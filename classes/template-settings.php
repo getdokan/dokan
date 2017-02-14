@@ -434,8 +434,9 @@ class Dokan_Template_Settings {
      */
     function insert_settings_info() {
 
-        $store_id            = get_current_user_id();
-        $prev_dokan_settings = get_user_meta( $store_id, 'dokan_profile_settings', true );
+        $store_id                = get_current_user_id();
+        $existing_dokan_settings = get_user_meta( $store_id, 'dokan_profile_settings', true );
+        $prev_dokan_settings     = ! empty( $existing_dokan_settings ) ? $existing_dokan_settings : array();
 
         if ( wp_verify_nonce( $_POST['_wpnonce'], 'dokan_profile_settings_nonce' ) ) {
 
@@ -503,7 +504,7 @@ class Dokan_Template_Settings {
 
         }
 
-        $dokan_settings = array_merge($prev_dokan_settings,$dokan_settings);
+        $dokan_settings = array_merge( $prev_dokan_settings,$dokan_settings );
 
         $profile_completeness = $this->calculate_profile_completeness_value( $dokan_settings );
         $dokan_settings['profile_completion'] = $profile_completeness;

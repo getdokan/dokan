@@ -366,7 +366,7 @@ class Dokan_Admin_Settings {
     /**
      * Pro listing page
      *
-     * @since 2.6
+     * @since 2.5.3
      *
      * @return void
      */
@@ -458,7 +458,7 @@ class Dokan_Admin_Settings {
         /**
          * Add new or remove toolbar
          *
-         * @since 2.6
+         * @since 2.5.3
          */
         do_action( 'dokan_render_admin_toolbar', $wp_admin_bar );
     }
