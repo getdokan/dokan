@@ -1,0 +1,162 @@
+.dokan-orders-content{
+
+    .dokan-orders-area {
+
+        .dokan-order-filter-serach {
+            padding:10px 7px;
+        }
+
+        td.thumb img {
+            padding: 2px;
+            margin: 0;
+            border: 1px solid #dfdfdf;
+            vertical-align: middle;
+            width: 46px;
+            height: auto;
+        }
+
+        table.table.order-items {
+            margin-bottom: 0;
+        }
+
+        .general-details {
+            ul.order-status {
+                border-bottom: 1px solid @borderColor;
+                margin-bottom: 3px;
+                padding-bottom: 3px;
+                margin-left: 0px;
+                padding-left: 0px;
+            }
+
+            ul.customer-details {
+                margin-left: 0px;
+                padding-left: 0px;
+            }
+
+            span {
+                font-weight: bold;
+            }
+        }
+
+        .alert-success.customer-note {
+            background-color: #dff0d8;
+            background: #dff0d8;
+            margin-bottom: 5px;
+
+            strong {
+                font-size: 12px;
+            }
+        }
+
+        .order_note_type {
+            padding-left: 0;
+        }
+
+        #dokan-order-status-form {
+            margin: 10px 0;
+
+            select.form-control {
+                display: inline-block;
+                width: 100%;
+                margin-right: 10px;
+                font-size: 13px;
+            }
+        }
+
+        ul.order-statuses-filter {
+            font-size: 12px;
+            color: @borderColor;
+            // padding: 0;
+
+
+            li {
+                display: inline-block;
+                line-height: 13px;
+                padding: 0 5px;
+                border-right: 1px solid @borderColor;
+
+                &:last-child {
+                    border-right: none;
+                }
+
+                &.active a {
+                    color: #999;
+                }
+            }
+        }
+
+        ul.order_notes {
+            font-size: 13px;
+
+            li {
+                // border-bottom: 1px solid @borderColor;
+            }
+
+            p.meta {
+                font-size: 11px;
+            }
+
+            .note_content {
+                position: relative;
+                background: #efefef;
+                padding: 3px 10px;
+                margin-bottom: 10px;
+
+                p {
+                    margin: 0;
+                    padding: 0;
+                    word-wrap: break-word;
+                }
+            }
+
+            .note_content:after {
+                content: "";
+                display: block;
+                position: absolute;
+                bottom: -15px;
+                left: 30px;
+                width: 0;
+                height: 0;
+                border-width: 15px 15px 0 0;
+                border-style: solid;
+                border-color: #efefef transparent
+            }
+
+            li.customer-note {
+                .note_content {
+                    background: #d7cad2;
+
+                    &:after {
+                        border-color: #d7cad2 transparent
+                    }
+                }
+            }
+        }
+
+        tfoot td.value {
+            border-left: 1px solid @borderColor;
+            text-align: right;
+        }
+
+        .order_download_permissions {
+
+            label {
+                font-weight: normal;
+            }
+
+            button.revoke_access {
+                padding: 3px 10px;
+                margin-top: -2px;
+            }
+
+            .toolbar {
+                margin-top: 15px;
+            }
+        }
+
+        .chosen-container-multi .chosen-choices li.search-field input[type="text"] {
+            min-height: 27px;
+        }
+
+    }
+}

@@ -1,0 +1,155 @@
+.dokan-announcement-wrapper {
+	.dokan-no-announcement {
+		.annoument-no-wrapper {
+			height: 100%;
+			margin: 70px auto;
+			text-align: center;
+
+			.dokan-announcement-icon {
+				font-size: 165px;
+				color: #e3e3e3;
+				-moz-animation: ring 8s 1s ease-in-out infinite !important;
+				-moz-transform-origin: 50% 4px;
+				-webkit-animation: ring 8s 1s ease-in-out infinite !important;
+				-webkit-transform-origin: 50% 4px;
+				animation: ring 8s 1s ease-in-out infinite !important;
+				transform-origin: 50% 4px;
+
+			}
+
+			p{
+				margin-top:10px;
+				color: #a6a6a6;
+				font-size: 30px;
+			}
+		}
+
+	}
+	.dokan-announcement-wrapper-item {
+		padding:22px;
+		background:#f3f3f3;
+		border:1px solid #eee;
+		margin-bottom: 25px;
+		position: relative;
+		width: 98%;
+
+		.dokan-announcement-heading {
+			margin-bottom: 5px;
+			h3{
+				margin:5px 0px;
+				padding:0px 0px 8px;
+				font-weight: bold;
+				font-size: 20px;
+  				color: #494949;
+			}
+
+		}
+
+		.dokan-annnouncement-date {
+			width: 95px;
+			height: 95px;
+			color: #fff;
+			margin-right: 25px;
+			vertical-align: middle;
+			background-color: #818181;
+			text-align: center;
+			border-radius: 300px;
+			-webkit-border-radius: 300px;
+			-moz-border-radius: 300px;
+
+			.announcement-day {
+				font-size: 20px;
+				font-weight: bold;
+				margin-top: 16px;
+			}
+			.announcement-year {
+				font-weight: bold;
+			}
+		}
+
+		.dokan-announcement-content-wrap {
+			width: 80%;
+			height: 100%;
+
+			.dokan-announcement-content {
+				color: #656565;
+				font-size: 13px;
+			}
+
+		}
+
+		.announcement-action {
+			position: absolute;
+			top: -12px;
+			right: -8px;
+			font-size: 12px;
+			width: 25px;
+			height: 25px;
+			text-align: center;
+			background-color: #818181;
+			border-radius: 20px;
+			line-height: 23px;
+
+			a {
+				color: #fff;
+  				font-size: 20px;
+			}
+		}
+
+	}
+}
+
+@media (max-width: 992px) {
+
+	.dokan-announcement-wrapper-item {
+		padding: 15px;
+		text-align: center;
+
+		.dokan-annnouncement-date {
+			float:none !important;
+			margin:0 auto 15px !important;
+
+			.announcement-day {
+				margin-top: 0px !important;
+				padding-top: 16px;
+			}
+		}
+
+		.dokan-announcement-content-wrap {
+			float: none !important;
+			width: 100% !important;
+		}
+	}
+
+}
+
+article.dokan-notice-single-notice-area {
+	span.dokan-single-announcement-date {
+		display:block;
+		margin-bottom: 10px;
+	}
+}
+
+
+.dokan-announcement-uread {
+	border:1px solid #f05025 !important;
+	.dokan-annnouncement-date {
+		background-color: #f05025 !important;
+	}
+}
+
+.dokan-announcement-bg-uread {
+	background-color: #f05025;
+}
+
+// .dokan-announcement-uread-text {
+// 	color: #f05025 !important;
+// }
+
+// .dokan-announcement-read-text {
+// 	color: #428bca !important;
+// }
+
+// .dokan-announcement-read {
+// 	border-left:2px solid #428bca !important;
+// }

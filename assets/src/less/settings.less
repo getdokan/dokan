@@ -1,0 +1,117 @@
+.dokan-settings-content {
+
+    .dokan-settings-area {
+
+        h1 {
+            margin:0px;
+            padding:0px;
+        }
+
+        .dokan-banner {
+            border: 4px dashed #D8D8D8;
+            height: 300px;
+            margin: 0 0 30px 35px;
+            max-width: 850px;
+            text-align: center;
+            overflow: hidden;
+            position: relative;
+
+            img {
+                max-width: 100%;
+            }
+
+            .dokan-remove-banner-image {
+                position: absolute;
+                width: 100%;
+                height: 300px;
+                background: #000;
+                top: 0;
+                left: 0;
+                opacity: 0.7;
+                font-size: 100px;
+                color: red;
+                padding-top: 70px;
+                display: none;
+            }
+
+            &:hover {
+                cursor: pointer;
+
+                .dokan-remove-banner-image {
+                    display: block;
+                }
+            }
+        }
+
+        .dokan-gravatar {
+            position: relative;
+
+            .dokan-remove-gravatar-image {
+                position:absolute;
+                width:80px;
+                height:80px;
+                background:#000;
+                top:0;
+                left: 0;
+                opacity:.7;
+                font-size:70px;
+                text-align: center;
+                color:#f00;
+                padding-top:5px;
+                display:none;
+                border-radius: 50%;
+            }
+
+            .gravatar-wrap {
+                .dokan-gravatar-img {
+                    border-radius: 50%;
+                    height: 80px !important;
+                    width: 80px;
+                }
+            }
+
+            &:hover {
+                .dokan-remove-gravatar-image {
+                    display: block;
+                }
+            }
+
+        }
+
+        .button-area {
+            margin-top: 35px;
+
+            i.fa-cloud-upload {
+                display: block;
+                font-size: 80px;
+                color: #DFDFDF;
+            }
+
+            .help-block {
+                font-size: 12px;
+                color: #B1B1B1;
+            }
+        }
+
+        ul.dokan-categories {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+
+            label {
+                font-weight: normal;
+            }
+        }
+        .dokan-address-fields {
+            label{
+                font-weight: normal;
+                font-size: 12px;
+            }
+        }
+        .dokan-form-group{
+            .checkbox{
+                margin-top: 0px;
+            }
+        }
+    }
+}

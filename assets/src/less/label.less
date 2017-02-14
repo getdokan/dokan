@@ -1,0 +1,109 @@
+//
+// Labels
+// --------------------------------------------------
+
+//** Default label background color
+@label-default-bg:            @gray-light;
+//** Primary label background color
+@label-primary-bg:            @brand-primary;
+//** Success label background color
+@label-success-bg:            @brand-success;
+//** Info label background color
+@label-info-bg:               @brand-info;
+//** Warning label background color
+@label-warning-bg:            @brand-warning;
+//** Danger label background color
+@label-danger-bg:             @brand-danger;
+
+//** Default label text color
+@label-color:                 #fff;
+//** Default text color of a linked label
+@label-link-hover-color:      #fff;
+
+.label-variant(@color) {
+  background-color: @color;
+
+  &[href] {
+    &:hover,
+    &:focus {
+      background-color: darken(@color, 10%);
+    }
+  }
+}
+
+.dokan-label {
+  display: inline;
+  padding: .2em .6em .3em;
+  font-size: 75%;
+  font-weight: bold;
+  line-height: 1;
+  color: @label-color;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: .25em;
+
+  // Add hover effects, but only for links
+  a& {
+    &:hover,
+    &:focus {
+      color: @label-link-hover-color;
+      text-decoration: none;
+      cursor: pointer;
+    }
+  }
+
+  // Empty labels collapse automatically (not available in IE8)
+  &:empty {
+    display: none;
+  }
+
+  // Quick fix for labels in buttons
+  .btn & {
+    position: relative;
+    top: -1px;
+  }
+}
+
+// Colors
+// Contextual variations (linked labels get darker on :hover)
+
+.dokan-label-default {
+  .label-variant(@label-default-bg);
+}
+
+.dokan-label-primary {
+  .label-variant(@label-primary-bg);
+}
+
+.dokan-label-success {
+  .label-variant(@label-success-bg);
+}
+
+.dokan-label-info {
+  .label-variant(@label-info-bg);
+}
+
+.dokan-label-warning {
+  .label-variant(@label-warning-bg);
+}
+
+.dokan-label-danger {
+  .label-variant(@label-danger-bg);
+}
+
+.dokan-success {
+  .label-variant(@label-success-bg);
+}
+
+.dokan-info {
+  .label-variant(@label-info-bg);
+}
+
+.dokan-warning {
+  .label-variant(@label-warning-bg);
+}
+
+.dokan-danger {
+  .label-variant(@label-danger-bg);
+}

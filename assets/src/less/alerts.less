@@ -1,0 +1,109 @@
+
+//== Alerts
+//
+//## Define alert colors, border radius, and padding.
+
+@alert-padding:               15px;
+@alert-border-radius:         4px;
+@alert-link-font-weight:      bold;
+
+@alert-success-bg:            #dff0d8;
+@alert-success-text:          #3c763d;
+@alert-success-border:        darken(spin(@alert-success-bg, -10), 5%);
+
+@alert-info-bg:               #d9edf7;
+@alert-info-text:             #31708f;
+@alert-info-border:           darken(spin(@alert-info-bg, -10), 7%);
+
+@alert-warning-bg:            #fcf8e3;
+@alert-warning-text:          #8a6d3b;
+@alert-warning-border:        darken(spin(@alert-warning-bg, -10), 5%);
+
+@alert-danger-bg:             #f2dede;
+@alert-danger-text:           #a94442;
+@alert-danger-border:         darken(spin(@alert-danger-bg, -10), 5%);
+
+
+// Alerts
+
+.dokan-alert-variant(@background; @border; @text-color) {
+  background-color: @background;
+  border-color: @border;
+  color: @text-color;
+
+  hr {
+    border-top-color: darken(@border, 5%);
+  }
+  .dokan-alert-link {
+    color: darken(@text-color, 10%);
+  }
+}
+
+//
+// Alerts
+// --------------------------------------------------
+
+
+// Base styles
+// -------------------------
+
+.dokan-alert {
+  padding: @alert-padding;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: @alert-border-radius;
+
+  // Headings for larger alerts
+  h4 {
+    margin-top: 0;
+    // Specified for the h4 to prevent conflicts of changing @headings-color
+    color: inherit;
+  }
+  // Provide class for links that match alerts
+  .dokan-alert-link {
+    font-weight: @alert-link-font-weight;
+  }
+
+  // Improve alignment and spacing of inner content
+  > p,
+  > ul {
+    margin-bottom: 0 !important;
+  }
+  > p + p {
+    margin-top: 5px;
+  }
+}
+
+// Dismissible alerts
+//
+// Expand the right padding and account for the close button's positioning.
+
+.dokan-alert-dismissable, // The misspelled .dokan-alert-dismissable was deprecated in 3.2.0.
+.dokan-alert-dismissible {
+  padding-right: (@alert-padding + 20);
+
+  // Adjust close link position
+  .close {
+    position: relative;
+    top: -2px;
+    right: -21px;
+    color: inherit;
+  }
+}
+
+// Alternate styles
+//
+// Generate contextual modifier classes for colorizing the alert.
+
+.dokan-alert-success {
+  .dokan-alert-variant(@alert-success-bg; @alert-success-border; @alert-success-text);
+}
+.dokan-alert-info {
+  .dokan-alert-variant(@alert-info-bg; @alert-info-border; @alert-info-text);
+}
+.dokan-alert-warning {
+  .dokan-alert-variant(@alert-warning-bg; @alert-warning-border; @alert-warning-text);
+}
+.dokan-alert-danger {
+  .dokan-alert-variant(@alert-danger-bg; @alert-danger-border; @alert-danger-text);
+}

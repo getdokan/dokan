@@ -1,0 +1,228 @@
+html,body{
+    -webkit-backface-visibility:hidden;
+}
+
+div.media-sidebar a.edit-attachment{
+    display:none;
+}
+
+.dokan-chart-tooltip() {
+    position: absolute;
+    display: none;
+    line-height: 1;
+    background: #333;
+    color: #fff;
+    padding: 3px 5px;
+    font-size: 11px;
+    border-radius: 3px;
+}
+
+.dokan-dashboard {
+
+    .dokan-dashboard-wrap {
+        // .clearfix();
+        display: flex;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+
+        flex-wrap: wrap;
+        -webkit-flex-wrap: wrap;
+        -ms-flex-wrap: wrap;
+        overflow: hidden;
+        width: 100%;
+
+        * {
+            box-sizing: border-box;
+        }
+    }
+
+    header.dokan-dashboard-header {
+        margin: 0 0 15px 0;
+
+        h1 {
+            margin: 0 0 10px 0;
+            border-bottom: 1px solid @borderColor;
+            padding: 0 0 10px 0;
+        }
+        .dokan-add-product-link{
+            .dokan-btn{
+                margin-right: 10px;
+            }
+        }
+    }
+
+    .dokan-dashboard-content {
+        padding: 0 0 0 25px;
+        overflow: hidden;
+        margin-top: 0px;
+        width: 83%;
+        flex: 5 auto;
+
+        article.dashboard-content-area {
+            .clearfix();
+
+            .dokan-dash-left {
+                padding-right: 15px;
+            }
+
+            .dashboard-widget {
+                background: #fff;
+                border: 1px solid #EBEBEB;
+                padding: 0px 10px;
+                position: relative;
+                -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+                box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+                margin-bottom: 15px;
+
+                a {
+                    font-size: 13px;
+                    // color: #666;
+                }
+
+                .widget-title {
+                    font-weight: bold;
+                    font-size: 15px;
+                    border-bottom: 1px solid #EBEBEB;
+                    padding: 6px 0;
+                    margin-bottom: 6px;
+
+                    i {
+                        color: #ccc;
+                        padding-right: 5px;
+                    }
+                }
+
+                &.big-counter {
+                    text-align: center;
+
+                    ul{
+                        margin: 0px;
+                    }
+
+                    li {
+                        width: 100%;
+                        display: block;
+                        margin: 0 auto;
+                    }
+
+                    .title {
+                        font-size: 15px;
+                        padding-top: 10px;
+                    }
+
+                    .count {
+                        font-size: 18px;
+                        border-bottom: 1px solid #EBEBEB;
+                        font-weight: 600;
+                        padding-bottom: 10px;
+                    }
+                }
+
+                &.orders{
+                    overflow:hidden;
+
+                    .content-half-part{
+                        width: 50%;
+                        padding: 0;
+                        float: left;
+                    }
+
+                    #order-stats {
+                        width: 250px !important;
+                        height: 100% !important;
+                        margin-top: 15px;
+                        margin-left: -10px;
+                    }
+                }
+
+                &.products {
+                    .pull-right a {
+                        .border-radius(0);
+                        margin-top: -6px;
+                    }
+                }
+
+                &.sells-graph {
+                    padding-bottom: 7px;
+                    width: 100%;
+                    position: relative;
+                }
+
+                .chart-placeholder.main {
+                    height: 347px;
+                }
+
+                .list-count {
+                    .count {
+                        float: right;
+                    }
+                }
+            }
+
+            .chart-tooltip {
+                .dokan-chart-tooltip;
+            }
+        }
+
+        article.dokan-settings-area {
+
+            .dokan-map-wrap {
+                border: 1px solid @borderColor;
+
+                .dokan-map-search-bar {
+                    position: relative;
+                }
+
+                .dokan-map-find-btn {
+                    display: none;
+                }
+
+                .dokan-map-search {
+                    border: none;
+                    width: 100%;
+                    padding: 5px 10px;
+                }
+
+                .dokan-google-map {
+                    width: 100%;
+                    height: 300px;
+                }
+            }
+        }
+
+        .edit-account {
+            fieldset {
+                margin-top: 30px;
+
+                legend {
+                    font-weight: bold;
+                }
+            }
+        }
+
+        article {
+            border-bottom: none;
+        }
+
+        ul li {
+            list-style: none;
+            margin: 0px;
+            padding:0px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .dokan-page-help {
+            display: block;
+            font-style: italic;
+            color: #888;
+            margin-bottom: 30px;
+
+            p {
+                margin-bottom: 10px;
+            }
+        }
+    }
+}

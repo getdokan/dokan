@@ -1,0 +1,174 @@
+.dokan-clearfix:before,
+.dokan-clearfix:after {
+  display: table;
+  content: " ";
+}
+
+.dokan-clearfix:after {
+  clear: both;
+}
+
+.dokan-right {
+    float:right !important;
+}
+
+.dokan-left {
+    float:left !important;
+}
+
+.dokan-hide {
+    display: none;
+}
+
+.content-half-part{
+    width: 50%;
+    float: left;
+
+    &:first-child {
+        padding-right: 10px;
+    }
+
+    &:last-child {
+        padding-left: 10px;
+    }
+}
+
+p.help-block {
+    color: #AAA;
+    padding-top: 8px;
+    line-height: 1.42;
+}
+
+ul.subsubsub {
+    font-size: 12px;
+    color: @borderColor;
+    margin: 0 0 10px 0;
+    padding: 0;
+
+    li {
+        line-height: 13px;
+        padding: 0 5px;
+        border-right: 1px solid @borderColor;
+
+        &:last-child {
+            border-right: none;
+        }
+
+        &.active a {
+            color: #999;
+        }
+    }
+}
+
+.pagination-wrap {
+
+    ul.pagination{
+        display: inline-block;
+        padding-left: 0;
+        margin: 20px 0;
+        border-radius: 4px;
+
+        >li {
+            display: inline;
+
+            >span {
+                position: relative;
+                float: left;
+                padding: 6px 12px;
+                margin-left: -1px;
+                line-height: 1.428571429;
+                text-decoration: none;
+                background-color: #ffffff;
+                border: 1px solid #dddddd;
+            }
+
+            >span.current {
+                background-color: #eee;
+                color: #999;
+            }
+
+            >a {
+                position: relative;
+                float: left;
+                padding: 6px 12px;
+                margin-left: -1px;
+                line-height: 1.428571429;
+                text-decoration: none;
+                background-color: #ffffff;
+                border: 1px solid #dddddd;
+
+                &:hover {
+                    background-color: #eee;
+                    color: #999;
+                }
+            }
+        }
+    }
+}
+
+.dokan-form-inline {
+
+    .dokan-form-group {
+        float:left;
+        margin-right: 5px;
+    }
+}
+
+span.dokan-loading {
+    background: url("../images/wpspin_light.gif") no-repeat;
+    float: right;
+    height: 16px;
+    margin: 5px 5px 0;
+    width: 16px;
+}
+
+span.error {
+    color: #BB0000;
+    display: inline-block;
+}
+
+.dokan-seller-search {
+    box-sizing: border-box !important;
+    border: 2px solid #ccc !important;
+    border-radius: 4px !important;
+    background-color: white !important;
+    background-image: url('../images/searchicon.png') !important;
+    background-position: 8px 8px !important;
+    background-repeat: no-repeat !important;
+    padding: 5px 0 5px 36px !important;
+    -webkit-transition: width 0.4s ease-in-out !important;
+    transition: width 0.4s ease-in-out !important;
+    background-size: 16px !important;
+}
+
+.dokan-overlay {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 999;
+}
+
+.dokan-ajax-loader {
+    height: 1em;
+    width: 1em;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -.5em;
+    margin-top: -.5em;
+    display: block;
+    content: "";
+    -webkit-animation: spin 1s ease-in-out infinite;
+    -moz-animation: spin 1s ease-in-out infinite;
+    animation: spin 1s ease-in-out infinite;
+    background: url(../images/loader.svg) center center;
+    background-size: cover;
+    line-height: 1;
+    text-align: center;
+    font-size: 2em;
+    color: rgba(0, 0, 0, .75)
+}

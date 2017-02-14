@@ -1,0 +1,436 @@
+v2.5.3 -> February 14, 2017
+---------------------
+- [fix] Order Tracking modal not working properly in some themes
+- [fix] Fixed showing notice on customer order table for multiple vendors
+- [fix] Fixed product listing status count issue
+- [fix] Fixed withdraw status messages and calculation
+- [tweak] Removed un-necessary codes and optimized code structure
+
+v2.5.2 -> January 25, 2017
+---------------------
+- [new]   Added filter 'dokan_new_product_popup_args' to enable custom validation on new product add
+- [new]   Enabled vendors to select all products while creating coupon
+- [fix]   On plugin activation auto flush rewrite rules
+- [fix]   Seller Setup wizard not translating properly in some cases
+- [fix]   Shipping tracking modal not showing while bootstrap loaded is fixed
+- [fix]   Vendor statement enhanced for calculating per product commission
+- [tweak] Seller setup wizard enhanced for responsiveness
+- [tweak] Seller dashboard widgets enhanced for better responsiveness
+- [tweak] Add new product pop up enhanced for better responsiveness
+- [tweak] Several other optimizations to codebase for better and stable performance
+
+v2.5.1 -> January 12, 2017
+---------------------
+- [new]   Front-End product template new UI
+- [tweak] All SELLER text is changed to VENDOR
+- [tweak] Updated Seller Earning Statement Report View
+- [tweak] Fixed variable product data saving issues
+- [tweak] Changed Order Tracking options from Select to Text box for sellers
+- [tweak] Improved Responsiveness on seller dashboard pages
+- [tweak] Product commission option is moved to advance tab from general
+- [fix]   Improved Seller Setup wizard for better UX
+- [fix]   Fixed showing error If Google MAP API is not given
+- [fix]   Fixed Extra fee receiver not working issue
+
+v2.5 -> October 18, 2016
+---------------------
+- [new] Setup Wizard on Admin panel
+- [new] Setup Wizard for seller settings after new seller registration
+- [new] Multiple header templates for store template
+- [new] Added DOKAN shortcode insert button on post/page editor
+- [new] Added store search option on store listing page
+- [new] Added detailed income and withdraw statement for sellers
+- [new] Added option to choose tax and shipping receiver as admin or seller.
+- [new] Show seller payment options on user profile in back-end.
+- [tweak] Dokan store listing shortcode has more options
+- [tweak] Flat rate shipping synced with zone ID
+- [tweak] Fixed Tab view variation products
+- [tweak] Added active states in product review status filter
+- [fix] Fixed front-end variation issue for other languages
+- [fix] Fixed product add while selling is disabled for sellers
+
+v2.4.12 -> August 08, 2016
+---------------------
+- [new] Product base admin commission
+- [new] Sellers coupon show on store
+- [tweak] Added Settings for gMap API key
+- [fix] Product with same sku
+- [fix] Product permalink, defaults to 'product'
+- [fix] Image upload attribute undefined issue
+- [fix] Multiple seller order mail
+- [fix] Product sku search
+- [fix] Store search by store name
+
+v2.4.11 -> May 29, 2016
+---------------------
+- [new] Refund request from seller to admin by sellers order details page
+- [new] Tracker added
+- [fix] Checkout issue if flat rate shipping set as null
+- [fix] Change seller display name to store name
+- [fix] Multiple submit request on product add/edit
+- [fix] Undefine error on cart page for shipping additional price
+- [fix] Product edit page permission
+- [fix] Remove duplicate insert on dokan order table
+
+v2.4.10 -> February 24, 2016
+---------------------
+- [new] New dashboard menu added for 'store link', 'edit account' and 'sign out'
+- [fix] Remove repeated data rendering on admin panel dokan earning section
+- [fix] Terms and condition not showing on registration issue
+- [fix] Dashboard/orders page single view responsive issue
+- [fix] Product edit and add issue on Firefox and IE browser
+- [fix] Product variation save and update issues
+
+v2.4.9 -> February 01, 2016
+---------------------
+- [new] Plugin help page added
+- [new] Seller search added on store listing
+- [tweak] Some validation on contact seller email handler and after sent hook updated
+- [tweak] Category check added on new product add without reloading page
+- [tweak] Auto suggestion and clear button on flat view variation product attributes input field
+- [fix] Downloadable file change in product after order issue fixed
+- [fix] Order status translation issue on order listing page
+- [fix] Email not send to seller on new order issue fixed
+- [fix] Allow float number for seller percentage
+- [fix] Seo hook updated for Yoast to make compatible with WP 4.4
+- [fix] Browser jump issue in tab view on click of tabs
+
+v2.4.8 -> November 21, 2015
+---------------------
+- [tweak] Email template override system added
+- [fix] Change dokan SEO admin option section
+- [fix] Ajaxurl fixed to prevent conflict
+- [fix] Fix Arrow (reverted) for pagination
+- [fix] Hide unapprove comment from store review tab
+- [fix] Update cart discount meta on suborder create
+
+v2.4.7 -> October 20, 2015
+---------------------
+- [fix] Fix Coupon discount redundancy
+- [fix] Fix product gallery image delete issue on tab view
+- [fix] Fix translation issue on user migration form
+- [fix] Fix Store listing template view for not logged-in user
+- [fix] parent sub-order creation on unsuccessful payment by card
+- [fix] Store page breadcrumb fixed to show Store name and listing link properly
+
+v2.4.6 -> October 12, 2015
+---------------------
+- [tweak] Added terms and condition option field on Registration form
+- [fix] Remove required for product per page field on store settings
+- [fix] Fix delete variation product issue on tab view for seller
+- [fix] Fix redudant data for guest users
+- [fix] Fix responsive issue on front page product listing
+- [fix] Seller store banner size to cover
+- [fix] Store template fix for twentytwelve theme
+
+v2.4.5 -> September 14, 2015
+---------------------
+- [fix] Fix responsive style issue for store page
+- [fix] Fix undefine parent order object issue on creat sub-order
+- [fix] Fix seller dashboard product comments count on widget
+
+v2.4.4 -> September 4, 2015
+---------------------
+- [new] Seller balance resync by checking unexpected order button added on tools page
+- [fix] Make some text translatable on contact seller widget
+- [fix] Optimise sql query to make regenerate process fast
+- [fix] Fix WooCommerce deactivate dependency issue
+- [fix] Fix plugin bulk activate issue with dokan welcome page
+
+v2.4.3 -> August 25, 2015
+---------------------
+- [new] Welcome page on activation with resync button added
+- [tweak] Visual Progress bar added for resync Order progress
+- [fix] Sub-order duplicate issue fixed
+- [fix] Fix wp editor compatible to 4.3
+- [fix] Compatible with WordPress 4.3 widget __construct functions
+- [fix] Fix table name in sync table sql
+- [fix] Fix store review rewrite problem, Move store functionality in Dokan_Pro_Store class
+- [fix] Fix seller migration template loader
+- [fix] Fix same seller multiple product type shipping issue
+- [fix] Fix flat rate shipping issue for multi seller
+
+v2.4.2 -> August 12, 2015
+---------------------
+- [tweak] New hook on store header: dokan_store_before_social
+- [tweak] Re-arrange dokan admin settings fields
+- [tweak] Add field on seller store settings to manage store product per page
+- [tweak] Sellers redirected to dashboard after login
+- [fix] Feature seller widget display template path
+- [fix] Best seller widget display seller name changed to store name
+- [fix] Fix problem with showing variation data on order details
+- [fix] Update "dokan_create_seller_order" function to save variation order meta on sub-order
+- [fix] Update "dokan_post_input_box" function to add option for making text field and number field required
+- [fix] Fix balance separator problem on withdraw
+- [fix] Fix total sales balance display on seller dashboard page
+- [fix] Keep value saved of oveerride shipping fields meta even when the option uncheckd
+- [fix] English language phrases correction on several place
+- [fix] Fix calculation of sub-orders in WooCommerce dashboard status widget sales query
+
+v2.4.1 -> July 29, 2015
+---------------------
+- [fix] plugin updater fix: wrong plugin file path
+- [fix] Store banner min-height issue
+- [fix] added validation on settings/store phone field
+
+v2.4 -> July 28, 2015
+---------------------
+ - [new] Code re-write, re-organized
+ - [new] Customer support System for sellers
+ - [tweak] After login redirect users to the page they were instead of my account
+ - [tweak] Dokan order sycn table from backend tools done by ajax step by step
+ - [fix] New Product status change as admin settings rather than "draft"
+ - [fix] Pageination fix on admin earning log
+ - [fix] Translation fix on template-js
+ - [fix] Fix undefine state error from store and store listing
+
+v2.3 -> June 4, 2015
+---------------------
+
+- [new] Add new flat view style for product add and edit on seller dashboard
+- [new] Add store SEO manage system for sellers store page
+- [new] Add shipping calculator on single product page shipping tab
+- [new] Add new tab on seller store page to show terms and conditions
+- [tweak] Store address field change to multiple-fields on seller dashboard store settings
+- [tweak] New Products on "draft" status by default
+- [tweak] Address field can be not required
+- [fix] Fix styling issue in seller dashboard shipping settings options
+- [fix] Fix some text domain for translation issues on several pages
+- [fix] Fix empty title and empty category error on seller dashboard product edit page
+- [fix] Plugin updater: return false early when response error
+- [fix] Fix placeholder translation support for phone number and store name on seller dashboard store settings
+
+v2.2.2 -> May 15, 2015
+---------------------
+
+- [fix] Fix shipping calculation for 'everywhere else country' in checkout
+- [fix] Fix undefine error on single product shipping tab if select everywhere else country
+- [fix] Make override shipping value empty once set and then remove it
+- [fix] Show shipping tab on product edit for both simple and variable type product
+- [fix] Change same hooks on different settings forms
+- [fix] Fix dokan store tab margin
+- [fix] Fix store review template class/id
+
+v2.2.1 -> May 12, 2015
+---------------------
+
+- [fix] Fix whight and dimensions string translation error on product edit shipping tab
+- [fix] Fix store listing shortcode rendering error
+- [fix] Remove (#) sign from url when dokan gravatar and banner image upload
+- [fix] Fix require once file name which rename 'theme-fucntion.php' to 'functions.php'
+- [fix] Fix product listing sku search condition bug
+
+v2.2 -> May 11, 2015
+---------------------
+
+- [new] Settings pages divided into submenu
+- [new] Dokan product listing search by sku and product id added
+- [new] Tabs added on store page
+- [fix] Fix translation issues on product and order status text
+- [fix] Fix user migration shop url error
+- [fix] Category problem fixed for updated WordPress 4.2
+- [fix] Fix issue on plugin update checker. Was breaking getting plugin update info
+- [fix] Don't allow users to create coupons with same code
+- [tweak] Added "Elsewhere" for countries as well in shipping
+
+
+v2.1 -> April 2, 2015
+---------------------
+- [new] Seller announcement feature
+- [new] Seller Profile completeness
+- [new] Product listing filter and search field in seller dashboard product page
+- [new] Add admin view withdraw table row action
+- [new] Added shipping processing time for individual product
+- [new] Seller total earning view on seller dashboard
+- [tweak] Shipping tab disable for downloadable product
+- [tweak] Enable store contact seller and map show option of backend
+- [tweak] Variable product image size
+- [tweak] Product variation sku tooltip display
+- [tweak] Shipping tab extra info added
+- [tweak] Order refund by seller removed
+- [tweak] Download limit text and input type changed to number
+- [tweak] Admin all log order status display
+- [tweak] Restricted shipping charge for downloadable product or virtual product
+- [tweak] Show hide override shipping option according to disable shipping in single product
+- [fix] Shipping info display error
+- [fix] Shipping disable logical issue
+- [fix] Variation remove item problem
+- [fix] Variation stock management
+- [fix] Wp editor content render with auto p
+- [fix] Inventory stock management
+
+v2.0.1 -> March 9, 2015
+---------------------
+- [fix] Minor bug in shipping gateway
+- [fix] Manage stock and product review status wasn't updating
+- [fix] Sell individually checkbox wasn't updating
+- [new] Earning by seller report in Dokan admin earning reports page
+
+v2.0 -> March 1, 2015
+---------------------
+- [new] Add Custom Store wide and Per-Product Shipping option for individual sellers
+- [new] Add TAX option for individual sellers on seller dashboard
+- [new] Add Shipping TAX option
+- [new] Variation stock management feature on font end
+- [new] TAX and shipping management for variation product
+- [new] Added settings for new product add email notification to admin
+- [new] Added flickr, Instagram in seller store social profile field
+- [new] Added tag feature in Seller dashboard product add or edit
+- [new] Added Multiple category selection in seller product add or edit
+- [new] Set cookie for page view
+- [fix] Line break in seller name with product in chart page
+- [fix] Add seller review url filter ('dokan_get_seller_review_url')
+- [fix] Fix some styling issue for button, position
+- [fix] Fixes the broken Store page sidebar for any WooCommerce compatible theme.
+- [fix] Admin seller listing pagination fixed
+- [fix] Use wp_title filter from dokan theme and correct store title
+- [fix] Product edit tab background white colour removed
+- [fix] Media popup close icon styling fixed
+- [fix] Regenerate map file
+- [fix] Update code structure by id prefixed with dokan and stuff
+- [fix] Transliteration fixes
+- [fix] Fix withdraw threshold query
+- [fix] Coupon delete problem fixed
+- [fix] Fix settings page undefined error
+- [fix] Change hook name ‘dokn_aditional_relation_filed’ to ‘dokan_reg_form_field’
+- [fix] Language file updated
+
+
+v1.4 -> January 18, 2015
+---------------------
+- [new] Added admin option to change store URL
+- [new] Added withdraw threshold feature
+- [new] Order report Export and listing
+- [new] Added admin option to enable-disable store sidebar from theme
+- [new] Coupon fee shipping removed
+- [fix] Pagination compatible with Wordpress v4.1
+- [fix] Language translation fixed
+- [fix] Seller name changed to store name at featured seller widget
+- [fix] Fix product stock quantity save error
+- [fix] Fix product variation stock error
+- [fix] Settings page error fix
+
+
+v1.3 -> November 20, 2014
+---------------------
+- [fix] Sanitize settings fields
+- [fix] Calculate admin commision without shipping
+- [new] Featured seller widget
+- [new] Few hooks in mail
+- [fix] Customer to seller migration bugfix
+
+
+v1.2 -> November 2, 2014
+---------------------
+- [fix] Security fixes. props to @yann
+- [fix] dokan_templart_part function wasn't picking up template from theme
+- [fix] Add missing action hooks from the theme migration
+- [fix] Paginations in dashboard
+- [fix] Product edit page responsive issue
+
+
+v1.1 -> October 5, 2014
+---------------------
+- [new] Pre-defined attributes brought back in the plugin.
+- [fix] Sold individual bug fix
+- [fix] Withdraw cancel functionality was broken in plugin
+- [fix] Product delete functionality was broken
+- [fix] Fontawesome fonts added on dashboard. Removed icomoon
+- [fix] Some Bootstrap CSS classes fix
+- [new] New action hook and filters
+- [new] My orders page brought back
+- [fix] Duplicate order emails fixed
+- [fix] Discounted price wasn't updating properly
+
+
+v1.0
+---------------------
+- Initial plugin version released
+
+
+==================== Theme Version ====================
+
+v1.0.6 -> September 2, 2014
+---------------------
+- [new] Added hook and filter in product listing
+- [fix] Change seller name to store name in cart
+- [fix] Add store link to seller review tab
+- [fix] change best seller name to store name in best seller widget
+- [new] Arabic translation added
+- [new] Customer migration to seller
+- [fix] Condition fix for new product visibility
+- [fix] Update url separator
+- [fix] Coupon product dropdown shows only 10 products
+- [fix] Repeted slide off
+- [fix] Change manage stock check
+- [new] Hooks added on settings form
+- [new] Pre-defined attribute feature
+- [fix] Review pagination in seller dashboard
+- [fix] Email notifications removed from child orders
+- [fix] Correct text domain updated
+- [fix] Order status localization
+
+
+v1.0.5 -> June 9, 2014
+-----------------------
+- [new] Enable/disable scripts, styles, sidebars from child theme
+- [new] Better child theme support
+- [new] Responsive seller dashboard
+- [new] Filters added slider
+- [fix] Multisite collisions
+- [new] Seller enable/disable feature on registration
+- [fix] Language file updated with missing strings
+- [new] Store only category menu on store pages
+- [new] Turn on/off store sidebar location/contact widgets
+
+v1.0.4 -> May 9, 2014
+-----------------------
+- [new] RTL support
+- [fix] Responsive style problems
+- [fix] page title fix for homepage
+- [fix] category dropdown widget width with many categories
+- [fix] clicking category dropdown widget on mobile
+- [improve] child categories in main navigation are clickable now
+- [fix] main dropdown selected color fix
+- [fix] coupon expire date formatting fix
+- [fix] style.css is the main stylesheet now
+- [fix] duplicate phone number in admin edit profile removed
+- [fix] missing translation strings
+- [fix] small problem in seller listing
+
+v1.0.3 -> April 7, 2014
+-----------------------
+- [new] Profile settings can be updated from admin area
+- [new] Per user seller percentage
+- [new] Some new hooks added.
+- [bugfix] Product category won't update
+- [bugfix] Menu parameter removed from wp_nav_menu
+- [bugfix] Currency entity fix in withdraw email
+- [bugfix] Downloadable file upload directory
+- [bugfix] Price validation removed from new product page.
+- [improve] Demo store notice compatibility
+- [improve] Edit permalink support for category base
+
+
+v1.0.2 -> Mar 24, 2014
+-----------------------
+- [buxfix] Withdraw request balance float
+
+v1.0.1 -> Mar 24, 2014
+-----------------------
+- Sold individually option added
+- New action hooks and filters
+- PHP 5.2 support with replacing __DIR__
+- Seller shop url customization choice
+- Seller order status change enable/disable option added
+- Seller reviews shown on store page
+- Withdraw balance control -> order status choice option
+- Avatar upload feature
+- New seller notification mail
+- New product visibility to visible
+- Best seller widget
+
+
+v1.0 -> Feb 17, 2014
+-----------------------
+- Initial Release

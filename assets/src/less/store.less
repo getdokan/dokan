@@ -1,0 +1,845 @@
+.dokan-store {
+
+    &.dokan-theme-twentytwelve {
+
+        .site-content {
+            float: none;
+            width: 100%;
+        }
+    }
+}
+
+// store
+.dokan-single-store {
+    margin: 0;
+
+    &.dokan-w8 {
+        width: 72%;
+    }
+
+    .profile-frame {
+        padding: 0px;
+        position: relative;
+        background-size: cover;
+        background-color: #eee;
+
+        .profile-info-box {
+            position: relative;
+
+            a {
+                color: inherit;
+            }
+
+            &:hover {
+                color: #fff;
+            }
+
+            .profile-info-img {
+                width: 100%;
+                height: auto;
+            }
+
+            .profile-info-summery-wrapper {
+                position: absolute;
+                top: 0;
+                left: 0;
+                color: #fff;
+                width: 100%;
+                height: 100%;
+
+                .profile-info-summery {
+                    width: 320px;
+                    height: 100%;
+                    padding-top: 25px;
+
+                    .profile-info-head {
+                        .profile-img {
+                            text-align: center;
+                            margin-bottom: 12px;
+
+
+                            &.profile-img-circle img {
+                                border-radius: 50%;
+                                background: #fff;
+                                width: 80px;
+                                height: 80px;
+                            }
+
+                            &.profile-img-square img {
+                                background-color: #fff;
+                                border: 1px solid @borderColor;
+                                border-radius: 0;
+                                padding: 4px;
+                            }
+                        }
+
+                        .store-name {
+                            font-weight: bold;
+                            padding: 0;
+                            font-size: 20px;
+                            text-align: center;
+                            margin: 0 0 18px;
+                            color: #fff;
+                        }
+                    }
+
+                    .profile-info {
+                        padding: 0 30px;
+
+                        .dokan-store-info {
+                            list-style: none;
+
+                            .dokan-store-phone,
+                            .dokan-store-email {
+                                a {
+                                    text-decoration: none;
+                                    color: inherit;
+                                }
+                            }
+                        }
+
+                        li {
+                            padding-bottom: 8px;
+                        }
+
+                        i {
+                            font-weight: bold;
+                            float: left;
+                            margin-left: -25px;
+                            margin-top: 4px;
+                        }
+
+                        ul.store-social {
+                            list-style: none;
+
+                            li {
+                                display: inline-block;
+                            }
+
+                            i {
+                                font-size: 20px;
+                                float: none;
+                                font-weight: normal;
+                                margin: 0;
+
+
+                                &.fa-facebook-square {
+                                    color: #3b5998;
+                                }
+
+                                &.fa-google-plus-square {
+                                    color: #dd4b39;
+                                }
+
+                                &.fa-twitter-square {
+                                    color: #55acee;
+                                }
+
+                                &.fa-linkedin-square {
+                                    color: #007bb5;
+                                }
+
+                                &.fa-youtube-square {
+                                    color: #bb0000;
+                                }
+
+                                &.fa-instagram {
+                                    color: #125688;
+                                }
+
+                                &.fa-flickr {
+                                    color: #ff0084;
+                                }
+                            }
+                        }
+
+                        .seller-rating {
+                            display: none;
+                        }
+                    }
+                }
+
+            }
+
+            &.profile-layout-layout1 {
+
+                .profile-info-summery-wrapper {
+                    position: relative;
+                    height: 135px;
+                    background-color: #fff;
+                    color: inherit;
+                    border: 1px solid @borderColor;
+                    padding: 0 15px;
+
+                    .profile-info-summery {
+                        width: 100%;
+                        padding: 0;
+                        position: absolute;
+                        top: -55px;
+                        height: 140px;
+                        color: #444;
+                        background: none;
+
+                        .profile-info-head {
+                            float: left;
+
+                            .profile-img {
+                                margin-bottom: 0;
+
+                                img {
+                                    width: 150px;
+                                    height: 150px;
+                                }
+                            }
+                        }
+
+                        .profile-info {
+                            float: left;
+                            padding: 0;
+
+                            .store-name {
+                                color: #fff;
+                                margin: 10px 0 25px 15px;
+                                text-shadow: 0 0 3px rgba(0,0,0,.8);
+                                font-weight: bold;
+                                font-size: 28px;
+                                line-height: 1.1;
+                            }
+
+                            .dokan-store-info {
+                                padding-left: 40px;
+                                font-size: 14px;
+                                line-height: 21px;
+                                margin-left: 0;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        &.profile-frame-no-banner {
+            background-color: transparent;
+
+            .profile-layout-layout3 {
+
+                .profile-info-img {
+                    display: none;
+                }
+
+                .profile-info-summery-wrapper {
+                    position: relative;
+
+                    .profile-info-summery {
+                        background-color: #fff;
+                        width: 100%;
+                        padding: 10px;
+                        overflow: hidden;
+                        border: 1px solid @borderColor;
+
+
+                        .profile-info-head {
+                            width: 150px;
+                            float: left;
+
+                            .profile-img {
+
+                                img {
+                                    background: #fff;
+                                    border: 1px solid #ddd;
+                                    padding: 2px;
+                                    width: 150px;
+                                    height: 150px;
+                                }
+                            }
+                        }
+
+                        .profile-info {
+                            float: left;
+                            padding: 0 25px;
+                            color: #444;
+
+                            .store-name {
+                                margin-top: 5px;
+                                font-size: 30px;
+                                font-weight: bold;
+                            }
+
+                            .dokan-store-info {
+                                padding-left: 25px;
+
+                                li {
+                                    float: left;
+                                    margin-right: 40px;
+                                    position: relative;
+
+                                    i {
+                                        margin-left: -22px;
+                                    }
+
+                                    &:before {
+                                        content: "·";
+                                        position: absolute;
+                                        top: 10px;
+                                        left: -35px;
+                                        color: #afafaf;
+                                        font-size: 25px;
+                                        line-height: 0;
+                                    }
+
+                                    &:first-child:before {
+                                        content: "";
+                                    }
+
+                                    &.dokan-store-rating {
+                                        float: none;
+                                        margin-right: 0;
+
+                                        &:before {
+                                            content: "";
+                                            position: relative;
+                                        }
+                                    }
+                                }
+                            }
+
+                            .store-social-wrapper {
+                                position: relative;
+
+                                .store-social {
+                                    padding-left: 0;
+
+                                    li {
+                                        margin: 0 8px 0 0;
+
+                                        a {
+
+                                            i {
+                                                text-shadow: none;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .dokan-store-tabs {
+        ul {
+            background-color: #fff;
+            border-width: 0 1px 1px 1px;
+            border-color: @borderColor;
+            border-style: solid;
+            margin: 0;
+            padding: 0;
+            margin-bottom: 20px;
+
+            li {
+                display: inline-block;
+                border-right: 1px solid @borderColor;
+
+                a {
+                    text-decoration: none;
+                    color: #666;
+                    padding: 10px 15px;
+                    display: inline-block;
+
+                    &:hover {
+                        background: #eee;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.dokan-store-sidebar {
+    input[type=text],
+    input[type=email],
+    textarea {
+        width: 100%;
+    }
+
+    form.seller-form {
+        ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+
+            li {
+                margin-bottom: 8px;
+            }
+        }
+    }
+
+    #dokan-store-location {
+        width: 100%;
+        height: 200px;
+    }
+}
+
+// shortcode seller listing
+
+.dokan-seller-listing .dokan-seller-search-form {
+    margin-bottom: 30px;
+}
+
+ul.dokan-seller-wrap {
+    .clearfix();
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li.dokan-single-seller {
+        float: left;
+        width: 48%;
+        list-style: none;
+        margin: 0 0 25px 0;
+        padding: 0;
+        border: 1px solid @borderColor;
+
+        .dokan-store-banner-wrap {
+            background-color: @borderColor;
+            border-bottom: 1px solid @borderColor;
+
+            img {
+                width: 100%;
+                max-width: 100%;
+                height: auto;
+                margin-bottom: 0;
+            }
+        }
+
+        &:nth-child(2n+1) {
+            margin-right: 3%;
+            clear: left;
+        }
+
+        .dokan-store-caption {
+            padding: 20px 20px 10px 20px;
+            background-color: #fff;
+
+            h3 {
+                padding: 0;
+                margin: 0 0 15px 0;
+            }
+        }
+    }
+}
+
+@media (min-width: 1200px) {
+    .dokan-single-store {
+
+        .profile-frame {
+
+            .profile-info-box {
+
+                .profile-info-summery-wrapper {
+
+                    .profile-info-summery {
+                        background-color: fade( #000, 65% );
+
+                        .profile-info {
+
+                            .store-social-wrapper {
+                                position: absolute;
+                                bottom: 0;
+                                right: 0;
+
+                                .store-social {
+                                    padding-right: 15px;
+                                    margin: 0;
+
+                                    li {
+                                        line-height: 1;
+                                        margin-left: 5px;
+
+                                        a {
+                                            display: inline-block;
+
+                                            i {
+                                                font-size: 25px;
+                                                text-shadow: 1px 1px 1px rgba(255,255,255, 0.55);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                &.profile-layout-layout1 {
+
+                    .profile-info-summery-wrapper {
+
+                        .profile-info-summery {
+
+                            .profile-info {
+
+                                .store-social-wrapper {
+                                    top: 12px;
+                                    right: 15px;
+                                    bottom: auto;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                &.profile-layout-layout2 {
+                    position: relative;
+                    width: 100%;
+
+
+                    .profile-info-summery-wrapper {
+                        position: relative;
+                        background-color: #fff;
+                        color: #444;
+                        border: 1px solid @borderColor;
+                        height: 220px;
+
+                        .profile-info-summery {
+                            width: 100%;
+                            padding-top: 0;
+                            background: none;
+
+                            .profile-info-head {
+                                position: relative;
+                                top: -75px;
+
+                                .profile-img {
+
+                                    img {
+                                        background: #fff;
+                                        border: 1px solid #ddd;
+                                        padding: 2px;
+                                        width: 150px;
+                                        height: 150px;
+                                    }
+                                }
+                            }
+
+                            .profile-info {
+                                position: relative;
+                                top: -75px;
+
+                                .store-name {
+                                    color: inherit;
+                                    font-size: 35px;
+                                    text-align: center;
+                                    font-weight: bold;
+                                }
+
+                                .dokan-store-info {
+                                    padding: 0;
+                                    width: 100%;
+                                    margin: 0;
+                                    display: block;
+                                    overflow: hidden;
+                                    text-align: center;
+
+                                    li {
+                                        text-align: left;
+                                        display: inline-block;
+                                        padding-bottom: 15px;
+
+                                        a {
+                                            color: inherit;
+                                        }
+
+                                        i {
+                                            display: none;
+                                        }
+
+                                        &:after {
+                                            content: '·';
+                                            color: #9c9c9c;
+                                            font-weight: bold;
+                                            font-size: 18px;
+                                            position: relative;
+                                            top: 3px;
+                                        }
+
+                                        &:last-child {
+                                            &:after {
+                                                content: '';
+                                            }
+                                        }
+                                    }
+                                }
+
+                                .store-social-wrapper {
+                                    position: relative;
+                                    text-align: center;
+
+
+                                    .store-social {
+                                        position: relative;
+                                        padding: 0;
+                                        margin: 0;
+                                        display: inline-block;
+
+                                        li {
+
+                                            a {
+
+                                                i {
+                                                    text-shadow: none;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+}
+
+@media (max-width: 1199px) {
+    .dokan-single-store {
+
+        .profile-frame {
+
+            .profile-info-box {
+                position: relative;
+                width: 100%;
+
+                .profile-info-summery-wrapper {
+                    position: relative;
+                    background-color: #fff;
+                    color: #444;
+                    border: 1px solid @borderColor;
+                    height: 255px;
+
+                    .profile-info-summery {
+                        width: 100%;
+                        padding-top: 0;
+
+                        .profile-info-head {
+                            position: relative;
+                            top: -45px;
+
+                            .store-name {
+                                color: inherit;
+                                font-size: 35px;
+                                margin-bottom: 11px;
+                            }
+
+                            .profile-img {
+
+                                img {
+                                    background: #fff;
+                                    border: 1px solid #ddd;
+                                    padding: 2px;
+                                }
+
+                                &.profile-img-circle {
+
+                                    img {
+                                        width: 100px;
+                                        height: 100px;
+                                    }
+                                }
+                            }
+                        }
+
+                        .profile-info {
+
+                            .dokan-store-info {
+                                position: relative;
+                                top: -45px;
+                                padding: 0;
+                                width: 100%;
+                                margin: 0;
+                                display: block;
+                                overflow: hidden;
+                                line-height: 1.4;
+
+                                li {
+                                    text-align: center;
+
+                                    a {
+                                        color: inherit;
+                                    }
+
+                                    i {
+                                        display: none;
+                                    }
+                                }
+                            }
+
+                            .store-social-wrapper {
+                                position: relative;
+                                top: -45px;
+                                text-align: center;
+
+                                .store-social {
+                                    padding: 0;
+                                    margin: 0;
+                                    display: inline-block;
+
+                                    li {
+                                        margin-left: 8px;
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                }
+
+                &.profile-layout-layout1 {
+
+                    .profile-info-summery-wrapper {
+                        height: 175px;
+                        padding: 0 8px;
+
+                        .profile-info-summery {
+                            top: 6px;
+
+                            .profile-info-head {
+                                top: 0;
+
+                                .profile-img {
+
+                                    &.profile-img-square {
+                                        background: none;
+                                        border: 0;
+                                    }
+
+                                    img {
+                                        width: 100px;
+                                        height: 100px;
+                                    }
+                                }
+                            }
+
+                            .profile-info {
+
+                                .store-name {
+                                    font-size: 20px;
+                                    margin-bottom: 8px;
+                                    color: #444;
+                                    text-shadow: none;
+                                }
+
+                                .dokan-store-info {
+                                    top: 0;
+
+                                    li {
+                                        text-align: left;
+
+                                        a {
+                                        }
+
+                                        i {
+                                            display: inline-block;
+                                        }
+                                    }
+                                }
+
+                                .store-social-wrapper {
+                                    position: absolute;
+                                    top: -35px;
+                                    right: 20px;
+
+                                    .store-social {
+                                        top: 0;
+
+                                        li {
+                                            margin-left: 8px;
+
+                                            a {
+                                                i {
+                                                    font-size: 25px;
+                                                    text-shadow: 1px 1px 1px rgba(255,255,255, 0.55);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                &.profile-layout-layout2 {
+
+                    .profile-info-summery-wrapper {
+
+                        .profile-info-summery {
+
+                            .profile-info {
+
+                                .store-name {
+                                    position: relative;
+                                    top: -45px;
+                                    text-align: center;
+                                    font-size: 20px;
+                                    margin-bottom: 8px;
+                                    color: #444;
+                                    text-shadow: none;
+                                    font-weight: bold;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                &.profile-layout-layout3 {
+
+                    .profile-info-summery-wrapper {
+                        height: auto;
+                        border: 0;
+
+                        .profile-info-summery {
+
+                            .profile-info-head {
+                                top: 0;
+                                margin-right: 15px;
+                            }
+
+                            .profile-info {
+                                padding: 0 0 0 15px;
+
+                                .dokan-store-info {
+                                    top: 0;
+
+                                    li {
+                                        float: none;
+                                        text-align: left;
+
+                                        i {
+                                            display: inline-block;
+                                        }
+
+                                        &:before {
+                                            content: "";
+                                        }
+                                    }
+                                }
+
+                                .store-social-wrapper {
+                                    top: 0;
+                                    text-align: left;
+                                    padding: 0 4px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

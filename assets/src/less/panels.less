@@ -1,0 +1,96 @@
+//
+// Panels
+// --------------------------------------------------
+
+@panel-bg:                    #fff;
+@panel-body-padding:          15px;
+@panel-heading-padding:       10px 15px;
+@panel-footer-padding:        @panel-heading-padding;
+@panel-border-radius:         4px;
+
+//** Border color for elements within panels
+@panel-inner-border:          #ddd;
+@panel-footer-bg:             #f5f5f5;
+
+@panel-default-text:          #333;
+@panel-default-border:        #ddd;
+@panel-default-heading-bg:    #f5f5f5;
+
+
+// Panels
+
+.dokan-panel-variant(@border; @heading-text-color; @heading-bg-color; @heading-border) {
+  border-color: @border;
+
+  & > .dokan-panel-heading {
+    color: @heading-text-color;
+    background-color: @heading-bg-color;
+    border-color: @heading-border;
+
+    + .dokan-panel-collapse > .dokan-panel-body {
+      border-top-color: @border;
+    }
+    .dokan-badge {
+      color: @heading-bg-color;
+      background-color: @heading-text-color;
+    }
+  }
+  & > .dokan-panel-footer {
+    + .dokan-panel-collapse > .dokan-panel-body {
+      border-bottom-color: @border;
+    }
+  }
+}
+
+// Base class
+.dokan-panel {
+  margin-bottom: 20px;
+  background-color: @panel-bg;
+  border: 1px solid transparent;
+  border-radius: @panel-border-radius;
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+          box-shadow: 0 1px 1px rgba(0,0,0,.05);
+}
+
+// Panel contents
+.dokan-panel-body {
+  padding: @panel-body-padding;
+}
+
+// Optional heading
+.dokan-panel-heading {
+  padding: @panel-heading-padding;
+  border-bottom: 1px solid transparent;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+
+  > .dropdown .dropdown-toggle {
+    color: inherit;
+  }
+}
+
+// Within heading, strip any `h*` tag of its default margins for spacing.
+.dokan-panel-title {
+  margin-top: 0;
+  margin-bottom: 0;
+  color: inherit;
+
+  > a {
+    color: inherit;
+  }
+}
+
+// Optional footer (stays gray in every modifier class)
+.dokan-panel-footer {
+  padding: @panel-footer-padding;
+  background-color: @panel-footer-bg;
+  border-top: 1px solid @panel-inner-border;
+
+  border-bottom-right-radius: 3px;
+   border-bottom-left-radius: 3px;
+}
+
+// Contextual variations
+.dokan-panel-default {
+  .dokan-panel-variant(@panel-default-border; @panel-default-text; @panel-default-heading-bg; @panel-default-border);
+}

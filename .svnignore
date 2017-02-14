@@ -1,0 +1,16 @@
+bin
+node_modules
+assets/src
+assets/css/style.css.map
+tests
+nbproject
+Gruntfile.js
+package.json
+docs.md
+changelog.txt
+.gitignore
+.travis.yml
+debug.log
+phpunit.xml
+.svnignore
+plugin-deploy.sh
