@@ -657,7 +657,7 @@ function dokan_get_template_part( $slug, $name = '', $args = array() ) {
     /**
      * Change template directory path filter
      *
-     * @since 2.6
+     * @since 2.5.3
      */
     $template_path = apply_filters( 'dokan_set_template_path', $dokan->plugin_path() . '/templates', $template, $args );
 

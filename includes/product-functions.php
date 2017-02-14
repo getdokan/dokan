@@ -150,7 +150,7 @@ function dokan_save_product( $args ) {
 /**
  * Show options for the variable product type.
  *
- * @since 2.6
+ * @since 2.5.3
  *
  * @return void
  */
