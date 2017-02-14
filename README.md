@@ -111,4 +111,4 @@ And much more. Checkout the [**Pro Version**](https://wedevs.com/products/plugin
 
 ## Author
 
-Brought to you by [Tareq Hasan](http://tareq.wedevs.com) from [weDevs](http://wedevs.com)
+Brought to you by [Tareq Hasan](http://tareq.co) from [weDevs](http://wedevs.com)
