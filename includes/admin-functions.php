@@ -544,7 +544,7 @@ add_action( 'pending_to_publish', 'dokan_send_notification_on_product_publish' )
 /**
  * Display form field with list of authors.
  *
- * @since 2.6.0
+ * @since 2.5.3
  *
  * @param object $post
  */

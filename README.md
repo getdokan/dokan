@@ -99,8 +99,9 @@ And much more. Checkout the [**Pro Version**](https://wedevs.com/products/plugin
 
 
 ## Minimum Requirement
- - PHP 5.3
+ - PHP 5.4+
  - WordPress 4.0+
+ - WooCommerce 2.4+
 
 ## Installation
   Just clone the repository inside /wp-content/plugins/ and active your plugin from your plugins menu
