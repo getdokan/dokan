@@ -1,11 +1,11 @@
 <?php
 /*
-Plugin Name: Dokan - Multi-vendor Marketplace
+Plugin Name: Dokan (Lite) - Multi-vendor Marketplace
 Plugin URI: https://wordpress.org/plugins/dokan-lite/
 Description: An e-commerce marketplace plugin for WordPress. Powered by WooCommerce and weDevs.
 Version: 2.5.3
-Author: weDevs
-Author URI: http://wedevs.com/
+Author: Tareq Hasan
+Author URI: http://tareq.co/
 License: GPL2
 */
 

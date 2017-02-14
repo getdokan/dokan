@@ -38,7 +38,7 @@ Profit doesn’t only rely on sales. Multiple ways allow earning through vendor 
 
 As a an admin, you can use Dokan in a way where you can control everything that happens in your marketplace. Product publishing, vendor registration, subscription renewal and every other vendor activity can be re routed through you.
 
-> Get the [**Pro Version**](https://wedevs.com/products/plugins/dokan/?utm_source=wporg&utm_medium=cta&utm_campaign=dokan-lite) with bunch of super features, updates and scope for powerful add-ons.
+> Get the [**Pro Version**](https://wedevs.com/dokan/?utm_source=wporg&utm_medium=cta&utm_campaign=dokan-lite) with bunch of super features, updates and scope for powerful add-ons.
 
 = Features =
 **Marketplace with Independent Stores**
@@ -107,10 +107,13 @@ The admin panel gives you some powerful management tools
     * Store contact widget
     * Store location widget
 
-And much more. Checkout the [**Pro Version**](https://wedevs.com/products/plugins/dokan/?utm_source=wporg&utm_medium=footer&utm_campaign=dokan-lite)
+And much more. Checkout the [**Pro Version**](https://wedevs.com/dokan/?utm_source=wporg&utm_medium=cta&utm_campaign=dokan-lite)
+
+= Contribute =
+This may have bugs and lack of many features. If you want to contribute on this project, you are more than welcome. Please fork the repository from [Github](https://github.com/weDevsOfficial/dokan).
 
 = Author =
-Brought to you by [Tareq Hasan](http://tareq.wedevs.com) from [weDevs](http://wedevs.com)
+Brought to you by [Tareq Hasan](http://tareq.co) from [weDevs](http://wedevs.com)
 
 == Installation ==
 
@@ -147,7 +150,6 @@ A. Obviously, you can use this on a single seller site to give them a nice front
 
 = Q. How to upgrade to the Pro version?
 A. You just delete the free version and install and activate the pro version. Nothing complicated! All your data will be safe on the database and some extra features will be added. You can even ask the support team to help you to migrate.
-
 
 == Screenshots ==
 
