@@ -171,12 +171,11 @@ class Dokan_Template_Products {
                             wp_set_object_terms( $product_id, $cat_ids, 'product_cat' );
                         }
                     }
-                    if ( isset( $_POST['product_type'] ) ) {
-                        wp_set_object_terms( $product_id, $_POST['product_type'], 'product_type' );
-                    } else {
-                        /** Set Product type by default simple */
-                        wp_set_object_terms( $product_id, 'simple', 'product_type' );
-                    }
+                    
+                    /** Set Product type, default is simple */
+                    $product_type = empty( $_POST['product_type'] ) ? 'simple' : stripslashes( $_POST['product_type'] );
+                    wp_set_object_terms( $product_id, $product_type, 'product_type' );
+
                     update_post_meta( $product_id, '_regular_price', $price );
                     update_post_meta( $product_id, '_sale_price', '' );
                     update_post_meta( $product_id, '_price', $price );
@@ -253,9 +252,10 @@ class Dokan_Template_Products {
                         wp_set_object_terms( $post_id, $cat_ids, 'product_cat' );
                     }
                 }
-
-                //set default prodcuct type as simple
-                wp_set_object_terms( $post_id, 'simple', 'product_type' );
+                
+                //set prodcuct type default is simple
+                $product_type = empty( $_POST['product_type'] ) ? 'simple' : stripslashes( $_POST['product_type'] );
+                wp_set_object_terms( $post_id, $product_type, 'product_type' );
 
                 /**  Process all variation products meta */
                 dokan_process_product_meta( $post_id );
