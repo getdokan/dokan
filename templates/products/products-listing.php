@@ -32,18 +32,16 @@
             <article class="dokan-product-listing-area">
 
                 <div class="product-listing-top dokan-clearfix">
+                    <?php dokan_product_listing_status_filter(); ?>
 
-                    <?php dokan_product_listing_status_filter();
-
-                    $user_id = get_current_user_id();
-
-                    if ( dokan_is_seller_enabled( $user_id ) ) {
-                        echo '<span class="dokan-add-product-link">
-                        <a href="'.dokan_get_navigation_url( 'new-product' ).'" class="dokan-btn dokan-btn-theme dokan-right dokan-add-new-product"><i class="fa fa-briefcase">&nbsp;</i>'.__( 'Add new product', 'dokan' ).'</a>
-                        </span>';
-                    }
-                    ?>
-                    
+                    <?php if ( dokan_is_seller_enabled( get_current_user_id() ) ): ?>
+                        <span class="dokan-add-product-link">
+                            <a href="<?php echo dokan_get_navigation_url( 'new-product' ); ?>" class="dokan-btn dokan-btn-theme dokan-right <?php echo ( 'on' == dokan_get_option( 'disable_product_popup', 'dokan_selling', 'off' ) ) ? '' : 'dokan-add-new-product'; ?>">
+                                <i class="fa fa-briefcase">&nbsp;</i>
+                                <?php _e( 'Add new product', 'dokan' ); ?>
+                            </a>
+                        </span>
+                    <?php endif; ?>
                 </div>
 
                 <?php dokan_product_dashboard_errors(); ?>

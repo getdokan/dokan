@@ -261,6 +261,13 @@ class Dokan_Admin_Settings {
                     'type'    => 'checkbox',
                     'default' => 'on'
                 ),
+                'disable_product_popup' => array(
+                    'name'    => 'disable_product_popup',
+                    'label'   => __( 'Disable Product Popup', 'dokan' ),
+                    'desc'    => __( 'Disable add new product popup view', 'dokan' ),
+                    'type'    => 'checkbox',
+                    'default' => 'off'
+                ),
             ),
             'dokan_withdraw' => array(
                 'withdraw_methods' => array(

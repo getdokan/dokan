@@ -36,7 +36,7 @@
 
                                 <div class="dokan-input-group">
                                     <span class="dokan-input-group-addon"><?php echo get_woocommerce_currency_symbol(); ?></span>
-                                    <input type="text" class="dokan-form-control" name="_regular_price" placeholder="0.00">
+                                    <input type="number" class="dokan-form-control" name="_regular_price" placeholder="0.00" min="0" step="any">
                                 </div>
                             </div>
 
@@ -49,7 +49,7 @@
 
                                 <div class="dokan-input-group">
                                     <span class="dokan-input-group-addon"><?php echo get_woocommerce_currency_symbol(); ?></span>
-                                    <input type="text" class="dokan-form-control" name="_sale_price" placeholder="0.00">
+                                    <input type="number" class="dokan-form-control" name="_sale_price" placeholder="0.00" min="0" step="any">
                                 </div>
                             </div>
                         </div>

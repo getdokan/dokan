@@ -9,7 +9,7 @@
  */
 function dokan_process_product_meta( $post_id ) {
     global $wpdb, $woocommerce, $woocommerce_errors;
-    
+
     $product_type = empty( $_POST['product_type'] ) ? 'simple' : stripslashes( $_POST['product_type'] );
     // Add any default post meta
     add_post_meta( $post_id, 'total_sales', '0', true );
@@ -55,7 +55,7 @@ function dokan_process_product_meta( $post_id ) {
     }
 
     update_post_meta( $post_id, '_visibility', stripslashes( $_POST['_visibility'] ) );
-    
+
     // Unique SKU
     $sku     = get_post_meta( $post_id, '_sku', true );
     $new_sku = (string) wc_clean( $_POST['_sku'] );
@@ -192,7 +192,7 @@ function dokan_process_product_meta( $post_id ) {
     }
 
     update_post_meta( $post_id, '_product_attributes', $attributes );
-    
+
     // Sales and prices
     $date_from     = (string) isset( $_POST['_sale_price_dates_from'] ) ? wc_clean( $_POST['_sale_price_dates_from'] ) : '';
     $date_to       = (string) isset( $_POST['_sale_price_dates_to'] ) ? wc_clean( $_POST['_sale_price_dates_to'] )     : '';
@@ -226,15 +226,15 @@ function dokan_process_product_meta( $post_id ) {
         update_post_meta( $post_id, '_sale_price_dates_from', '' );
         update_post_meta( $post_id, '_sale_price_dates_to', '' );
     }
-    
-    
+
+
     //enable reviews
     $comment_status = 'closed';
-    
+
     if ( $_POST['_enable_reviews'] == 'yes' ) {
         $comment_status = 'open';
     }
-    
+
     // Update the post into the database
     wp_update_post( array(
         'ID'           => $post_id,

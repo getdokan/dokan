@@ -169,13 +169,13 @@ if ( ! $from_shortcode ) {
                                         <?php _e( 'Please enter product title!', 'dokan' ); ?>
                                     </div>
                                 </div>
-                                
+
                                 <?php $product_types = apply_filters( 'dokan_product_types', 'simple' ); ?>
-                                
+
                                 <?php if( 'simple' === $product_types ): ?>
                                         <input type="hidden" id="product_type" name="product_type" value="simple">
                                 <?php endif; ?>
-                                        
+
                                 <?php if ( is_array( $product_types ) ): ?>
                                     <div class="dokan-form-group">
                                         <label for="product_type" class="form-label"><?php _e( 'Product Type', 'dokan' ); ?> <i class="fa fa-question-circle tips" aria-hidden="true" data-title="<?php _e( 'Choose Variable if your product has multiple attributes - like sizes, colors, quality etc', 'dokan' ); ?>"></i></label>

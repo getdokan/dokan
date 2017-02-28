@@ -224,6 +224,11 @@ class Dokan_Template_Products {
                     }
 
                     $redirect = apply_filters( 'dokan_add_new_product_redirect', dokan_edit_product_url( $product_id ), $product_id );
+
+                    if ( 'create_and_add_new' === $_POST['add_product'] ) {
+                        $redirect = add_query_arg( array( 'created_product' => $product_id ), dokan_get_navigation_url( 'new-product' ) );
+                    }
+
                     wp_redirect( $redirect );
                     exit;
                 }

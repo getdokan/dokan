@@ -56,6 +56,14 @@
                 </div>
             <?php } ?>
 
+            <?php if ( isset( $_GET['created_product'] ) ): ?>
+                <div class="dokan-alert dokan-alert-success">
+                    <a class="dokan-close" data-dismiss="alert">&times;</a>
+                    <strong><?php _e( 'Success!', 'dokan' ); ?></strong>
+                    <?php echo sprintf( __( 'You have successfully created <a href="%s"><strong>%s</strong></a> product', 'dokan' ), dokan_edit_product_url( intval( $_GET['created_product'] ) ), get_the_title( intval( $_GET['created_product'] ) ) ); ?>
+                </div>
+            <?php endif ?>
+
             <?php
 
             $can_sell = apply_filters( 'dokan_can_post', true );
@@ -66,7 +74,7 @@
 
                     <form class="dokan-form-container" method="post">
 
-                        <div class="row product-edit-container dokan-clearfix">
+                        <div class="product-edit-container dokan-clearfix">
                             <div class="content-half-part featured-image">
                                 <div class="dokan-feat-image-upload">
                                     <div class="instruction-inside">
@@ -93,7 +101,7 @@
 
                                             <div class="dokan-input-group">
                                                 <span class="dokan-input-group-addon"><?php echo get_woocommerce_currency_symbol(); ?></span>
-                                                <input type="text" class="dokan-form-control" name="_regular_price" placeholder="0.00">
+                                                <input type="number" class="dokan-form-control" name="_regular_price" placeholder="0.00" min="0" step="any">
                                             </div>
                                         </div>
 
@@ -106,7 +114,7 @@
 
                                             <div class="dokan-input-group">
                                                 <span class="dokan-input-group-addon"><?php echo get_woocommerce_currency_symbol(); ?></span>
-                                                <input type="text" class="dokan-form-control" name="_sale_price" placeholder="0.00">
+                                                <input type="number" class="dokan-form-control" name="_sale_price" placeholder="0.00" min="0" step="any">
                                             </div>
                                         </div>
                                     </div>
@@ -201,16 +209,20 @@
                             </div>
                         </div>
 
-                        <!-- <textarea name="post_content" id="" cols="30" rows="10" class="span7" placeholder="Describe your product..."><?php echo dokan_posted_textarea( 'post_content' ); ?></textarea> -->
                         <div class="dokan-form-group">
                             <?php wp_editor( Dokan_Template_Products::$post_content, 'post_content', array('editor_height' => 50, 'quicktags' => false, 'media_buttons' => false, 'teeny' => true, 'editor_class' => 'post_content') ); ?>
                         </div>
 
                         <?php do_action( 'dokan_new_product_form' ); ?>
 
-                        <div class="dokan-form-group">
+                        <hr>
+
+                        <div class="dokan-form-group dokan-right">
                             <?php wp_nonce_field( 'dokan_add_new_product', 'dokan_add_new_product_nonce' ); ?>
-                            <input type="submit" name="add_product" class="dokan-btn dokan-btn-danger dokan-btn-theme" value="<?php esc_attr_e( 'Add Product', 'dokan' ); ?>"/>
+                            <button type="submit" name="add_product" class="dokan-btn dokan-btn-default" value="create_and_add_new"><?php esc_attr_e( 'Create & Add New', 'dokan' ); ?></button>
+                            <button type="submit" name="add_product" class="dokan-btn dokan-btn-default dokan-btn-theme" value="create_new"><?php esc_attr_e( 'Create Product', 'dokan' ); ?></button>
+                            <!-- <input type="submit" name="add_product" class="dokan-btn dokan-btn-default" value=""/> -->
+                            <!-- <input type="submit" name="add_product" class="dokan-btn dokan-btn-danger dokan-btn-theme" value="<?php esc_attr_e( 'Create Product', 'dokan' ); ?>"/> -->
                         </div>
 
                     </form>
