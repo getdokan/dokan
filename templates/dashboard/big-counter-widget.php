@@ -22,7 +22,7 @@
         </li>
         <li>
             <div class="title"><?php _e( 'Earning', 'dokan' ); ?></div>
-            <div class="count"><?php echo $seller_balance; ?></div>
+            <div class="count"><?php echo wc_price( dokan_get_seller_earnings( get_current_user_id() ) ) ?></div>
         </li>
         <li>
             <div class="title"><?php _e( 'Pageview', 'dokan' ); ?></div>
