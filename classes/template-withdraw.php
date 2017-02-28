@@ -113,15 +113,14 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
      * @return void
      */
     public function show_seller_balance() {
-        
-        $balance        = dokan_get_seller_balance( get_current_user_id() );
+        $balance        = dokan_get_seller_balance( get_current_user_id(), true );
         $withdraw_limit = dokan_get_option( 'withdraw_limit', 'dokan_withdraw', -1 );
         $threshold      = dokan_get_option( 'withdraw_date_limit', 'dokan_withdraw', -1 );
 
-        $message = sprintf( __('Current Balance: %d '),$balance );
-        
+        $message = sprintf( __('Current Balance: %s '), $balance );
+
         if ( $withdraw_limit != -1 ) {
-            $message .= sprintf( __('<br>Minimum Withdraw amount: %d '), $withdraw_limit );
+            $message .= sprintf( __('<br>Minimum Withdraw amount: %s '), wc_price( $withdraw_limit ) );
         }
         if ( $threshold != -1 ) {
             $message .= sprintf( __('<br>Withdraw Threshold: %d days '), $threshold );
@@ -319,9 +318,9 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
         }
 
         if ( $this->has_pending_request( $current_user->ID ) ) {
-            
+
             $req_success = isset( $_GET['message'] ) ? $_GET['message'] : false;
-            
+
             if( !$req_success ) {
                 $pending_warning = sprintf( "<p>%s</p><p>%s</p>", __( 'You already have pending withdraw request(s).', 'dokan' ), __( 'Please submit your request after approval or cancellation of your previous request.', 'dokan' ) );
 
@@ -330,7 +329,7 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
                     'message' => $pending_warning
                 ) );
             }
-            
+
             $this->withdraw_requests( $current_user->ID );
             return;
 
