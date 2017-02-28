@@ -87,10 +87,45 @@
                                 </div>
 
                                 <div class="dokan-form-group">
-                                    <div class="dokan-input-group">
-                                        <span class="dokan-input-group-addon"><?php echo get_woocommerce_currency_symbol(); ?></span>
-                                        <input class="dokan-form-control" name="price" id="product-price" type="text" placeholder="0.00" value="<?php echo dokan_posted_input( 'price' ); ?>">
+                                    <div class="dokan-form-group dokan-clearfix dokan-price-container">
+                                        <div class="content-half-part">
+                                            <label for="_regular_price" class="form-label"><?php _e( 'Price', 'dokan' ); ?></label>
+
+                                            <div class="dokan-input-group">
+                                                <span class="dokan-input-group-addon"><?php echo get_woocommerce_currency_symbol(); ?></span>
+                                                <input type="text" class="dokan-form-control" name="_regular_price" placeholder="0.00">
+                                            </div>
+                                        </div>
+
+                                        <div class="content-half-part sale-price">
+                                            <label for="_sale_price" class="form-label">
+                                                <?php _e( 'Discounted Price', 'dokan' ); ?>
+                                                <a href="#" class="sale_schedule"><?php _e( 'Schedule', 'dokan' ); ?></a>
+                                                <a href="#" class="cancel_sale_schedule dokan-hide"><?php _e( 'Cancel', 'dokan' ); ?></a>
+                                            </label>
+
+                                            <div class="dokan-input-group">
+                                                <span class="dokan-input-group-addon"><?php echo get_woocommerce_currency_symbol(); ?></span>
+                                                <input type="text" class="dokan-form-control" name="_sale_price" placeholder="0.00">
+                                            </div>
+                                        </div>
                                     </div>
+
+                                    <div class="dokan-hide sale-schedule-container sale_price_dates_fields dokan-clearfix dokan-form-group">
+                                        <div class="content-half-part from">
+                                            <div class="dokan-input-group">
+                                                <span class="dokan-input-group-addon"><?php _e( 'From', 'dokan' ); ?></span>
+                                                <input type="text" name="_sale_price_dates_from" class="dokan-form-control datepicker sale_price_dates_from" value="" maxlength="10" pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])" placeholder="YYYY-MM-DD">
+                                            </div>
+                                        </div>
+
+                                        <div class="content-half-part to">
+                                            <div class="dokan-input-group">
+                                                <span class="dokan-input-group-addon"><?php _e( 'To', 'dokan' ); ?></span>
+                                                <input type="text" name="_sale_price_dates_to" class="dokan-form-control datepicker sale_price_dates_to" value="" maxlength="10" pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])" placeholder="YYYY-MM-DD">
+                                            </div>
+                                        </div>
+                                    </div><!-- .sale-schedule-container -->
                                 </div>
 
                                 <div class="dokan-form-group">
