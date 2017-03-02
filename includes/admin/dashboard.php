@@ -29,10 +29,10 @@ function dokan_admin_dash_widget_news() {
 }
 
 function dokan_admin_dash_metabox_glance() {
-    $user_count = count_users();
+    $user_count      = count_users();
     $withdraw_counts = dokan_get_withdraw_count();
-    $seller_counts = dokan_get_seller_count();
-    $total_seller = isset( $user_count['avail_roles']['seller'] ) ? $user_count['avail_roles']['seller'] : 0;
+    $seller_counts   = dokan_get_seller_count();
+    $total_seller    = isset( $user_count['avail_roles']['seller'] ) ? $user_count['avail_roles']['seller'] : 0;
     ?>
 
     <div class="dokan-left">
@@ -47,19 +47,19 @@ function dokan_admin_dash_metabox_glance() {
                 <div class="dashicons dashicons-awards"></div>
                 <a href="<?php echo WeDevs_Dokan::init()->is_pro_exists() ? admin_url( 'admin.php?page=dokan-sellers' ) : ''; ?>">
                     <?php
-                    if ( $seller_counts['yes'] ) {
-                        printf( _n( __( '%d Active Vendor', 'dokan' ), __( '%d Active Vendors', 'dokan' ), $seller_counts['yes'], 'dokan' ), $seller_counts['yes'] );
+                    if ( $seller_counts['active'] ) {
+                        printf( _n( __( '%d Active Vendor', 'dokan' ), __( '%d Active Vendors', 'dokan' ), $seller_counts['active'], 'dokan' ), $seller_counts['active'] );
                     } else {
                         _e( 'No Active Vendor', 'dokan' );
                     }  ?>
                 </a>
             </li>
-            <li class="seller-count <?php echo ($seller_counts['no'] < 1) ? 'mark-green' : 'mark-red'; ?>">
+            <li class="seller-count <?php echo ($seller_counts['inactive'] < 1) ? 'mark-green' : 'mark-red'; ?>">
                 <div class="dashicons dashicons-editor-help"></div>
                 <a href="<?php echo WeDevs_Dokan::init()->is_pro_exists() ? admin_url( 'admin.php?page=dokan-sellers' ) : ''; ?>">
                     <?php
-                    if ( $seller_counts['no'] ) {
-                        printf( _n( __( '%d Pending Vendor', 'dokan' ), __( '%d Pending Vendors', 'dokan' ), $seller_counts['no'], 'dokan' ), $seller_counts['no'] );
+                    if ( $seller_counts['inactive'] ) {
+                        printf( _n( __( '%d Pending Vendor', 'dokan' ), __( '%d Pending Vendors', 'dokan' ), $seller_counts['inactive'], 'dokan' ), $seller_counts['inactive'] );
                     } else {
                         _e( 'No Pending Vendor', 'dokan' );
                     }  ?>

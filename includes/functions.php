@@ -1171,25 +1171,26 @@ add_action( 'user_register', 'dokan_admin_user_register' );
  * @return array
  */
 function dokan_get_seller_count() {
-    global $wpdb;
 
+    $inactive_sellers = dokan_get_sellers( array(
+        'number'     => -1,
+        'meta_query' => array(
+            array(
+                'key'     => 'dokan_enable_selling',
+                'value'   => 'no',
+                'compare' => '='
+            )
+        )
+    ) );
 
-    $counts = array( 'yes' => 0, 'no' => 0 );
+    $active_sellers = dokan_get_sellers( array(
+        'number' => -1,
+    ) );
 
-    $result = $wpdb->get_results( "SELECT COUNT(um.user_id) as count, um1.meta_value as type
-                FROM $wpdb->usermeta um
-                LEFT JOIN $wpdb->usermeta um1 ON um1.user_id = um.user_id
-                WHERE um.meta_key = 'wp_capabilities' AND um1.meta_key = 'dokan_enable_selling'
-                AND um.meta_value LIKE '%seller%'
-                GROUP BY um1.meta_value" );
-
-    if ( $result ) {
-        foreach ($result as $row) {
-            $counts[$row->type] = (int) $row->count;
-        }
-    }
-
-    return $counts;
+    return array(
+        'inactive' => $inactive_sellers['count'],
+        'active'   => $active_sellers['count']
+    );
 }
 
 /**
