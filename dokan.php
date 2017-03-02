@@ -106,7 +106,7 @@ final class WeDevs_Dokan {
             require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
             deactivate_plugins( plugin_basename( __FILE__ ) );
 
-            wp_die( '<div class="error"><p>' . sprintf( __( '<b>Dokan</b> requires %sWooCommerce%s to be installed & activated!', 'dokan' ), '<a target="_blank" href="https://wordpress.org/plugins/woocommerce/">', '</a>' ) . '</p></div>' );
+            wp_die( '<div class="error"><p>' . sprintf( __( '<b>Dokan</b> requires %sWooCommerce%s to be installed & activated!', 'dokan-lite' ), '<a target="_blank" href="https://wordpress.org/plugins/woocommerce/">', '</a>' ) . '</p></div>' );
         }
 
         global $wpdb;
@@ -292,16 +292,16 @@ final class WeDevs_Dokan {
                 'nonce'       => wp_create_nonce( 'dokan_reviews' ),
                 'ajax_loader' => plugins_url( 'assets/images/ajax-loader.gif', __FILE__ ),
                 'seller'      => array(
-                    'available'    => __( 'Available', 'dokan' ),
-                    'notAvailable' => __( 'Not Available', 'dokan' )
+                    'available'    => __( 'Available', 'dokan-lite' ),
+                    'notAvailable' => __( 'Not Available', 'dokan-lite' )
                 ),
-                'delete_confirm' => __('Are you sure?', 'dokan' ),
-                'wrong_message'  => __('Something went wrong. Please try again.', 'dokan' ),
+                'delete_confirm' => __('Are you sure?', 'dokan-lite' ),
+                'wrong_message'  => __('Something went wrong. Please try again.', 'dokan-lite' ),
         );
 
         $localize_script = apply_filters( 'dokan_localized_args', $default_script );
 
-        wp_localize_script( 'jquery', 'dokan', $localize_script );
+        wp_localize_script( 'jquery', 'dokan-lite', $localize_script );
 
         // load only in dokan dashboard and product edit page
         if ( ( dokan_is_seller_dashboard() || ( get_query_var( 'edit' ) && is_singular( 'product' ) ) ) || apply_filters( 'dokan_forced_load_scripts', false ) ) {
@@ -358,16 +358,16 @@ final class WeDevs_Dokan {
             $has_flex_height  = ! empty( $general_settings['store_banner_flex_height'] ) ? $general_settings['store_banner_flex_height'] : true;
 
             $custom_args             = array (
-                'i18n_choose_featured_img'            => __( 'Upload featured image', 'dokan' ),
-                'i18n_choose_file'                    => __( 'Choose a file', 'dokan' ),
-                'i18n_choose_gallery'                 => __( 'Add Images to Product Gallery', 'dokan' ),
-                'i18n_choose_featured_img_btn_text'   => __( 'Set featured image', 'dokan' ),
-                'i18n_choose_file_btn_text'           => __( 'Insert file URL', 'dokan' ),
-                'i18n_choose_gallery_btn_text'        => __( 'Add to gallery', 'dokan' ),
-                'duplicates_attribute_messg'          => __( 'Sorry, this attribute option already exists, Try a different one.', 'dokan' ),
-                'variation_unset_warning'             => __( 'Warning! This product will not have any variations if this option is not checked.', 'dokan' ),
-                'new_attribute_prompt'                => __( 'Enter a name for the new attribute term:', 'dokan' ),
-                'remove_attribute'                    => __( 'Remove this attribute?', 'dokan' ),
+                'i18n_choose_featured_img'            => __( 'Upload featured image', 'dokan-lite' ),
+                'i18n_choose_file'                    => __( 'Choose a file', 'dokan-lite' ),
+                'i18n_choose_gallery'                 => __( 'Add Images to Product Gallery', 'dokan-lite' ),
+                'i18n_choose_featured_img_btn_text'   => __( 'Set featured image', 'dokan-lite' ),
+                'i18n_choose_file_btn_text'           => __( 'Insert file URL', 'dokan-lite' ),
+                'i18n_choose_gallery_btn_text'        => __( 'Add to gallery', 'dokan-lite' ),
+                'duplicates_attribute_messg'          => __( 'Sorry, this attribute option already exists, Try a different one.', 'dokan-lite' ),
+                'variation_unset_warning'             => __( 'Warning! This product will not have any variations if this option is not checked.', 'dokan-lite' ),
+                'new_attribute_prompt'                => __( 'Enter a name for the new attribute term:', 'dokan-lite' ),
+                'remove_attribute'                    => __( 'Remove this attribute?', 'dokan-lite' ),
                 'dokan_placeholder_img_src'           => wc_placeholder_img_src(),
                 'add_variation_nonce'                 => wp_create_nonce( 'add-variation' ),
                 'link_variation_nonce'                => wp_create_nonce( 'link-variations' ),
@@ -375,27 +375,27 @@ final class WeDevs_Dokan {
                 'load_variations_nonce'               => wp_create_nonce( 'load-variations' ),
                 'save_variations_nonce'               => wp_create_nonce( 'save-variations' ),
                 'bulk_edit_variations_nonce'          => wp_create_nonce( 'bulk-edit-variations' ),
-                'i18n_link_all_variations'            => esc_js( sprintf( __( 'Are you sure you want to link all variations? This will create a new variation for each and every possible combination of variation attributes (max %d per run).', 'dokan' ), defined( 'WC_MAX_LINKED_VARIATIONS' ) ? WC_MAX_LINKED_VARIATIONS : 50 ) ),
-                'i18n_enter_a_value'                  => esc_js( __( 'Enter a value', 'dokan' ) ),
-                'i18n_enter_menu_order'               => esc_js( __( 'Variation menu order (determines position in the list of variations)', 'dokan' ) ),
-                'i18n_enter_a_value_fixed_or_percent' => esc_js( __( 'Enter a value (fixed or %)', 'dokan' ) ),
-                'i18n_delete_all_variations'          => esc_js( __( 'Are you sure you want to delete all variations? This cannot be undone.', 'dokan' ) ),
-                'i18n_last_warning'                   => esc_js( __( 'Last warning, are you sure?', 'dokan' ) ),
-                'i18n_choose_image'                   => esc_js( __( 'Choose an image', 'dokan' ) ),
-                'i18n_set_image'                      => esc_js( __( 'Set variation image', 'dokan' ) ),
-                'i18n_variation_added'                => esc_js( __( "variation added", 'dokan' ) ),
-                'i18n_variations_added'               => esc_js( __( "variations added", 'dokan' ) ),
-                'i18n_no_variations_added'            => esc_js( __( "No variations added", 'dokan' ) ),
-                'i18n_remove_variation'               => esc_js( __( 'Are you sure you want to remove this variation?', 'dokan' ) ),
-                'i18n_scheduled_sale_start'           => esc_js( __( 'Sale start date (YYYY-MM-DD format or leave blank)', 'dokan' ) ),
-                'i18n_scheduled_sale_end'             => esc_js( __( 'Sale end date (YYYY-MM-DD format or leave blank)', 'dokan' ) ),
-                'i18n_edited_variations'              => esc_js( __( 'Save changes before changing page?', 'dokan' ) ),
-                'i18n_variation_count_single'         => esc_js( __( '%qty% variation', 'dokan' ) ),
-                'i18n_variation_count_plural'         => esc_js( __( '%qty% variations', 'dokan' ) ),
+                'i18n_link_all_variations'            => esc_js( sprintf( __( 'Are you sure you want to link all variations? This will create a new variation for each and every possible combination of variation attributes (max %d per run).', 'dokan-lite' ), defined( 'WC_MAX_LINKED_VARIATIONS' ) ? WC_MAX_LINKED_VARIATIONS : 50 ) ),
+                'i18n_enter_a_value'                  => esc_js( __( 'Enter a value', 'dokan-lite' ) ),
+                'i18n_enter_menu_order'               => esc_js( __( 'Variation menu order (determines position in the list of variations)', 'dokan-lite' ) ),
+                'i18n_enter_a_value_fixed_or_percent' => esc_js( __( 'Enter a value (fixed or %)', 'dokan-lite' ) ),
+                'i18n_delete_all_variations'          => esc_js( __( 'Are you sure you want to delete all variations? This cannot be undone.', 'dokan-lite' ) ),
+                'i18n_last_warning'                   => esc_js( __( 'Last warning, are you sure?', 'dokan-lite' ) ),
+                'i18n_choose_image'                   => esc_js( __( 'Choose an image', 'dokan-lite' ) ),
+                'i18n_set_image'                      => esc_js( __( 'Set variation image', 'dokan-lite' ) ),
+                'i18n_variation_added'                => esc_js( __( "variation added", 'dokan-lite' ) ),
+                'i18n_variations_added'               => esc_js( __( "variations added", 'dokan-lite' ) ),
+                'i18n_no_variations_added'            => esc_js( __( "No variations added", 'dokan-lite' ) ),
+                'i18n_remove_variation'               => esc_js( __( 'Are you sure you want to remove this variation?', 'dokan-lite' ) ),
+                'i18n_scheduled_sale_start'           => esc_js( __( 'Sale start date (YYYY-MM-DD format or leave blank)', 'dokan-lite' ) ),
+                'i18n_scheduled_sale_end'             => esc_js( __( 'Sale end date (YYYY-MM-DD format or leave blank)', 'dokan-lite' ) ),
+                'i18n_edited_variations'              => esc_js( __( 'Save changes before changing page?', 'dokan-lite' ) ),
+                'i18n_variation_count_single'         => esc_js( __( '%qty% variation', 'dokan-lite' ) ),
+                'i18n_variation_count_plural'         => esc_js( __( '%qty% variations', 'dokan-lite' ) ),
                 'variations_per_page'                 => absint( apply_filters( 'dokan_product_variations_per_page', 10 ) ),
                 'store_banner_dimension'              => [ 'width' => $banner_width, 'height' => $banner_height, 'flex-width' => $has_flex_width, 'flex-height' => $has_flex_height ],
-                'selectAndCrop'                       => __( 'Select and Crop', 'dokan' ),
-                'chooseImage'                         => __( 'Choose Image', 'dokan' )
+                'selectAndCrop'                       => __( 'Select and Crop', 'dokan-lite' ),
+                'chooseImage'                         => __( 'Choose Image', 'dokan-lite' )
             );
 
             $default_args = array_merge( $default_args, $custom_args );
@@ -428,22 +428,22 @@ final class WeDevs_Dokan {
     function load_form_validate_script() {
 
         $form_validate_messages = array(
-            'required'        => __( "This field is required", 'dokan' ),
-            'remote'          => __( "Please fix this field.", 'dokan' ),
-            'email'           => __( "Please enter a valid email address.", 'dokan' ),
-            'url'             => __( "Please enter a valid URL.", 'dokan' ),
-            'date'            => __( "Please enter a valid date.", 'dokan' ),
-            'dateISO'         => __( "Please enter a valid date (ISO).", 'dokan' ),
-            'number'          => __( "Please enter a valid number.", 'dokan' ),
-            'digits'          => __( "Please enter only digits.", 'dokan' ),
-            'creditcard'      => __( "Please enter a valid credit card number.", 'dokan' ),
-            'equalTo'         => __( "Please enter the same value again.", 'dokan' ),
-            'maxlength_msg'   => __( "Please enter no more than {0} characters.", 'dokan' ),
-            'minlength_msg'   => __( "Please enter at least {0} characters.", 'dokan' ),
-            'rangelength_msg' => __( "Please enter a value between {0} and {1} characters long.", 'dokan' ),
-            'range_msg'       => __( "Please enter a value between {0} and {1}.", 'dokan' ),
-            'max_msg'         => __( "Please enter a value less than or equal to {0}.", 'dokan' ),
-            'min_msg'         => __( "Please enter a value greater than or equal to {0}.", 'dokan' ),
+            'required'        => __( "This field is required", 'dokan-lite' ),
+            'remote'          => __( "Please fix this field.", 'dokan-lite' ),
+            'email'           => __( "Please enter a valid email address.", 'dokan-lite' ),
+            'url'             => __( "Please enter a valid URL.", 'dokan-lite' ),
+            'date'            => __( "Please enter a valid date.", 'dokan-lite' ),
+            'dateISO'         => __( "Please enter a valid date (ISO).", 'dokan-lite' ),
+            'number'          => __( "Please enter a valid number.", 'dokan-lite' ),
+            'digits'          => __( "Please enter only digits.", 'dokan-lite' ),
+            'creditcard'      => __( "Please enter a valid credit card number.", 'dokan-lite' ),
+            'equalTo'         => __( "Please enter the same value again.", 'dokan-lite' ),
+            'maxlength_msg'   => __( "Please enter no more than {0} characters.", 'dokan-lite' ),
+            'minlength_msg'   => __( "Please enter at least {0} characters.", 'dokan-lite' ),
+            'rangelength_msg' => __( "Please enter a value between {0} and {1} characters long.", 'dokan-lite' ),
+            'range_msg'       => __( "Please enter a value between {0} and {1}.", 'dokan-lite' ),
+            'max_msg'         => __( "Please enter a value less than or equal to {0}.", 'dokan-lite' ),
+            'min_msg'         => __( "Please enter a value greater than or equal to {0}.", 'dokan-lite' ),
         );
 
         wp_localize_script( 'dokan-form-validate', 'DokanValidateMsg', apply_filters( 'DokanValidateMsg_args', $form_validate_messages ) );
@@ -746,7 +746,7 @@ final class WeDevs_Dokan {
 
             // Add a page number if necessary.
             if ( $paged >= 2 || $page >= 2 ) {
-                $title = "$title $sep " . sprintf( __( 'Page %s', 'dokan' ), max( $paged, $page ) );
+                $title = "$title $sep " . sprintf( __( 'Page %s', 'dokan-lite' ), max( $paged, $page ) );
             }
 
             return $title;
@@ -778,11 +778,11 @@ final class WeDevs_Dokan {
     function plugin_action_links( $links ) {
 
         if ( ! $this->is_pro_exists() ) {
-            $links[] = '<a href="https://wedevs.com/products/plugins/dokan/" target="_blank">' . __( 'Get PRO', 'dokan' ) . '</a>';
+            $links[] = '<a href="https://wedevs.com/products/plugins/dokan/" target="_blank">' . __( 'Get PRO', 'dokan-lite' ) . '</a>';
         }
 
-        $links[] = '<a href="' . admin_url( 'admin.php?page=dokan-settings' ) . '">' . __( 'Settings', 'dokan' ) . '</a>';
-        $links[] = '<a href="http://docs.wedevs.com/category/plugins/dokan-plugins/" target="_blank">' . __( 'Documentation', 'dokan' ) . '</a>';
+        $links[] = '<a href="' . admin_url( 'admin.php?page=dokan-settings' ) . '">' . __( 'Settings', 'dokan-lite' ) . '</a>';
+        $links[] = '<a href="http://docs.wedevs.com/category/plugins/dokan-plugins/" target="_blank">' . __( 'Documentation', 'dokan-lite' ) . '</a>';
 
         return $links;
     }

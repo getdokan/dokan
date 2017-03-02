@@ -11,7 +11,7 @@
 
 if ( isset( $_GET['order_id'] ) ) {
     ?>
-        <a href="<?php echo dokan_get_navigation_url( 'orders' ) ; ?>" class="dokan-btn"><?php _e( '&larr; Orders', 'dokan' ); ?></a>
+        <a href="<?php echo dokan_get_navigation_url( 'orders' ) ; ?>" class="dokan-btn"><?php _e( '&larr; Orders', 'dokan-lite' ); ?></a>
     <?php
 } else {
 

@@ -16,15 +16,15 @@ class Dokan_Customizer {
 
         // logo
         $wp_customize->add_section( 'dokan_logo_section', array(
-            'title' => __( 'Theme Logo', 'dokan' ),
+            'title' => __( 'Theme Logo', 'dokan-lite' ),
             'priority' => 9,
-            'description' => __( 'Upload your logo to replace the default Logo (dimension : 180 X 50)', 'dokan' ),
+            'description' => __( 'Upload your logo to replace the default Logo (dimension : 180 X 50)', 'dokan-lite' ),
         ) );
 
         $wp_customize->add_setting( 'dokan_logo' );
 
         $wp_customize->add_control( new WP_Customize_Image_Control( $wp_customize, 'dokan_logo', array(
-            'label' => __( 'Upload Logo', 'dokan' ),
+            'label' => __( 'Upload Logo', 'dokan-lite' ),
             'section' => 'dokan_logo_section',
             'settings' => 'dokan_logo',
         ) ) );
@@ -36,7 +36,7 @@ class Dokan_Customizer {
         ) );
 
         $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'dokan_link_color', array(
-            'label' => __( 'Link', 'dokan' ),
+            'label' => __( 'Link', 'dokan-lite' ),
             'section' => 'colors',
             'settings' => 'dokan_link_color',
             'priority' => 20
@@ -49,7 +49,7 @@ class Dokan_Customizer {
         ) );
 
         $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'dokan_link_hover_color', array(
-            'label' => __( 'Link hover', 'dokan' ),
+            'label' => __( 'Link hover', 'dokan-lite' ),
             'section' => 'colors',
             'settings' => 'dokan_link_hover_color',
             'priority' => 25
@@ -62,7 +62,7 @@ class Dokan_Customizer {
         ) );
 
         $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'dokan_header_bg', array(
-            'label' => __( 'Header Background', 'dokan' ),
+            'label' => __( 'Header Background', 'dokan-lite' ),
             'section' => 'colors',
             'settings' => 'dokan_header_bg',
             'priority' => 30
@@ -75,7 +75,7 @@ class Dokan_Customizer {
         ) );
 
         $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'dokan_nav_bg', array(
-            'label' => __( 'Navigation Background', 'dokan' ),
+            'label' => __( 'Navigation Background', 'dokan-lite' ),
             'section' => 'colors',
             'settings' => 'dokan_nav_bg',
             'priority' => 33
@@ -88,7 +88,7 @@ class Dokan_Customizer {
         ) );
 
         $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'dokan_nav_color', array(
-            'label' => __( 'Navigation Link', 'dokan' ),
+            'label' => __( 'Navigation Link', 'dokan-lite' ),
             'section' => 'colors',
             'settings' => 'dokan_nav_color',
             'priority' => 35
@@ -100,7 +100,7 @@ class Dokan_Customizer {
         ) );
 
         $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'dokan_nav_hover', array(
-            'label' => __( 'Navigation Link Hover', 'dokan' ),
+            'label' => __( 'Navigation Link Hover', 'dokan-lite' ),
             'section' => 'colors',
             'settings' => 'dokan_nav_hover',
             'priority' => 40
@@ -113,7 +113,7 @@ class Dokan_Customizer {
         ) );
 
         $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'dokan_footer_bg', array(
-            'label' => __( 'Footer Background', 'dokan' ),
+            'label' => __( 'Footer Background', 'dokan-lite' ),
             'section' => 'colors',
             'settings' => 'dokan_footer_bg',
             'priority' => 50
@@ -126,7 +126,7 @@ class Dokan_Customizer {
         ) );
 
         $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'dokan_footer_bottom_bar_bg_color', array(
-            'label' => __( 'Copy Container Background', 'dokan' ),
+            'label' => __( 'Copy Container Background', 'dokan-lite' ),
             'section' => 'colors',
             'settings' => 'dokan_footer_bottom_bar_bg_color',
             'priority' => 50
@@ -139,7 +139,7 @@ class Dokan_Customizer {
         ) );
 
         $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'dokan_footer_text', array(
-            'label' => __( 'Footer text', 'dokan' ),
+            'label' => __( 'Footer text', 'dokan-lite' ),
             'section' => 'colors',
             'settings' => 'dokan_footer_text',
             'priority' => 55
@@ -152,7 +152,7 @@ class Dokan_Customizer {
         ) );
 
         $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'sidebar_widget_header', array(
-            'label' => __( 'Sidebar widget header', 'dokan' ),
+            'label' => __( 'Sidebar widget header', 'dokan-lite' ),
             'section' => 'colors',
             'settings' => 'sidebar_widget_header',
             'priority' => 56
@@ -165,7 +165,7 @@ class Dokan_Customizer {
         ) );
 
         $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'footer_widget_header', array(
-            'label' => __( 'Footer widget header', 'dokan' ),
+            'label' => __( 'Footer widget header', 'dokan-lite' ),
             'section' => 'colors',
             'settings' => 'footer_widget_header',
             'priority' => 60
@@ -179,7 +179,7 @@ class Dokan_Customizer {
         ) );
 
         $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'dokan_footer_widget_link', array(
-            'label' => __( 'Footer Widget link', 'dokan' ),
+            'label' => __( 'Footer Widget link', 'dokan-lite' ),
             'section' => 'colors',
             'settings' => 'dokan_footer_widget_link',
             'priority' => 65
@@ -191,7 +191,7 @@ class Dokan_Customizer {
         ) );
 
         $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'dokan_footer_link_hover', array(
-            'label' => __( 'Footer Widget link hover', 'dokan' ),
+            'label' => __( 'Footer Widget link hover', 'dokan-lite' ),
             'section' => 'colors',
             'settings' => 'dokan_footer_link_hover',
             'priority' => 70

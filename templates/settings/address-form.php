@@ -23,12 +23,12 @@ $address_state   = isset( $profile_info['address']['state'] ) ? $profile_info['a
 <input type="hidden" id="dokan_selected_country" value="<?php echo $address_country?>" />
 <input type="hidden" id="dokan_selected_state" value="<?php echo $address_state?>" />
 <div class="dokan-form-group">
-    <label class="dokan-w3 dokan-control-label" for="setting_address"><?php _e( 'Address', 'dokan' ); ?></label>
+    <label class="dokan-w3 dokan-control-label" for="setting_address"><?php _e( 'Address', 'dokan-lite' ); ?></label>
 
     <div class="dokan-w5 dokan-text-left dokan-address-fields">
         <?php if ( $seller_address_fields['street_1'] ) { ?>
             <div class="dokan-form-group">
-                <label class="dokan-w3 control-label" for="dokan_address[street_1]"><?php _e( 'Street ', 'dokan' ); ?>
+                <label class="dokan-w3 control-label" for="dokan_address[street_1]"><?php _e( 'Street ', 'dokan-lite' ); ?>
                     <?php
                     $required_attr = '';
                     if ( $seller_address_fields['street_1']['required'] ) {
@@ -36,12 +36,12 @@ $address_state   = isset( $profile_info['address']['state'] ) ? $profile_info['a
                         <span class="required"> *</span>
                     <?php } ?>
                 </label>
-                <input <?php echo $required_attr; ?> <?php echo $disabled ?> id="dokan_address[street_1]" value="<?php echo esc_attr( $address_street1 ); ?>" name="dokan_address[street_1]" placeholder="<?php _e( 'Street address' , 'dokan' ) ?>" class="dokan-form-control input-md" type="text">
+                <input <?php echo $required_attr; ?> <?php echo $disabled ?> id="dokan_address[street_1]" value="<?php echo esc_attr( $address_street1 ); ?>" name="dokan_address[street_1]" placeholder="<?php _e( 'Street address' , 'dokan-lite' ) ?>" class="dokan-form-control input-md" type="text">
             </div>
         <?php }
         if ( $seller_address_fields['street_2'] ) { ?>
             <div class="dokan-form-group">
-                <label class="dokan-w3 control-label" for="dokan_address[street_2]"><?php _e( 'Street 2', 'dokan' ); ?>
+                <label class="dokan-w3 control-label" for="dokan_address[street_2]"><?php _e( 'Street 2', 'dokan-lite' ); ?>
                     <?php
                     $required_attr = '';
                     if ( $seller_address_fields['street_2']['required'] ) {
@@ -49,7 +49,7 @@ $address_state   = isset( $profile_info['address']['state'] ) ? $profile_info['a
                         <span class="required"> *</span>
                     <?php } ?>
                 </label>
-                <input <?php echo $required_attr; ?> <?php echo $disabled ?> id="dokan_address[street_2]" value="<?php echo esc_attr( $address_street2 ); ?>" name="dokan_address[street_2]" placeholder="<?php _e( 'Apartment, suite, unit etc. (optional)' , 'dokan' ) ?>" class="dokan-form-control input-md" type="text">
+                <input <?php echo $required_attr; ?> <?php echo $disabled ?> id="dokan_address[street_2]" value="<?php echo esc_attr( $address_street2 ); ?>" name="dokan_address[street_2]" placeholder="<?php _e( 'Apartment, suite, unit etc. (optional)' , 'dokan-lite' ) ?>" class="dokan-form-control input-md" type="text">
             </div>
         <?php }
         if ( $seller_address_fields['city'] || $seller_address_fields['zip'] ) {
@@ -57,7 +57,7 @@ $address_state   = isset( $profile_info['address']['state'] ) ? $profile_info['a
             <div class="dokan-from-group">
                 <?php if ( $seller_address_fields['city'] ) { ?>
                     <div class="dokan-form-group dokan-w6 dokan-left dokan-right-margin-30">
-                        <label class="control-label" for="dokan_address[city]"><?php _e( 'City', 'dokan' ); ?>
+                        <label class="control-label" for="dokan_address[city]"><?php _e( 'City', 'dokan-lite' ); ?>
                             <?php
                             $required_attr = '';
                             if ( $seller_address_fields['city']['required'] ) {
@@ -65,12 +65,12 @@ $address_state   = isset( $profile_info['address']['state'] ) ? $profile_info['a
                                 <span class="required"> *</span>
                             <?php } ?>
                         </label>
-                        <input <?php echo $required_attr; ?> <?php echo $disabled ?> id="dokan_address[city]" value="<?php echo esc_attr( $address_city ); ?>" name="dokan_address[city]" placeholder="<?php _e( 'Town / City' , 'dokan' ) ?>" class="dokan-form-control input-md" type="text">
+                        <input <?php echo $required_attr; ?> <?php echo $disabled ?> id="dokan_address[city]" value="<?php echo esc_attr( $address_city ); ?>" name="dokan_address[city]" placeholder="<?php _e( 'Town / City' , 'dokan-lite' ) ?>" class="dokan-form-control input-md" type="text">
                     </div>
                 <?php }
                 if ( $seller_address_fields['zip'] ) { ?>
                     <div class="dokan-form-group dokan-w5 dokan-left">
-                        <label class="control-label" for="dokan_address[zip]"><?php _e( 'Post/ZIP Code', 'dokan' ); ?>
+                        <label class="control-label" for="dokan_address[zip]"><?php _e( 'Post/ZIP Code', 'dokan-lite' ); ?>
                             <?php
                             $required_attr = '';
                             if ( $seller_address_fields['zip']['required'] ) {
@@ -78,7 +78,7 @@ $address_state   = isset( $profile_info['address']['state'] ) ? $profile_info['a
                                 <span class="required"> *</span>
                             <?php } ?>
                         </label>
-                        <input <?php echo $required_attr; ?> <?php echo $disabled ?> id="dokan_address[zip]" value="<?php echo esc_attr( $address_zip ); ?>" name="dokan_address[zip]" placeholder="<?php _e( 'Postcode / Zip' , 'dokan' ) ?>" class="dokan-form-control input-md" type="text">
+                        <input <?php echo $required_attr; ?> <?php echo $disabled ?> id="dokan_address[zip]" value="<?php echo esc_attr( $address_zip ); ?>" name="dokan_address[zip]" placeholder="<?php _e( 'Postcode / Zip' , 'dokan-lite' ) ?>" class="dokan-form-control input-md" type="text">
                     </div>
                 <?php } ?>
                 <div class="dokan-clearfix"></div>
@@ -91,7 +91,7 @@ $address_state   = isset( $profile_info['address']['state'] ) ? $profile_info['a
             $states        = $country_obj->states;
         ?>
             <div class="dokan-form-group">
-                <label class="control-label" for="dokan_address[country]"><?php _e( 'Country ', 'dokan' ); ?>
+                <label class="control-label" for="dokan_address[country]"><?php _e( 'Country ', 'dokan-lite' ); ?>
                     <?php
                     $required_attr = '';
                     if ( $seller_address_fields['country']['required'] ) {
@@ -120,7 +120,7 @@ $address_state   = isset( $profile_info['address']['state'] ) ? $profile_info['a
             }
         ?>
             <div  id="dokan-states-box" class="dokan-form-group">
-                <label class="dokan-w3 control-label" for="dokan_address[state]"><?php _e( 'State ', 'dokan' ); ?>
+                <label class="dokan-w3 control-label" for="dokan_address[state]"><?php _e( 'State ', 'dokan-lite' ); ?>
                     <?php
                     $required_attr = '';
                     if ( $seller_address_fields['state']['required'] ) {

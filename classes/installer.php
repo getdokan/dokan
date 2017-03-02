@@ -131,7 +131,7 @@ class Dokan_Installer {
             $wp_roles = new WP_Roles();
         }
 
-        add_role( 'seller', __( 'Vendor', 'dokan' ), array(
+        add_role( 'seller', __( 'Vendor', 'dokan-lite' ), array(
             'read'                   => true,
             'publish_posts'          => true,
             'edit_posts'             => true,
@@ -161,19 +161,19 @@ class Dokan_Installer {
 
         $pages = array(
             array(
-                'post_title' => __( 'Dashboard', 'dokan' ),
+                'post_title' => __( 'Dashboard', 'dokan-lite' ),
                 'slug'       => 'dashboard',
                 'page_id'    => 'dashboard',
                 'content'    => '[dokan-dashboard]'
             ),
             array(
-                'post_title' => __( 'Store List', 'dokan' ),
+                'post_title' => __( 'Store List', 'dokan-lite' ),
                 'slug'       => 'store-listing',
                 'page_id'    => 'store_listing',
                 'content'    => '[dokan-stores]'
             ),
             array(
-                'post_title' => __( 'My Orders', 'dokan' ),
+                'post_title' => __( 'My Orders', 'dokan-lite' ),
                 'slug'       => 'my-orders',
                 'page_id'    => 'my_orders',
                 'content'    => '[dokan-my-orders]'

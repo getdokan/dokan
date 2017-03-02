@@ -1,5 +1,5 @@
 <div class="wrap">
-    <h2><?php _e( 'Dokan - Add-ons', 'dokan' ); ?></h2>
+    <h2><?php _e( 'Dokan - Add-ons', 'dokan-lite' ); ?></h2>
 
     <?php
     $add_ons = get_transient( 'dokan_addons' );

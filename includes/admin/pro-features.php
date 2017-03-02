@@ -1,5 +1,5 @@
 <div class="wrap">
-    <h2><?php _e( 'Dokan - Pro Features', 'dokan' ); ?></h2>
+    <h2><?php _e( 'Dokan - Pro Features', 'dokan-lite' ); ?></h2>
 
     <?php
     $pro_features = array(

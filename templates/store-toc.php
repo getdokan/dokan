@@ -28,12 +28,12 @@ get_header( 'shop' );
                 );
 
                 if ( class_exists( 'Dokan_Store_Location' ) ) {
-                    the_widget( 'Dokan_Store_Category_Menu', array( 'title' => __( 'Store Category', 'dokan' ) ), $args );
+                    the_widget( 'Dokan_Store_Category_Menu', array( 'title' => __( 'Store Category', 'dokan-lite' ) ), $args );
                     if( dokan_get_option( 'store_map', 'dokan_general', 'on' ) == 'on' ) {
-                        the_widget( 'Dokan_Store_Location', array( 'title' => __( 'Store Location', 'dokan' ) ), $args );
+                        the_widget( 'Dokan_Store_Location', array( 'title' => __( 'Store Location', 'dokan-lite' ) ), $args );
                     }
                     if( dokan_get_option( 'contact_seller', 'dokan_general', 'on' ) == 'on' ) {
-                        the_widget( 'Dokan_Store_Contact_Form', array( 'title' => __( 'Contact Vendor', 'dokan' ) ), $args );
+                        the_widget( 'Dokan_Store_Contact_Form', array( 'title' => __( 'Contact Vendor', 'dokan-lite' ) ), $args );
                     }
                 }
 
@@ -59,7 +59,7 @@ get_header( 'shop' );
                 <?php
                 if( isset( $store_info['store_tnc'] ) ):
                 ?>
-                    <h2 class="headline"><?php _e( 'Terms And Conditions', 'dokan' ); ?></h2>
+                    <h2 class="headline"><?php _e( 'Terms And Conditions', 'dokan-lite' ); ?></h2>
                     <div>
                         <?php
                         echo nl2br($store_info['store_tnc']);

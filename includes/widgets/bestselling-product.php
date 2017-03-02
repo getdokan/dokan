@@ -52,23 +52,23 @@ class Dokan_Best_Selling_Widget extends WP_Widget {
             $no_of_product = esc_attr( intval( $instance[ 'no_of_product' ] ) );
             $show_rating   = esc_attr( $instance['show_rating'] );
         }  else {
-            $title = __( 'Best Selling Product', 'dokan' );
+            $title = __( 'Best Selling Product', 'dokan-lite' );
             $no_of_product = '8';
             $show_rating   = '0';
         }
 
         ?>
         <p>
-            <label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'dokan' ); ?></label>
+            <label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'dokan-lite' ); ?></label>
             <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>">
         </p>
         <p>
-            <label for="<?php echo $this->get_field_id( 'no_of_product' ); ?>"><?php _e( 'No of Product:', 'dokan' ); ?></label>
+            <label for="<?php echo $this->get_field_id( 'no_of_product' ); ?>"><?php _e( 'No of Product:', 'dokan-lite' ); ?></label>
             <input class="widefat" id="<?php echo $this->get_field_id( 'no_of_product' ); ?>" name="<?php echo $this->get_field_name( 'no_of_product' ); ?>" type="text" value="<?php echo ( $no_of_product == '-1' ) ? '' : $no_of_product; ?>">
         </p>
         <p>
             <input id="<?php echo $this->get_field_id( 'show_rating' ); ?>" name="<?php echo $this->get_field_name( 'show_rating' ); ?>" type="checkbox" value="1" <?php checked( '1', $show_rating ); ?> />
-            <label for="<?php echo $this->get_field_id( 'show_rating' ); ?>"><?php _e( 'Show Product Rating', 'dokan' ); ?></label>
+            <label for="<?php echo $this->get_field_id( 'show_rating' ); ?>"><?php _e( 'Show Product Rating', 'dokan-lite' ); ?></label>
         </p>
 
         <?php

@@ -8,13 +8,13 @@
  */
 ?>
 
-<h2><?php _e( 'Vendor Information', 'dokan' ); ?></h2>
+<h2><?php _e( 'Vendor Information', 'dokan-lite' ); ?></h2>
 
 <ul class="list-unstyled">
 
     <?php if ( !empty( $store_info['store_name'] ) ) { ?>
         <li class="store-name">
-            <span><?php _e( 'Store Name:', 'dokan' ); ?></span>
+            <span><?php _e( 'Store Name:', 'dokan-lite' ); ?></span>
             <span class="details">
                 <?php echo esc_html( $store_info['store_name'] ); ?>
             </span>
@@ -23,7 +23,7 @@
 
     <li class="seller-name">
         <span>
-            <?php _e( 'Vendor:', 'dokan' ); ?>
+            <?php _e( 'Vendor:', 'dokan-lite' ); ?>
         </span>
 
         <span class="details">
@@ -32,7 +32,7 @@
     </li>
     <?php if ( !empty( $store_info['address'] ) ) { ?>
         <li class="store-address">
-            <span><b><?php _e( 'Address:', 'dokan' ); ?></b></span>
+            <span><b><?php _e( 'Address:', 'dokan-lite' ); ?></b></span>
             <span class="details">
                 <?php echo dokan_get_seller_address( $author->ID ) ?>
             </span>

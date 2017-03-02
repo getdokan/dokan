@@ -187,15 +187,15 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
 
             switch ( $_GET['message'] ) {
             case 'trashed':
-                $message = __( 'Requests Deleted!', 'dokan' );
+                $message = __( 'Requests Deleted!', 'dokan-lite' );
                 break;
 
             case 'cancelled':
-                $message = __( 'Requests Cancelled!', 'dokan' );
+                $message = __( 'Requests Cancelled!', 'dokan-lite' );
                 break;
 
             case 'approved':
-                $message = __( 'Requests Approved!', 'dokan' );
+                $message = __( 'Requests Approved!', 'dokan-lite' );
                 break;
             }
 
@@ -216,13 +216,13 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
                         <td class="check-column">
                             <input type="checkbox" class="dokan-withdraw-allcheck">
                         </td>
-                        <th><?php _e( 'User Name', 'dokan' ); ?></th>
-                        <th><?php _e( 'Amount', 'dokan' ); ?></th>
-                        <th><?php _e( 'Method', 'dokan' ); ?></th>
-                        <th><?php _e( 'Method Details', 'dokan' ); ?></th>
-                        <th><?php _e( 'Note', 'dokan' ); ?></th>
-                        <th><?php _e( 'IP', 'dokan' ); ?></th>
-                        <th><?php _e( 'Date', 'dokan' ); ?></th>
+                        <th><?php _e( 'User Name', 'dokan-lite' ); ?></th>
+                        <th><?php _e( 'Amount', 'dokan-lite' ); ?></th>
+                        <th><?php _e( 'Method', 'dokan-lite' ); ?></th>
+                        <th><?php _e( 'Method Details', 'dokan-lite' ); ?></th>
+                        <th><?php _e( 'Note', 'dokan-lite' ); ?></th>
+                        <th><?php _e( 'IP', 'dokan-lite' ); ?></th>
+                        <th><?php _e( 'Date', 'dokan-lite' ); ?></th>
                     </tr>
                 </thead>
                 <tfoot>
@@ -230,13 +230,13 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
                         <td class="check-column">
                             <input type="checkbox" class="dokan-withdraw-allcheck">
                         </td>
-                        <th><?php _e( 'User Name', 'dokan' ); ?></th>
-                        <th><?php _e( 'Amount', 'dokan' ); ?></th>
-                        <th><?php _e( 'Method', 'dokan' ); ?></th>
-                        <th><?php _e( 'Method Details', 'dokan' ); ?></th>
-                        <th><?php _e( 'Note', 'dokan' ); ?></th>
-                        <th><?php _e( 'IP', 'dokan' ); ?></th>
-                        <th><?php _e( 'Date', 'dokan' ); ?></th>
+                        <th><?php _e( 'User Name', 'dokan-lite' ); ?></th>
+                        <th><?php _e( 'Amount', 'dokan-lite' ); ?></th>
+                        <th><?php _e( 'Method', 'dokan-lite' ); ?></th>
+                        <th><?php _e( 'Method Details', 'dokan-lite' ); ?></th>
+                        <th><?php _e( 'Note', 'dokan-lite' ); ?></th>
+                        <th><?php _e( 'IP', 'dokan-lite' ); ?></th>
+                        <th><?php _e( 'Date', 'dokan-lite' ); ?></th>
                     </tr>
                 </tfoot>
 
@@ -260,23 +260,23 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
                             <div class="row-actions">
                                 <?php if ( $status == 'pending' ) { ?>
 
-                                    <span class="edit"><a href="#" class="dokan-withdraw-action" data-status="approve" data-withdraw_id = "<?php echo $row->id; ?>"><?php _e( 'Approve', 'dokan' ); ?></a> | </span>
-                                    <span class="edit"><a href="#" class="dokan-withdraw-action" data-status="cancel" data-withdraw_id = "<?php echo $row->id; ?>"><?php _e( 'Cancel', 'dokan' ); ?></a></span>
+                                    <span class="edit"><a href="#" class="dokan-withdraw-action" data-status="approve" data-withdraw_id = "<?php echo $row->id; ?>"><?php _e( 'Approve', 'dokan-lite' ); ?></a> | </span>
+                                    <span class="edit"><a href="#" class="dokan-withdraw-action" data-status="cancel" data-withdraw_id = "<?php echo $row->id; ?>"><?php _e( 'Cancel', 'dokan-lite' ); ?></a></span>
 
                                 <?php } elseif ( $status == 'completed' ) { ?>
 
-                                    <span class="edit"><a href="#" class="dokan-withdraw-action" data-status="cancel" data-withdraw_id = "<?php echo $row->id; ?>"><?php _e( 'Cancel', 'dokan' ); ?></a> | </span>
-                                    <span class="edit"><a href="#" class="dokan-withdraw-action" data-status="pending" data-withdraw_id = "<?php echo $row->id; ?>"><?php _e( 'Pending', 'dokan' ); ?></a></span>
+                                    <span class="edit"><a href="#" class="dokan-withdraw-action" data-status="cancel" data-withdraw_id = "<?php echo $row->id; ?>"><?php _e( 'Cancel', 'dokan-lite' ); ?></a> | </span>
+                                    <span class="edit"><a href="#" class="dokan-withdraw-action" data-status="pending" data-withdraw_id = "<?php echo $row->id; ?>"><?php _e( 'Pending', 'dokan-lite' ); ?></a></span>
 
                                 <?php } elseif ( $status == 'cancelled' ) { ?>
 
-                                    <span class="edit"><a href="#" class="dokan-withdraw-action" data-status="approve" data-withdraw_id = "<?php echo $row->id; ?>"><?php _e( 'Approve', 'dokan' ); ?></a> | </span>
-                                    <span class="edit"><a href="#" class="dokan-withdraw-action" data-status="pending" data-withdraw_id = "<?php echo $row->id; ?>"><?php _e( 'Pending', 'dokan' ); ?></a></span>
+                                    <span class="edit"><a href="#" class="dokan-withdraw-action" data-status="approve" data-withdraw_id = "<?php echo $row->id; ?>"><?php _e( 'Approve', 'dokan-lite' ); ?></a> | </span>
+                                    <span class="edit"><a href="#" class="dokan-withdraw-action" data-status="pending" data-withdraw_id = "<?php echo $row->id; ?>"><?php _e( 'Pending', 'dokan-lite' ); ?></a></span>
 
                                 <?php } ?>
 
                                 <?php if ( $result ) { ?>
-                                    <span class="trash"> | <a href="#" class="dokan-withdraw-action" data-status="delete" data-withdraw_id = "<?php echo $row->id; ?>"><?php _e( 'Delete', 'dokan' ); ?></a></span>
+                                    <span class="trash"> | <a href="#" class="dokan-withdraw-action" data-status="delete" data-withdraw_id = "<?php echo $row->id; ?>"><?php _e( 'Delete', 'dokan-lite' ); ?></a></span>
 
                                 <?php } ?>
                             </div>
@@ -300,14 +300,14 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
                                     <p class="ajax_note"><?php echo $row->note; ?></p>
 
                                     <div class="row-actions">
-                                        <a href="#" class="dokan-note-field"><?php _e( 'Add note', 'dokan' ); ?></a>
+                                        <a href="#" class="dokan-note-field"><?php _e( 'Add note', 'dokan-lite' ); ?></a>
                                     </div>
                                 </div>
 
                                 <div class="note-form" style="display: none;">
                                     <p><input type="text" class="dokan-note-text" name="note[<?php echo $row->id;?>]" value="<?php echo esc_attr( $row->note ); ?>"></p>
-                                    <a class="dokan-note-submit button" data-id=<?php echo $row->id; ?> href="#" ><?php _e( 'Save', 'dokan' ); ?></a>
-                                    <a href="#" class="dokan-note-cancel"><?php _e( 'cancel', 'dokan' ); ?></a>
+                                    <a class="dokan-note-submit button" data-id=<?php echo $row->id; ?> href="#" ><?php _e( 'Save', 'dokan-lite' ); ?></a>
+                                    <a href="#" class="dokan-note-cancel"><?php _e( 'cancel', 'dokan-lite' ); ?></a>
                                 </div>
                             </div>
 
@@ -323,7 +323,7 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
             ?>
                 <tr>
                     <td colspan="8">
-                        <?php _e( 'No results found', 'dokan' ) ?>
+                        <?php _e( 'No results found', 'dokan-lite' ) ?>
                     </td>
                 </tr>
                 <?php
@@ -335,33 +335,33 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
 
                 <div class="alignleft actions bulkactions">
                     <select name="dokan_withdraw_bulk">
-                        <option value="-1" selected="selected"><?php _e( 'Bulk Actions', 'dokan' ); ?></option>
+                        <option value="-1" selected="selected"><?php _e( 'Bulk Actions', 'dokan-lite' ); ?></option>
 
                         <?php if ( $status == 'pending' ) { ?>
 
-                            <option value="approve"><?php _e( 'Approve Requests', 'dokan' ); ?></option>
-                            <option value="cancel"><?php _e( 'Mark as Cancelled', 'dokan' ); ?></option>
+                            <option value="approve"><?php _e( 'Approve Requests', 'dokan-lite' ); ?></option>
+                            <option value="cancel"><?php _e( 'Mark as Cancelled', 'dokan-lite' ); ?></option>
 
                         <?php } elseif ( $status == 'completed' ) { ?>
 
-                            <option value="cancel"><?php _e( 'Mark as Cancelled', 'dokan' ); ?></option>
-                            <option value="pending"><?php _e( 'Mark Pending', 'dokan' ); ?></option>
+                            <option value="cancel"><?php _e( 'Mark as Cancelled', 'dokan-lite' ); ?></option>
+                            <option value="pending"><?php _e( 'Mark Pending', 'dokan-lite' ); ?></option>
 
                         <?php } elseif ( $status == 'cancelled' ) { ?>
 
-                            <option value="approve"><?php _e( 'Approve Requests', 'dokan' ); ?></option>
-                            <option value="pending"><?php _e( 'Mark Pending', 'dokan' ); ?></option>
+                            <option value="approve"><?php _e( 'Approve Requests', 'dokan-lite' ); ?></option>
+                            <option value="pending"><?php _e( 'Mark Pending', 'dokan-lite' ); ?></option>
 
                         <?php } ?>
 
                         <?php if ( $result ) { ?>
-                            <option value="delete"><?php _e( 'Delete', 'dokan' ); ?></option>
-                            <option value="paypal"><?php _e( 'Download PayPal mass payment file', 'dokan' ); ?></option>
+                            <option value="delete"><?php _e( 'Delete', 'dokan-lite' ); ?></option>
+                            <option value="paypal"><?php _e( 'Download PayPal mass payment file', 'dokan-lite' ); ?></option>
                         <?php } ?>
                     </select>
 
                     <input type="hidden" name="status_page" value="<?php echo $status; ?>">
-                    <input type="submit" name="" id="doaction2" class="button button-primary" value="<?php esc_attr_e( 'Apply', 'dokan' ); ?>">
+                    <input type="submit" name="" id="doaction2" class="button button-primary" value="<?php esc_attr_e( 'Apply', 'dokan-lite' ); ?>">
                 </div>
 
                 <?php if ( $result ) {

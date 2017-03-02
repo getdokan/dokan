@@ -9,9 +9,9 @@ class Dokan_Tracker extends WeDevs_Insights {
 
     public function __construct() {
 
-        $notice = __( 'Want to help make <strong>Dokan</strong> even more awesome? Allow weDevs to collect non-sensitive diagnostic data and usage information. Enjoy <strong>20% discount</strong> on upgrades and add-on purchase.', 'dokan' );
+        $notice = __( 'Want to help make <strong>Dokan</strong> even more awesome? Allow weDevs to collect non-sensitive diagnostic data and usage information. Enjoy <strong>20% discount</strong> on upgrades and add-on purchase.', 'dokan-lite' );
 
-        parent::__construct( 'dokan', 'Dokan', DOKAN_FILE, $notice );
+        parent::__construct( 'dokan', 'dokan-lite', DOKAN_FILE, $notice );
     }
 
     /**

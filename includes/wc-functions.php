@@ -67,7 +67,7 @@ function dokan_process_product_meta( $post_id ) {
             $unique_sku = wc_product_has_unique_sku( $post_id, $new_sku );
 
             if ( ! $unique_sku ) {
-                $woocommerce_errors[] = ( __( 'Product SKU must be unique.', 'dokan' ) );
+                $woocommerce_errors[] = ( __( 'Product SKU must be unique.', 'dokan-lite' ) );
             } else {
                 update_post_meta( $post_id, '_sku', $new_sku );
             }
@@ -468,7 +468,7 @@ add_action( 'woocommerce_checkout_update_order_meta', 'dokan_create_sub_order' )
 function dokan_create_seller_order( $parent_order, $seller_id, $seller_products ) {
     $order_data = apply_filters( 'woocommerce_new_order_data', array(
         'post_type'     => 'shop_order',
-        'post_title'    => sprintf( __( 'Order &ndash; %s', 'dokan' ), strftime( _x( '%b %d, %Y @ %I:%M %p', 'Order date parsed by strftime', 'dokan' ) ) ),
+        'post_title'    => sprintf( __( 'Order &ndash; %s', 'dokan-lite' ), strftime( _x( '%b %d, %Y @ %I:%M %p', 'Order date parsed by strftime', 'dokan-lite' ) ) ),
         'post_status'   => 'wc-pending',
         'ping_status'   => 'closed',
         'post_excerpt'  => isset( $posted['order_comments'] ) ? $posted['order_comments'] : '',
@@ -707,7 +707,7 @@ function dokan_seller_registration_errors( $error ) {
 
     // is the role name allowed or user is trying to manipulate?
     if ( isset( $_POST['role'] ) && !in_array( $_POST['role'], $allowed_roles ) ) {
-        return new WP_Error( 'role-error', __( 'Cheating, eh?', 'dokan' ) );
+        return new WP_Error( 'role-error', __( 'Cheating, eh?', 'dokan-lite' ) );
     }
 
     $role = $_POST['role'];
@@ -716,16 +716,16 @@ function dokan_seller_registration_errors( $error ) {
 
         $first_name = trim( $_POST['fname'] );
         if ( empty( $first_name ) ) {
-            return new WP_Error( 'fname-error', __( 'Please enter your first name.', 'dokan' ) );
+            return new WP_Error( 'fname-error', __( 'Please enter your first name.', 'dokan-lite' ) );
         }
 
         $last_name = trim( $_POST['lname'] );
         if ( empty( $last_name ) ) {
-            return new WP_Error( 'lname-error', __( 'Please enter your last name.', 'dokan' ) );
+            return new WP_Error( 'lname-error', __( 'Please enter your last name.', 'dokan-lite' ) );
         }
         $phone = trim( $_POST['phone'] );
         if ( empty( $phone ) ) {
-            return new WP_Error( 'phone-error', __( 'Please enter your phone number.', 'dokan' ) );
+            return new WP_Error( 'phone-error', __( 'Please enter your phone number.', 'dokan-lite' ) );
         }
     }
 
@@ -1020,7 +1020,7 @@ function dokan_get_seller_balance( $seller_id, $formatted = true ) {
 
     $status        = dokan_withdraw_get_active_order_status_in_comma();
     $cache_key     = 'dokan_seller_balance_' . $seller_id;
-    $earning       = wp_cache_get( $cache_key, 'dokan' );
+    $earning       = wp_cache_get( $cache_key, 'dokan-lite' );
     $threshold_day = dokan_get_option( 'withdraw_date_limit', 'dokan_withdraw', 0 );
     $date          = date( 'Y-m-d', strtotime( date('Y-m-d') . ' -'.$threshold_day.' days' ) );
 
@@ -1033,7 +1033,7 @@ function dokan_get_seller_balance( $seller_id, $formatted = true ) {
         $result = $wpdb->get_row( $wpdb->prepare( $sql, $seller_id, $seller_id, $date ) );
         $earning = $result->earnings - $result->withdraw;
 
-        wp_cache_set( $cache_key, $earning, 'dokan' );
+        wp_cache_set( $cache_key, $earning, 'dokan-lite' );
     }
 
     if ( $formatted ) {
@@ -1112,12 +1112,12 @@ function dokan_get_readable_seller_rating( $seller_id ) {
     $rating = dokan_get_seller_rating( $seller_id );
 
     if ( ! $rating['count'] ) {
-        echo __( 'No ratings found yet!', 'dokan' );
+        echo __( 'No ratings found yet!', 'dokan-lite' );
         return;
     }
 
-    $long_text = _n( '%s rating from %d review', '%s rating from %d reviews', $rating['count'], 'dokan' );
-    $text = sprintf( __( 'Rated %s out of %d', 'dokan' ), $rating['rating'], number_format( 5 ) );
+    $long_text = _n( '%s rating from %d review', '%s rating from %d reviews', $rating['count'], 'dokan-lite' );
+    $text = sprintf( __( 'Rated %s out of %d', 'dokan-lite' ), $rating['rating'], number_format( 5 ) );
     $width = ( $rating['rating']/5 ) * 100;
     ?>
         <span class="seller-rating">
@@ -1156,8 +1156,8 @@ function dokan_exclude_child_customer_receipt( &$phpmailer ) {
     $subject      = $phpmailer->Subject;
 
     // order receipt
-    $sub_receipt  = __( 'Your {site_title} order receipt from {order_date}', 'dokan' );
-    $sub_download = __( 'Your {site_title} order from {order_date} is complete', 'dokan' );
+    $sub_receipt  = __( 'Your {site_title} order receipt from {order_date}', 'dokan-lite' );
+    $sub_download = __( 'Your {site_title} order from {order_date} is complete', 'dokan-lite' );
 
     $sub_receipt  = str_replace( array('{site_title}', '{order_date}'), array(wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ), ''), $sub_receipt);
     $sub_download = str_replace( array('{site_title}', '{order_date} is complete'), array(wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ), ''), $sub_download);
@@ -1254,42 +1254,42 @@ function dokan_save_account_details(){
 
 	// Handle required fields
 	$required_fields = apply_filters( 'woocommerce_save_account_details_required_fields', array(
-		'account_first_name' => __( 'First Name', 'dokan' ),
-		'account_last_name'  => __( 'Last Name', 'dokan' ),
-		'account_email'      => __( 'Email address', 'dokan' ),
+		'account_first_name' => __( 'First Name', 'dokan-lite' ),
+		'account_last_name'  => __( 'Last Name', 'dokan-lite' ),
+		'account_email'      => __( 'Email address', 'dokan-lite' ),
 	) );
 
 	foreach ( $required_fields as $field_key => $field_name ) {
 		if ( empty( $_POST[ $field_key ] ) ) {
-			wc_add_notice( '<strong>' . esc_html( $field_name ) . '</strong> ' . __( 'is a required field.', 'dokan' ), 'error' );
+			wc_add_notice( '<strong>' . esc_html( $field_name ) . '</strong> ' . __( 'is a required field.', 'dokan-lite' ), 'error' );
 		}
 	}
 
 	if ( $account_email ) {
 		if ( ! is_email( $account_email ) ) {
-			wc_add_notice( __( 'Please provide a valid email address.', 'dokan' ), 'error' );
+			wc_add_notice( __( 'Please provide a valid email address.', 'dokan-lite' ), 'error' );
 		} elseif ( email_exists( $account_email ) && $account_email !== $current_user->user_email ) {
-			wc_add_notice( __( 'This email address is already registered.', 'dokan' ), 'error' );
+			wc_add_notice( __( 'This email address is already registered.', 'dokan-lite' ), 'error' );
 		}
 		$user->user_email = $account_email;
 	}
 
 	if ( ! empty( $pass1 ) && ! wp_check_password( $pass_cur, $current_user->user_pass, $current_user->ID ) ) {
-		wc_add_notice( __( 'Your current password is incorrect.', 'dokan' ), 'error' );
+		wc_add_notice( __( 'Your current password is incorrect.', 'dokan-lite' ), 'error' );
 		$save_pass = false;
 	}
 
 	if ( ! empty( $pass_cur ) && empty( $pass1 ) && empty( $pass2 ) ) {
-		wc_add_notice( __( 'Please fill out all password fields.', 'dokan' ), 'error' );
+		wc_add_notice( __( 'Please fill out all password fields.', 'dokan-lite' ), 'error' );
 		$save_pass = false;
 	} elseif ( ! empty( $pass1 ) && empty( $pass_cur ) ) {
-		wc_add_notice( __( 'Please enter your current password.', 'dokan' ), 'error' );
+		wc_add_notice( __( 'Please enter your current password.', 'dokan-lite' ), 'error' );
 		$save_pass = false;
 	} elseif ( ! empty( $pass1 ) && empty( $pass2 ) ) {
-		wc_add_notice( __( 'Please re-enter your password.', 'dokan' ), 'error' );
+		wc_add_notice( __( 'Please re-enter your password.', 'dokan-lite' ), 'error' );
 		$save_pass = false;
 	} elseif ( ( ! empty( $pass1 ) || ! empty( $pass2 ) ) && $pass1 !== $pass2 ) {
-		wc_add_notice( __( 'New passwords do not match.', 'dokan' ), 'error' );
+		wc_add_notice( __( 'New passwords do not match.', 'dokan-lite' ), 'error' );
 		$save_pass = false;
 	}
 
@@ -1310,7 +1310,7 @@ function dokan_save_account_details(){
 
 		wp_update_user( $user ) ;
 
-		wc_add_notice( __( 'Account details changed successfully.', 'dokan' ) );
+		wc_add_notice( __( 'Account details changed successfully.', 'dokan-lite' ) );
 
 		do_action( 'woocommerce_save_account_details', $user->ID );
 

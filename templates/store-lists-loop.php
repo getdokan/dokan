@@ -6,7 +6,7 @@ if ( $sellers['users'] ) {
         foreach ( $sellers['users'] as $seller ) {
             $store_info = dokan_get_store_info( $seller->ID );
             $banner_id  = isset( $store_info['banner'] ) ? $store_info['banner'] : 0;
-            $store_name = isset( $store_info['store_name'] ) ? esc_html( $store_info['store_name'] ) : __( 'N/A', 'dokan' );
+            $store_name = isset( $store_info['store_name'] ) ? esc_html( $store_info['store_name'] ) : __( 'N/A', 'dokan-lite' );
             $store_url  = dokan_get_store_url( $seller->ID );
             ?>
 
@@ -20,7 +20,7 @@ if ( $sellers['users'] ) {
                                 ?>
                                 <img class="dokan-store-img" src="<?php echo esc_url( $banner_url[0] ); ?>" alt="<?php echo esc_attr( $store_name ); ?>">
                             <?php } else { ?>
-                                <img class="dokan-store-img" src="<?php echo dokan_get_no_seller_image(); ?>" alt="<?php _e( 'No Image', 'dokan' ); ?>">
+                                <img class="dokan-store-img" src="<?php echo dokan_get_no_seller_image(); ?>" alt="<?php _e( 'No Image', 'dokan-lite' ); ?>">
                             <?php } ?>
                         </a>
                     </div>
@@ -36,12 +36,12 @@ if ( $sellers['users'] ) {
 
                             <?php if ( isset( $store_info['phone'] ) && !empty( $store_info['phone'] ) ) { ?>
                                 <br>
-                                <abbr title="<?php _e( 'Phone Number', 'dokan' ); ?>"><?php _e( 'P:', 'dokan' ); ?></abbr> <?php echo esc_html( $store_info['phone'] ); ?>
+                                <abbr title="<?php _e( 'Phone Number', 'dokan-lite' ); ?>"><?php _e( 'P:', 'dokan-lite' ); ?></abbr> <?php echo esc_html( $store_info['phone'] ); ?>
                             <?php } ?>
 
                         </address>
 
-                        <p><a class="dokan-btn dokan-btn-theme" href="<?php echo $store_url; ?>"><?php _e( 'Visit Store', 'dokan' ); ?></a></p>
+                        <p><a class="dokan-btn dokan-btn-theme" href="<?php echo $store_url; ?>"><?php _e( 'Visit Store', 'dokan-lite' ); ?></a></p>
 
                     </div> <!-- .caption -->
                 </div> <!-- .thumbnail -->
@@ -61,8 +61,8 @@ if ( $sellers['users'] ) {
             'total'     => $num_of_pages,
             'base'      => $pagination_base,
             'type'      => 'array',
-            'prev_text' => __( '&larr; Previous', 'dokan' ),
-            'next_text' => __( 'Next &rarr;', 'dokan' ),
+            'prev_text' => __( '&larr; Previous', 'dokan-lite' ),
+            'next_text' => __( 'Next &rarr;', 'dokan-lite' ),
         );
 
         if ( ! empty( $search_query ) ) {
@@ -88,5 +88,5 @@ if ( $sellers['users'] ) {
     ?>
 
 <?php } else { ?>
-    <p class="dokan-error"><?php _e( 'No vendor found!', 'dokan' ); ?></p>
+    <p class="dokan-error"><?php _e( 'No vendor found!', 'dokan-lite' ); ?></p>
 <?php } ?>

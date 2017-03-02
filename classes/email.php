@@ -103,7 +103,7 @@ class Dokan_Email {
             home_url()
         );
 
-        $subject = sprintf( __( '"%s" sent you a message from your "%s" store', 'dokan' ), $from_name, $this->get_from_name() );
+        $subject = sprintf( __( '"%s" sent you a message from your "%s" store', 'dokan-lite' ), $from_name, $this->get_from_name() );
         $body = str_replace( $find, $replace, $body);
         $headers = array( "Reply-To: {$from_name}<{$from_email}>" );
 
@@ -151,7 +151,7 @@ class Dokan_Email {
             home_url(),
         );
 
-        $subject = sprintf( __( '[%s] Refund Request %s', 'dokan' ), $this->get_from_name(), $status );
+        $subject = sprintf( __( '[%s] Refund Request %s', 'dokan-lite' ), $this->get_from_name(), $status );
         $body = str_replace( $find, $replace, $body);
 
         $this->send( $seller_mail, $subject, $body );
@@ -184,7 +184,7 @@ class Dokan_Email {
             home_url(),
         );
 
-        $subject = sprintf( __( '[%s] New Refund Request', 'dokan' ), $this->get_from_name() );
+        $subject = sprintf( __( '[%s] New Refund Request', 'dokan-lite' ), $this->get_from_name() );
         $body = str_replace( $find, $replace, $body);
         $this->send( $this->admin_email(), $subject, $body );
         do_action( 'after_dokan_refund_request', $this->admin_email(), $subject, $body );
@@ -242,7 +242,7 @@ class Dokan_Email {
         dokan_get_template_part( 'emails/withdraw-new' );
         $body = ob_get_clean();
 
-        $subject = sprintf( __( '[%s] New Withdraw Request', 'dokan' ), $this->get_from_name() );
+        $subject = sprintf( __( '[%s] New Withdraw Request', 'dokan-lite' ), $this->get_from_name() );
         $body = $this->prepare_withdraw( $body, $user, $amount, $method );
 
         $this->send( $this->admin_email(), $subject, $body );
@@ -263,7 +263,7 @@ class Dokan_Email {
         $body = ob_get_clean();
 
         $user = get_user_by( 'id', $user_id );
-        $subject = sprintf( __( '[%s] Your Withdraw Request has been approved', 'dokan' ), $this->get_from_name() );
+        $subject = sprintf( __( '[%s] Your Withdraw Request has been approved', 'dokan-lite' ), $this->get_from_name() );
         $body = $this->prepare_withdraw( $body, $user, $amount, $method );
 
         $this->send( $user->user_email, $subject, $body );
@@ -285,7 +285,7 @@ class Dokan_Email {
         $body = ob_get_clean();
 
         $user = get_user_by( 'id', $user_id );
-        $subject = sprintf( __( '[%s] Your Withdraw Request has been cancelled', 'dokan' ), $this->get_from_name() );
+        $subject = sprintf( __( '[%s] Your Withdraw Request has been cancelled', 'dokan-lite' ), $this->get_from_name() );
         $body = $this->prepare_withdraw( $body, $user, $amount, $method, $note );
 
         $this->send( $user->user_email, $subject, $body );
@@ -323,7 +323,7 @@ class Dokan_Email {
         );
 
         $body = str_replace( $find, $replace, $body);
-        $subject = sprintf( __( '[%s] New Vendor Registered', 'dokan' ), $this->get_from_name() );
+        $subject = sprintf( __( '[%s] New Vendor Registered', 'dokan-lite' ), $this->get_from_name() );
 
         $this->send( $this->admin_email(), $subject, $body );
         do_action( 'after_new_seller_registered_mail', $this->admin_email(), $subject, $body );
@@ -376,7 +376,7 @@ class Dokan_Email {
         );
 
         $body = str_replace( $find, $replace, $body);
-        $subject = sprintf( __( '[%s] New Product Added', 'dokan' ), $this->get_from_name() );
+        $subject = sprintf( __( '[%s] New Product Added', 'dokan-lite' ), $this->get_from_name() );
 
         $this->send( $this->admin_email(), $subject, $body );
         do_action( 'after_new_product_added', $this->admin_email(), $subject, $body );
@@ -415,7 +415,7 @@ class Dokan_Email {
         );
 
         $body = str_replace( $find, $replace, $body);
-        $subject = sprintf( __( '[%s] Your product has been approved!', 'dokan' ), $this->get_from_name() );
+        $subject = sprintf( __( '[%s] Your product has been approved!', 'dokan-lite' ), $this->get_from_name() );
 
         $this->send( $seller->user_email, $subject, $body );
         do_action( 'after_product_published', $seller->user_email, $subject, $body );
