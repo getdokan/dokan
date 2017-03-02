@@ -301,7 +301,7 @@ final class WeDevs_Dokan {
 
         $localize_script = apply_filters( 'dokan_localized_args', $default_script );
 
-        wp_localize_script( 'jquery', 'dokan-lite', $localize_script );
+        wp_localize_script( 'jquery', 'dokan', $localize_script );
 
         // load only in dokan dashboard and product edit page
         if ( ( dokan_is_seller_dashboard() || ( get_query_var( 'edit' ) && is_singular( 'product' ) ) ) || apply_filters( 'dokan_forced_load_scripts', false ) ) {
