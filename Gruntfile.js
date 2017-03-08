@@ -88,7 +88,7 @@ module.exports = function(grunt) {
                 options: {
                     exclude: ['build/.*'],
                     domainPath: '/languages/', // Where to save the POT file.
-                    potFilename: 'dokan.pot', // Name of the POT file.
+                    potFilename: 'dokan-lite.pot', // Name of the POT file.
                     type: 'wp-plugin', // Type of project (wp-plugin or wp-theme).
                     potHeaders: {
                         'report-msgid-bugs-to': 'http://wedevs.com/support/forum/theme-support/dokan/',
@@ -150,12 +150,12 @@ module.exports = function(grunt) {
             main: {
                 options: {
                     mode: 'zip',
-                    archive: './build/dokan-v' + pkg.version + '.zip'
+                    archive: './build/dokan-lite-v' + pkg.version + '.zip'
                 },
                 expand: true,
                 cwd: 'build/',
                 src: ['**/*'],
-                dest: 'dokan'
+                dest: 'dokan-lite'
             }
         },
 

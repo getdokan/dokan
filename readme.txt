@@ -3,7 +3,7 @@ Contributors: tareq1988, wedevs, rafsuntaskin, sabbir1991
 Donate Link: http://tareq.co/donate/
 Tags: woocommerce, multivendor, multi-vendor, paypal, shop, vendor, seller, store, sell, online, amazon, dokan, ebay, Etsy, multi seller, multi store, multi vendor, multi vendors, multistore, multivendor, product vendor, product vendors, vendor, vendor system, vendors, wc market place, wc marketplace, wc vendors, woo vendors, woocommerce market place, woocommerce marketplace, woocommerce multi vendor,  commission rate, e-commerce, ebay, ecommerce, yith, yithemes
 Requires at least: 4.4
-Tested up to: 4.7.2
+Tested up to: 4.7.3
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -176,8 +176,18 @@ A. You just delete the free version and install and activate the pro version. No
 
 == Changelog ==
 
+v2.5.4 -> March 8, 2017
+----------------------
+- [tweak] Changed text domain from 'dokan' to 'dokan-lite'
+- [new] Added settings to turn on/off new product form pop-up
+- [new] Added schedule discount price fields in new product form template when popup settings is disabled
+- [fix] Dokan Tabs css fixed for better compatibility with all themes
+- [fix] Fixed issues with saving product types other than simple like booking/auction
+- [fix] Fixed issues with withdraw balance and status
+- [fix] Template rendering issue on Store page and Review page for vendors is fixed.
+
 v2.5.3 -> February 14, 2017
----------------------
+----------------------
 - [fix] Order Tracking modal not working properly in some themes
 - [fix] Fixed showing notice on customer order table for multiple vendors
 - [fix] Fixed product listing status count issue
