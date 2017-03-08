@@ -1,3 +1,12 @@
+v2.5.4 -> March 8, 2017
+---------------------
+- [tweak] Changed text domain from 'dokan' to 'dokan-lite'
+- [new] Added settings to turn on/off new product form pop-up
+- [fix] dokan Tabs css fixed for better compatibility with all themes
+- [fix] Fixed issues with saving product types other than simple like booking/auction
+- [fix] Fixed issues with withdraw balance and status
+- [fix] Template rendering issue on Store page and Review page for vendors is fixed.
+
 v2.5.3 -> February 14, 2017
 ---------------------
 - [fix] Order Tracking modal not working properly in some themes
