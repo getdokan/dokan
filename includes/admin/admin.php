@@ -115,8 +115,8 @@ class Dokan_Admin_Settings {
             $withdraw_text = sprintf( __( 'Withdraw %s', 'dokan-lite' ), '<span class="awaiting-mod count-1"><span class="pending-count">' . $withdraw['pending'] . '</span></span>' );
         }
 
-        $dashboard = add_menu_page( __( 'Dokan', 'dokan-lite' ), __( 'Dokan', 'dokan-lite' ), $capability, 'dokan-lite', array( $this, 'dashboard'), 'dashicons-vault', $menu_position );
-        add_submenu_page( 'dokan', __( 'Dokan Dashboard', 'dokan-lite' ), __( 'Dashboard', 'dokan-lite' ), $capability, 'dokan-lite', array( $this, 'dashboard' ) );
+        $dashboard = add_menu_page( __( 'Dokan', 'dokan-lite' ), __( 'Dokan', 'dokan-lite' ), $capability, 'dokan', array( $this, 'dashboard'), 'dashicons-vault', $menu_position );
+        add_submenu_page( 'dokan', __( 'Dokan Dashboard', 'dokan-lite' ), __( 'Dashboard', 'dokan-lite' ), $capability, 'dokan', array( $this, 'dashboard' ) );
         add_submenu_page( 'dokan', __( 'Withdraw', 'dokan-lite' ), $withdraw_text, $capability, 'dokan-withdraw', array( $this, 'withdraw_page' ) );
         add_submenu_page( 'dokan', __( 'PRO Features', 'dokan-lite' ), __( 'PRO Features', 'dokan-lite' ), $capability, 'dokan-pro-features', array( $this, 'pro_features' ) );
 
