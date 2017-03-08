@@ -47,10 +47,10 @@ class Dokan_Upgrade {
         if ( version_compare( $installed_version, DOKAN_PLUGIN_VERSION , '<' ) ) {
             ?>
                 <div class="notice notice-warning">
-                    <p><?php _e( '<strong>Dokan Data Update Required</strong> &#8211; Please click the button below to update to the latest version.', 'dokan' ) ?></p>
+                    <p><?php _e( '<strong>Dokan Data Update Required</strong> &#8211; Please click the button below to update to the latest version.', 'dokan-lite' ) ?></p>
 
                     <form action="" method="post" style="padding-bottom: 10px;">
-                        <input type="submit" class="button button-primary" name="dokan_upgrade_plugin" value="<?php esc_attr_e( 'Run the Updater', 'dokan' ); ?>">
+                        <input type="submit" class="button button-primary" name="dokan_upgrade_plugin" value="<?php esc_attr_e( 'Run the Updater', 'dokan-lite' ); ?>">
                         <?php wp_nonce_field( 'dokan_upgrade_action', 'dokan_upgrade_action_nonce' ); ?>
                     </form>
                 </div>
@@ -76,14 +76,14 @@ class Dokan_Upgrade {
         if ( version_compare( $installed_version, '2.4', '>=' ) && $ignore != 'yes' ) {
             ?>
             <div class="notice notice-warning">
-                <p><strong><?php _e( 'Please Update Dokan Add-ons', 'dokan' ); ?></strong></p>
+                <p><strong><?php _e( 'Please Update Dokan Add-ons', 'dokan-lite' ); ?></strong></p>
 
                 <p>
-                    <?php printf( __( 'Dokan <strong>v2.4</strong> plugin templating system has been changed. To get smoother add-on experience, update your existing <a href="%s" target="_blank">Dokan Add-Ons</a> from <a href="%s" target="_blank">weDevs.com</a>.', 'dokan' ), 'https://wedevs.com/product-category/plugins/dokan/', 'https://wedevs.com/account/' ); ?>
+                    <?php printf( __( 'Dokan <strong>v2.4</strong> plugin templating system has been changed. To get smoother add-on experience, update your existing <a href="%s" target="_blank">Dokan Add-Ons</a> from <a href="%s" target="_blank">weDevs.com</a>.', 'dokan-lite' ), 'https://wedevs.com/product-category/plugins/dokan/', 'https://wedevs.com/account/' ); ?>
                 </p>
 
                 <p>
-                    <a class="button button-primary" href="<?php echo add_query_arg( array( 'dokan_addon_update_nag_ignore' => 'true' ) ); ?>"><?php _e( 'Hide Notice', 'dokan' ); ?></a>
+                    <a class="button button-primary" href="<?php echo add_query_arg( array( 'dokan_addon_update_nag_ignore' => 'true' ) ); ?>"><?php _e( 'Hide Notice', 'dokan-lite' ); ?></a>
                 </p>
             </div>
             <?php

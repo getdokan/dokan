@@ -67,11 +67,11 @@ class Dokan_Template_Settings {
         global $wp;
 
         if ( isset( $wp->query_vars['settings'] ) && $wp->query_vars['settings'] == 'store' ) {
-            $heading = __( 'Settings', 'dokan' );
+            $heading = __( 'Settings', 'dokan-lite' );
         } elseif ( isset( $wp->query_vars['settings'] ) && $wp->query_vars['settings'] == 'payment' ) {
-            $heading = __( 'Payment Settings', 'dokan' );
+            $heading = __( 'Payment Settings', 'dokan-lite' );
         } else {
-            $heading = apply_filters( 'dokan_dashboard_settings_heading_title', __( 'Settings', 'dokan' ), $wp->query_vars['settings'] );
+            $heading = apply_filters( 'dokan_dashboard_settings_heading_title', __( 'Settings', 'dokan-lite' ), $wp->query_vars['settings'] );
         }
 
         dokan_get_template_part( 'settings/header', '', array( 'heading' => $heading ) );
@@ -89,7 +89,7 @@ class Dokan_Template_Settings {
         $help_text ='';
 
         if ( isset( $wp->query_vars['settings'] ) && $wp->query_vars['settings'] == 'payment' ) {
-            $help_text = __( 'These are the withdraw methods available for you. Please update your payment information below to submit withdraw requests and get your store payments seamlessly.', 'dokan' );
+            $help_text = __( 'These are the withdraw methods available for you. Please update your payment information below to submit withdraw requests and get your store payments seamlessly.', 'dokan-lite' );
         }
 
         if ( $help_text = apply_filters( 'dokan_dashboard_settings_helper_text', $help_text, $wp->query_vars['settings'] ) ) {
@@ -204,7 +204,7 @@ class Dokan_Template_Settings {
     function ajax_settings() {
 
         if ( ! dokan_is_user_seller( get_current_user_id() ) ) {
-            wp_send_json_error( __( 'Are you cheating?', 'dokan' ) );
+            wp_send_json_error( __( 'Are you cheating?', 'dokan-lite' ) );
         }
 
         $_POST['dokan_update_profile'] = '';
@@ -212,19 +212,19 @@ class Dokan_Template_Settings {
         switch( $_POST['form_id'] ) {
             case 'profile-form':
                 if ( !wp_verify_nonce( $_POST['_wpnonce'], 'dokan_profile_settings_nonce' ) ) {
-                    wp_send_json_error( __( 'Are you cheating?', 'dokan' ) );
+                    wp_send_json_error( __( 'Are you cheating?', 'dokan-lite' ) );
                 }
                 $ajax_validate =  $this->profile_validate();
                 break;
             case 'store-form':
                 if ( !wp_verify_nonce( $_POST['_wpnonce'], 'dokan_store_settings_nonce' ) ) {
-                    wp_send_json_error( __( 'Are you cheating?', 'dokan' ) );
+                    wp_send_json_error( __( 'Are you cheating?', 'dokan-lite' ) );
                 }
                 $ajax_validate =  $this->store_validate();
                 break;
             case 'payment-form':
                 if ( !wp_verify_nonce( $_POST['_wpnonce'], 'dokan_payment_settings_nonce' ) ) {
-                    wp_send_json_error( __( 'Are you cheating?', 'dokan' ) );
+                    wp_send_json_error( __( 'Are you cheating?', 'dokan-lite' ) );
                 }
                 $ajax_validate =  $this->payment_validate();
                 break;
@@ -237,7 +237,7 @@ class Dokan_Template_Settings {
         // we are good to go
         $save_data = $this->insert_settings_info();
 
-        $success_msg = __( 'Your information has been saved successfully', 'dokan' ) ;
+        $success_msg = __( 'Your information has been saved successfully', 'dokan-lite' ) ;
 
         $data = apply_filters( 'dokan_ajax_settings_response', array(
             'msg'      => $success_msg,
@@ -258,7 +258,7 @@ class Dokan_Template_Settings {
         }
 
         if ( !wp_verify_nonce( $_POST['_wpnonce'], 'dokan_settings_nonce' ) ) {
-            wp_die( __( 'Are you cheating?', 'dokan' ) );
+            wp_die( __( 'Are you cheating?', 'dokan-lite' ) );
         }
 
         $error = new WP_Error();
@@ -266,20 +266,20 @@ class Dokan_Template_Settings {
         $dokan_name = sanitize_text_field( $_POST['dokan_store_name'] );
 
         if ( empty( $dokan_name ) ) {
-            $error->add( 'dokan_name', __( 'Store name required', 'dokan' ) );
+            $error->add( 'dokan_name', __( 'Store name required', 'dokan-lite' ) );
         }
 
         if ( isset( $_POST['setting_category'] ) ) {
 
             if ( !is_array( $_POST['setting_category'] ) || !count( $_POST['setting_category'] ) ) {
-                $error->add( 'dokan_type', __( 'Store type required', 'dokan' ) );
+                $error->add( 'dokan_type', __( 'Store type required', 'dokan-lite' ) );
             }
         }
 
         if ( !empty( $_POST['setting_paypal_email'] ) ) {
             $email = filter_var( $_POST['setting_paypal_email'], FILTER_VALIDATE_EMAIL );
             if ( empty( $email ) ) {
-                $error->add( 'dokan_email', __( 'Invalid email', 'dokan' ) );
+                $error->add( 'dokan_email', __( 'Invalid email', 'dokan-lite' ) );
             }
         }
 
@@ -296,7 +296,7 @@ class Dokan_Template_Settings {
         foreach ( $required_fields as $key ) {
             if ( empty( $_POST['dokan_address'][$key] ) ) {
                 $code = 'dokan_address['.$key.']';
-                $error->add( $code, sprintf( __('Address field for %s is required','dokan'), $key ) );
+                $error->add( $code, sprintf( __('Address field for %s is required', 'dokan-lite'), $key ) );
             }
         }
 
@@ -320,7 +320,7 @@ class Dokan_Template_Settings {
         }
 
         if ( !wp_verify_nonce( $_POST['_wpnonce'], 'dokan_profile_settings_nonce' ) ) {
-            wp_die( __( 'Are you cheating?', 'dokan' ) );
+            wp_die( __( 'Are you cheating?', 'dokan-lite' ) );
         }
 
         $error = new WP_Error();
@@ -328,7 +328,7 @@ class Dokan_Template_Settings {
         if ( isset( $_POST['setting_category'] ) ) {
 
             if ( !is_array( $_POST['setting_category'] ) || !count( $_POST['setting_category'] ) ) {
-                $error->add( 'dokan_type', __( 'Store type required', 'dokan' ) );
+                $error->add( 'dokan_type', __( 'Store type required', 'dokan-lite' ) );
             }
         }
 
@@ -336,7 +336,7 @@ class Dokan_Template_Settings {
             $email = filter_var( $_POST['setting_paypal_email'], FILTER_VALIDATE_EMAIL );
 
             if ( empty( $email ) ) {
-                $error->add( 'dokan_email', __( 'Invalid email', 'dokan' ) );
+                $error->add( 'dokan_email', __( 'Invalid email', 'dokan-lite' ) );
             }
         }
 
@@ -359,7 +359,7 @@ class Dokan_Template_Settings {
         }
 
         if ( !wp_verify_nonce( $_POST['_wpnonce'], 'dokan_store_settings_nonce' ) ) {
-            wp_die( __( 'Are you cheating?', 'dokan' ) );
+            wp_die( __( 'Are you cheating?', 'dokan-lite' ) );
         }
 
         $error = new WP_Error();
@@ -367,20 +367,20 @@ class Dokan_Template_Settings {
         $dokan_name = sanitize_text_field( $_POST['dokan_store_name'] );
 
         if ( empty( $dokan_name ) ) {
-            $error->add( 'dokan_name', __( 'Store name required', 'dokan' ) );
+            $error->add( 'dokan_name', __( 'Store name required', 'dokan-lite' ) );
         }
 
         if ( isset( $_POST['setting_category'] ) ) {
 
             if ( !is_array( $_POST['setting_category'] ) || !count( $_POST['setting_category'] ) ) {
-                $error->add( 'dokan_type', __( 'Store type required', 'dokan' ) );
+                $error->add( 'dokan_type', __( 'Store type required', 'dokan-lite' ) );
             }
         }
 
         if ( !empty( $_POST['setting_paypal_email'] ) ) {
             $email = filter_var( $_POST['setting_paypal_email'], FILTER_VALIDATE_EMAIL );
             if ( empty( $email ) ) {
-                $error->add( 'dokan_email', __( 'Invalid email', 'dokan' ) );
+                $error->add( 'dokan_email', __( 'Invalid email', 'dokan-lite' ) );
             }
         }
 
@@ -406,7 +406,7 @@ class Dokan_Template_Settings {
         }
 
         if ( !wp_verify_nonce( $_POST['_wpnonce'], 'dokan_payment_settings_nonce' ) ) {
-            wp_die( __( 'Are you cheating?', 'dokan' ) );
+            wp_die( __( 'Are you cheating?', 'dokan-lite' ) );
         }
 
         $error = new WP_Error();
@@ -415,7 +415,7 @@ class Dokan_Template_Settings {
         if ( !empty( $_POST['setting_paypal_email'] ) ) {
             $email = filter_var( $_POST['setting_paypal_email'], FILTER_VALIDATE_EMAIL );
             if ( empty( $email ) ) {
-                $error->add( 'dokan_email', __( 'Invalid email', 'dokan' ) );
+                $error->add( 'dokan_email', __( 'Invalid email', 'dokan-lite' ) );
             }
         }
 
@@ -563,7 +563,7 @@ class Dokan_Template_Settings {
                 $track_val['gravatar'] = $profile_picture_val;
             } else {
                 if ( strlen( $next_add ) == 0 ) {
-                    $next_add = sprintf(__( 'Add Profile Picture to gain %s%% progress', 'dokan' ), $profile_picture_val);
+                    $next_add = sprintf(__( 'Add Profile Picture to gain %s%% progress', 'dokan-lite' ), $profile_picture_val);
                 }
             }
         endif;
@@ -582,8 +582,8 @@ class Dokan_Template_Settings {
 
                     if ( strlen( $next_add ) == 0 ) {
                         //replace keys to nice name
-                        $nice_name = ( $key === 'fb' ) ? __( 'Facebook', 'dokan' ) : ( ( $key === 'gplus' ) ? __( 'Google+', 'dokan' ) : $key);
-                        $next_add = sprintf( __( 'Add %s profile link to gain %s%% progress', 'dokan' ), $nice_name, $social_val[$key] );
+                        $nice_name = ( $key === 'fb' ) ? __( 'Facebook', 'dokan-lite' ) : ( ( $key === 'gplus' ) ? __( 'Google+', 'dokan-lite' ) : $key);
+                        $next_add = sprintf( __( 'Add %s profile link to gain %s%% progress', 'dokan-lite' ), $nice_name, $social_val[$key] );
                     }
                 }
             }
@@ -597,7 +597,7 @@ class Dokan_Template_Settings {
                 $track_val['phone'] = $phone_val;
             } else {
                 if ( strlen( $next_add ) == 0 ) {
-                    $next_add = sprintf( __( 'Add Phone to gain %s%% progress', 'dokan' ), $phone_val );
+                    $next_add = sprintf( __( 'Add Phone to gain %s%% progress', 'dokan-lite' ), $phone_val );
                 }
             }
 
@@ -610,7 +610,7 @@ class Dokan_Template_Settings {
                 $profile_val         = $profile_val + $banner_val;
                 $track_val['banner'] = $banner_val;
             } else {
-                $next_add = sprintf(__( 'Add Banner to gain %s%% progress', 'dokan' ), $banner_val);
+                $next_add = sprintf(__( 'Add Banner to gain %s%% progress', 'dokan-lite' ), $banner_val);
             }
 
         endif;
@@ -622,7 +622,7 @@ class Dokan_Template_Settings {
                 $track_val['store_name'] = $store_name_val;
             } else {
                 if ( strlen( $next_add ) == 0 ) {
-                    $next_add = sprintf( __( 'Add Store Name to gain %s%% progress', 'dokan' ), $store_name_val );
+                    $next_add = sprintf( __( 'Add Store Name to gain %s%% progress', 'dokan-lite' ), $store_name_val );
                 }
             }
         endif;
@@ -634,7 +634,7 @@ class Dokan_Template_Settings {
                 $track_val['address'] = $address_val;
             } else {
                 if ( strlen( $next_add ) == 0 ) {
-                    $next_add = sprintf(__( 'Add address to gain %s%% progress', 'dokan' ),$address_val);
+                    $next_add = sprintf(__( 'Add address to gain %s%% progress', 'dokan-lite' ),$address_val);
                 }
             }
         endif;
@@ -682,7 +682,7 @@ class Dokan_Template_Settings {
 
         // set message if no payment method found
         if ( strlen( $next_add ) == 0 && $payment_method_val !=0 ) {
-            $next_add = sprintf( __( 'Add a Payment method to gain %s%% progress', 'dokan' ), $payment_method_val );
+            $next_add = sprintf( __( 'Add a Payment method to gain %s%% progress', 'dokan-lite' ), $payment_method_val );
         }
 
         if ( isset( $dokan_settings['location'] ) && strlen(trim($dokan_settings['location'])) != 0 ) {
@@ -690,7 +690,7 @@ class Dokan_Template_Settings {
             $track_val['location'] = $map_val;
         } else {
             if ( strlen( $next_add ) == 0 ) {
-                $next_add = sprintf( __( 'Add Map location to gain %s%% progress', 'dokan' ), $map_val );
+                $next_add = sprintf( __( 'Add Map location to gain %s%% progress', 'dokan-lite' ), $map_val );
             }
         }
 
@@ -709,9 +709,9 @@ class Dokan_Template_Settings {
      */
     function get_dokan_categories() {
         $dokan_category = array(
-            'book'       => __( 'Book', 'dokan' ),
-            'dress'      => __( 'Dress', 'dokan' ),
-            'electronic' => __( 'Electronic', 'dokan' ),
+            'book'       => __( 'Book', 'dokan-lite' ),
+            'dress'      => __( 'Dress', 'dokan-lite' ),
+            'electronic' => __( 'Electronic', 'dokan-lite' ),
         );
 
         return apply_filters( 'dokan_category', $dokan_category );

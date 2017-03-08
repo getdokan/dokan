@@ -103,18 +103,18 @@ class Dokan_Template_Orders {
             header( "Content-Disposition: attachment; filename=$filename.csv" );
 
             $headers = array(
-                'order_id'             => __( 'Order No', 'dokan' ),
-                'order_items'          => __( 'Order Items', 'dokan' ),
-                'order_shipping'       => __( 'Shipping method', 'dokan' ),
-                'order_shipping_cost'  => __( 'Shipping Cost', 'dokan' ),
-                'order_payment_method' => __( 'Payment method', 'dokan' ),
-                'order_total'          => __( 'Order Total', 'dokan' ),
-                'order_status'         => __( 'Order Status', 'dokan' ),
-                'order_date'           => __( 'Order Date', 'dokan' ),
-                'customer_name'        => __( 'Customer Name', 'dokan' ),
-                'customer_email'       => __( 'Customer Email', 'dokan' ),
-                'customer_phone'       => __( 'Customer Phone', 'dokan' ),
-                'customer_ip'          => __( 'Customer IP', 'dokan' ),
+                'order_id'             => __( 'Order No', 'dokan-lite' ),
+                'order_items'          => __( 'Order Items', 'dokan-lite' ),
+                'order_shipping'       => __( 'Shipping method', 'dokan-lite' ),
+                'order_shipping_cost'  => __( 'Shipping Cost', 'dokan-lite' ),
+                'order_payment_method' => __( 'Payment method', 'dokan-lite' ),
+                'order_total'          => __( 'Order Total', 'dokan-lite' ),
+                'order_status'         => __( 'Order Status', 'dokan-lite' ),
+                'order_date'           => __( 'Order Date', 'dokan-lite' ),
+                'customer_name'        => __( 'Customer Name', 'dokan-lite' ),
+                'customer_email'       => __( 'Customer Email', 'dokan-lite' ),
+                'customer_phone'       => __( 'Customer Phone', 'dokan-lite' ),
+                'customer_ip'          => __( 'Customer IP', 'dokan-lite' ),
             );
 
             foreach ( (array)$headers as $label ) {
@@ -172,18 +172,18 @@ class Dokan_Template_Orders {
             header( "Content-Disposition: attachment; filename=$filename.csv" );
 
             $headers = array(
-                'order_id'             => __( 'Order No', 'dokan' ),
-                'order_items'          => __( 'Order Items', 'dokan' ),
-                'order_shipping'       => __( 'Shipping method', 'dokan' ),
-                'order_shipping_cost'  => __( 'Shipping Cost', 'dokan' ),
-                'order_payment_method' => __( 'Payment method', 'dokan' ),
-                'order_total'          => __( 'Order Total', 'dokan' ),
-                'order_status'         => __( 'Order Status', 'dokan' ),
-                'order_date'           => __( 'Order Date', 'dokan' ),
-                'customer_name'        => __( 'Customer Name', 'dokan' ),
-                'customer_email'       => __( 'Customer Email', 'dokan' ),
-                'customer_phone'       => __( 'Customer Phone', 'dokan' ),
-                'customer_ip'          => __( 'Customer IP', 'dokan' ),
+                'order_id'             => __( 'Order No', 'dokan-lite' ),
+                'order_items'          => __( 'Order Items', 'dokan-lite' ),
+                'order_shipping'       => __( 'Shipping method', 'dokan-lite' ),
+                'order_shipping_cost'  => __( 'Shipping Cost', 'dokan-lite' ),
+                'order_payment_method' => __( 'Payment method', 'dokan-lite' ),
+                'order_total'          => __( 'Order Total', 'dokan-lite' ),
+                'order_status'         => __( 'Order Status', 'dokan-lite' ),
+                'order_date'           => __( 'Order Date', 'dokan-lite' ),
+                'customer_name'        => __( 'Customer Name', 'dokan-lite' ),
+                'customer_email'       => __( 'Customer Email', 'dokan-lite' ),
+                'customer_phone'       => __( 'Customer Phone', 'dokan-lite' ),
+                'customer_ip'          => __( 'Customer IP', 'dokan-lite' ),
             );
 
             foreach ( (array)$headers as $label ) {

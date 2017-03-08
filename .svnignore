@@ -13,4 +13,5 @@ changelog.txt
 debug.log
 phpunit.xml
 .svnignore
+README.md
 plugin-deploy.sh

@@ -64,25 +64,25 @@ class Dokan_Admin_User_Profile {
 
         $country_state     = array(
             'country' => array(
-                'label'       => __( 'Country', 'dokan' ),
+                'label'       => __( 'Country', 'dokan-lite' ),
                 'description' => '',
                 'class'       => 'js_field-country',
                 'type'        => 'select',
-                'options'     => array( '' => __( 'Select a country&hellip;', 'dokan' ) ) + WC()->countries->get_allowed_countries()
+                'options'     => array( '' => __( 'Select a country&hellip;', 'dokan-lite' ) ) + WC()->countries->get_allowed_countries()
             ),
             'state' => array(
-                'label'       => __( 'State/County', 'dokan' ),
-                'description' => __( 'State/County or state code', 'dokan' ),
+                'label'       => __( 'State/County', 'dokan-lite' ),
+                'description' => __( 'State/County or state code', 'dokan-lite' ),
                 'class'       => 'js_field-state'
             ),
         );
         ?>
-        <h3><?php _e( 'Dokan Options', 'dokan' ); ?></h3>
+        <h3><?php _e( 'Dokan Options', 'dokan-lite' ); ?></h3>
 
         <table class="form-table">
             <tbody>
                 <tr>
-                    <th><?php _e( 'Banner', 'dokan' ); ?></th>
+                    <th><?php _e( 'Banner', 'dokan-lite' ); ?></th>
                     <td>
                         <div class="dokan-banner">
                             <div class="image-wrap<?php echo $banner ? '' : ' dokan-hide'; ?>">
@@ -94,43 +94,43 @@ class Dokan_Admin_User_Profile {
                             </div>
 
                             <div class="button-area<?php echo $banner ? ' dokan-hide' : ''; ?>">
-                                <a href="#" class="dokan-banner-drag button button-primary"><?php _e( 'Upload banner', 'dokan' ); ?></a>
-                                <p class="description"><?php _e( '(Upload a banner for your store. Banner size is (825x300) pixels. )', 'dokan' ); ?></p>
+                                <a href="#" class="dokan-banner-drag button button-primary"><?php _e( 'Upload banner', 'dokan-lite' ); ?></a>
+                                <p class="description"><?php _e( '(Upload a banner for your store. Banner size is (825x300) pixels. )', 'dokan-lite' ); ?></p>
                             </div>
                         </div> <!-- .dokan-banner -->
                     </td>
                 </tr>
 
                 <tr>
-                    <th><?php _e( 'Store name', 'dokan' ); ?></th>
+                    <th><?php _e( 'Store name', 'dokan-lite' ); ?></th>
                     <td>
                         <input type="text" name="dokan_store_name" class="regular-text" value="<?php echo esc_attr( $store_settings['store_name'] ); ?>">
                     </td>
                 </tr>
 
                 <tr>
-                    <th><?php _e( 'Address 1', 'dokan' ); ?></th>
+                    <th><?php _e( 'Address 1', 'dokan-lite' ); ?></th>
                     <td>
                         <input type="text" name="dokan_store_address[street_1]" class="regular-text" value="<?php echo esc_attr( $address_street1 ) ?>">
                     </td>
                 </tr>
 
                 <tr>
-                    <th><?php _e( 'Address 2', 'dokan' ); ?></th>
+                    <th><?php _e( 'Address 2', 'dokan-lite' ); ?></th>
                     <td>
                         <input type="text" name="dokan_store_address[street_2]" class="regular-text" value="<?php echo esc_attr( $address_street2 ) ?>">
                     </td>
                 </tr>
 
                 <tr>
-                    <th><?php _e( 'Town/City', 'dokan' ); ?></th>
+                    <th><?php _e( 'Town/City', 'dokan-lite' ); ?></th>
                     <td>
                         <input type="text" name="dokan_store_address[city]" class="regular-text" value="<?php echo esc_attr( $address_city ) ?>">
                     </td>
                 </tr>
 
                 <tr>
-                    <th><?php _e( 'Zip Code', 'dokan' ); ?></th>
+                    <th><?php _e( 'Zip Code', 'dokan-lite' ); ?></th>
                     <td>
                         <input type="text" name="dokan_store_address[zip]" class="regular-text" value="<?php echo esc_attr( $address_zip ) ?>">
                     </td>
@@ -170,7 +170,7 @@ class Dokan_Admin_User_Profile {
 
 
                 <tr>
-                    <th><?php _e( 'Phone Number', 'dokan' ); ?></th>
+                    <th><?php _e( 'Phone Number', 'dokan-lite' ); ?></th>
                     <td>
                         <input type="text" name="dokan_store_phone" class="regular-text" value="<?php echo esc_attr( $store_settings['phone'] ); ?>">
                     </td>
@@ -188,12 +188,12 @@ class Dokan_Admin_User_Profile {
                 <?php } ?>
 
                 <tr>
-                    <th><?php _e( 'Payment Options : ', 'dokan' ); ?></th>
+                    <th><?php _e( 'Payment Options : ', 'dokan-lite' ); ?></th>
                 </tr>
 
                 <?php if( isset( $store_settings['payment']['paypal']['email'] ) ) { ?>
                     <tr>
-                        <th><?php _e( 'Paypal Email ', 'dokan' ); ?></th>
+                        <th><?php _e( 'Paypal Email ', 'dokan-lite' ); ?></th>
                         <td>
                             <input type="text" disabled class="regular-text" value="<?php echo esc_attr( $store_settings['payment']['paypal']['email'] ); ?>">
                         </td>
@@ -201,7 +201,7 @@ class Dokan_Admin_User_Profile {
                 <?php } ?>
                 <?php if( isset( $store_settings['payment']['skrill']['email'] ) ) { ?>
                     <tr>
-                        <th><?php _e( 'Skrill Email ', 'dokan' ); ?></th>
+                        <th><?php _e( 'Skrill Email ', 'dokan-lite' ); ?></th>
                         <td>
                             <input type="text" disabled class="regular-text" value="<?php echo esc_attr( $store_settings['payment']['skrill']['email'] ); ?>">
                         </td>
@@ -210,81 +210,81 @@ class Dokan_Admin_User_Profile {
 
                 <?php if( isset( $store_settings['payment']['bank'] ) ) { ?>
                     <tr>
-                        <th><?php _e( 'Bank name ', 'dokan' ); ?></th>
+                        <th><?php _e( 'Bank name ', 'dokan-lite' ); ?></th>
                         <td>
                             <input type="text" disabled class="regular-text" value="<?php echo isset( $store_settings['payment']['bank']['bank_name'] ) ? esc_attr( $store_settings['payment']['bank']['bank_name'] ) : ''; ?>">
                         </td>
                     </tr>
                     <tr>
-                        <th><?php _e( 'Account Name ', 'dokan' ); ?></th>
+                        <th><?php _e( 'Account Name ', 'dokan-lite' ); ?></th>
                         <td>
                             <input type="text" disabled class="regular-text" value="<?php echo isset( $store_settings['payment']['bank']['ac_name'] ) ? esc_attr( $store_settings['payment']['bank']['ac_name'] ) : ''; ?>">
                         </td>
                     </tr>
                     <tr>
-                        <th><?php _e( 'Account Number ', 'dokan' ); ?></th>
+                        <th><?php _e( 'Account Number ', 'dokan-lite' ); ?></th>
                         <td>
                             <input type="text" disabled class="regular-text" value="<?php echo isset( $store_settings['payment']['bank']['ac_number'] ) ? esc_attr( $store_settings['payment']['bank']['ac_number'] ) : ''; ?>">
                         </td>
                     </tr>
                     <tr>
-                        <th><?php _e( 'Bank Address ', 'dokan' ); ?></th>
+                        <th><?php _e( 'Bank Address ', 'dokan-lite' ); ?></th>
                         <td>
                             <input type="text" disabled class="regular-text" value="<?php echo isset( $store_settings['payment']['bank']['bank_addr'] ) ? esc_attr( $store_settings['payment']['bank']['bank_addr'] ) : ''; ?>">
                         </td>
                     </tr>
                     <tr>
-                        <th><?php _e( 'Bank Swift ', 'dokan' ); ?></th>
+                        <th><?php _e( 'Bank Swift ', 'dokan-lite' ); ?></th>
                         <td>
                             <input type="text" disabled class="regular-text" value="<?php echo isset( $store_settings['payment']['bank']['swift'] ) ? esc_attr( $store_settings['payment']['bank']['swift'] ) : ''; ?>">
                         </td>
                     </tr>
                 <?php } ?>
                 <tr>
-                    <th><?php _e( 'Selling', 'dokan' ); ?></th>
+                    <th><?php _e( 'Selling', 'dokan-lite' ); ?></th>
                     <td>
                         <label for="dokan_enable_selling">
                             <input type="hidden" name="dokan_enable_selling" value="no">
                             <input name="dokan_enable_selling" type="checkbox" id="dokan_enable_selling" value="yes" <?php checked( $selling, 'yes' ); ?> />
-                            <?php _e( 'Enable Adding Products', 'dokan' ); ?>
+                            <?php _e( 'Enable Adding Products', 'dokan-lite' ); ?>
                         </label>
 
-                        <p class="description"><?php _e( 'Enable or disable product adding capability', 'dokan' ) ?></p>
+                        <p class="description"><?php _e( 'Enable or disable product adding capability', 'dokan-lite' ) ?></p>
                     </td>
                 </tr>
 
                 <tr>
-                    <th><?php _e( 'Publishing', 'dokan' ); ?></th>
+                    <th><?php _e( 'Publishing', 'dokan-lite' ); ?></th>
                     <td>
                         <label for="dokan_publish">
                             <input type="hidden" name="dokan_publish" value="no">
                             <input name="dokan_publish" type="checkbox" id="dokan_publish" value="yes" <?php checked( $publishing, 'yes' ); ?> />
-                            <?php _e( 'Publish product directly', 'dokan' ); ?>
+                            <?php _e( 'Publish product directly', 'dokan-lite' ); ?>
                         </label>
 
-                        <p class="description"><?php _e( 'Bypass pending, publish products directly', 'dokan' ) ?></p>
+                        <p class="description"><?php _e( 'Bypass pending, publish products directly', 'dokan-lite' ) ?></p>
                     </td>
                 </tr>
 
                 <tr>
-                    <th><?php _e( 'Vendor Commission %', 'dokan' ); ?></th>
+                    <th><?php _e( 'Vendor Commission %', 'dokan-lite' ); ?></th>
                     <td>
                         <input type="text" class="small-text" name="dokan_seller_percentage" value="<?php echo esc_attr( $seller_percentage ); ?>">
 
-                        <p class="description"><?php _e( 'It will overrride the default % vendor gets from each order', 'dokan' ) ?></p>
+                        <p class="description"><?php _e( 'It will overrride the default % vendor gets from each order', 'dokan-lite' ) ?></p>
                     </td>
                 </tr>
 
                 <tr>
-                    <th><?php _e( 'Featured vendor', 'dokan' ); ?></th>
+                    <th><?php _e( 'Featured vendor', 'dokan-lite' ); ?></th>
                     <td>
                         <label for="dokan_feature">
                             <input type="hidden" name="dokan_feature" value="no">
                             <input name="dokan_feature" type="checkbox" id="dokan_feature" value="yes" <?php checked( $feature_seller, 'yes' ); ?> />
-                            <?php _e( 'Mark as featured vendor', 'dokan' ); ?>
+                            <?php _e( 'Mark as featured vendor', 'dokan-lite' ); ?>
                         </label>
 
-                        <p class="description"><?php _e( 'This vendor will be marked as a featured vendor.', 'dokan' ) ?></p>
+                        <p class="description"><?php _e( 'This vendor will be marked as a featured vendor.', 'dokan-lite' ) ?></p>
                     </td>
                 </tr>
 

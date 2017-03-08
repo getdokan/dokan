@@ -65,7 +65,7 @@
                 <div class="button-area<?php echo $banner ? ' dokan-hide' : ''; ?>">
                     <i class="fa fa-cloud-upload"></i>
 
-                    <a href="#" class="dokan-banner-drag dokan-btn dokan-btn-info dokan-theme"><?php _e( 'Upload banner', 'dokan' ); ?></a>
+                    <a href="#" class="dokan-banner-drag dokan-btn dokan-btn-info dokan-theme"><?php _e( 'Upload banner', 'dokan-lite' ); ?></a>
                     <p class="help-block">
                         <?php
                         /**
@@ -78,7 +78,7 @@
                         $banner_height = ! empty( $general_settings['store_banner_height'] ) ? $general_settings['store_banner_height'] : 300;
 
                         $help_text = sprintf(
-                            __('Upload a banner for your store. Banner size is (%sx%s) pixels.', 'dokan' ),
+                            __('Upload a banner for your store. Banner size is (%sx%s) pixels.', 'dokan-lite' ),
                             $banner_width, $banner_height
                         );
 
@@ -92,7 +92,7 @@
         <?php endif; ?>
 
         <div class="dokan-form-group">
-            <label class="dokan-w3 dokan-control-label" for="dokan_gravatar"><?php _e( 'Profile Picture', 'dokan' ); ?></label>
+            <label class="dokan-w3 dokan-control-label" for="dokan_gravatar"><?php _e( 'Profile Picture', 'dokan-lite' ); ?></label>
 
             <div class="dokan-w5 dokan-gravatar">
                 <div class="dokan-left gravatar-wrap<?php echo $gravatar ? '' : ' dokan-hide'; ?>">
@@ -102,21 +102,21 @@
                     <a class="dokan-close dokan-remove-gravatar-image">&times;</a>
                 </div>
                 <div class="gravatar-button-area<?php echo $gravatar ? ' dokan-hide' : ''; ?>">
-                    <a href="#" class="dokan-pro-gravatar-drag dokan-btn dokan-btn-default"><i class="fa fa-cloud-upload"></i> <?php _e( 'Upload Photo', 'dokan' ); ?></a>
+                    <a href="#" class="dokan-pro-gravatar-drag dokan-btn dokan-btn-default"><i class="fa fa-cloud-upload"></i> <?php _e( 'Upload Photo', 'dokan-lite' ); ?></a>
                 </div>
             </div>
         </div>
 
         <div class="dokan-form-group">
-            <label class="dokan-w3 dokan-control-label" for="dokan_store_name"><?php _e( 'Store Name', 'dokan' ); ?></label>
+            <label class="dokan-w3 dokan-control-label" for="dokan_store_name"><?php _e( 'Store Name', 'dokan-lite' ); ?></label>
 
             <div class="dokan-w5 dokan-text-left">
-                <input id="dokan_store_name" required value="<?php echo $storename; ?>" name="dokan_store_name" placeholder="<?php _e( 'store name', 'dokan'); ?>" class="dokan-form-control" type="text">
+                <input id="dokan_store_name" required value="<?php echo $storename; ?>" name="dokan_store_name" placeholder="<?php _e( 'store name', 'dokan-lite'); ?>" class="dokan-form-control" type="text">
             </div>
         </div>
 
         <div class="dokan-form-group">
-            <label class="dokan-w3 dokan-control-label" for="dokan_store_ppp"><?php _e( 'Store Product Per Page', 'dokan' ); ?></label>
+            <label class="dokan-w3 dokan-control-label" for="dokan_store_ppp"><?php _e( 'Store Product Per Page', 'dokan-lite' ); ?></label>
 
             <div class="dokan-w5 dokan-text-left">
                 <input id="dokan_store_ppp" value="<?php echo $store_ppp; ?>" name="dokan_store_ppp" placeholder="10" class="dokan-form-control" type="number">
@@ -139,31 +139,31 @@
         <!--address-->
 
         <div class="dokan-form-group">
-            <label class="dokan-w3 dokan-control-label" for="setting_phone"><?php _e( 'Phone No', 'dokan' ); ?></label>
+            <label class="dokan-w3 dokan-control-label" for="setting_phone"><?php _e( 'Phone No', 'dokan-lite' ); ?></label>
             <div class="dokan-w5 dokan-text-left">
-                <input id="setting_phone" value="<?php echo $phone; ?>" name="setting_phone" placeholder="<?php _e( '+123456..', 'dokan' ); ?>" class="dokan-form-control input-md" type="text">
+                <input id="setting_phone" value="<?php echo $phone; ?>" name="setting_phone" placeholder="<?php _e( '+123456..', 'dokan-lite' ); ?>" class="dokan-form-control input-md" type="text">
             </div>
         </div>
 
         <div class="dokan-form-group">
-            <label class="dokan-w3 dokan-control-label"><?php _e( 'Email', 'dokan' ); ?></label>
+            <label class="dokan-w3 dokan-control-label"><?php _e( 'Email', 'dokan-lite' ); ?></label>
             <div class="dokan-w5 dokan-text-left">
                 <div class="checkbox">
                     <label>
                         <input type="hidden" name="setting_show_email" value="no">
-                        <input type="checkbox" name="setting_show_email" value="yes"<?php checked( $show_email, 'yes' ); ?>> <?php _e( 'Show email address in store', 'dokan' ); ?>
+                        <input type="checkbox" name="setting_show_email" value="yes"<?php checked( $show_email, 'yes' ); ?>> <?php _e( 'Show email address in store', 'dokan-lite' ); ?>
                     </label>
                 </div>
             </div>
         </div>
 
         <div class="dokan-form-group">
-            <label class="dokan-w3 dokan-control-label"><?php _e( 'More product', 'dokan' ); ?></label>
+            <label class="dokan-w3 dokan-control-label"><?php _e( 'More product', 'dokan-lite' ); ?></label>
             <div class="dokan-w5 dokan-text-left">
                 <div class="checkbox">
                     <label>
                         <input type="hidden" name="setting_show_more_ptab" value="no">
-                        <input type="checkbox" name="setting_show_more_ptab" value="yes"<?php checked( $show_email, 'yes' ); ?>> <?php _e( 'Enable tab on product single page view', 'dokan' ); ?>
+                        <input type="checkbox" name="setting_show_more_ptab" value="yes"<?php checked( $show_email, 'yes' ); ?>> <?php _e( 'Enable tab on product single page view', 'dokan-lite' ); ?>
                     </label>
                 </div>
             </div>
@@ -171,15 +171,15 @@
 
 
         <div class="dokan-form-group">
-            <label class="dokan-w3 dokan-control-label" for="setting_map"><?php _e( 'Map', 'dokan' ); ?></label>
+            <label class="dokan-w3 dokan-control-label" for="setting_map"><?php _e( 'Map', 'dokan-lite' ); ?></label>
 
             <div class="dokan-w6 dokan-text-left">
                 <input id="dokan-map-lat" type="hidden" name="location" value="<?php echo $map_location; ?>" size="30" />
 
                 <div class="dokan-map-wrap">
                     <div class="dokan-map-search-bar">
-                        <input id="dokan-map-add" type="text" class="dokan-map-search" value="<?php echo $map_address; ?>" name="find_address" placeholder="<?php _e( 'Type an address to find', 'dokan' ); ?>" size="30" />
-                        <a href="#" class="dokan-map-find-btn" id="dokan-location-find-btn" type="button"><?php _e( 'Find Address', 'dokan' ); ?></a>
+                        <input id="dokan-map-add" type="text" class="dokan-map-search" value="<?php echo $map_address; ?>" name="find_address" placeholder="<?php _e( 'Type an address to find', 'dokan-lite' ); ?>" size="30" />
+                        <a href="#" class="dokan-map-find-btn" id="dokan-location-find-btn" type="button"><?php _e( 'Find Address', 'dokan-lite' ); ?></a>
                     </div>
 
                     <div class="dokan-google-map" id="dokan-map"></div>
@@ -193,17 +193,17 @@
         if ( $tnc_enable == 'on' ) :
             ?>
             <div class="dokan-form-group">
-                <label class="dokan-w3 dokan-control-label"><?php _e( 'Terms and Conditions', 'dokan' ); ?></label>
+                <label class="dokan-w3 dokan-control-label"><?php _e( 'Terms and Conditions', 'dokan-lite' ); ?></label>
                 <div class="dokan-w5 dokan-text-left dokan_tock_check">
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" id="dokan_store_tnc_enable" value="on" <?php echo $enable_tnc == 'on' ? 'checked':'' ; ?> name="dokan_store_tnc_enable" ><?php _e( 'Show terms and conditions in store page', 'dokan' ); ?>
+                            <input type="checkbox" id="dokan_store_tnc_enable" value="on" <?php echo $enable_tnc == 'on' ? 'checked':'' ; ?> name="dokan_store_tnc_enable" ><?php _e( 'Show terms and conditions in store page', 'dokan-lite' ); ?>
                         </label>
                     </div>
                 </div>
             </div>
             <div class="dokan-form-group" id="dokan_tnc_text">
-                <label class="dokan-w3 dokan-control-label" for="dokan_store_tnc"><?php _e( 'TOC Details', 'dokan' ); ?></label>
+                <label class="dokan-w3 dokan-control-label" for="dokan_store_tnc"><?php _e( 'TOC Details', 'dokan-lite' ); ?></label>
                 <div class="dokan-w8 dokan-text-left">
                     <?php
                         $settings = array(
@@ -225,7 +225,7 @@
         <div class="dokan-form-group">
 
             <div class="dokan-w4 ajax_prev dokan-text-left" style="margin-left:24%;">
-                <input type="submit" name="dokan_update_store_settings" class="dokan-btn dokan-btn-danger dokan-btn-theme" value="<?php esc_attr_e( 'Update Settings', 'dokan' ); ?>">
+                <input type="submit" name="dokan_update_store_settings" class="dokan-btn dokan-btn-danger dokan-btn-theme" value="<?php esc_attr_e( 'Update Settings', 'dokan-lite' ); ?>">
             </div>
         </div>
     </form>

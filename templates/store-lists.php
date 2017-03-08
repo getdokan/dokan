@@ -8,15 +8,15 @@
         $search_query = isset( $_GET['dokan_seller_search'] ) ? sanitize_text_field( $_GET['dokan_seller_search'] ) : '';
 
         if ( ! empty( $search_query ) ) {
-            printf( '<h2>' . __( 'Search Results for: %s', 'dokan' ) . '</h2>', $search_query );
+            printf( '<h2>' . __( 'Search Results for: %s', 'dokan-lite' ) . '</h2>', $search_query );
         }
     ?>
 
         <form role="search" method="get" class="dokan-seller-search-form" action="">
             <label>
-                <span class="screen-reader-text"><?php _e( 'Search vendor', 'dokan' ); ?></span>
+                <span class="screen-reader-text"><?php _e( 'Search vendor', 'dokan-lite' ); ?></span>
             </label>
-            <input type="search" id="search" class="search-field dokan-seller-search" placeholder="<?php esc_attr_e( 'Search &hellip;', 'dokan' ); ?>" value="<?php echo esc_attr( $search_query ); ?>" name="dokan_seller_search" title="<?php esc_attr_e( 'Search seller &hellip;', 'dokan' ); ?>" />
+            <input type="search" id="search" class="search-field dokan-seller-search" placeholder="<?php esc_attr_e( 'Search &hellip;', 'dokan-lite' ); ?>" value="<?php echo esc_attr( $search_query ); ?>" name="dokan_seller_search" title="<?php esc_attr_e( 'Search seller &hellip;', 'dokan-lite' ); ?>" />
             <input type="hidden" id="pagination_base" name="pagination_base" value="<?php echo $pagination_base ?>" />
             <input type="hidden" id="nonce" name="nonce" value="<?php echo wp_create_nonce( 'dokan-seller-listing-search' ); ?>" />
             <div class="dokan-overlay" style="display: none;"><span class="dokan-ajax-loader"></span></div>

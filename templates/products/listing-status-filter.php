@@ -10,7 +10,7 @@
 ?>
 <ul class="dokan-listing-filter dokan-left subsubsub">
     <li<?php echo $status_class == 'all' ? ' class="active"' : ''; ?>>
-        <a href="<?php echo $permalink; ?>"><?php printf( __( 'All (%d)', 'dokan' ), $post_counts->total ); ?></a>
+        <a href="<?php echo $permalink; ?>"><?php printf( __( 'All (%d)', 'dokan-lite' ), $post_counts->total ); ?></a>
     </li>
     <?php foreach ( $statuses as $status => $status_label ): ?>
         <?php

@@ -53,7 +53,7 @@ function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = NUL
     global $wpdb;
 
     $cache_key = 'dokan-seller-orders-' . $status . '-' . $seller_id;
-    $orders = wp_cache_get( $cache_key, 'dokan' );
+    $orders = wp_cache_get( $cache_key, 'dokan-lite' );
 
     if ( $orders === false ) {
         $status_where = ( $status == 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', $status );
@@ -71,7 +71,7 @@ function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = NUL
                 LIMIT $offset, $limit";
 
         $orders = $wpdb->get_results( $wpdb->prepare( $sql, $seller_id ) );
-        wp_cache_set( $cache_key, $orders, 'dokan' );
+        wp_cache_set( $cache_key, $orders, 'dokan-lite' );
     }
 
     return $orders;
@@ -93,7 +93,7 @@ function dokan_get_seller_orders_by_date( $start_date, $end_date, $seller_id = f
     $end_date = date( 'Y-m-d', strtotime( $end_date ) );
 
     $cache_key = md5( 'dokan-seller-orders-' . $end_date . '-' . $end_date. '-' . $seller_id );
-    $orders = wp_cache_get( $cache_key, 'dokan' );
+    $orders = wp_cache_get( $cache_key, 'dokan-lite' );
     if ( $orders === false ) {
         $status_where = ( $status == 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', $status );
         $date_query = $wpdb->prepare( ' AND DATE( p.post_date ) >= %s AND DATE( p.post_date ) <= %s', $start_date, $end_date );
@@ -109,7 +109,7 @@ function dokan_get_seller_orders_by_date( $start_date, $end_date, $seller_id = f
                 ORDER BY p.post_date ASC";
         $orders = $wpdb->get_results( $wpdb->prepare( $sql, $seller_id ) );
 
-        wp_cache_set( $cache_key, $orders, 'dokan' );
+        wp_cache_set( $cache_key, $orders, 'dokan-lite' );
     }
 
     return $orders;
@@ -153,7 +153,7 @@ function dokan_get_seller_orders_number( $seller_id, $status = 'all' ) {
     global $wpdb;
 
     $cache_key = 'dokan-seller-orders-count-' . $status . '-' . $seller_id;
-    $count = wp_cache_get( $cache_key, 'dokan' );
+    $count = wp_cache_get( $cache_key, 'dokan-lite' );
 
     if ( $count === false ) {
         $status_where = ( $status == 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', $status );
@@ -169,7 +169,7 @@ function dokan_get_seller_orders_number( $seller_id, $status = 'all' ) {
         $result = $wpdb->get_row( $wpdb->prepare( $sql, $seller_id ) );
         $count  = $result->count;
 
-        wp_cache_set( $cache_key, $count, 'dokan' );
+        wp_cache_set( $cache_key, $count, 'dokan-lite' );
     }
 
     return $count;
@@ -208,7 +208,7 @@ function dokan_count_orders( $user_id ) {
     global $wpdb;
 
     $cache_key = 'dokan-count-orders-' . $user_id;
-    $counts = wp_cache_get( $cache_key, 'dokan' );
+    $counts = wp_cache_get( $cache_key, 'dokan-lite' );
 
     if ( $counts === false ) {
         $counts = array('wc-pending' => 0, 'wc-completed' => 0, 'wc-on-hold' => 0, 'wc-processing' => 0, 'wc-refunded' => 0, 'wc-cancelled' => 0, 'total' => 0);
@@ -235,7 +235,7 @@ function dokan_count_orders( $user_id ) {
         }
 
         $counts = (object) $counts;
-        wp_cache_set( $cache_key, $counts, 'dokan' );
+        wp_cache_set( $cache_key, $counts, 'dokan-lite' );
     }
 
     return $counts;
@@ -316,7 +316,7 @@ function dokan_on_child_order_status_change( $order_id, $old_status, $new_status
     // mark the parent order as complete
     if ( $all_complete ) {
         $parent_order = new WC_Order( $parent_order_id );
-        $parent_order->update_status( 'wc-completed', __( 'Mark parent order completed when all child orders are completed.', 'dokan' ) );
+        $parent_order->update_status( 'wc-completed', __( 'Mark parent order completed when all child orders are completed.', 'dokan-lite' ) );
     }
 }
 
@@ -487,37 +487,37 @@ function dokan_get_order_status_translated( $status ) {
     switch ($status) {
         case 'completed':
         case 'wc-completed':
-            return __( 'Completed', 'dokan' );
+            return __( 'Completed', 'dokan-lite' );
             break;
 
         case 'pending':
         case 'wc-pending':
-            return __( 'Pending Payment', 'dokan' );
+            return __( 'Pending Payment', 'dokan-lite' );
             break;
 
         case 'on-hold':
         case 'wc-on-hold':
-            return __( 'On-hold', 'dokan' );
+            return __( 'On-hold', 'dokan-lite' );
             break;
 
         case 'processing':
         case 'wc-processing':
-            return __( 'Processing', 'dokan' );
+            return __( 'Processing', 'dokan-lite' );
             break;
 
         case 'refunded':
         case 'wc-refunded':
-            return __( 'Refunded', 'dokan' );
+            return __( 'Refunded', 'dokan-lite' );
             break;
 
         case 'cancelled':
         case 'wc-cancelled':
-            return __( 'Cancelled', 'dokan' );
+            return __( 'Cancelled', 'dokan-lite' );
             break;
 
         case 'failed':
         case 'wc-failed':
-            return __( 'Failed', 'dokan' );
+            return __( 'Failed', 'dokan-lite' );
             break;
     }
 }

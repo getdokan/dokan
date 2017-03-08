@@ -3,7 +3,7 @@ Contributors: tareq1988, wedevs, rafsuntaskin, sabbir1991
 Donate Link: http://tareq.co/donate/
 Tags: woocommerce, multivendor, multi-vendor, paypal, shop, vendor, seller, store, sell, online, amazon, dokan, ebay, Etsy, multi seller, multi store, multi vendor, multi vendors, multistore, multivendor, product vendor, product vendors, vendor, vendor system, vendors, wc market place, wc marketplace, wc vendors, woo vendors, woocommerce market place, woocommerce marketplace, woocommerce multi vendor,  commission rate, e-commerce, ebay, ecommerce, yith, yithemes
 Requires at least: 4.4
-Tested up to: 4.7.2
+Tested up to: 4.7.3
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -16,7 +16,7 @@ Dokan is the best front end multi vendor marketplace on WordPress, powered by Wo
 
 **The best Frontend user interface**
 
-We love the philosophy of a complete frontend experience. So, vendors have their personalised dashboard on the store frontend where they can find all what they need. Backend access is restricted to the admin only. This sets Dokan apart on a higher ground. All of our add-ons are frontend compatible. Dokan comes with a free responsive ecommerce theme that has widgets specially made for Dokan.
+We love the philosophy of a complete frontend experience. So, vendors have their personalised dashboard on the store frontend where they can find all what they need. Backend access is restricted to the admin only. This sets Dokan apart on a higher ground. All of our add-ons are frontend compatible. Dokan(Pro) comes with a free responsive ecommerce theme that has widgets specially made for Dokan.
 
 **It’s fast and easy to use**
 
@@ -38,7 +38,7 @@ Profit doesn’t only rely on sales. Multiple ways allow earning through vendor 
 
 As a an admin, you can use Dokan in a way where you can control everything that happens in your marketplace. Product publishing, vendor registration, subscription renewal and every other vendor activity can be re routed through you.
 
-> Get the [**Pro Version**](https://wedevs.com/products/plugins/dokan/?utm_source=wporg&utm_medium=cta&utm_campaign=dokan-lite) with bunch of super features, updates and scope for powerful add-ons.
+> Get the [**Pro Version**](https://wedevs.com/dokan/?utm_source=wporg&utm_medium=cta&utm_campaign=dokan-lite) with bunch of super features, updates and scope for powerful add-ons.
 
 = Features =
 **Marketplace with Independent Stores**
@@ -81,36 +81,40 @@ As a an admin, you can use Dokan in a way where you can control everything that 
   * All product reviews are managed by vendors (with admin override)
   * View all reviews on products left by customers.
 
-**Pro Features Continued
-The admin panel gives you some powerful management tools
+**Pro Features Continued**
+
+*The admin panel gives you some powerful management tools*
+
   * Admin can view and manage vendor list
   * Admin can view his as well as every vendor’s earning reports individually
   * Dokan Pro has update and support option for customer.
   * Dokan tools option has page installer and Sync table option
-
   * Advanced settings for the admin -
-     * **General Settings**
-        *Admin can enable/disable the map on the store page.
-        *Admin can enable/disable the contact form on the store page
-        *Admin can also enable/disable the store sidebar from theme.
+     * General Settings
+        * Admin can enable/disable the map on the store page.
+        * Admin can enable/disable the contact form on the store page
+        * Admin can also enable/disable the store sidebar from theme.
 
-     * **Selling Options**
+     * Selling Options
         * Admin can manage new product status.
         * Admin can set the order status for withdraw.
         * Admin can seth threshold withdraw day for the vendor.
         * Admin can change the vendor store URL.
         * Admin can also enable/disable the permission of review editing for the vendor.
 
-  * **Widgets**
+  * Widgets
     * Best vendor widget
     * Featured vendor widget
     * Store contact widget
     * Store location widget
 
-And much more. Checkout the [**Pro Version**](https://wedevs.com/products/plugins/dokan/?utm_source=wporg&utm_medium=footer&utm_campaign=dokan-lite)
+And much more. Checkout the [**Pro Version**](https://wedevs.com/dokan/?utm_source=wporg&utm_medium=cta&utm_campaign=dokan-lite)
+
+= Contribute =
+This may have bugs and lack of many features. If you want to contribute on this project, you are more than welcome. Please fork the repository from [Github](https://github.com/weDevsOfficial/dokan).
 
 = Author =
-Brought to you by [Tareq Hasan](http://tareq.wedevs.com) from [weDevs](http://wedevs.com)
+Brought to you by [Tareq Hasan](http://tareq.co) from [weDevs](http://wedevs.com)
 
 == Installation ==
 
@@ -148,7 +152,6 @@ A. Obviously, you can use this on a single seller site to give them a nice front
 = Q. How to upgrade to the Pro version?
 A. You just delete the free version and install and activate the pro version. Nothing complicated! All your data will be safe on the database and some extra features will be added. You can even ask the support team to help you to migrate.
 
-
 == Screenshots ==
 
 1. Admin Dashboard
@@ -173,8 +176,18 @@ A. You just delete the free version and install and activate the pro version. No
 
 == Changelog ==
 
+v2.5.4 -> March 8, 2017
+----------------------
+- [tweak] Changed text domain from 'dokan' to 'dokan-lite'
+- [new] Added settings to turn on/off new product form pop-up
+- [new] Added schedule discount price fields in new product form template when popup settings is disabled
+- [fix] Dokan Tabs css fixed for better compatibility with all themes
+- [fix] Fixed issues with saving product types other than simple like booking/auction
+- [fix] Fixed issues with withdraw balance and status
+- [fix] Template rendering issue on Store page and Review page for vendors is fixed.
+
 v2.5.3 -> February 14, 2017
----------------------
+----------------------
 - [fix] Order Tracking modal not working properly in some themes
 - [fix] Fixed showing notice on customer order table for multiple vendors
 - [fix] Fixed product listing status count issue

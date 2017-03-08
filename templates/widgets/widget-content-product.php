@@ -23,5 +23,5 @@
         <?php endwhile; ?>
     </ul>
 <?php else: ?>
-    <p><?php _e( 'No products found', 'dokan' ); ?></p>
+    <p><?php _e( 'No products found', 'dokan-lite' ); ?></p>
 <?php endif; ?>

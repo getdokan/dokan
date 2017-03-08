@@ -29,17 +29,17 @@ function dokan_save_product( $args ) {
     $data = wp_parse_args( $args, $defaults );
 
     if ( empty( $data['post_title'] ) ) {
-        return new WP_Error( 'no-title', __( 'Please enter product title', 'dokan' ) );
+        return new WP_Error( 'no-title', __( 'Please enter product title', 'dokan-lite' ) );
     }
 
     if( dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) == 'single' ) {
         $product_cat    = intval( $data['product_cat'] );
         if ( $product_cat < 0 ) {
-            return new WP_Error( 'no-category', __( 'Please select a category', 'dokan' ) );
+            return new WP_Error( 'no-category', __( 'Please select a category', 'dokan-lite' ) );
         }
     } else {
         if( ! isset( $data['product_cat'] ) && empty( $data['product_cat'] ) ) {
-            return new WP_Error( 'no-category', __( 'Please select AT LEAST ONE category', 'dokan' ) );
+            return new WP_Error( 'no-category', __( 'Please select AT LEAST ONE category', 'dokan-lite' ) );
         }
     }
 
@@ -183,7 +183,7 @@ function dokan_product_output_variations() {
 
             <div id="dokan-info-message" class="dokan-alert dokan-alert-info">
                 <p>
-                    <?php _e( 'Before you can add a variation you need to add some variation attributes on the <strong>Attributes</strong> section', 'dokan' ); ?>
+                    <?php _e( 'Before you can add a variation you need to add some variation attributes on the <strong>Attributes</strong> section', 'dokan-lite' ); ?>
                 </p>
             </div>
 
@@ -193,47 +193,47 @@ function dokan_product_output_variations() {
                 <div class="dokan-variation-label content-half-part">
                     <div class="toolbar toolbar-top">
                         <select id="field_to_edit" class="variation-actions dokan-form-control dokan-w10">
-                            <option data-global="true" value="add_variation"><?php _e( 'Add variation', 'dokan' ); ?></option>
-                            <option data-global="true" value="link_all_variations"><?php _e( 'Create variations from all attributes', 'dokan' ); ?></option>
-                            <option value="delete_all"><?php _e( 'Delete all variations', 'dokan' ); ?></option>
-                            <optgroup label="<?php esc_attr_e( 'Status', 'dokan' ); ?>">
-                                <option value="toggle_enabled"><?php _e( 'Toggle &quot;Enabled&quot;', 'dokan' ); ?></option>
-                                <option value="toggle_downloadable"><?php _e( 'Toggle &quot;Downloadable&quot;', 'dokan' ); ?></option>
-                                <option value="toggle_virtual"><?php _e( 'Toggle &quot;Virtual&quot;', 'dokan' ); ?></option>
+                            <option data-global="true" value="add_variation"><?php _e( 'Add variation', 'dokan-lite' ); ?></option>
+                            <option data-global="true" value="link_all_variations"><?php _e( 'Create variations from all attributes', 'dokan-lite' ); ?></option>
+                            <option value="delete_all"><?php _e( 'Delete all variations', 'dokan-lite' ); ?></option>
+                            <optgroup label="<?php esc_attr_e( 'Status', 'dokan-lite' ); ?>">
+                                <option value="toggle_enabled"><?php _e( 'Toggle &quot;Enabled&quot;', 'dokan-lite' ); ?></option>
+                                <option value="toggle_downloadable"><?php _e( 'Toggle &quot;Downloadable&quot;', 'dokan-lite' ); ?></option>
+                                <option value="toggle_virtual"><?php _e( 'Toggle &quot;Virtual&quot;', 'dokan-lite' ); ?></option>
                             </optgroup>
-                            <optgroup label="<?php esc_attr_e( 'Pricing', 'dokan' ); ?>">
-                                <option value="variable_regular_price"><?php _e( 'Set regular prices', 'dokan' ); ?></option>
-                                <option value="variable_regular_price_increase"><?php _e( 'Increase regular prices (fixed amount or percentage)', 'dokan' ); ?></option>
-                                <option value="variable_regular_price_decrease"><?php _e( 'Decrease regular prices (fixed amount or percentage)', 'dokan' ); ?></option>
-                                <option value="variable_sale_price"><?php _e( 'Set sale prices', 'dokan' ); ?></option>
-                                <option value="variable_sale_price_increase"><?php _e( 'Increase sale prices (fixed amount or percentage)', 'dokan' ); ?></option>
-                                <option value="variable_sale_price_decrease"><?php _e( 'Decrease sale prices (fixed amount or percentage)', 'dokan' ); ?></option>
-                                <option value="variable_sale_schedule"><?php _e( 'Set scheduled sale dates', 'dokan' ); ?></option>
+                            <optgroup label="<?php esc_attr_e( 'Pricing', 'dokan-lite' ); ?>">
+                                <option value="variable_regular_price"><?php _e( 'Set regular prices', 'dokan-lite' ); ?></option>
+                                <option value="variable_regular_price_increase"><?php _e( 'Increase regular prices (fixed amount or percentage)', 'dokan-lite' ); ?></option>
+                                <option value="variable_regular_price_decrease"><?php _e( 'Decrease regular prices (fixed amount or percentage)', 'dokan-lite' ); ?></option>
+                                <option value="variable_sale_price"><?php _e( 'Set sale prices', 'dokan-lite' ); ?></option>
+                                <option value="variable_sale_price_increase"><?php _e( 'Increase sale prices (fixed amount or percentage)', 'dokan-lite' ); ?></option>
+                                <option value="variable_sale_price_decrease"><?php _e( 'Decrease sale prices (fixed amount or percentage)', 'dokan-lite' ); ?></option>
+                                <option value="variable_sale_schedule"><?php _e( 'Set scheduled sale dates', 'dokan-lite' ); ?></option>
                             </optgroup>
-                            <optgroup label="<?php esc_attr_e( 'Inventory', 'dokan' ); ?>">
-                                <option value="toggle_manage_stock"><?php _e( 'Toggle &quot;Manage stock&quot;', 'dokan' ); ?></option>
-                                <option value="variable_stock"><?php _e( 'Stock', 'dokan' ); ?></option>
+                            <optgroup label="<?php esc_attr_e( 'Inventory', 'dokan-lite' ); ?>">
+                                <option value="toggle_manage_stock"><?php _e( 'Toggle &quot;Manage stock&quot;', 'dokan-lite' ); ?></option>
+                                <option value="variable_stock"><?php _e( 'Stock', 'dokan-lite' ); ?></option>
                             </optgroup>
-                            <optgroup label="<?php esc_attr_e( 'Shipping', 'dokan' ); ?>">
-                                <option value="variable_length"><?php _e( 'Length', 'dokan' ); ?></option>
-                                <option value="variable_width"><?php _e( 'Width', 'dokan' ); ?></option>
-                                <option value="variable_height"><?php _e( 'Height', 'dokan' ); ?></option>
-                                <option value="variable_weight"><?php _e( 'Weight', 'dokan' ); ?></option>
+                            <optgroup label="<?php esc_attr_e( 'Shipping', 'dokan-lite' ); ?>">
+                                <option value="variable_length"><?php _e( 'Length', 'dokan-lite' ); ?></option>
+                                <option value="variable_width"><?php _e( 'Width', 'dokan-lite' ); ?></option>
+                                <option value="variable_height"><?php _e( 'Height', 'dokan-lite' ); ?></option>
+                                <option value="variable_weight"><?php _e( 'Weight', 'dokan-lite' ); ?></option>
                             </optgroup>
-                            <optgroup label="<?php esc_attr_e( 'Downloadable products', 'dokan' ); ?>">
-                                <option value="variable_download_limit"><?php _e( 'Download limit', 'dokan' ); ?></option>
-                                <option value="variable_download_expiry"><?php _e( 'Download expiry', 'dokan' ); ?></option>
+                            <optgroup label="<?php esc_attr_e( 'Downloadable products', 'dokan-lite' ); ?>">
+                                <option value="variable_download_limit"><?php _e( 'Download limit', 'dokan-lite' ); ?></option>
+                                <option value="variable_download_expiry"><?php _e( 'Download expiry', 'dokan-lite' ); ?></option>
                             </optgroup>
                             <?php do_action( 'dokan_variable_product_bulk_edit_actions' ); ?>
                         </select>
-                        <a class="dokan-btn dokan-btn-default do_variation_action"><?php _e( 'Go', 'dokan' ); ?></a>
+                        <a class="dokan-btn dokan-btn-default do_variation_action"><?php _e( 'Go', 'dokan-lite' ); ?></a>
                     </div>
                 </div>
 
                 <div class="dokan-variation-default-toolbar content-half-part">
 
                     <div class="dokan-variations-defaults">
-                        <span class="dokan-variation-default-label dokan-left float-none"><i class="fa fa-question-circle tips" title="<?php _e( 'Default Form Values: These are the attributes that will be pre-selected on the frontend.', 'dokan' ); ?>" aria-hidden="true"></i></span>
+                        <span class="dokan-variation-default-label dokan-left float-none"><i class="fa fa-question-circle tips" title="<?php _e( 'Default Form Values: These are the attributes that will be pre-selected on the frontend.', 'dokan-lite' ); ?>" aria-hidden="true"></i></span>
 
                         <?php
                             $default_attributes = maybe_unserialize( get_post_meta( $post->ID, '_default_attributes', true ) );
@@ -251,7 +251,7 @@ function dokan_product_output_variations() {
                                 $variation_selected_value = isset( $default_attributes[ sanitize_title( $attribute['name'] ) ] ) ? $default_attributes[ sanitize_title( $attribute['name'] ) ] : '';
 
                                 // Name will be something like attribute_pa_color
-                                echo '<select class="dokan-form-control" name="default_attribute_' . sanitize_title( $attribute['name'] ) . '" data-current="' . esc_attr( $variation_selected_value ) . '"><option value="">' . __( 'No default', 'dokan' ) . ' ' . esc_html( wc_attribute_label( $attribute['name'] ) ) . '&hellip;</option>';
+                                echo '<select class="dokan-form-control" name="default_attribute_' . sanitize_title( $attribute['name'] ) . '" data-current="' . esc_attr( $variation_selected_value ) . '"><option value="">' . __( 'No default', 'dokan-lite' ) . ' ' . esc_html( wc_attribute_label( $attribute['name'] ) ) . '&hellip;</option>';
 
                                 // Get terms for attribute taxonomy or value if its a custom attribute
                                 if ( $attribute['is_taxonomy'] ) {
@@ -291,28 +291,28 @@ function dokan_product_output_variations() {
             </div>
 
             <div class="dokan-variation-action-toolbar">
-                <button class="dokan-btn dokan-btn-default dokan-btn-theme save-variation-changes"><?php _e( 'Save Variations', 'dokan' ) ?></button>
-                <button class="dokan-btn dokan-btn-default cancel-variation-changes"><?php _e( 'Cancel', 'dokan' ) ?></button>
+                <button class="dokan-btn dokan-btn-default dokan-btn-theme save-variation-changes"><?php _e( 'Save Variations', 'dokan-lite' ) ?></button>
+                <button class="dokan-btn dokan-btn-default cancel-variation-changes"><?php _e( 'Cancel', 'dokan-lite' ) ?></button>
 
                 <div class="dokan-variations-pagenav dokan-right">
-                    <span class="displaying-num"><?php printf( _n( '%s item', '%s items', $variations_count, 'dokan' ), $variations_count ); ?></span>
+                    <span class="displaying-num"><?php printf( _n( '%s item', '%s items', $variations_count, 'dokan-lite' ), $variations_count ); ?></span>
                     <span class="expand-close">
-                        (<a href="#" class="expand_all"><?php _e( 'Expand', 'dokan' ); ?></a> / <a href="#" class="close_all"><?php _e( 'Close', 'dokan' ); ?></a>)
+                        (<a href="#" class="expand_all"><?php _e( 'Expand', 'dokan-lite' ); ?></a> / <a href="#" class="close_all"><?php _e( 'Close', 'dokan-lite' ); ?></a>)
                     </span>
                     <span class="pagination-links">
-                        <a class="first-page disabled" title="<?php esc_attr_e( 'Go to the first page', 'dokan' ); ?>" href="#">&laquo;</a>
-                        <a class="prev-page disabled" title="<?php esc_attr_e( 'Go to the previous page', 'dokan' ); ?>" href="#">&lsaquo;</a>
+                        <a class="first-page disabled" title="<?php esc_attr_e( 'Go to the first page', 'dokan-lite' ); ?>" href="#">&laquo;</a>
+                        <a class="prev-page disabled" title="<?php esc_attr_e( 'Go to the previous page', 'dokan-lite' ); ?>" href="#">&lsaquo;</a>
                         <span class="paging-select">
-                            <label for="current-page-selector-1" class="screen-reader-text"><?php _e( 'Select Page', 'dokan' ); ?></label>
-                            <select class="page-selector" id="current-page-selector-1" title="<?php esc_attr_e( 'Current page', 'dokan' ); ?>">
+                            <label for="current-page-selector-1" class="screen-reader-text"><?php _e( 'Select Page', 'dokan-lite' ); ?></label>
+                            <select class="page-selector" id="current-page-selector-1" title="<?php esc_attr_e( 'Current page', 'dokan-lite' ); ?>">
                                 <?php for ( $i = 1; $i <= $variations_total_pages; $i++ ) : ?>
                                     <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
                                 <?php endfor; ?>
                             </select>
-                             <?php _ex( 'of', 'number of pages', 'dokan' ); ?> <span class="total-pages"><?php echo $variations_total_pages; ?></span>
+                             <?php _ex( 'of', 'number of pages', 'dokan-lite' ); ?> <span class="total-pages"><?php echo $variations_total_pages; ?></span>
                         </span>
-                        <a class="next-page" title="<?php esc_attr_e( 'Go to the next page', 'dokan' ); ?>" href="#">&rsaquo;</a>
-                        <a class="last-page" title="<?php esc_attr_e( 'Go to the last page', 'dokan' ); ?>" href="#">&raquo;</a>
+                        <a class="next-page" title="<?php esc_attr_e( 'Go to the next page', 'dokan-lite' ); ?>" href="#">&rsaquo;</a>
+                        <a class="last-page" title="<?php esc_attr_e( 'Go to the last page', 'dokan-lite' ); ?>" href="#">&raquo;</a>
                     </span>
                 </div>
 

@@ -37,18 +37,18 @@ class Dokan_Setup_Wizard {
         wp_register_script( 'select2', WC()->plugin_url() . '/assets/js/select2/select2' . $suffix . '.js', array( 'jquery' ), '3.5.2' );
         wp_register_script( 'wc-enhanced-select', WC()->plugin_url() . '/assets/js/admin/wc-enhanced-select' . $suffix . '.js', array( 'jquery', 'select2' ), WC_VERSION );
         wp_localize_script( 'wc-enhanced-select', 'wc_enhanced_select_params', array(
-            'i18n_matches_1'            => _x( 'One result is available, press enter to select it.', 'enhanced select', 'dokan' ),
-            'i18n_matches_n'            => _x( '%qty% results are available, use up and down arrow keys to navigate.', 'enhanced select', 'dokan' ),
-            'i18n_no_matches'           => _x( 'No matches found', 'enhanced select', 'dokan' ),
-            'i18n_ajax_error'           => _x( 'Loading failed', 'enhanced select', 'dokan' ),
-            'i18n_input_too_short_1'    => _x( 'Please enter 1 or more characters', 'enhanced select', 'dokan' ),
-            'i18n_input_too_short_n'    => _x( 'Please enter %qty% or more characters', 'enhanced select', 'dokan' ),
-            'i18n_input_too_long_1'     => _x( 'Please delete 1 character', 'enhanced select', 'dokan' ),
-            'i18n_input_too_long_n'     => _x( 'Please delete %qty% characters', 'enhanced select', 'dokan' ),
-            'i18n_selection_too_long_1' => _x( 'You can only select 1 item', 'enhanced select', 'dokan' ),
-            'i18n_selection_too_long_n' => _x( 'You can only select %qty% items', 'enhanced select', 'dokan' ),
-            'i18n_load_more'            => _x( 'Loading more results&hellip;', 'enhanced select', 'dokan' ),
-            'i18n_searching'            => _x( 'Searching&hellip;', 'enhanced select', 'dokan' ),
+            'i18n_matches_1'            => _x( 'One result is available, press enter to select it.', 'enhanced select', 'dokan-lite' ),
+            'i18n_matches_n'            => _x( '%qty% results are available, use up and down arrow keys to navigate.', 'enhanced select', 'dokan-lite' ),
+            'i18n_no_matches'           => _x( 'No matches found', 'enhanced select', 'dokan-lite' ),
+            'i18n_ajax_error'           => _x( 'Loading failed', 'enhanced select', 'dokan-lite' ),
+            'i18n_input_too_short_1'    => _x( 'Please enter 1 or more characters', 'enhanced select', 'dokan-lite' ),
+            'i18n_input_too_short_n'    => _x( 'Please enter %qty% or more characters', 'enhanced select', 'dokan-lite' ),
+            'i18n_input_too_long_1'     => _x( 'Please delete 1 character', 'enhanced select', 'dokan-lite' ),
+            'i18n_input_too_long_n'     => _x( 'Please delete %qty% characters', 'enhanced select', 'dokan-lite' ),
+            'i18n_selection_too_long_1' => _x( 'You can only select 1 item', 'enhanced select', 'dokan-lite' ),
+            'i18n_selection_too_long_n' => _x( 'You can only select %qty% items', 'enhanced select', 'dokan-lite' ),
+            'i18n_load_more'            => _x( 'Loading more results&hellip;', 'enhanced select', 'dokan-lite' ),
+            'i18n_searching'            => _x( 'Searching&hellip;', 'enhanced select', 'dokan-lite' ),
             'ajax_url'                  => admin_url( 'admin-ajax.php' ),
         ) );
 
@@ -75,27 +75,27 @@ class Dokan_Setup_Wizard {
         }
         $this->steps = array(
             'introduction' => array(
-                'name'    =>  __( 'Introduction', 'dokan' ),
+                'name'    =>  __( 'Introduction', 'dokan-lite' ),
                 'view'    => array( $this, 'dokan_setup_introduction' ),
                 'handler' => ''
             ),
             'store' => array(
-                'name'    =>  __( 'Store', 'dokan' ),
+                'name'    =>  __( 'Store', 'dokan-lite' ),
                 'view'    => array( $this, 'dokan_setup_store' ),
                 'handler' => array( $this, 'dokan_setup_store_save' ),
             ),
             'selling' => array(
-                'name'    =>  __( 'Selling', 'dokan' ),
+                'name'    =>  __( 'Selling', 'dokan-lite' ),
                 'view'    => array( $this, 'dokan_setup_selling' ),
                 'handler' => array( $this, 'dokan_setup_selling_save' ),
             ),
             'withdraw' => array(
-                'name'    =>  __( 'Withdraw', 'dokan' ),
+                'name'    =>  __( 'Withdraw', 'dokan-lite' ),
                 'view'    => array( $this, 'dokan_setup_withdraw' ),
                 'handler' => array( $this, 'dokan_setup_withdraw_save' ),
             ),
             'next_steps' => array(
-                'name'    =>  __( 'Ready!', 'dokan' ),
+                'name'    =>  __( 'Ready!', 'dokan-lite' ),
                 'view'    => array( $this, 'dokan_setup_ready' ),
                 'handler' => ''
             )
@@ -132,7 +132,7 @@ class Dokan_Setup_Wizard {
         <head>
             <meta name="viewport" content="width=device-width" />
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-            <title><?php _e( 'Dokan &rsaquo; Setup Wizard', 'dokan' ); ?></title>
+            <title><?php _e( 'Dokan &rsaquo; Setup Wizard', 'dokan-lite' ); ?></title>
             <?php wp_print_scripts( 'wc-setup' ); ?>
             <?php do_action( 'admin_print_styles' ); ?>
             <?php do_action( 'admin_head' ); ?>
@@ -199,7 +199,7 @@ class Dokan_Setup_Wizard {
     public function setup_wizard_footer() {
         ?>
             <?php if ( 'next_steps' === $this->step ) : ?>
-                <a class="wc-return-to-dashboard" href="<?php echo esc_url( admin_url() ); ?>"><?php _e( 'Return to the WordPress Dashboard', 'dokan' ); ?></a>
+                <a class="wc-return-to-dashboard" href="<?php echo esc_url( admin_url() ); ?>"><?php _e( 'Return to the WordPress Dashboard', 'dokan-lite' ); ?></a>
             <?php endif; ?>
             </body>
         </html>
@@ -241,12 +241,12 @@ class Dokan_Setup_Wizard {
      */
     public function dokan_setup_introduction() {
         ?>
-        <h1><?php _e( 'Welcome to the world of Dokan!', 'dokan' ); ?></h1>
-        <p><?php _e( 'Thank you for choosing Dokan to power your online marketplace! This quick setup wizard will help you configure the basic settings. <strong>It’s completely optional and shouldn’t take longer than three minutes.</strong>', 'dokan' ); ?></p>
-        <p><?php _e( 'No time right now? If you don’t want to go through the wizard, you can skip and return to the WordPress dashboard. Come back anytime if you change your mind!', 'dokan' ); ?></p>
+        <h1><?php _e( 'Welcome to the world of Dokan!', 'dokan-lite' ); ?></h1>
+        <p><?php _e( 'Thank you for choosing Dokan to power your online marketplace! This quick setup wizard will help you configure the basic settings. <strong>It’s completely optional and shouldn’t take longer than three minutes.</strong>', 'dokan-lite' ); ?></p>
+        <p><?php _e( 'No time right now? If you don’t want to go through the wizard, you can skip and return to the WordPress dashboard. Come back anytime if you change your mind!', 'dokan-lite' ); ?></p>
         <p class="wc-setup-actions step">
-            <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button-primary button button-large button-next"><?php _e( 'Let\'s Go!', 'dokan' ); ?></a>
-            <a href="<?php echo esc_url( admin_url() ); ?>" class="button button-large"><?php _e( 'Not right now', 'dokan' ); ?></a>
+            <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button-primary button button-large button-next"><?php _e( 'Let\'s Go!', 'dokan-lite' ); ?></a>
+            <a href="<?php echo esc_url( admin_url() ); ?>" class="button button-large"><?php _e( 'Not right now', 'dokan-lite' ); ?></a>
         </p>
         <?php
     }
@@ -260,22 +260,22 @@ class Dokan_Setup_Wizard {
         $extra_fee_recipient = ! empty( $options['extra_fee_recipient'] ) ? $options['extra_fee_recipient'] : 'seller';
 
         $recipients = array(
-            'seller' => __( 'Vendor', 'dokan' ),
-            'admin'  => __( 'Admin', 'dokan' ),
+            'seller' => __( 'Vendor', 'dokan-lite' ),
+            'admin'  => __( 'Admin', 'dokan-lite' ),
         );
         ?>
-        <h1><?php _e( 'Store Setup', 'dokan' ); ?></h1>
+        <h1><?php _e( 'Store Setup', 'dokan-lite' ); ?></h1>
         <form method="post">
             <table class="form-table">
                 <tr>
-                    <th scope="row"><label for="custom_store_url"><?php _e( 'Vendor Store URL', 'dokan' ); ?></label></th>
+                    <th scope="row"><label for="custom_store_url"><?php _e( 'Vendor Store URL', 'dokan-lite' ); ?></label></th>
                     <td>
                         <input type="text" id="custom_store_url" name="custom_store_url" value="<?php echo $custom_store_url; ?>" />
-                        <p class="description"><?php _e( 'Define vendor store URL', 'dokan' ); ?> (<?php echo site_url(); ?>/[this-text]/[seller-name])</p>
+                        <p class="description"><?php _e( 'Define vendor store URL', 'dokan-lite' ); ?> (<?php echo site_url(); ?>/[this-text]/[seller-name])</p>
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="extra_fee_recipient"><?php _e( 'Extra Fee Recipient', 'dokan' ); ?></label></th>
+                    <th scope="row"><label for="extra_fee_recipient"><?php _e( 'Extra Fee Recipient', 'dokan-lite' ); ?></label></th>
                     <td>
                         <select class="wc-enhanced-select" id="extra_fee_recipient" name="extra_fee_recipient">
                             <?php
@@ -285,13 +285,13 @@ class Dokan_Setup_Wizard {
                                 }
                             ?>
                         </select>
-                        <p class="description"><?php _e( 'Extra fees like shipping and tax will go to', 'dokan' ); ?></p>
+                        <p class="description"><?php _e( 'Extra fees like shipping and tax will go to', 'dokan-lite' ); ?></p>
                     </td>
                 </tr>
             </table>
             <p class="wc-setup-actions step">
-                <input type="submit" class="button-primary button button-large button-next" value="<?php esc_attr_e( 'Continue', 'dokan' ); ?>" name="save_step" />
-                <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button button-large button-next"><?php _e( 'Skip this step', 'dokan' ); ?></a>
+                <input type="submit" class="button-primary button button-large button-next" value="<?php esc_attr_e( 'Continue', 'dokan-lite' ); ?>" name="save_step" />
+                <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button button-large button-next"><?php _e( 'Skip this step', 'dokan-lite' ); ?></a>
                 <?php wp_nonce_field( 'dokan-setup' ); ?>
             </p>
         </form>
@@ -325,37 +325,37 @@ class Dokan_Setup_Wizard {
         $order_status_change       = ! empty( $options['order_status_change'] ) ? $options['order_status_change'] : '';
         $product_style             = ! empty( $options['product_style'] ) ? $options['product_style'] : '';
         $product_styles_list       = array(
-            'old' => __( 'Tab View', 'dokan' ),
-            'new' => __( 'Flat View', 'dokan' ),
+            'old' => __( 'Tab View', 'dokan-lite' ),
+            'new' => __( 'Flat View', 'dokan-lite' ),
         );
 
         ?>
-        <h1><?php _e( 'Selling Setup', 'dokan' ); ?></h1>
+        <h1><?php _e( 'Selling Setup', 'dokan-lite' ); ?></h1>
         <form method="post">
             <table class="form-table">
                 <tr>
-                    <th scope="row"><label for="new_seller_enable_selling"><?php _e( 'New Vendor Enable Selling', 'dokan' ); ?></label></th>
+                    <th scope="row"><label for="new_seller_enable_selling"><?php _e( 'New Vendor Enable Selling', 'dokan-lite' ); ?></label></th>
                     <td>
                         <input type="checkbox" name="new_seller_enable_selling" id="new_seller_enable_selling" class="input-checkbox" value="1" <?php echo ( $new_seller_enable_selling == 'on' ) ? 'checked="checked"' : ''; ?>/>
-                        <label for="new_seller_enable_selling"><?php _e( 'Make selling status enable for new registred vendor', 'dokan' ); ?></label>
+                        <label for="new_seller_enable_selling"><?php _e( 'Make selling status enable for new registred vendor', 'dokan-lite' ); ?></label>
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="seller_percentage"><?php _e( 'Vendor Commission %', 'dokan' ); ?></label></th>
+                    <th scope="row"><label for="seller_percentage"><?php _e( 'Vendor Commission %', 'dokan-lite' ); ?></label></th>
                     <td>
                         <input type="text" id="seller_percentage" name="seller_percentage" value="<?php echo $seller_percentage; ?>" />
-                        <p class="description"><?php _e( 'How much amount (%) a vendor will get from each order', 'dokan' ); ?></p>
+                        <p class="description"><?php _e( 'How much amount (%) a vendor will get from each order', 'dokan-lite' ); ?></p>
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="order_status_change"><?php _e( 'Order Status Change', 'dokan' ); ?></label></th>
+                    <th scope="row"><label for="order_status_change"><?php _e( 'Order Status Change', 'dokan-lite' ); ?></label></th>
                     <td>
                         <input type="checkbox" name="order_status_change" id="order_status_change" class="input-checkbox" value="1" <?php echo ( $order_status_change == 'on' ) ? 'checked="checked"' : ''; ?>/>
-                        <label for="order_status_change"><?php _e( 'Vendor can change order status', 'dokan' ); ?></label>
+                        <label for="order_status_change"><?php _e( 'Vendor can change order status', 'dokan-lite' ); ?></label>
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="product_style"><?php _e( 'Add/Edit Product Style', 'dokan' ); ?></label></th>
+                    <th scope="row"><label for="product_style"><?php _e( 'Add/Edit Product Style', 'dokan-lite' ); ?></label></th>
                     <td>
                         <select class="wc-enhanced-select" id="product_style" name="product_style">
                             <?php
@@ -365,13 +365,13 @@ class Dokan_Setup_Wizard {
                                 }
                             ?>
                         </select>
-                        <p class="description"><?php _e( 'The style you prefer for vendor to add or edit products.', 'dokan' ); ?></p>
+                        <p class="description"><?php _e( 'The style you prefer for vendor to add or edit products.', 'dokan-lite' ); ?></p>
                     </td>
                 </tr>
             </table>
             <p class="wc-setup-actions step">
-                <input type="submit" class="button-primary button button-large button-next" value="<?php esc_attr_e( 'Continue', 'dokan' ); ?>" name="save_step" />
-                <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button button-large button-next"><?php _e( 'Skip this step', 'dokan' ); ?></a>
+                <input type="submit" class="button-primary button button-large button-next" value="<?php esc_attr_e( 'Continue', 'dokan-lite' ); ?>" name="save_step" />
+                <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button button-large button-next"><?php _e( 'Skip this step', 'dokan-lite' ); ?></a>
                 <?php wp_nonce_field( 'dokan-setup' ); ?>
             </p>
         </form>
@@ -407,11 +407,11 @@ class Dokan_Setup_Wizard {
         $withdraw_order_status = ! empty( $options['withdraw_order_status'] ) ? $options['withdraw_order_status'] : [];
 
         ?>
-        <h1><?php _e( 'Withdraw Setup', 'dokan' ); ?></h1>
+        <h1><?php _e( 'Withdraw Setup', 'dokan-lite' ); ?></h1>
         <form method="post">
             <table class="form-table">
                 <tr>
-                    <th scope="row"><label for="withdraw_methods"><?php _e( 'Withdraw Methods', 'dokan' ); ?></label></th>
+                    <th scope="row"><label for="withdraw_methods"><?php _e( 'Withdraw Methods', 'dokan-lite' ); ?></label></th>
                 </tr>
                 <tr>
                     <td colspan="2">
@@ -438,26 +438,26 @@ class Dokan_Setup_Wizard {
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="withdraw_limit"><?php _e( 'Minimum Withdraw Limit', 'dokan' ); ?></label></th>
+                    <th scope="row"><label for="withdraw_limit"><?php _e( 'Minimum Withdraw Limit', 'dokan-lite' ); ?></label></th>
                     <td>
                         <input type="text" id="withdraw_limit" name="withdraw_limit" value="<?php echo $withdraw_limit; ?>" />
-                        <p class="description"><?php _e( 'Minimum balance required to make a withdraw request', 'dokan' ); ?></p>
+                        <p class="description"><?php _e( 'Minimum balance required to make a withdraw request', 'dokan-lite' ); ?></p>
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="withdraw_order_status"><?php _e( 'Order Status for Withdraw', 'dokan' ); ?></label></th>
+                    <th scope="row"><label for="withdraw_order_status"><?php _e( 'Order Status for Withdraw', 'dokan-lite' ); ?></label></th>
                     <td>
-                        <input type="checkbox" class="input-checkbox" id="withdraw_order_status[wc-completed]" name="withdraw_order_status[wc-completed]" value="wc-completed" <?php echo ( array_key_exists( 'wc-completed', $withdraw_order_status ) ) ? 'checked="true"' : ''; ?>><label> <?php _e( 'Completed', 'dokan' ); ?></label><br />
-                        <input type="checkbox" class="input-checkbox" id="withdraw_order_status[wc-processing]" name="withdraw_order_status[wc-processing]" value="wc-processing" <?php echo ( array_key_exists( 'wc-processing', $withdraw_order_status ) ) ? 'checked="true"' : ''; ?>><label> <?php _e( 'Processing', 'dokan' ); ?></label><br />
-                        <input type="checkbox" class="input-checkbox" id="withdraw_order_status[wc-on-hold]" name="withdraw_order_status[wc-on-hold]" value="wc-on-hold" <?php echo ( array_key_exists( 'wc-on-hold', $withdraw_order_status ) ) ? 'checked="true"' : ''; ?>><label> <?php _e( 'On-hold', 'dokan' ); ?></label>
+                        <input type="checkbox" class="input-checkbox" id="withdraw_order_status[wc-completed]" name="withdraw_order_status[wc-completed]" value="wc-completed" <?php echo ( array_key_exists( 'wc-completed', $withdraw_order_status ) ) ? 'checked="true"' : ''; ?>><label> <?php _e( 'Completed', 'dokan-lite' ); ?></label><br />
+                        <input type="checkbox" class="input-checkbox" id="withdraw_order_status[wc-processing]" name="withdraw_order_status[wc-processing]" value="wc-processing" <?php echo ( array_key_exists( 'wc-processing', $withdraw_order_status ) ) ? 'checked="true"' : ''; ?>><label> <?php _e( 'Processing', 'dokan-lite' ); ?></label><br />
+                        <input type="checkbox" class="input-checkbox" id="withdraw_order_status[wc-on-hold]" name="withdraw_order_status[wc-on-hold]" value="wc-on-hold" <?php echo ( array_key_exists( 'wc-on-hold', $withdraw_order_status ) ) ? 'checked="true"' : ''; ?>><label> <?php _e( 'On-hold', 'dokan-lite' ); ?></label>
 
-                        <p class="description"><?php _e( 'Order status for which vendor can make a withdraw request.', 'dokan' ); ?></p>
+                        <p class="description"><?php _e( 'Order status for which vendor can make a withdraw request.', 'dokan-lite' ); ?></p>
                     </td>
                 </tr>
             </table>
             <p class="wc-setup-actions step">
-                <input type="submit" class="button-primary button button-large button-next" value="<?php esc_attr_e( 'Continue', 'dokan' ); ?>" name="save_step" />
-                <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button button-large button-next"><?php _e( 'Skip this step', 'dokan' ); ?></a>
+                <input type="submit" class="button-primary button button-large button-next" value="<?php esc_attr_e( 'Continue', 'dokan-lite' ); ?>" name="save_step" />
+                <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button button-large button-next"><?php _e( 'Skip this step', 'dokan-lite' ); ?></a>
                 <?php wp_nonce_field( 'dokan-setup' ); ?>
             </p>
         </form>
@@ -487,17 +487,17 @@ class Dokan_Setup_Wizard {
      */
     public function dokan_setup_ready() {
         ?>
-        <h1><?php _e( 'Your Marketplace is Ready!', 'dokan' ); ?></h1>
+        <h1><?php _e( 'Your Marketplace is Ready!', 'dokan-lite' ); ?></h1>
 
         <div class="wc-setup-next-steps">
             <div class="wc-setup-next-steps-first">
-                <h2><?php _e( 'Next Steps', 'dokan' ); ?></h2>
+                <h2><?php _e( 'Next Steps', 'dokan-lite' ); ?></h2>
                 <ul>
-                    <li class="setup-product"><a class="button button-primary button-large" href="<?php echo esc_url( admin_url( 'admin.php?page=dokan-settings' ) ); ?>"><?php _e( 'Setup your dokan!', 'dokan' ); ?></a></li>
+                    <li class="setup-product"><a class="button button-primary button-large" href="<?php echo esc_url( admin_url( 'admin.php?page=dokan-settings' ) ); ?>"><?php _e( 'Setup your dokan!', 'dokan-lite' ); ?></a></li>
                 </ul>
             </div>
             <div class="wc-setup-next-steps-last">
-                <h2><a href="<?php echo esc_url( admin_url( 'admin.php?page=dokan-help' ) ); ?>"><?php _e( 'Learn More', 'dokan' ); ?></a></h2>
+                <h2><a href="<?php echo esc_url( admin_url( 'admin.php?page=dokan-help' ) ); ?>"><?php _e( 'Learn More', 'dokan-lite' ); ?></a></h2>
             </div>
         </div>
         <?php

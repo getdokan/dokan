@@ -11,9 +11,9 @@
 <table class="dokan-table dokan-table-striped">
     <thead>
         <tr>
-            <th><?php _e( 'Amount', 'dokan' ); ?></th>
-            <th><?php _e( 'Method', 'dokan' ); ?></th>
-            <th><?php _e( 'Date', 'dokan' ); ?></th>
+            <th><?php _e( 'Amount', 'dokan-lite' ); ?></th>
+            <th><?php _e( 'Method', 'dokan-lite' ); ?></th>
+            <th><?php _e( 'Date', 'dokan-lite' ); ?></th>
         </tr>
     </thead>
     <tbody>

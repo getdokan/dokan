@@ -9,16 +9,16 @@
 ?>
 
 <div class="wrap about-wrap">
-    <h1><?php echo __( 'Welcome to Dokan', 'dokan' ) . ' ' . DOKAN_PLUGIN_VERSION; ?></h1>
+    <h1><?php echo __( 'Welcome to Dokan', 'dokan-lite' ) . ' ' . DOKAN_PLUGIN_VERSION; ?></h1>
 
     <div class="about-text">
-        <?php _e( 'Thank you for installing Dokan!', 'dokan' ); ?>
-        <?php printf( __( 'Dokan %s makes it even easier to start your own multivendor marketplace.', 'dokan' ), DOKAN_PLUGIN_VERSION ); ?>
+        <?php _e( 'Thank you for installing Dokan!', 'dokan-lite' ); ?>
+        <?php printf( __( 'Dokan %s makes it even easier to start your own multivendor marketplace.', 'dokan-lite' ), DOKAN_PLUGIN_VERSION ); ?>
     </div>
 
     <ul class="action-buttons">
-        <li><a class="button button-primary" href="<?php echo admin_url( 'admin.php?page=dokan-settings' ); ?>"><?php _e( 'Settings', 'dokan' ); ?></a></li>
-        <li><a class="button" href="http://docs.wedevs.com/category/plugins/dokan-plugins/" target="_blank"><?php _e( 'Documentation', 'dokan' ); ?></a></li>
+        <li><a class="button button-primary" href="<?php echo admin_url( 'admin.php?page=dokan-settings' ); ?>"><?php _e( 'Settings', 'dokan-lite' ); ?></a></li>
+        <li><a class="button" href="http://docs.wedevs.com/category/plugins/dokan-plugins/" target="_blank"><?php _e( 'Documentation', 'dokan-lite' ); ?></a></li>
         <li>
             <a href="https://twitter.com/share" class="twitter-share-button" data-url="https://wedevs.com/products/plugins/dokan/" data-text="#Dokan is the easiest way to start your own multi-vendor e-commerce website" data-via="weDevs" data-size="large" data-hashtags="dokan">Tweet</a>
             <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
@@ -37,11 +37,11 @@
 
         <div class="metabox-holder">
             <div class="postbox">
-                <h3><?php _e( 'Order Synchronization', 'dokan' ); ?></h3>
+                <h3><?php _e( 'Order Synchronization', 'dokan-lite' ); ?></h3>
 
                 <div class="inside">
-                    <p><?php _e( 'Seems like you have some unsynchronized orders. This tool will re-build Dokan\'s sync table.', 'dokan' ); ?></p>
-                    <p><?php _e( 'Don\'t worry, any existing orders will not be deleted.', 'dokan' ); ?></p>
+                    <p><?php _e( 'Seems like you have some unsynchronized orders. This tool will re-build Dokan\'s sync table.', 'dokan-lite' ); ?></p>
+                    <p><?php _e( 'Don\'t worry, any existing orders will not be deleted.', 'dokan-lite' ); ?></p>
 
                     <div class="regen-sync-response"></div>
                     <div id="progressbar" style="display: none"><div id="regen-pro">0</div></div>
@@ -51,8 +51,8 @@
                         <input type="hidden" name="limit" value="<?php echo apply_filters( 'regen_sync_table_limit', 100 ); ?>">
                         <input type="hidden" name="offset" value="0">
 
-                        <a href="<?php echo admin_url( 'admin.php?page=dokan' ); ?>" class="button"><?php _e( 'Skip', 'dokan' ); ?></a>
-                        <input id="btn-rebuild" type="submit" class="button button-primary" value="<?php esc_attr_e( 'Synchronize Orders', 'dokan' ); ?>" >
+                        <a href="<?php echo admin_url( 'admin.php?page=dokan' ); ?>" class="button"><?php _e( 'Skip', 'dokan-lite' ); ?></a>
+                        <input id="btn-rebuild" type="submit" class="button button-primary" value="<?php esc_attr_e( 'Synchronize Orders', 'dokan-lite' ); ?>" >
                         <span class="regen-sync-loader" style="display:none"></span>
                     </form>
                 </div>
@@ -62,24 +62,24 @@
 
     <div class="feature-section three-col">
         <div class="col">
-            <h3><?php _e( 'Flat view style for product add and edit', 'dokan' ); ?></h3>
-            <p><?php _e( 'New Flat view for add or edit product is a single page design to add new products from one place. To switch the new product upload screen, you can go to wp-admin → Dokan → Settings → Selling Options → Add Edit Product Style.', 'dokan' ); ?></p>
+            <h3><?php _e( 'Flat view style for product add and edit', 'dokan-lite' ); ?></h3>
+            <p><?php _e( 'New Flat view for add or edit product is a single page design to add new products from one place. To switch the new product upload screen, you can go to wp-admin → Dokan → Settings → Selling Options → Add Edit Product Style.', 'dokan-lite' ); ?></p>
         </div>
 
         <div class="col">
-            <h3><?php _e( 'Store SEO manage system for vendors store', 'dokan' ); ?></h3>
-            <p><?php _e( 'From now on, whenever someone shares the store page, the images and texts written on the settings will appear on the social sites. So your vendors can get more traffic from search engines and social sites.', 'dokan' ); ?></p>
+            <h3><?php _e( 'Store SEO manage system for vendors store', 'dokan-lite' ); ?></h3>
+            <p><?php _e( 'From now on, whenever someone shares the store page, the images and texts written on the settings will appear on the social sites. So your vendors can get more traffic from search engines and social sites.', 'dokan-lite' ); ?></p>
         </div>
 
         <div class="col">
-            <h3><?php _e( 'Shipping calculator on single product page', 'dokan' ); ?></h3>
-            <p><?php _e( 'From this version, the customers can calculate the shipping cost right from the product page, before adding them to cart and also know about if that product ships to his location or not. So this means less cart abandonment and more conversion.', 'dokan' ); ?></p>
+            <h3><?php _e( 'Shipping calculator on single product page', 'dokan-lite' ); ?></h3>
+            <p><?php _e( 'From this version, the customers can calculate the shipping cost right from the product page, before adding them to cart and also know about if that product ships to his location or not. So this means less cart abandonment and more conversion.', 'dokan-lite' ); ?></p>
         </div>
     </div>
 
     <div class="metabox-holder">
         <div class="changelog-wrap postbox">
-            <h3><?php _e( 'Changelog', 'dokan' ); ?></h3>
+            <h3><?php _e( 'Changelog', 'dokan-lite' ); ?></h3>
 
             <div class="changelog-content inside">
                 <pre>

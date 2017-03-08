@@ -232,11 +232,11 @@ class Dokan_Withdraw {
     function request_status( $status ) {
         switch ( $status ) {
             case 0:
-                return '<span class="label label-danger">' . __( 'Pending Reivew', 'dokan' ) . '</span>';
+                return '<span class="label label-danger">' . __( 'Pending Reivew', 'dokan-lite' ) . '</span>';
                 break;
 
             case 1:
-                return '<span class="label label-warning">' . __( 'Accepted', 'dokan' ) . '</span>';
+                return '<span class="label label-warning">' . __( 'Accepted', 'dokan-lite' ) . '</span>';
                 break;
         }
     }

@@ -28,11 +28,11 @@ class Dokan_Settings_API extends WeDevs_Settings_API {
                 <div class="dokan-settings-radio-image<?php echo ( $name === $value ) ? ' active' : ' not-active'; ?>">
                     <img src="<?php echo $image; ?>">
 
-                    <span class="current-option-indicator"><span class="dashicons dashicons-yes"></span> <?php _e( 'Active', 'dokan' ); ?></span>
+                    <span class="current-option-indicator"><span class="dashicons dashicons-yes"></span> <?php _e( 'Active', 'dokan-lite' ); ?></span>
 
                     <span class="active-option">
                         <button class="button button-primary button-hero" type="button" data-template="<?php echo $name; ?>" data-input="<?php echo $id; ?>">
-                            <?php _e( 'Select', 'dokan' ); ?>
+                            <?php _e( 'Select', 'dokan-lite' ); ?>
                         </button>
                     </span>
                 </div>

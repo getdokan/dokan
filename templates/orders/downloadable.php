@@ -36,7 +36,7 @@ global $wpdb;
 
         <div class="dokan-w7" style="margin-right: 5px;">
 
-            <select name="grant_access_id" class="grant_access_id dokan-form-control" data-placeholder="<?php _e( 'Choose a downloadable product&hellip;', 'dokan' ) ?>" multiple="multiple">
+            <select name="grant_access_id" class="grant_access_id dokan-form-control" data-placeholder="<?php _e( 'Choose a downloadable product&hellip;', 'dokan-lite' ) ?>" multiple="multiple">
                 <?php
                     echo '<option value=""></option>';
 
@@ -69,7 +69,7 @@ global $wpdb;
         </div>
 
         <div class="dokan-w4">
-            <button type="button" class="dokan-btn dokan-btn-success grant_access" data-order-id="<?php echo $order->id; ?>" data-nonce="<?php echo wp_create_nonce( 'grant-access' ); ?>"><?php _e( 'Grant Access', 'dokan' ); ?></button>
+            <button type="button" class="dokan-btn dokan-btn-success grant_access" data-order-id="<?php echo $order->id; ?>" data-nonce="<?php echo wp_create_nonce( 'grant-access' ); ?>"><?php _e( 'Grant Access', 'dokan-lite' ); ?></button>
         </div>
 
     </div> <!-- .toolbar -->

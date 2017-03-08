@@ -113,15 +113,14 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
      * @return void
      */
     public function show_seller_balance() {
-        
-        $balance        = dokan_get_seller_balance( get_current_user_id() );
+        $balance        = dokan_get_seller_balance( get_current_user_id(), true );
         $withdraw_limit = dokan_get_option( 'withdraw_limit', 'dokan_withdraw', -1 );
         $threshold      = dokan_get_option( 'withdraw_date_limit', 'dokan_withdraw', -1 );
 
-        $message = sprintf( __('Current Balance: %d '),$balance );
-        
+        $message = sprintf( __('Current Balance: %s '), $balance );
+
         if ( $withdraw_limit != -1 ) {
-            $message .= sprintf( __('<br>Minimum Withdraw amount: %d '), $withdraw_limit );
+            $message .= sprintf( __('<br>Minimum Withdraw amount: %s '), wc_price( $withdraw_limit ) );
         }
         if ( $threshold != -1 ) {
             $message .= sprintf( __('<br>Withdraw Threshold: %d days '), $threshold );
@@ -173,7 +172,7 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
         if ( isset( $_GET['action'] ) && $_GET['action'] == 'dokan_cancel_withdrow' ) {
 
             if ( !wp_verify_nonce( $_GET['_wpnonce'], 'dokan_cancel_withdrow' ) ) {
-                wp_die( __( 'Are you cheating?', 'dokan' ) );
+                wp_die( __( 'Are you cheating?', 'dokan-lite' ) );
             }
 
             global $current_user, $wpdb;
@@ -198,7 +197,7 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
         }
 
         if ( !wp_verify_nonce( $_POST['dokan_withdraw_nonce'], 'dokan_withdraw' ) ) {
-            wp_die( __( 'Are you cheating?', 'dokan' ) );
+            wp_die( __( 'Are you cheating?', 'dokan-lite' ) );
         }
 
         $error           = new WP_Error();
@@ -207,16 +206,16 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
         $withdraw_amount = (float) $_POST['witdraw_amount'];
 
         if ( empty( $_POST['witdraw_amount'] ) ) {
-            $error->add( 'dokan_empty_withdrad', __( 'Withdraw amount required ', 'dokan' ) );
+            $error->add( 'dokan_empty_withdrad', __( 'Withdraw amount required ', 'dokan-lite' ) );
         } elseif ( $withdraw_amount > $balance ) {
 
-            $error->add( 'enough_balance', __( 'You don\'t have enough balance for this request', 'dokan' ) );
+            $error->add( 'enough_balance', __( 'You don\'t have enough balance for this request', 'dokan-lite' ) );
         } elseif ( $withdraw_amount < $limit ) {
-            $error->add( 'dokan_withdraw_amount', sprintf( __( 'Withdraw amount must be greater than %d', 'dokan' ), $this->get_withdraw_limit() ) );
+            $error->add( 'dokan_withdraw_amount', sprintf( __( 'Withdraw amount must be greater than %d', 'dokan-lite' ), $this->get_withdraw_limit() ) );
         }
 
         if ( empty( $_POST['withdraw_method'] ) ) {
-            $error->add( 'dokan_withdraw_method', __( 'withdraw method required', 'dokan' ) );
+            $error->add( 'dokan_withdraw_method', __( 'withdraw method required', 'dokan-lite' ) );
         }
 
         if ( $error->get_error_codes() ) {
@@ -279,15 +278,15 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
 
         switch ( $type ) {
             case 'request_cancelled':
-                $message = __( 'Your request has been cancelled successfully!', 'dokan' );
+                $message = __( 'Your request has been cancelled successfully!', 'dokan-lite' );
                 break;
 
             case 'request_success':
-                $message = __( 'Your request has been received successfully and being reviewed!', 'dokan' );
+                $message = __( 'Your request has been received successfully and being reviewed!', 'dokan-lite' );
                 break;
 
             case 'request_error':
-                $message = __( 'Unknown error!', 'dokan' );
+                $message = __( 'Unknown error!', 'dokan-lite' );
                 break;
         }
 
@@ -314,23 +313,23 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
         if ( $balance < 0 ) {
             dokan_get_template_part( 'global/dokan-error', '', array(
                 'deleted'=> false,
-                'message' => sprintf( __( 'You already withdrawed %s. This amount will deducted from your balance.', 'dokan' ), wc_price( $balance ) )
+                'message' => sprintf( __( 'You already withdrawed %s. This amount will deducted from your balance.', 'dokan-lite' ), wc_price( $balance ) )
             ) );
         }
 
         if ( $this->has_pending_request( $current_user->ID ) ) {
-            
+
             $req_success = isset( $_GET['message'] ) ? $_GET['message'] : false;
-            
+
             if( !$req_success ) {
-                $pending_warning = sprintf( "<p>%s</p><p>%s</p>", __( 'You already have pending withdraw request(s).', 'dokan' ), __( 'Please submit your request after approval or cancellation of your previous request.', 'dokan' ) );
+                $pending_warning = sprintf( "<p>%s</p><p>%s</p>", __( 'You already have pending withdraw request(s).', 'dokan-lite' ), __( 'Please submit your request after approval or cancellation of your previous request.', 'dokan-lite' ) );
 
                 dokan_get_template_part( 'global/dokan-error', '', array(
                     'deleted' => false,
                     'message' => $pending_warning
                 ) );
             }
-            
+
             $this->withdraw_requests( $current_user->ID );
             return;
 
@@ -338,7 +337,7 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
 
             dokan_get_template_part( 'global/dokan-error', '', array(
                 'deleted' => false,
-                'message' => __( 'You don\'t have sufficient balance for a withdraw request!', 'dokan' )
+                'message' => __( 'You don\'t have sufficient balance for a withdraw request!', 'dokan-lite' )
             ) );
 
             return;
@@ -381,7 +380,7 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
 
             dokan_get_template_part( 'global/dokan-warning', '', array(
                 'deleted' => false,
-                'message' => __( 'Sorry, no transactions were found!', 'dokan' )
+                'message' => __( 'Sorry, no transactions were found!', 'dokan-lite' )
             ) );
 
         }

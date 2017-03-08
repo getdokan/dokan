@@ -333,7 +333,7 @@ function dokan_sales_overview_chart_data( $start_date, $end_date, $group_by ) {
             var order_data = jQuery.parseJSON( '<?php echo $chart_data; ?>' );
             var series = [
                 {
-                    label: "<?php echo esc_js( __( 'Sales total', 'dokan' ) ) ?>",
+                    label: "<?php echo esc_js( __( 'Sales total', 'dokan-lite' ) ) ?>",
                     data: order_data.order_amounts,
                     shadowSize: 0,
                     hoverable: true,
@@ -343,14 +343,14 @@ function dokan_sales_overview_chart_data( $start_date, $end_date, $group_by ) {
                     prepend_tooltip: "<?php echo get_woocommerce_currency_symbol(); ?>"
                 },
                 {
-                    label: "<?php echo esc_js( __( 'Number of orders', 'dokan' ) ) ?>",
+                    label: "<?php echo esc_js( __( 'Number of orders', 'dokan-lite' ) ) ?>",
                     data: order_data.order_counts,
                     shadowSize: 0,
                     hoverable: true,
                     points: { show: true, radius: 5, lineWidth: 2, fillColor: '#fff', fill: true },
                     lines: { show: true, lineWidth: 3, fill: false },
                     shadowSize: 0,
-                    append_tooltip: " <?php echo __( 'sales', 'dokan' ); ?>"
+                    append_tooltip: " <?php echo __( 'sales', 'dokan-lite' ); ?>"
                 },
             ];
 

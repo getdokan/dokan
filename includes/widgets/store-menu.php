@@ -13,8 +13,8 @@ class Dokan_Store_Category_Menu extends WP_Widget {
      * @return void
      **/
     public function __construct() {
-        $widget_ops = array( 'classname' => 'dokan-store-menu', 'description' => __( 'Dokan Seller Store Menu', 'dokan' ) );
-        parent::__construct( 'dokan-store-menu', __( 'Dokan: Store Category Menu', 'dokan' ), $widget_ops );
+        $widget_ops = array( 'classname' => 'dokan-store-menu', 'description' => __( 'Dokan Seller Store Menu', 'dokan-lite' ) );
+        parent::__construct( 'dokan-store-menu', __( 'Dokan: Store Category Menu', 'dokan-lite' ), $widget_ops );
     }
 
     /**
@@ -61,13 +61,13 @@ class Dokan_Store_Category_Menu extends WP_Widget {
      **/
     function form( $instance ) {
         $instance = wp_parse_args( (array) $instance, array(
-            'title' => __( 'Category', 'dokan' ),
+            'title' => __( 'Category', 'dokan-lite' ),
         ) );
 
         $title = $instance['title'];
         ?>
         <p>
-            <label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'dokan' ); ?></label>
+            <label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'dokan-lite' ); ?></label>
             <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
         </p>
         <?php

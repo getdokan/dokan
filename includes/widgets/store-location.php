@@ -15,8 +15,8 @@ class Dokan_Store_Location extends WP_Widget {
      * @return void
      */
     public function __construct() {
-        $widget_ops = array( 'classname' => 'dokan-store-location', 'description' => __( 'Dokan Vendor Store Location', 'dokan' ) );
-        parent::__construct( 'dokan-store-location', __( 'Dokan: Store Location', 'dokan' ), $widget_ops );
+        $widget_ops = array( 'classname' => 'dokan-store-location', 'description' => __( 'Dokan Vendor Store Location', 'dokan-lite' ) );
+        parent::__construct( 'dokan-store-location', __( 'Dokan: Store Location', 'dokan-lite' ), $widget_ops );
     }
 
     /**
@@ -81,13 +81,13 @@ class Dokan_Store_Location extends WP_Widget {
      */
     function form( $instance ) {
         $instance = wp_parse_args( (array) $instance, array(
-            'title' => __( 'Store Location', 'dokan' ),
+            'title' => __( 'Store Location', 'dokan-lite' ),
         ) );
 
         $title = $instance['title'];
         ?>
         <p>
-            <label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'dokan' ); ?></label>
+            <label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'dokan-lite' ); ?></label>
             <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
         </p>
         <?php

@@ -15,8 +15,8 @@ class Dokan_Store_Contact_Form extends WP_Widget {
      * @return void
      */
     public function __construct() {
-        $widget_ops = array( 'classname' => 'dokan-store-contact', 'description' => __( 'Dokan Vendor Contact Form', 'dokan' ) );
-        parent::__construct( 'dokan-store-contact-widget', __( 'Dokan: Store Contact Form', 'dokan' ), $widget_ops );
+        $widget_ops = array( 'classname' => 'dokan-store-contact', 'description' => __( 'Dokan Vendor Contact Form', 'dokan-lite' ) );
+        parent::__construct( 'dokan-store-contact-widget', __( 'Dokan: Store Contact Form', 'dokan-lite' ), $widget_ops );
     }
 
     /**
@@ -78,13 +78,13 @@ class Dokan_Store_Contact_Form extends WP_Widget {
      */
     function form( $instance ) {
         $instance = wp_parse_args( (array) $instance, array(
-            'title' => __( 'Contact Vendor', 'dokan' ),
+            'title' => __( 'Contact Vendor', 'dokan-lite' ),
         ) );
 
         $title = $instance['title'];
         ?>
         <p>
-            <label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'dokan' ); ?></label>
+            <label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'dokan-lite' ); ?></label>
             <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
         </p>
         <?php

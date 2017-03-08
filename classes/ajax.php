@@ -81,7 +81,7 @@ class Dokan_Ajax {
         if ( is_int( $response ) ) {
             wp_send_json_success( dokan_edit_product_url( $response ) );
         } else {
-            wp_send_json_error( __( 'Something wrong, please try again later', 'dokan' ) );
+            wp_send_json_error( __( 'Something wrong, please try again later', 'dokan-lite' ) );
         }
     }
 
@@ -94,7 +94,7 @@ class Dokan_Ajax {
      */
     function seller_info_checkout( $item_data, $cart_item ) {
         $info   = dokan_get_store_info( $cart_item['data']->post->post_author );
-        $seller = sprintf( __( '<br><strong> Vendor:</strong> %s', 'dokan' ), $info['store_name'] );
+        $seller = sprintf( __( '<br><strong> Vendor:</strong> %s', 'dokan-lite' ), $info['store_name'] );
         $data   = $item_data . $seller;
 
         return apply_filters( 'dokan_seller_info_checkout', $data, $info, $item_data, $cart_item );
@@ -109,7 +109,7 @@ class Dokan_Ajax {
         if ( !wp_verify_nonce( $_POST['_nonce'], 'dokan_reviews' ) ) {
             wp_send_json_error( array(
                 'type' => 'nonce',
-                'message' => __( 'Are you cheating?', 'dokan' )
+                'message' => __( 'Are you cheating?', 'dokan-lite' )
             ) );
         }
 
@@ -144,11 +144,11 @@ class Dokan_Ajax {
         }
 
         if ( !current_user_can( 'dokandar' ) || dokan_get_option( 'order_status_change', 'dokan_selling', 'on' ) != 'on' ) {
-            wp_die( __( 'You do not have sufficient permissions to access this page.', 'dokan' ) );
+            wp_die( __( 'You do not have sufficient permissions to access this page.', 'dokan-lite' ) );
         }
 
         if ( !check_admin_referer( 'dokan-mark-order-complete' ) ) {
-            wp_die( __( 'You have taken too long. Please go back and retry.', 'dokan' ) );
+            wp_die( __( 'You have taken too long. Please go back and retry.', 'dokan-lite' ) );
         }
 
         $order_id = isset($_GET['order_id']) && (int) $_GET['order_id'] ? (int) $_GET['order_id'] : '';
@@ -157,7 +157,7 @@ class Dokan_Ajax {
         }
 
         if ( !dokan_is_seller_has_order( get_current_user_id(), $order_id ) ) {
-            wp_die( __( 'You do not have permission to change this order', 'dokan' ) );
+            wp_die( __( 'You do not have permission to change this order', 'dokan-lite' ) );
         }
 
         $order = new WC_Order( $order_id );
@@ -178,11 +178,11 @@ class Dokan_Ajax {
         }
 
         if ( !current_user_can( 'dokandar' ) && dokan_get_option( 'order_status_change', 'dokan_selling', 'on' ) != 'on' ) {
-            wp_die( __( 'You do not have sufficient permissions to access this page.', 'dokan' ) );
+            wp_die( __( 'You do not have sufficient permissions to access this page.', 'dokan-lite' ) );
         }
 
         if ( !check_admin_referer( 'dokan-mark-order-processing' ) ) {
-            wp_die( __( 'You have taken too long. Please go back and retry.', 'dokan' ) );
+            wp_die( __( 'You have taken too long. Please go back and retry.', 'dokan-lite' ) );
         }
 
         $order_id = isset( $_GET['order_id'] ) && (int) $_GET['order_id'] ? (int) $_GET['order_id'] : '';
@@ -191,7 +191,7 @@ class Dokan_Ajax {
         }
 
         if ( !dokan_is_seller_has_order( get_current_user_id(), $order_id ) ) {
-            wp_die( __( 'You do not have permission to change this order', 'dokan' ) );
+            wp_die( __( 'You do not have permission to change this order', 'dokan-lite' ) );
         }
 
         $order = new WC_Order( $order_id );
@@ -242,7 +242,7 @@ class Dokan_Ajax {
                         if ( isset( $file['name'] ) ) {
                             $file_count = $file['name'];
                         } else {
-                            $file_count = sprintf( __( 'File %d', 'dokan' ), $file_counter );
+                            $file_count = sprintf( __( 'File %d', 'dokan-lite' ), $file_counter );
                         }
 
                         include dirname( dirname( __FILE__ ) ) . '/templates/orders/order-download-permission-html.php';
@@ -293,25 +293,25 @@ class Dokan_Ajax {
         $error_template  = '<div class="alert alert-danger">%s</div>';
 
         if ( empty( $contact_name ) ) {
-            $message = sprintf( $error_template, __( 'Please provide your name.', 'dokan' ) );
+            $message = sprintf( $error_template, __( 'Please provide your name.', 'dokan-lite' ) );
             wp_send_json_error( $message );
         }
 
         if ( empty( $contact_name ) ) {
-            $message = sprintf( $error_template, __( 'Please provide your name.', 'dokan' ) );
+            $message = sprintf( $error_template, __( 'Please provide your name.', 'dokan-lite' ) );
             wp_send_json_error( $message );
         }
 
         $seller = get_user_by( 'id', (int) $posted['seller_id'] );
 
         if ( !$seller ) {
-            $message = sprintf( $error_template, __( 'Something went wrong!', 'dokan' ) );
+            $message = sprintf( $error_template, __( 'Something went wrong!', 'dokan-lite' ) );
             wp_send_json_error( $message );
         }
 
         Dokan_Email::init()->contact_seller( $seller->user_email, $contact_name, $contact_email, $contact_message );
 
-        $success = sprintf( '<div class="alert alert-success">%s</div>', __( 'Email sent successfully!', 'dokan' ) );
+        $success = sprintf( '<div class="alert alert-success">%s</div>', __( 'Email sent successfully!', 'dokan-lite' ) );
         wp_send_json_success( $success );
         exit;
     }
@@ -366,7 +366,7 @@ class Dokan_Ajax {
             }
             echo '"><div class="note_content">';
             echo wpautop( wptexturize( $note ) );
-            echo '</div><p class="meta"><a href="#" class="delete_note">'.__( 'Delete note', 'dokan' ).'</a></p>';
+            echo '</div><p class="meta"><a href="#" class="delete_note">'.__( 'Delete note', 'dokan-lite' ).'</a></p>';
             echo '</li>';
         }
 
@@ -432,7 +432,7 @@ class Dokan_Ajax {
             //}
             echo '"><div class="note_content">';
             echo wpautop( wptexturize( $ship_info ) );
-            echo '</div><p class="meta"><a href="#" class="delete_note">'.__( 'Delete', 'dokan' ).'</a></p>';
+            echo '</div><p class="meta"><a href="#" class="delete_note">'.__( 'Delete', 'dokan-lite' ).'</a></p>';
             echo '</li>';
         }
 
@@ -520,7 +520,7 @@ class Dokan_Ajax {
      */
     public function seller_listing_search() {
         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'dokan-seller-listing-search' ) ) {
-            wp_send_json_error( __( 'Error: Nonce verification failed', 'dokan' ) );
+            wp_send_json_error( __( 'Error: Nonce verification failed', 'dokan-lite' ) );
         }
 
         $paged  = 1;
