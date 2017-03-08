@@ -16,7 +16,7 @@ Dokan is the best front end multi vendor marketplace on WordPress, powered by Wo
 
 **The best Frontend user interface**
 
-We love the philosophy of a complete frontend experience. So, vendors have their personalised dashboard on the store frontend where they can find all what they need. Backend access is restricted to the admin only. This sets Dokan apart on a higher ground. All of our add-ons are frontend compatible. Dokan comes with a free responsive ecommerce theme that has widgets specially made for Dokan.
+We love the philosophy of a complete frontend experience. So, vendors have their personalised dashboard on the store frontend where they can find all what they need. Backend access is restricted to the admin only. This sets Dokan apart on a higher ground. All of our add-ons are frontend compatible. Dokan(Pro) comes with a free responsive ecommerce theme that has widgets specially made for Dokan.
 
 **It’s fast and easy to use**
 
@@ -81,27 +81,28 @@ As a an admin, you can use Dokan in a way where you can control everything that 
   * All product reviews are managed by vendors (with admin override)
   * View all reviews on products left by customers.
 
-**Pro Features Continued
-The admin panel gives you some powerful management tools
+**Pro Features Continued**
+
+*The admin panel gives you some powerful management tools*
+
   * Admin can view and manage vendor list
   * Admin can view his as well as every vendor’s earning reports individually
   * Dokan Pro has update and support option for customer.
   * Dokan tools option has page installer and Sync table option
-
   * Advanced settings for the admin -
-     * **General Settings**
-        *Admin can enable/disable the map on the store page.
-        *Admin can enable/disable the contact form on the store page
-        *Admin can also enable/disable the store sidebar from theme.
+     * General Settings
+        * Admin can enable/disable the map on the store page.
+        * Admin can enable/disable the contact form on the store page
+        * Admin can also enable/disable the store sidebar from theme.
 
-     * **Selling Options**
+     * Selling Options
         * Admin can manage new product status.
         * Admin can set the order status for withdraw.
         * Admin can seth threshold withdraw day for the vendor.
         * Admin can change the vendor store URL.
         * Admin can also enable/disable the permission of review editing for the vendor.
 
-  * **Widgets**
+  * Widgets
     * Best vendor widget
     * Featured vendor widget
     * Store contact widget
