@@ -307,7 +307,7 @@ function dokan_admin_report( $group_by = 'day', $year = '' ) {
 
     $date_where = '';
 
-    if ( $group_by == 'day' ) {
+    if ( $group_by == 'day' || $group_by == 'year' ) {
         $group_by_query       = 'YEAR(p.post_date), MONTH(p.post_date), DAY(p.post_date)';
         $date_where           = " AND DATE(p.post_date) >= '$start_date' AND DATE(p.post_date) <= '$end_date'";
         $chart_interval       = ceil( max( 0, ( $end_date_to_time - $start_date_to_time ) / ( 60 * 60 * 24 ) ) );
