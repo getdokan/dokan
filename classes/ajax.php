@@ -223,7 +223,7 @@ class Dokan_Ajax {
         }
 
         foreach ( $product_ids as $product_id ) {
-            $product    = get_product( $product_id );
+            $product    = wc_get_product( $product_id );
             $files      = $product->get_files();
 
             if ( ! $order->billing_email )

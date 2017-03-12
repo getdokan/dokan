@@ -637,7 +637,7 @@ function dokan_create_sub_order_shipping( $parent_order, $order_id, $seller_prod
 
     // emulate shopping cart for calculating the shipping method
     foreach ($seller_products as $product_item) {
-        $product = get_product( $product_item['product_id'] );
+        $product = wc_get_product( $product_item['product_id'] );
 
         if ( $product->needs_shipping() ) {
             $shipping_products[] = array(

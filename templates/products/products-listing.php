@@ -118,7 +118,7 @@
                                     $product_query->the_post();
 
                                     $tr_class = ($post->post_status == 'pending' ) ? ' class="danger"' : '';
-                                    $product = get_product( $post->ID );
+                                    $product = wc_get_product( $post->ID );
                                     ?>
                                     <tr<?php echo $tr_class; ?>>
                                     <td data-title="<?php _e( 'Image', 'dokan-lite' ); ?>">
