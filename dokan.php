@@ -347,6 +347,7 @@ final class WeDevs_Dokan {
         if ( dokan_is_seller_dashboard()
                 || ( get_query_var( 'edit' ) && is_singular( 'product' ) )
                 || dokan_is_store_page()
+                || is_account_page()
                 || apply_filters( 'dokan_force_load_extra_args', false )
             ) {
 
