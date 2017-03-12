@@ -18,7 +18,7 @@
     <ul class="list-inline">
          <li>
             <div class="title"><?php _e( 'Sales', 'dokan-lite' ); ?></div>
-            <div class="count"><?php echo woocommerce_price( $earning ); ?></div>
+            <div class="count"><?php echo wc_price( $earning ); ?></div>
         </li>
         <li>
             <div class="title"><?php _e( 'Earning', 'dokan-lite' ); ?></div>
