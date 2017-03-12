@@ -49,7 +49,8 @@ add_filter( 'woocommerce_product_tabs', 'dokan_seller_product_tab' );
 function dokan_product_seller_tab( $val ) {
     global $product;
 
-    $author     = get_user_by( 'id', $product->post->post_author );
+    $author_id  = get_post_field( 'post_author', $product->get_id() );
+    $author     = get_user_by( 'id', $author_id );
     $store_info = dokan_get_store_info( $author->ID );
 
     dokan_get_template_part('global/product-tab', '', array(

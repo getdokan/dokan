@@ -12,7 +12,7 @@
  */
 ?>
 <style>
-   
+
 </style>
 <div class="dashboard-widget big-counter">
     <ul class="list-inline">
@@ -42,7 +42,7 @@
                 ?>
             </div>
         </li>
-       
+
         <?php do_action( 'dokan_seller_dashboard_widget_counter' ); ?>
 
     </ul>
