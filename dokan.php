@@ -6,6 +6,7 @@ Description: An e-commerce marketplace plugin for WordPress. Powered by WooComme
 Version: 2.5.4
 Author: Tareq Hasan
 Author URI: http://tareq.co/
+Text Domain: dokan-lite
 License: GPL2
 */
 
