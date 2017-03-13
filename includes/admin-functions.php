@@ -314,6 +314,7 @@ function dokan_admin_report( $group_by = 'day', $year = '' ) {
         $barwidth             = 60 * 60 * 24 * 1000;
     } else {
         $group_by_query = 'YEAR(p.post_date), MONTH(p.post_date)';
+        $date_where           = " AND DATE(p.post_date) >= '$start_date' AND DATE(p.post_date) <= '$end_date'";
         $chart_interval = 0;
         $min_date             = $start_date_to_time;
         while ( ( $min_date   = strtotime( "+1 MONTH", $min_date ) ) <= $end_date_to_time ) {
@@ -430,7 +431,7 @@ function dokan_admin_report( $group_by = 'day', $year = '' ) {
                             timeformat: "<?php if ( $group_by == 'day' ) echo '%d %b'; else echo '%b'; ?>",
                             monthNames: <?php echo json_encode( array_values( $wp_locale->month_abbrev ) ) ?>,
                             tickLength: 1,
-                            minTickSize: [1, "<?php echo $group_by; ?>"],
+                            minTickSize: [1, "<?php echo ( $group_by == 'year' ) ? 'month' : $group_by; ?>"],
                             font: {
                                 color: "#aaa"
                             }

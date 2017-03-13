@@ -70,7 +70,7 @@ function dokan_order_show_suborders( $parent_order ) {
     $sub_orders = get_children( array(
         'post_parent' => $parent_order->id,
         'post_type'   => 'shop_order',
-        'post_status' => array( 'wc-pending', 'wc-completed', 'wc-processing', 'wc-on-hold' )
+        'post_status' => array( 'wc-pending', 'wc-completed', 'wc-processing', 'wc-on-hold', 'wc-cancelled'  )
     ) );
 
     if ( ! $sub_orders ) {

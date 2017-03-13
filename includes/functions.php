@@ -1106,27 +1106,42 @@ function dokan_prepare_chart_data( $data, $date_key, $data_key, $interval, $star
     $prepared_data = array();
 
     // Ensure all days (or months) have values first in this range
-    for ( $i = 0; $i <= $interval; $i ++ ) {
-        switch ( $group_by ) {
-            case 'day' :
-                $time = strtotime( date( 'Ymd', strtotime( "+{$i} DAY", $start_date ) ) ) * 1000;
-            break;
-            case 'year' :
-                $time = strtotime( date( 'Ym', strtotime( "+{$i} MONTH", $start_date ) ) . '01' ) * 1000;
-            break;
-        }
+    if ( 'day' === $group_by ) {
+        for ( $i = 0; $i <= $interval; $i ++ ) {
+            $time = strtotime( date( 'Ymd', strtotime( "+{$i} DAY", $start_date ) ) ) . '000';
 
-        if ( ! isset( $prepared_data[ $time ] ) )
-            $prepared_data[ $time ] = array( esc_js( $time ), 0 );
+            if ( ! isset( $prepared_data[ $time ] ) ) {
+                $prepared_data[ $time ] = array( esc_js( $time ), 0 );
+            }
+        }
+    } else {
+        $current_yearnum  = date( 'Y', $start_date );
+        $current_monthnum = date( 'm', $start_date );
+
+        for ( $i = 0; $i <= $interval; $i ++ ) {
+            $time = strtotime( $current_yearnum . str_pad( $current_monthnum, 2, '0', STR_PAD_LEFT ) . '01' ) . '000';
+
+            if ( ! isset( $prepared_data[ $time ] ) ) {
+                $prepared_data[ $time ] = array( esc_js( $time ), 0 );
+            }
+
+            $current_monthnum ++;
+
+            if ( $current_monthnum > 12 ) {
+                $current_monthnum = 1;
+                $current_yearnum  ++;
+            }
+        }
     }
 
     foreach ( $data as $d ) {
         switch ( $group_by ) {
             case 'day' :
-                $time = strtotime( date( 'Ymd', strtotime( $d->$date_key ) ) ) * 1000;
+                $time = strtotime( date( 'Ymd', strtotime( $d->$date_key ) ) ) . '000';
             break;
             case 'month' :
-                $time = strtotime( date( 'Ym', strtotime( $d->$date_key ) ) . '01' ) * 1000;
+            default :
+                $time = strtotime( date( 'Ym', strtotime( $d->$date_key ) ) . '01' ) . '000';
             break;
         }
 
@@ -1134,10 +1149,11 @@ function dokan_prepare_chart_data( $data, $date_key, $data_key, $interval, $star
             continue;
         }
 
-        if ( $data_key )
+        if ( $data_key ) {
             $prepared_data[ $time ][1] += $d->$data_key;
-        else
+        } else {
             $prepared_data[ $time ][1] ++;
+        }
     }
 
     return $prepared_data;
