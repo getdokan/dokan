@@ -1,4 +1,4 @@
-=== Dokan Multivendor Marketplace Plugin ===
+=== Dokan Multivendor Marketplace ===
 Contributors: tareq1988, wedevs, rafsuntaskin, sabbir1991
 Donate Link: http://tareq.co/donate/
 Tags: woocommerce, multivendor, multi-vendor, paypal, shop, vendor, seller, store, sell, online, amazon, dokan, ebay, Etsy, multi seller, multi store, multi vendor, multi vendors, multistore, multivendor, product vendor, product vendors, vendor, vendor system, vendors, wc market place, wc marketplace, wc vendors, woo vendors, woocommerce market place, woocommerce marketplace, woocommerce multi vendor,  commission rate, e-commerce, ebay, ecommerce, yith, yithemes
