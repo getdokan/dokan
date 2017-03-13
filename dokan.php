@@ -7,6 +7,7 @@ Version: 2.5.4
 Author: Tareq Hasan
 Author URI: http://tareq.co/
 Text Domain: dokan-lite
+Domain Path: /languages/
 License: GPL2
 */
 
