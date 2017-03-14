@@ -281,7 +281,7 @@ class Dokan_Admin_Settings {
                 'withdraw_limit' => array(
                     'name'    => 'withdraw_limit',
                     'label'   => __( 'Minimum Withdraw Limit', 'dokan-lite' ),
-                    'desc'    => __( 'Minimum balance required to make a withdraw request', 'dokan-lite' ),
+                    'desc'    => __( 'Minimum balance required to make a withdraw request ( Leave it blank to set no limits )', 'dokan-lite' ),
                     'default' => '50',
                     'type'    => 'text',
                 ),
