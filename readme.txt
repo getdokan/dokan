@@ -176,6 +176,13 @@ A. You just delete the free version and install and activate the pro version. No
 
 == Changelog ==
 
+v2.5.5 -> March 13, 2017
+---------------------
+- [tweak] Enabled showing cancelled orders in case of multiple sub-orders
+- [fix] Fixed js error on my-account page
+- [fix] Fixed reports showing wrong curve
+- [fix] Text domain issue fixed
+
 v2.5.4 -> March 8, 2017
 ----------------------
 - [tweak] Changed text domain from 'dokan' to 'dokan-lite'
