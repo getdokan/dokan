@@ -1037,10 +1037,10 @@ function dokan_get_seller_balance( $seller_id, $formatted = true ) {
     }
 
     if ( $formatted ) {
-        return wc_price( $earning );
+        return apply_filters( 'dokan_get_seller_balance', wc_price( $earning ) );
     }
 
-    return $earning;
+    return apply_filters( 'dokan_get_seller_balance', $earning );
 }
 
 /**
