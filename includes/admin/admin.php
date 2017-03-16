@@ -37,9 +37,15 @@ class Dokan_Admin_Settings {
         add_action( 'wp_before_admin_bar_render', array( $this, 'dokan_admin_toolbar' ) );
     }
 
+    /**
+     * Added promotion notice
+     *
+     * @since  2.5.6
+     *
+     * @return void
+     */
     public function promotional_offer() {
 
-        // Show only to Admins
         if ( ! current_user_can( 'manage_options' ) ) {
             return;
         }
@@ -71,8 +77,9 @@ class Dokan_Admin_Settings {
                 }
 
                 #dokan-promotional-offer-notice h2{
+                    font-size: 19px;
                     color: rgba(250, 250, 250, 0.77);
-                    margin-bottom: 10px;
+                    margin-bottom: 8px;
                     font-weight: normal;
                     margin-top: 15px;
                     -webkit-text-shadow: 0.1px 0.1px 0px rgba(250, 250, 250, 0.24);
@@ -83,14 +90,14 @@ class Dokan_Admin_Settings {
 
                 #dokan-promotional-offer-notice img{
                     position: absolute;
-                    width: 82px;
+                    width: 80px;
                     top: 0px;
                     left: 0px;
                 }
 
                 #dokan-promotional-offer-notice h2 span {
                     position: relative;
-                    top: -3px;
+                    top: -1px;
                 }
 
                 #dokan-promotional-offer-notice p{

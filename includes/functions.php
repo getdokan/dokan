@@ -288,7 +288,7 @@ function dokan_author_total_sales( $seller_id ) {
         wp_cache_set( $cache_key, $earnings, 'dokan-lite' );
     }
 
-    return apply_filters( 'dokan_author_total_sales', $earnings );
+    return apply_filters( 'dokan_seller_total_sales', $earnings );
 }
 
 /**

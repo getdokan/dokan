@@ -176,6 +176,12 @@ A. You just delete the free version and install and activate the pro version. No
 
 == Changelog ==
 
+v2.5.6 -> March 16, 2017
+----------------------
+- [fix] If no withdraw limit is set then it defaults to ‘0’
+- [fix] Remove add to cart fragment filter for thirdparty theme conflicting
+- [new] Added `dokan_seller_total_sales`, `dokan_get_formatted_seller_balance` and `dokan_get_seller_balance` filter
+
 v2.5.5 -> March 13, 2017
 ---------------------
 - [tweak] Enabled showing cancelled orders in case of multiple sub-orders
