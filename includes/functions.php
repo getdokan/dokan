@@ -288,7 +288,7 @@ function dokan_author_total_sales( $seller_id ) {
         wp_cache_set( $cache_key, $earnings, 'dokan-lite' );
     }
 
-    return $earnings;
+    return apply_filters( 'dokan_seller_total_sales', $earnings );
 }
 
 /**
@@ -1075,21 +1075,6 @@ function dokan_get_sellers( $args = array() ) {
 
     return array( 'users' => $sellers, 'count' => $user_query->total_users );
 }
-
-/**
- * Add cart total amount on add_to_cart_fragments
- *
- * @param array $fragment
- * @return array
- */
-function dokan_add_to_cart_fragments( $fragment ) {
-    $fragment['amount'] = WC()->cart->get_cart_total();
-
-    return $fragment;
-}
-
-add_filter( 'add_to_cart_fragments', 'dokan_add_to_cart_fragments' );
-
 
 /**
  * Put data with post_date's into an array of times

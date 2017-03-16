@@ -208,7 +208,7 @@ class Dokan_Withdraw {
      * @return integer
      */
     function get_withdraw_limit() {
-        return (int) dokan_get_option( 'withdraw_limit', 'dokan_withdraw', '50' );
+        return (int) dokan_get_option( 'withdraw_limit', 'dokan_withdraw', 0 );
     }
 
     /**
