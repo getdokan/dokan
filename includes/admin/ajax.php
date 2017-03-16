@@ -14,6 +14,7 @@ class Dokan_Admin_Ajax {
 	 */
 	function __construct() {
         add_action( 'wp_ajax_dokan_withdraw_form_action', array( $this, 'handle_withdraw_action' ) );
+        add_action( 'wp_ajax_dokan-dismiss-promotional-offer-notice', array( $this, 'dismiss_promotional_offer' ) );
 	}
 
 	/**
@@ -100,6 +101,21 @@ class Dokan_Admin_Ajax {
 
                 break;
         }
-
     }
+
+    /**
+     * Dismiss promotion notice
+     *
+     * @since  2.5.6
+     *
+     * @return void
+     */
+    public function dismiss_promotional_offer() {
+
+        if ( ! empty( $_POST['dokan_promotion_dismissed'] ) ) {
+            $offer_key = 'dokan_4th_yr_aniv_44_perc_discount';
+            update_option( $offer_key . '_tracking_notice', 'hide' );
+        }
+    }
+
 }

@@ -32,8 +32,112 @@ class Dokan_Admin_Settings {
         add_action( 'admin_head', array( $this, 'welcome_page_remove' ) );
 
         add_action( 'admin_notices', array($this, 'update_notice' ) );
+        add_action( 'admin_notices', array($this, 'promotional_offer' ) );
+
         add_action( 'wp_before_admin_bar_render', array( $this, 'dokan_admin_toolbar' ) );
     }
+
+    public function promotional_offer() {
+
+        // Show only to Admins
+        if ( ! current_user_can( 'manage_options' ) ) {
+            return;
+        }
+
+        // check if it has already been dismissed
+        $offer_key = 'dokan_4th_yr_aniv_44_perc_discount';
+        $hide_notice = get_option( $offer_key . '_tracking_notice', 'no' );
+
+        if ( 'hide' == $hide_notice ) {
+            return;
+        }
+
+        $product_text = ( ! WeDevs_Dokan::init()->is_pro_exists() ) ? __( 'Pro upgrade and all extensions', 'dokan-lite' ) : __( 'all extensions', 'dokan-lite' );
+
+        $offer_msg = sprintf( __( '<h2><span class="dashicons dashicons-awards"></span> weDevs 4th Year Anniversary Offer</h2>', 'dokan-lite' ) );
+        $offer_msg .= sprintf( __( '<p>Get <strong class="highlight-text">44&#37; discount</strong> on %2$s also <a target="_blank" href="%1$s"><strong>WIN any product</strong></a> from our 4th year anniversary giveaway. Offer ending soon!</p>', 'dokan-lite' ), 'https://wedevs.com/in/4years', $product_text );
+        ?>
+            <div class="notice is-dismissible" id="dokan-promotional-offer-notice">
+                <img src="https://ps.w.org/dokan-lite/assets/icon-256x256.png?rev=1595714" alt="">
+                <?php echo $offer_msg; ?>
+                <span class="dashicons dashicons-megaphone"></span>
+            </div>
+
+            <style>
+                #dokan-promotional-offer-notice {
+                    background-color: #F35E33;
+                    border-left: 0px;
+                    padding-left: 83px;
+                }
+
+                #dokan-promotional-offer-notice h2{
+                    color: rgba(250, 250, 250, 0.77);
+                    margin-bottom: 10px;
+                    font-weight: normal;
+                    margin-top: 15px;
+                    -webkit-text-shadow: 0.1px 0.1px 0px rgba(250, 250, 250, 0.24);
+                    -moz-text-shadow: 0.1px 0.1px 0px rgba(250, 250, 250, 0.24);
+                    -o-text-shadow: 0.1px 0.1px 0px rgba(250, 250, 250, 0.24);
+                    text-shadow: 0.1px 0.1px 0px rgba(250, 250, 250, 0.24);
+                }
+
+                #dokan-promotional-offer-notice img{
+                    position: absolute;
+                    width: 82px;
+                    top: 0px;
+                    left: 0px;
+                }
+
+                #dokan-promotional-offer-notice h2 span {
+                    position: relative;
+                    top: -3px;
+                }
+
+                #dokan-promotional-offer-notice p{
+                    color: rgba(250, 250, 250, 0.77);
+                    font-size: 14px;
+                    margin-bottom: 10px;
+                    -webkit-text-shadow: 0.1px 0.1px 0px rgba(250, 250, 250, 0.24);
+                    -moz-text-shadow: 0.1px 0.1px 0px rgba(250, 250, 250, 0.24);
+                    -o-text-shadow: 0.1px 0.1px 0px rgba(250, 250, 250, 0.24);
+                    text-shadow: 0.1px 0.1px 0px rgba(250, 250, 250, 0.24);
+                }
+
+                #dokan-promotional-offer-notice p strong.highlight-text{
+                    color: #fff;
+                }
+
+                #dokan-promotional-offer-notice p a {
+                    color: #fafafa;
+                }
+
+                #dokan-promotional-offer-notice .notice-dismiss:before {
+                    color: #fff;
+                }
+
+                #dokan-promotional-offer-notice span.dashicons-megaphone {
+                    position: absolute;
+                    top: 16px;
+                    right: 119px;
+                    color: rgba(253, 253, 253, 0.29);
+                    font-size: 96px;
+                    transform: rotate(-21deg);
+                }
+
+            </style>
+
+            <script type='text/javascript'>
+                jQuery('body').on('click', '#dokan-promotional-offer-notice .notice-dismiss', function(e) {
+                    e.preventDefault();
+
+                    wp.ajax.post('dokan-dismiss-promotional-offer-notice', {
+                        dokan_promotion_dismissed: true
+                    });
+                });
+            </script>
+        <?php
+    }
+
 
     /**
      * Get Post Type array
