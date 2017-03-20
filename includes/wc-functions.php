@@ -21,9 +21,6 @@ function dokan_process_product_meta( $post_id ) {
     update_post_meta( $post_id, '_downloadable', $is_downloadable );
     update_post_meta( $post_id, '_virtual', $is_virtual );
 
-    // update_post_meta( $post_id, '_has_attribute', 'no' );
-    // update_post_meta( $post_id, '_create_variation', 'no' );
-
     // Gallery Images
     $attachment_ids = array_filter( explode( ',', wc_clean( $_POST['product_image_gallery'] ) ) );
     update_post_meta( $post_id, '_product_image_gallery', implode( ',', $attachment_ids ) );
@@ -1037,35 +1034,34 @@ function dokan_get_seller_balance( $seller_id, $formatted = true ) {
     }
 
     if ( $formatted ) {
-        return wc_price( $earning );
+        return apply_filters( 'dokan_get_formatted_seller_balance', wc_price( $earning ) );
     }
 
-    return $earning;
+    return apply_filters( 'dokan_get_seller_balance', $earning );
 }
 
 /**
- * Get Seller Earned amount 
- * 
+ * Get Seller Earned amount
+ *
  * @since 2.5.4
- * 
+ *
  * @param type $seller_id
- * 
+ *
  * @param string $start_date
- * 
+ *
  * @param type $end_date
- * 
+ *
  * @return type
  */
 function dokan_get_seller_earnings( $seller_id, $start_date = '', $end_date = '' ) {
-    
     if ( empty( $start_date ) ) {
         $start_date = '2010-01-01';
     }
-    
+
     if ( empty( $end_date ) ) {
         $end_date = date( 'Y-m-d', strtotime( 'midnight', current_time( 'timestamp' ) ) );
     }
-    
+
     $all_orders = dokan_get_seller_orders_by_date( $start_date, $end_date, $seller_id, dokan_withdraw_get_active_order_status() );
     $earnings = 0;
     foreach ( $all_orders as $order ) {

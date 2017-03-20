@@ -1,4 +1,4 @@
-=== Dokan Multivendor Marketplace Plugin ===
+=== Dokan Multivendor Marketplace ===
 Contributors: tareq1988, wedevs, rafsuntaskin, sabbir1991
 Donate Link: http://tareq.co/donate/
 Tags: woocommerce, multivendor, multi-vendor, paypal, shop, vendor, seller, store, sell, online, amazon, dokan, ebay, Etsy, multi seller, multi store, multi vendor, multi vendors, multistore, multivendor, product vendor, product vendors, vendor, vendor system, vendors, wc market place, wc marketplace, wc vendors, woo vendors, woocommerce market place, woocommerce marketplace, woocommerce multi vendor,  commission rate, e-commerce, ebay, ecommerce, yith, yithemes
@@ -175,6 +175,19 @@ A. You just delete the free version and install and activate the pro version. No
 19. Frontend &rarr; Individual Seller Store-3
 
 == Changelog ==
+
+v2.5.6 -> March 16, 2017
+----------------------
+- [fix] If no withdraw limit is set then it defaults to ‘0’
+- [fix] Remove add to cart fragment filter for thirdparty theme conflicting
+- [new] Added `dokan_seller_total_sales`, `dokan_get_formatted_seller_balance` and `dokan_get_seller_balance` filter
+
+v2.5.5 -> March 13, 2017
+---------------------
+- [tweak] Enabled showing cancelled orders in case of multiple sub-orders
+- [fix] Fixed js error on my-account page
+- [fix] Fixed reports showing wrong curve
+- [fix] Text domain issue fixed
 
 v2.5.4 -> March 8, 2017
 ----------------------

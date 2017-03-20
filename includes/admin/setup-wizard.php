@@ -441,7 +441,7 @@ class Dokan_Setup_Wizard {
                     <th scope="row"><label for="withdraw_limit"><?php _e( 'Minimum Withdraw Limit', 'dokan-lite' ); ?></label></th>
                     <td>
                         <input type="text" id="withdraw_limit" name="withdraw_limit" value="<?php echo $withdraw_limit; ?>" />
-                        <p class="description"><?php _e( 'Minimum balance required to make a withdraw request', 'dokan-lite' ); ?></p>
+                        <p class="description"><?php _e( 'Minimum balance required to make a withdraw request ( Leave it blank to set no limits )', 'dokan-lite' ); ?></p>
                     </td>
                 </tr>
                 <tr>
