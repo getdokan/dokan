@@ -130,7 +130,7 @@
                                         <div class="row-actions">
                                             <span class="edit"><a href="<?php echo dokan_edit_product_url( $post->ID ); ?>"><?php _e( 'Edit', 'dokan-lite' ); ?></a> | </span>
                                             <span class="delete"><a onclick="return confirm('Are you sure?');" href="<?php echo wp_nonce_url( add_query_arg( array( 'action' => 'dokan-delete-product', 'product_id' => $post->ID ), dokan_get_navigation_url('products') ), 'dokan-delete-product' ); ?>"><?php _e( 'Delete Permanently', 'dokan-lite' ); ?></a> | </span>
-                                            <span class="view"><a href="<?php echo get_permalink( $product->get_id() ); ?>" rel="permalink"><?php _e( 'View', 'dokan-lite' ); ?></a></span>
+                                            <span class="view"><a href="<?php echo get_permalink( dokan_cmp_get_prop( $product, 'id' ) ); ?>" rel="permalink"><?php _e( 'View', 'dokan-lite' ); ?></a></span>
                                         </div>
                                     </td>
                                     <td class="post-status" data-title="<?php _e( 'Status', 'dokan-lite' ); ?>">
@@ -169,11 +169,12 @@
                                     </td>
                                     <td data-title="<?php _e( 'Type', 'dokan-lite' ); ?>">
                                         <?php
-                                        if( $product->get_type() == 'grouped' ):
+
+                                        if( dokan_cmp_get_prop( $product, 'product_type' , 'get_type') == 'grouped' ):
                                             echo '<span class="product-type tips grouped" title="' . __( 'Grouped', 'dokan-lite' ) . '"></span>';
-                                        elseif ( $product->get_type() == 'external' ):
+                                        elseif ( dokan_cmp_get_prop( $product, 'product_type' , 'get_type') == 'external' ):
                                             echo '<span class="product-type tips external" title="' . __( 'External/Affiliate', 'dokan-lite' ) . '"></span>';
-                                        elseif ( $product->get_type() == 'simple' ):
+                                        elseif ( dokan_cmp_get_prop( $product, 'product_type' , 'get_type') == 'simple' ):
 
                                             if ( $product->is_virtual() ) {
                                                 echo '<span class="product-type tips virtual" title="' . __( 'Virtual', 'dokan-lite' ) . '"></span>';
@@ -183,11 +184,11 @@
                                                 echo '<span class="product-type tips simple" title="' . __( 'Simple', 'dokan-lite' ) . '"></span>';
                                             }
 
-                                            elseif ( $product->get_type() == 'variable' ):
+                                            elseif ( dokan_cmp_get_prop( $product, 'product_type' , 'get_type') == 'variable' ):
                                                 echo '<span class="product-type tips variable" title="' . __( 'Variable', 'dokan-lite' ) . '"></span>';
                                             else:
                                                 // Assuming that we have other types in future
-                                                echo '<span class="product-type tips ' . $product->get_type() . '" title="' . ucfirst( $product->get_type() ) . '"></span>';
+                                                echo '<span class="product-type tips ' . dokan_cmp_get_prop( $product, 'product_type' , 'get_type') . '" title="' . ucfirst( dokan_cmp_get_prop( $product, 'product_type' , 'get_type') ) . '"></span>';
                                             endif;
                                             ?>
                                         </td>

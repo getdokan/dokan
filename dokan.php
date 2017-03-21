@@ -513,6 +513,7 @@ final class WeDevs_Dokan {
 
         require_once $inc_dir . 'functions.php';
         require_once $inc_dir . 'functions-depricated.php';
+        require_once $inc_dir . 'functions-compatibility.php';
         require_once $inc_dir . 'widgets/menu-category.php';
         require_once $inc_dir . 'widgets/bestselling-product.php';
         require_once $inc_dir . 'widgets/top-rated-product.php';
