@@ -695,7 +695,7 @@ function dokan_get_suborder_ids_by ($parent_order_id){
  */
 function dokan_get_admin_commission_by( $order, $seller_id ) {
 
-    if ( get_posts( array( 'post_parent' => $order->id, 'post_type' => 'shop_order', 'post_status' => 'any' ) ) ) {
+    if ( get_posts( array( 'post_parent' => dokan_cmp_get_prop( $order, 'id' ), 'post_type' => 'shop_order', 'post_status' => 'any' ) ) ) {
         return;
     }
 

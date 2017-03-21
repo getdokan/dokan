@@ -1467,11 +1467,11 @@ function dokan_wc_email_recipient_add_seller( $email, $order ) {
 
     if ( $order ) {
 
-        if ( get_post_meta( $order->id, 'has_sub_order', true ) == true ) {
+        if ( get_post_meta( dokan_cmp_get_prop( $order, 'id' ), 'has_sub_order', true ) == true ) {
             return $email;
         }
 
-        $sellers = dokan_get_seller_id_by_order( $order->id );
+        $sellers = dokan_get_seller_id_by_order( dokan_cmp_get_prop( $order, 'id' ) );
 
         //if more than 1 seller
         if ( count( $sellers ) > 1 ) {

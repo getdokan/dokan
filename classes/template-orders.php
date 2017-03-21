@@ -136,7 +136,7 @@ class Dokan_Template_Orders {
                     $customer_phone   = esc_html( get_post_meta( $order->order_id, '_billing_phone', true ) );
                     $customer_ip      = esc_html( get_post_meta( $order->order_id, '_customer_ip_address', true ) );
                 } else {
-                    $customer_name  = get_post_meta( $order->id, '_billing_first_name', true ). ' '. get_post_meta( $order->id, '_billing_last_name', true ).'(Guest)';
+                    $customer_name  = get_post_meta( dokan_cmp_get_prop( $order, 'id' ), '_billing_first_name', true ). ' '. get_post_meta( dokan_cmp_get_prop( $order, 'id' ), '_billing_last_name', true ).'(Guest)';
                     $customer_email = esc_html( get_post_meta( $order->order_id, '_billing_email', true ) );
                     $customer_phone = esc_html( get_post_meta( $order->order_id, '_billing_phone', true ) );
                     $customer_ip    = esc_html( get_post_meta( $order->order_id, '_customer_ip_address', true ) );
@@ -208,7 +208,7 @@ class Dokan_Template_Orders {
                     $customer_phone   = esc_html( get_post_meta( $order->order_id, '_billing_phone', true ) );
                     $customer_ip      = esc_html( get_post_meta( $order->order_id, '_customer_ip_address', true ) );
                 } else {
-                    $customer_name  = get_post_meta( $order->id, '_billing_first_name', true ). ' '. get_post_meta( $order->id, '_billing_last_name', true ).'(Guest)';
+                    $customer_name  = get_post_meta( dokan_cmp_get_prop( $order, 'id' ), '_billing_first_name', true ). ' '. get_post_meta( dokan_cmp_get_prop( $order, 'id' ), '_billing_last_name', true ).'(Guest)';
                     $customer_email = esc_html( get_post_meta( $order->order_id, '_billing_email', true ) );
                     $customer_phone = esc_html( get_post_meta( $order->order_id, '_billing_phone', true ) );
                     $customer_ip    = esc_html( get_post_meta( $order->order_id, '_customer_ip_address', true ) );

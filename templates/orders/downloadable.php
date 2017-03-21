@@ -8,7 +8,7 @@ global $wpdb;
             $download_permissions = $wpdb->get_results( $wpdb->prepare( "
                 SELECT * FROM {$wpdb->prefix}woocommerce_downloadable_product_permissions
                 WHERE order_id = %d ORDER BY product_id
-            ", $order->id ) );
+            ", dokan_cmp_get_prop( $order, 'id' ) ) );
 
             $product = null;
             $loop    = 0;
@@ -69,7 +69,7 @@ global $wpdb;
         </div>
 
         <div class="dokan-w4">
-            <button type="button" class="dokan-btn dokan-btn-success grant_access" data-order-id="<?php echo $order->id; ?>" data-nonce="<?php echo wp_create_nonce( 'grant-access' ); ?>"><?php _e( 'Grant Access', 'dokan-lite' ); ?></button>
+            <button type="button" class="dokan-btn dokan-btn-success grant_access" data-order-id="<?php echo dokan_cmp_get_prop( $order, 'id' ); ?>" data-nonce="<?php echo wp_create_nonce( 'grant-access' ); ?>"><?php _e( 'Grant Access', 'dokan-lite' ); ?></button>
         </div>
 
     </div> <!-- .toolbar -->
