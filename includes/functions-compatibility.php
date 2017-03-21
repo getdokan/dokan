@@ -26,9 +26,9 @@ function dokan_cmp_get_prop( $the_order, $prop ){
 function dokan_cmp_get_date_created( $order ){
     
     if ( WC_VERSION > 2.6 ) {
-        return $order->get_date_created();
+        return wc_format_datetime( $order->get_date_created(), get_option( 'date_format' ) . ', ' . get_option( 'time_format' ) );
     }
-
+    
     return $order->order_date;
 }
 
