@@ -13,10 +13,10 @@ function dokan_cmp_wc_get_product( $product ) {
     return get_product( $product );
 }
 
-function dokan_cmp_get_prop( $the_order, $prop ){
+function dokan_cmp_get_prop( $the_order, $prop, $callback = false ){
     
     if ( WC_VERSION > 2.6 ) {
-        $fn_name = 'get_'.$prop;
+        $fn_name = $callback ? $callback : 'get_'.$prop;
         return $the_order->$fn_name();
     }
     
