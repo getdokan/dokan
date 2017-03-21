@@ -15,7 +15,7 @@ global $wpdb;
 
             if ( $download_permissions && sizeof( $download_permissions ) > 0 ) foreach ( $download_permissions as $download ) {
 
-                if ( ! $product || $product->id != $download->product_id ) {
+                if ( ! $product || dokan_cmp_get_prop( $product, 'id' ) != $download->product_id ) {
                     $product = wc_get_product( absint( $download->product_id ) );
                     $file_count = 0;
                 }

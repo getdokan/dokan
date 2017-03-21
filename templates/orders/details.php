@@ -163,7 +163,7 @@ $order    = new WC_Order( $order_id );
                         <ul class="list-unstyled order-status">
                             <li>
                                 <span><?php _e( 'Order Status:', 'dokan-lite' ); ?></span>
-                                <label class="dokan-label dokan-label-<?php echo dokan_get_order_status_class( $order->post_status ); ?>"><?php echo isset( $statuses[$order->post_status] ) ? $statuses[$order->post_status] : $order->post_status; ?></label>
+                                <label class="dokan-label dokan-label-<?php echo dokan_get_order_status_class( dokan_cmp_get_prop( $order, 'status' ) ); ?>"><?php echo isset( $statuses[dokan_cmp_get_prop( $order, 'status' )] ) ? $statuses[dokan_cmp_get_prop( $order, 'status' )] : dokan_cmp_get_prop( $order, 'status' ); ?></label>
 
                                 <?php if ( dokan_get_option( 'order_status_change', 'dokan_selling', 'on' ) == 'on' ) {?>
                                     <a href="#" class="dokan-edit-status"><small><?php _e( '&nbsp; Edit', 'dokan-lite' ); ?></small></a>
@@ -178,7 +178,7 @@ $order    = new WC_Order( $order_id );
                                             // if( $status == 'wc-refunded' ) {
                                             //     continue;
                                             // }
-                                            echo '<option value="' . esc_attr( $status ) . '" ' . selected( $status, $order->post_status, false ) . '>' . esc_html__( $label, 'dokan-lite' ) . '</option>';
+                                            echo '<option value="' . esc_attr( $status ) . '" ' . selected( $status, dokan_cmp_get_prop( $order, 'status' ), false ) . '>' . esc_html__( $label, 'dokan-lite' ) . '</option>';
                                         }
                                         ?>
                                     </select>
@@ -193,7 +193,7 @@ $order    = new WC_Order( $order_id );
                             </li>
                             <li>
                                 <span><?php _e( 'Order Date:', 'dokan-lite' ); ?></span>
-                                <?php echo $order->order_date; ?>
+                                <?php echo dokan_cmp_get_date_created( $order ); ?>
                             </li>
                         </ul>
 
