@@ -48,7 +48,6 @@ $order    = new WC_Order( $order_id );
                                                 switch ( $item['type'] ) {
                                                     case 'line_item' :
                                                         $_product   = $order->get_product_from_item( $item );
-                                                        $item_meta  = $order->get_item_meta( $item_id );
 
                                                         dokan_get_template_part( 'orders/order-item-html', '', array(
                                                             'order' => $order,
@@ -60,7 +59,6 @@ $order    = new WC_Order( $order_id );
                                                     case 'fee' :
                                                         dokan_get_template_part( 'orders/order-fee-html', '', array(
                                                             'item_id' => $item_id,
-                                                            'item_meta' => $item_meta
                                                         ) );
 
                                                     break;
