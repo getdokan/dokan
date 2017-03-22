@@ -27,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 		<?php 
 		global $wpdb;
 
-		if ( $metadata = $order->has_meta( $item_id ) ) {
+		if ( $metadata = dokan_cmp_get_metadata( $order, $item_id ) ) {
 			foreach ( $metadata as $meta ) {
 
 				// Skip hidden core fields

@@ -32,3 +32,13 @@ function dokan_cmp_get_date_created( $order ){
     return $order->order_date;
 }
 
+
+function dokan_cmp_get_metadata( $order, $item_id ) {
+    if ( WC_VERSION > 2.6 ) {
+        $item = new WC_Order_Item( $order );
+        
+        return $item->get_meta_data();
+    }
+    
+    return $order->has_meta( $item_id );
+}
