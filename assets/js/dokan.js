@@ -160,13 +160,13 @@ jQuery(function($) {
     var dokan_seller_meta_boxes_order_items = {
         init: function() {
 
-            $('#tracking-modal').on('shown.bs.modal', function () {
-                $('#tracking-modal').focus();
-            });
             $( "#shipped-date" ).datepicker({
                 dateFormat: "yy-mm-dd"
             });
+
             //saving note
+            $( 'body' ).on('click','#dokan-add-tracking-number', this.showTrackingForm );
+            $( 'body' ).on('click','#dokan-cancel-tracking-note', this.cancelTrackingForm );
             $( 'body' ).on('click','#add-tracking-details', this.insertShippingTrackingInfo);
 
             $( '#woocommerce-order-items' )
@@ -192,6 +192,24 @@ jQuery(function($) {
                 })
         },
 
+        showTrackingForm: function(e) {
+            e.preventDefault();
+            var self = $(this);
+
+            self.closest('div').find('form#add-shipping-tracking-form').slideDown( 300, function() {
+                $(this).removeClass('dokan-hide');
+            });
+        },
+
+        cancelTrackingForm: function(e) {
+            e.preventDefault();
+            var self = $(this);
+
+            self.closest('form#add-shipping-tracking-form').slideUp( 300, function() {
+                $(this).addClass('dokan-hide');
+            });
+        },
+
         insertShippingTrackingInfo: function(e){
             e.preventDefault();
 
@@ -209,7 +227,7 @@ jQuery(function($) {
             $.post( dokan.ajaxurl, shipping_tracking_info, function(response) {
                 $('ul.order_notes').prepend( response );
                 $('#dokan-order-notes').unblock();
-                $('#tracking-modal').modal('hide');
+                $('form#add-shipping-tracking-form').find("input[type=text], textarea").val("");
             });
 
             return false;
