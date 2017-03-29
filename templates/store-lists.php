@@ -19,6 +19,19 @@
             <div class="dokan-overlay" style="display: none;"><span class="dokan-ajax-loader"></span></div>
         </form>
 
+        <?php
+            /**
+             *  Added extra search field after store listing search
+             *
+             * `dokan_after_seller_listing_serach_form` - action
+             *
+             *  @since 2.5.7
+             *
+             *  @param array|object $sellers
+             */
+            do_action( 'dokan_after_seller_listing_serach_form', $sellers );
+        ?>
+
     <?php }
     else
     {

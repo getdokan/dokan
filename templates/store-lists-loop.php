@@ -57,6 +57,8 @@
                                     <?php echo get_avatar( $seller->ID, 150 ); ?>
                                 </div>
                                 <a href="<?php echo $store_url; ?>" class="dokan-btn dokan-btn-theme"><?php _e( 'Visit Store', 'dokan-lite' ); ?></a>
+
+                                <?php do_action( 'dokan_seller_listing_footer_content', $seller, $store_info ); ?>
                             </div>
                         </div>
                     </li>
