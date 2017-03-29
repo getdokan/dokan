@@ -13,9 +13,6 @@
     ?>
 
         <form role="search" method="get" class="dokan-seller-search-form" action="">
-            <label>
-                <span class="screen-reader-text"><?php _e( 'Search vendor', 'dokan-lite' ); ?></span>
-            </label>
             <input type="search" id="search" class="search-field dokan-seller-search" placeholder="<?php esc_attr_e( 'Search &hellip;', 'dokan-lite' ); ?>" value="<?php echo esc_attr( $search_query ); ?>" name="dokan_seller_search" title="<?php esc_attr_e( 'Search seller &hellip;', 'dokan-lite' ); ?>" />
             <input type="hidden" id="pagination_base" name="pagination_base" value="<?php echo $pagination_base ?>" />
             <input type="hidden" id="nonce" name="nonce" value="<?php echo wp_create_nonce( 'dokan-seller-listing-search' ); ?>" />
@@ -27,26 +24,20 @@
     {
         $search_query = null;
     }
+    $template_args = array(
+        'sellers'         => $sellers,
+        'limit'           => $limit,
+        'offset'          => $offset,
+        'paged'           => $paged,
+        'search_query'    => $search_query,
+        'pagination_base' => $pagination_base,
+        'per_row'         => $per_row,
+        'search_enabled'  => $search,
+        'image_size'      => $image_size,
+    );
 
+    echo dokan_get_template_part( 'store-lists-loop', false, $template_args );
     ?>
-
-    <div id="dokan-seller-listing-wrap">
-        <?php
-            $template_args = array(
-                'sellers'         => $sellers,
-                'limit'           => $limit,
-                'offset'          => $offset,
-                'paged'           => $paged,
-                'search_query'    => $search_query,
-                'pagination_base' => $pagination_base,
-                'per_row'         => $per_row,
-                'search_enabled'  => $search,
-                'image_size'      => $image_size,
-            );
-
-            echo dokan_get_template_part( 'store-lists-loop', false, $template_args );
-        ?>
-    </div>
 </div>
 
 <script>

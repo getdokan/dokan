@@ -625,7 +625,7 @@ function dokan_store_listing( $atts ) {
         'limit'      => $limit,
         'offset'     => $offset,
         'paged'      => $paged,
-        'image_size' => 'medium',
+        'image_size' => 'full',
         'search'     => $attr['search'],
         'per_row'    => $attr['per_row']
     ) );
