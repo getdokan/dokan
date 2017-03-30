@@ -174,14 +174,7 @@
 
                         $('.tips').tooltip();
 
-                        // featured image
-                        // $('body, .product-edit-container').on('click', 'a.dokan-feat-image-btn', Dokan_Editor.featuredImage.addImage );
-                        // $('body, .product-edit-container').on('click', 'a.dokan-remove-feat-image', Dokan_Editor.featuredImage.removeImage );
-
-                        // $('body, #dokan-product-images').on('click', 'a.add-product-images', Dokan_Editor.gallery.addImages );
-                        // $('body, #dokan-product-images').on( 'click', 'a.action-delete', Dokan_Editor.gallery.deleteImage );
                         Dokan_Editor.gallery.sortable();
-
                     },
                     close: function() {
                         product_gallery_frame = undefined;

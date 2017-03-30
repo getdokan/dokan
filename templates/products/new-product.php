@@ -227,7 +227,8 @@
                         </div>
 
                         <div class="dokan-form-group">
-                            <?php wp_editor( Dokan_Template_Products::$post_content, 'post_content', array('editor_height' => 50, 'quicktags' => false, 'media_buttons' => false, 'teeny' => true, 'editor_class' => 'post_content') ); ?>
+                            <label for="post_content" class="control-label"><?php _e( 'Description', 'dokan-lite' ) ?> <i class="fa fa-question-circle tips" data-title="<?php _e( 'Add your product description', 'dokan-lite' ) ?>" aria-hidden="true"></i></label>
+                            <?php wp_editor( '', 'post_content', array('editor_height' => 50, 'quicktags' => false, 'media_buttons' => false, 'teeny' => true, 'editor_class' => 'post_content') ); ?>
                         </div>
 
                         <?php do_action( 'dokan_new_product_form' ); ?>
@@ -238,8 +239,6 @@
                             <?php wp_nonce_field( 'dokan_add_new_product', 'dokan_add_new_product_nonce' ); ?>
                             <button type="submit" name="add_product" class="dokan-btn dokan-btn-default" value="create_and_add_new"><?php esc_attr_e( 'Create & Add New', 'dokan-lite' ); ?></button>
                             <button type="submit" name="add_product" class="dokan-btn dokan-btn-default dokan-btn-theme" value="create_new"><?php esc_attr_e( 'Create Product', 'dokan-lite' ); ?></button>
-                            <!-- <input type="submit" name="add_product" class="dokan-btn dokan-btn-default" value=""/> -->
-                            <!-- <input type="submit" name="add_product" class="dokan-btn dokan-btn-danger dokan-btn-theme" value="<?php esc_attr_e( 'Create Product', 'dokan-lite' ); ?>"/> -->
                         </div>
 
                     </form>
