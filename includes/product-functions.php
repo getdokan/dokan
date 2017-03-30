@@ -88,6 +88,12 @@ function dokan_save_product( $args ) {
             wp_set_object_terms( $product_id, 'simple', 'product_type' );
         }
 
+        // Gallery Images
+        if (  !empty( $data['product_image_gallery'] ) ) {
+            $attachment_ids = array_filter( explode( ',', wc_clean( $data['product_image_gallery'] ) ) );
+            update_post_meta( $product_id, '_product_image_gallery', implode( ',', $attachment_ids ) );
+        }
+
         if ( isset( $data['_regular_price'] ) ) {
             update_post_meta( $product_id, '_regular_price', ( $data['_regular_price'] === '' ) ? '' : wc_format_decimal( $data['_regular_price'] ) );
         }

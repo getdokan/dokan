@@ -3099,7 +3099,8 @@ div.media-sidebar a.edit-attachment {
   padding: 0;
 }
 .product-edit-container #dokan-product-images ul.product_images li.image,
-.product-edit-container #dokan-product-images ul.product_images li.dokan-sortable-placeholder {
+.product-edit-container #dokan-product-images ul.product_images li.dokan-sortable-placeholder,
+.product-edit-container #dokan-product-images ul.product_images li.add-image {
   width: 64px;
   height: 64px;
   overflow: hidden;
@@ -3112,14 +3113,33 @@ div.media-sidebar a.edit-attachment {
   padding: 2px;
   cursor: move;
 }
+.product-edit-container #dokan-product-images ul.product_images li.image.add-image,
+.product-edit-container #dokan-product-images ul.product_images li.dokan-sortable-placeholder.add-image,
+.product-edit-container #dokan-product-images ul.product_images li.add-image.add-image {
+  cursor: pointer;
+  text-align: center;
+  line-height: 50px;
+  border: 2px dashed #ddd;
+}
+.product-edit-container #dokan-product-images ul.product_images li.image.add-image a,
+.product-edit-container #dokan-product-images ul.product_images li.dokan-sortable-placeholder.add-image a,
+.product-edit-container #dokan-product-images ul.product_images li.add-image.add-image a {
+  width: 100%;
+  height: 100%;
+  color: #afafaf;
+  font-size: 18px;
+  display: block;
+}
 .product-edit-container #dokan-product-images ul.product_images li.image img,
-.product-edit-container #dokan-product-images ul.product_images li.dokan-sortable-placeholder img {
+.product-edit-container #dokan-product-images ul.product_images li.dokan-sortable-placeholder img,
+.product-edit-container #dokan-product-images ul.product_images li.add-image img {
   padding: 0;
   margin: 0;
   max-width: 100%;
 }
 .product-edit-container #dokan-product-images ul.product_images li.image a.action-delete,
-.product-edit-container #dokan-product-images ul.product_images li.dokan-sortable-placeholder a.action-delete {
+.product-edit-container #dokan-product-images ul.product_images li.dokan-sortable-placeholder a.action-delete,
+.product-edit-container #dokan-product-images ul.product_images li.add-image a.action-delete {
   position: absolute;
   top: 0;
   right: 0;
@@ -3136,7 +3156,8 @@ div.media-sidebar a.edit-attachment {
   display: none;
 }
 .product-edit-container #dokan-product-images ul.product_images li.image:hover a.action-delete,
-.product-edit-container #dokan-product-images ul.product_images li.dokan-sortable-placeholder:hover a.action-delete {
+.product-edit-container #dokan-product-images ul.product_images li.dokan-sortable-placeholder:hover a.action-delete,
+.product-edit-container #dokan-product-images ul.product_images li.add-image:hover a.action-delete {
   display: inline-block;
 }
 .product-edit-container #dokan-product-images ul.product_images li.dokan-sortable-placeholder {
@@ -3282,6 +3303,75 @@ div.media-sidebar a.edit-attachment {
 .dokan-add-new-product-popup .dokan-feat-image-content {
   width: 35%;
   margin-right: 15px;
+}
+.dokan-add-new-product-popup #dokan-product-images ul.product_images {
+  margin: 0 0 10px 0;
+  padding: 0;
+}
+.dokan-add-new-product-popup #dokan-product-images ul.product_images li.image,
+.dokan-add-new-product-popup #dokan-product-images ul.product_images li.dokan-sortable-placeholder,
+.dokan-add-new-product-popup #dokan-product-images ul.product_images li.add-image {
+  width: 50px;
+  height: 50px;
+  overflow: hidden;
+  float: left;
+  box-sizing: border-box;
+  position: relative;
+  margin: 9px 4px 0 0;
+  border: 1px solid #eee;
+  border-radius: 2px;
+  padding: 2px;
+  cursor: move;
+}
+.dokan-add-new-product-popup #dokan-product-images ul.product_images li.image.add-image,
+.dokan-add-new-product-popup #dokan-product-images ul.product_images li.dokan-sortable-placeholder.add-image,
+.dokan-add-new-product-popup #dokan-product-images ul.product_images li.add-image.add-image {
+  cursor: pointer;
+  text-align: center;
+  line-height: 40px;
+  border: 2px dashed #ddd;
+}
+.dokan-add-new-product-popup #dokan-product-images ul.product_images li.image.add-image a,
+.dokan-add-new-product-popup #dokan-product-images ul.product_images li.dokan-sortable-placeholder.add-image a,
+.dokan-add-new-product-popup #dokan-product-images ul.product_images li.add-image.add-image a {
+  width: 100%;
+  height: 100%;
+  color: #afafaf;
+  font-size: 18px;
+  display: block;
+}
+.dokan-add-new-product-popup #dokan-product-images ul.product_images li.image img,
+.dokan-add-new-product-popup #dokan-product-images ul.product_images li.dokan-sortable-placeholder img,
+.dokan-add-new-product-popup #dokan-product-images ul.product_images li.add-image img {
+  padding: 0;
+  margin: 0;
+  max-width: 100%;
+}
+.dokan-add-new-product-popup #dokan-product-images ul.product_images li.image a.action-delete,
+.dokan-add-new-product-popup #dokan-product-images ul.product_images li.dokan-sortable-placeholder a.action-delete,
+.dokan-add-new-product-popup #dokan-product-images ul.product_images li.add-image a.action-delete {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: red;
+  background: rgba(0, 0, 0, 0.6);
+  margin: 0;
+  padding: 0 3px;
+  font-size: 50px;
+  width: 100%;
+  text-align: center;
+  height: 100%;
+  padding-top: 25%;
+  font-weight: bold;
+  display: none;
+}
+.dokan-add-new-product-popup #dokan-product-images ul.product_images li.image:hover a.action-delete,
+.dokan-add-new-product-popup #dokan-product-images ul.product_images li.dokan-sortable-placeholder:hover a.action-delete,
+.dokan-add-new-product-popup #dokan-product-images ul.product_images li.add-image:hover a.action-delete {
+  display: inline-block;
+}
+.dokan-add-new-product-popup #dokan-product-images ul.product_images li.dokan-sortable-placeholder {
+  border: 1px dashed #ccc;
 }
 .dokan-add-new-product-popup .dokan-product-field-content {
   width: 62.5%;

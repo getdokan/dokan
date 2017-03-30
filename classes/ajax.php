@@ -67,6 +67,13 @@ class Dokan_Ajax {
         add_action( 'wp_ajax_custom-header-crop', array( $this, 'crop_store_banner' ) );
     }
 
+    /**
+     * Create product from popup submission
+     *
+     * @since  2.5.0
+     *
+     * @return void
+     */
     function create_product() {
         check_ajax_referer( 'dokan_reviews' );
 
