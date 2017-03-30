@@ -196,13 +196,13 @@
 
 
             if ( form.find( 'input[name="post_title"]' ).val() == '' ) {
-                $( 'span.dokan-show-add-product-error' ).html( 'Product title is required' );
+                $( 'span.dokan-show-add-product-error' ).html( dokan.product_title_required );
                 form.find( 'span.dokan-add-new-product-spinner' ).css( 'display', 'none' );
                 return;
             }
 
             if ( form.find( 'select[name="product_cat"]' ).val() == '-1' ) {
-                $( 'span.dokan-show-add-product-error' ).html( 'Product category is required' );
+                $( 'span.dokan-show-add-product-error' ).html( dokan.product_category_required );
                 form.find( 'span.dokan-add-new-product-spinner' ).css( 'display', 'none' );
                 return;
             }

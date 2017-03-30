@@ -394,7 +394,9 @@ final class WeDevs_Dokan {
                 'variations_per_page'                 => absint( apply_filters( 'dokan_product_variations_per_page', 10 ) ),
                 'store_banner_dimension'              => [ 'width' => $banner_width, 'height' => $banner_height, 'flex-width' => $has_flex_width, 'flex-height' => $has_flex_height ],
                 'selectAndCrop'                       => __( 'Select and Crop', 'dokan-lite' ),
-                'chooseImage'                         => __( 'Choose Image', 'dokan-lite' )
+                'chooseImage'                         => __( 'Choose Image', 'dokan-lite' ),
+                'product_title_required'              => __( 'Product title is required', 'dokan-lite' ),
+                'product_category_required'           => __( 'Product category is required', 'dokan-lite' )
             );
 
             $default_args = array_merge( $default_args, $custom_args );
