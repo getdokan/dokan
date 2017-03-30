@@ -428,7 +428,7 @@
             }
 
             .store-wrapper {
-                box-shadow: 0px 0px 20px -5px #ddd;
+                box-shadow: 0px 0px 25px 0px #ddd;
             }
 
             @media (max-width: 767px) {
@@ -457,6 +457,11 @@
                     background-position: 0 50%;
                     height: 220px;
                     position: relative;
+
+                    .store-data-container {
+                        height: 100%;
+                        background-color: rgba(0, 0, 0, .45);
+                    }
 
                     .featured-favourite {
                         padding: 20px 20px 10px;
@@ -495,11 +500,11 @@
                             font-size: 20px;
                             a {
                                 color: #FFF;
-                                text-shadow: 0 0 3px rgba(0,0,0,.8);
+                                text-shadow: rgba(0,0,0,.8) 0 1px 0;
 
                                 &:hover {
                                     color: #fafafa;
-                                    text-shadow: 0 0 3px rgba(0,0,0,.8);
+                                    text-shadow: rgba(0,0,0,.8) 0 1px 0;
                                 }
                             }
                         }
@@ -507,7 +512,7 @@
                         p {
                             margin-bottom: 2px;
                             color: #FFF;
-                            text-shadow: 0 0 3px rgba(0,0,0,.8);
+                            text-shadow: rgba(0,0,0,.8) 0 1px 0;
                         }
 
                         .dokan-seller-rating {
@@ -516,7 +521,6 @@
 
                             &:before {
                                 color: #adb5b6;
-                                text-shadow: 0 0 3px rgba( 255, 255, 255, 0.9);
                             }
 
                             span {
@@ -537,8 +541,7 @@
                 background: #f7fbfc;
                 position: relative;
                 padding: 15px 20px;
-                border: 1px solid #f3f3f3;
-                border-top: none;
+                border-top: 1px solid #eee;
 
                 .seller-avatar {
                     padding: 6px;
@@ -563,6 +566,11 @@
                 .store-content {
 
                     .store-info {
+                        .store-data-container {
+                            height: 100%;
+                            background: none;
+                        }
+
                         .featured-favourite {
 
                             .featured-label {
