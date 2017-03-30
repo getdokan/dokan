@@ -176,6 +176,20 @@ A. You just delete the free version and install and activate the pro version. No
 
 == Changelog ==
 
+v2.5.7 -> March 30, 2017
+----------------------
+- [new] New design for store listing page
+- [new] Added gallery image uploader in add new product popup and page
+- [new] Added `dokan_get_seller_amount_from_order` filter
+- [fix] Shipping tracking modal issue for third-party theme conflicting
+- [fix] Dokan updater issue fixed
+- [fix] Fix store listing search
+- [fix] "More tab" checkbox saving issue on store settings
+- [fix] Some translation issue fixed in product page
+- [tweak] Remove modal js library
+- [tweak] Remove default placeholder content from product description in new product page
+- [tweak] Change required field state to country in store settings
+
 v2.5.6 -> March 16, 2017
 ----------------------
 - [fix] If no withdraw limit is set then it defaults to ‘0’
