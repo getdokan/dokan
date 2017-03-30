@@ -541,6 +541,7 @@ class Dokan_Ajax {
 
         $search_term = isset( $_REQUEST['search_term'] ) ? sanitize_text_field( $_REQUEST['search_term'] ) : '';
         $pagination_base = isset( $_REQUEST['pagination_base'] ) ? sanitize_text_field( $_REQUEST['pagination_base'] ) : '';
+        $per_row = isset( $_REQUEST['per_row'] ) ? sanitize_text_field( $_REQUEST['per_row'] ) : '3';
 
         if ( '' != $search_term ) {
 
@@ -570,6 +571,7 @@ class Dokan_Ajax {
             'image_size'      => 'medium',
             'search'          => 'yes',
             'pagination_base' => $pagination_base,
+            'per_row'         => $per_row,
             'search_query'    => $search_term,
         ) );
 
