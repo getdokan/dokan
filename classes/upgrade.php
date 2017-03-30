@@ -12,12 +12,12 @@ class Dokan_Upgrade {
 
     /** @var array DB updates that need to be run */
     private static $updates = [
-        '1.2'       => 'upgrades/dokan-upgrade-1.2.php',
-        '2.1'       => 'upgrades/dokan-upgrade-2.1.php',
-        '2.3'       => 'upgrades/dokan-upgrade-2.3.php',
-        '2.4.11'    => 'upgrades/dokan-upgrade-2.4.11.php',
-        '2.4.12'    => 'upgrades/dokan-upgrade-2.4.12.php',
-        '2.5.7'    => 'upgrades/dokan-upgrade-2.5.7.php',
+        '1.2'    => 'upgrades/dokan-upgrade-1.2.php',
+        '2.1'    => 'upgrades/dokan-upgrade-2.1.php',
+        '2.3'    => 'upgrades/dokan-upgrade-2.3.php',
+        '2.4.11' => 'upgrades/dokan-upgrade-2.4.11.php',
+        '2.4.12' => 'upgrades/dokan-upgrade-2.4.12.php',
+        '2.5.7'  => 'upgrades/dokan-upgrade-2.5.7.php',
     ];
 
     /**
@@ -67,8 +67,9 @@ class Dokan_Upgrade {
         }
 
         $installed_version = get_option( 'dokan_theme_version' );
+        $updates_versions  = array_keys( self::$updates );
 
-        if ( ! is_null( $installed_version ) && version_compare( $installed_version, max( array_keys( self::$updates ) ), '<' ) ) {
+        if ( ! is_null( $installed_version ) && version_compare( $installed_version, end( $updates_versions ), '<' ) ) {
             ?>
                 <div id="message" class="updated">
                     <p><?php _e( '<strong>Dokan Data Update Required</strong> &#8211; We need to update your install to the latest version', 'dokan-lite' ); ?></p>
