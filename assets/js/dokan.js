@@ -160,13 +160,13 @@ jQuery(function($) {
     var dokan_seller_meta_boxes_order_items = {
         init: function() {
 
-            $('#tracking-modal').on('shown.bs.modal', function () {
-                $('#tracking-modal').focus();
-            });
             $( "#shipped-date" ).datepicker({
                 dateFormat: "yy-mm-dd"
             });
+
             //saving note
+            $( 'body' ).on('click','#dokan-add-tracking-number', this.showTrackingForm );
+            $( 'body' ).on('click','#dokan-cancel-tracking-note', this.cancelTrackingForm );
             $( 'body' ).on('click','#add-tracking-details', this.insertShippingTrackingInfo);
 
             $( '#woocommerce-order-items' )
@@ -192,6 +192,24 @@ jQuery(function($) {
                 })
         },
 
+        showTrackingForm: function(e) {
+            e.preventDefault();
+            var self = $(this);
+
+            self.closest('div').find('form#add-shipping-tracking-form').slideDown( 300, function() {
+                $(this).removeClass('dokan-hide');
+            });
+        },
+
+        cancelTrackingForm: function(e) {
+            e.preventDefault();
+            var self = $(this);
+
+            self.closest('form#add-shipping-tracking-form').slideUp( 300, function() {
+                $(this).addClass('dokan-hide');
+            });
+        },
+
         insertShippingTrackingInfo: function(e){
             e.preventDefault();
 
@@ -209,7 +227,7 @@ jQuery(function($) {
             $.post( dokan.ajaxurl, shipping_tracking_info, function(response) {
                 $('ul.order_notes').prepend( response );
                 $('#dokan-order-notes').unblock();
-                $('#tracking-modal').modal('hide');
+                $('form#add-shipping-tracking-form').find("input[type=text], textarea").val("");
             });
 
             return false;
@@ -921,8 +939,6 @@ jQuery(function($) {
             addImages: function(e) {
                 e.preventDefault();
 
-                var attachment_ids = $image_gallery_ids.val();
-
                 if ( product_gallery_frame ) {
                     product_gallery_frame.open();
                     return;
@@ -948,18 +964,23 @@ jQuery(function($) {
                         attachment = attachment.toJSON();
 
                         if ( attachment.id ) {
-                            attachment_ids = attachment_ids ? attachment_ids + "," + attachment.id : attachment.id;
+                            attachment_ids = [];
 
                             $product_images.append('\
                                 <li class="image" data-attachment_id="' + attachment.id + '">\
                                     <img src="' + attachment.url + '" />\
                                     <a href="#" class="action-delete">&times;</a>\
                                 </li>');
+
+                            $('#product_images_container ul li.image').css('cursor','default').each(function() {
+                                var attachment_id = jQuery(this).attr( 'data-attachment_id' );
+                                attachment_ids.push( attachment_id );
+                            });
                         }
 
                     } );
 
-                    $image_gallery_ids.val( attachment_ids );
+                    $image_gallery_ids.val( attachment_ids.join(',') );
                 });
 
                 product_gallery_frame.open();
@@ -970,14 +991,14 @@ jQuery(function($) {
 
                 $(this).closest('li.image').remove();
 
-                var attachment_ids = '';
+                var attachment_ids = [];
 
                 $('#product_images_container ul li.image').css('cursor','default').each(function() {
                     var attachment_id = $(this).attr( 'data-attachment_id' );
-                    attachment_ids = attachment_ids + attachment_id + ',';
+                    attachment_ids.push( attachment_id );
                 });
 
-                $image_gallery_ids.val( attachment_ids );
+                $image_gallery_ids.val( attachment_ids.join(',') );
 
                 return false;
             },
@@ -1000,14 +1021,14 @@ jQuery(function($) {
                         ui.item.removeAttr('style');
                     },
                     update: function(event, ui) {
-                        var attachment_ids = '';
+                        var attachment_ids = [];
 
                         $('#product_images_container ul li.image').css('cursor','default').each(function() {
                             var attachment_id = jQuery(this).attr( 'data-attachment_id' );
-                            attachment_ids = attachment_ids + attachment_id + ',';
+                            attachment_ids.push( attachment_id );
                         });
 
-                        $image_gallery_ids.val( attachment_ids );
+                        $image_gallery_ids.val( attachment_ids.join(',') );
                     }
                 });
             }

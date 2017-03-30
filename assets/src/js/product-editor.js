@@ -486,8 +486,6 @@
             addImages: function(e) {
                 e.preventDefault();
 
-                var attachment_ids = $image_gallery_ids.val();
-
                 if ( product_gallery_frame ) {
                     product_gallery_frame.open();
                     return;
@@ -513,18 +511,23 @@
                         attachment = attachment.toJSON();
 
                         if ( attachment.id ) {
-                            attachment_ids = attachment_ids ? attachment_ids + "," + attachment.id : attachment.id;
+                            attachment_ids = [];
 
                             $product_images.append('\
                                 <li class="image" data-attachment_id="' + attachment.id + '">\
                                     <img src="' + attachment.url + '" />\
                                     <a href="#" class="action-delete">&times;</a>\
                                 </li>');
+
+                            $('#product_images_container ul li.image').css('cursor','default').each(function() {
+                                var attachment_id = jQuery(this).attr( 'data-attachment_id' );
+                                attachment_ids.push( attachment_id );
+                            });
                         }
 
                     } );
 
-                    $image_gallery_ids.val( attachment_ids );
+                    $image_gallery_ids.val( attachment_ids.join(',') );
                 });
 
                 product_gallery_frame.open();
@@ -535,14 +538,14 @@
 
                 $(this).closest('li.image').remove();
 
-                var attachment_ids = '';
+                var attachment_ids = [];
 
                 $('#product_images_container ul li.image').css('cursor','default').each(function() {
                     var attachment_id = $(this).attr( 'data-attachment_id' );
-                    attachment_ids = attachment_ids + attachment_id + ',';
+                    attachment_ids.push( attachment_id );
                 });
 
-                $image_gallery_ids.val( attachment_ids );
+                $image_gallery_ids.val( attachment_ids.join(',') );
 
                 return false;
             },
@@ -565,14 +568,14 @@
                         ui.item.removeAttr('style');
                     },
                     update: function(event, ui) {
-                        var attachment_ids = '';
+                        var attachment_ids = [];
 
                         $('#product_images_container ul li.image').css('cursor','default').each(function() {
                             var attachment_id = jQuery(this).attr( 'data-attachment_id' );
-                            attachment_ids = attachment_ids + attachment_id + ',';
+                            attachment_ids.push( attachment_id );
                         });
 
-                        $image_gallery_ids.val( attachment_ids );
+                        $image_gallery_ids.val( attachment_ids.join(',') );
                     }
                 });
             }

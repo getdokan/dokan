@@ -39,7 +39,7 @@ function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
         $net_amount = $net_amount + $extra_cost;
     }
 
-    return $net_amount;
+    return apply_filters( 'dokan_get_seller_amount_from_order', $net_amount, $order, $seller_id );
 }
 /**
  * Get all the orders from a specific seller

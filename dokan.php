@@ -239,10 +239,7 @@ final class WeDevs_Dokan {
         wp_register_style( 'dokan-fontawesome', $vendor . '/font-awesome/font-awesome.min.css', false, null );
         wp_register_style( 'dokan-chosen-style', $vendor . '/chosen/chosen.min.css', false, null );
         wp_register_style( 'dokan-magnific-popup', $vendor . '/magnific/magnific-popup.css', false, null );
-        wp_register_style( 'dokan-modalcss', $vendor . '/modal/modal.css', false, null );
         wp_register_style( 'dokan-select2-css', $vendor . '/select2/select2.css', false, null );
-
-        // wp_register_style( 'dokan-extra', plugins_url( 'assets/css/dokan-extra.css', __FILE__ ), false, null );
 
         // Core styles
         wp_register_style( 'dokan-style', plugins_url( 'assets/css/style.css', __FILE__ ), false, null );
@@ -252,7 +249,6 @@ final class WeDevs_Dokan {
         wp_register_script( 'dokan-tabs', $vendor . '/easytab/jquery.easytabs.min.js', false, null, true );
         wp_register_script( 'dokan-chosen', $vendor . '/chosen/chosen.jquery.min.js', array( 'jquery' ), null, true );
         wp_register_script( 'dokan-popup', $vendor . '/magnific/jquery.magnific-popup.min.js', array( 'jquery' ), null, true );
-        wp_register_script( 'dokan-modaljs', $vendor . '/modal/modal.js', array( 'jquery' ), null, true );
         wp_register_script( 'dokan-tooltip', $vendor . '/tooltips/tooltips.js', array( 'jquery' ), null, true );
         wp_register_script( 'dokan-form-validate', $vendor . '/form-validate/form-validate.js', array( 'jquery' ), null, true  );
         wp_register_script( 'dokan-select2-js', $vendor . '/select2/select2.full.min.js', array( 'jquery' ), null, true  );
@@ -466,7 +462,6 @@ final class WeDevs_Dokan {
             wp_enqueue_style( 'jquery-ui' );
             wp_enqueue_style( 'dokan-magnific-popup' );
             wp_enqueue_style( 'woocommerce-general' );
-            wp_enqueue_style( 'dokan-modalcss' );
             wp_enqueue_style( 'dokan-select2-css' );
             wp_enqueue_style( 'dokan-chosen-style' );
         }
@@ -481,7 +476,6 @@ final class WeDevs_Dokan {
             wp_enqueue_script( 'jquery-ui-datepicker' );
             wp_enqueue_script( 'underscore' );
             wp_enqueue_script( 'post' );
-            wp_enqueue_script( 'dokan-modaljs' );
             wp_enqueue_script( 'dokan-tooltip' );
             wp_enqueue_script( 'dokan-form-validate' );
             wp_enqueue_script( 'dokan-tabs' );

@@ -9,17 +9,17 @@ class Dokan_Installer {
 
     function do_install() {
 
-        // upgrades
-        $this->do_upgrades();
-
         // installs
         $this->user_roles();
         $this->setup_pages();
         $this->woocommerce_settings();
         $this->create_tables();
         $this->product_design();
-        
-          
+
+        // does it needs any update?
+        $updater = new Dokan_Upgrade();
+        $updater->perform_updates();
+
         if( class_exists( 'Dokan_Rewrites' )){
             Dokan_Rewrites::init()->register_rule();
         }
