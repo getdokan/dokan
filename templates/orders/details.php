@@ -304,40 +304,33 @@ $order    = new WC_Order( $order_id );
 
                             <div class="clearfix dokan-form-group" style="margin-top: 10px;">
                                 <!-- Trigger the modal with a button -->
-                                <input type="button" data-toggle="modal" data-target="#tracking-modal" id="add-tracking-number" name="add_tracking_number" class="dokan-btn dokan-btn-success grant_access" value="<?php esc_attr_e( 'Tracking Number', 'dokan-lite' ); ?>">
+                                <input type="button" id="dokan-add-tracking-number" name="add_tracking_number" class="dokan-btn dokan-btn-success" value="<?php esc_attr_e( 'Tracking Number', 'dokan-lite' ); ?>">
 
-                            </div>
-
-                            <!-- Modal -->
-                            <div class="modal fade" id="tracking-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                            <h2 class="modal-title" id="myModalLabel"><?php _e('Shipment Tracking', 'dokan-lite');?></h2>
-                                        </div>
-                                        <form id="add-shipping-tracking-form" method="post">
-                                            <div class="modal-body">
-                                                <h5><?php _e('Shipping Provider Name / URL', 'dokan-lite');?></h5>
-                                                <input type="text" name="shipping_provider" id="shipping_provider" value="">
-                                                <h5><?php _e('Tracking Number', 'dokan-lite');?></h5>
-                                                <input type="text" name="tracking_number" id="tracking_number" value="">
-                                                <h5><?php _e('Date Shipped', 'dokan-lite');?></h5>
-                                                <input type="text" name="shipped_date" id="shipped-date" value="" placeholder="YYYY-MM-DD">
-                                                <input type="hidden" name="security" id="security" value="<?php echo wp_create_nonce('add-shipping-tracking-info'); ?>">
-                                                <input type="hidden" name="post_id" id="post-id" value="<?php echo $order->id; ?>">
-                                                <input type="hidden" name="action" id="action" value="dokan_add_shipping_tracking_info">
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-default" data-dismiss="modal"><?php _e('Close', 'dokan-lite');?></button>
-                                                <input id="add-tracking-details" type="button" class="btn btn-primary" value="<?php _e('Add Tracking Details', 'dokan-lite');?>">
-                                            </div>
-                                        </form>
-
+                                <form id="add-shipping-tracking-form" method="post" class="dokan-hide" style="margin-top: 10px;">
+                                    <div class="dokan-form-group">
+                                        <label class="dokan-control-label"><?php _e( 'Shipping Provider Name / URL', 'dokan-lite' ); ?></label>
+                                        <input type="text" name="shipping_provider" id="shipping_provider" class="dokan-form-control" value="">
                                     </div>
-                                </div>
+
+                                    <div class="dokan-form-group">
+                                        <label class="dokan-control-label"><?php _e( 'Tracking Number', 'dokan-lite' ); ?></label>
+                                        <input type="text" name="tracking_number" id="tracking_number" class="dokan-form-control" value="">
+                                    </div>
+
+                                    <div class="dokan-form-group">
+                                        <label class="dokan-control-label"><?php _e( 'Date Shipped', 'dokan-lite' ); ?></label>
+                                        <input type="text" name="shipped_date" id="shipped-date" class="dokan-form-control" value="" placeholder="YYYY-MM-DD">
+                                    </div>
+
+                                    <input type="hidden" name="security" id="security" value="<?php echo wp_create_nonce('add-shipping-tracking-info'); ?>">
+                                    <input type="hidden" name="post_id" id="post-id" value="<?php echo $order->id; ?>">
+                                    <input type="hidden" name="action" id="action" value="dokan_add_shipping_tracking_info">
+
+                                    <div class="dokan-form-group">
+                                        <input id="add-tracking-details" type="button" class="btn btn-primary" value="<?php _e('Add Tracking Details', 'dokan-lite');?>">
+                                        <button type="button" class="btn btn-default" id="dokan-cancel-tracking-note"><?php _e( 'Close', 'dokan-lite' );?></button>
+                                    </div>
+                                </form>
                             </div>
 
                         </div> <!-- .add_note -->

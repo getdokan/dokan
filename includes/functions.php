@@ -1682,10 +1682,10 @@ function dokan_seller_address_fields( $verified = false, $required = false ) {
                 'required' => $required ? 1 : 0,
             ),
             'country'  => array(
-                'required' => $required ? 1 : 0,
+                'required' => 1,
             ),
             'state'    => array(
-                'required' => 1,
+                'required' => 0,
             ),
         )
     );
@@ -1741,7 +1741,7 @@ function dokan_get_seller_address( $seller_id = '', $get_array = false ) {
         return 'N/A';
     }
 
-    if ( $get_array == TRUE ) {
+    if ( $get_array == true ) {
         $address = array(
             'street_1' => $street_1,
             'street_2' => $street_2,
@@ -1765,6 +1765,43 @@ function dokan_get_seller_address( $seller_id = '', $get_array = false ) {
     ) );
 
     return apply_filters( 'dokan_get_seller_address', $formatted_address, $profile_info );
+}
+
+/**
+ * Dokan get seller short formatted address
+ *
+ * @since  2.5.7
+ *
+ * @param  integer $store_id
+ *
+ * @return string
+ */
+function dokan_get_seller_short_address( $store_id ) {
+    $store_address = dokan_get_seller_address( $store_id, true );
+
+    $short_address = array();
+    $formatted_address = '';
+
+    if ( ! empty( $store_address['street_1'] ) && empty( $store_address['street_2'] ) ) {
+        $short_address[] = $store_address['street_1'];
+    } else if ( empty( $store_address['street_1'] ) && ! empty( $store_address['street_2'] ) ) {
+        $short_address[] = $store_address['street_2'];
+    } else if ( ! empty( $store_address['street_1'] ) && ! empty( $store_address['street_2'] ) ) {
+        $short_address[] = $store_address['street_1'];
+    }
+
+    if ( ! empty( $store_address['state'] ) && ! empty( $store_address['country'] ) ) {
+        $short_address[] = $store_address['state'] . ', ' . $store_address['country'];
+    } else if ( ! empty( $store_address['country'] ) ) {
+        $short_address[] = $store_address['country'];
+    }
+
+    if ( ! empty( $short_address  ) ) {
+        $formatted_address = implode( '<br>', $short_address );
+    }
+
+
+    return apply_filters( 'dokan_store_header_adress', $formatted_address, $store_address );
 }
 
 /**

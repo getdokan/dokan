@@ -23,6 +23,20 @@
                             <img height="" width="" src="" alt="">
                         </div>
                     </div>
+
+                    <div class="dokan-product-gallery">
+                        <div class="dokan-side-body" id="dokan-product-images">
+                            <div id="product_images_container">
+                                <ul class="product_images dokan-clearfix">
+
+                                    <li class="add-image add-product-images tips" data-title="<?php _e( 'Add gallery image', 'dokan-lite' ); ?>">
+                                        <a href="#" class="add-product-images"><i class="fa fa-plus" aria-hidden="true"></i></a>
+                                    </li>
+                                </ul>
+                                <input type="hidden" id="product_image_gallery" name="product_image_gallery" value="">
+                            </div>
+                        </div>
+                    </div> <!-- .product-gallery -->
                 </div>
                 <div class="content-half-part dokan-product-field-content">
                     <div class="dokan-form-group">

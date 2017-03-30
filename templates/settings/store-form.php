@@ -163,7 +163,7 @@
                 <div class="checkbox">
                     <label>
                         <input type="hidden" name="setting_show_more_ptab" value="no">
-                        <input type="checkbox" name="setting_show_more_ptab" value="yes"<?php checked( $show_email, 'yes' ); ?>> <?php _e( 'Enable tab on product single page view', 'dokan-lite' ); ?>
+                        <input type="checkbox" name="setting_show_more_ptab" value="yes"<?php checked( $show_more_ptab, 'yes' ); ?>> <?php _e( 'Enable tab on product single page view', 'dokan-lite' ); ?>
                     </label>
                 </div>
             </div>

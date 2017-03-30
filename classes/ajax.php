@@ -59,14 +59,21 @@ class Dokan_Ajax {
 
         add_filter( 'woocommerce_cart_item_name', array($this, 'seller_info_checkout'), 10, 2 );
 
-        add_filter( 'wp_ajax_dokan_seller_listing_search', array($this, 'seller_listing_search') );
-        add_filter( 'wp_ajax_nopriv_dokan_seller_listing_search', array($this, 'seller_listing_search') );
+        add_action( 'wp_ajax_dokan_seller_listing_search', array($this, 'seller_listing_search') );
+        add_action( 'wp_ajax_nopriv_dokan_seller_listing_search', array($this, 'seller_listing_search') );
 
         add_action( 'wp_ajax_dokan_create_new_product', array( $this, 'create_product' ) );
-        
+
         add_action( 'wp_ajax_custom-header-crop', array( $this, 'crop_store_banner' ) );
     }
 
+    /**
+     * Create product from popup submission
+     *
+     * @since  2.5.0
+     *
+     * @return void
+     */
     function create_product() {
         check_ajax_referer( 'dokan_reviews' );
 
@@ -534,18 +541,24 @@ class Dokan_Ajax {
 
         $search_term = isset( $_REQUEST['search_term'] ) ? sanitize_text_field( $_REQUEST['search_term'] ) : '';
         $pagination_base = isset( $_REQUEST['pagination_base'] ) ? sanitize_text_field( $_REQUEST['pagination_base'] ) : '';
+        $per_row = isset( $_REQUEST['per_row'] ) ? sanitize_text_field( $_REQUEST['per_row'] ) : '3';
 
         if ( '' != $search_term ) {
 
-            $seller_args['search']         = "*{$search_term}*";
-            $seller_args['search_columns'] = array( 'display_name' );
-
             $seller_args['meta_query'] = array(
+
                 array(
                     'key'     => 'dokan_enable_selling',
                     'value'   => 'yes',
                     'compare' => '='
+                ),
+
+                array(
+                    'key'     => 'dokan_store_name',
+                    'value'   => $search_term,
+                    'compare' => 'LIKE'
                 )
+
             );
         }
 
@@ -558,6 +571,7 @@ class Dokan_Ajax {
             'image_size'      => 'medium',
             'search'          => 'yes',
             'pagination_base' => $pagination_base,
+            'per_row'         => $per_row,
             'search_query'    => $search_term,
         ) );
 
@@ -567,7 +581,7 @@ class Dokan_Ajax {
 
         wp_send_json_success( $content );
     }
-    
+
     /**
      * Gets attachment uploaded by Media Manager, crops it, then saves it as a
      * new object. Returns JSON-encoded object details.
@@ -622,7 +636,7 @@ class Dokan_Ajax {
 
         wp_send_json_success( $object );
     }
-    
+
      /**
      * Calculate width and height based on what the currently selected theme supports.
      *
@@ -677,7 +691,7 @@ class Dokan_Ajax {
 
         return $dst;
     }
-    
+
     /**
      * Create an attachment 'object'.
      *

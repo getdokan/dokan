@@ -6,18 +6,7 @@ $social_fields = dokan_get_social_profile_fields();
 
 $dokan_appearance = get_option( 'dokan_appearance' );
 $profile_layout = empty( $dokan_appearance['store_header_template'] ) ? 'default' : $dokan_appearance['store_header_template'];
-
-$store_address = dokan_get_seller_address( $store_user->ID, TRUE );
-
-if ( ! empty( $store_address['state'] ) && ! empty( $store_address['country'] ) ) {
-    $short_address = $store_address['state'] . ', ' . $store_address['country'];
-} else if ( ! empty( $store_address['country'] ) ) {
-    $short_address = $store_address['country'];
-} else {
-    $short_address = '';
-}
-
-$store_address = apply_filters( 'dokan_store_header_adress', $short_address, $store_address );
+$store_address = dokan_get_seller_short_address( $store_user->ID );
 
 $general_settings = get_option( 'dokan_general', [] );
 $banner_width = ! empty( $general_settings['store_banner_width'] ) ? $general_settings['store_banner_width'] : 625;

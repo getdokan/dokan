@@ -3,7 +3,7 @@
 Plugin Name: Dokan (Lite) - Multi-vendor Marketplace
 Plugin URI: https://wordpress.org/plugins/dokan-lite/
 Description: An e-commerce marketplace plugin for WordPress. Powered by WooCommerce and weDevs.
-Version: 2.5.6
+Version: 2.5.7
 Author: Tareq Hasan
 Author URI: http://tareq.co/
 Text Domain: dokan-lite
@@ -45,7 +45,7 @@ if ( !defined( '__DIR__' ) ) {
     define( '__DIR__', dirname( __FILE__ ) );
 }
 
-define( 'DOKAN_PLUGIN_VERSION', '2.5.6' );
+define( 'DOKAN_PLUGIN_VERSION', '2.5.7' );
 define( 'DOKAN_FILE', __FILE__ );
 define( 'DOKAN_DIR', __DIR__ );
 define( 'DOKAN_INC_DIR', __DIR__ . '/includes' );
@@ -239,10 +239,7 @@ final class WeDevs_Dokan {
         wp_register_style( 'dokan-fontawesome', $vendor . '/font-awesome/font-awesome.min.css', false, null );
         wp_register_style( 'dokan-chosen-style', $vendor . '/chosen/chosen.min.css', false, null );
         wp_register_style( 'dokan-magnific-popup', $vendor . '/magnific/magnific-popup.css', false, null );
-        wp_register_style( 'dokan-modalcss', $vendor . '/modal/modal.css', false, null );
         wp_register_style( 'dokan-select2-css', $vendor . '/select2/select2.css', false, null );
-
-        // wp_register_style( 'dokan-extra', plugins_url( 'assets/css/dokan-extra.css', __FILE__ ), false, null );
 
         // Core styles
         wp_register_style( 'dokan-style', plugins_url( 'assets/css/style.css', __FILE__ ), false, null );
@@ -252,7 +249,6 @@ final class WeDevs_Dokan {
         wp_register_script( 'dokan-tabs', $vendor . '/easytab/jquery.easytabs.min.js', false, null, true );
         wp_register_script( 'dokan-chosen', $vendor . '/chosen/chosen.jquery.min.js', array( 'jquery' ), null, true );
         wp_register_script( 'dokan-popup', $vendor . '/magnific/jquery.magnific-popup.min.js', array( 'jquery' ), null, true );
-        wp_register_script( 'dokan-modaljs', $vendor . '/modal/modal.js', array( 'jquery' ), null, true );
         wp_register_script( 'dokan-tooltip', $vendor . '/tooltips/tooltips.js', array( 'jquery' ), null, true );
         wp_register_script( 'dokan-form-validate', $vendor . '/form-validate/form-validate.js', array( 'jquery' ), null, true  );
         wp_register_script( 'dokan-select2-js', $vendor . '/select2/select2.full.min.js', array( 'jquery' ), null, true  );
@@ -398,7 +394,9 @@ final class WeDevs_Dokan {
                 'variations_per_page'                 => absint( apply_filters( 'dokan_product_variations_per_page', 10 ) ),
                 'store_banner_dimension'              => [ 'width' => $banner_width, 'height' => $banner_height, 'flex-width' => $has_flex_width, 'flex-height' => $has_flex_height ],
                 'selectAndCrop'                       => __( 'Select and Crop', 'dokan-lite' ),
-                'chooseImage'                         => __( 'Choose Image', 'dokan-lite' )
+                'chooseImage'                         => __( 'Choose Image', 'dokan-lite' ),
+                'product_title_required'              => __( 'Product title is required', 'dokan-lite' ),
+                'product_category_required'           => __( 'Product category is required', 'dokan-lite' )
             );
 
             $default_args = array_merge( $default_args, $custom_args );
@@ -466,7 +464,6 @@ final class WeDevs_Dokan {
             wp_enqueue_style( 'jquery-ui' );
             wp_enqueue_style( 'dokan-magnific-popup' );
             wp_enqueue_style( 'woocommerce-general' );
-            wp_enqueue_style( 'dokan-modalcss' );
             wp_enqueue_style( 'dokan-select2-css' );
             wp_enqueue_style( 'dokan-chosen-style' );
         }
@@ -481,7 +478,6 @@ final class WeDevs_Dokan {
             wp_enqueue_script( 'jquery-ui-datepicker' );
             wp_enqueue_script( 'underscore' );
             wp_enqueue_script( 'post' );
-            wp_enqueue_script( 'dokan-modaljs' );
             wp_enqueue_script( 'dokan-tooltip' );
             wp_enqueue_script( 'dokan-form-validate' );
             wp_enqueue_script( 'dokan-tabs' );
