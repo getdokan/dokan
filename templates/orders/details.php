@@ -325,7 +325,7 @@ $order    = new WC_Order( $order_id );
                                     <input type="hidden" name="action" id="action" value="dokan_add_shipping_tracking_info">
 
                                     <div class="dokan-form-group">
-                                        <input id="add-tracking-details" type="button" class="btn btn-primary" value="<?php _e('Add Tracking Details', 'dokan-lite');?>" style="margin-bottom: 10px;">
+                                        <input id="add-tracking-details" type="button" class="btn btn-primary" value="<?php _e('Add Tracking Details', 'dokan-lite');?>">
                                         <button type="button" class="btn btn-default" id="dokan-cancel-tracking-note"><?php _e( 'Close', 'dokan-lite' );?></button>
                                     </div>
                                 </form>

@@ -387,12 +387,13 @@ if ( ! $from_shortcode ) {
                                                     }
                                                 }
                                                 ?>
+                                                <li class="add-image add-product-images tips" data-title="<?php _e( 'Add gallery image', 'dokan-lite' ); ?>">
+                                                    <a href="#" class="add-product-images"><i class="fa fa-plus" aria-hidden="true"></i></a>
+                                                </li>
                                             </ul>
 
                                             <input type="hidden" id="product_image_gallery" name="product_image_gallery" value="<?php echo esc_attr( $product_images ); ?>">
                                         </div>
-
-                                        <a href="#" class="add-product-images dokan-btn dokan-btn-sm dokan-btn-success"><?php _e( '+ Add more images', 'dokan-lite' ); ?></a>
                                     </div>
                                 </div> <!-- .product-gallery -->
                             </div><!-- .content-half-part -->

@@ -128,9 +128,19 @@ $address_state   = isset( $profile_info['address']['state'] ) ? $profile_info['a
                         <span class="required"> *</span>
                     <?php } ?>
                 </label>
-            <?php if ( $is_input ) { ?>
+            <?php if ( $is_input ) {
+                    $required_attr = '';
+                    if ( $seller_address_fields['state']['required'] ) {
+                        $required_attr = 'required';
+                    }
+                    ?>
                 <input <?php echo $required_attr; ?> <?php echo $disabled ?> name="dokan_address[state]" class="dokan-form-control <?php echo $address_state_class ?>" id="dokan_address_state" value="<?php echo $address_state ?>"/>
-            <?php } else { ?>
+            <?php } else {
+                    $required_attr = '';
+                    if ( $seller_address_fields['state']['required'] ) {
+                        $required_attr = 'required';
+                    }
+                ?>
                 <select <?php echo $required_attr; ?> <?php echo $disabled ?> name="dokan_address[state]" class="dokan-form-control" id="dokan_address_state">
                     <?php dokan_state_dropdown( $states[$address_country], $address_state ) ?>
                 </select>

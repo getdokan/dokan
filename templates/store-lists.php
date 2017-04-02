@@ -64,6 +64,7 @@
                     data = {
                         search_term: self.val(),
                         pagination_base: form.find('#pagination_base').val(),
+                        per_row: '<?php echo $per_row; ?>',
                         action: 'dokan_seller_listing_search',
                         _wpnonce: form.find('#nonce').val()
                     };

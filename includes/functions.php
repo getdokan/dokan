@@ -1682,10 +1682,10 @@ function dokan_seller_address_fields( $verified = false, $required = false ) {
                 'required' => $required ? 1 : 0,
             ),
             'country'  => array(
-                'required' => $required ? 1 : 0,
+                'required' => 1,
             ),
             'state'    => array(
-                'required' => 1,
+                'required' => 0,
             ),
         )
     );

@@ -170,6 +170,12 @@ class Dokan_Template_Products {
                     $product_type = empty( $_POST['product_type'] ) ? 'simple' : stripslashes( $_POST['product_type'] );
                     wp_set_object_terms( $product_id, $product_type, 'product_type' );
 
+                    // Gallery Images
+                    if (  !empty( $_POST['product_image_gallery'] ) ) {
+                        $attachment_ids = array_filter( explode( ',', wc_clean( $_POST['product_image_gallery'] ) ) );
+                        update_post_meta( $product_id, '_product_image_gallery', implode( ',', $attachment_ids ) );
+                    }
+
                     if ( isset( $_POST['_regular_price'] ) ) {
                         update_post_meta( $product_id, '_regular_price', ( $_POST['_regular_price'] === '' ) ? '' : wc_format_decimal( $_POST['_regular_price'] ) );
                     }
