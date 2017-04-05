@@ -1769,7 +1769,7 @@ jQuery(function($) {
         validateForm: function(self) {
 
             $("form#settings-form, form#profile-form, form#store-form, form#payment-form").validate({
-                //errorLabelContainer: '#errors'
+                errorLabelContainer: '#errors'
                 submitHandler: function(form) {
                     self.submitSettings( form.getAttribute('id') );
                 },
