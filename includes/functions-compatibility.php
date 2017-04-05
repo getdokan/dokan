@@ -14,7 +14,7 @@
  */
 function dokan_cmp_wc_get_product( $product ) {
     
-    if ( WC_VERSION > 2.6 ) {
+    if ( WC_VERSION > 2.7 ) {
         return wc_get_product( $product );
     }
 
@@ -36,7 +36,7 @@ function dokan_cmp_wc_get_product( $product ) {
  */
 function dokan_cmp_get_prop( $object, $prop, $callback = false ){
     
-    if ( WC_VERSION > 2.6 ) {
+    if ( WC_VERSION > 2.7 ) {
         $fn_name = $callback ? $callback : 'get_'.$prop;
         return $object->$fn_name();
     }
@@ -55,7 +55,7 @@ function dokan_cmp_get_prop( $object, $prop, $callback = false ){
  */
 function dokan_cmp_get_date_created( $order ){
     
-    if ( WC_VERSION > 2.6 ) {
+    if ( WC_VERSION > 2.7 ) {
         return wc_format_datetime( $order->get_date_created(), get_option( 'date_format' ) . ', ' . get_option( 'time_format' ) );
     }
     
@@ -76,7 +76,7 @@ function dokan_cmp_get_date_created( $order ){
 
 function dokan_cmp_get_metadata( $order, $item_id ) {
     
-    if ( WC_VERSION > 2.6 ) {
+    if ( WC_VERSION > 2.7 ) {
         $item = new WC_Order_Item( $order );
         return $item->get_meta_data();
     }
