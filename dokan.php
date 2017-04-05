@@ -531,6 +531,12 @@ final class WeDevs_Dokan {
         } else {
             require_once $inc_dir . 'template-tags.php';
         }
+        
+        if ( WC_VERSION > 2.7 ) {
+            require_once $inc_dir . 'wc-crud-functions.php';
+        } else {
+            require_once $inc_dir . 'wc-legacy-functions.php';
+        }
     }
 
     /**
