@@ -58,48 +58,30 @@ function dokan_create_sub_order( $parent_order_id ) {
 function dokan_create_seller_order( $parent_order, $seller_id, $seller_products ) {
     
     $seller_order = clone $parent_order;
+    
     $seller_order->set_id( 0 );
-    $seller_order->seller_id = $seller_id;
-    $seller_order->remove_order_items();
+    $seller_order->set_parent_id( $parent_order->get_id() );
+    $seller_order->save(); //generate order id
+    $seller_order->remove_order_items(); //reset_items
+    //add Items by seller
     foreach ( $seller_products as $item ) {
         $seller_order->add_item( $item );
     }
+    $seller_order->calculate_totals();  //calculate totals
+   
+    $seller_order->save_meta_data();
+    $seller_order->apply_changes();
     
-    $seller_order->get_items();
-    $seller_order->set_parent_id( $parent_order->get_id() );
-    $seller_order->calculate_totals();
-    $seller_order->save();
+    $seller_order->save(); //update the Seller Order
     
+    //set Seller as post_author
     $order_post = array(
         'ID'          => $seller_order->get_id(),
         'post_author' => $seller_id
     );
 
-    wp_update_post($order_post);
-    
-    error_log(var_dump($order_post));
-
-    
-//    foreach ( $parent_order>get_items() as $item ) {
-//        if( dokan_is_valid_owner( $item->get_id(), $seller_id) ){
-//            $seller_order->add_item($item);
-//        }
-//    }
-    
-    
-//    var_dump($parent_order);die();
-//    $order_data = apply_filters( 'woocommerce_new_order_data', array(
-//        'post_type'     => 'shop_order',
-//        'post_title'    => sprintf( __( 'Order &ndash; %s', 'dokan-lite' ), strftime( _x( '%b %d, %Y @ %I:%M %p', 'Order date parsed by strftime', 'dokan-lite' ) ) ),
-//        'post_status'   => 'wc-pending',
-//        'ping_status'   => 'closed',
-//        'post_excerpt'  => isset( $posted['order_comments'] ) ? $posted['order_comments'] : '',
-//        'post_author'   => $seller_id,
-//        'post_parent'   => dokan_cmp_get_prop( $parent_order, 'id' ),
-//        'post_password' => uniqid( 'order_' )   // Protects the post just in case
-//    ) );
-//
-//    $order_id = wp_insert_post( $order_data );
+    wp_update_post( $order_post );
+   
 //
 //    if ( $order_id && !is_wp_error( $order_id ) ) {
 //
