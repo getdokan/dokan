@@ -22,54 +22,6 @@ function dokan_get_order_item_meta_map() {
 }
 
 /**
- * Monitors a new order and attempts to create sub-orders
- *
- * If an order contains products from multiple vendor, we can't show the order
- * to each seller dashboard. That's why we need to divide the main order to
- * some sub-orders based on the number of sellers.
- *
- * @param int $parent_order_id
- * @return void
- *
- * @hooked woocommerce_checkout_update_order_meta - 10
- */
-function dokan_create_sub_order( $parent_order_id ) {
-
-    if ( get_post_meta( $parent_order_id, 'has_sub_order' ) == true ) {
-        $args = array(
-            'post_parent' => $parent_order_id,
-            'post_type'   => 'shop_order',
-            'numberposts' => -1,
-            'post_status' => 'any'
-        );
-        $child_orders = get_children( $args );
-
-        foreach ( $child_orders as $child ) {
-            wp_delete_post( $child->ID );
-        }
-    }
-
-    $parent_order = new WC_Order( $parent_order_id );
-    $sellers      = dokan_get_sellers_by( $parent_order_id );
-
-    // return if we've only ONE seller and seller as author
-    if ( count( $sellers ) == 1 ) {
-        $temp      = array_keys( $sellers );
-        $seller_id = reset( $temp );
-        wp_update_post( array( 'ID' => $parent_order_id, 'post_author' => $seller_id ) );
-        return;
-    }
-
-    // flag it as it has a suborder
-    update_post_meta( $parent_order_id, 'has_sub_order', true );
-
-    // seems like we've got multiple sellers
-    foreach ( $sellers as $seller_id => $seller_products ) {
-        dokan_create_seller_order( $parent_order, $seller_id, $seller_products );
-    }
-}
-
-/**
  * Creates a sub order
  *
  * @param int $parent_order
