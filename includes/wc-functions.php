@@ -467,7 +467,7 @@ function dokan_seller_registration_errors( $error ) {
 }
 
 add_filter( 'woocommerce_process_registration_errors', 'dokan_seller_registration_errors' );
-add_filter( 'registration_errors', 'dokan_seller_registration_errors' );
+add_filter( 'woocommerce_registration_errors', 'dokan_seller_registration_errors' );
 
 /**
  * Inject first and last name to WooCommerce for new seller registraion
