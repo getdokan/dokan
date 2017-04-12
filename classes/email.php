@@ -350,7 +350,7 @@ class Dokan_Email {
 
         $product = wc_get_product( $product_id );
         $seller = get_user_by( 'id', $product->post->post_author );
-        $category = wp_get_post_terms(dokan_cmp_get_prop( $product, 'id' ), 'product_cat', array( 'fields' => 'names' ) );
+        $category = wp_get_post_terms(dokan_get_prop( $product, 'id' ), 'product_cat', array( 'fields' => 'names' ) );
         $category_name = $category ? reset( $category ) : 'N/A';
 
         $find = array(

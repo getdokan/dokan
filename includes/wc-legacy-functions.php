@@ -105,7 +105,7 @@ function dokan_create_seller_order( $parent_order, $seller_id, $seller_products 
         // save billing and shipping address
         foreach ($bill_ship as $val) {
             $order_key = ltrim( $val, '_' );
-            update_post_meta( $order_id, $val, dokan_cmp_get_prop( $parent_order, $order_key ) );
+            update_post_meta( $order_id, $val, dokan_get_prop( $parent_order, $order_key ) );
         }
 
         // do shipping
@@ -228,12 +228,12 @@ function dokan_create_sub_order_shipping( $parent_order, $order_id, $seller_prod
             'contents_cost'   => array_sum( wp_list_pluck( $shipping_products, 'line_total' ) ),
             'applied_coupons' => array(),
             'destination'     => array(
-                'country'   => dokan_cmp_get_prop( $parent_order, 'shipping_country' ),
-                'state'     => dokan_cmp_get_prop( $parent_order, 'shipping_state' ),
-                'postcode'  => dokan_cmp_get_prop( $parent_order, 'shipping_postcode' ),
-                'city'      => dokan_cmp_get_prop( $parent_order, 'shipping_city'),
-                'address'   => dokan_cmp_get_prop( $parent_order, 'shipping_address_1'),
-                'address_2' => dokan_cmp_get_prop( $parent_order, 'shipping_address_2'),
+                'country'   => dokan_get_prop( $parent_order, 'shipping_country' ),
+                'state'     => dokan_get_prop( $parent_order, 'shipping_state' ),
+                'postcode'  => dokan_get_prop( $parent_order, 'shipping_postcode' ),
+                'city'      => dokan_get_prop( $parent_order, 'shipping_city'),
+                'address'   => dokan_get_prop( $parent_order, 'shipping_address_1'),
+                'address_2' => dokan_get_prop( $parent_order, 'shipping_address_2'),
             )
         );
 
