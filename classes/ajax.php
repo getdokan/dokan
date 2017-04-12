@@ -431,7 +431,7 @@ class Dokan_Ajax {
 
             update_comment_meta($comment_id, 'is_customer_note', true);
 
-            do_action( 'woocommerce_new_customer_note', array( 'order_id' => dokan_cmp_get_prop( $order, 'id' ), 'customer_note' => $ship_info ) );
+            do_action( 'woocommerce_new_customer_note', array( 'order_id' => dokan_get_prop( $order, 'id' ), 'customer_note' => $ship_info ) );
 
             echo '<li rel="' . esc_attr( $comment_id ) . '" class="note ';
             //if ( $is_customer_note ) {
