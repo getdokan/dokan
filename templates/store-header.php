@@ -6,7 +6,7 @@ $social_fields = dokan_get_social_profile_fields();
 
 $dokan_appearance = get_option( 'dokan_appearance' );
 $profile_layout = empty( $dokan_appearance['store_header_template'] ) ? 'default' : $dokan_appearance['store_header_template'];
-$store_address = dokan_get_seller_short_address( $store_user->ID );
+$store_address = dokan_get_seller_short_address( $store_user->ID, false );
 
 $general_settings = get_option( 'dokan_general', [] );
 $banner_width = ! empty( $general_settings['store_banner_width'] ) ? $general_settings['store_banner_width'] : 625;
