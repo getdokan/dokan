@@ -150,7 +150,7 @@ A. Yes, that's how Dokan works. In every sales, you can cut a commission from a 
 A. Obviously, you can use this on a single seller site to give them a nice front-end experience.
 
 = Q. How to upgrade to the Pro version?
-A. You just delete the free version and install and activate the pro version. Nothing complicated! All your data will be safe on the database and some extra features will be added. You can even ask the support team to help you to migrate.
+A. Just install and activate the PRO version without deleting the free plugin. All your data will be safe on the database and some extra features will be added. If you feel something may go wrong, please consult with our [support](https://wedevs.com/contact/) staff first.
 
 == Screenshots ==
 
