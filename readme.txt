@@ -395,4 +395,5 @@ Initial version released
 
 == Upgrade Notice ==
 
-Nothing here
+= 2.5.8 =
+**[Important Update]** This update is compatible with WooCommerce 3.0. Make sure to backup and read full [changelog](https://docs.wedevs.com/docs/dokan/changelog/) for more details.
