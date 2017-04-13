@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Wrapper functions to keep BackWards compatibility with WC 2.6 and older versions
  */
@@ -34,10 +35,10 @@ function dokan_wc_get_product( $product ) {
  *
  * @return $prop
  */
-function dokan_get_prop( $object, $prop, $callback = false ){
+function dokan_get_prop( $object, $prop, $callback = false ) {
 
     if ( version_compare( WC_VERSION, '2.7', '>' ) ) {
-        $fn_name = $callback ? $callback : 'get_'.$prop;
+        $fn_name = $callback ? $callback : 'get_' . $prop;
         return $object->$fn_name();
     }
 
@@ -57,7 +58,7 @@ function dokan_get_prop( $object, $prop, $callback = false ){
  *
  * @return $prop
  */
-function dokan_replace_func( $old_method, $new_method, $object = null ){
+function dokan_replace_func( $old_method, $new_method, $object = null ) {
 
     if ( version_compare( WC_VERSION, '2.7', '>' ) ) {
         return $object ? $object->$new_method() : call_user_func( $new_method );
@@ -75,7 +76,7 @@ function dokan_replace_func( $old_method, $new_method, $object = null ){
  *
  * @return String date
  */
-function dokan_get_date_created( $order ){
+function dokan_get_date_created( $order ) {
 
     if ( version_compare( WC_VERSION, '2.7', '>' ) ) {
         return wc_format_datetime( $order->get_date_created(), get_option( 'date_format' ) . ', ' . get_option( 'time_format' ) );
@@ -95,7 +96,6 @@ function dokan_get_date_created( $order ){
  *
  * @return $metadata
  */
-
 function dokan_get_metadata( $order, $item_id ) {
 
     if ( version_compare( WC_VERSION, '2.7', '>' ) ) {
