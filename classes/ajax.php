@@ -100,15 +100,16 @@ class Dokan_Ajax {
      * @return array
      */
     function seller_info_checkout( $item_data, $cart_item ) {
-        $info   = dokan_get_store_info( $cart_item['data']->post->post_author );
-        $seller = sprintf( __( '<br><strong> Vendor:</strong> %s', 'dokan-lite' ), $info['store_name'] );
-        $data   = $item_data . $seller;
+        $seller_id = get_post_field( 'post_author', $cart_item['data']->get_id() );
+        $info      = dokan_get_store_info( $seller_id );
+        $seller    = sprintf( __( '<br><strong> Vendor:</strong> %s', 'dokan-lite' ), $info['store_name'] );
+        $data      = $item_data . $seller;
 
         return apply_filters( 'dokan_seller_info_checkout', $data, $info, $item_data, $cart_item );
     }
 
     /**
-     * chop url check
+     * shop url check
      */
     function shop_url_check() {
         global $user_ID;
@@ -230,7 +231,7 @@ class Dokan_Ajax {
         }
 
         foreach ( $product_ids as $product_id ) {
-            $product    = get_product( $product_id );
+            $product    = wc_get_product( $product_id );
             $files      = $product->get_files();
 
             if ( ! $order->billing_email )
@@ -431,7 +432,7 @@ class Dokan_Ajax {
 
             update_comment_meta($comment_id, 'is_customer_note', true);
 
-            do_action( 'woocommerce_new_customer_note', array( 'order_id' => $order->id, 'customer_note' => $ship_info ) );
+            do_action( 'woocommerce_new_customer_note', array( 'order_id' => dokan_get_prop( $order, 'id' ), 'customer_note' => $ship_info ) );
 
             echo '<li rel="' . esc_attr( $comment_id ) . '" class="note ';
             //if ( $is_customer_note ) {

@@ -509,6 +509,7 @@ final class WeDevs_Dokan {
 
         require_once $inc_dir . 'functions.php';
         require_once $inc_dir . 'functions-depricated.php';
+        require_once $inc_dir . 'functions-compatibility.php';
         require_once $inc_dir . 'widgets/menu-category.php';
         require_once $inc_dir . 'widgets/bestselling-product.php';
         require_once $inc_dir . 'widgets/top-rated-product.php';
@@ -529,6 +530,12 @@ final class WeDevs_Dokan {
             require_once $inc_dir . 'admin-functions.php';
         } else {
             require_once $inc_dir . 'template-tags.php';
+        }
+        
+        if ( WC_VERSION > 2.7 ) {
+            require_once $inc_dir . 'wc-crud-functions.php';
+        } else {
+            require_once $inc_dir . 'wc-legacy-functions.php';
         }
     }
 

@@ -7,7 +7,9 @@
  * @return array
  */
 function dokan_product_seller_info( $item_data, $cart_item ) {
-    $seller_info = dokan_get_store_info( $cart_item['data']->post->post_author );
+    
+    $seller_id =  get_post_field( 'post_author', $cart_item['data']->get_id() );
+    $seller_info = dokan_get_store_info( $seller_id );
 
     $item_data[] = array(
         'name'  => __( 'Vendor', 'dokan-lite' ),
@@ -49,7 +51,8 @@ add_filter( 'woocommerce_product_tabs', 'dokan_seller_product_tab' );
 function dokan_product_seller_tab( $val ) {
     global $product;
 
-    $author     = get_user_by( 'id', $product->post->post_author );
+    $author_id  = get_post_field( 'post_author', $product->get_id() );
+    $author     = get_user_by( 'id', $author_id );
     $store_info = dokan_get_store_info( $author->ID );
 
     dokan_get_template_part('global/product-tab', '', array(
@@ -68,7 +71,7 @@ function dokan_product_seller_tab( $val ) {
 function dokan_order_show_suborders( $parent_order ) {
 
     $sub_orders = get_children( array(
-        'post_parent' => $parent_order->id,
+        'post_parent' => dokan_get_prop( $parent_order, 'id'),
         'post_type'   => 'shop_order',
         'post_status' => array( 'wc-pending', 'wc-completed', 'wc-processing', 'wc-on-hold', 'wc-cancelled'  )
     ) );

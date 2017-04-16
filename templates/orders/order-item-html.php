@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 <tr class="item <?php if ( ! empty( $class ) ) echo $class; ?>" data-order_item_id="<?php echo $item_id; ?>">
 	<td class="thumb" width="10%">
 		<?php if ( $_product ) : ?>
-			<a href="<?php echo esc_url( get_permalink( $_product->id ) ); ?>">
+			<a href="<?php echo esc_url( get_permalink( dokan_get_prop( $_product, 'id' ) ) ); ?>">
 				<?php echo $_product->get_image( 'shop_thumbnail', array( 'title' => '' ) ); ?>
 			</a>
 		<?php else : ?>
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 	<td class="name" width="65%">
 
 		<?php if ( $_product ) : ?>
-			<a target="_blank" href="<?php echo esc_url( get_permalink( $_product->id ) ); ?>">
+			<a target="_blank" href="<?php echo esc_url( get_permalink( dokan_get_prop( $_product, 'id' ) ) ); ?>">
 				<?php echo esc_html( $item['name'] ); ?>
 			</a>
 		<?php else : ?>
@@ -27,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 		<?php 
 		global $wpdb;
 
-		if ( $metadata = $order->has_meta( $item_id ) ) {
+		if ( $metadata = dokan_get_metadata( $order, $item_id ) ) {
 			foreach ( $metadata as $meta ) {
 
 				// Skip hidden core fields

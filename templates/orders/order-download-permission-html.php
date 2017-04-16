@@ -3,14 +3,14 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 ?>
 <div class="dokan-panel dokan-panel-default">
 	<div class="dokan-panel-heading">
-		<a class="title" data-toggle="collapse" data-parent="#accordion" href="#collapse-<?php echo $product->id; ?>">
-			<?php echo '#' . absint( $product->id ) . ' &mdash; ' . apply_filters( 'woocommerce_admin_download_permissions_title', $product->get_title(), $download->product_id, $download->order_id, $download->order_key, $download->download_id ) . ' &mdash; ' . sprintf( __( 'File %d: %s', 'dokan-lite' ), $file_count, woocommerce_get_filename_from_url( $product->get_file_download_path( $download->download_id ) ) ); ?>
+		<a class="title" data-toggle="collapse" data-parent="#accordion" href="#collapse-<?php echo dokan_get_prop( $product, 'id' ); ?>">
+			<?php echo '#' . absint( dokan_get_prop( $product, 'id' ) ) . ' &mdash; ' . apply_filters( 'woocommerce_admin_download_permissions_title', $product->get_title(), $download->product_id, $download->order_id, $download->order_key, $download->download_id ) . ' &mdash; ' . sprintf( __( 'File %d: %s', 'dokan-lite' ), $file_count, woocommerce_get_filename_from_url( $product->get_file_download_path( $download->download_id ) ) ); ?>
 		</a>
 
 		<button rel="<?php echo absint( $download->product_id ) . ',' . esc_attr( $download->download_id ); ?>" class="revoke_access btn btn-danger btn-sm pull-right" data-order-id="<?php echo $download->order_id; ?>" data-nonce="<?php echo wp_create_nonce( 'revoke-access' ); ?>"><?php _e( 'Revoke Access', 'dokan-lite' ); ?></button>
 	</div>
 
-	<div id="collapse-<?php echo $product->id; ?>" class="panel-collapse collapse">
+	<div id="collapse-<?php echo dokan_get_prop( $product, 'id' ); ?>" class="panel-collapse collapse">
 		<div class="panel-body">
 
 			<table cellpadding="0" cellspacing="0" class="wc-metabox-content">

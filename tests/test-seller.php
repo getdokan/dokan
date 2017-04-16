@@ -38,8 +38,8 @@ class Dokan_Test_Seller extends WP_UnitTestCase {
         $product_id = Dokan_Test_Helpers::create_product( 'Jetpack', 10, $this->seller_one );
 
         $this->assertEquals( $this->seller_one, get_post_field( 'post_author', $product_id ) );
-        $this->assertInstanceOf( 'WC_Product_Simple', get_product( $product_id ) );
-        $this->assertEquals( '10', get_product( $product_id )->get_price() );
+        $this->assertInstanceOf( 'WC_Product_Simple', wc_get_product( $product_id ) );
+        $this->assertEquals( '10', wc_get_product( $product_id )->get_price() );
     }
 
 }

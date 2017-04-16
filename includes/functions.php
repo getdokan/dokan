@@ -1467,11 +1467,11 @@ function dokan_wc_email_recipient_add_seller( $email, $order ) {
 
     if ( $order ) {
 
-        if ( get_post_meta( $order->id, 'has_sub_order', true ) == true ) {
+        if ( get_post_meta( dokan_get_prop( $order, 'id' ), 'has_sub_order', true ) == true ) {
             return $email;
         }
 
-        $sellers = dokan_get_seller_id_by_order( $order->id );
+        $sellers = dokan_get_seller_id_by_order( dokan_get_prop( $order, 'id' ) );
 
         //if more than 1 seller
         if ( count( $sellers ) > 1 ) {
@@ -1776,7 +1776,7 @@ function dokan_get_seller_address( $seller_id = '', $get_array = false ) {
  *
  * @return string
  */
-function dokan_get_seller_short_address( $store_id ) {
+function dokan_get_seller_short_address( $store_id, $line_break = true ) {
     $store_address = dokan_get_seller_address( $store_id, true );
 
     $short_address = array();
@@ -1790,18 +1790,24 @@ function dokan_get_seller_short_address( $store_id ) {
         $short_address[] = $store_address['street_1'];
     }
 
+    if ( ! empty( $store_address['city'] ) && ! empty( $store_address['city'] ) ) {
+        $short_address[] = $store_address['city'];
+    }
+
     if ( ! empty( $store_address['state'] ) && ! empty( $store_address['country'] ) ) {
         $short_address[] = $store_address['state'] . ', ' . $store_address['country'];
     } else if ( ! empty( $store_address['country'] ) ) {
         $short_address[] = $store_address['country'];
     }
 
-    if ( ! empty( $short_address  ) ) {
+    if ( ! empty( $short_address  ) && $line_break ) {
         $formatted_address = implode( '<br>', $short_address );
+    } else {
+        $formatted_address = implode( ', ', $short_address );
     }
 
 
-    return apply_filters( 'dokan_store_header_adress', $formatted_address, $store_address );
+    return apply_filters( 'dokan_store_header_adress', $formatted_address, $store_address, $short_address );
 }
 
 /**

@@ -66,9 +66,9 @@ add_filter( 'manage_edit-shop_order_columns', 'dokan_admin_shop_order_edit_colum
  * @param type $col
  */
 function dokan_shop_order_custom_columns( $col ) {
-    global $post, $woocommerce, $the_order;
+    global $post, $the_order;
 
-    if ( empty( $the_order ) || $the_order->id != $post->ID ) {
+    if ( empty( $the_order ) || dokan_get_prop( $the_order, 'id') != $post->ID ) {
         $the_order = new WC_Order( $post->ID );
     }
 
