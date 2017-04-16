@@ -1,3 +1,16 @@
+v2.5.8 -> April 16, 2017
+---------------------
+- [new] Made dokan compatible with WC 3.0
+- [new] Store listing design updated with city added
+- [tweak] Store listing banner image streched for full view
+- [fix] Variations attribute issue fixed
+- [fix] Sub-order not created for multiple seller is fixed
+- [fix] Seller dashboard Product and Order listing showing notices fixed
+- [fix] Seller new product add page showing notices fixed
+- [fix] Saving digital product data with WC 3.0
+- [fix] Saving variation product data with WC 3.0
+- [fix] Registration form now working with WC 3.0
+
 v2.5.7 -> March 30, 2017
 ---------------------
 - [new] New design for store listing page
