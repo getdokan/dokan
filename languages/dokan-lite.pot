@@ -1,17 +1,17 @@
-# Copyright (C) 2017 
-# This file is distributed under the same license as the  package.
+# Copyright (C) 2017 Tareq Hasan
+# This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: Dokan (Lite) - Multi-vendor Marketplace 2.6.0\n"
 "Report-Msgid-Bugs-To: http://wedevs.com/support/forum/theme-support/dokan/\n"
-"POT-Creation-Date: 2017-03-30 15:46:21+00:00\n"
+"POT-Creation-Date: 2017-04-18 02:34:21+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "PO-Revision-Date: 2017-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
-"X-Generator: grunt-wp-i18n1.0.0\n"
+"X-Generator: grunt-wp-i18n 0.4.9\n"
 
 #: templates/products/new-product-single.php:451
 msgid "1"
@@ -195,7 +195,7 @@ msgstr ""
 #: includes/admin-functions.php:49 templates/my-orders.php:28
 #: templates/orders/listing.php:21 templates/orders/listing.php:67
 #: templates/products/products-listing.php:65
-#: templates/products/products-listing.php:197 templates/sub-orders.php:26
+#: templates/products/products-listing.php:198 templates/sub-orders.php:26
 #: templates/withdraw/approved-request-listing.php:16
 #: templates/withdraw/pending-request-listing.php:16
 msgid "Date"
@@ -207,7 +207,7 @@ msgstr ""
 
 #: classes/admin-withdraw.php:264 classes/admin-withdraw.php:268
 #: includes/product-functions.php:301 templates/my-orders.php:83
-#: templates/orders/details.php:191
+#: templates/orders/details.php:189
 #: templates/products/new-product-single.php:222
 #: templates/products/new-product.php:129
 #: templates/products/tmpl-add-product-popup.php:61
@@ -222,12 +222,12 @@ msgid "Pending"
 msgstr ""
 
 #: classes/admin-withdraw.php:279 classes/admin-withdraw.php:358
-#: classes/ajax.php:442 includes/woo-views/html-product-download.php:18
+#: classes/ajax.php:443 includes/woo-views/html-product-download.php:18
 #: includes/woo-views/html-product-download.php:38
 msgid "Delete"
 msgstr ""
 
-#: classes/admin-withdraw.php:303 templates/orders/details.php:284
+#: classes/admin-withdraw.php:303 templates/orders/details.php:282
 msgid "Add note"
 msgstr ""
 
@@ -279,11 +279,11 @@ msgstr ""
 msgid "Something wrong, please try again later"
 msgstr ""
 
-#: classes/ajax.php:104
+#: classes/ajax.php:105
 msgid "<br><strong> Vendor:</strong> %s"
 msgstr ""
 
-#: classes/ajax.php:119 classes/template-settings.php:207
+#: classes/ajax.php:120 classes/template-settings.php:207
 #: classes/template-settings.php:215 classes/template-settings.php:221
 #: classes/template-settings.php:227 classes/template-settings.php:261
 #: classes/template-settings.php:323 classes/template-settings.php:362
@@ -292,43 +292,43 @@ msgstr ""
 msgid "Are you cheating?"
 msgstr ""
 
-#: classes/ajax.php:154 classes/ajax.php:188
+#: classes/ajax.php:155 classes/ajax.php:189
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
-#: classes/ajax.php:158 classes/ajax.php:192
+#: classes/ajax.php:159 classes/ajax.php:193
 msgid "You have taken too long. Please go back and retry."
 msgstr ""
 
-#: classes/ajax.php:167 classes/ajax.php:201
+#: classes/ajax.php:168 classes/ajax.php:202
 msgid "You do not have permission to change this order"
 msgstr ""
 
-#: classes/ajax.php:252
+#: classes/ajax.php:253
 msgid "File %d"
 msgstr ""
 
-#: classes/ajax.php:303 classes/ajax.php:308
+#: classes/ajax.php:304 classes/ajax.php:309
 msgid "Please provide your name."
 msgstr ""
 
-#: classes/ajax.php:315 includes/template-tags.php:140
+#: classes/ajax.php:316 includes/template-tags.php:140
 msgid "Something went wrong!"
 msgstr ""
 
-#: classes/ajax.php:321
+#: classes/ajax.php:322
 msgid "Email sent successfully!"
 msgstr ""
 
-#: classes/ajax.php:376 templates/orders/details.php:270
+#: classes/ajax.php:377 templates/orders/details.php:268
 msgid "Delete note"
 msgstr ""
 
-#: classes/ajax.php:530
+#: classes/ajax.php:531
 msgid "Error: Nonce verification failed"
 msgstr ""
 
-#: classes/ajax.php:620
+#: classes/ajax.php:621
 msgid "Image could not be processed. Please go back and try again."
 msgstr ""
 
@@ -424,31 +424,31 @@ msgstr ""
 msgid "[%s] New Vendor Registered"
 msgstr ""
 
-#: classes/email.php:379
+#: classes/email.php:380
 msgid "[%s] New Product Added"
 msgstr ""
 
-#: classes/email.php:418
+#: classes/email.php:419
 msgid "[%s] Your product has been approved!"
 msgstr ""
 
-#: classes/installer.php:134 includes/admin/admin.php:322
+#: classes/installer.php:135 includes/admin/admin.php:322
 #: includes/admin/setup-wizard.php:263 includes/admin-functions.php:52
 #: includes/admin-functions.php:559 includes/admin-functions.php:575
-#: includes/wc-template.php:13 templates/my-orders.php:31
+#: includes/wc-template.php:15 templates/my-orders.php:31
 msgid "Vendor"
 msgstr ""
 
-#: classes/installer.php:164 includes/admin/admin.php:230
+#: classes/installer.php:165 includes/admin/admin.php:230
 #: includes/admin/admin.php:403 includes/template-tags.php:297
 msgid "Dashboard"
 msgstr ""
 
-#: classes/installer.php:170
+#: classes/installer.php:171
 msgid "Store List"
 msgstr ""
 
-#: classes/installer.php:176 includes/admin/admin.php:409
+#: classes/installer.php:177 includes/admin/admin.php:409
 #: templates/global/header-menu.php:46
 msgid "My Orders"
 msgstr ""
@@ -617,27 +617,27 @@ msgstr ""
 msgid "Details of your product ..."
 msgstr ""
 
-#: classes/template-products.php:120 classes/template-products.php:249
+#: classes/template-products.php:120 classes/template-products.php:246
 #: includes/product-functions.php:32
 msgid "Please enter product title"
 msgstr ""
 
-#: classes/template-products.php:126 classes/template-products.php:255
+#: classes/template-products.php:126 classes/template-products.php:252
 #: includes/product-functions.php:38
 msgid "Please select a category"
 msgstr ""
 
-#: classes/template-products.php:130 classes/template-products.php:259
+#: classes/template-products.php:130 classes/template-products.php:256
 #: includes/product-functions.php:42
 msgid "Please select AT LEAST ONE category"
 msgstr ""
 
-#: classes/template-products.php:266
+#: classes/template-products.php:263
 msgid "No product found !"
 msgstr ""
 
 #: classes/template-settings.php:70 classes/template-settings.php:74
-#: dokan.php:783 includes/admin/admin.php:236 includes/admin/admin.php:572
+#: dokan.php:797 includes/admin/admin.php:236 includes/admin/admin.php:572
 #: includes/admin/welcome.php:20
 msgid "Settings"
 msgstr ""
@@ -828,225 +828,225 @@ msgstr ""
 msgid "<b>Dokan</b> requires %sWooCommerce%s to be installed & activated!"
 msgstr ""
 
-#: dokan.php:293
+#: dokan.php:296
 msgid "Available"
 msgstr ""
 
-#: dokan.php:294
+#: dokan.php:297
 msgid "Not Available"
 msgstr ""
 
-#: dokan.php:296
+#: dokan.php:299
 msgid "Are you sure?"
 msgstr ""
 
-#: dokan.php:297
+#: dokan.php:300
 msgid "Something went wrong. Please try again."
 msgstr ""
 
-#: dokan.php:360
+#: dokan.php:363
 msgid "Upload featured image"
 msgstr ""
 
-#: dokan.php:361
+#: dokan.php:364
 msgid "Choose a file"
 msgstr ""
 
-#: dokan.php:362
+#: dokan.php:365
 msgid "Add Images to Product Gallery"
 msgstr ""
 
-#: dokan.php:363
+#: dokan.php:366
 msgid "Set featured image"
 msgstr ""
 
-#: dokan.php:364 includes/woo-views/html-product-download.php:17
+#: dokan.php:367 includes/woo-views/html-product-download.php:17
 #: includes/woo-views/html-product-download.php:32
 msgid "Insert file URL"
 msgstr ""
 
-#: dokan.php:365
+#: dokan.php:368
 msgid "Add to gallery"
 msgstr ""
 
-#: dokan.php:366
+#: dokan.php:369
 msgid "Sorry, this attribute option already exists, Try a different one."
 msgstr ""
 
-#: dokan.php:367
+#: dokan.php:370
 msgid ""
 "Warning! This product will not have any variations if this option is not "
 "checked."
 msgstr ""
 
-#: dokan.php:368
+#: dokan.php:371
 msgid "Enter a name for the new attribute term:"
 msgstr ""
 
-#: dokan.php:369
+#: dokan.php:372
 msgid "Remove this attribute?"
 msgstr ""
 
-#: dokan.php:377
+#: dokan.php:380
 msgid ""
 "Are you sure you want to link all variations? This will create a new "
 "variation for each and every possible combination of variation attributes "
 "(max %d per run)."
 msgstr ""
 
-#: dokan.php:378
+#: dokan.php:381
 msgid "Enter a value"
 msgstr ""
 
-#: dokan.php:379
+#: dokan.php:382
 msgid "Variation menu order (determines position in the list of variations)"
 msgstr ""
 
-#: dokan.php:380
+#: dokan.php:383
 msgid "Enter a value (fixed or %)"
 msgstr ""
 
-#: dokan.php:381
+#: dokan.php:384
 msgid "Are you sure you want to delete all variations? This cannot be undone."
 msgstr ""
 
-#: dokan.php:382
+#: dokan.php:385
 msgid "Last warning, are you sure?"
 msgstr ""
 
-#: dokan.php:383
+#: dokan.php:386
 msgid "Choose an image"
 msgstr ""
 
-#: dokan.php:384
+#: dokan.php:387
 msgid "Set variation image"
 msgstr ""
 
-#: dokan.php:385
+#: dokan.php:388
 msgid "variation added"
 msgstr ""
 
-#: dokan.php:386
+#: dokan.php:389
 msgid "variations added"
 msgstr ""
 
-#: dokan.php:387
+#: dokan.php:390
 msgid "No variations added"
 msgstr ""
 
-#: dokan.php:388
+#: dokan.php:391
 msgid "Are you sure you want to remove this variation?"
 msgstr ""
 
-#: dokan.php:389
+#: dokan.php:392
 msgid "Sale start date (YYYY-MM-DD format or leave blank)"
 msgstr ""
 
-#: dokan.php:390
+#: dokan.php:393
 msgid "Sale end date (YYYY-MM-DD format or leave blank)"
 msgstr ""
 
-#: dokan.php:391
+#: dokan.php:394
 msgid "Save changes before changing page?"
 msgstr ""
 
-#: dokan.php:392
+#: dokan.php:395
 msgid "%qty% variation"
 msgstr ""
 
-#: dokan.php:393
+#: dokan.php:396
 msgid "%qty% variations"
 msgstr ""
 
-#: dokan.php:396
+#: dokan.php:399
 msgid "Select and Crop"
 msgstr ""
 
-#: dokan.php:397
+#: dokan.php:400
 msgid "Choose Image"
 msgstr ""
 
-#: dokan.php:398
+#: dokan.php:401
 msgid "Product title is required"
 msgstr ""
 
-#: dokan.php:399
+#: dokan.php:402
 msgid "Product category is required"
 msgstr ""
 
-#: dokan.php:432
+#: dokan.php:435
 msgid "This field is required"
 msgstr ""
 
-#: dokan.php:433
+#: dokan.php:436
 msgid "Please fix this field."
 msgstr ""
 
-#: dokan.php:434
+#: dokan.php:437
 msgid "Please enter a valid email address."
 msgstr ""
 
-#: dokan.php:435
+#: dokan.php:438
 msgid "Please enter a valid URL."
 msgstr ""
 
-#: dokan.php:436
+#: dokan.php:439
 msgid "Please enter a valid date."
 msgstr ""
 
-#: dokan.php:437
+#: dokan.php:440
 msgid "Please enter a valid date (ISO)."
 msgstr ""
 
-#: dokan.php:438
+#: dokan.php:441
 msgid "Please enter a valid number."
 msgstr ""
 
-#: dokan.php:439
+#: dokan.php:442
 msgid "Please enter only digits."
 msgstr ""
 
-#: dokan.php:440
+#: dokan.php:443
 msgid "Please enter a valid credit card number."
 msgstr ""
 
-#: dokan.php:441
+#: dokan.php:444
 msgid "Please enter the same value again."
 msgstr ""
 
-#: dokan.php:442
+#: dokan.php:445
 msgid "Please enter no more than {0} characters."
 msgstr ""
 
-#: dokan.php:443
+#: dokan.php:446
 msgid "Please enter at least {0} characters."
 msgstr ""
 
-#: dokan.php:444
+#: dokan.php:447
 msgid "Please enter a value between {0} and {1} characters long."
 msgstr ""
 
-#: dokan.php:445
+#: dokan.php:448
 msgid "Please enter a value between {0} and {1}."
 msgstr ""
 
-#: dokan.php:446
+#: dokan.php:449
 msgid "Please enter a value less than or equal to {0}."
 msgstr ""
 
-#: dokan.php:447
+#: dokan.php:450
 msgid "Please enter a value greater than or equal to {0}."
 msgstr ""
 
-#: dokan.php:748
+#: dokan.php:762
 msgid "Page %s"
 msgstr ""
 
-#: dokan.php:780
+#: dokan.php:794
 msgid "Get Pro"
 msgstr ""
 
-#: dokan.php:784 includes/admin/welcome.php:21
+#: dokan.php:798 includes/admin/welcome.php:21
 msgid "Documentation"
 msgstr ""
 
@@ -1520,7 +1520,7 @@ msgstr ""
 msgid "Customer Message"
 msgstr ""
 
-#: includes/admin-functions.php:48 templates/orders/details.php:246
+#: includes/admin-functions.php:48 templates/orders/details.php:244
 msgid "Order Notes"
 msgstr ""
 
@@ -1875,7 +1875,7 @@ msgstr[1] ""
 msgid "Expand"
 msgstr ""
 
-#: includes/product-functions.php:306 templates/orders/details.php:331
+#: includes/product-functions.php:306 templates/orders/details.php:329
 msgid "Close"
 msgstr ""
 
@@ -1973,103 +1973,103 @@ msgstr ""
 msgid "Log out"
 msgstr ""
 
+#: includes/wc-crud-functions.php:85 includes/wc-legacy-functions.php:61
+msgid "Order &ndash; %s"
+msgstr ""
+
 #: includes/wc-functions.php:67
 msgid "Product SKU must be unique."
 msgstr ""
 
-#: includes/wc-functions.php:468
-msgid "Order &ndash; %s"
-msgstr ""
-
-#: includes/wc-functions.php:707
+#: includes/wc-functions.php:444
 msgid "Cheating, eh?"
 msgstr ""
 
-#: includes/wc-functions.php:716
+#: includes/wc-functions.php:453
 msgid "Please enter your first name."
 msgstr ""
 
-#: includes/wc-functions.php:721
+#: includes/wc-functions.php:458
 msgid "Please enter your last name."
 msgstr ""
 
-#: includes/wc-functions.php:725
+#: includes/wc-functions.php:462
 msgid "Please enter your phone number."
 msgstr ""
 
-#: includes/wc-functions.php:1111
+#: includes/wc-functions.php:848
 msgid "No ratings found yet!"
 msgstr ""
 
-#: includes/wc-functions.php:1115
+#: includes/wc-functions.php:852
 msgid "%s rating from %d review"
 msgid_plural "%s rating from %d reviews"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/wc-functions.php:1116
+#: includes/wc-functions.php:853
 msgid "Rated %s out of %d"
 msgstr ""
 
-#: includes/wc-functions.php:1155
+#: includes/wc-functions.php:892
 msgid "Your {site_title} order receipt from {order_date}"
 msgstr ""
 
-#: includes/wc-functions.php:1156
+#: includes/wc-functions.php:893
 msgid "Your {site_title} order from {order_date} is complete"
 msgstr ""
 
-#: includes/wc-functions.php:1253
+#: includes/wc-functions.php:990
 #: templates/global/seller-registration-form.php:15
 msgid "First Name"
 msgstr ""
 
-#: includes/wc-functions.php:1254
+#: includes/wc-functions.php:991
 #: templates/global/seller-registration-form.php:20
 msgid "Last Name"
 msgstr ""
 
-#: includes/wc-functions.php:1255 templates/dashboard/edit-account.php:62
+#: includes/wc-functions.php:992 templates/dashboard/edit-account.php:62
 msgid "Email address"
 msgstr ""
 
-#: includes/wc-functions.php:1260
+#: includes/wc-functions.php:997
 msgid "is a required field."
 msgstr ""
 
-#: includes/wc-functions.php:1266
+#: includes/wc-functions.php:1003
 msgid "Please provide a valid email address."
 msgstr ""
 
-#: includes/wc-functions.php:1268
+#: includes/wc-functions.php:1005
 msgid "This email address is already registered."
 msgstr ""
 
-#: includes/wc-functions.php:1274
+#: includes/wc-functions.php:1011
 msgid "Your current password is incorrect."
 msgstr ""
 
-#: includes/wc-functions.php:1279
+#: includes/wc-functions.php:1016
 msgid "Please fill out all password fields."
 msgstr ""
 
-#: includes/wc-functions.php:1282
+#: includes/wc-functions.php:1019
 msgid "Please enter your current password."
 msgstr ""
 
-#: includes/wc-functions.php:1285
+#: includes/wc-functions.php:1022
 msgid "Please re-enter your password."
 msgstr ""
 
-#: includes/wc-functions.php:1288
+#: includes/wc-functions.php:1025
 msgid "New passwords do not match."
 msgstr ""
 
-#: includes/wc-functions.php:1309
+#: includes/wc-functions.php:1046
 msgid "Account details changed successfully."
 msgstr ""
 
-#: includes/wc-template.php:32
+#: includes/wc-template.php:34
 msgid "Vendor Info"
 msgstr ""
 
@@ -2352,11 +2352,11 @@ msgstr ""
 msgid "My Account"
 msgstr ""
 
-#: templates/global/header-menu.php:50 templates/orders/details.php:126
+#: templates/global/header-menu.php:50 templates/orders/details.php:124
 msgid "Billing Address"
 msgstr ""
 
-#: templates/global/header-menu.php:51 templates/orders/details.php:135
+#: templates/global/header-menu.php:51 templates/orders/details.php:133
 msgid "Shipping Address"
 msgstr ""
 
@@ -2475,87 +2475,87 @@ msgstr ""
 msgid "Totals"
 msgstr ""
 
-#: templates/orders/details.php:99
+#: templates/orders/details.php:97
 msgid "Coupons"
 msgstr ""
 
-#: templates/orders/details.php:146
+#: templates/orders/details.php:144
 msgid "Downloadable Product Permission"
 msgstr ""
 
-#: templates/orders/details.php:161
+#: templates/orders/details.php:159
 msgid "General Details"
 msgstr ""
 
-#: templates/orders/details.php:165
+#: templates/orders/details.php:163
 msgid "Order Status:"
 msgstr ""
 
-#: templates/orders/details.php:169
+#: templates/orders/details.php:167
 msgid "&nbsp; Edit"
 msgstr ""
 
-#: templates/orders/details.php:189
+#: templates/orders/details.php:187
 msgid "Update"
 msgstr ""
 
-#: templates/orders/details.php:195
+#: templates/orders/details.php:193
 msgid "Order Date:"
 msgstr ""
 
-#: templates/orders/details.php:202
+#: templates/orders/details.php:200
 msgid "Customer:"
 msgstr ""
 
-#: templates/orders/details.php:215
+#: templates/orders/details.php:213
 msgid "Email:"
 msgstr ""
 
-#: templates/orders/details.php:219
+#: templates/orders/details.php:217
 msgid "Phone:"
 msgstr ""
 
-#: templates/orders/details.php:223
+#: templates/orders/details.php:221
 msgid "Customer IP:"
 msgstr ""
 
-#: templates/orders/details.php:235
+#: templates/orders/details.php:233
 msgid "Customer Note:"
 msgstr ""
 
-#: templates/orders/details.php:270
+#: templates/orders/details.php:268
 msgid "added %s ago"
 msgstr ""
 
-#: templates/orders/details.php:276
+#: templates/orders/details.php:274
 msgid "There are no notes for this order yet."
 msgstr ""
 
-#: templates/orders/details.php:292
+#: templates/orders/details.php:290
 msgid "Customer note"
 msgstr ""
 
-#: templates/orders/details.php:293
+#: templates/orders/details.php:291
 msgid "Private note"
 msgstr ""
 
-#: templates/orders/details.php:301
+#: templates/orders/details.php:299
 msgid "Add Note"
 msgstr ""
 
-#: templates/orders/details.php:307 templates/orders/details.php:316
+#: templates/orders/details.php:305 templates/orders/details.php:314
 msgid "Tracking Number"
 msgstr ""
 
-#: templates/orders/details.php:311
+#: templates/orders/details.php:309
 msgid "Shipping Provider Name / URL"
 msgstr ""
 
-#: templates/orders/details.php:321
+#: templates/orders/details.php:319
 msgid "Date Shipped"
 msgstr ""
 
-#: templates/orders/details.php:330
+#: templates/orders/details.php:328
 msgid "Add Tracking Details"
 msgstr ""
 
@@ -2584,19 +2584,19 @@ msgstr ""
 msgid "Guest"
 msgstr ""
 
-#: templates/orders/listing.php:70 templates/products/products-listing.php:200
+#: templates/orders/listing.php:70 templates/products/products-listing.php:201
 msgid "Unpublished"
 msgstr ""
 
-#: templates/orders/listing.php:72 templates/products/products-listing.php:203
+#: templates/orders/listing.php:72 templates/products/products-listing.php:204
 msgid "Y/m/d g:i:s A"
 msgstr ""
 
-#: templates/orders/listing.php:78 templates/products/products-listing.php:210
+#: templates/orders/listing.php:78 templates/products/products-listing.php:211
 msgid "%s ago"
 msgstr ""
 
-#: templates/orders/listing.php:80 templates/products/products-listing.php:212
+#: templates/orders/listing.php:80 templates/products/products-listing.php:213
 msgid "Y/m/d"
 msgstr ""
 
@@ -2741,7 +2741,7 @@ msgid ""
 msgstr ""
 
 #: templates/products/new-product-single.php:193
-#: templates/products/products-listing.php:181
+#: templates/products/products-listing.php:182
 msgid "Downloadable"
 msgstr ""
 
@@ -2750,7 +2750,7 @@ msgid "Downloadable products give access to a file upon purchase."
 msgstr ""
 
 #: templates/products/new-product-single.php:198
-#: templates/products/products-listing.php:179
+#: templates/products/products-listing.php:180
 msgid "Virtual"
 msgstr ""
 
@@ -3012,7 +3012,7 @@ msgid "Type"
 msgstr ""
 
 #: templates/products/products-listing.php:64
-#: templates/products/products-listing.php:194
+#: templates/products/products-listing.php:195
 msgid "Views"
 msgstr ""
 
@@ -3032,47 +3032,47 @@ msgstr ""
 msgid "Out of stock"
 msgstr ""
 
-#: templates/products/products-listing.php:173
+#: templates/products/products-listing.php:174
 msgid "Grouped"
 msgstr ""
 
-#: templates/products/products-listing.php:175
+#: templates/products/products-listing.php:176
 msgid "External/Affiliate"
 msgstr ""
 
-#: templates/products/products-listing.php:183
+#: templates/products/products-listing.php:184
 msgid "Simple"
 msgstr ""
 
-#: templates/products/products-listing.php:187
+#: templates/products/products-listing.php:188
 msgid "Variable"
 msgstr ""
 
-#: templates/products/products-listing.php:219
+#: templates/products/products-listing.php:220
 msgid "Published"
 msgstr ""
 
-#: templates/products/products-listing.php:222
+#: templates/products/products-listing.php:223
 msgid "Missed schedule"
 msgstr ""
 
-#: templates/products/products-listing.php:224
+#: templates/products/products-listing.php:225
 msgid "Scheduled"
 msgstr ""
 
-#: templates/products/products-listing.php:227
+#: templates/products/products-listing.php:228
 msgid "Last Modified"
 msgstr ""
 
-#: templates/products/products-listing.php:239
+#: templates/products/products-listing.php:240
 msgid "No product found"
 msgstr ""
 
-#: templates/products/products-listing.php:262
+#: templates/products/products-listing.php:263
 msgid "&laquo; Previous"
 msgstr ""
 
-#: templates/products/products-listing.php:263
+#: templates/products/products-listing.php:264
 msgid "Next &raquo;"
 msgstr ""
 
@@ -3275,6 +3275,28 @@ msgstr ""
 msgid "Approved Requests"
 msgstr ""
 
+#. Plugin Name of the plugin/theme
+msgid "Dokan (Lite) - Multi-vendor Marketplace"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "https://wordpress.org/plugins/dokan-lite/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"An e-commerce marketplace plugin for WordPress. Powered by WooCommerce and "
+"weDevs."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Tareq Hasan"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://tareq.co/"
+msgstr ""
+
 #: includes/admin/setup-wizard.php:40
 msgctxt "enhanced select"
 msgid "One result is available, press enter to select it."
@@ -3350,7 +3372,7 @@ msgctxt "Next post link"
 msgid "&rarr;"
 msgstr ""
 
-#: includes/wc-functions.php:468
+#: includes/wc-crud-functions.php:85 includes/wc-legacy-functions.php:61
 msgctxt "Order date parsed by strftime"
 msgid "%b %d, %Y @ %I:%M %p"
 msgstr ""
