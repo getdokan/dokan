@@ -306,7 +306,7 @@ function dokan_on_child_order_status_change( $order_id, $old_status, $new_status
         foreach ($sub_orders as $sub) {
             $order = new WC_Order( $sub->ID );
 
-            if ( $order->post_status != 'wc-completed' ) {
+            if ( dokan_get_prop( $order, 'status' ) != 'wc-completed' ) {
                 $all_complete = false;
             }
         }
@@ -365,7 +365,7 @@ function dokan_sync_insert_order( $order_id ) {
     $order              = new WC_Order( $order_id );
     $seller_id          = dokan_get_seller_id_by_order( $order_id );
     $order_total        = $order->get_total();
-    $order_status       = $order->post_status;
+    $order_status       = dokan_get_prop( $order, 'status' );
     $admin_commission   = dokan_get_admin_commission_by( $order, $seller_id );
     $net_amount         = $order_total - $admin_commission;
     $net_amount         = apply_filters( 'dokan_order_net_amount', $net_amount, $order );
@@ -565,7 +565,7 @@ function dokan_sync_order_table( $order_id ) {
         $order_total = $order_total - $order->get_total_refunded();
     }
 
-    $order_status   = $order->post_status;
+    $order_status   = dokan_get_prop( $order, 'status' );
     $admin_commission   = dokan_get_admin_commission_by( $order, $seller_id );
     $net_amount         = $order_total - $admin_commission;
     $net_amount     = apply_filters( 'dokan_sync_order_net_amount', $net_amount, $order );
@@ -695,7 +695,7 @@ function dokan_get_suborder_ids_by ($parent_order_id){
  */
 function dokan_get_admin_commission_by( $order, $seller_id ) {
 
-    if ( get_posts( array( 'post_parent' => $order->id, 'post_type' => 'shop_order', 'post_status' => 'any' ) ) ) {
+    if ( get_posts( array( 'post_parent' => dokan_get_prop( $order, 'id' ), 'post_type' => 'shop_order', 'post_status' => 'any' ) ) ) {
         return;
     }
 
@@ -720,10 +720,11 @@ function dokan_get_admin_commission_by( $order, $seller_id ) {
     $refund_t += $order->get_total_tax_refunded() + $order->get_total_shipping_refunded();
     $refund_ut = $order->get_total_refunded() - $refund_t;
 
-    foreach ( $commissions as $commission ) {
-
-        $commission['ut_amount'] = $refund_ut * ( $commission['total_line'] / $total_line );
-        $admin_commission += ( $commission['total_line'] + $commission['ut_amount'] ) * $commission['admin_percentage'] /100;
+    if ( $total_line ) {
+        foreach ( $commissions as $commission ) {
+            $commission['ut_amount'] = $refund_ut * ( $commission['total_line'] / $total_line );
+            $admin_commission += ( $commission['total_line'] + $commission['ut_amount'] ) * $commission['admin_percentage'] /100;
+        }
     }
 
     if ( 'admin' == $commission_recipient ) {

@@ -8,15 +8,15 @@ global $wpdb;
             $download_permissions = $wpdb->get_results( $wpdb->prepare( "
                 SELECT * FROM {$wpdb->prefix}woocommerce_downloadable_product_permissions
                 WHERE order_id = %d ORDER BY product_id
-            ", $order->id ) );
+            ", dokan_get_prop( $order, 'id' ) ) );
 
             $product = null;
             $loop    = 0;
 
             if ( $download_permissions && sizeof( $download_permissions ) > 0 ) foreach ( $download_permissions as $download ) {
 
-                if ( ! $product || $product->id != $download->product_id ) {
-                    $product = get_product( absint( $download->product_id ) );
+                if ( ! $product || dokan_get_prop( $product, 'id' ) != $download->product_id ) {
+                    $product = wc_get_product( absint( $download->product_id ) );
                     $file_count = 0;
                 }
 
@@ -58,7 +58,7 @@ global $wpdb;
 
                     if ( $products ) foreach ( $products as $product ) {
 
-                        $product_object = get_product( $product->ID );
+                        $product_object = wc_get_product( $product->ID );
                         $product_name   = $product_object->get_formatted_name();
 
                         echo '<option value="' . esc_attr( $product->ID ) . '">' . esc_html( $product_name ) . '</option>';
@@ -69,7 +69,7 @@ global $wpdb;
         </div>
 
         <div class="dokan-w4">
-            <button type="button" class="dokan-btn dokan-btn-success grant_access" data-order-id="<?php echo $order->id; ?>" data-nonce="<?php echo wp_create_nonce( 'grant-access' ); ?>"><?php _e( 'Grant Access', 'dokan-lite' ); ?></button>
+            <button type="button" class="dokan-btn dokan-btn-success grant_access" data-order-id="<?php echo dokan_get_prop( $order, 'id' ); ?>" data-nonce="<?php echo wp_create_nonce( 'grant-access' ); ?>"><?php _e( 'Grant Access', 'dokan-lite' ); ?></button>
         </div>
 
     </div> <!-- .toolbar -->

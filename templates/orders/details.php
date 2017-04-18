@@ -17,7 +17,7 @@ $order    = new WC_Order( $order_id );
         <div class="dokan-clearfix">
             <div class="" style="width:100%">
                 <div class="dokan-panel dokan-panel-default">
-                    <div class="dokan-panel-heading"><strong><?php printf( __( 'Order', 'dokan-lite' ) . '#%d', $order->id ); ?></strong> &rarr; <?php _e( 'Order Items', 'dokan-lite' ); ?></div>
+                    <div class="dokan-panel-heading"><strong><?php printf( __( 'Order', 'dokan-lite' ) . '#%d', dokan_get_prop( $order, 'id' ) ); ?></strong> &rarr; <?php _e( 'Order Items', 'dokan-lite' ); ?></div>
                     <div class="dokan-panel-body" id="woocommerce-order-items">
 
                         <?php
@@ -48,7 +48,6 @@ $order    = new WC_Order( $order_id );
                                                 switch ( $item['type'] ) {
                                                     case 'line_item' :
                                                         $_product   = $order->get_product_from_item( $item );
-                                                        $item_meta  = $order->get_item_meta( $item_id );
 
                                                         dokan_get_template_part( 'orders/order-item-html', '', array(
                                                             'order' => $order,
@@ -60,7 +59,6 @@ $order    = new WC_Order( $order_id );
                                                     case 'fee' :
                                                         dokan_get_template_part( 'orders/order-fee-html', '', array(
                                                             'item_id' => $item_id,
-                                                            'item_meta' => $item_meta
                                                         ) );
 
                                                     break;
@@ -163,7 +161,7 @@ $order    = new WC_Order( $order_id );
                         <ul class="list-unstyled order-status">
                             <li>
                                 <span><?php _e( 'Order Status:', 'dokan-lite' ); ?></span>
-                                <label class="dokan-label dokan-label-<?php echo dokan_get_order_status_class( $order->post_status ); ?>"><?php echo isset( $statuses[$order->post_status] ) ? $statuses[$order->post_status] : $order->post_status; ?></label>
+                                <label class="dokan-label dokan-label-<?php echo dokan_get_order_status_class( dokan_get_prop( $order, 'status' ) ); ?>"><?php echo isset( $statuses[dokan_get_prop( $order, 'status' )] ) ? $statuses[dokan_get_prop( $order, 'status' )] : dokan_get_prop( $order, 'status' ); ?></label>
 
                                 <?php if ( dokan_get_option( 'order_status_change', 'dokan_selling', 'on' ) == 'on' ) {?>
                                     <a href="#" class="dokan-edit-status"><small><?php _e( '&nbsp; Edit', 'dokan-lite' ); ?></small></a>
@@ -178,12 +176,12 @@ $order    = new WC_Order( $order_id );
                                             // if( $status == 'wc-refunded' ) {
                                             //     continue;
                                             // }
-                                            echo '<option value="' . esc_attr( $status ) . '" ' . selected( $status, $order->post_status, false ) . '>' . esc_html__( $label, 'dokan-lite' ) . '</option>';
+                                            echo '<option value="' . esc_attr( $status ) . '" ' . selected( $status, dokan_get_prop( $order, 'status' ), false ) . '>' . esc_html__( $label, 'dokan-lite' ) . '</option>';
                                         }
                                         ?>
                                     </select>
 
-                                    <input type="hidden" name="order_id" value="<?php echo $order->id; ?>">
+                                    <input type="hidden" name="order_id" value="<?php echo dokan_get_prop( $order, 'id' ); ?>">
                                     <input type="hidden" name="action" value="dokan_change_status">
                                     <input type="hidden" name="_wpnonce" value="<?php echo wp_create_nonce( 'dokan_change_status' ); ?>">
                                     <input type="submit" class="dokan-btn dokan-btn-success dokan-btn-sm" name="dokan_change_status" value="<?php _e( 'Update', 'dokan-lite' ); ?>">
@@ -193,7 +191,7 @@ $order    = new WC_Order( $order_id );
                             </li>
                             <li>
                                 <span><?php _e( 'Order Date:', 'dokan-lite' ); ?></span>
-                                <?php echo $order->order_date; ?>
+                                <?php echo dokan_get_date_created( $order ); ?>
                             </li>
                         </ul>
 
@@ -201,33 +199,33 @@ $order    = new WC_Order( $order_id );
                             <li>
                                 <span><?php _e( 'Customer:', 'dokan-lite' ); ?></span>
                                 <?php
-                                $customer_user = absint( get_post_meta( $order->id, '_customer_user', true ) );
+                                $customer_user = absint( get_post_meta( dokan_get_prop( $order, 'id' ), '_customer_user', true ) );
                                 if ( $customer_user && $customer_user != 0 ) {
                                     $customer_userdata = get_userdata( $customer_user );
                                     $display_name =  $customer_userdata->display_name;
                                 } else {
-                                    $display_name = get_post_meta( $order->id, '_billing_first_name', true ). ' '. get_post_meta( $order->id, '_billing_last_name', true );
+                                    $display_name = get_post_meta( dokan_get_prop( $order, 'id' ), '_billing_first_name', true ). ' '. get_post_meta( dokan_get_prop( $order, 'id' ), '_billing_last_name', true );
                                 }
                                 ?>
                                 <a href="#"><?php echo $display_name; ?></a><br>
                             </li>
                             <li>
                                 <span><?php _e( 'Email:', 'dokan-lite' ); ?></span>
-                                <?php echo esc_html( get_post_meta( $order->id, '_billing_email', true ) ); ?>
+                                <?php echo esc_html( get_post_meta( dokan_get_prop( $order, 'id' ), '_billing_email', true ) ); ?>
                             </li>
                             <li>
                                 <span><?php _e( 'Phone:', 'dokan-lite' ); ?></span>
-                                <?php echo esc_html( get_post_meta( $order->id, '_billing_phone', true ) ); ?>
+                                <?php echo esc_html( get_post_meta( dokan_get_prop( $order, 'id' ), '_billing_phone', true ) ); ?>
                             </li>
                             <li>
                                 <span><?php _e( 'Customer IP:', 'dokan-lite' ); ?></span>
-                                <?php echo esc_html( get_post_meta( $order->id, '_customer_ip_address', true ) ); ?>
+                                <?php echo esc_html( get_post_meta( dokan_get_prop( $order, 'id' ), '_customer_ip_address', true ) ); ?>
                             </li>
                         </ul>
 
                         <?php
                         if ( get_option( 'woocommerce_enable_order_comments' ) != 'no' ) {
-                            $customer_note = get_post_field( 'post_excerpt', $order->id );
+                            $customer_note = get_post_field( 'post_excerpt', dokan_get_prop( $order, 'id' ) );
 
                             if ( !empty( $customer_note ) ) {
                                 ?>
@@ -296,7 +294,7 @@ $order    = new WC_Order( $order_id );
 
                                     <input type="hidden" name="security" value="<?php echo wp_create_nonce('add-order-note'); ?>">
                                     <input type="hidden" name="delete-note-security" id="delete-note-security" value="<?php echo wp_create_nonce('delete-order-note'); ?>">
-                                    <input type="hidden" name="post_id" value="<?php echo $order->id; ?>">
+                                    <input type="hidden" name="post_id" value="<?php echo dokan_get_prop( $order, 'id' ); ?>">
                                     <input type="hidden" name="action" value="dokan_add_order_note">
                                     <input type="submit" name="add_order_note" class="add_note btn btn-sm btn-theme" value="<?php esc_attr_e( 'Add Note', 'dokan-lite' ); ?>">
                                 </div>
@@ -323,7 +321,7 @@ $order    = new WC_Order( $order_id );
                                     </div>
 
                                     <input type="hidden" name="security" id="security" value="<?php echo wp_create_nonce('add-shipping-tracking-info'); ?>">
-                                    <input type="hidden" name="post_id" id="post-id" value="<?php echo $order->id; ?>">
+                                    <input type="hidden" name="post_id" id="post-id" value="<?php echo dokan_get_prop( $order, 'id' ); ?>">
                                     <input type="hidden" name="action" id="action" value="dokan_add_shipping_tracking_info">
 
                                     <div class="dokan-form-group">

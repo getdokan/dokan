@@ -12,13 +12,13 @@
  */
 ?>
 <style>
-   
+
 </style>
 <div class="dashboard-widget big-counter">
     <ul class="list-inline">
          <li>
             <div class="title"><?php _e( 'Sales', 'dokan-lite' ); ?></div>
-            <div class="count"><?php echo woocommerce_price( $earning ); ?></div>
+            <div class="count"><?php echo wc_price( $earning ); ?></div>
         </li>
         <li>
             <div class="title"><?php _e( 'Earning', 'dokan-lite' ); ?></div>
@@ -42,7 +42,7 @@
                 ?>
             </div>
         </li>
-       
+
         <?php do_action( 'dokan_seller_dashboard_widget_counter' ); ?>
 
     </ul>

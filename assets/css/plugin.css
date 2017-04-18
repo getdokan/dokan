@@ -1,0 +1,22 @@
+#dokan-plugin-upgrade-notice {
+    padding: 14px 10px;
+    background: #f2624d;
+    color: #fff;
+}
+
+#dokan-plugin-upgrade-notice a {
+    color: #fafafa;
+    text-decoration: underline;
+}
+
+#dokan-plugin-upgrade-notice:before {
+    content: '\f348';
+    display: inline-block;
+    font: 400 18px/1 dashicons;
+    speak: none;
+    margin: 0 8px 0 -2px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    vertical-align: top;
+    color: #fff;
+}

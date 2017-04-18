@@ -348,11 +348,12 @@ class Dokan_Email {
         dokan_get_template_part($template);
         $body = ob_get_clean();
 
-        $product = get_product( $product_id );
-        $seller = get_user_by( 'id', $product->post->post_author );
-        $category = wp_get_post_terms($product->id, 'product_cat', array( 'fields' => 'names' ) );
+        $product       = wc_get_product( $product_id );
+        $seller_id     = get_post_field( 'post_author', $product_id );
+        $seller        = get_user_by( 'id', $seller_id );
+        $category      = wp_get_post_terms( dokan_get_prop( $product, 'id' ), 'product_cat', array( 'fields' => 'names' ) );
         $category_name = $category ? reset( $category ) : 'N/A';
-
+        
         $find = array(
             '%title%',
             '%price%',
@@ -394,7 +395,7 @@ class Dokan_Email {
         dokan_get_template_part( 'emails/product-published' );
         $body = ob_get_clean();
 
-        $product = get_product( $post->ID );
+        $product = wc_get_product( $post->ID );
 
         $find = array(
             '%seller_name%',

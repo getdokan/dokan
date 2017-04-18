@@ -17,14 +17,14 @@
   float: right;
   font-weight: bold;
   line-height: 1;
-  color: #000;
-  text-shadow: 0 1px 0 #fff;
+  color: #000000;
+  text-shadow: 0 1px 0 #ffffff;
   opacity: 0.2;
   filter: alpha(opacity=20);
 }
 .dokan-close:hover,
 .dokan-close:focus {
-  color: #000;
+  color: #000000;
   text-decoration: none;
   cursor: pointer;
   opacity: 0.5;
@@ -144,10 +144,10 @@ button.dokan-close {
 .tooltip-inner {
   max-width: 200px;
   padding: 10px !important;
-  color: #fff;
+  color: #ffffff;
   text-align: center;
   text-decoration: none;
-  background-color: #000;
+  background-color: #000000;
   border-radius: 4px;
   font-weight: normal !important;
 }
@@ -163,52 +163,52 @@ button.dokan-close {
   left: 50%;
   margin-left: -5px;
   border-width: 5px 5px 0;
-  border-top-color: #000;
+  border-top-color: #000000;
 }
 .tooltip.top-left .tooltip-arrow {
   bottom: 0;
   left: 5px;
   border-width: 5px 5px 0;
-  border-top-color: #000;
+  border-top-color: #000000;
 }
 .tooltip.top-right .tooltip-arrow {
   bottom: 0;
   right: 5px;
   border-width: 5px 5px 0;
-  border-top-color: #000;
+  border-top-color: #000000;
 }
 .tooltip.right .tooltip-arrow {
   top: 50%;
   left: 0;
   margin-top: -5px;
   border-width: 5px 5px 5px 0;
-  border-right-color: #000;
+  border-right-color: #000000;
 }
 .tooltip.left .tooltip-arrow {
   top: 50%;
   right: 0;
   margin-top: -5px;
   border-width: 5px 0 5px 5px;
-  border-left-color: #000;
+  border-left-color: #000000;
 }
 .tooltip.bottom .tooltip-arrow {
   top: 0;
   left: 50%;
   margin-left: -5px;
   border-width: 0 5px 5px;
-  border-bottom-color: #000;
+  border-bottom-color: #000000;
 }
 .tooltip.bottom-left .tooltip-arrow {
   top: 0;
   left: 5px;
   border-width: 0 5px 5px;
-  border-bottom-color: #000;
+  border-bottom-color: #000000;
 }
 .tooltip.bottom-right .tooltip-arrow {
   top: 0;
   right: 5px;
   border-width: 0 5px 5px;
-  border-bottom-color: #000;
+  border-bottom-color: #000000;
 }
 .dokan-form-container label {
   display: inline-block;
@@ -218,7 +218,7 @@ button.dokan-close {
 .dokan-form-control {
   background-color: #ffffff;
   background-image: none;
-  border: 1px solid #EDEDED;
+  border: 1px solid #ededed;
   padding: 4px 6px;
   border-radius: 0;
   color: #555555;
@@ -287,7 +287,7 @@ select.dokan-form-control {
   color: #555;
   text-align: center;
   background-color: #eee;
-  border: 1px solid #EDEDED;
+  border: 1px solid #ededed;
   border-radius: 4px;
 }
 .dokan-input-group-addon input[type="radio"],
@@ -422,7 +422,7 @@ select.dokan-form-control {
   text-align: left;
 }
 .wp-editor-wrap {
-  border: 1px solid #EDEDED;
+  border: 1px solid #ededed;
 }
 .dokan-message,
 .dokan-info,
@@ -431,9 +431,9 @@ select.dokan-form-control {
   margin: 5px 0 15px 0;
   position: relative;
   background: #fff;
-  border-bottom: 1px solid #EDEDED;
-  border-left: 1px solid #EDEDED;
-  border-right: 1px solid #EDEDED;
+  border-bottom: 1px solid #ededed;
+  border-left: 1px solid #ededed;
+  border-right: 1px solid #ededed;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
   border-radius: 4px;
@@ -478,7 +478,7 @@ select.dokan-form-control {
   font-weight: 700;
 }
 ul.dokan_tabs {
-  border-bottom: 1px solid #EDEDED;
+  border-bottom: 1px solid #ededed;
   margin-bottom: 20px;
   line-height: 24px;
 }
@@ -488,7 +488,7 @@ ul.dokan_tabs > li {
 ul.dokan_tabs li {
   display: inline-block;
   margin-right: 5px !important;
-  border: 1px solid #EDEDED;
+  border: 1px solid #ededed;
   border-bottom: none;
 }
 ul.dokan_tabs li:first-child {
@@ -519,7 +519,7 @@ ul.dokan_tabs li.active {
 }
 .dokan-pagination-container .dokan-pagination li a {
   padding: 3px 10px;
-  border: 1px solid #EDEDED;
+  border: 1px solid #ededed;
   margin-right: 3px;
   text-decoration: none;
 }
@@ -579,7 +579,7 @@ a.dokan-btn.active,
 input[type="submit"].dokan-btn-theme,
 a.dokan-btn-theme,
 .dokan-btn-theme {
-  color: #fff;
+  color: #ffffff;
   background-color: #f05025;
   border-color: #f05025;
 }
@@ -598,7 +598,7 @@ a.dokan-btn-theme.active,
 .open .dropdown-toggleinput[type="submit"].dokan-btn-theme,
 .open .dropdown-togglea.dokan-btn-theme,
 .open .dropdown-toggle.dokan-btn-theme {
-  color: #fff;
+  color: #ffffff;
   background-color: #dd3b0f;
   border-color: #ca360e;
 }
@@ -670,7 +670,7 @@ a.dokan-btn-theme .badge,
 input[type="submit"].dokan-btn-success,
 a.dokan-btn-success,
 .dokan-btn-success {
-  color: #fff;
+  color: #ffffff;
   background-color: #5cb85c;
   border-color: #4cae4c;
 }
@@ -689,7 +689,7 @@ a.dokan-btn-success.active,
 .open .dropdown-toggleinput[type="submit"].dokan-btn-success,
 .open .dropdown-togglea.dokan-btn-success,
 .open .dropdown-toggle.dokan-btn-success {
-  color: #fff;
+  color: #ffffff;
   background-color: #47a447;
   border-color: #398439;
 }
@@ -761,9 +761,9 @@ a.dokan-btn-success .badge,
 input[type="submit"].dokan-btn-default,
 a.dokan-btn-default,
 .dokan-btn-default {
-  color: #333;
-  background-color: #fff;
-  border-color: #ccc;
+  color: #333333;
+  background-color: #ffffff;
+  border-color: #cccccc;
 }
 input[type="submit"].dokan-btn-default:hover,
 a.dokan-btn-default:hover,
@@ -780,7 +780,7 @@ a.dokan-btn-default.active,
 .open .dropdown-toggleinput[type="submit"].dokan-btn-default,
 .open .dropdown-togglea.dokan-btn-default,
 .open .dropdown-toggle.dokan-btn-default {
-  color: #333;
+  color: #333333;
   background-color: #ebebeb;
   border-color: #adadad;
 }
@@ -840,19 +840,19 @@ a.dokan-btn-default[disabled].active,
 fieldset[disabled] input[type="submit"].dokan-btn-default.active,
 fieldset[disabled] a.dokan-btn-default.active,
 fieldset[disabled] .dokan-btn-default.active {
-  background-color: #fff;
-  border-color: #ccc;
+  background-color: #ffffff;
+  border-color: #cccccc;
 }
 input[type="submit"].dokan-btn-default .badge,
 a.dokan-btn-default .badge,
 .dokan-btn-default .badge {
-  color: #fff;
+  color: #ffffff;
   background-color: #fff;
 }
 input[type="submit"].dokan-btn-danger,
 a.dokan-btn-danger,
 .dokan-btn-danger {
-  color: #fff;
+  color: #ffffff;
   background-color: #d9534f;
   border-color: #d43f3a;
 }
@@ -871,7 +871,7 @@ a.dokan-btn-danger.active,
 .open .dropdown-toggleinput[type="submit"].dokan-btn-danger,
 .open .dropdown-togglea.dokan-btn-danger,
 .open .dropdown-toggle.dokan-btn-danger {
-  color: #fff;
+  color: #ffffff;
   background-color: #d2322d;
   border-color: #ac2925;
 }
@@ -943,7 +943,7 @@ a.dokan-btn-danger .badge,
 input[type="submit"].dokan-btn-info,
 a.dokan-btn-info,
 .dokan-btn-info {
-  color: #fff;
+  color: #ffffff;
   background-color: #5bc0de;
   border-color: #46b8da;
 }
@@ -962,7 +962,7 @@ a.dokan-btn-info.active,
 .open .dropdown-toggleinput[type="submit"].dokan-btn-info,
 .open .dropdown-togglea.dokan-btn-info,
 .open .dropdown-toggle.dokan-btn-info {
-  color: #fff;
+  color: #ffffff;
   background-color: #39b3d7;
   border-color: #269abc;
 }
@@ -1061,11 +1061,11 @@ a.dokan-btn-sm,
   padding: 8px;
   line-height: 1.42;
   vertical-align: top;
-  border-top: 1px solid #EDEDED;
+  border-top: 1px solid #ededed;
 }
 .dokan-table > thead > tr > th {
   vertical-align: bottom;
-  border-bottom: 2px solid #EDEDED;
+  border-bottom: 2px solid #ededed;
 }
 .dokan-table > caption + thead > tr:first-child > th,
 .dokan-table > colgroup + thead > tr:first-child > th,
@@ -1076,7 +1076,7 @@ a.dokan-btn-sm,
   border-top: 0;
 }
 .dokan-table > tbody + tbody {
-  border-top: 2px solid #EDEDED;
+  border-top: 2px solid #ededed;
 }
 .dokan-table-striped > tbody > tr:nth-of-type(odd) {
   background-color: #f9f9f9;
@@ -1371,7 +1371,7 @@ table.my_account_orders tbody tr td.order-actions a.button {
   margin-right: 10px;
 }
 .dokan-dashboard-content ul.dokan_tabs {
-  border-bottom: 1px solid #EDEDED;
+  border-bottom: 1px solid #ededed;
   margin-bottom: 20px;
   line-height: 24px;
 }
@@ -1381,7 +1381,7 @@ table.my_account_orders tbody tr td.order-actions a.button {
 .dokan-dashboard-content ul.dokan_tabs li {
   display: inline-block;
   margin-right: 5px !important;
-  border: 1px solid #EDEDED;
+  border: 1px solid #ededed;
   border-bottom: none;
 }
 .dokan-dashboard-content ul.dokan_tabs li:first-child {
@@ -1406,7 +1406,7 @@ table.my_account_orders tbody tr td.order-actions a.button {
   font-size: 75%;
   font-weight: bold;
   line-height: 1;
-  color: #fff;
+  color: #ffffff;
   text-align: center;
   white-space: nowrap;
   vertical-align: baseline;
@@ -1414,7 +1414,7 @@ table.my_account_orders tbody tr td.order-actions a.button {
 }
 a.dokan-label:hover,
 a.dokan-label:focus {
-  color: #fff;
+  color: #ffffff;
   text-decoration: none;
   cursor: pointer;
 }
@@ -1537,7 +1537,7 @@ a.dokan-label:focus {
 }
 .dokan-panel {
   margin-bottom: 20px;
-  background-color: #fff;
+  background-color: #ffffff;
   border: 1px solid transparent;
   border-radius: 4px;
   -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
@@ -1566,27 +1566,27 @@ a.dokan-label:focus {
 .dokan-panel-footer {
   padding: 10px 15px;
   background-color: #f5f5f5;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid #dddddd;
   border-bottom-right-radius: 3px;
   border-bottom-left-radius: 3px;
 }
 .dokan-panel-default {
-  border-color: #ddd;
+  border-color: #dddddd;
 }
 .dokan-panel-default > .dokan-panel-heading {
-  color: #333;
+  color: #333333;
   background-color: #f5f5f5;
-  border-color: #ddd;
+  border-color: #dddddd;
 }
 .dokan-panel-default > .dokan-panel-heading + .dokan-panel-collapse > .dokan-panel-body {
-  border-top-color: #ddd;
+  border-top-color: #dddddd;
 }
 .dokan-panel-default > .dokan-panel-heading .dokan-badge {
   color: #f5f5f5;
-  background-color: #333;
+  background-color: #333333;
 }
 .dokan-panel-default > .dokan-panel-footer + .dokan-panel-collapse > .dokan-panel-body {
-  border-bottom-color: #ddd;
+  border-bottom-color: #dddddd;
 }
 .dokan-clearfix:before,
 .dokan-clearfix:after {
@@ -1622,14 +1622,14 @@ p.help-block {
 }
 ul.subsubsub {
   font-size: 12px;
-  color: #EDEDED;
+  color: #ededed;
   margin: 0 0 10px 0;
   padding: 0;
 }
 ul.subsubsub li {
   line-height: 13px;
   padding: 0 5px;
-  border-right: 1px solid #EDEDED;
+  border-right: 1px solid #ededed;
 }
 ul.subsubsub li:last-child {
   border-right: none;
@@ -1973,7 +1973,7 @@ div.media-sidebar a.edit-attachment {
 }
 .dokan-dashboard header.dokan-dashboard-header h1 {
   margin: 0 0 10px 0;
-  border-bottom: 1px solid #EDEDED;
+  border-bottom: 1px solid #ededed;
   padding: 0 0 10px 0;
 }
 .dokan-dashboard header.dokan-dashboard-header .dokan-add-product-link .dokan-btn {
@@ -2083,7 +2083,7 @@ div.media-sidebar a.edit-attachment {
   border-radius: 3px;
 }
 .dokan-dashboard .dokan-dashboard-content article.dokan-settings-area .dokan-map-wrap {
-  border: 1px solid #EDEDED;
+  border: 1px solid #ededed;
 }
 .dokan-dashboard .dokan-dashboard-content article.dokan-settings-area .dokan-map-wrap .dokan-map-search-bar {
   position: relative;
@@ -2141,7 +2141,7 @@ div.media-sidebar a.edit-attachment {
   margin-bottom: 0;
 }
 .dokan-orders-content .dokan-orders-area .general-details ul.order-status {
-  border-bottom: 1px solid #EDEDED;
+  border-bottom: 1px solid #ededed;
   margin-bottom: 3px;
   padding-bottom: 3px;
   margin-left: 0px;
@@ -2176,13 +2176,13 @@ div.media-sidebar a.edit-attachment {
 }
 .dokan-orders-content .dokan-orders-area ul.order-statuses-filter {
   font-size: 12px;
-  color: #EDEDED;
+  color: #ededed;
 }
 .dokan-orders-content .dokan-orders-area ul.order-statuses-filter li {
   display: inline-block;
   line-height: 13px;
   padding: 0 5px;
-  border-right: 1px solid #EDEDED;
+  border-right: 1px solid #ededed;
 }
 .dokan-orders-content .dokan-orders-area ul.order-statuses-filter li:last-child {
   border-right: none;
@@ -2226,7 +2226,7 @@ div.media-sidebar a.edit-attachment {
   border-color: #d7cad2 transparent;
 }
 .dokan-orders-content .dokan-orders-area tfoot td.value {
-  border-left: 1px solid #EDEDED;
+  border-left: 1px solid #ededed;
   text-align: right;
 }
 .dokan-orders-content .dokan-orders-area .order_download_permissions label {
@@ -2264,7 +2264,7 @@ div.media-sidebar a.edit-attachment {
   max-height: 48px;
 }
 .dokan-product-listing .dokan-product-listing-area .product-listing-top {
-  border-bottom: 1px solid #EDEDED;
+  border-bottom: 1px solid #ededed;
   line-height: 50px;
   margin-bottom: 15px;
 }
@@ -2350,7 +2350,7 @@ div.media-sidebar a.edit-attachment {
 }
 .dokan-product-edit-area header.dokan-pro-edit-breadcrumb {
   display: block;
-  border-bottom: 1px solid #EDEDED;
+  border-bottom: 1px solid #ededed;
   padding: 0 0 10px 0;
   margin: 0 0 15px 0;
 }
@@ -2444,7 +2444,7 @@ div.media-sidebar a.edit-attachment {
 }
 .product-edit-new-container header.dokan-pro-edit-breadcrumb {
   display: block;
-  border-bottom: 1px solid #EDEDED;
+  border-bottom: 1px solid #ededed;
   padding: 0 0 10px 0;
   margin: 0 0 15px 0;
 }
@@ -2938,7 +2938,7 @@ div.media-sidebar a.edit-attachment {
 }
 .product-edit-container .dokan-edit-sidebar .downloadable_files td {
   border-top: none;
-  border-bottom: 1px solid #EDEDED;
+  border-bottom: 1px solid #ededed;
 }
 .product-edit-container .dokan-edit-sidebar .downloadable_files td label {
   font-weight: normal;
@@ -3082,7 +3082,7 @@ div.media-sidebar a.edit-attachment {
 .product-edit-container #product-variations .wc-metabox input[type=text],
 .product-edit-container #product-variations .wc-metabox input[type=number],
 .product-edit-container #product-variations .wc-metabox select {
-  border: 1px solid #EDEDED;
+  border: 1px solid #ededed;
 }
 .product-edit-container #product-variations .wc-metabox select {
   width: auto;
@@ -3092,7 +3092,7 @@ div.media-sidebar a.edit-attachment {
   padding-top: 10px;
 }
 .product-edit-container #product-variations p.toolbar select {
-  border: 1px solid #EDEDED;
+  border: 1px solid #ededed;
 }
 .product-edit-container #dokan-product-images ul.product_images {
   margin: 0 0 10px 0;
@@ -3542,7 +3542,7 @@ div.media-sidebar a.edit-attachment {
 }
 .dokan-single-store .profile-frame .profile-info-box .profile-info-summery-wrapper .profile-info-summery .profile-info-head .profile-img.profile-img-square img {
   background-color: #fff;
-  border: 1px solid #EDEDED;
+  border: 1px solid #ededed;
   border-radius: 0;
   padding: 4px;
 }
@@ -3615,7 +3615,7 @@ div.media-sidebar a.edit-attachment {
   height: 135px;
   background-color: #fff;
   color: inherit;
-  border: 1px solid #EDEDED;
+  border: 1px solid #ededed;
   padding: 0 15px;
 }
 .dokan-single-store .profile-frame .profile-info-box.profile-layout-layout1 .profile-info-summery-wrapper .profile-info-summery {
@@ -3669,7 +3669,7 @@ div.media-sidebar a.edit-attachment {
   width: 100%;
   padding: 10px;
   overflow: hidden;
-  border: 1px solid #EDEDED;
+  border: 1px solid #ededed;
 }
 .dokan-single-store .profile-frame.profile-frame-no-banner .profile-layout-layout3 .profile-info-summery-wrapper .profile-info-summery .profile-info-head {
   width: 150px;
@@ -3738,7 +3738,7 @@ div.media-sidebar a.edit-attachment {
 .dokan-single-store .dokan-store-tabs ul {
   background-color: #fff;
   border-width: 0 1px 1px 1px;
-  border-color: #EDEDED;
+  border-color: #ededed;
   border-style: solid;
   margin: 0;
   padding: 0;
@@ -3746,7 +3746,8 @@ div.media-sidebar a.edit-attachment {
 }
 .dokan-single-store .dokan-store-tabs ul li {
   display: inline-block;
-  border-right: 1px solid #EDEDED;
+  border-right: 1px solid #ededed;
+  margin-right: -4px;
 }
 .dokan-single-store .dokan-store-tabs ul li a {
   text-decoration: none;
@@ -3847,7 +3848,8 @@ div.media-sidebar a.edit-attachment {
 }
 #dokan-seller-listing-wrap ul.dokan-seller-wrap li .store-content .store-info {
   height: 100%;
-  background-size: cover;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
   background-position: 0 50%;
   height: 220px;
   position: relative;
@@ -3994,7 +3996,7 @@ div.media-sidebar a.edit-attachment {
     position: relative;
     background-color: #fff;
     color: #444;
-    border: 1px solid #EDEDED;
+    border: 1px solid #ededed;
     height: 220px;
   }
   .dokan-single-store .profile-frame .profile-info-box.profile-layout-layout2 .profile-info-summery-wrapper .profile-info-summery {
@@ -4076,7 +4078,7 @@ div.media-sidebar a.edit-attachment {
     position: relative;
     background-color: #fff;
     color: #444;
-    border: 1px solid #EDEDED;
+    border: 1px solid #ededed;
     height: 255px;
   }
   .dokan-single-store .profile-frame .profile-info-box .profile-info-summery-wrapper .profile-info-summery {

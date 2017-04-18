@@ -136,7 +136,7 @@ class Dokan_Template_Orders {
                     $customer_phone   = esc_html( get_post_meta( $order->order_id, '_billing_phone', true ) );
                     $customer_ip      = esc_html( get_post_meta( $order->order_id, '_customer_ip_address', true ) );
                 } else {
-                    $customer_name  = get_post_meta( $order->id, '_billing_first_name', true ). ' '. get_post_meta( $order->id, '_billing_last_name', true ).'(Guest)';
+                    $customer_name  = get_post_meta( dokan_get_prop( $order, 'id' ), '_billing_first_name', true ). ' '. get_post_meta( dokan_get_prop( $order, 'id' ), '_billing_last_name', true ).'(Guest)';
                     $customer_email = esc_html( get_post_meta( $order->order_id, '_billing_email', true ) );
                     $customer_phone = esc_html( get_post_meta( $order->order_id, '_billing_phone', true ) );
                     $customer_ip    = esc_html( get_post_meta( $order->order_id, '_customer_ip_address', true ) );
@@ -149,8 +149,8 @@ class Dokan_Template_Orders {
                     'order_shipping_cost'  => $the_order->get_total_shipping(),
                     'order_payment_method' => get_post_meta( $order->order_id, '_payment_method_title', true ),
                     'order_total'          => $the_order->get_total(),
-                    'order_status'         => $statuses[$the_order->post_status],
-                    'order_date'           => $the_order->order_date,
+                    'order_status'         => $statuses[dokan_get_prop( $the_order, 'status' )],
+                    'order_date'           => dokan_get_date_created( $the_order ),
                     'customer_name'        => $customer_name,
                     'customer_email'       => $customer_email,
                     'customer_phone'       => $customer_phone,
@@ -208,7 +208,7 @@ class Dokan_Template_Orders {
                     $customer_phone   = esc_html( get_post_meta( $order->order_id, '_billing_phone', true ) );
                     $customer_ip      = esc_html( get_post_meta( $order->order_id, '_customer_ip_address', true ) );
                 } else {
-                    $customer_name  = get_post_meta( $order->id, '_billing_first_name', true ). ' '. get_post_meta( $order->id, '_billing_last_name', true ).'(Guest)';
+                    $customer_name  = get_post_meta( dokan_get_prop( $order, 'id' ), '_billing_first_name', true ). ' '. get_post_meta( dokan_get_prop( $order, 'id' ), '_billing_last_name', true ).'(Guest)';
                     $customer_email = esc_html( get_post_meta( $order->order_id, '_billing_email', true ) );
                     $customer_phone = esc_html( get_post_meta( $order->order_id, '_billing_phone', true ) );
                     $customer_ip    = esc_html( get_post_meta( $order->order_id, '_customer_ip_address', true ) );
@@ -221,8 +221,8 @@ class Dokan_Template_Orders {
                     'order_shipping_cost'  => $the_order->get_total_shipping(),
                     'order_payment_method' => get_post_meta( $order->order_id, '_payment_method_title', true ),
                     'order_total'          => $the_order->get_total(),
-                    'order_status'         => $statuses[$the_order->post_status],
-                    'order_date'           => $the_order->order_date,
+                    'order_status'         => $statuses[dokan_get_prop( $the_order, 'status' )],
+                    'order_date'           => dokan_get_date_created( $the_order ),
                     'customer_name'        => $customer_name,
                     'customer_email'       => $customer_email,
                     'customer_phone'       => $customer_phone,

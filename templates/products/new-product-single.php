@@ -28,7 +28,7 @@ if ( isset( $_GET['product_id'] ) ) {
     $post_content   = $post->post_content;
     $post_excerpt   = $post->post_excerpt;
     $post_status    = $post->post_status;
-    $product        = get_product( $post_id );
+    $product        = wc_get_product( $post_id );
     $from_shortcode = true;
 }
 

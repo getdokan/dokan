@@ -3,7 +3,7 @@
 Plugin Name: Dokan (Lite) - Multi-vendor Marketplace
 Plugin URI: https://wordpress.org/plugins/dokan-lite/
 Description: An e-commerce marketplace plugin for WordPress. Powered by WooCommerce and weDevs.
-Version: 2.5.7
+Version: 2.6.0
 Author: Tareq Hasan
 Author URI: http://tareq.co/
 Text Domain: dokan-lite
@@ -45,7 +45,7 @@ if ( !defined( '__DIR__' ) ) {
     define( '__DIR__', dirname( __FILE__ ) );
 }
 
-define( 'DOKAN_PLUGIN_VERSION', '2.5.7' );
+define( 'DOKAN_PLUGIN_VERSION', '2.6.0' );
 define( 'DOKAN_FILE', __FILE__ );
 define( 'DOKAN_DIR', __DIR__ );
 define( 'DOKAN_INC_DIR', __DIR__ . '/includes' );
@@ -227,6 +227,9 @@ final class WeDevs_Dokan {
         // add_action( 'admin_init', array( $this, 'install_theme' ) );
         add_action( 'admin_init', array( $this, 'block_admin_access' ) );
         add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), array( $this, 'plugin_action_links' ) );
+
+        add_action( 'in_plugin_update_message-dokan-lite/dokan.php', array( 'Dokan_Installer', 'in_plugin_update_message' ) );
+
     }
 
     public function register_scripts() {
@@ -509,6 +512,7 @@ final class WeDevs_Dokan {
 
         require_once $inc_dir . 'functions.php';
         require_once $inc_dir . 'functions-depricated.php';
+        require_once $inc_dir . 'functions-compatibility.php';
         require_once $inc_dir . 'widgets/menu-category.php';
         require_once $inc_dir . 'widgets/bestselling-product.php';
         require_once $inc_dir . 'widgets/top-rated-product.php';
@@ -529,6 +533,12 @@ final class WeDevs_Dokan {
             require_once $inc_dir . 'admin-functions.php';
         } else {
             require_once $inc_dir . 'template-tags.php';
+        }
+
+        if ( WC_VERSION > 2.7 ) {
+            require_once $inc_dir . 'wc-crud-functions.php';
+        } else {
+            require_once $inc_dir . 'wc-legacy-functions.php';
         }
     }
 
@@ -672,8 +682,12 @@ final class WeDevs_Dokan {
     /**
      * Scripts and styles for admin panel
      */
-    function admin_enqueue_scripts() {
+    function admin_enqueue_scripts( $hook ) {
         wp_enqueue_script( 'dokan_slider_admin', DOKAN_PLUGIN_ASSEST.'/js/dokan-admin.js', array( 'jquery' ) );
+
+        if ( 'plugins.php' == $hook ) {
+            wp_enqueue_style( 'dokan-plugin-list-css', DOKAN_PLUGIN_ASSEST.'/css/plugin.css', false, null );
+        }
 
         do_action( 'dokan_enqueue_admin_scripts' );
     }

@@ -33,6 +33,7 @@ class Dokan_Installer {
         if ( ! $was_installed_before ) {
             set_transient( '_dokan_setup_page_redirect', true, 30 );
         }
+
     }
 
     /**
@@ -333,6 +334,70 @@ class Dokan_Installer {
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
 
         dbDelta( $sql );
+    }
+
+    /**
+     * Show plugin changes from upgrade notice
+     *
+     * @since 2.5.8
+     *
+     */
+    public static function in_plugin_update_message( $args ) {
+        $transient_name = 'dokan_upgrade_notice_' . $args['Version'];
+
+        $upgrade_notice = get_transient( $transient_name );
+        if ( ! $upgrade_notice ) {
+            $response = wp_safe_remote_get( 'https://plugins.svn.wordpress.org/dokan-lite/trunk/readme.txt' );
+            if ( ! is_wp_error( $response ) && ! empty( $response['body'] ) ) {
+                $upgrade_notice = self::parse_update_notice( $response['body'], $args['new_version'] );
+                set_transient( $transient_name, $upgrade_notice, DAY_IN_SECONDS );
+            }
+        }
+
+        echo wp_kses_post( $upgrade_notice );
+    }
+
+    /**
+     * Parse upgrade notice from readme.txt file.
+     *
+     * @since 2.5.8
+     *
+     * @param  string $content
+     * @param  string $new_version
+     * @return string
+     */
+    private static function parse_update_notice( $content, $new_version ) {
+        // Output Upgrade Notice.
+        $matches        = null;
+        $regexp         = '~==\s*Upgrade Notice\s*==\s*=\s*(.*)\s*=(.*)(=\s*' . preg_quote( DOKAN_PLUGIN_VERSION ) . '\s*=|$)~Uis';
+        $upgrade_notice = '';
+
+        if ( preg_match( $regexp, $content, $matches ) ) {
+            $notices = (array) preg_split( '~[\r\n]+~', trim( $matches[2] ) );
+
+            // Convert the full version strings to minor versions.
+            $notice_version_parts  = explode( '.', trim( $matches[1] ) );
+            $current_version_parts = explode( '.', DOKAN_PLUGIN_VERSION );
+
+            if ( 3 !== sizeof( $notice_version_parts ) ) {
+                return;
+            }
+
+            $notice_version  = $notice_version_parts[0] . '.' . $notice_version_parts[1];
+            $current_version = $current_version_parts[0] . '.' . $current_version_parts[1];
+
+            // Check the latest stable version and ignore trunk.
+            if ( version_compare( $current_version, $notice_version, '<' ) ) {
+
+                $upgrade_notice .= '</p><p id="dokan-plugin-upgrade-notice">';
+
+                foreach ( $notices as $index => $line ) {
+                    $upgrade_notice .= preg_replace( '~\[([^\]]*)\]\(([^\)]*)\)~', '<a href="${2}">${1}</a>', $line );
+                }
+            }
+        }
+
+        return wp_kses_post( $upgrade_notice );
     }
 
 }

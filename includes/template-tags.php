@@ -487,8 +487,6 @@ function dokan_store_category_delete_transient( $post_id ) {
 add_action( 'delete_post', 'dokan_store_category_delete_transient' );
 add_action( 'save_post', 'dokan_store_category_delete_transient' );
 
-
-
 function dokan_seller_reg_form_fields() {
     $postdata = $_POST;
     $role = isset( $postdata['role'] ) ? $postdata['role'] : 'customer';
@@ -501,7 +499,7 @@ function dokan_seller_reg_form_fields() {
     ) );
 }
 
-add_action( 'register_form', 'dokan_seller_reg_form_fields' );
+add_action( 'woocommerce_register_form', 'dokan_seller_reg_form_fields' );
 
 if ( !function_exists( 'dokan_seller_not_enabled_notice' ) ) :
 

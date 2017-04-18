@@ -150,7 +150,7 @@ A. Yes, that's how Dokan works. In every sales, you can cut a commission from a 
 A. Obviously, you can use this on a single seller site to give them a nice front-end experience.
 
 = Q. How to upgrade to the Pro version?
-A. You just delete the free version and install and activate the pro version. Nothing complicated! All your data will be safe on the database and some extra features will be added. You can even ask the support team to help you to migrate.
+A. Just install and activate the PRO version without deleting the free plugin. All your data will be safe on the database and some extra features will be added. If you feel something may go wrong, please consult with our [support](https://wedevs.com/contact/) staff first.
 
 == Screenshots ==
 
@@ -175,6 +175,19 @@ A. You just delete the free version and install and activate the pro version. No
 19. Frontend &rarr; Individual Seller Store-3
 
 == Changelog ==
+
+v2.6.0 -> April 18, 2017
+---------------------
+- [new] Made dokan compatible with WC 3.0
+- [new] Store listing design updated with city added
+- [tweak] Store listing banner image streched for full view
+- [fix] Variations attribute issue fixed
+- [fix] Sub-order not created for multiple seller is fixed
+- [fix] Seller dashboard product and order listing showing notices fixed
+- [fix] Seller new product add page showing notices fixed
+- [fix] Saving digital product data with WC 3.0
+- [fix] Saving variation product data with WC 3.0
+- [fix] Registration form now working with WC 3.0
 
 v2.5.7 -> March 30, 2017
 ----------------------
@@ -395,4 +408,5 @@ Initial version released
 
 == Upgrade Notice ==
 
-Nothing here
+= 2.6.0 =
+**Important Update** This update is compatible with WooCommerce 3.0. Make sure to backup and read full [changelog](https://docs.wedevs.com/docs/dokan/changelog/) for more details.
