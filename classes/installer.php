@@ -33,8 +33,7 @@ class Dokan_Installer {
         if ( ! $was_installed_before ) {
             set_transient( '_dokan_setup_page_redirect', true, 30 );
         }
-        
-        add_action( 'in_plugin_update_message-dokan-lite/dokan.php', array( __CLASS__, 'in_plugin_update_message' ) );
+
     }
 
     /**
@@ -336,19 +335,19 @@ class Dokan_Installer {
 
         dbDelta( $sql );
     }
-    
+
     /**
      * Show plugin changes from upgrade notice
-     * 
+     *
      * @since 2.5.8
-     * 
+     *
      */
     public static function in_plugin_update_message( $args ) {
         $transient_name = 'dokan_upgrade_notice_' . $args['Version'];
 
-        if ( false === ( $upgrade_notice = get_transient( $transient_name ) ) ) {
+        $upgrade_notice = get_transient( $transient_name );
+        if ( ! $upgrade_notice ) {
             $response = wp_safe_remote_get( 'https://plugins.svn.wordpress.org/dokan-lite/trunk/readme.txt' );
-
             if ( ! is_wp_error( $response ) && ! empty( $response['body'] ) ) {
                 $upgrade_notice = self::parse_update_notice( $response['body'], $args['new_version'] );
                 set_transient( $transient_name, $upgrade_notice, DAY_IN_SECONDS );
@@ -357,12 +356,12 @@ class Dokan_Installer {
 
         echo wp_kses_post( $upgrade_notice );
     }
-    
+
     /**
      * Parse upgrade notice from readme.txt file.
      *
      * @since 2.5.8
-     * 
+     *
      * @param  string $content
      * @param  string $new_version
      * @return string
@@ -390,7 +389,7 @@ class Dokan_Installer {
             // Check the latest stable version and ignore trunk.
             if ( version_compare( $current_version, $notice_version, '<' ) ) {
 
-                $upgrade_notice .= '</p><p class="dokan_plugin_upgrade_notice">';
+                $upgrade_notice .= '</p><p id="dokan-plugin-upgrade-notice">';
 
                 foreach ( $notices as $index => $line ) {
                     $upgrade_notice .= preg_replace( '~\[([^\]]*)\]\(([^\)]*)\)~', '<a href="${2}">${1}</a>', $line );
