@@ -45,46 +45,49 @@ class Dokan_Template_Shortcodes {
      */
     public function load_template_files() {
         global $wp;
-
+        
         if ( ! function_exists( 'WC' ) ) {
             return sprintf( __( 'Please install <a href="%s"><strong>WooCommerce</strong></a> plugin first', 'dokan-lite' ), 'http://wordpress.org/plugins/woocommerce/' );
         }
+        
+        ob_start();
 
         if ( isset( $wp->query_vars['products'] ) ) {
             dokan_get_template_part( 'products/products' );
-            return;
+            return ob_get_clean();
         }
 
         if ( isset( $wp->query_vars['new-product'] ) ) {
             do_action( 'dokan_render_new_product_template', $wp->query_vars );
-            return;
+            return ob_get_clean();
         }
 
         if ( isset( $wp->query_vars['orders'] ) ) {
             dokan_get_template_part( 'orders/orders' );
-            return;
+            return ob_get_clean();
         }
 
         if ( isset( $wp->query_vars['withdraw'] ) ) {
             dokan_get_template_part( 'withdraw/withdraw' );
-            return;
+            return ob_get_clean();
         }
 
         if ( isset( $wp->query_vars['settings'] ) ) {
             dokan_get_template_part('settings/store');
-            return;
+            return ob_get_clean();
         }
 
         if ( isset( $wp->query_vars['page'] ) ) {
             dokan_get_template_part( 'dashboard/dashboard' );
-            return;
+            return ob_get_clean();
         }
         if ( isset( $wp->query_vars['edit-account'] ) ) {
             dokan_get_template_part( 'dashboard/edit-account' );
-            return;
+            return ob_get_clean();
         }
-
+        
         do_action( 'dokan_load_custom_template', $wp->query_vars );
+  
     }
 
     /**
