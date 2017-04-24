@@ -371,6 +371,11 @@ function dokan_sync_insert_order( $order_id ) {
     $net_amount         = apply_filters( 'dokan_order_net_amount', $net_amount, $order );
 
     dokan_delete_sync_duplicate_order( $order_id, $seller_id );
+    
+    // make sure order status contains "wc-" prefix
+    if ( stripos( $order_status, 'wc-' ) === false ) {
+        $order_status = 'wc-' . $order_status;
+    }
 
     $wpdb->insert( $wpdb->prefix . 'dokan_orders',
         array(
@@ -569,7 +574,12 @@ function dokan_sync_order_table( $order_id ) {
     $admin_commission   = dokan_get_admin_commission_by( $order, $seller_id );
     $net_amount         = $order_total - $admin_commission;
     $net_amount     = apply_filters( 'dokan_sync_order_net_amount', $net_amount, $order );
-
+    
+    // make sure order status contains "wc-" prefix
+    if ( stripos( $order_status, 'wc-' ) === false ) {
+        $order_status = 'wc-' . $order_status;
+    }
+    
     $wpdb->insert( $wpdb->prefix . 'dokan_orders',
         array(
             'order_id'     => $order_id,
