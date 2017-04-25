@@ -805,7 +805,7 @@ function dokan_get_seller_earnings( $seller_id, $start_date = '', $end_date = ''
         $earnings = $earnings + dokan_get_seller_amount_from_order( $order->order_id );
     }
 
-    return $earnings;
+    return apply_filters( 'dokan_get_seller_earnings', $earnings, $seller_id );
 }
 
 /**
