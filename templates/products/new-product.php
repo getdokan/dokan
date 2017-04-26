@@ -118,7 +118,7 @@
 
                                             <div class="dokan-input-group">
                                                 <span class="dokan-input-group-addon"><?php echo get_woocommerce_currency_symbol(); ?></span>
-                                                <input type="number" class="dokan-form-control" name="_regular_price" placeholder="0.00" min="0" step="any">
+                                                <input type="number" class="dokan-form-control" name="_regular_price" placeholder="0.00" value="<?php echo dokan_posted_input('_regular_price') ?>" min="0" step="any">
                                             </div>
                                         </div>
 
@@ -131,7 +131,7 @@
 
                                             <div class="dokan-input-group">
                                                 <span class="dokan-input-group-addon"><?php echo get_woocommerce_currency_symbol(); ?></span>
-                                                <input type="number" class="dokan-form-control" name="_sale_price" placeholder="0.00" min="0" step="any">
+                                                <input type="number" class="dokan-form-control" name="_sale_price" placeholder="0.00" value="<?php echo dokan_posted_input('_sale_price') ?>" min="0" step="any">
                                             </div>
                                         </div>
                                     </div>
@@ -140,14 +140,14 @@
                                         <div class="content-half-part from">
                                             <div class="dokan-input-group">
                                                 <span class="dokan-input-group-addon"><?php _e( 'From', 'dokan-lite' ); ?></span>
-                                                <input type="text" name="_sale_price_dates_from" class="dokan-form-control datepicker sale_price_dates_from" value="" maxlength="10" pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])" placeholder="YYYY-MM-DD">
+                                                <input type="text" name="_sale_price_dates_from" class="dokan-form-control datepicker sale_price_dates_from" maxlength="10" value="<?php echo dokan_posted_input('_sale_price_dates_from') ?>" pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])" placeholder="YYYY-MM-DD">
                                             </div>
                                         </div>
 
                                         <div class="content-half-part to">
                                             <div class="dokan-input-group">
                                                 <span class="dokan-input-group-addon"><?php _e( 'To', 'dokan-lite' ); ?></span>
-                                                <input type="text" name="_sale_price_dates_to" class="dokan-form-control datepicker sale_price_dates_to" value="" maxlength="10" pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])" placeholder="YYYY-MM-DD">
+                                                <input type="text" name="_sale_price_dates_to" class="dokan-form-control datepicker sale_price_dates_to" value="<?php echo dokan_posted_input('_sale_price_dates_to') ?>" maxlength="10" pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])" placeholder="YYYY-MM-DD">
                                             </div>
                                         </div>
                                     </div><!-- .sale-schedule-container -->
@@ -228,7 +228,7 @@
 
                         <div class="dokan-form-group">
                             <label for="post_content" class="control-label"><?php _e( 'Description', 'dokan-lite' ) ?> <i class="fa fa-question-circle tips" data-title="<?php _e( 'Add your product description', 'dokan-lite' ) ?>" aria-hidden="true"></i></label>
-                            <?php wp_editor( '', 'post_content', array('editor_height' => 50, 'quicktags' => false, 'media_buttons' => false, 'teeny' => true, 'editor_class' => 'post_content') ); ?>
+                            <?php wp_editor( dokan_posted_textarea( 'post_content' ), 'post_content', array('editor_height' => 50, 'quicktags' => false, 'media_buttons' => false, 'teeny' => true, 'editor_class' => 'post_content') ); ?>
                         </div>
 
                         <?php do_action( 'dokan_new_product_form' ); ?>
