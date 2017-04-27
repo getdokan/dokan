@@ -161,6 +161,7 @@
                                     <div class="dokan-form-group">
 
                                         <?php
+                                        $selected_cat  = dokan_posted_input( 'product_cat' );
                                         $category_args =  array(
                                             'show_option_none' => __( '- Select a category -', 'dokan-lite' ),
                                             'hierarchical'     => 1,
@@ -171,7 +172,7 @@
                                             'title_li'         => '',
                                             'class'            => 'product_cat dokan-form-control dokan-select2',
                                             'exclude'          => '',
-                                            'selected'         => Dokan_Template_Products::$product_cat,
+                                            'selected'         => $selected_cat,
                                         );
 
                                         wp_dropdown_categories( apply_filters( 'dokan_product_cat_dropdown_args', $category_args ) );
@@ -180,8 +181,11 @@
                                 <?php elseif ( dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) == 'multiple' ): ?>
                                     <div class="dokan-form-group">
                                         <?php
-                                        $term = array();
+                                        
                                         include_once DOKAN_LIB_DIR.'/class.taxonomy-walker.php';
+                                        
+                                        $selected_cat  = dokan_posted_input( 'product_cat', true );
+                                        
                                         $drop_down_category = wp_dropdown_categories( array(
                                             'show_option_none' => __( '', 'dokan-lite' ),
                                             'hierarchical'     => 1,
@@ -192,7 +196,7 @@
                                             'title_li'         => '',
                                             'class'            => 'product_cat dokan-form-control dokan-select2',
                                             'exclude'          => '',
-                                            'selected'         => $term,
+                                            'selected'         => $selected_cat,
                                             'echo'             => 0,
                                             'walker'           => new DokanTaxonomyWalker()
                                         ) );
@@ -205,6 +209,9 @@
                                 <div class="dokan-form-group">
                                     <?php
                                     require_once DOKAN_LIB_DIR.'/class.taxonomy-walker.php';
+                                    
+                                    $selected_tag   = dokan_posted_input( 'product_tag', true );
+                                    
                                     $drop_down_tags = wp_dropdown_categories( array(
                                         'show_option_none' => __( '', 'dokan-lite' ),
                                         'hierarchical'     => 1,
@@ -215,7 +222,7 @@
                                         'title_li'         => '',
                                         'class'            => 'product_tags dokan-form-control dokan-select2',
                                         'exclude'          => '',
-                                        'selected'         => array(),
+                                        'selected'         => $selected_tag,
                                         'echo'             => 0,
                                         'walker'           => new DokanTaxonomyWalker()
                                     ) );
