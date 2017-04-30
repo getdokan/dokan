@@ -17,7 +17,14 @@
                 <?php echo $product->get_image(); ?>
                 <span class="product-title"><?php echo $product->get_title(); ?></span>
             </a>
-            <?php if ( ! empty( $show_rating ) ) echo $product->get_rating_html(); ?>
+
+            <!-- For WC < 3.0.0  backward compatibility  -->
+            <?php if ( version_compare( WC_VERSION, '2.7', '>' ) ) : ?>
+                <?php if ( ! empty( $show_rating ) ) echo wc_get_rating_html( $product->get_average_rating() ); ?>
+            <?php else: ?>
+                <?php if ( ! empty( $show_rating ) ) echo $product->get_rating_html(); ?>
+            <?php endif ?>
+
             <?php echo $product->get_price_html(); ?>
         </li>
         <?php endwhile; ?>
