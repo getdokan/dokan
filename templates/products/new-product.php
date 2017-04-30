@@ -162,7 +162,6 @@
 
                                         <?php
                                         $selected_cat  = dokan_posted_input( 'product_cat' );
-                                        $selected_cat  = empty( $selected_cat ) ? array() : $selected_cat;
                                         $category_args =  array(
                                             'show_option_none' => __( '- Select a category -', 'dokan-lite' ),
                                             'hierarchical'     => 1,
