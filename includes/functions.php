@@ -613,8 +613,8 @@ function dokan_get_product_types( $status = '' ) {
  * @param string $key
  * @return string
  */
-function dokan_posted_input( $key,$array = false ) {
-    
+function dokan_posted_input( $key, $array = false ) {
+
     //If array value is submitted return array
     if ( $array && isset( $_POST[$key] ) ) {
         return $_POST[$key];

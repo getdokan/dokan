@@ -72,8 +72,8 @@
 
         saleSchedule: function() {
             var $wrap = $(this).closest( '.dokan-product-field-content', 'div, table' );
-
             $(this).hide();
+
             $wrap.find('.cancel_sale_schedule').show();
             $wrap.find('.sale_price_dates_fields').show();
 
@@ -778,16 +778,16 @@
         });
 
         $( '.product-edit-container' ).on( 'click', '.sale_schedule', function() {
-            var $wrap = $( '.product-edit-container, div, table' );
-
+            var $wrap = $(this).closest( '.product-edit-container, div.dokan-product-variation-itmes, table' );
             $( this ).hide();
             $wrap.find( '.cancel_sale_schedule' ).show();
             $wrap.find( '.sale_price_dates_fields' ).show();
 
             return false;
         });
+
         $( '.product-edit-container' ).on( 'click', '.cancel_sale_schedule', function() {
-            var $wrap = $( '.product-edit-container, div, table' );
+            var $wrap = $( '.product-edit-container, div.dokan-product-variation-itmes, table' );
 
             $( this ).hide();
             $wrap.find( '.sale_schedule' ).show();

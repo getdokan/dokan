@@ -182,12 +182,12 @@
                                 <?php elseif ( dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) == 'multiple' ): ?>
                                     <div class="dokan-form-group">
                                         <?php
-                                        
+
                                         include_once DOKAN_LIB_DIR.'/class.taxonomy-walker.php';
-                                        
+
                                         $selected_cat  = dokan_posted_input( 'product_cat', true );
                                         $selected_cat  = empty( $selected_cat ) ? array() : $selected_cat;
-                                        
+
                                         $drop_down_category = wp_dropdown_categories( array(
                                             'show_option_none' => __( '', 'dokan-lite' ),
                                             'hierarchical'     => 1,
@@ -211,10 +211,10 @@
                                 <div class="dokan-form-group">
                                     <?php
                                     require_once DOKAN_LIB_DIR.'/class.taxonomy-walker.php';
-                                    
+
                                     $selected_tag   = dokan_posted_input( 'product_tag', true );
                                     $selected_tag  = empty( $selected_tag ) ? array() : $selected_tag;
-                                    
+
                                     $drop_down_tags = wp_dropdown_categories( array(
                                         'show_option_none' => __( '', 'dokan-lite' ),
                                         'hierarchical'     => 1,
