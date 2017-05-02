@@ -29,7 +29,9 @@ function dokan_process_product_meta( $post_id ) {
     $_POST['_visibility'] = isset( $_POST['_visibility'] ) ? $_POST['_visibility'] : '';
     $_POST['_purchase_note'] = isset( $_POST['_purchase_note'] ) ? $_POST['_purchase_note'] : '';
 
+
     // Set visibiliy for WC 3.0.0+
+    $terms = array();
     switch ( $_POST['_visibility'] ) {
         case 'hidden' :
             $terms[] = 'exclude-from-search';

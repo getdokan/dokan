@@ -592,8 +592,6 @@ if ( ! $from_shortcode ) {
                                             <option value="<?php echo $name; ?>" <?php selected( $_visibility, $name ); ?>><?php echo $label; ?></option>
                                         <?php endforeach ?>
                                     </select>
-
-
                                 </div>
 
                                 <div class="dokan-clearfix"></div>
