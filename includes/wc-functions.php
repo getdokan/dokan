@@ -29,6 +29,23 @@ function dokan_process_product_meta( $post_id ) {
     $_POST['_visibility'] = isset( $_POST['_visibility'] ) ? $_POST['_visibility'] : '';
     $_POST['_purchase_note'] = isset( $_POST['_purchase_note'] ) ? $_POST['_purchase_note'] : '';
 
+    // Set visibiliy for WC 3.0.0+
+    switch ( $_POST['_visibility'] ) {
+        case 'hidden' :
+            $terms[] = 'exclude-from-search';
+            $terms[] = 'exclude-from-catalog';
+            break;
+        case 'catalog' :
+            $terms[] = 'exclude-from-search';
+            break;
+        case 'search' :
+            $terms[] = 'exclude-from-catalog';
+            break;
+    }
+
+    wp_set_post_terms( $post_id, $terms, 'product_visibility', false );
+    update_post_meta( $post_id, '_visibility', stripslashes( $_POST['_visibility'] ) );
+
     // Update post meta
     if ( isset( $_POST['_regular_price'] ) ) {
         update_post_meta( $post_id, '_regular_price', ( $_POST['_regular_price'] === '' ) ? '' : wc_format_decimal( $_POST['_regular_price'] ) );
@@ -51,7 +68,6 @@ function dokan_process_product_meta( $post_id ) {
         update_post_meta( $post_id, '_purchase_note', wp_kses_post( stripslashes( $_POST['_purchase_note'] ) ) );
     }
 
-    update_post_meta( $post_id, '_visibility', stripslashes( $_POST['_visibility'] ) );
 
     // Unique SKU
     $sku     = get_post_meta( $post_id, '_sku', true );
@@ -223,7 +239,6 @@ function dokan_process_product_meta( $post_id ) {
         update_post_meta( $post_id, '_sale_price_dates_from', '' );
         update_post_meta( $post_id, '_sale_price_dates_to', '' );
     }
-
 
     //enable reviews
     $comment_status = 'closed';
