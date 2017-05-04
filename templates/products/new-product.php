@@ -69,7 +69,16 @@
             $can_sell = apply_filters( 'dokan_can_post', true );
 
             if ( $can_sell ) {
-
+                $posted_img       = dokan_posted_input( 'feat_image_id' );
+                $posted_img_url   = $hide_instruction = '';
+                $hide_img_wrap    = 'dokan-hide';
+                
+                if ( !empty( $posted_img ) ) {
+                    $posted_img     = empty( $posted_img ) ? 0 : $posted_img;
+                    $posted_img_url = wp_get_attachment_url( $posted_img );
+                    $hide_instruction = 'dokan-hide';
+                    $hide_img_wrap = '';
+                }
                 if ( dokan_is_seller_enabled( get_current_user_id() ) ) { ?>
 
                     <form class="dokan-form-container" method="post">
@@ -78,15 +87,15 @@
                             <div class="content-half-part featured-image">
                                 <div class="featured-image">
                                     <div class="dokan-feat-image-upload">
-                                        <div class="instruction-inside">
-                                            <input type="hidden" name="feat_image_id" class="dokan-feat-image-id" value="0">
+                                        <div class="instruction-inside <?php echo $hide_instruction ?>">
+                                            <input type="hidden" name="feat_image_id" class="dokan-feat-image-id" value="<?php echo $posted_img ?>">
                                             <i class="fa fa-cloud-upload"></i>
                                             <a href="#" class="dokan-feat-image-btn dokan-btn"><?php _e( 'Upload Product Image', 'dokan-lite' ); ?></a>
                                         </div>
 
-                                        <div class="image-wrap dokan-hide">
+                                        <div class="image-wrap <?php echo $hide_img_wrap ?>">
                                             <a class="close dokan-remove-feat-image">&times;</a>
-                                                <img src="" alt="">
+                                                <img src="<?php echo $posted_img_url ?>" alt="">
                                         </div>
                                     </div>
                                 </div>
@@ -95,7 +104,28 @@
                                     <div class="dokan-side-body" id="dokan-product-images">
                                         <div id="product_images_container">
                                             <ul class="product_images dokan-clearfix">
+                                                <?php 
+                                                    if ( isset( $_POST['product_image_gallery'] ) ) {
+                                                        $product_images = $_POST['product_image_gallery'];
+                                                        $gallery        = explode( ',', $product_images );
 
+                                                        if ( $gallery ) {
+                                                            foreach ( $gallery as $image_id ) {
+                                                                if ( empty( $image_id ) ) {
+                                                                    continue;
+                                                                }
+
+                                                                $attachment_image = wp_get_attachment_image_src( $image_id, 'thumbnail' );
+                                                                ?>
+                                                                <li class="image" data-attachment_id="<?php echo $image_id; ?>">
+                                                                    <img src="<?php echo $attachment_image[0]; ?>" alt="">
+                                                                    <a href="#" class="action-delete" title="<?php esc_attr_e( 'Delete image', 'dokan-lite' ); ?>">&times;</a>
+                                                                </li>
+                                                                <?php
+                                                            }
+                                                        }
+                                                    }
+                                                    ?>
                                                 <li class="add-image add-product-images tips" data-title="<?php _e( 'Add gallery image', 'dokan-lite' ); ?>">
                                                     <a href="#" class="add-product-images"><i class="fa fa-plus" aria-hidden="true"></i></a>
                                                 </li>
