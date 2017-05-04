@@ -1,10 +1,10 @@
 v2.6.1 -> May 04, 2017
 ---------------------
-- [new] filter added `dokan_get_seller_earnings` 
+- [new] Filter added `dokan_get_seller_earnings`
 - [fix] `dokan-dashboard` shortcode not rendering properly
-- [fix] clear cache on vendor balance update
+- [fix] Clear cache on vendor balance update
 - [fix] Order regenerate order status issue
-- [fix] Seller wizard showing blank page
+- [fix] Vendor wizard showing blank page
 - [fix] Downloadable product grant access issue in vendor order
 - [fix] Rating display on widget not working properly
 - [fix] Single product view sales schedule issue fixed
