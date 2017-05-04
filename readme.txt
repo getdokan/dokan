@@ -3,7 +3,7 @@ Contributors: tareq1988, wedevs, rafsuntaskin, sabbir1991
 Donate Link: http://tareq.co/donate/
 Tags: woocommerce, multivendor, multi-vendor, paypal, shop, vendor, seller, store, sell, online, amazon, dokan, ebay, Etsy, multi seller, multi store, multi vendor, multi vendors, multistore, multivendor, product vendor, product vendors, vendor, vendor system, vendors, wc market place, wc marketplace, wc vendors, woo vendors, woocommerce market place, woocommerce marketplace, woocommerce multi vendor,  commission rate, e-commerce, ebay, ecommerce, yith, yithemes
 Requires at least: 4.4
-Tested up to: 4.7.3
+Tested up to: 4.7.4
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -175,6 +175,22 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 == Changelog ==
+
+v2.6.1 -> May 04, 2017
+---------------------
+- [new] Filter added `dokan_get_seller_earnings`
+- [fix] `dokan-dashboard` shortcode not rendering properly
+- [fix] Clear cache on vendor balance update
+- [fix] Order regenerate order status issue
+- [fix] Vendor wizard showing blank page
+- [fix] Downloadable product grant access issue in vendor order
+- [fix] Rating display on widget not working properly
+- [fix] Single product view sales schedule issue fixed
+- [fix] Vendor Product visibility and catalog issue fixed
+- [fix] Date range issue fixed for vendor balance
+- [tweak] Refill submitted values on error while adding new product
+- [tweak] Updated posted value handler function
+- [tweak] Hide view action on product listing if status is pending
 
 v2.6.0 -> April 18, 2017
 ---------------------
