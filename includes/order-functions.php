@@ -89,8 +89,10 @@ function dokan_get_seller_orders_by_date( $start_date, $end_date, $seller_id = f
     global $wpdb;
 
     $seller_id = ! $seller_id ? get_current_user_id() : intval( $seller_id );
+    
+    $end_date   = date( 'Y-m-d 00:00:00', strtotime( $end_date ) );
+    $end_date   = date( 'Y-m-d h:i:s', strtotime( $end_date . '-1 minute' ) );
     $start_date = date( 'Y-m-d', strtotime( $start_date ) );
-    $end_date = date( 'Y-m-d', strtotime( $end_date ) );
 
     $cache_key = md5( 'dokan-seller-orders-' . $end_date . '-' . $end_date. '-' . $seller_id );
     $orders = wp_cache_get( $cache_key, 'dokan-lite' );
