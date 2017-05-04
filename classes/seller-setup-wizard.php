@@ -107,7 +107,6 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
             <title><?php _e( 'Vendor &rsaquo; Setup Wizard', 'dokan-lite' ); ?></title>
             <?php wp_print_scripts( 'wc-setup' ); ?>
             <?php do_action( 'admin_print_styles' ); ?>
-            <?php do_action( 'admin_head' ); ?>
             <style type="text/css">
                 .wc-setup-steps {
                     justify-content: center;

@@ -613,9 +613,14 @@ function dokan_get_product_types( $status = '' ) {
  * @param string $key
  * @return string
  */
-function dokan_posted_input( $key ) {
-    $value = isset( $_POST[$key] ) ? trim( $_POST[$key] ) : '';
+function dokan_posted_input( $key, $array = false ) {
 
+    //If array value is submitted return array
+    if ( $array && isset( $_POST[$key] ) ) {
+        return $_POST[$key];
+    }
+
+    $value = isset( $_POST[$key] ) ? trim( $_POST[$key] ) : '';
     return esc_attr( $value );
 }
 

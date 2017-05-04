@@ -19,6 +19,7 @@ if( isset( $post->ID ) && $post->ID && $post->post_type == 'product' ) {
     $post_content = $post->post_content;
     $post_excerpt = $post->post_excerpt;
     $post_status = $post->post_status;
+    $product        = wc_get_product( $post_id );
 }
 
 if ( isset( $_GET['product_id'] ) ) {
@@ -43,7 +44,7 @@ $_sale_price_dates_to   = !empty( $_sale_price_dates_to ) ? date_i18n( 'Y-m-d', 
 $show_schedule          = false;
 
 if ( !empty( $_sale_price_dates_from ) && !empty( $_sale_price_dates_to ) ) {
-    $show_schedule = true;
+$show_schedule          = true;
 }
 
 $_featured              = get_post_meta( $post_id, '_featured', true );
@@ -51,15 +52,17 @@ $_downloadable          = get_post_meta( $post_id, '_downloadable', true );
 $_virtual               = get_post_meta( $post_id, '_virtual', true );
 $_stock                 = get_post_meta( $post_id, '_stock', true );
 $_stock_status          = get_post_meta( $post_id, '_stock_status', true );
-$_visibility            = get_post_meta( $post_id, '_visibility', true );
+
 $_enable_reviews        = $post->comment_status;
 $is_downloadable        = ( 'yes' == $_downloadable ) ? true : false;
 $is_virtual             = ( 'yes' == $_virtual ) ? true : false;
 $_sold_individually     = get_post_meta( $post_id, '_sold_individually', true );
 
-$terms                   = wp_get_object_terms( $post_id, 'product_type' );
-$product_type            = ( ! empty( $terms ) ) ? sanitize_title( current( $terms )->name ): 'simple';
-$variations_class        = ($product_type == 'simple' ) ? 'dokan-hide' : '';
+$terms                  = wp_get_object_terms( $post_id, 'product_type' );
+$product_type           = ( ! empty( $terms ) ) ? sanitize_title( current( $terms )->name ): 'simple';
+$variations_class       = ($product_type == 'simple' ) ? 'dokan-hide' : '';
+$_visibility            = ( version_compare( WC_VERSION, '2.7', '>' ) ) ? $product->get_catalog_visibility() : get_post_meta( $post_id, '_visibility', true );
+$visibility_options     = dokan_get_product_visibility_options();
 
 if ( ! $from_shortcode ) {
     get_header();
@@ -584,12 +587,11 @@ if ( ! $from_shortcode ) {
 
                                 <div class="dokan-form-group content-half-part">
                                     <label for="_visibility" class="form-label"><?php _e( 'Visibility', 'dokan-lite' ); ?></label>
-                                    <?php dokan_post_input_box( $post_id, '_visibility', array( 'options' => array(
-                                        'visible' => __( 'Catalog or Search', 'dokan-lite' ),
-                                        'catalog' => __( 'Catalog', 'dokan-lite' ),
-                                        'search'  => __( 'Search', 'dokan-lite' ),
-                                        'hidden'  => __( 'Hidden', 'dokan ')
-                                    ) ), 'select' ); ?>
+                                    <select name="_visibility" id="_visibility" class="dokan-form-control">
+                                        <?php foreach ( $visibility_options as $name => $label ): ?>
+                                            <option value="<?php echo $name; ?>" <?php selected( $_visibility, $name ); ?>><?php echo $label; ?></option>
+                                        <?php endforeach ?>
+                                    </select>
                                 </div>
 
                                 <div class="dokan-clearfix"></div>

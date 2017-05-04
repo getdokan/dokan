@@ -333,6 +333,22 @@ function dokan_product_output_variations() {
     <?php
 }
 
+/**
+ * Get product visibility options.
+ *
+ * @since 3.0.0
+ * @return array
+ */
+function dokan_get_product_visibility_options() {
+    return apply_filters( 'dokan_product_visibility_options', array(
+        'visible' => __( 'Visible', 'dokan-lite' ),
+        'catalog' => __( 'Catalog', 'dokan-lite' ),
+        'search'  => __( 'Search', 'dokan-lite' ),
+        'hidden'  => __( 'Hidden', 'dokan-lite' ),
+    ) );
+}
+
+
 
 
 

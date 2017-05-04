@@ -118,6 +118,7 @@
                                     $product_query->the_post();
 
                                     $tr_class = ($post->post_status == 'pending' ) ? ' class="danger"' : '';
+                                    $view_class = ($post->post_status == 'pending' ) ? 'dokan-hide' : '';
                                     $product = wc_get_product( $post->ID );
                                     ?>
                                     <tr<?php echo $tr_class; ?>>
@@ -129,8 +130,8 @@
 
                                         <div class="row-actions">
                                             <span class="edit"><a href="<?php echo dokan_edit_product_url( $post->ID ); ?>"><?php _e( 'Edit', 'dokan-lite' ); ?></a> | </span>
-                                            <span class="delete"><a onclick="return confirm('Are you sure?');" href="<?php echo wp_nonce_url( add_query_arg( array( 'action' => 'dokan-delete-product', 'product_id' => $post->ID ), dokan_get_navigation_url('products') ), 'dokan-delete-product' ); ?>"><?php _e( 'Delete Permanently', 'dokan-lite' ); ?></a> | </span>
-                                            <span class="view"><a href="<?php echo get_permalink( dokan_get_prop( $product, 'id' ) ); ?>" rel="permalink"><?php _e( 'View', 'dokan-lite' ); ?></a></span>
+                                            <span class="delete"><a onclick="return confirm('Are you sure?');" href="<?php echo wp_nonce_url( add_query_arg( array( 'action' => 'dokan-delete-product', 'product_id' => $post->ID ), dokan_get_navigation_url('products') ), 'dokan-delete-product' ); ?>"><?php _e( 'Delete Permanently', 'dokan-lite' ); ?></a>  </span>
+                                            <span class="view <?php echo $view_class ?>"> | <a href="<?php echo get_permalink( dokan_get_prop( $product, 'id' ) ); ?>" rel="permalink"><?php _e( 'View', 'dokan-lite' ); ?></a></span>
                                         </div>
                                     </td>
                                     <td class="post-status" data-title="<?php _e( 'Status', 'dokan-lite' ); ?>">
