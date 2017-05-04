@@ -1,3 +1,19 @@
+v2.6.1 -> May 04, 2017
+---------------------
+- [new] filter added `dokan_get_seller_earnings` 
+- [fix] `dokan-dashboard` shortcode not rendering properly
+- [fix] clear cache on vendor balance update
+- [fix] Order regenerate order status issue
+- [fix] Seller wizard showing blank page
+- [fix] Downloadable product grant access issue in vendor order
+- [fix] Rating display on widget not working properly
+- [fix] Single product view sales schedule issue fixed
+- [fix] Vendor Product visibility and catalog issue fixed
+- [fix] Date range issue fixed for vendor balance
+- [tweak] Refill submitted values on error while adding new product
+- [tweak] Updated posted value handler function
+- [tweak] Hide view action on product listing if status is pending
+
 v2.6.0 -> April 18, 2017
 ---------------------
 - [new] Made dokan compatible with WC 3.0
