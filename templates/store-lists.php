@@ -57,6 +57,7 @@
     (function($){
         $(document).ready(function(){
             var form = $('.dokan-seller-search-form');
+            var xhr;
             var timer = null;
 
             form.on('keyup', '#search', function() {
@@ -73,10 +74,14 @@
                     clearTimeout(timer);
                 }
 
+                if ( xhr ) {
+                    xhr.abort();
+                }
+
                 timer = setTimeout(function() {
                     form.find('.dokan-overlay').show();
 
-                    $.post(dokan.ajaxurl, data, function(response) {
+                    xhr = $.post(dokan.ajaxurl, data, function(response) {
                         if (response.success) {
                             form.find('.dokan-overlay').hide();
 
