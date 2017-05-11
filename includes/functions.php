@@ -1301,60 +1301,6 @@ function dokan_get_avatar( $avatar, $id_or_email, $size, $default, $alt ) {
 add_filter( 'get_avatar', 'dokan_get_avatar', 99, 5 );
 
 /**
- * Get best sellers list
- *
- * @param  integer $limit
- * @return array
- */
-function dokan_get_best_sellers( $limit = 5 ) {
-    global  $wpdb;
-
-    $cache_key = 'dokan-best-seller-' . $limit;
-    $seller = wp_cache_get( $cache_key, 'widget' );
-
-    if ( false === $seller ) {
-
-        $qry = "SELECT seller_id, display_name, SUM( net_amount ) AS total_sell
-            FROM {$wpdb->prefix}dokan_orders AS o,{$wpdb->prefix}users AS u
-            WHERE o.seller_id = u.ID
-            GROUP BY o.seller_id
-            ORDER BY total_sell DESC LIMIT ".$limit;
-
-        $seller = $wpdb->get_results( $qry );
-        wp_cache_set( $cache_key, $seller, 'widget' );
-    }
-
-    return $seller;
-}
-
-/**
- * Get featured sellers list
- *
- * @param  integer $limit
- * @return array
- */
-function dokan_get_feature_sellers( $count = 5 ) {
-    $args = array(
-        'role'         => 'seller',
-        'meta_key'     => 'dokan_feature_seller',
-        'meta_value'   => 'yes',
-        'offset'       => $count
-    );
-    $users = get_users( $args );
-
-    $args = array(
-        'role'         => 'administrator',
-        'meta_key'     => 'dokan_feature_seller',
-        'meta_value'   => 'yes',
-        'offset'       => $count
-    );
-    $admins = get_users( $args );
-
-    $sellers = array_merge( $admins, $users );
-    return $sellers;
-}
-
-/**
  * Get navigation url for the dokan dashboard
  *
  * @param  string $name endpoint name

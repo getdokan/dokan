@@ -556,8 +556,8 @@ function dokan_seller_meta_box( $post ) {
     $user_query = new WP_User_Query( array( 'role' => 'seller' ) );
     $sellers    = $user_query->get_results();
     ?>
-    <label class="screen-reader-text" for="post_author_override"><?php _e( 'Vendor', 'dokan-lite' ); ?></label>
-    <select name="post_author_override" id="post_author_override" class="">
+    <label class="screen-reader-text" for="dokan_product_author_override"><?php _e( 'Vendor', 'dokan-lite' ); ?></label>
+    <select name="dokan_product_author_override" id="dokan_product_author_override" class="">
         <?php if ( ! $sellers ): ?>
             <option value="<?php echo $admin_user->ID ?>"><?php echo $admin_user->display_name; ?></option>
         <?php else: ?>
@@ -570,12 +570,59 @@ function dokan_seller_meta_box( $post ) {
      <?php
 }
 
+/**
+ * Remove default author metabox and added
+ * new one for dokan seller
+ *
+ * @since  1.0.0
+ *
+ * @return void
+ */
 function dokan_add_seller_meta_box(){
     remove_meta_box( 'authordiv', 'product', 'core' );
     add_meta_box('sellerdiv', __('Vendor', 'dokan-lite' ), 'dokan_seller_meta_box', 'product', 'normal', 'core');
 }
 
 add_action( 'add_meta_boxes', 'dokan_add_seller_meta_box' );
+
+/**
+* Override product vendor ID from admin panel
+*
+* @since 2.6.2
+*
+* @return void
+**/
+function dokan_override_product_author_by_admin( $product_id, $post ) {
+    $product = wc_get_product( $product_id );
+    $seller_id = !empty( $_POST['dokan_product_author_override'] ) ? $_POST['dokan_product_author_override'] : '-1';
+
+    if ( $seller_id < 0 ) {
+        return;
+    }
+
+    dokan_override_product_author( $product, $seller_id );
+}
+
+add_action( 'woocommerce_process_product_meta', 'dokan_override_product_author_by_admin', 12, 2 );
+
+/**
+ * Dokan override author ID from admin
+ *
+ * @since  2.6.2
+ *
+ * @param  object $product
+ * @param  integer $seller_id
+ *
+ * @return void
+ */
+function dokan_override_product_author( $product, $seller_id ){
+    wp_update_post( array(
+        'ID'          => $product->get_id(),
+        'post_author' => $seller_id
+    ) );
+
+    do_action( 'dokan_after_override_product_author', $product, $seller_id );
+}
 
 /**
  * Generate Earning report By seller in admin area
