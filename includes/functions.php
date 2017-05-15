@@ -100,7 +100,8 @@ function dokan_is_seller_dashboard() {
  */
 function dokan_redirect_login() {
     if ( ! is_user_logged_in() ) {
-        wp_redirect( dokan_get_page_url( 'myaccount', 'woocommerce' ) );
+        $url = apply_filters( 'dokan_redirect_login', dokan_get_page_url( 'myaccount', 'woocommerce' ) );
+        wp_redirect( $url );
         exit;
     }
 }
@@ -768,7 +769,7 @@ function dokan_get_page_url( $page, $context = 'dokan' ) {
         $page_id = dokan_get_option( $page, 'dokan_pages' );
     }
 
-    return get_permalink( $page_id );
+    return apply_filters( 'dokan_get_page_url', get_permalink( $page_id ), $page_id, $context );
 }
 
 /**

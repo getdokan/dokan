@@ -639,7 +639,7 @@ final class WeDevs_Dokan {
             return;
         }
 
-        if ( is_page( $page_id ) ) {
+        if ( is_page( $page_id ) || apply_filters( 'dokan_force_page_redirect', false, $page_id ) ) {
             dokan_redirect_login();
             dokan_redirect_if_not_seller();
         }
