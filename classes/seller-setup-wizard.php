@@ -178,7 +178,7 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
             <?php
                 if ( ! empty( $this->custom_logo ) ) {
             ?>
-                <h1 id="wc-logo"><a href="<?php echo home_url() ?>"><img src="<?php echo $this->custom_logo; ?>" alt="Dokan" /></a></h1>
+                <h1 id="wc-logo"><a href="<?php echo home_url() ?>"><img src="<?php echo $this->custom_logo; ?>" alt="<?php echo get_bloginfo( 'name' ) ?>" /></a></h1>
             <?php
                 } else {
                     echo '<h1 id="wc-logo">' . get_bloginfo( 'name' ) . '</h1>';
