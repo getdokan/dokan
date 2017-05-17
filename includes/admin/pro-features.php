@@ -90,10 +90,18 @@
     <style type="text/css">
         .pro-feature {
             width: 48%;
-            float: left;
+            float: none;
             margin-right: 20px;
             margin-bottom: 20px;
             border: 1px solid #E6E6E6;
+            display: inline-block;
+            vertical-align: top;
+        }
+        
+        @media screen and (max-width: 782px) {
+	        .pro-feature {
+		        width: 100%;
+	        }
         }
 
         .pro-feature:nth-child( 2n+1 ) {
@@ -102,7 +110,7 @@
 
         .pro-feature-thumb img {
             width: 100%;
-            height: 250px;
+            height: auto;
         }
 
         .pro-detail {
