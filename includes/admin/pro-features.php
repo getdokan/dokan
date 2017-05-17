@@ -1,6 +1,6 @@
 <div class="wrap">
     <h2><?php _e( 'Dokan - Pro Features', 'dokan-lite' ); ?></h2>
-
+    <hr>
     <?php
     $pro_features = array(
         array(
@@ -97,14 +97,14 @@
             display: inline-block;
             vertical-align: top;
         }
-        
+
         @media screen and (max-width: 782px) {
 	        .pro-feature {
 		        width: 100%;
 	        }
         }
 
-        .pro-feature:nth-child( 2n+1 ) {
+        .pro-feature:nth-child(2n) {
             margin-right: 0px;
         }
 
