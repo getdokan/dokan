@@ -173,10 +173,7 @@ $order    = new WC_Order( $order_id );
                                     <select id="order_status" name="order_status" class="form-control">
                                         <?php
                                         foreach ( $statuses as $status => $label ) {
-                                            // if( $status == 'wc-refunded' ) {
-                                            //     continue;
-                                            // }
-                                            echo '<option value="' . esc_attr( $status ) . '" ' . selected( $status, dokan_get_prop( $order, 'status' ), false ) . '>' . esc_html__( $label, 'dokan-lite' ) . '</option>';
+                                            echo '<option value="' . esc_attr( $status ) . '" ' . selected( $status, 'wc-' . dokan_get_prop( $order, 'status' ), false ) . '>' . esc_html__( $label, 'dokan-lite' ) . '</option>';
                                         }
                                         ?>
                                     </select>
@@ -247,7 +244,7 @@ $order    = new WC_Order( $order_id );
                         $args = array(
                             'post_id' => $order_id,
                             'approve' => 'approve',
-                            'type' => 'order_note'
+                            'type'    => 'order_note'
                         );
 
                         remove_filter( 'comments_clauses', array( 'WC_Comments', 'exclude_order_comments' ), 10, 1 );

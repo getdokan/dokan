@@ -90,22 +90,23 @@ if ( $user_orders ) {
                         $actions = array();
 
                         if ( dokan_get_option( 'order_status_change', 'dokan_selling', 'on' ) == 'on' ) {
-
-                            if ( in_array( dokan_get_prop( $the_order, 'status' ), array('wc-pending', 'wc-on-hold') ) )
+                            if ( in_array( dokan_get_prop( $the_order, 'status' ), array( 'pending', 'on-hold' ) ) ) {
                                 $actions['processing'] = array(
                                     'url' => wp_nonce_url( admin_url( 'admin-ajax.php?action=dokan-mark-order-processing&order_id=' . dokan_get_prop( $the_order, 'id' ) ), 'dokan-mark-order-processing' ),
                                     'name' => __( 'Processing', 'dokan-lite' ),
                                     'action' => "processing",
                                     'icon' => '<i class="fa fa-clock-o">&nbsp;</i>'
                                 );
+                            }
 
-                            if ( in_array( dokan_get_prop( $the_order, 'status' ), array('wc-pending', 'wc-on-hold', 'wc-processing') ) )
+                            if ( in_array( dokan_get_prop( $the_order, 'status' ), array( 'pending', 'on-hold', 'processing' ) ) ) {
                                 $actions['complete'] = array(
                                     'url' => wp_nonce_url( admin_url( 'admin-ajax.php?action=dokan-mark-order-complete&order_id=' . dokan_get_prop( $the_order, 'id' ) ), 'dokan-mark-order-complete' ),
                                     'name' => __( 'Complete', 'dokan-lite' ),
                                     'action' => "complete",
                                     'icon' => '<i class="fa fa-check">&nbsp;</i>'
                                 );
+                            }
 
                         }
 
