@@ -1,8 +1,8 @@
-v2.6.1 -> May 18, 2017
+v2.6.2 -> May 18, 2017
 ---------------------
 - [new] Dynamic state select option for Vendor Setup Wizard
 - [fix] Change Product Seller from admin not working properly for variation products
-- [fix] Store listing search not showing same result if submitted 
+- [fix] Store listing search not showing same result if submitted
 - [fix] Store listing search sending multiple requests on AJAX
 - [fix] Feature products, Best selling products and Top rated seller queries fixed
 - [fix] Fixed Order status label issue in seller order listing
