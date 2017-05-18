@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 		<small><?php if ( $_product && $_product->get_sku() ) echo '<br>' . esc_html( $_product->get_sku() ); ?></small>
 
-		<?php 
+		<?php
 		global $wpdb;
 
 		if ( $metadata = dokan_get_metadata( $order, $item_id ) ) {
@@ -76,7 +76,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
             if ( isset( $item['line_total'] ) ) {
                 if ( isset( $item['line_subtotal'] ) && $item['line_subtotal'] != $item['line_total'] ) echo '<del>' . wc_price( $item['line_subtotal'] ) . '</del> ';
 
-                echo wc_price( $item['line_total'] );
+                echo wc_price( $item['line_total'], array( 'currency' => dokan_replace_func( 'get_order_currency', 'get_currency', $order ) ) );
             }
         ?>
     </td>

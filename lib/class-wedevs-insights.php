@@ -233,7 +233,7 @@ class WeDevs_Insights {
      * @return boolean
      */
     private function is_local_server() {
-        return in_array( $_SERVER['REMOTE_ADDR'], array( '127.0.0.1', '::1' ) );
+        return in_array( dokan_get_client_ip(), array( '127.0.0.1', '::1' ) );
     }
 
     /**

@@ -573,22 +573,46 @@ add_filter( 'pre_user_display_name', 'dokan_seller_displayname' );
  * @return \WP_Query
  */
 function dokan_get_featured_products( $per_page = 9) {
-    $featured_query = new WP_Query( apply_filters( 'dokan_get_featured_products', array(
+    $product_visibility_term_ids = wc_get_product_visibility_term_ids();
+
+    $args = array(
         'posts_per_page'      => $per_page,
         'post_type'           => 'product',
         'ignore_sticky_posts' => 1,
-        'meta_query'          => array(
+        'meta_query'          => array(),
+        'tax_query'           => array(
+            'relation' => 'AND',
+        ),
+    );
+
+    if ( version_compare( WC_VERSION, '2.7', '>' ) ) {
+        $args['tax_query'][] = array(
+            'taxonomy' => 'product_visibility',
+            'field'    => 'term_taxonomy_id',
+            'terms'    => is_search() ? $product_visibility_term_ids['exclude-from-search'] : $product_visibility_term_ids['exclude-from-catalog'],
+            'operator' => 'NOT IN',
+        );
+
+        $args['tax_query'][] = array(
+            'taxonomy' => 'product_visibility',
+            'field'    => 'term_taxonomy_id',
+            'terms'    => $product_visibility_term_ids['featured'],
+        );
+    } else {
+        $args['meta_query'] = array(
             array(
                 'key'     => '_visibility',
-                'value'   => array('catalog', 'visible'),
+                'value'   => array( 'catalog', 'visible' ),
                 'compare' => 'IN'
             ),
             array(
                 'key'   => '_featured',
                 'value' => 'yes'
             )
-        )
-    ) ) );
+        );
+    }
+
+    $featured_query = new WP_Query( apply_filters( 'dokan_get_featured_products', $args ) );
 
     return $featured_query;
 }
@@ -602,18 +626,30 @@ function dokan_get_featured_products( $per_page = 9) {
  * @return \WP_Query
  */
 function dokan_get_latest_products( $per_page = 9 , $seller_id = '' ) {
+    $product_visibility_term_ids = wc_get_product_visibility_term_ids();
+
     $args = array(
         'posts_per_page'      => $per_page,
         'post_type'           => 'product',
         'ignore_sticky_posts' => 1,
-        'meta_query'          => array(
+    );
+
+    if ( version_compare( WC_VERSION, '2.7', '>' ) ) {
+        $args['tax_query'] = array(
+            'taxonomy' => 'product_visibility',
+            'field'    => 'term_taxonomy_id',
+            'terms'    => is_search() ? $product_visibility_term_ids['exclude-from-search'] : $product_visibility_term_ids['exclude-from-catalog'],
+            'operator' => 'NOT IN',
+        );
+    } else {
+        $args['meta_query']  = array(
             array(
                 'key'     => '_visibility',
                 'value'   => array('catalog', 'visible'),
                 'compare' => 'IN'
             )
-        ),
-    );
+        );
+    }
 
     if ( !empty( $seller_id ) ) {
         $args['author'] = (int) $seller_id;
@@ -633,6 +669,7 @@ function dokan_get_latest_products( $per_page = 9 , $seller_id = '' ) {
  * @return \WP_Query
  */
 function dokan_get_best_selling_products( $per_page = 8, $seller_id = '' ) {
+    $product_visibility_term_ids = wc_get_product_visibility_term_ids();
 
     $args = array(
         'post_type'           => 'product',
@@ -640,15 +677,25 @@ function dokan_get_best_selling_products( $per_page = 8, $seller_id = '' ) {
         'ignore_sticky_posts' => 1,
         'posts_per_page'      => $per_page,
         'meta_key'            => 'total_sales',
-        'orderby'             => 'meta_value_num',
-        'meta_query'          => array(
+        'orderby'             => 'meta_value_num'
+    );
+
+    if ( version_compare( WC_VERSION, '2.7', '>' ) ) {
+        $args['tax_query'] = array(
+            'taxonomy' => 'product_visibility',
+            'field'    => 'term_taxonomy_id',
+            'terms'    => is_search() ? $product_visibility_term_ids['exclude-from-search'] : $product_visibility_term_ids['exclude-from-catalog'],
+            'operator' => 'NOT IN',
+        );
+    } else {
+        $args['meta_query']  = array(
             array(
                 'key'     => '_visibility',
-                'value'   => array( 'catalog', 'visible' ),
+                'value'   => array('catalog', 'visible'),
                 'compare' => 'IN'
-            ),
-        )
-    );
+            )
+        );
+    }
 
     if ( !empty( $seller_id ) ) {
         $args['author'] = (int) $seller_id;
@@ -686,20 +733,31 @@ function check_more_seller_product_tab(  ) {
  * @return \WP_Query
  */
 function dokan_get_top_rated_products( $per_page = 8 , $seller_id = '') {
+    $product_visibility_term_ids = wc_get_product_visibility_term_ids();
 
     $args = array(
         'post_type'             => 'product',
         'post_status'           => 'publish',
         'ignore_sticky_posts'   => 1,
-        'posts_per_page'        => $per_page,
-        'meta_query'            => array(
-            array(
-                'key'           => '_visibility',
-                'value'         => array('catalog', 'visible'),
-                'compare'       => 'IN'
-            )
-        )
+        'posts_per_page'        => $per_page
     );
+
+    if ( version_compare( WC_VERSION, '2.7', '>' ) ) {
+        $args['tax_query'] = array(
+            'taxonomy' => 'product_visibility',
+            'field'    => 'term_taxonomy_id',
+            'terms'    => is_search() ? $product_visibility_term_ids['exclude-from-search'] : $product_visibility_term_ids['exclude-from-catalog'],
+            'operator' => 'NOT IN',
+        );
+    } else {
+        $args['meta_query']  = array(
+            array(
+                'key'     => '_visibility',
+                'value'   => array('catalog', 'visible'),
+                'compare' => 'IN'
+            )
+        );
+    }
 
     if ( !empty( $seller_id ) ) {
         $args['author'] = (int) $seller_id;

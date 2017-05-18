@@ -296,28 +296,28 @@ class Dokan_Admin_Settings {
                 'admin_access' => array(
                     'name'    => 'admin_access',
                     'label'   => __( 'Admin area access', 'dokan-lite' ),
-                    'desc'    => __( 'Disable vendors and customers from accessing wp-admin area', 'dokan-lite' ),
+                    'desc'    => __( 'Disable Vendors and Customers from accessing the wp-admin dashboard area', 'dokan-lite' ),
                     'type'    => 'checkbox',
                     'default' => 'on'
                 ),
                 'custom_store_url' => array(
                     'name'    => 'custom_store_url',
                     'label'   => __( 'Vendor Store URL', 'dokan-lite' ),
-                    'desc'    => sprintf( __( 'Define seller store URL (%s<strong>[this-text]</strong>/[seller-name])', 'dokan-lite' ), site_url( '/' ) ),
+                    'desc'    => sprintf( __( 'Define the seller store URL (%s<strong>[this-text]</strong>/[seller-name])', 'dokan-lite' ), site_url( '/' ) ),
                     'default' => 'store',
                     'type'    => 'text',
                 ),
                 'seller_enable_terms_and_conditions' => array(
                     'name'    => 'seller_enable_terms_and_conditions',
                     'label'   => __( 'Terms and Conditions', 'dokan-lite' ),
-                    'desc'    => __( 'Enable terms and conditions for vendor store', 'dokan-lite' ),
+                    'desc'    => __( 'Enable Terms and Conditions for vendor stores', 'dokan-lite' ),
                     'type'    => 'checkbox',
                     'default' => 'off'
                  ),
                 'extra_fee_recipient' => array(
                     'name'    => 'extra_fee_recipient',
                     'label'   => __( 'Extra Fee Recipient', 'dokan-lite' ),
-                    'desc'    => __( 'Extra fees like shipping and tax will go to', 'dokan-lite' ),
+                    'desc'    => __( 'Should extra fees, such as Shipping and Tax, go to the Vendor or the Admin?', 'dokan-lite' ),
                     'type'    => 'select',
                     'options' => array( 'seller' => __( 'Vendor', 'dokan-lite' ), 'admin' => __( 'Admin', 'dokan-lite' ) ),
                     'default' => 'seller'
@@ -325,20 +325,20 @@ class Dokan_Admin_Settings {
                 'store_map'                  => array(
                     'name'    => 'store_map',
                     'label'   => __( 'Show Map on Store Page', 'dokan-lite' ),
-                    'desc'    => __( 'Enable showing Store location map on store left sidebar', 'dokan-lite' ),
+                    'desc'    => __( 'Enable a Google Map of the Store Location in the store sidebar', 'dokan-lite' ),
                     'type'    => 'checkbox',
                     'default' => 'on'
                 ),
                 'gmap_api_key'               => array(
                     'name'  => 'gmap_api_key',
-                    'label' => __( 'Google Map API key', 'dokan-lite' ),
+                    'label' => __( 'Google Map API Key', 'dokan-lite' ),
                     'desc'  => __( '<a href="https://developers.google.com/maps/documentation/javascript/" target="_blank">API Key</a> is needed to display map on store page', 'dokan-lite' ),
                     'type'  => 'text',
                 ),
                 'contact_seller'             => array(
                     'name'    => 'contact_seller',
                     'label'   => __( 'Show Contact Form on Store Page', 'dokan-lite' ),
-                    'desc'    => __( 'Enable showing contact vendor form on store left sidebar', 'dokan-lite' ),
+                    'desc'    => __( 'Enable Vendor Contact Form in the store sidebar', 'dokan-lite' ),
                     'type'    => 'checkbox',
                     'default' => 'on'
                 ),
@@ -354,28 +354,28 @@ class Dokan_Admin_Settings {
                 'new_seller_enable_selling' => array(
                     'name'    => 'new_seller_enable_selling',
                     'label'   => __( 'New Vendor Product Upload', 'dokan-lite' ),
-                    'desc'    => __( 'Allow newly registered vendors to upload products', 'dokan-lite' ),
+                    'desc'    => __( 'Allow newly registered vendors to add products', 'dokan-lite' ),
                     'type'    => 'checkbox',
                     'default' => 'on'
                 ),
                 'seller_percentage' => array(
                     'name'    => 'seller_percentage',
                     'label'   => __( 'Vendor Commission %', 'dokan-lite' ),
-                    'desc'    => __( 'How much amount (%) a vendor will get from each order', 'dokan-lite' ),
+                    'desc'    => __( 'How much (%) a vendor will get from each order', 'dokan-lite' ),
                     'default' => '90',
                     'type'    => 'text',
                 ),
                 'order_status_change' => array(
                     'name'    => 'order_status_change',
                     'label'   => __( 'Order Status Change', 'dokan-lite' ),
-                    'desc'    => __( 'Vendor can change order status', 'dokan-lite' ),
+                    'desc'    => __( 'Vendor can update order status', 'dokan-lite' ),
                     'type'    => 'checkbox',
                     'default' => 'on'
                 ),
                 'disable_product_popup' => array(
                     'name'    => 'disable_product_popup',
                     'label'   => __( 'Disable Product Popup', 'dokan-lite' ),
-                    'desc'    => __( 'Disable add new product popup view', 'dokan-lite' ),
+                    'desc'    => __( 'Disable add new product in popup view', 'dokan-lite' ),
                     'type'    => 'checkbox',
                     'default' => 'off'
                 ),
@@ -392,7 +392,7 @@ class Dokan_Admin_Settings {
                 'withdraw_limit' => array(
                     'name'    => 'withdraw_limit',
                     'label'   => __( 'Minimum Withdraw Limit', 'dokan-lite' ),
-                    'desc'    => __( 'Minimum balance required to make a withdraw request ( Leave it blank to set no limits )', 'dokan-lite' ),
+                    'desc'    => __( 'Minimum balance required to make a withdraw request. Leave blank to set no minimum limits.', 'dokan-lite' ),
                     'default' => '50',
                     'type'    => 'text',
                 ),

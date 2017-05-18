@@ -178,7 +178,7 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
             <?php
                 if ( ! empty( $this->custom_logo ) ) {
             ?>
-                <h1 id="wc-logo"><a href="<?php echo home_url() ?>"><img src="<?php echo $this->custom_logo; ?>" alt="Dokan" /></a></h1>
+                <h1 id="wc-logo"><a href="<?php echo home_url() ?>"><img src="<?php echo $this->custom_logo; ?>" alt="<?php echo get_bloginfo( 'name' ) ?>" /></a></h1>
             <?php
                 } else {
                     echo '<h1 id="wc-logo">' . get_bloginfo( 'name' ) . '</h1>';
@@ -234,7 +234,7 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
         $states        = $country_obj->states;
         ?>
         <h1><?php _e( 'Store Setup', 'dokan-lite' ); ?></h1>
-        <form method="post">
+        <form method="post" class="dokan-seller-setup-form">
             <table class="form-table">
                 <tr>
                     <th scope="row"><label for="store_ppp"><?php _e( 'Store Product Per Page', 'dokan-lite' ); ?></label></th>
@@ -267,14 +267,14 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
                 <tr>
                     <th scope="row"><label for="address[country]"><?php _e( 'Country', 'dokan-lite' ); ?></label></th>
                     <td>
-                        <select name="address[country]" class="wc-enhanced-select" id="address[country]">
+                        <select name="address[country]" class="wc-enhanced-select country_to_state" id="address[country]">
                             <?php dokan_country_dropdown( $countries, $address_country, false ); ?>
                         </select>
                     </td>
                 </tr>
-                    <th scope="row"><label for="address[state]"><?php _e( 'State', 'dokan-lite' ); ?></label></th>
+                    <th scope="row"><label for="calc_shipping_state"><?php _e( 'State', 'dokan-lite' ); ?></label></th>
                     <td>
-                        <input type="text" id="address[state]" name="address[state]" value="<?php echo $address_state; ?>" />
+                        <input type="text" id="calc_shipping_state" name="address[state]" value="<?php echo $address_state; ?>" / placeholder="<?php esc_attr_e( 'State Name', 'dokan-lite' ); ?>">
                     </td>
                 </tr>
                 <tr>
@@ -292,6 +292,83 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
                 <?php wp_nonce_field( 'dokan-seller-setup' ); ?>
             </p>
         </form>
+
+        <script>
+            (function($){
+                var states = <?php echo json_encode( $states ); ?>;
+
+                $('body').on( 'change', 'select.country_to_state, input.country_to_state', function() {
+                    // Grab wrapping element to target only stateboxes in same 'group'
+                    var $wrapper    = $( this ).closest('form.dokan-seller-setup-form');
+
+                    var country     = $( this ).val(),
+                        $statebox   = $wrapper.find( '#calc_shipping_state' ),
+                        $parent     = $statebox.closest('tr'),
+                        input_name  = $statebox.attr( 'name' ),
+                        input_id    = $statebox.attr( 'id' ),
+                        value       = $statebox.val(),
+                        placeholder = $statebox.attr( 'placeholder' ) || $statebox.attr( 'data-placeholder' ) || '',
+                        state_option_text = '<?php echo esc_attr__( 'Select an option&hellip;', 'dokan-lite' ); ?>';
+
+                    if ( states[ country ] ) {
+                        if ( $.isEmptyObject( states[ country ] ) ) {
+                            $statebox.closest('tr').hide().find( '.select2-container' ).remove();
+                            $statebox.replaceWith( '<input type="hidden" class="hidden" name="' + input_name + '" id="' + input_id + '" value="" placeholder="' + placeholder + '" />' );
+
+                            $( document.body ).trigger( 'country_to_state_changed', [ country, $wrapper ] );
+
+                        } else {
+
+                            var options = '',
+                                state = states[ country ];
+
+                            for( var index in state ) {
+                                if ( state.hasOwnProperty( index ) ) {
+                                    options = options + '<option value="' + index + '">' + state[ index ] + '</option>';
+                                }
+                            }
+
+                            $statebox.closest('tr').show();
+
+                            if ( $statebox.is( 'input' ) ) {
+                                // Change for select
+                                $statebox.replaceWith( '<select name="' + input_name + '" id="' + input_id + '" class="wc-enhanced-select state_select" data-placeholder="' + placeholder + '"></select>' );
+                                $statebox = $wrapper.find( '#calc_shipping_state' );
+                            }
+
+                            $statebox.html( '<option value="">' + state_option_text + '</option>' + options );
+                            $statebox.val( value ).change();
+
+                            $( document.body ).trigger( 'country_to_state_changed', [country, $wrapper ] );
+
+                        }
+                    } else {
+                        if ( $statebox.is( 'select' ) ) {
+
+                            $parent.show().find( '.select2-container' ).remove();
+                            $statebox.replaceWith( '<input type="text" class="input-text" name="' + input_name + '" id="' + input_id + '" placeholder="' + placeholder + '" />' );
+
+                            $( document.body ).trigger( 'country_to_state_changed', [country, $wrapper ] );
+
+                        } else if ( $statebox.is( 'input[type="hidden"]' ) ) {
+
+                            $parent.show().find( '.select2-container' ).remove();
+                            $statebox.replaceWith( '<input type="text" class="input-text" name="' + input_name + '" id="' + input_id + '" placeholder="' + placeholder + '" />' );
+
+                            $( document.body ).trigger( 'country_to_state_changed', [country, $wrapper ] );
+
+                        }
+                    }
+
+                    $( document.body ).trigger( 'country_to_state_changing', [country, $wrapper ] );
+                    $('.wc-enhanced-select').select2();
+                });
+
+                $( ':input.country_to_state' ).change();
+
+            })(jQuery)
+
+        </script>
         <?php
     }
 

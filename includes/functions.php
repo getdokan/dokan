@@ -100,7 +100,8 @@ function dokan_is_seller_dashboard() {
  */
 function dokan_redirect_login() {
     if ( ! is_user_logged_in() ) {
-        wp_redirect( dokan_get_page_url( 'myaccount', 'woocommerce' ) );
+        $url = apply_filters( 'dokan_redirect_login', dokan_get_page_url( 'myaccount', 'woocommerce' ) );
+        wp_redirect( $url );
         exit;
     }
 }
@@ -425,22 +426,21 @@ function dokan_get_new_post_status() {
 function dokan_get_client_ip() {
     $ipaddress = '';
 
-    if ( getenv( 'HTTP_CLIENT_IP' ) )
-        $ipaddress = getenv( 'HTTP_CLIENT_IP' );
-    else if ( getenv( 'HTTP_X_FORWARDED_FOR' ) )
-        $ipaddress = getenv( 'HTTP_X_FORWARDED_FOR' & quot );
-    else if ( getenv( 'HTTP_X_FORWARDED' ) )
-        $ipaddress = getenv( 'HTTP_X_FORWARDED' );
-    else if ( getenv( 'HTTP_FORWARDED_FOR' ) )
-        $ipaddress = getenv( 'HTTP_FORWARDED_FOR' );
-    else if ( getenv( 'HTTP_X_CLUSTER_CLIENT_IP' ) )
-        $ipaddress = getenv( 'HTTP_FORWARDED_FOR' );
-    else if ( getenv( 'HTTP_FORWARDED' ) )
-        $ipaddress = getenv( 'HTTP_FORWARDED' );
-    else if ( getenv( 'REMOTE_ADDR' ) )
-        $ipaddress = getenv( 'REMOTE_ADDR' );
-    else
+    if ( isset($_SERVER['HTTP_CLIENT_IP'] ) ) {
+        $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+    } else if ( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
+        $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    } else if ( isset( $_SERVER['HTTP_X_FORWARDED'] ) ) {
+        $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+    } else if ( isset( $_SERVER['HTTP_FORWARDED_FOR'] ) ) {
+        $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+    } else if ( isset( $_SERVER['HTTP_FORWARDED'] ) ) {
+        $ipaddress = $_SERVER['HTTP_FORWARDED'];
+    } else if ( isset( $_SERVER['REMOTE_ADDR'] ) ) {
+        $ipaddress = $_SERVER['REMOTE_ADDR'];
+    } else {
         $ipaddress = 'UNKNOWN';
+    }
 
     return $ipaddress;
 }
@@ -769,7 +769,7 @@ function dokan_get_page_url( $page, $context = 'dokan' ) {
         $page_id = dokan_get_option( $page, 'dokan_pages' );
     }
 
-    return get_permalink( $page_id );
+    return apply_filters( 'dokan_get_page_url', get_permalink( $page_id ), $page_id, $context );
 }
 
 /**
@@ -1300,60 +1300,6 @@ function dokan_get_avatar( $avatar, $id_or_email, $size, $default, $alt ) {
 }
 
 add_filter( 'get_avatar', 'dokan_get_avatar', 99, 5 );
-
-/**
- * Get best sellers list
- *
- * @param  integer $limit
- * @return array
- */
-function dokan_get_best_sellers( $limit = 5 ) {
-    global  $wpdb;
-
-    $cache_key = 'dokan-best-seller-' . $limit;
-    $seller = wp_cache_get( $cache_key, 'widget' );
-
-    if ( false === $seller ) {
-
-        $qry = "SELECT seller_id, display_name, SUM( net_amount ) AS total_sell
-            FROM {$wpdb->prefix}dokan_orders AS o,{$wpdb->prefix}users AS u
-            WHERE o.seller_id = u.ID
-            GROUP BY o.seller_id
-            ORDER BY total_sell DESC LIMIT ".$limit;
-
-        $seller = $wpdb->get_results( $qry );
-        wp_cache_set( $cache_key, $seller, 'widget' );
-    }
-
-    return $seller;
-}
-
-/**
- * Get featured sellers list
- *
- * @param  integer $limit
- * @return array
- */
-function dokan_get_feature_sellers( $count = 5 ) {
-    $args = array(
-        'role'         => 'seller',
-        'meta_key'     => 'dokan_feature_seller',
-        'meta_value'   => 'yes',
-        'offset'       => $count
-    );
-    $users = get_users( $args );
-
-    $args = array(
-        'role'         => 'administrator',
-        'meta_key'     => 'dokan_feature_seller',
-        'meta_value'   => 'yes',
-        'offset'       => $count
-    );
-    $admins = get_users( $args );
-
-    $sellers = array_merge( $admins, $users );
-    return $sellers;
-}
 
 /**
  * Get navigation url for the dokan dashboard

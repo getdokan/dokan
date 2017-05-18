@@ -7,7 +7,6 @@
  * @return array
  */
 function dokan_product_seller_info( $item_data, $cart_item ) {
-    
     $seller_id =  get_post_field( 'post_author', $cart_item['data']->get_id() );
     $seller_info = dokan_get_store_info( $seller_id );
 
@@ -20,7 +19,6 @@ function dokan_product_seller_info( $item_data, $cart_item ) {
 }
 
 add_filter( 'woocommerce_get_item_data', 'dokan_product_seller_info', 10, 2 );
-
 
 /**
  * Adds a seller tab in product single page
@@ -41,7 +39,6 @@ function dokan_seller_product_tab( $tabs) {
 
 add_filter( 'woocommerce_product_tabs', 'dokan_seller_product_tab' );
 
-
 /**
  * Prints seller info in product single page
  *
@@ -60,7 +57,6 @@ function dokan_product_seller_tab( $val ) {
         'store_info' => $store_info,
     ) );
 }
-
 
 /**
  * Show sub-orders on a parent order if available
