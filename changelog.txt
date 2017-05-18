@@ -1,3 +1,14 @@
+v2.6.1 -> May 18, 2017
+---------------------
+- [new] Dynamic state select option for Vendor Setup Wizard
+- [fix] Change Product Seller from admin not working properly for variation products
+- [fix] Store listing search not showing same result if submitted 
+- [fix] Store listing search sending multiple requests on AJAX
+- [fix] Feature products, Best selling products and Top rated seller queries fixed
+- [fix] Fixed Order status label issue in seller order listing
+- [tweak] Added currency argument for wc_price
+- [tweak] Various helper text labels updated
+
 v2.6.1 -> May 04, 2017
 ---------------------
 - [new] Filter added `dokan_get_seller_earnings`
