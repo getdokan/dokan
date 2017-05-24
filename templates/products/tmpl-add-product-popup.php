@@ -155,7 +155,7 @@
                     </div>
 
                     <div class="dokan-form-group">
-                        <textarea name="post_excerpt" id="" class="dokan-form-control" rows="5" placeholder="<?php _e( 'Enter some short description about this product...') ?>"></textarea>
+                        <textarea name="post_excerpt" id="" class="dokan-form-control" rows="5" placeholder="<?php _e( 'Enter some short description about this product...' , 'dokan-lite' ) ?>"></textarea>
                     </div>
                 </div>
             </div>
