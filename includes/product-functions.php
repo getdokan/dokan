@@ -57,7 +57,7 @@ function dokan_save_product( $args ) {
         'post_title'   => sanitize_text_field( $data['post_title'] ),
         'post_content' => $data['post_content'],
         'post_excerpt' => $data['post_excerpt'],
-    ) );
+    ), $data );
 
     $product_id = wp_insert_post( $post_data );
 
