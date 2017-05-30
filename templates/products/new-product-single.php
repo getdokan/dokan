@@ -277,7 +277,7 @@ if ( ! $from_shortcode ) {
                                         wp_dropdown_categories( apply_filters( 'dokan_product_cat_dropdown_args', $category_args ) );
                                     ?>
                                         <div class="dokan-product-cat-alert dokan-hide">
-                                            <?php _e('Please choose a category!', 'dokan-lite'); ?>
+                                            <?php _e('Please choose a category!', 'dokan-lite' ); ?>
                                         </div>
                                     </div>
                                 <?php elseif ( dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) == 'multiple' ): ?>
@@ -287,7 +287,7 @@ if ( ! $from_shortcode ) {
                                         $term = array();
                                         $term = wp_get_post_terms( $post_id, 'product_cat', array( 'fields' => 'ids') );
                                         include_once DOKAN_LIB_DIR.'/class.taxonomy-walker.php';
-                                        $drop_down_category = wp_dropdown_categories( array(
+                                        $drop_down_category = wp_dropdown_categories( apply_filters( 'dokan_product_cat_dropdown_args', array(
                                             'show_option_none' => __( '', 'dokan-lite' ),
                                             'hierarchical'     => 1,
                                             'hide_empty'       => 0,
@@ -297,10 +297,11 @@ if ( ! $from_shortcode ) {
                                             'title_li'         => '',
                                             'class'            => 'product_cat dokan-form-control dokan-select2',
                                             'exclude'          => '',
+                                            'include'          => array( 14,15,19),
                                             'selected'         => $term,
                                             'echo'             => 0,
                                             'walker'           => new DokanTaxonomyWalker()
-                                        ) );
+                                        ) ) );
 
                                         echo str_replace( '<select', '<select data-placeholder="'.__( 'Select product category', 'dokan-lite' ).'" multiple="multiple" ', $drop_down_category );
                                         ?>
