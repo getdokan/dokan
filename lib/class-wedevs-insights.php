@@ -620,7 +620,7 @@ class WeDevs_Insights {
                 <div class="wd-dr-modal-footer">
                     <a href="#" class="dont-bother-me"><?php _e( 'I rather wouldn\'t say', 'domain' ); ?></a>
                     <button class="button-secondary"><?php _e( 'Submit & Deactivate', 'domain' ); ?></button>
-                    <button class="button-primary"><?php _e( 'Canel', 'domain' ); ?></button>
+                    <button class="button-primary"><?php _e( 'Cancel', 'domain' ); ?></button>
                 </div>
             </div>
         </div>
