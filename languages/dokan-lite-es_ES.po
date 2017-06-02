@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Dokan (Lite) - Multi-vendor Marketplace 2.6.2\n"
 "Report-Msgid-Bugs-To: http://wedevs.com/support/forum/theme-support/dokan/\n"
-"POT-Creation-Date: 2017-06-02 11:14-0300\n"
-"PO-Revision-Date: 2017-06-02 13:38-0300\n"
+"POT-Creation-Date: 2017-06-02 16:22-0300\n"
+"PO-Revision-Date: 2017-06-02 16:22-0300\n"
 "Last-Translator: \n"
 "Language-Team: Sophivorus\n"
 "Language: es_ES\n"
@@ -74,35 +74,35 @@ msgid "Phone Number"
 msgstr "Número de teléfono"
 
 #: classes/admin-user-profile.php:191
-msgid "Payment Options : "
+msgid "Payment Options:"
 msgstr "Opciones de pago:"
 
 #: classes/admin-user-profile.php:196
-msgid "Paypal Email "
+msgid "Paypal Email"
 msgstr "Email de PayPal"
 
 #: classes/admin-user-profile.php:204
-msgid "Skrill Email "
+msgid "Skrill Email"
 msgstr "Email de Skrill"
 
 #: classes/admin-user-profile.php:213
-msgid "Bank name "
+msgid "Bank name"
 msgstr "Nombre del banco"
 
 #: classes/admin-user-profile.php:219
-msgid "Account Name "
+msgid "Account Name"
 msgstr "Nombre de la cuenta"
 
 #: classes/admin-user-profile.php:225
-msgid "Account Number "
+msgid "Account Number"
 msgstr "Número de la cuenta"
 
 #: classes/admin-user-profile.php:231
-msgid "Bank Address "
+msgid "Bank Address"
 msgstr "Dirección del banco"
 
 #: classes/admin-user-profile.php:237
-msgid "Bank Swift "
+msgid "Bank Swift"
 msgstr "Código SWIFT"
 
 #: classes/admin-user-profile.php:244 includes/admin/setup-wizard.php:88
@@ -115,7 +115,7 @@ msgstr "Permitir agregar productos"
 
 #: classes/admin-user-profile.php:252
 msgid "Enable or disable product adding capability"
-msgstr "Permitir que el vendedor agregue nuevos productos."
+msgstr "Permitir que el vendedor agregue nuevos productos"
 
 #: classes/admin-user-profile.php:257
 msgid "Publishing"
@@ -129,16 +129,16 @@ msgstr "Permitir publicar productos"
 msgid "Bypass pending, publish products directly"
 msgstr ""
 "Permitir que el vendedor publique productos directamente, sin pasar por "
-"revisión."
+"revisión"
 
 #: classes/admin-user-profile.php:270 includes/admin/admin.php:363
 #: includes/admin/setup-wizard.php:344
 msgid "Vendor Commission %"
-msgstr "Comisión del vendedor"
+msgstr "Comisión del vendedor %"
 
 #: classes/admin-user-profile.php:274
 msgid "It will overrride the default % vendor gets from each order"
-msgstr "Esto reemplaza la comisión por defecto."
+msgstr "Esto reemplaza la comisión por defecto"
 
 #: classes/admin-user-profile.php:279
 msgid "Featured vendor"
@@ -154,15 +154,15 @@ msgstr "Este vendedor será marcado como vendedor destacado."
 
 #: classes/admin-withdraw.php:190
 msgid "Requests Deleted!"
-msgstr "Pedidos borrados"
+msgstr "¡Pedidos borrados!"
 
 #: classes/admin-withdraw.php:194
 msgid "Requests Cancelled!"
-msgstr "Pedidos cancelados"
+msgstr "¡Pedidos cancelados!"
 
 #: classes/admin-withdraw.php:198
 msgid "Requests Approved!"
-msgstr "Pedidos aprobados"
+msgstr "¡Pedidos aprobados!"
 
 #: classes/admin-withdraw.php:219 classes/admin-withdraw.php:233
 msgid "User Name"
@@ -238,7 +238,7 @@ msgstr "Guardar"
 
 #: classes/admin-withdraw.php:310
 msgid "cancel"
-msgstr "Cancelar"
+msgstr "cancelar"
 
 #: classes/admin-withdraw.php:326
 msgid "No results found"
@@ -329,7 +329,7 @@ msgstr "Borrar nota"
 
 #: classes/ajax.php:531
 msgid "Error: Nonce verification failed"
-msgstr "Error: verificación fallida."
+msgstr "Error: verificación fallida"
 
 #: classes/ajax.php:621
 msgid "Image could not be processed. Please go back and try again."
@@ -353,7 +353,7 @@ msgstr "Enlace"
 
 #: classes/customizer.php:52
 msgid "Link hover"
-msgstr "Enlace (hover)"
+msgstr "Hover del enlace"
 
 #: classes/customizer.php:65
 msgid "Header Background"
@@ -369,7 +369,7 @@ msgstr "Enlace de navegación"
 
 #: classes/customizer.php:103
 msgid "Navigation Link Hover"
-msgstr "Enlace de navegación (hover)"
+msgstr "Hover del enlace de navegación"
 
 #: classes/customizer.php:116
 msgid "Footer Background"
@@ -397,7 +397,7 @@ msgstr "Enlace del widget del pie de página"
 
 #: classes/customizer.php:194
 msgid "Footer Widget link hover"
-msgstr "Enlace del widget del pie de página (hover)"
+msgstr "Hover del enlace del widget del pie de página"
 
 #: classes/email.php:106
 #, php-format
@@ -442,7 +442,7 @@ msgstr "[%s] Nuevo producto añadido"
 #: classes/email.php:419
 #, php-format
 msgid "[%s] Your product has been approved!"
-msgstr "[%s] Producto aprobado"
+msgstr "[%s] ¡Producto aprobado!"
 
 #: classes/installer.php:135 includes/admin-functions.php:52
 #: includes/admin-functions.php:559 includes/admin-functions.php:583
@@ -772,21 +772,21 @@ msgstr ""
 
 #: classes/template-withdraw.php:120
 #, php-format
-msgid "Current Balance: %s "
+msgid "Current Balance: %s"
 msgstr "Dinero disponible: %s"
 
 #: classes/template-withdraw.php:123
 #, php-format
-msgid "<br>Minimum Withdraw amount: %s "
+msgid "<br>Minimum Withdraw amount: %s"
 msgstr "<br>Cantidad mínima por extracción: %s "
 
 #: classes/template-withdraw.php:126
 #, php-format
-msgid "<br>Withdraw Threshold: %d days "
+msgid "<br>Withdraw Threshold: %d days"
 msgstr "<br>Tiempo mínimo de extracción: %d días"
 
 #: classes/template-withdraw.php:209
-msgid "Withdraw amount required "
+msgid "Withdraw amount required"
 msgstr "¿Cuánto quieres extraer?"
 
 #: classes/template-withdraw.php:212
@@ -3508,7 +3508,7 @@ msgstr "Términos y condiciones"
 
 #: templates/store.php:84
 msgid "No products were found of this vendor!"
-msgstr "No se han encontrado productos de este vendedor."
+msgstr "¡No se han encontrado productos de este vendedor!"
 
 #: templates/sub-orders.php:12
 msgid "Sub Orders"
@@ -3546,7 +3546,7 @@ msgstr "Enviar mensaje"
 
 #: templates/widgets/widget-content-product.php:33
 msgid "No products found"
-msgstr "No se han encontrado productos."
+msgstr "No se han encontrado productos"
 
 #: templates/withdraw/request-form.php:13
 msgid "Withdraw Amount"

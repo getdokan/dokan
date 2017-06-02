@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Dokan (Lite) - Multi-vendor Marketplace 2.6.2\n"
 "Report-Msgid-Bugs-To: http://wedevs.com/support/forum/theme-support/dokan/\n"
-"POT-Creation-Date: 2017-06-02 11:14-0300\n"
+"POT-Creation-Date: 2017-06-02 16:23-0300\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -79,35 +79,35 @@ msgid "Phone Number"
 msgstr ""
 
 #: classes/admin-user-profile.php:191
-msgid "Payment Options : "
+msgid "Payment Options:"
 msgstr ""
 
 #: classes/admin-user-profile.php:196
-msgid "Paypal Email "
+msgid "Paypal Email"
 msgstr ""
 
 #: classes/admin-user-profile.php:204
-msgid "Skrill Email "
+msgid "Skrill Email"
 msgstr ""
 
 #: classes/admin-user-profile.php:213
-msgid "Bank name "
+msgid "Bank name"
 msgstr ""
 
 #: classes/admin-user-profile.php:219
-msgid "Account Name "
+msgid "Account Name"
 msgstr ""
 
 #: classes/admin-user-profile.php:225
-msgid "Account Number "
+msgid "Account Number"
 msgstr ""
 
 #: classes/admin-user-profile.php:231
-msgid "Bank Address "
+msgid "Bank Address"
 msgstr ""
 
 #: classes/admin-user-profile.php:237
-msgid "Bank Swift "
+msgid "Bank Swift"
 msgstr ""
 
 #: classes/admin-user-profile.php:244 includes/admin/setup-wizard.php:88
@@ -766,21 +766,21 @@ msgstr ""
 
 #: classes/template-withdraw.php:120
 #, php-format
-msgid "Current Balance: %s "
+msgid "Current Balance: %s"
 msgstr ""
 
 #: classes/template-withdraw.php:123
 #, php-format
-msgid "<br>Minimum Withdraw amount: %s "
+msgid "<br>Minimum Withdraw amount: %s"
 msgstr ""
 
 #: classes/template-withdraw.php:126
 #, php-format
-msgid "<br>Withdraw Threshold: %d days "
+msgid "<br>Withdraw Threshold: %d days"
 msgstr ""
 
 #: classes/template-withdraw.php:209
-msgid "Withdraw amount required "
+msgid "Withdraw amount required"
 msgstr ""
 
 #: classes/template-withdraw.php:212
