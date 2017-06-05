@@ -131,7 +131,7 @@ endif;
 function dokan_product_dashboard_errors() {
     $type = isset( $_GET['message'] ) ? $_GET['message'] : '';
 
-    switch ($type) {
+    switch ( $type ) {
         case 'product_deleted':
             dokan_get_template_part( 'global/dokan-success', '', array( 'deleted' => true, 'message' => __( 'Product succesfully deleted', 'dokan-lite' ) ) );
             break;
@@ -139,6 +139,11 @@ function dokan_product_dashboard_errors() {
         case 'error':
             dokan_get_template_part( 'global/dokan-error', '', array( 'deleted' => false, 'message' =>  __( 'Something went wrong!', 'dokan-lite' ) ) );
             break;
+
+        default:
+            do_action( 'dokan_product_dashboard_errors', $type );
+            break;
+
     }
 }
 

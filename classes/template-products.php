@@ -200,7 +200,7 @@ class Dokan_Template_Products {
                         if ( $date_to && ! $date_from ) {
                             update_post_meta( $product_id, '_sale_price_dates_from', strtotime( 'NOW', current_time( 'timestamp' ) ) );
                         }
-                        
+
                         if ( '' !== $_POST['_sale_price'] && '' == $date_to && '' == $date_from ) {
                             update_post_meta( $product_id, '_price', wc_format_decimal( $_POST['_sale_price'] ) );
                         } else {
