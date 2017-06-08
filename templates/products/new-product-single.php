@@ -297,7 +297,6 @@ if ( ! $from_shortcode ) {
                                             'title_li'         => '',
                                             'class'            => 'product_cat dokan-form-control dokan-select2',
                                             'exclude'          => '',
-                                            'include'          => array( 14,15,19),
                                             'selected'         => $term,
                                             'echo'             => 0,
                                             'walker'           => new DokanTaxonomyWalker()

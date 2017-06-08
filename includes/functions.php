@@ -1821,3 +1821,12 @@ function dokan_is_valid_owner( $post_id, $user_id ) {
 
     return false;
 }
+
+add_action( 'wp', 'dokan_set_is_home_false_on_store' );
+
+function dokan_set_is_home_false_on_store() {
+    global $wp_query;
+    if ( dokan_is_store_page() ) {
+        $wp_query->is_home = false;
+    }
+}
