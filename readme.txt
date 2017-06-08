@@ -3,7 +3,7 @@ Contributors: tareq1988, wedevs, rafsuntaskin, sabbir1991
 Donate Link: http://tareq.co/donate/
 Tags: woocommerce, multivendor, multi-vendor, paypal, shop, vendor, seller, store, sell, online, amazon, dokan, ebay, Etsy, multi seller, multi store, multi vendor, multi vendors, multistore, multivendor, product vendor, product vendors, vendor, vendor system, vendors, wc market place, wc marketplace, wc vendors, woo vendors, woocommerce market place, woocommerce marketplace, woocommerce multi vendor,  commission rate, e-commerce, ebay, ecommerce, yith, yithemes
 Requires at least: 4.4
-Tested up to: 4.7.4
+Tested up to: 4.8
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -175,6 +175,14 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 == Changelog ==
+
+v2.6.3 -> June 08, 2017
+---------------------
+- [fix] Missing text domains updated
+- [fix] Featured Seller, Best Seller and Top Seller query fixed for older version of WooCommerce
+- [fix] Translation issue fixed on withdraw template
+- [fix] Store pages template conflitcs with theme home page
+- [tweak] Various other code improvements
 
 v2.6.2 -> May 18, 2017
 ---------------------

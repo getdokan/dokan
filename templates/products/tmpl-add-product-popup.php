@@ -112,7 +112,7 @@
                             <?php
                             $term = array();
                             include_once DOKAN_LIB_DIR.'/class.taxonomy-walker.php';
-                            $drop_down_category = wp_dropdown_categories( array(
+                            $drop_down_category = wp_dropdown_categories(  apply_filters( 'dokan_product_cat_dropdown_args', array(
                                 'show_option_none' => __( '', 'dokan-lite' ),
                                 'hierarchical'     => 1,
                                 'hide_empty'       => 0,
@@ -125,7 +125,7 @@
                                 'selected'         => $term,
                                 'echo'             => 0,
                                 'walker'           => new DokanTaxonomyWalker()
-                            ) );
+                            ) ) );
 
                             echo str_replace( '<select', '<select data-placeholder="'.__( 'Select product category', 'dokan-lite' ).'" multiple="multiple" ', $drop_down_category );
                             ?>
@@ -155,7 +155,7 @@
                     </div>
 
                     <div class="dokan-form-group">
-                        <textarea name="post_excerpt" id="" class="dokan-form-control" rows="5" placeholder="<?php _e( 'Enter some short description about this product...') ?>"></textarea>
+                        <textarea name="post_excerpt" id="" class="dokan-form-control" rows="5" placeholder="<?php _e( 'Enter some short description about this product...' , 'dokan-lite' ) ?>"></textarea>
                     </div>
                 </div>
             </div>

@@ -200,7 +200,7 @@ class Dokan_Template_Products {
                         if ( $date_to && ! $date_from ) {
                             update_post_meta( $product_id, '_sale_price_dates_from', strtotime( 'NOW', current_time( 'timestamp' ) ) );
                         }
-                        
+
                         if ( '' !== $_POST['_sale_price'] && '' == $date_to && '' == $date_from ) {
                             update_post_meta( $product_id, '_price', wc_format_decimal( $_POST['_sale_price'] ) );
                         } else {
@@ -266,14 +266,14 @@ class Dokan_Template_Products {
             self::$errors = apply_filters( 'dokan_can_edit_product', $errors );
 
             if ( !self::$errors ) {
-                $product_info = array(
+                $product_info = apply_filters( 'dokan_update_product_post_data', array(
                     'ID'             => $post_id,
                     'post_title'     => sanitize_text_field( $_POST['post_title'] ),
                     'post_content'   => $_POST['post_content'],
                     'post_excerpt'   => $_POST['post_excerpt'],
                     'post_status'    => isset( $_POST['post_status'] ) ? $_POST['post_status'] : 'pending',
                     'comment_status' => isset( $_POST['_enable_reviews'] ) ? 'open' : 'closed'
-                );
+                ) );
 
                 wp_update_post( $product_info );
 

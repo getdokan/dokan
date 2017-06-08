@@ -573,7 +573,7 @@ add_filter( 'pre_user_display_name', 'dokan_seller_displayname' );
  * @return \WP_Query
  */
 function dokan_get_featured_products( $per_page = 9) {
-    $product_visibility_term_ids = wc_get_product_visibility_term_ids();
+  
 
     $args = array(
         'posts_per_page'      => $per_page,
@@ -586,6 +586,7 @@ function dokan_get_featured_products( $per_page = 9) {
     );
 
     if ( version_compare( WC_VERSION, '2.7', '>' ) ) {
+        $product_visibility_term_ids = wc_get_product_visibility_term_ids();
         $args['tax_query'][] = array(
             'taxonomy' => 'product_visibility',
             'field'    => 'term_taxonomy_id',
@@ -626,7 +627,6 @@ function dokan_get_featured_products( $per_page = 9) {
  * @return \WP_Query
  */
 function dokan_get_latest_products( $per_page = 9 , $seller_id = '' ) {
-    $product_visibility_term_ids = wc_get_product_visibility_term_ids();
 
     $args = array(
         'posts_per_page'      => $per_page,
@@ -635,6 +635,9 @@ function dokan_get_latest_products( $per_page = 9 , $seller_id = '' ) {
     );
 
     if ( version_compare( WC_VERSION, '2.7', '>' ) ) {
+        
+        $product_visibility_term_ids = wc_get_product_visibility_term_ids();
+
         $args['tax_query'] = array(
             'taxonomy' => 'product_visibility',
             'field'    => 'term_taxonomy_id',
@@ -669,7 +672,6 @@ function dokan_get_latest_products( $per_page = 9 , $seller_id = '' ) {
  * @return \WP_Query
  */
 function dokan_get_best_selling_products( $per_page = 8, $seller_id = '' ) {
-    $product_visibility_term_ids = wc_get_product_visibility_term_ids();
 
     $args = array(
         'post_type'           => 'product',
@@ -681,6 +683,8 @@ function dokan_get_best_selling_products( $per_page = 8, $seller_id = '' ) {
     );
 
     if ( version_compare( WC_VERSION, '2.7', '>' ) ) {
+       
+        $product_visibility_term_ids = wc_get_product_visibility_term_ids();
         $args['tax_query'] = array(
             'taxonomy' => 'product_visibility',
             'field'    => 'term_taxonomy_id',
@@ -733,7 +737,6 @@ function check_more_seller_product_tab(  ) {
  * @return \WP_Query
  */
 function dokan_get_top_rated_products( $per_page = 8 , $seller_id = '') {
-    $product_visibility_term_ids = wc_get_product_visibility_term_ids();
 
     $args = array(
         'post_type'             => 'product',
@@ -743,6 +746,9 @@ function dokan_get_top_rated_products( $per_page = 8 , $seller_id = '') {
     );
 
     if ( version_compare( WC_VERSION, '2.7', '>' ) ) {
+
+        $product_visibility_term_ids = wc_get_product_visibility_term_ids();
+
         $args['tax_query'] = array(
             'taxonomy' => 'product_visibility',
             'field'    => 'term_taxonomy_id',

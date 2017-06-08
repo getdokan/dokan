@@ -117,13 +117,13 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
         $withdraw_limit = dokan_get_option( 'withdraw_limit', 'dokan_withdraw', -1 );
         $threshold      = dokan_get_option( 'withdraw_date_limit', 'dokan_withdraw', -1 );
 
-        $message = sprintf( __('Current Balance: %s '), $balance );
+        $message = sprintf( __('Current Balance: %s ', 'dokan-lite' ), $balance );
 
         if ( $withdraw_limit != -1 ) {
-            $message .= sprintf( __('<br>Minimum Withdraw amount: %s '), wc_price( $withdraw_limit ) );
+            $message .= sprintf( __( '<br>Minimum Withdraw amount: %s ', 'dokan-lite' ), wc_price( $withdraw_limit ) );
         }
         if ( $threshold != -1 ) {
-            $message .= sprintf( __('<br>Withdraw Threshold: %d days '), $threshold );
+            $message .= sprintf( __( '<br>Withdraw Threshold: %d days ', 'dokan-lite' ), $threshold );
         }
 
         dokan_get_template_part( 'global/dokan-warning', '', array( 'message' => $message, 'deleted' => false ) );
