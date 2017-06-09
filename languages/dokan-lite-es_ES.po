@@ -1,199 +1,196 @@
 # Copyright (C) 2017 Tareq Hasan
 # This file is distributed under the GPL2.
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan (Lite) - Multi-vendor Marketplace 2.6.3\n"
+"Project-Id-Version: Dokan (Lite) - Multi-vendor Marketplace 2.6.2\n"
 "Report-Msgid-Bugs-To: http://wedevs.com/support/forum/theme-support/dokan/\n"
-"POT-Creation-Date: 2017-06-08 20:59-0300\n"
+"POT-Creation-Date: 2017-06-08 21:02-0300\n"
+"PO-Revision-Date: 2017-06-08 21:03-0300\n"
+"Last-Translator: \n"
+"Language-Team: Sophivorus\n"
+"Language: es_ES\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2017-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "X-Generator: Poedit 2.0.1\n"
-"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
-"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
-"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
-"X-Poedit-SearchPath-0: .\n"
-"X-Poedit-SearchPathExcluded-0: *.js\n"
 
 #: classes/admin-user-profile.php:67 classes/seller-setup-wizard.php:268
 msgid "Country"
-msgstr ""
+msgstr "País"
 
 #: classes/admin-user-profile.php:71
 msgid "Select a country&hellip;"
-msgstr ""
+msgstr "Selecciona un país"
 
 #: classes/admin-user-profile.php:74
 msgid "State/County"
-msgstr ""
+msgstr "Estado o provincia"
 
 #: classes/admin-user-profile.php:75
 msgid "State/County or state code"
-msgstr ""
+msgstr " "
 
 #: classes/admin-user-profile.php:80
 msgid "Dokan Options"
-msgstr ""
+msgstr "Opciones de Dokan"
 
 #: classes/admin-user-profile.php:85
 msgid "Banner"
-msgstr ""
+msgstr "Foto de portada"
 
 #: classes/admin-user-profile.php:97 templates/settings/store-form.php:68
 msgid "Upload banner"
-msgstr ""
+msgstr "Subir foto de portada"
 
 #: classes/admin-user-profile.php:98
 msgid "(Upload a banner for your store. Banner size is (825x300) pixels. )"
-msgstr ""
+msgstr "(Sube una foto de portada para tu tienda de 825 x 300 píxeles)"
 
 #: classes/admin-user-profile.php:105
 msgid "Store name"
-msgstr ""
+msgstr "Nombre de la tienda"
 
 #: classes/admin-user-profile.php:112
 msgid "Address 1"
-msgstr ""
+msgstr "Dirección, línea 1"
 
 #: classes/admin-user-profile.php:119
 msgid "Address 2"
-msgstr ""
+msgstr "Dirección, línea 2"
 
 #: classes/admin-user-profile.php:126
 msgid "Town/City"
-msgstr ""
+msgstr "Pueblo o ciudad"
 
 #: classes/admin-user-profile.php:133
 msgid "Zip Code"
-msgstr ""
+msgstr "Código postal"
 
 #: classes/admin-user-profile.php:173
 #: templates/global/seller-registration-form.php:38
 msgid "Phone Number"
-msgstr ""
+msgstr "Número de teléfono"
 
 #: classes/admin-user-profile.php:191
 msgid "Payment Options : "
-msgstr ""
+msgstr "Opciones de pago:"
 
 #: classes/admin-user-profile.php:196
 msgid "Paypal Email "
-msgstr ""
+msgstr "Email de PayPal"
 
 #: classes/admin-user-profile.php:204
 msgid "Skrill Email "
-msgstr ""
+msgstr "Email de Skrill"
 
 #: classes/admin-user-profile.php:213
 msgid "Bank name "
-msgstr ""
+msgstr "Nombre del banco"
 
 #: classes/admin-user-profile.php:219
 msgid "Account Name "
-msgstr ""
+msgstr "Nombre de la cuenta"
 
 #: classes/admin-user-profile.php:225
 msgid "Account Number "
-msgstr ""
+msgstr "Número de la cuenta"
 
 #: classes/admin-user-profile.php:231
 msgid "Bank Address "
-msgstr ""
+msgstr "Dirección del banco"
 
 #: classes/admin-user-profile.php:237
 msgid "Bank Swift "
-msgstr ""
+msgstr "Código SWIFT"
 
 #: classes/admin-user-profile.php:244 includes/admin/setup-wizard.php:88
 msgid "Selling"
-msgstr ""
+msgstr "Agregar"
 
 #: classes/admin-user-profile.php:249
 msgid "Enable Adding Products"
-msgstr ""
+msgstr "Permitir agregar productos"
 
 #: classes/admin-user-profile.php:252
 msgid "Enable or disable product adding capability"
-msgstr ""
+msgstr "Permitir que el vendedor agregue nuevos productos"
 
 #: classes/admin-user-profile.php:257
 msgid "Publishing"
-msgstr ""
+msgstr "Publicar"
 
 #: classes/admin-user-profile.php:262
 msgid "Publish product directly"
-msgstr ""
+msgstr "Permitir publicar productos"
 
 #: classes/admin-user-profile.php:265
 msgid "Bypass pending, publish products directly"
 msgstr ""
+"Permitir que el vendedor publique productos directamente, sin pasar por "
+"revisión"
 
 #: classes/admin-user-profile.php:270 includes/admin/admin.php:363
 #: includes/admin/setup-wizard.php:344
 msgid "Vendor Commission %"
-msgstr ""
+msgstr "Comisión del vendedor %"
 
 #: classes/admin-user-profile.php:274
 msgid "It will overrride the default % vendor gets from each order"
-msgstr ""
+msgstr "Esto reemplaza la comisión por defecto"
 
 #: classes/admin-user-profile.php:279
 msgid "Featured vendor"
-msgstr ""
+msgstr "Vendedor destacado"
 
 #: classes/admin-user-profile.php:284
 msgid "Mark as featured vendor"
-msgstr ""
+msgstr "Marcar como vendedor destacado"
 
 #: classes/admin-user-profile.php:287
 msgid "This vendor will be marked as a featured vendor."
-msgstr ""
+msgstr "Este vendedor será marcado como vendedor destacado."
 
 #: classes/admin-withdraw.php:190
 msgid "Requests Deleted!"
-msgstr ""
+msgstr "¡Pedidos borrados!"
 
 #: classes/admin-withdraw.php:194
 msgid "Requests Cancelled!"
-msgstr ""
+msgstr "¡Pedidos cancelados!"
 
 #: classes/admin-withdraw.php:198
 msgid "Requests Approved!"
-msgstr ""
+msgstr "¡Pedidos aprobados!"
 
 #: classes/admin-withdraw.php:219 classes/admin-withdraw.php:233
 msgid "User Name"
-msgstr ""
+msgstr "Nombre de usuario"
 
 #: classes/admin-withdraw.php:220 classes/admin-withdraw.php:234
 #: templates/withdraw/approved-request-listing.php:14
 #: templates/withdraw/pending-request-listing.php:14
 msgid "Amount"
-msgstr ""
+msgstr "Cantidad"
 
 #: classes/admin-withdraw.php:221 classes/admin-withdraw.php:235
 #: templates/withdraw/approved-request-listing.php:15
 #: templates/withdraw/pending-request-listing.php:15
 msgid "Method"
-msgstr ""
+msgstr "Método"
 
 #: classes/admin-withdraw.php:222 classes/admin-withdraw.php:236
 msgid "Method Details"
-msgstr ""
+msgstr "Detalles del método"
 
 #: classes/admin-withdraw.php:223 classes/admin-withdraw.php:237
 msgid "Note"
-msgstr ""
+msgstr "Nota"
 
 #: classes/admin-withdraw.php:224 classes/admin-withdraw.php:238
 msgid "IP"
-msgstr ""
+msgstr "IP"
 
 #: classes/admin-withdraw.php:225 classes/admin-withdraw.php:239
 #: includes/admin-functions.php:49 templates/my-orders.php:28
@@ -203,89 +200,90 @@ msgstr ""
 #: templates/withdraw/approved-request-listing.php:16
 #: templates/withdraw/pending-request-listing.php:16
 msgid "Date"
-msgstr ""
+msgstr "Fecha"
 
 #: classes/admin-withdraw.php:263 classes/admin-withdraw.php:273
 msgid "Approve"
-msgstr ""
+msgstr "Aprobar"
 
 #: classes/admin-withdraw.php:264 classes/admin-withdraw.php:268
 #: includes/product-functions.php:301 templates/my-orders.php:83
-#: templates/orders/details.php:186 templates/products/new-product-single.php:225
+#: templates/orders/details.php:186
+#: templates/products/new-product-single.php:225
 #: templates/products/new-product.php:159
 #: templates/products/tmpl-add-product-popup.php:61
 #: templates/withdraw/pending-request-listing.php:17
 #: templates/withdraw/pending-request-listing.php:35
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #: classes/admin-withdraw.php:269 classes/admin-withdraw.php:274
 #: includes/admin/withdraw.php:13 templates/dashboard/orders-widget.php:31
 msgid "Pending"
-msgstr ""
+msgstr "Pendientes"
 
 #: classes/admin-withdraw.php:279 classes/admin-withdraw.php:358
 #: classes/ajax.php:443 includes/woo-views/html-product-download.php:18
 #: includes/woo-views/html-product-download.php:38
 msgid "Delete"
-msgstr ""
+msgstr "Eliminar"
 
 #: classes/admin-withdraw.php:303 templates/orders/details.php:279
 msgid "Add note"
-msgstr ""
+msgstr "Agregar nota"
 
 #: classes/admin-withdraw.php:309
 msgid "Save"
-msgstr ""
+msgstr "Guardar"
 
 #: classes/admin-withdraw.php:310
 msgid "cancel"
-msgstr ""
+msgstr "cancelar"
 
 #: classes/admin-withdraw.php:326
 msgid "No results found"
-msgstr ""
+msgstr "Sin resultados"
 
 #: classes/admin-withdraw.php:338
 msgid "Bulk Actions"
-msgstr ""
+msgstr "Acciones en lote"
 
 #: classes/admin-withdraw.php:342 classes/admin-withdraw.php:352
 msgid "Approve Requests"
-msgstr ""
+msgstr "Aprobar pedidos"
 
 #: classes/admin-withdraw.php:343 classes/admin-withdraw.php:347
 msgid "Mark as Cancelled"
-msgstr ""
+msgstr "Marcar como cancelados"
 
 #: classes/admin-withdraw.php:348 classes/admin-withdraw.php:353
 msgid "Mark Pending"
-msgstr ""
+msgstr "Marcar como pendientes"
 
 #: classes/admin-withdraw.php:359
 msgid "Download PayPal mass payment file"
-msgstr ""
+msgstr "Descargar archivo de PayPal Mass Pay"
 
 #: classes/admin-withdraw.php:364
 msgid "Apply"
-msgstr ""
+msgstr "Aplicar"
 
 #: classes/admin-withdraw.php:373
 msgid "&laquo;"
-msgstr ""
+msgstr "&laquo;"
 
 #: classes/admin-withdraw.php:374
 msgid "&raquo;"
-msgstr ""
+msgstr "&raquo;"
 
 #: classes/ajax.php:91
 msgid "Something wrong, please try again later"
-msgstr ""
+msgstr "Algo salió mal, por favor intenta otra vez"
 
 #: classes/ajax.php:105
 #, php-format
 msgid "<br><strong> Vendor:</strong> %s"
-msgstr ""
+msgstr "<br><strong> Vendedor:</strong> %s"
 
 #: classes/ajax.php:120 classes/template-settings.php:207
 #: classes/template-settings.php:215 classes/template-settings.php:221
@@ -294,379 +292,384 @@ msgstr ""
 #: classes/template-settings.php:409 classes/template-withdraw.php:175
 #: classes/template-withdraw.php:200
 msgid "Are you cheating?"
-msgstr ""
+msgstr "¿Qué haces?"
 
 #: classes/ajax.php:155 classes/ajax.php:189
 msgid "You do not have sufficient permissions to access this page."
-msgstr ""
+msgstr "No tienes permiso para acceder a esta página."
 
 #: classes/ajax.php:159 classes/ajax.php:193
 msgid "You have taken too long. Please go back and retry."
-msgstr ""
+msgstr "Ha pasado demasiado tiempo. Por favor regresa e intenta otra vez."
 
 #: classes/ajax.php:168 classes/ajax.php:202
 msgid "You do not have permission to change this order"
-msgstr ""
+msgstr "No tienes permiso para cambiar esta orden"
 
 #: classes/ajax.php:253
 #, php-format
 msgid "File %d"
-msgstr ""
+msgstr "Archivo %d"
 
 #: classes/ajax.php:304 classes/ajax.php:309
 msgid "Please provide your name."
-msgstr ""
+msgstr "Por favor ingrese su nombre."
 
 #: classes/ajax.php:316 includes/template-tags.php:140
 msgid "Something went wrong!"
-msgstr ""
+msgstr "¡Algo salió mal!"
 
 #: classes/ajax.php:322
 msgid "Email sent successfully!"
-msgstr ""
+msgstr "¡Email enviado!"
 
 #: classes/ajax.php:377 templates/orders/details.php:265
 msgid "Delete note"
-msgstr ""
+msgstr "Borrar nota"
 
 #: classes/ajax.php:531
 msgid "Error: Nonce verification failed"
-msgstr ""
+msgstr "Error: verificación fallida"
 
 #: classes/ajax.php:621
 msgid "Image could not be processed. Please go back and try again."
-msgstr ""
+msgstr "La imagen no se pudo procesar. Por favor regresa e intenta otra vez."
 
 #: classes/customizer.php:19
 msgid "Theme Logo"
-msgstr ""
+msgstr "Logo del tema"
 
 #: classes/customizer.php:21
 msgid "Upload your logo to replace the default Logo (dimension : 180 X 50)"
-msgstr ""
+msgstr "Sube tu logo para reemplazar el logo por defecto (180 x 50)"
 
 #: classes/customizer.php:27
 msgid "Upload Logo"
-msgstr ""
+msgstr "Subir logo"
 
 #: classes/customizer.php:39
 msgid "Link"
-msgstr ""
+msgstr "Enlace"
 
 #: classes/customizer.php:52
 msgid "Link hover"
-msgstr ""
+msgstr "Hover del enlace"
 
 #: classes/customizer.php:65
 msgid "Header Background"
-msgstr ""
+msgstr "Fondo del encabezado"
 
 #: classes/customizer.php:78
 msgid "Navigation Background"
-msgstr ""
+msgstr "Fondo de navegación"
 
 #: classes/customizer.php:91
 msgid "Navigation Link"
-msgstr ""
+msgstr "Enlace de navegación"
 
 #: classes/customizer.php:103
 msgid "Navigation Link Hover"
-msgstr ""
+msgstr "Hover del enlace de navegación"
 
 #: classes/customizer.php:116
 msgid "Footer Background"
-msgstr ""
+msgstr "Fondo del pie de página"
 
 #: classes/customizer.php:129
 msgid "Copy Container Background"
-msgstr ""
+msgstr "Copiar el fondo del contenedor"
 
 #: classes/customizer.php:142
 msgid "Footer text"
-msgstr ""
+msgstr "Texto del pie de página"
 
 #: classes/customizer.php:155
 msgid "Sidebar widget header"
-msgstr ""
+msgstr "Encabezado del widget de la barra lateral"
 
 #: classes/customizer.php:168
 msgid "Footer widget header"
-msgstr ""
+msgstr "Encabezado del widget del pie de página"
 
 #: classes/customizer.php:182
 msgid "Footer Widget link"
-msgstr ""
+msgstr "Enlace del widget del pie de página"
 
 #: classes/customizer.php:194
 msgid "Footer Widget link hover"
-msgstr ""
+msgstr "Hover del enlace del widget del pie de página"
 
 #: classes/email.php:106
 #, php-format
 msgid "\"%s\" sent you a message from your \"%s\" store"
-msgstr ""
+msgstr "%s te envío un mensaje desde tu tienda %s"
 
 #: classes/email.php:154
 #, php-format
 msgid "[%s] Refund Request %s"
-msgstr ""
+msgstr "[%s] Pedido de devolución %s"
 
 #: classes/email.php:187
 #, php-format
 msgid "[%s] New Refund Request"
-msgstr ""
+msgstr "[%s] Nuevo pedido de devolución"
 
 #: classes/email.php:245
 #, php-format
 msgid "[%s] New Withdraw Request"
-msgstr ""
+msgstr "[%s] Nuevo pedido de extracción"
 
 #: classes/email.php:266
 #, php-format
 msgid "[%s] Your Withdraw Request has been approved"
-msgstr ""
+msgstr "[%s] Pedido de extracción aprobado"
 
 #: classes/email.php:288
 #, php-format
 msgid "[%s] Your Withdraw Request has been cancelled"
-msgstr ""
+msgstr "[%s] Pedido de extracción cancelado"
 
 #: classes/email.php:326
 #, php-format
 msgid "[%s] New Vendor Registered"
-msgstr ""
+msgstr "[%s] Nuevo vendedor registrado"
 
 #: classes/email.php:380
 #, php-format
 msgid "[%s] New Product Added"
-msgstr ""
+msgstr "[%s] Nuevo producto añadido"
 
 #: classes/email.php:419
 #, php-format
 msgid "[%s] Your product has been approved!"
-msgstr ""
+msgstr "[%s] ¡Producto aprobado!"
 
 #: classes/installer.php:135 includes/admin-functions.php:52
 #: includes/admin-functions.php:559 includes/admin-functions.php:583
 #: includes/admin/admin.php:322 includes/admin/setup-wizard.php:263
 #: includes/wc-template.php:14 templates/my-orders.php:31
 msgid "Vendor"
-msgstr ""
+msgstr "Vendedor"
 
 #: classes/installer.php:165 includes/admin/admin.php:230
 #: includes/admin/admin.php:403 includes/template-tags.php:302
 msgid "Dashboard"
-msgstr ""
+msgstr "Resumen"
 
 #: classes/installer.php:171
 msgid "Store List"
-msgstr ""
+msgstr "Lista de la tienda"
 
 #: classes/installer.php:177 includes/admin/admin.php:409
 #: templates/global/header-menu.php:46
 msgid "My Orders"
-msgstr ""
+msgstr "Mis pedidos"
 
 #: classes/seller-setup-wizard.php:58 includes/admin/setup-wizard.php:78
 msgid "Introduction"
-msgstr ""
+msgstr "Introducción"
 
 #: classes/seller-setup-wizard.php:63 includes/admin/setup-wizard.php:83
 #: includes/template-tags.php:343
 msgid "Store"
-msgstr ""
+msgstr "Tienda"
 
 #: classes/seller-setup-wizard.php:68 includes/template-tags.php:349
 msgid "Payment"
-msgstr ""
+msgstr "Pagos"
 
 #: classes/seller-setup-wizard.php:73 includes/admin/setup-wizard.php:98
 msgid "Ready!"
-msgstr ""
+msgstr "¡Listo!"
 
 #: classes/seller-setup-wizard.php:107
 msgid "Vendor &rsaquo; Setup Wizard"
-msgstr ""
+msgstr "Vendedor &rsaquo; Asistente de configuración"
 
 #: classes/seller-setup-wizard.php:194
 msgid "Return to the Marketplace"
-msgstr ""
+msgstr "Regresar al mercado"
 
 #: classes/seller-setup-wizard.php:207
 msgid "Welcome to the Marketplace!"
-msgstr ""
+msgstr "¡Bienvenido al mercado!"
 
 #: classes/seller-setup-wizard.php:208
 msgid ""
-"Thank you for choosing The Marketplace to power your online store! This quick "
-"setup wizard will help you configure the basic settings. <strong>It’s completely "
-"optional and shouldn’t take longer than two minutes.</strong>"
+"Thank you for choosing The Marketplace to power your online store! This "
+"quick setup wizard will help you configure the basic settings. <strong>It’s "
+"completely optional and shouldn’t take longer than two minutes.</strong>"
 msgstr ""
+"¡Gracias por elegirnos para potenciar tu tienda! Aquí podrías realizar "
+"algunas configuraciones básicas. <strong>Es totalmente opcional y no te "
+"debería llevar más de dos minutos.</strong>"
 
 #: classes/seller-setup-wizard.php:209
 msgid ""
-"No time right now? If you don’t want to go through the wizard, you can skip and "
-"return to the Store!"
+"No time right now? If you don’t want to go through the wizard, you can skip "
+"and return to the Store!"
 msgstr ""
+"¿No tienes tiempo ahora? Si no quieres configurar la tienda ahora, te puedes "
+"saltear esto y regresar a la tienda."
 
 #: classes/seller-setup-wizard.php:211 includes/admin/setup-wizard.php:248
 msgid "Let's Go!"
-msgstr ""
+msgstr "¡Vamos!"
 
 #: classes/seller-setup-wizard.php:212 includes/admin/setup-wizard.php:249
 msgid "Not right now"
-msgstr ""
+msgstr "Ahora no"
 
 #: classes/seller-setup-wizard.php:236 includes/admin/setup-wizard.php:267
 msgid "Store Setup"
-msgstr ""
+msgstr "Configuración de la tienda"
 
 #: classes/seller-setup-wizard.php:240 templates/settings/store-form.php:119
 msgid "Store Product Per Page"
-msgstr ""
+msgstr "Productos por página"
 
 #: classes/seller-setup-wizard.php:246
 msgid "Street"
-msgstr ""
+msgstr "Calle"
 
 #: classes/seller-setup-wizard.php:252 templates/settings/address-form.php:44
 msgid "Street 2"
-msgstr ""
+msgstr "Detalles"
 
 #: classes/seller-setup-wizard.php:258 templates/settings/address-form.php:60
 msgid "City"
-msgstr ""
+msgstr "Ciudad"
 
 #: classes/seller-setup-wizard.php:263
 msgid "Post/Zip Code"
-msgstr ""
+msgstr "Código postal"
 
 #: classes/seller-setup-wizard.php:275
 msgid "State"
-msgstr ""
+msgstr "Estado o provincia"
 
 #: classes/seller-setup-wizard.php:277
 msgid "State Name"
-msgstr ""
+msgstr "Nombre del estado o provincia"
 
 #: classes/seller-setup-wizard.php:281 templates/settings/store-form.php:149
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #: classes/seller-setup-wizard.php:284 templates/settings/store-form.php:154
 msgid "Show email address in store"
-msgstr ""
+msgstr "Mostrar el email en la tienda"
 
 #: classes/seller-setup-wizard.php:290 classes/seller-setup-wizard.php:424
 #: includes/admin/setup-wizard.php:293 includes/admin/setup-wizard.php:373
 #: includes/admin/setup-wizard.php:459
 msgid "Continue"
-msgstr ""
+msgstr "Continuar"
 
 #: classes/seller-setup-wizard.php:291 classes/seller-setup-wizard.php:425
 #: includes/admin/setup-wizard.php:294 includes/admin/setup-wizard.php:374
 #: includes/admin/setup-wizard.php:460
 msgid "Skip this step"
-msgstr ""
+msgstr "Saltar este paso"
 
 #: classes/seller-setup-wizard.php:311
 msgid "Select an option&hellip;"
-msgstr ""
+msgstr "Selecciona una opción&hellip;"
 
 #: classes/seller-setup-wizard.php:402
 msgid "Payment Setup"
-msgstr ""
+msgstr "Configuración de pagos"
 
 #: classes/seller-setup-wizard.php:479
 msgid "Your Store is Ready!"
-msgstr ""
+msgstr "¡Tu tienda está lista!"
 
 #: classes/seller-setup-wizard.php:484
 msgid "Go to your Store Dashboard!"
-msgstr ""
+msgstr "¡Ir al mostrador de tu tienda!"
 
 #: classes/template-orders.php:106 classes/template-orders.php:175
 msgid "Order No"
-msgstr ""
+msgstr "Número de orden"
 
 #: classes/template-orders.php:107 classes/template-orders.php:176
 #: templates/orders/details.php:20
 msgid "Order Items"
-msgstr ""
+msgstr "Productos en la orden"
 
 #: classes/template-orders.php:108 classes/template-orders.php:177
 msgid "Shipping method"
-msgstr ""
+msgstr "Modo de envío"
 
 #: classes/template-orders.php:109 classes/template-orders.php:178
 msgid "Shipping Cost"
-msgstr ""
+msgstr "Costo de envío"
 
 #: classes/template-orders.php:110 classes/template-orders.php:179
 msgid "Payment method"
-msgstr ""
+msgstr "Modo de pago"
 
 #: classes/template-orders.php:111 classes/template-orders.php:180
 #: templates/orders/listing.php:18 templates/orders/listing.php:34
 msgid "Order Total"
-msgstr ""
+msgstr "Total"
 
 #: classes/template-orders.php:112 classes/template-orders.php:181
 msgid "Order Status"
-msgstr ""
+msgstr "Estado del pedido"
 
 #: classes/template-orders.php:113 classes/template-orders.php:182
 msgid "Order Date"
-msgstr ""
+msgstr "Fecha del pedido"
 
 #: classes/template-orders.php:114 classes/template-orders.php:183
 msgid "Customer Name"
-msgstr ""
+msgstr "Nombre del cliente"
 
 #: classes/template-orders.php:115 classes/template-orders.php:184
 msgid "Customer Email"
-msgstr ""
+msgstr "Email del cliente"
 
 #: classes/template-orders.php:116 classes/template-orders.php:185
 msgid "Customer Phone"
-msgstr ""
+msgstr "Teléfono del cliente"
 
 #: classes/template-orders.php:117 classes/template-orders.php:186
 msgid "Customer IP"
-msgstr ""
+msgstr "IP del cliente"
 
 #: classes/template-products.php:107
 msgid "Details of your product ..."
-msgstr ""
+msgstr "Detalles de tu producto"
 
 #: classes/template-products.php:120 classes/template-products.php:246
 #: includes/product-functions.php:32
 msgid "Please enter product title"
-msgstr ""
+msgstr "Por favor ingresa el título del producto"
 
 #: classes/template-products.php:126 classes/template-products.php:252
 #: includes/product-functions.php:38
 msgid "Please select a category"
-msgstr ""
+msgstr "Por favor selecciona una categoría"
 
 #: classes/template-products.php:130 classes/template-products.php:256
 #: includes/product-functions.php:42
 msgid "Please select AT LEAST ONE category"
-msgstr ""
+msgstr "Por favor selecciona al menos una categoría"
 
 #: classes/template-products.php:263
 msgid "No product found !"
-msgstr ""
+msgstr "No se ha encontrado ningún producto"
 
-#: classes/template-settings.php:70 classes/template-settings.php:74 dokan.php:797
-#: includes/admin/admin.php:236 includes/admin/admin.php:572
+#: classes/template-settings.php:70 classes/template-settings.php:74
+#: dokan.php:797 includes/admin/admin.php:236 includes/admin/admin.php:572
 #: includes/admin/welcome.php:20
 msgid "Settings"
-msgstr ""
+msgstr "Ajustes"
 
 #: classes/template-settings.php:72
 msgid "Payment Settings"
-msgstr ""
+msgstr "Ajustes de pago"
 
 #: classes/template-settings.php:92
 msgid ""
@@ -674,161 +677,168 @@ msgid ""
 "information below to submit withdraw requests and get your store payments "
 "seamlessly."
 msgstr ""
+"Por favor actualiza la información de al menos uno de los métodos de "
+"extracción para poder hacer pedidos de extracción."
 
 #: classes/template-settings.php:240
 msgid "Your information has been saved successfully"
-msgstr ""
+msgstr "Información guardada"
 
 #: classes/template-settings.php:269 classes/template-settings.php:370
 msgid "Store name required"
-msgstr ""
+msgstr "Se necesita el nombre de la tienda"
 
 #: classes/template-settings.php:275 classes/template-settings.php:331
 #: classes/template-settings.php:376
 msgid "Store type required"
-msgstr ""
+msgstr "Se necesita el tipo de tienda"
 
 #: classes/template-settings.php:282 classes/template-settings.php:339
 #: classes/template-settings.php:383 classes/template-settings.php:418
 msgid "Invalid email"
-msgstr ""
+msgstr "Email inválido"
 
 #: classes/template-settings.php:299
 #, php-format
 msgid "Address field for %s is required"
-msgstr ""
+msgstr "Se necesita la dirección de %s"
 
 #: classes/template-settings.php:566
 #, php-format
 msgid "Add Profile Picture to gain %s%% progress"
-msgstr ""
+msgstr "Agrega tu foto de perfil para progresar %s%%"
 
 #: classes/template-settings.php:585 includes/functions.php:1571
 msgid "Facebook"
-msgstr ""
+msgstr "Facebook"
 
 #: classes/template-settings.php:585
 msgid "Google+"
-msgstr ""
+msgstr "Google+"
 
 #: classes/template-settings.php:586
 #, php-format
 msgid "Add %s profile link to gain %s%% progress"
-msgstr ""
+msgstr "Agrega un perfil de %s para progresar %s%%"
 
 #: classes/template-settings.php:600
 #, php-format
 msgid "Add Phone to gain %s%% progress"
-msgstr ""
+msgstr "Agrega un número de teléfono para progresar %s%%"
 
 #: classes/template-settings.php:613
 #, php-format
 msgid "Add Banner to gain %s%% progress"
-msgstr ""
+msgstr "Agrega una foto de portada para progresar %s%%"
 
 #: classes/template-settings.php:625
 #, php-format
 msgid "Add Store Name to gain %s%% progress"
-msgstr ""
+msgstr "Agrega un nombre a la tienda para progresar %s%%"
 
 #: classes/template-settings.php:637
 #, php-format
 msgid "Add address to gain %s%% progress"
-msgstr ""
+msgstr "Agrega una dirección para progresar %s%%"
 
 #: classes/template-settings.php:685
 #, php-format
 msgid "Add a Payment method to gain %s%% progress"
-msgstr ""
+msgstr "Agrega un método de pago para progresar %s%%"
 
 #: classes/template-settings.php:693
 #, php-format
 msgid "Add Map location to gain %s%% progress"
-msgstr ""
+msgstr "Agrega una ubicación en el mapa para progresar %s%%"
 
 #: classes/template-settings.php:712
 msgid "Book"
-msgstr ""
+msgstr "Libro"
 
 #: classes/template-settings.php:713
 msgid "Dress"
-msgstr ""
+msgstr "Vestimenta"
 
 #: classes/template-settings.php:714
 msgid "Electronic"
-msgstr ""
+msgstr "Electrónica"
 
 #: classes/template-shortcodes.php:50
 #, php-format
-msgid "Please install <a href=\"%s\"><strong>WooCommerce</strong></a> plugin first"
+msgid ""
+"Please install <a href=\"%s\"><strong>WooCommerce</strong></a> plugin first"
 msgstr ""
+"Por favor instala <a href=\"%s\"><strong>WooCommerce</strong></a> primero"
 
 #: classes/template-withdraw.php:120
 #, php-format
 msgid "Current Balance: %s "
-msgstr ""
+msgstr "Dinero disponible: %s"
 
 #: classes/template-withdraw.php:123
 #, php-format
 msgid "<br>Minimum Withdraw amount: %s "
-msgstr ""
+msgstr "<br>Cantidad mínima por extracción: %s "
 
 #: classes/template-withdraw.php:126
 #, php-format
 msgid "<br>Withdraw Threshold: %d days "
-msgstr ""
+msgstr "<br>Tiempo mínimo de extracción: %d días"
 
 #: classes/template-withdraw.php:209
 msgid "Withdraw amount required "
-msgstr ""
+msgstr "¿Cuánto quieres extraer?"
 
 #: classes/template-withdraw.php:212
 msgid "You don't have enough balance for this request"
-msgstr ""
+msgstr "No tienes suficiente dinero para esa extracción"
 
 #: classes/template-withdraw.php:214
 #, php-format
 msgid "Withdraw amount must be greater than %d"
-msgstr ""
+msgstr "La cantidad a extraer debe ser mayor que %d"
 
 #: classes/template-withdraw.php:218
 msgid "withdraw method required"
-msgstr ""
+msgstr "Se necesita un método de extracción"
 
 #: classes/template-withdraw.php:281
 msgid "Your request has been cancelled successfully!"
-msgstr ""
+msgstr "Su pedido se ha cancelado exitosamente"
 
 #: classes/template-withdraw.php:285
 msgid "Your request has been received successfully and being reviewed!"
-msgstr ""
+msgstr "Su pedido se ha enviado exitosamente y está siendo revisado"
 
 #: classes/template-withdraw.php:289
 msgid "Unknown error!"
-msgstr ""
+msgstr "Error desconocido"
 
 #: classes/template-withdraw.php:316
 #, php-format
 msgid "You already withdrawed %s. This amount will deducted from your balance."
 msgstr ""
+"Ya has extraído %s. Esta cantidad será deducida de tu dinero disponible."
 
 #: classes/template-withdraw.php:325
 msgid "You already have pending withdraw request(s)."
-msgstr ""
+msgstr "Ya tienes un pedido de extracción pendiente."
 
 #: classes/template-withdraw.php:325
 msgid ""
 "Please submit your request after approval or cancellation of your previous "
 "request."
 msgstr ""
+"Por favor realiza tu pedido después de que se apruebe o rechace el pedido "
+"anterior."
 
 #: classes/template-withdraw.php:340
 msgid "You don't have sufficient balance for a withdraw request!"
-msgstr ""
+msgstr "No tienes dinero disponible para una extracción."
 
 #: classes/template-withdraw.php:383
 msgid "Sorry, no transactions were found!"
-msgstr ""
+msgstr "Lo siento, no se han encontrado transacciones"
 
 #: classes/tracker.php:12
 #, php-format
@@ -837,257 +847,275 @@ msgid ""
 "collect non-sensitive diagnostic data and usage information. Enjoy "
 "<strong>20% discount</strong> on upgrades and add-on purchase."
 msgstr ""
+"¿Quieres ayudar a que <strong>Dokan</strong> sea aún mejor? Permite a weDevs "
+"recolectar información de diagnóstico y uso, y disfruta de un <strong>20% de "
+"descuento</strong> en actualizaciones y compras de nuestros productos."
 
 #: classes/upgrade.php:75 includes/admin/admin.php:633
 msgid ""
 "<strong>Dokan Data Update Required</strong> &#8211; We need to update your "
 "install to the latest version"
 msgstr ""
+"<strong>Se necesita una actualización de datos.<strong> Necesitamos "
+"actualizar tu instalación a la última versión."
 
 #: classes/upgrade.php:76 includes/admin/admin.php:634
 msgid "Run the updater"
-msgstr ""
+msgstr "Ejecutar el actualizador"
 
 #: classes/upgrade.php:81 includes/admin/admin.php:639
 msgid ""
-"It is strongly recommended that you backup your database before proceeding. Are "
-"you sure you wish to run the updater now?"
+"It is strongly recommended that you backup your database before proceeding. "
+"Are you sure you wish to run the updater now?"
 msgstr ""
+"Se recomienda que hagas una copia de tu base de datos antes de proceder. "
+"¿Estás seguro que deseas ejecutar el actualizador ahora?"
 
 #: classes/withdraw.php:238 templates/withdraw/pending-request-listing.php:41
 msgid "Pending Reivew"
-msgstr ""
+msgstr "Pendiente"
 
 #: classes/withdraw.php:242 templates/withdraw/pending-request-listing.php:43
 msgid "Accepted"
-msgstr ""
+msgstr "Aceptada"
 
 #: dokan.php:111
 #, php-format
 msgid "<b>Dokan</b> requires %sWooCommerce%s to be installed & activated!"
-msgstr ""
+msgstr "<strong>Dokan</strong> necesita %sWooCommerce%s instalado y activo."
 
 #: dokan.php:296
 msgid "Available"
-msgstr ""
+msgstr "Disponible"
 
 #: dokan.php:297
 msgid "Not Available"
-msgstr ""
+msgstr "No disponible"
 
 #: dokan.php:299
 msgid "Are you sure?"
-msgstr ""
+msgstr "¿Estás seguro?"
 
 #: dokan.php:300
 msgid "Something went wrong. Please try again."
-msgstr ""
+msgstr "Algo salió mal, por favor intenta otra vez."
 
 #: dokan.php:363
 msgid "Upload featured image"
-msgstr ""
+msgstr "Seleccionar imagen destacada"
 
 #: dokan.php:364
 msgid "Choose a file"
-msgstr ""
+msgstr "Selecciona un archivo"
 
 #: dokan.php:365
 msgid "Add Images to Product Gallery"
-msgstr ""
+msgstr "Agregar imágenes a la galería del producto"
 
 #: dokan.php:366
 msgid "Set featured image"
-msgstr ""
+msgstr "Seleccionar imagen destacada"
 
 #: dokan.php:367 includes/woo-views/html-product-download.php:17
 #: includes/woo-views/html-product-download.php:32
 msgid "Insert file URL"
-msgstr ""
+msgstr "Agrega la URL del archivo"
 
 #: dokan.php:368
 msgid "Add to gallery"
-msgstr ""
+msgstr "Agregar a la galería"
 
 #: dokan.php:369
 msgid "Sorry, this attribute option already exists, Try a different one."
-msgstr ""
+msgstr "Lo siento este atributo ya existe, prueba con otro."
 
 #: dokan.php:370
 msgid ""
-"Warning! This product will not have any variations if this option is not checked."
+"Warning! This product will not have any variations if this option is not "
+"checked."
 msgstr ""
+"¡Cuidado! Este producto no tendrá ninguna variación si no seleccionas esta "
+"opción."
 
 #: dokan.php:371
 msgid "Enter a name for the new attribute term:"
-msgstr ""
+msgstr "Ingresa un nombre para el nuevo atributo:"
 
 #: dokan.php:372
 msgid "Remove this attribute?"
-msgstr ""
+msgstr "¿Borrar este atributo?"
 
 #: dokan.php:380
 #, php-format
 msgid ""
-"Are you sure you want to link all variations? This will create a new variation "
-"for each and every possible combination of variation attributes (max %d per run)."
+"Are you sure you want to link all variations? This will create a new "
+"variation for each and every possible combination of variation attributes "
+"(max %d per run)."
 msgstr ""
+"¿Estás seguro que quieres enlazar todas las variaciones? Esto creará una "
+"nueva variación para cada combinación posible de atributos (máximo %d por "
+"vez)."
 
 #: dokan.php:381
 msgid "Enter a value"
-msgstr ""
+msgstr "Ingresa un valor"
 
 #: dokan.php:382
 msgid "Variation menu order (determines position in the list of variations)"
 msgstr ""
+"Orden del menú de variaciones (determina la posición en la lista de "
+"variaciones)"
 
 #: dokan.php:383
 msgid "Enter a value (fixed or %)"
-msgstr ""
+msgstr "Ingresa un valor (fijo o %)"
 
 #: dokan.php:384
 msgid "Are you sure you want to delete all variations? This cannot be undone."
 msgstr ""
+"¿Estás seguro que quieres borrar todas las variaciones? Esto no se puede "
+"deshacer."
 
 #: dokan.php:385
 msgid "Last warning, are you sure?"
-msgstr ""
+msgstr "Última advertencia, ¿estás seguro?"
 
 #: dokan.php:386
 msgid "Choose an image"
-msgstr ""
+msgstr "Seleccionar una imagen"
 
 #: dokan.php:387
 msgid "Set variation image"
-msgstr ""
+msgstr "Seleccionar imagen de variación"
 
 #: dokan.php:388
 msgid "variation added"
-msgstr ""
+msgstr "Variación agregada"
 
 #: dokan.php:389
 msgid "variations added"
-msgstr ""
+msgstr "Variaciones agregadas"
 
 #: dokan.php:390
 msgid "No variations added"
-msgstr ""
+msgstr "No se ha agregado ninguna variación"
 
 #: dokan.php:391
 msgid "Are you sure you want to remove this variation?"
-msgstr ""
+msgstr "¿Estás seguro que quieres borrar esta variación?"
 
 #: dokan.php:392
 msgid "Sale start date (YYYY-MM-DD format or leave blank)"
-msgstr ""
+msgstr "Comienzo de la oferta (YYYY-MM-DD)"
 
 #: dokan.php:393
 msgid "Sale end date (YYYY-MM-DD format or leave blank)"
-msgstr ""
+msgstr "Final de la oferta (YYYY-MM-DD)"
 
 #: dokan.php:394
 msgid "Save changes before changing page?"
-msgstr ""
+msgstr "¿Guardar los cambios antes de cambiar de página?"
 
 #: dokan.php:395
 msgid "%qty% variation"
-msgstr ""
+msgstr "%qty% variación"
 
 #: dokan.php:396
 msgid "%qty% variations"
-msgstr ""
+msgstr "%qty% variaciones"
 
 #: dokan.php:399
 msgid "Select and Crop"
-msgstr ""
+msgstr "Seleccionar y cortar"
 
 #: dokan.php:400
 msgid "Choose Image"
-msgstr ""
+msgstr "Seleccionar imagen"
 
 #: dokan.php:401
 msgid "Product title is required"
-msgstr ""
+msgstr "Se necesita un título para el producto"
 
 #: dokan.php:402
 msgid "Product category is required"
-msgstr ""
+msgstr "Se necesita una categoría para el producto"
 
 #: dokan.php:435
 msgid "This field is required"
-msgstr ""
+msgstr "Este campo es necesario"
 
 #: dokan.php:436
 msgid "Please fix this field."
-msgstr ""
+msgstr "Por favor arregla este campo."
 
 #: dokan.php:437
 msgid "Please enter a valid email address."
-msgstr ""
+msgstr "Por favor ingresa una dirección de email válida."
 
 #: dokan.php:438
 msgid "Please enter a valid URL."
-msgstr ""
+msgstr "Por favor ingresa una URL válida."
 
 #: dokan.php:439
 msgid "Please enter a valid date."
-msgstr ""
+msgstr "Por favor ingresa una fecha válida."
 
 #: dokan.php:440
 msgid "Please enter a valid date (ISO)."
-msgstr ""
+msgstr "Por favor ingresa una fecha ISO válida."
 
 #: dokan.php:441
 msgid "Please enter a valid number."
-msgstr ""
+msgstr "Por favor ingresa un número válido."
 
 #: dokan.php:442
 msgid "Please enter only digits."
-msgstr ""
+msgstr "Por favor ingresa sólo números."
 
 #: dokan.php:443
 msgid "Please enter a valid credit card number."
-msgstr ""
+msgstr "Por favor ingresa un número de tarjeta de crédito válido."
 
 #: dokan.php:444
 msgid "Please enter the same value again."
-msgstr ""
+msgstr "Por favor ingresa el mismo valor otra vez."
 
 #: dokan.php:445
 msgid "Please enter no more than {0} characters."
-msgstr ""
+msgstr "Por favor ingresa hasta {0} caracteres."
 
 #: dokan.php:446
 msgid "Please enter at least {0} characters."
-msgstr ""
+msgstr "Por favor ingresa al menos {0} caracteres."
 
 #: dokan.php:447
 msgid "Please enter a value between {0} and {1} characters long."
-msgstr ""
+msgstr "Por favor ingresa un valor de entre {0} y {1} caracteres."
 
 #: dokan.php:448
 msgid "Please enter a value between {0} and {1}."
-msgstr ""
+msgstr "Por favor ingresa un valor entre {0} y {1}."
 
 #: dokan.php:449
 msgid "Please enter a value less than or equal to {0}."
-msgstr ""
+msgstr "Por favor ingresa un valor menor o igual a {0}."
 
 #: dokan.php:450
 msgid "Please enter a value greater than or equal to {0}."
-msgstr ""
+msgstr "Por favor ingresa un valor mayor o igual a {0}."
 
 #: dokan.php:762
 #, php-format
 msgid "Page %s"
-msgstr ""
+msgstr "Página %s"
 
 #: dokan.php:794
 msgid "Get Pro"
-msgstr ""
+msgstr "Dokan Pro"
 
 #: dokan.php:798 includes/admin/welcome.php:21
 msgid "Documentation"
-msgstr ""
+msgstr "Documentación"
 
 #: includes/admin-functions.php:42 includes/product-functions.php:205
 #: templates/my-orders.php:29 templates/orders/listing.php:19
@@ -1095,1499 +1123,1562 @@ msgstr ""
 #: templates/products/products-listing.php:138 templates/sub-orders.php:27
 #: templates/withdraw/pending-request-listing.php:18
 msgid "Status"
-msgstr ""
+msgstr "Estado"
 
-#: includes/admin-functions.php:43 templates/dashboard/big-counter-widget.php:32
-#: templates/my-orders.php:27 templates/orders/details.php:20
-#: templates/orders/listing.php:17 templates/orders/listing.php:31
-#: templates/sub-orders.php:25
+#: includes/admin-functions.php:43
+#: templates/dashboard/big-counter-widget.php:32 templates/my-orders.php:27
+#: templates/orders/details.php:20 templates/orders/listing.php:17
+#: templates/orders/listing.php:31 templates/sub-orders.php:25
 msgid "Order"
-msgstr ""
+msgstr "Pedidos"
 
 #: includes/admin-functions.php:44
 msgid "Purchased"
-msgstr ""
+msgstr "Comprado"
 
 #: includes/admin-functions.php:45
 msgid "Ship to"
-msgstr ""
+msgstr "Enviar a"
 
 #: includes/admin-functions.php:47
 msgid "Customer Message"
-msgstr ""
+msgstr "Mensaje del cliente"
 
 #: includes/admin-functions.php:48 templates/orders/details.php:241
 msgid "Order Notes"
-msgstr ""
+msgstr "Notas del pedido"
 
 #: includes/admin-functions.php:50 templates/dashboard/orders-widget.php:21
 #: templates/dashboard/products-widget.php:26 templates/my-orders.php:30
 #: templates/orders/order-fee-html.php:17 templates/sub-orders.php:28
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #: includes/admin-functions.php:51
 msgid "Actions"
-msgstr ""
+msgstr "Acciones"
 
 #: includes/admin-functions.php:53
 msgid "Sub Order"
-msgstr ""
+msgstr "Sub-pedido"
 
 #: includes/admin-functions.php:79
 msgid "Sub Order of"
-msgstr ""
+msgstr "Sub-pedido de"
 
 #: includes/admin-functions.php:89
 msgid "Show Sub-Orders"
-msgstr ""
+msgstr "Mostrar sub-pedidos"
 
 #: includes/admin-functions.php:89
 msgid "Hide Sub-Orders"
-msgstr ""
+msgstr "Ocultar sub-pedidos"
 
 #: includes/admin-functions.php:246
 msgid "Toggle Sub-orders"
-msgstr ""
+msgstr "Mostrar u ocultar sub-pedidos"
 
 #: includes/admin-functions.php:374 includes/admin-functions.php:733
 msgid "Total Sales"
-msgstr ""
+msgstr "Ventas"
 
 #: includes/admin-functions.php:381 includes/admin-functions.php:740
 msgid "Total: "
-msgstr ""
+msgstr "Total:"
 
 #: includes/admin-functions.php:384 includes/admin-functions.php:743
 #: includes/reports.php:346
 msgid "Number of orders"
-msgstr ""
+msgstr "Pedidos"
 
 #: includes/admin-functions.php:391 includes/admin-functions.php:750
 #: includes/reports.php:353
 msgid "sales"
-msgstr ""
+msgstr "ventas"
 
 #: includes/admin-functions.php:394 includes/admin-functions.php:753
 msgid "Commision"
-msgstr ""
+msgstr "Comisión"
 
 #: includes/admin-functions.php:401 includes/admin-functions.php:760
 msgid "Commision: "
-msgstr ""
+msgstr "Comisión:"
 
 #: includes/admin/add-on.php:2
 msgid "Dokan - Add-ons"
-msgstr ""
+msgstr "Plugins de Dokan"
 
 #: includes/admin/admin.php:61
 msgid "Pro upgrade and all extensions"
-msgstr ""
+msgstr "Actualización Pro y todas las extensiones"
 
 #: includes/admin/admin.php:61
 msgid "all extensions"
-msgstr ""
+msgstr "todas las extensiones"
 
 #: includes/admin/admin.php:63
 msgid ""
 "<h2><span class=\"dashicons dashicons-awards\"></span> weDevs 4th Year "
 "Anniversary Offer</h2>"
 msgstr ""
+"<h2><span class=\"dashicons dashicons-awards\"></span>Oferta del cuarto "
+"aniversario de weDevs</h2>"
 
 #: includes/admin/admin.php:64
 #, php-format
 msgid ""
-"<p>Get <strong class=\"highlight-text\">44&#37; discount</strong> on %2$s also <a "
-"target=\"_blank\" href=\"%1$s\"><strong>WIN any product</strong></a> from our 4th "
-"year anniversary giveaway. Offer ending soon!</p>"
+"<p>Get <strong class=\"highlight-text\">44&#37; discount</strong> on %2$s "
+"also <a target=\"_blank\" href=\"%1$s\"><strong>WIN any product</strong></a> "
+"from our 4th year anniversary giveaway. Offer ending soon!</p>"
 msgstr ""
+"<p><strong class=\"highlight-text\">44&#37; de descuento</strong> en %2$s y "
+"también <a target=\"_blank\" href=\"%1$s\"><strong>gana cualquier producto</"
+"strong></a> de nuestra promoción de cuarto aniversario. ¡La oferta termina "
+"pronto!</p>"
 
 #: includes/admin/admin.php:159
 msgid "- select -"
-msgstr ""
+msgstr "- selecciona -"
 
 #: includes/admin/admin.php:223 includes/admin/admin.php:231
 #: includes/admin/admin.php:558 includes/admin/dashboard.php:72
 #: includes/admin/setup-wizard.php:93 includes/template-tags.php:321
 #: templates/withdraw/header.php:11
 msgid "Withdraw"
-msgstr ""
+msgstr "Extracciones"
 
 #: includes/admin/admin.php:226
 #, php-format
 msgid "Withdraw %s"
-msgstr ""
+msgstr "Extraer %s"
 
 #: includes/admin/admin.php:229 includes/admin/admin.php:542
 msgid "Dokan"
-msgstr ""
+msgstr "Dokan"
 
 #: includes/admin/admin.php:230 includes/admin/admin.php:551
 #: includes/admin/dashboard.php:96
 msgid "Dokan Dashboard"
-msgstr ""
+msgstr "Resumen"
 
 #: includes/admin/admin.php:232 includes/admin/admin.php:565
 msgid "PRO Features"
-msgstr ""
+msgstr "Dokan Pro"
 
 #: includes/admin/admin.php:237
 msgid "Add Ons"
-msgstr ""
+msgstr "Plugins"
 
 #: includes/admin/admin.php:237
 msgid "Add-ons"
-msgstr ""
+msgstr "Plugins de Dokan"
 
 #: includes/admin/admin.php:244 includes/admin/welcome.php:12
 msgid "Welcome to Dokan"
-msgstr ""
+msgstr "Bienvenido a Dokan"
 
 #: includes/admin/admin.php:261
 msgid "General"
-msgstr ""
+msgstr "General"
 
 #: includes/admin/admin.php:265
 msgid "Selling Options"
-msgstr ""
+msgstr "Ventas"
 
 #: includes/admin/admin.php:269
 msgid "Withdraw Options"
-msgstr ""
+msgstr "Extracciones"
 
 #: includes/admin/admin.php:273
 msgid "Page Settings"
-msgstr ""
+msgstr "Páginas"
 
 #: includes/admin/admin.php:277
 msgid "Appearance"
-msgstr ""
+msgstr "Apariencia"
 
 #: includes/admin/admin.php:298
 msgid "Admin area access"
-msgstr ""
+msgstr "Área de administración"
 
 #: includes/admin/admin.php:299
-msgid "Disable Vendors and Customers from accessing the wp-admin dashboard area"
+msgid ""
+"Disable Vendors and Customers from accessing the wp-admin dashboard area"
 msgstr ""
+"Impedir que los vendedores y clientes accedan al área de administración (wp-"
+"admin)"
 
 #: includes/admin/admin.php:305 includes/admin/setup-wizard.php:271
 msgid "Vendor Store URL"
-msgstr ""
+msgstr "URL de las tiendas"
 
 #: includes/admin/admin.php:306
 #, php-format
-msgid "Define the seller store URL (%s<strong>[this-text]</strong>/[seller-name])"
+msgid ""
+"Define the seller store URL (%s<strong>[this-text]</strong>/[seller-name])"
 msgstr ""
+"Definir la URL de las tiendas de los vendedores (%s<strong>[este-texto]</"
+"strong>/[nombre-de-la-tienda])"
 
 #: includes/admin/admin.php:312 includes/functions.php:997
 #: templates/settings/store-form.php:196
 msgid "Terms and Conditions"
-msgstr ""
+msgstr "Términos y condiciones"
 
 #: includes/admin/admin.php:313
 msgid "Enable Terms and Conditions for vendor stores"
-msgstr ""
+msgstr "Mostrar los términos y condiciones en las tiendas de los vendedores."
 
 #: includes/admin/admin.php:319 includes/admin/setup-wizard.php:278
 msgid "Extra Fee Recipient"
-msgstr ""
+msgstr "Tarifas extra"
 
 #: includes/admin/admin.php:320
-msgid "Should extra fees, such as Shipping and Tax, go to the Vendor or the Admin?"
-msgstr ""
+msgid ""
+"Should extra fees, such as Shipping and Tax, go to the Vendor or the Admin?"
+msgstr "¿A quién van las tarifas extra como el envío y los impuestos?"
 
 #: includes/admin/admin.php:322 includes/admin/setup-wizard.php:264
 msgid "Admin"
-msgstr ""
+msgstr "Administrador"
 
 #: includes/admin/admin.php:327
 msgid "Show Map on Store Page"
-msgstr ""
+msgstr "Mapa"
 
 #: includes/admin/admin.php:328
 msgid "Enable a Google Map of the Store Location in the store sidebar"
 msgstr ""
+"Mostrar un Google Map con la ubicación de la tienda en la barra lateral de "
+"la tienda."
 
 #: includes/admin/admin.php:334
 msgid "Google Map API Key"
-msgstr ""
+msgstr "API Key de Google Maps"
 
 #: includes/admin/admin.php:335
 msgid ""
-"<a href=\"https://developers.google.com/maps/documentation/javascript/\" target="
-"\"_blank\">API Key</a> is needed to display map on store page"
+"<a href=\"https://developers.google.com/maps/documentation/javascript/\" "
+"target=\"_blank\">API Key</a> is needed to display map on store page"
 msgstr ""
+"Se necesita una <a href=\"https://developers.google.com/maps/documentation/"
+"javascript/\" target=\"_blank\">API Key</a> para mostrar un mapa en las "
+"tiendas."
 
 #: includes/admin/admin.php:340
 msgid "Show Contact Form on Store Page"
-msgstr ""
+msgstr "Formulario de contacto"
 
 #: includes/admin/admin.php:341
 msgid "Enable Vendor Contact Form in the store sidebar"
-msgstr ""
+msgstr "Mostrar formulario de contacto en las tiendas."
 
 #: includes/admin/admin.php:347
 msgid "Enable Store Sidebar From Theme"
-msgstr ""
+msgstr "Barra lateral del tema"
 
 #: includes/admin/admin.php:348
 msgid "Enable showing Store Sidebar From Your Theme."
-msgstr ""
+msgstr "Mostar la barra lateral del tema en la tienda."
 
 #: includes/admin/admin.php:356
 msgid "New Vendor Product Upload"
-msgstr ""
+msgstr "Vendedores nuevos"
 
 #: includes/admin/admin.php:357
 msgid "Allow newly registered vendors to add products"
-msgstr ""
+msgstr "Los vendedores nuevos pueden agregar productos"
 
 #: includes/admin/admin.php:364
 msgid "How much (%) a vendor will get from each order"
-msgstr ""
+msgstr "El porcentaje % de cada venta que va para el vendedor"
 
 #: includes/admin/admin.php:370 includes/admin/setup-wizard.php:351
 msgid "Order Status Change"
-msgstr ""
+msgstr "Estado de los pedidos"
 
 #: includes/admin/admin.php:371
 msgid "Vendor can update order status"
-msgstr ""
+msgstr "Los vendedores pueden actualizar el estado de los pedidos."
 
 #: includes/admin/admin.php:377
 msgid "Disable Product Popup"
-msgstr ""
+msgstr "Gestor de productos"
 
 #: includes/admin/admin.php:378
 msgid "Disable add new product in popup view"
-msgstr ""
+msgstr "Desactivar el gestor de productos en ventanas modales (popups)."
 
 #: includes/admin/admin.php:386 includes/admin/setup-wizard.php:414
 msgid "Withdraw Methods"
-msgstr ""
+msgstr "Métodos de extracción"
 
 #: includes/admin/admin.php:387
 msgid "Withdraw methods for vendors"
-msgstr ""
+msgstr "Métodos de extracción para vendedores"
 
 #: includes/admin/admin.php:394 includes/admin/setup-wizard.php:441
 msgid "Minimum Withdraw Limit"
-msgstr ""
+msgstr "Extracción mínima"
 
 #: includes/admin/admin.php:395
 msgid ""
 "Minimum balance required to make a withdraw request. Leave blank to set no "
 "minimum limits."
 msgstr ""
+"Balance mínimo necesario para hacer un pedido de extracción. Dejar en blanco "
+"para no fijar un mínimo."
 
 #: includes/admin/admin.php:415
 msgid "Terms and Conditions Page"
-msgstr ""
+msgstr "Términos y condiciones"
 
 #: includes/admin/admin.php:423
 msgid "Vendor Setup Wizard Logo"
-msgstr ""
+msgstr "Logo del asistente para nuevos vendedores"
 
 #: includes/admin/admin.php:425
 msgid ""
-"Recommended Logo size ( 270px X 90px ). If no logo is uploaded, site title is "
-"shown by default."
+"Recommended Logo size ( 270px X 90px ). If no logo is uploaded, site title "
+"is shown by default."
 msgstr ""
+"El tamaño recomendado para el logo es de 270 x 90 pixeles. Si no se "
+"selecciona un logo, se utiliza el título del sitio."
 
 #: includes/admin/admin.php:429
 msgid "Store Header Template"
-msgstr ""
+msgstr "Plantilla de las tiendas"
 
 #: includes/admin/dashboard.php:39
 msgid "Vendors"
-msgstr ""
+msgstr "Vendedores"
 
 #: includes/admin/dashboard.php:44
 #, php-format
 msgid "%d Total Vendor"
-msgstr ""
+msgstr "%d vendedor"
 
 #: includes/admin/dashboard.php:44
 #, php-format
 msgid "%d Total Vendors"
-msgstr ""
+msgstr "%d vendedores"
 
 #: includes/admin/dashboard.php:51
 #, php-format
 msgid "%d Active Vendor"
-msgstr ""
+msgstr "%d vendedor activo"
 
 #: includes/admin/dashboard.php:51
 #, php-format
 msgid "%d Active Vendors"
-msgstr ""
+msgstr "%d vendedores activos"
 
 #: includes/admin/dashboard.php:53
 msgid "No Active Vendor"
-msgstr ""
+msgstr "No hay vendedores activos"
 
 #: includes/admin/dashboard.php:62
 #, php-format
 msgid "%d Pending Vendor"
-msgstr ""
+msgstr "%d vendedor pendiente"
 
 #: includes/admin/dashboard.php:62
 #, php-format
 msgid "%d Pending Vendors"
-msgstr ""
+msgstr "%d vendedores activos"
 
 #: includes/admin/dashboard.php:64
 msgid "No Pending Vendor"
-msgstr ""
+msgstr "No hay vendedores pendientes"
 
 #: includes/admin/dashboard.php:77
 #, php-format
 msgid "%d Pending Withdraw"
-msgstr ""
+msgstr "%d extracciones pendientes"
 
 #: includes/admin/dashboard.php:81
 #, php-format
 msgid "%d Completed Withdraw"
-msgstr ""
+msgstr "%d extracciones completadas"
 
 #: includes/admin/dashboard.php:85
 #, php-format
 msgid "%d Cancelled Withdraw"
-msgstr ""
+msgstr "%d extracciones canceladas"
 
 #: includes/admin/dashboard.php:101
 msgid "At a Glance"
-msgstr ""
+msgstr "De un vistazo"
 
 #: includes/admin/dashboard.php:102
 msgid "Dokan News Updates"
-msgstr ""
+msgstr "Noticias de Dokan"
 
 #: includes/admin/dashboard.php:110
 msgid "Overview"
-msgstr ""
+msgstr "Resumen"
 
 #: includes/admin/pro-features.php:2
 msgid "Dokan - Pro Features"
-msgstr ""
+msgstr "Dokan Pro"
 
 #: includes/admin/setup-wizard.php:40
 msgctxt "enhanced select"
 msgid "One result is available, press enter to select it."
-msgstr ""
+msgstr "Un resultado disponible, presiona Enter para seleccionarlo."
 
 #: includes/admin/setup-wizard.php:41
 msgctxt "enhanced select"
 msgid "%qty% results are available, use up and down arrow keys to navigate."
-msgstr ""
+msgstr "%qty% resultados disponibles, usa las flechas para navegar."
 
 #: includes/admin/setup-wizard.php:42
 msgctxt "enhanced select"
 msgid "No matches found"
-msgstr ""
+msgstr "No se han encontrado resultados"
 
 #: includes/admin/setup-wizard.php:43
 msgctxt "enhanced select"
 msgid "Loading failed"
-msgstr ""
+msgstr "No se han podido cargar los resultados"
 
 #: includes/admin/setup-wizard.php:44
 msgctxt "enhanced select"
 msgid "Please enter 1 or more characters"
-msgstr ""
+msgstr "Por favor ingresa al menos un caracter"
 
 #: includes/admin/setup-wizard.php:45
 msgctxt "enhanced select"
 msgid "Please enter %qty% or more characters"
-msgstr ""
+msgstr "Por favor ingresa al menos %qty% caracteres"
 
 #: includes/admin/setup-wizard.php:46
 msgctxt "enhanced select"
 msgid "Please delete 1 character"
-msgstr ""
+msgstr "Por favor quita un caracter"
 
 #: includes/admin/setup-wizard.php:47
 msgctxt "enhanced select"
 msgid "Please delete %qty% characters"
-msgstr ""
+msgstr "Por favor quita %qty% caracteres"
 
 #: includes/admin/setup-wizard.php:48
 msgctxt "enhanced select"
 msgid "You can only select 1 item"
-msgstr ""
+msgstr "Solo puedes seleccionar un resultado"
 
 #: includes/admin/setup-wizard.php:49
 msgctxt "enhanced select"
 msgid "You can only select %qty% items"
-msgstr ""
+msgstr "Solo puedes seleccionar %qty% resultados"
 
 #: includes/admin/setup-wizard.php:50
 msgctxt "enhanced select"
 msgid "Loading more results&hellip;"
-msgstr ""
+msgstr "Cargar mas resultados..."
 
 #: includes/admin/setup-wizard.php:51
 msgctxt "enhanced select"
 msgid "Searching&hellip;"
-msgstr ""
+msgstr "Buscando..."
 
 #: includes/admin/setup-wizard.php:135
 msgid "Dokan &rsaquo; Setup Wizard"
-msgstr ""
+msgstr "Dokan &rsaquo; Asistente de configuración"
 
 #: includes/admin/setup-wizard.php:202
 msgid "Return to the WordPress Dashboard"
-msgstr ""
+msgstr "Regresar al escritorio de WordPress"
 
 #: includes/admin/setup-wizard.php:244
 msgid "Welcome to the world of Dokan!"
-msgstr ""
+msgstr "¡Bienvenido al mundo de Dokan!"
 
 #: includes/admin/setup-wizard.php:245
 msgid ""
-"Thank you for choosing Dokan to power your online marketplace! This quick setup "
-"wizard will help you configure the basic settings. <strong>It’s completely "
-"optional and shouldn’t take longer than three minutes.</strong>"
+"Thank you for choosing Dokan to power your online marketplace! This quick "
+"setup wizard will help you configure the basic settings. <strong>It’s "
+"completely optional and shouldn’t take longer than three minutes.</strong>"
 msgstr ""
+"¡Gracias por elegir Dokan para potenciar tu mercado online! Este rápido "
+"asistente te ayudará a configurar las opciones básicas <strong>Es totalmente "
+"opcional y no te debería llevar más de dos minutos.</strong>"
 
 #: includes/admin/setup-wizard.php:246
 msgid ""
-"No time right now? If you don’t want to go through the wizard, you can skip and "
-"return to the WordPress dashboard. Come back anytime if you change your mind!"
+"No time right now? If you don’t want to go through the wizard, you can skip "
+"and return to the WordPress dashboard. Come back anytime if you change your "
+"mind!"
 msgstr ""
+"¿No tienes tiempo ahora? Si no quieres configurar la tienda ahora, te puedes "
+"saltear esto y regresar a la tienda. Puedes regresar en cualquier momento si "
+"cambias de opinión."
 
 #: includes/admin/setup-wizard.php:274
 msgid "Define vendor store URL"
-msgstr ""
+msgstr "Definir la URL de las tiendas de los vendedores"
 
 #: includes/admin/setup-wizard.php:288
 msgid "Extra fees like shipping and tax will go to"
-msgstr ""
+msgstr "Las tarifas extra, como el envío y los impuestos, irán a"
 
 #: includes/admin/setup-wizard.php:328
 msgid "Tab View"
-msgstr ""
+msgstr "Vista en pestañas"
 
 #: includes/admin/setup-wizard.php:329
 msgid "Flat View"
-msgstr ""
+msgstr "Vista plana"
 
 #: includes/admin/setup-wizard.php:333
 msgid "Selling Setup"
-msgstr ""
+msgstr "Configuración de ventas"
 
 #: includes/admin/setup-wizard.php:337
 msgid "New Vendor Enable Selling"
-msgstr ""
+msgstr "Permitir que los vendedores nuevos agreguen productos"
 
 #: includes/admin/setup-wizard.php:340
 msgid "Make selling status enable for new registred vendor"
-msgstr ""
+msgstr "Permitir que los vendedores actualizan el estado de los pedidos"
 
 #: includes/admin/setup-wizard.php:347
 msgid "How much amount (%) a vendor will get from each order"
-msgstr ""
+msgstr "El porcentaje de cada venta va al vendedor"
 
 #: includes/admin/setup-wizard.php:354
 msgid "Vendor can change order status"
-msgstr ""
+msgstr "El vendedor puede cambiar el estado de los pedidos"
 
 #: includes/admin/setup-wizard.php:358
 msgid "Add/Edit Product Style"
-msgstr ""
+msgstr "Agregar/editar el estilo de los productos"
 
 #: includes/admin/setup-wizard.php:368
 msgid "The style you prefer for vendor to add or edit products."
-msgstr ""
+msgstr "Estilo en que los vendedores pueden agregar o editar productos."
 
 #: includes/admin/setup-wizard.php:410
 msgid "Withdraw Setup"
-msgstr ""
+msgstr "Configuración de extracciones"
 
 #: includes/admin/setup-wizard.php:444
 msgid ""
-"Minimum balance required to make a withdraw request ( Leave it blank to set no "
-"limits )"
+"Minimum balance required to make a withdraw request ( Leave it blank to set "
+"no limits )"
 msgstr ""
+"Balance mínimo necesario para hacer un pedido de extracción (dejar en blanco "
+"para no fijar un mínimo)"
 
 #: includes/admin/setup-wizard.php:448
 msgid "Order Status for Withdraw"
-msgstr ""
+msgstr "Estado de los pedidos para poder extraer"
 
 #: includes/admin/setup-wizard.php:450 includes/order-functions.php:497
 #: templates/dashboard/orders-widget.php:26
 msgid "Completed"
-msgstr ""
+msgstr "Completados"
 
 #: includes/admin/setup-wizard.php:451 includes/order-functions.php:512
 #: templates/dashboard/orders-widget.php:36 templates/orders/listing.php:96
 msgid "Processing"
-msgstr ""
+msgstr "Procesando"
 
 #: includes/admin/setup-wizard.php:452 includes/order-functions.php:507
 msgid "On-hold"
-msgstr ""
+msgstr "Retenido"
 
 #: includes/admin/setup-wizard.php:454
 msgid "Order status for which vendor can make a withdraw request."
 msgstr ""
+"Estado de los pedidos por los que el vendedor puede reclamar extracciones."
 
 #: includes/admin/setup-wizard.php:490
 msgid "Your Marketplace is Ready!"
-msgstr ""
+msgstr "¡Tu mercado está listo!"
 
 #: includes/admin/setup-wizard.php:494
 msgid "Next Steps"
-msgstr ""
+msgstr "Próximos pasos"
 
 #: includes/admin/setup-wizard.php:496
 msgid "Setup your dokan!"
-msgstr ""
+msgstr "¡Configura tu Dokan!"
 
 #: includes/admin/setup-wizard.php:500
 msgid "Learn More"
-msgstr ""
+msgstr "Aprende más"
 
 #: includes/admin/welcome.php:15
 msgid "Thank you for installing Dokan!"
-msgstr ""
+msgstr "¡Gracias por instalar Dokan!"
 
 #: includes/admin/welcome.php:16
 #, php-format
-msgid "Dokan %s makes it even easier to start your own multivendor marketplace."
-msgstr ""
+msgid ""
+"Dokan %s makes it even easier to start your own multivendor marketplace."
+msgstr "Dokan %s hace que empezar tu propio mercado sea más fácil que nunca."
 
 #: includes/admin/welcome.php:40
 msgid "Order Synchronization"
-msgstr ""
+msgstr "Sincronización de los pedidos"
 
 #: includes/admin/welcome.php:43
 msgid ""
-"Seems like you have some unsynchronized orders. This tool will re-build Dokan's "
-"sync table."
+"Seems like you have some unsynchronized orders. This tool will re-build "
+"Dokan's sync table."
 msgstr ""
+"Parece que tienes algunos pedidos sin sincronizar. Esta herramienta regenera "
+"tu tabla de sincronizaciones."
 
 #: includes/admin/welcome.php:44
 msgid "Don't worry, any existing orders will not be deleted."
-msgstr ""
+msgstr "No te preocupes, los pedidos existentes no serán borrados."
 
 #: includes/admin/welcome.php:54
 msgid "Skip"
-msgstr ""
+msgstr "Saltear"
 
 #: includes/admin/welcome.php:55
 msgid "Synchronize Orders"
-msgstr ""
+msgstr "Sincronizar pedidos"
 
 #: includes/admin/welcome.php:65
 msgid "Flat view style for product add and edit"
-msgstr ""
+msgstr "Estilo plano para gestionar productos"
 
 #: includes/admin/welcome.php:66
 msgid ""
-"New Flat view for add or edit product is a single page design to add new products "
-"from one place. To switch the new product upload screen, you can go to wp-admin → "
-"Dokan → Settings → Selling Options → Add Edit Product Style."
+"New Flat view for add or edit product is a single page design to add new "
+"products from one place. To switch the new product upload screen, you can go "
+"to wp-admin → Dokan → Settings → Selling Options → Add Edit Product Style."
 msgstr ""
+"El nuevo estilo plano para gestionar productos es una única página diseñada "
+"para gestionar productos desde un solo lugar. Para cambiar el estilo, puedes "
+"ir a wp-admin > Dokan > Ajustes > Ventas > Gestor de productos."
 
 #: includes/admin/welcome.php:70
 msgid "Store SEO manage system for vendors store"
-msgstr ""
+msgstr "Sistema de gestión de SEO para las tiendas de los vendedores"
 
 #: includes/admin/welcome.php:71
 msgid ""
-"From now on, whenever someone shares the store page, the images and texts written "
-"on the settings will appear on the social sites. So your vendors can get more "
-"traffic from search engines and social sites."
+"From now on, whenever someone shares the store page, the images and texts "
+"written on the settings will appear on the social sites. So your vendors can "
+"get more traffic from search engines and social sites."
 msgstr ""
+"De ahora en adelante, cuando alguien comparta una página de vendedor, las "
+"imágenes y textos escritos en los ajustes aparecerán en los sitios sociales. "
+"Así tus vendedores pueden recibir más tráfico desde los buscadores y los "
+"sitios sociales."
 
 #: includes/admin/welcome.php:75
 msgid "Shipping calculator on single product page"
-msgstr ""
+msgstr "Calculador de envíos en la página de producto"
 
 #: includes/admin/welcome.php:76
 msgid ""
-"From this version, the customers can calculate the shipping cost right from the "
-"product page, before adding them to cart and also know about if that product "
-"ships to his location or not. So this means less cart abandonment and more "
-"conversion."
+"From this version, the customers can calculate the shipping cost right from "
+"the product page, before adding them to cart and also know about if that "
+"product ships to his location or not. So this means less cart abandonment "
+"and more conversion."
 msgstr ""
+"A partir de esta versión, los clientes pueden calcular el costo de envío "
+"desde la página del producto, antes de agregarlo a su carrito y también "
+"saber si el producto se envía a su ubicación o no. Esto implica menos "
+"abandono de carritos y mayor conversión."
 
 #: includes/admin/welcome.php:82
 msgid "Changelog"
-msgstr ""
+msgstr "Lista de cambios"
 
 #: includes/admin/withdraw.php:8
 msgid "Withdraw Requests"
-msgstr ""
+msgstr "Pedidos de extracción"
 
 #: includes/admin/withdraw.php:18
 msgid "Approved"
-msgstr ""
+msgstr "Aprobado"
 
 #: includes/admin/withdraw.php:23 includes/order-functions.php:522
 #: templates/dashboard/orders-widget.php:41
 msgid "Cancelled"
-msgstr ""
+msgstr "Cancelados"
 
 #: includes/functions.php:553 templates/products/new-product-single.php:573
 msgid "Online"
-msgstr ""
+msgstr "Publicado"
 
 #: includes/functions.php:554 templates/products/new-product-single.php:574
 msgid "Draft"
-msgstr ""
+msgstr "Borrador"
 
 #: includes/functions.php:555 templates/dashboard/products-widget.php:41
 msgid "Pending Review"
-msgstr ""
+msgstr "Pendiente"
 
 #: includes/functions.php:597
 msgid "Simple Product"
-msgstr ""
+msgstr "Producto simple"
 
 #: includes/functions.php:598
 msgid "Variable Product"
-msgstr ""
+msgstr "Producto variable"
 
 #: includes/functions.php:599
 msgid "Grouped Product"
-msgstr ""
+msgstr "Producto agrupado"
 
 #: includes/functions.php:600
 msgid "Scheduled Product"
-msgstr ""
+msgstr "Producto programado"
 
 #: includes/functions.php:798
 msgid "Author"
-msgstr ""
+msgstr "Autor"
 
 #: includes/functions.php:987 includes/template-tags.php:308
 #: templates/dashboard/products-widget.php:16
 msgid "Products"
-msgstr ""
+msgstr "Productos"
 
 #: includes/functions.php:1034
 #, php-format
 msgid "Account Name: %s"
-msgstr ""
+msgstr "Nombre de la cuenta: %s"
 
 #: includes/functions.php:1037
 #, php-format
 msgid "Account Number: %s"
-msgstr ""
+msgstr "Número de la cuenta: %s"
 
 #: includes/functions.php:1040
 #, php-format
 msgid "Bank Name: %s"
-msgstr ""
+msgstr "Nombre del banco: %s"
 
 #: includes/functions.php:1043
 #, php-format
 msgid "Address: %s"
-msgstr ""
+msgstr "Dirección: %s"
 
 #: includes/functions.php:1046
 #, php-format
 msgid "SWIFT: %s"
-msgstr ""
+msgstr "SWIFT: %s"
 
 #: includes/functions.php:1335
 msgid "- Select a location -"
-msgstr ""
+msgstr "- Seleccionar una ubicación -"
 
 #: includes/functions.php:1339 includes/functions.php:1362
 msgid "Everywhere Else"
-msgstr ""
+msgstr "Cualquier otro lugar"
 
 #: includes/functions.php:1358
 msgid "- Select a State -"
-msgstr ""
+msgstr "- Seleccionar un estado o provincia -"
 
 #: includes/functions.php:1380
 msgid "Ready to ship in..."
-msgstr ""
+msgstr "Listo para enviar en…"
 
 #: includes/functions.php:1381
 msgid "1 business day"
-msgstr ""
+msgstr "1 día hábil"
 
 #: includes/functions.php:1382
 msgid "1-2 business day"
-msgstr ""
+msgstr "1-2 días hábiles"
 
 #: includes/functions.php:1383
 msgid "1-3 business day"
-msgstr ""
+msgstr "1-3 días hábiles"
 
 #: includes/functions.php:1384
 msgid "3-5 business day"
-msgstr ""
+msgstr "3-5 días hábiles"
 
 #: includes/functions.php:1385
 msgid "1-2 weeks"
-msgstr ""
+msgstr "1-2 semanas"
 
 #: includes/functions.php:1386
 msgid "2-3 weeks"
-msgstr ""
+msgstr "2-3 semanas"
 
 #: includes/functions.php:1387
 msgid "3-4 weeks"
-msgstr ""
+msgstr "3-4 semanas"
 
 #: includes/functions.php:1388
 msgid "4-6 weeks"
-msgstr ""
+msgstr "4-6 semanas"
 
 #: includes/functions.php:1389
 msgid "6-8 weeks"
-msgstr ""
+msgstr "6-8 semanas"
 
 #: includes/functions.php:1489
 msgid "All dates"
-msgstr ""
+msgstr "Todas las fechas"
 
 #: includes/functions.php:1502
 #, php-format
 msgid "%1$s %2$d"
-msgstr ""
+msgstr "%1$s %2$d"
 
 #: includes/functions.php:1575
 msgid "Google Plus"
-msgstr ""
+msgstr "Google+"
 
 #: includes/functions.php:1579
 msgid "Twitter"
-msgstr ""
+msgstr "Twitter"
 
 #: includes/functions.php:1583
 msgid "LinkedIn"
-msgstr ""
+msgstr "LinkedIn"
 
 #: includes/functions.php:1587
 msgid "Youtube"
-msgstr ""
+msgstr "YouTube"
 
 #: includes/functions.php:1591
 msgid "Instagram"
-msgstr ""
+msgstr "Instagram"
 
 #: includes/functions.php:1595
 msgid "Flickr"
-msgstr ""
+msgstr "Flickr"
 
 #: includes/order-functions.php:321
 msgid "Mark parent order completed when all child orders are completed."
 msgstr ""
+"Marcar el pedido principal como completado cuando todos los sub-pedidos "
+"están completados."
 
 #: includes/order-functions.php:502
 msgid "Pending Payment"
-msgstr ""
+msgstr "Pago pendiente"
 
 #: includes/order-functions.php:517 templates/dashboard/orders-widget.php:46
 msgid "Refunded"
-msgstr ""
+msgstr "Reembolsados"
 
 #: includes/order-functions.php:527
 msgid "Failed"
-msgstr ""
+msgstr "Fallido"
 
 #: includes/product-functions.php:192
 msgid ""
-"Before you can add a variation you need to add some variation attributes on the "
-"<strong>Attributes</strong> section"
+"Before you can add a variation you need to add some variation attributes on "
+"the <strong>Attributes</strong> section"
 msgstr ""
+"Antes de que puedas agregar una variación tienes que agregar algunos "
+"atributos de variación en la sección Atributos"
 
 #: includes/product-functions.php:202
 msgid "Add variation"
-msgstr ""
+msgstr "Agregar variación"
 
 #: includes/product-functions.php:203
 msgid "Create variations from all attributes"
-msgstr ""
+msgstr "Crear variaciones a partir de todos los atributos"
 
 #: includes/product-functions.php:204
 msgid "Delete all variations"
-msgstr ""
+msgstr "Borrar todas las variaciones"
 
 #: includes/product-functions.php:206
 msgid "Toggle &quot;Enabled&quot;"
-msgstr ""
+msgstr "Mostrar u ocultar “activado”"
 
 #: includes/product-functions.php:207
 msgid "Toggle &quot;Downloadable&quot;"
-msgstr ""
+msgstr "Mostrar u ocultar “descargable”"
 
 #: includes/product-functions.php:208
 msgid "Toggle &quot;Virtual&quot;"
-msgstr ""
+msgstr "Mostrar u ocultar “virtual”"
 
 #: includes/product-functions.php:210
 msgid "Pricing"
-msgstr ""
+msgstr "Precio"
 
 #: includes/product-functions.php:211
 msgid "Set regular prices"
-msgstr ""
+msgstr "Definir precios normales"
 
 #: includes/product-functions.php:212
 msgid "Increase regular prices (fixed amount or percentage)"
-msgstr ""
+msgstr "Subir precios normales (cantidad fija o porcentaje)"
 
 #: includes/product-functions.php:213
 msgid "Decrease regular prices (fixed amount or percentage)"
-msgstr ""
+msgstr "Bajar precios normales (cantidad fija o porcentaje)"
 
 #: includes/product-functions.php:214
 msgid "Set sale prices"
-msgstr ""
+msgstr "Definir precios de oferta"
 
 #: includes/product-functions.php:215
 msgid "Increase sale prices (fixed amount or percentage)"
-msgstr ""
+msgstr "Subir precios de oferta (cantidad fija o porcentaje)"
 
 #: includes/product-functions.php:216
 msgid "Decrease sale prices (fixed amount or percentage)"
-msgstr ""
+msgstr "Bajar precios de oferta (cantidad fija o porcentaje)"
 
 #: includes/product-functions.php:217
 msgid "Set scheduled sale dates"
-msgstr ""
+msgstr "Definir fechas de oferta"
 
-#: includes/product-functions.php:219 templates/products/new-product-single.php:420
+#: includes/product-functions.php:219
+#: templates/products/new-product-single.php:420
 msgid "Inventory"
-msgstr ""
+msgstr "Inventario"
 
 #: includes/product-functions.php:220
 msgid "Toggle &quot;Manage stock&quot;"
-msgstr ""
+msgstr "Mostrar u ocultar “gestionar existencias”"
 
-#: includes/product-functions.php:221 templates/products/products-listing.php:61
+#: includes/product-functions.php:221
+#: templates/products/products-listing.php:61
 #: templates/products/products-listing.php:150
 msgid "Stock"
-msgstr ""
+msgstr "Existencias"
 
 #: includes/product-functions.php:223
 msgid "Shipping"
-msgstr ""
+msgstr "Envío"
 
 #: includes/product-functions.php:224
 msgid "Length"
-msgstr ""
+msgstr "Largo"
 
 #: includes/product-functions.php:225
 msgid "Width"
-msgstr ""
+msgstr "Ancho"
 
 #: includes/product-functions.php:226
 msgid "Height"
-msgstr ""
+msgstr "Alto"
 
 #: includes/product-functions.php:227
 msgid "Weight"
-msgstr ""
+msgstr "Peso"
 
 #: includes/product-functions.php:229
 msgid "Downloadable products"
-msgstr ""
+msgstr "Productos descargabas"
 
 #: includes/product-functions.php:230
 msgid "Download limit"
-msgstr ""
+msgstr "Límite de descargas"
 
 #: includes/product-functions.php:231
 msgid "Download expiry"
-msgstr ""
+msgstr "Expiración de la descarga"
 
 #: includes/product-functions.php:235
 msgid "Go"
-msgstr ""
+msgstr "Ir"
 
 #: includes/product-functions.php:242
 msgid ""
-"Default Form Values: These are the attributes that will be pre-selected on the "
-"frontend."
+"Default Form Values: These are the attributes that will be pre-selected on "
+"the frontend."
 msgstr ""
+"Valores por defecto: estos son los atributos que serán seleccionados por "
+"defecto en el frontend."
 
 #: includes/product-functions.php:260
 msgid "No default"
-msgstr ""
+msgstr "Sin valor por defecto"
 
 #: includes/product-functions.php:300
 msgid "Save Variations"
-msgstr ""
+msgstr "Guardar variaciones"
 
 #: includes/product-functions.php:304
 #, php-format
 msgid "%s item"
 msgid_plural "%s items"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s producto"
+msgstr[1] "%s productos"
 
 #: includes/product-functions.php:306
 msgid "Expand"
-msgstr ""
+msgstr "Expandir"
 
 #: includes/product-functions.php:306 templates/orders/details.php:326
 msgid "Close"
-msgstr ""
+msgstr "Cerrar"
 
 #: includes/product-functions.php:309
 msgid "Go to the first page"
-msgstr ""
+msgstr "Ir a la primera página"
 
 #: includes/product-functions.php:310
 msgid "Go to the previous page"
-msgstr ""
+msgstr "Ir a la página anterior"
 
 #: includes/product-functions.php:312
 msgid "Select Page"
-msgstr ""
+msgstr "Seleccionar página"
 
 #: includes/product-functions.php:313
 msgid "Current page"
-msgstr ""
+msgstr "Página actual"
 
 #: includes/product-functions.php:318
 msgctxt "number of pages"
 msgid "of"
-msgstr ""
+msgstr "de"
 
 #: includes/product-functions.php:320
 msgid "Go to the next page"
-msgstr ""
+msgstr "Ir a la próxima página"
 
 #: includes/product-functions.php:321
 msgid "Go to the last page"
-msgstr ""
+msgstr "Ir a la última página"
 
 #: includes/product-functions.php:344
 msgid "Visible"
-msgstr ""
+msgstr "Visible"
 
 #: includes/product-functions.php:345
 msgid "Catalog"
-msgstr ""
+msgstr "Catálogo"
 
 #: includes/product-functions.php:346 templates/products/listing-filter.php:50
 msgid "Search"
-msgstr ""
+msgstr "Buscar"
 
-#: includes/product-functions.php:347 templates/products/new-product-single.php:124
+#: includes/product-functions.php:347
+#: templates/products/new-product-single.php:124
 msgid "Hidden"
-msgstr ""
+msgstr "Oculto"
 
 #: includes/reports.php:336
 msgid "Sales total"
-msgstr ""
+msgstr "Ventas"
 
 #: includes/template-tags.php:45
 msgctxt "Previous post link"
 msgid "&larr;"
-msgstr ""
+msgstr "&larr;"
 
 #: includes/template-tags.php:48
 msgctxt "Next post link"
 msgid "&rarr;"
-msgstr ""
+msgstr "&rarr;"
 
 #: includes/template-tags.php:109 templates/store-lists-loop.php:84
 msgid "&larr; Previous"
-msgstr ""
+msgstr "&larr; Anterior"
 
 #: includes/template-tags.php:120 templates/store-lists-loop.php:85
 msgid "Next &rarr;"
-msgstr ""
+msgstr "Siguiente &rarr;"
 
 #: includes/template-tags.php:136
 msgid "Product succesfully deleted"
-msgstr ""
+msgstr "Producto borrado exitosamente"
 
-#: includes/template-tags.php:192 templates/products/listing-status-filter.php:13
+#: includes/template-tags.php:192
+#: templates/products/listing-status-filter.php:13
 #, php-format
 msgid "All (%d)"
-msgstr ""
+msgstr "Todos (%d)"
 
 #: includes/template-tags.php:206
 #, php-format
 msgid "Completed (%d)"
-msgstr ""
+msgstr "Completados (%d)"
 
 #: includes/template-tags.php:220
 #, php-format
 msgid "Processing (%d)"
-msgstr ""
+msgstr "Procesando (%d)"
 
 #: includes/template-tags.php:234
 #, php-format
 msgid "On-hold (%d)"
-msgstr ""
+msgstr "Retenidos (%d)"
 
 #: includes/template-tags.php:248
 #, php-format
 msgid "Pending (%d)"
-msgstr ""
+msgstr "Pendientes (%d)"
 
 #: includes/template-tags.php:262
 #, php-format
 msgid "Cancelled (%d)"
-msgstr ""
+msgstr "Cancelados (%d)"
 
 #: includes/template-tags.php:276
 #, php-format
 msgid "Refunded (%d)"
-msgstr ""
+msgstr "Reembolsados (%d)"
 
 #: includes/template-tags.php:314 templates/dashboard/orders-widget.php:15
 msgid "Orders"
-msgstr ""
+msgstr "Pedidos"
 
 #: includes/template-tags.php:329
 msgid "Settings <i class=\"fa fa-angle-right pull-right\"></i>"
-msgstr ""
+msgstr "Ajustes <i class=\"fa fa-angle-right pull-right\"></i>"
 
 #: includes/template-tags.php:337
 msgid "Back to Dashboard"
-msgstr ""
+msgstr "Volver"
 
 #: includes/template-tags.php:417 templates/settings/header.php:13
 #: templates/store-lists-loop.php:61
 msgid "Visit Store"
-msgstr ""
+msgstr "Visitar tienda"
 
 #: includes/template-tags.php:418 templates/global/header-menu.php:48
 msgid "Edit Account"
-msgstr ""
+msgstr "Editar cuenta"
 
 #: includes/template-tags.php:419
 msgid "Log out"
-msgstr ""
+msgstr "Cerrar sesión"
 
 #: includes/wc-crud-functions.php:85 includes/wc-legacy-functions.php:61
 #, php-format
 msgid "Order &ndash; %s"
-msgstr ""
+msgstr "Pedido &ndash; %s"
 
 #: includes/wc-crud-functions.php:85 includes/wc-legacy-functions.php:61
 msgctxt "Order date parsed by strftime"
 msgid "%b %d, %Y @ %I:%M %p"
-msgstr ""
+msgstr "%b %d, %Y @ %I:%M %p"
 
 #: includes/wc-functions.php:85
 msgid "Product SKU must be unique."
-msgstr ""
+msgstr "El SKU del producto debe ser único."
 
 #: includes/wc-functions.php:461
 msgid "Cheating, eh?"
-msgstr ""
+msgstr "¿Haciendo trampa?"
 
 #: includes/wc-functions.php:470
 msgid "Please enter your first name."
-msgstr ""
+msgstr "Por favor ingresa tu nombre."
 
 #: includes/wc-functions.php:475
 msgid "Please enter your last name."
-msgstr ""
+msgstr "Por favor ingresa tu apellido."
 
 #: includes/wc-functions.php:479
 msgid "Please enter your phone number."
-msgstr ""
+msgstr "Por favor ingresa tu número de teléfono."
 
 #: includes/wc-functions.php:929
 msgid "No ratings found yet!"
-msgstr ""
+msgstr "No hay calificaciones aún"
 
 #: includes/wc-functions.php:933
 #, php-format
 msgid "%s rating from %d review"
 msgid_plural "%s rating from %d reviews"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Calificación %s de %d reseña"
+msgstr[1] "Calificación %s de %d reseñas"
 
 #: includes/wc-functions.php:934
 #, php-format
 msgid "Rated %s out of %d"
-msgstr ""
+msgstr "Calificación %s de %d"
 
 #: includes/wc-functions.php:973
 msgid "Your {site_title} order receipt from {order_date}"
-msgstr ""
+msgstr "[{site_title}] Tu recibo del pedido con fecha {order_date}"
 
 #: includes/wc-functions.php:974
 msgid "Your {site_title} order from {order_date} is complete"
-msgstr ""
+msgstr "[{site_title}] Tu pedido con fecha {order_date} está completo"
 
-#: includes/wc-functions.php:1071 templates/global/seller-registration-form.php:15
+#: includes/wc-functions.php:1071
+#: templates/global/seller-registration-form.php:15
 msgid "First Name"
-msgstr ""
+msgstr "Nombre"
 
-#: includes/wc-functions.php:1072 templates/global/seller-registration-form.php:20
+#: includes/wc-functions.php:1072
+#: templates/global/seller-registration-form.php:20
 msgid "Last Name"
-msgstr ""
+msgstr "Apellido"
 
 #: includes/wc-functions.php:1073 templates/dashboard/edit-account.php:62
 msgid "Email address"
-msgstr ""
+msgstr "Email"
 
 #: includes/wc-functions.php:1078
 msgid "is a required field."
-msgstr ""
+msgstr "es necesario."
 
 #: includes/wc-functions.php:1084
 msgid "Please provide a valid email address."
-msgstr ""
+msgstr "Por favor ingresa un email válido."
 
 #: includes/wc-functions.php:1086
 msgid "This email address is already registered."
-msgstr ""
+msgstr "Ese email ya está registrado."
 
 #: includes/wc-functions.php:1092
 msgid "Your current password is incorrect."
-msgstr ""
+msgstr "Tu contraseña actual es incorrecta."
 
 #: includes/wc-functions.php:1097
 msgid "Please fill out all password fields."
-msgstr ""
+msgstr "Por favor llena todos los campos de contraseña."
 
 #: includes/wc-functions.php:1100
 msgid "Please enter your current password."
-msgstr ""
+msgstr "Por favor ingresa tu contraseña actual."
 
 #: includes/wc-functions.php:1103
 msgid "Please re-enter your password."
-msgstr ""
+msgstr "Por favor ingresa tu contraseña otra vez."
 
 #: includes/wc-functions.php:1106
 msgid "New passwords do not match."
-msgstr ""
+msgstr "Las contraseñas nuevas no coinciden."
 
 #: includes/wc-functions.php:1127
 msgid "Account details changed successfully."
-msgstr ""
+msgstr "Los detalles de tu cuenta se han actualizado con éxito."
 
 #: includes/wc-template.php:32
 msgid "Vendor Info"
-msgstr ""
+msgstr "Acerca del vendedor"
 
 #: includes/widgets/bestselling-product.php:55
 msgid "Best Selling Product"
-msgstr ""
+msgstr "Producto mejor vendido"
 
 #: includes/widgets/bestselling-product.php:62
 #: includes/widgets/menu-category.php:147 includes/widgets/store-contact.php:87
 #: includes/widgets/store-location.php:90 includes/widgets/store-menu.php:70
 #: includes/widgets/top-rated-product.php:61
 msgid "Title:"
-msgstr ""
+msgstr "Título:"
 
 #: includes/widgets/bestselling-product.php:66
 #: includes/widgets/top-rated-product.php:65
 msgid "No of Product:"
-msgstr ""
+msgstr "Número de producto:"
 
 #: includes/widgets/bestselling-product.php:71
 #: includes/widgets/top-rated-product.php:70
 msgid "Show Product Rating"
-msgstr ""
+msgstr "Mostrar calificación del producto"
 
 #: includes/widgets/menu-category.php:70
 msgid "Dokan product category menu"
-msgstr ""
+msgstr "Menú de categoría del producto"
 
 #: includes/widgets/menu-category.php:141
 msgid "Product Category"
-msgstr ""
+msgstr "Categoría del producto"
 
 #: includes/widgets/store-contact.php:18
 msgid "Dokan Vendor Contact Form"
-msgstr ""
+msgstr "Formulario de contacto del vendedor"
 
 #: includes/widgets/store-contact.php:19
 msgid "Dokan: Store Contact Form"
-msgstr ""
+msgstr "Formulario de contacto de la tienda"
 
 #: includes/widgets/store-contact.php:81 templates/store-toc.php:36
 #: templates/store.php:41
 msgid "Contact Vendor"
-msgstr ""
+msgstr "Contactar al vendedor"
 
 #: includes/widgets/store-location.php:18
 msgid "Dokan Vendor Store Location"
-msgstr ""
+msgstr "Ubicación de la tienda del vendedor"
 
 #: includes/widgets/store-location.php:19
 msgid "Dokan: Store Location"
-msgstr ""
+msgstr "Ubicación de la tienda"
 
 #: includes/widgets/store-location.php:84 templates/store-toc.php:33
 #: templates/store.php:37
 msgid "Store Location"
-msgstr ""
+msgstr "Ubicación de la tienda"
 
 #: includes/widgets/store-menu.php:16
 msgid "Dokan Seller Store Menu"
-msgstr ""
+msgstr "Menú de la tienda del vendedor"
 
 #: includes/widgets/store-menu.php:17
 msgid "Dokan: Store Category Menu"
-msgstr ""
+msgstr "Menú de categoría de la tienda"
 
-#: includes/widgets/store-menu.php:64 templates/products/new-product-single.php:254
+#: includes/widgets/store-menu.php:64
+#: templates/products/new-product-single.php:254
 #: templates/products/new-product-single.php:285
 msgid "Category"
-msgstr ""
+msgstr "Categoría"
 
 #: includes/widgets/top-rated-product.php:10
 msgid "Dokan: Top Rated Product Widget"
-msgstr ""
+msgstr "Widget de productos mejor calificados"
 
 #: includes/widgets/top-rated-product.php:11
 msgid "A Widget for displaying To rated products for dokan"
-msgstr ""
+msgstr "Un widget para mostrar los productos mejor calificados"
 
 #: includes/widgets/top-rated-product.php:54
 msgid "Top Rated Product"
-msgstr ""
+msgstr "Producto mejor calificado"
 
 #: includes/withdraw-functions.php:11
 msgid "PayPal"
-msgstr ""
+msgstr "PayPal"
 
 #: includes/withdraw-functions.php:15
 msgid "Bank Transfer"
-msgstr ""
+msgstr "Transferencia bancaria"
 
 #: includes/withdraw-functions.php:98 includes/withdraw-functions.php:120
 msgid "E-mail"
-msgstr ""
+msgstr "Email"
 
 #: includes/withdraw-functions.php:143
 msgid "Your bank account name"
-msgstr ""
+msgstr "Nombre de tu cuenta de banco"
 
 #: includes/withdraw-functions.php:149
 msgid "Your bank account number"
-msgstr ""
+msgstr "Número de tu cuenta de banco"
 
 #: includes/withdraw-functions.php:155
 msgid "Name of bank"
-msgstr ""
+msgstr "Nombre del banco"
 
 #: includes/withdraw-functions.php:161
 msgid "Address of your bank"
-msgstr ""
+msgstr "Dirección del banco"
 
 #: includes/withdraw-functions.php:167
 msgid "Swift code"
-msgstr ""
+msgstr "Código SWIFT"
 
 #: includes/woo-views/html-product-download.php:7
 msgid "File Name:"
-msgstr ""
+msgstr "Nombre del archivo:"
 
 #: includes/woo-views/html-product-download.php:7
 #: templates/products/new-product-single.php:521
 msgid "This is the name of the download shown to the customer."
-msgstr ""
+msgstr "Este es el nombre de la descarga mostrada al cliente."
 
 #: includes/woo-views/html-product-download.php:8
 #: includes/woo-views/html-product-download.php:27
 msgid "File Name"
-msgstr ""
+msgstr "Nombre del archivo"
 
 #: includes/woo-views/html-product-download.php:12
 msgid "File URL:"
-msgstr ""
+msgstr "URL del archivo:"
 
 #: includes/woo-views/html-product-download.php:12
 #: templates/products/new-product-single.php:522
 msgid ""
-"This is the URL or absolute path to the file which customers will get access to."
-msgstr ""
+"This is the URL or absolute path to the file which customers will get access "
+"to."
+msgstr "Esta es la URL del archivo al que los clientes tendrán acceso."
 
 #: includes/woo-views/html-product-download.php:13
 #: includes/woo-views/html-product-download.php:31
 msgid "http://"
-msgstr ""
+msgstr "http://"
 
 #: includes/woo-views/html-product-download.php:17
 #: includes/woo-views/html-product-download.php:32
 msgid "Choose file"
-msgstr ""
+msgstr "Seleccionar archivo"
 
 #: lib/class-wedevs-insights.php:282
 #, php-format
 msgid ""
-"Want to help make <strong>%s</strong> even more awesome? Allow weDevs to collect "
-"non-sensitive diagnostic data and usage information."
+"Want to help make <strong>%s</strong> even more awesome? Allow weDevs to "
+"collect non-sensitive diagnostic data and usage information."
 msgstr ""
+"¿Quieres ayudar a que <strong>%s</strong> sea aún mejor? Permite a weDevs "
+"recolectar información de diagnóstico y uso."
 
 #: lib/class-wedevs-insights.php:287
 msgid "what we collect"
-msgstr ""
+msgstr "lo que recolectamos"
 
-#: lib/class-wedevs-insights.php:293 templates/products/new-product-single.php:463
+#: lib/class-wedevs-insights.php:293
+#: templates/products/new-product-single.php:463
 msgid "Allow"
-msgstr ""
+msgstr "Permitir"
 
 #: lib/class-wedevs-insights.php:294
 msgid "No thanks"
-msgstr ""
+msgstr "No gracias"
 
 #: lib/class-wedevs-insights.php:471
 msgid "Once Weekly"
-msgstr ""
+msgstr "Semanalmente"
 
 #: lib/class-wedevs-insights.php:607
 msgid "If you have a moment, please let us know why you are deactivating:"
-msgstr ""
+msgstr "Si tienes un minuto por favor haznos saber por qué estás desactivando:"
 
 #: lib/class-wedevs-insights.php:621
 msgid "I rather wouldn't say"
-msgstr ""
+msgstr "Prefiero no decir"
 
 #: lib/class-wedevs-insights.php:622
 msgid "Submit & Deactivate"
-msgstr ""
+msgstr "Enviar y desactivar"
 
 #: lib/class-wedevs-insights.php:623
 msgid "Canel"
-msgstr ""
+msgstr "Cancelar"
 
 #: lib/class.dokan-settings-api.php:31
 msgid "Active"
-msgstr ""
+msgstr "Activa"
 
 #: lib/class.dokan-settings-api.php:35
 msgid "Select"
-msgstr ""
+msgstr "Seleccionar"
 
 #: lib/class.settings-api.php:367
 msgid "Choose File"
-msgstr ""
+msgstr "Seleccionar archivo"
 
 #: templates/dashboard/big-counter-widget.php:20
 msgid "Sales"
-msgstr ""
+msgstr "Ventas"
 
 #: templates/dashboard/big-counter-widget.php:24
 msgid "Earning"
-msgstr ""
+msgstr "Ganancias"
 
 #: templates/dashboard/big-counter-widget.php:28
 msgid "Pageview"
-msgstr ""
+msgstr "Visitas"
 
 #: templates/dashboard/edit-account.php:44
 msgid "Edit Account Details"
-msgstr ""
+msgstr "Editar detalles de la cuenta"
 
 #: templates/dashboard/edit-account.php:51
 msgid "First name"
-msgstr ""
+msgstr "Nombre"
 
 #: templates/dashboard/edit-account.php:56
 msgid "Last name"
-msgstr ""
+msgstr "Apellido"
 
 #: templates/dashboard/edit-account.php:67
 msgid "Password Change"
-msgstr ""
+msgstr "Cambiar contraseña"
 
 #: templates/dashboard/edit-account.php:70
 msgid "Current Password (leave blank to leave unchanged)"
-msgstr ""
+msgstr "Contraseña actual (dejar en blanco para no cambiar)"
 
 #: templates/dashboard/edit-account.php:75
 msgid "New Password (leave blank to leave unchanged)"
-msgstr ""
+msgstr "Nueva contraseña (dejar en blanco para no cambiar)"
 
 #: templates/dashboard/edit-account.php:80
 msgid "Confirm New Password"
-msgstr ""
+msgstr "Confirmar nueva contraseña"
 
 #: templates/dashboard/edit-account.php:91
 msgid "Save changes"
-msgstr ""
+msgstr "Guardar cambios"
 
 #: templates/dashboard/orders-widget.php:51
 msgid "On hold"
-msgstr ""
+msgstr "Retenidos"
 
 #: templates/dashboard/products-widget.php:19
 msgid "+ Add new product"
-msgstr ""
+msgstr "+ Nuevo producto"
 
 #: templates/dashboard/products-widget.php:31
 msgid "Live"
-msgstr ""
+msgstr "Publicados"
 
 #: templates/dashboard/products-widget.php:36
 msgid "Offline"
-msgstr ""
+msgstr "Sin publicar"
 
 #: templates/dashboard/sales-chart-widget.php:15
 msgid "Sales this Month"
-msgstr ""
+msgstr "Ventas este mes"
 
 #: templates/global/header-menu.php:13
 #, php-format
 msgid "Cart %s"
-msgstr ""
+msgstr "Carrito %s"
 
 #: templates/global/header-menu.php:29
 msgid "Vendor Dashboard"
-msgstr ""
+msgstr "Mostrador del vendedor"
 
 #: templates/global/header-menu.php:32
 msgid "Visit your store"
-msgstr ""
+msgstr "Visitar tu tienda"
 
 #: templates/global/header-menu.php:47
 msgid "My Account"
-msgstr ""
+msgstr "Mi cuenta"
 
 #: templates/global/header-menu.php:50 templates/orders/details.php:124
 msgid "Billing Address"
-msgstr ""
+msgstr "Dirección de facturación"
 
 #: templates/global/header-menu.php:51 templates/orders/details.php:133
 msgid "Shipping Address"
-msgstr ""
+msgstr "Dirección de envío"
 
 #: templates/global/header-menu.php:58
 msgid "Log in"
-msgstr ""
+msgstr "Entrar a mi cuenta"
 
 #: templates/global/header-menu.php:59
 msgid "Sign Up"
-msgstr ""
+msgstr "Crear cuenta"
 
 #: templates/global/product-tab.php:11
 msgid "Vendor Information"
-msgstr ""
+msgstr "Acerca del vendedor"
 
 #: templates/global/product-tab.php:17
 msgid "Store Name:"
-msgstr ""
+msgstr "Nombre de la tienda:"
 
 #: templates/global/product-tab.php:26
 msgid "Vendor:"
-msgstr ""
+msgstr "Vendedor:"
 
 #: templates/global/product-tab.php:35
 msgid "Address:"
-msgstr ""
+msgstr "Dirección:"
 
 #: templates/global/seller-registration-form.php:26
 msgid "Shop Name"
-msgstr ""
+msgstr "Nombre de la tienda"
 
 #: templates/global/seller-registration-form.php:31
 msgid "Shop URL"
-msgstr ""
+msgstr "URL de la tienda"
 
 #: templates/global/seller-registration-form.php:52
 #, php-format
@@ -2595,832 +2686,841 @@ msgid ""
 "I have read and agree to the <a target=\"_blank\" href=\"%s\">Terms &amp; "
 "Conditions</a>."
 msgstr ""
+"He leído y acepto los <a target=\"_blank\" href=\"%s\">términos y "
+"condiciones</a>."
 
 #: templates/global/seller-registration-form.php:65
 msgid "I am a customer"
-msgstr ""
+msgstr "Soy un cliente"
 
 #: templates/global/seller-registration-form.php:70
 msgid "I am a vendor"
-msgstr ""
+msgstr "Soy un vendedor"
 
 #: templates/global/seller-warning.php:11
 #: templates/products/new-product-single.php:135
 #: templates/products/new-product.php:53
 msgid "Error!"
-msgstr ""
+msgstr "¡Error!"
 
 #: templates/global/seller-warning.php:12
 msgid "Your account is not enabled for selling, please contact the admin"
 msgstr ""
+"Tu cuenta no es una cuenta de vendedor, por favor contacta al administrador"
 
 #: templates/my-orders.php:21
 msgid "Recent Orders"
-msgstr ""
+msgstr "Pedidos recientes"
 
 #: templates/my-orders.php:55 templates/sub-orders.php:51
 #, php-format
 msgid "%s for %s item"
 msgid_plural "%s for %s items"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s para %s producto"
+msgstr[1] "%s para %s productos"
 
 #: templates/my-orders.php:65
 msgid "Multiple Vendor"
-msgstr ""
+msgstr "Vendedor múltiple"
 
 #: templates/my-orders.php:77
 msgid "Pay"
-msgstr ""
+msgstr "Pagar"
 
 #: templates/my-orders.php:88 templates/orders/listing.php:115
 #: templates/products/products-listing.php:134 templates/sub-orders.php:59
 msgid "View"
-msgstr ""
+msgstr "Ver"
 
 #: templates/my-orders.php:106
 msgid "No orders found!"
-msgstr ""
+msgstr "¡No se han encontrado pedidos!"
 
 #: templates/orders/date-export.php:15
 msgid "Date:"
-msgstr ""
+msgstr "Fecha:"
 
 #: templates/orders/date-export.php:16 templates/products/listing-filter.php:42
 msgid "Filter"
-msgstr ""
+msgstr "Filtrar"
 
 #: templates/orders/date-export.php:23
 msgid "Export All"
-msgstr ""
+msgstr "Exportar todo"
 
 #: templates/orders/date-export.php:24
 msgid "Export Filtered"
-msgstr ""
+msgstr "Exportar filtrados"
 
 #: templates/orders/details.php:7
 msgid "This is not yours, I swear!"
-msgstr ""
+msgstr "Esto no es tuyo, ¡te lo juro!"
 
 #: templates/orders/details.php:31
 msgid "Item"
-msgstr ""
+msgstr "Producto"
 
 #: templates/orders/details.php:35
 msgid "Qty"
-msgstr ""
+msgstr "Cantidad"
 
 #: templates/orders/details.php:37
 msgid "Totals"
-msgstr ""
+msgstr "Totales"
 
 #: templates/orders/details.php:97
 msgid "Coupons"
-msgstr ""
+msgstr "Cupones"
 
 #: templates/orders/details.php:144
 msgid "Downloadable Product Permission"
-msgstr ""
+msgstr "Permiso de producto descargable"
 
 #: templates/orders/details.php:159
 msgid "General Details"
-msgstr ""
+msgstr "Detalles generales"
 
 #: templates/orders/details.php:163
 msgid "Order Status:"
-msgstr ""
+msgstr "Estado del pedido:"
 
 #: templates/orders/details.php:167
 msgid "&nbsp; Edit"
-msgstr ""
+msgstr "Editar"
 
 #: templates/orders/details.php:184
 msgid "Update"
-msgstr ""
+msgstr "Actualizar"
 
 #: templates/orders/details.php:190
 msgid "Order Date:"
-msgstr ""
+msgstr "Fecha del pedido:"
 
 #: templates/orders/details.php:197
 msgid "Customer:"
-msgstr ""
+msgstr "Cliente:"
 
 #: templates/orders/details.php:210
 msgid "Email:"
-msgstr ""
+msgstr "Email:"
 
 #: templates/orders/details.php:214
 msgid "Phone:"
-msgstr ""
+msgstr "Teléfono:"
 
 #: templates/orders/details.php:218
 msgid "Customer IP:"
-msgstr ""
+msgstr "IP del cliente:"
 
 #: templates/orders/details.php:230
 msgid "Customer Note:"
-msgstr ""
+msgstr "Nota del cliente:"
 
 #: templates/orders/details.php:265
 #, php-format
 msgid "added %s ago"
-msgstr ""
+msgstr "agregado hace %s"
 
 #: templates/orders/details.php:271
 msgid "There are no notes for this order yet."
-msgstr ""
+msgstr "No hay notas para este pedido aún."
 
 #: templates/orders/details.php:287
 msgid "Customer note"
-msgstr ""
+msgstr "Nota del cliente"
 
 #: templates/orders/details.php:288
 msgid "Private note"
-msgstr ""
+msgstr "Nota privada"
 
 #: templates/orders/details.php:296
 msgid "Add Note"
-msgstr ""
+msgstr "Agregar nota"
 
 #: templates/orders/details.php:302 templates/orders/details.php:311
 msgid "Tracking Number"
-msgstr ""
+msgstr "Número de rastreo"
 
 #: templates/orders/details.php:306
 msgid "Shipping Provider Name / URL"
-msgstr ""
+msgstr "Nombre o URL del encargado de envíos"
 
 #: templates/orders/details.php:316
 msgid "Date Shipped"
-msgstr ""
+msgstr "Fecha de envío"
 
 #: templates/orders/details.php:325
 msgid "Add Tracking Details"
-msgstr ""
+msgstr "Agregar detalles de rastreo"
 
 #: templates/orders/downloadable.php:39
 msgid "Choose a downloadable product&hellip;"
-msgstr ""
+msgstr "Seleccionar un producto descargable..."
 
 #: templates/orders/downloadable.php:72
 msgid "Grant Access"
-msgstr ""
+msgstr "Dar acceso"
 
 #: templates/orders/listing.php:20 templates/orders/listing.php:40
 msgid "Customer"
-msgstr ""
+msgstr "Cliente"
 
 #: templates/orders/listing.php:22 templates/orders/listing.php:86
 #: templates/products/new-product-single.php:523
 msgid "Action"
-msgstr ""
+msgstr "Acciones"
 
 #: templates/orders/listing.php:32
 #, php-format
 msgid "Order %s"
-msgstr ""
+msgstr "Pedido %s"
 
 #: templates/orders/listing.php:61
 msgid "Guest"
-msgstr ""
+msgstr "Invitado"
 
 #: templates/orders/listing.php:70 templates/products/products-listing.php:203
 msgid "Unpublished"
-msgstr ""
+msgstr "Sin publicar"
 
 #: templates/orders/listing.php:72 templates/products/products-listing.php:206
 msgid "Y/m/d g:i:s A"
-msgstr ""
+msgstr "Y/m/d g:i:s A"
 
 #: templates/orders/listing.php:78 templates/products/products-listing.php:213
 #, php-format
 msgid "%s ago"
-msgstr ""
+msgstr "hace %s"
 
 #: templates/orders/listing.php:80 templates/products/products-listing.php:215
 msgid "Y/m/d"
-msgstr ""
+msgstr "Y/m/d"
 
 #: templates/orders/listing.php:105
 msgid "Complete"
-msgstr ""
+msgstr "Completado"
 
 #: templates/orders/listing.php:164
 msgid "No orders found"
-msgstr ""
+msgstr "No se han encontrado pedidos"
 
 #: templates/orders/order-download-permission-html.php:7
 #, php-format
 msgid "File %d: %s"
-msgstr ""
+msgstr "Archivo %d: %s"
 
 #: templates/orders/order-download-permission-html.php:10
 msgid "Revoke Access"
-msgstr ""
+msgstr "Revocar acceso"
 
 #: templates/orders/order-download-permission-html.php:20
 msgid "Downloaded"
-msgstr ""
+msgstr "Descargado"
 
 #: templates/orders/order-download-permission-html.php:22
 #, php-format
 msgid "%s time"
 msgid_plural "%s times"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s vez"
+msgstr[1] "%s veces"
 
 #: templates/orders/order-download-permission-html.php:25
 msgid "Downloads Remaining"
-msgstr ""
+msgstr "Descargas remanentes"
 
 #: templates/orders/order-download-permission-html.php:28
 msgid "Unlimited"
-msgstr ""
+msgstr "Ilimitado"
 
 #: templates/orders/order-download-permission-html.php:31
 msgid "Access Expires"
-msgstr ""
+msgstr "Expiración del acceso"
 
 #: templates/orders/order-download-permission-html.php:32
 msgid "Never"
-msgstr ""
+msgstr "Nunca"
 
 #: templates/orders/order-fee-html.php:10
 msgid "Fee Name"
-msgstr ""
+msgstr "Nombre de la tarifa"
 
 #: templates/orders/order-tax-html.php:6
 msgid "Tax Rate:"
-msgstr ""
+msgstr "Tasa de impuestos:"
 
 #: templates/orders/order-tax-html.php:8 templates/store-lists-loop.php:9
 msgid "N/A"
-msgstr ""
+msgstr "N/A"
 
 #: templates/orders/order-tax-html.php:16
 msgid "Sales Tax:"
-msgstr ""
+msgstr "Impuesto de venta:"
 
 #: templates/orders/order-tax-html.php:20
 msgid "Shipping Tax:"
-msgstr ""
+msgstr "Impuesto de envío:"
 
 #: templates/orders/orders-status-filter.php:14
 msgid "&larr; Orders"
-msgstr ""
+msgstr "&larr; Pedidos"
 
 #: templates/products/listing-filter.php:22
 #: templates/products/new-product-single.php:265
 #: templates/products/new-product.php:196
 #: templates/products/tmpl-add-product-popup.php:95
 msgid "- Select a category -"
-msgstr ""
+msgstr "- Selecciona una categoría -"
 
 #: templates/products/listing-filter.php:55
 msgid "Search Products"
-msgstr ""
+msgstr "Buscar productos"
 
 #: templates/products/new-product-single.php:8
 msgid "Access Denied, No product found"
-msgstr ""
+msgstr "Acceso denegado, no se han encontrado productos"
 
 #: templates/products/new-product-single.php:14
 msgid "Access Denied"
-msgstr ""
+msgstr "Acceso denegado"
 
 #: templates/products/new-product-single.php:112
 msgid "Edit Product"
-msgstr ""
+msgstr "Editar producto"
 
 #: templates/products/new-product-single.php:119
 msgid "View Product"
-msgstr ""
+msgstr "Ver producto"
 
 #: templates/products/new-product-single.php:143
 #: templates/products/new-product.php:62
 msgid "Success!"
-msgstr ""
+msgstr "¡Éxito!"
 
 #: templates/products/new-product-single.php:143
 msgid "The product has been saved successfully."
-msgstr ""
+msgstr "El producto se ha guardado con éxito."
 
 #: templates/products/new-product-single.php:146
 msgid "View Product &rarr;"
-msgstr ""
+msgstr "Ver producto &rarr;"
 
 #: templates/products/new-product-single.php:169
 msgid "Title"
-msgstr ""
+msgstr "Título"
 
 #: templates/products/new-product-single.php:170
 #: templates/products/new-product.php:141
 #: templates/products/tmpl-add-product-popup.php:43
 msgid "Product name.."
-msgstr ""
+msgstr "Nombre del producto"
 
 #: templates/products/new-product-single.php:172
 msgid "Please enter product title!"
-msgstr ""
+msgstr "Por favor ingresa el nombre del producto"
 
 #: templates/products/new-product-single.php:184
 msgid "Product Type"
-msgstr ""
+msgstr "Tipo de producto"
 
 #: templates/products/new-product-single.php:184
 msgid ""
-"Choose Variable if your product has multiple attributes - like sizes, colors, "
-"quality etc"
+"Choose Variable if your product has multiple attributes - like sizes, "
+"colors, quality etc"
 msgstr ""
+"Elige Variable si tu producto tiene múltiples atributos - como tamaños, "
+"colores, calidades, etc."
 
 #: templates/products/new-product-single.php:196
 #: templates/products/products-listing.php:184
 msgid "Downloadable"
-msgstr ""
+msgstr "Descargable"
 
 #: templates/products/new-product-single.php:196
 msgid "Downloadable products give access to a file upon purchase."
-msgstr ""
+msgstr "Los productos descargables dan acceso a un archivo tras la compra."
 
 #: templates/products/new-product-single.php:201
 #: templates/products/products-listing.php:182
 msgid "Virtual"
-msgstr ""
+msgstr "Virtual"
 
 #: templates/products/new-product-single.php:201
 msgid "Virtual products are intangible and aren't shipped."
-msgstr ""
+msgstr "Los productos virtuales son intangibles y no se envían."
 
 #: templates/products/new-product-single.php:213
-#: templates/products/new-product.php:147 templates/products/products-listing.php:62
+#: templates/products/new-product.php:147
+#: templates/products/products-listing.php:62
 #: templates/products/products-listing.php:163
 #: templates/products/tmpl-add-product-popup.php:49
 msgid "Price"
-msgstr ""
+msgstr "Precio"
 
 #: templates/products/new-product-single.php:217
 #: templates/products/new-product-single.php:230
 msgid "0.00"
-msgstr ""
+msgstr "0.00"
 
 #: templates/products/new-product-single.php:223
 #: templates/products/new-product.php:157
 #: templates/products/tmpl-add-product-popup.php:59
 msgid "Discounted Price"
-msgstr ""
+msgstr "Precio de descuento"
 
 #: templates/products/new-product-single.php:224
 #: templates/products/new-product.php:158
 #: templates/products/tmpl-add-product-popup.php:60
 msgid "Schedule"
-msgstr ""
+msgstr "Programar"
 
 #: templates/products/new-product-single.php:238
 #: templates/products/new-product.php:172
 #: templates/products/tmpl-add-product-popup.php:74
 msgid "From"
-msgstr ""
+msgstr "Desde"
 
 #: templates/products/new-product-single.php:245
 #: templates/products/new-product.php:179
 #: templates/products/tmpl-add-product-popup.php:81
 msgid "To"
-msgstr ""
+msgstr "Hasta"
 
 #: templates/products/new-product-single.php:280
 msgid "Please choose a category!"
-msgstr ""
+msgstr "Por favor selecciona una categoría"
 
 #: templates/products/new-product-single.php:305
 #: templates/products/new-product.php:235
 #: templates/products/tmpl-add-product-popup.php:130
 msgid "Select product category"
-msgstr ""
+msgstr "Selecciona una categoría"
 
 #: templates/products/new-product-single.php:311
 msgid "Tags"
-msgstr ""
+msgstr "Etiquetas"
 
 #: templates/products/new-product-single.php:331
 #: templates/products/new-product.php:262
 #: templates/products/tmpl-add-product-popup.php:153
 msgid "Select product tags"
-msgstr ""
+msgstr "Selecciona etiquetas"
 
 #: templates/products/new-product-single.php:356
 #: templates/products/tmpl-add-product-popup.php:18
 msgid "Upload a product cover image"
-msgstr ""
+msgstr "Imagen principal del producto"
 
 #: templates/products/new-product-single.php:387
 #: templates/products/new-product.php:122
 msgid "Delete image"
-msgstr ""
+msgstr "Borrar imagen"
 
 #: templates/products/new-product-single.php:393
 #: templates/products/new-product.php:129
 #: templates/products/tmpl-add-product-popup.php:32
 msgid "Add gallery image"
-msgstr ""
+msgstr "Agregar más imágenes"
 
 #: templates/products/new-product-single.php:406
 msgid "Short Description"
-msgstr ""
+msgstr "Breve descripción"
 
 #: templates/products/new-product-single.php:411
 #: templates/products/new-product.php:269
 msgid "Description"
-msgstr ""
+msgstr "Descripción"
 
 #: templates/products/new-product-single.php:421
 msgid "Manage inventory for this product."
-msgstr ""
+msgstr "Manejar el inventario para este producto."
 
 #: templates/products/new-product-single.php:431
 #: templates/products/products-listing.php:60
 #: templates/products/products-listing.php:141
 msgid "SKU"
-msgstr ""
+msgstr "SKU"
 
 #: templates/products/new-product-single.php:431
 msgid "(Stock Keeping Unit)"
-msgstr ""
+msgstr "(Stock Keeping Unit)"
 
 #: templates/products/new-product-single.php:436
 msgid "Stock Status"
-msgstr ""
+msgstr "Estado de las existencias"
 
 #: templates/products/new-product-single.php:439
 msgid "In Stock"
-msgstr ""
+msgstr "Hay existencias"
 
 #: templates/products/new-product-single.php:440
 msgid "Out of Stock"
-msgstr ""
+msgstr "No hay existencias"
 
 #: templates/products/new-product-single.php:447
 msgid "Enable product stock management"
-msgstr ""
+msgstr "Activar las opciones avanzadas del manejo de existencias"
 
 #: templates/products/new-product-single.php:453
 msgid "Quantity"
-msgstr ""
+msgstr "Cantidad"
 
 #: templates/products/new-product-single.php:454
 msgid "1"
-msgstr ""
+msgstr "1"
 
 #: templates/products/new-product-single.php:458
 msgid "Allow Backorders"
-msgstr ""
+msgstr "Permitir pedidos cuando no hay existencias"
 
 #: templates/products/new-product-single.php:461
 msgid "Do not allow"
-msgstr ""
+msgstr "No permitir"
 
 #: templates/products/new-product-single.php:462
 msgid "Allow but notify customer"
-msgstr ""
+msgstr "Permitir pero notificar al cliente"
 
 #: templates/products/new-product-single.php:472
 msgid "Allow only one quantity of this product to be bought in a single order"
-msgstr ""
+msgstr "Solo permitir comprar este producto en una determinada cantidad"
 
 #: templates/products/new-product-single.php:489
 msgid "Downloadable Options"
-msgstr ""
+msgstr "Opciones para descargables"
 
 #: templates/products/new-product-single.php:490
 msgid "Configure your downloadable product settings"
-msgstr ""
+msgstr "Configura las opciones para tus productos descargables"
 
 #: templates/products/new-product-single.php:515
 msgid "Add File"
-msgstr ""
+msgstr "Agregar archivo"
 
 #: templates/products/new-product-single.php:521
 #: templates/products/products-listing.php:58
 #: templates/products/products-listing.php:128
 msgid "Name"
-msgstr ""
+msgstr "Nombre"
 
 #: templates/products/new-product-single.php:522
 msgid "File URL"
-msgstr ""
+msgstr "URL del archivo"
 
 #: templates/products/new-product-single.php:541
 msgid "Download Limit"
-msgstr ""
+msgstr "Límite de descargas"
 
 #: templates/products/new-product-single.php:542
 msgid "e.g. 4"
-msgstr ""
+msgstr "por ejemplo 4"
 
 #: templates/products/new-product-single.php:546
 msgid "Download Expiry"
-msgstr ""
+msgstr "Expiración de la descarga"
 
 #: templates/products/new-product-single.php:547
 msgid "Number of days"
-msgstr ""
+msgstr "Número de días"
 
 #: templates/products/new-product-single.php:560
 msgid "Other Options"
-msgstr ""
+msgstr "Otras opciones"
 
 #: templates/products/new-product-single.php:561
 msgid "Set your extra product options"
-msgstr ""
+msgstr "Definir opciones adicionales para tu producto"
 
 #: templates/products/new-product-single.php:570
 msgid "Product Status"
-msgstr ""
+msgstr "Estado del producto"
 
 #: templates/products/new-product-single.php:589
 msgid "Visibility"
-msgstr ""
+msgstr "Visibilidad"
 
 #: templates/products/new-product-single.php:600
 msgid "Purchase Note"
-msgstr ""
+msgstr "Nota de compra"
 
 #: templates/products/new-product-single.php:601
 msgid "Customer will get this info in their order email"
 msgstr ""
+"El cliente recibirá esta nota junto con su email de confirmación de pedido"
 
 #: templates/products/new-product-single.php:606
 msgid "Enable product reviews"
-msgstr ""
+msgstr "Permitir reseñas del producto"
 
 #: templates/products/new-product-single.php:619
 #: templates/products/new-product-single.php:620
 msgid "Save Product"
-msgstr ""
+msgstr "Guardar producto"
 
 #: templates/products/new-product.php:41
 #: templates/products/tmpl-add-product-popup.php:3
 msgid "Add New Product"
-msgstr ""
+msgstr "Nuevo producto"
 
 #: templates/products/new-product.php:63
 #, php-format
-msgid "You have successfully created <a href=\"%s\"><strong>%s</strong></a> product"
+msgid ""
+"You have successfully created <a href=\"%s\"><strong>%s</strong></a> product"
 msgstr ""
+"Haz creado el producto <a href=\"%s\"><strong>%s</strong></a> con éxito."
 
 #: templates/products/new-product.php:93
 msgid "Upload Product Image"
-msgstr ""
+msgstr "Imagen principal del producto"
 
 #: templates/products/new-product.php:187
 msgid "Short description of the product..."
-msgstr ""
+msgstr "Breve descripción del producto"
 
 #: templates/products/new-product.php:269
 msgid "Add your product description"
-msgstr ""
+msgstr "Descripción detallada del producto"
 
 #: templates/products/new-product.php:279
 msgid "Create & Add New"
-msgstr ""
+msgstr "Publicar y crear otro"
 
 #: templates/products/new-product.php:280
 msgid "Create Product"
-msgstr ""
+msgstr "Publicar producto"
 
 #: templates/products/products-listing.php:41
 msgid "Add new product"
-msgstr ""
+msgstr "Nuevo producto"
 
 #: templates/products/products-listing.php:57
 #: templates/products/products-listing.php:125
 msgid "Image"
-msgstr ""
+msgstr "Imagen"
 
 #: templates/products/products-listing.php:63
 #: templates/products/products-listing.php:172
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 #: templates/products/products-listing.php:64
 #: templates/products/products-listing.php:197
 msgid "Views"
-msgstr ""
+msgstr "Visitas"
 
 #: templates/products/products-listing.php:132
 msgid "Edit"
-msgstr ""
+msgstr "Editar"
 
 #: templates/products/products-listing.php:133
 msgid "Delete Permanently"
-msgstr ""
+msgstr "Borrar"
 
 #: templates/products/products-listing.php:153
 msgid "In stock"
-msgstr ""
+msgstr "Hay existencias"
 
 #: templates/products/products-listing.php:155
 msgid "Out of stock"
-msgstr ""
+msgstr "No hay existencias"
 
 #: templates/products/products-listing.php:176
 msgid "Grouped"
-msgstr ""
+msgstr "Agrupado"
 
 #: templates/products/products-listing.php:178
 msgid "External/Affiliate"
-msgstr ""
+msgstr "Externo o afiliado"
 
 #: templates/products/products-listing.php:186
 msgid "Simple"
-msgstr ""
+msgstr "Simple"
 
 #: templates/products/products-listing.php:190
 msgid "Variable"
-msgstr ""
+msgstr "Variable"
 
 #: templates/products/products-listing.php:222
 msgid "Published"
-msgstr ""
+msgstr "Publicado"
 
 #: templates/products/products-listing.php:225
 msgid "Missed schedule"
-msgstr ""
+msgstr "Promesa no cumplida"
 
 #: templates/products/products-listing.php:227
 msgid "Scheduled"
-msgstr ""
+msgstr "Prometido"
 
 #: templates/products/products-listing.php:230
 msgid "Last Modified"
-msgstr ""
+msgstr "Última modificación"
 
 #: templates/products/products-listing.php:242
 msgid "No product found"
-msgstr ""
+msgstr "No se han encontrado productos"
 
 #: templates/products/products-listing.php:265
 msgid "&laquo; Previous"
-msgstr ""
+msgstr "&laquo; Anterior"
 
 #: templates/products/products-listing.php:266
 msgid "Next &raquo;"
-msgstr ""
+msgstr "Siguiente &raquo;"
 
 #: templates/products/tmpl-add-product-popup.php:158
 msgid "Enter some short description about this product..."
-msgstr ""
+msgstr "Ingresa alguna breve descripción sobre este producto..."
 
 #: templates/products/tmpl-add-product-popup.php:165
 msgid "Create product"
-msgstr ""
+msgstr "Crear producto"
 
 #: templates/products/tmpl-add-product-popup.php:166
 msgid "Create & add new"
-msgstr ""
+msgstr "Agregar y crear otro"
 
 #: templates/settings/address-form.php:26
 msgid "Address"
-msgstr ""
+msgstr "Dirección"
 
 #: templates/settings/address-form.php:31
 msgid "Street "
-msgstr ""
+msgstr "Dirección"
 
 #: templates/settings/address-form.php:39
 msgid "Street address"
-msgstr ""
+msgstr "Calle y altura"
 
 #: templates/settings/address-form.php:52
 msgid "Apartment, suite, unit etc. (optional)"
-msgstr ""
+msgstr "Piso, departamento, etc."
 
 #: templates/settings/address-form.php:68
 msgid "Town / City"
-msgstr ""
+msgstr "Pueblo o ciudad"
 
 #: templates/settings/address-form.php:73
 msgid "Post/ZIP Code"
-msgstr ""
+msgstr "Código postal"
 
 #: templates/settings/address-form.php:81
 msgid "Postcode / Zip"
-msgstr ""
+msgstr "Código postal"
 
 #: templates/settings/address-form.php:94
 msgid "Country "
-msgstr ""
+msgstr "País"
 
 #: templates/settings/address-form.php:123
 msgid "State "
-msgstr ""
+msgstr "Provincia o estado"
 
 #: templates/settings/payment.php:39 templates/settings/store-form.php:228
 msgid "Update Settings"
-msgstr ""
+msgstr "Actualizar"
 
 #: templates/settings/store-form.php:81
 #, php-format
 msgid "Upload a banner for your store. Banner size is (%sx%s) pixels."
-msgstr ""
+msgstr "Selecciona un encabezado para tu tienda de %s x %s pixeles."
 
 #: templates/settings/store-form.php:95
 msgid "Profile Picture"
-msgstr ""
+msgstr "Foto de perfil"
 
 #: templates/settings/store-form.php:105
 msgid "Upload Photo"
-msgstr ""
+msgstr "Seleccionar imagen"
 
 #: templates/settings/store-form.php:111
 msgid "Store Name"
-msgstr ""
+msgstr "Nombre de la tienda"
 
 #: templates/settings/store-form.php:114
 msgid "store name"
-msgstr ""
+msgstr "nombre de la tienda"
 
 #: templates/settings/store-form.php:142
 msgid "Phone No"
-msgstr ""
+msgstr "Teléfono"
 
 #: templates/settings/store-form.php:144
 msgid "+123456.."
-msgstr ""
+msgstr "+123456..."
 
 #: templates/settings/store-form.php:161
 msgid "More product"
-msgstr ""
+msgstr "Más productos"
 
 #: templates/settings/store-form.php:166
 msgid "Enable tab on product single page view"
-msgstr ""
+msgstr "Activar pestaña en la página de producto"
 
 #: templates/settings/store-form.php:174
 msgid "Map"
-msgstr ""
+msgstr "Mapa"
 
 #: templates/settings/store-form.php:181
 msgid "Type an address to find"
-msgstr ""
+msgstr "Escribe una dirección para buscar"
 
 #: templates/settings/store-form.php:182
 msgid "Find Address"
-msgstr ""
+msgstr "Encontrar dirección"
 
 #: templates/settings/store-form.php:200
 msgid "Show terms and conditions in store page"
-msgstr ""
+msgstr "Mostrar términos y condiciones en la página de la tienda"
 
 #: templates/settings/store-form.php:206
 msgid "TOC Details"
-msgstr ""
+msgstr "Detalles TOC"
 
 #: templates/store-lists-loop.php:24
 msgid "Featured"
-msgstr ""
+msgstr "Destacado"
 
 #: templates/store-lists-loop.php:34
 #, php-format
 msgid "Rated %s out of 5"
-msgstr ""
+msgstr "Calificación %s de 5"
 
 #: templates/store-lists-loop.php:111
 msgid "No vendor found!"
-msgstr ""
+msgstr "No se han encontrado vendedores"
 
 #: templates/store-lists.php:11
 #, php-format
 msgid "Search Results for: %s"
-msgstr ""
+msgstr "Resultados para: %s"
 
 #: templates/store-lists.php:16
 msgid "Search Vendor &hellip;"
-msgstr ""
+msgstr "Buscar vendedor..."
 
 #: templates/store-lists.php:16
 msgid "Search seller &hellip;"
-msgstr ""
+msgstr "Buscar vendedor..."
 
 #: templates/store-toc.php:31 templates/store.php:34
 msgid "Store Category"
-msgstr ""
+msgstr "Tipo de tienda"
 
 #: templates/store-toc.php:62
 msgid "Terms And Conditions"
-msgstr ""
+msgstr "Términos y condiciones"
 
 #: templates/store.php:84
 msgid "No products were found of this vendor!"
-msgstr ""
+msgstr "¡No se han encontrado productos de este vendedor!"
 
 #: templates/sub-orders.php:12
 msgid "Sub Orders"
-msgstr ""
+msgstr "Sub-pedidos"
 
 #: templates/sub-orders.php:16
 msgid "Note:"
-msgstr ""
+msgstr "Nota:"
 
 #: templates/sub-orders.php:17
 msgid ""
@@ -3428,43 +3528,65 @@ msgid ""
 "multiple vendor orders.\n"
 "    Each order will be handled by their respective vendor independently."
 msgstr ""
+"Este pedido tiene productos de múltiples vendedores, así que dividimos el "
+"pedido en múltiples pedidos. Cada pedido será manejado por el vendedor "
+"respectivo."
 
 #: templates/widgets/store-contact-form.php:23
 msgid "Your Name"
-msgstr ""
+msgstr "Tu nombre"
 
 #: templates/widgets/store-contact-form.php:26
 msgid "you@example.com"
-msgstr ""
+msgstr "tu@email.com"
 
 #: templates/widgets/store-contact-form.php:29
 msgid "Type your messsage..."
-msgstr ""
+msgstr "Ingresa tu mensaje..."
 
 #: templates/widgets/store-contact-form.php:36
 msgid "Send Message"
-msgstr ""
+msgstr "Enviar mensaje"
 
 #: templates/widgets/widget-content-product.php:33
 msgid "No products found"
-msgstr ""
+msgstr "No se han encontrado productos"
 
 #: templates/withdraw/request-form.php:13
 msgid "Withdraw Amount"
-msgstr ""
+msgstr "Cantidad a extraer"
 
 #: templates/withdraw/request-form.php:26
 msgid "Payment Method"
-msgstr ""
+msgstr "Método de pago"
 
 #: templates/withdraw/request-form.php:41
 msgid "Submit Request"
-msgstr ""
+msgstr "Enviar pedido de extracción"
 
 #: templates/withdraw/status-listing.php:12
 msgid "Withdraw Request"
-msgstr ""
+msgstr "Pedido de extracción"
 
 #: templates/withdraw/status-listing.php:15
 msgid "Approved Requests"
-msgstr ""
+msgstr "Pedidos aprobados"
+
+#~ msgid "Dokan (Lite) - Multi-vendor Marketplace"
+#~ msgstr "Dokan (lite) - Mercado multi-vendedor"
+
+#~ msgid "https://wordpress.org/plugins/dokan-lite/"
+#~ msgstr "https://wordpress.org/plugins/dokan-lite/"
+
+#~ msgid ""
+#~ "An e-commerce marketplace plugin for WordPress. Powered by WooCommerce "
+#~ "and weDevs."
+#~ msgstr ""
+#~ "Un plugin que convierte a tu sitio WordPress en un mercado de ecommerce. "
+#~ "Potenciado por WooCommerce y weDevs."
+
+#~ msgid "Tareq Hasan"
+#~ msgstr "Tareq Hasan"
+
+#~ msgid "http://tareq.co/"
+#~ msgstr "http://tareq.co/"

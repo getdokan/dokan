@@ -113,7 +113,7 @@
                             $term = array();
                             include_once DOKAN_LIB_DIR.'/class.taxonomy-walker.php';
                             $drop_down_category = wp_dropdown_categories(  apply_filters( 'dokan_product_cat_dropdown_args', array(
-                                'show_option_none' => __( '', 'dokan-lite' ),
+                                'show_option_none' => '',
                                 'hierarchical'     => 1,
                                 'hide_empty'       => 0,
                                 'name'             => 'product_cat[]',
@@ -136,7 +136,7 @@
                         <?php
                         require_once DOKAN_LIB_DIR.'/class.taxonomy-walker.php';
                         $drop_down_tags = wp_dropdown_categories( array(
-                            'show_option_none' => __( '', 'dokan-lite' ),
+                            'show_option_none' => '',
                             'hierarchical'     => 1,
                             'hide_empty'       => 0,
                             'name'             => 'product_tag[]',
