@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Dokan (Lite) - Multi-vendor Marketplace 2.6.2\n"
 "Report-Msgid-Bugs-To: http://wedevs.com/support/forum/theme-support/dokan/\n"
 "POT-Creation-Date: 2017-06-08 21:02-0300\n"
-"PO-Revision-Date: 2017-06-08 21:03-0300\n"
+"PO-Revision-Date: 2017-06-13 10:04-0300\n"
 "Last-Translator: \n"
 "Language-Team: Sophivorus\n"
 "Language: es_ES\n"
@@ -1379,7 +1379,7 @@ msgstr "Barra lateral del tema"
 
 #: includes/admin/admin.php:348
 msgid "Enable showing Store Sidebar From Your Theme."
-msgstr "Mostar la barra lateral del tema en la tienda."
+msgstr "Ocultar la barra lateral en las tiendas."
 
 #: includes/admin/admin.php:356
 msgid "New Vendor Product Upload"
