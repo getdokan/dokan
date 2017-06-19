@@ -36,7 +36,7 @@ global $wpdb;
 
         <div class="dokan-w7" style="margin-right: 5px;">
 
-            <select name="grant_access_id" class="grant_access_id dokan-form-control" data-placeholder="<?php _e( 'Choose a downloadable product&hellip;', 'dokan-lite' ) ?>" multiple="multiple">
+            <select name="grant_access_id" class="grant_access_id dokan-select2 dokan-form-control" data-placeholder="<?php _e( 'Choose a downloadable product&hellip;', 'dokan-lite' ) ?>" multiple="multiple">
                 <?php
                     echo '<option value=""></option>';
 
