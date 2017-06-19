@@ -51,7 +51,6 @@
 
         <?php wp_nonce_field( 'dokan_store_settings_nonce' ); ?>
 
-        <?php if ( ! empty( $dokan_appearance ) && 'layout3' !== $dokan_appearance ): ?>
             <div class="dokan-banner">
 
                 <div class="image-wrap<?php echo $banner ? '' : ' dokan-hide'; ?>">
@@ -89,7 +88,6 @@
             </div> <!-- .dokan-banner -->
 
             <?php do_action( 'dokan_settings_after_banner', $current_user, $profile_info ); ?>
-        <?php endif; ?>
 
         <div class="dokan-form-group">
             <label class="dokan-w3 dokan-control-label" for="dokan_gravatar"><?php _e( 'Profile Picture', 'dokan-lite' ); ?></label>
