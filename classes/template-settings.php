@@ -557,7 +557,7 @@ class Dokan_Template_Settings {
         extract( $progress_values );
 
         //settings wise completeness section
-        if( isset( $dokan_settings['gravatar'] ) ):
+        if ( isset( $profile_picture_val ) && isset( $dokan_settings['gravatar'] ) ):
             if ( $dokan_settings['gravatar'] != 0 ) {
                 $profile_val           = $profile_val + $profile_picture_val;
                 $track_val['gravatar'] = $profile_picture_val;
@@ -569,7 +569,7 @@ class Dokan_Template_Settings {
         endif;
 
         // Calculate Social profiles
-        if( isset( $dokan_settings['social'] ) ):
+        if ( isset( $social_val ) && isset( $dokan_settings['social'] ) ):
 
             foreach ( $dokan_settings['social'] as $key => $value ) {
 
@@ -590,7 +590,7 @@ class Dokan_Template_Settings {
         endif;
 
         //calculate completeness for phone
-        if( isset( $dokan_settings['phone'] ) ):
+        if ( isset( $phone_val ) && isset( $dokan_settings['phone'] ) ):
 
             if ( strlen( trim( $dokan_settings['phone'] ) ) != 0 ) {
                 $profile_val        = $profile_val + $phone_val;
@@ -604,7 +604,7 @@ class Dokan_Template_Settings {
         endif;
 
         //calculate completeness for banner
-        if( isset( $dokan_settings['banner'] ) ):
+        if ( isset( $banner_val ) && isset( $dokan_settings['banner'] ) ):
 
             if ( $dokan_settings['banner'] != 0 ) {
                 $profile_val         = $profile_val + $banner_val;
@@ -616,7 +616,7 @@ class Dokan_Template_Settings {
         endif;
 
         //calculate completeness for store name
-        if( isset( $dokan_settings['store_name'] ) ):
+        if ( isset( $store_name_val ) && isset( $dokan_settings['store_name'] ) ):
             if ( isset( $dokan_settings['store_name'] ) ) {
                 $profile_val             = $profile_val + $store_name_val;
                 $track_val['store_name'] = $store_name_val;
@@ -628,7 +628,7 @@ class Dokan_Template_Settings {
         endif;
 
         //calculate completeness for address
-        if( isset( $dokan_settings['address'] ) ):
+        if ( isset( $address_val ) && isset( $dokan_settings['address'] ) ):
             if ( !empty($dokan_settings['address']['street_1']) ) {
                 $profile_val          = $profile_val + $address_val;
                 $track_val['address'] = $address_val;
@@ -640,7 +640,7 @@ class Dokan_Template_Settings {
         endif;
 
         // Calculate Payment method val for Bank
-        if ( isset( $dokan_settings['payment']['bank'] ) ) {
+        if ( isset( $dokan_settings['payment'] ) && isset( $dokan_settings['payment']['bank'] ) ) {
             $count_bank = true;
 
             // if any of the values for bank details are blank, check_bank will be set as false
@@ -659,7 +659,7 @@ class Dokan_Template_Settings {
         }
 
         // Calculate Payment method val for Paypal
-        if ( isset( $dokan_settings['payment']['paypal'] ) ) {
+        if ( isset( $dokan_settings['payment'] ) && isset( $dokan_settings['payment']['paypal'] ) ) {
             $p_email = isset($dokan_settings['payment']['paypal']['email']) ? $dokan_settings['payment']['paypal']['email'] : false;
             if ( $p_email != false ) {
 
@@ -670,7 +670,7 @@ class Dokan_Template_Settings {
         }
 
         // Calculate Payment method val for skrill
-        if ( isset( $dokan_settings['payment']['skrill'] ) ) {
+        if ( isset( $dokan_settings['payment'] ) && isset( $dokan_settings['payment']['skrill'] ) ) {
 
             $s_email = isset( $dokan_settings['payment']['skrill']['email'] ) ? $dokan_settings['payment']['skrill']['email'] : false;
             if ( $s_email != false ) {
@@ -696,8 +696,8 @@ class Dokan_Template_Settings {
 
         $track_val['next_todo'] = $next_add;
         $track_val['progress'] = $profile_val;
-
-        return $track_val;
+        
+        return apply_filters( 'dokan_profile_completion_progress_value', $track_val ) ;
     }
 
     /**

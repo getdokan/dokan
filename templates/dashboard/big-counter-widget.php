@@ -37,7 +37,6 @@
                 foreach ( $status as $order_status ){
                     $total += $orders_count->$order_status;
                 }
-               // $total = $orders_count->{'wc-completed'} + $orders_count->{'wc-processing'} + $orders_count->{'wc-on-hold'};
                 echo number_format_i18n( $total, 0 );
                 ?>
             </div>

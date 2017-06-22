@@ -12,6 +12,8 @@ The pioneer multi-vendor plugin for WordPress. Start your own marketplace in min
 
 == Description ==
 
+= Dokan Multivendor Marketplace Plugin For WordPress =
+
 Dokan is the best front end multi vendor marketplace on WordPress, powered by WooCommerce. Build your own Amazon, Shopify, eBay, Magento like marketplace in just 30 minutes. Dokan is the fastest way to start ecommerce and earn through commissions with products ranging from digital, physical to variable.
 
 **The best Frontend user interface**
@@ -175,6 +177,15 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 == Changelog ==
+
+v2.6.4 -> June 22, 2017
+---------------------
+- [fix] Store page product loop pagination not showing
+- [fix] Order exporting not working properly
+- [fix] Earning calculation date range issue
+- [tweak] Banner upload is now available in store settings for all appearances
+- [tweak] Profile completion progress custom values logic updated
+- [tweak] Downloadable product section performance tweaks
 
 v2.6.3 -> June 08, 2017
 ---------------------
