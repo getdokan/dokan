@@ -52,7 +52,7 @@ function dokan_content_nav( $nav_id, $query = null ) {
         </ul>
 
 
-        <?php if ( $wp_query->max_num_pages > 1 && ( is_home() || is_archive() || is_search() ) ) : // navigation links for home, archive, and search pages ?>
+        <?php if ( $wp_query->max_num_pages > 1 && ( dokan_is_store_page() || is_home() || is_archive() || is_search() ) ) : // navigation links for home, archive, and search pages ?>
             <?php dokan_page_navi( '', '', $wp_query ); ?>
         <?php endif; ?>
 

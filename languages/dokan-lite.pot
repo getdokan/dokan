@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan (Lite) - Multi-vendor Marketplace 2.6.3\n"
+"Project-Id-Version: Dokan (Lite) - Multi-vendor Marketplace 2.6.4\n"
 "Report-Msgid-Bugs-To: http://wedevs.com/support/forum/theme-support/dokan/\n"
-"POT-Creation-Date: 2017-06-08 08:00:05+00:00\n"
+"POT-Creation-Date: 2017-06-22 05:37:03+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -41,7 +41,7 @@ msgstr ""
 msgid "Banner"
 msgstr ""
 
-#: classes/admin-user-profile.php:97 templates/settings/store-form.php:68
+#: classes/admin-user-profile.php:97 templates/settings/store-form.php:67
 msgid "Upload banner"
 msgstr ""
 
@@ -507,7 +507,7 @@ msgstr ""
 msgid "Store Setup"
 msgstr ""
 
-#: classes/seller-setup-wizard.php:240 templates/settings/store-form.php:119
+#: classes/seller-setup-wizard.php:240 templates/settings/store-form.php:117
 msgid "Store Product Per Page"
 msgstr ""
 
@@ -535,11 +535,11 @@ msgstr ""
 msgid "State Name"
 msgstr ""
 
-#: classes/seller-setup-wizard.php:281 templates/settings/store-form.php:149
+#: classes/seller-setup-wizard.php:281 templates/settings/store-form.php:147
 msgid "Email"
 msgstr ""
 
-#: classes/seller-setup-wizard.php:284 templates/settings/store-form.php:154
+#: classes/seller-setup-wizard.php:284 templates/settings/store-form.php:152
 msgid "Show email address in store"
 msgstr ""
 
@@ -1161,7 +1161,7 @@ msgid "Define the seller store URL (%s<strong>[this-text]</strong>/[seller-name]
 msgstr ""
 
 #: includes/admin/admin.php:312 includes/functions.php:997
-#: templates/settings/store-form.php:196
+#: templates/settings/store-form.php:194
 msgid "Terms and Conditions"
 msgstr ""
 
@@ -2602,11 +2602,11 @@ msgstr ""
 msgid "Add Tracking Details"
 msgstr ""
 
-#: templates/orders/downloadable.php:39
+#: templates/orders/downloadable.php:38
 msgid "Choose a downloadable product&hellip;"
 msgstr ""
 
-#: templates/orders/downloadable.php:72
+#: templates/orders/downloadable.php:68
 msgid "Grant Access"
 msgstr ""
 
@@ -3150,63 +3150,63 @@ msgstr ""
 msgid "State "
 msgstr ""
 
-#: templates/settings/payment.php:39 templates/settings/store-form.php:228
+#: templates/settings/payment.php:39 templates/settings/store-form.php:226
 msgid "Update Settings"
 msgstr ""
 
-#: templates/settings/store-form.php:81
+#: templates/settings/store-form.php:80
 msgid "Upload a banner for your store. Banner size is (%sx%s) pixels."
 msgstr ""
 
-#: templates/settings/store-form.php:95
+#: templates/settings/store-form.php:93
 msgid "Profile Picture"
 msgstr ""
 
-#: templates/settings/store-form.php:105
+#: templates/settings/store-form.php:103
 msgid "Upload Photo"
 msgstr ""
 
-#: templates/settings/store-form.php:111
+#: templates/settings/store-form.php:109
 msgid "Store Name"
 msgstr ""
 
-#: templates/settings/store-form.php:114
+#: templates/settings/store-form.php:112
 msgid "store name"
 msgstr ""
 
-#: templates/settings/store-form.php:142
+#: templates/settings/store-form.php:140
 msgid "Phone No"
 msgstr ""
 
-#: templates/settings/store-form.php:144
+#: templates/settings/store-form.php:142
 msgid "+123456.."
 msgstr ""
 
-#: templates/settings/store-form.php:161
+#: templates/settings/store-form.php:159
 msgid "More product"
 msgstr ""
 
-#: templates/settings/store-form.php:166
+#: templates/settings/store-form.php:164
 msgid "Enable tab on product single page view"
 msgstr ""
 
-#: templates/settings/store-form.php:174
+#: templates/settings/store-form.php:172
 msgid "Map"
 msgstr ""
 
-#: templates/settings/store-form.php:181
+#: templates/settings/store-form.php:179
 msgid "Type an address to find"
 msgstr ""
 
-#: templates/settings/store-form.php:182
+#: templates/settings/store-form.php:180
 msgid "Find Address"
 msgstr ""
 
-#: templates/settings/store-form.php:200
+#: templates/settings/store-form.php:198
 msgid "Show terms and conditions in store page"
 msgstr ""
 
-#: templates/settings/store-form.php:206
+#: templates/settings/store-form.php:204
 msgid "TOC Details"
 msgstr ""
 

@@ -35,26 +35,23 @@ global $wpdb;
     <div class="toolbar dokan-clearfix">
 
         <div class="dokan-w7" style="margin-right: 5px;">
-
-            <select name="grant_access_id" class="grant_access_id dokan-form-control" data-placeholder="<?php _e( 'Choose a downloadable product&hellip;', 'dokan-lite' ) ?>" multiple="multiple">
+            <select name="grant_access_id" class="grant_access_id dokan-select2 dokan-form-control" data-placeholder="<?php _e( 'Choose a downloadable product&hellip;', 'dokan-lite' ) ?>" multiple="multiple">
                 <?php
                     echo '<option value=""></option>';
+                    global $wpdb;
+                    $user_id = get_current_user_id();
 
-                    $args = array(
-                        'post_type'         => array( 'product', 'product_variation' ),
-                        'posts_per_page'    => -1,
-                        'post_status'       => 'publish',
-                        'author'            => get_current_user_id(),
-                        'order'             => 'ASC',
-                        'orderby'           => 'parent title',
-                        'meta_query'        => array(
-                            array(
-                                'key'   => '_downloadable',
-                                'value' => 'yes'
-                            )
-                        )
-                    );
-                    $products = get_posts( $args );
+                    $sql = "SELECT $wpdb->posts.* FROM $wpdb->posts
+                            INNER JOIN $wpdb->postmeta
+                                ON ( $wpdb->posts.ID = $wpdb->postmeta.post_id )
+                            WHERE $wpdb->posts.post_author=$user_id
+                                AND ( $wpdb->postmeta.meta_key = '_downloadable' AND $wpdb->postmeta.meta_value = 'yes' )
+                                AND $wpdb->posts.post_type IN ( 'product', 'product_variation' )
+                                AND $wpdb->posts.post_status = 'publish'
+                            GROUP BY $wpdb->posts.ID
+                            ORDER BY $wpdb->posts.post_parent ASC, $wpdb->posts.post_title ASC";
+
+                    $products = $wpdb->get_results( $sql );
 
                     if ( $products ) foreach ( $products as $product ) {
 
@@ -62,7 +59,6 @@ global $wpdb;
                         $product_name   = $product_object->get_formatted_name();
 
                         echo '<option value="' . esc_attr( $product->ID ) . '">' . esc_html( $product_name ) . '</option>';
-
                     }
                 ?>
             </select>

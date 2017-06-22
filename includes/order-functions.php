@@ -15,7 +15,7 @@ function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
     $order_total    = $order->get_total();
     $order_shipping = $order->get_total_shipping();
     $order_tax      = $order->get_total_tax();
-    $extra_cost     = $order_shipping + $order_tax;
+    $extra_cost     = (float) $order_shipping + (float) $order_tax;
 
     $commission_recipient = dokan_get_option( 'extra_fee_recipient', 'dokan_general', 'seller' );
 
@@ -89,7 +89,7 @@ function dokan_get_seller_orders_by_date( $start_date, $end_date, $seller_id = f
     global $wpdb;
 
     $seller_id = ! $seller_id ? get_current_user_id() : intval( $seller_id );
-    
+
     $end_date   = date( 'Y-m-d 00:00:00', strtotime( $end_date ) );
     $end_date   = date( 'Y-m-d h:i:s', strtotime( $end_date . '-1 minute' ) );
     $start_date = date( 'Y-m-d', strtotime( $start_date ) );
@@ -373,7 +373,7 @@ function dokan_sync_insert_order( $order_id ) {
     $net_amount         = apply_filters( 'dokan_order_net_amount', $net_amount, $order );
 
     dokan_delete_sync_duplicate_order( $order_id, $seller_id );
-    
+
     // make sure order status contains "wc-" prefix
     if ( stripos( $order_status, 'wc-' ) === false ) {
         $order_status = 'wc-' . $order_status;
@@ -576,12 +576,12 @@ function dokan_sync_order_table( $order_id ) {
     $admin_commission   = dokan_get_admin_commission_by( $order, $seller_id );
     $net_amount         = $order_total - $admin_commission;
     $net_amount     = apply_filters( 'dokan_sync_order_net_amount', $net_amount, $order );
-    
+
     // make sure order status contains "wc-" prefix
     if ( stripos( $order_status, 'wc-' ) === false ) {
         $order_status = 'wc-' . $order_status;
     }
-    
+
     $wpdb->insert( $wpdb->prefix . 'dokan_orders',
         array(
             'order_id'     => $order_id,
