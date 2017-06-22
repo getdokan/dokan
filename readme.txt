@@ -178,6 +178,15 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+v2.6.4 -> June 22, 2017
+---------------------
+- [fix] Store page product loop pagination not showing
+- [fix] Order exporting not working properly
+- [fix] Earning calculation date range issue
+- [tweak] Banner upload is now available in store settings for all appearances
+- [tweak] Profile completion progress custom values logic updated
+- [tweak] Downloadable product section performance tweaks
+
 v2.6.3 -> June 08, 2017
 ---------------------
 - [fix] Missing text domains updated
