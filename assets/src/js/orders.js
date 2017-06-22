@@ -1,7 +1,7 @@
 jQuery(function($) {
 
     $('.tips').tooltip();
-    $('select.grant_access_id').chosen();
+    //$('select.grant_access_id').chosen();
 
     $('ul.order-status').on('click', 'a.dokan-edit-status', function(e) {
         $(this).addClass('dokan-hide').closest('li').next('li').removeClass('dokan-hide');
