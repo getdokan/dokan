@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Dokan (Lite) - Multi-vendor Marketplace 2.6.2\n"
 "Report-Msgid-Bugs-To: http://wedevs.com/support/forum/theme-support/dokan/\n"
 "POT-Creation-Date: 2017-06-23 11:03-0300\n"
-"PO-Revision-Date: 2017-06-23 11:10-0300\n"
+"PO-Revision-Date: 2017-06-24 19:40-0300\n"
 "Last-Translator: \n"
 "Language-Team: Sophivorus\n"
 "Language: es_ES\n"
@@ -295,7 +295,7 @@ msgstr "<br><strong> Vendedor:</strong> %s"
 #: classes/template-settings.php:409 classes/template-withdraw.php:175
 #: classes/template-withdraw.php:200
 msgid "Are you cheating?"
-msgstr "¿Qué haces?"
+msgstr "¿Intentas hacer trampa?"
 
 #: classes/ajax.php:155 classes/ajax.php:189
 msgid "You do not have sufficient permissions to access this page."
@@ -662,7 +662,7 @@ msgstr "Ajustes"
 
 #: classes/template-settings.php:72
 msgid "Payment Settings"
-msgstr "Ajustes de pago"
+msgstr "Opciones de extracción"
 
 #: classes/template-settings.php:92
 msgid ""
