@@ -1134,3 +1134,21 @@ function dokan_save_account_details(){
 }
 
 add_action( 'template_redirect', 'dokan_save_account_details' );
+
+add_action( 'trashed_post', 'dokan_clear_product_category_cache' );
+add_action( 'deleted_post', 'dokan_clear_product_category_cache' );
+add_action( 'dokan_new_product_added', 'dokan_clear_product_category_cache' );
+add_action( 'dokan_product_updated', 'dokan_clear_product_category_cache' );
+
+function dokan_clear_product_category_cache( $post_id ) {
+
+    $product = wc_get_product( $post_id );
+
+    if ( !$product ) {
+        return;
+    }
+
+    $seller_id = get_post_field( 'post_author', $post_id );
+
+    delete_transient( 'dokan-store-category-' . $seller_id );
+}
