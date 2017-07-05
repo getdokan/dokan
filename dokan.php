@@ -247,6 +247,11 @@ final class WeDevs_Dokan {
         // Core styles
         wp_register_style( 'dokan-style', plugins_url( 'assets/css/style.css', __FILE__ ), false, null );
 
+        if ( is_rtl() ) {
+            // RTL supported style
+            wp_register_style( 'dokan-rtl-style', plugins_url( 'assets/css/rtl.css', __FILE__ ), false, null );
+        }
+
         // Register Vendors scripts
         wp_register_script( 'dokan-chart', $vendor . '/chart/Chart.min.js', false, null, true );
         wp_register_script( 'dokan-tabs', $vendor . '/easytab/jquery.easytabs.min.js', false, null, true );
@@ -286,6 +291,9 @@ final class WeDevs_Dokan {
         if ( DOKAN_LOAD_STYLE ) {
             wp_enqueue_style( 'dokan-style' );
             wp_enqueue_style( 'dokan-fontawesome' );
+            if ( is_rtl() ) {
+                wp_enqueue_style( 'dokan-rtl-style' );
+            }
         }
 
         $default_script = array(

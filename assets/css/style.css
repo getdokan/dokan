@@ -2126,6 +2126,16 @@ div.media-sidebar a.edit-attachment {
 .dokan-dashboard .dokan-dashboard-content .dokan-page-help p {
   margin-bottom: 10px;
 }
+.dokan-orders-content .dokan-orders-area .dokan-order-left-content {
+  margin-right: 3%;
+}
+.dokan-orders-content .dokan-orders-area .dokan-order-left-content .dokan-order-billing-address {
+  min-width: 49%;
+  margin-right: 2%;
+}
+.dokan-orders-content .dokan-orders-area .dokan-order-left-content .dokan-order-shipping-address {
+  min-width: 49%;
+}
 .dokan-orders-content .dokan-orders-area .dokan-order-filter-serach {
   padding: 10px 7px;
 }
