@@ -694,8 +694,9 @@ class Dokan_Template_Settings {
             }
         }
 
-        $track_val['next_todo'] = $next_add;
-        $track_val['progress'] = $profile_val;
+        $track_val['next_todo']     = $next_add;
+        $track_val['progress']      = $profile_val;
+        $track_val['progress_vals'] = $progress_values;
         
         return apply_filters( 'dokan_profile_completion_progress_value', $track_val ) ;
     }
