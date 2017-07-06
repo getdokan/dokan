@@ -3702,6 +3702,7 @@ div.media-sidebar a.edit-attachment {
   float: left;
   padding: 0 25px;
   color: #444;
+  width: 80%;
 }
 .dokan-single-store .profile-frame.profile-frame-no-banner .profile-layout-layout3 .profile-info-summery-wrapper .profile-info-summery .profile-info .store-name {
   margin-top: 5px;
