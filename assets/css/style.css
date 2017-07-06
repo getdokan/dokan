@@ -2288,6 +2288,12 @@ div.media-sidebar a.edit-attachment {
 .dokan-product-listing .dokan-product-listing-area .product-listing-top span.dokan-add-product-link {
   width: 30%;
 }
+.dokan-product-listing .dokan-product-listing-area form.dokan-product-search-form button[name="product_listing_search"] {
+  float: right;
+}
+.dokan-product-listing .dokan-product-listing-area form.dokan-product-search-form .dokan-form-group {
+  float: right;
+}
 .dokan-product-listing .dokan-product-listing-area table.product-listing-table span.product-type:before {
   font-family: FontAwesome;
   content: "\f133";
