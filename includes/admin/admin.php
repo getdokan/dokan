@@ -379,6 +379,13 @@ class Dokan_Admin_Settings {
                     'type'    => 'checkbox',
                     'default' => 'off'
                 ),
+                'disable_welcome_wizard' => array(
+                    'name'    => 'disable_welcome_wizard',
+                    'label'   => __( 'Disable Welcome Wizard', 'dokan-lite' ),
+                    'desc'    => __( 'Disable welcome wizard for newly registered vendors', 'dokan-lite' ),
+                    'type'    => 'checkbox',
+                    'default' => 'off'
+                ),
             ),
             'dokan_withdraw' => array(
                 'withdraw_methods' => array(
