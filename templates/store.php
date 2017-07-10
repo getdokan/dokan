@@ -34,7 +34,7 @@ get_header( 'shop' );
                         the_widget( 'Dokan_Store_Category_Menu', array( 'title' => __( 'Store Category', 'dokan-lite' ) ), $args );
 
                         if ( dokan_get_option( 'store_map', 'dokan_general', 'on' ) == 'on'  && !empty( $map_location ) ) {
-                            the_widget( 'Dokan_Store_Locationss', array( 'title' => __( 'Store Location', 'dokan-lite' ) ), $args );
+                            the_widget( 'Dokan_Store_Location', array( 'title' => __( 'Store Location', 'dokan-lite' ) ), $args );
                         }
 
                         if ( dokan_get_option( 'contact_seller', 'dokan_general', 'on' ) == 'on' ) {
