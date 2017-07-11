@@ -24,9 +24,14 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
     public function filter_woocommerce_registration_redirect( $var ) {
         $url  = $var;
         $user = wp_get_current_user();
-
+        
         if ( in_array( 'seller', $user->roles ) ) {
-            $url = apply_filters( 'dokan_seller_setup_wizard_url', site_url( '?page=dokan-seller-setup' ) );
+            
+            $url = dokan_get_navigation_url();
+            
+            if ( dokan_get_option( 'disable_welcome_wizard', 'dokan_selling', 'off' ) === 'off' ) {
+                $url = apply_filters( 'dokan_seller_setup_wizard_url', site_url( '?page=dokan-seller-setup' ) );
+            }
         }
         return $url;
     }
