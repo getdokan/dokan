@@ -12,9 +12,9 @@ class Dokan_Category_Walker extends Walker {
         $indent = str_repeat( "\t", $depth );
 
         if ( $depth == 0 ) {
-            $output .= $indent . '<div class="sub-category">' . "\n";
+            $output .= $indent . '<ul class="children level-' . $depth . '">' . "\n";
         } else {
-            $output .= "$indent<ul class='children'>\n";
+            $output .= "$indent<ul class='children level-$depth'>\n";
         }
     }
 
@@ -22,7 +22,7 @@ class Dokan_Category_Walker extends Walker {
         $indent = str_repeat( "\t", $depth );
 
         if ( $depth == 0 ) {
-            $output .= "$indent</div> <!-- .sub-category -->\n";
+            $output .= "$indent</ul> <!-- .sub-category -->\n";
         } else {
             $output .= "$indent</ul>\n";
         }
@@ -30,12 +30,14 @@ class Dokan_Category_Walker extends Walker {
 
     function start_el( &$output, $category, $depth = 0, $args = array(), $id = 0 ) {
         extract( $args );
-        $indent = str_repeat( "\t", $depth );
+        $indent = str_repeat( "\t\r", $depth );
 
-        if ( $depth == 1 ) {
-            $output .= $indent . '<div class="sub-block">' . "\n\t" .'<h3><a href="'. get_term_link( $category ) .'">' . $category->name . '</a></h3>' . "\n";
+        if ( $depth == 0 ) {
+            $caret = $args['has_children'] ? ' <span class="caret-icon"><i class="fa fa-angle-right" aria-hidden="true"></i></span>' : '';
+            $class_name = $args['has_children'] ? ' class="has-children parent-cat-wrap"' : ' class="parent-cat-wrap"';
+            $output .= $indent . '<li' . $class_name . '><a href="'. get_term_link( $category ) .'">' . $category->name . $caret . '</a>' . "\n";
         } else {
-            $caret = $args['has_children'] ? ' <span class="caret"></span>' : '';
+            $caret = $args['has_children'] ? ' <span class="caret-icon"><i class="fa fa-angle-right" aria-hidden="true"></i></span>' : '';
             $class_name = $args['has_children'] ? ' class="has-children"' : '';
             $output .= $indent . '<li' . $class_name . '><a href="' . get_term_link( $category ) . '">' . $category->name . $caret . '</a>';
         }
@@ -45,7 +47,7 @@ class Dokan_Category_Walker extends Walker {
         $indent = str_repeat( "\t", $depth );
 
         if ( $depth == 1 ) {
-            $output .= "$indent</div><!-- .sub-block -->\n";
+            $output .= "$indent</li><!-- .sub-block -->\n";
         } else {
             $output .= "$indent</li>\n";
         }
