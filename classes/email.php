@@ -146,7 +146,7 @@ class Dokan_Email {
             $order_id,
             $amount,
             $refund_reason,
-            home_url() . '?page=dokan-refund&status=pending',
+            dokan_get_navigation_url() . 'orders/?order_status=wc-refunded',
             $this->get_from_name(),
             home_url(),
         );
