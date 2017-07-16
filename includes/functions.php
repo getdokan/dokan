@@ -1033,15 +1033,27 @@ function dokan_get_seller_bank_details( $seller_id ) {
     if ( isset( $payment['ac_name'] ) ) {
         $details[] = sprintf( __( 'Account Name: %s', 'dokan-lite' ), $payment['ac_name'] );
     }
+
     if ( isset( $payment['ac_number'] ) ) {
         $details[] = sprintf( __( 'Account Number: %s', 'dokan-lite' ), $payment['ac_number'] );
     }
+
     if ( isset( $payment['bank_name'] ) ) {
         $details[] = sprintf( __( 'Bank Name: %s', 'dokan-lite' ), $payment['bank_name'] );
     }
+
     if ( isset( $payment['bank_addr'] ) ) {
         $details[] = sprintf( __( 'Address: %s', 'dokan-lite' ), $payment['bank_addr'] );
     }
+
+    if ( isset( $payment['routing_number'] ) ) {
+        $details[] = sprintf( __( 'Routing Number: %s', 'dokan-lite' ), $payment['routing_number'] );
+    }
+
+    if ( isset( $payment['iban'] ) ) {
+        $details[] = sprintf( __( 'IBAN: %s', 'dokan-lite' ), $payment['iban'] );
+    }
+
     if ( isset( $payment['swift'] ) ) {
         $details[] = sprintf( __( 'SWIFT: %s', 'dokan-lite' ), $payment['swift'] );
     }

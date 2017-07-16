@@ -136,6 +136,8 @@ function dokan_withdraw_method_bank( $store_settings ) {
     $account_number = isset( $store_settings['payment']['bank']['ac_number'] ) ? esc_attr( $store_settings['payment']['bank']['ac_number'] ) : '';
     $bank_name      = isset( $store_settings['payment']['bank']['bank_name'] ) ? esc_attr( $store_settings['payment']['bank']['bank_name'] ) : '';
     $bank_addr      = isset( $store_settings['payment']['bank']['bank_addr'] ) ? esc_textarea( $store_settings['payment']['bank']['bank_addr'] ) : '';
+    $routing_number = isset( $store_settings['payment']['bank']['routing_number'] ) ? esc_attr( $store_settings['payment']['bank']['routing_number'] ) : '';
+    $iban           = isset( $store_settings['payment']['bank']['iban'] ) ? esc_attr( $store_settings['payment']['bank']['iban'] ) : '';
     $swift_code     = isset( $store_settings['payment']['bank']['swift'] ) ? esc_attr( $store_settings['payment']['bank']['swift'] ) : '';
     ?>
     <div class="dokan-form-group">
@@ -159,6 +161,18 @@ function dokan_withdraw_method_bank( $store_settings ) {
     <div class="dokan-form-group">
         <div class="dokan-w8">
             <textarea name="settings[bank][bank_addr]" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Address of your bank', 'dokan-lite' ) ?>"><?php echo $bank_addr; ?></textarea>
+        </div>
+    </div>
+
+    <div class="dokan-form-group">
+        <div class="dokan-w8">
+            <input name="settings[bank][routing_number]" value="<?php echo $routing_number; ?>" class="dokan-form-control" placeholder="<?php _e( 'Routing number', 'dokan-lite' ) ?>" type="text">
+        </div>
+    </div>
+
+    <div class="dokan-form-group">
+        <div class="dokan-w8">
+            <input name="settings[bank][iban]" value="<?php echo $iban; ?>" class="dokan-form-control" placeholder="<?php _e( 'IBAN', 'dokan-lite' ) ?>" type="text">
         </div>
     </div>
 
