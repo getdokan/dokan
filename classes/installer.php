@@ -256,7 +256,7 @@ class Dokan_Installer {
                `status` int(1) NOT NULL,
                `method` varchar(30) NOT NULL,
                `note` text NOT NULL,
-               `ip` varchar(15) NOT NULL,
+               `ip` varchar(25) NOT NULL,
               PRIMARY KEY (id)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
 
