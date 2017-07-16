@@ -1732,6 +1732,66 @@ span.error {
   font-size: 2em;
   color: rgba(0, 0, 0, 0.75);
 }
+.dokan-category-menu {
+  padding: 0;
+  border: 1px solid #ece7e7;
+}
+.dokan-category-menu h3.widget-title {
+  margin: 0;
+  padding: 10px 10px 10px 15px;
+  background: #eee;
+  border: 1px solid #eee;
+  color: #444;
+}
+.dokan-category-menu ul li {
+  border-bottom: none;
+}
+.dokan-category-menu #cat-drop-stack ul .children {
+  display: none;
+}
+.dokan-category-menu #cat-drop-stack ul li:last-child a {
+  border-bottom: none !important;
+}
+.dokan-category-menu #cat-drop-stack ul li:last-child.has-children a {
+  border-bottom: 1px solid #eee !important;
+}
+.dokan-category-menu #cat-drop-stack > ul {
+  padding: 0px;
+  margin: 0px;
+}
+.dokan-category-menu #cat-drop-stack > ul li {
+  padding: 0;
+}
+.dokan-category-menu #cat-drop-stack > ul li.parent-cat-wrap {
+  background: #fff;
+}
+.dokan-category-menu #cat-drop-stack > ul li.parent-cat-wrap a {
+  border-bottom: 1px solid #eee;
+  margin: 0px 15px;
+  text-decoration: none;
+}
+.dokan-category-menu #cat-drop-stack > ul li.parent-cat-wrap ul.level-0 {
+  background: #fafafa;
+}
+.dokan-category-menu #cat-drop-stack > ul li.parent-cat-wrap ul.level-0 li.has-children {
+  border-bottom: none;
+}
+.dokan-category-menu #cat-drop-stack > ul li a {
+  padding: 9px 0px;
+  display: block;
+  color: #3C3C3C;
+  position: relative;
+  font-size: 13px;
+  text-decoration: none;
+}
+.dokan-category-menu #cat-drop-stack > ul li a .caret-icon {
+  position: absolute;
+  right: -2px;
+  display: inline-block;
+  width: 20px;
+  vertical-align: middle;
+  text-align: center;
+}
 .dokan-announcement-wrapper .dokan-no-announcement .annoument-no-wrapper {
   height: 100%;
   margin: 70px auto;
@@ -2126,6 +2186,16 @@ div.media-sidebar a.edit-attachment {
 .dokan-dashboard .dokan-dashboard-content .dokan-page-help p {
   margin-bottom: 10px;
 }
+.dokan-orders-content .dokan-orders-area .dokan-order-left-content {
+  margin-right: 3%;
+}
+.dokan-orders-content .dokan-orders-area .dokan-order-left-content .dokan-order-billing-address {
+  min-width: 49%;
+  margin-right: 2%;
+}
+.dokan-orders-content .dokan-orders-area .dokan-order-left-content .dokan-order-shipping-address {
+  min-width: 49%;
+}
 .dokan-orders-content .dokan-orders-area .dokan-order-filter-serach {
   padding: 10px 7px;
 }
@@ -2277,6 +2347,12 @@ div.media-sidebar a.edit-attachment {
 }
 .dokan-product-listing .dokan-product-listing-area .product-listing-top span.dokan-add-product-link {
   width: 30%;
+}
+.dokan-product-listing .dokan-product-listing-area form.dokan-product-search-form button[name="product_listing_search"] {
+  float: right;
+}
+.dokan-product-listing .dokan-product-listing-area form.dokan-product-search-form .dokan-form-group {
+  float: right;
 }
 .dokan-product-listing .dokan-product-listing-area table.product-listing-table span.product-type:before {
   font-family: FontAwesome;
@@ -3686,6 +3762,7 @@ div.media-sidebar a.edit-attachment {
   float: left;
   padding: 0 25px;
   color: #444;
+  width: 80%;
 }
 .dokan-single-store .profile-frame.profile-frame-no-banner .profile-layout-layout3 .profile-info-summery-wrapper .profile-info-summery .profile-info .store-name {
   margin-top: 5px;

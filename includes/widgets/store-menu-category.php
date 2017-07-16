@@ -15,10 +15,12 @@ class Dokan_Store_Category_Walker extends Dokan_Category_Walker {
 
         $url = $this->store_url . 'section/' . $category->term_id;
 
-        if ( $depth == 1 ) {
-            $output .= $indent . '<div class="sub-block">' . "\n\t" .'<h3><a href="' . $url . '">' . $category->name . '</a></h3>' . "\n";
+        if ( $depth == 0 ) {
+            $caret = $args['has_children'] ? ' <span class="caret-icon"><i class="fa fa-angle-right" aria-hidden="true"></i></span>' : '';
+            $class_name = $args['has_children'] ? ' class="has-children parent-cat-wrap"' : ' class="parent-cat-wrap"';
+            $output .= $indent . '<li' . $class_name . '>' . "\n\t" .'<a href="' . $url . '">' . $category->name . $caret . '</a>' . "\n";
         } else {
-            $caret = $args['has_children'] ? ' <span class="caret"></span>' : '';
+            $caret = $args['has_children'] ? ' <span class="caret-icon"><i class="fa fa-angle-right" aria-hidden="true"></i></span>' : '';
             $class_name = $args['has_children'] ? ' class="has-children"' : '';
             $output .= $indent . '<li' . $class_name . '><a href="' . $url . '">' . $category->name . $caret . '</a>';
         }

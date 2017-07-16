@@ -26,7 +26,12 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
         $user = wp_get_current_user();
 
         if ( in_array( 'seller', $user->roles ) ) {
-            $url = apply_filters( 'dokan_seller_setup_wizard_url', site_url( '?page=dokan-seller-setup' ) );
+
+            $url = dokan_get_navigation_url();
+
+            if ( dokan_get_option( 'disable_welcome_wizard', 'dokan_selling', 'off' ) === 'off' ) {
+                $url = apply_filters( 'dokan_seller_setup_wizard_url', site_url( '?page=dokan-seller-setup' ) );
+            }
         }
         return $url;
     }
@@ -443,11 +448,13 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
             $bank = $_POST['settings']['bank'];
 
             $dokan_settings['payment']['bank'] = array(
-                'ac_name'   => sanitize_text_field( $bank['ac_name'] ),
-                'ac_number' => sanitize_text_field( $bank['ac_number'] ),
-                'bank_name' => sanitize_text_field( $bank['bank_name'] ),
-                'bank_addr' => sanitize_text_field( $bank['bank_addr'] ),
-                'swift'     => sanitize_text_field( $bank['swift'] ),
+                'ac_name'        => sanitize_text_field( $bank['ac_name'] ),
+                'ac_number'      => sanitize_text_field( $bank['ac_number'] ),
+                'bank_name'      => sanitize_text_field( $bank['bank_name'] ),
+                'bank_addr'      => sanitize_text_field( $bank['bank_addr'] ),
+                'routing_number' => sanitize_text_field( $bank['routing_number'] ),
+                'iban'           => sanitize_text_field( $bank['iban'] ),
+                'swift'          => sanitize_text_field( $bank['swift'] ),
             );
         }
 

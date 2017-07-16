@@ -4,6 +4,8 @@ Donate Link: http://tareq.co/donate/
 Tags: woocommerce, multivendor, multi-vendor, paypal, shop, vendor, seller, store, sell, online, amazon, dokan, ebay, Etsy, multi seller, multi store, multi vendor, multi vendors, multistore, multivendor, product vendor, product vendors, vendor, vendor system, vendors, wc market place, wc marketplace, wc vendors, woo vendors, woocommerce market place, woocommerce marketplace, woocommerce multi vendor,  commission rate, e-commerce, ebay, ecommerce, yith, yithemes
 Requires at least: 4.4
 Tested up to: 4.8
+WC requires at least: 2.6
+WC tested up to: 3.1.1
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -30,7 +32,7 @@ We regularly keep our version updated for flawless operation and integration wit
 
 **A really scalable market**
 
-You can have unlimited vendors and vendors can create unlimited products. Currently 4 product types are supported eg. physical product, downloadable product, variable product and bookable products through the [Dokan WC Bookings](https://wedevs.com/products/plugins/dokan/woocommerce-booking-integration/) add on.
+You can have unlimited vendors and vendors can create unlimited products. Currently 5 product types are supported eg. physical product, downloadable product, variable product, bookable products through the [Dokan WC Bookings](https://wedevs.com/products/plugins/dokan/woocommerce-booking-integration/) add on and auction products through the [Dokan Simple Auction](https://wedevs.com/products/plugins/dokan/dokan-simple-auctions/) add on.
 
 **Earn in many ways**
 
@@ -177,6 +179,20 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 == Changelog ==
+
+v2.6.5 -> July 16, 2017
+---------------------
+- [new]   Added IBAN and Routing number fields for vendor's Bank info section
+- [new]   Added settings in admin panel to disable Vendor Welcome Wizard
+- [new]   Added filter `dokan_seller_registration_required_fields`
+- [new]   Store Category widget design updated
+- [new]   Added Dokan logo as menu icon in admin dashboard
+- [new]   Dokan Store Sidebar widget area now available for all themes
+- [fix]   Store categories are not updating properly
+- [fix]   Showing store location widget if location is not set
+- [fix]   Withdraw not working for IP address with port number
+- [tweak] Enahanced RTL support
+- [tweak] Profile Completion progress filter args updated
 
 v2.6.4 -> June 22, 2017
 ---------------------

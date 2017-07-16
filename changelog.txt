@@ -1,3 +1,17 @@
+v2.6.5 -> July 16, 2017
+---------------------
+- [new]   Added IBAN and Routing number fields for vendor's Bank info section
+- [new]   Added settings in admin panel to disable Vendor Welcome Wizard
+- [new]   Added filter `dokan_seller_registration_required_fields`
+- [new]   Store Category widget design updated
+- [new]   Added Dokan logo as menu icon in admin dashboard
+- [new]   Dokan Store Sidebar widget area now available for all themes
+- [fix]   Store categories are not updating properly
+- [fix]   Showing store location widget if location is not set
+- [fix]   Withdraw not working for IP address with port number
+- [tweak] Enahanced RTL support
+- [tweak] Profile Completion progress filter args updated
+
 v2.6.4 -> June 22, 2017
 ---------------------
 - [fix] Store page product loop pagination not showing

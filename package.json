@@ -1,8 +1,8 @@
 {
   "name": "dokan",
-  "version": "2.6.4",
+  "version": "2.6.5",
   "description": "A WordPress marketplace plugin",
-  "author": "Tareq Hasan",
+  "author": "weDevs",
   "license": "GPL",
   "private": true,
   "devDependencies": {

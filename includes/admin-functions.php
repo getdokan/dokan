@@ -369,6 +369,7 @@ function dokan_admin_report( $group_by = 'day', $year = '' ) {
             $(document).ready( function() {
 
                 var order_data = jQuery.parseJSON( '<?php echo $chart_data; ?>' );
+                var isRtl = '<?php echo is_rtl() ? "1" : "0"; ?>';
                 var series = [
                     {
                         label: "<?php echo esc_js( __( 'Total Sales', 'dokan-lite' ) ) ?>",
@@ -434,7 +435,9 @@ function dokan_admin_report( $group_by = 'day', $year = '' ) {
                             minTickSize: [1, "<?php echo ( $group_by == 'year' ) ? 'month' : $group_by; ?>"],
                             font: {
                                 color: "#aaa"
-                            }
+                            },
+                            transform: function (v) { return ( isRtl == '1' ) ? -v : v; },
+                            inverseTransform: function (v) { return ( isRtl == '1' ) ? -v : v; }
                         },
                         yaxes: [
                             {

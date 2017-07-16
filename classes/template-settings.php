@@ -482,11 +482,13 @@ class Dokan_Template_Settings {
                 $bank = $_POST['settings']['bank'];
 
                 $dokan_settings['payment']['bank'] = array(
-                    'ac_name'   => sanitize_text_field( $bank['ac_name'] ),
-                    'ac_number' => sanitize_text_field( $bank['ac_number'] ),
-                    'bank_name' => sanitize_text_field( $bank['bank_name'] ),
-                    'bank_addr' => sanitize_text_field( $bank['bank_addr'] ),
-                    'swift'     => sanitize_text_field( $bank['swift'] ),
+                    'ac_name'        => sanitize_text_field( $bank['ac_name'] ),
+                    'ac_number'      => sanitize_text_field( $bank['ac_number'] ),
+                    'bank_name'      => sanitize_text_field( $bank['bank_name'] ),
+                    'bank_addr'      => sanitize_text_field( $bank['bank_addr'] ),
+                    'routing_number' => sanitize_text_field( $bank['routing_number'] ),
+                    'iban'           => sanitize_text_field( $bank['iban'] ),
+                    'swift'          => sanitize_text_field( $bank['swift'] ),
                 );
             }
 
@@ -694,8 +696,9 @@ class Dokan_Template_Settings {
             }
         }
 
-        $track_val['next_todo'] = $next_add;
-        $track_val['progress'] = $profile_val;
+        $track_val['next_todo']     = $next_add;
+        $track_val['progress']      = $profile_val;
+        $track_val['progress_vals'] = $progress_values;
         
         return apply_filters( 'dokan_profile_completion_progress_value', $track_val ) ;
     }

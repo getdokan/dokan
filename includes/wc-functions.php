@@ -453,34 +453,35 @@ function dokan_sub_order_get_total_coupon( $order_id ) {
  * @param WP_Error $error
  * @return \WP_Error
  */
-function dokan_seller_registration_errors( $error ) {
-    $allowed_roles = apply_filters( 'dokan_register_user_role', array( 'customer', 'seller' ) );
+if ( !function_exists( 'dokan_seller_registration_errors' ) ) {
 
-    // is the role name allowed or user is trying to manipulate?
-    if ( isset( $_POST['role'] ) && !in_array( $_POST['role'], $allowed_roles ) ) {
-        return new WP_Error( 'role-error', __( 'Cheating, eh?', 'dokan-lite' ) );
+    function dokan_seller_registration_errors( $error ) {
+        $allowed_roles = apply_filters( 'dokan_register_user_role', array( 'customer', 'seller' ) );
+
+        // is the role name allowed or user is trying to manipulate?
+        if ( isset( $_POST['role'] ) && !in_array( $_POST['role'], $allowed_roles ) ) {
+            return new WP_Error( 'role-error', __( 'Cheating, eh?', 'dokan-lite' ) );
+        }
+
+        $role = $_POST['role'];
+
+        $required_fields = apply_filters( 'dokan_seller_registration_required_fields', array(
+            'fname' => __( 'Please enter your first name.', 'dokan-lite' ),
+            'lname' => __( 'Please enter your last name.', 'dokan-lite' ),
+            'phone' => __( 'Please enter your phone number.', 'dokan-lite' ),
+        ) );
+
+        if ( $role == 'seller' ) {
+            foreach ( $required_fields as $field => $msg ) {
+                if ( empty( trim( $_POST[$field] ) ) ) {
+                    return new WP_Error( "$field-error", $msg );
+                }
+            }
+        }
+
+        return $error;
     }
-
-    $role = $_POST['role'];
-
-    if ( $role == 'seller' ) {
-
-        $first_name = trim( $_POST['fname'] );
-        if ( empty( $first_name ) ) {
-            return new WP_Error( 'fname-error', __( 'Please enter your first name.', 'dokan-lite' ) );
-        }
-
-        $last_name = trim( $_POST['lname'] );
-        if ( empty( $last_name ) ) {
-            return new WP_Error( 'lname-error', __( 'Please enter your last name.', 'dokan-lite' ) );
-        }
-        $phone = trim( $_POST['phone'] );
-        if ( empty( $phone ) ) {
-            return new WP_Error( 'phone-error', __( 'Please enter your phone number.', 'dokan-lite' ) );
-        }
-    }
-
-    return $error;
+    
 }
 
 add_filter( 'woocommerce_process_registration_errors', 'dokan_seller_registration_errors' );
@@ -1134,3 +1135,21 @@ function dokan_save_account_details(){
 }
 
 add_action( 'template_redirect', 'dokan_save_account_details' );
+
+add_action( 'trashed_post', 'dokan_clear_product_category_cache' );
+add_action( 'deleted_post', 'dokan_clear_product_category_cache' );
+add_action( 'dokan_new_product_added', 'dokan_clear_product_category_cache' );
+add_action( 'dokan_product_updated', 'dokan_clear_product_category_cache' );
+
+function dokan_clear_product_category_cache( $post_id ) {
+
+    $product = wc_get_product( $post_id );
+
+    if ( !$product ) {
+        return;
+    }
+
+    $seller_id = get_post_field( 'post_author', $post_id );
+
+    delete_transient( 'dokan-store-category-' . $seller_id );
+}

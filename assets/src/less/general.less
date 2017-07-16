@@ -172,3 +172,91 @@ span.error {
     font-size: 2em;
     color: rgba(0, 0, 0, .75)
 }
+
+.dokan-category-menu {
+    padding: 0;
+    border: 1px solid #ece7e7;
+
+    h3.widget-title {
+        margin: 0;
+        padding: 10px 10px 10px 15px;
+        background: #eee;
+        border: 1px solid #eee;
+        color: #444;
+    }
+
+    ul li {
+        border-bottom: none;
+    }
+
+    #cat-drop-stack {
+        ul {
+            .children {
+                display: none;
+            }
+
+            li {
+                &:last-child {
+                    a {
+                        border-bottom: none !important;
+                    }
+
+                    &.has-children {
+                        a {
+                            border-bottom: 1px solid #eee !important;
+                        }
+                    }
+                }
+            }
+        }
+
+        > ul {
+            padding: 0px;
+            margin: 0px;
+
+            li {
+                padding:0;
+
+                &.parent-cat-wrap {
+                    background: #fff;
+
+                    a {
+                        border-bottom: 1px solid #eee;
+                        margin: 0px 15px;
+                        text-decoration: none;
+
+                    }
+
+                    ul {
+                        &.level-0 {
+                            background: #fafafa;
+                            li {
+                                &.has-children {
+                                    border-bottom: none;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                a {
+                    padding: 9px 0px;
+                    display: block;
+                    color: #3C3C3C;
+                    position: relative;
+                    font-size: 13px;
+                    text-decoration: none;
+
+                    .caret-icon {
+                        position: absolute;
+                        right: -2px;
+                        display: inline-block;
+                        width: 20px;
+                        vertical-align: middle;
+                        text-align: center;
+                    }
+                }
+            }
+        }
+    }
+}
