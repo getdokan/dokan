@@ -331,7 +331,7 @@ function dokan_sales_overview_chart_data( $start_date, $end_date, $group_by ) {
         jQuery(function($) {
 
             var order_data = jQuery.parseJSON( '<?php echo $chart_data; ?>' );
-            var isRtl = '<?php echo is_rtl() ? "1" : "0"; ?>'
+            var isRtl = '<?php echo is_rtl() ? "1" : "0"; ?>';
             var series = [
                 {
                     label: "<?php echo esc_js( __( 'Sales total', 'dokan-lite' ) ) ?>",
