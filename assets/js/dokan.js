@@ -1938,29 +1938,3 @@ jQuery(function($) {
     });
 
 })(jQuery);
-
-;( function ( $ ) {
-
-    $( '#cat-drop-stack li.has-children' ).on( 'click', '> a span.caret-icon', function ( e ) {
-        e.preventDefault();
-        var self = $( this ),
-            liHasChildren = self.closest( 'li.has-children' );
-
-        if ( !liHasChildren.find( '> ul.children' ).is( ':visible' ) ) {
-            self.find( 'i.fa' ).addClass( 'fa-rotate-90' );
-            if ( liHasChildren.find( '> ul.children' ).hasClass( 'level-0' ) ) {
-                self.closest( 'a' ).css( { 'borderBottom': 'none' } );
-            }
-        }
-
-        liHasChildren.find( '> ul.children' ).slideToggle( 'fast', function () {
-            if ( !$( this ).is( ':visible' ) ) {
-                self.find( 'i.fa' ).removeClass( 'fa-rotate-90' );
-
-                if ( liHasChildren.find( '> ul.children' ).hasClass( 'level-0' ) ) {
-                    self.closest( 'a' ).css( { 'borderBottom': '1px solid #eee' } );
-                }
-            }
-        } );
-    } );
-} )( jQuery );
