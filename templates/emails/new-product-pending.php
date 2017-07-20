@@ -1,18 +1,18 @@
-Hello there,
+<?php _e( 'Hello there,', 'dokan-lite' ); ?>
 
-A new product has been submitted to your site (%site_url%).
+<?php _e( 'A new product has been submitted to your site', 'dokan-lite' ); ?> (%site_url%).
 
-Summary of the product:
+<?php _e( 'Summary of the product:', 'dokan-lite' ); ?>
 ------------------------
 
-Title: %title%
-Price: %price%
-Vendor: %seller_name% (%seller_url%)
-Category: %category%
+<?php _e( 'Title:', 'dokan-lite' ); ?> %title%
+<?php _e( 'Price:', 'dokan-lite' ); ?> %price%
+<?php _e( 'Vendor:', 'dokan-lite' ); ?>%seller_name% (%seller_url%)
+<?php _e( 'Category:', 'dokan-lite' ); ?> %category%
 
-The product is currently in "pending" state. Please review this product before it goes public.
+<?php _e( 'The product is currently in "pending" state. Please review this product before it goes public.', 'dokan-lite' ); ?>
 
-Moderate: %product_link%
+<?php _e( 'Moderate:', 'dokan-lite' ); ?> %product_link%
 
 ---
 %site_name%

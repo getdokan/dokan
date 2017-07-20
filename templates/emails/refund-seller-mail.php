@@ -1,14 +1,14 @@
-Hi,
+<?php _e( 'Hi,', 'dokan' ); ?>
 
-Your refund request has been %status%.
+<?php _e( 'Your refund request has been', 'dokan' ); ?> %status%.
 
-Order ID: %order_id%
-Refund Amount: %amount%
-Refund Reason: %reason%
+<?php _e( 'Order ID:', 'dokan' ); ?> %order_id%
+<?php _e( 'Refund Amount:', 'dokan' ); ?> %amount%
+<?php _e( 'Refund Reason:', 'dokan' ); ?> %reason%
 
-You can view the order details by going here:
+<?php _e( 'You can view the order details by going here:', 'dokan' ); ?>
 %order_page%
 
 ---
-Sent from %site_name%
+<?php _e( 'Sent from', 'dokan' ); ?> %site_name%
 %site_url%

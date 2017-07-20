@@ -1,16 +1,16 @@
-Hi,
+<?php _e( 'Hi,', 'dokan-lite' ); ?>
 
-A new withdraw request has been made by %username%.
+<?php _e( 'A new withdraw request has been made by', 'dokan-lite' ); ?> %username%.
 
-Request Amount: %amount%
-Payment Method: %method%
+<?php _e( 'Request Amount:', 'dokan-lite' ); ?> %amount%
+<?php _e( 'Payment Method:', 'dokan-lite' ); ?> %method%
 
-Username: %username%
-Profile: %profile_url%
+<?php _e( 'Username:', 'dokan-lite' ); ?> %username%
+<?php _e( 'Profile:', 'dokan-lite' ); ?> %profile_url%
 
-You can approve or deny it by going here:
+<?php _e( 'You can approve or deny it by going here:', 'dokan-lite' ); ?>
 %withdraw_page%
 
 ---
-Sent from %site_name%
+<?php _e( 'Sent from', 'dokan-lite' ); ?> %site_name%
 %site_url%

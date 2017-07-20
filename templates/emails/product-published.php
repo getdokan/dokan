@@ -1,10 +1,10 @@
-Hello %seller_name%,
+<?php _e( 'Hello', 'dokan-lite' ); ?> %seller_name%,
 
-Your product "%title%" has been approved by one of our admin, congrats!
+<?php _e( 'Your product', 'dokan-lite' ); ?> "%title%" <?php _e( 'has been approved by one of our admin, congrats!', 'dokan-lite' ); ?>
 
-View product: %product_link%
-Update: %product_edit_link%
+<?php _e( 'View product:', 'dokan-lite' ); ?> %product_link%
+<?php _e( 'Update:', 'dokan-lite' ); ?> %product_edit_link%
 
 ---
-Sent from %site_name%
+<?php _e( 'Sent from', 'dokan-lite' ); ?> %site_name%
 %site_url%
