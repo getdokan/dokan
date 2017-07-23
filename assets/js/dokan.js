@@ -594,7 +594,15 @@ jQuery(function($) {
         },
 
         loadSelect2: function() {
-            $('.dokan-select2').select2();
+            $('.dokan-select2').select2(
+                {
+                    "language": {
+                        "noResults": function () {
+                            return dokan.i18n_no_result_found;
+                        }
+                    }
+                }
+            );
         },
 
         addProductPopup: function (e) {
