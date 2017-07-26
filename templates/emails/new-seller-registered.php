@@ -1,14 +1,14 @@
-Hello there,
+<?php _e( 'Hello there,', 'dokan-lite' ); ?>
 
-A new vendor has been registered to your site (%site_url%).
+<?php _e( 'A new vendor has been registered to your site ', 'dokan-lite' ); ?>(%site_url%).
 
-Vendor Details:
+<?php _e( 'Vendor Details:', 'dokan-lite' ); ?>
 ------------------------
 
-Vendor: %seller_name%
-Vendor Store: %store_url%
+<?php _e( 'Vendor:', 'dokan-lite' ); ?> %seller_name%
+<?php _e( 'Vendor Store:', 'dokan-lite' ); ?> %store_url%
 
-To edit vendor access and details visit - %seller_edit%
+<?php _e( 'To edit vendor access and details visit', 'dokan-lite' ); ?> - %seller_edit%
 
 ---
 %site_name%

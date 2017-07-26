@@ -1,6 +1,6 @@
-From: %from_name% (%from_email%)
-IP: %user_ip%
-User Agent: %user_agent%
+<?php _e( 'From:', 'dokan-lite')  ?>%from_name% (%from_email%)
+<?php _e( 'IP:', 'dokan-lite' ) ?> %user_ip%
+<?php _e( 'User Agent:', 'dokan-lite' ); ?> %user_agent%
 
 ------------------------------
 
@@ -10,5 +10,5 @@ User Agent: %user_agent%
 
 
 ---
-Sent from %site_name%
+<?php _e( 'Sent from', 'dokan-lite' ); ?> %site_name%
 %site_url%

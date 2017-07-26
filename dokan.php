@@ -402,6 +402,7 @@ final class WeDevs_Dokan {
                 'i18n_edited_variations'              => esc_js( __( 'Save changes before changing page?', 'dokan-lite' ) ),
                 'i18n_variation_count_single'         => esc_js( __( '%qty% variation', 'dokan-lite' ) ),
                 'i18n_variation_count_plural'         => esc_js( __( '%qty% variations', 'dokan-lite' ) ),
+                'i18n_no_result_found'                => esc_js( __( 'No Result Found', 'dokan-lite' ) ),
                 'variations_per_page'                 => absint( apply_filters( 'dokan_product_variations_per_page', 10 ) ),
                 'store_banner_dimension'              => [ 'width' => $banner_width, 'height' => $banner_height, 'flex-width' => $has_flex_width, 'flex-height' => $has_flex_height ],
                 'selectAndCrop'                       => __( 'Select and Crop', 'dokan-lite' ),
