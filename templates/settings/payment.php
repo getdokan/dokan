@@ -15,7 +15,7 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
     <?php foreach ( $methods as $method_key ) {
         $method = dokan_withdraw_get_method( $method_key );
         ?>
-        <fieldset classs="payment-field-<?php echo $method_key; ?>">
+        <fieldset class="payment-field-<?php echo $method_key; ?>">
             <div class="dokan-form-group">
                 <label class="dokan-w3 dokan-control-label" for="dokan_setting"><?php echo $method['title'] ?></label>
                 <div class="dokan-w6">
