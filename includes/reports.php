@@ -392,6 +392,7 @@ function dokan_sales_overview_chart_data( $start_date, $end_date, $group_by ) {
                     },
                     yaxes: [
                         {
+                            position: ( isRtl == '1' ) ? "right" : "left",
                             min: 0,
                             minTickSize: 1,
                             tickDecimals: 0,
@@ -399,7 +400,7 @@ function dokan_sales_overview_chart_data( $start_date, $end_date, $group_by ) {
                             font: { color: "#aaa" }
                         },
                         {
-                            position: "right",
+                            position: ( isRtl == '1' ) ? "right" : "left",
                             min: 0,
                             tickDecimals: 2,
                             alignTicksWithAxis: 1,

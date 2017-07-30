@@ -441,6 +441,7 @@ function dokan_admin_report( $group_by = 'day', $year = '' ) {
                         },
                         yaxes: [
                             {
+                                position: ( isRtl == '1' ) ? "right" : "left",
                                 min: 0,
                                 minTickSize: 1,
                                 tickDecimals: 0,
@@ -448,7 +449,7 @@ function dokan_admin_report( $group_by = 'day', $year = '' ) {
                                 font: { color: "#aaa" }
                             },
                             {
-                                position: "right",
+                                position: ( isRtl == '1' ) ? "right" : "left",
                                 min: 0,
                                 tickDecimals: 2,
                                 alignTicksWithAxis: 1,
