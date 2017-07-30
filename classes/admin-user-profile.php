@@ -41,7 +41,7 @@ class Dokan_Admin_User_Profile {
             return;
         }
 
-        if ( !user_can( $user, 'dokandar' ) ) {
+        if ( ! user_can( $user, 'dokandar' ) ) {
             return;
         }
 
