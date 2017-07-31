@@ -1714,7 +1714,7 @@ function dokan_get_seller_address( $seller_id = '', $get_array = false ) {
             'state'    => isset( $states[$country_code][$state_code] ) ? $states[$country_code][$state_code] : $state_code,
         );
 
-        return $address;
+        return apply_filters( 'dokan_get_seller_address', $address, $profile_info );
     }
 
     $country           = new WC_Countries();
@@ -1727,7 +1727,7 @@ function dokan_get_seller_address( $seller_id = '', $get_array = false ) {
         'country'   => $country_code
     ) );
 
-    return apply_filters( 'dokan_get_seller_address', $formatted_address, $profile_info );
+    return apply_filters( 'dokan_get_seller_formatted_address', $formatted_address, $profile_info );
 }
 
 /**
@@ -1766,7 +1766,11 @@ function dokan_get_seller_short_address( $store_id, $line_break = true ) {
     if ( ! empty( $short_address  ) && $line_break ) {
         $formatted_address = implode( '<br>', $short_address );
     } else {
-        $formatted_address = implode( ', ', $short_address );
+        if ( count( $short_address ) > 1 ) {
+            $formatted_address = implode( ', ', $short_address );
+        } else {
+            $formatted_address = implode( ' ', $short_address );
+        }
     }
 
 
