@@ -1,7 +1,9 @@
 v2.6.6 -> July 31, 2017
 ---------------------
-- [fix]   Dokan Emails are not translating 
+- [fix]   Dokan Emails are not translating
 - [fix]   'No result found' text on product edit page not translating
+- [fix]   Order sync offset problem during checkout
+- [fix]   All graph rtl problem
 - [tweak] Vendor dashboard graph RTL enhanced
 - [tweak] Filter added to customize shop address
 - [tweak] Several other code enhancement and optimization
