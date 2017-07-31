@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 2.6.5\n"
+"Project-Id-Version: Dokan 2.6.6\n"
 "Report-Msgid-Bugs-To: http://wedevs.com/support/forum/theme-support/dokan/\n"
-"POT-Creation-Date: 2017-07-16 06:48:47+00:00\n"
+"POT-Creation-Date: 2017-07-31 18:47:23+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -434,7 +434,7 @@ msgstr ""
 
 #: classes/installer.php:135 includes/admin/admin.php:322
 #: includes/admin/setup-wizard.php:263 includes/admin-functions.php:52
-#: includes/admin-functions.php:562 includes/admin-functions.php:586
+#: includes/admin-functions.php:563 includes/admin-functions.php:587
 #: includes/wc-template.php:14 templates/my-orders.php:31
 msgid "Vendor"
 msgstr ""
@@ -645,7 +645,7 @@ msgid "No product found !"
 msgstr ""
 
 #: classes/template-settings.php:70 classes/template-settings.php:74
-#: dokan.php:805 includes/admin/admin.php:236 includes/admin/admin.php:579
+#: dokan.php:806 includes/admin/admin.php:236 includes/admin/admin.php:579
 #: includes/admin/welcome.php:20
 msgid "Settings"
 msgstr ""
@@ -966,95 +966,99 @@ msgstr ""
 msgid "%qty% variations"
 msgstr ""
 
-#: dokan.php:407
-msgid "Select and Crop"
+#: dokan.php:405
+msgid "No Result Found"
 msgstr ""
 
 #: dokan.php:408
-msgid "Choose Image"
+msgid "Select and Crop"
 msgstr ""
 
 #: dokan.php:409
-msgid "Product title is required"
+msgid "Choose Image"
 msgstr ""
 
 #: dokan.php:410
+msgid "Product title is required"
+msgstr ""
+
+#: dokan.php:411
 msgid "Product category is required"
 msgstr ""
 
-#: dokan.php:443
+#: dokan.php:444
 msgid "This field is required"
 msgstr ""
 
-#: dokan.php:444
+#: dokan.php:445
 msgid "Please fix this field."
 msgstr ""
 
-#: dokan.php:445
+#: dokan.php:446
 msgid "Please enter a valid email address."
 msgstr ""
 
-#: dokan.php:446
+#: dokan.php:447
 msgid "Please enter a valid URL."
 msgstr ""
 
-#: dokan.php:447
+#: dokan.php:448
 msgid "Please enter a valid date."
 msgstr ""
 
-#: dokan.php:448
+#: dokan.php:449
 msgid "Please enter a valid date (ISO)."
 msgstr ""
 
-#: dokan.php:449
+#: dokan.php:450
 msgid "Please enter a valid number."
 msgstr ""
 
-#: dokan.php:450
+#: dokan.php:451
 msgid "Please enter only digits."
 msgstr ""
 
-#: dokan.php:451
+#: dokan.php:452
 msgid "Please enter a valid credit card number."
 msgstr ""
 
-#: dokan.php:452
+#: dokan.php:453
 msgid "Please enter the same value again."
 msgstr ""
 
-#: dokan.php:453
+#: dokan.php:454
 msgid "Please enter no more than {0} characters."
 msgstr ""
 
-#: dokan.php:454
+#: dokan.php:455
 msgid "Please enter at least {0} characters."
 msgstr ""
 
-#: dokan.php:455
+#: dokan.php:456
 msgid "Please enter a value between {0} and {1} characters long."
 msgstr ""
 
-#: dokan.php:456
+#: dokan.php:457
 msgid "Please enter a value between {0} and {1}."
 msgstr ""
 
-#: dokan.php:457
+#: dokan.php:458
 msgid "Please enter a value less than or equal to {0}."
 msgstr ""
 
-#: dokan.php:458
+#: dokan.php:459
 msgid "Please enter a value greater than or equal to {0}."
 msgstr ""
 
-#: dokan.php:770
+#: dokan.php:771
 msgid "Page %s"
 msgstr ""
 
-#: dokan.php:802
+#: dokan.php:803
 msgid "Get Pro"
 msgstr ""
 
-#: dokan.php:806 includes/admin/welcome.php:21
+#: dokan.php:807 includes/admin/welcome.php:21
 msgid "Documentation"
 msgstr ""
 
@@ -1411,17 +1415,17 @@ msgstr ""
 msgid "Order Status for Withdraw"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:450 includes/order-functions.php:497
+#: includes/admin/setup-wizard.php:450 includes/order-functions.php:498
 #: templates/dashboard/orders-widget.php:26
 msgid "Completed"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:451 includes/order-functions.php:512
+#: includes/admin/setup-wizard.php:451 includes/order-functions.php:513
 #: templates/dashboard/orders-widget.php:36 templates/orders/listing.php:96
 msgid "Processing"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:452 includes/order-functions.php:507
+#: includes/admin/setup-wizard.php:452 includes/order-functions.php:508
 msgid "On-hold"
 msgstr ""
 
@@ -1522,7 +1526,7 @@ msgstr ""
 msgid "Approved"
 msgstr ""
 
-#: includes/admin/withdraw.php:23 includes/order-functions.php:522
+#: includes/admin/withdraw.php:23 includes/order-functions.php:523
 #: templates/dashboard/orders-widget.php:41
 msgid "Cancelled"
 msgstr ""
@@ -1588,29 +1592,29 @@ msgstr ""
 msgid "Toggle Sub-orders"
 msgstr ""
 
-#: includes/admin-functions.php:375 includes/admin-functions.php:736
+#: includes/admin-functions.php:375 includes/admin-functions.php:737
 msgid "Total Sales"
 msgstr ""
 
-#: includes/admin-functions.php:382 includes/admin-functions.php:743
+#: includes/admin-functions.php:382 includes/admin-functions.php:744
 msgid "Total: "
 msgstr ""
 
-#: includes/admin-functions.php:385 includes/admin-functions.php:746
+#: includes/admin-functions.php:385 includes/admin-functions.php:747
 #: includes/reports.php:347
 msgid "Number of orders"
 msgstr ""
 
-#: includes/admin-functions.php:392 includes/admin-functions.php:753
+#: includes/admin-functions.php:392 includes/admin-functions.php:754
 #: includes/reports.php:354
 msgid "sales"
 msgstr ""
 
-#: includes/admin-functions.php:395 includes/admin-functions.php:756
+#: includes/admin-functions.php:395 includes/admin-functions.php:757
 msgid "Commision"
 msgstr ""
 
-#: includes/admin-functions.php:402 includes/admin-functions.php:763
+#: includes/admin-functions.php:402 includes/admin-functions.php:764
 msgid "Commision: "
 msgstr ""
 
@@ -1764,7 +1768,7 @@ msgstr ""
 msgid "Flickr"
 msgstr ""
 
-#: includes/functions.php:1846
+#: includes/functions.php:1850
 msgid "Dokan Store Sidebar"
 msgstr ""
 
@@ -1772,15 +1776,15 @@ msgstr ""
 msgid "Mark parent order completed when all child orders are completed."
 msgstr ""
 
-#: includes/order-functions.php:502
+#: includes/order-functions.php:503
 msgid "Pending Payment"
 msgstr ""
 
-#: includes/order-functions.php:517 templates/dashboard/orders-widget.php:46
+#: includes/order-functions.php:518 templates/dashboard/orders-widget.php:46
 msgid "Refunded"
 msgstr ""
 
-#: includes/order-functions.php:527
+#: includes/order-functions.php:528
 msgid "Failed"
 msgstr ""
 
@@ -2141,9 +2145,11 @@ msgid "Best Selling Product"
 msgstr ""
 
 #: includes/widgets/bestselling-product.php:62
-#: includes/widgets/menu-category.php:149 includes/widgets/store-contact.php:87
-#: includes/widgets/store-location.php:90 includes/widgets/store-menu.php:70
+#: includes/widgets/menu-category.php:176 includes/widgets/store-contact.php:87
+#: includes/widgets/store-location.php:94 includes/widgets/store-menu.php:101
 #: includes/widgets/top-rated-product.php:61
+#: templates/emails/new-product-pending.php:8
+#: templates/emails/new-product.php:8
 msgid "Title:"
 msgstr ""
 
@@ -2161,7 +2167,7 @@ msgstr ""
 msgid "Dokan product category menu"
 msgstr ""
 
-#: includes/widgets/menu-category.php:143
+#: includes/widgets/menu-category.php:170
 msgid "Product Category"
 msgstr ""
 
@@ -2186,7 +2192,7 @@ msgstr ""
 msgid "Dokan: Store Location"
 msgstr ""
 
-#: includes/widgets/store-location.php:84 templates/store-toc.php:33
+#: includes/widgets/store-location.php:88 templates/store-toc.php:33
 #: templates/store.php:37
 msgid "Store Location"
 msgstr ""
@@ -2199,7 +2205,7 @@ msgstr ""
 msgid "Dokan: Store Category Menu"
 msgstr ""
 
-#: includes/widgets/store-menu.php:64
+#: includes/widgets/store-menu.php:95
 #: templates/products/new-product-single.php:254
 #: templates/products/new-product-single.php:285
 msgid "Category"
@@ -2407,6 +2413,212 @@ msgstr ""
 msgid "Sales this Month"
 msgstr ""
 
+#: templates/emails/contact-seller.php:1
+msgid "From:"
+msgstr ""
+
+#: templates/emails/contact-seller.php:2
+msgid "IP:"
+msgstr ""
+
+#: templates/emails/contact-seller.php:3
+msgid "User Agent:"
+msgstr ""
+
+#: templates/emails/contact-seller.php:13
+#: templates/emails/product-published.php:9
+#: templates/emails/refund-seller-mail.php:13
+#: templates/emails/refund_request.php:9 templates/emails/withdraw-new.php:15
+msgid "Sent from"
+msgstr ""
+
+#: templates/emails/new-product-pending.php:1
+#: templates/emails/new-product.php:1
+#: templates/emails/new-seller-registered.php:1
+msgid "Hello there,"
+msgstr ""
+
+#: templates/emails/new-product-pending.php:3
+#: templates/emails/new-product.php:3
+msgid "A new product has been submitted to your site"
+msgstr ""
+
+#: templates/emails/new-product-pending.php:5
+#: templates/emails/new-product.php:5
+msgid "Summary of the product:"
+msgstr ""
+
+#: templates/emails/new-product-pending.php:9
+#: templates/emails/new-product.php:9
+msgid "Price:"
+msgstr ""
+
+#: templates/emails/new-product-pending.php:10
+#: templates/emails/new-product.php:10
+#: templates/emails/new-seller-registered.php:8
+#: templates/global/product-tab.php:26
+msgid "Vendor:"
+msgstr ""
+
+#: templates/emails/new-product-pending.php:11
+#: templates/emails/new-product.php:11
+msgid "Category:"
+msgstr ""
+
+#: templates/emails/new-product-pending.php:13
+msgid ""
+"The product is currently in \"pending\" state. Please review this product "
+"before it goes public."
+msgstr ""
+
+#: templates/emails/new-product-pending.php:15
+msgid "Moderate:"
+msgstr ""
+
+#: templates/emails/new-product.php:13
+msgid ""
+"The product is currently in \"publish\" state. So everyone can view the "
+"product."
+msgstr ""
+
+#: templates/emails/new-product.php:15
+msgid "In case it needs to be moderated:"
+msgstr ""
+
+#: templates/emails/new-seller-registered.php:3
+msgid "A new vendor has been registered to your site "
+msgstr ""
+
+#: templates/emails/new-seller-registered.php:5
+msgid "Vendor Details:"
+msgstr ""
+
+#: templates/emails/new-seller-registered.php:9
+msgid "Vendor Store:"
+msgstr ""
+
+#: templates/emails/new-seller-registered.php:11
+msgid "To edit vendor access and details visit"
+msgstr ""
+
+#: templates/emails/product-published.php:1
+msgid "Hello"
+msgstr ""
+
+#: templates/emails/product-published.php:3
+msgid "Your product"
+msgstr ""
+
+#: templates/emails/product-published.php:3
+msgid "has been approved by one of our admin, congrats!"
+msgstr ""
+
+#: templates/emails/product-published.php:5
+msgid "View product:"
+msgstr ""
+
+#: templates/emails/product-published.php:6
+msgid "Update:"
+msgstr ""
+
+#: templates/emails/refund-seller-mail.php:1
+#: templates/emails/withdraw-new.php:1
+msgid "Hi,"
+msgstr ""
+
+#: templates/emails/refund-seller-mail.php:3
+msgid "Your refund request has been"
+msgstr ""
+
+#: templates/emails/refund-seller-mail.php:5
+msgid "Order ID:"
+msgstr ""
+
+#: templates/emails/refund-seller-mail.php:6
+msgid "Refund Amount:"
+msgstr ""
+
+#: templates/emails/refund-seller-mail.php:7
+msgid "Refund Reason:"
+msgstr ""
+
+#: templates/emails/refund-seller-mail.php:9
+msgid "You can view the order details by going here:"
+msgstr ""
+
+#: templates/emails/refund_request.php:1
+#: templates/emails/withdraw-approve.php:1
+#: templates/emails/withdraw-cancel.php:1
+msgid "Hi"
+msgstr ""
+
+#: templates/emails/refund_request.php:3
+msgid "New refund request for order"
+msgstr ""
+
+#: templates/emails/refund_request.php:5
+msgid "You can process the request by going here:"
+msgstr ""
+
+#: templates/emails/withdraw-approve.php:3
+msgid "Your withdraw request has been approved, congrats!"
+msgstr ""
+
+#: templates/emails/withdraw-approve.php:5
+#: templates/emails/withdraw-cancel.php:5
+msgid "You sent a withdraw request of:"
+msgstr ""
+
+#: templates/emails/withdraw-approve.php:7
+#: templates/emails/withdraw-cancel.php:7
+msgid "Amount:"
+msgstr ""
+
+#: templates/emails/withdraw-approve.php:8
+#: templates/emails/withdraw-cancel.php:8
+msgid "Method:"
+msgstr ""
+
+#: templates/emails/withdraw-approve.php:10
+msgid "We'll transfer this amount to your preferred destination shortly."
+msgstr ""
+
+#: templates/emails/withdraw-approve.php:12
+msgid "Thanks for being with us."
+msgstr ""
+
+#: templates/emails/withdraw-cancel.php:3
+msgid "Your withdraw request has been cancelled!"
+msgstr ""
+
+#: templates/emails/withdraw-cancel.php:10
+msgid "Here's the reason, why:"
+msgstr ""
+
+#: templates/emails/withdraw-new.php:3
+msgid "A new withdraw request has been made by"
+msgstr ""
+
+#: templates/emails/withdraw-new.php:5
+msgid "Request Amount:"
+msgstr ""
+
+#: templates/emails/withdraw-new.php:6
+msgid "Payment Method:"
+msgstr ""
+
+#: templates/emails/withdraw-new.php:8
+msgid "Username:"
+msgstr ""
+
+#: templates/emails/withdraw-new.php:9
+msgid "Profile:"
+msgstr ""
+
+#: templates/emails/withdraw-new.php:11
+msgid "You can approve or deny it by going here:"
+msgstr ""
+
 #: templates/global/header-menu.php:13
 msgid "Cart %s"
 msgstr ""
@@ -2445,10 +2657,6 @@ msgstr ""
 
 #: templates/global/product-tab.php:17
 msgid "Store Name:"
-msgstr ""
-
-#: templates/global/product-tab.php:26
-msgid "Vendor:"
 msgstr ""
 
 #: templates/global/product-tab.php:35

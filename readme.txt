@@ -1,5 +1,5 @@
 === Dokan Multivendor Marketplace ===
-Contributors: tareq1988, wedevs, rafsuntaskin, sabbir1991
+Contributors: tareq1988, wedevs, rafsuntaskin, sabbir1991, nazmulhassann20, roshni07
 Donate Link: http://tareq.co/donate/
 Tags: woocommerce, multivendor, multi-vendor, paypal, shop, vendor, seller, store, sell, online, amazon, dokan, ebay, Etsy, multi seller, multi store, multi vendor, multi vendors, multistore, multivendor, product vendor, product vendors, vendor, vendor system, vendors, wc market place, wc marketplace, wc vendors, woo vendors, woocommerce market place, woocommerce marketplace, woocommerce multi vendor,  commission rate, e-commerce, ebay, ecommerce, yith, yithemes
 Requires at least: 4.4
@@ -179,6 +179,16 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 == Changelog ==
+
+v2.6.6 -> July 31, 2017
+---------------------
+- [fix]   Dokan Emails are not translating
+- [fix]   'No result found' text on product edit page not translating
+- [fix]   Order sync offset problem during checkout
+- [fix]   All graph rtl problem
+- [tweak] Vendor dashboard graph RTL enhanced
+- [tweak] Filter added to customize shop address
+- [tweak] Several other code enhancement and optimization
 
 v2.6.5 -> July 16, 2017
 ---------------------

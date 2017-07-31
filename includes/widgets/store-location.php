@@ -38,6 +38,10 @@ class Dokan_Store_Location extends WP_Widget {
         $title        = apply_filters( 'widget_title', $instance['title'] );
         $store_info   = dokan_get_store_info( get_query_var( 'author' ) );
         $map_location = isset( $store_info['location'] ) ? esc_attr( $store_info['location'] ) : '';
+        
+        if ( empty( $map_location ) ) {
+            return;
+        }
 
         echo $before_widget;
 

@@ -1,10 +1,10 @@
-Hi,
+<?php _e( 'Hi', 'dokan-lite' ); ?>,
 
-New refund request for order # %order_id%.
+<?php _e( 'New refund request for order', 'dokan-lite' ); ?> # %order_id%.
 
-You can process the request by going here:
+<?php _e( 'You can process the request by going here:', 'dokan-lite' ); ?>
 %refund_page%
 
 ---
-Sent from %site_name%
+<?php _e( 'Sent from', 'dokan-lite' ); ?> %site_name%
 %site_url%

@@ -1,13 +1,13 @@
-Hi %username%,
+<?php _e( 'Hi', 'dokan-lite' ); ?> %username%,
 
-Your withdraw request has been cancelled!
+<?php _e( 'Your withdraw request has been cancelled!', 'dokan-lite' ); ?>
 
-You sent a withdraw request of:
+<?php _e( 'You sent a withdraw request of:', 'dokan-lite' ); ?>
 
-Amount: %amount%
-Method: %method%
+<?php _e( 'Amount:', 'dokan-lite' ); ?> %amount%
+<?php _e( 'Method:', 'dokan-lite' ); ?> %method%
 
-Here's the reason, why:
+<?php _e( 'Here\'s the reason, why:', 'dokan-lite' ); ?>
 %notes%
 
 ---

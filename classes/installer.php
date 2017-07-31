@@ -389,7 +389,7 @@ class Dokan_Installer {
             // Check the latest stable version and ignore trunk.
             if ( version_compare( $current_version, $notice_version, '<' ) ) {
 
-                $upgrade_notice .= '</p><p id="dokan-plugin-upgrade-notice">';
+                $upgrade_notice .= '</p><p class="dokan-plugin-upgrade-notice">';
 
                 foreach ( $notices as $index => $line ) {
                     $upgrade_notice .= preg_replace( '~\[([^\]]*)\]\(([^\)]*)\)~', '<a href="${2}">${1}</a>', $line );

@@ -3,7 +3,7 @@
 Plugin Name: Dokan
 Plugin URI: https://wordpress.org/plugins/dokan-lite/
 Description: An e-commerce marketplace plugin for WordPress. Powered by WooCommerce and weDevs.
-Version: 2.6.5
+Version: 2.6.6
 Author: weDevs
 Author URI: https://wedevs.com/
 Text Domain: dokan-lite
@@ -45,7 +45,7 @@ if ( !defined( '__DIR__' ) ) {
     define( '__DIR__', dirname( __FILE__ ) );
 }
 
-define( 'DOKAN_PLUGIN_VERSION', '2.6.5' );
+define( 'DOKAN_PLUGIN_VERSION', '2.6.6' );
 define( 'DOKAN_FILE', __FILE__ );
 define( 'DOKAN_DIR', __DIR__ );
 define( 'DOKAN_INC_DIR', __DIR__ . '/includes' );
@@ -402,6 +402,7 @@ final class WeDevs_Dokan {
                 'i18n_edited_variations'              => esc_js( __( 'Save changes before changing page?', 'dokan-lite' ) ),
                 'i18n_variation_count_single'         => esc_js( __( '%qty% variation', 'dokan-lite' ) ),
                 'i18n_variation_count_plural'         => esc_js( __( '%qty% variations', 'dokan-lite' ) ),
+                'i18n_no_result_found'                => esc_js( __( 'No Result Found', 'dokan-lite' ) ),
                 'variations_per_page'                 => absint( apply_filters( 'dokan_product_variations_per_page', 10 ) ),
                 'store_banner_dimension'              => [ 'width' => $banner_width, 'height' => $banner_height, 'flex-width' => $has_flex_width, 'flex-height' => $has_flex_height ],
                 'selectAndCrop'                       => __( 'Select and Crop', 'dokan-lite' ),
