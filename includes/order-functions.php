@@ -373,8 +373,6 @@ function dokan_sync_insert_order( $order_id ) {
     $net_amount         = $order_total - $admin_commission;
     $net_amount         = apply_filters( 'dokan_order_net_amount', $net_amount, $order );
 
-    error_log( print_r( $order_id, true ) );
-    error_log( print_r( $seller_id, true ) );
     dokan_delete_sync_duplicate_order( $order_id, $seller_id );
 
     // make sure order status contains "wc-" prefix

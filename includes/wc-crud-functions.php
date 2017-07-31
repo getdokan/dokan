@@ -271,8 +271,6 @@ function dokan_create_sub_order_shipping( $parent_order, $order_id, $seller_prod
 
             $method = $pack['rates'][$shipping_method['method_id']];
             $cost = wc_format_decimal( $method->cost );
-            // we assumed that the key will be always 1, if different conditinos appear in future, we'll update the script
-
             $tax  = ! empty( $method->taxes[1] ) ? wc_format_decimal( $method->taxes[1] ) : 0;
 
             $item_id = wc_add_order_item( $order_id, array(
