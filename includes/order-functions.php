@@ -747,3 +747,31 @@ function dokan_get_admin_commission_by( $order, $seller_id ) {
 
     return apply_filters( 'dokan_order_admin_commission', $admin_commission, $order );
 }
+
+if ( ! function_exists( 'dokan_get_customer_orders_by_seller' ) ) :
+    /**
+     * Get Customer Orders by Seller 
+     * 
+     * @since 2.6.6
+     * 
+     * @param int $customer_id
+     * 
+     * @param int $seller_id
+     * 
+     * @return Object $order
+     */
+    function dokan_get_customer_orders_by_seller( $customer_id, $seller_id ) {
+
+        $customer_orders = get_posts( array(
+            'numberposts' => -1,
+            'author'      => $seller_id,
+            'meta_key'    => '_customer_user',
+            'meta_value'  => $customer_id,
+            'post_type'   => wc_get_order_types(),
+            'post_status' => array_keys( wc_get_order_statuses() ),
+        ) );
+
+        return $customer_orders;
+    }
+
+endif;
