@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 2.6.6\n"
+"Project-Id-Version: Dokan 2.6.7\n"
 "Report-Msgid-Bugs-To: http://wedevs.com/support/forum/theme-support/dokan/\n"
-"POT-Creation-Date: 2017-07-31 18:47:23+00:00\n"
+"POT-Creation-Date: 2017-08-03 04:10:07+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1415,17 +1415,17 @@ msgstr ""
 msgid "Order Status for Withdraw"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:450 includes/order-functions.php:498
+#: includes/admin/setup-wizard.php:450 includes/order-functions.php:497
 #: templates/dashboard/orders-widget.php:26
 msgid "Completed"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:451 includes/order-functions.php:513
+#: includes/admin/setup-wizard.php:451 includes/order-functions.php:512
 #: templates/dashboard/orders-widget.php:36 templates/orders/listing.php:96
 msgid "Processing"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:452 includes/order-functions.php:508
+#: includes/admin/setup-wizard.php:452 includes/order-functions.php:507
 msgid "On-hold"
 msgstr ""
 
@@ -1526,7 +1526,7 @@ msgstr ""
 msgid "Approved"
 msgstr ""
 
-#: includes/admin/withdraw.php:23 includes/order-functions.php:523
+#: includes/admin/withdraw.php:23 includes/order-functions.php:522
 #: templates/dashboard/orders-widget.php:41
 msgid "Cancelled"
 msgstr ""
@@ -1776,15 +1776,15 @@ msgstr ""
 msgid "Mark parent order completed when all child orders are completed."
 msgstr ""
 
-#: includes/order-functions.php:503
+#: includes/order-functions.php:502
 msgid "Pending Payment"
 msgstr ""
 
-#: includes/order-functions.php:518 templates/dashboard/orders-widget.php:46
+#: includes/order-functions.php:517 templates/dashboard/orders-widget.php:46
 msgid "Refunded"
 msgstr ""
 
-#: includes/order-functions.php:528
+#: includes/order-functions.php:527
 msgid "Failed"
 msgstr ""
 

@@ -360,8 +360,7 @@ function dokan_delete_sync_duplicate_order( $order_id, $seller_id ) {
 function dokan_sync_insert_order( $order_id ) {
     global $wpdb;
 
-    $order_post = get_post( $order_id );
-    if ( get_post_meta( $order_id, 'has_sub_order', true ) == true || $order_post->post_parent == 0 ) {
+    if ( get_post_meta( $order_id, 'has_sub_order', true ) == '1' ) {
         return;
     }
 
@@ -398,7 +397,7 @@ function dokan_sync_insert_order( $order_id ) {
     );
 }
 
-add_action( 'woocommerce_checkout_update_order_meta', 'dokan_sync_insert_order' );
+add_action( 'woocommerce_checkout_update_order_meta', 'dokan_sync_insert_order', 20 );
 add_action( 'dokan_checkout_update_order_meta', 'dokan_sync_insert_order' );
 
 
@@ -751,14 +750,14 @@ function dokan_get_admin_commission_by( $order, $seller_id ) {
 
 if ( ! function_exists( 'dokan_get_customer_orders_by_seller' ) ) :
     /**
-     * Get Customer Orders by Seller 
-     * 
+     * Get Customer Orders by Seller
+     *
      * @since 2.6.6
-     * 
+     *
      * @param int $customer_id
-     * 
+     *
      * @param int $seller_id
-     * 
+     *
      * @return Object $order
      */
     function dokan_get_customer_orders_by_seller( $customer_id, $seller_id ) {

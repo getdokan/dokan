@@ -180,6 +180,11 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+v2.6.7 -> Aug 3, 2017
+---------------------
+- [fix]   Fix multiple vendor order creating issue
+- [fix]   Disable pre defined attribute which already set with product
+
 v2.6.6 -> July 31, 2017
 ---------------------
 - [fix]   Dokan Emails are not translating

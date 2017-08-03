@@ -139,7 +139,7 @@ $order    = new WC_Order( $order_id );
 
             <div class="clear"></div>
 
-            <div class="" style="100%">
+            <div class="" style="width: 100%">
                 <div class="dokan-panel dokan-panel-default">
                     <div class="dokan-panel-heading"><strong><?php _e( 'Downloadable Product Permission', 'dokan-lite' ); ?></strong></div>
                     <div class="dokan-panel-body">

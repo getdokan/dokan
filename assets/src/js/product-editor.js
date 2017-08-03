@@ -68,6 +68,7 @@
 
             $( 'body' ).on( 'click', '.product-container-footer input[type="submit"]', this.createNewProduct );
 
+            this.attribute.disbalePredefinedAttribute();
         },
 
         saleSchedule: function() {
@@ -447,6 +448,14 @@
                     });
                 });
 
+            },
+
+            disbalePredefinedAttribute: function() {
+                $( 'ul.dokan-attribute-option-list li.product-attribute-list' ).each( function( index, el ) {
+                    if ( $( el ).css( 'display' ) !== 'none' && $( el ).is( '.taxonomy' ) ) {
+                        $( 'select#predefined_attribute' ).find( 'option[value="' + $( el ).data( 'taxonomy' ) + '"]' ).attr( 'disabled', 'disabled' );
+                    }
+                });
             }
         },
 
