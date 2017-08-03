@@ -360,7 +360,7 @@ function dokan_delete_sync_duplicate_order( $order_id, $seller_id ) {
 function dokan_sync_insert_order( $order_id ) {
     global $wpdb;
 
-    if ( get_post_meta( $order_id, 'has_sub_order', true ) == true  ) {
+    if ( get_post_meta( $order_id, 'has_sub_order', true ) == '1' ) {
         return;
     }
 
@@ -397,7 +397,7 @@ function dokan_sync_insert_order( $order_id ) {
     );
 }
 
-add_action( 'woocommerce_checkout_update_order_meta', 'dokan_sync_insert_order' );
+add_action( 'woocommerce_checkout_update_order_meta', 'dokan_sync_insert_order', 20 );
 add_action( 'dokan_checkout_update_order_meta', 'dokan_sync_insert_order' );
 
 
