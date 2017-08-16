@@ -142,6 +142,8 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
             $this->withdraw_form( self::$validate );
         } elseif ( $this->current_status == 'approved' ) {
             $this->user_approved_withdraws( get_current_user_id() );
+        } elseif ( $this->current_status == 'cancelled' ) {
+            $this->user_cancelled_withdraws( get_current_user_id() );
         }
     }
 
@@ -383,6 +385,32 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
                 'message' => __( 'Sorry, no transactions were found!', 'dokan-lite' )
             ) );
 
+        }
+    }
+    
+     /**
+     * Print the cancelled user withdraw requests
+     *
+     * @param  int  $user_id
+     *
+     * @return void
+     */
+    function user_cancelled_withdraws( $user_id ){
+        
+        $requests = $this->get_withdraw_requests( $user_id, 2, 100 );
+        
+        if ( $requests ) {
+
+            dokan_get_template_part( 'withdraw/cancelled-request-listing', '', array(
+                'requests' => $requests
+            ) );
+
+        } else {
+
+            dokan_get_template_part( 'global/dokan-warning', '', array(
+                'deleted' => false,
+                'message' => __( 'Sorry, no transactions were found!', 'dokan-lite' )
+            ) );
         }
     }
 
