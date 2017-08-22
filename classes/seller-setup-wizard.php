@@ -217,6 +217,7 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
             <a href="<?php echo esc_url( $dashboard_url ); ?>" class="button button-large"><?php _e( 'Not right now', 'dokan-lite' ); ?></a>
         </p>
         <?php
+        do_action( 'dokan_seller_wizard_introduction', $this );
     }
 
     /**
@@ -290,6 +291,8 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
                     </td>
                 </tr>
 
+                <?php do_action( 'dokan_seller_wizard_store_setup_field', $this ); ?>
+
             </table>
             <p class="wc-setup-actions step">
                 <input type="submit" class="button-primary button button-large button-next" value="<?php esc_attr_e( 'Continue', 'dokan-lite' ); ?>" name="save_step" />
@@ -297,7 +300,6 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
                 <?php wp_nonce_field( 'dokan-seller-setup' ); ?>
             </p>
         </form>
-
         <script>
             (function($){
                 var states = <?php echo json_encode( $states ); ?>;
@@ -375,6 +377,8 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
 
         </script>
         <?php
+
+        do_action( 'dokan_seller_wizard_after_store_setup_form', $this );
     }
 
     /**
@@ -392,6 +396,8 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
         $dokan_settings['show_email'] = isset( $_POST['show_email'] ) ? 'yes' : 'no';
 
         update_user_meta( $this->store_id, 'dokan_profile_settings', $dokan_settings );
+
+        do_action( 'dokan_seller_wizard_store_field_save', $this );
 
         wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
         exit;
@@ -423,6 +429,8 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
                     </tr>
                 <?php
                     }
+
+                    do_action( 'dokan_seller_wizard_payment_setup_field', $this );
                 ?>
             </table>
             <p class="wc-setup-actions step">
@@ -432,6 +440,9 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
             </p>
         </form>
         <?php
+
+        do_action( 'dokan_seller_wizard_after_payment_setup_form', $this );
+
     }
 
     /**
@@ -471,6 +482,8 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
         }
 
         update_user_meta( $this->store_id, 'dokan_profile_settings', $dokan_settings );
+
+        do_action( 'dokan_seller_wizard_payment_field_save', $this );
 
         wp_redirect( apply_filters( 'dokan_ww_payment_redirect',esc_url_raw( $this->get_next_step_link() ) ) );
         exit;
