@@ -408,7 +408,8 @@ final class WeDevs_Dokan {
                 'selectAndCrop'                       => __( 'Select and Crop', 'dokan-lite' ),
                 'chooseImage'                         => __( 'Choose Image', 'dokan-lite' ),
                 'product_title_required'              => __( 'Product title is required', 'dokan-lite' ),
-                'product_category_required'           => __( 'Product category is required', 'dokan-lite' )
+                'product_category_required'           => __( 'Product category is required', 'dokan-lite' ),
+                'search_products_nonce'               => wp_create_nonce( 'search-products' )
             );
 
             $default_args = array_merge( $default_args, $custom_args );

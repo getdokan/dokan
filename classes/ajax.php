@@ -65,6 +65,9 @@ class Dokan_Ajax {
         add_action( 'wp_ajax_dokan_create_new_product', array( $this, 'create_product' ) );
 
         add_action( 'wp_ajax_custom-header-crop', array( $this, 'crop_store_banner' ) );
+
+        add_action( 'wp_ajax_dokan_json_search_products_and_variations', array( $this, 'json_search_product' ), 10 );
+        add_action( 'wp_ajax_nopriv_dokan_json_search_products_and_variations', array( $this, 'json_search_product' ), 10 );
     }
 
     /**
@@ -636,6 +639,48 @@ class Dokan_Ajax {
         $object['height']        = $dimensions['dst_height'];
 
         wp_send_json_success( $object );
+    }
+
+    /**
+    * Search product using term
+    *
+    * @since 2.6.8
+    *
+    * @return void
+    **/
+    public function json_search_product() {
+        check_ajax_referer( 'search-products', 'security' );
+
+        $term = wc_clean( empty( $term ) ? stripslashes( $_GET['term'] ) : $term );
+        $include_variations = ! empty( $_GET['include_variations'] ) ? true : false;
+        $user_ids = ! empty( $_GET['user_ids'] ) ? $_GET['user_ids'] : false;
+
+        if ( empty( $term ) ) {
+            wp_die();
+        }
+
+        $ids = dokan_search_seller_products( $term, $user_ids, '', (bool) $include_variations );
+
+        if ( ! empty( $_GET['exclude'] ) ) {
+            $ids = array_diff( $ids, (array) $_GET['exclude'] );
+        }
+
+        if ( ! empty( $_GET['include'] ) ) {
+            $ids = array_intersect( $ids, (array) $_GET['include'] );
+        }
+
+        if ( ! empty( $_GET['limit'] ) ) {
+            $ids = array_slice( $ids, 0, absint( $_GET['limit'] ) );
+        }
+
+        $product_objects = array_filter( array_map( 'wc_get_product', $ids ), 'dokan_products_array_filter_editable' );
+        $products        = array();
+
+        foreach ( $product_objects as $product_object ) {
+            $products[ $product_object->get_id() ] = rawurldecode( $product_object->get_formatted_name() );
+        }
+
+        wp_send_json( apply_filters( 'dokan_json_search_found_products', $products ) );
     }
 
      /**
