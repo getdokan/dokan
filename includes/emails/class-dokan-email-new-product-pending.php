@@ -4,34 +4,34 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'Dokan_Email_New_Product' ) ) :
+if ( ! class_exists( 'Dokan_Email_New_Product_Pending' ) ) :
 
 /**
  * New Product Email.
  *
  * An email sent to the admin when a new Product is created by vendor.
  *
- * @class       Dokan_Email_New_Product
- * @version     2.6.6
+ * @class       Dokan_Email_New_Product_Pending
+ * @version     2.6.8
  * @package     Dokan/Classes/Emails
  * @author      weDevs
  * @extends     WC_Email
  */
-class Dokan_Email_New_Product extends WC_Email {
+class Dokan_Email_New_Product_Pending extends WC_Email {
 
 	/**
 	 * Constructor.
 	 */
 	public function __construct() {
-		$this->id               = 'new_product';
-		$this->title            = __( 'Dokan New Product', 'dokan-lite' );
-		$this->description      = __( 'New Product emails are sent to chosen recipient(s) when a new product is created by vendors.', 'dokan-lite' );
-                $this->template_html    = 'emails/new-product.php';
-		$this->template_plain   = 'emails/plain/new-product.php';
+		$this->id               = 'new_product_pending';
+		$this->title            = __( 'Dokan New Pending Product', 'dokan-lite' );
+		$this->description      = __( 'New Pending Product emails are sent to chosen recipient(s) when a new product is created by vendors.', 'dokan-lite' );
+                $this->template_html    = 'emails/new-product-pending.php';
+		$this->template_plain   = 'emails/plain/new-product-pending.php';
                 $this->template_base    = DOKAN_DIR.'/templates/';
                 
 		// Triggers for this email
-		add_action( 'dokan_new_product_added', array( $this, 'trigger' ), 30, 2 );
+		add_action( 'dokan_email_trigger_new_pending_product', array( $this, 'trigger' ), 30, 2 );
 
 		// Call parent constructor
 		parent::__construct();
@@ -47,7 +47,7 @@ class Dokan_Email_New_Product extends WC_Email {
 	 * @return string
 	 */
 	public function get_default_subject() {
-            return __( '[{site_title}] A New product is added by ({seller_name}) - {product_title}', 'dokan-lite' );
+            return __( '[{site_title}] A New product is pending from ({seller_name}) - {product_title}', 'dokan-lite' );
 	}
 
 	/**
@@ -57,7 +57,7 @@ class Dokan_Email_New_Product extends WC_Email {
 	 * @return string
 	 */
 	public function get_default_heading() {
-            return __( 'New product added by Vendor {seller_name}', 'dokan-lite' );
+            return __( 'New pending product added by Vendor {seller_name}', 'dokan-lite' );
 	}
 
 	/**
@@ -68,15 +68,6 @@ class Dokan_Email_New_Product extends WC_Email {
 	 */
 	public function trigger( $product_id, $postdata ) {
             
-            if ( dokan_get_option( 'product_add_mail', 'dokan_general', 'on' ) != 'on' ) {
-                return;
-            }
-
-            if ( dokan_get_new_post_status() == 'pending' ) {
-                do_action( 'dokan_email_trigger_new_pending_product', $product_id, $postdata );
-                return;
-            }
-
             if ( ! $this->is_enabled() || ! $this->get_recipient() ) {
                 return;
             }
@@ -205,4 +196,4 @@ class Dokan_Email_New_Product extends WC_Email {
 
 endif;
 
-return new Dokan_Email_New_Product();
+return new Dokan_Email_New_Product_Pending();
