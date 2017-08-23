@@ -1,20 +1,58 @@
-<?php _e( 'Hello there,', 'dokan-lite' ); ?>
+<?php
+/**
+ * New Product Email.
+ *
+ * An email sent to the admin when a new Product is created by vendor.
+ *
+ * @class       Dokan_Email_New_Product
+ * @version     2.6.8
+ * 
+ */
 
-<?php _e( 'A new product has been submitted to your site', 'dokan-lite' ); ?> (%site_url%).
+ if ( ! defined( 'ABSPATH' ) ) {
+ 	exit;
+ }
 
-<?php _e( 'Summary of the product:', 'dokan-lite' ); ?>
-------------------------
+ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 
-<?php _e( 'Title:', 'dokan-lite' ); ?> %title%
-<?php _e( 'Price:', 'dokan-lite' ); ?> %price%
-<?php _e( 'Vendor:', 'dokan-lite' ); ?> %seller_name% (%seller_url%)
-<?php _e( 'Category:', 'dokan-lite' ); ?> %category%
+<p><?php _e( 'Hello,', 'dokan-lite' ); ?></p>
 
-<?php _e( 'The product is currently in "publish" state. So everyone can view the product.', 'dokan-lite' ); ?>
+<p><?php _e( 'A new product is submitted to your site', 'dokan-lite' ); ?> <a href="<?php echo $data['site_url'] ?>" ><?php echo $data['site_name'] ?></a> </p>
+<p><?php _e( 'Summary of the product:', 'dokan-lite' ); ?></p>
+<hr>
+<ul>
+    <li>
+        <strong>
+            <?php _e( 'Title :', 'dokan-lite' ); ?>
+        </strong>
+        <?php printf( '<a href="%s">%s</a>', $data['product_link'], $data['product-title']  ); ?>
+    </li>
+    <li>
+        <strong>
+            <?php _e( 'Price :', 'dokan-lite' ); ?>
+        </strong>
+        <?php echo wc_price( $data['price'] ); ?>
+    </li>
+    <li>
+        <strong>
+            <?php _e( 'Vendor :', 'dokan-lite' ); ?>
+        </strong>
+        <?php 
+        printf( '<a href="%s">%s</a>', $data['seller_url'], $data['seller-name']  ); ?>
+    </li>
+    <li>
+        <strong>
+            <?php _e( 'Category :', 'dokan-lite' ); ?>
+        </strong>
+        <?php echo $data['category'] ?>
+    </li>
+    
+</ul>
+<p><?php _e( 'The product is currently in "publish" status. So, everyone can view the product.', 'dokan-lite' ); ?></p>
 
-<?php _e( 'In case it needs to be moderated:', 'dokan-lite' ); ?>
-%product_link%
+<?php
 
----
-%site_name%
-%site_url%
+/**
+  * @hooked WC_Emails::email_footer() Output the email footer
+ **/
+do_action( 'woocommerce_email_footer', $email );
