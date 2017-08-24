@@ -11,6 +11,7 @@ function dokan_process_product_meta( $post_id ) {
     global $wpdb, $woocommerce, $woocommerce_errors;
 
     $product_type = empty( $_POST['product_type'] ) ? 'simple' : stripslashes( $_POST['product_type'] );
+
     // Add any default post meta
     add_post_meta( $post_id, 'total_sales', '0', true );
 
@@ -208,38 +209,46 @@ function dokan_process_product_meta( $post_id ) {
 
     update_post_meta( $post_id, '_product_attributes', $attributes );
 
-    // Sales and prices
-    $date_from     = (string) isset( $_POST['_sale_price_dates_from'] ) ? wc_clean( $_POST['_sale_price_dates_from'] ) : '';
-    $date_to       = (string) isset( $_POST['_sale_price_dates_to'] ) ? wc_clean( $_POST['_sale_price_dates_to'] )     : '';
-    $regular_price = (string) isset( $_POST['_regular_price'] ) ? wc_clean( $_POST['_regular_price'] )                 : '';
-    $sale_price    = (string) isset( $_POST['_sale_price'] ) ? wc_clean( $_POST['_sale_price'] )                       : '';
-
-    update_post_meta( $post_id, '_regular_price', '' === $regular_price ? '' : wc_format_decimal( $regular_price ) );
-    update_post_meta( $post_id, '_sale_price', '' === $sale_price ? '' : wc_format_decimal( $sale_price ) );
-
-    // Dates
-    update_post_meta( $post_id, '_sale_price_dates_from', $date_from ? strtotime( $date_from ) : '' );
-    update_post_meta( $post_id, '_sale_price_dates_to', $date_to ? strtotime( $date_to ) : '' );
-
-    if ( $date_to && ! $date_from ) {
-        $date_from = date( 'Y-m-d' );
-        update_post_meta( $post_id, '_sale_price_dates_from', strtotime( $date_from ) );
-    }
-
-    // Update price if on sale
-    if ( '' !== $sale_price && '' === $date_to && '' === $date_from ) {
-        update_post_meta( $post_id, '_price', wc_format_decimal( $sale_price ) );
-    } elseif ( '' !== $sale_price && $date_from && strtotime( $date_from ) <= strtotime( 'NOW', current_time( 'timestamp' ) ) ) {
-        update_post_meta( $post_id, '_price', wc_format_decimal( $sale_price ) );
-    } else {
-        update_post_meta( $post_id, '_price', '' === $regular_price ? '' : wc_format_decimal( $regular_price ) );
-    }
-
-    if ( $date_to && strtotime( $date_to ) < strtotime( 'NOW', current_time( 'timestamp' ) ) ) {
-        update_post_meta( $post_id, '_price', '' === $regular_price ? '' : wc_format_decimal( $regular_price ) );
+    if ( in_array( $product_type, array( 'variable', 'grouped' ) ) ) {
+        // Variable and grouped products have no prices
+        update_post_meta( $post_id, '_regular_price', '' );
         update_post_meta( $post_id, '_sale_price', '' );
         update_post_meta( $post_id, '_sale_price_dates_from', '' );
         update_post_meta( $post_id, '_sale_price_dates_to', '' );
+    } else {
+        // Sales and prices
+        $date_from     = (string) isset( $_POST['_sale_price_dates_from'] ) ? wc_clean( $_POST['_sale_price_dates_from'] ) : '';
+        $date_to       = (string) isset( $_POST['_sale_price_dates_to'] ) ? wc_clean( $_POST['_sale_price_dates_to'] )     : '';
+        $regular_price = (string) isset( $_POST['_regular_price'] ) ? wc_clean( $_POST['_regular_price'] )                 : '';
+        $sale_price    = (string) isset( $_POST['_sale_price'] ) ? wc_clean( $_POST['_sale_price'] )                       : '';
+
+        update_post_meta( $post_id, '_regular_price', '' === $regular_price ? '' : wc_format_decimal( $regular_price ) );
+        update_post_meta( $post_id, '_sale_price', '' === $sale_price ? '' : wc_format_decimal( $sale_price ) );
+
+        // Dates
+        update_post_meta( $post_id, '_sale_price_dates_from', $date_from ? strtotime( $date_from ) : '' );
+        update_post_meta( $post_id, '_sale_price_dates_to', $date_to ? strtotime( $date_to ) : '' );
+
+        if ( $date_to && ! $date_from ) {
+            $date_from = date( 'Y-m-d' );
+            update_post_meta( $post_id, '_sale_price_dates_from', strtotime( $date_from ) );
+        }
+
+        // Update price if on sale
+        if ( '' !== $sale_price && '' === $date_to && '' === $date_from ) {
+            update_post_meta( $post_id, '_price', wc_format_decimal( $sale_price ) );
+        } elseif ( '' !== $sale_price && $date_from && strtotime( $date_from ) <= strtotime( 'NOW', current_time( 'timestamp' ) ) ) {
+            update_post_meta( $post_id, '_price', wc_format_decimal( $sale_price ) );
+        } else {
+            update_post_meta( $post_id, '_price', '' === $regular_price ? '' : wc_format_decimal( $regular_price ) );
+        }
+
+        if ( $date_to && strtotime( $date_to ) < strtotime( 'NOW', current_time( 'timestamp' ) ) ) {
+            update_post_meta( $post_id, '_price', '' === $regular_price ? '' : wc_format_decimal( $regular_price ) );
+            update_post_meta( $post_id, '_sale_price', '' );
+            update_post_meta( $post_id, '_sale_price_dates_from', '' );
+            update_post_meta( $post_id, '_sale_price_dates_to', '' );
+        }
     }
 
     //enable reviews
@@ -481,7 +490,7 @@ if ( !function_exists( 'dokan_seller_registration_errors' ) ) {
 
         return $error;
     }
-    
+
 }
 
 add_filter( 'woocommerce_process_registration_errors', 'dokan_seller_registration_errors' );
