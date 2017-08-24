@@ -880,8 +880,8 @@ final class WeDevs_Dokan {
                                     )
                         );
         
-        $template_name = substr( $template, strpos( $template , '/') + 1 );
-        
+        $template_name =  basename( $template );
+
         if ( in_array( $template_name, $dokan_emails ) ) {
             return 'dokan';
         }
