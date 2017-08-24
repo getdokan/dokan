@@ -824,8 +824,9 @@ final class WeDevs_Dokan {
      * @return $wc_emails
      */
     function load_dokan_emails( $wc_emails ){
-        $wc_emails['Dokan_Email_New_Product'] = include( DOKAN_INC_DIR.'/emails/class-dokan-email-new-product.php' );
-        $wc_emails['Dokan_Email_New_Product_Pending'] = include( DOKAN_INC_DIR.'/emails/class-dokan-email-new-product-pending.php' );
+        $wc_emails['Dokan_Email_New_Product']           = include( DOKAN_INC_DIR.'/emails/class-dokan-email-new-product.php' );
+        $wc_emails['Dokan_Email_New_Product_Pending']   = include( DOKAN_INC_DIR.'/emails/class-dokan-email-new-product-pending.php' );
+        $wc_emails['Dokan_Email_New_Seller']            = include( DOKAN_INC_DIR.'/emails/class-dokan-email-new-seller-registered.php' );
         return $wc_emails;
     }
     
@@ -843,6 +844,7 @@ final class WeDevs_Dokan {
         $dokan_email_actions = apply_filters( 'dokan_email_actions', array(
             'dokan_new_product_added',
             'dokan_email_trigger_new_pending_product',
+            'dokan_new_seller_created',
         ) );
         
         foreach ( $dokan_email_actions as $action ) {
