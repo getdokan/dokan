@@ -537,9 +537,10 @@ function dokan_send_notification_on_product_publish( $post ) {
     if ( $post->post_type != 'product' ) {
         return;
     }
-
+    
     $seller = get_user_by( 'id', $post->post_author );
-    Dokan_Email::init()->product_published( $post, $seller );
+    
+    do_action( 'dokan_pending_product_published_notification', $post, $seller );
 }
 
 add_action( 'pending_to_publish', 'dokan_send_notification_on_product_publish' );
