@@ -147,14 +147,6 @@ class Dokan_Email_Withdraw_Cancelled extends WC_Email {
 				'label'         => __( 'Enable this email notification', 'dokan-lite' ),
 				'default'       => 'yes',
 			),
-			'recipient' => array(
-				'title'         => __( 'Recipient(s)', 'dokan-lite' ),
-				'type'          => 'text',
-				'description'   => sprintf( __( 'Enter recipients (comma separated) for this email. Defaults to %s.', 'dokan-lite' ), '<code>' . esc_attr( get_option( 'admin_email' ) ) . '</code>' ),
-				'placeholder'   => '',
-				'default'       => '',
-				'desc_tip'      => true,
-			),
 			'subject' => array(
 				'title'         => __( 'Subject', 'dokan-lite' ),
 				'type'          => 'text',

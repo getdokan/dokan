@@ -13,7 +13,6 @@ if ( ! class_exists( 'Dokan_Email_New_Product' ) ) :
  *
  * @class       Dokan_Email_New_Product
  * @version     2.6.8
- * @package     Dokan/Classes/Emails
  * @author      weDevs
  * @extends     WC_Email
  */
@@ -47,7 +46,7 @@ class Dokan_Email_New_Product extends WC_Email {
 	 * @return string
 	 */
 	public function get_default_subject() {
-            return __( '[{site_title}] A New product is added by ({seller_name}) - {product_title}', 'dokan-lite' );
+            return __( '[{site_name}] A New product is added by ({seller_name}) - {product_title}', 'dokan-lite' );
 	}
 
 	/**
@@ -177,7 +176,7 @@ class Dokan_Email_New_Product extends WC_Email {
 				'type'          => 'text',
 				'desc_tip'      => true,
 				/* translators: %s: list of placeholders */
-				'description'   => sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>{site_title}, {product_title}, {seller_name}</code>' ),
+				'description'   => sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>{site_name}, {product_title}, {seller_name}</code>' ),
 				'placeholder'   => $this->get_default_subject(),
 				'default'       => '',
 			),
@@ -186,7 +185,7 @@ class Dokan_Email_New_Product extends WC_Email {
 				'type'          => 'text',
 				'desc_tip'      => true,
 				/* translators: %s: list of placeholders */
-				'description'   => sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>{site_title}, {product_title}, {seller_name}</code>' ),
+				'description'   => sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>{site_name}, {product_title}, {seller_name}</code>' ),
 				'placeholder'   => $this->get_default_heading(),
 				'default'       => '',
 			),

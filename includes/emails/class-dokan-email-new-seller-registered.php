@@ -47,7 +47,7 @@ class Dokan_Email_New_Seller extends WC_Email {
 	 * @return string
 	 */
 	public function get_default_subject() {
-            return __( '[{site_title}] A New vendor has registered', 'dokan-lite' );
+            return __( '[{site_name}] A New vendor has registered', 'dokan-lite' );
 	}
 
 	/**
@@ -156,7 +156,7 @@ class Dokan_Email_New_Seller extends WC_Email {
 				'type'          => 'text',
 				'desc_tip'      => true,
 				/* translators: %s: list of placeholders */
-				'description'   => sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>{site_title}, {store_name}, {seller_name}</code>' ),
+				'description'   => sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>{site_name}, {store_name}, {seller_name}</code>' ),
 				'placeholder'   => $this->get_default_subject(),
 				'default'       => '',
 			),
@@ -165,7 +165,7 @@ class Dokan_Email_New_Seller extends WC_Email {
 				'type'          => 'text',
 				'desc_tip'      => true,
 				/* translators: %s: list of placeholders */
-				'description'   => sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>{site_title}, {store_name}, {seller_name}</code>' ),
+				'description'   => sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>{site_name}, {store_name}, {seller_name}</code>' ),
 				'placeholder'   => $this->get_default_heading(),
 				'default'       => '',
 			),
