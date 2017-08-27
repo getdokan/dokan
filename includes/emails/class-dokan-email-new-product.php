@@ -12,7 +12,7 @@ if ( ! class_exists( 'Dokan_Email_New_Product' ) ) :
  * An email sent to the admin when a new Product is created by vendor.
  *
  * @class       Dokan_Email_New_Product
- * @version     2.6.6
+ * @version     2.6.8
  * @package     Dokan/Classes/Emails
  * @author      weDevs
  * @extends     WC_Email

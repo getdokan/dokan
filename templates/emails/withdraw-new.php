@@ -33,13 +33,13 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
         <strong>
             <?php _e( 'Request Amount:', 'dokan-lite' ); ?>
         </strong>
-        <?php echo wc_price( $data['amount'] ); ?>
+        <?php echo $data['amount']; ?>
     </li>
     <li>
         <strong>
             <?php _e( 'Payment Method: ', 'dokan-lite' ); ?>
         </strong>
-        <?php echo $data['category'] ?>
+        <?php echo $data['method'] ?>
     </li>
 </ul>
 
