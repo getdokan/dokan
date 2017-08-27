@@ -84,8 +84,9 @@ class Dokan_Admin_Ajax {
                 $amount  = $postdata['amount'][$withdraw_id];
                 $method  = $postdata['method'][$withdraw_id];
 
-                Dokan_Email::init()->withdraw_request_approve( $user_id, $amount, $method );
                 $withdraw->update_status( $withdraw_id, $user_id, 1 );
+
+                do_action( 'dokan_withdraw_request_approved', $user_id, $amount, $method );
 
                 $url = admin_url( 'admin.php?page=dokan-withdraw&message=approved&status=' . $status );
                 wp_send_json_success( array( 'url'=> $url ) );

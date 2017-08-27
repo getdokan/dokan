@@ -14,17 +14,17 @@ if ( !defined( 'ABSPATH' ) ) {
 }
 echo "= " . $email_heading . " =\n\n";
 ?>
-<?php _e( 'Hi,', 'dokan-lite' ); ?>
+<?php _e( 'Hi,', 'dokan-lite' );  echo " \n";?>
 
-<?php _e( 'A new withdraw request has been made by - '.$data['username'], 'dokan-lite' ); ?>
+<?php _e( 'A new withdraw request has been made by - '.$data['username'], 'dokan-lite' );  echo " \n";?>
 
-<?php _e( 'Request Amount : '.$data['amount'], 'dokan-lite' ); ?>
-<?php _e( 'Payment Method : '.$data['method'], 'dokan-lite' ); ?>
+<?php _e( 'Request Amount : '.$data['amount'], 'dokan-lite' );  echo " \n";?>
+<?php _e( 'Payment Method : '.$data['method'], 'dokan-lite' );  echo " \n";?>
 
-<?php _e( 'Username : '.$data['username'], 'dokan-lite' ); ?>
-<?php _e( 'Profile : '.$data['profile_url'], 'dokan-lite' ); ?>
+<?php _e( 'Username : '.$data['username'], 'dokan-lite' );  echo " \n";?>
+<?php _e( 'Profile : '.$data['profile_url'], 'dokan-lite' );  echo " \n";?>
 
-<?php _e( 'You can approve or deny it by going here : '.$data['withdraw_page'], 'dokan-lite' ); ?>
+<?php _e( 'You can approve or deny it by going here : '.$data['withdraw_page'], 'dokan-lite' );  echo " \n";?>
 
 <?php
 echo "\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n\n";

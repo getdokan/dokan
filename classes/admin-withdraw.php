@@ -97,9 +97,9 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
                 $user_id = $_POST['user_id'][$key];
                 $amount  = $_POST['amount'][$key];
                 $method  = $_POST['method'][$key];
-
-                Dokan_Email::init()->withdraw_request_approve( $user_id, $amount, $method );
+                
                 $this->update_status( $withdraw_id, $user_id, 1 );
+                do_action( 'dokan_withdraw_request_approved', $user_id, $amount, $method );
             }
 
             wp_redirect( admin_url( 'admin.php?page=dokan-withdraw&message=approved&status=' . $status ) );

@@ -828,6 +828,7 @@ final class WeDevs_Dokan {
         $wc_emails['Dokan_Email_New_Product_Pending']   = include( DOKAN_INC_DIR.'/emails/class-dokan-email-new-product-pending.php' );
         $wc_emails['Dokan_Email_New_Seller']            = include( DOKAN_INC_DIR.'/emails/class-dokan-email-new-seller-registered.php' );
         $wc_emails['Dokan_Vendor_Withdraw_Request']     = include( DOKAN_INC_DIR.'/emails/class-dokan-vendor-withdraw-request.php' );
+        $wc_emails['Dokan_Email_Withdraw_Approved']     = include( DOKAN_INC_DIR.'/emails/class-dokan-withdraw-approved.php' );
         return $wc_emails;
     }
     
@@ -847,6 +848,7 @@ final class WeDevs_Dokan {
             'dokan_email_trigger_new_pending_product',
             'dokan_new_seller_created',
             'dokan_after_withdraw_request',
+            'dokan_withdraw_request_approved',
         ) );
         
         foreach ( $dokan_email_actions as $action ) {
