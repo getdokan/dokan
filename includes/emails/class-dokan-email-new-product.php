@@ -68,16 +68,16 @@ class Dokan_Email_New_Product extends WC_Email {
 	 */
 	public function trigger( $product_id, $postdata ) {
             
+            if ( ! $this->is_enabled() || ! $this->get_recipient() ) {
+                return;
+            }
+            
             if ( dokan_get_option( 'product_add_mail', 'dokan_general', 'on' ) != 'on' ) {
                 return;
             }
 
             if ( dokan_get_new_post_status() == 'pending' ) {
                 do_action( 'dokan_email_trigger_new_pending_product', $product_id, $postdata );
-                return;
-            }
-
-            if ( ! $this->is_enabled() || ! $this->get_recipient() ) {
                 return;
             }
             
