@@ -69,8 +69,8 @@ class Dokan_Admin_Ajax {
                 $amount  = $postdata['amount'][$withdraw_id];
                 $method  = $postdata['method'][$withdraw_id];
                 $note    = $postdata['note'][$withdraw_id];
-
-                Dokan_Email::init()->withdraw_request_cancel( $user_id, $amount, $method, $note );
+                
+                do_action( 'dokan_withdraw_request_cancelled', $user_id, $amount, $method, $note );
                 $withdraw->update_status( $withdraw_id, $user_id, 2 );
 
                 $url = admin_url( 'admin.php?page=dokan-withdraw&message=cancelled&status=' . $status );

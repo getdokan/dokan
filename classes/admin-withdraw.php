@@ -81,8 +81,8 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
                 $amount  = $_POST['amount'][$key];
                 $method  = $_POST['method'][$key];
                 $note    = $_POST['note'][$key];
-
-                Dokan_Email::init()->withdraw_request_cancel( $user_id, $amount, $method, $note );
+                
+                do_action( 'dokan_withdraw_request_cancelled', $user_id, $amount, $method, $note );
                 $this->update_status( $withdraw_id, $user_id, 2 );
             }
 
