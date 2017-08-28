@@ -825,7 +825,14 @@ final class WeDevs_Dokan {
      * @return $wc_emails
      */
     function load_dokan_emails( $wc_emails ){
-        $wc_emails['Dokan_Email_New_Product'] = include( DOKAN_INC_DIR.'/emails/class-dokan-email-new-product.php' );
+        $wc_emails['Dokan_Email_New_Product']           = include( DOKAN_INC_DIR.'/emails/class-dokan-email-new-product.php' );
+        $wc_emails['Dokan_Email_New_Product_Pending']   = include( DOKAN_INC_DIR.'/emails/class-dokan-email-new-product-pending.php' );
+        $wc_emails['Dokan_Email_Product_Published']     = include( DOKAN_INC_DIR.'/emails/class-dokan-email-product-published.php' );
+        $wc_emails['Dokan_Email_New_Seller']            = include( DOKAN_INC_DIR.'/emails/class-dokan-email-new-seller-registered.php' );
+        $wc_emails['Dokan_Vendor_Withdraw_Request']     = include( DOKAN_INC_DIR.'/emails/class-dokan-vendor-withdraw-request.php' );
+        $wc_emails['Dokan_Email_Withdraw_Approved']     = include( DOKAN_INC_DIR.'/emails/class-dokan-withdraw-approved.php' );
+        $wc_emails['Dokan_Email_Withdraw_Cancelled']    = include( DOKAN_INC_DIR.'/emails/class-dokan-withdraw-cancelled.php' );
+        $wc_emails['Dokan_Email_Contact_Seller']        = include( DOKAN_INC_DIR.'/emails/class-dokan-email-contact-seller.php' );
         return $wc_emails;
     }
     
@@ -842,6 +849,13 @@ final class WeDevs_Dokan {
         
         $dokan_email_actions = apply_filters( 'dokan_email_actions', array(
             'dokan_new_product_added',
+            'dokan_email_trigger_new_pending_product',
+            'dokan_new_seller_created',
+            'dokan_after_withdraw_request',
+            'dokan_withdraw_request_approved',
+            'dokan_withdraw_request_cancelled',
+            'dokan_pending_product_published_notification',
+            'dokan_trigger_contact_seller_mail',
         ) );
         
         foreach ( $dokan_email_actions as $action ) {
@@ -877,8 +891,8 @@ final class WeDevs_Dokan {
                                     )
                         );
         
-        $template_name = substr( $template, strpos( $template , '/') + 1 );
-        
+        $template_name = basename( $template );
+
         if ( in_array( $template_name, $dokan_emails ) ) {
             return 'dokan';
         }

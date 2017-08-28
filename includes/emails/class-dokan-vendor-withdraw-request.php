@@ -1,36 +1,36 @@
 <?php
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+    exit;
 }
 
-if ( ! class_exists( 'Dokan_Email_New_Product' ) ) :
+if ( ! class_exists( 'Dokan_Vendor_Withdraw_Request' ) ) :
 
 /**
  * New Product Email.
  *
  * An email sent to the admin when a new Product is created by vendor.
  *
- * @class       Dokan_Email_New_Product
+ * @class       Dokan_Vendor_Withdraw_Request
  * @version     2.6.8
  * @author      weDevs
  * @extends     WC_Email
  */
-class Dokan_Email_New_Product extends WC_Email {
+class Dokan_Vendor_Withdraw_Request extends WC_Email {
 
 	/**
 	 * Constructor.
 	 */
 	public function __construct() {
-		$this->id               = 'new_product';
-		$this->title            = __( 'Dokan New Product', 'dokan-lite' );
-		$this->description      = __( 'New Product emails are sent to chosen recipient(s) when a new product is created by vendors.', 'dokan-lite' );
-                $this->template_html    = 'emails/new-product.php';
-		$this->template_plain   = 'emails/plain/new-product.php';
+		$this->id               = 'dokan_vendor_withdraw_request';
+		$this->title            = __( 'Dokan New Withdrawal Request', 'dokan-lite' );
+		$this->description      = __( 'These emails are sent to chosen recipient(s) when a vendor send request to withdraw', 'dokan-lite' );
+                $this->template_html    = 'emails/withdraw-new.php';
+		$this->template_plain   = 'emails/plain/withdraw-new.php';
                 $this->template_base    = DOKAN_DIR.'/templates/';
                 
 		// Triggers for this email
-		add_action( 'dokan_new_product_added', array( $this, 'trigger' ), 30, 2 );
+		add_action( 'dokan_after_withdraw_request', array( $this, 'trigger' ), 30, 3 );
 
 		// Call parent constructor
 		parent::__construct();
@@ -46,7 +46,7 @@ class Dokan_Email_New_Product extends WC_Email {
 	 * @return string
 	 */
 	public function get_default_subject() {
-            return __( '[{site_name}] A New product is added by ({seller_name}) - {product_title}', 'dokan-lite' );
+            return __( '[{site_name}] A New withdrawal request is made by {user_name}', 'dokan-lite' );
 	}
 
 	/**
@@ -56,7 +56,7 @@ class Dokan_Email_New_Product extends WC_Email {
 	 * @return string
 	 */
 	public function get_default_heading() {
-            return __( 'New product added by Vendor {seller_name}', 'dokan-lite' );
+            return __( 'New Withdraw Request from - {user_name}', 'dokan-lite' );
 	}
 
 	/**
@@ -65,52 +65,34 @@ class Dokan_Email_New_Product extends WC_Email {
 	 * @param int $product_id The product ID.
 	 * @param array $postdata.
 	 */
-	public function trigger( $product_id, $postdata ) {
-            
-            if ( dokan_get_option( 'product_add_mail', 'dokan_general', 'on' ) != 'on' ) {
-                return;
-            }
-
-            if ( dokan_get_new_post_status() == 'pending' ) {
-                do_action( 'dokan_email_trigger_new_pending_product', $product_id, $postdata );
-                return;
-            }
+	public function trigger( $current_user, $amount, $method ) {
             
             if ( ! $this->is_enabled() || ! $this->get_recipient() ) {
                 return;
             }
             
-            $product       = wc_get_product( $product_id );
-            $seller_id     = get_post_field( 'post_author', $product_id );
-            $seller        = get_user_by( 'id', $seller_id );
-            $category      = wp_get_post_terms( dokan_get_prop( $product, 'id' ), 'product_cat', array( 'fields' => 'names' ) );
-            $category_name = $category ? reset( $category ) : 'N/A';
+            $seller                      = get_user_by( 'id', $current_user->ID );
+            $this->object                = $current_user;
+            $this->find['username']      = '{user_name}';
+            $this->find['amount']        = '{amount}';
+            $this->find['method']        = '{method}';
+            $this->find['profile_url']   = '{profile_url}';
+            $this->find['withdraw_page'] = '{withdraw_page}';
+            $this->find['site_name']     = '{site_name}';
+            $this->find['site_url']      = '{site_url}';
 
-            if ( is_a( $product, 'WC_Product' ) ) {
-                $this->object                = $product;
-                
-                $this->find['product-title'] = '{product_title}';
-                $this->find['price']         = '{price}';
-                $this->find['seller-name']   = '{seller_name}';
-                $this->find['seller_url']    = '{seller_url}';
-                $this->find['category']      = '{category}';
-                $this->find['product_link']  = '{product_link}';
-                $this->find['site_name']     = '{site_name}';
-                $this->find['site_url']      = '{site_url}';
-
-                $this->replace['product-title'] = $product->get_title();
-                $this->replace['price']         = $product->get_price();
-                $this->replace['seller-name']   = $seller->display_name;
-                $this->replace['seller_url']    = dokan_get_store_url( $seller->ID );
-                $this->replace['category']      = $category_name;
-                $this->replace['product_link']  = admin_url( 'post.php?action=edit&post=' . $product_id );
-                $this->replace['site_name']     = $this->get_from_name();
-                $this->replace['site_url']      = site_url();
-            }
+            $this->replace['username']      = $seller->user_login;
+            $this->replace['amount']        = wc_price( $amount );
+            $this->replace['method']        = dokan_withdraw_get_method_title( $method );
+            $this->replace['profile_url']   = admin_url( 'user-edit.php?user_id=' . $seller->ID );
+            $this->replace['withdraw_page'] = admin_url( 'admin.php?page=dokan-withdraw' );
+            $this->replace['site_name']     = $this->get_from_name();
+            $this->replace['site_url']      = site_url();
 
             $this->setup_locale();
             $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
             $this->restore_locale();
+            
 	}
         
         /**
@@ -122,7 +104,7 @@ class Dokan_Email_New_Product extends WC_Email {
 	public function get_content_html() {
             ob_start();
                 wc_get_template( $this->template_html, array(
-                    'product'       => $this->object,
+                    'seller'        => $this->object,
                     'email_heading' => $this->get_heading(),
                     'sent_to_admin' => true,
                     'plain_text'    => false,
@@ -142,7 +124,7 @@ class Dokan_Email_New_Product extends WC_Email {
 	public function get_content_plain() {
             ob_start();
                 wc_get_template( $this->template_html, array(
-                    'product'       => $this->object,
+                    'seller'        => $this->object,
                     'email_heading' => $this->get_heading(),
                     'sent_to_admin' => true,
                     'plain_text'    => true,
@@ -176,7 +158,7 @@ class Dokan_Email_New_Product extends WC_Email {
 				'type'          => 'text',
 				'desc_tip'      => true,
 				/* translators: %s: list of placeholders */
-				'description'   => sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>{site_name}, {product_title}, {seller_name}</code>' ),
+				'description'   => sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>{site_name},{amount},{user_name}</code>' ),
 				'placeholder'   => $this->get_default_subject(),
 				'default'       => '',
 			),
@@ -185,7 +167,7 @@ class Dokan_Email_New_Product extends WC_Email {
 				'type'          => 'text',
 				'desc_tip'      => true,
 				/* translators: %s: list of placeholders */
-				'description'   => sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>{site_name}, {product_title}, {seller_name}</code>' ),
+				'description'   => sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>{site_name},{amount},{user_name}</code>' ),
 				'placeholder'   => $this->get_default_heading(),
 				'default'       => '',
 			),
@@ -204,4 +186,4 @@ class Dokan_Email_New_Product extends WC_Email {
 
 endif;
 
-return new Dokan_Email_New_Product();
+return new Dokan_Vendor_Withdraw_Request();

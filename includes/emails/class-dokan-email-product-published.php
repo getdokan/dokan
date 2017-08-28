@@ -4,39 +4,39 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'Dokan_Email_New_Product' ) ) :
+if ( ! class_exists( 'Dokan_Email_Product_Published' ) ) :
 
 /**
- * New Product Email.
+ * New Product Published Email to vendor.
  *
- * An email sent to the admin when a new Product is created by vendor.
+ * An email sent to the vendor when a pending Product is published by admin.
  *
- * @class       Dokan_Email_New_Product
+ * @class       Dokan_Email_Product_Published
  * @version     2.6.8
  * @author      weDevs
  * @extends     WC_Email
  */
-class Dokan_Email_New_Product extends WC_Email {
+class Dokan_Email_Product_Published extends WC_Email {
 
 	/**
 	 * Constructor.
 	 */
 	public function __construct() {
-		$this->id               = 'new_product';
-		$this->title            = __( 'Dokan New Product', 'dokan-lite' );
-		$this->description      = __( 'New Product emails are sent to chosen recipient(s) when a new product is created by vendors.', 'dokan-lite' );
-                $this->template_html    = 'emails/new-product.php';
-		$this->template_plain   = 'emails/plain/new-product.php';
+		$this->id               = 'pending_product_published';
+		$this->title            = __( 'Dokan Pending Product Published', 'dokan-lite' );
+		$this->description      = __( 'These emails are sent to vendor of the product when a pending product is published.', 'dokan-lite' );
+                $this->template_html    = 'emails/product-published.php';
+		$this->template_plain   = 'emails/plain/product-published.php';
                 $this->template_base    = DOKAN_DIR.'/templates/';
                 
 		// Triggers for this email
-		add_action( 'dokan_new_product_added', array( $this, 'trigger' ), 30, 2 );
+		add_action( 'dokan_pending_product_published_notification', array( $this, 'trigger' ), 30, 2 );
 
 		// Call parent constructor
 		parent::__construct();
 
 		// Other settings
-		$this->recipient = $this->get_option( 'recipient', get_option( 'admin_email' ) );
+		$this->recipient = 'vendor@ofthe.product';
 	}
 
 	/**
@@ -46,7 +46,7 @@ class Dokan_Email_New_Product extends WC_Email {
 	 * @return string
 	 */
 	public function get_default_subject() {
-            return __( '[{site_name}] A New product is added by ({seller_name}) - {product_title}', 'dokan-lite' );
+            return __( '[{site_name}] Your product - {product_title} - is now published', 'dokan-lite' );
 	}
 
 	/**
@@ -56,7 +56,7 @@ class Dokan_Email_New_Product extends WC_Email {
 	 * @return string
 	 */
 	public function get_default_heading() {
-            return __( 'New product added by Vendor {seller_name}', 'dokan-lite' );
+            return __( '{product_title} - is published', 'dokan-lite' );
 	}
 
 	/**
@@ -65,51 +65,36 @@ class Dokan_Email_New_Product extends WC_Email {
 	 * @param int $product_id The product ID.
 	 * @param array $postdata.
 	 */
-	public function trigger( $product_id, $postdata ) {
-            
-            if ( dokan_get_option( 'product_add_mail', 'dokan_general', 'on' ) != 'on' ) {
-                return;
-            }
-
-            if ( dokan_get_new_post_status() == 'pending' ) {
-                do_action( 'dokan_email_trigger_new_pending_product', $product_id, $postdata );
-                return;
-            }
+	public function trigger( $post, $seller ) {
             
             if ( ! $this->is_enabled() || ! $this->get_recipient() ) {
                 return;
             }
             
-            $product       = wc_get_product( $product_id );
-            $seller_id     = get_post_field( 'post_author', $product_id );
-            $seller        = get_user_by( 'id', $seller_id );
-            $category      = wp_get_post_terms( dokan_get_prop( $product, 'id' ), 'product_cat', array( 'fields' => 'names' ) );
-            $category_name = $category ? reset( $category ) : 'N/A';
+            $product       = wc_get_product( $post->ID );
 
             if ( is_a( $product, 'WC_Product' ) ) {
                 $this->object                = $product;
                 
-                $this->find['product-title'] = '{product_title}';
-                $this->find['price']         = '{price}';
-                $this->find['seller-name']   = '{seller_name}';
-                $this->find['seller_url']    = '{seller_url}';
-                $this->find['category']      = '{category}';
-                $this->find['product_link']  = '{product_link}';
-                $this->find['site_name']     = '{site_name}';
-                $this->find['site_url']      = '{site_url}';
+                $this->find['product-title']     = '{product_title}';
+                $this->find['price']             = '{price}';
+                $this->find['seller-name']       = '{seller_name}';
+                $this->find['product_url']       = '{product_url}';
+                $this->find['product_edit_link'] = '{product_edit_link}';
+                $this->find['site_name']         = '{site_name}';
+                $this->find['site_url']          = '{site_url}';
 
-                $this->replace['product-title'] = $product->get_title();
-                $this->replace['price']         = $product->get_price();
-                $this->replace['seller-name']   = $seller->display_name;
-                $this->replace['seller_url']    = dokan_get_store_url( $seller->ID );
-                $this->replace['category']      = $category_name;
-                $this->replace['product_link']  = admin_url( 'post.php?action=edit&post=' . $product_id );
-                $this->replace['site_name']     = $this->get_from_name();
-                $this->replace['site_url']      = site_url();
+                $this->replace['product-title']     = $product->get_title();
+                $this->replace['price']             = $product->get_price();
+                $this->replace['seller-name']       = $seller->display_name;
+                $this->replace['product_url']       = get_permalink( $post->ID );
+                $this->replace['product_edit_link'] = dokan_edit_product_url( $post->ID );
+                $this->replace['site_name']         = $this->get_from_name();
+                $this->replace['site_url']          = site_url();
             }
 
             $this->setup_locale();
-            $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
+            $this->send( $seller->user_email, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
             $this->restore_locale();
 	}
         
@@ -163,14 +148,7 @@ class Dokan_Email_New_Product extends WC_Email {
 				'label'         => __( 'Enable this email notification', 'dokan-lite' ),
 				'default'       => 'yes',
 			),
-			'recipient' => array(
-				'title'         => __( 'Recipient(s)', 'dokan-lite' ),
-				'type'          => 'text',
-				'description'   => sprintf( __( 'Enter recipients (comma separated) for this email. Defaults to %s.', 'dokan-lite' ), '<code>' . esc_attr( get_option( 'admin_email' ) ) . '</code>' ),
-				'placeholder'   => '',
-				'default'       => '',
-				'desc_tip'      => true,
-			),
+			
 			'subject' => array(
 				'title'         => __( 'Subject', 'dokan-lite' ),
 				'type'          => 'text',
@@ -204,4 +182,4 @@ class Dokan_Email_New_Product extends WC_Email {
 
 endif;
 
-return new Dokan_Email_New_Product();
+return new Dokan_Email_Product_Published();

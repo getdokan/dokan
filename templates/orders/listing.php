@@ -80,7 +80,7 @@ if ( $user_orders ) {
                                 $h_time = get_the_time( __( 'Y/m/d', 'dokan-lite' ), dokan_get_prop( $the_order, 'id' ) );
                         }
 
-                        echo '<abbr title="' . esc_attr( $t_time ) . '">' . esc_html( apply_filters( 'post_date_column_time', $h_time, dokan_get_prop( $the_order, 'id' ) ) ) . '</abbr>';
+                        echo '<abbr title="' . esc_attr( dokan_date_time_format( $t_time ) ) . '">' . esc_html( apply_filters( 'post_date_column_time', dokan_date_time_format( $h_time, true ) , dokan_get_prop( $the_order, 'id' ) ) ) . '</abbr>';
                         ?>
                     </td>
                     <td class="dokan-order-action" width="17%" data-title="<?php _e( 'Action', 'dokan-lite' ); ?>" >

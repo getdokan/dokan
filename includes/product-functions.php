@@ -143,10 +143,6 @@ function dokan_save_product( $args ) {
 
         do_action( 'dokan_new_product_added', $product_id, $data );
 
-        if ( dokan_get_option( 'product_add_mail', 'dokan_general', 'on' ) == 'on' ) {
-            Dokan_Email::init()->new_product_added( $product_id, $post_status );
-        }
-
         return $product_id;
     }
 

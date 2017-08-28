@@ -545,8 +545,8 @@ function dokan_on_create_seller( $user_id, $data ) {
 
     update_user_meta( $user_id, 'dokan_profile_settings', $dokan_settings );
     update_user_meta( $user_id, 'dokan_store_name', $dokan_settings['store_name'] );
-
-    Dokan_Email::init()->new_seller_registered_mail( $user_id );
+    
+    do_action( 'dokan_new_seller_created', $user_id, $dokan_settings );
 }
 
 add_action( 'woocommerce_created_customer', 'dokan_on_create_seller', 10, 2);
@@ -1161,4 +1161,27 @@ function dokan_clear_product_category_cache( $post_id ) {
     $seller_id = get_post_field( 'post_author', $post_id );
 
     delete_transient( 'dokan-store-category-' . $seller_id );
+}
+
+if ( !function_exists( 'dokan_date_time_format' ) ) {
+    
+    /**
+     * Format date time string to WC format
+     * 
+     * @since 2.6.8
+     * 
+     * @param string $time
+     * @param boolean $date_only
+     * @return string
+     */
+    function dokan_date_time_format( $time, $date_only = false ) {
+
+        $format = apply_filters( 'dokan_date_time_format', wc_date_format() . ' ' . wc_time_format() );
+
+        if ( $date_only ) {
+            return date_i18n( wc_date_format(), strtotime( $time ) );
+        }
+        return date_i18n( $format, strtotime( $time ) );
+    }
+
 }

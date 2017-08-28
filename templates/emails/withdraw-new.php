@@ -1,16 +1,50 @@
-<?php _e( 'Hi,', 'dokan-lite' ); ?>
+<?php
+/**
+ * New Withdraw request Email.
+ *
+ * An email sent to the admin when a new withdraw request is created by vendor.
+ *
+ * @class       Dokan_Vendor_Withdraw_Request
+ * @version     2.6.8
+ * 
+ */
 
-<?php _e( 'A new withdraw request has been made by', 'dokan-lite' ); ?> %username%.
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 
-<?php _e( 'Request Amount:', 'dokan-lite' ); ?> %amount%
-<?php _e( 'Payment Method:', 'dokan-lite' ); ?> %method%
+do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
+<p>
+    <?php _e( 'Hi,', 'dokan-lite' ); ?>
+</p>
+<p>
+    <?php _e( 'A new withdraw request has been made by', 'dokan-lite' ); ?> <?php echo $data ['username']; ?>.
+</p>
+<hr>
+<ul>
+    <li>
+        <strong>
+            <?php _e( 'Username : ', 'dokan-lite' ); ?>
+        </strong>
+        <?php 
+        printf( '<a href="%s">%s</a>', $data['profile_url'], $data['username']  ); ?>
+    </li>
+    <li>
+        <strong>
+            <?php _e( 'Request Amount:', 'dokan-lite' ); ?>
+        </strong>
+        <?php echo $data['amount']; ?>
+    </li>
+    <li>
+        <strong>
+            <?php _e( 'Payment Method: ', 'dokan-lite' ); ?>
+        </strong>
+        <?php echo $data['method'] ?>
+    </li>
+</ul>
 
-<?php _e( 'Username:', 'dokan-lite' ); ?> %username%
-<?php _e( 'Profile:', 'dokan-lite' ); ?> %profile_url%
+<?php echo sprintf( __( 'You can approve or deny it by going <a href="%s"> here </a>', 'dokan-lite' ), $data['withdraw_page'] ); ?>
 
-<?php _e( 'You can approve or deny it by going here:', 'dokan-lite' ); ?>
-%withdraw_page%
+<?php
 
----
-<?php _e( 'Sent from', 'dokan-lite' ); ?> %site_name%
-%site_url%
+do_action( 'woocommerce_email_footer', $email );
