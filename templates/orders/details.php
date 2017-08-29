@@ -314,7 +314,7 @@ $order    = new WC_Order( $order_id );
 
                                     <div class="dokan-form-group">
                                         <label class="dokan-control-label"><?php _e( 'Date Shipped', 'dokan-lite' ); ?></label>
-                                        <input type="text" name="shipped_date" id="shipped-date" class="dokan-form-control" value="" placeholder="YYYY-MM-DD">
+                                        <input type="text" name="shipped_date" id="shipped-date" class="dokan-form-control" value="" placeholder="<?php _e( 'YYYY-MM-DD', 'dokan-lite' ); ?>">
                                     </div>
 
                                     <input type="hidden" name="security" id="security" value="<?php echo wp_create_nonce('add-shipping-tracking-info'); ?>">
