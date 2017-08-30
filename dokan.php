@@ -231,7 +231,7 @@ final class WeDevs_Dokan {
         add_action( 'in_plugin_update_message-dokan-lite/dokan.php', array( 'Dokan_Installer', 'in_plugin_update_message' ) );
         
         //Dokan Email filters for WC Email
-        add_filter( 'woocommerce_email_classes', array( $this, 'load_dokan_emails' ) );
+        add_filter( 'woocommerce_email_classes', array( $this, 'load_dokan_emails' ), 35 );
         add_filter( 'woocommerce_template_directory', array( $this, 'set_email_template_directory' ), 15, 2 );
         add_filter( 'woocommerce_email_actions' , array( $this, 'register_email_actions' ) );
 
