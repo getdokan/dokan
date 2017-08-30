@@ -1594,6 +1594,10 @@ function dokan_get_social_profile_fields() {
             'icon'  => 'twitter-square',
             'title' => __( 'Twitter', 'dokan-lite' ),
         ),
+        'pinterest' => array(
+            'icon'  => 'pinterest-square',
+            'title' => __( 'Pinterest', 'dokan-lite' ),
+        ),
         'linkedin' => array(
             'icon'  => 'linkedin-square',
             'title' => __( 'LinkedIn', 'dokan-lite' ),

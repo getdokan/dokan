@@ -234,7 +234,7 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
      */
     function insert_withdraw_info() {
 
-        global $current_user, $wpdb;
+        global $current_user;
 
         $amount = floatval( $_POST['witdraw_amount'] );
         $method = $_POST['withdraw_method'];
@@ -249,7 +249,8 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
         );
 
         $update = $this->insert_withdraw( $data_info );
-        Dokan_Email::init()->new_withdraw_request( $current_user, $amount, $method );
+        
+        do_action( 'dokan_after_withdraw_request', $current_user, $amount, $method );
 
         wp_redirect( add_query_arg( array( 'message' => 'request_success' ), dokan_get_navigation_url( 'withdraw' ) ) );
     }

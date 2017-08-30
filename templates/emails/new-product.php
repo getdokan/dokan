@@ -9,11 +9,11 @@
  * 
  */
 
- if ( ! defined( 'ABSPATH' ) ) {
- 	exit;
- }
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 
- do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
+do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 
 <p><?php _e( 'Hello,', 'dokan-lite' ); ?></p>
 
@@ -52,7 +52,4 @@
 
 <?php
 
-/**
-  * @hooked WC_Emails::email_footer() Output the email footer
- **/
 do_action( 'woocommerce_email_footer', $email );

@@ -1,14 +1,29 @@
-<?php _e( 'From:', 'dokan-lite')  ?>%from_name% (%from_email%)
-<?php _e( 'IP:', 'dokan-lite' ) ?> %user_ip%
-<?php _e( 'User Agent:', 'dokan-lite' ); ?> %user_agent%
+<?php
+/**
+ * Contact Seller Email.
+ *
+ * An email sent to the vendor when a vendor is contacted via customer.
+ *
+ * @class       Dokan_Email_Contact_Seller
+ * @version     2.6.8
+ * 
+ */
 
-------------------------------
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 
-%message%
+do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 
-------------------------------
+<p>
+    <?php echo sprintf( __( 'From : %s (%s)', 'dokan-lite' ), $data['customer_name'], $data['customer_email'] ) ?>
+    <br>
+</p>
+<hr>
+<p>
+    <?php echo $data['message'] ?>
+</p>
+<hr>
 
-
----
-<?php _e( 'Sent from', 'dokan-lite' ); ?> %site_name%
-%site_url%
+<?php
+do_action( 'woocommerce_email_footer', $email );
