@@ -412,8 +412,8 @@ if ( ! $from_shortcode ) {
                             <?php wp_editor( $post_content , 'post_content', array('editor_height' => 50, 'quicktags' => false, 'media_buttons' => false, 'teeny' => true, 'editor_class' => 'post_content') ); ?>
                         </div>
 
-                        <?php do_action( 'dokan_new_product_form' ); ?>
-                        <?php do_action( 'dokan_product_edit_after_main' ); ?>
+                        <?php do_action( 'dokan_new_product_form', $post, $post_id ); ?>
+                        <?php do_action( 'dokan_product_edit_after_main', $post, $post_id ); ?>
 
                         <div class="dokan-product-inventory dokan-edit-row">
                             <div class="dokan-section-heading" data-togglehandler="dokan_product_inventory">
