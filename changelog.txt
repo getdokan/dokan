@@ -1,4 +1,4 @@
-v2.6.8 -> Aug 28, 2017
+v2.6.8 -> Sep 7, 2017
 ---------------------
 - [new]   Dokan Emails now configurable from WooCommerce Email settings with theme override support
 - [new]   Canceled withdraw requests are now shown for vendor
