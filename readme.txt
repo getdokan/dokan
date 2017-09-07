@@ -3,9 +3,10 @@ Contributors: tareq1988, wedevs, rafsuntaskin, sabbir1991, nazmulhassann20, rosh
 Donate Link: http://tareq.co/donate/
 Tags: woocommerce, multivendor, multi-vendor, paypal, shop, vendor, seller, store, sell, online, amazon, dokan, ebay, Etsy, multi seller, multi store, multi vendor, multi vendors, multistore, multivendor, product vendor, product vendors, vendor, vendor system, vendors, wc market place, wc marketplace, wc vendors, woo vendors, woocommerce market place, woocommerce marketplace, woocommerce multi vendor,  commission rate, e-commerce, ebay, ecommerce, yith, yithemes
 Requires at least: 4.4
-Tested up to: 4.8
+Tested up to: 4.8.1
 WC requires at least: 2.6
-WC tested up to: 3.1.1
+WC tested up to: 3.1.2
+Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -179,6 +180,14 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 == Changelog ==
+
+v2.6.8 -> Sep 7, 2017
+---------------------
+- [new]   Dokan Emails now configurable from WooCommerce Email settings with theme override support
+- [new]   Canceled withdraw requests are now shown for vendor
+- [fix]   Date time format fixed for order and product listing to support global format
+- [fix]   saving variable product prices
+- [tweak] fontawesome library updated
 
 v2.6.7 -> Aug 3, 2017
 ---------------------
