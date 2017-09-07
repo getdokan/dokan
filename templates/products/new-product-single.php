@@ -236,14 +236,14 @@ if ( ! $from_shortcode ) {
                                         <div class="content-half-part from">
                                             <div class="dokan-input-group">
                                                 <span class="dokan-input-group-addon"><?php _e( 'From', 'dokan-lite' ); ?></span>
-                                                <input type="text" name="_sale_price_dates_from" class="dokan-form-control datepicker" value="<?php echo esc_attr( $_sale_price_dates_from ); ?>" maxlength="10" pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])" placeholder="YYYY-MM-DD">
+                                                <input type="text" name="_sale_price_dates_from" class="dokan-form-control datepicker" value="<?php echo esc_attr( $_sale_price_dates_from ); ?>" maxlength="10" pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])" placeholder="<?php _e( 'YYYY-MM-DD', 'dokan-lite' ); ?>">
                                             </div>
                                         </div>
 
                                         <div class="content-half-part to">
                                             <div class="dokan-input-group">
                                                 <span class="dokan-input-group-addon"><?php _e( 'To', 'dokan-lite' ); ?></span>
-                                                <input type="text" name="_sale_price_dates_to" class="dokan-form-control datepicker" value="<?php echo esc_attr( $_sale_price_dates_to ); ?>" maxlength="10" pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])" placeholder="YYYY-MM-DD">
+                                                <input type="text" name="_sale_price_dates_to" class="dokan-form-control datepicker" value="<?php echo esc_attr( $_sale_price_dates_to ); ?>" maxlength="10" pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])" placeholder="<?php _e( 'YYYY-MM-DD', 'dokan-lite' ); ?>">
                                             </div>
                                         </div>
                                     </div><!-- .sale-schedule-container -->
@@ -412,8 +412,8 @@ if ( ! $from_shortcode ) {
                             <?php wp_editor( $post_content , 'post_content', array('editor_height' => 50, 'quicktags' => false, 'media_buttons' => false, 'teeny' => true, 'editor_class' => 'post_content') ); ?>
                         </div>
 
-                        <?php do_action( 'dokan_new_product_form' ); ?>
-                        <?php do_action( 'dokan_product_edit_after_main' ); ?>
+                        <?php do_action( 'dokan_new_product_form', $post, $post_id ); ?>
+                        <?php do_action( 'dokan_product_edit_after_main', $post, $post_id ); ?>
 
                         <div class="dokan-product-inventory dokan-edit-row">
                             <div class="dokan-section-heading" data-togglehandler="dokan_product_inventory">

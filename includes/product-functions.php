@@ -143,10 +143,6 @@ function dokan_save_product( $args ) {
 
         do_action( 'dokan_new_product_added', $product_id, $data );
 
-        if ( dokan_get_option( 'product_add_mail', 'dokan_general', 'on' ) == 'on' ) {
-            Dokan_Email::init()->new_product_added( $product_id, $post_status );
-        }
-
         return $product_id;
     }
 
@@ -347,6 +343,93 @@ function dokan_get_product_visibility_options() {
         'hidden'  => __( 'Hidden', 'dokan-lite' ),
     ) );
 }
+
+/**
+ * Search product data for a term and users ids and return only ids.
+ *
+ * @param  string $term
+ * @param  string $user_ids
+ * @param  string $type of product
+ * @param  bool $include_variations in search or not
+ *
+ * @return array of ids
+ */
+function dokan_search_seller_products( $term, $user_ids = false, $type = '', $include_variations = false ) {
+    global $wpdb;
+
+    $like_term     = '%' . $wpdb->esc_like( $term ) . '%';
+    $post_types    = $include_variations ? array( 'product', 'product_variation' ) : array( 'product' );
+    $post_statuses = current_user_can( 'edit_private_products' ) ? array( 'private', 'publish' ) : array( 'publish' );
+    $type_join     = '';
+    $type_where    = '';
+    $users_where    = '';
+
+    if ( $type ) {
+        if ( in_array( $type, array( 'virtual', 'downloadable' ) ) ) {
+            $type_join  = " LEFT JOIN {$wpdb->postmeta} postmeta_type ON posts.ID = postmeta_type.post_id ";
+            $type_where = " AND ( postmeta_type.meta_key = '_{$type}' AND postmeta_type.meta_value = 'yes' ) ";
+        }
+    }
+
+    if ( $user_ids ) {
+        if ( is_array( $user_ids ) ) {
+            $users_where = " AND posts.post_author IN ('" . implode( "','", $user_ids ) . "')";
+        } else {
+            $users_where = " AND posts.post_author = '$user_ids'";
+        }
+    }
+
+    $product_ids = $wpdb->get_col(
+        $wpdb->prepare( "
+            SELECT DISTINCT posts.ID FROM {$wpdb->posts} posts
+            LEFT JOIN {$wpdb->postmeta} postmeta ON posts.ID = postmeta.post_id
+            $type_join
+            WHERE (
+                posts.post_title LIKE %s
+                OR posts.post_content LIKE %s
+                OR (
+                    postmeta.meta_key = '_sku' AND postmeta.meta_value LIKE %s
+                )
+            )
+            AND posts.post_type IN ('" . implode( "','", $post_types ) . "')
+            AND posts.post_status IN ('" . implode( "','", $post_statuses ) . "')
+            $type_where
+            $users_where
+            ORDER BY posts.post_parent ASC, posts.post_title ASC
+            ",
+            $like_term,
+            $like_term,
+            $like_term
+        )
+    );
+
+    if ( is_numeric( $term ) ) {
+        $post_id   = absint( $term );
+        $post_type = get_post_type( $post_id );
+
+        if ( 'product_variation' === $post_type && $include_variations ) {
+            $product_ids[] = $post_id;
+        } elseif ( 'product' === $post_type ) {
+            $product_ids[] = $post_id;
+        }
+
+        $product_ids[] = wp_get_post_parent_id( $post_id );
+    }
+
+    return wp_parse_id_list( $product_ids );
+}
+
+/**
+ * Callback for array filter to get products the user can edit only.
+ *
+ * @since  2.6.8
+ * @param  WC_Product $product
+ * @return bool
+ */
+function dokan_products_array_filter_editable( $product ) {
+    return $product && is_a( $product, 'WC_Product' ) && current_user_can( 'dokandar', $product->get_id() );
+}
+
 
 
 

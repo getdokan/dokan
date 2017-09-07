@@ -3,7 +3,7 @@
 Plugin Name: Dokan
 Plugin URI: https://wordpress.org/plugins/dokan-lite/
 Description: An e-commerce marketplace plugin for WordPress. Powered by WooCommerce and weDevs.
-Version: 2.6.7
+Version: 2.6.8
 Author: weDevs
 Author URI: https://wedevs.com/
 Text Domain: dokan-lite
@@ -45,7 +45,7 @@ if ( !defined( '__DIR__' ) ) {
     define( '__DIR__', dirname( __FILE__ ) );
 }
 
-define( 'DOKAN_PLUGIN_VERSION', '2.6.7' );
+define( 'DOKAN_PLUGIN_VERSION', '2.6.8' );
 define( 'DOKAN_FILE', __FILE__ );
 define( 'DOKAN_DIR', __DIR__ );
 define( 'DOKAN_INC_DIR', __DIR__ . '/includes' );
@@ -230,6 +230,11 @@ final class WeDevs_Dokan {
 
         add_action( 'in_plugin_update_message-dokan-lite/dokan.php', array( 'Dokan_Installer', 'in_plugin_update_message' ) );
 
+        //Dokan Email filters for WC Email
+        add_filter( 'woocommerce_email_classes', array( $this, 'load_dokan_emails' ), 35 );
+        add_filter( 'woocommerce_template_directory', array( $this, 'set_email_template_directory' ), 15, 2 );
+        add_filter( 'woocommerce_email_actions' , array( $this, 'register_email_actions' ) );
+
     }
 
     public function register_scripts() {
@@ -408,7 +413,8 @@ final class WeDevs_Dokan {
                 'selectAndCrop'                       => __( 'Select and Crop', 'dokan-lite' ),
                 'chooseImage'                         => __( 'Choose Image', 'dokan-lite' ),
                 'product_title_required'              => __( 'Product title is required', 'dokan-lite' ),
-                'product_category_required'           => __( 'Product category is required', 'dokan-lite' )
+                'product_category_required'           => __( 'Product category is required', 'dokan-lite' ),
+                'search_products_nonce'               => wp_create_nonce( 'search-products' )
             );
 
             $default_args = array_merge( $default_args, $custom_args );
@@ -540,6 +546,7 @@ final class WeDevs_Dokan {
             require_once $inc_dir . 'admin/admin.php';
             require_once $inc_dir . 'admin/ajax.php';
             require_once $inc_dir . 'admin-functions.php';
+            require_once $lib_dir . '/class-weforms-upsell.php';
         } else {
             require_once $inc_dir . 'template-tags.php';
         }
@@ -613,6 +620,7 @@ final class WeDevs_Dokan {
             new Dokan_Admin_User_Profile();
             Dokan_Admin_Ajax::init();
             new Dokan_Upgrade();
+            new WeForms_Upsell( '409' );
         } else {
             new Dokan_Pageviews();
         }
@@ -807,6 +815,91 @@ final class WeDevs_Dokan {
         $links[] = '<a href="https://docs.wedevs.com/docs/dokan/" target="_blank">' . __( 'Documentation', 'dokan-lite' ) . '</a>';
 
         return $links;
+    }
+
+    /**
+     * Add Dokan Email classes in WC Email
+     *
+     * @since 2.6.8
+     *
+     * @param array $wc_emails
+     *
+     * @return $wc_emails
+     */
+    function load_dokan_emails( $wc_emails ){
+        $wc_emails['Dokan_Email_New_Product']           = include( DOKAN_INC_DIR.'/emails/class-dokan-email-new-product.php' );
+        $wc_emails['Dokan_Email_New_Product_Pending']   = include( DOKAN_INC_DIR.'/emails/class-dokan-email-new-product-pending.php' );
+        $wc_emails['Dokan_Email_Product_Published']     = include( DOKAN_INC_DIR.'/emails/class-dokan-email-product-published.php' );
+        $wc_emails['Dokan_Email_New_Seller']            = include( DOKAN_INC_DIR.'/emails/class-dokan-email-new-seller-registered.php' );
+        $wc_emails['Dokan_Vendor_Withdraw_Request']     = include( DOKAN_INC_DIR.'/emails/class-dokan-vendor-withdraw-request.php' );
+        $wc_emails['Dokan_Email_Withdraw_Approved']     = include( DOKAN_INC_DIR.'/emails/class-dokan-withdraw-approved.php' );
+        $wc_emails['Dokan_Email_Withdraw_Cancelled']    = include( DOKAN_INC_DIR.'/emails/class-dokan-withdraw-cancelled.php' );
+        $wc_emails['Dokan_Email_Contact_Seller']        = include( DOKAN_INC_DIR.'/emails/class-dokan-email-contact-seller.php' );
+        return $wc_emails;
+    }
+
+    /**
+     * Register Dokan Email actions for WC
+     *
+     * @since 2.6.8
+     *
+     * @param array $actions
+     *
+     * @return $actions
+     */
+    function register_email_actions( $actions ) {
+
+        $dokan_email_actions = apply_filters( 'dokan_email_actions', array(
+            'dokan_new_product_added',
+            'dokan_email_trigger_new_pending_product',
+            'dokan_new_seller_created',
+            'dokan_after_withdraw_request',
+            'dokan_withdraw_request_approved',
+            'dokan_withdraw_request_cancelled',
+            'dokan_pending_product_published_notification',
+            'dokan_trigger_contact_seller_mail',
+        ) );
+
+        foreach ( $dokan_email_actions as $action ) {
+            $actions[] = $action;
+        }
+
+        return $actions;
+    }
+
+    /**
+     * Set template override directory for Dokan Emails
+     *
+     * @since 2.6.8
+     *
+     * @param string $template_dir
+     *
+     * @param string $template
+     *
+     * @return string
+     */
+    function set_email_template_directory( $template_dir, $template ){
+
+        $dokan_emails = apply_filters( 'dokan_email_list',
+                                    array(
+                                        'new-product.php',
+                                        'new-product-pending.php',
+                                        'product-published.php',
+                                        'contact-seller.php',
+                                        'new-seller-registered.php',
+                                        'withdraw-new.php',
+                                        'withdraw-cancel.php',
+                                        'withdraw-approve.php',
+                                    )
+                        );
+
+        $template_name = basename( $template );
+
+        if ( in_array( $template_name, $dokan_emails ) ) {
+            return 'dokan';
+        }
+
+        return $template_dir;
     }
 
 } // WeDevs_Dokan

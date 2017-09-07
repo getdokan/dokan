@@ -383,8 +383,12 @@ function dokan_get_seller_percentage( $seller_id = 0, $product_id = 0 ) {
         if ( $_per_product_commission != '' ) {
             return (float) $_per_product_commission;
         }
+        $category_commission = dokan_get_category_wise_seller_commission( $product_id );
+        if ( !empty( $category_commission ) ) {
+            return (float) $category_commission;
+        }
     }
-
+    
     //return seller wise percentage
     if ( $seller_id ) {
         $seller_percentage = get_user_meta( $seller_id, 'dokan_seller_percentage', true );
@@ -1590,6 +1594,10 @@ function dokan_get_social_profile_fields() {
             'icon'  => 'twitter-square',
             'title' => __( 'Twitter', 'dokan-lite' ),
         ),
+        'pinterest' => array(
+            'icon'  => 'pinterest-square',
+            'title' => __( 'Pinterest', 'dokan-lite' ),
+        ),
         'linkedin' => array(
             'icon'  => 'linkedin-square',
             'title' => __( 'LinkedIn', 'dokan-lite' ),
@@ -1848,3 +1856,27 @@ function dokan_set_is_home_false_on_store() {
 }
 
 register_sidebar( array( 'name' => __( 'Dokan Store Sidebar', 'dokan-lite' ), 'id' => 'sidebar-store' ) );
+
+/**
+ * Calculate category wise commission for given product
+ * 
+ * @since 2.6.8
+ * 
+ * @param int $product_id
+ * 
+ * @return int $commission_rate
+ * 
+ */
+function dokan_get_category_wise_seller_commission( $product_id ){
+    
+    $terms   = get_the_terms( $product_id, 'product_cat' );
+    $category_commision = null;
+    
+    if ( $terms ) {
+        if ( 1 == count( $terms ) ) {
+            $category_commision = get_woocommerce_term_meta( $terms[0]->term_id, 'per_category_commission', true );
+        }
+    }
+
+    return $category_commision;
+}

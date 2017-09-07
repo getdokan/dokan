@@ -481,6 +481,10 @@ function dokan_get_order_status_class( $status ) {
         case 'wc-failed':
             return 'danger';
             break;
+
+        default:
+            return apply_filters( 'dokan_get_order_status_class', '', $status );
+            break;
     }
 }
 
@@ -525,6 +529,10 @@ function dokan_get_order_status_translated( $status ) {
         case 'failed':
         case 'wc-failed':
             return __( 'Failed', 'dokan-lite' );
+            break;
+
+        default:
+            return apply_filters( 'dokan_get_order_status_translated', '', $status );
             break;
     }
 }

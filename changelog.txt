@@ -1,3 +1,11 @@
+v2.6.8 -> Sep 7, 2017
+---------------------
+- [new]   Dokan Emails now configurable from WooCommerce Email settings with theme override support
+- [new]   Canceled withdraw requests are now shown for vendor
+- [fix]   Date time format fixed for order and product listing to support global format
+- [fix]   saving variable product prices
+- [tweak] fontawesome library updated
+
 v2.6.7 -> Aug 3, 2017
 ---------------------
 - [fix]   Fix multiple vendor order creating issue

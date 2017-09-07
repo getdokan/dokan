@@ -4156,7 +4156,6 @@ div.media-sidebar a.edit-attachment {
     background-color: #fff;
     color: #444;
     border: 1px solid #ededed;
-    height: 255px;
   }
   .dokan-single-store .profile-frame .profile-info-box .profile-info-summery-wrapper .profile-info-summery {
     width: 100%;
@@ -4213,7 +4212,7 @@ div.media-sidebar a.edit-attachment {
     margin-left: 8px;
   }
   .dokan-single-store .profile-frame .profile-info-box.profile-layout-layout1 .profile-info-summery-wrapper {
-    height: 175px;
+    height: 275px;
     padding: 0 8px;
   }
   .dokan-single-store .profile-frame .profile-info-box.profile-layout-layout1 .profile-info-summery-wrapper .profile-info-summery {

@@ -216,7 +216,7 @@
                                                 }
                                             }
 
-                                            echo '<abbr title="' . $t_time . '">' . apply_filters( 'post_date_column_time', $h_time, $post, 'date', 'all' ) . '</abbr>';
+                                            echo '<abbr title="' . dokan_date_time_format( $t_time ) . '">' . apply_filters( 'post_date_column_time', dokan_date_time_format( $h_time, true ), $post, 'date', 'all' ) . '</abbr>';
                                             echo '<div class="status">';
                                             if ( 'publish' == $post->post_status ) {
                                                 _e( 'Published', 'dokan-lite' );
