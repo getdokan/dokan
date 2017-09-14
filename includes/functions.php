@@ -164,9 +164,10 @@ function dokan_delete_product_handler() {
  */
 function dokan_count_posts( $post_type, $user_id ) {
     global $wpdb;
-
+    
+    $cache_group = 'dokan_seller_product_data_'.$user_id;
     $cache_key = 'dokan-count-' . $post_type . '-' . $user_id;
-    $counts = wp_cache_get( $cache_key, 'dokan-lite' );
+    $counts = wp_cache_get( $cache_key, $cache_group );
 
     if ( false === $counts ) {
         $query = "SELECT post_status, COUNT( * ) AS num_posts FROM {$wpdb->posts} WHERE post_type = %s AND post_author = %d GROUP BY post_status";
@@ -186,7 +187,7 @@ function dokan_count_posts( $post_type, $user_id ) {
 
         $counts['total'] = $total;
         $counts = (object) $counts;
-        wp_cache_set( $cache_key, $counts, 'dokan-lite' );
+        wp_cache_set( $cache_key, $counts, $cache_group, 3600*6 );
     }
 
     return $counts;
@@ -230,7 +231,7 @@ function dokan_count_comments( $post_type, $user_id ) {
         $counts['total'] = $total;
 
         $counts = (object) $counts;
-        wp_cache_set( $cache_key, $counts, 'dokan-lite' );
+        wp_cache_set( $cache_key, $counts, 'dokan-lite', 3600*2 );
     }
 
     return $counts;
@@ -247,7 +248,7 @@ function dokan_author_pageviews( $seller_id ) {
     global $wpdb;
 
     $cache_key = 'dokan-pageview-' . $seller_id;
-    $pageview = wp_cache_get( $cache_key, 'dokan-lite' );
+    $pageview = wp_cache_get( $cache_key, 'dokan_page_view' );
 
     if ( $pageview === false ) {
         $sql = "SELECT SUM(meta_value) as pageview
@@ -258,7 +259,7 @@ function dokan_author_pageviews( $seller_id ) {
         $count = $wpdb->get_row( $wpdb->prepare( $sql, $seller_id ) );
         $pageview = $count->pageview;
 
-        wp_cache_set( $cache_key, $pageview, 'dokan-lite' );
+        wp_cache_set( $cache_key, $pageview, 'dokan_page_view', 3600*4 );
     }
 
     return $pageview;
@@ -273,9 +274,10 @@ function dokan_author_pageviews( $seller_id ) {
  */
 function dokan_author_total_sales( $seller_id ) {
     global $wpdb;
-
+    
+    $cache_group = 'dokan_seller_data_'.$seller_id;
     $cache_key = 'dokan-earning-' . $seller_id;
-    $earnings = wp_cache_get( $cache_key, 'dokan-lite' );
+    $earnings = wp_cache_get( $cache_key, $cache_group );
 
     if ( $earnings === false ) {
 
@@ -286,7 +288,8 @@ function dokan_author_total_sales( $seller_id ) {
         $count = $wpdb->get_row( $wpdb->prepare( $sql, $seller_id ) );
         $earnings = $count->earnings;
 
-        wp_cache_set( $cache_key, $earnings, 'dokan-lite' );
+        wp_cache_set( $cache_key, $earnings, $cache_group );
+        dokan_cache_update_group( $cache_key , $cache_group );
     }
 
     return apply_filters( 'dokan_seller_total_sales', $earnings );
