@@ -1883,3 +1883,61 @@ function dokan_get_category_wise_seller_commission( $product_id ){
 
     return $category_commision;
 }
+
+//Dokan Cache helper functions
+ 
+/**
+ * Keep record of keys by group name
+ * 
+ * @since 2.6.9
+ * 
+ * @param string $key
+ * 
+ * @param string $group
+ * 
+ * @return void
+ */
+function dokan_cache_update_group( $key, $group ) {
+    $keys = get_option( $group, array() );
+    $keys[] = $key;
+    update_option( $group , $keys );
+}
+
+/**
+ * Bulk clear cache values by group name
+ * 
+ * @since 2.6.9
+ * 
+ * @param string $group
+ * 
+ * @return void
+ */
+function dokan_cache_clear_group( $group ) {
+    $keys = get_option( $group, array() );
+
+    if ( !empty( $keys ) ) {
+        foreach ( $keys as $key ) {
+            wp_cache_delete( $key );
+        }
+    }
+}
+
+//cache reset actions
+add_action( 'dokan_checkout_update_order_meta', 'dokan_cache_reset_seller_order_data', 10, 2 ); 
+add_action( 'dokan_new_product_added', 'dokan_cache_clear_seller_product_data', 20, 2 );
+add_action( 'dokan_product_updated', 'dokan_cache_clear_seller_product_data', 20 );
+
+/**
+ * Reset cache group related to seller orders
+ */
+function dokan_cache_reset_seller_order_data( $order_id, $seller_id ) {
+    dokan_cache_clear_group( 'dokan_seller_data_'.$seller_id );
+}
+
+/**
+ * Reset cache group related to seller products
+ */
+function dokan_cache_clear_seller_product_data( $product_id, $post_data = array() ) {
+    $seller_id = get_current_user_id();
+    dokan_cache_clear_group( 'dokan_seller_product_data_' . $seller_id );
+}
