@@ -1924,13 +1924,20 @@ function dokan_cache_clear_group( $group ) {
 
 //cache reset actions
 add_action( 'dokan_checkout_update_order_meta', 'dokan_cache_reset_seller_order_data', 10, 2 ); 
+add_action( 'woocommerce_order_status_changed', 'dokan_cache_reset_order_data_on_status', 10, 4 ); 
 add_action( 'dokan_new_product_added', 'dokan_cache_clear_seller_product_data', 20, 2 );
 add_action( 'dokan_product_updated', 'dokan_cache_clear_seller_product_data', 20 );
+add_action( 'delete_post', 'dokan_cache_clear_deleted_product', 20 );
 
 /**
  * Reset cache group related to seller orders
  */
 function dokan_cache_reset_seller_order_data( $order_id, $seller_id ) {
+    dokan_cache_clear_group( 'dokan_seller_data_'.$seller_id );
+}
+
+function dokan_cache_reset_order_data_on_status( $order_id, $from_status, $to_status, $order ) {
+    $seller_id = get_post_field( 'post_author', $order_id );
     dokan_cache_clear_group( 'dokan_seller_data_'.$seller_id );
 }
 
@@ -1940,4 +1947,10 @@ function dokan_cache_reset_seller_order_data( $order_id, $seller_id ) {
 function dokan_cache_clear_seller_product_data( $product_id, $post_data = array() ) {
     $seller_id = get_current_user_id();
     dokan_cache_clear_group( 'dokan_seller_product_data_' . $seller_id );
+    delete_transient( 'dokan-store-category-' . $seller_id );
+}
+
+function dokan_cache_clear_deleted_product( $post_id ) {
+    $seller_id = get_post_field( 'post_author', $post_id );
+    delete_transient( 'dokan-store-category-' . $seller_id );
 }
