@@ -367,7 +367,7 @@ if ( !function_exists( 'dokan_get_seller_earnings_by_order' ) ) {
             $earned    = $earned + ( ( $product['line_total'] * $comission ) / 100 );
         }
 
-        return $earned;
+        return apply_filters( 'dokan_get_seller_earnings_by_order', $earned, $order, $seller_id );
     }
 }
 if ( !function_exists( 'dokan_get_seller_percentage' ) ) :
