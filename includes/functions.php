@@ -1885,31 +1885,34 @@ function dokan_get_category_wise_seller_commission( $product_id ){
 }
 
 //Dokan Cache helper functions
- 
+
 /**
  * Keep record of keys by group name
- * 
+ *
  * @since 2.6.9
- * 
+ *
  * @param string $key
- * 
+ *
  * @param string $group
- * 
+ *
  * @return void
  */
 function dokan_cache_update_group( $key, $group ) {
     $keys = get_option( $group, array() );
+    if ( in_array( $key, $keys ) ) {
+        return;
+    }
     $keys[] = $key;
     update_option( $group , $keys );
 }
 
 /**
  * Bulk clear cache values by group name
- * 
+ *
  * @since 2.6.9
- * 
+ *
  * @param string $group
- * 
+ *
  * @return void
  */
 function dokan_cache_clear_group( $group ) {
@@ -1917,14 +1920,16 @@ function dokan_cache_clear_group( $group ) {
 
     if ( !empty( $keys ) ) {
         foreach ( $keys as $key ) {
-            wp_cache_delete( $key );
+            wp_cache_delete( $key, $group );
+            unset($keys[$key]);
         }
     }
+    update_option( $group, $keys );
 }
 
 //cache reset actions
-add_action( 'dokan_checkout_update_order_meta', 'dokan_cache_reset_seller_order_data', 10, 2 ); 
-add_action( 'woocommerce_order_status_changed', 'dokan_cache_reset_order_data_on_status', 10, 4 ); 
+add_action( 'dokan_checkout_update_order_meta', 'dokan_cache_reset_seller_order_data', 10, 2 );
+add_action( 'woocommerce_order_status_changed', 'dokan_cache_reset_order_data_on_status', 10, 4 );
 add_action( 'dokan_new_product_added', 'dokan_cache_clear_seller_product_data', 20, 2 );
 add_action( 'dokan_product_updated', 'dokan_cache_clear_seller_product_data', 20 );
 add_action( 'delete_post', 'dokan_cache_clear_deleted_product', 20 );
