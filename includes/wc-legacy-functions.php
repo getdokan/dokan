@@ -188,11 +188,22 @@ function dokan_create_sub_order_coupon( $parent_order, $order_id, $product_ids )
  */
 function dokan_create_sub_order_shipping( $parent_order, $order_id, $seller_products ) {
 
-    // take only the first shipping method
+    // Get all shipping methods for parent order
     $shipping_methods = $parent_order->get_shipping_methods();
 
-    $shipping_method = is_array( $shipping_methods ) ? reset( $shipping_methods ) : array();
+    $order_seller_id = get_post_field( 'post_author', $order_id );
 
+    $applied_shipping_method = array();
+
+    if ( $shipping_methods ) {
+        foreach ( $shipping_methods as $key => $value ) {
+            $product_id = $value['_product_ids'];
+            $product_author = get_post_field( 'post_author', $product_id );
+            $applied_shipping_method[$product_author] = $value;
+        }
+    }
+
+    $shipping_method = $applied_shipping_method[$order_seller_id];
     $shipping_method = apply_filters( 'dokan_shipping_method', $shipping_method, $order_id, $parent_order );
 
     // bail out if no shipping methods found
@@ -227,6 +238,7 @@ function dokan_create_sub_order_shipping( $parent_order, $order_id, $seller_prod
             'contents'        => $shipping_products,
             'contents_cost'   => array_sum( wp_list_pluck( $shipping_products, 'line_total' ) ),
             'applied_coupons' => array(),
+            'seller_id'       => $order_seller_id,
             'destination'     => array(
                 'country'   => dokan_get_prop( $parent_order, 'shipping_country' ),
                 'state'     => dokan_get_prop( $parent_order, 'shipping_state' ),
