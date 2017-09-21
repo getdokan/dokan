@@ -376,6 +376,9 @@ if ( !function_exists( 'dokan_get_seller_percentage' ) ) :
  * Get store seller percentage settings
  *
  * @param int $seller_id
+ * 
+ * @param int $product_id
+ * 
  * @return int
  */
 function dokan_get_seller_percentage( $seller_id = 0, $product_id = 0 ) {
@@ -1958,4 +1961,24 @@ function dokan_cache_clear_seller_product_data( $product_id, $post_data = array(
 function dokan_cache_clear_deleted_product( $post_id ) {
     $seller_id = get_post_field( 'post_author', $post_id );
     delete_transient( 'dokan-store-category-' . $seller_id );
+}
+
+/**
+ * Get seller earning for a given product
+ * 
+ * @since 2.6.9
+ * 
+ * @param int $product_id
+ * 
+ * @param int $seller_id
+ * 
+ * @return int $earning;
+ */
+function dokan_get_earning_by_product( $product_id, $seller_id ) {
+    $product    = wc_get_product( $product_id );
+    $percentage = dokan_get_seller_percentage( $seller_id, $product_id );
+    $price      = $product->get_price();
+    $earning    = ( $price * $percentage ) / 100;
+
+    return wc_format_decimal( $earning );
 }
