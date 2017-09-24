@@ -311,6 +311,7 @@ final class WeDevs_Dokan {
                 ),
                 'delete_confirm' => __('Are you sure?', 'dokan-lite' ),
                 'wrong_message'  => __('Something went wrong. Please try again.', 'dokan-lite' ),
+                'vendor_percentage'  => dokan_get_seller_percentage( get_current_user_id() ),
         );
 
         $localize_script = apply_filters( 'dokan_localized_args', $default_script );

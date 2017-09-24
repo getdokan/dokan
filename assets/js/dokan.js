@@ -1266,6 +1266,10 @@ jQuery(function($) {
 
             return false;
         });
+        
+        $( "input.dokan-product-price" ).keyup( function () {
+            $( 'span.vendor-price' ).html( ( $( this ).val() * dokan.vendor_percentage ) / 100 );
+        } );
     });
 
 })(jQuery);
