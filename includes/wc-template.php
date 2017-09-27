@@ -107,3 +107,49 @@ function dokan_get_customer_main_order( $customer_orders ) {
 }
 
 add_filter( 'woocommerce_my_account_my_orders_query', 'dokan_get_customer_main_order');
+
+add_action( 'init', 'dokan_register_form_shortcode' );
+
+function dokan_register_form_shortcode() {
+    add_shortcode( 'dokan-register-form', 'dokan_register_form_callback' );
+}
+
+/**
+ * Dokan Seller Registration Form Shortcode
+ *
+ * @param array()
+ *
+ * @return html
+ */
+function dokan_register_form_callback( $atts = [] ) {
+       if ( ! is_user_logged_in() ) { 
+            ob_start();
+
+            dokan_get_template_part( 'global/registration-form-shortcode', '', array(
+                'postdata' => $postdata,
+                'role' => $role,
+                'role_style' => $role_style
+            ) );
+
+            wp_enqueue_script( 'dokan-form-validate' );
+            ?>
+            <script type="text/javascript">
+                ;(function($) {
+
+                    $.validator.setDefaults({ ignore: ":hidden" });
+
+                    var validatorError = function(error, element) {
+                        var form_group = $(element).closest('.form-group');
+                        form_group.addClass('has-error').append(error);
+                    };
+
+                    var validatorSuccess = function(label, element) {
+                        $(element).closest('.form-group').removeClass('has-error');
+                    };
+                })(jQuery);
+            </script>
+            <?php 
+            return ob_get_clean();
+        }
+    echo 'You are already logged in..';
+}
