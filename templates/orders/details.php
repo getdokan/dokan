@@ -163,7 +163,7 @@ $order    = new WC_Order( $order_id );
                                 <span><?php _e( 'Order Status:', 'dokan-lite' ); ?></span>
                                 <label class="dokan-label dokan-label-<?php echo dokan_get_order_status_class( dokan_get_prop( $order, 'status' ) ); ?>"><?php echo isset( $statuses[dokan_get_prop( $order, 'status' )] ) ? $statuses[dokan_get_prop( $order, 'status' )] : dokan_get_prop( $order, 'status' ); ?></label>
 
-                                <?php if ( dokan_get_option( 'order_status_change', 'dokan_selling', 'on' ) == 'on' ) {?>
+                                <?php if ( dokan_get_option( 'order_status_change', 'dokan_selling', 'on' ) == 'on' && $order->get_status() !== 'cancelled' && $order->get_status() !== 'refunded' ) {?>
                                     <a href="#" class="dokan-edit-status"><small><?php _e( '&nbsp; Edit', 'dokan-lite' ); ?></small></a>
                                 <?php } ?>
                             </li>
