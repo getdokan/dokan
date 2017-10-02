@@ -107,3 +107,33 @@ function dokan_get_customer_main_order( $customer_orders ) {
 }
 
 add_filter( 'woocommerce_my_account_my_orders_query', 'dokan_get_customer_main_order');
+
+
+/**
+ * Add edit post capability to woocommerce proudct post type 
+ *
+ * @param capability array()
+ *
+ * @return capability array()
+ */
+function add_edit_capability_to_woocommerce_product( $capability ) {
+    $capability['capabilities'] = array( 'edit_post' => 'edit_product' );
+    return $capability;
+}
+
+add_filter( 'woocommerce_register_post_type_product', 'add_edit_capability_to_woocommerce_product' );
+
+
+/**
+ * Add edit product capability to the seller role
+ *
+ * @param 
+ *
+ * @return true
+ */
+function add_capabality_to_seller() {
+    $role = get_role( 'seller' );
+    $role->add_cap( 'edit_product' );
+}
+
+add_action( 'init', 'add_capabality_to_seller' );
