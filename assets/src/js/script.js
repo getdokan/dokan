@@ -697,7 +697,6 @@ jQuery(function($) {
                 dataType:    'json',
                 delay:       250,
                 data:        function( params ) {
-                    console.log( params );
                     return {
                         term:     params.term,
                         action:   $( this ).data( 'action' ) || 'dokan_json_search_products_and_variations',
@@ -710,8 +709,6 @@ jQuery(function($) {
                 },
                 processResults: function( data ) {
                     var terms = [];
-
-                    console.log( data );
 
                     if ( data ) {
                         $.each( data, function( id, text ) {

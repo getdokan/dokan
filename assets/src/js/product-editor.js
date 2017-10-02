@@ -813,10 +813,11 @@
 
             return false;
         });
-        
-        $( "input.dokan-product-price" ).keyup( function () {
-            $( 'span.vendor-price' ).html( ( $( this ).val() * dokan.vendor_percentage ) / 100 );
-        } );
+
+        $( "input.dokan-product-price" ).on( 'keyup', function () {
+            $( 'span.vendor-price' ).html( ( $( "input.dokan-product-price" ).val() * dokan.vendor_percentage ) / 100 );
+        } ).trigger('keyup');
+
     });
 
 })(jQuery);

@@ -1266,10 +1266,11 @@ jQuery(function($) {
 
             return false;
         });
-        
-        $( "input.dokan-product-price" ).keyup( function () {
-            $( 'span.vendor-price' ).html( ( $( this ).val() * dokan.vendor_percentage ) / 100 );
-        } );
+
+        $( "input.dokan-product-price" ).on( 'keyup', function () {
+            $( 'span.vendor-price' ).html( ( $( "input.dokan-product-price" ).val() * dokan.vendor_percentage ) / 100 );
+        } ).trigger('keyup');
+
     });
 
 })(jQuery);
@@ -1972,7 +1973,6 @@ jQuery(function($) {
                 dataType:    'json',
                 delay:       250,
                 data:        function( params ) {
-                    console.log( params );
                     return {
                         term:     params.term,
                         action:   $( this ).data( 'action' ) || 'dokan_json_search_products_and_variations',
@@ -1985,8 +1985,6 @@ jQuery(function($) {
                 },
                 processResults: function( data ) {
                     var terms = [];
-
-                    console.log( data );
 
                     if ( data ) {
                         $.each( data, function( id, text ) {
