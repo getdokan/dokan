@@ -643,6 +643,7 @@
 
                             // wrap.find('img').attr('src', attachment.sizes.thumbnail.url);
                             wrap.find('img').attr('src', attachment.url);
+                            wrap.find('img').attr('srcset', attachment.url);
 
                             instruction.addClass('dokan-hide');
                             wrap.removeClass('dokan-hide');
