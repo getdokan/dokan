@@ -107,3 +107,20 @@ function dokan_get_customer_main_order( $customer_orders ) {
 }
 
 add_filter( 'woocommerce_my_account_my_orders_query', 'dokan_get_customer_main_order');
+
+/**
+ * Add edit post capability to woocommerce proudct post type
+ *
+ * @since 2.6.9
+ *
+ * @param capability array
+ *
+ * @return capability array
+ */
+function dokan_manage_capability_for_woocommerce_product( $capability ) {
+    $capability['capabilities'] = array( 'edit_post' => 'edit_product' );
+    return $capability;
+}
+
+add_filter( 'woocommerce_register_post_type_product', 'dokan_manage_capability_for_woocommerce_product' );
+
