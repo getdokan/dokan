@@ -33,6 +33,29 @@ function dokan_replace_seller_commission_by_seller() {
     }
 }
 
+function dokan_replace_product_commissions(){
+    $args  = array(
+        'post_type' => 'product',
+        'meta_query' => array(
+            array(
+                'key'     => '_per_product_commission',
+                'value'   => '',
+                'compare' => '!='
+            )
+        )
+    );
+   
+    $query    = new WP_Query( $args );
+    $products = $query->get_posts();
+
+    foreach ( $products as $p ) {
+        $seller_commission = get_post_meta( $p->ID, '_per_product_commission' );
+        $admin_commission = 100 - $seller_commission;
+        update_post_meta( $p->ID, '_per_product_admin_commission', $admin_commission );
+    }
+}
+
 dokan_update_user_cap_269();
 dokan_replace_seller_commission();
 dokan_replace_seller_commission_by_seller();
+dokan_replace_product_commissions();
