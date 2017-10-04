@@ -49,7 +49,8 @@ class Dokan_Admin_User_Profile {
         $publishing        = get_user_meta( $user->ID, 'dokan_publishing', true );
         $store_settings    = dokan_get_store_info( $user->ID );
         $banner            = isset( $store_settings['banner'] ) ? absint( $store_settings['banner'] ) : 0;
-        $seller_percentage = get_user_meta( $user->ID, 'dokan_seller_percentage', true );
+//        seller_percentage = get_user_meta( $user->ID, 'dokan_seller_percentage', true );
+        $admin_percentage = get_user_meta( $user->ID, 'dokan_admin_percentage', true );
         $feature_seller    = get_user_meta( $user->ID, 'dokan_feature_seller', true );
 
         $social_fields     = dokan_get_social_profile_fields();
@@ -267,11 +268,11 @@ class Dokan_Admin_User_Profile {
                 </tr>
 
                 <tr>
-                    <th><?php _e( 'Vendor Commission %', 'dokan-lite' ); ?></th>
+                    <th><?php _e( 'Admin Commission ', 'dokan-lite' ); ?></th>
                     <td>
-                        <input type="text" class="small-text" name="dokan_seller_percentage" value="<?php echo esc_attr( $seller_percentage ); ?>">
+                        <input type="text" class="small-text" name="dokan_admin_percentage" value="<?php echo esc_attr( $admin_percentage ); ?>">
 
-                        <p class="description"><?php _e( 'It will overrride the default % vendor gets from each order', 'dokan-lite' ) ?></p>
+                        <p class="description"><?php _e( 'It will override the default commission admin gets from each sales', 'dokan-lite' ) ?></p>
                     </td>
                 </tr>
 
@@ -406,7 +407,7 @@ class Dokan_Admin_User_Profile {
 
         $selling        = sanitize_text_field( $_POST['dokan_enable_selling'] );
         $publishing     = sanitize_text_field( $_POST['dokan_publish'] );
-        $percentage     = empty( $_POST['dokan_seller_percentage'] ) ? '' : floatval( $_POST['dokan_seller_percentage'] );
+        $percentage     = empty( $_POST['dokan_admin_percentage'] ) ? '' : floatval( $_POST['dokan_admin_percentage'] );
         $feature_seller = sanitize_text_field( $_POST['dokan_feature'] );
         $store_settings = dokan_get_store_info( $user_id );
 
@@ -430,7 +431,7 @@ class Dokan_Admin_User_Profile {
         update_user_meta( $user_id, 'dokan_profile_settings', $store_settings );
         update_user_meta( $user_id, 'dokan_enable_selling', $selling );
         update_user_meta( $user_id, 'dokan_publishing', $publishing );
-        update_user_meta( $user_id, 'dokan_seller_percentage', $percentage );
+        update_user_meta( $user_id, 'dokan_admin_percentage', $percentage );
         update_user_meta( $user_id, 'dokan_feature_seller', $feature_seller );
         update_user_meta( $user_id, 'dokan_store_name', $store_settings['store_name'] );
 
