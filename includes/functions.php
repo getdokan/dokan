@@ -1880,7 +1880,7 @@ function dokan_get_category_wise_seller_commission( $product_id ){
     
     if ( $terms ) {
         if ( 1 == count( $terms ) ) {
-            $category_commision = get_woocommerce_term_meta( $terms[0]->term_id, 'per_category_commission', true );
+            $category_commision = get_woocommerce_term_meta( $terms[0]->term_id, 'per_category_admin_commission', true );
         }
     }
 
