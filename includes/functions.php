@@ -409,7 +409,17 @@ function dokan_get_seller_percentage( $seller_id = 0, $product_id = 0 ) {
 
 endif;
 
-
+/**
+ * Get Dokan commission type by seller or product or both
+ * 
+ * @since 2.6.9
+ * 
+ * @param int $seller_id
+ * 
+ * @param int $product_id
+ * 
+ * @return String $type
+ */
 function dokan_get_commission_type( $seller_id = 0, $product_id = 0 ) {
     //return product wise percentage
     if ( $product_id ) {
@@ -433,7 +443,9 @@ function dokan_get_commission_type( $seller_id = 0, $product_id = 0 ) {
     if ( $seller_id ) {
         $admin_commission = get_user_meta( $seller_id, 'dokan_admin_percentage', true );
         if ( $admin_commission != '' ) {
-            // return fee type
+            $type = get_user_meta( $seller_id, 'dokan_admin_percentage_type', true );
+            $type = empty( $type ) ? 'percentage' : $type;
+            return $type;
         }
     }
     
