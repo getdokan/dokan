@@ -1982,3 +1982,39 @@ function dokan_get_earning_by_product( $product_id, $seller_id ) {
 
     return wc_format_decimal( $earning );
 }
+
+
+add_action( 'delete_user', 'dokan_delete_user_details' );
+
+/**
+ * Delete user's details when the user is deleted
+ * 
+ * @since 2.6.9
+ * 
+ * @param int $user_id
+ * 
+ * @return void
+ */
+function dokan_delete_user_details( $user_id ) {
+
+    if ( ! dokan_is_user_seller( $user_id ) ) {
+        return;
+    }
+
+    $args = array (
+        'numberposts'   => -1,
+        'post_type'     => 'any',
+        'author'        => $user_id
+    );
+
+    // get all posts by this user
+    $user_posts = get_posts( $args );
+
+    if ( empty( $user_posts ) ) return;
+
+    // delete all the posts
+    foreach ( $user_posts as $user_post ) {
+        wp_delete_post( $user_post->ID, true );
+    }
+
+}
