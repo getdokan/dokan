@@ -385,9 +385,9 @@ function dokan_get_seller_percentage( $seller_id = 0, $product_id = 0 ) {
 
     //return product wise percentage
     if ( $product_id ) {
-        $_per_product_commission = get_post_meta( $product_id, '_per_product_commission', true );
+        $_per_product_commission = get_post_meta( $product_id, '_per_product_admin_commission', true );
         if ( $_per_product_commission != '' ) {
-            return (float) $_per_product_commission;
+            return (float) 100 - $_per_product_commission;
         }
         $category_commission = dokan_get_category_wise_seller_commission( $product_id );
         if ( !empty( $category_commission ) ) {
@@ -397,17 +397,62 @@ function dokan_get_seller_percentage( $seller_id = 0, $product_id = 0 ) {
     
     //return seller wise percentage
     if ( $seller_id ) {
-        $seller_percentage = get_user_meta( $seller_id, 'dokan_seller_percentage', true );
-        if ( $seller_percentage != '' ) {
-            return (float) $seller_percentage;
+        $admin_commission = get_user_meta( $seller_id, 'dokan_admin_percentage', true );
+        if ( $admin_commission != '' ) {
+            return (float) ( 100 - $admin_commission );
         }
     }
 
-    $global_percentage = dokan_get_option( 'seller_percentage', 'dokan_selling' , 10 );
-    return $global_percentage;
+    $global_percentage = dokan_get_option( 'admin_percentage', 'dokan_selling' , 10 );
+    return 100 - $global_percentage;
 }
 
 endif;
+
+/**
+ * Get Dokan commission type by seller or product or both
+ * 
+ * @since 2.6.9
+ * 
+ * @param int $seller_id
+ * 
+ * @param int $product_id
+ * 
+ * @return String $type
+ */
+function dokan_get_commission_type( $seller_id = 0, $product_id = 0 ) {
+    //return product wise percentage
+    if ( $product_id ) {
+        
+        $_per_product_commission = get_post_meta( $product_id, '_per_product_admin_commission', true );
+        if ( $_per_product_commission != '' ) {
+            $type = get_post_meta( $product_id, '_per_product_admin_commission_type', true );
+            $type = empty( $type ) ? 'percentage' : $type;
+            return $type;
+        }
+        
+        $category_commission = dokan_get_category_wise_seller_commission( $product_id );
+        if ( !empty( $category_commission ) ) {
+            $type = dokan_get_category_wise_seller_commission_type( $product_id );
+            $type = empty( $type ) ? 'percentage' : $type;
+            return $type;
+        }
+    }
+    
+    //return seller wise percentage
+    if ( $seller_id ) {
+        $admin_commission = get_user_meta( $seller_id, 'dokan_admin_percentage', true );
+        if ( $admin_commission != '' ) {
+            $type = get_user_meta( $seller_id, 'dokan_admin_percentage_type', true );
+            $type = empty( $type ) ? 'percentage' : $type;
+            return $type;
+        }
+    }
+    
+    $global_type = dokan_get_option( 'commission_type', 'dokan_selling' , 10 );
+    return $global_type;
+}
+
 
 /**
  * Get product status based on user id and settings
@@ -1880,7 +1925,31 @@ function dokan_get_category_wise_seller_commission( $product_id ){
     
     if ( $terms ) {
         if ( 1 == count( $terms ) ) {
-            $category_commision = get_woocommerce_term_meta( $terms[0]->term_id, 'per_category_commission', true );
+            $category_commision = get_woocommerce_term_meta( $terms[0]->term_id, 'per_category_admin_commission', true );
+        }
+    }
+
+    return 100 - $category_commision;
+}
+
+/**
+ * Calculate category wise commission type for given product
+ * 
+ * @since 2.6.9
+ * 
+ * @param int $product_id
+ * 
+ * @return int $commission_rate
+ * 
+ */
+function dokan_get_category_wise_seller_commission_type( $product_id ){
+    
+    $terms   = get_the_terms( $product_id, 'product_cat' );
+    $category_commision = '';
+    
+    if ( $terms ) {
+        if ( 1 == count( $terms ) ) {
+            $category_commision = get_woocommerce_term_meta( $terms[0]->term_id, 'per_category_admin_commission_type', true );
         }
     }
 
