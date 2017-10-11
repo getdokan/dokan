@@ -6,6 +6,7 @@ $status = isset( $_GET['status'] ) ? $_GET['status'] : 'pending';
 ?>
 <div class="wrap">
     <h2><?php _e( 'Withdraw Requests', 'dokan-lite' ); ?></h2>
+    <h5><?php printf ( __( '<i>Approve or Decline Withdraw Requests sent by vendors</i>. <a target="_blank" href="%s">Learn More</a>', 'dokan-lite' ), 'https://wedevs.com/docs/dokan/settings/withdraw-options/' ) ?></h5>
 
     <ul class="subsubsub" style="float: none;">
         <li>

@@ -432,7 +432,8 @@ class Dokan_Admin_Settings {
                     'name'    => 'reg_tc_page',
                     'label'   => __( 'Terms and Conditions Page', 'dokan-lite' ),
                     'type'    => 'select',
-                    'options' => $pages_array
+                    'options' => $pages_array,
+                    'desc'    => sprintf( __( 'Select where you want to add Dokan pages <a target="_blank" href="%s"> Learn More </a>', 'dokan-lite' ), 'https://wedevs.com/docs/dokan/settings/page-settings-2/' )
                 )
             ),
             'dokan_appearance' => array(
