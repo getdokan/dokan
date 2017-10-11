@@ -30,7 +30,7 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
         add_action( 'dokan_withdraw_content_area_header', array( $this, 'withdraw_header_render' ), 10 );
         add_action( 'dokan_withdraw_content', array( $this, 'render_withdraw_error' ), 10 );
         add_action( 'dokan_withdraw_content', array( $this, 'withdraw_status_filter' ), 15 );
-        add_action( 'dokan_withdraw_content', array( $this, 'show_seller_balance' ), 20 );
+        add_action( 'dokan_withdraw_content', array( $this, 'show_seller_balance' ), 5 );
         add_action( 'dokan_withdraw_content', array( $this, 'withdraw_form_and_listing' ), 20 );
 
     }
