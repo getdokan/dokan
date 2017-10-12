@@ -545,6 +545,7 @@ final class WeDevs_Dokan {
 
         if ( is_admin() ) {
             require_once $inc_dir . 'admin/admin.php';
+            require_once $inc_dir . 'admin/admin-pointers.php';
             require_once $inc_dir . 'admin/ajax.php';
             require_once $inc_dir . 'admin-functions.php';
             require_once $lib_dir . '/class-weforms-upsell.php';
