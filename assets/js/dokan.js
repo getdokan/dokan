@@ -1267,8 +1267,12 @@ jQuery(function($) {
             return false;
         });
 
-        $( "input.dokan-product-price" ).on( 'keyup', function () {
-            $( 'span.vendor-price' ).html( ( $( "input.dokan-product-price" ).val() * dokan.vendor_percentage ) / 100 );
+        $( "input.dokan-product-regular-price, input.dokan-product-sales-price" ).on( 'keyup', function () {
+            if ( $('input.dokan-product-sales-price' ).val() == '' ) {
+                $( 'span.vendor-price' ).html( ( $( 'input.dokan-product-regular-price' ).val() * dokan.vendor_percentage ) / 100 );
+            } else {
+                $( 'span.vendor-price' ).html( ( $( 'input.dokan-product-sales-price' ).val() * dokan.vendor_percentage ) / 100 );
+            }
         } ).trigger('keyup');
 
     });
