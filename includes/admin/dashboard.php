@@ -1,9 +1,9 @@
 <?php
 //wp_widget_rss_output
-function dokan_admin_dash_metabox( $title = '', $callback = null ) {
+function dokan_admin_dash_metabox( $title = '', $callback = null, $class = "" ) {
     ?>
     <div class="postbox">
-        <h3 class="hndle"><span><?php echo esc_html( $title ); ?></span></h3>
+        <h3 class="hndle <?php echo $class ?>"><span><?php echo esc_html( $title ); ?></span></h3>
         <div class="inside">
             <div class="main">
                 <?php if ( is_callable( $callback ) ) {
@@ -25,7 +25,7 @@ function dokan_admin_dash_metabox_report() {
 }
 
 function dokan_admin_dash_widget_news() {
-    wp_widget_rss_output( 'http://wedevs.com/tag/dokan/feed/', array( 'items' => 5, 'show_summary' => false, 'show_date' => true ) );
+    wp_widget_rss_output( 'http://wedevs.com/tag/dokan/feed/', array( 'items' => 5, 'show_summary' => true, 'show_date' => true ) );
 }
 
 function dokan_admin_dash_metabox_glance() {
@@ -98,8 +98,8 @@ function dokan_admin_dash_metabox_glance() {
     <div class="metabox-holder">
         <div class="post-box-container">
             <div class="meta-box-sortables">
-                <?php dokan_admin_dash_metabox( __( 'At a Glance', 'dokan-lite' ), 'dokan_admin_dash_metabox_glance' ); ?>
-                <?php dokan_admin_dash_metabox( __( 'Dokan News Updates', 'dokan-lite' ), 'dokan_admin_dash_widget_news'); ?>
+                <?php dokan_admin_dash_metabox( __( 'At a Glance', 'dokan-lite' ), 'dokan_admin_dash_metabox_glance', 'at-glance' ); ?>
+                <?php dokan_admin_dash_metabox( __( 'Dokan News Updates', 'dokan-lite' ), 'dokan_admin_dash_widget_news', 'news-updates'); ?>
 
                 <?php do_action( 'dokan_admin_dashboard_metabox_left' ); ?>
             </div>
@@ -107,7 +107,7 @@ function dokan_admin_dash_metabox_glance() {
 
         <div class="post-box-container">
             <div class="meta-box-sortables">
-                <?php dokan_admin_dash_metabox( __( 'Overview', 'dokan-lite' ), 'dokan_admin_dash_metabox_report' ); ?>
+                <?php dokan_admin_dash_metabox( __( 'Overview', 'dokan-lite' ), 'dokan_admin_dash_metabox_report', 'overview' ); ?>
 
                 <?php do_action( 'dokan_admin_dashboard_metabox_right' ); ?>
             </div>
