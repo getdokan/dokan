@@ -99,7 +99,7 @@ class Dokan_Admin_Pointers {
                                                 'align' => 'left',
                                         ),
                                 ),
-                                'next_button' => "<button class='next button button-primary right'>".__( 'Next', 'dokan' )."</button>"
+                                'next_button' => "<button class='next button button-primary right'>".__( 'Next', 'dokan-lite' )."</button>"
                         ),
                         'overview' => array(
                                     'target'       => ".overview",
@@ -116,7 +116,7 @@ class Dokan_Admin_Pointers {
                                                     'align' => 'left',
                                             ),
                                     ),
-                            'next_button' => "<button class='next button button-primary right'>".__( 'Next', 'dokan' )."</button>"
+                            'next_button' => "<button class='next button button-primary right'>".__( 'Next', 'dokan-lite' )."</button>"
                             ),
                         'updates' => array(
                                     'target'       => ".news-updates",
@@ -140,7 +140,83 @@ class Dokan_Admin_Pointers {
         }
         
         public function settings_tutorial() {
+             if ( $this->is_dismissed( $this->screen_id ) ) {
+                return;
+            }
             
+            $pointers = array(
+                    'pointers' => array(
+                        'general' => array(
+                                'target'       => "#dokan_general-tab",
+                                'next'         => 'selling',
+                                'next_trigger' => array(
+                                    'target' => '.next',
+                                    'event'  => 'click',
+                                ),
+                                'options'      => array(
+                                        'content'  => '<h3>' . esc_html__( 'General Settings', 'dokan-lite' ) . '</h3>' .
+                                                      '<p>' . esc_html__( 'Configure all general settings for your marketplace from this tab.', 'dokan-lite' ) . '</p>',
+                                        'position' => array(
+                                                'edge'  => 'top',
+                                                'align' => 'left',
+                                        ),
+                                ),
+                                'next_button' => "<button class='next button button-primary right'>".__( 'Next', 'dokan-lite' )."</button>"
+                        ),
+                        'selling' => array(
+                                'target'       => "#dokan_selling-tab",
+                                'next'         => 'withdraw',
+                                'next_trigger' => array(
+                                    'target' => '.next',
+                                    'event'  => 'click',
+                                ),
+                                'options'      => array(
+                                        'content'  => '<h3>' . esc_html__( 'Selling Options', 'dokan-lite' ) . '</h3>' .
+                                                      '<p>' . esc_html__( 'You can configure different selling options for your vendors', 'dokan-lite' ) . '</p>',
+                                        'position' => array(
+                                                'edge'  => 'top',
+                                                'align' => 'left',
+                                        ),
+                                ),
+                                'next_button' => "<button class='next button button-primary right'>".__( 'Next', 'dokan-lite' )."</button>"
+                        ),
+                        'withdraw' => array(
+                                'target'       => "#dokan_withdraw-tab",
+                                'next'         => 'pages',
+                                'next_trigger' => array(
+                                    'target' => '.next',
+                                    'event'  => 'click',
+                                ),
+                                'options'      => array(
+                                        'content'  => '<h3>' . esc_html__( 'Withdraw Options', 'dokan-lite' ) . '</h3>' .
+                                                      '<p>' . esc_html__( 'Configure your vendor\'s balance withdrawal options', 'dokan-lite' ) . '</p>',
+                                        'position' => array(
+                                                'edge'  => 'top',
+                                                'align' => 'left',
+                                        ),
+                                ),
+                                'next_button' => "<button class='next button button-primary right'>".__( 'Next', 'dokan-lite' )."</button>"
+                        ),
+                        'pages' => array(
+                                'target'       => "#dokan_pages-tab",
+                                'next'         => '',
+                                'options'      => array(
+                                        'content'  => '<h3>' . esc_html__( 'Dokan Pages', 'dokan-lite' ) . '</h3>' .
+                                                      '<p>' . esc_html__( 'Dokan requires some pages to be configured and you can set them up here', 'dokan-lite' ) . '</p>',
+                                        'position' => array(
+                                                'edge'  => 'top',
+                                                'align' => 'left',
+                                        ),
+                                ),
+                        ),
+                        
+                        
+                    ),
+            );
+            
+            $this->enqueue_pointers( apply_filters( 'dokan_pointer_'.$this->screen_id, $pointers ) );
+            
+            $this->dismiss_screen( $this->screen_id );
         }
 
         /**
