@@ -358,15 +358,8 @@ if ( !function_exists( 'dokan_get_seller_earnings_by_order' ) ) {
  * @return int $earned
  */
     function dokan_get_seller_earnings_by_order( $order, $seller_id ) {
-
-        $products = $order->get_items();
-        $earned   = 0;
-
-        foreach ( $products as $product ) {
-            $comission = dokan_get_seller_percentage( $seller_id, $product['product_id'] );
-            $earned    = $earned + ( ( $product['line_total'] * $comission ) / 100 );
-        }
-
+        
+        $earned = $order->get_total() - dokan_get_admin_commission_by( $order, $seller_id );
         return apply_filters( 'dokan_get_seller_earnings_by_order', $earned, $order, $seller_id );
     }
 }
