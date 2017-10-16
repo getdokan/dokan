@@ -1928,8 +1928,12 @@ function dokan_get_category_wise_seller_commission( $product_id ){
             $category_commision = get_woocommerce_term_meta( $terms[0]->term_id, 'per_category_admin_commission', true );
         }
     }
-
-    return 100 - (float)$category_commision;
+    
+    if ( !empty( $category_commision ) ) {
+        return 100 - (float) $category_commision;
+    }
+    
+    return 0;
 }
 
 /**
