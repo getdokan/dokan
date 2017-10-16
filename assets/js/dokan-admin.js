@@ -44,6 +44,8 @@ jQuery(function($) {
         }
     }
 
+    $('.tips').tooltip();
+
     // settings api - radio_image
     $('.dokan-settings-radio-image button').on('click', function (e) {
         e.preventDefault();

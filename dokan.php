@@ -702,6 +702,9 @@ final class WeDevs_Dokan {
      * Scripts and styles for admin panel
      */
     function admin_enqueue_scripts( $hook ) {
+        wp_enqueue_style( 'dokan-admin-css', DOKAN_PLUGIN_ASSEST.'/css/admin.css', false, time() );
+
+        wp_enqueue_script( 'dokan-tooltip' );
         wp_enqueue_script( 'dokan_slider_admin', DOKAN_PLUGIN_ASSEST.'/js/dokan-admin.js', array( 'jquery' ) );
 
         if ( 'plugins.php' == $hook ) {
