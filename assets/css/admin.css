@@ -208,3 +208,12 @@
 .dokan-settings-radio-image.not-active .current-option-indicator {
   display: none;
 }
+.wp-pointer-buttons button.next {
+  margin-right: 5px;
+}
+.wp-pointer-buttons a.dokan {
+  padding-left: 10px;
+}
+.wp-pointer-buttons a.dokan:before {
+  content: unset;
+}
