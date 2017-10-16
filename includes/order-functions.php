@@ -51,11 +51,11 @@ function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
  */
 function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = NULL, $limit = 10, $offset = 0 ) {
     global $wpdb;
-    
+
     $cache_group = 'dokan_seller_data_'.$seller_id;
     $cache_key = 'dokan-seller-orders-' . $status . '-' . $seller_id;
     $orders = wp_cache_get( $cache_key, $cache_group );
-    
+
     if ( $orders === false ) {
         $status_where = ( $status == 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', $status );
         $date_query = ( $order_date ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $order_date ) : '';
@@ -95,7 +95,7 @@ function dokan_get_seller_orders_by_date( $start_date, $end_date, $seller_id = f
     $end_date   = date( 'Y-m-d 00:00:00', strtotime( $end_date ) );
     $end_date   = date( 'Y-m-d h:i:s', strtotime( $end_date . '-1 minute' ) );
     $start_date = date( 'Y-m-d', strtotime( $start_date ) );
-    
+
     $cache_group = 'dokan_seller_data_'.$seller_id;
     $cache_key = md5( 'dokan-seller-orders-' . $end_date . '-' . $end_date. '-' . $seller_id );
     $orders = wp_cache_get( $cache_key, $cache_group );
@@ -157,7 +157,7 @@ function dokan_get_seller_withdraw_by_date( $start_date, $end_date, $seller_id =
  */
 function dokan_get_seller_orders_number( $seller_id, $status = 'all' ) {
     global $wpdb;
-    
+
     $cache_group = 'dokan_seller_data_'.$seller_id;
     $cache_key = 'dokan-seller-orders-count-' . $status . '-' . $seller_id;
     $count = wp_cache_get( $cache_key, $cache_group );
@@ -214,7 +214,7 @@ function dokan_is_seller_has_order( $seller_id, $order_id ) {
  */
 function dokan_count_orders( $user_id ) {
     global $wpdb;
-    
+
     $cache_group = 'dokan_seller_data_'.$user_id;
     $cache_key = 'dokan-count-orders-' . $user_id;
     $counts = wp_cache_get( $cache_key, $cache_group );
@@ -386,6 +386,8 @@ function dokan_sync_insert_order( $order_id ) {
     if ( stripos( $order_status, 'wc-' ) === false ) {
         $order_status = 'wc-' . $order_status;
     }
+
+    $seller_id = ! is_array( $seller_id ) ? $seller_id : 0;
 
     $wpdb->insert( $wpdb->prefix . 'dokan_orders',
         array(
@@ -597,6 +599,8 @@ function dokan_sync_order_table( $order_id ) {
     if ( stripos( $order_status, 'wc-' ) === false ) {
         $order_status = 'wc-' . $order_status;
     }
+
+    $seller_id = ! is_array( $seller_id ) ? $seller_id : 0;
 
     $wpdb->insert( $wpdb->prefix . 'dokan_orders',
         array(
