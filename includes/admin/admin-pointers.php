@@ -15,13 +15,41 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Dokan_Admin_Pointers Class.
  */
 class Dokan_Admin_Pointers {
-
+        
+        private $screen_id;
 	/**
 	 * Constructor.
 	 */
 	public function __construct() {
             add_action( 'admin_enqueue_scripts', array( $this, 'setup_pointers_for_screen' ), 20 );
+            add_action( 'wp_ajax_dokan-dismiss-wp-pointer', array( $this, 'dismiss_screen' ) );
 	}
+        
+        /**
+         * Dismiss a screen pointers after clicking dismiss 
+         * 
+         * @param String $screen
+         * 
+         * @return void
+         */
+        public function dismiss_screen( $screen = false ) { 
+            $screen = isset( $_POST['screen'] ) ? wc_clean( $_POST['screen'] ) : $screen;
+            if ( !$screen ) {
+                return;
+            }
+            update_option( 'dokan_pointer_'.$screen , true );
+        }
+        
+        /**
+         * Check if pointers for screen is dismissed
+         * 
+         * @param String $screen
+         * 
+         * @return void
+         */
+        public function is_dismissed( $screen ) {
+            return get_option( 'dokan_pointer_'.$screen, false );
+        }
 
 	/**
 	 * Setup pointers for screen.
@@ -32,13 +60,14 @@ class Dokan_Admin_Pointers {
                 return;
             }
             
+            $this->screen_id = $screen->id;
             switch ( $screen->id ) {
                 case 'toplevel_page_dokan' :
                         $this->dashboard_tutorial();
-                        break;
+                    break;
                 case 'dokan_page_dokan-settings' :
                         $this->settings_tutorial();
-                        break;
+                    break;
             }
             
             do_action( 'dokan_after_pointer_setup', $screen, $this );
@@ -48,6 +77,11 @@ class Dokan_Admin_Pointers {
          *  Render pointers on Dashboard Page
          */
         public function dashboard_tutorial() {
+            
+            if ( $this->is_dismissed( $this->screen_id ) ) {
+                return;
+            }
+            
             $pointers = array(
                     'pointers' => array(
                         'title' => array(
@@ -100,7 +134,9 @@ class Dokan_Admin_Pointers {
                     ),
             );
             
-            $this->enqueue_pointers( $pointers );
+            $this->enqueue_pointers( apply_filters( 'dokan_pointer_'.$this->screen_id, $pointers ) );
+            
+            $this->dismiss_screen( $this->screen_id );
         }
         
         public function settings_tutorial() {
@@ -112,50 +148,19 @@ class Dokan_Admin_Pointers {
 	 * @param array $pointers
 	 */
 	public function enqueue_pointers( $pointers ) {
-//		$pointers = wp_json_encode( $pointers );
-		wp_enqueue_style( 'wp-pointer' );
-		wp_enqueue_script( 'wp-pointer' );
-                
-                wp_register_script( 'dokan-pointers', DOKAN_PLUGIN_ASSEST.'/js/pointers.js', array( 'wp-pointer' ) );
-                wp_enqueue_script( 'dokan-pointers' );
+            wp_enqueue_style( 'wp-pointer' );
+            wp_enqueue_script( 'wp-pointer' );
 
-                wp_localize_script( 'dokan-pointers' , 'Dokan_Pointers', $pointers );
-                
-//		wc_enqueue_js( "
-//			jQuery( function( $ ) {
-//				var wc_pointers = {$pointers};
-//
-//				setTimeout( init_wc_pointers, 800 );
-//
-//				function init_wc_pointers() {
-//					$.each( wc_pointers.pointers, function( i ) {
-//						show_wc_pointer( i );
-//						return false;
-//					});
-//				}
-//
-//				function show_wc_pointer( id ) {
-//					var pointer = wc_pointers.pointers[ id ];
-//					var options = $.extend( pointer.options, {
-//						close: function() {
-//							if ( pointer.next ) {
-//								show_wc_pointer( pointer.next );
-//							}
-//						}
-//					} );
-//					var this_pointer = $( pointer.target ).pointer( options );
-//                                        var _buttons = this_pointer.find('.wp-pointer-buttons');
-//                                        console.log(_buttons);
-//					this_pointer.pointer( 'open' );
-//
-//					if ( pointer.next_trigger ) {
-//						$( pointer.next_trigger.target ).on( pointer.next_trigger.event, function() {
-//							setTimeout( function() { this_pointer.pointer( 'close' ); }, 400 );
-//						});
-//					}
-//				}
-//			});
-//		" );
+            wp_register_script( 'dokan-pointers', DOKAN_PLUGIN_ASSEST.'/js/pointers.js', array( 'wp-pointer' ) );
+            wp_enqueue_script( 'dokan-pointers' );
+            
+            $data = array(
+                    'ajaxurl' => admin_url( 'admin-ajax.php' ) ,
+                    'screen' => $this->screen_id,
+                );
+            
+            wp_localize_script( 'dokan-pointers' , 'Dokan_Pointers', $pointers );
+            wp_localize_script( 'dokan-pointers' , 'dokan_pointer_data', $data );
 	}
 }
 

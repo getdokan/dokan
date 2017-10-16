@@ -1,9 +1,8 @@
 jQuery( function( $ ) {
    
     setTimeout( init_wc_pointers, 800 );
-
+    
     function init_wc_pointers() {
-            console.log('loaded');
             $.each( Dokan_Pointers.pointers, function( i ) {
                     show_wc_pointer( i );
                     return false;
@@ -14,9 +13,10 @@ jQuery( function( $ ) {
             var pointer = Dokan_Pointers.pointers[ id ];
             var options = $.extend( pointer.options, {
                     close: function() {
-                            if ( pointer.next ) {
-                                    show_wc_pointer( pointer.next );
-                            }
+                            $.post( dokan_pointer_data.ajaxurl, {
+                                screen : dokan_pointer_data.screen,
+                                action: 'dokan-dismiss-wp-pointer'
+                            } );
                     }
             } );
             var this_pointer = $( pointer.target ).pointer( options );
@@ -29,7 +29,10 @@ jQuery( function( $ ) {
 
             if ( pointer.next_trigger ) {
                     $( pointer.next_trigger.target ).on( pointer.next_trigger.event, function() {
-                            setTimeout( function() { this_pointer.pointer( 'close' ); }, 200 );
+                            setTimeout( function() { 
+                                this_pointer.pointer( 'close' );
+                                show_wc_pointer( pointer.next );
+                            }, 200 );
                     });
             }
     }
