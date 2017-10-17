@@ -144,11 +144,11 @@
                                 <div class="dokan-form-group">
                                     <div class="dokan-form-group dokan-clearfix dokan-price-container">
                                         <div class="content-half-part">
-                                            <label for="_regular_price" class="form-label"><?php _e( 'Price', 'dokan-lite' ); ?></label>
-
+                                            <label for="_regular_price" class="dokan-form-label"><?php _e( 'Price', 'dokan-lite' ); ?></label>
+                                            <span class="vendor-earning">( <?php _e( ' You Earn : ', 'dokan-lite' ) ?><?php echo get_woocommerce_currency_symbol() ?><span class="vendor-price">0.00</span> )</span>
                                             <div class="dokan-input-group">
                                                 <span class="dokan-input-group-addon"><?php echo get_woocommerce_currency_symbol(); ?></span>
-                                                <input type="number" class="dokan-form-control" name="_regular_price" placeholder="0.00" value="<?php echo dokan_posted_input('_regular_price') ?>" min="0" step="any">
+                                                <input type="number" class="dokan-form-control dokan-product-regular-price" name="_regular_price" placeholder="0.00" value="<?php echo dokan_posted_input('_regular_price') ?>" min="0" step="any">
                                             </div>
                                         </div>
 
@@ -161,7 +161,7 @@
 
                                             <div class="dokan-input-group">
                                                 <span class="dokan-input-group-addon"><?php echo get_woocommerce_currency_symbol(); ?></span>
-                                                <input type="number" class="dokan-form-control" name="_sale_price" placeholder="0.00" value="<?php echo dokan_posted_input('_sale_price') ?>" min="0" step="any">
+                                                <input type="number" class="dokan-form-control dokan-product-sales-price" name="_sale_price" placeholder="0.00" value="<?php echo dokan_posted_input('_sale_price') ?>" min="0" step="any">
                                             </div>
                                         </div>
                                     </div>

@@ -210,11 +210,12 @@ if ( ! $from_shortcode ) {
                                     <div class="dokan-form-group dokan-clearfix dokan-price-container">
 
                                         <div class="content-half-part regular-price">
-                                            <label for="_regular_price" class="form-label"><?php _e( 'Price', 'dokan-lite' ); ?></label>
-
+                                            <label for="_regular_price" class="form-label"><?php _e( 'Price', 'dokan-lite' ); ?>
+                                                <span class="vendor-earning">( <?php _e( ' You Earn : ', 'dokan-lite' ) ?><?php echo get_woocommerce_currency_symbol() ?><span class="vendor-price">0.00</span> )</span>
+                                            </label>
                                             <div class="dokan-input-group">
                                                 <span class="dokan-input-group-addon"><?php echo get_woocommerce_currency_symbol(); ?></span>
-                                                <?php dokan_post_input_box( $post_id, '_regular_price', array( 'placeholder' => __( '0.00', 'dokan-lite' ) ), 'number' ); ?>
+                                                <?php dokan_post_input_box( $post_id, '_regular_price', array( 'class' => 'dokan-product-regular-price', 'placeholder' => __( '0.00', 'dokan-lite' ) ), 'number' ); ?>
                                             </div>
                                         </div>
 
@@ -227,7 +228,7 @@ if ( ! $from_shortcode ) {
 
                                             <div class="dokan-input-group">
                                                 <span class="dokan-input-group-addon"><?php echo get_woocommerce_currency_symbol(); ?></span>
-                                                <?php dokan_post_input_box( $post_id, '_sale_price', array( 'placeholder' => __( '0.00', 'dokan-lite' ) ), 'number' ); ?>
+                                                <?php dokan_post_input_box( $post_id, '_sale_price', array( 'class' => 'dokan-product-sales-price','placeholder' => __( '0.00', 'dokan-lite' ) ), 'number' ); ?>
                                             </div>
                                         </div>
                                     </div>
@@ -443,7 +444,7 @@ if ( ! $from_shortcode ) {
 
                                 <div class="dokan-clearfix"></div>
 
-                                <div class="dokan-form-group hide_if_variation">
+                                <div class="dokan-form-group hide_if_variation hide_if_grouped">
                                     <?php dokan_post_input_box( $post_id, '_manage_stock', array( 'label' => __( 'Enable product stock management', 'dokan-lite' ) ), 'checkbox' ); ?>
                                 </div>
 
@@ -466,7 +467,7 @@ if ( ! $from_shortcode ) {
                                     <div class="dokan-clearfix"></div>
                                 </div><!-- .show_if_stock -->
 
-                                <div class="dokan-form-group">
+                                <div class="dokan-form-group hide_if_grouped">
                                     <label class="" for="_sold_individually">
                                         <input name="_sold_individually" id="_sold_individually" value="yes" type="checkbox" <?php checked( $_sold_individually, 'yes' ); ?>>
                                         <?php _e( 'Allow only one quantity of this product to be bought in a single order', 'dokan-lite' ) ?>

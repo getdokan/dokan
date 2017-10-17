@@ -165,8 +165,9 @@ function dokan_delete_product_handler() {
 function dokan_count_posts( $post_type, $user_id ) {
     global $wpdb;
 
+    $cache_group = 'dokan_seller_product_data_'.$user_id;
     $cache_key = 'dokan-count-' . $post_type . '-' . $user_id;
-    $counts = wp_cache_get( $cache_key, 'dokan-lite' );
+    $counts = wp_cache_get( $cache_key, $cache_group );
 
     if ( false === $counts ) {
         $query = "SELECT post_status, COUNT( * ) AS num_posts FROM {$wpdb->posts} WHERE post_type = %s AND post_author = %d GROUP BY post_status";
@@ -186,7 +187,7 @@ function dokan_count_posts( $post_type, $user_id ) {
 
         $counts['total'] = $total;
         $counts = (object) $counts;
-        wp_cache_set( $cache_key, $counts, 'dokan-lite' );
+        wp_cache_set( $cache_key, $counts, $cache_group, 3600*6 );
     }
 
     return $counts;
@@ -230,7 +231,7 @@ function dokan_count_comments( $post_type, $user_id ) {
         $counts['total'] = $total;
 
         $counts = (object) $counts;
-        wp_cache_set( $cache_key, $counts, 'dokan-lite' );
+        wp_cache_set( $cache_key, $counts, 'dokan-lite', 3600*2 );
     }
 
     return $counts;
@@ -247,7 +248,7 @@ function dokan_author_pageviews( $seller_id ) {
     global $wpdb;
 
     $cache_key = 'dokan-pageview-' . $seller_id;
-    $pageview = wp_cache_get( $cache_key, 'dokan-lite' );
+    $pageview = wp_cache_get( $cache_key, 'dokan_page_view' );
 
     if ( $pageview === false ) {
         $sql = "SELECT SUM(meta_value) as pageview
@@ -258,7 +259,7 @@ function dokan_author_pageviews( $seller_id ) {
         $count = $wpdb->get_row( $wpdb->prepare( $sql, $seller_id ) );
         $pageview = $count->pageview;
 
-        wp_cache_set( $cache_key, $pageview, 'dokan-lite' );
+        wp_cache_set( $cache_key, $pageview, 'dokan_page_view', 3600*4 );
     }
 
     return $pageview;
@@ -274,8 +275,9 @@ function dokan_author_pageviews( $seller_id ) {
 function dokan_author_total_sales( $seller_id ) {
     global $wpdb;
 
+    $cache_group = 'dokan_seller_data_'.$seller_id;
     $cache_key = 'dokan-earning-' . $seller_id;
-    $earnings = wp_cache_get( $cache_key, 'dokan-lite' );
+    $earnings = wp_cache_get( $cache_key, $cache_group );
 
     if ( $earnings === false ) {
 
@@ -286,7 +288,8 @@ function dokan_author_total_sales( $seller_id ) {
         $count = $wpdb->get_row( $wpdb->prepare( $sql, $seller_id ) );
         $earnings = $count->earnings;
 
-        wp_cache_set( $cache_key, $earnings, 'dokan-lite' );
+        wp_cache_set( $cache_key, $earnings, $cache_group );
+        dokan_cache_update_group( $cache_key , $cache_group );
     }
 
     return apply_filters( 'dokan_seller_total_sales', $earnings );
@@ -355,16 +358,9 @@ if ( !function_exists( 'dokan_get_seller_earnings_by_order' ) ) {
  * @return int $earned
  */
     function dokan_get_seller_earnings_by_order( $order, $seller_id ) {
-
-        $products = $order->get_items();
-        $earned   = 0;
-
-        foreach ( $products as $product ) {
-            $comission = dokan_get_seller_percentage( $seller_id, $product['product_id'] );
-            $earned    = $earned + ( ( $product['line_total'] * $comission ) / 100 );
-        }
-
-        return $earned;
+        
+        $earned = $order->get_total() - dokan_get_admin_commission_by( $order, $seller_id );
+        return apply_filters( 'dokan_get_seller_earnings_by_order', $earned, $order, $seller_id );
     }
 }
 if ( !function_exists( 'dokan_get_seller_percentage' ) ) :
@@ -373,35 +369,83 @@ if ( !function_exists( 'dokan_get_seller_percentage' ) ) :
  * Get store seller percentage settings
  *
  * @param int $seller_id
+ *
+ * @param int $product_id
+ *
  * @return int
  */
 function dokan_get_seller_percentage( $seller_id = 0, $product_id = 0 ) {
 
     //return product wise percentage
     if ( $product_id ) {
-        $_per_product_commission = get_post_meta( $product_id, '_per_product_commission', true );
+        $_per_product_commission = get_post_meta( $product_id, '_per_product_admin_commission', true );
         if ( $_per_product_commission != '' ) {
-            return (float) $_per_product_commission;
+            return (float) 100 - $_per_product_commission;
         }
         $category_commission = dokan_get_category_wise_seller_commission( $product_id );
         if ( !empty( $category_commission ) ) {
             return (float) $category_commission;
         }
     }
-    
+
     //return seller wise percentage
     if ( $seller_id ) {
-        $seller_percentage = get_user_meta( $seller_id, 'dokan_seller_percentage', true );
-        if ( $seller_percentage != '' ) {
-            return (float) $seller_percentage;
+        $admin_commission = get_user_meta( $seller_id, 'dokan_admin_percentage', true );
+        if ( $admin_commission != '' ) {
+            return (float) ( 100 - $admin_commission );
         }
     }
 
-    $global_percentage = dokan_get_option( 'seller_percentage', 'dokan_selling' , 10 );
-    return $global_percentage;
+    $global_percentage = dokan_get_option( 'admin_percentage', 'dokan_selling' , 10 );
+    return 100 - $global_percentage;
 }
 
 endif;
+
+/**
+ * Get Dokan commission type by seller or product or both
+ *
+ * @since 2.6.9
+ *
+ * @param int $seller_id
+ *
+ * @param int $product_id
+ *
+ * @return String $type
+ */
+function dokan_get_commission_type( $seller_id = 0, $product_id = 0 ) {
+    //return product wise percentage
+    if ( $product_id ) {
+
+        $_per_product_commission = get_post_meta( $product_id, '_per_product_admin_commission', true );
+        if ( $_per_product_commission != '' ) {
+            $type = get_post_meta( $product_id, '_per_product_admin_commission_type', true );
+            $type = empty( $type ) ? 'percentage' : $type;
+            return $type;
+        }
+
+        $category_commission = dokan_get_category_wise_seller_commission( $product_id );
+        if ( !empty( $category_commission ) ) {
+            $type = dokan_get_category_wise_seller_commission_type( $product_id );
+            $type = empty( $type ) ? 'percentage' : $type;
+            return $type;
+        }
+    }
+
+    //return seller wise percentage
+    if ( $seller_id ) {
+        $admin_commission = get_user_meta( $seller_id, 'dokan_admin_percentage', true );
+        if ( $admin_commission != '' ) {
+            $type = get_user_meta( $seller_id, 'dokan_admin_percentage_type', true );
+            $type = empty( $type ) ? 'percentage' : $type;
+            return $type;
+        }
+    }
+
+    $global_type = dokan_get_option( 'commission_type', 'dokan_selling' , 10 );
+    return $global_type;
+}
+
 
 /**
  * Get product status based on user id and settings
@@ -1859,24 +1903,188 @@ register_sidebar( array( 'name' => __( 'Dokan Store Sidebar', 'dokan-lite' ), 'i
 
 /**
  * Calculate category wise commission for given product
- * 
+ *
  * @since 2.6.8
- * 
+ *
  * @param int $product_id
- * 
+ *
  * @return int $commission_rate
- * 
+ *
  */
 function dokan_get_category_wise_seller_commission( $product_id ){
-    
+
     $terms   = get_the_terms( $product_id, 'product_cat' );
     $category_commision = null;
-    
+
     if ( $terms ) {
         if ( 1 == count( $terms ) ) {
-            $category_commision = get_woocommerce_term_meta( $terms[0]->term_id, 'per_category_commission', true );
+            $category_commision = get_woocommerce_term_meta( $terms[0]->term_id, 'per_category_admin_commission', true );
+        }
+    }
+    
+    if ( !empty( $category_commision ) ) {
+        return 100 - (float) $category_commision;
+    }
+    
+    return 0;
+}
+
+/**
+ * Calculate category wise commission type for given product
+ *
+ * @since 2.6.9
+ *
+ * @param int $product_id
+ *
+ * @return int $commission_rate
+ *
+ */
+function dokan_get_category_wise_seller_commission_type( $product_id ){
+
+    $terms   = get_the_terms( $product_id, 'product_cat' );
+    $category_commision = '';
+
+    if ( $terms ) {
+        if ( 1 == count( $terms ) ) {
+            $category_commision = get_woocommerce_term_meta( $terms[0]->term_id, 'per_category_admin_commission_type', true );
         }
     }
 
     return $category_commision;
 }
+
+//Dokan Cache helper functions
+
+/**
+ * Keep record of keys by group name
+ *
+ * @since 2.6.9
+ *
+ * @param string $key
+ *
+ * @param string $group
+ *
+ * @return void
+ */
+function dokan_cache_update_group( $key, $group ) {
+    $keys = get_option( $group, array() );
+    if ( in_array( $key, $keys ) ) {
+        return;
+    }
+    $keys[] = $key;
+    update_option( $group , $keys );
+}
+
+/**
+ * Bulk clear cache values by group name
+ *
+ * @since 2.6.9
+ *
+ * @param string $group
+ *
+ * @return void
+ */
+function dokan_cache_clear_group( $group ) {
+    $keys = get_option( $group, array() );
+
+    if ( !empty( $keys ) ) {
+        foreach ( $keys as $key ) {
+            wp_cache_delete( $key, $group );
+            unset($keys[$key]);
+        }
+    }
+    update_option( $group, $keys );
+}
+
+//cache reset actions
+add_action( 'dokan_checkout_update_order_meta', 'dokan_cache_reset_seller_order_data', 10, 2 );
+add_action( 'woocommerce_order_status_changed', 'dokan_cache_reset_order_data_on_status', 10, 4 );
+add_action( 'dokan_new_product_added', 'dokan_cache_clear_seller_product_data', 20, 2 );
+add_action( 'dokan_product_updated', 'dokan_cache_clear_seller_product_data', 20 );
+add_action( 'delete_post', 'dokan_cache_clear_deleted_product', 20 );
+
+/**
+ * Reset cache group related to seller orders
+ */
+function dokan_cache_reset_seller_order_data( $order_id, $seller_id ) {
+    dokan_cache_clear_group( 'dokan_seller_data_'.$seller_id );
+}
+
+function dokan_cache_reset_order_data_on_status( $order_id, $from_status, $to_status, $order ) {
+    $seller_id = get_post_field( 'post_author', $order_id );
+    dokan_cache_clear_group( 'dokan_seller_data_'.$seller_id );
+}
+
+/**
+ * Reset cache group related to seller products
+ */
+function dokan_cache_clear_seller_product_data( $product_id, $post_data = array() ) {
+    $seller_id = get_current_user_id();
+    dokan_cache_clear_group( 'dokan_seller_product_data_' . $seller_id );
+    delete_transient( 'dokan-store-category-' . $seller_id );
+}
+
+function dokan_cache_clear_deleted_product( $post_id ) {
+    $seller_id = get_post_field( 'post_author', $post_id );
+    delete_transient( 'dokan-store-category-' . $seller_id );
+}
+
+/**
+ * Get seller earning for a given product
+ *
+ * @since 2.6.9
+ *
+ * @param int $product_id
+ *
+ * @param int $seller_id
+ *
+ * @return int $earning;
+ */
+function dokan_get_earning_by_product( $product_id, $seller_id ) {
+    $product    = wc_get_product( $product_id );
+    $percentage = dokan_get_seller_percentage( $seller_id, $product_id );
+    $price      = $product->get_price();
+    $earning    = ( $price * $percentage ) / 100;
+
+    return wc_format_decimal( $earning );
+}
+
+add_action( 'delete_user', 'dokan_delete_user_details', 10, 2 );
+
+/**
+ * Delete user's details when the user is deleted
+ *
+ * @since 2.6.9
+ *
+ * @param int $user_id, int $reassign
+ *
+ * @return void
+ */
+function dokan_delete_user_details( $user_id, $reassign ) {
+
+    if ( ! dokan_is_user_seller( $user_id ) ) {
+        return;
+    }
+
+    if ( is_null( $reassign ) ) {
+
+        $args = array (
+            'numberposts'   => -1,
+            'post_type'     => 'any',
+            'author'        => $user_id
+        );
+
+        // get all posts by this user
+        $user_posts = get_posts( $args );
+
+        if ( empty( $user_posts ) ) return;
+
+        // delete all the posts
+        foreach ( $user_posts as $user_post ) {
+            wp_delete_post( $user_post->ID, true );
+        }
+
+    }
+
+}
+

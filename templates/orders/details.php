@@ -10,6 +10,7 @@ if ( !dokan_is_seller_has_order( $current_user->ID, $order_id ) ) {
 
 $statuses = wc_get_order_statuses();
 $order    = new WC_Order( $order_id );
+$hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', 'off' );
 ?>
 <div class="dokan-clearfix">
     <div class="dokan-w8 dokan-order-left-content">
@@ -163,7 +164,7 @@ $order    = new WC_Order( $order_id );
                                 <span><?php _e( 'Order Status:', 'dokan-lite' ); ?></span>
                                 <label class="dokan-label dokan-label-<?php echo dokan_get_order_status_class( dokan_get_prop( $order, 'status' ) ); ?>"><?php echo isset( $statuses[dokan_get_prop( $order, 'status' )] ) ? $statuses[dokan_get_prop( $order, 'status' )] : dokan_get_prop( $order, 'status' ); ?></label>
 
-                                <?php if ( dokan_get_option( 'order_status_change', 'dokan_selling', 'on' ) == 'on' ) {?>
+                                <?php if ( dokan_get_option( 'order_status_change', 'dokan_selling', 'on' ) == 'on' && $order->get_status() !== 'cancelled' && $order->get_status() !== 'refunded' ) {?>
                                     <a href="#" class="dokan-edit-status"><small><?php _e( '&nbsp; Edit', 'dokan-lite' ); ?></small></a>
                                 <?php } ?>
                             </li>
@@ -191,7 +192,7 @@ $order    = new WC_Order( $order_id );
                                 <?php echo dokan_get_date_created( $order ); ?>
                             </li>
                         </ul>
-
+                        <?php if ( $hide_customer_info == 'off' ) : ?>
                         <ul class="list-unstyled customer-details">
                             <li>
                                 <span><?php _e( 'Customer:', 'dokan-lite' ); ?></span>
@@ -219,7 +220,7 @@ $order    = new WC_Order( $order_id );
                                 <?php echo esc_html( get_post_meta( dokan_get_prop( $order, 'id' ), '_customer_ip_address', true ) ); ?>
                             </li>
                         </ul>
-
+                        <?php endif; ?>
                         <?php
                         if ( get_option( 'woocommerce_enable_order_comments' ) != 'no' ) {
                             $customer_note = get_post_field( 'post_excerpt', dokan_get_prop( $order, 'id' ) );

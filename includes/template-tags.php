@@ -413,11 +413,13 @@ function dokan_dashboard_nav( $active_menu = '' ) {
         $menu .= sprintf( '<li class="%s"><a href="%s">%s %s</a></li>', $class, $item['url'], $item['icon'], $item['title'] );
     }
 
-    $menu .= '<li class="dokan-common-links dokan-clearfix">
+    $common_links = '<li class="dokan-common-links dokan-clearfix">
             <a title="' . __( 'Visit Store', 'dokan-lite' ) . '" class="tips" data-placement="top" href="' . dokan_get_store_url( get_current_user_id()) .'" target="_blank"><i class="fa fa-external-link"></i></a>
             <a title="' . __( 'Edit Account', 'dokan-lite' ) . '" class="tips" data-placement="top" href="' . dokan_get_navigation_url( 'edit-account' ) . '"><i class="fa fa-user"></i></a>
             <a title="' . __( 'Log out', 'dokan-lite' ) . '" class="tips" data-placement="top" href="' . wp_logout_url( home_url() ) . '"><i class="fa fa-power-off"></i></a>
         </li>';
+
+    $menu .= apply_filters( 'dokan_dashboard_nav_common_link', $common_links );
 
     $menu .= '</ul>';
 

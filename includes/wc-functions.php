@@ -844,8 +844,9 @@ function dokan_get_seller_balance( $seller_id, $formatted = true ) {
     global $wpdb;
 
     $status        = dokan_withdraw_get_active_order_status_in_comma();
+    $cache_group = 'dokan_seller_data_'.$seller_id;
     $cache_key     = 'dokan_seller_balance_' . $seller_id;
-    $earning       = wp_cache_get( $cache_key, 'dokan-lite' );
+    $earning       = wp_cache_get( $cache_key, $cache_group );
     $threshold_day = dokan_get_option( 'withdraw_date_limit', 'dokan_withdraw', 0 );
     $date          = date( 'Y-m-d', strtotime( date('Y-m-d') . ' -'.$threshold_day.' days' ) );
 
@@ -858,7 +859,8 @@ function dokan_get_seller_balance( $seller_id, $formatted = true ) {
         $result = $wpdb->get_row( $wpdb->prepare( $sql, $seller_id, $seller_id, $date ) );
         $earning = $result->earnings - $result->withdraw;
 
-        wp_cache_set( $cache_key, $earning, 'dokan-lite' );
+        wp_cache_set( $cache_key, $earning, $cache_group );
+        dokan_cache_update_group( $cache_key , $cache_group );
     }
 
     if ( $formatted ) {

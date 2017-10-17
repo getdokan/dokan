@@ -1195,7 +1195,7 @@ jQuery(function($) {
             var hide_classes = '.hide_if_downloadable, .hide_if_virtual';
             var show_classes = '.show_if_downloadable, .show_if_virtual';
 
-            $.each( [ 'simple', 'variable' ], function( index, value ) {
+            $.each( [ 'simple', 'variable', 'grouped' ], function( index, value ) {
                 hide_classes = hide_classes + ', .hide_if_' + value;
                 show_classes = show_classes + ', .show_if_' + value;
             });
@@ -1266,6 +1266,15 @@ jQuery(function($) {
 
             return false;
         });
+
+        $( "input.dokan-product-regular-price, input.dokan-product-sales-price" ).on( 'keyup', function () {
+            if ( $('input.dokan-product-sales-price' ).val() == '' ) {
+                $( 'span.vendor-price' ).html( ( $( 'input.dokan-product-regular-price' ).val() * dokan.vendor_percentage ) / 100 );
+            } else {
+                $( 'span.vendor-price' ).html( ( $( 'input.dokan-product-sales-price' ).val() * dokan.vendor_percentage ) / 100 );
+            }
+        } ).trigger('keyup');
+
     });
 
 })(jQuery);
@@ -1968,7 +1977,6 @@ jQuery(function($) {
                 dataType:    'json',
                 delay:       250,
                 data:        function( params ) {
-                    console.log( params );
                     return {
                         term:     params.term,
                         action:   $( this ).data( 'action' ) || 'dokan_json_search_products_and_variations',
@@ -1981,8 +1989,6 @@ jQuery(function($) {
                 },
                 processResults: function( data ) {
                     var terms = [];
-
-                    console.log( data );
 
                     if ( data ) {
                         $.each( data, function( id, text ) {

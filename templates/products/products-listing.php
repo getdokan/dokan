@@ -60,6 +60,7 @@
                                 <th><?php _e( 'SKU', 'dokan-lite' ); ?></th>
                                 <th><?php _e( 'Stock', 'dokan-lite' ); ?></th>
                                 <th><?php _e( 'Price', 'dokan-lite' ); ?></th>
+                                <th><?php _e( 'Earning', 'dokan-lite' ); ?></th>
                                 <th><?php _e( 'Type', 'dokan-lite' ); ?></th>
                                 <th><?php _e( 'Views', 'dokan-lite' ); ?></th>
                                 <th><?php _e( 'Date', 'dokan-lite' ); ?></th>
@@ -166,6 +167,15 @@
                                             echo $product->get_price_html();
                                         } else {
                                             echo '<span class="na">&ndash;</span>';
+                                        }
+                                        ?>
+                                    </td>
+                                    <td data-title="<?php _e( 'Earning', 'dokan-lite' ); ?>">
+                                        <?php
+                                        if ( $product->get_type() == 'simple' ) {
+                                            echo wc_price( dokan_get_earning_by_product( $product->get_id(), get_current_user_id() ) );
+                                        } else {
+                                            echo "-";
                                         }
                                         ?>
                                     </td>

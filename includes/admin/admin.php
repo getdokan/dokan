@@ -290,7 +290,10 @@ class Dokan_Admin_Settings {
     function get_settings_fields() {
         $pages_array = self::get_post_type( 'page' );
         $slider_array = self::get_post_type( 'dokan_slider' );
-
+        $commission_types = array(
+            'flat' => 'Flat',
+            'percentage' => 'Percentage',
+        );
         $settings_fields = array(
             'dokan_general' => array(
                 'admin_access' => array(
@@ -358,11 +361,19 @@ class Dokan_Admin_Settings {
                     'type'    => 'checkbox',
                     'default' => 'on'
                 ),
-                'seller_percentage' => array(
-                    'name'    => 'seller_percentage',
-                    'label'   => __( 'Vendor Commission %', 'dokan-lite' ),
-                    'desc'    => __( 'How much (%) a vendor will get from each order', 'dokan-lite' ),
-                    'default' => '90',
+                'commission_type' => array(
+                    'name'    => 'commission_type',
+                    'label'   => __( 'Commission Type ', 'dokan-lite' ),
+                    'desc'    => __( 'Select the commission type', 'dokan-lite' ),
+                    'type'    => 'select',
+                    'options' => $commission_types,
+                    'default' => 'percentage'
+                ),
+                'admin_percentage' => array(
+                    'name'    => 'admin_percentage',
+                    'label'   => __( 'Admin Commission', 'dokan-lite' ),
+                    'desc'    => __( 'Amount you get from sales', 'dokan-lite' ),
+                    'default' => '10',
                     'type'    => 'text',
                 ),
                 'order_status_change' => array(
@@ -421,7 +432,8 @@ class Dokan_Admin_Settings {
                     'name'    => 'reg_tc_page',
                     'label'   => __( 'Terms and Conditions Page', 'dokan-lite' ),
                     'type'    => 'select',
-                    'options' => $pages_array
+                    'options' => $pages_array,
+                    'desc'    => sprintf( __( 'Select where you want to add Dokan pages <a target="_blank" href="%s"> Learn More </a>', 'dokan-lite' ), 'https://wedevs.com/docs/dokan/settings/page-settings-2/' )
                 )
             ),
             'dokan_appearance' => array(

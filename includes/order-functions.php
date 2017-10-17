@@ -52,8 +52,9 @@ function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
 function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = NULL, $limit = 10, $offset = 0 ) {
     global $wpdb;
 
+    $cache_group = 'dokan_seller_data_'.$seller_id;
     $cache_key = 'dokan-seller-orders-' . $status . '-' . $seller_id;
-    $orders = wp_cache_get( $cache_key, 'dokan-lite' );
+    $orders = wp_cache_get( $cache_key, $cache_group );
 
     if ( $orders === false ) {
         $status_where = ( $status == 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', $status );
@@ -71,7 +72,8 @@ function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = NUL
                 LIMIT $offset, $limit";
 
         $orders = $wpdb->get_results( $wpdb->prepare( $sql, $seller_id ) );
-        wp_cache_set( $cache_key, $orders, 'dokan-lite' );
+        wp_cache_set( $cache_key, $orders, $cache_group );
+        dokan_cache_update_group( $cache_key, $cache_group );
     }
 
     return $orders;
@@ -94,8 +96,9 @@ function dokan_get_seller_orders_by_date( $start_date, $end_date, $seller_id = f
     $end_date   = date( 'Y-m-d h:i:s', strtotime( $end_date . '-1 minute' ) );
     $start_date = date( 'Y-m-d', strtotime( $start_date ) );
 
+    $cache_group = 'dokan_seller_data_'.$seller_id;
     $cache_key = md5( 'dokan-seller-orders-' . $end_date . '-' . $end_date. '-' . $seller_id );
-    $orders = wp_cache_get( $cache_key, 'dokan-lite' );
+    $orders = wp_cache_get( $cache_key, $cache_group );
     if ( $orders === false ) {
         $status_where = ( $status == 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', $status );
         $date_query = $wpdb->prepare( ' AND DATE( p.post_date ) >= %s AND DATE( p.post_date ) <= %s', $start_date, $end_date );
@@ -111,7 +114,8 @@ function dokan_get_seller_orders_by_date( $start_date, $end_date, $seller_id = f
                 ORDER BY p.post_date ASC";
         $orders = $wpdb->get_results( $wpdb->prepare( $sql, $seller_id ) );
 
-        wp_cache_set( $cache_key, $orders, 'dokan-lite' );
+        wp_cache_set( $cache_key, $orders, $cache_group, 3600*2 );
+        dokan_cache_update_group( $cache_key, $cache_group );
     }
 
     return $orders;
@@ -154,8 +158,9 @@ function dokan_get_seller_withdraw_by_date( $start_date, $end_date, $seller_id =
 function dokan_get_seller_orders_number( $seller_id, $status = 'all' ) {
     global $wpdb;
 
+    $cache_group = 'dokan_seller_data_'.$seller_id;
     $cache_key = 'dokan-seller-orders-count-' . $status . '-' . $seller_id;
-    $count = wp_cache_get( $cache_key, 'dokan-lite' );
+    $count = wp_cache_get( $cache_key, $cache_group );
 
     if ( $count === false ) {
         $status_where = ( $status == 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', $status );
@@ -171,7 +176,8 @@ function dokan_get_seller_orders_number( $seller_id, $status = 'all' ) {
         $result = $wpdb->get_row( $wpdb->prepare( $sql, $seller_id ) );
         $count  = $result->count;
 
-        wp_cache_set( $cache_key, $count, 'dokan-lite' );
+        wp_cache_set( $cache_key, $count, $cache_group );
+        dokan_cache_update_group( $cache_key, $cache_group );
     }
 
     return $count;
@@ -209,8 +215,9 @@ function dokan_is_seller_has_order( $seller_id, $order_id ) {
 function dokan_count_orders( $user_id ) {
     global $wpdb;
 
+    $cache_group = 'dokan_seller_data_'.$user_id;
     $cache_key = 'dokan-count-orders-' . $user_id;
-    $counts = wp_cache_get( $cache_key, 'dokan-lite' );
+    $counts = wp_cache_get( $cache_key, $cache_group );
 
     if ( $counts === false ) {
         $counts = array('wc-pending' => 0, 'wc-completed' => 0, 'wc-on-hold' => 0, 'wc-processing' => 0, 'wc-refunded' => 0, 'wc-cancelled' => 0, 'total' => 0);
@@ -237,7 +244,8 @@ function dokan_count_orders( $user_id ) {
         }
 
         $counts = (object) $counts;
-        wp_cache_set( $cache_key, $counts, 'dokan-lite' );
+        wp_cache_set( $cache_key, $counts, $cache_group );
+        dokan_cache_update_group( $cache_key , $cache_group );
     }
 
     return $counts;
@@ -378,6 +386,8 @@ function dokan_sync_insert_order( $order_id ) {
     if ( stripos( $order_status, 'wc-' ) === false ) {
         $order_status = 'wc-' . $order_status;
     }
+
+    $seller_id = ! is_array( $seller_id ) ? $seller_id : 0;
 
     $wpdb->insert( $wpdb->prefix . 'dokan_orders',
         array(
@@ -590,6 +600,8 @@ function dokan_sync_order_table( $order_id ) {
         $order_status = 'wc-' . $order_status;
     }
 
+    $seller_id = ! is_array( $seller_id ) ? $seller_id : 0;
+
     $wpdb->insert( $wpdb->prefix . 'dokan_orders',
         array(
             'order_id'     => $order_id,
@@ -730,7 +742,9 @@ function dokan_get_admin_commission_by( $order, $seller_id ) {
 
         $refund_t += $order->get_total_refunded_for_item( $item_id );
         $commissions[$i]['total_line'] = $item['line_total'] - $order->get_total_refunded_for_item( $item_id );
-        $commissions[$i]['admin_percentage'] = 100 - dokan_get_seller_percentage( $seller_id, $item['product_id'] );
+//        $commissions[$i]['admin_percentage'] = 100 - dokan_get_seller_percentage( $seller_id, $item['product_id'] );
+        $commissions[$i]['admin_fee'] = 100 - dokan_get_seller_percentage( $seller_id, $item['product_id'] );
+        $commissions[$i]['fee_type']  = dokan_get_commission_type( $seller_id, $item['product_id'] );
         $total_line += $commissions[$i]['total_line'];
 
         $i++;
@@ -743,7 +757,12 @@ function dokan_get_admin_commission_by( $order, $seller_id ) {
     if ( $total_line ) {
         foreach ( $commissions as $commission ) {
             $commission['ut_amount'] = $refund_ut * ( $commission['total_line'] / $total_line );
-            $admin_commission += ( $commission['total_line'] + $commission['ut_amount'] ) * $commission['admin_percentage'] /100;
+//            $admin_commission += ( $commission['total_line'] + $commission['ut_amount'] ) * $commission['admin_percentage'] /100;
+            if ( 'percentage' == $commission['fee_type'] ) {
+                $admin_commission += ( $commission['total_line'] + $commission['ut_amount'] ) * $commission['admin_fee'] /100;
+            } else {
+                $admin_commission += $commission['admin_fee'];
+            }
         }
     }
 

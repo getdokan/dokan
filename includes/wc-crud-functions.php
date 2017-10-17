@@ -97,6 +97,7 @@ function dokan_create_seller_order( $parent_order, $seller_id, $seller_products 
 
         $order_total = $order_tax = 0;
         $product_ids = array();
+        $items_tax = array();
 
         do_action( 'woocommerce_new_order', $order_id );
 
@@ -110,6 +111,12 @@ function dokan_create_seller_order( $parent_order, $seller_id, $seller_products 
                 'order_item_name' => $item->get_name(),
                 'order_item_type' => 'line_item'
             ) );
+
+            // Mapping item wise tax data for perticular seller products
+            $item_taxes = $item->get_taxes();
+            foreach( $item_taxes['total'] as $key=>$value ) {
+                $items_tax[$key][] = $value;
+            }
 
             if ( $item_id ) {
                 $item_meta_data = $item->get_data();
@@ -138,6 +145,31 @@ function dokan_create_seller_order( $parent_order, $seller_id, $seller_products 
         $shipping_values = dokan_create_sub_order_shipping( $parent_order, $order_id, $seller_products );
         $shipping_cost   = $shipping_values['cost'];
         $shipping_tax    = $shipping_values['tax'];
+
+        // do tax
+        foreach( $parent_order->get_items( array( 'tax' ) ) as $tax ) {
+            $item_id = wc_add_order_item( $order_id, array(
+                'order_item_name' => $tax->get_name(),
+                'order_item_type' => 'tax'
+            ) );
+
+            $seller_order = wc_get_order( $order_id );
+            $seller_shipping = $seller_order->get_items( 'shipping' );
+            $seller_shipping = reset( $seller_shipping );
+
+            $tax_metas = array(
+                'rate_id'             => $tax->get_rate_id(),
+                'label'               => $tax->get_label(),
+                'compound'            => $tax->get_compound(),
+                'tax_amount'          => wc_format_decimal( array_sum( $items_tax[$tax->get_rate_id()] ) ),
+                'shipping_tax_amount' => $seller_shipping->get_total_tax()
+            );
+
+            foreach( $tax_metas as $meta_key => $meta_value ) {
+                wc_add_order_item_meta( $item_id, $meta_key, $meta_value );
+            }
+
+        }
 
         // add coupons if any
         dokan_create_sub_order_coupon( $parent_order, $order_id, $product_ids );
@@ -215,15 +247,26 @@ function dokan_create_sub_order_coupon( $parent_order, $order_id, $product_ids )
  */
 function dokan_create_sub_order_shipping( $parent_order, $order_id, $seller_products ) {
 
-    // take only the first shipping method
+    // Get all shipping methods for parent order
     $shipping_methods = $parent_order->get_shipping_methods();
+    $order_seller_id = get_post_field( 'post_author', $order_id );
 
-    $shipping_method = is_array( $shipping_methods ) ? reset( $shipping_methods ) : array();
+    $applied_shipping_method = '';
 
-    $shipping_method = apply_filters( 'dokan_shipping_method', $shipping_method, $order_id, $parent_order );
+    if ( $shipping_methods ) {
+        foreach ( $shipping_methods as $method_item_id => $shipping_object ) {
+            $shipping_seller_id = wc_get_order_item_meta( $method_item_id, 'seller_id', true );
+
+            if ( $order_seller_id == $shipping_seller_id ) {
+                $applied_shipping_method = $shipping_object;
+            }
+        }
+    }
+
+    $shipping_method = apply_filters( 'dokan_shipping_method', $applied_shipping_method, $order_id, $parent_order );
 
     // bail out if no shipping methods found
-    if ( !$shipping_method ) {
+    if ( ! $shipping_method ) {
         return;
     }
 
@@ -254,6 +297,7 @@ function dokan_create_sub_order_shipping( $parent_order, $order_id, $seller_prod
             'contents'        => $shipping_products,
             'contents_cost'   => array_sum( wp_list_pluck( $shipping_products, 'line_total' ) ),
             'applied_coupons' => array(),
+            'seller_id'       => $order_seller_id,
             'destination'     => array(
                 'country'   => $parent_order->get_shipping_country(),
                 'state'     => $parent_order->get_shipping_state(),
@@ -269,21 +313,31 @@ function dokan_create_sub_order_shipping( $parent_order, $order_id, $seller_prod
 
         if ( array_key_exists( $shipping_method['method_id'], $pack['rates'] ) ) {
 
-            $method = $pack['rates'][$shipping_method['method_id']];
-            $cost = wc_format_decimal( $method->cost );
-            $tax  = ! empty( $method->taxes[1] ) ? wc_format_decimal( $method->taxes[1] ) : 0;
+            $method   = $pack['rates'][$shipping_method['method_id']];
+            $cost     = wc_format_decimal( $method->cost );
 
             $item_id = wc_add_order_item( $order_id, array(
                 'order_item_name'       => $method->label,
                 'order_item_type'       => 'shipping'
             ) );
 
+            $formatted_tax = array_map( 'wc_format_decimal', $method->taxes );
+
             if ( $item_id ) {
+                $taxes =  array(
+                    'total' => $formatted_tax,
+                );
                 wc_add_order_item_meta( $item_id, 'method_id', $method->id );
                 wc_add_order_item_meta( $item_id, 'cost', $cost );
+                wc_add_order_item_meta( $item_id, 'total_tax', $method->get_shipping_tax() );
+                wc_add_order_item_meta( $item_id, 'taxes', $taxes );
+
+                foreach ( $method->get_meta_data() as $key => $value ) {
+                    wc_add_order_item_meta( $item_id, $key, $value );
+                }
             }
 
-            return array( 'cost' => $cost, 'tax' => $tax );
+            return array( 'cost' => $cost, 'tax' => $method->get_shipping_tax() );
         };
     }
 

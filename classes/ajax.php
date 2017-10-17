@@ -319,7 +319,7 @@ class Dokan_Ajax {
             $message = sprintf( $error_template, __( 'Something went wrong!', 'dokan-lite' ) );
             wp_send_json_error( $message );
         }
-        
+
         do_action( 'dokan_trigger_contact_seller_mail', $seller->user_email, $contact_name, $contact_email, $contact_message );
 
         $success = sprintf( '<div class="alert alert-success">%s</div>', __( 'Email sent successfully!', 'dokan-lite' ) );
@@ -482,7 +482,7 @@ class Dokan_Ajax {
      * @return type
      */
     function toggle_seller_status() {
-        if ( !current_user_can( 'manage_options' ) ) {
+        if ( ! current_user_can( 'manage_options' ) ) {
             return;
         }
 
@@ -496,6 +496,8 @@ class Dokan_Ajax {
                 $this->make_products_pending( $user_id );
             }
         }
+
+        wp_send_json_success();
         exit;
     }
 

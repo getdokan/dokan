@@ -3,7 +3,7 @@
 Plugin Name: Dokan
 Plugin URI: https://wordpress.org/plugins/dokan-lite/
 Description: An e-commerce marketplace plugin for WordPress. Powered by WooCommerce and weDevs.
-Version: 2.6.8
+Version: 2.6.9
 Author: weDevs
 Author URI: https://wedevs.com/
 Text Domain: dokan-lite
@@ -45,7 +45,7 @@ if ( !defined( '__DIR__' ) ) {
     define( '__DIR__', dirname( __FILE__ ) );
 }
 
-define( 'DOKAN_PLUGIN_VERSION', '2.6.8' );
+define( 'DOKAN_PLUGIN_VERSION', '2.6.9' );
 define( 'DOKAN_FILE', __FILE__ );
 define( 'DOKAN_DIR', __DIR__ );
 define( 'DOKAN_INC_DIR', __DIR__ . '/includes' );
@@ -204,7 +204,7 @@ final class WeDevs_Dokan {
      * @uses load_plugin_textdomain()
      */
     public function localization_setup() {
-        load_plugin_textdomain( 'dokan', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+        load_plugin_textdomain( 'dokan-lite', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
     }
 
     function init_actions() {
@@ -311,6 +311,7 @@ final class WeDevs_Dokan {
                 ),
                 'delete_confirm' => __('Are you sure?', 'dokan-lite' ),
                 'wrong_message'  => __('Something went wrong. Please try again.', 'dokan-lite' ),
+                'vendor_percentage'  => dokan_get_seller_percentage( get_current_user_id() ),
         );
 
         $localize_script = apply_filters( 'dokan_localized_args', $default_script );
@@ -367,7 +368,7 @@ final class WeDevs_Dokan {
 
             $general_settings = get_option( 'dokan_general', array() );
 
-            $banner_width     = ! empty( $general_settings['store_banner_width'] ) ? $general_settings['store_banner_width'] : 625;
+            $banner_width     = ! empty( $gedokan_refundneral_settings['store_banner_width'] ) ? $general_settings['store_banner_width'] : 625;
             $banner_height    = ! empty( $general_settings['store_banner_height'] ) ? $general_settings['store_banner_height'] : 300;
             $has_flex_width   = ! empty( $general_settings['store_banner_flex_width'] ) ? $general_settings['store_banner_flex_width'] : true;
             $has_flex_height  = ! empty( $general_settings['store_banner_flex_height'] ) ? $general_settings['store_banner_flex_height'] : true;
@@ -544,6 +545,7 @@ final class WeDevs_Dokan {
 
         if ( is_admin() ) {
             require_once $inc_dir . 'admin/admin.php';
+            require_once $inc_dir . 'admin/admin-pointers.php';
             require_once $inc_dir . 'admin/ajax.php';
             require_once $inc_dir . 'admin-functions.php';
             require_once $lib_dir . '/class-weforms-upsell.php';
@@ -700,6 +702,9 @@ final class WeDevs_Dokan {
      * Scripts and styles for admin panel
      */
     function admin_enqueue_scripts( $hook ) {
+        wp_enqueue_style( 'dokan-admin-css', DOKAN_PLUGIN_ASSEST.'/css/admin.css', false, time() );
+
+        wp_enqueue_script( 'dokan-tooltip' );
         wp_enqueue_script( 'dokan_slider_admin', DOKAN_PLUGIN_ASSEST.'/js/dokan-admin.js', array( 'jquery' ) );
 
         if ( 'plugins.php' == $hook ) {
