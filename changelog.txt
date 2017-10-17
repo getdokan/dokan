@@ -1,15 +1,16 @@
-v2.6.9 -> Oct 12, 2017
+v2.6.9 -> Oct 17, 2017
 ---------------------
 - [new]  Depends on vendor commission, pricing suggession is added in new and edit product template
-- [new]  Added admin option for showing customer info in order details page
+- [new]  Added admin settings for showing/hiding customer info in order details page
 - [new]  Both flat and percentage commission system added for vendor
 - [new]  Added functinality for deleting vendor details when the vendor account is deleted
+- [new]  Added documentaion links in dokan settings and pages
 - [fix]  Clearing and restoring all caching issue
 - [fix]  Disabled order editing option when the order status is cancelled or refunded
 - [fix]  Product image uploading permission issue fixed
 - [fix]  Store layout breaks when the address is too long fixed
 - [fix]  Non numerical error fixed for php latest versions
-
+- [fix]  Fix vendor order inserting undefined notices
 
 v2.6.8 -> Sep 7, 2017
 ---------------------
