@@ -28,7 +28,7 @@ function dokan_replace_seller_commission_by_seller() {
     $sellers    = $user_query->get_results();
     foreach ( $sellers as $s ) {
         $seller_percentage = get_user_meta( $s->ID, 'dokan_seller_percentage', true );
-        $admin_percentage  = 100 - $seller_percentage;
+        $admin_percentage  = 100 - (int) $seller_percentage;
         update_user_meta( $s->ID, 'dokan_admin_percentage', $admin_percentage );
     }
 }
