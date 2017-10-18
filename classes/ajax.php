@@ -523,6 +523,7 @@ class Dokan_Ajax {
 
         if ( $products ) {
             foreach ($products as $pro) {
+                update_post_meta( $pro->ID, 'inactive_product_flag', 'yes' );
                 wp_update_post( array( 'ID' => $pro->ID, 'post_status' => 'pending' ) );
             }
         }
