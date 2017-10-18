@@ -92,6 +92,15 @@ spl_autoload_register( 'dokan_autoload' );
 final class WeDevs_Dokan {
 
     /**
+     * Holds various class instances
+     *
+     * @since 2.6.10
+     *
+     * @var array
+     */
+    private $container = array();
+
+    /**
      * Constructor for the WeDevs_Dokan class
      *
      * Sets up all the appropriate hooks and actions
@@ -146,6 +155,23 @@ final class WeDevs_Dokan {
         }
 
         return $instance;
+    }
+
+    /**
+     * Magic getter to bypass referencing objects
+     *
+     * @since 2.6.10
+     *
+     * @param $prop
+     *
+     * @return mixed
+     */
+    public function __get( $prop ) {
+        if ( array_key_exists( $prop, $this->container ) ) {
+            return $this->container[ $prop ];
+        }
+
+        return $this->{$prop};
     }
 
     /**
@@ -207,6 +233,11 @@ final class WeDevs_Dokan {
         load_plugin_textdomain( 'dokan-lite', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
     }
 
+    /**
+     * Initialize the actions
+     *
+     * @return void
+     */
     function init_actions() {
 
         // Localize our plugin
@@ -237,6 +268,11 @@ final class WeDevs_Dokan {
 
     }
 
+    /**
+     * Register all the scripts and styles
+     *
+     * @return void
+     */
     public function register_scripts() {
 
         $suffix   = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
@@ -296,6 +332,7 @@ final class WeDevs_Dokan {
         if ( DOKAN_LOAD_STYLE ) {
             wp_enqueue_style( 'dokan-style' );
             wp_enqueue_style( 'dokan-fontawesome' );
+
             if ( is_rtl() ) {
                 wp_enqueue_style( 'dokan-rtl-style' );
             }
@@ -543,6 +580,9 @@ final class WeDevs_Dokan {
 
         require_once $inc_dir . 'wc-template.php';
 
+        require_once $inc_dir . 'class-vendor.php';
+        require_once $inc_dir . 'class-vendor-manager.php';
+
         if ( is_admin() ) {
             require_once $inc_dir . 'admin/admin.php';
             require_once $inc_dir . 'admin/admin-pointers.php';
@@ -630,6 +670,8 @@ final class WeDevs_Dokan {
         new Dokan_Rewrites();
         new Dokan_Tracker();
         Dokan_Email::init();
+
+        $this->container['vendor'] = new Dokan_Vendor_Manager();
 
         if ( is_user_logged_in() ) {
             Dokan_Template_Main::init();
@@ -914,11 +956,11 @@ final class WeDevs_Dokan {
  *
  * @return void
  */
-function dokan_load_plugin() {
-    WeDevs_Dokan::init();
+function dokan() {
+    return WeDevs_Dokan::init();
 }
 
-add_action( 'plugins_loaded', 'dokan_load_plugin', 5 );
+add_action( 'plugins_loaded', 'dokan', 5 );
 
 register_activation_hook( __FILE__, array( 'WeDevs_Dokan', 'activate' ) );
 register_deactivation_hook( __FILE__, array( 'WeDevs_Dokan', 'deactivate' ) );
