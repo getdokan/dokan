@@ -357,12 +357,13 @@ if ( !function_exists( 'dokan_get_seller_earnings_by_order' ) ) {
  *
  * @return int $earned
  */
-    function dokan_get_seller_earnings_by_order( $order, $seller_id ) {
-        
+function dokan_get_seller_earnings_by_order( $order, $seller_id ) {
+
         $earned = $order->get_total() - dokan_get_admin_commission_by( $order, $seller_id );
         return apply_filters( 'dokan_get_seller_earnings_by_order', $earned, $order, $seller_id );
     }
 }
+
 if ( !function_exists( 'dokan_get_seller_percentage' ) ) :
 
 /**
@@ -1921,11 +1922,11 @@ function dokan_get_category_wise_seller_commission( $product_id ){
             $category_commision = get_woocommerce_term_meta( $terms[0]->term_id, 'per_category_admin_commission', true );
         }
     }
-    
+
     if ( !empty( $category_commision ) ) {
         return 100 - (float) $category_commision;
     }
-    
+
     return 0;
 }
 
@@ -2020,12 +2021,21 @@ function dokan_cache_reset_order_data_on_status( $order_id, $from_status, $to_st
  */
 function dokan_cache_clear_seller_product_data( $product_id, $post_data = array() ) {
     $seller_id = get_current_user_id();
+
     dokan_cache_clear_group( 'dokan_seller_product_data_' . $seller_id );
     delete_transient( 'dokan-store-category-' . $seller_id );
 }
 
+/**
+ * Reset the cache group for store category when deleted
+ *
+ * @param  integer $post_id
+ *
+ * @return void
+ */
 function dokan_cache_clear_deleted_product( $post_id ) {
     $seller_id = get_post_field( 'post_author', $post_id );
+
     delete_transient( 'dokan-store-category-' . $seller_id );
 }
 
@@ -2086,5 +2096,23 @@ function dokan_delete_user_details( $user_id, $reassign ) {
 
     }
 
+}
+
+/**
+ * Get a vendor
+ *
+ * @since 2.6.10
+ *
+ * @param  integer $vendor_id
+ *
+ * @return \Dokan_Vendor
+ */
+function dokan_get_vendor( $vendor_id = null ) {
+
+    if ( ! $vendor_id ) {
+        $vendor_id = wp_get_current_user();
+    }
+
+    return new Dokan_Vendor( $vendor_id );
 }
 
