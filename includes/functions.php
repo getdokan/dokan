@@ -397,7 +397,7 @@ function dokan_get_seller_percentage( $seller_id = 0, $product_id = 0 ) {
         }
     }
 
-    $global_percentage = dokan_get_option( 'admin_percentage', 'dokan_selling' , 10 );
+    $global_percentage = dokan_get_option( 'admin_percentage', 'dokan_selling' , 0 );
     return 100 - $global_percentage;
 }
 
