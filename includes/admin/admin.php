@@ -374,7 +374,7 @@ class Dokan_Admin_Settings {
                     'label'   => __( 'Admin Commission', 'dokan-lite' ),
                     'desc'    => __( 'Amount you get from sales', 'dokan-lite' ),
                     'default' => '10',
-                    'type'    => 'text',
+                    'type'    => 'number',
                 ),
                 'order_status_change' => array(
                     'name'    => 'order_status_change',
