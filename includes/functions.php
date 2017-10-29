@@ -4,6 +4,27 @@ require_once dirname(__FILE__) . '/product-functions.php';
 require_once dirname(__FILE__) . '/order-functions.php';
 require_once dirname(__FILE__) . '/withdraw-functions.php';
 
+/**
+ * Dokan Admin menu position
+ *
+ * @since 3.0.0
+ *
+ * @return void
+ */
+function dokan_admin_menu_position() {
+    return apply_filters( 'dokan_menu_position', 17 );
+}
+
+/**
+ * Dokan Admin menu capability
+ *
+ * @since 3.0.0
+ *
+ * @return void
+ */
+function dokana_admin_menu_capability() {
+    return apply_filters( 'dokan_menu_capability', 'manage_options' );
+}
 
 /**
  * Check if a user is seller
