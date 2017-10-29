@@ -138,8 +138,21 @@ if ( $user_orders ) {
 
     <?php
     $order_count = dokan_get_seller_orders_number( $seller_id, $order_status );
-    $num_of_pages = ceil( $order_count / $limit );
+
+    // if date is selected then calculate number_of_pages accordingly otherwise calculate number_of_pages =  ( total_orders / limit );
+    if ( ! is_null( $order_date ) ) {
+        if ( count( $user_orders ) >= $limit ) {
+            $num_of_pages = ceil ( ( ( $order_count + count( $user_orders ) ) - count( $user_orders ) ) / $limit );
+        } else {
+            $num_of_pages = ceil( count( $user_orders ) / $limit );
+        }
+    } else {
+        $num_of_pages = ceil( $order_count / $limit );
+    }
+    
+
     $base_url  = dokan_get_navigation_url( 'orders' );
+
     if ( $num_of_pages > 1 ) {
         echo '<div class="pagination-wrap">';
         $page_links = paginate_links( array(
