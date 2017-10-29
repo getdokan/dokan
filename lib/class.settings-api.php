@@ -10,6 +10,7 @@
  * @example example/oop-example.php How to use the class
  */
 if ( !class_exists( 'WeDevs_Settings_API' ) ):
+
 class WeDevs_Settings_API {
 
     /**
@@ -27,7 +28,7 @@ class WeDevs_Settings_API {
     protected $settings_fields = array();
 
     public function __construct() {
-        add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
+        add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ), 10 );
     }
 
     /**

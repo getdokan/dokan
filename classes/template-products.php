@@ -221,7 +221,7 @@ class Dokan_Template_Products {
                     update_post_meta( $product_id, '_visibility', 'visible' );
 
                     do_action( 'dokan_new_product_added', $product_id, $post_data );
-                  
+
                     $redirect = apply_filters( 'dokan_add_new_product_redirect', dokan_edit_product_url( $product_id ), $product_id );
 
                     if ( 'create_and_add_new' === $_POST['add_product'] ) {

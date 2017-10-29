@@ -9,12 +9,12 @@ if ( !class_exists( 'Dokan_Settings_API' ) ) {
  *
  * @author Tareq Hasan
  */
-class Dokan_Admin_Settings {
+class Dokan_Admin {
 
-    private $settings_api;
+    private $settings;
 
     /**
-     * Constructor for the Dokan_Admin_Settings class
+     * Constructor for the Dokan_Admin class
      *
      * Sets up all the appropriate hooks and actions
      * within our plugin.
@@ -22,10 +22,9 @@ class Dokan_Admin_Settings {
      * @return void
      */
     function __construct() {
-        $this->settings_api = new Dokan_Settings_API();
+        // $this->settings_api = new Dokan_Settings_API();
 
-        add_action( 'admin_init', array($this, 'do_updates') );
-        add_action( 'admin_init', array($this, 'admin_init') );
+        add_action( 'admin_init', array($this, 'do_updates' ) );
 
         add_action( 'admin_menu', array($this, 'admin_menu') );
 
@@ -184,6 +183,7 @@ class Dokan_Admin_Settings {
         wp_enqueue_style( 'dokan-chosen-style' );
 
         wp_enqueue_script( 'jquery-ui-datepicker' );
+        wp_enqueue_script( 'wp-color-picker' );
         wp_enqueue_script( 'dokan-flot' );
         wp_enqueue_script( 'dokan-chart' );
         wp_enqueue_script( 'dokan-chosen' );
@@ -191,23 +191,6 @@ class Dokan_Admin_Settings {
         do_action( 'dokan_enqueue_admin_dashboard_script' );
     }
 
-    /**
-     * Initialize Settings tab and sections content
-     *
-     * @since 1.0
-     *
-     * @return void
-     */
-    function admin_init() {
-        Dokan_Admin_Withdraw::init()->bulk_action_handler();
-
-        //set the settings
-        $this->settings_api->set_sections( $this->get_settings_sections() );
-        $this->settings_api->set_fields( $this->get_settings_fields() );
-
-        //initialize settings
-        $this->settings_api->admin_init();
-    }
 
     /**
      * Load admin Menu
@@ -472,8 +455,10 @@ class Dokan_Admin_Settings {
         echo '<div class="wrap">';
         settings_errors();
 
-        $this->settings_api->show_navigation();
-        $this->settings_api->show_forms();
+        $settings = new Dokan_Settings();
+
+        $settings->get_settings_api()->show_navigation();
+        $settings->get_settings_api()->show_forms();
 
         echo '</div>';
     }
@@ -608,6 +593,8 @@ class Dokan_Admin_Settings {
      * @return void
      */
     public function do_updates() {
+        Dokan_Admin_Withdraw::init()->bulk_action_handler();
+
         if ( isset( $_GET['dokan_do_update'] ) && $_GET['dokan_do_update'] == 'true' ) {
             $installer = new Dokan_Installer();
             $installer->do_upgrades();
@@ -662,4 +649,4 @@ class Dokan_Admin_Settings {
     }
 }
 
-$settings = new Dokan_Admin_Settings();
+$settings = new Dokan_Admin();

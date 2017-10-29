@@ -17,7 +17,7 @@ class Dokan_Template_Shortcodes {
         add_shortcode( 'dokan-dashboard', array( $this, 'load_template_files' ) );
         add_shortcode( 'dokan-best-selling-product', array( $this, 'best_selling_product_shortcode' ) );
         add_shortcode( 'dokan-top-rated-product', array( $this, 'top_rated_product_shortcode' ) );
-        add_shortcode( 'dokan-my-orders', array( $this, 'my_orders_page' ) );        
+        add_shortcode( 'dokan-my-orders', array( $this, 'my_orders_page' ) );
     }
 
     /**
@@ -45,11 +45,11 @@ class Dokan_Template_Shortcodes {
      */
     public function load_template_files() {
         global $wp;
-        
+
         if ( ! function_exists( 'WC' ) ) {
             return sprintf( __( 'Please install <a href="%s"><strong>WooCommerce</strong></a> plugin first', 'dokan-lite' ), 'http://wordpress.org/plugins/woocommerce/' );
         }
-        
+
         ob_start();
 
         if ( isset( $wp->query_vars['products'] ) ) {
@@ -85,9 +85,9 @@ class Dokan_Template_Shortcodes {
             dokan_get_template_part( 'dashboard/edit-account' );
             return ob_get_clean();
         }
-        
+
         do_action( 'dokan_load_custom_template', $wp->query_vars );
-  
+
     }
 
     /**
@@ -109,7 +109,7 @@ class Dokan_Template_Shortcodes {
             'no_of_product' => 8,
             'seller_id' => '',
         ), $atts ), $atts );
-        
+
         ob_start();
         ?>
         <ul>
