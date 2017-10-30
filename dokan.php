@@ -622,6 +622,7 @@ final class WeDevs_Dokan {
 
         new Dokan_Rewrites();
         new Dokan_Tracker();
+        $this->container['core'] = new Dokan_Core();
         $this->container['email'] = Dokan_Email::init();
         $this->container['vendor'] = new Dokan_Vendor_Manager();
 
