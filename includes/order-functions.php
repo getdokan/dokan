@@ -316,7 +316,7 @@ function dokan_on_child_order_status_change( $order_id, $old_status, $new_status
         foreach ($sub_orders as $sub) {
             $order = new WC_Order( $sub->ID );
 
-            if ( dokan_get_prop( $order, 'status' ) != 'wc-completed' ) {
+            if ( dokan_get_prop( $order, 'status' ) != 'completed' ) {
                 $all_complete = false;
             }
         }
