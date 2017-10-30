@@ -6,10 +6,28 @@
  */
 class Dokan_Email {
 
+    /**
+     * Load autometically when class initiate
+     *
+     * @since 3.0.0
+     */
+    public function __construct() {
+        //Dokan Email filters for WC Email
+        add_filter( 'woocommerce_email_classes', array( $this, 'load_dokan_emails' ), 35 );
+        add_filter( 'woocommerce_template_directory', array( $this, 'set_email_template_directory' ), 15, 2 );
+        add_filter( 'woocommerce_email_actions' , array( $this, 'register_email_actions' ) );
+    }
+
+    /**
+     * Initializes the Dokan_Email() class
+     *
+     * Checks for an existing Dokan_Email() instance
+     * and if it doesn't find one, creates it.
+     */
     public static function init() {
         static $instance = false;
 
-        if ( !$instance ) {
+        if ( ! $instance ) {
             $instance = new self;
         }
 
@@ -36,7 +54,6 @@ class Dokan_Email {
         return sanitize_email( get_option( 'woocommerce_email_from_address' ) );
     }
 
-
     /**
      * Get admin email address
      *
@@ -45,7 +62,6 @@ class Dokan_Email {
     function admin_email() {
         return apply_filters( 'dokan_email_admin_mail', get_option( 'admin_email' ) );
     }
-
 
     /**
      * Get user agent string
@@ -56,11 +72,11 @@ class Dokan_Email {
         return substr( $_SERVER['HTTP_USER_AGENT'], 0, 150 );
     }
 
-
     /**
      * Replace currency HTML entities with symbol
      *
      * @param string $amount
+     *
      * @return string
      */
     function currency_symbol( $amount ) {
@@ -69,6 +85,91 @@ class Dokan_Email {
         return html_entity_decode( $price );
     }
 
+    /**
+     * Add Dokan Email classes in WC Email
+     *
+     * @since 2.6.8
+     *
+     * @param array $wc_emails
+     *
+     * @return $wc_emails
+     */
+    function load_dokan_emails( $wc_emails ) {
+        $wc_emails['Dokan_Email_New_Product']         = include( DOKAN_INC_DIR.'/emails/class-dokan-email-new-product.php' );
+        $wc_emails['Dokan_Email_New_Product_Pending'] = include( DOKAN_INC_DIR.'/emails/class-dokan-email-new-product-pending.php' );
+        $wc_emails['Dokan_Email_Product_Published']   = include( DOKAN_INC_DIR.'/emails/class-dokan-email-product-published.php' );
+        $wc_emails['Dokan_Email_New_Seller']          = include( DOKAN_INC_DIR.'/emails/class-dokan-email-new-seller-registered.php' );
+        $wc_emails['Dokan_Vendor_Withdraw_Request']   = include( DOKAN_INC_DIR.'/emails/class-dokan-vendor-withdraw-request.php' );
+        $wc_emails['Dokan_Email_Withdraw_Approved']   = include( DOKAN_INC_DIR.'/emails/class-dokan-withdraw-approved.php' );
+        $wc_emails['Dokan_Email_Withdraw_Cancelled']  = include( DOKAN_INC_DIR.'/emails/class-dokan-withdraw-cancelled.php' );
+        $wc_emails['Dokan_Email_Contact_Seller']      = include( DOKAN_INC_DIR.'/emails/class-dokan-email-contact-seller.php' );
+
+        return $wc_emails;
+    }
+
+    /**
+     * Set template override directory for Dokan Emails
+     *
+     * @since 2.6.8
+     *
+     * @param string $template_dir
+     *
+     * @param string $template
+     *
+     * @return string
+     */
+    function set_email_template_directory( $template_dir, $template ) {
+
+        $dokan_emails = apply_filters( 'dokan_email_list',
+            array(
+                'new-product.php',
+                'new-product-pending.php',
+                'product-published.php',
+                'contact-seller.php',
+                'new-seller-registered.php',
+                'withdraw-new.php',
+                'withdraw-cancel.php',
+                'withdraw-approve.php'
+            )
+        );
+
+        $template_name = basename( $template );
+
+        if ( in_array( $template_name, $dokan_emails ) ) {
+            return 'dokan';
+        }
+
+        return $template_dir;
+    }
+
+    /**
+     * Register Dokan Email actions for WC
+     *
+     * @since 2.6.8
+     *
+     * @param array $actions
+     *
+     * @return $actions
+     */
+    function register_email_actions( $actions ) {
+
+        $dokan_email_actions = apply_filters( 'dokan_email_actions', array(
+            'dokan_new_product_added',
+            'dokan_email_trigger_new_pending_product',
+            'dokan_new_seller_created',
+            'dokan_after_withdraw_request',
+            'dokan_withdraw_request_approved',
+            'dokan_withdraw_request_cancelled',
+            'dokan_pending_product_published_notification',
+            'dokan_trigger_contact_seller_mail'
+        ) );
+
+        foreach ( $dokan_email_actions as $action ) {
+            $actions[] = $action;
+        }
+
+        return $actions;
+    }
 
     /**
      * Send email to seller from the seller contact form
@@ -77,6 +178,8 @@ class Dokan_Email {
      * @param string $from_name
      * @param string $from_email
      * @param string $message
+     *
+     * @return void
      */
     function contact_seller( $seller_email, $from_name, $from_email, $message ) {
         ob_start();
@@ -119,13 +222,14 @@ class Dokan_Email {
         ) );
     }
 
-
     /**
      * Send seller email notification when a new refund request is made
      *
      * @param WP_User $seller_mail
      * @param int $order_id
      * @param object $refund
+     *
+     * @return void
      */
     function dokan_refund_seller_mail( $seller_mail, $order_id, $status, $amount, $refund_reason ) {
         ob_start();
@@ -158,13 +262,14 @@ class Dokan_Email {
         do_action( 'dokan_after_refund_seller_mail', $seller_mail, $subject, $body );
     }
 
-
     /**
      * Send admin email notification when a new refund request is cancle
      *
      * @param string $seller_mail
      * @param int $order_id
      * @param int $refund_id
+     *
+     * @return @void
      */
     function dokan_refund_request( $order_id ) {
         ob_start();
@@ -190,7 +295,6 @@ class Dokan_Email {
         do_action( 'after_dokan_refund_request', $this->admin_email(), $subject, $body );
     }
 
-
     /**
      * Prepare body for withdraw email
      *
@@ -199,6 +303,7 @@ class Dokan_Email {
      * @param float $amount
      * @param string $method
      * @param string $note
+     *
      * @return string
      */
     function prepare_withdraw( $body, $user, $amount, $method, $note = '' ) {
@@ -229,7 +334,6 @@ class Dokan_Email {
         return $body;
     }
 
-
     /**
      * Send admin email notification when a new withdraw request is made
      *
@@ -249,13 +353,14 @@ class Dokan_Email {
         do_action( 'after_new_withdraw_request', $this->admin_email(), $subject, $body );
     }
 
-
     /**
      * Send email to user once a withdraw request is approved
      *
      * @param int $user_id
      * @param float $amount
      * @param string $method
+     *
+     * @return 3.0.0
      */
     function withdraw_request_approve( $user_id, $amount, $method ) {
         ob_start();
@@ -278,6 +383,8 @@ class Dokan_Email {
      * @param float $amount
      * @param string $method
      * @param string $note
+     *
+     * @since 3.0.0
      */
     function withdraw_request_cancel( $user_id, $amount, $method, $note = '' ) {
         ob_start();
@@ -292,11 +399,12 @@ class Dokan_Email {
         do_action( 'after_withdraw_request_cancel', $user->user_email, $subject, $body );
     }
 
-
     /**
      * Send email to admin once a new seller registered
      *
      * @param int $seller_id
+     *
+     * @return void
      */
     function new_seller_registered_mail( $seller_id ) {
 
@@ -329,14 +437,13 @@ class Dokan_Email {
         do_action( 'after_new_seller_registered_mail', $this->admin_email(), $subject, $body );
     }
 
-
-
-
     /**
      * Send email to admin once a product is added
      *
      * @param int $product_id
      * @param string $status
+     *
+     * @return void
      */
     function new_product_added( $product_id, $status = 'pending' ) {
         $template = 'emails/new-product-pending';
@@ -353,7 +460,7 @@ class Dokan_Email {
         $seller        = get_user_by( 'id', $seller_id );
         $category      = wp_get_post_terms( dokan_get_prop( $product, 'id' ), 'product_cat', array( 'fields' => 'names' ) );
         $category_name = $category ? reset( $category ) : 'N/A';
-        
+
         $find = array(
             '%title%',
             '%price%',
@@ -383,12 +490,13 @@ class Dokan_Email {
         do_action( 'after_new_product_added', $this->admin_email(), $subject, $body );
     }
 
-
     /**
      * Send email to seller once a product is published
      *
      * @param WP_Post $post
      * @param WP_User $seller
+     *
+     * @return void
      */
     function product_published( $post, $seller ) {
         ob_start();
@@ -426,11 +534,13 @@ class Dokan_Email {
      * Send the email.
      *
      * @access public
+     *
      * @param mixed $to
      * @param mixed $subject
      * @param mixed $message
      * @param string $headers
      * @param string $attachments
+     *
      * @return void
      */
     function send( $to, $subject, $message, $headers = array() ) {

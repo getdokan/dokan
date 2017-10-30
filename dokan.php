@@ -172,7 +172,6 @@ final class WeDevs_Dokan {
             wp_die( '<div class="error"><p>' . sprintf( __( '<b>Dokan</b> requires %sWooCommerce%s to be installed & activated!', 'dokan-lite' ), '<a target="_blank" href="https://wordpress.org/plugins/woocommerce/">', '</a>' ) . '</p></div>' );
         }
 
-
         global $wpdb;
 
         $wpdb->dokan_withdraw     = $wpdb->prefix . 'dokan_withdraw';
@@ -262,27 +261,13 @@ final class WeDevs_Dokan {
 
         add_action( 'init', array( $this, 'register_scripts' ) );
 
-        add_action( 'template_redirect', array( $this, 'redirect_if_not_logged_seller' ), 11 );
-
         add_action( 'wp_enqueue_scripts', array( $this, 'scripts' ) );
         add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 
         add_filter( 'dokan_localized_args', array( $this, 'conditional_localized_args' ) );
 
-        add_action( 'admin_init', array( $this, 'block_admin_access' ) );
         add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), array( $this, 'plugin_action_links' ) );
-
         add_action( 'in_plugin_update_message-dokan-lite/dokan.php', array( 'Dokan_Installer', 'in_plugin_update_message' ) );
-
-        add_filter( 'posts_where', array( $this, 'hide_others_uploads' ) );
-        add_filter( 'body_class', array( $this, 'add_dashboard_template_class' ), 99 );
-        add_filter( 'wp_title', array( $this, 'wp_title' ), 20, 2 );
-
-        //Dokan Email filters for WC Email
-        add_filter( 'woocommerce_email_classes', array( $this, 'load_dokan_emails' ), 35 );
-        add_filter( 'woocommerce_template_directory', array( $this, 'set_email_template_directory' ), 15, 2 );
-        add_filter( 'woocommerce_email_actions' , array( $this, 'register_email_actions' ) );
-
     }
 
     /**
@@ -422,7 +407,7 @@ final class WeDevs_Dokan {
 
             $general_settings = get_option( 'dokan_general', array() );
 
-            $banner_width     = ! empty( $gedokan_refundneral_settings['store_banner_width'] ) ? $general_settings['store_banner_width'] : 625;
+            $banner_width     = ! empty( $general_settings['store_banner_width'] ) ? $general_settings['store_banner_width'] : 625;
             $banner_height    = ! empty( $general_settings['store_banner_height'] ) ? $general_settings['store_banner_height'] : 300;
             $has_flex_width   = ! empty( $general_settings['store_banner_flex_width'] ) ? $general_settings['store_banner_flex_width'] : true;
             $has_flex_height  = ! empty( $general_settings['store_banner_flex_height'] ) ? $general_settings['store_banner_flex_height'] : true;
@@ -597,6 +582,8 @@ final class WeDevs_Dokan {
 
         require_once $inc_dir . 'wc-template.php';
 
+        require_once $inc_dir . 'class-core.php';
+        require_once $inc_dir . 'class-email.php';
         require_once $inc_dir . 'class-vendor.php';
         require_once $inc_dir . 'class-vendor-manager.php';
 
@@ -619,33 +606,6 @@ final class WeDevs_Dokan {
     }
 
     /**
-     * Hide other users uploads for `seller` users
-     *
-     * Hide media uploads in page "upload.php" and "media-upload.php" for
-     * sellers. They can see only thier uploads.
-     *
-     * FIXME: fix the upload counts
-     *
-     * @global string $pagenow
-     * @global object $wpdb
-     *
-     * @param string  $where
-     *
-     * @return string
-     */
-    function hide_others_uploads( $where ) {
-        global $pagenow, $wpdb;
-
-        if ( ( $pagenow == 'upload.php' || $pagenow == 'media-upload.php' ) && current_user_can( 'dokandar' ) ) {
-            $user_id = get_current_user_id();
-
-            $where .= " AND $wpdb->posts.post_author = $user_id";
-        }
-
-        return $where;
-    }
-
-    /**
      * Init all the classes
      *
      * @return void
@@ -662,8 +622,7 @@ final class WeDevs_Dokan {
 
         new Dokan_Rewrites();
         new Dokan_Tracker();
-        Dokan_Email::init();
-
+        $this->container['email'] = Dokan_Email::init();
         $this->container['vendor'] = new Dokan_Vendor_Manager();
 
         if ( is_user_logged_in() ) {
@@ -678,51 +637,6 @@ final class WeDevs_Dokan {
 
         if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
             Dokan_Ajax::init()->init_ajax();
-        }
-    }
-
-    /**
-     * Redirect if not logged Seller
-     *
-     * @since 2.4
-     *
-     * @return void [redirection]
-     */
-    function redirect_if_not_logged_seller() {
-        global $post;
-
-        $page_id = dokan_get_option( 'dashboard', 'dokan_pages' );
-
-        if ( ! $page_id ) {
-            return;
-        }
-
-        if ( is_page( $page_id ) || apply_filters( 'dokan_force_page_redirect', false, $page_id ) ) {
-            dokan_redirect_login();
-            dokan_redirect_if_not_seller();
-        }
-    }
-
-    /**
-     * Block user access to admin panel for specific roles
-     *
-     * @global string $pagenow
-     */
-    function block_admin_access() {
-        global $pagenow, $current_user;
-
-        // bail out if we are from WP Cli
-        if ( defined( 'WP_CLI' ) ) {
-            return;
-        }
-
-        $no_access   = dokan_get_option( 'admin_access', 'dokan_general', 'on' );
-        $valid_pages = array( 'admin-ajax.php', 'admin-post.php', 'async-upload.php', 'media-upload.php' );
-        $user_role   = reset( $current_user->roles );
-
-        if ( ( $no_access == 'on' ) && ( !in_array( $pagenow, $valid_pages ) ) && in_array( $user_role, array( 'seller', 'customer' ) ) ) {
-            wp_redirect( home_url() );
-            exit;
         }
     }
 
@@ -757,68 +671,6 @@ final class WeDevs_Dokan {
     }
 
     /**
-     * Add body class for dokan-dashboard
-     *
-     * @param array $classes
-     */
-    function add_dashboard_template_class( $classes ) {
-        $page_id = dokan_get_option( 'dashboard', 'dokan_pages' );
-
-        if ( ! $page_id ) {
-            return $classes;
-        }
-
-        if ( is_page( $page_id ) || ( get_query_var( 'edit' ) && is_singular( 'product' ) ) ) {
-            $classes[] = 'dokan-dashboard';
-        }
-
-        if ( dokan_is_store_page () ) {
-            $classes[] = 'dokan-store';
-        }
-
-        $classes[] = 'dokan-theme-' . get_option( 'template' );
-
-        return $classes;
-    }
-
-
-    /**
-     * Create a nicely formatted and more specific title element text for output
-     * in head of document, based on current view.
-     *
-     * @since Dokan 1.0.4
-     *
-     * @param string  $title Default title text for current view.
-     * @param string  $sep   Optional separator.
-     *
-     * @return string The filtered title.
-     */
-    function wp_title( $title, $sep ) {
-        global $paged, $page;
-
-        if ( is_feed() ) {
-            return $title;
-        }
-
-        if ( dokan_is_store_page() ) {
-            $site_title = get_bloginfo( 'name' );
-            $store_user = get_userdata( get_query_var( 'author' ) );
-            $store_info = dokan_get_store_info( $store_user->ID );
-            $store_name = esc_html( $store_info['store_name'] );
-            $title      = "$store_name $sep $site_title";
-
-            // Add a page number if necessary.
-            if ( $paged >= 2 || $page >= 2 ) {
-                $title = "$title $sep " . sprintf( __( 'Page %s', 'dokan-lite' ), max( $paged, $page ) );
-            }
-
-            return $title;
-        }
-
-        return $title;
-    }
-
-    /**
      * Returns if the plugin is in PRO version
      *
      * @since 2.4
@@ -848,92 +700,6 @@ final class WeDevs_Dokan {
         $links[] = '<a href="https://docs.wedevs.com/docs/dokan/" target="_blank">' . __( 'Documentation', 'dokan-lite' ) . '</a>';
 
         return $links;
-    }
-
-    /**
-     * Add Dokan Email classes in WC Email
-     *
-     * @since 2.6.8
-     *
-     * @param array $wc_emails
-     *
-     * @return $wc_emails
-     */
-    function load_dokan_emails( $wc_emails ){
-        $wc_emails['Dokan_Email_New_Product']         = include( DOKAN_INC_DIR.'/emails/class-dokan-email-new-product.php' );
-        $wc_emails['Dokan_Email_New_Product_Pending'] = include( DOKAN_INC_DIR.'/emails/class-dokan-email-new-product-pending.php' );
-        $wc_emails['Dokan_Email_Product_Published']   = include( DOKAN_INC_DIR.'/emails/class-dokan-email-product-published.php' );
-        $wc_emails['Dokan_Email_New_Seller']          = include( DOKAN_INC_DIR.'/emails/class-dokan-email-new-seller-registered.php' );
-        $wc_emails['Dokan_Vendor_Withdraw_Request']   = include( DOKAN_INC_DIR.'/emails/class-dokan-vendor-withdraw-request.php' );
-        $wc_emails['Dokan_Email_Withdraw_Approved']   = include( DOKAN_INC_DIR.'/emails/class-dokan-withdraw-approved.php' );
-        $wc_emails['Dokan_Email_Withdraw_Cancelled']  = include( DOKAN_INC_DIR.'/emails/class-dokan-withdraw-cancelled.php' );
-        $wc_emails['Dokan_Email_Contact_Seller']      = include( DOKAN_INC_DIR.'/emails/class-dokan-email-contact-seller.php' );
-
-        return $wc_emails;
-    }
-
-    /**
-     * Register Dokan Email actions for WC
-     *
-     * @since 2.6.8
-     *
-     * @param array $actions
-     *
-     * @return $actions
-     */
-    function register_email_actions( $actions ) {
-
-        $dokan_email_actions = apply_filters( 'dokan_email_actions', array(
-            'dokan_new_product_added',
-            'dokan_email_trigger_new_pending_product',
-            'dokan_new_seller_created',
-            'dokan_after_withdraw_request',
-            'dokan_withdraw_request_approved',
-            'dokan_withdraw_request_cancelled',
-            'dokan_pending_product_published_notification',
-            'dokan_trigger_contact_seller_mail',
-        ) );
-
-        foreach ( $dokan_email_actions as $action ) {
-            $actions[] = $action;
-        }
-
-        return $actions;
-    }
-
-    /**
-     * Set template override directory for Dokan Emails
-     *
-     * @since 2.6.8
-     *
-     * @param string $template_dir
-     *
-     * @param string $template
-     *
-     * @return string
-     */
-    function set_email_template_directory( $template_dir, $template ){
-
-        $dokan_emails = apply_filters( 'dokan_email_list',
-            array(
-                'new-product.php',
-                'new-product-pending.php',
-                'product-published.php',
-                'contact-seller.php',
-                'new-seller-registered.php',
-                'withdraw-new.php',
-                'withdraw-cancel.php',
-                'withdraw-approve.php',
-            )
-        );
-
-        $template_name = basename( $template );
-
-        if ( in_array( $template_name, $dokan_emails ) ) {
-            return 'dokan';
-        }
-
-        return $template_dir;
     }
 
 } // WeDevs_Dokan
