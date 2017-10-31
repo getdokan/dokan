@@ -1,17 +1,11 @@
 <?php
 
-if ( !class_exists( 'Dokan_Settings_API' ) ) {
-    require_once DOKAN_LIB_DIR . '/class.dokan-settings-api.php';
-}
-
 /**
  * WordPress settings API For Dokan Admin Settings class
  *
  * @author Tareq Hasan
  */
 class Dokan_Admin {
-
-    private $settings;
 
     /**
      * Constructor for the Dokan_Admin class
@@ -257,7 +251,7 @@ class Dokan_Admin {
      * @return void
      */
     function dashboard() {
-        include dirname(__FILE__) . '/dashboard.php';
+        include dirname(__FILE__) . '/views/dashboard.php';
     }
 
     /**
@@ -268,7 +262,7 @@ class Dokan_Admin {
      * @return void
      */
     function withdraw_page() {
-        include dirname(__FILE__) . '/withdraw.php';
+        include dirname(__FILE__) . '/views/withdraw.php';
     }
 
     /**
@@ -279,7 +273,7 @@ class Dokan_Admin {
      * @return void
      */
     function pro_features() {
-        include dirname(__FILE__) . '/pro-features.php';
+        include dirname(__FILE__) . '/views/pro-features.php';
     }
 
 
@@ -291,7 +285,7 @@ class Dokan_Admin {
      * @return void
      */
     function addon_page() {
-        include dirname(__FILE__) . '/add-on.php';
+        include dirname(__FILE__) . '/views/add-on.php';
     }
 
     /**
@@ -302,7 +296,7 @@ class Dokan_Admin {
      * @return void
      */
     function welcome_page() {
-        include_once DOKAN_INC_DIR . '/admin/welcome.php';
+        include_once dirname(__FILE__) . '/views/welcome.php';
     }
 
     /**
@@ -318,6 +312,7 @@ class Dokan_Admin {
 
     /**
      * Add Menu in Dashboard Top bar
+     *
      * @return array [top menu bar]
      */
     function dokan_admin_toolbar() {

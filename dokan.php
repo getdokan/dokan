@@ -293,7 +293,7 @@ final class WeDevs_Dokan {
             require_once $inc_dir . 'admin/class-admin.php';
             require_once $inc_dir . 'admin/class-settings.php';
             require_once $inc_dir . 'admin/class-ajax.php';
-            require_once $inc_dir . 'admin/admin-pointers.php';
+            require_once $inc_dir . 'admin/class-admin-pointers.php';
             require_once $inc_dir . 'admin-functions.php';
             require_once $lib_dir . '/class-weforms-upsell.php';
         } else {
@@ -330,7 +330,7 @@ final class WeDevs_Dokan {
         $this->container['vendor'] = new Dokan_Vendor_Manager();
 
         if ( is_user_logged_in() ) {
-            $this->container['shortcodes'] = Dokan_Template_Shortcodes::init();
+            Dokan_Template_Shortcodes::init();
             Dokan_Template_Main::init();
             Dokan_Template_Dashboard::init();
             Dokan_Template_Products::init();

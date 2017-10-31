@@ -1,11 +1,11 @@
 <?php
 /**
  * Adds and controls pointers for contextual help/tutorials
- * 
+ *
  * @since 2.6.9
  *
  * @author   weDevs
- * 
+ *
  * @category Admin
  */
 if ( !defined( 'ABSPATH' ) ) {
@@ -17,6 +17,11 @@ if ( !defined( 'ABSPATH' ) ) {
  */
 class Dokan_Admin_Pointers {
 
+    /**
+     * Hold current screen ID
+     *
+     * @var integer
+     */
     private $screen_id;
 
     /**
@@ -28,10 +33,10 @@ class Dokan_Admin_Pointers {
     }
 
     /**
-     * Dismiss a screen pointers after clicking dismiss 
-     * 
+     * Dismiss a screen pointers after clicking dismiss
+     *
      * @param String $screen
-     * 
+     *
      * @return void
      */
     public function dismiss_screen( $screen = false ) {
@@ -44,9 +49,9 @@ class Dokan_Admin_Pointers {
 
     /**
      * Check if pointers for screen is dismissed
-     * 
+     *
      * @param String $screen
-     * 
+     *
      * @return void
      */
     public function is_dismissed( $screen ) {
@@ -143,7 +148,7 @@ class Dokan_Admin_Pointers {
 
     /**
      * Renders Settings tutorial pointers
-     * 
+     *
      * @return type
      */
     public function settings_tutorial() {

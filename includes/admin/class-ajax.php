@@ -69,7 +69,7 @@ class Dokan_Admin_Ajax {
                 $amount  = $postdata['amount'][$withdraw_id];
                 $method  = $postdata['method'][$withdraw_id];
                 $note    = $postdata['note'][$withdraw_id];
-                
+
                 do_action( 'dokan_withdraw_request_cancelled', $user_id, $amount, $method, $note );
                 $withdraw->update_status( $withdraw_id, $user_id, 2 );
 
