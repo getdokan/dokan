@@ -1139,28 +1139,9 @@ function dokan_get_seller_bank_details( $seller_id ) {
  * @return array
  */
 function dokan_get_sellers( $args = array() ) {
-
-    $defaults = array(
-        'role'       => 'seller',
-        'number'     => 10,
-        'offset'     => 0,
-        'orderby'    => 'registered',
-        'order'      => 'ASC',
-        'meta_query' => array(
-            array(
-                'key'     => 'dokan_enable_selling',
-                'value'   => 'yes',
-                'compare' => '='
-            )
-        )
-    );
-
-    $args = wp_parse_args( $args, $defaults );
-
-    $user_query = new WP_User_Query( $args );
-    $sellers    = $user_query->get_results();
-
-    return array( 'users' => $sellers, 'count' => $user_query->total_users );
+    $vendors = dokan()->vendor;
+    $all_vendor = wp_list_pluck( $vendors->all( $args ), 'data' );
+    return array( 'users' => $all_vendor, 'count' => $vendors->get_total() );
 }
 
 /**

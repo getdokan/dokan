@@ -545,7 +545,7 @@ function dokan_on_create_seller( $user_id, $data ) {
 
     update_user_meta( $user_id, 'dokan_profile_settings', $dokan_settings );
     update_user_meta( $user_id, 'dokan_store_name', $dokan_settings['store_name'] );
-    
+
     do_action( 'dokan_new_seller_created', $user_id, $dokan_settings );
 }
 
@@ -582,8 +582,7 @@ add_filter( 'pre_user_display_name', 'dokan_seller_displayname' );
  * @param int $per_page
  * @return \WP_Query
  */
-function dokan_get_featured_products( $per_page = 9) {
-
+function dokan_get_featured_products( $per_page = 9 ) {
 
     $args = array(
         'posts_per_page'      => $per_page,
@@ -1166,12 +1165,12 @@ function dokan_clear_product_category_cache( $post_id ) {
 }
 
 if ( !function_exists( 'dokan_date_time_format' ) ) {
-    
+
     /**
      * Format date time string to WC format
-     * 
+     *
      * @since 2.6.8
-     * 
+     *
      * @param string $time
      * @param boolean $date_only
      * @return string

@@ -78,6 +78,15 @@ class Dokan_Vendor {
     }
 
     /**
+     * If the vendor is marked as featured
+     *
+     * @return boolean
+     */
+    public function is_featured() {
+        return 'yes' == get_user_meta( $this->id, 'dokan_feature_seller', true );
+    }
+
+    /**
      * Populate store info
      *
      * @return void

@@ -172,13 +172,6 @@ final class WeDevs_Dokan {
             wp_die( '<div class="error"><p>' . sprintf( __( '<b>Dokan</b> requires %sWooCommerce%s to be installed & activated!', 'dokan-lite' ), '<a target="_blank" href="https://wordpress.org/plugins/woocommerce/">', '</a>' ) . '</p></div>' );
         }
 
-        global $wpdb;
-
-        $wpdb->dokan_withdraw     = $wpdb->prefix . 'dokan_withdraw';
-        $wpdb->dokan_orders       = $wpdb->prefix . 'dokan_orders';
-        $wpdb->dokan_announcement = $wpdb->prefix . 'dokan_announcement';
-        $wpdb->dokan_refund       = $wpdb->prefix . 'dokan_refund';
-
         require_once __DIR__ . '/includes/functions.php';
 
         $installer = new Dokan_Installer();
@@ -299,8 +292,8 @@ final class WeDevs_Dokan {
         if ( is_admin() ) {
             require_once $inc_dir . 'admin/class-admin.php';
             require_once $inc_dir . 'admin/class-settings.php';
+            require_once $inc_dir . 'admin/class-ajax.php';
             require_once $inc_dir . 'admin/admin-pointers.php';
-            require_once $inc_dir . 'admin/ajax.php';
             require_once $inc_dir . 'admin-functions.php';
             require_once $lib_dir . '/class-weforms-upsell.php';
         } else {
@@ -349,6 +342,11 @@ final class WeDevs_Dokan {
         if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
             Dokan_Ajax::init()->init_ajax();
         }
+
+        // echo "<pre>";
+        // print_r( dokan()->vendor->get_featured() );
+        // print_r( dokan()->vendor->get_total() );
+        //  die();
     }
 
     /**
@@ -377,8 +375,10 @@ final class WeDevs_Dokan {
     function wpdb_table_shortcuts() {
         global $wpdb;
 
-        $wpdb->dokan_withdraw = $wpdb->prefix . 'dokan_withdraw';
-        $wpdb->dokan_orders   = $wpdb->prefix . 'dokan_orders';
+        $wpdb->dokan_withdraw     = $wpdb->prefix . 'dokan_withdraw';
+        $wpdb->dokan_orders       = $wpdb->prefix . 'dokan_orders';
+        $wpdb->dokan_announcement = $wpdb->prefix . 'dokan_announcement';
+        $wpdb->dokan_refund       = $wpdb->prefix . 'dokan_refund';
     }
 
     /**
