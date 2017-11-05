@@ -6,8 +6,10 @@
  * @package dokan - 2014 1.0
  */
 
-$store_user = get_userdata( get_query_var( 'author' ) );
-$store_info = dokan_get_store_info( $store_user->ID );
+$store_user = dokan()->vendor->get( get_query_var( 'author' ) );
+$store_info = $store_user->get_shop_info();
+
+var_dump( $store_user->get_store_tnc() );
 
 get_header( 'shop' );
 ?>

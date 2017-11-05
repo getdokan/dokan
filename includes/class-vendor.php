@@ -50,6 +50,12 @@ class Dokan_Vendor {
         }
     }
 
+    public function __call( $name, $param ) {
+        if ( strpos( $name, 'get_' ) === 0 ) {
+            return $this->get_shop_info( str_replace( 'get_', '', $name ) );
+        }
+    }
+
     /**
      * Check if the user is vendor
      *
@@ -97,11 +103,12 @@ class Dokan_Vendor {
             'social'     => array(),
             'payment'    => array( 'paypal' => array( 'email' ), 'bank' => array() ),
             'phone'      => '',
-            'show_email' => 'off',
+            'show_email' => 'no',
             'address'    => '',
             'location'   => '',
-            'banner'     => 0
+            'banner'     => 0,
         );
+
 
         if ( ! $this->id ) {
             $this->shop_data = $defaults;
@@ -120,7 +127,7 @@ class Dokan_Vendor {
      *
      * @return array
      */
-    public function get_shop_info() {
+    public function get_shop_info($field = null) {
 
         // return if already populated
         if ( $this->shop_data ) {
@@ -128,6 +135,10 @@ class Dokan_Vendor {
         }
 
         $this->popluate_store_data();
+
+        if ( $field ) {
+            return ! empty( $this->shop_data[ $field ] ) ? $this->shop_data[ $field ] : null;
+        }
 
         return $this->shop_data;
     }
@@ -148,12 +159,22 @@ class Dokan_Vendor {
     }
 
     /**
+     * Get store ID
+     *
+     * @since 3.0.0
+     *
+     * @return void
+     */
+    public function get_id() {
+        return $this->id;
+    }
+
+    /**
      * Get the vendor name
      *
      * @return string
      */
     public function get_name() {
-
         if ( $this->id ) {
             return $this->data->display_name;
         }
@@ -183,7 +204,6 @@ class Dokan_Vendor {
      * @return string
      */
     public function get_email() {
-
         if ( $this->id ) {
             return $this->data->user_email;
         }
@@ -255,7 +275,7 @@ class Dokan_Vendor {
      * @return boolean
      */
     public function show_email() {
-        return 'on' == $this->get_info_part( 'address' );
+        return 'yes' == $this->get_info_part( 'show_email' );
     }
 
     /**
@@ -353,14 +373,13 @@ class Dokan_Vendor {
         if ( ! $rating['count'] ) {
             $html = __( 'No ratings found yet!', 'dokan-lite' );
         } else {
-            $long_text = _n( '%s rating from %d review', '%s rating from %d reviews', $rating['count'], 'dokan-lite' );
-            $text = sprintf( __( 'Rated %s out of %d', 'dokan-lite' ), $rating['rating'], number_format( 5 ) );
-            $width = ( $rating['rating']/5 ) * 100;
-
+            $long_text   = _n( '%s rating from %d review', '%s rating from %d reviews', $rating['count'], 'dokan-lite' );
+            $text        = sprintf( __( 'Rated %s out of %d', 'dokan-lite' ), $rating['rating'], number_format( 5 ) );
+            $width       = ( $rating['rating']/5 ) * 100;
             $review_text = sprintf( $long_text, $rating['rating'], $rating['count'] );
 
             if ( function_exists( 'dokan_get_review_url' ) ) {
-                $review_text = sprintf( '<a href="%s">%s</a>', esc_url( dokan_get_review_url( $seller_id ) ), $review_text );
+                $review_text = sprintf( '<a href="%s">%s</a>', esc_url( dokan_get_review_url( $this->id ) ), $review_text );
             }
             $html = '<span class="seller-rating">
                         <span title=" '. esc_attr( $text ) . '" class="star-rating" itemtype="http://schema.org/Rating" itemscope="" itemprop="reviewRating">
