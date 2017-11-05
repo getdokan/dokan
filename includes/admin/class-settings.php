@@ -28,7 +28,7 @@ class Dokan_Settings {
 
         $this->settings_api = new Dokan_Settings_API();
 
-        $this->admin_init();
+        add_action( 'admin_init', array( $this, 'admin_init' ), 99 );
     }
 
     /**
@@ -127,8 +127,8 @@ class Dokan_Settings {
         $slider_array = $this->get_post_type( 'dokan_slider' );
 
         $commission_types = array(
-            'flat' => 'Flat',
-            'percentage' => 'Percentage',
+            'flat'       => __( 'Flat', 'dokan-lite' ),
+            'percentage' => __( 'Percentage', 'dokan-lite' ),
         );
 
         $settings_fields = array(

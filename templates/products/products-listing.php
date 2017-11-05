@@ -70,24 +70,11 @@
                             <?php
                             $pagenum      = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
 
-                            $post_statuses = array('publish', 'draft', 'pending');
                             $args = array(
-                                'post_type'      => 'product',
-                                'post_status'    => $post_statuses,
                                 'posts_per_page' => 10,
-                                'author'         => get_current_user_id(),
-                                'orderby'        => 'post_date',
-                                'order'          => 'DESC',
-                                'paged'          => $pagenum,
-                                'tax_query'      => array(
-                                    array(
-                                        'taxonomy' => 'product_type',
-                                        'field'    => 'slug',
-                                        'terms'    => apply_filters( 'dokan_product_listing_exclude_type', array() ),
-                                        'operator' => 'NOT IN',
-                                        ),
-                                    ),
-                                );
+                                'paged' => $pagenum,
+                                'author' => get_current_user_id()
+                            );
 
                             if ( isset( $_GET['post_status']) && in_array( $_GET['post_status'], $post_statuses ) ) {
                                 $args['post_status'] = $_GET['post_status'];
@@ -103,16 +90,15 @@
                                     'field' => 'id',
                                     'terms' => (int)  $_GET['product_cat'],
                                     'include_children' => false,
-                                    );
+                                );
                             }
 
                             if ( isset( $_GET['product_search_name']) && !empty( $_GET['product_search_name'] ) ) {
                                 $args['s'] = $_GET['product_search_name'];
                             }
 
-
                             $original_post = $post;
-                            $product_query = new WP_Query( apply_filters( 'dokan_product_listing_query', $args ) );
+                            $product_query = dokan()->product->all( $args );
 
                             if ( $product_query->have_posts() ) {
                                 while ($product_query->have_posts()) {

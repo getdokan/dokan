@@ -249,7 +249,7 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
         );
 
         $update = $this->insert_withdraw( $data_info );
-        
+
         do_action( 'dokan_after_withdraw_request', $current_user, $amount, $method );
 
         wp_redirect( add_query_arg( array( 'message' => 'request_success' ), dokan_get_navigation_url( 'withdraw' ) ) );
@@ -388,7 +388,7 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
 
         }
     }
-    
+
      /**
      * Print the cancelled user withdraw requests
      *
@@ -397,9 +397,9 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
      * @return void
      */
     function user_cancelled_withdraws( $user_id ){
-        
+
         $requests = $this->get_withdraw_requests( $user_id, 2, 100 );
-        
+
         if ( $requests ) {
 
             dokan_get_template_part( 'withdraw/cancelled-request-listing', '', array(

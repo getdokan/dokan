@@ -275,4 +275,106 @@ class Dokan_Vendor {
     public function get_product_views() {
         return dokan_author_pageviews( $this->id );
     }
+
+    /**
+     * Get balance
+     *
+     * @since 3.0.0
+     *
+     * @return void
+     */
+    public function get_balance( $formatted = true  ) {
+        global $wpdb;
+
+        $status        = dokan_withdraw_get_active_order_status_in_comma();
+        $cache_group = 'dokan_seller_data_'.$this->id;
+        $cache_key     = 'dokan_seller_balance_' . $this->id;
+        $earning       = wp_cache_get( $cache_key, $cache_group );
+        $threshold_day = dokan_get_option( 'withdraw_date_limit', 'dokan_withdraw', 0 );
+        $date          = date( 'Y-m-d', strtotime( date('Y-m-d') . ' -'.$threshold_day.' days' ) );
+
+        if ( false === $earning ) {
+            $sql = "SELECT SUM(net_amount) as earnings,
+                (SELECT SUM(amount) FROM {$wpdb->prefix}dokan_withdraw WHERE user_id = %d AND status = 1) as withdraw
+                FROM {$wpdb->prefix}dokan_orders as do LEFT JOIN {$wpdb->prefix}posts as p ON do.order_id = p.ID
+                WHERE seller_id = %d AND DATE(p.post_date) <= %s AND order_status IN({$status})";
+
+            $result = $wpdb->get_row( $wpdb->prepare( $sql, $this->id, $this->id, $date ) );
+            $earning = $result->earnings - $result->withdraw;
+
+            wp_cache_set( $cache_key, $earning, $cache_group );
+            dokan_cache_update_group( $cache_key , $cache_group );
+        }
+
+        if ( $formatted ) {
+            return apply_filters( 'dokan_get_formatted_seller_balance', wc_price( $earning ) );
+        }
+
+        return apply_filters( 'dokan_get_seller_balance', $earning );
+    }
+
+    /**
+     * Get vendor rating
+     *
+     * @since 3.0.0
+     *
+     * @return void
+     */
+    public function get_rating() {
+        global $wpdb;
+
+        $sql = "SELECT AVG(cm.meta_value) as average, COUNT(wc.comment_ID) as count FROM $wpdb->posts p
+            INNER JOIN $wpdb->comments wc ON p.ID = wc.comment_post_ID
+            LEFT JOIN $wpdb->commentmeta cm ON cm.comment_id = wc.comment_ID
+            WHERE p.post_author = %d AND p.post_type = 'product' AND p.post_status = 'publish'
+            AND ( cm.meta_key = 'rating' OR cm.meta_key IS NULL) AND wc.comment_approved = 1
+            ORDER BY wc.comment_post_ID";
+
+        $result = $wpdb->get_row( $wpdb->prepare( $sql, $this->id ) );
+
+        $rating_value = apply_filters( 'dokan_seller_rating_value', array(
+            'rating' => number_format( $result->average, 2 ),
+            'count'  => (int) $result->count
+        ), $this->id );
+
+        return $rating_value;
+    }
+
+    /**
+     * Get vendor readable rating
+     *
+     * @since 3.0.0
+     *
+     * @return void
+     */
+    public function get_readable_rating( $display = true ) {
+        $rating = $this->get_rating( $this->id );
+
+        if ( ! $rating['count'] ) {
+            $html = __( 'No ratings found yet!', 'dokan-lite' );
+        } else {
+            $long_text = _n( '%s rating from %d review', '%s rating from %d reviews', $rating['count'], 'dokan-lite' );
+            $text = sprintf( __( 'Rated %s out of %d', 'dokan-lite' ), $rating['rating'], number_format( 5 ) );
+            $width = ( $rating['rating']/5 ) * 100;
+
+            $review_text = sprintf( $long_text, $rating['rating'], $rating['count'] );
+
+            if ( function_exists( 'dokan_get_review_url' ) ) {
+                $review_text = sprintf( '<a href="%s">%s</a>', esc_url( dokan_get_review_url( $seller_id ) ), $review_text );
+            }
+            $html = '<span class="seller-rating">
+                        <span title=" '. esc_attr( $text ) . '" class="star-rating" itemtype="http://schema.org/Rating" itemscope="" itemprop="reviewRating">
+                            <span class="width" style="width: ' . $width . '%"></span>
+                            <span style=""><strong itemprop="ratingValue">' . $rating['rating'] . '</strong></span>
+                        </span>
+                    </span>
+                    <span class="text">' . $review_text . '</span>';
+        }
+
+        if ( ! $display ) {
+            return $html;
+        }
+
+        echo $html;
+    }
 }

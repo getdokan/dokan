@@ -8,6 +8,13 @@
 class Dokan_Admin {
 
     /**
+     * Hold settings api instance
+     *
+     * @var class instance
+     */
+    private $settings_api;
+
+    /**
      * Constructor for the Dokan_Admin class
      *
      * Sets up all the appropriate hooks and actions
@@ -16,7 +23,7 @@ class Dokan_Admin {
      * @return void
      */
     function __construct() {
-        // $this->settings_api = new Dokan_Settings_API();
+        $this->settings_api = new Dokan_Settings();
 
         add_action( 'admin_init', array($this, 'do_updates' ) );
 
@@ -25,6 +32,7 @@ class Dokan_Admin {
         add_action( 'admin_head', array( $this, 'welcome_page_remove' ) );
 
         add_action( 'admin_notices', array($this, 'update_notice' ) );
+
         // add_action( 'admin_notices', array($this, 'promotional_offer' ) );
 
         add_action( 'wp_before_admin_bar_render', array( $this, 'dokan_admin_toolbar' ) );
@@ -138,30 +146,6 @@ class Dokan_Admin {
         <?php
     }
 
-
-    /**
-     * Get Post Type array
-     *
-     * @since 1.0
-     *
-     * @param  string $post_type
-     *
-     * @return array
-     */
-    public static function get_post_type( $post_type ) {
-        $pages_array = array( '-1' => __( '- select -', 'dokan-lite' ) );
-        $pages = get_posts( array('post_type' => $post_type, 'numberposts' => -1) );
-
-        if ( $pages ) {
-            foreach ($pages as $page) {
-                $pages_array[$page->ID] = $page->post_title;
-            }
-        }
-
-        return $pages_array;
-    }
-
-
     /**
      * Dashboard scripts and styles
      *
@@ -184,7 +168,6 @@ class Dokan_Admin {
 
         do_action( 'dokan_enqueue_admin_dashboard_script' );
     }
-
 
     /**
      * Load admin Menu
@@ -235,10 +218,8 @@ class Dokan_Admin {
         echo '<div class="wrap">';
         settings_errors();
 
-        $settings = new Dokan_Settings();
-
-        $settings->get_settings_api()->show_navigation();
-        $settings->get_settings_api()->show_forms();
+        $this->settings_api->get_settings_api()->show_navigation();
+        $this->settings_api->get_settings_api()->show_forms();
 
         echo '</div>';
     }

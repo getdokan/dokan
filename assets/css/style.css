@@ -3792,14 +3792,6 @@ div.media-sidebar a.edit-attachment {
 .dokan-single-store .profile-frame.profile-frame-no-banner .profile-layout-layout3 .profile-info-summery-wrapper .profile-info-summery .profile-info .dokan-store-info li:first-child:before {
   content: "";
 }
-.dokan-single-store .profile-frame.profile-frame-no-banner .profile-layout-layout3 .profile-info-summery-wrapper .profile-info-summery .profile-info .dokan-store-info li.dokan-store-rating {
-  float: none;
-  margin-right: 0;
-}
-.dokan-single-store .profile-frame.profile-frame-no-banner .profile-layout-layout3 .profile-info-summery-wrapper .profile-info-summery .profile-info .dokan-store-info li.dokan-store-rating:before {
-  content: "";
-  position: relative;
-}
 .dokan-single-store .profile-frame.profile-frame-no-banner .profile-layout-layout3 .profile-info-summery-wrapper .profile-info-summery .profile-info .store-social-wrapper {
   position: relative;
 }

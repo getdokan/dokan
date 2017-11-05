@@ -194,6 +194,10 @@ final class WeDevs_Dokan {
      */
     public function localization_setup() {
         load_plugin_textdomain( 'dokan-lite', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+
+        // echo "<pre>";
+        // print_r( dokan()->product->featured() );
+        // die();
     }
 
     /**
@@ -288,10 +292,11 @@ final class WeDevs_Dokan {
         require_once $inc_dir . 'class-email.php';
         require_once $inc_dir . 'class-vendor.php';
         require_once $inc_dir . 'class-vendor-manager.php';
+        require_once $inc_dir . 'class-product-manager.php';
 
         if ( is_admin() ) {
-            require_once $inc_dir . 'admin/class-admin.php';
             require_once $inc_dir . 'admin/class-settings.php';
+            require_once $inc_dir . 'admin/class-admin.php';
             require_once $inc_dir . 'admin/class-ajax.php';
             require_once $inc_dir . 'admin/class-admin-pointers.php';
             require_once $inc_dir . 'admin-functions.php';
@@ -324,10 +329,12 @@ final class WeDevs_Dokan {
 
         new Dokan_Rewrites();
         new Dokan_Tracker();
-        $this->container['core'] = new Dokan_Core();
+
+        $this->container['core']    = new Dokan_Core();
         $this->container['scripts'] = new Dokan_Scripts();
-        $this->container['email'] = Dokan_Email::init();
-        $this->container['vendor'] = new Dokan_Vendor_Manager();
+        $this->container['email']   = Dokan_Email::init();
+        $this->container['vendor']  = new Dokan_Vendor_Manager();
+        $this->container['product']  = new Dokan_Product_Manager();
 
         if ( is_user_logged_in() ) {
             Dokan_Template_Shortcodes::init();
@@ -342,11 +349,7 @@ final class WeDevs_Dokan {
         if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
             Dokan_Ajax::init()->init_ajax();
         }
-
-        // echo "<pre>";
-        // print_r( dokan()->vendor->get_featured() );
         // print_r( dokan()->vendor->get_total() );
-        //  die();
     }
 
     /**
