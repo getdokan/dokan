@@ -518,7 +518,7 @@ class WeDevs_Settings_API {
                         do_action( 'wsa_form_bottom_' . $form['id'], $form );
                         if ( isset( $this->settings_fields[ $form['id'] ] ) ):
                         ?>
-                        <div style="padding-left: 10px">
+                        <div>
                             <?php submit_button(); ?>
                         </div>
                         <?php endif; ?>

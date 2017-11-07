@@ -6,10 +6,8 @@
  * @package dokan - 2014 1.0
  */
 
-$store_user = dokan()->vendor->get( get_query_var( 'author' ) );
-$store_info = $store_user->get_shop_info();
-
-var_dump( $store_user->get_store_tnc() );
+$vendor = dokan()->vendor->get( get_query_var( 'author' ) );
+$vendor_info = $vendor->get_shop_info();
 
 get_header( 'shop' );
 ?>
@@ -42,7 +40,7 @@ get_header( 'shop' );
             }
             ?>
 
-            <?php do_action( 'dokan_sidebar_store_after', $store_user, $store_info ); ?>
+            <?php do_action( 'dokan_sidebar_store_after', $vendor, $vendor_info ); ?>
         </div>
     </div><!-- #secondary .widget-area -->
 <?php
@@ -52,19 +50,19 @@ get_header( 'shop' );
 ?>
 
 <div id="primary" class="content-area dokan-single-store dokan-w8">
-    <div id="content" class="site-content store-review-wrap woocommerce" role="main">
+    <div id="dokan-content" class="site-content store-review-wrap woocommerce" role="main">
 
         <?php dokan_get_template_part( 'store-header' ); ?>
 
         <div id="store-toc-wrapper">
             <div id="store-toc">
                 <?php
-                if( isset( $store_info['store_tnc'] ) ):
+                if( ! empty( $vendor->get_store_tnc() ) ):
                 ?>
                     <h2 class="headline"><?php _e( 'Terms And Conditions', 'dokan-lite' ); ?></h2>
                     <div>
                         <?php
-                        echo nl2br($store_info['store_tnc']);
+                        echo nl2br( $vendor->get_store_tnc() );
                         ?>
                     </div>
                 <?php

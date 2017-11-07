@@ -216,12 +216,17 @@ class Dokan_Admin {
      */
     function settings_page() {
         echo '<div class="wrap">';
+        echo '<h2 style="margin-bottom: 15px;">' . __( 'Settings', 'dokan-lite' ) . '</h2>';
+        echo '<div class="dokan-settings-wrap">';
         settings_errors();
 
         $this->settings_api->get_settings_api()->show_navigation();
         $this->settings_api->get_settings_api()->show_forms();
 
         echo '</div>';
+        echo '</div>';
+        ?>
+        <?php
     }
 
     /**

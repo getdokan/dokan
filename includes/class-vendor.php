@@ -50,9 +50,18 @@ class Dokan_Vendor {
         }
     }
 
+    /**
+     * Call undefined functions callback
+     *
+     * @param string $name
+     * @param [type] $param [description]
+     *
+     * @return [type] [description]
+     */
     public function __call( $name, $param ) {
         if ( strpos( $name, 'get_' ) === 0 ) {
-            return $this->get_shop_info( str_replace( 'get_', '', $name ) );
+            $function_name  = str_replace('get_', '', $name );
+            return ! empty( $this->shop_data[$function_name] ) ? $this->shop_data[$function_name] : null;
         }
     }
 
@@ -106,9 +115,8 @@ class Dokan_Vendor {
             'show_email' => 'no',
             'address'    => '',
             'location'   => '',
-            'banner'     => 0,
+            'banner'     => 0
         );
-
 
         if ( ! $this->id ) {
             $this->shop_data = $defaults;
@@ -127,7 +135,7 @@ class Dokan_Vendor {
      *
      * @return array
      */
-    public function get_shop_info($field = null) {
+    public function get_shop_info() {
 
         // return if already populated
         if ( $this->shop_data ) {
@@ -135,10 +143,6 @@ class Dokan_Vendor {
         }
 
         $this->popluate_store_data();
-
-        if ( $field ) {
-            return ! empty( $this->shop_data[ $field ] ) ? $this->shop_data[ $field ] : null;
-        }
 
         return $this->shop_data;
     }
