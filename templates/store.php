@@ -88,6 +88,7 @@ get_header( 'shop' );
 
     </div><!-- .dokan-single-store -->
 
+    <div class="dokan-clearfix"></div>
 
     <?php do_action( 'woocommerce_after_main_content' ); ?>
 

@@ -74,6 +74,8 @@ get_header( 'shop' );
     </div><!-- #content .site-content -->
 </div><!-- #primary .content-area -->
 
+<div class="dokan-clearfix"></div>
+
 <?php do_action( 'woocommerce_after_main_content' ); ?>
 
 <?php get_footer(); ?>
