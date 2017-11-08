@@ -249,7 +249,7 @@ class Dokan_Installer {
     function create_withdraw_table() {
         global $wpdb;
 
-        $sql = "CREATE TABLE IF NOT EXISTS {$wpdb->dokan_withdraw} (
+        $sql = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}dokan_withdraw` (
                `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
                `user_id` bigint(20) unsigned NOT NULL,
                `amount` float(11) NOT NULL,
