@@ -92,23 +92,28 @@ class Dokan_Settings {
         $sections = array(
             array(
                 'id'    => 'dokan_general',
-                'title' => __( 'General', 'dokan-lite' )
+                'title' => __( 'General', 'dokan-lite' ),
+                'icon' => 'dashicons-admin-generic'
             ),
             array(
                 'id'    => 'dokan_selling',
-                'title' => __( 'Selling Options', 'dokan-lite' )
+                'title' => __( 'Selling Options', 'dokan-lite' ),
+                'icon' => 'dashicons-cart'
             ),
             array(
                 'id'    => 'dokan_withdraw',
-                'title' => __( 'Withdraw Options', 'dokan-lite' )
+                'title' => __( 'Withdraw Options', 'dokan-lite' ),
+                'icon' => 'dashicons-money'
             ),
             array(
                 'id'    => 'dokan_pages',
-                'title' => __( 'Page Settings', 'dokan-lite' )
+                'title' => __( 'Page Settings', 'dokan-lite' ),
+                'icon' => 'dashicons-admin-page'
             ),
             array(
                 'id'    => 'dokan_appearance',
-                'title' => __( 'Appearance', 'dokan-lite' )
+                'title' => __( 'Appearance', 'dokan-lite' ),
+                'icon'  => 'dashicons-admin-appearance'
             )
         );
 

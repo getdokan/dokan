@@ -159,6 +159,10 @@
   display: flex;
   border: 1px solid #c8d7e1;
 }
+.dokan-settings-wrap .dashicons {
+  padding-top: 2px;
+  margin-right: 5px;
+}
 .dokan-settings-wrap h2.nav-tab-wrapper {
   flex: 1;
   border-bottom: none;
