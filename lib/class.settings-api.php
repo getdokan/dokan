@@ -492,7 +492,7 @@ class WeDevs_Settings_API {
         }
 
         foreach ( $this->settings_sections as $tab ) {
-            $html .= sprintf( '<a href="#%1$s" class="nav-tab" id="%1$s-tab">%2$s</a>', $tab['id'], $tab['title'] );
+            $html .= sprintf( '<a href="#%1$s" class="nav-tab" id="%1$s-tab"><span class="dashicons %3$s"></span> %2$s</a>', $tab['id'], $tab['title'], ! empty( $tab['icon'] ) ? $tab['icon'] : '' );
         }
 
         $html .= '</h2>';
