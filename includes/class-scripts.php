@@ -105,12 +105,14 @@ class Dokan_Scripts {
             'nonce'             => wp_create_nonce( 'dokan_reviews' ),
             'ajax_loader'       => DOKAN_PLUGIN_ASSEST.'/images/ajax-loader.gif',
             'seller'            => array(
-                'available'    => __( 'Available', 'dokan-lite' ),
-                'notAvailable' => __( 'Not Available', 'dokan-lite' )
+                'available'     => __( 'Available', 'dokan-lite' ),
+                'notAvailable'  => __( 'Not Available', 'dokan-lite' )
             ),
             'delete_confirm'    => __( 'Are you sure?', 'dokan-lite' ),
             'wrong_message'     => __( 'Something went wrong. Please try again.', 'dokan-lite' ),
             'vendor_percentage' => dokan_get_seller_percentage( get_current_user_id() ),
+            'commission_type'   => dokan_get_commission_type( get_current_user_id() ),
+            
         );
 
         $localize_script = apply_filters( 'dokan_localized_args', $default_script );
