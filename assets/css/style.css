@@ -2915,6 +2915,11 @@ div.media-sidebar a.edit-attachment {
   font-style: italic;
   margin-top: 5px;
 }
+.product-edit-container .dokan-product-less-price-alert {
+  color: #f05025;
+  font-style: italic;
+  margin-top: 5px;
+}
 .product-edit-container .tab-pane {
   padding: 15px 0;
 }
