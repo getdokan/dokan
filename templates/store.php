@@ -19,7 +19,7 @@ get_header( 'shop' );
     <?php if ( dokan_get_option( 'enable_theme_store_sidebar', 'dokan_general', 'off' ) == 'off' ) { ?>
         <div id="dokan-secondary" class="dokan-clearfix dokan-w3 dokan-store-sidebar" role="complementary" style="margin-right:3%;">
             <div class="dokan-widget-area widget-collapse">
-                <?php do_action( 'dokan_sidebar_store_before', $store_user, $store_info ); ?>
+                <?php do_action( 'dokan_sidebar_store_before', $store_user->data, $store_info ); ?>
                 <?php
                 if ( ! dynamic_sidebar( 'sidebar-store' ) ) {
 
@@ -45,7 +45,7 @@ get_header( 'shop' );
                 }
                 ?>
 
-                <?php do_action( 'dokan_sidebar_store_after', $store_user, $store_info ); ?>
+                <?php do_action( 'dokan_sidebar_store_after', $store_user->data, $store_info ); ?>
             </div>
         </div><!-- #secondary .widget-area -->
     <?php
@@ -59,7 +59,7 @@ get_header( 'shop' );
 
             <?php dokan_get_template_part( 'store-header' ); ?>
 
-            <?php do_action( 'dokan_store_profile_frame_after', $store_user, $store_info ); ?>
+            <?php do_action( 'dokan_store_profile_frame_after', $store_user->data, $store_info ); ?>
 
             <?php if ( have_posts() ) { ?>
 

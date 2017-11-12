@@ -40,7 +40,7 @@ get_header( 'shop' );
             }
             ?>
 
-            <?php do_action( 'dokan_sidebar_store_after', $vendor, $vendor_info ); ?>
+            <?php do_action( 'dokan_sidebar_store_after', $vendor->data, $vendor_info ); ?>
         </div>
     </div><!-- #secondary .widget-area -->
 <?php
