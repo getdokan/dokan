@@ -181,6 +181,19 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+v2.6.10 -> Nov 13, 2017
+---------------------
+- [new]   Added dokan CRUD classes
+- [new]   Added help menu on Dokan Admin Dashboard
+- [tweak] Dokan Admin settings page redesigned
+- [tweak] Price suggestion made compatible with Flat commission
+- [tweak] Admin setup wizard styles updated
+- [fix]   Fixed casting issue in updater class
+- [fix]   Product status update on vendor status toggle
+- [fix]   Commission calculation issue fixed
+- [fix]   Store banner width and height not working properly
+- [fix]   Order filtering is showing wrong pagination
+
 v2.6.9 -> Oct 17, 2017
 ---------------------
 - [new]  Depends on vendor commission, pricing suggession is added in new and edit product template
