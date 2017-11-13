@@ -98,8 +98,8 @@ class Dokan_Help {
                 )
             ),
             array(
-                'title' => 'Miscellaneous'
-                'icon' => 'dashicons-editor-table'
+                'title' => 'Miscellaneous',
+                'icon' => 'dashicons-editor-table',
                 'questions' => array(
                     array(
                         'title' => 'Mark product and vendor as featured',

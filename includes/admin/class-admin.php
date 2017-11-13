@@ -269,8 +269,6 @@ class Dokan_Admin {
      * @return void
      */
     function help_page() {
-        // require_once DOKAN_INC_DIR . '/class-help.php';
-        // new Dokan_Help();
         include dirname( __FILE__ ) . '/views/help.php';
     }
 
