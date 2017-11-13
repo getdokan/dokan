@@ -28,7 +28,7 @@ function dokan_replace_seller_commission_by_seller() {
     $sellers    = $user_query->get_results();
     foreach ( $sellers as $s ) {
         $seller_percentage = get_user_meta( $s->ID, 'dokan_seller_percentage', true );
-        $admin_percentage  = 100 - $seller_percentage;
+        $admin_percentage  = 100 - (int) $seller_percentage;
         update_user_meta( $s->ID, 'dokan_admin_percentage', $admin_percentage );
     }
 }
@@ -50,7 +50,7 @@ function dokan_replace_product_commissions() {
 
     foreach ( $products as $p ) {
         $seller_commission = get_post_meta( $p->ID, '_per_product_commission' );
-        $admin_commission  = 100 - $seller_commission;
+        $admin_commission  = 100 - (float) $seller_commission;
         update_post_meta( $p->ID, '_per_product_admin_commission', $admin_commission );
     }
 }
@@ -61,12 +61,12 @@ function dokan_replace_category_commission_meta() {
         'hide_empty' => true,
         'meta_key'   => 'per_category_commission'
     );
-    
+
     $the_query = new WP_Term_Query( $args );
     $terms = $the_query->get_terms();
 
     foreach ( $terms as $t ) {
-        $admin_commission = 100 - get_woocommerce_term_meta( $t->term_id, 'per_category_commission', true );
+        $admin_commission = 100 - (int) get_woocommerce_term_meta( $t->term_id, 'per_category_commission', true );
         update_woocommerce_term_meta( $t->term_id, 'per_category_admin_commission', $admin_commission );
     }
 }

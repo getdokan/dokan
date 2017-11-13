@@ -10,6 +10,7 @@
  * @example example/oop-example.php How to use the class
  */
 if ( !class_exists( 'WeDevs_Settings_API' ) ):
+
 class WeDevs_Settings_API {
 
     /**
@@ -27,7 +28,7 @@ class WeDevs_Settings_API {
     protected $settings_fields = array();
 
     public function __construct() {
-        add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
+        add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ), 10 );
     }
 
     /**
@@ -491,7 +492,7 @@ class WeDevs_Settings_API {
         }
 
         foreach ( $this->settings_sections as $tab ) {
-            $html .= sprintf( '<a href="#%1$s" class="nav-tab" id="%1$s-tab">%2$s</a>', $tab['id'], $tab['title'] );
+            $html .= sprintf( '<a href="#%1$s" class="nav-tab" id="%1$s-tab"><span class="dashicons %3$s"></span> %2$s</a>', $tab['id'], $tab['title'], ! empty( $tab['icon'] ) ? $tab['icon'] : '' );
         }
 
         $html .= '</h2>';
@@ -517,7 +518,7 @@ class WeDevs_Settings_API {
                         do_action( 'wsa_form_bottom_' . $form['id'], $form );
                         if ( isset( $this->settings_fields[ $form['id'] ] ) ):
                         ?>
-                        <div style="padding-left: 10px">
+                        <div>
                             <?php submit_button(); ?>
                         </div>
                         <?php endif; ?>

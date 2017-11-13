@@ -36,7 +36,7 @@ class Dokan_Email_Withdraw_Cancelled extends WC_Email {
 		parent::__construct();
 
 		// Other settings
-		$this->recipient = 'venodor@ofthe.product';
+		$this->recipient = 'vendor@ofthe.product';
 	}
 
 	/**

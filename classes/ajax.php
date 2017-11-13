@@ -494,6 +494,8 @@ class Dokan_Ajax {
 
             if ( $status == 'no' ) {
                 $this->make_products_pending( $user_id );
+            } else {
+                $this->make_products_published( $user_id );
             }
         }
 
@@ -521,7 +523,34 @@ class Dokan_Ajax {
 
         if ( $products ) {
             foreach ($products as $pro) {
+                update_post_meta( $pro->ID, 'inactive_product_flag', 'yes' );
                 wp_update_post( array( 'ID' => $pro->ID, 'post_status' => 'pending' ) );
+            }
+        }
+    }
+
+    /**
+     * Make all the products to published once a seller is activated for selling
+     *
+     * @param int $seller_id
+     */
+    function make_products_published( $seller_id ) {
+        $args = array(
+            'post_type' => 'product',
+            'post_status' => 'pending',
+            'posts_per_page' => -1,
+            'author' => $seller_id,
+            'orderby' => 'post_date',
+            'order' => 'DESC',
+            'meta_key'  => 'inactive_product_flag'
+        );
+
+        $product_query = new WP_Query( $args );
+        $products = $product_query->get_posts();
+
+        if ( $products ) {
+            foreach ($products as $pro) {
+                wp_update_post( array( 'ID' => $pro->ID, 'post_status' => 'publish' ) );
             }
         }
     }

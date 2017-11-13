@@ -545,7 +545,7 @@ function dokan_on_create_seller( $user_id, $data ) {
 
     update_user_meta( $user_id, 'dokan_profile_settings', $dokan_settings );
     update_user_meta( $user_id, 'dokan_store_name', $dokan_settings['store_name'] );
-    
+
     do_action( 'dokan_new_seller_created', $user_id, $dokan_settings );
 }
 
@@ -563,7 +563,6 @@ add_action( 'woocommerce_created_customer', 'dokan_on_create_seller', 10, 2);
 function dokan_seller_displayname ( $display_name ) {
 
     if ( dokan_is_user_seller ( get_current_user_id() ) && !is_admin() ) {
-
         $seller_info = dokan_get_store_info ( get_current_user_id() );
         $display_name = ( !empty( $seller_info['store_name'] ) ) ? $seller_info['store_name'] : $display_name;
 
@@ -582,50 +581,18 @@ add_filter( 'pre_user_display_name', 'dokan_seller_displayname' );
  * @param int $per_page
  * @return \WP_Query
  */
-function dokan_get_featured_products( $per_page = 9) {
-
+function dokan_get_featured_products( $per_page = 9 ) {
 
     $args = array(
         'posts_per_page'      => $per_page,
-        'post_type'           => 'product',
+        'post_status'         => 'publish',
         'ignore_sticky_posts' => 1,
-        'meta_query'          => array(),
         'tax_query'           => array(
             'relation' => 'AND',
-        ),
+        )
     );
 
-    if ( version_compare( WC_VERSION, '2.7', '>' ) ) {
-        $product_visibility_term_ids = wc_get_product_visibility_term_ids();
-        $args['tax_query'][] = array(
-            'taxonomy' => 'product_visibility',
-            'field'    => 'term_taxonomy_id',
-            'terms'    => is_search() ? $product_visibility_term_ids['exclude-from-search'] : $product_visibility_term_ids['exclude-from-catalog'],
-            'operator' => 'NOT IN',
-        );
-
-        $args['tax_query'][] = array(
-            'taxonomy' => 'product_visibility',
-            'field'    => 'term_taxonomy_id',
-            'terms'    => $product_visibility_term_ids['featured'],
-        );
-    } else {
-        $args['meta_query'] = array(
-            array(
-                'key'     => '_visibility',
-                'value'   => array( 'catalog', 'visible' ),
-                'compare' => 'IN'
-            ),
-            array(
-                'key'   => '_featured',
-                'value' => 'yes'
-            )
-        );
-    }
-
-    $featured_query = new WP_Query( apply_filters( 'dokan_get_featured_products', $args ) );
-
-    return $featured_query;
+    return dokan()->product->featured( apply_filters( 'dokan_get_featured_products', $args ) );
 }
 
 /**
@@ -640,37 +607,16 @@ function dokan_get_latest_products( $per_page = 9 , $seller_id = '' ) {
 
     $args = array(
         'posts_per_page'      => $per_page,
-        'post_type'           => 'product',
+        'post_status'         => 'publish',
+        'orderby'             => 'publish_date',
         'ignore_sticky_posts' => 1,
     );
-
-    if ( version_compare( WC_VERSION, '2.7', '>' ) ) {
-
-        $product_visibility_term_ids = wc_get_product_visibility_term_ids();
-
-        $args['tax_query'] = array(
-            'taxonomy' => 'product_visibility',
-            'field'    => 'term_taxonomy_id',
-            'terms'    => is_search() ? $product_visibility_term_ids['exclude-from-search'] : $product_visibility_term_ids['exclude-from-catalog'],
-            'operator' => 'NOT IN',
-        );
-    } else {
-        $args['meta_query']  = array(
-            array(
-                'key'     => '_visibility',
-                'value'   => array('catalog', 'visible'),
-                'compare' => 'IN'
-            )
-        );
-    }
 
     if ( !empty( $seller_id ) ) {
         $args['author'] = (int) $seller_id;
     }
 
-    $latest_query = new WP_Query( apply_filters( 'dokan_get_latest_products', $args ) );
-
-    return $latest_query;
+    return dokan()->product->latest( apply_filters( 'dokan_get_latest_products', $args ) );
 }
 
 /**
@@ -688,36 +634,13 @@ function dokan_get_best_selling_products( $per_page = 8, $seller_id = '' ) {
         'post_status'         => 'publish',
         'ignore_sticky_posts' => 1,
         'posts_per_page'      => $per_page,
-        'meta_key'            => 'total_sales',
-        'orderby'             => 'meta_value_num'
     );
-
-    if ( version_compare( WC_VERSION, '2.7', '>' ) ) {
-
-        $product_visibility_term_ids = wc_get_product_visibility_term_ids();
-        $args['tax_query'] = array(
-            'taxonomy' => 'product_visibility',
-            'field'    => 'term_taxonomy_id',
-            'terms'    => is_search() ? $product_visibility_term_ids['exclude-from-search'] : $product_visibility_term_ids['exclude-from-catalog'],
-            'operator' => 'NOT IN',
-        );
-    } else {
-        $args['meta_query']  = array(
-            array(
-                'key'     => '_visibility',
-                'value'   => array('catalog', 'visible'),
-                'compare' => 'IN'
-            )
-        );
-    }
 
     if ( !empty( $seller_id ) ) {
         $args['author'] = (int) $seller_id;
     }
 
-    $best_selling_query = new WP_Query( apply_filters( 'dokan_best_selling_query', $args ) );
-
-    return $best_selling_query;
+    return dokan()->product->best_selling( apply_filters( 'dokan_best_selling_query', $args ) );
 }
 
 
@@ -755,37 +678,11 @@ function dokan_get_top_rated_products( $per_page = 8 , $seller_id = '') {
         'posts_per_page'        => $per_page
     );
 
-    if ( version_compare( WC_VERSION, '2.7', '>' ) ) {
-
-        $product_visibility_term_ids = wc_get_product_visibility_term_ids();
-
-        $args['tax_query'] = array(
-            'taxonomy' => 'product_visibility',
-            'field'    => 'term_taxonomy_id',
-            'terms'    => is_search() ? $product_visibility_term_ids['exclude-from-search'] : $product_visibility_term_ids['exclude-from-catalog'],
-            'operator' => 'NOT IN',
-        );
-    } else {
-        $args['meta_query']  = array(
-            array(
-                'key'     => '_visibility',
-                'value'   => array('catalog', 'visible'),
-                'compare' => 'IN'
-            )
-        );
-    }
-
     if ( !empty( $seller_id ) ) {
         $args['author'] = (int) $seller_id;
     }
 
-    add_filter( 'posts_clauses', array( 'WC_Shortcodes', 'order_by_rating_post_clauses' ) );
-
-    $top_rated_query = new WP_Query( apply_filters( 'dokan_top_rated_query', $args ) );
-
-    remove_filter( 'posts_clauses', array( 'WC_Shortcodes', 'order_by_rating_post_clauses' ) );
-
-    return $top_rated_query;
+    return dokan()->product->top_rated( apply_filters( 'dokan_top_rated_query', $args ) );
 }
 
 /**
@@ -841,33 +738,8 @@ function dokan_get_on_sale_products( $per_page = 10, $paged = 1, $seller_id = ''
  * @return mixed
  */
 function dokan_get_seller_balance( $seller_id, $formatted = true ) {
-    global $wpdb;
-
-    $status        = dokan_withdraw_get_active_order_status_in_comma();
-    $cache_group = 'dokan_seller_data_'.$seller_id;
-    $cache_key     = 'dokan_seller_balance_' . $seller_id;
-    $earning       = wp_cache_get( $cache_key, $cache_group );
-    $threshold_day = dokan_get_option( 'withdraw_date_limit', 'dokan_withdraw', 0 );
-    $date          = date( 'Y-m-d', strtotime( date('Y-m-d') . ' -'.$threshold_day.' days' ) );
-
-    if ( false === $earning ) {
-        $sql = "SELECT SUM(net_amount) as earnings,
-            (SELECT SUM(amount) FROM {$wpdb->prefix}dokan_withdraw WHERE user_id = %d AND status = 1) as withdraw
-            FROM {$wpdb->prefix}dokan_orders as do LEFT JOIN {$wpdb->prefix}posts as p ON do.order_id = p.ID
-            WHERE seller_id = %d AND DATE(p.post_date) <= %s AND order_status IN({$status})";
-
-        $result = $wpdb->get_row( $wpdb->prepare( $sql, $seller_id, $seller_id, $date ) );
-        $earning = $result->earnings - $result->withdraw;
-
-        wp_cache_set( $cache_key, $earning, $cache_group );
-        dokan_cache_update_group( $cache_key , $cache_group );
-    }
-
-    if ( $formatted ) {
-        return apply_filters( 'dokan_get_formatted_seller_balance', wc_price( $earning ) );
-    }
-
-    return apply_filters( 'dokan_get_seller_balance', $earning );
+    $vendor = dokan()->vendor->get( $seller_id );
+    return $vendor->get_balance( $formatted );
 }
 
 /**
@@ -909,23 +781,8 @@ function dokan_get_seller_earnings( $seller_id, $start_date = '', $end_date = ''
  * @return type
  */
 function dokan_get_seller_rating( $seller_id ) {
-    global $wpdb;
-
-    $sql = "SELECT AVG(cm.meta_value) as average, COUNT(wc.comment_ID) as count FROM $wpdb->posts p
-        INNER JOIN $wpdb->comments wc ON p.ID = wc.comment_post_ID
-        LEFT JOIN $wpdb->commentmeta cm ON cm.comment_id = wc.comment_ID
-        WHERE p.post_author = %d AND p.post_type = 'product' AND p.post_status = 'publish'
-        AND ( cm.meta_key = 'rating' OR cm.meta_key IS NULL) AND wc.comment_approved = 1
-        ORDER BY wc.comment_post_ID";
-
-    $result = $wpdb->get_row( $wpdb->prepare( $sql, $seller_id ) );
-
-    $rating_value = apply_filters( 'dokan_seller_rating_value', array(
-        'rating' => number_format( $result->average, 2 ),
-        'count'  => (int) $result->count
-    ), $seller_id );
-
-    return $rating_value;
+    $vendor = dokan()->vendor->get( $seller_id );
+    return $vendor->get_rating();
 }
 
 /**
@@ -935,35 +792,8 @@ function dokan_get_seller_rating( $seller_id ) {
  * @return void
  */
 function dokan_get_readable_seller_rating( $seller_id ) {
-    $rating = dokan_get_seller_rating( $seller_id );
-
-    if ( ! $rating['count'] ) {
-        echo __( 'No ratings found yet!', 'dokan-lite' );
-        return;
-    }
-
-    $long_text = _n( '%s rating from %d review', '%s rating from %d reviews', $rating['count'], 'dokan-lite' );
-    $text = sprintf( __( 'Rated %s out of %d', 'dokan-lite' ), $rating['rating'], number_format( 5 ) );
-    $width = ( $rating['rating']/5 ) * 100;
-    ?>
-        <span class="seller-rating">
-            <span title="<?php echo esc_attr( $text ); ?>" class="star-rating" itemtype="http://schema.org/Rating" itemscope="" itemprop="reviewRating">
-                <span class="width" style="width: <?php echo $width; ?>%"></span>
-                <span style=""><strong itemprop="ratingValue"><?php echo $rating['rating']; ?></strong></span>
-            </span>
-        </span>
-
-        <?php
-            $review_text = sprintf( $long_text, $rating['rating'], $rating['count'] );
-
-            if ( function_exists( 'dokan_get_review_url' ) ) {
-                $review_text = sprintf( '<a href="%s">%s</a>', esc_url( dokan_get_review_url( $seller_id ) ), $review_text );
-            }
-        ?>
-        <span class="text">
-            <?php echo $review_text; ?>
-        </span>
-    <?php
+    $vendor = dokan()->vendor->get( $seller_id );
+    echo $vendor->get_readable_rating();
 }
 
 /**
@@ -1165,13 +995,13 @@ function dokan_clear_product_category_cache( $post_id ) {
     delete_transient( 'dokan-store-category-' . $seller_id );
 }
 
-if ( !function_exists( 'dokan_date_time_format' ) ) {
-    
+if ( ! function_exists( 'dokan_date_time_format' ) ) {
+
     /**
      * Format date time string to WC format
-     * 
+     *
      * @since 2.6.8
-     * 
+     *
      * @param string $time
      * @param boolean $date_only
      * @return string

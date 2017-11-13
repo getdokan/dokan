@@ -155,6 +155,43 @@
 .chosen-container-multi .chosen-choices li.search-field input[type="text"] {
   height: 23px;
 }
+.dokan-settings-wrap {
+  display: flex;
+  border: 1px solid #c8d7e1;
+}
+.dokan-settings-wrap .dashicons {
+  padding-top: 2px;
+  margin-right: 5px;
+}
+.dokan-settings-wrap h2.nav-tab-wrapper {
+  flex: 1;
+  border-bottom: none;
+  padding: 0;
+  background: #f1f1f1;
+  border-right: 1px solid #c8d7e1;
+}
+.dokan-settings-wrap h2.nav-tab-wrapper a {
+  float: none;
+  display: block;
+  margin: 0;
+  border: none;
+  padding: 13px 13px;
+  background: #f1f1f1;
+  font-weight: 500;
+  border-bottom: 1px solid #c8d7e1;
+}
+.dokan-settings-wrap h2.nav-tab-wrapper a.nav-tab-active {
+  background: #fff !important;
+  border-right: 1px solid #c8d7e1;
+  width: 99%;
+  color: #2e4453;
+}
+.dokan-settings-wrap .metabox-holder {
+  flex: 3;
+  padding-left: 3%;
+  padding-right: 10px;
+  background: #fff;
+}
 .dokan-settings-radio-image {
   display: block;
   width: 50%;
