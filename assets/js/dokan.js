@@ -1270,16 +1270,33 @@ jQuery(function($) {
         $( "input.dokan-product-regular-price, input.dokan-product-sales-price" ).on( 'keyup', function () {
             if ( dokan.commission_type == 'percentage' ) {
                 if ( $('input.dokan-product-sales-price' ).val() == '' ) {
-                    $( 'span.vendor-price' ).html( ( $( 'input.dokan-product-regular-price' ).val() * dokan.vendor_percentage ) / 100 );
+                    $( 'span.vendor-price' ).html(
+                        parseFloat( accounting.formatNumber( ( ( $( 'input.dokan-product-regular-price' ).val() * dokan.vendor_percentage ) / 100 ), dokan.rounding_precision, '' ) )
+                                .toString()
+                                .replace( '.', dokan.mon_decimal_point )
+                    );
                 } else {
-                    $( 'span.vendor-price' ).html( ( $( 'input.dokan-product-sales-price' ).val() * dokan.vendor_percentage ) / 100 );
-                }           
+                    $( 'span.vendor-price' ).html(
+                        parseFloat( accounting.formatNumber( ( ( $( 'input.dokan-product-sales-price' ).val() * dokan.vendor_percentage ) / 100 ), dokan.rounding_precision, '' ) )
+                            .toString()
+                            .replace( '.', dokan.mon_decimal_point )
+                    );
+                }
             } else {
+
                 if ( $('input.dokan-product-sales-price' ).val() == '' ) {
-                    $( 'span.vendor-price' ).html( ( $( 'input.dokan-product-regular-price' ).val() - dokan.vendor_percentage ) );
+                    $( 'span.vendor-price' ).html(
+                        parseFloat( accounting.formatNumber( ( $( 'input.dokan-product-regular-price' ).val() - ( 100 - dokan.vendor_percentage ) ), dokan.rounding_precision, '' ) )
+                                .toString()
+                                .replace( '.', dokan.mon_decimal_point )
+                    );
                 } else {
-                    $( 'span.vendor-price' ).html( ( $( 'input.dokan-product-sales-price' ).val() - dokan.vendor_percentage ) );
-                } 
+                    $( 'span.vendor-price' ).html(
+                            parseFloat( accounting.formatNumber( ( $( 'input.dokan-product-sales-price' ).val() - ( 100 - dokan.vendor_percentage ) ), dokan.rounding_precision, '' ) )
+                                .toString()
+                                .replace( '.', dokan.mon_decimal_point )
+                        );
+                }
             }
 
             if ( Number( $('span.vendor-price').text() ) < 0  ) {

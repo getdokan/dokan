@@ -14,7 +14,7 @@ class Dokan_Scripts {
 
         add_action( 'init', array( $this, 'register_all_scripts' ), 10 );
         add_filter( 'dokan_localized_args', array( $this, 'conditional_localized_args' ) );
-        
+
         if ( is_admin() ) {
             add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
         } else {
@@ -78,12 +78,12 @@ class Dokan_Scripts {
 
         do_action( 'dokan_register_scripts' );
     }
-    
+
     /**
      * Enqueue front-end scripts
      */
     public function enqueue_front_scripts() {
-        
+
 
         if ( !function_exists( 'WC' ) ) {
             return;
@@ -112,7 +112,9 @@ class Dokan_Scripts {
             'wrong_message'     => __( 'Something went wrong. Please try again.', 'dokan-lite' ),
             'vendor_percentage' => dokan_get_seller_percentage( get_current_user_id() ),
             'commission_type'   => dokan_get_commission_type( get_current_user_id() ),
-            
+            'rounding_precision' => wc_get_rounding_precision(),
+            'mon_decimal_point'  => wc_get_price_decimal_separator(),
+
         );
 
         $localize_script = apply_filters( 'dokan_localized_args', $default_script );
@@ -252,12 +254,12 @@ class Dokan_Scripts {
      */
     function conditional_localized_args( $default_args ) {
 
-        if ( dokan_is_seller_dashboard() 
-            || ( get_query_var( 'edit' ) && is_singular( 'product' ) ) 
-            || dokan_is_store_page() 
-            || is_account_page() 
+        if ( dokan_is_seller_dashboard()
+            || ( get_query_var( 'edit' ) && is_singular( 'product' ) )
+            || dokan_is_store_page()
+            || is_account_page()
             || apply_filters( 'dokan_force_load_extra_args', false )
-        ) 
+        )
         {
             $general_settings = get_option( 'dokan_general', array() );
 

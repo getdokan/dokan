@@ -236,7 +236,7 @@ if ( ! $from_shortcode ) {
                                     <div class="dokan-form-group dokan-clearfix dokan-price-container">
                                         <div class="dokan-product-less-price-alert dokan-hide">
                                             <?php _e('Product price can\'t be less than the vendor fee!', 'dokan-lite' ); ?>
-                                        </div>                                        
+                                        </div>
                                     </div>
 
                                     <div class="sale_price_dates_fields dokan-clearfix dokan-form-group <?php echo ( ! $show_schedule ) ? 'dokan-hide' : ''; ?>">
