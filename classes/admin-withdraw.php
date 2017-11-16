@@ -36,7 +36,12 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
      * @return void admin
      */
     function bulk_action_handler() {
+
         if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            return;
+        }
+
+        if ( isset( $_POST['dokan_admin_withdraw_bulk_nonce'] ) && ! wp_verify_nonce( $_POST['dokan_admin_withdraw_bulk_nonce'], 'dokan_admin_withdraw_bulk_action' ) ) {
             return;
         }
 
@@ -81,7 +86,7 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
                 $amount  = $_POST['amount'][$key];
                 $method  = $_POST['method'][$key];
                 $note    = $_POST['note'][$key];
-                
+
                 do_action( 'dokan_withdraw_request_cancelled', $user_id, $amount, $method, $note );
                 $this->update_status( $withdraw_id, $user_id, 2 );
             }
@@ -97,7 +102,7 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
                 $user_id = $_POST['user_id'][$key];
                 $amount  = $_POST['amount'][$key];
                 $method  = $_POST['method'][$key];
-                
+
                 $this->update_status( $withdraw_id, $user_id, 1 );
                 do_action( 'dokan_withdraw_request_approved', $user_id, $amount, $method );
             }
@@ -116,8 +121,6 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
 
             break;
         }
-
-
     }
 
     /**
@@ -360,6 +363,9 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
                         <?php } ?>
                     </select>
 
+                    <?php
+                        wp_nonce_field( 'dokan_admin_withdraw_bulk_action', 'dokan_admin_withdraw_bulk_nonce' );
+                    ?>
                     <input type="hidden" name="status_page" value="<?php echo $status; ?>">
                     <input type="submit" name="" id="doaction2" class="button button-primary" value="<?php esc_attr_e( 'Apply', 'dokan-lite' ); ?>">
                 </div>

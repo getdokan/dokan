@@ -2452,32 +2452,29 @@ div.media-sidebar a.edit-attachment {
 .dokan-product-edit-area .featured-image {
   width: 35%;
 }
-.product-edit-new-container .dokan-edit-row {
+.dokan-edit-row {
   background: #fff;
   border: 1px solid #EBEBEB;
   margin-top: 15px;
 }
-.product-edit-new-container .dokan-edit-row.dokan-other-options {
-  margin-bottom: 20px;
-}
-.product-edit-new-container .dokan-edit-row .dokan-section-heading {
+.dokan-edit-row .dokan-section-heading {
   padding: 10px 15px;
   border-bottom: 1px solid #EBEBEB;
   overflow: hidden;
   cursor: pointer;
 }
-.product-edit-new-container .dokan-edit-row .dokan-section-heading i.fa {
+.dokan-edit-row .dokan-section-heading i.fa {
   font-size: 15px;
 }
-.product-edit-new-container .dokan-edit-row .dokan-section-heading i.fa.fa-flip-vertical {
+.dokan-edit-row .dokan-section-heading i.fa.fa-flip-vertical {
   margin-top: 9px;
 }
-.product-edit-new-container .dokan-edit-row .dokan-section-heading .dokan-section-toggle {
+.dokan-edit-row .dokan-section-heading .dokan-section-toggle {
   float: right;
   color: #888;
   font-size: 15px;
 }
-.product-edit-new-container .dokan-edit-row .dokan-section-heading h2 {
+.dokan-edit-row .dokan-section-heading h2 {
   margin: 0px;
   padding: 0px;
   float: left;
@@ -2485,7 +2482,7 @@ div.media-sidebar a.edit-attachment {
   font-weight: bold;
   line-height: 150%;
 }
-.product-edit-new-container .dokan-edit-row .dokan-section-heading p {
+.dokan-edit-row .dokan-section-heading p {
   float: left;
   vertical-align: bottom;
   margin-bottom: 0px;
@@ -2494,6 +2491,9 @@ div.media-sidebar a.edit-attachment {
   color: #888;
   font-style: italic;
   font-size: 12px;
+}
+.product-edit-new-container .dokan-edit-row.dokan-other-options {
+  margin-bottom: 20px;
 }
 .product-edit-new-container .dokan-edit-row .dokan-section-content {
   padding: 15px;
