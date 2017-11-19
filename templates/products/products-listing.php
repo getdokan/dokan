@@ -68,12 +68,20 @@
                         </thead>
                         <tbody>
                             <?php
-                            $pagenum      = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
-
+                            $pagenum       = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
+                            $post_statuses = array( 'publish', 'draft', 'pending' );
                             $args = array(
                                 'posts_per_page' => 10,
                                 'paged' => $pagenum,
-                                'author' => get_current_user_id()
+                                'author' => get_current_user_id(),
+                                'tax_query'  => array(
+                                    array(
+                                        'taxonomy' => 'product_type',
+                                        'field'    => 'slug',
+                                        'terms'    => apply_filters( 'dokan_product_listing_exclude_type', array() ),
+                                        'operator' => 'NOT IN',
+                                    ),
+                                ),
                             );
 
                             if ( isset( $_GET['post_status']) && in_array( $_GET['post_status'], $post_statuses ) ) {
