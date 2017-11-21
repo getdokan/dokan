@@ -292,9 +292,10 @@ class Dokan_Ajax {
      * Catches the form submission from store page
      */
     function contact_seller() {
-        $posted = $_POST;
 
         check_ajax_referer( 'dokan_contact_seller' );
+        
+        $posted = $_POST;
 
         $contact_name    = sanitize_text_field( $posted['name'] );
         $contact_email   = sanitize_text_field( $posted['email'] );

@@ -309,6 +309,7 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
 
                                 <div class="note-form" style="display: none;">
                                     <p><input type="text" class="dokan-note-text" name="note[<?php echo $row->id;?>]" value="<?php echo esc_attr( $row->note ); ?>"></p>
+                                    <?php wp_nonce_field( 'dokan_admin_action', 'dokan_admin_nonce' ); ?>
                                     <a class="dokan-note-submit button" data-id=<?php echo $row->id; ?> href="#" ><?php _e( 'Save', 'dokan-lite' ); ?></a>
                                     <a href="#" class="dokan-note-cancel"><?php _e( 'cancel', 'dokan-lite' ); ?></a>
                                 </div>
@@ -469,10 +470,12 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
                             form_wrap = self.closest('.note-form'),
                             row_id = self.data('id'),
                             note = form_wrap.find('input.dokan-note-text').val(),
+                            nonce = form_wrap.find('input#dokan_admin_nonce').val(),
                             data = {
                                 'action': 'note',
                                 'row_id': row_id,
                                 'note': note,
+                                'dokan_admin_nonce' : nonce
                             };
 
                         $.post( '<?php echo admin_url( 'admin-ajax.php' ); ?>', data, function(resp) {
