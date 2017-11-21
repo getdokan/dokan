@@ -495,7 +495,7 @@ add_action( 'delete_post', 'dokan_store_category_delete_transient' );
 add_action( 'save_post', 'dokan_store_category_delete_transient' );
 
 function dokan_seller_reg_form_fields() {
-    $postdata = $_POST;
+    $postdata = wc_clean( $_POST ); // WPCS: CSRF ok, input var ok.
     $role = isset( $postdata['role'] ) ? $postdata['role'] : 'customer';
     $role_style = ( $role == 'customer' ) ? ' style="display:none"' : '';
 

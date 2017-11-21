@@ -105,8 +105,8 @@
                                         <div id="product_images_container">
                                             <ul class="product_images dokan-clearfix">
                                                 <?php
-                                                    if ( isset( $_POST['product_image_gallery'] ) ) {
-                                                        $product_images = $_POST['product_image_gallery'];
+                                                    if ( isset( $_POST['product_image_gallery'] ) ) { // WPCS: CSRF ok, input var ok.
+                                                        $product_images = $_POST['product_image_gallery']; // WPCS: CSRF ok, input var ok.
                                                         $gallery        = explode( ',', $product_images );
 
                                                         if ( $gallery ) {

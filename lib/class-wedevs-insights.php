@@ -560,14 +560,14 @@ class WeDevs_Insights {
     public function uninstall_reason_submission() {
         global $wpdb;
 
-        if ( ! isset( $_POST['reason_id'] ) ) {
+        if ( ! isset( $_POST['reason_id'] ) ) { // WPCS: CSRF ok, Input var ok.
             wp_send_json_error();
         }
 
         $current_user = wp_get_current_user();
 
         $data = array(
-            'reason_id'     => sanitize_text_field( $_POST['reason_id'] ),
+            'reason_id'     => sanitize_text_field( $_POST['reason_id'] ), // WPCS: CSRF ok, Input var ok.
             'plugin'        => $this->slug,
             'url'           => home_url(),
             'user_email'    => $current_user->user_email,

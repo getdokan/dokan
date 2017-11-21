@@ -14,7 +14,7 @@ class Dokan_Admin_Ajax {
      */
     function __construct() {
         add_action( 'wp_ajax_dokan_withdraw_form_action', array( $this, 'handle_withdraw_action' ) );
-        add_action( 'wp_ajax_dokan-dismiss-promotional-offer-notice', array( $this, 'dismiss_promotional_offer' ) );
+        //add_action( 'wp_ajax_dokan-dismiss-promotional-offer-notice', array( $this, 'dismiss_promotional_offer' ) );
     }
 
     /**
@@ -40,7 +40,7 @@ class Dokan_Admin_Ajax {
      */
     function handle_withdraw_action() {
 
-        parse_str( $_POST['formData'], $postdata );
+        parse_str( wc_clean( $_POST['formData'] ), $postdata ); // WPCS: CSRF ok.
 
         if ( !wp_verify_nonce( $postdata['dokan_withdraw_admin_bulk_action_nonce'], 'dokan_withdraw_admin_bulk_action' ) ) {
             wp_send_json_error();
@@ -111,12 +111,12 @@ class Dokan_Admin_Ajax {
      *
      * @return void
      */
-    public function dismiss_promotional_offer() {
-
-        if ( !empty( $_POST['dokan_promotion_dismissed'] ) ) {
-            $offer_key = 'dokan_4th_yr_aniv_44_perc_discount';
-            update_option( $offer_key . '_tracking_notice', 'hide' );
-        }
-    }
+//    public function dismiss_promotional_offer() {
+//
+//        if ( !empty( $_POST['dokan_promotion_dismissed'] ) ) {
+//            $offer_key = 'dokan_4th_yr_aniv_44_perc_discount';
+//            update_option( $offer_key . '_tracking_notice', 'hide' );
+//        }
+//    }
 
 }

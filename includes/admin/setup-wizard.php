@@ -104,7 +104,7 @@ class Dokan_Setup_Wizard {
 
         $this->enqueue_scripts();
 
-        if ( ! empty( $_POST['save_step'] ) && isset( $this->steps[ $this->step ]['handler'] ) ) {
+        if ( ! empty( $_POST['save_step'] ) && isset( $this->steps[ $this->step ]['handler'] ) ) { // WPCS: CSRF ok.
             call_user_func( $this->steps[ $this->step ]['handler'] );
         }
 
