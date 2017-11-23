@@ -302,6 +302,9 @@ class Dokan_Admin_User_Profile {
 
                 <?php do_action( 'dokan_seller_meta_fields', $user ); ?>
 
+                <?php
+                    wp_nonce_field( 'dokan_update_user_profile_info', 'dokan_update_user_profile_info_nonce' );
+                ?>
             </tbody>
         </table>
 
@@ -409,6 +412,10 @@ class Dokan_Admin_User_Profile {
      */
     function save_meta_fields( $user_id ) {
         if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            return;
+        }
+
+        if ( isset( $_POST['dokan_update_user_profile_info_nonce'] ) && ! wp_verify_nonce( $_POST['dokan_update_user_profile_info_nonce'], 'dokan_update_user_profile_info' ) ) {
             return;
         }
 

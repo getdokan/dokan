@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<ruleset name="WordPress Coding Standards">
+    <description>Dokan Core Standard</description>
+
+    <!-- Exclude the test directory. -->
+    <exclude-pattern>/bin/*</exclude-pattern>
+
+    <!-- Exclude the test directory. -->
+    <exclude-pattern>/tests/*</exclude-pattern>
+
+    <!-- Exclude the Node Modules directory. -->
+    <exclude-pattern>/node_modules/*</exclude-pattern>
+
+    <!-- Exclude minified Javascript files. -->
+    <exclude-pattern>*.min.js</exclude-pattern>
+
+    <rule ref="WordPress">
+        <exclude name="Generic.WhiteSpace.DisallowSpaceIndent" />
+        <!-- <exclude name="WordPress.VIP.RestrictedFunctions" /> -->
+        <!-- <exclude name="WordPress.VIP.OrderByRand" /> -->
+    </rule>
+
+    <rule ref="Generic.WhiteSpace.ScopeIndent">
+        <properties>
+            <property name="indent" value="4"/>
+            <property name="tabIndent" value="false"/>
+        </properties>
+    </rule>
+
+   <!--  <rule ref="WordPress.VIP.ValidatedSanitizedInput">
+        <properties>
+            <property name="customSanitizingFunctions" type="array" value="wc_clean,wc_sanitize_tooltip,wc_format_decimal,wc_stock_amount" />
+        </properties>
+    </rule>
+
+    <rule ref="WordPress.XSS.EscapeOutput">
+            <properties>
+                <property name="customEscapingFunctions" type="array" value="wc_help_tip,wc_sanitize_tooltip" />
+            </properties>
+    </rule>
+ -->
+    <rule ref="Generic.WhiteSpace.DisallowTabIndent" />
+</ruleset>

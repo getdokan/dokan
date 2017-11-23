@@ -106,10 +106,6 @@ class Dokan_Template_Products {
         self::$product_cat  = -1;
         self::$post_content = __( 'Details of your product ...', 'dokan-lite' );
 
-        if ( ! $_POST ) {
-            return;
-        }
-
         if ( isset( $_POST['add_product'] ) && wp_verify_nonce( $_POST['dokan_add_new_product_nonce'], 'dokan_add_new_product' ) ) {
             $post_title     = trim( $_POST['post_title'] );
             $post_content   = trim( $_POST['post_content'] );

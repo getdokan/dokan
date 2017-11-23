@@ -52,8 +52,6 @@ class Dokan_Ajax {
         add_action( 'wp_ajax_dokan_revoke_access_to_download', array( $this, 'revoke_access_to_download' ) );
         add_action( 'wp_ajax_nopriv_dokan_revoke_access_to_download', array( $this, 'revoke_access_to_download' ) );
 
-        add_action( 'wp_ajax_dokan_toggle_seller', array( $this, 'toggle_seller_status' ) );
-
         add_action( 'wp_ajax_shop_url', array($this, 'shop_url_check') );
         add_action( 'wp_ajax_nopriv_shop_url', array($this, 'shop_url_check') );
 
@@ -474,85 +472,6 @@ class Dokan_Ajax {
 
         // Quit out
         die();
-    }
-
-    /**
-     * Enable/disable seller selling capability from admin seller listing page
-     *
-     * @return type
-     */
-    function toggle_seller_status() {
-        if ( ! current_user_can( 'manage_options' ) ) {
-            return;
-        }
-
-        $user_id = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
-        $status = sanitize_text_field( $_POST['type'] );
-
-        if ( $user_id && in_array( $status, array( 'yes', 'no' ) ) ) {
-            update_user_meta( $user_id, 'dokan_enable_selling', $status );
-
-            if ( $status == 'no' ) {
-                $this->make_products_pending( $user_id );
-            } else {
-                $this->make_products_published( $user_id );
-            }
-        }
-
-        wp_send_json_success();
-        exit;
-    }
-
-    /**
-     * Make all the products to pending once a seller is deactivated for selling
-     *
-     * @param int $seller_id
-     */
-    function make_products_pending( $seller_id ) {
-        $args = array(
-            'post_type' => 'product',
-            'post_status' => 'publish',
-            'posts_per_page' => -1,
-            'author' => $seller_id,
-            'orderby' => 'post_date',
-            'order' => 'DESC'
-        );
-
-        $product_query = new WP_Query( $args );
-        $products = $product_query->get_posts();
-
-        if ( $products ) {
-            foreach ($products as $pro) {
-                update_post_meta( $pro->ID, 'inactive_product_flag', 'yes' );
-                wp_update_post( array( 'ID' => $pro->ID, 'post_status' => 'pending' ) );
-            }
-        }
-    }
-
-    /**
-     * Make all the products to published once a seller is activated for selling
-     *
-     * @param int $seller_id
-     */
-    function make_products_published( $seller_id ) {
-        $args = array(
-            'post_type' => 'product',
-            'post_status' => 'pending',
-            'posts_per_page' => -1,
-            'author' => $seller_id,
-            'orderby' => 'post_date',
-            'order' => 'DESC',
-            'meta_key'  => 'inactive_product_flag'
-        );
-
-        $product_query = new WP_Query( $args );
-        $products = $product_query->get_posts();
-
-        if ( $products ) {
-            foreach ($products as $pro) {
-                wp_update_post( array( 'ID' => $pro->ID, 'post_status' => 'publish' ) );
-            }
-        }
     }
 
     /**

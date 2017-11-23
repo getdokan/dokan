@@ -1,5 +1,0 @@
-<h3>Basic Helps</h3>
-<hr>
-<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magnam, quibusdam dolorum in, quisquam vel aspernatur. Ipsam enim quo, nesciunt in maiores nulla deleniti ducimus porro corporis, reprehenderit, iure ea voluptate aperiam sapiente. Debitis voluptatum distinctio maiores odit maxime unde vero mollitia in repudiandae dicta dolor nostrum, deserunt eos nemo ex quis voluptatibus aliquam tempora placeat officiis neque totam, libero voluptatem saepe iusto. Alias quae corporis impedit. Laudantium quos provident, reprehenderit delectus autem accusamus odio at minima, accusantium, tempora aliquam veritatis repudiandae beatae. Ratione laudantium quidem saepe natus temporibus exercitationem quod reiciendis nesciunt veritatis quas ipsa fugiat consequatur facere, tenetur praesentium!</p>
-<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem aliquam est quas, molestias delectus fugit accusamus eveniet, itaque ab totam, dignissimos veniam ducimus vel quo. Voluptatum officiis, illum! Assumenda, sapiente.</p>
-<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi, animi?</p>

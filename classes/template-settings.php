@@ -35,7 +35,7 @@ class Dokan_Template_Settings {
     public static function init() {
         static $instance = false;
 
-        if ( !$instance ) {
+        if ( ! $instance ) {
             $instance = new Dokan_Template_Settings();
         }
 
@@ -211,7 +211,7 @@ class Dokan_Template_Settings {
 
         switch( $_POST['form_id'] ) {
             case 'profile-form':
-                if ( !wp_verify_nonce( $_POST['_wpnonce'], 'dokan_profile_settings_nonce' ) ) {
+                if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'dokan_profile_settings_nonce' ) ) {
                     wp_send_json_error( __( 'Are you cheating?', 'dokan-lite' ) );
                 }
                 $ajax_validate =  $this->profile_validate();
@@ -223,7 +223,7 @@ class Dokan_Template_Settings {
                 $ajax_validate =  $this->store_validate();
                 break;
             case 'payment-form':
-                if ( !wp_verify_nonce( $_POST['_wpnonce'], 'dokan_payment_settings_nonce' ) ) {
+                if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'dokan_payment_settings_nonce' ) ) {
                     wp_send_json_error( __( 'Are you cheating?', 'dokan-lite' ) );
                 }
                 $ajax_validate =  $this->payment_validate();
@@ -699,7 +699,7 @@ class Dokan_Template_Settings {
         $track_val['next_todo']     = $next_add;
         $track_val['progress']      = $profile_val;
         $track_val['progress_vals'] = $progress_values;
-        
+
         return apply_filters( 'dokan_profile_completion_progress_value', $track_val ) ;
     }
 

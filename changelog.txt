@@ -1,8 +1,14 @@
+v2.7.0 -> Nov 23, 2017
+---------------------
+- [fix]  Remove duplicate help menu and unwanted text
+- [fix]  Fixed price suggestion when flat rate commission set from admin fixed
+- [fix]  Fixed xss and csrf issues for some security
+
 v2.6.10 -> Nov 13, 2017
 ---------------------
 - [new]   Added dokan CRUD classes
 - [new]   Added help menu on Dokan Admin Dashboard
-- [tweak] Dokan Admin settings page redesigned 
+- [tweak] Dokan Admin settings page redesigned
 - [tweak] Price suggestion made compatible with Flat commission
 - [tweak] Admin setup wizard styles updated
 - [fix]   Fixed casting issue in updater class

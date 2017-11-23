@@ -96,6 +96,10 @@ class Dokan_Template_Orders {
             return;
         }
 
+        if ( isset( $_POST['dokan_vendor_order_export_nonce'] ) && ! wp_verify_nonce( $_POST['dokan_vendor_order_export_nonce'], 'dokan_vendor_order_export_action' ) ) {
+            return;
+        }
+
         if ( isset( $_POST['dokan_order_export_all'] ) ) {
 
             $filename = "Orders-".time();
