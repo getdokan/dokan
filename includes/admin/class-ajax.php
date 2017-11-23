@@ -112,9 +112,8 @@ class Dokan_Admin_Ajax {
      * @return void
      */
     public function dismiss_promotional_offer() {
-
         if ( ! empty( $_POST['dokan_promotion_dismissed'] ) ) {
-            $offer_key = 'dokan_4th_yr_aniv_44_perc_discount';
+            $offer_key = 'dokan_package_offer';
             update_option( $offer_key . '_tracking_notice', 'hide' );
         }
     }

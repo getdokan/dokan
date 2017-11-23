@@ -72,9 +72,9 @@
                             $post_statuses = array( 'publish', 'draft', 'pending' );
                             $args = array(
                                 'posts_per_page' => 10,
-                                'paged' => $pagenum,
-                                'author' => get_current_user_id(),
-                                'tax_query'  => array(
+                                'paged'          => $pagenum,
+                                'author'         => get_current_user_id(),
+                                'tax_query'      => array(
                                     array(
                                         'taxonomy' => 'product_type',
                                         'field'    => 'slug',

@@ -33,7 +33,7 @@ class Dokan_Admin {
 
         add_action( 'admin_notices', array($this, 'update_notice' ) );
 
-        // add_action( 'admin_notices', array($this, 'promotional_offer' ) );
+        add_action( 'admin_notices', array($this, 'promotional_offer' ) );
 
         add_action( 'wp_before_admin_bar_render', array( $this, 'dokan_admin_toolbar' ) );
     }
@@ -52,22 +52,23 @@ class Dokan_Admin {
         }
 
         // check if it has already been dismissed
-        $offer_key = 'dokan_4th_yr_aniv_44_perc_discount';
+        $offer_key = 'dokan_package_offer';
         $hide_notice = get_option( $offer_key . '_tracking_notice', 'no' );
 
         if ( 'hide' == $hide_notice ) {
             return;
         }
 
-        $product_text = ( ! WeDevs_Dokan::init()->is_pro_exists() ) ? __( 'Pro upgrade and all extensions', 'dokan-lite' ) : __( 'all extensions', 'dokan-lite' );
-
-        $offer_msg = sprintf( __( '<h2><span class="dashicons dashicons-awards"></span> weDevs 4th Year Anniversary Offer</h2>', 'dokan-lite' ) );
-        $offer_msg .= sprintf( __( '<p>Get <strong class="highlight-text">44&#37; discount</strong> on %2$s also <a target="_blank" href="%1$s"><strong>WIN any product</strong></a> from our 4th year anniversary giveaway. Offer ending soon!</p>', 'dokan-lite' ), 'https://wedevs.com/in/4years', $product_text );
+        $offer_msg = sprintf( __( '<h2>
+                        Dokan is Getting More Affordable: Price Reduction & Changes in Packages
+                    </h2>', 'dokan-lite' ) );
+        $offer_msg .= sprintf( __( '<p>Marketplaces are changing, so is Dokan Multivendor. We are reducing Dokan Pro entry package price and bringing entirely new pricing where you get addons pre-activated for free depending on your package.</p>', 'dokan-lite' ) );
         ?>
             <div class="notice is-dismissible" id="dokan-promotional-offer-notice">
                 <img src="https://ps.w.org/dokan-lite/assets/icon-256x256.png?rev=1595714" alt="">
                 <?php echo $offer_msg; ?>
                 <span class="dashicons dashicons-megaphone"></span>
+                <a href="https://wedevs.com/in/dokan-new-package-blog-via-lite" class="button button-primary promo-btn" target="_blank"><?php _e( 'View Package', 'dokan-lite' ); ?></a>
             </div>
 
             <style>
@@ -77,9 +78,26 @@ class Dokan_Admin {
                     padding-left: 83px;
                 }
 
+                #dokan-promotional-offer-notice a.promo-btn{
+                    background: #fff;
+                    border-color: #fafafa #fafafa #fafafa;
+                    box-shadow: 0 1px 0 #fafafa;
+                    color: #F35E33;
+                    text-decoration: none;
+                    text-shadow: none;
+                    position: absolute;
+                    top: 30px;
+                    right: 26px;
+                    height: 40px;
+                    line-height: 40px;
+                    width: 130px;
+                    text-align: center;
+                }
+
                 #dokan-promotional-offer-notice h2{
-                    font-size: 19px;
-                    color: rgba(250, 250, 250, 0.77);
+                    font-size: 18px;
+                    width: 85%;
+                    color: rgba(250, 250, 250, 1);
                     margin-bottom: 8px;
                     font-weight: normal;
                     margin-top: 15px;
@@ -92,7 +110,7 @@ class Dokan_Admin {
                 #dokan-promotional-offer-notice img{
                     position: absolute;
                     width: 80px;
-                    top: 0px;
+                    top: 10px;
                     left: 0px;
                 }
 
@@ -102,6 +120,7 @@ class Dokan_Admin {
                 }
 
                 #dokan-promotional-offer-notice p{
+                    width: 85%;
                     color: rgba(250, 250, 250, 0.77);
                     font-size: 14px;
                     margin-bottom: 10px;
@@ -126,7 +145,7 @@ class Dokan_Admin {
                 #dokan-promotional-offer-notice span.dashicons-megaphone {
                     position: absolute;
                     top: 16px;
-                    right: 119px;
+                    right: 248px;
                     color: rgba(253, 253, 253, 0.29);
                     font-size: 96px;
                     transform: rotate(-21deg);
@@ -195,7 +214,7 @@ class Dokan_Admin {
 
         add_submenu_page( 'dokan', __( 'Help', 'dokan' ), __( '<span style="color:#f18500">Help</span>', 'dokan' ), $capability, 'dokan-help', array( $this, 'help_page' ) );
         $settings = add_submenu_page( 'dokan', __( 'Settings', 'dokan-lite' ), __( 'Settings', 'dokan-lite' ), $capability, 'dokan-settings', array( $this, 'settings_page' ) );
-        add_submenu_page( 'dokan', __( 'Add Ons', 'dokan-lite' ), __( 'Add-ons', 'dokan-lite' ), $capability, 'dokan-addons', array($this, 'addon_page' ) );
+        // add_submenu_page( 'dokan', __( 'Add Ons', 'dokan-lite' ), __( 'Add-ons', 'dokan-lite' ), $capability, 'dokan-addons', array($this, 'addon_page' ) );
 
         /**
          * Welcome page
