@@ -388,7 +388,9 @@ class Dokan_Ajax {
      */
     public function add_shipping_tracking_info() {
 
-        check_ajax_referer( 'add-shipping-tracking-info', 'security' );
+        if ( isset( $_POST['dokan_security_nonce'] ) && !wp_verify_nonce( sanitize_key( $_POST['dokan_security_nonce'] ), 'dokan_security_action' ) ) {
+            die(-1);
+        }
 
         if ( !is_user_logged_in() ) {
             die(-1);
@@ -396,14 +398,14 @@ class Dokan_Ajax {
         if ( ! current_user_can( 'dokandar' ) ) {
             die(-1);
         }
-
+        
         $post_id           = absint( $_POST['post_id'] );
         $shipping_provider = $_POST['shipping_provider'];
         $shipping_number   = ( trim( stripslashes( $_POST['shipping_number'] ) ) );
         $shipped_date      = ( trim( $_POST['shipped_date'] ) );
 
         $ship_info = 'Shipping provider: ' . $shipping_provider . '<br />' . 'Shipping number: ' . $shipping_number . '<br />' . 'Shipped date: ' . $shipped_date;
-
+        
         if ( $shipping_number == '' ){
             die();
         }
@@ -443,6 +445,8 @@ class Dokan_Ajax {
             echo wpautop( wptexturize( $ship_info ) );
             echo '</div><p class="meta"><a href="#" class="delete_note">'.__( 'Delete', 'dokan-lite' ).'</a></p>';
             echo '</li>';
+            
+            do_action( 'dokan_order_tracking_updated', $post_id );
         }
 
         // Quit out

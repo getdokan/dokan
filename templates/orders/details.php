@@ -319,6 +319,7 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                                     </div>
 
                                     <input type="hidden" name="security" id="security" value="<?php echo wp_create_nonce('add-shipping-tracking-info'); ?>">
+                                    <?php wp_nonce_field( 'dokan_security_action', 'dokan_security_nonce' ); ?>
                                     <input type="hidden" name="post_id" id="post-id" value="<?php echo dokan_get_prop( $order, 'id' ); ?>">
                                     <input type="hidden" name="action" id="action" value="dokan_add_shipping_tracking_info">
 
