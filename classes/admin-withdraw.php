@@ -259,7 +259,7 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
                             <input type="hidden" name="amount[<?php echo esc_attr( $row->id );?>]" value="<?php echo esc_attr( $row->amount ); ?>">
                         </th>
                         <td>
-                            <strong><a href="<?php echo admin_url( 'user-edit.php?user_id=' . $user_data->ID ); ?>"><?php echo $user_data->user_login; ?></a></strong>
+                            <strong><a href="<?php echo esc_attr( admin_url( 'user-edit.php?user_id=' . $user_data->ID ) ) ?>"><?php echo esc_attr( $user_data->user_login ); ?></a></strong>
                             <div class="row-actions">
                                 <?php if ( $status == 'pending' ) { ?>
 
