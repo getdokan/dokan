@@ -282,7 +282,7 @@ class Dokan_Ajax {
         $status_label = isset( $statuses[$order_status] ) ? $statuses[$order_status] : $order_status;
         $status_class = dokan_get_order_status_class( $order_status );
 
-        echo '<label class="dokan-label dokan-label-' . $status_class . '">' . $status_label . '</label>';
+        echo '<label class="dokan-label dokan-label-' . esc_attr( $status_class ) . '">' . esc_attr( $status_label ) . '</label>';
         exit;
     }
 
@@ -292,9 +292,10 @@ class Dokan_Ajax {
      * Catches the form submission from store page
      */
     function contact_seller() {
-        $posted = $_POST;
 
         check_ajax_referer( 'dokan_contact_seller' );
+        
+        $posted = $_POST;
 
         $contact_name    = sanitize_text_field( $posted['name'] );
         $contact_email   = sanitize_text_field( $posted['email'] );

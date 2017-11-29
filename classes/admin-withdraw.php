@@ -162,9 +162,9 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
             header( 'Content-Disposition: attachment; filename="withdraw-'.date( 'd-m-y' ).'.csv"' );
 
             foreach ( $data as $fields ) {
-                echo $fields['email']. ',';
-                echo $fields['amount']. ',';
-                echo $fields['currency'] . "\n";
+                echo esc_html( $fields['email'] ) . ',';
+                echo esc_html( $fields['amount'] ) . ',';
+                echo esc_html( $fields['currency'] ) . "\n";
             }
 
             die();
@@ -205,7 +205,7 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
             if ( ! empty( $message ) ) {
                 ?>
                 <div class="updated">
-                    <p><strong><?php echo $message; ?></strong></p>
+                    <p><strong><?php echo esc_html( $message ); ?></strong></p>
                 </div>
                 <?php
             }
@@ -219,13 +219,13 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
                         <td class="check-column">
                             <input type="checkbox" class="dokan-withdraw-allcheck">
                         </td>
-                        <th><?php _e( 'User Name', 'dokan-lite' ); ?></th>
-                        <th><?php _e( 'Amount', 'dokan-lite' ); ?></th>
-                        <th><?php _e( 'Method', 'dokan-lite' ); ?></th>
-                        <th><?php _e( 'Method Details', 'dokan-lite' ); ?></th>
-                        <th><?php _e( 'Note', 'dokan-lite' ); ?></th>
-                        <th><?php _e( 'IP', 'dokan-lite' ); ?></th>
-                        <th><?php _e( 'Date', 'dokan-lite' ); ?></th>
+                        <th><?php esc_html_e( 'User Name', 'dokan-lite' ); ?></th>
+                        <th><?php esc_html_e( 'Amount', 'dokan-lite' ); ?></th>
+                        <th><?php esc_html_e( 'Method', 'dokan-lite' ); ?></th>
+                        <th><?php esc_html_e( 'Method Details', 'dokan-lite' ); ?></th>
+                        <th><?php esc_html_e( 'Note', 'dokan-lite' ); ?></th>
+                        <th><?php esc_html_e( 'IP', 'dokan-lite' ); ?></th>
+                        <th><?php esc_html_e( 'Date', 'dokan-lite' ); ?></th>
                     </tr>
                 </thead>
                 <tfoot>
@@ -233,13 +233,13 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
                         <td class="check-column">
                             <input type="checkbox" class="dokan-withdraw-allcheck">
                         </td>
-                        <th><?php _e( 'User Name', 'dokan-lite' ); ?></th>
-                        <th><?php _e( 'Amount', 'dokan-lite' ); ?></th>
-                        <th><?php _e( 'Method', 'dokan-lite' ); ?></th>
-                        <th><?php _e( 'Method Details', 'dokan-lite' ); ?></th>
-                        <th><?php _e( 'Note', 'dokan-lite' ); ?></th>
-                        <th><?php _e( 'IP', 'dokan-lite' ); ?></th>
-                        <th><?php _e( 'Date', 'dokan-lite' ); ?></th>
+                        <th><?php esc_html_e( 'User Name', 'dokan-lite' ); ?></th>
+                        <th><?php esc_html_e( 'Amount', 'dokan-lite' ); ?></th>
+                        <th><?php esc_html_e( 'Method', 'dokan-lite' ); ?></th>
+                        <th><?php esc_html_e( 'Method Details', 'dokan-lite' ); ?></th>
+                        <th><?php esc_html_e( 'Note', 'dokan-lite' ); ?></th>
+                        <th><?php esc_html_e( 'IP', 'dokan-lite' ); ?></th>
+                        <th><?php esc_html_e( 'Date', 'dokan-lite' ); ?></th>
                     </tr>
                 </tfoot>
 
@@ -253,33 +253,33 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
                     <tr class="<?php echo ( $count % 2 ) == 0 ? 'alternate': 'odd'; ?>">
 
                         <th class="check-column">
-                            <input type="checkbox" name="id[<?php echo $row->id;?>]" value="<?php echo $row->id;?>">
-                            <input type="hidden" name="user_id[<?php echo $row->id;?>]" value="<?php echo $row->user_id; ?>">
-                            <input type="hidden" name="method[<?php echo $row->id;?>]" value="<?php echo esc_attr( $row->method ); ?>">
-                            <input type="hidden" name="amount[<?php echo $row->id;?>]" value="<?php echo esc_attr( $row->amount ); ?>">
+                            <input type="checkbox" name="id[<?php echo esc_attr( $row->id );?>]" value="<?php echo esc_attr( $row->id )?>">
+                            <input type="hidden" name="user_id[<?php echo esc_attr( $row->id );?>]" value="<?php echo esc_attr( $row->user_id ); ?>">
+                            <input type="hidden" name="method[<?php echo esc_attr( $row->id );?>]" value="<?php echo esc_attr( $row->method ); ?>">
+                            <input type="hidden" name="amount[<?php echo esc_attr( $row->id );?>]" value="<?php echo esc_attr( $row->amount ); ?>">
                         </th>
                         <td>
-                            <strong><a href="<?php echo admin_url( 'user-edit.php?user_id=' . $user_data->ID ); ?>"><?php echo $user_data->user_login; ?></a></strong>
+                            <strong><a href="<?php echo esc_attr( admin_url( 'user-edit.php?user_id=' . $user_data->ID ) ) ?>"><?php echo esc_attr( $user_data->user_login ); ?></a></strong>
                             <div class="row-actions">
                                 <?php if ( $status == 'pending' ) { ?>
 
-                                    <span class="edit"><a href="#" class="dokan-withdraw-action" data-status="approve" data-withdraw_id = "<?php echo $row->id; ?>"><?php _e( 'Approve', 'dokan-lite' ); ?></a> | </span>
-                                    <span class="edit"><a href="#" class="dokan-withdraw-action" data-status="cancel" data-withdraw_id = "<?php echo $row->id; ?>"><?php _e( 'Cancel', 'dokan-lite' ); ?></a></span>
+                                    <span class="edit"><a href="#" class="dokan-withdraw-action" data-status="approve" data-withdraw_id = "<?php echo esc_attr( $row->id ); ?>"><?php esc_html_e( 'Approve', 'dokan-lite' ); ?></a> | </span>
+                                    <span class="edit"><a href="#" class="dokan-withdraw-action" data-status="cancel" data-withdraw_id = "<?php echo esc_attr( $row->id ); ?>"><?php esc_html_e( 'Cancel', 'dokan-lite' ); ?></a></span>
 
                                 <?php } elseif ( $status == 'completed' ) { ?>
 
-                                    <span class="edit"><a href="#" class="dokan-withdraw-action" data-status="cancel" data-withdraw_id = "<?php echo $row->id; ?>"><?php _e( 'Cancel', 'dokan-lite' ); ?></a> | </span>
-                                    <span class="edit"><a href="#" class="dokan-withdraw-action" data-status="pending" data-withdraw_id = "<?php echo $row->id; ?>"><?php _e( 'Pending', 'dokan-lite' ); ?></a></span>
+                                    <span class="edit"><a href="#" class="dokan-withdraw-action" data-status="cancel" data-withdraw_id = "<?php echo esc_attr( $row->id ); ?>"><?php esc_html_e( 'Cancel', 'dokan-lite' ); ?></a> | </span>
+                                    <span class="edit"><a href="#" class="dokan-withdraw-action" data-status="pending" data-withdraw_id = "<?php echo esc_attr( $row->id ); ?>"><?php esc_html_e( 'Pending', 'dokan-lite' ); ?></a></span>
 
                                 <?php } elseif ( $status == 'cancelled' ) { ?>
 
-                                    <span class="edit"><a href="#" class="dokan-withdraw-action" data-status="approve" data-withdraw_id = "<?php echo $row->id; ?>"><?php _e( 'Approve', 'dokan-lite' ); ?></a> | </span>
-                                    <span class="edit"><a href="#" class="dokan-withdraw-action" data-status="pending" data-withdraw_id = "<?php echo $row->id; ?>"><?php _e( 'Pending', 'dokan-lite' ); ?></a></span>
+                                    <span class="edit"><a href="#" class="dokan-withdraw-action" data-status="approve" data-withdraw_id = "<?php echo esc_attr( $row->id ); ?>"><?php esc_html_e( 'Approve', 'dokan-lite' ); ?></a> | </span>
+                                    <span class="edit"><a href="#" class="dokan-withdraw-action" data-status="pending" data-withdraw_id = "<?php echo esc_attr( $row->id ); ?>"><?php esc_html_e( 'Pending', 'dokan-lite' ); ?></a></span>
 
                                 <?php } ?>
 
                                 <?php if ( $result ) { ?>
-                                    <span class="trash"> | <a href="#" class="dokan-withdraw-action" data-status="delete" data-withdraw_id = "<?php echo $row->id; ?>"><?php _e( 'Delete', 'dokan-lite' ); ?></a></span>
+                                    <span class="trash"> | <a href="#" class="dokan-withdraw-action" data-status="delete" data-withdraw_id = "<?php echo esc_attr( $row->id ); ?>"><?php esc_html_e( 'Delete', 'dokan-lite' ); ?></a></span>
 
                                 <?php } ?>
                             </div>
@@ -303,14 +303,15 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
                                     <p class="ajax_note"><?php echo $row->note; ?></p>
 
                                     <div class="row-actions">
-                                        <a href="#" class="dokan-note-field"><?php _e( 'Add note', 'dokan-lite' ); ?></a>
+                                        <a href="#" class="dokan-note-field"><?php esc_html_e( 'Add note', 'dokan-lite' ); ?></a>
                                     </div>
                                 </div>
 
                                 <div class="note-form" style="display: none;">
                                     <p><input type="text" class="dokan-note-text" name="note[<?php echo $row->id;?>]" value="<?php echo esc_attr( $row->note ); ?>"></p>
-                                    <a class="dokan-note-submit button" data-id=<?php echo $row->id; ?> href="#" ><?php _e( 'Save', 'dokan-lite' ); ?></a>
-                                    <a href="#" class="dokan-note-cancel"><?php _e( 'cancel', 'dokan-lite' ); ?></a>
+                                    <?php wp_nonce_field( 'dokan_admin_action', 'dokan_admin_nonce' ); ?>
+                                    <a class="dokan-note-submit button" data-id=<?php echo $row->id; ?> href="#" ><?php esc_html_e( 'Save', 'dokan-lite' ); ?></a>
+                                    <a href="#" class="dokan-note-cancel"><?php esc_html_e( 'cancel', 'dokan-lite' ); ?></a>
                                 </div>
                             </div>
 
@@ -326,7 +327,7 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
             ?>
                 <tr>
                     <td colspan="8">
-                        <?php _e( 'No results found', 'dokan-lite' ) ?>
+                        <?php esc_html_e( 'No results found', 'dokan-lite' ) ?>
                     </td>
                 </tr>
                 <?php
@@ -338,28 +339,28 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
 
                 <div class="alignleft actions bulkactions">
                     <select name="dokan_withdraw_bulk">
-                        <option value="-1" selected="selected"><?php _e( 'Bulk Actions', 'dokan-lite' ); ?></option>
+                        <option value="-1" selected="selected"><?php esc_html_e( 'Bulk Actions', 'dokan-lite' ); ?></option>
 
                         <?php if ( $status == 'pending' ) { ?>
 
-                            <option value="approve"><?php _e( 'Approve Requests', 'dokan-lite' ); ?></option>
-                            <option value="cancel"><?php _e( 'Mark as Cancelled', 'dokan-lite' ); ?></option>
+                            <option value="approve"><?php esc_html_e( 'Approve Requests', 'dokan-lite' ); ?></option>
+                            <option value="cancel"><?php esc_html_e( 'Mark as Cancelled', 'dokan-lite' ); ?></option>
 
                         <?php } elseif ( $status == 'completed' ) { ?>
 
-                            <option value="cancel"><?php _e( 'Mark as Cancelled', 'dokan-lite' ); ?></option>
-                            <option value="pending"><?php _e( 'Mark Pending', 'dokan-lite' ); ?></option>
+                            <option value="cancel"><?php esc_html_e( 'Mark as Cancelled', 'dokan-lite' ); ?></option>
+                            <option value="pending"><?php esc_html_e( 'Mark Pending', 'dokan-lite' ); ?></option>
 
                         <?php } elseif ( $status == 'cancelled' ) { ?>
 
-                            <option value="approve"><?php _e( 'Approve Requests', 'dokan-lite' ); ?></option>
-                            <option value="pending"><?php _e( 'Mark Pending', 'dokan-lite' ); ?></option>
+                            <option value="approve"><?php esc_html_e( 'Approve Requests', 'dokan-lite' ); ?></option>
+                            <option value="pending"><?php esc_html_e( 'Mark Pending', 'dokan-lite' ); ?></option>
 
                         <?php } ?>
 
                         <?php if ( $result ) { ?>
-                            <option value="delete"><?php _e( 'Delete', 'dokan-lite' ); ?></option>
-                            <option value="paypal"><?php _e( 'Download PayPal mass payment file', 'dokan-lite' ); ?></option>
+                            <option value="delete"><?php esc_html_e( 'Delete', 'dokan-lite' ); ?></option>
+                            <option value="paypal"><?php esc_html_e( 'Download PayPal mass payment file', 'dokan-lite' ); ?></option>
                         <?php } ?>
                     </select>
 
@@ -469,10 +470,12 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
                             form_wrap = self.closest('.note-form'),
                             row_id = self.data('id'),
                             note = form_wrap.find('input.dokan-note-text').val(),
+                            nonce = form_wrap.find('input#dokan_admin_nonce').val(),
                             data = {
                                 'action': 'note',
                                 'row_id': row_id,
                                 'note': note,
+                                'dokan_admin_nonce' : nonce
                             };
 
                         $.post( '<?php echo admin_url( 'admin-ajax.php' ); ?>', data, function(resp) {
