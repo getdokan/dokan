@@ -1902,7 +1902,17 @@ function dokan_set_is_home_false_on_store() {
     }
 }
 
-register_sidebar( array( 'name' => __( 'Dokan Store Sidebar', 'dokan-lite' ), 'id' => 'sidebar-store' ) );
+register_sidebar(
+    apply_filters( 'dokan_store_widget_args', array(
+            'name'          => __( 'Dokan Store Sidebar', 'dokan-lite' ),
+            'id'            => 'sidebar-store',
+            'before_widget' => '<aside class="widget">',
+            'after_widget'  => '</aside>',
+            'before_title'  => '<h3 class="widget-title">',
+            'after_title'   => '</h3>',
+        )
+    )
+);
 
 /**
  * Calculate category wise commission for given product
