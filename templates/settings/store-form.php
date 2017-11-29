@@ -30,16 +30,18 @@
     $store_tnc      = isset( $profile_info['store_tnc'] ) ? $profile_info['store_tnc'] : '' ;
 
     if ( is_wp_error( $validate ) ) {
-        $storename    = $_POST['dokan_store_name'];
-        $map_location = $_POST['location'];
-        $map_address  = $_POST['find_address'];
-
-        $address_street1 = $_POST['dokan_address']['street_1'];
-        $address_street2 = $_POST['dokan_address']['street_2'];
-        $address_city    = $_POST['dokan_address']['city'];
-        $address_zip     = $_POST['dokan_address']['zip'];
-        $address_country = $_POST['dokan_address']['country'];
-        $address_state   = $_POST['dokan_address']['state'];
+        $storename    = $_POST['dokan_store_name']; // WPCS: CSRF ok, Input var ok.
+        $map_location = $_POST['location'];         // WPCS: CSRF ok, Input var ok.
+        $map_address  = $_POST['find_address'];     // WPCS: CSRF ok, Input var ok.
+        
+        $posted_address = wc_clean( $_POST['dokan_address'] ); // WPCS: CSRF ok, Input var ok.
+        
+        $address_street1 = $posted_address['street_1'];
+        $address_street2 = $posted_address['street_2'];
+        $address_city    = $posted_address['city'];
+        $address_zip     = $posted_address['zip'];
+        $address_country = $posted_address['country'];
+        $address_state   = $posted_address['state'];
     }
 
     $dokan_appearance = dokan_get_option( 'store_header_template', 'dokan_appearance', 'default' );

@@ -233,6 +233,10 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
      * @return void
      */
     function insert_withdraw_info() {
+        
+        if ( isset( $_POST['dokan_withdraw_nonce'] ) && ! wp_verify_nonce( $_POST['dokan_withdraw_nonce'], 'dokan_withdraw' ) ) {
+            return;
+        }
 
         global $current_user;
 
@@ -349,8 +353,8 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
         $payment_methods = dokan_withdraw_get_active_methods();
 
         if ( is_wp_error( $validate ) ) {
-            $amount          = $_POST['witdraw_amount'];
-            $withdraw_method = $_POST['withdraw_method'];
+            $amount          = sanitize_text_field( $_POST['witdraw_amount'] );
+            $withdraw_method = sanitize_text_field( $_POST['withdraw_method'] );
         } else {
             $amount          = '';
             $withdraw_method = '';

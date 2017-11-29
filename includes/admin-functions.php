@@ -281,9 +281,9 @@ function dokan_admin_report( $group_by = 'day', $year = '' ) {
     global $wpdb, $wp_locale;
 
     $group_by = apply_filters( 'dokan_report_group_by', $group_by );
-
-    $start_date = isset( $_POST['start_date'] ) ? $_POST['start_date'] : '';
-    $end_date   = isset( $_POST['end_date'] ) ? $_POST['end_date'] : '';
+    
+    $start_date = isset( $_POST['start_date'] ) ? sanitize_text_field ( $_POST['start_date'] ): ''; // WPCS: CSRF ok.
+    $end_date   = isset( $_POST['end_date'] ) ? sanitize_text_field( $_POST['end_date'] ): ''; // WPCS: CSRF ok.
     $current_year = date( 'Y' );
 
     if ( ! $start_date ) {
@@ -599,7 +599,7 @@ add_action( 'add_meta_boxes', 'dokan_add_seller_meta_box' );
 **/
 function dokan_override_product_author_by_admin( $product_id, $post ) {
     $product = wc_get_product( $product_id );
-    $seller_id = !empty( $_POST['dokan_product_author_override'] ) ? $_POST['dokan_product_author_override'] : '-1';
+    $seller_id = !empty( $_POST['dokan_product_author_override'] ) ? wc_clean( $_POST['dokan_product_author_override'] ): '-1'; // WPCS: CSRF ok.
 
     if ( $seller_id < 0 ) {
         return;
@@ -645,13 +645,13 @@ function dokan_admin_report_by_seller( $chosen_seller_id) {
     $year         = '';
     $group_by     = apply_filters( 'dokan_report_group_by', $group_by );
 
-    $start_date   = isset( $_POST['start_date'] ) ? $_POST['start_date'] : '';
-    $end_date     = isset( $_POST['end_date'] ) ? $_POST['end_date'] : '';
+    $start_date   = isset( $_POST['start_date'] ) ? $_POST['start_date'] : ''; // WPCS: CSRF ok.
+    $end_date     = isset( $_POST['end_date'] ) ? $_POST['end_date'] : ''; // WPCS: CSRF ok.
     $current_year = date( 'Y' );
 
-    if ( ! isset( $chosen_seller_id ) || $chosen_seller_id=='' || $chosen_seller_id == Null) {
-		return 0;
-	}
+    if ( !isset( $chosen_seller_id ) || $chosen_seller_id == '' || $chosen_seller_id == Null ) {
+        return 0;
+    }
 
     if ( ! $start_date ) {
         $start_date = date( 'Y-m-d', strtotime( date( 'Ym', current_time( 'timestamp' ) ) . '01' ) );

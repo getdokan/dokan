@@ -686,11 +686,11 @@ function dokan_get_product_types( $status = '' ) {
 function dokan_posted_input( $key, $array = false ) {
 
     //If array value is submitted return array
-    if ( $array && isset( $_POST[$key] ) ) {
-        return $_POST[$key];
+    if ( $array && isset( $_POST[$key] ) ) { // WPCS: CSRF ok.
+        return $_POST[$key];    // WPCS: CSRF ok.
     }
 
-    $value = isset( $_POST[$key] ) ? trim( $_POST[$key] ) : '';
+    $value = isset( $_POST[$key] ) ? trim( $_POST[$key] ) : ''; // WPCS: CSRF ok.
     return esc_attr( $value );
 }
 
@@ -701,7 +701,7 @@ function dokan_posted_input( $key, $array = false ) {
  * @return string
  */
 function dokan_posted_textarea( $key ) {
-    $value = isset( $_POST[$key] ) ? trim( $_POST[$key] ) : '';
+    $value = isset( $_POST[$key] ) ? trim( $_POST[$key] ) : ''; // WPCS: CSRF ok.
 
     return esc_textarea( $value );
 }
