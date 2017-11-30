@@ -1,9 +1,9 @@
 === Dokan Multivendor Marketplace ===
-Contributors: tareq1988, wedevs, rafsuntaskin, sabbir1991, nazmulhassann20, roshni07
+Contributors: tareq1988, wedevs, rafsuntaskin, sabbir1991
 Donate Link: http://tareq.co/donate/
 Tags: woocommerce, multivendor, multi-vendor, paypal, shop, vendor, seller, store, sell, online, amazon, dokan, ebay, Etsy, multi seller, multi store, multi vendor, multi vendors, multistore, multivendor, product vendor, product vendors, vendor, vendor system, vendors, wc market place, wc marketplace, wc vendors, woo vendors, woocommerce market place, woocommerce marketplace, woocommerce multi vendor,  commission rate, e-commerce, ebay, ecommerce, yith, yithemes
 Requires at least: 4.4
-Tested up to: 4.9
+Tested up to: 4.9.1
 WC requires at least: 2.6
 WC tested up to: 3.2.5
 Requires PHP: 5.6

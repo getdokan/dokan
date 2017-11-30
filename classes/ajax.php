@@ -576,7 +576,7 @@ class Dokan_Ajax {
         );
 
         if ( ! $cropped || is_wp_error( $cropped ) ) {
-            wp_send_json_error( array( 'message' => __( 'Image could not be processed. Please go back and try again.' ) ) );
+            wp_send_json_error( array( 'message' => __( 'Image could not be processed. Please go back and try again.', 'dokan-lite' ) ) );
         }
 
         /** This filter is documented in wp-admin/custom-header.php */

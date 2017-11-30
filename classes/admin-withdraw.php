@@ -377,8 +377,8 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
                     $page_links = paginate_links( array(
                         'base'      => add_query_arg( 'paged', '%#%' ),
                         'format'    => '',
-                        'prev_text' => __( '&laquo;', 'aag' ),
-                        'next_text' => __( '&raquo;', 'aag' ),
+                        'prev_text' => __( '&laquo;', 'dokan-lite' ),
+                        'next_text' => __( '&raquo;', 'dokan-lite' ),
                         'total'     => $num_of_pages,
                         'current'   => $pagenum
                     ) );
