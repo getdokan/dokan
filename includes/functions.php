@@ -1321,18 +1321,17 @@ function dokan_get_coupon_edit_url( $coupon_id, $coupon_page = '' ) {
 }
 
 /**
- * User avatar wrapper for custom uploaded avatar
+ * Filter `get_avatar_url` to retrieve image url from dokan profile settings
+ * called by `get_avatar_url()` as well as `get_avatar()`
  *
- * @since 2.0
- *
- * @param string $avatar
- * @param mixed $id_or_email
- * @param int $size
- * @param string $default
- * @param string $alt
- * @return string image tag of the user avatar
+ * @since 2.7.0
+ * 
+ * @param  string $url        avatar url
+ * @param  mixed $id_or_email userdata or user_id or user_email
+ * @param  array $args        arguments
+ * @return string             maybe modified url
  */
-function dokan_get_avatar( $avatar, $id_or_email, $size, $default, $alt ) {
+function dokan_get_avatar_url( $url, $id_or_email, $args ) {
 
     if ( is_numeric( $id_or_email ) ) {
         $user = get_user_by( 'id', $id_or_email );
@@ -1340,29 +1339,50 @@ function dokan_get_avatar( $avatar, $id_or_email, $size, $default, $alt ) {
         if ( $id_or_email->user_id != '0' ) {
             $user = get_user_by( 'id', $id_or_email->user_id );
         } else {
-            return $avatar;
+            return $url;
         }
     } else {
         $user = get_user_by( 'email', $id_or_email );
     }
 
     if ( !$user ) {
-        return $avatar;
+        return $url;
     }
 
     // see if there is a user_avatar meta field
     $user_avatar = get_user_meta( $user->ID, 'dokan_profile_settings', true );
     $gravatar_id = isset( $user_avatar['gravatar'] ) ? $user_avatar['gravatar'] : 0;
     if ( empty( $gravatar_id ) ) {
-        return $avatar;
+        return $url;
     }
 
-    $avater_url = wp_get_attachment_thumb_url( $gravatar_id );
+    try {
+        /**
+         * Trying to get from exact size
+         */
+        if(!isset($args['width']) || !isset($args['height'])){
+            throw new Exception("Image size not provided");
+        }
 
-    return sprintf( '<img src="%1$s" alt="%2$s" width="%3$s" height="%3$s" class="avatar photo">', esc_url( $avater_url ), $alt, $size );
+        $avatar_src = wp_get_attachment_image_src( $gravatar_id, array(
+            'width' => $args['width'],
+            'height' => $args['height'],
+        ) );
+
+        if(isset($avatar_src[0])){
+            throw new Exception("Image url not found from wp_attachment_image_src");
+        }
+        
+        $dokan_avatar_url = $avatar_src[0];
+            
+    } catch (Exception $e) {
+        $dokan_avatar_url = wp_get_attachment_thumb_url( $gravatar_id );
+    }
+
+    return esc_url( $dokan_avatar_url );
 }
 
-add_filter( 'get_avatar', 'dokan_get_avatar', 99, 5 );
+add_filter( 'get_avatar_url', 'dokan_get_avatar_url', 99, 3 );
 
 /**
  * Get navigation url for the dokan dashboard
