@@ -447,7 +447,7 @@ class Dokan_Ajax {
             echo '</div><p class="meta"><a href="#" class="delete_note">'.__( 'Delete', 'dokan-lite' ).'</a></p>';
             echo '</li>';
             
-            do_action( 'dokan_order_tracking_updated', $post_id );
+            do_action( 'dokan_order_tracking_updated', $post_id, get_current_user_id() );
         }
 
         // Quit out
