@@ -1356,27 +1356,9 @@ function dokan_get_avatar_url( $url, $id_or_email, $args ) {
         return $url;
     }
 
-    try {
-        /**
-         * Trying to get from exact size
-         */
-        if(!isset($args['width']) || !isset($args['height'])){
-            throw new Exception("Image size not provided");
-        }
-
-        $avatar_src = wp_get_attachment_image_src( $gravatar_id, array(
-            'width' => $args['width'],
-            'height' => $args['height'],
-        ) );
-
-        if(isset($avatar_src[0])){
-            throw new Exception("Image url not found from wp_attachment_image_src");
-        }
-        
-        $dokan_avatar_url = $avatar_src[0];
-            
-    } catch (Exception $e) {
-        $dokan_avatar_url = wp_get_attachment_thumb_url( $gravatar_id );
+    $dokan_avatar_url = wp_get_attachment_thumb_url( $gravatar_id );
+    if(empty($dokan_avatar_url)){
+        return $url;
     }
 
     return esc_url( $dokan_avatar_url );
