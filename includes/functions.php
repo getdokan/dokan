@@ -1549,7 +1549,7 @@ function dokan_product_listing_filter_months_dropdown( $user_id ) {
     $date = isset( $_GET['date'] ) ? (int) $_GET['date'] : 0;
     ?>
     <select name="date" id="filter-by-date" class="dokan-form-control">
-        <option<?php selected( $date, 0 ); ?> value="0"><?php _e( 'All dates' ); ?></option>
+        <option<?php selected( $date, 0 ); ?> value="0"><?php _e( 'All dates', 'dokan-lite' ); ?></option>
     <?php
     foreach ( $months as $arc_row ) {
         if ( 0 == $arc_row->year )
@@ -1562,7 +1562,7 @@ function dokan_product_listing_filter_months_dropdown( $user_id ) {
             selected( $date, $year . $month, false ),
             esc_attr( $year . $month ),
             /* translators: 1: month name, 2: 4-digit year */
-            sprintf( __( '%1$s %2$d' ), $wp_locale->get_month( $month ), $year )
+            sprintf( __( '%1$s %2$d', 'dokan-lite' ), $wp_locale->get_month( $month ), $year )
         );
     }
     ?>

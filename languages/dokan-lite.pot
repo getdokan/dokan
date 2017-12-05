@@ -3,15 +3,26 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Dokan 2.7.0\n"
-"Report-Msgid-Bugs-To: http://wedevs.com/support/forum/theme-support/dokan/\n"
-"POT-Creation-Date: 2017-11-23 11:48:44+00:00\n"
+"Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
+"POT-Creation-Date: 2017-11-30 04:30:41+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "PO-Revision-Date: 2017-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
-"X-Generator: grunt-wp-i18n1.0.1\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Country: United States\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: "
+"__;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_"
+"attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c;\n"
+"X-Poedit-Basepath: ../\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-Bookmarks: \n"
+"X-Textdomain-Support: yes\n"
+"X-Generator: grunt-wp-i18n1.0.0\n"
 
 #: templates/products/new-product-single.php:461
 msgid "1"
@@ -41,7 +52,7 @@ msgstr ""
 msgid "Banner"
 msgstr ""
 
-#: classes/admin-user-profile.php:99 templates/settings/store-form.php:67
+#: classes/admin-user-profile.php:99 templates/settings/store-form.php:69
 msgid "Upload banner"
 msgstr ""
 
@@ -241,8 +252,8 @@ msgstr ""
 msgid "Pending"
 msgstr ""
 
-#: classes/admin-withdraw.php:282 classes/admin-withdraw.php:361
-#: classes/ajax.php:444 includes/woo-views/html-product-download.php:18
+#: classes/admin-withdraw.php:282 classes/admin-withdraw.php:362
+#: classes/ajax.php:447 includes/woo-views/html-product-download.php:18
 #: includes/woo-views/html-product-download.php:38
 msgid "Delete"
 msgstr ""
@@ -251,47 +262,47 @@ msgstr ""
 msgid "Add note"
 msgstr ""
 
-#: classes/admin-withdraw.php:312
+#: classes/admin-withdraw.php:313
 msgid "Save"
 msgstr ""
 
-#: classes/admin-withdraw.php:313
+#: classes/admin-withdraw.php:314
 msgid "cancel"
 msgstr ""
 
-#: classes/admin-withdraw.php:329
+#: classes/admin-withdraw.php:330
 msgid "No results found"
 msgstr ""
 
-#: classes/admin-withdraw.php:341
+#: classes/admin-withdraw.php:342
 msgid "Bulk Actions"
 msgstr ""
 
-#: classes/admin-withdraw.php:345 classes/admin-withdraw.php:355
+#: classes/admin-withdraw.php:346 classes/admin-withdraw.php:356
 msgid "Approve Requests"
 msgstr ""
 
-#: classes/admin-withdraw.php:346 classes/admin-withdraw.php:350
+#: classes/admin-withdraw.php:347 classes/admin-withdraw.php:351
 msgid "Mark as Cancelled"
 msgstr ""
 
-#: classes/admin-withdraw.php:351 classes/admin-withdraw.php:356
+#: classes/admin-withdraw.php:352 classes/admin-withdraw.php:357
 msgid "Mark Pending"
 msgstr ""
 
-#: classes/admin-withdraw.php:362
+#: classes/admin-withdraw.php:363
 msgid "Download PayPal mass payment file"
 msgstr ""
 
-#: classes/admin-withdraw.php:370
+#: classes/admin-withdraw.php:371
 msgid "Apply"
 msgstr ""
 
-#: classes/admin-withdraw.php:379
+#: classes/admin-withdraw.php:380
 msgid "&laquo;"
 msgstr ""
 
-#: classes/admin-withdraw.php:380
+#: classes/admin-withdraw.php:381
 msgid "&raquo;"
 msgstr ""
 
@@ -328,27 +339,27 @@ msgstr ""
 msgid "File %d"
 msgstr ""
 
-#: classes/ajax.php:305 classes/ajax.php:310
+#: classes/ajax.php:306 classes/ajax.php:311
 msgid "Please provide your name."
 msgstr ""
 
-#: classes/ajax.php:317 includes/template-tags.php:140
+#: classes/ajax.php:318 includes/template-tags.php:140
 msgid "Something went wrong!"
 msgstr ""
 
-#: classes/ajax.php:323
+#: classes/ajax.php:324
 msgid "Email sent successfully!"
 msgstr ""
 
-#: classes/ajax.php:378 templates/orders/details.php:266
+#: classes/ajax.php:379 templates/orders/details.php:266
 msgid "Delete note"
 msgstr ""
 
-#: classes/ajax.php:484
+#: classes/ajax.php:489
 msgid "Error: Nonce verification failed"
 msgstr ""
 
-#: classes/ajax.php:574
+#: classes/ajax.php:579
 msgid "Image could not be processed. Please go back and try again."
 msgstr ""
 
@@ -491,7 +502,7 @@ msgstr ""
 msgid "Store Setup"
 msgstr ""
 
-#: classes/seller-setup-wizard.php:246 templates/settings/store-form.php:117
+#: classes/seller-setup-wizard.php:246 templates/settings/store-form.php:119
 msgid "Store Product Per Page"
 msgstr ""
 
@@ -519,11 +530,11 @@ msgstr ""
 msgid "State Name"
 msgstr ""
 
-#: classes/seller-setup-wizard.php:287 templates/settings/store-form.php:147
+#: classes/seller-setup-wizard.php:287 templates/settings/store-form.php:149
 msgid "Email"
 msgstr ""
 
-#: classes/seller-setup-wizard.php:290 templates/settings/store-form.php:152
+#: classes/seller-setup-wizard.php:290 templates/settings/store-form.php:154
 msgid "Show email address in store"
 msgstr ""
 
@@ -630,7 +641,7 @@ msgstr ""
 
 #: classes/template-settings.php:70 classes/template-settings.php:74
 #: dokan.php:409 includes/admin/class-admin.php:216
-#: includes/admin/class-admin.php:239 includes/admin/class-admin.php:371
+#: includes/admin/class-admin.php:238 includes/admin/class-admin.php:370
 #: includes/admin/views/welcome.php:20
 msgid "Settings"
 msgstr ""
@@ -752,37 +763,37 @@ msgstr ""
 msgid "withdraw method required"
 msgstr ""
 
-#: classes/template-withdraw.php:284
+#: classes/template-withdraw.php:288
 msgid "Your request has been cancelled successfully!"
 msgstr ""
 
-#: classes/template-withdraw.php:288
+#: classes/template-withdraw.php:292
 msgid "Your request has been received successfully and being reviewed!"
 msgstr ""
 
-#: classes/template-withdraw.php:292
+#: classes/template-withdraw.php:296
 msgid "Unknown error!"
 msgstr ""
 
-#: classes/template-withdraw.php:319
+#: classes/template-withdraw.php:323
 msgid "You already withdrawed %s. This amount will deducted from your balance."
 msgstr ""
 
-#: classes/template-withdraw.php:328
+#: classes/template-withdraw.php:332
 msgid "You already have pending withdraw request(s)."
 msgstr ""
 
-#: classes/template-withdraw.php:328
+#: classes/template-withdraw.php:332
 msgid ""
 "Please submit your request after approval or cancellation of your previous "
 "request."
 msgstr ""
 
-#: classes/template-withdraw.php:343
+#: classes/template-withdraw.php:347
 msgid "You don't have sufficient balance for a withdraw request!"
 msgstr ""
 
-#: classes/template-withdraw.php:386 classes/template-withdraw.php:413
+#: classes/template-withdraw.php:390 classes/template-withdraw.php:417
 msgid "Sorry, no transactions were found!"
 msgstr ""
 
@@ -793,27 +804,27 @@ msgid ""
 "<strong>20% discount</strong> on upgrades and add-on purchase."
 msgstr ""
 
-#: classes/upgrade.php:76 includes/admin/class-admin.php:434
+#: classes/upgrade.php:76 includes/admin/class-admin.php:433
 msgid ""
 "<strong>Dokan Data Update Required</strong> &#8211; We need to update your "
 "install to the latest version"
 msgstr ""
 
-#: classes/upgrade.php:77 includes/admin/class-admin.php:435
+#: classes/upgrade.php:77 includes/admin/class-admin.php:434
 msgid "Run the updater"
 msgstr ""
 
-#: classes/upgrade.php:82 includes/admin/class-admin.php:440
+#: classes/upgrade.php:82 includes/admin/class-admin.php:439
 msgid ""
 "It is strongly recommended that you backup your database before proceeding. "
 "Are you sure you wish to run the updater now?"
 msgstr ""
 
-#: classes/withdraw.php:238 templates/withdraw/pending-request-listing.php:41
+#: classes/withdraw.php:243 templates/withdraw/pending-request-listing.php:41
 msgid "Pending Reivew"
 msgstr ""
 
-#: classes/withdraw.php:242 templates/withdraw/pending-request-listing.php:43
+#: classes/withdraw.php:247 templates/withdraw/pending-request-listing.php:43
 msgid "Accepted"
 msgstr ""
 
@@ -917,7 +928,7 @@ msgid "View Package"
 msgstr ""
 
 #: includes/admin/class-admin.php:202 includes/admin/class-admin.php:210
-#: includes/admin/class-admin.php:357 includes/admin/setup-wizard.php:93
+#: includes/admin/class-admin.php:356 includes/admin/setup-wizard.php:93
 #: includes/admin/views/dashboard.php:72 includes/template-tags.php:321
 #: templates/withdraw/header.php:11
 msgid "Withdraw"
@@ -931,12 +942,12 @@ msgstr ""
 msgid "Dokan"
 msgstr ""
 
-#: includes/admin/class-admin.php:209 includes/admin/class-admin.php:350
+#: includes/admin/class-admin.php:209 includes/admin/class-admin.php:349
 #: includes/admin/views/dashboard.php:96
 msgid "Dokan Dashboard"
 msgstr ""
 
-#: includes/admin/class-admin.php:211 includes/admin/class-admin.php:364
+#: includes/admin/class-admin.php:211 includes/admin/class-admin.php:363
 msgid "PRO Features"
 msgstr ""
 
@@ -948,7 +959,7 @@ msgstr ""
 msgid "<span style=\"color:#f18500\">Help</span>"
 msgstr ""
 
-#: includes/admin/class-admin.php:224 includes/admin/views/welcome.php:12
+#: includes/admin/class-admin.php:223 includes/admin/views/welcome.php:12
 msgid "Welcome to Dokan"
 msgstr ""
 
@@ -985,7 +996,7 @@ msgid "Define the seller store URL (%s<strong>[this-text]</strong>/[seller-name]
 msgstr ""
 
 #: includes/admin/class-settings.php:157 includes/functions.php:1067
-#: templates/settings/store-form.php:194
+#: templates/settings/store-form.php:196
 msgid "Terms and Conditions"
 msgstr ""
 
@@ -2171,7 +2182,7 @@ msgstr ""
 msgid "Flickr"
 msgstr ""
 
-#: includes/functions.php:1905
+#: includes/functions.php:1907
 msgid "Dokan Store Sidebar"
 msgstr ""
 
@@ -2328,7 +2339,7 @@ msgstr[1] ""
 msgid "Expand"
 msgstr ""
 
-#: includes/product-functions.php:302 templates/orders/details.php:327
+#: includes/product-functions.php:302 templates/orders/details.php:328
 msgid "Close"
 msgstr ""
 
@@ -2567,7 +2578,7 @@ msgid "Dokan: Store Contact Form"
 msgstr ""
 
 #: includes/widgets/store-contact.php:81 templates/store-toc.php:36
-#: templates/store.php:41
+#: templates/store.php:40
 msgid "Contact Vendor"
 msgstr ""
 
@@ -2580,7 +2591,7 @@ msgid "Dokan: Store Location"
 msgstr ""
 
 #: includes/widgets/store-location.php:88 templates/store-toc.php:33
-#: templates/store.php:37
+#: templates/store.php:36
 msgid "Store Location"
 msgstr ""
 
@@ -3224,7 +3235,7 @@ msgstr ""
 msgid "YYYY-MM-DD"
 msgstr ""
 
-#: templates/orders/details.php:326
+#: templates/orders/details.php:327
 msgid "Add Tracking Details"
 msgstr ""
 
@@ -3785,63 +3796,63 @@ msgstr ""
 msgid "State "
 msgstr ""
 
-#: templates/settings/payment.php:39 templates/settings/store-form.php:226
+#: templates/settings/payment.php:39 templates/settings/store-form.php:228
 msgid "Update Settings"
 msgstr ""
 
-#: templates/settings/store-form.php:80
+#: templates/settings/store-form.php:82
 msgid "Upload a banner for your store. Banner size is (%sx%s) pixels."
 msgstr ""
 
-#: templates/settings/store-form.php:93
+#: templates/settings/store-form.php:95
 msgid "Profile Picture"
 msgstr ""
 
-#: templates/settings/store-form.php:103
+#: templates/settings/store-form.php:105
 msgid "Upload Photo"
 msgstr ""
 
-#: templates/settings/store-form.php:109
+#: templates/settings/store-form.php:111
 msgid "Store Name"
 msgstr ""
 
-#: templates/settings/store-form.php:112
+#: templates/settings/store-form.php:114
 msgid "store name"
 msgstr ""
 
-#: templates/settings/store-form.php:140
+#: templates/settings/store-form.php:142
 msgid "Phone No"
 msgstr ""
 
-#: templates/settings/store-form.php:142
+#: templates/settings/store-form.php:144
 msgid "+123456.."
 msgstr ""
 
-#: templates/settings/store-form.php:159
+#: templates/settings/store-form.php:161
 msgid "More product"
 msgstr ""
 
-#: templates/settings/store-form.php:164
+#: templates/settings/store-form.php:166
 msgid "Enable tab on product single page view"
 msgstr ""
 
-#: templates/settings/store-form.php:172
+#: templates/settings/store-form.php:174
 msgid "Map"
 msgstr ""
 
-#: templates/settings/store-form.php:179
+#: templates/settings/store-form.php:181
 msgid "Type an address to find"
 msgstr ""
 
-#: templates/settings/store-form.php:180
+#: templates/settings/store-form.php:182
 msgid "Find Address"
 msgstr ""
 
-#: templates/settings/store-form.php:198
+#: templates/settings/store-form.php:200
 msgid "Show terms and conditions in store page"
 msgstr ""
 
-#: templates/settings/store-form.php:204
+#: templates/settings/store-form.php:206
 msgid "TOC Details"
 msgstr ""
 
@@ -3869,7 +3880,7 @@ msgstr ""
 msgid "Search seller &hellip;"
 msgstr ""
 
-#: templates/store-toc.php:31 templates/store.php:34
+#: templates/store-toc.php:31 templates/store.php:33
 msgid "Store Category"
 msgstr ""
 
@@ -3877,7 +3888,7 @@ msgstr ""
 msgid "Terms And Conditions"
 msgstr ""
 
-#: templates/store.php:84
+#: templates/store.php:83
 msgid "No products were found of this vendor!"
 msgstr ""
 
@@ -3916,15 +3927,15 @@ msgstr ""
 msgid "No products found"
 msgstr ""
 
-#: templates/withdraw/request-form.php:13
+#: templates/withdraw/request-form.php:15
 msgid "Withdraw Amount"
 msgstr ""
 
-#: templates/withdraw/request-form.php:26
+#: templates/withdraw/request-form.php:28
 msgid "Payment Method"
 msgstr ""
 
-#: templates/withdraw/request-form.php:41
+#: templates/withdraw/request-form.php:43
 msgid "Submit Request"
 msgstr ""
 

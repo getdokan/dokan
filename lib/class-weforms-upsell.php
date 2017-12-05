@@ -74,11 +74,11 @@ class WeForms_Upsell {
                 <p>weForms is the next generation contact form plugin for WordPress.</p>
             </div>
             <div class="weforms-upsell-cta">
-                <button id="weforms-upsell-prompt-btn" class="button"><?php _e( 'Install Now', 'weforms' ); ?></button>
+                <button id="weforms-upsell-prompt-btn" class="button"><?php _e( 'Install Now', 'dokan-lite' ); ?></button>
                 &nbsp;<a href="#" class="learn-more" data-tube="NJvjy9WFyAM">Learn More</a>
             </div>
-            <button type="button" class="notice-dismiss" style="padding: 3px;" title="<?php _e( 'Dismiss this notice.' ); ?>">
-                <span class="screen-reader-text"><?php _e( 'Dismiss this notice.' ); ?></span>
+            <button type="button" class="notice-dismiss" style="padding: 3px;" title="<?php _e( 'Dismiss this notice.', 'dokan-lite' ); ?>">
+                <span class="screen-reader-text"><?php _e( 'Dismiss this notice.', 'dokan-lite' ); ?></span>
             </button>
         </div>
 
@@ -350,7 +350,7 @@ class WeForms_Upsell {
         check_ajax_referer( 'weforms_upsell_installer' );
 
         if ( ! current_user_can( 'manage_options' ) ) {
-            wp_send_json_error( __( 'You don\'t have permission to install the plugins' ) );
+            wp_send_json_error( __( 'You don\'t have permission to install the plugins', 'dokan-lite' ) );
         }
 
         $weforms_status = $this->install_plugin( 'weforms', 'weforms.php' );

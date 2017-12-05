@@ -447,7 +447,7 @@ class Dokan_Ajax {
             echo '</div><p class="meta"><a href="#" class="delete_note">'.__( 'Delete', 'dokan-lite' ).'</a></p>';
             echo '</li>';
             
-            do_action( 'dokan_order_tracking_updated', $post_id );
+            do_action( 'dokan_order_tracking_updated', $post_id, get_current_user_id() );
         }
 
         // Quit out
@@ -576,7 +576,7 @@ class Dokan_Ajax {
         );
 
         if ( ! $cropped || is_wp_error( $cropped ) ) {
-            wp_send_json_error( array( 'message' => __( 'Image could not be processed. Please go back and try again.' ) ) );
+            wp_send_json_error( array( 'message' => __( 'Image could not be processed. Please go back and try again.', 'dokan-lite' ) ) );
         }
 
         /** This filter is documented in wp-admin/custom-header.php */

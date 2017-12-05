@@ -1,43 +1,24 @@
 <?xml version="1.0"?>
-<ruleset name="WordPress Coding Standards">
-    <description>Dokan Core Standard</description>
+<ruleset name="WordPress Coding Standards for Plugins">
+    <description>Generally-applicable sniffs for WordPress plugins</description>
 
-    <!-- Exclude the test directory. -->
-    <exclude-pattern>/bin/*</exclude-pattern>
-
-    <!-- Exclude the test directory. -->
-    <exclude-pattern>/tests/*</exclude-pattern>
-
-    <!-- Exclude the Node Modules directory. -->
-    <exclude-pattern>/node_modules/*</exclude-pattern>
-
-    <!-- Exclude minified Javascript files. -->
-    <exclude-pattern>*.min.js</exclude-pattern>
-
-    <rule ref="WordPress">
-        <exclude name="Generic.WhiteSpace.DisallowSpaceIndent" />
-        <!-- <exclude name="WordPress.VIP.RestrictedFunctions" /> -->
-        <!-- <exclude name="WordPress.VIP.OrderByRand" /> -->
+    <rule ref="WordPress-Core">
+        <exclude name="Generic.WhiteSpace.DisallowSpaceIndent"/>
+        <exclude name="WordPress.Arrays.CommaAfterArrayItem"/>
     </rule>
+    <rule ref="WordPress-Docs"/>
 
-    <rule ref="Generic.WhiteSpace.ScopeIndent">
-        <properties>
-            <property name="indent" value="4"/>
-            <property name="tabIndent" value="false"/>
-        </properties>
-    </rule>
+    <!-- Check all PHP files in directory tree by default. -->
+    <arg name="extensions" value="php"/>
+    <file>.</file>
 
-   <!--  <rule ref="WordPress.VIP.ValidatedSanitizedInput">
-        <properties>
-            <property name="customSanitizingFunctions" type="array" value="wc_clean,wc_sanitize_tooltip,wc_format_decimal,wc_stock_amount" />
-        </properties>
-    </rule>
+    <!-- Show sniff codes in all reports -->
+    <arg value="s"/>
 
-    <rule ref="WordPress.XSS.EscapeOutput">
-            <properties>
-                <property name="customEscapingFunctions" type="array" value="wc_help_tip,wc_sanitize_tooltip" />
-            </properties>
-    </rule>
- -->
-    <rule ref="Generic.WhiteSpace.DisallowTabIndent" />
+    <exclude-pattern>*/assets/*</exclude-pattern>
+    <exclude-pattern>*/build/*</exclude-pattern>
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/tests/*</exclude-pattern>
+    <exclude-pattern>*/bin/*</exclude-pattern>
 </ruleset>
