@@ -10,7 +10,7 @@
 function dokan_process_product_meta( $post_id ) {
     global $wpdb, $woocommerce, $woocommerce_errors;
 
-    $product_type = empty( $_POST['product_type'] ) ? 'simple' : stripslashes( $_POST['product_type'] ); 
+    $product_type = empty( $_POST['product_type'] ) ? 'simple' : stripslashes( $_POST['product_type'] );
 
     // Add any default post meta
     add_post_meta( $post_id, 'total_sales', '0', true );
@@ -129,7 +129,7 @@ function dokan_process_product_meta( $post_id ) {
 
                     // Select based attributes - Format values (posted values are slugs)
                     if ( is_array( $attribute_values[ $i ] ) ) {
-                        $values           = array_map( 'sanitize_title', $attribute_values[ $i ] );
+                        $values           = array_map( 'wc_clean', $attribute_values[ $i ] );
                         $values_are_slugs = true;
 
                     // Text based attributes - Posted values are term names - don't change to slugs
