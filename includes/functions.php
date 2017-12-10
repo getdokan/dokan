@@ -1325,7 +1325,7 @@ function dokan_get_coupon_edit_url( $coupon_id, $coupon_page = '' ) {
  * called by `get_avatar_url()` as well as `get_avatar()`
  *
  * @since 2.7.0
- * 
+ *
  * @param  string $url        avatar url
  * @param  mixed $id_or_email userdata or user_id or user_email
  * @param  array $args        arguments
@@ -1345,19 +1345,21 @@ function dokan_get_avatar_url( $url, $id_or_email, $args ) {
         $user = get_user_by( 'email', $id_or_email );
     }
 
-    if ( !$user ) {
+    if ( ! $user ) {
         return $url;
     }
 
     // see if there is a user_avatar meta field
     $user_avatar = get_user_meta( $user->ID, 'dokan_profile_settings', true );
     $gravatar_id = isset( $user_avatar['gravatar'] ) ? $user_avatar['gravatar'] : 0;
+
     if ( empty( $gravatar_id ) ) {
         return $url;
     }
 
     $dokan_avatar_url = wp_get_attachment_thumb_url( $gravatar_id );
-    if(empty($dokan_avatar_url)){
+
+    if( empty( $dokan_avatar_url ) ) {
         return $url;
     }
 
