@@ -18,6 +18,11 @@
  */
 function dokan_save_product( $args ) {
 
+    $errors = array();
+    $errors = apply_filters( 'dokan_can_add_product', $errors );
+    
+    if ( ! empty( $errors ) ) return;
+
     $defaults = array(
         'post_title'     => '',
         'post_content'   => '',
