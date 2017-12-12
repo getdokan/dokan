@@ -123,18 +123,29 @@ function dokan_process_product_meta( $post_id ) {
 
             if ( $is_taxonomy ) {
 
-                $values_are_slugs = false;
-
                 if ( isset( $attribute_values[ $i ] ) ) {
 
                     // Select based attributes - Format values (posted values are slugs)
                     if ( is_array( $attribute_values[ $i ] ) ) {
-                        $values           = array_map( 'wc_clean', $attribute_values[ $i ] );
-                        $values_are_slugs = true;
+                        $values = array_map( 'wc_clean', $attribute_values[ $i ] );
 
-                    // Text based attributes - Posted values are term names - don't change to slugs
+                    // Text based attributes - Posted values are term names, wp_set_object_terms wants ids or slugs.
                     } else {
-                        $values = array_map( 'stripslashes', array_map( 'strip_tags', explode( WC_DELIMITER, $attribute_values[ $i ] ) ) );
+                        $values     = array();
+                        $raw_values = array_map( 'wc_sanitize_term_text_based', explode( WC_DELIMITER, $attribute_values[ $i ] ) );
+
+                        foreach ( $raw_values as $value ) {
+                            $term = get_term_by( 'name', $value, $attribute_names[ $i ] );
+                            if ( ! $term ) {
+                                $term = wp_insert_term( $value, $attribute_names[ $i ] );
+
+                                if ( $term && ! is_wp_error( $term ) ) {
+                                    $values[] = $term['term_id'];
+                                }
+                            } else {
+                                $values[] = $term->term_id;
+                            }
+                        }
                     }
 
                     // Remove empty items in the array
@@ -146,49 +157,38 @@ function dokan_process_product_meta( $post_id ) {
 
                 // Update post terms
                 if ( taxonomy_exists( $attribute_names[ $i ] ) ) {
-
-                    foreach ( $values as $key => $value ) {
-                        $term = get_term_by( $values_are_slugs ? 'slug' : 'name', trim( $value ), $attribute_names[ $i ] );
-
-                        if ( $term ) {
-                            $values[ $key ] = intval( $term->term_id );
-                        } else {
-                            $term = wp_insert_term( trim( $value ), $attribute_names[ $i ] );
-                            if ( isset( $term->term_id ) ) {
-                                $values[ $key ] = intval( $term->term_id );
-                            }
-                        }
-                    }
-
                     wp_set_object_terms( $post_id, $values, $attribute_names[ $i ] );
                 }
 
                 if ( ! empty( $values ) ) {
                     // Add attribute to array, but don't set values
                     $attributes[ sanitize_title( $attribute_names[ $i ] ) ] = array(
-                        'name'         => wc_clean( $attribute_names[ $i ] ),
-                        'value'        => '',
-                        'position'     => $attribute_position[ $i ],
-                        'is_visible'   => $is_visible,
-                        'is_variation' => $is_variation,
-                        'is_taxonomy'  => $is_taxonomy,
+                        'name'          => wc_clean( $attribute_names[ $i ] ),
+                        'value'         => '',
+                        'position'      => $attribute_position[ $i ],
+                        'is_visible'    => $is_visible,
+                        'is_variation'  => $is_variation,
+                        'is_taxonomy'   => $is_taxonomy
                     );
                 }
+
             } elseif ( isset( $attribute_values[ $i ] ) ) {
 
                 // Text based, possibly separated by pipes (WC_DELIMITER). Preserve line breaks in non-variation attributes.
-                $values = implode( ' ' . WC_DELIMITER . ' ', array_map( 'wc_clean', array_map( 'stripslashes', $attribute_values[ $i ] ) ) );
+                $values = $is_variation ? wc_clean( $attribute_values[ $i ] ) : implode( "\n", array_map( 'wc_clean', explode( "\n", $attribute_values[ $i ] ) ) );
+                $values = implode( ' ' . WC_DELIMITER . ' ', wc_get_text_attributes( $values ) );
 
                 // Custom attribute - Add attribute to array and set the values
                 $attributes[ sanitize_title( $attribute_names[ $i ] ) ] = array(
-                    'name'         => wc_clean( $attribute_names[ $i ] ),
-                    'value'        => $values,
-                    'position'     => $attribute_position[ $i ],
-                    'is_visible'   => $is_visible,
-                    'is_variation' => $is_variation,
-                    'is_taxonomy'  => $is_taxonomy,
+                    'name'          => wc_clean( $attribute_names[ $i ] ),
+                    'value'         => $values,
+                    'position'      => $attribute_position[ $i ],
+                    'is_visible'    => $is_visible,
+                    'is_variation'  => $is_variation,
+                    'is_taxonomy'   => $is_taxonomy
                 );
             }
+
         }
     }
     uasort( $attributes, 'wc_product_attribute_uasort_comparison' );

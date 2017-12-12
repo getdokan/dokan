@@ -166,6 +166,7 @@ function dokan_delete_product_handler() {
         }
 
         wp_delete_post( $product_id );
+        do_action( 'dokan_product_deleted', $product_id );
 
         $redirect = apply_filters( 'dokan_add_new_product_redirect', dokan_get_navigation_url( 'products' ), '' );
 

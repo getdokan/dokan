@@ -29,28 +29,38 @@ class Dokan_Store_Contact_Form extends WP_Widget {
      **/
     function widget( $args, $instance ) {
 
-        if ( ! dokan_is_store_page() ) {
-            return;
+        if ( dokan_is_store_page() || is_product() ) {
+            extract( $args, EXTR_SKIP );
+            $title      = apply_filters( 'widget_title', $instance['title'] );
+
+            if ( is_product() ) {
+                global $post;
+                $seller_id = get_post_field( 'post_author', $post->ID );
+            }
+
+            if ( dokan_is_store_page() ) {
+                $seller_id  = (int) get_query_var( 'author' );
+            }
+
+            if ( empty( $seller_id ) ) {
+                return;
+            }
+
+            $store_info = dokan_get_store_info( $seller_id );
+
+            echo $before_widget;
+
+            if ( ! empty( $title ) ) {
+                echo $args['before_title'] . $title . $args['after_title'];
+            }
+
+            dokan_get_template_part( 'widgets/store-contact-form', '', array(
+                'seller_id' => $seller_id,
+                'store_info' => $store_info,
+            ) );
+
+            echo $after_widget;
         }
-
-        extract( $args, EXTR_SKIP );
-
-        $title      = apply_filters( 'widget_title', $instance['title'] );
-        $seller_id  = (int) get_query_var( 'author' );
-        $store_info = dokan_get_store_info( $seller_id );
-
-        echo $before_widget;
-
-        if ( ! empty( $title ) ) {
-            echo $args['before_title'] . $title . $args['after_title'];
-        }
-
-        dokan_get_template_part( 'widgets/store-contact-form', '', array(
-            'seller_id' => $seller_id,
-            'store_info' => $store_info,
-        ) );
-
-        echo $after_widget;
     }
 
     /**
