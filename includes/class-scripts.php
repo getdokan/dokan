@@ -84,7 +84,6 @@ class Dokan_Scripts {
      */
     public function enqueue_front_scripts() {
 
-
         if ( !function_exists( 'WC' ) ) {
             return;
         }
@@ -127,7 +126,7 @@ class Dokan_Scripts {
         }
 
         // store and my account page
-        if ( dokan_is_store_page() || dokan_is_store_review_page() || is_account_page() ) {
+        if ( dokan_is_store_page() || dokan_is_store_review_page() || is_account_page() || is_product() ) {
 
             if ( DOKAN_LOAD_STYLE ) {
                 wp_enqueue_style( 'dokan-select2-css' );
@@ -258,6 +257,7 @@ class Dokan_Scripts {
             || ( get_query_var( 'edit' ) && is_singular( 'product' ) )
             || dokan_is_store_page()
             || is_account_page()
+            || is_product()
             || apply_filters( 'dokan_force_load_extra_args', false )
         )
         {

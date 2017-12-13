@@ -22,7 +22,6 @@ get_header( 'shop' );
                 <?php do_action( 'dokan_sidebar_store_before', $store_user->data, $store_info ); ?>
                 <?php
                 if ( ! dynamic_sidebar( 'sidebar-store' ) ) {
-
                     $args = array(
                         'before_widget' => '<aside class="widget">',
                         'after_widget'  => '</aside>',

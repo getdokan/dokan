@@ -104,7 +104,7 @@ class Dokan_Setup_Wizard {
 
         $this->enqueue_scripts();
 
-        if ( ! empty( $_POST['save_step'] ) && isset( $this->steps[ $this->step ]['handler'] ) ) {
+        if ( ! empty( $_POST['save_step'] ) && isset( $this->steps[ $this->step ]['handler'] ) ) { // WPCS: CSRF ok.
             call_user_func( $this->steps[ $this->step ]['handler'] );
         }
 
@@ -136,6 +136,7 @@ class Dokan_Setup_Wizard {
             <?php wp_print_scripts( 'wc-setup' ); ?>
             <?php do_action( 'admin_print_styles' ); ?>
             <?php do_action( 'admin_head' ); ?>
+            <?php do_action( 'dokan_setup_wizard_styles' ); ?>
             <style type="text/css">
                 .wc-setup-steps {
                     justify-content: center;

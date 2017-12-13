@@ -1,5 +1,5 @@
 <div class="wrap">
-    <h1 style="margin-bottom: 20px;"><?php _e( 'Dokan Help', 'dokan' ); ?> <a href="http://docs.wedevs.com/docs/dokan/" target="_blank" class="page-title-action"><?php _e( 'View all Documentations', 'dokan' ); ?></a></h1>
+    <h1 style="margin-bottom: 20px;"><?php _e( 'Dokan Help', 'dokan-lite' ); ?> <a href="http://docs.wedevs.com/docs/dokan/" target="_blank" class="page-title-action"><?php _e( 'View all Documentations', 'dokan-lite' ); ?></a></h1>
 
     <?php
     $help_docs = get_transient( 'dokan_help_docs' );

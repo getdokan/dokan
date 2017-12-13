@@ -282,7 +282,7 @@ class Dokan_Ajax {
         $status_label = isset( $statuses[$order_status] ) ? $statuses[$order_status] : $order_status;
         $status_class = dokan_get_order_status_class( $order_status );
 
-        echo '<label class="dokan-label dokan-label-' . $status_class . '">' . $status_label . '</label>';
+        echo '<label class="dokan-label dokan-label-' . esc_attr( $status_class ) . '">' . esc_attr( $status_label ) . '</label>';
         exit;
     }
 
@@ -292,9 +292,10 @@ class Dokan_Ajax {
      * Catches the form submission from store page
      */
     function contact_seller() {
-        $posted = $_POST;
 
         check_ajax_referer( 'dokan_contact_seller' );
+        
+        $posted = $_POST;
 
         $contact_name    = sanitize_text_field( $posted['name'] );
         $contact_email   = sanitize_text_field( $posted['email'] );
@@ -388,7 +389,9 @@ class Dokan_Ajax {
      */
     public function add_shipping_tracking_info() {
 
-        check_ajax_referer( 'add-shipping-tracking-info', 'security' );
+        if ( isset( $_POST['dokan_security_nonce'] ) && !wp_verify_nonce( sanitize_key( $_POST['dokan_security_nonce'] ), 'dokan_security_action' ) ) {
+            die(-1);
+        }
 
         if ( !is_user_logged_in() ) {
             die(-1);
@@ -396,14 +399,14 @@ class Dokan_Ajax {
         if ( ! current_user_can( 'dokandar' ) ) {
             die(-1);
         }
-
+        
         $post_id           = absint( $_POST['post_id'] );
         $shipping_provider = $_POST['shipping_provider'];
         $shipping_number   = ( trim( stripslashes( $_POST['shipping_number'] ) ) );
         $shipped_date      = ( trim( $_POST['shipped_date'] ) );
 
         $ship_info = 'Shipping provider: ' . $shipping_provider . '<br />' . 'Shipping number: ' . $shipping_number . '<br />' . 'Shipped date: ' . $shipped_date;
-
+        
         if ( $shipping_number == '' ){
             die();
         }
@@ -443,6 +446,8 @@ class Dokan_Ajax {
             echo wpautop( wptexturize( $ship_info ) );
             echo '</div><p class="meta"><a href="#" class="delete_note">'.__( 'Delete', 'dokan-lite' ).'</a></p>';
             echo '</li>';
+            
+            do_action( 'dokan_order_tracking_updated', $post_id, get_current_user_id() );
         }
 
         // Quit out
@@ -571,7 +576,7 @@ class Dokan_Ajax {
         );
 
         if ( ! $cropped || is_wp_error( $cropped ) ) {
-            wp_send_json_error( array( 'message' => __( 'Image could not be processed. Please go back and try again.' ) ) );
+            wp_send_json_error( array( 'message' => __( 'Image could not be processed. Please go back and try again.', 'dokan-lite' ) ) );
         }
 
         /** This filter is documented in wp-admin/custom-header.php */

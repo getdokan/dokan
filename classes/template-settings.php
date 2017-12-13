@@ -209,7 +209,7 @@ class Dokan_Template_Settings {
 
         $_POST['dokan_update_profile'] = '';
 
-        switch( $_POST['form_id'] ) {
+        switch( $_POST['form_id'] ) { // WPCS: CSRF ok.
             case 'profile-form':
                 if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'dokan_profile_settings_nonce' ) ) {
                     wp_send_json_error( __( 'Are you cheating?', 'dokan-lite' ) );

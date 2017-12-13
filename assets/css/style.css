@@ -3467,7 +3467,7 @@ div.media-sidebar a.edit-attachment {
   margin-top: 10px;
 }
 .dokan-add-new-product-popup .product-container-footer {
-  padding: 10px 20px;
+  padding: 20px 20px;
   border-top: 1px solid #eee;
   text-align: right;
 }
@@ -3480,6 +3480,9 @@ div.media-sidebar a.edit-attachment {
   color: #d9534f;
   margin-right: 8px;
   vertical-align: middle;
+  float: left;
+  display: block;
+  width: 55%;
 }
 .dokan-settings-content .dokan-settings-area h1 {
   margin: 0px;

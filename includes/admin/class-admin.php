@@ -212,9 +212,8 @@ class Dokan_Admin {
 
         do_action( 'dokan_admin_menu', $capability, $menu_position );
 
-        add_submenu_page( 'dokan', __( 'Help', 'dokan' ), __( '<span style="color:#f18500">Help</span>', 'dokan' ), $capability, 'dokan-help', array( $this, 'help_page' ) );
+        add_submenu_page( 'dokan', __( 'Help', 'dokan-lite' ), __( '<span style="color:#f18500">Help</span>', 'dokan-lite' ), $capability, 'dokan-help', array( $this, 'help_page' ) );
         $settings = add_submenu_page( 'dokan', __( 'Settings', 'dokan-lite' ), __( 'Settings', 'dokan-lite' ), $capability, 'dokan-settings', array( $this, 'settings_page' ) );
-        // add_submenu_page( 'dokan', __( 'Add Ons', 'dokan-lite' ), __( 'Add-ons', 'dokan-lite' ), $capability, 'dokan-addons', array($this, 'addon_page' ) );
 
         /**
          * Welcome page
@@ -338,7 +337,7 @@ class Dokan_Admin {
 
         $args = array(
             'id'     => 'dokan',
-            'title'  => __( 'Dokan', 'admin' ),
+            'title'  => __( 'Dokan', 'dokan-lite' ),
             'href'   => admin_url( 'admin.php?page=dokan' )
         );
 

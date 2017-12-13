@@ -87,7 +87,7 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
 
         $this->enqueue_scripts();
 
-        if ( ! empty( $_POST['save_step'] ) && isset( $this->steps[ $this->step ]['handler'] ) ) {
+        if ( ! empty( $_POST['save_step'] ) && isset( $this->steps[ $this->step ]['handler'] ) ) { // WPCS: CSRF ok.
             call_user_func( $this->steps[ $this->step ]['handler'] );
         }
 
@@ -112,6 +112,7 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
             <title><?php _e( 'Vendor &rsaquo; Setup Wizard', 'dokan-lite' ); ?></title>
             <?php wp_print_scripts( 'wc-setup' ); ?>
             <?php do_action( 'admin_print_styles' ); ?>
+            <?php do_action( 'dokan_setup_wizard_styles' ); ?>
             <style type="text/css">
                 .wc-setup-steps {
                     justify-content: center;
@@ -213,8 +214,8 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
         <p><?php _e( 'Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. <strong>It’s completely optional and shouldn’t take longer than two minutes.</strong>', 'dokan-lite' ); ?></p>
         <p><?php _e( 'No time right now? If you don’t want to go through the wizard, you can skip and return to the Store!', 'dokan-lite' ); ?></p>
         <p class="wc-setup-actions step">
-            <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button-primary button button-large button-next"><?php _e( 'Let\'s Go!', 'dokan-lite' ); ?></a>
-            <a href="<?php echo esc_url( $dashboard_url ); ?>" class="button button-large"><?php _e( 'Not right now', 'dokan-lite' ); ?></a>
+            <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button-primary button button-large button-next lets-go-btn"><?php _e( 'Let\'s Go!', 'dokan-lite' ); ?></a>
+            <a href="<?php echo esc_url( $dashboard_url ); ?>" class="button button-large not-right-now-btn"><?php _e( 'Not right now', 'dokan-lite' ); ?></a>
         </p>
         <?php
         do_action( 'dokan_seller_wizard_introduction', $this );
@@ -295,8 +296,8 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
 
             </table>
             <p class="wc-setup-actions step">
-                <input type="submit" class="button-primary button button-large button-next" value="<?php esc_attr_e( 'Continue', 'dokan-lite' ); ?>" name="save_step" />
-                <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button button-large button-next"><?php _e( 'Skip this step', 'dokan-lite' ); ?></a>
+                <input type="submit" class="button-primary button button-large button-next store-step-continue" value="<?php esc_attr_e( 'Continue', 'dokan-lite' ); ?>" name="save_step" />
+                <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button button-large button-next store-step-skip-btn"><?php _e( 'Skip this step', 'dokan-lite' ); ?></a>
                 <?php wp_nonce_field( 'dokan-seller-setup' ); ?>
             </p>
         </form>
@@ -434,15 +435,14 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
                 ?>
             </table>
             <p class="wc-setup-actions step">
-                <input type="submit" class="button-primary button button-large button-next" value="<?php esc_attr_e( 'Continue', 'dokan-lite' ); ?>" name="save_step" />
-                <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button button-large button-next"><?php _e( 'Skip this step', 'dokan-lite' ); ?></a>
+                <input type="submit" class="button-primary button button-large button-next payment-continue-btn" value="<?php esc_attr_e( 'Continue', 'dokan-lite' ); ?>" name="save_step" />
+                <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button button-large button-next payment-step-skip-btn"><?php _e( 'Skip this step', 'dokan-lite' ); ?></a>
                 <?php wp_nonce_field( 'dokan-seller-setup' ); ?>
             </p>
         </form>
         <?php
 
         do_action( 'dokan_seller_wizard_after_payment_setup_form', $this );
-
     }
 
     /**
@@ -501,7 +501,7 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
             <div class="wc-setup-next-steps">
                 <div class="wc-setup-next-steps-first final-button">
                     <ul>
-                        <li class="setup-product"><a class="button button-primary button-large" href="<?php echo esc_url( $dashboard_url ); ?>"><?php _e( 'Go to your Store Dashboard!', 'dokan-lite' ); ?></a></li>
+                        <li class="setup-product"><a class="button button-primary button-large go-to-dashboard-btn" href="<?php echo esc_url( $dashboard_url ); ?>"><?php _e( 'Go to your Store Dashboard!', 'dokan-lite' ); ?></a></li>
                     </ul>
                 </div>
             </div>

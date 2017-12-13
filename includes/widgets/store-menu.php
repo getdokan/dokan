@@ -36,7 +36,7 @@ class Dokan_Store_Category_Menu extends WP_Widget {
         $seller_id  = (int) get_query_var( 'author' );
 
         dokan_store_category_menu( $seller_id, $title );
-        
+
         ?>
         <script>
             ( function ( $ ) {
@@ -63,6 +63,15 @@ class Dokan_Store_Category_Menu extends WP_Widget {
                         }
                     } );
                 } );
+
+                $(document).ready(function(){
+                    var selectedLi = $('#cat-drop-stack ul').find( 'a.selected' );
+                    selectedLi.css({ fontWeight: 'bold' });
+
+                    selectedLi.parents('ul.children').each( function( i, val ) {
+                        $( val ).css({ display: 'block' });
+                    });
+                });
             } )( jQuery );
         </script>
 

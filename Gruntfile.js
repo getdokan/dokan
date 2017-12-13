@@ -83,17 +83,33 @@ module.exports = function(grunt) {
             }
         },
 
+        addtextdomain: {
+            options: {
+                textdomain: 'dokan-lite',
+            },
+            update_all_domains: {
+                options: {
+                    updateDomains: true
+                },
+                src: [ '*.php', '**/*.php', '!node_modules/**', '!php-tests/**', '!bin/**', '!build/**', '!assets/**' ]
+            }
+        },
+
         // Generate POT files.
         makepot: {
             target: {
                 options: {
-                    exclude: ['build/.*'],
-                    domainPath: '/languages/', // Where to save the POT file.
-                    potFilename: 'dokan-lite.pot', // Name of the POT file.
-                    type: 'wp-plugin', // Type of project (wp-plugin or wp-theme).
+                    exclude: ['build/.*', 'node_modules/*', 'assets/*', 'tests/*', 'bin/*'],
+                    mainFile: 'dokan.php',
+                    domainPath: '/languages/',
+                    potFilename: 'dokan-lite.pot',
+                    type: 'wp-plugin',
+                    updateTimestamp: true,
                     potHeaders: {
-                        'report-msgid-bugs-to': 'http://wedevs.com/support/forum/theme-support/dokan/',
-                        'language-team': 'LANGUAGE <EMAIL@ADDRESS>'
+                        'report-msgid-bugs-to': 'https://wedevs.com/contact/',
+                        'language-team': 'LANGUAGE <EMAIL@ADDRESS>',
+                        poedit: true,
+                        'x-poedit-keywordslist': true
                     }
                 }
             }
@@ -109,6 +125,14 @@ module.exports = function(grunt) {
                 files: '<%= dirs.devJsSrc %>/*.js',
                 tasks: [ 'concat:all_js', 'concat:backend_js' ]
             }
+        },
+
+        wp_readme_to_markdown: {
+            your_target: {
+                files: {
+                    'README.md': 'readme.txt'
+                }
+            },
         },
 
         // Clean up build directory
@@ -210,14 +234,20 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks( 'grunt-contrib-copy' );
     grunt.loadNpmTasks( 'grunt-contrib-compress' );
     grunt.loadNpmTasks( 'grunt-ssh' );
+    grunt.loadNpmTasks( 'grunt-wp-readme-to-markdown' );
 
     grunt.registerTask( 'default', [
         'less',
         'concat'
     ]);
 
+    // file auto generation
+    grunt.registerTask('i18n', ['addtextdomain', 'makepot']);
+    grunt.registerTask('readme', ['wp_readme_to_markdown']);
+
     grunt.registerTask('release', [
-        'makepot',
+        'i18n',
+        'readme',
         'less',
         'concat'
     ]);

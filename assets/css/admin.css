@@ -163,6 +163,24 @@
   padding-top: 2px;
   margin-right: 5px;
 }
+.dokan-settings-wrap .dashicons.dashicons-admin-generic {
+  color: #6c75ff;
+}
+.dokan-settings-wrap .dashicons.dashicons-cart {
+  color: #00aeff;
+}
+.dokan-settings-wrap .dashicons.dashicons-money {
+  color: #d35400;
+}
+.dokan-settings-wrap .dashicons.dashicons-admin-page {
+  color: #8e44ad;
+}
+.dokan-settings-wrap .dashicons.dashicons-admin-appearance {
+  color: #3498db;
+}
+.dokan-settings-wrap .dashicons.dashicons-networking {
+  color: #1abc9c;
+}
 .dokan-settings-wrap h2.nav-tab-wrapper {
   flex: 1;
   border-bottom: none;

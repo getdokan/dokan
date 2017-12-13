@@ -169,6 +169,11 @@ class Dokan_Withdraw {
      * @return void
      */
     function note_update() {
+        
+        if ( isset( $_POST['dokan_admin_nonce'] ) && !wp_verify_nonce( sanitize_key( $_POST['dokan_admin_nonce'] ), 'dokan_admin_action' ) ) {
+            return;
+        }
+        
         global $wpdb;
 
         $table_name = $wpdb->prefix . 'dokan_withdraw';

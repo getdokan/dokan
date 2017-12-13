@@ -166,6 +166,7 @@ function dokan_delete_product_handler() {
         }
 
         wp_delete_post( $product_id );
+        do_action( 'dokan_product_deleted', $product_id );
 
         $redirect = apply_filters( 'dokan_add_new_product_redirect', dokan_get_navigation_url( 'products' ), '' );
 
@@ -686,11 +687,11 @@ function dokan_get_product_types( $status = '' ) {
 function dokan_posted_input( $key, $array = false ) {
 
     //If array value is submitted return array
-    if ( $array && isset( $_POST[$key] ) ) {
-        return $_POST[$key];
+    if ( $array && isset( $_POST[$key] ) ) { // WPCS: CSRF ok.
+        return $_POST[$key];    // WPCS: CSRF ok.
     }
 
-    $value = isset( $_POST[$key] ) ? trim( $_POST[$key] ) : '';
+    $value = isset( $_POST[$key] ) ? trim( $_POST[$key] ) : ''; // WPCS: CSRF ok.
     return esc_attr( $value );
 }
 
@@ -701,7 +702,7 @@ function dokan_posted_input( $key, $array = false ) {
  * @return string
  */
 function dokan_posted_textarea( $key ) {
-    $value = isset( $_POST[$key] ) ? trim( $_POST[$key] ) : '';
+    $value = isset( $_POST[$key] ) ? trim( $_POST[$key] ) : ''; // WPCS: CSRF ok.
 
     return esc_textarea( $value );
 }
@@ -1321,18 +1322,17 @@ function dokan_get_coupon_edit_url( $coupon_id, $coupon_page = '' ) {
 }
 
 /**
- * User avatar wrapper for custom uploaded avatar
+ * Filter `get_avatar_url` to retrieve image url from dokan profile settings
+ * called by `get_avatar_url()` as well as `get_avatar()`
  *
- * @since 2.0
+ * @since 2.7.0
  *
- * @param string $avatar
- * @param mixed $id_or_email
- * @param int $size
- * @param string $default
- * @param string $alt
- * @return string image tag of the user avatar
+ * @param  string $url        avatar url
+ * @param  mixed $id_or_email userdata or user_id or user_email
+ * @param  array $args        arguments
+ * @return string             maybe modified url
  */
-function dokan_get_avatar( $avatar, $id_or_email, $size, $default, $alt ) {
+function dokan_get_avatar_url( $url, $id_or_email, $args ) {
 
     if ( is_numeric( $id_or_email ) ) {
         $user = get_user_by( 'id', $id_or_email );
@@ -1340,29 +1340,34 @@ function dokan_get_avatar( $avatar, $id_or_email, $size, $default, $alt ) {
         if ( $id_or_email->user_id != '0' ) {
             $user = get_user_by( 'id', $id_or_email->user_id );
         } else {
-            return $avatar;
+            return $url;
         }
     } else {
         $user = get_user_by( 'email', $id_or_email );
     }
 
-    if ( !$user ) {
-        return $avatar;
+    if ( ! $user ) {
+        return $url;
     }
 
     // see if there is a user_avatar meta field
     $user_avatar = get_user_meta( $user->ID, 'dokan_profile_settings', true );
     $gravatar_id = isset( $user_avatar['gravatar'] ) ? $user_avatar['gravatar'] : 0;
+
     if ( empty( $gravatar_id ) ) {
-        return $avatar;
+        return $url;
     }
 
-    $avater_url = wp_get_attachment_thumb_url( $gravatar_id );
+    $dokan_avatar_url = wp_get_attachment_thumb_url( $gravatar_id );
 
-    return sprintf( '<img src="%1$s" alt="%2$s" width="%3$s" height="%3$s" class="avatar photo">', esc_url( $avater_url ), $alt, $size );
+    if( empty( $dokan_avatar_url ) ) {
+        return $url;
+    }
+
+    return esc_url( $dokan_avatar_url );
 }
 
-add_filter( 'get_avatar', 'dokan_get_avatar', 99, 5 );
+add_filter( 'get_avatar_url', 'dokan_get_avatar_url', 99, 3 );
 
 /**
  * Get navigation url for the dokan dashboard
@@ -1549,7 +1554,7 @@ function dokan_product_listing_filter_months_dropdown( $user_id ) {
     $date = isset( $_GET['date'] ) ? (int) $_GET['date'] : 0;
     ?>
     <select name="date" id="filter-by-date" class="dokan-form-control">
-        <option<?php selected( $date, 0 ); ?> value="0"><?php _e( 'All dates' ); ?></option>
+        <option<?php selected( $date, 0 ); ?> value="0"><?php _e( 'All dates', 'dokan-lite' ); ?></option>
     <?php
     foreach ( $months as $arc_row ) {
         if ( 0 == $arc_row->year )
@@ -1562,7 +1567,7 @@ function dokan_product_listing_filter_months_dropdown( $user_id ) {
             selected( $date, $year . $month, false ),
             esc_attr( $year . $month ),
             /* translators: 1: month name, 2: 4-digit year */
-            sprintf( __( '%1$s %2$d' ), $wp_locale->get_month( $month ), $year )
+            sprintf( __( '%1$s %2$d', 'dokan-lite' ), $wp_locale->get_month( $month ), $year )
         );
     }
     ?>
@@ -1902,7 +1907,17 @@ function dokan_set_is_home_false_on_store() {
     }
 }
 
-register_sidebar( array( 'name' => __( 'Dokan Store Sidebar', 'dokan-lite' ), 'id' => 'sidebar-store' ) );
+register_sidebar(
+    apply_filters( 'dokan_store_widget_args', array(
+            'name'          => __( 'Dokan Store Sidebar', 'dokan-lite' ),
+            'id'            => 'sidebar-store',
+            'before_widget' => '<aside class="widget">',
+            'after_widget'  => '</aside>',
+            'before_title'  => '<h3 class="widget-title">',
+            'after_title'   => '</h3>',
+        )
+    )
+);
 
 /**
  * Calculate category wise commission for given product

@@ -149,7 +149,7 @@ if ( $user_orders ) {
     } else {
         $num_of_pages = ceil( $order_count / $limit );
     }
-    
+
 
     $base_url  = dokan_get_navigation_url( 'orders' );
 
