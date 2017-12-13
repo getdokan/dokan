@@ -181,6 +181,18 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+v2.7.1 -> Dec 13, 2017
+---------------------
+- [fix]  Added Order shipping track security nonce
+- [fix]  Fixed xss warnings
+- [fix]  Fix store widget register issue
+- [fix]  Added icon style in settings page
+- [fix]  Change user avatar rendering issue
+- [fix]  Store category value selected after reloading
+- [fix]  Fix attribute saving issue
+- [fix]  Store contact form widget is now working in single product page
+- [fix]  Fix some styling issue in product popup page
+
 v2.7.0 -> Nov 23, 2017
 ---------------------
 - [fix]  Remove duplicate help menu and unwanted text
