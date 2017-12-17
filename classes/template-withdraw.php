@@ -349,8 +349,8 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
 
             return;
         }
-
-        $payment_methods = dokan_withdraw_get_active_methods();
+        
+        $payment_methods = dokan_get_seller_active_withdraw_methods();
 
         if ( is_wp_error( $validate ) ) {
             $amount          = sanitize_text_field( $_POST['witdraw_amount'] );

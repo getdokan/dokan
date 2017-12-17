@@ -7,6 +7,7 @@
  * @package dokan
  */
 ?>
+<?php if ( ! empty( $payment_methods ) ) : ?>
 <form class="dokan-form-horizontal withdraw" role="form" method="post">
     <?php wp_nonce_field( 'dokan_withdraw', 'dokan_withdraw_nonce' ); ?>
 
@@ -44,3 +45,8 @@
         </div>
     </div>
 </form>
+<?php else : ?>
+    <div class="dokan-alert dokan-alert-warning">
+        <strong>No withdraw method is available. Please update your payment method to withdraw funds. <a href="<?php echo dokan_get_navigation_url( 'settings/payment' );  ?>">Payment Settings Setup</a></strong>
+    </div>
+<?php endif; ?>
