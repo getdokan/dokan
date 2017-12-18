@@ -50,6 +50,29 @@ function dokan_withdraw_get_active_methods() {
 }
 
 /**
+ * Get active withdraw methods for seller.
+ * @return array
+ */
+function dokan_get_seller_active_withdraw_methods() {
+    $payment_methods = get_user_meta( get_current_user_id(), 'dokan_profile_settings' );
+    $paypal = isset( $payment_methods[0]['payment']['paypal']['email'] ) && $payment_methods[0]['payment']['paypal']['email'] !== false ? 'paypal' : '';
+    $bank = isset( $payment_methods[0]['payment']['bank']['ac_number'] ) && $payment_methods[0]['payment']['bank']['ac_number']  !== '' ? 'bank' : '';
+    $skrill = isset( $payment_methods[0]['payment']['skrill']['email'] ) && $payment_methods[0]['payment']['skrill']['email'] !== false ? 'skrill' : '';
+
+    $payment_methods = array( $paypal, $bank, $skrill );
+    $active_payment_methods = array();
+
+    foreach ( $payment_methods as $payment_method ) {
+        if ( ! empty( $payment_method ) ) {
+            array_push( $active_payment_methods, $payment_method );
+        }
+    }
+
+    return $active_payment_methods;
+}
+
+
+/**
  * Get a single withdraw method based on key
  *
  * @param string $method_key
