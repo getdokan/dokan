@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 2.7.1\n"
+"Project-Id-Version: Dokan 2.7.2\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2017-12-13 03:17:43+00:00\n"
+"POT-Creation-Date: 2017-12-18 08:15:46+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2462,77 +2462,77 @@ msgstr ""
 msgid "Product SKU must be unique."
 msgstr ""
 
-#: includes/wc-functions.php:472
+#: includes/wc-functions.php:471
 msgid "Cheating, eh?"
 msgstr ""
 
-#: includes/wc-functions.php:478
+#: includes/wc-functions.php:477
 msgid "Please enter your first name."
 msgstr ""
 
-#: includes/wc-functions.php:479
+#: includes/wc-functions.php:478
 msgid "Please enter your last name."
 msgstr ""
 
-#: includes/wc-functions.php:480
+#: includes/wc-functions.php:479
 msgid "Please enter your phone number."
 msgstr ""
 
-#: includes/wc-functions.php:815
+#: includes/wc-functions.php:814
 msgid "Your {site_title} order receipt from {order_date}"
 msgstr ""
 
-#: includes/wc-functions.php:816
+#: includes/wc-functions.php:815
 msgid "Your {site_title} order from {order_date} is complete"
 msgstr ""
 
-#: includes/wc-functions.php:913
+#: includes/wc-functions.php:912
 #: templates/global/seller-registration-form.php:15
 msgid "First Name"
 msgstr ""
 
-#: includes/wc-functions.php:914
+#: includes/wc-functions.php:913
 #: templates/global/seller-registration-form.php:20
 msgid "Last Name"
 msgstr ""
 
-#: includes/wc-functions.php:915 templates/dashboard/edit-account.php:62
+#: includes/wc-functions.php:914 templates/dashboard/edit-account.php:62
 msgid "Email address"
 msgstr ""
 
-#: includes/wc-functions.php:920
+#: includes/wc-functions.php:919
 msgid "is a required field."
 msgstr ""
 
-#: includes/wc-functions.php:926
+#: includes/wc-functions.php:925
 msgid "Please provide a valid email address."
 msgstr ""
 
-#: includes/wc-functions.php:928
+#: includes/wc-functions.php:927
 msgid "This email address is already registered."
 msgstr ""
 
-#: includes/wc-functions.php:934
+#: includes/wc-functions.php:933
 msgid "Your current password is incorrect."
 msgstr ""
 
-#: includes/wc-functions.php:939
+#: includes/wc-functions.php:938
 msgid "Please fill out all password fields."
 msgstr ""
 
-#: includes/wc-functions.php:942
+#: includes/wc-functions.php:941
 msgid "Please enter your current password."
 msgstr ""
 
-#: includes/wc-functions.php:945
+#: includes/wc-functions.php:944
 msgid "Please re-enter your password."
 msgstr ""
 
-#: includes/wc-functions.php:948
+#: includes/wc-functions.php:947
 msgid "New passwords do not match."
 msgstr ""
 
-#: includes/wc-functions.php:969
+#: includes/wc-functions.php:968
 msgid "Account details changed successfully."
 msgstr ""
 
@@ -2629,35 +2629,35 @@ msgstr ""
 msgid "Bank Transfer"
 msgstr ""
 
-#: includes/withdraw-functions.php:98 includes/withdraw-functions.php:120
+#: includes/withdraw-functions.php:121 includes/withdraw-functions.php:143
 msgid "E-mail"
 msgstr ""
 
-#: includes/withdraw-functions.php:145
+#: includes/withdraw-functions.php:168
 msgid "Your bank account name"
 msgstr ""
 
-#: includes/withdraw-functions.php:151
+#: includes/withdraw-functions.php:174
 msgid "Your bank account number"
 msgstr ""
 
-#: includes/withdraw-functions.php:157
+#: includes/withdraw-functions.php:180
 msgid "Name of bank"
 msgstr ""
 
-#: includes/withdraw-functions.php:163
+#: includes/withdraw-functions.php:186
 msgid "Address of your bank"
 msgstr ""
 
-#: includes/withdraw-functions.php:169
+#: includes/withdraw-functions.php:192
 msgid "Routing number"
 msgstr ""
 
-#: includes/withdraw-functions.php:175
+#: includes/withdraw-functions.php:198
 msgid "IBAN"
 msgstr ""
 
-#: includes/withdraw-functions.php:181
+#: includes/withdraw-functions.php:204
 msgid "Swift code"
 msgstr ""
 
@@ -3927,16 +3927,26 @@ msgstr ""
 msgid "No products found"
 msgstr ""
 
-#: templates/withdraw/request-form.php:15
+#: templates/withdraw/request-form.php:16
 msgid "Withdraw Amount"
 msgstr ""
 
-#: templates/withdraw/request-form.php:28
+#: templates/withdraw/request-form.php:29
 msgid "Payment Method"
 msgstr ""
 
-#: templates/withdraw/request-form.php:43
+#: templates/withdraw/request-form.php:44
 msgid "Submit Request"
+msgstr ""
+
+#: templates/withdraw/request-form.php:50
+msgid ""
+"No withdraw method is available. Please update your payment method to "
+"withdraw funds."
+msgstr ""
+
+#: templates/withdraw/request-form.php:50
+msgid "Payment Settings Setup"
 msgstr ""
 
 #: templates/withdraw/status-listing.php:12
