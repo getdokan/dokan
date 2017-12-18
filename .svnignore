@@ -15,3 +15,5 @@ phpunit.xml
 .svnignore
 README.md
 plugin-deploy.sh
+package-lock.json
+phpcs.ruleset.xml
