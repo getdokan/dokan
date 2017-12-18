@@ -47,6 +47,6 @@
 </form>
 <?php else : ?>
     <div class="dokan-alert dokan-alert-warning">
-        <strong>No withdraw method is available. Please update your payment method to withdraw funds. <a href="<?php echo dokan_get_navigation_url( 'settings/payment' );  ?>">Payment Settings Setup</a></strong>
+        <strong><?php echo sprintf( '%s <a href="%s">%s</a>', __( 'No withdraw method is available. Please update your payment method to withdraw funds.', 'dokan-lite' ), esc_url( dokan_get_navigation_url( 'settings/payment' ) ), __( 'Payment Settings Setup', 'dokan-lite' ) ) ?></strong>
     </div>
 <?php endif; ?>
