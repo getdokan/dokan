@@ -1,3 +1,9 @@
+v2.7.2 -> Dec 18, 2017
+---------------------
+- [fix]    Product attributes not saving properly
+- [fix]    missing text domains updated
+- [tweak]  Disabled withdraw request if no withdraw method is set
+
 v2.7.1 -> Dec 13, 2017
 ---------------------
 - [fix]  Added Order shipping track security nonce
