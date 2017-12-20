@@ -9,3 +9,4 @@ includes/.DS_Store
 plugin-deploy.sh
 secret.json
 debug.log
+package-lock.json

@@ -3209,7 +3209,6 @@ div.media-sidebar a.edit-attachment {
   height: 100%;
   color: #afafaf;
   font-size: 18px;
-  display: block;
 }
 .product-edit-container #dokan-product-images ul.product_images li.image img,
 .product-edit-container #dokan-product-images ul.product_images li.dokan-sortable-placeholder img,
@@ -3419,7 +3418,6 @@ div.media-sidebar a.edit-attachment {
   height: 100%;
   color: #afafaf;
   font-size: 18px;
-  display: block;
 }
 .dokan-add-new-product-popup #dokan-product-images ul.product_images li.image img,
 .dokan-add-new-product-popup #dokan-product-images ul.product_images li.dokan-sortable-placeholder img,
