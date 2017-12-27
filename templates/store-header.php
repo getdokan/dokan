@@ -83,6 +83,8 @@ if ( 'layout3' === $profile_layout ) {
                             <i class="fa fa-star"></i>
                             <?php dokan_get_readable_seller_rating( $store_user->get_id() ); ?>
                         </li>
+                        
+                        <?php do_action( 'dokan_store_header_info_fields',  $store_user->get_id() ); ?>
                     </ul>
 
                     <?php if ( $social_fields ) { ?>
