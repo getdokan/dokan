@@ -162,7 +162,7 @@ function dokan_create_seller_order( $parent_order, $seller_id, $seller_products 
                 'label'               => $tax->get_label(),
                 'compound'            => $tax->get_compound(),
                 'tax_amount'          => wc_format_decimal( array_sum( $items_tax[$tax->get_rate_id()] ) ),
-                'shipping_tax_amount' => $seller_shipping->get_total_tax()
+                'shipping_tax_amount' => is_bool( $seller_shipping ) ? '' : $seller_shipping->get_total_tax()
             );
 
             foreach( $tax_metas as $meta_key => $meta_value ) {
