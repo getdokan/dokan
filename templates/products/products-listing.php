@@ -36,10 +36,13 @@
 
                     <?php if ( dokan_is_seller_enabled( get_current_user_id() ) ): ?>
                         <span class="dokan-add-product-link">
-                            <a href="<?php echo dokan_get_navigation_url( 'new-product' ); ?>" class="dokan-btn dokan-btn-theme dokan-right <?php echo ( 'on' == dokan_get_option( 'disable_product_popup', 'dokan_selling', 'off' ) ) ? '' : 'dokan-add-new-product'; ?>">
+                            <a href="<?php echo dokan_get_navigation_url( 'new-product' ); ?>" class="dokan-btn dokan-btn-theme <?php echo ( 'on' == dokan_get_option( 'disable_product_popup', 'dokan_selling', 'off' ) ) ? '' : 'dokan-add-new-product'; ?>">
                                 <i class="fa fa-briefcase">&nbsp;</i>
                                 <?php _e( 'Add new product', 'dokan-lite' ); ?>
                             </a>
+                            <?php
+                                do_action( 'dokan_after_add_product_btn' );
+                            ?>
                         </span>
                     <?php endif; ?>
                 </div>
