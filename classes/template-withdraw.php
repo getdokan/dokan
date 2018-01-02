@@ -282,7 +282,9 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
     function show_alert_messages() {
         $type    = isset( $_GET['message'] ) ? $_GET['message'] : '';
         $message = '';
-
+        
+        $template = 'global/dokan-success';
+        
         switch ( $type ) {
             case 'request_cancelled':
                 $message = __( 'Your request has been cancelled successfully!', 'dokan-lite' );
@@ -294,11 +296,12 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
 
             case 'request_error':
                 $message = __( 'Unknown error!', 'dokan-lite' );
+                $template = 'global/dokan-error';
                 break;
         }
 
         if ( ! empty( $message ) ) {
-            dokan_get_template_part( 'global/dokan-error', '', array( 'deleted' => true, 'message' => $message ) );
+            dokan_get_template_part( $template, '', array( 'deleted' => true, 'message' => $message ) );
         }
     }
 
