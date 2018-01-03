@@ -1288,6 +1288,27 @@ function dokan_disable_admin_bar( $show_admin_bar ) {
 add_filter( 'show_admin_bar', 'dokan_disable_admin_bar' );
 
 /**
+ * Filter the orders of current user
+ *
+ * @param object $query
+ * @since 2.7.3
+ * @return object $query
+ */
+function dokan_filter_orders_for_current_vendor( $query ) {
+    if ( current_user_can( 'administrator' ) ) {
+        return;
+    }
+
+    if ( is_admin() && $query->is_main_query() && $query->query_vars['post_type'] == 'shop_order' ) {
+        $query->set( 'author', get_current_user_id() );
+    }
+
+    return $query;
+}
+
+add_action( 'pre_get_posts', 'dokan_filter_orders_for_current_vendor' );
+
+/**
  * Human readable number format.
  *
  * Shortens the number by dividing 1000
