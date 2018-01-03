@@ -1275,8 +1275,10 @@ function dokan_disable_admin_bar( $show_admin_bar ) {
     if ( $current_user->ID !== 0 ) {
         $role = reset( $current_user->roles );
 
-        if ( in_array( $role, array( 'seller', 'customer' ) ) ) {
-            return false;
+        if ( dokan_get_option( 'admin_access', 'dokan_general' ) == 'on' ) {
+            if ( in_array( $role, array( 'seller', 'customer' ) ) ) {
+                return false;
+            }
         }
     }
 
