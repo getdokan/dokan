@@ -28,4 +28,24 @@ function dokan_update_order_meta_273(){
     }
 }
 
+/**
+ * Modify column structure to support upto 4 decimals
+ */
+function dokan_update_table_structure_273(){
+    global $wpdb;
+    
+    $wpdb->query( 
+        "ALTER TABLE `{$wpdb->prefix}dokan_orders` 
+        MODIFY COLUMN order_total float(11,4)"
+    );
+    
+    $wpdb->query( 
+        "ALTER TABLE `{$wpdb->prefix}dokan_orders` 
+        MODIFY COLUMN net_amount float(11,4)" 
+    );
+    
+}
+
+
+dokan_update_table_structure_273();
 dokan_update_order_meta_273();
