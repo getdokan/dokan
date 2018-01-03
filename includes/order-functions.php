@@ -734,7 +734,7 @@ function dokan_get_admin_commission_by( $order, $seller_id ) {
     $saved_admin_fee = get_post_meta( dokan_get_prop( $order, 'id' ), '_dokan_admin_fee', true );
     
     if ( $saved_admin_fee != '' ) {
-        return $saved_admin_fee;
+        return apply_filters( 'dokan_order_admin_commission', $saved_admin_fee, $order );
     }
 
     $admin_commission = 0;
