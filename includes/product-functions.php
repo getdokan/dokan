@@ -430,6 +430,18 @@ function dokan_products_array_filter_editable( $product ) {
     return $product && is_a( $product, 'WC_Product' ) && current_user_can( 'dokandar', $product->get_id() );
 }
 
+/**
+ * Get row action for product
+ *
+ * @since 2.7.3
+ *
+ * @return array
+ */
+function dokan_product_get_row_action() {
+    $row_action = array();
+
+
+}
 
 
 

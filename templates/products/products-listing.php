@@ -36,10 +36,13 @@
 
                     <?php if ( dokan_is_seller_enabled( get_current_user_id() ) ): ?>
                         <span class="dokan-add-product-link">
-                            <a href="<?php echo dokan_get_navigation_url( 'new-product' ); ?>" class="dokan-btn dokan-btn-theme <?php echo ( 'on' == dokan_get_option( 'disable_product_popup', 'dokan_selling', 'off' ) ) ? '' : 'dokan-add-new-product'; ?>">
-                                <i class="fa fa-briefcase">&nbsp;</i>
-                                <?php _e( 'Add new product', 'dokan-lite' ); ?>
-                            </a>
+                            <?php if ( current_user_can( 'dokan_add_product' ) ): ?>
+                                <a href="<?php echo dokan_get_navigation_url( 'new-product' ); ?>" class="dokan-btn dokan-btn-theme <?php echo ( 'on' == dokan_get_option( 'disable_product_popup', 'dokan_selling', 'off' ) ) ? '' : 'dokan-add-new-product'; ?>">
+                                    <i class="fa fa-briefcase">&nbsp;</i>
+                                    <?php _e( 'Add new product', 'dokan-lite' ); ?>
+                                </a>
+                            <?php endif ?>
+
                             <?php
                                 do_action( 'dokan_after_add_product_btn' );
                             ?>
@@ -121,15 +124,27 @@
                                     ?>
                                     <tr<?php echo $tr_class; ?>>
                                     <td data-title="<?php _e( 'Image', 'dokan-lite' ); ?>">
-                                        <a href="<?php echo dokan_edit_product_url( $post->ID ); ?>"><?php echo $product->get_image(); ?></a>
+                                        <?php if ( current_user_can( 'dokan_edit_product' ) ): ?>
+                                            <a href="<?php echo dokan_edit_product_url( $post->ID ); ?>"><?php echo $product->get_image(); ?></a>
+                                        <?php else: ?>
+                                            <?php echo $product->get_image(); ?>
+                                        <?php endif ?>
                                     </td>
                                     <td data-title="<?php _e( 'Name', 'dokan-lite' ); ?>">
                                         <p><a href="<?php echo dokan_edit_product_url( $post->ID ); ?>"><?php echo $product->get_title(); ?></a></p>
 
                                         <div class="row-actions">
-                                            <span class="edit"><a href="<?php echo dokan_edit_product_url( $post->ID ); ?>"><?php _e( 'Edit', 'dokan-lite' ); ?></a> | </span>
-                                            <span class="delete"><a onclick="return confirm('Are you sure?');" href="<?php echo wp_nonce_url( add_query_arg( array( 'action' => 'dokan-delete-product', 'product_id' => $post->ID ), dokan_get_navigation_url('products') ), 'dokan-delete-product' ); ?>"><?php _e( 'Delete Permanently', 'dokan-lite' ); ?></a>  </span>
-                                            <span class="view <?php echo $view_class ?>"> | <a href="<?php echo get_permalink( dokan_get_prop( $product, 'id' ) ); ?>" rel="permalink"><?php _e( 'View', 'dokan-lite' ); ?></a></span>
+                                            <?php if ( current_user_can( 'dokan_edit_product' ) ): ?>
+                                                <span class="edit"><a href="<?php echo dokan_edit_product_url( $post->ID ); ?>"><?php _e( 'Edit', 'dokan-lite' ); ?></a> | </span>
+                                            <?php endif ?>
+
+                                            <?php if ( current_user_can( 'dokan_delete_product' ) ): ?>
+                                                <span class="delete"><a onclick="return confirm('Are you sure?');" href="<?php echo wp_nonce_url( add_query_arg( array( 'action' => 'dokan-delete-product', 'product_id' => $post->ID ), dokan_get_navigation_url('products') ), 'dokan-delete-product' ); ?>"><?php _e( 'Delete Permanently', 'dokan-lite' ); ?></a>  </span>
+                                            <?php endif ?>
+
+                                            <?php if ( current_user_can( 'dokan_view_product' ) ): ?>
+                                                <span class="view <?php echo $view_class ?>" | <a href="<?php echo get_permalink( dokan_get_prop( $product, 'id' ) ); ?>" rel="permalink"><?php _e( 'View', 'dokan-lite' ); ?></a></span>
+                                            <?php endif ?>
                                             <?php do_action( 'dokan_product_listin_row_action', $product ); ?>
                                         </div>
                                     </td>
