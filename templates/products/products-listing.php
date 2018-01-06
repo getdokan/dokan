@@ -118,6 +118,7 @@
                                 while ($product_query->have_posts()) {
                                     $product_query->the_post();
 
+                                    $row_actions = dokan_product_get_row_action( $post );
                                     $tr_class = ($post->post_status == 'pending' ) ? ' class="danger"' : '';
                                     $view_class = ($post->post_status == 'pending' ) ? 'dokan-hide' : '';
                                     $product = wc_get_product( $post->ID );
@@ -133,20 +134,11 @@
                                     <td data-title="<?php _e( 'Name', 'dokan-lite' ); ?>">
                                         <p><a href="<?php echo dokan_edit_product_url( $post->ID ); ?>"><?php echo $product->get_title(); ?></a></p>
 
-                                        <div class="row-actions">
-                                            <?php if ( current_user_can( 'dokan_edit_product' ) ): ?>
-                                                <span class="edit"><a href="<?php echo dokan_edit_product_url( $post->ID ); ?>"><?php _e( 'Edit', 'dokan-lite' ); ?></a> | </span>
-                                            <?php endif ?>
-
-                                            <?php if ( current_user_can( 'dokan_delete_product' ) ): ?>
-                                                <span class="delete"><a onclick="return confirm('Are you sure?');" href="<?php echo wp_nonce_url( add_query_arg( array( 'action' => 'dokan-delete-product', 'product_id' => $post->ID ), dokan_get_navigation_url('products') ), 'dokan-delete-product' ); ?>"><?php _e( 'Delete Permanently', 'dokan-lite' ); ?></a>  </span>
-                                            <?php endif ?>
-
-                                            <?php if ( current_user_can( 'dokan_view_product' ) ): ?>
-                                                <span class="view <?php echo $view_class ?>" | <a href="<?php echo get_permalink( dokan_get_prop( $product, 'id' ) ); ?>" rel="permalink"><?php _e( 'View', 'dokan-lite' ); ?></a></span>
-                                            <?php endif ?>
-                                            <?php do_action( 'dokan_product_listin_row_action', $product ); ?>
-                                        </div>
+                                        <?php if ( !empty( $row_actions ) ): ?>
+                                            <div class="row-actions">
+                                                <?php echo $row_actions; ?>
+                                            </div>
+                                        <?php endif ?>
                                     </td>
                                     <td class="post-status" data-title="<?php _e( 'Status', 'dokan-lite' ); ?>">
                                         <label class="dokan-label <?php echo dokan_get_post_status_label_class( $post->post_status ); ?>"><?php echo dokan_get_post_status( $post->post_status ); ?></label>

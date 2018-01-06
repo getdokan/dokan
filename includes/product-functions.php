@@ -435,13 +435,61 @@ function dokan_products_array_filter_editable( $product ) {
  *
  * @since 2.7.3
  *
+ * @param object $post
+ *
  * @return array
  */
-function dokan_product_get_row_action() {
-    $row_action = array();
+function dokan_product_get_row_action( $post ) {
 
+    if ( empty( $post->ID ) ) {
+        return $row_action;
+    }
 
+    $row_action      = array();
+    $row_action_html = array();
+    $product_id      = $post->ID;
+
+    if ( current_user_can( 'dokan_edit_product' ) ) {
+        $row_action['edit'] = array(
+            'title' => __( 'Edit', 'dokan-lite' ),
+            'url'   => dokan_edit_product_url( $product_id ),
+            'class' => 'edit',
+        );
+    }
+
+    if ( current_user_can( 'dokan_delete_product' ) ) {
+        $row_action['delete'] = array(
+            'title' => __( 'Delete Permanently', 'dokan-lite' ),
+            'url'   => wp_nonce_url( add_query_arg( array( 'action' => 'dokan-delete-product', 'product_id' => $product_id ), dokan_get_navigation_url('products') ), 'dokan-delete-product' ),
+            'class' => 'delete',
+            'other' => 'onclick="return confirm( \'Are you sure?\' );"'
+        );
+    }
+
+    if ( current_user_can( 'dokan_view_product' ) && $post->post_status != 'pending' ) {
+        $row_action['view'] = array(
+            'title' => __( 'View', 'dokan-lite' ),
+            'url'   => get_permalink( $product_id ),
+            'class' => 'view',
+        );
+    }
+
+    $row_action = apply_filters( 'dokan_product_row_actions', $row_action, $post );
+
+    if ( empty( $row_action ) ) {
+        return $row_action;
+    }
+
+    foreach ( $row_action as $key => $action ) {
+        $row_action_html[$key] = sprintf( '<span class="%s"><a href="%s" %s>%s</a></span>', $action['class'], esc_url( $action['url'] ), isset( $action['other'] ) ? $action['other'] : '', $action['title'] );
+    }
+
+    $row_action_html = apply_filters( 'dokan_product_row_action_html', $row_action_html, $post );
+
+    return implode( ' | ', $row_action_html );
 }
+
+
 
 
 
