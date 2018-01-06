@@ -73,7 +73,13 @@ class Dokan_Template_Orders {
         $order_id = isset( $_GET['order_id'] ) ? intval( $_GET['order_id'] ) : 0;
 
         if ( $order_id ) {
-            dokan_get_template_part( 'orders/details' );
+
+            if ( wp_verify_nonce( $_REQUEST['_wpnonce'], 'dokan_view_order' ) && current_user_can( 'dokan_view_order' ) ) {
+                dokan_get_template_part( 'orders/details' );
+            } else {
+                dokan_get_template_part( 'global/dokan-error', '', array( 'deleted' => false, 'message' => __( 'You have no permission to view this order', 'dokan-lite' ) ) );
+            }
+
         } else {
             dokan_get_template_part( 'orders/date-export');
             dokan_get_template_part( 'orders/listing' );
