@@ -145,11 +145,19 @@ class Dokan_Template_Settings {
         global $wp;
 
         if ( isset( $wp->query_vars['settings'] ) && $wp->query_vars['settings'] == 'store' ) {
-            $this->load_store_content();
+            if ( ! current_user_can( 'dokan_view_store_settings_menu' ) ) {
+                dokan_get_template_part('global/dokan-error', '', array( 'deleted' => false, 'message' => __( 'You have no permission to view this page', 'dokan-lite' ) ) );
+            } else {
+                $this->load_store_content();
+            }
         }
 
         if ( isset( $wp->query_vars['settings'] ) && $wp->query_vars['settings'] == 'payment' ) {
-            $this->load_payment_content();
+            if ( ! current_user_can( 'dokan_view_store_payment_menu' ) ) {
+                dokan_get_template_part('global/dokan-error', '', array( 'deleted' => false, 'message' => __( 'You have no permission to view this page', 'dokan-lite' ) ) );
+            } else {
+                $this->load_payment_content();
+            }
         }
 
         do_action( 'dokan_render_settings_content', $wp->query_vars );
