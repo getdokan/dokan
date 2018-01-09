@@ -18,9 +18,9 @@ function dokan_update_order_meta_273(){
             ),
 	)
     );
-    
+
     $query = new WP_Query( $args );
-    
+
     foreach (  $query->posts as $sub_order ) {
         $order = wc_get_order( $sub_order->ID );
         $admin_fee = dokan_get_admin_commission_by( $order, dokan_get_seller_id_by_order( $sub_order->ID ) );
@@ -33,19 +33,45 @@ function dokan_update_order_meta_273(){
  */
 function dokan_update_table_structure_273(){
     global $wpdb;
-    
-    $wpdb->query( 
-        "ALTER TABLE `{$wpdb->prefix}dokan_orders` 
+
+    $wpdb->query(
+        "ALTER TABLE `{$wpdb->prefix}dokan_orders`
         MODIFY COLUMN order_total float(11,4)"
     );
-    
-    $wpdb->query( 
-        "ALTER TABLE `{$wpdb->prefix}dokan_orders` 
-        MODIFY COLUMN net_amount float(11,4)" 
+
+    $wpdb->query(
+        "ALTER TABLE `{$wpdb->prefix}dokan_orders`
+        MODIFY COLUMN net_amount float(11,4)"
     );
-    
+
+}
+
+/**
+ * Update seller capabilities
+ *
+ * @since 2.7.3
+ *
+ * @return void
+ */
+function dokan_update_user_capabilities_273() {
+    global $wp_roles;
+
+    if ( class_exists( 'WP_Roles' ) && ! isset( $wp_roles ) ) {
+        $wp_roles = new WP_Roles();
+    }
+
+    $capabilities = dokan_get_seller_cap();
+
+    foreach ( $capabilities as $key => $capability ) {
+        $wp_roles->add_cap( 'seller', $capability );
+        $wp_roles->add_cap( 'administrator', $capability );
+        $wp_roles->add_cap( 'shop_manager', $capability );
+    }
 }
 
 
 dokan_update_table_structure_273();
 dokan_update_order_meta_273();
+dokan_update_user_capabilities_273();
+
+

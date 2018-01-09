@@ -2169,6 +2169,7 @@ function dokan_get_seller_cap() {
         'dokan_view_statement_report',
         'dokan_view_reviews',
         'dokan_manage_reviews',
+        'dokan_manage_withdraw',
         'dokan_view_overview_menu',
         'dokan_view_product_menu',
         'dokan_view_order_menu',
