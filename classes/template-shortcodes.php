@@ -89,11 +89,7 @@ class Dokan_Template_Shortcodes {
         }
 
         if ( isset( $wp->query_vars['settings'] ) ) {
-            // if ( ! current_user_can( 'dokan_view_store_settings_menu' ) ) {
-            //     dokan_get_template_part( 'global/no-permission' );
-            // } else {
-                dokan_get_template_part('settings/store');
-            // }
+            dokan_get_template_part('settings/store');
             return ob_get_clean();
         }
 

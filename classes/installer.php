@@ -148,8 +148,15 @@ class Dokan_Installer {
             'dokandar'               => true
         ) );
 
+        $capabilities = dokan_get_seller_cap();
         $wp_roles->add_cap( 'shop_manager', 'dokandar' );
         $wp_roles->add_cap( 'administrator', 'dokandar' );
+
+        foreach ( $capabilities as $key => $capability ) {
+            $wp_roles->add_cap( 'seller', $capability );
+            $wp_roles->add_cap( 'administrator', $capability );
+            $wp_roles->add_cap( 'shop_manager', $capability );
+        }
     }
 
     function setup_pages() {
