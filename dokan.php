@@ -319,10 +319,8 @@ final class WeDevs_Dokan {
             Dokan_Admin_Ajax::init();
             new Dokan_Upgrade();
             new WeForms_Upsell( '409' );
-        } else {
-            new Dokan_Pageviews();
         }
-
+        new Dokan_Pageviews();
         new Dokan_Rewrites();
         new Dokan_Tracker();
 
