@@ -16,14 +16,20 @@ jQuery(function($) {
     });
 
     $('form#dokan-order-status-form').on('submit', function(e) {
-        e.preventDefault();
+        var confirmCancel = confirm("Are you sure you want to update the order status? This action is not reversible")
+		if (!confirmCancel) {
+			e.preventDefault();
+		}
+		
+		else{
+			e.preventDefault();
 
-        var self = $(this),
+			var self = $(this),
             li = self.closest('li');
 
-        li.block({ message: null, overlayCSS: { background: '#fff url(' + dokan.ajax_loader + ') no-repeat center', opacity: 0.6 } });
+			li.block({ message: null, overlayCSS: { background: '#fff url(' + dokan.ajax_loader + ') no-repeat center', opacity: 0.6 } });
 
-        $.post( dokan.ajaxurl, self.serialize(), function(response) {
+			$.post( dokan.ajaxurl, self.serialize(), function(response) {
             li.unblock();
 
             var prev_li = li.prev();
@@ -31,8 +37,10 @@ jQuery(function($) {
             li.addClass('dokan-hide');
             prev_li.find('label').replaceWith(response);
             prev_li.find('a.dokan-edit-status').removeClass('dokan-hide');
-        });
-    });
+			location.reload();
+			});
+		}
+	});
 
     $('form#add-order-note').on( 'submit', function(e) {
         e.preventDefault();
