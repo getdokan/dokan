@@ -17,9 +17,9 @@ class Dokan_Scripts {
 
         if ( is_admin() ) {
             add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
-        } else {
-            add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_front_scripts' ) );
         }
+        add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_front_scripts' ) );
+    
     }
 
     /**
@@ -46,6 +46,7 @@ class Dokan_Scripts {
 
         // Register Vendors styles
         wp_register_style( 'jquery-ui', $vendor . '/jquery-ui/jquery-ui-1.10.0.custom.css', false, null );
+        wp_register_style( 'timepicker', $vendor . '/jquery-ui/timepicker/timepicker.min.css', false, null );
         wp_register_style( 'dokan-fontawesome', $vendor . '/font-awesome/font-awesome.min.css', false, null );
         wp_register_style( 'dokan-chosen-style', $vendor . '/chosen/chosen.min.css', false, null );
         wp_register_style( 'dokan-magnific-popup', $vendor . '/magnific/magnific-popup.css', false, null );
@@ -60,6 +61,7 @@ class Dokan_Scripts {
         }
 
         // Register Vendors scripts
+        wp_register_script( 'timepicker', $vendor . '/jquery-ui/timepicker/timepicker.min.js', array( 'jquery' ), null, false );
         wp_register_script( 'dokan-chart', $vendor . '/chart/Chart.min.js', false, null, true );
         wp_register_script( 'dokan-tabs', $vendor . '/easytab/jquery.easytabs.min.js', false, null, true );
         wp_register_script( 'dokan-chosen', $vendor . '/chosen/chosen.jquery.min.js', array( 'jquery' ), null, true );
@@ -196,6 +198,10 @@ class Dokan_Scripts {
             wp_enqueue_style( 'woocommerce-general' );
             wp_enqueue_style( 'dokan-select2-css' );
             wp_enqueue_style( 'dokan-chosen-style' );
+
+            if ( isset( $wp->query_vars['settings'] ) == 'store' ) {
+                wp_enqueue_style( 'timepicker' );
+            }
         }
 
         if ( DOKAN_LOAD_SCRIPTS ) {
@@ -224,6 +230,7 @@ class Dokan_Scripts {
 
         if ( isset( $wp->query_vars['settings'] ) == 'store' ) {
             wp_enqueue_script( 'wc-country-select' );
+            wp_enqueue_script( 'timepicker' );
         }
     }
 
