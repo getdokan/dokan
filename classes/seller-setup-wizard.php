@@ -55,7 +55,7 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
             $this->custom_logo = $setup_wizard_logo_url;
         }
 
-        $this->store_id   = get_current_user_id();
+        $this->store_id   = dokan_get_current_user_id();
         $this->store_info = dokan_get_store_info( $this->store_id );
 
         $steps = array(

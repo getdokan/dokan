@@ -21,8 +21,7 @@ class Dokan_Template_Dashboard {
      * @since 2.4
      */
     function __construct() {
-
-        $this->user_id        = get_current_user_id();
+        $this->user_id        = dokan_get_current_user_id();
         $this->orders_count   = $this->get_orders_count();
         $this->post_counts    = $this->get_post_counts();
         $this->comment_counts = $this->get_comment_counts();

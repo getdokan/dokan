@@ -132,7 +132,7 @@ class Dokan_Template_Orders {
             }
 
             echo "\r\n";
-            $user_orders = dokan_get_seller_orders( get_current_user_id(), 'all', NULL, 10000000, 0 );
+            $user_orders = dokan_get_seller_orders( dokan_get_current_user_id(), 'all', NULL, 10000000, 0 );
             $statuses    = wc_get_order_statuses();
             $results     = array();
             foreach ( $user_orders as $order ) {
@@ -203,7 +203,7 @@ class Dokan_Template_Orders {
 
             $order_date   = ( isset( $_POST['order_date'] ) ) ? $_POST['order_date'] : NULL;
             $order_status = ( isset( $_POST['order_status'] ) ) ? $_POST['order_status'] : 'all';
-            $user_orders  = dokan_get_seller_orders( get_current_user_id(), $order_status, $order_date, 10000000, 0 );
+            $user_orders  = dokan_get_seller_orders( dokan_get_current_user_id(), $order_status, $order_date, 10000000, 0 );
             $statuses     = wc_get_order_statuses();
             $results      = array();
 

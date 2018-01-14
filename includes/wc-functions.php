@@ -562,7 +562,7 @@ add_action( 'woocommerce_created_customer', 'dokan_on_create_seller', 10, 2);
 function dokan_seller_displayname ( $display_name ) {
 
     if ( dokan_is_user_seller ( get_current_user_id() ) && !is_admin() ) {
-        $seller_info = dokan_get_store_info ( get_current_user_id() );
+        $seller_info = dokan_get_store_info ( dokan_get_current_user_id() );
         $display_name = ( !empty( $seller_info['store_name'] ) ) ? $seller_info['store_name'] : $display_name;
 
     }

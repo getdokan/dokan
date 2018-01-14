@@ -27,6 +27,28 @@ function dokana_admin_menu_capability() {
 }
 
 /**
+ * Dokan Get current user id
+ *
+ * @since 2.7.3
+ *
+ * @return void
+ */
+function dokan_get_current_user_id() {
+    if ( current_user_can( 'vendor_staff' ) ) {
+        $staff_id  = get_current_user_id();
+        $vendor_id = get_user_meta( $staff_id, '_vendor_id', true );
+
+        if ( empty( $vendor_id ) ) {
+            return $user_id;
+        }
+
+        return $vendor_id;
+    }
+
+    return get_current_user_id();
+}
+
+/**
  * Check if a user is seller
  *
  * @param int $user_id
@@ -70,7 +92,7 @@ function dokan_is_product_author( $product_id = 0 ) {
         $author = get_post_field( 'post_author', $product_id );
     }
 
-    if ( $author == get_current_user_id() ) {
+    if ( $author == dokan_get_current_user_id() ) {
         return true;
     }
 
@@ -133,7 +155,7 @@ function dokan_redirect_login() {
  * @param string $redirect
  */
 function dokan_redirect_if_not_seller( $redirect = '' ) {
-    if ( !dokan_is_user_seller( get_current_user_id() ) ) {
+    if ( !dokan_is_user_seller( dokan_get_current_user_id() ) ) {
         $redirect = empty( $redirect ) ? home_url( '/' ) : $redirect;
 
         wp_redirect( $redirect );
@@ -999,13 +1021,14 @@ function dokan_log( $message ) {
  * @return array
  */
 function dokan_media_uploader_restrict( $args ) {
+
     // bail out for admin and editor
     if ( current_user_can( 'delete_pages' ) ) {
         return $args;
     }
 
     if ( current_user_can( 'dokandar' ) ) {
-        $args['author'] = get_current_user_id();
+        $args['author'] = dokan_get_current_user_id();
 
         return $args;
     }
@@ -1300,7 +1323,7 @@ function dokan_filter_orders_for_current_vendor( $query ) {
     }
 
     if ( is_admin() && $query->is_main_query() && $query->query_vars['post_type'] == 'shop_order' ) {
-        $query->set( 'author', get_current_user_id() );
+        $query->set( 'author', dokan_get_current_user_id() );
     }
 
     return $query;
@@ -1736,7 +1759,7 @@ function dokan_seller_address_fields( $verified = false, $required = false ) {
         )
     );
 
-    $profile_info = dokan_get_store_info( get_current_user_id() );
+    $profile_info = dokan_get_store_info( dokan_get_current_user_id() );
 
     dokan_get_template_part( 'settings/address-form', '', array(
         'disabled' => $disabled,
@@ -1758,7 +1781,7 @@ function dokan_seller_address_fields( $verified = false, $required = false ) {
 function dokan_get_seller_address( $seller_id = '', $get_array = false ) {
 
     if ( $seller_id == '' ) {
-        $seller_id = get_current_user_id();
+        $seller_id = dokan_get_current_user_id();
     }
 
     $profile_info = dokan_get_store_info( $seller_id );
@@ -2060,7 +2083,7 @@ function dokan_cache_reset_order_data_on_status( $order_id, $from_status, $to_st
  * Reset cache group related to seller products
  */
 function dokan_cache_clear_seller_product_data( $product_id, $post_data = array() ) {
-    $seller_id = get_current_user_id();
+    $seller_id = dokan_get_current_user_id();
 
     dokan_cache_clear_group( 'dokan_seller_product_data_' . $seller_id );
     delete_transient( 'dokan-store-category-' . $seller_id );
@@ -2208,5 +2231,70 @@ function dokan_get_seller_cap() {
     );
 
     return apply_filters( 'dokan_get_seller_cap', $capabilities );
+}
+
+function dokan_get_all_caps() {
+    $capabilities = array(
+        'overview' => array(
+            'dokan_view_sales_overview',
+            'dokan_view_sales_report_chart',
+            'dokan_view_announcement',
+            'dokan_view_order_report',
+            'dokan_view_review_reports',
+            'dokan_view_product_status_report',
+        ),
+        'report' => array(
+            'dokan_view_overview_report',
+            'dokan_view_daily_sale_report',
+            'dokan_view_top_selling_report',
+            'dokan_view_top_earning_report',
+            'dokan_view_statement_report',
+        ),
+        'order' => array(
+            'dokan_view_order',
+            'dokan_manage_order',
+            'dokan_manage_order_note',
+            'dokan_manage_refund',
+        ),
+
+        'coupon' => array(
+            'dokan_add_coupon',
+            'dokan_edit_coupon',
+            'dokan_delete_coupon',
+        ),
+        'review' => array(
+            'dokan_view_reviews',
+            'dokan_manage_reviews',
+        ),
+
+        'withdraw' => array(
+            'dokan_manage_withdraw',
+        ),
+        'product' => array(
+            'dokan_add_product',
+            'dokan_edit_product',
+            'dokan_delete_product',
+            'dokan_view_product',
+            'dokan_duplicate_product',
+            'dokan_import_product',
+            'dokan_export_product',
+        ),
+        'menu' => array(
+            'dokan_view_overview_menu',
+            'dokan_view_product_menu',
+            'dokan_view_order_menu',
+            'dokan_view_coupon_menu',
+            'dokan_view_report_menu',
+            'dokan_view_review_menu',
+            'dokan_view_withdraw_menu',
+            'dokan_view_store_settings_menu',
+            'dokan_view_store_payment_menu',
+            'dokan_view_store_shipping_menu',
+            'dokan_view_store_social_menu',
+            'dokan_view_store_seo_menu',
+        )
+    );
+
+    return $capabilities;
 }
 

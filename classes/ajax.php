@@ -165,7 +165,7 @@ class Dokan_Ajax {
             die();
         }
 
-        if ( !dokan_is_seller_has_order( get_current_user_id(), $order_id ) ) {
+        if ( ! dokan_is_seller_has_order( dokan_get_current_user_id(), $order_id ) ) {
             wp_die( __( 'You do not have permission to change this order', 'dokan-lite' ) );
         }
 
@@ -199,7 +199,7 @@ class Dokan_Ajax {
             die();
         }
 
-        if ( !dokan_is_seller_has_order( get_current_user_id(), $order_id ) ) {
+        if ( ! dokan_is_seller_has_order( dokan_get_current_user_id(), $order_id ) ) {
             wp_die( __( 'You do not have permission to change this order', 'dokan-lite' ) );
         }
 
@@ -431,7 +431,7 @@ class Dokan_Ajax {
                 'comment_content'      => $ship_info,
                 'comment_type'         => 'order_note',
                 'comment_parent'       => 0,
-                'user_id'              => get_current_user_id(),
+                'user_id'              => dokan_get_current_user_id(),
                 'comment_author_IP'    => $_SERVER['REMOTE_ADDR'],
                 'comment_agent'        => $_SERVER['HTTP_USER_AGENT'],
                 'comment_date'         => $time,
@@ -453,7 +453,7 @@ class Dokan_Ajax {
             echo '</div><p class="meta"><a href="#" class="delete_note">'.__( 'Delete', 'dokan-lite' ).'</a></p>';
             echo '</li>';
 
-            do_action( 'dokan_order_tracking_updated', $post_id, get_current_user_id() );
+            do_action( 'dokan_order_tracking_updated', $post_id, dokan_get_current_user_id() );
         }
 
         // Quit out
@@ -556,9 +556,8 @@ class Dokan_Ajax {
      * @return void
      */
     public function crop_store_banner() {
-        check_ajax_referer( 'image_editor-' . $_POST['id'], 'nonce' );
 
-        if ( !current_user_can( 'edit_post', $_POST['id'] ) ) {
+        if ( ! dokan_is_user_seller( get_current_user_id() ) ) {
             wp_send_json_error();
         }
 

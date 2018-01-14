@@ -1,9 +1,9 @@
 <?php
-global $woocommerce, $current_user, $wpdb;
+global $woocommerce, $wpdb;
 
 $order_id = isset( $_GET['order_id'] ) ? intval( $_GET['order_id'] ) : 0;
 
-if ( !dokan_is_seller_has_order( $current_user->ID, $order_id ) ) {
+if ( !dokan_is_seller_has_order( dokan_get_current_user_id(), $order_id ) ) {
     echo '<div class="dokan-alert dokan-alert-danger">' . __( 'This is not yours, I swear!', 'dokan-lite' ) . '</div>';
     return;
 }

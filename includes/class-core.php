@@ -65,8 +65,8 @@ class Dokan_Core {
     function hide_others_uploads( $where ) {
         global $pagenow, $wpdb;
 
-        if ( ( $pagenow == 'upload.php' || $pagenow == 'media-upload.php' ) && current_user_can( 'dokandar' ) ) {
-            $user_id = get_current_user_id();
+        if ( ( $pagenow == 'upload.php' || $pagenow == 'media-upload.php' || $pagenow == 'admin-ajax.php' ) && current_user_can( 'dokandar' )  ) {
+            $user_id = dokan_get_current_user_id();
 
             $where .= " AND $wpdb->posts.post_author = $user_id";
         }

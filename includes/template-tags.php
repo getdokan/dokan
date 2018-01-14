@@ -150,7 +150,7 @@ function dokan_product_dashboard_errors() {
 function dokan_product_listing_status_filter() {
     $permalink    = dokan_get_navigation_url( 'products' );
     $status_class = isset( $_GET['post_status'] ) ? $_GET['post_status'] : 'all';
-    $post_counts  = dokan_count_posts( 'product', get_current_user_id() );
+    $post_counts  = dokan_count_posts( 'product', dokan_get_current_user_id() );
     $statuses     = dokan_get_post_status();
 
     dokan_get_template_part( 'products/listing-status-filter', '', array(
@@ -165,7 +165,7 @@ function dokan_order_listing_status_filter() {
     $orders_url = dokan_get_navigation_url( 'orders' );
 
     $status_class         = isset( $_GET['order_status'] ) ? $_GET['order_status'] : 'all';
-    $orders_counts        = dokan_count_orders( get_current_user_id() );
+    $orders_counts        = dokan_count_orders( dokan_get_current_user_id() );
     $order_date           = ( isset( $_GET['order_date'] ) ) ? $_GET['order_date'] : '';
     $date_filter          = array();
     $all_order_url        = array();
@@ -450,7 +450,7 @@ function dokan_dashboard_nav( $active_menu = '' ) {
     }
 
     $common_links = '<li class="dokan-common-links dokan-clearfix">
-            <a title="' . __( 'Visit Store', 'dokan-lite' ) . '" class="tips" data-placement="top" href="' . dokan_get_store_url( get_current_user_id()) .'" target="_blank"><i class="fa fa-external-link"></i></a>
+            <a title="' . __( 'Visit Store', 'dokan-lite' ) . '" class="tips" data-placement="top" href="' . dokan_get_store_url( dokan_get_current_user_id() ) .'" target="_blank"><i class="fa fa-external-link"></i></a>
             <a title="' . __( 'Edit Account', 'dokan-lite' ) . '" class="tips" data-placement="top" href="' . dokan_get_navigation_url( 'edit-account' ) . '"><i class="fa fa-user"></i></a>
             <a title="' . __( 'Log out', 'dokan-lite' ) . '" class="tips" data-placement="top" href="' . wp_logout_url( home_url() ) . '"><i class="fa fa-power-off"></i></a>
         </li>';

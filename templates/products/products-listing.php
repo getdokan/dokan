@@ -112,7 +112,7 @@
                             }
 
                             $original_post = $post;
-                            $product_query = dokan()->product->all( $args );
+                            $product_query = dokan()->product->all( apply_filters( 'dokan_product_listing_arg', $args ) );
 
                             if ( $product_query->have_posts() ) {
                                 while ($product_query->have_posts()) {

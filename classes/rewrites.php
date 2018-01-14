@@ -165,6 +165,11 @@ class Dokan_Rewrites {
         if ( !empty( $store_name ) ) {
             $store_user = get_user_by( 'slug', $store_name );
 
+            // Bell out for Vendor Stuff extensions
+            if ( user_can( $store_user->ID, 'vendor_staff' ) ) {
+                return get_404_template();
+            }
+
             // no user found
             if ( ! $store_user ) {
                 return get_404_template();

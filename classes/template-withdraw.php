@@ -125,7 +125,7 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
             return;
         }
 
-        $balance        = dokan_get_seller_balance( get_current_user_id(), true );
+        $balance        = dokan_get_seller_balance( dokan_get_current_user_id(), true );
         $withdraw_limit = dokan_get_option( 'withdraw_limit', 'dokan_withdraw', -1 );
         $threshold      = dokan_get_option( 'withdraw_date_limit', 'dokan_withdraw', -1 );
 
@@ -153,9 +153,9 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
         if ( $this->current_status == 'pending' ) {
             $this->withdraw_form( self::$validate );
         } elseif ( $this->current_status == 'approved' ) {
-            $this->user_approved_withdraws( get_current_user_id() );
+            $this->user_approved_withdraws( dokan_get_current_user_id() );
         } elseif ( $this->current_status == 'cancelled' ) {
-            $this->user_cancelled_withdraws( get_current_user_id() );
+            $this->user_cancelled_withdraws( dokan_get_current_user_id() );
         }
     }
 
@@ -224,7 +224,7 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
 
         $error           = new WP_Error();
         $limit           = $this->get_withdraw_limit();
-        $balance         = dokan_get_seller_balance( get_current_user_id(), false );
+        $balance         = dokan_get_seller_balance( dokan_get_current_user_id(), false );
         $withdraw_amount = (float) $_POST['witdraw_amount'];
 
         if ( empty( $_POST['witdraw_amount'] ) ) {

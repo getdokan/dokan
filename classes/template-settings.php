@@ -172,8 +172,8 @@ class Dokan_Template_Settings {
      */
     public function load_store_content() {
         $validate = $this->validate();
-        $currentuser = get_current_user_id();
-        $profile_info = dokan_get_store_info( get_current_user_id() );
+        $currentuser = dokan_get_current_user_id();
+        $profile_info = dokan_get_store_info( dokan_get_current_user_id() );
 
         dokan_get_template_part( 'settings/store-form', '', array(
             'current_user' => $currentuser,
@@ -192,8 +192,8 @@ class Dokan_Template_Settings {
      */
     public function load_payment_content() {
         $methods = dokan_withdraw_get_active_methods();
-        $currentuser = get_current_user_id();
-        $profile_info = dokan_get_store_info( get_current_user_id() );
+        $currentuser = dokan_get_current_user_id();
+        $profile_info = dokan_get_store_info( dokan_get_current_user_id() );
 
         dokan_get_template_part( 'settings/payment', '', array(
             'methods'      => $methods,
@@ -453,7 +453,7 @@ class Dokan_Template_Settings {
      */
     function insert_settings_info() {
 
-        $store_id                = get_current_user_id();
+        $store_id                = dokan_get_current_user_id();
         $existing_dokan_settings = get_user_meta( $store_id, 'dokan_profile_settings', true );
         $prev_dokan_settings     = ! empty( $existing_dokan_settings ) ? $existing_dokan_settings : array();
 
