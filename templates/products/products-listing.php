@@ -132,7 +132,11 @@
                                         <?php endif ?>
                                     </td>
                                     <td data-title="<?php _e( 'Name', 'dokan-lite' ); ?>">
-                                        <p><a href="<?php echo dokan_edit_product_url( $post->ID ); ?>"><?php echo $product->get_title(); ?></a></p>
+                                        <?php if ( current_user_can( 'dokan_edit_product' ) ): ?>
+                                            <p><a href="<?php echo dokan_edit_product_url( $post->ID ); ?>"><?php echo $product->get_title(); ?></a></p>
+                                        <?php else: ?>
+                                            <p><a href=""><?php echo $product->get_title(); ?></a></p>
+                                        <?php endif ?>
 
                                         <?php if ( !empty( $row_actions ) ): ?>
                                             <div class="row-actions">
