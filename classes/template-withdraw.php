@@ -78,6 +78,7 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
 
         if ( ! current_user_can( 'dokan_manage_withdraw' ) ) {
             dokan_get_template_part('global/dokan-error', '', array( 'deleted' => false, 'message' => __( 'You have no permission to manage withdraws', 'dokan-lite' ) ) );
+            return;
         }
     }
 
@@ -410,6 +411,9 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
      * @return void
      */
     function user_approved_withdraws( $user_id ) {
+        if ( ! current_user_can( 'dokan_manage_withdraw' ) ) {
+            return;
+        }
         $requests = $this->get_withdraw_requests( $user_id, 1, 100 );
 
         if ( $requests ) {
@@ -436,6 +440,9 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
      * @return void
      */
     function user_cancelled_withdraws( $user_id ){
+        if ( ! current_user_can( 'dokan_manage_withdraw' ) ) {
+            return;
+        }
 
         $requests = $this->get_withdraw_requests( $user_id, 2, 100 );
 
