@@ -68,8 +68,11 @@ class Dokan_Template_Products {
      * @return void
      */
     public function load_product_edit_template() {
-        if ( !WeDevs_Dokan::init()->is_pro_exists() ) {
+        if ( current_user_can( 'dokan_edit_product' ) ) {
             dokan_get_template_part( 'products/new-product-single' );
+        } else {
+            dokan_get_template_part('global/dokan-error', '', array( 'deleted' => false, 'message' => __( 'You have no permission to view this page', 'dokan-lite' ) ) );
+            return;
         }
     }
 

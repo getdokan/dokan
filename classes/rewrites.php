@@ -220,6 +220,10 @@ class Dokan_Rewrites {
             return $template;
         }
 
+        if ( ! current_user_can( 'dokan_edit_product' ) ) {
+            return $template;
+        }
+
         if ( ! ( get_query_var( 'edit' ) && is_singular( 'product' ) ) ) {
             return $template;
         }
