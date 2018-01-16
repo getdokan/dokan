@@ -398,29 +398,31 @@ if ( !function_exists( 'dokan_get_seller_percentage' ) ) :
  * @return int
  */
 function dokan_get_seller_percentage( $seller_id = 0, $product_id = 0 ) {
-
-    //return product wise percentage
+    
+    $global_percentage = dokan_get_option( 'admin_percentage', 'dokan_selling' , 0 );
+    $commission_val    = (float) ( 100 - $global_percentage );
+    
+    //product wise percentage
     if ( $product_id ) {
         $_per_product_commission = get_post_meta( $product_id, '_per_product_admin_commission', true );
         if ( $_per_product_commission != '' ) {
-            return (float) ( 100 - $_per_product_commission );
+            $commission_val = (float) ( 100 - $_per_product_commission );
         }
         $category_commission = dokan_get_category_wise_seller_commission( $product_id );
         if ( !empty( $category_commission ) ) {
-            return (float) $category_commission;
+            $commission_val = (float) $category_commission;
         }
     }
 
-    //return seller wise percentage
+    //seller wise percentage
     if ( $seller_id ) {
         $admin_commission = get_user_meta( $seller_id, 'dokan_admin_percentage', true );
         if ( $admin_commission != '' ) {
-            return (float) ( 100 - $admin_commission );
+            $commission_val = (float) ( 100 - $admin_commission );
         }
     }
 
-    $global_percentage = dokan_get_option( 'admin_percentage', 'dokan_selling' , 0 );
-    return (float) ( 100 - $global_percentage );
+    return apply_filters( 'dokan_get_seller_percentage' , $commission_val, $seller_id, $product_id );
 }
 
 endif;
