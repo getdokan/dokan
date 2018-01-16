@@ -144,7 +144,7 @@ class Dokan_Installer {
             'unfiltered_html'        => true,
             'upload_files'           => true,
             'edit_shop_orders'       => true,
-            'edit_product'           => true,
+            'edit_products'          => true,
             'dokandar'               => true
         ) );
 
