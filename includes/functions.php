@@ -1847,38 +1847,39 @@ function dokan_get_seller_address( $seller_id = '', $get_array = false ) {
  */
 function dokan_get_seller_short_address( $store_id, $line_break = true ) {
     $store_address = dokan_get_seller_address( $store_id, true );
-
+    $address_classes = array(
+        'street_1',
+        'street_2',
+        'city',
+        'state',
+        'country',
+    );
     $short_address = array();
     $formatted_address = '';
 
     if ( ! empty( $store_address['street_1'] ) && empty( $store_address['street_2'] ) ) {
-        $short_address[] = $store_address['street_1'];
+        $short_address[] = "<span class='{$address_classes[0]}'> {$store_address['street_1']},</span>";
     } else if ( empty( $store_address['street_1'] ) && ! empty( $store_address['street_2'] ) ) {
-        $short_address[] = $store_address['street_2'];
+        $short_address[] = "<span class='{$address_classes[1]}'> {$store_address['street_2']},</span>";
     } else if ( ! empty( $store_address['street_1'] ) && ! empty( $store_address['street_2'] ) ) {
-        $short_address[] = $store_address['street_1'];
+        $short_address[] = "<span class='{$address_classes[0]}'> {$store_address['street_1']},</span>";
     }
 
     if ( ! empty( $store_address['city'] ) && ! empty( $store_address['city'] ) ) {
-        $short_address[] = $store_address['city'];
+        $short_address[] = "<span class='{$address_classes[2]}'> {$store_address['city']},</span>";
     }
 
     if ( ! empty( $store_address['state'] ) && ! empty( $store_address['country'] ) ) {
-        $short_address[] = $store_address['state'] . ', ' . $store_address['country'];
+        $short_address[] = "<span class='{$address_classes[3]}'> {$store_address['state']},</span>" . "<span class='{$address_classes[4]}'> {$store_address['country']} </span>";
     } else if ( ! empty( $store_address['country'] ) ) {
-        $short_address[] = $store_address['country'];
+        $short_address[] = "<span class='{$address_classes[4]}'> {$store_address['country']} </span>";
     }
 
     if ( ! empty( $short_address  ) && $line_break ) {
         $formatted_address = implode( '<br>', $short_address );
     } else {
-        if ( count( $short_address ) > 1 ) {
-            $formatted_address = implode( ', ', $short_address );
-        } else {
-            $formatted_address = implode( ' ', $short_address );
-        }
+        $formatted_address = implode( ' ', $short_address );
     }
-
 
     return apply_filters( 'dokan_store_header_adress', $formatted_address, $store_address, $short_address );
 }
