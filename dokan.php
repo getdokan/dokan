@@ -76,7 +76,7 @@ final class WeDevs_Dokan {
      *
      * @var string
      */
-    public $version = '2.7.2';
+    public $version = '2.7.3';
 
     /**
      * Holds various class instances

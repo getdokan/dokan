@@ -148,7 +148,13 @@ class Dokan_Installer {
             'dokandar'               => true
         ) );
 
-        $capabilities = dokan_get_seller_cap();
+        $capabilities = array();
+        $all_cap      = dokan_get_all_caps();
+
+        foreach( $all_cap as $key=>$cap ) {
+            $capabilities = array_merge( $capabilities, $cap );
+        }
+
         $wp_roles->add_cap( 'shop_manager', 'dokandar' );
         $wp_roles->add_cap( 'administrator', 'dokandar' );
 
@@ -159,6 +165,11 @@ class Dokan_Installer {
         }
     }
 
+    /**
+     * Setup all pages for dokan
+     *
+     * @return void
+     */
     function setup_pages() {
         $meta_key = '_wp_page_template';
 
@@ -244,6 +255,13 @@ class Dokan_Installer {
         return false;
     }
 
+    /**
+     * Create necessary tables
+     *
+     * @since 1.4
+     *
+     * @return void
+     */
     function create_tables() {
         include_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
@@ -253,6 +271,11 @@ class Dokan_Installer {
         $this->create_refund_table();
     }
 
+    /**
+     * Create withdraw tabless
+     *
+     * @return void
+     */
     function create_withdraw_table() {
         global $wpdb;
 
@@ -271,6 +294,11 @@ class Dokan_Installer {
         dbDelta( $sql );
     }
 
+    /**
+     * Create order sync table
+     *
+     * @return void
+     */
     function create_sync_table() {
         global $wpdb;
 
@@ -311,8 +339,6 @@ class Dokan_Installer {
 
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         dbDelta( $sql );
-
-
     }
 
     /**

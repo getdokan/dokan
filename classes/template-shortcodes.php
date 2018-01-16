@@ -50,6 +50,10 @@ class Dokan_Template_Shortcodes {
             return sprintf( __( 'Please install <a href="%s"><strong>WooCommerce</strong></a> plugin first', 'dokan-lite' ), 'http://wordpress.org/plugins/woocommerce/' );
         }
 
+        if ( ! dokan_is_user_seller( get_current_user_id() ) ) {
+            return __( 'You have no permission to view this page', 'dokan-lite' );
+        }
+
         ob_start();
 
         if ( isset( $wp->query_vars['products'] ) ) {

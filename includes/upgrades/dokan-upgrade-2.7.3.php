@@ -60,7 +60,12 @@ function dokan_update_user_capabilities_273() {
         $wp_roles = new WP_Roles();
     }
 
-    $capabilities = dokan_get_seller_cap();
+    $capabilities = array();
+    $all_cap      = dokan_get_all_caps();
+
+    foreach( $all_cap as $key=>$cap ) {
+        $capabilities = array_merge( $capabilities, $cap );
+    }
 
     foreach ( $capabilities as $key => $capability ) {
         $wp_roles->add_cap( 'seller', $capability );

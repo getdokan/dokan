@@ -2295,6 +2295,6 @@ function dokan_get_all_caps() {
         )
     );
 
-    return $capabilities;
+    return apply_filters( 'dokan_get_all_cap', $capabilities );
 }
 
