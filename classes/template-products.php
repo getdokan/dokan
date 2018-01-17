@@ -336,6 +336,10 @@ class Dokan_Template_Products {
             return;
         }
 
+        if ( ! current_user_can( 'dokan_delete_product' ) ) {
+            return;
+        }
+
         dokan_delete_product_handler();
     }
 
