@@ -1290,7 +1290,7 @@ function dokan_disable_admin_bar( $show_admin_bar ) {
 add_filter( 'show_admin_bar', 'dokan_disable_admin_bar' );
 
 /**
- * Filter the orders of current user
+ * Filter the order, products and booking products of current user
  *
  * @param object $query
  * @since 2.7.3
@@ -1301,7 +1301,7 @@ function dokan_filter_orders_for_current_vendor( $query ) {
         return;
     }
 
-    if ( is_admin() && $query->is_main_query() && $query->query_vars['post_type'] == 'shop_order' ) {
+    if ( is_admin() && $query->is_main_query() && $query->query_vars['post_type'] == 'shop_order' || $query->query_vars['post_type'] == 'product' || $query->query_vars['post_type'] == 'wc_booking' ) {
         $query->set( 'author', get_current_user_id() );
     }
 
