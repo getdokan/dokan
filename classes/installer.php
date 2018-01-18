@@ -133,19 +133,34 @@ class Dokan_Installer {
         }
 
         add_role( 'seller', __( 'Vendor', 'dokan-lite' ), array(
-            'read'                   => true,
-            'publish_posts'          => true,
-            'edit_posts'             => true,
-            'delete_published_posts' => true,
-            'edit_published_posts'   => true,
-            'delete_posts'           => true,
-            'manage_categories'      => true,
-            'moderate_comments'      => true,
-            'unfiltered_html'        => true,
-            'upload_files'           => true,
-            'edit_shop_orders'       => true,
-            'edit_product'           => true,
-            'dokandar'               => true
+            'read'                      => true,
+            'publish_posts'             => true,
+            'edit_posts'                => true,
+            'delete_published_posts'    => true,
+            'edit_published_posts'      => true,
+            'delete_posts'              => true,
+            'manage_categories'         => true,
+            'moderate_comments'         => true,
+            'unfiltered_html'           => true,
+            'upload_files'              => true,
+            'edit_shop_orders'          => true,
+            'edit_product'              => true,
+            'read_product'              => true,
+            'delete_product'            => true,
+            'edit_products'             => true,
+            'publish_products'          => true,
+            'read_private_products'     => true,
+            'delete_products'           => true,
+            'delete_products'           => true,
+            'delete_private_products'   => true,
+            'delete_published_products' => true,
+            'delete_published_products' => true,
+            'edit_private_products'     => true,
+            'edit_published_products'   => true,
+            'manage_product_terms'      => true,
+            'delete_product_terms'      => true,
+            'assign_product_terms'      => true,
+            'dokandar'                  => true
         ) );
 
         $capabilities = array();
