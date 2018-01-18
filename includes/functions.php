@@ -1301,7 +1301,7 @@ function dokan_disable_admin_bar( $show_admin_bar ) {
         $role = reset( $current_user->roles );
 
         if ( dokan_get_option( 'admin_access', 'dokan_general' ) == 'on' ) {
-            if ( in_array( $role, array( 'seller', 'customer' ) ) ) {
+            if ( in_array( $role, array( 'seller', 'customer', 'vendor_staff' ) ) ) {
                 return false;
             }
         }
@@ -1324,7 +1324,11 @@ function dokan_filter_orders_for_current_vendor( $query ) {
         return;
     }
 
-    if ( is_admin() && $query->is_main_query() && $query->query_vars['post_type'] == 'shop_order' || $query->query_vars['post_type'] == 'product' || $query->query_vars['post_type'] == 'wc_booking' ) {
+    if ( ! isset( $query->query_vars['post_type'] ) ) {
+        return;
+    }
+
+    if ( is_admin() && $query->is_main_query() && ( $query->query_vars['post_type'] == 'shop_order' || $query->query_vars['post_type'] == 'product' || $query->query_vars['post_type'] == 'wc_booking' ) ) {
         $query->set( 'author', get_current_user_id() );
     }
 
