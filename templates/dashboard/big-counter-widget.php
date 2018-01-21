@@ -11,9 +11,6 @@
  *  @package dokan
  */
 ?>
-<style>
-
-</style>
 <div class="dashboard-widget big-counter">
     <ul class="list-inline">
          <li>
@@ -22,7 +19,7 @@
         </li>
         <li>
             <div class="title"><?php _e( 'Earning', 'dokan-lite' ); ?></div>
-            <div class="count"><?php echo wc_price( dokan_get_seller_earnings( get_current_user_id() ) ) ?></div>
+            <div class="count"><?php echo wc_price( dokan_get_seller_earnings( dokan_get_current_user_id() ) ) ?></div>
         </li>
         <li>
             <div class="title"><?php _e( 'Pageview', 'dokan-lite' ); ?></div>
@@ -43,6 +40,5 @@
         </li>
 
         <?php do_action( 'dokan_seller_dashboard_widget_counter' ); ?>
-
     </ul>
 </div> <!-- .big-counter -->

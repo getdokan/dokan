@@ -27,9 +27,16 @@ class Dokan_Scripts {
      */
     public function enqueue_admin_scripts( $hook ) {
         wp_enqueue_style( 'dokan-admin-css', DOKAN_PLUGIN_ASSEST . '/css/admin.css', false, time() );
-
         wp_enqueue_script( 'dokan-tooltip' );
-        wp_enqueue_script( 'dokan_slider_admin', DOKAN_PLUGIN_ASSEST . '/js/dokan-admin.js', array( 'jquery' ) );
+        
+        global $post;
+
+        if ( get_post_type( $post ) == 'dokan_slider' ) {
+            wp_enqueue_script( 'dokan_slider_admin', DOKAN_PLUGIN_ASSEST . '/js/dokan-admin.js', array( 'jquery' ) );
+            wp_enqueue_script( 'media-upload' );
+            wp_enqueue_script( 'thickbox' );
+            wp_enqueue_style( 'thickbox' );
+        }
 
         if ( 'plugins.php' == $hook ) {
             wp_enqueue_style( 'dokan-plugin-list-css', DOKAN_PLUGIN_ASSEST . '/css/plugin.css', false, null );
@@ -109,8 +116,8 @@ class Dokan_Scripts {
             ),
             'delete_confirm'    => __( 'Are you sure?', 'dokan-lite' ),
             'wrong_message'     => __( 'Something went wrong. Please try again.', 'dokan-lite' ),
-            'vendor_percentage' => dokan_get_seller_percentage( get_current_user_id() ),
-            'commission_type'   => dokan_get_commission_type( get_current_user_id() ),
+            'vendor_percentage' => dokan_get_seller_percentage( dokan_get_current_user_id() ),
+            'commission_type'   => dokan_get_commission_type( dokan_get_current_user_id() ),
             'rounding_precision' => wc_get_rounding_precision(),
             'mon_decimal_point'  => wc_get_price_decimal_separator(),
 

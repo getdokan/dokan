@@ -90,7 +90,7 @@ function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = NUL
 function dokan_get_seller_orders_by_date( $start_date, $end_date, $seller_id = false, $status = 'all' ) {
     global $wpdb;
 
-    $seller_id = ! $seller_id ? get_current_user_id() : intval( $seller_id );
+    $seller_id = ! $seller_id ? dokan_get_current_user_id() : intval( $seller_id );
 
     $end_date   = date( 'Y-m-d 00:00:00', strtotime( $end_date ) );
     $end_date   = date( 'Y-m-d h:i:s', strtotime( $end_date . '-1 minute' ) );
@@ -133,7 +133,7 @@ function dokan_get_seller_orders_by_date( $start_date, $end_date, $seller_id = f
 function dokan_get_seller_withdraw_by_date( $start_date, $end_date, $seller_id = false ) {
     global $wpdb;
 
-    $seller_id             = ! $seller_id ? get_current_user_id() : intval( $seller_id );
+    $seller_id             = ! $seller_id ? dokan_get_current_user_id() : intval( $seller_id );
     $withdraw_status_where = $wpdb->prepare( ' AND status = %d', 1 );
     $withdraw_date_query   = $wpdb->prepare( ' AND DATE( date ) >= %s AND DATE( date ) <= %s', $start_date, $end_date );
 
@@ -376,7 +376,7 @@ function dokan_sync_insert_order( $order_id ) {
     $seller_id          = dokan_get_seller_id_by_order( $order_id );
     $order_total        = $order->get_total();
     $order_status       = dokan_get_prop( $order, 'status' );
-    $admin_commission   = dokan_get_admin_commission_by( $order, $seller_id );
+        $admin_commission   = dokan_get_admin_commission_by( $order, $seller_id );
     $net_amount         = $order_total - $admin_commission;
     $net_amount         = apply_filters( 'dokan_order_net_amount', $net_amount, $order );
 
@@ -729,6 +729,12 @@ function dokan_get_admin_commission_by( $order, $seller_id ) {
 
     if ( get_posts( array( 'post_parent' => dokan_get_prop( $order, 'id' ), 'post_type' => 'shop_order', 'post_status' => 'any' ) ) ) {
         return;
+    }
+
+    $saved_admin_fee = get_post_meta( dokan_get_prop( $order, 'id' ), '_dokan_admin_fee', true );
+
+    if ( $saved_admin_fee != '' ) {
+        return apply_filters( 'dokan_order_admin_commission', $saved_admin_fee, $order );
     }
 
     $admin_commission = 0;

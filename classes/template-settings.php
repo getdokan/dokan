@@ -145,11 +145,19 @@ class Dokan_Template_Settings {
         global $wp;
 
         if ( isset( $wp->query_vars['settings'] ) && $wp->query_vars['settings'] == 'store' ) {
-            $this->load_store_content();
+            if ( ! current_user_can( 'dokan_view_store_settings_menu' ) ) {
+                dokan_get_template_part('global/dokan-error', '', array( 'deleted' => false, 'message' => __( 'You have no permission to view this page', 'dokan-lite' ) ) );
+            } else {
+                $this->load_store_content();
+            }
         }
 
         if ( isset( $wp->query_vars['settings'] ) && $wp->query_vars['settings'] == 'payment' ) {
-            $this->load_payment_content();
+            if ( ! current_user_can( 'dokan_view_store_payment_menu' ) ) {
+                dokan_get_template_part('global/dokan-error', '', array( 'deleted' => false, 'message' => __( 'You have no permission to view this page', 'dokan-lite' ) ) );
+            } else {
+                $this->load_payment_content();
+            }
         }
 
         do_action( 'dokan_render_settings_content', $wp->query_vars );
@@ -164,8 +172,8 @@ class Dokan_Template_Settings {
      */
     public function load_store_content() {
         $validate = $this->validate();
-        $currentuser = get_current_user_id();
-        $profile_info = dokan_get_store_info( get_current_user_id() );
+        $currentuser = dokan_get_current_user_id();
+        $profile_info = dokan_get_store_info( dokan_get_current_user_id() );
 
         dokan_get_template_part( 'settings/store-form', '', array(
             'current_user' => $currentuser,
@@ -184,8 +192,8 @@ class Dokan_Template_Settings {
      */
     public function load_payment_content() {
         $methods = dokan_withdraw_get_active_methods();
-        $currentuser = get_current_user_id();
-        $profile_info = dokan_get_store_info( get_current_user_id() );
+        $currentuser = dokan_get_current_user_id();
+        $profile_info = dokan_get_store_info( dokan_get_current_user_id() );
 
         dokan_get_template_part( 'settings/payment', '', array(
             'methods'      => $methods,
@@ -211,18 +219,28 @@ class Dokan_Template_Settings {
 
         switch( $_POST['form_id'] ) { // WPCS: CSRF ok.
             case 'profile-form':
-                if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'dokan_profile_settings_nonce' ) ) {
+                if ( ! current_user_can( 'dokan_view_store_social_menu' ) ) {
+                    wp_send_json_error( __( 'Pemission denied social', 'dokan-lite' ) );
+                }
+                if ( !wp_verify_nonce( $_POST['_wpnonce'], 'dokan_profile_settings_nonce' ) ) {
                     wp_send_json_error( __( 'Are you cheating?', 'dokan-lite' ) );
                 }
                 $ajax_validate =  $this->profile_validate();
                 break;
             case 'store-form':
+                if ( !current_user_can( 'dokan_view_store_settings_menu' ) ) {
+                    wp_send_json_error( __( 'Pemission denied', 'dokan-lite' ) );
+                }
                 if ( !wp_verify_nonce( $_POST['_wpnonce'], 'dokan_store_settings_nonce' ) ) {
                     wp_send_json_error( __( 'Are you cheating?', 'dokan-lite' ) );
                 }
                 $ajax_validate =  $this->store_validate();
                 break;
             case 'payment-form':
+                if ( !current_user_can( 'dokan_view_store_payment_menu' ) ) {
+                    wp_send_json_error( __( 'Pemission denied', 'dokan-lite' ) );
+                }
+
                 if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'dokan_payment_settings_nonce' ) ) {
                     wp_send_json_error( __( 'Are you cheating?', 'dokan-lite' ) );
                 }
@@ -260,6 +278,7 @@ class Dokan_Template_Settings {
         if ( !wp_verify_nonce( $_POST['_wpnonce'], 'dokan_settings_nonce' ) ) {
             wp_die( __( 'Are you cheating?', 'dokan-lite' ) );
         }
+
 
         $error = new WP_Error();
 
@@ -434,7 +453,7 @@ class Dokan_Template_Settings {
      */
     function insert_settings_info() {
 
-        $store_id                = get_current_user_id();
+        $store_id                = dokan_get_current_user_id();
         $existing_dokan_settings = get_user_meta( $store_id, 'dokan_profile_settings', true );
         $prev_dokan_settings     = ! empty( $existing_dokan_settings ) ? $existing_dokan_settings : array();
 
@@ -471,6 +490,8 @@ class Dokan_Template_Settings {
                 'store_tnc'                    => isset( $_POST['dokan_store_tnc'] ) ? $_POST['dokan_store_tnc'] : ''
             );
 
+            update_user_meta( $store_id, 'dokan_store_name', $dokan_settings['store_name'] );
+
         } elseif ( wp_verify_nonce( $_POST['_wpnonce'], 'dokan_payment_settings_nonce' ) ) {
 
             //update payment settings info
@@ -506,13 +527,12 @@ class Dokan_Template_Settings {
 
         }
 
-        $dokan_settings = array_merge( $prev_dokan_settings,$dokan_settings );
+        $dokan_settings = array_merge( $prev_dokan_settings, $dokan_settings );
 
         $profile_completeness = $this->calculate_profile_completeness_value( $dokan_settings );
         $dokan_settings['profile_completion'] = $profile_completeness;
 
         update_user_meta( $store_id, 'dokan_profile_settings', $dokan_settings );
-        update_user_meta( $store_id, 'dokan_store_name', $dokan_settings['store_name'] );
 
         do_action( 'dokan_store_profile_saved', $store_id, $dokan_settings );
 

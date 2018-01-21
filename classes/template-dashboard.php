@@ -21,8 +21,7 @@ class Dokan_Template_Dashboard {
      * @since 2.4
      */
     function __construct() {
-
-        $this->user_id        = get_current_user_id();
+        $this->user_id        = dokan_get_current_user_id();
         $this->orders_count   = $this->get_orders_count();
         $this->post_counts    = $this->get_post_counts();
         $this->comment_counts = $this->get_comment_counts();
@@ -76,6 +75,9 @@ class Dokan_Template_Dashboard {
      * @return void
      */
     public function get_big_counter_widgets() {
+        if ( ! current_user_can( 'dokan_view_sales_overview' ) ) {
+            return;
+        }
 
         dokan_get_template_part( 'dashboard/big-counter-widget', '', array(
                 'pageviews'      => $this->pageviews,
@@ -94,6 +96,9 @@ class Dokan_Template_Dashboard {
      * @return void
      */
     public function get_orders_widgets() {
+        if ( ! current_user_can( 'dokan_view_order_report' ) ) {
+            return;
+        }
 
         $order_data = array(
             array( 'value' => $this->orders_count->{'wc-completed'}, 'color' => '#73a724' ),
@@ -120,6 +125,10 @@ class Dokan_Template_Dashboard {
      * @return void
      */
     public function get_products_widgets() {
+        if ( ! current_user_can( 'dokan_view_product_status_report' ) ) {
+            return;
+        }
+
         dokan_get_template_part( 'dashboard/products-widget', '', array(
                 'post_counts'=> $this->post_counts,
                 'products_url'=> dokan_get_navigation_url('products'),
@@ -135,6 +144,10 @@ class Dokan_Template_Dashboard {
      * @return void
      */
     public function get_sales_report_chart_widget() {
+        if ( ! current_user_can( 'dokan_view_sales_report_chart' ) ) {
+            return;
+        }
+
         dokan_get_template_part( 'dashboard/sales-chart-widget', '' );
     }
 

@@ -165,6 +165,11 @@ class Dokan_Rewrites {
         if ( !empty( $store_name ) ) {
             $store_user = get_user_by( 'slug', $store_name );
 
+            // Bell out for Vendor Stuff extensions
+            if ( user_can( $store_user->ID, 'vendor_staff' ) ) {
+                return get_404_template();
+            }
+
             // no user found
             if ( ! $store_user ) {
                 return get_404_template();
@@ -212,6 +217,10 @@ class Dokan_Rewrites {
      */
     function product_edit_template( $template ) {
         if ( ! $this->is_woo_installed() ) {
+            return $template;
+        }
+
+        if ( ! current_user_can( 'dokan_edit_product' ) ) {
             return $template;
         }
 

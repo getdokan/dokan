@@ -57,7 +57,12 @@ function dokan_create_sub_order( $parent_order_id ) {
     if ( count( $sellers ) == 1 ) {
         $temp = array_keys( $sellers );
         $seller_id = reset( $temp );
+        
         wp_update_post( array( 'ID' => $parent_order_id, 'post_author' => $seller_id ) );
+        
+        $admin_fee = dokan_get_admin_commission_by( $parent_order, $seller_id );
+        
+        update_post_meta( $parent_order_id , '_dokan_admin_fee', $admin_fee );
         return;
     }
 
@@ -147,13 +152,14 @@ function dokan_create_seller_order( $parent_order, $seller_id, $seller_products 
         $shipping_tax    = $shipping_values['tax'];
 
         // do tax
+        $seller_order = wc_get_order( $order_id );
+        
         foreach( $parent_order->get_items( array( 'tax' ) ) as $tax ) {
             $item_id = wc_add_order_item( $order_id, array(
                 'order_item_name' => $tax->get_name(),
                 'order_item_type' => 'tax'
             ) );
 
-            $seller_order = wc_get_order( $order_id );
             $seller_shipping = $seller_order->get_items( 'shipping' );
             $seller_shipping = reset( $seller_shipping );
 
@@ -162,7 +168,7 @@ function dokan_create_seller_order( $parent_order, $seller_id, $seller_products 
                 'label'               => $tax->get_label(),
                 'compound'            => $tax->get_compound(),
                 'tax_amount'          => wc_format_decimal( array_sum( $items_tax[$tax->get_rate_id()] ) ),
-                'shipping_tax_amount' => $seller_shipping->get_total_tax()
+                'shipping_tax_amount' => is_bool( $seller_shipping ) ? '' : $seller_shipping->get_total_tax()
             );
 
             foreach( $tax_metas as $meta_key => $meta_value ) {
@@ -195,7 +201,10 @@ function dokan_create_seller_order( $parent_order, $seller_id, $seller_products 
         update_post_meta( $order_id, '_prices_include_tax',     $parent_order->get_prices_include_tax() );
         update_post_meta( $order_id, '_customer_ip_address',    get_post_meta( $parent_order->get_id(), '_customer_ip_address', true ) );
         update_post_meta( $order_id, '_customer_user_agent',    get_post_meta( $parent_order->get_id(), '_customer_user_agent', true ) );
-
+        
+        $admin_fee = dokan_get_admin_commission_by( $seller_order, $seller_id );
+        update_post_meta( $order_id , '_dokan_admin_fee', $admin_fee );
+        
         do_action( 'dokan_checkout_update_order_meta', $order_id, $seller_id );
     } // if order
 }

@@ -133,25 +133,58 @@ class Dokan_Installer {
         }
 
         add_role( 'seller', __( 'Vendor', 'dokan-lite' ), array(
-            'read'                   => true,
-            'publish_posts'          => true,
-            'edit_posts'             => true,
-            'delete_published_posts' => true,
-            'edit_published_posts'   => true,
-            'delete_posts'           => true,
-            'manage_categories'      => true,
-            'moderate_comments'      => true,
-            'unfiltered_html'        => true,
-            'upload_files'           => true,
-            'edit_shop_orders'       => true,
-            'edit_product'           => true,
-            'dokandar'               => true
+            'read'                      => true,
+            'publish_posts'             => true,
+            'edit_posts'                => true,
+            'delete_published_posts'    => true,
+            'edit_published_posts'      => true,
+            'delete_posts'              => true,
+            'manage_categories'         => true,
+            'moderate_comments'         => true,
+            'unfiltered_html'           => true,
+            'upload_files'              => true,
+            'edit_shop_orders'          => true,
+            'edit_product'              => true,
+            'read_product'              => true,
+            'delete_product'            => true,
+            'edit_products'             => true,
+            'publish_products'          => true,
+            'read_private_products'     => true,
+            'delete_products'           => true,
+            'delete_products'           => true,
+            'delete_private_products'   => true,
+            'delete_published_products' => true,
+            'delete_published_products' => true,
+            'edit_private_products'     => true,
+            'edit_published_products'   => true,
+            'manage_product_terms'      => true,
+            'delete_product_terms'      => true,
+            'assign_product_terms'      => true,
+            'dokandar'                  => true
         ) );
+
+        $capabilities = array();
+        $all_cap      = dokan_get_all_caps();
+
+        foreach( $all_cap as $key=>$cap ) {
+            $capabilities = array_merge( $capabilities, $cap );
+        }
 
         $wp_roles->add_cap( 'shop_manager', 'dokandar' );
         $wp_roles->add_cap( 'administrator', 'dokandar' );
+
+        foreach ( $capabilities as $key => $capability ) {
+            $wp_roles->add_cap( 'seller', $capability );
+            $wp_roles->add_cap( 'administrator', $capability );
+            $wp_roles->add_cap( 'shop_manager', $capability );
+        }
     }
 
+    /**
+     * Setup all pages for dokan
+     *
+     * @return void
+     */
     function setup_pages() {
         $meta_key = '_wp_page_template';
 
@@ -237,6 +270,13 @@ class Dokan_Installer {
         return false;
     }
 
+    /**
+     * Create necessary tables
+     *
+     * @since 1.4
+     *
+     * @return void
+     */
     function create_tables() {
         include_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
@@ -246,6 +286,11 @@ class Dokan_Installer {
         $this->create_refund_table();
     }
 
+    /**
+     * Create withdraw tabless
+     *
+     * @return void
+     */
     function create_withdraw_table() {
         global $wpdb;
 
@@ -264,6 +309,11 @@ class Dokan_Installer {
         dbDelta( $sql );
     }
 
+    /**
+     * Create order sync table
+     *
+     * @return void
+     */
     function create_sync_table() {
         global $wpdb;
 
@@ -271,8 +321,8 @@ class Dokan_Installer {
           `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
           `order_id` bigint(20) DEFAULT NULL,
           `seller_id` bigint(20) DEFAULT NULL,
-          `order_total` float(11,2) DEFAULT NULL,
-          `net_amount` float(11,2) DEFAULT NULL,
+          `order_total` float(11,4) DEFAULT NULL,
+          `net_amount` float(11,4) DEFAULT NULL,
           `order_status` varchar(30) DEFAULT NULL,
           PRIMARY KEY (`id`),
           KEY `order_id` (`order_id`),
@@ -304,8 +354,6 @@ class Dokan_Installer {
 
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         dbDelta( $sql );
-
-
     }
 
     /**

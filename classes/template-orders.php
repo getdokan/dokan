@@ -73,7 +73,13 @@ class Dokan_Template_Orders {
         $order_id = isset( $_GET['order_id'] ) ? intval( $_GET['order_id'] ) : 0;
 
         if ( $order_id ) {
-            dokan_get_template_part( 'orders/details' );
+
+            if ( wp_verify_nonce( $_REQUEST['_wpnonce'], 'dokan_view_order' ) && current_user_can( 'dokan_view_order' ) ) {
+                dokan_get_template_part( 'orders/details' );
+            } else {
+                dokan_get_template_part( 'global/dokan-error', '', array( 'deleted' => false, 'message' => __( 'You have no permission to view this order', 'dokan-lite' ) ) );
+            }
+
         } else {
             dokan_get_template_part( 'orders/date-export');
             dokan_get_template_part( 'orders/listing' );
@@ -126,7 +132,7 @@ class Dokan_Template_Orders {
             }
 
             echo "\r\n";
-            $user_orders = dokan_get_seller_orders( get_current_user_id(), 'all', NULL, 10000000, 0 );
+            $user_orders = dokan_get_seller_orders( dokan_get_current_user_id(), 'all', NULL, 10000000, 0 );
             $statuses    = wc_get_order_statuses();
             $results     = array();
             foreach ( $user_orders as $order ) {
@@ -197,7 +203,7 @@ class Dokan_Template_Orders {
 
             $order_date   = ( isset( $_POST['order_date'] ) ) ? $_POST['order_date'] : NULL;
             $order_status = ( isset( $_POST['order_status'] ) ) ? $_POST['order_status'] : 'all';
-            $user_orders  = dokan_get_seller_orders( get_current_user_id(), $order_status, $order_date, 10000000, 0 );
+            $user_orders  = dokan_get_seller_orders( dokan_get_current_user_id(), $order_status, $order_date, 10000000, 0 );
             $statuses     = wc_get_order_statuses();
             $results      = array();
 

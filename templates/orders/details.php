@@ -1,9 +1,9 @@
 <?php
-global $woocommerce, $current_user, $wpdb;
+global $woocommerce, $wpdb;
 
 $order_id = isset( $_GET['order_id'] ) ? intval( $_GET['order_id'] ) : 0;
 
-if ( !dokan_is_seller_has_order( $current_user->ID, $order_id ) ) {
+if ( !dokan_is_seller_has_order( dokan_get_current_user_id(), $order_id ) ) {
     echo '<div class="dokan-alert dokan-alert-danger">' . __( 'This is not yours, I swear!', 'dokan-lite' ) . '</div>';
     return;
 }
@@ -164,29 +164,32 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                                 <span><?php _e( 'Order Status:', 'dokan-lite' ); ?></span>
                                 <label class="dokan-label dokan-label-<?php echo dokan_get_order_status_class( dokan_get_prop( $order, 'status' ) ); ?>"><?php echo isset( $statuses[dokan_get_prop( $order, 'status' )] ) ? $statuses[dokan_get_prop( $order, 'status' )] : dokan_get_prop( $order, 'status' ); ?></label>
 
-                                <?php if ( dokan_get_option( 'order_status_change', 'dokan_selling', 'on' ) == 'on' && $order->get_status() !== 'cancelled' && $order->get_status() !== 'refunded' ) {?>
+                                <?php if ( current_user_can( 'dokan_manage_order' ) && dokan_get_option( 'order_status_change', 'dokan_selling', 'on' ) == 'on' && $order->get_status() !== 'cancelled' && $order->get_status() !== 'refunded' ) {?>
                                     <a href="#" class="dokan-edit-status"><small><?php _e( '&nbsp; Edit', 'dokan-lite' ); ?></small></a>
                                 <?php } ?>
                             </li>
-                            <li class="dokan-hide">
-                                <form id="dokan-order-status-form" action="" method="post">
+                            <?php if ( current_user_can( 'dokan_manage_order' ) ): ?>
+                                <li class="dokan-hide">
+                                    <form id="dokan-order-status-form" action="" method="post">
 
-                                    <select id="order_status" name="order_status" class="form-control">
-                                        <?php
-                                        foreach ( $statuses as $status => $label ) {
-                                            echo '<option value="' . esc_attr( $status ) . '" ' . selected( $status, 'wc-' . dokan_get_prop( $order, 'status' ), false ) . '>' . esc_html__( $label, 'dokan-lite' ) . '</option>';
-                                        }
-                                        ?>
-                                    </select>
+                                        <select id="order_status" name="order_status" class="form-control">
+                                            <?php
+                                            foreach ( $statuses as $status => $label ) {
+                                                echo '<option value="' . esc_attr( $status ) . '" ' . selected( $status, 'wc-' . dokan_get_prop( $order, 'status' ), false ) . '>' . esc_html__( $label, 'dokan-lite' ) . '</option>';
+                                            }
+                                            ?>
+                                        </select>
 
-                                    <input type="hidden" name="order_id" value="<?php echo dokan_get_prop( $order, 'id' ); ?>">
-                                    <input type="hidden" name="action" value="dokan_change_status">
-                                    <input type="hidden" name="_wpnonce" value="<?php echo wp_create_nonce( 'dokan_change_status' ); ?>">
-                                    <input type="submit" class="dokan-btn dokan-btn-success dokan-btn-sm" name="dokan_change_status" value="<?php _e( 'Update', 'dokan-lite' ); ?>">
+                                        <input type="hidden" name="order_id" value="<?php echo dokan_get_prop( $order, 'id' ); ?>">
+                                        <input type="hidden" name="action" value="dokan_change_status">
+                                        <input type="hidden" name="_wpnonce" value="<?php echo wp_create_nonce( 'dokan_change_status' ); ?>">
+                                        <input type="submit" class="dokan-btn dokan-btn-success dokan-btn-sm" name="dokan_change_status" value="<?php _e( 'Update', 'dokan-lite' ); ?>">
 
-                                    <a href="#" class="dokan-btn dokan-btn-default dokan-btn-sm dokan-cancel-status"><?php _e( 'Cancel', 'dokan-lite' ) ?></a>
-                                </form>
-                            </li>
+                                        <a href="#" class="dokan-btn dokan-btn-default dokan-btn-sm dokan-cancel-status"><?php _e( 'Cancel', 'dokan-lite' ) ?></a>
+                                    </form>
+                                </li>
+                            <?php endif ?>
+
                             <li>
                                 <span><?php _e( 'Order Date:', 'dokan-lite' ); ?></span>
                                 <?php echo dokan_get_date_created( $order ); ?>
@@ -263,7 +266,10 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                                         <?php echo wpautop( wptexturize( wp_kses_post( $note->comment_content ) ) ); ?>
                                     </div>
                                     <p class="meta">
-                                        <?php printf( __( 'added %s ago', 'dokan-lite' ), human_time_diff( strtotime( $note->comment_date_gmt ), current_time( 'timestamp', 1 ) ) ); ?> <a href="#" class="delete_note"><?php _e( 'Delete note', 'dokan-lite' ); ?></a>
+                                        <?php printf( __( 'added %s ago', 'dokan-lite' ), human_time_diff( strtotime( $note->comment_date_gmt ), current_time( 'timestamp', 1 ) ) ); ?>
+                                        <?php if ( current_user_can( 'dokan_manage_order_note' ) ): ?>
+                                            <a href="#" class="delete_note"><?php _e( 'Delete note', 'dokan-lite' ); ?></a>
+                                        <?php endif ?>
                                     </p>
                                 </li>
                                 <?php
@@ -277,26 +283,28 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                         add_filter( 'comments_clauses', array( 'WC_Comments', 'exclude_order_comments' ), 10, 1 );
                         ?>
                         <div class="add_note">
-                            <h4><?php _e( 'Add note', 'dokan-lite' ); ?></h4>
-                            <form class="dokan-form-inline" id="add-order-note" role="form" method="post">
-                                <p>
-                                    <textarea type="text" id="add-note-content" name="note" class="form-control" cols="19" rows="3"></textarea>
-                                </p>
-                                <div class="clearfix">
-                                    <div class="order_note_type dokan-form-group">
-                                        <select name="note_type" id="order_note_type" class="dokan-form-control">
-                                            <option value="customer"><?php _e( 'Customer note', 'dokan-lite' ); ?></option>
-                                            <option value=""><?php _e( 'Private note', 'dokan-lite' ); ?></option>
-                                        </select>
-                                    </div>
+                            <?php if ( current_user_can( 'dokan_manage_order_note' ) ): ?>
+                                <h4><?php _e( 'Add note', 'dokan-lite' ); ?></h4>
+                                <form class="dokan-form-inline" id="add-order-note" role="form" method="post">
+                                    <p>
+                                        <textarea type="text" id="add-note-content" name="note" class="form-control" cols="19" rows="3"></textarea>
+                                    </p>
+                                    <div class="clearfix">
+                                        <div class="order_note_type dokan-form-group">
+                                            <select name="note_type" id="order_note_type" class="dokan-form-control">
+                                                <option value="customer"><?php _e( 'Customer note', 'dokan-lite' ); ?></option>
+                                                <option value=""><?php _e( 'Private note', 'dokan-lite' ); ?></option>
+                                            </select>
+                                        </div>
 
-                                    <input type="hidden" name="security" value="<?php echo wp_create_nonce('add-order-note'); ?>">
-                                    <input type="hidden" name="delete-note-security" id="delete-note-security" value="<?php echo wp_create_nonce('delete-order-note'); ?>">
-                                    <input type="hidden" name="post_id" value="<?php echo dokan_get_prop( $order, 'id' ); ?>">
-                                    <input type="hidden" name="action" value="dokan_add_order_note">
-                                    <input type="submit" name="add_order_note" class="add_note btn btn-sm btn-theme" value="<?php esc_attr_e( 'Add Note', 'dokan-lite' ); ?>">
-                                </div>
-                            </form>
+                                        <input type="hidden" name="security" value="<?php echo wp_create_nonce('add-order-note'); ?>">
+                                        <input type="hidden" name="delete-note-security" id="delete-note-security" value="<?php echo wp_create_nonce('delete-order-note'); ?>">
+                                        <input type="hidden" name="post_id" value="<?php echo dokan_get_prop( $order, 'id' ); ?>">
+                                        <input type="hidden" name="action" value="dokan_add_order_note">
+                                        <input type="submit" name="add_order_note" class="add_note btn btn-sm btn-theme" value="<?php esc_attr_e( 'Add Note', 'dokan-lite' ); ?>">
+                                    </div>
+                                </form>
+                            <?php endif; ?>
 
                             <div class="clearfix dokan-form-group" style="margin-top: 10px;">
                                 <!-- Trigger the modal with a button -->

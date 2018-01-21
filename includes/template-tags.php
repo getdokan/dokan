@@ -150,7 +150,7 @@ function dokan_product_dashboard_errors() {
 function dokan_product_listing_status_filter() {
     $permalink    = dokan_get_navigation_url( 'products' );
     $status_class = isset( $_GET['post_status'] ) ? $_GET['post_status'] : 'all';
-    $post_counts  = dokan_count_posts( 'product', get_current_user_id() );
+    $post_counts  = dokan_count_posts( 'product', dokan_get_current_user_id() );
     $statuses     = dokan_get_post_status();
 
     dokan_get_template_part( 'products/listing-status-filter', '', array(
@@ -165,7 +165,7 @@ function dokan_order_listing_status_filter() {
     $orders_url = dokan_get_navigation_url( 'orders' );
 
     $status_class         = isset( $_GET['order_status'] ) ? $_GET['order_status'] : 'all';
-    $orders_counts        = dokan_count_orders( get_current_user_id() );
+    $orders_counts        = dokan_count_orders( dokan_get_current_user_id() );
     $order_date           = ( isset( $_GET['order_date'] ) ) ? $_GET['order_date'] : '';
     $date_filter          = array();
     $all_order_url        = array();
@@ -299,29 +299,33 @@ function dokan_get_dashboard_nav() {
 
     $urls = array(
         'dashboard' => array(
-            'title' => __( 'Dashboard', 'dokan-lite'),
-            'icon'  => '<i class="fa fa-tachometer"></i>',
-            'url'   => dokan_get_navigation_url(),
-            'pos'   => 10
+            'title'      => __( 'Dashboard', 'dokan-lite'),
+            'icon'       => '<i class="fa fa-tachometer"></i>',
+            'url'        => dokan_get_navigation_url(),
+            'pos'        => 10,
+            'permission' => 'dokan_view_overview_menu'
         ),
         'products' => array(
-            'title' => __( 'Products', 'dokan-lite'),
-            'icon'  => '<i class="fa fa-briefcase"></i>',
-            'url'   => dokan_get_navigation_url( 'products' ),
-            'pos'   => 30
+            'title'      => __( 'Products', 'dokan-lite'),
+            'icon'       => '<i class="fa fa-briefcase"></i>',
+            'url'        => dokan_get_navigation_url( 'products' ),
+            'pos'        => 30,
+            'permission' => 'dokan_view_product_menu'
         ),
         'orders' => array(
-            'title' => __( 'Orders', 'dokan-lite'),
-            'icon'  => '<i class="fa fa-shopping-cart"></i>',
-            'url'   => dokan_get_navigation_url( 'orders' ),
-            'pos'   => 50
+            'title'      => __( 'Orders', 'dokan-lite'),
+            'icon'       => '<i class="fa fa-shopping-cart"></i>',
+            'url'        => dokan_get_navigation_url( 'orders' ),
+            'pos'        => 50,
+            'permission' => 'dokan_view_order_menu'
         ),
 
         'withdraw' => array(
-            'title' => __( 'Withdraw', 'dokan-lite'),
-            'icon'  => '<i class="fa fa-upload"></i>',
-            'url'   => dokan_get_navigation_url( 'withdraw' ),
-            'pos'   => 70
+            'title'      => __( 'Withdraw', 'dokan-lite'),
+            'icon'       => '<i class="fa fa-upload"></i>',
+            'url'        => dokan_get_navigation_url( 'withdraw' ),
+            'pos'        => 70,
+            'permission' => 'dokan_view_withdraw_menu'
         ),
     );
 
@@ -340,16 +344,18 @@ function dokan_get_dashboard_nav() {
             'pos'   => 10
         ),
         'store' => array(
-            'title' => __( 'Store', 'dokan-lite'),
-            'icon'  => '<i class="fa fa-university"></i>',
-            'url'   => dokan_get_navigation_url( 'settings/store' ),
-            'pos'   => 30
+            'title'      => __( 'Store', 'dokan-lite'),
+            'icon'       => '<i class="fa fa-university"></i>',
+            'url'        => dokan_get_navigation_url( 'settings/store' ),
+            'pos'        => 30,
+            'permission' => 'dokan_view_store_settings_menu'
         ),
         'payment' => array(
-            'title' => __( 'Payment', 'dokan-lite'),
-            'icon'  => '<i class="fa fa-credit-card"></i>',
-            'url'   => dokan_get_navigation_url( 'settings/payment' ),
-            'pos'   => 50
+            'title'      => __( 'Payment', 'dokan-lite'),
+            'icon'       => '<i class="fa fa-credit-card"></i>',
+            'url'        => dokan_get_navigation_url( 'settings/payment' ),
+            'pos'        => 50,
+            'permission' => 'dokan_view_store_payment_menu'
         )
     );
 
@@ -366,11 +372,22 @@ function dokan_get_dashboard_nav() {
 
     uasort( $settings['sub'], 'dokan_nav_sort_by_pos' );
 
-    $urls['settings'] = $settings;
+    // Filter Sub setting menu according to permission
+    $settings['sub'] = array_filter( $settings['sub'], 'dokan_check_menu_permission' );
+
+    // Manage main settings url after re-render permission cheching
+    if ( count( $settings['sub'] ) > 1 ) {
+        $urls['settings'] = $settings;
+        $sub_settings_key = array_keys( $settings['sub'] );
+        $urls['settings']['url'] = $settings['sub'][$sub_settings_key[1]]['url'];
+    }
 
     $nav_urls = apply_filters( 'dokan_get_dashboard_nav', $urls );
 
     uasort( $nav_urls, 'dokan_nav_sort_by_pos' );
+
+    // Filter main menu according to permission
+    $nav_urls = array_filter( $nav_urls, 'dokan_check_menu_permission' );
 
     /**
      * Filter to get the final seller dashboard navigation.
@@ -380,6 +397,21 @@ function dokan_get_dashboard_nav() {
      * @param array $urls.
      */
     return $nav_urls;
+}
+
+/**
+ * Checking menu permissions
+ *
+ * @since 2.7.3
+ *
+ * @return boolean
+ */
+function dokan_check_menu_permission( $menu ) {
+    if ( isset( $menu['permission'] ) && !current_user_can( $menu['permission'] ) ) {
+        return false;
+    }
+
+    return true;
 }
 
 /**
@@ -399,7 +431,11 @@ function dokan_dashboard_nav( $active_menu = '' ) {
     $nav_menu          = dokan_get_dashboard_nav();
     $active_menu_parts = explode( '/', $active_menu );
 
-    if ( isset( $active_menu_parts[1] ) && $active_menu_parts[0] == 'settings' && array_key_exists( $active_menu_parts[1], $nav_menu['settings']['sub'] ) ) {
+    if ( isset( $active_menu_parts[1] )
+            && $active_menu_parts[0] == 'settings'
+            && isset( $nav_menu['settings']['sub'] )
+            && array_key_exists( $active_menu_parts[1], $nav_menu['settings']['sub'] )
+    ) {
         $urls        = $nav_menu['settings']['sub'];
         $active_menu = $active_menu_parts[1];
     } else {
@@ -408,13 +444,13 @@ function dokan_dashboard_nav( $active_menu = '' ) {
 
     $menu = '<ul class="dokan-dashboard-menu">';
 
-    foreach ($urls as $key => $item) {
+    foreach ( $urls as $key => $item ) {
         $class = ( $active_menu == $key ) ? 'active ' . $key : $key;
         $menu .= sprintf( '<li class="%s"><a href="%s">%s %s</a></li>', $class, $item['url'], $item['icon'], $item['title'] );
     }
 
     $common_links = '<li class="dokan-common-links dokan-clearfix">
-            <a title="' . __( 'Visit Store', 'dokan-lite' ) . '" class="tips" data-placement="top" href="' . dokan_get_store_url( get_current_user_id()) .'" target="_blank"><i class="fa fa-external-link"></i></a>
+            <a title="' . __( 'Visit Store', 'dokan-lite' ) . '" class="tips" data-placement="top" href="' . dokan_get_store_url( dokan_get_current_user_id() ) .'" target="_blank"><i class="fa fa-external-link"></i></a>
             <a title="' . __( 'Edit Account', 'dokan-lite' ) . '" class="tips" data-placement="top" href="' . dokan_get_navigation_url( 'edit-account' ) . '"><i class="fa fa-user"></i></a>
             <a title="' . __( 'Log out', 'dokan-lite' ) . '" class="tips" data-placement="top" href="' . wp_logout_url( home_url() ) . '"><i class="fa fa-power-off"></i></a>
         </li>';

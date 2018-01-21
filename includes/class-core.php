@@ -40,8 +40,7 @@ class Dokan_Core {
         $no_access   = dokan_get_option( 'admin_access', 'dokan_general', 'on' );
         $valid_pages = array( 'admin-ajax.php', 'admin-post.php', 'async-upload.php', 'media-upload.php' );
         $user_role   = reset( $current_user->roles );
-
-        if ( ( $no_access == 'on' ) && ( !in_array( $pagenow, $valid_pages ) ) && in_array( $user_role, array( 'seller', 'customer' ) ) ) {
+        if ( ( $no_access == 'on' ) && ( !in_array( $pagenow, $valid_pages ) ) && in_array( $user_role, array( 'seller', 'customer', 'vendor_staff' ) ) ) {
             wp_redirect( home_url() );
             exit;
         }
@@ -65,8 +64,8 @@ class Dokan_Core {
     function hide_others_uploads( $where ) {
         global $pagenow, $wpdb;
 
-        if ( ( $pagenow == 'upload.php' || $pagenow == 'media-upload.php' ) && current_user_can( 'dokandar' ) ) {
-            $user_id = get_current_user_id();
+        if ( ( $pagenow == 'upload.php' || $pagenow == 'media-upload.php' || $pagenow == 'admin-ajax.php' ) && current_user_can( 'dokandar' )  ) {
+            $user_id = dokan_get_current_user_id();
 
             $where .= " AND $wpdb->posts.post_author = $user_id";
         }

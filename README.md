@@ -1,15 +1,15 @@
 # Dokan Multivendor Marketplace #
-**Contributors:** [tareq1988](https://profiles.wordpress.org/tareq1988), [wedevs](https://profiles.wordpress.org/wedevs), [rafsuntaskin](https://profiles.wordpress.org/rafsuntaskin), [sabbir1991](https://profiles.wordpress.org/sabbir1991)  
-**Donate Link:** http://tareq.co/donate/  
-**Tags:** woocommerce, multivendor, multi-vendor, paypal, shop, vendor, seller, store, sell, online, amazon, dokan, ebay, Etsy, multi seller, multi store, multi vendor, multi vendors, multistore, multivendor, product vendor, product vendors, vendor, vendor system, vendors, wc market place, wc marketplace, wc vendors, woo vendors, woocommerce market place, woocommerce marketplace, woocommerce multi vendor,  commission rate, e-commerce, ebay, ecommerce, yith, yithemes  
-**Requires at least:** 4.4  
-**Tested up to:** 4.9.1  
-**WC requires at least:** 2.6  
-**WC tested up to:** 3.2.5  
-**Requires PHP:** 5.6  
-**Stable tag:** trunk  
-**License:** GPLv2 or later  
-**License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
+**Contributors:** [tareq1988](https://profiles.wordpress.org/tareq1988), [wedevs](https://profiles.wordpress.org/wedevs), [sabbir1991](https://profiles.wordpress.org/sabbir1991), [rafsuntaskin](https://profiles.wordpress.org/rafsuntaskin)
+**Donate Link:** http://tareq.co/donate/
+**Tags:** woocommerce, multivendor, multi-vendor, vendor, multishop, paypal , seller, store, sell, online, amazon, dokan, ebay, Etsy, multi seller, multi store, multi vendor, multi vendors, multistore, multivendor, product vendor, product vendors, vendor, vendor system, vendors, wc market place, wc marketplace, wc vendors, woo vendors, woocommerce market place, woocommerce marketplace, woocommerce multi vendor,  commission rate, e-commerce, ebay, ecommerce, yith, yithemes
+**Requires at least:** 4.4
+**Tested up to:** 4.9.2
+**WC requires at least:** 2.6
+**WC tested up to:** 3.2.6
+**Requires PHP:** 5.6
+**Stable tag:** trunk
+**License:** GPLv2 or later
+**License URI:** http://www.gnu.org/licenses/gpl-2.0.html
 
 The pioneer multi-vendor plugin for WordPress. Start your own marketplace in minutes!
 
@@ -156,7 +156,8 @@ A. Obviously, you can use this on a single seller site to give them a nice front
 
 ### Q. How to upgrade to the Pro version?
 A. Just install and activate the PRO version without deleting the free plugin. All your data will be safe on the database and some extra features will be added. If you feel something may go wrong, please consult with our [support](https://wedevs.com/contact/) staff first.
-###
+
+###
 ## Screenshots ##
 
 1. Admin Dashboard
@@ -180,6 +181,28 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 ## Changelog ##
+
+v2.7.3 -> Jan 21, 2018
+---------------------
+- [new]    Added permissions for vendors
+- [new]    Separate the vendor registration form through Shortcode
+- [new]    Added different class for vendor address is fixed
+- [new]    Product upload is now available on the backend for vendor
+- [new]    Added filter `dokan_get_seller_percentage`
+- [fix]    Can't withdraw full fractional amount from vendor withdraw
+- [fix]    Internal server error while placing order from multiple vendors
+- [fix]    Sync order is still working even if we change admin commission fee
+- [fix]    Slider js issue fixed
+- [fix]    Product pageview counting issue
+- [fix]    Vendors wp-admin bar does not showing
+- [fix]    A vendor is supposed to have backend access to see his orders instead all vendors order is shown
+- [tweak]  Added admin fee as a order meta for better experience
+
+v2.7.2 -> Dec 18, 2017
+---------------------
+- [fix]    Product attributes not saving properly
+- [fix]    missing text domains updated
+- [tweak]  Disabled withdraw request if no withdraw method is set
 
 v2.7.1 -> Dec 13, 2017
 ---------------------

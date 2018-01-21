@@ -50,25 +50,45 @@ class Dokan_Template_Shortcodes {
             return sprintf( __( 'Please install <a href="%s"><strong>WooCommerce</strong></a> plugin first', 'dokan-lite' ), 'http://wordpress.org/plugins/woocommerce/' );
         }
 
+        if ( ! dokan_is_user_seller( get_current_user_id() ) ) {
+            return __( 'You have no permission to view this page', 'dokan-lite' );
+        }
+
         ob_start();
 
         if ( isset( $wp->query_vars['products'] ) ) {
-            dokan_get_template_part( 'products/products' );
+            if ( ! current_user_can( 'dokan_view_product_menu' ) ) {
+                dokan_get_template_part( 'global/no-permission' );
+            } else {
+                dokan_get_template_part( 'products/products' );
+            }
             return ob_get_clean();
         }
 
         if ( isset( $wp->query_vars['new-product'] ) ) {
-            do_action( 'dokan_render_new_product_template', $wp->query_vars );
+            if ( ! current_user_can( 'dokan_add_product' ) ) {
+                dokan_get_template_part( 'global/no-permission' );
+            } else {
+                do_action( 'dokan_render_new_product_template', $wp->query_vars );
+            }
             return ob_get_clean();
         }
 
         if ( isset( $wp->query_vars['orders'] ) ) {
-            dokan_get_template_part( 'orders/orders' );
+            if ( ! current_user_can( 'dokan_view_order_menu' ) ) {
+                dokan_get_template_part( 'global/no-permission' );
+            } else {
+                dokan_get_template_part( 'orders/orders' );
+            }
             return ob_get_clean();
         }
 
         if ( isset( $wp->query_vars['withdraw'] ) ) {
-            dokan_get_template_part( 'withdraw/withdraw' );
+            if ( ! current_user_can( 'dokan_view_withdraw_menu' ) ) {
+                dokan_get_template_part( 'global/no-permission' );
+            } else {
+                dokan_get_template_part( 'withdraw/withdraw' );
+            }
             return ob_get_clean();
         }
 
@@ -78,7 +98,11 @@ class Dokan_Template_Shortcodes {
         }
 
         if ( isset( $wp->query_vars['page'] ) ) {
-            dokan_get_template_part( 'dashboard/dashboard' );
+            if ( ! current_user_can( 'dokan_view_overview_menu' ) ) {
+                dokan_get_template_part( 'global/no-permission' );
+            } else {
+                dokan_get_template_part( 'dashboard/dashboard' );
+            }
             return ob_get_clean();
         }
         if ( isset( $wp->query_vars['edit-account'] ) ) {

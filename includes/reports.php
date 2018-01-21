@@ -15,7 +15,9 @@
  * @return obj
  */
 function dokan_get_order_report_data( $args = array(), $start_date, $end_date ) {
-    global $wpdb, $current_user;
+    global $wpdb;
+
+    $current_user = dokan_get_current_user_id();
 
     $defaults = array(
         'data'         => array(),
@@ -110,7 +112,7 @@ function dokan_get_order_report_data( $args = array(), $start_date, $end_date ) 
     $query['where']  = "
         WHERE   posts.post_type     = 'shop_order'
         AND     posts.post_status   != 'trash'
-        AND     do.seller_id = {$current_user->ID}
+        AND     do.seller_id = {$current_user}
         AND     do.order_status IN ('" . implode( "','", apply_filters( 'woocommerce_reports_order_statuses', array( 'wc-completed', 'wc-processing', 'wc-on-hold' ) ) ) . "')
         ";
 

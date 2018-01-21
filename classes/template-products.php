@@ -68,8 +68,11 @@ class Dokan_Template_Products {
      * @return void
      */
     public function load_product_edit_template() {
-        if ( !WeDevs_Dokan::init()->is_pro_exists() ) {
+        if ( current_user_can( 'dokan_edit_product' ) ) {
             dokan_get_template_part( 'products/new-product-single' );
+        } else {
+            dokan_get_template_part('global/dokan-error', '', array( 'deleted' => false, 'message' => __( 'You have no permission to view this page', 'dokan-lite' ) ) );
+            return;
         }
     }
 
@@ -218,13 +221,17 @@ class Dokan_Template_Products {
 
                     do_action( 'dokan_new_product_added', $product_id, $post_data );
 
-                    $redirect = apply_filters( 'dokan_add_new_product_redirect', dokan_edit_product_url( $product_id ), $product_id );
+                    if ( current_user_can( 'dokan_edit_product' ) ) {
+                        $redirect = dokan_edit_product_url( $product_id );
+                    } else {
+                        $redirect = dokan_get_navigation_url( 'products' );
+                    }
 
                     if ( 'create_and_add_new' === $_POST['add_product'] ) {
                         $redirect = add_query_arg( array( 'created_product' => $product_id ), dokan_get_navigation_url( 'new-product' ) );
                     }
 
-                    wp_redirect( $redirect );
+                    wp_redirect( apply_filters( 'dokan_add_new_product_redirect', $redirect ) );
                     exit;
                 }
             }
@@ -330,6 +337,10 @@ class Dokan_Template_Products {
         }
 
         if ( ! dokan_is_user_seller( get_current_user_id() ) ) {
+            return;
+        }
+
+        if ( ! current_user_can( 'dokan_delete_product' ) ) {
             return;
         }
 
