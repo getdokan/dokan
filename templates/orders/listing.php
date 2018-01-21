@@ -41,7 +41,7 @@ if ( $user_orders ) {
                         <?php echo $the_order->get_formatted_order_total(); ?>
                     </td>
                     <td class="dokan-order-status" data-title="<?php _e( 'Status', 'dokan-lite' ); ?>" >
-                        <?php echo '<span class="dokan-label dokan-label-' . dokan_get_order_status_class( dokan_get_prop( $the_order, 'status' ) ) . '">' . esc_html__( dokan_get_order_status_translated( dokan_get_prop( $the_order, 'status' ) ) ) . '</span>'; ?>
+                        <?php echo '<span class="dokan-label dokan-label-' . dokan_get_order_status_class( dokan_get_prop( $the_order, 'status' ) ) . '">' . esc_html__( dokan_get_order_status_translated( dokan_get_prop( $the_order, 'dokan-lite' ) ) ) . '</span>'; ?>
                     </td>
                     <td class="dokan-order-customer" data-title="<?php _e( 'Customer', 'dokan-lite' ); ?>" >
                         <?php
