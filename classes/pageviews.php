@@ -105,25 +105,25 @@ class Dokan_Pageviews {
 
             <?php if ( 'no' === get_option( 'woocommerce_registration_generate_username' ) ) : ?>
                 <p class="form-row form-group form-row-wide">
-                    <label for="reg_username"><?php _e( 'Username', 'dokan-theme' ); ?> <span class="required">*</span></label>
+                    <label for="reg_username"><?php _e( 'Username', 'dokan-lite' ); ?> <span class="required">*</span></label>
                     <input type="text" class="input-text form-control" name="username" id="reg_username" value="<?php if ( ! empty( $_POST['username'] ) ) esc_attr( $_POST['username'] ); ?>" required="required" />
                 </p>
             <?php endif; ?>
 
             <p class="form-row form-group form-row-wide">
-                <label for="reg_email"><?php _e( 'Email address', 'dokan-theme' ); ?> <span class="required">*</span></label>
+                <label for="reg_email"><?php _e( 'Email address', 'dokan-lite' ); ?> <span class="required">*</span></label>
                 <input type="email" class="input-text form-control" name="email" id="reg_email" value="<?php if ( ! empty( $_POST['email'] ) ) esc_attr($_POST['email']); ?>" required="required" />
                 <label generated="true" class="reg_email_error"></label>
             </p>
 
             <?php if ( 'no' === get_option( 'woocommerce_registration_generate_password' ) ) : ?>
                 <p class="form-row form-group form-row-wide">
-                    <label for="reg_password"><?php _e( 'Password', 'dokan-theme' ); ?> <span class="required">*</span></label>
+                    <label for="reg_password"><?php _e( 'Password', 'dokan-lite' ); ?> <span class="required">*</span></label>
                     <input type="password" class="input-text form-control" name="password" id="reg_password" value="<?php if ( ! empty( $_POST['password'] ) ) esc_attr( $_POST['password'] ); ?>" required="required" minlength="6" />
                 </p>
             <?php endif; ?>
             <!-- Spam Trap -->
-            <div style="left:-999em; position:absolute;"><label for="trap"><?php _e( 'Anti-spam', 'dokan-theme' ); ?></label><input type="text" name="email_2" id="trap" tabindex="-1" /></div>
+            <div style="left:-999em; position:absolute;"><label for="trap"><?php _e( 'Anti-spam', 'dokan-lite' ); ?></label><input type="text" name="email_2" id="trap" tabindex="-1" /></div>
 
             <div class="split-row form-row-wide">
                 <p class="form-row form-group">
@@ -173,7 +173,7 @@ class Dokan_Pageviews {
             <?php do_action( 'register_form' ); ?>
             <p class="form-row">
                 <?php wp_nonce_field( 'woocommerce-register', '_wpnonce' ); ?>
-                <input type="submit" class="dokan-btn dokan-btn-theme" name="register" value="<?php _e( 'Register', 'dokan-theme' ); ?>" />
+                <input type="submit" class="dokan-btn dokan-btn-theme" name="register" value="<?php _e( 'Register', 'dokan-lite' ); ?>" />
             </p>
             <?php do_action( 'woocommerce_register_form_end' ); ?>
         </form>
