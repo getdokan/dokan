@@ -443,7 +443,7 @@ function dokan_dashboard_nav( $active_menu = '' ) {
     }
 
     $menu = '<ul class="dokan-dashboard-menu">';
-    // var_dump( $urls );
+
     foreach ( $urls as $key => $item ) {
         $class = ( $active_menu == $key ) ? 'active ' . $key : $key;
         $menu .= sprintf( '<li class="%s"><a href="%s">%s %s</a></li>', $class, $item['url'], $item['icon'], $item['title'] );

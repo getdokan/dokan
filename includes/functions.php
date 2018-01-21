@@ -2193,53 +2193,6 @@ function dokan_get_vendor( $vendor_id = null ) {
  *
  * @return array
  */
-function dokan_get_seller_cap() {
-    $capabilities = array(
-        'dokan_view_sales_overview',
-        'dokan_view_sales_report_chart',
-        'dokan_view_announcement',
-        'dokan_view_order_report',
-        'dokan_view_review_reports',
-        'dokan_view_product_status_report',
-        'dokan_add_product',
-        'dokan_edit_product',
-        'dokan_delete_product',
-        'dokan_view_product',
-        'dokan_duplicate_product',
-        'dokan_import_product',
-        'dokan_export_product',
-        'dokan_view_order',
-        'dokan_manage_order',
-        'dokan_manage_order_note',
-        'dokan_manage_refund',
-        'dokan_add_coupon',
-        'dokan_edit_coupon',
-        'dokan_delete_coupon',
-        'dokan_view_overview_report',
-        'dokan_view_daily_sale_report',
-        'dokan_view_top_selling_report',
-        'dokan_view_top_earning_report',
-        'dokan_view_statement_report',
-        'dokan_view_reviews',
-        'dokan_manage_reviews',
-        'dokan_manage_withdraw',
-        'dokan_view_overview_menu',
-        'dokan_view_product_menu',
-        'dokan_view_order_menu',
-        'dokan_view_coupon_menu',
-        'dokan_view_report_menu',
-        'dokan_view_review_menu',
-        'dokan_view_withdraw_menu',
-        'dokan_view_store_settings_menu',
-        'dokan_view_store_payment_menu',
-        'dokan_view_store_shipping_menu',
-        'dokan_view_store_social_menu',
-        'dokan_view_store_seo_menu',
-    );
-
-    return apply_filters( 'dokan_get_seller_cap', $capabilities );
-}
-
 function dokan_get_all_caps() {
     $capabilities = array(
         'overview' => array(
