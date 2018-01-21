@@ -221,13 +221,17 @@ class Dokan_Template_Products {
 
                     do_action( 'dokan_new_product_added', $product_id, $post_data );
 
-                    $redirect = apply_filters( 'dokan_add_new_product_redirect', dokan_edit_product_url( $product_id ), $product_id );
+                    if ( current_user_can( 'dokan_edit_product' ) ) {
+                        $redirect = dokan_edit_product_url( $product_id );
+                    } else {
+                        $redirect = dokan_get_navigation_url( 'products' );
+                    }
 
                     if ( 'create_and_add_new' === $_POST['add_product'] ) {
                         $redirect = add_query_arg( array( 'created_product' => $product_id ), dokan_get_navigation_url( 'new-product' ) );
                     }
 
-                    wp_redirect( $redirect );
+                    wp_redirect( apply_filters( 'dokan_add_new_product_redirect', $redirect ) );
                     exit;
                 }
             }

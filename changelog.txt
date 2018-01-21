@@ -1,3 +1,19 @@
+v2.7.3 -> Jan 21, 2018
+---------------------
+- [new]    Added permissions for vendors
+- [new]    Separate the vendor registration form through Shortcode
+- [new]    Added different class for vendor address is fixed
+- [new]    Product upload is now available on the backend for vendor
+- [new]    Added filter `dokan_get_seller_percentage`
+- [fix]    Can't withdraw full fractional amount from vendor withdraw
+- [fix]    Internal server error while placing order from multiple vendors
+- [fix]    Sync order is still working even if we change admin commission fee
+- [fix]    Slider js issue fixed
+- [fix]    Product pageview counting issue
+- [fix]    Vendors wp-admin bar does not show
+- [fix]    A vendor is supposed to have backend access to see his orders instead all vendors order is shown
+- [tweak]  Added admin fee as a order meta for better experience
+
 v2.7.2 -> Dec 18, 2017
 ---------------------
 - [fix]    Product attributes not saving properly
