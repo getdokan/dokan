@@ -78,6 +78,10 @@ class Dokan_Ajax {
     function create_product() {
         check_ajax_referer( 'dokan_reviews' );
 
+        if ( ! current_user_can( 'dokan_add_product' ) ) {
+            wp_send_json_error( __( 'You have no permission to do this action', 'dokan-lite' ) );
+        }
+
         parse_str( $_POST['postdata'], $postdata );
 
         $response = dokan_save_product( $postdata );
@@ -87,7 +91,13 @@ class Dokan_Ajax {
         }
 
         if ( is_int( $response ) ) {
-            wp_send_json_success( dokan_edit_product_url( $response ) );
+            if ( current_user_can( 'dokan_edit_product' ) ) {
+                $redirect = dokan_edit_product_url( $response );
+            } else {
+                $redirect = dokan_get_navigation_url( 'products' );
+            }
+
+            wp_send_json_success( $redirect );
         } else {
             wp_send_json_error( __( 'Something wrong, please try again later', 'dokan-lite' ) );
         }
