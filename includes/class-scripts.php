@@ -28,11 +28,11 @@ class Dokan_Scripts {
     public function enqueue_admin_scripts( $hook ) {
         wp_enqueue_style( 'dokan-admin-css', DOKAN_PLUGIN_ASSEST . '/css/admin.css', false, time() );
         wp_enqueue_script( 'dokan-tooltip' );
+        wp_enqueue_script( 'dokan_slider_admin', DOKAN_PLUGIN_ASSEST . '/js/dokan-admin.js', array( 'jquery' ) );
         
         global $post;
 
         if ( get_post_type( $post ) == 'dokan_slider' ) {
-            wp_enqueue_script( 'dokan_slider_admin', DOKAN_PLUGIN_ASSEST . '/js/dokan-admin.js', array( 'jquery' ) );
             wp_enqueue_script( 'media-upload' );
             wp_enqueue_script( 'thickbox' );
             wp_enqueue_style( 'thickbox' );
