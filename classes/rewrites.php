@@ -19,7 +19,7 @@ class Dokan_Rewrites {
         add_action( 'init', array( $this, 'register_rule' ) );
 
         add_filter( 'template_include', array( $this, 'store_template' ) );
-        add_filter( 'template_include', array( $this,  'product_edit_template' ) );
+        add_filter( 'template_include', array( $this,  'product_edit_template' ), 99 );
         add_filter( 'template_include', array( $this,  'store_toc_template' ) );
 
         add_filter( 'query_vars', array( $this, 'register_query_var' ) );
@@ -231,7 +231,6 @@ class Dokan_Rewrites {
         $edit_product_url = dokan_locate_template( 'products/new-product-single.php' );
 
         return apply_filters( 'dokan_get_product_edit_template', $edit_product_url );
-        // return apply_filters( 'dokan_get_product_edit_template', $edit_product_url );
     }
 
     /**
