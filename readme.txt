@@ -181,6 +181,12 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+v2.7.4 -> Jan 22, 2018
+---------------------
+- [fix]    Fix random plugin activation problem for older version udpating
+- [fix]    Fix order details page issue in vendor dashboard
+- [fix]    Updated product edit template priority so that it works with the latest version of WooCommerce
+
 v2.7.3 -> Jan 21, 2018
 ---------------------
 - [new]    Added permissions for vendors
