@@ -173,6 +173,7 @@ final class WeDevs_Dokan {
         }
 
         require_once __DIR__ . '/includes/functions.php';
+        require_once __DIR__ . '/includes/functions-compatibility.php';
 
         $installer = new Dokan_Installer();
         $installer->do_install();
