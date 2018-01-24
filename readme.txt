@@ -181,6 +181,11 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+v2.7.5 -> Jan 24, 2018
+---------------------
+- [fix]    Fix tinymce conflict issue
+- [fix]    Fix showing other vendor products in vendor dashboard
+
 v2.7.4 -> Jan 22, 2018
 ---------------------
 - [fix]    Fix random plugin activation problem for older version udpating
