@@ -21,7 +21,7 @@ class Dokan_Store_Controller extends WP_REST_Controller {
      *
      * @var string
      */
-    protected $namespace = 'dokan/v' . $version;
+    protected $namespace = 'dokan/v';
 
     /**
      * Route name
@@ -36,7 +36,7 @@ class Dokan_Store_Controller extends WP_REST_Controller {
      * @return void
      */
     public function register_routes() {
-        register_rest_route( $this->namespace, '/' . $this->base, array(
+        register_rest_route( $this->namespace . $this->version, '/' . $this->base, array(
             array(
                 'methods'         => WP_REST_Server::READABLE,
                 'callback'        => array( $this, 'get_stores' ),
@@ -52,7 +52,8 @@ class Dokan_Store_Controller extends WP_REST_Controller {
      * @return void
      */
     public function get_stores() {
-
+        $stores = dokan_get_sellers();
+        return new WP_REST_Response( $stores, 200 );
     }
 
 }

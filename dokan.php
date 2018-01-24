@@ -307,6 +307,9 @@ final class WeDevs_Dokan {
         } else {
             require_once $inc_dir . 'wc-legacy-functions.php';
         }
+
+        // API includes
+        require_once $classes_dir . 'api/class-api-register.php';
     }
 
     /**
@@ -324,6 +327,7 @@ final class WeDevs_Dokan {
         new Dokan_Pageviews();
         new Dokan_Rewrites();
         new Dokan_Tracker();
+        new Dokan_API_Register();
 
         $this->container['core']    = new Dokan_Core();
         $this->container['scripts'] = new Dokan_Scripts();
