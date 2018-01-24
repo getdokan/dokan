@@ -327,7 +327,6 @@ final class WeDevs_Dokan {
         new Dokan_Pageviews();
         new Dokan_Rewrites();
         new Dokan_Tracker();
-        new Dokan_API_Register();
 
         $this->container['core']    = new Dokan_Core();
         $this->container['scripts'] = new Dokan_Scripts();
@@ -348,6 +347,8 @@ final class WeDevs_Dokan {
         if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
             Dokan_Ajax::init()->init_ajax();
         }
+
+        new Dokan_API_Register();
         // print_r( dokan()->vendor->get_total() );
     }
 
