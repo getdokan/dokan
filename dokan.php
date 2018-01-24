@@ -309,7 +309,7 @@ final class WeDevs_Dokan {
         }
 
         // API includes
-        require_once $classes_dir . 'api/class-api-register.php';
+        require_once $inc_dir . 'api/class-api-register.php';
     }
 
     /**
