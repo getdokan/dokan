@@ -9,11 +9,6 @@ if ( !isset( $post->ID ) && ! isset( $_GET['product_id'] ) ) {
 }
 
 if( isset( $post->ID ) && $post->ID && $post->post_type == 'product' ) {
-
-    if ( $post->post_author != dokan_get_current_user_id() ) {
-        wp_die( __( 'Access Denied', 'dokan-lite' ) );
-    }
-
     $post_id = $post->ID;
     $post_title = $post->post_title;
     $post_content = $post->post_content;
@@ -31,6 +26,11 @@ if ( isset( $_GET['product_id'] ) ) {
     $post_status    = $post->post_status;
     $product        = wc_get_product( $post_id );
     $from_shortcode = true;
+}
+
+if ( ! dokan_is_product_author( $post_id ) ) {
+    wp_die( __( 'Access Denied', 'dokan-lite' ) );
+    exit();
 }
 
 $_regular_price         = get_post_meta( $post_id, '_regular_price', true );
