@@ -144,7 +144,9 @@ class Dokan_Store_Controller extends WP_REST_Controller {
         }
 
         $stores_data = $this->prepare_item_for_response( $store->data, $request );
-        return $stores_data;
+        $response    = rest_ensure_response( $stores_data );
+        
+        return $response;
     }
 
     /**
