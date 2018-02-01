@@ -62,14 +62,18 @@ class Dokan_Core {
      * @return string
      */
     function hide_others_uploads( $where ) {
-        global $pagenow, $wpdb;
+        $is_admin = get_user_by( 'email', get_option( 'admin_email' ) );
 
-        if ( ( $pagenow == 'upload.php' || $pagenow == 'media-upload.php' || $pagenow == 'admin-ajax.php' ) && current_user_can( 'dokandar' )  ) {
-            $user_id = dokan_get_current_user_id();
+        if ( ! $is_admin || ! current_user_can( 'manage_woocommerce' ) ) {
+            global $pagenow, $wpdb;
 
-            $where .= " AND $wpdb->posts.post_author = $user_id";
+            if ( ( $pagenow == 'upload.php' || $pagenow == 'media-upload.php' || $pagenow == 'admin-ajax.php' ) && current_user_can( 'dokandar' )  ) {
+                $user_id = dokan_get_current_user_id();
+
+                $where .= " AND $wpdb->posts.post_author = $user_id";
+            }  
         }
-
+        
         return $where;
     }
 
