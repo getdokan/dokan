@@ -1320,7 +1320,7 @@ add_filter( 'show_admin_bar', 'dokan_disable_admin_bar' );
  * @return object $query
  */
 function dokan_filter_orders_for_current_vendor( $query ) {
-    if ( current_user_can( 'administrator' ) ) {
+    if ( current_user_can( 'administrator' ) || current_user_can( 'manage_woocommerce' ) ) {
         return;
     }
 
