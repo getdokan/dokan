@@ -39,18 +39,15 @@ function dokan_admin_shop_order_edit_columns( $existing_columns ) {
     $columns = array();
 
     $columns['cb']               = '<input type="checkbox" />';
-    $columns['order_status']     = '<span class="status_head tips" data-tip="' . esc_attr__( 'Status', 'dokan-lite' ) . '">' . esc_attr__( 'Status', 'dokan-lite' ) . '</span>';
-    $columns['order_title']      = __( 'Order', 'dokan-lite' );
-    $columns['order_items']      = __( 'Purchased', 'dokan-lite' );
-    $columns['shipping_address'] = __( 'Ship to', 'dokan-lite' );
-
-    $columns['customer_message'] = '<span class="notes_head tips" data-tip="' . esc_attr__( 'Customer Message', 'dokan-lite' ) . '">' . esc_attr__( 'Customer Message', 'dokan-lite' ) . '</span>';
-    $columns['order_notes']      = '<span class="order-notes_head tips" data-tip="' . esc_attr__( 'Order Notes', 'dokan-lite' ) . '">' . esc_attr__( 'Order Notes', 'dokan-lite' ) . '</span>';
+    $columns['order_number']     = __( 'Order', 'dokan-lite' );
     $columns['order_date']       = __( 'Date', 'dokan-lite' );
+    $columns['order_status']     = __( 'Status', 'dokan-lite' );
+    $columns['billing_address']  = __( 'Billing', 'dokan-lite' );
+    $columns['shipping_address'] = __( 'Ship to', 'dokan-lite' );
     $columns['order_total']      = __( 'Total', 'dokan-lite' );
-    $columns['order_actions']    = __( 'Actions', 'dokan-lite' );
-    $columns['seller']        = __( 'Vendor', 'dokan-lite' );
-    $columns['suborder']        = __( 'Sub Order', 'dokan-lite' );
+    $columns['seller']           = __( 'Vendor', 'dokan-lite' );
+    $columns['suborder']         = __( 'Sub Order', 'dokan-lite' );
+    $columns['wc_actions']       = __( 'Actions', 'dokan-lite' );
 
     return $columns;
 }
@@ -73,7 +70,7 @@ function dokan_shop_order_custom_columns( $col ) {
     }
 
     switch ($col) {
-        case 'order_title':
+        case 'order_number':
             if ($post->post_parent !== 0) {
                 echo '<strong>';
                 echo __( 'Sub Order of', 'dokan-lite' );
