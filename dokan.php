@@ -99,7 +99,6 @@ final class WeDevs_Dokan {
      * @uses add_action()
      */
     public function __construct() {
-
         $this->define_constants();
 
         register_activation_hook( __FILE__, array( $this, 'activate' ) );
@@ -230,6 +229,9 @@ final class WeDevs_Dokan {
      * @return void
      */
     public function init_plugin() {
+        if ( ! function_exists( 'WC' ) ) {
+            return;
+        }
 
         $this->includes();
 
