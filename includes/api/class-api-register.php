@@ -21,7 +21,8 @@ class Dokan_API_Register {
         }
 
         $this->class_map = apply_filters( 'dokan_rest_api_class_map', array(
-            DOKAN_DIR . '/includes/api/class-store-controller.php' => 'Dokan_Store_Controller'
+            DOKAN_DIR . '/includes/api/class-store-controller.php' => 'Dokan_Store_Controller',
+            DOKAN_DIR . '/includes/api/class-product-controller.php' => 'Dokan_Product_Controller'
         ) );
 
         // Init REST API routes.
