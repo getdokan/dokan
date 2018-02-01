@@ -68,6 +68,12 @@ class Dokan_Template_Products {
      * @return void
      */
     public function load_product_edit_template() {
+        global $wp_query;
+        
+        if ( $wp_query->query['pagename'] == 'dashboard' ) {
+            return;
+        }
+
         if ( current_user_can( 'dokan_edit_product' ) ) {
             dokan_get_template_part( 'products/new-product-single' );
         } else {
