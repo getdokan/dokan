@@ -46,8 +46,8 @@ function dokan_admin_shop_order_edit_columns( $existing_columns ) {
     $columns['shipping_address'] = __( 'Ship to', 'dokan-lite' );
     $columns['order_total']      = __( 'Total', 'dokan-lite' );
     $columns['seller']           = __( 'Vendor', 'dokan-lite' );
-    $columns['suborder']         = __( 'Sub Order', 'dokan-lite' );
     $columns['wc_actions']       = __( 'Actions', 'dokan-lite' );
+    $columns['suborder']         = __( 'Sub Order', 'dokan-lite' );
 
     return $columns;
 }
@@ -158,6 +158,34 @@ function dokan_admin_shop_order_scripts() {
     <style type="text/css">
         tr.sub-order {
             background: #ECFFF2;
+        }
+
+        th#order_number {
+            width: 21ch;
+        }
+
+        th#order_date {
+            width: 9ch;
+        }
+
+        th#order_status {
+            width: 12ch;
+        }
+
+        th#shipping_address {
+            width: 18ch;
+        }
+
+        th#wc_actions {
+            width: 9ch;
+        }
+
+        th#seller {
+            width: 6ch;
+        }
+
+        th#suborder {
+            width: 9ch;
         }
     </style>
     <?php
@@ -278,7 +306,7 @@ function dokan_admin_report( $group_by = 'day', $year = '' ) {
     global $wpdb, $wp_locale;
 
     $group_by = apply_filters( 'dokan_report_group_by', $group_by );
-    
+
     $start_date = isset( $_POST['start_date'] ) ? sanitize_text_field ( $_POST['start_date'] ): ''; // WPCS: CSRF ok.
     $end_date   = isset( $_POST['end_date'] ) ? sanitize_text_field( $_POST['end_date'] ): ''; // WPCS: CSRF ok.
     $current_year = date( 'Y' );
@@ -534,9 +562,9 @@ function dokan_send_notification_on_product_publish( $post ) {
     if ( $post->post_type != 'product' ) {
         return;
     }
-    
+
     $seller = get_user_by( 'id', $post->post_author );
-    
+
     do_action( 'dokan_pending_product_published_notification', $post, $seller );
 }
 
