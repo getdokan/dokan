@@ -38,19 +38,31 @@ add_filter( 'woocommerce_reports_get_order_report_query', 'dokan_admin_order_rep
 function dokan_admin_shop_order_edit_columns( $existing_columns ) {
     $columns = array();
 
-    $columns['cb']               = '<input type="checkbox" />';
-    $columns['order_status']     = '<span class="status_head tips" data-tip="' . esc_attr__( 'Status', 'dokan-lite' ) . '">' . esc_attr__( 'Status', 'dokan-lite' ) . '</span>';
-    $columns['order_title']      = __( 'Order', 'dokan-lite' );
-    $columns['order_items']      = __( 'Purchased', 'dokan-lite' );
-    $columns['shipping_address'] = __( 'Ship to', 'dokan-lite' );
-
-    $columns['customer_message'] = '<span class="notes_head tips" data-tip="' . esc_attr__( 'Customer Message', 'dokan-lite' ) . '">' . esc_attr__( 'Customer Message', 'dokan-lite' ) . '</span>';
-    $columns['order_notes']      = '<span class="order-notes_head tips" data-tip="' . esc_attr__( 'Order Notes', 'dokan-lite' ) . '">' . esc_attr__( 'Order Notes', 'dokan-lite' ) . '</span>';
-    $columns['order_date']       = __( 'Date', 'dokan-lite' );
-    $columns['order_total']      = __( 'Total', 'dokan-lite' );
-    $columns['order_actions']    = __( 'Actions', 'dokan-lite' );
-    $columns['seller']        = __( 'Vendor', 'dokan-lite' );
-    $columns['suborder']        = __( 'Sub Order', 'dokan-lite' );
+    if ( WC_VERSION > '3.2.6' ) {
+        $columns['cb']               = '<input type="checkbox" />';
+        $columns['order_number']     = __( 'Order', 'dokan-lite' );
+        $columns['order_date']       = __( 'Date', 'dokan-lite' );
+        $columns['order_status']     = __( 'Status', 'dokan-lite' );
+        $columns['billing_address']  = __( 'Billing', 'dokan-lite' );
+        $columns['shipping_address'] = __( 'Ship to', 'dokan-lite' );
+        $columns['order_total']      = __( 'Total', 'dokan-lite' );
+        $columns['seller']           = __( 'Vendor', 'dokan-lite' );
+        $columns['wc_actions']       = __( 'Actions', 'dokan-lite' );
+        $columns['suborder']         = __( 'Sub Order', 'dokan-lite' );
+    } else {
+        $columns['cb']               = '<input type="checkbox" />';
+        $columns['order_status']     = '<span class="status_head tips" data-tip="' . esc_attr__( 'Status', 'dokan-lite' ) . '">' . esc_attr__( 'Status', 'dokan-lite' ) . '</span>';
+        $columns['order_title']      = __( 'Order', 'dokan-lite' );
+        $columns['order_items']      = __( 'Purchased', 'dokan-lite' );
+        $columns['shipping_address'] = __( 'Ship to', 'dokan-lite' );
+        $columns['customer_message'] = '<span class="notes_head tips" data-tip="' . esc_attr__( 'Customer Message', 'dokan-lite' ) . '">' . esc_attr__( 'Customer Message', 'dokan-lite' ) . '</span>';
+        $columns['order_notes']      = '<span class="order-notes_head tips" data-tip="' . esc_attr__( 'Order Notes', 'dokan-lite' ) . '">' . esc_attr__( 'Order Notes', 'dokan-lite' ) . '</span>';
+        $columns['order_date']       = __( 'Date', 'dokan-lite' );
+        $columns['order_total']      = __( 'Total', 'dokan-lite' );
+        $columns['order_actions']    = __( 'Actions', 'dokan-lite' );
+        $columns['seller']        = __( 'Vendor', 'dokan-lite' );
+        $columns['suborder']        = __( 'Sub Order', 'dokan-lite' );
+    }
 
     return $columns;
 }
@@ -73,7 +85,7 @@ function dokan_shop_order_custom_columns( $col ) {
     }
 
     switch ($col) {
-        case 'order_title':
+        case 'order_number':
             if ($post->post_parent !== 0) {
                 echo '<strong>';
                 echo __( 'Sub Order of', 'dokan-lite' );
@@ -161,6 +173,34 @@ function dokan_admin_shop_order_scripts() {
     <style type="text/css">
         tr.sub-order {
             background: #ECFFF2;
+        }
+
+        th#order_number {
+            width: 21ch;
+        }
+
+        th#order_date {
+            width: 9ch;
+        }
+
+        th#order_status {
+            width: 12ch;
+        }
+
+        th#shipping_address {
+            width: 18ch;
+        }
+
+        th#wc_actions {
+            width: 9ch;
+        }
+
+        th#seller {
+            width: 6ch;
+        }
+
+        th#suborder {
+            width: 9ch;
         }
     </style>
     <?php
@@ -281,7 +321,7 @@ function dokan_admin_report( $group_by = 'day', $year = '' ) {
     global $wpdb, $wp_locale;
 
     $group_by = apply_filters( 'dokan_report_group_by', $group_by );
-    
+
     $start_date = isset( $_POST['start_date'] ) ? sanitize_text_field ( $_POST['start_date'] ): ''; // WPCS: CSRF ok.
     $end_date   = isset( $_POST['end_date'] ) ? sanitize_text_field( $_POST['end_date'] ): ''; // WPCS: CSRF ok.
     $current_year = date( 'Y' );
@@ -537,9 +577,9 @@ function dokan_send_notification_on_product_publish( $post ) {
     if ( $post->post_type != 'product' ) {
         return;
     }
-    
+
     $seller = get_user_by( 'id', $post->post_author );
-    
+
     do_action( 'dokan_pending_product_published_notification', $post, $seller );
 }
 
