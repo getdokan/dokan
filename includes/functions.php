@@ -1328,6 +1328,10 @@ function dokan_filter_orders_for_current_vendor( $query ) {
         return;
     }
 
+    if ( is_admin() && $query->query_vars['post_type'] == 'page' ) {
+        remove_meta_box( 'sellerdiv', 'product', 'normal' );
+    }
+    
     if ( is_admin() && $query->is_main_query() && ( $query->query_vars['post_type'] == 'shop_order' || $query->query_vars['post_type'] == 'product' || $query->query_vars['post_type'] == 'wc_booking' ) ) {
         $query->set( 'author', get_current_user_id() );
     }
