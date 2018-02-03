@@ -331,7 +331,7 @@ final class WeDevs_Dokan {
         $this->container['scripts'] = new Dokan_Scripts();
         $this->container['email']   = Dokan_Email::init();
         $this->container['vendor']  = new Dokan_Vendor_Manager();
-        $this->container['product']  = new Dokan_Product_Manager();
+        $this->container['product'] = new Dokan_Product_Manager();
 
         if ( is_user_logged_in() ) {
             Dokan_Template_Main::init();
