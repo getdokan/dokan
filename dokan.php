@@ -331,10 +331,9 @@ final class WeDevs_Dokan {
         $this->container['scripts'] = new Dokan_Scripts();
         $this->container['email']   = Dokan_Email::init();
         $this->container['vendor']  = new Dokan_Vendor_Manager();
-        $this->container['product']  = new Dokan_Product_Manager();
+        $this->container['product'] = new Dokan_Product_Manager();
 
         if ( is_user_logged_in() ) {
-            Dokan_Template_Shortcodes::init();
             Dokan_Template_Main::init();
             Dokan_Template_Dashboard::init();
             Dokan_Template_Products::init();
@@ -343,10 +342,11 @@ final class WeDevs_Dokan {
             Dokan_Template_Settings::init();
         }
 
+        Dokan_Template_Shortcodes::init();
+
         if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
             Dokan_Ajax::init()->init_ajax();
         }
-        // print_r( dokan()->vendor->get_total() );
     }
 
     /**

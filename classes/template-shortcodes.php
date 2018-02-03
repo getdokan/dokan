@@ -193,6 +193,10 @@ class Dokan_Template_Shortcodes {
      * @return string
      */
     function my_orders_page() {
+        if ( ! is_user_logged_in() ) {
+            return;
+        }
+
         return dokan_get_template_part( 'my-orders' );
     }
 }
