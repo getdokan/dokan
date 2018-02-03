@@ -1,5 +1,15 @@
 v2.7.5 -> Jan 24, 2018
 ---------------------
+- [fix]    Product create shows error when booking module is enabled
+- [fix]    Admin is unable to see vendor's media in backend
+- [fix]    Added checking if WooCommerce not enabled
+- [tweak]  Fixed admin order layout issue for WooCommerce upcoming version
+- [fix]  Shop manager does not have any ability to manage WooCommerce
+- [fix]  Shortcode not rendering if user not logged in
+- [fix]  Changed ip column data size for withdraw table for comapatibility withdraw
+
+v2.7.5 -> Jan 24, 2018
+---------------------
 - [fix]    Fix tinymce conflict issue
 - [fix]    Fix showing other vendor products in vendor dashboard
 

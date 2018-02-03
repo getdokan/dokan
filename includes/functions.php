@@ -2124,7 +2124,7 @@ function dokan_get_earning_by_product( $product_id, $seller_id ) {
     $product    = wc_get_product( $product_id );
     $percentage = dokan_get_seller_percentage( $seller_id, $product_id );
     $price      = $product->get_price();
-    $earning    = ( $price * $percentage ) / 100;
+    $earning    = ( (float)$price * $percentage ) / 100;
 
     return wc_format_decimal( $earning );
 }

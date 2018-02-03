@@ -660,15 +660,18 @@ jQuery(function($) {
             form.find( 'span.dokan-show-add-product-error' ).html('');
             form.find( 'span.dokan-add-new-product-spinner' ).css( 'display', 'inline-block' );
 
+            self.attr( 'disabled', 'disabled' );
 
             if ( form.find( 'input[name="post_title"]' ).val() == '' ) {
                 $( 'span.dokan-show-add-product-error' ).html( dokan.product_title_required );
+                self.removeAttr( 'disabled' );
                 form.find( 'span.dokan-add-new-product-spinner' ).css( 'display', 'none' );
                 return;
             }
 
             if ( form.find( 'select[name="product_cat"]' ).val() == '-1' ) {
                 $( 'span.dokan-show-add-product-error' ).html( dokan.product_category_required );
+                self.removeAttr( 'disabled' );
                 form.find( 'span.dokan-add-new-product-spinner' ).css( 'display', 'none' );
                 return;
             }
@@ -681,6 +684,7 @@ jQuery(function($) {
 
             $.post( dokan.ajaxurl, data, function( resp ) {
                 if ( resp.success ) {
+                    self.removeAttr( 'disabled' );
                     if ( btn_id == 'create_new' ) {
                         $.magnificPopup.close();
                         window.location.href = resp.data;
@@ -690,6 +694,7 @@ jQuery(function($) {
                         Dokan_Editor.openProductPopup();
                     }
                 } else {
+                    self.removeAttr( 'disabled' );
                     $( 'span.dokan-show-add-product-error' ).html( resp.data );
                 }
                 form.find( 'span.dokan-add-new-product-spinner' ).css( 'display', 'none' );
