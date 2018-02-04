@@ -367,8 +367,15 @@ function dokan_get_dashboard_nav() {
      *
      * @param array.
      */
-    $settings['sub']  = apply_filters( 'dokan_get_dashboard_settings_nav', $settings_sub );
+    $sub_settings = apply_filters( 'dokan_get_dashboard_settings_nav', $settings_sub );
 
+    foreach ( $sub_settings as $key => $sub_setting ) {
+        if ( ! isset( $sub_setting['pos'] ) && empty( $sub_setting['pos'] ) ) {
+            $sub_setting['pos'] = '200';
+        }
+
+        $settings['sub'][$key] = $sub_setting;
+    }
 
     uasort( $settings['sub'], 'dokan_nav_sort_by_pos' );
 

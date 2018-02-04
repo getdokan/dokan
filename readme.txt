@@ -181,6 +181,18 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+v2.7.6 -> Feb 4, 2018
+---------------------
+- [new]    Vendors can now add products from backend
+- [fix]    Error in new products creation while booking is enabled
+- [fix]    Admin is unable to see vendor's media in backend
+- [fix]    Fixed dependency check for WooCommerce
+- [fix]    Shop manager does not have any ability to manage WooCommerce
+- [fix]    Shortcode not rendering if user not logged in
+- [fix]    Changed ip column data size for withdraw table for comapatibility with ipv6 address
+- [fix]    Fixed settings menu redirecting to dashboad menu issue
+- [tweak]  Fixed admin order layout compatibility issue with WooCommerce 3.3
+
 v2.7.5 -> Jan 24, 2018
 ---------------------
 - [fix]    Fix tinymce conflict issue
