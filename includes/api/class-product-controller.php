@@ -91,8 +91,12 @@ class Dokan_Product_Controller extends WP_REST_Controller {
      * @return void
      */
     public function get_products( $request, $args = array() ) {
+        global $current_user;
+
         $params   = $request->get_params();
         $store_id = $params['id'];
+
+        wp_send_json( dokan_get_current_user_id() );
 
         if ( empty( $store_id ) ) {
             return new WP_Error( 'no_store_found', __( 'No seller found' ), array( 'status' => 404 ) );
@@ -102,7 +106,7 @@ class Dokan_Product_Controller extends WP_REST_Controller {
             'fields'         => 'ids',
             'posts_per_page' => $params['per_page'],
             'paged'          => $params['page'],
-            'author'         => $store_id,
+            'author'         => $current_user->ID,
             'post_status'    => array( 'publish', 'pending', 'draft' )
         );
 
@@ -222,7 +226,37 @@ class Dokan_Product_Controller extends WP_REST_Controller {
      * @return void
      */
     public function update_product( $request ) {
+        $params   = $request->get_params();
+        $store_id = $params['id'];
 
+        if ( empty( $store_id ) ) {
+            return new WP_Error( 'no_store_found', __( 'No seller found' ), array( 'status' => 404 ) );
+        }
+
+        $object = wc_get_product( (int) $request['product_id'] );
+
+        if ( ! $object || 0 === $object->get_id() ) {
+            return new WP_Error( "woocommerce_rest_{$this->post_type}_invalid_id", __( 'Invalid ID.', 'woocommerce' ), array( 'status' => 400 ) );
+        }
+
+        try {
+
+            $object = $this->prepare_object_for_database( $request, false );
+
+            if ( is_wp_error( $object ) ) {
+                return $object;
+            }
+
+            $object->save();
+
+            $this->update_additional_fields_for_object( $object, $request );
+
+            return $this->get_product_data( $object );
+        } catch ( WC_Data_Exception $e ) {
+            return new WP_Error( $e->getErrorCode(), $e->getMessage(), $e->getErrorData() );
+        } catch ( WC_REST_Exception $e ) {
+            return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
+        }
     }
 
     /**
