@@ -299,7 +299,6 @@ final class WeDevs_Dokan {
             require_once $inc_dir . 'admin/class-ajax.php';
             require_once $inc_dir . 'admin/class-admin-pointers.php';
             require_once $inc_dir . 'admin-functions.php';
-            require_once $lib_dir . '/class-weforms-upsell.php';
         } else {
             require_once $inc_dir . 'template-tags.php';
         }
@@ -321,8 +320,8 @@ final class WeDevs_Dokan {
             new Dokan_Admin_User_Profile();
             Dokan_Admin_Ajax::init();
             new Dokan_Upgrade();
-            new WeForms_Upsell( '409' );
         }
+
         new Dokan_Pageviews();
         new Dokan_Rewrites();
         new Dokan_Tracker();
