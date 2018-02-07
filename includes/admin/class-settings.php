@@ -217,6 +217,8 @@ class Dokan_Settings {
                     'desc'    => __( 'Amount you get from sales', 'dokan-lite' ),
                     'default' => '10',
                     'type'    => 'number',
+                    'min'     => '0',
+                    'step'    => 'any',
                 ),
                 'order_status_change' => array(
                     'name'    => 'order_status_change',

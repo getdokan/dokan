@@ -1320,7 +1320,7 @@ add_filter( 'show_admin_bar', 'dokan_disable_admin_bar' );
  * @return object $query
  */
 function dokan_filter_orders_for_current_vendor( $query ) {
-    if ( current_user_can( 'administrator' ) ) {
+    if ( current_user_can( 'manage_woocommerce' ) ) {
         return;
     }
 
@@ -1328,6 +1328,10 @@ function dokan_filter_orders_for_current_vendor( $query ) {
         return;
     }
 
+    if ( is_admin() && $query->query_vars['post_type'] == 'page' ) {
+        remove_meta_box( 'sellerdiv', 'product', 'normal' );
+    }
+    
     if ( is_admin() && $query->is_main_query() && ( $query->query_vars['post_type'] == 'shop_order' || $query->query_vars['post_type'] == 'product' || $query->query_vars['post_type'] == 'wc_booking' ) ) {
         $query->set( 'author', get_current_user_id() );
     }
@@ -2124,7 +2128,7 @@ function dokan_get_earning_by_product( $product_id, $seller_id ) {
     $product    = wc_get_product( $product_id );
     $percentage = dokan_get_seller_percentage( $seller_id, $product_id );
     $price      = $product->get_price();
-    $earning    = ( $price * $percentage ) / 100;
+    $earning    = ( (float)$price * $percentage ) / 100;
 
     return wc_format_decimal( $earning );
 }
