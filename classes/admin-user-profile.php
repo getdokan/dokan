@@ -425,7 +425,7 @@ class Dokan_Admin_User_Profile {
 
         $selling         = sanitize_text_field( $_POST['dokan_enable_selling'] );
         $publishing      = sanitize_text_field( $_POST['dokan_publish'] );
-        $percentage      = empty( $_POST['dokan_admin_percentage'] ) ? '' : floatval( $_POST['dokan_admin_percentage'] );
+        $percentage      = isset( $_POST['dokan_admin_percentage'] ) && $_POST['dokan_admin_percentage'] != '' ? floatval( $_POST['dokan_admin_percentage'] ) : '';
         $percentage_type = empty( $_POST['dokan_admin_percentage_type'] ) ? 'percentage' : $_POST['dokan_admin_percentage_type'];
         $feature_seller  = sanitize_text_field( $_POST['dokan_feature'] );
         $store_settings  = dokan_get_store_info( $user_id );

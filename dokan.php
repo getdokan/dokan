@@ -3,7 +3,7 @@
 Plugin Name: Dokan
 Plugin URI: https://wordpress.org/plugins/dokan-lite/
 Description: An e-commerce marketplace plugin for WordPress. Powered by WooCommerce and weDevs.
-Version: 2.7.5
+Version: 2.7.6
 Author: weDevs
 Author URI: https://wedevs.com/
 Text Domain: dokan-lite
@@ -76,7 +76,7 @@ final class WeDevs_Dokan {
      *
      * @var string
      */
-    public $version = '2.7.5';
+    public $version = '2.7.6';
 
     /**
      * Holds various class instances
@@ -99,7 +99,6 @@ final class WeDevs_Dokan {
      * @uses add_action()
      */
     public function __construct() {
-
         $this->define_constants();
 
         register_activation_hook( __FILE__, array( $this, 'activate' ) );
@@ -230,6 +229,9 @@ final class WeDevs_Dokan {
      * @return void
      */
     public function init_plugin() {
+        if ( ! function_exists( 'WC' ) ) {
+            return;
+        }
 
         $this->includes();
 
@@ -307,7 +309,6 @@ final class WeDevs_Dokan {
         } else {
             require_once $inc_dir . 'wc-legacy-functions.php';
         }
-
         // API includes
         require_once $inc_dir . 'api/class-api-register.php';
     }
@@ -332,10 +333,9 @@ final class WeDevs_Dokan {
         $this->container['scripts'] = new Dokan_Scripts();
         $this->container['email']   = Dokan_Email::init();
         $this->container['vendor']  = new Dokan_Vendor_Manager();
-        $this->container['product']  = new Dokan_Product_Manager();
+        $this->container['product'] = new Dokan_Product_Manager();
 
         if ( is_user_logged_in() ) {
-            Dokan_Template_Shortcodes::init();
             Dokan_Template_Main::init();
             Dokan_Template_Dashboard::init();
             Dokan_Template_Products::init();
@@ -344,12 +344,12 @@ final class WeDevs_Dokan {
             Dokan_Template_Settings::init();
         }
 
+        Dokan_Template_Shortcodes::init();
+
         if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
             Dokan_Ajax::init()->init_ajax();
         }
-
         new Dokan_API_Register();
-        // print_r( dokan()->vendor->get_total() );
     }
 
     /**
