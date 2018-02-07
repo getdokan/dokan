@@ -7,8 +7,7 @@
 *
 * @author weDevs <info@wedevs.com>
 */
-class Dokan_Product_Controller extends WP_REST_Controller {
-
+class Dokan_Product_Controller extends Dokan_REST_Controller {
 
     /**
      * Endpoint namespace
@@ -32,6 +31,11 @@ class Dokan_Product_Controller extends WP_REST_Controller {
     protected $post_type = 'product';
 
     /**
+     * Post status
+     */
+    protected $post_status = array( 'publish', 'pending', 'draft' );
+
+    /**
      * Register all routes releated with stores
      *
      * @return void
@@ -46,20 +50,20 @@ class Dokan_Product_Controller extends WP_REST_Controller {
             ),
             array(
                 'methods'             => WP_REST_Server::READABLE,
-                'callback'            => array( $this, 'get_products' ),
+                'callback'            => array( $this, 'get_items' ),
                 'args'                => $this->get_collection_params(),
                 'permission_callback' => array( $this, 'get_product_permissions_check' ),
             ),
             array(
                 'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => array( $this, 'create_product' ),
+                'callback'            => array( $this, 'create_item' ),
                 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
                 'permission_callback' => array( $this, 'create_product_permissions_check' ),
             ),
             'schema' => array( $this, 'get_public_item_schema' ),
         ) );
 
-        register_rest_route( $this->namespace, '/' . $this->base . '/(?P<product_id>[\d]+)/', array(
+        register_rest_route( $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/', array(
             'args' => array(
                 'id' => array(
                     'description' => __( 'Unique identifier for the object.' ),
@@ -68,113 +72,50 @@ class Dokan_Product_Controller extends WP_REST_Controller {
             ),
             array(
                 'methods'             => WP_REST_Server::READABLE,
-                'callback'            => array( $this, 'get_product' ),
+                'callback'            => array( $this, 'get_item' ),
                 'args'                => $this->get_collection_params(),
                 'permission_callback' => array( $this, 'get_single_product_permissions_check' ),
             ),
             array(
                 'methods'             => WP_REST_Server::EDITABLE,
-                'callback'            => array( $this, 'update_product' ),
+                'callback'            => array( $this, 'update_item' ),
                 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
                 'permission_callback' => array( $this, 'update_product_permissions_check' ),
             ),
             array(
                 'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => array( $this, 'delete_product' ),
+                'callback'            => array( $this, 'delete_item' ),
                 'permission_callback' => array( $this, 'delete_product_permissions_check' ),
             )
         ) );
     }
 
     /**
-     * Get all products
+     * Get product object
+     *
+     * @since 2.8.0
+     *
+     * @return void
+     */
+    public function get_object( $id ) {
+        return wc_get_product( $id );
+    }
+
+    /**
+     * validation_before_create_product
      *
      * @since 1.0.0
      *
      * @return void
      */
-    public function get_products( $request, $args = array() ) {
+    public function validation_before_create_item( $request ) {
         $store_id = dokan_get_current_user_id();
 
         if ( empty( $store_id ) ) {
             return new WP_Error( 'no_store_found', __( 'No seller found' ), array( 'status' => 404 ) );
         }
 
-        $default = array(
-            'fields'         => 'ids',
-            'posts_per_page' => $request['per_page'],
-            'paged'          => $request['page'],
-            'author'         => $store_id,
-            'post_status'    => array( 'publish', 'pending', 'draft' )
-        );
-
-        $args = wp_parse_args( $args, $default );
-
-        $product_ids = dokan()->product->all( $args );
-
-        if ( empty( $product_ids->posts ) ) {
-            return new WP_Error( 'no_products_found', __( 'No Products found' ), array( 'status' => 404 ) );
-        }
-
-        $data = array();
-        foreach ( $product_ids->posts as $product_id ) {
-            $data[] = $this->get_product_data( wc_get_product( $product_id ) );
-        }
-
-        $response = rest_ensure_response( $data );
-        $response = $this->format_collection_response( $response, $request, $product_ids->found_posts );
-
-        return $response;
-    }
-
-    /**
-     * Get single product
-     *
-     * @since 2.8.0
-     *
-     * @return void
-     */
-    public function get_product( $request ) {
-        $store_id = dokan_get_current_user_id();
-
-        if ( empty( $store_id ) ) {
-            return new WP_Error( 'no_store_found', __( 'No seller found' ), array( 'status' => 404 ) );
-        }
-
-        $product_id = $request['product_id'];
-
-        if ( empty( $product_id ) ) {
-            return new WP_Error( 'no_product_found', __( 'No product found' ), array( 'status' => 404 ) );
-        }
-
-        $product = wc_get_product( $product_id );
-
-        if ( empty( $product ) ) {
-            return new WP_Error( 'no_product', __( 'No product found' ), array( 'status' => 404 ) );
-        }
-
-        $data     = $this->get_product_data( $product );
-        $response = rest_ensure_response( $data );
-
-        return $response;
-    }
-
-    /**
-     * Create product
-     *
-     * @since 2.8.0
-     *
-     * @return void
-     */
-    public function create_product( $request ) {
-        $params   = $request->get_params();
-        $store_id = $params['id'];
-
-        if ( empty( $store_id ) ) {
-            return new WP_Error( 'no_store_found', __( 'No seller found' ), array( 'status' => 404 ) );
-        }
-
-        if ( ! empty( $request['product_id'] ) ) {
+        if ( ! empty( $request['id'] ) ) {
             return new WP_Error( "woocommerce_rest_{$this->post_type}_exists", sprintf( __( 'Cannot create existing %s.', 'dokan-lite' ), 'product' ), array( 'status' => 400 ) );
         }
 
@@ -194,42 +135,24 @@ class Dokan_Product_Controller extends WP_REST_Controller {
             }
         }
 
-        try {
-            $object = $this->prepare_object_for_database( $request, true );
-
-            if ( is_wp_error( $object ) ) {
-                return $object;
-            }
-
-            $object->save();
-
-            // Update post author
-            wp_update_post( array( 'ID' => $object->get_id(), 'post_author' => $store_id ) );
-
-            $product = wc_get_product( $object->get_id() );
-            return $this->get_product_data( $product );
-        } catch ( WC_Data_Exception $e ) {
-            return new WP_Error( $e->getErrorCode(), $e->getMessage(), $e->getErrorData() );
-        } catch ( WC_REST_Exception $e ) {
-            return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
-        }
+        return true;
     }
 
     /**
-     * Update product
+     * Validation before update product
      *
      * @since 2.8.0
      *
      * @return void
      */
-    public function update_product( $request ) {
+    public function validation_before_update_item( $request ) {
         $store_id = dokan_get_current_user_id();
 
         if ( empty( $store_id ) ) {
             return new WP_Error( 'no_store_found', __( 'No seller found' ), array( 'status' => 404 ) );
         }
 
-        $object = wc_get_product( (int) $request['product_id'] );
+        $object = $this->get_object( (int) $request['id'] );
 
         if ( ! $object || 0 === $object->get_id() ) {
             return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Invalid ID.', 'dokan-lite' ), array( 'status' => 400 ) );
@@ -241,39 +164,23 @@ class Dokan_Product_Controller extends WP_REST_Controller {
             return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Sorry, you have no permission to do this. Since it\'s not your product.', 'dokan-lite' ), array( 'status' => 400 ) );
         }
 
-        try {
-            $object = $this->prepare_object_for_database( $request, false );
-
-            if ( is_wp_error( $object ) ) {
-                return $object;
-            }
-
-            $object->save();
-
-            $this->update_additional_fields_for_object( $object, $request );
-
-            return $this->get_product_data( $object );
-        } catch ( WC_Data_Exception $e ) {
-            return new WP_Error( $e->getErrorCode(), $e->getMessage(), $e->getErrorData() );
-        } catch ( WC_REST_Exception $e ) {
-            return new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
-        }
+        return true;
     }
 
     /**
-     * Delete product
+     * validation_before_delete_item
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return WP_Error|Boolean
      */
-    public function delete_product( $request ) {
+    public function validation_before_delete_item( $request ) {
         $store_id = dokan_get_current_user_id();
-        $object   = wc_get_product( (int) $request['product_id'] );
+        $object   = $this->get_object( (int) $request['id'] );
         $result   = false;
 
         if ( ! $object || 0 === $object->get_id() ) {
-            return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Invalid ID.', 'woocommerce' ), array( 'status' => 404 ) );
+            return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Invalid ID.', 'dokan' ), array( 'status' => 404 ) );
         }
 
         $product_author = get_post_field( 'post_author', $object->get_id() );
@@ -282,20 +189,7 @@ class Dokan_Product_Controller extends WP_REST_Controller {
             return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Sorry, you have no permission to do this. Since it\'s not your product.', 'dokan-lite' ), array( 'status' => 400 ) );
         }
 
-        $data     = $this->get_product_data( $object );
-        $response = rest_ensure_response( $data );
-
-        // If we're forcing, then delete permanently.
-        $object->delete( true );
-        $result = 0 === $object->get_id();
-
-        if ( ! $result ) {
-            return new WP_Error( 'dokan_rest_cannot_delete', sprintf( __( 'The %s cannot be deleted.', 'dokan-lite' ), $this->post_type ), array( 'status' => 500 ) );
-        }
-
-        do_action( "dokan_rest_delete_{$this->post_type}_object", $object, $response, $request );
-
-        return $response;
+        return true;
     }
 
     /**
@@ -361,7 +255,7 @@ class Dokan_Product_Controller extends WP_REST_Controller {
      *                            Options: 'view' and 'edit'.
      * @return array
      */
-    protected function get_product_data( $product, $context = 'view' ) {
+    protected function prepare_data_for_response( $product, $context = 'view' ) {
         $data = array(
             'id'                    => $product->get_id(),
             'name'                  => $product->get_name( $context ),
@@ -439,303 +333,6 @@ class Dokan_Product_Controller extends WP_REST_Controller {
     }
 
     /**
-     * Format item's collection for response
-     *
-     * @param  object $response
-     * @param  object $request
-     * @param  array $items
-     * @param  int $total_items
-     *
-     * @return object
-     */
-    public function format_collection_response( $response, $request, $total_items ) {
-        if ( $total_items === 0 ) {
-            return $response;
-        }
-
-        // Store pagation values for headers then unset for count query.
-        $per_page = (int) ( ! empty( $request['per_page'] ) ? $request['per_page'] : 20 );
-        $page     = (int) ( ! empty( $request['page'] ) ? $request['page'] : 1 );
-
-        $response->header( 'X-WP-Total', (int) $total_items );
-
-        $max_pages = ceil( $total_items / $per_page );
-
-        $response->header( 'X-WP-TotalPages', (int) $max_pages );
-        $base = add_query_arg( $request->get_query_params(), rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ) );
-
-        if ( $page > 1 ) {
-            $prev_page = $page - 1;
-            if ( $prev_page > $max_pages ) {
-                $prev_page = $max_pages;
-            }
-            $prev_link = add_query_arg( 'page', $prev_page, $base );
-            $response->link_header( 'prev', $prev_link );
-        }
-        if ( $max_pages > $page ) {
-
-            $next_page = $page + 1;
-            $next_link = add_query_arg( 'page', $next_page, $base );
-            $response->link_header( 'next', $next_link );
-        }
-
-        return $response;
-    }
-
-    /**
-     * Get taxonomy terms.
-     *
-     * @param WC_Product $product  Product instance.
-     * @param string     $taxonomy Taxonomy slug.
-     * @return array
-     */
-    protected function get_taxonomy_terms( $product, $taxonomy = 'cat' ) {
-        $terms = array();
-
-        foreach ( wc_get_object_terms( $product->get_id(), 'product_' . $taxonomy ) as $term ) {
-            $terms[] = array(
-                'id'   => $term->term_id,
-                'name' => $term->name,
-                'slug' => $term->slug,
-            );
-        }
-
-        return $terms;
-    }
-
-    /**
-     * Get the images for a product or product variation.
-     *
-     * @param WC_Product|WC_Product_Variation $product Product instance.
-     * @return array
-     */
-    protected function get_images( $product ) {
-        $images = array();
-        $attachment_ids = array();
-
-        // Add featured image.
-        if ( has_post_thumbnail( $product->get_id() ) ) {
-            $attachment_ids[] = $product->get_image_id();
-        }
-
-        // Add gallery images.
-        $attachment_ids = array_merge( $attachment_ids, $product->get_gallery_image_ids() );
-
-        // Build image data.
-        foreach ( $attachment_ids as $position => $attachment_id ) {
-            $attachment_post = get_post( $attachment_id );
-            if ( is_null( $attachment_post ) ) {
-                continue;
-            }
-
-            $attachment = wp_get_attachment_image_src( $attachment_id, 'full' );
-            if ( ! is_array( $attachment ) ) {
-                continue;
-            }
-
-            $images[] = array(
-                'id'                => (int) $attachment_id,
-                'date_created'      => wc_rest_prepare_date_response( $attachment_post->post_date, false ),
-                'date_created_gmt'  => wc_rest_prepare_date_response( strtotime( $attachment_post->post_date_gmt ) ),
-                'date_modified'     => wc_rest_prepare_date_response( $attachment_post->post_modified, false ),
-                'date_modified_gmt' => wc_rest_prepare_date_response( strtotime( $attachment_post->post_modified_gmt ) ),
-                'src'               => current( $attachment ),
-                'name'              => get_the_title( $attachment_id ),
-                'alt'               => get_post_meta( $attachment_id, '_wp_attachment_image_alt', true ),
-                'position'          => (int) $position,
-            );
-        }
-
-        // Set a placeholder image if the product has no images set.
-        if ( empty( $images ) ) {
-            $images[] = array(
-                'id'                => 0,
-                'date_created'      => wc_rest_prepare_date_response( current_time( 'mysql' ), false ), // Default to now.
-                'date_created_gmt'  => wc_rest_prepare_date_response( current_time( 'timestamp', true ) ), // Default to now.
-                'date_modified'     => wc_rest_prepare_date_response( current_time( 'mysql' ), false ),
-                'date_modified_gmt' => wc_rest_prepare_date_response( current_time( 'timestamp', true ) ),
-                'src'               => wc_placeholder_img_src(),
-                'name'              => __( 'Placeholder', 'dokan-lite' ),
-                'alt'               => __( 'Placeholder', 'dokan-lite' ),
-                'position'          => 0,
-            );
-        }
-
-        return $images;
-    }
-
-    /**
-     * Get attribute taxonomy label.
-     *
-     * @deprecated 2.8.0
-     *
-     * @param  string $name Taxonomy name.
-     * @return string
-     */
-    protected function get_attribute_taxonomy_label( $name ) {
-        $tax    = get_taxonomy( $name );
-        $labels = get_taxonomy_labels( $tax );
-
-        return $labels->singular_name;
-    }
-
-    /**
-     * Get product attribute taxonomy name.
-     *
-     * @since  2.8.0
-     * @param  string     $slug    Taxonomy name.
-     * @param  WC_Product $product Product data.
-     * @return string
-     */
-    protected function get_attribute_taxonomy_name( $slug, $product ) {
-        $attributes = $product->get_attributes();
-
-        if ( ! isset( $attributes[ $slug ] ) ) {
-            return str_replace( 'pa_', '', $slug );
-        }
-
-        $attribute = $attributes[ $slug ];
-
-        // Taxonomy attribute name.
-        if ( $attribute->is_taxonomy() ) {
-            $taxonomy = $attribute->get_taxonomy_object();
-            return $taxonomy->attribute_label;
-        }
-
-        // Custom product attribute name.
-        return $attribute->get_name();
-    }
-
-    /**
-     * Get default attributes.
-     *
-     * @param WC_Product $product Product instance.
-     * @return array
-     */
-    protected function get_default_attributes( $product ) {
-        $default = array();
-
-        if ( $product->is_type( 'variable' ) ) {
-            foreach ( array_filter( (array) $product->get_default_attributes(), 'strlen' ) as $key => $value ) {
-                if ( 0 === strpos( $key, 'pa_' ) ) {
-                    $default[] = array(
-                        'id'     => wc_attribute_taxonomy_id_by_name( $key ),
-                        'name'   => $this->get_attribute_taxonomy_name( $key, $product ),
-                        'option' => $value,
-                    );
-                } else {
-                    $default[] = array(
-                        'id'     => 0,
-                        'name'   => $this->get_attribute_taxonomy_name( $key, $product ),
-                        'option' => $value,
-                    );
-                }
-            }
-        }
-
-        return $default;
-    }
-
-    /**
-     * Get attribute options.
-     *
-     * @param int   $product_id Product ID.
-     * @param array $attribute  Attribute data.
-     * @return array
-     */
-    protected function get_attribute_options( $product_id, $attribute ) {
-        if ( isset( $attribute['is_taxonomy'] ) && $attribute['is_taxonomy'] ) {
-            return wc_get_product_terms( $product_id, $attribute['name'], array(
-                'fields' => 'names',
-            ) );
-        } elseif ( isset( $attribute['value'] ) ) {
-            return array_map( 'trim', explode( '|', $attribute['value'] ) );
-        }
-
-        return array();
-    }
-
-    /**
-     * Get the attributes for a product or product variation.
-     *
-     * @param WC_Product|WC_Product_Variation $product Product instance.
-     * @return array
-     */
-    protected function get_attributes( $product ) {
-        $attributes = array();
-
-        if ( $product->is_type( 'variation' ) ) {
-            $_product = wc_get_product( $product->get_parent_id() );
-            foreach ( $product->get_variation_attributes() as $attribute_name => $attribute ) {
-                $name = str_replace( 'attribute_', '', $attribute_name );
-
-                if ( ! $attribute ) {
-                    continue;
-                }
-
-                // Taxonomy-based attributes are prefixed with `pa_`, otherwise simply `attribute_`.
-                if ( 0 === strpos( $attribute_name, 'attribute_pa_' ) ) {
-                    $option_term = get_term_by( 'slug', $attribute, $name );
-                    $attributes[] = array(
-                        'id'     => wc_attribute_taxonomy_id_by_name( $name ),
-                        'name'   => $this->get_attribute_taxonomy_name( $name, $_product ),
-                        'option' => $option_term && ! is_wp_error( $option_term ) ? $option_term->name : $attribute,
-                    );
-                } else {
-                    $attributes[] = array(
-                        'id'     => 0,
-                        'name'   => $this->get_attribute_taxonomy_name( $name, $_product ),
-                        'option' => $attribute,
-                    );
-                }
-            }
-        } else {
-            foreach ( $product->get_attributes() as $attribute ) {
-                $attributes[] = array(
-                    'id'        => $attribute['is_taxonomy'] ? wc_attribute_taxonomy_id_by_name( $attribute['name'] ) : 0,
-                    'name'      => $this->get_attribute_taxonomy_name( $attribute['name'], $product ),
-                    'position'  => (int) $attribute['position'],
-                    'visible'   => (bool) $attribute['is_visible'],
-                    'variation' => (bool) $attribute['is_variation'],
-                    'options'   => $this->get_attribute_options( $product->get_id(), $attribute ),
-                );
-            }
-        }
-
-        return $attributes;
-    }
-
-    /**
-     * Get the downloads for a product or product variation.
-     *
-     * @param WC_Product|WC_Product_Variation $product Product instance.
-     * @return array
-     */
-    protected function get_downloads( $product ) {
-        $downloads = array();
-
-        if ( $product->is_downloadable() ) {
-            foreach ( $product->get_downloads() as $file_id => $file ) {
-                $downloads[] = array(
-                    'id'   => $file_id, // MD5 hash.
-                    'name' => $file['name'],
-                    'file' => $file['file'],
-                );
-            }
-        }
-
-        return $downloads;
-    }
-
-        /**
-     * Prepare a single product for create or update.
-     *
-     * @param  WP_REST_Request $request Request object.
-     * @param  bool            $creating If is creating a new object.
-     * @return WP_Error|WC_Data
-     */
-
-    /**
      * Prepare object for database mapping
      *
      * @param objec  $request
@@ -744,7 +341,7 @@ class Dokan_Product_Controller extends WP_REST_Controller {
      * @return object
      */
     protected function prepare_object_for_database( $request, $creating = false ) {
-        $id = isset( $request['product_id'] ) ? absint( $request['product_id'] ) : 0;
+        $id = isset( $request['id'] ) ? absint( $request['id'] ) : 0;
 
         // Type is the most important part here because we need to be using the correct class and methods.
         if ( isset( $request['type'] ) ) {
@@ -755,7 +352,7 @@ class Dokan_Product_Controller extends WP_REST_Controller {
             }
 
             $product = new $classname( $id );
-        } elseif ( isset( $request['product_id'] ) ) {
+        } elseif ( isset( $request['id'] ) ) {
             $product = wc_get_product( $id );
         } else {
             $product = new WC_Product_Simple();
@@ -1115,6 +712,259 @@ class Dokan_Product_Controller extends WP_REST_Controller {
          */
         return apply_filters( "woocommerce_rest_pre_insert_{$this->post_type}_object", $product, $request, $creating );
     }
+
+    /**
+     * Get taxonomy terms.
+     *
+     * @param WC_Product $product  Product instance.
+     * @param string     $taxonomy Taxonomy slug.
+     * @return array
+     */
+    protected function get_taxonomy_terms( $product, $taxonomy = 'cat' ) {
+        $terms = array();
+
+        foreach ( wc_get_object_terms( $product->get_id(), 'product_' . $taxonomy ) as $term ) {
+            $terms[] = array(
+                'id'   => $term->term_id,
+                'name' => $term->name,
+                'slug' => $term->slug,
+            );
+        }
+
+        return $terms;
+    }
+
+    /**
+     * Get the images for a product or product variation.
+     *
+     * @param WC_Product|WC_Product_Variation $product Product instance.
+     * @return array
+     */
+    protected function get_images( $product ) {
+        $images = array();
+        $attachment_ids = array();
+
+        // Add featured image.
+        if ( has_post_thumbnail( $product->get_id() ) ) {
+            $attachment_ids[] = $product->get_image_id();
+        }
+
+        // Add gallery images.
+        $attachment_ids = array_merge( $attachment_ids, $product->get_gallery_image_ids() );
+
+        // Build image data.
+        foreach ( $attachment_ids as $position => $attachment_id ) {
+            $attachment_post = get_post( $attachment_id );
+            if ( is_null( $attachment_post ) ) {
+                continue;
+            }
+
+            $attachment = wp_get_attachment_image_src( $attachment_id, 'full' );
+            if ( ! is_array( $attachment ) ) {
+                continue;
+            }
+
+            $images[] = array(
+                'id'                => (int) $attachment_id,
+                'date_created'      => wc_rest_prepare_date_response( $attachment_post->post_date, false ),
+                'date_created_gmt'  => wc_rest_prepare_date_response( strtotime( $attachment_post->post_date_gmt ) ),
+                'date_modified'     => wc_rest_prepare_date_response( $attachment_post->post_modified, false ),
+                'date_modified_gmt' => wc_rest_prepare_date_response( strtotime( $attachment_post->post_modified_gmt ) ),
+                'src'               => current( $attachment ),
+                'name'              => get_the_title( $attachment_id ),
+                'alt'               => get_post_meta( $attachment_id, '_wp_attachment_image_alt', true ),
+                'position'          => (int) $position,
+            );
+        }
+
+        // Set a placeholder image if the product has no images set.
+        if ( empty( $images ) ) {
+            $images[] = array(
+                'id'                => 0,
+                'date_created'      => wc_rest_prepare_date_response( current_time( 'mysql' ), false ), // Default to now.
+                'date_created_gmt'  => wc_rest_prepare_date_response( current_time( 'timestamp', true ) ), // Default to now.
+                'date_modified'     => wc_rest_prepare_date_response( current_time( 'mysql' ), false ),
+                'date_modified_gmt' => wc_rest_prepare_date_response( current_time( 'timestamp', true ) ),
+                'src'               => wc_placeholder_img_src(),
+                'name'              => __( 'Placeholder', 'dokan-lite' ),
+                'alt'               => __( 'Placeholder', 'dokan-lite' ),
+                'position'          => 0,
+            );
+        }
+
+        return $images;
+    }
+
+    /**
+     * Get attribute taxonomy label.
+     *
+     * @deprecated 2.8.0
+     *
+     * @param  string $name Taxonomy name.
+     * @return string
+     */
+    protected function get_attribute_taxonomy_label( $name ) {
+        $tax    = get_taxonomy( $name );
+        $labels = get_taxonomy_labels( $tax );
+
+        return $labels->singular_name;
+    }
+
+    /**
+     * Get product attribute taxonomy name.
+     *
+     * @since  2.8.0
+     * @param  string     $slug    Taxonomy name.
+     * @param  WC_Product $product Product data.
+     * @return string
+     */
+    protected function get_attribute_taxonomy_name( $slug, $product ) {
+        $attributes = $product->get_attributes();
+
+        if ( ! isset( $attributes[ $slug ] ) ) {
+            return str_replace( 'pa_', '', $slug );
+        }
+
+        $attribute = $attributes[ $slug ];
+
+        // Taxonomy attribute name.
+        if ( $attribute->is_taxonomy() ) {
+            $taxonomy = $attribute->get_taxonomy_object();
+            return $taxonomy->attribute_label;
+        }
+
+        // Custom product attribute name.
+        return $attribute->get_name();
+    }
+
+    /**
+     * Get default attributes.
+     *
+     * @param WC_Product $product Product instance.
+     * @return array
+     */
+    protected function get_default_attributes( $product ) {
+        $default = array();
+
+        if ( $product->is_type( 'variable' ) ) {
+            foreach ( array_filter( (array) $product->get_default_attributes(), 'strlen' ) as $key => $value ) {
+                if ( 0 === strpos( $key, 'pa_' ) ) {
+                    $default[] = array(
+                        'id'     => wc_attribute_taxonomy_id_by_name( $key ),
+                        'name'   => $this->get_attribute_taxonomy_name( $key, $product ),
+                        'option' => $value,
+                    );
+                } else {
+                    $default[] = array(
+                        'id'     => 0,
+                        'name'   => $this->get_attribute_taxonomy_name( $key, $product ),
+                        'option' => $value,
+                    );
+                }
+            }
+        }
+
+        return $default;
+    }
+
+    /**
+     * Get attribute options.
+     *
+     * @param int   $product_id Product ID.
+     * @param array $attribute  Attribute data.
+     * @return array
+     */
+    protected function get_attribute_options( $product_id, $attribute ) {
+        if ( isset( $attribute['is_taxonomy'] ) && $attribute['is_taxonomy'] ) {
+            return wc_get_product_terms( $product_id, $attribute['name'], array(
+                'fields' => 'names',
+            ) );
+        } elseif ( isset( $attribute['value'] ) ) {
+            return array_map( 'trim', explode( '|', $attribute['value'] ) );
+        }
+
+        return array();
+    }
+
+    /**
+     * Get the attributes for a product or product variation.
+     *
+     * @param WC_Product|WC_Product_Variation $product Product instance.
+     * @return array
+     */
+    protected function get_attributes( $product ) {
+        $attributes = array();
+
+        if ( $product->is_type( 'variation' ) ) {
+            $_product = wc_get_product( $product->get_parent_id() );
+            foreach ( $product->get_variation_attributes() as $attribute_name => $attribute ) {
+                $name = str_replace( 'attribute_', '', $attribute_name );
+
+                if ( ! $attribute ) {
+                    continue;
+                }
+
+                // Taxonomy-based attributes are prefixed with `pa_`, otherwise simply `attribute_`.
+                if ( 0 === strpos( $attribute_name, 'attribute_pa_' ) ) {
+                    $option_term = get_term_by( 'slug', $attribute, $name );
+                    $attributes[] = array(
+                        'id'     => wc_attribute_taxonomy_id_by_name( $name ),
+                        'name'   => $this->get_attribute_taxonomy_name( $name, $_product ),
+                        'option' => $option_term && ! is_wp_error( $option_term ) ? $option_term->name : $attribute,
+                    );
+                } else {
+                    $attributes[] = array(
+                        'id'     => 0,
+                        'name'   => $this->get_attribute_taxonomy_name( $name, $_product ),
+                        'option' => $attribute,
+                    );
+                }
+            }
+        } else {
+            foreach ( $product->get_attributes() as $attribute ) {
+                $attributes[] = array(
+                    'id'        => $attribute['is_taxonomy'] ? wc_attribute_taxonomy_id_by_name( $attribute['name'] ) : 0,
+                    'name'      => $this->get_attribute_taxonomy_name( $attribute['name'], $product ),
+                    'position'  => (int) $attribute['position'],
+                    'visible'   => (bool) $attribute['is_visible'],
+                    'variation' => (bool) $attribute['is_variation'],
+                    'options'   => $this->get_attribute_options( $product->get_id(), $attribute ),
+                );
+            }
+        }
+
+        return $attributes;
+    }
+
+    /**
+     * Get the downloads for a product or product variation.
+     *
+     * @param WC_Product|WC_Product_Variation $product Product instance.
+     * @return array
+     */
+    protected function get_downloads( $product ) {
+        $downloads = array();
+
+        if ( $product->is_downloadable() ) {
+            foreach ( $product->get_downloads() as $file_id => $file ) {
+                $downloads[] = array(
+                    'id'   => $file_id, // MD5 hash.
+                    'name' => $file['name'],
+                    'file' => $file['file'],
+                );
+            }
+        }
+
+        return $downloads;
+    }
+
+        /**
+     * Prepare a single product for create or update.
+     *
+     * @param  WP_REST_Request $request Request object.
+     * @param  bool            $creating If is creating a new object.
+     * @return WP_Error|WC_Data
+     */
 
     /**
      * Set product images.
