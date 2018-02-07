@@ -37,7 +37,7 @@ class Dokan_Product_Controller extends WP_REST_Controller {
      * @return void
      */
     public function register_routes() {
-         register_rest_route( $this->namespace, '/' . '/(?P<id>[\d]+)/' . $this->base, array(
+         register_rest_route( $this->namespace, '/' . $this->base, array(
             'args' => array(
                 'id' => array(
                     'description' => __( 'Unique identifier for the object.' ),
@@ -45,19 +45,21 @@ class Dokan_Product_Controller extends WP_REST_Controller {
                 ),
             ),
             array(
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => array( $this, 'get_products' ),
-                'args' => $this->get_collection_params()
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => array( $this, 'get_products' ),
+                'args'                => $this->get_collection_params(),
+                'permission_callback' => array( $this, 'get_product_permissions_check' ),
             ),
             array(
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => array( $this, 'create_product' ),
                 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+                'permission_callback' => array( $this, 'create_product_permissions_check' ),
             ),
             'schema' => array( $this, 'get_public_item_schema' ),
         ) );
 
-        register_rest_route( $this->namespace, '/' . '/(?P<id>[\d]+)/' . $this->base . '/(?P<product_id>[\d]+)/', array(
+        register_rest_route( $this->namespace, '/' . $this->base . '/(?P<product_id>[\d]+)/', array(
             'args' => array(
                 'id' => array(
                     'description' => __( 'Unique identifier for the object.' ),
@@ -65,23 +67,24 @@ class Dokan_Product_Controller extends WP_REST_Controller {
                 ),
             ),
             array(
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => array( $this, 'get_product' ),
-                'args' => $this->get_collection_params()
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => array( $this, 'get_product' ),
+                'args'                => $this->get_collection_params(),
+                'permission_callback' => array( $this, 'get_single_product_permissions_check' ),
             ),
             array(
-                'methods'  => WP_REST_Server::EDITABLE,
-                'callback' => array( $this, 'update_product' ),
-                'args'     => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+                'methods'             => WP_REST_Server::EDITABLE,
+                'callback'            => array( $this, 'update_product' ),
+                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+                'permission_callback' => array( $this, 'update_product_permissions_check' ),
             ),
             array(
-                'methods'  => WP_REST_Server::DELETABLE,
-                'callback' => array( $this, 'delete_product' ),
-            ),
-
+                'methods'             => WP_REST_Server::DELETABLE,
+                'callback'            => array( $this, 'delete_product' ),
+                'permission_callback' => array( $this, 'delete_product_permissions_check' ),
+            )
         ) );
     }
-
 
     /**
      * Get all products
@@ -91,12 +94,7 @@ class Dokan_Product_Controller extends WP_REST_Controller {
      * @return void
      */
     public function get_products( $request, $args = array() ) {
-        global $current_user;
-
-        $params   = $request->get_params();
-        $store_id = $params['id'];
-
-        wp_send_json( dokan_get_current_user_id() );
+        $store_id = dokan_get_current_user_id();
 
         if ( empty( $store_id ) ) {
             return new WP_Error( 'no_store_found', __( 'No seller found' ), array( 'status' => 404 ) );
@@ -104,9 +102,9 @@ class Dokan_Product_Controller extends WP_REST_Controller {
 
         $default = array(
             'fields'         => 'ids',
-            'posts_per_page' => $params['per_page'],
-            'paged'          => $params['page'],
-            'author'         => $current_user->ID,
+            'posts_per_page' => $request['per_page'],
+            'paged'          => $request['page'],
+            'author'         => $store_id,
             'post_status'    => array( 'publish', 'pending', 'draft' )
         );
 
@@ -137,14 +135,13 @@ class Dokan_Product_Controller extends WP_REST_Controller {
      * @return void
      */
     public function get_product( $request ) {
-        $params   = $request->get_params();
-        $store_id = $params['id'];
+        $store_id = dokan_get_current_user_id();
 
         if ( empty( $store_id ) ) {
             return new WP_Error( 'no_store_found', __( 'No seller found' ), array( 'status' => 404 ) );
         }
 
-        $product_id = $params['product_id'];
+        $product_id = $request['product_id'];
 
         if ( empty( $product_id ) ) {
             return new WP_Error( 'no_product_found', __( 'No product found' ), array( 'status' => 404 ) );
@@ -226,8 +223,7 @@ class Dokan_Product_Controller extends WP_REST_Controller {
      * @return void
      */
     public function update_product( $request ) {
-        $params   = $request->get_params();
-        $store_id = $params['id'];
+        $store_id = dokan_get_current_user_id();
 
         if ( empty( $store_id ) ) {
             return new WP_Error( 'no_store_found', __( 'No seller found' ), array( 'status' => 404 ) );
@@ -236,11 +232,16 @@ class Dokan_Product_Controller extends WP_REST_Controller {
         $object = wc_get_product( (int) $request['product_id'] );
 
         if ( ! $object || 0 === $object->get_id() ) {
-            return new WP_Error( "woocommerce_rest_{$this->post_type}_invalid_id", __( 'Invalid ID.', 'woocommerce' ), array( 'status' => 400 ) );
+            return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Invalid ID.', 'dokan-lite' ), array( 'status' => 400 ) );
+        }
+
+        $product_author = get_post_field( 'post_author', $object->get_id() );
+
+        if ( $store_id != $product_author ) {
+            return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Sorry, you have no permission to do this. Since it\'s not your product.', 'dokan-lite' ), array( 'status' => 400 ) );
         }
 
         try {
-
             $object = $this->prepare_object_for_database( $request, false );
 
             if ( is_wp_error( $object ) ) {
@@ -267,8 +268,91 @@ class Dokan_Product_Controller extends WP_REST_Controller {
      * @return void
      */
     public function delete_product( $request ) {
-        # code...
+        $store_id = dokan_get_current_user_id();
+        $object   = wc_get_product( (int) $request['product_id'] );
+        $result   = false;
+
+        if ( ! $object || 0 === $object->get_id() ) {
+            return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Invalid ID.', 'woocommerce' ), array( 'status' => 404 ) );
+        }
+
+        $product_author = get_post_field( 'post_author', $object->get_id() );
+
+        if ( $store_id != $product_author ) {
+            return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Sorry, you have no permission to do this. Since it\'s not your product.', 'dokan-lite' ), array( 'status' => 400 ) );
+        }
+
+        $data     = $this->get_product_data( $object );
+        $response = rest_ensure_response( $data );
+
+        // If we're forcing, then delete permanently.
+        $object->delete( true );
+        $result = 0 === $object->get_id();
+
+        if ( ! $result ) {
+            return new WP_Error( 'dokan_rest_cannot_delete', sprintf( __( 'The %s cannot be deleted.', 'dokan-lite' ), $this->post_type ), array( 'status' => 500 ) );
+        }
+
+        do_action( "dokan_rest_delete_{$this->post_type}_object", $object, $response, $request );
+
+        return $response;
     }
+
+    /**
+     * get_product_permissions_check
+     *
+     * @since 2.8.0
+     *
+     * @return void
+     */
+    public function get_product_permissions_check() {
+        return current_user_can( 'dokan_view_product_menu' );
+    }
+
+    /**
+     * create_product_permissions_check
+     *
+     * @since 2.8.0
+     *
+     * @return void
+     */
+    public function create_product_permissions_check() {
+        return current_user_can( 'dokan_add_product' );
+    }
+
+    /**
+     * get_single_product_permissions_check
+     *
+     * @since 2.8.0
+     *
+     * @return void
+     */
+    public function get_single_product_permissions_check() {
+        return current_user_can( 'dokandar' );
+    }
+
+    /**
+     * update_product_permissions_check
+     *
+     * @since 2.8.0
+     *
+     * @return void
+     */
+    public function update_product_permissions_check() {
+        return current_user_can( 'dokan_edit_product' );
+    }
+
+    /**
+     * Delete product permission checking
+     *
+     * @since 2.8.0
+     *
+     * @return void
+     */
+    public function delete_product_permissions_check() {
+        return current_user_can( 'dokan_delete_product' );
+    }
+
     /**
      * Get product data.
      *
@@ -397,7 +481,6 @@ class Dokan_Product_Controller extends WP_REST_Controller {
 
         return $response;
     }
-
 
     /**
      * Get taxonomy terms.
@@ -651,8 +734,16 @@ class Dokan_Product_Controller extends WP_REST_Controller {
      * @param  bool            $creating If is creating a new object.
      * @return WP_Error|WC_Data
      */
+
+    /**
+     * Prepare object for database mapping
+     *
+     * @param objec  $request
+     * @param boolean $creating
+     *
+     * @return object
+     */
     protected function prepare_object_for_database( $request, $creating = false ) {
-        $store_id = ! empty( $request['id'] ) ? absint( $request['id'] ) : 0;
         $id = isset( $request['product_id'] ) ? absint( $request['product_id'] ) : 0;
 
         // Type is the most important part here because we need to be using the correct class and methods.
@@ -668,12 +759,6 @@ class Dokan_Product_Controller extends WP_REST_Controller {
             $product = wc_get_product( $id );
         } else {
             $product = new WC_Product_Simple();
-        }
-
-        if ( empty( $store_id ) ) {
-            return new WP_Error( "dokan_no_seller_found", __( 'No vendor found', 'dokan-lite' ), array(
-                'status' => 404,
-            ) );
         }
 
         if ( 'variation' === $product->get_type() ) {

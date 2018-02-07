@@ -193,7 +193,8 @@ class Dokan_Store_Controller extends WP_REST_Controller {
         $product_controller = new Dokan_Product_Controller();
 
         $args = array(
-            'post_status' => array( 'publish' )
+            'post_status' => array( 'publish' ),
+            'author'      => $request['id']
         );
 
         $response = $product_controller->get_products( $request, $args );
