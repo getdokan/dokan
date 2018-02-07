@@ -36,6 +36,15 @@ class Dokan_Product_Controller extends Dokan_REST_Controller {
     protected $post_status = array( 'publish', 'pending', 'draft' );
 
     /**
+     * Load autometically when class initiate
+     *
+     * @since 2.8.0
+     */
+    public function __construct() {
+
+    }
+
+    /**
      * Register all routes releated with stores
      *
      * @return void
@@ -329,7 +338,7 @@ class Dokan_Product_Controller extends Dokan_REST_Controller {
             'meta_data'             => $product->get_meta_data(),
         );
 
-        return $data;
+        return apply_filters( "dokan_rest_prepare_{$this->post_type}_object", $data );
     }
 
     /**
