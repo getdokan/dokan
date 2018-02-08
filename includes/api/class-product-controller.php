@@ -264,7 +264,8 @@ class Dokan_Product_Controller extends Dokan_REST_Controller {
      *                            Options: 'view' and 'edit'.
      * @return array
      */
-    protected function prepare_data_for_response( $product, $context = 'view' ) {
+    protected function prepare_data_for_response( $product, $request ) {
+        $context = ! empty( $request['context'] ) ? $request['context'] : 'view';
         $data = array(
             'id'                    => $product->get_id(),
             'name'                  => $product->get_name( $context ),

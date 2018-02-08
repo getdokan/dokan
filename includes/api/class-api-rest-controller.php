@@ -29,6 +29,8 @@ abstract class Dokan_REST_Controller extends WP_REST_Controller {
 
         $query_args = $this->prepare_objects_query( $request );
 
+        error_log( print_r( $query_args, true ) );
+
         $query  = new WP_Query();
         $result = $query->query( $query_args );
 
@@ -36,7 +38,7 @@ abstract class Dokan_REST_Controller extends WP_REST_Controller {
         $objects = array_map( array( $this, 'get_object' ), $result );
 
         foreach ( $objects as $object ) {
-            $data[] = $this->prepare_data_for_response( $object );
+            $data[] = $this->prepare_data_for_response( $object, $request );
         }
 
         $response = rest_ensure_response( $data );
@@ -62,7 +64,7 @@ abstract class Dokan_REST_Controller extends WP_REST_Controller {
             return new WP_Error( "dokan_rest_invalid_{$this->post_type}_id", __( 'Invalid ID.', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
-        $data     = $this->prepare_data_for_response( $this->get_object( $post ) );
+        $data     = $this->prepare_data_for_response( $this->get_object( $post ), $request );
         $response = rest_ensure_response( $data );
 
         return $response;
@@ -94,7 +96,7 @@ abstract class Dokan_REST_Controller extends WP_REST_Controller {
 
             //Update post author
             wp_update_post( array( 'ID' => $object->get_id(), 'post_author' => dokan_get_current_user_id() ) );
-            return $this->prepare_data_for_response( $this->get_object( $object->get_id() ) );
+            return $this->prepare_data_for_response( $this->get_object( $object->get_id() ), $request );
         } catch ( WC_Data_Exception $e ) {
             return new WP_Error( $e->getErrorCode(), $e->getMessage(), $e->getErrorData() );
         } catch ( WC_REST_Exception $e ) {
@@ -125,7 +127,7 @@ abstract class Dokan_REST_Controller extends WP_REST_Controller {
 
             $object->save();
             $this->update_additional_fields_for_object( $object, $request );
-            return $this->prepare_data_for_response( $this->get_object( $object->get_id() ) );
+            return $this->prepare_data_for_response( $this->get_object( $object->get_id() ), $request );
         } catch ( WC_Data_Exception $e ) {
             return new WP_Error( $e->getErrorCode(), $e->getMessage(), $e->getErrorData() );
         } catch ( WC_REST_Exception $e ) {
@@ -149,7 +151,7 @@ abstract class Dokan_REST_Controller extends WP_REST_Controller {
         }
 
         $object   = $this->get_object( (int) $request['id'] );
-        $data     = $this->prepare_data_for_response( $object );
+        $data     = $this->prepare_data_for_response( $object, $request );
         $response = rest_ensure_response( $data );
 
         // If we're forcing, then delete permanently.
