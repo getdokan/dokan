@@ -24,9 +24,10 @@ class Dokan_API_Register {
             DOKAN_DIR . '/includes/api/class-store-controller.php'             => 'Dokan_Store_Controller',
             DOKAN_DIR . '/includes/api/class-product-controller.php'           => 'Dokan_Product_Controller',
             DOKAN_DIR . '/includes/api/class-order-controller.php'             => 'Dokan_Order_Controller',
+            DOKAN_DIR . '/includes/api/class-withdraw-controller.php'          => 'Dokan_Withdraw_Controller',
+            DOKAN_DIR . '/includes/api/class-product-variation-controller.php' => 'Dokan_Product_Variation_Controller',
             DOKAN_DIR . '/includes/api/class-store-controller.php'             => 'Dokan_Store_Controller',
             DOKAN_DIR . '/includes/api/class-dokan-settings-controller.php'    => 'Dokan_REST_Settings_Controller',
-            DOKAN_DIR . '/includes/api/class-product-variation-controller.php' => 'Dokan_Product_Variation_Controller'
         ) );
 
         // Init REST API routes.

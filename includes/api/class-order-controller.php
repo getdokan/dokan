@@ -94,6 +94,18 @@ class Dokan_Order_Controller extends Dokan_REST_Controller{
                 'args'                => $this->get_collection_params(),
                 'permission_callback' => array( $this, 'get_single_order_permissions_check' ),
             ),
+            array(
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => array( $this, 'create_order_note' ),
+                'permission_callback' => array( $this, 'get_single_order_permissions_check' ),
+                'args'                => array_merge( $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ), array(
+                    'note' => array(
+                        'type'        => 'string',
+                        'description' => __( 'Order note content.', 'dokan-lite' ),
+                        'required'    => true,
+                    ),
+                ) ),
+            ),
         ) );
 
         register_rest_route( $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/notes/(?P<note_id>[\d]+)', array(
@@ -347,6 +359,51 @@ class Dokan_Order_Controller extends Dokan_REST_Controller{
         }
 
         return rest_ensure_response( $data );
+    }
+
+    /**
+     * Create note for an Order
+     *
+     * @since 2.8.0
+     *
+     * @return void
+     */
+    public function create_order_note( $request ) {
+        if ( ! empty( $request['note_id'] ) ) {
+            return new WP_Error( "dokan_rest_{$this->post_type}_exists", sprintf( __( 'Cannot create existing %s.', 'dokan-lite' ), $this->post_type ), array( 'status' => 400 ) );
+        }
+
+        $order = wc_get_order( (int) $request['id'] );
+        $order_author_id = get_post_field( 'post_author', $order->get_id() );
+
+        if ( $order_author_id != dokan_get_current_user_id() ) {
+            return new WP_Error( "dokan_rest_{$this->post_type}_incorrect_order_author", __( 'You have no permission to create this notes', 'dokan-lite' ), array( 'status' => 404 ) );
+        }
+
+        if ( ! $order || $this->post_type !== $order->get_type() ) {
+            return new WP_Error( 'woocommerce_rest_order_invalid_id', __( 'Invalid order ID.', 'dokan-lite' ), array( 'status' => 404 ) );
+        }
+
+        // Create the note.
+        $note_id = $order->add_order_note( $request['note'], $request['customer_note'] );
+
+        if ( ! $note_id ) {
+            return new WP_Error( 'dokan_api_cannot_create_order_note', __( 'Cannot create order note, please try again.', 'dokan-lite' ), array( 'status' => 500 ) );
+        }
+
+        $note = get_comment( $note_id );
+        $this->update_additional_fields_for_object( $note, $request );
+
+        do_action( 'dokan_rest_insert_order_note', $note, $request, true );
+
+        $request->set_param( 'context', 'edit' );
+        $response = $this->prepare_item_for_response( $note, $request );
+        $response = rest_ensure_response( $response );
+        $response->set_status( 201 );
+        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, str_replace( '(?P<id>[\d]+)', $order->get_id(), $this->rest_base ), $note_id ) ) );
+
+        return $response;
+
     }
 
     /**
