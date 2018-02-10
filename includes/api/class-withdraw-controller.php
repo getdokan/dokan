@@ -48,15 +48,50 @@ class Dokan_Withdraw_Controller extends WP_REST_Controller {
                 ) ),
                 'permission_callback' => array( $this, 'get_withdraw_permissions_check' ),
             ),
-            // array(
-            //     'methods'             => WP_REST_Server::CREATABLE,
-            //     'callback'            => array( $this, 'create_item' ),
-            //     'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
-            //     'permission_callback' => array( $this, 'create_product_permissions_check' ),
-            // ),
-            // 'schema' => array( $this, 'get_public_item_schema' ),
+            array(
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => array( $this, 'create_withdraw' ),
+                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+                'permission_callback' => array( $this, 'get_withdraw_permissions_check' ),
+            ),
         ) );
 
+        register_rest_route( $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/', array(
+            'args' => array(
+                'id' => array(
+                    'description' => __( 'Unique identifier for the object.' ),
+                    'type'        => 'integer',
+                ),
+            ),
+            array(
+                'methods'             => WP_REST_Server::EDITABLE,
+                'callback'            => array( $this, 'cancel_withdraw_status' ),
+                'args'                => array(
+                    'status' => array(
+                        'type'        => 'string',
+                        'description' => __( 'Withdraw status', 'dokan-lite' ),
+                        'required'    => false,
+                    )
+                ),
+                'permission_callback' => array( $this, 'get_withdraw_permissions_check' ),
+            ),
+        ) );
+
+        register_rest_route( $this->namespace, '/' . $this->base . '/balance/', array(
+            array(
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => array( $this, 'get_balance' ),
+                'args'                => array(
+                    'formatted' => array(
+                        'type'        => 'boolean',
+                        'description' => __( 'Formatted balance', 'dokan-lite' ),
+                        'required'    => false,
+                    )
+                ),
+                'permission_callback' => array( $this, 'get_withdraw_permissions_check' ),
+            ),
+
+        ) );
     }
 
     /**
@@ -96,11 +131,13 @@ class Dokan_Withdraw_Controller extends WP_REST_Controller {
             return new WP_Error( 'no_store_found', __( 'No vendor found' ), array( 'status' => 404 ) );
         }
 
-        $status = ! empty( $request['status'] ) ? $request['status'] : 'pending';
+        $status = ! empty( $request['status'] ) ? $request['status'] : '';
         $withdraw = new Dokan_Template_Withdraw();
 
         if ( ! empty( $status ) ) {
-            $withdraws = $withdraw->get_withdraw_requests( $store_id, $this->get_status( $status ), $request['per_page'] );
+            $withdraws = $withdraw->get_withdraw_requests( $store_id, $this->get_status( $status ), 100 );
+        } else {
+            $withdraws = $withdraw->get_all_withdraws( $store_id );
         }
 
         $data = array();
@@ -113,6 +150,130 @@ class Dokan_Withdraw_Controller extends WP_REST_Controller {
     }
 
     /**
+     * Cancel withdraw status
+     *
+     * @since 2.8.0
+     *
+     * @return void
+     */
+    public function cancel_withdraw_status( $request ) {
+        global $wpdb;
+        $store_id = dokan_get_current_user_id();
+
+        if ( empty( $request['id'] ) ) {
+            return new WP_Error( 'no_id', __( 'Invalid ID', 'dokan-lite' ), array( 'status' => 404 ) );
+        }
+
+        if ( empty( $store_id ) ) {
+            return new WP_Error( 'no_store_found', __( 'No vendor found' ), array( 'status' => 404 ) );
+        }
+
+        $status = ! empty( $request['status'] ) ? $request['status'] : 'cancelled';
+
+        if ( $status != 'cancelled' ) {
+            return new WP_Error( 'cancel_request', __( 'Vendor can only cancell withdraw status', 'dokan-lite' ), array( 'status' => 404 ) );
+        }
+
+        $sql    = "SELECT * FROM `{$wpdb->prefix}dokan_withdraw` WHERE `id`={$request['id']}";
+        $result = $wpdb->get_row( $sql );
+
+        if ( $result->status != '0' ) {
+            return new WP_Error( 'not_cancel_request', __( 'This withdraw is not pending. Only pending request can be cancelled', 'dokan-lite' ), array( 'status' => 404 ) );
+        }
+
+        $withdraw = new Dokan_Template_Withdraw();
+        $withdraw->update_status( $request['id'], $store_id, 2 );
+
+        return rest_ensure_response( $this->prepare_response_for_object( $result, $request ) );
+    }
+
+    /**
+     * Get balance
+     *
+     * @since 2.8.0
+     *
+     * @return void
+     */
+    public function get_balance( $request ) {
+        $store_id = dokan_get_current_user_id();
+
+        if ( empty( $store_id ) ) {
+            return new WP_Error( 'no_store_found', __( 'No vendor found' ), array( 'status' => 404 ) );
+        }
+
+        $formatted = false;
+
+        if ( $request['formatted'] ) {
+            $formatted = true;
+        }
+
+        $balance        = dokan_get_seller_balance( $store_id, false );
+        $withdraw_limit = dokan_get_option( 'withdraw_limit', 'dokan_withdraw', -1 );
+        $threshold      = dokan_get_option( 'withdraw_date_limit', 'dokan_withdraw', -1 );
+
+        $data = array(
+            'current_balance'    => $balance,
+            'withdraw_limit'     => $withdraw_limit,
+            'withdraw_threshold' => $threshold,
+        );
+
+        return rest_ensure_response( $data );
+    }
+
+    /**
+     * Make a withdraw request
+     *
+     * @since 2.8.0
+     *
+     * @return void
+     */
+    public function create_withdraw( $request ) {
+        global $wpdb;
+        $store_id = dokan_get_current_user_id();
+
+        if ( empty( $store_id ) ) {
+            return new WP_Error( 'no_store_found', __( 'No vendor found', 'dokan-lite' ), array( 'status' => 404 ) );
+        }
+
+        $amount = floatval( $request['amount'] );
+        $method = $request['method'];
+        $notes  = $request['notes'];
+
+        if ( empty( $amount ) ) {
+            return new WP_Error( 'no_amount_found', __( 'Requested amount must be grater than 0', 'dokan-lite' ), array( 'status' => 404 ) );
+        }
+
+        if ( empty( $method ) ) {
+            return new WP_Error( 'no_payment_method', __( 'Withdraw method must be required', 'dokan-lite' ), array( 'status' => 404 ) );
+        }
+
+        $withdraw = new Dokan_Template_Withdraw();
+
+        $data_info = array(
+            'user_id' => $store_id,
+            'amount'  => $amount,
+            'status'  => 0,
+            'method'  => $method,
+            'ip'      => dokan_get_client_ip(),
+            'notes'   => $notes
+        );
+
+        $update = $withdraw->insert_withdraw( $data_info );
+
+        if ( ! $update ) {
+            return new WP_Error( 'not_updated', __( 'Does not created withdraw request. Try again', 'dokan-lite' ), array( 'status' => 404 ) );
+        }
+
+        unset( $data_info['user_id'] );
+
+        $data_info['id']           = $wpdb->insert_id;
+        $data_info['user']         = $this->get_user_data( $store_id, $request );
+        $data_info['created_data'] = mysql_to_rfc3339( date( 'Y-m-d h:i:s' ) );
+
+        return rest_ensure_response( $data_info );
+    }
+
+    /**
      * Prepare data for response
      *
      * @since 2.8.0
@@ -122,7 +283,7 @@ class Dokan_Withdraw_Controller extends WP_REST_Controller {
     public function prepare_response_for_object( $object, $request ) {
         $data = array(
             'id'           => $object->id,
-            'user'         => $this->get_user_data( $object, $request ),
+            'user'         => $this->get_user_data( $object->user_id, $request ),
             'amount'       => $object->amount,
             'created_data' => mysql_to_rfc3339( $object->date ),
             'status'       => $this->get_status( (int)$object->status ),
@@ -141,9 +302,9 @@ class Dokan_Withdraw_Controller extends WP_REST_Controller {
      *
      * @return return object
      */
-    public function get_user_data( $object, $request ) {
+    public function get_user_data( $user_id, $request ) {
         $store_controller = new Dokan_Store_Controller();
-        $user = new WP_User( $object->user_id );
+        $user = new WP_User( $user_id );
         return $store_controller->prepare_item_for_response( $user, $request );
     }
 
@@ -157,5 +318,64 @@ class Dokan_Withdraw_Controller extends WP_REST_Controller {
     public function get_withdraw_permissions_check() {
         return current_user_can( 'dokan_manage_withdraw' );
     }
+
+        /**
+     * Get the Coupon's schema, conforming to JSON Schema.
+     *
+     * @return array
+     */
+    public function get_item_schema() {
+        $schema = array(
+            '$schema'    => 'http://json-schema.org/draft-04/schema#',
+            'title'      => 'Withdraw',
+            'type'       => 'object',
+            'properties' => array(
+                'id' => array(
+                    'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
+                    'type'        => 'integer',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
+                ),
+                'user' => array(
+                    'description' => __( 'Requested User', 'dokan-lite' ),
+                    'type'        => 'integer',
+                    'context'     => array( 'view' ),
+                ),
+                'amount' => array(
+                    'description' => __( 'The amount of discount. Should always be numeric, even if setting a percentage.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                ),
+                'created_data' => array(
+                    'description' => __( "The date the withdraw request has beed created in the site's timezone.", 'dokan-lite' ),
+                    'type'        => 'date-time',
+                    'context'     => array( 'view' ),
+                ),
+                'status' => array(
+                    'description' => __( "Withdraw status", 'dokan-lite' ),
+                    'type'        => 'integer',
+                    'context'     => array( 'view' ),
+                ),
+                'method' => array(
+                    'description' => __( "Withdraw Method", 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                ),
+                'notes' => array(
+                    'description' => __( "Withdraw Notes", 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                ),
+                'ip' => array(
+                    'description' => __( "User IP", 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                ),
+            ),
+        );
+
+        return $this->add_additional_fields_schema( $schema );
+    }
+
 
 }
