@@ -7,6 +7,8 @@ Version: 2.7.6
 Author: weDevs
 Author URI: https://wedevs.com/
 Text Domain: dokan-lite
+WC requires at least: 2.6
+WC tested up to: 3.3.1
 Domain Path: /languages/
 License: GPL2
 */
