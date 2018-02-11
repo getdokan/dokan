@@ -403,6 +403,18 @@ function dokan_admin_report( $group_by = 'day', $year = '' ) {
 
     ?>
 
+    <style type="text/css">
+        .chart-tooltip {
+            position: absolute;
+            display: none;
+            line-height: 1;
+            background: #333;
+            color: #fff;
+            padding: 3px 5px;
+            font-size: 11px;
+            border-radius: 3px;
+        }
+    </style>
     <script type="text/javascript">
         jQuery(function($) {
 
@@ -769,6 +781,18 @@ function dokan_admin_report_by_seller( $chosen_seller_id) {
     );
     ?>
 
+    <style type="text/css">
+        .chart-tooltip {
+            position: absolute;
+            display: none;
+            line-height: 1;
+            background: #333;
+            color: #fff;
+            padding: 3px 5px;
+            font-size: 11px;
+            border-radius: 3px;
+        }
+    </style>
     <script type="text/javascript">
         jQuery(function($) {
 
