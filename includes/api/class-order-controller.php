@@ -7,7 +7,7 @@
 *
 * @package dokan
 */
-class Dokan_Order_Controller extends Dokan_REST_Controller{
+class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
 
     /**
      * Endpoint namespace

@@ -7,7 +7,7 @@
 *
 * @author weDevs <info@wedevs.com>
 */
-class Dokan_Product_Controller extends Dokan_REST_Controller {
+class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
 
     /**
      * Endpoint namespace
@@ -50,7 +50,7 @@ class Dokan_Product_Controller extends Dokan_REST_Controller {
      * @return void
      */
     public function register_routes() {
-         register_rest_route( $this->namespace, '/' . $this->base, array(
+        register_rest_route( $this->namespace, '/' . $this->base, array(
             'args' => array(
                 'id' => array(
                     'description' => __( 'Unique identifier for the object.' ),

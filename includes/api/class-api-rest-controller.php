@@ -26,10 +26,7 @@ abstract class Dokan_REST_Controller extends WP_REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_items( $request ) {
-
         $query_args = $this->prepare_objects_query( $request );
-
-        error_log( print_r( $query_args, true ) );
 
         $query  = new WP_Query();
         $result = $query->query( $query_args );
@@ -371,7 +368,7 @@ abstract class Dokan_REST_Controller extends WP_REST_Controller {
         $max_pages = ceil( $total_items / $per_page );
 
         $response->header( 'X-WP-TotalPages', (int) $max_pages );
-        $base = add_query_arg( $request->get_query_params(), rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ) );
+        $base = add_query_arg( $request->get_query_params(), rest_url( sprintf( '/%s/%s', $this->namespace, $this->base ) ) );
 
         if ( $page > 1 ) {
             $prev_page = $page - 1;

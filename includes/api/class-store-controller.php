@@ -7,7 +7,7 @@
 *
 * @author weDevs <info@wedevs.com>
 */
-class Dokan_Store_Controller extends WP_REST_Controller {
+class Dokan_REST_Store_Controller extends WP_REST_Controller {
 
     /**
      * Endpoint namespace
@@ -162,7 +162,7 @@ class Dokan_Store_Controller extends WP_REST_Controller {
         $max_pages = ceil( $total_items / $per_page );
 
         $response->header( 'X-WP-TotalPages', (int) $max_pages );
-        $base = add_query_arg( $request->get_query_params(), rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ) );
+        $base = add_query_arg( $request->get_query_params(), rest_url( sprintf( '/%s/%s', $this->namespace, $this->base ) ) );
 
         if ( $page > 1 ) {
             $prev_page = $page - 1;

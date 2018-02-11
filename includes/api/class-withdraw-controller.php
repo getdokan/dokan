@@ -7,7 +7,7 @@
 *
 * @package dokan
 */
-class Dokan_Withdraw_Controller extends WP_REST_Controller {
+class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
 
     /**
      * Endpoint namespace.
