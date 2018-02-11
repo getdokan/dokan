@@ -92,15 +92,23 @@ function dokan_get_seller_orders_by_date( $start_date, $end_date, $seller_id = f
 
     $seller_id = ! $seller_id ? dokan_get_current_user_id() : intval( $seller_id );
 
-    $end_date   = date( 'Y-m-d 00:00:00', strtotime( $end_date ) );
-    $end_date   = date( 'Y-m-d h:i:s', strtotime( $end_date . '-1 minute' ) );
-    $start_date = date( 'Y-m-d', strtotime( $start_date ) );
+    $end_date    = date( 'Y-m-d 00:00:00', strtotime( $end_date ) );
+    $end_date    = date( 'Y-m-d h:i:s', strtotime( $end_date . '-1 minute' ) );
+    $start_date  = date( 'Y-m-d', strtotime( $start_date ) );
 
-    $cache_group = 'dokan_seller_data_'.$seller_id;
-    $cache_key = md5( 'dokan-seller-orders-' . $end_date . '-' . $end_date. '-' . $seller_id );
-    $orders = wp_cache_get( $cache_key, $cache_group );
+    $cache_group = 'dokan_seller_data_' . $seller_id;
+    $cache_key   = md5( 'dokan-seller-orders-' . $end_date . '-' . $end_date. '-' . $seller_id );
+    $orders      = wp_cache_get( $cache_key, $cache_group );
+
     if ( $orders === false ) {
-        $status_where = ( $status == 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', $status );
+        $status_where = '';
+
+        if ( is_array( $status ) ) {
+            $status_where = sprintf( " AND order_status IN ('%s')", implode( "', '", $status ) );
+        } else {
+            $status_where = $wpdb->prepare( ' AND order_status = %s', $status );
+        }
+
         $date_query = $wpdb->prepare( ' AND DATE( p.post_date ) >= %s AND DATE( p.post_date ) <= %s', $start_date, $end_date );
         $sql = "SELECT do.*, p.post_date
                 FROM {$wpdb->prefix}dokan_orders AS do
@@ -112,6 +120,7 @@ function dokan_get_seller_orders_by_date( $start_date, $end_date, $seller_id = f
                     $status_where
                 GROUP BY do.order_id
                 ORDER BY p.post_date ASC";
+
         $orders = $wpdb->get_results( $wpdb->prepare( $sql, $seller_id ) );
 
         wp_cache_set( $cache_key, $orders, $cache_group, 3600*2 );
