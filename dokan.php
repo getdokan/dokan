@@ -106,7 +106,7 @@ final class WeDevs_Dokan {
         register_activation_hook( __FILE__, array( $this, 'activate' ) );
         register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
 
-        add_action( 'plugins_loaded', array( $this, 'init_plugin' ) );
+        add_action( 'woocommerce_loaded', array( $this, 'init_plugin' ) );
     }
 
     /**
@@ -231,9 +231,9 @@ final class WeDevs_Dokan {
      * @return void
      */
     public function init_plugin() {
-        if ( ! function_exists( 'WC' ) ) {
-            return;
-        }
+        // if ( ! function_exists( 'WC' ) ) {
+        //     return;
+        // }
 
         $this->includes();
 
@@ -254,7 +254,7 @@ final class WeDevs_Dokan {
         add_action( 'init', array( $this, 'localization_setup' ) );
 
         // initialize the classes
-        add_action( 'after_setup_theme', array( $this, 'init_classes' ) );
+        add_action( 'init', array( $this, 'init_classes' ),5 );
         add_action( 'init', array( $this, 'wpdb_table_shortcuts' ) );
 
         add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), array( $this, 'plugin_action_links' ) );
@@ -322,11 +322,13 @@ final class WeDevs_Dokan {
             new Dokan_Admin_User_Profile();
             Dokan_Admin_Ajax::init();
             new Dokan_Upgrade();
+            new Dokan_Setup_Wizard();
         }
 
         new Dokan_Pageviews();
         new Dokan_Rewrites();
         new Dokan_Tracker();
+        new Dokan_Seller_Setup_Wizard();
 
         $this->container['core']    = new Dokan_Core();
         $this->container['scripts'] = new Dokan_Scripts();
