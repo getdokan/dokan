@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Dokan 2.7.7\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2018-02-12 05:22:04+00:00\n"
+"POT-Creation-Date: 2018-02-12 05:34:29+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -28,164 +28,164 @@ msgstr ""
 msgid "1"
 msgstr ""
 
-#: classes/admin-user-profile.php:36 includes/class-scripts.php:114
+#: classes/admin-user-profile.php:35 includes/class-scripts.php:114
 msgid "Available"
 msgstr ""
 
-#: classes/admin-user-profile.php:37 includes/class-scripts.php:115
+#: classes/admin-user-profile.php:36 includes/class-scripts.php:115
 msgid "Not Available"
 msgstr ""
 
-#: classes/admin-user-profile.php:81 classes/seller-setup-wizard.php:275
+#: classes/admin-user-profile.php:82 classes/seller-setup-wizard.php:275
 msgid "Country"
 msgstr ""
 
-#: classes/admin-user-profile.php:85
+#: classes/admin-user-profile.php:86
 msgid "Select a country&hellip;"
 msgstr ""
 
-#: classes/admin-user-profile.php:88
+#: classes/admin-user-profile.php:89
 msgid "State/County"
 msgstr ""
 
-#: classes/admin-user-profile.php:89
+#: classes/admin-user-profile.php:90
 msgid "State/County or state code"
 msgstr ""
 
-#: classes/admin-user-profile.php:94
+#: classes/admin-user-profile.php:95
 msgid "Dokan Options"
 msgstr ""
 
-#: classes/admin-user-profile.php:99
+#: classes/admin-user-profile.php:100
 msgid "Banner"
 msgstr ""
 
-#: classes/admin-user-profile.php:111 templates/settings/store-form.php:69
+#: classes/admin-user-profile.php:112 templates/settings/store-form.php:69
 msgid "Upload banner"
 msgstr ""
 
-#: classes/admin-user-profile.php:112
+#: classes/admin-user-profile.php:113
 msgid "(Upload a banner for your store. Banner size is (825x300) pixels. )"
 msgstr ""
 
-#: classes/admin-user-profile.php:119
+#: classes/admin-user-profile.php:120
 msgid "Store name"
 msgstr ""
 
-#: classes/admin-user-profile.php:126
+#: classes/admin-user-profile.php:127
 msgid "Store URL"
 msgstr ""
 
-#: classes/admin-user-profile.php:134
+#: classes/admin-user-profile.php:135
 msgid "Address 1"
 msgstr ""
 
-#: classes/admin-user-profile.php:141
+#: classes/admin-user-profile.php:142
 msgid "Address 2"
 msgstr ""
 
-#: classes/admin-user-profile.php:148
+#: classes/admin-user-profile.php:149
 msgid "Town/City"
 msgstr ""
 
-#: classes/admin-user-profile.php:155
+#: classes/admin-user-profile.php:156
 msgid "Zip Code"
 msgstr ""
 
-#: classes/admin-user-profile.php:195 classes/pageviews.php:153
+#: classes/admin-user-profile.php:196 classes/pageviews.php:153
 #: templates/global/seller-registration-form.php:38
 msgid "Phone Number"
 msgstr ""
 
-#: classes/admin-user-profile.php:213
+#: classes/admin-user-profile.php:214
 msgid "Payment Options : "
 msgstr ""
 
-#: classes/admin-user-profile.php:218
+#: classes/admin-user-profile.php:219
 msgid "Paypal Email "
 msgstr ""
 
-#: classes/admin-user-profile.php:226
+#: classes/admin-user-profile.php:227
 msgid "Skrill Email "
 msgstr ""
 
-#: classes/admin-user-profile.php:235
+#: classes/admin-user-profile.php:236
 msgid "Bank name "
 msgstr ""
 
-#: classes/admin-user-profile.php:241
+#: classes/admin-user-profile.php:242
 msgid "Account Name "
 msgstr ""
 
-#: classes/admin-user-profile.php:247
+#: classes/admin-user-profile.php:248
 msgid "Account Number "
 msgstr ""
 
-#: classes/admin-user-profile.php:253
+#: classes/admin-user-profile.php:254
 msgid "Bank Address "
 msgstr ""
 
-#: classes/admin-user-profile.php:259
+#: classes/admin-user-profile.php:260
 msgid "Bank Swift "
 msgstr ""
 
-#: classes/admin-user-profile.php:266 includes/admin/setup-wizard.php:88
+#: classes/admin-user-profile.php:267 includes/admin/setup-wizard.php:88
 msgid "Selling"
 msgstr ""
 
-#: classes/admin-user-profile.php:271
+#: classes/admin-user-profile.php:272
 msgid "Enable Adding Products"
 msgstr ""
 
-#: classes/admin-user-profile.php:274
+#: classes/admin-user-profile.php:275
 msgid "Enable or disable product adding capability"
 msgstr ""
 
-#: classes/admin-user-profile.php:279
+#: classes/admin-user-profile.php:280
 msgid "Publishing"
 msgstr ""
 
-#: classes/admin-user-profile.php:284
+#: classes/admin-user-profile.php:285
 msgid "Publish product directly"
 msgstr ""
 
-#: classes/admin-user-profile.php:287
+#: classes/admin-user-profile.php:288
 msgid "Bypass pending, publish products directly"
 msgstr ""
 
-#: classes/admin-user-profile.php:292
+#: classes/admin-user-profile.php:293
 msgid "Admin Commission Type "
 msgstr ""
 
-#: classes/admin-user-profile.php:295 includes/admin/class-settings.php:136
+#: classes/admin-user-profile.php:296 includes/admin/class-settings.php:136
 msgid "Percentage"
 msgstr ""
 
-#: classes/admin-user-profile.php:296 includes/admin/class-settings.php:135
+#: classes/admin-user-profile.php:297 includes/admin/class-settings.php:135
 msgid "Flat"
 msgstr ""
 
-#: classes/admin-user-profile.php:298
+#: classes/admin-user-profile.php:299
 msgid "Set the commmission type admin gets from this seller"
 msgstr ""
 
-#: classes/admin-user-profile.php:302
+#: classes/admin-user-profile.php:303
 msgid "Admin Commission "
 msgstr ""
 
-#: classes/admin-user-profile.php:306
+#: classes/admin-user-profile.php:307
 msgid "It will override the default commission admin gets from each sales"
 msgstr ""
 
-#: classes/admin-user-profile.php:311
+#: classes/admin-user-profile.php:312
 msgid "Featured vendor"
 msgstr ""
 
-#: classes/admin-user-profile.php:316
+#: classes/admin-user-profile.php:317
 msgid "Mark as featured vendor"
 msgstr ""
 
-#: classes/admin-user-profile.php:319
+#: classes/admin-user-profile.php:320
 msgid "This vendor will be marked as a featured vendor."
 msgstr ""
 
