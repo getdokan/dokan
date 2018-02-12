@@ -529,5 +529,3 @@ class Dokan_Setup_Wizard {
         <?php
     }
 }
-
-new Dokan_Setup_Wizard();

@@ -510,4 +510,3 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
     }
 }
 
-new Dokan_Seller_Setup_Wizard();
