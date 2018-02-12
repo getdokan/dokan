@@ -26,19 +26,20 @@ class Dokan_Admin_User_Profile {
     function enqueue_scripts( $page ) {
         if ( in_array( $page, array( 'profile.php', 'user-edit.php' )) ) {
             wp_enqueue_media();
+
+            $admin_admin_script = array(
+                'ajaxurl'           => admin_url( 'admin-ajax.php' ),
+                'nonce'             => wp_create_nonce( 'dokan_reviews' ),
+                'ajax_loader'       => DOKAN_PLUGIN_ASSEST.'/images/ajax-loader.gif',
+                'seller'            => array(
+                    'available'     => __( 'Available', 'dokan-lite' ),
+                    'notAvailable'  => __( 'Not Available', 'dokan-lite' )
+                ),
+            );
+
+            wp_localize_script( 'jquery', 'dokan_user_profile', $admin_admin_script );
         }
 
-        $admin_admin_script = array(
-            'ajaxurl'           => admin_url( 'admin-ajax.php' ),
-            'nonce'             => wp_create_nonce( 'dokan_reviews' ),
-            'ajax_loader'       => DOKAN_PLUGIN_ASSEST.'/images/ajax-loader.gif',
-            'seller'            => array(
-                'available'     => __( 'Available', 'dokan-lite' ),
-                'notAvailable'  => __( 'Not Available', 'dokan-lite' )
-            ),
-        );
-
-        wp_localize_script( 'jquery', 'dokan_admin', $admin_admin_script );
     }
 
     /**
@@ -452,7 +453,7 @@ class Dokan_Admin_User_Profile {
                 data = {
                     action : 'shop_url',
                     url_slug : self.val(),
-                    _nonce : dokan_admin.nonce,
+                    _nonce : dokan_user_profile.nonce,
                 };
 
                 if ( self.val() === '' ) {
@@ -461,25 +462,21 @@ class Dokan_Admin_User_Profile {
 
                 var row = self.closest('td');
 
-                row.block({ message: null, overlayCSS: { background: '#f1f1f1 url(' + dokan_admin.ajax_loader + ') no-repeat center', opacity: 0.3 } });
+                row.block({ message: null, overlayCSS: { background: '#f1f1f1 url(' + dokan_user_profile.ajax_loader + ') no-repeat center', opacity: 0.3 } });
 
-                $.post( dokan_admin.ajaxurl, data, function(resp) {
+                $.post( dokan_user_profile.ajaxurl, data, function(resp) {
 
                     if ( resp == 0){
                         $('#url-alart').removeClass('text-success').addClass('text-danger');
-                        $('#url-alart-mgs').removeClass('text-success').addClass('text-danger').text(dokan_admin.seller.notAvailable);
+                        $('#url-alart-mgs').removeClass('text-success').addClass('text-danger').text(dokan_user_profile.seller.notAvailable);
                     } else {
                         $('#url-alart').removeClass('text-danger').addClass('text-success');
-                        $('#url-alart-mgs').removeClass('text-danger').addClass('text-success').text(dokan_admin.seller.available);
+                        $('#url-alart-mgs').removeClass('text-danger').addClass('text-success').text(dokan_user_profile.seller.available);
                     }
 
                     row.unblock();
-
                 } );
-
             });
-
-
         });
         </script>
         <?php
