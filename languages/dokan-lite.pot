@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 2.7.6\n"
+"Project-Id-Version: Dokan 2.7.7\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2018-02-04 08:14:08+00:00\n"
+"POT-Creation-Date: 2018-02-12 05:22:04+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -28,152 +28,164 @@ msgstr ""
 msgid "1"
 msgstr ""
 
-#: classes/admin-user-profile.php:69 classes/seller-setup-wizard.php:275
+#: classes/admin-user-profile.php:36 includes/class-scripts.php:114
+msgid "Available"
+msgstr ""
+
+#: classes/admin-user-profile.php:37 includes/class-scripts.php:115
+msgid "Not Available"
+msgstr ""
+
+#: classes/admin-user-profile.php:81 classes/seller-setup-wizard.php:275
 msgid "Country"
 msgstr ""
 
-#: classes/admin-user-profile.php:73
+#: classes/admin-user-profile.php:85
 msgid "Select a country&hellip;"
 msgstr ""
 
-#: classes/admin-user-profile.php:76
+#: classes/admin-user-profile.php:88
 msgid "State/County"
 msgstr ""
 
-#: classes/admin-user-profile.php:77
+#: classes/admin-user-profile.php:89
 msgid "State/County or state code"
 msgstr ""
 
-#: classes/admin-user-profile.php:82
+#: classes/admin-user-profile.php:94
 msgid "Dokan Options"
 msgstr ""
 
-#: classes/admin-user-profile.php:87
+#: classes/admin-user-profile.php:99
 msgid "Banner"
 msgstr ""
 
-#: classes/admin-user-profile.php:99 templates/settings/store-form.php:69
+#: classes/admin-user-profile.php:111 templates/settings/store-form.php:69
 msgid "Upload banner"
 msgstr ""
 
-#: classes/admin-user-profile.php:100
+#: classes/admin-user-profile.php:112
 msgid "(Upload a banner for your store. Banner size is (825x300) pixels. )"
 msgstr ""
 
-#: classes/admin-user-profile.php:107
+#: classes/admin-user-profile.php:119
 msgid "Store name"
 msgstr ""
 
-#: classes/admin-user-profile.php:114
+#: classes/admin-user-profile.php:126
+msgid "Store URL"
+msgstr ""
+
+#: classes/admin-user-profile.php:134
 msgid "Address 1"
 msgstr ""
 
-#: classes/admin-user-profile.php:121
+#: classes/admin-user-profile.php:141
 msgid "Address 2"
 msgstr ""
 
-#: classes/admin-user-profile.php:128
+#: classes/admin-user-profile.php:148
 msgid "Town/City"
 msgstr ""
 
-#: classes/admin-user-profile.php:135
+#: classes/admin-user-profile.php:155
 msgid "Zip Code"
 msgstr ""
 
-#: classes/admin-user-profile.php:175 classes/pageviews.php:153
+#: classes/admin-user-profile.php:195 classes/pageviews.php:153
 #: templates/global/seller-registration-form.php:38
 msgid "Phone Number"
 msgstr ""
 
-#: classes/admin-user-profile.php:193
+#: classes/admin-user-profile.php:213
 msgid "Payment Options : "
 msgstr ""
 
-#: classes/admin-user-profile.php:198
+#: classes/admin-user-profile.php:218
 msgid "Paypal Email "
 msgstr ""
 
-#: classes/admin-user-profile.php:206
+#: classes/admin-user-profile.php:226
 msgid "Skrill Email "
 msgstr ""
 
-#: classes/admin-user-profile.php:215
+#: classes/admin-user-profile.php:235
 msgid "Bank name "
 msgstr ""
 
-#: classes/admin-user-profile.php:221
+#: classes/admin-user-profile.php:241
 msgid "Account Name "
 msgstr ""
 
-#: classes/admin-user-profile.php:227
+#: classes/admin-user-profile.php:247
 msgid "Account Number "
 msgstr ""
 
-#: classes/admin-user-profile.php:233
+#: classes/admin-user-profile.php:253
 msgid "Bank Address "
 msgstr ""
 
-#: classes/admin-user-profile.php:239
+#: classes/admin-user-profile.php:259
 msgid "Bank Swift "
 msgstr ""
 
-#: classes/admin-user-profile.php:246 includes/admin/setup-wizard.php:88
+#: classes/admin-user-profile.php:266 includes/admin/setup-wizard.php:88
 msgid "Selling"
 msgstr ""
 
-#: classes/admin-user-profile.php:251
+#: classes/admin-user-profile.php:271
 msgid "Enable Adding Products"
 msgstr ""
 
-#: classes/admin-user-profile.php:254
+#: classes/admin-user-profile.php:274
 msgid "Enable or disable product adding capability"
 msgstr ""
 
-#: classes/admin-user-profile.php:259
+#: classes/admin-user-profile.php:279
 msgid "Publishing"
 msgstr ""
 
-#: classes/admin-user-profile.php:264
+#: classes/admin-user-profile.php:284
 msgid "Publish product directly"
 msgstr ""
 
-#: classes/admin-user-profile.php:267
+#: classes/admin-user-profile.php:287
 msgid "Bypass pending, publish products directly"
 msgstr ""
 
-#: classes/admin-user-profile.php:272
+#: classes/admin-user-profile.php:292
 msgid "Admin Commission Type "
 msgstr ""
 
-#: classes/admin-user-profile.php:275 includes/admin/class-settings.php:136
+#: classes/admin-user-profile.php:295 includes/admin/class-settings.php:136
 msgid "Percentage"
 msgstr ""
 
-#: classes/admin-user-profile.php:276 includes/admin/class-settings.php:135
+#: classes/admin-user-profile.php:296 includes/admin/class-settings.php:135
 msgid "Flat"
 msgstr ""
 
-#: classes/admin-user-profile.php:278
+#: classes/admin-user-profile.php:298
 msgid "Set the commmission type admin gets from this seller"
 msgstr ""
 
-#: classes/admin-user-profile.php:282
+#: classes/admin-user-profile.php:302
 msgid "Admin Commission "
 msgstr ""
 
-#: classes/admin-user-profile.php:286
+#: classes/admin-user-profile.php:306
 msgid "It will override the default commission admin gets from each sales"
 msgstr ""
 
-#: classes/admin-user-profile.php:291
+#: classes/admin-user-profile.php:311
 msgid "Featured vendor"
 msgstr ""
 
-#: classes/admin-user-profile.php:296
+#: classes/admin-user-profile.php:316
 msgid "Mark as featured vendor"
 msgstr ""
 
-#: classes/admin-user-profile.php:299
+#: classes/admin-user-profile.php:319
 msgid "This vendor will be marked as a featured vendor."
 msgstr ""
 
@@ -438,8 +450,8 @@ msgstr ""
 
 #: classes/installer.php:135 includes/admin/class-settings.php:167
 #: includes/admin/setup-wizard.php:264 includes/admin-functions.php:49
-#: includes/admin-functions.php:63 includes/admin-functions.php:604
-#: includes/admin-functions.php:628 includes/wc-template.php:14
+#: includes/admin-functions.php:63 includes/admin-functions.php:616
+#: includes/admin-functions.php:640 includes/wc-template.php:14
 #: templates/my-orders.php:31
 msgid "Vendor"
 msgstr ""
@@ -709,7 +721,7 @@ msgid "No product found !"
 msgstr ""
 
 #: classes/template-settings.php:70 classes/template-settings.php:74
-#: dokan.php:410 includes/admin/class-admin.php:216
+#: dokan.php:413 includes/admin/class-admin.php:216
 #: includes/admin/class-admin.php:238 includes/admin/class-admin.php:370
 #: includes/admin/views/welcome.php:20
 msgid "Settings"
@@ -909,15 +921,15 @@ msgstr ""
 msgid "Accepted"
 msgstr ""
 
-#: dokan.php:171
+#: dokan.php:173
 msgid "<b>Dokan</b> requires %sWooCommerce%s to be installed & activated!"
 msgstr ""
 
-#: dokan.php:407
+#: dokan.php:410
 msgid "Get Pro"
 msgstr ""
 
-#: dokan.php:411 includes/admin/views/welcome.php:21
+#: dokan.php:414 includes/admin/views/welcome.php:21
 msgid "Documentation"
 msgstr ""
 
@@ -1333,17 +1345,17 @@ msgstr ""
 msgid "Order Status for Withdraw"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:476 includes/order-functions.php:511
+#: includes/admin/setup-wizard.php:476 includes/order-functions.php:520
 #: templates/dashboard/orders-widget.php:26
 msgid "Completed"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:477 includes/order-functions.php:526
+#: includes/admin/setup-wizard.php:477 includes/order-functions.php:535
 #: templates/dashboard/orders-widget.php:36 templates/orders/listing.php:103
 msgid "Processing"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:478 includes/order-functions.php:521
+#: includes/admin/setup-wizard.php:478 includes/order-functions.php:530
 msgid "On-hold"
 msgstr ""
 
@@ -1506,7 +1518,7 @@ msgstr ""
 msgid "Approved"
 msgstr ""
 
-#: includes/admin/views/withdraw.php:24 includes/order-functions.php:536
+#: includes/admin/views/withdraw.php:24 includes/order-functions.php:545
 #: templates/dashboard/orders-widget.php:41
 msgid "Cancelled"
 msgstr ""
@@ -1578,29 +1590,29 @@ msgstr ""
 msgid "Toggle Sub-orders"
 msgstr ""
 
-#: includes/admin-functions.php:415 includes/admin-functions.php:778
+#: includes/admin-functions.php:427 includes/admin-functions.php:802
 msgid "Total Sales"
 msgstr ""
 
-#: includes/admin-functions.php:422 includes/admin-functions.php:785
+#: includes/admin-functions.php:434 includes/admin-functions.php:809
 msgid "Total: "
 msgstr ""
 
-#: includes/admin-functions.php:425 includes/admin-functions.php:788
+#: includes/admin-functions.php:437 includes/admin-functions.php:812
 #: includes/reports.php:349
 msgid "Number of orders"
 msgstr ""
 
-#: includes/admin-functions.php:432 includes/admin-functions.php:795
+#: includes/admin-functions.php:444 includes/admin-functions.php:819
 #: includes/reports.php:356
 msgid "sales"
 msgstr ""
 
-#: includes/admin-functions.php:435 includes/admin-functions.php:798
+#: includes/admin-functions.php:447 includes/admin-functions.php:822
 msgid "Commision"
 msgstr ""
 
-#: includes/admin-functions.php:442 includes/admin-functions.php:805
+#: includes/admin-functions.php:454 includes/admin-functions.php:829
 msgid "Commision: "
 msgstr ""
 
@@ -1642,14 +1654,6 @@ msgstr ""
 
 #: includes/class-email.php:527
 msgid "[%s] Your product has been approved!"
-msgstr ""
-
-#: includes/class-scripts.php:114
-msgid "Available"
-msgstr ""
-
-#: includes/class-scripts.php:115
-msgid "Not Available"
 msgstr ""
 
 #: includes/class-scripts.php:117
@@ -2273,19 +2277,19 @@ msgstr ""
 msgid "Dokan Store Sidebar"
 msgstr ""
 
-#: includes/order-functions.php:329
+#: includes/order-functions.php:338
 msgid "Mark parent order completed when all child orders are completed."
 msgstr ""
 
-#: includes/order-functions.php:516
+#: includes/order-functions.php:525
 msgid "Pending Payment"
 msgstr ""
 
-#: includes/order-functions.php:531 templates/dashboard/orders-widget.php:46
+#: includes/order-functions.php:540 templates/dashboard/orders-widget.php:46
 msgid "Refunded"
 msgstr ""
 
-#: includes/order-functions.php:541
+#: includes/order-functions.php:550
 msgid "Failed"
 msgstr ""
 
@@ -2819,18 +2823,6 @@ msgstr ""
 
 #: lib/class-wedevs-insights.php:623
 msgid "Canel"
-msgstr ""
-
-#: lib/class-weforms-upsell.php:77
-msgid "Install Now"
-msgstr ""
-
-#: lib/class-weforms-upsell.php:80 lib/class-weforms-upsell.php:81
-msgid "Dismiss this notice."
-msgstr ""
-
-#: lib/class-weforms-upsell.php:353
-msgid "You don't have permission to install the plugins"
 msgstr ""
 
 #: lib/class.dokan-settings-api.php:31
