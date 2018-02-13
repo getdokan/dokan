@@ -115,6 +115,9 @@
 .dokan-dashboard .postbox .main {
   padding: 0 12px 11px;
 }
+.dokan-dashboard .postbox.dokan-status .main {
+  padding: 0;
+}
 .dokan-dashboard .postbox .main:before,
 .dokan-dashboard .postbox .main:after {
   content: " ";
@@ -138,6 +141,9 @@
   margin: 10px 0 0 0;
   padding: 0;
 }
+.dokan-dashboard .postbox.dokan-status .inside {
+  margin: 0;
+}
 .dokan-dashboard .mark-red a {
   color: red;
 }
@@ -151,6 +157,86 @@
 .dokan-dashboard .dokan-right {
   float: right;
   width: 45%;
+}
+.dokan-status ul {
+    margin-top: -13px;
+}
+.dokan-status ul li {
+    min-height: 50px;
+    width: 50%;
+    float: left;
+    padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+    border-top: 1px solid #ececec;
+    color: #aaa;
+}
+.dokan-status ul li a {
+    display: block;
+    color: #aaa;
+    padding: 10px 10px 10px 55px;
+    -webkit-transition: all ease .5s;
+    transition: all ease .5s;
+    position: relative;
+    font-size: 12px;
+}
+.dokan-status ul li .dashicons {
+    font-size: 3em;
+    float: left;
+    margin: 10px;
+}
+.dokan-status ul li.sale .dashicons {
+    color: #307be1;
+}
+.dokan-status ul li.commission .dashicons {
+    color: #6da754;
+}
+.dokan-status ul li.vendor .dashicons {
+    color: #169c22;
+}
+.dokan-status ul li.approval .dashicons {
+    color: #fd9728;
+}
+.dokan-status ul li.product .dashicons {
+    color: #307be1;
+}
+.dokan-status ul li.withdraw .dashicons {
+    color: #cd2c2f;
+}
+.dokan-status ul li a .details {
+    color: #aaa;
+}
+.dokan-status ul li a .details span {
+    margin-left: 10px;
+    font-weight: bold;
+}
+.dokan-status ul li a .details span.up {
+    color: green;
+}
+.dokan-status ul li a .details span.up::before {
+    content: '+';
+}
+.dokan-status ul li a .details span.down {
+    color: red;
+}
+.dokan-status ul li a .details span.down::before {
+    content: '-';
+}
+.dokan-status ul li a .details span.up::after, .dokan-status ul li a .details span.down::after {
+    content: '%';
+}
+.dokan-status ul li:nth-child(1), .dokan-status ul li:nth-child(2) {
+    border-top: none;
+}
+.dokan-status ul li:nth-child(odd) {
+    border-right: 1px solid #ececec;
+}
+.dokan-status ul li a strong {
+    font-size: 18px;
+    line-height: 1.2em;
+    font-weight: 400;
+    display: block;
+    color: #21759b;
 }
 .chosen-container-multi .chosen-choices li.search-field input[type="text"] {
   height: 23px;

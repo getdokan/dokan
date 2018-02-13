@@ -1259,8 +1259,45 @@ function dokan_admin_user_register( $user_id ) {
 
 add_action( 'user_register', 'dokan_admin_user_register' );
 
+
 /**
- * Get seller count based on enable and disabled sellers
+ * Get percentage based owo two numeric data
+ *
+ * @param int $this_period
+ * @param int $last_period
+ *
+ * @return array
+ */
+function dokan_get_percentage_of( $this_period = 0, $last_period = 0 ) {
+
+    if ( 0 == $this_period && 0 == $last_period || $this_period == $last_period ) {
+        $parcent = 0;
+        $class = 'up';
+    } elseif ( 0 == $this_period ) {
+        $parcent = $last_period * 100;
+        $class = 'down';
+    } elseif ( 0 == $last_period ) {
+        $parcent = $this_period * 100;
+        $class = 'up';
+    } elseif ( $this_period > $last_period ) {
+        $parcent = ( $this_period - $last_period ) / $last_period * 100;
+        $class = 'up';
+    } elseif ( $this_period < $last_period ) {
+        $parcent = ( $last_period - $this_period ) / $last_period * 100;
+        $class = 'down';
+    }
+
+    $parcent = round( $parcent, 2); //'integer' == gettype($parcent) ? $parcent : number_format($parcent,2)
+
+    return array(
+        'parcent' => $parcent,
+        'class' => $class
+    );
+
+}
+
+/**
+ * Get seller count based on enable, disabled sellers and time period
  *
  * @global WPDB $wpdb
  * @return array
@@ -1282,9 +1319,124 @@ function dokan_get_seller_count() {
         'number' => -1,
     ) );
 
+    $this_month = dokan_get_sellers( array(
+        'date_query' => array(
+            array(
+                'year'  => date('Y'),
+                'month' => date('m'),
+            ),
+        ),
+    ) );
+
+    $last_month = dokan_get_sellers( array(
+        'date_query' => array(
+            array(
+                'year'  => date( 'Y', strtotime( 'last month' ) ),
+                'month' => date( 'm',strtotime( 'last month' ) ),
+            ),
+        ),
+    ) );
+
+    $vendor_parcent = dokan_get_percentage_of( $this_month['count'], $last_month['count'] );
+
     return array(
-        'inactive' => $inactive_sellers['count'],
-        'active'   => $active_sellers['count']
+        'inactive'      => $inactive_sellers['count'],
+        'active'        => $active_sellers['count'],
+        'this_month'    => $this_month['count'],
+        'last_month'    => $last_month['count'],
+        'class'         => $vendor_parcent['class'],
+        'parcent'       => $vendor_parcent['parcent']
+    );
+}
+
+/**
+ * Get product count of this month and last month with percentage
+ *
+ * @global WPDB $wpdb
+ * @return array
+ */
+function dokan_get_product_count() {
+
+    $this_month_posts = dokan()->product->all(
+        array(
+            'date_query' => array(
+                array(
+                    'year'  => date('Y'),
+                    'month' => date('m'),
+                ),
+            ),
+        )
+    );
+
+    $last_month_posts = dokan()->product->all(
+        array(
+            'date_query' => array(
+                array(
+                    'year'  => date( 'Y', strtotime( 'last month' ) ),
+                    'month' => date( 'm', strtotime( 'last month' ) ),
+                ),
+            ),
+        )
+    );
+
+    $product_parcent = dokan_get_percentage_of( count( $this_month_posts->posts ), count( $last_month_posts->posts ) );
+
+    return array(
+        'this_month'    => count( $this_month_posts->posts ),
+        'last_month'    => count( $last_month_posts->posts ),
+        'class'         => $product_parcent['class'],
+        'parcent'       => $product_parcent['parcent']
+    );
+
+}
+
+/**
+ * Get seles count based on this month and last month
+ *
+ * @global WPDB $wpdb
+ * @return array
+ */
+function dokan_get_sales_count() {
+
+    $this_month_report_data    = dokan_admin_report();
+
+    $this_month_order_total = $this_month_earning_total = $this_month_total_orders = 0;
+    if ( $this_month_report_data ) {
+        foreach ( $this_month_report_data as $row ) {
+            $this_month_order_total   += $row->order_total;
+            $this_month_earning_total += $row->earning;
+            $this_month_total_orders  += $row->total_orders;
+        }
+    }
+
+    $last_month_report_data    = dokan_admin_report( 'day', '', date("Y-m-d", strtotime("first day of previous month") ), date("Y-m-d", strtotime("last day of previous month") ) );
+
+    $last_month_order_total = $last_month_earning_total = $last_month_total_orders = 0;
+    if ( $last_month_report_data ) {
+        foreach ( $last_month_report_data as $row ) {
+            $last_month_order_total   += $row->order_total;
+            $last_month_earning_total += $row->earning;
+            $last_month_total_orders  += $row->total_orders;
+        }
+    }
+
+    $sale_percentage       = dokan_get_percentage_of( $this_month_order_total, $last_month_order_total );
+    $earning_percentage    = dokan_get_percentage_of( $this_month_earning_total, $last_month_earning_total );
+    $order_percentage      = dokan_get_percentage_of( $this_month_total_orders, $last_month_total_orders );
+
+    return array(
+        'this_month_order_total'    => $this_month_order_total,
+        'this_month_earning_total'  => $this_month_earning_total,
+        'this_month_total_orders'   => $this_month_total_orders,
+        'last_month_order_total'    => $last_month_order_total,
+        'last_month_earning_total'  => $last_month_earning_total,
+        'last_month_total_orders'   => $last_month_total_orders,
+        'sale_parcent_class'        => $sale_percentage['class'],
+        'sale_parcent'              => $sale_percentage['parcent'],
+        'earning_parcent_class'     => $earning_percentage['class'],
+        'earning_parcent'           => $earning_percentage['parcent'],
+        'order_parcent_class'       => $order_percentage['class'],
+        'order_parcent'             => $order_percentage['parcent'],
     );
 }
 
@@ -1331,7 +1483,7 @@ function dokan_filter_orders_for_current_vendor( $query ) {
     if ( is_admin() && $query->query_vars['post_type'] == 'page' ) {
         remove_meta_box( 'sellerdiv', 'product', 'normal' );
     }
-    
+
     if ( is_admin() && $query->is_main_query() && ( $query->query_vars['post_type'] == 'shop_order' || $query->query_vars['post_type'] == 'product' || $query->query_vars['post_type'] == 'wc_booking' ) ) {
         $query->set( 'author', get_current_user_id() );
     }
