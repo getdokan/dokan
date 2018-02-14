@@ -79,6 +79,20 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
                 'args'                => $this->get_collection_params(),
                 'permission_callback' => array( $this, 'get_single_order_permissions_check' ),
             ),
+
+            array(
+                'methods'             => WP_REST_Server::EDITABLE,
+                'callback'            => array( $this, 'update_item' ),
+                'args'                => array(
+                    'status' => array(
+                        'type'        => 'string',
+                        'description' => __( 'Order Status', 'dokan-lite' ),
+                        'required'    => true,
+                        'sanitize_callback' => 'sanitize_text_field',
+                    )
+                ),
+                'permission_callback' => array( $this, 'update_order_permissions_check' ),
+            ),
         ) );
 
         register_rest_route( $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/notes', array(
@@ -133,6 +147,16 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
             ),
         ) );
 
+        register_rest_route( $this->namespace, '/' . $this->base . '/summary', array(
+            array(
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => array( $this, 'get_order_summary' ),
+                'permission_callback' => array( $this, 'check_orders_summary_permissions' ),
+                'args'                => $this->get_collection_params(),
+            ),
+            'schema' => array( $this, 'get_public_item_schema' ),
+        ) );
+
     }
 
     /**
@@ -145,6 +169,36 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
     public function get_object( $id ) {
         return wc_get_order( $id );
     }
+
+    /**
+     * Validation before update product
+     *
+     * @since 2.8.0
+     *
+     * @return void
+     */
+    public function validation_before_update_item( $request ) {
+        $store_id = dokan_get_current_user_id();
+
+        if ( empty( $store_id ) ) {
+            return new WP_Error( 'no_store_found', __( 'No seller found' ), array( 'status' => 404 ) );
+        }
+
+        $object = $this->get_object( (int) $request['id'] );
+
+        if ( ! $object || 0 === $object->get_id() ) {
+            return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Invalid ID.', 'dokan-lite' ), array( 'status' => 400 ) );
+        }
+
+        $product_author = get_post_field( 'post_author', $object->get_id() );
+
+        if ( $store_id != $product_author ) {
+            return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Sorry, you have no permission to do this. Since it\'s not your product.', 'dokan-lite' ), array( 'status' => 400 ) );
+        }
+
+        return true;
+    }
+
 
     /**
      * Get formatted item data.
@@ -248,6 +302,65 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
         $this->request = $request;
         $data          = $this->get_formatted_item_data( $object );
         return apply_filters( "dokan_rest_prepare_{$this->post_type}_object", $data, $object, $request );
+    }
+
+    /**
+     * Prepare data for udpate into database
+     *
+     * @since 2.8.0
+     *
+     * @return void
+     */
+    public function prepare_object_for_database( $request ) {
+        $id             = isset( $request['id'] ) ? absint( $request['id'] ) : 0;
+        $status         = isset( $request['status'] ) ? $request['status'] : '';
+        $order_statuses = wc_get_order_statuses();
+
+        if ( empty( $id ) ) {
+            return new WP_Error( "dokan_rest_invalid_{$this->post_type}_id", __( 'Invalid order ID', 'dokan-lite' ), array(
+                'status' => 404,
+            ) );
+        }
+
+        if ( empty( $status ) ) {
+            return new WP_Error( "dokan_rest_empty_{$this->post_type}_status", __( 'Order status must me required', 'dokan-lite' ), array(
+                'status' => 404,
+            ) );
+        }
+
+        if ( ! in_array( $status, array_keys( $order_statuses ) ) ) {
+            return new WP_Error( "dokan_rest_invalid_{$this->post_type}_status", __( 'Order status not valid', 'dokan-lite' ), array(
+                'status' => 404,
+            ) );
+        }
+
+        $order = wc_get_order( $id );
+
+        if ( ! $order ) {
+            return new WP_Error( "dokan_rest_invalid_order", __( 'Invalid order', 'dokan-lite' ), array(
+                'status' => 404,
+            ) );
+        }
+
+        $order->set_status( $status );
+
+        return apply_filters( "dokan_rest_pre_insert_{$this->post_type}_object", $order, $request );
+    }
+    /**
+     * Get order summary report
+     *
+     * @since 2.8.0
+     *
+     * @return void
+     */
+    public function get_order_summary( $request ) {
+        $seller_id = dokan_get_current_user_id();
+
+        $data = array(
+            'orders_data'   => dokan_count_orders( $seller_id ),
+        );
+
+        return rest_ensure_response( reset( $data ) );
     }
 
     /**
@@ -523,5 +636,37 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
      */
     public function get_single_order_permissions_check() {
         return current_user_can( 'dokan_view_order' );
+    }
+
+    /**
+     * Updat order permission checking
+     *
+     * @since 2.8.0
+     *
+     * @return void
+     */
+    public function update_order_permissions_check() {
+        if ( ! current_user_can( 'dokan_manage_order' ) ) {
+            return false;
+        }
+
+        $has_admin_permission = dokan_get_option( 'order_status_change', 'dokan_selling', 'on' );
+
+        if ( 'off' == $has_admin_permission ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Checking if have any permission to view orders
+     *
+     * @since 2.8.0
+     *
+     * @return boolean
+     */
+    public function check_orders_summary_permissions() {
+        return current_user_can( 'dokan_view_order_report' );
     }
 }

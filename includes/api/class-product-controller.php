@@ -97,6 +97,15 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
                 'permission_callback' => array( $this, 'delete_product_permissions_check' ),
             )
         ) );
+
+        register_rest_route( $this->namespace, '/' . $this->base . '/summary', array(
+            array(
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => array( $this, 'get_product_summary' ),
+                'permission_callback' => array( $this, 'get_product_summary_permissions_check' ),
+            ),
+        ) );
+
     }
 
     /**
@@ -257,6 +266,35 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
     }
 
     /**
+     * Get product summary report
+     *
+     * @since 2.8.0
+     *
+     * @return void
+     */
+    public function get_product_summary_permissions_check() {
+        return current_user_can( 'dokan_view_product_status_report' );
+    }
+
+    /**
+     * Get product summary report in dashboard
+     *
+     * @since 2.8.0
+     *
+     * @return void
+     */
+    public function get_product_summary( $request ) {
+        $seller_id = dokan_get_current_user_id();
+
+        $data = array(
+            'post_counts'  => dokan_count_posts( 'product', $seller_id ),
+            'products_url' => dokan_get_navigation_url( 'products' ),
+        );
+
+        return rest_ensure_response( $data );
+    }
+
+    /**
      * Get product data.
      *
      * @param WC_Product $product Product instance.
@@ -369,7 +407,7 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
         }
 
         if ( 'variation' === $product->get_type() ) {
-            return new WP_Error( "woocommerce_rest_invalid_{$this->post_type}_id", __( 'To manipulate product variations you should use the /products/&lt;product_id&gt;/variations/&lt;id&gt; endpoint.', 'dokan-lite' ), array(
+            return new WP_Error( "dokan_rest_invalid_{$this->post_type}_id", __( 'To manipulate product variations you should use the /products/&lt;product_id&gt;/variations/&lt;id&gt; endpoint.', 'dokan-lite' ), array(
                 'status' => 404,
             ) );
         }
