@@ -174,16 +174,16 @@
 .dokan-status ul li a {
     display: block;
     color: #aaa;
-    padding: 10px 10px 10px 55px;
+    padding: 10px;
     -webkit-transition: all ease .5s;
     transition: all ease .5s;
     position: relative;
     font-size: 12px;
 }
 .dokan-status ul li .dashicons {
-    font-size: 3em;
+    font-size: 2em;
     float: left;
-    margin: 10px;
+    margin: 15px;
 }
 .dokan-status ul li.sale .dashicons {
     color: #307be1;
@@ -197,10 +197,14 @@
 .dokan-status ul li.approval .dashicons {
     color: #fd9728;
 }
-.dokan-status ul li.product .dashicons {
-    color: #307be1;
+.dokan-status ul li.product .dashicons::before {
+    font-family: WooCommerce;
+    content: "\e006";
+    color: #464646;
 }
-.dokan-status ul li.withdraw .dashicons {
+.dokan-status ul li.withdraw .dashicons::before {
+    font-family: WooCommerce;
+    content: "\e01e";
     color: #cd2c2f;
 }
 .dokan-status ul li a .details {
