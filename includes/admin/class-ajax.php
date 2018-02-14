@@ -84,6 +84,10 @@ class Dokan_Admin_Ajax {
                 $amount  = $postdata['amount'][$withdraw_id];
                 $method  = $postdata['method'][$withdraw_id];
 
+                if ( get_user_balance( $user_id ) < $amount ) {
+                    return;
+                }
+
                 $withdraw->update_status( $withdraw_id, $user_id, 1 );
 
                 do_action( 'dokan_withdraw_request_approved', $user_id, $amount, $method );
