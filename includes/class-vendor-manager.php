@@ -7,16 +7,34 @@
  */
 class Dokan_Vendor_Manager {
 
+    /**
+     * Total vendors found
+     *
+     * @var integer
+     */
     private $total_users;
 
     /**
-     * Get all vendor
+     * Get all vendors
+     *
+     * @since 2.8.0
+     *
+     * @param  array  $args
+     *
+     * @return array
+     */
+    public function all( $args = array() ) {
+        return $this->get_vendors( $args );
+    }
+
+    /**
+     * Get vendors
      *
      * @param array $args
      *
      * @return array
      */
-    public function all( $args = array() ) {
+    public function get_vendors( $args = array() ) {
         $vendors = array();
 
         $defaults = array(
@@ -97,6 +115,6 @@ class Dokan_Vendor_Manager {
 
         $args = wp_parse_args( $args, $defaults );
 
-        return $this->all( $args );
+        return $this->get_vendors( $args );
     }
 }
