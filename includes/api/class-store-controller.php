@@ -105,15 +105,16 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
             );
         }
 
-        $stores = dokan_get_sellers( $args );
+        $stores = dokan()->vendor->get_vendors( $args );
 
         $stores_data = array();
-        foreach ( $stores['users'] as $key => $store ) {
+        foreach ( $stores as $store ) {
             $stores_data[] = $this->prepare_item_for_response( $store, $request );
         }
 
         $response = rest_ensure_response( $stores_data );
-        $response = $this->format_collection_response( $response, $request, $stores['count'] );
+        $response = $this->format_collection_response( $response, $request, dokan()->vendor->get_total() );
+
         return $response;
     }
 
@@ -277,42 +278,9 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
      *
      * @return WP_REST_Response $response Response data.
      */
-    public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
+    public function prepare_item_for_response( $store, $request, $additional_fields = [] ) {
 
-        $store_info = dokan_get_store_info( $item->ID );
-
-        $featured             = get_user_meta( $item->ID, 'dokan_feature_seller', true );
-        $tnc_enabled          = ( !empty( $store_info['enable_tnc'] ) && $store_info['enable_tnc'] == 'on' ) ? true : false;
-        $is_showing_more_ptab = ( !empty( $store_info['show_more_ptab'] ) && $store_info['show_more_ptab'] == 'yes' ) ? true : false;
-        $is_featured          = $featured == 'yes' ? true : false;
-        $store_location_meta  = !empty( $store_info['location'] ) ? explode(',', $store_info['location'] ) : array();
-        $store_location = array();
-        if ( !empty( $store_location_meta ) ) {
-            $store_location['lat'] = $store_location_meta[0];
-            $store_location['lan'] = $store_location_meta[1];
-        }
-
-        $data = [
-            'id'                     => (int) $item->ID,
-            'store_name'             => get_user_meta( $item->ID, 'dokan_store_name', true ),
-            'first_name'             => $item->first_name,
-            'last_name'              => $item->last_name,
-            'email'                  => $item->user_email,
-            'social'                 => $store_info['social'],
-            'phone'                  => $store_info['phone'],
-            'show_email'             => $store_info['show_email'],
-            'address'                => $store_info['address'],
-            'location'               => $store_location,
-            'banner'                 => !empty( $store_info['banner'] ) ? wp_get_attachment_url( $store_info['banner'] ) : 0,
-            'gravatar'               => !empty( $store_info['gravatar'] ) ? wp_get_attachment_url( $store_info['gravatar'] ) : 0,
-            'store_product_per_page' => !empty( $store_info['store_ppp'] ) ? $store_info['store_ppp'] : 10,
-            'show_more_product_tab'  => $is_showing_more_ptab,
-            'is_tnc_enabled'         => $tnc_enabled,
-            'store_tnc'              => !empty( $store_info['store_tnc'] ) ? $store_info['store_tnc'] : null,
-            'is_featured'            => $is_featured,
-            'rating'                 => dokan_get_seller_rating( $item->ID )
-        ];
-
+        $data = $store->to_array();
         $data = array_merge( $data, $additional_fields );
 
         return $data;
