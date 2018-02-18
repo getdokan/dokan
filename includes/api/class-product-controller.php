@@ -294,6 +294,137 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
         return rest_ensure_response( $data );
     }
 
+        /**
+     * Prepare objects query.
+     *
+     * @since  3.0.0
+     * @param  WP_REST_Request $request Full details about the request.
+     * @return array
+     */
+    protected function prepare_objects_query( $request ) {
+        $args = parent::prepare_objects_query( $request );
+
+        // Set post_status.
+        $args['post_status'] = $request['status'];
+
+        // Taxonomy query to filter products by type, category,
+        // tag, shipping class, and attribute.
+        $tax_query = array();
+
+        // Map between taxonomy name and arg's key.
+        $taxonomies = array(
+            'product_cat'            => 'category',
+            'product_tag'            => 'tag',
+            'product_shipping_class' => 'shipping_class',
+        );
+
+        // Set tax_query for each passed arg.
+        foreach ( $taxonomies as $taxonomy => $key ) {
+            if ( ! empty( $request[ $key ] ) ) {
+                $tax_query[] = array(
+                    'taxonomy' => $taxonomy,
+                    'field'    => 'term_id',
+                    'terms'    => $request[ $key ],
+                );
+            }
+        }
+
+        // Filter product type by slug.
+        if ( ! empty( $request['type'] ) ) {
+            $tax_query[] = array(
+                'taxonomy' => 'product_type',
+                'field'    => 'slug',
+                'terms'    => $request['type'],
+            );
+        }
+
+        // Filter by attribute and term.
+        if ( ! empty( $request['attribute'] ) && ! empty( $request['attribute_term'] ) ) {
+            if ( in_array( $request['attribute'], wc_get_attribute_taxonomy_names(), true ) ) {
+                $tax_query[] = array(
+                    'taxonomy' => $request['attribute'],
+                    'field'    => 'term_id',
+                    'terms'    => $request['attribute_term'],
+                );
+            }
+        }
+
+        if ( ! empty( $tax_query ) ) {
+            $args['tax_query'] = $tax_query; // WPCS: slow query ok.
+        }
+
+        // Filter featured.
+        if ( is_bool( $request['featured'] ) ) {
+            $args['tax_query'][] = array(
+                'taxonomy' => 'product_visibility',
+                'field'    => 'name',
+                'terms'    => 'featured',
+            );
+        }
+
+        // Filter by sku.
+        if ( ! empty( $request['sku'] ) ) {
+            $skus = explode( ',', $request['sku'] );
+            // Include the current string as a SKU too.
+            if ( 1 < count( $skus ) ) {
+                $skus[] = $request['sku'];
+            }
+
+            $args['meta_query'] = $this->add_meta_query( // WPCS: slow query ok.
+                $args, array(
+                    'key'     => '_sku',
+                    'value'   => $skus,
+                    'compare' => 'IN',
+                )
+            );
+        }
+
+        // Filter by tax class.
+        if ( ! empty( $request['tax_class'] ) ) {
+            $args['meta_query'] = $this->add_meta_query( // WPCS: slow query ok.
+                $args, array(
+                    'key'   => '_tax_class',
+                    'value' => 'standard' !== $request['tax_class'] ? $request['tax_class'] : '',
+                )
+            );
+        }
+
+        // Price filter.
+        if ( ! empty( $request['min_price'] ) || ! empty( $request['max_price'] ) ) {
+            $args['meta_query'] = $this->add_meta_query( $args, wc_get_min_max_price_meta_query( $request ) );  // WPCS: slow query ok.
+        }
+
+        // Filter product in stock or out of stock.
+        if ( is_bool( $request['in_stock'] ) ) {
+            $args['meta_query'] = $this->add_meta_query( // WPCS: slow query ok.
+                $args, array(
+                    'key'   => '_stock_status',
+                    'value' => true === $request['in_stock'] ? 'instock' : 'outofstock',
+                )
+            );
+        }
+
+        // Filter by on sale products.
+        if ( is_bool( $request['on_sale'] ) ) {
+            $on_sale_key = $request['on_sale'] ? 'post__in' : 'post__not_in';
+            $on_sale_ids = wc_get_product_ids_on_sale();
+
+            // Use 0 when there's no on sale products to avoid return all products.
+            $on_sale_ids = empty( $on_sale_ids ) ? array( 0 ) : $on_sale_ids;
+
+            $args[ $on_sale_key ] += $on_sale_ids;
+        }
+
+        // Force the post_type argument, since it's not a user input variable.
+        if ( ! empty( $request['sku'] ) ) {
+            $args['post_type'] = array( 'product', 'product_variation' );
+        } else {
+            $args['post_type'] = $this->post_type;
+        }
+
+        return $args;
+    }
+
     /**
      * Get product data.
      *
@@ -428,8 +559,13 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
         }
 
         // Post status.
-        if ( isset( $request['status'] ) ) {
-            $product->set_status( get_post_status_object( $request['status'] ) ? $request['status'] : 'draft' );
+        if ( dokan_is_seller_trusted( get_current_user_id() ) ) {
+            if ( isset( $request['status'] ) ) {
+                $product->set_status( get_post_status_object( $request['status'] ) ? $request['status'] : 'draft' );
+            }
+        } else {
+            $status = dokan_get_option( 'product_status', 'dokan_selling', 'pending' );
+            $product->set_status( get_post_status_object( $status ) ? $status : 'draft' );
         }
 
         // Post slug.
