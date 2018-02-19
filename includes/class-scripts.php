@@ -29,7 +29,7 @@ class Dokan_Scripts {
         wp_enqueue_style( 'dokan-admin-css', DOKAN_PLUGIN_ASSEST . '/css/admin.css', false, time() );
         wp_enqueue_script( 'dokan-tooltip' );
         wp_enqueue_script( 'dokan_slider_admin', DOKAN_PLUGIN_ASSEST . '/js/dokan-admin.js', array( 'jquery' ) );
-        
+
         global $post;
 
         if ( get_post_type( $post ) == 'dokan_slider' ) {
@@ -52,36 +52,37 @@ class Dokan_Scripts {
         $vendor = DOKAN_PLUGIN_ASSEST . '/vendors';
 
         // Register Vendors styles
-        wp_register_style( 'jquery-ui', $vendor . '/jquery-ui/jquery-ui-1.10.0.custom.css', false, null );
-        wp_register_style( 'dokan-fontawesome', $vendor . '/font-awesome/font-awesome.min.css', false, null );
-        wp_register_style( 'dokan-chosen-style', $vendor . '/chosen/chosen.min.css', false, null );
-        wp_register_style( 'dokan-magnific-popup', $vendor . '/magnific/magnific-popup.css', false, null );
-        wp_register_style( 'dokan-select2-css', $vendor . '/select2/select2.css', false, null );
+        wp_register_style( 'jquery-ui', $vendor . '/jquery-ui/jquery-ui-1.10.0.custom.css', false, DOKAN_PLUGIN_VERSION );
+        wp_register_style( 'dokan-fontawesome', $vendor . '/font-awesome/font-awesome.min.css', false, DOKAN_PLUGIN_VERSION );
+        wp_register_style( 'dokan-chosen-style', $vendor . '/chosen/chosen.min.css', false, DOKAN_PLUGIN_VERSION );
+        wp_register_style( 'dokan-magnific-popup', $vendor . '/magnific/magnific-popup.css', false, DOKAN_PLUGIN_VERSION );
+        wp_register_style( 'dokan-select2-css', $vendor . '/select2/select2.css', false, DOKAN_PLUGIN_VERSION );
 
         // Core styles
-        wp_register_style( 'dokan-style', DOKAN_PLUGIN_ASSEST.'/css/style.css', false, null );
+        wp_register_style( 'dokan-style', DOKAN_PLUGIN_ASSEST.'/css/style.css', false, DOKAN_PLUGIN_VERSION );
 
         if ( is_rtl() ) {
             // RTL supported style
-            wp_register_style( 'dokan-rtl-style', DOKAN_PLUGIN_ASSEST.'/css/rtl.css', false, null );
+            wp_register_style( 'dokan-rtl-style', DOKAN_PLUGIN_ASSEST.'/css/rtl.css', false, DOKAN_PLUGIN_VERSION );
         }
 
         // Register Vendors scripts
-        wp_register_script( 'dokan-chart', $vendor . '/chart/Chart.min.js', false, null, true );
-        wp_register_script( 'dokan-tabs', $vendor . '/easytab/jquery.easytabs.min.js', false, null, true );
-        wp_register_script( 'dokan-chosen', $vendor . '/chosen/chosen.jquery.min.js', array( 'jquery' ), null, true );
-        wp_register_script( 'dokan-popup', $vendor . '/magnific/jquery.magnific-popup.min.js', array( 'jquery' ), null, true );
-        wp_register_script( 'dokan-tooltip', $vendor . '/tooltips/tooltips.js', array( 'jquery' ), null, true );
-        wp_register_script( 'dokan-form-validate', $vendor . '/form-validate/form-validate.js', array( 'jquery' ), null, true );
-        wp_register_script( 'dokan-select2-js', $vendor . '/select2/select2.full.min.js', array( 'jquery' ), null, true );
+        wp_register_script( 'dokan-chart', $vendor . '/chart/Chart.min.js', false, DOKAN_PLUGIN_VERSION, true );
+        wp_register_script( 'dokan-tabs', $vendor . '/easytab/jquery.easytabs.min.js', false, DOKAN_PLUGIN_VERSION, true );
+        wp_register_script( 'dokan-chosen', $vendor . '/chosen/chosen.jquery.min.js', array( 'jquery' ), DOKAN_PLUGIN_VERSION, true );
+        wp_register_script( 'dokan-popup', $vendor . '/magnific/jquery.magnific-popup.min.js', array( 'jquery' ), DOKAN_PLUGIN_VERSION, true );
+        wp_register_script( 'dokan-tooltip', $vendor . '/tooltips/tooltips.js', array( 'jquery' ), DOKAN_PLUGIN_VERSION, true );
+        wp_register_script( 'dokan-form-validate', $vendor . '/form-validate/form-validate.js', array( 'jquery' ), DOKAN_PLUGIN_VERSION, true );
+        wp_register_script( 'dokan-select2-js', $vendor . '/select2/select2.full.min.js', array( 'jquery' ), DOKAN_PLUGIN_VERSION, true );
 
         // Image cropping scripts
-        wp_register_script( 'customize-base', site_url( 'wp-includes/js/customize-base.js' ), array( 'jquery', 'json2', 'underscore' ), null, true );
-        wp_register_script( 'customize-model', site_url( 'wp-includes/js/customize-models.js' ), array( 'underscore', 'backbone' ), null, true );
+        wp_register_script( 'customize-base', site_url( 'wp-includes/js/customize-base.js' ), array( 'jquery', 'json2', 'underscore' ), DOKAN_PLUGIN_VERSION, true );
+        wp_register_script( 'customize-model', site_url( 'wp-includes/js/customize-models.js' ), array( 'underscore', 'backbone' ), DOKAN_PLUGIN_VERSION, true );
 
         // Register core scripts
-        wp_register_script( 'dokan-flot', DOKAN_PLUGIN_ASSEST.'/js/flot-all.min.js', false, null, true );
-        wp_register_script( 'dokan-script', DOKAN_PLUGIN_ASSEST.'/js/dokan.js', array( 'imgareaselect', 'customize-base', 'customize-model' ), null, true );
+        wp_register_script( 'dokan-flot', DOKAN_PLUGIN_ASSEST.'/js/flot-all.min.js', false, DOKAN_PLUGIN_VERSION, true );
+        wp_register_script( 'speaking-url', DOKAN_PLUGIN_ASSEST . '/js/speakingurl.min.js', false, DOKAN_PLUGIN_VERSION, true );
+        wp_register_script( 'dokan-script', DOKAN_PLUGIN_ASSEST.'/js/dokan.js', array( 'imgareaselect', 'customize-base', 'customize-model' ), DOKAN_PLUGIN_VERSION, true );
 
         do_action( 'dokan_register_scripts' );
     }
@@ -149,6 +150,7 @@ class Dokan_Scripts {
                 wp_enqueue_script( 'dokan-tooltip' );
                 wp_enqueue_script( 'dokan-chosen' );
                 wp_enqueue_script( 'dokan-form-validate' );
+                wp_enqueue_script( 'speaking-url' );
                 wp_enqueue_script( 'dokan-script' );
                 wp_enqueue_script( 'dokan-select2-js' );
             }

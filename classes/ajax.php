@@ -149,7 +149,10 @@ class Dokan_Ajax {
             }
         }
 
-        echo $check;
+        wp_send_json_success( array(
+            'message' => __( 'Available', 'dokan-lite' ),
+            'url'     => sanitize_user( $url_slug )
+        ) );
     }
 
     /**

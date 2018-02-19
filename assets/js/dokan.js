@@ -1417,7 +1417,8 @@ jQuery(function($) {
     }
 
     $('#company-name').on('focusout', function() {
-        var value = $(this).val().toLowerCase().replace(/-+/g, '').replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+        var value = getSlug( $(this).val() );
+
         $('#seller-url').val(value);
         $('#url-alart').text( value );
         $('#seller-url').focus();
@@ -1479,12 +1480,12 @@ jQuery(function($) {
 
         $.post( dokan.ajaxurl, data, function(resp) {
 
-            if ( resp == 0){
-                $('#url-alart').removeClass('text-success').addClass('text-danger');
-                $('#url-alart-mgs').removeClass('text-success').addClass('text-danger').text(dokan.seller.notAvailable);
-            } else {
+            if ( resp.success === true ) {
                 $('#url-alart').removeClass('text-danger').addClass('text-success');
                 $('#url-alart-mgs').removeClass('text-danger').addClass('text-success').text(dokan.seller.available);
+            } else {
+                $('#url-alart').removeClass('text-success').addClass('text-danger');
+                $('#url-alart-mgs').removeClass('text-success').addClass('text-danger').text(dokan.seller.notAvailable);
             }
 
             row.unblock();

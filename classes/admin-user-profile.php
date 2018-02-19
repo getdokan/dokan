@@ -37,6 +37,7 @@ class Dokan_Admin_User_Profile {
                 ),
             );
 
+            wp_enqueue_script( 'speaking-url' );
             wp_localize_script( 'jquery', 'dokan_user_profile', $admin_admin_script );
         }
 
@@ -445,7 +446,7 @@ class Dokan_Admin_User_Profile {
             });
 
             $('#seller-url').keyup(function(e) {
-                $('#url-alart').text( $(this).val() );
+                $('#url-alart').text( getSlug( $(this).val() ) );
             });
 
             $('#seller-url').on('focusout', function() {
@@ -466,12 +467,12 @@ class Dokan_Admin_User_Profile {
 
                 $.post( dokan_user_profile.ajaxurl, data, function(resp) {
 
-                    if ( resp == 0){
-                        $('#url-alart').removeClass('text-success').addClass('text-danger');
-                        $('#url-alart-mgs').removeClass('text-success').addClass('text-danger').text(dokan_user_profile.seller.notAvailable);
-                    } else {
+                    if ( resp.success === true ) {
                         $('#url-alart').removeClass('text-danger').addClass('text-success');
                         $('#url-alart-mgs').removeClass('text-danger').addClass('text-success').text(dokan_user_profile.seller.available);
+                    } else {
+                        $('#url-alart').removeClass('text-success').addClass('text-danger');
+                        $('#url-alart-mgs').removeClass('text-success').addClass('text-danger').text(dokan_user_profile.seller.notAvailable);
                     }
 
                     row.unblock();
