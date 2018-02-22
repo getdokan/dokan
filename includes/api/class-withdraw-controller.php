@@ -235,12 +235,22 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
             return new WP_Error( 'no_store_found', __( 'No vendor found', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
-        $amount = floatval( $request['amount'] );
-        $method = $request['method'];
-        $notes  = $request['notes'];
+        $amount  = floatval( $request['amount'] );
+        $method  = $request['method'];
+        $notes   = $request['notes'];
+        $limit   = $this->get_withdraw_limit();
+        $balance = dokan_get_seller_balance( $store_id, false );
 
         if ( empty( $amount ) ) {
             return new WP_Error( 'no_amount_found', __( 'Requested amount must be grater than 0', 'dokan-lite' ), array( 'status' => 404 ) );
+        }
+
+        if ( $amount > $balance ) {
+            return new WP_Error( 'enough_balance', __( 'You don\'t have enough balance for this request', 'dokan-lite' ), array( 'status' => 404 ) );
+        }
+
+        if ( $amount < $limit ) {
+            return new WP_Error( 'dokan_withdraw_amount', sprintf( __( 'Withdraw amount must be greater than %d', 'dokan-lite' ), $this->get_withdraw_limit() ), array( 'status' => 404 ) );
         }
 
         if ( empty( $method ) ) {
@@ -274,6 +284,15 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
     }
 
     /**
+     * Get the system withdraw limit
+     *
+     * @return integer
+     */
+    function get_withdraw_limit() {
+        return (int) dokan_get_option( 'withdraw_limit', 'dokan_withdraw', 0 );
+    }
+
+    /**
      * Prepare data for response
      *
      * @since 2.8.0
@@ -284,7 +303,7 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
         $data = array(
             'id'           => $object->id,
             'user'         => $this->get_user_data( $object->user_id, $request ),
-            'amount'       => $object->amount,
+            'amount'       => floatval( $object->amount ),
             'created_data' => mysql_to_rfc3339( $object->date ),
             'status'       => $this->get_status( (int)$object->status ),
             'method'       => $object->method,
