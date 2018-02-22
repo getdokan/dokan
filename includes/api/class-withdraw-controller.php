@@ -303,8 +303,8 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
      * @return return object
      */
     public function get_user_data( $user_id, $request ) {
-        $store_controller = new Dokan_Store_Controller();
-        $user = new WP_User( $user_id );
+        $store_controller = new Dokan_REST_Store_Controller();
+        $user = dokan()->vendor->get( $user_id );
         return $store_controller->prepare_item_for_response( $user, $request );
     }
 
