@@ -508,7 +508,9 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
             'meta_data'             => $product->get_meta_data(),
         );
 
-        return apply_filters( "dokan_rest_prepare_{$this->post_type}_object", $data );
+        $response = rest_ensure_response( $data );
+        $response->add_links( $this->prepare_links( $product, $request ) );
+        return apply_filters( "dokan_rest_prepare_{$this->post_type}_object", $response, $product, $request );
     }
 
     /**
@@ -895,6 +897,33 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
          * @param bool            $creating If is creating a new object.
          */
         return apply_filters( "woocommerce_rest_pre_insert_{$this->post_type}_object", $product, $request, $creating );
+    }
+
+    /**
+     * Prepare links for the request.
+     *
+     * @param WC_Data         $object  Object data.
+     * @param WP_REST_Request $request Request object.
+     *
+     * @return array                   Links for the given post.
+     */
+    protected function prepare_links( $object, $request ) {
+        $links = array(
+            'self'       => array(
+                'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->base, $object->get_id() ) ),
+            ),
+            'collection' => array(
+                'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->base ) ),
+            ),
+        );
+
+        if ( $object->get_parent_id() ) {
+            $links['up'] = array(
+                'href' => rest_url( sprintf( '/%s/products/%d', $this->namespace, $object->get_parent_id() ) ),
+            );
+        }
+
+        return $links;
     }
 
     /**

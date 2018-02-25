@@ -301,7 +301,9 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
     public function prepare_data_for_response( $object, $request ) {
         $this->request = $request;
         $data          = $this->get_formatted_item_data( $object );
-        return apply_filters( "dokan_rest_prepare_{$this->post_type}_object", $data, $object, $request );
+        $response      = rest_ensure_response( $data );
+        $response->add_links( $this->prepare_links( $object, $request ) );
+        return apply_filters( "dokan_rest_prepare_{$this->post_type}_object", $response, $object, $request );
     }
 
     /**
@@ -346,6 +348,40 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
 
         return apply_filters( "dokan_rest_pre_insert_{$this->post_type}_object", $order, $request );
     }
+
+    /**
+     * Prepare links for the request.
+     *
+     * @param WC_Data         $object  Object data.
+     * @param WP_REST_Request $request Request object.
+     *
+     * @return array                   Links for the given post.
+     */
+    protected function prepare_links( $object, $request ) {
+        $links = array(
+            'self' => array(
+                'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $object->get_id() ) ),
+            ),
+            'collection' => array(
+                'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ),
+            ),
+        );
+
+        if ( 0 !== (int) $object->get_customer_id() ) {
+            $links['customer'] = array(
+                'href' => rest_url( sprintf( '/%s/customers/%d', $this->namespace, $object->get_customer_id() ) ),
+            );
+        }
+
+        if ( 0 !== (int) $object->get_parent_id() ) {
+            $links['up'] = array(
+                'href' => rest_url( sprintf( '/%s/orders/%d', $this->namespace, $object->get_parent_id() ) ),
+            );
+        }
+
+        return $links;
+    }
+
     /**
      * Get order summary report
      *

@@ -35,10 +35,11 @@ abstract class Dokan_REST_Controller extends WP_REST_Controller {
         $objects = array_map( array( $this, 'get_object' ), $result );
 
         foreach ( $objects as $object ) {
-            $data[] = $this->prepare_data_for_response( $object, $request );
+            $data           = $this->prepare_data_for_response( $object, $request );
+            $data_objects[] = $this->prepare_response_for_collection( $data );
         }
 
-        $response = rest_ensure_response( $data );
+        $response = rest_ensure_response( $data_objects );
         $response = $this->format_collection_response( $response, $request, $query->found_posts );
 
         return $response;
@@ -173,6 +174,35 @@ abstract class Dokan_REST_Controller extends WP_REST_Controller {
      */
     protected function prepare_object_for_database( $request ) {
         return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'dokan-lite' ), __METHOD__ ), array( 'status' => 405 ) );
+    }
+
+    /**
+     * Prepares a response for insertion into a collection.
+     *
+     * @since 4.7.0
+     *
+     * @param WP_REST_Response $response Response object.
+     * @return array|mixed Response data, ready for insertion into collection data.
+     */
+    public function prepare_response_for_collection( $response ) {
+        if ( ! ( $response instanceof WP_REST_Response ) ) {
+            return $response;
+        }
+
+        $data   = (array) $response->get_data();
+        $server = rest_get_server();
+
+        if ( method_exists( $server, 'get_compact_response_links' ) ) {
+            $links = call_user_func( array( $server, 'get_compact_response_links' ), $response );
+        } else {
+            $links = call_user_func( array( $server, 'get_response_links' ), $response );
+        }
+
+        if ( ! empty( $links ) ) {
+            $data['_links'] = $links;
+        }
+
+        return $data;
     }
 
     /**
