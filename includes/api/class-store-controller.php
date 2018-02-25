@@ -109,10 +109,11 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
 
         $stores_data = array();
         foreach ( $stores as $store ) {
-            $stores_data[] = $this->prepare_item_for_response( $store, $request );
+            $stores_data = $this->prepare_item_for_response( $store, $request );
+            $data_objects[] = $this->prepare_response_for_collection( $stores_data );
         }
 
-        $response = rest_ensure_response( $stores_data );
+        $response = rest_ensure_response( $data_objects );
         $response = $this->format_collection_response( $response, $request, dokan()->vendor->get_total() );
 
         return $response;
@@ -135,8 +136,29 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
 
         $stores_data = $this->prepare_item_for_response( $store->data, $request );
         $response    = rest_ensure_response( $stores_data );
-
         return $response;
+    }
+
+    /**
+     * Prepare links for the request.
+     *
+     * @param WC_Data         $object  Object data.
+     * @param WP_REST_Request $request Request object.
+     *
+     * @return array                   Links for the given post.
+     */
+    protected function prepare_links( $object, $request ) {
+        error_log( print_r( $object, true ) );
+        $links = array(
+            'self' => array(
+                'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->base, $object['id'] ) ),
+            ),
+            'collection' => array(
+                'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->base ) ),
+            ),
+        );
+
+        return $links;
     }
 
     /**
@@ -191,14 +213,14 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
      * @return json
      */
     public function get_store_products( $request ) {
-        $product_controller = new Dokan_Product_Controller();
+        $product_controller = new Dokan_REST_Product_Controller();
 
         $args = array(
             'post_status' => array( 'publish' ),
             'author'      => $request['id']
         );
 
-        $response = $product_controller->get_products( $request, $args );
+        $response = $product_controller->get_items( $request, $args );
         return $response;
     }
 
@@ -282,8 +304,9 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
 
         $data = $store->to_array();
         $data = array_merge( $data, $additional_fields );
-
-        return $data;
+        $response = rest_ensure_response( $data );
+        $response->add_links( $this->prepare_links( $data, $request ) );
+        return $response;
     }
 
     /**

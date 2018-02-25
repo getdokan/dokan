@@ -142,7 +142,8 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
 
         $data = array();
         foreach ( $withdraws as $key => $value ) {
-            $data[] = $this->prepare_response_for_object( $value, $request );
+            $resp = $this->prepare_response_for_object( $value, $request );
+            $data[] = $this->prepare_response_for_collection( $resp );
         }
 
         $response = rest_ensure_response( $data );
@@ -311,7 +312,31 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
             'ip'           => $object->ip
         );
 
-        return apply_filters( "dokan_rest_prepare_withdraw_object", $data );
+        $response      = rest_ensure_response( $data );
+        $response->add_links( $this->prepare_links( $object, $request ) );
+
+        return apply_filters( "dokan_rest_prepare_withdraw_object", $response, $object, $request );
+    }
+
+    /**
+     * Prepare links for the request.
+     *
+     * @param WC_Data         $object  Object data.
+     * @param WP_REST_Request $request Request object.
+     *
+     * @return array                   Links for the given post.
+     */
+    protected function prepare_links( $object, $request ) {
+        $links = array(
+            'self' => array(
+                'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->base, $object->id ) ),
+            ),
+            'collection' => array(
+                'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->base ) ),
+            ),
+        );
+
+        return $links;
     }
 
     /**
