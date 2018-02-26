@@ -148,7 +148,6 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
      * @return array                   Links for the given post.
      */
     protected function prepare_links( $object, $request ) {
-        error_log( print_r( $object, true ) );
         $links = array(
             'self' => array(
                 'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->base, $object['id'] ) ),

@@ -54,28 +54,27 @@ class Dokan_REST_Settings_Controller extends WP_REST_Controller {
      * @return void
      */
     public function get_settings( $request ) {
-        
+
         $seller_id = dokan_get_current_user_id();
 
         if ( !dokan_is_user_seller( $seller_id ) ) {
             return new WP_Error( 'invalid_seller', 'Invalid Seller ID', array( 'status' => 404 ) );
         }
-        
+
         $data = dokan_get_store_info( $seller_id );
 
         $response = rest_ensure_response( $data );
         return $response;
     }
-    
+
     /**
      * Update Settings
-     * 
+     *
      * @param type $request
      */
     public function update_settings( $request ) {
-        
+
         $seller_id = dokan_get_current_user_id();
-        error_log( print_r( $request->get_params(), true ) );
         $prev_dokan_settings = dokan_get_store_info( $seller_id );
         //update store setttings info
         $dokan_settings = array(
@@ -92,7 +91,7 @@ class Dokan_REST_Settings_Controller extends WP_REST_Controller {
             'enable_tnc'                   => isset( $request['enable_tnc'] ) ? $request['enable_tnc'] : '',
             'store_tnc'                    => isset( $request['store_tnc'] ) ? $request['store_tnc'] : ''
         );
-        
+
         if ( isset( $request['social'] ) ) {
             $dokan_settings['social'] = array();
             $social                   = $request['social'];
@@ -105,14 +104,14 @@ class Dokan_REST_Settings_Controller extends WP_REST_Controller {
                     }
                 }
             }
-            
+
             $dokan_settings['social'] = wp_parse_args( $dokan_settings['social'], $prev_dokan_settings['social'] );
         }
-        
+
         //update payment settings info
         if ( isset( $request['payment'] ) ) {
             $dokan_settings['payment'] = array();
-            
+
             if ( isset( $request['payment']['bank'] ) ) {
             $bank = $request['payment']['bank'];
 
@@ -140,21 +139,21 @@ class Dokan_REST_Settings_Controller extends WP_REST_Controller {
                     'email' => filter_var( $skrill['email'], FILTER_VALIDATE_EMAIL )
                 );
             }
-            
+
             $dokan_settings['payment'] = wp_parse_args( $dokan_settings['payment'] , $prev_dokan_settings['payment'] );
         }
 
         $dokan_settings = wp_parse_args( $dokan_settings, $prev_dokan_settings );
-       
+
         $profile_completeness = Dokan_Template_Settings::init()->calculate_profile_completeness_value( $dokan_settings );
         $dokan_settings['profile_completion'] = $profile_completeness;
-        
+
         update_user_meta( $seller_id, 'dokan_profile_settings', $dokan_settings );
-        
+
         do_action( 'dokan_store_profile_saved_via_REST', $seller_id, $request, $dokan_settings );
-        
+
         $dokan_settings = dokan_get_store_info( $seller_id );
-        
+
         $response = rest_ensure_response( $dokan_settings );
         return $response;
     }

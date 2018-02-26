@@ -33,6 +33,7 @@ class Dokan_API_Register {
 
         // Init REST API routes.
         add_action( 'rest_api_init', array( $this, 'register_rest_routes' ), 10 );
+        add_filter( 'woocommerce_rest_prepare_product_object', array( $this, 'prepeare_product_response' ), 10, 3 );
     }
 
     /**
@@ -47,5 +48,30 @@ class Dokan_API_Register {
             $controller = new $controller();
             $controller->register_routes();
         }
+    }
+
+    /**
+     * Prepare object for product response
+     *
+     * @since 2.8.0
+     *
+     * @return void
+     */
+    public function prepeare_product_response( $response, $object, $request ) {
+        $data = $response->get_data();
+        $author_id = get_post_field( 'post_author', $data['id'] );
+
+        $store = dokan()->vendor->get( $author_id );
+
+        $data['store'] = array(
+            'id'        => $store->get_id(),
+            'name'      => $store->get_name(),
+            'shop_name' => $store->get_shop_name(),
+            'url'       => $store->get_shop_url(),
+            'address'   => $store->get_address()
+        );
+
+        $response->set_data( $data );
+        return $response;
     }
 }
