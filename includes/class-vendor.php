@@ -324,7 +324,7 @@ class Dokan_Vendor {
                 WHERE seller_id = %d AND DATE(p.post_date) <= %s AND order_status IN({$status})";
 
             $result = $wpdb->get_row( $wpdb->prepare( $sql, $this->id, $this->id, $date ) );
-            $earning = (float) $result->earnings - number_format( (float) $result->withdraw, wc_get_rounding_precision() );
+            $earning = (float) $result->earnings - (float) round( $result->withdraw, wc_get_rounding_precision() );
 
             wp_cache_set( $cache_key, $earning, $cache_group );
             dokan_cache_update_group( $cache_key , $cache_group );
