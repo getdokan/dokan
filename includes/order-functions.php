@@ -817,3 +817,22 @@ if ( ! function_exists( 'dokan_get_customer_orders_by_seller' ) ) :
     }
 
 endif;
+
+add_action( 'dokan_checkout_update_order_meta', 'dokan_save_admin_commssion_to_order_meta', 10, 2 );
+
+/**
+ * Update order meta when the order is placed
+ *
+ * @since 2.7.8
+ *
+ * @param int $order_id
+ *
+ * @param int $seller_id
+ *
+ * @return void
+ */
+function dokan_save_admin_commssion_to_order_meta( $order_id, $seller_id ) {
+    $seller_order = wc_get_order( $order_id );
+    $admin_fee = dokan_get_admin_commission_by( $seller_order, $seller_id );
+    update_post_meta( $order_id , '_dokan_admin_fee', $admin_fee );
+}
