@@ -1327,10 +1327,6 @@ function dokan_filter_orders_for_current_vendor( $query ) {
     if ( ! isset( $query->query_vars['post_type'] ) ) {
         return;
     }
-
-    if ( is_admin() && $query->query_vars['post_type'] == 'page' ) {
-        remove_meta_box( 'sellerdiv', 'product', 'normal' );
-    }
     
     if ( is_admin() && $query->is_main_query() && ( $query->query_vars['post_type'] == 'shop_order' || $query->query_vars['post_type'] == 'product' || $query->query_vars['post_type'] == 'wc_booking' ) ) {
         $query->set( 'author', get_current_user_id() );
@@ -1340,6 +1336,24 @@ function dokan_filter_orders_for_current_vendor( $query ) {
 }
 
 add_action( 'pre_get_posts', 'dokan_filter_orders_for_current_vendor' );
+
+/**
+ * Remove sellerdiv metabox when a seller can access the backend
+ *
+ * @since 2.7.8
+ * @return void
+ */
+function dokan_remove_sellerdiv_metabox() {
+    if ( current_user_can( 'manage_woocommerce' ) ) {
+        return;
+    }
+
+    if ( is_admin() && get_post_type() == 'product' && ! defined( 'DOING_AJAX' ) ) {
+        remove_meta_box( 'sellerdiv', 'product', 'normal' );
+    }
+}
+
+add_action( 'do_meta_boxes', 'dokan_remove_sellerdiv_metabox' );
 
 /**
  * Human readable number format.
