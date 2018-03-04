@@ -87,6 +87,7 @@ class Dokan_Vendor {
             'location'              => $this->get_location(),
             'banner'                => $this->get_banner(),
             'gravatar'              => $this->get_avatar(),
+            'shop_url'              => $this->get_shop_url(),
             'products_per_page'     => $this->get_per_page(),
             'show_more_product_tab' => $this->show_more_products_tab(),
             'toc_enabled'           => $this->toc_enabled(),
