@@ -1016,3 +1016,26 @@ if ( ! function_exists( 'dokan_date_time_format' ) ) {
     }
 
 }
+
+/**
+ * Remove banner when without banner layout
+ * selected for profile
+ *
+ * @param array $progress_values
+ *
+ * @return array
+ */
+function dokan_split_profile_completion_value( $progress_values ) {
+    $store_banner = dokan_get_option( 'store_header_template', 'dokan_appearance' );
+
+    if ( 'layout3' == $store_banner ) {
+        unset( $progress_values['banner_val'] );
+        $progress_values['store_name_val'] = 15;
+        $progress_values['phone_val']      = 15;
+        $progress_values['address_val']    = 15;
+    }
+
+    return $progress_values;
+}
+
+add_filter( 'dokan_profile_completion_values', 'dokan_split_profile_completion_value', 10 );
