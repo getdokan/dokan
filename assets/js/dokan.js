@@ -1103,6 +1103,7 @@ jQuery(function($) {
                             var instruction = self.closest('.instruction-inside');
                             var wrap = instruction.siblings('.image-wrap');
 
+                            // wrap.find('img').attr('src', attachment.sizes.thumbnail.url);
                             wrap.find('img').attr('src', attachment.url);
                             wrap.find('img').removeAttr( 'srcset' );
 
@@ -1308,31 +1309,13 @@ jQuery(function($) {
                 }
             }
 
-            if ( $( '#product_type' ).val() == 'simple' ) {
-                if ( Number( $('span.vendor-price').text() ) < 0  ) {
-                    $( $('.dokan-product-less-price-alert').removeClass('dokan-hide') );
-                    $( 'input[type=submit]' ).attr( 'disabled', 'disabled' );
-                } else {
-                    $( 'input[type=submit]' ).removeAttr( 'disabled');
-                    $( $('.dokan-product-less-price-alert').addClass('dokan-hide') );
-                }
+            if ( Number( $('span.vendor-price').text() ) < 0  ) {
+                $( $('.dokan-product-less-price-alert').removeClass('dokan-hide') );
+                $( 'input[type=submit]' ).attr( 'disabled', 'disabled' );
+            } else {
+                $( 'input[type=submit]' ).removeAttr( 'disabled');
+                $( $('.dokan-product-less-price-alert').addClass('dokan-hide') );
             }
-
-            $( '#product_type' ).on( 'change', function() {
-                var self = $(this);
-
-                if ( self.val() == 'variable' || self.val() == 'grouped' ) {
-                    $( 'input[type=submit]' ).removeAttr( 'disabled' );
-                } else {
-                    if ( Number( $('span.vendor-price').text() ) > 0 ) {
-                        $( 'input[type=submit]' ).removeAttr( 'disabled');
-                        $( $('.dokan-product-less-price-alert').addClass('dokan-hide') );
-                    } else {
-                        $( $('.dokan-product-less-price-alert').removeClass('dokan-hide') );
-                        $( 'input[type=submit]' ).attr( 'disabled', 'disabled' );
-                    }
-                }
-            } );            
 
         } ).trigger('keyup');
 
