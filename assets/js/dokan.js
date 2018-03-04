@@ -1103,8 +1103,8 @@ jQuery(function($) {
                             var instruction = self.closest('.instruction-inside');
                             var wrap = instruction.siblings('.image-wrap');
 
-                            // wrap.find('img').attr('src', attachment.sizes.thumbnail.url);
                             wrap.find('img').attr('src', attachment.url);
+                            wrap.find('img').removeAttr( 'srcset' );
 
                             instruction.addClass('dokan-hide');
                             wrap.removeClass('dokan-hide');
