@@ -103,6 +103,10 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
                 $amount  = $_POST['amount'][$key];
                 $method  = $_POST['method'][$key];
 
+                if ( dokan_get_seller_balance( $user_id, false ) < $amount ) {
+                    return;
+                }
+
                 $this->update_status( $withdraw_id, $user_id, 1 );
                 do_action( 'dokan_withdraw_request_approved', $user_id, $amount, $method );
             }
