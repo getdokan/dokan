@@ -85,7 +85,7 @@ class Dokan_Admin_Ajax {
                 $method  = $postdata['method'][$withdraw_id];
 
                 if ( dokan_get_seller_balance( $user_id, false ) < $amount ) {
-                    return;
+                    continue;
                 }
 
                 $withdraw->update_status( $withdraw_id, $user_id, 1 );
