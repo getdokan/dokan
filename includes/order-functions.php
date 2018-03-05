@@ -317,15 +317,13 @@ function dokan_on_child_order_status_change( $order_id, $old_status, $new_status
     $parent_order_id = $order_post->post_parent;
     $sub_orders      = get_children( array( 'post_parent' => $parent_order_id, 'post_type' => 'shop_order' ) );
 
-
     // return if any child order is not completed
     $all_complete = true;
 
     if ( $sub_orders ) {
         foreach ($sub_orders as $sub) {
             $order = new WC_Order( $sub->ID );
-
-            if ( dokan_get_prop( $order, 'status' ) != 'wc-completed' ) {
+            if ( dokan_get_prop( $order, 'status' ) != 'completed' ) {
                 $all_complete = false;
             }
         }
