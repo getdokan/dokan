@@ -131,12 +131,12 @@ class Dokan_Template_Shortcodes {
         */
         $atts_val = shortcode_atts( apply_filters( 'dokan_best_selling_product_per_page', array(
             'no_of_product' => 8,
-            'seller_id' => '',
+            'seller_id' => ''
         ), $atts ), $atts );
 
         ob_start();
         ?>
-        <ul>
+        <ul class="products">
             <?php
             $best_selling_query = dokan_get_best_selling_products( $atts_val['no_of_product'], $atts_val['seller_id'] );
             ?>
@@ -168,7 +168,7 @@ class Dokan_Template_Shortcodes {
         */
 
         $per_page = shortcode_atts( apply_filters( 'dokan_top_rated_product_per_page', array(
-            'no_of_product' => 8,
+            'no_of_product' => 8
         ), $atts ), $atts );
 
         ob_start();
