@@ -5,7 +5,7 @@
 **Requires at least:** 4.4  
 **Tested up to:** 4.9.4  
 **WC requires at least:** 2.6  
-**WC tested up to:** 3.3.1  
+**WC tested up to:** 3.3.3  
 **Requires PHP:** 5.6  
 **Stable tag:** trunk  
 **License:** GPLv2 or later  
@@ -180,6 +180,21 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 ## Changelog ##
+
+v2.7.8 -> March 05, 2018
+------------------------
+- **Tweak:** Added vendor field in the product quick edit page
+- **Tweak:** Removed sellerdiv metabox when a seller can access the backend
+- **Fix:** Sometimes seller balance turn into minus figure
+- **Fix:** Vendor name is showing twice on the cart checkout page
+- **Fix:** Seller balance is not updating when the withdraw request is approved
+- **Fix:** Extra fee (shipping & tax) is not adding to admin balance when a new order is made
+- **Fix:** Unable to save variable product if admin commission is set to fixed
+- **Fix:** Product thumbnail image is not changing on updating new image
+- **Fix:** Fixed withdraw approving issue from admin side
+- **Fix:** Vendor profile completion need upload banner even there are no settings to add banner
+- **Fix:** Fixed bulk withdraw approving issue
+- **Fix:** Completion of suborders does not make the parent order status to complete
 
 v2.7.7 -> Feb 4, 2018
 ---------------------

@@ -1309,19 +1309,38 @@ jQuery(function($) {
                 }
             }
 
-            if ( Number( $('span.vendor-price').text() ) < 0  ) {
-                $( $('.dokan-product-less-price-alert').removeClass('dokan-hide') );
-                $( 'input[type=submit]' ).attr( 'disabled', 'disabled' );
-            } else {
-                $( 'input[type=submit]' ).removeAttr( 'disabled');
-                $( $('.dokan-product-less-price-alert').addClass('dokan-hide') );
+            if ( $( '#product_type' ).val() == 'simple' ) {
+                if ( Number( $('span.vendor-price').text() ) < 0  ) {
+                    $( $('.dokan-product-less-price-alert').removeClass('dokan-hide') );
+                    $( 'input[type=submit]' ).attr( 'disabled', 'disabled' );
+                } else {
+                    $( 'input[type=submit]' ).removeAttr( 'disabled');
+                    $( $('.dokan-product-less-price-alert').addClass('dokan-hide') );
+                }
             }
+
+            $( '#product_type' ).on( 'change', function() {
+                var self = $(this);
+
+                if ( self.val() == 'variable' || self.val() == 'grouped' ) {
+                    $( 'input[type=submit]' ).removeAttr( 'disabled' );
+                } else {
+                    if ( Number( $('span.vendor-price').text() ) > 0 ) {
+                        $( 'input[type=submit]' ).removeAttr( 'disabled');
+                        $( $('.dokan-product-less-price-alert').addClass('dokan-hide') );
+                    } else {
+                        $( $('.dokan-product-less-price-alert').removeClass('dokan-hide') );
+                        $( 'input[type=submit]' ).attr( 'disabled', 'disabled' );
+                    }
+                }
+            } ); 
 
         } ).trigger('keyup');
 
     });
 
 })(jQuery);
+
 jQuery(function($) {
     var api = wp.customize;
 

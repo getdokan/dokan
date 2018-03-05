@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 2.7.7\n"
+"Project-Id-Version: Dokan 2.7.8\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2018-02-12 05:34:29+00:00\n"
+"POT-Creation-Date: 2018-03-05 06:38:16+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -28,211 +28,212 @@ msgstr ""
 msgid "1"
 msgstr ""
 
-#: classes/admin-user-profile.php:35 includes/class-scripts.php:114
+#: classes/admin-user-profile.php:35 classes/ajax.php:135
+#: includes/class-scripts.php:115
 msgid "Available"
 msgstr ""
 
-#: classes/admin-user-profile.php:36 includes/class-scripts.php:115
+#: classes/admin-user-profile.php:36 includes/class-scripts.php:116
 msgid "Not Available"
 msgstr ""
 
-#: classes/admin-user-profile.php:82 classes/seller-setup-wizard.php:275
+#: classes/admin-user-profile.php:83 classes/seller-setup-wizard.php:275
 msgid "Country"
 msgstr ""
 
-#: classes/admin-user-profile.php:86
+#: classes/admin-user-profile.php:87
 msgid "Select a country&hellip;"
 msgstr ""
 
-#: classes/admin-user-profile.php:89
+#: classes/admin-user-profile.php:90
 msgid "State/County"
 msgstr ""
 
-#: classes/admin-user-profile.php:90
+#: classes/admin-user-profile.php:91
 msgid "State/County or state code"
 msgstr ""
 
-#: classes/admin-user-profile.php:95
+#: classes/admin-user-profile.php:96
 msgid "Dokan Options"
 msgstr ""
 
-#: classes/admin-user-profile.php:100
+#: classes/admin-user-profile.php:101
 msgid "Banner"
 msgstr ""
 
-#: classes/admin-user-profile.php:112 templates/settings/store-form.php:69
+#: classes/admin-user-profile.php:113 templates/settings/store-form.php:69
 msgid "Upload banner"
 msgstr ""
 
-#: classes/admin-user-profile.php:113
+#: classes/admin-user-profile.php:114
 msgid "(Upload a banner for your store. Banner size is (825x300) pixels. )"
 msgstr ""
 
-#: classes/admin-user-profile.php:120
+#: classes/admin-user-profile.php:121
 msgid "Store name"
 msgstr ""
 
-#: classes/admin-user-profile.php:127
+#: classes/admin-user-profile.php:128
 msgid "Store URL"
 msgstr ""
 
-#: classes/admin-user-profile.php:135
+#: classes/admin-user-profile.php:136
 msgid "Address 1"
 msgstr ""
 
-#: classes/admin-user-profile.php:142
+#: classes/admin-user-profile.php:143
 msgid "Address 2"
 msgstr ""
 
-#: classes/admin-user-profile.php:149
+#: classes/admin-user-profile.php:150
 msgid "Town/City"
 msgstr ""
 
-#: classes/admin-user-profile.php:156
+#: classes/admin-user-profile.php:157
 msgid "Zip Code"
 msgstr ""
 
-#: classes/admin-user-profile.php:196 classes/pageviews.php:153
+#: classes/admin-user-profile.php:197 classes/pageviews.php:153
 #: templates/global/seller-registration-form.php:38
 msgid "Phone Number"
 msgstr ""
 
-#: classes/admin-user-profile.php:214
+#: classes/admin-user-profile.php:215
 msgid "Payment Options : "
 msgstr ""
 
-#: classes/admin-user-profile.php:219
+#: classes/admin-user-profile.php:220
 msgid "Paypal Email "
 msgstr ""
 
-#: classes/admin-user-profile.php:227
+#: classes/admin-user-profile.php:228
 msgid "Skrill Email "
 msgstr ""
 
-#: classes/admin-user-profile.php:236
+#: classes/admin-user-profile.php:237
 msgid "Bank name "
 msgstr ""
 
-#: classes/admin-user-profile.php:242
+#: classes/admin-user-profile.php:243
 msgid "Account Name "
 msgstr ""
 
-#: classes/admin-user-profile.php:248
+#: classes/admin-user-profile.php:249
 msgid "Account Number "
 msgstr ""
 
-#: classes/admin-user-profile.php:254
+#: classes/admin-user-profile.php:255
 msgid "Bank Address "
 msgstr ""
 
-#: classes/admin-user-profile.php:260
+#: classes/admin-user-profile.php:261
 msgid "Bank Swift "
 msgstr ""
 
-#: classes/admin-user-profile.php:267 includes/admin/setup-wizard.php:88
+#: classes/admin-user-profile.php:268 includes/admin/setup-wizard.php:88
 msgid "Selling"
 msgstr ""
 
-#: classes/admin-user-profile.php:272
+#: classes/admin-user-profile.php:273
 msgid "Enable Adding Products"
 msgstr ""
 
-#: classes/admin-user-profile.php:275
+#: classes/admin-user-profile.php:276
 msgid "Enable or disable product adding capability"
 msgstr ""
 
-#: classes/admin-user-profile.php:280
+#: classes/admin-user-profile.php:281
 msgid "Publishing"
 msgstr ""
 
-#: classes/admin-user-profile.php:285
+#: classes/admin-user-profile.php:286
 msgid "Publish product directly"
 msgstr ""
 
-#: classes/admin-user-profile.php:288
+#: classes/admin-user-profile.php:289
 msgid "Bypass pending, publish products directly"
 msgstr ""
 
-#: classes/admin-user-profile.php:293
+#: classes/admin-user-profile.php:294
 msgid "Admin Commission Type "
 msgstr ""
 
-#: classes/admin-user-profile.php:296 includes/admin/class-settings.php:136
+#: classes/admin-user-profile.php:297 includes/admin/class-settings.php:136
 msgid "Percentage"
 msgstr ""
 
-#: classes/admin-user-profile.php:297 includes/admin/class-settings.php:135
+#: classes/admin-user-profile.php:298 includes/admin/class-settings.php:135
 msgid "Flat"
 msgstr ""
 
-#: classes/admin-user-profile.php:299
+#: classes/admin-user-profile.php:300
 msgid "Set the commmission type admin gets from this seller"
 msgstr ""
 
-#: classes/admin-user-profile.php:303
+#: classes/admin-user-profile.php:304
 msgid "Admin Commission "
 msgstr ""
 
-#: classes/admin-user-profile.php:307
+#: classes/admin-user-profile.php:308
 msgid "It will override the default commission admin gets from each sales"
 msgstr ""
 
-#: classes/admin-user-profile.php:312
+#: classes/admin-user-profile.php:313
 msgid "Featured vendor"
 msgstr ""
 
-#: classes/admin-user-profile.php:317
+#: classes/admin-user-profile.php:318
 msgid "Mark as featured vendor"
 msgstr ""
 
-#: classes/admin-user-profile.php:320
+#: classes/admin-user-profile.php:321
 msgid "This vendor will be marked as a featured vendor."
 msgstr ""
 
-#: classes/admin-withdraw.php:193
+#: classes/admin-withdraw.php:197
 msgid "Requests Deleted!"
 msgstr ""
 
-#: classes/admin-withdraw.php:197
+#: classes/admin-withdraw.php:201
 msgid "Requests Cancelled!"
 msgstr ""
 
-#: classes/admin-withdraw.php:201
+#: classes/admin-withdraw.php:205
 msgid "Requests Approved!"
 msgstr ""
 
-#: classes/admin-withdraw.php:222 classes/admin-withdraw.php:236
+#: classes/admin-withdraw.php:226 classes/admin-withdraw.php:240
 msgid "User Name"
 msgstr ""
 
-#: classes/admin-withdraw.php:223 classes/admin-withdraw.php:237
+#: classes/admin-withdraw.php:227 classes/admin-withdraw.php:241
 #: templates/withdraw/approved-request-listing.php:14
 #: templates/withdraw/cancelled-request-listing.php:14
 #: templates/withdraw/pending-request-listing.php:14
 msgid "Amount"
 msgstr ""
 
-#: classes/admin-withdraw.php:224 classes/admin-withdraw.php:238
+#: classes/admin-withdraw.php:228 classes/admin-withdraw.php:242
 #: templates/withdraw/approved-request-listing.php:15
 #: templates/withdraw/cancelled-request-listing.php:15
 #: templates/withdraw/pending-request-listing.php:15
 msgid "Method"
 msgstr ""
 
-#: classes/admin-withdraw.php:225 classes/admin-withdraw.php:239
+#: classes/admin-withdraw.php:229 classes/admin-withdraw.php:243
 msgid "Method Details"
 msgstr ""
 
-#: classes/admin-withdraw.php:226 classes/admin-withdraw.php:240
+#: classes/admin-withdraw.php:230 classes/admin-withdraw.php:244
 #: templates/withdraw/cancelled-request-listing.php:17
 msgid "Note"
 msgstr ""
 
-#: classes/admin-withdraw.php:227 classes/admin-withdraw.php:241
+#: classes/admin-withdraw.php:231 classes/admin-withdraw.php:245
 msgid "IP"
 msgstr ""
 
-#: classes/admin-withdraw.php:228 classes/admin-withdraw.php:242
+#: classes/admin-withdraw.php:232 classes/admin-withdraw.php:246
 #: includes/admin-functions.php:44 includes/admin-functions.php:60
 #: templates/my-orders.php:28 templates/orders/listing.php:21
 #: templates/orders/listing.php:73 templates/products/products-listing.php:72
@@ -243,11 +244,11 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: classes/admin-withdraw.php:266 classes/admin-withdraw.php:276
+#: classes/admin-withdraw.php:270 classes/admin-withdraw.php:280
 msgid "Approve"
 msgstr ""
 
-#: classes/admin-withdraw.php:267 classes/admin-withdraw.php:271
+#: classes/admin-withdraw.php:271 classes/admin-withdraw.php:275
 #: includes/product-functions.php:297 templates/my-orders.php:83
 #: templates/orders/details.php:188
 #: templates/products/new-product-single.php:226
@@ -258,80 +259,76 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: classes/admin-withdraw.php:272 classes/admin-withdraw.php:277
+#: classes/admin-withdraw.php:276 classes/admin-withdraw.php:281
 #: includes/admin/views/withdraw.php:14
 #: templates/dashboard/orders-widget.php:31
 msgid "Pending"
 msgstr ""
 
-#: classes/admin-withdraw.php:282 classes/admin-withdraw.php:362
-#: classes/ajax.php:463 includes/woo-views/html-product-download.php:18
+#: classes/admin-withdraw.php:286 classes/admin-withdraw.php:366
+#: classes/ajax.php:448 includes/woo-views/html-product-download.php:18
 #: includes/woo-views/html-product-download.php:38
 msgid "Delete"
 msgstr ""
 
-#: classes/admin-withdraw.php:306 templates/orders/details.php:287
+#: classes/admin-withdraw.php:310 templates/orders/details.php:287
 msgid "Add note"
 msgstr ""
 
-#: classes/admin-withdraw.php:313
+#: classes/admin-withdraw.php:317
 msgid "Save"
 msgstr ""
 
-#: classes/admin-withdraw.php:314
+#: classes/admin-withdraw.php:318
 msgid "cancel"
 msgstr ""
 
-#: classes/admin-withdraw.php:330
+#: classes/admin-withdraw.php:334
 msgid "No results found"
 msgstr ""
 
-#: classes/admin-withdraw.php:342
+#: classes/admin-withdraw.php:346
 msgid "Bulk Actions"
 msgstr ""
 
-#: classes/admin-withdraw.php:346 classes/admin-withdraw.php:356
+#: classes/admin-withdraw.php:350 classes/admin-withdraw.php:360
 msgid "Approve Requests"
 msgstr ""
 
-#: classes/admin-withdraw.php:347 classes/admin-withdraw.php:351
+#: classes/admin-withdraw.php:351 classes/admin-withdraw.php:355
 msgid "Mark as Cancelled"
 msgstr ""
 
-#: classes/admin-withdraw.php:352 classes/admin-withdraw.php:357
+#: classes/admin-withdraw.php:356 classes/admin-withdraw.php:361
 msgid "Mark Pending"
 msgstr ""
 
-#: classes/admin-withdraw.php:363
+#: classes/admin-withdraw.php:367
 msgid "Download PayPal mass payment file"
 msgstr ""
 
-#: classes/admin-withdraw.php:371
+#: classes/admin-withdraw.php:375
 msgid "Apply"
 msgstr ""
 
-#: classes/admin-withdraw.php:380
+#: classes/admin-withdraw.php:384
 msgid "&laquo;"
 msgstr ""
 
-#: classes/admin-withdraw.php:381
+#: classes/admin-withdraw.php:385
 msgid "&raquo;"
 msgstr ""
 
-#: classes/ajax.php:82 classes/template-withdraw.php:194
+#: classes/ajax.php:80 classes/template-withdraw.php:194
 #: classes/template-withdraw.php:223
 msgid "You have no permission to do this action"
 msgstr ""
 
-#: classes/ajax.php:102
+#: classes/ajax.php:100
 msgid "Something wrong, please try again later"
 msgstr ""
 
-#: classes/ajax.php:116
-msgid "<br><strong> Vendor:</strong> %s"
-msgstr ""
-
-#: classes/ajax.php:131 classes/template-settings.php:215
+#: classes/ajax.php:113 classes/template-settings.php:215
 #: classes/template-settings.php:226 classes/template-settings.php:235
 #: classes/template-settings.php:245 classes/template-settings.php:279
 #: classes/template-settings.php:342 classes/template-settings.php:381
@@ -340,47 +337,47 @@ msgstr ""
 msgid "Are you cheating?"
 msgstr ""
 
-#: classes/ajax.php:166 classes/ajax.php:200
+#: classes/ajax.php:151 classes/ajax.php:185
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
-#: classes/ajax.php:170 classes/ajax.php:204
+#: classes/ajax.php:155 classes/ajax.php:189
 msgid "You have taken too long. Please go back and retry."
 msgstr ""
 
-#: classes/ajax.php:179 classes/ajax.php:213
+#: classes/ajax.php:164 classes/ajax.php:198
 msgid "You do not have permission to change this order"
 msgstr ""
 
-#: classes/ajax.php:264
+#: classes/ajax.php:249
 msgid "File %d"
 msgstr ""
 
-#: classes/ajax.php:286
+#: classes/ajax.php:271
 msgid "You have no permission to manage this order"
 msgstr ""
 
-#: classes/ajax.php:322 classes/ajax.php:327
+#: classes/ajax.php:307 classes/ajax.php:312
 msgid "Please provide your name."
 msgstr ""
 
-#: classes/ajax.php:334 includes/template-tags.php:140
+#: classes/ajax.php:319 includes/template-tags.php:140
 msgid "Something went wrong!"
 msgstr ""
 
-#: classes/ajax.php:340
+#: classes/ajax.php:325
 msgid "Email sent successfully!"
 msgstr ""
 
-#: classes/ajax.php:395 templates/orders/details.php:271
+#: classes/ajax.php:380 templates/orders/details.php:271
 msgid "Delete note"
 msgstr ""
 
-#: classes/ajax.php:505
+#: classes/ajax.php:490
 msgid "Error: Nonce verification failed"
 msgstr ""
 
-#: classes/ajax.php:594
+#: classes/ajax.php:579
 msgid "Image could not be processed. Please go back and try again."
 msgstr ""
 
@@ -452,7 +449,7 @@ msgstr ""
 #: includes/admin/setup-wizard.php:264 includes/admin-functions.php:49
 #: includes/admin-functions.php:63 includes/admin-functions.php:616
 #: includes/admin-functions.php:640 includes/wc-template.php:14
-#: templates/my-orders.php:31
+#: includes/wc-template.php:139 templates/my-orders.php:31
 msgid "Vendor"
 msgstr ""
 
@@ -721,7 +718,7 @@ msgid "No product found !"
 msgstr ""
 
 #: classes/template-settings.php:70 classes/template-settings.php:74
-#: dokan.php:413 includes/admin/class-admin.php:216
+#: dokan.php:408 includes/admin/class-admin.php:216
 #: includes/admin/class-admin.php:238 includes/admin/class-admin.php:370
 #: includes/admin/views/welcome.php:20
 msgid "Settings"
@@ -772,7 +769,7 @@ msgstr ""
 msgid "Add Profile Picture to gain %s%% progress"
 msgstr ""
 
-#: classes/template-settings.php:607 includes/functions.php:1695
+#: classes/template-settings.php:607 includes/functions.php:1709
 msgid "Facebook"
 msgstr ""
 
@@ -925,11 +922,11 @@ msgstr ""
 msgid "<b>Dokan</b> requires %sWooCommerce%s to be installed & activated!"
 msgstr ""
 
-#: dokan.php:410
+#: dokan.php:405
 msgid "Get Pro"
 msgstr ""
 
-#: dokan.php:414 includes/admin/views/welcome.php:21
+#: dokan.php:409 includes/admin/views/welcome.php:21
 msgid "Documentation"
 msgstr ""
 
@@ -1345,17 +1342,17 @@ msgstr ""
 msgid "Order Status for Withdraw"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:476 includes/order-functions.php:520
+#: includes/admin/setup-wizard.php:476 includes/order-functions.php:518
 #: templates/dashboard/orders-widget.php:26
 msgid "Completed"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:477 includes/order-functions.php:535
+#: includes/admin/setup-wizard.php:477 includes/order-functions.php:533
 #: templates/dashboard/orders-widget.php:36 templates/orders/listing.php:103
 msgid "Processing"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:478 includes/order-functions.php:530
+#: includes/admin/setup-wizard.php:478 includes/order-functions.php:528
 msgid "On-hold"
 msgstr ""
 
@@ -1518,7 +1515,7 @@ msgstr ""
 msgid "Approved"
 msgstr ""
 
-#: includes/admin/views/withdraw.php:24 includes/order-functions.php:545
+#: includes/admin/views/withdraw.php:24 includes/order-functions.php:543
 #: templates/dashboard/orders-widget.php:41
 msgid "Cancelled"
 msgstr ""
@@ -1656,210 +1653,210 @@ msgstr ""
 msgid "[%s] Your product has been approved!"
 msgstr ""
 
-#: includes/class-scripts.php:117
+#: includes/class-scripts.php:118
 msgid "Are you sure?"
 msgstr ""
 
-#: includes/class-scripts.php:118
+#: includes/class-scripts.php:119
 msgid "Something went wrong. Please try again."
 msgstr ""
 
-#: includes/class-scripts.php:169
+#: includes/class-scripts.php:171
 msgid "This field is required"
 msgstr ""
 
-#: includes/class-scripts.php:170
+#: includes/class-scripts.php:172
 msgid "Please fix this field."
 msgstr ""
 
-#: includes/class-scripts.php:171
+#: includes/class-scripts.php:173
 msgid "Please enter a valid email address."
 msgstr ""
 
-#: includes/class-scripts.php:172
+#: includes/class-scripts.php:174
 msgid "Please enter a valid URL."
 msgstr ""
 
-#: includes/class-scripts.php:173
+#: includes/class-scripts.php:175
 msgid "Please enter a valid date."
 msgstr ""
 
-#: includes/class-scripts.php:174
+#: includes/class-scripts.php:176
 msgid "Please enter a valid date (ISO)."
 msgstr ""
 
-#: includes/class-scripts.php:175
+#: includes/class-scripts.php:177
 msgid "Please enter a valid number."
 msgstr ""
 
-#: includes/class-scripts.php:176
+#: includes/class-scripts.php:178
 msgid "Please enter only digits."
 msgstr ""
 
-#: includes/class-scripts.php:177
+#: includes/class-scripts.php:179
 msgid "Please enter a valid credit card number."
 msgstr ""
 
-#: includes/class-scripts.php:178
+#: includes/class-scripts.php:180
 msgid "Please enter the same value again."
 msgstr ""
 
-#: includes/class-scripts.php:179
+#: includes/class-scripts.php:181
 msgid "Please enter no more than {0} characters."
 msgstr ""
 
-#: includes/class-scripts.php:180
+#: includes/class-scripts.php:182
 msgid "Please enter at least {0} characters."
 msgstr ""
 
-#: includes/class-scripts.php:181
+#: includes/class-scripts.php:183
 msgid "Please enter a value between {0} and {1} characters long."
 msgstr ""
 
-#: includes/class-scripts.php:182
+#: includes/class-scripts.php:184
 msgid "Please enter a value between {0} and {1}."
 msgstr ""
 
-#: includes/class-scripts.php:183
+#: includes/class-scripts.php:185
 msgid "Please enter a value less than or equal to {0}."
 msgstr ""
 
-#: includes/class-scripts.php:184
+#: includes/class-scripts.php:186
 msgid "Please enter a value greater than or equal to {0}."
 msgstr ""
 
-#: includes/class-scripts.php:279
+#: includes/class-scripts.php:281
 msgid "Upload featured image"
 msgstr ""
 
-#: includes/class-scripts.php:280
+#: includes/class-scripts.php:282
 msgid "Choose a file"
 msgstr ""
 
-#: includes/class-scripts.php:281
+#: includes/class-scripts.php:283
 msgid "Add Images to Product Gallery"
 msgstr ""
 
-#: includes/class-scripts.php:282
+#: includes/class-scripts.php:284
 msgid "Set featured image"
 msgstr ""
 
-#: includes/class-scripts.php:283
+#: includes/class-scripts.php:285
 #: includes/woo-views/html-product-download.php:17
 #: includes/woo-views/html-product-download.php:32
 msgid "Insert file URL"
 msgstr ""
 
-#: includes/class-scripts.php:284
+#: includes/class-scripts.php:286
 msgid "Add to gallery"
 msgstr ""
 
-#: includes/class-scripts.php:285
+#: includes/class-scripts.php:287
 msgid "Sorry, this attribute option already exists, Try a different one."
 msgstr ""
 
-#: includes/class-scripts.php:286
+#: includes/class-scripts.php:288
 msgid ""
 "Warning! This product will not have any variations if this option is not "
 "checked."
 msgstr ""
 
-#: includes/class-scripts.php:287
+#: includes/class-scripts.php:289
 msgid "Enter a name for the new attribute term:"
 msgstr ""
 
-#: includes/class-scripts.php:288
+#: includes/class-scripts.php:290
 msgid "Remove this attribute?"
 msgstr ""
 
-#: includes/class-scripts.php:296
+#: includes/class-scripts.php:298
 msgid ""
 "Are you sure you want to link all variations? This will create a new "
 "variation for each and every possible combination of variation attributes "
 "(max %d per run)."
 msgstr ""
 
-#: includes/class-scripts.php:297
+#: includes/class-scripts.php:299
 msgid "Enter a value"
 msgstr ""
 
-#: includes/class-scripts.php:298
+#: includes/class-scripts.php:300
 msgid "Variation menu order (determines position in the list of variations)"
 msgstr ""
 
-#: includes/class-scripts.php:299
+#: includes/class-scripts.php:301
 msgid "Enter a value (fixed or %)"
 msgstr ""
 
-#: includes/class-scripts.php:300
+#: includes/class-scripts.php:302
 msgid "Are you sure you want to delete all variations? This cannot be undone."
 msgstr ""
 
-#: includes/class-scripts.php:301
+#: includes/class-scripts.php:303
 msgid "Last warning, are you sure?"
 msgstr ""
 
-#: includes/class-scripts.php:302
+#: includes/class-scripts.php:304
 msgid "Choose an image"
 msgstr ""
 
-#: includes/class-scripts.php:303
+#: includes/class-scripts.php:305
 msgid "Set variation image"
 msgstr ""
 
-#: includes/class-scripts.php:304
+#: includes/class-scripts.php:306
 msgid "variation added"
 msgstr ""
 
-#: includes/class-scripts.php:305
+#: includes/class-scripts.php:307
 msgid "variations added"
 msgstr ""
 
-#: includes/class-scripts.php:306
+#: includes/class-scripts.php:308
 msgid "No variations added"
 msgstr ""
 
-#: includes/class-scripts.php:307
+#: includes/class-scripts.php:309
 msgid "Are you sure you want to remove this variation?"
 msgstr ""
 
-#: includes/class-scripts.php:308
+#: includes/class-scripts.php:310
 msgid "Sale start date (YYYY-MM-DD format or leave blank)"
 msgstr ""
 
-#: includes/class-scripts.php:309
+#: includes/class-scripts.php:311
 msgid "Sale end date (YYYY-MM-DD format or leave blank)"
 msgstr ""
 
-#: includes/class-scripts.php:310
+#: includes/class-scripts.php:312
 msgid "Save changes before changing page?"
 msgstr ""
 
-#: includes/class-scripts.php:311
+#: includes/class-scripts.php:313
 msgid "%qty% variation"
 msgstr ""
 
-#: includes/class-scripts.php:312
+#: includes/class-scripts.php:314
 msgid "%qty% variations"
 msgstr ""
 
-#: includes/class-scripts.php:313
+#: includes/class-scripts.php:315
 msgid "No Result Found"
 msgstr ""
 
-#: includes/class-scripts.php:316
+#: includes/class-scripts.php:318
 msgid "Select and Crop"
 msgstr ""
 
-#: includes/class-scripts.php:317
+#: includes/class-scripts.php:319
 msgid "Choose Image"
 msgstr ""
 
-#: includes/class-scripts.php:318
+#: includes/class-scripts.php:320
 msgid "Product title is required"
 msgstr ""
 
-#: includes/class-scripts.php:319
+#: includes/class-scripts.php:321
 msgid "Product category is required"
 msgstr ""
 
@@ -2184,112 +2181,112 @@ msgstr ""
 msgid "SWIFT: %s"
 msgstr ""
 
-#: includes/functions.php:1459
+#: includes/functions.php:1473
 msgid "- Select a location -"
 msgstr ""
 
-#: includes/functions.php:1463 includes/functions.php:1486
+#: includes/functions.php:1477 includes/functions.php:1500
 msgid "Everywhere Else"
 msgstr ""
 
-#: includes/functions.php:1482
+#: includes/functions.php:1496
 msgid "- Select a State -"
 msgstr ""
 
-#: includes/functions.php:1504
+#: includes/functions.php:1518
 msgid "Ready to ship in..."
 msgstr ""
 
-#: includes/functions.php:1505
+#: includes/functions.php:1519
 msgid "1 business day"
 msgstr ""
 
-#: includes/functions.php:1506
+#: includes/functions.php:1520
 msgid "1-2 business day"
 msgstr ""
 
-#: includes/functions.php:1507
+#: includes/functions.php:1521
 msgid "1-3 business day"
 msgstr ""
 
-#: includes/functions.php:1508
+#: includes/functions.php:1522
 msgid "3-5 business day"
 msgstr ""
 
-#: includes/functions.php:1509
+#: includes/functions.php:1523
 msgid "1-2 weeks"
 msgstr ""
 
-#: includes/functions.php:1510
+#: includes/functions.php:1524
 msgid "2-3 weeks"
 msgstr ""
 
-#: includes/functions.php:1511
+#: includes/functions.php:1525
 msgid "3-4 weeks"
 msgstr ""
 
-#: includes/functions.php:1512
+#: includes/functions.php:1526
 msgid "4-6 weeks"
 msgstr ""
 
-#: includes/functions.php:1513
+#: includes/functions.php:1527
 msgid "6-8 weeks"
 msgstr ""
 
-#: includes/functions.php:1613
+#: includes/functions.php:1627
 msgid "All dates"
 msgstr ""
 
-#: includes/functions.php:1626
+#: includes/functions.php:1640
 #. translators: 1: month name, 2: 4-digit year
 msgid "%1$s %2$d"
 msgstr ""
 
-#: includes/functions.php:1699
+#: includes/functions.php:1713
 msgid "Google Plus"
 msgstr ""
 
-#: includes/functions.php:1703
+#: includes/functions.php:1717
 msgid "Twitter"
 msgstr ""
 
-#: includes/functions.php:1707
+#: includes/functions.php:1721
 msgid "Pinterest"
 msgstr ""
 
-#: includes/functions.php:1711
+#: includes/functions.php:1725
 msgid "LinkedIn"
 msgstr ""
 
-#: includes/functions.php:1715
+#: includes/functions.php:1729
 msgid "Youtube"
 msgstr ""
 
-#: includes/functions.php:1719
+#: includes/functions.php:1733
 msgid "Instagram"
 msgstr ""
 
-#: includes/functions.php:1723
+#: includes/functions.php:1737
 msgid "Flickr"
 msgstr ""
 
-#: includes/functions.php:1969
+#: includes/functions.php:1983
 msgid "Dokan Store Sidebar"
 msgstr ""
 
-#: includes/order-functions.php:338
+#: includes/order-functions.php:336
 msgid "Mark parent order completed when all child orders are completed."
 msgstr ""
 
-#: includes/order-functions.php:525
+#: includes/order-functions.php:523
 msgid "Pending Payment"
 msgstr ""
 
-#: includes/order-functions.php:540 templates/dashboard/orders-widget.php:46
+#: includes/order-functions.php:538 templates/dashboard/orders-widget.php:46
 msgid "Refunded"
 msgstr ""
 
-#: includes/order-functions.php:550
+#: includes/order-functions.php:548
 msgid "Failed"
 msgstr ""
 
