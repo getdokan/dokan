@@ -166,13 +166,14 @@ class Dokan_Template_Shortcodes {
         *
         * @param array
         */
+
         $per_page = shortcode_atts( apply_filters( 'dokan_top_rated_product_per_page', array(
-            'no_of_product' => 8
-        ), $atts ) );
+            'no_of_product' => 8,
+        ), $atts ), $atts );
 
         ob_start();
         ?>
-        <ul>
+        <ul class="products">
             <?php
             $best_selling_query = dokan_get_top_rated_products();
             ?>
