@@ -55,8 +55,6 @@ class Dokan_Ajax {
         add_action( 'wp_ajax_shop_url', array($this, 'shop_url_check') );
         add_action( 'wp_ajax_nopriv_shop_url', array($this, 'shop_url_check') );
 
-        add_filter( 'woocommerce_cart_item_name', array($this, 'seller_info_checkout'), 10, 2 );
-
         add_action( 'wp_ajax_dokan_seller_listing_search', array($this, 'seller_listing_search') );
         add_action( 'wp_ajax_nopriv_dokan_seller_listing_search', array($this, 'seller_listing_search') );
 
@@ -104,22 +102,6 @@ class Dokan_Ajax {
     }
 
     /**
-     * Injects seller name on checkout page
-     *
-     * @param array $item_data
-     * @param array $cart_item
-     * @return array
-     */
-    function seller_info_checkout( $item_data, $cart_item ) {
-        $seller_id = get_post_field( 'post_author', $cart_item['data']->get_id() );
-        $info      = dokan_get_store_info( $seller_id );
-        $seller    = sprintf( __( '<br><strong> Vendor:</strong> %s', 'dokan-lite' ), $info['store_name'] );
-        $data      = $item_data . $seller;
-
-        return apply_filters( 'dokan_seller_info_checkout', $data, $info, $item_data, $cart_item );
-    }
-
-    /**
      * shop url check
      */
     function shop_url_check() {
@@ -149,7 +131,10 @@ class Dokan_Ajax {
             }
         }
 
-        echo $check;
+        wp_send_json_success( array(
+            'message' => __( 'Available', 'dokan-lite' ),
+            'url'     => sanitize_user( $url_slug )
+        ) );
     }
 
     /**

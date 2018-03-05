@@ -574,7 +574,7 @@ class Dokan_Template_Settings {
         );
 
         // setting values for completion
-        $progress_values = apply_filters('dokan_profile_completion_values', $progress_values);
+        $progress_values = apply_filters('dokan_profile_completion_values', $progress_values );
 
         extract( $progress_values );
 

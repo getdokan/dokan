@@ -3,12 +3,12 @@
 Plugin Name: Dokan
 Plugin URI: https://wordpress.org/plugins/dokan-lite/
 Description: An e-commerce marketplace plugin for WordPress. Powered by WooCommerce and weDevs.
-Version: 2.7.7
+Version: 2.7.8
 Author: weDevs
 Author URI: https://wedevs.com/
 Text Domain: dokan-lite
 WC requires at least: 2.6
-WC tested up to: 3.3.1
+WC tested up to: 3.3.3
 Domain Path: /languages/
 License: GPL2
 */
@@ -78,7 +78,7 @@ final class WeDevs_Dokan {
      *
      * @var string
      */
-    public $version = '2.7.7';
+    public $version = '2.7.8';
 
     /**
      * Holds various class instances
@@ -231,10 +231,6 @@ final class WeDevs_Dokan {
      * @return void
      */
     public function init_plugin() {
-        // if ( ! function_exists( 'WC' ) ) {
-        //     return;
-        // }
-
         $this->includes();
 
         $this->init_hooks();
@@ -250,7 +246,6 @@ final class WeDevs_Dokan {
     function init_hooks() {
 
         // Localize our plugin
-
         add_action( 'init', array( $this, 'localization_setup' ) );
 
         // initialize the classes

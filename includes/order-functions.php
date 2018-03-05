@@ -317,15 +317,13 @@ function dokan_on_child_order_status_change( $order_id, $old_status, $new_status
     $parent_order_id = $order_post->post_parent;
     $sub_orders      = get_children( array( 'post_parent' => $parent_order_id, 'post_type' => 'shop_order' ) );
 
-
     // return if any child order is not completed
     $all_complete = true;
 
     if ( $sub_orders ) {
         foreach ($sub_orders as $sub) {
             $order = new WC_Order( $sub->ID );
-
-            if ( dokan_get_prop( $order, 'status' ) != 'wc-completed' ) {
+            if ( dokan_get_prop( $order, 'status' ) != 'completed' ) {
                 $all_complete = false;
             }
         }
@@ -817,3 +815,22 @@ if ( ! function_exists( 'dokan_get_customer_orders_by_seller' ) ) :
     }
 
 endif;
+
+add_action( 'dokan_checkout_update_order_meta', 'dokan_save_admin_commssion_to_order_meta', 10, 2 );
+
+/**
+ * Update order meta when the order is placed
+ *
+ * @since 2.7.8
+ *
+ * @param int $order_id
+ *
+ * @param int $seller_id
+ *
+ * @return void
+ */
+function dokan_save_admin_commssion_to_order_meta( $order_id, $seller_id ) {
+    $seller_order = wc_get_order( $order_id );
+    $admin_fee = dokan_get_admin_commission_by( $seller_order, $seller_id );
+    update_post_meta( $order_id , '_dokan_admin_fee', $admin_fee );
+}

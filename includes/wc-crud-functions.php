@@ -202,9 +202,6 @@ function dokan_create_seller_order( $parent_order, $seller_id, $seller_products 
         update_post_meta( $order_id, '_customer_ip_address',    get_post_meta( $parent_order->get_id(), '_customer_ip_address', true ) );
         update_post_meta( $order_id, '_customer_user_agent',    get_post_meta( $parent_order->get_id(), '_customer_user_agent', true ) );
         
-        $admin_fee = dokan_get_admin_commission_by( $seller_order, $seller_id );
-        update_post_meta( $order_id , '_dokan_admin_fee', $admin_fee );
-        
         do_action( 'dokan_checkout_update_order_meta', $order_id, $seller_id );
     } // if order
 }
