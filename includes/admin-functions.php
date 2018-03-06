@@ -317,13 +317,12 @@ function dokan_site_total_earning() {
  * @param string $year
  * @return obj
  */
-function dokan_admin_report( $group_by = 'day', $year = '' ) {
+function dokan_admin_report( $group_by = 'day', $year = '', $start = '', $end = '' ) {
     global $wpdb, $wp_locale;
 
     $group_by = apply_filters( 'dokan_report_group_by', $group_by );
-
-    $start_date = isset( $_POST['start_date'] ) ? sanitize_text_field ( $_POST['start_date'] ): ''; // WPCS: CSRF ok.
-    $end_date   = isset( $_POST['end_date'] ) ? sanitize_text_field( $_POST['end_date'] ): ''; // WPCS: CSRF ok.
+    $start_date = isset( $_POST['start_date'] ) ? sanitize_text_field ( $_POST['start_date'] ): $start; // WPCS: CSRF ok.
+    $end_date   = isset( $_POST['end_date'] ) ? sanitize_text_field( $_POST['end_date'] ): $end; // WPCS: CSRF ok.
     $current_year = date( 'Y' );
 
     if ( ! $start_date ) {
