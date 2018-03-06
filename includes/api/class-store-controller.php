@@ -105,11 +105,15 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
             );
         }
 
-        $stores = dokan()->vendor->get_vendors( $args );
+        if ( ! empty( $params['status'] ) ) {
+            $args['status'] = $params['status'];
+        }
 
-        $stores_data = array();
+        $stores       = dokan()->vendor->get_vendors( $args );
+        $data_objects = array();
+
         foreach ( $stores as $store ) {
-            $stores_data = $this->prepare_item_for_response( $store, $request );
+            $stores_data    = $this->prepare_item_for_response( $store, $request );
             $data_objects[] = $this->prepare_response_for_collection( $stores_data );
         }
 
@@ -130,12 +134,14 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
         $store_id = $request['id'];
 
         $store = dokan()->vendor->get( $store_id );
+
         if ( empty( $store->id ) ) {
             return new WP_Error( 'no_store_found', __( 'No store found' ), array( 'status' => 404 ) );
         }
 
-        $stores_data = $this->prepare_item_for_response( $store->data, $request );
+        $stores_data = $this->prepare_item_for_response( $store, $request );
         $response    = rest_ensure_response( $stores_data );
+
         return $response;
     }
 

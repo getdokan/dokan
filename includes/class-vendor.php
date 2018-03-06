@@ -93,7 +93,9 @@ class Dokan_Vendor {
             'toc_enabled'           => $this->toc_enabled(),
             'store_toc'             => $this->get_toc(),
             'featured'              => $this->is_featured(),
-            'rating'                => $this->get_rating()
+            'rating'                => $this->get_rating(),
+            'enabled'               => $this->is_enabled(),
+            'registered'            => $this->get_register_date(),
         );
 
         return $info;
@@ -282,6 +284,19 @@ class Dokan_Vendor {
     }
 
     /**
+     * Get last name
+     *
+     * @since 2.8
+     *
+     * @return string
+     */
+    public function get_register_date() {
+        if ( $this->id ) {
+            return $this->data->user_registered;
+        }
+    }
+
+    /**
      * Get the shop name
      *
      * @return array
@@ -359,7 +374,7 @@ class Dokan_Vendor {
         $avatar_id = (int) $this->get_info_part( 'gravatar' );
 
         if ( ! $avatar_id ) {
-            return false;
+            return get_avatar_url( $this->data->user_email, 96 );
         }
 
         return wp_get_attachment_url( $avatar_id );
