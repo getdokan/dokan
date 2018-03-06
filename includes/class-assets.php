@@ -95,6 +95,18 @@ class Dokan_Assets {
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/admin.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/admin.css' ),
             ),
+            'dokan-vue-vendor' => array(
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/vendor.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/css/vendor.css' ),
+            ),
+            'dokan-vue-admin' => array(
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/vue-admin.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/css/vue-admin.css' ),
+            ),
+            'dokan-vue-frontend' => array(
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/vue-frontend.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/css/vue-frontend.css' ),
+            ),
         );
 
         return $styles;
@@ -167,6 +179,20 @@ class Dokan_Assets {
                 'src'       => $asset_url . '/js/dokan.js',
                 'deps'      => array( 'imgareaselect', 'customize-base', 'customize-model' ),
                 'version'   => filemtime( $asset_path . '/js/dokan.js' ),
+            ),
+            'vue-vendor' => array(
+                'src'       => $asset_url . '/js/vue-vendor.js',
+                'version'   => filemtime( $asset_path . '/js/vue-vendor.js' ),
+            ),
+            'vue-admin' => array(
+                'src'       => $asset_url . '/js/vue-admin.js',
+                'deps'      => array( 'jquery' ),
+                'version'   => filemtime( $asset_path . '/js/vue-admin.js' ),
+            ),
+            'vue-frontend' => array(
+                'src'       => $asset_url . '/js/vue-frontend.js',
+                'deps'      => array( 'jquery' ),
+                'version'   => filemtime( $asset_path . '/js/vue-frontend.js' ),
             ),
         );
 
