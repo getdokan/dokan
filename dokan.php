@@ -4,7 +4,7 @@ Plugin Name: Dokan
 Plugin URI: https://wordpress.org/plugins/dokan-lite/
 Description: An e-commerce marketplace plugin for WordPress. Powered by WooCommerce and weDevs.
 Version: 2.7.8
-Author: weDevs
+Author: weDevs, LLC
 Author URI: https://wedevs.com/
 Text Domain: dokan-lite
 WC requires at least: 2.6
@@ -14,7 +14,7 @@ License: GPL2
 */
 
 /**
- * Copyright (c) 2015 weDevs (email: info@wedevs.com). All rights reserved.
+ * Copyright (c) 2018 weDevs (email: info@wedevs.com). All rights reserved.
  *
  * Released under the GPL license
  * http://www.opensource.org/licenses/gpl-license.php
@@ -350,22 +350,6 @@ final class WeDevs_Dokan {
             Dokan_Ajax::init()->init_ajax();
         }
         new Dokan_API_Register();
-    }
-
-    /**
-     * Scripts and styles for admin panel
-     */
-    function admin_enqueue_scripts( $hook ) {
-        wp_enqueue_style( 'dokan-admin-css', DOKAN_PLUGIN_ASSEST.'/css/admin.css', false, time() );
-
-        wp_enqueue_script( 'dokan-tooltip' );
-        wp_enqueue_script( 'dokan_slider_admin', DOKAN_PLUGIN_ASSEST.'/js/dokan-admin.js', array( 'jquery' ) );
-
-        if ( 'plugins.php' == $hook ) {
-            wp_enqueue_style( 'dokan-plugin-list-css', DOKAN_PLUGIN_ASSEST.'/css/plugin.css', false, null );
-        }
-
-        do_action( 'dokan_enqueue_admin_scripts' );
     }
 
     /**

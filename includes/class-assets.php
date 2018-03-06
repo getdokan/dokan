@@ -26,11 +26,11 @@ class Dokan_Assets {
      * Enqueue admin scripts
      */
     public function enqueue_admin_scripts( $hook ) {
-        wp_enqueue_style( 'dokan-admin-css', DOKAN_PLUGIN_ASSEST . '/css/admin.css', false, time() );
-        wp_enqueue_script( 'dokan-tooltip' );
-        wp_enqueue_script( 'dokan_slider_admin', DOKAN_PLUGIN_ASSEST . '/js/dokan-admin.js', array( 'jquery' ) );
-
         global $post;
+
+        wp_enqueue_style( 'dokan-admin-css' );
+        wp_enqueue_script( 'dokan-tooltip' );
+        wp_enqueue_script( 'dokan-admin' );
 
         if ( get_post_type( $post ) == 'dokan_slider' ) {
             wp_enqueue_script( 'media-upload' );
@@ -39,7 +39,7 @@ class Dokan_Assets {
         }
 
         if ( 'plugins.php' == $hook ) {
-            wp_enqueue_style( 'dokan-plugin-list-css', DOKAN_PLUGIN_ASSEST . '/css/plugin.css', false, null );
+            wp_enqueue_style( 'dokan-plugin-list-css' );
         }
 
         do_action( 'dokan_enqueue_admin_scripts' );
@@ -49,42 +49,128 @@ class Dokan_Assets {
      * Register all Dokan scripts and styles
      */
     public function register_all_scripts() {
-        $vendor = DOKAN_PLUGIN_ASSEST . '/vendors';
+        $styles = $this->get_styles();
+        $scripts = $this->get_scripts();
 
-        // Register Vendors styles
-        wp_register_style( 'jquery-ui', $vendor . '/jquery-ui/jquery-ui-1.10.0.custom.css', false, DOKAN_PLUGIN_VERSION );
-        wp_register_style( 'dokan-fontawesome', $vendor . '/font-awesome/font-awesome.min.css', false, DOKAN_PLUGIN_VERSION );
-        wp_register_style( 'dokan-chosen-style', $vendor . '/chosen/chosen.min.css', false, DOKAN_PLUGIN_VERSION );
-        wp_register_style( 'dokan-magnific-popup', $vendor . '/magnific/magnific-popup.css', false, DOKAN_PLUGIN_VERSION );
-        wp_register_style( 'dokan-select2-css', $vendor . '/select2/select2.css', false, DOKAN_PLUGIN_VERSION );
-
-        // Core styles
-        wp_register_style( 'dokan-style', DOKAN_PLUGIN_ASSEST.'/css/style.css', false, DOKAN_PLUGIN_VERSION );
-
-        if ( is_rtl() ) {
-            // RTL supported style
-            wp_register_style( 'dokan-rtl-style', DOKAN_PLUGIN_ASSEST.'/css/rtl.css', false, DOKAN_PLUGIN_VERSION );
-        }
-
-        // Register Vendors scripts
-        wp_register_script( 'dokan-chart', $vendor . '/chart/Chart.min.js', false, DOKAN_PLUGIN_VERSION, true );
-        wp_register_script( 'dokan-tabs', $vendor . '/easytab/jquery.easytabs.min.js', false, DOKAN_PLUGIN_VERSION, true );
-        wp_register_script( 'dokan-chosen', $vendor . '/chosen/chosen.jquery.min.js', array( 'jquery' ), DOKAN_PLUGIN_VERSION, true );
-        wp_register_script( 'dokan-popup', $vendor . '/magnific/jquery.magnific-popup.min.js', array( 'jquery' ), DOKAN_PLUGIN_VERSION, true );
-        wp_register_script( 'dokan-tooltip', $vendor . '/tooltips/tooltips.js', array( 'jquery' ), DOKAN_PLUGIN_VERSION, true );
-        wp_register_script( 'dokan-form-validate', $vendor . '/form-validate/form-validate.js', array( 'jquery' ), DOKAN_PLUGIN_VERSION, true );
-        wp_register_script( 'dokan-select2-js', $vendor . '/select2/select2.full.min.js', array( 'jquery' ), DOKAN_PLUGIN_VERSION, true );
-
-        // Image cropping scripts
-        wp_register_script( 'customize-base', site_url( 'wp-includes/js/customize-base.js' ), array( 'jquery', 'json2', 'underscore' ), DOKAN_PLUGIN_VERSION, true );
-        wp_register_script( 'customize-model', site_url( 'wp-includes/js/customize-models.js' ), array( 'underscore', 'backbone' ), DOKAN_PLUGIN_VERSION, true );
-
-        // Register core scripts
-        wp_register_script( 'dokan-flot', DOKAN_PLUGIN_ASSEST.'/js/flot-all.min.js', false, DOKAN_PLUGIN_VERSION, true );
-        wp_register_script( 'speaking-url', DOKAN_PLUGIN_ASSEST . '/js/speakingurl.min.js', false, DOKAN_PLUGIN_VERSION, true );
-        wp_register_script( 'dokan-script', DOKAN_PLUGIN_ASSEST.'/js/dokan.js', array( 'imgareaselect', 'customize-base', 'customize-model' ), DOKAN_PLUGIN_VERSION, true );
+        $this->register_styles( $styles );
+        $this->register_scripts( $scripts );
 
         do_action( 'dokan_register_scripts' );
+    }
+
+    /**
+     * Get registered styles
+     *
+     * @return array
+     */
+    public function get_styles() {
+
+        $styles = array(
+            'dokan-style' => array(
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/style.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/css/style.css' ),
+            ),
+            'jquery-ui' => array(
+                'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/jquery-ui/jquery-ui-1.10.0.custom.css',
+            ),
+            'dokan-fontawesome' => array(
+                'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/font-awesome/font-awesome.min.css',
+            ),
+            'dokan-chosen-style' => array(
+                'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/chosen/chosen.min.css',
+            ),
+            'dokan-magnific-popup' => array(
+                'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/magnific/magnific-popup.css',
+            ),
+            'dokan-select2-css' => array(
+                'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/select2/select2.css',
+            ),
+            'dokan-rtl-style' => array(
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/rtl.css',
+            ),
+            'dokan-plugin-list-css' => array(
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/plugin.css',
+            ),
+            'dokan-admin-css' => array(
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/admin.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/css/admin.css' ),
+            ),
+        );
+
+        return $styles;
+    }
+
+    /**
+     * Get all registered scripts
+     *
+     * @return array
+     */
+    public function get_scripts() {
+        $prefix     = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.min' : '';
+        $asset_url  = DOKAN_PLUGIN_ASSEST;
+        $asset_path = DOKAN_DIR . '/assets/';
+
+        $scripts = array(
+            'dokan-chart' => array(
+                'src'       => $asset_url . '/vendors/chart/Chart.min.js',
+            ),
+            'dokan-tabs' => array(
+                'src'       => $asset_url . '/vendors/easytab/jquery.easytabs.min.js',
+                'deps'      => array( 'jquery' ),
+            ),
+            'dokan-chosen' => array(
+                'src'       => $asset_url . '/vendors/chosen/chosen.jquery.min.js',
+                'deps'      => array( 'jquery' ),
+            ),
+            'dokan-popup' => array(
+                'src'       => $asset_url . '/vendors/magnific/jquery.magnific-popup.min.js',
+                'deps'      => array( 'jquery' ),
+            ),
+            'dokan-tooltip' => array(
+                'src'       => $asset_url . '/vendors/tooltips/tooltips.js',
+                'deps'      => array( 'jquery' ),
+            ),
+            'dokan-form-validate' => array(
+                'src'       => $asset_url . '/vendors/form-validate/form-validate.js',
+                'deps'      => array( 'jquery' ),
+            ),
+            'dokan-select2-js' => array(
+                'src'       => $asset_url . '/vendors/select2/select2.full.min.js',
+                'deps'      => array( 'jquery' ),
+            ),
+
+            // customize scripts
+            'customize-base' => array(
+                'src'       => site_url( 'wp-includes/js/customize-base.js' ),
+                'deps'      => array( 'jquery', 'json2', 'underscore' )
+            ),
+            'customize-model' => array(
+                'src'       => site_url( 'wp-includes/js/customize-models.js' ),
+                'deps'      => array( 'underscore', 'backbone' )
+            ),
+
+            // Register core scripts
+            'dokan-flot' => array(
+                'src'       => $asset_url . '/js/flot-all.min.js',
+                'deps'      => array( 'jquery' ),
+            ),
+            'speaking-url' => array(
+                'src'       => $asset_url . '/js/speakingurl.min.js',
+                'deps'      => array( 'jquery' ),
+            ),
+            'dokan-admin' => array(
+                'src'       => $asset_url . '/js/dokan-admin.js',
+                'deps'      => array( 'jquery' ),
+                'version'   => filemtime( $asset_path . '/js/dokan-admin.js' ),
+            ),
+            'dokan-script' => array(
+                'src'       => $asset_url . '/js/dokan.js',
+                'deps'      => array( 'imgareaselect', 'customize-base', 'customize-model' ),
+                'version'   => filemtime( $asset_path . '/js/dokan.js' ),
+            ),
+        );
+
+        return $scripts;
     }
 
     /**
@@ -101,27 +187,25 @@ class Dokan_Assets {
             wp_enqueue_style( 'dokan-style' );
             wp_enqueue_style( 'dokan-fontawesome' );
 
-
             if ( is_rtl() ) {
                 wp_enqueue_style( 'dokan-rtl-style' );
             }
         }
 
         $default_script = array(
-            'ajaxurl'           => admin_url( 'admin-ajax.php' ),
-            'nonce'             => wp_create_nonce( 'dokan_reviews' ),
-            'ajax_loader'       => DOKAN_PLUGIN_ASSEST.'/images/ajax-loader.gif',
-            'seller'            => array(
+            'ajaxurl'            => admin_url( 'admin-ajax.php' ),
+            'nonce'              => wp_create_nonce( 'dokan_reviews' ),
+            'ajax_loader'        => DOKAN_PLUGIN_ASSEST.'/images/ajax-loader.gif',
+            'seller'             => array(
                 'available'     => __( 'Available', 'dokan-lite' ),
                 'notAvailable'  => __( 'Not Available', 'dokan-lite' )
             ),
-            'delete_confirm'    => __( 'Are you sure?', 'dokan-lite' ),
-            'wrong_message'     => __( 'Something went wrong. Please try again.', 'dokan-lite' ),
-            'vendor_percentage' => dokan_get_seller_percentage( dokan_get_current_user_id() ),
-            'commission_type'   => dokan_get_commission_type( dokan_get_current_user_id() ),
+            'delete_confirm'     => __( 'Are you sure?', 'dokan-lite' ),
+            'wrong_message'      => __( 'Something went wrong. Please try again.', 'dokan-lite' ),
+            'vendor_percentage'  => dokan_get_seller_percentage( dokan_get_current_user_id() ),
+            'commission_type'    => dokan_get_commission_type( dokan_get_current_user_id() ),
             'rounding_precision' => wc_get_rounding_precision(),
             'mon_decimal_point'  => wc_get_price_decimal_separator(),
-
         );
 
         $localize_script = apply_filters( 'dokan_localized_args', $default_script );
@@ -361,9 +445,10 @@ class Dokan_Assets {
     public function register_scripts( $scripts ) {
         foreach ( $scripts as $handle => $script ) {
             $deps      = isset( $script['deps'] ) ? $script['deps'] : false;
-            $in_footer = isset( $script['in_footer'] ) ? $script['in_footer'] : false;
+            $in_footer = isset( $script['in_footer'] ) ? $script['in_footer'] : true;
+            $version   = isset( $script['version'] ) ? $script['version'] : DOKAN_PLUGIN_VERSION;
 
-            wp_register_script( $handle, $script['src'], $deps, WEFORMS_VERSION, $in_footer );
+            wp_register_script( $handle, $script['src'], $deps, $version, $in_footer );
         }
     }
 
@@ -376,9 +461,10 @@ class Dokan_Assets {
      */
     public function register_styles( $styles ) {
         foreach ( $styles as $handle => $style ) {
-            $deps = isset( $style['deps'] ) ? $style['deps'] : false;
+            $deps    = isset( $style['deps'] ) ? $style['deps'] : false;
+            $version = isset( $style['version'] ) ? $style['version'] : DOKAN_PLUGIN_VERSION;
 
-            wp_register_style( $handle, $style['src'], $deps, WEFORMS_VERSION );
+            wp_register_style( $handle, $style['src'], $deps, $version );
         }
     }
 
