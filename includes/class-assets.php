@@ -96,8 +96,8 @@ class Dokan_Assets {
                 'version' => filemtime( DOKAN_DIR . '/assets/css/admin.css' ),
             ),
             'dokan-vue-vendor' => array(
-                'src'     => DOKAN_PLUGIN_ASSEST . '/css/vendor.css',
-                'version' => filemtime( DOKAN_DIR . '/assets/css/vendor.css' ),
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/vue-vendor.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/css/vue-vendor.css' ),
             ),
             'dokan-vue-admin' => array(
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/vue-admin.css',

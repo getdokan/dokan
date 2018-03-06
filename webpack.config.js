@@ -36,7 +36,7 @@ plugins.push( extractCss );
 
 // Extract all 3rd party modules into a separate 'vendor' chunk
 plugins.push(new webpack.optimize.CommonsChunkPlugin({
-    name: 'vendor',
+    name: 'vue-vendor',
     minChunks: ({ resource }) => /node_modules/.test(resource),
 }));
 
