@@ -305,6 +305,10 @@ final class WeDevs_Dokan {
         } else {
             require_once $inc_dir . 'wc-legacy-functions.php';
         }
+
+        // API includes
+        require_once $inc_dir . 'api/class-api-rest-controller.php';
+        require_once $inc_dir . 'api/class-api-register.php';
     }
 
     /**
@@ -345,6 +349,7 @@ final class WeDevs_Dokan {
         if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
             Dokan_Ajax::init()->init_ajax();
         }
+        new Dokan_API_Register();
     }
 
     /**

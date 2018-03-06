@@ -50,7 +50,7 @@ class Dokan_Withdraw {
             SET status = %d WHERE user_id=%d AND id = %d",
             $status, $user_id, $row_id
         ) );
-       
+
         $cache_key     = 'dokan_seller_balance_' . $user_id;
         wp_cache_delete( $cache_key );
     }
@@ -169,11 +169,11 @@ class Dokan_Withdraw {
      * @return void
      */
     function note_update() {
-        
+
         if ( isset( $_POST['dokan_admin_nonce'] ) && !wp_verify_nonce( sanitize_key( $_POST['dokan_admin_nonce'] ), 'dokan_admin_action' ) ) {
             return;
         }
-        
+
         global $wpdb;
 
         $table_name = $wpdb->prefix . 'dokan_withdraw';

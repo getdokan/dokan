@@ -66,6 +66,42 @@ class Dokan_Vendor {
     }
 
     /**
+     * Vendor info to array
+     *
+     * @since 2.8
+     *
+     * @return array
+     */
+    public function to_array() {
+
+        $info = array(
+            'id'                    => $this->get_id(),
+            'store_name'            => $this->get_shop_name(),
+            'first_name'            => $this->get_first_name(),
+            'last_name'             => $this->get_last_name(),
+            'email'                 => $this->get_email(),
+            'social'                => $this->get_social_profiles(),
+            'phone'                 => $this->get_phone(),
+            'show_email'            => $this->show_email(),
+            'address'               => $this->get_address(),
+            'location'              => $this->get_location(),
+            'banner'                => $this->get_banner(),
+            'gravatar'              => $this->get_avatar(),
+            'shop_url'              => $this->get_shop_url(),
+            'products_per_page'     => $this->get_per_page(),
+            'show_more_product_tab' => $this->show_more_products_tab(),
+            'toc_enabled'           => $this->toc_enabled(),
+            'store_toc'             => $this->get_toc(),
+            'featured'              => $this->is_featured(),
+            'rating'                => $this->get_rating(),
+            'enabled'               => $this->is_enabled(),
+            'registered'            => $this->get_register_date(),
+        );
+
+        return $info;
+    }
+
+    /**
      * Check if the user is vendor
      *
      * @return boolean
@@ -108,14 +144,22 @@ class Dokan_Vendor {
      */
     public function popluate_store_data() {
         $defaults = array(
-            'store_name' => '',
-            'social'     => array(),
-            'payment'    => array( 'paypal' => array( 'email' ), 'bank' => array() ),
-            'phone'      => '',
-            'show_email' => 'no',
-            'address'    => '',
-            'location'   => '',
-            'banner'     => 0
+            'store_name'              => '',
+            'social'                  => array(),
+            'payment'                 => array( 'paypal' => array( 'email' ), 'bank' => array() ),
+            'phone'                   => '',
+            'show_email'              => 'no',
+            'address'                 => array(),
+            'location'                => '',
+            'banner'                  => 0,
+            'icon'                    => 0,
+            'gravatar'                => 0,
+            'show_more_ptab'          => 'yes',
+            'store_ppp'               => 10,
+            'enable_tnc'              => 'off',
+            'store_tnc'               => '',
+            'show_min_order_discount' => 'no',
+            'store_seo'               => array()
         );
 
         if ( ! $this->id ) {
@@ -214,6 +258,45 @@ class Dokan_Vendor {
     }
 
     /**
+     * Get first name
+     *
+     * @since 2.8
+     *
+     * @return string
+     */
+    public function get_first_name() {
+        if ( $this->id ) {
+            return $this->data->first_name;
+        }
+    }
+
+    /**
+     * Get last name
+     *
+     * @since 2.8
+     *
+     * @return string
+     */
+    public function get_last_name() {
+        if ( $this->id ) {
+            return $this->data->last_name;
+        }
+    }
+
+    /**
+     * Get last name
+     *
+     * @since 2.8
+     *
+     * @return string
+     */
+    public function get_register_date() {
+        if ( $this->id ) {
+            return $this->data->user_registered;
+        }
+    }
+
+    /**
      * Get the shop name
      *
      * @return array
@@ -252,10 +335,17 @@ class Dokan_Vendor {
     /**
      * Get the shop location
      *
-     * @return string
+     * @return array
      */
     public function get_location() {
-        return $this->get_info_part( 'location' );
+        $default  = array( 'lat' => 0, 'long' => 0 );
+        $location = $this->get_info_part( 'location' );
+
+        if ( $location ) {
+            list( $default['lat'], $default['long'] ) = explode( ',', $location );
+        }
+
+        return $location;
     }
 
     /**
@@ -274,12 +364,79 @@ class Dokan_Vendor {
     }
 
     /**
+     * Get the shop profile icon
+     *
+     * @since 2.8
+     *
+     * @return string
+     */
+    public function get_avatar() {
+        $avatar_id = (int) $this->get_info_part( 'gravatar' );
+
+        if ( ! $avatar_id ) {
+            return get_avatar_url( $this->data->user_email, 96 );
+        }
+
+        return wp_get_attachment_url( $avatar_id );
+    }
+
+    /**
+     * Get per page pagination
+     *
+     * @since 2.8
+     *
+     * @return integer
+     */
+    public function get_per_page() {
+        $per_page = (int) $this->get_info_part( 'store_ppp' );
+
+        if ( ! $per_page ) {
+            return 10;
+        }
+
+        return $per_page;
+    }
+
+    /**
      * If should show the email
      *
      * @return boolean
      */
     public function show_email() {
         return 'yes' == $this->get_info_part( 'show_email' );
+    }
+
+    /**
+     * Check if terms and conditions enabled
+     *
+     * @since 2.8
+     *
+     * @return boolean
+     */
+    public function toc_enabled() {
+        return 'on' == $this->get_info_part( 'enable_tnc' );
+    }
+
+    /**
+     * Get terms and conditions
+     *
+     * @since 2.8
+     *
+     * @return string
+     */
+    public function get_toc() {
+        return $this->get_info_part( 'store_toc' );
+    }
+
+    /**
+     * Check if showing more product is enabled
+     *
+     * @since 2.8
+     *
+     * @return boolean
+     */
+    public function show_more_products_tab() {
+        return 'yes' == $this->get_info_part( 'show_more_ptab' );
     }
 
     /**
@@ -311,7 +468,7 @@ class Dokan_Vendor {
         global $wpdb;
 
         $status        = dokan_withdraw_get_active_order_status_in_comma();
-        $cache_group = 'dokan_seller_data_'.$this->id;
+        $cache_group   = 'dokan_seller_data_'.$this->id;
         $cache_key     = 'dokan_seller_balance_' . $this->id;
         $earning       = wp_cache_get( $cache_key, $cache_group );
         $threshold_day = dokan_get_option( 'withdraw_date_limit', 'dokan_withdraw', 0 );

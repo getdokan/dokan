@@ -1165,8 +1165,9 @@ function dokan_get_seller_bank_details( $seller_id ) {
  * @return array
  */
 function dokan_get_sellers( $args = array() ) {
-    $vendors = dokan()->vendor;
-    $all_vendor = wp_list_pluck( $vendors->all( $args ), 'data' );
+    $vendors    = dokan()->vendor;
+    $all_vendor = wp_list_pluck( $vendors->get_vendors( $args ), 'data' );
+
     return array( 'users' => $all_vendor, 'count' => $vendors->get_total() );
 }
 
@@ -1327,7 +1328,7 @@ function dokan_filter_orders_for_current_vendor( $query ) {
     if ( ! isset( $query->query_vars['post_type'] ) ) {
         return;
     }
-    
+
     if ( is_admin() && $query->is_main_query() && ( $query->query_vars['post_type'] == 'shop_order' || $query->query_vars['post_type'] == 'product' || $query->query_vars['post_type'] == 'wc_booking' ) ) {
         $query->set( 'author', get_current_user_id() );
     }

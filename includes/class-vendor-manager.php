@@ -7,16 +7,34 @@
  */
 class Dokan_Vendor_Manager {
 
+    /**
+     * Total vendors found
+     *
+     * @var integer
+     */
     private $total_users;
 
     /**
-     * Get all vendor
+     * Get all vendors
+     *
+     * @since 2.8.0
+     *
+     * @param  array  $args
+     *
+     * @return array
+     */
+    public function all( $args = array() ) {
+        return $this->get_vendors( $args );
+    }
+
+    /**
+     * Get vendors
      *
      * @param array $args
      *
      * @return array
      */
-    public function all( $args = array() ) {
+    public function get_vendors( $args = array() ) {
         $vendors = array();
 
         $defaults = array(
@@ -25,16 +43,27 @@ class Dokan_Vendor_Manager {
             'offset'     => 0,
             'orderby'    => 'registered',
             'order'      => 'ASC',
-            'meta_query' => array(
-                array(
-                    'key'     => 'dokan_enable_selling',
-                    'value'   => 'yes',
-                    'compare' => '='
-                )
-            )
+            'status'     => 'approved',
+            'meta_query' => array(),
         );
 
-        $args = wp_parse_args( $args, $defaults );
+        $args   = wp_parse_args( $args, $defaults );
+        $status = $args['status'];
+
+        // check if the user has permission to see pending vendors
+        if ( 'approved' != $args['status'] && current_user_can( 'manage_options' ) ) {
+            $status = $args['status'];
+        }
+
+        if ( in_array( $status, array( 'approved', 'pending' ) ) ) {
+            $operator = ( $status == 'approved' ) ? '=' : '!=';
+
+            $args['meta_query'][] = array(
+                'key'     => 'dokan_enable_selling',
+                'value'   => 'yes',
+                'compare' => $operator
+            );
+        }
 
         $user_query = new WP_User_Query( $args );
         $results    = $user_query->get_results();
@@ -97,6 +126,6 @@ class Dokan_Vendor_Manager {
 
         $args = wp_parse_args( $args, $defaults );
 
-        return $this->all( $args );
+        return $this->get_vendors( $args );
     }
 }
