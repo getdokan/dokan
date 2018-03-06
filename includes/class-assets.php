@@ -5,7 +5,7 @@
  *
  * @since 3.0.0
  */
-class Dokan_Scripts {
+class Dokan_Assets {
 
     /**
      * The constructor

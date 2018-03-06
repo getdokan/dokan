@@ -284,7 +284,7 @@ final class WeDevs_Dokan {
         require_once $inc_dir . 'wc-template.php';
 
         require_once $inc_dir . 'class-core.php';
-        require_once $inc_dir . 'class-scripts.php';
+        require_once $inc_dir . 'class-assets.php';
         require_once $inc_dir . 'class-email.php';
         require_once $inc_dir . 'class-vendor.php';
         require_once $inc_dir . 'class-vendor-manager.php';
@@ -330,7 +330,7 @@ final class WeDevs_Dokan {
         new Dokan_Seller_Setup_Wizard();
 
         $this->container['core']    = new Dokan_Core();
-        $this->container['scripts'] = new Dokan_Scripts();
+        $this->container['scripts'] = new Dokan_Assets();
         $this->container['email']   = Dokan_Email::init();
         $this->container['vendor']  = new Dokan_Vendor_Manager();
         $this->container['product'] = new Dokan_Product_Manager();
