@@ -1,13 +1,12 @@
-import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import menuFix from './utils/admin-menu-fix'
 
-Vue.config.productionTip = false
-
 /* eslint-disable no-new */
+let Vue = dokan_get_lib('Vue');
+
 new Vue({
-    el: '#vue-admin-app',
+    el: '#dokan-vue-admin',
     router,
     render: h => h(App)
 });

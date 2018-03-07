@@ -13,6 +13,7 @@ var appName = 'app';
 var entryPoint = {
     'vue-frontend': './src/frontend/main.js',
     'vue-admin': './src/admin/main.js',
+    'vue-bootstrap': './src/utils/Bootstrap.js',
     'vue-vendor': Object.keys(package.dependencies),
     // style: './less/style.less',
 };
@@ -87,7 +88,7 @@ module.exports = {
         path: exportPath,
         filename: appName,
         chunkFilename: 'chunks/[chunkhash].js',
-        jsonpFunction: 'pluginWebpack'
+        jsonpFunction: 'dokanWebpack'
     },
 
     resolve: {

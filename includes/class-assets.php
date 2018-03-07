@@ -28,7 +28,39 @@ class Dokan_Assets {
     public function enqueue_admin_scripts( $hook ) {
         global $post;
 
+        // load vue app inside the parent menu only
+        if ( 'toplevel_page_dokan' == $hook ) {
+
+            $localize_script = apply_filters( 'dokan-admin-localize_script', array(
+                'rest' => array(
+                    'root'    => esc_url_raw( get_rest_url() ),
+                    'nonce'   => wp_create_nonce( 'wp_rest' ),
+                    'version' => 'dokan/v1/',
+                ),
+                'api'             => null,
+                'libs'            => array(),
+                'routeComponents' => array( 'default' => null ),
+                'routes'          => $this->get_vue_admin_routes()
+            ) );
+
+            // load styles
+            wp_enqueue_style( 'dokan-vue-vendor' );
+            wp_enqueue_style( 'dokan-vue-admin' );
+
+            // load vue libraries and bootstrap the app
+            wp_enqueue_script( 'dokan-vue-vendor' );
+            wp_localize_script( 'dokan-vue-vendor', 'dokan', $localize_script );
+            wp_enqueue_script( 'dokan-vue-bootstrap' );
+
+            // allow other plugins to load scripts before the main app loads
+            do_action( 'dokan-vue-admin-scripts' );
+
+            // fire the admin app
+            wp_enqueue_script( 'dokan-vue-admin' );
+        }
+
         wp_enqueue_style( 'dokan-admin-css' );
+
         wp_enqueue_script( 'dokan-tooltip' );
         wp_enqueue_script( 'dokan-admin' );
 
@@ -43,6 +75,28 @@ class Dokan_Assets {
         }
 
         do_action( 'dokan_enqueue_admin_scripts' );
+    }
+
+    /**
+     * SPA Routes
+     *
+     * @return array
+     */
+    public function get_vue_admin_routes() {
+        $routes = array(
+            array(
+                'path'      => '/',
+                'name'      => 'Home',
+                'component' => 'Home'
+            ),
+            array(
+                'path'      => '/settings',
+                'name'      => 'Settings',
+                'component' => 'Settings'
+            ),
+        );
+
+        return apply_filters( 'dokan-admin-routes', $routes );
     }
 
     /**
@@ -101,6 +155,7 @@ class Dokan_Assets {
             ),
             'dokan-vue-admin' => array(
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/vue-admin.css',
+                'deps'    => array( 'dokan-vue-vendor' ),
                 'version' => filemtime( DOKAN_DIR . '/assets/css/vue-admin.css' ),
             ),
             'dokan-vue-frontend' => array(
@@ -180,18 +235,23 @@ class Dokan_Assets {
                 'deps'      => array( 'imgareaselect', 'customize-base', 'customize-model' ),
                 'version'   => filemtime( $asset_path . '/js/dokan.js' ),
             ),
-            'vue-vendor' => array(
+            'dokan-vue-vendor' => array(
                 'src'       => $asset_url . '/js/vue-vendor.js',
                 'version'   => filemtime( $asset_path . '/js/vue-vendor.js' ),
             ),
-            'vue-admin' => array(
+            'dokan-vue-bootstrap' => array(
+                'src'       => $asset_url . '/js/vue-bootstrap.js',
+                'deps'      => array( 'dokan-vue-vendor' ),
+                'version'   => filemtime( $asset_path . '/js/vue-bootstrap.js' ),
+            ),
+            'dokan-vue-admin' => array(
                 'src'       => $asset_url . '/js/vue-admin.js',
-                'deps'      => array( 'jquery' ),
+                'deps'      => array( 'jquery', 'dokan-vue-vendor', 'dokan-vue-bootstrap' ),
                 'version'   => filemtime( $asset_path . '/js/vue-admin.js' ),
             ),
-            'vue-frontend' => array(
+            'dokan-vue-frontend' => array(
                 'src'       => $asset_url . '/js/vue-frontend.js',
-                'deps'      => array( 'jquery' ),
+                'deps'      => array( 'jquery', 'dokan-vue-vendor', 'dokan-vue-bootstrap' ),
                 'version'   => filemtime( $asset_path . '/js/vue-frontend.js' ),
             ),
         );
@@ -221,7 +281,7 @@ class Dokan_Assets {
         $default_script = array(
             'ajaxurl'            => admin_url( 'admin-ajax.php' ),
             'nonce'              => wp_create_nonce( 'dokan_reviews' ),
-            'ajax_loader'        => DOKAN_PLUGIN_ASSEST.'/images/ajax-loader.gif',
+            'ajax_loader'        => DOKAN_PLUGIN_ASSEST . '/images/ajax-loader.gif',
             'seller'             => array(
                 'available'     => __( 'Available', 'dokan-lite' ),
                 'notAvailable'  => __( 'Not Available', 'dokan-lite' )
@@ -232,6 +292,11 @@ class Dokan_Assets {
             'commission_type'    => dokan_get_commission_type( dokan_get_current_user_id() ),
             'rounding_precision' => wc_get_rounding_precision(),
             'mon_decimal_point'  => wc_get_price_decimal_separator(),
+            'api'                => array(
+                'root'    => esc_url_raw( get_rest_url() ),
+                'nonce'   => wp_create_nonce( 'wp_rest' ),
+                'version' => 'dokan/v1/',
+            ),
         );
 
         $localize_script = apply_filters( 'dokan_localized_args', $default_script );

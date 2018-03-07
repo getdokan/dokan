@@ -1,4 +1,4 @@
-pluginWebpack([0],[
+dokanWebpack([0],[
 /* 0 */,
 /* 1 */,
 /* 2 */,
@@ -7,10 +7,12 @@ pluginWebpack([0],[
 /* 5 */,
 /* 6 */,
 /* 7 */,
-/* 8 */
+/* 8 */,
+/* 9 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+//
 //
 //
 //
@@ -23,50 +25,10 @@ pluginWebpack([0],[
 });
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_wp_list_table__ = __webpack_require__(10);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -75,139 +37,24 @@ pluginWebpack([0],[
 //
 //
 
-
+let ListTable = dokan_get_lib('ListTable');
 
 /* harmony default export */ __webpack_exports__["a"] = ({
 
     name: 'Home',
 
-    components: {
-        ListTable: __WEBPACK_IMPORTED_MODULE_0_vue_wp_list_table__["default"]
-    },
+    components: {},
 
     data() {
-        return {
-            showCb: true,
-
-            sortBy: 'title',
-            sortOrder: 'asc',
-
-            totalItems: 15,
-            perPage: 3,
-            totalPages: 5,
-            currentPage: 1,
-            loading: false,
-
-            columns: {
-                'title': {
-                    label: 'Title',
-                    sortable: true
-                },
-                'author': {
-                    label: 'Author',
-                    sortable: true
-                }
-            },
-            actionColumn: 'title',
-            actions: [{
-                key: 'edit',
-                label: 'Edit'
-            }, {
-                key: 'trash',
-                label: 'Delete'
-            }],
-            bulkActions: [{
-                key: 'trash',
-                label: 'Move to Trash'
-            }],
-            books: [
-                // {
-                //     id: 1,
-                //     title: 'Wings of Fire: An Autobiography',
-                //     author: ['A.P.J. Abdul Kalam'],
-                //     image: 'https://images.gr-assets.com/books/1295670969l/634583.jpg'
-                // },
-                // {
-                //     id: 2,
-                //     title: 'Who Moved My Cheese?',
-                //     author: ['Spencer Johnson', 'Kenneth H. Blanchard'],
-                //     image: 'https://images.gr-assets.com/books/1388639717l/4894.jpg'
-                // },
-                // {
-                //     id: 3,
-                //     title: 'Option B',
-                //     author: ['Sheryl Sandberg', 'Adam Grant', 'Adam M. Grant'],
-                //     image: 'https://images.gr-assets.com/books/1493998427l/32938155.jpg'
-                // }
-            ]
-        };
+        return {};
     },
 
-    created() {
+    created() {},
 
-        this.loadBooks();
-    },
-
-    methods: {
-
-        loadBooks(time = 100) {
-
-            let self = this;
-
-            self.loading = true;
-
-            setTimeout(function () {
-                self.books = [{
-                    id: 1,
-                    title: 'Wings of Fire: An Autobiography',
-                    author: ['A.P.J. Abdul Kalam'],
-                    image: 'https://images.gr-assets.com/books/1295670969l/634583.jpg'
-                }, {
-                    id: 2,
-                    title: 'Who Moved My Cheese?',
-                    author: ['Spencer Johnson', 'Kenneth H. Blanchard'],
-                    image: 'https://images.gr-assets.com/books/1388639717l/4894.jpg'
-                }, {
-                    id: 3,
-                    title: 'Option B',
-                    author: ['Sheryl Sandberg', 'Adam Grant', 'Adam M. Grant'],
-                    image: 'https://images.gr-assets.com/books/1493998427l/32938155.jpg'
-                }];
-
-                self.loading = false;
-            }, time);
-        },
-
-        onActionClick(action, row) {
-            if ('trash' === action) {
-                if (confirm('Are you sure to delete?')) {
-                    alert('deleted: ' + row.title);
-                }
-            }
-        },
-
-        goToPage(page) {
-            console.log('Going to page: ' + page);
-            this.currentPage = page;
-            this.loadBooks(1000);
-        },
-
-        onBulkAction(action, items) {
-            console.log(action, items);
-            alert(action + ': ' + items.join(', '));
-        },
-
-        sortCallback(column, order) {
-            this.sortBy = column;
-            this.sortOrder = order;
-
-            this.loadBooks(1000);
-        }
-    }
+    methods: {}
 });
 
 /***/ }),
-/* 10 */,
 /* 11 */,
 /* 12 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -243,35 +90,32 @@ pluginWebpack([0],[
 /* 23 */,
 /* 24 */,
 /* 25 */,
-/* 26 */
+/* 26 */,
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _vue = __webpack_require__(1);
-
-var _vue2 = _interopRequireDefault(_vue);
-
-var _App = __webpack_require__(27);
+var _App = __webpack_require__(28);
 
 var _App2 = _interopRequireDefault(_App);
 
-var _router = __webpack_require__(30);
+var _router = __webpack_require__(31);
 
 var _router2 = _interopRequireDefault(_router);
 
-var _adminMenuFix = __webpack_require__(40);
+var _adminMenuFix = __webpack_require__(41);
 
 var _adminMenuFix2 = _interopRequireDefault(_adminMenuFix);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-_vue2.default.config.productionTip = false;
-
 /* eslint-disable no-new */
-new _vue2.default({
-    el: '#vue-admin-app',
+var Vue = dokan_get_lib('Vue');
+
+new Vue({
+    el: '#dokan-vue-admin',
     router: _router2.default,
     render: function render(h) {
         return h(_App2.default);
@@ -282,20 +126,20 @@ new _vue2.default({
 (0, _adminMenuFix2.default)('vue-app');
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_App_vue__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_App_vue__ = __webpack_require__(9);
 /* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_3a030f38_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__ = __webpack_require__(29);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_3a030f38_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__ = __webpack_require__(30);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(28)
+  __webpack_require__(29)
 }
-var normalizeComponent = __webpack_require__(0)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 
 
@@ -339,13 +183,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -353,7 +197,16 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { attrs: { id: "vue-backend-app" } }, [_c("router-view")], 1)
+  return _c(
+    "div",
+    { attrs: { id: "vue-backend-app" } },
+    [
+      _c("router-view"),
+      _vm._v(" "),
+      _c("notifications", { attrs: { position: "bottom right" } })
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -367,7 +220,7 @@ if (false) {
 }
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -377,53 +230,74 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _vue = __webpack_require__(1);
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-var _vue2 = _interopRequireDefault(_vue);
-
-var _vueRouter = __webpack_require__(4);
-
-var _vueRouter2 = _interopRequireDefault(_vueRouter);
-
-var _Home = __webpack_require__(31);
+var _Home = __webpack_require__(32);
 
 var _Home2 = _interopRequireDefault(_Home);
 
-var _Settings = __webpack_require__(37);
+var _Settings = __webpack_require__(38);
 
 var _Settings2 = _interopRequireDefault(_Settings);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-_vue2.default.use(_vueRouter2.default);
+var Vue = dokan_get_lib('Vue');
+var Router = dokan_get_lib('Router');
 
-exports.default = new _vueRouter2.default({
-    routes: [{
-        path: '/',
-        name: 'Home',
-        component: _Home2.default
-    }, {
-        path: '/settings',
-        name: 'Settings',
-        component: _Settings2.default
-    }]
+Vue.use(Router);
+
+dokan_add_route(_Home2.default);
+dokan_add_route(_Settings2.default);
+
+/**
+ * Parse the route array and bind required components
+ *
+ * This changes the dokan.routes array and changes the components
+ * so we can use dokan.routeComponents.{compontent} component.
+ *
+ * @param  {array} routes
+ *
+ * @return {void}
+ */
+function parseRouteComponent(routes) {
+
+    for (var i = 0; i < routes.length; i++) {
+        if (_typeof(routes[i].children) === 'object') {
+
+            parseRouteComponent(routes[i].children);
+
+            if (typeof routes[i].component !== 'undefined') {
+                routes[i].component = dokan.routeComponents[routes[i].component];
+            }
+        } else {
+            routes[i].component = dokan.routeComponents[routes[i].component];
+        }
+    }
+}
+
+// mutate the localized array
+parseRouteComponent(dokan.routes);
+
+exports.default = new Router({
+    routes: dokan.routes
 });
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Home_vue__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Home_vue__ = __webpack_require__(10);
 /* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2d05f0e2_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Home_vue__ = __webpack_require__(36);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2d05f0e2_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Home_vue__ = __webpack_require__(37);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(32)
+  __webpack_require__(33)
 }
-var normalizeComponent = __webpack_require__(0)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 
 
@@ -467,16 +341,16 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 33 */,
 /* 34 */,
 /* 35 */,
-/* 36 */
+/* 36 */,
+/* 37 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -484,93 +358,18 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "home" },
-    [
-      _c("h1", { staticClass: "wp-heading-inline" }, [_vm._v("Books")]),
-      _vm._v(" "),
-      _c("a", { staticClass: "page-title-action", attrs: { href: "#" } }, [
-        _vm._v("Add New")
-      ]),
-      _vm._v(" "),
-      _c(
-        "list-table",
-        {
-          attrs: {
-            columns: _vm.columns,
-            loading: _vm.loading,
-            rows: _vm.books,
-            actions: _vm.actions,
-            "show-cb": _vm.showCb,
-            "total-items": _vm.totalItems,
-            "bulk-actions": _vm.bulkActions,
-            "total-pages": _vm.totalPages,
-            "per-page": _vm.perPage,
-            "current-page": _vm.currentPage,
-            "action-column": _vm.actionColumn,
-            "sort-by": _vm.sortBy,
-            "sort-order": _vm.sortOrder
-          },
-          on: {
-            sort: _vm.sortCallback,
-            pagination: _vm.goToPage,
-            "action:click": _vm.onActionClick,
-            "bulk:click": _vm.onBulkAction
-          },
-          scopedSlots: _vm._u([
-            {
-              key: "title",
-              fn: function(data) {
-                return [
-                  _c("img", {
-                    attrs: {
-                      src: data.row.image,
-                      alt: data.row.title,
-                      width: "50"
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c("strong", [
-                    _c("a", { attrs: { href: "#" } }, [
-                      _vm._v(_vm._s(data.row.title))
-                    ])
-                  ])
-                ]
-              }
-            },
-            {
-              key: "author",
-              fn: function(data) {
-                return [
-                  _vm._v(
-                    "\n            " +
-                      _vm._s(data.row.author.join(", ")) +
-                      "\n        "
-                  )
-                ]
-              }
-            }
-          ])
-        },
-        [
-          _c("template", { slot: "filters" }, [
-            _c("select", [
-              _c("option", { attrs: { value: "All Dates" } }, [
-                _vm._v("All Dates")
-              ])
-            ]),
-            _vm._v(" "),
-            _c("button", { staticClass: "button" }, [_vm._v("Filter")])
-          ])
-        ],
-        2
-      )
-    ],
-    1
-  )
+  return _vm._m(0)
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "dokan-dashboard" }, [
+      _c("h1", [_vm._v("Dokan Dashboard")])
+    ])
+  }
+]
 render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
@@ -582,20 +381,20 @@ if (false) {
 }
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Settings_vue__ = __webpack_require__(12);
 /* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_61e400d3_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Settings_vue__ = __webpack_require__(39);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_61e400d3_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Settings_vue__ = __webpack_require__(40);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(38)
+  __webpack_require__(39)
 }
-var normalizeComponent = __webpack_require__(0)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 
 
@@ -639,13 +438,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -669,7 +468,7 @@ if (false) {
 }
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -714,4 +513,4 @@ function menuFix(slug) {
 exports.default = menuFix;
 
 /***/ })
-],[26]);
+],[27]);
