@@ -1333,7 +1333,7 @@ jQuery(function($) {
                         $( 'input[type=submit]' ).attr( 'disabled', 'disabled' );
                     }
                 }
-            } ); 
+            } );
 
         } ).trigger('keyup');
 

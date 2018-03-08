@@ -35,7 +35,7 @@ class Dokan_Assets {
                 'rest' => array(
                     'root'    => esc_url_raw( get_rest_url() ),
                     'nonce'   => wp_create_nonce( 'wp_rest' ),
-                    'version' => 'dokan/v1/',
+                    'version' => 'dokan/v1',
                 ),
                 'api'             => null,
                 'libs'            => array(),
@@ -295,7 +295,7 @@ class Dokan_Assets {
             'api'                => array(
                 'root'    => esc_url_raw( get_rest_url() ),
                 'nonce'   => wp_create_nonce( 'wp_rest' ),
-                'version' => 'dokan/v1/',
+                'version' => 'dokan/v1',
             ),
         );
 

@@ -410,7 +410,7 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
      *
      * @return [type] [description]
      */
-    function get_all_withdraws( $user_id ) {
+    function get_all_withdraws( $user_id, $limit = 100, $offset = 0 ) {
         if ( ! current_user_can( 'dokan_manage_withdraw' ) ) {
             return;
         }
@@ -419,9 +419,8 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
 
         $where  = empty( $user_id ) ? '' : sprintf( "user_id ='%d' &&", $user_id );
 
-        $sql    = "SELECT * FROM {$wpdb->dokan_withdraw} WHERE $where 1=1";
+        $sql    = "SELECT * FROM {$wpdb->dokan_withdraw} WHERE $where 1=1 LIMIT $offset, $limit";
         $result = $wpdb->get_results( $sql );
-
         return $result;
     }
 
