@@ -4,12 +4,16 @@ import Notifications from 'vue-notification'
 import ListTable from 'vue-wp-list-table';
 import API_Helper from '@/utils/Api'
 
+// core components
+import Postbox from "admin/components/Postbox.vue"
+
 Vue.use(Notifications)
 
-window.dokan.api = new API_Helper();
-window.dokan.libs['Vue'] = Vue;
-window.dokan.libs['Router'] = Router;
+window.dokan.api               = new API_Helper();
+window.dokan.libs['Vue']       = Vue;
+window.dokan.libs['Router']    = Router;
 window.dokan.libs['ListTable'] = ListTable;
+window.dokan.libs['Postbox']   = Postbox;
 
 window.dokan_get_lib = function(lib) {
     return window.dokan.libs[lib];

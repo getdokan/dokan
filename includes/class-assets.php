@@ -86,13 +86,18 @@ class Dokan_Assets {
         $routes = array(
             array(
                 'path'      => '/',
-                'name'      => 'Home',
-                'component' => 'Home'
+                'name'      => 'Dashboard',
+                'component' => 'Dashboard'
             ),
             array(
-                'path'      => '/settings',
-                'name'      => 'Settings',
-                'component' => 'Settings'
+                'path'      => '/withdraw',
+                'name'      => 'Withdraw',
+                'component' => 'Withdraw'
+            ),
+            array(
+                'path'      => '/premium',
+                'name'      => 'Premium',
+                'component' => 'Premium'
             ),
         );
 
@@ -153,9 +158,14 @@ class Dokan_Assets {
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/vue-vendor.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/vue-vendor.css' ),
             ),
+            'dokan-vue-bootstrap' => array(
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/vue-bootstrap.css',
+                'deps'    => array( 'dokan-vue-vendor' ),
+                'version' => filemtime( DOKAN_DIR . '/assets/css/vue-bootstrap.css' ),
+            ),
             'dokan-vue-admin' => array(
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/vue-admin.css',
-                'deps'    => array( 'dokan-vue-vendor' ),
+                'deps'    => array( 'dokan-vue-vendor', 'dokan-vue-bootstrap' ),
                 'version' => filemtime( DOKAN_DIR . '/assets/css/vue-admin.css' ),
             ),
             'dokan-vue-frontend' => array(

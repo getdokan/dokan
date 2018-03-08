@@ -1,39 +1,91 @@
 dokanWebpack([2],{
 
-/***/ 42:
+/***/ 14:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+
+    name: 'Postbox',
+    props: {
+        title: {
+            type: String,
+            required: true,
+            default: ''
+        },
+        extraClass: {
+            type: String,
+            default: null
+        }
+    },
+
+    data() {
+        return {
+            showing: true
+        };
+    }
+});
+
+/***/ }),
+
+/***/ 40:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _vue = __webpack_require__(0);
+var _vue = __webpack_require__(1);
 
 var _vue2 = _interopRequireDefault(_vue);
 
-var _vueRouter = __webpack_require__(3);
+var _vueRouter = __webpack_require__(4);
 
 var _vueRouter2 = _interopRequireDefault(_vueRouter);
 
-var _vueNotification = __webpack_require__(13);
+var _vueNotification = __webpack_require__(11);
 
 var _vueNotification2 = _interopRequireDefault(_vueNotification);
 
-var _vueWpListTable = __webpack_require__(5);
+var _vueWpListTable = __webpack_require__(12);
 
 var _vueWpListTable2 = _interopRequireDefault(_vueWpListTable);
 
-var _Api = __webpack_require__(43);
+var _Api = __webpack_require__(44);
 
 var _Api2 = _interopRequireDefault(_Api);
+
+var _Postbox = __webpack_require__(45);
+
+var _Postbox2 = _interopRequireDefault(_Postbox);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _vue2.default.use(_vueNotification2.default);
 
+// core components
+
+
 window.dokan.api = new _Api2.default();
 window.dokan.libs['Vue'] = _vue2.default;
 window.dokan.libs['Router'] = _vueRouter2.default;
 window.dokan.libs['ListTable'] = _vueWpListTable2.default;
+window.dokan.libs['Postbox'] = _Postbox2.default;
 
 window.dokan_get_lib = function (lib) {
     return window.dokan.libs[lib];
@@ -45,7 +97,7 @@ window.dokan_add_route = function (component) {
 
 /***/ }),
 
-/***/ 43:
+/***/ 44:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -126,6 +178,132 @@ var Dokan_API = function () {
 
 exports.default = Dokan_API;
 
+/***/ }),
+
+/***/ 45:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Postbox_vue__ = __webpack_require__(14);
+/* empty harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_36a997ab_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Postbox_vue__ = __webpack_require__(47);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(46)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Postbox_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_36a997ab_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Postbox_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src/admin/components/Postbox.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-36a997ab", Component.options)
+  } else {
+    hotAPI.reload("data-v-36a997ab", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+
+
+/***/ }),
+
+/***/ 46:
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
+/***/ 47:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      class: [
+        "postbox",
+        "dokan-postbox",
+        { closed: !_vm.showing },
+        _vm.extraClass
+      ]
+    },
+    [
+      _c(
+        "button",
+        {
+          staticClass: "handlediv",
+          attrs: { type: "button", "aria-expanded": "false" },
+          on: {
+            click: function($event) {
+              _vm.showing = !_vm.showing
+            }
+          }
+        },
+        [
+          _c("span", {
+            staticClass: "toggle-indicator",
+            attrs: { "aria-hidden": "true" }
+          })
+        ]
+      ),
+      _vm._v(" "),
+      _c("h2", { staticClass: "hndle" }, [
+        _c("span", [_vm._v(_vm._s(_vm.title))])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "inside" }, [
+        _c("div", { staticClass: "main" }, [_vm._t("default")], 2)
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-36a997ab", esExports)
+  }
+}
+
 /***/ })
 
-},[42]);
+},[40]);

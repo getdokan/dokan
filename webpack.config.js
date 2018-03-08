@@ -30,7 +30,7 @@ function isProduction() {
 
 // extract css into its own file
 const extractCss = new ExtractTextPlugin({
-    filename: "../css/[name].css",
+    filename: "../css/[name].css"
 });
 
 plugins.push( extractCss );

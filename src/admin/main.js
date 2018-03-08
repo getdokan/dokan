@@ -13,4 +13,4 @@ new Vue({
 
 
 // fix the admin menu for the slug "vue-app"
-menuFix('vue-app');
+menuFix('dokan');
