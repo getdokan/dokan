@@ -258,8 +258,8 @@ class Dokan_Admin {
      * @return void
      */
     function dashboard() {
-        // echo '<div class="wrap"><div id="dokan-vue-admin"></div></div>';
-        include dirname(__FILE__) . '/views/dashboard.php';
+        echo '<div class="wrap"><div id="dokan-vue-admin"></div></div>';
+        // include dirname(__FILE__) . '/views/dashboard.php';
     }
 
     /**

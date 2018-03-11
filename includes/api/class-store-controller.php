@@ -48,6 +48,46 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
                 'methods'  => WP_REST_Server::READABLE,
                 'callback' => array( $this, 'get_store' )
             ),
+            array(
+                'methods'  => WP_REST_Server::DELETABLE,
+                'callback' => array( $this, 'delete_store' ),
+                'permission_callback' => array( $this, 'permission_check_for_manageable_part' ),
+                'args' =>  array(
+                    'reassign' => array(
+                        'type'        => 'integer',
+                        'description' => __( 'Reassign the deleted user\'s posts and links to this user ID.' ),
+                        'required'    => true,
+                    ),
+                )
+            ),
+        ) );
+
+        register_rest_route( $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/status', array(
+            'args' => array(
+                'id' => array(
+                    'description' => __( 'Unique identifier for the object.' ),
+                    'type'        => 'integer',
+                    'required'    => true
+                ),
+                'status' => array(
+                    'description' => __( 'Status for the store object.' ),
+                    'type'        => 'string',
+                    'required'    => true
+                ),
+            ),
+            array(
+                'methods'  => WP_REST_Server::EDITABLE,
+                'callback' => array( $this, 'update_vendor_status' ),
+                'permission_callback' => array( $this, 'permission_check_for_manageable_part' ),
+            ),
+        ) );
+
+        register_rest_route( $this->namespace, '/' . $this->base . '/batch', array(
+            array(
+                'methods'  => WP_REST_Server::EDITABLE,
+                'callback' => array( $this, 'batch_update' ),
+                'permission_callback' => array( $this, 'permission_check_for_manageable_part' ),
+            ),
         ) );
 
         register_rest_route( $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/products' , array(
@@ -143,6 +183,124 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
         $response    = rest_ensure_response( $stores_data );
 
         return $response;
+    }
+
+    /**
+     * Delete store
+     *
+     * @since 2.8.0
+     *
+     * @return void
+     */
+    public function delete_store( $request ) {
+        $store_id = !empty( $request['id'] ) ? $request['id'] : 0;
+        $reassign = false === $request['reassign'] ? null : absint( $request['reassign'] );
+
+        if ( empty( $store_id ) ) {
+            return new WP_Error( 'no_vendor_found', __( 'No vendor found for updating status', 'dokan-lite' ), array( 'status' => 400 ) );
+        }
+
+        if ( ! empty( $reassign ) ) {
+            if ( $reassign === $store_id || ! get_userdata( $reassign ) ) {
+                return new WP_Error( 'rest_user_invalid_reassign', __( 'Invalid user ID for reassignment.', 'dokan-lite' ), array( 'status' => 400 ) );
+            }
+        }
+
+        $vendor = dokan()->vendor->get( intval( $store_id ) )->delete( $reassign );
+        $response = rest_ensure_response( $vendor );
+        $response->add_links( $this->prepare_links( $vendor, $request ) );
+
+        return $response;
+    }
+
+    /**
+     * update_vendor_status
+     *
+     * @since 1.0.0
+     *
+     * @return void
+     */
+    public function update_vendor_status( $request ) {
+        if ( ! in_array( $request['status'], array( 'active', 'inactive' ) ) ) {
+            return new WP_Error( 'no_valid_status', __( 'Status parameter must be active or inactive' ), array( 'status' => 400 ) );
+        }
+
+        $store_id = ! empty( $request['id'] ) ? $request['id'] : 0;
+
+        if ( empty( $store_id ) ) {
+            return new WP_Error( 'no_vendor_found', __( 'No vendor found for updating status' ), array( 'status' => 400 ) );
+        }
+
+        if ( 'active' == $request['status'] ) {
+            $user = dokan()->vendor->get( $store_id )->make_active();
+        } else {
+            $user = dokan()->vendor->get( $store_id )->make_inactive();
+        }
+
+        $response = rest_ensure_response( $user );
+        $response->add_links( $this->prepare_links( $user, $request ) );
+        return $response;
+    }
+
+    /**
+     * Batch udpate for vendor listing
+     *
+     * @since 2.8.0
+     *
+     * @return void
+     */
+    public function batch_update( $request ) {
+        $params = $request->get_params();
+
+        if ( empty( $params ) ) {
+            return new WP_Error( 'no_item_found', __( 'No items found for bulk updating', 'dokan-lite' ), array( 'status' => 404 ) );
+        }
+
+        $allowed_status = array( 'approved', 'pending', 'delete' );
+
+        $response = array();
+
+        foreach ( $params as $status => $value ) {
+            if ( in_array( $status, $allowed_status ) ) {
+
+                switch ( $status ) {
+                    case 'approved':
+
+                        foreach ( $value as $vendor_id ) {
+                            $response['approved'][] = dokan()->vendor->get( $vendor_id )->make_active();
+                        }
+                        break;
+
+                    case 'pending':
+
+                        foreach ( $value as $vendor_id ) {
+                            $response['pending'][] = dokan()->vendor->get( $vendor_id )->make_inactive();
+                        }
+                        break;
+
+                    case 'delete':
+
+                        foreach ( $value as $vendor_id ) {
+                            $user = dokan()->vendor->get( $vendor_id )->delete();
+                            $response['delete'][] = $user;
+                        }
+                        break;
+                }
+            }
+        }
+
+        return $response;
+    }
+
+    /**
+     * undocumented function
+     *
+     * @since 1.0.0
+     *
+     * @return void
+     */
+    public function permission_check_for_manageable_part() {
+        return current_user_can( 'manage_options' );
     }
 
     /**

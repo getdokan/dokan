@@ -557,4 +557,81 @@ class Dokan_Vendor {
 
         echo $html;
     }
+
+    /**
+     * Make vendor active
+     *
+     * @since 2.8.0
+     *
+     * @return void
+     */
+    public function make_active() {
+        update_user_meta( $this->get_id(), 'dokan_enable_selling', 'yes' );
+        $this->change_product_status( 'publish' );
+
+        return $this->to_array();
+    }
+
+    /**
+     * Make vendor active
+     *
+     * @since 2.8.0
+     *
+     * @return void
+     */
+    public function make_inactive() {
+        update_user_meta( $this->get_id(), 'dokan_enable_selling', 'no' );
+        $this->change_product_status( 'pending' );
+
+        return $this->to_array();
+    }
+
+    /**
+     * Delete vendor with reassign data
+     *
+     * @since 2.8.0
+     *
+     * @return void
+     */
+    public function delete( $reassign = null ) {
+        $user = $this->to_array();
+        require_once ABSPATH . 'wp-admin/includes/user.php';;
+        wp_delete_user( $this->get_id(), $reassign );
+        return $user;
+    }
+
+    /**
+     * Chnage product status when toggling seller active status
+     *
+     * @since 2.6.9
+     *
+     * @param int $seller_id
+     * @param string $status
+     *
+     * @return void
+     */
+    function change_product_status( $status ) {
+        $args = array(
+            'post_type'      => 'product',
+            'post_status'    => ( $status == 'pending' ) ? 'publish' : 'pending',
+            'posts_per_page' => -1,
+            'author'         => $this->get_id(),
+            'orderby'        => 'post_date',
+            'order'          => 'DESC'
+        );
+
+        $product_query = new WP_Query( $args );
+        $products = $product_query->get_posts();
+
+        if ( $products ) {
+            foreach ( $products as $pro ) {
+                if ( 'publish' != $status ) {
+                    update_post_meta( $pro->ID, 'inactive_product_flag', 'yes' );
+                }
+
+                wp_update_post( array( 'ID' => $pro->ID, 'post_status' => $status ) );
+            }
+        }
+    }
+
 }

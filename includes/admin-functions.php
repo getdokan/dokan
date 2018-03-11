@@ -946,3 +946,15 @@ function dokan_admin_report_by_seller( $chosen_seller_id) {
 
     return $data;
 }
+
+add_filter( 'post_types_to_delete_with_user', 'dokan_add_wc_post_types_to_delete_user', 10, 2 );
+
+function dokan_add_wc_post_types_to_delete_user( $post_types, $user_id ) {
+    if ( ! dokan_is_user_seller( $user_id ) ) {
+        return $post_types;
+    }
+
+    $wc_post_types = array( 'product', 'product_variation', 'shop_order', 'shop_coupon' );
+
+    return array_merge( $post_types, $wc_post_types );
+}
