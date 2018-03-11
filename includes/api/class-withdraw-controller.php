@@ -124,7 +124,16 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
                 ),
                 'permission_callback' => array( $this, 'get_withdraw_permissions_check' ),
             ),
+        ) );
 
+        register_rest_route( $this->namespace, '/' . $this->base . '/batch', array(
+            array(
+                'methods'             => WP_REST_Server::EDITABLE,
+                'callback'            => array( $this, 'batch_items' ),
+                'permission_callback' => array( $this, 'batch_items_permissions_check' ),
+                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+            ),
+            'schema' => array( $this, 'get_public_batch_schema' ),
         ) );
     }
 
@@ -379,6 +388,62 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
     }
 
     /**
+     * Approve, Pending and cancel bulk action
+     *
+     * JSON data format for sending to API
+     *     {
+     *         "approved" : [
+     *             "1", "9", "7"
+     *         ],
+     *         "pending" : [
+     *             "2"
+     *         ],
+     *         "delete" : [
+     *             "4"
+     *         ],
+     *         "cancelled" : [
+     *             "5"
+     *         ]
+     *     }
+     *
+     * @since 2.8.0
+     *
+     * @return void
+     */
+    public function batch_items( $request ) {
+        global $wpdb;
+
+        $params = $request->get_params();
+
+        if ( empty( $params ) ) {
+            return new WP_Error( 'no_item_found', __( 'No items found for bulk updating', 'dokan-lite' ), array( 'status' => 404 ) );
+        }
+
+        $allowed_status = array( 'approved', 'cancelled', 'pending', 'delete' );
+
+        foreach ( $params as $status => $value ) {
+            if ( in_array( $status, $allowed_status ) ) {
+                if ( 'delete' == $status ) {
+                    foreach ( $value as $withdraw_id ) {
+                        $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}dokan_withdraw WHERE id = %d", $withdraw_id ) );
+                    }
+                } else {
+                    foreach ( $value as $withdraw_id ) {
+                        $status_code = $this->get_status( $status );
+                        $wpdb->query( $wpdb->prepare(
+                            "UPDATE {$wpdb->prefix}dokan_withdraw
+                            SET status = %d WHERE id = %d",
+                            $status_code, $withdraw_id
+                        ) );
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Prepare data for response
      *
      * @since 2.8.0
@@ -446,6 +511,17 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
      */
     public function get_withdraw_permissions_check() {
         return current_user_can( 'dokan_manage_withdraw' );
+    }
+
+    /**
+     * Check permission for getting withdraw
+     *
+     * @since 2.8.0
+     *
+     * @return void
+     */
+    public function batch_items_permissions_check() {
+        return current_user_can( 'manage_options' );
     }
 
     /**
