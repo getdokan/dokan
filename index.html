@@ -227,6 +227,14 @@
           </li>
           <li>
             <a href="#authentication" class="toc-h1 toc-link" data-title="authentication">Authentication</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#http-basic-auth" class="toc-h2 toc-link" data-title="http-basic-auth">HTTP Basic Auth</a>
+                  </li>
+                  <li>
+                    <a href="#using-jwt-auth" class="toc-h2 toc-link" data-title="using-jwt-auth">Using JWT Auth</a>
+                  </li>
+              </ul>
           </li>
           <li>
             <a href="#products" class="toc-h1 toc-link" data-title="products">Products</a>
@@ -466,36 +474,19 @@
       <div class="content">
         <h1 id='introduction'>Introduction</h1>
 <p>Dokan 2.8+ is fully integrated with the WordPress REST API. This allows to manupulate vendor data using requests in JSON format and using WordPress REST API Authentication methods and standard HTTP verbs which are understood by most HTTP clients.</p>
-<h1 id='authentication'>Authentication</h1>
-<blockquote>
-<p>To authorize, use this code:</p>
-</blockquote>
-<pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
+<h1 id='authentication'>Authentication</h1><h2 id='http-basic-auth'>HTTP Basic Auth</h2>
+<p>You may use <a href="http://en.wikipedia.org/wiki/Basic_access_authentication">HTTP Basic Auth</a> by providing the username and password.</p>
 
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-</code></pre><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">kittn</span>
+<p>For Basic auth you can use <a href="https://github.com/WP-API/Basic-Auth">Basic Auth</a> Plugin.</p>
 
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-</code></pre><pre class="highlight shell tab-shell"><code><span class="c"># With shell, you can just pass the correct header with each request</span>
-curl <span class="s2">"api_endpoint_here"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre><pre class="highlight javascript tab-javascript"><code><span class="kr">const</span> <span class="nx">kittn</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'kittn'</span><span class="p">);</span>
+<p>Occasionally some servers may not parse the Authorization header correctly (if you see a “Username is missing” error when authenticating over SSL, you have a server issue). In this case, you may provide the username/password as query string parameters instead.</p>
+<h2 id='using-jwt-auth'>Using JWT Auth</h2>
+<p>JSON Web Token (JWT) is an open standard (<a href="https://tools.ietf.org/html/rfc7519">RFC 7519</a>) that defines a compact and self-contained way for securely transmitting information between parties as a JSON object.</p>
 
-<span class="kd">let</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">kittn</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">);</span>
-</code></pre>
-<blockquote>
-<p>Make sure to replace <code>meowmeowmeow</code> with your API key.</p>
-</blockquote>
+<p>For using this authentication system you can use <a href="https://wordpress.org/plugins/jwt-authentication-for-wp-rest-api/">JWT Authentication for WP REST API</a> plugin.
+When user sign in using their credential a Bearer token will be created corrosponding to this user. Then this token can be used via API header for getting API response</p>
 
-<p>Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our <a href="http://example.com/developers">developer portal</a>.</p>
-
-<p>Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:</p>
-
-<p><code>Authorization: meowmeowmeow</code></p>
-
-<aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
-</aside>
+<p><code>Authorization: Bearer &lt;token&gt;</code></p>
 <h1 id='products'>Products</h1>
 <p>The products API allows you to create, view, update, and delete individual, or a batch, of products.</p>
 <h2 id='product-properties'>Product Properties</h2>
