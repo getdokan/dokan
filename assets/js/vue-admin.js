@@ -99,6 +99,17 @@ dokanWebpack([0],[
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 let Postbox = dokan_get_lib('Postbox');
 let Loading = dokan_get_lib('Loading');
@@ -114,12 +125,15 @@ let Loading = dokan_get_lib('Loading');
 
     data() {
         return {
-            overview: null
+            overview: null,
+            feed: null,
+            report: null
         };
     },
 
     created() {
         this.fetchOverview();
+        this.fetchFeed();
     },
 
     methods: {
@@ -127,6 +141,12 @@ let Loading = dokan_get_lib('Loading');
         fetchOverview() {
             dokan.api.get('/admin/report/summary').done(response => {
                 this.overview = response;
+            });
+        },
+
+        fetchFeed() {
+            dokan.api.get('/admin/dashboard/feed').done(response => {
+                this.feed = response;
             });
         },
 
@@ -588,7 +608,7 @@ var render = function() {
           "postbox",
           { attrs: { title: "At a Glance", extraClass: "dokan-status" } },
           [
-            _vm.overview
+            _vm.overview !== null
               ? _c("div", { staticClass: "dokan-status" }, [
                   _c("ul", [
                     _c("li", { staticClass: "sale" }, [
@@ -646,7 +666,9 @@ var render = function() {
                       _vm._v(" "),
                       _c("a", { attrs: { href: "#" } }, [
                         _c("strong", [
-                          _vm._v(_vm._s(_vm.overview.vendors.this_month))
+                          _vm._v(
+                            _vm._s(_vm.overview.vendors.this_month) + " Vendor"
+                          )
                         ]),
                         _vm._v(" "),
                         _c("div", { staticClass: "details" }, [
@@ -667,7 +689,9 @@ var render = function() {
                       _vm._v(" "),
                       _c("a", { attrs: { href: "#" } }, [
                         _c("strong", [
-                          _vm._v(_vm._s(_vm.overview.vendors.inactive))
+                          _vm._v(
+                            _vm._s(_vm.overview.vendors.inactive) + " Vendor"
+                          )
                         ]),
                         _vm._v(" "),
                         _c("div", { staticClass: "details" }, [
@@ -681,7 +705,10 @@ var render = function() {
                       _vm._v(" "),
                       _c("a", { attrs: { href: "#" } }, [
                         _c("strong", [
-                          _vm._v(_vm._s(_vm.overview.products.this_month))
+                          _vm._v(
+                            _vm._s(_vm.overview.products.this_month) +
+                              " Products"
+                          )
                         ]),
                         _vm._v(" "),
                         _c("div", { staticClass: "details" }, [
@@ -719,7 +746,31 @@ var render = function() {
         _vm._v(" "),
         _c("postbox", { attrs: { title: "Overview" } }),
         _vm._v(" "),
-        _c("postbox", { attrs: { title: "Dokan News Updates" } })
+        _c("postbox", { attrs: { title: "Dokan News Updates" } }, [
+          _vm.feed !== null
+            ? _c("div", { staticClass: "rss-widget" }, [
+                _c(
+                  "ul",
+                  _vm._l(_vm.feed, function(news) {
+                    return _c("li", [
+                      _c(
+                        "a",
+                        {
+                          attrs: {
+                            href:
+                              news.link +
+                              "?utm_source=wp-admin&utm_campaign=dokan-news",
+                            target: "_blank"
+                          }
+                        },
+                        [_vm._v(_vm._s(news.title))]
+                      )
+                    ])
+                  })
+                )
+              ])
+            : _c("div", { staticClass: "loading" }, [_c("loading")], 1)
+        ])
       ],
       1
     )
