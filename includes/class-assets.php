@@ -40,7 +40,8 @@ class Dokan_Assets {
                 'api'             => null,
                 'libs'            => array(),
                 'routeComponents' => array( 'default' => null ),
-                'routes'          => $this->get_vue_admin_routes()
+                'routes'          => $this->get_vue_admin_routes(),
+                'currency'        => $this->get_localized_price()
             ) );
 
             // load styles
@@ -48,6 +49,7 @@ class Dokan_Assets {
             wp_enqueue_style( 'dokan-vue-admin' );
 
             // load vue libraries and bootstrap the app
+            wp_enqueue_script( 'accounting' );
             wp_enqueue_script( 'dokan-vue-vendor' );
             wp_localize_script( 'dokan-vue-vendor', 'dokan', $localize_script );
             wp_enqueue_script( 'dokan-vue-bootstrap' );
@@ -75,6 +77,16 @@ class Dokan_Assets {
         }
 
         do_action( 'dokan_enqueue_admin_scripts' );
+    }
+
+    public function get_localized_price() {
+        return array(
+            'precision' => wc_get_price_decimals(),
+            'symbol'    => get_woocommerce_currency_symbol(),
+            'decimal'   => esc_attr( wc_get_price_decimal_separator() ),
+            'thousand'  => esc_attr( wc_get_price_thousand_separator() ),
+            'format'    => esc_attr( str_replace( array( '%1$s', '%2$s' ), array( '%s', '%v' ), get_woocommerce_price_format() ) ), // For accounting JS
+        );
     }
 
     /**

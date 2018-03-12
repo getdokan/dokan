@@ -318,9 +318,9 @@ function dokan_site_total_earning() {
 function dokan_admin_report_data( $group_by = 'day', $year = '', $start = '', $end = '' ) {
     global $wpdb, $wp_locale;
 
-    $group_by = apply_filters( 'dokan_report_group_by', $group_by );
-    $start_date = isset( $_POST['start_date'] ) ? sanitize_text_field ( $_POST['start_date'] ): $start; // WPCS: CSRF ok.
-    $end_date   = isset( $_POST['end_date'] ) ? sanitize_text_field( $_POST['end_date'] ): $end; // WPCS: CSRF ok.
+    $group_by     = apply_filters( 'dokan_report_group_by', $group_by );
+    $start_date   = isset( $_POST['start_date'] ) ? sanitize_text_field ( $_POST['start_date'] ): $start; // WPCS: CSRF ok.
+    $end_date     = isset( $_POST['end_date'] ) ? sanitize_text_field( $_POST['end_date'] ): $end; // WPCS: CSRF ok.
     $current_year = date( 'Y' );
 
     if ( ! $start_date ) {
@@ -340,7 +340,7 @@ function dokan_admin_report_data( $group_by = 'day', $year = '', $start = '', $e
     }
 
     $start_date_to_time = strtotime( $start_date );
-    $end_date_to_time = strtotime( $end_date );
+    $end_date_to_time   = strtotime( $end_date );
 
     $date_where = '';
 
@@ -351,13 +351,15 @@ function dokan_admin_report_data( $group_by = 'day', $year = '', $start = '', $e
         $barwidth             = 60 * 60 * 24 * 1000;
     } else {
         $group_by_query = 'YEAR(p.post_date), MONTH(p.post_date)';
-        $date_where           = " AND DATE(p.post_date) >= '$start_date' AND DATE(p.post_date) <= '$end_date'";
+        $date_where     = " AND DATE(p.post_date) >= '$start_date' AND DATE(p.post_date) <= '$end_date'";
         $chart_interval = 0;
-        $min_date             = $start_date_to_time;
+        $min_date       = $start_date_to_time;
+
         while ( ( $min_date   = strtotime( "+1 MONTH", $min_date ) ) <= $end_date_to_time ) {
             $chart_interval ++;
         }
-        $barwidth             = 60 * 60 * 24 * 7 * 4 * 1000;
+
+        $barwidth = 60 * 60 * 24 * 7 * 4 * 1000;
     }
 
     $left_join      = apply_filters( 'dokan_report_left_join', $date_where );
@@ -398,21 +400,21 @@ function dokan_admin_report( $group_by = 'day', $year = '', $start = '', $end = 
     $data = dokan_admin_report_data( $group_by, $year, $start, $end );
 
     // Prepare data for report
-    $order_counts      = dokan_prepare_chart_data( $data, 'order_date', 'total_orders', $chart_interval, $start_date_to_time, $group_by );
-    $order_amounts     = dokan_prepare_chart_data( $data, 'order_date', 'order_total', $chart_interval, $start_date_to_time, $group_by );
-    $order_commision     = dokan_prepare_chart_data( $data, 'order_date', 'earning', $chart_interval, $start_date_to_time, $group_by );
+    $order_counts    = dokan_prepare_chart_data( $data, 'order_date', 'total_orders', $chart_interval, $start_date_to_time, $group_by );
+    $order_amounts   = dokan_prepare_chart_data( $data, 'order_date', 'order_total', $chart_interval, $start_date_to_time, $group_by );
+    $order_commision = dokan_prepare_chart_data( $data, 'order_date', 'earning', $chart_interval, $start_date_to_time, $group_by );
 
     // Encode in json format
     $chart_data = json_encode( array(
-        'order_counts'      => array_values( $order_counts ),
-        'order_amounts'     => array_values( $order_amounts ),
-        'order_commision'     => array_values( $order_commision )
+        'order_counts'    => array_values( $order_counts ),
+        'order_amounts'   => array_values( $order_amounts ),
+        'order_commision' => array_values( $order_commision )
     ) );
 
     $chart_colours = array(
-        'order_counts'  => '#3498db',
+        'order_counts'    => '#3498db',
         'order_amounts'   => '#1abc9c',
-        'order_commision'   => '#73a724'
+        'order_commision' => '#73a724'
     );
 
     ?>

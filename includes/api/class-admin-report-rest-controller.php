@@ -91,14 +91,16 @@ class Dokan_REST_Admin_Report_Controller extends WP_REST_Controller {
      * @return void
      */
     public function get_overview( $request ) {
-        $data = array();
-
         require_once DOKAN_INC_DIR . '/admin-functions.php';
 
-        $data['sales']    = dokan_get_sales_count();
-        $data['withdraw'] = dokan_get_withdraw_count();
-        $data['sellers']  = dokan_get_seller_count();
-        $data['products'] = dokan_get_product_count();
+        $sales = dokan_get_sales_count();
+        $data = array(
+            'products'  => dokan_get_product_count(),
+            'withdraw'  => dokan_get_withdraw_count(),
+            'vendors'   => dokan_get_seller_count(),
+            'orders'    => $sales['orders'],
+            'earning'   => $sales['earning']
+        );
 
         return rest_ensure_response( $data );
     }

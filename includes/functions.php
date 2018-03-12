@@ -1333,7 +1333,7 @@ function dokan_get_seller_count() {
         'date_query' => array(
             array(
                 'year'  => date( 'Y', strtotime( 'last month' ) ),
-                'month' => date( 'm',strtotime( 'last month' ) ),
+                'month' => date( 'm', strtotime( 'last month' ) ),
             ),
         ),
     ) );
@@ -1410,9 +1410,9 @@ function dokan_get_sales_count() {
         }
     }
 
-    $last_month_report_data    = dokan_admin_report_data( 'day', '', date("Y-m-d", strtotime("first day of previous month") ), date("Y-m-d", strtotime("last day of previous month") ) );
-
+    $last_month_report_data = dokan_admin_report_data( 'day', '', date("Y-m-d", strtotime("first day of previous month") ), date("Y-m-d", strtotime("last day of previous month") ) );
     $last_month_order_total = $last_month_earning_total = $last_month_total_orders = 0;
+
     if ( $last_month_report_data ) {
         foreach ( $last_month_report_data as $row ) {
             $last_month_order_total   += $row->order_total;
@@ -1426,23 +1426,42 @@ function dokan_get_sales_count() {
     $order_percentage      = dokan_get_percentage_of( $this_month_total_orders, $last_month_total_orders );
 
     $data = array(
-        'this_month_order_total'    => $this_month_order_total,
-        'this_month_earning_total'  => $this_month_earning_total,
-        'this_month_total_orders'   => $this_month_total_orders,
-        'last_month_order_total'    => $last_month_order_total,
-        'last_month_earning_total'  => $last_month_earning_total,
-        'last_month_total_orders'   => $last_month_total_orders,
-        'sale_parcent_class'        => $sale_percentage['class'],
-        'sale_parcent'              => $sale_percentage['parcent'],
-        'earning_parcent_class'     => $earning_percentage['class'],
-        'earning_parcent'           => $earning_percentage['parcent'],
-        'order_parcent_class'       => $order_percentage['class'],
-        'order_parcent'             => $order_percentage['parcent'],
+        'orders'    => array(
+            'this_month' => $this_month_order_total,
+            'last_month' => $last_month_order_total,
+            'class'      => $order_percentage['class'],
+            'parcent'    => $order_percentage['parcent'],
+        ),
+        'earning'   => array(
+            'this_month' => $this_month_earning_total,
+            'last_month' => $last_month_earning_total,
+            'class'      => $earning_percentage['class'],
+            'parcent'    => $earning_percentage['parcent'],
+        ),
     );
 
-    error_log( print_r( $data, true ) );
-
     return $data;
+
+    // $data = array(
+    //     'this_month_order_total'    => $this_month_order_total,
+    //     'this_month_total_orders'   => $this_month_total_orders,
+    //     'last_month_order_total'    => $last_month_order_total,
+
+    //     'this_month_earning_total'  => $this_month_earning_total,
+    //     'last_month_earning_total'  => $last_month_earning_total,
+    //     'last_month_total_orders'   => $last_month_total_orders,
+
+    //     'sale_parcent_class'        => $sale_percentage['class'],
+    //     'sale_parcent'              => $sale_percentage['parcent'],
+
+    //     'earning_parcent_class'     => $earning_percentage['class'],
+    //     'earning_parcent'           => $earning_percentage['parcent'],
+
+    //     'order_parcent_class'       => $order_percentage['class'],
+    //     'order_parcent'             => $order_percentage['parcent'],
+    // );
+
+    // return $data;
 }
 
 /**
