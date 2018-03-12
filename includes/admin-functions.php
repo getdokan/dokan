@@ -309,15 +309,13 @@ function dokan_site_total_earning() {
 }
 
 /**
- * Generate report in admin area
+ * Dokan Get Admin report data
  *
- * @global WPDB $wpdb
- * @global type $wp_locale
- * @param string $group_by
- * @param string $year
- * @return obj
+ * @since 2.8.0
+ *
+ * @return array
  */
-function dokan_admin_report( $group_by = 'day', $year = '', $start = '', $end = '' ) {
+function dokan_admin_report_data( $group_by = 'day', $year = '', $start = '', $end = '' ) {
     global $wpdb, $wp_locale;
 
     $group_by = apply_filters( 'dokan_report_group_by', $group_by );
@@ -382,6 +380,23 @@ function dokan_admin_report( $group_by = 'day', $year = '', $start = '', $end = 
 
 
     $data = $wpdb->get_results( $sql );
+
+    return $data;
+}
+
+/**
+ * Generate report in admin area
+ *
+ * @global WPDB $wpdb
+ * @global type $wp_locale
+ * @param string $group_by
+ * @param string $year
+ * @return obj
+ */
+function dokan_admin_report( $group_by = 'day', $year = '', $start = '', $end = '' ) {
+
+    $data = dokan_admin_report_data( $group_by, $year, $start, $end );
+
     // Prepare data for report
     $order_counts      = dokan_prepare_chart_data( $data, 'order_date', 'total_orders', $chart_interval, $start_date_to_time, $group_by );
     $order_amounts     = dokan_prepare_chart_data( $data, 'order_date', 'order_total', $chart_interval, $start_date_to_time, $group_by );

@@ -1399,7 +1399,7 @@ function dokan_get_product_count() {
  */
 function dokan_get_sales_count() {
 
-    $this_month_report_data    = dokan_admin_report();
+    $this_month_report_data    = dokan_admin_report_data();
 
     $this_month_order_total = $this_month_earning_total = $this_month_total_orders = 0;
     if ( $this_month_report_data ) {
@@ -1410,7 +1410,7 @@ function dokan_get_sales_count() {
         }
     }
 
-    $last_month_report_data    = dokan_admin_report( 'day', '', date("Y-m-d", strtotime("first day of previous month") ), date("Y-m-d", strtotime("last day of previous month") ) );
+    $last_month_report_data    = dokan_admin_report_data( 'day', '', date("Y-m-d", strtotime("first day of previous month") ), date("Y-m-d", strtotime("last day of previous month") ) );
 
     $last_month_order_total = $last_month_earning_total = $last_month_total_orders = 0;
     if ( $last_month_report_data ) {
@@ -1425,7 +1425,7 @@ function dokan_get_sales_count() {
     $earning_percentage    = dokan_get_percentage_of( $this_month_earning_total, $last_month_earning_total );
     $order_percentage      = dokan_get_percentage_of( $this_month_total_orders, $last_month_total_orders );
 
-    return array(
+    $data = array(
         'this_month_order_total'    => $this_month_order_total,
         'this_month_earning_total'  => $this_month_earning_total,
         'this_month_total_orders'   => $this_month_total_orders,
@@ -1439,6 +1439,10 @@ function dokan_get_sales_count() {
         'order_parcent_class'       => $order_percentage['class'],
         'order_parcent'             => $order_percentage['parcent'],
     );
+
+    error_log( print_r( $data, true ) );
+
+    return $data;
 }
 
 /**
