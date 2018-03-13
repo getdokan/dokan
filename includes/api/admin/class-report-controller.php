@@ -25,6 +25,14 @@ class Dokan_REST_Admin_Report_Controller extends Dokan_REST_Admin_Controller {
         register_rest_route( $this->namespace, '/' . $this->base . '/summary', array(
             array(
                 'methods'             => WP_REST_Server::READABLE,
+                'callback'            => array( $this, 'get_summary' ),
+                'permission_callback' => array( $this, 'check_permission' ),
+            ),
+        ) );
+
+        register_rest_route( $this->namespace, '/' . $this->base . '/overview', array(
+            array(
+                'methods'             => WP_REST_Server::READABLE,
                 'callback'            => array( $this, 'get_overview' ),
                 'permission_callback' => array( $this, 'check_permission' ),
             ),
@@ -32,13 +40,13 @@ class Dokan_REST_Admin_Report_Controller extends Dokan_REST_Admin_Controller {
     }
 
     /**
-     * Get overview data
+     * Get at a glance
      *
      * @since 2.8.0
      *
      * @return void
      */
-    public function get_overview( $request ) {
+    public function get_summary( $request ) {
         require_once DOKAN_INC_DIR . '/admin-functions.php';
 
         $sales = dokan_get_sales_count();
@@ -53,4 +61,109 @@ class Dokan_REST_Admin_Report_Controller extends Dokan_REST_Admin_Controller {
         return rest_ensure_response( $data );
     }
 
+    /**
+     * Get overview data
+     *
+     * @since 2.8.0
+     *
+     * @return void
+     */
+    public function get_overview( $request ) {
+        require_once DOKAN_INC_DIR . '/admin-functions.php';
+
+        $group_by   = 'day';
+        $start_date = new DateTime( 'first day of this month' );
+        $end_date   = new DateTime();
+        $data       = dokan_admin_report_data( $group_by, '', $start_date->format( 'Y-m-d' ), $end_date->format( 'Y-m-d' ) );
+
+        $labels          = array();
+        $order_counts    = array();
+        $order_amounts   = array();
+        $order_commision = array();
+
+        // initialize data
+        for ( $i = $start_date; $i <= $end_date; $i->modify( '+1 day' ) ){
+            $date                     = $i->format( 'Y-m-d' );
+            $labels[ $date ]          = $date;
+            $order_counts[ $date ]    = 0;
+            $order_amounts[ $date ]   = 0;
+            $order_commision[ $date ] = 0;
+        }
+
+        // fillup real datea
+        foreach ( $data as $row ) {
+            $date = date( 'Y-m-d', strtotime( $row->order_date ) );
+
+            $order_counts[ $date ]    = (int) $row->total_orders;
+            $order_amounts[ $date ]   = $row->order_total;
+            $order_commision[ $date ] = $row->earning;
+        }
+
+        $response = array(
+            'labels'   => array_values( $labels ),
+            'datasets' => array(
+                array(
+                    'label'           => __( 'Total Sales', 'dokan-lite' ),
+                    'borderColor'     => '#3498db',
+                    'fill'            => false,
+                    'data'            => array_values( $order_amounts ),
+                    'tooltipLabel'    => __( 'Total', 'dokan-lite' ),
+                    'tooltipPrefix'   => html_entity_decode( get_woocommerce_currency_symbol() )
+                ),
+                array(
+                    'label'           => __( 'Number of orders', 'dokan-lite' ),
+                    'borderColor'     => '#1abc9c',
+                    'fill'            => false,
+                    'data'            => array_values( $order_counts ),
+                    'tooltipLabel'    => __( 'Orders', 'dokan-lite' ),
+                ),
+                array(
+                    'label'           => __( 'Commision', 'dokan-lite' ),
+                    'borderColor'     => '#73a724',
+                    'fill'            => false,
+                    'data'            => array_values( $order_commision ),
+                ),
+            )
+        );
+
+        return rest_ensure_response( $response );
+
+        // var_dump( $data, $labels );
+        var_dump( $order_counts, $order_amounts, $order_commision );
+        exit;
+
+        $start_date_time = strtotime( $start_date );
+        $end_date_time   = strtotime( $end_date );
+
+        // Prepare data for report
+        $order_counts    = dokan_prepare_chart_data( $data, 'order_date', 'total_orders', $chart_interval, $end_date_time, $group_by );
+        $order_amounts   = dokan_prepare_chart_data( $data, 'order_date', 'order_total', $chart_interval, $end_date_time, $group_by );
+        $order_commision = dokan_prepare_chart_data( $data, 'order_date', 'earning', $chart_interval, $end_date_time, $group_by );
+
+        // Encode in json format
+        $chart_data = array(
+            'counts'    => array_values( $order_counts ),
+            'amounts'   => array_values( $order_amounts ),
+            'commision' => array_values( $order_commision )
+        );
+
+        $chart_colours = array(
+            'counts'    => '#3498db',
+            'amounts'   => '#1abc9c',
+            'commision' => '#73a724'
+        );
+
+        $response = array(
+            'data'   => $chart_data,
+            'color'  => $chart_colours,
+            'rtl'    => is_rtl() ? true : false,
+            'labels' => array(
+                'counts'    => __( 'Number of orders', 'dokan-lite' ),
+                'amounts'   =>  __( 'Total Sales', 'dokan-lite' ),
+                'commision' => __( 'Commision', 'dokan-lite' )
+            )
+        );
+
+        return rest_ensure_response( $response );
+    }
 }

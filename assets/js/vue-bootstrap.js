@@ -1,6 +1,6 @@
 dokanWebpack([2],{
 
-/***/ 15:
+/***/ 17:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -44,7 +44,27 @@ dokanWebpack([2],{
 
 /***/ }),
 
-/***/ 44:
+/***/ 18:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+
+    name: 'Loading',
+
+    data() {
+        return {};
+    }
+});
+
+/***/ }),
+
+/***/ 49:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -58,37 +78,44 @@ var _vueRouter = __webpack_require__(4);
 
 var _vueRouter2 = _interopRequireDefault(_vueRouter);
 
-var _vueNotification = __webpack_require__(12);
+var _moment = __webpack_require__(50);
+
+var _moment2 = _interopRequireDefault(_moment);
+
+var _vueNotification = __webpack_require__(13);
 
 var _vueNotification2 = _interopRequireDefault(_vueNotification);
 
-var _vueWpListTable = __webpack_require__(13);
+var _vueWpListTable = __webpack_require__(14);
 
 var _vueWpListTable2 = _interopRequireDefault(_vueWpListTable);
 
-var _Api = __webpack_require__(48);
+var _Api = __webpack_require__(54);
 
 var _Api2 = _interopRequireDefault(_Api);
 
-var _Postbox = __webpack_require__(49);
+var _vueChartjs = __webpack_require__(16);
+
+var _vueChartjs2 = _interopRequireDefault(_vueChartjs);
+
+var _Postbox = __webpack_require__(58);
 
 var _Postbox2 = _interopRequireDefault(_Postbox);
 
-var _Loading = __webpack_require__(67);
+var _Loading = __webpack_require__(61);
 
 var _Loading2 = _interopRequireDefault(_Loading);
 
+var _Chart = __webpack_require__(81);
+
+var _Chart2 = _interopRequireDefault(_Chart);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// core components
 _vue2.default.use(_vueNotification2.default);
 
-window.dokan.api = new _Api2.default();
-window.dokan.libs['Vue'] = _vue2.default;
-window.dokan.libs['Router'] = _vueRouter2.default;
-window.dokan.libs['ListTable'] = _vueWpListTable2.default;
-window.dokan.libs['Postbox'] = _Postbox2.default;
-window.dokan.libs['Loading'] = _Loading2.default;
+// core components
+
 
 window.dokan_get_lib = function (lib) {
     return window.dokan.libs[lib];
@@ -98,9 +125,28 @@ window.dokan_add_route = function (component) {
     window.dokan.routeComponents[component.name] = component;
 };
 
+// setup global Dokan libraries
+window.dokan.api = new _Api2.default();
+window.dokan.libs['Vue'] = _vue2.default;
+window.dokan.libs['Router'] = _vueRouter2.default;
+window.dokan.libs['moment'] = _moment2.default;
+
+window.dokan.libs['ListTable'] = _vueWpListTable2.default;
+window.dokan.libs['Postbox'] = _Postbox2.default;
+window.dokan.libs['Loading'] = _Loading2.default;
+window.dokan.libs['ChartJS'] = _vueChartjs2.default;
+window.dokan.libs['Chart'] = _Chart2.default;
+
 /***/ }),
 
-/***/ 48:
+/***/ 50:
+/***/ (function(module, exports) {
+
+module.exports = moment;
+
+/***/ }),
+
+/***/ 54:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -183,18 +229,18 @@ exports.default = Dokan_API;
 
 /***/ }),
 
-/***/ 49:
+/***/ 58:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Postbox_vue__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Postbox_vue__ = __webpack_require__(17);
 /* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_36a997ab_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Postbox_vue__ = __webpack_require__(51);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_36a997ab_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Postbox_vue__ = __webpack_require__(60);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(50)
+  __webpack_require__(59)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -241,14 +287,14 @@ if (false) {(function () {
 
 /***/ }),
 
-/***/ 50:
+/***/ 59:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ 51:
+/***/ 60:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -309,38 +355,18 @@ if (false) {
 
 /***/ }),
 
-/***/ 66:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["a"] = ({
-
-    name: 'Loading',
-
-    data() {
-        return {};
-    }
-});
-
-/***/ }),
-
-/***/ 67:
+/***/ 61:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Loading_vue__ = __webpack_require__(66);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Loading_vue__ = __webpack_require__(18);
 /* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_67db673c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Loading_vue__ = __webpack_require__(69);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_67db673c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Loading_vue__ = __webpack_require__(63);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(68)
+  __webpack_require__(62)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -387,14 +413,14 @@ if (false) {(function () {
 
 /***/ }),
 
-/***/ 68:
+/***/ 62:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ 69:
+/***/ 63:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -422,6 +448,140 @@ if (false) {
   }
 }
 
+/***/ }),
+
+/***/ 80:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(16);
+
+
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+    extends: __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__["Line"],
+    props: ['data'],
+    data() {
+        return {
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    xAxes: [{
+                        type: 'time',
+                        scaleLabel: {
+                            display: false
+                        },
+                        gridLines: {
+                            display: false
+                        },
+                        ticks: {
+                            fontColor: '#aaa',
+                            fontSize: 11
+                        }
+                    }],
+                    yAxes: [{
+                        scaleLabel: {
+                            display: false
+                        },
+                        ticks: {
+                            fontColor: '#aaa'
+                        }
+                    }]
+                },
+                legend: {
+                    position: 'top',
+                    onClick: false
+                },
+                elements: {
+                    line: {
+                        tension: 0,
+                        borderWidth: 4
+                    },
+                    point: {
+                        radius: 5,
+                        borderWidth: 3,
+                        backgroundColor: '#fff',
+                        borderColor: '#fff'
+                    }
+                },
+                tooltips: {
+                    displayColors: false,
+                    callbacks: {
+                        label: function (tooltipItems, data) {
+                            let label = data.datasets[tooltipItems.datasetIndex].label || '';
+                            let customLabel = data.datasets[tooltipItems.datasetIndex].tooltipLabel || '';
+                            let prefix = data.datasets[tooltipItems.datasetIndex].tooltipPrefix || '';
+
+                            let tooltipLabel = customLabel ? customLabel + ': ' : label + ': ';
+
+                            tooltipLabel += prefix + tooltipItems.yLabel;
+
+                            return tooltipLabel;
+                        }
+                    }
+                }
+            }
+        };
+    },
+    mounted() {
+        this.renderChart(this.data, this.options);
+    }
+});
+
+/***/ }),
+
+/***/ 81:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Chart_vue__ = __webpack_require__(80);
+/* empty harmony namespace reexport */
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+var __vue_template__ = null
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Chart_vue__["a" /* default */],
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src/admin/components/Chart.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-28c376de", Component.options)
+  } else {
+    hotAPI.reload("data-v-28c376de", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+
+
 /***/ })
 
-},[44]);
+},[49]);

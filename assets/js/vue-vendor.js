@@ -98,7 +98,7 @@
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 52);
+/******/ 	return __webpack_require__(__webpack_require__.s = 64);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -11026,7 +11026,7 @@ Vue$3.compile = compileToFunctions;
 
 /* harmony default export */ __webpack_exports__["default"] = (Vue$3);
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(3), __webpack_require__(2), __webpack_require__(17).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(3), __webpack_require__(2), __webpack_require__(20).setImmediate))
 
 /***/ }),
 /* 2 */
@@ -13885,7 +13885,8 @@ if (inBrowser && window.Vue) {
 /* 9 */,
 /* 10 */,
 /* 11 */,
-/* 12 */
+/* 12 */,
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -15006,13 +15007,13 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_20__;
 //# sourceMappingURL=index.js.map
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* WEBPACK VAR INJECTION */(function(global) {/* harmony export (immutable) */ __webpack_exports__["install"] = install;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_ListTable_vue__ = __webpack_require__(45);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_ListTable_vue__ = __webpack_require__(51);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "ListTable", function() { return __WEBPACK_IMPORTED_MODULE_0__components_ListTable_vue__["a"]; });
 
 
@@ -15050,7 +15051,7 @@ if (GlobalVue) {
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(2)))
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -15388,9 +15389,46 @@ if (GlobalVue) {
 });
 
 /***/ }),
-/* 15 */,
-/* 16 */,
-/* 17 */
+/* 16 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "VueCharts", function() { return VueCharts; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mixins_index_js__ = __webpack_require__(55);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__BaseCharts__ = __webpack_require__(56);
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "Bar", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "HorizontalBar", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["d"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "Doughnut", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["c"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "Line", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["e"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "Pie", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["f"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "PolarArea", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["g"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "Radar", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["h"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "Bubble", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["b"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "Scatter", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["i"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "mixins", function() { return __WEBPACK_IMPORTED_MODULE_0__mixins_index_js__["a"]; });
+
+
+var VueCharts = {
+  Bar: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["a" /* Bar */],
+  HorizontalBar: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["d" /* HorizontalBar */],
+  Doughnut: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["c" /* Doughnut */],
+  Line: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["e" /* Line */],
+  Pie: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["f" /* Pie */],
+  PolarArea: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["g" /* PolarArea */],
+  Radar: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["h" /* Radar */],
+  Bubble: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["b" /* Bubble */],
+  Scatter: __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["i" /* Scatter */],
+  mixins: __WEBPACK_IMPORTED_MODULE_0__mixins_index_js__["a" /* default */]
+};
+/* harmony default export */ __webpack_exports__["default"] = (VueCharts);
+
+
+/***/ }),
+/* 17 */,
+/* 18 */,
+/* 19 */,
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {var apply = Function.prototype.apply;
@@ -15443,7 +15481,7 @@ exports._unrefActive = exports.active = function(item) {
 };
 
 // setimmediate attaches itself to the global object
-__webpack_require__(18);
+__webpack_require__(21);
 // On some exotic environments, it's not clear which object `setimmeidate` was
 // able to install onto.  Search each possibility in the same order as the
 // `setimmediate` library.
@@ -15457,7 +15495,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 18 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -15650,9 +15688,6 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(3)))
 
 /***/ }),
-/* 19 */,
-/* 20 */,
-/* 21 */,
 /* 22 */,
 /* 23 */,
 /* 24 */,
@@ -15676,17 +15711,23 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 /* 42 */,
 /* 43 */,
 /* 44 */,
-/* 45 */
+/* 45 */,
+/* 46 */,
+/* 47 */,
+/* 48 */,
+/* 49 */,
+/* 50 */,
+/* 51 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_vue_loader_lib_selector_type_script_index_0_ListTable_vue__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_vue_loader_lib_selector_type_script_index_0_ListTable_vue__ = __webpack_require__(15);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__vue_loader_lib_template_compiler_index_id_data_v_2562096c_hasScoped_false_buble_transforms_vue_loader_lib_selector_type_template_index_0_ListTable_vue__ = __webpack_require__(47);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__vue_loader_lib_template_compiler_index_id_data_v_2562096c_hasScoped_false_buble_transforms_vue_loader_lib_selector_type_template_index_0_ListTable_vue__ = __webpack_require__(53);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(46)
+  __webpack_require__(52)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -15732,13 +15773,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 46 */
+/* 52 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 47 */
+/* 53 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -16477,370 +16518,232 @@ if (false) {
 }
 
 /***/ }),
-/* 48 */,
-/* 49 */,
-/* 50 */,
-/* 51 */,
-/* 52 */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(1);
-__webpack_require__(53);
-__webpack_require__(12);
-__webpack_require__(4);
-module.exports = __webpack_require__(13);
-
-
-/***/ }),
-/* 53 */
-/***/ (function(module, exports, __webpack_require__) {
-
-!function(t,e){ true?module.exports=e():"function"==typeof define&&define.amd?define([],e):"object"==typeof exports?exports.VueContentLoading=e():t.VueContentLoading=e()}(this,function(){return function(t){function e(r){if(n[r])return n[r].exports;var i=n[r]={i:r,l:!1,exports:{}};return t[r].call(i.exports,i,i.exports,e),i.l=!0,i.exports}var n={};return e.m=t,e.c=n,e.d=function(t,n,r){e.o(t,n)||Object.defineProperty(t,n,{configurable:!1,enumerable:!0,get:r})},e.n=function(t){var n=t&&t.__esModule?function(){return t.default}:function(){return t};return e.d(n,"a",n),n},e.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},e.p="",e(e.s=1)}([function(t,e,n){"use strict";var r=function(t){return/^#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$/.test(t)};e.a={props:{speed:{default:2,type:Number},width:{default:400,type:Number},height:{default:130,type:Number},primary:{type:String,default:"#f0f0f0",validator:r},secondary:{type:String,default:"#e0e0e0",validator:r}},computed:{viewbox:function(){return"0 0 "+this.width+" "+this.height},formatedSpeed:function(){return this.speed+"s"},gradientId:function(){return"gradient-"+this._uid},clipPathId:function(){return"clipPath-"+this._uid}},template:'\n    <svg :viewBox="viewbox" preserveAspectRatio="xMidYMid meet">\n      <rect\n        :style="{ fill: \'url(#\' + gradientId + \')\' }" \n        :clip-path="\'url(#\' + clipPathId + \')\'"\n        x="0" \n        y="0" \n        :width="width" \n        :height="height" \n      />\n\n      <defs>\n        <clipPath :id="clipPathId">\n          <slot>\n            <rect x="0" y="0" rx="5" ry="5" width="70" height="70" />\n            <rect x="80" y="17" rx="4" ry="4" width="300" height="13" />\n            <rect x="80" y="40" rx="3" ry="3" width="250" height="10" />\n            <rect x="0" y="80" rx="3" ry="3" width="350" height="10" />\n            <rect x="0" y="100" rx="3" ry="3" width="400" height="10" />\n            <rect x="0" y="120" rx="3" ry="3" width="360" height="10" />\n          </slot>\n        </clipPath>\n\n        <linearGradient :id="gradientId">\n          <stop offset="0%" :stop-color="primary">\n            <animate attributeName="offset" values="-2; 1" :dur="formatedSpeed" repeatCount="indefinite" />\n          </stop>\n\n          <stop offset="50%" :stop-color="secondary">\n            <animate attributeName="offset" values="-1.5; 1.5" :dur="formatedSpeed" repeatCount="indefinite" />\n          </stop>\n\n          <stop offset="100%" :stop-color="primary">\n            <animate attributeName="offset" values="-1; 2" :dur="formatedSpeed" repeatCount="indefinite" />\n          </stop>\n        </linearGradient>\n      </defs>\n    </svg>\n  '}},function(t,e,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var r=n(0),i=n(2),o=n(3),h=n(4),d=n(5),a=n(6),c=n(7);n.d(e,"VclCode",function(){return i.a}),n.d(e,"VclList",function(){return o.a}),n.d(e,"VclTwitch",function(){return h.a}),n.d(e,"VclFacebook",function(){return d.a}),n.d(e,"VclInstagram",function(){return a.a}),n.d(e,"VclBulletList",function(){return c.a}),n.d(e,"VueContentLoading",function(){return r.a}),e.default=r.a},function(t,e,n){"use strict";var r=n(0);e.a={components:{VueContentLoading:r.a},template:'\n    <vue-content-loading v-bind="$attrs" :width="300" :height="80">\n      <rect x="0" y="0" rx="3" ry="3" width="70" height="10" />\n      <rect x="80" y="0" rx="3" ry="3" width="100" height="10" />\n      <rect x="190" y="0" rx="3" ry="3" width="10" height="10" />\n      <rect x="15" y="20" rx="3" ry="3" width="130" height="10" />\n      <rect x="155" y="20" rx="3" ry="3" width="130" height="10" />\n      <rect x="15" y="40" rx="3" ry="3" width="90" height="10" />\n      <rect x="115" y="40" rx="3" ry="3" width="60" height="10" />\n      <rect x="185" y="40" rx="3" ry="3" width="60" height="10" />\n      <rect x="0" y="60" rx="3" ry="3" width="30" height="10" />\n    </vue-content-loading>\n  '}},function(t,e,n){"use strict";var r=n(0);e.a={components:{VueContentLoading:r.a},template:'\n    <vue-content-loading v-bind="$attrs" :width="300" :height="120">\n      <rect x="0" y="0" rx="3" ry="3" width="250" height="10" />\n      <rect x="20" y="20" rx="3" ry="3" width="220" height="10" />\n      <rect x="20" y="40" rx="3" ry="3" width="170" height="10" />\n      <rect x="0" y="60" rx="3" ry="3" width="250" height="10" />\n      <rect x="20" y="80" rx="3" ry="3" width="200" height="10" />\n      <rect x="20" y="100" rx="3" ry="3" width="80" height="10" />\n    </vue-content-loading>\n  '}},function(t,e,n){"use strict";var r=n(0);e.a={components:{VueContentLoading:r.a},template:'\n    <vue-content-loading v-bind="$attrs" :width="300" :height="225">\n      <rect x="0" y="0" rx="3" ry="3" width="300" height="170" />\n      <rect x="0" y="180" rx="2" ry="2" width="35" height="45" />\n      <rect x="45" y="180" rx="2" ry="2" width="150" height="15" />\n      <rect x="45" y="203" rx="2" ry="2" width="100" height="10" />\n    </vue-content-loading>\n  '}},function(t,e,n){"use strict";var r=n(0);e.a={components:{VueContentLoading:r.a},template:'\n    <vue-content-loading v-bind="$attrs">\n      <rect x="0" y="0" rx="5" ry="5" width="70" height="70" />\n      <rect x="80" y="17" rx="4" ry="4" width="300" height="13" />\n      <rect x="80" y="40" rx="3" ry="3" width="250" height="10" />\n      <rect x="0" y="80" rx="3" ry="3" width="350" height="10" />\n      <rect x="0" y="100" rx="3" ry="3" width="400" height="10" />\n      <rect x="0" y="120" rx="3" ry="3" width="360" height="10" />\n    </vue-content-loading>\n  '}},function(t,e,n){"use strict";var r=n(0);e.a={components:{VueContentLoading:r.a},template:'\n    <vue-content-loading v-bind="$attrs" :height="480">\n      <circle cx="30" cy="30" r="30" />\n      <rect x="75" y="13" rx="4" ry="4" width="100" height="13" />\n      <rect x="75" y="37" rx="4" ry="4" width="50" height="8" />\n      <rect x="0" y="70" rx="5" ry="5" width="400" height="400" />\n    </vue-content-loading>\n  '}},function(t,e,n){"use strict";var r=n(0);e.a={components:{VueContentLoading:r.a},props:{rows:{default:5,type:Number}},computed:{height:function(){return 21*this.rows}},methods:{getYPos:function(t,e){return e+22*(t-1)}},template:'\n    <vue-content-loading v-bind="$attrs" :width="230" :height="height">\n      <template v-for="i in rows">\n        <circle cx="8" :cy="getYPos(i, 8)" r="8" />\n        <rect x="22" :y="getYPos(i, 3)" rx="3" ry="3" width="200" height="9" />\n      </template>\n    </vue-content-loading>\n  '}}])});
-//# sourceMappingURL=vuecontentloading.js.map
-
-/***/ }),
 /* 54 */,
 /* 55 */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-// css base code, injected by the css-loader
-module.exports = function(useSourceMap) {
-	var list = [];
+"use strict";
+/* unused harmony export reactiveData */
+/* unused harmony export reactiveProp */
+function dataHandler(newData, oldData) {
+  if (oldData) {
+    var chart = this.$data._chart;
+    var newDatasetLabels = newData.datasets.map(function (dataset) {
+      return dataset.label;
+    });
+    var oldDatasetLabels = oldData.datasets.map(function (dataset) {
+      return dataset.label;
+    });
+    var oldLabels = JSON.stringify(oldDatasetLabels);
+    var newLabels = JSON.stringify(newDatasetLabels);
 
-	// return the list of modules as css string
-	list.toString = function toString() {
-		return this.map(function (item) {
-			var content = cssWithMappingToString(item, useSourceMap);
-			if(item[2]) {
-				return "@media " + item[2] + "{" + content + "}";
-			} else {
-				return content;
-			}
-		}).join("");
-	};
+    if (newLabels === oldLabels && oldData.datasets.length === newData.datasets.length) {
+      newData.datasets.forEach(function (dataset, i) {
+        var oldDatasetKeys = Object.keys(oldData.datasets[i]);
+        var newDatasetKeys = Object.keys(dataset);
+        var deletionKeys = oldDatasetKeys.filter(function (key) {
+          return key !== '_meta' && newDatasetKeys.indexOf(key) === -1;
+        });
+        deletionKeys.forEach(function (deletionKey) {
+          delete chart.data.datasets[i][deletionKey];
+        });
 
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
+        for (var attribute in dataset) {
+          if (dataset.hasOwnProperty(attribute)) {
+            chart.data.datasets[i][attribute] = dataset[attribute];
+          }
+        }
+      });
+
+      if (newData.hasOwnProperty('labels')) {
+        chart.data.labels = newData.labels;
+      }
+
+      if (newData.hasOwnProperty('xLabels')) {
+        chart.data.xLabels = newData.xLabels;
+      }
+
+      if (newData.hasOwnProperty('yLabels')) {
+        chart.data.yLabels = newData.yLabels;
+      }
+
+      chart.update();
+    } else {
+      chart.destroy();
+      this.renderChart(this.chartData, this.options);
+    }
+  } else {
+    if (this.$data._chart) {
+      this.$data._chart.destroy();
+    }
+
+    this.renderChart(this.chartData, this.options);
+  }
+}
+
+var reactiveData = {
+  data: function data() {
+    return {
+      chartData: null
+    };
+  },
+  watch: {
+    'chartData': dataHandler
+  }
 };
-
-function cssWithMappingToString(item, useSourceMap) {
-	var content = item[1] || '';
-	var cssMapping = item[3];
-	if (!cssMapping) {
-		return content;
-	}
-
-	if (useSourceMap && typeof btoa === 'function') {
-		var sourceMapping = toComment(cssMapping);
-		var sourceURLs = cssMapping.sources.map(function (source) {
-			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
-		});
-
-		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
-	}
-
-	return [content].join('\n');
-}
-
-// Adapted from convert-source-map (MIT)
-function toComment(sourceMap) {
-	// eslint-disable-next-line no-undef
-	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
-	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
-
-	return '/*# ' + data + ' */';
-}
-
+var reactiveProp = {
+  props: {
+    chartData: {
+      required: true
+    }
+  },
+  watch: {
+    'chartData': dataHandler
+  }
+};
+/* harmony default export */ __webpack_exports__["a"] = ({
+  reactiveData: reactiveData,
+  reactiveProp: reactiveProp
+});
 
 /***/ }),
 /* 56 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-/*
-  MIT License http://www.opensource.org/licenses/mit-license.php
-  Author Tobias Koppers @sokra
-  Modified by Evan You @yyx990803
-*/
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Bar; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return HorizontalBar; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return Doughnut; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return Line; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return Pie; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return PolarArea; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return Radar; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return Bubble; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return Scatter; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_chart_js__ = __webpack_require__(57);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_chart_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_chart_js__);
 
-var hasDocument = typeof document !== 'undefined'
 
-if (typeof DEBUG !== 'undefined' && DEBUG) {
-  if (!hasDocument) {
-    throw new Error(
-    'vue-style-loader cannot be used in a non-browser environment. ' +
-    "Use { target: 'node' } in your Webpack config to indicate a server-rendering environment."
-  ) }
-}
-
-var listToStyles = __webpack_require__(57)
-
-/*
-type StyleObject = {
-  id: number;
-  parts: Array<StyleObjectPart>
-}
-
-type StyleObjectPart = {
-  css: string;
-  media: string;
-  sourceMap: ?string
-}
-*/
-
-var stylesInDom = {/*
-  [id: number]: {
-    id: number,
-    refs: number,
-    parts: Array<(obj?: StyleObjectPart) => void>
-  }
-*/}
-
-var head = hasDocument && (document.head || document.getElementsByTagName('head')[0])
-var singletonElement = null
-var singletonCounter = 0
-var isProduction = false
-var noop = function () {}
-var options = null
-var ssrIdKey = 'data-vue-ssr-id'
-
-// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
-// tags it will allow on a page
-var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\b/.test(navigator.userAgent.toLowerCase())
-
-module.exports = function (parentId, list, _isProduction, _options) {
-  isProduction = _isProduction
-
-  options = _options || {}
-
-  var styles = listToStyles(parentId, list)
-  addStylesToDom(styles)
-
-  return function update (newList) {
-    var mayRemove = []
-    for (var i = 0; i < styles.length; i++) {
-      var item = styles[i]
-      var domStyle = stylesInDom[item.id]
-      domStyle.refs--
-      mayRemove.push(domStyle)
-    }
-    if (newList) {
-      styles = listToStyles(parentId, newList)
-      addStylesToDom(styles)
-    } else {
-      styles = []
-    }
-    for (var i = 0; i < mayRemove.length; i++) {
-      var domStyle = mayRemove[i]
-      if (domStyle.refs === 0) {
-        for (var j = 0; j < domStyle.parts.length; j++) {
-          domStyle.parts[j]()
+function generateChart(chartId, chartType) {
+  return {
+    render: function render(createElement) {
+      return createElement('div', {
+        style: this.styles,
+        class: this.cssClasses
+      }, [createElement('canvas', {
+        attrs: {
+          id: this.chartId,
+          width: this.width,
+          height: this.height
+        },
+        ref: 'canvas'
+      })]);
+    },
+    props: {
+      chartId: {
+        default: chartId,
+        type: String
+      },
+      width: {
+        default: 400,
+        type: Number
+      },
+      height: {
+        default: 400,
+        type: Number
+      },
+      cssClasses: {
+        type: String,
+        default: ''
+      },
+      styles: {
+        type: Object
+      },
+      plugins: {
+        type: Array,
+        default: function _default() {
+          return [];
         }
-        delete stylesInDom[domStyle.id]
+      }
+    },
+    data: function data() {
+      return {
+        _chart: null,
+        _plugins: this.plugins
+      };
+    },
+    methods: {
+      addPlugin: function addPlugin(plugin) {
+        this.$data._plugins.push(plugin);
+      },
+      renderChart: function renderChart(data, options) {
+        this.$data._chart = new __WEBPACK_IMPORTED_MODULE_0_chart_js___default.a(this.$refs.canvas.getContext('2d'), {
+          type: chartType,
+          data: data,
+          options: options,
+          plugins: this.$data._plugins
+        });
+      }
+    },
+    beforeDestroy: function beforeDestroy() {
+      if (this.$data._chart) {
+        this.$data._chart.destroy();
       }
     }
-  }
+  };
 }
 
-function addStylesToDom (styles /* Array<StyleObject> */) {
-  for (var i = 0; i < styles.length; i++) {
-    var item = styles[i]
-    var domStyle = stylesInDom[item.id]
-    if (domStyle) {
-      domStyle.refs++
-      for (var j = 0; j < domStyle.parts.length; j++) {
-        domStyle.parts[j](item.parts[j])
-      }
-      for (; j < item.parts.length; j++) {
-        domStyle.parts.push(addStyle(item.parts[j]))
-      }
-      if (domStyle.parts.length > item.parts.length) {
-        domStyle.parts.length = item.parts.length
-      }
-    } else {
-      var parts = []
-      for (var j = 0; j < item.parts.length; j++) {
-        parts.push(addStyle(item.parts[j]))
-      }
-      stylesInDom[item.id] = { id: item.id, refs: 1, parts: parts }
-    }
-  }
-}
-
-function createStyleElement () {
-  var styleElement = document.createElement('style')
-  styleElement.type = 'text/css'
-  head.appendChild(styleElement)
-  return styleElement
-}
-
-function addStyle (obj /* StyleObjectPart */) {
-  var update, remove
-  var styleElement = document.querySelector('style[' + ssrIdKey + '~="' + obj.id + '"]')
-
-  if (styleElement) {
-    if (isProduction) {
-      // has SSR styles and in production mode.
-      // simply do nothing.
-      return noop
-    } else {
-      // has SSR styles but in dev mode.
-      // for some reason Chrome can't handle source map in server-rendered
-      // style tags - source maps in <style> only works if the style tag is
-      // created and inserted dynamically. So we remove the server rendered
-      // styles and inject new ones.
-      styleElement.parentNode.removeChild(styleElement)
-    }
-  }
-
-  if (isOldIE) {
-    // use singleton mode for IE9.
-    var styleIndex = singletonCounter++
-    styleElement = singletonElement || (singletonElement = createStyleElement())
-    update = applyToSingletonTag.bind(null, styleElement, styleIndex, false)
-    remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true)
-  } else {
-    // use multi-style-tag mode in all other cases
-    styleElement = createStyleElement()
-    update = applyToTag.bind(null, styleElement)
-    remove = function () {
-      styleElement.parentNode.removeChild(styleElement)
-    }
-  }
-
-  update(obj)
-
-  return function updateStyle (newObj /* StyleObjectPart */) {
-    if (newObj) {
-      if (newObj.css === obj.css &&
-          newObj.media === obj.media &&
-          newObj.sourceMap === obj.sourceMap) {
-        return
-      }
-      update(obj = newObj)
-    } else {
-      remove()
-    }
-  }
-}
-
-var replaceText = (function () {
-  var textStore = []
-
-  return function (index, replacement) {
-    textStore[index] = replacement
-    return textStore.filter(Boolean).join('\n')
-  }
-})()
-
-function applyToSingletonTag (styleElement, index, remove, obj) {
-  var css = remove ? '' : obj.css
-
-  if (styleElement.styleSheet) {
-    styleElement.styleSheet.cssText = replaceText(index, css)
-  } else {
-    var cssNode = document.createTextNode(css)
-    var childNodes = styleElement.childNodes
-    if (childNodes[index]) styleElement.removeChild(childNodes[index])
-    if (childNodes.length) {
-      styleElement.insertBefore(cssNode, childNodes[index])
-    } else {
-      styleElement.appendChild(cssNode)
-    }
-  }
-}
-
-function applyToTag (styleElement, obj) {
-  var css = obj.css
-  var media = obj.media
-  var sourceMap = obj.sourceMap
-
-  if (media) {
-    styleElement.setAttribute('media', media)
-  }
-  if (options.ssrId) {
-    styleElement.setAttribute(ssrIdKey, obj.id)
-  }
-
-  if (sourceMap) {
-    // https://developer.chrome.com/devtools/docs/javascript-debugging
-    // this makes source maps inside style tags work properly in Chrome
-    css += '\n/*# sourceURL=' + sourceMap.sources[0] + ' */'
-    // http://stackoverflow.com/a/26603875
-    css += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + ' */'
-  }
-
-  if (styleElement.styleSheet) {
-    styleElement.styleSheet.cssText = css
-  } else {
-    while (styleElement.firstChild) {
-      styleElement.removeChild(styleElement.firstChild)
-    }
-    styleElement.appendChild(document.createTextNode(css))
-  }
-}
-
+var Bar = generateChart('bar-chart', 'bar');
+var HorizontalBar = generateChart('horizontalbar-chart', 'horizontalBar');
+var Doughnut = generateChart('doughnut-chart', 'doughnut');
+var Line = generateChart('line-chart', 'line');
+var Pie = generateChart('pie-chart', 'pie');
+var PolarArea = generateChart('polar-chart', 'polarArea');
+var Radar = generateChart('radar-chart', 'radar');
+var Bubble = generateChart('bubble-chart', 'bubble');
+var Scatter = generateChart('scatter-chart', 'scatter');
+/* unused harmony default export */ var _unused_webpack_default_export = ({
+  Bar: Bar,
+  HorizontalBar: HorizontalBar,
+  Doughnut: Doughnut,
+  Line: Line,
+  Pie: Pie,
+  PolarArea: PolarArea,
+  Radar: Radar,
+  Bubble: Bubble,
+  Scatter: Scatter
+});
 
 /***/ }),
 /* 57 */
 /***/ (function(module, exports) {
 
-/**
- * Translates the list format produced by css-loader into something
- * easier to manipulate.
- */
-module.exports = function listToStyles (parentId, list) {
-  var styles = []
-  var newStyles = {}
-  for (var i = 0; i < list.length; i++) {
-    var item = list[i]
-    var id = item[0]
-    var css = item[1]
-    var media = item[2]
-    var sourceMap = item[3]
-    var part = {
-      id: parentId + ':' + i,
-      css: css,
-      media: media,
-      sourceMap: sourceMap
-    }
-    if (!newStyles[id]) {
-      styles.push(newStyles[id] = { id: id, parts: [part] })
-    } else {
-      newStyles[id].parts.push(part)
-    }
-  }
-  return styles
-}
+module.exports = Chart;
 
+/***/ }),
+/* 58 */,
+/* 59 */,
+/* 60 */,
+/* 61 */,
+/* 62 */,
+/* 63 */,
+/* 64 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(1);
+__webpack_require__(16);
+__webpack_require__(65);
+__webpack_require__(13);
+__webpack_require__(4);
+module.exports = __webpack_require__(14);
+
+
+/***/ }),
+/* 65 */
+/***/ (function(module, exports, __webpack_require__) {
+
+!function(t,e){ true?module.exports=e():"function"==typeof define&&define.amd?define([],e):"object"==typeof exports?exports.VueContentLoading=e():t.VueContentLoading=e()}(this,function(){return function(t){function e(r){if(n[r])return n[r].exports;var i=n[r]={i:r,l:!1,exports:{}};return t[r].call(i.exports,i,i.exports,e),i.l=!0,i.exports}var n={};return e.m=t,e.c=n,e.d=function(t,n,r){e.o(t,n)||Object.defineProperty(t,n,{configurable:!1,enumerable:!0,get:r})},e.n=function(t){var n=t&&t.__esModule?function(){return t.default}:function(){return t};return e.d(n,"a",n),n},e.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},e.p="",e(e.s=1)}([function(t,e,n){"use strict";var r=function(t){return/^#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$/.test(t)};e.a={props:{speed:{default:2,type:Number},width:{default:400,type:Number},height:{default:130,type:Number},primary:{type:String,default:"#f0f0f0",validator:r},secondary:{type:String,default:"#e0e0e0",validator:r}},computed:{viewbox:function(){return"0 0 "+this.width+" "+this.height},formatedSpeed:function(){return this.speed+"s"},gradientId:function(){return"gradient-"+this._uid},clipPathId:function(){return"clipPath-"+this._uid}},template:'\n    <svg :viewBox="viewbox" preserveAspectRatio="xMidYMid meet">\n      <rect\n        :style="{ fill: \'url(#\' + gradientId + \')\' }" \n        :clip-path="\'url(#\' + clipPathId + \')\'"\n        x="0" \n        y="0" \n        :width="width" \n        :height="height" \n      />\n\n      <defs>\n        <clipPath :id="clipPathId">\n          <slot>\n            <rect x="0" y="0" rx="5" ry="5" width="70" height="70" />\n            <rect x="80" y="17" rx="4" ry="4" width="300" height="13" />\n            <rect x="80" y="40" rx="3" ry="3" width="250" height="10" />\n            <rect x="0" y="80" rx="3" ry="3" width="350" height="10" />\n            <rect x="0" y="100" rx="3" ry="3" width="400" height="10" />\n            <rect x="0" y="120" rx="3" ry="3" width="360" height="10" />\n          </slot>\n        </clipPath>\n\n        <linearGradient :id="gradientId">\n          <stop offset="0%" :stop-color="primary">\n            <animate attributeName="offset" values="-2; 1" :dur="formatedSpeed" repeatCount="indefinite" />\n          </stop>\n\n          <stop offset="50%" :stop-color="secondary">\n            <animate attributeName="offset" values="-1.5; 1.5" :dur="formatedSpeed" repeatCount="indefinite" />\n          </stop>\n\n          <stop offset="100%" :stop-color="primary">\n            <animate attributeName="offset" values="-1; 2" :dur="formatedSpeed" repeatCount="indefinite" />\n          </stop>\n        </linearGradient>\n      </defs>\n    </svg>\n  '}},function(t,e,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var r=n(0),i=n(2),o=n(3),h=n(4),d=n(5),a=n(6),c=n(7);n.d(e,"VclCode",function(){return i.a}),n.d(e,"VclList",function(){return o.a}),n.d(e,"VclTwitch",function(){return h.a}),n.d(e,"VclFacebook",function(){return d.a}),n.d(e,"VclInstagram",function(){return a.a}),n.d(e,"VclBulletList",function(){return c.a}),n.d(e,"VueContentLoading",function(){return r.a}),e.default=r.a},function(t,e,n){"use strict";var r=n(0);e.a={components:{VueContentLoading:r.a},template:'\n    <vue-content-loading v-bind="$attrs" :width="300" :height="80">\n      <rect x="0" y="0" rx="3" ry="3" width="70" height="10" />\n      <rect x="80" y="0" rx="3" ry="3" width="100" height="10" />\n      <rect x="190" y="0" rx="3" ry="3" width="10" height="10" />\n      <rect x="15" y="20" rx="3" ry="3" width="130" height="10" />\n      <rect x="155" y="20" rx="3" ry="3" width="130" height="10" />\n      <rect x="15" y="40" rx="3" ry="3" width="90" height="10" />\n      <rect x="115" y="40" rx="3" ry="3" width="60" height="10" />\n      <rect x="185" y="40" rx="3" ry="3" width="60" height="10" />\n      <rect x="0" y="60" rx="3" ry="3" width="30" height="10" />\n    </vue-content-loading>\n  '}},function(t,e,n){"use strict";var r=n(0);e.a={components:{VueContentLoading:r.a},template:'\n    <vue-content-loading v-bind="$attrs" :width="300" :height="120">\n      <rect x="0" y="0" rx="3" ry="3" width="250" height="10" />\n      <rect x="20" y="20" rx="3" ry="3" width="220" height="10" />\n      <rect x="20" y="40" rx="3" ry="3" width="170" height="10" />\n      <rect x="0" y="60" rx="3" ry="3" width="250" height="10" />\n      <rect x="20" y="80" rx="3" ry="3" width="200" height="10" />\n      <rect x="20" y="100" rx="3" ry="3" width="80" height="10" />\n    </vue-content-loading>\n  '}},function(t,e,n){"use strict";var r=n(0);e.a={components:{VueContentLoading:r.a},template:'\n    <vue-content-loading v-bind="$attrs" :width="300" :height="225">\n      <rect x="0" y="0" rx="3" ry="3" width="300" height="170" />\n      <rect x="0" y="180" rx="2" ry="2" width="35" height="45" />\n      <rect x="45" y="180" rx="2" ry="2" width="150" height="15" />\n      <rect x="45" y="203" rx="2" ry="2" width="100" height="10" />\n    </vue-content-loading>\n  '}},function(t,e,n){"use strict";var r=n(0);e.a={components:{VueContentLoading:r.a},template:'\n    <vue-content-loading v-bind="$attrs">\n      <rect x="0" y="0" rx="5" ry="5" width="70" height="70" />\n      <rect x="80" y="17" rx="4" ry="4" width="300" height="13" />\n      <rect x="80" y="40" rx="3" ry="3" width="250" height="10" />\n      <rect x="0" y="80" rx="3" ry="3" width="350" height="10" />\n      <rect x="0" y="100" rx="3" ry="3" width="400" height="10" />\n      <rect x="0" y="120" rx="3" ry="3" width="360" height="10" />\n    </vue-content-loading>\n  '}},function(t,e,n){"use strict";var r=n(0);e.a={components:{VueContentLoading:r.a},template:'\n    <vue-content-loading v-bind="$attrs" :height="480">\n      <circle cx="30" cy="30" r="30" />\n      <rect x="75" y="13" rx="4" ry="4" width="100" height="13" />\n      <rect x="75" y="37" rx="4" ry="4" width="50" height="8" />\n      <rect x="0" y="70" rx="5" ry="5" width="400" height="400" />\n    </vue-content-loading>\n  '}},function(t,e,n){"use strict";var r=n(0);e.a={components:{VueContentLoading:r.a},props:{rows:{default:5,type:Number}},computed:{height:function(){return 21*this.rows}},methods:{getYPos:function(t,e){return e+22*(t-1)}},template:'\n    <vue-content-loading v-bind="$attrs" :width="230" :height="height">\n      <template v-for="i in rows">\n        <circle cx="8" :cy="getYPos(i, 8)" r="8" />\n        <rect x="22" :y="getYPos(i, 3)" rx="3" ry="3" width="200" height="9" />\n      </template>\n    </vue-content-loading>\n  '}}])});
+//# sourceMappingURL=vuecontentloading.js.map
 
 /***/ })
 /******/ ]);
