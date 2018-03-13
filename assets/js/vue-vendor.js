@@ -16745,5 +16745,349 @@ module.exports = __webpack_require__(14);
 !function(t,e){ true?module.exports=e():"function"==typeof define&&define.amd?define([],e):"object"==typeof exports?exports.VueContentLoading=e():t.VueContentLoading=e()}(this,function(){return function(t){function e(r){if(n[r])return n[r].exports;var i=n[r]={i:r,l:!1,exports:{}};return t[r].call(i.exports,i,i.exports,e),i.l=!0,i.exports}var n={};return e.m=t,e.c=n,e.d=function(t,n,r){e.o(t,n)||Object.defineProperty(t,n,{configurable:!1,enumerable:!0,get:r})},e.n=function(t){var n=t&&t.__esModule?function(){return t.default}:function(){return t};return e.d(n,"a",n),n},e.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},e.p="",e(e.s=1)}([function(t,e,n){"use strict";var r=function(t){return/^#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$/.test(t)};e.a={props:{speed:{default:2,type:Number},width:{default:400,type:Number},height:{default:130,type:Number},primary:{type:String,default:"#f0f0f0",validator:r},secondary:{type:String,default:"#e0e0e0",validator:r}},computed:{viewbox:function(){return"0 0 "+this.width+" "+this.height},formatedSpeed:function(){return this.speed+"s"},gradientId:function(){return"gradient-"+this._uid},clipPathId:function(){return"clipPath-"+this._uid}},template:'\n    <svg :viewBox="viewbox" preserveAspectRatio="xMidYMid meet">\n      <rect\n        :style="{ fill: \'url(#\' + gradientId + \')\' }" \n        :clip-path="\'url(#\' + clipPathId + \')\'"\n        x="0" \n        y="0" \n        :width="width" \n        :height="height" \n      />\n\n      <defs>\n        <clipPath :id="clipPathId">\n          <slot>\n            <rect x="0" y="0" rx="5" ry="5" width="70" height="70" />\n            <rect x="80" y="17" rx="4" ry="4" width="300" height="13" />\n            <rect x="80" y="40" rx="3" ry="3" width="250" height="10" />\n            <rect x="0" y="80" rx="3" ry="3" width="350" height="10" />\n            <rect x="0" y="100" rx="3" ry="3" width="400" height="10" />\n            <rect x="0" y="120" rx="3" ry="3" width="360" height="10" />\n          </slot>\n        </clipPath>\n\n        <linearGradient :id="gradientId">\n          <stop offset="0%" :stop-color="primary">\n            <animate attributeName="offset" values="-2; 1" :dur="formatedSpeed" repeatCount="indefinite" />\n          </stop>\n\n          <stop offset="50%" :stop-color="secondary">\n            <animate attributeName="offset" values="-1.5; 1.5" :dur="formatedSpeed" repeatCount="indefinite" />\n          </stop>\n\n          <stop offset="100%" :stop-color="primary">\n            <animate attributeName="offset" values="-1; 2" :dur="formatedSpeed" repeatCount="indefinite" />\n          </stop>\n        </linearGradient>\n      </defs>\n    </svg>\n  '}},function(t,e,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var r=n(0),i=n(2),o=n(3),h=n(4),d=n(5),a=n(6),c=n(7);n.d(e,"VclCode",function(){return i.a}),n.d(e,"VclList",function(){return o.a}),n.d(e,"VclTwitch",function(){return h.a}),n.d(e,"VclFacebook",function(){return d.a}),n.d(e,"VclInstagram",function(){return a.a}),n.d(e,"VclBulletList",function(){return c.a}),n.d(e,"VueContentLoading",function(){return r.a}),e.default=r.a},function(t,e,n){"use strict";var r=n(0);e.a={components:{VueContentLoading:r.a},template:'\n    <vue-content-loading v-bind="$attrs" :width="300" :height="80">\n      <rect x="0" y="0" rx="3" ry="3" width="70" height="10" />\n      <rect x="80" y="0" rx="3" ry="3" width="100" height="10" />\n      <rect x="190" y="0" rx="3" ry="3" width="10" height="10" />\n      <rect x="15" y="20" rx="3" ry="3" width="130" height="10" />\n      <rect x="155" y="20" rx="3" ry="3" width="130" height="10" />\n      <rect x="15" y="40" rx="3" ry="3" width="90" height="10" />\n      <rect x="115" y="40" rx="3" ry="3" width="60" height="10" />\n      <rect x="185" y="40" rx="3" ry="3" width="60" height="10" />\n      <rect x="0" y="60" rx="3" ry="3" width="30" height="10" />\n    </vue-content-loading>\n  '}},function(t,e,n){"use strict";var r=n(0);e.a={components:{VueContentLoading:r.a},template:'\n    <vue-content-loading v-bind="$attrs" :width="300" :height="120">\n      <rect x="0" y="0" rx="3" ry="3" width="250" height="10" />\n      <rect x="20" y="20" rx="3" ry="3" width="220" height="10" />\n      <rect x="20" y="40" rx="3" ry="3" width="170" height="10" />\n      <rect x="0" y="60" rx="3" ry="3" width="250" height="10" />\n      <rect x="20" y="80" rx="3" ry="3" width="200" height="10" />\n      <rect x="20" y="100" rx="3" ry="3" width="80" height="10" />\n    </vue-content-loading>\n  '}},function(t,e,n){"use strict";var r=n(0);e.a={components:{VueContentLoading:r.a},template:'\n    <vue-content-loading v-bind="$attrs" :width="300" :height="225">\n      <rect x="0" y="0" rx="3" ry="3" width="300" height="170" />\n      <rect x="0" y="180" rx="2" ry="2" width="35" height="45" />\n      <rect x="45" y="180" rx="2" ry="2" width="150" height="15" />\n      <rect x="45" y="203" rx="2" ry="2" width="100" height="10" />\n    </vue-content-loading>\n  '}},function(t,e,n){"use strict";var r=n(0);e.a={components:{VueContentLoading:r.a},template:'\n    <vue-content-loading v-bind="$attrs">\n      <rect x="0" y="0" rx="5" ry="5" width="70" height="70" />\n      <rect x="80" y="17" rx="4" ry="4" width="300" height="13" />\n      <rect x="80" y="40" rx="3" ry="3" width="250" height="10" />\n      <rect x="0" y="80" rx="3" ry="3" width="350" height="10" />\n      <rect x="0" y="100" rx="3" ry="3" width="400" height="10" />\n      <rect x="0" y="120" rx="3" ry="3" width="360" height="10" />\n    </vue-content-loading>\n  '}},function(t,e,n){"use strict";var r=n(0);e.a={components:{VueContentLoading:r.a},template:'\n    <vue-content-loading v-bind="$attrs" :height="480">\n      <circle cx="30" cy="30" r="30" />\n      <rect x="75" y="13" rx="4" ry="4" width="100" height="13" />\n      <rect x="75" y="37" rx="4" ry="4" width="50" height="8" />\n      <rect x="0" y="70" rx="5" ry="5" width="400" height="400" />\n    </vue-content-loading>\n  '}},function(t,e,n){"use strict";var r=n(0);e.a={components:{VueContentLoading:r.a},props:{rows:{default:5,type:Number}},computed:{height:function(){return 21*this.rows}},methods:{getYPos:function(t,e){return e+22*(t-1)}},template:'\n    <vue-content-loading v-bind="$attrs" :width="230" :height="height">\n      <template v-for="i in rows">\n        <circle cx="8" :cy="getYPos(i, 8)" r="8" />\n        <rect x="22" :y="getYPos(i, 3)" rx="3" ry="3" width="200" height="9" />\n      </template>\n    </vue-content-loading>\n  '}}])});
 //# sourceMappingURL=vuecontentloading.js.map
 
+/***/ }),
+/* 66 */,
+/* 67 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function(useSourceMap) {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		return this.map(function (item) {
+			var content = cssWithMappingToString(item, useSourceMap);
+			if(item[2]) {
+				return "@media " + item[2] + "{" + content + "}";
+			} else {
+				return content;
+			}
+		}).join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+function cssWithMappingToString(item, useSourceMap) {
+	var content = item[1] || '';
+	var cssMapping = item[3];
+	if (!cssMapping) {
+		return content;
+	}
+
+	if (useSourceMap && typeof btoa === 'function') {
+		var sourceMapping = toComment(cssMapping);
+		var sourceURLs = cssMapping.sources.map(function (source) {
+			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
+		});
+
+		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
+	}
+
+	return [content].join('\n');
+}
+
+// Adapted from convert-source-map (MIT)
+function toComment(sourceMap) {
+	// eslint-disable-next-line no-undef
+	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
+	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
+
+	return '/*# ' + data + ' */';
+}
+
+
+/***/ }),
+/* 68 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+  MIT License http://www.opensource.org/licenses/mit-license.php
+  Author Tobias Koppers @sokra
+  Modified by Evan You @yyx990803
+*/
+
+var hasDocument = typeof document !== 'undefined'
+
+if (typeof DEBUG !== 'undefined' && DEBUG) {
+  if (!hasDocument) {
+    throw new Error(
+    'vue-style-loader cannot be used in a non-browser environment. ' +
+    "Use { target: 'node' } in your Webpack config to indicate a server-rendering environment."
+  ) }
+}
+
+var listToStyles = __webpack_require__(69)
+
+/*
+type StyleObject = {
+  id: number;
+  parts: Array<StyleObjectPart>
+}
+
+type StyleObjectPart = {
+  css: string;
+  media: string;
+  sourceMap: ?string
+}
+*/
+
+var stylesInDom = {/*
+  [id: number]: {
+    id: number,
+    refs: number,
+    parts: Array<(obj?: StyleObjectPart) => void>
+  }
+*/}
+
+var head = hasDocument && (document.head || document.getElementsByTagName('head')[0])
+var singletonElement = null
+var singletonCounter = 0
+var isProduction = false
+var noop = function () {}
+var options = null
+var ssrIdKey = 'data-vue-ssr-id'
+
+// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+// tags it will allow on a page
+var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\b/.test(navigator.userAgent.toLowerCase())
+
+module.exports = function (parentId, list, _isProduction, _options) {
+  isProduction = _isProduction
+
+  options = _options || {}
+
+  var styles = listToStyles(parentId, list)
+  addStylesToDom(styles)
+
+  return function update (newList) {
+    var mayRemove = []
+    for (var i = 0; i < styles.length; i++) {
+      var item = styles[i]
+      var domStyle = stylesInDom[item.id]
+      domStyle.refs--
+      mayRemove.push(domStyle)
+    }
+    if (newList) {
+      styles = listToStyles(parentId, newList)
+      addStylesToDom(styles)
+    } else {
+      styles = []
+    }
+    for (var i = 0; i < mayRemove.length; i++) {
+      var domStyle = mayRemove[i]
+      if (domStyle.refs === 0) {
+        for (var j = 0; j < domStyle.parts.length; j++) {
+          domStyle.parts[j]()
+        }
+        delete stylesInDom[domStyle.id]
+      }
+    }
+  }
+}
+
+function addStylesToDom (styles /* Array<StyleObject> */) {
+  for (var i = 0; i < styles.length; i++) {
+    var item = styles[i]
+    var domStyle = stylesInDom[item.id]
+    if (domStyle) {
+      domStyle.refs++
+      for (var j = 0; j < domStyle.parts.length; j++) {
+        domStyle.parts[j](item.parts[j])
+      }
+      for (; j < item.parts.length; j++) {
+        domStyle.parts.push(addStyle(item.parts[j]))
+      }
+      if (domStyle.parts.length > item.parts.length) {
+        domStyle.parts.length = item.parts.length
+      }
+    } else {
+      var parts = []
+      for (var j = 0; j < item.parts.length; j++) {
+        parts.push(addStyle(item.parts[j]))
+      }
+      stylesInDom[item.id] = { id: item.id, refs: 1, parts: parts }
+    }
+  }
+}
+
+function createStyleElement () {
+  var styleElement = document.createElement('style')
+  styleElement.type = 'text/css'
+  head.appendChild(styleElement)
+  return styleElement
+}
+
+function addStyle (obj /* StyleObjectPart */) {
+  var update, remove
+  var styleElement = document.querySelector('style[' + ssrIdKey + '~="' + obj.id + '"]')
+
+  if (styleElement) {
+    if (isProduction) {
+      // has SSR styles and in production mode.
+      // simply do nothing.
+      return noop
+    } else {
+      // has SSR styles but in dev mode.
+      // for some reason Chrome can't handle source map in server-rendered
+      // style tags - source maps in <style> only works if the style tag is
+      // created and inserted dynamically. So we remove the server rendered
+      // styles and inject new ones.
+      styleElement.parentNode.removeChild(styleElement)
+    }
+  }
+
+  if (isOldIE) {
+    // use singleton mode for IE9.
+    var styleIndex = singletonCounter++
+    styleElement = singletonElement || (singletonElement = createStyleElement())
+    update = applyToSingletonTag.bind(null, styleElement, styleIndex, false)
+    remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true)
+  } else {
+    // use multi-style-tag mode in all other cases
+    styleElement = createStyleElement()
+    update = applyToTag.bind(null, styleElement)
+    remove = function () {
+      styleElement.parentNode.removeChild(styleElement)
+    }
+  }
+
+  update(obj)
+
+  return function updateStyle (newObj /* StyleObjectPart */) {
+    if (newObj) {
+      if (newObj.css === obj.css &&
+          newObj.media === obj.media &&
+          newObj.sourceMap === obj.sourceMap) {
+        return
+      }
+      update(obj = newObj)
+    } else {
+      remove()
+    }
+  }
+}
+
+var replaceText = (function () {
+  var textStore = []
+
+  return function (index, replacement) {
+    textStore[index] = replacement
+    return textStore.filter(Boolean).join('\n')
+  }
+})()
+
+function applyToSingletonTag (styleElement, index, remove, obj) {
+  var css = remove ? '' : obj.css
+
+  if (styleElement.styleSheet) {
+    styleElement.styleSheet.cssText = replaceText(index, css)
+  } else {
+    var cssNode = document.createTextNode(css)
+    var childNodes = styleElement.childNodes
+    if (childNodes[index]) styleElement.removeChild(childNodes[index])
+    if (childNodes.length) {
+      styleElement.insertBefore(cssNode, childNodes[index])
+    } else {
+      styleElement.appendChild(cssNode)
+    }
+  }
+}
+
+function applyToTag (styleElement, obj) {
+  var css = obj.css
+  var media = obj.media
+  var sourceMap = obj.sourceMap
+
+  if (media) {
+    styleElement.setAttribute('media', media)
+  }
+  if (options.ssrId) {
+    styleElement.setAttribute(ssrIdKey, obj.id)
+  }
+
+  if (sourceMap) {
+    // https://developer.chrome.com/devtools/docs/javascript-debugging
+    // this makes source maps inside style tags work properly in Chrome
+    css += '\n/*# sourceURL=' + sourceMap.sources[0] + ' */'
+    // http://stackoverflow.com/a/26603875
+    css += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + ' */'
+  }
+
+  if (styleElement.styleSheet) {
+    styleElement.styleSheet.cssText = css
+  } else {
+    while (styleElement.firstChild) {
+      styleElement.removeChild(styleElement.firstChild)
+    }
+    styleElement.appendChild(document.createTextNode(css))
+  }
+}
+
+
+/***/ }),
+/* 69 */
+/***/ (function(module, exports) {
+
+/**
+ * Translates the list format produced by css-loader into something
+ * easier to manipulate.
+ */
+module.exports = function listToStyles (parentId, list) {
+  var styles = []
+  var newStyles = {}
+  for (var i = 0; i < list.length; i++) {
+    var item = list[i]
+    var id = item[0]
+    var css = item[1]
+    var media = item[2]
+    var sourceMap = item[3]
+    var part = {
+      id: parentId + ':' + i,
+      css: css,
+      media: media,
+      sourceMap: sourceMap
+    }
+    if (!newStyles[id]) {
+      styles.push(newStyles[id] = { id: id, parts: [part] })
+    } else {
+      newStyles[id].parts.push(part)
+    }
+  }
+  return styles
+}
+
+
 /***/ })
 /******/ ]);

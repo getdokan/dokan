@@ -18,8 +18,7 @@ class Dokan_API  {
     }
 
     put(path, data = {} ) {
-        data._method = 'PUT';
-        return this.post(path, data);
+        return this.ajax(path, 'PUT', this.headers(), data);
     }
 
     delete(path, data = {} ) {
@@ -32,7 +31,7 @@ class Dokan_API  {
         return $.ajax({
             url: this.endpoint() + path,
             beforeSend: function ( xhr ) {
-                xhr.setRequestHeader( 'X-WP-Nonce', window.wpApiSettings.nonce );
+                xhr.setRequestHeader( 'X-WP-Nonce', window.dokan.rest.nonce );
             },
             type: method,
             data: data

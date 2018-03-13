@@ -117,6 +117,16 @@ _vue2.default.use(_vueNotification2.default);
 // core components
 
 
+_vue2.default.filter('currency', function (value) {
+    return accounting.formatMoney(value, dokan.currency);
+});
+
+_vue2.default.filter('capitalize', function (value) {
+    if (!value) return '';
+    value = value.toString();
+    return value.charAt(0).toUpperCase() + value.slice(1);
+});
+
 window.dokan_get_lib = function (lib) {
     return window.dokan.libs[lib];
 };
@@ -194,8 +204,7 @@ var Dokan_API = function () {
         value: function put(path) {
             var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-            data._method = 'PUT';
-            return this.post(path, data);
+            return this.ajax(path, 'PUT', this.headers(), data);
         }
     }, {
         key: 'delete',
@@ -214,7 +223,7 @@ var Dokan_API = function () {
             return $.ajax({
                 url: this.endpoint() + path,
                 beforeSend: function beforeSend(xhr) {
-                    xhr.setRequestHeader('X-WP-Nonce', window.wpApiSettings.nonce);
+                    xhr.setRequestHeader('X-WP-Nonce', window.dokan.rest.nonce);
                 },
                 type: method,
                 data: data

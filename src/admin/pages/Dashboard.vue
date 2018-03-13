@@ -144,12 +144,6 @@ export default {
             });
         },
     },
-
-    filters: {
-        currency(price) {
-            return accounting.formatMoney(price, dokan.currency);
-        }
-    }
 }
 </script>
 

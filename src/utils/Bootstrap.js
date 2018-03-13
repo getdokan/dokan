@@ -14,6 +14,16 @@ import Chart from "admin/components/Chart.vue"
 
 Vue.use(Notifications)
 
+Vue.filter('currency', function (value) {
+    return accounting.formatMoney(value, dokan.currency);
+})
+
+Vue.filter('capitalize', function (value) {
+    if (!value) return ''
+    value = value.toString()
+    return value.charAt(0).toUpperCase() + value.slice(1)
+})
+
 window.dokan_get_lib = function(lib) {
     return window.dokan.libs[lib];
 }

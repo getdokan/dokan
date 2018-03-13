@@ -127,43 +127,5 @@ class Dokan_REST_Admin_Report_Controller extends Dokan_REST_Admin_Controller {
         );
 
         return rest_ensure_response( $response );
-
-        // var_dump( $data, $labels );
-        var_dump( $order_counts, $order_amounts, $order_commision );
-        exit;
-
-        $start_date_time = strtotime( $start_date );
-        $end_date_time   = strtotime( $end_date );
-
-        // Prepare data for report
-        $order_counts    = dokan_prepare_chart_data( $data, 'order_date', 'total_orders', $chart_interval, $end_date_time, $group_by );
-        $order_amounts   = dokan_prepare_chart_data( $data, 'order_date', 'order_total', $chart_interval, $end_date_time, $group_by );
-        $order_commision = dokan_prepare_chart_data( $data, 'order_date', 'earning', $chart_interval, $end_date_time, $group_by );
-
-        // Encode in json format
-        $chart_data = array(
-            'counts'    => array_values( $order_counts ),
-            'amounts'   => array_values( $order_amounts ),
-            'commision' => array_values( $order_commision )
-        );
-
-        $chart_colours = array(
-            'counts'    => '#3498db',
-            'amounts'   => '#1abc9c',
-            'commision' => '#73a724'
-        );
-
-        $response = array(
-            'data'   => $chart_data,
-            'color'  => $chart_colours,
-            'rtl'    => is_rtl() ? true : false,
-            'labels' => array(
-                'counts'    => __( 'Number of orders', 'dokan-lite' ),
-                'amounts'   =>  __( 'Total Sales', 'dokan-lite' ),
-                'commision' => __( 'Commision', 'dokan-lite' )
-            )
-        );
-
-        return rest_ensure_response( $response );
     }
 }

@@ -18,6 +18,41 @@ dokanWebpack([0],{
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 let ListTable = dokan_get_lib('ListTable');
 
@@ -32,26 +67,25 @@ let ListTable = dokan_get_lib('ListTable');
     data() {
         return {
             showCb: true,
+            loading: false,
             columns: {
-                'seller': { label: 'Seller' },
+                'seller': { label: 'Vendor' },
                 'amount': { label: 'Amount' },
-                'method': { label: 'Method' },
-                'method_details': { label: 'Method Details' },
+                'status': { label: 'Status' },
+                'method_title': { label: 'Method' },
+                // 'method_details': { label: 'Method Details' },
                 'note': { label: 'Note' },
-                'ip': { label: 'IP' },
-                'date': { label: 'date' }
+                'created': { label: 'Date' },
+                'actions': { label: 'Actions' }
             },
             requests: [],
             actionColumn: 'seller',
             actions: [{
-                key: 'approve',
-                label: 'Approve'
+                key: 'trash',
+                label: 'Delete'
             }, {
                 key: 'cancel',
                 label: 'Cancel'
-            }, {
-                key: 'trash',
-                label: 'Delete'
             }],
             bulkActions: [{
                 key: 'approve',
@@ -61,6 +95,48 @@ let ListTable = dokan_get_lib('ListTable');
                 label: 'Delete'
             }]
         };
+    },
+
+    created() {
+        this.fetchRequests();
+    },
+
+    methods: {
+
+        fetchRequests() {
+            this.loading = true;
+
+            dokan.api.get('/withdraw').done(response => {
+                this.requests = response;
+                this.loading = false;
+            });
+        },
+
+        updateItem(id, value) {
+            let index = this.requests.findIndex(x => x.id == id);
+
+            this.$set(this.requests, index, value);
+        },
+
+        changeStatus(status, id) {
+            this.loading = true;
+
+            dokan.api.put('/withdraw/' + id, { status: status }).done(response => {
+                // this.requests = response;
+                this.loading = false;
+                this.updateItem(id, response);
+            });
+        },
+
+        onActionClick(action, row) {
+            if ('cancel' === action) {
+                this.changeStatus('cancelled', row.id);
+            }
+        },
+
+        moment(date) {
+            return moment(date);
+        }
     }
 });
 
@@ -654,11 +730,11 @@ if (false) {
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Withdraw_vue__ = __webpack_require__(11);
 /* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_62373ea4_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Withdraw_vue__ = __webpack_require__(44);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_62373ea4_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Withdraw_vue__ = __webpack_require__(83);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(43)
+  __webpack_require__(82)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -671,12 +747,12 @@ var __vue_template_functional__ = false
 /* styles */
 var __vue_styles__ = injectStyle
 /* scopeId */
-var __vue_scopeId__ = "data-v-62373ea4"
+var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Withdraw_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_62373ea4_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Withdraw_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_62373ea4_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Withdraw_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
@@ -702,53 +778,6 @@ if (false) {(function () {
 
 /* harmony default export */ __webpack_exports__["default"] = (Component.exports);
 
-
-/***/ }),
-
-/***/ 43:
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
-/***/ 44:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "app-settings" },
-    [
-      _c("h1", [_vm._v("Withdraw Requests")]),
-      _vm._v(" "),
-      _c("list-table", {
-        attrs: {
-          columns: _vm.columns,
-          rows: _vm.requests,
-          actions: _vm.actions,
-          "show-cb": _vm.showCb,
-          "bulk-actions": _vm.bulkActions
-        }
-      })
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-62373ea4", esExports)
-  }
-}
 
 /***/ }),
 
@@ -1066,6 +1095,186 @@ if (false) {(function () {
 
 /***/ }),
 
+/***/ 82:
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
+/***/ 83:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "withdraw-requests" },
+    [
+      _c("h1", [_vm._v("Withdraw Requests")]),
+      _vm._v(" "),
+      _c("list-table", {
+        attrs: {
+          columns: _vm.columns,
+          rows: _vm.requests,
+          loading: _vm.loading,
+          "action-column": _vm.actionColumn,
+          actions: _vm.actions,
+          "show-cb": _vm.showCb,
+          "bulk-actions": _vm.bulkActions
+        },
+        on: { "action:click": _vm.onActionClick },
+        scopedSlots: _vm._u([
+          {
+            key: "seller",
+            fn: function(data) {
+              return [
+                _c("img", {
+                  attrs: {
+                    src: data.row.user.gravatar,
+                    alt: data.row.user.store_name,
+                    width: "50"
+                  }
+                }),
+                _vm._v(" "),
+                _c("strong", [
+                  _c("a", { attrs: { href: "#" } }, [
+                    _vm._v(_vm._s(data.row.user.store_name))
+                  ])
+                ])
+              ]
+            }
+          },
+          {
+            key: "amount",
+            fn: function(data) {
+              return [
+                _vm._v(
+                  "\n            " +
+                    _vm._s(_vm._f("currency")(data.row.amount)) +
+                    "\n        "
+                )
+              ]
+            }
+          },
+          {
+            key: "status",
+            fn: function(data) {
+              return [
+                _c("span", { class: data.row.status }, [
+                  _vm._v(_vm._s(_vm._f("capitalize")(data.row.status)))
+                ])
+              ]
+            }
+          },
+          {
+            key: "created",
+            fn: function(data) {
+              return [
+                _vm._v(
+                  "\n            " +
+                    _vm._s(_vm.moment(data.row.created).format("MMM D, YYYY")) +
+                    "\n        "
+                )
+              ]
+            }
+          },
+          {
+            key: "actions",
+            fn: function(data) {
+              return [
+                data.row.status === "pending"
+                  ? [
+                      _c(
+                        "a",
+                        {
+                          staticClass: "button button-small",
+                          attrs: { href: "#" },
+                          on: {
+                            click: function($event) {
+                              $event.preventDefault()
+                              _vm.changeStatus("approved", data.row.id)
+                            }
+                          }
+                        },
+                        [_vm._v("Approve")]
+                      )
+                    ]
+                  : data.row.status === "approved"
+                    ? [
+                        _c(
+                          "a",
+                          {
+                            staticClass: "button button-small",
+                            attrs: { href: "#" },
+                            on: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                _vm.changeStatus("pending", data.row.id)
+                              }
+                            }
+                          },
+                          [_vm._v("Pending")]
+                        )
+                      ]
+                    : [
+                        _c("div", { staticClass: "button-group" }, [
+                          _c(
+                            "a",
+                            {
+                              staticClass: "button button-small",
+                              attrs: { href: "#" },
+                              on: {
+                                click: function($event) {
+                                  $event.preventDefault()
+                                  _vm.changeStatus("approved", data.row.id)
+                                }
+                              }
+                            },
+                            [_vm._v("Approve")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "a",
+                            {
+                              staticClass: "button button-small",
+                              attrs: { href: "#" },
+                              on: {
+                                click: function($event) {
+                                  $event.preventDefault()
+                                  _vm.changeStatus("pending", data.row.id)
+                                }
+                              }
+                            },
+                            [_vm._v("Pending")]
+                          )
+                        ])
+                      ]
+              ]
+            }
+          }
+        ])
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-62373ea4", esExports)
+  }
+}
+
+/***/ }),
+
 /***/ 9:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1212,12 +1421,6 @@ let Loading = dokan_get_lib('Loading');
             dokan.api.get('/admin/report/overview').done(response => {
                 this.report = response;
             });
-        }
-    },
-
-    filters: {
-        currency(price) {
-            return accounting.formatMoney(price, dokan.currency);
         }
     }
 });
