@@ -1514,7 +1514,7 @@ function dokan_filter_orders_for_current_vendor( $query ) {
 add_action( 'pre_get_posts', 'dokan_filter_orders_for_current_vendor' );
 
 /**
- * Remove sellerdiv metabox when a seller can access the backend
+ * Remove sellerdiv metabox and some actions when a seller can access the backend
  *
  * @since 2.7.8
  * @return void
@@ -1526,6 +1526,9 @@ function dokan_remove_sellerdiv_metabox() {
 
     if ( is_admin() && get_post_type() == 'product' && ! defined( 'DOING_AJAX' ) ) {
         remove_meta_box( 'sellerdiv', 'product', 'normal' );
+        remove_action( 'woocommerce_product_options_advanced', array( Dokan_Pro_Products::init(), 'add_per_product_commission_options' ), 15 );
+        remove_action( 'woocommerce_product_options_general_product_data', array( DPS_Admin::init(), 'general_fields' ) );
+        remove_filter( 'product_type_selector', array( DPS_Admin::init(), 'add_product_type' ), 1 );
     }
 }
 
@@ -2451,4 +2454,3 @@ function dokan_get_all_caps() {
 
     return apply_filters( 'dokan_get_all_cap', $capabilities );
 }
-
