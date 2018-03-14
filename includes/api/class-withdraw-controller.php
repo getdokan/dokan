@@ -65,7 +65,7 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
             ),
             array(
                 'methods'             => WP_REST_Server::EDITABLE,
-                'callback'            => array( $this, 'cancel_withdraw_status' ),
+                'callback'            => array( $this, 'change_withdraw_status' ),
                 'args'                => array(
                     'status' => array(
                         'type'        => 'string',
@@ -210,8 +210,9 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
      *
      * @return void
      */
-    public function cancel_withdraw_status( $request ) {
+    public function change_withdraw_status( $request ) {
         global $wpdb;
+
         $store_id = dokan_get_current_user_id();
 
         if ( empty( $request['id'] ) ) {
@@ -240,6 +241,7 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
         }
 
         $withdraw = new Dokan_Template_Withdraw();
+
         if ( current_user_can( 'manage_options' ) ) {
             $user_id = $result->user_id;
             $status_code = $this->get_status( $status );
@@ -343,9 +345,9 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
 
         unset( $data_info['user_id'] );
 
-        $data_info['id']           = $wpdb->insert_id;
-        $data_info['user']         = $this->get_user_data( $store_id, $request );
-        $data_info['created_data'] = mysql_to_rfc3339( date( 'Y-m-d h:i:s' ) );
+        $data_info['id']      = $wpdb->insert_id;
+        $data_info['user']    = $this->get_user_data( $store_id );
+        $data_info['created'] = mysql_to_rfc3339( date( 'Y-m-d h:i:s' ) );
 
         return rest_ensure_response( $data_info );
     }
@@ -451,13 +453,15 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
      * @return data
      */
     public function prepare_response_for_object( $object, $request ) {
+        $methods = dokan_withdraw_get_methods();
         $data = array(
             'id'           => $object->id,
-            'user'         => $this->get_user_data( $object->user_id, $request ),
+            'user'         => $this->get_user_data( $object->user_id ),
             'amount'       => floatval( $object->amount ),
-            'created_data' => mysql_to_rfc3339( $object->date ),
-            'status'       => $this->get_status( (int)$object->status ),
+            'created'      => mysql_to_rfc3339( $object->date ),
+            'status'       => $this->get_status( (int) $object->status ),
             'method'       => $object->method,
+            'method_title' => array_key_exists( $object->method, $methods ) ? $methods[ $object->method ] : $object->method,
             'note'         => $object->note,
             'ip'           => $object->ip
         );
@@ -496,10 +500,10 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
      *
      * @return return object
      */
-    public function get_user_data( $user_id, $request ) {
-        $store_controller = new Dokan_REST_Store_Controller();
-        $user = dokan()->vendor->get( $user_id );
-        return $store_controller->prepare_item_for_response( $user, $request );
+    public function get_user_data( $user_id ) {
+        $vendor = dokan()->vendor->get( $user_id );
+
+        return $vendor->to_array();
     }
 
     /**
@@ -563,12 +567,15 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
 
         if ( $page > 1 ) {
             $prev_page = $page - 1;
+
             if ( $prev_page > $max_pages ) {
                 $prev_page = $max_pages;
             }
+
             $prev_link = add_query_arg( 'page', $prev_page, $base );
             $response->link_header( 'prev', $prev_link );
         }
+
         if ( $max_pages > $page ) {
 
             $next_page = $page + 1;
@@ -578,7 +585,6 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
 
         return $response;
     }
-
 
     /**
      * Get the Coupon's schema, conforming to JSON Schema.

@@ -104,6 +104,12 @@ module.exports = {
         ]
     },
 
+    externals: {
+        jquery: 'jQuery',
+        'chart.js': 'Chart',
+        moment: 'moment'
+    },
+
     plugins,
 
     module: {

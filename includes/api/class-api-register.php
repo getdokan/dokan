@@ -20,8 +20,11 @@ class Dokan_API_Register {
             return;
         }
 
+        require_once DOKAN_DIR . '/includes/api/admin/class-admin-controller.php';
+
         $this->class_map = apply_filters( 'dokan_rest_api_class_map', array(
-            DOKAN_DIR . '/includes/api/class-admin-report-rest-controller.php'       => 'Dokan_REST_Admin_Report_Controller',
+            DOKAN_DIR . '/includes/api/admin/class-report-controller.php'            => 'Dokan_REST_Admin_Report_Controller',
+            DOKAN_DIR . '/includes/api/admin/class-dashboard-controller.php'         => 'Dokan_REST_Admin_Dashboard_Controller',
             DOKAN_DIR . '/includes/api/class-store-controller.php'                   => 'Dokan_REST_Store_Controller',
             DOKAN_DIR . '/includes/api/class-product-controller.php'                 => 'Dokan_REST_Product_Controller',
             DOKAN_DIR . '/includes/api/class-product-attribute-controller.php'       => 'Dokan_REST_Product_Attribute_Controller',
