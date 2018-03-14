@@ -426,13 +426,16 @@ function dokan_get_seller_percentage( $seller_id = 0, $product_id = 0 ) {
 
     //product wise percentage
     if ( $product_id ) {
-        $_per_product_commission = get_post_meta( $product_id, '_per_product_admin_commission', true );
-        if ( $_per_product_commission != '' ) {
-            $commission_val = (float) ( 100 - $_per_product_commission );
-        }
         $category_commission = dokan_get_category_wise_seller_commission( $product_id );
+
         if ( !empty( $category_commission ) ) {
             $commission_val = (float) $category_commission;
+        }
+
+        $_per_product_commission = get_post_meta( $product_id, '_per_product_admin_commission', true );
+
+        if ( $_per_product_commission != '' ) {
+            $commission_val = (float) ( 100 - $_per_product_commission );
         }
     }
 
@@ -2451,4 +2454,3 @@ function dokan_get_all_caps() {
 
     return apply_filters( 'dokan_get_all_cap', $capabilities );
 }
-
