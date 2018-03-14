@@ -77,6 +77,12 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
             ),
 
             array(
+                'methods'             => WP_REST_Server::DELETABLE,
+                'callback'            => array( $this, 'delete_withdraw' ),
+                'permission_callback' => array( $this, 'delete_withdraw_permissions_check' ),
+            ),
+
+            array(
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => array( $this, 'update_withdraw_note' ),
                 'args'                => array(
@@ -254,6 +260,34 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
         $response = $wpdb->get_row( $sql );
 
         return rest_ensure_response( $this->prepare_response_for_object( $response, $request ) );
+    }
+
+    /**
+     * Delete a withdraw
+     *
+     * @since 2.8.0
+     *
+     * @return void
+     */
+    public function delete_withdraw( $request ) {
+        global $wpdb;
+
+        $withdraw_id = !empty( $request['id'] ) ? intval( $request['id'] ) : 0;
+
+        if ( !$withdraw_id ) {
+            return new WP_Error( 'no_id', __( 'Invalid ID', 'dokan-lite' ), array( 'status' => 404 ) );
+        }
+
+        $sql    = "SELECT * FROM `{$wpdb->prefix}dokan_withdraw` WHERE `id`={$withdraw_id}";
+        $result = $wpdb->get_row( $sql );
+
+        if ( empty( $result->id ) ) {
+            return new WP_Error( 'no_withdraw', __( 'No withdraw found for deleting', 'dokan-lite' ), array( 'status' => 404 ) );
+        }
+
+        $deleted = $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}dokan_withdraw WHERE id = %d", $withdraw_id ) );
+
+        return rest_ensure_response( $this->prepare_response_for_object( $result, $request ) );
     }
 
     /**
@@ -515,6 +549,17 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
      */
     public function get_withdraw_permissions_check() {
         return current_user_can( 'dokan_manage_withdraw' );
+    }
+
+    /**
+     * Check permission for deleting withdraw
+     *
+     * @since 2.8.0
+     *
+     * @return void
+     */
+    public function delete_withdraw_permissions_check() {
+        return current_user_can( 'manage_options' );
     }
 
     /**
