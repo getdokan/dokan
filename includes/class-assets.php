@@ -104,6 +104,12 @@ class Dokan_Assets {
         return apply_filters( 'dokan-admin-routes', $routes );
     }
 
+    public function get_vue_frontend_routes() {
+        $routes = array();
+
+        return apply_filters( 'dokan-admin-routes', $routes );
+    }
+
     /**
      * Register all Dokan scripts and styles
      */
@@ -302,16 +308,24 @@ class Dokan_Assets {
             'commission_type'    => dokan_get_commission_type( dokan_get_current_user_id() ),
             'rounding_precision' => wc_get_rounding_precision(),
             'mon_decimal_point'  => wc_get_price_decimal_separator(),
-            'api'                => array(
+        );
+
+        $localize_script = apply_filters( 'dokan_localized_args', $default_script );
+        $vue_localize_script = apply_filters( 'dokan_frontend_localize_script', array(
+            'rest' => array(
                 'root'    => esc_url_raw( get_rest_url() ),
                 'nonce'   => wp_create_nonce( 'wp_rest' ),
                 'version' => 'dokan/v1',
             ),
-        );
+            'api'             => null,
+            'libs'            => array(),
+            'routeComponents' => array( 'default' => null ),
+            'routes'          => $this->get_vue_frontend_routes()
+        ) );
 
-        $localize_script = apply_filters( 'dokan_localized_args', $default_script );
+        $localize_data = array_merge( $localize_script, $vue_localize_script );
 
-        wp_localize_script( 'jquery', 'dokan', $localize_script );
+        wp_localize_script( 'jquery', 'dokan', $localize_data );
 
         // load only in dokan dashboard and product edit page
         if ( ( dokan_is_seller_dashboard() || ( get_query_var( 'edit' ) && is_singular( 'product' ) ) ) || apply_filters( 'dokan_forced_load_scripts', false ) ) {
