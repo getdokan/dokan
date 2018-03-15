@@ -335,29 +335,36 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
      * @return object
      */
     public function format_collection_response( $response, $request, $total_items ) {
+
+        // Store pagation values for headers then unset for count query.
+        $per_page  = (int) ( ! empty( $request['per_page'] ) ? $request['per_page'] : 20 );
+        $page      = (int) ( ! empty( $request['page'] ) ? $request['page'] : 1 );
+        $max_pages = ceil( $total_items / $per_page );
+        $counts    = dokan_get_seller_status_count();
+
+        $response->header( 'X-WP-Total', (int) $total_items );
+        $response->header( 'X-WP-TotalPages', (int) $max_pages );
+        $response->header( 'X-Status-Pending', (int) $counts['inactive'] );
+        $response->header( 'X-Status-Approved', (int) $counts['active'] );
+        $response->header( 'X-Status-All', (int) $counts['total'] );
+
         if ( $total_items === 0 ) {
             return $response;
         }
 
-        // Store pagation values for headers then unset for count query.
-        $per_page = (int) ( ! empty( $request['per_page'] ) ? $request['per_page'] : 20 );
-        $page     = (int) ( ! empty( $request['page'] ) ? $request['page'] : 1 );
-
-        $response->header( 'X-WP-Total', (int) $total_items );
-
-        $max_pages = ceil( $total_items / $per_page );
-
-        $response->header( 'X-WP-TotalPages', (int) $max_pages );
         $base = add_query_arg( $request->get_query_params(), rest_url( sprintf( '/%s/%s', $this->namespace, $this->base ) ) );
 
         if ( $page > 1 ) {
             $prev_page = $page - 1;
+
             if ( $prev_page > $max_pages ) {
                 $prev_page = $max_pages;
             }
+
             $prev_link = add_query_arg( 'page', $prev_page, $base );
             $response->link_header( 'prev', $prev_link );
         }
+
         if ( $max_pages > $page ) {
 
             $next_page = $page + 1;
