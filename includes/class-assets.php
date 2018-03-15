@@ -41,7 +41,8 @@ class Dokan_Assets {
                 'libs'            => array(),
                 'routeComponents' => array( 'default' => null ),
                 'routes'          => $this->get_vue_admin_routes(),
-                'currency'        => $this->get_localized_price()
+                'currency'        => $this->get_localized_price(),
+                'hasPro'          => dokan()->is_pro_exists(),
             ) );
 
             // load styles

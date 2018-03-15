@@ -211,7 +211,10 @@ class Dokan_Admin {
         if ( current_user_can( $capability ) ) {
             $submenu[ $slug ][] = array( __( 'Dashboard', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/' );
             $submenu[ $slug ][] = array( __( 'Withdraw', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/withdraw?status=pending' );
-            $submenu[ $slug ][] = array( __( 'PRO Features', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/premium' );
+
+            if ( ! dokan()->is_pro_exists() ) {
+                $submenu[ $slug ][] = array( __( 'PRO Features', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/premium' );
+            }
         }
 
         do_action( 'dokan_admin_menu', $capability, $menu_position );

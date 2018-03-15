@@ -6,7 +6,7 @@
             <postbox v-for="section in docs" :title="section.title">
                 <ul>
                     <li v-for="item in section.questions">
-                        <span class="dashicons dashicons-portfolio"></span> <a :href="item.link" target="_blank">{{ item.title }}</a>
+                        <span class="dashicons dashicons-media-text"></span> <a :href="item.link" target="_blank">{{ item.title }}</a>
                     </li>
                 </ul>
             </postbox>

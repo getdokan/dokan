@@ -2086,7 +2086,7 @@ var render = function() {
                 _vm._l(section.questions, function(item) {
                   return _c("li", [
                     _c("span", {
-                      staticClass: "dashicons dashicons-portfolio"
+                      staticClass: "dashicons dashicons-media-text"
                     }),
                     _vm._v(" "),
                     _c("a", { attrs: { href: item.link, target: "_blank" } }, [
