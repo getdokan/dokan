@@ -1,6 +1,7 @@
 import Dashboard from 'admin/pages/Dashboard.vue'
 import Withdraw from 'admin/pages/Withdraw.vue'
 import Premium from 'admin/pages/Premium.vue'
+import Help from 'admin/pages/Help.vue'
 
 let Vue    = dokan_get_lib('Vue')
 let Router = dokan_get_lib('Router')
@@ -10,6 +11,7 @@ Vue.use(Router)
 dokan_add_route(Dashboard)
 dokan_add_route(Withdraw)
 dokan_add_route(Premium)
+dokan_add_route(Help)
 
 /**
  * Parse the route array and bind required components

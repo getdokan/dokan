@@ -112,6 +112,11 @@ class Dokan_Assets {
                 'name'      => 'Premium',
                 'component' => 'Premium'
             ),
+            array(
+                'path'      => '/help',
+                'name'      => 'Help',
+                'component' => 'Help'
+            ),
         );
 
         return apply_filters( 'dokan-admin-routes', $routes );

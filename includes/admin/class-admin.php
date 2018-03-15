@@ -216,7 +216,10 @@ class Dokan_Admin {
 
         do_action( 'dokan_admin_menu', $capability, $menu_position );
 
-        add_submenu_page( 'dokan', __( 'Help', 'dokan-lite' ), __( '<span style="color:#f18500">Help</span>', 'dokan-lite' ), $capability, 'dokan-help', array( $this, 'help_page' ) );
+        if ( current_user_can( $capability ) ) {
+            $submenu[ $slug ][] = array( __( '<span style="color:#f18500">Help</span>', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/help' );
+        }
+        // add_submenu_page( 'dokan', __( 'Help', 'dokan-lite' ), __( '<span style="color:#f18500">Help</span>', 'dokan-lite' ), $capability, 'dokan-help', array( $this, 'help_page' ) );
         $settings = add_submenu_page( 'dokan', __( 'Settings', 'dokan-lite' ), __( 'Settings', 'dokan-lite' ), $capability, 'dokan-settings', array( $this, 'settings_page' ) );
 
         /**

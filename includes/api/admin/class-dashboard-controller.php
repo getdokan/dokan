@@ -56,6 +56,7 @@ class Dokan_REST_Admin_Dashboard_Controller extends Dokan_REST_Admin_Controller 
                 )
             ),
         ) );
+
     }
 
     /**
@@ -63,7 +64,7 @@ class Dokan_REST_Admin_Dashboard_Controller extends Dokan_REST_Admin_Controller 
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return WP_REST_Response
      */
     public function get_feeds( $request ) {
         $items = (int) $request['items'];

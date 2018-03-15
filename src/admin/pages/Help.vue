@@ -1,0 +1,87 @@
+<template>
+    <div class="dokan-help-page">
+        <h1>Help</h1>
+
+        <div class="section-wrapper" v-if="docs !== null">
+            <postbox v-for="section in docs" :title="section.title">
+                <ul>
+                    <li v-for="item in section.questions">
+                        <span class="dashicons dashicons-portfolio"></span> <a :href="item.link" target="_blank">{{ item.title }}</a>
+                    </li>
+                </ul>
+            </postbox>
+        </div>
+        <div class="loading" v-else>
+            <loading></loading>
+        </div>
+    </div>
+</template>
+
+<script>
+let Postbox = dokan_get_lib('Postbox');
+let Loading = dokan_get_lib('Loading');
+
+export default {
+
+    name: 'Help',
+
+    components: {
+        Postbox,
+        Loading,
+    },
+
+    data () {
+        return {
+            docs: null
+        };
+    },
+
+    created() {
+        this.fetch();
+    },
+
+    methods: {
+
+        fetch() {
+            dokan.api.get('/admin/help')
+            .done(response => {
+                this.docs = response
+            });
+        }
+    }
+};
+</script>
+
+<style lang="less">
+.dokan-help-page {
+
+    .section-wrapper {
+        margin-top: 15px;
+        display: flex;
+        flex-wrap: wrap;
+
+        .dokan-postbox {
+            width: ~"calc(33% - 2em)";
+            margin: 0 2% 15px 0;
+
+            .dashicons {
+                color: #ccc;
+            }
+
+            a {
+                text-decoration: none;
+            }
+
+            .inside, ul {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    .loading {
+        width: 100%;
+        text-align: center;
+        margin-top: 100px;
+    }
+}
+</style>

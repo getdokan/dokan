@@ -998,3 +998,30 @@ function dokan_add_wc_post_types_to_delete_user( $post_types, $user_id ) {
 
     return array_merge( $post_types, $wc_post_types );
 }
+
+/**
+ * Get help documents for admin
+ *
+ * @since 2.8
+ *
+ * @return Object
+ */
+function dokan_admin_get_help() {
+    $help_docs = get_transient( 'dokan_help_docs', '[]' );
+
+    if ( false === $help_docs ) {
+        $help_url  = 'https://api.bitbucket.org/2.0/snippets/wedevs/oErMz/files/dokan-help.json';
+        $response  = wp_remote_get( $help_url, array('timeout' => 15) );
+        $help_docs = wp_remote_retrieve_body( $response );
+
+        if ( is_wp_error( $response ) || $response['response']['code'] != 200 ) {
+            $help_docs = '[]';
+        }
+
+        set_transient( 'dokan_help_docs', $help_docs, 12 * HOUR_IN_SECONDS );
+    }
+
+    $help_docs = json_decode( $help_docs );
+
+    return $help_docs;
+}
