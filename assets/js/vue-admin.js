@@ -373,19 +373,57 @@ let Loading = dokan_get_lib('Loading');
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 let ListTable = dokan_get_lib('ListTable');
+let Modal = dokan_get_lib('Modal');
 
 /* harmony default export */ __webpack_exports__["a"] = ({
 
     name: 'Withdraw',
 
     components: {
-        ListTable
+        ListTable,
+        Modal
     },
 
     data() {
         return {
+            showModal: false,
+            editing: {
+                id: null,
+                note: null
+            },
+
+            totalPages: 1,
+            perPage: 10,
+            totalItems: 0,
+
             counts: {
                 pending: 0,
                 approved: 0,
@@ -399,7 +437,7 @@ let ListTable = dokan_get_lib('ListTable');
                 'amount': { label: 'Amount' },
                 'status': { label: 'Status' },
                 'method_title': { label: 'Method' },
-                'method_details': { label: 'Method Details' },
+                'method_details': { label: 'Details' },
                 'note': { label: 'Note' },
                 'created': { label: 'Date' },
                 'actions': { label: 'Actions' }
@@ -432,6 +470,10 @@ let ListTable = dokan_get_lib('ListTable');
     watch: {
         '$route.query.status'() {
             this.fetchRequests();
+        },
+
+        '$route.query.page'() {
+            this.fetchRequests();
         }
     },
 
@@ -439,6 +481,12 @@ let ListTable = dokan_get_lib('ListTable');
 
         currentStatus() {
             return this.$route.query.status || 'pending';
+        },
+
+        currentPage() {
+            let page = this.$route.query.page || 1;
+
+            return parseInt(page);
         }
     },
 
@@ -454,14 +502,30 @@ let ListTable = dokan_get_lib('ListTable');
             this.counts.cancelled = parseInt(xhr.getResponseHeader('X-Status-Cancelled'));
         },
 
+        updatePagination(xhr) {
+            this.totalPages = parseInt(xhr.getResponseHeader('X-WP-TotalPages'));
+            this.totalItems = parseInt(xhr.getResponseHeader('X-WP-Total'));
+        },
+
         fetchRequests() {
             this.loading = true;
 
-            dokan.api.get('/withdraw?status=' + this.currentStatus).done((response, status, xhr) => {
+            dokan.api.get('/withdraw?per_page=' + this.perPage + '&page=' + this.currentPage + '&status=' + this.currentStatus).done((response, status, xhr) => {
                 this.requests = response;
                 this.loading = false;
 
                 this.updatedCounts(xhr);
+                this.updatePagination(xhr);
+            });
+        },
+
+        goToPage(page) {
+            this.$router.push({
+                name: 'Withdraw',
+                query: {
+                    status: this.currentStatus,
+                    page: page
+                }
             });
         },
 
@@ -597,6 +661,31 @@ let ListTable = dokan_get_lib('ListTable');
                     }
                 });
             }
+        },
+
+        openNoteModal(note, id) {
+            this.showModal = true;
+            this.editing = {
+                id: id,
+                note: note
+            };
+        },
+
+        updateNote() {
+            this.showModal = false;
+            this.loading = true;
+
+            dokan.api.put('/withdraw/' + this.editing.id + '/note', {
+                note: this.editing.note
+            }).done(response => {
+                this.loading = false;
+
+                this.updateItem(this.editing.id, response);
+                this.editing = {
+                    id: null,
+                    note: null
+                };
+            });
         }
     }
 });
@@ -1272,6 +1361,60 @@ var render = function() {
     [
       _c("h1", [_vm._v("Withdraw Requests")]),
       _vm._v(" "),
+      _vm.showModal
+        ? _c(
+            "modal",
+            {
+              attrs: { title: "Update Note" },
+              on: {
+                close: function($event) {
+                  _vm.showModal = false
+                }
+              }
+            },
+            [
+              _c("template", { slot: "body" }, [
+                _c("textarea", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.editing.note,
+                      expression: "editing.note"
+                    }
+                  ],
+                  attrs: { rows: "3" },
+                  domProps: { value: _vm.editing.note },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.editing, "note", $event.target.value)
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("template", { slot: "footer" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "button button-primary button-large",
+                    on: {
+                      click: function($event) {
+                        _vm.updateNote()
+                      }
+                    }
+                  },
+                  [_vm._v("Update Note")]
+                )
+              ])
+            ],
+            2
+          )
+        : _vm._e(),
+      _vm._v(" "),
       _c("ul", { staticClass: "subsubsub" }, [
         _c(
           "li",
@@ -1354,9 +1497,14 @@ var render = function() {
           actions: _vm.actions,
           "show-cb": _vm.showCb,
           "bulk-actions": _vm.bulkActions,
-          "not-found": _vm.notFound
+          "not-found": _vm.notFound,
+          "total-pages": _vm.totalPages,
+          "total-items": _vm.totalItems,
+          "per-page": _vm.perPage,
+          "current-page": _vm.currentPage
         },
         on: {
+          pagination: _vm.goToPage,
           "action:click": _vm.onActionClick,
           "bulk:click": _vm.onBulkAction
         },
@@ -1438,60 +1586,54 @@ var render = function() {
               return [
                 data.row.status === "pending"
                   ? [
-                      _c(
-                        "a",
-                        {
-                          staticClass: "button button-small",
-                          attrs: { href: "#" },
-                          on: {
-                            click: function($event) {
-                              $event.preventDefault()
-                              _vm.changeStatus("approved", data.row.id)
-                            }
-                          }
-                        },
-                        [_vm._v("Approve")]
-                      )
-                    ]
-                  : data.row.status === "approved"
-                    ? [
+                      _c("div", { staticClass: "button-group" }, [
                         _c(
-                          "a",
+                          "button",
                           {
                             staticClass: "button button-small",
-                            attrs: { href: "#" },
+                            attrs: { title: "Approve Request" },
                             on: {
                               click: function($event) {
                                 $event.preventDefault()
-                                _vm.changeStatus("pending", data.row.id)
+                                _vm.changeStatus("approved", data.row.id)
                               }
                             }
                           },
-                          [_vm._v("Pending")]
+                          [
+                            _c("span", {
+                              staticClass: "dashicons dashicons-yes"
+                            })
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass: "button button-small",
+                            attrs: { title: "Add Note" },
+                            on: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                _vm.openNoteModal(data.row.note, data.row.id)
+                              }
+                            }
+                          },
+                          [
+                            _c("span", {
+                              staticClass: "dashicons dashicons-testimonial"
+                            })
+                          ]
                         )
-                      ]
-                    : [
+                      ])
+                    ]
+                  : data.row.status === "approved"
+                    ? [
                         _c("div", { staticClass: "button-group" }, [
                           _c(
-                            "a",
+                            "button",
                             {
                               staticClass: "button button-small",
-                              attrs: { href: "#" },
-                              on: {
-                                click: function($event) {
-                                  $event.preventDefault()
-                                  _vm.changeStatus("approved", data.row.id)
-                                }
-                              }
-                            },
-                            [_vm._v("Approve")]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "a",
-                            {
-                              staticClass: "button button-small",
-                              attrs: { href: "#" },
+                              attrs: { title: "Mark as Pending" },
                               on: {
                                 click: function($event) {
                                   $event.preventDefault()
@@ -1499,7 +1641,90 @@ var render = function() {
                                 }
                               }
                             },
-                            [_vm._v("Pending")]
+                            [
+                              _c("span", {
+                                staticClass: "dashicons dashicons-backup"
+                              })
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "button",
+                            {
+                              staticClass: "button button-small",
+                              attrs: { title: "Add Note" },
+                              on: {
+                                click: function($event) {
+                                  $event.preventDefault()
+                                  _vm.openNoteModal(data.row.note, data.row.id)
+                                }
+                              }
+                            },
+                            [
+                              _c("span", {
+                                staticClass: "dashicons dashicons-testimonial"
+                              })
+                            ]
+                          )
+                        ])
+                      ]
+                    : [
+                        _c("div", { staticClass: "button-group" }, [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "button button-small",
+                              attrs: { title: "Approve Request" },
+                              on: {
+                                click: function($event) {
+                                  $event.preventDefault()
+                                  _vm.changeStatus("approved", data.row.id)
+                                }
+                              }
+                            },
+                            [
+                              _c("span", {
+                                staticClass: "dashicons dashicons-yes"
+                              })
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "button",
+                            {
+                              staticClass: "button button-small",
+                              attrs: { title: "Mark as Pending" },
+                              on: {
+                                click: function($event) {
+                                  $event.preventDefault()
+                                  _vm.changeStatus("pending", data.row.id)
+                                }
+                              }
+                            },
+                            [
+                              _c("span", {
+                                staticClass: "dashicons dashicons-backup"
+                              })
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "button",
+                            {
+                              staticClass: "button button-small",
+                              attrs: { title: "Add Note" },
+                              on: {
+                                click: function($event) {
+                                  $event.preventDefault()
+                                  _vm.openNoteModal(data.row.note, data.row.id)
+                                }
+                              }
+                            },
+                            [
+                              _c("span", {
+                                staticClass: "dashicons dashicons-testimonial"
+                              })
+                            ]
                           )
                         ])
                       ]

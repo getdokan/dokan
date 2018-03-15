@@ -2,6 +2,20 @@
     <div class="withdraw-requests">
         <h1>Withdraw Requests</h1>
 
+        <modal
+            title="Update Note"
+            v-if="showModal"
+            @close="showModal = false"
+        >
+            <template slot="body">
+                <textarea v-model="editing.note" rows="3"></textarea>
+            </template>
+
+            <template slot="footer">
+                <button class="button button-primary button-large" @click="updateNote()">Update Note</button>
+            </template>
+        </modal>
+
         <ul class="subsubsub">
             <li><router-link :to="{ name: 'Withdraw', query: { status: 'pending' }}" active-class="current" exact>Pending <span class="count">({{ counts.pending }})</span></router-link> | </li>
             <li><router-link :to="{ name: 'Withdraw', query: { status: 'approved' }}" active-class="current" exact>Approved <span class="count">({{ counts.approved }})</span></router-link> | </li>
@@ -17,6 +31,11 @@
             :show-cb="showCb"
             :bulk-actions="bulkActions"
             :not-found="notFound"
+            :total-pages="totalPages"
+            :total-items="totalItems"
+            :per-page="perPage"
+            :current-page="currentPage"
+            @pagination="goToPage"
             @action:click="onActionClick"
             @bulk:click="onBulkAction"
         >
@@ -43,15 +62,22 @@
 
             <template slot="actions" slot-scope="data">
                 <template v-if="data.row.status === 'pending'">
-                    <a href="#" class="button button-small" @click.prevent="changeStatus('approved', data.row.id)">Approve</a>
+                    <div class="button-group">
+                        <button class="button button-small" @click.prevent="changeStatus('approved', data.row.id)" title="Approve Request"><span class="dashicons dashicons-yes"></span></button>
+                        <button class="button button-small" @click.prevent="openNoteModal(data.row.note, data.row.id)" title="Add Note"><span class="dashicons dashicons-testimonial"></span></button>
+                    </div>
                 </template>
                 <template v-else-if="data.row.status === 'approved'">
-                    <a href="#" class="button button-small" @click.prevent="changeStatus('pending', data.row.id)">Pending</a>
+                    <div class="button-group">
+                        <button class="button button-small" @click.prevent="changeStatus('pending', data.row.id)" title="Mark as Pending"><span class="dashicons dashicons-backup"></span></button>
+                        <button class="button button-small" @click.prevent="openNoteModal(data.row.note, data.row.id)" title="Add Note"><span class="dashicons dashicons-testimonial"></span></button>
+                    </div>
                 </template>
                 <template v-else>
                     <div class="button-group">
-                        <a href="#" class="button button-small" @click.prevent="changeStatus('approved', data.row.id)">Approve</a>
-                        <a href="#" class="button button-small" @click.prevent="changeStatus('pending', data.row.id)">Pending</a>
+                        <button class="button button-small" @click.prevent="changeStatus('approved', data.row.id)" title="Approve Request"><span class="dashicons dashicons-yes"></span></button>
+                        <button class="button button-small" @click.prevent="changeStatus('pending', data.row.id)" title="Mark as Pending"><span class="dashicons dashicons-backup"></span></button>
+                        <button class="button button-small" @click.prevent="openNoteModal(data.row.note, data.row.id)" title="Add Note"><span class="dashicons dashicons-testimonial"></span></button>
                     </div>
                 </template>
             </template>
@@ -61,6 +87,7 @@
 
 <script>
 let ListTable = dokan_get_lib('ListTable');
+let Modal = dokan_get_lib('Modal');
 
 export default {
 
@@ -68,10 +95,21 @@ export default {
 
     components: {
         ListTable,
+        Modal,
     },
 
     data () {
         return {
+            showModal: false,
+            editing: {
+                id: null,
+                note: null
+            },
+
+            totalPages: 1,
+            perPage: 10,
+            totalItems: 0,
+
             counts: {
                 pending: 0,
                 approved: 0,
@@ -85,7 +123,7 @@ export default {
                 'amount': { label: 'Amount' },
                 'status': { label: 'Status' },
                 'method_title': { label: 'Method' },
-                'method_details': { label: 'Method Details' },
+                'method_details': { label: 'Details' },
                 'note': { label: 'Note' },
                 'created': { label: 'Date' },
                 'actions': { label: 'Actions' },
@@ -126,6 +164,10 @@ export default {
     watch: {
         '$route.query.status'() {
             this.fetchRequests();
+        },
+
+        '$route.query.page'() {
+            this.fetchRequests();
         }
     },
 
@@ -133,6 +175,12 @@ export default {
 
         currentStatus() {
             return this.$route.query.status || 'pending';
+        },
+
+        currentPage() {
+            let page = this.$route.query.page || 1;
+
+            return parseInt( page );
         }
     },
 
@@ -148,15 +196,31 @@ export default {
             this.counts.cancelled = parseInt( xhr.getResponseHeader('X-Status-Cancelled') );
         },
 
+        updatePagination(xhr) {
+            this.totalPages = parseInt( xhr.getResponseHeader('X-WP-TotalPages') );
+            this.totalItems = parseInt( xhr.getResponseHeader('X-WP-Total') );
+        },
+
         fetchRequests() {
             this.loading = true;
 
-            dokan.api.get('/withdraw?status=' + this.currentStatus)
+            dokan.api.get('/withdraw?per_page=' + this.perPage + '&page=' + this.currentPage + '&status=' + this.currentStatus)
             .done((response, status, xhr) => {
                 this.requests = response;
                 this.loading = false;
 
                 this.updatedCounts(xhr);
+                this.updatePagination(xhr);
+            });
+        },
+
+        goToPage(page) {
+            this.$router.push({
+                name: 'Withdraw',
+                query: {
+                    status: this.currentStatus,
+                    page: page
+                }
             });
         },
 
@@ -295,6 +359,32 @@ export default {
                     }
                 });
             }
+        },
+
+        openNoteModal(note, id) {
+            this.showModal = true;
+            this.editing = {
+                id: id,
+                note: note
+            }
+        },
+
+        updateNote() {
+            this.showModal = false;
+            this.loading = true;
+
+            dokan.api.put('/withdraw/' + this.editing.id + '/note', {
+                note: this.editing.note
+            })
+            .done((response) => {
+                this.loading = false;
+
+                this.updateItem(this.editing.id, response);
+                this.editing = {
+                    id: null,
+                    note: null
+                }
+            });
         }
     }
 };
@@ -302,6 +392,17 @@ export default {
 
 <style lang="less">
 .withdraw-requests {
+
+    .dokan-modal {
+
+        .modal-body {
+            min-height: 130px;
+
+            textarea {
+                width: 100%;
+            }
+        }
+    }
 
     .image {
         width: 10%;
@@ -323,6 +424,11 @@ export default {
         display: block;
         margin-bottom: .2em;
         font-size: 14px;
+    }
+
+    td.actions,
+    th.actions {
+        width: 120px;
     }
 
     td.status {

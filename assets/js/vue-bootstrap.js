@@ -191,12 +191,14 @@ var _Chart = __webpack_require__(7);
 
 var _Chart2 = _interopRequireDefault(_Chart);
 
+var _Modal = __webpack_require__(79);
+
+var _Modal2 = _interopRequireDefault(_Modal);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-_vue2.default.use(_vueNotification2.default);
-
 // core components
-
+_vue2.default.use(_vueNotification2.default);
 
 _vue2.default.filter('currency', function (value) {
     return accounting.formatMoney(value, dokan.currency);
@@ -227,6 +229,7 @@ window.dokan.libs['Postbox'] = _Postbox2.default;
 window.dokan.libs['Loading'] = _Loading2.default;
 window.dokan.libs['ChartJS'] = _vueChartjs2.default;
 window.dokan.libs['Chart'] = _Chart2.default;
+window.dokan.libs['Modal'] = _Modal2.default;
 
 /***/ }),
 
@@ -590,6 +593,199 @@ if (false) {(function () {
 
 /* harmony default export */ __webpack_exports__["default"] = (Component.exports);
 
+
+/***/ }),
+
+/***/ 78:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+
+    name: 'Modal',
+
+    props: {
+        footer: {
+            type: Boolean,
+            required: false,
+            default: true
+        },
+        title: {
+            type: String,
+            required: true,
+            default: ''
+        }
+    },
+
+    data() {
+        return {};
+    }
+});
+
+/***/ }),
+
+/***/ 79:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Modal_vue__ = __webpack_require__(78);
+/* empty harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4bd79a2d_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Modal_vue__ = __webpack_require__(81);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(80)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Modal_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4bd79a2d_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Modal_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src/admin/components/Modal.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-4bd79a2d", Component.options)
+  } else {
+    hotAPI.reload("data-v-4bd79a2d", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+
+
+/***/ }),
+
+/***/ 80:
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
+/***/ 81:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "dokan-modal-dialog" }, [
+    _c("div", { staticClass: "dokan-modal" }, [
+      _c("div", { staticClass: "dokan-modal-content" }, [
+        _c(
+          "section",
+          { class: ["dokan-modal-main", { "has-footer": _vm.footer }] },
+          [
+            _c(
+              "header",
+              { staticClass: "modal-header" },
+              [
+                _vm._t("header", [_c("h1", [_vm._v(_vm._s(_vm.title))])]),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass:
+                      "modal-close modal-close-link dashicons dashicons-no-alt",
+                    on: {
+                      click: function($event) {
+                        _vm.$emit("close")
+                      }
+                    }
+                  },
+                  [
+                    _c("span", { staticClass: "screen-reader-text" }, [
+                      _vm._v("Close modal panel")
+                    ])
+                  ]
+                )
+              ],
+              2
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "modal-body" }, [_vm._t("body")], 2),
+            _vm._v(" "),
+            _vm.footer
+              ? _c("footer", { staticClass: "modal-footer" }, [
+                  _c("div", { staticClass: "inner" }, [_vm._t("footer")], 2)
+                ])
+              : _vm._e()
+          ]
+        )
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "dokan-modal-backdrop" })
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-4bd79a2d", esExports)
+  }
+}
 
 /***/ })
 
