@@ -96,6 +96,7 @@ class Dokan_Vendor {
             'rating'                => $this->get_rating(),
             'enabled'               => $this->is_enabled(),
             'registered'            => $this->get_register_date(),
+            'payment'               => $this->get_payment_profiles(),
         );
 
         return $info;

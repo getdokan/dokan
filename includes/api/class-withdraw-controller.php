@@ -209,12 +209,17 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
 
         $data = array();
         foreach ( $withdraws as $key => $value ) {
-            $resp = $this->prepare_response_for_object( $value, $request );
+            $resp   = $this->prepare_response_for_object( $value, $request );
             $data[] = $this->prepare_response_for_collection( $resp );
         }
 
-        $response = rest_ensure_response( $data );
-        $response->header( 'X-StatusFilter', wp_json_encode( $withdraw_count ) );
+        $response       = rest_ensure_response( $data );
+        $withdraw_count = dokan_get_withdraw_count();
+
+        $response->header( 'X-Status-Pending', $withdraw_count['pending'] );
+        $response->header( 'X-Status-Completed', $withdraw_count['completed'] );
+        $response->header( 'X-Status-Cancelled', $withdraw_count['cancelled'] );
+
         $response = $this->format_collection_response( $response, $request, $total_count );
         return $response;
     }
