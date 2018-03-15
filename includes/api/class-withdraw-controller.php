@@ -186,14 +186,25 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
         $limit = $request['per_page'];
         $offset = ( $request['page'] - 1 ) * $request['per_page'];
 
+        $withdraw_count = dokan_get_withdraw_count();
+
         if ( current_user_can( 'manage_options' ) ) {
             $store_id = '';
         }
 
         if ( ! empty( $status ) ) {
+            if ( $status == 'pending' ) {
+                $total_count = $withdraw_count['pending'];
+            } elseif( $status == 'approved' ) {
+                $total_count = $withdraw_count['completed'];
+            } else {
+                $total_count = $withdraw_count['cancelled'];
+            }
+
             $withdraws = $withdraw->get_withdraw_requests( $store_id, $this->get_status( $status ), $limit, $offset );
         } else {
             $withdraws = $withdraw->get_all_withdraws( $store_id, $limit, $offset );
+            $total_count = array_sum( $withdraw_count );
         }
 
         $data = array();
@@ -203,9 +214,8 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
         }
 
         $response = rest_ensure_response( $data );
-        $withdraw_count = dokan_get_withdraw_count();
         $response->header( 'X-StatusFilter', wp_json_encode( $withdraw_count ) );
-        $response = $this->format_collection_response( $response, $request, array_sum( $withdraw_count ) );
+        $response = $this->format_collection_response( $response, $request, $total_count );
         return $response;
     }
 
