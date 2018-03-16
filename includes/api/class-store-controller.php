@@ -149,6 +149,14 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
             $args['status'] = $params['status'];
         }
 
+        if ( ! empty( $params['orderby'] ) ) {
+            $args['orderby'] = $params['orderby'];
+        }
+
+        if ( ! empty( $params['order'] ) ) {
+            $args['order'] = $params['order'];
+        }
+
         $stores       = dokan()->vendor->get_vendors( $args );
         $data_objects = array();
 
