@@ -6,7 +6,8 @@
             <postbox v-for="section in docs" :title="section.title">
                 <ul>
                     <li v-for="item in section.questions">
-                        <span class="dashicons dashicons-media-text"></span> <a :href="item.link" target="_blank">{{ item.title }}</a>
+                        <span class="dashicons dashicons-media-text"></span>
+                        <a :href="item.link + '?utm_source=wp-admin&utm_medium=dokan-help-page'" target="_blank">{{ item.title }}</a>
                     </li>
                 </ul>
             </postbox>
@@ -57,12 +58,15 @@ export default {
 
     .section-wrapper {
         margin-top: 15px;
-        display: flex;
-        flex-wrap: wrap;
 
         .dokan-postbox {
             width: ~"calc(33% - 2em)";
             margin: 0 2% 15px 0;
+            float: left;
+
+            &:nth-child(3n+1) {
+                clear: both;
+            }
 
             .dashicons {
                 color: #ccc;

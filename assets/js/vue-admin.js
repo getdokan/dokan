@@ -803,6 +803,7 @@ let Modal = dokan_get_lib('Modal');
 //
 //
 //
+//
 
 let Postbox = dokan_get_lib('Postbox');
 let Loading = dokan_get_lib('Loading');
@@ -2014,9 +2015,18 @@ var render = function() {
                       staticClass: "dashicons dashicons-media-text"
                     }),
                     _vm._v(" "),
-                    _c("a", { attrs: { href: item.link, target: "_blank" } }, [
-                      _vm._v(_vm._s(item.title))
-                    ])
+                    _c(
+                      "a",
+                      {
+                        attrs: {
+                          href:
+                            item.link +
+                            "?utm_source=wp-admin&utm_medium=dokan-help-page",
+                          target: "_blank"
+                        }
+                      },
+                      [_vm._v(_vm._s(item.title))]
+                    )
                   ])
                 })
               )
