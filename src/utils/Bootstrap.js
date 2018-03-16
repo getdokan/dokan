@@ -12,6 +12,7 @@ import Postbox from "admin/components/Postbox.vue"
 import Loading from "admin/components/Loading.vue"
 import Chart from "admin/components/Chart.vue"
 import Modal from "admin/components/Modal.vue"
+import Switches from "admin/components/Switches.vue"
 
 Vue.use(Notifications)
 
@@ -45,3 +46,5 @@ window.dokan.libs['Loading']   = Loading;
 window.dokan.libs['ChartJS']   = ChartJS;
 window.dokan.libs['Chart']     = Chart;
 window.dokan.libs['Modal']     = Modal;
+window.dokan.libs['Switches']  = Switches;
+
