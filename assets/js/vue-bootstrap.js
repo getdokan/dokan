@@ -375,6 +375,8 @@ var _vueChartjs = __webpack_require__(4);
 
 var _vueChartjs2 = _interopRequireDefault(_vueChartjs);
 
+var _vueContentLoading = __webpack_require__(76);
+
 var _Postbox = __webpack_require__(63);
 
 var _Postbox2 = _interopRequireDefault(_Postbox);
@@ -433,6 +435,15 @@ window.dokan.libs['ChartJS'] = _vueChartjs2.default;
 window.dokan.libs['Chart'] = _Chart2.default;
 window.dokan.libs['Modal'] = _Modal2.default;
 window.dokan.libs['Switches'] = _Switches2.default;
+window.dokan.libs['ContentLoading'] = {
+    VclCode: _vueContentLoading.VclCode,
+    VclList: _vueContentLoading.VclList,
+    VclTwitch: _vueContentLoading.VclTwitch,
+    VclFacebook: _vueContentLoading.VclFacebook,
+    VclInstagram: _vueContentLoading.VclInstagram,
+    VclBulletList: _vueContentLoading.VclBulletList,
+    VueContentLoading: _vueContentLoading.VueContentLoading
+};
 
 /***/ }),
 /* 58 */
