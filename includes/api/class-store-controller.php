@@ -241,8 +241,10 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
 
         if ( 'active' == $request['status'] ) {
             $user = dokan()->vendor->get( $store_id )->make_active();
+            do_action( 'dokan_vendor_enabled', $store_id, 'active' );
         } else {
             $user = dokan()->vendor->get( $store_id )->make_inactive();
+            do_action( 'dokan_vendor_disabled', $store_id, 'deactive' );
         }
 
         $response = rest_ensure_response( $user );

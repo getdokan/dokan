@@ -103,6 +103,8 @@ class Dokan_Email {
         $wc_emails['Dokan_Email_Withdraw_Approved']   = include( DOKAN_INC_DIR.'/emails/class-dokan-withdraw-approved.php' );
         $wc_emails['Dokan_Email_Withdraw_Cancelled']  = include( DOKAN_INC_DIR.'/emails/class-dokan-withdraw-cancelled.php' );
         $wc_emails['Dokan_Email_Contact_Seller']      = include( DOKAN_INC_DIR.'/emails/class-dokan-email-contact-seller.php' );
+        $wc_emails['Dokan_Email_Vendor_Enable']       = include( DOKAN_INC_DIR.'/emails/class-dokan-email-vendor-enable.php' );
+        $wc_emails['Dokan_Email_Vendor_Disable']      = include( DOKAN_INC_DIR.'/emails/class-dokan-email-vendor-disable.php' );
 
         return $wc_emails;
     }
