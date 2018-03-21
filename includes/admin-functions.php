@@ -383,11 +383,13 @@ function dokan_admin_report_data( $group_by = 'day', $year = '', $start = '', $e
  * @return obj
  */
 function dokan_admin_report( $group_by = 'day', $year = '', $start = '', $end = '' ) {
+    global $wp_locale;
 
     $data = dokan_admin_report_data( $group_by, $year, $start, $end );
 
     $start_date   = isset( $_POST['start_date'] ) ? sanitize_text_field ( $_POST['start_date'] ): $start; // WPCS: CSRF ok.
     $end_date     = isset( $_POST['end_date'] ) ? sanitize_text_field( $_POST['end_date'] ): $end; // WPCS: CSRF ok.
+    $current_year = $year ? $year : date('Y');
 
     if ( ! $start_date ) {
         $start_date = date( 'Y-m-d', strtotime( date( 'Ym', current_time( 'timestamp' ) ) . '01' ) );
