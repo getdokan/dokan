@@ -98,7 +98,7 @@
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 75);
+/******/ 	return __webpack_require__(__webpack_require__.s = 76);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -11028,7 +11028,7 @@ Vue$3.compile = compileToFunctions;
 
 /* harmony default export */ __webpack_exports__["default"] = (Vue$3);
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(5), __webpack_require__(3), __webpack_require__(24).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(5), __webpack_require__(3), __webpack_require__(25).setImmediate))
 
 /***/ }),
 
@@ -12160,7 +12160,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_20__;
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* WEBPACK VAR INJECTION */(function(global) {/* harmony export (immutable) */ __webpack_exports__["install"] = install;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_ListTable_vue__ = __webpack_require__(59);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_ListTable_vue__ = __webpack_require__(60);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "ListTable", function() { return __WEBPACK_IMPORTED_MODULE_0__components_ListTable_vue__["a"]; });
 
 
@@ -12558,7 +12558,15 @@ if (GlobalVue) {
 
 /***/ }),
 
-/***/ 24:
+/***/ 19:
+/***/ (function(module, exports, __webpack_require__) {
+
+!function(t,e){ true?module.exports=e():"function"==typeof define&&define.amd?define([],e):"object"==typeof exports?exports.VueContentLoading=e():t.VueContentLoading=e()}(this,function(){return function(t){function e(r){if(n[r])return n[r].exports;var i=n[r]={i:r,l:!1,exports:{}};return t[r].call(i.exports,i,i.exports,e),i.l=!0,i.exports}var n={};return e.m=t,e.c=n,e.d=function(t,n,r){e.o(t,n)||Object.defineProperty(t,n,{configurable:!1,enumerable:!0,get:r})},e.n=function(t){var n=t&&t.__esModule?function(){return t.default}:function(){return t};return e.d(n,"a",n),n},e.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},e.p="",e(e.s=1)}([function(t,e,n){"use strict";var r=function(t){return/^#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$/.test(t)};e.a={props:{speed:{default:2,type:Number},width:{default:400,type:Number},height:{default:130,type:Number},primary:{type:String,default:"#f0f0f0",validator:r},secondary:{type:String,default:"#e0e0e0",validator:r}},computed:{viewbox:function(){return"0 0 "+this.width+" "+this.height},formatedSpeed:function(){return this.speed+"s"},gradientId:function(){return"gradient-"+this._uid},clipPathId:function(){return"clipPath-"+this._uid}},template:'\n    <svg :viewBox="viewbox" preserveAspectRatio="xMidYMid meet">\n      <rect\n        :style="{ fill: \'url(#\' + gradientId + \')\' }" \n        :clip-path="\'url(#\' + clipPathId + \')\'"\n        x="0" \n        y="0" \n        :width="width" \n        :height="height" \n      />\n\n      <defs>\n        <clipPath :id="clipPathId">\n          <slot>\n            <rect x="0" y="0" rx="5" ry="5" width="70" height="70" />\n            <rect x="80" y="17" rx="4" ry="4" width="300" height="13" />\n            <rect x="80" y="40" rx="3" ry="3" width="250" height="10" />\n            <rect x="0" y="80" rx="3" ry="3" width="350" height="10" />\n            <rect x="0" y="100" rx="3" ry="3" width="400" height="10" />\n            <rect x="0" y="120" rx="3" ry="3" width="360" height="10" />\n          </slot>\n        </clipPath>\n\n        <linearGradient :id="gradientId">\n          <stop offset="0%" :stop-color="primary">\n            <animate attributeName="offset" values="-2; 1" :dur="formatedSpeed" repeatCount="indefinite" />\n          </stop>\n\n          <stop offset="50%" :stop-color="secondary">\n            <animate attributeName="offset" values="-1.5; 1.5" :dur="formatedSpeed" repeatCount="indefinite" />\n          </stop>\n\n          <stop offset="100%" :stop-color="primary">\n            <animate attributeName="offset" values="-1; 2" :dur="formatedSpeed" repeatCount="indefinite" />\n          </stop>\n        </linearGradient>\n      </defs>\n    </svg>\n  '}},function(t,e,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var r=n(0),i=n(2),o=n(3),h=n(4),d=n(5),a=n(6),c=n(7);n.d(e,"VclCode",function(){return i.a}),n.d(e,"VclList",function(){return o.a}),n.d(e,"VclTwitch",function(){return h.a}),n.d(e,"VclFacebook",function(){return d.a}),n.d(e,"VclInstagram",function(){return a.a}),n.d(e,"VclBulletList",function(){return c.a}),n.d(e,"VueContentLoading",function(){return r.a}),e.default=r.a},function(t,e,n){"use strict";var r=n(0);e.a={components:{VueContentLoading:r.a},template:'\n    <vue-content-loading v-bind="$attrs" :width="300" :height="80">\n      <rect x="0" y="0" rx="3" ry="3" width="70" height="10" />\n      <rect x="80" y="0" rx="3" ry="3" width="100" height="10" />\n      <rect x="190" y="0" rx="3" ry="3" width="10" height="10" />\n      <rect x="15" y="20" rx="3" ry="3" width="130" height="10" />\n      <rect x="155" y="20" rx="3" ry="3" width="130" height="10" />\n      <rect x="15" y="40" rx="3" ry="3" width="90" height="10" />\n      <rect x="115" y="40" rx="3" ry="3" width="60" height="10" />\n      <rect x="185" y="40" rx="3" ry="3" width="60" height="10" />\n      <rect x="0" y="60" rx="3" ry="3" width="30" height="10" />\n    </vue-content-loading>\n  '}},function(t,e,n){"use strict";var r=n(0);e.a={components:{VueContentLoading:r.a},template:'\n    <vue-content-loading v-bind="$attrs" :width="300" :height="120">\n      <rect x="0" y="0" rx="3" ry="3" width="250" height="10" />\n      <rect x="20" y="20" rx="3" ry="3" width="220" height="10" />\n      <rect x="20" y="40" rx="3" ry="3" width="170" height="10" />\n      <rect x="0" y="60" rx="3" ry="3" width="250" height="10" />\n      <rect x="20" y="80" rx="3" ry="3" width="200" height="10" />\n      <rect x="20" y="100" rx="3" ry="3" width="80" height="10" />\n    </vue-content-loading>\n  '}},function(t,e,n){"use strict";var r=n(0);e.a={components:{VueContentLoading:r.a},template:'\n    <vue-content-loading v-bind="$attrs" :width="300" :height="225">\n      <rect x="0" y="0" rx="3" ry="3" width="300" height="170" />\n      <rect x="0" y="180" rx="2" ry="2" width="35" height="45" />\n      <rect x="45" y="180" rx="2" ry="2" width="150" height="15" />\n      <rect x="45" y="203" rx="2" ry="2" width="100" height="10" />\n    </vue-content-loading>\n  '}},function(t,e,n){"use strict";var r=n(0);e.a={components:{VueContentLoading:r.a},template:'\n    <vue-content-loading v-bind="$attrs">\n      <rect x="0" y="0" rx="5" ry="5" width="70" height="70" />\n      <rect x="80" y="17" rx="4" ry="4" width="300" height="13" />\n      <rect x="80" y="40" rx="3" ry="3" width="250" height="10" />\n      <rect x="0" y="80" rx="3" ry="3" width="350" height="10" />\n      <rect x="0" y="100" rx="3" ry="3" width="400" height="10" />\n      <rect x="0" y="120" rx="3" ry="3" width="360" height="10" />\n    </vue-content-loading>\n  '}},function(t,e,n){"use strict";var r=n(0);e.a={components:{VueContentLoading:r.a},template:'\n    <vue-content-loading v-bind="$attrs" :height="480">\n      <circle cx="30" cy="30" r="30" />\n      <rect x="75" y="13" rx="4" ry="4" width="100" height="13" />\n      <rect x="75" y="37" rx="4" ry="4" width="50" height="8" />\n      <rect x="0" y="70" rx="5" ry="5" width="400" height="400" />\n    </vue-content-loading>\n  '}},function(t,e,n){"use strict";var r=n(0);e.a={components:{VueContentLoading:r.a},props:{rows:{default:5,type:Number}},computed:{height:function(){return 21*this.rows}},methods:{getYPos:function(t,e){return e+22*(t-1)}},template:'\n    <vue-content-loading v-bind="$attrs" :width="230" :height="height">\n      <template v-for="i in rows">\n        <circle cx="8" :cy="getYPos(i, 8)" r="8" />\n        <rect x="22" :y="getYPos(i, 3)" rx="3" ry="3" width="200" height="9" />\n      </template>\n    </vue-content-loading>\n  '}}])});
+//# sourceMappingURL=vuecontentloading.js.map
+
+/***/ }),
+
+/***/ 25:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {var apply = Function.prototype.apply;
@@ -12611,7 +12619,7 @@ exports._unrefActive = exports.active = function(item) {
 };
 
 // setimmediate attaches itself to the global object
-__webpack_require__(25);
+__webpack_require__(26);
 // On some exotic environments, it's not clear which object `setimmeidate` was
 // able to install onto.  Search each possibility in the same order as the
 // `setimmediate` library.
@@ -12626,7 +12634,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 
 /***/ }),
 
-/***/ 25:
+/***/ 26:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -12854,8 +12862,8 @@ module.exports = g;
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "VueCharts", function() { return VueCharts; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mixins_index_js__ = __webpack_require__(43);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__BaseCharts__ = __webpack_require__(44);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mixins_index_js__ = __webpack_require__(44);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__BaseCharts__ = __webpack_require__(45);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "Bar", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["a"]; });
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "HorizontalBar", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["d"]; });
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "Doughnut", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts__["c"]; });
@@ -12885,7 +12893,7 @@ var VueCharts = {
 
 /***/ }),
 
-/***/ 43:
+/***/ 44:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12974,7 +12982,7 @@ var reactiveProp = {
 
 /***/ }),
 
-/***/ 44:
+/***/ 45:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12987,7 +12995,7 @@ var reactiveProp = {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return Radar; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return Bubble; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return Scatter; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_chart_js__ = __webpack_require__(45);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_chart_js__ = __webpack_require__(46);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_chart_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_chart_js__);
 
 
@@ -13083,7 +13091,7 @@ var Scatter = generateChart('scatter-chart', 'scatter');
 
 /***/ }),
 
-/***/ 45:
+/***/ 46:
 /***/ (function(module, exports) {
 
 module.exports = Chart;
@@ -13277,63 +13285,6 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 process.umask = function() { return 0; };
-
-
-/***/ }),
-
-/***/ 59:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_vue_loader_lib_selector_type_script_index_0_ListTable_vue__ = __webpack_require__(18);
-/* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__vue_loader_lib_template_compiler_index_id_data_v_2562096c_hasScoped_false_buble_transforms_vue_loader_lib_selector_type_template_index_0_ListTable_vue__ = __webpack_require__(61);
-var disposed = false
-function injectStyle (ssrContext) {
-  if (disposed) return
-  __webpack_require__(60)
-}
-var normalizeComponent = __webpack_require__(0)
-/* script */
-
-
-/* template */
-
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = injectStyle
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __WEBPACK_IMPORTED_MODULE_0__babel_loader_vue_loader_lib_selector_type_script_index_0_ListTable_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__vue_loader_lib_template_compiler_index_id_data_v_2562096c_hasScoped_false_buble_transforms_vue_loader_lib_selector_type_template_index_0_ListTable_vue__["a" /* default */],
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "node_modules/vue-wp-list-table/src/components/ListTable.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-2562096c", Component.options)
-  } else {
-    hotAPI.reload("data-v-2562096c", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
 
 /***/ }),
@@ -15972,13 +15923,70 @@ if (inBrowser && window.Vue) {
 /***/ }),
 
 /***/ 60:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_vue_loader_lib_selector_type_script_index_0_ListTable_vue__ = __webpack_require__(18);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__vue_loader_lib_template_compiler_index_id_data_v_2562096c_hasScoped_false_buble_transforms_vue_loader_lib_selector_type_template_index_0_ListTable_vue__ = __webpack_require__(62);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(61)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_vue_loader_lib_selector_type_script_index_0_ListTable_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__vue_loader_lib_template_compiler_index_id_data_v_2562096c_hasScoped_false_buble_transforms_vue_loader_lib_selector_type_template_index_0_ListTable_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "node_modules/vue-wp-list-table/src/components/ListTable.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-2562096c", Component.options)
+  } else {
+    hotAPI.reload("data-v-2562096c", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
+
+
+/***/ }),
+
+/***/ 61:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ 61:
+/***/ 62:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -16744,24 +16752,16 @@ if (false) {
 
 /***/ }),
 
-/***/ 75:
+/***/ 76:
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(1);
 __webpack_require__(4);
-__webpack_require__(76);
+__webpack_require__(19);
 __webpack_require__(16);
 __webpack_require__(6);
 module.exports = __webpack_require__(17);
 
-
-/***/ }),
-
-/***/ 76:
-/***/ (function(module, exports, __webpack_require__) {
-
-!function(t,e){ true?module.exports=e():"function"==typeof define&&define.amd?define([],e):"object"==typeof exports?exports.VueContentLoading=e():t.VueContentLoading=e()}(this,function(){return function(t){function e(r){if(n[r])return n[r].exports;var i=n[r]={i:r,l:!1,exports:{}};return t[r].call(i.exports,i,i.exports,e),i.l=!0,i.exports}var n={};return e.m=t,e.c=n,e.d=function(t,n,r){e.o(t,n)||Object.defineProperty(t,n,{configurable:!1,enumerable:!0,get:r})},e.n=function(t){var n=t&&t.__esModule?function(){return t.default}:function(){return t};return e.d(n,"a",n),n},e.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},e.p="",e(e.s=1)}([function(t,e,n){"use strict";var r=function(t){return/^#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$/.test(t)};e.a={props:{speed:{default:2,type:Number},width:{default:400,type:Number},height:{default:130,type:Number},primary:{type:String,default:"#f0f0f0",validator:r},secondary:{type:String,default:"#e0e0e0",validator:r}},computed:{viewbox:function(){return"0 0 "+this.width+" "+this.height},formatedSpeed:function(){return this.speed+"s"},gradientId:function(){return"gradient-"+this._uid},clipPathId:function(){return"clipPath-"+this._uid}},template:'\n    <svg :viewBox="viewbox" preserveAspectRatio="xMidYMid meet">\n      <rect\n        :style="{ fill: \'url(#\' + gradientId + \')\' }" \n        :clip-path="\'url(#\' + clipPathId + \')\'"\n        x="0" \n        y="0" \n        :width="width" \n        :height="height" \n      />\n\n      <defs>\n        <clipPath :id="clipPathId">\n          <slot>\n            <rect x="0" y="0" rx="5" ry="5" width="70" height="70" />\n            <rect x="80" y="17" rx="4" ry="4" width="300" height="13" />\n            <rect x="80" y="40" rx="3" ry="3" width="250" height="10" />\n            <rect x="0" y="80" rx="3" ry="3" width="350" height="10" />\n            <rect x="0" y="100" rx="3" ry="3" width="400" height="10" />\n            <rect x="0" y="120" rx="3" ry="3" width="360" height="10" />\n          </slot>\n        </clipPath>\n\n        <linearGradient :id="gradientId">\n          <stop offset="0%" :stop-color="primary">\n            <animate attributeName="offset" values="-2; 1" :dur="formatedSpeed" repeatCount="indefinite" />\n          </stop>\n\n          <stop offset="50%" :stop-color="secondary">\n            <animate attributeName="offset" values="-1.5; 1.5" :dur="formatedSpeed" repeatCount="indefinite" />\n          </stop>\n\n          <stop offset="100%" :stop-color="primary">\n            <animate attributeName="offset" values="-1; 2" :dur="formatedSpeed" repeatCount="indefinite" />\n          </stop>\n        </linearGradient>\n      </defs>\n    </svg>\n  '}},function(t,e,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var r=n(0),i=n(2),o=n(3),h=n(4),d=n(5),a=n(6),c=n(7);n.d(e,"VclCode",function(){return i.a}),n.d(e,"VclList",function(){return o.a}),n.d(e,"VclTwitch",function(){return h.a}),n.d(e,"VclFacebook",function(){return d.a}),n.d(e,"VclInstagram",function(){return a.a}),n.d(e,"VclBulletList",function(){return c.a}),n.d(e,"VueContentLoading",function(){return r.a}),e.default=r.a},function(t,e,n){"use strict";var r=n(0);e.a={components:{VueContentLoading:r.a},template:'\n    <vue-content-loading v-bind="$attrs" :width="300" :height="80">\n      <rect x="0" y="0" rx="3" ry="3" width="70" height="10" />\n      <rect x="80" y="0" rx="3" ry="3" width="100" height="10" />\n      <rect x="190" y="0" rx="3" ry="3" width="10" height="10" />\n      <rect x="15" y="20" rx="3" ry="3" width="130" height="10" />\n      <rect x="155" y="20" rx="3" ry="3" width="130" height="10" />\n      <rect x="15" y="40" rx="3" ry="3" width="90" height="10" />\n      <rect x="115" y="40" rx="3" ry="3" width="60" height="10" />\n      <rect x="185" y="40" rx="3" ry="3" width="60" height="10" />\n      <rect x="0" y="60" rx="3" ry="3" width="30" height="10" />\n    </vue-content-loading>\n  '}},function(t,e,n){"use strict";var r=n(0);e.a={components:{VueContentLoading:r.a},template:'\n    <vue-content-loading v-bind="$attrs" :width="300" :height="120">\n      <rect x="0" y="0" rx="3" ry="3" width="250" height="10" />\n      <rect x="20" y="20" rx="3" ry="3" width="220" height="10" />\n      <rect x="20" y="40" rx="3" ry="3" width="170" height="10" />\n      <rect x="0" y="60" rx="3" ry="3" width="250" height="10" />\n      <rect x="20" y="80" rx="3" ry="3" width="200" height="10" />\n      <rect x="20" y="100" rx="3" ry="3" width="80" height="10" />\n    </vue-content-loading>\n  '}},function(t,e,n){"use strict";var r=n(0);e.a={components:{VueContentLoading:r.a},template:'\n    <vue-content-loading v-bind="$attrs" :width="300" :height="225">\n      <rect x="0" y="0" rx="3" ry="3" width="300" height="170" />\n      <rect x="0" y="180" rx="2" ry="2" width="35" height="45" />\n      <rect x="45" y="180" rx="2" ry="2" width="150" height="15" />\n      <rect x="45" y="203" rx="2" ry="2" width="100" height="10" />\n    </vue-content-loading>\n  '}},function(t,e,n){"use strict";var r=n(0);e.a={components:{VueContentLoading:r.a},template:'\n    <vue-content-loading v-bind="$attrs">\n      <rect x="0" y="0" rx="5" ry="5" width="70" height="70" />\n      <rect x="80" y="17" rx="4" ry="4" width="300" height="13" />\n      <rect x="80" y="40" rx="3" ry="3" width="250" height="10" />\n      <rect x="0" y="80" rx="3" ry="3" width="350" height="10" />\n      <rect x="0" y="100" rx="3" ry="3" width="400" height="10" />\n      <rect x="0" y="120" rx="3" ry="3" width="360" height="10" />\n    </vue-content-loading>\n  '}},function(t,e,n){"use strict";var r=n(0);e.a={components:{VueContentLoading:r.a},template:'\n    <vue-content-loading v-bind="$attrs" :height="480">\n      <circle cx="30" cy="30" r="30" />\n      <rect x="75" y="13" rx="4" ry="4" width="100" height="13" />\n      <rect x="75" y="37" rx="4" ry="4" width="50" height="8" />\n      <rect x="0" y="70" rx="5" ry="5" width="400" height="400" />\n    </vue-content-loading>\n  '}},function(t,e,n){"use strict";var r=n(0);e.a={components:{VueContentLoading:r.a},props:{rows:{default:5,type:Number}},computed:{height:function(){return 21*this.rows}},methods:{getYPos:function(t,e){return e+22*(t-1)}},template:'\n    <vue-content-loading v-bind="$attrs" :width="230" :height="height">\n      <template v-for="i in rows">\n        <circle cx="8" :cy="getYPos(i, 8)" r="8" />\n        <rect x="22" :y="getYPos(i, 3)" rx="3" ry="3" width="200" height="9" />\n      </template>\n    </vue-content-loading>\n  '}}])});
-//# sourceMappingURL=vuecontentloading.js.map
 
 /***/ })
 
