@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Moment from 'moment'
 import Notifications from 'vue-notification'
 import ListTable from 'vue-wp-list-table';
+import Multiselect from 'vue-multiselect'
 import API_Helper from '@/utils/Api'
 
 import ChartJS from 'vue-chartjs'
@@ -14,7 +15,10 @@ import Chart from "admin/components/Chart.vue"
 import Modal from "admin/components/Modal.vue"
 import Switches from "admin/components/Switches.vue"
 
+import "vue-multiselect/dist/vue-multiselect.min.css"
+
 Vue.use(Notifications)
+Vue.component('multiselect', Multiselect)
 
 Vue.filter('currency', function (value) {
     return accounting.formatMoney(value, dokan.currency);
