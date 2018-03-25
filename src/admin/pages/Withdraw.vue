@@ -41,7 +41,7 @@
         >
             <template slot="seller" slot-scope="data">
                 <img :src="data.row.user.gravatar" :alt="data.row.user.store_name" width="50">
-                <strong><a href="#">{{ data.row.user.store_name }}</a></strong>
+                <strong><a :href="vendorUrl(data.row.user.id)">{{ data.row.user.store_name }}</a></strong>
             </template>
 
             <template slot="amount" slot-scope="data">
@@ -199,6 +199,14 @@ export default {
         updatePagination(xhr) {
             this.totalPages = parseInt( xhr.getResponseHeader('X-WP-TotalPages') );
             this.totalItems = parseInt( xhr.getResponseHeader('X-WP-Total') );
+        },
+
+        vendorUrl(id) {
+            if ( window.dokan.hasPro === '1' ) {
+                return dokan.adminRoot + 'admin.php?page=dokan#/vendors/' + id;
+            }
+
+            return dokan.adminRoot + 'user-edit.php?user_id=' + id;
         },
 
         fetchRequests() {

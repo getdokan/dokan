@@ -5,8 +5,17 @@ import Notifications from 'vue-notification'
 import ListTable from 'vue-wp-list-table';
 import Multiselect from 'vue-multiselect'
 import API_Helper from '@/utils/Api'
-
 import ChartJS from 'vue-chartjs'
+
+import {
+  VclCode,
+  VclList,
+  VclTwitch,
+  VclFacebook,
+  VclInstagram,
+  VclBulletList,
+  VueContentLoading,
+} from 'vue-content-loading';
 
 // core components
 import Postbox from "admin/components/Postbox.vue"
@@ -51,4 +60,13 @@ window.dokan.libs['ChartJS']   = ChartJS;
 window.dokan.libs['Chart']     = Chart;
 window.dokan.libs['Modal']     = Modal;
 window.dokan.libs['Switches']  = Switches;
+window.dokan.libs['ContentLoading']  = {
+  VclCode,
+  VclList,
+  VclTwitch,
+  VclFacebook,
+  VclInstagram,
+  VclBulletList,
+  VueContentLoading,
+};
 
