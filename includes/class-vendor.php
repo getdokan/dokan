@@ -97,6 +97,7 @@ class Dokan_Vendor {
             'enabled'               => $this->is_enabled(),
             'registered'            => $this->get_register_date(),
             'payment'               => $this->get_payment_profiles(),
+            'trusted'               => $this->is_trusted(),
         );
 
         return $info;
@@ -455,7 +456,7 @@ class Dokan_Vendor {
      * @return integer
      */
     public function get_product_views() {
-        return dokan_author_pageviews( $this->id );
+        return (int) dokan_author_pageviews( $this->id );
     }
 
     /**
@@ -557,6 +558,17 @@ class Dokan_Vendor {
         }
 
         echo $html;
+    }
+
+    /**
+     * Get vendor percentage
+     *
+     * @param  integer $product_id
+     *
+     * @return integer
+     */
+    public function get_percentage( $product_id = 0 ) {
+        return dokan_get_seller_percentage( $this->id, $product_id );
     }
 
     /**
