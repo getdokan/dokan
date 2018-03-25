@@ -566,9 +566,9 @@ let Modal = dokan_get_lib('Modal');
         getPaymentDetails(method, data) {
             let details = '—';
 
-            if ('bank' !== method) {
+            if ('paypal' === method || 'skrill' === method) {
                 details = data[method].email || '';
-            } else {
+            } else if ('bank' === method) {
 
                 if (data.bank.hasOwnProperty('ac_name')) {
                     details = 'Account Name: ' + data.bank.ac_name;
