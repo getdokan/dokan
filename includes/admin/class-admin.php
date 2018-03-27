@@ -187,6 +187,21 @@ class Dokan_Admin {
     }
 
     /**
+     * Sepearate settings page script
+     *
+     * Separating because Chart.js conflicting with WP Color Picker
+     *
+     * @return void
+     */
+    public function settings_script() {
+        wp_enqueue_style( 'dokan-admin-css' );
+        wp_enqueue_style( 'jquery-ui' );
+        wp_enqueue_style( 'dokan-chosen-style' );
+
+        do_action( 'dokan_enqueue_admin_dashboard_script' );
+    }
+
+    /**
      * Load admin Menu
      *
      * @since 1.0
@@ -233,7 +248,7 @@ class Dokan_Admin {
         add_dashboard_page( __( 'Welcome to Dokan', 'dokan-lite' ), __( 'Welcome to Dokan', 'dokan-lite' ), $capability, 'dokan-welcome', array( $this, 'welcome_page' ) );
 
         add_action( $dashboard, array($this, 'dashboard_script' ) );
-        add_action( $settings, array($this, 'dashboard_script' ) );
+        add_action( $settings, array($this, 'settings_script' ) );
     }
 
     /**
