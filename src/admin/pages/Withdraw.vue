@@ -203,10 +203,10 @@ export default {
 
         vendorUrl(id) {
             if ( window.dokan.hasPro === '1' ) {
-                return dokan.adminRoot + 'admin.php?page=dokan#/vendors/' + id;
+                return dokan.urls.adminRoot + 'admin.php?page=dokan#/vendors/' + id;
             }
 
-            return dokan.adminRoot + 'user-edit.php?user_id=' + id;
+            return dokan.urls.adminRoot + 'user-edit.php?user_id=' + id;
         },
 
         fetchRequests() {

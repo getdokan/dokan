@@ -255,6 +255,23 @@ if (false) {(function () {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 let Postbox = dokan_get_lib('Postbox');
 let Loading = dokan_get_lib('Loading');
@@ -275,7 +292,12 @@ let Loading = dokan_get_lib('Loading');
         return {
             overview: null,
             feed: null,
-            report: null
+            report: null,
+            subscribe: {
+                success: false,
+                loading: false,
+                email: ''
+            }
         };
     },
 
@@ -302,6 +324,36 @@ let Loading = dokan_get_lib('Loading');
         fetchReport() {
             dokan.api.get('/admin/report/overview').done(response => {
                 this.report = response;
+            });
+        },
+
+        validEmail(email) {
+            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(email);
+        },
+
+        emailSubscribe() {
+            let action = 'https://wedevs.us16.list-manage.com/subscribe/post-json?u=66e606cfe0af264974258f030&id=0d176bb256&c=?';
+
+            if (!this.validEmail(this.subscribe.email)) {
+                return;
+            }
+
+            this.subscribe.loading = true;
+
+            $.ajax({
+                url: action,
+                data: {
+                    EMAIL: this.subscribe.email,
+                    'group[3555][8]': '1'
+                },
+                type: 'GET',
+                dataType: 'json',
+                cache: false,
+                contentType: "application/json; charset=utf-8"
+            }).always(response => {
+                this.subscribe.success = true;
+                this.subscribe.loading = false;
             });
         }
     }
@@ -509,10 +561,10 @@ let Modal = dokan_get_lib('Modal');
 
         vendorUrl(id) {
             if (window.dokan.hasPro === '1') {
-                return dokan.adminRoot + 'admin.php?page=dokan#/vendors/' + id;
+                return dokan.urls.adminRoot + 'admin.php?page=dokan#/vendors/' + id;
             }
 
-            return dokan.adminRoot + 'user-edit.php?user_id=' + id;
+            return dokan.urls.adminRoot + 'user-edit.php?user_id=' + id;
         },
 
         fetchRequests() {
@@ -1320,6 +1372,94 @@ var render = function() {
                         )
                       ])
                     })
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "subscribe-box" },
+                    [
+                      !_vm.subscribe.success
+                        ? [
+                            _vm.subscribe.loading
+                              ? _c(
+                                  "div",
+                                  { staticClass: "loading" },
+                                  [_c("loading")],
+                                  1
+                                )
+                              : _vm._e(),
+                            _vm._v(" "),
+                            _c("h3", [_vm._v("Stay up-to-date")]),
+                            _vm._v(" "),
+                            _c("p", [
+                              _vm._v(
+                                "\n                                We're constantly developing new features, stay up-to-date by subscribing to our newsletter.\n                            "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-wrap" }, [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.subscribe.email,
+                                    expression: "subscribe.email"
+                                  }
+                                ],
+                                attrs: {
+                                  type: "email",
+                                  required: "",
+                                  placeholder: "Your Email Address"
+                                },
+                                domProps: { value: _vm.subscribe.email },
+                                on: {
+                                  keyup: function($event) {
+                                    if (
+                                      !("button" in $event) &&
+                                      _vm._k(
+                                        $event.keyCode,
+                                        "enter",
+                                        13,
+                                        $event.key
+                                      )
+                                    ) {
+                                      return null
+                                    }
+                                    _vm.emailSubscribe()
+                                  },
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.subscribe,
+                                      "email",
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "button",
+                                  on: {
+                                    click: function($event) {
+                                      _vm.emailSubscribe()
+                                    }
+                                  }
+                                },
+                                [_vm._v("Subscribe")]
+                              )
+                            ])
+                          ]
+                        : _c("div", { staticClass: "thank-you" }, [
+                            _vm._v("Thank you for subscribing!")
+                          ])
+                    ],
+                    2
                   )
                 ])
               : _c("div", { staticClass: "loading" }, [_c("loading")], 1)

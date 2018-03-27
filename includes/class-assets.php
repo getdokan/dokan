@@ -43,7 +43,11 @@ class Dokan_Assets {
                 'routes'          => $this->get_vue_admin_routes(),
                 'currency'        => $this->get_localized_price(),
                 'hasPro'          => dokan()->is_pro_exists(),
-                'adminRoot'       => admin_url()
+                'urls'            => array(
+                    'adminRoot'   => admin_url(),
+                    'siteUrl'     => home_url( '/' ),
+                    'storePrefix' => dokan_get_option( 'custom_store_url', 'dokan_general', 'store' )
+                )
             ) );
 
             // load styles
