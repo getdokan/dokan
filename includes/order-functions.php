@@ -414,7 +414,7 @@ function dokan_sync_insert_order( $order_id ) {
     );
 }
 
-// add_action( 'woocommerce_checkout_update_order_meta', 'dokan_sync_insert_order', 20 );
+add_action( 'woocommerce_checkout_update_order_meta', 'dokan_sync_insert_order', 20 );
 add_action( 'dokan_checkout_update_order_meta', 'dokan_sync_insert_order' );
 
 

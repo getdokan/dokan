@@ -431,7 +431,7 @@ function dokan_process_product_file_download_paths( $product_id, $variation_id, 
     }
 }
 
-// add_action( 'woocommerce_checkout_update_order_meta', 'dokan_create_sub_order', 10 );
+add_action( 'woocommerce_checkout_update_order_meta', 'dokan_create_sub_order', 10 );
 
 /**
  * Get discount coupon total from a order
