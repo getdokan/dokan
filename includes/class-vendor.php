@@ -582,6 +582,8 @@ class Dokan_Vendor {
         update_user_meta( $this->get_id(), 'dokan_enable_selling', 'yes' );
         $this->change_product_status( 'publish' );
 
+        do_action( 'dokan_vendor_enabled', $this->get_id() );
+
         return $this->to_array();
     }
 
@@ -595,6 +597,8 @@ class Dokan_Vendor {
     public function make_inactive() {
         update_user_meta( $this->get_id(), 'dokan_enable_selling', 'no' );
         $this->change_product_status( 'pending' );
+
+        do_action( 'dokan_vendor_disabled', $this->get_id() );
 
         return $this->to_array();
     }
