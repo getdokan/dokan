@@ -421,6 +421,9 @@ select.dokan-form-control {
 .dokan-text-left {
   text-align: left;
 }
+.dokan-text-right {
+  text-align: right;
+}
 .wp-editor-wrap {
   border: 1px solid #EDEDED;
 }
