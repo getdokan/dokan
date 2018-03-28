@@ -474,9 +474,10 @@ if ( !function_exists( 'dokan_seller_registration_errors' ) ) {
         $role = $_POST['role'];
 
         $required_fields = apply_filters( 'dokan_seller_registration_required_fields', array(
-            'fname' => __( 'Please enter your first name.', 'dokan-lite' ),
-            'lname' => __( 'Please enter your last name.', 'dokan-lite' ),
-            'phone' => __( 'Please enter your phone number.', 'dokan-lite' ),
+            'fname'    => __( 'Please enter your first name.', 'dokan-lite' ),
+            'lname'    => __( 'Please enter your last name.', 'dokan-lite' ),
+            'phone'    => __( 'Please enter your phone number.', 'dokan-lite' ),
+            'shopname' => __( 'Please provide a shop name.', 'dokan-lite' ),
         ) );
 
         if ( $role == 'seller' ) {

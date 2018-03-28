@@ -19,6 +19,9 @@ class Dokan_Shortcodes {
         add_shortcode( 'dokan-top-rated-product', array( $this, 'top_rated_product_shortcode' ) );
         add_shortcode( 'dokan-my-orders', array( $this, 'my_orders_page' ) );
         add_shortcode( 'dokan-stores', array( $this, 'store_listing' ) );
+
+        /* Register vendor registration shortcode */
+        add_shortcode( 'dokan-vendor-registration', array( $this, 'vendor_registration' ) );
     }
 
     /**
@@ -274,6 +277,32 @@ class Dokan_Shortcodes {
         $content = ob_get_clean();
 
         return apply_filters( 'dokan_seller_listing', $content, $attr );
+    }
+
+    /**
+     * Vendor regsitration form shortcode callback
+     *
+     * @return string
+     */
+    public function vendor_registration() {
+
+        if ( is_user_logged_in() ) {
+            _e( 'You are already logged in', 'dokan-lite' );
+            return;
+        }
+
+        Dokan_Assets::load_form_validate_script();
+
+        wp_enqueue_script( 'dokan-form-validate' );
+        wp_enqueue_script( 'dokan-vendor-registration' );
+
+        ob_start();
+        $postdata = wc_clean( $_POST ); // WPCS: CSRF ok, input var ok.
+
+        dokan_get_template_part( 'account/vendor-registration', false, array( 'postdata' => $postdata ) );
+        $content = ob_get_clean();
+
+        return apply_filters( 'dokan_vendor_reg_form', $content );
     }
 
 }
