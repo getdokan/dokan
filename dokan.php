@@ -254,6 +254,8 @@ final class WeDevs_Dokan {
 
         add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), array( $this, 'plugin_action_links' ) );
         add_action( 'in_plugin_update_message-dokan-lite/dokan.php', array( 'Dokan_Installer', 'in_plugin_update_message' ) );
+
+        add_action( 'widgets_init', array( $this, 'register_widgets' ) );
     }
 
     /**
@@ -269,6 +271,8 @@ final class WeDevs_Dokan {
         require_once $inc_dir . 'functions.php';
         require_once $inc_dir . 'functions-depricated.php';
         require_once $inc_dir . 'functions-compatibility.php';
+
+        // widgets
         require_once $inc_dir . 'widgets/menu-category.php';
         require_once $inc_dir . 'widgets/bestselling-product.php';
         require_once $inc_dir . 'widgets/top-rated-product.php';
@@ -276,6 +280,7 @@ final class WeDevs_Dokan {
         require_once $inc_dir . 'widgets/store-menu.php';
         require_once $inc_dir . 'widgets/store-location.php';
         require_once $inc_dir . 'widgets/store-contact.php';
+
         require_once $inc_dir . 'wc-functions.php';
         require_once $lib_dir . 'class-wedevs-insights.php';
         require_once $inc_dir . '/admin/setup-wizard.php';
@@ -366,6 +371,22 @@ final class WeDevs_Dokan {
         $wpdb->dokan_orders       = $wpdb->prefix . 'dokan_orders';
         $wpdb->dokan_announcement = $wpdb->prefix . 'dokan_announcement';
         $wpdb->dokan_refund       = $wpdb->prefix . 'dokan_refund';
+    }
+
+    /**
+     * Register widgets
+     *
+     * @since 2.8
+     *
+     * @return void
+     */
+    public function register_widgets() {
+        register_widget( 'Dokan_Best_Selling_Widget' );
+        register_widget( 'Dokan_Category_Widget' );
+        register_widget( 'Dokan_Store_Contact_Form' );
+        register_widget( 'Dokan_Store_Location' );
+        register_widget( 'Dokan_Store_Category_Menu' );
+        register_widget( 'Dokan_Toprated_Widget' );
     }
 
     /**
