@@ -290,6 +290,7 @@ final class WeDevs_Dokan {
 
         require_once $inc_dir . 'class-core.php';
         require_once $inc_dir . 'class-shortcodes.php';
+        require_once $inc_dir . 'class-registration.php';
         require_once $inc_dir . 'class-assets.php';
         require_once $inc_dir . 'class-email.php';
         require_once $inc_dir . 'class-vendor.php';
@@ -330,17 +331,17 @@ final class WeDevs_Dokan {
             new Dokan_Setup_Wizard();
         }
 
-        new Dokan_Pageviews();
-        new Dokan_Rewrites();
-        new Dokan_Tracker();
-        new Dokan_Seller_Setup_Wizard();
-
-        $this->container['core']      = new Dokan_Core();
-        $this->container['scripts']   = new Dokan_Assets();
-        $this->container['email']     = Dokan_Email::init();
-        $this->container['vendor']    = new Dokan_Vendor_Manager();
-        $this->container['product']   = new Dokan_Product_Manager();
-        $this->container['shortcode'] = new Dokan_Shortcodes();
+        $this->container['pageview']      = new Dokan_Pageviews();
+        $this->container['rewrite']       = new Dokan_Rewrites();
+        $this->container['tracker']       = new Dokan_Tracker();
+        $this->container['seller_wizard'] = new Dokan_Seller_Setup_Wizard();
+        $this->container['core']          = new Dokan_Core();
+        $this->container['scripts']       = new Dokan_Assets();
+        $this->container['email']         = Dokan_Email::init();
+        $this->container['vendor']        = new Dokan_Vendor_Manager();
+        $this->container['product']       = new Dokan_Product_Manager();
+        $this->container['shortcode']     = new Dokan_Shortcodes();
+        $this->container['registration']  = new Dokan_Registration();
 
         if ( is_user_logged_in() ) {
             Dokan_Template_Main::init();
