@@ -289,6 +289,7 @@ final class WeDevs_Dokan {
         require_once $inc_dir . 'wc-template.php';
 
         require_once $inc_dir . 'class-core.php';
+        require_once $inc_dir . 'class-shortcodes.php';
         require_once $inc_dir . 'class-assets.php';
         require_once $inc_dir . 'class-email.php';
         require_once $inc_dir . 'class-vendor.php';
@@ -334,11 +335,12 @@ final class WeDevs_Dokan {
         new Dokan_Tracker();
         new Dokan_Seller_Setup_Wizard();
 
-        $this->container['core']    = new Dokan_Core();
-        $this->container['scripts'] = new Dokan_Assets();
-        $this->container['email']   = Dokan_Email::init();
-        $this->container['vendor']  = new Dokan_Vendor_Manager();
-        $this->container['product'] = new Dokan_Product_Manager();
+        $this->container['core']      = new Dokan_Core();
+        $this->container['scripts']   = new Dokan_Assets();
+        $this->container['email']     = Dokan_Email::init();
+        $this->container['vendor']    = new Dokan_Vendor_Manager();
+        $this->container['product']   = new Dokan_Product_Manager();
+        $this->container['shortcode'] = new Dokan_Shortcodes();
 
         if ( is_user_logged_in() ) {
             Dokan_Template_Main::init();
@@ -348,8 +350,6 @@ final class WeDevs_Dokan {
             Dokan_Template_Withdraw::init();
             Dokan_Template_Settings::init();
         }
-
-        Dokan_Template_Shortcodes::init();
 
         if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
             Dokan_Ajax::init()->init_ajax();
