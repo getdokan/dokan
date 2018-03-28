@@ -96,7 +96,7 @@
             </div>
 
             <div class="right-side">
-                <postbox title="Overview">
+                <postbox title="Overview" class="overview-chart">
                     <chart :data="report" v-if="report !== null"></chart>
                     <div class="loading" v-else>
                         <loading></loading>

@@ -1474,7 +1474,7 @@ var render = function() {
         [
           _c(
             "postbox",
-            { attrs: { title: "Overview" } },
+            { staticClass: "overview-chart", attrs: { title: "Overview" } },
             [
               _vm.report !== null
                 ? _c("chart", { attrs: { data: _vm.report } })
