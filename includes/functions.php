@@ -2466,3 +2466,29 @@ function dokan_get_all_caps() {
     return apply_filters( 'dokan_get_all_cap', $capabilities );
 }
 
+/**
+ * Revoke vendor access of changing order status in the backend if permission is not given
+ *
+ * @since 2.7.9
+ *
+ * @return void;
+ */
+function dokan_revoke_change_order_status() {
+    if ( current_user_can( 'manage_woocommerce' ) ) {
+        return;
+    }
+
+    if ( is_admin() && get_current_screen()->id == 'shop_order' ) {
+        if ( dokan_get_option( 'order_status_change', 'dokan_selling', 'on' ) !== 'on' ) {
+            ?>
+            <style media="screen">
+                .order_data_column .wc-order-status {
+                    display:  none !important;
+                }
+            </style>
+            <?php
+        }
+    }
+}
+
+add_action( 'load-post.php', 'dokan_revoke_change_order_status' );
