@@ -383,11 +383,13 @@ function dokan_admin_report_data( $group_by = 'day', $year = '', $start = '', $e
  * @return obj
  */
 function dokan_admin_report( $group_by = 'day', $year = '', $start = '', $end = '' ) {
+    global $wp_locale;
 
     $data = dokan_admin_report_data( $group_by, $year, $start, $end );
 
     $start_date   = isset( $_POST['start_date'] ) ? sanitize_text_field ( $_POST['start_date'] ): $start; // WPCS: CSRF ok.
     $end_date     = isset( $_POST['end_date'] ) ? sanitize_text_field( $_POST['end_date'] ): $end; // WPCS: CSRF ok.
+    $current_year = $year ? $year : date('Y');
 
     if ( ! $start_date ) {
         $start_date = date( 'Y-m-d', strtotime( date( 'Ym', current_time( 'timestamp' ) ) . '01' ) );
@@ -997,4 +999,31 @@ function dokan_add_wc_post_types_to_delete_user( $post_types, $user_id ) {
     $wc_post_types = array( 'product', 'product_variation', 'shop_order', 'shop_coupon' );
 
     return array_merge( $post_types, $wc_post_types );
+}
+
+/**
+ * Get help documents for admin
+ *
+ * @since 2.8
+ *
+ * @return Object
+ */
+function dokan_admin_get_help() {
+    $help_docs = get_transient( 'dokan_help_docs', '[]' );
+
+    if ( false === $help_docs ) {
+        $help_url  = 'https://api.bitbucket.org/2.0/snippets/wedevs/oErMz/files/dokan-help.json';
+        $response  = wp_remote_get( $help_url, array('timeout' => 15) );
+        $help_docs = wp_remote_retrieve_body( $response );
+
+        if ( is_wp_error( $response ) || $response['response']['code'] != 200 ) {
+            $help_docs = '[]';
+        }
+
+        set_transient( 'dokan_help_docs', $help_docs, 12 * HOUR_IN_SECONDS );
+    }
+
+    $help_docs = json_decode( $help_docs );
+
+    return $help_docs;
 }

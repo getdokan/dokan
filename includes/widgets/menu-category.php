@@ -180,6 +180,4 @@ class Dokan_Category_Widget extends WP_Widget {
     }
 }
 
-add_action( 'widgets_init', create_function( '', "register_widget( 'Dokan_Category_Widget' );" ) );
-
 endif;

@@ -41,7 +41,13 @@ class Dokan_Assets {
                 'libs'            => array(),
                 'routeComponents' => array( 'default' => null ),
                 'routes'          => $this->get_vue_admin_routes(),
-                'currency'        => $this->get_localized_price()
+                'currency'        => $this->get_localized_price(),
+                'hasPro'          => dokan()->is_pro_exists(),
+                'urls'            => array(
+                    'adminRoot'   => admin_url(),
+                    'siteUrl'     => home_url( '/' ),
+                    'storePrefix' => dokan_get_option( 'custom_store_url', 'dokan_general', 'store' )
+                )
             ) );
 
             // load styles
@@ -111,6 +117,11 @@ class Dokan_Assets {
                 'path'      => '/premium',
                 'name'      => 'Premium',
                 'component' => 'Premium'
+            ),
+            array(
+                'path'      => '/help',
+                'name'      => 'Help',
+                'component' => 'Help'
             ),
         );
 
@@ -182,9 +193,13 @@ class Dokan_Assets {
                 'deps'    => array( 'dokan-vue-vendor' ),
                 'version' => filemtime( DOKAN_DIR . '/assets/css/vue-bootstrap.css' ),
             ),
+            'dokan-flaticon' => array(
+                'src'     => DOKAN_PLUGIN_ASSEST . '/font/flaticon.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/font/flaticon.css' ),
+            ),
             'dokan-vue-admin' => array(
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/vue-admin.css',
-                'deps'    => array( 'dokan-vue-vendor', 'dokan-vue-bootstrap' ),
+                'deps'    => array( 'dokan-vue-vendor', 'dokan-vue-bootstrap', 'dokan-flaticon' ),
                 'version' => filemtime( DOKAN_DIR . '/assets/css/vue-admin.css' ),
             ),
             'dokan-vue-frontend' => array(

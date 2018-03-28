@@ -1008,13 +1008,27 @@ function dokan_is_store_review_page() {
 }
 
 /**
- * Helper function for loggin
+ * Helper function for logging
+ *
+ * For valid levels, see `WC_Log_Levels` class
+ *
+ * Description of levels:
+ *     'emergency': System is unusable.
+ *     'alert': Action must be taken immediately.
+ *     'critical': Critical conditions.
+ *     'error': Error conditions.
+ *     'warning': Warning conditions.
+ *     'notice': Normal but significant condition.
+ *     'info': Informational messages.
+ *     'debug': Debug-level messages.
  *
  * @param string $message
  */
-function dokan_log( $message ) {
-    $message = sprintf( "[%s] %s\n", date( 'd.m.Y h:i:s' ), $message );
-    error_log( $message, 3, DOKAN_DIR . '/debug.log' );
+function dokan_log( $message, $level = 'debug' ) {
+    $logger  = wc_get_logger();
+    $context = array( 'source' => 'dokan' );
+
+    return $logger->log( $level, $message, $context );
 }
 
 /**

@@ -187,6 +187,21 @@ class Dokan_Admin {
     }
 
     /**
+     * Sepearate settings page script
+     *
+     * Separating because Chart.js conflicting with WP Color Picker
+     *
+     * @return void
+     */
+    public function settings_script() {
+        wp_enqueue_style( 'dokan-admin-css' );
+        wp_enqueue_style( 'jquery-ui' );
+        wp_enqueue_style( 'dokan-chosen-style' );
+
+        do_action( 'dokan_enqueue_admin_dashboard_script' );
+    }
+
+    /**
      * Load admin Menu
      *
      * @since 1.0
@@ -210,13 +225,19 @@ class Dokan_Admin {
 
         if ( current_user_can( $capability ) ) {
             $submenu[ $slug ][] = array( __( 'Dashboard', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/' );
-            $submenu[ $slug ][] = array( __( 'Withdraw', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/withdraw' );
-            $submenu[ $slug ][] = array( __( 'PRO Features', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/premium' );
+            $submenu[ $slug ][] = array( __( 'Withdraw', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/withdraw?status=pending' );
+
+            if ( ! dokan()->is_pro_exists() ) {
+                $submenu[ $slug ][] = array( __( 'PRO Features', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/premium' );
+            }
         }
 
         do_action( 'dokan_admin_menu', $capability, $menu_position );
 
-        add_submenu_page( 'dokan', __( 'Help', 'dokan-lite' ), __( '<span style="color:#f18500">Help</span>', 'dokan-lite' ), $capability, 'dokan-help', array( $this, 'help_page' ) );
+        if ( current_user_can( $capability ) ) {
+            $submenu[ $slug ][] = array( __( '<span style="color:#f18500">Help</span>', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/help' );
+        }
+        // add_submenu_page( 'dokan', __( 'Help', 'dokan-lite' ), __( '<span style="color:#f18500">Help</span>', 'dokan-lite' ), $capability, 'dokan-help', array( $this, 'help_page' ) );
         $settings = add_submenu_page( 'dokan', __( 'Settings', 'dokan-lite' ), __( 'Settings', 'dokan-lite' ), $capability, 'dokan-settings', array( $this, 'settings_page' ) );
 
         /**
@@ -227,7 +248,7 @@ class Dokan_Admin {
         add_dashboard_page( __( 'Welcome to Dokan', 'dokan-lite' ), __( 'Welcome to Dokan', 'dokan-lite' ), $capability, 'dokan-welcome', array( $this, 'welcome_page' ) );
 
         add_action( $dashboard, array($this, 'dashboard_script' ) );
-        add_action( $settings, array($this, 'dashboard_script' ) );
+        add_action( $settings, array($this, 'settings_script' ) );
     }
 
     /**

@@ -96,6 +96,8 @@ class Dokan_Vendor {
             'rating'                => $this->get_rating(),
             'enabled'               => $this->is_enabled(),
             'registered'            => $this->get_register_date(),
+            'payment'               => $this->get_payment_profiles(),
+            'trusted'               => $this->is_trusted(),
         );
 
         return $info;
@@ -454,7 +456,7 @@ class Dokan_Vendor {
      * @return integer
      */
     public function get_product_views() {
-        return dokan_author_pageviews( $this->id );
+        return (int) dokan_author_pageviews( $this->id );
     }
 
     /**
@@ -559,6 +561,17 @@ class Dokan_Vendor {
     }
 
     /**
+     * Get vendor percentage
+     *
+     * @param  integer $product_id
+     *
+     * @return integer
+     */
+    public function get_percentage( $product_id = 0 ) {
+        return dokan_get_seller_percentage( $this->id, $product_id );
+    }
+
+    /**
      * Make vendor active
      *
      * @since 2.8.0
@@ -568,6 +581,8 @@ class Dokan_Vendor {
     public function make_active() {
         update_user_meta( $this->get_id(), 'dokan_enable_selling', 'yes' );
         $this->change_product_status( 'publish' );
+
+        do_action( 'dokan_vendor_enabled', $this->get_id() );
 
         return $this->to_array();
     }
@@ -582,6 +597,8 @@ class Dokan_Vendor {
     public function make_inactive() {
         update_user_meta( $this->get_id(), 'dokan_enable_selling', 'no' );
         $this->change_product_status( 'pending' );
+
+        do_action( 'dokan_vendor_disabled', $this->get_id() );
 
         return $this->to_array();
     }

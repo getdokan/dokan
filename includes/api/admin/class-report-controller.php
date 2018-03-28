@@ -122,6 +122,7 @@ class Dokan_REST_Admin_Report_Controller extends Dokan_REST_Admin_Controller {
                     'borderColor'     => '#73a724',
                     'fill'            => false,
                     'data'            => array_values( $order_commision ),
+                    'tooltipPrefix'   => html_entity_decode( get_woocommerce_currency_symbol() )
                 ),
             )
         );

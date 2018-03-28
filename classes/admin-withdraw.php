@@ -128,6 +128,27 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
     }
 
     /**
+     * Generate CSV file from ajax request (Vue)
+     *
+     * @return void
+     */
+    public function withdraw_ajax() {
+
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            exit;
+        }
+
+        header( 'Content-type: html/csv' );
+        header( 'Content-Disposition: attachment; filename="withdraw-'.date( 'd-m-y' ).'.csv"' );
+
+        $ids = $_POST['id'];
+
+        $this->generate_csv( $ids );
+
+        exit;
+    }
+
+    /**
      * Export withdraws as CSV format
      *
      * @param string  $withdraw_ids
@@ -139,7 +160,7 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
 
         $result = $wpdb->get_results(
             "SELECT * FROM {$wpdb->dokan_withdraw}
-            WHERE id in('$withdraw_ids')"
+            WHERE id in ('$withdraw_ids') and status = 1"
         );
 
         if ( ! $result ) {

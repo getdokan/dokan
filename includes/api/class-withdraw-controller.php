@@ -82,18 +82,6 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
                 'permission_callback' => array( $this, 'delete_withdraw_permissions_check' ),
             ),
 
-            array(
-                'methods'             => WP_REST_Server::EDITABLE,
-                'callback'            => array( $this, 'update_withdraw_note' ),
-                'args'                => array(
-                    'note' => array(
-                        'description' => __( 'Withdraw Note', 'dokan-lite' ),
-                        'type'        => 'string',
-                        'required'    => false,
-                    )
-                ),
-                'permission_callback' => array( $this, 'update_withdraw_note_permission' ),
-            ),
         ) );
 
         register_rest_route( $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/note', array(
@@ -186,26 +174,41 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
         $limit = $request['per_page'];
         $offset = ( $request['page'] - 1 ) * $request['per_page'];
 
+        $withdraw_count = dokan_get_withdraw_count();
+
         if ( current_user_can( 'manage_options' ) ) {
             $store_id = '';
         }
 
         if ( ! empty( $status ) ) {
+            if ( $status == 'pending' ) {
+                $total_count = $withdraw_count['pending'];
+            } elseif( $status == 'approved' ) {
+                $total_count = $withdraw_count['completed'];
+            } else {
+                $total_count = $withdraw_count['cancelled'];
+            }
+
             $withdraws = $withdraw->get_withdraw_requests( $store_id, $this->get_status( $status ), $limit, $offset );
         } else {
             $withdraws = $withdraw->get_all_withdraws( $store_id, $limit, $offset );
+            $total_count = array_sum( $withdraw_count );
         }
 
         $data = array();
         foreach ( $withdraws as $key => $value ) {
-            $resp = $this->prepare_response_for_object( $value, $request );
+            $resp   = $this->prepare_response_for_object( $value, $request );
             $data[] = $this->prepare_response_for_collection( $resp );
         }
 
-        $response = rest_ensure_response( $data );
+        $response       = rest_ensure_response( $data );
         $withdraw_count = dokan_get_withdraw_count();
-        $response->header( 'X-StatusFilter', wp_json_encode( $withdraw_count ) );
-        $response = $this->format_collection_response( $response, $request, array_sum( $withdraw_count ) );
+
+        $response->header( 'X-Status-Pending', $withdraw_count['pending'] );
+        $response->header( 'X-Status-Completed', $withdraw_count['completed'] );
+        $response->header( 'X-Status-Cancelled', $withdraw_count['cancelled'] );
+
+        $response = $this->format_collection_response( $response, $request, $total_count );
         return $response;
     }
 
@@ -404,8 +407,9 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
      */
     public function update_withdraw_note( $request ) {
         global $wpdb;
+
         $withdraw_id = isset( $request['id'] ) ? $request['id'] : 0;
-        $note = isset( $request['note'] ) ? $request['note'] : '';
+        $note        = isset( $request['note'] ) ? $request['note'] : '';
 
         if ( empty( $withdraw_id ) ) {
             return new WP_Error( 'no_withdraw', __( 'No withdraw id found', 'dokan-lite' ), array( 'status' => 404 ) );
@@ -418,9 +422,11 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
             return new WP_Error( 'note_not_udpated', __( 'Something wrong, Note not updated', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
-        $withdraw = $wpdb->get_row( "select * from {$table_name} where id=$withdraw_id" );
+        $withdraw = $wpdb->get_row( "SELECT * from {$table_name} WHERE id = $withdraw_id" );
 
-        return $this->prepare_response_for_collection( $withdraw, $response );
+        $response = $this->prepare_response_for_object( $withdraw, $request );
+
+        return $response;
     }
 
     /**
