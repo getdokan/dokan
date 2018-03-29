@@ -39,7 +39,7 @@ function dokan_get_current_user_id() {
         $vendor_id = get_user_meta( $staff_id, '_vendor_id', true );
 
         if ( empty( $vendor_id ) ) {
-            return $user_id;
+            return $staff_id;
         }
 
         return $vendor_id;
@@ -430,7 +430,7 @@ function dokan_get_seller_percentage( $seller_id = 0, $product_id = 0 ) {
     //product wise percentage
     if ( $product_id ) {
         $category_commission = dokan_get_category_wise_seller_commission( $product_id );
-        
+
         if ( $category_commission != '' && is_numeric( $category_commission ) && $category_commission >= 0 && $category_commission <= 100 ) {
             $commission_val = (float) $category_commission;
         }

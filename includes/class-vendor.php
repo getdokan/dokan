@@ -473,7 +473,13 @@ class Dokan_Vendor {
         $cache_group   = 'dokan_seller_data_'.$this->id;
         $cache_key     = 'dokan_seller_balance_' . $this->id;
         $earning       = wp_cache_get( $cache_key, $cache_group );
-        $threshold_day = dokan_get_option( 'withdraw_date_limit', 'dokan_withdraw', 0 );
+
+        if ( get_user_meta( dokan_get_current_user_id(), 'withdraw_date_limit', true ) !== '' ) {
+            $threshold_day = get_user_meta( dokan_get_current_user_id(), 'withdraw_date_limit', true );
+        } else {
+            $threshold_day = dokan_get_option( 'withdraw_date_limit', 'dokan_withdraw', 0 );
+        }
+
         $date          = date( 'Y-m-d', strtotime( date('Y-m-d') . ' -'.$threshold_day.' days' ) );
 
         if ( false === $earning ) {
