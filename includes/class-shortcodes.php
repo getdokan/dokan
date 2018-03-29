@@ -231,11 +231,6 @@ class Dokan_Shortcodes {
 
                 $seller_args['meta_query'] = array(
                     array(
-                        'key'     => 'dokan_enable_selling',
-                        'value'   => 'yes',
-                        'compare' => '='
-                    ),
-                     array(
                         'key'     => 'dokan_store_name',
                         'value'   => $search_term,
                         'compare' => 'LIKE'
@@ -245,11 +240,7 @@ class Dokan_Shortcodes {
         }
 
         if ( $attr['featured'] == 'yes' ) {
-            $seller_args['meta_query'][] = array(
-                'key'     => 'dokan_feature_seller',
-                'value'   => 'yes',
-                'compare' => '='
-            );
+            $seller_args['featured'] = 'yes';
         }
 
         $sellers = dokan_get_sellers( apply_filters( 'dokan_seller_listing_args', $seller_args ) );

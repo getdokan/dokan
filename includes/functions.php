@@ -430,7 +430,7 @@ function dokan_get_seller_percentage( $seller_id = 0, $product_id = 0 ) {
     //product wise percentage
     if ( $product_id ) {
         $category_commission = dokan_get_category_wise_seller_commission( $product_id );
-        
+
         if ( $category_commission != '' && is_numeric( $category_commission ) && $category_commission >= 0 && $category_commission <= 100 ) {
             $commission_val = (float) $category_commission;
         }
@@ -1327,14 +1327,8 @@ function dokan_get_percentage_of( $this_period = 0, $last_period = 0 ) {
 function dokan_get_seller_count() {
 
     $inactive_sellers = dokan_get_sellers( array(
-        'number'     => -1,
-        'meta_query' => array(
-            array(
-                'key'     => 'dokan_enable_selling',
-                'value'   => 'no',
-                'compare' => '='
-            )
-        )
+        'number' => -1,
+        'status' => 'pending'
     ) );
 
     $active_sellers = dokan_get_sellers( array(
