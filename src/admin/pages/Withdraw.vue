@@ -41,7 +41,7 @@
         >
             <template slot="seller" slot-scope="data">
                 <img :src="data.row.user.gravatar" :alt="data.row.user.store_name" width="50">
-                <strong><a :href="vendorUrl(data.row.user.id)">{{ data.row.user.store_name }}</a></strong>
+                <strong><a :href="vendorUrl(data.row.user.id)">{{ data.row.user.store_name ? data.row.user.store_name : '(no name)' }}</a></strong>
             </template>
 
             <template slot="amount" slot-scope="data">

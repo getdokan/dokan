@@ -1741,7 +1741,15 @@ var render = function() {
                   _c(
                     "a",
                     { attrs: { href: _vm.vendorUrl(data.row.user.id) } },
-                    [_vm._v(_vm._s(data.row.user.store_name))]
+                    [
+                      _vm._v(
+                        _vm._s(
+                          data.row.user.store_name
+                            ? data.row.user.store_name
+                            : "(no name)"
+                        )
+                      )
+                    ]
                   )
                 ])
               ]
