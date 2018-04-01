@@ -1327,14 +1327,8 @@ function dokan_get_percentage_of( $this_period = 0, $last_period = 0 ) {
 function dokan_get_seller_count() {
 
     $inactive_sellers = dokan_get_sellers( array(
-        'number'     => -1,
-        'meta_query' => array(
-            array(
-                'key'     => 'dokan_enable_selling',
-                'value'   => 'no',
-                'compare' => '='
-            )
-        )
+        'number' => -1,
+        'status' => 'pending'
     ) );
 
     $active_sellers = dokan_get_sellers( array(

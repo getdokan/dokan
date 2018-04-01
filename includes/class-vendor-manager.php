@@ -44,6 +44,7 @@ class Dokan_Vendor_Manager {
             'orderby'    => 'registered',
             'order'      => 'ASC',
             'status'     => 'approved',
+            'featured'   => '', // yes or no
             'meta_query' => array(),
         );
 
@@ -64,6 +65,18 @@ class Dokan_Vendor_Manager {
                 'compare' => $operator
             );
         }
+
+        // if featured
+        if ( 'yes' == $args['featured'] ) {
+            $args['meta_query'][] = array(
+                'key'     => 'dokan_feature_seller',
+                'value'   => 'yes',
+                'compare' => '='
+            );
+        }
+
+        unset( $args['status'] );
+        unset( $args['featured'] );
 
         $user_query = new WP_User_Query( $args );
         $results    = $user_query->get_results();
@@ -107,21 +120,9 @@ class Dokan_Vendor_Manager {
     public function get_featured( $args = array() ) {
 
         $defaults = array(
-            'number'     => 10,
-            'offset'     => 0,
-            'meta_query' => array(
-                array(
-                    'key'     => 'dokan_enable_selling',
-                    'value'   => 'yes',
-                    'compare' => '='
-                ),
-
-                array(
-                    'key'     => 'dokan_feature_seller',
-                    'value'   => 'yes',
-                    'compare' => '='
-                ),
-            )
+            'number'   => 10,
+            'offset'   => 0,
+            'featured' => 'yes',
         );
 
         $args = wp_parse_args( $args, $defaults );
