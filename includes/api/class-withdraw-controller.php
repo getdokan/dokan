@@ -315,12 +315,7 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
 
         $balance        = dokan_get_seller_balance( $store_id, false );
         $withdraw_limit = dokan_get_option( 'withdraw_limit', 'dokan_withdraw', -1 );
-        
-        if ( get_user_meta( dokan_get_current_user_id(), 'withdraw_date_limit', true ) !== '' ) {
-            $threshold = get_user_meta( dokan_get_current_user_id(), 'withdraw_date_limit', true );
-        } else {
-            $threshold = dokan_get_option( 'withdraw_date_limit', 'dokan_withdraw', -1 );
-        }
+        $threshold      = dokan_get_withdraw_threshold( $store_id );
 
         $data = array(
             'current_balance'    => $balance,
