@@ -131,7 +131,7 @@ class Dokan_Ajax {
             }
         }
 
-        if( is_admin() && isset( $_POST['vendor_id'] ) ) {
+        if ( is_admin() && isset( $_POST['vendor_id'] ) ) {
             $vendor     = get_user_by( 'id', $_POST['vendor_id'] );
             if ( $vendor->user_nicename == $user->user_nicename ) {
                 $check = true;
