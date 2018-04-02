@@ -7,7 +7,7 @@ Version: 2.7.8
 Author: weDevs, LLC
 Author URI: https://wedevs.com/
 Text Domain: dokan-lite
-WC requires at least: 2.6
+WC requires at least: 3.0
 WC tested up to: 3.3.3
 Domain Path: /languages/
 License: GPL2
@@ -81,6 +81,13 @@ final class WeDevs_Dokan {
     public $version = '2.7.8';
 
     /**
+     * Minimum PHP version required
+     *
+     * @var string
+     */
+    private $min_php = '5.4.0';
+
+    /**
      * Holds various class instances
      *
      * @since 2.6.10
@@ -94,14 +101,13 @@ final class WeDevs_Dokan {
      *
      * Sets up all the appropriate hooks and actions
      * within our plugin.
-     *
-     * @uses register_activation_hook()
-     * @uses register_deactivation_hook()
-     * @uses is_admin()
-     * @uses add_action()
      */
     public function __construct() {
         $this->define_constants();
+
+        if ( ! $this->is_supported_php() ) {
+            return;
+        }
 
         register_activation_hook( __FILE__, array( $this, 'activate' ) );
         register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
@@ -140,6 +146,19 @@ final class WeDevs_Dokan {
         }
 
         return $this->{$prop};
+    }
+
+    /**
+     * Check if the PHP version is supported
+     *
+     * @return bool
+     */
+    public function is_supported_php() {
+        if ( version_compare( PHP_VERSION, $this->min_php, '<=' ) ) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -308,12 +327,6 @@ final class WeDevs_Dokan {
             require_once $inc_dir . 'template-tags.php';
         }
 
-        if ( WC_VERSION > 2.7 ) {
-            require_once $inc_dir . 'wc-crud-functions.php';
-        } else {
-            require_once $inc_dir . 'wc-legacy-functions.php';
-        }
-
         // API includes
         require_once $inc_dir . 'api/class-api-rest-controller.php';
         require_once $inc_dir . 'class-api-manager.php';
@@ -343,9 +356,8 @@ final class WeDevs_Dokan {
         $this->container['product']       = new Dokan_Product_Manager();
         $this->container['shortcode']     = new Dokan_Shortcodes();
         $this->container['registration']  = new Dokan_Registration();
-
-        new Dokan_Order_Manager();
-        new Dokan_API_Manager();
+        $this->container['orders']        = new Dokan_Order_Manager();
+        $this->container['api']           = new Dokan_API_Manager();
 
         if ( is_user_logged_in() ) {
             Dokan_Template_Main::init();
