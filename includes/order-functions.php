@@ -12,10 +12,10 @@ function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
     $seller_id      = dokan_get_seller_id_by_order( $order_id );
     $net_amount     = dokan_get_seller_earnings_by_order( $order, $seller_id );
 
-    $order_total    = $order->get_total();
+    // $order_total    = $order->get_total();
     $order_shipping = $order->get_total_shipping();
     $order_tax      = $order->get_total_tax();
-    $extra_cost     = (float) $order_shipping + (float) $order_tax;
+    // $extra_cost     = (float) $order_shipping + (float) $order_tax;
 
     $commission_recipient = dokan_get_option( 'extra_fee_recipient', 'dokan_general', 'seller' );
 
@@ -35,9 +35,9 @@ function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
     }
 
 
-    if ( 'seller' == $commission_recipient ) {
-        $net_amount = $net_amount + $extra_cost;
-    }
+    // if ( 'seller' == $commission_recipient ) {
+    //     $net_amount = $net_amount + $extra_cost;
+    // }
 
     return apply_filters( 'dokan_get_seller_amount_from_order', $net_amount, $order, $seller_id );
 }
@@ -518,10 +518,10 @@ function dokan_sync_order_table( $order_id ) {
         $order_total = $order_total - $order->get_total_refunded();
     }
 
-    $order_status   = dokan_get_prop( $order, 'status' );
+    $order_status       = dokan_get_prop( $order, 'status' );
     $admin_commission   = dokan_get_admin_commission_by( $order, $seller_id );
     $net_amount         = $order_total - $admin_commission;
-    $net_amount     = apply_filters( 'dokan_sync_order_net_amount', $net_amount, $order );
+    $net_amount         = apply_filters( 'dokan_sync_order_net_amount', $net_amount, $order );
 
     // make sure order status contains "wc-" prefix
     if ( stripos( $order_status, 'wc-' ) === false ) {
@@ -676,8 +676,7 @@ function dokan_get_admin_commission_by( $order, $seller_id ) {
     foreach ( $order->get_items() as $item_id => $item ) {
 
         $refund_t += $order->get_total_refunded_for_item( $item_id );
-        $commissions[$i]['total_line'] = $item['line_total'] - $order->get_total_refunded_for_item( $item_id );
-//        $commissions[$i]['admin_percentage'] = 100 - dokan_get_seller_percentage( $seller_id, $item['product_id'] );
+        $commissions[$i]['total_line'] = $item->get_total() - $order->get_total_refunded_for_item( $item_id );
         $commissions[$i]['admin_fee'] = 100 - dokan_get_seller_percentage( $seller_id, $item['product_id'] );
         $commissions[$i]['fee_type']  = dokan_get_commission_type( $seller_id, $item['product_id'] );
         $total_line += $commissions[$i]['total_line'];
@@ -692,7 +691,6 @@ function dokan_get_admin_commission_by( $order, $seller_id ) {
     if ( $total_line ) {
         foreach ( $commissions as $commission ) {
             $commission['ut_amount'] = $refund_ut * ( $commission['total_line'] / $total_line );
-//            $admin_commission += ( $commission['total_line'] + $commission['ut_amount'] ) * $commission['admin_percentage'] /100;
             if ( 'percentage' == $commission['fee_type'] ) {
                 $admin_commission += ( $commission['total_line'] + $commission['ut_amount'] ) * $commission['admin_fee'] /100;
             } else {
