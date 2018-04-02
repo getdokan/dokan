@@ -525,6 +525,10 @@ class Dokan_Template_Settings {
                 );
             }
 
+            if ( isset( $_POST['settings']['stripe'] ) ) {
+                $dokan_settings['payment']['stripe'] = $_POST['settings']['stripe'];
+            }
+
         }
 
         $dokan_settings = array_merge( $prev_dokan_settings, $dokan_settings );
@@ -698,6 +702,16 @@ class Dokan_Template_Settings {
             if ( $s_email != false ) {
                 $profile_val         = $profile_val + $payment_method_val;
                 $track_val['skrill'] = $payment_method_val;
+                $payment_method_val  = 0;
+            }
+        }
+
+        // Calculate Payment method val for stripe
+        if ( isset( $dokan_settings['payment'] ) && isset( $dokan_settings['payment']['stripe'] ) ) {
+
+            if ( $dokan_settings['payment']['stripe'] ) {
+                $profile_val         = $profile_val + $payment_method_val;
+                $track_val['stripe'] = $payment_method_val;
                 $payment_method_val  = 0;
             }
         }
