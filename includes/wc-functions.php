@@ -431,13 +431,13 @@ function dokan_process_product_file_download_paths( $product_id, $variation_id, 
     }
 }
 
-add_action( 'woocommerce_checkout_update_order_meta', 'dokan_create_sub_order', 10 );
-
 /**
  * Get discount coupon total from a order
  *
  * @global WPDB $wpdb
+ *
  * @param int $order_id
+ *
  * @return int
  */
 function dokan_sub_order_get_total_coupon( $order_id ) {
@@ -643,6 +643,7 @@ function dokan_get_on_sale_products( $per_page = 10, $paged = 1, $seller_id = ''
  */
 function dokan_get_seller_balance( $seller_id, $formatted = true ) {
     $vendor = dokan()->vendor->get( $seller_id );
+
     return $vendor->get_balance( $formatted );
 }
 
@@ -670,6 +671,7 @@ function dokan_get_seller_earnings( $seller_id, $start_date = '', $end_date = ''
 
     $all_orders = dokan_get_seller_orders_by_date( $start_date, $end_date, $seller_id, dokan_withdraw_get_active_order_status() );
     $earnings = 0;
+
     foreach ( $all_orders as $order ) {
         $earnings = $earnings + dokan_get_seller_amount_from_order( $order->order_id );
     }
@@ -681,11 +683,14 @@ function dokan_get_seller_earnings( $seller_id, $start_date = '', $end_date = ''
  * Get seller rating
  *
  * @global WPDB $wpdb
+ *
  * @param type $seller_id
+ *
  * @return type
  */
 function dokan_get_seller_rating( $seller_id ) {
     $vendor = dokan()->vendor->get( $seller_id );
+
     return $vendor->get_rating();
 }
 
@@ -693,10 +698,12 @@ function dokan_get_seller_rating( $seller_id ) {
  * Get seller rating in a readable rating format
  *
  * @param int $seller_id
+ *
  * @return void
  */
 function dokan_get_readable_seller_rating( $seller_id ) {
     $vendor = dokan()->vendor->get( $seller_id );
+
     echo $vendor->get_readable_rating();
 }
 
@@ -710,6 +717,7 @@ function dokan_get_readable_seller_rating( $seller_id ) {
  * by returning a fake phpmailer class.
  *
  * @param  array $attr
+ *
  * @return array
  */
 function dokan_exclude_child_customer_receipt( &$phpmailer ) {

@@ -295,6 +295,7 @@ final class WeDevs_Dokan {
         require_once $inc_dir . 'class-email.php';
         require_once $inc_dir . 'class-vendor.php';
         require_once $inc_dir . 'class-vendor-manager.php';
+        require_once $inc_dir . 'class-order-manager.php';
         require_once $inc_dir . 'class-product-manager.php';
 
         if ( is_admin() ) {
@@ -315,7 +316,7 @@ final class WeDevs_Dokan {
 
         // API includes
         require_once $inc_dir . 'api/class-api-rest-controller.php';
-        require_once $inc_dir . 'api/class-api-register.php';
+        require_once $inc_dir . 'class-api-manager.php';
     }
 
     /**
@@ -343,6 +344,9 @@ final class WeDevs_Dokan {
         $this->container['shortcode']     = new Dokan_Shortcodes();
         $this->container['registration']  = new Dokan_Registration();
 
+        new Dokan_Order_Manager();
+        new Dokan_API_Manager();
+
         if ( is_user_logged_in() ) {
             Dokan_Template_Main::init();
             Dokan_Template_Dashboard::init();
@@ -355,7 +359,6 @@ final class WeDevs_Dokan {
         if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
             Dokan_Ajax::init()->init_ajax();
         }
-        new Dokan_API_Register();
     }
 
     /**

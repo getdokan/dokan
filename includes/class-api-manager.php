@@ -3,7 +3,7 @@
 /**
  * API_Registrar class
  */
-class Dokan_API_Register {
+class Dokan_API_Manager {
 
     /**
      * Class dir and class name mapping
