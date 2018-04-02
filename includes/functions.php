@@ -390,20 +390,26 @@ function dokan_generate_sync_table() {
 
 if ( !function_exists( 'dokan_get_seller_earnings_by_order' ) ) {
 
- /**
- * Get Seller's net Earnings from a order
- *
- * @since 2.5.2
- *
- * @param WC_ORDER $order
- *
- * @param int $seller_id
- *
- * @return int $earned
- */
-function dokan_get_seller_earnings_by_order( $order, $seller_id ) {
+     /**
+     * Get Seller's net Earnings from a order
+     *
+     * @since 2.5.2
+     *
+     * @param WC_ORDER $order
+     *
+     * @param int $seller_id
+     *
+     * @return int $earned
+     */
+    function dokan_get_seller_earnings_by_order( $order, $seller_id ) {
+        $commission_recipient = dokan_get_option( 'extra_fee_recipient', 'dokan_general', 'seller' );
 
-        $earned = $order->get_total() - dokan_get_admin_commission_by( $order, $seller_id );
+        if ( $commission_recipient == 'admin' ) {
+            $earned = $order->get_total() - dokan_get_admin_commission_by( $order, $seller_id );
+        } else {
+            $earned = $order->get_total() - ( $order->get_total_shipping() + $order->get_total_tax() + dokan_get_admin_commission_by( $order, $seller_id ) );
+        }
+
         return apply_filters( 'dokan_get_seller_earnings_by_order', $earned, $order, $seller_id );
     }
 }
