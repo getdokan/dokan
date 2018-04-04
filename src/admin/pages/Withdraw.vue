@@ -41,7 +41,7 @@
         >
             <template slot="seller" slot-scope="data">
                 <img :src="data.row.user.gravatar" :alt="data.row.user.store_name" width="50">
-                <strong><a :href="vendorUrl(data.row.user.id)">{{ data.row.user.store_name }}</a></strong>
+                <strong><a :href="vendorUrl(data.row.user.id)">{{ data.row.user.store_name ? data.row.user.store_name : '(no name)' }}</a></strong>
             </template>
 
             <template slot="amount" slot-scope="data">
@@ -203,10 +203,10 @@ export default {
 
         vendorUrl(id) {
             if ( window.dokan.hasPro === '1' ) {
-                return dokan.adminRoot + 'admin.php?page=dokan#/vendors/' + id;
+                return dokan.urls.adminRoot + 'admin.php?page=dokan#/vendors/' + id;
             }
 
-            return dokan.adminRoot + 'user-edit.php?user_id=' + id;
+            return dokan.urls.adminRoot + 'user-edit.php?user_id=' + id;
         },
 
         fetchRequests() {

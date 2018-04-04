@@ -254,6 +254,8 @@ final class WeDevs_Dokan {
 
         add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), array( $this, 'plugin_action_links' ) );
         add_action( 'in_plugin_update_message-dokan-lite/dokan.php', array( 'Dokan_Installer', 'in_plugin_update_message' ) );
+
+        add_action( 'widgets_init', array( $this, 'register_widgets' ) );
     }
 
     /**
@@ -269,6 +271,8 @@ final class WeDevs_Dokan {
         require_once $inc_dir . 'functions.php';
         require_once $inc_dir . 'functions-depricated.php';
         require_once $inc_dir . 'functions-compatibility.php';
+
+        // widgets
         require_once $inc_dir . 'widgets/menu-category.php';
         require_once $inc_dir . 'widgets/bestselling-product.php';
         require_once $inc_dir . 'widgets/top-rated-product.php';
@@ -276,6 +280,7 @@ final class WeDevs_Dokan {
         require_once $inc_dir . 'widgets/store-menu.php';
         require_once $inc_dir . 'widgets/store-location.php';
         require_once $inc_dir . 'widgets/store-contact.php';
+
         require_once $inc_dir . 'wc-functions.php';
         require_once $lib_dir . 'class-wedevs-insights.php';
         require_once $inc_dir . '/admin/setup-wizard.php';
@@ -284,6 +289,8 @@ final class WeDevs_Dokan {
         require_once $inc_dir . 'wc-template.php';
 
         require_once $inc_dir . 'class-core.php';
+        require_once $inc_dir . 'class-shortcodes.php';
+        require_once $inc_dir . 'class-registration.php';
         require_once $inc_dir . 'class-assets.php';
         require_once $inc_dir . 'class-email.php';
         require_once $inc_dir . 'class-vendor.php';
@@ -324,16 +331,17 @@ final class WeDevs_Dokan {
             new Dokan_Setup_Wizard();
         }
 
-        new Dokan_Pageviews();
-        new Dokan_Rewrites();
-        new Dokan_Tracker();
-        new Dokan_Seller_Setup_Wizard();
-
-        $this->container['core']    = new Dokan_Core();
-        $this->container['scripts'] = new Dokan_Assets();
-        $this->container['email']   = Dokan_Email::init();
-        $this->container['vendor']  = new Dokan_Vendor_Manager();
-        $this->container['product'] = new Dokan_Product_Manager();
+        $this->container['pageview']      = new Dokan_Pageviews();
+        $this->container['rewrite']       = new Dokan_Rewrites();
+        $this->container['tracker']       = new Dokan_Tracker();
+        $this->container['seller_wizard'] = new Dokan_Seller_Setup_Wizard();
+        $this->container['core']          = new Dokan_Core();
+        $this->container['scripts']       = new Dokan_Assets();
+        $this->container['email']         = Dokan_Email::init();
+        $this->container['vendor']        = new Dokan_Vendor_Manager();
+        $this->container['product']       = new Dokan_Product_Manager();
+        $this->container['shortcode']     = new Dokan_Shortcodes();
+        $this->container['registration']  = new Dokan_Registration();
 
         if ( is_user_logged_in() ) {
             Dokan_Template_Main::init();
@@ -343,8 +351,6 @@ final class WeDevs_Dokan {
             Dokan_Template_Withdraw::init();
             Dokan_Template_Settings::init();
         }
-
-        Dokan_Template_Shortcodes::init();
 
         if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
             Dokan_Ajax::init()->init_ajax();
@@ -366,6 +372,22 @@ final class WeDevs_Dokan {
         $wpdb->dokan_orders       = $wpdb->prefix . 'dokan_orders';
         $wpdb->dokan_announcement = $wpdb->prefix . 'dokan_announcement';
         $wpdb->dokan_refund       = $wpdb->prefix . 'dokan_refund';
+    }
+
+    /**
+     * Register widgets
+     *
+     * @since 2.8
+     *
+     * @return void
+     */
+    public function register_widgets() {
+        register_widget( 'Dokan_Best_Selling_Widget' );
+        register_widget( 'Dokan_Category_Widget' );
+        register_widget( 'Dokan_Store_Contact_Form' );
+        register_widget( 'Dokan_Store_Location' );
+        register_widget( 'Dokan_Store_Category_Menu' );
+        register_widget( 'Dokan_Toprated_Widget' );
     }
 
     /**

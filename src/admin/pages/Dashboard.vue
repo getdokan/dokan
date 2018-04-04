@@ -71,6 +71,23 @@
                                 <a :href="news.link + '?utm_source=wp-admin&utm_campaign=dokan-news'" target="_blank">{{ news.title }}</a>
                             </li>
                         </ul>
+
+                        <div class="subscribe-box">
+                            <template v-if="!subscribe.success">
+                                <div class="loading" v-if="subscribe.loading">
+                                    <loading></loading>
+                                </div>
+                                <h3>Stay up-to-date</h3>
+                                <p>
+                                    We're constantly developing new features, stay up-to-date by subscribing to our newsletter.
+                                </p>
+                                <div class="form-wrap">
+                                    <input type="email" v-model="subscribe.email" required placeholder="Your Email Address" @keyup.enter="emailSubscribe()">
+                                    <button class="button" @click="emailSubscribe()">Subscribe</button>
+                                </div>
+                            </template>
+                            <div v-else class="thank-you">Thank you for subscribing!</div>
+                        </div>
                     </div>
                     <div class="loading" v-else>
                         <loading></loading>
@@ -79,7 +96,7 @@
             </div>
 
             <div class="right-side">
-                <postbox title="Overview">
+                <postbox title="Overview" class="overview-chart">
                     <chart :data="report" v-if="report !== null"></chart>
                     <div class="loading" v-else>
                         <loading></loading>
@@ -111,7 +128,12 @@ export default {
         return {
             overview: null,
             feed: null,
-            report: null
+            report: null,
+            subscribe: {
+                success: false,
+                loading: false,
+                email: ''
+            }
         }
     },
 
@@ -143,6 +165,36 @@ export default {
                 this.report = response;
             });
         },
+
+        validEmail(email) {
+            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(email);
+        },
+
+        emailSubscribe() {
+            let action = 'https://wedevs.us16.list-manage.com/subscribe/post-json?u=66e606cfe0af264974258f030&id=0d176bb256&c=?';
+
+            if ( ! this.validEmail(this.subscribe.email) ) {
+                return;
+            }
+
+            this.subscribe.loading = true;
+
+            $.ajax({
+                url: action,
+                data: {
+                    EMAIL: this.subscribe.email,
+                    'group[3555][8]': '1'
+                },
+                type: 'GET',
+                dataType: 'json',
+                cache: false,
+                contentType: "application/json; charset=utf-8",
+            }).always(response => {
+                this.subscribe.success = true;
+                this.subscribe.loading = false;
+            });
+        }
     },
 }
 </script>
@@ -173,6 +225,64 @@ export default {
             width: 100%;
             margin: 15px auto;
             text-align: center;
+        }
+    }
+
+    .subscribe-box {
+        margin: 20px -12px -11px -12px;
+        padding: 0 15px 15px;
+        background: #fafafa;
+        border-top: 1px solid #efefef;
+        position: relative;
+
+        h3 {
+            margin: 10px 0;
+        }
+
+        p {
+            margin-bottom: 10px !important;
+        }
+
+        .thank-you {
+            background: #4fa72b;
+            margin-top: 10px;
+            padding: 15px;
+            border-radius: 3px;
+            color: #fff;
+        }
+
+        .form-wrap {
+            display: flex;
+
+            input[type="email"] {
+                width: 100%;
+                padding: 3px 0 3px 6px;
+                margin: 0px -1px 0 0;
+            }
+
+            button.button {
+                box-shadow: none;
+                background: #FF5722;
+                color: #fff;
+                border-color: #FF5722;
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+
+                &:hover {
+                    background: lighten(#FF5722, 5%);
+                }
+            }
+        }
+
+        .loading {
+            position: absolute;
+            height: 100%;
+            margin: 0 0 0 -15px;
+            background: rgba(0,0,0, 0.2);
+
+            .dokan-loader {
+                margin-top: 30px;
+            }
         }
     }
 }

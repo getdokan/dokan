@@ -43,7 +43,11 @@ class Dokan_Assets {
                 'routes'          => $this->get_vue_admin_routes(),
                 'currency'        => $this->get_localized_price(),
                 'hasPro'          => dokan()->is_pro_exists(),
-                'adminRoot'       => admin_url()
+                'urls'            => array(
+                    'adminRoot'   => admin_url(),
+                    'siteUrl'     => home_url( '/' ),
+                    'storePrefix' => dokan_get_option( 'custom_store_url', 'dokan_general', 'store' )
+                )
             ) );
 
             // load styles
@@ -274,6 +278,11 @@ class Dokan_Assets {
                 'deps'      => array( 'jquery' ),
                 'version'   => filemtime( $asset_path . '/js/dokan-admin.js' ),
             ),
+            'dokan-vendor-registration' => array(
+                'src'       => $asset_url . '/js/vendor-registration.js',
+                'deps'      => array( 'dokan-form-validate', 'jquery', 'speaking-url' ),
+                'version'   => filemtime( $asset_path . '/js/vendor-registration.js' ),
+            ),
             'dokan-script' => array(
                 'src'       => $asset_url . '/js/dokan.js',
                 'deps'      => array( 'imgareaselect', 'customize-base', 'customize-model' ),
@@ -369,7 +378,7 @@ class Dokan_Assets {
 
             if ( DOKAN_LOAD_SCRIPTS ) {
 
-                $this->load_form_validate_script();
+                self::load_form_validate_script();
                 $this->load_gmap_script();
 
                 wp_enqueue_script( 'jquery-ui-sortable' );
@@ -378,6 +387,7 @@ class Dokan_Assets {
                 wp_enqueue_script( 'dokan-chosen' );
                 wp_enqueue_script( 'dokan-form-validate' );
                 wp_enqueue_script( 'speaking-url' );
+                wp_enqueue_script( 'dokan-vendor-registration' );
                 wp_enqueue_script( 'dokan-script' );
                 wp_enqueue_script( 'dokan-select2-js' );
             }
@@ -392,7 +402,7 @@ class Dokan_Assets {
      * @since 2.5.3
      *
      */
-    function load_form_validate_script() {
+    public static function load_form_validate_script() {
 
         $form_validate_messages = array(
             'required'        => __( "This field is required", 'dokan-lite' ),
@@ -435,7 +445,7 @@ class Dokan_Assets {
         }
 
         if ( DOKAN_LOAD_SCRIPTS ) {
-            $this->load_form_validate_script();
+            self::load_form_validate_script();
             $this->load_gmap_script();
 
             wp_enqueue_script( 'jquery' );
