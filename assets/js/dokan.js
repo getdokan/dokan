@@ -1352,13 +1352,15 @@ jQuery(function($) {
                 }
             }
 
-            if ( $( '#product_type' ).val() == 'simple' ) {
+            if ( $( '#product_type' ).val() == 'simple' || $( '#product_type' ).text() == '' ) {
                 if ( Number( $('span.vendor-price').text() ) < 0  ) {
                     $( $('.dokan-product-less-price-alert').removeClass('dokan-hide') );
                     $( 'input[type=submit]' ).attr( 'disabled', 'disabled' );
+                    $( 'button[type=submit]' ).attr( 'disabled', 'disabled' );
                 } else {
-                    $( 'input[type=submit]' ).removeAttr( 'disabled');
                     $( $('.dokan-product-less-price-alert').addClass('dokan-hide') );
+                    $( 'input[type=submit]' ).removeAttr( 'disabled');
+                    $( 'button[type=submit]' ).removeAttr( 'disabled');
                 }
             }
 
