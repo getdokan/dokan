@@ -422,6 +422,16 @@ _vue2.default.filter('capitalize', function (value) {
     return value.charAt(0).toUpperCase() + value.slice(1);
 });
 
+// Tooltip directive
+_vue2.default.directive('tooltip', {
+    bind: function bind(el, binding, vnode) {
+        $(el).tooltip('show');
+    },
+    unbind: function unbind(el, binding, vnode) {
+        $(el).tooltip('destroy');
+    }
+});
+
 window.dokan_get_lib = function (lib) {
     return window.dokan.libs[lib];
 };

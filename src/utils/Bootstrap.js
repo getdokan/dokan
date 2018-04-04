@@ -39,6 +39,16 @@ Vue.filter('capitalize', function (value) {
     return value.charAt(0).toUpperCase() + value.slice(1)
 })
 
+// Tooltip directive
+Vue.directive('tooltip', {
+    bind: function( el, binding, vnode ) {
+        $(el).tooltip('show');
+    },
+    unbind: function( el, binding, vnode ) {
+        $(el).tooltip('destroy');
+    }
+});
+
 window.dokan_get_lib = function(lib) {
     return window.dokan.libs[lib];
 }
