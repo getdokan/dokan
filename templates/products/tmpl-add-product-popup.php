@@ -47,10 +47,11 @@
                         <div class="dokan-form-group dokan-clearfix dokan-price-container">
                             <div class="content-half-part">
                                 <label for="_regular_price" class="form-label"><?php _e( 'Price', 'dokan-lite' ); ?></label>
+                                <span class="vendor-earning">( <?php _e( ' You Earn : ', 'dokan-lite' ) ?><?php echo get_woocommerce_currency_symbol() ?><span class="vendor-price">0.00</span> )</span>
 
                                 <div class="dokan-input-group">
                                     <span class="dokan-input-group-addon"><?php echo get_woocommerce_currency_symbol(); ?></span>
-                                    <input type="number" class="dokan-form-control" name="_regular_price" placeholder="0.00" min="0" step="any">
+                                    <input type="number" class="dokan-product-regular-price dokan-form-control" name="_regular_price" placeholder="0.00" min="0" step="any">
                                 </div>
                             </div>
 
@@ -63,8 +64,14 @@
 
                                 <div class="dokan-input-group">
                                     <span class="dokan-input-group-addon"><?php echo get_woocommerce_currency_symbol(); ?></span>
-                                    <input type="number" class="dokan-form-control" name="_sale_price" placeholder="0.00" min="0" step="any">
+                                    <input type="number" class="dokan-product-sales-price dokan-form-control" name="_sale_price" placeholder="0.00" min="0" step="any">
                                 </div>
+                            </div>
+                        </div>
+
+                        <div class="dokan-form-group dokan-clearfix product-edit-container">
+                            <div class="dokan-product-less-price-alert dokan-hide">
+                                <?php _e('Product price can\'t be less than the vendor fee!', 'dokan-lite' ); ?>
                             </div>
                         </div>
 
@@ -167,4 +174,7 @@
             </div>
         </form>
     </div>
+    <script type="javascript">
+        console.log('ok');
+    </script>
 </script>

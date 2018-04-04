@@ -525,6 +525,49 @@ jQuery(function($) {
 
             $( 'body' ).on( 'click', '.product-container-footer input[type="submit"]', this.createNewProduct );
 
+            //product popup product price error notice
+            $( 'body' ).on( 'keyup', 'input.dokan-product-regular-price, input.dokan-product-sales-price', function() {
+                if ( dokan.commission_type == 'percentage' ) {
+                    if ( $('input.dokan-product-sales-price' ).val() == '' ) {
+                        $( 'span.vendor-price' ).html(
+                            parseFloat( accounting.formatNumber( ( ( $( 'input.dokan-product-regular-price' ).val() * dokan.vendor_percentage ) / 100 ), dokan.rounding_precision, '' ) )
+                                    .toString()
+                                    .replace( '.', dokan.mon_decimal_point )
+                        );
+                    } else {
+                        $( 'span.vendor-price' ).html(
+                            parseFloat( accounting.formatNumber( ( ( $( 'input.dokan-product-sales-price' ).val() * dokan.vendor_percentage ) / 100 ), dokan.rounding_precision, '' ) )
+                                .toString()
+                                .replace( '.', dokan.mon_decimal_point )
+                        );
+                    }
+                } else {
+
+                    if ( $('input.dokan-product-sales-price' ).val() == '' ) {
+                        $( 'span.vendor-price' ).html(
+                            parseFloat( accounting.formatNumber( ( $( 'input.dokan-product-regular-price' ).val() - ( 100 - dokan.vendor_percentage ) ), dokan.rounding_precision, '' ) )
+                                    .toString()
+                                    .replace( '.', dokan.mon_decimal_point )
+                        );
+                    } else {
+                        $( 'span.vendor-price' ).html(
+                                parseFloat( accounting.formatNumber( ( $( 'input.dokan-product-sales-price' ).val() - ( 100 - dokan.vendor_percentage ) ), dokan.rounding_precision, '' ) )
+                                    .toString()
+                                    .replace( '.', dokan.mon_decimal_point )
+                            );
+                    }
+                }
+
+                if ( Number( $('span.vendor-price').text() ) <= 0  ) {
+                    $( 'input[type=submit]' ).attr( 'disabled', 'disabled' );
+                    $( $('.dokan-product-less-price-alert').removeClass('dokan-hide') );
+                } else {
+                    $( 'input[type=submit]' ).removeAttr( 'disabled');
+                    $( $('.dokan-product-less-price-alert').addClass('dokan-hide') );
+                }
+
+            } );
+
             this.attribute.disbalePredefinedAttribute();
         },
 
@@ -1333,7 +1376,7 @@ jQuery(function($) {
                         $( 'input[type=submit]' ).attr( 'disabled', 'disabled' );
                     }
                 }
-            } ); 
+            } );
 
         } ).trigger('keyup');
 
