@@ -1352,7 +1352,8 @@ jQuery(function($) {
                 }
             }
 
-            if ( $( '#product_type' ).val() == 'simple' || $( '#product_type' ).text() == '' ) {
+            // if ( $( '#product_type' ).val() == 'simple' || $( '#product_type' ).text() == '' ) {
+            if ( $( '#product_type' ).val() == 'simple' ) {
                 if ( Number( $('span.vendor-price').text() ) < 0  ) {
                     $( $('.dokan-product-less-price-alert').removeClass('dokan-hide') );
                     $( 'input[type=submit]' ).attr( 'disabled', 'disabled' );
@@ -1369,6 +1370,47 @@ jQuery(function($) {
 
                 if ( self.val() == 'variable' || self.val() == 'grouped' ) {
                     $( 'input[type=submit]' ).removeAttr( 'disabled' );
+
+                    $( "input.dokan-product-regular-price, input.dokan-product-sales-price" ).on( 'keyup', function () {
+                        if ( dokan.commission_type == 'percentage' ) {
+                            if ( $('input.dokan-product-sales-price' ).val() == '' ) {
+                                $( 'span.vendor-price' ).html(
+                                    parseFloat( accounting.formatNumber( ( ( $( 'input.dokan-product-regular-price' ).val() * dokan.vendor_percentage ) / 100 ), dokan.rounding_precision, '' ) )
+                                            .toString()
+                                            .replace( '.', dokan.mon_decimal_point )
+                                );
+                            } else {
+                                $( 'span.vendor-price' ).html(
+                                    parseFloat( accounting.formatNumber( ( ( $( 'input.dokan-product-sales-price' ).val() * dokan.vendor_percentage ) / 100 ), dokan.rounding_precision, '' ) )
+                                        .toString()
+                                        .replace( '.', dokan.mon_decimal_point )
+                                );
+                            }
+                        } else {
+
+                            if ( $('input.dokan-product-sales-price' ).val() == '' ) {
+                                $( 'span.vendor-price' ).html(
+                                    parseFloat( accounting.formatNumber( ( $( 'input.dokan-product-regular-price' ).val() - ( 100 - dokan.vendor_percentage ) ), dokan.rounding_precision, '' ) )
+                                            .toString()
+                                            .replace( '.', dokan.mon_decimal_point )
+                                );
+                            } else {
+                                $( 'span.vendor-price' ).html(
+                                        parseFloat( accounting.formatNumber( ( $( 'input.dokan-product-sales-price' ).val() - ( 100 - dokan.vendor_percentage ) ), dokan.rounding_precision, '' ) )
+                                            .toString()
+                                            .replace( '.', dokan.mon_decimal_point )
+                                    );
+                            }
+                        }
+                    } );
+
+                    if ( Number( $('span.vendor-price').text() ) < 0  ) {
+                        $( $('.dokan-product-less-price-alert').removeClass('dokan-hide') );
+                        $( 'input[type=submit]' ).attr( 'disabled', 'disabled' );
+                    } else {
+                        $( $('.dokan-product-less-price-alert').addClass('dokan-hide') );
+                        $( 'input[type=submit]' ).removeAttr( 'disabled');
+                    }
                 } else {
                     if ( Number( $('span.vendor-price').text() ) > 0 ) {
                         $( 'input[type=submit]' ).removeAttr( 'disabled');
