@@ -14,7 +14,7 @@ class Dokan_Order_Manager {
         add_action( 'woocommerce_order_status_changed', array( $this, 'on_sub_order_change' ), 99, 3 );
 
         // create sub-orders
-        add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'new_order_created' ) );
+        add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'maybe_split_orders' ) );
 
         // prevent non-vendor coupons from being added
         add_filter( 'woocommerce_coupon_is_valid', array( $this, 'ensure_vendor_coupon' ), 10, 3 );
@@ -111,7 +111,7 @@ class Dokan_Order_Manager {
      *
      * @return void
      */
-    function new_order_created( $parent_order_id ) {
+    function maybe_split_orders( $parent_order_id ) {
         $parent_order = wc_get_order( $parent_order_id );
 
         dokan_log( sprintf( 'New Order #%d created. Init sub order.', $parent_order_id ) );
@@ -244,7 +244,7 @@ class Dokan_Order_Manager {
             $order->set_payment_method_title( $parent_order->get_payment_method_title() );
 
             // record admin fee
-            $admin_fee = dokan_get_admin_commission_by( $order_id, $seller_id );
+            $admin_fee = dokan_get_admin_commission_by( $order, $seller_id );
             $order->update_meta_data( '_dokan_admin_fee', $admin_fee );
 
             // finally, let the order re-calculate itself and save
@@ -454,7 +454,6 @@ class Dokan_Order_Manager {
         // a coupon must be bound with a product
         if ( count( $coupon->get_product_ids() ) == 0 ) {
             throw new Exception( __( 'A coupon must be restricted with a vendor product.', 'dokan-lite' ) );
-
         }
 
         foreach ( WC()->cart->get_cart() as $item ) {
