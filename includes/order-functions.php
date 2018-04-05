@@ -8,7 +8,7 @@
  */
 function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
 
-    $order          = new WC_Order( $order_id );
+    $order          = wc_get_order( $order_id );
     $seller_id      = dokan_get_seller_id_by_order( $order_id );
     $net_amount     = dokan_get_seller_earnings_by_order( $order, $seller_id );
 
@@ -225,8 +225,8 @@ function dokan_count_orders( $user_id ) {
     global $wpdb;
 
     $cache_group = 'dokan_seller_data_'.$user_id;
-    $cache_key = 'dokan-count-orders-' . $user_id;
-    $counts = wp_cache_get( $cache_key, $cache_group );
+    $cache_key   = 'dokan-count-orders-' . $user_id;
+    $counts      = wp_cache_get( $cache_key, $cache_group );
 
     if ( $counts === false ) {
         $counts = array('wc-pending' => 0, 'wc-completed' => 0, 'wc-on-hold' => 0, 'wc-processing' => 0, 'wc-refunded' => 0, 'wc-cancelled' => 0, 'total' => 0);
@@ -259,85 +259,6 @@ function dokan_count_orders( $user_id ) {
 
     return $counts;
 }
-
-/**
- * Update the child order status when a parent order status is changed
- *
- * @global object $wpdb
- * @param int $order_id
- * @param string $old_status
- * @param string $new_status
- */
-function dokan_on_order_status_change( $order_id, $old_status, $new_status ) {
-    global $wpdb;
-
-    // make sure order status contains "wc-" prefix
-    if ( stripos( $new_status, 'wc-' ) === false ) {
-        $new_status = 'wc-' . $new_status;
-    }
-
-    // insert on dokan sync table
-    $wpdb->update( $wpdb->prefix . 'dokan_orders',
-        array( 'order_status' => $new_status ),
-        array( 'order_id' => $order_id ),
-        array( '%s' ),
-        array( '%d' )
-    );
-
-    // if any child orders found, change the orders as well
-    $sub_orders = get_children( array( 'post_parent' => $order_id, 'post_type' => 'shop_order' ) );
-    if ( $sub_orders ) {
-        foreach ($sub_orders as $order_post) {
-            $order = new WC_Order( $order_post->ID );
-            $order->update_status( $new_status );
-        }
-    }
-}
-
-add_action( 'woocommerce_order_status_changed', 'dokan_on_order_status_change', 10, 3 );
-
-
-/**
- * Mark the parent order as complete when all the child order are completed
- *
- * @param int $order_id
- * @param string $old_status
- * @param string $new_status
- * @return void
- */
-function dokan_on_child_order_status_change( $order_id, $old_status, $new_status ) {
-    $order_post = get_post( $order_id );
-
-    // we are monitoring only child orders
-    if ( $order_post->post_parent === 0 ) {
-        return;
-    }
-
-    // get all the child orders and monitor the status
-    $parent_order_id = $order_post->post_parent;
-    $sub_orders      = get_children( array( 'post_parent' => $parent_order_id, 'post_type' => 'shop_order' ) );
-
-    // return if any child order is not completed
-    $all_complete = true;
-
-    if ( $sub_orders ) {
-        foreach ($sub_orders as $sub) {
-            $order = new WC_Order( $sub->ID );
-            if ( dokan_get_prop( $order, 'status' ) != 'completed' ) {
-                $all_complete = false;
-            }
-        }
-    }
-
-    // seems like all the child orders are completed
-    // mark the parent order as complete
-    if ( $all_complete ) {
-        $parent_order = new WC_Order( $parent_order_id );
-        $parent_order->update_status( 'wc-completed', __( 'Mark parent order completed when all child orders are completed.', 'dokan-lite' ) );
-    }
-}
-
-add_action( 'woocommerce_order_status_changed', 'dokan_on_child_order_status_change', 99, 3 );
 
 
 /**
@@ -379,7 +300,7 @@ function dokan_sync_insert_order( $order_id ) {
         return;
     }
 
-    $order              = new WC_Order( $order_id );
+    $order              = wc_get_order( $order_id );
     $seller_id          = dokan_get_seller_id_by_order( $order_id );
     $order_total        = $order->get_total();
     $order_status       = dokan_get_prop( $order, 'status' );
@@ -589,7 +510,7 @@ function dokan_get_product_list_by_order( $order, $glue = ',' ) {
 function dokan_sync_order_table( $order_id ) {
     global $wpdb;
 
-    $order          = new WC_Order( $order_id );
+    $order          = wc_get_order( $order_id );
     $seller_id      = dokan_get_seller_id_by_order( $order_id );
     $order_total    = $order->get_total();
 
@@ -638,11 +559,12 @@ function dokan_sync_order_table( $order_id ) {
  */
 function dokan_is_sub_order( $order_id ) {
     $parent_order_id =  wp_get_post_parent_id( $order_id );
+
     if ( 0 != $parent_order_id ) {
         return true;
-    } else {
-        return false;
     }
+
+    return false;
 }
 
 
@@ -672,7 +594,7 @@ function dokan_total_orders() {
  */
 function dokan_get_sellers_by( $order_id ) {
 
-    $order       = new WC_Order( $order_id );
+    $order       = wc_get_order( $order_id );
     $order_items = $order->get_items();
 
     $sellers = array();
@@ -813,22 +735,3 @@ if ( ! function_exists( 'dokan_get_customer_orders_by_seller' ) ) :
     }
 
 endif;
-
-add_action( 'dokan_checkout_update_order_meta', 'dokan_save_admin_commssion_to_order_meta', 10, 2 );
-
-/**
- * Update order meta when the order is placed
- *
- * @since 2.7.8
- *
- * @param int $order_id
- *
- * @param int $seller_id
- *
- * @return void
- */
-function dokan_save_admin_commssion_to_order_meta( $order_id, $seller_id ) {
-    $seller_order = wc_get_order( $order_id );
-    $admin_fee = dokan_get_admin_commission_by( $seller_order, $seller_id );
-    update_post_meta( $order_id , '_dokan_admin_fee', $admin_fee );
-}
