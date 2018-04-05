@@ -60,9 +60,25 @@
 
 <script type="text/javascript">
     jQuery(function($) {
-        var order_stats = <?php echo json_encode( $order_data ); ?>;
+        var order_stats = <?php echo json_encode( wp_list_pluck( $order_data, 'value' ) ); ?>;
+        var colors = <?php echo json_encode( wp_list_pluck( $order_data, 'color' ) ); ?>;
+        var labels = <?php echo json_encode( wp_list_pluck( $order_data, 'label' ) ); ?>;
 
         var ctx = $("#order-stats").get(0).getContext("2d");
-        new Chart(ctx).Doughnut(order_stats);
+        var donn = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: order_stats,
+                    backgroundColor: colors
+                }],
+                labels: labels,
+            },
+            options: {
+                legend: {
+                    display: false
+                }
+            }
+        });
     });
 </script>
