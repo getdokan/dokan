@@ -2466,3 +2466,30 @@ function dokan_get_all_caps() {
 
     return apply_filters( 'dokan_get_all_cap', $capabilities );
 }
+
+/**
+ * Merge user defined arguments into defaults array.
+ *
+ * This function is similiar to wordpress wp_parse_args().
+ * It's support multidimensional array.
+ *
+ * @param  array $args
+ * @param  array $defaults Optional.
+ *
+ * @return array
+ */
+function dokan_parse_args( &$args, $defaults = [] ) {
+    $args     = (array) $args;
+    $defaults = (array) $defaults;
+    $r        = $defaults;
+
+    foreach ( $args as $k => &$v ) {
+        if ( is_array( $v ) && isset( $r[ $k ] ) ) {
+            $r[ $k ] = dokan_parse_args( $v, $r[ $k ] );
+        } else {
+            $r[ $k ] = $v;
+        }
+    }
+
+    return $r;
+}
