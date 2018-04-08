@@ -18,3 +18,4 @@ plugin-deploy.sh
 package-lock.json
 phpcs.ruleset.xml
 src
+CONTRIBUTING.md
