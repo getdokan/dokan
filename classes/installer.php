@@ -113,7 +113,6 @@ class Dokan_Installer {
 
         if ( !$installed_version ) {
             $options = get_option( 'dokan_selling' );
-            $options['product_style'] = 'new';
             update_option( 'dokan_selling', $options );
         }
     }
