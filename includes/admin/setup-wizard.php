@@ -324,11 +324,6 @@ class Dokan_Setup_Wizard {
         $new_seller_enable_selling = ! empty( $options['new_seller_enable_selling'] ) ? $options['new_seller_enable_selling'] : '';
         $seller_percentage         = ! empty( $options['seller_percentage'] ) ? $options['seller_percentage'] : '';
         $order_status_change       = ! empty( $options['order_status_change'] ) ? $options['order_status_change'] : '';
-        $product_style             = ! empty( $options['product_style'] ) ? $options['product_style'] : '';
-        $product_styles_list       = array(
-            'old' => __( 'Tab View', 'dokan-lite' ),
-            'new' => __( 'Flat View', 'dokan-lite' ),
-        );
 
         ?>
         <h1><?php _e( 'Selling Setup', 'dokan-lite' ); ?></h1>
@@ -355,20 +350,6 @@ class Dokan_Setup_Wizard {
                         <label for="order_status_change"><?php _e( 'Vendor can change order status', 'dokan-lite' ); ?></label>
                     </td>
                 </tr>
-                <tr>
-                    <th scope="row"><label for="product_style"><?php _e( 'Add/Edit Product Style', 'dokan-lite' ); ?></label></th>
-                    <td>
-                        <select class="wc-enhanced-select" id="product_style" name="product_style">
-                            <?php
-                                foreach ( $product_styles_list as $key => $value ) {
-                                    $selected = ( $product_style == $key ) ? ' selected="true"' : '';
-                                    echo '<option value="' . $key . '" ' . $selected . '>' . $value . '</option>';
-                                }
-                            ?>
-                        </select>
-                        <p class="description"><?php _e( 'The style you prefer for vendor to add or edit products.', 'dokan-lite' ); ?></p>
-                    </td>
-                </tr>
             </table>
             <p class="wc-setup-actions step">
                 <input type="submit" class="button-primary button button-large button-next" value="<?php esc_attr_e( 'Continue', 'dokan-lite' ); ?>" name="save_step" />
@@ -389,7 +370,6 @@ class Dokan_Setup_Wizard {
         $options['new_seller_enable_selling'] = isset( $_POST['new_seller_enable_selling'] ) ? 'on' : 'off';
         $options['seller_percentage']         = intval( $_POST['seller_percentage'] );
         $options['order_status_change']       = isset( $_POST['order_status_change'] ) ? 'on' : 'off';
-        $options['product_style']             = sanitize_text_field( $_POST['product_style'] );
 
         update_option( 'dokan_selling', $options );
 
