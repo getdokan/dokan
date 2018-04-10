@@ -39,6 +39,7 @@ var Dokan_Vendor_Registration = {
         var value = $(this).val();
 
         if ( value === 'seller') {
+            $('.show_if_seller').find( 'input, select' ).removeAttr( 'disabled' );
             $('.show_if_seller').slideDown();
 
             if ( $( '.tc_check_box' ).length > 0 ) {
@@ -46,6 +47,7 @@ var Dokan_Vendor_Registration = {
             }
 
         } else {
+            $('.show_if_seller').find( 'input, select' ).attr( 'disabled', 'disabled' );
             $('.show_if_seller').slideUp();
 
             if ( $( '.tc_check_box' ).length > 0 ) {
@@ -164,6 +166,8 @@ var Dokan_Vendor_Registration = {
 // boot the class onReady
 $(function() {
     Dokan_Vendor_Registration.init();
+
+    $('.show_if_seller').find( 'input, select' ).attr( 'disabled', 'disabled' );
 
     // disable migration button if checkbox isn't checked
     if ( $( '.tc_check_box' ).length > 0 ){
