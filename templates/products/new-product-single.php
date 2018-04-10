@@ -681,4 +681,3 @@ if ( ! $from_shortcode ) {
         get_footer();
     }
 ?>
-

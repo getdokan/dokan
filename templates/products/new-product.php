@@ -183,6 +183,12 @@
                                     </div><!-- .sale-schedule-container -->
                                 </div>
 
+                                <div class="dokan-form-group dokan-clearfix dokan-price-container">
+                                    <div class="dokan-product-less-price-alert dokan-hide">
+                                        <?php _e('Product price can\'t be less than the vendor fee!', 'dokan-lite' ); ?>
+                                    </div>
+                                </div>
+
                                 <div class="dokan-form-group">
                                     <textarea name="post_excerpt" id="post-excerpt" rows="5" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Short description of the product...', 'dokan-lite' ); ?>"><?php echo dokan_posted_textarea( 'post_excerpt' ); ?></textarea>
                                 </div>
