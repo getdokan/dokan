@@ -150,6 +150,7 @@ module.exports = function(grunt) {
                     '!bin/**',
                     '!.git/**',
                     '!Gruntfile.js',
+                    '!CONTRIBUTING.md',
                     '!package.json',
                     '!debug.log',
                     '!phpunit.xml',
