@@ -131,10 +131,19 @@ class Dokan_Ajax {
             }
         }
 
-        wp_send_json_success( array(
-            'message' => __( 'Available', 'dokan-lite' ),
-            'url'     => sanitize_user( $url_slug )
-        ) );
+        if ( is_admin() && isset( $_POST['vendor_id'] ) ) {
+            $vendor     = get_user_by( 'id', $_POST['vendor_id'] );
+            if ( $vendor->user_nicename == $user->user_nicename ) {
+                $check = true;
+            }
+        }
+
+        if ( $check ) {
+            wp_send_json_success( array(
+                'message' => __( 'Available', 'dokan-lite' ),
+                'url'     => sanitize_user( $url_slug )
+            ) );
+        }
     }
 
     /**
