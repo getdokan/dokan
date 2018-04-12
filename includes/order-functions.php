@@ -514,6 +514,11 @@ function dokan_sync_order_table( $order_id ) {
     $seller_id      = dokan_get_seller_id_by_order( $order_id );
     $order_total    = $order->get_total();
 
+    if ( is_null( $seller_id ) ) {
+        $post_tmp = get_post( $order_id );
+        $seller_id = $post_tmp->post_author;
+    }
+
     if ( $order->get_total_refunded() ) {
         $order_total = $order_total - $order->get_total_refunded();
     }
