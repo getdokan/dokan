@@ -91,7 +91,7 @@ module.exports = function(grunt) {
                 options: {
                     updateDomains: true
                 },
-                src: [ '*.php', '**/*.php', '!node_modules/**', '!php-tests/**', '!src/**', '!bin/**', '!build/**', '!assets/**' ]
+                src: [ '*.php', '**/*.php', '!node_modules/**', '!src/**', '!php-tests/**', '!bin/**', '!build/**', '!assets/**' ]
             }
         },
 

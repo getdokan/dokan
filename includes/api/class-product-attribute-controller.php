@@ -92,7 +92,7 @@ class Dokan_REST_Product_Attribute_Controller extends WC_REST_Product_Attributes
      */
     public function update_item_permissions_check( $request ) {
         if ( ! $this->get_taxonomy( $request ) ) {
-            return new WP_Error( 'dokan_rest_taxonomy_invalid', __( 'Resource does not exist.', 'woocommerce' ), array( 'status' => 404 ) );
+            return new WP_Error( 'dokan_rest_taxonomy_invalid', __( 'Resource does not exist.', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
         return current_user_can( 'dokan_edit_product' );
@@ -106,7 +106,7 @@ class Dokan_REST_Product_Attribute_Controller extends WC_REST_Product_Attributes
      */
     public function delete_item_permissions_check( $request ) {
         if ( ! $this->get_taxonomy( $request ) ) {
-            return new WP_Error( 'woocommerce_rest_taxonomy_invalid', __( 'Resource does not exist.', 'woocommerce' ), array( 'status' => 404 ) );
+            return new WP_Error( 'woocommerce_rest_taxonomy_invalid', __( 'Resource does not exist.', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
         return current_user_can( 'dokan_delete_product' );

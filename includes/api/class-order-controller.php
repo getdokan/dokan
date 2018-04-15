@@ -69,7 +69,7 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
         register_rest_route( $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/', array(
             'args' => array(
                 'id' => array(
-                    'description' => __( 'Unique identifier for the object.' ),
+                    'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
                     'type'        => 'integer',
                 )
             ),
@@ -98,7 +98,7 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
         register_rest_route( $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/notes', array(
             'args' => array(
                 'id' => array(
-                    'description' => __( 'Unique identifier for the object.' ),
+                    'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
                     'type'        => 'integer',
                 )
             ),
@@ -129,7 +129,7 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
                     'type'        => 'integer',
                 ),
                 'note_id' => array(
-                    'description' => __( 'Unique identifier for the note object.' ),
+                    'description' => __( 'Unique identifier for the note object.', 'dokan-lite' ),
                     'type'        => 'integer',
                 )
             ),
@@ -181,7 +181,7 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
         $store_id = dokan_get_current_user_id();
 
         if ( empty( $store_id ) ) {
-            return new WP_Error( 'no_store_found', __( 'No seller found' ), array( 'status' => 404 ) );
+            return new WP_Error( 'no_store_found', __( 'No seller found', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
         $object = $this->get_object( (int) $request['id'] );
@@ -578,7 +578,7 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
         $note = get_comment( $id );
 
         if ( empty( $id ) || empty( $note ) || intval( $note->comment_post_ID ) !== intval( $order->get_id() ) ) {
-            return new WP_Error( 'dokan_rest_invalid_id', __( 'Invalid resource ID.', 'woocommerce' ), array( 'status' => 404 ) );
+            return new WP_Error( 'dokan_rest_invalid_id', __( 'Invalid resource ID.', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
         $order_note = $this->prepare_item_for_response( $note, $request );

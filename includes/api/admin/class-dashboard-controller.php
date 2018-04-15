@@ -85,7 +85,7 @@ class Dokan_REST_Admin_Dashboard_Controller extends Dokan_REST_Admin_Controller 
         }
 
         if ( ! $rss->get_item_quantity() ) {
-            return new WP_Error( 'error', __( 'An error has occurred, which probably means the feed is down. Try again later.' ) );
+            return new WP_Error( 'error', __( 'An error has occurred, which probably means the feed is down. Try again later.', 'dokan-lite' ) );
             $rss->__destruct();
             unset($rss);
         }
@@ -100,7 +100,7 @@ class Dokan_REST_Admin_Dashboard_Controller extends Dokan_REST_Admin_Controller 
 
             $title = esc_html( trim( strip_tags( $item->get_title() ) ) );
             if ( empty( $title ) ) {
-                $title = __( 'Untitled' );
+                $title = __( 'Untitled', 'dokan-lite' );
             }
 
             $desc = @html_entity_decode( $item->get_description(), ENT_QUOTES, get_option( 'blog_charset' ) );

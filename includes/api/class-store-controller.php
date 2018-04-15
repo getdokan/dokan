@@ -40,7 +40,7 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
         register_rest_route( $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)', array(
             'args' => array(
                 'id' => array(
-                    'description' => __( 'Unique identifier for the object.' ),
+                    'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
                     'type'        => 'integer',
                 ),
             ),
@@ -55,7 +55,7 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
                 'args' =>  array(
                     'reassign' => array(
                         'type'        => 'integer',
-                        'description' => __( 'Reassign the deleted user\'s posts and links to this user ID.' ),
+                        'description' => __( 'Reassign the deleted user\'s posts and links to this user ID.', 'dokan-lite' ),
                         'required'    => true,
                     ),
                 )
@@ -65,7 +65,7 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
         register_rest_route( $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/products' , array(
             'args' => array(
                 'id' => array(
-                    'description' => __( 'Unique identifier for the object.' ),
+                    'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
                     'type'        => 'integer',
                 ),
             ),
@@ -79,7 +79,7 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
         register_rest_route( $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/reviews' , array(
             'args' => array(
                 'id' => array(
-                    'description' => __( 'Unique identifier for the object.' ),
+                    'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
                     'type'        => 'integer',
                 ),
             ),
@@ -155,7 +155,7 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
         $store = dokan()->vendor->get( $store_id );
 
         if ( empty( $store->id ) ) {
-            return new WP_Error( 'no_store_found', __( 'No store found' ), array( 'status' => 404 ) );
+            return new WP_Error( 'no_store_found', __( 'No store found', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
         $stores_data = $this->prepare_item_for_response( $store, $request );
@@ -307,7 +307,7 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
         $store_id = $params['id'];
 
         if ( empty( $store_id ) ) {
-            return new WP_Error( 'no_store_found', __( 'No store found' ), array( 'status' => 404 ) );
+            return new WP_Error( 'no_store_found', __( 'No store found', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
         $dokan_template_reviews = Dokan_Pro_Reviews::init();
@@ -318,7 +318,7 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
         $comments               = $dokan_template_reviews->comment_query( $store_id, $post_type, $limit, $status, $paged );
 
         if ( empty( $comments ) ) {
-            return new WP_Error( 'no_reviews_found', __( 'No reviews found' ), array( 'status' => 404 ) );
+            return new WP_Error( 'no_reviews_found', __( 'No reviews found', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
         $data = array();

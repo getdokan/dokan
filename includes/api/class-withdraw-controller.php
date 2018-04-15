@@ -165,7 +165,7 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
         $store_id = dokan_get_current_user_id();
 
         if ( empty( $store_id ) ) {
-            return new WP_Error( 'no_store_found', __( 'No vendor found' ), array( 'status' => 404 ) );
+            return new WP_Error( 'no_store_found', __( 'No vendor found', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
         $status = ! empty( $request['status'] ) ? $request['status'] : '';
@@ -229,7 +229,7 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
         }
 
         if ( empty( $store_id ) ) {
-            return new WP_Error( 'no_store_found', __( 'No vendor found' ), array( 'status' => 404 ) );
+            return new WP_Error( 'no_store_found', __( 'No vendor found', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
         $status = ! empty( $request['status'] ) ? $request['status'] : 'cancelled';
@@ -304,7 +304,7 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
         $store_id = dokan_get_current_user_id();
 
         if ( empty( $store_id ) ) {
-            return new WP_Error( 'no_store_found', __( 'No vendor found' ), array( 'status' => 404 ) );
+            return new WP_Error( 'no_store_found', __( 'No vendor found', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
         $formatted = false;

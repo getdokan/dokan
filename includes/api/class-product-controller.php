@@ -53,7 +53,7 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
         register_rest_route( $this->namespace, '/' . $this->base, array(
             'args' => array(
                 'id' => array(
-                    'description' => __( 'Unique identifier for the object.' ),
+                    'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
                     'type'        => 'integer',
                 ),
             ),
@@ -75,7 +75,7 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
         register_rest_route( $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/', array(
             'args' => array(
                 'id' => array(
-                    'description' => __( 'Unique identifier for the object.' ),
+                    'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
                     'type'        => 'integer',
                 ),
             ),
@@ -130,7 +130,7 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
         $store_id = dokan_get_current_user_id();
 
         if ( empty( $store_id ) ) {
-            return new WP_Error( 'no_store_found', __( 'No seller found' ), array( 'status' => 404 ) );
+            return new WP_Error( 'no_store_found', __( 'No seller found', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
         if ( ! empty( $request['id'] ) ) {
@@ -167,7 +167,7 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
         $store_id = dokan_get_current_user_id();
 
         if ( empty( $store_id ) ) {
-            return new WP_Error( 'no_store_found', __( 'No seller found' ), array( 'status' => 404 ) );
+            return new WP_Error( 'no_store_found', __( 'No seller found', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
         $object = $this->get_object( (int) $request['id'] );
@@ -198,7 +198,7 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
         $result   = false;
 
         if ( ! $object || 0 === $object->get_id() ) {
-            return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Invalid ID.', 'dokan' ), array( 'status' => 404 ) );
+            return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Invalid ID.', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
         $product_author = get_post_field( 'post_author', $object->get_id() );
@@ -1212,7 +1212,7 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
 
                 if ( ! wp_attachment_is_image( $attachment_id ) ) {
                     /* translators: %s: attachment id */
-                    throw new WC_REST_Exception( 'woocommerce_product_invalid_image_id', sprintf( __( '#%s is an invalid image ID.', 'woocommerce' ), $attachment_id ), 400 );
+                    throw new WC_REST_Exception( 'woocommerce_product_invalid_image_id', sprintf( __( '#%s is an invalid image ID.', 'dokan-lite' ), $attachment_id ), 400 );
                 }
 
                 if ( isset( $image['position'] ) && 0 === absint( $image['position'] ) ) {
