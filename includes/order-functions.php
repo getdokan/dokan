@@ -475,7 +475,6 @@ function dokan_get_order_status_translated( $status ) {
     }
 }
 
-
 /**
  * Get product items list from order
  *
@@ -498,59 +497,6 @@ function dokan_get_product_list_by_order( $order, $glue = ',' ) {
     $product_list = implode( $glue, $prodct_name );
 
     return $product_list;
-}
-
-/**
- * Insert a order in sync table once a order is created
- *
- * @global object $wpdb
- * @param int $order_id
- * @since 2.4
- */
-function dokan_sync_order_table( $order_id ) {
-    global $wpdb;
-
-    $order          = wc_get_order( $order_id );
-    $seller_id      = dokan_get_seller_id_by_order( $order_id );
-    $order_total    = $order->get_total();
-
-    if ( is_null( $seller_id ) ) {
-        $post_tmp = get_post( $order_id );
-        $seller_id = $post_tmp->post_author;
-    }
-
-    if ( $order->get_total_refunded() ) {
-        $order_total = $order_total - $order->get_total_refunded();
-    }
-
-    $order_status       = dokan_get_prop( $order, 'status' );
-    $admin_commission   = dokan_get_admin_commission_by( $order, $seller_id );
-    $net_amount         = $order_total - $admin_commission;
-    $net_amount         = apply_filters( 'dokan_sync_order_net_amount', $net_amount, $order );
-
-    // make sure order status contains "wc-" prefix
-    if ( stripos( $order_status, 'wc-' ) === false ) {
-        $order_status = 'wc-' . $order_status;
-    }
-
-    $seller_id = ! is_array( $seller_id ) ? $seller_id : 0;
-
-    $wpdb->insert( $wpdb->prefix . 'dokan_orders',
-        array(
-            'order_id'     => $order_id,
-            'seller_id'    => $seller_id,
-            'order_total'  => $order_total,
-            'net_amount'   => $net_amount,
-            'order_status' => $order_status,
-        ),
-        array(
-            '%d',
-            '%d',
-            '%f',
-            '%f',
-            '%s',
-        )
-    );
 }
 
 /**
