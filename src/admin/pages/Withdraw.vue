@@ -1,9 +1,9 @@
 <template>
     <div class="withdraw-requests">
-        <h1>Withdraw Requests</h1>
+        <h1>{{ __( 'Withdraw Requests', 'dokan-lite' ) }}</h1>
 
         <modal
-            title="Update Note"
+            :title="__( 'Update Note', 'dokan-lite' )"
             v-if="showModal"
             @close="showModal = false"
         >
@@ -12,14 +12,14 @@
             </template>
 
             <template slot="footer">
-                <button class="button button-primary button-large" @click="updateNote()">Update Note</button>
+                <button class="button button-primary button-large" @click="updateNote()">{{ __( 'Update Note', 'dokan-lite' ) }}</button>
             </template>
         </modal>
 
         <ul class="subsubsub">
-            <li><router-link :to="{ name: 'Withdraw', query: { status: 'pending' }}" active-class="current" exact>Pending <span class="count">({{ counts.pending }})</span></router-link> | </li>
-            <li><router-link :to="{ name: 'Withdraw', query: { status: 'approved' }}" active-class="current" exact>Approved <span class="count">({{ counts.approved }})</span></router-link> | </li>
-            <li><router-link :to="{ name: 'Withdraw', query: { status: 'cancelled' }}" active-class="current" exact>Cancelled <span class="count">({{ counts.cancelled }})</span></router-link></li>
+            <li><router-link :to="{ name: 'Withdraw', query: { status: 'pending' }}" active-class="current" exact v-html="sprintf( __( 'Pending <span class=\'count\'>(%s)</span>', 'dokan-lite' ), counts.pending )"></router-link> | </li>
+            <li><router-link :to="{ name: 'Withdraw', query: { status: 'approved' }}" active-class="current" exact v-html="sprintf( __( 'Approved <span class=\'count\'>(%s)</span>', 'dokan-lite' ), counts.approved )"></router-link> | </li>
+            <li><router-link :to="{ name: 'Withdraw', query: { status: 'cancelled' }}" active-class="current" exact v-html="sprintf( __( 'Cancelled <span class=\'count\'>(%s)</span>', 'dokan-lite' ), counts.cancelled )"></router-link></li>
         </ul>
 
         <list-table
@@ -41,7 +41,7 @@
         >
             <template slot="seller" slot-scope="data">
                 <img :src="data.row.user.gravatar" :alt="data.row.user.store_name" width="50">
-                <strong><a :href="vendorUrl(data.row.user.id)">{{ data.row.user.store_name ? data.row.user.store_name : '(no name)' }}</a></strong>
+                <strong><a :href="vendorUrl(data.row.user.id)">{{ data.row.user.store_name ? data.row.user.store_name : __( '(no name)', 'dokan-lite' ) }}</a></strong>
             </template>
 
             <template slot="amount" slot-scope="data">
@@ -63,21 +63,21 @@
             <template slot="actions" slot-scope="data">
                 <template v-if="data.row.status === 'pending'">
                     <div class="button-group">
-                        <button class="button button-small" @click.prevent="changeStatus('approved', data.row.id)" title="Approve Request"><span class="dashicons dashicons-yes"></span></button>
-                        <button class="button button-small" @click.prevent="openNoteModal(data.row.note, data.row.id)" title="Add Note"><span class="dashicons dashicons-testimonial"></span></button>
+                        <button class="button button-small" @click.prevent="changeStatus('approved', data.row.id)" :title="__( 'Approve Request', 'dokan-lite' )"><span class="dashicons dashicons-yes"></span></button>
+                        <button class="button button-small" @click.prevent="openNoteModal(data.row.note, data.row.id)" :title="__( 'Add Note', 'dokan-lite' )"><span class="dashicons dashicons-testimonial"></span></button>
                     </div>
                 </template>
                 <template v-else-if="data.row.status === 'approved'">
                     <div class="button-group">
-                        <button class="button button-small" @click.prevent="changeStatus('pending', data.row.id)" title="Mark as Pending"><span class="dashicons dashicons-backup"></span></button>
-                        <button class="button button-small" @click.prevent="openNoteModal(data.row.note, data.row.id)" title="Add Note"><span class="dashicons dashicons-testimonial"></span></button>
+                        <button class="button button-small" @click.prevent="changeStatus('pending', data.row.id)" :title="__( 'Mark as Pending', 'dokan-lite' )"><span class="dashicons dashicons-backup"></span></button>
+                        <button class="button button-small" @click.prevent="openNoteModal(data.row.note, data.row.id)" :title="__( 'Add Note', 'dokan-lite' )"><span class="dashicons dashicons-testimonial"></span></button>
                     </div>
                 </template>
                 <template v-else>
                     <div class="button-group">
-                        <button class="button button-small" @click.prevent="changeStatus('approved', data.row.id)" title="Approve Request"><span class="dashicons dashicons-yes"></span></button>
-                        <button class="button button-small" @click.prevent="changeStatus('pending', data.row.id)" title="Mark as Pending"><span class="dashicons dashicons-backup"></span></button>
-                        <button class="button button-small" @click.prevent="openNoteModal(data.row.note, data.row.id)" title="Add Note"><span class="dashicons dashicons-testimonial"></span></button>
+                        <button class="button button-small" @click.prevent="changeStatus('approved', data.row.id)" :title="__( 'Approve Request', 'dokan-lite' )"><span class="dashicons dashicons-yes"></span></button>
+                        <button class="button button-small" @click.prevent="changeStatus('pending', data.row.id)" :title="__( 'Mark as Pending', 'dokan-lite' )"><span class="dashicons dashicons-backup"></span></button>
+                        <button class="button button-small" @click.prevent="openNoteModal(data.row.note, data.row.id)" :title="__( 'Add Note', 'dokan-lite' )"><span class="dashicons dashicons-testimonial"></span></button>
                     </div>
                 </template>
             </template>
@@ -115,47 +115,47 @@ export default {
                 approved: 0,
                 cancelled: 0
             },
-            notFound: 'No requests found.',
+            notFound: this.__( 'No requests found.', 'dokan-lite' ),
             showCb: true,
             loading: false,
             columns: {
-                'seller': { label: 'Vendor' },
-                'amount': { label: 'Amount' },
-                'status': { label: 'Status' },
-                'method_title': { label: 'Method' },
-                'method_details': { label: 'Details' },
-                'note': { label: 'Note' },
-                'created': { label: 'Date' },
-                'actions': { label: 'Actions' },
+                'seller': { label: this.__( 'Vendor', 'dokan-lite' ) },
+                'amount': { label: this.__( 'Amount', 'dokan-lite' ) },
+                'status': { label: this.__( 'Status', 'dokan-lite' ) },
+                'method_title': { label: this.__( 'Method', 'dokan-lite' ) },
+                'method_details': { label: this.__( 'Details', 'dokan-lite' ) },
+                'note': { label: this.__( 'Note', 'dokan-lite' ) },
+                'created': { label: this.__( 'Date', 'dokan-lite' ) },
+                'actions': { label: this.__( 'Actions', 'dokan-lite' ) },
             },
             requests: [],
             actionColumn: 'seller',
             actions: [
                 {
                     key: 'trash',
-                    label: 'Delete'
+                    label: this.__( 'Delete', 'dokan-lite' )
                 },
                 {
                     key: 'cancel',
-                    label: 'Cancel'
+                    label: this.__( 'Cancel', 'dokan-lite' )
                 }
             ],
             bulkActions: [
                 {
                     key: 'approved',
-                    label: 'Approve'
+                    label: this.__( 'Approve', 'dokan-lite' )
                 },
                 {
                     key: 'cancelled',
-                    label: 'Cancel'
+                    label: this.__( 'Cancel', 'dokan-lite' )
                 },
                 {
                     key: 'delete',
-                    label: 'Delete'
+                    label: this.__( 'Delete', 'dokan-lite' )
                 },
                 {
                     key: 'paypal',
-                    label: 'Download PayPal mass payment file'
+                    label: this.__( 'Download PayPal mass payment file', 'dokan-lite' )
                 },
             ],
         };
@@ -256,7 +256,7 @@ export default {
             }
 
             if ( 'trash' === action ) {
-                if ( confirm( 'Are you sure?' ) ) {
+                if ( confirm( this.__( 'Are you sure?', 'dokan-lite' ) ) ) {
                     this.loading = true;
 
                     dokan.api.delete('/withdraw/' + row.id)
@@ -275,21 +275,20 @@ export default {
                 details = data[method].email || '';
 
             } else if ( 'bank' === method ) {
-
                 if ( data.bank.hasOwnProperty('ac_name') ) {
-                    details = 'Account Name: ' + data.bank.ac_name;
+                    details = this.sprintf( this.__( 'Account Name: %s', 'dokan-lite' ),  data.bank.ac_name );
                 }
 
                 if ( data.bank.hasOwnProperty('ac_number') ) {
-                    details += ", Account Number: " + data.bank.ac_number;
+                    details += this.sprintf( this.__( ', Account Number: %s', 'dokan-lite' ), data.bank.ac_number );
                 }
 
                 if ( data.bank.hasOwnProperty('bank_name') ) {
-                    details += ", Bank Name: " + data.bank.bank_name;
+                    details += this.sprintf( this.__( ', Bank Name: %s', 'dokan-lite' ), data.bank.bank_name );
                 }
 
                 if ( data.bank.hasOwnProperty('routing_number') ) {
-                    details += ", Routing Number: " + data.bank.routing_number;
+                    details += this.sprintf( this.__( ', Routing Number: %s', 'dokan-lite' ), data.bank.routing_number );
                 }
             }
 

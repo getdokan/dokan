@@ -1,6 +1,6 @@
 <template>
     <div class="dokan-help-page">
-        <h1>Help</h1>
+        <h1>{{ __( 'Help', 'dokan-lite' ) }}</h1>
 
         <div class="section-wrapper" v-if="docs !== null">
             <postbox v-for="section in docs" :title="section.title">

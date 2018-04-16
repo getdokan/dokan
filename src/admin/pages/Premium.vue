@@ -1,6 +1,6 @@
 <template>
     <div class="dokan-pro-features">
-        <h1>Dokan - Pro Features</h1>
+        <h1>{{ __( 'Dokan - Pro Features', 'dokan-lite' ) }}</h1>
 
         <div class="pro-feature-wrap">
             <div class="pro-feature" v-for="feature in features">

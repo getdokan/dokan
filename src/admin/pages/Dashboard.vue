@@ -1,6 +1,6 @@
 <template>
     <div class="dokan-dashboard">
-        <h1>Dashboard</h1>
+        <h1>{{ __( 'Dashboard', 'dokan-lite' ) }}</h1>
 
         <div class="widgets-wrapper">
             <div class="left-side">
@@ -12,7 +12,7 @@
                                 <a href="#">
                                     <strong>{{ overview.orders.this_month | currency }}</strong>
                                     <div class="details">
-                                        net sales this month <span :class="overview.orders.class">{{ overview.orders.parcent }}</span>
+                                        {{ __( 'net sales this month', 'dokan-lite' ) }} <span :class="overview.orders.class">{{ overview.orders.parcent }}</span>
                                     </div>
                                 </a>
                             </li>
@@ -21,40 +21,40 @@
                                 <a href="#">
                                     <strong>{{ overview.earning.this_month | currency }}</strong>
                                     <div class="details">
-                                        commission earned <span :class="overview.earning.class">{{ overview.earning.parcent }}</span>
+                                        {{ __( 'commission earned', 'dokan-lite' ) }} <span :class="overview.earning.class">{{ overview.earning.parcent }}</span>
                                     </div>
                                 </a>
                             </li>
                             <li class="vendor">
                                 <div class="dashicons dashicons-id"></div>
                                 <a href="#">
-                                    <strong>{{ overview.vendors.this_month }} Vendor</strong>
+                                    <strong>{{ sprintf( __( '%s Vendor', 'dokan-lite' ), overview.vendors.this_month ) }}</strong>
                                     <div class="details">
-                                        signup this month <span :class="overview.vendors.class">{{ overview.vendors.parcent }}</span>
+                                        {{ __( 'signup this month', 'dokan-lite' ) }} <span :class="overview.vendors.class">{{ overview.vendors.parcent }}</span>
                                     </div>
                                 </a>
                             </li>
                             <li class="approval">
                                 <div class="dashicons dashicons-businessman"></div>
                                 <a href="#">
-                                    <strong>{{ overview.vendors.inactive }} Vendor</strong>
+                                    <strong>{{ sprintf( __( '%s Vendor', 'dokan-lite' ), overview.vendors.inactive ) }}</strong>
                                     <div class="details">awaiting approval</div>
                                 </a>
                             </li>
                             <li class="product">
                                 <div class="dashicons dashicons-cart"></div>
                                 <a href="#">
-                                    <strong>{{ overview.products.this_month }} Products</strong>
+                                    <strong>{{ sprintf( __( '%s Products', 'dokan-lite' ), overview.products.this_month ) }}</strong>
                                     <div class="details">
-                                        created this month <span :class="overview.products.class">{{ overview.products.parcent }}</span>
+                                        {{ __( 'created this month', 'dokan-lite' ) }} <span :class="overview.products.class">{{ overview.products.parcent }}</span>
                                     </div>
                                 </a>
                             </li>
                             <li class="withdraw">
                                 <div class="dashicons dashicons-money"></div>
                                 <a href="#">
-                                    <strong>{{ overview.withdraw.pending }} Withdrawals</strong>
-                                    <div class="details">awaiting approval</div>
+                                    <strong>{{ sprintf( __( '%s Withdrawals', 'dokan-lite' ), overview.withdraw.pending ) }}</strong>
+                                    <div class="details">{{ __( 'awaiting approval', 'dokan-lite' ) }}</div>
                                 </a>
                             </li>
                         </ul>
@@ -79,14 +79,14 @@
                                 </div>
                                 <h3>{{ __( 'Stay up-to-date', 'dokan-lite' ) }}</h3>
                                 <p>
-                                    We're constantly developing new features, stay up-to-date by subscribing to our newsletter.
+                                    {{ __( 'We\'re constantly developing new features, stay up-to-date by subscribing to our newsletter.', 'dokan-lite' ) }}
                                 </p>
                                 <div class="form-wrap">
                                     <input type="email" v-model="subscribe.email" required placeholder="Your Email Address" @keyup.enter="emailSubscribe()">
-                                    <button class="button" @click="emailSubscribe()">Subscribe</button>
+                                    <button class="button" @click="emailSubscribe()">{{ __( 'Subscribe', 'dokan-lite' ) }}</button>
                                 </div>
                             </template>
-                            <div v-else class="thank-you">Thank you for subscribing!</div>
+                            <div v-else class="thank-you">{{ __( 'Thank you for subscribing!', 'dokan-lite' ) }}</div>
                         </div>
                     </div>
                     <div class="loading" v-else>

@@ -481,40 +481,40 @@ let Modal = dokan_get_lib('Modal');
                 approved: 0,
                 cancelled: 0
             },
-            notFound: 'No requests found.',
+            notFound: this.__('No requests found.', 'dokan-lite'),
             showCb: true,
             loading: false,
             columns: {
-                'seller': { label: 'Vendor' },
-                'amount': { label: 'Amount' },
-                'status': { label: 'Status' },
-                'method_title': { label: 'Method' },
-                'method_details': { label: 'Details' },
-                'note': { label: 'Note' },
-                'created': { label: 'Date' },
-                'actions': { label: 'Actions' }
+                'seller': { label: this.__('Vendor', 'dokan-lite') },
+                'amount': { label: this.__('Amount', 'dokan-lite') },
+                'status': { label: this.__('Status', 'dokan-lite') },
+                'method_title': { label: this.__('Method', 'dokan-lite') },
+                'method_details': { label: this.__('Details', 'dokan-lite') },
+                'note': { label: this.__('Note', 'dokan-lite') },
+                'created': { label: this.__('Date', 'dokan-lite') },
+                'actions': { label: this.__('Actions', 'dokan-lite') }
             },
             requests: [],
             actionColumn: 'seller',
             actions: [{
                 key: 'trash',
-                label: 'Delete'
+                label: this.__('Delete', 'dokan-lite')
             }, {
                 key: 'cancel',
-                label: 'Cancel'
+                label: this.__('Cancel', 'dokan-lite')
             }],
             bulkActions: [{
                 key: 'approved',
-                label: 'Approve'
+                label: this.__('Approve', 'dokan-lite')
             }, {
                 key: 'cancelled',
-                label: 'Cancel'
+                label: this.__('Cancel', 'dokan-lite')
             }, {
                 key: 'delete',
-                label: 'Delete'
+                label: this.__('Delete', 'dokan-lite')
             }, {
                 key: 'paypal',
-                label: 'Download PayPal mass payment file'
+                label: this.__('Download PayPal mass payment file', 'dokan-lite')
             }]
         };
     },
@@ -612,7 +612,7 @@ let Modal = dokan_get_lib('Modal');
             }
 
             if ('trash' === action) {
-                if (confirm('Are you sure?')) {
+                if (confirm(this.__('Are you sure?', 'dokan-lite'))) {
                     this.loading = true;
 
                     dokan.api.delete('/withdraw/' + row.id).done(response => {
@@ -629,21 +629,20 @@ let Modal = dokan_get_lib('Modal');
             if ('paypal' === method || 'skrill' === method) {
                 details = data[method].email || '';
             } else if ('bank' === method) {
-
                 if (data.bank.hasOwnProperty('ac_name')) {
-                    details = 'Account Name: ' + data.bank.ac_name;
+                    details = this.sprintf(this.__('Account Name: %s', 'dokan-lite'), data.bank.ac_name);
                 }
 
                 if (data.bank.hasOwnProperty('ac_number')) {
-                    details += ", Account Number: " + data.bank.ac_number;
+                    details += this.sprintf(this.__(', Account Number: %s', 'dokan-lite'), data.bank.ac_number);
                 }
 
                 if (data.bank.hasOwnProperty('bank_name')) {
-                    details += ", Bank Name: " + data.bank.bank_name;
+                    details += this.sprintf(this.__(', Bank Name: %s', 'dokan-lite'), data.bank.bank_name);
                 }
 
                 if (data.bank.hasOwnProperty('routing_number')) {
-                    details += ", Routing Number: " + data.bank.routing_number;
+                    details += this.sprintf(this.__(', Routing Number: %s', 'dokan-lite'), data.bank.routing_number);
                 }
             }
 
@@ -1203,7 +1202,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "dokan-dashboard" }, [
-    _c("h1", [_vm._v("Dashboard")]),
+    _c("h1", [_vm._v(_vm._s(_vm.__("Dashboard", "dokan-lite")))]),
     _vm._v(" "),
     _c("div", { staticClass: "widgets-wrapper" }, [
       _c(
@@ -1235,7 +1234,11 @@ var render = function() {
                           _vm._v(" "),
                           _c("div", { staticClass: "details" }, [
                             _vm._v(
-                              "\n                                    net sales this month "
+                              "\n                                    " +
+                                _vm._s(
+                                  _vm.__("net sales this month", "dokan-lite")
+                                ) +
+                                " "
                             ),
                             _c("span", { class: _vm.overview.orders.class }, [
                               _vm._v(_vm._s(_vm.overview.orders.parcent))
@@ -1262,7 +1265,11 @@ var render = function() {
                           _vm._v(" "),
                           _c("div", { staticClass: "details" }, [
                             _vm._v(
-                              "\n                                    commission earned "
+                              "\n                                    " +
+                                _vm._s(
+                                  _vm.__("commission earned", "dokan-lite")
+                                ) +
+                                " "
                             ),
                             _c("span", { class: _vm.overview.earning.class }, [
                               _vm._v(_vm._s(_vm.overview.earning.parcent))
@@ -1277,14 +1284,22 @@ var render = function() {
                         _c("a", { attrs: { href: "#" } }, [
                           _c("strong", [
                             _vm._v(
-                              _vm._s(_vm.overview.vendors.this_month) +
-                                " Vendor"
+                              _vm._s(
+                                _vm.sprintf(
+                                  _vm.__("%s Vendor", "dokan-lite"),
+                                  _vm.overview.vendors.this_month
+                                )
+                              )
                             )
                           ]),
                           _vm._v(" "),
                           _c("div", { staticClass: "details" }, [
                             _vm._v(
-                              "\n                                    signup this month "
+                              "\n                                    " +
+                                _vm._s(
+                                  _vm.__("signup this month", "dokan-lite")
+                                ) +
+                                " "
                             ),
                             _c("span", { class: _vm.overview.vendors.class }, [
                               _vm._v(_vm._s(_vm.overview.vendors.parcent))
@@ -1301,7 +1316,12 @@ var render = function() {
                         _c("a", { attrs: { href: "#" } }, [
                           _c("strong", [
                             _vm._v(
-                              _vm._s(_vm.overview.vendors.inactive) + " Vendor"
+                              _vm._s(
+                                _vm.sprintf(
+                                  _vm.__("%s Vendor", "dokan-lite"),
+                                  _vm.overview.vendors.inactive
+                                )
+                              )
                             )
                           ]),
                           _vm._v(" "),
@@ -1317,14 +1337,22 @@ var render = function() {
                         _c("a", { attrs: { href: "#" } }, [
                           _c("strong", [
                             _vm._v(
-                              _vm._s(_vm.overview.products.this_month) +
-                                " Products"
+                              _vm._s(
+                                _vm.sprintf(
+                                  _vm.__("%s Products", "dokan-lite"),
+                                  _vm.overview.products.this_month
+                                )
+                              )
                             )
                           ]),
                           _vm._v(" "),
                           _c("div", { staticClass: "details" }, [
                             _vm._v(
-                              "\n                                    created this month "
+                              "\n                                    " +
+                                _vm._s(
+                                  _vm.__("created this month", "dokan-lite")
+                                ) +
+                                " "
                             ),
                             _c("span", { class: _vm.overview.products.class }, [
                               _vm._v(_vm._s(_vm.overview.products.parcent))
@@ -1339,13 +1367,19 @@ var render = function() {
                         _c("a", { attrs: { href: "#" } }, [
                           _c("strong", [
                             _vm._v(
-                              _vm._s(_vm.overview.withdraw.pending) +
-                                " Withdrawals"
+                              _vm._s(
+                                _vm.sprintf(
+                                  _vm.__("%s Withdrawals", "dokan-lite"),
+                                  _vm.overview.withdraw.pending
+                                )
+                              )
                             )
                           ]),
                           _vm._v(" "),
                           _c("div", { staticClass: "details" }, [
-                            _vm._v("awaiting approval")
+                            _vm._v(
+                              _vm._s(_vm.__("awaiting approval", "dokan-lite"))
+                            )
                           ])
                         ])
                       ])
@@ -1401,7 +1435,14 @@ var render = function() {
                             _vm._v(" "),
                             _c("p", [
                               _vm._v(
-                                "\n                                We're constantly developing new features, stay up-to-date by subscribing to our newsletter.\n                            "
+                                "\n                                " +
+                                  _vm._s(
+                                    _vm.__(
+                                      "We're constantly developing new features, stay up-to-date by subscribing to our newsletter.",
+                                      "dokan-lite"
+                                    )
+                                  ) +
+                                  "\n                            "
                               )
                             ]),
                             _vm._v(" "),
@@ -1459,12 +1500,23 @@ var render = function() {
                                     }
                                   }
                                 },
-                                [_vm._v("Subscribe")]
+                                [
+                                  _vm._v(
+                                    _vm._s(_vm.__("Subscribe", "dokan-lite"))
+                                  )
+                                ]
                               )
                             ])
                           ]
                         : _c("div", { staticClass: "thank-you" }, [
-                            _vm._v("Thank you for subscribing!")
+                            _vm._v(
+                              _vm._s(
+                                _vm.__(
+                                  "Thank you for subscribing!",
+                                  "dokan-lite"
+                                )
+                              )
+                            )
                           ])
                     ],
                     2
@@ -1583,13 +1635,13 @@ var render = function() {
     "div",
     { staticClass: "withdraw-requests" },
     [
-      _c("h1", [_vm._v("Withdraw Requests")]),
+      _c("h1", [_vm._v(_vm._s(_vm.__("Withdraw Requests", "dokan-lite")))]),
       _vm._v(" "),
       _vm.showModal
         ? _c(
             "modal",
             {
-              attrs: { title: "Update Note" },
+              attrs: { title: _vm.__("Update Note", "dokan-lite") },
               on: {
                 close: function($event) {
                   _vm.showModal = false
@@ -1631,7 +1683,7 @@ var render = function() {
                       }
                     }
                   },
-                  [_vm._v("Update Note")]
+                  [_vm._v(_vm._s(_vm.__("Update Note", "dokan-lite")))]
                 )
               ])
             ],
@@ -1643,22 +1695,24 @@ var render = function() {
         _c(
           "li",
           [
-            _c(
-              "router-link",
-              {
-                attrs: {
-                  to: { name: "Withdraw", query: { status: "pending" } },
-                  "active-class": "current",
-                  exact: ""
-                }
+            _c("router-link", {
+              attrs: {
+                to: { name: "Withdraw", query: { status: "pending" } },
+                "active-class": "current",
+                exact: ""
               },
-              [
-                _vm._v("Pending "),
-                _c("span", { staticClass: "count" }, [
-                  _vm._v("(" + _vm._s(_vm.counts.pending) + ")")
-                ])
-              ]
-            ),
+              domProps: {
+                innerHTML: _vm._s(
+                  _vm.sprintf(
+                    _vm.__(
+                      "Pending <span class='count'>(%s)</span>",
+                      "dokan-lite"
+                    ),
+                    _vm.counts.pending
+                  )
+                )
+              }
+            }),
             _vm._v(" | ")
           ],
           1
@@ -1667,22 +1721,24 @@ var render = function() {
         _c(
           "li",
           [
-            _c(
-              "router-link",
-              {
-                attrs: {
-                  to: { name: "Withdraw", query: { status: "approved" } },
-                  "active-class": "current",
-                  exact: ""
-                }
+            _c("router-link", {
+              attrs: {
+                to: { name: "Withdraw", query: { status: "approved" } },
+                "active-class": "current",
+                exact: ""
               },
-              [
-                _vm._v("Approved "),
-                _c("span", { staticClass: "count" }, [
-                  _vm._v("(" + _vm._s(_vm.counts.approved) + ")")
-                ])
-              ]
-            ),
+              domProps: {
+                innerHTML: _vm._s(
+                  _vm.sprintf(
+                    _vm.__(
+                      "Approved <span class='count'>(%s)</span>",
+                      "dokan-lite"
+                    ),
+                    _vm.counts.approved
+                  )
+                )
+              }
+            }),
             _vm._v(" | ")
           ],
           1
@@ -1691,22 +1747,24 @@ var render = function() {
         _c(
           "li",
           [
-            _c(
-              "router-link",
-              {
-                attrs: {
-                  to: { name: "Withdraw", query: { status: "cancelled" } },
-                  "active-class": "current",
-                  exact: ""
-                }
+            _c("router-link", {
+              attrs: {
+                to: { name: "Withdraw", query: { status: "cancelled" } },
+                "active-class": "current",
+                exact: ""
               },
-              [
-                _vm._v("Cancelled "),
-                _c("span", { staticClass: "count" }, [
-                  _vm._v("(" + _vm._s(_vm.counts.cancelled) + ")")
-                ])
-              ]
-            )
+              domProps: {
+                innerHTML: _vm._s(
+                  _vm.sprintf(
+                    _vm.__(
+                      "Cancelled <span class='count'>(%s)</span>",
+                      "dokan-lite"
+                    ),
+                    _vm.counts.cancelled
+                  )
+                )
+              }
+            })
           ],
           1
         )
@@ -1754,7 +1812,7 @@ var render = function() {
                         _vm._s(
                           data.row.user.store_name
                             ? data.row.user.store_name
-                            : "(no name)"
+                            : _vm.__("(no name)", "dokan-lite")
                         )
                       )
                     ]
@@ -1825,7 +1883,9 @@ var render = function() {
                           "button",
                           {
                             staticClass: "button button-small",
-                            attrs: { title: "Approve Request" },
+                            attrs: {
+                              title: _vm.__("Approve Request", "dokan-lite")
+                            },
                             on: {
                               click: function($event) {
                                 $event.preventDefault()
@@ -1844,7 +1904,7 @@ var render = function() {
                           "button",
                           {
                             staticClass: "button button-small",
-                            attrs: { title: "Add Note" },
+                            attrs: { title: _vm.__("Add Note", "dokan-lite") },
                             on: {
                               click: function($event) {
                                 $event.preventDefault()
@@ -1867,7 +1927,9 @@ var render = function() {
                             "button",
                             {
                               staticClass: "button button-small",
-                              attrs: { title: "Mark as Pending" },
+                              attrs: {
+                                title: _vm.__("Mark as Pending", "dokan-lite")
+                              },
                               on: {
                                 click: function($event) {
                                   $event.preventDefault()
@@ -1886,7 +1948,9 @@ var render = function() {
                             "button",
                             {
                               staticClass: "button button-small",
-                              attrs: { title: "Add Note" },
+                              attrs: {
+                                title: _vm.__("Add Note", "dokan-lite")
+                              },
                               on: {
                                 click: function($event) {
                                   $event.preventDefault()
@@ -1908,7 +1972,9 @@ var render = function() {
                             "button",
                             {
                               staticClass: "button button-small",
-                              attrs: { title: "Approve Request" },
+                              attrs: {
+                                title: _vm.__("Approve Request", "dokan-lite")
+                              },
                               on: {
                                 click: function($event) {
                                   $event.preventDefault()
@@ -1927,7 +1993,9 @@ var render = function() {
                             "button",
                             {
                               staticClass: "button button-small",
-                              attrs: { title: "Mark as Pending" },
+                              attrs: {
+                                title: _vm.__("Mark as Pending", "dokan-lite")
+                              },
                               on: {
                                 click: function($event) {
                                   $event.preventDefault()
@@ -1946,7 +2014,9 @@ var render = function() {
                             "button",
                             {
                               staticClass: "button button-small",
-                              attrs: { title: "Add Note" },
+                              attrs: {
+                                title: _vm.__("Add Note", "dokan-lite")
+                              },
                               on: {
                                 click: function($event) {
                                   $event.preventDefault()
@@ -2055,7 +2125,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "dokan-pro-features" }, [
-    _c("h1", [_vm._v("Dokan - Pro Features")]),
+    _c("h1", [_vm._v(_vm._s(_vm.__("Dokan - Pro Features", "dokan-lite")))]),
     _vm._v(" "),
     _c(
       "div",
@@ -2168,7 +2238,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "dokan-help-page" }, [
-    _c("h1", [_vm._v("Help")]),
+    _c("h1", [_vm._v(_vm._s(_vm.__("Help", "dokan-lite")))]),
     _vm._v(" "),
     _vm.docs !== null
       ? _c(

@@ -9,7 +9,7 @@
                         </slot>
 
                         <button class="modal-close modal-close-link dashicons dashicons-no-alt" @click="$emit('close')">
-                            <span class="screen-reader-text">Close modal panel</span>
+                            <span class="screen-reader-text">{{ __( 'Close modal panel', 'dokan-lite' ) }}</span>
                         </button>
                     </header>
                     <div class="modal-body">
