@@ -228,7 +228,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks( 'grunt-contrib-less' );
     grunt.loadNpmTasks( 'grunt-contrib-concat' );
     grunt.loadNpmTasks( 'grunt-contrib-jshint' );
-    grunt.loadNpmTasks( 'grunt-wp-i18n' );
+    grunt.loadNpmTasks( 'grunt-wpvue-i18n' );
     grunt.loadNpmTasks( 'grunt-contrib-uglify' );
     grunt.loadNpmTasks( 'grunt-contrib-watch' );
     grunt.loadNpmTasks( 'grunt-contrib-clean' );
@@ -243,7 +243,8 @@ module.exports = function(grunt) {
     ]);
 
     // file auto generation
-    grunt.registerTask('i18n', ['addtextdomain', 'makepot']);
+    // grunt.registerTask('i18n', ['addtextdomain', 'makepot']);
+    grunt.registerTask('i18n', [ 'makepot'] );
     grunt.registerTask('readme', ['wp_readme_to_markdown']);
 
     grunt.registerTask('release', [

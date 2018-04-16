@@ -1,7 +1,44 @@
-dokanWebpack([1],[
-/* 0 */,
-/* 1 */,
-/* 2 */
+dokanWebpack([1],{
+
+/***/ 100:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _i18n = __webpack_require__(98);
+
+exports.default = {
+    methods: {
+        setLocaleData: function setLocaleData(data) {
+            return (0, _i18n.setLocaleData)(data);
+        },
+        __: function __(text, domain) {
+            return (0, _i18n.__)(text, domain);
+        },
+        _nx: function _nx(single, plural, number, context, domain) {
+            return (0, _i18n._nx)(single, plural, number, context, domain);
+        },
+        __n: function __n(single, plural, number, domain) {
+            return _n(single, plural, number, domain);
+        },
+        sprintf: function sprintf(fmt) {
+            for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+                args[_key - 1] = arguments[_key];
+            }
+
+            return _i18n.sprintf.apply(undefined, [fmt].concat(args));
+        }
+    }
+};
+
+/***/ }),
+
+/***/ 2:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -81,76 +118,8 @@ dokanWebpack([1],[
 });
 
 /***/ }),
-/* 3 */,
-/* 4 */,
-/* 5 */,
-/* 6 */,
-/* 7 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Chart_vue__ = __webpack_require__(2);
-/* empty harmony namespace reexport */
-var disposed = false
-var normalizeComponent = __webpack_require__(0)
-/* script */
-
-
-/* template */
-var __vue_template__ = null
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Chart_vue__["a" /* default */],
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "src/admin/components/Chart.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-28c376de", Component.options)
-  } else {
-    hotAPI.reload("data-v-28c376de", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
-
-
-/***/ }),
-/* 8 */,
-/* 9 */,
-/* 10 */,
-/* 11 */,
-/* 12 */,
-/* 13 */,
-/* 14 */,
-/* 15 */,
-/* 16 */,
-/* 17 */,
-/* 18 */,
-/* 19 */,
-/* 20 */,
-/* 21 */
+/***/ 21:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -193,7 +162,8 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 22 */
+
+/***/ 22:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -212,7 +182,8 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 23 */
+
+/***/ 23:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -269,7 +240,8 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 24 */
+
+/***/ 24:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -309,42 +281,8 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 25 */,
-/* 26 */,
-/* 27 */,
-/* 28 */,
-/* 29 */,
-/* 30 */,
-/* 31 */,
-/* 32 */,
-/* 33 */,
-/* 34 */,
-/* 35 */,
-/* 36 */,
-/* 37 */,
-/* 38 */,
-/* 39 */,
-/* 40 */,
-/* 41 */,
-/* 42 */,
-/* 43 */,
-/* 44 */,
-/* 45 */,
-/* 46 */,
-/* 47 */,
-/* 48 */,
-/* 49 */,
-/* 50 */,
-/* 51 */,
-/* 52 */,
-/* 53 */,
-/* 54 */,
-/* 55 */,
-/* 56 */,
-/* 57 */,
-/* 58 */,
-/* 59 */,
-/* 60 */
+
+/***/ 60:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -382,6 +320,10 @@ var _vueChartjs = __webpack_require__(4);
 
 var _vueChartjs2 = _interopRequireDefault(_vueChartjs);
 
+var _Mixin = __webpack_require__(100);
+
+var _Mixin2 = _interopRequireDefault(_Mixin);
+
 var _vueContentLoading = __webpack_require__(20);
 
 var _Postbox = __webpack_require__(66);
@@ -408,9 +350,19 @@ __webpack_require__(78);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// console.log( __() );
+
+window.__ = function (text, domain) {
+    return __(text, domain);
+};
+
 // core components
+
+
 _vue2.default.use(_vueNotification2.default);
 _vue2.default.component('multiselect', _vueMultiselect2.default);
+
+_vue2.default.mixin(_Mixin2.default);
 
 _vue2.default.filter('currency', function (value) {
     return accounting.formatMoney(value, dokan.currency);
@@ -464,16 +416,15 @@ window.dokan.libs['ContentLoading'] = {
 };
 
 /***/ }),
-/* 61 */
+
+/***/ 61:
 /***/ (function(module, exports) {
 
 module.exports = moment;
 
 /***/ }),
-/* 62 */,
-/* 63 */,
-/* 64 */,
-/* 65 */
+
+/***/ 65:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -554,7 +505,8 @@ var Dokan_API = function () {
 exports.default = Dokan_API;
 
 /***/ }),
-/* 66 */
+
+/***/ 66:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -611,13 +563,15 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 67 */
+
+/***/ 67:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 68 */
+
+/***/ 68:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -677,7 +631,8 @@ if (false) {
 }
 
 /***/ }),
-/* 69 */
+
+/***/ 69:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -734,13 +689,68 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 70 */
+
+/***/ 7:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Chart_vue__ = __webpack_require__(2);
+/* empty harmony namespace reexport */
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+var __vue_template__ = null
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Chart_vue__["a" /* default */],
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src/admin/components/Chart.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-28c376de", Component.options)
+  } else {
+    hotAPI.reload("data-v-28c376de", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+
+
+/***/ }),
+
+/***/ 70:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 71 */
+
+/***/ 71:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -769,7 +779,8 @@ if (false) {
 }
 
 /***/ }),
-/* 72 */
+
+/***/ 72:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -826,13 +837,15 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 73 */
+
+/***/ 73:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 74 */
+
+/***/ 74:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -901,7 +914,8 @@ if (false) {
 }
 
 /***/ }),
-/* 75 */
+
+/***/ 75:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -958,13 +972,15 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 76 */
+
+/***/ 76:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 77 */
+
+/***/ 77:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -994,5 +1010,131 @@ if (false) {
   }
 }
 
+/***/ }),
+
+/***/ 98:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.setLocaleData = setLocaleData;
+exports.getI18n = getI18n;
+exports.__ = __;
+exports._x = _x;
+exports._n = _n;
+exports._nx = _nx;
+/**
+ * External dependencies
+ */
+var i18n = {};
+
+/**
+ * Creates a new Jed instance with specified locale data configuration.
+ *
+ * @see http://messageformat.github.io/Jed/
+ *
+ * @param {Object} data Locale data configuration.
+ */
+function setLocaleData(data) {
+  var jed = new Jed(data);
+  i18n[jed._textdomain] = jed;
+}
+
+/**
+ * Returns the current Jed instance, initializing with a default configuration
+ * if not already assigned.
+ *
+ * @return {Jed} Jed instance.
+ */
+function getI18n() {
+  var domain = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+
+  if (!i18n[domain]) {
+    setLocaleData({ '': {} });
+  }
+
+  return i18n[domain];
+}
+
+/**
+ * Retrieve the translation of text.
+ *
+ * @see https://developer.wordpress.org/reference/functions/__/
+ *
+ * @param {string} text Text to translate.
+ * @param {string} domain Domain to retrieve the translated text.
+ *
+ * @return {string} Translated text.
+ */
+function __(text, domain) {
+  return getI18n(domain) ? getI18n(domain).dgettext(domain, text) : text;
+}
+
+/**
+ * Retrieve translated string with gettext context.
+ *
+ * @see https://developer.wordpress.org/reference/functions/_x/
+ *
+ * @param {string} text    Text to translate.
+ * @param {string} context Context information for the translators.
+ * @param {string} domain Domain to retrieve the translated text.
+ *
+ * @return {string} Translated context string without pipe.
+ */
+function _x(text, context, domain) {
+  return getI18n(domain).dpgettext(domain, context, text);
+}
+
+/**
+ * Translates and retrieves the singular or plural form based on the supplied
+ * number.
+ *
+ * @see https://developer.wordpress.org/reference/functions/_n/
+ *
+ * @param {string} single The text to be used if the number is singular.
+ * @param {string} plural The text to be used if the number is plural.
+ * @param {number} number The number to compare against to use either the
+ *                         singular or plural form.
+ * @param {string} domain Domain to retrieve the translated text.
+ *
+ * @return {string} The translated singular or plural form.
+ */
+function _n(single, plural, number, domain) {
+  return getI18n(domain).dngettext(domain, single, plural, number);
+}
+
+/**
+ * Translates and retrieves the singular or plural form based on the supplied
+ * number, with gettext context.
+ *
+ * @see https://developer.wordpress.org/reference/functions/_nx/
+ *
+ * @param {string} single  The text to be used if the number is singular.
+ * @param {string} plural  The text to be used if the number is plural.
+ * @param {number} number  The number to compare against to use either the
+ *                          singular or plural form.
+ * @param {string} context Context information for the translators.
+ * @param {string} domain Domain to retrieve the translated text.
+ *
+ * @return {string} The translated singular or plural form.
+ */
+function _nx(single, plural, number, context, domain) {
+  return getI18n(domain).dnpgettext(domain, context, single, plural, number);
+}
+
+/**
+ * Returns a formatted string.
+ *
+ * @see http://www.diveintojavascript.com/projects/javascript-sprintf
+ *
+ * @type {string}
+ */
+var sprintf = exports.sprintf = Jed.sprintf;
+
 /***/ })
-],[60]);
+
+},[60]);

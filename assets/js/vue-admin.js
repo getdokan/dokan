@@ -949,6 +949,10 @@ new Vue({
     router: _router2.default,
     render: function render(h) {
         return h(_App2.default);
+    },
+
+    created: function created() {
+        this.setLocaleData(dokan.i18n['dokan-lite']);
     }
 });
 
@@ -1389,7 +1393,11 @@ var render = function() {
                                 )
                               : _vm._e(),
                             _vm._v(" "),
-                            _c("h3", [_vm._v("Stay up-to-date")]),
+                            _c("h3", [
+                              _vm._v(
+                                _vm._s(_vm.__("Stay up-to-date", "dokan-lite"))
+                              )
+                            ]),
                             _vm._v(" "),
                             _c("p", [
                               _vm._v(

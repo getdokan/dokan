@@ -77,7 +77,7 @@
                                 <div class="loading" v-if="subscribe.loading">
                                     <loading></loading>
                                 </div>
-                                <h3>Stay up-to-date</h3>
+                                <h3>{{ __( 'Stay up-to-date', 'dokan-lite' ) }}</h3>
                                 <p>
                                     We're constantly developing new features, stay up-to-date by subscribing to our newsletter.
                                 </p>
