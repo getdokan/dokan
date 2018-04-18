@@ -2379,10 +2379,11 @@ function dokan_cache_clear_deleted_product( $post_id ) {
  * @return int $earning;
  */
 function dokan_get_earning_by_product( $product_id, $seller_id ) {
-    $product    = wc_get_product( $product_id );
-    $percentage = dokan_get_seller_percentage( $seller_id, $product_id );
-    $price      = $product->get_price();
-    $earning    = ( (float)$price * $percentage ) / 100;
+    $product            = wc_get_product( $product_id );
+    $percentage         = dokan_get_seller_percentage( $seller_id, $product_id );
+    $percentage_type    = dokan_get_commission_type( $seller_id, $product_id );
+    $price              = $product->get_price();
+    $earning            = 'percentage' == $percentage_type ? (float) ( $price * $percentage ) / 100 : $price - ( 100 - $percentage );
 
     return wc_format_decimal( $earning );
 }
