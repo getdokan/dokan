@@ -1211,7 +1211,12 @@ var render = function() {
         [
           _c(
             "postbox",
-            { attrs: { title: "At a Glance", extraClass: "dokan-status" } },
+            {
+              attrs: {
+                title: _vm.__("At a Glance", "dokan-lite"),
+                extraClass: "dokan-status"
+              }
+            },
             [
               _vm.overview !== null
                 ? _c("div", { staticClass: "dokan-status" }, [
@@ -1389,141 +1394,147 @@ var render = function() {
             ]
           ),
           _vm._v(" "),
-          _c("postbox", { attrs: { title: "Dokan News Updates" } }, [
-            _vm.feed !== null
-              ? _c("div", { staticClass: "rss-widget" }, [
-                  _c(
-                    "ul",
-                    _vm._l(_vm.feed, function(news) {
-                      return _c("li", [
-                        _c(
-                          "a",
-                          {
-                            attrs: {
-                              href:
-                                news.link +
-                                "?utm_source=wp-admin&utm_campaign=dokan-news",
-                              target: "_blank"
-                            }
-                          },
-                          [_vm._v(_vm._s(news.title))]
-                        )
-                      ])
-                    })
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    { staticClass: "subscribe-box" },
-                    [
-                      !_vm.subscribe.success
-                        ? [
-                            _vm.subscribe.loading
-                              ? _c(
-                                  "div",
-                                  { staticClass: "loading" },
-                                  [_c("loading")],
-                                  1
-                                )
-                              : _vm._e(),
-                            _vm._v(" "),
-                            _c("h3", [
-                              _vm._v(
-                                _vm._s(_vm.__("Stay up-to-date", "dokan-lite"))
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("p", [
-                              _vm._v(
-                                "\n                                " +
-                                  _vm._s(
-                                    _vm.__(
-                                      "We're constantly developing new features, stay up-to-date by subscribing to our newsletter.",
-                                      "dokan-lite"
-                                    )
-                                  ) +
-                                  "\n                            "
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "form-wrap" }, [
-                              _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.subscribe.email,
-                                    expression: "subscribe.email"
-                                  }
-                                ],
-                                attrs: {
-                                  type: "email",
-                                  required: "",
-                                  placeholder: "Your Email Address"
-                                },
-                                domProps: { value: _vm.subscribe.email },
-                                on: {
-                                  keyup: function($event) {
-                                    if (
-                                      !("button" in $event) &&
-                                      _vm._k(
-                                        $event.keyCode,
-                                        "enter",
-                                        13,
-                                        $event.key
-                                      )
-                                    ) {
-                                      return null
-                                    }
-                                    _vm.emailSubscribe()
-                                  },
-                                  input: function($event) {
-                                    if ($event.target.composing) {
-                                      return
-                                    }
-                                    _vm.$set(
-                                      _vm.subscribe,
-                                      "email",
-                                      $event.target.value
-                                    )
-                                  }
-                                }
-                              }),
-                              _vm._v(" "),
-                              _c(
-                                "button",
-                                {
-                                  staticClass: "button",
-                                  on: {
-                                    click: function($event) {
-                                      _vm.emailSubscribe()
-                                    }
-                                  }
-                                },
-                                [
-                                  _vm._v(
-                                    _vm._s(_vm.__("Subscribe", "dokan-lite"))
+          _c(
+            "postbox",
+            { attrs: { title: _vm.__("Dokan News Updates", "dokan-lite") } },
+            [
+              _vm.feed !== null
+                ? _c("div", { staticClass: "rss-widget" }, [
+                    _c(
+                      "ul",
+                      _vm._l(_vm.feed, function(news) {
+                        return _c("li", [
+                          _c(
+                            "a",
+                            {
+                              attrs: {
+                                href:
+                                  news.link +
+                                  "?utm_source=wp-admin&utm_campaign=dokan-news",
+                                target: "_blank"
+                              }
+                            },
+                            [_vm._v(_vm._s(news.title))]
+                          )
+                        ])
+                      })
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "subscribe-box" },
+                      [
+                        !_vm.subscribe.success
+                          ? [
+                              _vm.subscribe.loading
+                                ? _c(
+                                    "div",
+                                    { staticClass: "loading" },
+                                    [_c("loading")],
+                                    1
                                   )
-                                ]
+                                : _vm._e(),
+                              _vm._v(" "),
+                              _c("h3", [
+                                _vm._v(
+                                  _vm._s(
+                                    _vm.__("Stay up-to-date", "dokan-lite")
+                                  )
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("p", [
+                                _vm._v(
+                                  "\n                                " +
+                                    _vm._s(
+                                      _vm.__(
+                                        "We're constantly developing new features, stay up-to-date by subscribing to our newsletter.",
+                                        "dokan-lite"
+                                      )
+                                    ) +
+                                    "\n                            "
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "form-wrap" }, [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.subscribe.email,
+                                      expression: "subscribe.email"
+                                    }
+                                  ],
+                                  attrs: {
+                                    type: "email",
+                                    required: "",
+                                    placeholder: "Your Email Address"
+                                  },
+                                  domProps: { value: _vm.subscribe.email },
+                                  on: {
+                                    keyup: function($event) {
+                                      if (
+                                        !("button" in $event) &&
+                                        _vm._k(
+                                          $event.keyCode,
+                                          "enter",
+                                          13,
+                                          $event.key
+                                        )
+                                      ) {
+                                        return null
+                                      }
+                                      _vm.emailSubscribe()
+                                    },
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.subscribe,
+                                        "email",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass: "button",
+                                    on: {
+                                      click: function($event) {
+                                        _vm.emailSubscribe()
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _vm._v(
+                                      _vm._s(_vm.__("Subscribe", "dokan-lite"))
+                                    )
+                                  ]
+                                )
+                              ])
+                            ]
+                          : _c("div", { staticClass: "thank-you" }, [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.__(
+                                    "Thank you for subscribing!",
+                                    "dokan-lite"
+                                  )
+                                )
                               )
                             ])
-                          ]
-                        : _c("div", { staticClass: "thank-you" }, [
-                            _vm._v(
-                              _vm._s(
-                                _vm.__(
-                                  "Thank you for subscribing!",
-                                  "dokan-lite"
-                                )
-                              )
-                            )
-                          ])
-                    ],
-                    2
-                  )
-                ])
-              : _c("div", { staticClass: "loading" }, [_c("loading")], 1)
-          ])
+                      ],
+                      2
+                    )
+                  ])
+                : _c("div", { staticClass: "loading" }, [_c("loading")], 1)
+            ]
+          )
         ],
         1
       ),
@@ -1534,7 +1545,10 @@ var render = function() {
         [
           _c(
             "postbox",
-            { staticClass: "overview-chart", attrs: { title: "Overview" } },
+            {
+              staticClass: "overview-chart",
+              attrs: { title: _vm.__("Overview", "dokan-lite") }
+            },
             [
               _vm.report !== null
                 ? _c("chart", { attrs: { data: _vm.report } })

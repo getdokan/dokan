@@ -4,7 +4,7 @@
 
         <div class="widgets-wrapper">
             <div class="left-side">
-                <postbox title="At a Glance" extraClass="dokan-status">
+                <postbox :title="__( 'At a Glance', 'dokan-lite' )" extraClass="dokan-status">
                     <div class="dokan-status" v-if="overview !== null">
                         <ul>
                             <li class="sale">
@@ -38,7 +38,7 @@
                                 <div class="dashicons dashicons-businessman"></div>
                                 <a href="#">
                                     <strong>{{ sprintf( __( '%s Vendor', 'dokan-lite' ), overview.vendors.inactive ) }}</strong>
-                                    <div class="details">awaiting approval</div>
+                                    <div class="details">{{ __( 'awaiting approval', 'dokan-lite' ) }}</div>
                                 </a>
                             </li>
                             <li class="product">
@@ -64,7 +64,7 @@
                     </div>
                 </postbox>
 
-                <postbox title="Dokan News Updates">
+                <postbox :title="__( 'Dokan News Updates', 'dokan-lite' )">
                     <div class="rss-widget" v-if="feed !== null">
                         <ul>
                             <li v-for="news in feed">
@@ -96,7 +96,7 @@
             </div>
 
             <div class="right-side">
-                <postbox title="Overview" class="overview-chart">
+                <postbox :title="__( 'Overview', 'dokan-lite' )" class="overview-chart">
                     <chart :data="report" v-if="report !== null"></chart>
                     <div class="loading" v-else>
                         <loading></loading>
