@@ -438,7 +438,7 @@ function dokan_get_seller_percentage( $seller_id = 0, $product_id = 0 ) {
             }
 
         } elseif ( 'flat' == $global_type ) {
-            $commission_val = (float) $global_percentage;
+            $commission_val = (float) ( 100 - $global_percentage );
         }
     }
 
@@ -457,7 +457,7 @@ function dokan_get_seller_percentage( $seller_id = 0, $product_id = 0 ) {
                 }
 
             } elseif ( 'flat' == $admin_percentage_type ) {
-                $commission_val = (float) $admin_commission;
+                $commission_val = (float) ( 100 - $admin_commission );
             }
         }
     }
@@ -479,7 +479,7 @@ function dokan_get_seller_percentage( $seller_id = 0, $product_id = 0 ) {
                 }
 
             } elseif ( 'flat' == $category_commission_type ) {
-                $commission_val = (float) $category_commission;
+                $commission_val = (float) ( 100 - $category_commission );
             }
         }
 
@@ -495,7 +495,7 @@ function dokan_get_seller_percentage( $seller_id = 0, $product_id = 0 ) {
                     $commission_val = (float) ( 100 - $_per_product_commission );
                 }
             } elseif ( 'flat' == $_per_product_commission_type ) {
-                $commission_val = (float) $_per_product_commission;
+                $commission_val = (float) ( 100 - $_per_product_commission );
             }
         }
     }
