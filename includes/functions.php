@@ -1829,6 +1829,25 @@ function dokan_wc_email_recipient_add_seller( $email, $order ) {
 add_filter( 'woocommerce_email_recipient_new_order', 'dokan_wc_email_recipient_add_seller', 10, 2 );
 
 /**
+ * Send email to seller and admin when there is no product in stock or low stock
+ *
+ * @param string recipient email
+ * @param object product
+ * @since 2.8.0
+ * @return string recipient emails
+ */
+function dokan_wc_email_recipient_add_seller_no_stock( $recipient, $product ) {
+    $product_id   = $product->get_id();
+    $seller_id    = get_post_field( 'post_author', $product_id );
+    $seller_email = dokan()->vendor->get( $seller_id )->get_email();
+
+    return $recipient . ', ' . $seller_email;
+}
+
+add_filter( 'woocommerce_email_recipient_no_stock', 'dokan_wc_email_recipient_add_seller_no_stock', 10, 2 );
+add_filter( 'woocommerce_email_recipient_low_stock', 'dokan_wc_email_recipient_add_seller_no_stock', 10, 2 );
+
+/**
  * Display a monthly dropdown for filtering product listing on seller dashboard
  *
  * @since 2.1
