@@ -545,13 +545,13 @@ jQuery(function($) {
 
                     if ( $('input.dokan-product-sales-price' ).val() == '' ) {
                         $( 'span.vendor-price' ).html(
-                            parseFloat( accounting.formatNumber( ( $( 'input.dokan-product-regular-price' ).val() - ( 100 - dokan.vendor_percentage ) ), dokan.rounding_precision, '' ) )
+                            parseFloat( accounting.formatNumber( ( $( 'input.dokan-product-regular-price' ).val() - dokan.vendor_percentage ), dokan.rounding_precision, '' ) )
                                     .toString()
                                     .replace( '.', dokan.mon_decimal_point )
                         );
                     } else {
                         $( 'span.vendor-price' ).html(
-                                parseFloat( accounting.formatNumber( ( $( 'input.dokan-product-sales-price' ).val() - ( 100 - dokan.vendor_percentage ) ), dokan.rounding_precision, '' ) )
+                                parseFloat( accounting.formatNumber( ( $( 'input.dokan-product-sales-price' ).val() - dokan.vendor_percentage ), dokan.rounding_precision, '' ) )
                                     .toString()
                                     .replace( '.', dokan.mon_decimal_point )
                             );
@@ -1338,13 +1338,13 @@ jQuery(function($) {
             } else {
                 if ( $('input.dokan-product-sales-price' ).val() == '' ) {
                     $( 'span.vendor-price' ).html(
-                        parseFloat( accounting.formatNumber( ( $( 'input.dokan-product-regular-price' ).val() - ( 100 - dokan.vendor_percentage ) ), dokan.rounding_precision, '' ) )
+                        parseFloat( accounting.formatNumber( ( $( 'input.dokan-product-regular-price' ).val() - dokan.vendor_percentage ), dokan.rounding_precision, '' ) )
                             .toString()
                             .replace( '.', dokan.mon_decimal_point )
                     );
                 } else {
                     $( 'span.vendor-price' ).html(
-                        parseFloat( accounting.formatNumber( ( $( 'input.dokan-product-sales-price' ).val() - ( 100 - dokan.vendor_percentage ) ), dokan.rounding_precision, '' ) )
+                        parseFloat( accounting.formatNumber( ( $( 'input.dokan-product-sales-price' ).val() - dokan.vendor_percentage ), dokan.rounding_precision, '' ) )
                             .toString()
                             .replace( '.', dokan.mon_decimal_point )
                     );
