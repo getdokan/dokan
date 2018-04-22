@@ -430,7 +430,7 @@ function dokan_get_seller_percentage( $seller_id = 0, $product_id = 0 ) {
     if ( $global_percentage != '' && is_numeric( $global_percentage ) && $global_percentage >= 0 ) {
 
         $global_type = dokan_get_option( 'commission_type', 'dokan_selling' , 'percentage' );
-// echo '( global - ' . $global_type . ' ) ';
+
         if ( 'percentage' == $global_type ) {
 
             if ( $global_percentage <= 100 ) {
@@ -449,7 +449,7 @@ function dokan_get_seller_percentage( $seller_id = 0, $product_id = 0 ) {
         if ( $admin_commission != '' && is_numeric( $admin_commission ) && $admin_commission >= 0 ) {
 
             $admin_percentage_type = get_user_meta( $seller_id, 'dokan_admin_percentage_type', true );
-// echo '( vendor -' . $admin_percentage_type . ' ) ';
+
             if ( 'percentage' == $admin_percentage_type ) {
 
                 if ( $admin_commission <= 100 ) {
@@ -471,7 +471,7 @@ function dokan_get_seller_percentage( $seller_id = 0, $product_id = 0 ) {
         if ( $category_commission != '' && is_numeric( $category_commission ) && $category_commission >= 0 ) {
 
             $category_commission_type = dokan_get_category_wise_seller_commission_type( $product_id );
-// echo '( category -' . $category_commission_type . ' ) ';
+
             if ( 'percentage' == $category_commission_type ) {
 
                 if ( $category_commission <= 100 ) {
@@ -489,7 +489,7 @@ function dokan_get_seller_percentage( $seller_id = 0, $product_id = 0 ) {
         if ( $_per_product_commission != '' && is_numeric( $_per_product_commission ) && $_per_product_commission >= 0 ) {
 
             $_per_product_commission_type = get_post_meta( $product_id, '_per_product_admin_commission_type', true );
-// echo '( product -' . $_per_product_commission_type . ' ) ';
+
             if ( 'percentage' == $_per_product_commission_type ) {
                 if ( $_per_product_commission <= 100 ) {
                     $commission_val = (float) ( 100 - $_per_product_commission );
