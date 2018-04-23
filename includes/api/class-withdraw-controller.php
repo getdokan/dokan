@@ -259,6 +259,13 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
             $status_code = 2;
         }
 
+        // if its an approve request and don't have enough balance then return early
+        if ( $status_code === 1 ) {
+            if ( dokan_get_seller_balance( $result->user_id, false ) < $result->amount ) {
+                return;
+            }
+        }
+
         $withdraw->update_status( $request['id'], $user_id, $status_code );
         $response = $wpdb->get_row( $sql );
 
@@ -477,7 +484,7 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
                         if ( dokan_get_seller_balance( $user->user_id, false ) < $user->amount ) {
                             continue;
                         }
-                        
+
                         $wpdb->query( $wpdb->prepare(
                             "UPDATE {$wpdb->prefix}dokan_withdraw
                             SET status = %d WHERE id = %d",
