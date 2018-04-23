@@ -56,7 +56,7 @@ class Dokan_Assets {
             wp_enqueue_style( 'dokan-vue-admin' );
 
             // load vue libraries and bootstrap the app
-            wp_enqueue_script( 'accounting' );
+            wp_enqueue_script( 'dokan-accounting' );
             wp_enqueue_script( 'dokan-chart' );
             wp_enqueue_script( 'dokan-vue-vendor' );
             wp_localize_script( 'dokan-vue-vendor', 'dokan', $localize_script );
@@ -226,10 +226,10 @@ class Dokan_Assets {
             'dokan-i18n-jed' => array(
                 'src'       => $asset_url . '/vendors/i18n/jed.js',
             ),
-            // 'dokan-i18n' => array(
-            //     'src'       => $asset_url . '/vendors/i18n/i18n.js',
-            //     'deps'      => array( 'dokan-i18n-jed' )
-            // ),
+            'dokan-accounting' => array(
+                'src'       => WC()->plugin_url() . '/assets/js/accounting/accounting.min.js',
+                'deps'      => array( 'jquery' )
+            ),
             'dokan-moment' => array(
                 'src'       => $asset_url . '/vendors/moment/moment.min.js',
             ),
@@ -471,6 +471,7 @@ class Dokan_Assets {
             wp_enqueue_script( 'dokan-chosen' );
             wp_enqueue_script( 'dokan-select2-js' );
             wp_enqueue_media();
+            wp_enqueue_script( 'dokan-accounting' );
             wp_enqueue_script( 'serializejson' );
             wp_enqueue_script( 'dokan-popup' );
             wp_enqueue_script( 'wc-password-strength-meter' );
