@@ -629,11 +629,10 @@ function dokan_get_admin_commission_by( $order, $seller_id ) {
         $refund_t += $order->get_total_refunded_for_item( $item_id );
         $commissions[$i]['total_line'] = $item->get_total() - $order->get_total_refunded_for_item( $item_id );
         $commissions[$i]['fee_type']  = dokan_get_commission_type( $seller_id, $item['product_id'] );
-        $commissions[$i]['admin_fee'] = ( 'percentage' == $commission['fee_type'] ) ? 100 - dokan_get_seller_percentage( $seller_id, $item['product_id'] ) : dokan_get_seller_percentage( $seller_id, $item['product_id'] );
+        $commissions[$i]['admin_fee'] = ( 'percentage' == $commissions[$i]['fee_type'] ) ? 100 - dokan_get_seller_percentage( $seller_id, $item['product_id'] ) : dokan_get_seller_percentage( $seller_id, $item['product_id'] );
         $total_line += $commissions[$i]['total_line'];
 
         $i++;
-
     }
 
     $refund_t += $order->get_total_tax_refunded() + $order->get_total_shipping_refunded();
