@@ -472,6 +472,12 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
                 } else {
                     foreach ( $value as $withdraw_id ) {
                         $status_code = $this->get_status( $status );
+                        $user = $wpdb->get_row( "SELECT user_id, amount FROM {$wpdb->prefix}dokan_withdraw WHERE id = {$withdraw_id}" );
+
+                        if ( dokan_get_seller_balance( $user->user_id, false ) < $user->amount ) {
+                            continue;
+                        }
+                        
                         $wpdb->query( $wpdb->prepare(
                             "UPDATE {$wpdb->prefix}dokan_withdraw
                             SET status = %d WHERE id = %d",
