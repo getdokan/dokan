@@ -1331,7 +1331,9 @@ var render = function() {
                           ]),
                           _vm._v(" "),
                           _c("div", { staticClass: "details" }, [
-                            _vm._v("awaiting approval")
+                            _vm._v(
+                              _vm._s(_vm.__("awaiting approval", "dokan-lite"))
+                            )
                           ])
                         ])
                       ]),
