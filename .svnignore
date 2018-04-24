@@ -17,3 +17,8 @@ README.md
 plugin-deploy.sh
 package-lock.json
 phpcs.ruleset.xml
+src
+CONTRIBUTING.md
+config.json
+phpcs.xml.dist
+webpack.config.js

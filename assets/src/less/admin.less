@@ -36,6 +36,121 @@
             margin: 10px 0 0 0;
             padding: 0;
         }
+
+        &.dokan-status {
+            .main {
+                padding: 0;
+            }
+            .inside {
+                margin: 0;
+            }
+            ul {
+                margin-top: -13px;
+                li {
+                    min-height: 50px;
+                    width: 50%;
+                    float: left;
+                    padding: 0;
+                    box-sizing: border-box;
+                    margin: 0;
+                    border-top: 1px solid #ececec;
+                    color: #aaa;
+                    a {
+                        display: block;
+                        color: #aaa;
+                        padding: 10px;
+                        -webkit-transition: all ease .5s;
+                        transition: all ease .5s;
+                        position: relative;
+                        font-size: 12px;
+                        .details {
+                            color: #aaa;
+                            span {
+                                margin-left: 10px;
+                                font-weight: bold;
+                            }
+                            span.up {
+                                color: green;
+                                &::before {
+                                    content: '+';
+                                }
+                                &::after {
+                                    content: '%';
+                                }
+                            }
+                            span.down {
+                                color: red;
+                                &::before {
+                                    content: '-';
+                                }
+                                &::after {
+                                    content: '%';
+                                }
+                            }
+                        }
+                        strong {
+                            font-size: 18px;
+                            line-height: 1.2em;
+                            font-weight: 400;
+                            display: block;
+                            color: #21759b;
+                        }
+                    }
+                    .dashicons {
+                        font-size: 2em;
+                        float: left;
+                        margin: 15px;
+                    }
+                    &:nth-child(1) {
+                        border-top: none;
+                    }
+                    &:nth-child(2) {
+                        border-top: none;
+                    }
+                    &:nth-child(odd) {
+                        border-right: 1px solid #ececec;
+                    }
+                }
+                li.sale {
+                    .dashicons {
+                        color: #307be1;
+                    }
+                }
+                li.commission {
+                    .dashicons {
+                        color: #6da754;
+                    }
+                }
+                li.vendor {
+                    .dashicons {
+                        color: #169c22;
+                    }
+                }
+                li.approval {
+                    .dashicons {
+                        color: #fd9728;
+                    }
+                }
+                li.product {
+                    .dashicons {
+                        &::before {
+                            font-family: WooCommerce;
+                            content: "\e006";
+                            color: #464646;
+                        }
+                    }
+                }
+                li.withdraw {
+                    .dashicons {
+                        &::before {
+                            font-family: WooCommerce;
+                            content: "\e01e";
+                            color: #cd2c2f;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     .mark-red a {

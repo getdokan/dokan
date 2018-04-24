@@ -32,6 +32,9 @@
 .dokan-text-left {
   text-align: right;
 }
+.dokan-text-right {
+  text-align: left;
+}
 #dokan-comments-table td.col-author .dokan-author-img,
 #dokan-comments-table th.col-author .dokan-author-img {
   float: right !important;

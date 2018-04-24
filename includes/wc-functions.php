@@ -431,13 +431,13 @@ function dokan_process_product_file_download_paths( $product_id, $variation_id, 
     }
 }
 
-add_action( 'woocommerce_checkout_update_order_meta', 'dokan_create_sub_order', 10 );
-
 /**
  * Get discount coupon total from a order
  *
  * @global WPDB $wpdb
+ *
  * @param int $order_id
+ *
  * @return int
  */
 function dokan_sub_order_get_total_coupon( $order_id ) {
@@ -454,101 +454,6 @@ function dokan_sub_order_get_total_coupon( $order_id ) {
 
     return 0;
 }
-
-/**
- * Validates seller registration form from my-account page
- *
- * @param WP_Error $error
- * @return \WP_Error
- */
-if ( !function_exists( 'dokan_seller_registration_errors' ) ) {
-
-    function dokan_seller_registration_errors( $error ) {
-        $allowed_roles = apply_filters( 'dokan_register_user_role', array( 'customer', 'seller' ) );
-
-        // is the role name allowed or user is trying to manipulate?
-        if ( isset( $_POST['role'] ) && !in_array( $_POST['role'], $allowed_roles ) ) {
-            return new WP_Error( 'role-error', __( 'Cheating, eh?', 'dokan-lite' ) );
-        }
-
-        $role = $_POST['role'];
-
-        $required_fields = apply_filters( 'dokan_seller_registration_required_fields', array(
-            'fname' => __( 'Please enter your first name.', 'dokan-lite' ),
-            'lname' => __( 'Please enter your last name.', 'dokan-lite' ),
-            'phone' => __( 'Please enter your phone number.', 'dokan-lite' ),
-        ) );
-
-        if ( $role == 'seller' ) {
-            foreach ( $required_fields as $field => $msg ) {
-                if ( empty( trim( $_POST[$field] ) ) ) {
-                    return new WP_Error( "$field-error", $msg );
-                }
-            }
-        }
-
-        return $error;
-    }
-
-}
-
-add_filter( 'woocommerce_process_registration_errors', 'dokan_seller_registration_errors' );
-add_filter( 'woocommerce_registration_errors', 'dokan_seller_registration_errors' );
-
-/**
- * Inject first and last name to WooCommerce for new seller registraion
- *
- * @param array $data
- * @return array
- */
-function dokan_new_customer_data( $data ) {
-    $allowed_roles = array( 'customer', 'seller' );
-    $role = ( isset( $_POST['role'] ) && in_array( $_POST['role'], $allowed_roles ) ) ? $_POST['role'] : 'customer';
-
-    $data['role'] = $role;
-
-    if ( $role == 'seller' ) {
-        $data['first_name']    = strip_tags( $_POST['fname'] );
-        $data['last_name']     = strip_tags( $_POST['lname'] );
-        $data['user_nicename'] = sanitize_user( $_POST['shopurl'] );
-    }
-
-    return $data;
-}
-
-add_filter( 'woocommerce_new_customer_data', 'dokan_new_customer_data');
-
-/**
- * Adds default dokan store settings when a new seller registers
- *
- * @param int $user_id
- * @param array $data
- * @return void
- */
-function dokan_on_create_seller( $user_id, $data ) {
-    if ( $data['role'] != 'seller' ) {
-        return;
-    }
-
-    $dokan_settings = array(
-        'store_name'     => strip_tags( $_POST['shopname'] ),
-        'social'         => array(),
-        'payment'        => array(),
-        'phone'          => $_POST['phone'],
-        'show_email'     => 'no',
-        'location'       => '',
-        'find_address'   => '',
-        'dokan_category' => '',
-        'banner'         => 0,
-    );
-
-    update_user_meta( $user_id, 'dokan_profile_settings', $dokan_settings );
-    update_user_meta( $user_id, 'dokan_store_name', $dokan_settings['store_name'] );
-
-    do_action( 'dokan_new_seller_created', $user_id, $dokan_settings );
-}
-
-add_action( 'woocommerce_created_customer', 'dokan_on_create_seller', 10, 2);
 
 /**
  * Change seller display name to store name
@@ -738,6 +643,7 @@ function dokan_get_on_sale_products( $per_page = 10, $paged = 1, $seller_id = ''
  */
 function dokan_get_seller_balance( $seller_id, $formatted = true ) {
     $vendor = dokan()->vendor->get( $seller_id );
+
     return $vendor->get_balance( $formatted );
 }
 
@@ -765,6 +671,7 @@ function dokan_get_seller_earnings( $seller_id, $start_date = '', $end_date = ''
 
     $all_orders = dokan_get_seller_orders_by_date( $start_date, $end_date, $seller_id, dokan_withdraw_get_active_order_status() );
     $earnings = 0;
+
     foreach ( $all_orders as $order ) {
         $earnings = $earnings + dokan_get_seller_amount_from_order( $order->order_id );
     }
@@ -776,11 +683,14 @@ function dokan_get_seller_earnings( $seller_id, $start_date = '', $end_date = ''
  * Get seller rating
  *
  * @global WPDB $wpdb
+ *
  * @param type $seller_id
+ *
  * @return type
  */
 function dokan_get_seller_rating( $seller_id ) {
     $vendor = dokan()->vendor->get( $seller_id );
+
     return $vendor->get_rating();
 }
 
@@ -788,10 +698,12 @@ function dokan_get_seller_rating( $seller_id ) {
  * Get seller rating in a readable rating format
  *
  * @param int $seller_id
+ *
  * @return void
  */
 function dokan_get_readable_seller_rating( $seller_id ) {
     $vendor = dokan()->vendor->get( $seller_id );
+
     echo $vendor->get_readable_rating();
 }
 
@@ -805,6 +717,7 @@ function dokan_get_readable_seller_rating( $seller_id ) {
  * by returning a fake phpmailer class.
  *
  * @param  array $attr
+ *
  * @return array
  */
 function dokan_exclude_child_customer_receipt( &$phpmailer ) {

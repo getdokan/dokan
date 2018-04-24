@@ -131,10 +131,19 @@ class Dokan_Ajax {
             }
         }
 
-        wp_send_json_success( array(
-            'message' => __( 'Available', 'dokan-lite' ),
-            'url'     => sanitize_user( $url_slug )
-        ) );
+        if ( is_admin() && isset( $_POST['vendor_id'] ) ) {
+            $vendor     = get_user_by( 'id', $_POST['vendor_id'] );
+            if ( $vendor->user_nicename == $user->user_nicename ) {
+                $check = true;
+            }
+        }
+
+        if ( $check ) {
+            wp_send_json_success( array(
+                'message' => __( 'Available', 'dokan-lite' ),
+                'url'     => sanitize_user( $url_slug )
+            ) );
+        }
     }
 
     /**
@@ -499,20 +508,13 @@ class Dokan_Ajax {
             'offset' => $offset
         );
 
-        $search_term = isset( $_REQUEST['search_term'] ) ? sanitize_text_field( $_REQUEST['search_term'] ) : '';
+        $search_term     = isset( $_REQUEST['search_term'] ) ? sanitize_text_field( $_REQUEST['search_term'] ) : '';
         $pagination_base = isset( $_REQUEST['pagination_base'] ) ? sanitize_text_field( $_REQUEST['pagination_base'] ) : '';
-        $per_row = isset( $_REQUEST['per_row'] ) ? sanitize_text_field( $_REQUEST['per_row'] ) : '3';
+        $per_row         = isset( $_REQUEST['per_row'] ) ? sanitize_text_field( $_REQUEST['per_row'] ) : '3';
 
         if ( '' != $search_term ) {
 
             $seller_args['meta_query'] = array(
-
-                array(
-                    'key'     => 'dokan_enable_selling',
-                    'value'   => 'yes',
-                    'compare' => '='
-                ),
-
                 array(
                     'key'     => 'dokan_store_name',
                     'value'   => $search_term,

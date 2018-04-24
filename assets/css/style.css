@@ -421,6 +421,25 @@ select.dokan-form-control {
 .dokan-text-left {
   text-align: left;
 }
+.dokan-text-right {
+  text-align: right;
+}
+.woocommerce .form-row.has-error {
+  background-color: #ffe5e5;
+  padding: 10px;
+  border-radius: 3px;
+}
+.woocommerce form.register.dokan-vendor-register {
+  border: none;
+  padding: 0;
+}
+.woocommerce form.register.dokan-vendor-register .name-field {
+  display: flex;
+  justify-content: space-between;
+}
+.woocommerce form.register.dokan-vendor-register .name-field p {
+  width: 48%;
+}
 .wp-editor-wrap {
   border: 1px solid #EDEDED;
 }
@@ -658,8 +677,8 @@ a.dokan-btn-theme[disabled].active,
 fieldset[disabled] input[type="submit"].dokan-btn-theme.active,
 fieldset[disabled] a.dokan-btn-theme.active,
 fieldset[disabled] .dokan-btn-theme.active {
-  background-color: #f05025;
-  border-color: #f05025;
+  background-color: #f37655;
+  border-color: #f37655;
 }
 input[type="submit"].dokan-btn-theme .badge,
 a.dokan-btn-theme .badge,
@@ -749,8 +768,8 @@ a.dokan-btn-success[disabled].active,
 fieldset[disabled] input[type="submit"].dokan-btn-success.active,
 fieldset[disabled] a.dokan-btn-success.active,
 fieldset[disabled] .dokan-btn-success.active {
-  background-color: #5cb85c;
-  border-color: #4cae4c;
+  background-color: #80c780;
+  border-color: #6ec06e;
 }
 input[type="submit"].dokan-btn-success .badge,
 a.dokan-btn-success .badge,
@@ -840,8 +859,8 @@ a.dokan-btn-default[disabled].active,
 fieldset[disabled] input[type="submit"].dokan-btn-default.active,
 fieldset[disabled] a.dokan-btn-default.active,
 fieldset[disabled] .dokan-btn-default.active {
-  background-color: #fff;
-  border-color: #ccc;
+  background-color: #ffffff;
+  border-color: #e6e6e6;
 }
 input[type="submit"].dokan-btn-default .badge,
 a.dokan-btn-default .badge,
@@ -931,8 +950,8 @@ a.dokan-btn-danger[disabled].active,
 fieldset[disabled] input[type="submit"].dokan-btn-danger.active,
 fieldset[disabled] a.dokan-btn-danger.active,
 fieldset[disabled] .dokan-btn-danger.active {
-  background-color: #d9534f;
-  border-color: #d43f3a;
+  background-color: #e27c79;
+  border-color: #de6764;
 }
 input[type="submit"].dokan-btn-danger .badge,
 a.dokan-btn-danger .badge,
@@ -1022,8 +1041,8 @@ a.dokan-btn-info[disabled].active,
 fieldset[disabled] input[type="submit"].dokan-btn-info.active,
 fieldset[disabled] a.dokan-btn-info.active,
 fieldset[disabled] .dokan-btn-info.active {
-  background-color: #5bc0de;
-  border-color: #46b8da;
+  background-color: #85d0e7;
+  border-color: #70c8e2;
 }
 input[type="submit"].dokan-btn-info .badge,
 a.dokan-btn-info .badge,

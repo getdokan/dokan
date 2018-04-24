@@ -10,3 +10,4 @@ plugin-deploy.sh
 secret.json
 debug.log
 package-lock.json
+config.json

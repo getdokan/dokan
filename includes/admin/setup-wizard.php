@@ -256,7 +256,7 @@ class Dokan_Setup_Wizard {
      * Store step.
      */
     public function dokan_setup_store() {
-        $options             = get_option( 'dokan_general', [] );
+        $options             = get_option( 'dokan_general', array() );
         $custom_store_url    = ! empty( $options['custom_store_url'] ) ? $options['custom_store_url'] : 'store';
         $extra_fee_recipient = ! empty( $options['extra_fee_recipient'] ) ? $options['extra_fee_recipient'] : 'seller';
 
@@ -305,7 +305,7 @@ class Dokan_Setup_Wizard {
     public function dokan_setup_store_save() {
         check_admin_referer( 'dokan-setup' );
 
-        $options = get_option( 'dokan_general', [] );
+        $options = get_option( 'dokan_general', array() );
 
         $options['custom_store_url']    = ! empty( $_POST['custom_store_url'] ) ? sanitize_text_field( $_POST['custom_store_url'] ) : '';
         $options['extra_fee_recipient'] = ! empty( $_POST['extra_fee_recipient'] ) ? sanitize_text_field( $_POST['extra_fee_recipient'] ) : '';
@@ -320,15 +320,11 @@ class Dokan_Setup_Wizard {
      * Selling step.
      */
     public function dokan_setup_selling() {
-        $options = get_option( 'dokan_selling', [] );
+        $options = get_option( 'dokan_selling', array() );
         $new_seller_enable_selling = ! empty( $options['new_seller_enable_selling'] ) ? $options['new_seller_enable_selling'] : '';
-        $seller_percentage         = ! empty( $options['seller_percentage'] ) ? $options['seller_percentage'] : '';
+        $commission_type           = ! empty( $options['commission_type'] ) ? $options['commission_type'] : 'percentage';
+        $admin_percentage          = ! empty( $options['admin_percentage'] ) ? $options['admin_percentage'] : '';
         $order_status_change       = ! empty( $options['order_status_change'] ) ? $options['order_status_change'] : '';
-        $product_style             = ! empty( $options['product_style'] ) ? $options['product_style'] : '';
-        $product_styles_list       = array(
-            'old' => __( 'Tab View', 'dokan-lite' ),
-            'new' => __( 'Flat View', 'dokan-lite' ),
-        );
 
         ?>
         <h1><?php _e( 'Selling Setup', 'dokan-lite' ); ?></h1>
@@ -342,10 +338,20 @@ class Dokan_Setup_Wizard {
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="seller_percentage"><?php _e( 'Vendor Commission %', 'dokan-lite' ); ?></label></th>
+                    <th scope="row"><label for="admin_percentage"><?php _e( 'Commission Type', 'dokan-lite' ); ?></label></th>
                     <td>
-                        <input type="text" id="seller_percentage" name="seller_percentage" value="<?php echo $seller_percentage; ?>" />
-                        <p class="description"><?php _e( 'How much amount (%) a vendor will get from each order', 'dokan-lite' ); ?></p>
+                        <select class="commission_type wc-enhanced-select" name="commission_type">
+                            <option value="percentage">Percentage(%)</option>
+                            <option value="flat">Flat</option>
+                        </select>
+                        <p class="description"><?php _e( 'Set your commission type', 'dokan-lite' ); ?></p>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row"><label for="admin_percentage"><?php _e( 'Admin Commission %', 'dokan-lite' ); ?></label></th>
+                    <td>
+                        <input type="text" id="admin_percentage" name="admin_percentage" value="<?php echo $admin_percentage; ?>" />
+                        <p class="description"><?php _e( 'How much amount (%) you will get from each order', 'dokan-lite' ); ?></p>
                     </td>
                 </tr>
                 <tr>
@@ -353,20 +359,6 @@ class Dokan_Setup_Wizard {
                     <td>
                         <input type="checkbox" name="order_status_change" id="order_status_change" class="input-checkbox" value="1" <?php echo ( $order_status_change == 'on' ) ? 'checked="checked"' : ''; ?>/>
                         <label for="order_status_change"><?php _e( 'Vendor can change order status', 'dokan-lite' ); ?></label>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row"><label for="product_style"><?php _e( 'Add/Edit Product Style', 'dokan-lite' ); ?></label></th>
-                    <td>
-                        <select class="wc-enhanced-select" id="product_style" name="product_style">
-                            <?php
-                                foreach ( $product_styles_list as $key => $value ) {
-                                    $selected = ( $product_style == $key ) ? ' selected="true"' : '';
-                                    echo '<option value="' . $key . '" ' . $selected . '>' . $value . '</option>';
-                                }
-                            ?>
-                        </select>
-                        <p class="description"><?php _e( 'The style you prefer for vendor to add or edit products.', 'dokan-lite' ); ?></p>
                     </td>
                 </tr>
             </table>
@@ -385,11 +377,11 @@ class Dokan_Setup_Wizard {
     public function dokan_setup_selling_save() {
         check_admin_referer( 'dokan-setup' );
 
-        $options = get_option( 'dokan_selling', [] );
+        $options = get_option( 'dokan_selling', array() );
         $options['new_seller_enable_selling'] = isset( $_POST['new_seller_enable_selling'] ) ? 'on' : 'off';
-        $options['seller_percentage']         = intval( $_POST['seller_percentage'] );
+        $options['commission_type']           =  $_POST['commission_type'];
+        $options['admin_percentage']          = intval( $_POST['admin_percentage'] );
         $options['order_status_change']       = isset( $_POST['order_status_change'] ) ? 'on' : 'off';
-        $options['product_style']             = sanitize_text_field( $_POST['product_style'] );
 
         update_option( 'dokan_selling', $options );
 

@@ -48,7 +48,6 @@ function dokan_update_user_capabilities_276() {
     );
 
     foreach ( $caps as $cap => $val ) {
-        error_log( print_r( $cap, true ) );
         $wp_roles->add_cap( 'seller', $cap );
     }
 

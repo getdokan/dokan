@@ -1,3 +1,23 @@
+v2.8.0 -> April 24, 2018
+------------------------
+- **New:** Introduction of REST APIs
+- **New:** Email on vendor activation and deactivation
+- **New:** Price earning suggestion added for variable product
+- **New:** Email on product low & out of stock
+- **Tweak:** Improvement of back-end UI & UX
+- **Fix:** Sub order trash and untrashed not working in back-end
+- **Fix:** Top rated product shortcode is not working issue
+- **Fix:** Rredirection problem during activation using WP CLI
+- **Fix:** Setup wizard settings value not properly saved
+- **Fix:** Removed deprecated create_function issue
+- **Fix:** Commission splitting issue
+- **Fix:** Login registration issue
+- **Fix:** Price earning suggestion on product edit page issue
+- **Fix:** Registration of order table issue
+- **Fix:** Bulk withdrawal issue
+- **Fix:** Order status translation issue
+- **Fix:** Vendor name is showing twice on checkout page issue
+
 v2.7.8 -> March 05, 2018
 ------------------------
 - **Tweak:** Added vendor field in the product quick edit page

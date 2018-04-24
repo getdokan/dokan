@@ -101,20 +101,19 @@ class Dokan_Template_Dashboard {
         }
 
         $order_data = array(
-            array( 'value' => $this->orders_count->{'wc-completed'}, 'color' => '#73a724' ),
-            array( 'value' => $this->orders_count->{'wc-pending'}, 'color' => '#999' ),
-            array( 'value' => $this->orders_count->{'wc-processing'}, 'color' => '#21759b' ),
-            array( 'value' => $this->orders_count->{'wc-cancelled'}, 'color' => '#d54e21' ),
-            array( 'value' => $this->orders_count->{'wc-refunded'}, 'color' => '#e6db55' ),
-            array( 'value' => $this->orders_count->{'wc-on-hold'}, 'color' => '#f0ad4e' ),
+            array( 'value' => $this->orders_count->{'wc-completed'}, 'color' => '#73a724', 'label' => __( 'Completed', 'dokan-lite' ) ),
+            array( 'value' => $this->orders_count->{'wc-pending'}, 'color' => '#999', 'label' => __( 'Pending', 'dokan-lite' ) ),
+            array( 'value' => $this->orders_count->{'wc-processing'}, 'color' => '#21759b', 'label' => __( 'Processing', 'dokan-lite' ) ),
+            array( 'value' => $this->orders_count->{'wc-cancelled'}, 'color' => '#d54e21', 'label' => __( 'Cancelled', 'dokan-lite' ) ),
+            array( 'value' => $this->orders_count->{'wc-refunded'}, 'color' => '#e6db55', 'label' => __( 'Refunded', 'dokan-lite' ) ),
+            array( 'value' => $this->orders_count->{'wc-on-hold'}, 'color' => '#f0ad4e', 'label' => __( 'On Hold', 'dokan-lite' ) ),
         );
 
         dokan_get_template_part( 'dashboard/orders-widget', '', array(
-                'order_data'=> $order_data,
-                'orders_count'  => $this->orders_count,
-                'orders_url'=> dokan_get_navigation_url('orders'),
-            )
-        );
+            'order_data'   => $order_data,
+            'orders_count' => $this->orders_count,
+            'orders_url'   => dokan_get_navigation_url('orders'),
+        ) );
     }
 
     /**

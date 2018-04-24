@@ -213,17 +213,17 @@ function dokan_withdraw_method_bank( $store_settings ) {
  * @global WPDB $wpdb
  * @return array
  */
-function dokan_get_withdraw_count() {
+function dokan_get_withdraw_count( $user_id = '' ) {
     global $wpdb;
 
     $cache_key = 'dokan_withdraw_count';
     $counts = wp_cache_get( $cache_key );
 
     if ( false === $counts ) {
-
-        $counts = array( 'pending' => 0, 'completed' => 0, 'cancelled' => 0 );
-        $sql = "SELECT COUNT(id) as count, status FROM {$wpdb->dokan_withdraw} GROUP BY status";
-        $result = $wpdb->get_results( $sql );
+        $where_user = !empty( $user_id ) ? " AND user_id=$user_id" : '';
+        $counts     = array( 'pending' => 0, 'completed' => 0, 'cancelled' => 0 );
+        $sql        = "SELECT COUNT(id) as count, status FROM {$wpdb->dokan_withdraw} WHERE 1=1{$where_user} GROUP BY status";
+        $result     = $wpdb->get_results( $sql );
 
         if ( $result ) {
             foreach ($result as $row) {

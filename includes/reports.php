@@ -1,5 +1,6 @@
 <?php
 
+if ( ! function_exists( 'dokan_get_order_report_data' ) ) :
 /**
  * Generate SQL query and fetch the report data based on the arguments passed
  *
@@ -236,6 +237,10 @@ function dokan_get_order_report_data( $args = array(), $start_date, $end_date ) 
     return $result;
 }
 
+endif;
+
+
+if ( ! function_exists( 'dokan_dashboard_sales_overview' ) ) :
 
 /**
  * Generate seller dashboard overview chart
@@ -250,7 +255,10 @@ function dokan_dashboard_sales_overview() {
     dokan_sales_overview_chart_data( $start_date, $end_date, 'day' );
 }
 
+endif;
 
+
+if ( ! function_exists( 'dokan_sales_overview_chart_data' ) ) :
 
 /**
  * Prepares chart data for sales overview
@@ -420,3 +428,5 @@ function dokan_sales_overview_chart_data( $start_date, $end_date, $group_by ) {
     </script>
     <?php
 }
+
+endif;

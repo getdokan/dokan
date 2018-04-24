@@ -33,7 +33,6 @@ class Dokan_Installer {
         if ( ! $was_installed_before ) {
             set_transient( '_dokan_setup_page_redirect', true, 30 );
         }
-
     }
 
     /**
@@ -80,25 +79,6 @@ class Dokan_Installer {
     }
 
     /**
-     * Redirect to Setup page if transient is valid
-     *
-     * @since 2.5
-     *
-     * @return void
-     */
-    public static function setup_page_redirect( $plugin ) {
-
-        if ( !get_transient( '_dokan_setup_page_redirect' ) ) {
-            return;
-        }
-        // Delete the redirect transient
-        delete_transient( '_dokan_setup_page_redirect' );
-
-        wp_safe_redirect( add_query_arg( array( 'page' => 'dokan-setup' ), admin_url( 'index.php' ) ) );
-        exit;
-    }
-
-    /**
      * Update product new style options
      *
      * when user first install this plugin
@@ -113,7 +93,6 @@ class Dokan_Installer {
 
         if ( !$installed_version ) {
             $options = get_option( 'dokan_selling' );
-            $options['product_style'] = 'new';
             update_option( 'dokan_selling', $options );
         }
     }

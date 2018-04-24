@@ -211,7 +211,7 @@ if ( ! $from_shortcode ) {
 
                                         <div class="content-half-part regular-price">
                                             <label for="_regular_price" class="form-label"><?php _e( 'Price', 'dokan-lite' ); ?>
-                                                <span class="vendor-earning">( <?php _e( ' You Earn : ', 'dokan-lite' ) ?><?php echo get_woocommerce_currency_symbol() ?><span class="vendor-price">0.00</span> )</span>
+                                                <span class="vendor-earning" data-commission="<?php echo dokan_get_seller_percentage( dokan_get_current_user_id(), $post_id ); ?>" data-commission_type="<?php echo dokan_get_commission_type( dokan_get_current_user_id(), $post_id ); ?>">( <?php _e( ' You Earn : ', 'dokan-lite' ) ?><?php echo get_woocommerce_currency_symbol() ?><span class="vendor-price">0.00</span> )</span>
                                             </label>
                                             <div class="dokan-input-group">
                                                 <span class="dokan-input-group-addon"><?php echo get_woocommerce_currency_symbol(); ?></span>
@@ -267,6 +267,7 @@ if ( ! $from_shortcode ) {
                                         if ( $term ) {
                                             $product_cat = reset( $term );
                                         }
+                                        include_once DOKAN_LIB_DIR.'/class.category-walker.php';
 
                                         $category_args =  array(
                                             'show_option_none' => __( '- Select a category -', 'dokan-lite' ),
@@ -279,6 +280,7 @@ if ( ! $from_shortcode ) {
                                             'class'            => 'product_cat dokan-form-control dokan-select2',
                                             'exclude'          => '',
                                             'selected'         => $product_cat,
+                                            'walker'           => new DokanCategoryWalker( $post_id )
                                         );
 
                                         wp_dropdown_categories( apply_filters( 'dokan_product_cat_dropdown_args', $category_args ) );
@@ -681,4 +683,3 @@ if ( ! $from_shortcode ) {
         get_footer();
     }
 ?>
-

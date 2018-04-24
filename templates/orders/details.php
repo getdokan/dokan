@@ -162,7 +162,7 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                         <ul class="list-unstyled order-status">
                             <li>
                                 <span><?php _e( 'Order Status:', 'dokan-lite' ); ?></span>
-                                <label class="dokan-label dokan-label-<?php echo dokan_get_order_status_class( dokan_get_prop( $order, 'status' ) ); ?>"><?php echo isset( $statuses[dokan_get_prop( $order, 'status' )] ) ? $statuses[dokan_get_prop( $order, 'status' )] : dokan_get_prop( $order, 'status' ); ?></label>
+                                <label class="dokan-label dokan-label-<?php echo dokan_get_order_status_class( dokan_get_prop( $order, 'status' ) ); ?>"><?php echo esc_html( dokan_get_order_status_translated( dokan_get_prop( $order, 'status' ) ) ); ?></label>
 
                                 <?php if ( current_user_can( 'dokan_manage_order' ) && dokan_get_option( 'order_status_change', 'dokan_selling', 'on' ) == 'on' && $order->get_status() !== 'cancelled' && $order->get_status() !== 'refunded' ) {?>
                                     <a href="#" class="dokan-edit-status"><small><?php _e( '&nbsp; Edit', 'dokan-lite' ); ?></small></a>

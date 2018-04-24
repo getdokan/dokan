@@ -47,10 +47,9 @@
                         <div class="dokan-form-group dokan-clearfix dokan-price-container">
                             <div class="content-half-part">
                                 <label for="_regular_price" class="form-label"><?php _e( 'Price', 'dokan-lite' ); ?></label>
-
                                 <div class="dokan-input-group">
                                     <span class="dokan-input-group-addon"><?php echo get_woocommerce_currency_symbol(); ?></span>
-                                    <input type="number" class="dokan-form-control" name="_regular_price" placeholder="0.00" min="0" step="any">
+                                    <input type="number" class="dokan-product-regular-price dokan-form-control" name="_regular_price" placeholder="0.00" min="0" step="any">
                                 </div>
                             </div>
 
@@ -63,7 +62,7 @@
 
                                 <div class="dokan-input-group">
                                     <span class="dokan-input-group-addon"><?php echo get_woocommerce_currency_symbol(); ?></span>
-                                    <input type="number" class="dokan-form-control" name="_sale_price" placeholder="0.00" min="0" step="any">
+                                    <input type="number" class="dokan-product-sales-price dokan-form-control" name="_sale_price" placeholder="0.00" min="0" step="any">
                                 </div>
                             </div>
                         </div>
@@ -167,4 +166,7 @@
             </div>
         </form>
     </div>
+    <script type="javascript">
+        console.log('ok');
+    </script>
 </script>

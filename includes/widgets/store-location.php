@@ -38,7 +38,7 @@ class Dokan_Store_Location extends WP_Widget {
         $title        = apply_filters( 'widget_title', $instance['title'] );
         $store_info   = dokan_get_store_info( get_query_var( 'author' ) );
         $map_location = isset( $store_info['location'] ) ? esc_attr( $store_info['location'] ) : '';
-        
+
         if ( empty( $map_location ) ) {
             return;
         }
@@ -49,12 +49,12 @@ class Dokan_Store_Location extends WP_Widget {
             echo $args['before_title'] . $title . $args['after_title'];
         }
         do_action('dokan-store-widget-before-map' , get_query_var( 'author' ));
-        
+
         dokan_get_template_part( 'widgets/store-map', '', array(
             'store_info' => $store_info,
             'map_location' => $map_location,
         ) );
-        
+
         do_action('dokan-store-widget-after-map', get_query_var( 'author' ));
 
         echo $after_widget;
@@ -97,5 +97,3 @@ class Dokan_Store_Location extends WP_Widget {
         <?php
     }
 }
-
-add_action( 'widgets_init', create_function( '', "register_widget( 'Dokan_Store_Location' );" ) );
