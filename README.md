@@ -3,9 +3,9 @@
 **Donate Link:** http://tareq.co/donate/  
 **Tags:** woocommerce, multivendor, multi-vendor, vendor, multishop, paypal , seller, store, sell, online, amazon, dokan, ebay, Etsy, multi seller, multi store, multi vendor, multi vendors, multistore, multivendor, product vendor, product vendors, vendor, vendor system, vendors, wc market place, wc marketplace, wc vendors, woo vendors, woocommerce market place, woocommerce marketplace, woocommerce multi vendor,  commission rate, e-commerce, ebay, ecommerce, yith, yithemes  
 **Requires at least:** 4.4  
-**Tested up to:** 4.9.4  
-**WC requires at least:** 2.6  
-**WC tested up to:** 3.3.3  
+**Tested up to:** 4.9.5  
+**WC requires at least:** 3.0  
+**WC tested up to:** 3.3.5  
 **Requires PHP:** 5.6  
 **Stable tag:** trunk  
 **License:** GPLv2 or later  
@@ -180,6 +180,26 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 ## Changelog ##
+
+v2.8.0 -> April 24, 2018
+------------------------
+- **New:** Introduction of REST APIs
+- **New:** Email on vendor activation and deactivation
+- **New:** Price earning suggestion added for variable product
+- **New:** Email on product low & out of stock
+- **Tweak:** Improvement of back-end UI & UX
+- **Fix:** Sub order trash and untrashed not working in back-end
+- **Fix:** Top rated product shortcode is not working issue
+- **Fix:** Rredirection problem during activation using WP CLI
+- **Fix:** Setup wizard settings value not properly saved
+- **Fix:** Removed deprecated create_function issue
+- **Fix:** Commission splitting issue
+- **Fix:** Login registration issue
+- **Fix:** Price earning suggestion on product edit page issue
+- **Fix:** Registration of order table issue
+- **Fix:** Bulk withdrawal issue
+- **Fix:** Order status translation issue
+- **Fix:** Vendor name is showing twice on checkout page issue
 
 v2.7.8 -> March 05, 2018
 ------------------------
