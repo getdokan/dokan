@@ -238,18 +238,20 @@ function dokan_admin_on_untrash_order( $post_id ) {
     $post = get_post( $post_id );
 
     if ( $post->post_type == 'shop_order' && $post->post_parent == 0 ) {
-        $sub_orders = get_children( array( 'post_parent' => $post_id, 'post_type' => 'shop_order' ) );
+        global $wpdb;
+        $suborder_ids  = $wpdb->get_col(
+            $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_parent = %d AND post_type = 'shop_order'", $post_id )
+        );
 
-        if ( $sub_orders ) {
-            foreach ($sub_orders as $order_post) {
-                wp_untrash_post( $order_post->ID );
+        if ( $suborder_ids ) {
+            foreach ($suborder_ids as $suborder_id ) {
+                wp_untrash_post( $suborder_id );
             }
         }
     }
 }
 
-add_action( 'wp_untrash_post', 'dokan_admin_on_untrash_order' );
-
+add_action( 'untrash_post', 'dokan_admin_on_untrash_order' );
 
 /**
  * Delete sub orders and from dokan sync table when a order is deleted
