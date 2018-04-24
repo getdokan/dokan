@@ -164,6 +164,7 @@ module.exports = function(grunt) {
                     '!secret.json',
                     '!plugin-deploy.sh',
                     '!assets/src/**',
+                    '!src/**',
                     '!assets/css/style.css.map',
                     '!tests/**',
                     '!**/Gruntfile.js',
