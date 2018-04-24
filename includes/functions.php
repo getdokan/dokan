@@ -39,7 +39,7 @@ function dokan_get_current_user_id() {
         $vendor_id = get_user_meta( $staff_id, '_vendor_id', true );
 
         if ( empty( $vendor_id ) ) {
-            return $user_id;
+            return $staff_id;
         }
 
         return $vendor_id;
