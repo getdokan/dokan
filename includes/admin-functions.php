@@ -220,7 +220,7 @@ function dokan_admin_on_trash_order( $post_id ) {
         $sub_orders = get_children( array( 'post_parent' => $post_id, 'post_type' => 'shop_order' ) );
 
         if ( $sub_orders ) {
-            foreach ($sub_orders as $order_post) {
+            foreach ( $sub_orders as $order_post ) {
                 wp_trash_post( $order_post->ID );
             }
         }
@@ -239,12 +239,13 @@ function dokan_admin_on_untrash_order( $post_id ) {
 
     if ( $post->post_type == 'shop_order' && $post->post_parent == 0 ) {
         global $wpdb;
+
         $suborder_ids  = $wpdb->get_col(
             $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_parent = %d AND post_type = 'shop_order'", $post_id )
         );
 
         if ( $suborder_ids ) {
-            foreach ($suborder_ids as $suborder_id ) {
+            foreach ( $suborder_ids as $suborder_id ) {
                 wp_untrash_post( $suborder_id );
             }
         }
