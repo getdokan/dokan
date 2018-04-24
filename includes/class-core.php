@@ -20,6 +20,7 @@ class Dokan_Core {
         add_filter( 'body_class', array( $this, 'add_dashboard_template_class' ), 99 );
         add_filter( 'wp_title', array( $this, 'wp_title' ), 20, 2 );
         add_action( 'template_redirect', array( $this, 'redirect_if_not_logged_seller' ), 11 );
+        add_action( 'admin_init', array( $this, 'redirect_after_activate' ), 999 );
     }
 
     /**
@@ -160,6 +161,25 @@ class Dokan_Core {
             dokan_redirect_login();
             dokan_redirect_if_not_seller();
         }
+    }
+
+    /**
+     * Redirect after activation
+     *
+     * @since 2.8.0
+     *
+     * @return void
+     */
+    public function redirect_after_activate() {
+        if ( ! get_transient( '_dokan_setup_page_redirect' ) ) {
+            return;
+        }
+
+        // Delete the redirect transient
+        delete_transient( '_dokan_setup_page_redirect' );
+
+        wp_safe_redirect( add_query_arg( array( 'page' => 'dokan-setup' ), admin_url( 'index.php' ) ) );
+        exit;
     }
 
 }

@@ -450,5 +450,3 @@ function dokan() {
 
 // Lets Go....
 dokan();
-
-add_action( 'activated_plugin', array( 'Dokan_Installer', 'setup_page_redirect' ) );
