@@ -127,7 +127,6 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
                 'permission_callback' => array( $this, 'batch_items_permissions_check' ),
                 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
             ),
-            'schema' => array( $this, 'get_public_batch_schema' ),
         ) );
     }
 
@@ -481,7 +480,8 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
                         $status_code = $this->get_status( $status );
                         $user = $wpdb->get_row( "SELECT user_id, amount FROM {$wpdb->prefix}dokan_withdraw WHERE id = {$withdraw_id}" );
 
-                        if ( dokan_get_seller_balance( $user->user_id, false ) < $user->amount ) {
+
+                        if ( $status_code === 1 && dokan_get_seller_balance( $user->user_id, false ) < $user->amount ) {
                             continue;
                         }
 
