@@ -64,7 +64,7 @@ function dokan_update_user_capabilities_273() {
     $all_cap      = dokan_get_all_caps();
 
     foreach( $all_cap as $key=>$cap ) {
-        $capabilities = array_merge( $capabilities, $cap );
+        $capabilities = array_merge( $capabilities, array_keys( $cap ) );
     }
 
     foreach ( $capabilities as $key => $capability ) {
