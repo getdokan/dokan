@@ -28,6 +28,11 @@ class Dokan_Assets {
     public function enqueue_admin_scripts( $hook ) {
         global $post;
 
+        // Load common styles and scripts
+        wp_enqueue_style( 'dokan-admin-css' );
+        wp_enqueue_script( 'dokan-tooltip' );
+        wp_enqueue_script( 'dokan-admin' );
+
         // load vue app inside the parent menu only
         if ( 'toplevel_page_dokan' == $hook ) {
 
@@ -50,11 +55,6 @@ class Dokan_Assets {
                     'storePrefix' => dokan_get_option( 'custom_store_url', 'dokan_general', 'store' )
                 )
             ) );
-
-            // Load common styles and scripts
-            wp_enqueue_style( 'dokan-admin-css' );
-            wp_enqueue_script( 'dokan-tooltip' );
-            wp_enqueue_script( 'dokan-admin' );
 
             // load styles
             wp_enqueue_style( 'dokan-vue-vendor' );
