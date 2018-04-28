@@ -181,6 +181,15 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 ## Changelog ##
 
+v2.8.1 -> April 28, 2018
+------------------------
+- **Tweak:** Change dokan all capability label
+- **Fix:** Bulk withdraw request approving not working
+- **Fix:** Store header template settings js not working
+- **Fix:** Tinymce shortcode not working in post and page editor if pro exist
+- **Fix:** Alter tag missing in avatar image is fixed
+- **Fix:** Price suggession not properly calculated for other product type in vendor dashboard
+
 v2.8.0 -> April 24, 2018
 ------------------------
 - **New:** Introduction of REST APIs
