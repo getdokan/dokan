@@ -6,7 +6,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 const BrowserSyncPlugin = require( 'browser-sync-webpack-plugin' );
 
-const config = require( './config.json' );
+// const config = require( './config.json' );
 
 // Naming and path settings
 var appName = 'app';

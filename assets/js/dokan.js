@@ -1321,7 +1321,7 @@ jQuery(function($) {
         $('select#product_cat').on('change', function() {
             dokan_show_earning_suggestion();
 
-            if ( $( '#product_type' ).val() == 'variable' ) {
+            if ( $( '#product_type' ).val() == 'variable' || $( '#product_type' ).val() == undefined ) {
                 return;
             }
 

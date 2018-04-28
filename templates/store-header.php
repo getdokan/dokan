@@ -46,7 +46,7 @@ if ( 'layout3' === $profile_layout ) {
             <div class="profile-info-summery">
                 <div class="profile-info-head">
                     <div class="profile-img <?php echo $profile_img_class; ?>">
-                        <?php echo get_avatar( $store_user->get_id(), 150 ); ?>
+                        <?php echo get_avatar( $store_user->get_id(), 150, '', $store_user->get_shop_name() ); ?>
                     </div>
                     <?php if ( ! empty( $store_user->get_shop_name() ) && 'default' === $profile_layout ) { ?>
                         <h1 class="store-name"><?php echo esc_html( $store_user->get_shop_name() ); ?></h1>
@@ -83,7 +83,7 @@ if ( 'layout3' === $profile_layout ) {
                             <i class="fa fa-star"></i>
                             <?php dokan_get_readable_seller_rating( $store_user->get_id() ); ?>
                         </li>
-                        
+
                         <?php do_action( 'dokan_store_header_info_fields',  $store_user->get_id() ); ?>
                     </ul>
 

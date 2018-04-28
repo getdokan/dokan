@@ -80,6 +80,11 @@ class Dokan_Assets {
             wp_enqueue_style( 'thickbox' );
         }
 
+        if ( get_post_type( $post ) == 'post' || get_post_type( $post ) == 'page' ) {
+            wp_enqueue_script( 'dokan-tooltip' );
+            wp_enqueue_script( 'dokan-admin' );
+        }
+
         if ( 'plugins.php' == $hook ) {
             wp_enqueue_style( 'dokan-plugin-list-css' );
         }

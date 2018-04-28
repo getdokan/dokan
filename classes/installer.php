@@ -146,7 +146,7 @@ class Dokan_Installer {
         $all_cap      = dokan_get_all_caps();
 
         foreach( $all_cap as $key=>$cap ) {
-            $capabilities = array_merge( $capabilities, $cap );
+            $capabilities = array_merge( $capabilities, array_keys( $cap ) );
         }
 
         $wp_roles->add_cap( 'shop_manager', 'dokandar' );
