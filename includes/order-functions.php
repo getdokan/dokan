@@ -685,3 +685,7 @@ if ( ! function_exists( 'dokan_get_customer_orders_by_seller' ) ) :
     }
 
 endif;
+
+remove_action( 'woocommerce_order_status_completed', 'wc_update_total_sales_counts' );
+remove_action( 'woocommerce_order_status_processing', 'wc_update_total_sales_counts' );
+remove_action( 'woocommerce_order_status_on-hold', 'wc_update_total_sales_counts' );
