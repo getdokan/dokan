@@ -231,7 +231,7 @@
                         $.magnificPopup.close();
                         window.location.href = resp.data;
                     } else {
-                        $('.dokan-dahsboard-product-listing-wrapper').load( window.location.href + ' table.product-listing-table' );
+                        $('.dokan-dashboard-product-listing-wrapper').load( window.location.href + ' table.product-listing-table' );
                         $.magnificPopup.close();
                         Dokan_Editor.openProductPopup();
                     }

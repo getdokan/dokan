@@ -56,7 +56,7 @@
                     <?php dokan_product_listing_filter(); ?>
                 </div>
 
-                <div class="dokan-dahsboard-product-listing-wrapper">
+                <div class="dokan-dashboard-product-listing-wrapper">
                     <table class="dokan-table dokan-table-striped product-listing-table">
                         <thead>
                             <tr>

@@ -2,7 +2,7 @@
 /**
  *  Dokan Dashboard Template
  *
- *  Dokan Main Dahsboard template for Fron-end
+ *  Dokan Main Dashboard template for Fron-end
  *
  *  @since 2.4
  *

@@ -1,6 +1,6 @@
 <?php
 /**
- * Dokan Dahsboard Withdra Header Template
+ * Dokan Dashboard Withdra Header Template
  *
  * @since 2.4
  *
