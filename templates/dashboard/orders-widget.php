@@ -1,6 +1,6 @@
 <?php
 /**
- *  Dahsboard Widget Template
+ *  Dashboard Widget Template
  *
  *  Get dokan dashboard widget template
  *
