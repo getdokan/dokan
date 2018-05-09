@@ -134,7 +134,7 @@ function dokan_author_field_quick_edit(){
     $user_query = new WP_User_Query( array( 'role' => 'seller' ) );
     $sellers    = $user_query->get_results();
     ?>
-    <div class="dokan-product-author-field">
+    <div class="dokan-product-author-field inline-edit-group">
         <label class="alignleft">
             <span class="title"><?php _e( 'Vendor', 'dokan-lite' ); ?></span>
             <span class="input-text-wrap">
@@ -151,6 +151,22 @@ function dokan_author_field_quick_edit(){
             </span>
         </label>
     </div>
+
+    <script>
+        ;(function($){
+            $('#the-list').on('click', '.editinline', function(){
+                var post_id = $(this).closest('tr').attr('id');
+
+                post_id = post_id.replace("post-", "");
+
+                var $vendor_id_inline_data = $('#dokan_vendor_id_inline_' + post_id).find('#dokan_vendor_id').text(),
+                    $wc_inline_data = $('#woocommerce_inline_' + post_id );
+
+                $( 'select[name="dokan_product_author_override"] option:selected', '.inline-edit-row' ).attr( 'selected', false ).change();
+                $( 'select[name="dokan_product_author_override"] option[value="' + $vendor_id_inline_data + '"]' ).attr( 'selected', 'selected' ).change();
+            });
+        })(jQuery);
+    </script>
     <?php
 }
 
