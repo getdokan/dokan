@@ -147,6 +147,8 @@ class Dokan_Order_Manager {
                 'post_author' => $seller_id
             ) );
 
+            wc_update_total_sales_counts( $parent_order_id );
+
             // record admin commision
             $admin_fee = dokan_get_admin_commission_by( $parent_order, $seller_id );
             $parent_order->update_meta_data( '_dokan_admin_fee', $admin_fee );
@@ -181,6 +183,8 @@ class Dokan_Order_Manager {
     function create_sub_order( $parent_order, $seller_id, $seller_products ) {
 
         dokan_log( 'Creating sub order for vendor: #' . $seller_id );
+
+        wc_update_total_sales_counts( $parent_order->get_id() );
 
         $bill_ship = array(
             'billing_country', 'billing_first_name', 'billing_last_name', 'billing_company',
