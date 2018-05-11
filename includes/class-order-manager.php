@@ -209,6 +209,9 @@ class Dokan_Order_Manager {
 
         if ( $order_id && !is_wp_error( $order_id ) ) {
 
+            // update total_sales count for sub-order
+            wc_update_total_sales_counts( $order_id );
+
             // update author as vendor
             wp_update_post( array(
                 'post_author' => $seller_id,
