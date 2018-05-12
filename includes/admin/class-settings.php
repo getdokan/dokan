@@ -29,6 +29,7 @@ class Dokan_Settings {
         $this->settings_api = new Dokan_Settings_API();
 
         add_action( 'admin_init', array( $this, 'admin_init' ), 99 );
+        add_filter( 'dokan_admin_localize_script', array( $this, 'settings_localize_data' ), 10 );
     }
 
     /**
@@ -56,6 +57,20 @@ class Dokan_Settings {
 
         //initialize settings
         $this->get_settings_api()->admin_init();
+    }
+
+    /**
+     * Load settings sections and fields
+     *
+     * @since 2.8.2
+     *
+     * @return void
+     */
+    public function settings_localize_data( $data ) {
+        $data['settings_sections'] = $this->get_settings_sections();
+        $data['settings_fields']   = $this->get_settings_fields();
+
+        return $data;
     }
 
     /**

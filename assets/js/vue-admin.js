@@ -289,6 +289,10 @@ var _Help = __webpack_require__(94);
 
 var _Help2 = _interopRequireDefault(_Help);
 
+var _Settings = __webpack_require__(97);
+
+var _Settings2 = _interopRequireDefault(_Settings);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Vue = dokan_get_lib('Vue');
@@ -300,6 +304,7 @@ dokan_add_route(_Dashboard2.default);
 dokan_add_route(_Withdraw2.default);
 dokan_add_route(_Premium2.default);
 dokan_add_route(_Help2.default);
+dokan_add_route(_Settings2.default);
 
 /**
  * Parse the route array and bind required components
@@ -1211,7 +1216,83 @@ let Loading = dokan_get_lib('Loading');
 });
 
 /***/ }),
-/* 84 */,
+/* 84 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+
+    name: 'Settings',
+
+    data() {
+        return {
+            currentTab: null,
+            settingSections: [],
+            settingFields: {}
+        };
+    },
+
+    computed: {},
+
+    methods: {},
+
+    created() {
+        this.currentTab = 'dokan_general';
+
+        this.settingSections = dokan.settings_sections;
+        this.settingFields = dokan.settings_fields;
+    }
+});
+
+/***/ }),
 /* 85 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2383,6 +2464,1627 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-c289d136", esExports)
   }
 }
+
+/***/ }),
+/* 97 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Settings_vue__ = __webpack_require__(84);
+/* empty harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_e4dc4572_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Settings_vue__ = __webpack_require__(106);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(108)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Settings_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_e4dc4572_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Settings_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src/admin/pages/Settings.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-e4dc4572", Component.options)
+  } else {
+    hotAPI.reload("data-v-e4dc4572", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+
+
+/***/ }),
+/* 98 */,
+/* 99 */,
+/* 100 */,
+/* 101 */,
+/* 102 */,
+/* 103 */,
+/* 104 */,
+/* 105 */,
+/* 106 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "dokan-settings" }, [
+    _c("h2", { staticStyle: { "margin-bottom": "15px" } }, [
+      _vm._v("Settings")
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "dokan-settings-wrap" }, [
+      _c(
+        "h2",
+        { staticClass: "nav-tab-wrapper" },
+        [
+          _vm._l(_vm.settingSections, function(section) {
+            return [
+              _c(
+                "a",
+                {
+                  staticClass: "nav-tab",
+                  class: { "nav-tab-active": _vm.currentTab === section.id },
+                  attrs: { href: "#", id: "dokan_general-tab" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      _vm.currentTab = section.id
+                    }
+                  }
+                },
+                [
+                  _c("span", { staticClass: "dashicons", class: section.icon }),
+                  _vm._v(" " + _vm._s(section.title))
+                ]
+              )
+            ]
+          })
+        ],
+        2
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "metabox-holder" }, [
+        _c(
+          "div",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm.currentTab === "dokan_general",
+                expression: "currentTab==='dokan_general'"
+              }
+            ],
+            staticClass: "group",
+            attrs: { id: "dokan_general" }
+          },
+          [_vm._m(0)]
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm.currentTab === "dokan_selling",
+                expression: "currentTab==='dokan_selling'"
+              }
+            ],
+            staticClass: "group",
+            attrs: { id: "dokan_selling" }
+          },
+          [_vm._m(1)]
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm.currentTab === "dokan_withdraw",
+                expression: "currentTab==='dokan_withdraw'"
+              }
+            ],
+            staticClass: "group",
+            attrs: { id: "dokan_withdraw" }
+          },
+          [_vm._m(2)]
+        )
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("form", { attrs: { method: "post", action: "options.php" } }, [
+      _c("input", {
+        attrs: { type: "hidden", name: "option_page", value: "dokan_general" }
+      }),
+      _vm._v(" "),
+      _c("input", {
+        attrs: { type: "hidden", name: "action", value: "update" }
+      }),
+      _vm._v(" "),
+      _c("h2", [_vm._v("General")]),
+      _vm._v(" "),
+      _c("table", { staticClass: "form-table" }, [
+        _c("tbody", [
+          _c("tr", { staticClass: "admin_access" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c("label", { attrs: { for: "dokan_general[admin_access]" } }, [
+                _vm._v("Admin area access")
+              ])
+            ]),
+            _c("td", [
+              _c("fieldset", [
+                _c(
+                  "label",
+                  { attrs: { for: "wpuf-dokan_general[admin_access]" } },
+                  [
+                    _c("input", {
+                      attrs: {
+                        type: "hidden",
+                        name: "dokan_general[admin_access]",
+                        value: "off"
+                      }
+                    }),
+                    _c("input", {
+                      staticClass: "checkbox",
+                      attrs: {
+                        type: "checkbox",
+                        id: "wpuf-dokan_general[admin_access]",
+                        name: "dokan_general[admin_access]",
+                        value: "on"
+                      }
+                    }),
+                    _vm._v(
+                      "Disable Vendors and Customers from accessing the wp-admin dashboard area"
+                    )
+                  ]
+                )
+              ])
+            ])
+          ]),
+          _c("tr", { staticClass: "custom_store_url" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c(
+                "label",
+                { attrs: { for: "dokan_general[custom_store_url]" } },
+                [_vm._v("Vendor Store URL")]
+              )
+            ]),
+            _c("td", [
+              _c("input", {
+                staticClass: "regular-text",
+                attrs: {
+                  type: "text",
+                  id: "dokan_general[custom_store_url]",
+                  name: "dokan_general[custom_store_url]",
+                  value: "store"
+                }
+              }),
+              _c("p", { staticClass: "description" }, [
+                _vm._v("Define the seller store URL (http://newdokan.test/"),
+                _c("strong", [_vm._v("[this-text]")]),
+                _vm._v("/[seller-name])")
+              ])
+            ])
+          ]),
+          _c("tr", { staticClass: "seller_enable_terms_and_conditions" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c(
+                "label",
+                {
+                  attrs: {
+                    for: "dokan_general[seller_enable_terms_and_conditions]"
+                  }
+                },
+                [_vm._v("Terms and Conditions")]
+              )
+            ]),
+            _c("td", [
+              _c("fieldset", [
+                _c(
+                  "label",
+                  {
+                    attrs: {
+                      for:
+                        "wpuf-dokan_general[seller_enable_terms_and_conditions]"
+                    }
+                  },
+                  [
+                    _c("input", {
+                      attrs: {
+                        type: "hidden",
+                        name:
+                          "dokan_general[seller_enable_terms_and_conditions]",
+                        value: "off"
+                      }
+                    }),
+                    _c("input", {
+                      staticClass: "checkbox",
+                      attrs: {
+                        type: "checkbox",
+                        id:
+                          "wpuf-dokan_general[seller_enable_terms_and_conditions]",
+                        name:
+                          "dokan_general[seller_enable_terms_and_conditions]",
+                        value: "on"
+                      }
+                    }),
+                    _vm._v("Enable Terms and Conditions for vendor stores")
+                  ]
+                )
+              ])
+            ])
+          ]),
+          _c("tr", { staticClass: "extra_fee_recipient" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c(
+                "label",
+                { attrs: { for: "dokan_general[extra_fee_recipient]" } },
+                [_vm._v("Extra Fee Recipient")]
+              )
+            ]),
+            _c("td", [
+              _c(
+                "select",
+                {
+                  staticClass: "regular",
+                  attrs: {
+                    name: "dokan_general[extra_fee_recipient]",
+                    id: "dokan_general[extra_fee_recipient]"
+                  }
+                },
+                [
+                  _c(
+                    "option",
+                    { attrs: { value: "seller", selected: "selected" } },
+                    [_vm._v("Vendor")]
+                  ),
+                  _c("option", { attrs: { value: "admin" } }, [_vm._v("Admin")])
+                ]
+              ),
+              _c("p", { staticClass: "description" }, [
+                _vm._v(
+                  "Should extra fees, such as Shipping and Tax, go to the Vendor or the Admin?"
+                )
+              ])
+            ])
+          ]),
+          _c("tr", { staticClass: "store_map" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c("label", { attrs: { for: "dokan_general[store_map]" } }, [
+                _vm._v("Show Map on Store Page")
+              ])
+            ]),
+            _c("td", [
+              _c("fieldset", [
+                _c(
+                  "label",
+                  { attrs: { for: "wpuf-dokan_general[store_map]" } },
+                  [
+                    _c("input", {
+                      attrs: {
+                        type: "hidden",
+                        name: "dokan_general[store_map]",
+                        value: "off"
+                      }
+                    }),
+                    _c("input", {
+                      staticClass: "checkbox",
+                      attrs: {
+                        type: "checkbox",
+                        id: "wpuf-dokan_general[store_map]",
+                        name: "dokan_general[store_map]",
+                        value: "on",
+                        checked: "checked"
+                      }
+                    }),
+                    _vm._v(
+                      "Enable a Google Map of the Store Location in the store sidebar"
+                    )
+                  ]
+                )
+              ])
+            ])
+          ]),
+          _c("tr", { staticClass: "gmap_api_key" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c("label", { attrs: { for: "dokan_general[gmap_api_key]" } }, [
+                _vm._v("Google Map API Key")
+              ])
+            ]),
+            _c("td", [
+              _c("input", {
+                staticClass: "regular-text",
+                attrs: {
+                  type: "text",
+                  id: "dokan_general[gmap_api_key]",
+                  name: "dokan_general[gmap_api_key]",
+                  value: ""
+                }
+              }),
+              _c("p", { staticClass: "description" }, [
+                _c(
+                  "a",
+                  {
+                    attrs: {
+                      href:
+                        "https://developers.google.com/maps/documentation/javascript/",
+                      target: "_blank"
+                    }
+                  },
+                  [_vm._v("API Key")]
+                ),
+                _vm._v(" is needed to display map on store page")
+              ])
+            ])
+          ]),
+          _c("tr", { staticClass: "contact_seller" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c("label", { attrs: { for: "dokan_general[contact_seller]" } }, [
+                _vm._v("Show Contact Form on Store Page")
+              ])
+            ]),
+            _c("td", [
+              _c("fieldset", [
+                _c(
+                  "label",
+                  { attrs: { for: "wpuf-dokan_general[contact_seller]" } },
+                  [
+                    _c("input", {
+                      attrs: {
+                        type: "hidden",
+                        name: "dokan_general[contact_seller]",
+                        value: "off"
+                      }
+                    }),
+                    _c("input", {
+                      staticClass: "checkbox",
+                      attrs: {
+                        type: "checkbox",
+                        id: "wpuf-dokan_general[contact_seller]",
+                        name: "dokan_general[contact_seller]",
+                        value: "on",
+                        checked: "checked"
+                      }
+                    }),
+                    _vm._v("Enable Vendor Contact Form in the store sidebar")
+                  ]
+                )
+              ])
+            ])
+          ]),
+          _c("tr", { staticClass: "enable_theme_store_sidebar" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c(
+                "label",
+                { attrs: { for: "dokan_general[enable_theme_store_sidebar]" } },
+                [_vm._v("Enable Store Sidebar From Theme")]
+              )
+            ]),
+            _c("td", [
+              _c("fieldset", [
+                _c(
+                  "label",
+                  {
+                    attrs: {
+                      for: "wpuf-dokan_general[enable_theme_store_sidebar]"
+                    }
+                  },
+                  [
+                    _c("input", {
+                      attrs: {
+                        type: "hidden",
+                        name: "dokan_general[enable_theme_store_sidebar]",
+                        value: "off"
+                      }
+                    }),
+                    _c("input", {
+                      staticClass: "checkbox",
+                      attrs: {
+                        type: "checkbox",
+                        id: "wpuf-dokan_general[enable_theme_store_sidebar]",
+                        name: "dokan_general[enable_theme_store_sidebar]",
+                        value: "on"
+                      }
+                    }),
+                    _vm._v("Enable showing Store Sidebar From Your Theme.")
+                  ]
+                )
+              ])
+            ])
+          ]),
+          _c("tr", { staticClass: "product_add_mail" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c(
+                "label",
+                { attrs: { for: "dokan_general[product_add_mail]" } },
+                [_vm._v("Product Mail Notification")]
+              )
+            ]),
+            _c("td", [
+              _c("fieldset", [
+                _c(
+                  "label",
+                  { attrs: { for: "wpuf-dokan_general[product_add_mail]" } },
+                  [
+                    _c("input", {
+                      attrs: {
+                        type: "hidden",
+                        name: "dokan_general[product_add_mail]",
+                        value: "off"
+                      }
+                    }),
+                    _c("input", {
+                      staticClass: "checkbox",
+                      attrs: {
+                        type: "checkbox",
+                        id: "wpuf-dokan_general[product_add_mail]",
+                        name: "dokan_general[product_add_mail]",
+                        value: "on",
+                        checked: "checked"
+                      }
+                    }),
+                    _vm._v("Email notification on new product submission")
+                  ]
+                )
+              ])
+            ])
+          ]),
+          _c("tr", { staticClass: "seller_review_manage" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c(
+                "label",
+                { attrs: { for: "dokan_general[seller_review_manage]" } },
+                [_vm._v("Vendor Product Review")]
+              )
+            ]),
+            _c("td", [
+              _c("fieldset", [
+                _c(
+                  "label",
+                  {
+                    attrs: { for: "wpuf-dokan_general[seller_review_manage]" }
+                  },
+                  [
+                    _c("input", {
+                      attrs: {
+                        type: "hidden",
+                        name: "dokan_general[seller_review_manage]",
+                        value: "off"
+                      }
+                    }),
+                    _c("input", {
+                      staticClass: "checkbox",
+                      attrs: {
+                        type: "checkbox",
+                        id: "wpuf-dokan_general[seller_review_manage]",
+                        name: "dokan_general[seller_review_manage]",
+                        value: "on",
+                        checked: "checked"
+                      }
+                    }),
+                    _vm._v(
+                      "Vendor can change product review status from vendor dashboard"
+                    )
+                  ]
+                )
+              ])
+            ])
+          ]),
+          _c("tr", { staticClass: "enable_tc_on_reg" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c(
+                "label",
+                { attrs: { for: "dokan_general[enable_tc_on_reg]" } },
+                [_vm._v("Enable Terms and Condition")]
+              )
+            ]),
+            _c("td", [
+              _c("fieldset", [
+                _c(
+                  "label",
+                  { attrs: { for: "wpuf-dokan_general[enable_tc_on_reg]" } },
+                  [
+                    _c("input", {
+                      attrs: {
+                        type: "hidden",
+                        name: "dokan_general[enable_tc_on_reg]",
+                        value: "off"
+                      }
+                    }),
+                    _c("input", {
+                      staticClass: "checkbox",
+                      attrs: {
+                        type: "checkbox",
+                        id: "wpuf-dokan_general[enable_tc_on_reg]",
+                        name: "dokan_general[enable_tc_on_reg]",
+                        value: "on",
+                        checked: "checked"
+                      }
+                    }),
+                    _vm._v(
+                      "Enable Terms and Condition check on registration form"
+                    )
+                  ]
+                )
+              ])
+            ])
+          ]),
+          _c("tr", { staticClass: "store_banner_width" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c(
+                "label",
+                { attrs: { for: "dokan_general[store_banner_width]" } },
+                [_vm._v("Store Banner width")]
+              )
+            ]),
+            _c("td", [
+              _c("input", {
+                staticClass: "regular-text",
+                attrs: {
+                  type: "text",
+                  id: "dokan_general[store_banner_width]",
+                  name: "dokan_general[store_banner_width]",
+                  value: "625"
+                }
+              })
+            ])
+          ]),
+          _c("tr", { staticClass: "store_banner_height" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c(
+                "label",
+                { attrs: { for: "dokan_general[store_banner_height]" } },
+                [_vm._v("Store Banner height")]
+              )
+            ]),
+            _c("td", [
+              _c("input", {
+                staticClass: "regular-text",
+                attrs: {
+                  type: "text",
+                  id: "dokan_general[store_banner_height]",
+                  name: "dokan_general[store_banner_height]",
+                  value: "300"
+                }
+              })
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticStyle: { "padding-left": "10px" } }, [
+        _c("p", { staticClass: "submit" }, [
+          _c("input", {
+            staticClass: "button button-primary",
+            attrs: {
+              type: "submit",
+              name: "submit",
+              id: "submit",
+              value: "Save Changes"
+            }
+          })
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("form", { attrs: { method: "post", action: "options.php" } }, [
+      _c("input", {
+        attrs: { type: "hidden", name: "option_page", value: "dokan_general" }
+      }),
+      _vm._v(" "),
+      _c("input", {
+        attrs: { type: "hidden", name: "action", value: "update" }
+      }),
+      _vm._v(" "),
+      _c("h2", [_vm._v("Selling")]),
+      _vm._v(" "),
+      _c("table", { staticClass: "form-table" }, [
+        _c("tbody", [
+          _c("tr", { staticClass: "admin_access" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c("label", { attrs: { for: "dokan_general[admin_access]" } }, [
+                _vm._v("Admin area access")
+              ])
+            ]),
+            _c("td", [
+              _c("fieldset", [
+                _c(
+                  "label",
+                  { attrs: { for: "wpuf-dokan_general[admin_access]" } },
+                  [
+                    _c("input", {
+                      attrs: {
+                        type: "hidden",
+                        name: "dokan_general[admin_access]",
+                        value: "off"
+                      }
+                    }),
+                    _c("input", {
+                      staticClass: "checkbox",
+                      attrs: {
+                        type: "checkbox",
+                        id: "wpuf-dokan_general[admin_access]",
+                        name: "dokan_general[admin_access]",
+                        value: "on"
+                      }
+                    }),
+                    _vm._v(
+                      "Disable Vendors and Customers from accessing the wp-admin dashboard area"
+                    )
+                  ]
+                )
+              ])
+            ])
+          ]),
+          _c("tr", { staticClass: "custom_store_url" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c(
+                "label",
+                { attrs: { for: "dokan_general[custom_store_url]" } },
+                [_vm._v("Vendor Store URL")]
+              )
+            ]),
+            _c("td", [
+              _c("input", {
+                staticClass: "regular-text",
+                attrs: {
+                  type: "text",
+                  id: "dokan_general[custom_store_url]",
+                  name: "dokan_general[custom_store_url]",
+                  value: "store"
+                }
+              }),
+              _c("p", { staticClass: "description" }, [
+                _vm._v("Define the seller store URL (http://newdokan.test/"),
+                _c("strong", [_vm._v("[this-text]")]),
+                _vm._v("/[seller-name])")
+              ])
+            ])
+          ]),
+          _c("tr", { staticClass: "seller_enable_terms_and_conditions" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c(
+                "label",
+                {
+                  attrs: {
+                    for: "dokan_general[seller_enable_terms_and_conditions]"
+                  }
+                },
+                [_vm._v("Terms and Conditions")]
+              )
+            ]),
+            _c("td", [
+              _c("fieldset", [
+                _c(
+                  "label",
+                  {
+                    attrs: {
+                      for:
+                        "wpuf-dokan_general[seller_enable_terms_and_conditions]"
+                    }
+                  },
+                  [
+                    _c("input", {
+                      attrs: {
+                        type: "hidden",
+                        name:
+                          "dokan_general[seller_enable_terms_and_conditions]",
+                        value: "off"
+                      }
+                    }),
+                    _c("input", {
+                      staticClass: "checkbox",
+                      attrs: {
+                        type: "checkbox",
+                        id:
+                          "wpuf-dokan_general[seller_enable_terms_and_conditions]",
+                        name:
+                          "dokan_general[seller_enable_terms_and_conditions]",
+                        value: "on"
+                      }
+                    }),
+                    _vm._v("Enable Terms and Conditions for vendor stores")
+                  ]
+                )
+              ])
+            ])
+          ]),
+          _c("tr", { staticClass: "extra_fee_recipient" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c(
+                "label",
+                { attrs: { for: "dokan_general[extra_fee_recipient]" } },
+                [_vm._v("Extra Fee Recipient")]
+              )
+            ]),
+            _c("td", [
+              _c(
+                "select",
+                {
+                  staticClass: "regular",
+                  attrs: {
+                    name: "dokan_general[extra_fee_recipient]",
+                    id: "dokan_general[extra_fee_recipient]"
+                  }
+                },
+                [
+                  _c(
+                    "option",
+                    { attrs: { value: "seller", selected: "selected" } },
+                    [_vm._v("Vendor")]
+                  ),
+                  _c("option", { attrs: { value: "admin" } }, [_vm._v("Admin")])
+                ]
+              ),
+              _c("p", { staticClass: "description" }, [
+                _vm._v(
+                  "Should extra fees, such as Shipping and Tax, go to the Vendor or the Admin?"
+                )
+              ])
+            ])
+          ]),
+          _c("tr", { staticClass: "store_map" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c("label", { attrs: { for: "dokan_general[store_map]" } }, [
+                _vm._v("Show Map on Store Page")
+              ])
+            ]),
+            _c("td", [
+              _c("fieldset", [
+                _c(
+                  "label",
+                  { attrs: { for: "wpuf-dokan_general[store_map]" } },
+                  [
+                    _c("input", {
+                      attrs: {
+                        type: "hidden",
+                        name: "dokan_general[store_map]",
+                        value: "off"
+                      }
+                    }),
+                    _c("input", {
+                      staticClass: "checkbox",
+                      attrs: {
+                        type: "checkbox",
+                        id: "wpuf-dokan_general[store_map]",
+                        name: "dokan_general[store_map]",
+                        value: "on",
+                        checked: "checked"
+                      }
+                    }),
+                    _vm._v(
+                      "Enable a Google Map of the Store Location in the store sidebar"
+                    )
+                  ]
+                )
+              ])
+            ])
+          ]),
+          _c("tr", { staticClass: "gmap_api_key" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c("label", { attrs: { for: "dokan_general[gmap_api_key]" } }, [
+                _vm._v("Google Map API Key")
+              ])
+            ]),
+            _c("td", [
+              _c("input", {
+                staticClass: "regular-text",
+                attrs: {
+                  type: "text",
+                  id: "dokan_general[gmap_api_key]",
+                  name: "dokan_general[gmap_api_key]",
+                  value: ""
+                }
+              }),
+              _c("p", { staticClass: "description" }, [
+                _c(
+                  "a",
+                  {
+                    attrs: {
+                      href:
+                        "https://developers.google.com/maps/documentation/javascript/",
+                      target: "_blank"
+                    }
+                  },
+                  [_vm._v("API Key")]
+                ),
+                _vm._v(" is needed to display map on store page")
+              ])
+            ])
+          ]),
+          _c("tr", { staticClass: "contact_seller" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c("label", { attrs: { for: "dokan_general[contact_seller]" } }, [
+                _vm._v("Show Contact Form on Store Page")
+              ])
+            ]),
+            _c("td", [
+              _c("fieldset", [
+                _c(
+                  "label",
+                  { attrs: { for: "wpuf-dokan_general[contact_seller]" } },
+                  [
+                    _c("input", {
+                      attrs: {
+                        type: "hidden",
+                        name: "dokan_general[contact_seller]",
+                        value: "off"
+                      }
+                    }),
+                    _c("input", {
+                      staticClass: "checkbox",
+                      attrs: {
+                        type: "checkbox",
+                        id: "wpuf-dokan_general[contact_seller]",
+                        name: "dokan_general[contact_seller]",
+                        value: "on",
+                        checked: "checked"
+                      }
+                    }),
+                    _vm._v("Enable Vendor Contact Form in the store sidebar")
+                  ]
+                )
+              ])
+            ])
+          ]),
+          _c("tr", { staticClass: "enable_theme_store_sidebar" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c(
+                "label",
+                { attrs: { for: "dokan_general[enable_theme_store_sidebar]" } },
+                [_vm._v("Enable Store Sidebar From Theme")]
+              )
+            ]),
+            _c("td", [
+              _c("fieldset", [
+                _c(
+                  "label",
+                  {
+                    attrs: {
+                      for: "wpuf-dokan_general[enable_theme_store_sidebar]"
+                    }
+                  },
+                  [
+                    _c("input", {
+                      attrs: {
+                        type: "hidden",
+                        name: "dokan_general[enable_theme_store_sidebar]",
+                        value: "off"
+                      }
+                    }),
+                    _c("input", {
+                      staticClass: "checkbox",
+                      attrs: {
+                        type: "checkbox",
+                        id: "wpuf-dokan_general[enable_theme_store_sidebar]",
+                        name: "dokan_general[enable_theme_store_sidebar]",
+                        value: "on"
+                      }
+                    }),
+                    _vm._v("Enable showing Store Sidebar From Your Theme.")
+                  ]
+                )
+              ])
+            ])
+          ]),
+          _c("tr", { staticClass: "product_add_mail" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c(
+                "label",
+                { attrs: { for: "dokan_general[product_add_mail]" } },
+                [_vm._v("Product Mail Notification")]
+              )
+            ]),
+            _c("td", [
+              _c("fieldset", [
+                _c(
+                  "label",
+                  { attrs: { for: "wpuf-dokan_general[product_add_mail]" } },
+                  [
+                    _c("input", {
+                      attrs: {
+                        type: "hidden",
+                        name: "dokan_general[product_add_mail]",
+                        value: "off"
+                      }
+                    }),
+                    _c("input", {
+                      staticClass: "checkbox",
+                      attrs: {
+                        type: "checkbox",
+                        id: "wpuf-dokan_general[product_add_mail]",
+                        name: "dokan_general[product_add_mail]",
+                        value: "on",
+                        checked: "checked"
+                      }
+                    }),
+                    _vm._v("Email notification on new product submission")
+                  ]
+                )
+              ])
+            ])
+          ]),
+          _c("tr", { staticClass: "seller_review_manage" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c(
+                "label",
+                { attrs: { for: "dokan_general[seller_review_manage]" } },
+                [_vm._v("Vendor Product Review")]
+              )
+            ]),
+            _c("td", [
+              _c("fieldset", [
+                _c(
+                  "label",
+                  {
+                    attrs: { for: "wpuf-dokan_general[seller_review_manage]" }
+                  },
+                  [
+                    _c("input", {
+                      attrs: {
+                        type: "hidden",
+                        name: "dokan_general[seller_review_manage]",
+                        value: "off"
+                      }
+                    }),
+                    _c("input", {
+                      staticClass: "checkbox",
+                      attrs: {
+                        type: "checkbox",
+                        id: "wpuf-dokan_general[seller_review_manage]",
+                        name: "dokan_general[seller_review_manage]",
+                        value: "on",
+                        checked: "checked"
+                      }
+                    }),
+                    _vm._v(
+                      "Vendor can change product review status from vendor dashboard"
+                    )
+                  ]
+                )
+              ])
+            ])
+          ]),
+          _c("tr", { staticClass: "enable_tc_on_reg" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c(
+                "label",
+                { attrs: { for: "dokan_general[enable_tc_on_reg]" } },
+                [_vm._v("Enable Terms and Condition")]
+              )
+            ]),
+            _c("td", [
+              _c("fieldset", [
+                _c(
+                  "label",
+                  { attrs: { for: "wpuf-dokan_general[enable_tc_on_reg]" } },
+                  [
+                    _c("input", {
+                      attrs: {
+                        type: "hidden",
+                        name: "dokan_general[enable_tc_on_reg]",
+                        value: "off"
+                      }
+                    }),
+                    _c("input", {
+                      staticClass: "checkbox",
+                      attrs: {
+                        type: "checkbox",
+                        id: "wpuf-dokan_general[enable_tc_on_reg]",
+                        name: "dokan_general[enable_tc_on_reg]",
+                        value: "on",
+                        checked: "checked"
+                      }
+                    }),
+                    _vm._v(
+                      "Enable Terms and Condition check on registration form"
+                    )
+                  ]
+                )
+              ])
+            ])
+          ]),
+          _c("tr", { staticClass: "store_banner_width" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c(
+                "label",
+                { attrs: { for: "dokan_general[store_banner_width]" } },
+                [_vm._v("Store Banner width")]
+              )
+            ]),
+            _c("td", [
+              _c("input", {
+                staticClass: "regular-text",
+                attrs: {
+                  type: "text",
+                  id: "dokan_general[store_banner_width]",
+                  name: "dokan_general[store_banner_width]",
+                  value: "625"
+                }
+              })
+            ])
+          ]),
+          _c("tr", { staticClass: "store_banner_height" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c(
+                "label",
+                { attrs: { for: "dokan_general[store_banner_height]" } },
+                [_vm._v("Store Banner height")]
+              )
+            ]),
+            _c("td", [
+              _c("input", {
+                staticClass: "regular-text",
+                attrs: {
+                  type: "text",
+                  id: "dokan_general[store_banner_height]",
+                  name: "dokan_general[store_banner_height]",
+                  value: "300"
+                }
+              })
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticStyle: { "padding-left": "10px" } }, [
+        _c("p", { staticClass: "submit" }, [
+          _c("input", {
+            staticClass: "button button-primary",
+            attrs: {
+              type: "submit",
+              name: "submit",
+              id: "submit",
+              value: "Save Changes"
+            }
+          })
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("form", { attrs: { method: "post", action: "options.php" } }, [
+      _c("input", {
+        attrs: { type: "hidden", name: "option_page", value: "dokan_general" }
+      }),
+      _vm._v(" "),
+      _c("input", {
+        attrs: { type: "hidden", name: "action", value: "update" }
+      }),
+      _vm._v(" "),
+      _c("h2", [_vm._v("Withdraw")]),
+      _vm._v(" "),
+      _c("table", { staticClass: "form-table" }, [
+        _c("tbody", [
+          _c("tr", { staticClass: "admin_access" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c("label", { attrs: { for: "dokan_general[admin_access]" } }, [
+                _vm._v("Admin area access")
+              ])
+            ]),
+            _c("td", [
+              _c("fieldset", [
+                _c(
+                  "label",
+                  { attrs: { for: "wpuf-dokan_general[admin_access]" } },
+                  [
+                    _c("input", {
+                      attrs: {
+                        type: "hidden",
+                        name: "dokan_general[admin_access]",
+                        value: "off"
+                      }
+                    }),
+                    _c("input", {
+                      staticClass: "checkbox",
+                      attrs: {
+                        type: "checkbox",
+                        id: "wpuf-dokan_general[admin_access]",
+                        name: "dokan_general[admin_access]",
+                        value: "on"
+                      }
+                    }),
+                    _vm._v(
+                      "Disable Vendors and Customers from accessing the wp-admin dashboard area"
+                    )
+                  ]
+                )
+              ])
+            ])
+          ]),
+          _c("tr", { staticClass: "custom_store_url" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c(
+                "label",
+                { attrs: { for: "dokan_general[custom_store_url]" } },
+                [_vm._v("Vendor Store URL")]
+              )
+            ]),
+            _c("td", [
+              _c("input", {
+                staticClass: "regular-text",
+                attrs: {
+                  type: "text",
+                  id: "dokan_general[custom_store_url]",
+                  name: "dokan_general[custom_store_url]",
+                  value: "store"
+                }
+              }),
+              _c("p", { staticClass: "description" }, [
+                _vm._v("Define the seller store URL (http://newdokan.test/"),
+                _c("strong", [_vm._v("[this-text]")]),
+                _vm._v("/[seller-name])")
+              ])
+            ])
+          ]),
+          _c("tr", { staticClass: "seller_enable_terms_and_conditions" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c(
+                "label",
+                {
+                  attrs: {
+                    for: "dokan_general[seller_enable_terms_and_conditions]"
+                  }
+                },
+                [_vm._v("Terms and Conditions")]
+              )
+            ]),
+            _c("td", [
+              _c("fieldset", [
+                _c(
+                  "label",
+                  {
+                    attrs: {
+                      for:
+                        "wpuf-dokan_general[seller_enable_terms_and_conditions]"
+                    }
+                  },
+                  [
+                    _c("input", {
+                      attrs: {
+                        type: "hidden",
+                        name:
+                          "dokan_general[seller_enable_terms_and_conditions]",
+                        value: "off"
+                      }
+                    }),
+                    _c("input", {
+                      staticClass: "checkbox",
+                      attrs: {
+                        type: "checkbox",
+                        id:
+                          "wpuf-dokan_general[seller_enable_terms_and_conditions]",
+                        name:
+                          "dokan_general[seller_enable_terms_and_conditions]",
+                        value: "on"
+                      }
+                    }),
+                    _vm._v("Enable Terms and Conditions for vendor stores")
+                  ]
+                )
+              ])
+            ])
+          ]),
+          _c("tr", { staticClass: "extra_fee_recipient" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c(
+                "label",
+                { attrs: { for: "dokan_general[extra_fee_recipient]" } },
+                [_vm._v("Extra Fee Recipient")]
+              )
+            ]),
+            _c("td", [
+              _c(
+                "select",
+                {
+                  staticClass: "regular",
+                  attrs: {
+                    name: "dokan_general[extra_fee_recipient]",
+                    id: "dokan_general[extra_fee_recipient]"
+                  }
+                },
+                [
+                  _c(
+                    "option",
+                    { attrs: { value: "seller", selected: "selected" } },
+                    [_vm._v("Vendor")]
+                  ),
+                  _c("option", { attrs: { value: "admin" } }, [_vm._v("Admin")])
+                ]
+              ),
+              _c("p", { staticClass: "description" }, [
+                _vm._v(
+                  "Should extra fees, such as Shipping and Tax, go to the Vendor or the Admin?"
+                )
+              ])
+            ])
+          ]),
+          _c("tr", { staticClass: "store_map" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c("label", { attrs: { for: "dokan_general[store_map]" } }, [
+                _vm._v("Show Map on Store Page")
+              ])
+            ]),
+            _c("td", [
+              _c("fieldset", [
+                _c(
+                  "label",
+                  { attrs: { for: "wpuf-dokan_general[store_map]" } },
+                  [
+                    _c("input", {
+                      attrs: {
+                        type: "hidden",
+                        name: "dokan_general[store_map]",
+                        value: "off"
+                      }
+                    }),
+                    _c("input", {
+                      staticClass: "checkbox",
+                      attrs: {
+                        type: "checkbox",
+                        id: "wpuf-dokan_general[store_map]",
+                        name: "dokan_general[store_map]",
+                        value: "on",
+                        checked: "checked"
+                      }
+                    }),
+                    _vm._v(
+                      "Enable a Google Map of the Store Location in the store sidebar"
+                    )
+                  ]
+                )
+              ])
+            ])
+          ]),
+          _c("tr", { staticClass: "gmap_api_key" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c("label", { attrs: { for: "dokan_general[gmap_api_key]" } }, [
+                _vm._v("Google Map API Key")
+              ])
+            ]),
+            _c("td", [
+              _c("input", {
+                staticClass: "regular-text",
+                attrs: {
+                  type: "text",
+                  id: "dokan_general[gmap_api_key]",
+                  name: "dokan_general[gmap_api_key]",
+                  value: ""
+                }
+              }),
+              _c("p", { staticClass: "description" }, [
+                _c(
+                  "a",
+                  {
+                    attrs: {
+                      href:
+                        "https://developers.google.com/maps/documentation/javascript/",
+                      target: "_blank"
+                    }
+                  },
+                  [_vm._v("API Key")]
+                ),
+                _vm._v(" is needed to display map on store page")
+              ])
+            ])
+          ]),
+          _c("tr", { staticClass: "contact_seller" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c("label", { attrs: { for: "dokan_general[contact_seller]" } }, [
+                _vm._v("Show Contact Form on Store Page")
+              ])
+            ]),
+            _c("td", [
+              _c("fieldset", [
+                _c(
+                  "label",
+                  { attrs: { for: "wpuf-dokan_general[contact_seller]" } },
+                  [
+                    _c("input", {
+                      attrs: {
+                        type: "hidden",
+                        name: "dokan_general[contact_seller]",
+                        value: "off"
+                      }
+                    }),
+                    _c("input", {
+                      staticClass: "checkbox",
+                      attrs: {
+                        type: "checkbox",
+                        id: "wpuf-dokan_general[contact_seller]",
+                        name: "dokan_general[contact_seller]",
+                        value: "on",
+                        checked: "checked"
+                      }
+                    }),
+                    _vm._v("Enable Vendor Contact Form in the store sidebar")
+                  ]
+                )
+              ])
+            ])
+          ]),
+          _c("tr", { staticClass: "enable_theme_store_sidebar" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c(
+                "label",
+                { attrs: { for: "dokan_general[enable_theme_store_sidebar]" } },
+                [_vm._v("Enable Store Sidebar From Theme")]
+              )
+            ]),
+            _c("td", [
+              _c("fieldset", [
+                _c(
+                  "label",
+                  {
+                    attrs: {
+                      for: "wpuf-dokan_general[enable_theme_store_sidebar]"
+                    }
+                  },
+                  [
+                    _c("input", {
+                      attrs: {
+                        type: "hidden",
+                        name: "dokan_general[enable_theme_store_sidebar]",
+                        value: "off"
+                      }
+                    }),
+                    _c("input", {
+                      staticClass: "checkbox",
+                      attrs: {
+                        type: "checkbox",
+                        id: "wpuf-dokan_general[enable_theme_store_sidebar]",
+                        name: "dokan_general[enable_theme_store_sidebar]",
+                        value: "on"
+                      }
+                    }),
+                    _vm._v("Enable showing Store Sidebar From Your Theme.")
+                  ]
+                )
+              ])
+            ])
+          ]),
+          _c("tr", { staticClass: "product_add_mail" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c(
+                "label",
+                { attrs: { for: "dokan_general[product_add_mail]" } },
+                [_vm._v("Product Mail Notification")]
+              )
+            ]),
+            _c("td", [
+              _c("fieldset", [
+                _c(
+                  "label",
+                  { attrs: { for: "wpuf-dokan_general[product_add_mail]" } },
+                  [
+                    _c("input", {
+                      attrs: {
+                        type: "hidden",
+                        name: "dokan_general[product_add_mail]",
+                        value: "off"
+                      }
+                    }),
+                    _c("input", {
+                      staticClass: "checkbox",
+                      attrs: {
+                        type: "checkbox",
+                        id: "wpuf-dokan_general[product_add_mail]",
+                        name: "dokan_general[product_add_mail]",
+                        value: "on",
+                        checked: "checked"
+                      }
+                    }),
+                    _vm._v("Email notification on new product submission")
+                  ]
+                )
+              ])
+            ])
+          ]),
+          _c("tr", { staticClass: "seller_review_manage" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c(
+                "label",
+                { attrs: { for: "dokan_general[seller_review_manage]" } },
+                [_vm._v("Vendor Product Review")]
+              )
+            ]),
+            _c("td", [
+              _c("fieldset", [
+                _c(
+                  "label",
+                  {
+                    attrs: { for: "wpuf-dokan_general[seller_review_manage]" }
+                  },
+                  [
+                    _c("input", {
+                      attrs: {
+                        type: "hidden",
+                        name: "dokan_general[seller_review_manage]",
+                        value: "off"
+                      }
+                    }),
+                    _c("input", {
+                      staticClass: "checkbox",
+                      attrs: {
+                        type: "checkbox",
+                        id: "wpuf-dokan_general[seller_review_manage]",
+                        name: "dokan_general[seller_review_manage]",
+                        value: "on",
+                        checked: "checked"
+                      }
+                    }),
+                    _vm._v(
+                      "Vendor can change product review status from vendor dashboard"
+                    )
+                  ]
+                )
+              ])
+            ])
+          ]),
+          _c("tr", { staticClass: "enable_tc_on_reg" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c(
+                "label",
+                { attrs: { for: "dokan_general[enable_tc_on_reg]" } },
+                [_vm._v("Enable Terms and Condition")]
+              )
+            ]),
+            _c("td", [
+              _c("fieldset", [
+                _c(
+                  "label",
+                  { attrs: { for: "wpuf-dokan_general[enable_tc_on_reg]" } },
+                  [
+                    _c("input", {
+                      attrs: {
+                        type: "hidden",
+                        name: "dokan_general[enable_tc_on_reg]",
+                        value: "off"
+                      }
+                    }),
+                    _c("input", {
+                      staticClass: "checkbox",
+                      attrs: {
+                        type: "checkbox",
+                        id: "wpuf-dokan_general[enable_tc_on_reg]",
+                        name: "dokan_general[enable_tc_on_reg]",
+                        value: "on",
+                        checked: "checked"
+                      }
+                    }),
+                    _vm._v(
+                      "Enable Terms and Condition check on registration form"
+                    )
+                  ]
+                )
+              ])
+            ])
+          ]),
+          _c("tr", { staticClass: "store_banner_width" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c(
+                "label",
+                { attrs: { for: "dokan_general[store_banner_width]" } },
+                [_vm._v("Store Banner width")]
+              )
+            ]),
+            _c("td", [
+              _c("input", {
+                staticClass: "regular-text",
+                attrs: {
+                  type: "text",
+                  id: "dokan_general[store_banner_width]",
+                  name: "dokan_general[store_banner_width]",
+                  value: "625"
+                }
+              })
+            ])
+          ]),
+          _c("tr", { staticClass: "store_banner_height" }, [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c(
+                "label",
+                { attrs: { for: "dokan_general[store_banner_height]" } },
+                [_vm._v("Store Banner height")]
+              )
+            ]),
+            _c("td", [
+              _c("input", {
+                staticClass: "regular-text",
+                attrs: {
+                  type: "text",
+                  id: "dokan_general[store_banner_height]",
+                  name: "dokan_general[store_banner_height]",
+                  value: "300"
+                }
+              })
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticStyle: { "padding-left": "10px" } }, [
+        _c("p", { staticClass: "submit" }, [
+          _c("input", {
+            staticClass: "button button-primary",
+            attrs: {
+              type: "submit",
+              name: "submit",
+              id: "submit",
+              value: "Save Changes"
+            }
+          })
+        ])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-e4dc4572", esExports)
+  }
+}
+
+/***/ }),
+/* 107 */,
+/* 108 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 ],[34]);

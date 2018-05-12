@@ -31,7 +31,7 @@ class Dokan_Assets {
         // load vue app inside the parent menu only
         if ( 'toplevel_page_dokan' == $hook ) {
 
-            $localize_script = apply_filters( 'dokan-admin-localize_script', array(
+            $localize_script = apply_filters( 'dokan_admin_localize_script', array(
                 'rest' => array(
                     'root'    => esc_url_raw( get_rest_url() ),
                     'nonce'   => wp_create_nonce( 'wp_rest' ),
@@ -128,6 +128,11 @@ class Dokan_Assets {
                 'path'      => '/help',
                 'name'      => 'Help',
                 'component' => 'Help'
+            ),
+            array(
+                'path'      => '/settings',
+                'name'      => 'Settings',
+                'component' => 'Settings'
             ),
         );
 

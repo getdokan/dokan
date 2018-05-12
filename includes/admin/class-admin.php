@@ -239,6 +239,7 @@ class Dokan_Admin {
 
         if ( current_user_can( $capability ) ) {
             $submenu[ $slug ][] = array( __( '<span style="color:#f18500">Help</span>', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/help' );
+            $submenu[ $slug ][] = array( __( 'Settings', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/settings' );
         }
 
         $settings = add_submenu_page( 'dokan', __( 'Settings', 'dokan-lite' ), __( 'Settings', 'dokan-lite' ), $capability, 'dokan-settings', array( $this, 'settings_page' ) );
