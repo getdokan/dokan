@@ -1,42 +1,11 @@
-dokanWebpack([2],[
+dokanWebpack([0],[
 /* 0 */,
 /* 1 */,
-/* 2 */,
-/* 3 */,
-/* 4 */,
-/* 5 */,
-/* 6 */,
-/* 7 */,
-/* 8 */,
-/* 9 */
+/* 2 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["a"] = ({
-    name: 'App'
-});
-
-/***/ }),
-/* 10 */,
-/* 11 */,
-/* 12 */,
-/* 13 */,
-/* 14 */,
-/* 15 */,
-/* 16 */,
-/* 17 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(4);
 
 
 
@@ -112,302 +81,16 @@ dokanWebpack([2],[
 });
 
 /***/ }),
-/* 18 */,
-/* 19 */,
-/* 20 */,
-/* 21 */,
-/* 22 */,
-/* 23 */,
-/* 24 */,
-/* 25 */,
-/* 26 */,
-/* 27 */,
-/* 28 */,
-/* 29 */,
-/* 30 */,
-/* 31 */,
-/* 32 */,
-/* 33 */,
-/* 34 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _App = __webpack_require__(35);
-
-var _App2 = _interopRequireDefault(_App);
-
-var _router = __webpack_require__(38);
-
-var _router2 = _interopRequireDefault(_router);
-
-var _adminMenuFix = __webpack_require__(39);
-
-var _adminMenuFix2 = _interopRequireDefault(_adminMenuFix);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/* eslint-disable no-new */
-var Vue = dokan_get_lib('Vue');
-
-new Vue({
-    el: '#dokan-vue-admin',
-    router: _router2.default,
-    render: function render(h) {
-        return h(_App2.default);
-    },
-
-    created: function created() {
-        this.setLocaleData(dokan.i18n['dokan-lite']);
-    }
-});
-
-// fix the admin menu for the slug "vue-app"
-(0, _adminMenuFix2.default)('dokan');
-
-/***/ }),
-/* 35 */
+/* 3 */,
+/* 4 */,
+/* 5 */,
+/* 6 */,
+/* 7 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_App_vue__ = __webpack_require__(9);
-/* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_3a030f38_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__ = __webpack_require__(37);
-var disposed = false
-function injectStyle (ssrContext) {
-  if (disposed) return
-  __webpack_require__(36)
-}
-var normalizeComponent = __webpack_require__(0)
-/* script */
-
-
-/* template */
-
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = injectStyle
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_App_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_3a030f38_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__["a" /* default */],
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "src/admin/App.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-3a030f38", Component.options)
-  } else {
-    hotAPI.reload("data-v-3a030f38", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
-
-
-/***/ }),
-/* 36 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 37 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { attrs: { id: "vue-backend-app" } },
-    [
-      _c("router-view"),
-      _vm._v(" "),
-      _c("notifications", { attrs: { position: "bottom right" } })
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-3a030f38", esExports)
-  }
-}
-
-/***/ }),
-/* 38 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-var _Dashboard = __webpack_require__(85);
-
-var _Dashboard2 = _interopRequireDefault(_Dashboard);
-
-var _Withdraw = __webpack_require__(88);
-
-var _Withdraw2 = _interopRequireDefault(_Withdraw);
-
-var _Premium = __webpack_require__(91);
-
-var _Premium2 = _interopRequireDefault(_Premium);
-
-var _Help = __webpack_require__(94);
-
-var _Help2 = _interopRequireDefault(_Help);
-
-var _Settings = __webpack_require__(97);
-
-var _Settings2 = _interopRequireDefault(_Settings);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var Vue = dokan_get_lib('Vue');
-var Router = dokan_get_lib('Router');
-
-Vue.use(Router);
-
-dokan_add_route(_Dashboard2.default);
-dokan_add_route(_Withdraw2.default);
-dokan_add_route(_Premium2.default);
-dokan_add_route(_Help2.default);
-dokan_add_route(_Settings2.default);
-
-/**
- * Parse the route array and bind required components
- *
- * This changes the dokan.routes array and changes the components
- * so we can use dokan.routeComponents.{compontent} component.
- *
- * @param  {array} routes
- *
- * @return {void}
- */
-function parseRouteComponent(routes) {
-
-    for (var i = 0; i < routes.length; i++) {
-        if (_typeof(routes[i].children) === 'object') {
-
-            parseRouteComponent(routes[i].children);
-
-            if (typeof routes[i].component !== 'undefined') {
-                routes[i].component = dokan.routeComponents[routes[i].component];
-            }
-        } else {
-            routes[i].component = dokan.routeComponents[routes[i].component];
-        }
-    }
-}
-
-// mutate the localized array
-parseRouteComponent(dokan.routes);
-
-exports.default = new Router({
-    routes: dokan.routes
-});
-
-/***/ }),
-/* 39 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-/**
- * As we are using hash based navigation, hack fix
- * to highlight the current selected menu
- *
- * Requires jQuery
- */
-function menuFix(slug) {
-    var $ = jQuery;
-
-    var menuRoot = $('#toplevel_page_' + slug);
-    var currentUrl = window.location.href;
-    var currentPath = currentUrl.substr(currentUrl.indexOf('admin.php'));
-
-    menuRoot.on('click', 'a', function () {
-        var self = $(this);
-
-        $('ul.wp-submenu li', menuRoot).removeClass('current');
-
-        if (self.hasClass('wp-has-submenu')) {
-            $('li.wp-first-item', menuRoot).addClass('current');
-        } else {
-            self.parents('li').addClass('current');
-        }
-    });
-
-    $('ul.wp-submenu a', menuRoot).each(function (index, el) {
-        if ($(el).attr('href') === currentPath) {
-            $(el).parent().addClass('current');
-            return;
-        }
-    });
-}
-
-exports.default = menuFix;
-
-/***/ }),
-/* 40 */,
-/* 41 */,
-/* 42 */,
-/* 43 */,
-/* 44 */,
-/* 45 */,
-/* 46 */,
-/* 47 */,
-/* 48 */,
-/* 49 */,
-/* 50 */,
-/* 51 */,
-/* 52 */,
-/* 53 */,
-/* 54 */,
-/* 55 */,
-/* 56 */,
-/* 57 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Chart_vue__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Chart_vue__ = __webpack_require__(2);
 /* empty harmony namespace reexport */
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
@@ -454,33 +137,31 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 58 */,
-/* 59 */,
-/* 60 */,
-/* 61 */,
-/* 62 */,
-/* 63 */,
-/* 64 */,
-/* 65 */,
-/* 66 */,
-/* 67 */,
-/* 68 */,
-/* 69 */,
-/* 70 */,
-/* 71 */,
-/* 72 */,
-/* 73 */,
-/* 74 */,
-/* 75 */,
-/* 76 */,
-/* 77 */,
-/* 78 */,
-/* 79 */,
-/* 80 */
+/* 8 */,
+/* 9 */,
+/* 10 */,
+/* 11 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_Chart_vue__ = __webpack_require__(57);
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+    name: 'App'
+});
+
+/***/ }),
+/* 12 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_Chart_vue__ = __webpack_require__(7);
 //
 //
 //
@@ -679,7 +360,7 @@ let Loading = dokan_get_lib('Loading');
 });
 
 /***/ }),
-/* 81 */
+/* 13 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1069,7 +750,7 @@ let Modal = dokan_get_lib('Modal');
 });
 
 /***/ }),
-/* 82 */
+/* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1158,7 +839,7 @@ let Modal = dokan_get_lib('Modal');
 });
 
 /***/ }),
-/* 83 */
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1216,10 +897,11 @@ let Loading = dokan_get_lib('Loading');
 });
 
 /***/ }),
-/* 84 */
+/* 16 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_Fields_vue__ = __webpack_require__(63);
 //
 //
 //
@@ -1252,40 +934,66 @@ let Loading = dokan_get_lib('Loading');
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
 
     name: 'Settings',
 
+    components: {
+        Fields: __WEBPACK_IMPORTED_MODULE_0_admin_components_Fields_vue__["a" /* default */]
+    },
+
     data() {
         return {
+            isLoaded: false,
             currentTab: null,
             settingSections: [],
-            settingFields: {}
+            settingFields: {},
+            settingValues: {}
         };
     },
 
     computed: {},
 
-    methods: {},
+    methods: {
+        changeTab(section) {
+            var activetab = '';
+            this.currentTab = section.id;
+
+            if (typeof localStorage != 'undefined') {
+                localStorage.setItem("activetab", this.currentTab);
+            }
+        },
+
+        showSectionTitle(index) {
+            return _.findWhere(this.settingSections, { id: index }).title;
+        },
+
+        fetchSettingValues() {
+            var self = this,
+                data = {
+                action: 'dokan_get_setting_values',
+                nonce: dokan.nonce
+            };
+
+            $.post(dokan.ajaxurl, data, function (resp) {
+                if (resp.success) {
+                    self.settingValues = resp.data;
+                    self.isLoaded = true;
+                }
+            });
+        }
+    },
 
     created() {
+        this.fetchSettingValues();
+
         this.currentTab = 'dokan_general';
+        if (typeof localStorage != 'undefined') {
+            this.currentTab = localStorage.getItem("activetab");
+        }
 
         this.settingSections = dokan.settings_sections;
         this.settingFields = dokan.settings_fields;
@@ -1293,18 +1001,365 @@ let Loading = dokan_get_lib('Loading');
 });
 
 /***/ }),
-/* 85 */
+/* 17 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+    name: 'Fields',
+
+    props: ['id', 'fieldData', 'sectionId', 'fieldValue'],
+
+    data() {
+        return {};
+    },
+
+    methods: {
+        containCommonFields(type) {
+            return _.contains(['text', 'email', 'url', 'phone'], type);
+        }
+    }
+
+});
+
+/***/ }),
+/* 18 */,
+/* 19 */,
+/* 20 */,
+/* 21 */,
+/* 22 */,
+/* 23 */,
+/* 24 */,
+/* 25 */,
+/* 26 */,
+/* 27 */,
+/* 28 */,
+/* 29 */,
+/* 30 */,
+/* 31 */,
+/* 32 */,
+/* 33 */,
+/* 34 */,
+/* 35 */,
+/* 36 */,
+/* 37 */,
+/* 38 */,
+/* 39 */,
+/* 40 */,
+/* 41 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _App = __webpack_require__(42);
+
+var _App2 = _interopRequireDefault(_App);
+
+var _router = __webpack_require__(45);
+
+var _router2 = _interopRequireDefault(_router);
+
+var _adminMenuFix = __webpack_require__(67);
+
+var _adminMenuFix2 = _interopRequireDefault(_adminMenuFix);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/* eslint-disable no-new */
+var Vue = dokan_get_lib('Vue');
+
+new Vue({
+    el: '#dokan-vue-admin',
+    router: _router2.default,
+    render: function render(h) {
+        return h(_App2.default);
+    },
+
+    created: function created() {
+        this.setLocaleData(dokan.i18n['dokan-lite']);
+    }
+});
+
+// fix the admin menu for the slug "vue-app"
+(0, _adminMenuFix2.default)('dokan');
+
+/***/ }),
+/* 42 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Dashboard_vue__ = __webpack_require__(80);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_App_vue__ = __webpack_require__(11);
 /* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_219ffca0_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Dashboard_vue__ = __webpack_require__(87);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_3a030f38_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__ = __webpack_require__(44);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(86)
+  __webpack_require__(43)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_App_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_3a030f38_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src/admin/App.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-3a030f38", Component.options)
+  } else {
+    hotAPI.reload("data-v-3a030f38", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+
+
+/***/ }),
+/* 43 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 44 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { attrs: { id: "vue-backend-app" } },
+    [
+      _c("router-view"),
+      _vm._v(" "),
+      _c("notifications", { attrs: { position: "bottom right" } })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-3a030f38", esExports)
+  }
+}
+
+/***/ }),
+/* 45 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _Dashboard = __webpack_require__(46);
+
+var _Dashboard2 = _interopRequireDefault(_Dashboard);
+
+var _Withdraw = __webpack_require__(52);
+
+var _Withdraw2 = _interopRequireDefault(_Withdraw);
+
+var _Premium = __webpack_require__(55);
+
+var _Premium2 = _interopRequireDefault(_Premium);
+
+var _Help = __webpack_require__(58);
+
+var _Help2 = _interopRequireDefault(_Help);
+
+var _Settings = __webpack_require__(61);
+
+var _Settings2 = _interopRequireDefault(_Settings);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Vue = dokan_get_lib('Vue');
+var Router = dokan_get_lib('Router');
+
+Vue.use(Router);
+
+dokan_add_route(_Dashboard2.default);
+dokan_add_route(_Withdraw2.default);
+dokan_add_route(_Premium2.default);
+dokan_add_route(_Help2.default);
+dokan_add_route(_Settings2.default);
+
+/**
+ * Parse the route array and bind required components
+ *
+ * This changes the dokan.routes array and changes the components
+ * so we can use dokan.routeComponents.{compontent} component.
+ *
+ * @param  {array} routes
+ *
+ * @return {void}
+ */
+function parseRouteComponent(routes) {
+
+    for (var i = 0; i < routes.length; i++) {
+        if (_typeof(routes[i].children) === 'object') {
+
+            parseRouteComponent(routes[i].children);
+
+            if (typeof routes[i].component !== 'undefined') {
+                routes[i].component = dokan.routeComponents[routes[i].component];
+            }
+        } else {
+            routes[i].component = dokan.routeComponents[routes[i].component];
+        }
+    }
+}
+
+// mutate the localized array
+parseRouteComponent(dokan.routes);
+
+exports.default = new Router({
+    routes: dokan.routes
+});
+
+/***/ }),
+/* 46 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Dashboard_vue__ = __webpack_require__(12);
+/* empty harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_219ffca0_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Dashboard_vue__ = __webpack_require__(51);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(47)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -1350,13 +1405,16 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 86 */
+/* 47 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 87 */
+/* 48 */,
+/* 49 */,
+/* 50 */,
+/* 51 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1739,18 +1797,18 @@ if (false) {
 }
 
 /***/ }),
-/* 88 */
+/* 52 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Withdraw_vue__ = __webpack_require__(81);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Withdraw_vue__ = __webpack_require__(13);
 /* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_62373ea4_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Withdraw_vue__ = __webpack_require__(90);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_62373ea4_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Withdraw_vue__ = __webpack_require__(54);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(89)
+  __webpack_require__(53)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -1796,13 +1854,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 89 */
+/* 53 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 90 */
+/* 54 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2232,18 +2290,18 @@ if (false) {
 }
 
 /***/ }),
-/* 91 */
+/* 55 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Premium_vue__ = __webpack_require__(82);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Premium_vue__ = __webpack_require__(14);
 /* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_b38fd83a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Premium_vue__ = __webpack_require__(93);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_b38fd83a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Premium_vue__ = __webpack_require__(57);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(92)
+  __webpack_require__(56)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -2289,13 +2347,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 92 */
+/* 56 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 93 */
+/* 57 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2345,18 +2403,18 @@ if (false) {
 }
 
 /***/ }),
-/* 94 */
+/* 58 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Help_vue__ = __webpack_require__(83);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Help_vue__ = __webpack_require__(15);
 /* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_c289d136_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Help_vue__ = __webpack_require__(96);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_c289d136_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Help_vue__ = __webpack_require__(60);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(95)
+  __webpack_require__(59)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -2402,13 +2460,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 95 */
+/* 59 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 96 */
+/* 60 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2466,18 +2524,18 @@ if (false) {
 }
 
 /***/ }),
-/* 97 */
+/* 61 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Settings_vue__ = __webpack_require__(84);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Settings_vue__ = __webpack_require__(16);
 /* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_e4dc4572_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Settings_vue__ = __webpack_require__(106);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_e4dc4572_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Settings_vue__ = __webpack_require__(66);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(108)
+  __webpack_require__(62)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -2523,15 +2581,75 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 98 */,
-/* 99 */,
-/* 100 */,
-/* 101 */,
-/* 102 */,
-/* 103 */,
-/* 104 */,
-/* 105 */,
-/* 106 */
+/* 62 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 63 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Fields_vue__ = __webpack_require__(17);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_a96ce32e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Fields_vue__ = __webpack_require__(65);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(64)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Fields_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_a96ce32e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Fields_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src/admin/components/Fields.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-a96ce32e", Component.options)
+  } else {
+    hotAPI.reload("data-v-a96ce32e", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
+
+
+/***/ }),
+/* 64 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 65 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2539,95 +2657,426 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "dokan-settings" }, [
-    _c("h2", { staticStyle: { "margin-bottom": "15px" } }, [
-      _vm._v("Settings")
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "dokan-settings-wrap" }, [
-      _c(
-        "h2",
-        { staticClass: "nav-tab-wrapper" },
-        [
-          _vm._l(_vm.settingSections, function(section) {
-            return [
-              _c(
-                "a",
+  return _c("tbody", [
+    _vm.containCommonFields(_vm.fieldData.type)
+      ? _c("tr", { class: _vm.id }, [
+          _c("th", { attrs: { scope: "row" } }, [
+            _c(
+              "label",
+              {
+                attrs: { for: _vm.sectionId + "[" + _vm.fieldData.name + "]" }
+              },
+              [_vm._v(_vm._s(_vm.fieldData.label))]
+            )
+          ]),
+          _vm._v(" "),
+          _c("td", [
+            _c("input", {
+              directives: [
                 {
-                  staticClass: "nav-tab",
-                  class: { "nav-tab-active": _vm.currentTab === section.id },
-                  attrs: { href: "#", id: "dokan_general-tab" },
-                  on: {
-                    click: function($event) {
-                      $event.preventDefault()
-                      _vm.currentTab = section.id
-                    }
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.fieldValue[_vm.fieldData.name],
+                  expression: "fieldValue[fieldData.name]"
+                }
+              ],
+              staticClass: "regular-text",
+              attrs: {
+                type: "text",
+                id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                name: _vm.sectionId + "[" + _vm.fieldData.name + "]"
+              },
+              domProps: { value: _vm.fieldValue[_vm.fieldData.name] },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
                   }
+                  _vm.$set(
+                    _vm.fieldValue,
+                    _vm.fieldData.name,
+                    $event.target.value
+                  )
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("p", {
+              staticClass: "description",
+              domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+            })
+          ])
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    "number" == _vm.fieldData.type
+      ? _c("tr", { class: _vm.id }, [
+          _c("th", { attrs: { scope: "row" } }, [
+            _c(
+              "label",
+              {
+                attrs: { for: _vm.sectionId + "[" + _vm.fieldData.name + "]" }
+              },
+              [_vm._v(_vm._s(_vm.fieldData.label))]
+            )
+          ]),
+          _vm._v(" "),
+          _c("td", [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.fieldValue[_vm.fieldData.name],
+                  expression: "fieldValue[fieldData.name]"
+                }
+              ],
+              staticClass: "regular-text",
+              attrs: {
+                type: "number",
+                min: _vm.fieldData.min,
+                max: _vm.fieldData.max,
+                step: _vm.fieldData.step,
+                id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                name: _vm.sectionId + "[" + _vm.fieldData.name + "]"
+              },
+              domProps: { value: _vm.fieldValue[_vm.fieldData.name] },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(
+                    _vm.fieldValue,
+                    _vm.fieldData.name,
+                    $event.target.value
+                  )
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("p", {
+              staticClass: "description",
+              domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+            })
+          ])
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    "checkbox" == _vm.fieldData.type
+      ? _c("tr", { class: _vm.id }, [
+          _c("th", { attrs: { scope: "row" } }, [
+            _c(
+              "label",
+              {
+                attrs: { for: _vm.sectionId + "[" + _vm.fieldData.name + "]" }
+              },
+              [_vm._v(_vm._s(_vm.fieldData.label))]
+            )
+          ]),
+          _vm._v(" "),
+          _c("td", [
+            _c("fieldset", [
+              _c(
+                "label",
+                {
+                  attrs: { for: _vm.sectionId + "[" + _vm.fieldData.name + "]" }
                 },
                 [
-                  _c("span", { staticClass: "dashicons", class: section.icon }),
-                  _vm._v(" " + _vm._s(section.title))
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.fieldValue[_vm.fieldData.name],
+                        expression: "fieldValue[fieldData.name]"
+                      }
+                    ],
+                    staticClass: "checkbox",
+                    attrs: {
+                      type: "checkbox",
+                      id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                      name: _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                      "true-value": "on",
+                      "false-value": "off"
+                    },
+                    domProps: {
+                      checked: Array.isArray(_vm.fieldValue[_vm.fieldData.name])
+                        ? _vm._i(_vm.fieldValue[_vm.fieldData.name], null) > -1
+                        : _vm._q(_vm.fieldValue[_vm.fieldData.name], "on")
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$a = _vm.fieldValue[_vm.fieldData.name],
+                          $$el = $event.target,
+                          $$c = $$el.checked ? "on" : "off"
+                        if (Array.isArray($$a)) {
+                          var $$v = null,
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 &&
+                              (_vm.fieldValue[_vm.fieldData.name] = $$a.concat([
+                                $$v
+                              ]))
+                          } else {
+                            $$i > -1 &&
+                              (_vm.fieldValue[_vm.fieldData.name] = $$a
+                                .slice(0, $$i)
+                                .concat($$a.slice($$i + 1)))
+                          }
+                        } else {
+                          _vm.$set(_vm.fieldValue, _vm.fieldData.name, $$c)
+                        }
+                      }
+                    }
+                  }),
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(_vm.fieldData.desc) +
+                      "\n                "
+                  )
                 ]
               )
-            ]
-          })
-        ],
-        2
-      ),
-      _vm._v(" "),
-      _c("div", { staticClass: "metabox-holder" }, [
-        _c(
-          "div",
-          {
-            directives: [
+            ])
+          ])
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    "multicheck" == _vm.fieldData.type
+      ? _c("tr", { class: _vm.id }, [
+          _c("th", { attrs: { scope: "row" } }, [
+            _c(
+              "label",
               {
-                name: "show",
-                rawName: "v-show",
-                value: _vm.currentTab === "dokan_general",
-                expression: "currentTab==='dokan_general'"
-              }
-            ],
-            staticClass: "group",
-            attrs: { id: "dokan_general" }
-          },
-          [_vm._m(0)]
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            directives: [
+                attrs: { for: _vm.sectionId + "[" + _vm.fieldData.name + "]" }
+              },
+              [_vm._v(_vm._s(_vm.fieldData.label))]
+            )
+          ]),
+          _vm._v(" "),
+          _c("td", [
+            _c(
+              "fieldset",
+              [
+                _vm._l(_vm.fieldData.options, function(optionVal, optionKey) {
+                  return [
+                    _c(
+                      "label",
+                      {
+                        attrs: {
+                          for:
+                            _vm.sectionId +
+                            "[" +
+                            _vm.fieldData.name +
+                            "][" +
+                            optionKey +
+                            "]"
+                        }
+                      },
+                      [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value:
+                                _vm.fieldValue[_vm.fieldData.name][optionKey],
+                              expression:
+                                "fieldValue[fieldData.name][optionKey]"
+                            }
+                          ],
+                          staticClass: "checkbox",
+                          attrs: {
+                            type: "checkbox",
+                            id:
+                              _vm.sectionId +
+                              "[" +
+                              _vm.fieldData.name +
+                              "][" +
+                              optionKey +
+                              "]",
+                            name:
+                              _vm.sectionId +
+                              "[" +
+                              _vm.fieldData.name +
+                              "][" +
+                              optionKey +
+                              "]",
+                            "true-value": optionKey,
+                            "false-value": ""
+                          },
+                          domProps: {
+                            checked: Array.isArray(
+                              _vm.fieldValue[_vm.fieldData.name][optionKey]
+                            )
+                              ? _vm._i(
+                                  _vm.fieldValue[_vm.fieldData.name][optionKey],
+                                  null
+                                ) > -1
+                              : _vm._q(
+                                  _vm.fieldValue[_vm.fieldData.name][optionKey],
+                                  optionKey
+                                )
+                          },
+                          on: {
+                            change: function($event) {
+                              var $$a =
+                                  _vm.fieldValue[_vm.fieldData.name][optionKey],
+                                $$el = $event.target,
+                                $$c = $$el.checked ? optionKey : ""
+                              if (Array.isArray($$a)) {
+                                var $$v = null,
+                                  $$i = _vm._i($$a, $$v)
+                                if ($$el.checked) {
+                                  $$i < 0 &&
+                                    (_vm.fieldValue[_vm.fieldData.name][
+                                      optionKey
+                                    ] = $$a.concat([$$v]))
+                                } else {
+                                  $$i > -1 &&
+                                    (_vm.fieldValue[_vm.fieldData.name][
+                                      optionKey
+                                    ] = $$a
+                                      .slice(0, $$i)
+                                      .concat($$a.slice($$i + 1)))
+                                }
+                              } else {
+                                _vm.$set(
+                                  _vm.fieldValue[_vm.fieldData.name],
+                                  optionKey,
+                                  $$c
+                                )
+                              }
+                            }
+                          }
+                        }),
+                        _vm._v(
+                          "\n                        " +
+                            _vm._s(optionVal) +
+                            "\n                    "
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("br")
+                  ]
+                })
+              ],
+              2
+            )
+          ])
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    "select" == _vm.fieldData.type
+      ? _c("tr", { class: _vm.id }, [
+          _c("th", { attrs: { scope: "row" } }, [
+            _c(
+              "label",
               {
-                name: "show",
-                rawName: "v-show",
-                value: _vm.currentTab === "dokan_selling",
-                expression: "currentTab==='dokan_selling'"
-              }
-            ],
-            staticClass: "group",
-            attrs: { id: "dokan_selling" }
-          },
-          [_vm._m(1)]
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            directives: [
+                attrs: { for: _vm.sectionId + "[" + _vm.fieldData.name + "]" }
+              },
+              [_vm._v(_vm._s(_vm.fieldData.label))]
+            )
+          ]),
+          _vm._v(" "),
+          _c("td", [
+            _c(
+              "select",
               {
-                name: "show",
-                rawName: "v-show",
-                value: _vm.currentTab === "dokan_withdraw",
-                expression: "currentTab==='dokan_withdraw'"
-              }
-            ],
-            staticClass: "group",
-            attrs: { id: "dokan_withdraw" }
-          },
-          [_vm._m(2)]
-        )
-      ])
-    ])
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.fieldValue[_vm.fieldData.name],
+                    expression: "fieldValue[fieldData.name]"
+                  }
+                ],
+                staticClass: "regular",
+                attrs: {
+                  name: _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                  id: _vm.sectionId + "[" + _vm.fieldData.name + "]"
+                },
+                on: {
+                  change: function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
+                      })
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.$set(
+                      _vm.fieldValue,
+                      _vm.fieldData.name,
+                      $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+                    )
+                  }
+                }
+              },
+              _vm._l(_vm.fieldData.options, function(optionVal, optionKey) {
+                return _c("option", {
+                  domProps: { value: optionKey, innerHTML: _vm._s(optionVal) }
+                })
+              })
+            )
+          ])
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    "radio_image" == _vm.fieldData.type
+      ? _c("tr", { class: _vm.id }, [
+          _c("th", { attrs: { scope: "row" } }, [
+            _c(
+              "label",
+              {
+                attrs: { for: _vm.sectionId + "[" + _vm.fieldData.name + "]" }
+              },
+              [_vm._v(_vm._s(_vm.fieldData.label))]
+            )
+          ]),
+          _vm._v(" "),
+          _c("td", [
+            _c(
+              "div",
+              { staticClass: "dokan-settings-radio-image-container" },
+              [
+                _vm._l(_vm.fieldData.options, function(image, name) {
+                  return [
+                    _c("div", { staticClass: "dokan-settings-radio-image" }, [
+                      _c("img", { attrs: { src: image } }),
+                      _vm._v(" "),
+                      _vm._m(0, true),
+                      _vm._v(" "),
+                      _c("span", { staticClass: "active-option" }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "button button-primary button-hero",
+                            attrs: {
+                              type: "button",
+                              "data-template": name,
+                              "data-input":
+                                _vm.sectionId + "_" + _vm.fieldData.name
+                            }
+                          },
+                          [
+                            _vm._v(
+                              "\n                                Select\n                            "
+                            )
+                          ]
+                        )
+                      ])
+                    ])
+                  ]
+                })
+              ],
+              2
+            )
+          ])
+        ])
+      : _vm._e()
   ])
 }
 var staticRenderFns = [
@@ -2635,1437 +3084,159 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("form", { attrs: { method: "post", action: "options.php" } }, [
-      _c("input", {
-        attrs: { type: "hidden", name: "option_page", value: "dokan_general" }
-      }),
-      _vm._v(" "),
-      _c("input", {
-        attrs: { type: "hidden", name: "action", value: "update" }
-      }),
-      _vm._v(" "),
-      _c("h2", [_vm._v("General")]),
-      _vm._v(" "),
-      _c("table", { staticClass: "form-table" }, [
-        _c("tbody", [
-          _c("tr", { staticClass: "admin_access" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c("label", { attrs: { for: "dokan_general[admin_access]" } }, [
-                _vm._v("Admin area access")
-              ])
-            ]),
-            _c("td", [
-              _c("fieldset", [
-                _c(
-                  "label",
-                  { attrs: { for: "wpuf-dokan_general[admin_access]" } },
-                  [
-                    _c("input", {
-                      attrs: {
-                        type: "hidden",
-                        name: "dokan_general[admin_access]",
-                        value: "off"
-                      }
-                    }),
-                    _c("input", {
-                      staticClass: "checkbox",
-                      attrs: {
-                        type: "checkbox",
-                        id: "wpuf-dokan_general[admin_access]",
-                        name: "dokan_general[admin_access]",
-                        value: "on"
-                      }
-                    }),
-                    _vm._v(
-                      "Disable Vendors and Customers from accessing the wp-admin dashboard area"
-                    )
-                  ]
-                )
-              ])
-            ])
-          ]),
-          _c("tr", { staticClass: "custom_store_url" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c(
-                "label",
-                { attrs: { for: "dokan_general[custom_store_url]" } },
-                [_vm._v("Vendor Store URL")]
-              )
-            ]),
-            _c("td", [
-              _c("input", {
-                staticClass: "regular-text",
-                attrs: {
-                  type: "text",
-                  id: "dokan_general[custom_store_url]",
-                  name: "dokan_general[custom_store_url]",
-                  value: "store"
-                }
-              }),
-              _c("p", { staticClass: "description" }, [
-                _vm._v("Define the seller store URL (http://newdokan.test/"),
-                _c("strong", [_vm._v("[this-text]")]),
-                _vm._v("/[seller-name])")
-              ])
-            ])
-          ]),
-          _c("tr", { staticClass: "seller_enable_terms_and_conditions" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c(
-                "label",
-                {
-                  attrs: {
-                    for: "dokan_general[seller_enable_terms_and_conditions]"
-                  }
-                },
-                [_vm._v("Terms and Conditions")]
-              )
-            ]),
-            _c("td", [
-              _c("fieldset", [
-                _c(
-                  "label",
-                  {
-                    attrs: {
-                      for:
-                        "wpuf-dokan_general[seller_enable_terms_and_conditions]"
-                    }
-                  },
-                  [
-                    _c("input", {
-                      attrs: {
-                        type: "hidden",
-                        name:
-                          "dokan_general[seller_enable_terms_and_conditions]",
-                        value: "off"
-                      }
-                    }),
-                    _c("input", {
-                      staticClass: "checkbox",
-                      attrs: {
-                        type: "checkbox",
-                        id:
-                          "wpuf-dokan_general[seller_enable_terms_and_conditions]",
-                        name:
-                          "dokan_general[seller_enable_terms_and_conditions]",
-                        value: "on"
-                      }
-                    }),
-                    _vm._v("Enable Terms and Conditions for vendor stores")
-                  ]
-                )
-              ])
-            ])
-          ]),
-          _c("tr", { staticClass: "extra_fee_recipient" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c(
-                "label",
-                { attrs: { for: "dokan_general[extra_fee_recipient]" } },
-                [_vm._v("Extra Fee Recipient")]
-              )
-            ]),
-            _c("td", [
-              _c(
-                "select",
-                {
-                  staticClass: "regular",
-                  attrs: {
-                    name: "dokan_general[extra_fee_recipient]",
-                    id: "dokan_general[extra_fee_recipient]"
-                  }
-                },
-                [
+    return _c("span", { staticClass: "current-option-indicator" }, [
+      _c("span", { staticClass: "dashicons dashicons-yes" }),
+      _vm._v("Active")
+    ])
+  }
+]
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-a96ce32e", esExports)
+  }
+}
+
+/***/ }),
+/* 66 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm.isLoaded
+    ? _c("div", { staticClass: "dokan-settings" }, [
+        _c("h2", { staticStyle: { "margin-bottom": "15px" } }, [
+          _vm._v("Settings")
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "dokan-settings-wrap" }, [
+          _c(
+            "h2",
+            { staticClass: "nav-tab-wrapper" },
+            [
+              _vm._l(_vm.settingSections, function(section) {
+                return [
                   _c(
-                    "option",
-                    { attrs: { value: "seller", selected: "selected" } },
-                    [_vm._v("Vendor")]
-                  ),
-                  _c("option", { attrs: { value: "admin" } }, [_vm._v("Admin")])
+                    "a",
+                    {
+                      staticClass: "nav-tab",
+                      class: {
+                        "nav-tab-active": _vm.currentTab === section.id
+                      },
+                      attrs: { href: "#", id: "dokan_general-tab" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          _vm.changeTab(section)
+                        }
+                      }
+                    },
+                    [
+                      _c("span", {
+                        staticClass: "dashicons",
+                        class: section.icon
+                      }),
+                      _vm._v(" " + _vm._s(section.title))
+                    ]
+                  )
                 ]
-              ),
-              _c("p", { staticClass: "description" }, [
-                _vm._v(
-                  "Should extra fees, such as Shipping and Tax, go to the Vendor or the Admin?"
-                )
-              ])
-            ])
-          ]),
-          _c("tr", { staticClass: "store_map" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c("label", { attrs: { for: "dokan_general[store_map]" } }, [
-                _vm._v("Show Map on Store Page")
-              ])
-            ]),
-            _c("td", [
-              _c("fieldset", [
-                _c(
-                  "label",
-                  { attrs: { for: "wpuf-dokan_general[store_map]" } },
-                  [
-                    _c("input", {
-                      attrs: {
-                        type: "hidden",
-                        name: "dokan_general[store_map]",
-                        value: "off"
-                      }
-                    }),
-                    _c("input", {
-                      staticClass: "checkbox",
-                      attrs: {
-                        type: "checkbox",
-                        id: "wpuf-dokan_general[store_map]",
-                        name: "dokan_general[store_map]",
-                        value: "on",
-                        checked: "checked"
-                      }
-                    }),
-                    _vm._v(
-                      "Enable a Google Map of the Store Location in the store sidebar"
-                    )
-                  ]
-                )
-              ])
-            ])
-          ]),
-          _c("tr", { staticClass: "gmap_api_key" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c("label", { attrs: { for: "dokan_general[gmap_api_key]" } }, [
-                _vm._v("Google Map API Key")
-              ])
-            ]),
-            _c("td", [
-              _c("input", {
-                staticClass: "regular-text",
-                attrs: {
-                  type: "text",
-                  id: "dokan_general[gmap_api_key]",
-                  name: "dokan_general[gmap_api_key]",
-                  value: ""
-                }
-              }),
-              _c("p", { staticClass: "description" }, [
-                _c(
-                  "a",
-                  {
-                    attrs: {
-                      href:
-                        "https://developers.google.com/maps/documentation/javascript/",
-                      target: "_blank"
-                    }
-                  },
-                  [_vm._v("API Key")]
-                ),
-                _vm._v(" is needed to display map on store page")
-              ])
-            ])
-          ]),
-          _c("tr", { staticClass: "contact_seller" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c("label", { attrs: { for: "dokan_general[contact_seller]" } }, [
-                _vm._v("Show Contact Form on Store Page")
-              ])
-            ]),
-            _c("td", [
-              _c("fieldset", [
-                _c(
-                  "label",
-                  { attrs: { for: "wpuf-dokan_general[contact_seller]" } },
-                  [
-                    _c("input", {
-                      attrs: {
-                        type: "hidden",
-                        name: "dokan_general[contact_seller]",
-                        value: "off"
-                      }
-                    }),
-                    _c("input", {
-                      staticClass: "checkbox",
-                      attrs: {
-                        type: "checkbox",
-                        id: "wpuf-dokan_general[contact_seller]",
-                        name: "dokan_general[contact_seller]",
-                        value: "on",
-                        checked: "checked"
-                      }
-                    }),
-                    _vm._v("Enable Vendor Contact Form in the store sidebar")
-                  ]
-                )
-              ])
-            ])
-          ]),
-          _c("tr", { staticClass: "enable_theme_store_sidebar" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c(
-                "label",
-                { attrs: { for: "dokan_general[enable_theme_store_sidebar]" } },
-                [_vm._v("Enable Store Sidebar From Theme")]
-              )
-            ]),
-            _c("td", [
-              _c("fieldset", [
-                _c(
-                  "label",
-                  {
-                    attrs: {
-                      for: "wpuf-dokan_general[enable_theme_store_sidebar]"
-                    }
-                  },
-                  [
-                    _c("input", {
-                      attrs: {
-                        type: "hidden",
-                        name: "dokan_general[enable_theme_store_sidebar]",
-                        value: "off"
-                      }
-                    }),
-                    _c("input", {
-                      staticClass: "checkbox",
-                      attrs: {
-                        type: "checkbox",
-                        id: "wpuf-dokan_general[enable_theme_store_sidebar]",
-                        name: "dokan_general[enable_theme_store_sidebar]",
-                        value: "on"
-                      }
-                    }),
-                    _vm._v("Enable showing Store Sidebar From Your Theme.")
-                  ]
-                )
-              ])
-            ])
-          ]),
-          _c("tr", { staticClass: "product_add_mail" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c(
-                "label",
-                { attrs: { for: "dokan_general[product_add_mail]" } },
-                [_vm._v("Product Mail Notification")]
-              )
-            ]),
-            _c("td", [
-              _c("fieldset", [
-                _c(
-                  "label",
-                  { attrs: { for: "wpuf-dokan_general[product_add_mail]" } },
-                  [
-                    _c("input", {
-                      attrs: {
-                        type: "hidden",
-                        name: "dokan_general[product_add_mail]",
-                        value: "off"
-                      }
-                    }),
-                    _c("input", {
-                      staticClass: "checkbox",
-                      attrs: {
-                        type: "checkbox",
-                        id: "wpuf-dokan_general[product_add_mail]",
-                        name: "dokan_general[product_add_mail]",
-                        value: "on",
-                        checked: "checked"
-                      }
-                    }),
-                    _vm._v("Email notification on new product submission")
-                  ]
-                )
-              ])
-            ])
-          ]),
-          _c("tr", { staticClass: "seller_review_manage" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c(
-                "label",
-                { attrs: { for: "dokan_general[seller_review_manage]" } },
-                [_vm._v("Vendor Product Review")]
-              )
-            ]),
-            _c("td", [
-              _c("fieldset", [
-                _c(
-                  "label",
-                  {
-                    attrs: { for: "wpuf-dokan_general[seller_review_manage]" }
-                  },
-                  [
-                    _c("input", {
-                      attrs: {
-                        type: "hidden",
-                        name: "dokan_general[seller_review_manage]",
-                        value: "off"
-                      }
-                    }),
-                    _c("input", {
-                      staticClass: "checkbox",
-                      attrs: {
-                        type: "checkbox",
-                        id: "wpuf-dokan_general[seller_review_manage]",
-                        name: "dokan_general[seller_review_manage]",
-                        value: "on",
-                        checked: "checked"
-                      }
-                    }),
-                    _vm._v(
-                      "Vendor can change product review status from vendor dashboard"
-                    )
-                  ]
-                )
-              ])
-            ])
-          ]),
-          _c("tr", { staticClass: "enable_tc_on_reg" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c(
-                "label",
-                { attrs: { for: "dokan_general[enable_tc_on_reg]" } },
-                [_vm._v("Enable Terms and Condition")]
-              )
-            ]),
-            _c("td", [
-              _c("fieldset", [
-                _c(
-                  "label",
-                  { attrs: { for: "wpuf-dokan_general[enable_tc_on_reg]" } },
-                  [
-                    _c("input", {
-                      attrs: {
-                        type: "hidden",
-                        name: "dokan_general[enable_tc_on_reg]",
-                        value: "off"
-                      }
-                    }),
-                    _c("input", {
-                      staticClass: "checkbox",
-                      attrs: {
-                        type: "checkbox",
-                        id: "wpuf-dokan_general[enable_tc_on_reg]",
-                        name: "dokan_general[enable_tc_on_reg]",
-                        value: "on",
-                        checked: "checked"
-                      }
-                    }),
-                    _vm._v(
-                      "Enable Terms and Condition check on registration form"
-                    )
-                  ]
-                )
-              ])
-            ])
-          ]),
-          _c("tr", { staticClass: "store_banner_width" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c(
-                "label",
-                { attrs: { for: "dokan_general[store_banner_width]" } },
-                [_vm._v("Store Banner width")]
-              )
-            ]),
-            _c("td", [
-              _c("input", {
-                staticClass: "regular-text",
-                attrs: {
-                  type: "text",
-                  id: "dokan_general[store_banner_width]",
-                  name: "dokan_general[store_banner_width]",
-                  value: "625"
-                }
               })
-            ])
-          ]),
-          _c("tr", { staticClass: "store_banner_height" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c(
-                "label",
-                { attrs: { for: "dokan_general[store_banner_height]" } },
-                [_vm._v("Store Banner height")]
-              )
-            ]),
-            _c("td", [
-              _c("input", {
-                staticClass: "regular-text",
-                attrs: {
-                  type: "text",
-                  id: "dokan_general[store_banner_height]",
-                  name: "dokan_general[store_banner_height]",
-                  value: "300"
-                }
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "metabox-holder" },
+            [
+              _vm._l(_vm.settingFields, function(fields, index) {
+                return [
+                  _c(
+                    "div",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: _vm.currentTab === index,
+                          expression: "currentTab===index"
+                        }
+                      ],
+                      staticClass: "group",
+                      attrs: { id: index }
+                    },
+                    [
+                      _c(
+                        "form",
+                        { attrs: { method: "post", action: "options.php" } },
+                        [
+                          _c("input", {
+                            attrs: { type: "hidden", name: "option_page" },
+                            domProps: { value: index }
+                          }),
+                          _vm._v(" "),
+                          _c("input", {
+                            attrs: {
+                              type: "hidden",
+                              name: "action",
+                              value: "update"
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("h2", [
+                            _vm._v(_vm._s(_vm.showSectionTitle(index)))
+                          ]),
+                          _vm._v(" "),
+                          _c(
+                            "table",
+                            { staticClass: "form-table" },
+                            _vm._l(fields, function(field, fieldId) {
+                              return _c("fields", {
+                                attrs: {
+                                  "section-id": index,
+                                  id: fieldId,
+                                  "field-data": field,
+                                  "field-value": _vm.settingValues[index]
+                                }
+                              })
+                            })
+                          ),
+                          _vm._v(" "),
+                          _vm._m(0, true)
+                        ]
+                      )
+                    ]
+                  )
+                ]
               })
-            ])
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticStyle: { "padding-left": "10px" } }, [
-        _c("p", { staticClass: "submit" }, [
-          _c("input", {
-            staticClass: "button button-primary",
-            attrs: {
-              type: "submit",
-              name: "submit",
-              id: "submit",
-              value: "Save Changes"
-            }
-          })
+            ],
+            2
+          )
         ])
       ])
-    ])
-  },
+    : _vm._e()
+}
+var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("form", { attrs: { method: "post", action: "options.php" } }, [
+    return _c("p", { staticClass: "submit" }, [
       _c("input", {
-        attrs: { type: "hidden", name: "option_page", value: "dokan_general" }
-      }),
-      _vm._v(" "),
-      _c("input", {
-        attrs: { type: "hidden", name: "action", value: "update" }
-      }),
-      _vm._v(" "),
-      _c("h2", [_vm._v("Selling")]),
-      _vm._v(" "),
-      _c("table", { staticClass: "form-table" }, [
-        _c("tbody", [
-          _c("tr", { staticClass: "admin_access" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c("label", { attrs: { for: "dokan_general[admin_access]" } }, [
-                _vm._v("Admin area access")
-              ])
-            ]),
-            _c("td", [
-              _c("fieldset", [
-                _c(
-                  "label",
-                  { attrs: { for: "wpuf-dokan_general[admin_access]" } },
-                  [
-                    _c("input", {
-                      attrs: {
-                        type: "hidden",
-                        name: "dokan_general[admin_access]",
-                        value: "off"
-                      }
-                    }),
-                    _c("input", {
-                      staticClass: "checkbox",
-                      attrs: {
-                        type: "checkbox",
-                        id: "wpuf-dokan_general[admin_access]",
-                        name: "dokan_general[admin_access]",
-                        value: "on"
-                      }
-                    }),
-                    _vm._v(
-                      "Disable Vendors and Customers from accessing the wp-admin dashboard area"
-                    )
-                  ]
-                )
-              ])
-            ])
-          ]),
-          _c("tr", { staticClass: "custom_store_url" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c(
-                "label",
-                { attrs: { for: "dokan_general[custom_store_url]" } },
-                [_vm._v("Vendor Store URL")]
-              )
-            ]),
-            _c("td", [
-              _c("input", {
-                staticClass: "regular-text",
-                attrs: {
-                  type: "text",
-                  id: "dokan_general[custom_store_url]",
-                  name: "dokan_general[custom_store_url]",
-                  value: "store"
-                }
-              }),
-              _c("p", { staticClass: "description" }, [
-                _vm._v("Define the seller store URL (http://newdokan.test/"),
-                _c("strong", [_vm._v("[this-text]")]),
-                _vm._v("/[seller-name])")
-              ])
-            ])
-          ]),
-          _c("tr", { staticClass: "seller_enable_terms_and_conditions" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c(
-                "label",
-                {
-                  attrs: {
-                    for: "dokan_general[seller_enable_terms_and_conditions]"
-                  }
-                },
-                [_vm._v("Terms and Conditions")]
-              )
-            ]),
-            _c("td", [
-              _c("fieldset", [
-                _c(
-                  "label",
-                  {
-                    attrs: {
-                      for:
-                        "wpuf-dokan_general[seller_enable_terms_and_conditions]"
-                    }
-                  },
-                  [
-                    _c("input", {
-                      attrs: {
-                        type: "hidden",
-                        name:
-                          "dokan_general[seller_enable_terms_and_conditions]",
-                        value: "off"
-                      }
-                    }),
-                    _c("input", {
-                      staticClass: "checkbox",
-                      attrs: {
-                        type: "checkbox",
-                        id:
-                          "wpuf-dokan_general[seller_enable_terms_and_conditions]",
-                        name:
-                          "dokan_general[seller_enable_terms_and_conditions]",
-                        value: "on"
-                      }
-                    }),
-                    _vm._v("Enable Terms and Conditions for vendor stores")
-                  ]
-                )
-              ])
-            ])
-          ]),
-          _c("tr", { staticClass: "extra_fee_recipient" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c(
-                "label",
-                { attrs: { for: "dokan_general[extra_fee_recipient]" } },
-                [_vm._v("Extra Fee Recipient")]
-              )
-            ]),
-            _c("td", [
-              _c(
-                "select",
-                {
-                  staticClass: "regular",
-                  attrs: {
-                    name: "dokan_general[extra_fee_recipient]",
-                    id: "dokan_general[extra_fee_recipient]"
-                  }
-                },
-                [
-                  _c(
-                    "option",
-                    { attrs: { value: "seller", selected: "selected" } },
-                    [_vm._v("Vendor")]
-                  ),
-                  _c("option", { attrs: { value: "admin" } }, [_vm._v("Admin")])
-                ]
-              ),
-              _c("p", { staticClass: "description" }, [
-                _vm._v(
-                  "Should extra fees, such as Shipping and Tax, go to the Vendor or the Admin?"
-                )
-              ])
-            ])
-          ]),
-          _c("tr", { staticClass: "store_map" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c("label", { attrs: { for: "dokan_general[store_map]" } }, [
-                _vm._v("Show Map on Store Page")
-              ])
-            ]),
-            _c("td", [
-              _c("fieldset", [
-                _c(
-                  "label",
-                  { attrs: { for: "wpuf-dokan_general[store_map]" } },
-                  [
-                    _c("input", {
-                      attrs: {
-                        type: "hidden",
-                        name: "dokan_general[store_map]",
-                        value: "off"
-                      }
-                    }),
-                    _c("input", {
-                      staticClass: "checkbox",
-                      attrs: {
-                        type: "checkbox",
-                        id: "wpuf-dokan_general[store_map]",
-                        name: "dokan_general[store_map]",
-                        value: "on",
-                        checked: "checked"
-                      }
-                    }),
-                    _vm._v(
-                      "Enable a Google Map of the Store Location in the store sidebar"
-                    )
-                  ]
-                )
-              ])
-            ])
-          ]),
-          _c("tr", { staticClass: "gmap_api_key" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c("label", { attrs: { for: "dokan_general[gmap_api_key]" } }, [
-                _vm._v("Google Map API Key")
-              ])
-            ]),
-            _c("td", [
-              _c("input", {
-                staticClass: "regular-text",
-                attrs: {
-                  type: "text",
-                  id: "dokan_general[gmap_api_key]",
-                  name: "dokan_general[gmap_api_key]",
-                  value: ""
-                }
-              }),
-              _c("p", { staticClass: "description" }, [
-                _c(
-                  "a",
-                  {
-                    attrs: {
-                      href:
-                        "https://developers.google.com/maps/documentation/javascript/",
-                      target: "_blank"
-                    }
-                  },
-                  [_vm._v("API Key")]
-                ),
-                _vm._v(" is needed to display map on store page")
-              ])
-            ])
-          ]),
-          _c("tr", { staticClass: "contact_seller" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c("label", { attrs: { for: "dokan_general[contact_seller]" } }, [
-                _vm._v("Show Contact Form on Store Page")
-              ])
-            ]),
-            _c("td", [
-              _c("fieldset", [
-                _c(
-                  "label",
-                  { attrs: { for: "wpuf-dokan_general[contact_seller]" } },
-                  [
-                    _c("input", {
-                      attrs: {
-                        type: "hidden",
-                        name: "dokan_general[contact_seller]",
-                        value: "off"
-                      }
-                    }),
-                    _c("input", {
-                      staticClass: "checkbox",
-                      attrs: {
-                        type: "checkbox",
-                        id: "wpuf-dokan_general[contact_seller]",
-                        name: "dokan_general[contact_seller]",
-                        value: "on",
-                        checked: "checked"
-                      }
-                    }),
-                    _vm._v("Enable Vendor Contact Form in the store sidebar")
-                  ]
-                )
-              ])
-            ])
-          ]),
-          _c("tr", { staticClass: "enable_theme_store_sidebar" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c(
-                "label",
-                { attrs: { for: "dokan_general[enable_theme_store_sidebar]" } },
-                [_vm._v("Enable Store Sidebar From Theme")]
-              )
-            ]),
-            _c("td", [
-              _c("fieldset", [
-                _c(
-                  "label",
-                  {
-                    attrs: {
-                      for: "wpuf-dokan_general[enable_theme_store_sidebar]"
-                    }
-                  },
-                  [
-                    _c("input", {
-                      attrs: {
-                        type: "hidden",
-                        name: "dokan_general[enable_theme_store_sidebar]",
-                        value: "off"
-                      }
-                    }),
-                    _c("input", {
-                      staticClass: "checkbox",
-                      attrs: {
-                        type: "checkbox",
-                        id: "wpuf-dokan_general[enable_theme_store_sidebar]",
-                        name: "dokan_general[enable_theme_store_sidebar]",
-                        value: "on"
-                      }
-                    }),
-                    _vm._v("Enable showing Store Sidebar From Your Theme.")
-                  ]
-                )
-              ])
-            ])
-          ]),
-          _c("tr", { staticClass: "product_add_mail" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c(
-                "label",
-                { attrs: { for: "dokan_general[product_add_mail]" } },
-                [_vm._v("Product Mail Notification")]
-              )
-            ]),
-            _c("td", [
-              _c("fieldset", [
-                _c(
-                  "label",
-                  { attrs: { for: "wpuf-dokan_general[product_add_mail]" } },
-                  [
-                    _c("input", {
-                      attrs: {
-                        type: "hidden",
-                        name: "dokan_general[product_add_mail]",
-                        value: "off"
-                      }
-                    }),
-                    _c("input", {
-                      staticClass: "checkbox",
-                      attrs: {
-                        type: "checkbox",
-                        id: "wpuf-dokan_general[product_add_mail]",
-                        name: "dokan_general[product_add_mail]",
-                        value: "on",
-                        checked: "checked"
-                      }
-                    }),
-                    _vm._v("Email notification on new product submission")
-                  ]
-                )
-              ])
-            ])
-          ]),
-          _c("tr", { staticClass: "seller_review_manage" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c(
-                "label",
-                { attrs: { for: "dokan_general[seller_review_manage]" } },
-                [_vm._v("Vendor Product Review")]
-              )
-            ]),
-            _c("td", [
-              _c("fieldset", [
-                _c(
-                  "label",
-                  {
-                    attrs: { for: "wpuf-dokan_general[seller_review_manage]" }
-                  },
-                  [
-                    _c("input", {
-                      attrs: {
-                        type: "hidden",
-                        name: "dokan_general[seller_review_manage]",
-                        value: "off"
-                      }
-                    }),
-                    _c("input", {
-                      staticClass: "checkbox",
-                      attrs: {
-                        type: "checkbox",
-                        id: "wpuf-dokan_general[seller_review_manage]",
-                        name: "dokan_general[seller_review_manage]",
-                        value: "on",
-                        checked: "checked"
-                      }
-                    }),
-                    _vm._v(
-                      "Vendor can change product review status from vendor dashboard"
-                    )
-                  ]
-                )
-              ])
-            ])
-          ]),
-          _c("tr", { staticClass: "enable_tc_on_reg" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c(
-                "label",
-                { attrs: { for: "dokan_general[enable_tc_on_reg]" } },
-                [_vm._v("Enable Terms and Condition")]
-              )
-            ]),
-            _c("td", [
-              _c("fieldset", [
-                _c(
-                  "label",
-                  { attrs: { for: "wpuf-dokan_general[enable_tc_on_reg]" } },
-                  [
-                    _c("input", {
-                      attrs: {
-                        type: "hidden",
-                        name: "dokan_general[enable_tc_on_reg]",
-                        value: "off"
-                      }
-                    }),
-                    _c("input", {
-                      staticClass: "checkbox",
-                      attrs: {
-                        type: "checkbox",
-                        id: "wpuf-dokan_general[enable_tc_on_reg]",
-                        name: "dokan_general[enable_tc_on_reg]",
-                        value: "on",
-                        checked: "checked"
-                      }
-                    }),
-                    _vm._v(
-                      "Enable Terms and Condition check on registration form"
-                    )
-                  ]
-                )
-              ])
-            ])
-          ]),
-          _c("tr", { staticClass: "store_banner_width" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c(
-                "label",
-                { attrs: { for: "dokan_general[store_banner_width]" } },
-                [_vm._v("Store Banner width")]
-              )
-            ]),
-            _c("td", [
-              _c("input", {
-                staticClass: "regular-text",
-                attrs: {
-                  type: "text",
-                  id: "dokan_general[store_banner_width]",
-                  name: "dokan_general[store_banner_width]",
-                  value: "625"
-                }
-              })
-            ])
-          ]),
-          _c("tr", { staticClass: "store_banner_height" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c(
-                "label",
-                { attrs: { for: "dokan_general[store_banner_height]" } },
-                [_vm._v("Store Banner height")]
-              )
-            ]),
-            _c("td", [
-              _c("input", {
-                staticClass: "regular-text",
-                attrs: {
-                  type: "text",
-                  id: "dokan_general[store_banner_height]",
-                  name: "dokan_general[store_banner_height]",
-                  value: "300"
-                }
-              })
-            ])
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticStyle: { "padding-left": "10px" } }, [
-        _c("p", { staticClass: "submit" }, [
-          _c("input", {
-            staticClass: "button button-primary",
-            attrs: {
-              type: "submit",
-              name: "submit",
-              id: "submit",
-              value: "Save Changes"
-            }
-          })
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("form", { attrs: { method: "post", action: "options.php" } }, [
-      _c("input", {
-        attrs: { type: "hidden", name: "option_page", value: "dokan_general" }
-      }),
-      _vm._v(" "),
-      _c("input", {
-        attrs: { type: "hidden", name: "action", value: "update" }
-      }),
-      _vm._v(" "),
-      _c("h2", [_vm._v("Withdraw")]),
-      _vm._v(" "),
-      _c("table", { staticClass: "form-table" }, [
-        _c("tbody", [
-          _c("tr", { staticClass: "admin_access" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c("label", { attrs: { for: "dokan_general[admin_access]" } }, [
-                _vm._v("Admin area access")
-              ])
-            ]),
-            _c("td", [
-              _c("fieldset", [
-                _c(
-                  "label",
-                  { attrs: { for: "wpuf-dokan_general[admin_access]" } },
-                  [
-                    _c("input", {
-                      attrs: {
-                        type: "hidden",
-                        name: "dokan_general[admin_access]",
-                        value: "off"
-                      }
-                    }),
-                    _c("input", {
-                      staticClass: "checkbox",
-                      attrs: {
-                        type: "checkbox",
-                        id: "wpuf-dokan_general[admin_access]",
-                        name: "dokan_general[admin_access]",
-                        value: "on"
-                      }
-                    }),
-                    _vm._v(
-                      "Disable Vendors and Customers from accessing the wp-admin dashboard area"
-                    )
-                  ]
-                )
-              ])
-            ])
-          ]),
-          _c("tr", { staticClass: "custom_store_url" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c(
-                "label",
-                { attrs: { for: "dokan_general[custom_store_url]" } },
-                [_vm._v("Vendor Store URL")]
-              )
-            ]),
-            _c("td", [
-              _c("input", {
-                staticClass: "regular-text",
-                attrs: {
-                  type: "text",
-                  id: "dokan_general[custom_store_url]",
-                  name: "dokan_general[custom_store_url]",
-                  value: "store"
-                }
-              }),
-              _c("p", { staticClass: "description" }, [
-                _vm._v("Define the seller store URL (http://newdokan.test/"),
-                _c("strong", [_vm._v("[this-text]")]),
-                _vm._v("/[seller-name])")
-              ])
-            ])
-          ]),
-          _c("tr", { staticClass: "seller_enable_terms_and_conditions" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c(
-                "label",
-                {
-                  attrs: {
-                    for: "dokan_general[seller_enable_terms_and_conditions]"
-                  }
-                },
-                [_vm._v("Terms and Conditions")]
-              )
-            ]),
-            _c("td", [
-              _c("fieldset", [
-                _c(
-                  "label",
-                  {
-                    attrs: {
-                      for:
-                        "wpuf-dokan_general[seller_enable_terms_and_conditions]"
-                    }
-                  },
-                  [
-                    _c("input", {
-                      attrs: {
-                        type: "hidden",
-                        name:
-                          "dokan_general[seller_enable_terms_and_conditions]",
-                        value: "off"
-                      }
-                    }),
-                    _c("input", {
-                      staticClass: "checkbox",
-                      attrs: {
-                        type: "checkbox",
-                        id:
-                          "wpuf-dokan_general[seller_enable_terms_and_conditions]",
-                        name:
-                          "dokan_general[seller_enable_terms_and_conditions]",
-                        value: "on"
-                      }
-                    }),
-                    _vm._v("Enable Terms and Conditions for vendor stores")
-                  ]
-                )
-              ])
-            ])
-          ]),
-          _c("tr", { staticClass: "extra_fee_recipient" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c(
-                "label",
-                { attrs: { for: "dokan_general[extra_fee_recipient]" } },
-                [_vm._v("Extra Fee Recipient")]
-              )
-            ]),
-            _c("td", [
-              _c(
-                "select",
-                {
-                  staticClass: "regular",
-                  attrs: {
-                    name: "dokan_general[extra_fee_recipient]",
-                    id: "dokan_general[extra_fee_recipient]"
-                  }
-                },
-                [
-                  _c(
-                    "option",
-                    { attrs: { value: "seller", selected: "selected" } },
-                    [_vm._v("Vendor")]
-                  ),
-                  _c("option", { attrs: { value: "admin" } }, [_vm._v("Admin")])
-                ]
-              ),
-              _c("p", { staticClass: "description" }, [
-                _vm._v(
-                  "Should extra fees, such as Shipping and Tax, go to the Vendor or the Admin?"
-                )
-              ])
-            ])
-          ]),
-          _c("tr", { staticClass: "store_map" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c("label", { attrs: { for: "dokan_general[store_map]" } }, [
-                _vm._v("Show Map on Store Page")
-              ])
-            ]),
-            _c("td", [
-              _c("fieldset", [
-                _c(
-                  "label",
-                  { attrs: { for: "wpuf-dokan_general[store_map]" } },
-                  [
-                    _c("input", {
-                      attrs: {
-                        type: "hidden",
-                        name: "dokan_general[store_map]",
-                        value: "off"
-                      }
-                    }),
-                    _c("input", {
-                      staticClass: "checkbox",
-                      attrs: {
-                        type: "checkbox",
-                        id: "wpuf-dokan_general[store_map]",
-                        name: "dokan_general[store_map]",
-                        value: "on",
-                        checked: "checked"
-                      }
-                    }),
-                    _vm._v(
-                      "Enable a Google Map of the Store Location in the store sidebar"
-                    )
-                  ]
-                )
-              ])
-            ])
-          ]),
-          _c("tr", { staticClass: "gmap_api_key" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c("label", { attrs: { for: "dokan_general[gmap_api_key]" } }, [
-                _vm._v("Google Map API Key")
-              ])
-            ]),
-            _c("td", [
-              _c("input", {
-                staticClass: "regular-text",
-                attrs: {
-                  type: "text",
-                  id: "dokan_general[gmap_api_key]",
-                  name: "dokan_general[gmap_api_key]",
-                  value: ""
-                }
-              }),
-              _c("p", { staticClass: "description" }, [
-                _c(
-                  "a",
-                  {
-                    attrs: {
-                      href:
-                        "https://developers.google.com/maps/documentation/javascript/",
-                      target: "_blank"
-                    }
-                  },
-                  [_vm._v("API Key")]
-                ),
-                _vm._v(" is needed to display map on store page")
-              ])
-            ])
-          ]),
-          _c("tr", { staticClass: "contact_seller" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c("label", { attrs: { for: "dokan_general[contact_seller]" } }, [
-                _vm._v("Show Contact Form on Store Page")
-              ])
-            ]),
-            _c("td", [
-              _c("fieldset", [
-                _c(
-                  "label",
-                  { attrs: { for: "wpuf-dokan_general[contact_seller]" } },
-                  [
-                    _c("input", {
-                      attrs: {
-                        type: "hidden",
-                        name: "dokan_general[contact_seller]",
-                        value: "off"
-                      }
-                    }),
-                    _c("input", {
-                      staticClass: "checkbox",
-                      attrs: {
-                        type: "checkbox",
-                        id: "wpuf-dokan_general[contact_seller]",
-                        name: "dokan_general[contact_seller]",
-                        value: "on",
-                        checked: "checked"
-                      }
-                    }),
-                    _vm._v("Enable Vendor Contact Form in the store sidebar")
-                  ]
-                )
-              ])
-            ])
-          ]),
-          _c("tr", { staticClass: "enable_theme_store_sidebar" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c(
-                "label",
-                { attrs: { for: "dokan_general[enable_theme_store_sidebar]" } },
-                [_vm._v("Enable Store Sidebar From Theme")]
-              )
-            ]),
-            _c("td", [
-              _c("fieldset", [
-                _c(
-                  "label",
-                  {
-                    attrs: {
-                      for: "wpuf-dokan_general[enable_theme_store_sidebar]"
-                    }
-                  },
-                  [
-                    _c("input", {
-                      attrs: {
-                        type: "hidden",
-                        name: "dokan_general[enable_theme_store_sidebar]",
-                        value: "off"
-                      }
-                    }),
-                    _c("input", {
-                      staticClass: "checkbox",
-                      attrs: {
-                        type: "checkbox",
-                        id: "wpuf-dokan_general[enable_theme_store_sidebar]",
-                        name: "dokan_general[enable_theme_store_sidebar]",
-                        value: "on"
-                      }
-                    }),
-                    _vm._v("Enable showing Store Sidebar From Your Theme.")
-                  ]
-                )
-              ])
-            ])
-          ]),
-          _c("tr", { staticClass: "product_add_mail" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c(
-                "label",
-                { attrs: { for: "dokan_general[product_add_mail]" } },
-                [_vm._v("Product Mail Notification")]
-              )
-            ]),
-            _c("td", [
-              _c("fieldset", [
-                _c(
-                  "label",
-                  { attrs: { for: "wpuf-dokan_general[product_add_mail]" } },
-                  [
-                    _c("input", {
-                      attrs: {
-                        type: "hidden",
-                        name: "dokan_general[product_add_mail]",
-                        value: "off"
-                      }
-                    }),
-                    _c("input", {
-                      staticClass: "checkbox",
-                      attrs: {
-                        type: "checkbox",
-                        id: "wpuf-dokan_general[product_add_mail]",
-                        name: "dokan_general[product_add_mail]",
-                        value: "on",
-                        checked: "checked"
-                      }
-                    }),
-                    _vm._v("Email notification on new product submission")
-                  ]
-                )
-              ])
-            ])
-          ]),
-          _c("tr", { staticClass: "seller_review_manage" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c(
-                "label",
-                { attrs: { for: "dokan_general[seller_review_manage]" } },
-                [_vm._v("Vendor Product Review")]
-              )
-            ]),
-            _c("td", [
-              _c("fieldset", [
-                _c(
-                  "label",
-                  {
-                    attrs: { for: "wpuf-dokan_general[seller_review_manage]" }
-                  },
-                  [
-                    _c("input", {
-                      attrs: {
-                        type: "hidden",
-                        name: "dokan_general[seller_review_manage]",
-                        value: "off"
-                      }
-                    }),
-                    _c("input", {
-                      staticClass: "checkbox",
-                      attrs: {
-                        type: "checkbox",
-                        id: "wpuf-dokan_general[seller_review_manage]",
-                        name: "dokan_general[seller_review_manage]",
-                        value: "on",
-                        checked: "checked"
-                      }
-                    }),
-                    _vm._v(
-                      "Vendor can change product review status from vendor dashboard"
-                    )
-                  ]
-                )
-              ])
-            ])
-          ]),
-          _c("tr", { staticClass: "enable_tc_on_reg" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c(
-                "label",
-                { attrs: { for: "dokan_general[enable_tc_on_reg]" } },
-                [_vm._v("Enable Terms and Condition")]
-              )
-            ]),
-            _c("td", [
-              _c("fieldset", [
-                _c(
-                  "label",
-                  { attrs: { for: "wpuf-dokan_general[enable_tc_on_reg]" } },
-                  [
-                    _c("input", {
-                      attrs: {
-                        type: "hidden",
-                        name: "dokan_general[enable_tc_on_reg]",
-                        value: "off"
-                      }
-                    }),
-                    _c("input", {
-                      staticClass: "checkbox",
-                      attrs: {
-                        type: "checkbox",
-                        id: "wpuf-dokan_general[enable_tc_on_reg]",
-                        name: "dokan_general[enable_tc_on_reg]",
-                        value: "on",
-                        checked: "checked"
-                      }
-                    }),
-                    _vm._v(
-                      "Enable Terms and Condition check on registration form"
-                    )
-                  ]
-                )
-              ])
-            ])
-          ]),
-          _c("tr", { staticClass: "store_banner_width" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c(
-                "label",
-                { attrs: { for: "dokan_general[store_banner_width]" } },
-                [_vm._v("Store Banner width")]
-              )
-            ]),
-            _c("td", [
-              _c("input", {
-                staticClass: "regular-text",
-                attrs: {
-                  type: "text",
-                  id: "dokan_general[store_banner_width]",
-                  name: "dokan_general[store_banner_width]",
-                  value: "625"
-                }
-              })
-            ])
-          ]),
-          _c("tr", { staticClass: "store_banner_height" }, [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c(
-                "label",
-                { attrs: { for: "dokan_general[store_banner_height]" } },
-                [_vm._v("Store Banner height")]
-              )
-            ]),
-            _c("td", [
-              _c("input", {
-                staticClass: "regular-text",
-                attrs: {
-                  type: "text",
-                  id: "dokan_general[store_banner_height]",
-                  name: "dokan_general[store_banner_height]",
-                  value: "300"
-                }
-              })
-            ])
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticStyle: { "padding-left": "10px" } }, [
-        _c("p", { staticClass: "submit" }, [
-          _c("input", {
-            staticClass: "button button-primary",
-            attrs: {
-              type: "submit",
-              name: "submit",
-              id: "submit",
-              value: "Save Changes"
-            }
-          })
-        ])
-      ])
+        staticClass: "button button-primary",
+        attrs: {
+          type: "submit",
+          name: "submit",
+          id: "submit",
+          value: "Save Changes"
+        }
+      })
     ])
   }
 ]
@@ -4080,11 +3251,49 @@ if (false) {
 }
 
 /***/ }),
-/* 107 */,
-/* 108 */
-/***/ (function(module, exports) {
+/* 67 */
+/***/ (function(module, exports, __webpack_require__) {
 
-// removed by extract-text-webpack-plugin
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+/**
+ * As we are using hash based navigation, hack fix
+ * to highlight the current selected menu
+ *
+ * Requires jQuery
+ */
+function menuFix(slug) {
+    var $ = jQuery;
+
+    var menuRoot = $('#toplevel_page_' + slug);
+    var currentUrl = window.location.href;
+    var currentPath = currentUrl.substr(currentUrl.indexOf('admin.php'));
+
+    menuRoot.on('click', 'a', function () {
+        var self = $(this);
+
+        $('ul.wp-submenu li', menuRoot).removeClass('current');
+
+        if (self.hasClass('wp-has-submenu')) {
+            $('li.wp-first-item', menuRoot).addClass('current');
+        } else {
+            self.parents('li').addClass('current');
+        }
+    });
+
+    $('ul.wp-submenu a', menuRoot).each(function (index, el) {
+        if ($(el).attr('href') === currentPath) {
+            $(el).parent().addClass('current');
+            return;
+        }
+    });
+}
+
+exports.default = menuFix;
 
 /***/ })
-],[34]);
+],[41]);

@@ -1,42 +1,28 @@
 <template>
-    <div class="dokan-settings">
+    <div class="dokan-settings" v-if="isLoaded">
         <h2 style="margin-bottom: 15px;">Settings</h2>
 
         <div class="dokan-settings-wrap">
             <h2 class="nav-tab-wrapper">
                 <template v-for="section in settingSections">
-                    <a href="#" class="nav-tab" :class="{ 'nav-tab-active': currentTab === section.id }" id="dokan_general-tab" @click.prevent="currentTab = section.id"><span class="dashicons" :class="section.icon"></span> {{ section.title }}</a>
+                    <a href="#" class="nav-tab" :class="{ 'nav-tab-active': currentTab === section.id }" id="dokan_general-tab" @click.prevent="changeTab(section)"><span class="dashicons" :class="section.icon"></span> {{ section.title }}</a>
                 </template>
             </h2>
 
             <div class="metabox-holder">
-                <div id="dokan_general" class="group" v-show="currentTab==='dokan_general'">
-                    <form method="post" action="options.php">
-                        <input type="hidden" name="option_page" value="dokan_general">
-                        <input type="hidden" name="action" value="update">
-                        <h2>General</h2>
-                        <table class="form-table"><tbody><tr class="admin_access"><th scope="row"><label for="dokan_general[admin_access]">Admin area access</label></th><td><fieldset><label for="wpuf-dokan_general[admin_access]"><input type="hidden" name="dokan_general[admin_access]" value="off"><input type="checkbox" class="checkbox" id="wpuf-dokan_general[admin_access]" name="dokan_general[admin_access]" value="on">Disable Vendors and Customers from accessing the wp-admin dashboard area</label></fieldset></td></tr><tr class="custom_store_url"><th scope="row"><label for="dokan_general[custom_store_url]">Vendor Store URL</label></th><td><input type="text" class="regular-text" id="dokan_general[custom_store_url]" name="dokan_general[custom_store_url]" value="store"><p class="description">Define the seller store URL (http://newdokan.test/<strong>[this-text]</strong>/[seller-name])</p></td></tr><tr class="seller_enable_terms_and_conditions"><th scope="row"><label for="dokan_general[seller_enable_terms_and_conditions]">Terms and Conditions</label></th><td><fieldset><label for="wpuf-dokan_general[seller_enable_terms_and_conditions]"><input type="hidden" name="dokan_general[seller_enable_terms_and_conditions]" value="off"><input type="checkbox" class="checkbox" id="wpuf-dokan_general[seller_enable_terms_and_conditions]" name="dokan_general[seller_enable_terms_and_conditions]" value="on">Enable Terms and Conditions for vendor stores</label></fieldset></td></tr><tr class="extra_fee_recipient"><th scope="row"><label for="dokan_general[extra_fee_recipient]">Extra Fee Recipient</label></th><td><select class="regular" name="dokan_general[extra_fee_recipient]" id="dokan_general[extra_fee_recipient]"><option value="seller" selected="selected">Vendor</option><option value="admin">Admin</option></select><p class="description">Should extra fees, such as Shipping and Tax, go to the Vendor or the Admin?</p></td></tr><tr class="store_map"><th scope="row"><label for="dokan_general[store_map]">Show Map on Store Page</label></th><td><fieldset><label for="wpuf-dokan_general[store_map]"><input type="hidden" name="dokan_general[store_map]" value="off"><input type="checkbox" class="checkbox" id="wpuf-dokan_general[store_map]" name="dokan_general[store_map]" value="on" checked="checked">Enable a Google Map of the Store Location in the store sidebar</label></fieldset></td></tr><tr class="gmap_api_key"><th scope="row"><label for="dokan_general[gmap_api_key]">Google Map API Key</label></th><td><input type="text" class="regular-text" id="dokan_general[gmap_api_key]" name="dokan_general[gmap_api_key]" value=""><p class="description"><a href="https://developers.google.com/maps/documentation/javascript/" target="_blank">API Key</a> is needed to display map on store page</p></td></tr><tr class="contact_seller"><th scope="row"><label for="dokan_general[contact_seller]">Show Contact Form on Store Page</label></th><td><fieldset><label for="wpuf-dokan_general[contact_seller]"><input type="hidden" name="dokan_general[contact_seller]" value="off"><input type="checkbox" class="checkbox" id="wpuf-dokan_general[contact_seller]" name="dokan_general[contact_seller]" value="on" checked="checked">Enable Vendor Contact Form in the store sidebar</label></fieldset></td></tr><tr class="enable_theme_store_sidebar"><th scope="row"><label for="dokan_general[enable_theme_store_sidebar]">Enable Store Sidebar From Theme</label></th><td><fieldset><label for="wpuf-dokan_general[enable_theme_store_sidebar]"><input type="hidden" name="dokan_general[enable_theme_store_sidebar]" value="off"><input type="checkbox" class="checkbox" id="wpuf-dokan_general[enable_theme_store_sidebar]" name="dokan_general[enable_theme_store_sidebar]" value="on">Enable showing Store Sidebar From Your Theme.</label></fieldset></td></tr><tr class="product_add_mail"><th scope="row"><label for="dokan_general[product_add_mail]">Product Mail Notification</label></th><td><fieldset><label for="wpuf-dokan_general[product_add_mail]"><input type="hidden" name="dokan_general[product_add_mail]" value="off"><input type="checkbox" class="checkbox" id="wpuf-dokan_general[product_add_mail]" name="dokan_general[product_add_mail]" value="on" checked="checked">Email notification on new product submission</label></fieldset></td></tr><tr class="seller_review_manage"><th scope="row"><label for="dokan_general[seller_review_manage]">Vendor Product Review</label></th><td><fieldset><label for="wpuf-dokan_general[seller_review_manage]"><input type="hidden" name="dokan_general[seller_review_manage]" value="off"><input type="checkbox" class="checkbox" id="wpuf-dokan_general[seller_review_manage]" name="dokan_general[seller_review_manage]" value="on" checked="checked">Vendor can change product review status from vendor dashboard</label></fieldset></td></tr><tr class="enable_tc_on_reg"><th scope="row"><label for="dokan_general[enable_tc_on_reg]">Enable Terms and Condition</label></th><td><fieldset><label for="wpuf-dokan_general[enable_tc_on_reg]"><input type="hidden" name="dokan_general[enable_tc_on_reg]" value="off"><input type="checkbox" class="checkbox" id="wpuf-dokan_general[enable_tc_on_reg]" name="dokan_general[enable_tc_on_reg]" value="on" checked="checked">Enable Terms and Condition check on registration form</label></fieldset></td></tr><tr class="store_banner_width"><th scope="row"><label for="dokan_general[store_banner_width]">Store Banner width</label></th><td><input type="text" class="regular-text" id="dokan_general[store_banner_width]" name="dokan_general[store_banner_width]" value="625"></td></tr><tr class="store_banner_height"><th scope="row"><label for="dokan_general[store_banner_height]">Store Banner height</label></th><td><input type="text" class="regular-text" id="dokan_general[store_banner_height]" name="dokan_general[store_banner_height]" value="300"></td></tr></tbody></table>                        <div style="padding-left: 10px">
-                        <p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes"></p>                        </div>
-                    </form>
-                </div>
-                <div id="dokan_selling" class="group" v-show="currentTab==='dokan_selling'">
-                    <form method="post" action="options.php">
-                        <input type="hidden" name="option_page" value="dokan_general">
-                        <input type="hidden" name="action" value="update">
-                        <h2>Selling</h2>
-                        <table class="form-table"><tbody><tr class="admin_access"><th scope="row"><label for="dokan_general[admin_access]">Admin area access</label></th><td><fieldset><label for="wpuf-dokan_general[admin_access]"><input type="hidden" name="dokan_general[admin_access]" value="off"><input type="checkbox" class="checkbox" id="wpuf-dokan_general[admin_access]" name="dokan_general[admin_access]" value="on">Disable Vendors and Customers from accessing the wp-admin dashboard area</label></fieldset></td></tr><tr class="custom_store_url"><th scope="row"><label for="dokan_general[custom_store_url]">Vendor Store URL</label></th><td><input type="text" class="regular-text" id="dokan_general[custom_store_url]" name="dokan_general[custom_store_url]" value="store"><p class="description">Define the seller store URL (http://newdokan.test/<strong>[this-text]</strong>/[seller-name])</p></td></tr><tr class="seller_enable_terms_and_conditions"><th scope="row"><label for="dokan_general[seller_enable_terms_and_conditions]">Terms and Conditions</label></th><td><fieldset><label for="wpuf-dokan_general[seller_enable_terms_and_conditions]"><input type="hidden" name="dokan_general[seller_enable_terms_and_conditions]" value="off"><input type="checkbox" class="checkbox" id="wpuf-dokan_general[seller_enable_terms_and_conditions]" name="dokan_general[seller_enable_terms_and_conditions]" value="on">Enable Terms and Conditions for vendor stores</label></fieldset></td></tr><tr class="extra_fee_recipient"><th scope="row"><label for="dokan_general[extra_fee_recipient]">Extra Fee Recipient</label></th><td><select class="regular" name="dokan_general[extra_fee_recipient]" id="dokan_general[extra_fee_recipient]"><option value="seller" selected="selected">Vendor</option><option value="admin">Admin</option></select><p class="description">Should extra fees, such as Shipping and Tax, go to the Vendor or the Admin?</p></td></tr><tr class="store_map"><th scope="row"><label for="dokan_general[store_map]">Show Map on Store Page</label></th><td><fieldset><label for="wpuf-dokan_general[store_map]"><input type="hidden" name="dokan_general[store_map]" value="off"><input type="checkbox" class="checkbox" id="wpuf-dokan_general[store_map]" name="dokan_general[store_map]" value="on" checked="checked">Enable a Google Map of the Store Location in the store sidebar</label></fieldset></td></tr><tr class="gmap_api_key"><th scope="row"><label for="dokan_general[gmap_api_key]">Google Map API Key</label></th><td><input type="text" class="regular-text" id="dokan_general[gmap_api_key]" name="dokan_general[gmap_api_key]" value=""><p class="description"><a href="https://developers.google.com/maps/documentation/javascript/" target="_blank">API Key</a> is needed to display map on store page</p></td></tr><tr class="contact_seller"><th scope="row"><label for="dokan_general[contact_seller]">Show Contact Form on Store Page</label></th><td><fieldset><label for="wpuf-dokan_general[contact_seller]"><input type="hidden" name="dokan_general[contact_seller]" value="off"><input type="checkbox" class="checkbox" id="wpuf-dokan_general[contact_seller]" name="dokan_general[contact_seller]" value="on" checked="checked">Enable Vendor Contact Form in the store sidebar</label></fieldset></td></tr><tr class="enable_theme_store_sidebar"><th scope="row"><label for="dokan_general[enable_theme_store_sidebar]">Enable Store Sidebar From Theme</label></th><td><fieldset><label for="wpuf-dokan_general[enable_theme_store_sidebar]"><input type="hidden" name="dokan_general[enable_theme_store_sidebar]" value="off"><input type="checkbox" class="checkbox" id="wpuf-dokan_general[enable_theme_store_sidebar]" name="dokan_general[enable_theme_store_sidebar]" value="on">Enable showing Store Sidebar From Your Theme.</label></fieldset></td></tr><tr class="product_add_mail"><th scope="row"><label for="dokan_general[product_add_mail]">Product Mail Notification</label></th><td><fieldset><label for="wpuf-dokan_general[product_add_mail]"><input type="hidden" name="dokan_general[product_add_mail]" value="off"><input type="checkbox" class="checkbox" id="wpuf-dokan_general[product_add_mail]" name="dokan_general[product_add_mail]" value="on" checked="checked">Email notification on new product submission</label></fieldset></td></tr><tr class="seller_review_manage"><th scope="row"><label for="dokan_general[seller_review_manage]">Vendor Product Review</label></th><td><fieldset><label for="wpuf-dokan_general[seller_review_manage]"><input type="hidden" name="dokan_general[seller_review_manage]" value="off"><input type="checkbox" class="checkbox" id="wpuf-dokan_general[seller_review_manage]" name="dokan_general[seller_review_manage]" value="on" checked="checked">Vendor can change product review status from vendor dashboard</label></fieldset></td></tr><tr class="enable_tc_on_reg"><th scope="row"><label for="dokan_general[enable_tc_on_reg]">Enable Terms and Condition</label></th><td><fieldset><label for="wpuf-dokan_general[enable_tc_on_reg]"><input type="hidden" name="dokan_general[enable_tc_on_reg]" value="off"><input type="checkbox" class="checkbox" id="wpuf-dokan_general[enable_tc_on_reg]" name="dokan_general[enable_tc_on_reg]" value="on" checked="checked">Enable Terms and Condition check on registration form</label></fieldset></td></tr><tr class="store_banner_width"><th scope="row"><label for="dokan_general[store_banner_width]">Store Banner width</label></th><td><input type="text" class="regular-text" id="dokan_general[store_banner_width]" name="dokan_general[store_banner_width]" value="625"></td></tr><tr class="store_banner_height"><th scope="row"><label for="dokan_general[store_banner_height]">Store Banner height</label></th><td><input type="text" class="regular-text" id="dokan_general[store_banner_height]" name="dokan_general[store_banner_height]" value="300"></td></tr></tbody></table>                        <div style="padding-left: 10px">
-                        <p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes"></p>                        </div>
-                    </form>
-                </div>
-                <div id="dokan_withdraw" class="group" v-show="currentTab==='dokan_withdraw'">
-                    <form method="post" action="options.php">
-                        <input type="hidden" name="option_page" value="dokan_general">
-                        <input type="hidden" name="action" value="update">
-                        <h2>Withdraw</h2>
-                        <table class="form-table"><tbody><tr class="admin_access"><th scope="row"><label for="dokan_general[admin_access]">Admin area access</label></th><td><fieldset><label for="wpuf-dokan_general[admin_access]"><input type="hidden" name="dokan_general[admin_access]" value="off"><input type="checkbox" class="checkbox" id="wpuf-dokan_general[admin_access]" name="dokan_general[admin_access]" value="on">Disable Vendors and Customers from accessing the wp-admin dashboard area</label></fieldset></td></tr><tr class="custom_store_url"><th scope="row"><label for="dokan_general[custom_store_url]">Vendor Store URL</label></th><td><input type="text" class="regular-text" id="dokan_general[custom_store_url]" name="dokan_general[custom_store_url]" value="store"><p class="description">Define the seller store URL (http://newdokan.test/<strong>[this-text]</strong>/[seller-name])</p></td></tr><tr class="seller_enable_terms_and_conditions"><th scope="row"><label for="dokan_general[seller_enable_terms_and_conditions]">Terms and Conditions</label></th><td><fieldset><label for="wpuf-dokan_general[seller_enable_terms_and_conditions]"><input type="hidden" name="dokan_general[seller_enable_terms_and_conditions]" value="off"><input type="checkbox" class="checkbox" id="wpuf-dokan_general[seller_enable_terms_and_conditions]" name="dokan_general[seller_enable_terms_and_conditions]" value="on">Enable Terms and Conditions for vendor stores</label></fieldset></td></tr><tr class="extra_fee_recipient"><th scope="row"><label for="dokan_general[extra_fee_recipient]">Extra Fee Recipient</label></th><td><select class="regular" name="dokan_general[extra_fee_recipient]" id="dokan_general[extra_fee_recipient]"><option value="seller" selected="selected">Vendor</option><option value="admin">Admin</option></select><p class="description">Should extra fees, such as Shipping and Tax, go to the Vendor or the Admin?</p></td></tr><tr class="store_map"><th scope="row"><label for="dokan_general[store_map]">Show Map on Store Page</label></th><td><fieldset><label for="wpuf-dokan_general[store_map]"><input type="hidden" name="dokan_general[store_map]" value="off"><input type="checkbox" class="checkbox" id="wpuf-dokan_general[store_map]" name="dokan_general[store_map]" value="on" checked="checked">Enable a Google Map of the Store Location in the store sidebar</label></fieldset></td></tr><tr class="gmap_api_key"><th scope="row"><label for="dokan_general[gmap_api_key]">Google Map API Key</label></th><td><input type="text" class="regular-text" id="dokan_general[gmap_api_key]" name="dokan_general[gmap_api_key]" value=""><p class="description"><a href="https://developers.google.com/maps/documentation/javascript/" target="_blank">API Key</a> is needed to display map on store page</p></td></tr><tr class="contact_seller"><th scope="row"><label for="dokan_general[contact_seller]">Show Contact Form on Store Page</label></th><td><fieldset><label for="wpuf-dokan_general[contact_seller]"><input type="hidden" name="dokan_general[contact_seller]" value="off"><input type="checkbox" class="checkbox" id="wpuf-dokan_general[contact_seller]" name="dokan_general[contact_seller]" value="on" checked="checked">Enable Vendor Contact Form in the store sidebar</label></fieldset></td></tr><tr class="enable_theme_store_sidebar"><th scope="row"><label for="dokan_general[enable_theme_store_sidebar]">Enable Store Sidebar From Theme</label></th><td><fieldset><label for="wpuf-dokan_general[enable_theme_store_sidebar]"><input type="hidden" name="dokan_general[enable_theme_store_sidebar]" value="off"><input type="checkbox" class="checkbox" id="wpuf-dokan_general[enable_theme_store_sidebar]" name="dokan_general[enable_theme_store_sidebar]" value="on">Enable showing Store Sidebar From Your Theme.</label></fieldset></td></tr><tr class="product_add_mail"><th scope="row"><label for="dokan_general[product_add_mail]">Product Mail Notification</label></th><td><fieldset><label for="wpuf-dokan_general[product_add_mail]"><input type="hidden" name="dokan_general[product_add_mail]" value="off"><input type="checkbox" class="checkbox" id="wpuf-dokan_general[product_add_mail]" name="dokan_general[product_add_mail]" value="on" checked="checked">Email notification on new product submission</label></fieldset></td></tr><tr class="seller_review_manage"><th scope="row"><label for="dokan_general[seller_review_manage]">Vendor Product Review</label></th><td><fieldset><label for="wpuf-dokan_general[seller_review_manage]"><input type="hidden" name="dokan_general[seller_review_manage]" value="off"><input type="checkbox" class="checkbox" id="wpuf-dokan_general[seller_review_manage]" name="dokan_general[seller_review_manage]" value="on" checked="checked">Vendor can change product review status from vendor dashboard</label></fieldset></td></tr><tr class="enable_tc_on_reg"><th scope="row"><label for="dokan_general[enable_tc_on_reg]">Enable Terms and Condition</label></th><td><fieldset><label for="wpuf-dokan_general[enable_tc_on_reg]"><input type="hidden" name="dokan_general[enable_tc_on_reg]" value="off"><input type="checkbox" class="checkbox" id="wpuf-dokan_general[enable_tc_on_reg]" name="dokan_general[enable_tc_on_reg]" value="on" checked="checked">Enable Terms and Condition check on registration form</label></fieldset></td></tr><tr class="store_banner_width"><th scope="row"><label for="dokan_general[store_banner_width]">Store Banner width</label></th><td><input type="text" class="regular-text" id="dokan_general[store_banner_width]" name="dokan_general[store_banner_width]" value="625"></td></tr><tr class="store_banner_height"><th scope="row"><label for="dokan_general[store_banner_height]">Store Banner height</label></th><td><input type="text" class="regular-text" id="dokan_general[store_banner_height]" name="dokan_general[store_banner_height]" value="300"></td></tr></tbody></table>                        <div style="padding-left: 10px">
-                        <p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes"></p>                        </div>
-                    </form>
-                </div>
+                <template v-for="(fields, index) in settingFields">
+                    <div :id="index" class="group" v-show="currentTab===index">
+                        <form method="post" action="options.php">
+                            <input type="hidden" name="option_page" :value="index">
+                            <input type="hidden" name="action" value="update">
+                            <h2>{{ showSectionTitle( index ) }}</h2>
+                            <table class="form-table">
+                                <fields v-for="(field, fieldId) in fields" :section-id="index" :id="fieldId" :field-data="field" :field-value="settingValues[index]"></fields>
+                            </table>
+                            <p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes"></p>
+                        </form>
+                    </div>
+                </template>
             </div>
 
         </div>
@@ -45,16 +31,23 @@
 </template>
 
 <script>
+    import Fields from "admin/components/Fields.vue"
 
     export default {
 
         name: 'Settings',
 
+        components: {
+            Fields
+        },
+
         data () {
             return {
+                isLoaded: false,
                 currentTab: null,
                 settingSections: [],
-                settingFields: {}
+                settingFields: {},
+                settingValues: {}
             }
         },
 
@@ -63,11 +56,42 @@
         },
 
         methods: {
+            changeTab( section ) {
+                var activetab = '';
+                this.currentTab = section.id;
 
+                if ( typeof( localStorage ) != 'undefined' ) {
+                    localStorage.setItem( "activetab", this.currentTab );
+                }
+            },
+
+            showSectionTitle( index ) {
+                return _.findWhere( this.settingSections, { id:index} ).title;
+            },
+
+            fetchSettingValues() {
+                var self = this,
+                    data = {
+                        action: 'dokan_get_setting_values',
+                        nonce: dokan.nonce
+                    };
+
+                $.post( dokan.ajaxurl, data, function(resp) {
+                    if ( resp.success ) {
+                        self.settingValues = resp.data;
+                        self.isLoaded = true;
+                    }
+                });
+            }
         },
 
         created() {
+            this.fetchSettingValues();
+
             this.currentTab = 'dokan_general';
+            if ( typeof(localStorage) != 'undefined' ) {
+                this.currentTab = localStorage.getItem("activetab");
+            }
 
             this.settingSections = dokan.settings_sections;
             this.settingFields = dokan.settings_fields;
@@ -146,6 +170,74 @@
             padding-right: 10px;
             background: #fff;
         }
+
+        .dokan-settings-radio-image {
+            display: block;
+            width: 50%;
+            background: #fff;
+            -webkit-box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 );
+            box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 );
+            margin: 0 0 15px;
+            position: relative;
+            line-height: 0;
+            border: 1px solid #ededed;
+            padding: 4px;
+
+            img {
+                max-width: 100%;
+                z-index: 1;
+            }
+
+            .current-option-indicator {
+                position: absolute;
+                top: 0;
+                right: 0;
+                background-color: #4CAF50;
+                color: #fff;
+                padding: 4px;
+                z-index: 2;
+                line-height: 1.3;
+            }
+
+            .active-option {
+                opacity: 0;
+                position: absolute;
+                top: 0;
+                left: 0;
+                z-index: 3;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.45);
+                transition: opacity 0.4s ease;
+
+                button {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    margin-top: -23px;
+                    margin-left: -58px;
+                }
+            }
+
+            &:hover {
+                .active-option {
+                    opacity: 1;
+                }
+            }
+
+            &.active {
+                .active-option {
+                    display: none;
+                }
+            }
+
+            &.not-active {
+                .current-option-indicator {
+                    display: none;
+                }
+            }
+        }
+
     }
 
 </style>

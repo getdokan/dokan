@@ -30,6 +30,32 @@ class Dokan_Settings {
 
         add_action( 'admin_init', array( $this, 'admin_init' ), 99 );
         add_filter( 'dokan_admin_localize_script', array( $this, 'settings_localize_data' ), 10 );
+        add_action( 'wp_ajax_dokan_get_setting_values', array( $this, 'get_settings_value' ), 10 );
+    }
+
+    /**
+     * Get settings values
+     *
+     * @since 2.8.2
+     *
+     * @return void
+     */
+    public function get_settings_value() {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( __( 'You have no permission to get settings value', 'dokan-lite' ) );
+        }
+
+        if ( ! wp_verify_nonce( $_POST['nonce'], 'dokan_admin' ) ) {
+            wp_send_json_error( __( 'Invalid nonce', 'dokan-lite' ) );
+        }
+
+        $settings = array();
+
+        foreach ( $this->get_settings_sections() as $key => $section ) {
+            $settings[$section['id']] = get_option( $section['id'], array() );
+        }
+
+        wp_send_json_success( $settings );
     }
 
     /**

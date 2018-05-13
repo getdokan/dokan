@@ -32,6 +32,8 @@ class Dokan_Assets {
         if ( 'toplevel_page_dokan' == $hook ) {
 
             $localize_script = apply_filters( 'dokan_admin_localize_script', array(
+                'ajaxurl' => admin_url( 'admin-ajax.php' ),
+                'nonce'   => wp_create_nonce( 'dokan_admin' ),
                 'rest' => array(
                     'root'    => esc_url_raw( get_rest_url() ),
                     'nonce'   => wp_create_nonce( 'wp_rest' ),
