@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Dokan Dahsboard Withdraw class
+ * Dokan Dashboard Withdraw class
  *
  * @author weDevs
  *

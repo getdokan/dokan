@@ -1,6 +1,6 @@
 <?php
 /**
- *  Dokan Dahsboard Template
+ *  Dokan Dashboard Template
  *
  *  Dokan Dashboard order status filter template
  *

@@ -31,7 +31,7 @@ function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
             $amount['tax']      = $order_tax;
         }
 
-        return $amount;
+        return apply_filters( 'dokan_get_seller_amount_from_order_array', $amount, $order, $seller_id );
     }
 
 
