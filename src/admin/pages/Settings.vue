@@ -17,7 +17,15 @@
                             <input type="hidden" name="action" value="update">
                             <h2>{{ showSectionTitle( index ) }}</h2>
                             <table class="form-table">
-                                <fields v-for="(field, fieldId) in fields" :section-id="index" :id="fieldId" :field-data="field" :field-value="settingValues[index]"></fields>
+                                <tbody>
+                                    <fields v-for="(field, fieldId) in fields"
+                                        :section-id="index"
+                                        :id="fieldId"
+                                        :field-data="field"
+                                        :field-value="settingValues[index]"
+                                        @openMedia="showMedia"
+                                    ></fields>
+                                </tbody>
                             </table>
                             <p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes"></p>
                         </form>
@@ -82,6 +90,29 @@
                         self.isLoaded = true;
                     }
                 });
+            },
+
+            showMedia( data, $event ) {
+                // var $elm = $($event.target);
+                console.log( data );
+                var self = this;
+                // Create the media frame.
+                var file_frame = wp.media.frames.file_frame = wp.media({
+                    title: 'Chose your file',
+                    button: {
+                        text: 'Select',
+                    },
+                    multiple: false
+                });
+
+                file_frame.on('select', function () {
+                    var attachment = file_frame.state().get('selection').first().toJSON();
+                    self.$set( self.settingValues[data.sectionId], data.name, attachment.url );
+                });
+
+                // Finally, open the modal
+                file_frame.open();
+
             }
         },
 
@@ -249,7 +280,7 @@
             label > img {
                 max-width:100%;
             }
-        }
+         }
     }
 
 </style>

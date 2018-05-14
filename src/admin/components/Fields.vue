@@ -1,5 +1,5 @@
 <template>
-    <tbody>
+    <div>
         <tr :class="id" v-if="containCommonFields( fieldData.type )">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
@@ -59,6 +59,18 @@
                 <select class="regular" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
                     <option v-for="( optionVal, optionKey ) in fieldData.options" :value="optionKey" v-html="optionVal"></option>
                 </select>
+                <p class="description" v-html="fieldData.desc"></p>
+            </td>
+        </tr>
+
+        <tr :class="id" v-if="'file' == fieldData.type">
+            <th scope="row">
+                <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label}}</label>
+            </th>
+            <td>
+                <input type="text" class="regular-text wpsa-url" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
+                <input type="button" class="button wpsa-browse" value="Choose File" v-on:click.prevent="$emit( 'openMedia', { sectionId: sectionId, name: fieldData.name }, $event )">
+                <p class="description" v-html="fieldData.desc"></p>
             </td>
         </tr>
 
@@ -79,23 +91,11 @@
                                 </button>
                             </span>
                         </label>
-
-                        <!-- <div class="dokan-settings-radio-image not-active">
-                            <img :src="image">
-
-                            <span class="current-option-indicator"><span class="dashicons dashicons-yes"></span>Active</span>
-
-                            <span class="active-option">
-                                <button class="button button-primary button-hero" type="button" :data-template="name" :data-input="sectionId + '_' + fieldData.name">
-                                    Select
-                                </button>
-                            </span>
-                        </div> -->
                     </template>
                 </div>
             </td>
         </tr>
-    </tbody>
+    </div>
 </template>
 
 <script>
