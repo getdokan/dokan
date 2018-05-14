@@ -228,7 +228,7 @@
                                             'exclude'          => '',
                                             'selected'         => $selected_cat,
                                             'echo'             => 0,
-                                            'walker'           => new DokanTaxonomyWalker()
+                                            'walker'           => new DokanTaxonomyWalker( '' )
                                         ) ) );
 
                                         echo str_replace( '<select', '<select data-placeholder="'.__( 'Select product category', 'dokan-lite' ).'" multiple="multiple" ', $drop_down_category );
@@ -255,7 +255,7 @@
                                         'exclude'          => '',
                                         'selected'         => $selected_tag,
                                         'echo'             => 0,
-                                        'walker'           => new DokanTaxonomyWalker()
+                                        'walker'           => new DokanTaxonomyWalker( '' )
                                     ) );
 
                                     echo str_replace( '<select', '<select data-placeholder="'.__( 'Select product tags', 'dokan-lite' ).'" multiple="multiple" ', $drop_down_tags );
