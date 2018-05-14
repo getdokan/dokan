@@ -1094,6 +1094,17 @@ let Loading = dokan_get_lib('Loading');
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["a"] = ({
     name: 'Fields',
@@ -3040,35 +3051,72 @@ var render = function() {
           _c("td", [
             _c(
               "div",
-              { staticClass: "dokan-settings-radio-image-container" },
+              { staticClass: "radio-image-container" },
               [
                 _vm._l(_vm.fieldData.options, function(image, name) {
                   return [
-                    _c("div", { staticClass: "dokan-settings-radio-image" }, [
-                      _c("img", { attrs: { src: image } }),
-                      _vm._v(" "),
-                      _vm._m(0, true),
-                      _vm._v(" "),
-                      _c("span", { staticClass: "active-option" }, [
-                        _c(
-                          "button",
-                          {
-                            staticClass: "button button-primary button-hero",
-                            attrs: {
-                              type: "button",
-                              "data-template": name,
-                              "data-input":
-                                _vm.sectionId + "_" + _vm.fieldData.name
+                    _c(
+                      "label",
+                      {
+                        staticClass: "radio-image",
+                        class: {
+                          active: _vm.fieldValue[_vm.fieldData.name] === name,
+                          "not-active":
+                            _vm.fieldValue[_vm.fieldData.name] !== name
+                        }
+                      },
+                      [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.fieldValue[_vm.fieldData.name],
+                              expression: "fieldValue[fieldData.name]"
                             }
-                          },
-                          [
-                            _vm._v(
-                              "\n                                Select\n                            "
+                          ],
+                          staticClass: "radio",
+                          attrs: { type: "radio", name: _vm.fieldData.name },
+                          domProps: {
+                            value: name,
+                            checked: _vm._q(
+                              _vm.fieldValue[_vm.fieldData.name],
+                              name
                             )
-                          ]
-                        )
-                      ])
-                    ])
+                          },
+                          on: {
+                            change: function($event) {
+                              _vm.$set(_vm.fieldValue, _vm.fieldData.name, name)
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _vm._m(0, true),
+                        _vm._v(" "),
+                        _c("img", { attrs: { src: image } }),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "active-option" }, [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "button button-primary button-hero",
+                              attrs: { type: "button" },
+                              on: {
+                                click: function($event) {
+                                  $event.preventDefault()
+                                  _vm.fieldValue[_vm.fieldData.name] = name
+                                }
+                              }
+                            },
+                            [
+                              _vm._v(
+                                "\n                                Select\n                            "
+                              )
+                            ]
+                          )
+                        ])
+                      ]
+                    )
                   ]
                 })
               ],
@@ -3086,7 +3134,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("span", { staticClass: "current-option-indicator" }, [
       _c("span", { staticClass: "dashicons dashicons-yes" }),
-      _vm._v("Active")
+      _vm._v(" Active")
     ])
   }
 ]

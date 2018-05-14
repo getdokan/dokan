@@ -67,9 +67,20 @@
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label}}</label>
             </th>
             <td>
-                <div class="dokan-settings-radio-image-container">
+                <div class="radio-image-container">
                     <template v-for="( image, name ) in fieldData.options">
-                        <div class="dokan-settings-radio-image">
+                        <label class="radio-image" :class="{ 'active' : fieldValue[fieldData.name] === name, 'not-active' : fieldValue[fieldData.name] !== name }">
+                            <input type="radio" class="radio" :name="fieldData.name" v-model="fieldValue[fieldData.name]" :value="name">
+                            <span class="current-option-indicator"><span class="dashicons dashicons-yes"></span> Active</span>
+                            <img :src="image">
+                            <span class="active-option">
+                                <button class="button button-primary button-hero" type="button" @click.prevent="fieldValue[fieldData.name] = name">
+                                    Select
+                                </button>
+                            </span>
+                        </label>
+
+                        <!-- <div class="dokan-settings-radio-image not-active">
                             <img :src="image">
 
                             <span class="current-option-indicator"><span class="dashicons dashicons-yes"></span>Active</span>
@@ -79,7 +90,7 @@
                                     Select
                                 </button>
                             </span>
-                        </div>
+                        </div> -->
                     </template>
                 </div>
             </td>
