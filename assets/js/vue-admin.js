@@ -942,7 +942,18 @@ let Loading = dokan_get_lib('Loading');
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
+let Loading = dokan_get_lib('Loading');
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -950,20 +961,23 @@ let Loading = dokan_get_lib('Loading');
     name: 'Settings',
 
     components: {
-        Fields: __WEBPACK_IMPORTED_MODULE_0_admin_components_Fields_vue__["a" /* default */]
+        Fields: __WEBPACK_IMPORTED_MODULE_0_admin_components_Fields_vue__["a" /* default */],
+        Loading
     },
 
     data() {
         return {
+            isSaved: false,
+            showLoading: false,
+            isUpdated: false,
             isLoaded: false,
+            message: '',
             currentTab: null,
             settingSections: [],
             settingFields: {},
             settingValues: {}
         };
     },
-
-    computed: {},
 
     methods: {
         changeTab(section) {
@@ -986,34 +1000,78 @@ let Loading = dokan_get_lib('Loading');
                 nonce: dokan.nonce
             };
 
-            $.post(dokan.ajaxurl, data, function (resp) {
+            self.showLoading = true;
+
+            jQuery.post(dokan.ajaxurl, data, function (resp) {
                 if (resp.success) {
-                    self.settingValues = resp.data;
+
+                    Object.keys(self.settingFields).forEach(function (section, index) {
+                        Object.keys(self.settingFields[section]).forEach(function (field, i) {
+
+                            if (!self.settingValues[section]) {
+                                self.settingValues[section] = {};
+                            }
+
+                            if (typeof resp.data[section][field] === 'undefined') {
+                                if (typeof self.settingFields[section][field].default === 'undefined') {
+                                    self.settingValues[section][field] = '';
+                                } else {
+                                    self.settingValues[section][field] = self.settingFields[section][field].default;
+                                }
+                            } else {
+                                self.settingValues[section][field] = resp.data[section][field];
+                            }
+                        });
+                    });
+
+                    self.settingValues = jQuery.extend({}, self.settingValues);
+
+                    self.showLoading = false;
                     self.isLoaded = true;
                 }
             });
         },
 
         showMedia(data, $event) {
-            // var $elm = $($event.target);
-            console.log(data);
             var self = this;
-            // Create the media frame.
+
             var file_frame = wp.media.frames.file_frame = wp.media({
-                title: 'Chose your file',
+                title: this.__('Chose your file', 'dokan-lite'),
                 button: {
-                    text: 'Select'
+                    text: this.__('Select', 'dokan-lite')
                 },
                 multiple: false
             });
 
             file_frame.on('select', function () {
                 var attachment = file_frame.state().get('selection').first().toJSON();
-                self.$set(self.settingValues[data.sectionId], data.name, attachment.url);
+                self.settingValues[data.sectionId][data.name] = attachment.url;
             });
 
-            // Finally, open the modal
             file_frame.open();
+        },
+
+        saveSettings(fieldData, section) {
+            var self = this,
+                data = {
+                action: 'dokan_save_settings',
+                nonce: dokan.nonce,
+                settingsData: fieldData,
+                section: section
+            };
+            self.showLoading = true;
+            jQuery.post(dokan.ajaxurl, data, function (resp) {
+                if (resp.success) {
+                    self.isSaved = true;
+                    self.isUpdated = true;
+                    self.message = resp.data;
+                } else {
+                    self.isSaved = true;
+                    self.isUpdated = false;
+                    self.message = resp.data;
+                }
+                self.showLoading = false;
+            });
         }
     },
 
@@ -1035,6 +1093,7 @@ let Loading = dokan_get_lib('Loading');
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_ColorPicker_vue__ = __webpack_require__(111);
 //
 //
 //
@@ -1135,15 +1194,37 @@ let Loading = dokan_get_lib('Loading');
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
 
 /* harmony default export */ __webpack_exports__["a"] = ({
     name: 'Fields',
 
-    props: ['id', 'fieldData', 'sectionId', 'fieldValue'],
-
-    data() {
-        return {};
+    components: {
+        colorPicker: __WEBPACK_IMPORTED_MODULE_0_admin_components_ColorPicker_vue__["a" /* default */]
     },
+
+    props: ['id', 'fieldData', 'sectionId', 'fieldValue'],
 
     methods: {
         containCommonFields(type) {
@@ -2636,10 +2717,6 @@ if (false) {(function () {
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_a96ce32e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Fields_vue__ = __webpack_require__(65);
 var disposed = false
-function injectStyle (ssrContext) {
-  if (disposed) return
-  __webpack_require__(64)
-}
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -2649,7 +2726,7 @@ var normalizeComponent = __webpack_require__(0)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
-var __vue_styles__ = injectStyle
+var __vue_styles__ = null
 /* scopeId */
 var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
@@ -2684,12 +2761,7 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 64 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
+/* 64 */,
 /* 65 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -3137,6 +3209,62 @@ var render = function() {
         ])
       : _vm._e(),
     _vm._v(" "),
+    "color" == _vm.fieldData.type
+      ? _c("tr", { class: _vm.id }, [
+          _c("th", { attrs: { scope: "row" } }, [
+            _c(
+              "label",
+              {
+                attrs: { for: _vm.sectionId + "[" + _vm.fieldData.name + "]" }
+              },
+              [_vm._v(_vm._s(_vm.fieldData.label))]
+            )
+          ]),
+          _vm._v(" "),
+          _c(
+            "td",
+            [
+              _c("color-picker", {
+                model: {
+                  value: _vm.fieldValue[_vm.fieldData.name],
+                  callback: function($$v) {
+                    _vm.$set(_vm.fieldValue, _vm.fieldData.name, $$v)
+                  },
+                  expression: "fieldValue[fieldData.name]"
+                }
+              }),
+              _vm._v(" "),
+              _c("p", {
+                staticClass: "description",
+                domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+              })
+            ],
+            1
+          )
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    "html" == _vm.fieldData.type
+      ? _c("tr", { class: _vm.id }, [
+          _c("th", { attrs: { scope: "row" } }, [
+            _c(
+              "label",
+              {
+                attrs: { for: _vm.sectionId + "[" + _vm.fieldData.name + "]" }
+              },
+              [_vm._v(_vm._s(_vm.fieldData.label))]
+            )
+          ]),
+          _vm._v(" "),
+          _c("td", [
+            _c("p", {
+              staticClass: "description",
+              domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+            })
+          ])
+        ])
+      : _vm._e(),
+    _vm._v(" "),
     "radio_image" == _vm.fieldData.type
       ? _c("tr", { class: _vm.id }, [
           _c("th", { attrs: { scope: "row" } }, [
@@ -3192,7 +3320,16 @@ var render = function() {
                           }
                         }),
                         _vm._v(" "),
-                        _vm._m(0, true),
+                        _c(
+                          "span",
+                          { staticClass: "current-option-indicator" },
+                          [
+                            _c("span", {
+                              staticClass: "dashicons dashicons-yes"
+                            }),
+                            _vm._v(" " + _vm._s(_vm.__("Active", "dokan-lite")))
+                          ]
+                        ),
                         _vm._v(" "),
                         _c("img", { attrs: { src: image } }),
                         _vm._v(" "),
@@ -3211,7 +3348,9 @@ var render = function() {
                             },
                             [
                               _vm._v(
-                                "\n                                Select\n                            "
+                                "\n                                " +
+                                  _vm._s(_vm.__("Select", "dokan-lite")) +
+                                  "\n                            "
                               )
                             ]
                           )
@@ -3228,17 +3367,7 @@ var render = function() {
       : _vm._e()
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("span", { staticClass: "current-option-indicator" }, [
-      _c("span", { staticClass: "dashicons dashicons-yes" }),
-      _vm._v(" Active")
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
@@ -3258,54 +3387,84 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm.isLoaded
-    ? _c("div", { staticClass: "dokan-settings" }, [
-        _c("h2", { staticStyle: { "margin-bottom": "15px" } }, [
-          _vm._v("Settings")
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "dokan-settings-wrap" }, [
-          _c(
-            "h2",
-            { staticClass: "nav-tab-wrapper" },
-            [
-              _vm._l(_vm.settingSections, function(section) {
-                return [
-                  _c(
-                    "a",
-                    {
-                      staticClass: "nav-tab",
-                      class: {
-                        "nav-tab-active": _vm.currentTab === section.id
-                      },
-                      attrs: { href: "#", id: "dokan_general-tab" },
-                      on: {
-                        click: function($event) {
-                          $event.preventDefault()
-                          _vm.changeTab(section)
-                        }
-                      }
-                    },
-                    [
-                      _c("span", {
-                        staticClass: "dashicons",
-                        class: section.icon
-                      }),
-                      _vm._v(" " + _vm._s(section.title))
-                    ]
-                  )
+  return _c("div", { staticClass: "dokan-settings" }, [
+    _c("h2", { staticStyle: { "margin-bottom": "15px" } }, [
+      _vm._v(_vm._s(_vm.__("Settings", "dokan-lite")))
+    ]),
+    _vm._v(" "),
+    _vm.isSaved
+      ? _c(
+          "div",
+          {
+            staticClass: "settings-error notice is-dismissible",
+            class: { updated: _vm.isUpdated, error: !_vm.isUpdated },
+            attrs: { id: "setting-message_updated" }
+          },
+          [
+            _c("p", [
+              _c("strong", { domProps: { innerHTML: _vm._s(_vm.message) } })
+            ]),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "notice-dismiss",
+                attrs: { type: "button" },
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    _vm.isSaved = false
+                  }
+                }
+              },
+              [
+                _c("span", { staticClass: "screen-reader-text" }, [
+                  _vm._v(_vm._s(_vm.__("Dismiss this notice.", "dokan-lite")))
+                ])
+              ]
+            )
+          ]
+        )
+      : _vm._e(),
+    _vm._v(" "),
+    _c("div", { staticClass: "dokan-settings-wrap" }, [
+      _c(
+        "h2",
+        { staticClass: "nav-tab-wrapper" },
+        [
+          _vm._l(_vm.settingSections, function(section) {
+            return [
+              _c(
+                "a",
+                {
+                  staticClass: "nav-tab",
+                  class: { "nav-tab-active": _vm.currentTab === section.id },
+                  attrs: { href: "#", id: "dokan_general-tab" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      _vm.changeTab(section)
+                    }
+                  }
+                },
+                [
+                  _c("span", { staticClass: "dashicons", class: section.icon }),
+                  _vm._v(" " + _vm._s(section.title))
                 ]
-              })
-            ],
-            2
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "metabox-holder" },
-            [
-              _vm._l(_vm.settingFields, function(fields, index) {
-                return [
+              )
+            ]
+          })
+        ],
+        2
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "metabox-holder" },
+        [
+          _vm._l(_vm.settingFields, function(fields, index) {
+            return _vm.isLoaded
+              ? [
                   _c(
                     "div",
                     {
@@ -3359,38 +3518,44 @@ var render = function() {
                             )
                           ]),
                           _vm._v(" "),
-                          _vm._m(0, true)
+                          _c("p", { staticClass: "submit" }, [
+                            _c("input", {
+                              staticClass: "button button-primary",
+                              attrs: {
+                                type: "submit",
+                                name: "submit",
+                                id: "submit",
+                                value: "Save Changes"
+                              },
+                              on: {
+                                click: function($event) {
+                                  $event.preventDefault()
+                                  _vm.saveSettings(
+                                    _vm.settingValues[index],
+                                    index
+                                  )
+                                }
+                              }
+                            })
+                          ])
                         ]
                       )
                     ]
                   )
                 ]
-              })
-            ],
-            2
-          )
-        ])
-      ])
-    : _vm._e()
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("p", { staticClass: "submit" }, [
-      _c("input", {
-        staticClass: "button button-primary",
-        attrs: {
-          type: "submit",
-          name: "submit",
-          id: "submit",
-          value: "Save Changes"
-        }
-      })
+              : _vm._e()
+          })
+        ],
+        2
+      ),
+      _vm._v(" "),
+      _vm.showLoading
+        ? _c("div", { staticClass: "loading" }, [_c("loading")], 1)
+        : _vm._e()
     ])
-  }
-]
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
@@ -3445,6 +3610,328 @@ function menuFix(slug) {
 }
 
 exports.default = menuFix;
+
+/***/ }),
+/* 68 */,
+/* 69 */,
+/* 70 */,
+/* 71 */,
+/* 72 */,
+/* 73 */,
+/* 74 */,
+/* 75 */,
+/* 76 */,
+/* 77 */,
+/* 78 */,
+/* 79 */,
+/* 80 */,
+/* 81 */,
+/* 82 */,
+/* 83 */,
+/* 84 */,
+/* 85 */,
+/* 86 */,
+/* 87 */,
+/* 88 */,
+/* 89 */,
+/* 90 */,
+/* 91 */,
+/* 92 */,
+/* 93 */,
+/* 94 */,
+/* 95 */,
+/* 96 */,
+/* 97 */,
+/* 98 */,
+/* 99 */,
+/* 100 */,
+/* 101 */,
+/* 102 */,
+/* 103 */,
+/* 104 */,
+/* 105 */,
+/* 106 */,
+/* 107 */,
+/* 108 */,
+/* 109 */,
+/* 110 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_color_src_components_Sketch_vue__ = __webpack_require__(125);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+    components: {
+        Sketch: __WEBPACK_IMPORTED_MODULE_0_vue_color_src_components_Sketch_vue__["a" /* default */]
+    },
+
+    props: {
+        value: {
+            type: String,
+            required: true,
+            default: ''
+        },
+
+        format: {
+            type: String,
+            required: false,
+            default: 'hex',
+            validator(type) {
+                return ['hsl', 'hex', 'rgba', 'hsv'].indexOf(type) !== -1;
+            }
+        },
+
+        presetColors: {
+            type: Array,
+            required: false,
+            default() {
+                return ['#000', '#fff', '#d33', '#d93', '#ee2', '#81d742', '#1e73be', '#8224e3'];
+            }
+        },
+
+        disableAlpha: {
+            type: Boolean,
+            required: false,
+            default: true
+        },
+
+        disableFields: {
+            type: Boolean,
+            required: false,
+            default: true
+        }
+    },
+
+    data() {
+        return {
+            showColorPicker: false
+        };
+    },
+
+    methods: {
+        updateColor(colors) {
+            let color = '';
+
+            if (colors[this.format]) {
+                color = colors[this.format];
+            }
+
+            this.$emit('input', color);
+        },
+
+        toggleColorPicker() {
+            this.showColorPicker = !this.showColorPicker;
+        },
+
+        setHexColor(color) {
+            this.updateColor({
+                hex: color
+            });
+        }
+    }
+});
+
+/***/ }),
+/* 111 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ColorPicker_vue__ = __webpack_require__(110);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_01dc0d51_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ColorPicker_vue__ = __webpack_require__(115);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(116)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-01dc0d51"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ColorPicker_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_01dc0d51_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ColorPicker_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src/admin/components/ColorPicker.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-01dc0d51", Component.options)
+  } else {
+    hotAPI.reload("data-v-01dc0d51", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
+
+
+/***/ }),
+/* 112 */,
+/* 113 */,
+/* 114 */,
+/* 115 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "color-picker-container" },
+    [
+      _c(
+        "button",
+        {
+          staticClass: "button color-picker-button",
+          style: { backgroundColor: _vm.value },
+          attrs: { type: "button" },
+          on: { click: _vm.toggleColorPicker }
+        },
+        [_c("span", [_vm._v(_vm._s(_vm.__("Select Color", "dokan-lite")))])]
+      ),
+      _vm._v(" "),
+      _vm.showColorPicker && _vm.format === "hex"
+        ? _c("input", {
+            staticClass: "hex-input",
+            attrs: { type: "text" },
+            domProps: { value: _vm.value },
+            on: {
+              input: function($event) {
+                _vm.setHexColor($event.target.value)
+              }
+            }
+          })
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.showColorPicker
+        ? _c("div", { staticClass: "button-group" }, [
+            _c(
+              "button",
+              {
+                staticClass: "button button-small",
+                attrs: { type: "button" },
+                on: {
+                  click: function($event) {
+                    _vm.updateColor({})
+                  }
+                }
+              },
+              [_vm._v(_vm._s(_vm.__("Clear", "dokan-lite")))]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "button button-small",
+                attrs: { type: "button" },
+                on: { click: _vm.toggleColorPicker }
+              },
+              [_vm._v(_vm._s(_vm.__("Close", "dokan-lite")))]
+            )
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.showColorPicker
+        ? _c("sketch", {
+            attrs: {
+              value: _vm.value,
+              "preset-colors": _vm.presetColors,
+              "disable-alpha": _vm.disableAlpha,
+              "disable-fields": _vm.disableFields
+            },
+            on: { input: _vm.updateColor }
+          })
+        : _vm._e()
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-01dc0d51", esExports)
+  }
+}
+
+/***/ }),
+/* 116 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 ],[41]);

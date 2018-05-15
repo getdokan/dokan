@@ -559,7 +559,7 @@ var Dokan_API = function () {
         key: 'ajax',
         value: function ajax(path, method, headers, data) {
 
-            return $.ajax({
+            return jQuery.ajax({
                 url: this.endpoint() + path,
                 beforeSend: function beforeSend(xhr) {
                     xhr.setRequestHeader('X-WP-Nonce', window.dokan.rest.nonce);

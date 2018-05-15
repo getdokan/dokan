@@ -55,6 +55,7 @@ class Dokan_Assets {
 
             // Load common styles and scripts
             wp_enqueue_style( 'dokan-admin-css' );
+            wp_enqueue_script( 'underscore' );
             wp_enqueue_script( 'dokan-tooltip' );
             wp_enqueue_script( 'dokan-admin' );
 

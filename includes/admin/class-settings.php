@@ -10,27 +10,14 @@
 class Dokan_Settings {
 
     /**
-     * Holds settings API
-     *
-     * @var array
-     */
-    private $settings_api;
-
-    /**
      * Load autometically when class initiate
      *
      * @since 1.0.0
      */
     public function __construct() {
-        if ( ! class_exists( 'Dokan_Settings_API' ) ) {
-            require_once DOKAN_LIB_DIR . '/class.dokan-settings-api.php';
-        }
-
-        $this->settings_api = new Dokan_Settings_API();
-
-        add_action( 'admin_init', array( $this, 'admin_init' ), 99 );
         add_filter( 'dokan_admin_localize_script', array( $this, 'settings_localize_data' ), 10 );
         add_action( 'wp_ajax_dokan_get_setting_values', array( $this, 'get_settings_value' ), 10 );
+        add_action( 'wp_ajax_dokan_save_settings', array( $this, 'save_settings_value' ), 10 );
     }
 
     /**
@@ -59,30 +46,81 @@ class Dokan_Settings {
     }
 
     /**
-     * Get settings API
+     * Save settings value
      *
-     * @since 3.0.0
+     * @since 2.8.2
      *
      * @return void
      */
-    public function get_settings_api() {
-        return $this->settings_api;
+    public function save_settings_value() {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( __( 'You have no permission to get settings value', 'dokan-lite' ) );
+        }
+
+        if ( ! wp_verify_nonce( $_POST['nonce'], 'dokan_admin' ) ) {
+            wp_send_json_error( __( 'Invalid nonce', 'dokan-lite' ) );
+        }
+
+        $option_key = $_POST['section'];
+
+        if ( empty( $option_key ) ) {
+            wp_send_json_error( __( 'Setting not saved properly', 'dokan-lite' ) );
+        }
+
+        $option_values = $this->sanitize_options( $_POST['settingsData'] );
+
+        update_option( $option_key, $option_values );
+        wp_send_json_success( __( 'Setting Saved', 'dokan-lite' ) );
     }
 
     /**
-     * Initialize Settings tab and sections content
+     * Sanitize callback for Settings API
      *
-     * @since 1.0
-     *
-     * @return void
+     * @return mixed
      */
-    function admin_init() {
-        //set the settings
-        $this->get_settings_api()->set_sections( $this->get_settings_sections() );
-        $this->get_settings_api()->set_fields( $this->get_settings_fields() );
+    function sanitize_options( $options ) {
+        if ( !$options ) {
+            return $options;
+        }
 
-        //initialize settings
-        $this->get_settings_api()->admin_init();
+        foreach( $options as $option_slug => $option_value ) {
+            $sanitize_callback = $this->get_sanitize_callback( $option_slug );
+
+            // If callback is set, call it
+            if ( $sanitize_callback ) {
+                $options[ $option_slug ] = call_user_func( $sanitize_callback, $option_value );
+                continue;
+            }
+        }
+
+        return $options;
+    }
+
+    /**
+     * Get sanitization callback for given option slug
+     *
+     * @param string $slug option slug
+     *
+     * @return mixed string or bool false
+     */
+    function get_sanitize_callback( $slug = '' ) {
+        if ( empty( $slug ) ) {
+            return false;
+        }
+
+        // Iterate over registered fields and see if we can find proper callback
+        foreach( $this->get_settings_fields() as $section => $options ) {
+            foreach ( $options as $option ) {
+                if ( $option['name'] != $slug ) {
+                    continue;
+                }
+
+                // Return the callback name
+                return isset( $option['sanitize_callback'] ) && is_callable( $option['sanitize_callback'] ) ? $option['sanitize_callback'] : false;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -129,6 +167,14 @@ class Dokan_Settings {
      *
      * @return array
      */
+
+    /**
+     * Get setting sections
+     *
+     * @since 1.0.0
+     *
+     * @return array
+     */
     function get_settings_sections() {
         $sections = array(
             array(
@@ -164,7 +210,7 @@ class Dokan_Settings {
     /**
      * Returns all the settings fields
      *
-     * @since 1.0
+     * @since 1.0.0
      *
      * @return array settings fields
      */
@@ -346,3 +392,5 @@ class Dokan_Settings {
         return apply_filters( 'dokan_settings_fields', $settings_fields );
     }
 }
+
+new Dokan_Settings();
