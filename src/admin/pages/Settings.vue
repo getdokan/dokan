@@ -17,7 +17,15 @@
                             <input type="hidden" name="action" value="update">
                             <h2>{{ showSectionTitle( index ) }}</h2>
                             <table class="form-table">
-                                <fields v-for="(field, fieldId) in fields" :section-id="index" :id="fieldId" :field-data="field" :field-value="settingValues[index]"></fields>
+                                <tbody>
+                                    <fields v-for="(field, fieldId) in fields"
+                                        :section-id="index"
+                                        :id="fieldId"
+                                        :field-data="field"
+                                        :field-value="settingValues[index]"
+                                        @openMedia="showMedia"
+                                    ></fields>
+                                </tbody>
                             </table>
                             <p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes"></p>
                         </form>
@@ -82,6 +90,29 @@
                         self.isLoaded = true;
                     }
                 });
+            },
+
+            showMedia( data, $event ) {
+                // var $elm = $($event.target);
+                console.log( data );
+                var self = this;
+                // Create the media frame.
+                var file_frame = wp.media.frames.file_frame = wp.media({
+                    title: 'Chose your file',
+                    button: {
+                        text: 'Select',
+                    },
+                    multiple: false
+                });
+
+                file_frame.on('select', function () {
+                    var attachment = file_frame.state().get('selection').first().toJSON();
+                    self.$set( self.settingValues[data.sectionId], data.name, attachment.url );
+                });
+
+                // Finally, open the modal
+                file_frame.open();
+
             }
         },
 
@@ -171,73 +202,85 @@
             background: #fff;
         }
 
-        .dokan-settings-radio-image {
-            display: block;
-            width: 50%;
-            background: #fff;
-            -webkit-box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 );
-            box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 );
-            margin: 0 0 15px;
-            position: relative;
-            line-height: 0;
-            border: 1px solid #ededed;
-            padding: 4px;
-
-            img {
-                max-width: 100%;
-                z-index: 1;
-            }
-
-            .current-option-indicator {
-                position: absolute;
-                top: 0;
-                right: 0;
-                background-color: #4CAF50;
-                color: #fff;
+        .radio-image-container {
+            .radio-image {
+                display: block;
+                width: 50%;
+                background: #fff;
+                -webkit-box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 );
+                box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 );
+                margin: 0 0 15px;
+                position: relative;
+                line-height: 0;
+                border: 1px solid #ededed;
                 padding: 4px;
-                z-index: 2;
-                line-height: 1.3;
-            }
 
-            .active-option {
-                opacity: 0;
-                position: absolute;
-                top: 0;
-                left: 0;
-                z-index: 3;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(0, 0, 0, 0.45);
-                transition: opacity 0.4s ease;
-
-                button {
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    margin-top: -23px;
-                    margin-left: -58px;
+                img {
+                    max-width: 100%;
+                    z-index: 1;
                 }
-            }
 
-            &:hover {
-                .active-option {
-                    opacity: 1;
-                }
-            }
-
-            &.active {
-                .active-option {
-                    display: none;
-                }
-            }
-
-            &.not-active {
                 .current-option-indicator {
-                    display: none;
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    background-color: #4CAF50;
+                    color: #fff;
+                    padding: 4px;
+                    z-index: 2;
+                    line-height: 1.4;
+                }
+
+                .active-option {
+                    opacity: 0;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    z-index: 3;
+                    width: 100%;
+                    height: 100%;
+                    background-color: rgba(0, 0, 0, 0.45);
+                    transition: opacity 0.4s ease;
+
+                    button {
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        margin-top: -23px;
+                        margin-left: -58px;
+                    }
+                }
+
+                &:hover {
+                    .active-option {
+                        opacity: 1;
+                    }
+                }
+
+                &.active {
+                    .active-option {
+                        display: none;
+                    }
+                }
+
+                &.not-active {
+                    .current-option-indicator {
+                        display: none;
+                    }
                 }
             }
-        }
-
+            label {
+                display:block;
+                margin-bottom:5px;
+            }
+            label > input[type='radio'] {
+                visibility: hidden; /* Makes input not-clickable */
+                position: absolute; /* Remove input from document flow */
+            }
+            label > img {
+                max-width:100%;
+            }
+         }
     }
 
 </style>

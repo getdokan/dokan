@@ -934,6 +934,14 @@ let Loading = dokan_get_lib('Loading');
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -984,6 +992,28 @@ let Loading = dokan_get_lib('Loading');
                     self.isLoaded = true;
                 }
             });
+        },
+
+        showMedia(data, $event) {
+            // var $elm = $($event.target);
+            console.log(data);
+            var self = this;
+            // Create the media frame.
+            var file_frame = wp.media.frames.file_frame = wp.media({
+                title: 'Chose your file',
+                button: {
+                    text: 'Select'
+                },
+                multiple: false
+            });
+
+            file_frame.on('select', function () {
+                var attachment = file_frame.state().get('selection').first().toJSON();
+                self.$set(self.settingValues[data.sectionId], data.name, attachment.url);
+            });
+
+            // Finally, open the modal
+            file_frame.open();
         }
     },
 
@@ -1005,6 +1035,17 @@ let Loading = dokan_get_lib('Loading');
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2657,7 +2698,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("tbody", [
+  return _c("div", [
     _vm.containCommonFields(_vm.fieldData.type)
       ? _c("tr", { class: _vm.id }, [
           _c("th", { attrs: { scope: "row" } }, [
@@ -3020,7 +3061,78 @@ var render = function() {
                   domProps: { value: optionKey, innerHTML: _vm._s(optionVal) }
                 })
               })
+            ),
+            _vm._v(" "),
+            _c("p", {
+              staticClass: "description",
+              domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+            })
+          ])
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    "file" == _vm.fieldData.type
+      ? _c("tr", { class: _vm.id }, [
+          _c("th", { attrs: { scope: "row" } }, [
+            _c(
+              "label",
+              {
+                attrs: { for: _vm.sectionId + "[" + _vm.fieldData.name + "]" }
+              },
+              [_vm._v(_vm._s(_vm.fieldData.label))]
             )
+          ]),
+          _vm._v(" "),
+          _c("td", [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.fieldValue[_vm.fieldData.name],
+                  expression: "fieldValue[fieldData.name]"
+                }
+              ],
+              staticClass: "regular-text wpsa-url",
+              attrs: {
+                type: "text",
+                id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                name: _vm.sectionId + "[" + _vm.fieldData.name + "]"
+              },
+              domProps: { value: _vm.fieldValue[_vm.fieldData.name] },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(
+                    _vm.fieldValue,
+                    _vm.fieldData.name,
+                    $event.target.value
+                  )
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("input", {
+              staticClass: "button wpsa-browse",
+              attrs: { type: "button", value: "Choose File" },
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  _vm.$emit(
+                    "openMedia",
+                    { sectionId: _vm.sectionId, name: _vm.fieldData.name },
+                    $event
+                  )
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("p", {
+              staticClass: "description",
+              domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+            })
           ])
         ])
       : _vm._e(),
@@ -3040,35 +3152,72 @@ var render = function() {
           _c("td", [
             _c(
               "div",
-              { staticClass: "dokan-settings-radio-image-container" },
+              { staticClass: "radio-image-container" },
               [
                 _vm._l(_vm.fieldData.options, function(image, name) {
                   return [
-                    _c("div", { staticClass: "dokan-settings-radio-image" }, [
-                      _c("img", { attrs: { src: image } }),
-                      _vm._v(" "),
-                      _vm._m(0, true),
-                      _vm._v(" "),
-                      _c("span", { staticClass: "active-option" }, [
-                        _c(
-                          "button",
-                          {
-                            staticClass: "button button-primary button-hero",
-                            attrs: {
-                              type: "button",
-                              "data-template": name,
-                              "data-input":
-                                _vm.sectionId + "_" + _vm.fieldData.name
+                    _c(
+                      "label",
+                      {
+                        staticClass: "radio-image",
+                        class: {
+                          active: _vm.fieldValue[_vm.fieldData.name] === name,
+                          "not-active":
+                            _vm.fieldValue[_vm.fieldData.name] !== name
+                        }
+                      },
+                      [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.fieldValue[_vm.fieldData.name],
+                              expression: "fieldValue[fieldData.name]"
                             }
-                          },
-                          [
-                            _vm._v(
-                              "\n                                Select\n                            "
+                          ],
+                          staticClass: "radio",
+                          attrs: { type: "radio", name: _vm.fieldData.name },
+                          domProps: {
+                            value: name,
+                            checked: _vm._q(
+                              _vm.fieldValue[_vm.fieldData.name],
+                              name
                             )
-                          ]
-                        )
-                      ])
-                    ])
+                          },
+                          on: {
+                            change: function($event) {
+                              _vm.$set(_vm.fieldValue, _vm.fieldData.name, name)
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _vm._m(0, true),
+                        _vm._v(" "),
+                        _c("img", { attrs: { src: image } }),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "active-option" }, [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "button button-primary button-hero",
+                              attrs: { type: "button" },
+                              on: {
+                                click: function($event) {
+                                  $event.preventDefault()
+                                  _vm.fieldValue[_vm.fieldData.name] = name
+                                }
+                              }
+                            },
+                            [
+                              _vm._v(
+                                "\n                                Select\n                            "
+                              )
+                            ]
+                          )
+                        ])
+                      ]
+                    )
                   ]
                 })
               ],
@@ -3086,7 +3235,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("span", { staticClass: "current-option-indicator" }, [
       _c("span", { staticClass: "dashicons dashicons-yes" }),
-      _vm._v("Active")
+      _vm._v(" Active")
     ])
   }
 ]
@@ -3193,20 +3342,22 @@ var render = function() {
                             _vm._v(_vm._s(_vm.showSectionTitle(index)))
                           ]),
                           _vm._v(" "),
-                          _c(
-                            "table",
-                            { staticClass: "form-table" },
-                            _vm._l(fields, function(field, fieldId) {
-                              return _c("fields", {
-                                attrs: {
-                                  "section-id": index,
-                                  id: fieldId,
-                                  "field-data": field,
-                                  "field-value": _vm.settingValues[index]
-                                }
+                          _c("table", { staticClass: "form-table" }, [
+                            _c(
+                              "tbody",
+                              _vm._l(fields, function(field, fieldId) {
+                                return _c("fields", {
+                                  attrs: {
+                                    "section-id": index,
+                                    id: fieldId,
+                                    "field-data": field,
+                                    "field-value": _vm.settingValues[index]
+                                  },
+                                  on: { openMedia: _vm.showMedia }
+                                })
                               })
-                            })
-                          ),
+                            )
+                          ]),
                           _vm._v(" "),
                           _vm._m(0, true)
                         ]
