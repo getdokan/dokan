@@ -20,7 +20,7 @@ class DokanTaxonomyWalker extends Walker{
 
     private $post_id = '';
 
-    public function __construct( $post_id )  {
+    public function __construct( $post_id = '' )  {
         // fetch the list of term ids for the given post
         $this->post_id = $post_id;
     }
