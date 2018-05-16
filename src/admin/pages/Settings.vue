@@ -132,7 +132,7 @@
                 var self = this;
 
                 var file_frame = wp.media.frames.file_frame = wp.media({
-                    title: this.__( 'Chose your file', 'dokan-lite' ) ,
+                    title: this.__( 'Choose your file', 'dokan-lite' ),
                     button: {
                         text: this.__( 'Select', 'dokan-lite' ),
                     },
@@ -182,7 +182,7 @@
             this.settingSections = dokan.settings_sections;
             this.settingFields = dokan.settings_fields;
         },
-    }
+    };
 
 </script>
 

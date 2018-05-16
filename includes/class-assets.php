@@ -56,6 +56,7 @@ class Dokan_Assets {
             // Load common styles and scripts
             wp_enqueue_style( 'dokan-admin-css' );
             wp_enqueue_script( 'underscore' );
+            wp_enqueue_media();
             wp_enqueue_script( 'dokan-tooltip' );
             wp_enqueue_script( 'dokan-admin' );
 
@@ -145,7 +146,7 @@ class Dokan_Assets {
     public function get_vue_frontend_routes() {
         $routes = array();
 
-        return apply_filters( 'dokan-admin-routes', $routes );
+        return apply_filters( 'dokan-frontend-routes', $routes );
     }
 
     /**
