@@ -57,6 +57,7 @@
     "style-loader": "^0.20.2",
     "uglifyjs-webpack-plugin": "^1.1.6",
     "url-loader": "^0.5.8",
+    "vue-color": "^2.4.6",
     "vue-loader": "^13.7.0",
     "vue-style-loader": "^3.0.1",
     "vue-template-compiler": "^2.5.13",

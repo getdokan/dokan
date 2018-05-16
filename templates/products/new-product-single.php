@@ -308,7 +308,7 @@ if ( ! $from_shortcode ) {
                                             'exclude'          => '',
                                             'selected'         => $term,
                                             'echo'             => 0,
-                                            'walker'           => new DokanTaxonomyWalker()
+                                            'walker'           => new DokanTaxonomyWalker( $post_id )
                                         ) ) );
 
                                         echo str_replace( '<select', '<select data-placeholder="'.__( 'Select product category', 'dokan-lite' ).'" multiple="multiple" ', $drop_down_category );
@@ -334,7 +334,7 @@ if ( ! $from_shortcode ) {
                                         'exclude'          => '',
                                         'selected'         => $selected,
                                         'echo'             => 0,
-                                        'walker'           => new DokanTaxonomyWalker()
+                                        'walker'           => new DokanTaxonomyWalker( $post_id )
                                     ) );
 
                                     echo str_replace( '<select', '<select data-placeholder="'.__( 'Select product tags', 'dokan-lite' ).'" multiple="multiple" ', $drop_down_tags );

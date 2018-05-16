@@ -1,6 +1,13 @@
 <template>
-    <div class="dokan-settings" v-if="isLoaded">
-        <h2 style="margin-bottom: 15px;">Settings</h2>
+    <div class="dokan-settings">
+        <h2 style="margin-bottom: 15px;">{{ __( 'Settings', 'dokan-lite' ) }}</h2>
+
+        <div id="setting-message_updated" class="settings-error notice is-dismissible" :class="{ 'updated' : isUpdated, 'error' : !isUpdated }" v-if="isSaved">
+            <p><strong v-html="message"></strong></p>
+            <button type="button" class="notice-dismiss" @click.prevent="isSaved = false">
+                <span class="screen-reader-text">{{ __( 'Dismiss this notice.', 'dokan-lite' ) }}</span>
+            </button>
+        </div>
 
         <div class="dokan-settings-wrap">
             <h2 class="nav-tab-wrapper">
@@ -10,7 +17,7 @@
             </h2>
 
             <div class="metabox-holder">
-                <template v-for="(fields, index) in settingFields">
+                <template v-for="(fields, index) in settingFields" v-if="isLoaded">
                     <div :id="index" class="group" v-show="currentTab===index">
                         <form method="post" action="options.php">
                             <input type="hidden" name="option_page" :value="index">
@@ -27,18 +34,22 @@
                                     ></fields>
                                 </tbody>
                             </table>
-                            <p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes"></p>
+                            <p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes" @click.prevent="saveSettings( settingValues[index], index )"></p>
                         </form>
                     </div>
                 </template>
             </div>
 
+            <div class="loading" v-if="showLoading">
+                <loading></loading>
+            </div>
         </div>
     </div>
 
 </template>
 
 <script>
+    let Loading = dokan_get_lib('Loading');
     import Fields from "admin/components/Fields.vue"
 
     export default {
@@ -46,21 +57,22 @@
         name: 'Settings',
 
         components: {
-            Fields
+            Fields,
+            Loading
         },
 
         data () {
             return {
+                isSaved: false,
+                showLoading: false,
+                isUpdated: false,
                 isLoaded: false,
+                message: '',
                 currentTab: null,
                 settingSections: [],
                 settingFields: {},
                 settingValues: {}
             }
-        },
-
-        computed: {
-
         },
 
         methods: {
@@ -84,35 +96,78 @@
                         nonce: dokan.nonce
                     };
 
-                $.post( dokan.ajaxurl, data, function(resp) {
+                self.showLoading = true;
+
+                jQuery.post( dokan.ajaxurl, data, function(resp) {
                     if ( resp.success ) {
-                        self.settingValues = resp.data;
+
+                        Object.keys( self.settingFields ).forEach( function( section, index ) {
+                            Object.keys( self.settingFields[section] ).forEach( function( field, i ) {
+
+                                if (!self.settingValues[section]) {
+                                    self.settingValues[section] = {};
+                                }
+
+                                if ( typeof( resp.data[section][field] ) === 'undefined' ) {
+                                    if ( typeof( self.settingFields[section][field].default ) === 'undefined' ) {
+                                        self.settingValues[section][field] = '';
+                                    } else {
+                                        self.settingValues[section][field] = self.settingFields[section][field].default;
+                                    }
+                                } else {
+                                    self.settingValues[section][field] = resp.data[section][field];
+                                }
+                            });
+                        });
+
+                        self.settingValues = jQuery.extend( {}, self.settingValues );
+
+                        self.showLoading = false;
                         self.isLoaded = true;
                     }
                 });
             },
 
             showMedia( data, $event ) {
-                // var $elm = $($event.target);
-                console.log( data );
                 var self = this;
-                // Create the media frame.
+
                 var file_frame = wp.media.frames.file_frame = wp.media({
-                    title: 'Chose your file',
+                    title: this.__( 'Chose your file', 'dokan-lite' ) ,
                     button: {
-                        text: 'Select',
+                        text: this.__( 'Select', 'dokan-lite' ),
                     },
                     multiple: false
                 });
 
-                file_frame.on('select', function () {
+                file_frame.on( 'select', function () {
                     var attachment = file_frame.state().get('selection').first().toJSON();
-                    self.$set( self.settingValues[data.sectionId], data.name, attachment.url );
+                    self.settingValues[data.sectionId][data.name] = attachment.url;
                 });
 
-                // Finally, open the modal
                 file_frame.open();
+            },
 
+            saveSettings( fieldData, section ) {
+                var self = this,
+                    data = {
+                        action : 'dokan_save_settings',
+                        nonce: dokan.nonce,
+                        settingsData: fieldData,
+                        section: section
+                    };
+                self.showLoading = true;
+                jQuery.post( dokan.ajaxurl, data, function(resp) {
+                    if ( resp.success ) {
+                        self.isSaved = true;
+                        self.isUpdated = true;
+                        self.message = resp.data;
+                    } else {
+                        self.isSaved = true;
+                        self.isUpdated = false;
+                        self.message = resp.data;
+                    }
+                    self.showLoading = false;
+                })
             }
         },
 
@@ -133,8 +188,21 @@
 
 <style lang="less">
     .dokan-settings-wrap {
+        position: relative;
         display: flex;
         border: 1px solid #c8d7e1;
+
+        .loading{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba( 255,255,255, 0.6);
+
+            .dokan-loader {
+                top: 40%;
+                left: 45%;
+            }
+        }
 
         .dashicons {
             padding-top: 2px;

@@ -8,13 +8,6 @@
 class Dokan_Admin {
 
     /**
-     * Hold settings api instance
-     *
-     * @var class instance
-     */
-    private $settings_api;
-
-    /**
      * Constructor for the Dokan_Admin class
      *
      * Sets up all the appropriate hooks and actions
@@ -23,7 +16,6 @@ class Dokan_Admin {
      * @return void
      */
     function __construct() {
-        $this->settings_api = new Dokan_Settings();
 
         add_action( 'admin_init', array($this, 'do_updates' ) );
 
@@ -187,24 +179,6 @@ class Dokan_Admin {
     }
 
     /**
-     * Sepearate settings page script
-     *
-     * Separating because Chart.js conflicting with WP Color Picker
-     *
-     * @return void
-     */
-    public function settings_script() {
-        wp_enqueue_style( 'dokan-admin-css' );
-        wp_enqueue_style( 'jquery-ui' );
-        wp_enqueue_style( 'dokan-chosen-style' );
-
-        wp_enqueue_script( 'dokan-tooltip' );
-        wp_enqueue_script( 'dokan-admin' );
-
-        do_action( 'dokan_enqueue_admin_dashboard_script' );
-    }
-
-    /**
      * Load admin Menu
      *
      * @since 1.0
@@ -242,8 +216,6 @@ class Dokan_Admin {
             $submenu[ $slug ][] = array( __( 'Settings', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/settings' );
         }
 
-        $settings = add_submenu_page( 'dokan', __( 'Settings', 'dokan-lite' ), __( 'Settings', 'dokan-lite' ), $capability, 'dokan-settings', array( $this, 'settings_page' ) );
-
         /**
          * Welcome page
          *
@@ -252,27 +224,6 @@ class Dokan_Admin {
         add_dashboard_page( __( 'Welcome to Dokan', 'dokan-lite' ), __( 'Welcome to Dokan', 'dokan-lite' ), $capability, 'dokan-welcome', array( $this, 'welcome_page' ) );
 
         add_action( $dashboard, array($this, 'dashboard_script' ) );
-        add_action( $settings, array($this, 'settings_script' ) );
-    }
-
-    /**
-     * Render Settings Page
-     *
-     * @since 1.0
-     *
-     * @return void
-     */
-    function settings_page() {
-        echo '<div class="wrap">';
-        echo '<h2 style="margin-bottom: 15px;">' . __( 'Settings', 'dokan-lite' ) . '</h2>';
-        echo '<div class="dokan-settings-wrap">';
-        settings_errors();
-
-        $this->settings_api->get_settings_api()->show_navigation();
-        $this->settings_api->get_settings_api()->show_forms();
-
-        echo '</div>';
-        echo '</div>';
     }
 
     /**
@@ -284,7 +235,6 @@ class Dokan_Admin {
      */
     function dashboard() {
         echo '<div class="wrap"><div id="dokan-vue-admin"></div></div>';
-        // include dirname(__FILE__) . '/views/dashboard.php';
     }
 
     /**
@@ -384,21 +334,21 @@ class Dokan_Admin {
             'id'     => 'dokan-withdraw',
             'parent' => 'dokan',
             'title'  => __( 'Withdraw', 'dokan-lite' ),
-            'href'   => admin_url( 'admin.php?page=dokan-withdraw' )
+            'href'   => admin_url( 'admin.php?page=dokan#/withdraw' )
         ) );
 
         $wp_admin_bar->add_menu( array(
             'id'     => 'dokan-pro-features',
             'parent' => 'dokan',
             'title'  => __( 'PRO Features', 'dokan-lite' ),
-            'href'   => admin_url( 'admin.php?page=dokan-pro-features' )
+            'href'   => admin_url( 'admin.php?page=dokan#/premium' )
         ) );
 
         $wp_admin_bar->add_menu( array(
             'id'     => 'dokan-settings',
             'parent' => 'dokan',
             'title'  => __( 'Settings', 'dokan-lite' ),
-            'href'   => admin_url( 'admin.php?page=dokan-settings' )
+            'href'   => admin_url( 'admin.php?page=dokan#/settings' )
         ) );
 
         /**
