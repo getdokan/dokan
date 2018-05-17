@@ -8,8 +8,6 @@ import API_Helper from '@/utils/Api'
 import ChartJS from 'vue-chartjs'
 import Mixin from './Mixin'
 
-// console.log( __() );
-
 window.__ = function( text, domain ) {
   return __( text, domain );
 }

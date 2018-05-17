@@ -1080,7 +1080,7 @@ let Loading = dokan_get_lib('Loading');
 
         this.currentTab = 'dokan_general';
         if (typeof localStorage != 'undefined') {
-            this.currentTab = localStorage.getItem("activetab");
+            this.currentTab = localStorage.getItem("activetab") ? localStorage.getItem("activetab") : 'dokan_general';
         }
 
         this.settingSections = dokan.settings_sections;

@@ -420,8 +420,6 @@ __webpack_require__(88);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// console.log( __() );
-
 window.__ = function (text, domain) {
     return __(text, domain);
 };
