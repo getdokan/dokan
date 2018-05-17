@@ -258,6 +258,12 @@ class Dokan_Admin_User_Profile {
                         </td>
                     </tr>
                     <tr>
+                        <th><?php esc_html_e( 'Bank IBAN ', 'dokan-lite' ); ?></th>
+                        <td>
+                            <input type="text" disabled class="regular-text" value="<?php echo isset( $store_settings['payment']['bank']['iban'] ) ? esc_attr( $store_settings['payment']['bank']['iban'] ) : ''; ?>">
+                        </td>
+                    </tr>
+                    <tr>
                         <th><?php esc_html_e( 'Bank Swift ', 'dokan-lite' ); ?></th>
                         <td>
                             <input type="text" disabled class="regular-text" value="<?php echo isset( $store_settings['payment']['bank']['swift'] ) ? esc_attr( $store_settings['payment']['bank']['swift'] ) : ''; ?>">
