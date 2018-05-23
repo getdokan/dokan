@@ -145,7 +145,7 @@ export default {
         position: absolute;
         left: 0;
         right: 0;
-        bottom: 0;
+        bottom: -30px;
         z-index: 100;
         padding: 1em 1.5em;
         background: #fcfcfc;
