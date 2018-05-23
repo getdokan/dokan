@@ -2281,12 +2281,10 @@ function dokan_get_category_wise_seller_commission( $product_id, $category_id = 
     }
 
     if ( $terms ) {
-        if ( 1 == count( $terms ) ) {
-            $category_commision = get_woocommerce_term_meta( $term_id, 'per_category_admin_commission', true );
-        }
+        $category_commision = get_woocommerce_term_meta( $term_id, 'per_category_admin_commission', true );
     }
 
-    if ( !empty( $category_commision ) ) {
+    if ( ! empty( $category_commision ) ) {
         return (float) $category_commision;
     }
 
