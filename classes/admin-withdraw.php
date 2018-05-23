@@ -160,7 +160,7 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
 
         $result = $wpdb->get_results(
             "SELECT * FROM {$wpdb->dokan_withdraw}
-            WHERE id in ('$withdraw_ids') and status = 1"
+            WHERE id in ($withdraw_ids) and status = 0"
         );
 
         if ( ! $result ) {
