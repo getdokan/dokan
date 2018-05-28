@@ -478,42 +478,40 @@ if ( ! function_exists( 'dokan_store_category_menu' ) ) :
  * @param  int $seller_id
  * @return void
  */
-function dokan_store_category_menu( $seller_id, $title = '' ) { ?>
-    <aside class="widget dokan-category-menu">
-        <h3 class="widget-title"><?php echo $title; ?></h3>
-        <div id="cat-drop-stack">
-            <?php
-            global $wpdb;
+function dokan_store_category_menu( $seller_id, $title = '' ) {
+    ?>
+    <div id="cat-drop-stack">
+        <?php
+        global $wpdb;
 
-            $categories = get_transient( 'dokan-store-category-'.$seller_id );
+        $categories = get_transient( 'dokan-store-category-'.$seller_id );
 
-            if ( false === $categories ) {
-                $sql = "SELECT t.term_id,t.name, tt.parent FROM $wpdb->terms as t
-                        LEFT JOIN $wpdb->term_taxonomy as tt on t.term_id = tt.term_id
-                        LEFT JOIN $wpdb->term_relationships AS tr on tt.term_taxonomy_id = tr.term_taxonomy_id
-                        LEFT JOIN $wpdb->posts AS p on tr.object_id = p.ID
-                        WHERE tt.taxonomy = 'product_cat'
-                        AND p.post_type = 'product'
-                        AND p.post_status = 'publish'
-                        AND p.post_author = $seller_id GROUP BY t.term_id";
+        if ( false === $categories ) {
+            $sql = "SELECT t.term_id,t.name, tt.parent FROM $wpdb->terms as t
+                    LEFT JOIN $wpdb->term_taxonomy as tt on t.term_id = tt.term_id
+                    LEFT JOIN $wpdb->term_relationships AS tr on tt.term_taxonomy_id = tr.term_taxonomy_id
+                    LEFT JOIN $wpdb->posts AS p on tr.object_id = p.ID
+                    WHERE tt.taxonomy = 'product_cat'
+                    AND p.post_type = 'product'
+                    AND p.post_status = 'publish'
+                    AND p.post_author = $seller_id GROUP BY t.term_id";
 
-                $categories = $wpdb->get_results( $sql );
-                set_transient( 'dokan-store-category-'.$seller_id , $categories );
-            }
+            $categories = $wpdb->get_results( $sql );
+            set_transient( 'dokan-store-category-'.$seller_id , $categories );
+        }
 
-            $args = array(
-                'taxonomy'      => 'product_cat',
-                'selected_cats' => ''
-            );
+        $args = array(
+            'taxonomy'      => 'product_cat',
+            'selected_cats' => ''
+        );
 
-            $walker = new Dokan_Store_Category_Walker( $seller_id );
-            echo "<ul>";
-            echo call_user_func_array( array(&$walker, 'walk'), array($categories, 0, array()) );
-            echo "</ul>";
-            ?>
-        </div>
-    </aside>
-<?php
+        $walker = new Dokan_Store_Category_Walker( $seller_id );
+        echo "<ul>";
+        echo call_user_func_array( array(&$walker, 'walk'), array($categories, 0, array()) );
+        echo "</ul>";
+        ?>
+    </div>
+    <?php
 }
 
 endif;
