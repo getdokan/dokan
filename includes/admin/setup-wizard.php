@@ -511,11 +511,11 @@ class Dokan_Setup_Wizard {
             <div class="wc-setup-next-steps-first">
                 <h2><?php _e( 'Next Steps', 'dokan-lite' ); ?></h2>
                 <ul>
-                    <li class="setup-product"><a class="button button-primary button-large" href="<?php echo esc_url( admin_url( 'admin.php?page=dokan-settings' ) ); ?>"><?php _e( 'Setup your dokan!', 'dokan-lite' ); ?></a></li>
+                    <li class="setup-product"><a class="button button-primary button-large" href="<?php echo esc_url( admin_url( 'admin.php?page=dokan#/settings' ) ); ?>"><?php _e( 'Setup your dokan!', 'dokan-lite' ); ?></a></li>
                 </ul>
             </div>
             <div class="wc-setup-next-steps-last">
-                <h2><a href="<?php echo esc_url( admin_url( 'admin.php?page=dokan-help' ) ); ?>"><?php _e( 'Learn More', 'dokan-lite' ); ?></a></h2>
+                <h2><a href="<?php echo esc_url( admin_url( 'admin.php?page=dokan#/help' ) ); ?>"><?php _e( 'Learn More', 'dokan-lite' ); ?></a></h2>
             </div>
         </div>
         <?php
