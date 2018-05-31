@@ -20,7 +20,6 @@ class Dokan_Setup_Wizard {
      */
     public function __construct() {
         if ( current_user_can( 'manage_options' ) ) {
-            add_action( 'admin_menu', array( $this, 'admin_menus' ) );
             add_action( 'admin_init', array( $this, 'setup_wizard' ), 99 );
         }
     }
@@ -57,13 +56,6 @@ class Dokan_Setup_Wizard {
 
         wp_register_script( 'wc-setup', WC()->plugin_url() . '/assets/js/admin/wc-setup.min.js', array( 'jquery', 'wc-enhanced-select', 'jquery-blockui' ), WC_VERSION );
         wp_localize_script( 'wc-setup', 'wc_setup_params', array() );
-    }
-
-    /**
-     * Add admin menus/screens.
-     */
-    public function admin_menus() {
-        add_dashboard_page( '', '', 'manage_options', 'dokan-setup', '' );
     }
 
     /**
