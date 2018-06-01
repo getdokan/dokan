@@ -441,7 +441,7 @@ if ( ! $from_shortcode ) {
                                     <?php dokan_post_input_box( $post_id, '_sku' ); ?>
                                 </div>
 
-                                <div class="content-half-part hide_if_variation">
+                                <div class="content-half-part hide_if_variable">
                                     <label for="_stock_status" class="form-label"><?php _e( 'Stock Status', 'dokan-lite' ); ?></label>
 
                                     <?php dokan_post_input_box( $post_id, '_stock_status', array( 'options' => array(
