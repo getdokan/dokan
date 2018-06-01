@@ -371,8 +371,8 @@ class Dokan_Setup_Wizard {
 
         $options = get_option( 'dokan_selling', array() );
         $options['new_seller_enable_selling'] = isset( $_POST['new_seller_enable_selling'] ) ? 'on' : 'off';
-        $options['commission_type']           =  $_POST['commission_type'];
-        $options['admin_percentage']          = intval( $_POST['admin_percentage'] );
+        $options['commission_type']           = $_POST['commission_type'];
+        $options['admin_percentage']          = is_int( $_POST['admin_percentage'] ) ? intval( $_POST['admin_percentage'] ) : floatval( $_POST['admin_percentage'] );
         $options['order_status_change']       = isset( $_POST['order_status_change'] ) ? 'on' : 'off';
 
         update_option( 'dokan_selling', $options );
