@@ -619,7 +619,7 @@ if ( ! $from_shortcode ) {
                         </div><!-- .dokan-other-options -->
 
                         <?php if ( $post_id ): ?>
-                            <?php do_action( 'dokan_product_edit_after_options' ); ?>
+                            <?php do_action( 'dokan_product_edit_after_options', $post_id ); ?>
                         <?php endif; ?>
 
                         <?php wp_nonce_field( 'dokan_edit_product', 'dokan_edit_product_nonce' ); ?>
