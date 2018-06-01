@@ -20,6 +20,16 @@
             </td>
         </tr>
 
+        <tr :class="id" v-if="'textarea' == fieldData.type">
+            <th scope="row">
+                <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
+            </th>
+            <td>
+                <input type="textarea" :rows="fieldData.rows" :cols="fieldData.cols" class="regular-text" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
+                <p class="description" v-html="fieldData.desc"></p>
+            </td>
+        </tr>
+
         <tr :class="id" v-if="'checkbox' == fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
