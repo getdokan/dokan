@@ -20,7 +20,6 @@ class Dokan_Setup_Wizard {
      */
     public function __construct() {
         if ( current_user_can( 'manage_options' ) ) {
-            add_action( 'admin_menu', array( $this, 'admin_menus' ) );
             add_action( 'admin_init', array( $this, 'setup_wizard' ), 99 );
         }
     }
@@ -57,13 +56,6 @@ class Dokan_Setup_Wizard {
 
         wp_register_script( 'wc-setup', WC()->plugin_url() . '/assets/js/admin/wc-setup.min.js', array( 'jquery', 'wc-enhanced-select', 'jquery-blockui' ), WC_VERSION );
         wp_localize_script( 'wc-setup', 'wc_setup_params', array() );
-    }
-
-    /**
-     * Add admin menus/screens.
-     */
-    public function admin_menus() {
-        add_dashboard_page( '', '', 'manage_options', 'dokan-setup', '' );
     }
 
     /**
@@ -379,8 +371,8 @@ class Dokan_Setup_Wizard {
 
         $options = get_option( 'dokan_selling', array() );
         $options['new_seller_enable_selling'] = isset( $_POST['new_seller_enable_selling'] ) ? 'on' : 'off';
-        $options['commission_type']           =  $_POST['commission_type'];
-        $options['admin_percentage']          = intval( $_POST['admin_percentage'] );
+        $options['commission_type']           = $_POST['commission_type'];
+        $options['admin_percentage']          = is_int( $_POST['admin_percentage'] ) ? intval( $_POST['admin_percentage'] ) : floatval( $_POST['admin_percentage'] );
         $options['order_status_change']       = isset( $_POST['order_status_change'] ) ? 'on' : 'off';
 
         update_option( 'dokan_selling', $options );
@@ -511,11 +503,11 @@ class Dokan_Setup_Wizard {
             <div class="wc-setup-next-steps-first">
                 <h2><?php _e( 'Next Steps', 'dokan-lite' ); ?></h2>
                 <ul>
-                    <li class="setup-product"><a class="button button-primary button-large" href="<?php echo esc_url( admin_url( 'admin.php?page=dokan-settings' ) ); ?>"><?php _e( 'Setup your dokan!', 'dokan-lite' ); ?></a></li>
+                    <li class="setup-product"><a class="button button-primary button-large" href="<?php echo esc_url( admin_url( 'admin.php?page=dokan#/settings' ) ); ?>"><?php _e( 'Setup your dokan!', 'dokan-lite' ); ?></a></li>
                 </ul>
             </div>
             <div class="wc-setup-next-steps-last">
-                <h2><a href="<?php echo esc_url( admin_url( 'admin.php?page=dokan-help' ) ); ?>"><?php _e( 'Learn More', 'dokan-lite' ); ?></a></h2>
+                <h2><a href="<?php echo esc_url( admin_url( 'admin.php?page=dokan#/help' ) ); ?>"><?php _e( 'Learn More', 'dokan-lite' ); ?></a></h2>
             </div>
         </div>
         <?php

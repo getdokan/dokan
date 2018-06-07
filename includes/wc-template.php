@@ -212,4 +212,23 @@ function dokan_save_quick_edit_vendor_data ( $product ){
 
 add_action( 'woocommerce_product_quick_edit_save', 'dokan_save_quick_edit_vendor_data', 10, 1 );
 
+/**
+ * Add go to vendor dashboard button to my account page
+ *
+ * @since 2.8.2
+ *
+ * @return string
+ */
+function dokan_set_go_to_vendor_dashboard_btn() {
 
+    if ( ! dokan_is_user_seller( get_current_user_id() ) ) {
+        return;
+    }
+
+    printf( '<p><a href="%s" class="dokan-btn dokan-btn-theme vendor-dashboard" >%s</a></p>',
+        dokan_get_navigation_url(),
+        apply_filters( 'dokan_set_go_to_vendor_dashboard_btn_text', __( 'Go to Vendor Dashboard', 'dokan-lite' ) )
+    );
+}
+
+add_action( 'woocommerce_account_dashboard', 'dokan_set_go_to_vendor_dashboard_btn' );

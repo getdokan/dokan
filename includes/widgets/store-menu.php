@@ -32,8 +32,14 @@ class Dokan_Store_Category_Menu extends WP_Widget {
 
         extract( $args, EXTR_SKIP );
 
+        echo $before_widget;
+
         $title      = apply_filters( 'widget_title', $instance['title'] );
         $seller_id  = (int) get_query_var( 'author' );
+
+        if ( ! empty( $title ) ) {
+            echo $args['before_title'] . $title . $args['after_title'];
+        }
 
         dokan_store_category_menu( $seller_id, $title );
 
@@ -76,6 +82,8 @@ class Dokan_Store_Category_Menu extends WP_Widget {
         </script>
 
         <?php
+
+        echo $after_widget;
     }
 
     /**

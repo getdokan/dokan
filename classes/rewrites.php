@@ -166,7 +166,7 @@ class Dokan_Rewrites {
             $store_user = get_user_by( 'slug', $store_name );
 
             // Bell out for Vendor Stuff extensions
-            if ( user_can( $store_user->ID, 'vendor_staff' ) ) {
+            if ( ! is_super_admin( $store_user->ID ) && user_can( $store_user->ID, 'vendor_staff' ) ) {
                 return get_404_template();
             }
 

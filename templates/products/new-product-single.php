@@ -441,7 +441,7 @@ if ( ! $from_shortcode ) {
                                     <?php dokan_post_input_box( $post_id, '_sku' ); ?>
                                 </div>
 
-                                <div class="content-half-part hide_if_variation">
+                                <div class="content-half-part hide_if_variable">
                                     <label for="_stock_status" class="form-label"><?php _e( 'Stock Status', 'dokan-lite' ); ?></label>
 
                                     <?php dokan_post_input_box( $post_id, '_stock_status', array( 'options' => array(
@@ -619,7 +619,7 @@ if ( ! $from_shortcode ) {
                         </div><!-- .dokan-other-options -->
 
                         <?php if ( $post_id ): ?>
-                            <?php do_action( 'dokan_product_edit_after_options' ); ?>
+                            <?php do_action( 'dokan_product_edit_after_options', $post_id ); ?>
                         <?php endif; ?>
 
                         <?php wp_nonce_field( 'dokan_edit_product', 'dokan_edit_product_nonce' ); ?>

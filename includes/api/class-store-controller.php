@@ -235,13 +235,16 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
         $per_page  = (int) ( ! empty( $request['per_page'] ) ? $request['per_page'] : 20 );
         $page      = (int) ( ! empty( $request['page'] ) ? $request['page'] : 1 );
         $max_pages = ceil( $total_items / $per_page );
-        $counts    = dokan_get_seller_status_count();
+
+        if ( function_exists( 'dokan_get_seller_status_count' ) && current_user_can( 'manage_options' ) ) {
+            $counts = dokan_get_seller_status_count();
+            $response->header( 'X-Status-Pending', (int) $counts['inactive'] );
+            $response->header( 'X-Status-Approved', (int) $counts['active'] );
+            $response->header( 'X-Status-All', (int) $counts['total'] );
+        }
 
         $response->header( 'X-WP-Total', (int) $total_items );
         $response->header( 'X-WP-TotalPages', (int) $max_pages );
-        $response->header( 'X-Status-Pending', (int) $counts['inactive'] );
-        $response->header( 'X-Status-Approved', (int) $counts['active'] );
-        $response->header( 'X-Status-All', (int) $counts['total'] );
 
         if ( $total_items === 0 ) {
             return $response;
