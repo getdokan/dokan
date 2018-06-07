@@ -31,6 +31,7 @@
                                         :field-data="field"
                                         :field-value="settingValues[index]"
                                         @openMedia="showMedia"
+                                        :key="fieldId"
                                     ></fields>
                                 </tbody>
                             </table>

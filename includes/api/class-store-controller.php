@@ -107,13 +107,8 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
         );
 
         if ( ! empty( $params['search'] ) ) {
-            $args['meta_query'] = array(
-                array(
-                    'key'     => 'dokan_store_name',
-                    'value'   => $params['search'],
-                    'compare' => 'LIKE'
-                )
-            );
+            $args['search']         = '*' . esc_attr( $params['search'] ) . '*';
+            $args['search_columns'] = array( 'user_login', 'user_email', 'display_name' );
         }
 
         if ( ! empty( $params['status'] ) ) {

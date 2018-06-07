@@ -952,6 +952,7 @@ let Loading = dokan_get_lib('Loading');
 //
 //
 //
+//
 
 let Loading = dokan_get_lib('Loading');
 
@@ -2734,32 +2735,36 @@ var render = function() {
       ? _c(
           "div",
           { staticClass: "section-wrapper" },
-          _vm._l(_vm.docs, function(section) {
-            return _c("postbox", { attrs: { title: section.title } }, [
-              _c(
-                "ul",
-                _vm._l(section.questions, function(item) {
-                  return _c("li", [
-                    _c("span", {
-                      staticClass: "dashicons dashicons-media-text"
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "a",
-                      {
-                        attrs: {
-                          href:
-                            item.link +
-                            "?utm_source=wp-admin&utm_medium=dokan-help-page",
-                          target: "_blank"
-                        }
-                      },
-                      [_vm._v(_vm._s(item.title))]
-                    )
-                  ])
-                })
-              )
-            ])
+          _vm._l(_vm.docs, function(section, index) {
+            return _c(
+              "postbox",
+              { key: index, attrs: { title: section.title } },
+              [
+                _c(
+                  "ul",
+                  _vm._l(section.questions, function(item) {
+                    return _c("li", [
+                      _c("span", {
+                        staticClass: "dashicons dashicons-media-text"
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "a",
+                        {
+                          attrs: {
+                            href:
+                              item.link +
+                              "?utm_source=wp-admin&utm_medium=dokan-help-page",
+                            target: "_blank"
+                          }
+                        },
+                        [_vm._v(_vm._s(item.title))]
+                      )
+                    ])
+                  })
+                )
+              ]
+            )
           })
         )
       : _c("div", { staticClass: "loading" }, [_c("loading")], 1)
@@ -3809,6 +3814,7 @@ var render = function() {
                               "tbody",
                               _vm._l(fields, function(field, fieldId) {
                                 return _c("fields", {
+                                  key: fieldId,
                                   attrs: {
                                     "section-id": index,
                                     id: fieldId,

@@ -3,7 +3,7 @@
         <h1>{{ __( 'Help', 'dokan-lite' ) }}</h1>
 
         <div class="section-wrapper" v-if="docs !== null">
-            <postbox v-for="section in docs" :title="section.title">
+            <postbox v-for="(section, index) in docs" :title="section.title" :key="index">
                 <ul>
                     <li v-for="item in section.questions">
                         <span class="dashicons dashicons-media-text"></span>
