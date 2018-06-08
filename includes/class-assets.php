@@ -54,6 +54,7 @@ class Dokan_Assets {
             ) );
 
             // Load common styles and scripts
+            wp_enqueue_script( 'dokan-tinymce' );
             wp_enqueue_style( 'dokan-admin-css' );
             wp_enqueue_script( 'underscore' );
             wp_enqueue_media();
@@ -63,6 +64,7 @@ class Dokan_Assets {
             // load styles
             wp_enqueue_style( 'dokan-vue-vendor' );
             wp_enqueue_style( 'dokan-vue-admin' );
+            wp_enqueue_style( 'dokan-tinymce' );
 
             // load vue libraries and bootstrap the app
             wp_enqueue_script( 'dokan-accounting' );
@@ -174,6 +176,11 @@ class Dokan_Assets {
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/style.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/style.css' ),
             ),
+            'dokan-tinymce' => array(
+                'src'     => site_url( '/wp-includes/css/editor.css' ),
+                'deps'    => array(),
+                'version' => time()
+            ),
             'jquery-ui' => array(
                 'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/jquery-ui/jquery-ui-1.10.0.custom.css',
             ),
@@ -244,6 +251,15 @@ class Dokan_Assets {
                 'src'       => WC()->plugin_url() . '/assets/js/accounting/accounting.min.js',
                 'deps'      => array( 'jquery' )
             ),
+            'dokan-tinymce' => array(
+                'src'       => site_url( '/wp-includes/js/tinymce/tinymce.min.js' ),
+                'deps'      => array()
+            ),
+            'dokan-tinymce-plugin' => array(
+                'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/tinymce/code/plugin.min.js',
+                'deps'    => array('dokan-tinymce'),
+                'version' => time()
+            ),
             'dokan-moment' => array(
                 'src'       => $asset_url . '/vendors/moment/moment.min.js',
             ),
@@ -313,7 +329,7 @@ class Dokan_Assets {
             'dokan-vue-vendor' => array(
                 'src'       => $asset_url . '/js/vue-vendor.js',
                 'version'   => filemtime( $asset_path . '/js/vue-vendor.js' ),
-                'deps'      => array('dokan-i18n-jed')
+                'deps'      => array('dokan-i18n-jed', 'dokan-tinymce-plugin' )
             ),
             'dokan-vue-bootstrap' => array(
                 'src'       => $asset_url . '/js/vue-bootstrap.js',
