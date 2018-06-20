@@ -316,6 +316,7 @@ final class WeDevs_Dokan {
         require_once $inc_dir . 'class-vendor-manager.php';
         require_once $inc_dir . 'class-order-manager.php';
         require_once $inc_dir . 'class-product-manager.php';
+        require_once $inc_dir . 'class-dokan-privacy.php';
 
         if ( is_admin() ) {
             require_once $inc_dir . 'admin/class-settings.php';

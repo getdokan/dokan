@@ -698,200 +698,14 @@ if (false) {
 
 /***/ }),
 
-/***/ 149:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["a"] = ({
-    props: {
-        value: {
-            type: String,
-            required: true
-        }
-
-        // shortcodes: {
-        //     type: Object,
-        //     required: false
-        // }
-    },
-
-    data() {
-        return {
-            editorId: this._uid,
-            fileFrame: null
-        };
-    },
-
-    mounted() {
-        const vm = this;
-
-        window.tinymce.init({
-            selector: `#dokan-tinymce-${this.editorId}`,
-            branding: false,
-            height: 300,
-            menubar: false,
-            convert_urls: false,
-            theme: 'modern',
-            skin: 'lightgray',
-            content_css: `${dokan.cdn}/css/customizer.css`,
-            fontsize_formats: '10px 11px 13px 14px 16px 18px 22px 25px 30px 36px 40px 45px 50px 60px 65px 70px 75px 80px',
-            font_formats: 'Arial=arial,helvetica,sans-serif;' + 'Comic Sans MS=comic sans ms,sans-serif;' + 'Courier New=courier new,courier;' + 'Georgia=georgia,palatino;' + 'Lucida=Lucida Sans Unicode, Lucida Grande, sans-serif;' + 'Tahoma=tahoma,arial,helvetica,sans-serif;' + 'Times New Roman=times new roman,times;' + 'Trebuchet MS=trebuchet ms,geneva;' + 'Verdana=verdana,geneva;',
-            plugins: 'textcolor colorpicker wplink wordpress code hr wpeditimage',
-            toolbar: ['shortcodes bold italic underline bullist numlist alignleft aligncenter alignjustify alignright link image wp_adv', 'formatselect forecolor backcolor blockquote hr code fontselect fontsizeselect removeformat undo redo'],
-            setup(editor) {
-                const shortcodeMenuItems = [];
-
-                _.forEach(vm.shortcodes, (shortcodeObj, shortcodeType) => {
-                    shortcodeMenuItems.push({
-                        text: shortcodeObj.title,
-                        classes: 'menu-section-title'
-                    });
-
-                    _.forEach(shortcodeObj.codes, (codeObj, shortcode) => {
-                        shortcodeMenuItems.push({
-                            text: codeObj.title,
-                            onclick() {
-                                let code = `[${shortcodeType}:${shortcode}]`;
-
-                                if (codeObj.default) {
-                                    code = `[${shortcodeType}:${shortcode} default="${codeObj.default}"]`;
-                                }
-
-                                if (codeObj.text) {
-                                    code = `[${shortcodeType}:${shortcode} text="${codeObj.text}"]`;
-                                }
-
-                                if (codeObj.plainText) {
-                                    code = codeObj.text;
-                                }
-
-                                editor.insertContent(code);
-                            }
-                        });
-                    });
-                });
-
-                // editor.addButton('shortcodes', {
-                //     type: 'menubutton',
-                //     icon: 'shortcode',
-                //     tooltip: 'Shortcodes',
-                //     menu: shortcodeMenuItems
-                // });
-
-                editor.addButton('image', {
-                    icon: 'image',
-                    onclick() {
-                        vm.browseImage(editor);
-                    }
-                });
-
-                // editor change triggers
-                editor.on('change keyup NodeChange', () => {
-                    vm.$emit('input', editor.getContent());
-                });
-            }
-        });
-    },
-
-    methods: {
-        browseImage(editor) {
-            const vm = this;
-            const selectedFile = {
-                id: 0,
-                url: '',
-                type: ''
-            };
-
-            if (vm.fileFrame) {
-                vm.fileFrame.open();
-                return;
-            }
-
-            const fileStates = [new wp.media.controller.Library({
-                library: wp.media.query(),
-                multiple: false,
-                title: this.__('Select an image', 'dokan-lite'),
-                priority: 20,
-                filterable: 'uploaded'
-            })];
-
-            vm.fileFrame = wp.media({
-                title: this.__('Select an image', 'dokan-lite'),
-                library: {
-                    type: ''
-                },
-                button: {
-                    text: this.__('Select an image', 'dokan-lite')
-                },
-                multiple: false,
-                states: fileStates
-            });
-
-            vm.fileFrame.on('select', () => {
-                const selection = vm.fileFrame.state().get('selection');
-
-                selection.map(image => {
-                    image = image.toJSON();
-
-                    if (image.id) {
-                        selectedFile.id = image.id;
-                    }
-
-                    if (image.url) {
-                        selectedFile.url = image.url;
-                    }
-
-                    if (image.type) {
-                        selectedFile.type = image.type;
-                    }
-
-                    vm.insertImage(editor, selectedFile);
-
-                    return null;
-                });
-            });
-
-            vm.fileFrame.on('ready', () => {
-                vm.fileFrame.uploader.options.uploader.params = {
-                    type: 'dokan-image-uploader'
-                };
-            });
-
-            vm.fileFrame.open();
-        },
-
-        insertImage(editor, image) {
-            if (!image.id || image.type !== 'image') {
-                this.alert({
-                    type: 'error',
-                    text: this.__('Please select an image,', 'dokan-lite')
-                });
-
-                return;
-            }
-
-            const img = `<img src="${image.url}" alt="${image.alt}" title="${image.title}" style="max-width: 100%; height: auto;">`;
-
-            editor.insertContent(img);
-        }
-    }
-});
-
-/***/ }),
-
-/***/ 150:
+/***/ 118:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_TextEditor_vue__ = __webpack_require__(149);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_TextEditor_vue__ = __webpack_require__(35);
 /* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_70730fac_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TextEditor_vue__ = __webpack_require__(151);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_70730fac_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TextEditor_vue__ = __webpack_require__(119);
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -938,7 +752,7 @@ if (false) {(function () {
 
 /***/ }),
 
-/***/ 151:
+/***/ 119:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1208,6 +1022,192 @@ if (false) {
 
 /***/ }),
 
+/***/ 35:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+    props: {
+        value: {
+            type: String,
+            required: true
+        }
+
+        // shortcodes: {
+        //     type: Object,
+        //     required: false
+        // }
+    },
+
+    data() {
+        return {
+            editorId: this._uid,
+            fileFrame: null
+        };
+    },
+
+    mounted() {
+        const vm = this;
+
+        window.tinymce.init({
+            selector: `#dokan-tinymce-${this.editorId}`,
+            branding: false,
+            height: 300,
+            menubar: false,
+            convert_urls: false,
+            theme: 'modern',
+            skin: 'lightgray',
+            content_css: `${dokan.cdn}/css/customizer.css`,
+            fontsize_formats: '10px 11px 13px 14px 16px 18px 22px 25px 30px 36px 40px 45px 50px 60px 65px 70px 75px 80px',
+            font_formats: 'Arial=arial,helvetica,sans-serif;' + 'Comic Sans MS=comic sans ms,sans-serif;' + 'Courier New=courier new,courier;' + 'Georgia=georgia,palatino;' + 'Lucida=Lucida Sans Unicode, Lucida Grande, sans-serif;' + 'Tahoma=tahoma,arial,helvetica,sans-serif;' + 'Times New Roman=times new roman,times;' + 'Trebuchet MS=trebuchet ms,geneva;' + 'Verdana=verdana,geneva;',
+            plugins: 'textcolor colorpicker wplink wordpress code hr wpeditimage',
+            toolbar: ['shortcodes bold italic underline bullist numlist alignleft aligncenter alignjustify alignright link image wp_adv', 'formatselect forecolor backcolor blockquote hr code fontselect fontsizeselect removeformat undo redo'],
+            setup(editor) {
+                const shortcodeMenuItems = [];
+
+                _.forEach(vm.shortcodes, (shortcodeObj, shortcodeType) => {
+                    shortcodeMenuItems.push({
+                        text: shortcodeObj.title,
+                        classes: 'menu-section-title'
+                    });
+
+                    _.forEach(shortcodeObj.codes, (codeObj, shortcode) => {
+                        shortcodeMenuItems.push({
+                            text: codeObj.title,
+                            onclick() {
+                                let code = `[${shortcodeType}:${shortcode}]`;
+
+                                if (codeObj.default) {
+                                    code = `[${shortcodeType}:${shortcode} default="${codeObj.default}"]`;
+                                }
+
+                                if (codeObj.text) {
+                                    code = `[${shortcodeType}:${shortcode} text="${codeObj.text}"]`;
+                                }
+
+                                if (codeObj.plainText) {
+                                    code = codeObj.text;
+                                }
+
+                                editor.insertContent(code);
+                            }
+                        });
+                    });
+                });
+
+                // editor.addButton('shortcodes', {
+                //     type: 'menubutton',
+                //     icon: 'shortcode',
+                //     tooltip: 'Shortcodes',
+                //     menu: shortcodeMenuItems
+                // });
+
+                editor.addButton('image', {
+                    icon: 'image',
+                    onclick() {
+                        vm.browseImage(editor);
+                    }
+                });
+
+                // editor change triggers
+                editor.on('change keyup NodeChange', () => {
+                    vm.$emit('input', editor.getContent());
+                });
+            }
+        });
+    },
+
+    methods: {
+        browseImage(editor) {
+            const vm = this;
+            const selectedFile = {
+                id: 0,
+                url: '',
+                type: ''
+            };
+
+            if (vm.fileFrame) {
+                vm.fileFrame.open();
+                return;
+            }
+
+            const fileStates = [new wp.media.controller.Library({
+                library: wp.media.query(),
+                multiple: false,
+                title: this.__('Select an image', 'dokan-lite'),
+                priority: 20,
+                filterable: 'uploaded'
+            })];
+
+            vm.fileFrame = wp.media({
+                title: this.__('Select an image', 'dokan-lite'),
+                library: {
+                    type: ''
+                },
+                button: {
+                    text: this.__('Select an image', 'dokan-lite')
+                },
+                multiple: false,
+                states: fileStates
+            });
+
+            vm.fileFrame.on('select', () => {
+                const selection = vm.fileFrame.state().get('selection');
+
+                selection.map(image => {
+                    image = image.toJSON();
+
+                    if (image.id) {
+                        selectedFile.id = image.id;
+                    }
+
+                    if (image.url) {
+                        selectedFile.url = image.url;
+                    }
+
+                    if (image.type) {
+                        selectedFile.type = image.type;
+                    }
+
+                    vm.insertImage(editor, selectedFile);
+
+                    return null;
+                });
+            });
+
+            vm.fileFrame.on('ready', () => {
+                vm.fileFrame.uploader.options.uploader.params = {
+                    type: 'dokan-image-uploader'
+                };
+            });
+
+            vm.fileFrame.open();
+        },
+
+        insertImage(editor, image) {
+            if (!image.id || image.type !== 'image') {
+                this.alert({
+                    type: 'error',
+                    text: this.__('Please select an image,', 'dokan-lite')
+                });
+
+                return;
+            }
+
+            const img = `<img src="${image.url}" alt="${image.alt}" title="${image.title}" style="max-width: 100%; height: auto;">`;
+
+            editor.insertContent(img);
+        }
+    }
+});
+
+/***/ }),
+
 /***/ 7:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1325,11 +1325,11 @@ var _Switches = __webpack_require__(115);
 
 var _Switches2 = _interopRequireDefault(_Switches);
 
-var _TextEditor = __webpack_require__(150);
+var _TextEditor = __webpack_require__(118);
 
 var _TextEditor2 = _interopRequireDefault(_TextEditor);
 
-__webpack_require__(118);
+__webpack_require__(120);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
