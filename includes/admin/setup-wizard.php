@@ -20,6 +20,7 @@ class Dokan_Setup_Wizard {
      */
     public function __construct() {
         if ( current_user_can( 'manage_options' ) ) {
+            add_action( 'admin_menu', array( $this, 'admin_menus' ) );
             add_action( 'admin_init', array( $this, 'setup_wizard' ), 99 );
         }
     }
@@ -56,6 +57,13 @@ class Dokan_Setup_Wizard {
 
         wp_register_script( 'wc-setup', WC()->plugin_url() . '/assets/js/admin/wc-setup.min.js', array( 'jquery', 'wc-enhanced-select', 'jquery-blockui' ), WC_VERSION );
         wp_localize_script( 'wc-setup', 'wc_setup_params', array() );
+    }
+
+    /**
+     * Add admin menus/screens.
+     */
+    public function admin_menus() {
+        add_submenu_page( null, '', '', 'manage_options', 'dokan-setup', '' );
     }
 
     /**
@@ -175,6 +183,33 @@ class Dokan_Setup_Wizard {
                 ul.wc-wizard-payment-gateways li.wc-wizard-gateway .wc-wizard-gateway-enable input:checked+label:before {
                     background: #f39132 !important;
                     border-color: #f39132 !important;
+                }
+                .dokan-setup-done h1 {
+                    text-align:  center;
+                }
+                .dokan-setup-done-content {
+                    display: flex;
+                    justify-content: center;
+                }
+                .dokan-setup-done-content .button {
+                    background-color: #ee9034 !important;
+                    color: #ffffff !important;
+                    height: 40px;
+                    line-height: 40px;
+                    font-size: 14px;
+                    padding: 0 25px;
+                    margin-left: 12px;
+                    margin-right: 12px;
+                }
+                .dokan-setup-done-content .learn-more {
+                    background-color: #ECF0F1 !important;
+                    color: #A5B7BB !important;
+                }
+                .dokan-setup-done img {
+                    display: block;
+                    margin-left: auto;
+                    margin-right: auto;
+                    padding-bottom: 30px;
                 }
             </style>
         </head>
@@ -497,18 +532,16 @@ class Dokan_Setup_Wizard {
      */
     public function dokan_setup_ready() {
         ?>
-        <h1><?php _e( 'Your Marketplace is Ready!', 'dokan-lite' ); ?></h1>
+        <div class="dokan-setup-done">
+            <img src="<?php echo plugins_url( 'assets/images/dokan-checked.png', DOKAN_FILE ); ?>" alt="dokan setup">
+            <h1><?php _e( 'Your Marketplace is Ready!', 'dokan-lite' ); ?></h1>
+        </div>
 
-        <div class="wc-setup-next-steps">
-            <div class="wc-setup-next-steps-first">
-                <h2><?php _e( 'Next Steps', 'dokan-lite' ); ?></h2>
-                <ul>
-                    <li class="setup-product"><a class="button button-primary button-large" href="<?php echo esc_url( admin_url( 'admin.php?page=dokan#/settings' ) ); ?>"><?php _e( 'Setup your dokan!', 'dokan-lite' ); ?></a></li>
-                </ul>
-            </div>
-            <div class="wc-setup-next-steps-last">
-                <h2><a href="<?php echo esc_url( admin_url( 'admin.php?page=dokan#/help' ) ); ?>"><?php _e( 'Learn More', 'dokan-lite' ); ?></a></h2>
-            </div>
+        <div class="dokan-setup-done-content">
+            <p class="wc-setup-actions step">
+                <a class="button" href="<?php echo esc_url( admin_url( 'admin.php?page=dokan#/settings' ) ); ?>"><?php _e( 'Setup Your Dokan!', 'dokan-lite' ); ?></a>
+                <a class="button learn-more" href="<?php echo esc_url( admin_url( 'admin.php?page=dokan#/help' ) ); ?>"><?php _e( 'Learn More', 'dokan-lite' ); ?></a>
+            </p>
         </div>
         <?php
     }
