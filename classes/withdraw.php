@@ -123,8 +123,17 @@ class Dokan_Withdraw {
 
         $sql    = $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} WHERE $where status = %d LIMIT %d, %d", $status, $offset, $limit );
         $result = $wpdb->get_results( $sql );
+        $results = array();
 
-        return $result;
+        foreach ( $result as $key => $value ) {
+            if ( get_userdata( $value->user_id ) === false ) {
+                continue;
+            }
+
+            array_push( $results, $value);
+        }
+
+        return $results;
     }
 
     /**
