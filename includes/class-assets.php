@@ -58,6 +58,8 @@ class Dokan_Assets {
             wp_enqueue_style( 'dokan-admin-css' );
             wp_enqueue_script( 'underscore' );
             wp_enqueue_media();
+
+
             wp_enqueue_script( 'dokan-tooltip' );
             wp_enqueue_script( 'dokan-admin' );
 
@@ -78,6 +80,14 @@ class Dokan_Assets {
 
             // fire the admin app
             wp_enqueue_script( 'dokan-vue-admin' );
+        }
+
+        if ( 'dokan_page_dokan-modules' === $hook ) {
+            wp_enqueue_style( 'dokan-admin-css' );
+            wp_enqueue_script( 'underscore' );
+            wp_enqueue_media();
+            wp_enqueue_script( 'dokan-tooltip' );
+            wp_enqueue_script( 'dokan-admin' );
         }
 
         if ( get_post_type( $post ) == 'dokan_slider' ) {
