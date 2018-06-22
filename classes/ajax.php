@@ -415,7 +415,15 @@ class Dokan_Ajax {
         $shipping_number   = ( trim( stripslashes( $_POST['shipping_number'] ) ) );
         $shipped_date      = ( trim( $_POST['shipped_date'] ) );
 
-        $ship_info = 'Shipping provider: ' . $shipping_provider . '<br />' . 'Shipping number: ' . $shipping_number . '<br />' . 'Shipped date: ' . $shipped_date;
+        $ship_info = sprintf(
+            __( 'Shipping Provider', 'dokan-lite' ) .
+            ': %s <br>' .
+            __( 'Tracking Number','dokan-lite' ) .
+            ': %s <br>' .
+            __('Shipping Date', 'dokan-lite') .
+            ': %s',
+            $shipping_provider, $shipping_number, $shipped_date
+        );
 
         if ( $shipping_number == '' ){
             die();
