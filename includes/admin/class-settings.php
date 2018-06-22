@@ -132,7 +132,15 @@ class Dokan_Settings {
      */
     public function settings_localize_data( $data ) {
         $data['settings_sections'] = $this->get_settings_sections();
-        $data['settings_fields']   = $this->get_settings_fields();
+
+        $settings_fields = array();
+        foreach ( $this->get_settings_fields() as $key => $section_fields ) {
+            foreach ( $section_fields as $settings_key => $value ) {
+                $settings_fields[$key][$value['name']] = $value;
+            }
+        }
+
+        $data['settings_fields']   = $settings_fields;
 
         return $data;
     }

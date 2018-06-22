@@ -142,7 +142,7 @@
 
         methods: {
             containCommonFields( type ) {
-                return _.contains( [ 'text', 'email', 'url', 'phone' ], type );
+                return _.contains( [ undefined, 'text', 'email', 'url', 'phone' ], type );
             }
         }
 
