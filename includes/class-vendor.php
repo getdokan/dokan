@@ -427,7 +427,7 @@ class Dokan_Vendor {
      * @return string
      */
     public function get_toc() {
-        return $this->get_info_part( 'store_toc' );
+        return $this->get_info_part( 'store_tnc' );
     }
 
     /**
