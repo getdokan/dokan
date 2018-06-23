@@ -36,35 +36,22 @@ add_filter( 'woocommerce_reports_get_order_report_query', 'dokan_admin_order_rep
  * @return array
  */
 function dokan_admin_shop_order_edit_columns( $existing_columns ) {
-    $columns = array();
-
     if ( WC_VERSION > '3.2.6' ) {
-        $columns['cb']               = '<input type="checkbox" />';
-        $columns['order_number']     = __( 'Order', 'dokan-lite' );
-        $columns['order_date']       = __( 'Date', 'dokan-lite' );
-        $columns['order_status']     = __( 'Status', 'dokan-lite' );
-        $columns['billing_address']  = __( 'Billing', 'dokan-lite' );
-        $columns['shipping_address'] = __( 'Ship to', 'dokan-lite' );
-        $columns['order_total']      = __( 'Total', 'dokan-lite' );
-        $columns['seller']           = __( 'Vendor', 'dokan-lite' );
-        $columns['wc_actions']       = __( 'Actions', 'dokan-lite' );
-        $columns['suborder']         = __( 'Sub Order', 'dokan-lite' );
+        unset( $existing_columns['wc_actions'] );
+
+        $columns = array_slice( $existing_columns, 0, count( $existing_columns ), true ) +
+            array(
+                'seller'     => __( 'Vendor', 'dokan-lite' ),
+                'wc_actions' => __( 'Actions', 'dokan-lite' ),
+                'suborder'   => __( 'Sub Order', 'dokan-lite' ),
+            )
+            + array_slice( $existing_columns, count( $existing_columns ), count( $existing_columns ) - 1, true );
     } else {
-        $columns['cb']               = '<input type="checkbox" />';
-        $columns['order_status']     = '<span class="status_head tips" data-tip="' . esc_attr__( 'Status', 'dokan-lite' ) . '">' . esc_attr__( 'Status', 'dokan-lite' ) . '</span>';
-        $columns['order_title']      = __( 'Order', 'dokan-lite' );
-        $columns['order_items']      = __( 'Purchased', 'dokan-lite' );
-        $columns['shipping_address'] = __( 'Ship to', 'dokan-lite' );
-        $columns['customer_message'] = '<span class="notes_head tips" data-tip="' . esc_attr__( 'Customer Message', 'dokan-lite' ) . '">' . esc_attr__( 'Customer Message', 'dokan-lite' ) . '</span>';
-        $columns['order_notes']      = '<span class="order-notes_head tips" data-tip="' . esc_attr__( 'Order Notes', 'dokan-lite' ) . '">' . esc_attr__( 'Order Notes', 'dokan-lite' ) . '</span>';
-        $columns['order_date']       = __( 'Date', 'dokan-lite' );
-        $columns['order_total']      = __( 'Total', 'dokan-lite' );
-        $columns['order_actions']    = __( 'Actions', 'dokan-lite' );
-        $columns['seller']        = __( 'Vendor', 'dokan-lite' );
-        $columns['suborder']        = __( 'Sub Order', 'dokan-lite' );
+        $existing_columns['seller']    = __( 'Vendor', 'dokan-lite' );
+        $existing_columns['suborder']  = __( 'Sub Order', 'dokan-lite' );
     }
 
-    return $columns;
+    return apply_filters( 'dokan_edit_shop_order_columns', $columns );
 }
 
 add_filter( 'manage_edit-shop_order_columns', 'dokan_admin_shop_order_edit_columns', 11 );
