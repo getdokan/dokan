@@ -95,6 +95,13 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => array( $this, 'delete_item' ),
                 'permission_callback' => array( $this, 'delete_product_permissions_check' ),
+                'args'                => array(
+                    'force' => array(
+                        'type'        => 'boolean',
+                        'default'     => false,
+                        'description' => __( 'Whether to bypass trash and force deletion.', 'dokan' ),
+                    ),
+                ),
             )
         ) );
 

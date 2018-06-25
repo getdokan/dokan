@@ -50,6 +50,9 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
      */
     public function __construct() {
         $this->post_status = array_keys( wc_get_order_statuses() );
+
+        add_filter( 'woocommerce_new_order_data', array( $this, 'set_order_vendor_id' ) );
+        add_action( 'woocommerce_rest_insert_shop_order_object', array( $this, 'after_order_create' ), 10, 2 );
     }
 
     /**
@@ -198,7 +201,6 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
 
         return true;
     }
-
 
     /**
      * Get formatted item data.
@@ -704,5 +706,37 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
      */
     public function check_orders_summary_permissions() {
         return current_user_can( 'dokan_view_order_report' );
+    }
+
+    /**
+     * Set vendor ID on order when creating from REST API
+     *
+     * @since 2.8.2
+     *
+     * @param array $args
+     *
+     * @return array
+     */
+    public function set_order_vendor_id( $args ) {
+
+        if ( defined( 'REST_REQUEST' ) ) {
+            $args['post_author'] = dokan_get_current_user_id();
+        }
+
+        return $args;
+    }
+
+    /**
+     * Insert into Dokan sync table once an order is created via API
+     *
+     * @since 2.8.2 [<description>]
+     *
+     * @param  WC_Order $object
+     * @param  WP_REST_Request $request
+     *
+     * @return void
+     */
+    public function after_order_create( $object, $request ) {
+        dokan()->orders->maybe_split_orders( $object->get_id() );
     }
 }

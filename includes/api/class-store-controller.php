@@ -107,13 +107,8 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
         );
 
         if ( ! empty( $params['search'] ) ) {
-            $args['meta_query'] = array(
-                array(
-                    'key'     => 'dokan_store_name',
-                    'value'   => $params['search'],
-                    'compare' => 'LIKE'
-                )
-            );
+            $args['search']         = '*' . esc_attr( $params['search'] ) . '*';
+            $args['search_columns'] = array( 'user_login', 'user_email', 'display_name' );
         }
 
         if ( ! empty( $params['status'] ) ) {
@@ -240,13 +235,16 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
         $per_page  = (int) ( ! empty( $request['per_page'] ) ? $request['per_page'] : 20 );
         $page      = (int) ( ! empty( $request['page'] ) ? $request['page'] : 1 );
         $max_pages = ceil( $total_items / $per_page );
-        $counts    = dokan_get_seller_status_count();
+
+        if ( function_exists( 'dokan_get_seller_status_count' ) && current_user_can( 'manage_options' ) ) {
+            $counts = dokan_get_seller_status_count();
+            $response->header( 'X-Status-Pending', (int) $counts['inactive'] );
+            $response->header( 'X-Status-Approved', (int) $counts['active'] );
+            $response->header( 'X-Status-All', (int) $counts['total'] );
+        }
 
         $response->header( 'X-WP-Total', (int) $total_items );
         $response->header( 'X-WP-TotalPages', (int) $max_pages );
-        $response->header( 'X-Status-Pending', (int) $counts['inactive'] );
-        $response->header( 'X-Status-Approved', (int) $counts['active'] );
-        $response->header( 'X-Status-All', (int) $counts['total'] );
 
         if ( $total_items === 0 ) {
             return $response;
@@ -373,7 +371,7 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
     public function prepare_item_for_response( $store, $request, $additional_fields = [] ) {
 
         $data = $store->to_array();
-        $data = array_merge( $data, $additional_fields );
+        $data = array_merge( $data, apply_filters( 'dokan_rest_store_additional_fields', $additional_fields, $store, $request ) );
         $response = rest_ensure_response( $data );
         $response->add_links( $this->prepare_links( $data, $request ) );
         return $response;

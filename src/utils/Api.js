@@ -28,7 +28,7 @@ class Dokan_API  {
     // jQuery ajax wrapper
     ajax(path, method, headers, data) {
 
-        return $.ajax({
+        return jQuery.ajax({
             url: this.endpoint() + path,
             beforeSend: function ( xhr ) {
                 xhr.setRequestHeader( 'X-WP-Nonce', window.dokan.rest.nonce );

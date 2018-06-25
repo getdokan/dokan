@@ -271,24 +271,26 @@ export default {
         getPaymentDetails(method, data) {
             let details = '—';
 
-            if ( 'paypal' === method || 'skrill' === method ) {
-                details = data[method].email || '';
+            if ( data[method] !== undefined ) {
+                if ( 'paypal' === method || 'skrill' === method ) {
+                    details = data[method].email || '';
 
-            } else if ( 'bank' === method ) {
-                if ( data.bank.hasOwnProperty('ac_name') ) {
-                    details = this.sprintf( this.__( 'Account Name: %s', 'dokan-lite' ),  data.bank.ac_name );
-                }
+                } else if ( 'bank' === method ) {
+                    if ( data.bank.hasOwnProperty('ac_name') ) {
+                        details = this.sprintf( this.__( 'Account Name: %s', 'dokan-lite' ),  data.bank.ac_name );
+                    }
 
-                if ( data.bank.hasOwnProperty('ac_number') ) {
-                    details += this.sprintf( this.__( ', Account Number: %s', 'dokan-lite' ), data.bank.ac_number );
-                }
+                    if ( data.bank.hasOwnProperty('ac_number') ) {
+                        details += this.sprintf( this.__( ', Account Number: %s', 'dokan-lite' ), data.bank.ac_number );
+                    }
 
-                if ( data.bank.hasOwnProperty('bank_name') ) {
-                    details += this.sprintf( this.__( ', Bank Name: %s', 'dokan-lite' ), data.bank.bank_name );
-                }
+                    if ( data.bank.hasOwnProperty('bank_name') ) {
+                        details += this.sprintf( this.__( ', Bank Name: %s', 'dokan-lite' ), data.bank.bank_name );
+                    }
 
-                if ( data.bank.hasOwnProperty('routing_number') ) {
-                    details += this.sprintf( this.__( ', Routing Number: %s', 'dokan-lite' ), data.bank.routing_number );
+                    if ( data.bank.hasOwnProperty('routing_number') ) {
+                        details += this.sprintf( this.__( ', Routing Number: %s', 'dokan-lite' ), data.bank.routing_number );
+                    }
                 }
             }
 
@@ -316,7 +318,7 @@ export default {
             }
 
             if ( 'paypal' === action ) {
-                let ids = items.join("','");
+                let ids = items.join(",");
 
                 $.post(ajaxurl, {
                     'dokan_withdraw_bulk': 'paypal',

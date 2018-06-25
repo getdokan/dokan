@@ -63,7 +63,7 @@ class Dokan_Setup_Wizard {
      * Add admin menus/screens.
      */
     public function admin_menus() {
-        add_dashboard_page( '', '', 'manage_options', 'dokan-setup', '' );
+        add_submenu_page( null, '', '', 'manage_options', 'dokan-setup', '' );
     }
 
     /**
@@ -183,6 +183,33 @@ class Dokan_Setup_Wizard {
                 ul.wc-wizard-payment-gateways li.wc-wizard-gateway .wc-wizard-gateway-enable input:checked+label:before {
                     background: #f39132 !important;
                     border-color: #f39132 !important;
+                }
+                .dokan-setup-done h1 {
+                    text-align:  center;
+                }
+                .dokan-setup-done-content {
+                    display: flex;
+                    justify-content: center;
+                }
+                .dokan-setup-done-content .button {
+                    background-color: #ee9034 !important;
+                    color: #ffffff !important;
+                    height: 40px;
+                    line-height: 40px;
+                    font-size: 14px;
+                    padding: 0 25px;
+                    margin-left: 12px;
+                    margin-right: 12px;
+                }
+                .dokan-setup-done-content .learn-more {
+                    background-color: #ECF0F1 !important;
+                    color: #A5B7BB !important;
+                }
+                .dokan-setup-done img {
+                    display: block;
+                    margin-left: auto;
+                    margin-right: auto;
+                    padding-bottom: 30px;
                 }
             </style>
         </head>
@@ -379,8 +406,8 @@ class Dokan_Setup_Wizard {
 
         $options = get_option( 'dokan_selling', array() );
         $options['new_seller_enable_selling'] = isset( $_POST['new_seller_enable_selling'] ) ? 'on' : 'off';
-        $options['commission_type']           =  $_POST['commission_type'];
-        $options['admin_percentage']          = intval( $_POST['admin_percentage'] );
+        $options['commission_type']           = $_POST['commission_type'];
+        $options['admin_percentage']          = is_int( $_POST['admin_percentage'] ) ? intval( $_POST['admin_percentage'] ) : floatval( $_POST['admin_percentage'] );
         $options['order_status_change']       = isset( $_POST['order_status_change'] ) ? 'on' : 'off';
 
         update_option( 'dokan_selling', $options );
@@ -505,18 +532,16 @@ class Dokan_Setup_Wizard {
      */
     public function dokan_setup_ready() {
         ?>
-        <h1><?php _e( 'Your Marketplace is Ready!', 'dokan-lite' ); ?></h1>
+        <div class="dokan-setup-done">
+            <img src="<?php echo plugins_url( 'assets/images/dokan-checked.png', DOKAN_FILE ); ?>" alt="dokan setup">
+            <h1><?php _e( 'Your Marketplace is Ready!', 'dokan-lite' ); ?></h1>
+        </div>
 
-        <div class="wc-setup-next-steps">
-            <div class="wc-setup-next-steps-first">
-                <h2><?php _e( 'Next Steps', 'dokan-lite' ); ?></h2>
-                <ul>
-                    <li class="setup-product"><a class="button button-primary button-large" href="<?php echo esc_url( admin_url( 'admin.php?page=dokan-settings' ) ); ?>"><?php _e( 'Setup your dokan!', 'dokan-lite' ); ?></a></li>
-                </ul>
-            </div>
-            <div class="wc-setup-next-steps-last">
-                <h2><a href="<?php echo esc_url( admin_url( 'admin.php?page=dokan-help' ) ); ?>"><?php _e( 'Learn More', 'dokan-lite' ); ?></a></h2>
-            </div>
+        <div class="dokan-setup-done-content">
+            <p class="wc-setup-actions step">
+                <a class="button" href="<?php echo esc_url( admin_url( 'admin.php?page=dokan#/settings' ) ); ?>"><?php _e( 'Setup Your Dokan!', 'dokan-lite' ); ?></a>
+                <a class="button learn-more" href="<?php echo esc_url( admin_url( 'admin.php?page=dokan#/help' ) ); ?>"><?php _e( 'Learn More', 'dokan-lite' ); ?></a>
+            </p>
         </div>
         <?php
     }

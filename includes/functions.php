@@ -1812,7 +1812,7 @@ function dokan_wc_email_recipient_add_seller( $email, $order ) {
         $sellers = dokan_get_seller_id_by_order( dokan_get_prop( $order, 'id' ) );
 
         //if more than 1 seller
-        if ( count( $sellers ) > 1 ) {
+        if ( is_array( $sellers ) && count( $sellers ) > 1 ) {
             foreach ( $sellers as $seller_id ) {
                 $seller       = get_userdata( $seller_id );
                 $seller_email = $seller->user_email;
@@ -1822,12 +1822,15 @@ function dokan_wc_email_recipient_add_seller( $email, $order ) {
                 }
             }
         } else {
-            //if single seller is returned
-            $seller       = get_userdata( $sellers );
-            $seller_email = $seller->user_email;
 
-            if ( $email != $seller_email ) {
-                $email .= ',' . $seller_email;
+            if ( $sellers ) {
+                //if single seller is returned
+                $seller       = get_userdata( $sellers );
+                $seller_email = $seller->user_email;
+
+                if ( $email != $seller_email ) {
+                    $email .= ',' . $seller_email;
+                }
             }
         }
     }
@@ -2281,12 +2284,10 @@ function dokan_get_category_wise_seller_commission( $product_id, $category_id = 
     }
 
     if ( $terms ) {
-        if ( 1 == count( $terms ) ) {
-            $category_commision = get_woocommerce_term_meta( $term_id, 'per_category_admin_commission', true );
-        }
+        $category_commision = get_woocommerce_term_meta( $term_id, 'per_category_admin_commission', true );
     }
 
-    if ( !empty( $category_commision ) ) {
+    if ( ! empty( $category_commision ) ) {
         return (float) $category_commision;
     }
 
@@ -2315,9 +2316,7 @@ function dokan_get_category_wise_seller_commission_type( $product_id, $category_
     }
 
     if ( $terms ) {
-        if ( 1 == count( $terms ) ) {
-            $category_commision = get_woocommerce_term_meta( $term_id, 'per_category_admin_commission_type', true );
-        }
+        $category_commision = get_woocommerce_term_meta( $term_id, 'per_category_admin_commission_type', true );
     }
 
     return $category_commision;

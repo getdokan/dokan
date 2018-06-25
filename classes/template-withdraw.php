@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Dokan Dahsboard Withdraw class
+ * Dokan Dashboard Withdraw class
  *
  * @author weDevs
  *
@@ -421,6 +421,7 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
 
         $sql    = "SELECT * FROM {$wpdb->dokan_withdraw} WHERE $where 1=1 ORDER BY date DESC LIMIT $offset, $limit";
         $result = $wpdb->get_results( $sql );
+
         return $result;
     }
 

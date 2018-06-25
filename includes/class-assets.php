@@ -31,7 +31,9 @@ class Dokan_Assets {
         // load vue app inside the parent menu only
         if ( 'toplevel_page_dokan' == $hook ) {
 
-            $localize_script = apply_filters( 'dokan-admin-localize_script', array(
+            $localize_script = apply_filters( 'dokan_admin_localize_script', array(
+                'ajaxurl' => admin_url( 'admin-ajax.php' ),
+                'nonce'   => wp_create_nonce( 'dokan_admin' ),
                 'rest' => array(
                     'root'    => esc_url_raw( get_rest_url() ),
                     'nonce'   => wp_create_nonce( 'wp_rest' ),
@@ -47,18 +49,25 @@ class Dokan_Assets {
                 'urls'            => array(
                     'adminRoot'   => admin_url(),
                     'siteUrl'     => home_url( '/' ),
-                    'storePrefix' => dokan_get_option( 'custom_store_url', 'dokan_general', 'store' )
+                    'storePrefix' => dokan_get_option( 'custom_store_url', 'dokan_general', 'store' ),
+                    'assetsUrl'   => DOKAN_PLUGIN_ASSEST
                 )
             ) );
 
             // Load common styles and scripts
+            wp_enqueue_script( 'dokan-tinymce' );
             wp_enqueue_style( 'dokan-admin-css' );
+            wp_enqueue_script( 'underscore' );
+            wp_enqueue_media();
+
+
             wp_enqueue_script( 'dokan-tooltip' );
             wp_enqueue_script( 'dokan-admin' );
 
             // load styles
             wp_enqueue_style( 'dokan-vue-vendor' );
             wp_enqueue_style( 'dokan-vue-admin' );
+            wp_enqueue_style( 'dokan-tinymce' );
 
             // load vue libraries and bootstrap the app
             wp_enqueue_script( 'dokan-accounting' );
@@ -72,6 +81,14 @@ class Dokan_Assets {
 
             // fire the admin app
             wp_enqueue_script( 'dokan-vue-admin' );
+        }
+
+        if ( 'dokan_page_dokan-modules' === $hook ) {
+            wp_enqueue_style( 'dokan-admin-css' );
+            wp_enqueue_script( 'underscore' );
+            wp_enqueue_media();
+            wp_enqueue_script( 'dokan-tooltip' );
+            wp_enqueue_script( 'dokan-admin' );
         }
 
         if ( get_post_type( $post ) == 'dokan_slider' ) {
@@ -129,6 +146,11 @@ class Dokan_Assets {
                 'name'      => 'Help',
                 'component' => 'Help'
             ),
+            array(
+                'path'      => '/settings',
+                'name'      => 'Settings',
+                'component' => 'Settings'
+            ),
         );
 
         return apply_filters( 'dokan-admin-routes', $routes );
@@ -137,7 +159,7 @@ class Dokan_Assets {
     public function get_vue_frontend_routes() {
         $routes = array();
 
-        return apply_filters( 'dokan-admin-routes', $routes );
+        return apply_filters( 'dokan-frontend-routes', $routes );
     }
 
     /**
@@ -164,6 +186,11 @@ class Dokan_Assets {
             'dokan-style' => array(
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/style.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/style.css' ),
+            ),
+            'dokan-tinymce' => array(
+                'src'     => site_url( '/wp-includes/css/editor.css' ),
+                'deps'    => array(),
+                'version' => time()
             ),
             'jquery-ui' => array(
                 'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/jquery-ui/jquery-ui-1.10.0.custom.css',
@@ -235,6 +262,15 @@ class Dokan_Assets {
                 'src'       => WC()->plugin_url() . '/assets/js/accounting/accounting.min.js',
                 'deps'      => array( 'jquery' )
             ),
+            'dokan-tinymce' => array(
+                'src'       => site_url( '/wp-includes/js/tinymce/tinymce.min.js' ),
+                'deps'      => array()
+            ),
+            'dokan-tinymce-plugin' => array(
+                'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/tinymce/code/plugin.min.js',
+                'deps'    => array('dokan-tinymce'),
+                'version' => time()
+            ),
             'dokan-moment' => array(
                 'src'       => $asset_url . '/vendors/moment/moment.min.js',
             ),
@@ -304,7 +340,7 @@ class Dokan_Assets {
             'dokan-vue-vendor' => array(
                 'src'       => $asset_url . '/js/vue-vendor.js',
                 'version'   => filemtime( $asset_path . '/js/vue-vendor.js' ),
-                'deps'      => array('dokan-i18n-jed')
+                'deps'      => array('dokan-i18n-jed', 'dokan-tinymce-plugin' )
             ),
             'dokan-vue-bootstrap' => array(
                 'src'       => $asset_url . '/js/vue-bootstrap.js',

@@ -34,7 +34,6 @@ class Dokan_Vendor {
      * @param int|WP_User $vendor
      */
     public function __construct( $vendor = null ) {
-
         if ( is_numeric( $vendor ) ) {
 
             $the_user = get_user_by( 'id', $vendor );;
@@ -101,6 +100,17 @@ class Dokan_Vendor {
         );
 
         return $info;
+    }
+
+    /**
+     * Check if key is exist
+     *
+     * @param $key
+     *
+     * @return string
+     */
+    public function get_value( $key ) {
+        return ! empty( $key ) ? $key : '';
     }
 
     /**
@@ -226,7 +236,7 @@ class Dokan_Vendor {
      */
     public function get_name() {
         if ( $this->id ) {
-            return $this->data->display_name;
+            return $this->get_value( $this->data->display_name );
         }
     }
 
@@ -255,7 +265,7 @@ class Dokan_Vendor {
      */
     public function get_email() {
         if ( $this->id ) {
-            return $this->data->user_email;
+            return $this->get_value( $this->data->user_email );
         }
     }
 
@@ -268,7 +278,7 @@ class Dokan_Vendor {
      */
     public function get_first_name() {
         if ( $this->id ) {
-            return $this->data->first_name;
+            return $this->get_value( $this->data->first_name );
         }
     }
 
@@ -281,7 +291,7 @@ class Dokan_Vendor {
      */
     public function get_last_name() {
         if ( $this->id ) {
-            return $this->data->last_name;
+            return $this->get_value( $this->data->last_name );
         }
     }
 
@@ -294,7 +304,7 @@ class Dokan_Vendor {
      */
     public function get_register_date() {
         if ( $this->id ) {
-            return $this->data->user_registered;
+            return $this->get_value( $this->data->user_registered );
         }
     }
 
@@ -375,7 +385,7 @@ class Dokan_Vendor {
     public function get_avatar() {
         $avatar_id = (int) $this->get_info_part( 'gravatar' );
 
-        if ( ! $avatar_id ) {
+        if ( ! $avatar_id && ! empty( $this->data->user_email ) ) {
             return get_avatar_url( $this->data->user_email, 96 );
         }
 
@@ -427,7 +437,7 @@ class Dokan_Vendor {
      * @return string
      */
     public function get_toc() {
-        return $this->get_info_part( 'store_toc' );
+        return $this->get_info_part( 'store_tnc' );
     }
 
     /**

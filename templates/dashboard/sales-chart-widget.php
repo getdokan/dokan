@@ -1,7 +1,7 @@
 <?php
 
 /**
- *  Dokan Dahsboard Template
+ *  Dokan Dashboard Template
  *
  *  Dokan Dashboard Sales chart report widget
  *

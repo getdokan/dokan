@@ -134,7 +134,7 @@ function dokan_author_field_quick_edit(){
     $user_query = new WP_User_Query( array( 'role' => 'seller' ) );
     $sellers    = $user_query->get_results();
     ?>
-    <div class="dokan-product-author-field">
+    <div class="dokan-product-author-field inline-edit-group">
         <label class="alignleft">
             <span class="title"><?php _e( 'Vendor', 'dokan-lite' ); ?></span>
             <span class="input-text-wrap">
@@ -151,6 +151,22 @@ function dokan_author_field_quick_edit(){
             </span>
         </label>
     </div>
+
+    <script>
+        ;(function($){
+            $('#the-list').on('click', '.editinline', function(){
+                var post_id = $(this).closest('tr').attr('id');
+
+                post_id = post_id.replace("post-", "");
+
+                var $vendor_id_inline_data = $('#dokan_vendor_id_inline_' + post_id).find('#dokan_vendor_id').text(),
+                    $wc_inline_data = $('#woocommerce_inline_' + post_id );
+
+                $( 'select[name="dokan_product_author_override"] option:selected', '.inline-edit-row' ).attr( 'selected', false ).change();
+                $( 'select[name="dokan_product_author_override"] option[value="' + $vendor_id_inline_data + '"]' ).attr( 'selected', 'selected' ).change();
+            });
+        })(jQuery);
+    </script>
     <?php
 }
 
@@ -196,4 +212,23 @@ function dokan_save_quick_edit_vendor_data ( $product ){
 
 add_action( 'woocommerce_product_quick_edit_save', 'dokan_save_quick_edit_vendor_data', 10, 1 );
 
+/**
+ * Add go to vendor dashboard button to my account page
+ *
+ * @since 2.8.2
+ *
+ * @return string
+ */
+function dokan_set_go_to_vendor_dashboard_btn() {
 
+    if ( ! dokan_is_user_seller( get_current_user_id() ) ) {
+        return;
+    }
+
+    printf( '<p><a href="%s" class="dokan-btn dokan-btn-theme vendor-dashboard" >%s</a></p>',
+        dokan_get_navigation_url(),
+        apply_filters( 'dokan_set_go_to_vendor_dashboard_btn_text', __( 'Go to Vendor Dashboard', 'dokan-lite' ) )
+    );
+}
+
+add_action( 'woocommerce_account_dashboard', 'dokan_set_go_to_vendor_dashboard_btn' );
