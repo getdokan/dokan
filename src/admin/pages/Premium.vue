@@ -4,7 +4,7 @@
         <!-- Header Section -->
         <div class="header-section">
             <div class="feature-thumb">
-                <img :src="`${asstesUrl}/images/premium/header-feature-thumb@2x.png`" alt="Upgrade to Dokan Pro!">
+                <img :src="`${asstesUrl}/images/premium/header-feature-thumb@2x.png`" :alt="__( 'Upgrade to Dokan Pro!', 'dokan-lite' )" :title="__( 'Upgrade to Dokan Pro!', 'dokan-lite' )">
             </div>
             <div class="content-area">
                 <h1>{{ __( 'Upgrade to Dokan Pro!', 'dokan-lite' ) }}</h1>
@@ -20,7 +20,7 @@
             <div class="service-list">
                 <div class="service-box" v-for="service in services">
                     <div class="service-thumb">
-                        <img :src="service.thumbnail" :alt="service.title" />
+                        <img :src="service.thumbnail" :alt="service.title" :title="service.title"/>
                     </div>
 
                     <div class="service-detail">
@@ -148,16 +148,16 @@
                 <div class="table-row">
                     <div class="table-col"></div>
                     <div class="table-col">
-                        <a href="https://wedevs.com/dokan/pricing/" class="buy-btn starter" target="_blank">Buy Now</a>
+                        <a href="https://wedevs.com/dokan/pricing/" class="buy-btn starter" target="_blank">{{ __( 'Buy Now', 'dokan-lite' ) }}</a>
                     </div>
                     <div class="table-col popular">
-                        <a href="https://wedevs.com/dokan/pricing/" class="buy-btn professional" target="_blank">Buy Now</a>
+                        <a href="https://wedevs.com/dokan/pricing/" class="buy-btn professional" target="_blank">{{ __( 'Buy Now', 'dokan-lite' ) }}</a>
                     </div>
                     <div class="table-col">
-                        <a href="https://wedevs.com/dokan/pricing/" class="buy-btn business" target="_blank">Buy Now</a>
+                        <a href="https://wedevs.com/dokan/pricing/" class="buy-btn business" target="_blank">{{ __( 'Buy Now', 'dokan-lite' ) }}</a>
                     </div>
                     <div class="table-col">
-                        <a href="https://wedevs.com/dokan/pricing/" class="buy-btn enterprise" target="_blank">Buy Now</a>
+                        <a href="https://wedevs.com/dokan/pricing/" class="buy-btn enterprise" target="_blank">{{ __( 'Buy Now', 'dokan-lite' ) }}</a>
                     </div>
                 </div>
             </div>
@@ -173,7 +173,7 @@
                 <div class="guarantee-detail">
                     <h2>{{ __( '14 Days Money Back Guarantee', 'dokan-lite' ) }}</h2>
                     <p>{{ __( 'After successful purchase, you will be eligible for conditional refund', 'dokan-lite' ) }}</p>
-                    <a :href="payment.termsPolicyUrl"><img :src="payment.viewIcon" alt="Dokan"> {{ __( 'Terms & Condition Applied', 'dokan-lite' ) }}</a>
+                    <a :href="payment.termsPolicyUrl" target="_blank"><img :src="payment.viewIcon" alt="Dokan"> {{ __( 'Terms & Condition Applied', 'dokan-lite' ) }}</a>
                 </div>
             </div>
             <div class="payment-area">
@@ -210,14 +210,14 @@
 
             </div>
 
-            <p>We are proud to say the official <a href="https://themes.getbootstrap.com/" target="_blank">Bootstrap theme marketplace</a> is built using Dokan</p>
+            <p v-html="sprintf( '%s <a href=\'%s\' target=\'_blank\'>%s</a> %s', __( 'We are proud to say the official', 'dokan-lite' ), 'https://themes.getbootstrap.com/', 'Bootstrap theme marketplace', __( 'is built using Dokan', 'dokan-lite' ) )"></p>
         </div>
         <!-- End of Testimonial Section -->
 
         <!-- CTA Section -->
-        <div class="cta-section" v-bind:style="{ 'background-image': 'url(' + cta.styles.bgPattern + '), linear-gradient( 45deg, rgb(255,125,144) 33%, rgb(255,173,111) 100%)' } ">
+        <div class="cta-section" v-bind:style="{ 'background-image': 'url(' + cta.styles.bgPattern + '), linear-gradient( 45deg, rgb(255,125,144) 33%, rgb(255,173,111) 100%)' }">
             <div class="feature-thumb">
-                <img :src="cta.thumbnail" alt="Dokan">
+                <img :src="cta.thumbnail" alt="Dokan Lite">
             </div>
             <div class="content-area">
                 <h2>{{ __( 'Convinced?', 'dokan-lite' ) }}</h2>
@@ -240,8 +240,8 @@
 
 <script>
 
-    import 'slick-carousel/slick/slick.css';
-    import Slick from 'vue-slick';
+import 'slick-carousel/slick/slick.css';
+import Slick from 'vue-slick';
 
 export default {
 
@@ -256,151 +256,151 @@ export default {
 
             services: [
                 {
-                    "title": "Premium modules to make everything easier & better",
+                    "title": this.__( "Premium modules to make everything easier & better", "dokan-lite" ),
                     "thumbnail": dokan.urls.assetsUrl + '/images/premium/service-01@2x.png'
                 },
                 {
-                    "title": "Frontend dashboard for vendors with advanced controls",
+                    "title": this.__( "Frontend dashboard for vendors with advanced controls", "dokan-lite" ),
                     "thumbnail": dokan.urls.assetsUrl + '/images/premium/service-02@2x.png'
                 },
                 {
-                    "title": "Unlimited Product Variations and group product upload",
+                    "title": this.__( "Unlimited Product Variations and group product upload", "dokan-lite" ),
                     "thumbnail": dokan.urls.assetsUrl + '/images/premium/service-03@2x.png'
                 },
                 {
-                    "title": "Zone wise shipping with multiple method for vendors",
+                    "title": this.__( "Zone wise shipping with multiple method for vendors", "dokan-lite" ),
                     "thumbnail": dokan.urls.assetsUrl + '/images/premium/service-04@2x.png'
                 },
                 {
-                    "title": "Store support based on ticket system for your customers",
+                    "title": this.__( "Store support based on ticket system for your customers", "dokan-lite" ),
                     "thumbnail": dokan.urls.assetsUrl + '/images/premium/service-05@2x.png'
                 },
                 {
-                    "title": "Vendors will be able to generate coupon codes",
+                    "title": this.__( "Vendors will be able to generate coupon codes", "dokan-lite" ),
                     "thumbnail": dokan.urls.assetsUrl + '/images/premium/service-06@2x.png'
                 },
                 {
-                    "title": "Earning, Selling and Commission Reports & Statement",
+                    "title": this.__( "Earning, Selling and Commission Reports & Statement", "dokan-lite" ),
                     "thumbnail": dokan.urls.assetsUrl + '/images/premium/service-07@2x.png'
                 },
                 {
-                    "title": "24/7 super fast premium customer support for you",
+                    "title": this.__( "24/7 super fast premium customer support for you", "dokan-lite" ),
                     "thumbnail": dokan.urls.assetsUrl + '/images/premium/service-08@2x.png'
                 },
                 {
-                    "title": "Add Social profile to your vendor’s store and support for store seo",
+                    "title": this.__( "Add Social profile to your vendor’s store and support for store seo", "dokan-lite" ),
                     "thumbnail": dokan.urls.assetsUrl + '/images/premium/service-09@2x.png'
                 }
             ],
 
             comparisons: [
                 {
-                    "title": "Frontend order management",
+                    "title": this.__( "Frontend order management", "dokan-lite" ),
                     "compare" : {
                         "lite": "available",
                         "pro" : 'available'
                     }
                 },
                 {
-                    "title": "Seller Statement Reports",
+                    "title": this.__( "Seller Statement Reports", "dokan-lite" ),
                     "compare" : {
                         "lite": "available",
                         "pro" : 'available'
                     }
                 },
                 {
-                    "title": "Making Announcements",
+                    "title": this.__( "Making Announcements", "dokan-lite" ),
                     "compare" : {
                         "lite": "available",
                         "pro" : 'available'
                     }
                 },
                 {
-                    "title": "Customized Product Categories",
+                    "title": this.__( "Customized Product Categories", "dokan-lite" ),
                     "compare" : {
                         "lite": "unavailable",
                         "pro" : 'available'
                     }
                 },
                 {
-                    "title": "Store SEO",
+                    "title": this.__( "Store SEO", "dokan-lite" ),
                     "compare" : {
                         "lite": "unavailable",
                         "pro" : 'available'
                     }
                 },
                 {
-                    "title": "Back Ordering System",
+                    "title": this.__( "Back Ordering System", "dokan-lite" ),
                     "compare" : {
                         "lite": "unavailable",
                         "pro" : 'available'
                     }
                 },
                 {
-                    "title": "Store Contact Form",
+                    "title": this.__( "Store Contact Form", "dokan-lite" ),
                     "compare" : {
                         "lite": "unavailable",
                         "pro" : 'available'
                     }
                 },
                 {
-                    "title": "Single Product Multiple Seller",
+                    "title": this.__( "Single Product Multiple Seller", "dokan-lite" ),
                     "compare" : {
                         "lite": "unavailable",
                         "pro" : 'available'
                     }
                 },
                 {
-                    "title": "Seller Verification",
+                    "title": this.__( "Seller Verification", "dokan-lite" ),
                     "compare" : {
                         "lite": "unavailable",
                         "pro" : 'available'
                     }
                 },
                 {
-                    "title": "Featured Seller",
+                    "title": this.__( "Featured Seller", "dokan-lite" ),
                     "compare" : {
                         "lite": "unavailable",
                         "pro" : 'available'
                     }
                 },
                 {
-                    "title": "Multiple Commission Types",
+                    "title": this.__( "Multiple Commission Types", "dokan-lite" ),
                     "compare" : {
                         "lite": "unavailable",
                         "pro" : 'available'
                     }
                 },
                 {
-                    "title": "Frontend Shipping Tracking",
+                    "title": this.__( "Frontend Shipping Tracking", "dokan-lite" ),
                     "compare" : {
                         "lite": "unavailable",
                         "pro" : 'available'
                     }
                 },
                 {
-                    "title": "Setup Wizard",
+                    "title": this.__( "Setup Wizard", "dokan-lite" ),
                     "compare" : {
                         "lite": "unavailable",
                         "pro" : 'available'
                     }
                 },
                 {
-                    "title": "Google Maps",
+                    "title": this.__( "Google Maps", "dokan-lite" ),
                     "compare" : {
                         "lite": "unavailable",
                         "pro" : 'available'
                     }
                 },
                 {
-                    "title": "Manage reviews",
+                    "title": this.__( "Manage reviews", "dokan-lite" ),
                     "compare" : {
                         "lite": "unavailable",
                         "pro" : 'available'
                     }
                 },
                 {
-                    "title": "Bookable Product",
+                    "title": this.__( "Bookable Product", "dokan-lite" ),
                     "compare" : {
                         "lite": "unavailable",
                         "pro" : 'available'
@@ -1002,7 +1002,6 @@ export default {
 
                     .compare-list{
                         margin: 0;
-                        /*padding-left: 35px;*/
 
                         li {
                             font-size: 15px;
@@ -1023,24 +1022,9 @@ export default {
                                 margin-right: 12px;
                             }
 
-                            /*&:before {*/
-                                /*content: '';*/
-                                /*position: absolute;*/
-                                /*left: -35px;*/
-                                /*top: 0;*/
-                                /*background-color: #35cd88;*/
-                                /*width: 25px;*/
-                                /*height: 25px;*/
-                                /*border-radius: 50%;*/
-
-                            /*}*/
 
                             &.unavailable {
                                 color: #ccced5;
-
-                                /*&:before {*/
-                                    /*background-color: #dee1ea;*/
-                                /*}*/
                             }
                         }
                     }
