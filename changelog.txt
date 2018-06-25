@@ -1,3 +1,23 @@
+v2.8.2 -> June 25, 2018
+------------------------
+- **New:** Added GDPR Support
+- **New:** Added go to dashboard button in seller's my account page
+- **Fix:** Unable to create order using REST API
+- **Fix:** Unable to assign product author from quick edit page
+- **Fix:** Total sales counting problem fixed
+- **Fix:** Vendor earning suggestion is not working if a product is under multiple category
+- **Fix:** Bank info is not appearing in profile edit page
+- **Fix:** If network mode is enabled then admin is unable to see his store page
+- **Fix:** Function not exists error on store listing api request
+- **Fix:** Vendor order export date column not showing properly in csv format
+- **Fix:** Withdraw page loading issue ( when a seller is deleted by admin )
+- **Fix:** Vendor terms and conditions is not showing in REST API
+- **Tweak:** Hide invenotry product status if the product type is variable
+- **Tweak:** Allow admin to set commission in both integer and floating number
+- **Tweak:** Make dokan store category menu wizard wp standard
+- **Tweak:** Redesign dokan setup wizard page
+- **Tweak:** Redesign the dokan settings page using vuejs
+
 v2.8.1 -> April 28, 2018
 ------------------------
 - **Tweak:** Change dokan all capability label
