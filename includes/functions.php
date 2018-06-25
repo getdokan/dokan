@@ -1822,12 +1822,15 @@ function dokan_wc_email_recipient_add_seller( $email, $order ) {
                 }
             }
         } else {
-            //if single seller is returned
-            $seller       = get_userdata( $sellers );
-            $seller_email = $seller->user_email;
 
-            if ( $email != $seller_email ) {
-                $email .= ',' . $seller_email;
+            if ( $sellers ) {
+                //if single seller is returned
+                $seller       = get_userdata( $sellers );
+                $seller_email = $seller->user_email;
+
+                if ( $email != $seller_email ) {
+                    $email .= ',' . $seller_email;
+                }
             }
         }
     }
