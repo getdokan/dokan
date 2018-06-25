@@ -2316,9 +2316,7 @@ function dokan_get_category_wise_seller_commission_type( $product_id, $category_
     }
 
     if ( $terms ) {
-        if ( 1 == count( $terms ) ) {
-            $category_commision = get_woocommerce_term_meta( $term_id, 'per_category_admin_commission_type', true );
-        }
+        $category_commision = get_woocommerce_term_meta( $term_id, 'per_category_admin_commission_type', true );
     }
 
     return $category_commision;
