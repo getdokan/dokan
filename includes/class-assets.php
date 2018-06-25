@@ -49,7 +49,8 @@ class Dokan_Assets {
                 'urls'            => array(
                     'adminRoot'   => admin_url(),
                     'siteUrl'     => home_url( '/' ),
-                    'storePrefix' => dokan_get_option( 'custom_store_url', 'dokan_general', 'store' )
+                    'storePrefix' => dokan_get_option( 'custom_store_url', 'dokan_general', 'store' ),
+                    'assetsUrl'   => DOKAN_PLUGIN_ASSEST
                 )
             ) );
 
