@@ -469,6 +469,6 @@ class Dokan_Order_Manager {
             return false;
         }
 
-        return true;
+        return $valid;
     }
 }
