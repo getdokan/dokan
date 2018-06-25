@@ -3,9 +3,9 @@
 **Donate Link:** http://tareq.co/donate/  
 **Tags:** woocommerce, multivendor, multi-vendor, vendor, multishop, paypal , seller, store, sell, online, amazon, dokan, ebay, Etsy, multi seller, multi store, multi vendor, multi vendors, multistore, multivendor, product vendor, product vendors, vendor, vendor system, vendors, wc market place, wc marketplace, wc vendors, woo vendors, woocommerce market place, woocommerce marketplace, woocommerce multi vendor,  commission rate, e-commerce, ebay, ecommerce, yith, yithemes  
 **Requires at least:** 4.4  
-**Tested up to:** 4.9.5  
+**Tested up to:** 4.9.6  
 **WC requires at least:** 3.0  
-**WC tested up to:** 3.3.5  
+**WC tested up to:** 3.4.3  
 **Requires PHP:** 5.6  
 **Stable tag:** trunk  
 **License:** GPLv2 or later  
@@ -145,9 +145,6 @@ A. The **Pro** version does! You can seller normal products, downloadable produc
 ### Q. Can each vendor customize his store? ###
 A. Right now we have options for only changing the store banner page. We are working on a better customizable seller store page.
 
-### Q. Does Dokan supports PayPal adaptive payments? ###
-A. Yes it does! We have [an add-on](http://wedevs.com/plugin/dokan/paypal-adaptive-payments/) that brings PayPal adaptive payment support.
-
 ### Q. Will it be possible to take a cut or commission from the sales? ###
 A. Yes, that's how Dokan works. In every sales, you can cut a commission from a order. That's configurable from Dokan settings.
 
@@ -180,6 +177,26 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 ## Changelog ##
+
+v2.8.2 -> June 25, 2018
+------------------------
+- **New:** Added GDPR Support
+- **New:** Added go to dashboard button in seller's my account page
+- **Fix:** Unable to create order using REST API
+- **Fix:** Unable to assign product author from quick edit page
+- **Fix:** Total sales counting problem fixed
+- **Fix:** Vendor earning suggestion is not working if a product is under multiple category
+- **Fix:** Bank info is not appearing in profile edit page
+- **Fix:** If network mode is enabled then admin is unable to see his store page
+- **Fix:** Function not exists error on store listing api request
+- **Fix:** Vendor order export date column not showing properly in csv format
+- **Fix:** Withdraw page loading issue ( when a seller is deleted by admin )
+- **Fix:** Vendor terms and conditions is not showing in REST API
+- **Tweak:** Hide invenotry product status if the product type is variable
+- **Tweak:** Allow admin to set commission in both integer and floating number
+- **Tweak:** Make dokan store category menu wizard wp standard
+- **Tweak:** Redesign dokan setup wizard page
+- **Tweak:** Redesign the dokan settings page using vuejs
 
 v2.8.1 -> April 28, 2018
 ------------------------
@@ -518,7 +535,6 @@ v2.5.1 -> January 12, 2017
 - **Fix:** Product sku search
 - **Fix:** Store search by store name
 
-
 ### v2.4.11 -> May 29, 2016 ###
 ---------------------
 - **New:** Refund request from seller to admin by sellers order details page
@@ -571,7 +587,6 @@ v2.5.1 -> January 12, 2017
 - **Fix:** parent sub-order creation on unsuccessful payment by card
 - **Fix:** Store page breadcrumb fixed to show Store name and listing link properly
 
-
 ### v2.4.6 -> October 12, 2015 ###
 ------------------------------
 - **Tweak:** Added terms and condition option field on Registration form
@@ -582,10 +597,8 @@ v2.5.1 -> January 12, 2017
 - **Fix:** Seller store banner size to cover
 - **Fix:** Store template fix for Twenty Twelve theme
 
-
 ### v2.4.5 -> September 14, 2015 ###
 ------------------------------
-
 - **Fix:** Fix responsive style issue for store page
 - **Fix:** Fix undefined parent order object issue on creat sub-order
 - **Fix:** Fix seller dashboard product comments count on widget

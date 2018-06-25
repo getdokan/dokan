@@ -45,7 +45,7 @@ return [
 	__( 'Vendors will be able to generate coupon codes', 'dokan-lite' ),
 	__( 'Earning, Selling and Commission Reports & Statement', 'dokan-lite' ),
 	__( '24/7 super fast premium customer support for you', 'dokan-lite' ),
-	__( 'Add Social profile to your vendor’s store and support for store seo', 'dokan-lite' ),
+	__( 'Add Social profile to your vendor’s store and support for store SEO', 'dokan-lite' ),
 	__( 'Frontend order management', 'dokan-lite' ),
 	__( 'Seller Statement Reports', 'dokan-lite' ),
 	__( 'Making Announcements', 'dokan-lite' ),
