@@ -1812,7 +1812,7 @@ function dokan_wc_email_recipient_add_seller( $email, $order ) {
         $sellers = dokan_get_seller_id_by_order( dokan_get_prop( $order, 'id' ) );
 
         //if more than 1 seller
-        if ( count( $sellers ) > 1 ) {
+        if ( is_array( $sellers ) && count( $sellers ) > 1 ) {
             foreach ( $sellers as $seller_id ) {
                 $seller       = get_userdata( $seller_id );
                 $seller_email = $seller->user_email;

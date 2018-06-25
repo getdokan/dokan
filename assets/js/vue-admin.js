@@ -1041,7 +1041,7 @@ let Modal = dokan_get_lib('Modal');
                 "title": this.__("24/7 super fast premium customer support for you", "dokan-lite"),
                 "thumbnail": dokan.urls.assetsUrl + '/images/premium/service-08@2x.png'
             }, {
-                "title": this.__("Add Social profile to your vendor’s store and support for store seo", "dokan-lite"),
+                "title": this.__("Add Social profile to your vendor’s store and support for store SEO", "dokan-lite"),
                 "thumbnail": dokan.urls.assetsUrl + '/images/premium/service-09@2x.png'
             }],
 
@@ -3846,7 +3846,7 @@ var staticRenderFns = [
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "price" }, [
-          _c("span", [_c("sup", [_vm._v("$")]), _vm._v("149")]),
+          _c("span", [_c("sup", [_vm._v("$")]), _vm._v("249")]),
           _vm._v(" "),
           _c("span", [_vm._v("/year")])
         ])
@@ -3856,7 +3856,7 @@ var staticRenderFns = [
         _c("div", { staticClass: "plan-name business" }, [_vm._v("Business")]),
         _vm._v(" "),
         _c("div", { staticClass: "price" }, [
-          _c("span", [_c("sup", [_vm._v("$")]), _vm._v("149")]),
+          _c("span", [_c("sup", [_vm._v("$")]), _vm._v("499")]),
           _vm._v(" "),
           _c("span", [_vm._v("/year")])
         ])
@@ -3868,7 +3868,7 @@ var staticRenderFns = [
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "price" }, [
-          _c("span", [_c("sup", [_vm._v("$")]), _vm._v("149")]),
+          _c("span", [_c("sup", [_vm._v("$")]), _vm._v("999")]),
           _vm._v(" "),
           _c("span", [_vm._v("/year")])
         ])

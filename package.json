@@ -63,6 +63,6 @@
     "vue-style-loader": "^3.0.1",
     "vue-template-compiler": "^2.5.13",
     "webpack": "^3.10.0",
-    "wp-vue-i18n": "^1.0.0"
+    "wp-vue-i18n": "^1.1.1"
   }
 }

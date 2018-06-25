@@ -95,21 +95,21 @@
                     <div class="table-col popular">
                         <div class="plan-name professional">Professional</div>
                         <div class="price">
-                            <span><sup>$</sup>149</span>
+                            <span><sup>$</sup>249</span>
                             <span>/year</span>
                         </div>
                     </div>
                     <div class="table-col">
                         <div class="plan-name business">Business</div>
                         <div class="price">
-                            <span><sup>$</sup>149</span>
+                            <span><sup>$</sup>499</span>
                             <span>/year</span>
                         </div>
                     </div>
                     <div class="table-col">
                         <div class="plan-name enterprise">Enterprise</div>
                         <div class="price">
-                            <span><sup>$</sup>149</span>
+                            <span><sup>$</sup>999</span>
                             <span>/year</span>
                         </div>
                     </div>
@@ -288,7 +288,7 @@ export default {
                     "thumbnail": dokan.urls.assetsUrl + '/images/premium/service-08@2x.png'
                 },
                 {
-                    "title": this.__( "Add Social profile to your vendor’s store and support for store seo", "dokan-lite" ),
+                    "title": this.__( "Add Social profile to your vendor’s store and support for store SEO", "dokan-lite" ),
                     "thumbnail": dokan.urls.assetsUrl + '/images/premium/service-09@2x.png'
                 }
             ],
