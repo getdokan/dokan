@@ -45,7 +45,7 @@
                     <time datetime="<?php echo date('Y-m-d', strtotime( dokan_get_date_created( $order ) ) ); ?>" title="<?php echo esc_attr( strtotime( dokan_get_date_created( $order ) ) ); ?>"><?php echo date_i18n( get_option( 'date_format' ), strtotime( dokan_get_date_created( $order ) ) ); ?></time>
                 </td>
                 <td class="order-status" style="text-align:left; white-space:nowrap;">
-                    <?php echo isset( $statuses[dokan_get_prop( $order, 'status' )] ) ? $statuses[dokan_get_prop( $order, 'status' )] : dokan_get_prop( $order, 'status' ); ?>
+                    <?php echo isset( $statuses['wc-' . dokan_get_prop( $order, 'status' )] ) ? $statuses['wc-' . dokan_get_prop( $order, 'status' )] : dokan_get_prop( $order, 'status' ); ?>
                 </td>
                 <td class="order-total">
                     <?php echo sprintf( _n( '%s for %s item', '%s for %s items', $item_count, 'dokan-lite' ), $order->get_formatted_order_total(), $item_count ); ?>
