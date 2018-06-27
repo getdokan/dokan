@@ -27,7 +27,6 @@ abstract class Dokan_REST_Controller extends WP_REST_Controller {
      */
     public function get_items( $request ) {
         $query_args = $this->prepare_objects_query( $request );
-
         $query  = new WP_Query();
         $result = $query->query( $query_args );
 
@@ -260,8 +259,8 @@ abstract class Dokan_REST_Controller extends WP_REST_Controller {
     protected function prepare_objects_query( $request ) {
         $args                        = array();
         $args['fields']              = 'ids';
-        $args['post_status']         = $this->post_status;
-        $args['author']              = dokan_get_current_user_id();
+        $args['post_status']         = !isset( $request['post_status'] ) ? $this->post_status : $request['post_status'];
+        $args['author']              = !isset( $request['id'] ) ? dokan_get_current_user_id() : $request['id'];
         $args['offset']              = $request['offset'];
         $args['order']               = $request['order'];
         $args['orderby']             = $request['orderby'];
@@ -321,6 +320,7 @@ abstract class Dokan_REST_Controller extends WP_REST_Controller {
     protected function prepare_items_query( $prepared_args = array(), $request = null ) {
 
         $valid_vars = array_flip( $this->get_allowed_query_vars() );
+
         $query_args = array();
         foreach ( $valid_vars as $var => $index ) {
             if ( isset( $prepared_args[ $var ] ) ) {
