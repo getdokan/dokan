@@ -52,7 +52,7 @@ function dokan_admin_shop_order_edit_columns( $existing_columns ) {
     }
 
     // Remove seller, suborder column if seller is viewing his own product
-    if ( ! current_user_can( 'manage_options' ) || ( isset( $_GET['author'] ) && ! empty( $_GET['author'] ) ) ) {
+    if ( ! current_user_can( 'manage_woocommerce' ) || ( isset( $_GET['author'] ) && ! empty( $_GET['author'] ) ) ) {
         unset( $columns['suborder'] );
         unset( $columns['seller'] );
     }
