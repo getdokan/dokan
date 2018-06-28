@@ -51,6 +51,12 @@ function dokan_admin_shop_order_edit_columns( $existing_columns ) {
         $existing_columns['suborder']  = __( 'Sub Order', 'dokan-lite' );
     }
 
+    // Remove seller, suborder column if seller is viewing his own product
+    if ( ! current_user_can( 'manage_options' ) || ( isset( $_GET['author'] ) && ! empty( $_GET['author'] ) ) ) {
+        unset( $columns['suborder'] );
+        unset( $columns['seller'] );
+    }
+
     return apply_filters( 'dokan_edit_shop_order_columns', $columns );
 }
 
