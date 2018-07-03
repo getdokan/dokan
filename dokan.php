@@ -404,6 +404,7 @@ final class WeDevs_Dokan {
         register_widget( 'Dokan_Store_Location' );
         register_widget( 'Dokan_Store_Category_Menu' );
         register_widget( 'Dokan_Toprated_Widget' );
+        register_widget( 'Dokan_Store_Open_Close' );
     }
 
     /**

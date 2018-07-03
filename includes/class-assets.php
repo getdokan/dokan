@@ -213,6 +213,9 @@ class Dokan_Assets {
             'dokan-plugin-list-css' => array(
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/plugin.css',
             ),
+            'dokan-timepicker' => array(
+                'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/jquery-ui/timepicker/timepicker.min.css',
+            ),
             'dokan-admin-css' => array(
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/admin.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/admin.css' ),
@@ -301,6 +304,11 @@ class Dokan_Assets {
             'dokan-select2-js' => array(
                 'src'       => $asset_url . '/vendors/select2/select2.full.min.js',
                 'deps'      => array( 'jquery' ),
+            ),
+            'dokan-timepicker' => array(
+                'src'       => $asset_url . '/vendors/jquery-ui/timepicker/timepicker.min.js',
+                'deps'      => array( 'jquery' ),
+                'in_footer' => false,
             ),
 
             // customize scripts
@@ -492,6 +500,7 @@ class Dokan_Assets {
             wp_enqueue_style( 'woocommerce-general' );
             wp_enqueue_style( 'dokan-select2-css' );
             wp_enqueue_style( 'dokan-chosen-style' );
+            wp_enqueue_style( 'dokan-timepicker' );
         }
 
         if ( DOKAN_LOAD_SCRIPTS ) {
@@ -521,6 +530,7 @@ class Dokan_Assets {
 
         if ( isset( $wp->query_vars['settings'] ) == 'store' ) {
             wp_enqueue_script( 'wc-country-select' );
+            wp_enqueue_script( 'dokan-timepicker' );
         }
     }
 

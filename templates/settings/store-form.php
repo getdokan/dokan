@@ -33,9 +33,9 @@
         $storename    = $_POST['dokan_store_name']; // WPCS: CSRF ok, Input var ok.
         $map_location = $_POST['location'];         // WPCS: CSRF ok, Input var ok.
         $map_address  = $_POST['find_address'];     // WPCS: CSRF ok, Input var ok.
-        
+
         $posted_address = wc_clean( $_POST['dokan_address'] ); // WPCS: CSRF ok, Input var ok.
-        
+
         $address_street1 = $posted_address['street_1'];
         $address_street2 = $posted_address['street_2'];
         $address_city    = $posted_address['city'];
@@ -43,7 +43,7 @@
         $address_country = $posted_address['country'];
         $address_state   = $posted_address['state'];
     }
-    
+
     $dokan_appearance = dokan_get_option( 'store_header_template', 'dokan_appearance', 'default' );
     $dokan_days = array( 'sunday','monday','tuesday','wednesday','thursday','friday','saturday' );
 
@@ -223,12 +223,14 @@
         <?php endif;?>
 
         <div class="dokan-form-group store-open-close">
-            <label class="dokan-w3 control-label" for="dokan-store-close">Store Open Close</label>
+            <label class="dokan-w3 control-label" for="dokan-store-close">
+                <?php _e( 'Store Open Close', 'dokan-lite' ); ?>
+            </label>
             <div class="dokan-w6" style="width: auto">
                 <?php foreach ( $dokan_days as $key => $day ) : ?>
                     <div class="dokan-form-group">
                         <label class="day control-label" for="<?php echo $day ?>-opening-time">
-                            <?php esc_attr_e( ucfirst( $day ), 'dokan-lite' ); ?>   
+                            <?php esc_attr_e( ucfirst( $day ), 'dokan-lite' ); ?>
                         </label>
                         <label for="">
                             <select name="<?php echo esc_attr( $day ) ?>_on_off" class="dokan-on-off dokan-form-control">
@@ -237,16 +239,16 @@
                             </select>
                         </label>
                         <label for="opening-time" class="time" style="visibility: <?php echo isset( $all_times[$day]['open'] ) == 'open' ? 'visible' : 'hidden' ?>" >
-                            <input type="text" class="dokan-form-control" name="<?php echo strtolower( $day ) ?>_opening_time" id="<?php echo $day ?>-opening-time" placeholder="10:00 AM" value="<?php echo isset( $all_times[$day]['opening_time'] ) ? $all_times[$day]['opening_time'] : '' ?>" >
+                            <input type="text" class="dokan-form-control" name="<?php echo strtolower( $day ) ?>_opening_time" id="<?php echo $day ?>-opening-time" placeholder="<?php _e( '10:00 AM' ); ?>" value="<?php echo isset( $all_times[$day]['opening_time'] ) ? $all_times[$day]['opening_time'] : '' ?>" >
                         </label>
                         <label for="closing-time" class="time" style="visibility: <?php echo isset( $all_times[$day]['open'] ) == 'open' ? 'visible' : 'hidden' ?>" >
-                            <input type="text" class="dokan-form-control" name="<?php echo $day ?>_closing_time" id="<?php echo $day ?>-closing-time" placeholder="2:00 PM" value="<?php echo isset( $all_times[$day]['closing_time'] ) ? $all_times[$day]['closing_time'] : '' ?>">
+                            <input type="text" class="dokan-form-control" name="<?php echo $day ?>_closing_time" id="<?php echo $day ?>-closing-time" placeholder="<?php _e( '2:00 PM' ); ?>" value="<?php echo isset( $all_times[$day]['closing_time'] ) ? $all_times[$day]['closing_time'] : '' ?>">
                         </label>
                     </div>
                 <?php endforeach; ?>
             </div>
-        </div>     
-    
+        </div>
+
         <?php do_action( 'dokan_settings_form_bottom', $current_user, $profile_info ); ?>
 
         <div class="dokan-form-group">

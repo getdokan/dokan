@@ -96,5 +96,3 @@ class Dokan_Store_Open_Close extends WP_Widget {
         <?php
     }
 }
-
-add_action( 'widgets_init', create_function( '', "register_widget( 'Dokan_Store_Open_Close' );" ) );
