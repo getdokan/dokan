@@ -39,7 +39,7 @@ global $wpdb;
                 <?php
                     echo '<option value=""></option>';
                     global $wpdb;
-                    $user_id = get_current_user_id();
+                    $user_id = dokan_get_current_user_id();
 
                     $sql = "SELECT $wpdb->posts.* FROM $wpdb->posts
                             INNER JOIN $wpdb->postmeta

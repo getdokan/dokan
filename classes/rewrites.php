@@ -19,7 +19,7 @@ class Dokan_Rewrites {
         add_action( 'init', array( $this, 'register_rule' ) );
 
         add_filter( 'template_include', array( $this, 'store_template' ) );
-        add_filter( 'template_include', array( $this,  'product_edit_template' ) );
+        add_filter( 'template_include', array( $this,  'product_edit_template' ), 99 );
         add_filter( 'template_include', array( $this,  'store_toc_template' ) );
 
         add_filter( 'query_vars', array( $this, 'register_query_var' ) );
@@ -165,6 +165,11 @@ class Dokan_Rewrites {
         if ( !empty( $store_name ) ) {
             $store_user = get_user_by( 'slug', $store_name );
 
+            // Bell out for Vendor Stuff extensions
+            if ( ! is_super_admin( $store_user->ID ) && user_can( $store_user->ID, 'vendor_staff' ) ) {
+                return get_404_template();
+            }
+
             // no user found
             if ( ! $store_user ) {
                 return get_404_template();
@@ -215,6 +220,10 @@ class Dokan_Rewrites {
             return $template;
         }
 
+        if ( ! current_user_can( 'dokan_edit_product' ) ) {
+            return $template;
+        }
+
         if ( ! ( get_query_var( 'edit' ) && is_singular( 'product' ) ) ) {
             return $template;
         }
@@ -222,7 +231,6 @@ class Dokan_Rewrites {
         $edit_product_url = dokan_locate_template( 'products/new-product-single.php' );
 
         return apply_filters( 'dokan_get_product_edit_template', $edit_product_url );
-        // return apply_filters( 'dokan_get_product_edit_template', $edit_product_url );
     }
 
     /**

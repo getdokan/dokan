@@ -1,6 +1,6 @@
 <?php
 /**
- * Dokan Dahsboard Product Listing
+ * Dokan Dashboard Product Listing
  * filter template
  *
  * @since 2.4
@@ -13,7 +13,7 @@
     <form class="dokan-form-inline dokan-w6 dokan-product-date-filter" method="get" >
 
         <div class="dokan-form-group">
-            <?php dokan_product_listing_filter_months_dropdown( get_current_user_id() ); ?>
+            <?php dokan_product_listing_filter_months_dropdown( dokan_get_current_user_id() ); ?>
         </div>
 
         <div class="dokan-form-group">

@@ -54,7 +54,7 @@ function dokan_withdraw_get_active_methods() {
  * @return array
  */
 function dokan_get_seller_active_withdraw_methods() {
-    $payment_methods = get_user_meta( get_current_user_id(), 'dokan_profile_settings' );
+    $payment_methods = get_user_meta( dokan_get_current_user_id(), 'dokan_profile_settings' );
     $paypal = isset( $payment_methods[0]['payment']['paypal']['email'] ) && $payment_methods[0]['payment']['paypal']['email'] !== false ? 'paypal' : '';
     $bank = isset( $payment_methods[0]['payment']['bank']['ac_number'] ) && $payment_methods[0]['payment']['bank']['ac_number']  !== '' ? 'bank' : '';
     $skrill = isset( $payment_methods[0]['payment']['skrill']['email'] ) && $payment_methods[0]['payment']['skrill']['email'] !== false ? 'skrill' : '';
@@ -68,7 +68,7 @@ function dokan_get_seller_active_withdraw_methods() {
         }
     }
 
-    return $active_payment_methods;
+    return apply_filters( 'dokan_get_seller_active_withdraw_methods', $active_payment_methods );
 }
 
 
@@ -213,17 +213,17 @@ function dokan_withdraw_method_bank( $store_settings ) {
  * @global WPDB $wpdb
  * @return array
  */
-function dokan_get_withdraw_count() {
+function dokan_get_withdraw_count( $user_id = '' ) {
     global $wpdb;
 
     $cache_key = 'dokan_withdraw_count';
     $counts = wp_cache_get( $cache_key );
 
     if ( false === $counts ) {
-
-        $counts = array( 'pending' => 0, 'completed' => 0, 'cancelled' => 0 );
-        $sql = "SELECT COUNT(id) as count, status FROM {$wpdb->dokan_withdraw} GROUP BY status";
-        $result = $wpdb->get_results( $sql );
+        $where_user = !empty( $user_id ) ? " AND user_id=$user_id" : '';
+        $counts     = array( 'pending' => 0, 'completed' => 0, 'cancelled' => 0 );
+        $sql        = "SELECT COUNT(id) as count, status FROM {$wpdb->dokan_withdraw} WHERE 1=1{$where_user} GROUP BY status";
+        $result     = $wpdb->get_results( $sql );
 
         if ( $result ) {
             foreach ($result as $row) {
@@ -248,9 +248,16 @@ function dokan_get_withdraw_count() {
  *
  */
 function dokan_withdraw_get_active_order_status() {
-    $order_status = dokan_get_option( 'withdraw_order_status', 'dokan_withdraw', array( 'wc-completed' ) );
+    $order_status  = dokan_get_option( 'withdraw_order_status', 'dokan_withdraw', array( 'wc-completed' ) );
+    $saving_status = array();
 
-    return apply_filters( 'dokan_withdraw_active_status', $order_status );
+    foreach ( $order_status as $key => $status ) {
+        if ( ! empty( $status ) ) {
+            $saving_status[] = $status;
+        }
+    }
+
+    return apply_filters( 'dokan_withdraw_active_status', $saving_status );
 }
 
 /**

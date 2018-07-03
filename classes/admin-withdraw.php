@@ -103,6 +103,10 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
                 $amount  = $_POST['amount'][$key];
                 $method  = $_POST['method'][$key];
 
+                if ( dokan_get_seller_balance( $user_id, false ) < $amount ) {
+                    continue;
+                }
+
                 $this->update_status( $withdraw_id, $user_id, 1 );
                 do_action( 'dokan_withdraw_request_approved', $user_id, $amount, $method );
             }
@@ -124,6 +128,27 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
     }
 
     /**
+     * Generate CSV file from ajax request (Vue)
+     *
+     * @return void
+     */
+    public function withdraw_ajax() {
+
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            exit;
+        }
+
+        header( 'Content-type: html/csv' );
+        header( 'Content-Disposition: attachment; filename="withdraw-'.date( 'd-m-y' ).'.csv"' );
+
+        $ids = $_POST['id'];
+
+        $this->generate_csv( $ids );
+
+        exit;
+    }
+
+    /**
      * Export withdraws as CSV format
      *
      * @param string  $withdraw_ids
@@ -135,7 +160,7 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
 
         $result = $wpdb->get_results(
             "SELECT * FROM {$wpdb->dokan_withdraw}
-            WHERE id in('$withdraw_ids')"
+            WHERE id in ($withdraw_ids) and status = 0"
         );
 
         if ( ! $result ) {
@@ -445,6 +470,34 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
         <?php
 
         $this->add_note_script();
+    }
+
+    /**
+     * Update a note
+     *
+     * @return void
+     */
+    function note_update() {
+
+        if ( isset( $_POST['dokan_admin_nonce'] ) && !wp_verify_nonce( sanitize_key( $_POST['dokan_admin_nonce'] ), 'dokan_admin_action' ) ) {
+            return;
+        }
+
+        global $wpdb;
+
+        $table_name = $wpdb->prefix . 'dokan_withdraw';
+        $update     = $wpdb->update( $table_name, array( 'note' => sanitize_text_field( $_POST['note'] ) ), array( 'id' => $_POST['row_id'] ) );
+
+        if ( $update ) {
+            $html = array(
+                'note' => wp_kses_post( $_POST['note'] ),
+            );
+
+            wp_send_json_success( $html );
+
+        } else {
+            wp_send_json_error();
+        }
     }
 
     /**

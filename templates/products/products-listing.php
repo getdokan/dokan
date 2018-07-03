@@ -36,10 +36,13 @@
 
                     <?php if ( dokan_is_seller_enabled( get_current_user_id() ) ): ?>
                         <span class="dokan-add-product-link">
-                            <a href="<?php echo dokan_get_navigation_url( 'new-product' ); ?>" class="dokan-btn dokan-btn-theme <?php echo ( 'on' == dokan_get_option( 'disable_product_popup', 'dokan_selling', 'off' ) ) ? '' : 'dokan-add-new-product'; ?>">
-                                <i class="fa fa-briefcase">&nbsp;</i>
-                                <?php _e( 'Add new product', 'dokan-lite' ); ?>
-                            </a>
+                            <?php if ( current_user_can( 'dokan_add_product' ) ): ?>
+                                <a href="<?php echo dokan_get_navigation_url( 'new-product' ); ?>" class="dokan-btn dokan-btn-theme <?php echo ( 'on' == dokan_get_option( 'disable_product_popup', 'dokan_selling', 'off' ) ) ? '' : 'dokan-add-new-product'; ?>">
+                                    <i class="fa fa-briefcase">&nbsp;</i>
+                                    <?php _e( 'Add new product', 'dokan-lite' ); ?>
+                                </a>
+                            <?php endif ?>
+
                             <?php
                                 do_action( 'dokan_after_add_product_btn' );
                             ?>
@@ -53,7 +56,7 @@
                     <?php dokan_product_listing_filter(); ?>
                 </div>
 
-                <div class="dokan-dahsboard-product-listing-wrapper">
+                <div class="dokan-dashboard-product-listing-wrapper">
                     <table class="dokan-table dokan-table-striped product-listing-table">
                         <thead>
                             <tr>
@@ -109,29 +112,37 @@
                             }
 
                             $original_post = $post;
-                            $product_query = dokan()->product->all( $args );
+                            $product_query = dokan()->product->all( apply_filters( 'dokan_product_listing_arg', $args ) );
 
                             if ( $product_query->have_posts() ) {
                                 while ($product_query->have_posts()) {
                                     $product_query->the_post();
 
+                                    $row_actions = dokan_product_get_row_action( $post );
                                     $tr_class = ($post->post_status == 'pending' ) ? ' class="danger"' : '';
                                     $view_class = ($post->post_status == 'pending' ) ? 'dokan-hide' : '';
                                     $product = wc_get_product( $post->ID );
                                     ?>
                                     <tr<?php echo $tr_class; ?>>
                                     <td data-title="<?php _e( 'Image', 'dokan-lite' ); ?>">
-                                        <a href="<?php echo dokan_edit_product_url( $post->ID ); ?>"><?php echo $product->get_image(); ?></a>
+                                        <?php if ( current_user_can( 'dokan_edit_product' ) ): ?>
+                                            <a href="<?php echo dokan_edit_product_url( $post->ID ); ?>"><?php echo $product->get_image(); ?></a>
+                                        <?php else: ?>
+                                            <?php echo $product->get_image(); ?>
+                                        <?php endif ?>
                                     </td>
                                     <td data-title="<?php _e( 'Name', 'dokan-lite' ); ?>">
-                                        <p><a href="<?php echo dokan_edit_product_url( $post->ID ); ?>"><?php echo $product->get_title(); ?></a></p>
+                                        <?php if ( current_user_can( 'dokan_edit_product' ) ): ?>
+                                            <p><a href="<?php echo dokan_edit_product_url( $post->ID ); ?>"><?php echo $product->get_title(); ?></a></p>
+                                        <?php else: ?>
+                                            <p><a href=""><?php echo $product->get_title(); ?></a></p>
+                                        <?php endif ?>
 
-                                        <div class="row-actions">
-                                            <span class="edit"><a href="<?php echo dokan_edit_product_url( $post->ID ); ?>"><?php _e( 'Edit', 'dokan-lite' ); ?></a> | </span>
-                                            <span class="delete"><a onclick="return confirm('Are you sure?');" href="<?php echo wp_nonce_url( add_query_arg( array( 'action' => 'dokan-delete-product', 'product_id' => $post->ID ), dokan_get_navigation_url('products') ), 'dokan-delete-product' ); ?>"><?php _e( 'Delete Permanently', 'dokan-lite' ); ?></a>  </span>
-                                            <span class="view <?php echo $view_class ?>"> | <a href="<?php echo get_permalink( dokan_get_prop( $product, 'id' ) ); ?>" rel="permalink"><?php _e( 'View', 'dokan-lite' ); ?></a></span>
-                                            <?php do_action( 'dokan_product_listin_row_action', $product ); ?>
-                                        </div>
+                                        <?php if ( !empty( $row_actions ) ): ?>
+                                            <div class="row-actions">
+                                                <?php echo $row_actions; ?>
+                                            </div>
+                                        <?php endif ?>
                                     </td>
                                     <td class="post-status" data-title="<?php _e( 'Status', 'dokan-lite' ); ?>">
                                         <label class="dokan-label <?php echo dokan_get_post_status_label_class( $post->post_status ); ?>"><?php echo dokan_get_post_status( $post->post_status ); ?></label>

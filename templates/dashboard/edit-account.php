@@ -2,7 +2,7 @@
 /**
  *  Dokan Dashboard Template
  *
- *  Dokan Main Dahsboard template for Front-end
+ *  Dokan Main Dashboard template for Front-end
  *
  *  @since 2.5
  *

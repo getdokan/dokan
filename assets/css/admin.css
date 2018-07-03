@@ -138,6 +138,102 @@
   margin: 10px 0 0 0;
   padding: 0;
 }
+.dokan-dashboard .postbox.dokan-status .main {
+  padding: 0;
+}
+.dokan-dashboard .postbox.dokan-status .inside {
+  margin: 0;
+}
+.dokan-dashboard .postbox.dokan-status ul {
+  margin-top: -13px;
+}
+.dokan-dashboard .postbox.dokan-status ul li {
+  min-height: 50px;
+  width: 50%;
+  float: left;
+  padding: 0;
+  box-sizing: border-box;
+  margin: 0;
+  border-top: 1px solid #ececec;
+  color: #aaa;
+}
+.dokan-dashboard .postbox.dokan-status ul li a {
+  display: block;
+  color: #aaa;
+  padding: 10px;
+  -webkit-transition: all ease .5s;
+  transition: all ease .5s;
+  position: relative;
+  font-size: 12px;
+}
+.dokan-dashboard .postbox.dokan-status ul li a .details {
+  color: #aaa;
+}
+.dokan-dashboard .postbox.dokan-status ul li a .details span {
+  margin-left: 10px;
+  font-weight: bold;
+}
+.dokan-dashboard .postbox.dokan-status ul li a .details span.up {
+  color: green;
+}
+.dokan-dashboard .postbox.dokan-status ul li a .details span.up::before {
+  content: '+';
+}
+.dokan-dashboard .postbox.dokan-status ul li a .details span.up::after {
+  content: '%';
+}
+.dokan-dashboard .postbox.dokan-status ul li a .details span.down {
+  color: red;
+}
+.dokan-dashboard .postbox.dokan-status ul li a .details span.down::before {
+  content: '-';
+}
+.dokan-dashboard .postbox.dokan-status ul li a .details span.down::after {
+  content: '%';
+}
+.dokan-dashboard .postbox.dokan-status ul li a strong {
+  font-size: 18px;
+  line-height: 1.2em;
+  font-weight: 400;
+  display: block;
+  color: #21759b;
+}
+.dokan-dashboard .postbox.dokan-status ul li .dashicons {
+  font-size: 2em;
+  float: left;
+  margin: 15px;
+}
+.dokan-dashboard .postbox.dokan-status ul li:nth-child(1) {
+  border-top: none;
+}
+.dokan-dashboard .postbox.dokan-status ul li:nth-child(2) {
+  border-top: none;
+}
+.dokan-dashboard .postbox.dokan-status ul li:nth-child(odd) {
+  border-right: 1px solid #ececec;
+}
+.dokan-dashboard .postbox.dokan-status ul li.sale .dashicons {
+  color: #307be1;
+}
+.dokan-dashboard .postbox.dokan-status ul li.commission .dashicons {
+  color: #6da754;
+}
+.dokan-dashboard .postbox.dokan-status ul li.vendor .dashicons {
+  color: #169c22;
+}
+.dokan-dashboard .postbox.dokan-status ul li.approval .dashicons {
+  color: #fd9728;
+}
+.dokan-dashboard .postbox.dokan-status ul li.product .dashicons::before {
+  font-family: WooCommerce;
+  content: "\e006";
+  color: #464646;
+}
+.dokan-dashboard .postbox.dokan-status ul li.withdraw .dashicons::before {
+  font-family: WooCommerce;
+  content: "\e01e";
+  color: #cd2c2f;
+}
 .dokan-dashboard .mark-red a {
   color: red;
 }

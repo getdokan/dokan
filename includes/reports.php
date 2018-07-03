@@ -1,5 +1,6 @@
 <?php
 
+if ( ! function_exists( 'dokan_get_order_report_data' ) ) :
 /**
  * Generate SQL query and fetch the report data based on the arguments passed
  *
@@ -15,7 +16,9 @@
  * @return obj
  */
 function dokan_get_order_report_data( $args = array(), $start_date, $end_date ) {
-    global $wpdb, $current_user;
+    global $wpdb;
+
+    $current_user = dokan_get_current_user_id();
 
     $defaults = array(
         'data'         => array(),
@@ -110,7 +113,7 @@ function dokan_get_order_report_data( $args = array(), $start_date, $end_date ) 
     $query['where']  = "
         WHERE   posts.post_type     = 'shop_order'
         AND     posts.post_status   != 'trash'
-        AND     do.seller_id = {$current_user->ID}
+        AND     do.seller_id = {$current_user}
         AND     do.order_status IN ('" . implode( "','", apply_filters( 'woocommerce_reports_order_statuses', array( 'wc-completed', 'wc-processing', 'wc-on-hold' ) ) ) . "')
         ";
 
@@ -234,6 +237,10 @@ function dokan_get_order_report_data( $args = array(), $start_date, $end_date ) 
     return $result;
 }
 
+endif;
+
+
+if ( ! function_exists( 'dokan_dashboard_sales_overview' ) ) :
 
 /**
  * Generate seller dashboard overview chart
@@ -248,7 +255,10 @@ function dokan_dashboard_sales_overview() {
     dokan_sales_overview_chart_data( $start_date, $end_date, 'day' );
 }
 
+endif;
 
+
+if ( ! function_exists( 'dokan_sales_overview_chart_data' ) ) :
 
 /**
  * Prepares chart data for sales overview
@@ -418,3 +428,5 @@ function dokan_sales_overview_chart_data( $start_date, $end_date, $group_by ) {
     </script>
     <?php
 }
+
+endif;

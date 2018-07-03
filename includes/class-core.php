@@ -20,6 +20,7 @@ class Dokan_Core {
         add_filter( 'body_class', array( $this, 'add_dashboard_template_class' ), 99 );
         add_filter( 'wp_title', array( $this, 'wp_title' ), 20, 2 );
         add_action( 'template_redirect', array( $this, 'redirect_if_not_logged_seller' ), 11 );
+        add_action( 'admin_init', array( $this, 'redirect_after_activate' ), 999 );
     }
 
     /**
@@ -40,8 +41,7 @@ class Dokan_Core {
         $no_access   = dokan_get_option( 'admin_access', 'dokan_general', 'on' );
         $valid_pages = array( 'admin-ajax.php', 'admin-post.php', 'async-upload.php', 'media-upload.php' );
         $user_role   = reset( $current_user->roles );
-
-        if ( ( $no_access == 'on' ) && ( !in_array( $pagenow, $valid_pages ) ) && in_array( $user_role, array( 'seller', 'customer' ) ) ) {
+        if ( ( $no_access == 'on' ) && ( !in_array( $pagenow, $valid_pages ) ) && in_array( $user_role, array( 'seller', 'customer', 'vendor_staff' ) ) ) {
             wp_redirect( home_url() );
             exit;
         }
@@ -65,8 +65,12 @@ class Dokan_Core {
     function hide_others_uploads( $where ) {
         global $pagenow, $wpdb;
 
-        if ( ( $pagenow == 'upload.php' || $pagenow == 'media-upload.php' ) && current_user_can( 'dokandar' ) ) {
-            $user_id = get_current_user_id();
+        if ( current_user_can( 'manage_woocommerce' ) ) {
+            return $where;
+        }
+
+        if ( ( $pagenow == 'upload.php' || $pagenow == 'media-upload.php' ) && current_user_can( 'dokandar' )  ) {
+            $user_id = dokan_get_current_user_id();
 
             $where .= " AND $wpdb->posts.post_author = $user_id";
         }
@@ -157,6 +161,25 @@ class Dokan_Core {
             dokan_redirect_login();
             dokan_redirect_if_not_seller();
         }
+    }
+
+    /**
+     * Redirect after activation
+     *
+     * @since 2.8.0
+     *
+     * @return void
+     */
+    public function redirect_after_activate() {
+        if ( ! get_transient( '_dokan_setup_page_redirect' ) ) {
+            return;
+        }
+
+        // Delete the redirect transient
+        delete_transient( '_dokan_setup_page_redirect' );
+
+        wp_safe_redirect( add_query_arg( array( 'page' => 'dokan-setup' ), admin_url( 'index.php' ) ) );
+        exit;
     }
 
 }

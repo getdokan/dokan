@@ -26,7 +26,21 @@ class Dokan_Admin_User_Profile {
     function enqueue_scripts( $page ) {
         if ( in_array( $page, array( 'profile.php', 'user-edit.php' )) ) {
             wp_enqueue_media();
+
+            $admin_admin_script = array(
+                'ajaxurl'           => admin_url( 'admin-ajax.php' ),
+                'nonce'             => wp_create_nonce( 'dokan_reviews' ),
+                'ajax_loader'       => DOKAN_PLUGIN_ASSEST.'/images/ajax-loader.gif',
+                'seller'            => array(
+                    'available'     => __( 'Available', 'dokan-lite' ),
+                    'notAvailable'  => __( 'Not Available', 'dokan-lite' )
+                ),
+            );
+
+            wp_enqueue_script( 'speaking-url' );
+            wp_localize_script( 'jquery', 'dokan_user_profile', $admin_admin_script );
         }
+
     }
 
     /**
@@ -107,6 +121,14 @@ class Dokan_Admin_User_Profile {
                     <th><?php esc_html_e( 'Store name', 'dokan-lite' ); ?></th>
                     <td>
                         <input type="text" name="dokan_store_name" class="regular-text" value="<?php echo esc_attr( $store_settings['store_name'] ); ?>">
+                    </td>
+                </tr>
+
+                <tr>
+                    <th><?php esc_html_e( 'Store URL', 'dokan-lite' ); ?></th>
+                    <td>
+                        <input type="text" name="dokan_store_url" data-vendor="<?php echo $user->ID; ?>" class="regular-text" id="seller-url" value="<?php echo esc_attr( $user->data->user_nicename ); ?>"><strong id="url-alart-mgs"></strong>
+                        <p><small><?php echo home_url() . '/' . dokan_get_option( 'custom_store_url', 'dokan_general', 'store' ); ?>/<strong id="url-alart"><?php echo esc_attr( $user->data->user_nicename ); ?></strong></small></p>
                     </td>
                 </tr>
 
@@ -236,6 +258,18 @@ class Dokan_Admin_User_Profile {
                         </td>
                     </tr>
                     <tr>
+                        <th><?php esc_html_e( 'Routing Number', 'dokan-lite' ); ?></th>
+                        <td>
+                            <input type="text" disabled class="regular-text" value="<?php echo isset( $store_settings['payment']['bank']['routing_number'] ) ? esc_attr( $store_settings['payment']['bank']['routing_number'] ) : ''; ?>">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><?php esc_html_e( 'Bank IBAN ', 'dokan-lite' ); ?></th>
+                        <td>
+                            <input type="text" disabled class="regular-text" value="<?php echo isset( $store_settings['payment']['bank']['iban'] ) ? esc_attr( $store_settings['payment']['bank']['iban'] ) : ''; ?>">
+                        </td>
+                    </tr>
+                    <tr>
                         <th><?php esc_html_e( 'Bank Swift ', 'dokan-lite' ); ?></th>
                         <td>
                             <input type="text" disabled class="regular-text" value="<?php echo isset( $store_settings['payment']['bank']['swift'] ) ? esc_attr( $store_settings['payment']['bank']['swift'] ) : ''; ?>">
@@ -338,6 +372,12 @@ class Dokan_Admin_User_Profile {
             display:block;
             cursor: pointer;
         }
+        .text-success {
+            color: green;
+        }
+        .text-danger {
+            color: red;
+        }
         </style>
 
         <script type="text/javascript">
@@ -398,6 +438,59 @@ class Dokan_Admin_User_Profile {
             };
 
             Dokan_Settings.init();
+
+            $('#seller-url').keydown(function(e) {
+                var text = $(this).val();
+
+                // Allow: backspace, delete, tab, escape, enter and .
+                if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 91, 109, 110, 173, 189, 190]) !== -1 ||
+                     // Allow: Ctrl+A
+                    (e.keyCode == 65 && e.ctrlKey === true) ||
+                     // Allow: home, end, left, right
+                    (e.keyCode >= 35 && e.keyCode <= 39)) {
+                         // let it happen, don't do anything
+                        return;
+                }
+
+                if ((e.shiftKey || (e.keyCode < 65 || e.keyCode > 90) && (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105) ) {
+                    e.preventDefault();
+                }
+            });
+
+            $('#seller-url').keyup(function(e) {
+                $('#url-alart').text( getSlug( $(this).val() ) );
+            });
+
+            $('#seller-url').on('focusout', function() {
+                var self = $(this),
+                data = {
+                    action : 'shop_url',
+                    url_slug : self.val(),
+                    vendor_id: self.data('vendor'),
+                    _nonce : dokan_user_profile.nonce,
+                };
+
+                if ( self.val() === '' ) {
+                    return;
+                }
+
+                var row = self.closest('td');
+
+                row.block({ message: null, overlayCSS: { background: '#f1f1f1 url(' + dokan_user_profile.ajax_loader + ') no-repeat center', opacity: 0.3 } });
+
+                $.post( dokan_user_profile.ajaxurl, data, function(resp) {
+
+                    if ( resp.success === true ) {
+                        $('#url-alart').removeClass('text-danger').addClass('text-success');
+                        $('#url-alart-mgs').removeClass('text-danger').addClass('text-success').text(dokan_user_profile.seller.available);
+                    } else {
+                        $('#url-alart').removeClass('text-success').addClass('text-danger');
+                        $('#url-alart-mgs').removeClass('text-success').addClass('text-danger').text(dokan_user_profile.seller.notAvailable);
+                    }
+
+                    row.unblock();
+                } );
+            });
         });
         </script>
         <?php
@@ -425,7 +518,7 @@ class Dokan_Admin_User_Profile {
 
         $selling         = sanitize_text_field( $_POST['dokan_enable_selling'] );
         $publishing      = sanitize_text_field( $_POST['dokan_publish'] );
-        $percentage      = empty( $_POST['dokan_admin_percentage'] ) ? '' : floatval( $_POST['dokan_admin_percentage'] );
+        $percentage      = isset( $_POST['dokan_admin_percentage'] ) && $_POST['dokan_admin_percentage'] != '' ? floatval( $_POST['dokan_admin_percentage'] ) : '';
         $percentage_type = empty( $_POST['dokan_admin_percentage_type'] ) ? 'percentage' : $_POST['dokan_admin_percentage_type'];
         $feature_seller  = sanitize_text_field( $_POST['dokan_feature'] );
         $store_settings  = dokan_get_store_info( $user_id );
@@ -447,6 +540,7 @@ class Dokan_Admin_User_Profile {
             }
         }
 
+        wp_update_user( array( 'ID' => $user_id, 'user_nicename' => sanitize_title( $_POST['dokan_store_url'] ) ) );
         update_user_meta( $user_id, 'dokan_profile_settings', $store_settings );
         update_user_meta( $user_id, 'dokan_enable_selling', $selling );
         update_user_meta( $user_id, 'dokan_publishing', $publishing );

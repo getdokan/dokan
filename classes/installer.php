@@ -33,7 +33,6 @@ class Dokan_Installer {
         if ( ! $was_installed_before ) {
             set_transient( '_dokan_setup_page_redirect', true, 30 );
         }
-
     }
 
     /**
@@ -80,25 +79,6 @@ class Dokan_Installer {
     }
 
     /**
-     * Redirect to Setup page if transient is valid
-     *
-     * @since 2.5
-     *
-     * @return void
-     */
-    public static function setup_page_redirect( $plugin ) {
-
-        if ( !get_transient( '_dokan_setup_page_redirect' ) ) {
-            return;
-        }
-        // Delete the redirect transient
-        delete_transient( '_dokan_setup_page_redirect' );
-
-        wp_safe_redirect( add_query_arg( array( 'page' => 'dokan-setup' ), admin_url( 'index.php' ) ) );
-        exit;
-    }
-
-    /**
      * Update product new style options
      *
      * when user first install this plugin
@@ -113,7 +93,6 @@ class Dokan_Installer {
 
         if ( !$installed_version ) {
             $options = get_option( 'dokan_selling' );
-            $options['product_style'] = 'new';
             update_option( 'dokan_selling', $options );
         }
     }
@@ -133,25 +112,58 @@ class Dokan_Installer {
         }
 
         add_role( 'seller', __( 'Vendor', 'dokan-lite' ), array(
-            'read'                   => true,
-            'publish_posts'          => true,
-            'edit_posts'             => true,
-            'delete_published_posts' => true,
-            'edit_published_posts'   => true,
-            'delete_posts'           => true,
-            'manage_categories'      => true,
-            'moderate_comments'      => true,
-            'unfiltered_html'        => true,
-            'upload_files'           => true,
-            'edit_shop_orders'       => true,
-            'edit_product'           => true,
-            'dokandar'               => true
+            'read'                      => true,
+            'publish_posts'             => true,
+            'edit_posts'                => true,
+            'delete_published_posts'    => true,
+            'edit_published_posts'      => true,
+            'delete_posts'              => true,
+            'manage_categories'         => true,
+            'moderate_comments'         => true,
+            'unfiltered_html'           => true,
+            'upload_files'              => true,
+            'edit_shop_orders'          => true,
+            'edit_product'              => true,
+            'read_product'              => true,
+            'delete_product'            => true,
+            'edit_products'             => true,
+            'publish_products'          => true,
+            'read_private_products'     => true,
+            'delete_products'           => true,
+            'delete_products'           => true,
+            'delete_private_products'   => true,
+            'delete_published_products' => true,
+            'delete_published_products' => true,
+            'edit_private_products'     => true,
+            'edit_published_products'   => true,
+            'manage_product_terms'      => true,
+            'delete_product_terms'      => true,
+            'assign_product_terms'      => true,
+            'dokandar'                  => true
         ) );
+
+        $capabilities = array();
+        $all_cap      = dokan_get_all_caps();
+
+        foreach( $all_cap as $key=>$cap ) {
+            $capabilities = array_merge( $capabilities, array_keys( $cap ) );
+        }
 
         $wp_roles->add_cap( 'shop_manager', 'dokandar' );
         $wp_roles->add_cap( 'administrator', 'dokandar' );
+
+        foreach ( $capabilities as $key => $capability ) {
+            $wp_roles->add_cap( 'seller', $capability );
+            $wp_roles->add_cap( 'administrator', $capability );
+            $wp_roles->add_cap( 'shop_manager', $capability );
+        }
     }
 
+    /**
+     * Setup all pages for dokan
+     *
+     * @return void
+     */
     function setup_pages() {
         $meta_key = '_wp_page_template';
 
@@ -237,6 +249,13 @@ class Dokan_Installer {
         return false;
     }
 
+    /**
+     * Create necessary tables
+     *
+     * @since 1.4
+     *
+     * @return void
+     */
     function create_tables() {
         include_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
@@ -246,6 +265,11 @@ class Dokan_Installer {
         $this->create_refund_table();
     }
 
+    /**
+     * Create withdraw tabless
+     *
+     * @return void
+     */
     function create_withdraw_table() {
         global $wpdb;
 
@@ -257,13 +281,18 @@ class Dokan_Installer {
                `status` int(1) NOT NULL,
                `method` varchar(30) NOT NULL,
                `note` text NOT NULL,
-               `ip` varchar(25) NOT NULL,
+               `ip` varchar(50) NOT NULL,
               PRIMARY KEY (id)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
 
         dbDelta( $sql );
     }
 
+    /**
+     * Create order sync table
+     *
+     * @return void
+     */
     function create_sync_table() {
         global $wpdb;
 
@@ -304,8 +333,6 @@ class Dokan_Installer {
 
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         dbDelta( $sql );
-
-
     }
 
     /**

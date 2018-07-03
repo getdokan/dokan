@@ -26,11 +26,15 @@ jQuery(function($) {
         $.post( dokan.ajaxurl, self.serialize(), function(response) {
             li.unblock();
 
-            var prev_li = li.prev();
+            if ( response.success ) {
+                var prev_li = li.prev();
 
-            li.addClass('dokan-hide');
-            prev_li.find('label').replaceWith(response);
-            prev_li.find('a.dokan-edit-status').removeClass('dokan-hide');
+                li.addClass('dokan-hide');
+                prev_li.find('label').replaceWith(response.data);
+                prev_li.find('a.dokan-edit-status').removeClass('dokan-hide');
+            } else {
+                alert( response.data );
+            }
         });
     });
 

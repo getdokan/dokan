@@ -55,8 +55,6 @@ class Dokan_Ajax {
         add_action( 'wp_ajax_shop_url', array($this, 'shop_url_check') );
         add_action( 'wp_ajax_nopriv_shop_url', array($this, 'shop_url_check') );
 
-        add_filter( 'woocommerce_cart_item_name', array($this, 'seller_info_checkout'), 10, 2 );
-
         add_action( 'wp_ajax_dokan_seller_listing_search', array($this, 'seller_listing_search') );
         add_action( 'wp_ajax_nopriv_dokan_seller_listing_search', array($this, 'seller_listing_search') );
 
@@ -78,6 +76,10 @@ class Dokan_Ajax {
     function create_product() {
         check_ajax_referer( 'dokan_reviews' );
 
+        if ( ! current_user_can( 'dokan_add_product' ) ) {
+            wp_send_json_error( __( 'You have no permission to do this action', 'dokan-lite' ) );
+        }
+
         parse_str( $_POST['postdata'], $postdata );
 
         $response = dokan_save_product( $postdata );
@@ -87,26 +89,16 @@ class Dokan_Ajax {
         }
 
         if ( is_int( $response ) ) {
-            wp_send_json_success( dokan_edit_product_url( $response ) );
+            if ( current_user_can( 'dokan_edit_product' ) ) {
+                $redirect = dokan_edit_product_url( $response );
+            } else {
+                $redirect = dokan_get_navigation_url( 'products' );
+            }
+
+            wp_send_json_success( $redirect );
         } else {
             wp_send_json_error( __( 'Something wrong, please try again later', 'dokan-lite' ) );
         }
-    }
-
-    /**
-     * Injects seller name on checkout page
-     *
-     * @param array $item_data
-     * @param array $cart_item
-     * @return array
-     */
-    function seller_info_checkout( $item_data, $cart_item ) {
-        $seller_id = get_post_field( 'post_author', $cart_item['data']->get_id() );
-        $info      = dokan_get_store_info( $seller_id );
-        $seller    = sprintf( __( '<br><strong> Vendor:</strong> %s', 'dokan-lite' ), $info['store_name'] );
-        $data      = $item_data . $seller;
-
-        return apply_filters( 'dokan_seller_info_checkout', $data, $info, $item_data, $cart_item );
     }
 
     /**
@@ -139,7 +131,19 @@ class Dokan_Ajax {
             }
         }
 
-        echo $check;
+        if ( is_admin() && isset( $_POST['vendor_id'] ) ) {
+            $vendor     = get_user_by( 'id', $_POST['vendor_id'] );
+            if ( $vendor->user_nicename == $user->user_nicename ) {
+                $check = true;
+            }
+        }
+
+        if ( $check ) {
+            wp_send_json_success( array(
+                'message' => __( 'Available', 'dokan-lite' ),
+                'url'     => sanitize_user( $url_slug )
+            ) );
+        }
     }
 
     /**
@@ -165,7 +169,7 @@ class Dokan_Ajax {
             die();
         }
 
-        if ( !dokan_is_seller_has_order( get_current_user_id(), $order_id ) ) {
+        if ( ! dokan_is_seller_has_order( dokan_get_current_user_id(), $order_id ) ) {
             wp_die( __( 'You do not have permission to change this order', 'dokan-lite' ) );
         }
 
@@ -199,7 +203,7 @@ class Dokan_Ajax {
             die();
         }
 
-        if ( !dokan_is_seller_has_order( get_current_user_id(), $order_id ) ) {
+        if ( ! dokan_is_seller_has_order( dokan_get_current_user_id(), $order_id ) ) {
             wp_die( __( 'You do not have permission to change this order', 'dokan-lite' ) );
         }
 
@@ -272,6 +276,11 @@ class Dokan_Ajax {
 
         check_ajax_referer( 'dokan_change_status' );
 
+        if ( ! current_user_can( 'dokan_manage_order' ) ) {
+            wp_send_json_error( __( 'You have no permission to manage this order', 'dokan-lite' ) );
+            return;
+        }
+
         $order_id     = intval( $_POST['order_id'] );
         $order_status = $_POST['order_status'];
 
@@ -282,8 +291,9 @@ class Dokan_Ajax {
         $status_label = isset( $statuses[$order_status] ) ? $statuses[$order_status] : $order_status;
         $status_class = dokan_get_order_status_class( $order_status );
 
-        echo '<label class="dokan-label dokan-label-' . esc_attr( $status_class ) . '">' . esc_attr( $status_label ) . '</label>';
-        exit;
+        $html = '<label class="dokan-label dokan-label-' . esc_attr( $status_class ) . '">' . esc_attr( $status_label ) . '</label>';
+
+        wp_send_json_success( $html );
     }
 
     /**
@@ -294,7 +304,7 @@ class Dokan_Ajax {
     function contact_seller() {
 
         check_ajax_referer( 'dokan_contact_seller' );
-        
+
         $posted = $_POST;
 
         $contact_name    = sanitize_text_field( $posted['name'] );
@@ -356,7 +366,7 @@ class Dokan_Ajax {
         if ( !is_user_logged_in() ) {
             die(-1);
         }
-        if ( ! current_user_can( 'dokandar' ) ) {
+        if ( ! current_user_can( 'dokan_manage_order_note' ) ) {
             die(-1);
         }
 
@@ -396,17 +406,17 @@ class Dokan_Ajax {
         if ( !is_user_logged_in() ) {
             die(-1);
         }
-        if ( ! current_user_can( 'dokandar' ) ) {
+        if ( ! current_user_can( 'dokan_manage_order_note' ) ) {
             die(-1);
         }
-        
+
         $post_id           = absint( $_POST['post_id'] );
         $shipping_provider = $_POST['shipping_provider'];
         $shipping_number   = ( trim( stripslashes( $_POST['shipping_number'] ) ) );
         $shipped_date      = ( trim( $_POST['shipped_date'] ) );
 
-        $ship_info = 'Shipping provider: ' . $shipping_provider . '<br />' . 'Shipping number: ' . $shipping_number . '<br />' . 'Shipped date: ' . $shipped_date;
-        
+        $ship_info = __( 'Shipping provider: ', 'dokan-lite' ) . $shipping_provider . '<br />' . __( 'Shipping number: ', 'dokan-lite' ) . $shipping_number . '<br />' . __( 'Shipped date: ', 'dokan-lite' ) . $shipped_date;
+
         if ( $shipping_number == '' ){
             die();
         }
@@ -425,7 +435,7 @@ class Dokan_Ajax {
                 'comment_content'      => $ship_info,
                 'comment_type'         => 'order_note',
                 'comment_parent'       => 0,
-                'user_id'              => get_current_user_id(),
+                'user_id'              => dokan_get_current_user_id(),
                 'comment_author_IP'    => $_SERVER['REMOTE_ADDR'],
                 'comment_agent'        => $_SERVER['HTTP_USER_AGENT'],
                 'comment_date'         => $time,
@@ -446,8 +456,8 @@ class Dokan_Ajax {
             echo wpautop( wptexturize( $ship_info ) );
             echo '</div><p class="meta"><a href="#" class="delete_note">'.__( 'Delete', 'dokan-lite' ).'</a></p>';
             echo '</li>';
-            
-            do_action( 'dokan_order_tracking_updated', $post_id, get_current_user_id() );
+
+            do_action( 'dokan_order_tracking_updated', $post_id, dokan_get_current_user_id() );
         }
 
         // Quit out
@@ -498,20 +508,13 @@ class Dokan_Ajax {
             'offset' => $offset
         );
 
-        $search_term = isset( $_REQUEST['search_term'] ) ? sanitize_text_field( $_REQUEST['search_term'] ) : '';
+        $search_term     = isset( $_REQUEST['search_term'] ) ? sanitize_text_field( $_REQUEST['search_term'] ) : '';
         $pagination_base = isset( $_REQUEST['pagination_base'] ) ? sanitize_text_field( $_REQUEST['pagination_base'] ) : '';
-        $per_row = isset( $_REQUEST['per_row'] ) ? sanitize_text_field( $_REQUEST['per_row'] ) : '3';
+        $per_row         = isset( $_REQUEST['per_row'] ) ? sanitize_text_field( $_REQUEST['per_row'] ) : '3';
 
         if ( '' != $search_term ) {
 
             $seller_args['meta_query'] = array(
-
-                array(
-                    'key'     => 'dokan_enable_selling',
-                    'value'   => 'yes',
-                    'compare' => '='
-                ),
-
                 array(
                     'key'     => 'dokan_store_name',
                     'value'   => $search_term,
@@ -550,9 +553,8 @@ class Dokan_Ajax {
      * @return void
      */
     public function crop_store_banner() {
-        check_ajax_referer( 'image_editor-' . $_POST['id'], 'nonce' );
 
-        if ( !current_user_can( 'edit_post', $_POST['id'] ) ) {
+        if ( ! dokan_is_user_seller( get_current_user_id() ) ) {
             wp_send_json_error();
         }
 

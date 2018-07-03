@@ -11,6 +11,7 @@
 <h2><?php _e( 'Vendor Information', 'dokan-lite' ); ?></h2>
 
 <ul class="list-unstyled">
+    <?php do_action( 'dokan_product_seller_tab_start', $author, $store_info ); ?>
 
     <?php if ( !empty( $store_info['store_name'] ) ) { ?>
         <li class="store-name">
@@ -42,4 +43,6 @@
     <li class="clearfix">
         <?php dokan_get_readable_seller_rating( $author->ID ); ?>
     </li>
+
+    <?php do_action( 'dokan_product_seller_tab_end', $author, $store_info ); ?>
 </ul>

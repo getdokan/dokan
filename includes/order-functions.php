@@ -8,14 +8,14 @@
  */
 function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
 
-    $order          = new WC_Order( $order_id );
+    $order          = wc_get_order( $order_id );
     $seller_id      = dokan_get_seller_id_by_order( $order_id );
     $net_amount     = dokan_get_seller_earnings_by_order( $order, $seller_id );
 
-    $order_total    = $order->get_total();
+    // $order_total    = $order->get_total();
     $order_shipping = $order->get_total_shipping();
     $order_tax      = $order->get_total_tax();
-    $extra_cost     = (float) $order_shipping + (float) $order_tax;
+    // $extra_cost     = (float) $order_shipping + (float) $order_tax;
 
     $commission_recipient = dokan_get_option( 'extra_fee_recipient', 'dokan_general', 'seller' );
 
@@ -31,13 +31,13 @@ function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
             $amount['tax']      = $order_tax;
         }
 
-        return $amount;
+        return apply_filters( 'dokan_get_seller_amount_from_order_array', $amount, $order, $seller_id );
     }
 
 
-    if ( 'seller' == $commission_recipient ) {
-        $net_amount = $net_amount + $extra_cost;
-    }
+    // if ( 'seller' == $commission_recipient ) {
+    //     $net_amount = $net_amount + $extra_cost;
+    // }
 
     return apply_filters( 'dokan_get_seller_amount_from_order', $net_amount, $order, $seller_id );
 }
@@ -90,17 +90,25 @@ function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = NUL
 function dokan_get_seller_orders_by_date( $start_date, $end_date, $seller_id = false, $status = 'all' ) {
     global $wpdb;
 
-    $seller_id = ! $seller_id ? get_current_user_id() : intval( $seller_id );
+    $seller_id = ! $seller_id ? dokan_get_current_user_id() : intval( $seller_id );
 
-    $end_date   = date( 'Y-m-d 00:00:00', strtotime( $end_date ) );
-    $end_date   = date( 'Y-m-d h:i:s', strtotime( $end_date . '-1 minute' ) );
-    $start_date = date( 'Y-m-d', strtotime( $start_date ) );
+    $end_date    = date( 'Y-m-d 00:00:00', strtotime( $end_date ) );
+    $end_date    = date( 'Y-m-d h:i:s', strtotime( $end_date . '-1 minute' ) );
+    $start_date  = date( 'Y-m-d', strtotime( $start_date ) );
 
-    $cache_group = 'dokan_seller_data_'.$seller_id;
-    $cache_key = md5( 'dokan-seller-orders-' . $end_date . '-' . $end_date. '-' . $seller_id );
-    $orders = wp_cache_get( $cache_key, $cache_group );
+    $cache_group = 'dokan_seller_data_' . $seller_id;
+    $cache_key   = md5( 'dokan-seller-orders-' . $end_date . '-' . $end_date. '-' . $seller_id );
+    $orders      = wp_cache_get( $cache_key, $cache_group );
+
     if ( $orders === false ) {
-        $status_where = ( $status == 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', $status );
+        $status_where = '';
+
+        if ( is_array( $status ) ) {
+            $status_where = sprintf( " AND order_status IN ('%s')", implode( "', '", $status ) );
+        } else {
+            $status_where = $wpdb->prepare( ' AND order_status = %s', $status );
+        }
+
         $date_query = $wpdb->prepare( ' AND DATE( p.post_date ) >= %s AND DATE( p.post_date ) <= %s', $start_date, $end_date );
         $sql = "SELECT do.*, p.post_date
                 FROM {$wpdb->prefix}dokan_orders AS do
@@ -112,6 +120,7 @@ function dokan_get_seller_orders_by_date( $start_date, $end_date, $seller_id = f
                     $status_where
                 GROUP BY do.order_id
                 ORDER BY p.post_date ASC";
+
         $orders = $wpdb->get_results( $wpdb->prepare( $sql, $seller_id ) );
 
         wp_cache_set( $cache_key, $orders, $cache_group, 3600*2 );
@@ -133,7 +142,7 @@ function dokan_get_seller_orders_by_date( $start_date, $end_date, $seller_id = f
 function dokan_get_seller_withdraw_by_date( $start_date, $end_date, $seller_id = false ) {
     global $wpdb;
 
-    $seller_id             = ! $seller_id ? get_current_user_id() : intval( $seller_id );
+    $seller_id             = ! $seller_id ? dokan_get_current_user_id() : intval( $seller_id );
     $withdraw_status_where = $wpdb->prepare( ' AND status = %d', 1 );
     $withdraw_date_query   = $wpdb->prepare( ' AND DATE( date ) >= %s AND DATE( date ) <= %s', $start_date, $end_date );
 
@@ -216,8 +225,8 @@ function dokan_count_orders( $user_id ) {
     global $wpdb;
 
     $cache_group = 'dokan_seller_data_'.$user_id;
-    $cache_key = 'dokan-count-orders-' . $user_id;
-    $counts = wp_cache_get( $cache_key, $cache_group );
+    $cache_key   = 'dokan-count-orders-' . $user_id;
+    $counts      = wp_cache_get( $cache_key, $cache_group );
 
     if ( $counts === false ) {
         $counts = array('wc-pending' => 0, 'wc-completed' => 0, 'wc-on-hold' => 0, 'wc-processing' => 0, 'wc-refunded' => 0, 'wc-cancelled' => 0, 'total' => 0);
@@ -250,87 +259,6 @@ function dokan_count_orders( $user_id ) {
 
     return $counts;
 }
-
-/**
- * Update the child order status when a parent order status is changed
- *
- * @global object $wpdb
- * @param int $order_id
- * @param string $old_status
- * @param string $new_status
- */
-function dokan_on_order_status_change( $order_id, $old_status, $new_status ) {
-    global $wpdb;
-
-    // make sure order status contains "wc-" prefix
-    if ( stripos( $new_status, 'wc-' ) === false ) {
-        $new_status = 'wc-' . $new_status;
-    }
-
-    // insert on dokan sync table
-    $wpdb->update( $wpdb->prefix . 'dokan_orders',
-        array( 'order_status' => $new_status ),
-        array( 'order_id' => $order_id ),
-        array( '%s' ),
-        array( '%d' )
-    );
-
-    // if any child orders found, change the orders as well
-    $sub_orders = get_children( array( 'post_parent' => $order_id, 'post_type' => 'shop_order' ) );
-    if ( $sub_orders ) {
-        foreach ($sub_orders as $order_post) {
-            $order = new WC_Order( $order_post->ID );
-            $order->update_status( $new_status );
-        }
-    }
-}
-
-add_action( 'woocommerce_order_status_changed', 'dokan_on_order_status_change', 10, 3 );
-
-
-/**
- * Mark the parent order as complete when all the child order are completed
- *
- * @param int $order_id
- * @param string $old_status
- * @param string $new_status
- * @return void
- */
-function dokan_on_child_order_status_change( $order_id, $old_status, $new_status ) {
-    $order_post = get_post( $order_id );
-
-    // we are monitoring only child orders
-    if ( $order_post->post_parent === 0 ) {
-        return;
-    }
-
-    // get all the child orders and monitor the status
-    $parent_order_id = $order_post->post_parent;
-    $sub_orders      = get_children( array( 'post_parent' => $parent_order_id, 'post_type' => 'shop_order' ) );
-
-
-    // return if any child order is not completed
-    $all_complete = true;
-
-    if ( $sub_orders ) {
-        foreach ($sub_orders as $sub) {
-            $order = new WC_Order( $sub->ID );
-
-            if ( dokan_get_prop( $order, 'status' ) != 'wc-completed' ) {
-                $all_complete = false;
-            }
-        }
-    }
-
-    // seems like all the child orders are completed
-    // mark the parent order as complete
-    if ( $all_complete ) {
-        $parent_order = new WC_Order( $parent_order_id );
-        $parent_order->update_status( 'wc-completed', __( 'Mark parent order completed when all child orders are completed.', 'dokan-lite' ) );
-    }
-}
-
-add_action( 'woocommerce_order_status_changed', 'dokan_on_child_order_status_change', 99, 3 );
 
 
 /**
@@ -372,11 +300,11 @@ function dokan_sync_insert_order( $order_id ) {
         return;
     }
 
-    $order              = new WC_Order( $order_id );
+    $order              = wc_get_order( $order_id );
     $seller_id          = dokan_get_seller_id_by_order( $order_id );
     $order_total        = $order->get_total();
     $order_status       = dokan_get_prop( $order, 'status' );
-        $admin_commission   = dokan_get_admin_commission_by( $order, $seller_id );
+    $admin_commission   = dokan_get_admin_commission_by( $order, $seller_id );
     $net_amount         = $order_total - $admin_commission;
     $net_amount         = apply_filters( 'dokan_order_net_amount', $net_amount, $order );
 
@@ -547,7 +475,6 @@ function dokan_get_order_status_translated( $status ) {
     }
 }
 
-
 /**
  * Get product items list from order
  *
@@ -573,54 +500,6 @@ function dokan_get_product_list_by_order( $order, $glue = ',' ) {
 }
 
 /**
- * Insert a order in sync table once a order is created
- *
- * @global object $wpdb
- * @param int $order_id
- * @since 2.4
- */
-function dokan_sync_order_table( $order_id ) {
-    global $wpdb;
-
-    $order          = new WC_Order( $order_id );
-    $seller_id      = dokan_get_seller_id_by_order( $order_id );
-    $order_total    = $order->get_total();
-
-    if ( $order->get_total_refunded() ) {
-        $order_total = $order_total - $order->get_total_refunded();
-    }
-
-    $order_status   = dokan_get_prop( $order, 'status' );
-    $admin_commission   = dokan_get_admin_commission_by( $order, $seller_id );
-    $net_amount         = $order_total - $admin_commission;
-    $net_amount     = apply_filters( 'dokan_sync_order_net_amount', $net_amount, $order );
-
-    // make sure order status contains "wc-" prefix
-    if ( stripos( $order_status, 'wc-' ) === false ) {
-        $order_status = 'wc-' . $order_status;
-    }
-
-    $seller_id = ! is_array( $seller_id ) ? $seller_id : 0;
-
-    $wpdb->insert( $wpdb->prefix . 'dokan_orders',
-        array(
-            'order_id'     => $order_id,
-            'seller_id'    => $seller_id,
-            'order_total'  => $order_total,
-            'net_amount'   => $net_amount,
-            'order_status' => $order_status,
-        ),
-        array(
-            '%d',
-            '%d',
-            '%f',
-            '%f',
-            '%s',
-        )
-    );
-}
-
-/**
  * Get if an order is a sub order or not
  *
  * @since 2.4.11
@@ -631,11 +510,12 @@ function dokan_sync_order_table( $order_id ) {
  */
 function dokan_is_sub_order( $order_id ) {
     $parent_order_id =  wp_get_post_parent_id( $order_id );
+
     if ( 0 != $parent_order_id ) {
         return true;
-    } else {
-        return false;
     }
+
+    return false;
 }
 
 
@@ -665,7 +545,7 @@ function dokan_total_orders() {
  */
 function dokan_get_sellers_by( $order_id ) {
 
-    $order       = new WC_Order( $order_id );
+    $order       = wc_get_order( $order_id );
     $order_items = $order->get_items();
 
     $sellers = array();
@@ -730,9 +610,9 @@ function dokan_get_admin_commission_by( $order, $seller_id ) {
     if ( get_posts( array( 'post_parent' => dokan_get_prop( $order, 'id' ), 'post_type' => 'shop_order', 'post_status' => 'any' ) ) ) {
         return;
     }
-    
+
     $saved_admin_fee = get_post_meta( dokan_get_prop( $order, 'id' ), '_dokan_admin_fee', true );
-    
+
     if ( $saved_admin_fee != '' ) {
         return apply_filters( 'dokan_order_admin_commission', $saved_admin_fee, $order );
     }
@@ -747,14 +627,12 @@ function dokan_get_admin_commission_by( $order, $seller_id ) {
     foreach ( $order->get_items() as $item_id => $item ) {
 
         $refund_t += $order->get_total_refunded_for_item( $item_id );
-        $commissions[$i]['total_line'] = $item['line_total'] - $order->get_total_refunded_for_item( $item_id );
-//        $commissions[$i]['admin_percentage'] = 100 - dokan_get_seller_percentage( $seller_id, $item['product_id'] );
-        $commissions[$i]['admin_fee'] = 100 - dokan_get_seller_percentage( $seller_id, $item['product_id'] );
+        $commissions[$i]['total_line'] = $item->get_total() - $order->get_total_refunded_for_item( $item_id );
         $commissions[$i]['fee_type']  = dokan_get_commission_type( $seller_id, $item['product_id'] );
+        $commissions[$i]['admin_fee'] = ( 'percentage' == $commissions[$i]['fee_type'] ) ? 100 - dokan_get_seller_percentage( $seller_id, $item['product_id'] ) : dokan_get_seller_percentage( $seller_id, $item['product_id'] );
         $total_line += $commissions[$i]['total_line'];
 
         $i++;
-
     }
 
     $refund_t += $order->get_total_tax_refunded() + $order->get_total_shipping_refunded();
@@ -763,7 +641,6 @@ function dokan_get_admin_commission_by( $order, $seller_id ) {
     if ( $total_line ) {
         foreach ( $commissions as $commission ) {
             $commission['ut_amount'] = $refund_ut * ( $commission['total_line'] / $total_line );
-//            $admin_commission += ( $commission['total_line'] + $commission['ut_amount'] ) * $commission['admin_percentage'] /100;
             if ( 'percentage' == $commission['fee_type'] ) {
                 $admin_commission += ( $commission['total_line'] + $commission['ut_amount'] ) * $commission['admin_fee'] /100;
             } else {

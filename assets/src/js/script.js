@@ -62,115 +62,6 @@ jQuery(function($) {
 
 });
 
-// Dokan Register
-jQuery(function($) {
-    $('.user-role input[type=radio]').on('change', function() {
-        var value = $(this).val();
-
-        if ( value === 'seller') {
-            $('.show_if_seller').slideDown();
-            if ( $( '.tc_check_box' ).length > 0 )
-                $('input[name=register]').attr('disabled','disabled');
-        } else {
-            $('.show_if_seller').slideUp();
-            if ( $( '.tc_check_box' ).length > 0 )
-                $( 'input[name=register]' ).removeAttr( 'disabled' );
-        }
-    });
-
-   $( '.tc_check_box' ).on( 'click', function () {
-        var chk_value = $( this ).val();
-        if ( $( this ).prop( "checked" ) ) {
-            $( 'input[name=register]' ).removeAttr( 'disabled' );
-            $( 'input[name=dokan_migration]' ).removeAttr( 'disabled' );
-        } else {
-            $( 'input[name=register]' ).attr( 'disabled', 'disabled' );
-            $( 'input[name=dokan_migration]' ).attr( 'disabled', 'disabled' );
-        }
-    } );
-
-    if ( $( '.tc_check_box' ).length > 0 ){
-        $( 'input[name=dokan_migration]' ).attr( 'disabled', 'disabled' );
-    }
-
-    $('#company-name').on('focusout', function() {
-        var value = $(this).val().toLowerCase().replace(/-+/g, '').replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-        $('#seller-url').val(value);
-        $('#url-alart').text( value );
-        $('#seller-url').focus();
-    });
-
-    $('#seller-url').keydown(function(e) {
-        var text = $(this).val();
-
-        // Allow: backspace, delete, tab, escape, enter and .
-        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 91, 109, 110, 173, 189, 190]) !== -1 ||
-             // Allow: Ctrl+A
-            (e.keyCode == 65 && e.ctrlKey === true) ||
-             // Allow: home, end, left, right
-            (e.keyCode >= 35 && e.keyCode <= 39)) {
-                 // let it happen, don't do anything
-                return;
-        }
-
-        if ((e.shiftKey || (e.keyCode < 65 || e.keyCode > 90) && (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105) ) {
-            e.preventDefault();
-        }
-    });
-
-    $('#seller-url').keyup(function(e) {
-        $('#url-alart').text( $(this).val() );
-    });
-
-    $('#shop-phone').keydown(function(e) {
-        // Allow: backspace, delete, tab, escape, enter and .
-        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 91, 107, 109, 110, 187, 189, 190]) !== -1 ||
-             // Allow: Ctrl+A
-            (e.keyCode == 65 && e.ctrlKey === true) ||
-             // Allow: home, end, left, right
-            (e.keyCode >= 35 && e.keyCode <= 39)) {
-                 // let it happen, don't do anything
-                 return;
-        }
-
-        // Ensure that it is a number and stop the keypress
-        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-            e.preventDefault();
-        }
-    });
-
-    $('#seller-url').on('focusout', function() {
-        var self = $(this),
-        data = {
-            action : 'shop_url',
-            url_slug : self.val(),
-            _nonce : dokan.nonce,
-        };
-
-        if ( self.val() === '' ) {
-            return;
-        }
-
-        var row = self.closest('.form-row');
-        row.block({ message: null, overlayCSS: { background: '#fff url(' + dokan.ajax_loader + ') no-repeat center', opacity: 0.6 } });
-
-        $.post( dokan.ajaxurl, data, function(resp) {
-
-            if ( resp == 0){
-                $('#url-alart').removeClass('text-success').addClass('text-danger');
-                $('#url-alart-mgs').removeClass('text-success').addClass('text-danger').text(dokan.seller.notAvailable);
-            } else {
-                $('#url-alart').removeClass('text-danger').addClass('text-success');
-                $('#url-alart-mgs').removeClass('text-danger').addClass('text-success').text(dokan.seller.available);
-            }
-
-            row.unblock();
-
-        } );
-
-    });
-});
-
 //dokan settings
 (function($) {
 
@@ -602,28 +493,10 @@ jQuery(function($) {
         }
     };
 
-    var Dokan_Add_Seller = {
-        init: function() {
-            this.validate(this);
-        },
-
-        validate: function(self) {
-
-            $('form.register').validate({
-                errorPlacement: validatorError,
-                success: validatorSuccess,
-                submitHandler: function(form) {
-                    form.submit();
-                }
-            });
-        }
-    };
-
     $(function() {
         Dokan_Settings.init();
         Dokan_Withdraw.init();
         Dokan_Seller.init();
-        Dokan_Add_Seller.init();
 
         $('.dokan-form-horizontal').on('change', 'input[type=checkbox]#lbl_setting_minimum_quantity', function(){
             var showSWDiscount =  $( '.show_if_needs_sw_discount' );
@@ -691,6 +564,46 @@ jQuery(function($) {
             minimumInputLength: $( this ).data( 'minimum_input_length' ) ? $( this ).data( 'minimum_input_length' ) : '3',
             escapeMarkup: function( m ) {
                 return m;
+            },
+            language: {
+                errorLoading: function() {
+                    // Workaround for https://github.com/select2/select2/issues/4355 instead of i18n_ajax_error.
+                    return dokan.i18n_searching;
+                },
+                inputTooLong: function( args ) {
+                    var overChars = args.input.length - args.maximum;
+
+                    if ( 1 === overChars ) {
+                        return dokan.i18n_input_too_long_1;
+                    }
+
+                    return dokan.i18n_input_too_long_n.replace( '%qty%', overChars );
+                },
+                inputTooShort: function( args ) {
+                    var remainingChars = args.minimum - args.input.length;
+
+                    if ( 1 === remainingChars ) {
+                        return dokan.i18n_input_too_short_1;
+                    }
+
+                    return dokan.i18n_input_too_short_n.replace( '%qty%', remainingChars );
+                },
+                loadingMore: function() {
+                    return dokan.i18n_load_more;
+                },
+                maximumSelected: function( args ) {
+                    if ( args.maximum === 1 ) {
+                        return dokan.i18n_selection_too_long_1;
+                    }
+
+                    return dokan.i18n_selection_too_long_n.replace( '%qty%', args.maximum );
+                },
+                noResults: function() {
+                    return dokan.i18n_no_matches;
+                },
+                searching: function() {
+                    return dokan.i18n_searching;
+                }
             },
             ajax: {
                 url:         dokan.ajaxurl,

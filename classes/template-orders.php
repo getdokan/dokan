@@ -73,7 +73,13 @@ class Dokan_Template_Orders {
         $order_id = isset( $_GET['order_id'] ) ? intval( $_GET['order_id'] ) : 0;
 
         if ( $order_id ) {
-            dokan_get_template_part( 'orders/details' );
+
+            if ( wp_verify_nonce( $_REQUEST['_wpnonce'], 'dokan_view_order' ) && current_user_can( 'dokan_view_order' ) ) {
+                dokan_get_template_part( 'orders/details' );
+            } else {
+                dokan_get_template_part( 'global/dokan-error', '', array( 'deleted' => false, 'message' => __( 'You have no permission to view this order', 'dokan-lite' ) ) );
+            }
+
         } else {
             dokan_get_template_part( 'orders/date-export');
             dokan_get_template_part( 'orders/listing' );
@@ -126,7 +132,7 @@ class Dokan_Template_Orders {
             }
 
             echo "\r\n";
-            $user_orders = dokan_get_seller_orders( get_current_user_id(), 'all', NULL, 10000000, 0 );
+            $user_orders = dokan_get_seller_orders( dokan_get_current_user_id(), 'all', NULL, 10000000, 0 );
             $statuses    = wc_get_order_statuses();
             $results     = array();
             foreach ( $user_orders as $order ) {
@@ -154,7 +160,7 @@ class Dokan_Template_Orders {
                     'order_payment_method' => get_post_meta( $order->order_id, '_payment_method_title', true ),
                     'order_total'          => $the_order->get_total(),
                     'order_status'         => $statuses['wc-' . dokan_get_prop( $the_order, 'status' )],
-                    'order_date'           => dokan_get_date_created( $the_order ),
+                    'order_date'           => '"' . dokan_get_date_created( $the_order ) . '"',
                     'customer_name'        => $customer_name,
                     'customer_email'       => $customer_email,
                     'customer_phone'       => $customer_phone,
@@ -197,7 +203,7 @@ class Dokan_Template_Orders {
 
             $order_date   = ( isset( $_POST['order_date'] ) ) ? $_POST['order_date'] : NULL;
             $order_status = ( isset( $_POST['order_status'] ) ) ? $_POST['order_status'] : 'all';
-            $user_orders  = dokan_get_seller_orders( get_current_user_id(), $order_status, $order_date, 10000000, 0 );
+            $user_orders  = dokan_get_seller_orders( dokan_get_current_user_id(), $order_status, $order_date, 10000000, 0 );
             $statuses     = wc_get_order_statuses();
             $results      = array();
 
@@ -212,7 +218,7 @@ class Dokan_Template_Orders {
                     $customer_phone   = esc_html( get_post_meta( $order->order_id, '_billing_phone', true ) );
                     $customer_ip      = esc_html( get_post_meta( $order->order_id, '_customer_ip_address', true ) );
                 } else {
-                    $customer_name  = get_post_meta( dokan_get_prop( $order, 'id' ), '_billing_first_name', true ). ' '. get_post_meta( dokan_get_prop( $order, 'id' ), '_billing_last_name', true ).'(Guest)';
+                    $customer_name  = get_post_meta( $order->order_id, '_billing_first_name', true ). ' '. get_post_meta( $order->order_id, '_billing_last_name', true ).'(Guest)';
                     $customer_email = esc_html( get_post_meta( $order->order_id, '_billing_email', true ) );
                     $customer_phone = esc_html( get_post_meta( $order->order_id, '_billing_phone', true ) );
                     $customer_ip    = esc_html( get_post_meta( $order->order_id, '_customer_ip_address', true ) );
@@ -225,8 +231,8 @@ class Dokan_Template_Orders {
                     'order_shipping_cost'  => $the_order->get_total_shipping(),
                     'order_payment_method' => get_post_meta( $order->order_id, '_payment_method_title', true ),
                     'order_total'          => $the_order->get_total(),
-                    'order_status'         => $statuses[dokan_get_prop( $the_order, 'status' )],
-                    'order_date'           => dokan_get_date_created( $the_order ),
+                    'order_status'         => $statuses['wc-' . dokan_get_prop( $the_order, 'status' )],
+                    'order_date'           => '"' . dokan_get_date_created( $the_order ) . '"',
                     'customer_name'        => $customer_name,
                     'customer_email'       => $customer_email,
                     'customer_phone'       => $customer_phone,

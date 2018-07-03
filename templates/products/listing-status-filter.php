@@ -1,6 +1,6 @@
 <?php
 /**
- * Dokan Dahsboard Product Listing status filter
+ * Dokan Dashboard Product Listing status filter
  * Template
  *
  * @since 2.4

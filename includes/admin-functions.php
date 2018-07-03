@@ -36,23 +36,22 @@ add_filter( 'woocommerce_reports_get_order_report_query', 'dokan_admin_order_rep
  * @return array
  */
 function dokan_admin_shop_order_edit_columns( $existing_columns ) {
-    $columns = array();
+    if ( WC_VERSION > '3.2.6' ) {
+        unset( $existing_columns['wc_actions'] );
 
-    $columns['cb']               = '<input type="checkbox" />';
-    $columns['order_status']     = '<span class="status_head tips" data-tip="' . esc_attr__( 'Status', 'dokan-lite' ) . '">' . esc_attr__( 'Status', 'dokan-lite' ) . '</span>';
-    $columns['order_title']      = __( 'Order', 'dokan-lite' );
-    $columns['order_items']      = __( 'Purchased', 'dokan-lite' );
-    $columns['shipping_address'] = __( 'Ship to', 'dokan-lite' );
+        $columns = array_slice( $existing_columns, 0, count( $existing_columns ), true ) +
+            array(
+                'seller'     => __( 'Vendor', 'dokan-lite' ),
+                'wc_actions' => __( 'Actions', 'dokan-lite' ),
+                'suborder'   => __( 'Sub Order', 'dokan-lite' ),
+            )
+            + array_slice( $existing_columns, count( $existing_columns ), count( $existing_columns ) - 1, true );
+    } else {
+        $existing_columns['seller']    = __( 'Vendor', 'dokan-lite' );
+        $existing_columns['suborder']  = __( 'Sub Order', 'dokan-lite' );
+    }
 
-    $columns['customer_message'] = '<span class="notes_head tips" data-tip="' . esc_attr__( 'Customer Message', 'dokan-lite' ) . '">' . esc_attr__( 'Customer Message', 'dokan-lite' ) . '</span>';
-    $columns['order_notes']      = '<span class="order-notes_head tips" data-tip="' . esc_attr__( 'Order Notes', 'dokan-lite' ) . '">' . esc_attr__( 'Order Notes', 'dokan-lite' ) . '</span>';
-    $columns['order_date']       = __( 'Date', 'dokan-lite' );
-    $columns['order_total']      = __( 'Total', 'dokan-lite' );
-    $columns['order_actions']    = __( 'Actions', 'dokan-lite' );
-    $columns['seller']        = __( 'Vendor', 'dokan-lite' );
-    $columns['suborder']        = __( 'Sub Order', 'dokan-lite' );
-
-    return $columns;
+    return apply_filters( 'dokan_edit_shop_order_columns', $columns );
 }
 
 add_filter( 'manage_edit-shop_order_columns', 'dokan_admin_shop_order_edit_columns', 11 );
@@ -73,7 +72,7 @@ function dokan_shop_order_custom_columns( $col ) {
     }
 
     switch ($col) {
-        case 'order_title':
+        case 'order_number':
             if ($post->post_parent !== 0) {
                 echo '<strong>';
                 echo __( 'Sub Order of', 'dokan-lite' );
@@ -162,6 +161,34 @@ function dokan_admin_shop_order_scripts() {
         tr.sub-order {
             background: #ECFFF2;
         }
+
+        th#order_number {
+            width: 21ch;
+        }
+
+        th#order_date {
+            width: 9ch;
+        }
+
+        th#order_status {
+            width: 12ch;
+        }
+
+        th#shipping_address {
+            width: 18ch;
+        }
+
+        th#wc_actions {
+            width: 9ch;
+        }
+
+        th#seller {
+            width: 6ch;
+        }
+
+        th#suborder {
+            width: 9ch;
+        }
     </style>
     <?php
 }
@@ -180,7 +207,7 @@ function dokan_admin_on_trash_order( $post_id ) {
         $sub_orders = get_children( array( 'post_parent' => $post_id, 'post_type' => 'shop_order' ) );
 
         if ( $sub_orders ) {
-            foreach ($sub_orders as $order_post) {
+            foreach ( $sub_orders as $order_post ) {
                 wp_trash_post( $order_post->ID );
             }
         }
@@ -198,18 +225,21 @@ function dokan_admin_on_untrash_order( $post_id ) {
     $post = get_post( $post_id );
 
     if ( $post->post_type == 'shop_order' && $post->post_parent == 0 ) {
-        $sub_orders = get_children( array( 'post_parent' => $post_id, 'post_type' => 'shop_order' ) );
+        global $wpdb;
 
-        if ( $sub_orders ) {
-            foreach ($sub_orders as $order_post) {
-                wp_untrash_post( $order_post->ID );
+        $suborder_ids  = $wpdb->get_col(
+            $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_parent = %d AND post_type = 'shop_order'", $post_id )
+        );
+
+        if ( $suborder_ids ) {
+            foreach ( $suborder_ids as $suborder_id ) {
+                wp_untrash_post( $suborder_id );
             }
         }
     }
 }
 
-add_action( 'wp_untrash_post', 'dokan_admin_on_untrash_order' );
-
+add_action( 'untrash_post', 'dokan_admin_on_untrash_order' );
 
 /**
  * Delete sub orders and from dokan sync table when a order is deleted
@@ -269,21 +299,18 @@ function dokan_site_total_earning() {
 }
 
 /**
- * Generate report in admin area
+ * Dokan Get Admin report data
  *
- * @global WPDB $wpdb
- * @global type $wp_locale
- * @param string $group_by
- * @param string $year
- * @return obj
+ * @since 2.8.0
+ *
+ * @return array
  */
-function dokan_admin_report( $group_by = 'day', $year = '' ) {
+function dokan_admin_report_data( $group_by = 'day', $year = '', $start = '', $end = '' ) {
     global $wpdb, $wp_locale;
 
-    $group_by = apply_filters( 'dokan_report_group_by', $group_by );
-    
-    $start_date = isset( $_POST['start_date'] ) ? sanitize_text_field ( $_POST['start_date'] ): ''; // WPCS: CSRF ok.
-    $end_date   = isset( $_POST['end_date'] ) ? sanitize_text_field( $_POST['end_date'] ): ''; // WPCS: CSRF ok.
+    $group_by     = apply_filters( 'dokan_report_group_by', $group_by );
+    $start_date   = isset( $_POST['start_date'] ) ? sanitize_text_field ( $_POST['start_date'] ): $start; // WPCS: CSRF ok.
+    $end_date     = isset( $_POST['end_date'] ) ? sanitize_text_field( $_POST['end_date'] ): $end; // WPCS: CSRF ok.
     $current_year = date( 'Y' );
 
     if ( ! $start_date ) {
@@ -302,25 +329,14 @@ function dokan_admin_report( $group_by = 'day', $year = '' ) {
         }
     }
 
-    $start_date_to_time = strtotime( $start_date );
-    $end_date_to_time = strtotime( $end_date );
-
     $date_where = '';
 
     if ( $group_by == 'day' ) {
         $group_by_query       = 'YEAR(p.post_date), MONTH(p.post_date), DAY(p.post_date)';
         $date_where           = " AND DATE(p.post_date) >= '$start_date' AND DATE(p.post_date) <= '$end_date'";
-        $chart_interval       = ceil( max( 0, ( $end_date_to_time - $start_date_to_time ) / ( 60 * 60 * 24 ) ) );
-        $barwidth             = 60 * 60 * 24 * 1000;
     } else {
         $group_by_query = 'YEAR(p.post_date), MONTH(p.post_date)';
-        $date_where           = " AND DATE(p.post_date) >= '$start_date' AND DATE(p.post_date) <= '$end_date'";
-        $chart_interval = 0;
-        $min_date             = $start_date_to_time;
-        while ( ( $min_date   = strtotime( "+1 MONTH", $min_date ) ) <= $end_date_to_time ) {
-            $chart_interval ++;
-        }
-        $barwidth             = 60 * 60 * 24 * 7 * 4 * 1000;
+        $date_where     = " AND DATE(p.post_date) >= '$start_date' AND DATE(p.post_date) <= '$end_date'";
     }
 
     $left_join      = apply_filters( 'dokan_report_left_join', $date_where );
@@ -343,26 +359,93 @@ function dokan_admin_report( $group_by = 'day', $year = '' ) {
 
 
     $data = $wpdb->get_results( $sql );
+
+    return $data;
+}
+
+/**
+ * Generate report in admin area
+ *
+ * @global WPDB $wpdb
+ * @global type $wp_locale
+ * @param string $group_by
+ * @param string $year
+ * @return obj
+ */
+function dokan_admin_report( $group_by = 'day', $year = '', $start = '', $end = '' ) {
+    global $wp_locale;
+
+    $data = dokan_admin_report_data( $group_by, $year, $start, $end );
+
+    $start_date   = isset( $_POST['start_date'] ) ? sanitize_text_field ( $_POST['start_date'] ): $start; // WPCS: CSRF ok.
+    $end_date     = isset( $_POST['end_date'] ) ? sanitize_text_field( $_POST['end_date'] ): $end; // WPCS: CSRF ok.
+    $current_year = $year ? $year : date('Y');
+
+    if ( ! $start_date ) {
+        $start_date = date( 'Y-m-d', strtotime( date( 'Ym', current_time( 'timestamp' ) ) . '01' ) );
+
+        if ( $group_by == 'year' ) {
+            $start_date = $year . '-01-01';
+        }
+    }
+
+    if ( ! $end_date ) {
+        $end_date = date( 'Y-m-d', current_time( 'timestamp' ) );
+
+        if ( $group_by == 'year' && ( $year < $current_year ) ) {
+            $end_date = $year . '-12-31';
+        }
+    }
+
+    $start_date_to_time = strtotime( $start_date );
+    $end_date_to_time   = strtotime( $end_date );
+
+    if ( $group_by == 'day' ) {
+        $chart_interval       = ceil( max( 0, ( $end_date_to_time - $start_date_to_time ) / ( 60 * 60 * 24 ) ) );
+        $barwidth             = 60 * 60 * 24 * 1000;
+    } else {
+        $chart_interval = 0;
+        $min_date       = $start_date_to_time;
+
+        while ( ( $min_date   = strtotime( "+1 MONTH", $min_date ) ) <= $end_date_to_time ) {
+            $chart_interval ++;
+        }
+
+        $barwidth = 60 * 60 * 24 * 7 * 4 * 1000;
+    }
+
     // Prepare data for report
-    $order_counts      = dokan_prepare_chart_data( $data, 'order_date', 'total_orders', $chart_interval, $start_date_to_time, $group_by );
-    $order_amounts     = dokan_prepare_chart_data( $data, 'order_date', 'order_total', $chart_interval, $start_date_to_time, $group_by );
-    $order_commision     = dokan_prepare_chart_data( $data, 'order_date', 'earning', $chart_interval, $start_date_to_time, $group_by );
+    $order_counts    = dokan_prepare_chart_data( $data, 'order_date', 'total_orders', $chart_interval, $start_date_to_time, $group_by );
+    $order_amounts   = dokan_prepare_chart_data( $data, 'order_date', 'order_total', $chart_interval, $start_date_to_time, $group_by );
+    $order_commision = dokan_prepare_chart_data( $data, 'order_date', 'earning', $chart_interval, $start_date_to_time, $group_by );
 
     // Encode in json format
     $chart_data = json_encode( array(
-        'order_counts'      => array_values( $order_counts ),
-        'order_amounts'     => array_values( $order_amounts ),
-        'order_commision'     => array_values( $order_commision )
+        'order_counts'    => array_values( $order_counts ),
+        'order_amounts'   => array_values( $order_amounts ),
+        'order_commision' => array_values( $order_commision )
     ) );
 
     $chart_colours = array(
-        'order_counts'  => '#3498db',
+        'order_counts'    => '#3498db',
         'order_amounts'   => '#1abc9c',
-        'order_commision'   => '#73a724'
+        'order_commision' => '#73a724'
     );
 
     ?>
 
+    <style type="text/css">
+        .chart-tooltip {
+            position: absolute;
+            display: none;
+            line-height: 1;
+            background: #333;
+            color: #fff;
+            padding: 3px 5px;
+            font-size: 11px;
+            border-radius: 3px;
+        }
+    </style>
     <script type="text/javascript">
         jQuery(function($) {
 
@@ -537,9 +620,9 @@ function dokan_send_notification_on_product_publish( $post ) {
     if ( $post->post_type != 'product' ) {
         return;
     }
-    
+
     $seller = get_user_by( 'id', $post->post_author );
-    
+
     do_action( 'dokan_pending_product_published_notification', $post, $seller );
 }
 
@@ -713,7 +796,7 @@ function dokan_admin_report_by_seller( $chosen_seller_id) {
     // Prepare data for report
     $order_counts      = dokan_prepare_chart_data( $data, 'order_date', 'total_orders', $chart_interval, $start_date_to_time, $group_by );
     $order_amounts     = dokan_prepare_chart_data( $data, 'order_date', 'order_total', $chart_interval, $start_date_to_time, $group_by );
-    $order_commision     = dokan_prepare_chart_data( $data, 'order_date', 'earning', $chart_interval, $start_date_to_time, $group_by );
+    $order_commision   = dokan_prepare_chart_data( $data, 'order_date', 'earning', $chart_interval, $start_date_to_time, $group_by );
 
     // Encode in json format
     $chart_data = json_encode( array(
@@ -729,6 +812,18 @@ function dokan_admin_report_by_seller( $chosen_seller_id) {
     );
     ?>
 
+    <style type="text/css">
+        .chart-tooltip {
+            position: absolute;
+            display: none;
+            line-height: 1;
+            background: #333;
+            color: #fff;
+            padding: 3px 5px;
+            font-size: 11px;
+            border-radius: 3px;
+        }
+    </style>
     <script type="text/javascript">
         jQuery(function($) {
 
@@ -882,4 +977,43 @@ function dokan_admin_report_by_seller( $chosen_seller_id) {
     <?php
 
     return $data;
+}
+
+add_filter( 'post_types_to_delete_with_user', 'dokan_add_wc_post_types_to_delete_user', 10, 2 );
+
+function dokan_add_wc_post_types_to_delete_user( $post_types, $user_id ) {
+    if ( ! dokan_is_user_seller( $user_id ) ) {
+        return $post_types;
+    }
+
+    $wc_post_types = array( 'product', 'product_variation', 'shop_order', 'shop_coupon' );
+
+    return array_merge( $post_types, $wc_post_types );
+}
+
+/**
+ * Get help documents for admin
+ *
+ * @since 2.8
+ *
+ * @return Object
+ */
+function dokan_admin_get_help() {
+    $help_docs = get_transient( 'dokan_help_docs', '[]' );
+
+    if ( false === $help_docs ) {
+        $help_url  = 'https://api.bitbucket.org/2.0/snippets/wedevs/oErMz/files/dokan-help.json';
+        $response  = wp_remote_get( $help_url, array('timeout' => 15) );
+        $help_docs = wp_remote_retrieve_body( $response );
+
+        if ( is_wp_error( $response ) || $response['response']['code'] != 200 ) {
+            $help_docs = '[]';
+        }
+
+        set_transient( 'dokan_help_docs', $help_docs, 12 * HOUR_IN_SECONDS );
+    }
+
+    $help_docs = json_decode( $help_docs );
+
+    return $help_docs;
 }

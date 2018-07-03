@@ -150,7 +150,7 @@ function dokan_product_dashboard_errors() {
 function dokan_product_listing_status_filter() {
     $permalink    = dokan_get_navigation_url( 'products' );
     $status_class = isset( $_GET['post_status'] ) ? $_GET['post_status'] : 'all';
-    $post_counts  = dokan_count_posts( 'product', get_current_user_id() );
+    $post_counts  = dokan_count_posts( 'product', dokan_get_current_user_id() );
     $statuses     = dokan_get_post_status();
 
     dokan_get_template_part( 'products/listing-status-filter', '', array(
@@ -165,7 +165,7 @@ function dokan_order_listing_status_filter() {
     $orders_url = dokan_get_navigation_url( 'orders' );
 
     $status_class         = isset( $_GET['order_status'] ) ? $_GET['order_status'] : 'all';
-    $orders_counts        = dokan_count_orders( get_current_user_id() );
+    $orders_counts        = dokan_count_orders( dokan_get_current_user_id() );
     $order_date           = ( isset( $_GET['order_date'] ) ) ? $_GET['order_date'] : '';
     $date_filter          = array();
     $all_order_url        = array();
@@ -299,29 +299,33 @@ function dokan_get_dashboard_nav() {
 
     $urls = array(
         'dashboard' => array(
-            'title' => __( 'Dashboard', 'dokan-lite'),
-            'icon'  => '<i class="fa fa-tachometer"></i>',
-            'url'   => dokan_get_navigation_url(),
-            'pos'   => 10
+            'title'      => __( 'Dashboard', 'dokan-lite'),
+            'icon'       => '<i class="fa fa-tachometer"></i>',
+            'url'        => dokan_get_navigation_url(),
+            'pos'        => 10,
+            'permission' => 'dokan_view_overview_menu'
         ),
         'products' => array(
-            'title' => __( 'Products', 'dokan-lite'),
-            'icon'  => '<i class="fa fa-briefcase"></i>',
-            'url'   => dokan_get_navigation_url( 'products' ),
-            'pos'   => 30
+            'title'      => __( 'Products', 'dokan-lite'),
+            'icon'       => '<i class="fa fa-briefcase"></i>',
+            'url'        => dokan_get_navigation_url( 'products' ),
+            'pos'        => 30,
+            'permission' => 'dokan_view_product_menu'
         ),
         'orders' => array(
-            'title' => __( 'Orders', 'dokan-lite'),
-            'icon'  => '<i class="fa fa-shopping-cart"></i>',
-            'url'   => dokan_get_navigation_url( 'orders' ),
-            'pos'   => 50
+            'title'      => __( 'Orders', 'dokan-lite'),
+            'icon'       => '<i class="fa fa-shopping-cart"></i>',
+            'url'        => dokan_get_navigation_url( 'orders' ),
+            'pos'        => 50,
+            'permission' => 'dokan_view_order_menu'
         ),
 
         'withdraw' => array(
-            'title' => __( 'Withdraw', 'dokan-lite'),
-            'icon'  => '<i class="fa fa-upload"></i>',
-            'url'   => dokan_get_navigation_url( 'withdraw' ),
-            'pos'   => 70
+            'title'      => __( 'Withdraw', 'dokan-lite'),
+            'icon'       => '<i class="fa fa-upload"></i>',
+            'url'        => dokan_get_navigation_url( 'withdraw' ),
+            'pos'        => 70,
+            'permission' => 'dokan_view_withdraw_menu'
         ),
     );
 
@@ -340,16 +344,18 @@ function dokan_get_dashboard_nav() {
             'pos'   => 10
         ),
         'store' => array(
-            'title' => __( 'Store', 'dokan-lite'),
-            'icon'  => '<i class="fa fa-university"></i>',
-            'url'   => dokan_get_navigation_url( 'settings/store' ),
-            'pos'   => 30
+            'title'      => __( 'Store', 'dokan-lite'),
+            'icon'       => '<i class="fa fa-university"></i>',
+            'url'        => dokan_get_navigation_url( 'settings/store' ),
+            'pos'        => 30,
+            'permission' => 'dokan_view_store_settings_menu'
         ),
         'payment' => array(
-            'title' => __( 'Payment', 'dokan-lite'),
-            'icon'  => '<i class="fa fa-credit-card"></i>',
-            'url'   => dokan_get_navigation_url( 'settings/payment' ),
-            'pos'   => 50
+            'title'      => __( 'Payment', 'dokan-lite'),
+            'icon'       => '<i class="fa fa-credit-card"></i>',
+            'url'        => dokan_get_navigation_url( 'settings/payment' ),
+            'pos'        => 50,
+            'permission' => 'dokan_view_store_payment_menu'
         )
     );
 
@@ -361,16 +367,34 @@ function dokan_get_dashboard_nav() {
      *
      * @param array.
      */
-    $settings['sub']  = apply_filters( 'dokan_get_dashboard_settings_nav', $settings_sub );
+    $sub_settings = apply_filters( 'dokan_get_dashboard_settings_nav', $settings_sub );
 
+    foreach ( $sub_settings as $key => $sub_setting ) {
+        if ( ! isset( $sub_setting['pos'] ) && empty( $sub_setting['pos'] ) ) {
+            $sub_setting['pos'] = '200';
+        }
+
+        $settings['sub'][$key] = $sub_setting;
+    }
 
     uasort( $settings['sub'], 'dokan_nav_sort_by_pos' );
 
-    $urls['settings'] = $settings;
+    // Filter Sub setting menu according to permission
+    $settings['sub'] = array_filter( $settings['sub'], 'dokan_check_menu_permission' );
+
+    // Manage main settings url after re-render permission cheching
+    if ( count( $settings['sub'] ) > 1 ) {
+        $urls['settings'] = $settings;
+        $sub_settings_key = array_keys( $settings['sub'] );
+        $urls['settings']['url'] = $settings['sub'][$sub_settings_key[1]]['url'];
+    }
 
     $nav_urls = apply_filters( 'dokan_get_dashboard_nav', $urls );
 
     uasort( $nav_urls, 'dokan_nav_sort_by_pos' );
+
+    // Filter main menu according to permission
+    $nav_urls = array_filter( $nav_urls, 'dokan_check_menu_permission' );
 
     /**
      * Filter to get the final seller dashboard navigation.
@@ -380,6 +404,21 @@ function dokan_get_dashboard_nav() {
      * @param array $urls.
      */
     return $nav_urls;
+}
+
+/**
+ * Checking menu permissions
+ *
+ * @since 2.7.3
+ *
+ * @return boolean
+ */
+function dokan_check_menu_permission( $menu ) {
+    if ( isset( $menu['permission'] ) && !current_user_can( $menu['permission'] ) ) {
+        return false;
+    }
+
+    return true;
 }
 
 /**
@@ -399,7 +438,11 @@ function dokan_dashboard_nav( $active_menu = '' ) {
     $nav_menu          = dokan_get_dashboard_nav();
     $active_menu_parts = explode( '/', $active_menu );
 
-    if ( isset( $active_menu_parts[1] ) && $active_menu_parts[0] == 'settings' && array_key_exists( $active_menu_parts[1], $nav_menu['settings']['sub'] ) ) {
+    if ( isset( $active_menu_parts[1] )
+            && $active_menu_parts[0] == 'settings'
+            && isset( $nav_menu['settings']['sub'] )
+            && array_key_exists( $active_menu_parts[1], $nav_menu['settings']['sub'] )
+    ) {
         $urls        = $nav_menu['settings']['sub'];
         $active_menu = $active_menu_parts[1];
     } else {
@@ -408,13 +451,13 @@ function dokan_dashboard_nav( $active_menu = '' ) {
 
     $menu = '<ul class="dokan-dashboard-menu">';
 
-    foreach ($urls as $key => $item) {
+    foreach ( $urls as $key => $item ) {
         $class = ( $active_menu == $key ) ? 'active ' . $key : $key;
         $menu .= sprintf( '<li class="%s"><a href="%s">%s %s</a></li>', $class, $item['url'], $item['icon'], $item['title'] );
     }
 
     $common_links = '<li class="dokan-common-links dokan-clearfix">
-            <a title="' . __( 'Visit Store', 'dokan-lite' ) . '" class="tips" data-placement="top" href="' . dokan_get_store_url( get_current_user_id()) .'" target="_blank"><i class="fa fa-external-link"></i></a>
+            <a title="' . __( 'Visit Store', 'dokan-lite' ) . '" class="tips" data-placement="top" href="' . dokan_get_store_url( dokan_get_current_user_id() ) .'" target="_blank"><i class="fa fa-external-link"></i></a>
             <a title="' . __( 'Edit Account', 'dokan-lite' ) . '" class="tips" data-placement="top" href="' . dokan_get_navigation_url( 'edit-account' ) . '"><i class="fa fa-user"></i></a>
             <a title="' . __( 'Log out', 'dokan-lite' ) . '" class="tips" data-placement="top" href="' . wp_logout_url( home_url() ) . '"><i class="fa fa-power-off"></i></a>
         </li>';
@@ -435,42 +478,40 @@ if ( ! function_exists( 'dokan_store_category_menu' ) ) :
  * @param  int $seller_id
  * @return void
  */
-function dokan_store_category_menu( $seller_id, $title = '' ) { ?>
-    <aside class="widget dokan-category-menu">
-        <h3 class="widget-title"><?php echo $title; ?></h3>
-        <div id="cat-drop-stack">
-            <?php
-            global $wpdb;
+function dokan_store_category_menu( $seller_id, $title = '' ) {
+    ?>
+    <div id="cat-drop-stack">
+        <?php
+        global $wpdb;
 
-            $categories = get_transient( 'dokan-store-category-'.$seller_id );
+        $categories = get_transient( 'dokan-store-category-'.$seller_id );
 
-            if ( false === $categories ) {
-                $sql = "SELECT t.term_id,t.name, tt.parent FROM $wpdb->terms as t
-                        LEFT JOIN $wpdb->term_taxonomy as tt on t.term_id = tt.term_id
-                        LEFT JOIN $wpdb->term_relationships AS tr on tt.term_taxonomy_id = tr.term_taxonomy_id
-                        LEFT JOIN $wpdb->posts AS p on tr.object_id = p.ID
-                        WHERE tt.taxonomy = 'product_cat'
-                        AND p.post_type = 'product'
-                        AND p.post_status = 'publish'
-                        AND p.post_author = $seller_id GROUP BY t.term_id";
+        if ( false === $categories ) {
+            $sql = "SELECT t.term_id,t.name, tt.parent FROM $wpdb->terms as t
+                    LEFT JOIN $wpdb->term_taxonomy as tt on t.term_id = tt.term_id
+                    LEFT JOIN $wpdb->term_relationships AS tr on tt.term_taxonomy_id = tr.term_taxonomy_id
+                    LEFT JOIN $wpdb->posts AS p on tr.object_id = p.ID
+                    WHERE tt.taxonomy = 'product_cat'
+                    AND p.post_type = 'product'
+                    AND p.post_status = 'publish'
+                    AND p.post_author = $seller_id GROUP BY t.term_id";
 
-                $categories = $wpdb->get_results( $sql );
-                set_transient( 'dokan-store-category-'.$seller_id , $categories );
-            }
+            $categories = $wpdb->get_results( $sql );
+            set_transient( 'dokan-store-category-'.$seller_id , $categories );
+        }
 
-            $args = array(
-                'taxonomy'      => 'product_cat',
-                'selected_cats' => ''
-            );
+        $args = array(
+            'taxonomy'      => 'product_cat',
+            'selected_cats' => ''
+        );
 
-            $walker = new Dokan_Store_Category_Walker( $seller_id );
-            echo "<ul>";
-            echo call_user_func_array( array(&$walker, 'walk'), array($categories, 0, array()) );
-            echo "</ul>";
-            ?>
-        </div>
-    </aside>
-<?php
+        $walker = new Dokan_Store_Category_Walker( $seller_id );
+        echo "<ul>";
+        echo call_user_func_array( array(&$walker, 'walk'), array($categories, 0, array()) );
+        echo "</ul>";
+        ?>
+    </div>
+    <?php
 }
 
 endif;
@@ -560,88 +601,3 @@ function dokan_myorder_login_check(){
         dokan_redirect_login();
     }
 }
-
- /**
- * Displays the store lists
- *
- * @since 2.4
- *
- * @param  array $atts
- *
- * @return string
- */
-function dokan_store_listing( $atts ) {
-    /**
-     * Filter return the number of store listing number per page.
-     *
-     * @since 2.2
-     *
-     * @param array
-     */
-    $attr = shortcode_atts( apply_filters( 'dokan_store_listing_per_page', array(
-        'per_page' => 10,
-        'search'   => 'yes',
-        'per_row'  => 3,
-        'featured'  => 'no'
-    ) ), $atts );
-    $paged   = max( 1, get_query_var( 'paged' ) );
-    $limit   = $attr['per_page'];
-    $offset  = ( $paged - 1 ) * $limit;
-
-    $seller_args = array(
-        'number' => $limit,
-        'offset' => $offset
-    );
-
-    // if search is enabled, perform a search
-    if ( 'yes' == $attr['search'] ) {
-        $search_term = isset( $_GET['dokan_seller_search'] ) ? sanitize_text_field( $_GET['dokan_seller_search'] ) : '';
-        if ( '' != $search_term ) {
-
-            $seller_args['meta_query'] = array(
-                array(
-                    'key'     => 'dokan_enable_selling',
-                    'value'   => 'yes',
-                    'compare' => '='
-                ),
-                 array(
-                    'key'     => 'dokan_store_name',
-                    'value'   => $search_term,
-                    'compare' => 'LIKE'
-                )
-            );
-        }
-    }
-
-    if ( $attr['featured'] == 'yes' ) {
-        $seller_args['meta_query'][] = array(
-                                        'key'     => 'dokan_feature_seller',
-                                        'value'   => 'yes',
-                                        'compare' => '='
-                                    );
-    }
-
-    $sellers = dokan_get_sellers( apply_filters( 'dokan_seller_listing_args', $seller_args ) );
-
-    /**
-     * Filter for store listing args
-     *
-     * @since 2.4.9
-     */
-    $template_args = apply_filters( 'dokan_store_list_args', array(
-        'sellers'    => $sellers,
-        'limit'      => $limit,
-        'offset'     => $offset,
-        'paged'      => $paged,
-        'image_size' => 'full',
-        'search'     => $attr['search'],
-        'per_row'    => $attr['per_row']
-    ) );
-    ob_start();
-    dokan_get_template_part( 'store-lists', false, $template_args );
-    $content = ob_get_clean();
-
-    return apply_filters( 'dokan_seller_listing', $content, $attr );
-}
-
-add_shortcode( 'dokan-stores', 'dokan_store_listing' );

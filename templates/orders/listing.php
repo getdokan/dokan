@@ -1,7 +1,7 @@
 <?php
 global $woocommerce;
 
-$seller_id    = get_current_user_id();
+$seller_id    = dokan_get_current_user_id();
 $order_status = isset( $_GET['order_status'] ) ? sanitize_key( $_GET['order_status'] ) : 'all';
 $paged        = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
 $limit        = 10;
@@ -19,7 +19,9 @@ if ( $user_orders ) {
                 <th><?php _e( 'Status', 'dokan-lite' ); ?></th>
                 <th><?php _e( 'Customer', 'dokan-lite' ); ?></th>
                 <th><?php _e( 'Date', 'dokan-lite' ); ?></th>
-                <th width="17%"><?php _e( 'Action', 'dokan-lite' ); ?></th>
+                <?php if ( current_user_can( 'dokan_manage_order' ) ): ?>
+                    <th width="17%"><?php _e( 'Action', 'dokan-lite' ); ?></th>
+                <?php endif ?>
             </tr>
         </thead>
         <tbody>
@@ -29,13 +31,17 @@ if ( $user_orders ) {
                 ?>
                 <tr >
                     <td class="dokan-order-id" data-title="<?php _e( 'Order', 'dokan-lite' ); ?>" >
-                        <?php echo '<a href="' . wp_nonce_url( add_query_arg( array( 'order_id' => dokan_get_prop( $the_order, 'id' ) ), dokan_get_navigation_url( 'orders' ) ), 'dokan_view_order' ) . '"><strong>' . sprintf( __( 'Order %s', 'dokan-lite' ), esc_attr( $the_order->get_order_number() ) ) . '</strong></a>'; ?>
+                        <?php if ( current_user_can( 'dokan_view_order' ) ): ?>
+                            <?php echo '<a href="' . wp_nonce_url( add_query_arg( array( 'order_id' => dokan_get_prop( $the_order, 'id' ) ), dokan_get_navigation_url( 'orders' ) ), 'dokan_view_order' ) . '"><strong>' . sprintf( __( 'Order %s', 'dokan-lite' ), esc_attr( $the_order->get_order_number() ) ) . '</strong></a>'; ?>
+                        <?php else: ?>
+                            <?php echo '<strong>' . sprintf( __( 'Order %s', 'dokan-lite' ), esc_attr( $the_order->get_order_number() ) ) . '</strong>'; ?>
+                        <?php endif ?>
                     </td>
                     <td class="dokan-order-total" data-title="<?php _e( 'Order Total', 'dokan-lite' ); ?>" >
                         <?php echo $the_order->get_formatted_order_total(); ?>
                     </td>
                     <td class="dokan-order-status" data-title="<?php _e( 'Status', 'dokan-lite' ); ?>" >
-                        <?php echo '<span class="dokan-label dokan-label-' . dokan_get_order_status_class( dokan_get_prop( $the_order, 'status' ) ) . '">' . esc_html__( dokan_get_order_status_translated( dokan_get_prop( $the_order, 'status' ) ) ) . '</span>'; ?>
+                        <?php echo '<span class="dokan-label dokan-label-' . dokan_get_order_status_class( dokan_get_prop( $the_order, 'status' ) ) . '">' . dokan_get_order_status_translated( dokan_get_prop( $the_order, 'status' ) ) . '</span>'; ?>
                     </td>
                     <td class="dokan-order-customer" data-title="<?php _e( 'Customer', 'dokan-lite' ); ?>" >
                         <?php
@@ -83,50 +89,52 @@ if ( $user_orders ) {
                         echo '<abbr title="' . esc_attr( dokan_date_time_format( $t_time ) ) . '">' . esc_html( apply_filters( 'post_date_column_time', dokan_date_time_format( $h_time, true ) , dokan_get_prop( $the_order, 'id' ) ) ) . '</abbr>';
                         ?>
                     </td>
-                    <td class="dokan-order-action" width="17%" data-title="<?php _e( 'Action', 'dokan-lite' ); ?>" >
-                        <?php
-                        do_action( 'woocommerce_admin_order_actions_start', $the_order );
+                    <?php if ( current_user_can( 'dokan_manage_order' ) ): ?>
+                        <td class="dokan-order-action" width="17%" data-title="<?php _e( 'Action', 'dokan-lite' ); ?>" >
+                            <?php
+                            do_action( 'woocommerce_admin_order_actions_start', $the_order );
 
-                        $actions = array();
+                            $actions = array();
 
-                        if ( dokan_get_option( 'order_status_change', 'dokan_selling', 'on' ) == 'on' ) {
-                            if ( in_array( dokan_get_prop( $the_order, 'status' ), array( 'pending', 'on-hold' ) ) ) {
-                                $actions['processing'] = array(
-                                    'url' => wp_nonce_url( admin_url( 'admin-ajax.php?action=dokan-mark-order-processing&order_id=' . dokan_get_prop( $the_order, 'id' ) ), 'dokan-mark-order-processing' ),
-                                    'name' => __( 'Processing', 'dokan-lite' ),
-                                    'action' => "processing",
-                                    'icon' => '<i class="fa fa-clock-o">&nbsp;</i>'
-                                );
+                            if ( dokan_get_option( 'order_status_change', 'dokan_selling', 'on' ) == 'on' ) {
+                                if ( in_array( dokan_get_prop( $the_order, 'status' ), array( 'pending', 'on-hold' ) ) ) {
+                                    $actions['processing'] = array(
+                                        'url' => wp_nonce_url( admin_url( 'admin-ajax.php?action=dokan-mark-order-processing&order_id=' . dokan_get_prop( $the_order, 'id' ) ), 'dokan-mark-order-processing' ),
+                                        'name' => __( 'Processing', 'dokan-lite' ),
+                                        'action' => "processing",
+                                        'icon' => '<i class="fa fa-clock-o">&nbsp;</i>'
+                                    );
+                                }
+
+                                if ( in_array( dokan_get_prop( $the_order, 'status' ), array( 'pending', 'on-hold', 'processing' ) ) ) {
+                                    $actions['complete'] = array(
+                                        'url' => wp_nonce_url( admin_url( 'admin-ajax.php?action=dokan-mark-order-complete&order_id=' . dokan_get_prop( $the_order, 'id' ) ), 'dokan-mark-order-complete' ),
+                                        'name' => __( 'Complete', 'dokan-lite' ),
+                                        'action' => "complete",
+                                        'icon' => '<i class="fa fa-check">&nbsp;</i>'
+                                    );
+                                }
+
                             }
 
-                            if ( in_array( dokan_get_prop( $the_order, 'status' ), array( 'pending', 'on-hold', 'processing' ) ) ) {
-                                $actions['complete'] = array(
-                                    'url' => wp_nonce_url( admin_url( 'admin-ajax.php?action=dokan-mark-order-complete&order_id=' . dokan_get_prop( $the_order, 'id' ) ), 'dokan-mark-order-complete' ),
-                                    'name' => __( 'Complete', 'dokan-lite' ),
-                                    'action' => "complete",
-                                    'icon' => '<i class="fa fa-check">&nbsp;</i>'
-                                );
+                            $actions['view'] = array(
+                                'url' => wp_nonce_url( add_query_arg( array( 'order_id' => dokan_get_prop( $the_order, 'id' ) ), dokan_get_navigation_url( 'orders' ) ), 'dokan_view_order' ),
+                                'name' => __( 'View', 'dokan-lite' ),
+                                'action' => "view",
+                                'icon' => '<i class="fa fa-eye">&nbsp;</i>'
+                            );
+
+                            $actions = apply_filters( 'woocommerce_admin_order_actions', $actions, $the_order );
+
+                            foreach ($actions as $action) {
+                                $icon = ( isset( $action['icon'] ) ) ? $action['icon'] : '';
+                                printf( '<a class="dokan-btn dokan-btn-default dokan-btn-sm tips" href="%s" data-toggle="tooltip" data-placement="top" title="%s">%s</a> ', esc_url( $action['url'] ), esc_attr( $action['name'] ), $icon );
                             }
 
-                        }
-
-                        $actions['view'] = array(
-                            'url' => wp_nonce_url( add_query_arg( array( 'order_id' => dokan_get_prop( $the_order, 'id' ) ), dokan_get_navigation_url( 'orders' ) ), 'dokan_view_order' ),
-                            'name' => __( 'View', 'dokan-lite' ),
-                            'action' => "view",
-                            'icon' => '<i class="fa fa-eye">&nbsp;</i>'
-                        );
-
-                        $actions = apply_filters( 'woocommerce_admin_order_actions', $actions, $the_order );
-
-                        foreach ($actions as $action) {
-                            $icon = ( isset( $action['icon'] ) ) ? $action['icon'] : '';
-                            printf( '<a class="dokan-btn dokan-btn-default dokan-btn-sm tips" href="%s" data-toggle="tooltip" data-placement="top" title="%s">%s</a> ', esc_url( $action['url'] ), esc_attr( $action['name'] ), $icon );
-                        }
-
-                        do_action( 'woocommerce_admin_order_actions_end', $the_order );
-                        ?>
-                    </td>
+                            do_action( 'woocommerce_admin_order_actions_end', $the_order );
+                            ?>
+                        </td>
+                    <?php endif ?>
                     <td class="diviader"></td>
                 </tr>
 

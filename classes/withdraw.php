@@ -50,7 +50,7 @@ class Dokan_Withdraw {
             SET status = %d WHERE user_id=%d AND id = %d",
             $status, $user_id, $row_id
         ) );
-       
+
         $cache_key     = 'dokan_seller_balance_' . $user_id;
         wp_cache_delete( $cache_key );
     }
@@ -160,34 +160,6 @@ class Dokan_Withdraw {
             case 'cancelled':
                 return 2;
                 break;
-        }
-    }
-
-    /**
-     * Update a note
-     *
-     * @return void
-     */
-    function note_update() {
-        
-        if ( isset( $_POST['dokan_admin_nonce'] ) && !wp_verify_nonce( sanitize_key( $_POST['dokan_admin_nonce'] ), 'dokan_admin_action' ) ) {
-            return;
-        }
-        
-        global $wpdb;
-
-        $table_name = $wpdb->prefix . 'dokan_withdraw';
-        $update     = $wpdb->update( $table_name, array( 'note' => sanitize_text_field( $_POST['note'] ) ), array( 'id' => $_POST['row_id'] ) );
-
-        if ( $update ) {
-            $html = array(
-                'note' => wp_kses_post( $_POST['note'] ),
-            );
-
-            wp_send_json_success( $html );
-
-        } else {
-            wp_send_json_error();
         }
     }
 
