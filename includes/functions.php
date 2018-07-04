@@ -2712,3 +2712,41 @@ function dokan_remove_action_button( $actions ) {
 }
 
 add_filter( 'woocommerce_admin_order_preview_actions', 'dokan_remove_action_button', 15 );
+
+/**
+ * Dokan get translated days
+ *
+ * @param  string day
+ *
+ * @since  2.8.2
+ *
+ * @return string
+ */
+function dokan_get_translated_days( $day ) {
+    switch ( $day ) {
+        case 'saturday':
+            return __( 'Saturday', 'dokan-lite' );
+
+        case 'sunday':
+            return __( 'Sunday', 'dokan-lite' );
+
+        case 'monday':
+            return __( 'Monday', 'dokan-lite' );
+
+        case 'tuesday':
+            return __( 'Tuesday', 'dokan-lite' );
+
+        case 'wednesday':
+            return __( 'Wednesday', 'dokan-lite' );
+
+        case 'thursday':
+            return __( 'Thursday', 'dokan-lite' );
+
+        case 'friday':
+            return __( 'Friday', 'dokan-lite' );
+
+        default:
+            return apply_filters( 'dokan_get_translated_days', '', $day );
+            break;
+    }
+}

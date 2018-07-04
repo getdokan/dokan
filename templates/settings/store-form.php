@@ -230,12 +230,16 @@
                 <?php foreach ( $dokan_days as $key => $day ) : ?>
                     <div class="dokan-form-group">
                         <label class="day control-label" for="<?php echo $day ?>-opening-time">
-                            <?php esc_attr_e( ucfirst( $day ), 'dokan-lite' ); ?>
+                            <?php echo esc_attr( dokan_get_translated_days( $day ) ); ?>
                         </label>
                         <label for="">
                             <select name="<?php echo esc_attr( $day ) ?>_on_off" class="dokan-on-off dokan-form-control">
-                                <option value="close" <?php ! empty( $all_times ) ? selected( $all_times[$day]['open'], 'open' ) : '' ?> >Close</option>
-                                <option value="open" <?php ! empty( $all_times ) ? selected( $all_times[$day]['open'], 'open' ) : '' ?> >Open</option>
+                                <option value="close" <?php ! empty( $all_times ) ? selected( $all_times[$day]['open'], 'close' ) : '' ?> >
+                                    <?php _e( 'Close', 'dokan-lite' ); ?>
+                                </option>
+                                <option value="open" <?php ! empty( $all_times ) ? selected( $all_times[$day]['open'], 'open' ) : '' ?> >
+                                    <?php _e( 'Open', 'dokan-lite' ); ?>
+                                </option>
                             </select>
                         </label>
                         <label for="opening-time" class="time" style="visibility: <?php echo isset( $all_times[$day]['open'] ) == 'open' ? 'visible' : 'hidden' ?>" >

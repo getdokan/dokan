@@ -491,38 +491,38 @@ class Dokan_Template_Settings {
                 'dokan_store_time'             => array(
                     'sunday'                   => array(
                         'open'                 => isset( $_POST['sunday_on_off'] ) ? $_POST['sunday_on_off'] : 'close' ,
-                        'opening_time'         => isset( $_POST['sunday_opening_time'] ) ? $_POST['sunday_opening_time'] : '', 
-                        'closing_time'         => isset( $_POST['sunday_closing_time'] ) ? $_POST['sunday_closing_time'] : '', 
+                        'opening_time'         => isset( $_POST['sunday_opening_time'] ) ? $_POST['sunday_opening_time'] : '',
+                        'closing_time'         => isset( $_POST['sunday_closing_time'] ) ? $_POST['sunday_closing_time'] : '',
                     ),
                     'monday'                   => array(
                         'open'                 => isset( $_POST['monday_on_off'] ) ? $_POST['monday_on_off'] : 'close' ,
-                        'opening_time'         => isset( $_POST['monday_opening_time'] ) ? $_POST['monday_opening_time'] : '', 
-                        'closing_time'         => isset( $_POST['monday_closing_time'] ) ? $_POST['monday_closing_time'] : '', 
+                        'opening_time'         => isset( $_POST['monday_opening_time'] ) ? $_POST['monday_opening_time'] : '',
+                        'closing_time'         => isset( $_POST['monday_closing_time'] ) ? $_POST['monday_closing_time'] : '',
                     ),
                     'tuesday'                  => array(
                         'open'                 => isset( $_POST['tuesay_on_off'] ) ? $_POST['tuesday_on_off'] : 'close' ,
-                        'opening_time'         => isset( $_POST['tuesday_opening_time'] ) ? $_POST['tuesday_opening_time'] : '', 
-                        'closing_time'         => isset( $_POST['tuesday_closing_time'] ) ? $_POST['tuesday_closing_time'] : '', 
+                        'opening_time'         => isset( $_POST['tuesday_opening_time'] ) ? $_POST['tuesday_opening_time'] : '',
+                        'closing_time'         => isset( $_POST['tuesday_closing_time'] ) ? $_POST['tuesday_closing_time'] : '',
                     ),
                     'wednesday'                 => array(
                         'open'                 => isset( $_POST['wednesday_on_off'] ) ? $_POST['wednesday_on_off'] : 'close' ,
-                        'opening_time'         => isset( $_POST['wednesday_opening_time'] ) ? $_POST['wednesday_opening_time'] : '', 
-                        'closing_time'         => isset( $_POST['wednesday_closing_time'] ) ? $_POST['wednesday_closing_time'] : '', 
+                        'opening_time'         => isset( $_POST['wednesday_opening_time'] ) ? $_POST['wednesday_opening_time'] : '',
+                        'closing_time'         => isset( $_POST['wednesday_closing_time'] ) ? $_POST['wednesday_closing_time'] : '',
                     ),
                     'thursday'                 => array(
                         'open'                 => isset( $_POST['thursday_on_off'] ) ? $_POST['thursday_on_off'] : 'close' ,
-                        'opening_time'         => isset( $_POST['thursday_opening_time'] ) ? $_POST['thursday_opening_time'] : '', 
-                        'closing_time'         => isset( $_POST['thursday_closing_time'] ) ? $_POST['thursday_closing_time'] : '', 
+                        'opening_time'         => isset( $_POST['thursday_opening_time'] ) ? $_POST['thursday_opening_time'] : '',
+                        'closing_time'         => isset( $_POST['thursday_closing_time'] ) ? $_POST['thursday_closing_time'] : '',
                     ),
                     'friday'                   => array(
                         'open'                 => isset( $_POST['friday_on_off'] ) ? $_POST['friday_on_off'] : 'close' ,
-                        'opening_time'         => isset( $_POST['friday_opening_time'] ) ? $_POST['friday_opening_time'] : '', 
-                        'closing_time'         => isset( $_POST['friday_closing_time'] ) ? $_POST['friday_closing_time'] : '', 
+                        'opening_time'         => isset( $_POST['friday_opening_time'] ) ? $_POST['friday_opening_time'] : '',
+                        'closing_time'         => isset( $_POST['friday_closing_time'] ) ? $_POST['friday_closing_time'] : '',
                     ),
                     'saturday'                 => array(
                         'open'                 => isset( $_POST['saturday_on_off'] ) ? $_POST['saturday_on_off'] : 'close' ,
-                        'opening_time'         => isset( $_POST['saturday_opening_time'] ) ? $_POST['saturday_opening_time'] : '', 
-                        'closing_time'         => isset( $_POST['saturday_closing_time'] ) ? $_POST['saturday_closing_time'] : '', 
+                        'opening_time'         => isset( $_POST['saturday_opening_time'] ) ? $_POST['saturday_opening_time'] : '',
+                        'closing_time'         => isset( $_POST['saturday_closing_time'] ) ? $_POST['saturday_closing_time'] : '',
                     )
                 ),
             );

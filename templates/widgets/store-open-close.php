@@ -12,8 +12,8 @@
     	<?php $to =  $value['open'] == 'close' ? 'Off Day' : '-' ?>
     	<?php $is_open =  $value['open'] == 'open' ? true : false ?>
         <div class="<?php echo esc_attr( $day ) . '-time' ?>">
-            <label for=""><?php echo esc_attr( ucfirst( $day ) ) ?></label>:
-            <?php echo sprintf( __( '<span> %s %s %s </span>', 'dokan-lite' ), $is_open ? esc_attr( ucfirst( $value['opening_time'] ) ) : '' , $to, $is_open ? esc_attr( ucfirst( $value['closing_time'] ) ) : '' ); ?> 
+            <label for=""><?php echo esc_attr( dokan_get_translated_days( $day ) ); ?></label>:
+            <?php echo sprintf( __( '<span> %s %s %s </span>', 'dokan-lite' ), $is_open ? esc_attr( ucfirst( $value['opening_time'] ) ) : '' , $to, $is_open ? esc_attr( ucfirst( $value['closing_time'] ) ) : '' ); ?>
         </div>
     <?php endforeach; ?>
 </div>
@@ -24,5 +24,5 @@
 	}
 	.dokan-store-open-close span {
 	    padding-left: 10px;
-	}	
+	}
 </style>
