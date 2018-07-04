@@ -47,7 +47,10 @@
     $dokan_appearance = dokan_get_option( 'store_header_template', 'dokan_appearance', 'default' );
     $dokan_days = array( 'sunday','monday','tuesday','wednesday','thursday','friday','saturday' );
 
-    $all_times      = isset( dokan_get_store_info( $current_user )['dokan_store_time'] ) ? dokan_get_store_info( $current_user )['dokan_store_time'] : '';
+    $all_times      = isset( $profile_info['dokan_store_time'] ) ? $profile_info['dokan_store_time'] : '';
+    $dokan_store_time_enabled = isset( $profile_info['dokan_store_time_enabled'] ) ? $profile_info['dokan_store_time_enabled'] : '';
+    $dokan_store_open_notice  = isset( $profile_info['dokan_store_open_notice'] ) ? $profile_info['dokan_store_open_notice'] : '';
+    $dokan_store_close_notice = isset( $profile_info['dokan_store_close_notice'] ) ? $profile_info['dokan_store_close_notice'] : '';
 
 ?>
 <?php do_action( 'dokan_settings_before_form', $current_user, $profile_info ); ?>
@@ -224,7 +227,22 @@
 
         <div class="dokan-form-group store-open-close">
             <label class="dokan-w3 control-label" for="dokan-store-close">
-                <?php _e( 'Store Open Close', 'dokan-lite' ); ?>
+                <?php _e( 'Enable Store Open Colse Time', 'dokan-lite' ); ?>
+            </label>
+
+            <div class="dokan-w5 dokan-text-left dokan_tock_check">
+                <div class="checkbox">
+                    <label for="dokan-store-time-enable" class="control-label">
+                        <input type="checkbox" name="dokan_store_time_enabled" id="dokan-store-time-enable" value="yes" <?php echo $dokan_store_time_enabled == 'yes' ? 'checked': ''; ?>>
+                        <?php esc_attr_e( 'Show store opening/colsesing time widget in store page', 'dokan-lite' ); ?>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="dokan-form-group store-open-close">
+            <label class="dokan-w3 control-label" for="dokan-store-close">
+                <?php printf( '%s %s %s', __( 'Store Open/Close', 'dokan-lite' ), '<br>', __( 'Time', 'dokan-lite' ) ); ?>
             </label>
             <div class="dokan-w6" style="width: auto">
                 <?php foreach ( $dokan_days as $key => $day ) : ?>
@@ -250,6 +268,31 @@
                         </label>
                     </div>
                 <?php endforeach; ?>
+            </div>
+        </div>
+
+        <div class="dokan-form-group store-open-close">
+            <label class="dokan-w3 control-label" for="dokan-store-time-notice">
+                <?php _e( 'Store Open Notice', 'dokan-lite' ); ?>
+            </label>
+            <div class="dokan-w6" style="width: auto">
+                <div class="dokan-form-group">
+                    <label class="control-label" for="dokan-store-open-notice">
+                        <input type="text" name="dokan_store_open_notice" placeholder="Store is open" value="<?php echo esc_attr( $dokan_store_open_notice ); ?>">
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="dokan-form-group store-open-close">
+            <label class="dokan-w3 control-label" for="dokan-store-time-notice">
+                <?php _e( 'Store Close Notice', 'dokan-lite' ); ?>
+            </label>
+            <div class="dokan-w6" style="width: auto">
+                <div class="dokan-form-group">
+                    <label class="control-label" for="dokan-store-close-notice">
+                        <input type="text" name="dokan_store_close_notice" placeholder="Store is closed" value="<?php echo esc_attr( $dokan_store_close_notice ); ?>">
+                    </label>
+                </div>
             </div>
         </div>
 

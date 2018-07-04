@@ -525,6 +525,9 @@ class Dokan_Template_Settings {
                         'closing_time'         => isset( $_POST['saturday_closing_time'] ) ? $_POST['saturday_closing_time'] : '',
                     )
                 ),
+                'dokan_store_time_enabled'  => isset( $_POST['dokan_store_time_enabled'] ) ? $_POST['dokan_store_time_enabled'] : '',
+                'dokan_store_open_notice'  => isset( $_POST['dokan_store_open_notice'] ) ? $_POST['dokan_store_open_notice'] : '',
+                'dokan_store_close_notice' => isset( $_POST['dokan_store_close_notice'] ) ? $_POST['dokan_store_close_notice'] : '',
             );
 
             update_user_meta( $store_id, 'dokan_store_name', $dokan_settings['store_name'] );

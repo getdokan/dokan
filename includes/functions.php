@@ -2750,3 +2750,36 @@ function dokan_get_translated_days( $day ) {
             break;
     }
 }
+
+/**
+ * Dokan is store open
+ *
+ * @param  int user_id
+ *
+ * @since  2.8.2
+ *
+ * @return boolean
+ */
+function dokan_is_store_open( $user_id ) {
+    $store_user = dokan()->vendor->get( $user_id );
+    $store_info = $store_user->get_shop_info();
+    $open_days  = isset ( $store_info['dokan_store_time'] ) ? $store_info['dokan_store_time'] : '';
+    $today      = strtolower( date( 'l' ) );
+
+    if ( ! is_array( $open_days ) ) {
+        return false;
+    }
+
+    foreach ( $open_days as $key => $value ) {
+
+        if ( $key !== $today ) {
+            continue;
+        }
+
+        if ( $value['open'] !== 'open' ) {
+            return false;
+        }
+
+        return true;
+    }
+}
