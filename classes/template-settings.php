@@ -500,7 +500,7 @@ class Dokan_Template_Settings {
                         'closing_time'         => isset( $_POST['monday_closing_time'] ) ? $_POST['monday_closing_time'] : '',
                     ),
                     'tuesday'                  => array(
-                        'open'                 => isset( $_POST['tuesay_on_off'] ) ? $_POST['tuesday_on_off'] : 'close' ,
+                        'open'                 => isset( $_POST['tuesday_on_off'] ) ? $_POST['tuesday_on_off'] : 'close' ,
                         'opening_time'         => isset( $_POST['tuesday_opening_time'] ) ? $_POST['tuesday_opening_time'] : '',
                         'closing_time'         => isset( $_POST['tuesday_closing_time'] ) ? $_POST['tuesday_closing_time'] : '',
                     ),

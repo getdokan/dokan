@@ -242,10 +242,10 @@
                                 </option>
                             </select>
                         </label>
-                        <label for="opening-time" class="time" style="visibility: <?php echo isset( $all_times[$day]['open'] ) == 'open' ? 'visible' : 'hidden' ?>" >
+                        <label for="opening-time" class="time" style="visibility: <?php echo isset( $all_times[$day]['open'] ) && $all_times[$day]['open'] == 'open' ? 'visible' : 'hidden' ?>" >
                             <input type="text" class="dokan-form-control" name="<?php echo strtolower( $day ) ?>_opening_time" id="<?php echo $day ?>-opening-time" placeholder="<?php _e( '10:00 AM' ); ?>" value="<?php echo isset( $all_times[$day]['opening_time'] ) ? $all_times[$day]['opening_time'] : '' ?>" >
                         </label>
-                        <label for="closing-time" class="time" style="visibility: <?php echo isset( $all_times[$day]['open'] ) == 'open' ? 'visible' : 'hidden' ?>" >
+                        <label for="closing-time" class="time" style="visibility: <?php echo isset( $all_times[$day]['open'] ) && $all_times[$day]['open'] == 'open' ? 'visible' : 'hidden' ?>" >
                             <input type="text" class="dokan-form-control" name="<?php echo $day ?>_closing_time" id="<?php echo $day ?>-closing-time" placeholder="<?php _e( '2:00 PM' ); ?>" value="<?php echo isset( $all_times[$day]['closing_time'] ) ? $all_times[$day]['closing_time'] : '' ?>">
                         </label>
                     </div>
