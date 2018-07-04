@@ -78,7 +78,7 @@ final class WeDevs_Dokan {
      *
      * @var string
      */
-    public $version = '2.8.2';
+    public $version = '2.8.3';
 
     /**
      * Minimum PHP version required
@@ -384,10 +384,11 @@ final class WeDevs_Dokan {
     function wpdb_table_shortcuts() {
         global $wpdb;
 
-        $wpdb->dokan_withdraw     = $wpdb->prefix . 'dokan_withdraw';
-        $wpdb->dokan_orders       = $wpdb->prefix . 'dokan_orders';
-        $wpdb->dokan_announcement = $wpdb->prefix . 'dokan_announcement';
-        $wpdb->dokan_refund       = $wpdb->prefix . 'dokan_refund';
+        $wpdb->dokan_withdraw       = $wpdb->prefix . 'dokan_withdraw';
+        $wpdb->dokan_orders         = $wpdb->prefix . 'dokan_orders';
+        $wpdb->dokan_announcement   = $wpdb->prefix . 'dokan_announcement';
+        $wpdb->dokan_refund         = $wpdb->prefix . 'dokan_refund';
+        $wpdb->dokan_vendor_balance = $wpdb->prefix . 'dokan_vendor_balance';
     }
 
     /**

@@ -333,6 +333,29 @@ function dokan_sync_insert_order( $order_id ) {
             '%s',
         )
     );
+
+    $wpdb->insert( $wpdb->prefix . 'dokan_vendor_balance',
+        array(
+            'vendor_id'     => $seller_id,
+            'trn_id'        => $order_id,
+            'trn_type'      => 'dokan_orders',
+            'perticulars'   => 'New order',
+            'debit'         => $net_amount,
+            'credit'        => 0,
+            'status'        => $order_status,
+            'date'          => current_time( 'mysql' )
+        ),
+        array(
+            '%d',
+            '%d',
+            '%s',
+            '%s',
+            '%f',
+            '%f',
+            '%s',
+            '%s',
+        )
+    );
 }
 
 add_action( 'woocommerce_checkout_update_order_meta', 'dokan_sync_insert_order', 20 );

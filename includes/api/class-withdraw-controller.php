@@ -263,6 +263,34 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
             if ( dokan_get_seller_balance( $result->user_id, false ) < $result->amount ) {
                 return;
             }
+
+            $balance_sql    = "SELECT * FROM `{$wpdb->prefix}dokan_vendor_balance` WHERE `trn_id`={$request['id']} AND `trn_type` = 'dokan_withdraw'";
+            $balance_result = $wpdb->get_row( $balance_sql );
+
+            if ( ! count( $balance_result ) ) {
+                $wpdb->insert( $wpdb->prefix . 'dokan_vendor_balance',
+                    array(
+                        'vendor_id'     => $user_id,
+                        'trn_id'        => $request['id'],
+                        'trn_type'      => 'dokan_withdraw',
+                        'perticulars'   => 'Approve withdraw request',
+                        'debit'         => 0,
+                        'credit'        => $result->amount,
+                        'status'        => 'approved',
+                        'date'          => current_time( 'mysql' )
+                    ),
+                    array(
+                        '%d',
+                        '%d',
+                        '%s',
+                        '%s',
+                        '%f',
+                        '%f',
+                        '%s',
+                        '%s',
+                    )
+                );
+            }
         }
 
         $withdraw->update_status( $request['id'], $user_id, $status_code );

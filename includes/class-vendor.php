@@ -487,10 +487,18 @@ class Dokan_Vendor {
         $date          = date( 'Y-m-d', strtotime( date('Y-m-d') . ' -'.$threshold_day.' days' ) );
 
         if ( false === $earning ) {
-            $sql = "SELECT SUM(net_amount) as earnings,
-                (SELECT SUM(amount) FROM {$wpdb->prefix}dokan_withdraw WHERE user_id = %d AND status = 1) as withdraw
-                FROM {$wpdb->prefix}dokan_orders as do LEFT JOIN {$wpdb->prefix}posts as p ON do.order_id = p.ID
-                WHERE seller_id = %d AND DATE(p.post_date) <= %s AND order_status IN({$status})";
+            $installed_version = get_option( 'dokan_theme_version' );
+            if ( ! $installed_version || version_compare( $installed_version, '2.8.2', '>' ) ) {
+                $sql = "SELECT SUM(debit) as earnings,
+                    (SELECT SUM(credit) FROM {$wpdb->prefix}dokan_vendor_balance WHERE vendor_id = %d) as withdraw
+                    from {$wpdb->prefix}dokan_vendor_balance
+                    WHERE vendor_id = %d AND DATE(`date`) <= %s AND status IN({$status})";
+            } else {
+                $sql = "SELECT SUM(net_amount) as earnings,
+                    (SELECT SUM(amount) FROM {$wpdb->prefix}dokan_withdraw WHERE user_id = %d AND status = 1) as withdraw
+                    FROM {$wpdb->prefix}dokan_orders as do LEFT JOIN {$wpdb->prefix}posts as p ON do.order_id = p.ID
+                    WHERE seller_id = %d AND DATE(p.post_date) <= %s AND order_status IN({$status})";
+            }
 
             $result = $wpdb->get_row( $wpdb->prepare( $sql, $this->id, $this->id, $date ) );
             $earning = (float) $result->earnings - (float) round( $result->withdraw, wc_get_rounding_precision() );

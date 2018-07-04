@@ -263,10 +263,11 @@ class Dokan_Installer {
         $this->create_announcement_table();
         $this->create_sync_table();
         $this->create_refund_table();
+        $this->create_vendor_balance_table();
     }
 
     /**
-     * Create withdraw tabless
+     * Create withdraw table
      *
      * @return void
      */
@@ -358,6 +359,30 @@ class Dokan_Installer {
                `date` timestamp NOT NULL,
                `status` int(1) NOT NULL,
                `method` varchar(30) NOT NULL,
+              PRIMARY KEY (id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
+
+        dbDelta( $sql );
+    }
+
+    /**
+     * Create vendor-balance table
+     *
+     * @return void
+     */
+    function create_vendor_balance_table() {
+        global $wpdb;
+
+        $sql = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}dokan_vendor_balance` (
+               `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+               `vendor_id` bigint(20) unsigned NOT NULL,
+               `trn_id` bigint(20) unsigned NOT NULL,
+               `trn_type` varchar(30) NOT NULL,
+               `perticulars` text NOT NULL,
+               `debit` float(11) NOT NULL,
+               `credit` float(11) NOT NULL,
+               `status` varchar(30) DEFAULT NULL,
+               `date` timestamp NOT NULL,
               PRIMARY KEY (id)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
 
