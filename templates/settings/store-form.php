@@ -225,7 +225,7 @@
 
         <?php endif;?>
 
-        <div class="dokan-form-group store-open-close">
+        <div class="dokan-form-group store-open-close-time">
             <label class="dokan-w3 control-label" for="dokan-store-close">
                 <?php _e( 'Enable Store Open Colse Time', 'dokan-lite' ); ?>
             </label>
@@ -354,6 +354,22 @@
 <script type="text/javascript">
 
     (function($) {
+        // dokan store open close scripts starts //
+        var store_opencolse = $( '.store-open-close' );
+        store_opencolse.hide();
+
+        $( '#dokan-store-time-enable' ).on( 'change', function() {
+            var self = $(this);
+
+            if ( self.prop( 'checked' ) ) {
+                store_opencolse.hide().fadeIn();
+            } else {
+                store_opencolse.fadeOut();
+            }
+        } );
+
+        $('#dokan-store-time-enable').trigger('change');
+
         $( '.dokan-on-off' ).on( 'change', function() {
             var self = $(this);
 
@@ -372,6 +388,7 @@
             'scrollDefault': 'now',
             'timeFormat': "g:i A"
         });
+        // dokan store open close scripts end //
 
         var dokan_address_wrapper = $( '.dokan-address-fields' );
         var dokan_address_select = {
