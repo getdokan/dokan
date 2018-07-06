@@ -46,15 +46,23 @@ function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
  *
  * @global object $wpdb
  * @param int $seller_id
+ * @param string $status
+ * @param string $order_date
+ * @param int $limit
+ * @param int $offset
+ * @param int $customer_id
  *
  * @return array
  */
-function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = NULL, $limit = 10, $offset = 0 ) {
+function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = NULL, $limit = 10, $offset = 0, $customer_id = null ) {
     global $wpdb;
 
     $cache_group = 'dokan_seller_data_'.$seller_id;
     $cache_key = 'dokan-seller-orders-' . $status . '-' . $seller_id;
     $orders = wp_cache_get( $cache_key, $cache_group );
+
+    $join = $customer_id ? "LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id" : '';
+    $where = $customer_id ? sprintf( "pm.meta_key = '_customer_user' AND pm.meta_value = %d AND", $customer_id ) : '';
 
     if ( $orders === false ) {
         $status_where = ( $status == 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', $status );
@@ -62,8 +70,10 @@ function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = NUL
         $sql = "SELECT do.order_id, p.post_date
                 FROM {$wpdb->prefix}dokan_orders AS do
                 LEFT JOIN $wpdb->posts p ON do.order_id = p.ID
+                {$join}
                 WHERE
                     do.seller_id = %d AND
+                    {$where}
                     p.post_status != 'trash'
                     $date_query
                     $status_where
@@ -685,3 +695,5 @@ if ( ! function_exists( 'dokan_get_customer_orders_by_seller' ) ) :
     }
 
 endif;
+
+
