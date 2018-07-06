@@ -382,7 +382,8 @@ class Dokan_Installer {
                `debit` float(11) NOT NULL,
                `credit` float(11) NOT NULL,
                `status` varchar(30) DEFAULT NULL,
-               `date` timestamp NOT NULL,
+               `trn_date` timestamp NOT NULL,
+               `balance_date` timestamp NOT NULL,
               PRIMARY KEY (id)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
 

@@ -277,7 +277,8 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
                         'debit'         => 0,
                         'credit'        => $result->amount,
                         'status'        => 'approved',
-                        'date'          => current_time( 'mysql' )
+                        'trn_date'      => current_time( 'mysql' ),
+                        'balance_date'  => current_time( 'mysql' ),
                     ),
                     array(
                         '%d',
@@ -286,6 +287,7 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
                         '%s',
                         '%f',
                         '%f',
+                        '%s',
                         '%s',
                         '%s',
                     )

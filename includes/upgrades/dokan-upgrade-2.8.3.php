@@ -18,7 +18,8 @@ function create_vendor_balance_table_283() {
            `debit` float(11) NOT NULL,
            `credit` float(11) NOT NULL,
            `status` varchar(30) DEFAULT NULL,
-           `date` timestamp NOT NULL,
+           `trn_date` timestamp NOT NULL,
+           `balance_date` timestamp NOT NULL,
           PRIMARY KEY (id)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
 
@@ -31,6 +32,8 @@ function create_vendor_balance_table_283() {
 function dokan_migrate_order_data_283(){
     global $wpdb;
 
+    $threshold_day = dokan_get_option( 'withdraw_date_limit', 'dokan_withdraw', 0 );
+
     $sql = "SELECT `order`.*, post.post_date from {$wpdb->prefix}dokan_orders as `order` left join {$wpdb->prefix}posts as post on post.ID = order.order_id";
     $results = $wpdb->get_results( $sql );
     foreach ( $results as $result ) {
@@ -42,7 +45,8 @@ function dokan_migrate_order_data_283(){
             'debit'         => $result->net_amount,
             'credit'        => 0,
             'status'        => $result->order_status,
-            'date'          => $result->post_date
+            'trn_date'      => $result->post_date,
+            'balance_date'  => date( 'Y-m-d h:i:s', strtotime( $result->post_date . ' + '.$threshold_day.' days' ) ),
         );
         dokan_insert_vendor_balance_data_283( $data );
     }
@@ -65,7 +69,8 @@ function dokan_migrate_withdraw_data_283(){
             'debit'         => 0,
             'credit'        => $result->amount,
             'status'        => 'approved',
-            'date'          => $result->date
+            'trn_date'      => $result->date,
+            'balance_date'  => $result->date,
         );
         dokan_insert_vendor_balance_data_283( $data );
     }
@@ -85,6 +90,7 @@ function dokan_insert_vendor_balance_data_283( $data ){
             '%s',
             '%f',
             '%f',
+            '%s',
             '%s',
             '%s',
         )

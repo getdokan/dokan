@@ -491,17 +491,18 @@ class Dokan_Vendor {
             $installed_version = get_option( 'dokan_theme_version' );
             if ( ! $installed_version || version_compare( $installed_version, '2.8.2', '>' ) ) {
                 $sql = "SELECT SUM(debit) as earnings,
-                    (SELECT SUM(credit) FROM {$wpdb->prefix}dokan_vendor_balance WHERE vendor_id = %d AND DATE(`date`) <= %s) as withdraw
+                    (SELECT SUM(credit) FROM {$wpdb->prefix}dokan_vendor_balance WHERE vendor_id = %d AND DATE(balance_date) <= %s) as withdraw
                     from {$wpdb->prefix}dokan_vendor_balance
-                    WHERE vendor_id = %d AND DATE(`date`) <= %s AND status IN({$status})";
+                    WHERE vendor_id = %d AND DATE(balance_date) <= %s AND status IN({$status})";
+                $result = $wpdb->get_row( $wpdb->prepare( $sql, $this->id, $on_date, $this->id, $on_date ) );
             } else {
                 $sql = "SELECT SUM(net_amount) as earnings,
                     (SELECT SUM(amount) FROM {$wpdb->prefix}dokan_withdraw WHERE user_id = %d AND status = 1 AND DATE(`date`) <= %s) as withdraw
                     FROM {$wpdb->prefix}dokan_orders as do LEFT JOIN {$wpdb->prefix}posts as p ON do.order_id = p.ID
                     WHERE seller_id = %d AND DATE(p.post_date) <= %s AND order_status IN({$status})";
+                $result = $wpdb->get_row( $wpdb->prepare( $sql, $this->id, $on_date, $this->id, $date ) );
             }
 
-            $result = $wpdb->get_row( $wpdb->prepare( $sql, $this->id, $on_date, $this->id, $date ) );
             $earning = (float) $result->earnings - (float) round( $result->withdraw, wc_get_rounding_precision() );
 
             wp_cache_set( $cache_key, $earning, $cache_group );

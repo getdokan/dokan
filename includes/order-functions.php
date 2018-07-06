@@ -307,6 +307,7 @@ function dokan_sync_insert_order( $order_id ) {
     $admin_commission   = dokan_get_admin_commission_by( $order, $seller_id );
     $net_amount         = $order_total - $admin_commission;
     $net_amount         = apply_filters( 'dokan_order_net_amount', $net_amount, $order );
+    $threshold_day      = dokan_get_option( 'withdraw_date_limit', 'dokan_withdraw', 0 );
 
     dokan_delete_sync_duplicate_order( $order_id, $seller_id );
 
@@ -343,7 +344,8 @@ function dokan_sync_insert_order( $order_id ) {
             'debit'         => $net_amount,
             'credit'        => 0,
             'status'        => $order_status,
-            'date'          => current_time( 'mysql' )
+            'trn_date'      => current_time( 'mysql' ),
+            'balance_date'  => date( 'Y-m-d h:i:s', strtotime( current_time( 'mysql' ) . ' + '.$threshold_day.' days' ) ),
         ),
         array(
             '%d',
@@ -352,6 +354,7 @@ function dokan_sync_insert_order( $order_id ) {
             '%s',
             '%f',
             '%f',
+            '%s',
             '%s',
             '%s',
         )
