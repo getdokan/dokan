@@ -2712,3 +2712,30 @@ function dokan_remove_action_button( $actions ) {
 }
 
 add_filter( 'woocommerce_admin_order_preview_actions', 'dokan_remove_action_button', 15 );
+
+/**
+ * Customer has order from current seller
+ *
+ * @param  int $customer_id
+ * @param  int $seller_id
+ *
+ *@since  2.8.3
+ *
+ * @return boolean
+ */
+function customer_has_order_from_this_seller( $customer_id, $seller_id = null ) {
+    $seller_id = ! empty( $seller_id ) ? $seller_id : get_current_user_id();
+    $args = array(
+        'author'        => $seller_id,
+        'post_type'     => 'shop_order',
+        'meta_key'      => '_customer_user',
+        'meta_value'    => $customer_id,
+        'post_status'   => 'any',
+        'numberposts'   => 1,
+    );
+
+    $orders = get_posts( $args );
+
+    return ! empty( $orders ) ? true : false;
+}
+
