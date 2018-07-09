@@ -367,8 +367,6 @@ class Dokan_Admin {
      * @return void
      */
     public function do_updates() {
-//        Dokan_Admin_Withdraw::init()->bulk_action_handler();
-
         if ( isset( $_GET['dokan_do_update'] ) && $_GET['dokan_do_update'] == 'true' ) {
             $installer = new Dokan_Installer();
             $installer->do_upgrades();
