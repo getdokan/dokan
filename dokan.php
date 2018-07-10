@@ -78,7 +78,7 @@ final class WeDevs_Dokan {
      *
      * @var string
      */
-    public $version = '2.8.3';
+    public $version = '2.8.2';
 
     /**
      * Minimum PHP version required
