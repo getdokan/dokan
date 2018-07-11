@@ -267,7 +267,7 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
             $balance_sql    = "SELECT * FROM `{$wpdb->prefix}dokan_vendor_balance` WHERE `trn_id`={$request['id']} AND `trn_type` = 'dokan_withdraw'";
             $balance_result = $wpdb->get_row( $balance_sql );
 
-            if ( ! count( $balance_result ) ) {
+            if ( empty( $balance_result ) ) {
                 $wpdb->insert( $wpdb->prefix . 'dokan_vendor_balance',
                     array(
                         'vendor_id'     => $user_id,
