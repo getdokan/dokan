@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 2.8.2\n"
+"Project-Id-Version: Dokan 2.8.3\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2018-06-25 15:05:55+00:00\n"
+"POT-Creation-Date: 2018-07-11 06:33:32+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -28,7 +28,7 @@ msgstr ""
 msgid "1"
 msgstr ""
 
-#: classes/admin-user-profile.php:35 classes/ajax.php:143
+#: classes/admin-user-profile.php:35 classes/ajax.php:144
 #: includes/class-assets.php:389
 msgid "Available"
 msgstr ""
@@ -200,23 +200,23 @@ msgstr ""
 msgid "This vendor will be marked as a featured vendor."
 msgstr ""
 
-#: classes/admin-withdraw.php:218
+#: classes/admin-withdraw.php:121
 msgid "Requests Deleted!"
 msgstr ""
 
-#: classes/admin-withdraw.php:222
+#: classes/admin-withdraw.php:125
 msgid "Requests Cancelled!"
 msgstr ""
 
-#: classes/admin-withdraw.php:226
+#: classes/admin-withdraw.php:129
 msgid "Requests Approved!"
 msgstr ""
 
-#: classes/admin-withdraw.php:247 classes/admin-withdraw.php:261
+#: classes/admin-withdraw.php:150 classes/admin-withdraw.php:164
 msgid "User Name"
 msgstr ""
 
-#: classes/admin-withdraw.php:248 classes/admin-withdraw.php:262
+#: classes/admin-withdraw.php:151 classes/admin-withdraw.php:165
 #: src/admin/pages/Withdraw.vue:123
 #: templates/withdraw/approved-request-listing.php:14
 #: templates/withdraw/cancelled-request-listing.php:14
@@ -224,7 +224,7 @@ msgstr ""
 msgid "Amount"
 msgstr ""
 
-#: classes/admin-withdraw.php:249 classes/admin-withdraw.php:263
+#: classes/admin-withdraw.php:152 classes/admin-withdraw.php:166
 #: src/admin/pages/Withdraw.vue:125
 #: templates/withdraw/approved-request-listing.php:15
 #: templates/withdraw/cancelled-request-listing.php:15
@@ -232,23 +232,23 @@ msgstr ""
 msgid "Method"
 msgstr ""
 
-#: classes/admin-withdraw.php:250 classes/admin-withdraw.php:264
+#: classes/admin-withdraw.php:153 classes/admin-withdraw.php:167
 msgid "Method Details"
 msgstr ""
 
-#: classes/admin-withdraw.php:251 classes/admin-withdraw.php:265
+#: classes/admin-withdraw.php:154 classes/admin-withdraw.php:168
 #: src/admin/pages/Withdraw.vue:127
 #: templates/withdraw/cancelled-request-listing.php:17
 msgid "Note"
 msgstr ""
 
-#: classes/admin-withdraw.php:252 classes/admin-withdraw.php:266
+#: classes/admin-withdraw.php:155 classes/admin-withdraw.php:169
 msgid "IP"
 msgstr ""
 
-#: classes/admin-withdraw.php:253 classes/admin-withdraw.php:267
+#: classes/admin-withdraw.php:156 classes/admin-withdraw.php:170
 #: src/admin/pages/Withdraw.vue:128 templates/my-orders.php:28
-#: templates/orders/listing.php:21 templates/orders/listing.php:73
+#: templates/orders/listing.php:22 templates/orders/listing.php:74
 #: templates/products/products-listing.php:72
 #: templates/products/products-listing.php:218 templates/sub-orders.php:26
 #: templates/withdraw/approved-request-listing.php:16
@@ -257,12 +257,12 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: classes/admin-withdraw.php:291 classes/admin-withdraw.php:301
+#: classes/admin-withdraw.php:194 classes/admin-withdraw.php:204
 #: src/admin/pages/Withdraw.vue:146
 msgid "Approve"
 msgstr ""
 
-#: classes/admin-withdraw.php:292 classes/admin-withdraw.php:296
+#: classes/admin-withdraw.php:195 classes/admin-withdraw.php:199
 #: includes/product-functions.php:297 src/admin/pages/Withdraw.vue:140
 #: src/admin/pages/Withdraw.vue:150 templates/my-orders.php:83
 #: templates/orders/details.php:188
@@ -274,76 +274,75 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: classes/admin-withdraw.php:297 classes/admin-withdraw.php:302
-#: classes/template-dashboard.php:105 includes/admin/views/withdraw.php:14
-#: templates/dashboard/orders-widget.php:31
+#: classes/admin-withdraw.php:200 classes/admin-withdraw.php:205
+#: classes/template-dashboard.php:104 templates/dashboard/orders-widget.php:31
 msgid "Pending"
 msgstr ""
 
-#: classes/admin-withdraw.php:307 classes/admin-withdraw.php:387
-#: classes/ajax.php:457 includes/woo-views/html-product-download.php:14
+#: classes/admin-withdraw.php:210 classes/admin-withdraw.php:290
+#: classes/ajax.php:458 includes/woo-views/html-product-download.php:14
 #: src/admin/pages/Withdraw.vue:136 src/admin/pages/Withdraw.vue:154
 msgid "Delete"
 msgstr ""
 
-#: classes/admin-withdraw.php:331 templates/orders/details.php:287
+#: classes/admin-withdraw.php:234 templates/orders/details.php:287
 msgid "Add note"
 msgstr ""
 
-#: classes/admin-withdraw.php:338
+#: classes/admin-withdraw.php:241
 msgid "Save"
 msgstr ""
 
-#: classes/admin-withdraw.php:339
+#: classes/admin-withdraw.php:242
 msgid "cancel"
 msgstr ""
 
-#: classes/admin-withdraw.php:355
+#: classes/admin-withdraw.php:258
 msgid "No results found"
 msgstr ""
 
-#: classes/admin-withdraw.php:367
+#: classes/admin-withdraw.php:270
 msgid "Bulk Actions"
 msgstr ""
 
-#: classes/admin-withdraw.php:371 classes/admin-withdraw.php:381
+#: classes/admin-withdraw.php:274 classes/admin-withdraw.php:284
 msgid "Approve Requests"
 msgstr ""
 
-#: classes/admin-withdraw.php:372 classes/admin-withdraw.php:376
+#: classes/admin-withdraw.php:275 classes/admin-withdraw.php:279
 msgid "Mark as Cancelled"
 msgstr ""
 
-#: classes/admin-withdraw.php:377 classes/admin-withdraw.php:382
+#: classes/admin-withdraw.php:280 classes/admin-withdraw.php:285
 msgid "Mark Pending"
 msgstr ""
 
-#: classes/admin-withdraw.php:388 src/admin/pages/Withdraw.vue:158
+#: classes/admin-withdraw.php:291 src/admin/pages/Withdraw.vue:158
 msgid "Download PayPal mass payment file"
 msgstr ""
 
-#: classes/admin-withdraw.php:396
+#: classes/admin-withdraw.php:299
 msgid "Apply"
 msgstr ""
 
-#: classes/admin-withdraw.php:405
+#: classes/admin-withdraw.php:308
 msgid "&laquo;"
 msgstr ""
 
-#: classes/admin-withdraw.php:406
+#: classes/admin-withdraw.php:309
 msgid "&raquo;"
 msgstr ""
 
-#: classes/ajax.php:80 classes/template-withdraw.php:194
+#: classes/ajax.php:81 classes/template-withdraw.php:194
 #: classes/template-withdraw.php:223
 msgid "You have no permission to do this action"
 msgstr ""
 
-#: classes/ajax.php:100
+#: classes/ajax.php:101
 msgid "Something wrong, please try again later"
 msgstr ""
 
-#: classes/ajax.php:113 classes/template-settings.php:215
+#: classes/ajax.php:114 classes/template-settings.php:215
 #: classes/template-settings.php:226 classes/template-settings.php:235
 #: classes/template-settings.php:245 classes/template-settings.php:279
 #: classes/template-settings.php:342 classes/template-settings.php:381
@@ -352,60 +351,65 @@ msgstr ""
 msgid "Are you cheating?"
 msgstr ""
 
-#: classes/ajax.php:160 classes/ajax.php:194
+#: classes/ajax.php:161 classes/ajax.php:195
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
-#: classes/ajax.php:164 classes/ajax.php:198
+#: classes/ajax.php:165 classes/ajax.php:199
 msgid "You have taken too long. Please go back and retry."
 msgstr ""
 
-#: classes/ajax.php:173 classes/ajax.php:207
+#: classes/ajax.php:174 classes/ajax.php:208
 msgid "You do not have permission to change this order"
 msgstr ""
 
-#: classes/ajax.php:258
+#: classes/ajax.php:259
 msgid "File %d"
 msgstr ""
 
-#: classes/ajax.php:280
+#: classes/ajax.php:281
 msgid "You have no permission to manage this order"
 msgstr ""
 
-#: classes/ajax.php:316 classes/ajax.php:321
+#: classes/ajax.php:317 classes/ajax.php:322
 msgid "Please provide your name."
 msgstr ""
 
-#: classes/ajax.php:328 includes/template-tags.php:140
+#: classes/ajax.php:329 includes/template-tags.php:140
 msgid "Something went wrong!"
 msgstr ""
 
-#: classes/ajax.php:334
+#: classes/ajax.php:335
 msgid "Email sent successfully!"
 msgstr ""
 
-#: classes/ajax.php:389 templates/orders/details.php:271
+#: classes/ajax.php:390 templates/orders/details.php:271
 msgid "Delete note"
 msgstr ""
 
-#: classes/ajax.php:418
+#: classes/ajax.php:419
 msgid "Shipping provider: "
 msgstr ""
 
-#: classes/ajax.php:418
+#: classes/ajax.php:419
 msgid "Shipping number: "
 msgstr ""
 
-#: classes/ajax.php:418
+#: classes/ajax.php:419
 msgid "Shipped date: "
 msgstr ""
 
-#: classes/ajax.php:499
+#: classes/ajax.php:500
 msgid "Error: Nonce verification failed"
 msgstr ""
 
-#: classes/ajax.php:581
+#: classes/ajax.php:582
 msgid "Image could not be processed. Please go back and try again."
+msgstr ""
+
+#: classes/ajax.php:703
+#. translators: 1: user display name 2: user ID 3: user email
+msgid "%1$s (#%2$s &ndash; %3$s)"
 msgstr ""
 
 #: classes/customizer.php:19
@@ -474,14 +478,14 @@ msgstr ""
 
 #: classes/installer.php:114 includes/admin/class-settings.php:262
 #: includes/admin/setup-wizard.php:291 includes/admin-functions.php:44
-#: includes/admin-functions.php:50 includes/admin-functions.php:647
-#: includes/admin-functions.php:671 includes/wc-template.php:14
-#: includes/wc-template.php:139 src/admin/pages/Withdraw.vue:122
-#: templates/my-orders.php:31
+#: includes/admin-functions.php:50 includes/admin-functions.php:653
+#: includes/admin-functions.php:677 includes/wc-template.php:14
+#: includes/wc-template.php:139 includes/wc-template.php:261
+#: src/admin/pages/Withdraw.vue:122 templates/my-orders.php:31
 msgid "Vendor"
 msgstr ""
 
-#: classes/installer.php:178 includes/admin/class-admin.php:204
+#: classes/installer.php:178 includes/admin/class-admin.php:202
 #: includes/admin/class-settings.php:360 includes/template-tags.php:302
 #: src/admin/pages/Dashboard.vue:3
 msgid "Dashboard"
@@ -615,28 +619,28 @@ msgstr ""
 msgid "Go to your Store Dashboard!"
 msgstr ""
 
-#: classes/template-dashboard.php:104 includes/admin/setup-wizard.php:495
-#: includes/order-functions.php:439 templates/dashboard/orders-widget.php:26
+#: classes/template-dashboard.php:103 includes/admin/setup-wizard.php:495
+#: includes/order-functions.php:475 templates/dashboard/orders-widget.php:26
 msgid "Completed"
 msgstr ""
 
-#: classes/template-dashboard.php:106 includes/admin/setup-wizard.php:496
-#: includes/order-functions.php:454 templates/dashboard/orders-widget.php:36
-#: templates/orders/listing.php:103
+#: classes/template-dashboard.php:105 includes/admin/setup-wizard.php:496
+#: includes/order-functions.php:490 templates/dashboard/orders-widget.php:36
+#: templates/orders/listing.php:104
 msgid "Processing"
 msgstr ""
 
-#: classes/template-dashboard.php:107 includes/admin/views/withdraw.php:24
-#: includes/order-functions.php:464 templates/dashboard/orders-widget.php:41
+#: classes/template-dashboard.php:106 includes/order-functions.php:500
+#: templates/dashboard/orders-widget.php:41
 msgid "Cancelled"
 msgstr ""
 
-#: classes/template-dashboard.php:108 includes/order-functions.php:459
+#: classes/template-dashboard.php:107 includes/order-functions.php:495
 #: templates/dashboard/orders-widget.php:46
 msgid "Refunded"
 msgstr ""
 
-#: classes/template-dashboard.php:109
+#: classes/template-dashboard.php:108
 msgid "On Hold"
 msgstr ""
 
@@ -666,7 +670,7 @@ msgid "Payment method"
 msgstr ""
 
 #: classes/template-orders.php:121 classes/template-orders.php:190
-#: templates/orders/listing.php:18 templates/orders/listing.php:40
+#: templates/orders/listing.php:19 templates/orders/listing.php:41
 msgid "Order Total"
 msgstr ""
 
@@ -725,9 +729,8 @@ msgid "No product found !"
 msgstr ""
 
 #: classes/template-settings.php:70 classes/template-settings.php:74
-#: dokan.php:435 includes/admin/class-admin.php:216
-#: includes/admin/class-admin.php:350 includes/admin/views/welcome.php:20
-#: src/admin/pages/Settings.vue:3
+#: dokan.php:436 includes/admin/class-admin.php:214
+#: includes/admin/class-admin.php:275 src/admin/pages/Settings.vue:3
 msgid "Settings"
 msgstr ""
 
@@ -805,12 +808,12 @@ msgid "Withdraw amount required "
 msgstr ""
 
 #: classes/template-withdraw.php:235
-#: includes/api/class-withdraw-controller.php:361
+#: includes/api/class-withdraw-controller.php:391
 msgid "You don't have enough balance for this request"
 msgstr ""
 
 #: classes/template-withdraw.php:237
-#: includes/api/class-withdraw-controller.php:365
+#: includes/api/class-withdraw-controller.php:395
 msgid "Withdraw amount must be greater than %d"
 msgstr ""
 
@@ -859,17 +862,17 @@ msgid ""
 "<strong>20% discount</strong> on upgrades and add-on purchase."
 msgstr ""
 
-#: classes/upgrade.php:79 includes/admin/class-admin.php:413
+#: classes/upgrade.php:80 includes/admin/class-admin.php:336
 msgid ""
 "<strong>Dokan Data Update Required</strong> &#8211; We need to update your "
 "install to the latest version"
 msgstr ""
 
-#: classes/upgrade.php:80 includes/admin/class-admin.php:414
+#: classes/upgrade.php:81 includes/admin/class-admin.php:337
 msgid "Run the updater"
 msgstr ""
 
-#: classes/upgrade.php:85 includes/admin/class-admin.php:419
+#: classes/upgrade.php:86 includes/admin/class-admin.php:342
 msgid ""
 "It is strongly recommended that you backup your database before proceeding. "
 "Are you sure you wish to run the updater now?"
@@ -887,11 +890,11 @@ msgstr ""
 msgid "<b>Dokan</b> requires %sWooCommerce%s to be installed & activated!"
 msgstr ""
 
-#: dokan.php:432
+#: dokan.php:433
 msgid "Get Pro"
 msgstr ""
 
-#: dokan.php:436 includes/admin/views/welcome.php:21
+#: dokan.php:437
 msgid "Documentation"
 msgstr ""
 
@@ -963,7 +966,7 @@ msgstr ""
 msgid "Dokan requires some pages to be configured and you can set them up here"
 msgstr ""
 
-#: includes/admin/class-admin.php:54
+#: includes/admin/class-admin.php:52
 msgid ""
 "<h2>\n"
 "                        Dokan is Getting More Affordable: Price Reduction & "
@@ -971,24 +974,24 @@ msgid ""
 "                    </h2>"
 msgstr ""
 
-#: includes/admin/class-admin.php:57
+#: includes/admin/class-admin.php:55
 msgid ""
 "<p>Marketplaces are changing, so is Dokan Multivendor. We are reducing "
 "Dokan Pro entry package price and bringing entirely new pricing where you "
 "get addons pre-activated for free depending on your package.</p>"
 msgstr ""
 
-#: includes/admin/class-admin.php:63
+#: includes/admin/class-admin.php:61
 msgid "View Package"
 msgstr ""
 
-#: includes/admin/class-admin.php:194 includes/admin/class-admin.php:205
-#: includes/admin/class-admin.php:336 includes/admin/setup-wizard.php:93
+#: includes/admin/class-admin.php:192 includes/admin/class-admin.php:203
+#: includes/admin/class-admin.php:261 includes/admin/setup-wizard.php:93
 #: includes/template-tags.php:324 templates/withdraw/header.php:11
 msgid "Withdraw"
 msgstr ""
 
-#: includes/admin/class-admin.php:198
+#: includes/admin/class-admin.php:196
 msgid "Withdraw %s"
 msgstr ""
 
@@ -996,19 +999,15 @@ msgstr ""
 msgid "Dokan"
 msgstr ""
 
-#: includes/admin/class-admin.php:208 includes/admin/class-admin.php:343
+#: includes/admin/class-admin.php:206 includes/admin/class-admin.php:268
 msgid "PRO Features"
 msgstr ""
 
-#: includes/admin/class-admin.php:215
+#: includes/admin/class-admin.php:213
 msgid "<span style=\"color:#f18500\">Help</span>"
 msgstr ""
 
-#: includes/admin/class-admin.php:224 includes/admin/views/welcome.php:12
-msgid "Welcome to Dokan"
-msgstr ""
-
-#: includes/admin/class-admin.php:329 includes/admin/views/dashboard.php:134
+#: includes/admin/class-admin.php:254
 msgid "Dokan Dashboard"
 msgstr ""
 
@@ -1309,7 +1308,7 @@ msgstr ""
 msgid "Order Status for Withdraw"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:497 includes/order-functions.php:449
+#: includes/admin/setup-wizard.php:497 includes/order-functions.php:485
 msgid "On-hold"
 msgstr ""
 
@@ -1329,154 +1328,6 @@ msgstr ""
 msgid "Learn More"
 msgstr ""
 
-#: includes/admin/views/add-on.php:2
-msgid "Dokan - Add-ons"
-msgstr ""
-
-#: includes/admin/views/dashboard.php:50 src/admin/pages/Dashboard.vue:15
-msgid "net sales this month"
-msgstr ""
-
-#: includes/admin/views/dashboard.php:61 src/admin/pages/Dashboard.vue:24
-msgid "commission earned"
-msgstr ""
-
-#: includes/admin/views/dashboard.php:73 includes/admin/views/dashboard.php:90
-msgid "0 Vendor"
-msgstr ""
-
-#: includes/admin/views/dashboard.php:77 src/admin/pages/Dashboard.vue:33
-msgid "signup this month"
-msgstr ""
-
-#: includes/admin/views/dashboard.php:94 includes/admin/views/dashboard.php:121
-#: src/admin/pages/Dashboard.vue:41 src/admin/pages/Dashboard.vue:57
-msgid "awaiting approval"
-msgstr ""
-
-#: includes/admin/views/dashboard.php:106
-msgid "0 Product"
-msgstr ""
-
-#: includes/admin/views/dashboard.php:110 src/admin/pages/Dashboard.vue:49
-msgid "created this month"
-msgstr ""
-
-#: includes/admin/views/dashboard.php:118
-msgid "%d Withdrawals"
-msgstr ""
-
-#: includes/admin/views/dashboard.php:139
-msgid "Dokan Status"
-msgstr ""
-
-#: includes/admin/views/dashboard.php:140
-msgid "Dokan News Updates"
-msgstr ""
-
-#: includes/admin/views/dashboard.php:148
-msgid "Overview"
-msgstr ""
-
-#: includes/admin/views/help.php:2
-msgid "Dokan Help"
-msgstr ""
-
-#: includes/admin/views/help.php:2
-msgid "View all Documentations"
-msgstr ""
-
-#: includes/admin/views/help.php:46
-msgid "Releated Links"
-msgstr ""
-
-#: includes/admin/views/pro-features.php:2
-msgid "Dokan - Pro Features"
-msgstr ""
-
-#: includes/admin/views/welcome.php:15
-msgid "Thank you for installing Dokan!"
-msgstr ""
-
-#: includes/admin/views/welcome.php:16
-msgid "Dokan %s makes it even easier to start your own multivendor marketplace."
-msgstr ""
-
-#: includes/admin/views/welcome.php:40
-msgid "Order Synchronization"
-msgstr ""
-
-#: includes/admin/views/welcome.php:43
-msgid ""
-"Seems like you have some unsynchronized orders. This tool will re-build "
-"Dokan's sync table."
-msgstr ""
-
-#: includes/admin/views/welcome.php:44
-msgid "Don't worry, any existing orders will not be deleted."
-msgstr ""
-
-#: includes/admin/views/welcome.php:54
-msgid "Skip"
-msgstr ""
-
-#: includes/admin/views/welcome.php:55
-msgid "Synchronize Orders"
-msgstr ""
-
-#: includes/admin/views/welcome.php:65
-msgid "Flat view style for product add and edit"
-msgstr ""
-
-#: includes/admin/views/welcome.php:66
-msgid ""
-"New Flat view for add or edit product is a single page design to add new "
-"products from one place. To switch the new product upload screen, you can "
-"go to wp-admin → Dokan → Settings → Selling Options → Add Edit Product "
-"Style."
-msgstr ""
-
-#: includes/admin/views/welcome.php:70
-msgid "Store SEO manage system for vendors store"
-msgstr ""
-
-#: includes/admin/views/welcome.php:71
-msgid ""
-"From now on, whenever someone shares the store page, the images and texts "
-"written on the settings will appear on the social sites. So your vendors "
-"can get more traffic from search engines and social sites."
-msgstr ""
-
-#: includes/admin/views/welcome.php:75
-msgid "Shipping calculator on single product page"
-msgstr ""
-
-#: includes/admin/views/welcome.php:76
-msgid ""
-"From this version, the customers can calculate the shipping cost right from "
-"the product page, before adding them to cart and also know about if that "
-"product ships to his location or not. So this means less cart abandonment "
-"and more conversion."
-msgstr ""
-
-#: includes/admin/views/welcome.php:82
-msgid "Changelog"
-msgstr ""
-
-#: includes/admin/views/withdraw.php:8 src/admin/pages/Withdraw.vue:3
-msgid "Withdraw Requests"
-msgstr ""
-
-#: includes/admin/views/withdraw.php:9
-msgid ""
-"<i>Approve or Decline Withdraw Requests sent by vendors</i>. <a "
-"target=\"_blank\" href=\"%s\">Learn More</a>"
-msgstr ""
-
-#: includes/admin/views/withdraw.php:19
-msgid "Approved"
-msgstr ""
-
 #: includes/admin-functions.php:45 src/admin/pages/Withdraw.vue:129
 msgid "Actions"
 msgstr ""
@@ -1485,47 +1336,47 @@ msgstr ""
 msgid "Sub Order"
 msgstr ""
 
-#: includes/admin-functions.php:78
+#: includes/admin-functions.php:84
 msgid "Sub Order of"
 msgstr ""
 
-#: includes/admin-functions.php:88
+#: includes/admin-functions.php:94
 msgid "Show Sub-Orders"
 msgstr ""
 
-#: includes/admin-functions.php:88
+#: includes/admin-functions.php:94
 msgid "Hide Sub-Orders"
 msgstr ""
 
-#: includes/admin-functions.php:276
+#: includes/admin-functions.php:282
 msgid "Toggle Sub-orders"
 msgstr ""
 
-#: includes/admin-functions.php:458 includes/admin-functions.php:833
+#: includes/admin-functions.php:464 includes/admin-functions.php:839
 #: includes/api/admin/class-report-controller.php:106
 msgid "Total Sales"
 msgstr ""
 
-#: includes/admin-functions.php:465 includes/admin-functions.php:840
+#: includes/admin-functions.php:471 includes/admin-functions.php:846
 msgid "Total: "
 msgstr ""
 
-#: includes/admin-functions.php:468 includes/admin-functions.php:843
+#: includes/admin-functions.php:474 includes/admin-functions.php:849
 #: includes/api/admin/class-report-controller.php:114 includes/reports.php:357
 msgid "Number of orders"
 msgstr ""
 
-#: includes/admin-functions.php:475 includes/admin-functions.php:850
+#: includes/admin-functions.php:481 includes/admin-functions.php:856
 #: includes/reports.php:364
 msgid "sales"
 msgstr ""
 
-#: includes/admin-functions.php:478 includes/admin-functions.php:853
+#: includes/admin-functions.php:484 includes/admin-functions.php:859
 #: includes/api/admin/class-report-controller.php:121
 msgid "Commision"
 msgstr ""
 
-#: includes/admin-functions.php:485 includes/admin-functions.php:860
+#: includes/admin-functions.php:491 includes/admin-functions.php:866
 msgid "Commision: "
 msgstr ""
 
@@ -1568,26 +1419,26 @@ msgid "Orders"
 msgstr ""
 
 #: includes/api/class-api-rest-controller.php:19
-#: includes/api/class-api-rest-controller.php:176
-#: includes/api/class-api-rest-controller.php:250
+#: includes/api/class-api-rest-controller.php:175
+#: includes/api/class-api-rest-controller.php:249
 msgid "Method '%s' not implemented. Must be overridden in subclass."
 msgstr ""
 
-#: includes/api/class-api-rest-controller.php:60
+#: includes/api/class-api-rest-controller.php:59
 #: includes/api/class-product-controller.php:550
 msgid ""
 "To manipulate product variations you should use the "
 "/products/&lt;product_id&gt;/variations/&lt;id&gt; endpoint."
 msgstr ""
 
-#: includes/api/class-api-rest-controller.php:62
+#: includes/api/class-api-rest-controller.php:61
 #: includes/api/class-order-controller.php:193
 #: includes/api/class-product-controller.php:183
 #: includes/api/class-product-controller.php:208
 msgid "Invalid ID."
 msgstr ""
 
-#: includes/api/class-api-rest-controller.php:160
+#: includes/api/class-api-rest-controller.php:159
 #: includes/api/class-order-controller.php:623
 msgid "The %s cannot be deleted."
 msgstr ""
@@ -1603,7 +1454,7 @@ msgstr ""
 #: includes/api/class-withdraw-controller.php:35
 #: includes/api/class-withdraw-controller.php:62
 #: includes/api/class-withdraw-controller.php:90
-#: includes/api/class-withdraw-controller.php:665
+#: includes/api/class-withdraw-controller.php:726
 msgid "Unique identifier for the object."
 msgstr ""
 
@@ -1719,7 +1570,7 @@ msgid "Reassign the deleted user's posts and links to this user ID."
 msgstr ""
 
 #: includes/api/class-store-controller.php:153
-#: includes/api/class-store-controller.php:308
+#: includes/api/class-store-controller.php:306
 msgid "No store found"
 msgstr ""
 
@@ -1731,13 +1582,13 @@ msgstr ""
 msgid "Invalid user ID for reassignment."
 msgstr ""
 
-#: includes/api/class-store-controller.php:319
+#: includes/api/class-store-controller.php:317
 msgid "No reviews found"
 msgstr ""
 
 #: includes/api/class-withdraw-controller.php:45
 #: includes/api/class-withdraw-controller.php:72
-#: includes/api/class-withdraw-controller.php:686
+#: includes/api/class-withdraw-controller.php:747
 msgid "Withdraw status"
 msgstr ""
 
@@ -1751,13 +1602,13 @@ msgstr ""
 
 #: includes/api/class-withdraw-controller.php:167
 #: includes/api/class-withdraw-controller.php:231
-#: includes/api/class-withdraw-controller.php:313
-#: includes/api/class-withdraw-controller.php:347
+#: includes/api/class-withdraw-controller.php:343
+#: includes/api/class-withdraw-controller.php:377
 msgid "No vendor found"
 msgstr ""
 
 #: includes/api/class-withdraw-controller.php:227
-#: includes/api/class-withdraw-controller.php:287
+#: includes/api/class-withdraw-controller.php:317
 msgid "Invalid ID"
 msgstr ""
 
@@ -1773,57 +1624,57 @@ msgstr ""
 msgid "You can not cancel other vendor withdraw request"
 msgstr ""
 
-#: includes/api/class-withdraw-controller.php:294
+#: includes/api/class-withdraw-controller.php:324
 msgid "No withdraw found for deleting"
 msgstr ""
 
-#: includes/api/class-withdraw-controller.php:357
+#: includes/api/class-withdraw-controller.php:387
 msgid "Requested amount must be grater than 0"
 msgstr ""
 
-#: includes/api/class-withdraw-controller.php:369
+#: includes/api/class-withdraw-controller.php:399
 msgid "Withdraw method must be required"
 msgstr ""
 
-#: includes/api/class-withdraw-controller.php:386
+#: includes/api/class-withdraw-controller.php:416
 msgid "Does not created withdraw request. Try again"
 msgstr ""
 
-#: includes/api/class-withdraw-controller.php:421
+#: includes/api/class-withdraw-controller.php:451
 msgid "No withdraw id found"
 msgstr ""
 
-#: includes/api/class-withdraw-controller.php:428
+#: includes/api/class-withdraw-controller.php:458
 msgid "Something wrong, Note not updated"
 msgstr ""
 
-#: includes/api/class-withdraw-controller.php:467
+#: includes/api/class-withdraw-controller.php:497
 msgid "No items found for bulk updating"
 msgstr ""
 
-#: includes/api/class-withdraw-controller.php:671
+#: includes/api/class-withdraw-controller.php:732
 msgid "Requested User"
 msgstr ""
 
-#: includes/api/class-withdraw-controller.php:676
+#: includes/api/class-withdraw-controller.php:737
 msgid ""
 "The amount of discount. Should always be numeric, even if setting a "
 "percentage."
 msgstr ""
 
-#: includes/api/class-withdraw-controller.php:681
+#: includes/api/class-withdraw-controller.php:742
 msgid "The date the withdraw request has beed created in the site's timezone."
 msgstr ""
 
-#: includes/api/class-withdraw-controller.php:691
+#: includes/api/class-withdraw-controller.php:752
 msgid "Withdraw Method"
 msgstr ""
 
-#: includes/api/class-withdraw-controller.php:696
+#: includes/api/class-withdraw-controller.php:757
 msgid "Withdraw Notes"
 msgstr ""
 
-#: includes/api/class-withdraw-controller.php:701
+#: includes/api/class-withdraw-controller.php:762
 msgid "User IP"
 msgstr ""
 
@@ -2032,51 +1883,51 @@ msgstr ""
 msgid "Product category is required"
 msgstr ""
 
-#: includes/class-assets.php:611
+#: includes/class-assets.php:612
 msgid "One result is available, press enter to select it."
 msgstr ""
 
-#: includes/class-assets.php:612
+#: includes/class-assets.php:613
 msgid "%qty% results are available, use up and down arrow keys to navigate."
 msgstr ""
 
-#: includes/class-assets.php:613
+#: includes/class-assets.php:614
 msgid "No matches found"
 msgstr ""
 
-#: includes/class-assets.php:614
+#: includes/class-assets.php:615
 msgid "Loading failed"
 msgstr ""
 
-#: includes/class-assets.php:615
+#: includes/class-assets.php:616
 msgid "Please enter 1 or more characters"
 msgstr ""
 
-#: includes/class-assets.php:616
+#: includes/class-assets.php:617
 msgid "Please enter %qty% or more characters"
 msgstr ""
 
-#: includes/class-assets.php:617
+#: includes/class-assets.php:618
 msgid "Please delete 1 character"
 msgstr ""
 
-#: includes/class-assets.php:618
+#: includes/class-assets.php:619
 msgid "Please delete %qty% characters"
 msgstr ""
 
-#: includes/class-assets.php:619
+#: includes/class-assets.php:620
 msgid "You can only select 1 item"
 msgstr ""
 
-#: includes/class-assets.php:620
+#: includes/class-assets.php:621
 msgid "You can only select %qty% items"
 msgstr ""
 
-#: includes/class-assets.php:621
+#: includes/class-assets.php:622
 msgid "Loading more results&hellip;"
 msgstr ""
 
-#: includes/class-assets.php:622
+#: includes/class-assets.php:623
 msgid "Searching&hellip;"
 msgstr ""
 
@@ -2425,11 +2276,11 @@ msgstr ""
 msgid "[%s] Your product has been approved!"
 msgstr ""
 
-#: includes/class-order-manager.php:99
+#: includes/class-order-manager.php:107
 msgid "Mark parent order completed when all child orders are completed."
 msgstr ""
 
-#: includes/class-order-manager.php:459
+#: includes/class-order-manager.php:472
 msgid "A coupon must be restricted with a vendor product."
 msgstr ""
 
@@ -2461,17 +2312,17 @@ msgstr ""
 msgid "Please install <a href=\"%s\"><strong>WooCommerce</strong></a> plugin first"
 msgstr ""
 
-#: includes/class-vendor.php:547
+#: includes/class-vendor.php:557
 msgid "No ratings found yet!"
 msgstr ""
 
-#: includes/class-vendor.php:549
+#: includes/class-vendor.php:559
 msgid "%s rating from %d review"
 msgid_plural "%s rating from %d reviews"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/class-vendor.php:550
+#: includes/class-vendor.php:560
 msgid "Rated %s out of %d"
 msgstr ""
 
@@ -3011,11 +2862,11 @@ msgstr ""
 msgid "View seo settings menu"
 msgstr ""
 
-#: includes/order-functions.php:444
+#: includes/order-functions.php:480
 msgid "Pending Payment"
 msgstr ""
 
-#: includes/order-functions.php:469
+#: includes/order-functions.php:505
 msgid "Failed"
 msgstr ""
 
@@ -3038,8 +2889,8 @@ msgid "Delete all variations"
 msgstr ""
 
 #: includes/product-functions.php:201 src/admin/pages/Withdraw.vue:124
-#: templates/my-orders.php:29 templates/orders/listing.php:19
-#: templates/orders/listing.php:43 templates/products/products-listing.php:65
+#: templates/my-orders.php:29 templates/orders/listing.php:20
+#: templates/orders/listing.php:44 templates/products/products-listing.php:65
 #: templates/products/products-listing.php:147 templates/sub-orders.php:27
 #: templates/withdraw/pending-request-listing.php:18
 msgid "Status"
@@ -3219,7 +3070,7 @@ msgid "Delete Permanently"
 msgstr ""
 
 #: includes/product-functions.php:471 templates/my-orders.php:88
-#: templates/orders/listing.php:122 templates/sub-orders.php:59
+#: templates/orders/listing.php:123 templates/sub-orders.php:59
 msgid "View"
 msgstr ""
 
@@ -3350,6 +3201,14 @@ msgstr ""
 
 #: includes/wc-functions.php:881
 msgid "Account details changed successfully."
+msgstr ""
+
+#: includes/wc-functions.php:968
+msgid "More Product"
+msgstr ""
+
+#: includes/wc-functions.php:1019
+msgid "No product has been found!"
 msgstr ""
 
 #: includes/wc-legacy-functions.php:61
@@ -3562,12 +3421,32 @@ msgstr ""
 msgid "Please select an image,"
 msgstr ""
 
+#: src/admin/pages/Dashboard.vue:15
+msgid "net sales this month"
+msgstr ""
+
+#: src/admin/pages/Dashboard.vue:24
+msgid "commission earned"
+msgstr ""
+
 #: src/admin/pages/Dashboard.vue:31 src/admin/pages/Dashboard.vue:40
 msgid "%s Vendor"
 msgstr ""
 
+#: src/admin/pages/Dashboard.vue:33
+msgid "signup this month"
+msgstr ""
+
+#: src/admin/pages/Dashboard.vue:41 src/admin/pages/Dashboard.vue:57
+msgid "awaiting approval"
+msgstr ""
+
 #: src/admin/pages/Dashboard.vue:47
 msgid "%s Products"
+msgstr ""
+
+#: src/admin/pages/Dashboard.vue:49
+msgid "created this month"
 msgstr ""
 
 #: src/admin/pages/Dashboard.vue:56
@@ -3761,6 +3640,10 @@ msgstr ""
 msgid "Choose your file"
 msgstr ""
 
+#: src/admin/pages/Withdraw.vue:3
+msgid "Withdraw Requests"
+msgstr ""
+
 #: src/admin/pages/Withdraw.vue:15
 msgid "Update Note"
 msgstr ""
@@ -3837,8 +3720,8 @@ msgid "Pageview"
 msgstr ""
 
 #: templates/dashboard/big-counter-widget.php:29 templates/my-orders.php:27
-#: templates/orders/details.php:21 templates/orders/listing.php:17
-#: templates/orders/listing.php:33 templates/sub-orders.php:25
+#: templates/orders/details.php:21 templates/orders/listing.php:18
+#: templates/orders/listing.php:34 templates/sub-orders.php:25
 msgid "Order"
 msgstr ""
 
@@ -4163,19 +4046,28 @@ msgstr ""
 msgid "No orders found!"
 msgstr ""
 
-#: templates/orders/date-export.php:15
-msgid "Date:"
+#: templates/orders/date-export.php:22
+#. translators: 1: user display name 2: user ID 3: user email
+msgid "%1$s (#%2$s)"
 msgstr ""
 
-#: templates/orders/date-export.php:16 templates/products/listing-filter.php:42
+#: templates/orders/date-export.php:31
+msgid "Filter by Date"
+msgstr ""
+
+#: templates/orders/date-export.php:32
+msgid "Filter by Customer"
+msgstr ""
+
+#: templates/orders/date-export.php:35 templates/products/listing-filter.php:42
 msgid "Filter"
 msgstr ""
 
-#: templates/orders/date-export.php:26
+#: templates/orders/date-export.php:45
 msgid "Export All"
 msgstr ""
 
-#: templates/orders/date-export.php:27
+#: templates/orders/date-export.php:46
 msgid "Export Filtered"
 msgstr ""
 
@@ -4301,44 +4193,44 @@ msgstr ""
 msgid "Grant Access"
 msgstr ""
 
-#: templates/orders/listing.php:20 templates/orders/listing.php:46
+#: templates/orders/listing.php:21 templates/orders/listing.php:47
 msgid "Customer"
 msgstr ""
 
-#: templates/orders/listing.php:23 templates/orders/listing.php:93
+#: templates/orders/listing.php:24 templates/orders/listing.php:94
 #: templates/products/new-product-single.php:532
 msgid "Action"
 msgstr ""
 
-#: templates/orders/listing.php:35 templates/orders/listing.php:37
+#: templates/orders/listing.php:36 templates/orders/listing.php:38
 msgid "Order %s"
 msgstr ""
 
-#: templates/orders/listing.php:67
+#: templates/orders/listing.php:68
 msgid "Guest"
 msgstr ""
 
-#: templates/orders/listing.php:76 templates/products/products-listing.php:221
+#: templates/orders/listing.php:77 templates/products/products-listing.php:221
 msgid "Unpublished"
 msgstr ""
 
-#: templates/orders/listing.php:78 templates/products/products-listing.php:224
+#: templates/orders/listing.php:79 templates/products/products-listing.php:224
 msgid "Y/m/d g:i:s A"
 msgstr ""
 
-#: templates/orders/listing.php:84 templates/products/products-listing.php:231
+#: templates/orders/listing.php:85 templates/products/products-listing.php:231
 msgid "%s ago"
 msgstr ""
 
-#: templates/orders/listing.php:86 templates/products/products-listing.php:233
+#: templates/orders/listing.php:87 templates/products/products-listing.php:233
 msgid "Y/m/d"
 msgstr ""
 
-#: templates/orders/listing.php:112
+#: templates/orders/listing.php:113
 msgid "Complete"
 msgstr ""
 
-#: templates/orders/listing.php:185
+#: templates/orders/listing.php:186
 msgid "No orders found"
 msgstr ""
 
@@ -4843,7 +4735,7 @@ msgstr ""
 msgid "Country "
 msgstr ""
 
-#: templates/settings/address-form.php:123
+#: templates/settings/address-form.php:121
 msgid "State "
 msgstr ""
 
