@@ -232,3 +232,33 @@ function dokan_set_go_to_vendor_dashboard_btn() {
 }
 
 add_action( 'woocommerce_account_dashboard', 'dokan_set_go_to_vendor_dashboard_btn' );
+
+/**
+ * Attach vendor name into order details
+ *
+ * @param  int item_id
+ *
+ * @param  object order
+ *
+ * @since 2.8.3
+ *
+ * @return string
+ */
+function dokan_attach_vendor_name( $item_id, $order ) {
+    $product_id = $order->get_product_id();
+
+    if ( ! $product_id ) {
+        return;
+    }
+
+    $vendor_id  = get_post_field( 'post_author', $product_id );
+    $vendor     = dokan()->vendor->get( $vendor_id );
+
+    if ( ! is_object( $vendor ) ) {
+        return;
+    }
+
+    printf( '<br>%s: <a href="%s">%s</a>', __( 'Vendor', 'dokan-lite' ), $vendor->get_shop_url(), $vendor->get_shop_name() );
+}
+
+add_action( 'woocommerce_order_item_meta_start', 'dokan_attach_vendor_name', 10, 2 );

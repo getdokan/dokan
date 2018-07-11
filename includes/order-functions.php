@@ -46,15 +46,23 @@ function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
  *
  * @global object $wpdb
  * @param int $seller_id
+ * @param string $status
+ * @param string $order_date
+ * @param int $limit
+ * @param int $offset
+ * @param int $customer_id
  *
  * @return array
  */
-function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = NULL, $limit = 10, $offset = 0 ) {
+function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = NULL, $limit = 10, $offset = 0, $customer_id = null ) {
     global $wpdb;
 
     $cache_group = 'dokan_seller_data_'.$seller_id;
     $cache_key = 'dokan-seller-orders-' . $status . '-' . $seller_id;
     $orders = wp_cache_get( $cache_key, $cache_group );
+
+    $join = $customer_id ? "LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id" : '';
+    $where = $customer_id ? sprintf( "pm.meta_key = '_customer_user' AND pm.meta_value = %d AND", $customer_id ) : '';
 
     if ( $orders === false ) {
         $status_where = ( $status == 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', $status );
@@ -62,8 +70,10 @@ function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = NUL
         $sql = "SELECT do.order_id, p.post_date
                 FROM {$wpdb->prefix}dokan_orders AS do
                 LEFT JOIN $wpdb->posts p ON do.order_id = p.ID
+                {$join}
                 WHERE
                     do.seller_id = %d AND
+                    {$where}
                     p.post_status != 'trash'
                     $date_query
                     $status_where
@@ -307,6 +317,7 @@ function dokan_sync_insert_order( $order_id ) {
     $admin_commission   = dokan_get_admin_commission_by( $order, $seller_id );
     $net_amount         = $order_total - $admin_commission;
     $net_amount         = apply_filters( 'dokan_order_net_amount', $net_amount, $order );
+    $threshold_day      = dokan_get_option( 'withdraw_date_limit', 'dokan_withdraw', 0 );
 
     dokan_delete_sync_duplicate_order( $order_id, $seller_id );
 
@@ -330,6 +341,31 @@ function dokan_sync_insert_order( $order_id ) {
             '%d',
             '%f',
             '%f',
+            '%s',
+        )
+    );
+
+    $wpdb->insert( $wpdb->prefix . 'dokan_vendor_balance',
+        array(
+            'vendor_id'     => $seller_id,
+            'trn_id'        => $order_id,
+            'trn_type'      => 'dokan_orders',
+            'perticulars'   => 'New order',
+            'debit'         => $net_amount,
+            'credit'        => 0,
+            'status'        => $order_status,
+            'trn_date'      => current_time( 'mysql' ),
+            'balance_date'  => date( 'Y-m-d h:i:s', strtotime( current_time( 'mysql' ) . ' + '.$threshold_day.' days' ) ),
+        ),
+        array(
+            '%d',
+            '%d',
+            '%s',
+            '%s',
+            '%f',
+            '%f',
+            '%s',
+            '%s',
             '%s',
         )
     );
@@ -685,3 +721,5 @@ if ( ! function_exists( 'dokan_get_customer_orders_by_seller' ) ) :
     }
 
 endif;
+
+

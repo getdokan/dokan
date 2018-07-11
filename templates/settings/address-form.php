@@ -112,8 +112,6 @@ $address_state   = isset( $profile_info['address']['state'] ) ? $profile_info['a
                 if ( empty( $states[$address_country] ) ) {
                     $address_state_class = 'dokan-hide';
                     $no_states           = true;
-                } else {
-
                 }
             } else {
                 $is_input = true;
