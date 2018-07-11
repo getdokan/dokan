@@ -1,9 +1,9 @@
 # Dokan Multivendor Marketplace #
-**Contributors:** [tareq1988](https://profiles.wordpress.org/tareq1988), [wedevs](https://profiles.wordpress.org/wedevs), [sabbir1991](https://profiles.wordpress.org/sabbir1991), [rafsuntaskin](https://profiles.wordpress.org/rafsuntaskin)  
+**Contributors:** [tareq1988](https://profiles.wordpress.org/tareq1988), [wedevs](https://profiles.wordpress.org/wedevs), [sabbir1991](https://profiles.wordpress.org/sabbir1991), [rafsuntaskin](https://profiles.wordpress.org/rafsuntaskin), [sk.shaikat](https://profiles.wordpress.org/sk.shaikat)  
 **Donate Link:** http://tareq.co/donate/  
 **Tags:** woocommerce, multivendor, multi-vendor, vendor, multishop, paypal , seller, store, sell, online, amazon, dokan, ebay, Etsy, multi seller, multi store, multi vendor, multi vendors, multistore, multivendor, product vendor, product vendors, vendor, vendor system, vendors, wc market place, wc marketplace, wc vendors, woo vendors, woocommerce market place, woocommerce marketplace, woocommerce multi vendor,  commission rate, e-commerce, ebay, ecommerce, yith, yithemes  
 **Requires at least:** 4.4  
-**Tested up to:** 4.9.6  
+**Tested up to:** 4.9.7  
 **WC requires at least:** 3.0  
 **WC tested up to:** 3.4.3  
 **Requires PHP:** 5.6  
@@ -177,6 +177,17 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 ## Changelog ##
+
+v2.8.3 -> July 11, 2018
+------------------------
+- **New:** Customer filter in order listing page vendor dashboard
+- **Tweak:** Only load active withdraw methods in vendor dashboard
+- **Tweak:** Remove unwanted column from order listing in Admin area
+- **Fix:** Get single store products return all stores product via REST API
+- **Fix:** Add textarea input fields in admin settings section
+- **Fix:** Make order status translatable
+- **Fix:** Attach vendor name into order details in recevie order page
+- **Fix:** Insert the order data to the sync table when an order is placed via REST API
 
 v2.8.2 -> June 25, 2018
 ------------------------

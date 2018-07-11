@@ -1,3 +1,14 @@
+v2.8.3 -> July 11, 2018
+------------------------
+- **New:** Customer filter in order listing page vendor dashboard
+- **Tweak:** Only load active withdraw methods in vendor dashboard
+- **Tweak:** Remove unwanted column from order listing in Admin area
+- **Fix:** Get single store products return all stores product via REST API
+- **Fix:** Add textarea input fields in admin settings section
+- **Fix:** Make order status translatable
+- **Fix:** Attach vendor name into order details in recevie order page
+- **Fix:** Insert the order data to the sync table when an order is placed via REST API
+
 v2.8.2 -> June 25, 2018
 ------------------------
 - **New:** Added GDPR Support
