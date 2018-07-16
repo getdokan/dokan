@@ -513,5 +513,51 @@ jQuery(function($) {
         }
     });
 
+    /**
+     * Change bulk order status in vendor dashboard
+     */
+    var change_bulk_order_status = {
+        init: function() {
+            selected_orders = [];
+
+            $( '#cb-select-all' ).on( 'change', function( e ) {
+                var self = $(this);
+
+                var order_id = $( '.cb-select-order' );
+
+                if ( self.is( ':checked' ) ) {
+                    order_id.each( function ( key, value ) {
+                        var order = $( value );
+
+                        order.prop( 'checked', 'checked' );
+
+                        selected_orders.push( order.data( 'order_id' ) );
+                    } );
+                } else {
+                    order_id.each( function ( key, value ) {
+                        $( value ).prop( 'checked', '' );
+                        selected_orders.pop();
+                    } );
+                }
+            } );
+
+            $( '.cb-select-order' ).on( 'change', function( e ) {
+                var self = $(this);
+
+                if ( self.is( ':checked' ) ) {
+                    selected_orders.push( self.data( 'order_id' ) );
+                } else {
+                    var index = selected_orders.indexOf( self.data( 'order_id' ) );
+
+                    if ( index !== -1) {
+                        selected_orders.splice( index, 1 );
+                    }
+                }
+            } );
+        }
+    };
+
+    change_bulk_order_status.init();
+
 })(jQuery);
 
