@@ -530,12 +530,16 @@ class Dokan_Assets {
      * @since 2.5.3
      */
     function load_gmap_script() {
-
-        $scheme  = is_ssl() ? 'https' : 'http';
         $api_key = dokan_get_option( 'gmap_api_key', 'dokan_general', false );
 
         if ( $api_key ) {
-            wp_enqueue_script( 'google-maps', $scheme . '://maps.google.com/maps/api/js?key=' . $api_key );
+            $query_args = apply_filters( 'dokan_google_maps_script_query_args', array(
+                'key' => $api_key,
+            ) );
+
+            $src = add_query_arg( $query_args, 'https://maps.googleapis.com/maps/api/js' );
+
+            wp_enqueue_script( 'google-maps', $src, array(), false, true );
         }
     }
 
