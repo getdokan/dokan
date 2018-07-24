@@ -513,52 +513,6 @@ jQuery(function($) {
         }
     });
 
-    /**
-     * Change bulk order status in vendor dashboard
-     */
-    var change_bulk_order_status = {
-        init: function() {
-            selected_orders = [];
-
-            $( '#cb-select-all' ).on( 'change', function( e ) {
-                var self = $(this);
-
-                var order_id = $( '.cb-select-order' );
-
-                if ( self.is( ':checked' ) ) {
-                    order_id.each( function ( key, value ) {
-                        var order = $( value );
-
-                        order.prop( 'checked', 'checked' );
-
-                        selected_orders.push( order.data( 'order_id' ) );
-                    } );
-                } else {
-                    order_id.each( function ( key, value ) {
-                        $( value ).prop( 'checked', '' );
-                        selected_orders.pop();
-                    } );
-                }
-            } );
-
-            $( '.cb-select-order' ).on( 'change', function( e ) {
-                var self = $(this);
-
-                if ( self.is( ':checked' ) ) {
-                    selected_orders.push( self.data( 'order_id' ) );
-                } else {
-                    var index = selected_orders.indexOf( self.data( 'order_id' ) );
-
-                    if ( index !== -1) {
-                        selected_orders.splice( index, 1 );
-                    }
-                }
-            } );
-        }
-    };
-
-    change_bulk_order_status.init();
-
 })(jQuery);
 
 
@@ -1496,53 +1450,6 @@ jQuery(function($) {
 
     });
 
-
-    /**
-     * Change bulk order status in vendor dashboard
-     */
-    var change_bulk_product_status = {
-        init: function() {
-            selected_products = [];
-
-            $( '#cb-select-all' ).on( 'change', function( e ) {
-                var self = $(this);
-
-                var product_id = $( '.cb-select-product' );
-
-                if ( self.is( ':checked' ) ) {
-                    product_id.each( function ( key, value ) {
-                        var product = $( value );
-
-                        product.prop( 'checked', 'checked' );
-
-                        selected_products.push( product.data( 'product_id' ) );
-                    } );
-                } else {
-                    product_id.each( function ( key, value ) {
-                        $( value ).prop( 'checked', '' );
-                        selected_products.pop();
-                    } );
-                }
-            } );
-
-            $( '.cb-select-product' ).on( 'change', function( e ) {
-                var self = $(this);
-
-                if ( self.is( ':checked' ) ) {
-                    selected_products.push( self.data( 'product_id' ) );
-                } else {
-                    var index = selected_products.indexOf( self.data( 'product_id' ) );
-
-                    if ( index !== -1) {
-                        selected_products.splice( index, 1 );
-                    }
-                }
-            } );
-        }
-    };
-
-    change_bulk_product_status.init();
-
 })(jQuery);
 
 jQuery(function($) {
@@ -2206,5 +2113,35 @@ jQuery(function($) {
             });
         }
     });
+
+    /**
+     * Trigger bulk item checkbox selections
+     */
+    var bulkItemsSelection = {
+        init: function() {
+            selected_items = [];
+
+            $( '#cb-select-all' ).on( 'change', function( e ) {
+                var self = $(this);
+
+                var item_id = $( '.cb-select-items' );
+
+                if ( self.is( ':checked' ) ) {
+                    item_id.each( function ( key, value ) {
+                        var item = $( value );
+                        item.prop( 'checked', 'checked' );
+                    } );
+                } else {
+                    item_id.each( function ( key, value ) {
+                        $( value ).prop( 'checked', '' );
+                        selected_items.pop();
+                    } );
+                }
+            } );
+        }
+    };
+
+    bulkItemsSelection.init();
+
 
 })(jQuery);

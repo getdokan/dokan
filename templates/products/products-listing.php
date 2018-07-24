@@ -148,7 +148,7 @@
                                         <tr<?php echo $tr_class; ?>>
                                             <td class="dokan-product-select">
                                                 <label for="cb-select-<?php echo esc_attr( $post->ID ); ?>"></label>
-                                                <input class="cb-select-product dokan-checkbox" type="checkbox" name="bulk_products[]" value="<?php echo esc_attr( $post->ID ); ?>">
+                                                <input class="cb-select-items dokan-checkbox" type="checkbox" name="bulk_products[]" value="<?php echo esc_attr( $post->ID ); ?>">
                                             </td>
                                             <td data-title="<?php _e( 'Image', 'dokan-lite' ); ?>">
                                                 <?php if ( current_user_can( 'dokan_edit_product' ) ): ?>

@@ -60,7 +60,7 @@ if ( $user_orders ) {
                     <tr >
                         <td class="dokan-order-select">
                             <label for="cb-select-<?php echo esc_attr( $order->order_id ); ?>"></label>
-                            <input class="cb-select-order dokan-checkbox" type="checkbox" name="bulk_orders[]" value="<?php echo esc_attr( $order->order_id ); ?>">
+                            <input class="cb-select-items dokan-checkbox" type="checkbox" name="bulk_orders[]" value="<?php echo esc_attr( $order->order_id ); ?>">
                         </td>
                         <td class="dokan-order-id" data-title="<?php _e( 'Order', 'dokan-lite' ); ?>" >
                             <?php if ( current_user_can( 'dokan_view_order' ) ): ?>
