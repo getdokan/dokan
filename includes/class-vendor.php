@@ -484,7 +484,7 @@ class Dokan_Vendor {
         $cache_key     = 'dokan_seller_balance_' . $this->id;
         $earning       = wp_cache_get( $cache_key, $cache_group );
         $threshold_day = dokan_get_option( 'withdraw_date_limit', 'dokan_withdraw', 0 );
-        $on_date       = $on_date ? date( 'Y-m-d', strtotime( $on_date ) ) : date('Y-m-d');
+        $on_date       = $on_date ? date( 'Y-m-d', strtotime( $on_date ) ) : current_time( 'mysql' );
         $date          = date( 'Y-m-d', strtotime( $on_date . ' -'.$threshold_day.' days' ) );
 
         if ( false === $earning ) {
