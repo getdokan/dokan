@@ -518,7 +518,9 @@ function dokan_bulk_product_status_change() {
     foreach ( $products as $product ) {
         wp_delete_post( $product );
     }
-    $_POST['delete'] = 'delete';
+
+    wp_redirect( add_query_arg( array( 'message' => 'product_deleted' ), dokan_get_navigation_url( 'products' ) ) );
+    exit;
 }
 
 add_action( 'template_redirect', 'dokan_bulk_product_status_change' );

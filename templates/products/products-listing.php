@@ -1,8 +1,5 @@
-<?php global $post;
-$product_statuses = apply_filters( 'dokan_bulk_product_statuses', array(
-    '-1'            => __( 'Bulk Actions', 'dokan-lite' ),
-    'delete'    => __( 'Delete', 'dokan-lite' ),
-) );
+<?php
+    global $post;
 ?>
 
 <div class="dokan-dashboard-wrap">
@@ -61,13 +58,6 @@ $product_statuses = apply_filters( 'dokan_bulk_product_statuses', array(
                     <?php dokan_product_listing_filter(); ?>
                 </div>
 
-                <?php if ( isset( $_POST['delete'] ) && $_POST['delete'] == 'delete') { ?>
-                    <div class="dokan-message" style="overflow: hidden;">
-                        <button type="button" class="dokan-close" data-dismiss="alert">&times;</button>
-                        <strong><?php _e( 'Success!', 'dokan-lite' ); ?></strong> <?php _e( 'Product has been deleted successfully.', 'dokan-lite' ); ?>
-                    </div>
-                <?php } ?>
-
                 <div class="dokan-dashboard-product-listing-wrapper">
 
                     <form id="product-filter" method="POST" class="dokan-form-inline">
@@ -75,8 +65,8 @@ $product_statuses = apply_filters( 'dokan_bulk_product_statuses', array(
                             <label for="bulk-product-action-selector" class="screen-reader-text"><?php _e( 'Select bulk action', 'dokan-lite' ); ?></label>
 
                             <select name="status" id="bulk-product-action-selector" class="dokan-form-control chosen">
-                                <?php foreach ( $product_statuses as $key => $value ) : ?>
-                                    <option class="bulk-product-status" value="<?php echo esc_attr( $key ) ?>"><?php echo esc_attr( $value ); ?></option>
+                                <?php foreach ( $bulk_statuses as $key => $bulk_status ) : ?>
+                                    <option class="bulk-product-status" value="<?php echo esc_attr( $key ) ?>"><?php echo esc_attr( $bulk_status ); ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
