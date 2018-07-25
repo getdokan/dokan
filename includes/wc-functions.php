@@ -1046,7 +1046,9 @@ function dokan_bulk_order_status_change() {
     $orders = $_POST['bulk_orders'];
 
     // -1 means bluk action option value
-    if ( $status === '-1' ) {
+    $excluded_status = array( '-1', 'cancelled', 'refunded' );
+
+    if (  in_array( $status, $excluded_status ) ) {
         return;
     }
 
@@ -1054,6 +1056,10 @@ function dokan_bulk_order_status_change() {
         $the_order = new WC_Order( $order );
 
         if ( $the_order->get_status() == $status ) {
+            continue;
+        }
+
+        if ( in_array( $the_order->get_status(), $excluded_status ) ) {
             continue;
         }
 
