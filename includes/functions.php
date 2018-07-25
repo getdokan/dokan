@@ -2253,7 +2253,7 @@ register_sidebar(
     apply_filters( 'dokan_store_widget_args', array(
             'name'          => __( 'Dokan Store Sidebar', 'dokan-lite' ),
             'id'            => 'sidebar-store',
-            'before_widget' => '<aside class="widget">',
+            'before_widget' => '<aside id="%1$s" class="widget %2$s">',
             'after_widget'  => '</aside>',
             'before_title'  => '<h3 class="widget-title">',
             'after_title'   => '</h3>',

@@ -86,7 +86,12 @@ class Dokan_Template_Products {
      * @return void
      */
     public function render_product_listing_template( $action ) {
-        dokan_get_template_part( 'products/products-listing');
+        $bulk_statuses = apply_filters( 'dokan_bulk_product_statuses', array(
+            '-1'     => __( 'Bulk Actions', 'dokan-lite' ),
+            'delete' => __( 'Delete Permanently', 'dokan-lite' ),
+        ) );
+
+        dokan_get_template_part( 'products/products-listing', '', array( 'bulk_statuses' => $bulk_statuses ) );
     }
 
     /**

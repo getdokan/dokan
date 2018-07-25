@@ -1021,3 +1021,50 @@ function dokan_get_more_products_from_seller( $seller_id = 0, $posts_per_page = 
 
     wp_reset_postdata();
 }
+
+/**
+ * Change bulk order status in vendor dashboard
+ *
+ * @since 2.8.3
+ *
+ * @return string
+ */
+function dokan_bulk_order_status_change() {
+    if ( ! current_user_can( 'dokan_manage_order' ) ) {
+        return;
+    }
+
+    if ( ! isset( $_POST['security'] ) || ! wp_verify_nonce( $_POST['security'], 'bulk_order_status_change' ) ) {
+        return;
+    }
+
+    if ( ! isset( $_POST['status'] ) || ! isset( $_POST['bulk_orders'] ) ) {
+        return;
+    }
+
+    $status = $_POST['status'];
+    $orders = $_POST['bulk_orders'];
+
+    // -1 means bluk action option value
+    $excluded_status = array( '-1', 'cancelled', 'refunded' );
+
+    if (  in_array( $status, $excluded_status ) ) {
+        return;
+    }
+
+    foreach ( $orders as $order ) {
+        $the_order = new WC_Order( $order );
+
+        if ( $the_order->get_status() == $status ) {
+            continue;
+        }
+
+        if ( in_array( $the_order->get_status(), $excluded_status ) ) {
+            continue;
+        }
+
+        $the_order->update_status( $status );
+    }
+}
+
+add_action( 'template_redirect', 'dokan_bulk_order_status_change' );

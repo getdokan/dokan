@@ -1,3 +1,14 @@
+v2.8.4 -> July 25, 2018
+------------------------
+- **New:** Order bulk status change option in vendor order listing page
+- **New:** Bulk product delete option in vendor dashboard
+- **Fix:** Check whether WC_Abstract_Privacy is exist or not
+- **Fix:** Commission amount not updating on time
+- **Fix:** Set correct settings link of dokan plugin in backend plugins page
+- **Tweak:** Added id and class placeholder value for before_widget
+- **Tweak:** Add filter to google maps script url query
+- **Tweak:** Add JS event in product editor script
+
 v2.8.3 -> July 11, 2018
 ------------------------
 - **New:** Customer filter in order listing page vendor dashboard

@@ -55,6 +55,7 @@
             $( '.dokan-product-listing' ).on( 'click', 'a.dokan-add-new-product', this.addProductPopup );
 
             this.loadSelect2();
+            this.bindProductTagDropdown();
             this.attribute.sortable();
             this.checkProductPostboxToggle();
             $( '.product-edit-container .dokan-product-attribute-wrapper' ).on( 'click', 'a.dokan-product-toggle-attribute, .dokan-product-attribute-heading', this.attribute.toggleAttribute );
@@ -68,6 +69,8 @@
             $( 'body' ).on( 'click', '.product-container-footer input[type="submit"]', this.createNewProduct );
 
             this.attribute.disbalePredefinedAttribute();
+
+            $( 'body' ).trigger( 'dokan-product-editor-loaded', this );
         },
 
         saleSchedule: function() {
@@ -152,6 +155,20 @@
             );
         },
 
+        bindProductTagDropdown: function () {
+            if ( dokan.product_vendors_can_create_tags && 'on' === dokan.product_vendors_can_create_tags ) {
+                return;
+            }
+
+            $( '#product_tag' ).select2( {
+                language: {
+                    noResults: function () {
+                        return dokan.i18n_no_result_found;
+                    }
+                }
+            } );
+        },
+
         addProductPopup: function (e) {
             e.preventDefault();
             Dokan_Editor.openProductPopup();
@@ -169,6 +186,7 @@
                     open: function() {
                         $(this.content).closest('.mfp-wrap').removeAttr('tabindex');
                         Dokan_Editor.loadSelect2();
+                        Dokan_Editor.bindProductTagDropdown();
 
                         $('.sale_price_dates_from, .sale_price_dates_to').on('focus', function() {
                             $(this).css('z-index', '99999');
@@ -183,6 +201,8 @@
                         $('.tips').tooltip();
 
                         Dokan_Editor.gallery.sortable();
+
+                        $( 'body' ).trigger( 'dokan-product-editor-popup-opened', Dokan_Editor );
                     },
                     close: function() {
                         product_gallery_frame = undefined;
