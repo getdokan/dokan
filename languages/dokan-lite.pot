@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 2.8.3\n"
+"Project-Id-Version: Dokan 2.8.4\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2018-07-11 06:33:32+00:00\n"
+"POT-Creation-Date: 2018-07-25 11:41:16+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -38,7 +38,7 @@ msgid "Not Available"
 msgstr ""
 
 #: classes/admin-user-profile.php:83 classes/seller-setup-wizard.php:275
-#: includes/class-dokan-privacy.php:217
+#: includes/class-dokan-privacy.php:221
 msgid "Country"
 msgstr ""
 
@@ -78,11 +78,11 @@ msgstr ""
 msgid "Store URL"
 msgstr ""
 
-#: classes/admin-user-profile.php:136 includes/class-dokan-privacy.php:213
+#: classes/admin-user-profile.php:136 includes/class-dokan-privacy.php:217
 msgid "Address 1"
 msgstr ""
 
-#: classes/admin-user-profile.php:143 includes/class-dokan-privacy.php:214
+#: classes/admin-user-profile.php:143 includes/class-dokan-privacy.php:218
 msgid "Address 2"
 msgstr ""
 
@@ -128,7 +128,7 @@ msgstr ""
 msgid "Bank Address "
 msgstr ""
 
-#: classes/admin-user-profile.php:261 includes/class-dokan-privacy.php:269
+#: classes/admin-user-profile.php:261 includes/class-dokan-privacy.php:273
 msgid "Routing Number"
 msgstr ""
 
@@ -248,9 +248,9 @@ msgstr ""
 
 #: classes/admin-withdraw.php:156 classes/admin-withdraw.php:170
 #: src/admin/pages/Withdraw.vue:128 templates/my-orders.php:28
-#: templates/orders/listing.php:22 templates/orders/listing.php:74
-#: templates/products/products-listing.php:72
-#: templates/products/products-listing.php:218 templates/sub-orders.php:26
+#: templates/orders/listing.php:49 templates/orders/listing.php:105
+#: templates/products/products-listing.php:94
+#: templates/products/products-listing.php:243 templates/sub-orders.php:26
 #: templates/withdraw/approved-request-listing.php:16
 #: templates/withdraw/cancelled-request-listing.php:16
 #: templates/withdraw/pending-request-listing.php:16
@@ -301,7 +301,8 @@ msgstr ""
 msgid "No results found"
 msgstr ""
 
-#: classes/admin-withdraw.php:270
+#: classes/admin-withdraw.php:270 classes/template-products.php:90
+#: templates/orders/listing.php:14
 msgid "Bulk Actions"
 msgstr ""
 
@@ -321,7 +322,8 @@ msgstr ""
 msgid "Download PayPal mass payment file"
 msgstr ""
 
-#: classes/admin-withdraw.php:299
+#: classes/admin-withdraw.php:299 templates/orders/listing.php:36
+#: templates/products/products-listing.php:76
 msgid "Apply"
 msgstr ""
 
@@ -566,7 +568,7 @@ msgstr ""
 msgid "Street 2"
 msgstr ""
 
-#: classes/seller-setup-wizard.php:265 includes/class-dokan-privacy.php:215
+#: classes/seller-setup-wizard.php:265 includes/class-dokan-privacy.php:219
 #: templates/settings/address-form.php:60
 msgid "City"
 msgstr ""
@@ -575,7 +577,7 @@ msgstr ""
 msgid "Post/Zip Code"
 msgstr ""
 
-#: classes/seller-setup-wizard.php:282 includes/class-dokan-privacy.php:218
+#: classes/seller-setup-wizard.php:282 includes/class-dokan-privacy.php:222
 msgid "State"
 msgstr ""
 
@@ -626,7 +628,7 @@ msgstr ""
 
 #: classes/template-dashboard.php:105 includes/admin/setup-wizard.php:496
 #: includes/order-functions.php:490 templates/dashboard/orders-widget.php:36
-#: templates/orders/listing.php:104
+#: templates/orders/listing.php:135
 msgid "Processing"
 msgstr ""
 
@@ -670,7 +672,7 @@ msgid "Payment method"
 msgstr ""
 
 #: classes/template-orders.php:121 classes/template-orders.php:190
-#: templates/orders/listing.php:19 templates/orders/listing.php:41
+#: templates/orders/listing.php:46 templates/orders/listing.php:72
 msgid "Order Total"
 msgstr ""
 
@@ -705,26 +707,30 @@ msgstr ""
 msgid "You have no permission to view this page"
 msgstr ""
 
-#: classes/template-products.php:110
+#: classes/template-products.php:91 includes/product-functions.php:462
+msgid "Delete Permanently"
+msgstr ""
+
+#: classes/template-products.php:115
 msgid "Details of your product ..."
 msgstr ""
 
-#: classes/template-products.php:119 classes/template-products.php:245
+#: classes/template-products.php:124 classes/template-products.php:250
 #: includes/product-functions.php:32
 msgid "Please enter product title"
 msgstr ""
 
-#: classes/template-products.php:125 classes/template-products.php:251
+#: classes/template-products.php:130 classes/template-products.php:256
 #: includes/product-functions.php:38
 msgid "Please select a category"
 msgstr ""
 
-#: classes/template-products.php:129 classes/template-products.php:255
+#: classes/template-products.php:134 classes/template-products.php:260
 #: includes/product-functions.php:42
 msgid "Please select AT LEAST ONE category"
 msgstr ""
 
-#: classes/template-products.php:262
+#: classes/template-products.php:267
 msgid "No product found !"
 msgstr ""
 
@@ -1750,184 +1756,184 @@ msgstr ""
 msgid "Please enter a value greater than or equal to {0}."
 msgstr ""
 
-#: includes/class-assets.php:569
+#: includes/class-assets.php:573
 msgid "Upload featured image"
 msgstr ""
 
-#: includes/class-assets.php:570
+#: includes/class-assets.php:574
 msgid "Choose a file"
 msgstr ""
 
-#: includes/class-assets.php:571
+#: includes/class-assets.php:575
 msgid "Add Images to Product Gallery"
 msgstr ""
 
-#: includes/class-assets.php:572
+#: includes/class-assets.php:576
 msgid "Set featured image"
 msgstr ""
 
-#: includes/class-assets.php:573 includes/woo-views/html-product-download.php:8
+#: includes/class-assets.php:577 includes/woo-views/html-product-download.php:8
 msgid "Insert file URL"
 msgstr ""
 
-#: includes/class-assets.php:574
+#: includes/class-assets.php:578
 msgid "Add to gallery"
 msgstr ""
 
-#: includes/class-assets.php:575
+#: includes/class-assets.php:579
 msgid "Sorry, this attribute option already exists, Try a different one."
 msgstr ""
 
-#: includes/class-assets.php:576
+#: includes/class-assets.php:580
 msgid ""
 "Warning! This product will not have any variations if this option is not "
 "checked."
 msgstr ""
 
-#: includes/class-assets.php:577
+#: includes/class-assets.php:581
 msgid "Enter a name for the new attribute term:"
 msgstr ""
 
-#: includes/class-assets.php:578
+#: includes/class-assets.php:582
 msgid "Remove this attribute?"
 msgstr ""
 
-#: includes/class-assets.php:586
+#: includes/class-assets.php:590
 msgid ""
 "Are you sure you want to link all variations? This will create a new "
 "variation for each and every possible combination of variation attributes "
 "(max %d per run)."
 msgstr ""
 
-#: includes/class-assets.php:587
+#: includes/class-assets.php:591
 msgid "Enter a value"
 msgstr ""
 
-#: includes/class-assets.php:588
+#: includes/class-assets.php:592
 msgid "Variation menu order (determines position in the list of variations)"
 msgstr ""
 
-#: includes/class-assets.php:589
+#: includes/class-assets.php:593
 msgid "Enter a value (fixed or %)"
 msgstr ""
 
-#: includes/class-assets.php:590
+#: includes/class-assets.php:594
 msgid "Are you sure you want to delete all variations? This cannot be undone."
 msgstr ""
 
-#: includes/class-assets.php:591
+#: includes/class-assets.php:595
 msgid "Last warning, are you sure?"
 msgstr ""
 
-#: includes/class-assets.php:592
+#: includes/class-assets.php:596
 msgid "Choose an image"
 msgstr ""
 
-#: includes/class-assets.php:593
+#: includes/class-assets.php:597
 msgid "Set variation image"
 msgstr ""
 
-#: includes/class-assets.php:594
+#: includes/class-assets.php:598
 msgid "variation added"
 msgstr ""
 
-#: includes/class-assets.php:595
+#: includes/class-assets.php:599
 msgid "variations added"
 msgstr ""
 
-#: includes/class-assets.php:596
+#: includes/class-assets.php:600
 msgid "No variations added"
 msgstr ""
 
-#: includes/class-assets.php:597
+#: includes/class-assets.php:601
 msgid "Are you sure you want to remove this variation?"
 msgstr ""
 
-#: includes/class-assets.php:598
+#: includes/class-assets.php:602
 msgid "Sale start date (YYYY-MM-DD format or leave blank)"
 msgstr ""
 
-#: includes/class-assets.php:599
+#: includes/class-assets.php:603
 msgid "Sale end date (YYYY-MM-DD format or leave blank)"
 msgstr ""
 
-#: includes/class-assets.php:600
+#: includes/class-assets.php:604
 msgid "Save changes before changing page?"
 msgstr ""
 
-#: includes/class-assets.php:601
+#: includes/class-assets.php:605
 msgid "%qty% variation"
 msgstr ""
 
-#: includes/class-assets.php:602
+#: includes/class-assets.php:606
 msgid "%qty% variations"
 msgstr ""
 
-#: includes/class-assets.php:603
+#: includes/class-assets.php:607
 msgid "No Result Found"
 msgstr ""
 
-#: includes/class-assets.php:606
+#: includes/class-assets.php:610
 msgid "Select and Crop"
 msgstr ""
 
-#: includes/class-assets.php:607
+#: includes/class-assets.php:611
 msgid "Choose Image"
 msgstr ""
 
-#: includes/class-assets.php:608
+#: includes/class-assets.php:612
 msgid "Product title is required"
 msgstr ""
 
-#: includes/class-assets.php:609
+#: includes/class-assets.php:613
 msgid "Product category is required"
 msgstr ""
 
-#: includes/class-assets.php:612
+#: includes/class-assets.php:616
 msgid "One result is available, press enter to select it."
 msgstr ""
 
-#: includes/class-assets.php:613
+#: includes/class-assets.php:617
 msgid "%qty% results are available, use up and down arrow keys to navigate."
 msgstr ""
 
-#: includes/class-assets.php:614
+#: includes/class-assets.php:618
 msgid "No matches found"
 msgstr ""
 
-#: includes/class-assets.php:615
+#: includes/class-assets.php:619
 msgid "Loading failed"
 msgstr ""
 
-#: includes/class-assets.php:616
+#: includes/class-assets.php:620
 msgid "Please enter 1 or more characters"
 msgstr ""
 
-#: includes/class-assets.php:617
+#: includes/class-assets.php:621
 msgid "Please enter %qty% or more characters"
 msgstr ""
 
-#: includes/class-assets.php:618
+#: includes/class-assets.php:622
 msgid "Please delete 1 character"
 msgstr ""
 
-#: includes/class-assets.php:619
+#: includes/class-assets.php:623
 msgid "Please delete %qty% characters"
 msgstr ""
 
-#: includes/class-assets.php:620
+#: includes/class-assets.php:624
 msgid "You can only select 1 item"
 msgstr ""
 
-#: includes/class-assets.php:621
+#: includes/class-assets.php:625
 msgid "You can only select %qty% items"
 msgstr ""
 
-#: includes/class-assets.php:622
+#: includes/class-assets.php:626
 msgid "Loading more results&hellip;"
 msgstr ""
 
-#: includes/class-assets.php:623
+#: includes/class-assets.php:627
 msgid "Searching&hellip;"
 msgstr ""
 
@@ -1935,12 +1941,12 @@ msgstr ""
 msgid "Page %s"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:23 includes/class-dokan-privacy.php:26
-#: includes/class-dokan-privacy.php:142
+#: includes/class-dokan-privacy.php:27 includes/class-dokan-privacy.php:30
+#: includes/class-dokan-privacy.php:146
 msgid "Vendor Data"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:41
+#: includes/class-dokan-privacy.php:45
 msgid ""
 "This sample privacy policy includes the basics around what personal data "
 "your multivendor store may be collecting, storing and sharing, as well as "
@@ -1950,55 +1956,55 @@ msgid ""
 "what information to disclose on your privacy policy."
 msgstr ""
 
-#: includes/class-dokan-privacy.php:44
+#: includes/class-dokan-privacy.php:48
 msgid "We collect information about you during the checkout process on our store."
 msgstr ""
 
-#: includes/class-dokan-privacy.php:45
+#: includes/class-dokan-privacy.php:49
 msgid "What we collect and store"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:46
+#: includes/class-dokan-privacy.php:50
 msgid "While you visit our site, we’ll track:"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:48
+#: includes/class-dokan-privacy.php:52
 msgid ""
 "Stores you’ve viewed: we’ll use this to, for example, show you vendor "
 "stores you’ve recently viewed"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:49
+#: includes/class-dokan-privacy.php:53
 msgid ""
 "Products you’ve viewed: we’ll use this to, for example, show you products "
 "you’ve recently viewed"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:50
+#: includes/class-dokan-privacy.php:54
 msgid ""
 "Location, IP address and browser type: we’ll use this for purposes like "
 "estimating taxes and shipping"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:51
+#: includes/class-dokan-privacy.php:55
 msgid ""
 "Shipping address: we’ll ask you to enter this so we can, for instance, "
 "estimate shipping before you place an order, and send you the order!"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:53
+#: includes/class-dokan-privacy.php:57
 msgid ""
 "We’ll also use cookies to keep track of cart contents while you’re browsing "
 "our site."
 msgstr ""
 
-#: includes/class-dokan-privacy.php:55
+#: includes/class-dokan-privacy.php:59
 msgid ""
 "Note: you may want to further detail your cookie policy, and link to that "
 "section from here."
 msgstr ""
 
-#: includes/class-dokan-privacy.php:57
+#: includes/class-dokan-privacy.php:61
 msgid ""
 "When you purchase from us, we’ll ask you to provide information including "
 "your name, billing address, shipping address, email address, phone number, "
@@ -2006,41 +2012,41 @@ msgid ""
 "and password. We’ll use this information for purposes, such as, to:"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:59
+#: includes/class-dokan-privacy.php:63
 msgid "Send you information about your account and order"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:60
+#: includes/class-dokan-privacy.php:64
 msgid "Respond to your requests, including refunds and complaints"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:61
+#: includes/class-dokan-privacy.php:65
 msgid "Process payments and prevent fraud"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:62
+#: includes/class-dokan-privacy.php:66
 msgid "Set up your account for our store"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:63
+#: includes/class-dokan-privacy.php:67
 msgid "Comply with any legal obligations we have, such as calculating taxes"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:64
+#: includes/class-dokan-privacy.php:68
 msgid "Improve our store offerings"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:65
+#: includes/class-dokan-privacy.php:69
 msgid "Send you marketing messages, if you choose to receive them"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:67
+#: includes/class-dokan-privacy.php:71
 msgid ""
 "If you create an account, we will store your name, address, email and phone "
 "number, which will be used to populate the checkout for future orders."
 msgstr ""
 
-#: includes/class-dokan-privacy.php:68
+#: includes/class-dokan-privacy.php:72
 msgid ""
 "We generally store information about you for as long as we need the "
 "information for the purposes for which we collect and use it, and we are "
@@ -2049,60 +2055,60 @@ msgid ""
 "includes your name, email address and billing and shipping addresses."
 msgstr ""
 
-#: includes/class-dokan-privacy.php:69
+#: includes/class-dokan-privacy.php:73
 msgid "We will also store comments or reviews, if you choose to leave them."
 msgstr ""
 
-#: includes/class-dokan-privacy.php:70
+#: includes/class-dokan-privacy.php:74
 msgid "Who on our team has access"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:71
+#: includes/class-dokan-privacy.php:75
 msgid ""
 "Members of our team have access to the information you provide us. For "
 "example, both Administrators and Shop Managers can access:"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:73
+#: includes/class-dokan-privacy.php:77
 msgid ""
 "Order information like what was purchased, when it was purchased and where "
 "it should be sent, and"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:74
+#: includes/class-dokan-privacy.php:78
 msgid ""
 "Customer information like your name, email address, and billing and "
 "shipping information."
 msgstr ""
 
-#: includes/class-dokan-privacy.php:76
+#: includes/class-dokan-privacy.php:80
 msgid ""
 "Our team members have access to this information to help fulfill orders, "
 "process refunds and support you."
 msgstr ""
 
-#: includes/class-dokan-privacy.php:77
+#: includes/class-dokan-privacy.php:81
 msgid "What we share with others"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:79
+#: includes/class-dokan-privacy.php:83
 msgid ""
 "In this section you should list who you’re sharing data with, and for what "
 "purpose. This could include, but may not be limited to, analytics, "
 "marketing, payment gateways, shipping providers, and third party embeds."
 msgstr ""
 
-#: includes/class-dokan-privacy.php:81
+#: includes/class-dokan-privacy.php:85
 msgid ""
 "We share information with third parties who help us provide our orders and "
 "store services to you; for example --"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:82
+#: includes/class-dokan-privacy.php:86
 msgid "Payments"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:84
+#: includes/class-dokan-privacy.php:88
 msgid ""
 "In this subsection you should list which third party payment processors "
 "you’re using to take payments on your store since these may handle customer "
@@ -2110,25 +2116,25 @@ msgid ""
 "you’re not using PayPal."
 msgstr ""
 
-#: includes/class-dokan-privacy.php:86
+#: includes/class-dokan-privacy.php:90
 msgid ""
 "We accept payments through PayPal. When processing payments, some of your "
 "data will be passed to PayPal, including information required to process or "
 "support the payment, such as the purchase total and billing information."
 msgstr ""
 
-#: includes/class-dokan-privacy.php:87
+#: includes/class-dokan-privacy.php:91
 msgid ""
 "Please see the <a "
 "href=\"https://www.paypal.com/us/webapps/mpp/ua/privacy-full\">PayPal "
 "Privacy Policy</a> for more details."
 msgstr ""
 
-#: includes/class-dokan-privacy.php:88
+#: includes/class-dokan-privacy.php:92
 msgid "Modules"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:90
+#: includes/class-dokan-privacy.php:94
 msgid ""
 "Dokan has premium modules that perform specific and special purpose tasks. "
 "Each of the modules collect additional information. Also third party "
@@ -2136,107 +2142,107 @@ msgid ""
 "their individual privacy policy."
 msgstr ""
 
-#: includes/class-dokan-privacy.php:170 templates/settings/store-form.php:111
+#: includes/class-dokan-privacy.php:174 templates/settings/store-form.php:111
 msgid "Store Name"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:171
+#: includes/class-dokan-privacy.php:175
 msgid "Social"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:172
+#: includes/class-dokan-privacy.php:176
 msgid "Phone"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:173 templates/settings/address-form.php:26
+#: includes/class-dokan-privacy.php:177 templates/settings/address-form.php:26
 msgid "Address"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:174
+#: includes/class-dokan-privacy.php:178
 msgid "GEO Locations"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:175
+#: includes/class-dokan-privacy.php:179
 msgid "Banner Url"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:176
+#: includes/class-dokan-privacy.php:180
 msgid "Gravatar Url"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:191 includes/functions.php:1980
+#: includes/class-dokan-privacy.php:195 includes/functions.php:1980
 msgid "Facebook"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:192 includes/functions.php:1984
+#: includes/class-dokan-privacy.php:196 includes/functions.php:1984
 msgid "Google Plus"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:193 includes/functions.php:1988
+#: includes/class-dokan-privacy.php:197 includes/functions.php:1988
 msgid "Twitter"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:194 includes/functions.php:1992
+#: includes/class-dokan-privacy.php:198 includes/functions.php:1992
 msgid "Pinterest"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:195
+#: includes/class-dokan-privacy.php:199
 msgid "Linkedin"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:196 includes/functions.php:2000
+#: includes/class-dokan-privacy.php:200 includes/functions.php:2000
 msgid "Youtube"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:197 includes/functions.php:2004
+#: includes/class-dokan-privacy.php:201 includes/functions.php:2004
 msgid "Instagram"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:198 includes/functions.php:2008
+#: includes/class-dokan-privacy.php:202 includes/functions.php:2008
 msgid "Flickr"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:216
+#: includes/class-dokan-privacy.php:220
 msgid "Postal Code"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:263
+#: includes/class-dokan-privacy.php:267
 msgid "Bank Details"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:265
+#: includes/class-dokan-privacy.php:269
 msgid "Account Name"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:266
+#: includes/class-dokan-privacy.php:270
 msgid "Account Number"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:267
+#: includes/class-dokan-privacy.php:271
 msgid "Bank Name"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:268
+#: includes/class-dokan-privacy.php:272
 msgid "Bank Address"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:270 includes/withdraw-functions.php:198
+#: includes/class-dokan-privacy.php:274 includes/withdraw-functions.php:198
 msgid "IBAN"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:271
+#: includes/class-dokan-privacy.php:275
 msgid "Swift Code"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:282
+#: includes/class-dokan-privacy.php:286
 msgid "Paypal Email"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:287
+#: includes/class-dokan-privacy.php:291
 msgid "Skrill Email"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:358
+#: includes/class-dokan-privacy.php:362
 msgid "Vendor %s data is removed."
 msgstr ""
 
@@ -2889,9 +2895,9 @@ msgid "Delete all variations"
 msgstr ""
 
 #: includes/product-functions.php:201 src/admin/pages/Withdraw.vue:124
-#: templates/my-orders.php:29 templates/orders/listing.php:20
-#: templates/orders/listing.php:44 templates/products/products-listing.php:65
-#: templates/products/products-listing.php:147 templates/sub-orders.php:27
+#: templates/my-orders.php:29 templates/orders/listing.php:47
+#: templates/orders/listing.php:75 templates/products/products-listing.php:87
+#: templates/products/products-listing.php:173 templates/sub-orders.php:27
 #: templates/withdraw/pending-request-listing.php:18
 msgid "Status"
 msgstr ""
@@ -2950,8 +2956,8 @@ msgid "Toggle &quot;Manage stock&quot;"
 msgstr ""
 
 #: includes/product-functions.php:217
-#: templates/products/products-listing.php:67
-#: templates/products/products-listing.php:159
+#: templates/products/products-listing.php:89
+#: templates/products/products-listing.php:185
 msgid "Stock"
 msgstr ""
 
@@ -3065,12 +3071,8 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: includes/product-functions.php:462
-msgid "Delete Permanently"
-msgstr ""
-
 #: includes/product-functions.php:471 templates/my-orders.php:88
-#: templates/orders/listing.php:123 templates/sub-orders.php:59
+#: templates/orders/listing.php:154 templates/sub-orders.php:59
 msgid "View"
 msgstr ""
 
@@ -3710,8 +3712,8 @@ msgid "Sales"
 msgstr ""
 
 #: templates/dashboard/big-counter-widget.php:21
-#: templates/products/products-listing.php:69
-#: templates/products/products-listing.php:181
+#: templates/products/products-listing.php:91
+#: templates/products/products-listing.php:207
 msgid "Earning"
 msgstr ""
 
@@ -3720,8 +3722,8 @@ msgid "Pageview"
 msgstr ""
 
 #: templates/dashboard/big-counter-widget.php:29 templates/my-orders.php:27
-#: templates/orders/details.php:21 templates/orders/listing.php:18
-#: templates/orders/listing.php:34 templates/sub-orders.php:25
+#: templates/orders/details.php:21 templates/orders/listing.php:45
+#: templates/orders/listing.php:65 templates/sub-orders.php:25
 msgid "Order"
 msgstr ""
 
@@ -4193,44 +4195,60 @@ msgstr ""
 msgid "Grant Access"
 msgstr ""
 
-#: templates/orders/listing.php:21 templates/orders/listing.php:47
+#: templates/orders/listing.php:15
+msgid "Change status to on-hold"
+msgstr ""
+
+#: templates/orders/listing.php:16
+msgid "Change status to processing"
+msgstr ""
+
+#: templates/orders/listing.php:17
+msgid "Change status to completed"
+msgstr ""
+
+#: templates/orders/listing.php:25 templates/products/products-listing.php:65
+msgid "Select bulk action"
+msgstr ""
+
+#: templates/orders/listing.php:48 templates/orders/listing.php:78
 msgid "Customer"
 msgstr ""
 
-#: templates/orders/listing.php:24 templates/orders/listing.php:94
+#: templates/orders/listing.php:51 templates/orders/listing.php:125
 #: templates/products/new-product-single.php:532
 msgid "Action"
 msgstr ""
 
-#: templates/orders/listing.php:36 templates/orders/listing.php:38
+#: templates/orders/listing.php:67 templates/orders/listing.php:69
 msgid "Order %s"
 msgstr ""
 
-#: templates/orders/listing.php:68
+#: templates/orders/listing.php:99
 msgid "Guest"
 msgstr ""
 
-#: templates/orders/listing.php:77 templates/products/products-listing.php:221
+#: templates/orders/listing.php:108 templates/products/products-listing.php:246
 msgid "Unpublished"
 msgstr ""
 
-#: templates/orders/listing.php:79 templates/products/products-listing.php:224
+#: templates/orders/listing.php:110 templates/products/products-listing.php:249
 msgid "Y/m/d g:i:s A"
 msgstr ""
 
-#: templates/orders/listing.php:85 templates/products/products-listing.php:231
+#: templates/orders/listing.php:116 templates/products/products-listing.php:256
 msgid "%s ago"
 msgstr ""
 
-#: templates/orders/listing.php:87 templates/products/products-listing.php:233
+#: templates/orders/listing.php:118 templates/products/products-listing.php:258
 msgid "Y/m/d"
 msgstr ""
 
-#: templates/orders/listing.php:113
+#: templates/orders/listing.php:144
 msgid "Complete"
 msgstr ""
 
-#: templates/orders/listing.php:186
+#: templates/orders/listing.php:218
 msgid "No orders found"
 msgstr ""
 
@@ -4357,7 +4375,7 @@ msgid ""
 msgstr ""
 
 #: templates/products/new-product-single.php:196
-#: templates/products/products-listing.php:202
+#: templates/products/products-listing.php:227
 msgid "Downloadable"
 msgstr ""
 
@@ -4366,7 +4384,7 @@ msgid "Downloadable products give access to a file upon purchase."
 msgstr ""
 
 #: templates/products/new-product-single.php:201
-#: templates/products/products-listing.php:200
+#: templates/products/products-listing.php:225
 msgid "Virtual"
 msgstr ""
 
@@ -4376,8 +4394,8 @@ msgstr ""
 
 #: templates/products/new-product-single.php:213
 #: templates/products/new-product.php:147
-#: templates/products/products-listing.php:68
-#: templates/products/products-listing.php:172
+#: templates/products/products-listing.php:90
+#: templates/products/products-listing.php:198
 #: templates/products/tmpl-add-product-popup.php:49
 msgid "Price"
 msgstr ""
@@ -4469,8 +4487,8 @@ msgid "Manage inventory for this product."
 msgstr ""
 
 #: templates/products/new-product-single.php:440
-#: templates/products/products-listing.php:66
-#: templates/products/products-listing.php:150
+#: templates/products/products-listing.php:88
+#: templates/products/products-listing.php:176
 msgid "SKU"
 msgstr ""
 
@@ -4527,8 +4545,8 @@ msgid "Add File"
 msgstr ""
 
 #: templates/products/new-product-single.php:530
-#: templates/products/products-listing.php:64
-#: templates/products/products-listing.php:134
+#: templates/products/products-listing.php:86
+#: templates/products/products-listing.php:160
 msgid "Name"
 msgstr ""
 
@@ -4624,74 +4642,74 @@ msgstr ""
 msgid "Create Product"
 msgstr ""
 
-#: templates/products/products-listing.php:42
+#: templates/products/products-listing.php:44
 msgid "Add new product"
 msgstr ""
 
-#: templates/products/products-listing.php:63
-#: templates/products/products-listing.php:127
+#: templates/products/products-listing.php:85
+#: templates/products/products-listing.php:153
 msgid "Image"
 msgstr ""
 
-#: templates/products/products-listing.php:70
-#: templates/products/products-listing.php:190
+#: templates/products/products-listing.php:92
+#: templates/products/products-listing.php:216
 msgid "Type"
 msgstr ""
 
-#: templates/products/products-listing.php:71
-#: templates/products/products-listing.php:215
+#: templates/products/products-listing.php:93
+#: templates/products/products-listing.php:240
 msgid "Views"
 msgstr ""
 
-#: templates/products/products-listing.php:162
+#: templates/products/products-listing.php:188
 msgid "In stock"
 msgstr ""
 
-#: templates/products/products-listing.php:164
+#: templates/products/products-listing.php:190
 msgid "Out of stock"
 msgstr ""
 
-#: templates/products/products-listing.php:194
+#: templates/products/products-listing.php:219
 msgid "Grouped"
 msgstr ""
 
-#: templates/products/products-listing.php:196
+#: templates/products/products-listing.php:221
 msgid "External/Affiliate"
 msgstr ""
 
-#: templates/products/products-listing.php:204
+#: templates/products/products-listing.php:229
 msgid "Simple"
 msgstr ""
 
-#: templates/products/products-listing.php:208
+#: templates/products/products-listing.php:233
 msgid "Variable"
 msgstr ""
 
-#: templates/products/products-listing.php:240
+#: templates/products/products-listing.php:265
 msgid "Published"
 msgstr ""
 
-#: templates/products/products-listing.php:243
+#: templates/products/products-listing.php:268
 msgid "Missed schedule"
 msgstr ""
 
-#: templates/products/products-listing.php:245
+#: templates/products/products-listing.php:270
 msgid "Scheduled"
 msgstr ""
 
-#: templates/products/products-listing.php:248
+#: templates/products/products-listing.php:273
 msgid "Last Modified"
 msgstr ""
 
-#: templates/products/products-listing.php:260
+#: templates/products/products-listing.php:285
 msgid "No product found"
 msgstr ""
 
-#: templates/products/products-listing.php:283
+#: templates/products/products-listing.php:309
 msgid "&laquo; Previous"
 msgstr ""
 
-#: templates/products/products-listing.php:284
+#: templates/products/products-listing.php:310
 msgid "Next &raquo;"
 msgstr ""
 
