@@ -50,7 +50,8 @@ class Dokan_Assets {
                     'adminRoot'   => admin_url(),
                     'siteUrl'     => home_url( '/' ),
                     'storePrefix' => dokan_get_option( 'custom_store_url', 'dokan_general', 'store' ),
-                    'assetsUrl'   => DOKAN_PLUGIN_ASSEST
+                    'assetsUrl'   => DOKAN_PLUGIN_ASSEST,
+                    'buynowpro'   => dokan_pro_buynow_url()
                 )
             ) );
 

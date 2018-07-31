@@ -2723,7 +2723,7 @@ add_filter( 'woocommerce_admin_order_preview_actions', 'dokan_remove_action_butt
  *
  * @return boolean
  */
-function customer_has_order_from_this_seller( $customer_id, $seller_id = null ) {
+function dokan_customer_has_order_from_this_seller( $customer_id, $seller_id = null ) {
     $seller_id = ! empty( $seller_id ) ? $seller_id : get_current_user_id();
     $args = array(
         'author'        => $seller_id,
@@ -2737,5 +2737,22 @@ function customer_has_order_from_this_seller( $customer_id, $seller_id = null ) 
     $orders = get_posts( $args );
 
     return ! empty( $orders ) ? true : false;
+}
+
+/**
+ * Dokan get pro buy now url
+ *
+ * @since 2.8.5
+ *
+ * @return string [url]
+ */
+function dokan_pro_buynow_url() {
+    $link = 'https://wedevs.com/dokan/pricing/';
+
+    if ( $aff = get_option( '_dokan_aff_ref' ) ) {
+        $link = add_query_arg( array( 'ref' => $aff ), $link );
+    }
+
+    return $link;
 }
 
