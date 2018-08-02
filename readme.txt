@@ -5,7 +5,7 @@ Tags: woocommerce, multivendor, multi-vendor, vendor, multishop, paypal , seller
 Requires at least: 4.4
 Tested up to: 4.9.7
 WC requires at least: 3.0
-WC tested up to: 3.4.3
+WC tested up to: 3.4.4
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv2 or later
@@ -177,6 +177,13 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 == Changelog ==
+
+v2.8.5 -> July 31, 2018
+------------------------
+- **fix:** Banner image dimension helper text showing wrong in admin vendor profile page
+- **fix:** Remove unwanted customizer class
+- **fix:** Responsive issue fixed in store page
+- **fix:** Fixed conflict between WP-CLI and REST API
 
 v2.8.4 -> July 25, 2018
 ------------------------

@@ -178,6 +178,12 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 ## Changelog ##
 
+v2.8.5 -> July 31, 2018
+------------------------
+- **fix:** Banner image dimension helper text showing wrong in admin vendor profile page
+- **fix:** Remove unwanted customizer class
+- **Fix:** Fixed conflict between WP-CLI and REST API
+
 v2.8.4 -> July 25, 2018
 ------------------------
 - **New:** Order bulk status change option in vendor order listing page

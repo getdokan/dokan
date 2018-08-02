@@ -4165,6 +4165,14 @@ div.media-sidebar a.edit-attachment {
     text-shadow: none;
   }
 }
+@media (max-width: 767px) {
+  .dokan-store-sidebar,
+  .dokan-single-store {
+    margin-right: 3%;
+    width: 94% !important;
+    margin-left: 3%;
+  }
+}
 @media (max-width: 1199px) {
   .dokan-single-store .profile-frame .profile-info-box {
     position: relative;
