@@ -693,7 +693,7 @@ class Dokan_Ajax {
         }
 
         foreach ( $ids as $id ) {
-            if ( ! customer_has_order_from_this_seller( $id ) ) {
+            if ( ! dokan_customer_has_order_from_this_seller( $id ) ) {
                 continue;
             }
 
