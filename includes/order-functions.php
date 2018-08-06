@@ -722,4 +722,194 @@ if ( ! function_exists( 'dokan_get_customer_orders_by_seller' ) ) :
 
 endif;
 
+/**
+ * Header rows for CSV order export
+ *
+ * @since 2.8.6
+ *
+ * @return array
+ */
+function dokan_order_csv_headers() {
+    $headers = array(
+        'order_id'             => __( 'Order No', 'dokan-lite' ),
+        'order_items'          => __( 'Order Items', 'dokan-lite' ),
+        'order_shipping'       => __( 'Shipping method', 'dokan-lite' ),
+        'order_shipping_cost'  => __( 'Shipping Cost', 'dokan-lite' ),
+        'order_payment_method' => __( 'Payment method', 'dokan-lite' ),
+        'order_total'          => __( 'Order Total', 'dokan-lite' ),
+        'order_status'         => __( 'Order Status', 'dokan-lite' ),
+        'order_date'           => __( 'Order Date', 'dokan-lite' ),
 
+        'billing_company'      => __( 'Billing Company', 'dokan-lite' ),
+        'billing_first_name'   => __( 'Billing First Name', 'dokan-lite' ),
+        'billing_last_name'    => __( 'Billing Last Name', 'dokan-lite' ),
+        'billing_full_name'    => __( 'Billing Full Name', 'dokan-lite' ),
+        'billing_email'        => __( 'Billing Email', 'dokan-lite' ),
+        'billing_phone'        => __( 'Billing Phone', 'dokan-lite' ),
+        'billing_address_1'    => __( 'Billing Address 1', 'dokan-lite' ),
+        'billing_address_2'    => __( 'Billing Address 2', 'dokan-lite' ),
+        'billing_city'         => __( 'Billing City', 'dokan-lite' ),
+        'billing_state'        => __( 'Billing State', 'dokan-lite' ),
+        'billing_postcode'     => __( 'Billing Postcode', 'dokan-lite' ),
+        'billing_country'      => __( 'Billing Country', 'dokan-lite' ),
+
+        'shipping_company'     => __( 'Shipping Company', 'dokan-lite' ),
+        'shipping_first_name'  => __( 'Shipping First Name', 'dokan-lite' ),
+        'shipping_last_name'   => __( 'Shipping Last Name', 'dokan-lite' ),
+        'shipping_full_name'   => __( 'Shipping Full Name', 'dokan-lite' ),
+        'shipping_address_1'   => __( 'Shipping Address 1', 'dokan-lite' ),
+        'shipping_address_2'   => __( 'Shipping Address 2', 'dokan-lite' ),
+        'shipping_city'        => __( 'Shipping City', 'dokan-lite' ),
+        'shipping_state'       => __( 'Shipping State', 'dokan-lite' ),
+        'shipping_postcode'    => __( 'Shipping Postcode', 'dokan-lite' ),
+        'shipping_country'     => __( 'Shipping Country', 'dokan-lite' ),
+
+        'customer_ip'          => __( 'Customer IP', 'dokan-lite' ),
+        'customer_note'        => __( 'Customer Note', 'dokan-lite' ),
+    );
+
+    return apply_filters( 'dokan_csv_export_headers', $headers );
+}
+
+/**
+ * Export orders to a CSV file
+ *
+ * @since 2.8.6
+ *
+ * @param  array $orders
+ * @param  string $file     A file name to write to
+ *
+ * @return void
+ */
+function dokan_order_csv_export( $orders, $file = null ) {
+    $headers  = dokan_order_csv_headers();
+    $statuses = wc_get_order_statuses();
+
+    $resource = ( $file == null ) ? 'php://output' : $file;
+    $output   = fopen( $resource, 'w');
+
+    fputcsv( $output, $headers );
+
+    foreach ( $orders as $order ) {
+        $the_order = wc_get_order( $order->order_id );
+        $line      = array();
+
+        foreach ( $headers as $row_key => $label ) {
+
+            switch ( $row_key ) {
+                case 'order_id':
+                    $line[ $row_key ] = $the_order->get_id();
+                    break;
+                case 'order_items':
+                    $line[ $row_key ] = dokan_get_product_list_by_order( $the_order, '; ' );
+                    break;
+                case 'order_shipping':
+                    $line[ $row_key ] = $the_order->get_shipping_method();
+                    break;
+                case 'order_shipping_cost':
+                    $line[ $row_key ] = $the_order->get_total_shipping();
+                    break;
+                case 'order_payment_method':
+                    $line[ $row_key ] = $the_order->get_payment_method_title();
+                    break;
+                case 'order_total':
+                    $line[ $row_key ] = $the_order->get_total();
+                    break;
+                case 'order_status':
+                    $line[ $row_key ] = $statuses['wc-' . dokan_get_prop( $the_order, 'status' )];
+                    break;
+                case 'order_date':
+                    $line[ $row_key ] = dokan_get_date_created( $the_order );
+                    break;
+
+                // billing details
+                case 'billing_company':
+                    $line[ $row_key ] = $the_order->get_billing_company();
+                    break;
+                case 'billing_first_name':
+                    $line[ $row_key ] = $the_order->get_billing_first_name();
+                    break;
+                case 'billing_last_name':
+                    $line[ $row_key ] = $the_order->get_billing_last_name();
+                    break;
+                case 'billing_full_name':
+                    $line[ $row_key ] = $the_order->get_formatted_billing_full_name();
+                    break;
+                case 'billing_email':
+                    $line[ $row_key ] = $the_order->get_billing_email();
+                    break;
+                case 'billing_phone':
+                    $line[ $row_key ] = $the_order->get_billing_phone();
+                    break;
+                case 'billing_address_1':
+                    $line[ $row_key ] = $the_order->get_billing_address_1();
+                    break;
+                case 'billing_address_2':
+                    $line[ $row_key ] = $the_order->get_billing_address_2();
+                    break;
+                case 'billing_city':
+                    $line[ $row_key ] = $the_order->get_billing_city();
+                    break;
+                case 'billing_state':
+                    $line[ $row_key ] = $the_order->get_billing_state();
+                    break;
+                case 'billing_postcode':
+                    $line[ $row_key ] = $the_order->get_billing_postcode();
+                    break;
+                case 'billing_country':
+                    $line[ $row_key ] = $the_order->get_billing_country();
+                    break;
+
+                // shipping details
+                case 'shipping_company':
+                    $line[ $row_key ] = $the_order->get_shipping_company();
+                    break;
+                case 'shipping_first_name':
+                    $line[ $row_key ] = $the_order->get_shipping_first_name();
+                    break;
+                case 'shipping_last_name':
+                    $line[ $row_key ] = $the_order->get_shipping_last_name();
+                    break;
+                case 'shipping_full_name':
+                    $line[ $row_key ] = $the_order->get_formatted_billing_full_name();
+                    break;
+                case 'shipping_address_1':
+                    $line[ $row_key ] = $the_order->get_shipping_address_1();
+                    break;
+                case 'shipping_address_2':
+                    $line[ $row_key ] = $the_order->get_shipping_address_2();
+                    break;
+                case 'shipping_city':
+                    $line[ $row_key ] = $the_order->get_shipping_city();
+                    break;
+                case 'shipping_state':
+                    $line[ $row_key ] = $the_order->get_shipping_state();
+                    break;
+                case 'shipping_postcode':
+                    $line[ $row_key ] = $the_order->get_shipping_postcode();
+                    break;
+                case 'shipping_country':
+                    $line[ $row_key ] = $the_order->get_shipping_country();
+                    break;
+
+                // custom details
+                case 'customer_ip':
+                    $line[ $row_key ] = $the_order->get_customer_ip_address();
+                    break;
+                case 'customer_note':
+                    $line[ $row_key ] = $the_order->get_customer_note();
+                    break;
+
+                default:
+                    $line[ $row_key ] = '';
+                    break;
+            }
+        }
+
+        $line = apply_filters( 'dokan_csv_export_lines', $line, $the_order );
+
+        fputcsv( $output, $line );
+    }
+
+    fclose( $output );
+}
