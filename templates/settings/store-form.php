@@ -385,8 +385,8 @@
 
         } );
         $( '.time .dokan-form-control' ).timepicker({
-            'scrollDefault': 'now',
-            'timeFormat': "g:i A"
+            scrollDefault: 'now',
+            timeFormat: 'g:i A',
         });
         // dokan store open close scripts end //
 
