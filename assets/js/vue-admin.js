@@ -1013,9 +1013,7 @@ let Modal = dokan_get_lib('Modal');
 
     data() {
         return {
-
             asstesUrl: dokan.urls.assetsUrl,
-
             services: [{
                 "title": this.__("Premium modules to make everything easier & better", "dokan-lite"),
                 "thumbnail": dokan.urls.assetsUrl + '/images/premium/service-01@2x.png'
@@ -1501,7 +1499,7 @@ let Modal = dokan_get_lib('Modal');
                     "bgPattern": dokan.urls.assetsUrl + '/images/premium/cta-pattern@2x.png'
                 },
                 "thumbnail": dokan.urls.assetsUrl + '/images/premium/cta-dokan-logo.png',
-                "url": "https:\/\/wedevs.com\/products\/plugins\/dokan\/"
+                "url": dokan.urls.buynowpro
             }
 
         };
@@ -1521,6 +1519,12 @@ let Modal = dokan_get_lib('Modal');
             this.$nextTick(() => {
                 this.$refs.slick.reSlick();
             });
+        }
+    },
+
+    computed: {
+        buyNowProUrl() {
+            return dokan.urls.buynowpro.substr(-1) === '/' ? dokan.urls.buynowpro + '?' : dokan.urls.buynowpro + '&';
         }
     }
 });
@@ -3592,7 +3596,9 @@ var render = function() {
                 {
                   staticClass: "buy-btn starter",
                   attrs: {
-                    href: "https://wedevs.com/dokan/pricing/",
+                    href:
+                      _vm.buyNowProUrl +
+                      "add-to-cart=15310&variation_id=15316&attribute_pa_license=starter",
                     target: "_blank"
                   }
                 },
@@ -3606,7 +3612,9 @@ var render = function() {
                 {
                   staticClass: "buy-btn professional",
                   attrs: {
-                    href: "https://wedevs.com/dokan/pricing/",
+                    href:
+                      _vm.buyNowProUrl +
+                      "add-to-cart=15310&variation_id=15314&attribute_pa_license=professional",
                     target: "_blank"
                   }
                 },
@@ -3620,7 +3628,9 @@ var render = function() {
                 {
                   staticClass: "buy-btn business",
                   attrs: {
-                    href: "https://wedevs.com/dokan/pricing/",
+                    href:
+                      _vm.buyNowProUrl +
+                      "add-to-cart=15310&variation_id=15315&attribute_pa_license=business",
                     target: "_blank"
                   }
                 },
@@ -3634,7 +3644,9 @@ var render = function() {
                 {
                   staticClass: "buy-btn enterprise",
                   attrs: {
-                    href: "https://wedevs.com/dokan/pricing/",
+                    href:
+                      _vm.buyNowProUrl +
+                      "add-to-cart=15310&variation_id=103829&attribute_pa_license=enterprise",
                     target: "_blank"
                   }
                 },
@@ -4427,7 +4439,7 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("td", [
-            _c("input", {
+            _c("textarea", {
               directives: [
                 {
                   name: "model",

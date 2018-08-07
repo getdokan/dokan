@@ -1,11 +1,11 @@
 === Dokan Multivendor Marketplace ===
-Contributors: tareq1988, wedevs, sabbir1991, rafsuntaskin
+Contributors: tareq1988, wedevs, sabbir1991, rafsuntaskin, sk.shaikat
 Donate Link: http://tareq.co/donate/
 Tags: woocommerce, multivendor, multi-vendor, vendor, multishop, paypal , seller, store, sell, online, amazon, dokan, ebay, Etsy, multi seller, multi store, multi vendor, multi vendors, multistore, multivendor, product vendor, product vendors, vendor, vendor system, vendors, wc market place, wc marketplace, wc vendors, woo vendors, woocommerce market place, woocommerce marketplace, woocommerce multi vendor,  commission rate, e-commerce, ebay, ecommerce, yith, yithemes
 Requires at least: 4.4
-Tested up to: 4.9.6
+Tested up to: 4.9.7
 WC requires at least: 3.0
-WC tested up to: 3.4.3
+WC tested up to: 3.4.4
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv2 or later
@@ -177,6 +177,35 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 == Changelog ==
+
+v2.8.5 -> July 31, 2018
+------------------------
+- **fix:** Banner image dimension helper text showing wrong in admin vendor profile page
+- **fix:** Remove unwanted customizer class
+- **fix:** Responsive issue fixed in store page
+- **fix:** Fixed conflict between WP-CLI and REST API
+
+v2.8.4 -> July 25, 2018
+------------------------
+- **New:** Order bulk status change option in vendor order listing page
+- **New:** Bulk product delete option in vendor dashboard
+- **Fix:** Check whether WC_Abstract_Privacy is exist or not
+- **Fix:** Commission amount not updating on time
+- **Fix:** Set correct settings link of dokan plugin in backend plugins page
+- **Tweak:** Added id and class placeholder value for before_widget
+- **Tweak:** Add filter to google maps script url query
+- **Tweak:** Add JS event in product editor script
+
+v2.8.3 -> July 11, 2018
+------------------------
+- **New:** Customer filter in order listing page vendor dashboard
+- **Tweak:** Only load active withdraw methods in vendor dashboard
+- **Tweak:** Remove unwanted column from order listing in Admin area
+- **Fix:** Get single store products return all stores product via REST API
+- **Fix:** Add textarea input fields in admin settings section
+- **Fix:** Make order status translatable
+- **Fix:** Attach vendor name into order details in recevie order page
+- **Fix:** Insert the order data to the sync table when an order is placed via REST API
 
 v2.8.2 -> June 25, 2018
 ------------------------

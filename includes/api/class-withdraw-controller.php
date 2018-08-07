@@ -263,6 +263,36 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
             if ( dokan_get_seller_balance( $result->user_id, false ) < $result->amount ) {
                 return;
             }
+
+            $balance_sql    = "SELECT * FROM `{$wpdb->prefix}dokan_vendor_balance` WHERE `trn_id`={$request['id']} AND `trn_type` = 'dokan_withdraw'";
+            $balance_result = $wpdb->get_row( $balance_sql );
+
+            if ( empty( $balance_result ) ) {
+                $wpdb->insert( $wpdb->prefix . 'dokan_vendor_balance',
+                    array(
+                        'vendor_id'     => $user_id,
+                        'trn_id'        => $request['id'],
+                        'trn_type'      => 'dokan_withdraw',
+                        'perticulars'   => 'Approve withdraw request',
+                        'debit'         => 0,
+                        'credit'        => $result->amount,
+                        'status'        => 'approved',
+                        'trn_date'      => current_time( 'mysql' ),
+                        'balance_date'  => current_time( 'mysql' ),
+                    ),
+                    array(
+                        '%d',
+                        '%d',
+                        '%s',
+                        '%s',
+                        '%f',
+                        '%f',
+                        '%s',
+                        '%s',
+                        '%s',
+                    )
+                );
+            }
         }
 
         $withdraw->update_status( $request['id'], $user_id, $status_code );
@@ -480,9 +510,40 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
                         $status_code = $this->get_status( $status );
                         $user = $wpdb->get_row( "SELECT user_id, amount FROM {$wpdb->prefix}dokan_withdraw WHERE id = {$withdraw_id}" );
 
+                        if ( $status_code === 1 ) {
+                            if ( dokan_get_seller_balance( $user->user_id, false ) < $user->amount ) {
+                                continue;
+                            }
 
-                        if ( $status_code === 1 && dokan_get_seller_balance( $user->user_id, false ) < $user->amount ) {
-                            continue;
+                            $balance_sql    = "SELECT * FROM `{$wpdb->prefix}dokan_vendor_balance` WHERE `trn_id`={$withdraw_id} AND `trn_type` = 'dokan_withdraw'";
+                            $balance_result = $wpdb->get_row( $balance_sql );
+
+                            if ( ! count( $balance_result ) ) {
+                                $wpdb->insert( $wpdb->prefix . 'dokan_vendor_balance',
+                                    array(
+                                        'vendor_id'     => $user->user_id,
+                                        'trn_id'        => $withdraw_id,
+                                        'trn_type'      => 'dokan_withdraw',
+                                        'perticulars'   => 'Approve withdraw request',
+                                        'debit'         => 0,
+                                        'credit'        => $user->amount,
+                                        'status'        => 'approved',
+                                        'trn_date'      => current_time( 'mysql' ),
+                                        'balance_date'  => current_time( 'mysql' ),
+                                    ),
+                                    array(
+                                        '%d',
+                                        '%d',
+                                        '%s',
+                                        '%s',
+                                        '%f',
+                                        '%f',
+                                        '%s',
+                                        '%s',
+                                        '%s',
+                                    )
+                                );
+                            }
                         }
 
                         $wpdb->query( $wpdb->prepare(

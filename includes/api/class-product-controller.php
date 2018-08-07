@@ -1411,4 +1411,627 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
 
         return $product;
     }
+
+        /**
+     * Get the Product's schema, conforming to JSON Schema.
+     *
+     * @return array
+     */
+    public function get_item_schema() {
+        $weight_unit    = get_option( 'woocommerce_weight_unit' );
+        $dimension_unit = get_option( 'woocommerce_dimension_unit' );
+        $schema         = array(
+            '$schema'    => 'http://json-schema.org/draft-04/schema#',
+            'title'      => $this->post_type,
+            'type'       => 'object',
+            'properties' => array(
+                'id'                    => array(
+                    'description' => __( 'Unique identifier for the resource.', 'dokan-lite' ),
+                    'type'        => 'integer',
+                    'context'     => array( 'view', 'edit' ),
+                    'readonly'    => true,
+                ),
+                'name'                  => array(
+                    'description' => __( 'Product name.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'slug'                  => array(
+                    'description' => __( 'Product slug.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'permalink'             => array(
+                    'description' => __( 'Product URL.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'format'      => 'uri',
+                    'context'     => array( 'view', 'edit' ),
+                    'readonly'    => true,
+                ),
+                'date_created'          => array(
+                    'description' => __( "The date the product was created, in the site's timezone.", 'dokan-lite' ),
+                    'type'        => 'date-time',
+                    'context'     => array( 'view', 'edit' ),
+                    'readonly'    => true,
+                ),
+                'date_created_gmt'      => array(
+                    'description' => __( 'The date the product was created, as GMT.', 'dokan-lite' ),
+                    'type'        => 'date-time',
+                    'context'     => array( 'view', 'edit' ),
+                    'readonly'    => true,
+                ),
+                'date_modified'         => array(
+                    'description' => __( "The date the product was last modified, in the site's timezone.", 'dokan-lite' ),
+                    'type'        => 'date-time',
+                    'context'     => array( 'view', 'edit' ),
+                    'readonly'    => true,
+                ),
+                'date_modified_gmt'     => array(
+                    'description' => __( 'The date the product was last modified, as GMT.', 'dokan-lite' ),
+                    'type'        => 'date-time',
+                    'context'     => array( 'view', 'edit' ),
+                    'readonly'    => true,
+                ),
+                'type'                  => array(
+                    'description' => __( 'Product type.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'default'     => 'simple',
+                    'enum'        => array_keys( wc_get_product_types() ),
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'status'                => array(
+                    'description' => __( 'Product status (post status).', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'default'     => 'publish',
+                    'enum'        => array_keys( get_post_statuses() ),
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'featured'              => array(
+                    'description' => __( 'Featured product.', 'dokan-lite' ),
+                    'type'        => 'boolean',
+                    'default'     => false,
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'catalog_visibility'    => array(
+                    'description' => __( 'Catalog visibility.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'default'     => 'visible',
+                    'enum'        => array( 'visible', 'catalog', 'search', 'hidden' ),
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'description'           => array(
+                    'description' => __( 'Product description.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'short_description'     => array(
+                    'description' => __( 'Product short description.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'sku'                   => array(
+                    'description' => __( 'Unique identifier.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'price'                 => array(
+                    'description' => __( 'Current product price.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view', 'edit' ),
+                    'readonly'    => true,
+                ),
+                'regular_price'         => array(
+                    'description' => __( 'Product regular price.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'sale_price'            => array(
+                    'description' => __( 'Product sale price.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'date_on_sale_from'     => array(
+                    'description' => __( "Start date of sale price, in the site's timezone.", 'dokan-lite' ),
+                    'type'        => 'date-time',
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'date_on_sale_from_gmt' => array(
+                    'description' => __( 'Start date of sale price, as GMT.', 'dokan-lite' ),
+                    'type'        => 'date-time',
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'date_on_sale_to'       => array(
+                    'description' => __( "End date of sale price, in the site's timezone.", 'dokan-lite' ),
+                    'type'        => 'date-time',
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'date_on_sale_to_gmt'   => array(
+                    'description' => __( 'End date of sale price, as GMT.', 'dokan-lite' ),
+                    'type'        => 'date-time',
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'price_html'            => array(
+                    'description' => __( 'Price formatted in HTML.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view', 'edit' ),
+                    'readonly'    => true,
+                ),
+                'on_sale'               => array(
+                    'description' => __( 'Shows if the product is on sale.', 'dokan-lite' ),
+                    'type'        => 'boolean',
+                    'context'     => array( 'view', 'edit' ),
+                    'readonly'    => true,
+                ),
+                'purchasable'           => array(
+                    'description' => __( 'Shows if the product can be bought.', 'dokan-lite' ),
+                    'type'        => 'boolean',
+                    'context'     => array( 'view', 'edit' ),
+                    'readonly'    => true,
+                ),
+                'total_sales'           => array(
+                    'description' => __( 'Amount of sales.', 'dokan-lite' ),
+                    'type'        => 'integer',
+                    'context'     => array( 'view', 'edit' ),
+                    'readonly'    => true,
+                ),
+                'virtual'               => array(
+                    'description' => __( 'If the product is virtual.', 'dokan-lite' ),
+                    'type'        => 'boolean',
+                    'default'     => false,
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'downloadable'          => array(
+                    'description' => __( 'If the product is downloadable.', 'dokan-lite' ),
+                    'type'        => 'boolean',
+                    'default'     => false,
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'downloads'             => array(
+                    'description' => __( 'List of downloadable files.', 'dokan-lite' ),
+                    'type'        => 'array',
+                    'context'     => array( 'view', 'edit' ),
+                    'items'       => array(
+                        'type'       => 'object',
+                        'properties' => array(
+                            'id'   => array(
+                                'description' => __( 'File MD5 hash.', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'context'     => array( 'view', 'edit' ),
+                                'readonly'    => true,
+                            ),
+                            'name' => array(
+                                'description' => __( 'File name.', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'context'     => array( 'view', 'edit' ),
+                            ),
+                            'file' => array(
+                                'description' => __( 'File URL.', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'context'     => array( 'view', 'edit' ),
+                            ),
+                        ),
+                    ),
+                ),
+                'download_limit'        => array(
+                    'description' => __( 'Number of times downloadable files can be downloaded after purchase.', 'dokan-lite' ),
+                    'type'        => 'integer',
+                    'default'     => -1,
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'download_expiry'       => array(
+                    'description' => __( 'Number of days until access to downloadable files expires.', 'dokan-lite' ),
+                    'type'        => 'integer',
+                    'default'     => -1,
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'external_url'          => array(
+                    'description' => __( 'Product external URL. Only for external products.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'format'      => 'uri',
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'button_text'           => array(
+                    'description' => __( 'Product external button text. Only for external products.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'tax_status'            => array(
+                    'description' => __( 'Tax status.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'default'     => 'taxable',
+                    'enum'        => array( 'taxable', 'shipping', 'none' ),
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'tax_class'             => array(
+                    'description' => __( 'Tax class.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'manage_stock'          => array(
+                    'description' => __( 'Stock management at product level.', 'dokan-lite' ),
+                    'type'        => 'boolean',
+                    'default'     => false,
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'stock_quantity'        => array(
+                    'description' => __( 'Stock quantity.', 'dokan-lite' ),
+                    'type'        => 'integer',
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'in_stock'              => array(
+                    'description' => __( 'Controls whether or not the product is listed as "in stock" or "out of stock" on the frontend.', 'dokan-lite' ),
+                    'type'        => 'boolean',
+                    'default'     => true,
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'backorders'            => array(
+                    'description' => __( 'If managing stock, this controls if backorders are allowed.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'default'     => 'no',
+                    'enum'        => array( 'no', 'notify', 'yes' ),
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'backorders_allowed'    => array(
+                    'description' => __( 'Shows if backorders are allowed.', 'dokan-lite' ),
+                    'type'        => 'boolean',
+                    'context'     => array( 'view', 'edit' ),
+                    'readonly'    => true,
+                ),
+                'backordered'           => array(
+                    'description' => __( 'Shows if the product is on backordered.', 'dokan-lite' ),
+                    'type'        => 'boolean',
+                    'context'     => array( 'view', 'edit' ),
+                    'readonly'    => true,
+                ),
+                'sold_individually'     => array(
+                    'description' => __( 'Allow one item to be bought in a single order.', 'dokan-lite' ),
+                    'type'        => 'boolean',
+                    'default'     => false,
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'weight'                => array(
+                    /* translators: %s: weight unit */
+                    'description' => sprintf( __( 'Product weight (%s).', 'dokan-lite' ), $weight_unit ),
+                    'type'        => 'string',
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'dimensions'            => array(
+                    'description' => __( 'Product dimensions.', 'dokan-lite' ),
+                    'type'        => 'object',
+                    'context'     => array( 'view', 'edit' ),
+                    'properties'  => array(
+                        'length' => array(
+                            /* translators: %s: dimension unit */
+                            'description' => sprintf( __( 'Product length (%s).', 'dokan-lite' ), $dimension_unit ),
+                            'type'        => 'string',
+                            'context'     => array( 'view', 'edit' ),
+                        ),
+                        'width'  => array(
+                            /* translators: %s: dimension unit */
+                            'description' => sprintf( __( 'Product width (%s).', 'dokan-lite' ), $dimension_unit ),
+                            'type'        => 'string',
+                            'context'     => array( 'view', 'edit' ),
+                        ),
+                        'height' => array(
+                            /* translators: %s: dimension unit */
+                            'description' => sprintf( __( 'Product height (%s).', 'dokan-lite' ), $dimension_unit ),
+                            'type'        => 'string',
+                            'context'     => array( 'view', 'edit' ),
+                        ),
+                    ),
+                ),
+                'shipping_required'     => array(
+                    'description' => __( 'Shows if the product need to be shipped.', 'dokan-lite' ),
+                    'type'        => 'boolean',
+                    'context'     => array( 'view', 'edit' ),
+                    'readonly'    => true,
+                ),
+                'shipping_taxable'      => array(
+                    'description' => __( 'Shows whether or not the product shipping is taxable.', 'dokan-lite' ),
+                    'type'        => 'boolean',
+                    'context'     => array( 'view', 'edit' ),
+                    'readonly'    => true,
+                ),
+                'shipping_class'        => array(
+                    'description' => __( 'Shipping class slug.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'shipping_class_id'     => array(
+                    'description' => __( 'Shipping class ID.', 'dokan-lite' ),
+                    'type'        => 'integer',
+                    'context'     => array( 'view', 'edit' ),
+                    'readonly'    => true,
+                ),
+                'reviews_allowed'       => array(
+                    'description' => __( 'Allow reviews.', 'dokan-lite' ),
+                    'type'        => 'boolean',
+                    'default'     => true,
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'average_rating'        => array(
+                    'description' => __( 'Reviews average rating.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view', 'edit' ),
+                    'readonly'    => true,
+                ),
+                'rating_count'          => array(
+                    'description' => __( 'Amount of reviews that the product have.', 'dokan-lite' ),
+                    'type'        => 'integer',
+                    'context'     => array( 'view', 'edit' ),
+                    'readonly'    => true,
+                ),
+                'related_ids'           => array(
+                    'description' => __( 'List of related products IDs.', 'dokan-lite' ),
+                    'type'        => 'array',
+                    'items'       => array(
+                        'type' => 'integer',
+                    ),
+                    'context'     => array( 'view', 'edit' ),
+                    'readonly'    => true,
+                ),
+                'upsell_ids'            => array(
+                    'description' => __( 'List of up-sell products IDs.', 'dokan-lite' ),
+                    'type'        => 'array',
+                    'items'       => array(
+                        'type' => 'integer',
+                    ),
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'cross_sell_ids'        => array(
+                    'description' => __( 'List of cross-sell products IDs.', 'dokan-lite' ),
+                    'type'        => 'array',
+                    'items'       => array(
+                        'type' => 'integer',
+                    ),
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'parent_id'             => array(
+                    'description' => __( 'Product parent ID.', 'dokan-lite' ),
+                    'type'        => 'integer',
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'purchase_note'         => array(
+                    'description' => __( 'Optional note to send the customer after purchase.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'categories'            => array(
+                    'description' => __( 'List of categories.', 'dokan-lite' ),
+                    'type'        => 'array',
+                    'context'     => array( 'view', 'edit' ),
+                    'items'       => array(
+                        'type'       => 'object',
+                        'properties' => array(
+                            'id'   => array(
+                                'description' => __( 'Category ID.', 'dokan-lite' ),
+                                'type'        => 'integer',
+                                'context'     => array( 'view', 'edit' ),
+                            ),
+                            'name' => array(
+                                'description' => __( 'Category name.', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'context'     => array( 'view', 'edit' ),
+                                'readonly'    => true,
+                            ),
+                            'slug' => array(
+                                'description' => __( 'Category slug.', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'context'     => array( 'view', 'edit' ),
+                                'readonly'    => true,
+                            ),
+                        ),
+                    ),
+                ),
+                'tags'                  => array(
+                    'description' => __( 'List of tags.', 'dokan-lite' ),
+                    'type'        => 'array',
+                    'context'     => array( 'view', 'edit' ),
+                    'items'       => array(
+                        'type'       => 'object',
+                        'properties' => array(
+                            'id'   => array(
+                                'description' => __( 'Tag ID.', 'dokan-lite' ),
+                                'type'        => 'integer',
+                                'context'     => array( 'view', 'edit' ),
+                            ),
+                            'name' => array(
+                                'description' => __( 'Tag name.', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'context'     => array( 'view', 'edit' ),
+                                'readonly'    => true,
+                            ),
+                            'slug' => array(
+                                'description' => __( 'Tag slug.', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'context'     => array( 'view', 'edit' ),
+                                'readonly'    => true,
+                            ),
+                        ),
+                    ),
+                ),
+                'images'                => array(
+                    'description' => __( 'List of images.', 'dokan-lite' ),
+                    'type'        => 'array',
+                    'context'     => array( 'view', 'edit' ),
+                    'items'       => array(
+                        'type'       => 'object',
+                        'properties' => array(
+                            'id'                => array(
+                                'description' => __( 'Image ID.', 'dokan-lite' ),
+                                'type'        => 'integer',
+                                'context'     => array( 'view', 'edit' ),
+                            ),
+                            'date_created'      => array(
+                                'description' => __( "The date the image was created, in the site's timezone.", 'dokan-lite' ),
+                                'type'        => 'date-time',
+                                'context'     => array( 'view', 'edit' ),
+                                'readonly'    => true,
+                            ),
+                            'date_created_gmt'  => array(
+                                'description' => __( 'The date the image was created, as GMT.', 'dokan-lite' ),
+                                'type'        => 'date-time',
+                                'context'     => array( 'view', 'edit' ),
+                                'readonly'    => true,
+                            ),
+                            'date_modified'     => array(
+                                'description' => __( "The date the image was last modified, in the site's timezone.", 'dokan-lite' ),
+                                'type'        => 'date-time',
+                                'context'     => array( 'view', 'edit' ),
+                                'readonly'    => true,
+                            ),
+                            'date_modified_gmt' => array(
+                                'description' => __( 'The date the image was last modified, as GMT.', 'dokan-lite' ),
+                                'type'        => 'date-time',
+                                'context'     => array( 'view', 'edit' ),
+                                'readonly'    => true,
+                            ),
+                            'src'               => array(
+                                'description' => __( 'Image URL.', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'format'      => 'uri',
+                                'context'     => array( 'view', 'edit' ),
+                            ),
+                            'name'              => array(
+                                'description' => __( 'Image name.', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'context'     => array( 'view', 'edit' ),
+                            ),
+                            'alt'               => array(
+                                'description' => __( 'Image alternative text.', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'context'     => array( 'view', 'edit' ),
+                            ),
+                            'position'          => array(
+                                'description' => __( 'Image position. 0 means that the image is featured.', 'dokan-lite' ),
+                                'type'        => 'integer',
+                                'context'     => array( 'view', 'edit' ),
+                            ),
+                        ),
+                    ),
+                ),
+                'attributes'            => array(
+                    'description' => __( 'List of attributes.', 'dokan-lite' ),
+                    'type'        => 'array',
+                    'context'     => array( 'view', 'edit' ),
+                    'items'       => array(
+                        'type'       => 'object',
+                        'properties' => array(
+                            'id'        => array(
+                                'description' => __( 'Attribute ID.', 'dokan-lite' ),
+                                'type'        => 'integer',
+                                'context'     => array( 'view', 'edit' ),
+                            ),
+                            'name'      => array(
+                                'description' => __( 'Attribute name.', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'context'     => array( 'view', 'edit' ),
+                            ),
+                            'position'  => array(
+                                'description' => __( 'Attribute position.', 'dokan-lite' ),
+                                'type'        => 'integer',
+                                'context'     => array( 'view', 'edit' ),
+                            ),
+                            'visible'   => array(
+                                'description' => __( "Define if the attribute is visible on the \"Additional information\" tab in the product's page.", 'dokan-lite' ),
+                                'type'        => 'boolean',
+                                'default'     => false,
+                                'context'     => array( 'view', 'edit' ),
+                            ),
+                            'variation' => array(
+                                'description' => __( 'Define if the attribute can be used as variation.', 'dokan-lite' ),
+                                'type'        => 'boolean',
+                                'default'     => false,
+                                'context'     => array( 'view', 'edit' ),
+                            ),
+                            'options'   => array(
+                                'description' => __( 'List of available term names of the attribute.', 'dokan-lite' ),
+                                'type'        => 'array',
+                                'context'     => array( 'view', 'edit' ),
+                                'items'       => array(
+                                    'type' => 'string',
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
+                'default_attributes'    => array(
+                    'description' => __( 'Defaults variation attributes.', 'dokan-lite' ),
+                    'type'        => 'array',
+                    'context'     => array( 'view', 'edit' ),
+                    'items'       => array(
+                        'type'       => 'object',
+                        'properties' => array(
+                            'id'     => array(
+                                'description' => __( 'Attribute ID.', 'dokan-lite' ),
+                                'type'        => 'integer',
+                                'context'     => array( 'view', 'edit' ),
+                            ),
+                            'name'   => array(
+                                'description' => __( 'Attribute name.', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'context'     => array( 'view', 'edit' ),
+                            ),
+                            'option' => array(
+                                'description' => __( 'Selected attribute term name.', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'context'     => array( 'view', 'edit' ),
+                            ),
+                        ),
+                    ),
+                ),
+                'variations'            => array(
+                    'description' => __( 'List of variations IDs.', 'dokan-lite' ),
+                    'type'        => 'array',
+                    'context'     => array( 'view', 'edit' ),
+                    'items'       => array(
+                        'type' => 'integer',
+                    ),
+                    'readonly'    => true,
+                ),
+                'grouped_products'      => array(
+                    'description' => __( 'List of grouped products ID.', 'dokan-lite' ),
+                    'type'        => 'array',
+                    'items'       => array(
+                        'type' => 'integer',
+                    ),
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'menu_order'            => array(
+                    'description' => __( 'Menu order, used to custom sort products.', 'dokan-lite' ),
+                    'type'        => 'integer',
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'meta_data'             => array(
+                    'description' => __( 'Meta data.', 'dokan-lite' ),
+                    'type'        => 'array',
+                    'context'     => array( 'view', 'edit' ),
+                    'items'       => array(
+                        'type'       => 'object',
+                        'properties' => array(
+                            'id'    => array(
+                                'description' => __( 'Meta ID.', 'dokan-lite' ),
+                                'type'        => 'integer',
+                                'context'     => array( 'view', 'edit' ),
+                                'readonly'    => true,
+                            ),
+                            'key'   => array(
+                                'description' => __( 'Meta key.', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'context'     => array( 'view', 'edit' ),
+                            ),
+                            'value' => array(
+                                'description' => __( 'Meta value.', 'dokan-lite' ),
+                                'type'        => 'mixed',
+                                'context'     => array( 'view', 'edit' ),
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+        );
+
+        return $this->add_additional_fields_schema( $schema );
+    }
+
 }

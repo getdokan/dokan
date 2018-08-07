@@ -2253,7 +2253,7 @@ register_sidebar(
     apply_filters( 'dokan_store_widget_args', array(
             'name'          => __( 'Dokan Store Sidebar', 'dokan-lite' ),
             'id'            => 'sidebar-store',
-            'before_widget' => '<aside class="widget">',
+            'before_widget' => '<aside id="%1$s" class="widget %2$s">',
             'after_widget'  => '</aside>',
             'before_title'  => '<h3 class="widget-title">',
             'after_title'   => '</h3>',
@@ -2782,4 +2782,47 @@ function dokan_is_store_open( $user_id ) {
 
         return true;
     }
+}
+
+ /**
+ * Customer has order from current seller
+ *
+ * @param  int $customer_id
+ * @param  int $seller_id
+ *
+ * @since  2.8.6
+ *
+ * @return boolean
+ */
+function dokan_customer_has_order_from_this_seller( $customer_id, $seller_id = null ) {
+    $seller_id = ! empty( $seller_id ) ? $seller_id : get_current_user_id();
+    $args = array(
+        'author'        => $seller_id,
+        'post_type'     => 'shop_order',
+        'meta_key'      => '_customer_user',
+        'meta_value'    => $customer_id,
+        'post_status'   => 'any',
+        'numberposts'   => 1,
+    );
+
+    $orders = get_posts( $args );
+
+    return ! empty( $orders ) ? true : false;
+}
+
+/**
+ * Dokan get pro buy now url
+ *
+ * @since 2.8.5
+ *
+ * @return string [url]
+ */
+function dokan_pro_buynow_url() {
+    $link = 'https://wedevs.com/dokan/pricing/';
+
+    if ( $aff = get_option( '_dokan_aff_ref' ) ) {
+        $link = add_query_arg( array( 'ref' => $aff ), $link );
+    }
+
+    return $link;
 }

@@ -50,7 +50,8 @@ class Dokan_Assets {
                     'adminRoot'   => admin_url(),
                     'siteUrl'     => home_url( '/' ),
                     'storePrefix' => dokan_get_option( 'custom_store_url', 'dokan_general', 'store' ),
-                    'assetsUrl'   => DOKAN_PLUGIN_ASSEST
+                    'assetsUrl'   => DOKAN_PLUGIN_ASSEST,
+                    'buynowpro'   => dokan_pro_buynow_url()
                 )
             ) );
 
@@ -540,12 +541,16 @@ class Dokan_Assets {
      * @since 2.5.3
      */
     function load_gmap_script() {
-
-        $scheme  = is_ssl() ? 'https' : 'http';
         $api_key = dokan_get_option( 'gmap_api_key', 'dokan_general', false );
 
         if ( $api_key ) {
-            wp_enqueue_script( 'google-maps', $scheme . '://maps.google.com/maps/api/js?key=' . $api_key );
+            $query_args = apply_filters( 'dokan_google_maps_script_query_args', array(
+                'key' => $api_key,
+            ) );
+
+            $src = add_query_arg( $query_args, 'https://maps.googleapis.com/maps/api/js' );
+
+            wp_enqueue_script( 'google-maps', $src, array(), false, true );
         }
     }
 
@@ -618,6 +623,7 @@ class Dokan_Assets {
                 'product_title_required'              => __( 'Product title is required', 'dokan-lite' ),
                 'product_category_required'           => __( 'Product category is required', 'dokan-lite' ),
                 'search_products_nonce'               => wp_create_nonce( 'search-products' ),
+                'search_customer_nonce'               => wp_create_nonce( 'search-customer' ),
                 'i18n_matches_1'                      => __( 'One result is available, press enter to select it.', 'dokan-lite' ),
                 'i18n_matches_n'                      => __( '%qty% results are available, use up and down arrow keys to navigate.', 'dokan-lite' ),
                 'i18n_no_matches'                     => __( 'No matches found', 'dokan-lite' ),

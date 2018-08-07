@@ -3,12 +3,12 @@
 Plugin Name: Dokan
 Plugin URI: https://wordpress.org/plugins/dokan-lite/
 Description: An e-commerce marketplace plugin for WordPress. Powered by WooCommerce and weDevs.
-Version: 2.8.2
+Version: 2.8.5
 Author: weDevs, LLC
 Author URI: https://wedevs.com/
 Text Domain: dokan-lite
 WC requires at least: 3.0
-WC tested up to: 3.4.3
+WC tested up to: 3.4.4
 Domain Path: /languages/
 License: GPL2
 */
@@ -78,14 +78,14 @@ final class WeDevs_Dokan {
      *
      * @var string
      */
-    public $version = '2.8.2';
+    public $version = '2.8.5';
 
     /**
      * Minimum PHP version required
      *
      * @var string
      */
-    private $min_php = '5.4.0';
+    private $min_php = '5.6.0';
 
     /**
      * Holds various class instances
@@ -384,10 +384,11 @@ final class WeDevs_Dokan {
     function wpdb_table_shortcuts() {
         global $wpdb;
 
-        $wpdb->dokan_withdraw     = $wpdb->prefix . 'dokan_withdraw';
-        $wpdb->dokan_orders       = $wpdb->prefix . 'dokan_orders';
-        $wpdb->dokan_announcement = $wpdb->prefix . 'dokan_announcement';
-        $wpdb->dokan_refund       = $wpdb->prefix . 'dokan_refund';
+        $wpdb->dokan_withdraw       = $wpdb->prefix . 'dokan_withdraw';
+        $wpdb->dokan_orders         = $wpdb->prefix . 'dokan_orders';
+        $wpdb->dokan_announcement   = $wpdb->prefix . 'dokan_announcement';
+        $wpdb->dokan_refund         = $wpdb->prefix . 'dokan_refund';
+        $wpdb->dokan_vendor_balance = $wpdb->prefix . 'dokan_vendor_balance';
     }
 
     /**
@@ -433,7 +434,7 @@ final class WeDevs_Dokan {
             $links[] = '<a href="https://wedevs.com/dokan/" style="color: #389e38;font-weight: bold;" target="_blank">' . __( 'Get Pro', 'dokan-lite' ) . '</a>';
         }
 
-        $links[] = '<a href="' . admin_url( 'admin.php?page=dokan-settings' ) . '">' . __( 'Settings', 'dokan-lite' ) . '</a>';
+        $links[] = '<a href="' . admin_url( 'admin.php?page=dokan#/settings' ) . '">' . __( 'Settings', 'dokan-lite' ) . '</a>';
         $links[] = '<a href="https://docs.wedevs.com/docs/dokan/" target="_blank">' . __( 'Documentation', 'dokan-lite' ) . '</a>';
 
         return $links;

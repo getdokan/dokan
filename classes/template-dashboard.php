@@ -27,7 +27,6 @@ class Dokan_Template_Dashboard {
         $this->comment_counts = $this->get_comment_counts();
         $this->pageviews      = $this->get_pageviews();
         $this->earning        = $this->get_earning();
-        $this->seller_balance = $this->get_seller_balance();
 
         add_action( 'dokan_dashboard_content_inside_before', array( $this, 'show_seller_dashboard_notice' ), 10 );
         add_action( 'dokan_dashboard_left_widgets', array( $this, 'get_big_counter_widgets' ), 10 );
@@ -83,7 +82,7 @@ class Dokan_Template_Dashboard {
                 'pageviews'      => $this->pageviews,
                 'orders_count'  => $this->orders_count,
                 'earning'        => $this->earning,
-                'seller_balance' => $this->seller_balance
+                'seller_balance' => $this->get_seller_balance()
             )
         );
     }

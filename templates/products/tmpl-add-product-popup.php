@@ -142,7 +142,7 @@
                             'id'               => 'product_tag',
                             'taxonomy'         => 'product_tag',
                             'title_li'         => '',
-                            'class'            => 'product_tags dokan-form-control dokan-select2',
+                            'class'            => 'product_tags dokan-form-control',
                             'exclude'          => '',
                             'selected'         => array(),
                             'echo'             => 0,
