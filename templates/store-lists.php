@@ -10,6 +10,13 @@ if ( 'yes' === $search ) {
     $search_query = isset( $_GET['dokan_seller_search'] ) ? sanitize_text_field( $_GET['dokan_seller_search'] ) : '';
 }
 
+/**
+ * Filter to toggle seller search form
+ *
+ * @since 2.8.6
+ *
+ * @var bool $show_form
+ */
 $show_seller_search = apply_filters( 'dokan_show_seller_search', true );
 
 if ( $show_seller_search ) {
@@ -33,6 +40,15 @@ if ( $show_seller_search ) {
  */
 do_action( 'dokan_after_seller_listing_serach_form', $sellers );
 
+/**
+ * Action hook before starting seller listing loop
+ *
+ * @since 2.8.6
+ *
+ * @var array $sellers
+ */
+do_action( 'dokan_before_seller_listing_loop', $sellers );
+
 $template_args = array(
     'sellers'         => $sellers,
     'limit'           => $limit,
@@ -46,4 +62,12 @@ $template_args = array(
 );
 
 dokan_get_template_part( 'store-lists-loop', false, $template_args );
-?>
+
+/**
+ * Action hook after finishing seller listing loop
+ *
+ * @since 2.8.6
+ *
+ * @var array $sellers
+ */
+do_action( 'dokan_after_seller_listing_loop', $sellers );

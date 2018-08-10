@@ -1,4 +1,6 @@
-<h2><?php printf( __( 'Search Results for: %s', 'dokan-lite' ), $search_query ); ?></h2>
+<?php if ( ! empty( $search_query ) ): ?>
+    <h2><?php printf( __( 'Search Results for: %s', 'dokan-lite' ), $search_query ); ?></h2>
+<?php endif; ?>
 
 <form role="search" method="get" class="dokan-seller-search-form" action="">
     <input type="search" id="search" class="search-field dokan-seller-search" placeholder="<?php esc_attr_e( 'Search Vendor &hellip;', 'dokan-lite' ); ?>" value="<?php echo esc_attr( $search_query ); ?>" name="dokan_seller_search" title="<?php esc_attr_e( 'Search seller &hellip;', 'dokan-lite' ); ?>" />
