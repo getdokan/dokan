@@ -2788,3 +2788,65 @@ function dokan_add_vendor_info_in_rest_order( $response ) {
 }
 
 add_filter( 'woocommerce_rest_prepare_shop_order_object', 'dokan_add_vendor_info_in_rest_order', 10, 1 );
+
+/**
+ * Stop sending multiple email for an order
+ *
+ * @since 2.8.6
+ *
+ * @return void
+ */
+function dokan_stop_sending_multiple_email() {
+    if ( did_action( 'woocommerce_order_status_pending_to_on-hold_notification' ) == 1 ) {
+        dokan_remove_hook_for_anonymous_class( 'woocommerce_order_status_pending_to_on-hold_notification', 'WC_Email_Customer_On_Hold_Order', 'trigger', 10 );
+    }
+
+    if ( did_action( 'woocommerce_order_status_on-hold_to_processing_notification' ) == 1 ) {
+        dokan_remove_hook_for_anonymous_class( 'woocommerce_order_status_on-hold_to_processing_notification', 'WC_Email_Customer_Processing_Order', 'trigger', 10 );
+    }
+
+    if ( did_action( 'woocommerce_order_status_pending_to_processing_notification' ) == 1 ) {
+        dokan_remove_hook_for_anonymous_class( 'woocommerce_order_status_pending_to_processing_notification', 'WC_Email_Customer_Processing_Order', 'trigger', 10 );
+    }
+}
+
+add_action( 'woocommerce_order_status_pending_to_on-hold', 'dokan_stop_sending_multiple_email' );
+add_action( 'woocommerce_order_status_on-hold_to_processing', 'dokan_stop_sending_multiple_email' );
+add_action( 'woocommerce_order_status_pending_to_processing', 'dokan_stop_sending_multiple_email' );
+
+/**
+ * Remove hook for anonymous class
+ *
+ * @param  string  $hook_name
+ * @param  string  $class_name
+ * @param  string  $method_name
+ * @param  int $priority
+ *
+ * @return boolean
+ */
+function dokan_remove_hook_for_anonymous_class( $hook_name = '', $class_name = '', $method_name = '', $priority = 0 ) {
+    global $wp_filter;
+
+    // Take only filters on right hook name and priority
+    if ( ! isset( $wp_filter[ $hook_name ][ $priority ] ) || ! is_array( $wp_filter[ $hook_name ][ $priority ] ) ) {
+        return false;
+    }
+
+    // Loop on filters registered
+    foreach ( (array) $wp_filter[ $hook_name ][ $priority ] as $unique_id => $filter_array ) {
+        // Test if filter is an array ! (always for class/method)
+        if ( isset( $filter_array['function'] ) && is_array( $filter_array['function'] ) ) {
+            // Test if object is a class, class and method is equal to param !
+            if ( is_object( $filter_array['function'][0] ) && get_class( $filter_array['function'][0] ) && get_class( $filter_array['function'][0] ) == $class_name && $filter_array['function'][1] == $method_name ) {
+                // Test for WordPress >= 4.7 WP_Hook class (https://make.wordpress.org/core/2016/09/08/wp_hook-next-generation-actions-and-filters/)
+                if ( is_a( $wp_filter[ $hook_name ], 'WP_Hook' ) ) {
+                    unset( $wp_filter[ $hook_name ]->callbacks[ $priority ][ $unique_id ] );
+                } else {
+                    unset( $wp_filter[ $hook_name ][ $priority ][ $unique_id ] );
+                }
+            }
+        }
+    }
+
+    return false;
+}
