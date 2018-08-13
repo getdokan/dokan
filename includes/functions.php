@@ -2763,7 +2763,7 @@ function dokan_pro_buynow_url() {
  *
  * @return object
  */
-function dokan_add_vendor_info_in_restful_order( $response ) {
+function dokan_add_vendor_info_in_rest_order( $response ) {
     foreach ( $response as $data ) {
         if ( isset( $data['line_items'] ) ) {
             $product_id = $data['line_items'][0]['product_id'];
@@ -2787,4 +2787,4 @@ function dokan_add_vendor_info_in_restful_order( $response ) {
     return $response;
 }
 
-add_filter( 'woocommerce_rest_prepare_shop_order_object', 'dokan_add_vendor_info_in_restful_order', 10, 1 );
+add_filter( 'woocommerce_rest_prepare_shop_order_object', 'dokan_add_vendor_info_in_rest_order', 10, 1 );
