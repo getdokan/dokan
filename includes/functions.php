@@ -975,7 +975,7 @@ function dokan_get_option( $option, $section, $default = '' ) {
 
     $options = get_option( $section );
 
-    if ( isset( $options[$option] ) && !empty( $options[$option] ) ) {
+    if ( isset( $options[$option] ) && !is_null( $options[$option] ) ) {
         return $options[$option];
     }
 
