@@ -2757,6 +2757,39 @@ function dokan_pro_buynow_url() {
 }
 
 /**
+ * Add vendor info in restful wc_order
+ *
+ * @param object $response
+ *
+ * @return object
+ */
+function dokan_add_vendor_info_in_rest_order( $response ) {
+    foreach ( $response as $data ) {
+        if ( isset( $data['line_items'] ) ) {
+            $product_id = $data['line_items'][0]['product_id'];
+            $author_id  = get_post_field( 'post_author', $product_id );
+        }
+    }
+
+    $store = dokan()->vendor->get( $author_id );
+    $data  = $response->get_data();
+
+    $data['store'] = array(
+        'id'        => $store->get_id(),
+        'name'      => $store->get_name(),
+        'shop_name' => $store->get_shop_name(),
+        'url'       => $store->get_shop_url(),
+        'address'   => $store->get_address()
+    );
+
+    $response->set_data( $data );
+
+    return $response;
+}
+
+add_filter( 'woocommerce_rest_prepare_shop_order_object', 'dokan_add_vendor_info_in_rest_order', 10, 1 );
+
+/**
  * Stop sending multiple email for an order
  *
  * @since 2.8.6
