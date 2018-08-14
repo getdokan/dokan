@@ -17,7 +17,8 @@ function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
     $order_tax      = $order->get_total_tax();
     // $extra_cost     = (float) $order_shipping + (float) $order_tax;
 
-    $commission_recipient = dokan_get_option( 'extra_fee_recipient', 'dokan_general', 'seller' );
+    $shipping_recipient = dokan_get_option( 'shipping_fee_recipient', 'dokan_general', 'seller' );
+    $tax_recipient = dokan_get_option( 'tax_fee_recipient', 'dokan_general', 'seller' );
 
     if ( $get_array ) {
         $amount = array(
@@ -26,8 +27,11 @@ function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
             'tax'        => 0,
         );
 
-        if ( 'seller' == $commission_recipient ) {
+        if ( 'seller' == $shipping_recipient ) {
             $amount['shipping'] = $order_shipping;
+        }
+
+        if ( 'seller' == $tax_recipient ) {
             $amount['tax']      = $order_tax;
         }
 
@@ -658,7 +662,8 @@ function dokan_get_admin_commission_by( $order, $seller_id ) {
     $commissions = array();
     $i = 0;
     $total_line = 0;
-    $commission_recipient = dokan_get_option( 'extra_fee_recipient', 'dokan_general', 'seller' );
+    $shipping_recipient = dokan_get_option( 'shipping_fee_recipient', 'dokan_general', 'seller' );
+    $tax_recipient = dokan_get_option( 'tax_fee_recipient', 'dokan_general', 'seller' );
 
     foreach ( $order->get_items() as $item_id => $item ) {
 
@@ -685,10 +690,12 @@ function dokan_get_admin_commission_by( $order, $seller_id ) {
         }
     }
 
-    if ( 'admin' == $commission_recipient ) {
-        $total_extra = $order->get_total_tax() + $order->get_total_shipping();
-        $net_extra   = $total_extra - ( $order->get_total_tax_refunded() + $order->get_total_shipping_refunded() );
-        $admin_commission += $net_extra;
+    if ( 'admin' == $shipping_recipient ) {
+        $admin_commission += $order->get_total_shipping() - $order->get_total_shipping_refunded();
+    }
+
+    if ( 'admin' == $tax_recipient ) {
+        $admin_commission += $order->get_total_tax() - $order->get_total_tax_refunded();
     }
 
     return apply_filters( 'dokan_order_admin_commission', $admin_commission, $order );
