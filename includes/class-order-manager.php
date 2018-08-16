@@ -158,6 +158,7 @@ class Dokan_Order_Manager {
             // record admin commision
             $admin_fee = dokan_get_admin_commission_by( $parent_order, $seller_id );
             $parent_order->update_meta_data( '_dokan_admin_fee', $admin_fee );
+            $parent_order->update_meta_data( '_dokan_vendor_id', $seller_id );
             $parent_order->save();
 
 			// if the request is made from rest api then insert the order data to the sync table
@@ -262,6 +263,7 @@ class Dokan_Order_Manager {
             // record admin fee
             $admin_fee = dokan_get_admin_commission_by( $order, $seller_id );
             $order->update_meta_data( '_dokan_admin_fee', $admin_fee );
+            $order->update_meta_data( '_dokan_vendor_id', $seller_id );
 
             // finally, let the order re-calculate itself and save
             $order->calculate_totals();
