@@ -306,10 +306,6 @@ function dokan_delete_sync_duplicate_order( $order_id, $seller_id ) {
 function dokan_sync_insert_order( $order_id ) {
     global $wpdb;
 
-    // if ( get_post_meta( $order_id, 'has_sub_order', true ) == '1' ) {
-    //     return;
-    // }
-
     $order              = wc_get_order( $order_id );
     $seller_id          = dokan_get_seller_id_by_order( $order_id );
     $order_total        = $order->get_total();
@@ -388,17 +384,7 @@ add_action( 'dokan_checkout_update_order_meta', 'dokan_sync_insert_order' );
 function dokan_get_seller_id_by_order( $order_id ) {
     global $wpdb;
 
-    // assuming post_author will be changed from wc_version 5
-    if ( WC_VERSION >= '5' ) {
-        $sql = "SELECT seller_id FROM {$wpdb->prefix}dokan_orders WHERE order_id = %d";
-    } else {
-        $sql = "SELECT p.post_author AS seller_id
-                FROM {$wpdb->prefix}woocommerce_order_items oi
-                LEFT JOIN {$wpdb->prefix}woocommerce_order_itemmeta oim ON oim.order_item_id = oi.order_item_id
-                LEFT JOIN $wpdb->posts p ON oim.meta_value = p.ID
-                WHERE oim.meta_key = '_product_id' AND oi.order_id = %d GROUP BY p.post_author";
-    }
-
+    $sql     = "SELECT seller_id FROM {$wpdb->prefix}dokan_orders WHERE order_id = %d";
     $sellers = $wpdb->get_results( $wpdb->prepare( $sql, $order_id ) );
 
     if ( count( $sellers ) > 1 ) {
