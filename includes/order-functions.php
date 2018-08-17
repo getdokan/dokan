@@ -616,7 +616,6 @@ function dokan_get_seller_ids_by( $order_id ) {
  * @return type
  */
 function dokan_get_suborder_ids_by ($parent_order_id){
-
     global $wpdb;
 
      $sql = "SELECT ID FROM " . $wpdb->prefix . "posts
@@ -643,11 +642,11 @@ function dokan_get_suborder_ids_by ($parent_order_id){
  */
 function dokan_get_admin_commission_by( $order, $seller_id ) {
 
-    if ( get_posts( array( 'post_parent' => dokan_get_prop( $order, 'id' ), 'post_type' => 'shop_order', 'post_status' => 'any' ) ) ) {
+    if ( get_posts( array( 'post_parent' => $order->get_id(), 'post_type' => 'shop_order', 'post_status' => 'any' ) ) ) {
         return;
     }
 
-    $saved_admin_fee = get_post_meta( dokan_get_prop( $order, 'id' ), '_dokan_admin_fee', true );
+    $saved_admin_fee = get_post_meta( $order->get_id(), '_dokan_admin_fee', true );
 
     if ( $saved_admin_fee != '' ) {
         return apply_filters( 'dokan_order_admin_commission', $saved_admin_fee, $order );

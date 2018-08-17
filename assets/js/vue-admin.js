@@ -450,8 +450,6 @@ let Loading = dokan_get_lib('Loading');
 //
 //
 //
-//
-//
 
 let ListTable = dokan_get_lib('ListTable');
 let Modal = dokan_get_lib('Modal');
@@ -496,27 +494,7 @@ let Modal = dokan_get_lib('Modal');
                 'actions': { label: this.__('Actions', 'dokan-lite') }
             },
             requests: [],
-            actionColumn: 'seller',
-            actions: [{
-                key: 'trash',
-                label: this.__('Delete', 'dokan-lite')
-            }, {
-                key: 'cancel',
-                label: this.__('Cancel', 'dokan-lite')
-            }],
-            bulkActions: [{
-                key: 'approved',
-                label: this.__('Approve', 'dokan-lite')
-            }, {
-                key: 'cancelled',
-                label: this.__('Cancel', 'dokan-lite')
-            }, {
-                key: 'delete',
-                label: this.__('Delete', 'dokan-lite')
-            }, {
-                key: 'paypal',
-                label: this.__('Download PayPal mass payment file', 'dokan-lite')
-            }]
+            actionColumn: 'seller'
         };
     },
 
@@ -540,6 +518,62 @@ let Modal = dokan_get_lib('Modal');
             let page = this.$route.query.page || 1;
 
             return parseInt(page);
+        },
+
+        actions() {
+            if ('pending' == this.currentStatus) {
+                return [{
+                    key: 'trash',
+                    label: this.__('Delete', 'dokan-lite')
+                }, {
+                    key: 'cancel',
+                    label: this.__('Cancel', 'dokan-lite')
+                }];
+            } else if ('cancelled' == this.currentStatus) {
+                return [{
+                    key: 'trash',
+                    label: this.__('Delete', 'dokan-lite')
+                }, {
+                    key: 'pending',
+                    label: this.__('Pending', 'dokan-lite')
+                }];
+            } else {
+                return [];
+            }
+        },
+
+        bulkActions() {
+            if ('pending' == this.currentStatus) {
+                return [{
+                    key: 'approved',
+                    label: this.__('Approve', 'dokan-lite')
+                }, {
+                    key: 'cancelled',
+                    label: this.__('Cancel', 'dokan-lite')
+                }, {
+                    key: 'delete',
+                    label: this.__('Delete', 'dokan-lite')
+                }, {
+                    key: 'paypal',
+                    label: this.__('Download PayPal mass payment file', 'dokan-lite')
+                }];
+            } else if ('cancelled' == this.currentStatus) {
+                return [{
+                    key: 'pending',
+                    label: this.__('Pending', 'dokan-lite')
+                }, {
+                    key: 'delete',
+                    label: this.__('Delete', 'dokan-lite')
+                }, {
+                    key: 'paypal',
+                    label: this.__('Download PayPal mass payment file', 'dokan-lite')
+                }];
+            } else {
+                return [{
+                    key: 'paypal',
+                    label: this.__('Download PayPal mass payment file', 'dokan-lite')
+                }];
+            }
         }
     },
 
@@ -612,6 +646,10 @@ let Modal = dokan_get_lib('Modal');
                 this.changeStatus('cancelled', row.id);
             }
 
+            if ('pending' === action) {
+                this.changeStatus('pending', row.id);
+            }
+
             if ('trash' === action) {
                 if (confirm(this.__('Are you sure?', 'dokan-lite'))) {
                     this.loading = true;
@@ -657,8 +695,7 @@ let Modal = dokan_get_lib('Modal');
         },
 
         onBulkAction(action, items) {
-
-            if (_.contains(['delete', 'approved', 'cancelled'], action)) {
+            if (_.contains(['delete', 'approved', 'cancelled', 'pending'], action)) {
 
                 let jsonData = {};
                 jsonData[action] = items;
@@ -3128,27 +3165,6 @@ var render = function() {
                             {
                               staticClass: "button button-small",
                               attrs: {
-                                title: _vm.__("Mark as Pending", "dokan-lite")
-                              },
-                              on: {
-                                click: function($event) {
-                                  $event.preventDefault()
-                                  _vm.changeStatus("pending", data.row.id)
-                                }
-                              }
-                            },
-                            [
-                              _c("span", {
-                                staticClass: "dashicons dashicons-backup"
-                              })
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "button",
-                            {
-                              staticClass: "button button-small",
-                              attrs: {
                                 title: _vm.__("Add Note", "dokan-lite")
                               },
                               on: {
@@ -3168,27 +3184,6 @@ var render = function() {
                       ]
                     : [
                         _c("div", { staticClass: "button-group" }, [
-                          _c(
-                            "button",
-                            {
-                              staticClass: "button button-small",
-                              attrs: {
-                                title: _vm.__("Approve Request", "dokan-lite")
-                              },
-                              on: {
-                                click: function($event) {
-                                  $event.preventDefault()
-                                  _vm.changeStatus("approved", data.row.id)
-                                }
-                              }
-                            },
-                            [
-                              _c("span", {
-                                staticClass: "dashicons dashicons-yes"
-                              })
-                            ]
-                          ),
-                          _vm._v(" "),
                           _c(
                             "button",
                             {

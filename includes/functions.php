@@ -954,13 +954,13 @@ function dokan_edit_product_url( $product_id ) {
  * @param array $columns
  * @return array
  */
-function my_custom_admin_product_columns( $columns ) {
+function dokan_admin_product_columns( $columns ) {
     $columns['author'] = __( 'Author', 'dokan-lite' );
 
     return $columns;
 }
 
-add_filter( 'manage_edit-product_columns', 'my_custom_admin_product_columns' );
+add_filter( 'manage_edit-product_columns', 'dokan_admin_product_columns' );
 
 
 /**
