@@ -193,7 +193,7 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
             return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Invalid ID.', 'dokan-lite' ), array( 'status' => 400 ) );
         }
 
-        $product_author = get_post_field( 'post_author', $object->get_id() );
+        $product_author = dokan_get_seller_id_by_order( $object->get_id() );
 
         if ( $store_id != $product_author ) {
             return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Sorry, you have no permission to do this. Since it\'s not your product.', 'dokan-lite' ), array( 'status' => 400 ) );

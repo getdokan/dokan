@@ -306,8 +306,12 @@ function dokan_delete_sync_duplicate_order( $order_id, $seller_id ) {
 function dokan_sync_insert_order( $order_id ) {
     global $wpdb;
 
+    if ( get_post_meta( $order_id, 'has_sub_order', true ) == '1' ) {
+        return;
+    }
+
     $order              = wc_get_order( $order_id );
-    $seller_id          = dokan_get_seller_id_by_order( $order_id );
+    $seller_id          = dokan_get_seller_id_by_order_id( $order_id );
     $order_total        = $order->get_total();
     $order_status       = dokan_get_prop( $order, 'status' );
     $admin_commission   = dokan_get_admin_commission_by( $order, $seller_id );
@@ -321,8 +325,6 @@ function dokan_sync_insert_order( $order_id ) {
     if ( stripos( $order_status, 'wc-' ) === false ) {
         $order_status = 'wc-' . $order_status;
     }
-
-    $seller_id = ! is_array( $seller_id ) ? $seller_id : 0;
 
     $wpdb->insert( $wpdb->prefix . 'dokan_orders',
         array(
@@ -903,4 +905,30 @@ function dokan_order_csv_export( $orders, $file = null ) {
     }
 
     fclose( $output );
+}
+
+/**
+ * Dokan get seller id by order id
+ *
+ * @param  int order_id
+ *
+ * @return int
+ */
+function dokan_get_seller_id_by_order_id( $id ) {
+    $order = wc_get_order( $id );
+    $items = $order->get_items( 'line_item' );
+
+    // if we have multiple sellers then return 0
+    if ( count( $items ) > 1 ) {
+        return 0;
+    }
+
+    // seems like we have got one seller
+    foreach ( $items as $item ) {
+        $product_id = $item->get_product_id();
+    }
+
+    $seller_id = get_post_field( 'post_author', $product_id );
+
+    return $seller_id;
 }

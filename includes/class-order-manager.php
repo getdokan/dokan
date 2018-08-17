@@ -176,7 +176,7 @@ class Dokan_Order_Manager {
         dokan_log( sprintf( 'Got %s vendors, starting sub order.', count( $vendors ) ) );
 
         // seems like we've got multiple sellers
-        foreach ($vendors as $seller_id => $seller_products ) {
+        foreach ( $vendors as $seller_id => $seller_products ) {
             $this->create_sub_order( $parent_order, $seller_id, $seller_products );
         }
 
