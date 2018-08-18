@@ -921,7 +921,7 @@ function dokan_get_seller_id_by_order_id( $id ) {
     $items = $order->get_items( 'line_item' );
 
     if ( ! is_array( $items ) ) {
-        return;
+        return 0;
     }
 
     foreach ( $items as $item ) {
