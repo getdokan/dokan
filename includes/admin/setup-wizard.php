@@ -283,9 +283,10 @@ class Dokan_Setup_Wizard {
      * Store step.
      */
     public function dokan_setup_store() {
-        $options             = get_option( 'dokan_general', array() );
-        $custom_store_url    = ! empty( $options['custom_store_url'] ) ? $options['custom_store_url'] : 'store';
-        $extra_fee_recipient = ! empty( $options['extra_fee_recipient'] ) ? $options['extra_fee_recipient'] : 'seller';
+        $options                = get_option( 'dokan_general', array() );
+        $custom_store_url       = ! empty( $options['custom_store_url'] ) ? $options['custom_store_url'] : 'store';
+        $shipping_fee_recipient = ! empty( $options['shipping_fee_recipient'] ) ? $options['shipping_fee_recipient'] : 'seller';
+        $tax_fee_recipient      = ! empty( $options['tax_fee_recipient'] ) ? $options['tax_fee_recipient'] : 'seller';
 
         $recipients = array(
             'seller' => __( 'Vendor', 'dokan-lite' ),
@@ -303,17 +304,31 @@ class Dokan_Setup_Wizard {
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="extra_fee_recipient"><?php _e( 'Extra Fee Recipient', 'dokan-lite' ); ?></label></th>
+                    <th scope="row"><label for="shipping_fee_recipient"><?php _e( 'Shipping Fee Recipient', 'dokan-lite' ); ?></label></th>
                     <td>
-                        <select class="wc-enhanced-select" id="extra_fee_recipient" name="extra_fee_recipient">
+                        <select class="wc-enhanced-select" id="shipping_fee_recipient" name="shipping_fee_recipient">
                             <?php
                                 foreach ( $recipients as $key => $value ) {
-                                    $selected = ( $extra_fee_recipient == $key ) ? ' selected="true"' : '';
+                                    $selected = ( $shipping_fee_recipient == $key ) ? ' selected="true"' : '';
                                     echo '<option value="' . $key . '" ' . $selected . '>' . $value . '</option>';
                                 }
                             ?>
                         </select>
-                        <p class="description"><?php _e( 'Extra fees like shipping and tax will go to', 'dokan-lite' ); ?></p>
+                        <p class="description"><?php _e( 'Shipping fees will go to', 'dokan-lite' ); ?></p>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row"><label for="tax_fee_recipient"><?php _e( 'Rax Fee Recipient', 'dokan-lite' ); ?></label></th>
+                    <td>
+                        <select class="wc-enhanced-select" id="tax_fee_recipient" name="tax_fee_recipient">
+                            <?php
+                                foreach ( $recipients as $key => $value ) {
+                                    $selected = ( $tax_fee_recipient == $key ) ? ' selected="true"' : '';
+                                    echo '<option value="' . $key . '" ' . $selected . '>' . $value . '</option>';
+                                }
+                            ?>
+                        </select>
+                        <p class="description"><?php _e( 'Tax fees will go to', 'dokan-lite' ); ?></p>
                     </td>
                 </tr>
             </table>
@@ -334,8 +349,9 @@ class Dokan_Setup_Wizard {
 
         $options = get_option( 'dokan_general', array() );
 
-        $options['custom_store_url']    = ! empty( $_POST['custom_store_url'] ) ? sanitize_text_field( $_POST['custom_store_url'] ) : '';
-        $options['extra_fee_recipient'] = ! empty( $_POST['extra_fee_recipient'] ) ? sanitize_text_field( $_POST['extra_fee_recipient'] ) : '';
+        $options['custom_store_url']       = ! empty( $_POST['custom_store_url'] ) ? sanitize_text_field( $_POST['custom_store_url'] ) : '';
+        $options['tax_fee_recipient']      = ! empty( $_POST['tax_fee_recipient'] ) ? sanitize_text_field( $_POST['tax_fee_recipient'] ) : '';
+        $options['shipping_fee_recipient'] = ! empty( $_POST['shipping_fee_recipient'] ) ? sanitize_text_field( $_POST['shipping_fee_recipient'] ) : '';
 
         update_option( 'dokan_general', $options );
 
