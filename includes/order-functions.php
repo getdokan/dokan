@@ -913,16 +913,20 @@ function dokan_order_csv_export( $orders, $file = null ) {
  */
 function dokan_get_seller_id_by_order_id( $id ) {
     $order = wc_get_order( $id );
-    $items = $order->get_items( 'line_item' );
 
-    // if we have multiple sellers then return 0
-    if ( count( $items ) > 1 ) {
+    if ( $order->get_meta( 'has_sub_order' ) ) {
         return 0;
     }
 
-    // seems like we have got one seller
+    $items = $order->get_items( 'line_item' );
+
+    if ( ! is_array( $items ) ) {
+        return;
+    }
+
     foreach ( $items as $item ) {
         $product_id = $item->get_product_id();
+        break;
     }
 
     $seller_id = get_post_field( 'post_author', $product_id );
