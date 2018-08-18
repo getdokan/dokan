@@ -8,17 +8,13 @@
  */
 function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
 
-    $order          = wc_get_order( $order_id );
-    $seller_id      = dokan_get_seller_id_by_order( $order_id );
-    $net_amount     = dokan_get_seller_earnings_by_order( $order, $seller_id );
-
-    // $order_total    = $order->get_total();
-    $order_shipping = $order->get_total_shipping();
-    $order_tax      = $order->get_total_tax();
-    // $extra_cost     = (float) $order_shipping + (float) $order_tax;
-
+    $order              = wc_get_order( $order_id );
+    $seller_id          = dokan_get_seller_id_by_order( $order_id );
+    $net_amount         = dokan_get_seller_earnings_by_order( $order, $seller_id );
+    $order_shipping     = $order->get_total_shipping();
+    $order_tax          = $order->get_total_tax();
     $shipping_recipient = dokan_get_option( 'shipping_fee_recipient', 'dokan_general', 'seller' );
-    $tax_recipient = dokan_get_option( 'tax_fee_recipient', 'dokan_general', 'seller' );
+    $tax_recipient      = dokan_get_option( 'tax_fee_recipient', 'dokan_general', 'seller' );
 
     if ( $get_array ) {
         $amount = array(
@@ -32,16 +28,11 @@ function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
         }
 
         if ( 'seller' == $tax_recipient ) {
-            $amount['tax']      = $order_tax;
+            $amount['tax'] = $order_tax;
         }
 
         return apply_filters( 'dokan_get_seller_amount_from_order_array', $amount, $order, $seller_id );
     }
-
-
-    // if ( 'seller' == $commission_recipient ) {
-    //     $net_amount = $net_amount + $extra_cost;
-    // }
 
     return apply_filters( 'dokan_get_seller_amount_from_order', $net_amount, $order, $seller_id );
 }

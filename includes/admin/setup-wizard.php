@@ -283,10 +283,10 @@ class Dokan_Setup_Wizard {
      * Store step.
      */
     public function dokan_setup_store() {
-        $options             = get_option( 'dokan_general', array() );
-        $custom_store_url    = ! empty( $options['custom_store_url'] ) ? $options['custom_store_url'] : 'store';
+        $options                = get_option( 'dokan_general', array() );
+        $custom_store_url       = ! empty( $options['custom_store_url'] ) ? $options['custom_store_url'] : 'store';
         $shipping_fee_recipient = ! empty( $options['shipping_fee_recipient'] ) ? $options['shipping_fee_recipient'] : 'seller';
-        $tax_fee_recipient = ! empty( $options['tax_fee_recipient'] ) ? $options['tax_fee_recipient'] : 'seller';
+        $tax_fee_recipient      = ! empty( $options['tax_fee_recipient'] ) ? $options['tax_fee_recipient'] : 'seller';
 
         $recipients = array(
             'seller' => __( 'Vendor', 'dokan-lite' ),
@@ -349,9 +349,9 @@ class Dokan_Setup_Wizard {
 
         $options = get_option( 'dokan_general', array() );
 
-        $options['custom_store_url']    = ! empty( $_POST['custom_store_url'] ) ? sanitize_text_field( $_POST['custom_store_url'] ) : '';
+        $options['custom_store_url']       = ! empty( $_POST['custom_store_url'] ) ? sanitize_text_field( $_POST['custom_store_url'] ) : '';
+        $options['tax_fee_recipient']      = ! empty( $_POST['tax_fee_recipient'] ) ? sanitize_text_field( $_POST['tax_fee_recipient'] ) : '';
         $options['shipping_fee_recipient'] = ! empty( $_POST['shipping_fee_recipient'] ) ? sanitize_text_field( $_POST['shipping_fee_recipient'] ) : '';
-        $options['tax_fee_recipient'] = ! empty( $_POST['tax_fee_recipient'] ) ? sanitize_text_field( $_POST['tax_fee_recipient'] ) : '';
 
         update_option( 'dokan_general', $options );
 
