@@ -1034,6 +1034,10 @@ function dokan_bulk_order_status_change() {
         return;
     }
 
+    if ( dokan_get_option( 'order_status_change', 'dokan_selling' ) == 'off' ) {
+        return;
+    }
+
     if ( ! isset( $_POST['security'] ) || ! wp_verify_nonce( $_POST['security'], 'bulk_order_status_change' ) ) {
         return;
     }
