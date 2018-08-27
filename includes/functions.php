@@ -1839,8 +1839,12 @@ function dokan_wc_email_recipient_add_seller( $email, $order ) {
         if ( class_exists( 'Dokan_Vendor_staff' ) ) {
             $staff_ids = dokan_get_staff_id_by_order( $order_id );
 
-            if ( is_array( $staff_ids ) ) {
-                foreach ( $staff_ids as $staff_id ) {
+            if ( ! is_array( $staff_ids ) ) {
+                return $email;
+            }
+
+            foreach ( $staff_ids as $staff_id ) {
+                if ( user_can( $staff_id, 'dokan_view_order' ) ) {
                     $staff  = get_userdata( $staff_id );
                     $email .= ',' . $staff->user_email;
                 }
