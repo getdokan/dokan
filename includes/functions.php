@@ -712,7 +712,8 @@ function dokan_get_post_status( $status = '' ) {
     $statuses = apply_filters( 'dokan_get_post_status', array(
         'publish' => __( 'Online', 'dokan-lite' ),
         'draft'   => __( 'Draft', 'dokan-lite' ),
-        'pending' => __( 'Pending Review', 'dokan-lite' )
+        'pending' => __( 'Pending Review', 'dokan-lite' ),
+        'future'  => __( 'Scheduled', 'dokan-lite' )
     ) );
 
     if ( $status ) {
@@ -734,7 +735,8 @@ function dokan_get_post_status_label_class( $status = '' ) {
     $labels = apply_filters( 'dokan_get_post_status_label_class', array(
         'publish' => 'dokan-label-success',
         'draft'   => 'dokan-label-default',
-        'pending' => 'dokan-label-danger'
+        'pending' => 'dokan-label-danger',
+        'future'  => 'dokan-label-warning'
     ) );
 
     if ( $status ) {
