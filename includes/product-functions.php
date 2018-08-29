@@ -442,7 +442,7 @@ function dokan_products_array_filter_editable( $product ) {
 function dokan_product_get_row_action( $post ) {
 
     if ( empty( $post->ID ) ) {
-        return $row_action;
+        return array();
     }
 
     $row_action      = array();
