@@ -193,7 +193,7 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
             return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Invalid ID.', 'dokan-lite' ), array( 'status' => 400 ) );
         }
 
-        $product_author = get_post_field( 'post_author', $object->get_id() );
+        $product_author = dokan_get_seller_id_by_order( $object->get_id() );
 
         if ( $store_id != $product_author ) {
             return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Sorry, you have no permission to do this. Since it\'s not your product.', 'dokan-lite' ), array( 'status' => 400 ) );
@@ -462,7 +462,7 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
      */
     public function get_order_notes( $request ) {
         $order           = wc_get_order( (int) $request['id'] );
-        $order_author_id = get_post_field( 'post_author', $order->get_id() );
+        $order_author_id = dokan_get_seller_id_by_order( $order->get_id() );
 
         if ( $order_author_id != dokan_get_current_user_id() ) {
             return new WP_Error( "dokan_rest_{$this->post_type}_incorrect_order_author", __( 'You have no permission to view this notes', 'dokan-lite' ), array( 'status' => 404 ) );
@@ -525,7 +525,7 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
         }
 
         $order = wc_get_order( (int) $request['id'] );
-        $order_author_id = get_post_field( 'post_author', $order->get_id() );
+        $order_author_id = dokan_get_seller_id_by_order( $order->get_id() );
 
         if ( $order_author_id != dokan_get_current_user_id() ) {
             return new WP_Error( "dokan_rest_{$this->post_type}_incorrect_order_author", __( 'You have no permission to create this notes', 'dokan-lite' ), array( 'status' => 404 ) );
@@ -567,7 +567,7 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
         $id    = (int) $request['note_id'];
         $order = wc_get_order( (int) $request['id'] );
 
-        $order_author_id = get_post_field( 'post_author', $order->get_id() );
+        $order_author_id = dokan_get_seller_id_by_order( $order->get_id() );
 
         if ( $order_author_id != dokan_get_current_user_id() ) {
             return new WP_Error( "dokan_rest_{$this->post_type}_incorrect_order_author", __( 'You have no permission to view this notes', 'dokan-lite' ), array( 'status' => 404 ) );
@@ -598,7 +598,7 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
     public function delete_order_note( $request ) {
         $id              = (int) $request['note_id'];
         $order           = wc_get_order( (int) $request['id'] );
-        $order_author_id = get_post_field( 'post_author', $order->get_id() );
+        $order_author_id = dokan_get_seller_id_by_order( $order->get_id() );
 
         if ( $order_author_id != dokan_get_current_user_id() ) {
             return new WP_Error( "dokan_rest_{$this->post_type}_incorrect_order_author", __( 'You have no permission to view this notes', 'dokan-lite' ), array( 'status' => 404 ) );
