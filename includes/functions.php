@@ -1835,7 +1835,7 @@ function dokan_wc_email_recipient_add_seller( $email, $order ) {
         }
     }
 
-    return $email;
+    return apply_filters( 'dokan_email_recipient_new_order', $email );
 }
 
 add_filter( 'woocommerce_email_recipient_new_order', 'dokan_wc_email_recipient_add_seller', 10, 2 );
