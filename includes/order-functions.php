@@ -381,8 +381,15 @@ add_action( 'dokan_checkout_update_order_meta', 'dokan_sync_insert_order' );
 function dokan_get_seller_id_by_order( $order_id ) {
     global $wpdb;
 
-    $sql     = "SELECT seller_id FROM {$wpdb->prefix}dokan_orders WHERE order_id = %d";
-    $sellers = $wpdb->get_results( $wpdb->prepare( $sql, $order_id ) );
+    $sql         = "SELECT seller_id FROM {$wpdb->prefix}dokan_orders WHERE order_id = %d";
+    $cache_key   = 'dokan_get_seller_id_' . $order_id;
+    $cache_group = 'dokan_get_seller_id_by_order';
+    $sellers     = wp_cache_get( $cache_key, $cache_group );
+
+    if ( false === $sellers ) {
+        $sellers = $wpdb->get_results( $wpdb->prepare( $sql, $order_id ) );
+        wp_cache_set( $cache_key, $sellers, $cache_group );
+    }
 
     if ( count( $sellers ) > 1 ) {
         foreach ( $sellers as $seller ) {
