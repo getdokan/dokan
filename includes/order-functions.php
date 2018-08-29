@@ -306,7 +306,7 @@ function dokan_sync_insert_order( $order_id ) {
     }
 
     $order              = wc_get_order( $order_id );
-    $seller_id          = dokan_get_seller_id_by_order( $order_id );
+    $seller_id          = dokan_get_seller_id_by_order_id( $order_id );
     $order_total        = $order->get_total();
     $order_status       = dokan_get_prop( $order, 'status' );
     $admin_commission   = dokan_get_admin_commission_by( $order, $seller_id );
@@ -320,8 +320,6 @@ function dokan_sync_insert_order( $order_id ) {
     if ( stripos( $order_status, 'wc-' ) === false ) {
         $order_status = 'wc-' . $order_status;
     }
-
-    $seller_id = ! is_array( $seller_id ) ? $seller_id : 0;
 
     $wpdb->insert( $wpdb->prefix . 'dokan_orders',
         array(
@@ -383,13 +381,15 @@ add_action( 'dokan_checkout_update_order_meta', 'dokan_sync_insert_order' );
 function dokan_get_seller_id_by_order( $order_id ) {
     global $wpdb;
 
-    $sql = "SELECT p.post_author AS seller_id
-            FROM {$wpdb->prefix}woocommerce_order_items oi
-            LEFT JOIN {$wpdb->prefix}woocommerce_order_itemmeta oim ON oim.order_item_id = oi.order_item_id
-            LEFT JOIN $wpdb->posts p ON oim.meta_value = p.ID
-            WHERE oim.meta_key = '_product_id' AND oi.order_id = %d GROUP BY p.post_author";
+    $sql         = "SELECT seller_id FROM {$wpdb->prefix}dokan_orders WHERE order_id = %d";
+    $cache_key   = 'dokan_get_seller_id_' . $order_id;
+    $cache_group = 'dokan_get_seller_id_by_order';
+    $sellers     = wp_cache_get( $cache_key, $cache_group );
 
-    $sellers = $wpdb->get_results( $wpdb->prepare( $sql, $order_id ) );
+    if ( false === $sellers ) {
+        $sellers = $wpdb->get_results( $wpdb->prepare( $sql, $order_id ) );
+        wp_cache_set( $cache_key, $sellers, $cache_group );
+    }
 
     if ( count( $sellers ) > 1 ) {
         foreach ( $sellers as $seller ) {
@@ -909,4 +909,34 @@ function dokan_order_csv_export( $orders, $file = null ) {
     }
 
     fclose( $output );
+}
+
+/**
+ * Dokan get seller id by order id
+ *
+ * @param  int order_id
+ *
+ * @return int
+ */
+function dokan_get_seller_id_by_order_id( $id ) {
+    $order = wc_get_order( $id );
+
+    if ( $order->get_meta( 'has_sub_order' ) ) {
+        return 0;
+    }
+
+    $items = $order->get_items( 'line_item' );
+
+    if ( ! is_array( $items ) ) {
+        return 0;
+    }
+
+    foreach ( $items as $item ) {
+        $product_id = $item->get_product_id();
+        break;
+    }
+
+    $seller_id = get_post_field( 'post_author', $product_id );
+
+    return $seller_id;
 }

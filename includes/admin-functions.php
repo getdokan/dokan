@@ -73,7 +73,7 @@ add_filter( 'manage_edit-shop_order_columns', 'dokan_admin_shop_order_edit_colum
 function dokan_shop_order_custom_columns( $col ) {
     global $post, $the_order;
 
-    if ( empty( $the_order ) || dokan_get_prop( $the_order, 'id') != $post->ID ) {
+    if ( empty( $the_order ) || $the_order->get_id() != $post->ID ) {
         $the_order = new WC_Order( $post->ID );
     }
 
@@ -99,7 +99,7 @@ function dokan_shop_order_custom_columns( $col ) {
             $has_sub = get_post_meta( $post->ID, 'has_sub_order', true );
 
             if ( $has_sub != '1' ) {
-                $seller = get_user_by( 'id', $post->post_author );
+                $seller = get_user_by( 'id', dokan_get_seller_id_by_order( $post->ID ) );
                 printf( '<a href="%s">%s</a>', admin_url( 'edit.php?post_type=shop_order&author=' . $seller->ID ), $seller->display_name );
             }
 
