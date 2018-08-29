@@ -912,6 +912,31 @@ function dokan_order_csv_export( $orders, $file = null ) {
 }
 
 /**
+ * Dokan get staff id by order id
+ *
+ * @param  int order
+ *
+ * @since  2.9.0
+ *
+ * @return array
+ */
+function dokan_get_staff_id_by_order( $id ) {
+    $order     = wc_get_order( $id );
+    $staff_ids = array();
+
+    foreach ( $order->get_items( 'line_item' ) as $item ) {
+        $product_id = $item['product_id'];
+        $staff_id   = get_post_meta( $product_id, '_staff_id', true );
+
+        if ( $staff_id ) {
+            array_push( $staff_ids, $staff_id );
+        }
+    }
+
+    return $staff_ids;
+}
+
+/**
  * Dokan get seller id by order id
  *
  * @param  int order_id

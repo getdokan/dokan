@@ -1804,12 +1804,13 @@ function dokan_get_processing_time_value( $index ) {
 function dokan_wc_email_recipient_add_seller( $email, $order ) {
 
     if ( $order ) {
+        $order_id = $order->get_id();
 
-        if ( get_post_meta( dokan_get_prop( $order, 'id' ), 'has_sub_order', true ) == true ) {
+        if ( get_post_meta( $order_id, 'has_sub_order', true ) == true ) {
             return $email;
         }
 
-        $sellers = dokan_get_seller_id_by_order( dokan_get_prop( $order, 'id' ) );
+        $sellers = dokan_get_seller_id_by_order( $order_id );
 
         //if more than 1 seller
         if ( is_array( $sellers ) && count( $sellers ) > 1 ) {
@@ -1830,6 +1831,22 @@ function dokan_wc_email_recipient_add_seller( $email, $order ) {
 
                 if ( $email != $seller_email ) {
                     $email .= ',' . $seller_email;
+                }
+            }
+        }
+
+        // vendor staff email
+        if ( class_exists( 'Dokan_Vendor_staff' ) ) {
+            $staff_ids = dokan_get_staff_id_by_order( $order_id );
+
+            if ( ! is_array( $staff_ids ) ) {
+                return $email;
+            }
+
+            foreach ( $staff_ids as $staff_id ) {
+                if ( user_can( $staff_id, 'dokan_view_order' ) ) {
+                    $staff  = get_userdata( $staff_id );
+                    $email .= ',' . $staff->user_email;
                 }
             }
         }
