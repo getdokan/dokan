@@ -954,7 +954,7 @@ function dokan_split_profile_completion_value( $progress_values ) {
 add_filter( 'dokan_profile_completion_values', 'dokan_split_profile_completion_value', 10 );
 
 /**
- * Set More product from seller tab
+ * Set More products from seller tab
  *
  * on Single Product Page
  *
@@ -965,7 +965,7 @@ add_filter( 'dokan_profile_completion_values', 'dokan_split_profile_completion_v
 function dokan_set_more_from_seller_tab( $tabs ) {
     if ( check_more_seller_product_tab() ) {
         $tabs['more_seller_product'] = array(
-            'title'     => __( 'More Product', 'dokan' ),
+            'title'     => __( 'More Products', 'dokan' ),
             'priority'  => 99,
             'callback'  => 'dokan_get_more_products_from_seller',
         );
@@ -977,7 +977,7 @@ function dokan_set_more_from_seller_tab( $tabs ) {
 add_action( 'woocommerce_product_tabs', 'dokan_set_more_from_seller_tab', 10 );
 
 /**
- *  Show more product from current seller
+ *  Show more products from current seller
  *
  * @since 2.5
  * @global object $product

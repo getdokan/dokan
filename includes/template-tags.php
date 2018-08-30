@@ -330,7 +330,7 @@ function dokan_get_dashboard_nav() {
     );
 
     $settings = array(
-        'title' => __( 'Settings <i class="fa fa-angle-right pull-right"></i>', 'dokan-lite'),
+        'title' => sprintf( '%s <i class="fa fa-angle-right pull-right"></i>', __( 'Settings', 'dokan-lite') ),
         'icon'  => '<i class="fa fa-cog"></i>',
         'url'   => dokan_get_navigation_url( 'settings/store' ),
         'pos'   => 200,
