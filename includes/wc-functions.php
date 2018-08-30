@@ -1072,3 +1072,22 @@ function dokan_bulk_order_status_change() {
 }
 
 add_action( 'template_redirect', 'dokan_bulk_order_status_change' );
+
+/**
+ * Clear transient once a product is saved or deleted
+ *
+ * @param  int $post_id
+ *
+ * @return void
+ */
+function dokan_store_category_delete_transient( $post_id ) {
+
+    $post_tmp = get_post( $post_id );
+    $seller_id = $post_tmp->post_author;
+
+    //delete store category transient
+    delete_transient( 'dokan-store-category-'.$seller_id );
+}
+
+add_action( 'delete_post', 'dokan_store_category_delete_transient' );
+add_action( 'save_post', 'dokan_store_category_delete_transient' );
