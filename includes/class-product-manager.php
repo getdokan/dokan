@@ -16,7 +16,7 @@ class Dokan_Product_Manager {
      * @return void
      */
     public function all( $args = array() ) {
-        $post_statuses = array( 'publish', 'draft', 'pending' );
+        $post_statuses = apply_filters( 'dokan_get_product_status', array( 'publish', 'draft', 'pending', 'future' ) );
 
         $defaults = array(
             'post_type'      => 'product',
