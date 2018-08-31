@@ -2380,7 +2380,7 @@ function dokan_cache_reset_seller_order_data( $order_id, $seller_id ) {
 }
 
 function dokan_cache_reset_order_data_on_status( $order_id, $from_status, $to_status, $order ) {
-    $seller_id = dokan_get_seller_id_by_order_id( $order_id );
+    $seller_id = dokan_get_seller_id_by_order( $order_id );
     dokan_cache_clear_group( 'dokan_seller_data_'.$seller_id );
 }
 
