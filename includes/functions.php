@@ -1806,32 +1806,25 @@ function dokan_get_processing_time_value( $index ) {
 function dokan_wc_email_recipient_add_seller( $email, $order ) {
 
     if ( $order ) {
+        $order_id = $order->get_id();
 
-        if ( get_post_meta( dokan_get_prop( $order, 'id' ), 'has_sub_order', true ) == true ) {
+        if ( get_post_meta( $order_id, 'has_sub_order', true ) ) {
             return $email;
         }
 
-        $sellers = dokan_get_seller_id_by_order( dokan_get_prop( $order, 'id' ) );
+        $sellers = dokan_get_seller_id_by_order_id( $order_id );
 
-        //if more than 1 seller
-        if ( is_array( $sellers ) && count( $sellers ) > 1 ) {
-            foreach ( $sellers as $seller_id ) {
-                $seller       = get_userdata( $seller_id );
-                $seller_email = $seller->user_email;
+        if ( $sellers ) {
+            $seller       = get_userdata( $sellers );
+            $seller_email = $seller->user_email;
 
+            if ( ! wp_get_post_parent_id( $order_id ) ) {
                 if ( $email != $seller_email ) {
                     $email .= ',' . $seller_email;
                 }
-            }
-        } else {
-
-            if ( $sellers ) {
-                //if single seller is returned
-                $seller       = get_userdata( $sellers );
-                $seller_email = $seller->user_email;
-
+            } else {
                 if ( $email != $seller_email ) {
-                    $email .= ',' . $seller_email;
+                    $email = $seller_email;
                 }
             }
         }
