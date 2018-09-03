@@ -391,18 +391,8 @@ function dokan_get_seller_id_by_order( $order_id ) {
         wp_cache_set( $cache_key, $sellers, $cache_group );
     }
 
-    if ( count( $sellers ) > 1 ) {
-        foreach ( $sellers as $seller ) {
-            $seller_id[] = (int) $seller->seller_id;
-        }
-
-        return $seller_id;
-
-    } else if ( count( $sellers ) == 1 ) {
-
-        $seller_id = reset( $sellers )->seller_id;
-
-        return $seller_id;
+    if ( count( $sellers ) == 1 ) {
+        return reset( $sellers )->seller_id;
     }
 
     return 0;
