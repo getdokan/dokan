@@ -8,16 +8,13 @@
  */
 function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
 
-    $order          = wc_get_order( $order_id );
-    $seller_id      = dokan_get_seller_id_by_order( $order_id );
-    $net_amount     = dokan_get_seller_earnings_by_order( $order, $seller_id );
-
-    // $order_total    = $order->get_total();
-    $order_shipping = $order->get_total_shipping();
-    $order_tax      = $order->get_total_tax();
-    // $extra_cost     = (float) $order_shipping + (float) $order_tax;
-
-    $commission_recipient = dokan_get_option( 'extra_fee_recipient', 'dokan_general', 'seller' );
+    $order              = wc_get_order( $order_id );
+    $seller_id          = dokan_get_seller_id_by_order( $order_id );
+    $net_amount         = dokan_get_seller_earnings_by_order( $order, $seller_id );
+    $order_shipping     = $order->get_total_shipping();
+    $order_tax          = $order->get_total_tax();
+    $shipping_recipient = dokan_get_option( 'shipping_fee_recipient', 'dokan_general', 'seller' );
+    $tax_recipient      = dokan_get_option( 'tax_fee_recipient', 'dokan_general', 'seller' );
 
     if ( $get_array ) {
         $amount = array(
@@ -26,18 +23,16 @@ function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
             'tax'        => 0,
         );
 
-        if ( 'seller' == $commission_recipient ) {
+        if ( 'seller' == $shipping_recipient ) {
             $amount['shipping'] = $order_shipping;
-            $amount['tax']      = $order_tax;
+        }
+
+        if ( 'seller' == $tax_recipient ) {
+            $amount['tax'] = $order_tax;
         }
 
         return apply_filters( 'dokan_get_seller_amount_from_order_array', $amount, $order, $seller_id );
     }
-
-
-    // if ( 'seller' == $commission_recipient ) {
-    //     $net_amount = $net_amount + $extra_cost;
-    // }
 
     return apply_filters( 'dokan_get_seller_amount_from_order', $net_amount, $order, $seller_id );
 }
@@ -311,7 +306,7 @@ function dokan_sync_insert_order( $order_id ) {
     }
 
     $order              = wc_get_order( $order_id );
-    $seller_id          = dokan_get_seller_id_by_order( $order_id );
+    $seller_id          = dokan_get_seller_id_by_order_id( $order_id );
     $order_total        = $order->get_total();
     $order_status       = dokan_get_prop( $order, 'status' );
     $admin_commission   = dokan_get_admin_commission_by( $order, $seller_id );
@@ -325,8 +320,6 @@ function dokan_sync_insert_order( $order_id ) {
     if ( stripos( $order_status, 'wc-' ) === false ) {
         $order_status = 'wc-' . $order_status;
     }
-
-    $seller_id = ! is_array( $seller_id ) ? $seller_id : 0;
 
     $wpdb->insert( $wpdb->prefix . 'dokan_orders',
         array(
@@ -388,26 +381,18 @@ add_action( 'dokan_checkout_update_order_meta', 'dokan_sync_insert_order' );
 function dokan_get_seller_id_by_order( $order_id ) {
     global $wpdb;
 
-    $sql = "SELECT p.post_author AS seller_id
-            FROM {$wpdb->prefix}woocommerce_order_items oi
-            LEFT JOIN {$wpdb->prefix}woocommerce_order_itemmeta oim ON oim.order_item_id = oi.order_item_id
-            LEFT JOIN $wpdb->posts p ON oim.meta_value = p.ID
-            WHERE oim.meta_key = '_product_id' AND oi.order_id = %d GROUP BY p.post_author";
+    $sql         = "SELECT seller_id FROM {$wpdb->prefix}dokan_orders WHERE order_id = %d";
+    $cache_key   = 'dokan_get_seller_id_' . $order_id;
+    $cache_group = 'dokan_get_seller_id_by_order';
+    $sellers     = wp_cache_get( $cache_key, $cache_group );
 
-    $sellers = $wpdb->get_results( $wpdb->prepare( $sql, $order_id ) );
+    if ( false === $sellers ) {
+        $sellers = $wpdb->get_results( $wpdb->prepare( $sql, $order_id ) );
+        wp_cache_set( $cache_key, $sellers, $cache_group );
+    }
 
-    if ( count( $sellers ) > 1 ) {
-        foreach ( $sellers as $seller ) {
-            $seller_id[] = (int) $seller->seller_id;
-        }
-
-        return $seller_id;
-
-    } else if ( count( $sellers ) == 1 ) {
-
-        $seller_id = reset( $sellers )->seller_id;
-
-        return $seller_id;
+    if ( count( $sellers ) == 1 ) {
+        return reset( $sellers )->seller_id;
     }
 
     return 0;
@@ -616,7 +601,6 @@ function dokan_get_seller_ids_by( $order_id ) {
  * @return type
  */
 function dokan_get_suborder_ids_by ($parent_order_id){
-
     global $wpdb;
 
      $sql = "SELECT ID FROM " . $wpdb->prefix . "posts
@@ -643,11 +627,11 @@ function dokan_get_suborder_ids_by ($parent_order_id){
  */
 function dokan_get_admin_commission_by( $order, $seller_id ) {
 
-    if ( get_posts( array( 'post_parent' => dokan_get_prop( $order, 'id' ), 'post_type' => 'shop_order', 'post_status' => 'any' ) ) ) {
+    if ( get_posts( array( 'post_parent' => $order->get_id(), 'post_type' => 'shop_order', 'post_status' => 'any' ) ) ) {
         return;
     }
 
-    $saved_admin_fee = get_post_meta( dokan_get_prop( $order, 'id' ), '_dokan_admin_fee', true );
+    $saved_admin_fee = get_post_meta( $order->get_id(), '_dokan_admin_fee', true );
 
     if ( $saved_admin_fee != '' ) {
         return apply_filters( 'dokan_order_admin_commission', $saved_admin_fee, $order );
@@ -658,7 +642,8 @@ function dokan_get_admin_commission_by( $order, $seller_id ) {
     $commissions = array();
     $i = 0;
     $total_line = 0;
-    $commission_recipient = dokan_get_option( 'extra_fee_recipient', 'dokan_general', 'seller' );
+    $shipping_recipient = dokan_get_option( 'shipping_fee_recipient', 'dokan_general', 'seller' );
+    $tax_recipient = dokan_get_option( 'tax_fee_recipient', 'dokan_general', 'seller' );
 
     foreach ( $order->get_items() as $item_id => $item ) {
 
@@ -685,10 +670,12 @@ function dokan_get_admin_commission_by( $order, $seller_id ) {
         }
     }
 
-    if ( 'admin' == $commission_recipient ) {
-        $total_extra = $order->get_total_tax() + $order->get_total_shipping();
-        $net_extra   = $total_extra - ( $order->get_total_tax_refunded() + $order->get_total_shipping_refunded() );
-        $admin_commission += $net_extra;
+    if ( 'admin' == $shipping_recipient ) {
+        $admin_commission += $order->get_total_shipping() - $order->get_total_shipping_refunded();
+    }
+
+    if ( 'admin' == $tax_recipient ) {
+        $admin_commission += $order->get_total_tax() - $order->get_total_tax_refunded();
     }
 
     return apply_filters( 'dokan_order_admin_commission', $admin_commission, $order );
@@ -912,4 +899,34 @@ function dokan_order_csv_export( $orders, $file = null ) {
     }
 
     fclose( $output );
+}
+
+/**
+ * Dokan get seller id by order id
+ *
+ * @param  int order_id
+ *
+ * @return int
+ */
+function dokan_get_seller_id_by_order_id( $id ) {
+    $order = wc_get_order( $id );
+
+    if ( $order->get_meta( 'has_sub_order' ) ) {
+        return 0;
+    }
+
+    $items = $order->get_items( 'line_item' );
+
+    if ( ! is_array( $items ) ) {
+        return 0;
+    }
+
+    foreach ( $items as $item ) {
+        $product_id = $item->get_product_id();
+        break;
+    }
+
+    $seller_id = get_post_field( 'post_author', $product_id );
+
+    return $seller_id;
 }

@@ -712,7 +712,8 @@ function dokan_get_post_status( $status = '' ) {
     $statuses = apply_filters( 'dokan_get_post_status', array(
         'publish' => __( 'Online', 'dokan-lite' ),
         'draft'   => __( 'Draft', 'dokan-lite' ),
-        'pending' => __( 'Pending Review', 'dokan-lite' )
+        'pending' => __( 'Pending Review', 'dokan-lite' ),
+        'future'  => __( 'Scheduled', 'dokan-lite' )
     ) );
 
     if ( $status ) {
@@ -734,7 +735,8 @@ function dokan_get_post_status_label_class( $status = '' ) {
     $labels = apply_filters( 'dokan_get_post_status_label_class', array(
         'publish' => 'dokan-label-success',
         'draft'   => 'dokan-label-default',
-        'pending' => 'dokan-label-danger'
+        'pending' => 'dokan-label-danger',
+        'future'  => 'dokan-label-warning'
     ) );
 
     if ( $status ) {
@@ -954,13 +956,13 @@ function dokan_edit_product_url( $product_id ) {
  * @param array $columns
  * @return array
  */
-function my_custom_admin_product_columns( $columns ) {
+function dokan_admin_product_columns( $columns ) {
     $columns['author'] = __( 'Author', 'dokan-lite' );
 
     return $columns;
 }
 
-add_filter( 'manage_edit-product_columns', 'my_custom_admin_product_columns' );
+add_filter( 'manage_edit-product_columns', 'dokan_admin_product_columns' );
 
 
 /**
@@ -975,7 +977,7 @@ function dokan_get_option( $option, $section, $default = '' ) {
 
     $options = get_option( $section );
 
-    if ( isset( $options[$option] ) && !empty( $options[$option] ) ) {
+    if ( isset( $options[$option] ) ) {
         return $options[$option];
     }
 
@@ -1804,38 +1806,31 @@ function dokan_get_processing_time_value( $index ) {
 function dokan_wc_email_recipient_add_seller( $email, $order ) {
 
     if ( $order ) {
+        $order_id = $order->get_id();
 
-        if ( get_post_meta( dokan_get_prop( $order, 'id' ), 'has_sub_order', true ) == true ) {
+        if ( get_post_meta( $order_id, 'has_sub_order', true ) ) {
             return $email;
         }
 
-        $sellers = dokan_get_seller_id_by_order( dokan_get_prop( $order, 'id' ) );
+        $sellers = dokan_get_seller_id_by_order_id( $order_id );
 
-        //if more than 1 seller
-        if ( is_array( $sellers ) && count( $sellers ) > 1 ) {
-            foreach ( $sellers as $seller_id ) {
-                $seller       = get_userdata( $seller_id );
-                $seller_email = $seller->user_email;
+        if ( $sellers ) {
+            $seller       = get_userdata( $sellers );
+            $seller_email = $seller->user_email;
 
+            if ( ! wp_get_post_parent_id( $order_id ) ) {
                 if ( $email != $seller_email ) {
                     $email .= ',' . $seller_email;
                 }
-            }
-        } else {
-
-            if ( $sellers ) {
-                //if single seller is returned
-                $seller       = get_userdata( $sellers );
-                $seller_email = $seller->user_email;
-
+            } else {
                 if ( $email != $seller_email ) {
-                    $email .= ',' . $seller_email;
+                    $email = $seller_email;
                 }
             }
         }
     }
 
-    return $email;
+    return apply_filters( 'dokan_email_recipient_new_order', $email );
 }
 
 add_filter( 'woocommerce_email_recipient_new_order', 'dokan_wc_email_recipient_add_seller', 10, 2 );
@@ -2378,7 +2373,7 @@ function dokan_cache_reset_seller_order_data( $order_id, $seller_id ) {
 }
 
 function dokan_cache_reset_order_data_on_status( $order_id, $from_status, $to_status, $order ) {
-    $seller_id = get_post_field( 'post_author', $order_id );
+    $seller_id = dokan_get_seller_id_by_order( $order_id );
     dokan_cache_clear_group( 'dokan_seller_data_'.$seller_id );
 }
 
@@ -2825,4 +2820,99 @@ function dokan_pro_buynow_url() {
     }
 
     return $link;
+}
+
+/**
+ * Add vendor info in restful wc_order
+ *
+ * @param object $response
+ *
+ * @return object
+ */
+function dokan_add_vendor_info_in_rest_order( $response ) {
+    foreach ( $response as $data ) {
+        if ( isset( $data['line_items'] ) ) {
+            $product_id = $data['line_items'][0]['product_id'];
+            $author_id  = get_post_field( 'post_author', $product_id );
+        }
+    }
+
+    $store = dokan()->vendor->get( $author_id );
+    $data  = $response->get_data();
+
+    $data['store'] = array(
+        'id'        => $store->get_id(),
+        'name'      => $store->get_name(),
+        'shop_name' => $store->get_shop_name(),
+        'url'       => $store->get_shop_url(),
+        'address'   => $store->get_address()
+    );
+
+    $response->set_data( $data );
+
+    return $response;
+}
+
+add_filter( 'woocommerce_rest_prepare_shop_order_object', 'dokan_add_vendor_info_in_rest_order', 10, 1 );
+
+/**
+ * Stop sending multiple email for an order
+ *
+ * @since 2.8.6
+ *
+ * @return void
+ */
+function dokan_stop_sending_multiple_email() {
+    if ( did_action( 'woocommerce_order_status_pending_to_on-hold_notification' ) == 1 ) {
+        dokan_remove_hook_for_anonymous_class( 'woocommerce_order_status_pending_to_on-hold_notification', 'WC_Email_Customer_On_Hold_Order', 'trigger', 10 );
+    }
+
+    if ( did_action( 'woocommerce_order_status_on-hold_to_processing_notification' ) == 1 ) {
+        dokan_remove_hook_for_anonymous_class( 'woocommerce_order_status_on-hold_to_processing_notification', 'WC_Email_Customer_Processing_Order', 'trigger', 10 );
+    }
+
+    if ( did_action( 'woocommerce_order_status_pending_to_processing_notification' ) == 1 ) {
+        dokan_remove_hook_for_anonymous_class( 'woocommerce_order_status_pending_to_processing_notification', 'WC_Email_Customer_Processing_Order', 'trigger', 10 );
+    }
+}
+
+add_action( 'woocommerce_order_status_pending_to_on-hold', 'dokan_stop_sending_multiple_email' );
+add_action( 'woocommerce_order_status_on-hold_to_processing', 'dokan_stop_sending_multiple_email' );
+add_action( 'woocommerce_order_status_pending_to_processing', 'dokan_stop_sending_multiple_email' );
+
+/**
+ * Remove hook for anonymous class
+ *
+ * @param  string  $hook_name
+ * @param  string  $class_name
+ * @param  string  $method_name
+ * @param  int $priority
+ *
+ * @return boolean
+ */
+function dokan_remove_hook_for_anonymous_class( $hook_name = '', $class_name = '', $method_name = '', $priority = 0 ) {
+    global $wp_filter;
+
+    // Take only filters on right hook name and priority
+    if ( ! isset( $wp_filter[ $hook_name ][ $priority ] ) || ! is_array( $wp_filter[ $hook_name ][ $priority ] ) ) {
+        return false;
+    }
+
+    // Loop on filters registered
+    foreach ( (array) $wp_filter[ $hook_name ][ $priority ] as $unique_id => $filter_array ) {
+        // Test if filter is an array ! (always for class/method)
+        if ( isset( $filter_array['function'] ) && is_array( $filter_array['function'] ) ) {
+            // Test if object is a class, class and method is equal to param !
+            if ( is_object( $filter_array['function'][0] ) && get_class( $filter_array['function'][0] ) && get_class( $filter_array['function'][0] ) == $class_name && $filter_array['function'][1] == $method_name ) {
+                // Test for WordPress >= 4.7 WP_Hook class (https://make.wordpress.org/core/2016/09/08/wp_hook-next-generation-actions-and-filters/)
+                if ( is_a( $wp_filter[ $hook_name ], 'WP_Hook' ) ) {
+                    unset( $wp_filter[ $hook_name ]->callbacks[ $priority ][ $unique_id ] );
+                } else {
+                    unset( $wp_filter[ $hook_name ][ $priority ][ $unique_id ] );
+                }
+            }
+        }
+    }
+
+    return false;
 }

@@ -164,7 +164,7 @@
         </div>
 
         <div class="dokan-form-group">
-            <label class="dokan-w3 dokan-control-label"><?php _e( 'More product', 'dokan-lite' ); ?></label>
+            <label class="dokan-w3 dokan-control-label"><?php _e( 'More products', 'dokan-lite' ); ?></label>
             <div class="dokan-w5 dokan-text-left">
                 <div class="checkbox">
                     <label>
