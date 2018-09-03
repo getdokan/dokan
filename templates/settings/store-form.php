@@ -44,10 +44,10 @@
         $address_state   = $posted_address['state'];
     }
 
-    $dokan_appearance = dokan_get_option( 'store_header_template', 'dokan_appearance', 'default' );
-    $dokan_days = array( 'sunday','monday','tuesday','wednesday','thursday','friday','saturday' );
-
-    $all_times      = isset( $profile_info['dokan_store_time'] ) ? $profile_info['dokan_store_time'] : '';
+    $dokan_appearance         = dokan_get_option( 'store_header_template', 'dokan_appearance', 'default' );
+    $show_store_open_close    = dokan_get_option( 'store_open_close', 'dokan_general', 'on' );
+    $dokan_days               = array( 'sunday','monday','tuesday','wednesday','thursday','friday','saturday' );
+    $all_times                = isset( $profile_info['dokan_store_time'] ) ? $profile_info['dokan_store_time'] : '';
     $dokan_store_time_enabled = isset( $profile_info['dokan_store_time_enabled'] ) ? $profile_info['dokan_store_time_enabled'] : '';
     $dokan_store_open_notice  = isset( $profile_info['dokan_store_open_notice'] ) ? $profile_info['dokan_store_open_notice'] : '';
     $dokan_store_close_notice = isset( $profile_info['dokan_store_close_notice'] ) ? $profile_info['dokan_store_close_notice'] : '';
@@ -225,6 +225,7 @@
 
         <?php endif;?>
 
+        <?php if ( $show_store_open_close == 'on' ) : ?>
         <div class="dokan-form-group store-open-close-time">
             <label class="dokan-w3 control-label" for="dokan-store-close">
                 <?php _e( 'Enable Store Open Colse Time', 'dokan-lite' ); ?>
@@ -295,6 +296,7 @@
                 </div>
             </div>
         </div>
+        <?php endif; ?>
 
         <?php do_action( 'dokan_settings_form_bottom', $current_user, $profile_info ); ?>
 
