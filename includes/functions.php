@@ -2750,23 +2750,6 @@ function dokan_get_translated_days( $day ) {
 }
 
 /**
- * Dokan get translated off day
- *
- * @param  [type] $day [description]
- * @return [type]      [description]
- */
-// function dokan_get_translated_off_day( $day ) {
-
-//     if ( empty( $day ) ) {
-//         return;
-//     }
-
-//     if ( $day == 'close' ) {
-//         return apply_filters( 'dokan_get_translated_off_day', __( 'Off Day', 'dokan-lite' ) );
-//     }
-// }
-
-/**
  * Dokan is store open
  *
  * @param  int user_id
