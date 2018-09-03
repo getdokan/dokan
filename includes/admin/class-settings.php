@@ -272,8 +272,8 @@ class Dokan_Settings {
                 ),
                 'store_open_close'  => array(
                     'name'    => 'store_open_close',
-                    'label'   => __( 'Show Store Open Close Widget', 'dokan-lite' ),
-                    'desc'    => __( 'Enable store open close widget in the store sidebar', 'dokan-lite' ),
+                    'label'   => __( 'Store Opening Closing Time Widget', 'dokan-lite' ),
+                    'desc'    => __( 'Enable store opening closing time widget in the store sidebar', 'dokan-lite' ),
                     'type'    => 'checkbox',
                     'default' => 'on'
                 ),

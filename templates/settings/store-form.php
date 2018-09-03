@@ -228,14 +228,14 @@
         <?php if ( $show_store_open_close == 'on' ) : ?>
         <div class="dokan-form-group store-open-close-time">
             <label class="dokan-w3 control-label" for="dokan-store-close">
-                <?php _e( 'Enable Store Open Colse Time', 'dokan-lite' ); ?>
+                <?php _e( 'Enable Store Opening Colsing Time', 'dokan-lite' ); ?>
             </label>
 
             <div class="dokan-w5 dokan-text-left dokan_tock_check">
                 <div class="checkbox">
                     <label for="dokan-store-time-enable" class="control-label">
                         <input type="checkbox" name="dokan_store_time_enabled" id="dokan-store-time-enable" value="yes" <?php echo $dokan_store_time_enabled == 'yes' ? 'checked': ''; ?>>
-                        <?php esc_attr_e( 'Show store opening/colsesing time widget in store page', 'dokan-lite' ); ?>
+                        <?php esc_attr_e( 'Show store opening colsesing time widget in store page', 'dokan-lite' ); ?>
                     </label>
                 </div>
             </div>
@@ -243,7 +243,7 @@
 
         <div class="dokan-form-group store-open-close">
             <label class="dokan-w3 control-label" for="dokan-store-close">
-                <?php printf( '%s %s %s', __( 'Store Open/Close', 'dokan-lite' ), '<br>', __( 'Time', 'dokan-lite' ) ); ?>
+                <?php printf( '%s %s %s', __( 'Store Opening Closing', 'dokan-lite' ), '<br>', __( 'Time', 'dokan-lite' ) ); ?>
             </label>
             <div class="dokan-w6" style="width: auto">
                 <?php foreach ( $dokan_days as $key => $day ) : ?>

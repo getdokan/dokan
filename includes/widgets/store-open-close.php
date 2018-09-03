@@ -14,8 +14,8 @@ class Dokan_Store_Open_Close extends WP_Widget {
      * @return void
      */
     public function __construct() {
-        $widget_ops = array( 'classname' => 'dokan-store-open-close', 'description' => __( 'Dokan Store Open Close', 'dokan-lite' ) );
-        parent::__construct( 'dokan-store-open-close-widget', __( 'Dokan: Store Open Close Widget', 'dokan-lite' ), $widget_ops );
+        $widget_ops = array( 'classname' => 'dokan-store-open-close', 'description' => __( 'Dokan Store Opening Closing Time', 'dokan-lite' ) );
+        parent::__construct( 'dokan-store-open-close-widget', __( 'Dokan: Store Opening Closing Time Widget', 'dokan-lite' ), $widget_ops );
     }
 
     /**
