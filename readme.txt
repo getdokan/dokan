@@ -3,9 +3,9 @@ Contributors: tareq1988, wedevs, sabbir1991, rafsuntaskin, sk.shaikat
 Donate Link: http://tareq.co/donate/
 Tags: woocommerce, multivendor, multi-vendor, vendor, multishop, paypal , seller, store, sell, online, amazon, dokan, ebay, Etsy, multi seller, multi store, multi vendor, multi vendors, multistore, multivendor, product vendor, product vendors, vendor, vendor system, vendors, wc market place, wc marketplace, wc vendors, woo vendors, woocommerce market place, woocommerce marketplace, woocommerce multi vendor,  commission rate, e-commerce, ebay, ecommerce, yith, yithemes
 Requires at least: 4.4
-Tested up to: 4.9.7
+Tested up to: 4.9.8
 WC requires at least: 3.0
-WC tested up to: 3.4.4
+WC tested up to: 3.4.5
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv2 or later
@@ -177,6 +177,18 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 == Changelog ==
+
+v2.8.6 -> Sep 4, 2018
+------------------------
+- **New:** Store opening and closing widget added for vendor
+- **New:** Divided shipping and tax fee recipient from admin settings
+- **New:** Added billing and shipping info in order export to CSV file
+- **New:** Show scheduled product in vendor product listing page if admin created scheduled product from backend
+- **Tweak:** Added vendor info in REST API order data
+- **Fix:** Send only single email when purchase is made from multiple vendor
+- **Fix:** Withdraw status updating problem from admin side.
+- **Fix:** Send email on withdraw approval and cancelled request
+- **Fix:** Store category menu not showing properly even though assigned a category from product page.
 
 v2.8.5 -> July 31, 2018
 ------------------------

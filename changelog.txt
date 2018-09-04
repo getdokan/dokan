@@ -1,3 +1,15 @@
+v2.8.6 -> Sep 4, 2018
+------------------------
+- **New:** Added billing and shipping info in Order export to CSV file
+- **New:** Divided shipping and tax fee recipient from admin settings
+- **New:** Store opening and closing widget added for vendor
+- **New:** Show scheduled product in vendor product listing page if admin created scheduled product from backend
+- **Tweak:** Added vendor info in REST API order data
+- **Fix:** Send only single email when purchase is made from multiple vendor
+- **Fix:** Withdraw status updating problem from admin side.
+- **Fix:** Send email on withdraw approval and cancelled request
+- **Fix:** Store category menu not showing properly even though assigned a category from product page.
+
 v2.8.5 -> July 31, 2018
 ------------------------
 - **fix:** Banner image dimension helper text showing wrong in admin vendor profile page
