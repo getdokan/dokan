@@ -270,6 +270,13 @@ class Dokan_Settings {
                     'options' => array( 'seller' => __( 'Vendor', 'dokan-lite' ), 'admin' => __( 'Admin', 'dokan-lite' ) ),
                     'default' => 'seller'
                 ),
+                'store_open_close'  => array(
+                    'name'    => 'store_open_close',
+                    'label'   => __( 'Store Opening Closing Time Widget', 'dokan-lite' ),
+                    'desc'    => __( 'Enable store opening closing time widget in the store sidebar', 'dokan-lite' ),
+                    'type'    => 'checkbox',
+                    'default' => 'on'
+                ),
                 'store_map'                  => array(
                     'name'    => 'store_map',
                     'label'   => __( 'Show Map on Store Page', 'dokan-lite' ),

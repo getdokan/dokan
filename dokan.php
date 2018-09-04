@@ -295,7 +295,7 @@ final class WeDevs_Dokan {
         require_once $inc_dir . 'widgets/store-menu.php';
         require_once $inc_dir . 'widgets/store-location.php';
         require_once $inc_dir . 'widgets/store-contact.php';
-
+        require_once $inc_dir . 'widgets/store-open-close.php';
         require_once $inc_dir . 'wc-functions.php';
         require_once $lib_dir . 'class-wedevs-insights.php';
         require_once $inc_dir . '/admin/setup-wizard.php';
@@ -401,6 +401,7 @@ final class WeDevs_Dokan {
         register_widget( 'Dokan_Store_Location' );
         register_widget( 'Dokan_Store_Category_Menu' );
         register_widget( 'Dokan_Toprated_Widget' );
+        register_widget( 'Dokan_Store_Open_Close' );
     }
 
     /**
