@@ -79,6 +79,7 @@ return [
 	__( 'Actions', 'dokan-lite' ),
 	__( 'Delete', 'dokan-lite' ),
 	__( 'Cancel', 'dokan-lite' ),
+	__( 'Pending', 'dokan-lite' ),
 	__( 'Approve', 'dokan-lite' ),
 	__( 'Download PayPal mass payment file', 'dokan-lite' ),
 	__( 'Are you sure?', 'dokan-lite' ),
