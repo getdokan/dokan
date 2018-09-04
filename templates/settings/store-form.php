@@ -228,7 +228,7 @@
         <?php if ( $show_store_open_close == 'on' ) : ?>
         <div class="dokan-form-group store-open-close-time">
             <label class="dokan-w3 control-label" for="dokan-store-close">
-                <?php _e( 'Enable Store Opening Colsing Time', 'dokan-lite' ); ?>
+                <?php _e( 'Store Opening Colsing Time', 'dokan-lite' ); ?>
             </label>
 
             <div class="dokan-w5 dokan-text-left dokan_tock_check">
@@ -242,9 +242,7 @@
         </div>
 
         <div class="dokan-form-group store-open-close">
-            <label class="dokan-w3 control-label" for="dokan-store-close">
-                <?php printf( '%s %s %s', __( 'Store Opening Closing', 'dokan-lite' ), '<br>', __( 'Time', 'dokan-lite' ) ); ?>
-            </label>
+            <label class="dokan-w3 control-label"></label>
             <div class="dokan-w6" style="width: auto">
                 <?php foreach ( $dokan_days as $key => $day ) : ?>
                     <div class="dokan-form-group">
@@ -278,9 +276,7 @@
             </label>
             <div class="dokan-w6" style="width: auto">
                 <div class="dokan-form-group">
-                    <label class="control-label" for="dokan-store-open-notice">
-                        <input type="text" name="dokan_store_open_notice" placeholder="Store is open" value="<?php echo esc_attr( $dokan_store_open_notice ); ?>">
-                    </label>
+                    <input type="text" class="dokan-form-control input-md" name="dokan_store_open_notice" placeholder="<?php _e( 'Store is open', 'dokan-lite' ) ?>" value="<?php echo esc_attr( $dokan_store_open_notice ); ?>">
                 </div>
             </div>
         </div>
@@ -290,9 +286,7 @@
             </label>
             <div class="dokan-w6" style="width: auto">
                 <div class="dokan-form-group">
-                    <label class="control-label" for="dokan-store-close-notice">
-                        <input type="text" name="dokan_store_close_notice" placeholder="Store is closed" value="<?php echo esc_attr( $dokan_store_close_notice ); ?>">
-                    </label>
+                    <input type="text" class="dokan-form-control input-md" name="dokan_store_close_notice" placeholder="<?php _e( 'Store is closed', 'dokan' ) ?>" value="<?php echo esc_attr( $dokan_store_close_notice ); ?>">
                 </div>
             </div>
         </div>

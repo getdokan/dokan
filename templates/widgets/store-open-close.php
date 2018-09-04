@@ -18,8 +18,7 @@
     <?php endforeach; ?>
 </div>
 <style>
-	.dokan-store-open-close
-	 label {
+	.dokan-store-open-close label {
 	    width: 85px;
 	}
 	.dokan-store-open-close span {

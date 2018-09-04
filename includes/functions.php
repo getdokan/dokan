@@ -2741,7 +2741,7 @@ function dokan_get_translated_days( $day ) {
             return __( 'Friday', 'dokan-lite' );
 
         case 'close':
-            return __( 'Off Day', 'dokan-lite' );
+            return apply_filters( 'dokan_store_close_day_label', __( 'Off Day', 'dokan-lite' ) );
 
         default:
             return apply_filters( 'dokan_get_translated_days', '', $day );
