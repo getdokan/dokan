@@ -284,7 +284,7 @@ class Dokan_Email {
 
         $replace = array(
             $order_id,
-            admin_url( 'admin.php?page=dokan-refund&status=pending' ),
+            admin_url( 'admin.php?page=dokan#/refund?status=pending' ),
             $this->get_from_name(),
             home_url(),
         );
@@ -323,7 +323,7 @@ class Dokan_Email {
             $this->currency_symbol( $amount ),
             dokan_withdraw_get_method_title( $method ),
             admin_url( 'user-edit.php?user_id=' . $user->ID ),
-            admin_url( 'admin.php?page=dokan-withdraw' ),
+            admin_url( 'admin.php?page=dokan#/withdraw?status=pending' ),
             $this->get_from_name(),
             home_url(),
             $note
