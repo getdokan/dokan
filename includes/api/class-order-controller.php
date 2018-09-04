@@ -193,7 +193,7 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
             return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Invalid ID.', 'dokan-lite' ), array( 'status' => 400 ) );
         }
 
-        $product_author = get_post_field( 'post_author', $object->get_id() );
+        $product_author = dokan_get_seller_id_by_order( $object->get_id() );
 
         if ( $store_id != $product_author ) {
             return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Sorry, you have no permission to do this. Since it\'s not your product.', 'dokan-lite' ), array( 'status' => 400 ) );
@@ -462,7 +462,7 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
      */
     public function get_order_notes( $request ) {
         $order           = wc_get_order( (int) $request['id'] );
-        $order_author_id = get_post_field( 'post_author', $order->get_id() );
+        $order_author_id = dokan_get_seller_id_by_order( $order->get_id() );
 
         if ( $order_author_id != dokan_get_current_user_id() ) {
             return new WP_Error( "dokan_rest_{$this->post_type}_incorrect_order_author", __( 'You have no permission to view this notes', 'dokan-lite' ), array( 'status' => 404 ) );
@@ -525,7 +525,7 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
         }
 
         $order = wc_get_order( (int) $request['id'] );
-        $order_author_id = get_post_field( 'post_author', $order->get_id() );
+        $order_author_id = dokan_get_seller_id_by_order( $order->get_id() );
 
         if ( $order_author_id != dokan_get_current_user_id() ) {
             return new WP_Error( "dokan_rest_{$this->post_type}_incorrect_order_author", __( 'You have no permission to create this notes', 'dokan-lite' ), array( 'status' => 404 ) );
@@ -567,7 +567,7 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
         $id    = (int) $request['note_id'];
         $order = wc_get_order( (int) $request['id'] );
 
-        $order_author_id = get_post_field( 'post_author', $order->get_id() );
+        $order_author_id = dokan_get_seller_id_by_order( $order->get_id() );
 
         if ( $order_author_id != dokan_get_current_user_id() ) {
             return new WP_Error( "dokan_rest_{$this->post_type}_incorrect_order_author", __( 'You have no permission to view this notes', 'dokan-lite' ), array( 'status' => 404 ) );
@@ -598,7 +598,7 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
     public function delete_order_note( $request ) {
         $id              = (int) $request['note_id'];
         $order           = wc_get_order( (int) $request['id'] );
-        $order_author_id = get_post_field( 'post_author', $order->get_id() );
+        $order_author_id = dokan_get_seller_id_by_order( $order->get_id() );
 
         if ( $order_author_id != dokan_get_current_user_id() ) {
             return new WP_Error( "dokan_rest_{$this->post_type}_incorrect_order_author", __( 'You have no permission to view this notes', 'dokan-lite' ), array( 'status' => 404 ) );
@@ -739,4 +739,850 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
     public function after_order_create( $object, $request ) {
         dokan()->orders->maybe_split_orders( $object->get_id() );
     }
+
+    /**
+     * Get order statuses without prefixes.
+     *
+     * @return array
+     */
+    protected function get_order_statuses() {
+        $order_statuses = array();
+
+        foreach ( array_keys( wc_get_order_statuses() ) as $status ) {
+            $order_statuses[] = str_replace( 'wc-', '', $status );
+        }
+
+        return $order_statuses;
+    }
+
+    /**
+     * Get the Order's schema, conforming to JSON Schema.
+     *
+     * @return array
+     */
+    public function get_item_schema() {
+        $schema = array(
+            '$schema'    => 'http://json-schema.org/draft-04/schema#',
+            'title'      => $this->post_type,
+            'type'       => 'object',
+            'properties' => array(
+                'id'                   => array(
+                    'description' => __( 'Unique identifier for the resource.', 'dokan-lite' ),
+                    'type'        => 'integer',
+                    'context'     => array( 'view', 'edit' ),
+                    'readonly'    => true,
+                ),
+                'parent_id'            => array(
+                    'description' => __( 'Parent order ID.', 'dokan-lite' ),
+                    'type'        => 'integer',
+                    'context'     => array( 'view' ),
+                ),
+                'number'               => array(
+                    'description' => __( 'Order number.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
+                ),
+                'order_key'            => array(
+                    'description' => __( 'Order key.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
+                ),
+                'created_via'          => array(
+                    'description' => __( 'Shows where the order was created.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
+                ),
+                'version'              => array(
+                    'description' => __( 'Version of WooCommerce which last updated the order.', 'dokan-lite' ),
+                    'type'        => 'integer',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
+                ),
+                'status'               => array(
+                    'description' => __( 'Order status.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'default'     => 'pending',
+                    'enum'        => $this->get_order_statuses(),
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'currency'             => array(
+                    'description' => __( 'Currency the order was created with, in ISO format.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'default'     => get_woocommerce_currency(),
+                    'enum'        => array_keys( get_woocommerce_currencies() ),
+                    'context'     => array( 'view' ),
+                ),
+                'date_created'         => array(
+                    'description' => __( "The date the order was created, in the site's timezone.", 'dokan-lite' ),
+                    'type'        => 'date-time',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
+                ),
+                'date_created_gmt'     => array(
+                    'description' => __( 'The date the order was created, as GMT.', 'dokan-lite' ),
+                    'type'        => 'date-time',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
+                ),
+                'date_modified'        => array(
+                    'description' => __( "The date the order was last modified, in the site's timezone.", 'dokan-lite' ),
+                    'type'        => 'date-time',
+                    'context'     => array( 'view', 'edit' ),
+                    'readonly'    => true,
+                ),
+                'date_modified_gmt'    => array(
+                    'description' => __( 'The date the order was last modified, as GMT.', 'dokan-lite' ),
+                    'type'        => 'date-time',
+                    'context'     => array( 'view', 'edit' ),
+                    'readonly'    => true,
+                ),
+                'discount_total'       => array(
+                    'description' => __( 'Total discount amount for the order.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
+                ),
+                'discount_tax'         => array(
+                    'description' => __( 'Total discount tax amount for the order.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
+                ),
+                'shipping_total'       => array(
+                    'description' => __( 'Total shipping amount for the order.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
+                ),
+                'shipping_tax'         => array(
+                    'description' => __( 'Total shipping tax amount for the order.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
+                ),
+                'cart_tax'             => array(
+                    'description' => __( 'Sum of line item taxes only.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
+                ),
+                'total'                => array(
+                    'description' => __( 'Grand total.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
+                ),
+                'total_tax'            => array(
+                    'description' => __( 'Sum of all taxes.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
+                ),
+                'prices_include_tax'   => array(
+                    'description' => __( 'True the prices included tax during checkout.', 'dokan-lite' ),
+                    'type'        => 'boolean',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
+                ),
+                'customer_id'          => array(
+                    'description' => __( 'User ID who owns the order. 0 for guests.', 'dokan-lite' ),
+                    'type'        => 'integer',
+                    'default'     => 0,
+                    'context'     => array( 'view' ),
+                ),
+                'customer_ip_address'  => array(
+                    'description' => __( "Customer's IP address.", 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
+                ),
+                'customer_user_agent'  => array(
+                    'description' => __( 'User agent of the customer.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
+                ),
+                'customer_note'        => array(
+                    'description' => __( 'Note left by customer during checkout.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'billing'              => array(
+                    'description' => __( 'Billing address.', 'dokan-lite' ),
+                    'type'        => 'object',
+                    'context'     => array( 'view' ),
+                    'properties'  => array(
+                        'first_name' => array(
+                            'description' => __( 'First name.', 'dokan-lite' ),
+                            'type'        => 'string',
+                            'context'     => array( 'view' ),
+                        ),
+                        'last_name'  => array(
+                            'description' => __( 'Last name.', 'dokan-lite' ),
+                            'type'        => 'string',
+                            'context'     => array( 'view' ),
+                        ),
+                        'company'    => array(
+                            'description' => __( 'Company name.', 'dokan-lite' ),
+                            'type'        => 'string',
+                            'context'     => array( 'view' ),
+                        ),
+                        'address_1'  => array(
+                            'description' => __( 'Address line 1', 'dokan-lite' ),
+                            'type'        => 'string',
+                            'context'     => array( 'view' ),
+                        ),
+                        'address_2'  => array(
+                            'description' => __( 'Address line 2', 'dokan-lite' ),
+                            'type'        => 'string',
+                            'context'     => array( 'view' ),
+                        ),
+                        'city'       => array(
+                            'description' => __( 'City name.', 'dokan-lite' ),
+                            'type'        => 'string',
+                            'context'     => array( 'view' ),
+                        ),
+                        'state'      => array(
+                            'description' => __( 'ISO code or name of the state, province or district.', 'dokan-lite' ),
+                            'type'        => 'string',
+                            'context'     => array( 'view' ),
+                        ),
+                        'postcode'   => array(
+                            'description' => __( 'Postal code.', 'dokan-lite' ),
+                            'type'        => 'string',
+                            'context'     => array( 'view' ),
+                        ),
+                        'country'    => array(
+                            'description' => __( 'Country code in ISO 3166-1 alpha-2 format.', 'dokan-lite' ),
+                            'type'        => 'string',
+                            'context'     => array( 'view' ),
+                        ),
+                        'email'      => array(
+                            'description' => __( 'Email address.', 'dokan-lite' ),
+                            'type'        => 'string',
+                            'format'      => 'email',
+                            'context'     => array( 'view' ),
+                        ),
+                        'phone'      => array(
+                            'description' => __( 'Phone number.', 'dokan-lite' ),
+                            'type'        => 'string',
+                            'context'     => array( 'view' ),
+                        ),
+                    ),
+                ),
+                'shipping'             => array(
+                    'description' => __( 'Shipping address.', 'dokan-lite' ),
+                    'type'        => 'object',
+                    'context'     => array( 'view' ),
+                    'properties'  => array(
+                        'first_name' => array(
+                            'description' => __( 'First name.', 'dokan-lite' ),
+                            'type'        => 'string',
+                            'context'     => array( 'view' ),
+                        ),
+                        'last_name'  => array(
+                            'description' => __( 'Last name.', 'dokan-lite' ),
+                            'type'        => 'string',
+                            'context'     => array( 'view' ),
+                        ),
+                        'company'    => array(
+                            'description' => __( 'Company name.', 'dokan-lite' ),
+                            'type'        => 'string',
+                            'context'     => array( 'view' ),
+                        ),
+                        'address_1'  => array(
+                            'description' => __( 'Address line 1', 'dokan-lite' ),
+                            'type'        => 'string',
+                            'context'     => array( 'view' ),
+                        ),
+                        'address_2'  => array(
+                            'description' => __( 'Address line 2', 'dokan-lite' ),
+                            'type'        => 'string',
+                            'context'     => array( 'view' ),
+                        ),
+                        'city'       => array(
+                            'description' => __( 'City name.', 'dokan-lite' ),
+                            'type'        => 'string',
+                            'context'     => array( 'view' ),
+                        ),
+                        'state'      => array(
+                            'description' => __( 'ISO code or name of the state, province or district.', 'dokan-lite' ),
+                            'type'        => 'string',
+                            'context'     => array( 'view' ),
+                        ),
+                        'postcode'   => array(
+                            'description' => __( 'Postal code.', 'dokan-lite' ),
+                            'type'        => 'string',
+                            'context'     => array( 'view' ),
+                        ),
+                        'country'    => array(
+                            'description' => __( 'Country code in ISO 3166-1 alpha-2 format.', 'dokan-lite' ),
+                            'type'        => 'string',
+                            'context'     => array( 'view' ),
+                        ),
+                    ),
+                ),
+                'payment_method'       => array(
+                    'description' => __( 'Payment method ID.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                ),
+                'payment_method_title' => array(
+                    'description' => __( 'Payment method title.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                ),
+                'transaction_id'       => array(
+                    'description' => __( 'Unique transaction ID.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                ),
+                'date_paid'            => array(
+                    'description' => __( "The date the order was paid, in the site's timezone.", 'dokan-lite' ),
+                    'type'        => 'date-time',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
+                ),
+                'date_paid_gmt'        => array(
+                    'description' => __( 'The date the order was paid, as GMT.', 'dokan-lite' ),
+                    'type'        => 'date-time',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
+                ),
+                'date_completed'       => array(
+                    'description' => __( "The date the order was completed, in the site's timezone.", 'dokan-lite' ),
+                    'type'        => 'date-time',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
+                ),
+                'date_completed_gmt'   => array(
+                    'description' => __( 'The date the order was completed, as GMT.', 'dokan-lite' ),
+                    'type'        => 'date-time',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
+                ),
+                'cart_hash'            => array(
+                    'description' => __( 'MD5 hash of cart items to ensure orders are not modified.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
+                ),
+                'meta_data'            => array(
+                    'description' => __( 'Meta data.', 'dokan-lite' ),
+                    'type'        => 'array',
+                    'context'     => array( 'view' ),
+                    'items'       => array(
+                        'type'       => 'object',
+                        'properties' => array(
+                            'id'    => array(
+                                'description' => __( 'Meta ID.', 'dokan-lite' ),
+                                'type'        => 'integer',
+                                'context'     => array( 'view' ),
+                                'readonly'    => true,
+                            ),
+                            'key'   => array(
+                                'description' => __( 'Meta key.', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'context'     => array( 'view' ),
+                            ),
+                            'value' => array(
+                                'description' => __( 'Meta value.', 'dokan-lite' ),
+                                'type'        => 'mixed',
+                                'context'     => array( 'view' ),
+                            ),
+                        ),
+                    ),
+                ),
+                'line_items'           => array(
+                    'description' => __( 'Line items data.', 'dokan-lite' ),
+                    'type'        => 'array',
+                    'context'     => array( 'view' ),
+                    'items'       => array(
+                        'type'       => 'object',
+                        'properties' => array(
+                            'id'           => array(
+                                'description' => __( 'Item ID.', 'dokan-lite' ),
+                                'type'        => 'integer',
+                                'context'     => array( 'view' ),
+                                'readonly'    => true,
+                            ),
+                            'name'         => array(
+                                'description' => __( 'Product name.', 'dokan-lite' ),
+                                'type'        => 'mixed',
+                                'context'     => array( 'view' ),
+                            ),
+                            'product_id'   => array(
+                                'description' => __( 'Product ID.', 'dokan-lite' ),
+                                'type'        => 'mixed',
+                                'context'     => array( 'view' ),
+                            ),
+                            'variation_id' => array(
+                                'description' => __( 'Variation ID, if applicable.', 'dokan-lite' ),
+                                'type'        => 'integer',
+                                'context'     => array( 'view' ),
+                            ),
+                            'quantity'     => array(
+                                'description' => __( 'Quantity ordered.', 'dokan-lite' ),
+                                'type'        => 'integer',
+                                'context'     => array( 'view' ),
+                            ),
+                            'tax_class'    => array(
+                                'description' => __( 'Tax class of product.', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'context'     => array( 'view' ),
+                            ),
+                            'subtotal'     => array(
+                                'description' => __( 'Line subtotal (before discounts).', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'context'     => array( 'view' ),
+                            ),
+                            'subtotal_tax' => array(
+                                'description' => __( 'Line subtotal tax (before discounts).', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'context'     => array( 'view' ),
+                                'readonly'    => true,
+                            ),
+                            'total'        => array(
+                                'description' => __( 'Line total (after discounts).', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'context'     => array( 'view' ),
+                            ),
+                            'total_tax'    => array(
+                                'description' => __( 'Line total tax (after discounts).', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'context'     => array( 'view' ),
+                                'readonly'    => true,
+                            ),
+                            'taxes'        => array(
+                                'description' => __( 'Line taxes.', 'dokan-lite' ),
+                                'type'        => 'array',
+                                'context'     => array( 'view' ),
+                                'readonly'    => true,
+                                'items'       => array(
+                                    'type'       => 'object',
+                                    'properties' => array(
+                                        'id'       => array(
+                                            'description' => __( 'Tax rate ID.', 'dokan-lite' ),
+                                            'type'        => 'integer',
+                                            'context'     => array( 'view' ),
+                                        ),
+                                        'total'    => array(
+                                            'description' => __( 'Tax total.', 'dokan-lite' ),
+                                            'type'        => 'string',
+                                            'context'     => array( 'view' ),
+                                        ),
+                                        'subtotal' => array(
+                                            'description' => __( 'Tax subtotal.', 'dokan-lite' ),
+                                            'type'        => 'string',
+                                            'context'     => array( 'view' ),
+                                        ),
+                                    ),
+                                ),
+                            ),
+                            'meta_data'    => array(
+                                'description' => __( 'Meta data.', 'dokan-lite' ),
+                                'type'        => 'array',
+                                'context'     => array( 'view' ),
+                                'items'       => array(
+                                    'type'       => 'object',
+                                    'properties' => array(
+                                        'id'    => array(
+                                            'description' => __( 'Meta ID.', 'dokan-lite' ),
+                                            'type'        => 'integer',
+                                            'context'     => array( 'view' ),
+                                            'readonly'    => true,
+                                        ),
+                                        'key'   => array(
+                                            'description' => __( 'Meta key.', 'dokan-lite' ),
+                                            'type'        => 'string',
+                                            'context'     => array( 'view' ),
+                                        ),
+                                        'value' => array(
+                                            'description' => __( 'Meta value.', 'dokan-lite' ),
+                                            'type'        => 'mixed',
+                                            'context'     => array( 'view' ),
+                                        ),
+                                    ),
+                                ),
+                            ),
+                            'sku'          => array(
+                                'description' => __( 'Product SKU.', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'context'     => array( 'view', 'edit' ),
+                                'readonly'    => true,
+                            ),
+                            'price'        => array(
+                                'description' => __( 'Product price.', 'dokan-lite' ),
+                                'type'        => 'number',
+                                'context'     => array( 'view', 'edit' ),
+                                'readonly'    => true,
+                            ),
+                        ),
+                    ),
+                ),
+                'tax_lines'            => array(
+                    'description' => __( 'Tax lines data.', 'dokan-lite' ),
+                    'type'        => 'array',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
+                    'items'       => array(
+                        'type'       => 'object',
+                        'properties' => array(
+                            'id'                 => array(
+                                'description' => __( 'Item ID.', 'dokan-lite' ),
+                                'type'        => 'integer',
+                                'context'     => array( 'view' ),
+                                'readonly'    => true,
+                            ),
+                            'rate_code'          => array(
+                                'description' => __( 'Tax rate code.', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'context'     => array( 'view' ),
+                                'readonly'    => true,
+                            ),
+                            'rate_id'            => array(
+                                'description' => __( 'Tax rate ID.', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'context'     => array( 'view' ),
+                                'readonly'    => true,
+                            ),
+                            'label'              => array(
+                                'description' => __( 'Tax rate label.', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'context'     => array( 'view' ),
+                                'readonly'    => true,
+                            ),
+                            'compound'           => array(
+                                'description' => __( 'Show if is a compound tax rate.', 'dokan-lite' ),
+                                'type'        => 'boolean',
+                                'context'     => array( 'view' ),
+                                'readonly'    => true,
+                            ),
+                            'tax_total'          => array(
+                                'description' => __( 'Tax total (not including shipping taxes).', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'context'     => array( 'view' ),
+                                'readonly'    => true,
+                            ),
+                            'shipping_tax_total' => array(
+                                'description' => __( 'Shipping tax total.', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'context'     => array( 'view' ),
+                                'readonly'    => true,
+                            ),
+                            'meta_data'          => array(
+                                'description' => __( 'Meta data.', 'dokan-lite' ),
+                                'type'        => 'array',
+                                'context'     => array( 'view' ),
+                                'items'       => array(
+                                    'type'       => 'object',
+                                    'properties' => array(
+                                        'id'    => array(
+                                            'description' => __( 'Meta ID.', 'dokan-lite' ),
+                                            'type'        => 'integer',
+                                            'context'     => array( 'view' ),
+                                            'readonly'    => true,
+                                        ),
+                                        'key'   => array(
+                                            'description' => __( 'Meta key.', 'dokan-lite' ),
+                                            'type'        => 'string',
+                                            'context'     => array( 'view' ),
+                                        ),
+                                        'value' => array(
+                                            'description' => __( 'Meta value.', 'dokan-lite' ),
+                                            'type'        => 'mixed',
+                                            'context'     => array( 'view' ),
+                                        ),
+                                    ),
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
+                'shipping_lines'       => array(
+                    'description' => __( 'Shipping lines data.', 'dokan-lite' ),
+                    'type'        => 'array',
+                    'context'     => array( 'view' ),
+                    'items'       => array(
+                        'type'       => 'object',
+                        'properties' => array(
+                            'id'           => array(
+                                'description' => __( 'Item ID.', 'dokan-lite' ),
+                                'type'        => 'integer',
+                                'context'     => array( 'view' ),
+                                'readonly'    => true,
+                            ),
+                            'method_title' => array(
+                                'description' => __( 'Shipping method name.', 'dokan-lite' ),
+                                'type'        => 'mixed',
+                                'context'     => array( 'view' ),
+                            ),
+                            'method_id'    => array(
+                                'description' => __( 'Shipping method ID.', 'dokan-lite' ),
+                                'type'        => 'mixed',
+                                'context'     => array( 'view' ),
+                            ),
+                            'total'        => array(
+                                'description' => __( 'Line total (after discounts).', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'context'     => array( 'view' ),
+                            ),
+                            'total_tax'    => array(
+                                'description' => __( 'Line total tax (after discounts).', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'context'     => array( 'view' ),
+                                'readonly'    => true,
+                            ),
+                            'taxes'        => array(
+                                'description' => __( 'Line taxes.', 'dokan-lite' ),
+                                'type'        => 'array',
+                                'context'     => array( 'view' ),
+                                'readonly'    => true,
+                                'items'       => array(
+                                    'type'       => 'object',
+                                    'properties' => array(
+                                        'id'    => array(
+                                            'description' => __( 'Tax rate ID.', 'dokan-lite' ),
+                                            'type'        => 'integer',
+                                            'context'     => array( 'view' ),
+                                            'readonly'    => true,
+                                        ),
+                                        'total' => array(
+                                            'description' => __( 'Tax total.', 'dokan-lite' ),
+                                            'type'        => 'string',
+                                            'context'     => array( 'view' ),
+                                            'readonly'    => true,
+                                        ),
+                                    ),
+                                ),
+                            ),
+                            'meta_data'    => array(
+                                'description' => __( 'Meta data.', 'dokan-lite' ),
+                                'type'        => 'array',
+                                'context'     => array( 'view' ),
+                                'items'       => array(
+                                    'type'       => 'object',
+                                    'properties' => array(
+                                        'id'    => array(
+                                            'description' => __( 'Meta ID.', 'dokan-lite' ),
+                                            'type'        => 'integer',
+                                            'context'     => array( 'view' ),
+                                            'readonly'    => true,
+                                        ),
+                                        'key'   => array(
+                                            'description' => __( 'Meta key.', 'dokan-lite' ),
+                                            'type'        => 'string',
+                                            'context'     => array( 'view' ),
+                                        ),
+                                        'value' => array(
+                                            'description' => __( 'Meta value.', 'dokan-lite' ),
+                                            'type'        => 'mixed',
+                                            'context'     => array( 'view' ),
+                                        ),
+                                    ),
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
+                'fee_lines'            => array(
+                    'description' => __( 'Fee lines data.', 'dokan-lite' ),
+                    'type'        => 'array',
+                    'context'     => array( 'view' ),
+                    'items'       => array(
+                        'type'       => 'object',
+                        'properties' => array(
+                            'id'         => array(
+                                'description' => __( 'Item ID.', 'dokan-lite' ),
+                                'type'        => 'integer',
+                                'context'     => array( 'view' ),
+                                'readonly'    => true,
+                            ),
+                            'name'       => array(
+                                'description' => __( 'Fee name.', 'dokan-lite' ),
+                                'type'        => 'mixed',
+                                'context'     => array( 'view' ),
+                            ),
+                            'tax_class'  => array(
+                                'description' => __( 'Tax class of fee.', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'context'     => array( 'view' ),
+                            ),
+                            'tax_status' => array(
+                                'description' => __( 'Tax status of fee.', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'context'     => array( 'view' ),
+                                'enum'        => array( 'taxable', 'none' ),
+                            ),
+                            'total'      => array(
+                                'description' => __( 'Line total (after discounts).', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'context'     => array( 'view' ),
+                            ),
+                            'total_tax'  => array(
+                                'description' => __( 'Line total tax (after discounts).', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'context'     => array( 'view' ),
+                                'readonly'    => true,
+                            ),
+                            'taxes'      => array(
+                                'description' => __( 'Line taxes.', 'dokan-lite' ),
+                                'type'        => 'array',
+                                'context'     => array( 'view' ),
+                                'readonly'    => true,
+                                'items'       => array(
+                                    'type'       => 'object',
+                                    'properties' => array(
+                                        'id'       => array(
+                                            'description' => __( 'Tax rate ID.', 'dokan-lite' ),
+                                            'type'        => 'integer',
+                                            'context'     => array( 'view' ),
+                                            'readonly'    => true,
+                                        ),
+                                        'total'    => array(
+                                            'description' => __( 'Tax total.', 'dokan-lite' ),
+                                            'type'        => 'string',
+                                            'context'     => array( 'view' ),
+                                            'readonly'    => true,
+                                        ),
+                                        'subtotal' => array(
+                                            'description' => __( 'Tax subtotal.', 'dokan-lite' ),
+                                            'type'        => 'string',
+                                            'context'     => array( 'view' ),
+                                            'readonly'    => true,
+                                        ),
+                                    ),
+                                ),
+                            ),
+                            'meta_data'  => array(
+                                'description' => __( 'Meta data.', 'dokan-lite' ),
+                                'type'        => 'array',
+                                'context'     => array( 'view' ),
+                                'items'       => array(
+                                    'type'       => 'object',
+                                    'properties' => array(
+                                        'id'    => array(
+                                            'description' => __( 'Meta ID.', 'dokan-lite' ),
+                                            'type'        => 'integer',
+                                            'context'     => array( 'view' ),
+                                            'readonly'    => true,
+                                        ),
+                                        'key'   => array(
+                                            'description' => __( 'Meta key.', 'dokan-lite' ),
+                                            'type'        => 'string',
+                                            'context'     => array( 'view' ),
+                                        ),
+                                        'value' => array(
+                                            'description' => __( 'Meta value.', 'dokan-lite' ),
+                                            'type'        => 'mixed',
+                                            'context'     => array( 'view' ),
+                                        ),
+                                    ),
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
+                'coupon_lines'         => array(
+                    'description' => __( 'Coupons line data.', 'dokan-lite' ),
+                    'type'        => 'array',
+                    'context'     => array( 'view' ),
+                    'items'       => array(
+                        'type'       => 'object',
+                        'properties' => array(
+                            'id'           => array(
+                                'description' => __( 'Item ID.', 'dokan-lite' ),
+                                'type'        => 'integer',
+                                'context'     => array( 'view' ),
+                                'readonly'    => true,
+                            ),
+                            'code'         => array(
+                                'description' => __( 'Coupon code.', 'dokan-lite' ),
+                                'type'        => 'mixed',
+                                'context'     => array( 'view' ),
+                            ),
+                            'discount'     => array(
+                                'description' => __( 'Discount total.', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'context'     => array( 'view' ),
+                            ),
+                            'discount_tax' => array(
+                                'description' => __( 'Discount total tax.', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'context'     => array( 'view' ),
+                                'readonly'    => true,
+                            ),
+                            'meta_data'    => array(
+                                'description' => __( 'Meta data.', 'dokan-lite' ),
+                                'type'        => 'array',
+                                'context'     => array( 'view' ),
+                                'items'       => array(
+                                    'type'       => 'object',
+                                    'properties' => array(
+                                        'id'    => array(
+                                            'description' => __( 'Meta ID.', 'dokan-lite' ),
+                                            'type'        => 'integer',
+                                            'context'     => array( 'view' ),
+                                            'readonly'    => true,
+                                        ),
+                                        'key'   => array(
+                                            'description' => __( 'Meta key.', 'dokan-lite' ),
+                                            'type'        => 'string',
+                                            'context'     => array( 'view' ),
+                                        ),
+                                        'value' => array(
+                                            'description' => __( 'Meta value.', 'dokan-lite' ),
+                                            'type'        => 'mixed',
+                                            'context'     => array( 'view' ),
+                                        ),
+                                    ),
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
+                'refunds'              => array(
+                    'description' => __( 'List of refunds.', 'dokan-lite' ),
+                    'type'        => 'array',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
+                    'items'       => array(
+                        'type'       => 'object',
+                        'properties' => array(
+                            'id'     => array(
+                                'description' => __( 'Refund ID.', 'dokan-lite' ),
+                                'type'        => 'integer',
+                                'context'     => array( 'view' ),
+                                'readonly'    => true,
+                            ),
+                            'reason' => array(
+                                'description' => __( 'Refund reason.', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'context'     => array( 'view' ),
+                                'readonly'    => true,
+                            ),
+                            'total'  => array(
+                                'description' => __( 'Refund total.', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'context'     => array( 'view' ),
+                                'readonly'    => true,
+                            ),
+                        ),
+                    ),
+                ),
+                'set_paid'             => array(
+                    'description' => __( 'Define if the order is paid. It will set the status to processing and reduce stock items.', 'dokan-lite' ),
+                    'type'        => 'boolean',
+                    'default'     => false,
+                    'context'     => array( 'edit' ),
+                ),
+            ),
+        );
+
+        return $this->add_additional_fields_schema( $schema );
+    }
+
 }

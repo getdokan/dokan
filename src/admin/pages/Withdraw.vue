@@ -69,13 +69,11 @@
                 </template>
                 <template v-else-if="data.row.status === 'approved'">
                     <div class="button-group">
-                        <button class="button button-small" @click.prevent="changeStatus('pending', data.row.id)" :title="__( 'Mark as Pending', 'dokan-lite' )"><span class="dashicons dashicons-backup"></span></button>
                         <button class="button button-small" @click.prevent="openNoteModal(data.row.note, data.row.id)" :title="__( 'Add Note', 'dokan-lite' )"><span class="dashicons dashicons-testimonial"></span></button>
                     </div>
                 </template>
                 <template v-else>
                     <div class="button-group">
-                        <button class="button button-small" @click.prevent="changeStatus('approved', data.row.id)" :title="__( 'Approve Request', 'dokan-lite' )"><span class="dashicons dashicons-yes"></span></button>
                         <button class="button button-small" @click.prevent="changeStatus('pending', data.row.id)" :title="__( 'Mark as Pending', 'dokan-lite' )"><span class="dashicons dashicons-backup"></span></button>
                         <button class="button button-small" @click.prevent="openNoteModal(data.row.note, data.row.id)" :title="__( 'Add Note', 'dokan-lite' )"><span class="dashicons dashicons-testimonial"></span></button>
                     </div>
@@ -130,34 +128,6 @@ export default {
             },
             requests: [],
             actionColumn: 'seller',
-            actions: [
-                {
-                    key: 'trash',
-                    label: this.__( 'Delete', 'dokan-lite' )
-                },
-                {
-                    key: 'cancel',
-                    label: this.__( 'Cancel', 'dokan-lite' )
-                }
-            ],
-            bulkActions: [
-                {
-                    key: 'approved',
-                    label: this.__( 'Approve', 'dokan-lite' )
-                },
-                {
-                    key: 'cancelled',
-                    label: this.__( 'Cancel', 'dokan-lite' )
-                },
-                {
-                    key: 'delete',
-                    label: this.__( 'Delete', 'dokan-lite' )
-                },
-                {
-                    key: 'paypal',
-                    label: this.__( 'Download PayPal mass payment file', 'dokan-lite' )
-                },
-            ],
         };
     },
 
@@ -181,6 +151,79 @@ export default {
             let page = this.$route.query.page || 1;
 
             return parseInt( page );
+        },
+
+        actions() {
+            if ( 'pending' == this.currentStatus ) {
+                return [
+                    {
+                        key: 'trash',
+                        label: this.__( 'Delete', 'dokan-lite' )
+                    },
+                    {
+                        key: 'cancel',
+                        label: this.__( 'Cancel', 'dokan-lite' )
+                    }
+                ];
+            } else if ( 'cancelled' == this.currentStatus ) {
+                return [
+                    {
+                        key: 'trash',
+                        label: this.__( 'Delete', 'dokan-lite' )
+                    },
+                    {
+                        key: 'pending',
+                        label: this.__( 'Pending', 'dokan-lite' )
+                    }
+                ];
+            } else {
+                return [];
+            }
+        },
+
+        bulkActions() {
+            if ( 'pending' == this.currentStatus ) {
+                return [
+                    {
+                        key: 'approved',
+                        label: this.__( 'Approve', 'dokan-lite' )
+                    },
+                    {
+                        key: 'cancelled',
+                        label: this.__( 'Cancel', 'dokan-lite' )
+                    },
+                    {
+                        key: 'delete',
+                        label: this.__( 'Delete', 'dokan-lite' )
+                    },
+                    {
+                        key: 'paypal',
+                        label: this.__( 'Download PayPal mass payment file', 'dokan-lite' )
+                    },
+                ];
+            } else if ( 'cancelled' == this.currentStatus ) {
+                return [
+                    {
+                        key: 'pending',
+                        label: this.__( 'Pending', 'dokan-lite' )
+                    },
+                    {
+                        key: 'delete',
+                        label: this.__( 'Delete', 'dokan-lite' )
+                    },
+                    {
+                        key: 'paypal',
+                        label: this.__( 'Download PayPal mass payment file', 'dokan-lite' )
+                    },
+                ];
+            } else {
+                return [
+                    {
+                        key: 'paypal',
+                        label: this.__( 'Download PayPal mass payment file', 'dokan-lite' )
+                    },
+                ];
+            }
         }
     },
 
@@ -255,6 +298,10 @@ export default {
                 this.changeStatus('cancelled', row.id);
             }
 
+            if ( 'pending' === action ) {
+                this.changeStatus('pending', row.id);
+            }
+
             if ( 'trash' === action ) {
                 if ( confirm( this.__( 'Are you sure?', 'dokan-lite' ) ) ) {
                     this.loading = true;
@@ -302,8 +349,7 @@ export default {
         },
 
         onBulkAction(action, items) {
-
-            if ( _.contains(['delete', 'approved', 'cancelled'], action) ) {
+            if ( _.contains(['delete', 'approved', 'cancelled', 'pending'], action) ) {
 
                 let jsonData = {};
                 jsonData[action] = items;

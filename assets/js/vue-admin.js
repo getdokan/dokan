@@ -450,8 +450,6 @@ let Loading = dokan_get_lib('Loading');
 //
 //
 //
-//
-//
 
 let ListTable = dokan_get_lib('ListTable');
 let Modal = dokan_get_lib('Modal');
@@ -496,27 +494,7 @@ let Modal = dokan_get_lib('Modal');
                 'actions': { label: this.__('Actions', 'dokan-lite') }
             },
             requests: [],
-            actionColumn: 'seller',
-            actions: [{
-                key: 'trash',
-                label: this.__('Delete', 'dokan-lite')
-            }, {
-                key: 'cancel',
-                label: this.__('Cancel', 'dokan-lite')
-            }],
-            bulkActions: [{
-                key: 'approved',
-                label: this.__('Approve', 'dokan-lite')
-            }, {
-                key: 'cancelled',
-                label: this.__('Cancel', 'dokan-lite')
-            }, {
-                key: 'delete',
-                label: this.__('Delete', 'dokan-lite')
-            }, {
-                key: 'paypal',
-                label: this.__('Download PayPal mass payment file', 'dokan-lite')
-            }]
+            actionColumn: 'seller'
         };
     },
 
@@ -540,6 +518,62 @@ let Modal = dokan_get_lib('Modal');
             let page = this.$route.query.page || 1;
 
             return parseInt(page);
+        },
+
+        actions() {
+            if ('pending' == this.currentStatus) {
+                return [{
+                    key: 'trash',
+                    label: this.__('Delete', 'dokan-lite')
+                }, {
+                    key: 'cancel',
+                    label: this.__('Cancel', 'dokan-lite')
+                }];
+            } else if ('cancelled' == this.currentStatus) {
+                return [{
+                    key: 'trash',
+                    label: this.__('Delete', 'dokan-lite')
+                }, {
+                    key: 'pending',
+                    label: this.__('Pending', 'dokan-lite')
+                }];
+            } else {
+                return [];
+            }
+        },
+
+        bulkActions() {
+            if ('pending' == this.currentStatus) {
+                return [{
+                    key: 'approved',
+                    label: this.__('Approve', 'dokan-lite')
+                }, {
+                    key: 'cancelled',
+                    label: this.__('Cancel', 'dokan-lite')
+                }, {
+                    key: 'delete',
+                    label: this.__('Delete', 'dokan-lite')
+                }, {
+                    key: 'paypal',
+                    label: this.__('Download PayPal mass payment file', 'dokan-lite')
+                }];
+            } else if ('cancelled' == this.currentStatus) {
+                return [{
+                    key: 'pending',
+                    label: this.__('Pending', 'dokan-lite')
+                }, {
+                    key: 'delete',
+                    label: this.__('Delete', 'dokan-lite')
+                }, {
+                    key: 'paypal',
+                    label: this.__('Download PayPal mass payment file', 'dokan-lite')
+                }];
+            } else {
+                return [{
+                    key: 'paypal',
+                    label: this.__('Download PayPal mass payment file', 'dokan-lite')
+                }];
+            }
         }
     },
 
@@ -612,6 +646,10 @@ let Modal = dokan_get_lib('Modal');
                 this.changeStatus('cancelled', row.id);
             }
 
+            if ('pending' === action) {
+                this.changeStatus('pending', row.id);
+            }
+
             if ('trash' === action) {
                 if (confirm(this.__('Are you sure?', 'dokan-lite'))) {
                     this.loading = true;
@@ -657,8 +695,7 @@ let Modal = dokan_get_lib('Modal');
         },
 
         onBulkAction(action, items) {
-
-            if (_.contains(['delete', 'approved', 'cancelled'], action)) {
+            if (_.contains(['delete', 'approved', 'cancelled', 'pending'], action)) {
 
                 let jsonData = {};
                 jsonData[action] = items;
@@ -1013,9 +1050,7 @@ let Modal = dokan_get_lib('Modal');
 
     data() {
         return {
-
             asstesUrl: dokan.urls.assetsUrl,
-
             services: [{
                 "title": this.__("Premium modules to make everything easier & better", "dokan-lite"),
                 "thumbnail": dokan.urls.assetsUrl + '/images/premium/service-01@2x.png'
@@ -1501,7 +1536,7 @@ let Modal = dokan_get_lib('Modal');
                     "bgPattern": dokan.urls.assetsUrl + '/images/premium/cta-pattern@2x.png'
                 },
                 "thumbnail": dokan.urls.assetsUrl + '/images/premium/cta-dokan-logo.png',
-                "url": "https:\/\/wedevs.com\/products\/plugins\/dokan\/"
+                "url": dokan.urls.buynowpro
             }
 
         };
@@ -1521,6 +1556,12 @@ let Modal = dokan_get_lib('Modal');
             this.$nextTick(() => {
                 this.$refs.slick.reSlick();
             });
+        }
+    },
+
+    computed: {
+        buyNowProUrl() {
+            return dokan.urls.buynowpro.substr(-1) === '/' ? dokan.urls.buynowpro + '?' : dokan.urls.buynowpro + '&';
         }
     }
 });
@@ -3124,27 +3165,6 @@ var render = function() {
                             {
                               staticClass: "button button-small",
                               attrs: {
-                                title: _vm.__("Mark as Pending", "dokan-lite")
-                              },
-                              on: {
-                                click: function($event) {
-                                  $event.preventDefault()
-                                  _vm.changeStatus("pending", data.row.id)
-                                }
-                              }
-                            },
-                            [
-                              _c("span", {
-                                staticClass: "dashicons dashicons-backup"
-                              })
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "button",
-                            {
-                              staticClass: "button button-small",
-                              attrs: {
                                 title: _vm.__("Add Note", "dokan-lite")
                               },
                               on: {
@@ -3164,27 +3184,6 @@ var render = function() {
                       ]
                     : [
                         _c("div", { staticClass: "button-group" }, [
-                          _c(
-                            "button",
-                            {
-                              staticClass: "button button-small",
-                              attrs: {
-                                title: _vm.__("Approve Request", "dokan-lite")
-                              },
-                              on: {
-                                click: function($event) {
-                                  $event.preventDefault()
-                                  _vm.changeStatus("approved", data.row.id)
-                                }
-                              }
-                            },
-                            [
-                              _c("span", {
-                                staticClass: "dashicons dashicons-yes"
-                              })
-                            ]
-                          ),
-                          _vm._v(" "),
                           _c(
                             "button",
                             {
@@ -3592,7 +3591,9 @@ var render = function() {
                 {
                   staticClass: "buy-btn starter",
                   attrs: {
-                    href: "https://wedevs.com/dokan/pricing/",
+                    href:
+                      _vm.buyNowProUrl +
+                      "add-to-cart=15310&variation_id=15316&attribute_pa_license=starter",
                     target: "_blank"
                   }
                 },
@@ -3606,7 +3607,9 @@ var render = function() {
                 {
                   staticClass: "buy-btn professional",
                   attrs: {
-                    href: "https://wedevs.com/dokan/pricing/",
+                    href:
+                      _vm.buyNowProUrl +
+                      "add-to-cart=15310&variation_id=15314&attribute_pa_license=professional",
                     target: "_blank"
                   }
                 },
@@ -3620,7 +3623,9 @@ var render = function() {
                 {
                   staticClass: "buy-btn business",
                   attrs: {
-                    href: "https://wedevs.com/dokan/pricing/",
+                    href:
+                      _vm.buyNowProUrl +
+                      "add-to-cart=15310&variation_id=15315&attribute_pa_license=business",
                     target: "_blank"
                   }
                 },
@@ -3634,7 +3639,9 @@ var render = function() {
                 {
                   staticClass: "buy-btn enterprise",
                   attrs: {
-                    href: "https://wedevs.com/dokan/pricing/",
+                    href:
+                      _vm.buyNowProUrl +
+                      "add-to-cart=15310&variation_id=103829&attribute_pa_license=enterprise",
                     target: "_blank"
                   }
                 },
@@ -4427,7 +4434,7 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("td", [
-            _c("input", {
+            _c("textarea", {
               directives: [
                 {
                   name: "model",

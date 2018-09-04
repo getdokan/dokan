@@ -47,6 +47,14 @@ class Dokan_Order_Manager {
             array( '%d' )
         );
 
+        // update on vendor-balance table
+        $wpdb->update( $wpdb->prefix . 'dokan_vendor_balance',
+            array( 'status' => $new_status ),
+            array( 'trn_id' => $order_id, 'trn_type' => 'dokan_orders' ),
+            array( '%s' ),
+            array( '%d', '%s' )
+        );
+
         // if any child orders found, change the orders as well
         $sub_orders = get_children( array( 'post_parent' => $order_id, 'post_type' => 'shop_order' ) );
 
@@ -150,8 +158,14 @@ class Dokan_Order_Manager {
             // record admin commision
             $admin_fee = dokan_get_admin_commission_by( $parent_order, $seller_id );
             $parent_order->update_meta_data( '_dokan_admin_fee', $admin_fee );
-
+            $parent_order->update_meta_data( '_dokan_vendor_id', $seller_id );
             $parent_order->save();
+
+			// if the request is made from rest api then insert the order data to the sync table
+			if ( defined( 'REST_REQUEST' ) ) {
+				do_action( 'dokan_checkout_update_order_meta', $parent_order_id, $seller_id );
+			}
+
             return;
         }
 
@@ -162,7 +176,7 @@ class Dokan_Order_Manager {
         dokan_log( sprintf( 'Got %s vendors, starting sub order.', count( $vendors ) ) );
 
         // seems like we've got multiple sellers
-        foreach ($vendors as $seller_id => $seller_products ) {
+        foreach ( $vendors as $seller_id => $seller_products ) {
             $this->create_sub_order( $parent_order, $seller_id, $seller_products );
         }
 
@@ -249,6 +263,7 @@ class Dokan_Order_Manager {
             // record admin fee
             $admin_fee = dokan_get_admin_commission_by( $order, $seller_id );
             $order->update_meta_data( '_dokan_admin_fee', $admin_fee );
+            $order->update_meta_data( '_dokan_vendor_id', $seller_id );
 
             // finally, let the order re-calculate itself and save
             $order->calculate_totals();
@@ -344,7 +359,7 @@ class Dokan_Order_Manager {
 
         // Get all shipping methods for parent order
         $shipping_methods = $parent_order->get_shipping_methods();
-        $order_seller_id  = get_post_field( 'post_author', $order->get_id() );
+        $order_seller_id  = dokan_get_seller_id_by_order( $order->get_id() );
 
         $applied_shipping_method = '';
 

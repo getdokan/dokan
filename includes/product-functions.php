@@ -442,7 +442,7 @@ function dokan_products_array_filter_editable( $product ) {
 function dokan_product_get_row_action( $post ) {
 
     if ( empty( $post->ID ) ) {
-        return $row_action;
+        return array();
     }
 
     $row_action      = array();
@@ -489,20 +489,38 @@ function dokan_product_get_row_action( $post ) {
     return implode( ' | ', $row_action_html );
 }
 
+/**
+ * Change bulk product status in vendor dashboard
+ *
+ * @since 2.9.0
+ *
+ * @return string
+ */
+function dokan_bulk_product_status_change() {
+    if ( ! current_user_can( 'dokan_delete_product' ) ) {
+        return;
+    }
+    if ( ! isset( $_POST['security'] ) || ! wp_verify_nonce( $_POST['security'], 'bulk_product_status_change' ) ) {
+        return;
+    }
+    if ( ! isset( $_POST['status'] ) || ! isset( $_POST['bulk_products'] ) ) {
+        return;
+    }
 
+    $status = $_POST['status'];
+    $products = $_POST['bulk_products'];
 
+    // -1 means bluk action option value
+    if ( $status === '-1' ) {
+        return;
+    }
 
+    foreach ( $products as $product ) {
+        wp_delete_post( $product );
+    }
 
+    wp_redirect( add_query_arg( array( 'message' => 'product_deleted' ), dokan_get_navigation_url( 'products' ) ) );
+    exit;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
+add_action( 'template_redirect', 'dokan_bulk_product_status_change' );

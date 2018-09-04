@@ -148,16 +148,16 @@
                 <div class="table-row">
                     <div class="table-col"></div>
                     <div class="table-col">
-                        <a href="https://wedevs.com/dokan/pricing/" class="buy-btn starter" target="_blank">{{ __( 'Buy Now', 'dokan-lite' ) }}</a>
+                        <a :href="buyNowProUrl + `add-to-cart=15310&variation_id=15316&attribute_pa_license=starter`" class="buy-btn starter" target="_blank">{{ __( 'Buy Now', 'dokan-lite' ) }}</a>
                     </div>
                     <div class="table-col popular">
-                        <a href="https://wedevs.com/dokan/pricing/" class="buy-btn professional" target="_blank">{{ __( 'Buy Now', 'dokan-lite' ) }}</a>
+                        <a :href="buyNowProUrl + `add-to-cart=15310&variation_id=15314&attribute_pa_license=professional`" class="buy-btn professional" target="_blank">{{ __( 'Buy Now', 'dokan-lite' ) }}</a>
                     </div>
                     <div class="table-col">
-                        <a href="https://wedevs.com/dokan/pricing/" class="buy-btn business" target="_blank">{{ __( 'Buy Now', 'dokan-lite' ) }}</a>
+                        <a :href="buyNowProUrl + `add-to-cart=15310&variation_id=15315&attribute_pa_license=business`" class="buy-btn business" target="_blank">{{ __( 'Buy Now', 'dokan-lite' ) }}</a>
                     </div>
                     <div class="table-col">
-                        <a href="https://wedevs.com/dokan/pricing/" class="buy-btn enterprise" target="_blank">{{ __( 'Buy Now', 'dokan-lite' ) }}</a>
+                        <a :href="buyNowProUrl + `add-to-cart=15310&variation_id=103829&attribute_pa_license=enterprise`" class="buy-btn enterprise" target="_blank">{{ __( 'Buy Now', 'dokan-lite' ) }}</a>
                     </div>
                 </div>
             </div>
@@ -251,9 +251,7 @@ export default {
 
     data () {
         return {
-
             asstesUrl : dokan.urls.assetsUrl,
-
             services: [
                 {
                     "title": this.__( "Premium modules to make everything easier & better", "dokan-lite" ),
@@ -788,7 +786,7 @@ export default {
                     "bgPattern": dokan.urls.assetsUrl + '/images/premium/cta-pattern@2x.png'
                 },
                 "thumbnail": dokan.urls.assetsUrl + '/images/premium/cta-dokan-logo.png',
-                "url": "https:\/\/wedevs.com\/products\/plugins\/dokan\/"
+                "url": dokan.urls.buynowpro
             },
 
         };
@@ -809,6 +807,12 @@ export default {
                 this.$refs.slick.reSlick();
             });
         },
+    },
+
+    computed: {
+        buyNowProUrl() {
+            return dokan.urls.buynowpro.substr(-1) === '/' ? dokan.urls.buynowpro + '?' : dokan.urls.buynowpro + '&';
+        }
     }
 };
 </script>

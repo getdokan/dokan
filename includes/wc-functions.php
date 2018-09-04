@@ -952,3 +952,142 @@ function dokan_split_profile_completion_value( $progress_values ) {
 }
 
 add_filter( 'dokan_profile_completion_values', 'dokan_split_profile_completion_value', 10 );
+
+/**
+ * Set More products from seller tab
+ *
+ * on Single Product Page
+ *
+ * @since 2.5
+ * @param array $tabs
+ * @return int
+ */
+function dokan_set_more_from_seller_tab( $tabs ) {
+    if ( check_more_seller_product_tab() ) {
+        $tabs['more_seller_product'] = array(
+            'title'     => __( 'More Products', 'dokan' ),
+            'priority'  => 99,
+            'callback'  => 'dokan_get_more_products_from_seller',
+        );
+    }
+
+    return $tabs;
+}
+
+add_action( 'woocommerce_product_tabs', 'dokan_set_more_from_seller_tab', 10 );
+
+/**
+ *  Show more products from current seller
+ *
+ * @since 2.5
+ * @global object $product
+ * @global object $post
+ * @param int $seller_id
+ * @param int $posts_per_page
+ */
+function dokan_get_more_products_from_seller( $seller_id = 0, $posts_per_page = 6 ) {
+
+    global $product, $post;
+
+    if ( $seller_id == 0 ) {
+        $seller_id = $post->post_author;
+    }
+
+    if ( !abs( $posts_per_page ) ) {
+        $posts_per_page = 4;
+    }
+    $args = array(
+        'post_type'      => 'product',
+        'posts_per_page' => $posts_per_page,
+        'orderby'        => 'rand',
+        'post__not_in'   => array( $post->ID ),
+        'author'         => $seller_id
+    );
+
+    $products = new WP_Query( $args );
+
+    if ( $products->have_posts() ) {
+        woocommerce_product_loop_start();
+
+        while ( $products->have_posts() ) {
+            $products->the_post();
+            wc_get_template_part( 'content', 'product' );
+        }
+
+        woocommerce_product_loop_end();
+    } else {
+        _e( 'No product has been found!', 'dokan' );
+    }
+
+    wp_reset_postdata();
+}
+
+/**
+ * Change bulk order status in vendor dashboard
+ *
+ * @since 2.8.3
+ *
+ * @return string
+ */
+function dokan_bulk_order_status_change() {
+    if ( ! current_user_can( 'dokan_manage_order' ) ) {
+        return;
+    }
+
+    if ( dokan_get_option( 'order_status_change', 'dokan_selling' ) == 'off' ) {
+        return;
+    }
+
+    if ( ! isset( $_POST['security'] ) || ! wp_verify_nonce( $_POST['security'], 'bulk_order_status_change' ) ) {
+        return;
+    }
+
+    if ( ! isset( $_POST['status'] ) || ! isset( $_POST['bulk_orders'] ) ) {
+        return;
+    }
+
+    $status = $_POST['status'];
+    $orders = $_POST['bulk_orders'];
+
+    // -1 means bluk action option value
+    $excluded_status = array( '-1', 'cancelled', 'refunded' );
+
+    if (  in_array( $status, $excluded_status ) ) {
+        return;
+    }
+
+    foreach ( $orders as $order ) {
+        $the_order = new WC_Order( $order );
+
+        if ( $the_order->get_status() == $status ) {
+            continue;
+        }
+
+        if ( in_array( $the_order->get_status(), $excluded_status ) ) {
+            continue;
+        }
+
+        $the_order->update_status( $status );
+    }
+}
+
+add_action( 'template_redirect', 'dokan_bulk_order_status_change' );
+
+/**
+ * Clear transient once a product is saved or deleted
+ *
+ * @param  int $post_id
+ *
+ * @return void
+ */
+function dokan_store_category_delete_transient( $post_id ) {
+
+    $post_tmp = get_post( $post_id );
+    $seller_id = $post_tmp->post_author;
+
+    //delete store category transient
+    delete_transient( 'dokan-store-category-'.$seller_id );
+}
+
+add_action( 'delete_post', 'dokan_store_category_delete_transient' );
+add_action( 'save_post', 'dokan_store_category_delete_transient' );

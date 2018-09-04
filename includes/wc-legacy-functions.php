@@ -191,7 +191,7 @@ function dokan_create_sub_order_shipping( $parent_order, $order_id, $seller_prod
     // Get all shipping methods for parent order
     $shipping_methods = $parent_order->get_shipping_methods();
 
-    $order_seller_id = get_post_field( 'post_author', $order_id );
+    $order_seller_id = dokan_get_seller_id_by_order( $order_id );
 
     $applied_shipping_method = array();
 

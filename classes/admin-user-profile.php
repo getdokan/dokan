@@ -78,6 +78,10 @@ class Dokan_Admin_User_Profile {
         $address_country   = isset( $store_settings['address']['country'] ) ? $store_settings['address']['country'] : '';
         $address_state     = isset( $store_settings['address']['state'] ) ? $store_settings['address']['state'] : '';
 
+        $general_settings = get_option( 'dokan_general', array() );
+        $banner_width    = !empty( $general_settings['store_banner_width'] ) ? $general_settings['store_banner_width'] : 625;
+        $banner_height   = !empty( $general_settings['store_banner_height'] ) ? $general_settings['store_banner_height'] : 300;
+
         $country_state     = array(
             'country' => array(
                 'label'       => __( 'Country', 'dokan-lite' ),
@@ -111,7 +115,12 @@ class Dokan_Admin_User_Profile {
 
                             <div class="button-area<?php echo esc_attr( $banner ) ? ' dokan-hide' : ''; ?>">
                                 <a href="#" class="dokan-banner-drag button button-primary"><?php esc_html_e( 'Upload banner', 'dokan-lite' ); ?></a>
-                                <p class="description"><?php esc_html_e( '(Upload a banner for your store. Banner size is (825x300) pixels. )', 'dokan-lite' ); ?></p>
+                                <p class="description">
+                                    <?php echo sprintf(
+                                        __('Upload a banner for your store. Banner size is (%sx%s) pixels.', 'dokan-lite' ),
+                                        $banner_width, $banner_height
+                                    ); ?>
+                                </p>
                             </div>
                         </div> <!-- .dokan-banner -->
                     </td>

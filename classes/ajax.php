@@ -64,6 +64,7 @@ class Dokan_Ajax {
 
         add_action( 'wp_ajax_dokan_json_search_products_and_variations', array( $this, 'json_search_product' ), 10 );
         add_action( 'wp_ajax_nopriv_dokan_json_search_products_and_variations', array( $this, 'json_search_product' ), 10 );
+        add_action( 'wp_ajax_dokan_json_search_vendor_customers', array( $this, 'dokan_json_search_vendor_customers' ) );
     }
 
     /**
@@ -638,6 +639,75 @@ class Dokan_Ajax {
         }
 
         wp_send_json( apply_filters( 'dokan_json_search_found_products', $products ) );
+    }
+
+    /**
+    * Search customer
+    *
+    * @since 2.8.3
+    *
+    * @return array
+    **/
+    public function dokan_json_search_vendor_customers() {
+        check_ajax_referer( 'search-customer', 'security' );
+
+        if ( ! current_user_can( 'edit_shop_orders' ) ) {
+            wp_die( -1 );
+        }
+
+        $term    = wc_clean( wp_unslash( $_GET['term'] ) );
+        $exclude = array();
+        $limit   = '';
+
+        if ( empty( $term ) ) {
+            wp_die();
+        }
+
+        $ids = array();
+        // Search by ID.
+        if ( is_numeric( $term ) ) {
+            $customer = new WC_Customer( intval( $term ) );
+
+            // Customer does not exists.
+            if ( 0 !== $customer->get_id() ) {
+                $ids = array( $customer->get_id() );
+            }
+        }
+
+        // Usernames can be numeric so we first check that no users was found by ID before searching for numeric username, this prevents performance issues with ID lookups.
+        if ( empty( $ids ) ) {
+            $data_store = WC_Data_Store::load( 'customer' );
+
+            // If search is smaller than 3 characters, limit result set to avoid
+            // too many rows being returned.
+            if ( 3 > strlen( $term ) ) {
+                $limit = 20;
+            }
+            $ids = $data_store->search_customers( $term, $limit );
+        }
+
+        $found_customers = array();
+
+        if ( ! empty( $_GET['exclude'] ) ) {
+            $ids = array_diff( $ids, (array) $_GET['exclude'] );
+        }
+
+        foreach ( $ids as $id ) {
+            if ( ! dokan_customer_has_order_from_this_seller( $id ) ) {
+                continue;
+            }
+
+            $customer = new WC_Customer( $id );
+            /* translators: 1: user display name 2: user ID 3: user email */
+            $found_customers[ $id ] = sprintf(
+                esc_html__( '%1$s (#%2$s &ndash; %3$s)', 'dokan-lite' ),
+                $customer->get_first_name() . ' ' . $customer->get_last_name(),
+                $customer->get_id(),
+                $customer->get_email()
+            );
+        }
+
+        wp_send_json( apply_filters( 'dokan_json_search_found_customers', $found_customers ) );
     }
 
      /**

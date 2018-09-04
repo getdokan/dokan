@@ -8,6 +8,10 @@
 
 defined( 'ABSPATH' ) || exit;
 
+if ( ! class_exists( 'WC_Abstract_Privacy' ) ) {
+    return;
+}
+
 /**
  * Dokan_Privacy Class.
  */

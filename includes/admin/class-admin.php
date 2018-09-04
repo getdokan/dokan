@@ -21,8 +21,6 @@ class Dokan_Admin {
 
         add_action( 'admin_menu', array($this, 'admin_menu') );
 
-        add_action( 'admin_head', array( $this, 'welcome_page_remove' ) );
-
         add_action( 'admin_notices', array($this, 'update_notice' ) );
 
         // add_action( 'admin_notices', array($this, 'promotional_offer' ) );
@@ -216,13 +214,6 @@ class Dokan_Admin {
             $submenu[ $slug ][] = array( __( 'Settings', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/settings' );
         }
 
-        /**
-         * Welcome page
-         *
-         * @since 2.4.3
-         */
-        add_dashboard_page( __( 'Welcome to Dokan', 'dokan-lite' ), __( 'Welcome to Dokan', 'dokan-lite' ), $capability, 'dokan-welcome', array( $this, 'welcome_page' ) );
-
         add_action( $dashboard, array($this, 'dashboard_script' ) );
     }
 
@@ -235,72 +226,6 @@ class Dokan_Admin {
      */
     function dashboard() {
         echo '<div class="wrap"><div id="dokan-vue-admin"></div></div>';
-    }
-
-    /**
-     * Load withdraw template
-     *
-     * @since 1.0
-     *
-     * @return void
-     */
-    function withdraw_page() {
-        include dirname(__FILE__) . '/views/withdraw.php';
-    }
-
-    /**
-     * Pro listing page
-     *
-     * @since 2.5.3
-     *
-     * @return void
-     */
-    function pro_features() {
-        include dirname(__FILE__) . '/views/pro-features.php';
-    }
-
-    /**
-     * Plugin help page
-     *
-     * @since 2.4.9
-     *
-     * @return void
-     */
-    function help_page() {
-        include dirname( __FILE__ ) . '/views/help.php';
-    }
-
-    /**
-     * Laad Addon template
-     *
-     * @since 1.0
-     *
-     * @return void
-     */
-    function addon_page() {
-        include dirname(__FILE__) . '/views/add-on.php';
-    }
-
-    /**
-     * Include welcome page template
-     *
-     * @since 2.4.3
-     *
-     * @return void
-     */
-    function welcome_page() {
-        include_once dirname(__FILE__) . '/views/welcome.php';
-    }
-
-    /**
-     * Remove the welcome page dashboard menu
-     *
-     * @since 2.4.3
-     *
-     * @return void
-     */
-    function welcome_page_remove() {
-        remove_submenu_page( 'index.php', 'dokan-welcome' );
     }
 
     /**
@@ -367,8 +292,6 @@ class Dokan_Admin {
      * @return void
      */
     public function do_updates() {
-//        Dokan_Admin_Withdraw::init()->bulk_action_handler();
-
         if ( isset( $_GET['dokan_do_update'] ) && $_GET['dokan_do_update'] == 'true' ) {
             $installer = new Dokan_Installer();
             $installer->do_upgrades();

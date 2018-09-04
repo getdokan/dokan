@@ -660,4 +660,34 @@ jQuery(function($) {
         }
     });
 
+    /**
+     * Trigger bulk item checkbox selections
+     */
+    var bulkItemsSelection = {
+        init: function() {
+            selected_items = [];
+
+            $( '#cb-select-all' ).on( 'change', function( e ) {
+                var self = $(this);
+
+                var item_id = $( '.cb-select-items' );
+
+                if ( self.is( ':checked' ) ) {
+                    item_id.each( function ( key, value ) {
+                        var item = $( value );
+                        item.prop( 'checked', 'checked' );
+                    } );
+                } else {
+                    item_id.each( function ( key, value ) {
+                        $( value ).prop( 'checked', '' );
+                        selected_items.pop();
+                    } );
+                }
+            } );
+        }
+    };
+
+    bulkItemsSelection.init();
+
+
 })(jQuery);
