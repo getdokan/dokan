@@ -452,7 +452,6 @@ class Dokan_Template_Settings {
      * @return void
      */
     function insert_settings_info() {
-
         $store_id                = dokan_get_current_user_id();
         $existing_dokan_settings = get_user_meta( $store_id, 'dokan_profile_settings', true );
         $prev_dokan_settings     = ! empty( $existing_dokan_settings ) ? $existing_dokan_settings : array();
@@ -476,18 +475,58 @@ class Dokan_Template_Settings {
 
             //update store setttings info
             $dokan_settings = array(
-                'store_name'                   => sanitize_text_field( $_POST['dokan_store_name'] ),
-                'store_ppp'                    => absint( $_POST['dokan_store_ppp'] ),
-                'address'                      => isset( $_POST['dokan_address'] ) ? $_POST['dokan_address'] : $prev_dokan_settings['address'],
-                'location'                     => sanitize_text_field( $_POST['location'] ),
-                'find_address'                 => sanitize_text_field( $_POST['find_address'] ),
-                'banner'                       => isset( $_POST['dokan_banner'] ) ? absint( $_POST['dokan_banner'] ) : null,
-                'phone'                        => sanitize_text_field( $_POST['setting_phone'] ),
-                'show_email'                   => sanitize_text_field( $_POST['setting_show_email'] ),
-                'show_more_ptab'               => sanitize_text_field( $_POST['setting_show_more_ptab'] ),
-                'gravatar'                     => absint( $_POST['dokan_gravatar'] ),
-                'enable_tnc'                   => isset( $_POST['dokan_store_tnc_enable'] ) ? $_POST['dokan_store_tnc_enable'] : '',
-                'store_tnc'                    => isset( $_POST['dokan_store_tnc'] ) ? $_POST['dokan_store_tnc'] : ''
+                'store_name'               => sanitize_text_field( $_POST['dokan_store_name'] ),
+                'store_ppp'                => absint( $_POST['dokan_store_ppp'] ),
+                'address'                  => isset( $_POST['dokan_address'] ) ? $_POST['dokan_address'] : $prev_dokan_settings['address'],
+                'location'                 => sanitize_text_field( $_POST['location'] ),
+                'find_address'             => sanitize_text_field( $_POST['find_address'] ),
+                'banner'                   => isset( $_POST['dokan_banner'] ) ? absint( $_POST['dokan_banner'] ) : null,
+                'phone'                    => sanitize_text_field( $_POST['setting_phone'] ),
+                'show_email'               => sanitize_text_field( $_POST['setting_show_email'] ),
+                'show_more_ptab'           => sanitize_text_field( $_POST['setting_show_more_ptab'] ),
+                'gravatar'                 => absint( $_POST['dokan_gravatar'] ),
+                'enable_tnc'               => isset( $_POST['dokan_store_tnc_enable'] ) ? $_POST['dokan_store_tnc_enable'] : '',
+                'store_tnc'                => isset( $_POST['dokan_store_tnc'] ) ? $_POST['dokan_store_tnc'] : '',
+                'dokan_store_time'         => array(
+                    'sunday'               => array(
+                        'open'             => isset( $_POST['sunday_on_off'] ) ? $_POST['sunday_on_off'] : 'close' ,
+                        'opening_time'     => isset( $_POST['sunday_opening_time'] ) ? $_POST['sunday_opening_time'] : '',
+                        'closing_time'     => isset( $_POST['sunday_closing_time'] ) ? $_POST['sunday_closing_time'] : '',
+                    ),
+                    'monday'               => array(
+                        'open'             => isset( $_POST['monday_on_off'] ) ? $_POST['monday_on_off'] : 'close' ,
+                        'opening_time'     => isset( $_POST['monday_opening_time'] ) ? $_POST['monday_opening_time'] : '',
+                        'closing_time'     => isset( $_POST['monday_closing_time'] ) ? $_POST['monday_closing_time'] : '',
+                    ),
+                    'tuesday'              => array(
+                        'open'             => isset( $_POST['tuesday_on_off'] ) ? $_POST['tuesday_on_off'] : 'close' ,
+                        'opening_time'     => isset( $_POST['tuesday_opening_time'] ) ? $_POST['tuesday_opening_time'] : '',
+                        'closing_time'     => isset( $_POST['tuesday_closing_time'] ) ? $_POST['tuesday_closing_time'] : '',
+                    ),
+                    'wednesday'            => array(
+                        'open'             => isset( $_POST['wednesday_on_off'] ) ? $_POST['wednesday_on_off'] : 'close' ,
+                        'opening_time'     => isset( $_POST['wednesday_opening_time'] ) ? $_POST['wednesday_opening_time'] : '',
+                        'closing_time'     => isset( $_POST['wednesday_closing_time'] ) ? $_POST['wednesday_closing_time'] : '',
+                    ),
+                    'thursday'             => array(
+                        'open'             => isset( $_POST['thursday_on_off'] ) ? $_POST['thursday_on_off'] : 'close' ,
+                        'opening_time'     => isset( $_POST['thursday_opening_time'] ) ? $_POST['thursday_opening_time'] : '',
+                        'closing_time'     => isset( $_POST['thursday_closing_time'] ) ? $_POST['thursday_closing_time'] : '',
+                    ),
+                    'friday'               => array(
+                        'open'             => isset( $_POST['friday_on_off'] ) ? $_POST['friday_on_off'] : 'close' ,
+                        'opening_time'     => isset( $_POST['friday_opening_time'] ) ? $_POST['friday_opening_time'] : '',
+                        'closing_time'     => isset( $_POST['friday_closing_time'] ) ? $_POST['friday_closing_time'] : '',
+                    ),
+                    'saturday'             => array(
+                        'open'             => isset( $_POST['saturday_on_off'] ) ? $_POST['saturday_on_off'] : 'close' ,
+                        'opening_time'     => isset( $_POST['saturday_opening_time'] ) ? $_POST['saturday_opening_time'] : '',
+                        'closing_time'     => isset( $_POST['saturday_closing_time'] ) ? $_POST['saturday_closing_time'] : '',
+                    )
+                ),
+                'dokan_store_time_enabled' => isset( $_POST['dokan_store_time_enabled'] ) ? $_POST['dokan_store_time_enabled'] : '',
+                'dokan_store_open_notice'  => isset( $_POST['dokan_store_open_notice'] ) ? $_POST['dokan_store_open_notice'] : '',
+                'dokan_store_close_notice' => isset( $_POST['dokan_store_close_notice'] ) ? $_POST['dokan_store_close_notice'] : '',
             );
 
             update_user_meta( $store_id, 'dokan_store_name', $dokan_settings['store_name'] );
