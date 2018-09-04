@@ -112,66 +112,8 @@ class Dokan_Template_Orders {
             header( "Content-Type: application/csv; charset=" . get_option( 'blog_charset' ) );
             header( "Content-Disposition: attachment; filename=$filename.csv" );
 
-            $headers = array(
-                'order_id'             => __( 'Order No', 'dokan-lite' ),
-                'order_items'          => __( 'Order Items', 'dokan-lite' ),
-                'order_shipping'       => __( 'Shipping method', 'dokan-lite' ),
-                'order_shipping_cost'  => __( 'Shipping Cost', 'dokan-lite' ),
-                'order_payment_method' => __( 'Payment method', 'dokan-lite' ),
-                'order_total'          => __( 'Order Total', 'dokan-lite' ),
-                'order_status'         => __( 'Order Status', 'dokan-lite' ),
-                'order_date'           => __( 'Order Date', 'dokan-lite' ),
-                'customer_name'        => __( 'Customer Name', 'dokan-lite' ),
-                'customer_email'       => __( 'Customer Email', 'dokan-lite' ),
-                'customer_phone'       => __( 'Customer Phone', 'dokan-lite' ),
-                'customer_ip'          => __( 'Customer IP', 'dokan-lite' ),
-            );
-
-            foreach ( (array)$headers as $label ) {
-                echo $label .', ';
-            }
-
-            echo "\r\n";
             $user_orders = dokan_get_seller_orders( dokan_get_current_user_id(), 'all', NULL, 10000000, 0 );
-            $statuses    = wc_get_order_statuses();
-            $results     = array();
-            foreach ( $user_orders as $order ) {
-                $the_order = new WC_Order( $order->order_id );
-
-                $customer = get_post_meta( $order->order_id , '_customer_user', true );
-                if ( $customer ) {
-                    $customer_details = get_user_by( 'id', $customer );
-                    $customer_name    = $customer_details->user_login;
-                    $customer_email   = esc_html( get_post_meta( $order->order_id, '_billing_email', true ) );
-                    $customer_phone   = esc_html( get_post_meta( $order->order_id, '_billing_phone', true ) );
-                    $customer_ip      = esc_html( get_post_meta( $order->order_id, '_customer_ip_address', true ) );
-                } else {
-                    $customer_name  = get_post_meta( $order->order_id, '_billing_first_name', true ). ' '. get_post_meta( $order->order_id, '_billing_last_name', true ).'(Guest)';
-                    $customer_email = esc_html( get_post_meta( $order->order_id, '_billing_email', true ) );
-                    $customer_phone = esc_html( get_post_meta( $order->order_id, '_billing_phone', true ) );
-                    $customer_ip    = esc_html( get_post_meta( $order->order_id, '_customer_ip_address', true ) );
-                }
-
-                $results = array(
-                    'order_id'             => $order->order_id,
-                    'order_items'          => dokan_get_product_list_by_order( $the_order, ';' ),
-                    'order_shipping'       => $the_order->get_shipping_method(),
-                    'order_shipping_cost'  => $the_order->get_total_shipping(),
-                    'order_payment_method' => get_post_meta( $order->order_id, '_payment_method_title', true ),
-                    'order_total'          => $the_order->get_total(),
-                    'order_status'         => $statuses['wc-' . dokan_get_prop( $the_order, 'status' )],
-                    'order_date'           => '"' . dokan_get_date_created( $the_order ) . '"',
-                    'customer_name'        => $customer_name,
-                    'customer_email'       => $customer_email,
-                    'customer_phone'       => $customer_phone,
-                    'customer_ip'          => $customer_ip,
-                );
-
-                foreach ( $results as $csv_key => $csv_val ) {
-                    echo $csv_val . ', ';
-                }
-                echo "\r\n";
-            }
+            dokan_order_csv_export( $user_orders );
             exit();
         }
 
@@ -181,69 +123,11 @@ class Dokan_Template_Orders {
             header( "Content-Type: application/csv; charset=" . get_option( 'blog_charset' ) );
             header( "Content-Disposition: attachment; filename=$filename.csv" );
 
-            $headers = array(
-                'order_id'             => __( 'Order No', 'dokan-lite' ),
-                'order_items'          => __( 'Order Items', 'dokan-lite' ),
-                'order_shipping'       => __( 'Shipping method', 'dokan-lite' ),
-                'order_shipping_cost'  => __( 'Shipping Cost', 'dokan-lite' ),
-                'order_payment_method' => __( 'Payment method', 'dokan-lite' ),
-                'order_total'          => __( 'Order Total', 'dokan-lite' ),
-                'order_status'         => __( 'Order Status', 'dokan-lite' ),
-                'order_date'           => __( 'Order Date', 'dokan-lite' ),
-                'customer_name'        => __( 'Customer Name', 'dokan-lite' ),
-                'customer_email'       => __( 'Customer Email', 'dokan-lite' ),
-                'customer_phone'       => __( 'Customer Phone', 'dokan-lite' ),
-                'customer_ip'          => __( 'Customer IP', 'dokan-lite' ),
-            );
-
-            foreach ( (array)$headers as $label ) {
-                echo $label .', ';
-            }
-            echo "\r\n";
-
             $order_date   = ( isset( $_POST['order_date'] ) ) ? $_POST['order_date'] : NULL;
             $order_status = ( isset( $_POST['order_status'] ) ) ? $_POST['order_status'] : 'all';
+
             $user_orders  = dokan_get_seller_orders( dokan_get_current_user_id(), $order_status, $order_date, 10000000, 0 );
-            $statuses     = wc_get_order_statuses();
-            $results      = array();
-
-            foreach ( $user_orders as $order ) {
-                $the_order = new WC_Order( $order->order_id );
-
-                $customer = get_post_meta( $order->order_id , '_customer_user', true );
-                if ( $customer ) {
-                    $customer_details = get_user_by( 'id', $customer );
-                    $customer_name    = $customer_details->user_login;
-                    $customer_email   = esc_html( get_post_meta( $order->order_id, '_billing_email', true ) );
-                    $customer_phone   = esc_html( get_post_meta( $order->order_id, '_billing_phone', true ) );
-                    $customer_ip      = esc_html( get_post_meta( $order->order_id, '_customer_ip_address', true ) );
-                } else {
-                    $customer_name  = get_post_meta( $order->order_id, '_billing_first_name', true ). ' '. get_post_meta( $order->order_id, '_billing_last_name', true ).'(Guest)';
-                    $customer_email = esc_html( get_post_meta( $order->order_id, '_billing_email', true ) );
-                    $customer_phone = esc_html( get_post_meta( $order->order_id, '_billing_phone', true ) );
-                    $customer_ip    = esc_html( get_post_meta( $order->order_id, '_customer_ip_address', true ) );
-                }
-
-                $results = array(
-                    'order_id'             => $order->order_id,
-                    'order_items'          => dokan_get_product_list_by_order( $the_order ),
-                    'order_shipping'       => $the_order->get_shipping_method(),
-                    'order_shipping_cost'  => $the_order->get_total_shipping(),
-                    'order_payment_method' => get_post_meta( $order->order_id, '_payment_method_title', true ),
-                    'order_total'          => $the_order->get_total(),
-                    'order_status'         => $statuses['wc-' . dokan_get_prop( $the_order, 'status' )],
-                    'order_date'           => '"' . dokan_get_date_created( $the_order ) . '"',
-                    'customer_name'        => $customer_name,
-                    'customer_email'       => $customer_email,
-                    'customer_phone'       => $customer_phone,
-                    'customer_ip'          => $customer_ip,
-                );
-
-                foreach ( $results as $csv_key => $csv_val ) {
-                    echo $csv_val . ', ';
-                }
-                echo "\r\n";
-            }
+            dokan_order_csv_export( $user_orders );
             exit();
         }
     }

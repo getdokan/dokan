@@ -1,96 +1,73 @@
-<div class="dokan-seller-listing">
+<?php
 
-    <?php
-        global $post;
-        $pagination_base = str_replace( $post->ID, '%#%', esc_url( get_pagenum_link( $post->ID ) ) );
+global $post;
 
-        if ( $search == 'yes' ) {
-        $search_query = isset( $_GET['dokan_seller_search'] ) ? sanitize_text_field( $_GET['dokan_seller_search'] ) : '';
+$pagination_base = str_replace( $post->ID, '%#%', esc_url( get_pagenum_link( $post->ID ) ) );
 
-        if ( ! empty( $search_query ) ) {
-            printf( '<h2>' . __( 'Search Results for: %s', 'dokan-lite' ) . '</h2>', $search_query );
-        }
-    ?>
+$search_query = null;
 
-        <form role="search" method="get" class="dokan-seller-search-form" action="">
-            <input type="search" id="search" class="search-field dokan-seller-search" placeholder="<?php esc_attr_e( 'Search Vendor &hellip;', 'dokan-lite' ); ?>" value="<?php echo esc_attr( $search_query ); ?>" name="dokan_seller_search" title="<?php esc_attr_e( 'Search seller &hellip;', 'dokan-lite' ); ?>" />
-            <input type="hidden" id="pagination_base" name="pagination_base" value="<?php echo $pagination_base ?>" />
-            <input type="hidden" id="nonce" name="nonce" value="<?php echo wp_create_nonce( 'dokan-seller-listing-search' ); ?>" />
-            <div class="dokan-overlay" style="display: none;"><span class="dokan-ajax-loader"></span></div>
-        </form>
+if ( 'yes' === $search ) {
+    $search_query = isset( $_GET['dokan_seller_search'] ) ? sanitize_text_field( $_GET['dokan_seller_search'] ) : '';
+}
 
-        <?php
-            /**
-             *  Added extra search field after store listing search
-             *
-             * `dokan_after_seller_listing_serach_form` - action
-             *
-             *  @since 2.5.7
-             *
-             *  @param array|object $sellers
-             */
-            do_action( 'dokan_after_seller_listing_serach_form', $sellers );
-        ?>
+/**
+ * Filter to toggle seller search form
+ *
+ * @since 2.8.6
+ *
+ * @var bool $show_form
+ */
+$show_seller_search = apply_filters( 'dokan_show_seller_search', true );
 
-    <?php }
-    else
-    {
-        $search_query = null;
-    }
-    $template_args = array(
-        'sellers'         => $sellers,
-        'limit'           => $limit,
-        'offset'          => $offset,
-        'paged'           => $paged,
+if ( $show_seller_search ) {
+    $args = array(
         'search_query'    => $search_query,
         'pagination_base' => $pagination_base,
         'per_row'         => $per_row,
-        'search_enabled'  => $search,
-        'image_size'      => $image_size,
     );
 
-    echo dokan_get_template_part( 'store-lists-loop', false, $template_args );
-    ?>
-</div>
+    dokan_get_template_part( 'seller-search-form', false, $args );
+}
 
-<script>
-    (function($){
-        $(document).ready(function(){
-            var form = $('.dokan-seller-search-form');
-            var xhr;
-            var timer = null;
+/**
+ *  Added extra search field after store listing search
+ *
+ * `dokan_after_seller_listing_serach_form` - action
+ *
+ *  @since 2.5.7
+ *
+ *  @param array|object $sellers
+ */
+do_action( 'dokan_after_seller_listing_serach_form', $sellers );
 
-            form.on('keyup', '#search', function() {
-                var self = $(this),
-                    data = {
-                        search_term: self.val(),
-                        pagination_base: form.find('#pagination_base').val(),
-                        per_row: '<?php echo $per_row; ?>',
-                        action: 'dokan_seller_listing_search',
-                        _wpnonce: form.find('#nonce').val()
-                    };
+/**
+ * Action hook before starting seller listing loop
+ *
+ * @since 2.8.6
+ *
+ * @var array $sellers
+ */
+do_action( 'dokan_before_seller_listing_loop', $sellers );
 
-                if (timer) {
-                    clearTimeout(timer);
-                }
+$template_args = array(
+    'sellers'         => $sellers,
+    'limit'           => $limit,
+    'offset'          => $offset,
+    'paged'           => $paged,
+    'search_query'    => $search_query,
+    'pagination_base' => $pagination_base,
+    'per_row'         => $per_row,
+    'search_enabled'  => $search,
+    'image_size'      => $image_size,
+);
 
-                if ( xhr ) {
-                    xhr.abort();
-                }
+dokan_get_template_part( 'store-lists-loop', false, $template_args );
 
-                timer = setTimeout(function() {
-                    form.find('.dokan-overlay').show();
-
-                    xhr = $.post(dokan.ajaxurl, data, function(response) {
-                        if (response.success) {
-                            form.find('.dokan-overlay').hide();
-
-                            var data = response.data;
-                            $('#dokan-seller-listing-wrap').html( $(data).find( '.seller-listing-content' ) );
-                        }
-                    });
-                }, 500);
-            } );
-        });
-    })(jQuery);
-</script>
+/**
+ * Action hook after finishing seller listing loop
+ *
+ * @since 2.8.6
+ *
+ * @var array $sellers
+ */
+do_action( 'dokan_after_seller_listing_loop', $sellers );

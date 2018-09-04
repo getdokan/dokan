@@ -954,7 +954,7 @@ function dokan_split_profile_completion_value( $progress_values ) {
 add_filter( 'dokan_profile_completion_values', 'dokan_split_profile_completion_value', 10 );
 
 /**
- * Set More product from seller tab
+ * Set More products from seller tab
  *
  * on Single Product Page
  *
@@ -965,7 +965,7 @@ add_filter( 'dokan_profile_completion_values', 'dokan_split_profile_completion_v
 function dokan_set_more_from_seller_tab( $tabs ) {
     if ( check_more_seller_product_tab() ) {
         $tabs['more_seller_product'] = array(
-            'title'     => __( 'More Product', 'dokan' ),
+            'title'     => __( 'More Products', 'dokan' ),
             'priority'  => 99,
             'callback'  => 'dokan_get_more_products_from_seller',
         );
@@ -977,7 +977,7 @@ function dokan_set_more_from_seller_tab( $tabs ) {
 add_action( 'woocommerce_product_tabs', 'dokan_set_more_from_seller_tab', 10 );
 
 /**
- *  Show more product from current seller
+ *  Show more products from current seller
  *
  * @since 2.5
  * @global object $product
@@ -1034,6 +1034,10 @@ function dokan_bulk_order_status_change() {
         return;
     }
 
+    if ( dokan_get_option( 'order_status_change', 'dokan_selling' ) == 'off' ) {
+        return;
+    }
+
     if ( ! isset( $_POST['security'] ) || ! wp_verify_nonce( $_POST['security'], 'bulk_order_status_change' ) ) {
         return;
     }
@@ -1068,3 +1072,22 @@ function dokan_bulk_order_status_change() {
 }
 
 add_action( 'template_redirect', 'dokan_bulk_order_status_change' );
+
+/**
+ * Clear transient once a product is saved or deleted
+ *
+ * @param  int $post_id
+ *
+ * @return void
+ */
+function dokan_store_category_delete_transient( $post_id ) {
+
+    $post_tmp = get_post( $post_id );
+    $seller_id = $post_tmp->post_author;
+
+    //delete store category transient
+    delete_transient( 'dokan-store-category-'.$seller_id );
+}
+
+add_action( 'delete_post', 'dokan_store_category_delete_transient' );
+add_action( 'save_post', 'dokan_store_category_delete_transient' );

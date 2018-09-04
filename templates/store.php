@@ -23,7 +23,7 @@ get_header( 'shop' );
                 <?php
                 if ( ! dynamic_sidebar( 'sidebar-store' ) ) {
                     $args = array(
-                        'before_widget' => '<aside class="widget">',
+                        'before_widget' => '<aside class="widget %s">',
                         'after_widget'  => '</aside>',
                         'before_title'  => '<h3 class="widget-title">',
                         'after_title'   => '</h3>',
@@ -36,11 +36,14 @@ get_header( 'shop' );
                             the_widget( 'Dokan_Store_Location', array( 'title' => __( 'Store Location', 'dokan-lite' ) ), $args );
                         }
 
+                        if ( dokan_get_option( 'store_open_close', 'dokan_general', 'on' ) == 'on' ) {
+                            the_widget( 'Dokan_Store_Open_Close', array( 'title' => __( 'Store Time', 'dokan-lite' ) ), $args );
+                        }
+
                         if ( dokan_get_option( 'contact_seller', 'dokan_general', 'on' ) == 'on' ) {
                             the_widget( 'Dokan_Store_Contact_Form', array( 'title' => __( 'Contact Vendor', 'dokan-lite' ) ), $args );
                         }
                     }
-
                 }
                 ?>
 

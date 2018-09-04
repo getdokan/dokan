@@ -3,12 +3,12 @@
 Plugin Name: Dokan
 Plugin URI: https://wordpress.org/plugins/dokan-lite/
 Description: An e-commerce marketplace plugin for WordPress. Powered by WooCommerce and weDevs.
-Version: 2.8.5
+Version: 2.8.6
 Author: weDevs, LLC
 Author URI: https://wedevs.com/
 Text Domain: dokan-lite
 WC requires at least: 3.0
-WC tested up to: 3.4.4
+WC tested up to: 3.4.5
 Domain Path: /languages/
 License: GPL2
 */
@@ -56,7 +56,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function dokan_autoload( $class ) {
     if ( stripos( $class, 'Dokan_' ) !== false ) {
         $class_name = str_replace( array( 'Dokan_', '_' ), array( '', '-' ), $class );
-        $file_path = __DIR__ . '/classes/' . strtolower( $class_name ) . '.php';
+        $file_path = dirname( __FILE__ ) . '/classes/' . strtolower( $class_name ) . '.php';
 
         if ( file_exists( $file_path ) ) {
             require_once $file_path;
@@ -78,7 +78,7 @@ final class WeDevs_Dokan {
      *
      * @var string
      */
-    public $version = '2.8.5';
+    public $version = '2.8.6';
 
     /**
      * Minimum PHP version required
@@ -192,8 +192,8 @@ final class WeDevs_Dokan {
             wp_die( '<div class="error"><p>' . sprintf( __( '<b>Dokan</b> requires %sWooCommerce%s to be installed & activated!', 'dokan-lite' ), '<a target="_blank" href="https://wordpress.org/plugins/woocommerce/">', '</a>' ) . '</p></div>' );
         }
 
-        require_once __DIR__ . '/includes/functions.php';
-        require_once __DIR__ . '/includes/functions-compatibility.php';
+        require_once dirname( __FILE__ ) . '/includes/functions.php';
+        require_once dirname( __FILE__ ) . '/includes/functions-compatibility.php';
 
         $installer = new Dokan_Installer();
         $installer->do_install();
@@ -223,15 +223,11 @@ final class WeDevs_Dokan {
      * @return void
      */
     public function define_constants() {
-        if ( ! defined( '__DIR__' ) ) {
-            define( '__DIR__', dirname( __FILE__ ) );
-        }
-
         define( 'DOKAN_PLUGIN_VERSION', $this->version );
         define( 'DOKAN_FILE', __FILE__ );
-        define( 'DOKAN_DIR', __DIR__ );
-        define( 'DOKAN_INC_DIR', __DIR__ . '/includes' );
-        define( 'DOKAN_LIB_DIR', __DIR__ . '/lib' );
+        define( 'DOKAN_DIR', dirname( __FILE__ ) );
+        define( 'DOKAN_INC_DIR', dirname( __FILE__ ) . '/includes' );
+        define( 'DOKAN_LIB_DIR', dirname( __FILE__ ) . '/lib' );
         define( 'DOKAN_PLUGIN_ASSEST', plugins_url( 'assets', __FILE__ ) );
 
         // give a way to turn off loading styles and scripts from parent theme
@@ -283,9 +279,9 @@ final class WeDevs_Dokan {
      * @return void
      */
     function includes() {
-        $lib_dir     = __DIR__ . '/lib/';
-        $inc_dir     = __DIR__ . '/includes/';
-        $classes_dir = __DIR__ . '/classes/';
+        $lib_dir     = dirname( __FILE__ ) . '/lib/';
+        $inc_dir     = dirname( __FILE__ ) . '/includes/';
+        $classes_dir = dirname( __FILE__ ) . '/classes/';
 
         require_once $inc_dir . 'functions.php';
         require_once $inc_dir . 'functions-depricated.php';
@@ -299,7 +295,7 @@ final class WeDevs_Dokan {
         require_once $inc_dir . 'widgets/store-menu.php';
         require_once $inc_dir . 'widgets/store-location.php';
         require_once $inc_dir . 'widgets/store-contact.php';
-
+        require_once $inc_dir . 'widgets/store-open-close.php';
         require_once $inc_dir . 'wc-functions.php';
         require_once $lib_dir . 'class-wedevs-insights.php';
         require_once $inc_dir . '/admin/setup-wizard.php';
@@ -405,6 +401,7 @@ final class WeDevs_Dokan {
         register_widget( 'Dokan_Store_Location' );
         register_widget( 'Dokan_Store_Category_Menu' );
         register_widget( 'Dokan_Toprated_Widget' );
+        register_widget( 'Dokan_Store_Open_Close' );
     }
 
     /**

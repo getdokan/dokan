@@ -23,6 +23,7 @@ class Dokan_Upgrade {
         '2.7.6'  => 'upgrades/dokan-upgrade-2.7.6.php',
         '2.8.0'  => 'upgrades/dokan-upgrade-2.8.0.php',
         '2.8.3'  => 'upgrades/dokan-upgrade-2.8.3.php',
+        '2.8.6'  => 'upgrades/dokan-upgrade-2.8.6.php'
     ];
 
     /**

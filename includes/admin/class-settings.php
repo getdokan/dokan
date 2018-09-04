@@ -254,13 +254,28 @@ class Dokan_Settings {
                     'type'    => 'checkbox',
                     'default' => 'off'
                  ),
-                'extra_fee_recipient' => array(
-                    'name'    => 'extra_fee_recipient',
-                    'label'   => __( 'Extra Fee Recipient', 'dokan-lite' ),
-                    'desc'    => __( 'Should extra fees, such as Shipping and Tax, go to the Vendor or the Admin?', 'dokan-lite' ),
+                'shipping_fee_recipient' => array(
+                    'name'    => 'shipping_fee_recipient',
+                    'label'   => __( 'Shipping Fee Recipient', 'dokan-lite' ),
+                    'desc'    => __( 'Should Shipping fees go to the Vendor or the Admin?', 'dokan-lite' ),
                     'type'    => 'select',
                     'options' => array( 'seller' => __( 'Vendor', 'dokan-lite' ), 'admin' => __( 'Admin', 'dokan-lite' ) ),
                     'default' => 'seller'
+                ),
+                'tax_fee_recipient' => array(
+                    'name'    => 'tax_fee_recipient',
+                    'label'   => __( 'Tax Fee Recipient', 'dokan-lite' ),
+                    'desc'    => __( 'Should Tax fees go to the Vendor or the Admin?', 'dokan-lite' ),
+                    'type'    => 'select',
+                    'options' => array( 'seller' => __( 'Vendor', 'dokan-lite' ), 'admin' => __( 'Admin', 'dokan-lite' ) ),
+                    'default' => 'seller'
+                ),
+                'store_open_close'  => array(
+                    'name'    => 'store_open_close',
+                    'label'   => __( 'Store Opening Closing Time Widget', 'dokan-lite' ),
+                    'desc'    => __( 'Enable store opening closing time widget in the store sidebar', 'dokan-lite' ),
+                    'type'    => 'checkbox',
+                    'default' => 'on'
                 ),
                 'store_map'                  => array(
                     'name'    => 'store_map',
