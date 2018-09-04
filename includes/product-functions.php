@@ -492,7 +492,7 @@ function dokan_product_get_row_action( $post ) {
 /**
  * Change bulk product status in vendor dashboard
  *
- * @since 2.9.0
+ * @since 2.8.6
  *
  * @return string
  */

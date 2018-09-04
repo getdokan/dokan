@@ -20,7 +20,7 @@ abstract class Dokan_Background_Updater extends WP_Background_Process {
      *
      * Override this action in your updater class
      *
-     * @since 2.9.0
+     * @since 2.8.6
      *
      * @var string
      */
@@ -29,7 +29,7 @@ abstract class Dokan_Background_Updater extends WP_Background_Process {
     /**
      * Execute after complete a task
      *
-     * @since 2.9.0
+     * @since 2.8.6
      *
      * @return void
      */

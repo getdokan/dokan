@@ -9,23 +9,23 @@ if ( ! class_exists( 'Dokan_Background_Updater', false ) ) {
 /**
  * Update vendor and product geolocation data
  *
- * @since 2.9.0
+ * @since 2.8.6
  */
-class dokan_update_2_9_0_vendor_and_product_geolocations extends Dokan_Background_Updater {
+class dokan_update_2_8_6_vendor_and_product_geolocations extends Dokan_Background_Updater {
 
     /**
      * Action
      *
-     * @since 2.9.0
+     * @since 2.8.6
      *
      * @var string
      */
-    protected $action = 'dokan_update_2_9_0_vendor_and_product_geolocations';
+    protected $action = 'dokan_update_2_8_6_vendor_and_product_geolocations';
 
     /**
      * Perform updates
      *
-     * @since 2.9.0
+     * @since 2.8.6
      *
      * @param mixed $item
      *
@@ -48,7 +48,7 @@ class dokan_update_2_9_0_vendor_and_product_geolocations extends Dokan_Backgroun
     /**
      * Update vendors
      *
-     * @since 2.9.0
+     * @since 2.8.6
      *
      * @param int $paged
      *
@@ -104,7 +104,7 @@ class dokan_update_2_9_0_vendor_and_product_geolocations extends Dokan_Backgroun
     /**
      * Update products
      *
-     * @since 2.9.0
+     * @since 2.8.6
      *
      * @param int $paged
      *

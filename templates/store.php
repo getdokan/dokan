@@ -23,7 +23,7 @@ get_header( 'shop' );
                 <?php
                 if ( ! dynamic_sidebar( 'sidebar-store' ) ) {
                     $args = array(
-                        'before_widget' => '<aside id="%1$s" class="widget %2$s">',
+                        'before_widget' => '<aside class="widget %s">',
                         'after_widget'  => '</aside>',
                         'before_title'  => '<h3 class="widget-title">',
                         'after_title'   => '</h3>',
@@ -40,7 +40,6 @@ get_header( 'shop' );
                             the_widget( 'Dokan_Store_Contact_Form', array( 'title' => __( 'Contact Vendor', 'dokan-lite' ) ), $args );
                         }
                     }
-
                 }
                 ?>
 
