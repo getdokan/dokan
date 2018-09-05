@@ -228,14 +228,14 @@
         <?php if ( $show_store_open_close == 'on' ) : ?>
         <div class="dokan-form-group store-open-close-time">
             <label class="dokan-w3 control-label" for="dokan-store-close">
-                <?php _e( 'Store Opening Colsing Time', 'dokan-lite' ); ?>
+                <?php _e( 'Store Opening Closing Time', 'dokan-lite' ); ?>
             </label>
 
             <div class="dokan-w5 dokan-text-left dokan_tock_check">
                 <div class="checkbox">
                     <label for="dokan-store-time-enable" class="control-label">
                         <input type="checkbox" name="dokan_store_time_enabled" id="dokan-store-time-enable" value="yes" <?php echo $dokan_store_time_enabled == 'yes' ? 'checked': ''; ?>>
-                        <?php esc_attr_e( 'Show store opening colsesing time widget in store page', 'dokan-lite' ); ?>
+                        <?php esc_attr_e( 'Show store opening closing time widget in store page', 'dokan-lite' ); ?>
                     </label>
                 </div>
             </div>
