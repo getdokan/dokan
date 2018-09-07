@@ -42,7 +42,7 @@ We export our database and place it into the `_data` directory. we rename the da
  
         -Example: Download and place it in my e/selenium-server local directory.
  
- * To use Chrome, install [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/getting-started).To use Firefox,    install [GeckoDriver](https://github.com/mozilla/geckodriver).
+ * To use Chrome, install [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/getting-started) or To use Firefox,    install [GeckoDriver](https://github.com/mozilla/geckodriver).
  
         -Example: Download and place it in my tests/vendor/bin test directory.
       
