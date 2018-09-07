@@ -31,7 +31,7 @@ We need to create `.env` file in our plugin directory. Already shared a `.env.ex
 
 **Database Configuration**
 
-WPDb is the WordPress Database settings, this requires details to the specific database we are setting up for testing. Now we export our database and place it into the _data directory. we rename the databse name like `dump.sql`.
+WPDb is the WordPress Database settings, this requires details to the specific database we are setting up for testing. Now we export our database and place it into the `_data` directory. we rename the databse like `dump.sql`.
 
 **Server Configuration**
 
