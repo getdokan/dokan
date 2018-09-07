@@ -24,14 +24,38 @@ composer require lucatume/wp-browser --dev
 
 ## Configuration
 
-**Suit Configuration**
+### Suit Configuration
 
-First thing we need to configure `/tests/acceptance.suite.yml` where we can configure our acceptance test suite.
-We need to create `.env` file in our plugin directory. Already shared a `.env.example` sample file so just copy & past source code `.env.example` to `.env` and update the configuration. 
+First thing we need to configure `/tests/acceptance.suite.yml`. We need to create `.env` file in our plugin directory. Already shared a `.env.example` sample file so just copy & past source code `.env.example` to `.env` and update the configuration. 
 
-**Database Configuration**
+### Database Configuration
 
-WPDb is the WordPress Database settings, this requires details to the specific database we are setting up for testing. Now we export our database and place it into the `_data` directory. we rename the databse like `dump.sql`.
+We export our database and place it into the `_data` directory. we rename the databse like `dump.sql`.
 
-**Server Configuration**
+### Server Configuration
 
+ **Selenium Server Local Testing**
+ 
+ To run Selenium Server we need Java as well as Chrome or Firefox browser installed.
+ 
+ * Download [Selenium Standalone Server](https://docs.seleniumhq.org/download/)
+ 
+        -Example: Download and place it in my e/selenium-server local directory.
+ 
+ * To use Chrome, install [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/getting-started).To use Firefox,    install [GeckoDriver](https://github.com/mozilla/geckodriver).
+ 
+        -Example: Download and place it in my tests/vendor/bin test directory.
+      
+ * Launch the Selenium Server: `java -jar "/path/to/selenium-server-standalone-xxx.jar"`
+ 
+        -Example: In `tests/vendor/bin` directory launch java -jar "/e/selenium-server/selenium-server-standalone-3.13.0.jar"
+ 
+ Launch Selenium Server before executing tests.
+ 
+  
+ 
+   
+    
+    
+    
+     
