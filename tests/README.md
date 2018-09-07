@@ -52,8 +52,11 @@ We export our database and place it into the `_data` directory. we rename the da
  
  Launch Selenium Server before executing tests.
  
-  
+ ## Running Test
  
+Run The following command:
+
+`vendor/bin/codecept run acceptance`
    
     
     
