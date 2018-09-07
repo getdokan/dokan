@@ -1,0 +1,1 @@
+Codeception Acceptance testing configuration
