@@ -24,6 +24,7 @@ function dokan_save_product( $args ) {
         'post_excerpt'   => '',
         'post_status'    => '',
         'post_type'      => 'product',
+        '_visibility'    => 'visible',
     );
 
     $data = wp_parse_args( $args, $defaults );
@@ -51,20 +52,29 @@ function dokan_save_product( $args ) {
 
     $post_status = ! empty( $data['post_status'] ) ? $data['post_status'] : dokan_get_new_post_status();
 
-    $post_data = apply_filters( 'dokan_insert_product_post_data', array(
+    $post_arr = array(
         'post_type'    => 'product',
         'post_status'  => $post_status,
         'post_title'   => sanitize_text_field( $data['post_title'] ),
         'post_content' => $data['post_content'],
         'post_excerpt' => $data['post_excerpt'],
-    ), $data );
+    );
 
-    $product_id = wp_insert_post( $post_data );
+    if ( ! empty( $data['ID'] ) ) {
+        $post_arr['ID'] = $data['ID'];
+        $is_updating = true;
+    } else {
+        $is_updating = false;
+    }
 
-    if ( $product_id ) {
+    $post_arr = apply_filters( 'dokan_insert_product_post_data', $post_arr, $data );
+
+    $product_id = $is_updating ? wp_update_post( $post_arr ) : wp_insert_post( $post_arr );
+
+    if ( ! is_wp_error( $product_id ) ) {
 
         /** set images **/
-        if ( $data['feat_image_id'] ) {
+        if ( isset( $data['feat_image_id'] ) && ! empty( $data['feat_image_id'] ) ) {
             set_post_thumbnail( $product_id, $data['feat_image_id'] );
         }
 
@@ -139,9 +149,17 @@ function dokan_save_product( $args ) {
             update_post_meta( $product_id, '_sale_price_dates_to', '' );
         }
 
-        update_post_meta( $product_id, '_visibility', 'visible' );
+        if ( array_key_exists( $data['_visibility'], dokan_get_product_visibility_options() ) ) {
+            update_post_meta( $product_id, '_visibility', $data['_visibility'] );
+        } else {
+            update_post_meta( $product_id, '_visibility', 'visible' );
+        }
 
-        do_action( 'dokan_new_product_added', $product_id, $data );
+        if ( ! $is_updating ) {
+            do_action( 'dokan_new_product_added', $product_id, $data );
+        } else {
+            do_action( 'dokan_product_updated', $product_id, $data );
+        }
 
         return $product_id;
     }
