@@ -327,6 +327,10 @@ final class WeDevs_Dokan {
         // API includes
         require_once $inc_dir . 'api/class-api-rest-controller.php';
         require_once $inc_dir . 'class-api-manager.php';
+
+        // Background Processes
+        require_once $inc_dir . 'background-processes/class-dokan-background-processes.php';
+        require_once $inc_dir . 'background-processes/abstract-class-dokan-background-processes.php';
     }
 
     /**
@@ -368,6 +372,8 @@ final class WeDevs_Dokan {
         if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
             Dokan_Ajax::init()->init_ajax();
         }
+
+        new Dokan_Background_Processes();
     }
 
     /**
