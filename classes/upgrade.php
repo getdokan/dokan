@@ -104,6 +104,44 @@ class Dokan_Upgrade {
     public function do_updates() {
         if ( isset( $_GET['dokan_do_update'] ) && $_GET['dokan_do_update'] ) {
             $this->perform_updates();
+        } else if ( $this->running_background_process() ) {
+            $this->continue_background_processes();
+        }
+    }
+
+    /**
+     * Is running any background updater
+     *
+     * @since 2.9.0
+     *
+     * @return bool
+     */
+    public function running_background_process() {
+        $processes = get_option( 'dokan_background_updater_processes', array() );
+         if ( ! empty( $processes ) ) {
+            return true;
+        }
+         return false;
+    }
+     /**
+     * Continue background updaters
+     *
+     * @since 2.9.0
+     *
+     * @return void
+     */
+    public function continue_background_processes() {
+        $processes = get_option( 'dokan_background_updater_processes', array() );
+
+        if ( empty( $processes ) ) {
+            return;
+        }
+
+        foreach ( $processes as $process => $run_process ) {
+            if ( $run_process ) {
+                include_once DOKAN_INC_DIR . '/upgrades/background-processes/class_' . $process . '.php';
+                $processor = new $process();
+            }
         }
     }
 
