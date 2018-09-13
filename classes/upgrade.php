@@ -93,7 +93,6 @@ class Dokan_Upgrade {
         }
     }
 
-
     /**
      * Do all updates when Run updater btn click
      *
@@ -123,6 +122,7 @@ class Dokan_Upgrade {
         }
          return false;
     }
+
      /**
      * Continue background updaters
      *
