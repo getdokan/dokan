@@ -918,7 +918,7 @@ function dokan_get_seller_id_by_order_id( $id ) {
     $items = $order->get_items( 'line_item' );
 
     if ( ! is_array( $items ) ) {
-        return 0;
+        return;
     }
 
     foreach ( $items as $item ) {
@@ -927,6 +927,10 @@ function dokan_get_seller_id_by_order_id( $id ) {
     }
 
     $seller_id = get_post_field( 'post_author', $product_id );
+
+    if ( empty( $seller_id ) ) {
+        return;
+    }
 
     return $seller_id;
 }
