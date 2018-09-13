@@ -11,34 +11,34 @@ if ( ! class_exists( 'WP_Background_Process', false ) ) {
 }
 
 /**
- * Abstract Dokan_Background_Updater class
+ * Abstract Dokan_Background_Processes class
  */
-abstract class Dokan_Background_Updater extends WP_Background_Process {
+abstract class Abstract_Dokan_Background_Processes extends WP_Background_Process {
 
     /**
      * Action
      *
      * Override this action in your updater class
      *
-     * @since 2.8.6
+     * @since 2.8.7
      *
      * @var string
      */
-    protected $action = 'dokan_background_process';
+    protected $action = 'dokan_background_processes';
 
     /**
      * Execute after complete a task
      *
-     * @since 2.8.6
+     * @since 2.8.7
      *
      * @return void
      */
     public function complete() {
-        $processes = get_option( 'dokan_background_updater_processes', array() );
+        $processes = get_option( 'dokan_background_processes', array() );
 
         if ( array_key_exists( $this->action , $processes ) ) {
             unset( $processes[ $this->action ] );
-            update_option( 'dokan_background_updater_processes', $processes, 'no' );
+            update_option( 'dokan_background_processes', $processes, 'no' );
         }
 
         parent::complete();
