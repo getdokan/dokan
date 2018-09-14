@@ -524,3 +524,28 @@ function dokan_bulk_product_status_change() {
 }
 
 add_action( 'template_redirect', 'dokan_bulk_product_status_change' );
+
+/**
+ * Dokan get lowest category id of a product
+ *
+ * @param  int $product_id
+ *
+ * @return int|false Lowest category id on success
+ */
+function dokan_get_min_category( $product_id ) {
+    $terms = get_the_terms( $product_id, 'product_cat' );
+
+    if ( empty( $terms ) || ! is_array( $terms ) ) {
+        return false;
+    }
+
+    if ( is_wp_error( $terms ) ) {
+        return false;
+    }
+
+    $term = array_map( function( $term ) {
+        return $term->term_id;
+    }, $terms );
+
+    return is_array( $term ) ? min( $term ) : false;
+}
