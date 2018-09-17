@@ -476,20 +476,26 @@ class Dokan_Setup_Wizard {
                 <tr>
                     <th scope="row"><label for="withdraw_order_status"><?php _e( 'Order Status for Withdraw', 'dokan-lite' ); ?></label></th>
                     <td>
-                        <input type="checkbox" name="withdraw_order_status[wc-completed]" id="withdraw_order_status[wc-completed]" class="switch-input" value="wc-completed" <?php echo ( array_key_exists( 'wc-completed', $withdraw_order_status ) ) ? 'checked="true"' : ''; ?>>
-                        <label for="withdraw_order_status[wc-completed]" class="switch-label">
-                            <?php _e( 'Completed', 'dokan-lite' ); ?>
-                        </label><br>
-
-                        <input type="checkbox" name="withdraw_order_status[wc-processing]" id="withdraw_order_status[wc-processing]" class="switch-input" value="wc-processing" <?php echo ( array_key_exists( 'wc-processing', $withdraw_order_status ) ) ? 'checked="true"' : ''; ?>>
-                        <label for="withdraw_order_status[wc-processing]" class="switch-label">
-                            <?php _e( 'Processing', 'dokan-lite' ); ?>
-                        </label><br>
-
-                        <input type="checkbox" name="withdraw_order_status[wc-on-hold]" id="withdraw_order_status[wc-on-hold]" class="switch-input" value="wc-on-hold" <?php echo ( array_key_exists( 'wc-on-hold', $withdraw_order_status ) ) ? 'checked="true"' : ''; ?>>
-                        <label for="withdraw_order_status[wc-on-hold]" class="switch-label">
-                            <?php _e( 'On-hold', 'dokan-lite' ); ?>
-                        </label><br>
+                        <ul class="list-unstyled">
+                            <li class="checkbox">
+                                <input type="checkbox" name="withdraw_order_status[wc-completed]" id="withdraw_order_status[wc-completed]" class="switch-input" value="wc-completed" <?php echo ( array_key_exists( 'wc-completed', $withdraw_order_status ) ) ? 'checked="true"' : ''; ?>>
+                                <label for="withdraw_order_status[wc-completed]">
+                                    <?php _e( 'Completed', 'dokan-lite' ); ?>
+                                </label>
+                            </li>
+                            <li class="checkbox">
+                                <input type="checkbox" name="withdraw_order_status[wc-processing]" id="withdraw_order_status[wc-processing]" class="switch-input" value="wc-processing" <?php echo ( array_key_exists( 'wc-processing', $withdraw_order_status ) ) ? 'checked="true"' : ''; ?>>
+                                <label for="withdraw_order_status[wc-processing]">
+                                    <?php _e( 'Processing', 'dokan-lite' ); ?>
+                                </label>
+                            </li>
+                            <li class="checkbox">
+                                <input type="checkbox" name="withdraw_order_status[wc-on-hold]" id="withdraw_order_status[wc-on-hold]" class="switch-input" value="wc-on-hold" <?php echo ( array_key_exists( 'wc-on-hold', $withdraw_order_status ) ) ? 'checked="true"' : ''; ?>>
+                                <label for="withdraw_order_status[wc-on-hold]">
+                                    <?php _e( 'On-hold', 'dokan-lite' ); ?>
+                                </label>
+                            </li>
+                        </ul>
 
                         <p class="description"><?php _e( 'Order status for which vendor can make a withdraw request.', 'dokan-lite' ); ?></p>
                     </td>

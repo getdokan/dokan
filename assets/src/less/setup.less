@@ -2,6 +2,7 @@
 
 /* Variables */
 @dokan-color: #f2624d;
+@dokan-color-darken: darken(@dokan-color, 10%);
 
 /* Toggle switch */
 .form-table {
@@ -84,6 +85,20 @@
     .switch-input:checked + .switch-label .toggle--off {
         display: none;
     }
+
+    .list-unstyled {
+        padding: 0;
+        margin-top: 0;
+
+        li {
+            list-style-type: none;
+            margin-bottom: 5px;
+
+            label {
+                font-weight: 400;
+            }
+        }
+    }
 }
 
 /* WC Overrides */
@@ -121,11 +136,12 @@
             color: #fff;
             background: @dokan-color !important;
             border-color: @dokan-color !important;
+            text-shadow: 0 -1px 1px @dokan-color-darken, 1px 0 1px @dokan-color-darken, 0 1px 1px @dokan-color-darken, -1px 0 1px @dokan-color-darken;
 
             &:hover,
             &:active,
             &:focus {
-                background-color: darken(@dokan-color, 10%) !important;
+                background-color: @dokan-color-darken !important;
             }
         }
     }
@@ -135,8 +151,15 @@
         a {
             color: @dokan-color;
         }
-    }
 
+        .checkbox {
+
+            input[type=checkbox]:checked+label::before    {
+                background: @dokan-color;
+                border-color: @dokan-color;
+            }
+        }
+    }
 }
 
 

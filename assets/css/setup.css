@@ -73,6 +73,17 @@
 .form-table .switch-input:checked + .switch-label .toggle--off {
   display: none;
 }
+.form-table .list-unstyled {
+  padding: 0;
+  margin-top: 0;
+}
+.form-table .list-unstyled li {
+  list-style-type: none;
+  margin-bottom: 5px;
+}
+.form-table .list-unstyled li label {
+  font-weight: 400;
+}
 /* WC Overrides */
 .wc-setup .wc-setup-steps li.done,
 .wc-setup .wc-setup-steps li.active {
@@ -96,6 +107,7 @@
   color: #fff;
   background: #f2624d !important;
   border-color: #f2624d !important;
+  text-shadow: 0 -1px 1px #ef381d, 1px 0 1px #ef381d, 0 1px 1px #ef381d, -1px 0 1px #ef381d;
 }
 .wc-setup .wc-setup-actions .button-primary:hover,
 .wc-setup .wc-setup-actions .button-primary:active,
@@ -104,6 +116,10 @@
 }
 .wc-setup .wc-setup-content a {
   color: #f2624d;
+}
+.wc-setup .wc-setup-content .checkbox input[type=checkbox]:checked + label::before {
+  background: #f2624d;
+  border-color: #f2624d;
 }
 .wc-wizard-service-item .wc-wizard-service-name {
   padding-left: 20px;
