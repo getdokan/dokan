@@ -54,6 +54,7 @@ class Dokan_Setup_Wizard {
 
         wp_enqueue_style( 'woocommerce_admin_styles', WC()->plugin_url() . '/assets/css/admin.css', array(), WC_VERSION );
         wp_enqueue_style( 'wc-setup', WC()->plugin_url() . '/assets/css/wc-setup.css', array( 'dashicons', 'install' ), WC_VERSION );
+        wp_enqueue_style( 'dokan-setup', DOKAN_PLUGIN_ASSEST . '/css/setup.css', array( 'wc-setup' ), DOKAN_PLUGIN_VERSION );
 
         wp_register_script( 'wc-setup', WC()->plugin_url() . '/assets/js/admin/wc-setup.min.js', array( 'jquery', 'wc-enhanced-select', 'jquery-blockui' ), WC_VERSION );
         wp_localize_script( 'wc-setup', 'wc_setup_params', array() );
@@ -376,8 +377,14 @@ class Dokan_Setup_Wizard {
                 <tr>
                     <th scope="row"><label for="new_seller_enable_selling"><?php _e( 'New Vendor Enable Selling', 'dokan-lite' ); ?></label></th>
                     <td>
-                        <input type="checkbox" name="new_seller_enable_selling" id="new_seller_enable_selling" class="input-checkbox" value="1" <?php echo ( $new_seller_enable_selling == 'on' ) ? 'checked="checked"' : ''; ?>/>
-                        <label for="new_seller_enable_selling"><?php _e( 'Make selling status enable for new registred vendor', 'dokan-lite' ); ?></label>
+                        <input type="checkbox" name="new_seller_enable_selling" id="new_seller_enable_selling" class="switch-input" <?php echo ( $new_seller_enable_selling == 'on' ) ? 'checked="checked"' : ''; ?>>
+                        <label for="new_seller_enable_selling" class="switch-label">
+                            <span class="toggle--on"><?php _e( 'On', 'dokan-lite' ); ?></span>
+                            <span class="toggle--off"><?php _e( 'Off', 'dokan-lite' ); ?></span>
+                        </label>
+                        <span class="description">
+                            <?php _e( 'Make selling status enable for new registred vendor', 'dokan-lite' ); ?>
+                        </span>
                     </td>
                 </tr>
                 <tr>
@@ -400,8 +407,14 @@ class Dokan_Setup_Wizard {
                 <tr>
                     <th scope="row"><label for="order_status_change"><?php _e( 'Order Status Change', 'dokan-lite' ); ?></label></th>
                     <td>
-                        <input type="checkbox" name="order_status_change" id="order_status_change" class="input-checkbox" value="1" <?php echo ( $order_status_change == 'on' ) ? 'checked="checked"' : ''; ?>/>
-                        <label for="order_status_change"><?php _e( 'Vendor can change order status', 'dokan-lite' ); ?></label>
+                        <input type="checkbox" name="order_status_change" id="order_status_change" class="switch-input" <?php echo ( $order_status_change == 'on' ) ? 'checked="checked"' : ''; ?>>
+                        <label for="order_status_change" class="switch-label">
+                            <span class="toggle--on"><?php _e( 'On', 'dokan-lite' ); ?></span>
+                            <span class="toggle--off"><?php _e( 'Off', 'dokan-lite' ); ?></span>
+                        </label>
+                        <span class="description">
+                            <?php _e( 'Vendor can change order status', 'dokan-lite' ); ?>
+                        </span>
                     </td>
                 </tr>
             </table>
@@ -458,11 +471,9 @@ class Dokan_Setup_Wizard {
                                 <div class="wc-wizard-service-description">
                                     <?php _e( 'Enable paypal for your vendor as a withdraw method', 'dokan-lite' ); ?>
                                 </div>
-                                <div class="wc-wizard-service-enable">
-                                    <span class="wc-wizard-service-toggle">
-                                        <input id="withdraw_methods[paypal]" type="checkbox" name="withdraw_methods[paypal]" value="paypal" checked="checked" class="wc-wizard-shipping-method-enable" />
-                                        <label for="withdraw_methods[paypal]">
-                                    </span>
+                                <div class="dokan-wizard-service-enable">
+                                    <input type="checkbox" name="withdraw_methods[paypal]" id="withdraw_methods[paypal]" class="switch-input" checked>
+                                    <label for="withdraw_methods[paypal]" class="switch-label"></label>
                                 </div>
                             </li>
 
@@ -473,11 +484,9 @@ class Dokan_Setup_Wizard {
                                 <div class="wc-wizard-service-description">
                                     <?php _e( 'Enable bank transfer for your vendor as a withdraw method', 'dokan-lite' ); ?>
                                 </div>
-                                <div class="wc-wizard-service-enable">
-                                    <span class="wc-wizard-service-toggle">
-                                        <input id="withdraw_methods[bank]" type="checkbox" name="withdraw_methods[bank]" value="bank" checked="checked" class="wc-wizard-shipping-method-enable" />
-                                        <label for="withdraw_methods[bank]">
-                                    </span>
+                                <div class="dokan-wizard-service-enable">
+                                    <input type="checkbox" name="withdraw_methods[bank]" id="withdraw_methods[bank]" class="switch-input" checked>
+                                    <label for="withdraw_methods[bank]" class="switch-label"></label>
                                 </div>
                             </li>
 
@@ -488,11 +497,9 @@ class Dokan_Setup_Wizard {
                                 <div class="wc-wizard-service-description">
                                     <?php _e( 'Enable skrill for your vendor as a withdraw method', 'dokan-lite' ); ?>
                                 </div>
-                                <div class="wc-wizard-service-enable">
-                                    <span class="wc-wizard-service-toggle">
-                                        <input id="withdraw_methods[skrill]" type="checkbox" name="withdraw_methods[skrill]" value="skrill" checked="checked" class="wc-wizard-shipping-method-enable" />
-                                        <label for="withdraw_methods[skrill]">
-                                    </span>
+                                <div class="dokan-wizard-service-enable">
+                                    <input type="checkbox" name="withdraw_methods[skrill]" id="withdraw_methods[skrill]" class="switch-input" checked>
+                                    <label for="withdraw_methods[skrill]" class="switch-label"></label>
                                 </div>
                             </li>
                         </ul>
@@ -508,9 +515,20 @@ class Dokan_Setup_Wizard {
                 <tr>
                     <th scope="row"><label for="withdraw_order_status"><?php _e( 'Order Status for Withdraw', 'dokan-lite' ); ?></label></th>
                     <td>
-                        <input type="checkbox" class="input-checkbox" id="withdraw_order_status[wc-completed]" name="withdraw_order_status[wc-completed]" value="wc-completed" <?php echo ( array_key_exists( 'wc-completed', $withdraw_order_status ) ) ? 'checked="true"' : ''; ?>><label for="withdraw_order_status[wc-completed]"> <?php _e( 'Completed', 'dokan-lite' ); ?></label><br />
-                        <input type="checkbox" class="input-checkbox" id="withdraw_order_status[wc-processing]" name="withdraw_order_status[wc-processing]" value="wc-processing" <?php echo ( array_key_exists( 'wc-processing', $withdraw_order_status ) ) ? 'checked="true"' : ''; ?>><label for="withdraw_order_status[wc-processing]"> <?php _e( 'Processing', 'dokan-lite' ); ?></label><br />
-                        <input type="checkbox" class="input-checkbox" id="withdraw_order_status[wc-on-hold]" name="withdraw_order_status[wc-on-hold]" value="wc-on-hold" <?php echo ( array_key_exists( 'wc-on-hold', $withdraw_order_status ) ) ? 'checked="true"' : ''; ?>><label for="withdraw_order_status[wc-on-hold]"> <?php _e( 'On-hold', 'dokan-lite' ); ?></label>
+                        <input type="checkbox" name="withdraw_order_status[wc-completed]" id="withdraw_order_status[wc-completed]" class="switch-input" value="wc-completed" <?php echo ( array_key_exists( 'wc-completed', $withdraw_order_status ) ) ? 'checked="true"' : ''; ?>>
+                        <label for="withdraw_order_status[wc-completed]" class="switch-label">
+                            <?php _e( 'Completed', 'dokan-lite' ); ?>
+                        </label><br>
+
+                        <input type="checkbox" name="withdraw_order_status[wc-processing]" id="withdraw_order_status[wc-processing]" class="switch-input" value="wc-processing" <?php echo ( array_key_exists( 'wc-processing', $withdraw_order_status ) ) ? 'checked="true"' : ''; ?>>
+                        <label for="withdraw_order_status[wc-processing]" class="switch-label">
+                            <?php _e( 'Processing', 'dokan-lite' ); ?>
+                        </label><br>
+
+                        <input type="checkbox" name="withdraw_order_status[wc-on-hold]" id="withdraw_order_status[wc-on-hold]" class="switch-input" value="wc-on-hold" <?php echo ( array_key_exists( 'wc-on-hold', $withdraw_order_status ) ) ? 'checked="true"' : ''; ?>>
+                        <label for="withdraw_order_status[wc-on-hold]" class="switch-label">
+                            <?php _e( 'On-hold', 'dokan-lite' ); ?>
+                        </label><br>
 
                         <p class="description"><?php _e( 'Order status for which vendor can make a withdraw request.', 'dokan-lite' ); ?></p>
                     </td>
