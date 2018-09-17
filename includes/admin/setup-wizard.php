@@ -139,79 +139,7 @@ class Dokan_Setup_Wizard {
             <?php do_action( 'admin_head' ); ?>
             <?php do_action( 'dokan_setup_wizard_styles' ); ?>
             <style type="text/css">
-                .wc-setup-steps {
-                    justify-content: center;
-                }
-                .wc-setup-content a {
-                    color: #f39132;
-                }
-                .wc-setup-steps li.active:before {
-                    border-color: #f39132;
-                }
-                .wc-setup-steps li.active {
-                    border-color: #f39132;
-                    color: #f39132;
-                }
-                .wc-setup-steps li.done:before {
-                    border-color: #f39132;
-                }
-                .wc-setup-steps li.done {
-                    border-color: #f39132;
-                    color: #f39132;
-                }
-                .wc-setup .wc-setup-actions .button-primary, .wc-setup .wc-setup-actions .button-primary, .wc-setup .wc-setup-actions .button-primary {
-                    background: #f39132 !important;
-                }
-                .wc-setup .wc-setup-actions .button-primary:active, .wc-setup .wc-setup-actions .button-primary:focus, .wc-setup .wc-setup-actions .button-primary:hover {
-                    background: #ff6b00 !important;
-                    border-color: #ff6b00 !important;
-                }
-                .wc-setup-content .wc-setup-next-steps ul .setup-product a, .wc-setup-content .wc-setup-next-steps ul .setup-product a, .wc-setup-content .wc-setup-next-steps ul .setup-product a {
-                    background: #f39132 !important;
-                    box-shadow: inset 0 1px 0 rgba(255,255,255,.25),0 1px 0 #f39132;
-                }
-                .wc-setup-content .wc-setup-next-steps ul .setup-product a:active, .wc-setup-content .wc-setup-next-steps ul .setup-product a:focus, .wc-setup-content .wc-setup-next-steps ul .setup-product a:hover {
-                    background: #ff6b00 !important;
-                    border-color: #ff6b00 !important;
-                    box-shadow: inset 0 1px 0 rgba(255,255,255,.25),0 1px 0 #ff6b00;
-                }
-                .wc-setup .wc-setup-actions .button-primary {
-                    border-color: #f39132 !important;
-                }
-                .wc-setup-content .wc-setup-next-steps ul .setup-product a {
-                    border-color: #f39132 !important;
-                }
-                ul.wc-wizard-payment-gateways li.wc-wizard-gateway .wc-wizard-gateway-enable input:checked+label:before {
-                    background: #f39132 !important;
-                    border-color: #f39132 !important;
-                }
-                .dokan-setup-done h1 {
-                    text-align:  center;
-                }
-                .dokan-setup-done-content {
-                    display: flex;
-                    justify-content: center;
-                }
-                .dokan-setup-done-content .button {
-                    background-color: #ee9034 !important;
-                    color: #ffffff !important;
-                    height: 40px;
-                    line-height: 40px;
-                    font-size: 14px;
-                    padding: 0 25px;
-                    margin-left: 12px;
-                    margin-right: 12px;
-                }
-                .dokan-setup-done-content .learn-more {
-                    background-color: #ECF0F1 !important;
-                    color: #A5B7BB !important;
-                }
-                .dokan-setup-done img {
-                    display: block;
-                    margin-left: auto;
-                    margin-right: auto;
-                    padding-bottom: 30px;
-                }
+
             </style>
         </head>
         <body class="wc-setup wp-core-ui">
@@ -573,8 +501,8 @@ class Dokan_Setup_Wizard {
 
         <div class="dokan-setup-done-content">
             <p class="wc-setup-actions step">
-                <a class="button" href="<?php echo esc_url( admin_url( 'admin.php?page=dokan#/settings' ) ); ?>"><?php _e( 'Setup Your Dokan!', 'dokan-lite' ); ?></a>
-                <a class="button learn-more" href="<?php echo esc_url( admin_url( 'admin.php?page=dokan#/help' ) ); ?>"><?php _e( 'Learn More', 'dokan-lite' ); ?></a>
+                <a class="button button-primary" href="<?php echo esc_url( admin_url( 'admin.php?page=dokan#/settings' ) ); ?>"><?php _e( 'Setup Your Dokan!', 'dokan-lite' ); ?></a>
+                <a class="button" href="<?php echo esc_url( admin_url( 'admin.php?page=dokan#/help' ) ); ?>"><?php _e( 'Learn More', 'dokan-lite' ); ?></a>
             </p>
         </div>
         <?php

@@ -1,3 +1,8 @@
+@import 'mixins.less';
+
+/* Variables */
+@dokan-color: #f2624d;
+
 /* Toggle switch */
 .form-table {
 
@@ -62,11 +67,11 @@
     }
 
     .switch-input:checked + .switch-label:before {
-        background-color: #ffd4ab;
+        background-color: lighten(@dokan-color, 25%);
     }
 
     .switch-input:checked + .switch-label:after {
-        background-color: #f39132;
+        background-color: @dokan-color;
         -ms-transform: translate(80%, -50%);
         -webkit-transform: translate(80%, -50%);
         transform: translate(80%, -50%);
@@ -82,6 +87,59 @@
 }
 
 /* WC Overrides */
+.wc-setup {
+
+    .wc-setup-steps {
+
+        li.done,
+        li.active {
+            color: @dokan-color;
+            border-color: @dokan-color;
+
+            &:before {
+                background: @dokan-color;
+                border-color: @dokan-color;
+            }
+        }
+
+        li.active {
+
+            &:before {
+                background: #fff;
+            }
+        }
+    }
+
+    .wc-setup-actions {
+
+        .button {
+            color: #555;
+            .transition(background-color 0.3s ease);
+        }
+
+        .button-primary {
+            color: #fff;
+            background: @dokan-color !important;
+            border-color: @dokan-color !important;
+
+            &:hover,
+            &:active,
+            &:focus {
+                background-color: darken(@dokan-color, 10%) !important;
+            }
+        }
+    }
+
+    .wc-setup-content {
+
+        a {
+            color: @dokan-color;
+        }
+    }
+
+}
+
+
 .wc-wizard-service-item {
 
     .wc-wizard-service-name {
@@ -102,4 +160,23 @@
             left: 20px;
         }
     }
+}
+
+.dokan-setup-done {
+
+    h1 {
+        text-align:  center;
+    }
+
+    img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        padding-bottom: 30px;
+    }
+}
+
+.dokan-setup-done-content {
+    display: flex;
+    justify-content: center;
 }
