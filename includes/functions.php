@@ -210,16 +210,16 @@ function dokan_count_posts( $post_type, $user_id ) {
     global $wpdb;
 
     $cache_group = 'dokan_seller_product_data_'.$user_id;
-    $cache_key = 'dokan-count-' . $post_type . '-' . $user_id;
-    $counts = wp_cache_get( $cache_key, $cache_group );
+    $cache_key   = 'dokan-count-' . $post_type . '-' . $user_id;
+    $counts      = wp_cache_get( $cache_key, $cache_group );
 
     if ( false === $counts ) {
-        $query = "SELECT post_status, COUNT( * ) AS num_posts FROM {$wpdb->posts} WHERE post_type = %s AND post_author = %d GROUP BY post_status";
-        $results = $wpdb->get_results( $wpdb->prepare( $query, $post_type, $user_id ), ARRAY_A );
+        $query       = apply_filters( 'dokan_count_posts', "SELECT post_status, COUNT( * ) AS num_posts FROM {$wpdb->posts} WHERE post_type = %s AND post_author = %d GROUP BY post_status" );
+        $results     = $wpdb->get_results( $wpdb->prepare( $query, $post_type, $user_id ), ARRAY_A );
         $post_status = array_keys( dokan_get_post_status() );
-        $counts = array_fill_keys( get_post_stati(), 0 );
+        $counts      = array_fill_keys( get_post_stati(), 0 );
+        $total       = 0;
 
-        $total = 0;
         foreach ( $results as $row ) {
             if ( ! in_array( $row['post_status'], $post_status ) ) {
                 continue;
