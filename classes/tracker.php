@@ -8,6 +8,8 @@
  */
 class Dokan_Tracker {
 
+    public $insights = null;
+
     /**
      * Class constructor
      *
@@ -31,8 +33,8 @@ class Dokan_Tracker {
             require_once DOKAN_LIB_DIR . '/appsero/src/insights.php';
         }
 
-        $insights = new AppSero\Insights( '559bcc0d-21b4-4b34-8317-3e072badf46d', 'Dokan Multivendor Marketplace', __FILE__ );
+        $this->insights = new AppSero\Insights( '559bcc0d-21b4-4b34-8317-3e072badf46d', 'Dokan Multivendor Marketplace', __FILE__ );
 
-        $insights->init_plugin();
+        $this->insights->init_plugin();
     }
 }

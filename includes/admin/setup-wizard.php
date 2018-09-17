@@ -260,6 +260,24 @@ class Dokan_Setup_Wizard {
                         <p class="description"><?php _e( 'Tax fees will go to', 'dokan-lite' ); ?></p>
                     </td>
                 </tr>
+                <tr>
+                    <th scope="row"><label for="share_essentials"><?php _e( 'Share Essentials', 'dokan-lite' ); ?></label></th>
+
+                    <td>
+                        <input type="checkbox" name="share_essentials" id="share_essentials" class="switch-input" checked>
+                        <label for="share_essentials" class="switch-label">
+                            <span class="toggle--on"><?php _e( 'On', 'dokan-lite' ); ?></span>
+                            <span class="toggle--off"><?php _e( 'Off', 'dokan-lite' ); ?></span>
+                        </label>
+                        <span class="description">
+                            <?php _e( 'Want to help make WP ERP even more awesome? Allow weDevs to collect non-sensitive diagnostic data and usage information.', 'dokan-lite' ); ?>
+                            <?php printf( '<a class="insights-data-we-collect" href="#">%s</a>', __( 'What we collect', 'dokan-lite' ) ); ?>
+                        </span>
+                        <p id="collection-info" class="description" style="display:none;">
+                            <?php _e( 'Server environment details (php, mysql, server, WordPress versions), Number of users in your site, Site language, Number of active and inactive plugins, Site name and url, Your name and email address. No sensitive data is tracked.', 'dokan-lite' ); ?>
+                        </p>
+                    </td>
+                </tr>
             </table>
             <p class="wc-setup-actions step">
                 <input type="submit" class="button-primary button button-large button-next" value="<?php esc_attr_e( 'Continue', 'dokan-lite' ); ?>" name="save_step" />
@@ -267,6 +285,13 @@ class Dokan_Setup_Wizard {
                 <?php wp_nonce_field( 'dokan-setup' ); ?>
             </p>
         </form>
+
+        <script type="text/javascript">
+            jQuery('.insights-data-we-collect').on('click', function(e) {
+                e.preventDefault();
+                jQuery('#collection-info').slideToggle('fast');
+            });
+        </script>
         <?php
     }
 
@@ -281,6 +306,14 @@ class Dokan_Setup_Wizard {
         $options['custom_store_url']       = ! empty( $_POST['custom_store_url'] ) ? sanitize_text_field( $_POST['custom_store_url'] ) : '';
         $options['tax_fee_recipient']      = ! empty( $_POST['tax_fee_recipient'] ) ? sanitize_text_field( $_POST['tax_fee_recipient'] ) : '';
         $options['shipping_fee_recipient'] = ! empty( $_POST['shipping_fee_recipient'] ) ? sanitize_text_field( $_POST['shipping_fee_recipient'] ) : '';
+
+        $share_essentials = sanitize_text_field( isset( $_POST['share_essentials'] ) );
+
+        if ( $share_essentials ) {
+            dokan()->tracker->insights->optin();
+        } else {
+            dokan()->tracker->insights->optout();
+        }
 
         update_option( 'dokan_general', $options );
 
