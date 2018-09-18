@@ -9,11 +9,19 @@
  * The class
  */
 class Dokan_Setup_Wizard {
+
     /** @var string Currenct Step */
     protected $step   = '';
 
     /** @var array Steps for the setup wizard */
     protected $steps  = array();
+
+    /**
+     * Actions to be executed after the HTTP response has completed
+     *
+     * @var array
+     */
+    private $deferred_actions = array();
 
     /**
      * Hook in tabs.
@@ -22,11 +30,12 @@ class Dokan_Setup_Wizard {
         if ( current_user_can( 'manage_options' ) ) {
             add_action( 'admin_menu', array( $this, 'admin_menus' ) );
             add_action( 'admin_init', array( $this, 'setup_wizard' ), 99 );
+            add_action( 'activated_plugin', array( $this, 'activated_plugin' ) );
         }
     }
 
     /**
-     * Enqueue scripts & styles from woocommerce plugin.
+     * Enqueue scripts & styles
      *
      * @return void
      */
@@ -95,12 +104,23 @@ class Dokan_Setup_Wizard {
                 'view'    => array( $this, 'dokan_setup_withdraw' ),
                 'handler' => array( $this, 'dokan_setup_withdraw_save' ),
             ),
+            'recommended' => array(
+                'name'    =>  __( 'Recommended', 'dokan-lite' ),
+                'view'    => array( $this, 'dokan_setup_recommended' ),
+                'handler' => array( $this, 'dokan_setup_recommended_save' ),
+            ),
             'next_steps' => array(
                 'name'    =>  __( 'Ready!', 'dokan-lite' ),
                 'view'    => array( $this, 'dokan_setup_ready' ),
                 'handler' => ''
             )
         );
+
+        // Hide recommended step if nothing is going to be shown there.
+        if ( ! $this->should_show_recommended_step() ) {
+            unset( $this->steps['recommended'] );
+        }
+
         $this->step = isset( $_GET['step'] ) ? sanitize_key( $_GET['step'] ) : current( array_keys( $this->steps ) );
 
         $this->enqueue_scripts();
@@ -188,6 +208,11 @@ class Dokan_Setup_Wizard {
      * Output the content for the current step.
      */
     public function setup_wizard_content() {
+        if ( empty( $this->steps[ $this->step ]['view'] ) ) {
+            wp_redirect( esc_url_raw( add_query_arg( 'step', 'introduction' ) ) );
+            exit;
+        }
+
         echo '<div class="wc-setup-content">';
         call_user_func( $this->steps[ $this->step ]['view'] );
         echo '</div>';
@@ -511,6 +536,96 @@ class Dokan_Setup_Wizard {
     }
 
     /**
+     * Recommended Step
+     *
+     * @since 2.8.7
+     *
+     * @return void
+     */
+    public function dokan_setup_recommended() {
+        ?>
+            <h1><?php esc_html_e( 'Recommended for All Dokan Marketplaces', 'dokan-lite' ); ?></h1>
+
+            <p><?php esc_html_e( 'Enhance your store with these recommended features.', 'dokan-lite' ); ?></p>
+
+            <form method="post">
+                <ul class="recommended-step">
+                    <?php
+                        if ( $this->user_can_install_plugin() ) {
+
+                            if ( ! $this->is_wc_conversion_tracking_active() ) {
+                                $this->display_recommended_item( array(
+                                    'type'        => 'wc_conversion_tracking',
+                                    'title'       => __( 'WooCommerce Conversion Tracking', 'dokan-lite' ),
+                                    'description' => __( 'Track conversions on your WooCommerce store like a pro!', 'dokan-lite' ),
+                                    'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/wc-conversion-tracking-logo.png',
+                                    'img_alt'     => __( 'WooCommerce Conversion Tracking logo', 'dokan-lite' ),
+                                    'plugins'     => array( array( 'name' => __( 'WooCommerce Conversion Tracking', 'dokan-lite' ), 'slug' => 'woocommerce-conversion-tracking' ) ),
+                                ) );
+                            }
+
+                            if ( ! $this->is_weforms_active() ) {
+                                $this->display_recommended_item( array(
+                                    'type'        => 'weforms',
+                                    'title'       => __( 'weForms', 'dokan-lite' ),
+                                    'description' => __( 'Best Contact Form Plugin for WordPress.', 'dokan-lite' ),
+                                    'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/weforms-logo.png',
+                                    'img_alt'     => __( 'weForms logo', 'dokan-lite' ),
+                                    'plugins'     => array( array( 'name' => __( 'weForms', 'dokan-lite' ), 'slug' => 'weforms' ) ),
+                                ) );
+                            }
+                        };
+                    ?>
+                </ul>
+                <p class="wc-setup-actions step">
+                    <?php $this->plugin_install_info(); ?>
+                    <button type="submit" class="button-primary button button-large button-next" value="<?php esc_attr_e( 'Continue', 'dokan-lite' ); ?>" name="save_step"><?php esc_html_e( 'Continue', 'dokan-lite' ); ?></button>
+                    <?php wp_nonce_field( 'dokan-setup' ); ?>
+                </p>
+            </form>
+        <?php
+    }
+
+    /**
+     * Save data from recommended step
+     *
+     * @since 2.8.7
+     *
+     * @return void
+     */
+    public function dokan_setup_recommended_save() {
+        check_admin_referer( 'dokan-setup' );
+
+        $setup_wc_conversion_tracking  = isset( $_POST['setup_wc_conversion_tracking'] ) && 'yes' === $_POST['setup_wc_conversion_tracking'];
+        $setup_weforms                 = isset( $_POST['setup_weforms'] ) && 'yes' === $_POST['setup_weforms'];
+
+        if ( $setup_wc_conversion_tracking && ! $this->is_wc_conversion_tracking_active() ) {
+            $this->install_plugin(
+                'woocommerce-conversion-tracking',
+                array(
+                    'name'      => __( 'WooCommerce Conversion Tracking', 'dokan-lite' ),
+                    'repo-slug' => 'woocommerce-conversion-tracking',
+                    'file'      => 'conversion-tracking.php',
+                )
+            );
+        }
+
+        if ( $setup_weforms && ! $this->is_weforms_active() ) {
+            $this->install_plugin(
+                'weforms',
+                array(
+                    'name'      => __( 'weForms', 'dokan-lite' ),
+                    'repo-slug' => 'weforms',
+                    'file'      => 'weforms.php',
+                )
+            );
+        }
+
+        wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
+        exit;
+    }
+
+    /**
      * Save withdraw options.
      */
     public function dokan_setup_withdraw_save() {
@@ -532,6 +647,7 @@ class Dokan_Setup_Wizard {
      * Final step.
      */
     public function dokan_setup_ready() {
+        $this->after_weforms_activate();
         ?>
         <div class="dokan-setup-done">
             <img src="<?php echo plugins_url( 'assets/images/dokan-checked.png', DOKAN_FILE ); ?>" alt="dokan setup">
@@ -545,5 +661,241 @@ class Dokan_Setup_Wizard {
             </p>
         </div>
         <?php
+    }
+
+    /**
+     * Should we display the 'Recommended' step?
+     *
+     * True if at least one of the recommendations will be displayed.
+     *
+     * @return boolean
+     */
+    protected function should_show_recommended_step() {
+        if ( ! $this->user_can_install_plugin() ) {
+            return false;
+        }
+
+        if ( $this->is_wc_conversion_tracking_active() && $this->is_weforms_active() ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Check if WC Conversion Tracking is active or not
+     *
+     * @since 2.8.7
+     *
+     * @return bool
+     */
+    protected function is_wc_conversion_tracking_active() {
+        return is_plugin_active( 'woocommerce-conversion-tracking/conversion-tracking.php' );
+    }
+
+    /**
+     * Check if weForms is active or not
+     *
+     * @since 2.8.7
+     *
+     * @return bool
+     */
+    protected function is_weforms_active() {
+        return is_plugin_active( 'weforms/weforms.php' );
+    }
+
+    /**
+     * Should we show the WooCommerce Conversion Tracking install option?
+     *
+     * True only if the user can install plugins.
+     *
+     * @return boolean
+     */
+    protected function user_can_install_plugin() {
+        return current_user_can( 'install_plugins' );
+    }
+
+    protected function display_recommended_item( $item_info ) {
+        $type        = $item_info['type'];
+        $title       = $item_info['title'];
+        $description = $item_info['description'];
+        $img_url     = $item_info['img_url'];
+        $img_alt     = $item_info['img_alt'];
+        ?>
+        <li class="recommended-item checkbox">
+            <input
+                id="<?php echo esc_attr( 'dokan_recommended_' . $type ); ?>"
+                type="checkbox"
+                name="<?php echo esc_attr( 'setup_' . $type ); ?>"
+                value="yes"
+                checked
+                data-plugins="<?php echo esc_attr( wp_json_encode( isset( $item_info['plugins'] ) ? $item_info['plugins'] : null ) ); ?>"
+            />
+            <label for="<?php echo esc_attr( 'dokan_recommended_' . $type ); ?>">
+                <img
+                    src="<?php echo esc_url( $img_url ); ?>"
+                    class="<?php echo esc_attr( 'recommended-item-icon-' . $type ); ?> recommended-item-icon"
+                    alt="<?php echo esc_attr( $img_alt ); ?>" />
+                <div class="recommended-item-description-container">
+                    <h3><?php echo esc_html( $title ); ?></h3>
+                    <p><?php echo wp_kses( $description, array(
+                        'a' => array(
+                            'href'   => array(),
+                            'target' => array(),
+                            'rel'    => array(),
+                        ),
+                        'em' => array(),
+                    ) ); ?></p>
+                </div>
+            </label>
+        </li>
+        <?php
+    }
+
+    /**
+     * Plugin install info message markup with heading.
+     */
+    public function plugin_install_info() {
+        ?>
+        <span class="plugin-install-info">
+            <span class="plugin-install-info-label"><?php esc_html_e( 'The following plugins will be installed and activated for you:', 'woocommerce' ); ?></span>
+            <span class="plugin-install-info-list"></span>
+        </span>
+        <?php
+    }
+
+    /**
+     * Helper method to queue the background install of a plugin.
+     *
+     * @param string $plugin_id  Plugin id used for background install.
+     * @param array  $plugin_info Plugin info array containing name and repo-slug, and optionally file if different from [repo-slug].php.
+     */
+    protected function install_plugin( $plugin_id, $plugin_info ) {
+        // Make sure we don't trigger multiple simultaneous installs.
+        if ( get_option( 'woocommerce_setup_background_installing_' . $plugin_id ) ) {
+            return;
+        }
+
+        $plugin_file = isset( $plugin_info['file'] ) ? $plugin_info['file'] : $plugin_info['repo-slug'] . '.php';
+        if ( is_plugin_active( $plugin_info['repo-slug'] . '/' . $plugin_file ) ) {
+            return;
+        }
+
+        if ( empty( $this->deferred_actions ) ) {
+            add_action( 'shutdown', array( $this, 'run_deferred_actions' ) );
+        }
+
+        array_push(
+            $this->deferred_actions,
+            array(
+                'func' => array( 'WC_Install', 'background_installer' ),
+                'args' => array( $plugin_id, $plugin_info ),
+            )
+        );
+
+        // Set the background installation flag for this plugin.
+        update_option( 'woocommerce_setup_background_installing_' . $plugin_id, true );
+    }
+
+    /**
+     * Function called after the HTTP request is finished, so it's executed without the client having to wait for it.
+     *
+     * @see WC_Admin_Setup_Wizard::install_plugin
+     * @see WC_Admin_Setup_Wizard::install_theme
+     */
+    public function run_deferred_actions() {
+        $this->close_http_connection();
+        foreach ( $this->deferred_actions as $action ) {
+            call_user_func_array( $action['func'], $action['args'] );
+
+            // Clear the background installation flag if this is a plugin.
+            if (
+                isset( $action['func'][1] ) &&
+                'background_installer' === $action['func'][1] &&
+                isset( $action['args'][0] )
+            ) {
+                delete_option( 'woocommerce_setup_background_installing_' . $action['args'][0] );
+            }
+        }
+    }
+
+    /**
+     * Finishes replying to the client, but keeps the process running for further (async) code execution.
+     *
+     * @see https://core.trac.wordpress.org/ticket/41358 .
+     */
+    protected function close_http_connection() {
+        // Only 1 PHP process can access a session object at a time, close this so the next request isn't kept waiting.
+        // @codingStandardsIgnoreStart
+        if ( session_id() ) {
+            session_write_close();
+        }
+        // @codingStandardsIgnoreEnd
+
+        wc_set_time_limit( 0 );
+
+        // fastcgi_finish_request is the cleanest way to send the response and keep the script running, but not every server has it.
+        if ( is_callable( 'fastcgi_finish_request' ) ) {
+            fastcgi_finish_request();
+        } else {
+            // Fallback: send headers and flush buffers.
+            if ( ! headers_sent() ) {
+                header( 'Connection: close' );
+            }
+            @ob_end_flush(); // @codingStandardsIgnoreLine.
+            flush();
+        }
+    }
+
+    /**
+     * activate_plugin hook
+     *
+     * @since 2.8.7
+     *
+     * @param string $plugin
+     *
+     * @return void
+     */
+    public function activated_plugin( $plugin ) {
+        if ( 'weforms/weforms.php' === $plugin ) {
+            update_option( 'dokan_setup_wizard_activated_weforms', true );
+        }
+    }
+
+    /**
+     * Action after weForms activate
+     *
+     * @since 2.8.7
+     *
+     * @return void
+     */
+    private function after_weforms_activate() {
+        $did_activate = get_option( 'dokan_setup_wizard_activated_weforms', false );
+
+        if ( ! $did_activate ) {
+            return;
+        }
+
+        add_action( 'shutdown', 'flush_rewrite_rules' );
+
+        $forms_data = weforms()->form->all();
+
+        $forms = $forms_data['forms'];
+
+        if ( empty( $forms_data['forms'][0] ) ) {
+            return;
+        }
+
+        $form = $forms_data['forms'][0];
+
+        $settings = array(
+            'allow_vendor_contact_form'    => 'on',
+            'vendor_contact_section_label' => __( 'Contact Admin', 'dokan-lite' ),
+            'vendor_contact_form'          => $form->id,
+        );
+
+        update_option( 'weforms_integration', $settings );
+
+        delete_option( 'dokan_setup_wizard_activated_weforms' );
     }
 }
