@@ -276,7 +276,7 @@ class Dokan_Setup_Wizard {
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="tax_fee_recipient"><?php _e( 'Rax Fee Recipient', 'dokan-lite' ); ?></label></th>
+                    <th scope="row"><label for="tax_fee_recipient"><?php _e( 'Tax Fee Recipient', 'dokan-lite' ); ?></label></th>
                     <td>
                         <select class="wc-enhanced-select" id="tax_fee_recipient" name="tax_fee_recipient">
                             <?php
@@ -299,7 +299,7 @@ class Dokan_Setup_Wizard {
                             <span class="toggle--off"><?php _e( 'Off', 'dokan-lite' ); ?></span>
                         </label>
                         <span class="description">
-                            <?php _e( 'Want to help make WP ERP even more awesome? Allow weDevs to collect non-sensitive diagnostic data and usage information.', 'dokan-lite' ); ?>
+                            <?php _e( 'Want to help make Dokan even more awesome? Allow weDevs to collect non-sensitive diagnostic data and usage information.', 'dokan-lite' ); ?>
                             <?php printf( '<a class="insights-data-we-collect" href="#">%s</a>', __( 'What we collect', 'dokan-lite' ) ); ?>
                         </span>
                         <p id="collection-info" class="description" style="display:none;">
