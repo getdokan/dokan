@@ -67,6 +67,13 @@ class Dokan_Setup_Wizard {
 
         wp_register_script( 'wc-setup', WC()->plugin_url() . '/assets/js/admin/wc-setup.min.js', array( 'jquery', 'wc-enhanced-select', 'jquery-blockui' ), WC_VERSION );
         wp_localize_script( 'wc-setup', 'wc_setup_params', array() );
+
+        /**
+         * Action fires after finishing enqueuing setup wizard assets
+         *
+         * @since 2.8.7
+         */
+        do_action( 'dokan_setup_wizard_enqueue_scripts' );
     }
 
     /**
@@ -158,9 +165,6 @@ class Dokan_Setup_Wizard {
             <?php do_action( 'admin_print_styles' ); ?>
             <?php do_action( 'admin_head' ); ?>
             <?php do_action( 'dokan_setup_wizard_styles' ); ?>
-            <style type="text/css">
-
-            </style>
         </head>
         <body class="wc-setup wp-core-ui">
             <?php
@@ -458,7 +462,7 @@ class Dokan_Setup_Wizard {
                                     <?php _e( 'Enable paypal for your vendor as a withdraw method', 'dokan-lite' ); ?>
                                 </div>
                                 <div class="dokan-wizard-service-enable">
-                                    <input type="checkbox" name="withdraw_methods[paypal]" id="withdraw_methods[paypal]" class="switch-input" checked>
+                                    <input type="checkbox" name="withdraw_methods[paypal]" id="withdraw_methods[paypal]" class="switch-input" value="paypal" checked>
                                     <label for="withdraw_methods[paypal]" class="switch-label"></label>
                                 </div>
                             </li>
@@ -471,7 +475,7 @@ class Dokan_Setup_Wizard {
                                     <?php _e( 'Enable bank transfer for your vendor as a withdraw method', 'dokan-lite' ); ?>
                                 </div>
                                 <div class="dokan-wizard-service-enable">
-                                    <input type="checkbox" name="withdraw_methods[bank]" id="withdraw_methods[bank]" class="switch-input" checked>
+                                    <input type="checkbox" name="withdraw_methods[bank]" id="withdraw_methods[bank]" value="bank" class="switch-input" checked>
                                     <label for="withdraw_methods[bank]" class="switch-label"></label>
                                 </div>
                             </li>
@@ -484,10 +488,21 @@ class Dokan_Setup_Wizard {
                                     <?php _e( 'Enable skrill for your vendor as a withdraw method', 'dokan-lite' ); ?>
                                 </div>
                                 <div class="dokan-wizard-service-enable">
-                                    <input type="checkbox" name="withdraw_methods[skrill]" id="withdraw_methods[skrill]" class="switch-input" checked>
+                                    <input type="checkbox" name="withdraw_methods[skrill]" id="withdraw_methods[skrill]" value="skrill" class="switch-input" checked>
                                     <label for="withdraw_methods[skrill]" class="switch-label"></label>
                                 </div>
                             </li>
+
+                            <?php
+                                /**
+                                 * Hook to include more withdraw options during setup
+                                 *
+                                 * @since 2.8.7
+                                 *
+                                 * @param array $options dokan_withdraw settings
+                                 */
+                                do_action( 'dokan_setup_wizard_view_withdraw_methods', $options );
+                            ?>
                         </ul>
                     </td>
                 </tr>
@@ -636,6 +651,16 @@ class Dokan_Setup_Wizard {
         $options['withdraw_methods']      = ! empty( $_POST['withdraw_methods'] ) ? $_POST['withdraw_methods'] : array();
         $options['withdraw_limit']        = ! empty( $_POST['withdraw_limit'] ) ? sanitize_text_field( $_POST['withdraw_limit'] ) : 0;
         $options['withdraw_order_status'] = ! empty( $_POST['withdraw_order_status'] ) ? $_POST['withdraw_order_status'] : array();
+
+        /**
+         * Filter dokan_withdraw options before saving in setup wizard
+         *
+         * @since 2.8.7
+         *
+         * @param array $options
+         * @param array $_POST
+         */
+        $options = apply_filters( 'dokan_setup_wizard_save_withdraw_options', $options, $_POST );
 
         update_option( 'dokan_withdraw', $options );
 

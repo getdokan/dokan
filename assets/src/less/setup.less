@@ -93,11 +93,18 @@
         li {
             list-style-type: none;
             margin-bottom: 5px;
-
-            label {
-                font-weight: 400;
-            }
         }
+    }
+}
+
+.dokan-form-group {
+
+    .dokan-w8 {
+        margin-bottom: 10px;
+    }
+
+    textarea {
+        font-size: 15px;
     }
 }
 
@@ -157,6 +164,11 @@
             input[type=checkbox]:checked+label::before    {
                 background: @dokan-color;
                 border-color: @dokan-color;
+            }
+
+            label {
+                font-weight: 400;
+                line-height: 1.7;
             }
         }
     }

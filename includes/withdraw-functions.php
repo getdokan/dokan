@@ -183,7 +183,7 @@ function dokan_withdraw_method_bank( $store_settings ) {
 
     <div class="dokan-form-group">
         <div class="dokan-w8">
-            <textarea name="settings[bank][bank_addr]" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Address of your bank', 'dokan-lite' ) ?>"><?php echo $bank_addr; ?></textarea>
+            <textarea name="settings[bank][bank_addr]" rows="5" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Address of your bank', 'dokan-lite' ) ?>"><?php echo $bank_addr; ?></textarea>
         </div>
     </div>
 

@@ -81,8 +81,11 @@
   list-style-type: none;
   margin-bottom: 5px;
 }
-.form-table .list-unstyled li label {
-  font-weight: 400;
+.dokan-form-group .dokan-w8 {
+  margin-bottom: 10px;
+}
+.dokan-form-group textarea {
+  font-size: 15px;
 }
 /* WC Overrides */
 .wc-setup .wc-setup-steps li.done,
@@ -120,6 +123,10 @@
 .wc-setup .wc-setup-content .checkbox input[type=checkbox]:checked + label::before {
   background: #f2624d;
   border-color: #f2624d;
+}
+.wc-setup .wc-setup-content .checkbox label {
+  font-weight: 400;
+  line-height: 1.7;
 }
 .wc-wizard-service-item .wc-wizard-service-name {
   padding-left: 20px;
