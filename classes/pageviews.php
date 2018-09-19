@@ -18,17 +18,19 @@ class Dokan_Pageviews {
 
     public function load_scripts() {
         $nonce = wp_create_nonce( 'dokan_pageview' );
+        
+        ob_start();
 
-        echo '<script type="text/javascript">
-            jQuery(document).ready( function($) {
+        echo 'jQuery(document).ready( function($) {
                 var data = {
                     action: "dokan_pageview",
                     _ajax_nonce: "'. $nonce .'",
                     post_id: ' . get_the_ID() . ',
                 }
                 $.post( "' . admin_url( 'admin-ajax.php' ) . '", data );
-            } );
-            </script>';
+            } );';
+        
+        return ob_get_clean();
     }
 
     public function load_views() {
@@ -45,7 +47,7 @@ class Dokan_Pageviews {
                 $dokan_viewed_products[] = $post->ID;
 
                 wp_enqueue_script( 'jquery' );
-                add_action( 'wp_footer', array($this, 'load_scripts') );
+                wp_add_inline_script( 'jquery', $this->load_scripts(), 'after' );
             }
             // Store for single product view
             setcookie( 'dokan_product_viewed', implode( ',', $dokan_viewed_products ) );
