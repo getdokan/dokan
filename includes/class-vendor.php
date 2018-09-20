@@ -482,15 +482,16 @@ class Dokan_Vendor {
         $cache_key     = 'dokan_seller_earnings_' . $this->id;
         $earning       = wp_cache_get( $cache_key, $cache_group );
         $on_date       = $on_date ? date( 'Y-m-d', strtotime( $on_date ) ) : current_time( 'mysql' );
+        $trn_type      = 'dokan_refund';
+        $refund_status = 'approved';
 
         if ( false === $earning ) {
             $installed_version = get_option( 'dokan_theme_version' );
 
             if ( ! $installed_version || version_compare( $installed_version, '2.8.2', '>' ) ) {
-                $sql = "SELECT SUM(debit) as earnings
-                    FROM {$wpdb->prefix}dokan_vendor_balance
-                    WHERE vendor_id = %d AND DATE(balance_date) <= %s AND status IN({$status})";
-                $result = $wpdb->get_row( $wpdb->prepare( $sql, $this->id, $on_date ) );
+                $sql = "SELECT (SELECT SUM(debit) FROM {$wpdb->prefix}dokan_vendor_balance WHERE vendor_id = %d AND DATE(balance_date) <= %s AND status IN({$status})) - (SELECT SUM(credit) FROM {$wpdb->prefix}dokan_vendor_balance WHERE vendor_id = %d AND DATE(balance_date) <= %s AND trn_type = %s AND status = %s)
+                    AS earnings";
+                $result = $wpdb->get_row( $wpdb->prepare( $sql, $this->id, $on_date, $this->id, $on_date, $trn_type, $refund_status ) );
             } else {
                 $sql = "SELECT SUM(net_amount) as earnings
                     FROM {$wpdb->prefix}dokan_orders as do LEFT JOIN {$wpdb->prefix}posts as p ON do.order_id = p.ID
