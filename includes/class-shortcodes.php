@@ -213,7 +213,7 @@ class Dokan_Shortcodes {
          * @param array
          */
         $attr   = shortcode_atts( apply_filters( 'dokan_store_listing_per_page', $defaults ), $atts );
-        $paged  = max( 1, get_query_var( 'paged' ) );
+        $paged  = is_front_page() ? max( 1, get_query_var( 'page' ) ) : max( 1, get_query_var( 'paged' ) );
         $limit  = $attr['per_page'];
         $offset = ( $paged - 1 ) * $limit;
 
