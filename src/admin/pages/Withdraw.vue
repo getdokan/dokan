@@ -509,6 +509,26 @@ export default {
             color: #761919
         }
     }
+}
 
+@media only screen and (max-width: 600px) {
+    .withdraw-requests {
+
+        table td.seller, td.amount, td.actions {
+            display: table-cell !important;
+        }
+
+        table th:not(.check-column):not(.seller):not(.amount):not(.actions) {
+            display: none;
+        }
+
+        table td:not(.check-column):not(.seller):not(.amount):not(.actions) {
+            display: none;
+        }
+
+        table th.column, table td.column {
+            width: auto;
+        }
+    }
 }
 </style>
