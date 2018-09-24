@@ -24,7 +24,7 @@ class Dokan_Rewrites {
 
         add_filter( 'query_vars', array( $this, 'register_query_var' ) );
         add_filter( 'pre_get_posts', array( $this, 'store_query_filter' ) );
-        add_filter( 'woocommerce_get_breadcrumb', array( $this, 'store_page_breadcrumb'), 10 ,1  );
+        add_filter( 'woocommerce_get_breadcrumb', array( $this, 'store_page_breadcrumb' ) );
     }
 
 
@@ -55,13 +55,20 @@ class Dokan_Rewrites {
      *
      * @return array $crumbs
      */
-    public function store_page_breadcrumb( $crumbs ){
-        if (  dokan_is_store_page() ) {
-            $author      = get_query_var( $this->custom_store_url );
-            $seller_info = get_user_by( 'slug', $author );
-            $crumbs[1]   = array( ucwords($this->custom_store_url) , site_url().'/'.$this->custom_store_url );
-            $crumbs[2]   = array( $author, dokan_get_store_url( $seller_info->data->ID ) );
+    public function store_page_breadcrumb( $crumbs ) {
+        if ( ! dokan_is_store_page() ) {
+            return $crumbs;
         }
+
+        if ( function_exists( 'yoast_breadcrumb' ) && WPSEO_Options::get( 'breadcrumbs-enable' ) ) {
+            unset( $crumbs );
+            return;
+        }
+
+        $author      = get_query_var( $this->custom_store_url );
+        $seller_info = get_user_by( 'slug', $author );
+        $crumbs[1]   = array( ucwords($this->custom_store_url) , site_url().'/'.$this->custom_store_url );
+        $crumbs[2]   = array( $author, dokan_get_store_url( $seller_info->data->ID ) );
 
         return $crumbs;
     }

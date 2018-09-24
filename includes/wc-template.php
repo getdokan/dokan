@@ -269,3 +269,32 @@ function dokan_attach_vendor_name( $item_id, $order ) {
 }
 
 add_action( 'woocommerce_order_item_meta_start', 'dokan_attach_vendor_name', 10, 2 );
+
+/**
+ * Enable yoast seo breadcrums in dokan store page
+ *
+ * @param  array $crumbs
+ *
+ * @return array
+ */
+function enable_yoast_breadcrumb( $crumbs ) {
+    if ( ! dokan_is_store_page() ) {
+        return $crumbs;
+    }
+
+    $vendor    = dokan()->vendor->get( get_query_var( 'author' ) );
+    $store_url = dokan_get_option( 'custom_store_url', 'dokan_general', 'store' );
+
+    if ( $vendor->get_id() === 0 ) {
+        return $crumbs;
+    }
+
+    $crumbs[1]['text']  = ucwords( $store_url );
+    $crumbs[1]['url']   = site_url() . '/' . $store_url;
+    $crumbs[2]['text']  = $vendor->get_shop_name();
+    $crumbs[2]['url']   = $vendor->get_shop_url();
+
+    return $crumbs;
+}
+
+add_filter( 'wpseo_breadcrumb_links', 'enable_yoast_breadcrumb' );
