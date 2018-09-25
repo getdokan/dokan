@@ -529,6 +529,44 @@ export default {
         table th.column, table td.column {
             width: auto;
         }
+
+        table td.column.actions .dashicons {
+            width: 14px;
+            height: 14px;
+            font-size: 18px;
+        }
+
+        table td.seller {
+            .row-actions {
+                display: inline-block;
+                span {
+                    font-size: 11px;
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 376px) {
+    .withdraw-requests {
+        table td.seller {
+            .row-actions {
+                display: inline-block;
+                span {
+                    font-size: 9px;
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 320px) {
+    .withdraw-requests {
+        table td.column.actions .dashicons {
+            width: 10px;
+            height: 10px;
+            font-size: 14px;
+        }
     }
 }
 </style>

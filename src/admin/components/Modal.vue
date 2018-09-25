@@ -159,4 +159,26 @@ export default {
         }
     }
 }
+
+@media only screen and (max-width: 500px) {
+    .dokan-modal-content {
+        width: 400px !important;
+        top: 300px !important;
+    }
+}
+
+@media only screen and (max-width: 376px) {
+    .dokan-modal-content {
+        width: 350px !important;
+        top: 300px !important;
+    }
+}
+
+@media only screen and (max-width: 320px) {
+    .dokan-modal-content {
+        width: 300px !important;
+        top: 300px !important;
+    }
+}
+
 </style>
