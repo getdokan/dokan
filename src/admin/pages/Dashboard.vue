@@ -286,4 +286,47 @@ export default {
         }
     }
 }
+
+@media only screen and (max-width: 770px) {
+    .dokan-dashboard {
+        .widgets-wrapper {
+            .left-side {
+                margin-right: 0;
+            }
+            .left-side, .right-side {
+                width: auto;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    .dokan-dashboard {
+        .widgets-wrapper {
+            .left-side {
+                margin-right: 0;
+            }
+            .left-side, .right-side {
+                width: auto;
+            }
+        }
+    }
+
+    .dokan-dashboard .postbox.dokan-status ul li a {
+        .details {
+            span.up, span.down {
+                display: none;
+            }
+        }
+        strong {
+            font-size: 16px;
+        }
+    }
+}
+
+@media only screen and (max-width: 360px) {
+    .dokan-dashboard .postbox.dokan-status ul li a .details {
+        display: none;
+    }
+}
 </style>
