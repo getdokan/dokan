@@ -7,26 +7,17 @@
  * @return void
  */
 function create_vendor_balance_table_283() {
-    $processes = get_option( 'dokan_background_processes', array() );
+    $processor_file = DOKAN_INC_DIR . '/upgrades/background-processes/class_dokan_update_2_8_3_vendor_balance.php';
 
-    if ( empty( $processes['dokan_update_2_8_3_vendor_balance'] ) ) {
-        $updater_file = DOKAN_INC_DIR . '/upgrades/background-processes/class_dokan_update_2_8_3_vendor_balance.php';
+    include_once $processor_file;
 
-        include_once $updater_file;
+    $processor = new Dokan_Update_2_8_3_Vendor_Balance();
 
-        $processor = new dokan_update_2_8_3_vendor_balance();
+    $args = array(
+        'updating' => 'vendor_balance_table',
+    );
 
-        $payload = array(
-            'updating' => 'vendor_balance_table',
-        );
-
-        $processor->push_to_queue( $payload );
-        $processor->save()->dispatch();
-
-        $processes['dokan_update_2_8_3_vendor_balance'] = $updater_file;
-
-        update_option( 'dokan_background_processes', $processes, 'no' );
-    }
+    $processor->push_to_queue( $args )->dispatch_process( $processor_file );
 }
 
 create_vendor_balance_table_283();

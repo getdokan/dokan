@@ -2,16 +2,12 @@
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'Dokan_Background_Updater', false ) ) {
-    include_once DOKAN_INC_DIR . '/background-processes/abstract-class-dokan-background-processes.php';
-}
-
 /**
  * Update vendor and product geolocation data
  *
  * @since 2.8.6
  */
-class dokan_update_2_8_3_vendor_balance extends Abstract_Dokan_Background_Processes {
+class Dokan_Update_2_8_3_Vendor_Balance extends Abstract_Dokan_Background_Processes {
 
     /**
      * Action
