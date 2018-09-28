@@ -9,11 +9,19 @@
  * The class
  */
 class Dokan_Setup_Wizard {
+
     /** @var string Currenct Step */
     protected $step   = '';
 
     /** @var array Steps for the setup wizard */
     protected $steps  = array();
+
+    /**
+     * Actions to be executed after the HTTP response has completed
+     *
+     * @var array
+     */
+    private $deferred_actions = array();
 
     /**
      * Hook in tabs.
@@ -22,11 +30,12 @@ class Dokan_Setup_Wizard {
         if ( current_user_can( 'manage_options' ) ) {
             add_action( 'admin_menu', array( $this, 'admin_menus' ) );
             add_action( 'admin_init', array( $this, 'setup_wizard' ), 99 );
+            add_action( 'activated_plugin', array( $this, 'activated_plugin' ) );
         }
     }
 
     /**
-     * Enqueue scripts & styles from woocommerce plugin.
+     * Enqueue scripts & styles
      *
      * @return void
      */
@@ -54,9 +63,17 @@ class Dokan_Setup_Wizard {
 
         wp_enqueue_style( 'woocommerce_admin_styles', WC()->plugin_url() . '/assets/css/admin.css', array(), WC_VERSION );
         wp_enqueue_style( 'wc-setup', WC()->plugin_url() . '/assets/css/wc-setup.css', array( 'dashicons', 'install' ), WC_VERSION );
+        wp_enqueue_style( 'dokan-setup', DOKAN_PLUGIN_ASSEST . '/css/setup.css', array( 'wc-setup' ), DOKAN_PLUGIN_VERSION );
 
         wp_register_script( 'wc-setup', WC()->plugin_url() . '/assets/js/admin/wc-setup.min.js', array( 'jquery', 'wc-enhanced-select', 'jquery-blockui' ), WC_VERSION );
         wp_localize_script( 'wc-setup', 'wc_setup_params', array() );
+
+        /**
+         * Action fires after finishing enqueuing setup wizard assets
+         *
+         * @since 2.8.7
+         */
+        do_action( 'dokan_setup_wizard_enqueue_scripts' );
     }
 
     /**
@@ -94,12 +111,23 @@ class Dokan_Setup_Wizard {
                 'view'    => array( $this, 'dokan_setup_withdraw' ),
                 'handler' => array( $this, 'dokan_setup_withdraw_save' ),
             ),
+            'recommended' => array(
+                'name'    =>  __( 'Recommended', 'dokan-lite' ),
+                'view'    => array( $this, 'dokan_setup_recommended' ),
+                'handler' => array( $this, 'dokan_setup_recommended_save' ),
+            ),
             'next_steps' => array(
                 'name'    =>  __( 'Ready!', 'dokan-lite' ),
                 'view'    => array( $this, 'dokan_setup_ready' ),
                 'handler' => ''
             )
         );
+
+        // Hide recommended step if nothing is going to be shown there.
+        if ( ! $this->should_show_recommended_step() ) {
+            unset( $this->steps['recommended'] );
+        }
+
         $this->step = isset( $_GET['step'] ) ? sanitize_key( $_GET['step'] ) : current( array_keys( $this->steps ) );
 
         $this->enqueue_scripts();
@@ -137,81 +165,6 @@ class Dokan_Setup_Wizard {
             <?php do_action( 'admin_print_styles' ); ?>
             <?php do_action( 'admin_head' ); ?>
             <?php do_action( 'dokan_setup_wizard_styles' ); ?>
-            <style type="text/css">
-                .wc-setup-steps {
-                    justify-content: center;
-                }
-                .wc-setup-content a {
-                    color: #f39132;
-                }
-                .wc-setup-steps li.active:before {
-                    border-color: #f39132;
-                }
-                .wc-setup-steps li.active {
-                    border-color: #f39132;
-                    color: #f39132;
-                }
-                .wc-setup-steps li.done:before {
-                    border-color: #f39132;
-                }
-                .wc-setup-steps li.done {
-                    border-color: #f39132;
-                    color: #f39132;
-                }
-                .wc-setup .wc-setup-actions .button-primary, .wc-setup .wc-setup-actions .button-primary, .wc-setup .wc-setup-actions .button-primary {
-                    background: #f39132 !important;
-                }
-                .wc-setup .wc-setup-actions .button-primary:active, .wc-setup .wc-setup-actions .button-primary:focus, .wc-setup .wc-setup-actions .button-primary:hover {
-                    background: #ff6b00 !important;
-                    border-color: #ff6b00 !important;
-                }
-                .wc-setup-content .wc-setup-next-steps ul .setup-product a, .wc-setup-content .wc-setup-next-steps ul .setup-product a, .wc-setup-content .wc-setup-next-steps ul .setup-product a {
-                    background: #f39132 !important;
-                    box-shadow: inset 0 1px 0 rgba(255,255,255,.25),0 1px 0 #f39132;
-                }
-                .wc-setup-content .wc-setup-next-steps ul .setup-product a:active, .wc-setup-content .wc-setup-next-steps ul .setup-product a:focus, .wc-setup-content .wc-setup-next-steps ul .setup-product a:hover {
-                    background: #ff6b00 !important;
-                    border-color: #ff6b00 !important;
-                    box-shadow: inset 0 1px 0 rgba(255,255,255,.25),0 1px 0 #ff6b00;
-                }
-                .wc-setup .wc-setup-actions .button-primary {
-                    border-color: #f39132 !important;
-                }
-                .wc-setup-content .wc-setup-next-steps ul .setup-product a {
-                    border-color: #f39132 !important;
-                }
-                ul.wc-wizard-payment-gateways li.wc-wizard-gateway .wc-wizard-gateway-enable input:checked+label:before {
-                    background: #f39132 !important;
-                    border-color: #f39132 !important;
-                }
-                .dokan-setup-done h1 {
-                    text-align:  center;
-                }
-                .dokan-setup-done-content {
-                    display: flex;
-                    justify-content: center;
-                }
-                .dokan-setup-done-content .button {
-                    background-color: #ee9034 !important;
-                    color: #ffffff !important;
-                    height: 40px;
-                    line-height: 40px;
-                    font-size: 14px;
-                    padding: 0 25px;
-                    margin-left: 12px;
-                    margin-right: 12px;
-                }
-                .dokan-setup-done-content .learn-more {
-                    background-color: #ECF0F1 !important;
-                    color: #A5B7BB !important;
-                }
-                .dokan-setup-done img {
-                    display: block;
-                    margin-left: auto;
-                    margin-right: auto;
-                    padding-bottom: 30px;
-                }
-            </style>
         </head>
         <body class="wc-setup wp-core-ui">
             <?php
@@ -259,6 +212,11 @@ class Dokan_Setup_Wizard {
      * Output the content for the current step.
      */
     public function setup_wizard_content() {
+        if ( empty( $this->steps[ $this->step ]['view'] ) ) {
+            wp_redirect( esc_url_raw( add_query_arg( 'step', 'introduction' ) ) );
+            exit;
+        }
+
         echo '<div class="wc-setup-content">';
         call_user_func( $this->steps[ $this->step ]['view'] );
         echo '</div>';
@@ -318,7 +276,7 @@ class Dokan_Setup_Wizard {
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="tax_fee_recipient"><?php _e( 'Rax Fee Recipient', 'dokan-lite' ); ?></label></th>
+                    <th scope="row"><label for="tax_fee_recipient"><?php _e( 'Tax Fee Recipient', 'dokan-lite' ); ?></label></th>
                     <td>
                         <select class="wc-enhanced-select" id="tax_fee_recipient" name="tax_fee_recipient">
                             <?php
@@ -331,6 +289,24 @@ class Dokan_Setup_Wizard {
                         <p class="description"><?php _e( 'Tax fees will go to', 'dokan-lite' ); ?></p>
                     </td>
                 </tr>
+                <tr>
+                    <th scope="row"><label for="share_essentials"><?php _e( 'Share Essentials', 'dokan-lite' ); ?></label></th>
+
+                    <td>
+                        <input type="checkbox" name="share_essentials" id="share_essentials" class="switch-input" checked>
+                        <label for="share_essentials" class="switch-label">
+                            <span class="toggle--on"><?php _e( 'On', 'dokan-lite' ); ?></span>
+                            <span class="toggle--off"><?php _e( 'Off', 'dokan-lite' ); ?></span>
+                        </label>
+                        <span class="description">
+                            <?php _e( 'Want to help make Dokan even more awesome? Allow weDevs to collect non-sensitive diagnostic data and usage information.', 'dokan-lite' ); ?>
+                            <?php printf( '<a class="insights-data-we-collect" href="#">%s</a>', __( 'What we collect', 'dokan-lite' ) ); ?>
+                        </span>
+                        <p id="collection-info" class="description" style="display:none;">
+                            <?php _e( 'Server environment details (php, mysql, server, WordPress versions), Number of users in your site, Site language, Number of active and inactive plugins, Site name and url, Your name and email address. No sensitive data is tracked.', 'dokan-lite' ); ?>
+                        </p>
+                    </td>
+                </tr>
             </table>
             <p class="wc-setup-actions step">
                 <input type="submit" class="button-primary button button-large button-next" value="<?php esc_attr_e( 'Continue', 'dokan-lite' ); ?>" name="save_step" />
@@ -338,6 +314,13 @@ class Dokan_Setup_Wizard {
                 <?php wp_nonce_field( 'dokan-setup' ); ?>
             </p>
         </form>
+
+        <script type="text/javascript">
+            jQuery('.insights-data-we-collect').on('click', function(e) {
+                e.preventDefault();
+                jQuery('#collection-info').slideToggle('fast');
+            });
+        </script>
         <?php
     }
 
@@ -352,6 +335,14 @@ class Dokan_Setup_Wizard {
         $options['custom_store_url']       = ! empty( $_POST['custom_store_url'] ) ? sanitize_text_field( $_POST['custom_store_url'] ) : '';
         $options['tax_fee_recipient']      = ! empty( $_POST['tax_fee_recipient'] ) ? sanitize_text_field( $_POST['tax_fee_recipient'] ) : '';
         $options['shipping_fee_recipient'] = ! empty( $_POST['shipping_fee_recipient'] ) ? sanitize_text_field( $_POST['shipping_fee_recipient'] ) : '';
+
+        $share_essentials = sanitize_text_field( isset( $_POST['share_essentials'] ) );
+
+        if ( $share_essentials ) {
+            dokan()->tracker->insights->optin();
+        } else {
+            dokan()->tracker->insights->optout();
+        }
 
         update_option( 'dokan_general', $options );
 
@@ -376,8 +367,14 @@ class Dokan_Setup_Wizard {
                 <tr>
                     <th scope="row"><label for="new_seller_enable_selling"><?php _e( 'New Vendor Enable Selling', 'dokan-lite' ); ?></label></th>
                     <td>
-                        <input type="checkbox" name="new_seller_enable_selling" id="new_seller_enable_selling" class="input-checkbox" value="1" <?php echo ( $new_seller_enable_selling == 'on' ) ? 'checked="checked"' : ''; ?>/>
-                        <label for="new_seller_enable_selling"><?php _e( 'Make selling status enable for new registred vendor', 'dokan-lite' ); ?></label>
+                        <input type="checkbox" name="new_seller_enable_selling" id="new_seller_enable_selling" class="switch-input" <?php echo ( $new_seller_enable_selling == 'on' ) ? 'checked="checked"' : ''; ?>>
+                        <label for="new_seller_enable_selling" class="switch-label">
+                            <span class="toggle--on"><?php _e( 'On', 'dokan-lite' ); ?></span>
+                            <span class="toggle--off"><?php _e( 'Off', 'dokan-lite' ); ?></span>
+                        </label>
+                        <span class="description">
+                            <?php _e( 'Make selling status enable for new registred vendor', 'dokan-lite' ); ?>
+                        </span>
                     </td>
                 </tr>
                 <tr>
@@ -400,8 +397,14 @@ class Dokan_Setup_Wizard {
                 <tr>
                     <th scope="row"><label for="order_status_change"><?php _e( 'Order Status Change', 'dokan-lite' ); ?></label></th>
                     <td>
-                        <input type="checkbox" name="order_status_change" id="order_status_change" class="input-checkbox" value="1" <?php echo ( $order_status_change == 'on' ) ? 'checked="checked"' : ''; ?>/>
-                        <label for="order_status_change"><?php _e( 'Vendor can change order status', 'dokan-lite' ); ?></label>
+                        <input type="checkbox" name="order_status_change" id="order_status_change" class="switch-input" <?php echo ( $order_status_change == 'on' ) ? 'checked="checked"' : ''; ?>>
+                        <label for="order_status_change" class="switch-label">
+                            <span class="toggle--on"><?php _e( 'On', 'dokan-lite' ); ?></span>
+                            <span class="toggle--off"><?php _e( 'Off', 'dokan-lite' ); ?></span>
+                        </label>
+                        <span class="description">
+                            <?php _e( 'Vendor can change order status', 'dokan-lite' ); ?>
+                        </span>
                     </td>
                 </tr>
             </table>
@@ -458,11 +461,9 @@ class Dokan_Setup_Wizard {
                                 <div class="wc-wizard-service-description">
                                     <?php _e( 'Enable paypal for your vendor as a withdraw method', 'dokan-lite' ); ?>
                                 </div>
-                                <div class="wc-wizard-service-enable">
-                                    <span class="wc-wizard-service-toggle">
-                                        <input id="withdraw_methods[paypal]" type="checkbox" name="withdraw_methods[paypal]" value="paypal" checked="checked" class="wc-wizard-shipping-method-enable" />
-                                        <label for="withdraw_methods[paypal]">
-                                    </span>
+                                <div class="dokan-wizard-service-enable">
+                                    <input type="checkbox" name="withdraw_methods[paypal]" id="withdraw_methods[paypal]" class="switch-input" value="paypal" checked>
+                                    <label for="withdraw_methods[paypal]" class="switch-label"></label>
                                 </div>
                             </li>
 
@@ -473,11 +474,9 @@ class Dokan_Setup_Wizard {
                                 <div class="wc-wizard-service-description">
                                     <?php _e( 'Enable bank transfer for your vendor as a withdraw method', 'dokan-lite' ); ?>
                                 </div>
-                                <div class="wc-wizard-service-enable">
-                                    <span class="wc-wizard-service-toggle">
-                                        <input id="withdraw_methods[bank]" type="checkbox" name="withdraw_methods[bank]" value="bank" checked="checked" class="wc-wizard-shipping-method-enable" />
-                                        <label for="withdraw_methods[bank]">
-                                    </span>
+                                <div class="dokan-wizard-service-enable">
+                                    <input type="checkbox" name="withdraw_methods[bank]" id="withdraw_methods[bank]" value="bank" class="switch-input" checked>
+                                    <label for="withdraw_methods[bank]" class="switch-label"></label>
                                 </div>
                             </li>
 
@@ -488,13 +487,22 @@ class Dokan_Setup_Wizard {
                                 <div class="wc-wizard-service-description">
                                     <?php _e( 'Enable skrill for your vendor as a withdraw method', 'dokan-lite' ); ?>
                                 </div>
-                                <div class="wc-wizard-service-enable">
-                                    <span class="wc-wizard-service-toggle">
-                                        <input id="withdraw_methods[skrill]" type="checkbox" name="withdraw_methods[skrill]" value="skrill" checked="checked" class="wc-wizard-shipping-method-enable" />
-                                        <label for="withdraw_methods[skrill]">
-                                    </span>
+                                <div class="dokan-wizard-service-enable">
+                                    <input type="checkbox" name="withdraw_methods[skrill]" id="withdraw_methods[skrill]" value="skrill" class="switch-input" checked>
+                                    <label for="withdraw_methods[skrill]" class="switch-label"></label>
                                 </div>
                             </li>
+
+                            <?php
+                                /**
+                                 * Hook to include more withdraw options during setup
+                                 *
+                                 * @since 2.8.7
+                                 *
+                                 * @param array $options dokan_withdraw settings
+                                 */
+                                do_action( 'dokan_setup_wizard_view_withdraw_methods', $options );
+                            ?>
                         </ul>
                     </td>
                 </tr>
@@ -508,9 +516,26 @@ class Dokan_Setup_Wizard {
                 <tr>
                     <th scope="row"><label for="withdraw_order_status"><?php _e( 'Order Status for Withdraw', 'dokan-lite' ); ?></label></th>
                     <td>
-                        <input type="checkbox" class="input-checkbox" id="withdraw_order_status[wc-completed]" name="withdraw_order_status[wc-completed]" value="wc-completed" <?php echo ( array_key_exists( 'wc-completed', $withdraw_order_status ) ) ? 'checked="true"' : ''; ?>><label for="withdraw_order_status[wc-completed]"> <?php _e( 'Completed', 'dokan-lite' ); ?></label><br />
-                        <input type="checkbox" class="input-checkbox" id="withdraw_order_status[wc-processing]" name="withdraw_order_status[wc-processing]" value="wc-processing" <?php echo ( array_key_exists( 'wc-processing', $withdraw_order_status ) ) ? 'checked="true"' : ''; ?>><label for="withdraw_order_status[wc-processing]"> <?php _e( 'Processing', 'dokan-lite' ); ?></label><br />
-                        <input type="checkbox" class="input-checkbox" id="withdraw_order_status[wc-on-hold]" name="withdraw_order_status[wc-on-hold]" value="wc-on-hold" <?php echo ( array_key_exists( 'wc-on-hold', $withdraw_order_status ) ) ? 'checked="true"' : ''; ?>><label for="withdraw_order_status[wc-on-hold]"> <?php _e( 'On-hold', 'dokan-lite' ); ?></label>
+                        <ul class="list-unstyled">
+                            <li class="checkbox">
+                                <input type="checkbox" name="withdraw_order_status[wc-completed]" id="withdraw_order_status[wc-completed]" class="switch-input" value="wc-completed" <?php echo ( array_key_exists( 'wc-completed', $withdraw_order_status ) ) ? 'checked="true"' : ''; ?>>
+                                <label for="withdraw_order_status[wc-completed]">
+                                    <?php _e( 'Completed', 'dokan-lite' ); ?>
+                                </label>
+                            </li>
+                            <li class="checkbox">
+                                <input type="checkbox" name="withdraw_order_status[wc-processing]" id="withdraw_order_status[wc-processing]" class="switch-input" value="wc-processing" <?php echo ( array_key_exists( 'wc-processing', $withdraw_order_status ) ) ? 'checked="true"' : ''; ?>>
+                                <label for="withdraw_order_status[wc-processing]">
+                                    <?php _e( 'Processing', 'dokan-lite' ); ?>
+                                </label>
+                            </li>
+                            <li class="checkbox">
+                                <input type="checkbox" name="withdraw_order_status[wc-on-hold]" id="withdraw_order_status[wc-on-hold]" class="switch-input" value="wc-on-hold" <?php echo ( array_key_exists( 'wc-on-hold', $withdraw_order_status ) ) ? 'checked="true"' : ''; ?>>
+                                <label for="withdraw_order_status[wc-on-hold]">
+                                    <?php _e( 'On-hold', 'dokan-lite' ); ?>
+                                </label>
+                            </li>
+                        </ul>
 
                         <p class="description"><?php _e( 'Order status for which vendor can make a withdraw request.', 'dokan-lite' ); ?></p>
                     </td>
@@ -526,6 +551,96 @@ class Dokan_Setup_Wizard {
     }
 
     /**
+     * Recommended Step
+     *
+     * @since 2.8.7
+     *
+     * @return void
+     */
+    public function dokan_setup_recommended() {
+        ?>
+            <h1><?php esc_html_e( 'Recommended for All Dokan Marketplaces', 'dokan-lite' ); ?></h1>
+
+            <p><?php esc_html_e( 'Enhance your store with these recommended features.', 'dokan-lite' ); ?></p>
+
+            <form method="post">
+                <ul class="recommended-step">
+                    <?php
+                        if ( $this->user_can_install_plugin() ) {
+
+                            if ( ! $this->is_wc_conversion_tracking_active() ) {
+                                $this->display_recommended_item( array(
+                                    'type'        => 'wc_conversion_tracking',
+                                    'title'       => __( 'WooCommerce Conversion Tracking', 'dokan-lite' ),
+                                    'description' => __( 'Track conversions on your WooCommerce store like a pro!', 'dokan-lite' ),
+                                    'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/wc-conversion-tracking-logo.png',
+                                    'img_alt'     => __( 'WooCommerce Conversion Tracking logo', 'dokan-lite' ),
+                                    'plugins'     => array( array( 'name' => __( 'WooCommerce Conversion Tracking', 'dokan-lite' ), 'slug' => 'woocommerce-conversion-tracking' ) ),
+                                ) );
+                            }
+
+                            if ( ! $this->is_weforms_active() ) {
+                                $this->display_recommended_item( array(
+                                    'type'        => 'weforms',
+                                    'title'       => __( 'weForms', 'dokan-lite' ),
+                                    'description' => __( 'Best Contact Form Plugin for WordPress.', 'dokan-lite' ),
+                                    'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/weforms-logo.png',
+                                    'img_alt'     => __( 'weForms logo', 'dokan-lite' ),
+                                    'plugins'     => array( array( 'name' => __( 'weForms', 'dokan-lite' ), 'slug' => 'weforms' ) ),
+                                ) );
+                            }
+                        };
+                    ?>
+                </ul>
+                <p class="wc-setup-actions step">
+                    <?php $this->plugin_install_info(); ?>
+                    <button type="submit" class="button-primary button button-large button-next" value="<?php esc_attr_e( 'Continue', 'dokan-lite' ); ?>" name="save_step"><?php esc_html_e( 'Continue', 'dokan-lite' ); ?></button>
+                    <?php wp_nonce_field( 'dokan-setup' ); ?>
+                </p>
+            </form>
+        <?php
+    }
+
+    /**
+     * Save data from recommended step
+     *
+     * @since 2.8.7
+     *
+     * @return void
+     */
+    public function dokan_setup_recommended_save() {
+        check_admin_referer( 'dokan-setup' );
+
+        $setup_wc_conversion_tracking  = isset( $_POST['setup_wc_conversion_tracking'] ) && 'yes' === $_POST['setup_wc_conversion_tracking'];
+        $setup_weforms                 = isset( $_POST['setup_weforms'] ) && 'yes' === $_POST['setup_weforms'];
+
+        if ( $setup_wc_conversion_tracking && ! $this->is_wc_conversion_tracking_active() ) {
+            $this->install_plugin(
+                'woocommerce-conversion-tracking',
+                array(
+                    'name'      => __( 'WooCommerce Conversion Tracking', 'dokan-lite' ),
+                    'repo-slug' => 'woocommerce-conversion-tracking',
+                    'file'      => 'conversion-tracking.php',
+                )
+            );
+        }
+
+        if ( $setup_weforms && ! $this->is_weforms_active() ) {
+            $this->install_plugin(
+                'weforms',
+                array(
+                    'name'      => __( 'weForms', 'dokan-lite' ),
+                    'repo-slug' => 'weforms',
+                    'file'      => 'weforms.php',
+                )
+            );
+        }
+
+        wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
+        exit;
+    }
+
+    /**
      * Save withdraw options.
      */
     public function dokan_setup_withdraw_save() {
@@ -537,6 +652,16 @@ class Dokan_Setup_Wizard {
         $options['withdraw_limit']        = ! empty( $_POST['withdraw_limit'] ) ? sanitize_text_field( $_POST['withdraw_limit'] ) : 0;
         $options['withdraw_order_status'] = ! empty( $_POST['withdraw_order_status'] ) ? $_POST['withdraw_order_status'] : array();
 
+        /**
+         * Filter dokan_withdraw options before saving in setup wizard
+         *
+         * @since 2.8.7
+         *
+         * @param array $options
+         * @param array $_POST
+         */
+        $options = apply_filters( 'dokan_setup_wizard_save_withdraw_options', $options, $_POST );
+
         update_option( 'dokan_withdraw', $options );
 
         wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
@@ -547,6 +672,7 @@ class Dokan_Setup_Wizard {
      * Final step.
      */
     public function dokan_setup_ready() {
+        $this->after_weforms_activate();
         ?>
         <div class="dokan-setup-done">
             <img src="<?php echo plugins_url( 'assets/images/dokan-checked.png', DOKAN_FILE ); ?>" alt="dokan setup">
@@ -555,10 +681,246 @@ class Dokan_Setup_Wizard {
 
         <div class="dokan-setup-done-content">
             <p class="wc-setup-actions step">
-                <a class="button" href="<?php echo esc_url( admin_url( 'admin.php?page=dokan#/settings' ) ); ?>"><?php _e( 'Setup Your Dokan!', 'dokan-lite' ); ?></a>
-                <a class="button learn-more" href="<?php echo esc_url( admin_url( 'admin.php?page=dokan#/help' ) ); ?>"><?php _e( 'Learn More', 'dokan-lite' ); ?></a>
+                <a class="button button-primary" href="<?php echo esc_url( admin_url( 'admin.php?page=dokan#/settings' ) ); ?>"><?php _e( 'Setup Your Dokan!', 'dokan-lite' ); ?></a>
+                <a class="button" href="<?php echo esc_url( admin_url( 'admin.php?page=dokan#/help' ) ); ?>"><?php _e( 'Learn More', 'dokan-lite' ); ?></a>
             </p>
         </div>
         <?php
+    }
+
+    /**
+     * Should we display the 'Recommended' step?
+     *
+     * True if at least one of the recommendations will be displayed.
+     *
+     * @return boolean
+     */
+    protected function should_show_recommended_step() {
+        if ( ! $this->user_can_install_plugin() ) {
+            return false;
+        }
+
+        if ( $this->is_wc_conversion_tracking_active() && $this->is_weforms_active() ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Check if WC Conversion Tracking is active or not
+     *
+     * @since 2.8.7
+     *
+     * @return bool
+     */
+    protected function is_wc_conversion_tracking_active() {
+        return is_plugin_active( 'woocommerce-conversion-tracking/conversion-tracking.php' );
+    }
+
+    /**
+     * Check if weForms is active or not
+     *
+     * @since 2.8.7
+     *
+     * @return bool
+     */
+    protected function is_weforms_active() {
+        return is_plugin_active( 'weforms/weforms.php' );
+    }
+
+    /**
+     * Should we show the WooCommerce Conversion Tracking install option?
+     *
+     * True only if the user can install plugins.
+     *
+     * @return boolean
+     */
+    protected function user_can_install_plugin() {
+        return current_user_can( 'install_plugins' );
+    }
+
+    protected function display_recommended_item( $item_info ) {
+        $type        = $item_info['type'];
+        $title       = $item_info['title'];
+        $description = $item_info['description'];
+        $img_url     = $item_info['img_url'];
+        $img_alt     = $item_info['img_alt'];
+        ?>
+        <li class="recommended-item checkbox">
+            <input
+                id="<?php echo esc_attr( 'dokan_recommended_' . $type ); ?>"
+                type="checkbox"
+                name="<?php echo esc_attr( 'setup_' . $type ); ?>"
+                value="yes"
+                checked
+                data-plugins="<?php echo esc_attr( wp_json_encode( isset( $item_info['plugins'] ) ? $item_info['plugins'] : null ) ); ?>"
+            />
+            <label for="<?php echo esc_attr( 'dokan_recommended_' . $type ); ?>">
+                <img
+                    src="<?php echo esc_url( $img_url ); ?>"
+                    class="<?php echo esc_attr( 'recommended-item-icon-' . $type ); ?> recommended-item-icon"
+                    alt="<?php echo esc_attr( $img_alt ); ?>" />
+                <div class="recommended-item-description-container">
+                    <h3><?php echo esc_html( $title ); ?></h3>
+                    <p><?php echo wp_kses( $description, array(
+                        'a' => array(
+                            'href'   => array(),
+                            'target' => array(),
+                            'rel'    => array(),
+                        ),
+                        'em' => array(),
+                    ) ); ?></p>
+                </div>
+            </label>
+        </li>
+        <?php
+    }
+
+    /**
+     * Plugin install info message markup with heading.
+     */
+    public function plugin_install_info() {
+        ?>
+        <span class="plugin-install-info">
+            <span class="plugin-install-info-label"><?php esc_html_e( 'The following plugins will be installed and activated for you:', 'woocommerce' ); ?></span>
+            <span class="plugin-install-info-list"></span>
+        </span>
+        <?php
+    }
+
+    /**
+     * Helper method to queue the background install of a plugin.
+     *
+     * @param string $plugin_id  Plugin id used for background install.
+     * @param array  $plugin_info Plugin info array containing name and repo-slug, and optionally file if different from [repo-slug].php.
+     */
+    protected function install_plugin( $plugin_id, $plugin_info ) {
+        // Make sure we don't trigger multiple simultaneous installs.
+        if ( get_option( 'woocommerce_setup_background_installing_' . $plugin_id ) ) {
+            return;
+        }
+
+        $plugin_file = isset( $plugin_info['file'] ) ? $plugin_info['file'] : $plugin_info['repo-slug'] . '.php';
+        if ( is_plugin_active( $plugin_info['repo-slug'] . '/' . $plugin_file ) ) {
+            return;
+        }
+
+        if ( empty( $this->deferred_actions ) ) {
+            add_action( 'shutdown', array( $this, 'run_deferred_actions' ) );
+        }
+
+        array_push(
+            $this->deferred_actions,
+            array(
+                'func' => array( 'WC_Install', 'background_installer' ),
+                'args' => array( $plugin_id, $plugin_info ),
+            )
+        );
+
+        // Set the background installation flag for this plugin.
+        update_option( 'woocommerce_setup_background_installing_' . $plugin_id, true );
+    }
+
+    /**
+     * Function called after the HTTP request is finished, so it's executed without the client having to wait for it.
+     *
+     * @see WC_Admin_Setup_Wizard::install_plugin
+     * @see WC_Admin_Setup_Wizard::install_theme
+     */
+    public function run_deferred_actions() {
+        $this->close_http_connection();
+        foreach ( $this->deferred_actions as $action ) {
+            call_user_func_array( $action['func'], $action['args'] );
+
+            // Clear the background installation flag if this is a plugin.
+            if (
+                isset( $action['func'][1] ) &&
+                'background_installer' === $action['func'][1] &&
+                isset( $action['args'][0] )
+            ) {
+                delete_option( 'woocommerce_setup_background_installing_' . $action['args'][0] );
+            }
+        }
+    }
+
+    /**
+     * Finishes replying to the client, but keeps the process running for further (async) code execution.
+     *
+     * @see https://core.trac.wordpress.org/ticket/41358 .
+     */
+    protected function close_http_connection() {
+        // Only 1 PHP process can access a session object at a time, close this so the next request isn't kept waiting.
+        // @codingStandardsIgnoreStart
+        if ( session_id() ) {
+            session_write_close();
+        }
+        // @codingStandardsIgnoreEnd
+
+        wc_set_time_limit( 0 );
+
+        // fastcgi_finish_request is the cleanest way to send the response and keep the script running, but not every server has it.
+        if ( is_callable( 'fastcgi_finish_request' ) ) {
+            fastcgi_finish_request();
+        } else {
+            // Fallback: send headers and flush buffers.
+            if ( ! headers_sent() ) {
+                header( 'Connection: close' );
+            }
+            @ob_end_flush(); // @codingStandardsIgnoreLine.
+            flush();
+        }
+    }
+
+    /**
+     * activate_plugin hook
+     *
+     * @since 2.8.7
+     *
+     * @param string $plugin
+     *
+     * @return void
+     */
+    public function activated_plugin( $plugin ) {
+        if ( 'weforms/weforms.php' === $plugin ) {
+            update_option( 'dokan_setup_wizard_activated_weforms', true );
+        }
+    }
+
+    /**
+     * Action after weForms activate
+     *
+     * @since 2.8.7
+     *
+     * @return void
+     */
+    private function after_weforms_activate() {
+        $did_activate = get_option( 'dokan_setup_wizard_activated_weforms', false );
+
+        if ( ! $did_activate ) {
+            return;
+        }
+
+        add_action( 'shutdown', 'flush_rewrite_rules' );
+
+        $forms_data = weforms()->form->all();
+
+        $forms = $forms_data['forms'];
+
+        if ( empty( $forms_data['forms'][0] ) ) {
+            return;
+        }
+
+        $form = $forms_data['forms'][0];
+
+        $settings = array(
+            'allow_vendor_contact_form'    => 'on',
+            'vendor_contact_section_label' => __( 'Contact Admin', 'dokan-lite' ),
+            'vendor_contact_form'          => $form->id,
+        );
+
+        update_option( 'weforms_integration', $settings );
+
+        delete_option( 'dokan_setup_wizard_activated_weforms' );
     }
 }
