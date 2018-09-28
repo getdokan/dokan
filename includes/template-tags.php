@@ -102,7 +102,7 @@ function dokan_page_navi( $before = '', $after = '', $wp_query ) {
         echo '<li class="prev"><a href="' . get_pagenum_link() . '" title="First">' . $first_page_text . '</a></li>';
     }
 
-    $prevposts = get_previous_posts_link( '&larr; Previous' );
+    $prevposts = get_previous_posts_link( __( '&larr; Previous', 'dokan-lite') );
     if ( $prevposts ) {
         echo '<li>' . $prevposts . '</li>';
     } else {
