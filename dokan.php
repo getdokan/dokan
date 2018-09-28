@@ -266,6 +266,7 @@ final class WeDevs_Dokan {
         // initialize the classes
         add_action( 'init', array( $this, 'init_classes' ),5 );
         add_action( 'init', array( $this, 'wpdb_table_shortcuts' ) );
+        add_action( 'dokan_loaded', array( $this, 'after_dokan_loaded' ), 11 ); // Pro is using priority 10
 
         add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), array( $this, 'plugin_action_links' ) );
         add_action( 'in_plugin_update_message-dokan-lite/dokan.php', array( 'Dokan_Installer', 'in_plugin_update_message' ) );
@@ -371,8 +372,6 @@ final class WeDevs_Dokan {
         if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
             Dokan_Ajax::init()->init_ajax();
         }
-
-        new Dokan_Background_Processes();
     }
 
     /**
@@ -390,6 +389,19 @@ final class WeDevs_Dokan {
         $wpdb->dokan_announcement   = $wpdb->prefix . 'dokan_announcement';
         $wpdb->dokan_refund         = $wpdb->prefix . 'dokan_refund';
         $wpdb->dokan_vendor_balance = $wpdb->prefix . 'dokan_vendor_balance';
+    }
+
+    /**
+     * Executed after Dokan finished loading
+     *
+     * This method is intended to load after Pro loaded
+     *
+     * @since 2.8.7
+     *
+     * @return void
+     */
+    public function after_dokan_loaded() {
+        new Dokan_Background_Processes();
     }
 
     /**
