@@ -467,8 +467,9 @@ function dokan_get_seller_percentage( $seller_id = 0, $product_id = 0, $category
 
         //category wise percentage
         $category_commission = dokan_get_category_wise_seller_commission( $product_id, $category_id );
+        $is_single_category  = dokan_get_option( 'product_category_style', 'dokan_selling', 'single' );
 
-        if ( $category_commission != '' && is_numeric( $category_commission ) && $category_commission >= 0 ) {
+        if ( $is_single_category == 'single' && $category_commission != '' && is_numeric( $category_commission ) && $category_commission >= 0 ) {
 
             $category_commission_type = dokan_get_category_wise_seller_commission_type( $product_id, $category_id );
 
