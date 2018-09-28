@@ -129,10 +129,11 @@ add_filter( 'woocommerce_register_post_type_product', 'dokan_manage_capability_f
  *
  * @return void
  */
-function dokan_author_field_quick_edit(){
+function dokan_author_field_quick_edit() {
     if ( ! current_user_can( 'manage_woocommerce' ) ) {
         return;
     }
+
     $admin_user = get_user_by( 'id', get_current_user_id() );
     $user_query = new WP_User_Query( array( 'role' => 'seller' ) );
     $sellers    = $user_query->get_results();
@@ -174,6 +175,7 @@ function dokan_author_field_quick_edit(){
 }
 
 add_action( 'woocommerce_product_quick_edit_end',  'dokan_author_field_quick_edit' );
+add_action( 'woocommerce_product_bulk_edit_end',  'dokan_author_field_quick_edit' );
 
 /**
  * Assign value for quick edit data
@@ -206,7 +208,7 @@ add_action( 'manage_product_posts_custom_column', 'dokan_vendor_quick_edit_data'
  *
  * @return void
  */
-function dokan_save_quick_edit_vendor_data ( $product ){
+function dokan_save_quick_edit_vendor_data ( $product ) {
     if ( ! current_user_can( 'manage_woocommerce' ) ) {
         return;
     }
@@ -218,6 +220,7 @@ function dokan_save_quick_edit_vendor_data ( $product ){
 }
 
 add_action( 'woocommerce_product_quick_edit_save', 'dokan_save_quick_edit_vendor_data', 10, 1 );
+add_action( 'woocommerce_product_bulk_edit_save', 'dokan_save_quick_edit_vendor_data', 10, 1 );
 
 /**
  * Add go to vendor dashboard button to my account page
