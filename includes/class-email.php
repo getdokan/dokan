@@ -104,7 +104,7 @@ class Dokan_Email {
         $wc_emails['Dokan_Email_Withdraw_Cancelled']  = include( DOKAN_INC_DIR.'/emails/class-dokan-withdraw-cancelled.php' );
         $wc_emails['Dokan_Email_Contact_Seller']      = include( DOKAN_INC_DIR.'/emails/class-dokan-email-contact-seller.php' );
 
-        return $wc_emails;
+        return apply_filters( 'dokan_email_classes', $wc_emails );
     }
 
     /**
