@@ -266,7 +266,8 @@ final class WeDevs_Dokan {
         // initialize the classes
         add_action( 'init', array( $this, 'init_classes' ),5 );
         add_action( 'init', array( $this, 'wpdb_table_shortcuts' ) );
-        add_action( 'dokan_loaded', array( $this, 'after_dokan_loaded' ), 11 ); // Pro is using priority 10
+
+        add_action( 'plugins_loaded', array( $this, 'after_plugins_loaded' ) );
 
         add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), array( $this, 'plugin_action_links' ) );
         add_action( 'in_plugin_update_message-dokan-lite/dokan.php', array( 'Dokan_Installer', 'in_plugin_update_message' ) );
@@ -392,15 +393,15 @@ final class WeDevs_Dokan {
     }
 
     /**
-     * Executed after Dokan finished loading
+     * Executed after all plugins are loaded
      *
-     * This method is intended to load after Pro loaded
+     * At this point Dokan Pro is loaded
      *
      * @since 2.8.7
      *
      * @return void
      */
-    public function after_dokan_loaded() {
+    public function after_plugins_loaded() {
         new Dokan_Background_Processes();
     }
 
