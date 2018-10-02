@@ -470,6 +470,68 @@ class Dokan_Vendor {
     }
 
     /**
+     * Get vendor total earnings
+     *
+     * @return float
+     */
+    public function get_earnings( $formatted = true, $on_date = '' ) {
+        global $wpdb;
+
+        $status        = dokan_withdraw_get_active_order_status_in_comma();
+        $cache_group   = 'dokan_seller_data_'.$this->id;
+        $cache_key     = 'dokan_seller_earnings_' . $this->id;
+        $earning       = wp_cache_get( $cache_key, $cache_group );
+        $on_date       = $on_date ? date( 'Y-m-d', strtotime( $on_date ) ) : current_time( 'mysql' );
+        $trn_type      = 'dokan_refund';
+        $refund_status = 'approved';
+
+        if ( false === $earning ) {
+            $installed_version = get_option( 'dokan_theme_version' );
+
+            if ( ! $installed_version || version_compare( $installed_version, '2.8.2', '>' ) ) {
+                $debit_sql      = "SELECT
+                                    SUM(debit) AS earnings
+                                FROM
+                                    {$wpdb->prefix}dokan_vendor_balance
+                                WHERE
+                                    vendor_id = %d AND DATE(balance_date) <= %s AND status IN({$status})";
+                $debit_balance  = $wpdb->get_row( $wpdb->prepare( $debit_sql, $this->id, $on_date ) );
+
+                $credit_sql     = "SELECT
+                                        SUM(credit) AS earnings
+                                    FROM
+                                        {$wpdb->prefix}dokan_vendor_balance
+                                    WHERE
+                                        vendor_id = %d AND DATE(balance_date) <= %s AND trn_type = %s AND status = %s";
+                $credit_balance = $wpdb->get_row( $wpdb->prepare( $credit_sql, $this->id, $on_date, $trn_type, $refund_status ) );
+
+                $earnings         = $debit_balance->earnings - $credit_balance->earnings;
+                $result           = new stdClass;
+                $result->earnings = $earnings;
+            } else {
+                $sql    = "SELECT
+                            SUM(net_amount) as earnings
+                        FROM
+                            {$wpdb->prefix}dokan_orders as do LEFT JOIN {$wpdb->prefix}posts as p ON do.order_id = p.ID
+                        WHERE
+                            seller_id = %d AND DATE(p.post_date) <= %s AND order_status IN({$status})";
+                $result = $wpdb->get_row( $wpdb->prepare( $sql, $this->id, $on_date ) );
+            }
+
+            $earning = (float) $result->earnings;
+
+            wp_cache_set( $cache_key, $earning, $cache_group );
+            dokan_cache_update_group( $cache_key , $cache_group );
+        }
+
+        if ( $formatted ) {
+            return apply_filters( 'dokan_get_formatted_seller_earnings', wc_price( $earning ), $this->id );
+        }
+
+        return apply_filters( 'dokan_get_seller_earnings', $earning, $this->id );
+    }
+
+    /**
      * Get balance
      *
      * @since 3.0.0

@@ -314,7 +314,7 @@ class Dokan_Template_Products {
                     delete_post_thumbnail( $post_id );
                 }
 
-                do_action( 'dokan_product_updated', $post_id );
+                do_action( 'dokan_product_updated', $post_id, $_POST );
 
                 //$edit_url = dokan_edit_product_url( $post_id );
 

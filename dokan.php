@@ -3,7 +3,7 @@
 Plugin Name: Dokan
 Plugin URI: https://wordpress.org/plugins/dokan-lite/
 Description: An e-commerce marketplace plugin for WordPress. Powered by WooCommerce and weDevs.
-Version: 2.8.6
+Version: 2.9.0
 Author: weDevs, LLC
 Author URI: https://wedevs.com/
 Text Domain: dokan-lite
@@ -78,7 +78,7 @@ final class WeDevs_Dokan {
      *
      * @var string
      */
-    public $version = '2.8.6';
+    public $version = '2.9.0';
 
     /**
      * Minimum PHP version required
@@ -267,6 +267,8 @@ final class WeDevs_Dokan {
         add_action( 'init', array( $this, 'init_classes' ),5 );
         add_action( 'init', array( $this, 'wpdb_table_shortcuts' ) );
 
+        add_action( 'plugins_loaded', array( $this, 'after_plugins_loaded' ) );
+
         add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), array( $this, 'plugin_action_links' ) );
         add_action( 'in_plugin_update_message-dokan-lite/dokan.php', array( 'Dokan_Installer', 'in_plugin_update_message' ) );
 
@@ -297,7 +299,6 @@ final class WeDevs_Dokan {
         require_once $inc_dir . 'widgets/store-contact.php';
         require_once $inc_dir . 'widgets/store-open-close.php';
         require_once $inc_dir . 'wc-functions.php';
-        require_once $lib_dir . 'class-wedevs-insights.php';
         require_once $inc_dir . '/admin/setup-wizard.php';
         require_once $classes_dir . 'seller-setup-wizard.php';
 
@@ -320,6 +321,7 @@ final class WeDevs_Dokan {
             require_once $inc_dir . 'admin/class-ajax.php';
             require_once $inc_dir . 'admin/class-admin-pointers.php';
             require_once $inc_dir . 'admin-functions.php';
+            require_once $inc_dir . 'admin/promotion.php';
         } else {
             require_once $inc_dir . 'template-tags.php';
         }
@@ -327,6 +329,10 @@ final class WeDevs_Dokan {
         // API includes
         require_once $inc_dir . 'api/class-api-rest-controller.php';
         require_once $inc_dir . 'class-api-manager.php';
+
+        // Background Processes
+        require_once $inc_dir . 'background-processes/class-dokan-background-processes.php';
+        require_once $inc_dir . 'background-processes/abstract-class-dokan-background-processes.php';
     }
 
     /**
@@ -340,6 +346,7 @@ final class WeDevs_Dokan {
             Dokan_Admin_Ajax::init();
             new Dokan_Upgrade();
             new Dokan_Setup_Wizard();
+            new Dokan_Promotion();
         }
 
         $this->container['pageview']      = new Dokan_Pageviews();
@@ -385,6 +392,19 @@ final class WeDevs_Dokan {
         $wpdb->dokan_announcement   = $wpdb->prefix . 'dokan_announcement';
         $wpdb->dokan_refund         = $wpdb->prefix . 'dokan_refund';
         $wpdb->dokan_vendor_balance = $wpdb->prefix . 'dokan_vendor_balance';
+    }
+
+    /**
+     * Executed after all plugins are loaded
+     *
+     * At this point Dokan Pro is loaded
+     *
+     * @since 2.8.7
+     *
+     * @return void
+     */
+    public function after_plugins_loaded() {
+        new Dokan_Background_Processes();
     }
 
     /**

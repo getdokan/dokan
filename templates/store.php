@@ -13,6 +13,10 @@ $store_info   = $store_user->get_shop_info();
 $map_location = $store_user->get_location();
 
 get_header( 'shop' );
+
+if ( function_exists( 'yoast_breadcrumb' ) ) {
+    yoast_breadcrumb( '<p id="breadcrumbs">', '</p>' );
+}
 ?>
     <?php do_action( 'woocommerce_before_main_content' ); ?>
 

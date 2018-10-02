@@ -652,31 +652,22 @@ function dokan_get_seller_balance( $seller_id, $formatted = true ) {
  *
  * @since 2.5.4
  *
- * @param type $seller_id
+ * @param int $seller_id
  *
- * @param string $start_date
+ * @param boolean $formatted
  *
- * @param type $end_date
+ * @param type string
  *
- * @return type
+ * @return float|null
  */
-function dokan_get_seller_earnings( $seller_id, $start_date = '', $end_date = '' ) {
-    if ( empty( $start_date ) ) {
-        $start_date = '2010-01-01';
+function dokan_get_seller_earnings( $seller_id, $formatted = true, $on_date = '' ) {
+    $vendor = dokan()->vendor->get( $seller_id );
+
+    if ( $vendor->id === 0 ) {
+        return null;
     }
 
-    if ( empty( $end_date ) ) {
-        $end_date = date( 'Y-m-d', strtotime( '+1 day', current_time( 'timestamp' ) ) );
-    }
-
-    $all_orders = dokan_get_seller_orders_by_date( $start_date, $end_date, $seller_id, dokan_withdraw_get_active_order_status() );
-    $earnings = 0;
-
-    foreach ( $all_orders as $order ) {
-        $earnings = $earnings + dokan_get_seller_amount_from_order( $order->order_id );
-    }
-
-    return apply_filters( 'dokan_get_seller_earnings', $earnings, $seller_id );
+    return $vendor->get_earnings( $formatted, $on_date );
 }
 
 /**
@@ -965,7 +956,7 @@ add_filter( 'dokan_profile_completion_values', 'dokan_split_profile_completion_v
 function dokan_set_more_from_seller_tab( $tabs ) {
     if ( check_more_seller_product_tab() ) {
         $tabs['more_seller_product'] = array(
-            'title'     => __( 'More Products', 'dokan' ),
+            'title'     => __( 'More Products', 'dokan-lite' ),
             'priority'  => 99,
             'callback'  => 'dokan_get_more_products_from_seller',
         );

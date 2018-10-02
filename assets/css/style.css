@@ -2205,6 +2205,18 @@ div.media-sidebar a.edit-attachment {
 .dokan-dashboard .dokan-dashboard-content .dokan-page-help p {
   margin-bottom: 10px;
 }
+.dokan-column-name-with-avatar {
+  position: relative;
+  padding-left: 46px !important;
+}
+.dokan-column-name-with-avatar img {
+  position: absolute;
+  top: 3px;
+  left: 8px;
+  border-radius: 50%;
+  border: 1px solid #fff;
+  box-shadow: 0 1px 0 0 #e0e0e0;
+}
 .dokan-orders-content .dokan-orders-area .dokan-order-left-content {
   margin-right: 3%;
 }

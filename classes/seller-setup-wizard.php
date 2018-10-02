@@ -113,72 +113,6 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
             <?php wp_print_scripts( 'wc-setup' ); ?>
             <?php do_action( 'admin_print_styles' ); ?>
             <?php do_action( 'dokan_setup_wizard_styles' ); ?>
-            <style type="text/css">
-                .wc-setup-steps {
-                    justify-content: center;
-                }
-                .wc-setup-content a {
-                    color: #f39132;
-                }
-                .wc-setup-steps li.active:before {
-                    border-color: #f39132;
-                }
-                .wc-setup-steps li.active {
-                    border-color: #f39132;
-                    color: #f39132;
-                }
-                .wc-setup-steps li.done:before {
-                    border-color: #f39132;
-                }
-                .wc-setup-steps li.done {
-                    border-color: #f39132;
-                    color: #f39132;
-                }
-                .wc-setup .wc-setup-actions .button-primary, .wc-setup .wc-setup-actions .button-primary, .wc-setup .wc-setup-actions .button-primary {
-                    background: #f39132 !important;
-                }
-                .wc-setup .wc-setup-actions .button-primary:active, .wc-setup .wc-setup-actions .button-primary:focus, .wc-setup .wc-setup-actions .button-primary:hover {
-                    background: #ff6b00 !important;
-                    border-color: #ff6b00 !important;
-                }
-                .wc-setup-content .wc-setup-next-steps ul .setup-product a, .wc-setup-content .wc-setup-next-steps ul .setup-product a, .wc-setup-content .wc-setup-next-steps ul .setup-product a {
-                    background: #f39132 !important;
-                    box-shadow: inset 0 1px 0 rgba(255,255,255,.25),0 1px 0 #f39132;
-                }
-                .wc-setup-content .wc-setup-next-steps ul .setup-product a:active, .wc-setup-content .wc-setup-next-steps ul .setup-product a:focus, .wc-setup-content .wc-setup-next-steps ul .setup-product a:hover {
-                    background: #ff6b00 !important;
-                    border-color: #ff6b00 !important;
-                    box-shadow: inset 0 1px 0 rgba(255,255,255,.25),0 1px 0 #ff6b00;
-                }
-                .wc-setup .wc-setup-actions .button-primary {
-                    border-color: #f39132 !important;
-                }
-                .wc-setup-content .wc-setup-next-steps ul .setup-product a {
-                    border-color: #f39132 !important;
-                }
-                ul.wc-wizard-payment-gateways li.wc-wizard-gateway .wc-wizard-gateway-enable input:checked+label:before {
-                    background: #f39132 !important;
-                    border-color: #f39132 !important;
-                }
-                .last-step{
-                    text-align: center;
-                }
-                .last-step .wc-setup-next-steps-first.final-button ul{
-                    margin: 0px;
-                    padding: 0px;
-                    max-width: 250px;
-                    margin: 0 auto;
-                }
-                .last-step .wc-setup-next-steps-first.final-button{
-                    width: auto;
-                    float: none;
-                }
-                .wc-setup .wc-setup-actions .button{
-                    margin-bottom: 10px;
-                    margin-left: .5em;
-                    margin-right: 0px;
-                }
-            </style>
         </head>
         <body class="wc-setup wp-core-ui">
             <?php
@@ -286,9 +220,11 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
                 </tr>
                 <tr>
                     <th scope="row"><label for="show_email"><?php _e( 'Email', 'dokan-lite' ); ?></label></th>
-                    <td>
-                        <input type="checkbox" name="show_email" id="show_email" class="input-checkbox" value="1" <?php echo ( $show_email == 'yes' ) ? 'checked="checked"' : ''; ?>/>
-                        <label for="show_email"><?php _e( 'Show email address in store', 'dokan-lite' ); ?></label>
+                    <td class="checkbox">
+                        <input type="checkbox" name="show_email" id="show_email" class="switch-input" value="1" <?php echo ( $show_email == 'yes' ) ? 'checked="true"' : ''; ?>>
+                        <label for="show_email">
+                            <?php _e( 'Show email address in store', 'dokan-lite' ); ?>
+                        </label>
                     </td>
                 </tr>
 
@@ -495,17 +431,16 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
     public function dokan_setup_ready() {
         $dashboard_url = dokan_get_navigation_url();
         ?>
-        <div class="last-step">
-            <h1><?php _e( 'Your Store is Ready!', 'dokan-lite' ); ?></h1>
-
-            <div class="wc-setup-next-steps">
-                <div class="wc-setup-next-steps-first final-button">
-                    <ul>
-                        <li class="setup-product"><a class="button button-primary button-large go-to-dashboard-btn" href="<?php echo esc_url( $dashboard_url ); ?>"><?php _e( 'Go to your Store Dashboard!', 'dokan-lite' ); ?></a></li>
-                    </ul>
-                </div>
+            <div class="dokan-setup-done">
+                <img src="<?php echo plugins_url( 'assets/images/dokan-checked.png', DOKAN_FILE ); ?>" alt="dokan setup">
+                <h1><?php _e( 'Your Store is Ready!', 'dokan-lite' ); ?></h1>
             </div>
-        </div>
+
+            <div class="dokan-setup-done-content">
+                <p class="wc-setup-actions step">
+                    <a class="button button-primary" href="<?php echo esc_url( $dashboard_url ); ?>"><?php _e( 'Go to your Store Dashboard!', 'dokan-lite' ); ?></a>
+                </p>
+            </div>
         <?php
     }
 }
