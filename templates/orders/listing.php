@@ -21,20 +21,22 @@ $order_statuses = apply_filters( 'dokan_bulk_order_statuses', $order_statuses );
 if ( $user_orders ) {
     ?>
     <form id="order-filter" method="POST" class="dokan-form-inline">
-        <div class="dokan-form-group">
-            <label for="bulk-order-action-selector" class="screen-reader-text"><?php _e( 'Select bulk action', 'dokan-lite' ); ?></label>
+        <?php if( dokan_get_option( 'order_status_change', 'dokan_selling', 'on' ) == 'on' ) : ?>
+            <div class="dokan-form-group">
+                <label for="bulk-order-action-selector" class="screen-reader-text"><?php _e( 'Select bulk action', 'dokan-lite' ); ?></label>
 
-            <select name="status" id="bulk-order-action-selector" class="dokan-form-control chosen">
-                <?php foreach ( $order_statuses as $key => $value ) : ?>
-                    <option class="bulk-order-status" value="<?php echo esc_attr( $key ) ?>"><?php echo esc_attr( $value ); ?></option>
-                <?php endforeach; ?>
-            </select>
-        </div>
+                <select name="statßus" id="bulk-order-action-selector" class="dokan-form-control chosen">
+                    <?php foreach ( $order_statuses as $key => $value ) : ?>
+                        <option class="bulk-order-status" value="<?php echo esc_attr( $key ) ?>"><?php echo esc_attr( $value ); ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
 
-        <div class="dokan-form-group">
-            <?php wp_nonce_field( 'bulk_order_status_change', 'security' ); ?>
-            <input type="submit" name="bulk_order_status_change" id="bulk-order-action" class="dokan-btn dokan-btn-theme" value="<?php esc_attr_e( 'Apply', 'dokan-lite' ); ?>">
-        </div>
+            <div class="dokan-form-group">
+                <?php wp_nonce_field( 'bulk_order_status_change', 'security' ); ?>
+                <input type="submit" name="bulk_order_status_change" id="bulk-order-action" class="dokan-btn dokan-btn-theme" value="<?php esc_attr_e( 'Apply', 'dokan-lite' ); ?>">
+            </div>
+        <?php endif; ?>
         <table class="dokan-table dokan-table-striped">
             <thead>
                 <tr>
