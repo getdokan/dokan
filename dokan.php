@@ -321,6 +321,7 @@ final class WeDevs_Dokan {
             require_once $inc_dir . 'admin/class-ajax.php';
             require_once $inc_dir . 'admin/class-admin-pointers.php';
             require_once $inc_dir . 'admin-functions.php';
+            require_once $inc_dir . 'admin/promotion.php';
         } else {
             require_once $inc_dir . 'template-tags.php';
         }
@@ -345,6 +346,7 @@ final class WeDevs_Dokan {
             Dokan_Admin_Ajax::init();
             new Dokan_Upgrade();
             new Dokan_Setup_Wizard();
+            new Dokan_Promotion();
         }
 
         $this->container['pageview']      = new Dokan_Pageviews();
