@@ -178,13 +178,29 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 ## Changelog ##
 
+v2.9.0 -> Oct 2, 2018
+------------------------
+-**New**   Add support for yoast seo breadcrumbs in dokan store page
+-**New**   Make backend dokan settings page responsive
+-**Tweak** Vendor product listing table template
+-**Tweak** Redesign dokan & vendor setup wizard
+-**Tweak** dokan_get_seller_id_by_order_id & dokan_get_seller_earnings function
+-**Tweak** Add filter to alter dokan_count_post function
+-**Tweak** Dokan backrgound process & 2.8.3 updater class
+-**Fix**   Store opening closing widget typo
+-**Fix**   Make more product & previous string translatable in frontend
+-**Fix**   Pagination issue of dokan store listing page
+-**Fix**   Stop sending multiple email to customer when an order status is changed to completed
+-**Fix**   Bulk product edit option does not have the option to assign vendor in admin backend
+-**Fix**   Shipping cost wasn't included while creating sub-order
+
 v2.8.6 -> Sep 4, 2018
 ------------------------
 - **New:** Store opening and closing widget added for vendor
 - **New:** Divided shipping and tax fee recipient from admin settings
 - **New:** Added billing and shipping info in order export to CSV file
 - **New:** Show scheduled product in vendor product listing page if admin created scheduled product from backend
-- **Tweak:** Added vendor info in REST api order data
+- **Tweak:** Added vendor info in REST API order data
 - **Fix:** Send only single email when purchase is made from multiple vendor
 - **Fix:** Withdraw status updating problem from admin side.
 - **Fix:** Send email on withdraw approval and cancelled request
