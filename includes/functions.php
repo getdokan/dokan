@@ -1129,24 +1129,13 @@ add_filter( 'ajax_query_attachments_args', 'dokan_media_uploader_restrict' );
  * @return array
  */
 function dokan_get_store_info( $seller_id ) {
-    $info = get_user_meta( $seller_id, 'dokan_profile_settings', true );
-    $info = is_array( $info ) ? $info : array();
+    $vendor = dokan()->vendor->get( $seller_id );
 
-    $defaults = array(
-        'store_name' => '',
-        'social'     => array(),
-        'payment'    => array( 'paypal' => array( 'email' ), 'bank' => array() ),
-        'phone'      => '',
-        'show_email' => 'off',
-        'address'    => '',
-        'location'   => '',
-        'banner'     => 0
-    );
+    if ( ! $vendor->get_id() ) {
+        return null;
+    }
 
-    $info               = wp_parse_args( $info, $defaults );
-    $info['store_name'] = empty( $info['store_name'] ) ? get_user_by( 'id', $seller_id )->display_name : $info['store_name'];
-
-    return $info;
+    return $vendor->get_shop_info();
 }
 
 /**
