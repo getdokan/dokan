@@ -150,19 +150,13 @@ class Dokan_Withdraw {
      * @return integer
      */
     function get_status_code( $status ) {
-        switch ( $status ) {
-            case 'pending':
-                return 0;
-                break;
+        $statuses = array(
+            'pending'   => 0,
+            'completed' => 1,
+            'cancelled' => 2
+        );
 
-            case 'completed':
-                return 1;
-                break;
-
-            case 'cancelled':
-                return 2;
-                break;
-        }
+        return isset( $statuses[$status] ) ? $statuses[$status] : '';
     }
 
     /**

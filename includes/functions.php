@@ -2719,35 +2719,18 @@ add_filter( 'woocommerce_admin_order_preview_actions', 'dokan_remove_action_butt
  * @return string
  */
 function dokan_get_translated_days( $day ) {
-    switch ( $day ) {
-        case 'saturday':
-            return __( 'Saturday', 'dokan-lite' );
+    $days = apply_filters( 'dokan_get_translated_days', array(
+        'saturday'  => __( 'Saturday', 'dokan-lite' ),
+        'sunday'    => __( 'Sunday', 'dokan-lite' ),
+        'monday'    => __( 'Monday', 'dokan-lite' ),
+        'tuesday'   => __( 'Tuesday', 'dokan-lite' ),
+        'wednesday' => __( 'Wednesday', 'dokan-lite' ),
+        'thursday'  => __( 'Thursday', 'dokan-lite' ),
+        'friday'    => __( 'Friday', 'dokan-lite' ),
+        'close'     => apply_filters( 'dokan_store_close_day_label', __( 'Off Day', 'dokan-lite' ) )
+    ) );
 
-        case 'sunday':
-            return __( 'Sunday', 'dokan-lite' );
-
-        case 'monday':
-            return __( 'Monday', 'dokan-lite' );
-
-        case 'tuesday':
-            return __( 'Tuesday', 'dokan-lite' );
-
-        case 'wednesday':
-            return __( 'Wednesday', 'dokan-lite' );
-
-        case 'thursday':
-            return __( 'Thursday', 'dokan-lite' );
-
-        case 'friday':
-            return __( 'Friday', 'dokan-lite' );
-
-        case 'close':
-            return apply_filters( 'dokan_store_close_day_label', __( 'Off Day', 'dokan-lite' ) );
-
-        default:
-            return apply_filters( 'dokan_get_translated_days', '', $day );
-            break;
-    }
+    return isset( $days[$day] ) ? $days[$day] : '';
 }
 
 /**
