@@ -408,7 +408,7 @@ function dokan_get_order_status_class( $status ) {
     $statuses = apply_filters( 'dokan_get_order_status_class', array(
         'completed'     => 'success',
         'wc-completed'  => 'success',
-        'pendin'        => 'danger',
+        'pending'       => 'danger',
         'wc-pending'    => 'danger',
         'on-hold'       => 'warning',
         'wc-on-hold'    => 'warning',
