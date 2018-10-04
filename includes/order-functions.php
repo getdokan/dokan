@@ -405,46 +405,24 @@ function dokan_get_seller_id_by_order( $order_id ) {
  * @return string
  */
 function dokan_get_order_status_class( $status ) {
-    switch ($status) {
-        case 'completed':
-        case 'wc-completed':
-            return 'success';
-            break;
+    $statuses = apply_filters( 'dokan_get_order_status_class', array(
+        'completed'     => 'success',
+        'wc-completed'  => 'success',
+        'pendin'        => 'danger',
+        'wc-pending'    => 'danger',
+        'on-hold'       => 'warning',
+        'wc-on-hold'    => 'warning',
+        'processing'    => 'info',
+        'wc-processing' => 'info',
+        'refunded'      => 'default',
+        'wc-refunded'   => 'default',
+        'cancelled'     => 'default',
+        'wc-cancelled'  => 'default',
+        'failed'        => 'danger',
+        'wc-failed'     => 'danger',
+    ) );
 
-        case 'pending':
-        case 'wc-pending':
-            return 'danger';
-            break;
-
-        case 'on-hold':
-        case 'wc-on-hold':
-            return 'warning';
-            break;
-
-        case 'processing':
-        case 'wc-processing':
-            return 'info';
-            break;
-
-        case 'refunded':
-        case 'wc-refunded':
-            return 'default';
-            break;
-
-        case 'cancelled':
-        case 'wc-cancelled':
-            return 'default';
-            break;
-
-        case 'failed':
-        case 'wc-failed':
-            return 'danger';
-            break;
-
-        default:
-            return apply_filters( 'dokan_get_order_status_class', '', $status );
-            break;
-    }
+    return isset( $statuses[$status] ) ? $statuses[$status] : '';
 }
 
 /**
@@ -454,46 +432,24 @@ function dokan_get_order_status_class( $status ) {
  * @return string
  */
 function dokan_get_order_status_translated( $status ) {
-    switch ($status) {
-        case 'completed':
-        case 'wc-completed':
-            return __( 'Completed', 'dokan-lite' );
-            break;
+    $statuses = apply_filters( 'dokan_get_order_status_translated', array(
+        'completed'     => __( 'Completed', 'dokan-lite' ),
+        'wc-completed'  => __( 'Completed', 'dokan-lite' ),
+        'pending'       => __( 'Pending Payment', 'dokan-lite' ),
+        'wc-pending'    => __( 'Pending Payment', 'dokan-lite' ),
+        'on-hold'       => __( 'On-hold', 'dokan-lite' ),
+        'wc-on-hold'    => __( 'On-hold', 'dokan-lite' ),
+        'processing'    => __( 'Processing', 'dokan-lite' ),
+        'wc-processing' => __( 'Processing', 'dokan-lite' ),
+        'refunded'      => __( 'Refunded', 'dokan-lite' ),
+        'wc-refunded'   => __( 'Refunded', 'dokan-lite' ),
+        'cancelled'     => __( 'Cancelled', 'dokan-lite' ),
+        'wc-cancelled'  => __( 'Cancelled', 'dokan-lite' ),
+        'failed'        => __( 'Failed', 'dokan-lite' ),
+        'wc-failed'     => __( 'Failed', 'dokan-lite' ),
+    ) );
 
-        case 'pending':
-        case 'wc-pending':
-            return __( 'Pending Payment', 'dokan-lite' );
-            break;
-
-        case 'on-hold':
-        case 'wc-on-hold':
-            return __( 'On-hold', 'dokan-lite' );
-            break;
-
-        case 'processing':
-        case 'wc-processing':
-            return __( 'Processing', 'dokan-lite' );
-            break;
-
-        case 'refunded':
-        case 'wc-refunded':
-            return __( 'Refunded', 'dokan-lite' );
-            break;
-
-        case 'cancelled':
-        case 'wc-cancelled':
-            return __( 'Cancelled', 'dokan-lite' );
-            break;
-
-        case 'failed':
-        case 'wc-failed':
-            return __( 'Failed', 'dokan-lite' );
-            break;
-
-        default:
-            return apply_filters( 'dokan_get_order_status_translated', '', $status );
-            break;
-    }
+    return isset( $statuses[$status] ) ? $statuses[$status] : '';
 }
 
 /**
