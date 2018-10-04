@@ -1131,8 +1131,8 @@ add_filter( 'ajax_query_attachments_args', 'dokan_media_uploader_restrict' );
 function dokan_get_store_info( $seller_id ) {
     $vendor = dokan()->vendor->get( $seller_id );
 
-    if ( ! $vendor || $vendor->get_id() === 0 ) {
-        return;
+    if ( ! $vendor->get_id() ) {
+        return null;
     }
 
     return $vendor->get_shop_info();
