@@ -146,6 +146,7 @@ function dokan_author_field_quick_edit() {
                     <?php if ( ! $sellers ): ?>
                         <option value="<?php echo $admin_user->ID ?>"><?php echo $admin_user->display_name; ?></option>
                     <?php else: ?>
+                        <option value=""><?php _e( '— No change —', 'dokan-lite' ); ?></option>
                         <option value="<?php echo $admin_user->ID; ?>"><?php echo $admin_user->display_name; ?></option>
                         <?php foreach ( $sellers as $key => $user): ?>
                             <option value="<?php echo $user->ID ?>"><?php echo $user->display_name; ?></option>
@@ -215,6 +216,11 @@ function dokan_save_quick_edit_vendor_data ( $product ) {
 
     if ( isset( $_REQUEST['dokan_product_author_override'] ) ) {
         $vendor_id = esc_attr( $_REQUEST['dokan_product_author_override'] );
+
+        if ( ! $vendor_id ) {
+            return;
+        }
+
         wp_update_post( array( 'ID' => $product->get_id(), 'post_author' => $vendor_id  ) );
     }
 }
