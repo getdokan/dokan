@@ -120,6 +120,10 @@ add_action( 'manage_shop_order_posts_custom_column', 'dokan_shop_order_custom_co
 function dokan_admin_shop_order_row_classes( $classes, $post_id ) {
     global $post;
 
+    if ( is_search() ) {
+        return $classes;
+    }
+
     if ( $post->post_type == 'shop_order' && $post->post_parent != 0 ) {
         $classes[] = 'sub-order parent-' . $post->post_parent;
     }
