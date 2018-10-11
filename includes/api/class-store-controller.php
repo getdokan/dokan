@@ -123,6 +123,10 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
             $args['order'] = $params['order'];
         }
 
+        if ( ! empty( $params['featured'] ) ) {
+            $args['featured'] = $params['featured'];
+        }
+
         $stores       = dokan()->vendor->get_vendors( $args );
         $data_objects = array();
 

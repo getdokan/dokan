@@ -485,7 +485,7 @@ add_filter( 'pre_user_display_name', 'dokan_seller_displayname' );
  * @param int $per_page
  * @return \WP_Query
  */
-function dokan_get_featured_products( $per_page = 9 ) {
+function dokan_get_featured_products( $per_page = 9, $seller_id = '' ) {
 
     $args = array(
         'posts_per_page'      => $per_page,
@@ -495,6 +495,10 @@ function dokan_get_featured_products( $per_page = 9 ) {
             'relation' => 'AND',
         )
     );
+
+    if ( !empty( $seller_id ) ) {
+        $args['author'] = (int) $seller_id;
+    }
 
     return dokan()->product->featured( apply_filters( 'dokan_get_featured_products', $args ) );
 }
@@ -507,7 +511,7 @@ function dokan_get_featured_products( $per_page = 9 ) {
  * @param int $per_page
  * @return \WP_Query
  */
-function dokan_get_latest_products( $per_page = 9 , $seller_id = '' ) {
+function dokan_get_latest_products( $per_page = 9, $seller_id = '' ) {
 
     $args = array(
         'posts_per_page'      => $per_page,
