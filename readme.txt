@@ -178,6 +178,15 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+v2.9.1 -> Oct 11, 2018
+------------------------
+-**New** Added top rated, best selling, latest, featured product and featured vendor REST API
+-**Fix** Assign all product to a single vendor while using bulk edit in product page
+-**Fix** Handle dokan order when order created from backend via Admin
+-**Fix** Sales total count error fixed
+-**Fix** Show sub order while searching order from backend order listing page
+-**Fix** Fix plugin activation error
+
 v2.9.0 -> Oct 2, 2018
 ------------------------
 -**New**   Add support for yoast seo breadcrumbs in dokan store page
