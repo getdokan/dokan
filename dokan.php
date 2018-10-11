@@ -195,6 +195,10 @@ final class WeDevs_Dokan {
         require_once dirname( __FILE__ ) . '/includes/functions.php';
         require_once dirname( __FILE__ ) . '/includes/functions-compatibility.php';
 
+        // Background Processes
+        require_once dirname( __FILE__ ) . '/includes/background-processes/class-dokan-background-processes.php';
+        require_once dirname( __FILE__ ) . '/includes/background-processes/abstract-class-dokan-background-processes.php';
+
         $installer = new Dokan_Installer();
         $installer->do_install();
     }
