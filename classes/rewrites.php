@@ -236,7 +236,6 @@ class Dokan_Rewrites {
         }
 
         $edit_product_url = dokan_locate_template( 'products/new-product-single.php' );
-
         return apply_filters( 'dokan_get_product_edit_template', $edit_product_url );
     }
 
