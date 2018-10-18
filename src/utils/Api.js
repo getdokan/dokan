@@ -32,6 +32,12 @@ class Dokan_API  {
             url: this.endpoint() + path,
             beforeSend: function ( xhr ) {
                 xhr.setRequestHeader( 'X-WP-Nonce', window.dokan.rest.nonce );
+
+                if ( 'PUT' === method ) {
+                    xhr.setRequestHeader( 'X-HTTP-Method-Override', method );
+                } else if ( 'DELETE' === method ) {
+                    xhr.setRequestHeader( 'X-HTTP-Method-Override', method );
+                }
             },
             type: method,
             data: data
