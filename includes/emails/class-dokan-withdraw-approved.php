@@ -22,15 +22,15 @@ class Dokan_Email_Withdraw_Approved extends WC_Email {
 	 * Constructor.
 	 */
 	public function __construct() {
-		$this->id               = 'dokan_vendor_withdraw_approved';
-		$this->title            = __( 'Dokan Withdraw Approved', 'dokan-lite' );
-		$this->description      = __( 'These emails are sent to vendor when a vendor withdraw request is approved', 'dokan-lite' );
-                $this->template_html    = 'emails/withdraw-approve.php';
-		$this->template_plain   = 'emails/plain/withdraw-approve.php';
-                $this->template_base    = DOKAN_DIR.'/templates/';
-                
+        $this->id             = 'dokan_vendor_withdraw_approved';
+        $this->title          = __( 'Dokan Withdraw Approved', 'dokan-lite' );
+        $this->description    = __( 'These emails are sent to vendor when a vendor withdraw request is approved', 'dokan-lite' );
+        $this->template_html  = 'emails/withdraw-approve.php';
+        $this->template_plain = 'emails/plain/withdraw-approve.php';
+        $this->template_base  = DOKAN_DIR.'/templates/';
+
 		// Triggers for this email
-		add_action( 'dokan_withdraw_request_approved', array( $this, 'trigger' ), 30, 3 );
+		add_action( 'dokan_withdraw_request_approved', array( $this, 'trigger' ), 30, 2 );
 
 		// Call parent constructor
 		parent::__construct();
@@ -46,7 +46,7 @@ class Dokan_Email_Withdraw_Approved extends WC_Email {
 	 * @return string
 	 */
 	public function get_default_subject() {
-            return __( '[{site_name}] Your withdrawal request was approved', 'dokan-lite' );
+        return __( '[{site_name}] Your withdrawal request was approved', 'dokan-lite' );
 	}
 
 	/**
@@ -56,7 +56,7 @@ class Dokan_Email_Withdraw_Approved extends WC_Email {
 	 * @return string
 	 */
 	public function get_default_heading() {
-            return __( 'Withdrawal request for {amount} is approved', 'dokan-lite' );
+        return __( 'Withdrawal request for {amount} is approved', 'dokan-lite' );
 	}
 
 	/**
@@ -65,36 +65,35 @@ class Dokan_Email_Withdraw_Approved extends WC_Email {
 	 * @param int $product_id The product ID.
 	 * @param array $postdata.
 	 */
-	public function trigger( $user_id, $amount, $method ) {
-            
-            if ( ! $this->is_enabled() || ! $this->get_recipient() ) {
-                return;
-            }
-            
-            $seller                      = get_user_by( 'id', $user_id );
-            $this->object                = $seller;
-            $this->find['username']      = '{user_name}';
-            $this->find['amount']        = '{amount}';
-            $this->find['method']        = '{method}';
-            $this->find['profile_url']   = '{profile_url}';
-            $this->find['withdraw_page'] = '{withdraw_page}';
-            $this->find['site_name']     = '{site_name}';
-            $this->find['site_url']      = '{site_url}';
+	public function trigger( $user_id, $withdraw ) {
+        if ( ! $this->is_enabled() || ! $this->get_recipient() ) {
+            return;
+        }
 
-            $this->replace['username']      = $seller->user_login;
-            $this->replace['amount']        = wc_price( $amount );
-            $this->replace['method']        = dokan_withdraw_get_method_title( $method );
-            $this->replace['profile_url']   = admin_url( 'user-edit.php?user_id=' . $seller->ID );
-            $this->replace['withdraw_page'] = admin_url( 'admin.php?page=dokan-withdraw' );
-            $this->replace['site_name']     = $this->get_from_name();
-            $this->replace['site_url']      = site_url();
+        $seller                      = get_user_by( 'id', $user_id );
+        $this->object                = $seller;
+        $this->find['username']      = '{user_name}';
+        $this->find['amount']        = '{amount}';
+        $this->find['method']        = '{method}';
+        $this->find['profile_url']   = '{profile_url}';
+        $this->find['withdraw_page'] = '{withdraw_page}';
+        $this->find['site_name']     = '{site_name}';
+        $this->find['site_url']      = '{site_url}';
 
-            $this->setup_locale();
-            $this->send( $seller->user_email, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
-            $this->restore_locale();
-            
+        $this->replace['username']      = $seller->user_login;
+        $this->replace['amount']        = wc_price( $withdraw->amount );
+        $this->replace['method']        = dokan_withdraw_get_method_title( $withdraw->method );
+        $this->replace['profile_url']   = admin_url( 'user-edit.php?user_id=' . $seller->ID );
+        $this->replace['withdraw_page'] = admin_url( 'admin.php?page=dokan-withdraw' );
+        $this->replace['site_name']     = $this->get_from_name();
+        $this->replace['site_url']      = site_url();
+
+        $this->setup_locale();
+        $this->send( $seller->user_email, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
+        $this->restore_locale();
+
 	}
-        
+
         /**
 	 * Get content html.
 	 *
@@ -102,17 +101,16 @@ class Dokan_Email_Withdraw_Approved extends WC_Email {
 	 * @return string
 	 */
 	public function get_content_html() {
-            ob_start();
-                wc_get_template( $this->template_html, array(
-                    'seller'        => $this->object,
-                    'email_heading' => $this->get_heading(),
-                    'sent_to_admin' => true,
-                    'plain_text'    => false,
-                    'email'         => $this,
-                    'data'          => $this->replace
-                ), 'dokan/', $this->template_base );
-            return ob_get_clean();
-           
+        ob_start();
+        wc_get_template( $this->template_html, array(
+            'seller'        => $this->object,
+            'email_heading' => $this->get_heading(),
+            'sent_to_admin' => true,
+            'plain_text'    => false,
+            'email'         => $this,
+            'data'          => $this->replace
+        ), 'dokan/', $this->template_base );
+        return ob_get_clean();
 	}
 
 	/**
@@ -122,16 +120,16 @@ class Dokan_Email_Withdraw_Approved extends WC_Email {
 	 * @return string
 	 */
 	public function get_content_plain() {
-            ob_start();
-                wc_get_template( $this->template_html, array(
-                    'seller'        => $this->object,
-                    'email_heading' => $this->get_heading(),
-                    'sent_to_admin' => true,
-                    'plain_text'    => true,
-                    'email'         => $this,
-                    'data'          => $this->replace
-                ), 'dokan/', $this->template_base );
-            return ob_get_clean();
+        ob_start();
+        wc_get_template( $this->template_html, array(
+            'seller'        => $this->object,
+            'email_heading' => $this->get_heading(),
+            'sent_to_admin' => true,
+            'plain_text'    => true,
+            'email'         => $this,
+            'data'          => $this->replace
+        ), 'dokan/', $this->template_base );
+        return ob_get_clean();
 	}
 
 	/**
