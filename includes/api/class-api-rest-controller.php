@@ -31,6 +31,7 @@ abstract class Dokan_REST_Controller extends WP_REST_Controller {
         $result = $query->query( $query_args );
 
         $data = array();
+        $data_objects = array();
         $objects = array_map( array( $this, 'get_object' ), $result );
 
         foreach ( $objects as $object ) {
