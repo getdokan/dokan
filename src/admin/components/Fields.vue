@@ -66,9 +66,18 @@
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
             <td>
-                <select class="regular" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
+                <select v-if="!fieldData.grouped" class="regular" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
+                    <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
                     <option v-for="( optionVal, optionKey ) in fieldData.options" :value="optionKey" v-html="optionVal"></option>
                 </select>
+
+                <select v-else class="regular" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
+                    <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
+                    <optgroup v-for="optionGroup in fieldData.options" :label="optionGroup.group_label">
+                        <option v-for="option in optionGroup.group_values" :value="option.value" v-html="option.label" />
+                    </optgroup>
+                </select>
+
                 <p class="description" v-html="fieldData.desc"></p>
             </td>
         </tr>

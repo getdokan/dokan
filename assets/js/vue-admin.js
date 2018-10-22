@@ -1961,6 +1961,15 @@ let Loading = dokan_get_lib('Loading');
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -4692,46 +4701,130 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("td", [
-            _c(
-              "select",
-              {
-                directives: [
+            !_vm.fieldData.grouped
+              ? _c(
+                  "select",
                   {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.fieldValue[_vm.fieldData.name],
-                    expression: "fieldValue[fieldData.name]"
-                  }
-                ],
-                staticClass: "regular",
-                attrs: {
-                  name: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                  id: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                },
-                on: {
-                  change: function($event) {
-                    var $$selectedVal = Array.prototype.filter
-                      .call($event.target.options, function(o) {
-                        return o.selected
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.fieldValue[_vm.fieldData.name],
+                        expression: "fieldValue[fieldData.name]"
+                      }
+                    ],
+                    staticClass: "regular",
+                    attrs: {
+                      name: _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                      id: _vm.sectionId + "[" + _vm.fieldData.name + "]"
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.$set(
+                          _vm.fieldValue,
+                          _vm.fieldData.name,
+                          $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        )
+                      }
+                    }
+                  },
+                  [
+                    _vm.fieldData.placeholder
+                      ? _c("option", {
+                          attrs: { value: "" },
+                          domProps: {
+                            innerHTML: _vm._s(_vm.fieldData.placeholder)
+                          }
+                        })
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm._l(_vm.fieldData.options, function(
+                      optionVal,
+                      optionKey
+                    ) {
+                      return _c("option", {
+                        domProps: {
+                          value: optionKey,
+                          innerHTML: _vm._s(optionVal)
+                        }
                       })
-                      .map(function(o) {
-                        var val = "_value" in o ? o._value : o.value
-                        return val
-                      })
-                    _vm.$set(
-                      _vm.fieldValue,
-                      _vm.fieldData.name,
-                      $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-                    )
-                  }
-                }
-              },
-              _vm._l(_vm.fieldData.options, function(optionVal, optionKey) {
-                return _c("option", {
-                  domProps: { value: optionKey, innerHTML: _vm._s(optionVal) }
-                })
-              })
-            ),
+                    })
+                  ],
+                  2
+                )
+              : _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.fieldValue[_vm.fieldData.name],
+                        expression: "fieldValue[fieldData.name]"
+                      }
+                    ],
+                    staticClass: "regular",
+                    attrs: {
+                      name: _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                      id: _vm.sectionId + "[" + _vm.fieldData.name + "]"
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.$set(
+                          _vm.fieldValue,
+                          _vm.fieldData.name,
+                          $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        )
+                      }
+                    }
+                  },
+                  [
+                    _vm.fieldData.placeholder
+                      ? _c("option", {
+                          attrs: { value: "" },
+                          domProps: {
+                            innerHTML: _vm._s(_vm.fieldData.placeholder)
+                          }
+                        })
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm._l(_vm.fieldData.options, function(optionGroup) {
+                      return _c(
+                        "optgroup",
+                        { attrs: { label: optionGroup.group_label } },
+                        _vm._l(optionGroup.group_values, function(option) {
+                          return _c("option", {
+                            domProps: {
+                              value: option.value,
+                              innerHTML: _vm._s(option.label)
+                            }
+                          })
+                        })
+                      )
+                    })
+                  ],
+                  2
+                ),
             _vm._v(" "),
             _c("p", {
               staticClass: "description",
