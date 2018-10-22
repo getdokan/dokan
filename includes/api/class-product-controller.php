@@ -694,6 +694,7 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
             'tax_class'             => $product->get_tax_class( $context ),
             'manage_stock'          => $product->managing_stock(),
             'stock_quantity'        => $product->get_stock_quantity( $context ),
+            'low_stock_amount'      => function_exists( 'get_low_stock_amount' ) ? $product->get_low_stock_amount( $context ) : '',
             'in_stock'              => $product->is_in_stock(),
             'backorders'            => $product->get_backorders( $context ),
             'backorders_allowed'    => $product->backorders_allowed(),
