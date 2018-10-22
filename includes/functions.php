@@ -2259,7 +2259,12 @@ register_sidebar(
  */
 function dokan_get_category_wise_seller_commission( $product_id, $category_id = 0 ){
 
-    $terms   = get_the_terms( $product_id, 'product_cat' );
+    $terms = get_the_terms( $product_id, 'product_cat' );
+
+    if ( empty( $terms ) ) {
+        return 0;
+    }
+
     $term_id = $terms[0]->term_id;
 
     $category_commision = null;
@@ -2914,4 +2919,46 @@ function dokan_remove_hook_for_anonymous_class( $hook_name = '', $class_name = '
     }
 
     return false;
+}
+
+/**
+ * Dokan get variable product earnings
+ *
+ * @param  int $id
+ * @param  int $seller_id
+ * @param  boolean $formated
+ *
+ * @return int
+ */
+function dokan_get_variable_product_earning( $product_id, $seller_id, $formated = true ) {
+    $product = wc_get_product( $product_id );
+
+    if ( ! $product ) {
+        return null;
+    }
+
+    $variations = $product->get_children();
+
+    if ( empty( $variations ) || ! is_array( $variations ) ) {
+        return null;
+    }
+
+    $earnings = array_map( function( $id ) use ( $seller_id ) {
+        return dokan_get_earning_by_product( $id, $seller_id );
+    }, $variations );
+
+    if ( empty( $earnings ) || ! is_array( $earnings ) ) {
+        return null;
+    }
+
+    if ( count( $earnings ) == 1 ) {
+        return $formated ? wc_price( $earnings[0] ) : $earnings[0];
+    }
+
+    $min_earning = $formated ? wc_price( min( $earnings ) ) : min( $earnings );
+    $max_earning = $formated ? wc_price( max( $earnings ) ) : max( $earnings );
+    $seperator   = apply_filters( 'dokan_get_variable_product_earning_seperator', ' - ', $product_id );
+    $earning     = $min_earning . $seperator . $max_earning;
+
+    return $earning;
 }

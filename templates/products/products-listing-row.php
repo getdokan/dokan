@@ -62,7 +62,7 @@
         if ( $product->get_type() == 'simple' ) {
             echo wc_price( dokan_get_earning_by_product( $product->get_id(), get_current_user_id() ) );
         } else {
-            echo "-";
+            echo dokan_get_variable_product_earning( $product->get_id(), get_current_user_id() );
         }
         ?>
     </td>
