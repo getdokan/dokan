@@ -213,6 +213,7 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
                         </select>
                     </td>
                 </tr>
+                <tr>
                     <th scope="row"><label for="calc_shipping_state"><?php _e( 'State', 'dokan-lite' ); ?></label></th>
                     <td>
                         <input type="text" id="calc_shipping_state" name="address[state]" value="<?php echo $address_state; ?>" / placeholder="<?php esc_attr_e( 'State Name', 'dokan-lite' ); ?>">
