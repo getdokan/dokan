@@ -218,6 +218,9 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
                         <input type="text" id="calc_shipping_state" name="address[state]" value="<?php echo $address_state; ?>" / placeholder="<?php esc_attr_e( 'State Name', 'dokan-lite' ); ?>">
                     </td>
                 </tr>
+
+                <?php do_action( 'dokan_seller_wizard_store_setup_after_address_field', $this ); ?>
+
                 <tr>
                     <th scope="row"><label for="show_email"><?php _e( 'Email', 'dokan-lite' ); ?></label></th>
                     <td class="checkbox">
