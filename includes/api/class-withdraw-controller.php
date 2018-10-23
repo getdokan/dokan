@@ -299,9 +299,9 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
         $response = $wpdb->get_row( $sql );
 
         if ( $status_code === 1 ) {
-            do_action( 'dokan_withdraw_request_approved', $user_id, $result->amount, $response->method );
+            do_action( 'dokan_withdraw_request_approved', $user_id, $response );
         } elseif ( $status_code === 2 ) {
-            do_action( 'dokan_withdraw_request_cancelled', $user_id, $result->amount, $response->method, $response->note );
+            do_action( 'dokan_withdraw_request_cancelled', $user_id, $response );
         }
 
         return rest_ensure_response( $this->prepare_response_for_object( $response, $request ) );
