@@ -150,7 +150,7 @@ class Dokan_REST_Settings_Controller extends WP_REST_Controller {
 
         update_user_meta( $seller_id, 'dokan_profile_settings', $dokan_settings );
 
-        do_action( 'dokan_store_profile_saved_via_REST', $seller_id, $request, $dokan_settings );
+        do_action( 'dokan_store_profile_saved_via_rest', $seller_id, $dokan_settings, $request );
 
         $dokan_settings = dokan_get_store_info( $seller_id );
 
