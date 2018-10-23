@@ -694,7 +694,7 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
             'tax_class'             => $product->get_tax_class( $context ),
             'manage_stock'          => $product->managing_stock(),
             'stock_quantity'        => $product->get_stock_quantity( $context ),
-            'low_stock_amount'      => function_exists( 'get_low_stock_amount' ) ? $product->get_low_stock_amount( $context ) : '',
+            'low_stock_amount'      => version_compare( WC_VERSION, '3.4.7', '>' ) ? $product->get_low_stock_amount( $context ) : '',
             'in_stock'              => $product->is_in_stock(),
             'backorders'            => $product->get_backorders( $context ),
             'backorders_allowed'    => $product->backorders_allowed(),
@@ -979,11 +979,21 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
                 $product->set_backorders( 'no' );
                 $product->set_stock_quantity( '' );
                 $product->set_stock_status( $stock_status );
+
+                if ( version_compare( WC_VERSION, '3.4.7', '>' ) ) {
+                    $product->set_low_stock_amount( '' );
+                }
+
             } elseif ( $product->is_type( 'external' ) ) {
                 $product->set_manage_stock( 'no' );
                 $product->set_backorders( 'no' );
                 $product->set_stock_quantity( '' );
                 $product->set_stock_status( 'instock' );
+
+                if ( version_compare( WC_VERSION, '3.4.7', '>' ) ) {
+                    $product->set_low_stock_amount( '' );
+                }
+
             } elseif ( $product->get_manage_stock() ) {
                 // Stock status is always determined by children so sync later.
                 if ( ! $product->is_type( 'variable' ) ) {
@@ -993,10 +1003,15 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
                 // Stock quantity.
                 if ( isset( $request['stock_quantity'] ) ) {
                     $product->set_stock_quantity( wc_stock_amount( $request['stock_quantity'] ) );
+
                 } elseif ( isset( $request['inventory_delta'] ) ) {
                     $stock_quantity  = wc_stock_amount( $product->get_stock_quantity() );
                     $stock_quantity += wc_stock_amount( $request['inventory_delta'] );
                     $product->set_stock_quantity( wc_stock_amount( $stock_quantity ) );
+                }
+
+                if ( version_compare( WC_VERSION, '3.4.7', '>' ) && isset( $request['low_stock_amount'] ) ) {
+                    $product->set_low_stock_amount( wc_stock_amount( $request['low_stock_amount'] ) );
                 }
             } else {
                 // Don't manage stock.
