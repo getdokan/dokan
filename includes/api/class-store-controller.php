@@ -310,23 +310,48 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
             return new WP_Error( 'no_store_found', __( 'No store found', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
-        $dokan_template_reviews = Dokan_Pro_Reviews::init();
-        $post_type              = 'product';
-        $limit                  = $params['per_page'];
-        $paged                  = ( $params['page'] - 1 ) * $params['per_page'];
-        $status                 = '1';
-        $comments               = $dokan_template_reviews->comment_query( $store_id, $post_type, $limit, $status, $paged );
+        if ( class_exists( 'Dokan_Store_Reviews' ) ) {
+            $args = array(
+                'post_type'      => 'dokan_store_reviews',
+                'meta_key'       => 'store_id',
+                'meta_value'     => $store_id,
+                'post_status'    => 'publish',
+                'posts_per_page' => $request['per_page'],
+                'paged'          => $request['page'],
+                'author__not_in' => array( get_current_user_id(), $store_id )
+            );
 
-        if ( empty( $comments ) ) {
-            return new WP_Error( 'no_reviews_found', __( 'No reviews found', 'dokan-lite' ), array( 'status' => 404 ) );
+            $query = new WP_Query( $args );
+
+            if ( empty( $query->posts ) ) {
+                return new WP_Error( 'no_reviews_found', __( 'No reviews found', 'dokan-lite' ), array( 'status' => 404 ) );
+            }
+
+            $data = array();
+            foreach ( $query->posts as $post ) {
+                $data[] = $this->prepare_reviews_for_response( $post, $request );
+            }
+
+            $total_count = $query->found_posts;
+        } else {
+            $dokan_template_reviews = Dokan_Pro_Reviews::init();
+            $post_type              = 'product';
+            $limit                  = $params['per_page'];
+            $paged                  = ( $params['page'] - 1 ) * $params['per_page'];
+            $status                 = '1';
+            $comments               = $dokan_template_reviews->comment_query( $store_id, $post_type, $limit, $status, $paged );
+
+            if ( empty( $comments ) ) {
+                return new WP_Error( 'no_reviews_found', __( 'No reviews found', 'dokan-lite' ), array( 'status' => 404 ) );
+            }
+
+            $data = array();
+            foreach ( $comments as $comment ) {
+                $data[] = $this->prepare_reviews_for_response( $comment, $request );
+            }
+
+            $total_count = $this->get_total_review_count( $store_id, $post_type, $status );
         }
-
-        $data = array();
-        foreach ( $comments as $comment ) {
-            $data[] = $this->prepare_reviews_for_response( $comment, $request );
-        }
-
-        $total_count = $this->get_total_review_count( $store_id, $post_type, $status );
 
         $response = rest_ensure_response( $data );
         $response = $this->format_collection_response( $response, $request, $total_count );
@@ -389,22 +414,47 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
      * @return WP_REST_Response $response Response data.
      */
     public function prepare_reviews_for_response( $item, $request, $additional_fields = [] ) {
+        if ( class_exists( 'Dokan_Store_Reviews' ) ) {
+            $user          = get_user_by( 'id', $item->post_author );
+            $user_gravatar = get_avatar_url( $user->user_email );
 
-        $comment_author_img_url = get_avatar_url( $item->comment_author_email );
-        $data = [
-            'comment_id'            => (int) $item->comment_ID,
-            'comment_author'        => $item->comment_author,
-            'comment_author_email'  => $item->comment_author_email,
-            'comment_author_url'    => $item->comment_author_url,
-            'comment_author_avatar' => $comment_author_img_url,
-            'comment_content'       => $item->comment_content,
-            'comment_permalink'     => get_comment_link( $item ),
-            'user_id'               => $item->user_id,
-            'comment_post_ID'       => $item->comment_post_ID,
-            'comment_approved'      => $item->comment_approved,
-            'comment_date'          => mysql_to_rfc3339( $item->comment_date ),
-            'rating'                => intval( get_comment_meta( $item->comment_ID, 'rating', true ) ),
-        ];
+            $data = [
+                'id'            => (int) $item->ID,
+                'author'        => array(
+                    'id'     => $user->ID,
+                    'name'   => $user->user_login,
+                    'email'  => $user->user_email,
+                    'url'    => $user->user_url,
+                    'avatar' => $user_gravatar
+                ),
+                'title'         => $item->post_title,
+                'content'       => $item->post_content,
+                'permalink'     => null,
+                'product_id'    => null,
+                'approved'      => true,
+                'date'          => mysql_to_rfc3339( $item->post_date ),
+                'rating'        => intval( get_post_meta( $item->ID, 'rating', true ) ),
+            ];
+        } else {
+            $comment_author_img_url = get_avatar_url( $item->comment_author_email );
+            $data = [
+                'id'            => (int) $item->comment_ID,
+                'author'        => array(
+                    'id'     => $item->user_id,
+                    'name'   => $item->comment_author,
+                    'email'  => $item->comment_author_email,
+                    'url'    => $item->comment_author_url,
+                    'avatar' => $comment_author_img_url
+                ),
+                'title'         => null,
+                'content'       => $item->comment_content,
+                'permalink'     => get_comment_link( $item ),
+                'product_id'    => $item->comment_post_ID,
+                'approved'      => (bool)$item->comment_approved,
+                'date'          => mysql_to_rfc3339( $item->comment_date ),
+                'rating'        => intval( get_comment_meta( $item->comment_ID, 'rating', true ) ),
+            ];
+        }
 
         $data = array_merge( $data, $additional_fields );
 
