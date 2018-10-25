@@ -148,8 +148,8 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
         <p><?php _e( 'Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. <strong>It’s completely optional and shouldn’t take longer than two minutes.</strong>', 'dokan-lite' ); ?></p>
         <p><?php _e( 'No time right now? If you don’t want to go through the wizard, you can skip and return to the Store!', 'dokan-lite' ); ?></p>
         <p class="wc-setup-actions step">
-            <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button-primary button button-large button-next lets-go-btn"><?php _e( 'Let\'s Go!', 'dokan-lite' ); ?></a>
-            <a href="<?php echo esc_url( $dashboard_url ); ?>" class="button button-large not-right-now-btn"><?php _e( 'Not right now', 'dokan-lite' ); ?></a>
+            <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="dokan-btn-theme button-primary button button-large button-next lets-go-btn dokan-btn-theme"><?php _e( 'Let\'s Go!', 'dokan-lite' ); ?></a>
+            <a href="<?php echo esc_url( $dashboard_url ); ?>" class="button button-large not-right-now-btn dokan-btn-theme"><?php _e( 'Not right now', 'dokan-lite' ); ?></a>
         </p>
         <?php
         do_action( 'dokan_seller_wizard_introduction', $this );
