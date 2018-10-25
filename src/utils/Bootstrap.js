@@ -29,6 +29,7 @@ import Chart from "admin/components/Chart.vue"
 import Modal from "admin/components/Modal.vue"
 import Switches from "admin/components/Switches.vue"
 import TextEditor from "admin/components/TextEditor.vue"
+import LazyInput from "admin/components/LazyInput.vue"
 
 import "vue-multiselect/dist/vue-multiselect.min.css"
 
@@ -79,6 +80,7 @@ window.dokan.libs['Chart']      = Chart;
 window.dokan.libs['Modal']      = Modal;
 window.dokan.libs['Switches']   = Switches;
 window.dokan.libs['TextEditor'] = TextEditor;
+window.dokan.libs['LazyInput']  = LazyInput;
 window.dokan.libs['ContentLoading']  = {
   VclCode,
   VclList,
