@@ -29,6 +29,7 @@ import Chart from "admin/components/Chart.vue"
 import Modal from "admin/components/Modal.vue"
 import Switches from "admin/components/Switches.vue"
 import TextEditor from "admin/components/TextEditor.vue"
+import Currency from "admin/components/Currency.vue"
 
 import "vue-multiselect/dist/vue-multiselect.min.css"
 
@@ -36,10 +37,6 @@ Vue.use(Notifications)
 Vue.component('multiselect', Multiselect)
 
 Vue.mixin( Mixin );
-
-Vue.filter('currency', function (value) {
-    return accounting.formatMoney(value, dokan.currency);
-})
 
 Vue.filter('capitalize', function (value) {
     if (!value) return ''
@@ -72,6 +69,7 @@ window.dokan.libs['Router']    = Router;
 window.dokan.libs['moment']    = Moment;
 
 window.dokan.libs['ListTable']  = ListTable;
+window.dokan.libs['Currency']   = Currency;
 window.dokan.libs['Postbox']    = Postbox;
 window.dokan.libs['Loading']    = Loading;
 window.dokan.libs['ChartJS']    = ChartJS;

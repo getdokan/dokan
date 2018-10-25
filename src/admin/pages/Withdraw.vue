@@ -45,7 +45,7 @@
             </template>
 
             <template slot="amount" slot-scope="data">
-                {{ data.row.amount | currency }}
+                <currency :amount="data.row.amount"></currency>
             </template>
 
             <template slot="status" slot-scope="data">
@@ -85,7 +85,8 @@
 
 <script>
 let ListTable = dokan_get_lib('ListTable');
-let Modal = dokan_get_lib('Modal');
+let Modal     = dokan_get_lib('Modal');
+let Currency  = dokan_get_lib('Currency');
 
 export default {
 
@@ -94,6 +95,7 @@ export default {
     components: {
         ListTable,
         Modal,
+        Currency
     },
 
     data () {
