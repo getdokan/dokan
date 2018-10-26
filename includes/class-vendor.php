@@ -50,16 +50,25 @@ class Dokan_Vendor {
     }
 
     /**
-     * Call undefined functions callback
+     * Magic method to access vendor properties
+     *
+     * When you try to access a property by calling a method
+     * with 'get_' prefixed, this magic method will look into
+     * shop_data for that property.
      *
      * @param string $name
-     * @param [type] $param [description]
+     * @param array  $param
      *
-     * @return [type] [description]
+     * @return mixed|void
      */
     public function __call( $name, $param ) {
         if ( strpos( $name, 'get_' ) === 0 ) {
             $function_name  = str_replace('get_', '', $name );
+
+            if ( empty( $this->shop_data ) ) {
+                $this->popluate_store_data();
+            }
+
             return ! empty( $this->shop_data[$function_name] ) ? $this->shop_data[$function_name] : null;
         }
     }
@@ -72,8 +81,7 @@ class Dokan_Vendor {
      * @return array
      */
     public function to_array() {
-
-        $info = array(
+        $data = array(
             'id'                    => $this->get_id(),
             'store_name'            => $this->get_shop_name(),
             'first_name'            => $this->get_first_name(),
@@ -99,7 +107,7 @@ class Dokan_Vendor {
             'trusted'               => $this->is_trusted(),
         );
 
-        return $info;
+        return apply_filters( 'dokan_vendor_to_array', $data, $this );
     }
 
     /**
@@ -183,7 +191,7 @@ class Dokan_Vendor {
         $shop_info = is_array( $shop_info ) ? $shop_info : array();
         $shop_info = wp_parse_args( $shop_info, $defaults );
 
-        $this->shop_data = $shop_info;
+        $this->shop_data = apply_filters( 'dokan_vendor_shop_data', $shop_info, $this );
     }
 
     /**
