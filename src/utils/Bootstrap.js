@@ -29,6 +29,7 @@ import Chart from "admin/components/Chart.vue"
 import Modal from "admin/components/Modal.vue"
 import Switches from "admin/components/Switches.vue"
 import TextEditor from "admin/components/TextEditor.vue"
+import Currency from "admin/components/Currency.vue"
 
 import "vue-multiselect/dist/vue-multiselect.min.css"
 
@@ -72,6 +73,7 @@ window.dokan.libs['Router']    = Router;
 window.dokan.libs['moment']    = Moment;
 
 window.dokan.libs['ListTable']  = ListTable;
+window.dokan.libs['Currency']   = Currency;
 window.dokan.libs['Postbox']    = Postbox;
 window.dokan.libs['Loading']    = Loading;
 window.dokan.libs['ChartJS']    = ChartJS;

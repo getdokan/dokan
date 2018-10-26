@@ -28,6 +28,10 @@ class Dokan_Template_Products {
         add_action( 'dokan_render_new_product_template', array( $this, 'render_new_product_template' ), 10 );
         add_action( 'dokan_render_product_edit_template', array( $this, 'load_product_edit_template' ), 11 );
         add_action( 'dokan_after_listing_product', array( $this, 'load_add_new_product_popup' ), 10 );
+        add_action( 'dokan_product_edit_after_title', array( __CLASS__, 'load_download_virtual_template' ), 10, 2 );
+        add_action( 'dokan_product_edit_after_main', array( __CLASS__, 'load_inventory_template' ), 5, 2 );
+        add_action( 'dokan_product_edit_after_main', array( __CLASS__, 'load_downloadable_template' ), 10, 2 );
+        add_action( 'dokan_product_edit_after_main', array( __CLASS__, 'load_others_template' ), 85, 2 );
     }
 
     /**
@@ -43,6 +47,87 @@ class Dokan_Template_Products {
         }
 
         return $instance;
+    }
+
+    /**
+     * Load product
+     *
+     * @since 1.0.0
+     *
+     * @return void
+     */
+    public static function load_download_virtual_template( $post, $post_id ) {
+        $_downloadable          = get_post_meta( $post_id, '_downloadable', true );
+        $_virtual               = get_post_meta( $post_id, '_virtual', true );
+        $is_downloadable        = ( 'yes' == $_downloadable ) ? true : false;
+        $is_virtual             = ( 'yes' == $_virtual ) ? true : false;
+
+        dokan_get_template_part( 'products/download-virtual', '', array(
+            'post_id'         => $post_id,
+            'post'            => $post,
+            'is_downloadable' => $is_downloadable,
+            'is_virtual'      => $is_virtual,
+            'class'           => 'show_if_simple'
+        ) );
+    }
+
+    /**
+     * Load invendor template
+     *
+     * @since 2.9.2
+     *
+     * @return void
+     */
+    public static function load_inventory_template( $post, $post_id ) {
+        $_sold_individually = get_post_meta( $post_id, '_sold_individually', true );
+        $_stock             = get_post_meta( $post_id, '_stock', true );
+        $_low_stock_amount  = get_post_meta( $post_id, '_low_stock_amount', true );
+
+        dokan_get_template_part( 'products/inventory', '', array(
+            'post_id'            => $post_id,
+            'post'               => $post,
+            '_sold_individually' => $_sold_individually,
+            '_stock'             => $_stock,
+            '_low_stock_amount'  => $_low_stock_amount,
+            'class'              => ''
+        ) );
+    }
+
+    /**
+     * Load downloadable template
+     *
+     * @since 2.9.2
+     *
+     * @return void
+     */
+    public static function load_downloadable_template( $post, $post_id ) {
+        dokan_get_template_part( 'products/downloadable', '', array(
+            'post_id' => $post_id,
+            'post'    => $post,
+            'class'   => 'show_if_downloadable'
+        ) );
+    }
+
+    /**
+     * Load others item template
+     *
+     * @since 2.9.2
+     *
+     * @return void
+     */
+    public static function load_others_template( $post, $post_id ) {
+        $product            = wc_get_product( $post_id );
+        $_visibility        = ( version_compare( WC_VERSION, '2.7', '>' ) ) ? $product->get_catalog_visibility() : get_post_meta( $post_id, '_visibility', true );
+        $visibility_options = dokan_get_product_visibility_options();
+
+        dokan_get_template_part( 'products/others', '', array(
+            'post_id'            => $post_id,
+            'post'               => $post,
+            'post_status'        => $post->post_status,
+            '_visibility'        => $_visibility,
+            'visibility_options' => $visibility_options,
+            'class'              => ''
+        ) );
     }
 
     /**

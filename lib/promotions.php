@@ -147,7 +147,7 @@ abstract class WeDevs_Promotion {
             </style>
 
             <script type='text/javascript'>
-                $(document).ready(function(){
+                jQuery(document).ready(function(){
                     jQuery('body').on('click', '.dokan-upgrade-promotional-notice span.prmotion-close-icon', function(e) {
                         e.preventDefault();
 
