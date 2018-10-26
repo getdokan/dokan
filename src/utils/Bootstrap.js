@@ -38,6 +38,10 @@ Vue.component('multiselect', Multiselect)
 
 Vue.mixin( Mixin );
 
+Vue.filter('currency', function (value) {
+    return accounting.formatMoney(value, dokan.currency);
+})
+
 Vue.filter('capitalize', function (value) {
     if (!value) return ''
     value = value.toString()
