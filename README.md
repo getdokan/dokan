@@ -1,11 +1,11 @@
 # Dokan Multivendor Marketplace #
-**Contributors:** [tareq1988](https://profiles.wordpress.org/tareq1988), [wedevs](https://profiles.wordpress.org/wedevs), [sabbir1991](https://profiles.wordpress.org/sabbir1991), [rafsuntaskin](https://profiles.wordpress.org/rafsuntaskin), [sk.shaikat](https://profiles.wordpress.org/sk.shaikat)  
+**Contributors:** [tareq1988](https://profiles.wordpress.org/tareq1988), [wedevs](https://profiles.wordpress.org/wedevs), [sabbir1991](https://profiles.wordpress.org/sabbir1991), [rafsuntaskin](https://profiles.wordpress.org/rafsuntaskin), [sk.shaikat](https://profiles.wordpress.org/sk.shaikat), [ediamin](https://profiles.wordpress.org/ediamin), [saimonh](https://profiles.wordpress.org/saimonh)  
 **Donate Link:** http://tareq.co/donate/  
 **Tags:** woocommerce, multivendor, multi-vendor, vendor, multishop, paypal , seller, store, sell, online, amazon, dokan, ebay, Etsy, multi seller, multi store, multi vendor, multi vendors, multistore, multivendor, product vendor, product vendors, vendor, vendor system, vendors, wc market place, wc marketplace, wc vendors, woo vendors, woocommerce market place, woocommerce marketplace, woocommerce multi vendor,  commission rate, e-commerce, ebay, ecommerce, yith, yithemes  
 **Requires at least:** 4.4  
 **Tested up to:** 4.9.8  
 **WC requires at least:** 3.0  
-**WC tested up to:** 3.4.5  
+**WC tested up to:** 3.5.0  
 **Requires PHP:** 5.6  
 **Stable tag:** trunk  
 **License:** GPLv2 or later  
@@ -177,6 +177,18 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 ## Changelog ##
+
+v2.9.2 -> Oct 26, 2018
+------------------------
+-**New**   Add low stock amount option in vendor product
+-**Fix**   Issue fix for REST API PUT and DELETE request
+-**Fix**   Promotion hiding error in console
+-**Fix**   Rest controller undefined data_objects error
+-**Fix**   Currency symbol issue in dokan admin backend
+-**Tweak** Change withdraw api hooks in REST API
+-**Tweak** Added some filter in dokan vendor class
+-**Tweak** Enable option group for select fields in admin settings page
+-**Tweak** Change some template rendering hooks
 
 v2.9.1 -> Oct 11, 2018
 ------------------------
