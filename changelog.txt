@@ -1,3 +1,15 @@
+v2.9.2 -> Oct 26, 2018
+------------------------
+-**New**   Add low stock amount option in vendor product
+-**Fix**   Issue fix for REST API PUT and DELETE request
+-**Fix**   Promotion hiding error in console
+-**Fix**   Rest controller undefined data_objects error
+-**Fix**   Currency symbol issue in dokan admin backend
+-**Tweak** Change withdraw api hooks in REST API
+-**Tweak** Added some filter in dokan vendor class
+-**Tweak** Enable option group for select fields in admin settings page
+-**Tweak** Change some template rendering hooks
+
 v2.9.1 -> Oct 11, 2018
 ------------------------
 -**New** Added top rated, best selling, latest, featured product and featured vendor REST API
