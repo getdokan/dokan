@@ -81,12 +81,14 @@ class Dokan_Template_Products {
     public static function load_inventory_template( $post, $post_id ) {
         $_sold_individually = get_post_meta( $post_id, '_sold_individually', true );
         $_stock             = get_post_meta( $post_id, '_stock', true );
+        $_low_stock_amount  = get_post_meta( $post_id, '_low_stock_amount', true );
 
         dokan_get_template_part( 'products/inventory', '', array(
             'post_id'            => $post_id,
             'post'               => $post,
             '_sold_individually' => $_sold_individually,
             '_stock'             => $_stock,
+            '_low_stock_amount'  => $_low_stock_amount,
             'class'              => ''
         ) );
     }

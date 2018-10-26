@@ -33,9 +33,16 @@
         <div class="show_if_stock dokan-stock-management-wrapper dokan-form-group dokan-clearfix">
 
             <div class="content-half-part hide_if_variation">
-                <label for="_stock" class="form-label"><?php _e( 'Quantity', 'dokan-lite' ); ?></label>
+                <label for="_stock" class="form-label"><?php _e( 'Stock quantity', 'dokan-lite' ); ?></label>
                 <input type="number" class="dokan-form-control" name="_stock" placeholder="<?php __( '1', 'dokan-lite' ); ?>" value="<?php echo wc_stock_amount( $_stock ); ?>" min="0" step="1">
             </div>
+
+            <?php if ( version_compare( WC_VERSION, '3.4.7', '>' ) ) : ?>
+            <div class="content-half-part hide_if_variation">
+                <label for="_low_stock_amount" class="form-label"><?php _e( 'Low stock threshold', 'dokan-lite' ); ?></label>
+                <input type="number" class="dokan-form-control" name="_low_stock_amount" placeholder="<?php __( '1', 'dokan-lite' ); ?>" value="<?php echo wc_stock_amount( $_low_stock_amount ); ?>" min="0" step="1">
+            </div>
+            <?php endif; ?>
 
             <div class="content-half-part hide_if_variation last-child">
                 <label for="_backorders" class="form-label"><?php _e( 'Allow Backorders', 'dokan-lite' ); ?></label>

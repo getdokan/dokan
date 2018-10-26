@@ -271,10 +271,13 @@ function dokan_process_product_meta( $post_id ) {
     }
 
     // Stock Data
-    $manage_stock = ! empty( $_POST['_manage_stock'] ) && 'grouped' !== $product_type ? 'yes' : 'no';
-    $backorders   = ! empty( $_POST['_backorders'] ) && 'yes' === $manage_stock ? wc_clean( $_POST['_backorders'] ) : 'no';
-    $stock_status = ! empty( $_POST['_stock_status'] ) ? wc_clean( $_POST['_stock_status'] ) : 'instock';
-    $stock_amount = 'yes' === $manage_stock ? wc_stock_amount( $_POST['_stock'] ) : '';
+    $manage_stock      = ! empty( $_POST['_manage_stock'] ) && 'grouped' !== $product_type ? 'yes' : 'no';
+    $backorders        = ! empty( $_POST['_backorders'] ) && 'yes' === $manage_stock ? wc_clean( $_POST['_backorders'] ) : 'no';
+    $stock_status      = ! empty( $_POST['_stock_status'] ) ? wc_clean( $_POST['_stock_status'] ) : 'instock';
+    $stock_amount      = isset( $_POST['_stock'] ) ? $_POST['_stock'] : '';
+    $stock_amount      = 'yes' === $manage_stock ? wc_stock_amount( wp_unslash( $stock_amount ) ) : '';
+    $_low_stock_amount = isset( $_POST['_low_stock_amount'] ) ? $_POST['_low_stock_amount'] : '';
+    $_low_stock_amount = 'yes' === $manage_stock ? wc_stock_amount( wp_unslash( $_low_stock_amount ) ) : '';
 
     // Stock Data
     if ( 'yes' === get_option( 'woocommerce_manage_stock' ) ) {
@@ -311,9 +314,17 @@ function dokan_process_product_meta( $post_id ) {
         }
 
         if ( ! empty( $_POST['_manage_stock'] ) ) {
-            wc_update_product_stock( $post_id, wc_stock_amount( $_POST['_stock'] ) );
+
+            if ( 'variable' === $product_type ) {
+                update_post_meta( $post_id, '_stock', $stock_amount );
+            } else {
+                wc_update_product_stock( $post_id, $stock_amount );
+            }
+
+            update_post_meta( $post_id, '_low_stock_amount', wc_stock_amount( $_POST['_low_stock_amount'] ) );
         } else {
             update_post_meta( $post_id, '_stock', '' );
+            update_post_meta( $post_id, '_low_stock_amount', '' );
         }
 
     } else {

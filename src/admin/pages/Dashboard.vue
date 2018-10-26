@@ -10,7 +10,9 @@
                             <li class="sale">
                                 <div class="dashicons dashicons-chart-bar"></div>
                                 <a href="#">
-                                    <strong>{{ overview.orders.this_month | currency }}</strong>
+                                    <strong>
+                                        <currency :amount="overview.orders.this_month"></currency>
+                                    </strong>
                                     <div class="details">
                                         {{ __( 'net sales this month', 'dokan-lite' ) }} <span :class="overview.orders.class">{{ overview.orders.parcent }}</span>
                                     </div>
@@ -19,7 +21,9 @@
                             <li class="commission">
                                 <div class="dashicons dashicons-chart-pie"></div>
                                 <a href="#">
-                                    <strong>{{ overview.earning.this_month | currency }}</strong>
+                                    <strong>
+                                        <currency :amount="overview.earning.this_month"></currency>
+                                    </strong>
                                     <div class="details">
                                         {{ __( 'commission earned', 'dokan-lite' ) }} <span :class="overview.earning.class">{{ overview.earning.parcent }}</span>
                                     </div>
@@ -109,8 +113,9 @@
 </template>
 
 <script>
-let Postbox = dokan_get_lib('Postbox');
-let Loading = dokan_get_lib('Loading');
+let Postbox  = dokan_get_lib('Postbox');
+let Loading  = dokan_get_lib('Loading');
+let Currency = dokan_get_lib('Currency');
 
 import Chart from "admin/components/Chart.vue"
 
@@ -121,7 +126,8 @@ export default {
     components: {
         Postbox,
         Loading,
-        Chart
+        Chart,
+        Currency
     },
 
     data () {
