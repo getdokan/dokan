@@ -376,7 +376,8 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
         $data = array_merge( $data, apply_filters( 'dokan_rest_store_additional_fields', $additional_fields, $store, $request ) );
         $response = rest_ensure_response( $data );
         $response->add_links( $this->prepare_links( $data, $request ) );
-        return $response;
+
+        return apply_filters( 'dokan_rest_prepare_store_item_for_response', $response );
     }
 
     /**
