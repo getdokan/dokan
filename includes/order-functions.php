@@ -958,9 +958,3 @@ function dokan_is_order_already_exists( $id ) {
 
     return $order_id ? true : false;
 }
-
-
-
-
-
-
