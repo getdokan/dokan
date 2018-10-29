@@ -153,12 +153,6 @@ class Dokan_Order_Manager {
             $temp      = array_keys( $vendors );
             $seller_id = reset( $temp );
 
-            // update author as vendor
-            wp_update_post( array(
-                'ID'          => $parent_order_id,
-                'post_author' => $seller_id
-            ) );
-
             // record admin commision
             $admin_fee = dokan_get_admin_commission_by( $parent_order, $seller_id );
             $parent_order->update_meta_data( '_dokan_admin_fee', $admin_fee );
@@ -229,12 +223,6 @@ class Dokan_Order_Manager {
 
             // update total_sales count for sub-order
             wc_update_total_sales_counts( $order_id );
-
-            // update author as vendor
-            wp_update_post( array(
-                'post_author' => $seller_id,
-                'ID'          => $order_id
-            ) );
 
             dokan_log( 'Created sub order : #' . $order_id );
 
