@@ -301,6 +301,10 @@ function dokan_delete_sync_duplicate_order( $order_id, $seller_id ) {
 function dokan_sync_insert_order( $order_id ) {
     global $wpdb;
 
+    if ( dokan_is_order_already_exists( $order_id ) ) {
+        return;
+    }
+
     if ( get_post_meta( $order_id, 'has_sub_order', true ) == '1' ) {
         return;
     }
@@ -934,3 +938,29 @@ function dokan_get_seller_id_by_order_id( $id ) {
 
     return $seller_id;
 }
+
+/**
+ * Check if an order with same id is exists in database
+ *
+ * @param  int order_id
+ *
+ * @return boolean
+ */
+function dokan_is_order_already_exists( $id ) {
+    global $wpdb;
+
+    if ( ! $id || ! is_numeric( $id ) ) {
+        return false;
+    }
+
+    $sql      = "SELECT order_id FROM {$wpdb->prefix}dokan_orders WHERE order_id=%d";
+    $order_id = $wpdb->get_var( $wpdb->prepare( $sql, $id ) );
+
+    return $order_id ? true : false;
+}
+
+
+
+
+
+
