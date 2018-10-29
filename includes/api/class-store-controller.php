@@ -132,6 +132,8 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
             $args['featured'] = $params['featured'];
         }
 
+        $args = apply_filters( 'dokan_rest_get_stores_args', $args, $request );
+
         $stores       = dokan()->vendor->get_vendors( $args );
         $data_objects = array();
 

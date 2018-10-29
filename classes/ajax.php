@@ -525,7 +525,7 @@ class Dokan_Ajax {
             );
         }
 
-        $seller_args = apply_filters( 'dokan_seller_listing_search_args', $seller_args );
+        $seller_args = apply_filters( 'dokan_seller_listing_search_args', $seller_args, $_REQUEST );
 
         $sellers = dokan_get_sellers( $seller_args );
 
