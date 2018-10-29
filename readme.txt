@@ -178,6 +178,11 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+v2.9.3 -> Oct 29, 2018
+------------------------
+-**Fix**   Remove vendor id from order post table
+-**Fix**   Prevent duplication order in dokan order table
+
 v2.9.2 -> Oct 26, 2018
 ------------------------
 -**New**   Add low stock amount option in vendor product

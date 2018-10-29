@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 2.9.2\n"
+"Project-Id-Version: Dokan 2.9.3\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2018-10-26 08:41:07+00:00\n"
+"POT-Creation-Date: 2018-10-29 14:36:18+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -562,22 +562,22 @@ msgid "Go to your Store Dashboard!"
 msgstr ""
 
 #: classes/template-dashboard.php:103 includes/admin/setup-wizard.php:523
-#: includes/order-functions.php:460 templates/dashboard/orders-widget.php:26
+#: includes/order-functions.php:464 templates/dashboard/orders-widget.php:26
 msgid "Completed"
 msgstr ""
 
 #: classes/template-dashboard.php:105 includes/admin/setup-wizard.php:529
-#: includes/order-functions.php:475 templates/dashboard/orders-widget.php:36
+#: includes/order-functions.php:479 templates/dashboard/orders-widget.php:36
 #: templates/orders/listing.php:137
 msgid "Processing"
 msgstr ""
 
-#: classes/template-dashboard.php:106 includes/order-functions.php:485
+#: classes/template-dashboard.php:106 includes/order-functions.php:489
 #: templates/dashboard/orders-widget.php:41
 msgid "Cancelled"
 msgstr ""
 
-#: classes/template-dashboard.php:107 includes/order-functions.php:480
+#: classes/template-dashboard.php:107 includes/order-functions.php:484
 #: templates/dashboard/orders-widget.php:46
 msgid "Refunded"
 msgstr ""
@@ -1297,7 +1297,7 @@ msgstr ""
 msgid "Order Status for Withdraw"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:535 includes/order-functions.php:470
+#: includes/admin/setup-wizard.php:535 includes/order-functions.php:474
 msgid "On-hold"
 msgstr ""
 
@@ -1490,7 +1490,7 @@ msgstr ""
 msgid "Unique identifier for the object."
 msgstr ""
 
-#: includes/api/class-order-controller.php:92 includes/order-functions.php:727
+#: includes/api/class-order-controller.php:92 includes/order-functions.php:731
 msgid "Order Status"
 msgstr ""
 
@@ -3111,7 +3111,7 @@ msgstr ""
 msgid "Mark parent order completed when all child orders are completed."
 msgstr ""
 
-#: includes/class-order-manager.php:478
+#: includes/class-order-manager.php:466
 msgid "A coupon must be restricted with a vendor product."
 msgstr ""
 
@@ -3729,136 +3729,136 @@ msgstr ""
 msgid "Off Day"
 msgstr ""
 
-#: includes/order-functions.php:465
+#: includes/order-functions.php:469
 msgid "Pending Payment"
 msgstr ""
 
-#: includes/order-functions.php:490
+#: includes/order-functions.php:494
 msgid "Failed"
 msgstr ""
 
-#: includes/order-functions.php:721
+#: includes/order-functions.php:725
 msgid "Order No"
 msgstr ""
 
-#: includes/order-functions.php:722 templates/orders/details.php:21
+#: includes/order-functions.php:726 templates/orders/details.php:21
 msgid "Order Items"
 msgstr ""
 
-#: includes/order-functions.php:723
+#: includes/order-functions.php:727
 msgid "Shipping method"
 msgstr ""
 
-#: includes/order-functions.php:724
+#: includes/order-functions.php:728
 msgid "Shipping Cost"
 msgstr ""
 
-#: includes/order-functions.php:725
+#: includes/order-functions.php:729
 msgid "Payment method"
 msgstr ""
 
-#: includes/order-functions.php:726 templates/orders/listing.php:48
+#: includes/order-functions.php:730 templates/orders/listing.php:48
 #: templates/orders/listing.php:74
 msgid "Order Total"
 msgstr ""
 
-#: includes/order-functions.php:728
+#: includes/order-functions.php:732
 msgid "Order Date"
 msgstr ""
 
-#: includes/order-functions.php:730
+#: includes/order-functions.php:734
 msgid "Billing Company"
 msgstr ""
 
-#: includes/order-functions.php:731
+#: includes/order-functions.php:735
 msgid "Billing First Name"
 msgstr ""
 
-#: includes/order-functions.php:732
+#: includes/order-functions.php:736
 msgid "Billing Last Name"
 msgstr ""
 
-#: includes/order-functions.php:733
+#: includes/order-functions.php:737
 msgid "Billing Full Name"
 msgstr ""
 
-#: includes/order-functions.php:734
+#: includes/order-functions.php:738
 msgid "Billing Email"
 msgstr ""
 
-#: includes/order-functions.php:735
+#: includes/order-functions.php:739
 msgid "Billing Phone"
 msgstr ""
 
-#: includes/order-functions.php:736
+#: includes/order-functions.php:740
 msgid "Billing Address 1"
 msgstr ""
 
-#: includes/order-functions.php:737
+#: includes/order-functions.php:741
 msgid "Billing Address 2"
 msgstr ""
 
-#: includes/order-functions.php:738
+#: includes/order-functions.php:742
 msgid "Billing City"
 msgstr ""
 
-#: includes/order-functions.php:739
+#: includes/order-functions.php:743
 msgid "Billing State"
 msgstr ""
 
-#: includes/order-functions.php:740
+#: includes/order-functions.php:744
 msgid "Billing Postcode"
 msgstr ""
 
-#: includes/order-functions.php:741
+#: includes/order-functions.php:745
 msgid "Billing Country"
 msgstr ""
 
-#: includes/order-functions.php:743
+#: includes/order-functions.php:747
 msgid "Shipping Company"
 msgstr ""
 
-#: includes/order-functions.php:744
+#: includes/order-functions.php:748
 msgid "Shipping First Name"
 msgstr ""
 
-#: includes/order-functions.php:745
+#: includes/order-functions.php:749
 msgid "Shipping Last Name"
 msgstr ""
 
-#: includes/order-functions.php:746
+#: includes/order-functions.php:750
 msgid "Shipping Full Name"
 msgstr ""
 
-#: includes/order-functions.php:747
+#: includes/order-functions.php:751
 msgid "Shipping Address 1"
 msgstr ""
 
-#: includes/order-functions.php:748
+#: includes/order-functions.php:752
 msgid "Shipping Address 2"
 msgstr ""
 
-#: includes/order-functions.php:749
+#: includes/order-functions.php:753
 msgid "Shipping City"
 msgstr ""
 
-#: includes/order-functions.php:750
+#: includes/order-functions.php:754
 msgid "Shipping State"
 msgstr ""
 
-#: includes/order-functions.php:751
+#: includes/order-functions.php:755
 msgid "Shipping Postcode"
 msgstr ""
 
-#: includes/order-functions.php:752
+#: includes/order-functions.php:756
 msgid "Shipping Country"
 msgstr ""
 
-#: includes/order-functions.php:754
+#: includes/order-functions.php:758
 msgid "Customer IP"
 msgstr ""
 
-#: includes/order-functions.php:755
+#: includes/order-functions.php:759
 msgid "Customer Note"
 msgstr ""
 
