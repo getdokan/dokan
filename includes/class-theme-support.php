@@ -35,6 +35,10 @@ class Dokan_Theme_Support {
             case 'storefront':
                 require_once __DIR__ . '/theme-support/class-' . $this->theme . '.php';
                 break;
+
+            case 'flatsome':
+                require_once __DIR__ . '/theme-support/class-' . $this->theme . '.php';
+                break;
         }
     }
 
