@@ -328,6 +328,7 @@ final class WeDevs_Dokan {
             require_once $inc_dir . 'admin/promotion.php';
         } else {
             require_once $inc_dir . 'template-tags.php';
+            require_once $inc_dir . 'class-theme-support.php';
         }
 
         // API includes
@@ -374,6 +375,10 @@ final class WeDevs_Dokan {
             Dokan_Template_Orders::init();
             Dokan_Template_Withdraw::init();
             Dokan_Template_Settings::init();
+        }
+
+        if ( ! is_admin() ) {
+            new Dokan_Theme_Support();
         }
 
         if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
