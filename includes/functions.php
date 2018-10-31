@@ -115,6 +115,21 @@ function dokan_is_store_page() {
 }
 
 /**
+ * Check if it's product edit page
+ *
+ * @since 3.0
+ *
+ * @return boolean
+ */
+function dokan_is_product_edit_page() {
+    if ( get_query_var( 'edit' ) && is_singular( 'product' ) ) {
+        return true;
+    }
+
+    return false;
+}
+
+/**
  * Check if it's a Seller Dashboard page
  *
  * @since 2.4.9
