@@ -69,7 +69,12 @@ class Dokan_Settings {
 
         $option_values = $this->sanitize_options( $_POST['settingsData'] );
 
+        $option_values = apply_filters( 'dokan_save_settings_value', $option_values );
+
         update_option( $option_key, $option_values );
+
+        do_action( 'dokan_after_saving_settings', $option_key, $option_values );
+
         wp_send_json_success( __( 'Setting Saved', 'dokan-lite' ) );
     }
 

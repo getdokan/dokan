@@ -60,6 +60,11 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
                     ),
                 )
             ),
+            array(
+                'methods'             => WP_REST_Server::EDITABLE,
+                'callback'            => array( $this, 'update_store' ),
+                'permission_callback' => array( $this, 'update_product_permissions_check' ),
+            ),
         ) );
 
         register_rest_route( $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/products' , array(
@@ -127,6 +132,8 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
             $args['featured'] = $params['featured'];
         }
 
+        $args = apply_filters( 'dokan_rest_get_stores_args', $args, $request );
+
         $stores       = dokan()->vendor->get_vendors( $args );
         $data_objects = array();
 
@@ -187,6 +194,46 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
         $vendor = dokan()->vendor->get( intval( $store_id ) )->delete( $reassign );
         $response = rest_ensure_response( $vendor );
         $response->add_links( $this->prepare_links( $vendor, $request ) );
+
+        return $response;
+    }
+
+    /**
+     * Update product permission check method
+     *
+     * @since 2.9.2
+     *
+     * @return bool
+     */
+    public function update_product_permissions_check() {
+        // This is temporary check to use store category update
+        return current_user_can( 'manage_woocommerce' ); // @todo: Update this with logic
+    }
+
+    /**
+     * Update Store
+     *
+     * @since 2.9.2
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_REST_Response
+     */
+    public function update_store( $request ) {
+        $store_id = $request->get_param( 'id' );
+
+        $store = dokan()->vendor->get( $store_id );
+
+        if ( empty( $store->id ) ) {
+            return new WP_Error( 'no_store_found', __( 'No store found', 'dokan-lite' ), array( 'status' => 404 ) );
+        }
+
+        // @todo: update process. This method was introduced to update store categories.
+
+        do_action( 'dokan_rest_stores_update_store', $store, $request );
+
+        $stores_data = $this->prepare_item_for_response( $store, $request );
+        $response    = rest_ensure_response( $stores_data );
 
         return $response;
     }
@@ -401,7 +448,8 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
         $data = array_merge( $data, apply_filters( 'dokan_rest_store_additional_fields', $additional_fields, $store, $request ) );
         $response = rest_ensure_response( $data );
         $response->add_links( $this->prepare_links( $data, $request ) );
-        return $response;
+
+        return apply_filters( 'dokan_rest_prepare_store_item_for_response', $response );
     }
 
     /**
