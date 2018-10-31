@@ -3883,11 +3883,21 @@ div.media-sidebar a.edit-attachment {
   width: 100%;
   height: 200px;
 }
-.dokan-seller-listing .dokan-seller-search-form {
+.dokan-seller-search-form {
   margin: 30px 0px;
 }
-.dokan-seller-listing .dokan-seller-search-form input#search {
-  width: 30%;
+.dokan-seller-search-form .dokan-w4 {
+  padding: 0 15px;
+}
+.dokan-seller-search-form .dokan-w4 input[type=search],
+.dokan-seller-search-form .dokan-w4 select.dokan-form-control {
+  height: 40px !important;
+  border: 1px solid #e2e2e2 !important;
+  box-shadow: none !important;
+  border-radius: 4px !important;
+}
+.dokan-seller-search-form .dokan-w4 input[type=search] {
+  background-position-y: 11px !important;
 }
 .dokan-seller-listing {
   position: relative;
