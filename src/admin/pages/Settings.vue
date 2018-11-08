@@ -157,18 +157,28 @@
                         section: section
                     };
                 self.showLoading = true;
-                jQuery.post( dokan.ajaxurl, data, function(resp) {
-                    if ( resp.success ) {
+
+                jQuery.post( dokan.ajaxurl, data )
+                    .done( function ( response ) {
+                        var settings = response.data.settings;
+
                         self.isSaved = true;
                         self.isUpdated = true;
-                        self.message = resp.data;
-                    } else {
-                        self.isSaved = true;
-                        self.isUpdated = false;
-                        self.message = resp.data;
-                    }
-                    self.showLoading = false;
-                })
+
+                        self.message = response.data.message;
+
+                        self.settingValues[ settings.name ] = settings.value;
+                    } )
+                    .fail( function ( jqXHR ) {
+                        var messages = jqXHR.responseJSON.data.map( function ( error ) {
+                            return error.message;
+                        } );
+
+                        alert( messages.join( ' ' ) );
+                    } )
+                    .always( function () {
+                        self.showLoading = false;
+                    } );
             }
         },
 

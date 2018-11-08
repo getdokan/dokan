@@ -53,29 +53,44 @@ class Dokan_Settings {
      * @return void
      */
     public function save_settings_value() {
-        if ( ! current_user_can( 'manage_options' ) ) {
-            wp_send_json_error( __( 'You have no permission to get settings value', 'dokan-lite' ) );
+        try {
+            if ( ! current_user_can( 'manage_options' ) ) {
+                throw new Exception( __( 'You are not authorized to perform this action.', 'dokan-lite' ), 401 );
+            }
+
+            if ( ! wp_verify_nonce( $_POST['nonce'], 'dokan_admin' ) ) {
+                throw new Exception( __( 'Invalid nonce', 'dokan-lite' ), 403 );
+            }
+
+            $option_name = $_POST['section'];
+
+            if ( empty( $option_name ) ) {
+                throw new Exception( __( 'Setting not saved properly', 'dokan-lite' ), 400 );
+            }
+
+            $option_value = $this->sanitize_options( $_POST['settingsData'] );
+
+            $option_value = apply_filters( 'dokan_save_settings_value', $option_value );
+
+            do_action( 'dokan_before_saving_settings', $option_name, $option_value );
+
+            update_option( $option_name, $option_value );
+
+            do_action( 'dokan_after_saving_settings', $option_name, $option_value );
+
+            wp_send_json_success( array(
+                'settings' => array(
+                    'name'    => $option_name,
+                    'value'   => $option_value,
+                ),
+                'message' => __( 'Setting has been saved successfully.', 'dokan-lite' ),
+            ) );
+
+        } catch ( Exception $e ) {
+            $error_code = $e->getCode() ? $e->getCode() : 422;
+
+            wp_send_json_error( new WP_Error( 'error_saving_dokan_settings', $e->getMessage() ), $error_code );
         }
-
-        if ( ! wp_verify_nonce( $_POST['nonce'], 'dokan_admin' ) ) {
-            wp_send_json_error( __( 'Invalid nonce', 'dokan-lite' ) );
-        }
-
-        $option_key = $_POST['section'];
-
-        if ( empty( $option_key ) ) {
-            wp_send_json_error( __( 'Setting not saved properly', 'dokan-lite' ) );
-        }
-
-        $option_values = $this->sanitize_options( $_POST['settingsData'] );
-
-        $option_values = apply_filters( 'dokan_save_settings_value', $option_values );
-
-        update_option( $option_key, $option_values );
-
-        do_action( 'dokan_after_saving_settings', $option_key, $option_values );
-
-        wp_send_json_success( __( 'Setting Saved', 'dokan-lite' ) );
     }
 
     /**
