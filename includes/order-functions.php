@@ -319,7 +319,18 @@ function dokan_sync_insert_order( $order_id ) {
     $threshold_day      = dokan_get_option( 'withdraw_date_limit', 'dokan_withdraw', 0 );
 
     dokan_delete_sync_duplicate_order( $order_id, $seller_id );
-
+    
+    /**
+    * Prevent duplicate transaction in duplicate income 
+     */
+    $wpdb->delete(
+        $wpdb->prefix . 'dokan_vendor_balance',
+        array(
+            'trn_id'    => $order_id,
+            'trn_type'  => 'dokan_orders'
+        )
+    );
+    
     // make sure order status contains "wc-" prefix
     if ( stripos( $order_status, 'wc-' ) === false ) {
         $order_status = 'wc-' . $order_status;
