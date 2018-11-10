@@ -654,7 +654,14 @@ function dokan_get_admin_commission_by( $order, $seller_id ) {
         $refund_t += $order->get_total_refunded_for_item( $item_id );
         $commissions[$i]['total_line'] = $item->get_total() - $order->get_total_refunded_for_item( $item_id );
         $commissions[$i]['fee_type']  = dokan_get_commission_type( $seller_id, $item['product_id'] );
-        $commissions[$i]['admin_fee'] = ( 'percentage' == $commissions[$i]['fee_type'] ) ? 100 - dokan_get_seller_percentage( $seller_id, $item['product_id'] ) : dokan_get_seller_percentage( $seller_id, $item['product_id'] );
+        
+        if( 'percentage' == $commissions[$i]['fee_type'] ){
+            $commissions[$i]['admin_fee'] = 100 - dokan_get_seller_percentage( $seller_id, $item['product_id'] );
+        }else{
+            $admin_fee = $item->get_quantity() * dokan_get_seller_percentage( $seller_id, $item['product_id'] );
+            $commissions[$i]['admin_fee'] = $admin_fee;
+        }
+        
         $total_line += $commissions[$i]['total_line'];
 
         $i++;
