@@ -321,7 +321,7 @@ function dokan_process_product_meta( $post_id ) {
                 wc_update_product_stock( $post_id, $stock_amount );
             }
 
-            update_post_meta( $post_id, '_low_stock_amount', wc_stock_amount( $_POST['_low_stock_amount'] ) );
+            update_post_meta( $post_id, '_low_stock_amount', $_low_stock_amount );
         } else {
             update_post_meta( $post_id, '_stock', '' );
             update_post_meta( $post_id, '_low_stock_amount', '' );

@@ -51,13 +51,23 @@ function dokan_admin_shop_order_edit_columns( $existing_columns ) {
         $existing_columns['suborder']  = __( 'Sub Order', 'dokan-lite' );
     }
 
-    // Remove seller, suborder column if seller is viewing his own product
-    if ( ! current_user_can( 'manage_woocommerce' ) || ( isset( $_GET['author'] ) && ! empty( $_GET['author'] ) ) ) {
-        unset( $columns['suborder'] );
-        unset( $columns['seller'] );
+    if ( WC_VERSION > '3.2.6' ) {
+        // Remove seller, suborder column if seller is viewing his own product
+        if ( ! current_user_can( 'manage_woocommerce' ) || ( isset( $_GET['author'] ) && ! empty( $_GET['author'] ) ) ) {
+            unset( $columns['suborder'] );
+            unset( $columns['seller'] );
+        }
+
+        return apply_filters( 'dokan_edit_shop_order_columns', $columns );
     }
 
-    return apply_filters( 'dokan_edit_shop_order_columns', $columns );
+    // Remove seller, suborder column if seller is viewing his own product
+    if ( ! current_user_can( 'manage_woocommerce' ) || ( isset( $_GET['author'] ) && ! empty( $_GET['author'] ) ) ) {
+        unset( $existing_columns['suborder'] );
+        unset( $existing_columns['seller'] );
+    }
+
+    return apply_filters( 'dokan_edit_shop_order_columns', $existing_columns );
 }
 
 add_filter( 'manage_edit-shop_order_columns', 'dokan_admin_shop_order_edit_columns', 11 );
