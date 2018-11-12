@@ -1578,21 +1578,44 @@ add_filter( 'show_admin_bar', 'dokan_disable_admin_bar' );
  */
 function dokan_filter_orders_for_current_vendor( $query ) {
     if ( current_user_can( 'manage_woocommerce' ) ) {
-        return;
+        return $query;
     }
 
     if ( ! isset( $query->query_vars['post_type'] ) ) {
-        return;
+        return $query;
     }
 
-    if ( is_admin() && $query->is_main_query() && ( $query->query_vars['post_type'] == 'shop_order' || $query->query_vars['post_type'] == 'product' || $query->query_vars['post_type'] == 'wc_booking' ) ) {
+    if ( is_admin() && $query->is_main_query() && $query->query_vars['post_type'] == 'product' ) {
         $query->set( 'author', get_current_user_id() );
     }
 
     return $query;
 }
 
-add_action( 'pre_get_posts', 'dokan_filter_orders_for_current_vendor' );
+add_filter( 'pre_get_posts', 'dokan_filter_orders_for_current_vendor' );
+
+function dokan_join_author_table( $args, $query ) {
+    global $wpdb;
+
+    if ( current_user_can( 'manage_woocommerce' ) ) {
+        return $args;
+    }
+
+    if ( ! isset( $query->query_vars['post_type'] ) ) {
+        return $args;
+    }
+
+    $vendor_id = get_current_user_id();
+
+    if ( is_admin() && $query->is_main_query() && ( $query->query_vars['post_type'] == 'shop_order' || $query->query_vars['post_type'] == 'wc_booking' ) ) {
+        $args['join']  .= " LEFT JOIN {$wpdb->prefix}dokan_orders as do ON $wpdb->posts.ID=do.order_id";
+        $args['where'] .= " AND do.seller_id=$vendor_id";
+    }
+
+    return $args;
+}
+
+add_filter( 'posts_clauses', 'dokan_join_author_table', 12, 2 );
 
 /**
  * Remove sellerdiv metabox when a seller can access the backend
