@@ -1570,13 +1570,13 @@ function dokan_disable_admin_bar( $show_admin_bar ) {
 add_filter( 'show_admin_bar', 'dokan_disable_admin_bar' );
 
 /**
- * Filter the orders, products and booking products of current user
+ * Filter products of current user
  *
  * @param object $query
  * @since 2.7.3
  * @return object $query
  */
-function dokan_filter_orders_for_current_vendor( $query ) {
+function dokan_filter_product_for_current_vendor( $query ) {
     if ( current_user_can( 'manage_woocommerce' ) ) {
         return $query;
     }
@@ -1592,9 +1592,17 @@ function dokan_filter_orders_for_current_vendor( $query ) {
     return $query;
 }
 
-add_filter( 'pre_get_posts', 'dokan_filter_orders_for_current_vendor' );
+add_filter( 'pre_get_posts', 'dokan_filter_product_for_current_vendor' );
 
-function dokan_join_author_table( $args, $query ) {
+/**
+ * Filter orders of current user
+ *
+ * @param object $args
+ * @param object $query
+ * @since 2.9.4
+ * @return object $args
+ */
+function dokan_filter_orders_for_current_vendor( $args, $query ) {
     global $wpdb;
 
     if ( current_user_can( 'manage_woocommerce' ) ) {
@@ -1615,7 +1623,7 @@ function dokan_join_author_table( $args, $query ) {
     return $args;
 }
 
-add_filter( 'posts_clauses', 'dokan_join_author_table', 12, 2 );
+add_filter( 'posts_clauses', 'dokan_filter_orders_for_current_vendor', 12, 2 );
 
 /**
  * Remove sellerdiv metabox when a seller can access the backend
