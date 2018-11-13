@@ -1642,6 +1642,7 @@ add_filter( 'posts_clauses', 'dokan_filter_orders_for_current_vendor', 12, 2 );
  * @return array
  */
 function dokan_map_meta_caps( $caps, $cap, $user_id, $args ) {
+    global $post;
 
     if ( ! is_admin() ) {
         return $caps;
@@ -1649,23 +1650,23 @@ function dokan_map_meta_caps( $caps, $cap, $user_id, $args ) {
 
     $post_id = ! empty( $args[0] ) ? $args[0] : 0;
 
-    if ( $cap === 'edit_post' ) {
+    if ( $cap === 'edit_post' || $cap === 'edit_others_shop_orders' ) {
         $post_id = ! empty( $args[0] ) ? $args[0] : 0;
 
         if ( empty( $post_id ) ) {
-            return $caps;
+            if ( empty( $post->ID ) ) {
+                return $caps;
+            }
+
+            $post_id = $post->ID;
         }
 
         $vendor_id       = get_post_meta( $post_id, '_dokan_vendor_id', true );
         $current_user_id = get_current_user_id();
 
-        if ( $vendor_id == $current_user_id ) {
+        if ( absint( $vendor_id ) === absint( $current_user_id ) ) {
             return array( 'edit_shop_orders' );
         }
-    }
-
-    if ( $cap === 'edit_others_shop_orders' ) {
-        return array( 'edit_shop_orders' );
     }
 
     return $caps;
