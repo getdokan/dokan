@@ -1606,6 +1606,12 @@ function dokan_filter_orders_for_current_vendor( $args, $query ) {
     global $wpdb;
 
     if ( current_user_can( 'manage_woocommerce' ) ) {
+        if ( ! empty( $_GET['vendor_id'] ) ) {
+            $vendor_id      = $_GET['vendor_id'];
+            $args['join']  .= " LEFT JOIN {$wpdb->prefix}dokan_orders as do ON $wpdb->posts.ID=do.order_id";
+            $args['where'] .= " AND do.seller_id=$vendor_id";
+        }
+
         return $args;
     }
 
@@ -1624,6 +1630,48 @@ function dokan_filter_orders_for_current_vendor( $args, $query ) {
 }
 
 add_filter( 'posts_clauses', 'dokan_filter_orders_for_current_vendor', 12, 2 );
+
+/**
+ * Dokan map meta cpas for vendors
+ *
+ * @param  array $caps
+ * @param  string $cap
+ * @param  int $user_id
+ * @param  array $args
+ *
+ * @return array
+ */
+function dokan_map_meta_caps( $caps, $cap, $user_id, $args ) {
+
+    if ( ! is_admin() ) {
+        return $caps;
+    }
+
+    $post_id = ! empty( $args[0] ) ? $args[0] : 0;
+
+    if ( $cap === 'edit_post' ) {
+        $post_id = ! empty( $args[0] ) ? $args[0] : 0;
+
+        if ( empty( $post_id ) ) {
+            return $caps;
+        }
+
+        $vendor_id       = get_post_meta( $post_id, '_dokan_vendor_id', true );
+        $current_user_id = get_current_user_id();
+
+        if ( $vendor_id == $current_user_id ) {
+            return array( 'edit_shop_orders' );
+        }
+    }
+
+    if ( $cap === 'edit_others_shop_orders' ) {
+        return array( 'edit_shop_orders' );
+    }
+
+    return $caps;
+}
+
+add_filter( 'map_meta_cap', 'dokan_map_meta_caps', 12, 4 );
 
 /**
  * Remove sellerdiv metabox when a seller can access the backend

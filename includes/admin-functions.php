@@ -128,6 +128,12 @@ function dokan_admin_shop_order_row_classes( $classes, $post_id ) {
         return $classes;
     }
 
+    $vendor_id = isset( $_GET['vendor_id'] ) ? $_GET['vendor_id'] : '';
+
+    if ( $vendor_id ) {
+        return $classes;
+    }
+
     if ( $post->post_type == 'shop_order' && $post->post_parent != 0 ) {
         $classes[] = 'sub-order parent-' . $post->post_parent;
     }
