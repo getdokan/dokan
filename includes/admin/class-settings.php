@@ -388,6 +388,13 @@ class Dokan_Settings {
                     'default' => '50',
                     'type'    => 'text',
                 ),
+                'offline_payments' => array(
+                    'name'    => 'offline_payments',
+                    'label'   => __( 'Exclude Offline Payments', 'dokan-lite' ),
+                    'desc'    => __( 'If an order is paid via any offline payment method, then exclude those payment from vendor balance', 'dokan-lite' ),
+                    'type'    => 'checkbox',
+                    'default' => 'off',
+                )
             ),
             'dokan_pages' => array(
                 'dashboard' => array(
