@@ -236,8 +236,8 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
 
             </table>
             <p class="wc-setup-actions step">
-                <input type="submit" class="button-primary button button-large button-next store-step-continue" value="<?php esc_attr_e( 'Continue', 'dokan-lite' ); ?>" name="save_step" />
-                <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button button-large button-next store-step-skip-btn"><?php _e( 'Skip this step', 'dokan-lite' ); ?></a>
+                <input type="submit" class="button-primary button button-large button-next store-step-continue dokan-btn-theme" value="<?php esc_attr_e( 'Continue', 'dokan-lite' ); ?>" name="save_step" />
+                <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button button-large button-next store-step-skip-btn dokan-btn-theme"><?php _e( 'Skip this step', 'dokan-lite' ); ?></a>
                 <?php wp_nonce_field( 'dokan-seller-setup' ); ?>
             </p>
         </form>
@@ -375,8 +375,8 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
                 ?>
             </table>
             <p class="wc-setup-actions step">
-                <input type="submit" class="button-primary button button-large button-next payment-continue-btn" value="<?php esc_attr_e( 'Continue', 'dokan-lite' ); ?>" name="save_step" />
-                <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button button-large button-next payment-step-skip-btn"><?php _e( 'Skip this step', 'dokan-lite' ); ?></a>
+                <input type="submit" class="button-primary button button-large button-next payment-continue-btn dokan-btn-theme" value="<?php esc_attr_e( 'Continue', 'dokan-lite' ); ?>" name="save_step" />
+                <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button button-large button-next payment-step-skip-btn dokan-btn-theme"><?php _e( 'Skip this step', 'dokan-lite' ); ?></a>
                 <?php wp_nonce_field( 'dokan-seller-setup' ); ?>
             </p>
         </form>
@@ -442,7 +442,7 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
 
             <div class="dokan-setup-done-content">
                 <p class="wc-setup-actions step">
-                    <a class="button button-primary" href="<?php echo esc_url( $dashboard_url ); ?>"><?php _e( 'Go to your Store Dashboard!', 'dokan-lite' ); ?></a>
+                    <a class="button button-primary dokan-btn-theme" href="<?php echo esc_url( $dashboard_url ); ?>"><?php _e( 'Go to your Store Dashboard!', 'dokan-lite' ); ?></a>
                 </p>
             </div>
         <?php
