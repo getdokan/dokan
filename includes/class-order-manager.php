@@ -299,6 +299,9 @@ class Dokan_Order_Manager {
         }
 
         $order->save();
+        
+        //New action hook to add custom line items or trigger function after line items are added
+        do_action('after_create_line_items', $order);
     }
 
     /**
