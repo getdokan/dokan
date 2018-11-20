@@ -22,6 +22,9 @@ class Dokan_Order_Manager {
         if ( is_admin() ) {
             add_action( 'woocommerce_process_shop_order_meta', 'dokan_sync_insert_order' );
         }
+
+        // restore order stock if it's been reduced by twice
+        add_action( 'woocommerce_reduce_order_stock', array( $this, 'restore_reduced_order_stock' ) );
     }
 
     /**
@@ -477,5 +480,49 @@ class Dokan_Order_Manager {
         }
 
         return $valid;
+    }
+
+
+    /**
+     * Restore order stock if it's been reduced by twice
+     *
+     * @param  object $order
+     *
+     * @return void
+     */
+    public function restore_reduced_order_stock( $order ) {
+        $has_sub_order = wp_get_post_parent_id( $order->get_id() );
+
+        // seems it's not a parent order so return early
+        if ( ! $has_sub_order ) {
+            return;
+        }
+
+        // Loop over all items.
+        foreach ( $order->get_items() as $item ) {
+            if ( ! $item->is_type( 'line_item' ) ) {
+                continue;
+            }
+
+            // Only reduce stock once for each item.
+            $product            = $item->get_product();
+            $item_stock_reduced = $item->get_meta( '_reduced_stock', true );
+
+            if ( ! $item_stock_reduced || ! $product || ! $product->managing_stock() ) {
+                continue;
+            }
+
+            $item_name = $product->get_formatted_name();
+            $new_stock = wc_update_product_stock( $product, $item_stock_reduced, 'increase' );
+
+            if ( is_wp_error( $new_stock ) ) {
+                /* translators: %s item name. */
+                $order->add_order_note( sprintf( __( 'Unable to restore stock for item %s.', 'woocommerce' ), $item_name ) );
+                continue;
+            }
+
+            $item->delete_meta_data( '_reduced_stock' );
+            $item->save();
+        }
     }
 }
