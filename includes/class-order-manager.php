@@ -51,14 +51,6 @@ class Dokan_Order_Manager {
             array( '%d' )
         );
 
-        // update on vendor-balance table
-        $wpdb->update( $wpdb->prefix . 'dokan_vendor_balance',
-            array( 'status' => $new_status ),
-            array( 'trn_id' => $order_id, 'trn_type' => 'dokan_orders' ),
-            array( '%s' ),
-            array( '%d', '%s' )
-        );
-
         // if any child orders found, change the orders as well
         $sub_orders = get_children( array( 'post_parent' => $order_id, 'post_type' => 'shop_order' ) );
 
@@ -68,6 +60,22 @@ class Dokan_Order_Manager {
                 $order->update_status( $new_status );
             }
         }
+
+        $order = wc_get_order( $order_id );
+        $offline_payment_methods = apply_filters( 'dokan_offline_payment_methods', array( 'cod', 'bacs', 'cheque' ) );
+        $exclude_offline_payment = dokan_get_option( 'offline_payments', 'dokan_withdraw', 'off' );
+
+        if ( $exclude_offline_payment === 'on' && in_array( $order->get_payment_method(), $offline_payment_methods ) ) {
+            return;
+        }
+
+        // update on vendor-balance table
+       $wpdb->update( $wpdb->prefix . 'dokan_vendor_balance',
+            array( 'status' => $new_status ),
+            array( 'trn_id' => $order_id, 'trn_type' => 'dokan_orders' ),
+            array( '%s' ),
+            array( '%d', '%s' )
+        );
     }
 
     /**
