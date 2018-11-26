@@ -32,6 +32,7 @@ import TextEditor from "admin/components/TextEditor.vue"
 import Currency from "admin/components/Currency.vue"
 import LazyInput from "admin/components/LazyInput.vue"
 import Progressbar from "admin/components/Progressbar.vue"
+import Search from "admin/components/Search.vue"
 
 import "vue-multiselect/dist/vue-multiselect.min.css"
 
@@ -84,6 +85,8 @@ window.dokan.libs['Switches']    = Switches;
 window.dokan.libs['TextEditor']  = TextEditor;
 window.dokan.libs['LazyInput']   = LazyInput;
 window.dokan.libs['Progressbar'] = Progressbar;
+window.dokan.libs['Search']      = Search;
+
 window.dokan.libs['ContentLoading']  = {
   VclCode,
   VclList,
