@@ -87,6 +87,10 @@ function dokan_shop_order_custom_columns( $col ) {
         $the_order = new WC_Order( $post->ID );
     }
 
+    if ( ! current_user_can( 'manage_woocommerce' ) ) {
+        return $col;
+    }
+
     switch ($col) {
         case 'order_number':
             if ($post->post_parent !== 0) {
@@ -130,7 +134,13 @@ add_action( 'manage_shop_order_posts_custom_column', 'dokan_shop_order_custom_co
 function dokan_admin_shop_order_row_classes( $classes, $post_id ) {
     global $post;
 
-    if ( is_search() ) {
+    if ( is_search() || ! current_user_can( 'manage_woocommerce' ) ) {
+        return $classes;
+    }
+
+    $vendor_id = isset( $_GET['vendor_id'] ) ? $_GET['vendor_id'] : '';
+
+    if ( $vendor_id ) {
         return $classes;
     }
 
