@@ -33,6 +33,7 @@ function dokan_process_product_meta( $post_id ) {
 
     // Set visibiliy for WC 3.0.0+
     $terms = array();
+
     switch ( $_POST['_visibility'] ) {
         case 'hidden' :
             $terms[] = 'exclude-from-search';
@@ -44,6 +45,14 @@ function dokan_process_product_meta( $post_id ) {
         case 'search' :
             $terms[] = 'exclude-from-catalog';
             break;
+    }
+
+    $product_visibility = get_the_terms( $post_id, 'product_visibility' );
+    $term_names         = is_array( $product_visibility ) ? wp_list_pluck( $product_visibility, 'name' ) : array();
+    $featured           = in_array( 'featured', $term_names, true );
+
+    if ( $featured ) {
+        $terms[] = 'featured';
     }
 
     wp_set_post_terms( $post_id, $terms, 'product_visibility', false );
