@@ -108,14 +108,13 @@
 }
 .wc-setup .wc-setup-actions .button-primary {
   color: #fff;
-  background: #f2624d !important;
-  border-color: #f2624d !important;
-  text-shadow: 0 -1px 1px #ef381d, 1px 0 1px #ef381d, 0 1px 1px #ef381d, -1px 0 1px #ef381d;
+  background: #f2624d;
+  border-color: #f2624d;
 }
 .wc-setup .wc-setup-actions .button-primary:hover,
 .wc-setup .wc-setup-actions .button-primary:active,
 .wc-setup .wc-setup-actions .button-primary:focus {
-  background-color: #ef381d !important;
+  background-color: #ef381d;
 }
 .wc-setup .wc-setup-content a {
   color: #f2624d;
