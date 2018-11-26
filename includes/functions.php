@@ -2977,3 +2977,14 @@ function dokan_get_variable_product_earning( $product_id, $seller_id, $formated 
 
     return $earning;
 }
+
+/**
+ * Insert dokan dashboard class
+ *
+ * @return string
+ */
+function dokan_dashboard_class() {
+    $classes = apply_filters( 'dokan_get_dashboard_class', [] );
+
+    echo 'class="'. join( ' ', $classes ) .'"';
+}

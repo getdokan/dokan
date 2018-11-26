@@ -1,8 +1,8 @@
 <?php
     global $post;
 ?>
-
-<div class="dokan-dashboard-wrap">
+<div <?php dokan_dashboard_class(); ?> >
+    <div class="dokan-dashboard-wrap">
 
     <?php
 
@@ -221,3 +221,4 @@
         ?>
 
     </div><!-- .dokan-dashboard-wrap -->
+</div>
