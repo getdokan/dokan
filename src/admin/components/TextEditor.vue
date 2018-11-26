@@ -10,10 +10,10 @@
                 required: true
             },
 
-            // shortcodes: {
-            //     type: Object,
-            //     required: false
-            // }
+            shortcodes: {
+                type: Object,
+                required: false
+            }
         },
 
         data() {
@@ -29,7 +29,7 @@
             window.tinymce.init({
                 selector: `#dokan-tinymce-${this.editorId}`,
                 branding: false,
-                height: 300,
+                height: 200,
                 menubar: false,
                 convert_urls: false,
                 theme: 'modern',

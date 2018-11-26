@@ -387,7 +387,7 @@ class Dokan_Settings {
                     'desc'    => __( 'Minimum balance required to make a withdraw request. Leave blank to set no minimum limits.', 'dokan-lite' ),
                     'default' => '50',
                     'type'    => 'text',
-                ),
+                )
             ),
             'dokan_pages' => array(
                 'dashboard' => array(
