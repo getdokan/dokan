@@ -517,7 +517,7 @@ class Dokan_Order_Manager {
 
             if ( is_wp_error( $new_stock ) ) {
                 /* translators: %s item name. */
-                $order->add_order_note( sprintf( __( 'Unable to restore stock for item %s.', 'woocommerce' ), $item_name ) );
+                $order->add_order_note( sprintf( __( 'Unable to restore stock for item %s.', 'dokan-lite' ), $item_name ) );
                 continue;
             }
 
