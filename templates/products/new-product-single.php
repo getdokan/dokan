@@ -68,6 +68,8 @@ if ( ! $from_shortcode ) {
     do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
 ?>
 
+<?php do_action( 'dokan_dashboard_wrap_start' ); ?>
+
 <div class="dokan-dashboard-wrap">
 
     <?php
@@ -450,6 +452,9 @@ if ( ! $from_shortcode ) {
     ?>
 
 </div><!-- .dokan-dashboard-wrap -->
+
+<?php do_action( 'dokan_dashboard_wrap_end' ); ?>
+
 <div class="dokan-clearfix"></div>
 
 <?php

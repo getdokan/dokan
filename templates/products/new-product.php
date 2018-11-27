@@ -7,6 +7,9 @@
      */
     do_action( 'dokan_new_product_wrap_before' );
 ?>
+
+<?php do_action( 'dokan_dashboard_wrap_start' ); ?>
+
 <div class="dokan-dashboard-wrap">
 
     <?php
@@ -319,6 +322,8 @@
     ?>
 
 </div><!-- .dokan-dashboard-wrap -->
+
+<?php do_action( 'dokan_dashboard_wrap_end' ); ?>
 
 <?php
 

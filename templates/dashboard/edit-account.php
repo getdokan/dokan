@@ -11,6 +11,9 @@
 
 $user = get_user_by( 'id', get_current_user_id() );
 ?>
+
+<?php do_action( 'dokan_dashboard_wrap_start' ); ?>
+
 <div class="dokan-dashboard-wrap">
 
     <?php
@@ -122,3 +125,6 @@ $user = get_user_by( 'id', get_current_user_id() );
     ?>
 
 </div><!-- .dokan-dashboard-wrap -->
+
+<?php do_action( 'dokan_dashboard_wrap_end' ); ?>
+

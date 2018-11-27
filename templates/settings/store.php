@@ -6,8 +6,9 @@
  *
  * @package dokan
  */
-
 ?>
+
+<?php do_action( 'dokan_dashboard_wrap_start' ); ?>
 
 <div class="dokan-dashboard-wrap">
 
@@ -60,3 +61,5 @@
         </article>
     </div><!-- .dokan-dashboard-content -->
 </div><!-- .dokan-dashboard-wrap -->
+
+<?php do_action( 'dokan_dashboard_wrap_end' ); ?>
