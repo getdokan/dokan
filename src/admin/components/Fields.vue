@@ -112,6 +112,32 @@
             </td>
         </tr>
 
+        <tr :class="id" v-if="'wpeditor' == fieldData.type">
+            <th scope="row">
+                <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
+            </th>
+            <td width="72%">
+                <text-editor v-model="fieldValue[fieldData.name]"></text-editor>
+                <p class="description" v-html="fieldData.desc"></p>
+            </td>
+        </tr>
+
+        <tr :class="id" v-if="'repeatable' == fieldData.type">
+            <th scope="row">
+                <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
+            </th>
+            <td width="72%">
+                <ul class="dokan-settings-repeatable-list">
+                    <li v-if="fieldValue[fieldData.name]" v-for="(optionVal, optionKey) in fieldValue[fieldData.name]">
+                        {{ optionVal.value }} <span class="dashicons dashicons-no-alt remove-item" @click.prevent="removeItem( optionKey, fieldData.name )"></span>
+                    </li>
+
+                </ul>
+                <input type="text" class="regular-text" v-model="repeatableItem[fieldData.name]">
+                <a href="#" class="button dokan-repetable-add-item-btn" @click.prevent="addItem( fieldData.type, fieldData.name )">+</a>
+                <p class="description" v-html="fieldData.desc"></p>
+            </td>
+        </tr>
 
         <tr :class="id" v-if="'radio_image' == fieldData.type">
             <th scope="row">
@@ -139,12 +165,20 @@
 
 <script>
     import colorPicker from "admin/components/ColorPicker.vue";
+    let TextEditor = dokan_get_lib('TextEditor');
 
     export default {
         name: 'Fields',
 
         components: {
-            colorPicker
+            colorPicker,
+            TextEditor,
+        },
+
+        data() {
+            return {
+                repeatableItem: {}
+            }
         },
 
         props: ['id', 'fieldData', 'sectionId', 'fieldValue'],
@@ -152,8 +186,47 @@
         methods: {
             containCommonFields( type ) {
                 return _.contains( [ undefined, 'text', 'email', 'url', 'phone' ], type );
+            },
+
+            addItem( type, name ) {
+                this.fieldValue[name] = this.fieldValue[name] || [];
+
+                if ( typeof this.repeatableItem[name] == 'undefined' || ! this.repeatableItem[name] )  {
+                    return;
+                }
+
+                this.fieldValue[name].push( {
+                        id : this.repeatableItem[name].trim().replace(/\s+/g, '_').toLowerCase(),
+                        value : this.repeatableItem[name]
+                    }
+                );
+                this.repeatableItem[name] = '';
+            },
+
+            removeItem( optionVal, name ) {
+                this.fieldValue[name].splice( optionVal, 1 );
             }
         }
 
     };
 </script>
+
+<style>
+
+    ul.dokan-settings-repeatable-list {
+        list-style-type: disc;
+        padding-left: 20px;
+    }
+    ul.dokan-settings-repeatable-list li span.remove-item{
+        padding-top: 0px;
+        cursor: pointer;
+    }
+
+    .dokan-repetable-add-item-btn {
+        font-size: 16px !important;
+        font-weight: bold !important;
+        height: 25px !important;
+        line-height: 22px !important;
+    }
+
+</style>

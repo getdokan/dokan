@@ -26,6 +26,9 @@
     <td class="post-status" data-title="<?php _e( 'Status', 'dokan-lite' ); ?>">
         <label class="dokan-label <?php echo dokan_get_post_status_label_class( $post->post_status ); ?>"><?php echo dokan_get_post_status( $post->post_status ); ?></label>
     </td>
+
+    <?php do_action( 'dokan_product_list_table_after_status_table_data', $post, $product, $tr_class, $row_actions ); ?>
+
     <td data-title="<?php _e( 'SKU', 'dokan-lite' ); ?>">
         <?php
         if ( $product->get_sku() ) {

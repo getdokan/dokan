@@ -402,7 +402,6 @@ if ( ! $from_shortcode ) {
 
                             <?php do_action( 'dokan_product_edit_after_inventory_variants', $post, $post_id ); ?>
 
-
                             <?php if ( $post_id ): ?>
                                 <?php do_action( 'dokan_product_edit_after_options', $post_id ); ?>
                             <?php endif; ?>
