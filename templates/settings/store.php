@@ -6,57 +6,60 @@
  *
  * @package dokan
  */
-
 ?>
 
-<div class="dokan-dashboard-wrap">
+<?php do_action( 'dokan_dashboard_wrap_start' ); ?>
 
-    <?php
+    <div class="dokan-dashboard-wrap">
 
-        /**
-         *  dokan_dashboard_content_before hook
-         *  dokan_dashboard_settings_store_content_before hook
-         *
-         *  @hooked get_dashboard_side_navigation
-         *
-         *  @since 2.4
-         */
-        do_action( 'dokan_dashboard_content_before' );
-        do_action( 'dokan_dashboard_settings_content_before' );
-    ?>
-
-    <div class="dokan-dashboard-content dokan-settings-content">
         <?php
 
             /**
-             *  dokan_settings_content_inside_before hook
+             *  dokan_dashboard_content_before hook
+             *  dokan_dashboard_settings_store_content_before hook
+             *
+             *  @hooked get_dashboard_side_navigation
              *
              *  @since 2.4
              */
-            do_action( 'dokan_settings_content_inside_before' );
+            do_action( 'dokan_dashboard_content_before' );
+            do_action( 'dokan_dashboard_settings_content_before' );
         ?>
-        <article class="dokan-settings-area">
 
+        <div class="dokan-dashboard-content dokan-settings-content">
             <?php
-                /**
-                 * dokan_review_content_area_header hook
-                 *
-                 * @hooked dokan_settings_content_area_header
-                 *
-                 * @since 2.4
-                 */
-                do_action( 'dokan_settings_content_area_header' );
-
 
                 /**
-                 * dokan_settings_content hook
+                 *  dokan_settings_content_inside_before hook
                  *
-                 * @hooked render_settings_content_hook
+                 *  @since 2.4
                  */
-                do_action( 'dokan_settings_content' );
+                do_action( 'dokan_settings_content_inside_before' );
             ?>
+            <article class="dokan-settings-area">
 
-            <!--settings updated content ends-->
-        </article>
-    </div><!-- .dokan-dashboard-content -->
-</div><!-- .dokan-dashboard-wrap -->
+                <?php
+                    /**
+                     * dokan_review_content_area_header hook
+                     *
+                     * @hooked dokan_settings_content_area_header
+                     *
+                     * @since 2.4
+                     */
+                    do_action( 'dokan_settings_content_area_header' );
+
+
+                    /**
+                     * dokan_settings_content hook
+                     *
+                     * @hooked render_settings_content_hook
+                     */
+                    do_action( 'dokan_settings_content' );
+                ?>
+
+                <!--settings updated content ends-->
+            </article>
+        </div><!-- .dokan-dashboard-content -->
+    </div><!-- .dokan-dashboard-wrap -->
+
+<?php do_action( 'dokan_dashboard_wrap_end' ); ?>
