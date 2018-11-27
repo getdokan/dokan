@@ -227,4 +227,4 @@
 
     </div><!-- .dokan-dashboard-wrap -->
 
-    <?php do_action( 'dokan_dashboard_wrap_end' ); ?>
+<?php do_action( 'dokan_dashboard_wrap_end' ); ?>
