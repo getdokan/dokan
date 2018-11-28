@@ -1,15 +1,13 @@
 <template>
-    <form @submit.prevent="search">
-        <p class="search-box">
-          <input type="search" id="post-search-input" name="s" v-model="searchItems">
-          <button type="submit" class="button">
-            {{ title }}
-          </button>
-        </p>
-    </form>
+    <p class="search-box">
+      <input type="search" id="post-search-input" name="s" v-model="searchItems" :placeholder="title">
+    </p>
 </template>
 
 <script>
+
+import { debounce } from 'debounce';
+
 export default {
 
     name: 'Search',
@@ -22,14 +20,31 @@ export default {
 
     data() {
         return {
+            delay: 500,
             searchItems: ''
         };
     },
 
+    watch: {
+        searchItems() {
+            this.makeDelay();
+        }
+    },
+
+    created() {
+        this.makeDelay = debounce(this.doSearch, this.delay);
+    },
+
     methods: {
-        search() {
-            this.$emit('searched', this.searchItems)
+        doSearch() {
+            this.$emit('searched', this.searchItems);
         }
     }
 };
 </script>
+
+<style scoped>
+.search-box #post-search-input {
+    padding: 15px 18px;
+}
+</style>
