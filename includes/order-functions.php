@@ -934,7 +934,7 @@ function dokan_get_seller_id_by_order_id( $id ) {
 
     $seller_id = get_post_field( 'post_author', $product_id );
     //New filter hook to modify the seller id at run time.
-    $seller_id = apply_filters('dokan_get_seller_id_by_order_id', $seller_id, $items);
+    $seller_id = apply_filters( 'dokan_get_seller_id_by_order_id', $seller_id, $items );
 
     if ( empty( $seller_id ) ) {
         return;
