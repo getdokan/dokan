@@ -64,11 +64,8 @@ class Dokan_Order_Manager {
             }
         }
 
-        $order = wc_get_order( $order_id );
-        $offline_payment_methods = apply_filters( 'dokan_offline_payment_methods', array( 'cod', 'bacs', 'cheque' ) );
-        $exclude_offline_payment = dokan_get_option( 'offline_payments', 'dokan_withdraw', 'off' );
-
-        if ( $exclude_offline_payment === 'on' && in_array( $order->get_payment_method(), $offline_payment_methods ) ) {
+        // exclude offline payment such as cash on delivery
+        if ( dokan_exclude_offline_payment( $order_id ) ) {
             return;
         }
 
