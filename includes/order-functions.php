@@ -576,6 +576,8 @@ function dokan_get_sellers_by( $order_id ) {
     $sellers = array();
     foreach ( $order_items as $item ) {
         $seller_id             = get_post_field( 'post_author', $item['product_id'] );
+        //New filter hook to modify the seller id at run time.
+   		$seller_id = apply_filters( 'dokan_get_sellers_by', $seller_id, $item );
         $sellers[$seller_id][] = $item;
     }
 
@@ -931,6 +933,7 @@ function dokan_get_seller_id_by_order_id( $id ) {
     }
 
     $seller_id = get_post_field( 'post_author', $product_id );
+    $seller_id = apply_filters( 'dokan_get_seller_id_by_order_id', $seller_id, $items );
 
     if ( empty( $seller_id ) ) {
         return;
