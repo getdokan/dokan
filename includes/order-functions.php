@@ -958,3 +958,26 @@ function dokan_is_order_already_exists( $id ) {
 
     return $order_id ? true : false;
 }
+
+/**
+ * Dokan exclude offline payment from vendor balance ( ei; cod )
+ *
+ * @param  int $order_id
+ *
+ * @return boolean
+ */
+function dokan_exclude_offline_payment( $order_id ) {
+    if ( ! $order_id ) {
+        return false;
+    }
+
+    $order                   = wc_get_order( $order_id );
+    $offline_payment_methods = apply_filters( 'dokan_offline_payment_methods', array( 'cod', 'bacs', 'cheque' ) );
+    $exclude_offline_payment = dokan_get_option( 'offline_payments', 'dokan_withdraw', 'off' );
+
+    if ( $exclude_offline_payment === 'on' && in_array( $order->get_payment_method(), $offline_payment_methods ) ) {
+        return true;
+    }
+
+    return false;
+}
