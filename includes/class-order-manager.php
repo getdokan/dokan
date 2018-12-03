@@ -307,6 +307,8 @@ class Dokan_Order_Manager {
         }
 
         $order->save();
+
+        do_action( 'dokan_after_create_line_items', $order );
     }
 
     /**
