@@ -64,11 +64,6 @@ class Dokan_Order_Manager {
             }
         }
 
-        // exclude offline payment such as cash on delivery
-        if ( dokan_exclude_offline_payment( $order_id ) ) {
-            return;
-        }
-
         // update on vendor-balance table
        $wpdb->update( $wpdb->prefix . 'dokan_vendor_balance',
             array( 'status' => $new_status ),
