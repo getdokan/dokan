@@ -39,6 +39,10 @@ class Dokan_Theme_Support {
             case 'flatsome':
                 require_once __DIR__ . '/theme-support/class-' . $this->theme . '.php';
                 break;
+
+            case 'Divi':
+                require_once __DIR__ . '/theme-support/class-' . $this->theme . '.php';
+                break;
         }
     }
 
