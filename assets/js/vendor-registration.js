@@ -170,7 +170,9 @@ $(function() {
     $('.show_if_seller').find( 'input, select' ).attr( 'disabled', 'disabled' );
 
     // trigger change if there is an error while registering
-    if ( $( '.woocommerce ul' ).hasClass( 'woocommerce-error' ) ) {
+    var shouldTrigger = $( '.woocommerce ul' ).hasClass( 'woocommerce-error' ) && ! $( '.show_if_seller' ).is( ':hidden' );
+
+    if ( shouldTrigger ) {
         var form = $('form.register');
 
         $( '.user-role input[type=radio]', form ).trigger('change');
