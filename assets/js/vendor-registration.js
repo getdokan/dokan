@@ -167,9 +167,14 @@ var Dokan_Vendor_Registration = {
 $(function() {
     Dokan_Vendor_Registration.init();
 
-    var target_element = $( 'input, select' ).not( '#tc_agree' );
+    $('.show_if_seller').find( 'input, select' ).attr( 'disabled', 'disabled' );
 
-    $('.show_if_seller').find( target_element ).attr( 'disabled', 'disabled' );
+    // trigger change if there is an error while registering
+    if ( $( '.woocommerce ul' ).hasClass( 'woocommerce-error' ) ) {
+        var form = $('form.register');
+
+        $( '.user-role input[type=radio]', form ).trigger('change');
+    }
 
     // disable migration button if checkbox isn't checked
     if ( $( '.tc_check_box' ).length > 0 ){
