@@ -167,7 +167,7 @@ var Dokan_Vendor_Registration = {
 $(function() {
     Dokan_Vendor_Registration.init();
 
-    const target_element = $( 'input, select' ).not( '#tc_agree' );
+    var target_element = $( 'input, select' ).not( '#tc_agree' );
 
     $('.show_if_seller').find( target_element ).attr( 'disabled', 'disabled' );
 
