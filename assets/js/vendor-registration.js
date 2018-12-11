@@ -167,7 +167,9 @@ var Dokan_Vendor_Registration = {
 $(function() {
     Dokan_Vendor_Registration.init();
 
-    $('.show_if_seller').find( 'input, select' ).attr( 'disabled', 'disabled' );
+    var target_element = $( 'input, select' ).not( '#tc_agree' );
+
+    $('.show_if_seller').find( target_element ).attr( 'disabled', 'disabled' );
 
     // disable migration button if checkbox isn't checked
     if ( $( '.tc_check_box' ).length > 0 ){

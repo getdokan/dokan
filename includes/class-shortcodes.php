@@ -243,7 +243,7 @@ class Dokan_Shortcodes {
             $seller_args['featured'] = 'yes';
         }
 
-        $sellers = dokan_get_sellers( apply_filters( 'dokan_seller_listing_args', $seller_args ) );
+        $sellers = dokan_get_sellers( apply_filters( 'dokan_seller_listing_args', $seller_args, $_GET ) );
 
         /**
          * Filter for store listing args

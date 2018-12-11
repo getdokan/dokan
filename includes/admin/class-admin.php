@@ -23,7 +23,7 @@ class Dokan_Admin {
 
         add_action( 'admin_notices', array($this, 'update_notice' ) );
 
-        // add_action( 'admin_notices', array($this, 'promotional_offer' ) );
+        add_action( 'admin_notices', array( $this, 'promotional_offer' ) );
 
         add_action( 'wp_before_admin_bar_render', array( $this, 'dokan_admin_toolbar' ) );
     }
@@ -42,113 +42,30 @@ class Dokan_Admin {
         }
 
         // check if it has already been dismissed
-        $offer_key = 'dokan_package_offer';
-        $hide_notice = get_option( $offer_key . '_tracking_notice', 'no' );
+        $offer_key   = 'dokan_christmas_notice';
+        $hide_notice = get_option( $offer_key, 'show' );
+        $offer_link  = 'https://wedevs.com/dokan/?add-to-cart=15310&variation_id=15314&attribute_pa_license=professional&coupon_code=xmas30';
 
-        if ( 'hide' == $hide_notice ) {
+        if ( 'hide' == $hide_notice || dokan()->is_pro_exists() ) {
             return;
         }
-
-        $offer_msg = sprintf( __( '<h2>
-                        Dokan is Getting More Affordable: Price Reduction & Changes in Packages
-                    </h2>', 'dokan-lite' ) );
-        $offer_msg .= sprintf( __( '<p>Marketplaces are changing, so is Dokan Multivendor. We are reducing Dokan Pro entry package price and bringing entirely new pricing where you get addons pre-activated for free depending on your package.</p>', 'dokan-lite' ) );
         ?>
-            <div class="notice is-dismissible" id="dokan-promotional-offer-notice">
-                <img src="https://ps.w.org/dokan-lite/assets/icon-256x256.png?rev=1595714" alt="">
-                <?php echo $offer_msg; ?>
-                <span class="dashicons dashicons-megaphone"></span>
-                <a href="https://wedevs.com/in/dokan-new-package-blog-via-lite" class="button button-primary promo-btn" target="_blank"><?php _e( 'View Package', 'dokan-lite' ); ?></a>
+            <div class="notice notice-success is-dismissible" id="dokan-christmas-notice">
+                <?php printf( __( '<p>Dokan is more affordable this Christmas! <strong>Save 30%%</strong> while building your dream multivendor marketplace. [Limited time ⏳] <a target="_blank" href="%s">Grab The Deal</a></p>', 'dokan-lite' ), $offer_link ); ?>
             </div>
 
             <style>
-                #dokan-promotional-offer-notice {
-                    background-color: #F35E33;
-                    border-left: 0px;
-                    padding-left: 83px;
+                #dokan-christmas-notice p {
+                    font-size: 15px;
                 }
-
-                #dokan-promotional-offer-notice a.promo-btn{
-                    background: #fff;
-                    border-color: #fafafa #fafafa #fafafa;
-                    box-shadow: 0 1px 0 #fafafa;
-                    color: #F35E33;
-                    text-decoration: none;
-                    text-shadow: none;
-                    position: absolute;
-                    top: 30px;
-                    right: 26px;
-                    height: 40px;
-                    line-height: 40px;
-                    width: 130px;
-                    text-align: center;
-                }
-
-                #dokan-promotional-offer-notice h2{
-                    font-size: 18px;
-                    width: 85%;
-                    color: rgba(250, 250, 250, 1);
-                    margin-bottom: 8px;
-                    font-weight: normal;
-                    margin-top: 15px;
-                    -webkit-text-shadow: 0.1px 0.1px 0px rgba(250, 250, 250, 0.24);
-                    -moz-text-shadow: 0.1px 0.1px 0px rgba(250, 250, 250, 0.24);
-                    -o-text-shadow: 0.1px 0.1px 0px rgba(250, 250, 250, 0.24);
-                    text-shadow: 0.1px 0.1px 0px rgba(250, 250, 250, 0.24);
-                }
-
-                #dokan-promotional-offer-notice img{
-                    position: absolute;
-                    width: 80px;
-                    top: 10px;
-                    left: 0px;
-                }
-
-                #dokan-promotional-offer-notice h2 span {
-                    position: relative;
-                    top: -1px;
-                }
-
-                #dokan-promotional-offer-notice p{
-                    width: 85%;
-                    color: rgba(250, 250, 250, 0.77);
-                    font-size: 14px;
-                    margin-bottom: 10px;
-                    -webkit-text-shadow: 0.1px 0.1px 0px rgba(250, 250, 250, 0.24);
-                    -moz-text-shadow: 0.1px 0.1px 0px rgba(250, 250, 250, 0.24);
-                    -o-text-shadow: 0.1px 0.1px 0px rgba(250, 250, 250, 0.24);
-                    text-shadow: 0.1px 0.1px 0px rgba(250, 250, 250, 0.24);
-                }
-
-                #dokan-promotional-offer-notice p strong.highlight-text{
-                    color: #fff;
-                }
-
-                #dokan-promotional-offer-notice p a {
-                    color: #fafafa;
-                }
-
-                #dokan-promotional-offer-notice .notice-dismiss:before {
-                    color: #fff;
-                }
-
-                #dokan-promotional-offer-notice span.dashicons-megaphone {
-                    position: absolute;
-                    top: 16px;
-                    right: 248px;
-                    color: rgba(253, 253, 253, 0.29);
-                    font-size: 96px;
-                    transform: rotate(-21deg);
-                }
-
             </style>
 
             <script type='text/javascript'>
-                jQuery('body').on('click', '#dokan-promotional-offer-notice .notice-dismiss', function(e) {
+                jQuery('body').on('click', '#dokan-christmas-notice .notice-dismiss', function(e) {
                     e.preventDefault();
 
-                    wp.ajax.post('dokan-dismiss-promotional-offer-notice', {
-                        dokan_promotion_dismissed: true
+                    wp.ajax.post('dokan-dismiss-christmas-offer-notice', {
+                        dokan_christmas_dismissed: true
                     });
                 });
             </script>
@@ -165,13 +82,11 @@ class Dokan_Admin {
     function dashboard_script() {
         wp_enqueue_style( 'dokan-admin-css' );
         wp_enqueue_style( 'jquery-ui' );
-        wp_enqueue_style( 'dokan-chosen-style' );
 
         wp_enqueue_script( 'jquery-ui-datepicker' );
         wp_enqueue_script( 'wp-color-picker' );
         wp_enqueue_script( 'dokan-flot' );
         wp_enqueue_script( 'dokan-chart' );
-        wp_enqueue_script( 'dokan-chosen' );
 
         do_action( 'dokan_enqueue_admin_dashboard_script' );
     }

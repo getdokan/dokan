@@ -31,7 +31,7 @@ class Dokan_Template_Products {
         add_action( 'dokan_product_edit_after_title', array( __CLASS__, 'load_download_virtual_template' ), 10, 2 );
         add_action( 'dokan_product_edit_after_main', array( __CLASS__, 'load_inventory_template' ), 5, 2 );
         add_action( 'dokan_product_edit_after_main', array( __CLASS__, 'load_downloadable_template' ), 10, 2 );
-        add_action( 'dokan_product_edit_after_main', array( __CLASS__, 'load_others_template' ), 85, 2 );
+        add_action( 'dokan_product_edit_after_inventory_variants', array( __CLASS__, 'load_others_template' ), 85, 2 );
     }
 
     /**

@@ -199,9 +199,6 @@ class Dokan_Assets {
             'dokan-fontawesome' => array(
                 'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/font-awesome/font-awesome.min.css',
             ),
-            'dokan-chosen-style' => array(
-                'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/chosen/chosen.min.css',
-            ),
             'dokan-magnific-popup' => array(
                 'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/magnific/magnific-popup.css',
             ),
@@ -284,10 +281,6 @@ class Dokan_Assets {
             ),
             'dokan-tabs' => array(
                 'src'       => $asset_url . '/vendors/easytab/jquery.easytabs.min.js',
-                'deps'      => array( 'jquery' ),
-            ),
-            'dokan-chosen' => array(
-                'src'       => $asset_url . '/vendors/chosen/chosen.jquery.min.js',
                 'deps'      => array( 'jquery' ),
             ),
             'dokan-popup' => array(
@@ -443,7 +436,6 @@ class Dokan_Assets {
                 wp_enqueue_script( 'jquery-ui-sortable' );
                 wp_enqueue_script( 'jquery-ui-datepicker' );
                 wp_enqueue_script( 'dokan-tooltip' );
-                wp_enqueue_script( 'dokan-chosen' );
                 wp_enqueue_script( 'dokan-form-validate' );
                 wp_enqueue_script( 'speaking-url' );
                 wp_enqueue_script( 'dokan-vendor-registration' );
@@ -500,7 +492,6 @@ class Dokan_Assets {
             wp_enqueue_style( 'dokan-magnific-popup' );
             wp_enqueue_style( 'woocommerce-general' );
             wp_enqueue_style( 'dokan-select2-css' );
-            wp_enqueue_style( 'dokan-chosen-style' );
             wp_enqueue_style( 'dokan-timepicker' );
         }
 
@@ -519,7 +510,6 @@ class Dokan_Assets {
             wp_enqueue_script( 'dokan-tabs' );
             wp_enqueue_script( 'dokan-chart' );
             wp_enqueue_script( 'dokan-flot' );
-            wp_enqueue_script( 'dokan-chosen' );
             wp_enqueue_script( 'dokan-select2-js' );
             wp_enqueue_media();
             wp_enqueue_script( 'dokan-accounting' );

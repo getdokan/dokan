@@ -33,6 +33,7 @@ function dokan_process_product_meta( $post_id ) {
 
     // Set visibiliy for WC 3.0.0+
     $terms = array();
+
     switch ( $_POST['_visibility'] ) {
         case 'hidden' :
             $terms[] = 'exclude-from-search';
@@ -44,6 +45,14 @@ function dokan_process_product_meta( $post_id ) {
         case 'search' :
             $terms[] = 'exclude-from-catalog';
             break;
+    }
+
+    $product_visibility = get_the_terms( $post_id, 'product_visibility' );
+    $term_names         = is_array( $product_visibility ) ? wp_list_pluck( $product_visibility, 'name' ) : array();
+    $featured           = in_array( 'featured', $term_names, true );
+
+    if ( $featured ) {
+        $terms[] = 'featured';
     }
 
     wp_set_post_terms( $post_id, $terms, 'product_visibility', false );
@@ -321,7 +330,7 @@ function dokan_process_product_meta( $post_id ) {
                 wc_update_product_stock( $post_id, $stock_amount );
             }
 
-            update_post_meta( $post_id, '_low_stock_amount', wc_stock_amount( $_POST['_low_stock_amount'] ) );
+            update_post_meta( $post_id, '_low_stock_amount', $_low_stock_amount );
         } else {
             update_post_meta( $post_id, '_stock', '' );
             update_post_meta( $post_id, '_low_stock_amount', '' );

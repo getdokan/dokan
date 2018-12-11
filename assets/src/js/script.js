@@ -413,7 +413,8 @@ jQuery(function($) {
                 errorElement: 'span',
                 errorClass: 'error',
                 errorPlacement: validatorError,
-                success: validatorSuccess
+                success: validatorSuccess,
+                ignore: '.select2-search__field, :hidden'
             });
 
         },

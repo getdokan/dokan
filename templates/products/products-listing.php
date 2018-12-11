@@ -2,6 +2,8 @@
     global $post;
 ?>
 
+<?php do_action( 'dokan_dashboard_wrap_start' ); ?>
+
 <div class="dokan-dashboard-wrap">
 
     <?php
@@ -85,6 +87,9 @@
                                     <th><?php _e( 'Image', 'dokan-lite' ); ?></th>
                                     <th><?php _e( 'Name', 'dokan-lite' ); ?></th>
                                     <th><?php _e( 'Status', 'dokan-lite' ); ?></th>
+
+                                    <?php do_action( 'dokan_product_list_table_after_status_table_header' ); ?>
+
                                     <th><?php _e( 'SKU', 'dokan-lite' ); ?></th>
                                     <th><?php _e( 'Stock', 'dokan-lite' ); ?></th>
                                     <th><?php _e( 'Price', 'dokan-lite' ); ?></th>
@@ -221,3 +226,5 @@
         ?>
 
     </div><!-- .dokan-dashboard-wrap -->
+
+<?php do_action( 'dokan_dashboard_wrap_end' ); ?>

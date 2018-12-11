@@ -51,13 +51,23 @@ function dokan_admin_shop_order_edit_columns( $existing_columns ) {
         $existing_columns['suborder']  = __( 'Sub Order', 'dokan-lite' );
     }
 
-    // Remove seller, suborder column if seller is viewing his own product
-    if ( ! current_user_can( 'manage_woocommerce' ) || ( isset( $_GET['author'] ) && ! empty( $_GET['author'] ) ) ) {
-        unset( $columns['suborder'] );
-        unset( $columns['seller'] );
+    if ( WC_VERSION > '3.2.6' ) {
+        // Remove seller, suborder column if seller is viewing his own product
+        if ( ! current_user_can( 'manage_woocommerce' ) || ( isset( $_GET['author'] ) && ! empty( $_GET['author'] ) ) ) {
+            unset( $columns['suborder'] );
+            unset( $columns['seller'] );
+        }
+
+        return apply_filters( 'dokan_edit_shop_order_columns', $columns );
     }
 
-    return apply_filters( 'dokan_edit_shop_order_columns', $columns );
+    // Remove seller, suborder column if seller is viewing his own product
+    if ( ! current_user_can( 'manage_woocommerce' ) || ( isset( $_GET['author'] ) && ! empty( $_GET['author'] ) ) ) {
+        unset( $existing_columns['suborder'] );
+        unset( $existing_columns['seller'] );
+    }
+
+    return apply_filters( 'dokan_edit_shop_order_columns', $existing_columns );
 }
 
 add_filter( 'manage_edit-shop_order_columns', 'dokan_admin_shop_order_edit_columns', 11 );
@@ -75,6 +85,10 @@ function dokan_shop_order_custom_columns( $col ) {
 
     if ( empty( $the_order ) || $the_order->get_id() != $post->ID ) {
         $the_order = new WC_Order( $post->ID );
+    }
+
+    if ( ! current_user_can( 'manage_woocommerce' ) ) {
+        return $col;
     }
 
     switch ($col) {
@@ -100,7 +114,7 @@ function dokan_shop_order_custom_columns( $col ) {
 
             if ( $has_sub != '1' ) {
                 $seller = get_user_by( 'id', dokan_get_seller_id_by_order( $post->ID ) );
-                printf( '<a href="%s">%s</a>', admin_url( 'edit.php?post_type=shop_order&author=' . $seller->ID ), $seller->display_name );
+                printf( '<a href="%s">%s</a>', admin_url( 'edit.php?post_type=shop_order&vendor_id=' . $seller->ID ), $seller->display_name );
             }
 
             break;
@@ -120,7 +134,13 @@ add_action( 'manage_shop_order_posts_custom_column', 'dokan_shop_order_custom_co
 function dokan_admin_shop_order_row_classes( $classes, $post_id ) {
     global $post;
 
-    if ( is_search() ) {
+    if ( is_search() || ! current_user_can( 'manage_woocommerce' ) ) {
+        return $classes;
+    }
+
+    $vendor_id = isset( $_GET['vendor_id'] ) ? $_GET['vendor_id'] : '';
+
+    if ( $vendor_id ) {
         return $classes;
     }
 

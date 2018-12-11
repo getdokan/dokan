@@ -121,6 +121,8 @@
             </div>
         </div>
 
+        <?php do_action( 'dokan_settings_after_store_name', $current_user, $profile_info ); ?>
+
         <div class="dokan-form-group">
             <label class="dokan-w3 dokan-control-label" for="dokan_store_ppp"><?php _e( 'Store Product Per Page', 'dokan-lite' ); ?></label>
 

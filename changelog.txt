@@ -1,3 +1,16 @@
+v2.9.4 -> Dec 11, 2018
+------------------------
+-**New**   Add theme compatibility with Storefront, Flatsome & Divi theme
+-**Fix**   Undefined `$` error on promotions in the backend
+-**Fix**   Order stock quantity is reducing by twice on a single order
+-**Fix**   Filter orders by customer is not working in vendor dashboard
+-**Fix**   Featured product status is getting changed while editing product by vendors
+-**Fix**   The back-end order list table is not showing properly
+-**Tweak** Dokan seller setup wizard style
+-**Tweak** Add some actions and filters in various places
+-**Tweak** Remove chosen js library support
+-**Tweak** Refactor admin settings saving process
+
 v2.9.3 -> Oct 29, 2018
 ------------------------
 -**Fix**   Remove vendor id from order post table

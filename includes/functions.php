@@ -115,6 +115,21 @@ function dokan_is_store_page() {
 }
 
 /**
+ * Check if it's product edit page
+ *
+ * @since 3.0
+ *
+ * @return boolean
+ */
+function dokan_is_product_edit_page() {
+    if ( get_query_var( 'edit' ) && is_singular( 'product' ) ) {
+        return true;
+    }
+
+    return false;
+}
+
+/**
  * Check if it's a Seller Dashboard page
  *
  * @since 2.4.9
@@ -1555,29 +1570,109 @@ function dokan_disable_admin_bar( $show_admin_bar ) {
 add_filter( 'show_admin_bar', 'dokan_disable_admin_bar' );
 
 /**
- * Filter the orders, products and booking products of current user
+ * Filter products of current user
  *
  * @param object $query
  * @since 2.7.3
  * @return object $query
  */
-function dokan_filter_orders_for_current_vendor( $query ) {
+function dokan_filter_product_for_current_vendor( $query ) {
     if ( current_user_can( 'manage_woocommerce' ) ) {
-        return;
+        return $query;
     }
 
     if ( ! isset( $query->query_vars['post_type'] ) ) {
-        return;
+        return $query;
     }
 
-    if ( is_admin() && $query->is_main_query() && ( $query->query_vars['post_type'] == 'shop_order' || $query->query_vars['post_type'] == 'product' || $query->query_vars['post_type'] == 'wc_booking' ) ) {
+    if ( is_admin() && $query->is_main_query() && $query->query_vars['post_type'] == 'product' ) {
         $query->set( 'author', get_current_user_id() );
     }
 
     return $query;
 }
 
-add_action( 'pre_get_posts', 'dokan_filter_orders_for_current_vendor' );
+add_filter( 'pre_get_posts', 'dokan_filter_product_for_current_vendor' );
+
+/**
+ * Filter orders of current user
+ *
+ * @param object $args
+ * @param object $query
+ * @since 2.9.4
+ * @return object $args
+ */
+function dokan_filter_orders_for_current_vendor( $args, $query ) {
+    global $wpdb;
+
+    if ( current_user_can( 'manage_woocommerce' ) ) {
+        if ( ! empty( $_GET['vendor_id'] ) ) {
+            $vendor_id      = $_GET['vendor_id'];
+            $args['join']  .= " LEFT JOIN {$wpdb->prefix}dokan_orders as do ON $wpdb->posts.ID=do.order_id";
+            $args['where'] .= " AND do.seller_id=$vendor_id";
+        }
+
+        return $args;
+    }
+
+    if ( ! isset( $query->query_vars['post_type'] ) ) {
+        return $args;
+    }
+
+    $vendor_id = get_current_user_id();
+
+    if ( is_admin() && $query->is_main_query() && ( $query->query_vars['post_type'] == 'shop_order' || $query->query_vars['post_type'] == 'wc_booking' ) ) {
+        $args['join']  .= " LEFT JOIN {$wpdb->prefix}dokan_orders as do ON $wpdb->posts.ID=do.order_id";
+        $args['where'] .= " AND do.seller_id=$vendor_id";
+    }
+
+    return $args;
+}
+
+add_filter( 'posts_clauses', 'dokan_filter_orders_for_current_vendor', 12, 2 );
+
+/**
+ * Dokan map meta cpas for vendors
+ *
+ * @param  array $caps
+ * @param  string $cap
+ * @param  int $user_id
+ * @param  array $args
+ *
+ * @return array
+ */
+function dokan_map_meta_caps( $caps, $cap, $user_id, $args ) {
+    global $post;
+
+    if ( ! is_admin() ) {
+        return $caps;
+    }
+
+    $post_id = ! empty( $args[0] ) ? $args[0] : 0;
+
+    if ( $cap === 'edit_post' || $cap === 'edit_others_shop_orders' ) {
+        $post_id = ! empty( $args[0] ) ? $args[0] : 0;
+
+        if ( empty( $post_id ) ) {
+            if ( empty( $post->ID ) ) {
+                return $caps;
+            }
+
+            $post_id = $post->ID;
+        }
+
+        $vendor_id       = get_post_meta( $post_id, '_dokan_vendor_id', true );
+        $current_user_id = get_current_user_id();
+
+        if ( absint( $vendor_id ) === absint( $current_user_id ) ) {
+            return array( 'edit_shop_orders' );
+        }
+    }
+
+    return $caps;
+}
+
+add_filter( 'map_meta_cap', 'dokan_map_meta_caps', 12, 4 );
 
 /**
  * Remove sellerdiv metabox when a seller can access the backend
@@ -2789,17 +2884,18 @@ function dokan_is_store_open( $user_id ) {
  * @return boolean
  */
 function dokan_customer_has_order_from_this_seller( $customer_id, $seller_id = null ) {
-    $seller_id = ! empty( $seller_id ) ? $seller_id : get_current_user_id();
-    $args = array(
-        'author'        => $seller_id,
+    $seller_id = ! empty( $seller_id ) ? $seller_id : dokan_get_current_user_id();
+    $args = [
+        'customer_id'   => $customer_id,
         'post_type'     => 'shop_order',
-        'meta_key'      => '_customer_user',
-        'meta_value'    => $customer_id,
+        'meta_key'      => '_dokan_vendor_id',
+        'meta_value'    => $seller_id,
         'post_status'   => 'any',
+        'return'        => 'ids',
         'numberposts'   => 1,
-    );
+    ];
 
-    $orders = get_posts( $args );
+    $orders = wc_get_orders( $args );
 
     return ! empty( $orders ) ? true : false;
 }
