@@ -14,7 +14,8 @@ class Dokan_Admin_Ajax {
 	 */
 	function __construct() {
         add_action( 'wp_ajax_dokan_withdraw_form_action', array( $this, 'handle_withdraw_action' ) );
-        add_action( 'wp_ajax_dokan-dismiss-promotional-offer-notice', array( $this, 'dismiss_promotional_offer' ) );
+        add_action( 'wp_ajax_dokan-dismiss-christmas-offer-notice', array( $this, 'dismiss_christmas_offer' ) );
+        // add_action( 'wp_ajax_dokan-dismiss-promotional-offer-notice', array( $this, 'dismiss_promotional_offer' ) );
 	}
 
 	/**
@@ -115,10 +116,10 @@ class Dokan_Admin_Ajax {
      *
      * @return void
      */
-    public function dismiss_promotional_offer() {
-        if ( ! empty( $_POST['dokan_promotion_dismissed'] ) ) {
-            $offer_key = 'dokan_package_offer';
-            update_option( $offer_key . '_tracking_notice', 'hide' );
+    public function dismiss_christmas_offer() {
+        if ( ! empty( $_POST['dokan_christmas_dismissed'] ) ) {
+            $offer_key = 'dokan_christmas_notice';
+            update_option( $offer_key, 'hide' );
         }
     }
 

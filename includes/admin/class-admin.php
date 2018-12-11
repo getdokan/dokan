@@ -42,24 +42,30 @@ class Dokan_Admin {
         }
 
         // check if it has already been dismissed
-        $offer_key   = 'dokan_package_offer';
-        $hide_notice = get_option( $offer_key . '_tracking_notice', 'no' );
-        $offer_link  = 'https://wedevs.com';
+        $offer_key   = 'dokan_christmas_notice';
+        $hide_notice = get_option( $offer_key, 'show' );
+        $offer_link  = 'https://wedevs.com/dokan/?add-to-cart=15310&variation_id=15316&coupon_code=xmas30';
 
-        if ( 'hide' == $hide_notice ) {
+        if ( 'hide' == $hide_notice || dokan()->is_pro_exists() ) {
             return;
         }
         ?>
-            <div class="#dokan-notice notice notice-success is-dismissible">
-                <?php printf( __( '<p>Dokan is more affordable this snowy season! Save 30%% while building your dream multivendor marketplace. [Limited time ⏳] <a target="_blank" href="%s">Grab The Deal</a> </p>', 'dokan-lite' ), $offer_link ); ?>
+            <div class="notice notice-success is-dismissible" id="dokan-christmas-notice">
+                <?php printf( __( '<p>Dokan is more affordable this Christmas! <strong>Save 30%%</strong> while building your dream multivendor marketplace. [Limited time ⏳] <a target="_blank" href="%s">Grab The Deal</a></p>', 'dokan-lite' ), $offer_link ); ?>
             </div>
 
+            <style>
+                #dokan-christmas-notice p {
+                    font-size: 15px;
+                }
+            </style>
+
             <script type='text/javascript'>
-                jQuery('body').on('click', '.is-dismissible', function(e) {
+                jQuery('body').on('click', '#dokan-christmas-notice .notice-dismiss', function(e) {
                     e.preventDefault();
 
-                    wp.ajax.post('dokan-dismiss-promotional-offer-notice', {
-                        dokan_promotion_dismissed: true
+                    wp.ajax.post('dokan-dismiss-christmas-offer-notice', {
+                        dokan_christmas_dismissed: true
                     });
                 });
             </script>
