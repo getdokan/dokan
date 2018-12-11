@@ -343,7 +343,7 @@ export default {
                 }
             }
 
-            return details;
+            return dokan.hooks.applyFilters( 'dokan_get_payment_details', details, method, data );
         },
 
         moment(date) {
