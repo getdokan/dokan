@@ -2884,17 +2884,18 @@ function dokan_is_store_open( $user_id ) {
  * @return boolean
  */
 function dokan_customer_has_order_from_this_seller( $customer_id, $seller_id = null ) {
-    $seller_id = ! empty( $seller_id ) ? $seller_id : get_current_user_id();
-    $args = array(
-        'author'        => $seller_id,
+    $seller_id = ! empty( $seller_id ) ? $seller_id : dokan_get_current_user_id();
+    $args = [
+        'customer_id'   => $customer_id,
         'post_type'     => 'shop_order',
-        'meta_key'      => '_customer_user',
-        'meta_value'    => $customer_id,
+        'meta_key'      => '_dokan_vendor_id',
+        'meta_value'    => $seller_id,
         'post_status'   => 'any',
+        'return'        => 'ids',
         'numberposts'   => 1,
-    );
+    ];
 
-    $orders = get_posts( $args );
+    $orders = wc_get_orders( $args );
 
     return ! empty( $orders ) ? true : false;
 }
