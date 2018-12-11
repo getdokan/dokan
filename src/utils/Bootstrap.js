@@ -97,3 +97,5 @@ window.dokan.libs['ContentLoading']  = {
   VueContentLoading,
 };
 
+// wp npm packages with backward compatibility
+dokan.hooks = (wp && wp.hooks) ? wp.hooks : dokan.wpPackages.hooks;

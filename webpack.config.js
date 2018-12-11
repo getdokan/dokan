@@ -9,12 +9,17 @@ const BrowserSyncPlugin = require( 'browser-sync-webpack-plugin' );
 // const config = require( './config.json' );
 
 // Naming and path settings
-var appName = 'app';
+var appName   = 'app';
+var vueVendor = Object.keys(package.dependencies);
+
+vueVendor.splice( vueVendor.indexOf( '@wordpress/hooks' ), 1 );
+
 var entryPoint = {
     'vue-frontend': './src/frontend/main.js',
     'vue-admin': './src/admin/main.js',
     'vue-bootstrap': './src/utils/Bootstrap.js',
-    'vue-vendor': Object.keys(package.dependencies),
+    'vue-vendor': vueVendor,
+    'dokan-wp': './src/wp-packages/index.js',
     // style: './less/style.less',
 };
 
