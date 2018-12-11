@@ -44,7 +44,7 @@ class Dokan_Admin {
         // check if it has already been dismissed
         $offer_key   = 'dokan_christmas_notice';
         $hide_notice = get_option( $offer_key, 'show' );
-        $offer_link  = 'https://wedevs.com/dokan/?add-to-cart=15310&variation_id=15316&coupon_code=xmas30';
+        $offer_link  = 'https://wedevs.com/dokan/?add-to-cart=15310&variation_id=15314&attribute_pa_license=professional&coupon_code=xmas30';
 
         if ( 'hide' == $hide_notice || dokan()->is_pro_exists() ) {
             return;

@@ -43,7 +43,7 @@ function dokan_update_refund_table_2_9_4() {
     foreach ( $columns as $column ) {
         $wpdb->query(
             "ALTER TABLE `{$wpdb->prefix}dokan_refund`
-            MODIFY COLUMN {$column} varchar(100)"
+            MODIFY COLUMN {$column} varchar(200)"
         );
     }
 }
