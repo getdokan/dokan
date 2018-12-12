@@ -15,7 +15,6 @@ class Dokan_Admin_Ajax {
 	function __construct() {
         add_action( 'wp_ajax_dokan_withdraw_form_action', array( $this, 'handle_withdraw_action' ) );
         add_action( 'wp_ajax_dokan-dismiss-christmas-offer-notice', array( $this, 'dismiss_christmas_offer' ) );
-        // add_action( 'wp_ajax_dokan-dismiss-promotional-offer-notice', array( $this, 'dismiss_promotional_offer' ) );
 	}
 
 	/**
@@ -117,6 +116,16 @@ class Dokan_Admin_Ajax {
      * @return void
      */
     public function dismiss_christmas_offer() {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( __( 'You have no permission to do that', 'dokan' ) );
+        }
+
+        if ( ! wp_verify_nonce( $_POST['nonce'], 'dokan_admin' ) ) {
+            wp_send_json_error( __( 'Invalid nonce', 'dokan' ) );
+        }
+
+        error_log( print_r( $_POST, true ) );
+
         if ( ! empty( $_POST['dokan_christmas_dismissed'] ) ) {
             $offer_key = 'dokan_christmas_notice';
             update_option( $offer_key, 'hide' );
