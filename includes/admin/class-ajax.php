@@ -117,14 +117,12 @@ class Dokan_Admin_Ajax {
      */
     public function dismiss_christmas_offer() {
         if ( ! current_user_can( 'manage_options' ) ) {
-            wp_send_json_error( __( 'You have no permission to do that', 'dokan' ) );
+            wp_send_json_error( __( 'You have no permission to do that', 'dokan-lite' ) );
         }
 
         if ( ! wp_verify_nonce( $_POST['nonce'], 'dokan_admin' ) ) {
-            wp_send_json_error( __( 'Invalid nonce', 'dokan' ) );
+            wp_send_json_error( __( 'Invalid nonce', 'dokan-lite' ) );
         }
-
-        error_log( print_r( $_POST, true ) );
 
         if ( ! empty( $_POST['dokan_christmas_dismissed'] ) ) {
             $offer_key = 'dokan_christmas_notice';
