@@ -64,8 +64,9 @@ class Dokan_Admin {
                 jQuery('body').on('click', '#dokan-christmas-notice .notice-dismiss', function(e) {
                     e.preventDefault();
 
-                    wp.ajax.post('dokan-dismiss-christmas-offer-notice', {
-                        dokan_christmas_dismissed: true
+                    wp.ajax.post( 'dokan-dismiss-christmas-offer-notice', {
+                        dokan_christmas_dismissed: true,
+                        nonce: dokan.nonce
                     });
                 });
             </script>

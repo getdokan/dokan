@@ -2855,22 +2855,27 @@ function dokan_is_store_open( $user_id ) {
     $open_days  = isset ( $store_info['dokan_store_time'] ) ? $store_info['dokan_store_time'] : '';
     $today      = strtolower( date( 'l' ) );
 
-    if ( ! is_array( $open_days ) ) {
+    if ( ! is_array( $open_days ) && ! isset( $open_days[ $today ] ) ) {
         return false;
     }
 
-    foreach ( $open_days as $key => $value ) {
+    $schedule = $open_days[ $today ];
 
-        if ( $key !== $today ) {
-            continue;
+    if ( 'open' === $schedule['open'] ) {
+        if ( empty( $schedule['opening_time'] ) || empty( $schedule['closing_time'] ) ) {
+            return true;
         }
 
-        if ( $value['open'] !== 'open' ) {
-            return false;
-        }
+        $current_time = current_time( 'timestamp' );
+        $open         = strtotime( $schedule['opening_time'] );
+        $close        = strtotime( $schedule['closing_time'] );
 
-        return true;
+        if ( $open <= $current_time && $close >= $current_time ) {
+            return true;
+        }
     }
+
+    return false;
 }
 
  /**

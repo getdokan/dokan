@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 2.9.4\n"
+"Project-Id-Version: Dokan 2.9.5\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2018-12-11 16:34:49+00:00\n"
+"POT-Creation-Date: 2018-12-12 21:18:42+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -427,7 +427,7 @@ msgstr ""
 msgid "Vendor"
 msgstr ""
 
-#: classes/installer.php:178 includes/admin/class-admin.php:117
+#: classes/installer.php:178 includes/admin/class-admin.php:118
 #: includes/admin/class-settings.php:395 includes/template-tags.php:302
 #: src/admin/pages/Dashboard.vue:3
 msgid "Dashboard"
@@ -624,8 +624,8 @@ msgid "No product found !"
 msgstr ""
 
 #: classes/template-settings.php:70 classes/template-settings.php:74
-#: dokan.php:462 includes/admin/class-admin.php:129
-#: includes/admin/class-admin.php:190 includes/template-tags.php:333
+#: dokan.php:462 includes/admin/class-admin.php:130
+#: includes/admin/class-admin.php:191 includes/template-tags.php:333
 #: src/admin/pages/Settings.vue:3
 msgid "Settings"
 msgstr ""
@@ -751,17 +751,17 @@ msgstr ""
 msgid "Sorry, no transactions were found!"
 msgstr ""
 
-#: classes/upgrade.php:82 includes/admin/class-admin.php:251
+#: classes/upgrade.php:82 includes/admin/class-admin.php:252
 msgid ""
 "<strong>Dokan Data Update Required</strong> &#8211; We need to update your "
 "install to the latest version"
 msgstr ""
 
-#: classes/upgrade.php:83 includes/admin/class-admin.php:252
+#: classes/upgrade.php:83 includes/admin/class-admin.php:253
 msgid "Run the updater"
 msgstr ""
 
-#: classes/upgrade.php:88 includes/admin/class-admin.php:257
+#: classes/upgrade.php:88 includes/admin/class-admin.php:258
 msgid ""
 "It is strongly recommended that you backup your database before proceeding. "
 "Are you sure you wish to run the updater now?"
@@ -862,13 +862,13 @@ msgid ""
 "target=\"_blank\" href=\"%s\">Grab The Deal</a></p>"
 msgstr ""
 
-#: includes/admin/class-admin.php:107 includes/admin/class-admin.php:118
-#: includes/admin/class-admin.php:176 includes/admin/setup-wizard.php:113
+#: includes/admin/class-admin.php:108 includes/admin/class-admin.php:119
+#: includes/admin/class-admin.php:177 includes/admin/setup-wizard.php:113
 #: includes/template-tags.php:324 templates/withdraw/header.php:11
 msgid "Withdraw"
 msgstr ""
 
-#: includes/admin/class-admin.php:111
+#: includes/admin/class-admin.php:112
 msgid "Withdraw %s"
 msgstr ""
 
@@ -876,24 +876,29 @@ msgstr ""
 msgid "Dokan"
 msgstr ""
 
-#: includes/admin/class-admin.php:121 includes/admin/class-admin.php:183
+#: includes/admin/class-admin.php:122 includes/admin/class-admin.php:184
 msgid "PRO Features"
 msgstr ""
 
-#: includes/admin/class-admin.php:128
+#: includes/admin/class-admin.php:129
 msgid "<span style=\"color:#f18500\">Help</span>"
 msgstr ""
 
-#: includes/admin/class-admin.php:169
+#: includes/admin/class-admin.php:170
 msgid "Dokan Dashboard"
+msgstr ""
+
+#: includes/admin/class-ajax.php:120 lib/promotions.php:184
+msgid "You have no permission to do that"
+msgstr ""
+
+#: includes/admin/class-ajax.php:124 includes/admin/class-settings.php:36
+#: includes/admin/class-settings.php:62 lib/promotions.php:188
+msgid "Invalid nonce"
 msgstr ""
 
 #: includes/admin/class-settings.php:32
 msgid "You have no permission to get settings value"
-msgstr ""
-
-#: includes/admin/class-settings.php:36 includes/admin/class-settings.php:62
-msgid "Invalid nonce"
 msgstr ""
 
 #: includes/admin/class-settings.php:58
