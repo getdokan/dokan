@@ -560,6 +560,8 @@ class Dokan_Ajax {
             wp_send_json_error();
         }
 
+        check_ajax_referer( 'image_editor-' . $_POST['id'], 'nonce' );
+
         $crop_details = $_POST['cropDetails'];
 
         $dimensions = $this->get_header_dimensions( array(
