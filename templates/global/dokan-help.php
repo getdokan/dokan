@@ -9,5 +9,5 @@
 ?>
 
 <div class="dokan-page-help">
-    <?php echo esc_html( $help_text ); ?>
+    <?php echo $help_text; ?>
 </div>

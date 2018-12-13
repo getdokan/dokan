@@ -33,7 +33,7 @@
                     <li class="divider"></li>
                     <?php
                     foreach ( $nav_urls as $key => $item ) {
-                        printf( '<li><a href="%s">%s &nbsp;%s</a></li>', esc_url( $item['url'] ), esc_attr( $item['icon'] ), esc_attr( $item['title'] ) );
+                        printf( '<li><a href="%s">%s &nbsp;%s</a></li>', esc_url( $item['url'] ), $item['icon'], $item['title'] );
                     }
                     ?>
                 </ul>
