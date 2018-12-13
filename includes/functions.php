@@ -651,19 +651,19 @@ function dokan_post_input_box( $post_id, $meta_key, $attr = array(), $type = 'te
     $name        = isset( $attr['name'] ) ? esc_attr( $attr['name'] ) : $meta_key;
     $value       = isset( $attr['value'] ) ? $attr['value'] : get_post_meta( $post_id, $meta_key, true );
     $size        = isset( $attr['size'] ) ? $attr['size'] : 30;
-    $required    = isset( $attr['required'] ) ? 'required="required"' : '';
+    $required    = isset( $attr['required'] ) ? 'required' : '';
 
     switch ($type) {
         case 'text':
             ?>
-            <input <?php echo $required; ?> type="text" name="<?php echo $name; ?>" id="<?php echo $name; ?>" value="<?php echo esc_attr( $value ); ?>" class="<?php echo $class; ?>" placeholder="<?php echo $placeholder; ?>">
+            <input <?php echo esc_attr( $required ); ?> type="text" name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $name ); ?>" value="<?php echo esc_attr( $value ); ?>" class="<?php echo esc_attr( $class ); ?>" placeholder="<?php echo esc_attr( $placeholder ); ?>">
             <?php
             break;
 
         case 'textarea':
             $rows = isset( $attr['rows'] ) ? absint( $attr['rows'] ) : 4;
             ?>
-            <textarea name="<?php echo $name; ?>" id="<?php echo $name; ?>" rows="<?php echo $rows; ?>" class="<?php echo $class; ?>" placeholder="<?php echo $placeholder; ?>"><?php echo esc_textarea( $value ); ?></textarea>
+            <textarea name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $name ); ?>" rows="<?php echo esc_attr( $rows ); ?>" class="<?php echo esc_attr( $class ); ?>" placeholder="<?php echo esc_attr( $placeholder ); ?>"><?php echo esc_textarea( $value ); ?></textarea>
             <?php
             break;
 
@@ -672,10 +672,10 @@ function dokan_post_input_box( $post_id, $meta_key, $attr = array(), $type = 'te
             $class = ( $class == 'dokan-form-control' ) ? '' : $class;
             ?>
 
-            <label class="<?php echo $class; ?>" for="<?php echo $name; ?>">
-                <input type="hidden" name="<?php echo $name; ?>" value="no">
-                <input name="<?php echo $name; ?>" id="<?php echo $name; ?>" value="yes" type="checkbox"<?php checked( $value, 'yes' ); ?>>
-                <?php echo $label; ?>
+            <label class="<?php echo esc_attr( $class ); ?>" for="<?php echo esc_attr( $name ); ?>">
+                <input type="hidden" name="<?php echo esc_attr( $name ); ?>" value="no">
+                <input name="<?php echo $name; ?>" id="<?php echo esc_attr( $name ); ?>" value="yes" type="checkbox"<?php checked( $value, 'yes' ); ?>>
+                <?php echo esc_html( $label ); ?>
             </label>
 
             <?php
@@ -684,9 +684,9 @@ function dokan_post_input_box( $post_id, $meta_key, $attr = array(), $type = 'te
         case 'select':
             $options = is_array( $attr['options'] ) ? $attr['options'] : array();
             ?>
-            <select name="<?php echo $name; ?>" id="<?php echo $name; ?>" class="<?php echo $class; ?>">
-                <?php foreach ($options as $key => $label) { ?>
-                    <option value="<?php echo esc_attr( $key ); ?>"<?php selected( $value, $key ); ?>><?php echo $label; ?></option>
+            <select name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $name ); ?>" class="<?php echo esc_attr( $class ); ?>">
+                <?php foreach ( $options as $key => $label ) { ?>
+                    <option value="<?php echo esc_attr( $key ); ?>"<?php selected( $value, $key ); ?>><?php echo esc_html( $label ); ?></option>
                 <?php } ?>
             </select>
 
@@ -697,7 +697,7 @@ function dokan_post_input_box( $post_id, $meta_key, $attr = array(), $type = 'te
             $min = isset( $attr['min'] ) ? $attr['min'] : 0;
             $step = isset( $attr['step'] ) ? $attr['step'] : 'any';
             ?>
-            <input <?php echo $required; ?> type="number" name="<?php echo $name; ?>" id="<?php echo $name; ?>" value="<?php echo esc_attr( $value ); ?>" class="<?php echo $class; ?>" placeholder="<?php echo $placeholder; ?>" min="<?php echo esc_attr( $min ); ?>" step="<?php echo esc_attr( $step ); ?>" size="<?php echo esc_attr( $size ); ?>">
+            <input <?php echo $required; ?> type="number" name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $name ); ?>" value="<?php echo esc_attr( $value ); ?>" class="<?php echo esc_attr( $class ); ?>" placeholder="<?php echo esc_attr( $placeholder ); ?>" min="<?php echo esc_attr( $min ); ?>" step="<?php echo esc_attr( $step ); ?>" size="<?php echo esc_attr( $size ); ?>">
             <?php
             break;
 
@@ -705,15 +705,14 @@ function dokan_post_input_box( $post_id, $meta_key, $attr = array(), $type = 'te
             $options = is_array( $attr['options'] ) ? $attr['options'] : array();
             foreach ( $options as $key => $label ) {
             ?>
-            <label class="<?php echo $class; ?>" for="<?php echo $key; ?>">
-                <input name="<?php echo $name; ?>" id="<?php echo $key; ?>" value="<?php echo $key; ?>" type="radio"<?php checked( $value, $key ); ?>>
-                <?php echo $label; ?>
+            <label class="<?php echo esc_attr( $class ); ?>" for="<?php echo esc_attr( $key ); ?>">
+                <input name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $key ); ?>" value="<?php echo esc_attr( $key ); ?>" type="radio"<?php checked( $value, $key ); ?>>
+                <?php echo esc_html( $label ); ?>
             </label>
 
             <?php
             }
             break;
-
     }
 }
 
@@ -880,7 +879,7 @@ function dokan_get_template( $template_name, $args = array(), $template_path = '
     $located = dokan_locate_template( $template_name, $template_path, $default_path );
 
     if ( ! file_exists( $located ) ) {
-        _doing_it_wrong( __FUNCTION__, sprintf( '<code>%s</code> does not exist.', $located ), '2.1' );
+        _doing_it_wrong( __FUNCTION__, sprintf( '<code>%s</code> does not exist.', esc_html( $located ) ), '2.1' );
         return;
     }
 
@@ -1017,15 +1016,6 @@ function dokan_redirect_to_register(){
 }
 
 add_action( 'login_init', 'dokan_redirect_to_register' );
-
-/**
- * Pretty print a variable
- *
- * @param var $value
- */
-function dokan_pre( $value ) {
-    printf( '<pre>%s</pre>', print_r( $value, true ) );
-}
 
 /**
  * Check if the seller is enabled
@@ -1807,17 +1797,17 @@ function dokan_get_navigation_url( $name = '' ) {
  * @param bool $everywhere
  */
 function dokan_country_dropdown( $options, $selected = '', $everywhere = false ) {
-    printf( '<option value="">%s</option>', __( '- Select a location -', 'dokan-lite' ) );
+    printf( '<option value="">%s</option>', esc_html__( '- Select a location -', 'dokan-lite' ) );
 
     if ( $everywhere ) {
         echo '<optgroup label="--------------------------">';
-        printf( '<option value="everywhere"%s>%s</option>', selected( $selected, 'everywhere', true ), __( 'Everywhere Else', 'dokan-lite' ) );
+        printf( '<option value="everywhere"%s>%s</option>', selected( $selected, 'everywhere', true ), esc_html__( 'Everywhere Else', 'dokan-lite' ) );
         echo '</optgroup>';
     }
 
     echo '<optgroup label="------------------------------">';
     foreach ($options as $key => $value) {
-        printf( '<option value="%s"%s>%s</option>', $key, selected( $selected, $key, true ), $value );
+        printf( '<option value="%s"%s>%s</option>', esc_attr( $key ), selected( $selected, $key, true ), esc_html( $value ) );
     }
     echo '</optgroup>';
 }
@@ -1830,17 +1820,17 @@ function dokan_country_dropdown( $options, $selected = '', $everywhere = false )
  * @param bool $everywhere
  */
 function dokan_state_dropdown( $options, $selected = '', $everywhere = false ) {
-    printf( '<option value="">%s</option>', __( '- Select a State -', 'dokan-lite' ) );
+    printf( '<option value="">%s</option>', esc_html__( '- Select a State -', 'dokan-lite' ) );
 
     if ( $everywhere ) {
         echo '<optgroup label="--------------------------">';
-        printf( '<option value="everywhere" %s>%s</option>', selected( $selected, 'everywhere', true ), __( 'Everywhere Else', 'dokan-lite' ) );
+        printf( '<option value="everywhere" %s>%s</option>', selected( $selected, 'everywhere', true ), esc_html__( 'Everywhere Else', 'dokan-lite' ) );
         echo '</optgroup>';
     }
 
     echo '<optgroup label="------------------------------">';
-    foreach ($options as $key => $value) {
-        printf( '<option value="%s" %s>%s</option>', $key, selected( $selected, $key, true ), $value );
+    foreach ( $options as $key => $value ) {
+        printf( '<option value="%s" %s>%s</option>', esc_attr( $key ), selected( $selected, $key, true ), esc_html( $value ) );
     }
     echo '</optgroup>';
 }
@@ -1976,7 +1966,7 @@ function dokan_product_listing_filter_months_dropdown( $user_id ) {
     $date = isset( $_GET['date'] ) ? (int) $_GET['date'] : 0;
     ?>
     <select name="date" id="filter-by-date" class="dokan-form-control">
-        <option<?php selected( $date, 0 ); ?> value="0"><?php _e( 'All dates', 'dokan-lite' ); ?></option>
+        <option<?php selected( $date, 0 ); ?> value="0"><?php esc_html_e( 'All dates', 'dokan-lite' ); ?></option>
     <?php
     foreach ( $months as $arc_row ) {
         if ( 0 == $arc_row->year )
@@ -1989,7 +1979,7 @@ function dokan_product_listing_filter_months_dropdown( $user_id ) {
             selected( $date, $year . $month, false ),
             esc_attr( $year . $month ),
             /* translators: 1: month name, 2: 4-digit year */
-            sprintf( __( '%1$s %2$d', 'dokan-lite' ), $wp_locale->get_month( $month ), $year )
+            sprintf( __( '%1$s %2$d', 'dokan-lite' ), esc_html( $wp_locale->get_month( $month ) ), esc_html( $year ) )
         );
     }
     ?>
