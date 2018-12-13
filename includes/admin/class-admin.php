@@ -46,12 +46,24 @@ class Dokan_Admin {
         $hide_notice = get_option( $offer_key, 'show' );
         $offer_link  = 'https://wedevs.com/dokan/?add-to-cart=15310&variation_id=15314&attribute_pa_license=professional&coupon_code=xmas30';
 
+        $allowed_html = array(
+            'p'       => array(),
+            'strong'  => array(),
+            'a'       => array(
+                'href'   => array(),
+                'title'  => array(),
+                'target' => array()
+            )
+        );
+
+        $content = __( '<p>Dokan is more affordable this Christmas! <strong>Save 30%%</strong> while building your dream multivendor marketplace. [Limited time ⏳] <a target="_blank" href="%s">Grab The Deal</a></p>', 'dokan-lite' );
+
         if ( 'hide' == $hide_notice || dokan()->is_pro_exists() ) {
             return;
         }
         ?>
             <div class="notice notice-success is-dismissible" id="dokan-christmas-notice">
-                <?php printf( __( '<p>Dokan is more affordable this Christmas! <strong>Save 30%%</strong> while building your dream multivendor marketplace. [Limited time ⏳] <a target="_blank" href="%s">Grab The Deal</a></p>', 'dokan-lite' ), esc_url( $offer_link ) ); ?>
+                <?php printf( wp_kses( $content, $allowed_html ), esc_url( $offer_link ) ); ?>
             </div>
 
             <style>
