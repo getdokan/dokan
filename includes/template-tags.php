@@ -204,7 +204,7 @@ function dokan_order_listing_status_filter() {
                 $complete_order_url = array_merge( array( 'order_status' => 'wc-completed' ), $date_filter );
             ?>
             <a href="<?php echo esc_url( add_query_arg( $complete_order_url, $orders_url ) ); ?>">
-                <?php printf( esc_html_e( 'Completed (%d)', 'dokan-lite' ), esc_attr( $orders_counts->{'wc-completed'} ) ); ?></span>
+                <?php printf( esc_html__( 'Completed (%d)', 'dokan-lite' ), esc_attr( $orders_counts->{'wc-completed'} ) ); ?></span>
             </a>
         </li>
         <li<?php echo $status_class == 'wc-processing' ? ' class="active"' : ''; ?>>
