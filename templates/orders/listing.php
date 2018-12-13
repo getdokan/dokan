@@ -208,7 +208,7 @@ if ( $user_orders ) {
         ) );
 
         echo "<ul class='pagination'>\n\t<li>";
-        echo join("</li>\n\t<li>", esc_url($page_links));
+        echo join("</li>\n\t<li>", $page_links);
         echo "</li>\n</ul>\n";
         echo '</div>';
     }
