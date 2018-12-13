@@ -79,13 +79,13 @@ class Dokan_Upgrade {
         if ( ! is_null( $installed_version ) && version_compare( $installed_version, end( $updates_versions ), '<' ) ) {
             ?>
                 <div id="message" class="updated">
-                    <p><?php _e( '<strong>Dokan Data Update Required</strong> &#8211; We need to update your install to the latest version', 'dokan-lite' ); ?></p>
-                    <p class="submit"><a href="<?php echo add_query_arg( [ 'dokan_do_update' => true ], $_SERVER['REQUEST_URI'] ); ?>" class="dokan-update-btn button-primary"><?php _e( 'Run the updater', 'dokan-lite' ); ?></a></p>
+                    <p><?php esc_attr_e( '<strong>Dokan Data Update Required</strong> &#8211; We need to update your install to the latest version', 'dokan-lite' ); ?></p>
+                    <p class="submit"><a href="<?php echo esc_url( add_query_arg( [ 'dokan_do_update' => true ], $_SERVER['REQUEST_URI'] ) ); ?>" class="dokan-update-btn button-primary"><?php esc_attr_e( 'Run the updater', 'dokan-lite' ); ?></a></p>
                 </div>
 
                 <script type="text/javascript">
                     jQuery('.dokan-update-btn').click('click', function(){
-                        return confirm( '<?php _e( 'It is strongly recommended that you backup your database before proceeding. Are you sure you wish to run the updater now?', 'dokan-lite' ); ?>' );
+                        return confirm( '<?php esc_attr_e( 'It is strongly recommended that you backup your database before proceeding. Are you sure you wish to run the updater now?', 'dokan-lite' ); ?>' );
                     });
                 </script>
             <?php

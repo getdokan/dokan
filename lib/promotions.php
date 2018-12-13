@@ -73,14 +73,14 @@ abstract class WeDevs_Promotion {
         ?>
             <div class="notice dokan-upgrade-promotional-notice">
                 <div class="thumbnail">
-                    <img src="<?php echo $notice['thumbnail']; ?>" alt="<?php echo $notice['title']; ?>">
+                    <img src="<?php echo esc_url( $notice['thumbnail'] ); ?>" alt="<?php echo esc_attr( $notice['title'] ); ?>">
                 </div>
                 <div class="content">
-                    <h2><?php echo $notice['title']; ?></h2>
-                    <p><?php echo $notice['content']; ?></p>
-                    <a href="<?php echo $notice['link']; ?>" class="button button-primary promo-btn" target="_blank"><?php echo !empty( $notice['btn_text'] ) ? $notice['btn_text'] : __( 'Learn More &rarr;', 'dokan-lite' ); ?></a>
+                    <h2><?php echo esc_html( $notice['title'] ); ?></h2>
+                    <p><?php echo esc_html( $notice['content'] ); ?></p>
+                    <a href="<?php echo esc_url( $notice['link'] ); ?>" class="button button-primary promo-btn" target="_blank"><?php echo !empty( $notice['btn_text'] ) ? esc_html( $notice['btn_text'] ) : esc_html__( 'Learn More &rarr;', 'dokan-lite' ); ?></a>
                 </div>
-                <span class="prmotion-close-icon dashicons dashicons-no-alt" data-key="<?php echo $notice['key']; ?>" data-promo_key="<?php echo $this->promo_option_key; ?>"></span>
+                <span class="prmotion-close-icon dashicons dashicons-no-alt" data-key="<?php echo esc_attr( $notice['key'] ); ?>" data-promo_key="<?php echo esc_attr( $this->promo_option_key ); ?>"></span>
                 <div class="clear"></div>
             </div>
 

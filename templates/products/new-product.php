@@ -41,7 +41,7 @@
 
             <header class="dokan-dashboard-header dokan-clearfix">
                 <h1 class="entry-title">
-                    <?php _e( 'Add New Product', 'dokan-lite' ); ?>
+                    <?php esc_html_e( 'Add New Product', 'dokan-lite' ); ?>
                 </h1>
             </header><!-- .entry-header -->
 
@@ -53,7 +53,7 @@
 
                         <?php foreach ( Dokan_Template_Products::$errors as $error) { ?>
 
-                            <strong><?php _e( 'Error!', 'dokan-lite' ); ?></strong> <?php echo $error ?>.<br>
+                            <strong><?php esc_html_e( 'Error!', 'dokan-lite' ); ?></strong> <?php echo esc_html( $error ); ?>.<br>
 
                         <?php } ?>
                     </div>
@@ -62,8 +62,8 @@
                 <?php if ( isset( $_GET['created_product'] ) ): ?>
                     <div class="dokan-alert dokan-alert-success">
                         <a class="dokan-close" data-dismiss="alert">&times;</a>
-                        <strong><?php _e( 'Success!', 'dokan-lite' ); ?></strong>
-                        <?php echo sprintf( __( 'You have successfully created <a href="%s"><strong>%s</strong></a> product', 'dokan-lite' ), dokan_edit_product_url( intval( $_GET['created_product'] ) ), get_the_title( intval( $_GET['created_product'] ) ) ); ?>
+                        <strong><?php esc_html_e( 'Success!', 'dokan-lite' ); ?></strong>
+                        <?php echo sprintf( __( 'You have successfully created <a href="%s"><strong>%s</strong></a> product', 'dokan-lite' ), esc_url( dokan_edit_product_url( intval( $_GET['created_product'] ) ) ), get_the_title( intval( $_GET['created_product'] ) ) ); ?>
                     </div>
                 <?php endif ?>
 
@@ -90,15 +90,15 @@
                                 <div class="content-half-part featured-image">
                                     <div class="featured-image">
                                         <div class="dokan-feat-image-upload">
-                                            <div class="instruction-inside <?php echo $hide_instruction ?>">
-                                                <input type="hidden" name="feat_image_id" class="dokan-feat-image-id" value="<?php echo $posted_img ?>">
+                                            <div class="instruction-inside <?php echo esc_attr( $hide_instruction ); ?>">
+                                                <input type="hidden" name="feat_image_id" class="dokan-feat-image-id" value="<?php echo esc_attr( $posted_img ); ?>">
                                                 <i class="fa fa-cloud-upload"></i>
-                                                <a href="#" class="dokan-feat-image-btn dokan-btn"><?php _e( 'Upload Product Image', 'dokan-lite' ); ?></a>
+                                                <a href="#" class="dokan-feat-image-btn dokan-btn"><?php esc_html_e( 'Upload Product Image', 'dokan-lite' ); ?></a>
                                             </div>
 
-                                            <div class="image-wrap <?php echo $hide_img_wrap ?>">
+                                            <div class="image-wrap <?php echo esc_attr( $hide_img_wrap ); ?>">
                                                 <a class="close dokan-remove-feat-image">&times;</a>
-                                                    <img src="<?php echo $posted_img_url ?>" alt="">
+                                                    <img src="<?php echo esc_url( $posted_img_url ); ?>" alt="">
                                             </div>
                                         </div>
                                     </div>
@@ -120,8 +120,8 @@
 
                                                                     $attachment_image = wp_get_attachment_image_src( $image_id, 'thumbnail' );
                                                                     ?>
-                                                                    <li class="image" data-attachment_id="<?php echo $image_id; ?>">
-                                                                        <img src="<?php echo $attachment_image[0]; ?>" alt="">
+                                                                    <li class="image" data-attachment_id="<?php echo esc_attr( $image_id ); ?>">
+                                                                        <img src="<?php echo esc_url( $attachment_image[0] ); ?>" alt="">
                                                                         <a href="#" class="action-delete" title="<?php esc_attr_e( 'Delete image', 'dokan-lite' ); ?>">&times;</a>
                                                                     </li>
                                                                     <?php
@@ -129,7 +129,7 @@
                                                             }
                                                         }
                                                         ?>
-                                                    <li class="add-image add-product-images tips" data-title="<?php _e( 'Add gallery image', 'dokan-lite' ); ?>">
+                                                    <li class="add-image add-product-images tips" data-title="<?php esc_attr_e( 'Add gallery image', 'dokan-lite' ); ?>">
                                                         <a href="#" class="add-product-images"><i class="fa fa-plus" aria-hidden="true"></i></a>
                                                     </li>
                                                 </ul>
@@ -141,7 +141,7 @@
 
                                 <div class="content-half-part dokan-product-meta">
                                     <div class="dokan-form-group">
-                                        <input class="dokan-form-control" name="post_title" id="post-title" type="text" placeholder="<?php esc_attr_e( 'Product name..', 'dokan-lite' ); ?>" value="<?php echo dokan_posted_input( 'post_title' ); ?>">
+                                        <input class="dokan-form-control" name="post_title" id="post-title" type="text" placeholder="<?php esc_attr_e( 'Product name..', 'dokan-lite' ); ?>" value="<?php echo esc_attr( dokan_posted_input( 'post_title' ) ); ?>">
                                     </div>
 
                                     <div class="dokan-form-group">
@@ -149,7 +149,7 @@
                                             <div class="content-half-part">
                                                 <label for="_regular_price" class="dokan-form-label"><?php _e( 'Price', 'dokan-lite' ); ?></label>
                                                 <div class="dokan-input-group">
-                                                    <span class="dokan-input-group-addon"><?php echo get_woocommerce_currency_symbol(); ?></span>
+                                                    <span class="dokan-input-group-addon"><?php echo esc_attr__( get_woocommerce_currency_symbol() ); ?></span>
                                                     <input type="number" class="dokan-form-control dokan-product-regular-price" name="_regular_price" placeholder="0.00" value="<?php echo dokan_posted_input('_regular_price') ?>" min="0" step="any">
                                                 </div>
                                             </div>
@@ -162,7 +162,7 @@
                                                 </label>
 
                                                 <div class="dokan-input-group">
-                                                    <span class="dokan-input-group-addon"><?php echo get_woocommerce_currency_symbol(); ?></span>
+                                                    <span class="dokan-input-group-addon"><?php echo esc_attr__( get_woocommerce_currency_symbol() ); ?></span>
                                                     <input type="number" class="dokan-form-control dokan-product-sales-price" name="_sale_price" placeholder="0.00" value="<?php echo dokan_posted_input('_sale_price') ?>" min="0" step="any">
                                                 </div>
                                             </div>
@@ -171,15 +171,15 @@
                                         <div class="dokan-hide sale-schedule-container sale_price_dates_fields dokan-clearfix dokan-form-group">
                                             <div class="content-half-part from">
                                                 <div class="dokan-input-group">
-                                                    <span class="dokan-input-group-addon"><?php _e( 'From', 'dokan-lite' ); ?></span>
-                                                    <input type="text" name="_sale_price_dates_from" class="dokan-form-control datepicker sale_price_dates_from" maxlength="10" value="<?php echo dokan_posted_input('_sale_price_dates_from') ?>" pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])" placeholder="<?php _e( 'YYYY-MM-DD', 'dokan-lite' ); ?>">
+                                                    <span class="dokan-input-group-addon"><?php esc_html_e( 'From', 'dokan-lite' ); ?></span>
+                                                    <input type="text" name="_sale_price_dates_from" class="dokan-form-control datepicker sale_price_dates_from" maxlength="10" value="<?php echo esc_attr( dokan_posted_input('_sale_price_dates_from') ); ?>" pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])" placeholder="<?php esc_attr_e( 'YYYY-MM-DD', 'dokan-lite' ); ?>">
                                                 </div>
                                             </div>
 
                                             <div class="content-half-part to">
                                                 <div class="dokan-input-group">
-                                                    <span class="dokan-input-group-addon"><?php _e( 'To', 'dokan-lite' ); ?></span>
-                                                    <input type="text" name="_sale_price_dates_to" class="dokan-form-control datepicker sale_price_dates_to" value="<?php echo dokan_posted_input('_sale_price_dates_to') ?>" maxlength="10" pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])" placeholder="<?php _e( 'YYYY-MM-DD', 'dokan-lite' ); ?>">
+                                                    <span class="dokan-input-group-addon"><?php esc_html_e( 'To', 'dokan-lite' ); ?></span>
+                                                    <input type="text" name="_sale_price_dates_to" class="dokan-form-control datepicker sale_price_dates_to" value="<?php echo esc_attr( dokan_posted_input('_sale_price_dates_to') ); ?>" maxlength="10" pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])" placeholder="<?php esc_attr_e( 'YYYY-MM-DD', 'dokan-lite' ); ?>">
                                                 </div>
                                             </div>
                                         </div><!-- .sale-schedule-container -->
@@ -234,7 +234,7 @@
                                                 'walker'           => new DokanTaxonomyWalker()
                                             ) ) );
 
-                                            echo str_replace( '<select', '<select data-placeholder="'.__( 'Select product category', 'dokan-lite' ).'" multiple="multiple" ', $drop_down_category );
+                                            echo str_replace( '<select', '<select data-placeholder="'.esc_attr__( 'Select product category', 'dokan-lite' ).'" multiple="multiple" ', $drop_down_category );
                                             ?>
                                         </div>
                                     <?php endif; ?>
@@ -261,14 +261,14 @@
                                             'walker'           => new DokanTaxonomyWalker()
                                         ) );
 
-                                        echo str_replace( '<select', '<select data-placeholder="'.__( 'Select product tags', 'dokan-lite' ).'" multiple="multiple" ', $drop_down_tags );
+                                        echo str_replace( '<select', '<select data-placeholder="'.esc_attr__( 'Select product tags', 'dokan-lite' ).'" multiple="multiple" ', $drop_down_tags );
                                         ?>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="dokan-form-group">
-                                <label for="post_content" class="control-label"><?php _e( 'Description', 'dokan-lite' ) ?> <i class="fa fa-question-circle tips" data-title="<?php _e( 'Add your product description', 'dokan-lite' ) ?>" aria-hidden="true"></i></label>
+                                <label for="post_content" class="control-label"><?php esc_html_e( 'Description', 'dokan-lite' ) ?> <i class="fa fa-question-circle tips" data-title="<?php esc_attr_e( 'Add your product description', 'dokan-lite' ) ?>" aria-hidden="true"></i></label>
                                 <?php wp_editor( dokan_posted_textarea( 'post_content' ), 'post_content', array('editor_height' => 50, 'quicktags' => false, 'media_buttons' => false, 'teeny' => true, 'editor_class' => 'post_content') ); ?>
                             </div>
 

@@ -647,7 +647,7 @@ class Dokan_Vendor {
             return $html;
         }
 
-        echo $html;
+        echo esc_html( $html );
     }
 
     /**

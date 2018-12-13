@@ -117,8 +117,8 @@ class Dokan_Admin_User_Profile {
                                 <a href="#" class="dokan-banner-drag button button-primary"><?php esc_html_e( 'Upload banner', 'dokan-lite' ); ?></a>
                                 <p class="description">
                                     <?php echo sprintf(
-                                        __('Upload a banner for your store. Banner size is (%sx%s) pixels.', 'dokan-lite' ),
-                                        $banner_width, $banner_height
+                                        esc_attr__('Upload a banner for your store. Banner size is (%sx%s) pixels.', 'dokan-lite' ),
+                                        esc_attr( $banner_width ), esc_attr( $banner_height )
                                     ); ?>
                                 </p>
                             </div>
@@ -136,8 +136,8 @@ class Dokan_Admin_User_Profile {
                 <tr>
                     <th><?php esc_html_e( 'Store URL', 'dokan-lite' ); ?></th>
                     <td>
-                        <input type="text" name="dokan_store_url" data-vendor="<?php echo $user->ID; ?>" class="regular-text" id="seller-url" value="<?php echo esc_attr( $user->data->user_nicename ); ?>"><strong id="url-alart-mgs"></strong>
-                        <p><small><?php echo home_url() . '/' . dokan_get_option( 'custom_store_url', 'dokan_general', 'store' ); ?>/<strong id="url-alart"><?php echo esc_attr( $user->data->user_nicename ); ?></strong></small></p>
+                        <input type="text" name="dokan_store_url" data-vendor="<?php echo esc_attr( $user->ID ); ?>" class="regular-text" id="seller-url" value="<?php echo esc_attr( $user->data->user_nicename ); ?>"><strong id="url-alart-mgs"></strong>
+                        <p><small><?php echo esc_url( home_url() . '/' . dokan_get_option( 'custom_store_url', 'dokan_general', 'store' ) ); ?>/<strong id="url-alart"><?php echo esc_attr( $user->data->user_nicename ); ?></strong></small></p>
                     </td>
                 </tr>
 
