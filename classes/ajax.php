@@ -31,7 +31,6 @@ class Dokan_Ajax {
     function init_ajax() {
         //withdraw note
         $withdraw = Dokan_Admin_Withdraw::init();
-        add_action( 'wp_ajax_note', array( $withdraw, 'note_update' ) );
         add_action( 'wp_ajax_withdraw_ajax_submission', array( $withdraw, 'withdraw_ajax' ) );
 
         //settings
