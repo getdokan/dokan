@@ -41,17 +41,16 @@ global $wpdb;
                     global $wpdb;
                     $user_id = dokan_get_current_user_id();
 
-                    $sql = "SELECT $wpdb->posts.* FROM $wpdb->posts
-                            INNER JOIN $wpdb->postmeta
-                                ON ( $wpdb->posts.ID = $wpdb->postmeta.post_id )
-                            WHERE $wpdb->posts.post_author=$user_id
-                                AND ( $wpdb->postmeta.meta_key = '_downloadable' AND $wpdb->postmeta.meta_value = 'yes' )
-                                AND $wpdb->posts.post_type IN ( 'product', 'product_variation' )
-                                AND $wpdb->posts.post_status = 'publish'
-                            GROUP BY $wpdb->posts.ID
-                            ORDER BY $wpdb->posts.post_parent ASC, $wpdb->posts.post_title ASC";
-
-                    $products = $wpdb->get_results( $sql );
+                    $products = $wpdb->get_results( $wpdb->prepare( "SELECT $wpdb->posts.* FROM $wpdb->posts
+                        INNER JOIN $wpdb->postmeta
+                            ON ( $wpdb->posts.ID = $wpdb->postmeta.post_id )
+                        WHERE $wpdb->posts.post_author=%d
+                            AND ( $wpdb->postmeta.meta_key = '_downloadable' AND $wpdb->postmeta.meta_value = 'yes' )
+                            AND $wpdb->posts.post_type IN ( 'product', 'product_variation' )
+                            AND $wpdb->posts.post_status = 'publish'
+                        GROUP BY $wpdb->posts.ID
+                        ORDER BY $wpdb->posts.post_parent ASC, $wpdb->posts.post_title ASC", $user_id
+                    ) );
 
                     if ( $products ) foreach ( $products as $product ) {
 
