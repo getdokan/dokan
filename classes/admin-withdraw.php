@@ -36,9 +36,12 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
      * @return void
      */
     public function withdraw_ajax() {
-
         if ( ! current_user_can( 'manage_woocommerce' ) ) {
-            exit;
+            wp_send_json_error( __( 'You have no permission to do this action', 'dokan' ) );
+        }
+
+        if ( ! wp_verify_nonce( $_POST['nonce'], 'dokan_admin' ) ) {
+            wp_send_json_error( __( 'Invalid nonce', 'dokan' ) );
         }
 
         header( 'Content-type: html/csv' );
@@ -47,8 +50,6 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
         $ids = $_POST['id'];
 
         $this->generate_csv( $ids );
-
-        exit;
     }
 
     /**
