@@ -28,7 +28,7 @@ echo "= " . esc_html( $email_heading ) . " =\n\n";
 <?php esc_attr_e( 'Vendor: '. $data['seller_name'], 'dokan-lite' ); echo " \n"; ?>
 <?php esc_attr_e( 'Category: '. $data['category'], 'dokan-lite' ); echo " \n"; ?>
 
-<?php _e( 'The product is currently in "pending" state.', 'dokan-lite' ); echo " \n";?>
+<?php esc_html_e( 'The product is currently in "pending" state.', 'dokan-lite' ); echo " \n";?>
 
 <?php echo sprintf( __( 'In case it needs to be moderated  <a href="%s"> click here </a>', 'dokan-lite' ), $data['product_link'] ); ?>
 
@@ -36,4 +36,4 @@ echo "= " . esc_html( $email_heading ) . " =\n\n";
 
 echo "\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n\n";
 
-echo apply_filters( 'woocommerce_email_footer_text', get_option( 'woocommerce_email_footer_text' ) );
+echo esc_html( apply_filters( 'woocommerce_email_footer_text', get_option( 'woocommerce_email_footer_text' ) ) );

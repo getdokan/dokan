@@ -271,7 +271,7 @@ function dokan_product_output_variations() {
                                 $variation_selected_value = isset( $default_attributes[ sanitize_title( $attribute['name'] ) ] ) ? $default_attributes[ sanitize_title( $attribute['name'] ) ] : '';
 
                                 // Name will be something like attribute_pa_color
-                                echo '<select class="dokan-form-control" name="default_attribute_' . sanitize_title( $attribute['name'] ) . '" data-current="' . esc_attr( $variation_selected_value ) . '"><option value="">' . esc_html__( 'No default', 'dokan-lite' ) . ' ' . esc_html( wc_attribute_label( $attribute['name'] ) ) . '&hellip;</option>';
+                                echo '<select class="dokan-form-control" name="default_attribute_' . esc_attr( sanitize_title( $attribute['name'] ) ) . '" data-current="' . esc_attr( $variation_selected_value ) . '"><option value="">' . esc_html__( 'No default', 'dokan-lite' ) . ' ' . esc_html( wc_attribute_label( $attribute['name'] ) ) . '&hellip;</option>';
 
                                 // Get terms for attribute taxonomy or value if its a custom attribute
                                 if ( $attribute['is_taxonomy'] ) {
@@ -315,7 +315,12 @@ function dokan_product_output_variations() {
                 <button class="dokan-btn dokan-btn-default cancel-variation-changes"><?php esc_html_e( 'Cancel', 'dokan-lite' ) ?></button>
 
                 <div class="dokan-variations-pagenav dokan-right">
-                    <span class="displaying-num"><?php printf( _n( '%s item', '%s items', $variations_count, 'dokan-lite' ), $variations_count ); ?></span>
+                    <span class="displaying-num">
+                        <?php
+                            $variations_count_text =  _n( '%s item', '%s items', esc_attr( $variations_count ), 'dokan-lite' );
+                            printf( esc_html( $variations_count_text ), esc_attr( $variations_count ) );
+                        ?>
+                    </span>
                     <span class="expand-close">
                         (<a href="#" class="expand_all"><?php esc_html_e( 'Expand', 'dokan-lite' ); ?></a> / <a href="#" class="close_all"><?php esc_html_e( 'Close', 'dokan-lite' ); ?></a>)
                     </span>
@@ -329,7 +334,7 @@ function dokan_product_output_variations() {
                                     <option value="<?php echo esc_attr( $i ); ?>"><?php echo esc_html( $i ); ?></option>
                                 <?php endfor; ?>
                             </select>
-                             <?php _ex( 'of', 'number of pages', 'dokan-lite' ); ?> <span class="total-pages"><?php echo esc_html( $variations_total_pages ); ?></span>
+                             <?php esc_html_x( 'of', 'number of pages', 'dokan-lite' ); ?> <span class="total-pages"><?php echo esc_html( $variations_total_pages ); ?></span>
                         </span>
                         <a class="next-page" title="<?php esc_attr_e( 'Go to the next page', 'dokan-lite' ); ?>" href="#">&rsaquo;</a>
                         <a class="last-page" title="<?php esc_attr_e( 'Go to the last page', 'dokan-lite' ); ?>" href="#">&raquo;</a>

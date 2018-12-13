@@ -242,8 +242,8 @@ function dokan_set_go_to_vendor_dashboard_btn() {
     }
 
     printf( '<p><a href="%s" class="dokan-btn dokan-btn-theme vendor-dashboard" >%s</a></p>',
-        dokan_get_navigation_url(),
-        apply_filters( 'dokan_set_go_to_vendor_dashboard_btn_text', esc_html__( 'Go to Vendor Dashboard', 'dokan-lite' ) )
+        esc_url( dokan_get_navigation_url() ),
+        esc_html( apply_filters( 'dokan_set_go_to_vendor_dashboard_btn_text', __( 'Go to Vendor Dashboard', 'dokan-lite' ) ) )
     );
 }
 

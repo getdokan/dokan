@@ -289,7 +289,7 @@ if ( ! $from_shortcode ) {
                                                 'walker'           => new DokanTaxonomyWalker( $post_id )
                                             ) ) );
 
-                                            echo str_replace( '<select', '<select data-placeholder="' . esc_html__( 'Select product category', 'dokan-lite' ) . '" multiple="multiple" ', $drop_down_category );
+                                            echo str_replace( '<select', '<select data-placeholder="' . esc_html__( 'Select product category', 'dokan-lite' ) . '" multiple="multiple" ', $drop_down_category ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
                                             ?>
                                         </div>
                                     <?php endif; ?>
@@ -315,7 +315,7 @@ if ( ! $from_shortcode ) {
                                             'walker'           => new DokanTaxonomyWalker( $post_id )
                                         ) );
 
-                                        echo str_replace( '<select', '<select data-placeholder="' . esc_html__( 'Select product tags', 'dokan-lite' ) . '" multiple="multiple" ', $drop_down_tags );
+                                        echo str_replace( '<select', '<select data-placeholder="' . esc_html__( 'Select product tags', 'dokan-lite' ) . '" multiple="multiple" ', $drop_down_tags ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
 
                                         ?>
                                     </div>
