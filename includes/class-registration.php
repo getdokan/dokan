@@ -96,6 +96,13 @@ class Dokan_Registration {
      * @return array
      */
     function set_new_vendor_names( $data ) {
+        $nonce_value = isset( $_POST['_wpnonce'] ) ? $_POST['_wpnonce'] : '';
+        $nonce_value = isset( $_POST['woocommerce-register-nonce'] ) ? $_POST['woocommerce-register-nonce'] : $nonce_value;
+
+        if ( ! wp_verify_nonce( $nonce_value, 'woocommerce-register' ) ) {
+            return new WP_Error( 'nonce_verification_failed', __( 'Nonce verification failed', 'dokan-lite' ) );
+        }
+
         $allowed_roles = array( 'customer', 'seller' );
         $role          = ( isset( $_POST['role'] ) && in_array( $_POST['role'], $allowed_roles ) ) ? $_POST['role'] : 'customer';
 
@@ -121,6 +128,13 @@ class Dokan_Registration {
      * @return void
      */
     function save_vendor_info( $user_id, $data ) {
+        $nonce_value = isset( $_POST['_wpnonce'] ) ? $_POST['_wpnonce'] : '';
+        $nonce_value = isset( $_POST['woocommerce-register-nonce'] ) ? $_POST['woocommerce-register-nonce'] : $nonce_value;
+
+        if ( ! wp_verify_nonce( $nonce_value, 'woocommerce-register' ) ) {
+            return new WP_Error( 'nonce_verification_failed', __( 'Nonce verification failed', 'dokan-lite' ) );
+        }
+
         if ( $data['role'] != 'seller' ) {
             return;
         }
