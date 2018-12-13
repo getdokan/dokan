@@ -23,7 +23,7 @@ class Dokan_Template_Products {
      */
     function __construct() {
         add_action( 'dokan_render_product_listing_template', array( $this, 'render_product_listing_template' ), 11 );
-        add_action( 'template_redirect', array( $this, 'handle_all_submit' ), 11 );
+        add_action( 'template_redirect', array( $this, 'handle_product_add' ), 11 );
         add_action( 'template_redirect', array( $this, 'handle_product_update' ), 11 );
         add_action( 'template_redirect', array( $this, 'handle_delete_product' ) );
         add_action( 'dokan_render_new_product_template', array( $this, 'render_new_product_template' ), 10 );
@@ -181,11 +181,11 @@ class Dokan_Template_Products {
     }
 
     /**
-     * Handle all the form POST submit
+     * Handle product add
      *
      * @return void
      */
-    function handle_all_submit() {
+    function handle_product_add() {
 
         if ( ! is_user_logged_in() ) {
             return;
@@ -202,8 +202,6 @@ class Dokan_Template_Products {
         if ( ! wp_verify_nonce( $_POST['dokan_add_new_product_nonce'], 'dokan_add_new_product' ) ) {
             return;
         }
-
-        global $wpdb;
 
         $errors   = array();
         $postdata = $_POST;
