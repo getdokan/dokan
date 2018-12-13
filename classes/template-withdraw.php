@@ -417,9 +417,12 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
 
         global $wpdb;
 
-        $where  = empty( $user_id ) ? '' : sprintf( "user_id ='%d' &&", $user_id );
+        if ( empty( $user_id ) ) {
+            $sql = $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} ORDER BY date DESC LIMIT %d, %d", $offset, $limit );
+        } else {
+            $sql = $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} WHERE user_id =%d ORDER BY date DESC LIMIT %d, %d", $user_id, $offset, $limit );
+        }
 
-        $sql    = "SELECT * FROM {$wpdb->dokan_withdraw} WHERE $where 1=1 ORDER BY date DESC LIMIT $offset, $limit";
         $result = $wpdb->get_results( $sql );
 
         return $result;

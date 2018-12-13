@@ -401,8 +401,9 @@ function dokan_search_seller_products( $term, $user_ids = false, $type = '', $in
             $users_where = " AND posts.post_author = '$user_ids'";
         }
     }
-
+    // phpcs:ignore WordPress.VIP.DirectDatabaseQuery.DirectQuery
     $product_ids = $wpdb->get_col(
+        // phpcs:disable
         $wpdb->prepare( "
             SELECT DISTINCT posts.ID FROM {$wpdb->posts} posts
             LEFT JOIN {$wpdb->postmeta} postmeta ON posts.ID = postmeta.post_id
@@ -424,6 +425,7 @@ function dokan_search_seller_products( $term, $user_ids = false, $type = '', $in
             $like_term,
             $like_term
         )
+        // phpcs:enable
     );
 
     if ( is_numeric( $term ) ) {

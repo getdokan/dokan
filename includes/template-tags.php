@@ -484,20 +484,18 @@ function dokan_store_category_menu( $seller_id, $title = '' ) {
     <div id="cat-drop-stack">
         <?php
         global $wpdb;
-
         $categories = get_transient( 'dokan-store-category-'.$seller_id );
 
         if ( false === $categories ) {
-            $sql = "SELECT t.term_id,t.name, tt.parent FROM $wpdb->terms as t
-                    LEFT JOIN $wpdb->term_taxonomy as tt on t.term_id = tt.term_id
-                    LEFT JOIN $wpdb->term_relationships AS tr on tt.term_taxonomy_id = tr.term_taxonomy_id
-                    LEFT JOIN $wpdb->posts AS p on tr.object_id = p.ID
-                    WHERE tt.taxonomy = 'product_cat'
-                    AND p.post_type = 'product'
-                    AND p.post_status = 'publish'
-                    AND p.post_author = $seller_id GROUP BY t.term_id";
-
-            $categories = $wpdb->get_results( $sql );
+            $categories = $wpdb->get_results( $wpdb->prepare( "SELECT t.term_id,t.name, tt.parent FROM $wpdb->terms as t
+                LEFT JOIN $wpdb->term_taxonomy as tt on t.term_id = tt.term_id
+                LEFT JOIN $wpdb->term_relationships AS tr on tt.term_taxonomy_id = tr.term_taxonomy_id
+                LEFT JOIN $wpdb->posts AS p on tr.object_id = p.ID
+                WHERE tt.taxonomy = 'product_cat'
+                AND p.post_type = 'product'
+                AND p.post_status = 'publish'
+                AND p.post_author = %d GROUP BY t.term_id", $seller_id
+            ) );
             set_transient( 'dokan-store-category-'.$seller_id , $categories );
         }
 
