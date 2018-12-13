@@ -23,10 +23,11 @@ if ( ! empty( $_GET['customer_id'] ) ) { // WPCS: input var ok.
         $user->display_name,
         absint( $user->ID )
     );
-
-    $filter_date = isset( $_GET['order_date'] ) ? sanitize_key( $_GET['order_date'] ) : '';
-    $order_status = isset( $_GET['order_status'] ) ? sanitize_key( $_GET['order_status'] ) : 'all';
 }
+
+$filter_date  = isset( $_GET['order_date'] ) ? sanitize_key( $_GET['order_date'] ) : '';
+$order_status = isset( $_GET['order_status'] ) ? sanitize_key( $_GET['order_status'] ) : 'all';
+
 ?>
 <div class="dokan-order-filter-serach">
     <form action="" method="GET" class="dokan-left">
