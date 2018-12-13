@@ -157,11 +157,11 @@ class Dokan_Ajax {
         }
 
         if ( !current_user_can( 'dokandar' ) || dokan_get_option( 'order_status_change', 'dokan_selling', 'on' ) != 'on' ) {
-            wp_die( __( 'You do not have sufficient permissions to access this page.', 'dokan-lite' ) );
+            wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'dokan-lite' ) );
         }
 
         if ( !check_admin_referer( 'dokan-mark-order-complete' ) ) {
-            wp_die( __( 'You have taken too long. Please go back and retry.', 'dokan-lite' ) );
+            wp_die( esc_html__( 'You have taken too long. Please go back and retry.', 'dokan-lite' ) );
         }
 
         $order_id = isset($_GET['order_id']) && (int) $_GET['order_id'] ? (int) $_GET['order_id'] : '';
@@ -170,7 +170,7 @@ class Dokan_Ajax {
         }
 
         if ( ! dokan_is_seller_has_order( dokan_get_current_user_id(), $order_id ) ) {
-            wp_die( __( 'You do not have permission to change this order', 'dokan-lite' ) );
+            wp_die( esc_html__( 'You do not have permission to change this order', 'dokan-lite' ) );
         }
 
         $order = new WC_Order( $order_id );
@@ -191,11 +191,11 @@ class Dokan_Ajax {
         }
 
         if ( !current_user_can( 'dokandar' ) && dokan_get_option( 'order_status_change', 'dokan_selling', 'on' ) != 'on' ) {
-            wp_die( __( 'You do not have sufficient permissions to access this page.', 'dokan-lite' ) );
+            wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'dokan-lite' ) );
         }
 
         if ( !check_admin_referer( 'dokan-mark-order-processing' ) ) {
-            wp_die( __( 'You have taken too long. Please go back and retry.', 'dokan-lite' ) );
+            wp_die( esc_html__( 'You have taken too long. Please go back and retry.', 'dokan-lite' ) );
         }
 
         $order_id = isset( $_GET['order_id'] ) && (int) $_GET['order_id'] ? (int) $_GET['order_id'] : '';
@@ -204,7 +204,7 @@ class Dokan_Ajax {
         }
 
         if ( ! dokan_is_seller_has_order( dokan_get_current_user_id(), $order_id ) ) {
-            wp_die( __( 'You do not have permission to change this order', 'dokan-lite' ) );
+            wp_die( esc_html__( 'You do not have permission to change this order', 'dokan-lite' ) );
         }
 
         $order = new WC_Order( $order_id );
@@ -385,8 +385,8 @@ class Dokan_Ajax {
                 echo 'customer-note';
             }
             echo '"><div class="note_content">';
-            echo wpautop( wptexturize( $note ) );
-            echo '</div><p class="meta"><a href="#" class="delete_note">'.__( 'Delete note', 'dokan-lite' ).'</a></p>';
+            echo wpautop( wptexturize( esc_textarea( $note ) ) );
+            echo '</div><p class="meta"><a href="#" class="delete_note">'.esc_html__( 'Delete note', 'dokan-lite' ).'</a></p>';
             echo '</li>';
         }
 
@@ -453,8 +453,8 @@ class Dokan_Ajax {
                 echo 'customer-note';
             //}
             echo '"><div class="note_content">';
-            echo wpautop( wptexturize( $ship_info ) );
-            echo '</div><p class="meta"><a href="#" class="delete_note">'.__( 'Delete', 'dokan-lite' ).'</a></p>';
+            echo wpautop( wptexturize( esc_textarea( $ship_info ) ) );
+            echo '</div><p class="meta"><a href="#" class="delete_note">'. esc_html__( 'Delete', 'dokan-lite' ).'</a></p>';
             echo '</li>';
 
             do_action( 'dokan_order_tracking_updated', $post_id, dokan_get_current_user_id() );

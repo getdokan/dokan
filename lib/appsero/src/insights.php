@@ -399,27 +399,39 @@ class Insights {
         }
 
         // don't show tracking if a local server
-        if ( ! $this->is_local_server() ) {
+        if ( $this->is_local_server() ) {
             $optin_url  = add_query_arg( $this->slug . '_tracker_optin', 'true' );
             $optout_url = add_query_arg( $this->slug . '_tracker_optout', 'true' );
 
             if ( empty( $this->notice ) ) {
-                $notice = sprintf( __( 'Want to help make <strong>%1$s</strong> even more awesome? Allow %1$s to collect non-sensitive diagnostic data and usage information.', 'textdomain' ), $this->name );
+                $notice = sprintf( __( 'Want to help make <strong>%1$s</strong> even more awesome? Allow %1$s to collect non-sensitive diagnostic data and usage information.', 'dokan-lite' ), $this->name );
             } else {
                 $notice = $this->notice;
             }
 
-            $notice .= ' (<a class="' . $this->slug . '-insights-data-we-collect" href="#">' . __( 'what we collect', 'textdomain' ) . '</a>)';
+            $notice .= ' (<a class="' . $this->slug . '-insights-data-we-collect" href="#">' . __( 'what we collect', 'dokan-lite' ) . '</a>)';
             $notice .= '<p class="description" style="display:none;">' . implode( ', ', $this->data_we_collect() ) . '. No sensitive data is tracked.</p>';
 
             echo '<div class="updated"><p>';
-                echo $notice;
+                echo wp_kses( $notice, array(
+                'a' => array(
+                    'href' => array(),
+                    'class' => array(),
+                    'title' => array()
+                ),
+                'p' => array(
+                    'class' => array(),
+                    'id' => array(),
+                    'style' => array(),
+                ),
+                'strong' => array()
+                ) );
                 echo '</p><p class="submit">';
-                echo '&nbsp;<a href="' . esc_url( $optin_url ) . '" class="button-primary button-large">' . __( 'Allow', 'textdomain' ) . '</a>';
-                echo '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary button-large">' . __( 'No thanks', 'textdomain' ) . '</a>';
+                echo '&nbsp;<a href="' . esc_url( $optin_url ) . '" class="button-primary button-large">' . esc_html__( 'Allow', 'dokan-lite' ) . '</a>';
+                echo '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary button-large">' . esc_html__( 'No thanks', 'dokan-lite' ) . '</a>';
             echo '</p></div>';
 
-            echo "<script type='text/javascript'>jQuery('." . $this->slug . "-insights-data-we-collect').on('click', function(e) {
+            echo "<script type='text/javascript'>jQuery('." . esc_attr( $this->slug ) . "-insights-data-we-collect').on('click', function(e) {
                     e.preventDefault();
                     jQuery(this).parents('.updated').find('p.description').slideToggle('fast');
                 });
@@ -612,7 +624,7 @@ class Insights {
 
         $schedules['weekly'] = array(
             'interval' => DAY_IN_SECONDS * 7,
-            'display'  => __( 'Once Weekly', 'textdomain' )
+            'display'  => __( 'Once Weekly', 'dokan-lite' )
         );
 
         return $schedules;
@@ -747,26 +759,26 @@ class Insights {
         $reasons = $this->get_uninstall_reasons();
         ?>
 
-        <div class="wd-dr-modal" id="<?php echo $this->slug; ?>-wd-dr-modal">
+        <div class="wd-dr-modal" id="<?php echo esc_attr( $this->slug ); ?>-wd-dr-modal">
             <div class="wd-dr-modal-wrap">
                 <div class="wd-dr-modal-header">
-                    <h3><?php _e( 'If you have a moment, please let us know why you are deactivating:', 'domain' ); ?></h3>
+                    <h3><?php esc_html_e( 'If you have a moment, please let us know why you are deactivating:', 'dokan-lite' ); ?></h3>
                 </div>
 
                 <div class="wd-dr-modal-body">
                     <ul class="reasons">
                         <?php foreach ($reasons as $reason) { ?>
                             <li data-type="<?php echo esc_attr( $reason['type'] ); ?>" data-placeholder="<?php echo esc_attr( $reason['placeholder'] ); ?>">
-                                <label><input type="radio" name="selected-reason" value="<?php echo $reason['id']; ?>"> <?php echo $reason['text']; ?></label>
+                                <label><input type="radio" name="selected-reason" value="<?php echo esc_attr( $reason['id'] ); ?>"> <?php echo esc_html( $reason['text'] ); ?></label>
                             </li>
                         <?php } ?>
                     </ul>
                 </div>
 
                 <div class="wd-dr-modal-footer">
-                    <a href="#" class="dont-bother-me"><?php _e( 'I rather wouldn\'t say', 'domain' ); ?></a>
-                    <button class="button-secondary"><?php _e( 'Submit & Deactivate', 'domain' ); ?></button>
-                    <button class="button-primary"><?php _e( 'Cancel', 'domain' ); ?></button>
+                    <a href="#" class="dont-bother-me"><?php esc_html_e( 'I rather wouldn\'t say', 'dokan-lite' ); ?></a>
+                    <button class="button-secondary"><?php esc_html_e( 'Submit & Deactivate', 'dokan-lite' ); ?></button>
+                    <button class="button-primary"><?php esc_html_e( 'Cancel', 'dokan-lite' ); ?></button>
                 </div>
             </div>
         </div>
@@ -822,10 +834,10 @@ class Insights {
         <script type="text/javascript">
             (function($) {
                 $(function() {
-                    var modal = $( '#<?php echo $this->slug; ?>-wd-dr-modal' );
+                    var modal = $( '#<?php echo esc_attr( $this->slug ); ?>-wd-dr-modal' );
                     var deactivateLink = '';
 
-                    $( '#the-list' ).on('click', 'a.<?php echo $this->slug; ?>-deactivate-link', function(e) {
+                    $( '#the-list' ).on('click', 'a.<?php echo esc_attr( $this->slug ); ?>-deactivate-link', function(e) {
                         e.preventDefault();
 
                         modal.addClass('modal-active');

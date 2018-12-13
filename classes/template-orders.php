@@ -47,7 +47,7 @@ class Dokan_Template_Orders {
         $user_id = get_current_user_id();
 
         if ( ! dokan_is_seller_enabled( $user_id ) ) {
-            echo dokan_seller_not_enabled_notice();
+            echo esc_html( dokan_seller_not_enabled_notice() );
         }
     }
 
