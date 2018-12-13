@@ -55,6 +55,13 @@ class Dokan_Registration {
      * @return \WP_Error
      */
     function validate_registration( $error ) {
+        $nonce_value = isset( $_POST['_wpnonce'] ) ? $_POST['_wpnonce'] : '';
+        $nonce_value = isset( $_POST['woocommerce-register-nonce'] ) ? $_POST['woocommerce-register-nonce'] : $nonce_value;
+
+        if ( ! wp_verify_nonce( $nonce_value, 'woocommerce-register' ) ) {
+            return new WP_Error( 'nonce_verification_failed', __( 'Nonce verification failed', 'dokan-lite' ) );
+        }
+
         $allowed_roles = apply_filters( 'dokan_register_user_role', array( 'customer', 'seller' ) );
 
         // is the role name allowed or user is trying to manipulate?
