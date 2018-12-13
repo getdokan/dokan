@@ -30,8 +30,3 @@
 
     </tbody>
 </table>
-
-<!-- esc_html_e -->
-<!-- esc_attr_e -->
-<!-- wp_keses_post -->
-<!-- esc_html -->

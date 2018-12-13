@@ -420,15 +420,21 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
     public function get_total_review_count( $id, $post_type, $status ) {
         global $wpdb;
 
-        $total = $wpdb->get_var(
-            "SELECT COUNT(*)
+        // $sql = "SELECT COUNT(*)
+        //             FROM $wpdb->comments, $wpdb->posts
+        //             WHERE $wpdb->posts.post_author=%d AND
+        //             $wpdb->posts.post_status='publish' AND
+        //             $wpdb->comments.comment_post_ID=$wpdb->posts.ID AND
+        //             $wpdb->comments.comment_approved=%s AND
+        //             $wpdb->posts.post_type=%s";
+
+        $total = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*)
             FROM $wpdb->comments, $wpdb->posts
-            WHERE   $wpdb->posts.post_author='$id' AND
+            WHERE $wpdb->posts.post_author=%d AND
             $wpdb->posts.post_status='publish' AND
             $wpdb->comments.comment_post_ID=$wpdb->posts.ID AND
-            $wpdb->comments.comment_approved='$status' AND
-            $wpdb->posts.post_type='$post_type'"
-        );
+            $wpdb->comments.comment_approved=%s AND
+            $wpdb->posts.post_type=%s", $id, $status, $post_type ) );
 
         return intval( $total );
     }
