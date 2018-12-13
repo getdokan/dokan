@@ -23,10 +23,10 @@ class Dokan_Pageviews {
             jQuery(document).ready( function($) {
                 var data = {
                     action: "dokan_pageview",
-                    _ajax_nonce: "'. $nonce .'",
+                    _ajax_nonce: "'. esc_html( $nonce ) .'",
                     post_id: ' . get_the_ID() . ',
                 }
-                $.post( "' . admin_url( 'admin-ajax.php' ) . '", data );
+                $.post( "' . esc_url( admin_url( 'admin-ajax.php' ) ) . '", data );
             } );
             </script>';
     }
