@@ -2018,8 +2018,13 @@ function dokan_product_search_by_sku( $where ) {
         if ( is_numeric( $term ) ) {
             $search_ids[] = $term;
         }
+
         // Attempt to get a SKU
-        $sku_to_id = $wpdb->get_col( $wpdb->prepare( "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key='_sku' AND meta_value LIKE '%%%s%%';", wc_clean( $term ) ) );
+        $wild = '%';
+        $find = wc_clean( $term );
+        $like = $wild . $wpdb->esc_like( $find ) . $wild;
+
+        $sku_to_id = $wpdb->get_col( $wpdb->prepare( "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key='_sku' AND meta_value LIKE %s", $like ) );
 
         if ( $sku_to_id && sizeof( $sku_to_id ) > 0 ) {
             $search_ids = array_merge( $search_ids, $sku_to_id );
