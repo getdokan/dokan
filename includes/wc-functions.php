@@ -270,7 +270,7 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
     //enable reviews
     $comment_status = 'closed';
 
-    if ( $_POST['_enable_reviews'] == 'yes' ) {
+    if ( $data['_enable_reviews'] == 'yes' ) {
         $comment_status = 'open';
     }
 

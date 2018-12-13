@@ -155,10 +155,10 @@ class Insights {
         list( $this->slug, $mainfile) = explode( '/', $this->basename );
 
         // plugin deactivate popup
-        if ( ! $this->is_local_server() ) {
+        // if ( ! $this->is_local_server() ) {
             add_action( 'plugin_action_links_' . $this->basename, array( $this, 'plugin_action_links' ) );
             add_action( 'admin_footer', array( $this, 'deactivate_scripts' ) );
-        }
+        // }
 
         $this->init_common();
 
@@ -703,6 +703,10 @@ class Insights {
      */
     public function uninstall_reason_submission() {
 
+        if ( ! wp_verify_nonce( $_POST['nonce'], 'wedevs_insights_nonce' ) ) {
+            wp_send_json_error();
+        }
+
         if ( ! isset( $_POST['reason_id'] ) ) {
             wp_send_json_error();
         }
@@ -870,7 +874,8 @@ class Insights {
                             data: {
                                 action: '<?php echo $this->slug; ?>_submit-uninstall-reason',
                                 reason_id: ( 0 === $radio.length ) ? 'none' : $radio.val(),
-                                reason_info: ( 0 !== $input.length ) ? $input.val().trim() : ''
+                                reason_info: ( 0 !== $input.length ) ? $input.val().trim() : '',
+                                nonce: '<?php echo wp_create_nonce( 'wedevs_insights_nonce' ); ?>'
                             },
                             beforeSend: function() {
                                 button.addClass('disabled');
