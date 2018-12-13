@@ -146,7 +146,7 @@
                                         $product_query->the_post();
 
                                         $row_actions = dokan_product_get_row_action( $post );
-                                        $tr_class = ($post->post_status == 'pending' ) ? ' class="danger"' : '';
+                                        $tr_class = ( $post->post_status == 'pending' ) ? 'danger' : '';
                                         $view_class = ($post->post_status == 'pending' ) ? 'dokan-hide' : '';
                                         $product = wc_get_product( $post->ID );
 
