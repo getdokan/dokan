@@ -4,10 +4,10 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 <div class="dokan-panel dokan-panel-default">
 	<div class="dokan-panel-heading" style="overflow: hidden;">
 		<a class="title" data-toggle="collapse" data-parent="#accordion" href="#collapse-<?php echo esc_attr( $download->download_id ); ?>">
-			<?php echo '#' . absint( dokan_get_prop( $product, 'id' ) ) . ' &mdash; ' . apply_filters( 'woocommerce_admin_download_permissions_title', $product->get_title(), $download->product_id, $download->order_id, $download->order_key, $download->download_id ) . ' &mdash; ' . sprintf( __( 'File %d: %s', 'dokan-lite' ), $file_count, wc_get_filename_from_url( $product->get_file_download_path( $download->download_id ) ) ); ?>
+			<?php echo '#' . esc_attr( absint( dokan_get_prop( $product, 'id' ) ) ) . ' &mdash; ' . apply_filters( 'woocommerce_admin_download_permissions_title', $product->get_title(), $download->product_id, $download->order_id, $download->order_key, $download->download_id ) . ' &mdash; ' . sprintf( __( 'File %d: %s', 'dokan-lite' ), $file_count, wc_get_filename_from_url( $product->get_file_download_path( $download->download_id ) ) ); ?>
 		</a>
 
-		<button rel="<?php echo absint( $download->product_id ) . ',' . esc_attr( $download->download_id ); ?>" class="revoke_access btn btn-danger btn-sm pull-right" data-order-id="<?php echo $download->order_id; ?>" data-nonce="<?php echo wp_create_nonce( 'revoke-access' ); ?>"><?php _e( 'Revoke Access', 'dokan-lite' ); ?></button>
+		<button rel="<?php echo esc_attr( absint( $download->product_id ) ) . ',' . esc_attr( $download->download_id ); ?>" class="revoke_access btn btn-danger btn-sm pull-right" data-order-id="<?php echo esc_attr( $download->order_id ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'revoke-access' ) ); ?>"><?php _e( 'Revoke Access', 'dokan-lite' ); ?></button>
 	</div>
 
 	<div id="collapse-<?php echo esc_attr( $download->download_id ); ?>" class="panel-collapse collapse">
@@ -23,9 +23,9 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 						</td>
 						<td width="30%">
 							<label><?php esc_html_e( 'Downloads Remaining', 'dokan-lite' ); ?>:</label>
-							<input type="hidden" name="product_id[<?php echo esc_attr( $loop ); ?>]" value="<?php echo absint( $download->product_id ); ?>" />
+							<input type="hidden" name="product_id[<?php echo esc_attr( $loop ); ?>]" value="<?php echo esc_attr( absint( $download->product_id ) ); ?>" />
 							<input type="hidden" name="download_id[<?php echo esc_attr( $loop ); ?>]" value="<?php echo esc_attr( $download->download_id ); ?>" />
-							<input type="number" step="1" min="0" class="form-input" name="downloads_remaining[<?php echo $loop; ?>]" value="<?php echo esc_attr( $download->downloads_remaining ); ?>" placeholder="<?php _e( 'Unlimited', 'dokan-lite' ); ?>" />
+							<input type="number" step="1" min="0" class="form-input" name="downloads_remaining[<?php echo esc_attr( $loop ); ?>]" value="<?php echo esc_attr( $download->downloads_remaining ); ?>" placeholder="<?php esc_attr_e( 'Unlimited', 'dokan-lite' ); ?>" />
 						</td>
 						<td width="33%">
 							<label><?php esc_html_e( 'Access Expires', 'dokan-lite' ); ?>:</label>

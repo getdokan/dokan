@@ -35,9 +35,9 @@ if ( 'layout3' === $profile_layout ) {
 }
 
 ?>
-<div class="profile-frame<?php echo $no_banner_class; ?>">
+<div class="profile-frame<?php echo esc_attr( $no_banner_class ); ?>">
 
-    <div class="profile-info-box profile-layout-<?php echo $profile_layout; ?>">
+    <div class="profile-info-box profile-layout-<?php echo esc_attr( $profile_layout ); ?>">
         <?php if ( $store_user->get_banner() ) { ?>
             <img src="<?php echo esc_url( $store_user->get_banner() ); ?>"
                  alt="<?php echo esc_attr( $store_user->get_shop_name() ); ?>"
