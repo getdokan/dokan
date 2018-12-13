@@ -727,7 +727,7 @@ function dokan_get_seller_rating( $seller_id ) {
 function dokan_get_readable_seller_rating( $seller_id ) {
     $vendor = dokan()->vendor->get( $seller_id );
 
-    echo $vendor->get_readable_rating();
+    $vendor->get_readable_rating();
 }
 
 /**
@@ -1039,7 +1039,7 @@ function dokan_get_more_products_from_seller( $seller_id = 0, $posts_per_page = 
 
         woocommerce_product_loop_end();
     } else {
-        _e( 'No product has been found!', 'dokan' );
+        esc_html_e( 'No product has been found!', 'dokan' );
     }
 
     wp_reset_postdata();

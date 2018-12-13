@@ -85,10 +85,10 @@ class Dokan_Category_Widget extends WP_Widget {
 
         $title = apply_filters( 'widget_title', $instance['title'] );
 
-        echo $before_widget;
+        echo $before_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
 
         if ( ! empty( $title ) )
-            echo $args['before_title'] . $title . $args['after_title'];
+            echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
 
         ?>
             <div id="cat-drop-stack">
@@ -108,7 +108,7 @@ class Dokan_Category_Widget extends WP_Widget {
 
                 $walker = new Dokan_Category_Walker();
                 echo "<ul>";
-                echo call_user_func_array( array(&$walker, 'walk'), array($categories, 0, array()) );
+                echo call_user_func_array( array(&$walker, 'walk'), array( $categories, 0, array()) ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
                 echo "</ul>";
                 ?>
             </div>
@@ -141,7 +141,7 @@ class Dokan_Category_Widget extends WP_Widget {
         </script>
         <?php
 
-        echo $after_widget;
+        echo $after_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
     }
 
     /**
@@ -173,8 +173,8 @@ class Dokan_Category_Widget extends WP_Widget {
         $title = $instance['title'];
         ?>
         <p>
-            <label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'dokan-lite' ); ?></label>
-            <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
+            <label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'dokan-lite' ); ?></label>
+            <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
         </p>
         <?php
     }

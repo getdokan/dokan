@@ -46,12 +46,24 @@ class Dokan_Admin {
         $hide_notice = get_option( $offer_key, 'show' );
         $offer_link  = 'https://wedevs.com/dokan/?add-to-cart=15310&variation_id=15314&attribute_pa_license=professional&coupon_code=xmas30';
 
+        $allowed_html = array(
+            'p'       => array(),
+            'strong'  => array(),
+            'a'       => array(
+                'href'   => array(),
+                'title'  => array(),
+                'target' => array()
+            )
+        );
+
+        $content = __( '<p>Dokan is more affordable this Christmas! <strong>Save 30%%</strong> while building your dream multivendor marketplace. [Limited time ⏳] <a target="_blank" href="%s">Grab The Deal</a></p>', 'dokan-lite' );
+
         if ( 'hide' == $hide_notice || dokan()->is_pro_exists() ) {
             return;
         }
         ?>
             <div class="notice notice-success is-dismissible" id="dokan-christmas-notice">
-                <?php printf( __( '<p>Dokan is more affordable this Christmas! <strong>Save 30%%</strong> while building your dream multivendor marketplace. [Limited time ⏳] <a target="_blank" href="%s">Grab The Deal</a></p>', 'dokan-lite' ), $offer_link ); ?>
+                <?php printf( wp_kses( $content, $allowed_html ), esc_url( $offer_link ) ); ?>
             </div>
 
             <style>
@@ -249,13 +261,13 @@ class Dokan_Admin {
         }
         ?>
         <div id="message" class="updated">
-            <p><?php _e( '<strong>Dokan Data Update Required</strong> &#8211; We need to update your install to the latest version', 'dokan-lite' ); ?></p>
-            <p class="submit"><a href="<?php echo add_query_arg( 'dokan_do_update', 'true', admin_url( 'admin.php?page=dokan' ) ); ?>" class="dokan-update-btn button-primary"><?php _e( 'Run the updater', 'dokan-lite' ); ?></a></p>
+            <p><?php esc_html_e( '<strong>Dokan Data Update Required</strong> &#8211; We need to update your install to the latest version', 'dokan-lite' ); ?></p>
+            <p class="submit"><a href="<?php echo esc_url( add_query_arg( 'dokan_do_update', 'true', admin_url( 'admin.php?page=dokan' ) ) ); ?>" class="dokan-update-btn button-primary"><?php esc_html_e( 'Run the updater', 'dokan-lite' ); ?></a></p>
         </div>
 
         <script type="text/javascript">
             jQuery('.dokan-update-btn').click('click', function(){
-                return confirm( '<?php _e( 'It is strongly recommended that you backup your database before proceeding. Are you sure you wish to run the updater now?', 'dokan-lite' ); ?>' );
+                return confirm( '<?php esc_html_e( 'It is strongly recommended that you backup your database before proceeding. Are you sure you wish to run the updater now?', 'dokan-lite' ); ?>' );
             });
         </script>
     <?php

@@ -276,7 +276,7 @@ class Dokan_Template_Settings {
         }
 
         if ( !wp_verify_nonce( $_POST['_wpnonce'], 'dokan_settings_nonce' ) ) {
-            wp_die( __( 'Are you cheating?', 'dokan-lite' ) );
+            wp_die( esc_attr__( 'Are you cheating?', 'dokan-lite' ) );
         }
 
 
@@ -339,7 +339,7 @@ class Dokan_Template_Settings {
         }
 
         if ( !wp_verify_nonce( $_POST['_wpnonce'], 'dokan_profile_settings_nonce' ) ) {
-            wp_die( __( 'Are you cheating?', 'dokan-lite' ) );
+            wp_die( esc_attr__( 'Are you cheating?', 'dokan-lite' ) );
         }
 
         $error = new WP_Error();
@@ -378,7 +378,7 @@ class Dokan_Template_Settings {
         }
 
         if ( !wp_verify_nonce( $_POST['_wpnonce'], 'dokan_store_settings_nonce' ) ) {
-            wp_die( __( 'Are you cheating?', 'dokan-lite' ) );
+            wp_die( esc_attr__( 'Are you cheating?', 'dokan-lite' ) );
         }
 
         $error = new WP_Error();
@@ -425,7 +425,7 @@ class Dokan_Template_Settings {
         }
 
         if ( !wp_verify_nonce( $_POST['_wpnonce'], 'dokan_payment_settings_nonce' ) ) {
-            wp_die( __( 'Are you cheating?', 'dokan-lite' ) );
+            wp_die( esc_attr__( 'Are you cheating?', 'dokan-lite' ) );
         }
 
         $error = new WP_Error();

@@ -187,11 +187,11 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
         if ( isset( $_GET['action'] ) && $_GET['action'] == 'dokan_cancel_withdrow' ) {
 
             if ( !wp_verify_nonce( $_GET['_wpnonce'], 'dokan_cancel_withdrow' ) ) {
-                wp_die( __( 'Are you cheating?', 'dokan-lite' ) );
+                wp_die( esc_attr__( 'Are you cheating?', 'dokan-lite' ) );
             }
 
             if ( ! current_user_can( 'dokan_manage_withdraw' ) ) {
-                wp_die( __( 'You have no permission to do this action', 'dokan-lite' ) );
+                wp_die( esc_attr__( 'You have no permission to do this action', 'dokan-lite' ) );
             }
 
             global $current_user, $wpdb;
@@ -216,11 +216,11 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
         }
 
         if ( !wp_verify_nonce( $_POST['dokan_withdraw_nonce'], 'dokan_withdraw' ) ) {
-            wp_die( __( 'Are you cheating?', 'dokan-lite' ) );
+            wp_die( esc_attr__( 'Are you cheating?', 'dokan-lite' ) );
         }
 
         if ( ! current_user_can( 'dokan_manage_withdraw' ) ) {
-            wp_die( __( 'You have no permission to do this action', 'dokan-lite' ) );
+            wp_die( esc_attr__( 'You have no permission to do this action', 'dokan-lite' ) );
         }
 
         $error           = new WP_Error();

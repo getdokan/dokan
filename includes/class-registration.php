@@ -29,7 +29,7 @@ class Dokan_Registration {
     public function render_shortcode() {
 
         if ( is_user_logged_in() ) {
-            _e( 'You are already logged in', 'dokan-lite' );
+            esc_html_e( 'You are already logged in', 'dokan-lite' );
             return;
         }
 
