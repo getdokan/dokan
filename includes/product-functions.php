@@ -401,7 +401,7 @@ function dokan_search_seller_products( $term, $user_ids = false, $type = '', $in
             $users_where = " AND posts.post_author = '$user_ids'";
         }
     }
-    // phpcs:ignore WordPress.VIP.DirectDatabaseQuery.DirectQuery
+    // phpcs:ignore WordPress.DB.PreparedSQL
     $product_ids = $wpdb->get_col(
         // phpcs:disable
         $wpdb->prepare( "
