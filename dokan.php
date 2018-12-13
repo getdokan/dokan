@@ -293,6 +293,9 @@ final class WeDevs_Dokan {
         require_once $inc_dir . 'functions-depricated.php';
         require_once $inc_dir . 'functions-compatibility.php';
 
+        // Traits
+        require_once $inc_dir . 'traits/singleton.php';
+
         // widgets
         require_once $inc_dir . 'widgets/menu-category.php';
         require_once $inc_dir . 'widgets/bestselling-product.php';
