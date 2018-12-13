@@ -385,7 +385,7 @@ class Dokan_Ajax {
                 echo 'customer-note';
             }
             echo '"><div class="note_content">';
-            echo wpautop( wptexturize( esc_textarea( $note ) ) );
+            echo wpautop( wptexturize( $note ) ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
             echo '</div><p class="meta"><a href="#" class="delete_note">'.esc_html__( 'Delete note', 'dokan-lite' ).'</a></p>';
             echo '</li>';
         }
@@ -453,7 +453,7 @@ class Dokan_Ajax {
                 echo 'customer-note';
             //}
             echo '"><div class="note_content">';
-            echo wpautop( wptexturize( esc_textarea( $ship_info ) ) );
+            echo wpautop( wptexturize( $ship_info ) ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
             echo '</div><p class="meta"><a href="#" class="delete_note">'. esc_html__( 'Delete', 'dokan-lite' ).'</a></p>';
             echo '</li>';
 

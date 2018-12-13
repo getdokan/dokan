@@ -65,10 +65,10 @@ get_header( 'shop' );
                 <?php
                 if( ! empty( $vendor->get_store_tnc() ) ):
                 ?>
-                    <h2 class="headline"><?php _e( 'Terms And Conditions', 'dokan-lite' ); ?></h2>
+                    <h2 class="headline"><?php esc_html_e( 'Terms And Conditions', 'dokan-lite' ); ?></h2>
                     <div>
                         <?php
-                        echo nl2br( $vendor->get_store_tnc() );
+                        echo esc_html( nl2br( $vendor->get_store_tnc() ) );
                         ?>
                     </div>
                 <?php

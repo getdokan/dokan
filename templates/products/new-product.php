@@ -63,7 +63,7 @@
                     <div class="dokan-alert dokan-alert-success">
                         <a class="dokan-close" data-dismiss="alert">&times;</a>
                         <strong><?php esc_html_e( 'Success!', 'dokan-lite' ); ?></strong>
-                        <?php echo sprintf( __( 'You have successfully created <a href="%s"><strong>%s</strong></a> product', 'dokan-lite' ), esc_url( dokan_edit_product_url( intval( $_GET['created_product'] ) ) ), get_the_title( intval( $_GET['created_product'] ) ) ); ?>
+                        <?php printf( __( 'You have successfully created <a href="%s"><strong>%s</strong></a> product', 'dokan-lite' ), esc_url( dokan_edit_product_url( intval( $_GET['created_product'] ) ) ), get_the_title( intval( $_GET['created_product'] ) ) ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped ?>
                     </div>
                 <?php endif ?>
 
@@ -147,23 +147,23 @@
                                     <div class="dokan-form-group">
                                         <div class="dokan-form-group dokan-clearfix dokan-price-container">
                                             <div class="content-half-part">
-                                                <label for="_regular_price" class="dokan-form-label"><?php _e( 'Price', 'dokan-lite' ); ?></label>
+                                                <label for="_regular_price" class="dokan-form-label"><?php esc_html_e( 'Price', 'dokan-lite' ); ?></label>
                                                 <div class="dokan-input-group">
                                                     <span class="dokan-input-group-addon"><?php echo esc_attr__( get_woocommerce_currency_symbol() ); ?></span>
-                                                    <input type="number" class="dokan-form-control dokan-product-regular-price" name="_regular_price" placeholder="0.00" value="<?php echo dokan_posted_input('_regular_price') ?>" min="0" step="any">
+                                                    <input type="number" class="dokan-form-control dokan-product-regular-price" name="_regular_price" placeholder="0.00" value="<?php echo esc_attr( dokan_posted_input( '_regular_price' ) ) ?>" min="0" step="any">
                                                 </div>
                                             </div>
 
                                             <div class="content-half-part sale-price">
                                                 <label for="_sale_price" class="form-label">
-                                                    <?php _e( 'Discounted Price', 'dokan-lite' ); ?>
-                                                    <a href="#" class="sale_schedule"><?php _e( 'Schedule', 'dokan-lite' ); ?></a>
-                                                    <a href="#" class="cancel_sale_schedule dokan-hide"><?php _e( 'Cancel', 'dokan-lite' ); ?></a>
+                                                    <?php esc_html_e( 'Discounted Price', 'dokan-lite' ); ?>
+                                                    <a href="#" class="sale_schedule"><?php esc_html_e( 'Schedule', 'dokan-lite' ); ?></a>
+                                                    <a href="#" class="cancel_sale_schedule dokan-hide"><?php esc_html_e( 'Cancel', 'dokan-lite' ); ?></a>
                                                 </label>
 
                                                 <div class="dokan-input-group">
                                                     <span class="dokan-input-group-addon"><?php echo esc_attr__( get_woocommerce_currency_symbol() ); ?></span>
-                                                    <input type="number" class="dokan-form-control dokan-product-sales-price" name="_sale_price" placeholder="0.00" value="<?php echo dokan_posted_input('_sale_price') ?>" min="0" step="any">
+                                                    <input type="number" class="dokan-form-control dokan-product-sales-price" name="_sale_price" placeholder="0.00" value="<?php echo esc_attr( dokan_posted_input( '_sale_price' ) ) ?>" min="0" step="any">
                                                 </div>
                                             </div>
                                         </div>
@@ -186,7 +186,7 @@
                                     </div>
 
                                     <div class="dokan-form-group">
-                                        <textarea name="post_excerpt" id="post-excerpt" rows="5" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Short description of the product...', 'dokan-lite' ); ?>"><?php echo dokan_posted_textarea( 'post_excerpt' ); ?></textarea>
+                                        <textarea name="post_excerpt" id="post-excerpt" rows="5" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Short description of the product...', 'dokan-lite' ); ?>"><?php echo esc_attr( dokan_posted_textarea( 'post_excerpt' ) ); ?></textarea>
                                     </div>
 
                                     <?php if ( dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) == 'single' ): ?>
@@ -234,7 +234,7 @@
                                                 'walker'           => new DokanTaxonomyWalker()
                                             ) ) );
 
-                                            echo str_replace( '<select', '<select data-placeholder="'.esc_attr__( 'Select product category', 'dokan-lite' ).'" multiple="multiple" ', $drop_down_category );
+                                            echo str_replace( '<select', '<select data-placeholder="'.esc_attr__( 'Select product category', 'dokan-lite' ).'" multiple="multiple" ', $drop_down_category ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
                                             ?>
                                         </div>
                                     <?php endif; ?>
@@ -261,7 +261,7 @@
                                             'walker'           => new DokanTaxonomyWalker()
                                         ) );
 
-                                        echo str_replace( '<select', '<select data-placeholder="'.esc_attr__( 'Select product tags', 'dokan-lite' ).'" multiple="multiple" ', $drop_down_tags );
+                                        echo str_replace( '<select', '<select data-placeholder="'.esc_attr__( 'Select product tags', 'dokan-lite' ).'" multiple="multiple" ', $drop_down_tags ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
                                         ?>
                                     </div>
                                 </div>

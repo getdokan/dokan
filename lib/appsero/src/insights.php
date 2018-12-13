@@ -884,10 +884,10 @@ class Insights {
                             url: ajaxurl,
                             type: 'POST',
                             data: {
-                                action: '<?php echo $this->slug; ?>_submit-uninstall-reason',
+                                action: '<?php echo esc_attr( $this->slug ); ?>_submit-uninstall-reason',
                                 reason_id: ( 0 === $radio.length ) ? 'none' : $radio.val(),
                                 reason_info: ( 0 !== $input.length ) ? $input.val().trim() : '',
-                                nonce: '<?php echo wp_create_nonce( 'wedevs_insights_nonce' ); ?>'
+                                nonce: '<?php echo wp_create_nonce( 'wedevs_insights_nonce' ); ?>' // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
                             },
                             beforeSend: function() {
                                 button.addClass('disabled');

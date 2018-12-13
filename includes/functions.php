@@ -674,7 +674,7 @@ function dokan_post_input_box( $post_id, $meta_key, $attr = array(), $type = 'te
 
             <label class="<?php echo esc_attr( $class ); ?>" for="<?php echo esc_attr( $name ); ?>">
                 <input type="hidden" name="<?php echo esc_attr( $name ); ?>" value="no">
-                <input name="<?php echo $name; ?>" id="<?php echo esc_attr( $name ); ?>" value="yes" type="checkbox"<?php checked( $value, 'yes' ); ?>>
+                <input name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $name ); ?>" value="yes" type="checkbox"<?php checked( $value, 'yes' ); ?>>
                 <?php echo esc_html( $label ); ?>
             </label>
 
@@ -697,7 +697,7 @@ function dokan_post_input_box( $post_id, $meta_key, $attr = array(), $type = 'te
             $min = isset( $attr['min'] ) ? $attr['min'] : 0;
             $step = isset( $attr['step'] ) ? $attr['step'] : 'any';
             ?>
-            <input <?php echo $required; ?> type="number" name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $name ); ?>" value="<?php echo esc_attr( $value ); ?>" class="<?php echo esc_attr( $class ); ?>" placeholder="<?php echo esc_attr( $placeholder ); ?>" min="<?php echo esc_attr( $min ); ?>" step="<?php echo esc_attr( $step ); ?>" size="<?php echo esc_attr( $size ); ?>">
+            <input <?php echo esc_attr( $required ); ?> type="number" name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $name ); ?>" value="<?php echo esc_attr( $value ); ?>" class="<?php echo esc_attr( $class ); ?>" placeholder="<?php echo esc_attr( $placeholder ); ?>" min="<?php echo esc_attr( $min ); ?>" step="<?php echo esc_attr( $step ); ?>" size="<?php echo esc_attr( $size ); ?>">
             <?php
             break;
 
@@ -1979,7 +1979,7 @@ function dokan_product_listing_filter_months_dropdown( $user_id ) {
             selected( $date, $year . $month, false ),
             esc_attr( $year . $month ),
             /* translators: 1: month name, 2: 4-digit year */
-            sprintf( __( '%1$s %2$d', 'dokan-lite' ), esc_html( $wp_locale->get_month( $month ) ), esc_html( $year ) )
+            sprintf( esc_html__( '%1$s %2$d', 'dokan-lite' ), esc_html( $wp_locale->get_month( $month ) ), esc_html( $year ) ) // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
         );
     }
     ?>
