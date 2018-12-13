@@ -11,5 +11,5 @@
     <?php if ( $deleted ): ?>
         <button type="button" class="dokan-close" data-dismiss="alert">&times;</button>
     <?php endif ?>
-    <strong><?php echo esc_html( $message ); ?></strong>
+    <strong><?php echo $message; ?></strong>
 </div>
