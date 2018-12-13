@@ -4,37 +4,44 @@
  * Save the product data meta box.
  *
  * @access public
- * @param mixed $post_id
+ *
+ * @param int $post_id
+ * @param array $data
+ *
  * @return void
  */
-function dokan_process_product_meta( $post_id ) {
+function dokan_process_product_meta( $post_id, $data = [] ) {
+
+    if ( ! $post_id || ! $data ) {
+        return;
+    }
+
     global $wpdb, $woocommerce, $woocommerce_errors;
 
-    $product_type = empty( $_POST['product_type'] ) ? 'simple' : stripslashes( $_POST['product_type'] );
+    $product_type = empty( $data['product_type'] ) ? 'simple' : stripslashes( $data['product_type'] );
 
     // Add any default post meta
     add_post_meta( $post_id, 'total_sales', '0', true );
 
-    $is_downloadable    = isset( $_POST['_downloadable'] ) ? 'yes' : 'no';
-    $is_virtual         = isset( $_POST['_virtual'] ) ? 'yes' : 'no';
+    $is_downloadable = isset( $data['_downloadable'] ) ? 'yes' : 'no';
+    $is_virtual      = isset( $data['_virtual'] ) ? 'yes' : 'no';
 
     // Product type + Downloadable/Virtual
     update_post_meta( $post_id, '_downloadable', $is_downloadable );
     update_post_meta( $post_id, '_virtual', $is_virtual );
 
     // Gallery Images
-    $attachment_ids = array_filter( explode( ',', wc_clean( $_POST['product_image_gallery'] ) ) );
+    $attachment_ids = array_filter( explode( ',', wc_clean( $data['product_image_gallery'] ) ) );
     update_post_meta( $post_id, '_product_image_gallery', implode( ',', $attachment_ids ) );
 
     // Check product visibility and purchaces note
-    $_POST['_visibility'] = isset( $_POST['_visibility'] ) ? $_POST['_visibility'] : '';
-    $_POST['_purchase_note'] = isset( $_POST['_purchase_note'] ) ? $_POST['_purchase_note'] : '';
-
+    $data['_visibility']    = isset( $data['_visibility'] ) ? $data['_visibility'] : '';
+    $data['_purchase_note'] = isset( $data['_purchase_note'] ) ? $data['_purchase_note'] : '';
 
     // Set visibiliy for WC 3.0.0+
     $terms = array();
 
-    switch ( $_POST['_visibility'] ) {
+    switch ( $data['_visibility'] ) {
         case 'hidden' :
             $terms[] = 'exclude-from-search';
             $terms[] = 'exclude-from-catalog';
@@ -56,34 +63,34 @@ function dokan_process_product_meta( $post_id ) {
     }
 
     wp_set_post_terms( $post_id, $terms, 'product_visibility', false );
-    update_post_meta( $post_id, '_visibility', stripslashes( $_POST['_visibility'] ) );
+    update_post_meta( $post_id, '_visibility', stripslashes( $data['_visibility'] ) );
 
     // Update post meta
-    if ( isset( $_POST['_regular_price'] ) ) {
-        update_post_meta( $post_id, '_regular_price', ( $_POST['_regular_price'] === '' ) ? '' : wc_format_decimal( $_POST['_regular_price'] ) );
+    if ( isset( $data['_regular_price'] ) ) {
+        update_post_meta( $post_id, '_regular_price', ( $data['_regular_price'] === '' ) ? '' : wc_format_decimal( $data['_regular_price'] ) );
     }
 
-    if ( isset( $_POST['_sale_price'] ) ) {
-        update_post_meta( $post_id, '_sale_price', ( $_POST['_sale_price'] === '' ? '' : wc_format_decimal( $_POST['_sale_price'] ) ) );
+    if ( isset( $data['_sale_price'] ) ) {
+        update_post_meta( $post_id, '_sale_price', ( $data['_sale_price'] === '' ? '' : wc_format_decimal( $data['_sale_price'] ) ) );
     }
 
     // Update post meta
-    if ( isset( $_POST['_tax_status'] ) ) {
-        update_post_meta( $post_id, '_tax_status', wc_clean( $_POST['_tax_status'] ) );
+    if ( isset( $data['_tax_status'] ) ) {
+        update_post_meta( $post_id, '_tax_status', wc_clean( $data['_tax_status'] ) );
     }
 
-    if ( isset( $_POST['_tax_class'] ) ) {
-        update_post_meta( $post_id, '_tax_class', wc_clean( $_POST['_tax_class'] ) );
+    if ( isset( $data['_tax_class'] ) ) {
+        update_post_meta( $post_id, '_tax_class', wc_clean( $data['_tax_class'] ) );
     }
 
-    if ( isset( $_POST['_purchase_note'] ) ) {
-        update_post_meta( $post_id, '_purchase_note', wp_kses_post( stripslashes( $_POST['_purchase_note'] ) ) );
+    if ( isset( $data['_purchase_note'] ) ) {
+        update_post_meta( $post_id, '_purchase_note', wp_kses_post( stripslashes( $data['_purchase_note'] ) ) );
     }
 
 
     // Unique SKU
     $sku     = get_post_meta( $post_id, '_sku', true );
-    $new_sku = (string) wc_clean( $_POST['_sku'] );
+    $new_sku = (string) wc_clean( $data['_sku'] );
 
     if ( '' == $new_sku ) {
         update_post_meta( $post_id, '_sku', '' );
@@ -104,21 +111,21 @@ function dokan_process_product_meta( $post_id ) {
     // Save Attributes
     $attributes = array();
 
-    if ( isset( $_POST['attribute_names'] ) && isset( $_POST['attribute_values'] ) ) {
+    if ( isset( $data['attribute_names'] ) && isset( $data['attribute_values'] ) ) {
 
-        $attribute_names  = $_POST['attribute_names'];
-        $attribute_values = $_POST['attribute_values'];
+        $attribute_names  = $data['attribute_names'];
+        $attribute_values = $data['attribute_values'];
 
-        if ( isset( $_POST['attribute_visibility'] ) ) {
-            $attribute_visibility = $_POST['attribute_visibility'];
+        if ( isset( $data['attribute_visibility'] ) ) {
+            $attribute_visibility = $data['attribute_visibility'];
         }
 
-        if ( isset( $_POST['attribute_variation'] ) ) {
-            $attribute_variation = $_POST['attribute_variation'];
+        if ( isset( $data['attribute_variation'] ) ) {
+            $attribute_variation = $data['attribute_variation'];
         }
 
-        $attribute_is_taxonomy   = $_POST['attribute_is_taxonomy'];
-        $attribute_position      = $_POST['attribute_position'];
+        $attribute_is_taxonomy   = $data['attribute_is_taxonomy'];
+        $attribute_position      = $data['attribute_position'];
         $attribute_names_max_key = max( array_keys( $attribute_names ) );
 
         for ( $i = 0; $i <= $attribute_names_max_key; $i++ ) {
@@ -199,6 +206,7 @@ function dokan_process_product_meta( $post_id ) {
 
         }
     }
+
     uasort( $attributes, 'wc_product_attribute_uasort_comparison' );
 
     /**
@@ -225,10 +233,10 @@ function dokan_process_product_meta( $post_id ) {
         update_post_meta( $post_id, '_sale_price_dates_to', '' );
     } else {
         // Sales and prices
-        $date_from     = (string) isset( $_POST['_sale_price_dates_from'] ) ? wc_clean( $_POST['_sale_price_dates_from'] ) : '';
-        $date_to       = (string) isset( $_POST['_sale_price_dates_to'] ) ? wc_clean( $_POST['_sale_price_dates_to'] )     : '';
-        $regular_price = (string) isset( $_POST['_regular_price'] ) ? wc_clean( $_POST['_regular_price'] )                 : '';
-        $sale_price    = (string) isset( $_POST['_sale_price'] ) ? wc_clean( $_POST['_sale_price'] )                       : '';
+        $date_from     = (string) isset( $data['_sale_price_dates_from'] ) ? wc_clean( $data['_sale_price_dates_from'] ) : '';
+        $date_to       = (string) isset( $data['_sale_price_dates_to'] ) ? wc_clean( $data['_sale_price_dates_to'] )     : '';
+        $regular_price = (string) isset( $data['_regular_price'] ) ? wc_clean( $data['_regular_price'] )                 : '';
+        $sale_price    = (string) isset( $data['_sale_price'] ) ? wc_clean( $data['_sale_price'] )                       : '';
 
         update_post_meta( $post_id, '_regular_price', '' === $regular_price ? '' : wc_format_decimal( $regular_price ) );
         update_post_meta( $post_id, '_sale_price', '' === $sale_price ? '' : wc_format_decimal( $sale_price ) );
@@ -268,24 +276,24 @@ function dokan_process_product_meta( $post_id ) {
 
     // Update the post into the database
     wp_update_post( array(
-        'ID'           => $post_id,
+        'ID'             => $post_id,
         'comment_status' => $comment_status,
     ) );
 
     // Sold Individually
-    if ( ! empty( $_POST['_sold_individually'] ) ) {
+    if ( ! empty( $data['_sold_individually'] ) ) {
         update_post_meta( $post_id, '_sold_individually', 'yes' );
     } else {
         update_post_meta( $post_id, '_sold_individually', '' );
     }
 
     // Stock Data
-    $manage_stock      = ! empty( $_POST['_manage_stock'] ) && 'grouped' !== $product_type ? 'yes' : 'no';
-    $backorders        = ! empty( $_POST['_backorders'] ) && 'yes' === $manage_stock ? wc_clean( $_POST['_backorders'] ) : 'no';
-    $stock_status      = ! empty( $_POST['_stock_status'] ) ? wc_clean( $_POST['_stock_status'] ) : 'instock';
-    $stock_amount      = isset( $_POST['_stock'] ) ? $_POST['_stock'] : '';
+    $manage_stock      = ! empty( $data['_manage_stock'] ) && 'grouped' !== $product_type ? 'yes' : 'no';
+    $backorders        = ! empty( $data['_backorders'] ) && 'yes' === $manage_stock ? wc_clean( $data['_backorders'] ) : 'no';
+    $stock_status      = ! empty( $data['_stock_status'] ) ? wc_clean( $data['_stock_status'] ) : 'instock';
+    $stock_amount      = isset( $data['_stock'] ) ? $data['_stock'] : '';
     $stock_amount      = 'yes' === $manage_stock ? wc_stock_amount( wp_unslash( $stock_amount ) ) : '';
-    $_low_stock_amount = isset( $_POST['_low_stock_amount'] ) ? $_POST['_low_stock_amount'] : '';
+    $_low_stock_amount = isset( $data['_low_stock_amount'] ) ? $data['_low_stock_amount'] : '';
     $_low_stock_amount = 'yes' === $manage_stock ? wc_stock_amount( wp_unslash( $_low_stock_amount ) ) : '';
 
     // Stock Data
@@ -294,7 +302,7 @@ function dokan_process_product_meta( $post_id ) {
         $manage_stock = 'no';
         $backorders   = 'no';
         $stock        = '';
-        $stock_status = wc_clean( $_POST['_stock_status'] );
+        $stock_status = wc_clean( $data['_stock_status'] );
 
         if ( 'external' === $product_type ) {
 
@@ -305,14 +313,14 @@ function dokan_process_product_meta( $post_id ) {
             // Stock status is always determined by children so sync later
             $stock_status = '';
 
-            if ( ! empty( $_POST['_manage_stock'] ) && $_POST['_manage_stock'] == 'yes' ) {
+            if ( ! empty( $data['_manage_stock'] ) && $data['_manage_stock'] == 'yes' ) {
                 $manage_stock = 'yes';
-                $backorders   = wc_clean( $_POST['_backorders'] );
+                $backorders   = wc_clean( $data['_backorders'] );
             }
 
-        } elseif ( 'grouped' !== $product_type && ! empty( $_POST['_manage_stock'] ) ) {
-            $manage_stock = $_POST['_manage_stock'];
-            $backorders   = wc_clean( $_POST['_backorders'] );
+        } elseif ( 'grouped' !== $product_type && ! empty( $data['_manage_stock'] ) ) {
+            $manage_stock = $data['_manage_stock'];
+            $backorders   = wc_clean( $data['_backorders'] );
         }
 
         update_post_meta( $post_id, '_manage_stock', $manage_stock );
@@ -322,7 +330,7 @@ function dokan_process_product_meta( $post_id ) {
             wc_update_product_stock_status( $post_id, $stock_status );
         }
 
-        if ( ! empty( $_POST['_manage_stock'] ) ) {
+        if ( ! empty( $data['_manage_stock'] ) ) {
 
             if ( 'variable' === $product_type ) {
                 update_post_meta( $post_id, '_stock', $stock_amount );
@@ -337,26 +345,26 @@ function dokan_process_product_meta( $post_id ) {
         }
 
     } else {
-        wc_update_product_stock_status( $post_id, wc_clean( $_POST['_stock_status'] ) );
+        wc_update_product_stock_status( $post_id, wc_clean( $data['_stock_status'] ) );
     }
 
     // Downloadable options
     if ( 'yes' ==  $is_downloadable  ) {
+        $_download_limit = absint( $data['_download_limit'] );
 
-        $_download_limit = absint( $_POST['_download_limit'] );
         if ( ! $_download_limit )
             $_download_limit = ''; // 0 or blank = unlimited
 
-        $_download_expiry = absint( $_POST['_download_expiry'] );
+        $_download_expiry = absint( $data['_download_expiry'] );
         if ( ! $_download_expiry )
             $_download_expiry = ''; // 0 or blank = unlimited
 
         // file paths will be stored in an array keyed off md5(file path)
-        if ( isset( $_POST['_wc_file_urls'] ) ) {
+        if ( isset( $data['_wc_file_urls'] ) ) {
             $files = array();
 
-            $file_names    = isset( $_POST['_wc_file_names'] ) ? array_map( 'wc_clean', $_POST['_wc_file_names'] ) : array();
-            $file_urls     = isset( $_POST['_wc_file_urls'] ) ? array_map( 'esc_url_raw', array_map( 'trim', $_POST['_wc_file_urls'] ) ) : array();
+            $file_names    = isset( $data['_wc_file_names'] ) ? array_map( 'wc_clean', $data['_wc_file_names'] ) : array();
+            $file_urls     = isset( $data['_wc_file_urls'] ) ? array_map( 'esc_url_raw', array_map( 'trim', $data['_wc_file_urls'] ) ) : array();
             $file_url_size = sizeof( $file_urls );
 
             for ( $i = 0; $i < $file_url_size; $i ++ ) {
@@ -376,15 +384,15 @@ function dokan_process_product_meta( $post_id ) {
         update_post_meta( $post_id, '_download_limit', $_download_limit );
         update_post_meta( $post_id, '_download_expiry', $_download_expiry );
 
-        if ( isset( $_POST['_download_limit'] ) ) {
+        if ( isset( $data['_download_limit'] ) ) {
             update_post_meta( $post_id, '_download_limit', esc_attr( $_download_limit ) );
         }
-        if ( isset( $_POST['_download_expiry'] ) ) {
+        if ( isset( $data['_download_expiry'] ) ) {
             update_post_meta( $post_id, '_download_expiry', esc_attr( $_download_expiry ) );
         }
 
-        if ( isset( $_POST['_download_type'] ) ) {
-            update_post_meta( $post_id, '_download_type', wc_clean( $_POST['_download_type'] ) );
+        if ( isset( $data['_download_type'] ) ) {
+            update_post_meta( $post_id, '_download_type', wc_clean( $data['_download_type'] ) );
         }
     }
 
