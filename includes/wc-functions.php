@@ -471,11 +471,10 @@ function dokan_process_product_file_download_paths( $product_id, $variation_id, 
 function dokan_sub_order_get_total_coupon( $order_id ) {
     global $wpdb;
 
-    $sql = $wpdb->prepare( "SELECT SUM(oim.meta_value) FROM {$wpdb->prefix}woocommerce_order_itemmeta oim
+    $result = $wpdb->get_var( $wpdb->prepare( "SELECT SUM(oim.meta_value) FROM {$wpdb->prefix}woocommerce_order_itemmeta oim
             LEFT JOIN {$wpdb->prefix}woocommerce_order_items oi ON oim.order_item_id = oi.order_item_id
-            WHERE oi.order_id = %d AND oi.order_item_type = 'coupon'", $order_id );
+            WHERE oi.order_id = %d AND oi.order_item_type = 'coupon'", $order_id ) );
 
-    $result = $wpdb->get_var( $sql );
     if ( $result ) {
         return $result;
     }

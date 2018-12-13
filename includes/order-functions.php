@@ -61,22 +61,23 @@ function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = NUL
 
     if ( $orders === false ) {
         $status_where = ( $status == 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', $status );
-        $date_query = ( $order_date ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $order_date ) : '';
-        $sql = "SELECT do.order_id, p.post_date
-                FROM {$wpdb->prefix}dokan_orders AS do
-                LEFT JOIN $wpdb->posts p ON do.order_id = p.ID
-                {$join}
-                WHERE
-                    do.seller_id = %d AND
-                    {$where}
-                    p.post_status != 'trash'
-                    $date_query
-                    $status_where
-                GROUP BY do.order_id
-                ORDER BY p.post_date DESC
-                LIMIT $offset, $limit";
+        $date_query   = ( $order_date ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $order_date ) : '';
 
-        $orders = $wpdb->get_results( $wpdb->prepare( $sql, $seller_id ) );
+        $orders = $wpdb->get_results( $wpdb->prepare( "SELECT do.order_id, p.post_date
+            FROM {$wpdb->prefix}dokan_orders AS do
+            LEFT JOIN $wpdb->posts p ON do.order_id = p.ID
+            {$join}
+            WHERE
+                do.seller_id = %d AND
+                {$where}
+                p.post_status != 'trash'
+                {$date_query}
+                {$status_where}
+            GROUP BY do.order_id
+            ORDER BY p.post_date DESC
+            LIMIT %d, %d", $seller_id, $offset, $limit
+        ) );
+
         wp_cache_set( $cache_key, $orders, $cache_group );
         dokan_cache_update_group( $cache_key, $cache_group );
     }
@@ -115,18 +116,18 @@ function dokan_get_seller_orders_by_date( $start_date, $end_date, $seller_id = f
         }
 
         $date_query = $wpdb->prepare( ' AND DATE( p.post_date ) >= %s AND DATE( p.post_date ) <= %s', $start_date, $end_date );
-        $sql = "SELECT do.*, p.post_date
-                FROM {$wpdb->prefix}dokan_orders AS do
-                LEFT JOIN $wpdb->posts p ON do.order_id = p.ID
-                WHERE
-                    do.seller_id = %d AND
-                    p.post_status != 'trash'
-                    $date_query
-                    $status_where
-                GROUP BY do.order_id
-                ORDER BY p.post_date ASC";
 
-        $orders = $wpdb->get_results( $wpdb->prepare( $sql, $seller_id ) );
+        $orders = $wpdb->get_results( $wpdb->prepare( "SELECT do.*, p.post_date
+            FROM {$wpdb->prefix}dokan_orders AS do
+            LEFT JOIN $wpdb->posts p ON do.order_id = p.ID
+            WHERE
+                do.seller_id = %d AND
+                p.post_status != 'trash'
+                {$date_query}
+                {$status_where}
+            GROUP BY do.order_id
+            ORDER BY p.post_date ASC", $seller_id
+        ) );
 
         wp_cache_set( $cache_key, $orders, $cache_group, 3600*2 );
         dokan_cache_update_group( $cache_key, $cache_group );
@@ -151,15 +152,14 @@ function dokan_get_seller_withdraw_by_date( $start_date, $end_date, $seller_id =
     $withdraw_status_where = $wpdb->prepare( ' AND status = %d', 1 );
     $withdraw_date_query   = $wpdb->prepare( ' AND DATE( date ) >= %s AND DATE( date ) <= %s', $start_date, $end_date );
 
-    $withdraw_sql = "SELECT *
-            FROM {$wpdb->prefix}dokan_withdraw
-            WHERE
-                user_id = %d
-                $withdraw_date_query
-                $withdraw_status_where
-            ORDER BY date ASC";
-
-    return $wpdb->get_results( $wpdb->prepare( $withdraw_sql, $seller_id ) );
+    return $wpdb->get_results( $wpdb->prepare( "SELECT *
+        FROM {$wpdb->prefix}dokan_withdraw
+        WHERE
+            user_id = %d
+            {$withdraw_date_query}
+            {$withdraw_status_where}
+        ORDER BY date ASC", $seller_id
+    ) );
 }
 
 /**
@@ -173,21 +173,20 @@ function dokan_get_seller_orders_number( $seller_id, $status = 'all' ) {
     global $wpdb;
 
     $cache_group = 'dokan_seller_data_'.$seller_id;
-    $cache_key = 'dokan-seller-orders-count-' . $status . '-' . $seller_id;
-    $count = wp_cache_get( $cache_key, $cache_group );
+    $cache_key   = 'dokan-seller-orders-count-' . $status . '-' . $seller_id;
+    $count       = wp_cache_get( $cache_key, $cache_group );
 
     if ( $count === false ) {
         $status_where = ( $status == 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', $status );
 
-        $sql = "SELECT COUNT(do.order_id) as count
+        $result = $wpdb->get_row( $wpdb->prepare( "SELECT COUNT(do.order_id) as count
                 FROM {$wpdb->prefix}dokan_orders AS do
                 LEFT JOIN $wpdb->posts p ON do.order_id = p.ID
                 WHERE
                     do.seller_id = %d AND
                     p.post_status != 'trash'
-                    $status_where";
+                    {$status_where}", $seller_id ) );
 
-        $result = $wpdb->get_row( $wpdb->prepare( $sql, $seller_id ) );
         $count  = $result->count;
 
         wp_cache_set( $cache_key, $count, $cache_group );
@@ -206,17 +205,15 @@ function dokan_get_seller_orders_number( $seller_id, $status = 'all' ) {
  */
 function dokan_is_seller_has_order( $seller_id, $order_id ) {
     global $wpdb;
-
-    $sql = "SELECT do.order_id, p.post_date
-            FROM {$wpdb->prefix}dokan_orders AS do
-            LEFT JOIN $wpdb->posts p ON do.order_id = p.ID
-            WHERE
-                do.seller_id = %d AND
-                p.post_status != 'trash' AND
-                do.order_id = %d
-            GROUP BY do.order_id";
-
-    return $wpdb->get_row( $wpdb->prepare( $sql, $seller_id, $order_id ) );
+    return $wpdb->get_row( $wpdb->prepare( "SELECT do.order_id, p.post_date
+        FROM {$wpdb->prefix}dokan_orders AS do
+        LEFT JOIN $wpdb->posts p ON do.order_id = p.ID
+        WHERE
+            do.seller_id = %d AND
+            p.post_status != 'trash' AND
+            do.order_id = %d
+        GROUP BY do.order_id", $seller_id, $order_id
+    ) );
 }
 
 /**
@@ -236,15 +233,14 @@ function dokan_count_orders( $user_id ) {
     if ( $counts === false ) {
         $counts = array('wc-pending' => 0, 'wc-completed' => 0, 'wc-on-hold' => 0, 'wc-processing' => 0, 'wc-refunded' => 0, 'wc-cancelled' => 0, 'total' => 0);
 
-        $sql = "SELECT do.order_status
-                FROM {$wpdb->prefix}dokan_orders AS do
-                LEFT JOIN $wpdb->posts p ON do.order_id = p.ID
-                WHERE
-                    do.seller_id = %d AND
-                    p.post_type = 'shop_order' AND
-                    p.post_status != 'trash'";
-
-        $results = $wpdb->get_results( $wpdb->prepare( $sql, $user_id ) );
+        $results = $wpdb->get_results( $wpdb->prepare( "SELECT do.order_status
+            FROM {$wpdb->prefix}dokan_orders AS do
+            LEFT JOIN $wpdb->posts p ON do.order_id = p.ID
+            WHERE
+                do.seller_id = %d AND
+                p.post_type = 'shop_order' AND
+                p.post_status != 'trash'", $user_id
+        ) );
 
         if ($results) {
             $total = 0;
@@ -385,13 +381,12 @@ add_action( 'dokan_checkout_update_order_meta', 'dokan_sync_insert_order' );
 function dokan_get_seller_id_by_order( $order_id ) {
     global $wpdb;
 
-    $sql         = "SELECT seller_id FROM {$wpdb->prefix}dokan_orders WHERE order_id = %d";
     $cache_key   = 'dokan_get_seller_id_' . $order_id;
     $cache_group = 'dokan_get_seller_id_by_order';
     $sellers     = wp_cache_get( $cache_key, $cache_group );
 
     if ( false === $sellers ) {
-        $sellers = $wpdb->get_results( $wpdb->prepare( $sql, $order_id ) );
+        $sellers = $wpdb->get_results( $wpdb->prepare( "SELECT seller_id FROM {$wpdb->prefix}dokan_orders WHERE order_id = %d", $order_id ) );
         wp_cache_set( $cache_key, $sellers, $cache_group );
     }
 
@@ -606,14 +601,13 @@ function dokan_get_seller_ids_by( $order_id ) {
  * @param type $parent_order_id
  * @return type
  */
-function dokan_get_suborder_ids_by ($parent_order_id){
+function dokan_get_suborder_ids_by( $parent_order_id ) {
     global $wpdb;
 
-     $sql = "SELECT ID FROM " . $wpdb->prefix . "posts
-             WHERE post_type = 'shop_order'
-             AND post_parent = " . $parent_order_id;
-
-     $sub_orders = $wpdb->get_results($sql);
+     $sub_orders = $wpdb->get_results( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts}
+         WHERE post_type = 'shop_order'
+         AND post_parent = %d", $parent_order_id
+    ) );
 
     if ( ! $sub_orders ) {
         return null;
@@ -956,8 +950,7 @@ function dokan_is_order_already_exists( $id ) {
         return false;
     }
 
-    $sql      = "SELECT order_id FROM {$wpdb->prefix}dokan_orders WHERE order_id=%d";
-    $order_id = $wpdb->get_var( $wpdb->prepare( $sql, $id ) );
+    $order_id = $wpdb->get_var( $wpdb->prepare( "SELECT order_id FROM {$wpdb->prefix}dokan_orders WHERE order_id=%d", $id ) );
 
     return $order_id ? true : false;
 }

@@ -229,8 +229,7 @@ function dokan_count_posts( $post_type, $user_id ) {
     $counts      = wp_cache_get( $cache_key, $cache_group );
 
     if ( false === $counts ) {
-        $query       = apply_filters( 'dokan_count_posts', "SELECT post_status, COUNT( * ) AS num_posts FROM {$wpdb->posts} WHERE post_type = %s AND post_author = %d GROUP BY post_status" );
-        $results     = $wpdb->get_results( $wpdb->prepare( $query, $post_type, $user_id ), ARRAY_A );
+        $results     = $wpdb->get_results( $wpdb->prepare( apply_filters( 'dokan_count_posts', "SELECT post_status, COUNT( * ) AS num_posts FROM {$wpdb->posts} WHERE post_type = %s AND post_author = %d GROUP BY post_status" ), $post_type, $user_id ), ARRAY_A );
         $post_status = array_keys( dokan_get_post_status() );
         $counts      = array_fill_keys( get_post_stati(), 0 );
         $total       = 0;
@@ -268,20 +267,20 @@ function dokan_count_comments( $post_type, $user_id ) {
     $counts = wp_cache_get( $cache_key, 'dokan-lite' );
 
     if ( $counts === false ) {
-        $query = "SELECT c.comment_approved, COUNT( * ) AS num_comments
+        $count = $wpdb->get_results(
+            $wpdb->prepare( "SELECT c.comment_approved, COUNT( * ) AS num_comments
             FROM $wpdb->comments as c, $wpdb->posts as p
             WHERE p.post_author = %d AND
                 p.post_status = 'publish' AND
                 c.comment_post_ID = p.ID AND
                 p.post_type = %s
-            GROUP BY c.comment_approved";
+            GROUP BY c.comment_approved", $user_id, $post_type
+        ), ARRAY_A );
 
-        $count = $wpdb->get_results( $wpdb->prepare( $query, $user_id, $post_type ), ARRAY_A );
-
-        $counts = array('moderated' => 0, 'approved' => 0, 'spam' => 0, 'trash' => 0, 'total' => 0);
-        $statuses = array('0' => 'moderated', '1' => 'approved', 'spam' => 'spam', 'trash' => 'trash', 'post-trashed' => 'post-trashed');
+        $counts = array( 'moderated' => 0, 'approved' => 0, 'spam' => 0, 'trash' => 0, 'total' => 0 );
+        $statuses = array( '0' => 'moderated', '1' => 'approved', 'spam' => 'spam', 'trash' => 'trash', 'post-trashed' => 'post-trashed' );
         $total = 0;
-        foreach ($count as $row) {
+        foreach ( $count as $row ) {
             if ( isset( $statuses[$row['comment_approved']] ) ) {
                 $counts[$statuses[$row['comment_approved']]] = (int) $row['num_comments'];
                 $total += (int) $row['num_comments'];
@@ -310,12 +309,11 @@ function dokan_author_pageviews( $seller_id ) {
     $pageview = wp_cache_get( $cache_key, 'dokan_page_view' );
 
     if ( $pageview === false ) {
-        $sql = "SELECT SUM(meta_value) as pageview
+        $count = $wpdb->get_row( $wpdb->prepare( "SELECT SUM(meta_value) as pageview
             FROM {$wpdb->postmeta} AS meta
             LEFT JOIN {$wpdb->posts} AS p ON p.ID = meta.post_id
-            WHERE meta.meta_key = 'pageview' AND p.post_author = %d AND p.post_status IN ('publish', 'pending', 'draft')";
+            WHERE meta.meta_key = 'pageview' AND p.post_author = %d AND p.post_status IN ('publish', 'pending', 'draft')", $seller_id ) );
 
-        $count = $wpdb->get_row( $wpdb->prepare( $sql, $seller_id ) );
         $pageview = $count->pageview;
 
         wp_cache_set( $cache_key, $pageview, 'dokan_page_view', 3600*4 );
@@ -339,13 +337,11 @@ function dokan_author_total_sales( $seller_id ) {
     $earnings = wp_cache_get( $cache_key, $cache_group );
 
     if ( $earnings === false ) {
-
-        $sql = "SELECT SUM(order_total) as earnings, SUM(refund_amount) as refund_total
+        $count    = $wpdb->get_row( $wpdb->prepare( "SELECT SUM(order_total) as earnings, SUM(refund_amount) as refund_total
             FROM {$wpdb->prefix}dokan_orders as do LEFT JOIN {$wpdb->prefix}posts as p ON do.order_id = p.ID
             LEFT JOIN {$wpdb->prefix}dokan_refund as refund ON do.order_id = refund.order_id AND status = '1'
-            WHERE do.seller_id = %d AND order_status IN('wc-completed', 'wc-processing', 'wc-on-hold')";
+            WHERE do.seller_id = %d AND order_status IN('wc-completed', 'wc-processing', 'wc-on-hold')", $seller_id ) );
 
-        $count    = $wpdb->get_row( $wpdb->prepare( $sql, $seller_id ) );
         $earnings = $count->earnings - $count->refund_total;
 
         wp_cache_set( $cache_key, $earnings, $cache_group );
@@ -363,21 +359,20 @@ function dokan_author_total_sales( $seller_id ) {
 function dokan_generate_sync_table() {
     global $wpdb;
 
-    $sql = "SELECT oi.order_id, p.ID as product_id, p.post_title, p.post_author as seller_id,
-                oim2.meta_value as order_total, p.post_status as order_status
-            FROM {$wpdb->prefix}woocommerce_order_items oi
-            INNER JOIN {$wpdb->prefix}woocommerce_order_itemmeta oim ON oim.order_item_id = oi.order_item_id
-            INNER JOIN {$wpdb->prefix}woocommerce_order_itemmeta oim2 ON oim2.order_item_id = oi.order_item_id
-            INNER JOIN $wpdb->posts p ON oi.order_id = p.ID
-            WHERE
-                oim.meta_key = '_product_id' AND
-                oim2.meta_key = '_line_total'
-            GROUP BY oi.order_id";
+    $orders = $wpdb->get_results( $wpdb->prepare( "SELECT oi.order_id, p.ID as product_id, p.post_title, p.post_author as seller_id,
+        oim2.meta_value as order_total, p.post_status as order_status
+    FROM {$wpdb->prefix}woocommerce_order_items oi
+    INNER JOIN {$wpdb->prefix}woocommerce_order_itemmeta oim ON oim.order_item_id = oi.order_item_id
+    INNER JOIN {$wpdb->prefix}woocommerce_order_itemmeta oim2 ON oim2.order_item_id = oi.order_item_id
+    INNER JOIN $wpdb->posts p ON oi.order_id = p.ID
+    WHERE
+        oim.meta_key = '_product_id' AND
+        oim2.meta_key = '_line_total'
+    GROUP BY oi.order_id" ) );
 
-    $orders = $wpdb->get_results( $sql );
     $table_name = $wpdb->prefix . 'dokan_orders';
 
-    $wpdb->query( 'TRUNCATE TABLE ' . $table_name );
+    $wpdb->query( $wpdb->prepare( 'TRUNCATE TABLE %s', $table_name ) );
 
     if ( $orders ) {
         foreach ($orders as $order) {
