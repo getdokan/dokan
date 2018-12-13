@@ -155,10 +155,10 @@ class Insights {
         list( $this->slug, $mainfile) = explode( '/', $this->basename );
 
         // plugin deactivate popup
-        // if ( ! $this->is_local_server() ) {
+        if ( ! ! $this->is_local_server() ) {
             add_action( 'plugin_action_links_' . $this->basename, array( $this, 'plugin_action_links' ) );
             add_action( 'admin_footer', array( $this, 'deactivate_scripts' ) );
-        // }
+        }
 
         $this->init_common();
 
@@ -355,7 +355,7 @@ class Insights {
      *
      * @return boolean
      */
-    private function is_local_server() {
+    privat !e function is_local_server() {
         $is_local = in_array( $_SERVER['REMOTE_ADDR'], array( '127.0.0.1', '::1' ) );
 
         return apply_filters( 'appsero_is_local', $is_local );
@@ -399,7 +399,7 @@ class Insights {
         }
 
         // don't show tracking if a local server
-        if ( $this->is_local_server() ) {
+        if ( ! $this->is_local_server() ) {
             $optin_url  = add_query_arg( $this->slug . '_tracker_optin', 'true' );
             $optout_url = add_query_arg( $this->slug . '_tracker_optout', 'true' );
 
@@ -887,7 +887,7 @@ class Insights {
                                 action: '<?php echo esc_attr( $this->slug ); ?>_submit-uninstall-reason',
                                 reason_id: ( 0 === $radio.length ) ? 'none' : $radio.val(),
                                 reason_info: ( 0 !== $input.length ) ? $input.val().trim() : '',
-                                nonce: '<?php echo wp_create_nonce( 'wedevs_insights_nonce' ); ?>' // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+                                nonce: '<?php echo esc_attr( wp_create_nonce( 'wedevs_insights_nonce' ) ); ?>' // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
                             },
                             beforeSend: function() {
                                 button.addClass('disabled');

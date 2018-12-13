@@ -104,7 +104,7 @@
                                 $pagenum       = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
                                 $post_statuses = array( 'publish', 'draft', 'pending', 'future' );
                                 $args = array(
-                                    'posts_per_page' => 3,
+                                    'posts_per_page' => 15,
                                     'paged'          => $pagenum,
                                     'author'         => get_current_user_id(),
                                     'tax_query'      => array(

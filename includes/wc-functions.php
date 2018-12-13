@@ -727,7 +727,7 @@ function dokan_get_seller_rating( $seller_id ) {
 function dokan_get_readable_seller_rating( $seller_id ) {
     $vendor = dokan()->vendor->get( $seller_id );
 
-    $vendor->get_readable_rating();
+    return $vendor->get_readable_rating( false );
 }
 
 /**
