@@ -35,13 +35,13 @@
         <li class="store-address">
             <span><b><?php esc_html_e( 'Address:', 'dokan-lite' ); ?></b></span>
             <span class="details">
-                <?php echo esc_attr( dokan_get_seller_address( $author->ID ) ) ?>
+                <?php echo wp_kses_post( dokan_get_seller_address( $author->ID ) ) ?>
             </span>
         </li>
     <?php } ?>
 
     <li class="clearfix">
-        <?php dokan_get_readable_seller_rating( $author->ID ); ?>
+        <?php echo wp_kses_post( dokan_get_readable_seller_rating( $author->ID ) ); ?>
     </li>
 
     <?php do_action( 'dokan_product_seller_tab_end', $author, $store_info ); ?>
