@@ -79,7 +79,7 @@ class Dokan_Upgrade {
         if ( ! is_null( $installed_version ) && version_compare( $installed_version, end( $updates_versions ), '<' ) ) {
             ?>
                 <div id="message" class="updated">
-                    <p><?php esc_attr_e( '<strong>Dokan Data Update Required</strong> &#8211; We need to update your install to the latest version', 'dokan-lite' ); ?></p>
+                    <p><?php printf( '<strong>%s  &#8211; %s</strong>', esc_attr__( 'Dokan Data Update Required', 'dokan-lite' ), esc_attr__( 'We need to update your install to the latest version', 'dokan-lite' ) ); ?></p>
                     <p class="submit"><a href="<?php echo esc_url( add_query_arg( [ 'dokan_do_update' => true ], $_SERVER['REQUEST_URI'] ) ); ?>" class="dokan-update-btn button-primary"><?php esc_attr_e( 'Run the updater', 'dokan-lite' ); ?></a></p>
                 </div>
 
