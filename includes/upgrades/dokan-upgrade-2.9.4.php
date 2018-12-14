@@ -34,7 +34,7 @@ function dokan_update_refund_table_2_9_4() {
 
     $table_name = $wpdb->prefix . 'dokan_refund';
 
-    if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) !== $table_name ) {
+    if ( $wpdb->get_var( $wpdb->prepare("SHOW TABLES LIKE %s", $table_name ) ) !== $table_name ) {
         return;
     }
 
@@ -42,9 +42,10 @@ function dokan_update_refund_table_2_9_4() {
 
     foreach ( $columns as $column ) {
         $wpdb->query(
-            "ALTER TABLE `{$wpdb->prefix}dokan_refund`
-            MODIFY COLUMN {$column} varchar(200)"
-        );
+            $wpdb->prepare(
+                "ALTER TABLE %s
+                MODIFY COLUMN %s varchar(200)", $wpdb->prefix . 'dokan_refund', $column
+            ));
     }
 }
 
