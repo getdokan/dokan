@@ -40,14 +40,20 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
             wp_send_json_error( __( 'You have no permission to do this action', 'dokan' ) );
         }
 
-        if ( ! wp_verify_nonce( $_POST['nonce'], 'dokan_admin' ) ) {
+        if ( ! isset( $_POST['nonce'] ) ) {
+            return;
+        }
+
+        $nonce = sanitize_text_field( wp_unslash( $_POST['nonce'] ) );
+
+        if ( ! wp_verify_nonce( $nonce, 'dokan_admin' ) ) {
             wp_send_json_error( __( 'Invalid nonce', 'dokan' ) );
         }
 
         header( 'Content-type: html/csv' );
         header( 'Content-Disposition: attachment; filename="withdraw-'.date( 'd-m-y' ).'.csv"' );
 
-        $ids = $_POST['id'];
+        $ids = isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : '';
 
         $this->generate_csv( $ids );
     }

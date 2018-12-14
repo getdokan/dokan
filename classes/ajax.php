@@ -80,7 +80,9 @@ class Dokan_Ajax {
             wp_send_json_error( __( 'You have no permission to do this action', 'dokan-lite' ) );
         }
 
-        parse_str( $_POST['postdata'], $postdata );
+        $submited_data = isset( $_POST['postdata'] ) ? sanitize_text_field( wp_unslash( $_POST['postdata'] ) ) : '';
+
+        parse_str( $submited_data, $postdata );
 
         $response = dokan_save_product( $postdata );
 
@@ -107,14 +109,16 @@ class Dokan_Ajax {
     function shop_url_check() {
         global $user_ID;
 
-        if ( !wp_verify_nonce( $_POST['_nonce'], 'dokan_reviews' ) ) {
+        $nonce = isset( $_POST['_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['_nonce'] ) ) : '';
+
+        if ( ! wp_verify_nonce( $nonce, 'dokan_reviews' ) ) {
             wp_send_json_error( array(
                 'type' => 'nonce',
                 'message' => __( 'Are you cheating?', 'dokan-lite' )
             ) );
         }
 
-        $url_slug = $_POST['url_slug'];
+        $url_slug = isset( $_POST['url_slug'] ) ? sanitize_text_field( wp_unslash( $_POST['url_slug'] ) ) : '';
         $check    = true;
         $user     = get_user_by( 'slug', $url_slug );
 
@@ -132,7 +136,8 @@ class Dokan_Ajax {
         }
 
         if ( is_admin() && isset( $_POST['vendor_id'] ) ) {
-            $vendor     = get_user_by( 'id', $_POST['vendor_id'] );
+            $vendor = get_user_by( 'id', sanitize_text_field( wp_unslash( $_POST['vendor_id'] ) ) );
+
             if ( $vendor->user_nicename == $user->user_nicename ) {
                 $check = true;
             }
@@ -225,9 +230,9 @@ class Dokan_Ajax {
 
         global $wpdb;
 
-        $order_id       = intval( $_POST['order_id'] );
-        $product_ids    = $_POST['product_ids'];
-        $loop           = intval( $_POST['loop'] );
+        $order_id       = isset( $_POST['order_id'] ) ? intval( sanitize_text_field( wp_unslash( $_POST['order_id'] ) ) ) : '';
+        $product_ids    = isset( $_POST['product_ids'] ) ? intval( sanitize_text_field( wp_unslash( $_POST['product_ids'] ) ) ) : '';
+        $loop           = isset( $_POST['loop'] ) ? intval( sanitize_text_field( wp_unslash( $_POST['loop'] ) ) ) : '';
         $file_counter   = 0;
         $order          = new WC_Order( $order_id );
 
@@ -281,8 +286,8 @@ class Dokan_Ajax {
             return;
         }
 
-        $order_id     = intval( $_POST['order_id'] );
-        $order_status = $_POST['order_status'];
+        $order_id     = isset( $_POST['order_id'] ) ? intval( sanitize_text_field( wp_unslash( $_POST['order_id'] ) ) ) : '';
+        $order_status = isset( $_POST['order_status'] ) ? intval( sanitize_text_field( wp_unslash( $_POST['order_status'] ) ) ) : '';
 
         $order = new WC_Order( $order_id );
         $order->update_status( $order_status );
@@ -345,9 +350,9 @@ class Dokan_Ajax {
 
         global $wpdb;
 
-        $download_id = $_POST['download_id'];
-        $product_id  = intval( $_POST['product_id'] );
-        $order_id    = intval( $_POST['order_id'] );
+        $download_id = isset( $_POST['download_id'] ) ? intval( sanitize_text_field( wp_unslash( $_POST['download_id'] ) ) ) : '';
+        $product_id  = isset( $_POST['product_id'] ) ? intval( sanitize_text_field( wp_unslash( $_POST['product_id'] ) ) ) : '';
+        $order_id    = isset( $_POST['order_id'] ) ? intval( sanitize_text_field( wp_unslash( $_POST['order_id'] ) ) ) : '';
 
         $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}woocommerce_downloadable_product_permissions WHERE order_id = %d AND product_id = %d AND download_id = %s;", $order_id, $product_id, $download_id ) );
 
@@ -370,9 +375,9 @@ class Dokan_Ajax {
             die(-1);
         }
 
-        $post_id   = absint( $_POST['post_id'] );
+        $post_id   = isset( $_POST['post_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) ) : '';
         $note      = wp_kses_post( trim( stripslashes( $_POST['note'] ) ) );
-        $note_type = $_POST['note_type'];
+        $note_type = isset( $_POST['note_type'] ) ? sanitize_text_field( wp_unslash( $_POST['note_type'] ) ) : '';
 
         $is_customer_note = $note_type == 'customer' ? 1 : 0;
 
@@ -410,10 +415,11 @@ class Dokan_Ajax {
             die(-1);
         }
 
-        $post_id           = absint( $_POST['post_id'] );
-        $shipping_provider = $_POST['shipping_provider'];
-        $shipping_number   = ( trim( stripslashes( $_POST['shipping_number'] ) ) );
-        $shipped_date      = ( trim( $_POST['shipped_date'] ) );
+        $post_id           = isset( $_POST['post_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) ) : '';
+        $shipping_provider = isset( $_POST['shipping_provider'] ) ? sanitize_text_field( wp_unslash( $_POST['shipping_provider'] ) ) : '';
+        $shipping_number   = isset( $_POST['shipping_number'] ) ? sanitize_text_field( wp_unslash( $_POST['shipping_number'] ) ) : '';
+        $shipping_number   = ( trim( stripslashes( $shipping_number ) ) );
+        $shipped_date      = isset( $_POST['shipped_date'] ) ? trim( sanitize_text_field( wp_unslash( $_POST['shipped_date'] ) ) ) : '';
 
         $ship_info = __( 'Shipping provider: ', 'dokan-lite' ) . $shipping_provider . '<br />' . __( 'Shipping number: ', 'dokan-lite' ) . $shipping_number . '<br />' . __( 'Shipped date: ', 'dokan-lite' ) . $shipped_date;
 
@@ -436,15 +442,15 @@ class Dokan_Ajax {
                 'comment_type'         => 'order_note',
                 'comment_parent'       => 0,
                 'user_id'              => dokan_get_current_user_id(),
-                'comment_author_IP'    => $_SERVER['REMOTE_ADDR'],
-                'comment_agent'        => $_SERVER['HTTP_USER_AGENT'],
+                'comment_author_IP'    => isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '',
+                'comment_agent'        => isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '',
                 'comment_date'         => $time,
                 'comment_approved'     => 1,
             );
 
-            $comment_id = wp_insert_comment($data);
+            $comment_id = wp_insert_comment( $data );
 
-            update_comment_meta($comment_id, 'is_customer_note', true);
+            update_comment_meta( $comment_id, 'is_customer_note', true );
 
             do_action( 'woocommerce_new_customer_note', array( 'order_id' => dokan_get_prop( $order, 'id' ), 'customer_note' => $ship_info ) );
 
@@ -479,7 +485,7 @@ class Dokan_Ajax {
             die(-1);
         }
 
-        $note_id = (int) $_POST['note_id'];
+        $note_id = isset( $_POST['note_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['note_id'] ) ) : '';
 
         if ( $note_id > 0 ) {
             wp_delete_comment( $note_id );
@@ -495,7 +501,10 @@ class Dokan_Ajax {
      * @return void
      */
     public function seller_listing_search() {
-        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'dokan-seller-listing-search' ) ) {
+
+        $nonce = isset( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ) : '';
+
+        if ( ! $nonce || ! wp_verify_nonce( $nonce, 'dokan-seller-listing-search' ) ) {
             wp_send_json_error( __( 'Error: Nonce verification failed', 'dokan-lite' ) );
         }
 
@@ -508,9 +517,9 @@ class Dokan_Ajax {
             'offset' => $offset
         );
 
-        $search_term     = isset( $_REQUEST['search_term'] ) ? sanitize_text_field( $_REQUEST['search_term'] ) : '';
-        $pagination_base = isset( $_REQUEST['pagination_base'] ) ? sanitize_text_field( $_REQUEST['pagination_base'] ) : '';
-        $per_row         = isset( $_REQUEST['per_row'] ) ? sanitize_text_field( $_REQUEST['per_row'] ) : '3';
+        $search_term     = isset( $_REQUEST['search_term'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['search_term'] ) ): '';
+        $pagination_base = isset( $_REQUEST['pagination_base'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['pagination_base'] ) ) : '';
+        $per_row         = isset( $_REQUEST['per_row'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['per_row'] ) ) : '3';
 
         if ( '' != $search_term ) {
 
