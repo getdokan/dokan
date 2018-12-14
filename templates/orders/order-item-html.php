@@ -14,7 +14,7 @@ $img_kses = array(
 	<td class="thumb" width="10%">
 		<?php if ( $_product ) : ?>
 			<a href="<?php echo esc_url( get_permalink( dokan_get_prop( $_product, 'id' ) ) ); ?>">
-				<?php echo wp_kses( $_product->get_image( 'shop_thumbnail', array( 'title' => '' ) ) ); ?>
+				<?php echo wp_kses( $_product->get_image( 'shop_thumbnail', array( 'title' => '' ) ), $img_kses ); ?>
 			</a>
 		<?php else : ?>
 			<?php echo woocommerce_placeholder_img( 'shop_thumbnail' ); ?>
