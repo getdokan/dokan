@@ -231,7 +231,7 @@ function dokan_count_posts( $post_type, $user_id ) {
     $counts      = wp_cache_get( $cache_key, $cache_group );
 
     if ( false === $counts ) {
-        $results = apply_filters( 'dokan_count_posts', null );
+        $results = apply_filters( 'dokan_count_posts', null, $post_type, $user_id );
 
         if ( ! $results ) {
             $results = $wpdb->get_results(
