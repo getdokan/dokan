@@ -40,12 +40,13 @@ function dokan_update_refund_table_2_9_4() {
 
     $columns = array( 'item_qtys', 'item_totals', 'item_tax_totals' );
 
-    foreach ( $columns as $column ) {
+      foreach ( $columns as $column ) {
         $wpdb->query(
             $wpdb->prepare(
-                "ALTER TABLE %s
-                MODIFY COLUMN %s varchar(200)", $wpdb->prefix . 'dokan_refund', $column
-            ));
+                "ALTER TABLE `{$wpdb->prefix}dokan_refund`
+                MODIFY COLUMN %s varchar(200)", $column
+            )
+        );
     }
 }
 
