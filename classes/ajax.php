@@ -287,7 +287,7 @@ class Dokan_Ajax {
         }
 
         $order_id     = isset( $_POST['order_id'] ) ? intval( sanitize_text_field( wp_unslash( $_POST['order_id'] ) ) ) : '';
-        $order_status = isset( $_POST['order_status'] ) ? intval( sanitize_text_field( wp_unslash( $_POST['order_status'] ) ) ) : '';
+        $order_status = isset( $_POST['order_status'] ) ? sanitize_text_field( wp_unslash( $_POST['order_status'] ) ) : '';
 
         $order = new WC_Order( $order_id );
         $order->update_status( $order_status );
