@@ -18,7 +18,7 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
         <div class="dokan-clearfix">
             <div class="" style="width:100%">
                 <div class="dokan-panel dokan-panel-default">
-                    <div class="dokan-panel-heading"><strong><?php printf( __( 'Order', 'dokan-lite' ) . '#%d', esc_attr( dokan_get_prop( $order, 'id' ) ) ); ?></strong> &rarr; <?php esc_html_e( 'Order Items', 'dokan-lite' ); ?></div>
+                    <div class="dokan-panel-heading"><strong><?php printf( esc_html__( 'Order', 'dokan-lite' ) . '#%d', esc_attr( dokan_get_prop( $order, 'id' ) ) ); ?></strong> &rarr; <?php esc_html_e( 'Order Items', 'dokan-lite' ); ?></div>
                     <div class="dokan-panel-body" id="woocommerce-order-items">
 
                         <?php
@@ -77,8 +77,8 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                                                 foreach ( $totals as $total ) {
                                                     ?>
                                                     <tr>
-                                                        <th colspan="2"><?php echo esc_html( $total['label'] ); ?></th>
-                                                        <td colspan="2" class="value"><?php echo esc_html( $total['value'] ); ?></td>
+                                                        <th colspan="2"><?php echo wp_kses_data( $total['label'] ); ?></th>
+                                                        <td colspan="2" class="value"><?php echo wp_kses_post( $total['value']); ?></td>
                                                     </tr>
                                                     <?php
                                                 }
@@ -124,7 +124,7 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                 <div class="dokan-panel dokan-panel-default">
                     <div class="dokan-panel-heading"><strong><?php esc_html_e( 'Billing Address', 'dokan-lite' ); ?></strong></div>
                     <div class="dokan-panel-body">
-                        <?php echo $order->get_formatted_billing_address(); ?>
+                        <?php echo wp_kses_post( $order->get_formatted_billing_address() ); ?>
                     </div>
                 </div>
             </div>
@@ -133,7 +133,7 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                 <div class="dokan-panel dokan-panel-default">
                     <div class="dokan-panel-heading"><strong><?php esc_html_e( 'Shipping Address', 'dokan-lite' ); ?></strong></div>
                     <div class="dokan-panel-body">
-                        <?php echo $order->get_formatted_shipping_address(); ?>
+                        <?php echo wp_kses_post( $order->get_formatted_shipping_address() ); ?>
                     </div>
                 </div>
             </div>
@@ -162,7 +162,7 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                         <ul class="list-unstyled order-status">
                             <li>
                                 <span><?php esc_html_e( 'Order Status:', 'dokan-lite' ); ?></span>
-                                <label class="dokan-label dokan-label-<?php echo dokan_get_order_status_class( dokan_get_prop( $order, 'status' ) ); ?>"><?php echo esc_html( dokan_get_order_status_translated( dokan_get_prop( $order, 'status' ) ) ); ?></label>
+                                <label class="dokan-label dokan-label-<?php echo esc_attr( dokan_get_order_status_class( dokan_get_prop( $order, 'status' ) ) ); ?>"><?php echo esc_html( dokan_get_order_status_translated( dokan_get_prop( $order, 'status' ) ) ); ?></label>
 
                                 <?php if ( current_user_can( 'dokan_manage_order' ) && dokan_get_option( 'order_status_change', 'dokan_selling', 'on' ) == 'on' && $order->get_status() !== 'cancelled' && $order->get_status() !== 'refunded' ) {?>
                                     <a href="#" class="dokan-edit-status"><small><?php esc_html_e( '&nbsp; Edit', 'dokan-lite' ); ?></small></a>
@@ -182,7 +182,7 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
 
                                         <input type="hidden" name="order_id" value="<?php echo esc_attr( dokan_get_prop( $order, 'id' ) ); ?>">
                                         <input type="hidden" name="action" value="dokan_change_status">
-                                        <input type="hidden" name="_wpnonce" value="<?php echo wp_create_nonce( 'dokan_change_status' ); ?>">
+                                        <input type="hidden" name="_wpnonce" value="<?php echo esc_attr( wp_create_nonce( 'dokan_change_status' ) ); ?>">
                                         <input type="submit" class="dokan-btn dokan-btn-success dokan-btn-sm" name="dokan_change_status" value="<?php esc_attr_e( 'Update', 'dokan-lite' ); ?>">
 
                                         <a href="#" class="dokan-btn dokan-btn-default dokan-btn-sm dokan-cancel-status"><?php esc_html_e( 'Cancel', 'dokan-lite' ) ?></a>
@@ -263,10 +263,10 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                                 ?>
                                 <li rel="<?php echo esc_attr( absint( $note->comment_ID ) ) ; ?>" class="<?php echo esc_attr( implode( ' ', $note_classes ) ); ?>">
                                     <div class="note_content">
-                                        <?php echo wpautop( wptexturize( wp_kses_post( $note->comment_content ) ) ); ?>
+                                        <?php echo wp_kses_post( wpautop( wptexturize( $note->comment_content ) ) ); ?>
                                     </div>
                                     <p class="meta">
-                                        <?php printf( __( 'added %s ago', 'dokan-lite' ), human_time_diff( strtotime( $note->comment_date_gmt ), current_time( 'timestamp', 1 ) ) ); ?>
+                                        <?php printf( esc_html__( 'added %s ago', 'dokan-lite' ), esc_textarea( human_time_diff( strtotime( $note->comment_date_gmt ), current_time( 'timestamp', 1 ) ) ) ); ?>
                                         <?php if ( current_user_can( 'dokan_manage_order_note' ) ): ?>
                                             <a href="#" class="delete_note"><?php esc_html_e( 'Delete note', 'dokan-lite' ); ?></a>
                                         <?php endif ?>
@@ -298,7 +298,7 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                                         </div>
 
                                         <input type="hidden" name="security" value="<?php echo esc_attr( wp_create_nonce( 'add-order-note' ) ); ?>">
-                                        <input type="hidden" name="delete-note-security" id="delete-note-security" value="<?php echo wp_create_nonce('delete-order-note'); ?>">
+                                        <input type="hidden" name="delete-note-security" id="delete-note-security" value="<?php echo esc_attr( wp_create_nonce('delete-order-note') ); ?>">
                                         <input type="hidden" name="post_id" value="<?php echo esc_attr( dokan_get_prop( $order, 'id' ) ); ?>">
                                         <input type="hidden" name="action" value="dokan_add_order_note">
                                         <input type="submit" name="add_order_note" class="add_note btn btn-sm btn-theme" value="<?php esc_attr_e( 'Add Note', 'dokan-lite' ); ?>">
