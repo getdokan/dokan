@@ -771,7 +771,7 @@ let Currency = dokan_get_lib('Currency');
                         }
                     }
 
-                    if (response && response.hasOwnProperty('success') && !response.success) {
+                    if (response && !response.success) {
                         alert(response.data);
                         return;
                     }
