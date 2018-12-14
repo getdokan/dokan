@@ -369,7 +369,7 @@ class Dokan_Ajax {
 
         check_ajax_referer( 'add-order-note', 'security' );
 
-        if ( !is_user_logged_in() ) {
+        if ( ! is_user_logged_in() ) {
             die(-1);
         }
         if ( ! current_user_can( 'dokan_manage_order_note' ) ) {
@@ -377,7 +377,7 @@ class Dokan_Ajax {
         }
 
         $post_id   = isset( $_POST['post_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) ) : '';
-        $note      = wp_kses_post( trim( stripslashes( $_POST['note'] ) ) );
+        $note      = isset( $_POST['note'] ) ? wp_kses_post( trim( sanitize_text_field( wp_unslash( $_POST['note'] ) ) ) ) : '';
         $note_type = isset( $_POST['note_type'] ) ? sanitize_text_field( wp_unslash( $_POST['note_type'] ) ) : '';
 
         $is_customer_note = $note_type == 'customer' ? 1 : 0;
@@ -570,16 +570,18 @@ class Dokan_Ajax {
             wp_send_json_error();
         }
 
-        check_ajax_referer( 'image_editor-' . $_POST['id'], 'nonce' );
+        $post_id = isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : '';
 
-        $crop_details = $_POST['cropDetails'];
+        check_ajax_referer( 'image_editor-' . $post_id, 'nonce' );
+
+        $crop_details = isset( $_POST['cropDetails'] ) ? sanitize_text_field( wp_unslash( $_POST['cropDetails'] ) ) : '';
 
         $dimensions = $this->get_header_dimensions( array(
             'height' => $crop_details['height'],
             'width'  => $crop_details['width'],
         ) );
 
-        $attachment_id = absint( $_POST['id'] );
+        $attachment_id = absint( $post_id );
 
         $cropped = wp_crop_image(
             $attachment_id,
@@ -622,9 +624,10 @@ class Dokan_Ajax {
     public function json_search_product() {
         check_ajax_referer( 'search-products', 'security' );
 
-        $term = wc_clean( empty( $term ) ? stripslashes( $_GET['term'] ) : $term );
+        $_term              = isset( $_GET['term'] ) ? sanitize_text_field( wp_unslash( $_GET['term'] ) ) : '';
+        $term               = wc_clean( empty( $term ) ? $_term : $term );
         $include_variations = ! empty( $_GET['include_variations'] ) ? true : false;
-        $user_ids = ! empty( $_GET['user_ids'] ) ? $_GET['user_ids'] : false;
+        $user_ids           = ! empty( $_GET['user_ids'] ) ? sanitize_text_field( wp_unslash( $_GET['user_ids'] ) ) : false;
 
         if ( empty( $term ) ) {
             wp_die();
@@ -633,15 +636,15 @@ class Dokan_Ajax {
         $ids = dokan_search_seller_products( $term, $user_ids, '', (bool) $include_variations );
 
         if ( ! empty( $_GET['exclude'] ) ) {
-            $ids = array_diff( $ids, (array) $_GET['exclude'] );
+            $ids = array_diff( $ids, (array) sanitize_text_field( wp_unslash( $_GET['exclude'] ) ) );
         }
 
         if ( ! empty( $_GET['include'] ) ) {
-            $ids = array_intersect( $ids, (array) $_GET['include'] );
+            $ids = array_intersect( $ids, (array) sanitize_text_field( wp_unslash( $_GET['include'] ) ) );
         }
 
         if ( ! empty( $_GET['limit'] ) ) {
-            $ids = array_slice( $ids, 0, absint( $_GET['limit'] ) );
+            $ids = array_slice( $ids, 0, absint( sanitize_text_field( wp_unslash( $_GET['limit'] ) ) ) );
         }
 
         $product_objects = array_filter( array_map( 'wc_get_product', $ids ), 'dokan_products_array_filter_editable' );
@@ -668,7 +671,7 @@ class Dokan_Ajax {
             wp_die( -1 );
         }
 
-        $term    = wc_clean( wp_unslash( $_GET['term'] ) );
+        $term    = isset( $_GET['term'] ) ? wc_clean( sanitize_text_field( wp_unslash( $_GET['term'] ) ) ) : '';
         $exclude = array();
         $limit   = '';
 
@@ -702,7 +705,7 @@ class Dokan_Ajax {
         $found_customers = array();
 
         if ( ! empty( $_GET['exclude'] ) ) {
-            $ids = array_diff( $ids, (array) $_GET['exclude'] );
+            $ids = array_diff( $ids, (array) sanitize_text_field( wp_unslash( $_GET['exclude'] ) ) );
         }
 
         foreach ( $ids as $id ) {

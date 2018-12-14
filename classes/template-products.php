@@ -199,21 +199,21 @@ class Dokan_Template_Products {
             return;
         }
 
-        if ( ! wp_verify_nonce( $_POST['dokan_add_new_product_nonce'], 'dokan_add_new_product' ) ) {
+        $postdata = wp_unslash( $_POST );
+
+        if ( ! wp_verify_nonce( sanitize_text_field( $postdata['dokan_add_new_product_nonce'] ), 'dokan_add_new_product' ) ) {
             return;
         }
 
-        $errors   = array();
-        $postdata = $_POST;
-
+        $errors             = array();
         self::$product_cat  = -1;
         self::$post_content = __( 'Details of your product ...', 'dokan-lite' );
 
         if ( isset( $postdata['add_product'] ) ) {
-            $post_title     = trim( $postdata['post_title'] );
-            $post_content   = trim( $postdata['post_content'] );
-            $post_excerpt   = trim( $postdata['post_excerpt'] );
-            $featured_image = absint( $postdata['feat_image_id'] );
+            $post_title     = trim( sanitize_text_field( $postdata['post_title'] ) );
+            $post_content   = trim( sanitize_text_field( $postdata['post_content'] ) );
+            $post_excerpt   = trim( sanitize_text_field( $postdata['post_excerpt'] ) );
+            $featured_image = absint( sanitize_text_field( $postdata['feat_image_id'] ) );
 
             if ( empty( $post_title ) ) {
                 $errors[] = __( 'Please enter product title', 'dokan-lite' );
@@ -357,13 +357,13 @@ class Dokan_Template_Products {
             return;
         }
 
-        if ( ! wp_verify_nonce( $_POST['dokan_edit_product_nonce'], 'dokan_edit_product' ) ) {
+        $postdata = wp_unslash( $_POST );
+
+        if ( ! wp_verify_nonce( sanitize_text_field( $postdata['dokan_edit_product_nonce'] ), 'dokan_edit_product' ) ) {
             return;
         }
 
-        $errors   = array();
-        $postdata = $_POST;
-
+        $errors     = array();
         $post_title = trim( $postdata['post_title'] );
 
         if ( empty( $post_title ) ) {

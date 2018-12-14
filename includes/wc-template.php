@@ -215,7 +215,7 @@ function dokan_save_quick_edit_vendor_data ( $product ) {
     }
 
     if ( isset( $_REQUEST['dokan_product_author_override'] ) ) {
-        $vendor_id = esc_attr( $_REQUEST['dokan_product_author_override'] );
+        $vendor_id = sanitize_text_field( wp_unslash( $_REQUEST['dokan_product_author_override'] ) );
 
         if ( ! $vendor_id ) {
             return;
