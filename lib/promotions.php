@@ -160,7 +160,7 @@ abstract class WeDevs_Promotion {
                                 dokan_upgrade_promotion_dismissed: true,
                                 key: key,
                                 promo_key: promo_key,
-                                nonce: dokan.nonce
+                                nonce: '<?php echo esc_attr( wp_create_nonce( 'dokan_admin' ) ); ?>'
                             },
                             complete: function( resp ) {
                                 self.closest('.dokan-upgrade-promotional-notice').fadeOut(200);
@@ -180,24 +180,24 @@ abstract class WeDevs_Promotion {
      * @return void
      */
     public function dismiss_upgrade_promo() {
-        $get_data = wp_unslash( $_POST );
+        $post_data = wp_unslash( $_POST );
 
         if ( ! current_user_can( 'manage_options' ) ) {
             wp_send_json_error( __( 'You have no permission to do that', 'dokan-lite' ) );
         }
 
-        if ( ! wp_verify_nonce( $get_data['nonce'], 'dokan_admin' ) ) {
+        if ( ! wp_verify_nonce( $post_data['nonce'], 'dokan_admin' ) ) {
             wp_send_json_error( __( 'Invalid nonce', 'dokan-lite' ) );
         }
 
-        if ( isset( $get_data['dokan_upgrade_promotion_dismissed'] ) && $get_data['dokan_upgrade_promotion_dismissed'] ) {
-            $promo_option_key        = $get_data['promo_key'];
-            $promo_last_display_time = $get_data['promo_key'] . '_displayed_time';
+        if ( isset( $post_data['dokan_upgrade_promotion_dismissed'] ) && $post_data['dokan_upgrade_promotion_dismissed'] ) {
+            $promo_option_key        = $post_data['promo_key'];
+            $promo_last_display_time = $post_data['promo_key'] . '_displayed_time';
 
             $already_displayed_promo = get_option( $promo_option_key, array() );
 
-            if ( ! isset( $already_displayed_promo[ $get_data['key'] ] ) ) {
-                $already_displayed_promo[ $get_data['key'] ] = array(
+            if ( ! isset( $already_displayed_promo[ $post_data['key'] ] ) ) {
+                $already_displayed_promo[ $post_data['key'] ] = array(
                     'display'        => 0,
                     'last_displayed' => current_time( 'mysql' )
                 );
