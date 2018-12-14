@@ -570,27 +570,29 @@ class Dokan_Ajax {
             wp_send_json_error();
         }
 
-        $post_id = isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : '';
+        $posted_data = wp_unslash( $_POST );
+
+        $post_id = isset( $posted_data['id'] ) ? absint( $posted_data['id'] ) : '';
 
         check_ajax_referer( 'image_editor-' . $post_id, 'nonce' );
 
-        $crop_details = isset( $_POST['cropDetails'] ) ? sanitize_text_field( wp_unslash( $_POST['cropDetails'] ) ) : '';
+        $crop_details = isset( $posted_data['cropDetails'] ) ? $posted_data['cropDetails'] : '';
 
         $dimensions = $this->get_header_dimensions( array(
-            'height' => $crop_details['height'],
-            'width'  => $crop_details['width'],
+            'height' => absint( $crop_details['height'] ),
+            'width'  => absint( $crop_details['width'] ),
         ) );
 
         $attachment_id = absint( $post_id );
 
         $cropped = wp_crop_image(
             $attachment_id,
-            (int) $crop_details['x1'],
-            (int) $crop_details['y1'],
-            (int) $crop_details['width'],
-            (int) $crop_details['height'],
-            (int) $dimensions['dst_width'],
-            (int) $dimensions['dst_height']
+            absint( $crop_details['x1'] ),
+            absint( $crop_details['y1'] ),
+            absint( $crop_details['width'] ),
+            absint( $crop_details['height'] ),
+            absint( $dimensions['dst_width'] ),
+            absint( $dimensions['dst_height'] )
         );
 
         if ( ! $cropped || is_wp_error( $cropped ) ) {
