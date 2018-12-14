@@ -395,11 +395,13 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
      * Save payment options.
      */
     public function dokan_setup_payment_save() {
-        if ( ! isset( $_POST['_wpnonce'] ) ) {
+        $posted_data = wp_unslash( $_POST );
+
+        if ( ! isset( $posted_data['_wpnonce'] ) ) {
             return;
         }
 
-        $nonce = sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) );
+        $nonce = sanitize_text_field( wp_unslash( $posted_data['_wpnonce'] ) );
 
         if ( ! wp_verify_nonce( $nonce, 'dokan-seller-setup' ) ) {
             return;
@@ -407,8 +409,8 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
 
         $dokan_settings = $this->store_info;
 
-        if ( isset( $_POST['settings']['bank'] ) ) {
-            $bank = array_map( 'sanitize_text_field', array_map( 'wp_unslash', $_POST['settings']['bank'] ) );
+        if ( isset( $posted_data['settings']['bank'] ) ) {
+            $bank = array_map( 'sanitize_text_field', array_map( 'wp_unslash', $posted_data['settings']['bank'] ) );
 
             $dokan_settings['payment']['bank'] = array(
                 'ac_name'        => sanitize_text_field( $bank['ac_name'] ),
@@ -421,15 +423,15 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
             );
         }
 
-        if ( isset( $_POST['settings']['paypal'] ) ) {
+        if ( isset( $posted_data['settings']['paypal'] ) ) {
             $dokan_settings['payment']['paypal'] = array(
-                'email' => filter_var( sanitize_text_field( wp_unslash( $_POST['settings']['paypal']['email'] ) ), FILTER_VALIDATE_EMAIL )
+                'email' => filter_var( sanitize_text_field( wp_unslash( $posted_data['settings']['paypal']['email'] ) ), FILTER_VALIDATE_EMAIL )
             );
         }
 
-        if ( isset( $_POST['settings']['skrill'] ) ) {
+        if ( isset( $posted_data['settings']['skrill'] ) ) {
             $dokan_settings['payment']['skrill'] = array(
-                'email' => filter_var( sanitize_text_field( wp_unslash( $_POST['settings']['skrill']['email'] ) ), FILTER_VALIDATE_EMAIL )
+                'email' => filter_var( sanitize_text_field( wp_unslash( $posted_data['settings']['skrill']['email'] ) ), FILTER_VALIDATE_EMAIL )
             );
         }
 

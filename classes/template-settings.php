@@ -215,14 +215,16 @@ class Dokan_Template_Settings {
             wp_send_json_error( __( 'Are you cheating?', 'dokan-lite' ) );
         }
 
-        $_POST['dokan_update_profile'] = '';
+        $post_data = wp_unslash( $_POST );
 
-        switch( $_POST['form_id'] ) { // WPCS: CSRF ok.
+        $post_data['dokan_update_profile'] = '';
+
+        switch( $post_data['form_id'] ) { // WPCS: CSRF ok.
             case 'profile-form':
                 if ( ! current_user_can( 'dokan_view_store_social_menu' ) ) {
                     wp_send_json_error( __( 'Pemission denied social', 'dokan-lite' ) );
                 }
-                if ( !wp_verify_nonce( $_POST['_wpnonce'], 'dokan_profile_settings_nonce' ) ) {
+                if ( !wp_verify_nonce( $post_data['_wpnonce'], 'dokan_profile_settings_nonce' ) ) {
                     wp_send_json_error( __( 'Are you cheating?', 'dokan-lite' ) );
                 }
                 $ajax_validate =  $this->profile_validate();
@@ -231,7 +233,7 @@ class Dokan_Template_Settings {
                 if ( !current_user_can( 'dokan_view_store_settings_menu' ) ) {
                     wp_send_json_error( __( 'Pemission denied', 'dokan-lite' ) );
                 }
-                if ( !wp_verify_nonce( $_POST['_wpnonce'], 'dokan_store_settings_nonce' ) ) {
+                if ( !wp_verify_nonce( $post_data['_wpnonce'], 'dokan_store_settings_nonce' ) ) {
                     wp_send_json_error( __( 'Are you cheating?', 'dokan-lite' ) );
                 }
                 $ajax_validate =  $this->store_validate();
@@ -241,7 +243,7 @@ class Dokan_Template_Settings {
                     wp_send_json_error( __( 'Pemission denied', 'dokan-lite' ) );
                 }
 
-                if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'dokan_payment_settings_nonce' ) ) {
+                if ( ! wp_verify_nonce( $post_data['_wpnonce'], 'dokan_payment_settings_nonce' ) ) {
                     wp_send_json_error( __( 'Are you cheating?', 'dokan-lite' ) );
                 }
                 $ajax_validate =  $this->payment_validate();
@@ -271,32 +273,34 @@ class Dokan_Template_Settings {
      */
     function validate() {
 
-        if ( !isset( $_POST['dokan_update_profile'] ) ) {
+        $post_data = wp_unslash( $_POST );
+
+        if ( !isset( $post_data['dokan_update_profile'] ) ) {
             return false;
         }
 
-        if ( !wp_verify_nonce( $_POST['_wpnonce'], 'dokan_settings_nonce' ) ) {
+        if ( !wp_verify_nonce( $post_data['_wpnonce'], 'dokan_settings_nonce' ) ) {
             wp_die( esc_attr__( 'Are you cheating?', 'dokan-lite' ) );
         }
 
 
         $error = new WP_Error();
 
-        $dokan_name = sanitize_text_field( $_POST['dokan_store_name'] );
+        $dokan_name = sanitize_text_field( $post_data['dokan_store_name'] );
 
         if ( empty( $dokan_name ) ) {
             $error->add( 'dokan_name', __( 'Store name required', 'dokan-lite' ) );
         }
 
-        if ( isset( $_POST['setting_category'] ) ) {
+        if ( isset( $post_data['setting_category'] ) ) {
 
-            if ( !is_array( $_POST['setting_category'] ) || !count( $_POST['setting_category'] ) ) {
+            if ( !is_array( $post_data['setting_category'] ) || !count( $post_data['setting_category'] ) ) {
                 $error->add( 'dokan_type', __( 'Store type required', 'dokan-lite' ) );
             }
         }
 
-        if ( !empty( $_POST['setting_paypal_email'] ) ) {
-            $email = filter_var( $_POST['setting_paypal_email'], FILTER_VALIDATE_EMAIL );
+        if ( !empty( $post_data['setting_paypal_email'] ) ) {
+            $email = filter_var( $post_data['setting_paypal_email'], FILTER_VALIDATE_EMAIL );
             if ( empty( $email ) ) {
                 $error->add( 'dokan_email', __( 'Invalid email', 'dokan-lite' ) );
             }
@@ -309,11 +313,11 @@ class Dokan_Template_Settings {
             'zip',
             'country',
         );
-        if ( $_POST['dokan_address']['state'] != 'N/A' ) {
+        if ( $post_data['dokan_address']['state'] != 'N/A' ) {
             $required_fields[] = 'state';
         }
         foreach ( $required_fields as $key ) {
-            if ( empty( $_POST['dokan_address'][$key] ) ) {
+            if ( empty( $post_data['dokan_address'][$key] ) ) {
                 $code = 'dokan_address['.$key.']';
                 $error->add( $code, sprintf( __('Address field for %s is required', 'dokan-lite'), $key ) );
             }
@@ -334,25 +338,27 @@ class Dokan_Template_Settings {
      */
     function profile_validate() {
 
-        if ( !isset( $_POST['dokan_update_profile_settings'] ) ) {
+        $post_data = wp_unslash( $_POST );
+
+        if ( !isset( $post_data['dokan_update_profile_settings'] ) ) {
             return false;
         }
 
-        if ( !wp_verify_nonce( $_POST['_wpnonce'], 'dokan_profile_settings_nonce' ) ) {
+        if ( !wp_verify_nonce( $post_data['_wpnonce'], 'dokan_profile_settings_nonce' ) ) {
             wp_die( esc_attr__( 'Are you cheating?', 'dokan-lite' ) );
         }
 
         $error = new WP_Error();
 
-        if ( isset( $_POST['setting_category'] ) ) {
+        if ( isset( $post_data['setting_category'] ) ) {
 
-            if ( !is_array( $_POST['setting_category'] ) || !count( $_POST['setting_category'] ) ) {
+            if ( !is_array( $post_data['setting_category'] ) || !count( $post_data['setting_category'] ) ) {
                 $error->add( 'dokan_type', __( 'Store type required', 'dokan-lite' ) );
             }
         }
 
         if ( !empty( $_POST['setting_paypal_email'] ) ) {
-            $email = filter_var( $_POST['setting_paypal_email'], FILTER_VALIDATE_EMAIL );
+            $email = filter_var( $post_data['setting_paypal_email'], FILTER_VALIDATE_EMAIL );
 
             if ( empty( $email ) ) {
                 $error->add( 'dokan_email', __( 'Invalid email', 'dokan-lite' ) );
@@ -373,17 +379,19 @@ class Dokan_Template_Settings {
      */
     function store_validate() {
 
-        if ( !isset( $_POST['dokan_update_store_settings'] ) ) {
+        $post_data = wp_unslash( $_POST );
+
+        if ( !isset( $post_data['dokan_update_store_settings'] ) ) {
             return false;
         }
 
-        if ( !wp_verify_nonce( $_POST['_wpnonce'], 'dokan_store_settings_nonce' ) ) {
+        if ( !wp_verify_nonce( $post_data['_wpnonce'], 'dokan_store_settings_nonce' ) ) {
             wp_die( esc_attr__( 'Are you cheating?', 'dokan-lite' ) );
         }
 
         $error = new WP_Error();
 
-        $dokan_name = sanitize_text_field( $_POST['dokan_store_name'] );
+        $dokan_name = sanitize_text_field( $post_data['dokan_store_name'] );
 
         if ( empty( $dokan_name ) ) {
             $error->add( 'dokan_name', __( 'Store name required', 'dokan-lite' ) );
@@ -391,13 +399,13 @@ class Dokan_Template_Settings {
 
         if ( isset( $_POST['setting_category'] ) ) {
 
-            if ( !is_array( $_POST['setting_category'] ) || !count( $_POST['setting_category'] ) ) {
+            if ( !is_array( $_POST['setting_category'] ) || !count( $post_data['setting_category'] ) ) {
                 $error->add( 'dokan_type', __( 'Store type required', 'dokan-lite' ) );
             }
         }
 
-        if ( !empty( $_POST['setting_paypal_email'] ) ) {
-            $email = filter_var( $_POST['setting_paypal_email'], FILTER_VALIDATE_EMAIL );
+        if ( !empty( $post_data['setting_paypal_email'] ) ) {
+            $email = filter_var( $post_data['setting_paypal_email'], FILTER_VALIDATE_EMAIL );
             if ( empty( $email ) ) {
                 $error->add( 'dokan_email', __( 'Invalid email', 'dokan-lite' ) );
             }
@@ -419,20 +427,22 @@ class Dokan_Template_Settings {
      * @return bool|WP_Error
      */
     function payment_validate() {
+        
+        $post_data = wp_unslash( $_POST );
 
-        if ( !isset( $_POST['dokan_update_payment_settings'] ) ) {
+        if ( !isset( $post_data['dokan_update_payment_settings'] ) ) {
             return false;
         }
 
-        if ( !wp_verify_nonce( $_POST['_wpnonce'], 'dokan_payment_settings_nonce' ) ) {
+        if ( !wp_verify_nonce( $post_data['_wpnonce'], 'dokan_payment_settings_nonce' ) ) {
             wp_die( esc_attr__( 'Are you cheating?', 'dokan-lite' ) );
         }
 
         $error = new WP_Error();
 
 
-        if ( !empty( $_POST['setting_paypal_email'] ) ) {
-            $email = filter_var( $_POST['setting_paypal_email'], FILTER_VALIDATE_EMAIL );
+        if ( !empty( $post_data['setting_paypal_email'] ) ) {
+            $email = filter_var( $post_data['setting_paypal_email'], FILTER_VALIDATE_EMAIL );
             if ( empty( $email ) ) {
                 $error->add( 'dokan_email', __( 'Invalid email', 'dokan-lite' ) );
             }
@@ -456,10 +466,12 @@ class Dokan_Template_Settings {
         $existing_dokan_settings = get_user_meta( $store_id, 'dokan_profile_settings', true );
         $prev_dokan_settings     = ! empty( $existing_dokan_settings ) ? $existing_dokan_settings : array();
 
-        if ( wp_verify_nonce( $_POST['_wpnonce'], 'dokan_profile_settings_nonce' ) ) {
+        $post_data = wp_unslash( $_POST );
+
+        if ( wp_verify_nonce( $post_data['_wpnonce'], 'dokan_profile_settings_nonce' ) ) {
 
             // update profile settings info
-            $social         = $_POST['settings']['social'];
+            $social         = $post_data['settings']['social'];
             $social_fields  = dokan_get_social_profile_fields();
             $dokan_settings = array( 'social' => array() );
 
@@ -471,75 +483,75 @@ class Dokan_Template_Settings {
                 }
             }
 
-        } elseif ( wp_verify_nonce( $_POST['_wpnonce'], 'dokan_store_settings_nonce' ) ) {
+        } elseif ( wp_verify_nonce( $post_data['_wpnonce'], 'dokan_store_settings_nonce' ) ) {
 
             //update store setttings info
             $dokan_settings = array(
-                'store_name'               => sanitize_text_field( $_POST['dokan_store_name'] ),
-                'store_ppp'                => absint( $_POST['dokan_store_ppp'] ),
-                'address'                  => isset( $_POST['dokan_address'] ) ? $_POST['dokan_address'] : $prev_dokan_settings['address'],
-                'location'                 => sanitize_text_field( $_POST['location'] ),
-                'find_address'             => sanitize_text_field( $_POST['find_address'] ),
-                'banner'                   => isset( $_POST['dokan_banner'] ) ? absint( $_POST['dokan_banner'] ) : null,
-                'phone'                    => sanitize_text_field( $_POST['setting_phone'] ),
-                'show_email'               => sanitize_text_field( $_POST['setting_show_email'] ),
-                'show_more_ptab'           => sanitize_text_field( $_POST['setting_show_more_ptab'] ),
-                'gravatar'                 => absint( $_POST['dokan_gravatar'] ),
-                'enable_tnc'               => isset( $_POST['dokan_store_tnc_enable'] ) ? $_POST['dokan_store_tnc_enable'] : '',
-                'store_tnc'                => isset( $_POST['dokan_store_tnc'] ) ? $_POST['dokan_store_tnc'] : '',
+                'store_name'               => sanitize_text_field( $post_data['dokan_store_name'] ),
+                'store_ppp'                => absint( $post_data['dokan_store_ppp'] ),
+                'address'                  => isset( $post_data['dokan_address'] ) ? $post_data['dokan_address'] : $prev_dokan_settings['address'],
+                'location'                 => sanitize_text_field( $post_data['location'] ),
+                'find_address'             => sanitize_text_field( $post_data['find_address'] ),
+                'banner'                   => isset( $post_data['dokan_banner'] ) ? absint( $post_data['dokan_banner'] ) : null,
+                'phone'                    => sanitize_text_field( $post_data['setting_phone'] ),
+                'show_email'               => sanitize_text_field( $post_data['setting_show_email'] ),
+                'show_more_ptab'           => sanitize_text_field( $post_data['setting_show_more_ptab'] ),
+                'gravatar'                 => absint( $post_data['dokan_gravatar'] ),
+                'enable_tnc'               => isset( $post_data['dokan_store_tnc_enable'] ) ? $post_data['dokan_store_tnc_enable'] : '',
+                'store_tnc'                => isset( $post_data['dokan_store_tnc'] ) ? $post_data['dokan_store_tnc'] : '',
                 'dokan_store_time'         => array(
                     'sunday'               => array(
-                        'open'             => isset( $_POST['sunday_on_off'] ) ? $_POST['sunday_on_off'] : 'close' ,
-                        'opening_time'     => isset( $_POST['sunday_opening_time'] ) ? $_POST['sunday_opening_time'] : '',
-                        'closing_time'     => isset( $_POST['sunday_closing_time'] ) ? $_POST['sunday_closing_time'] : '',
+                        'open'             => isset( $post_data['sunday_on_off'] ) ? $post_data['sunday_on_off'] : 'close' ,
+                        'opening_time'     => isset( $post_data['sunday_opening_time'] ) ? $post_data['sunday_opening_time'] : '',
+                        'closing_time'     => isset( $post_data['sunday_closing_time'] ) ? $post_data['sunday_closing_time'] : '',
                     ),
                     'monday'               => array(
-                        'open'             => isset( $_POST['monday_on_off'] ) ? $_POST['monday_on_off'] : 'close' ,
-                        'opening_time'     => isset( $_POST['monday_opening_time'] ) ? $_POST['monday_opening_time'] : '',
-                        'closing_time'     => isset( $_POST['monday_closing_time'] ) ? $_POST['monday_closing_time'] : '',
+                        'open'             => isset( $post_data['monday_on_off'] ) ? $post_data['monday_on_off'] : 'close' ,
+                        'opening_time'     => isset( $post_data['monday_opening_time'] ) ? $post_data['monday_opening_time'] : '',
+                        'closing_time'     => isset( $post_data['monday_closing_time'] ) ? $post_data['monday_closing_time'] : '',
                     ),
                     'tuesday'              => array(
-                        'open'             => isset( $_POST['tuesday_on_off'] ) ? $_POST['tuesday_on_off'] : 'close' ,
-                        'opening_time'     => isset( $_POST['tuesday_opening_time'] ) ? $_POST['tuesday_opening_time'] : '',
-                        'closing_time'     => isset( $_POST['tuesday_closing_time'] ) ? $_POST['tuesday_closing_time'] : '',
+                        'open'             => isset( $post_data['tuesday_on_off'] ) ? $post_data['tuesday_on_off'] : 'close' ,
+                        'opening_time'     => isset( $post_data['tuesday_opening_time'] ) ? $post_data['tuesday_opening_time'] : '',
+                        'closing_time'     => isset( $post_data['tuesday_closing_time'] ) ? $post_data['tuesday_closing_time'] : '',
                     ),
                     'wednesday'            => array(
-                        'open'             => isset( $_POST['wednesday_on_off'] ) ? $_POST['wednesday_on_off'] : 'close' ,
-                        'opening_time'     => isset( $_POST['wednesday_opening_time'] ) ? $_POST['wednesday_opening_time'] : '',
-                        'closing_time'     => isset( $_POST['wednesday_closing_time'] ) ? $_POST['wednesday_closing_time'] : '',
+                        'open'             => isset( $post_data['wednesday_on_off'] ) ? $post_data['wednesday_on_off'] : 'close' ,
+                        'opening_time'     => isset( $post_data['wednesday_opening_time'] ) ? $post_data['wednesday_opening_time'] : '',
+                        'closing_time'     => isset( $post_data['wednesday_closing_time'] ) ? $post_data['wednesday_closing_time'] : '',
                     ),
                     'thursday'             => array(
-                        'open'             => isset( $_POST['thursday_on_off'] ) ? $_POST['thursday_on_off'] : 'close' ,
-                        'opening_time'     => isset( $_POST['thursday_opening_time'] ) ? $_POST['thursday_opening_time'] : '',
-                        'closing_time'     => isset( $_POST['thursday_closing_time'] ) ? $_POST['thursday_closing_time'] : '',
+                        'open'             => isset( $post_data['thursday_on_off'] ) ? $post_data['thursday_on_off'] : 'close' ,
+                        'opening_time'     => isset( $post_data['thursday_opening_time'] ) ? $post_data['thursday_opening_time'] : '',
+                        'closing_time'     => isset( $post_data['thursday_closing_time'] ) ? $post_data['thursday_closing_time'] : '',
                     ),
                     'friday'               => array(
-                        'open'             => isset( $_POST['friday_on_off'] ) ? $_POST['friday_on_off'] : 'close' ,
-                        'opening_time'     => isset( $_POST['friday_opening_time'] ) ? $_POST['friday_opening_time'] : '',
-                        'closing_time'     => isset( $_POST['friday_closing_time'] ) ? $_POST['friday_closing_time'] : '',
+                        'open'             => isset( $post_data['friday_on_off'] ) ? $post_data['friday_on_off'] : 'close' ,
+                        'opening_time'     => isset( $post_data['friday_opening_time'] ) ? $post_data['friday_opening_time'] : '',
+                        'closing_time'     => isset( $post_data['friday_closing_time'] ) ? $post_data['friday_closing_time'] : '',
                     ),
                     'saturday'             => array(
-                        'open'             => isset( $_POST['saturday_on_off'] ) ? $_POST['saturday_on_off'] : 'close' ,
-                        'opening_time'     => isset( $_POST['saturday_opening_time'] ) ? $_POST['saturday_opening_time'] : '',
-                        'closing_time'     => isset( $_POST['saturday_closing_time'] ) ? $_POST['saturday_closing_time'] : '',
+                        'open'             => isset( $post_data['saturday_on_off'] ) ? $post_data['saturday_on_off'] : 'close' ,
+                        'opening_time'     => isset( $post_data['saturday_opening_time'] ) ? $post_data['saturday_opening_time'] : '',
+                        'closing_time'     => isset( $post_data['saturday_closing_time'] ) ? $post_data['saturday_closing_time'] : '',
                     )
                 ),
-                'dokan_store_time_enabled' => isset( $_POST['dokan_store_time_enabled'] ) ? $_POST['dokan_store_time_enabled'] : '',
-                'dokan_store_open_notice'  => isset( $_POST['dokan_store_open_notice'] ) ? $_POST['dokan_store_open_notice'] : '',
-                'dokan_store_close_notice' => isset( $_POST['dokan_store_close_notice'] ) ? $_POST['dokan_store_close_notice'] : '',
+                'dokan_store_time_enabled' => isset( $post_data['dokan_store_time_enabled'] ) ? $post_data['dokan_store_time_enabled'] : '',
+                'dokan_store_open_notice'  => isset( $post_data['dokan_store_open_notice'] ) ? $post_data['dokan_store_open_notice'] : '',
+                'dokan_store_close_notice' => isset( $post_data['dokan_store_close_notice'] ) ? $post_data['dokan_store_close_notice'] : '',
             );
 
             update_user_meta( $store_id, 'dokan_store_name', $dokan_settings['store_name'] );
 
-        } elseif ( wp_verify_nonce( $_POST['_wpnonce'], 'dokan_payment_settings_nonce' ) ) {
+        } elseif ( wp_verify_nonce( $post_data['_wpnonce'], 'dokan_payment_settings_nonce' ) ) {
 
             //update payment settings info
             $dokan_settings = array(
                 'payment'      => array(),
             );
 
-            if ( isset( $_POST['settings']['bank'] ) ) {
-                $bank = $_POST['settings']['bank'];
+            if ( isset( $post_data['settings']['bank'] ) ) {
+                $bank = $post_data['settings']['bank'];
 
                 $dokan_settings['payment']['bank'] = array(
                     'ac_name'        => sanitize_text_field( $bank['ac_name'] ),
@@ -552,15 +564,15 @@ class Dokan_Template_Settings {
                 );
             }
 
-            if ( isset( $_POST['settings']['paypal'] ) ) {
+            if ( isset( $post_data['settings']['paypal'] ) ) {
                 $dokan_settings['payment']['paypal'] = array(
-                    'email' => filter_var( $_POST['settings']['paypal']['email'], FILTER_VALIDATE_EMAIL )
+                    'email' => filter_var( $post_data['settings']['paypal']['email'], FILTER_VALIDATE_EMAIL )
                 );
             }
 
-            if ( isset( $_POST['settings']['skrill'] ) ) {
+            if ( isset( $post_data['settings']['skrill'] ) ) {
                 $dokan_settings['payment']['skrill'] = array(
-                    'email' => filter_var( $_POST['settings']['skrill']['email'], FILTER_VALIDATE_EMAIL )
+                    'email' => filter_var( $post_data['settings']['skrill']['email'], FILTER_VALIDATE_EMAIL )
                 );
             }
 

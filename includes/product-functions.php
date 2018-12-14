@@ -525,15 +525,18 @@ function dokan_bulk_product_status_change() {
     if ( ! current_user_can( 'dokan_delete_product' ) ) {
         return;
     }
-    if ( ! isset( $_POST['security'] ) || ! wp_verify_nonce( $_POST['security'], 'bulk_product_status_change' ) ) {
+
+    $post_data = wp_unslash( $_POST );
+
+    if ( ! isset( $post_data['security'] ) || ! wp_verify_nonce( $post_data['security'], 'bulk_product_status_change' ) ) {
         return;
     }
-    if ( ! isset( $_POST['status'] ) || ! isset( $_POST['bulk_products'] ) ) {
+    if ( ! isset( $post_data['status'] ) || ! isset( $post_data['bulk_products'] ) ) {
         return;
     }
 
-    $status = $_POST['status'];
-    $products = $_POST['bulk_products'];
+    $status = $post_data['status'];
+    $products = $post_data['bulk_products'];
 
     // -1 means bluk action option value
     if ( $status === '-1' ) {

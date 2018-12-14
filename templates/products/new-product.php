@@ -1,5 +1,8 @@
 <?php
 
+    $get_data  = wp_unslash( $_GET );
+    $post_data = wp_unslash( $_POST );
+
     /**
      *  dokan_new_product_wrap_before hook
      *
@@ -59,11 +62,11 @@
                     </div>
                 <?php } ?>
 
-                <?php if ( isset( $_GET['created_product'] ) ): ?>
+                <?php if ( isset( $get_data['created_product'] ) ): ?>
                     <div class="dokan-alert dokan-alert-success">
                         <a class="dokan-close" data-dismiss="alert">&times;</a>
                         <strong><?php esc_html_e( 'Success!', 'dokan-lite' ); ?></strong>
-                        <?php printf( __( 'You have successfully created <a href="%s"><strong>%s</strong></a> product', 'dokan-lite' ), esc_url( dokan_edit_product_url( intval( $_GET['created_product'] ) ) ), get_the_title( intval( $_GET['created_product'] ) ) ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped ?>
+                        <?php printf( __( 'You have successfully created <a href="%s"><strong>%s</strong></a> product', 'dokan-lite' ), esc_url( dokan_edit_product_url( intval( $get_data['created_product'] ) ) ), get_the_title( intval( $get_data['created_product'] ) ) ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped ?>
                     </div>
                 <?php endif ?>
 
@@ -108,8 +111,8 @@
                                             <div id="product_images_container">
                                                 <ul class="product_images dokan-clearfix">
                                                     <?php
-                                                        if ( isset( $_POST['product_image_gallery'] ) ) { // WPCS: CSRF ok, input var ok.
-                                                            $product_images = $_POST['product_image_gallery']; // WPCS: CSRF ok, input var ok.
+                                                        if ( isset( $post_data['product_image_gallery'] ) ) { // WPCS: CSRF ok, input var ok.
+                                                            $product_images = $post_data['product_image_gallery']; // WPCS: CSRF ok, input var ok.
                                                             $gallery        = explode( ',', $product_images );
 
                                                             if ( $gallery ) {

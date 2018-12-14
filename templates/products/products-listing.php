@@ -103,6 +103,8 @@
                                 <?php
                                 $pagenum       = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
                                 $post_statuses = array( 'publish', 'draft', 'pending', 'future' );
+                                $get_data      = wp_unslash( $_GET );
+
                                 $args = array(
                                     'posts_per_page' => 15,
                                     'paged'          => $pagenum,
@@ -117,15 +119,15 @@
                                     ),
                                 );
 
-                                if ( isset( $_GET['post_status']) && in_array( $_GET['post_status'], $post_statuses ) ) {
-                                    $args['post_status'] = $_GET['post_status'];
+                                if ( isset( $get_data['post_status']) && in_array( $get_data['post_status'], $post_statuses ) ) {
+                                    $args['post_status'] = $get_data['post_status'];
                                 }
 
-                                if( isset( $_GET['date'] ) && $_GET['date'] != 0 ) {
-                                    $args['m'] = $_GET['date'];
+                                if( isset( $get_data['date'] ) && $get_data['date'] != 0 ) {
+                                    $args['m'] = $get_data['date'];
                                 }
 
-                                if( isset( $_GET['product_cat'] ) && $_GET['product_cat'] != -1 ) {
+                                if( isset( $get_data['product_cat'] ) && $get_data['product_cat'] != -1 ) {
                                     $args['tax_query'][] = array(
                                         'taxonomy' => 'product_cat',
                                         'field' => 'id',
@@ -134,8 +136,8 @@
                                     );
                                 }
 
-                                if ( isset( $_GET['product_search_name']) && !empty( $_GET['product_search_name'] ) ) {
-                                    $args['s'] = $_GET['product_search_name'];
+                                if ( isset( $get_data['product_search_name']) && !empty( $get_data['product_search_name'] ) ) {
+                                    $args['s'] = $get_data['product_search_name'];
                                 }
 
                                 $original_post = $post;

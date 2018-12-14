@@ -30,11 +30,13 @@
     $store_tnc      = isset( $profile_info['store_tnc'] ) ? $profile_info['store_tnc'] : '' ;
 
     if ( is_wp_error( $validate ) ) {
-        $storename    = $_POST['dokan_store_name']; // WPCS: CSRF ok, Input var ok.
-        $map_location = $_POST['location'];         // WPCS: CSRF ok, Input var ok.
-        $map_address  = $_POST['find_address'];     // WPCS: CSRF ok, Input var ok.
+        $get_data = wp_unslash( $_POST );
 
-        $posted_address = wc_clean( $_POST['dokan_address'] ); // WPCS: CSRF ok, Input var ok.
+        $storename    = $get_data['dokan_store_name']; // WPCS: CSRF ok, Input var ok.
+        $map_location = $get_data['location'];         // WPCS: CSRF ok, Input var ok.
+        $map_address  = $get_data['find_address'];     // WPCS: CSRF ok, Input var ok.
+
+        $posted_address = wc_clean( $get_data['dokan_address'] ); // WPCS: CSRF ok, Input var ok.
 
         $address_street1 = $posted_address['street_1'];
         $address_street2 = $posted_address['street_2'];
