@@ -274,6 +274,10 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 ## Changelog ##
 
+v2.9.6 -> Dec 14, 2018
+------------------------
+-**Fix**  Refactored codebase with better Input Sanitization, Validation, Escape outputs following WPCS
+
 v2.9.5 -> Dec 13, 2018
 ------------------------
 -**Fix**  Some csrf and XSS related issue

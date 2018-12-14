@@ -35,13 +35,13 @@ if ( 'layout3' === $profile_layout ) {
 }
 
 ?>
-<div class="profile-frame<?php echo $no_banner_class; ?>">
+<div class="profile-frame<?php echo esc_attr( $no_banner_class ); ?>">
 
-    <div class="profile-info-box profile-layout-<?php echo $profile_layout; ?>">
+    <div class="profile-info-box profile-layout-<?php echo esc_attr( $profile_layout ); ?>">
         <?php if ( $store_user->get_banner() ) { ?>
-            <img src="<?php echo $store_user->get_banner(); ?>"
-                 alt="<?php echo $store_user->get_shop_name(); ?>"
-                 title="<?php echo $store_user->get_shop_name(); ?>"
+            <img src="<?php echo esc_url( $store_user->get_banner() ); ?>"
+                 alt="<?php echo esc_attr( $store_user->get_shop_name() ); ?>"
+                 title="<?php echo esc_attr( $store_user->get_shop_name() ); ?>"
                  class="profile-info-img">
         <?php } else { ?>
             <div class="profile-info-img dummy-image">&nbsp;</div>
@@ -50,7 +50,7 @@ if ( 'layout3' === $profile_layout ) {
         <div class="profile-info-summery-wrapper dokan-clearfix">
             <div class="profile-info-summery">
                 <div class="profile-info-head">
-                    <div class="profile-img <?php echo $profile_img_class; ?>">
+                    <div class="profile-img <?php echo esc_attr( $profile_img_class ); ?>">
                         <?php echo get_avatar( $store_user->get_id(), 150, '', $store_user->get_shop_name() ); ?>
                     </div>
                     <?php if ( ! empty( $store_user->get_shop_name() ) && 'default' === $profile_layout ) { ?>
@@ -80,13 +80,13 @@ if ( 'layout3' === $profile_layout ) {
                         <?php if ( $store_user->show_email() == 'yes' ) { ?>
                             <li class="dokan-store-email">
                                 <i class="fa fa-envelope-o"></i>
-                                <a href="mailto:<?php echo antispambot( $store_user->get_email() ); ?>"><?php echo antispambot( $store_user->get_email() ); ?></a>
+                                <a href="mailto:<?php echo esc_attr( antispambot( $store_user->get_email() ) ); ?>"><?php echo esc_attr( antispambot( $store_user->get_email() ) ); ?></a>
                             </li>
                         <?php } ?>
 
                         <li class="dokan-store-rating">
                             <i class="fa fa-star"></i>
-                            <?php dokan_get_readable_seller_rating( $store_user->get_id() ); ?>
+                            <?php echo dokan_get_readable_seller_rating( $store_user->get_id() ); ?>
                         </li>
 
                         <?php if ( $show_store_open_close == 'on' && $dokan_store_time_enabled == 'yes') : ?>
@@ -109,7 +109,7 @@ if ( 'layout3' === $profile_layout ) {
                                 <?php foreach( $social_fields as $key => $field ) { ?>
                                     <?php if ( !empty( $social_info[ $key ] ) ) { ?>
                                         <li>
-                                            <a href="<?php echo esc_url( $social_info[ $key ] ); ?>" target="_blank"><i class="fa fa-<?php echo $field['icon']; ?>"></i></a>
+                                            <a href="<?php echo esc_url( $social_info[ $key ] ); ?>" target="_blank"><i class="fa fa-<?php echo esc_attr( $field['icon'] ); ?>"></i></a>
                                         </li>
                                     <?php } ?>
                                 <?php } ?>
@@ -124,10 +124,10 @@ if ( 'layout3' === $profile_layout ) {
 </div> <!-- .profile-frame -->
 
 <?php if ( $store_tabs ) { ?>
-    <div class="dokan-store-tabs<?php echo $no_banner_class_tabs; ?>">
+    <div class="dokan-store-tabs<?php echo esc_attr( $no_banner_class_tabs ); ?>">
         <ul class="dokan-list-inline">
             <?php foreach( $store_tabs as $key => $tab ) { ?>
-                <li><a href="<?php echo esc_url( $tab['url'] ); ?>"><?php echo $tab['title']; ?></a></li>
+                <li><a href="<?php echo esc_url( $tab['url'] ); ?>"><?php echo esc_html( $tab['title'] ); ?></a></li>
             <?php } ?>
             <?php do_action( 'dokan_after_store_tabs', $store_user->get_id() ); ?>
         </ul>

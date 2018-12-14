@@ -121,10 +121,11 @@ class Dokan_Withdraw {
     function get_withdraw_requests( $user_id = '', $status = 0, $limit = 10, $offset = 0 ) {
         global $wpdb;
 
-        $where  = empty( $user_id ) ? '' : sprintf( "user_id ='%d' &&", $user_id );
-
-        $sql    = $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} WHERE $where status = %d LIMIT %d, %d", $status, $offset, $limit );
-        $result = $wpdb->get_results( $sql );
+        if ( empty( $user_id ) ) {
+            $result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} WHERE status = %d LIMIT %d, %d", $status, $offset, $limit ) );
+        } else {
+            $result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} WHERE user_id = %d AND status = %d LIMIT %d, %d", $user_id, $status, $offset, $limit ) );
+        }
 
         return $result;
     }

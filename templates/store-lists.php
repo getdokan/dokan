@@ -4,10 +4,12 @@ global $post;
 
 $pagination_base = str_replace( $post->ID, '%#%', esc_url( get_pagenum_link( $post->ID ) ) );
 
+$get_data = wp_unslash( $_GET );
+
 $search_query = null;
 
 if ( 'yes' === $search ) {
-    $search_query = isset( $_GET['dokan_seller_search'] ) ? sanitize_text_field( $_GET['dokan_seller_search'] ) : '';
+    $search_query = isset( $get_data['dokan_seller_search'] ) ? sanitize_text_field( $get_data['dokan_seller_search'] ) : '';
 }
 
 /**

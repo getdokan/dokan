@@ -23,7 +23,9 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
      */
     public function __construct() {
 
-        $this->current_status = isset( $_GET['type'] ) ? $_GET['type'] : 'pending';
+        $get_data = wp_unslash( $_GET );
+
+        $this->current_status = isset( $get_data['type'] ) ? $get_data['type'] : 'pending';
 
         add_action( 'template_redirect', array( $this, 'handle_withdraws' ) );
         add_action( 'dokan_withdraw_content_inside_before', array( $this, 'show_seller_enable_message' ) );
@@ -62,7 +64,7 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
         $user_id = get_current_user_id();
 
         if ( ! dokan_is_seller_enabled( $user_id ) ) {
-            echo dokan_seller_not_enabled_notice();
+            dokan_seller_not_enabled_notice();
         }
     }
 
@@ -184,19 +186,21 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
      */
     function cancel_pending() {
 
-        if ( isset( $_GET['action'] ) && $_GET['action'] == 'dokan_cancel_withdrow' ) {
+        $get_data = wp_unslash( $_GET );
 
-            if ( !wp_verify_nonce( $_GET['_wpnonce'], 'dokan_cancel_withdrow' ) ) {
-                wp_die( __( 'Are you cheating?', 'dokan-lite' ) );
+        if ( isset( $get_data['action'] ) && $get_data['action'] == 'dokan_cancel_withdrow' ) {
+
+            if ( !wp_verify_nonce( $get_data['_wpnonce'], 'dokan_cancel_withdrow' ) ) {
+                wp_die( esc_attr__( 'Are you cheating?', 'dokan-lite' ) );
             }
 
             if ( ! current_user_can( 'dokan_manage_withdraw' ) ) {
-                wp_die( __( 'You have no permission to do this action', 'dokan-lite' ) );
+                wp_die( esc_attr__( 'You have no permission to do this action', 'dokan-lite' ) );
             }
 
             global $current_user, $wpdb;
 
-            $row_id = absint( $_GET['id'] );
+            $row_id = absint( $get_data['id'] );
 
             $this->update_status( $row_id, $current_user->ID, 2 );
 
@@ -211,24 +215,26 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
      */
     function validate() {
 
-        if ( !isset( $_POST['withdraw_submit'] ) ) {
+        $post_data = wp_unslash( $_POST );
+
+        if ( !isset( $post_data['withdraw_submit'] ) ) {
             return false;
         }
 
-        if ( !wp_verify_nonce( $_POST['dokan_withdraw_nonce'], 'dokan_withdraw' ) ) {
-            wp_die( __( 'Are you cheating?', 'dokan-lite' ) );
+        if ( !wp_verify_nonce( $post_data['dokan_withdraw_nonce'], 'dokan_withdraw' ) ) {
+            wp_die( esc_attr__( 'Are you cheating?', 'dokan-lite' ) );
         }
 
         if ( ! current_user_can( 'dokan_manage_withdraw' ) ) {
-            wp_die( __( 'You have no permission to do this action', 'dokan-lite' ) );
+            wp_die( esc_attr__( 'You have no permission to do this action', 'dokan-lite' ) );
         }
 
         $error           = new WP_Error();
         $limit           = $this->get_withdraw_limit();
         $balance         = dokan_get_seller_balance( dokan_get_current_user_id(), false );
-        $withdraw_amount = (float) $_POST['witdraw_amount'];
+        $withdraw_amount = (float) $post_data['witdraw_amount'];
 
-        if ( empty( $_POST['witdraw_amount'] ) ) {
+        if ( empty( $post_data['witdraw_amount'] ) ) {
             $error->add( 'dokan_empty_withdrad', __( 'Withdraw amount required ', 'dokan-lite' ) );
         } elseif ( $withdraw_amount > $balance ) {
 
@@ -237,7 +243,7 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
             $error->add( 'dokan_withdraw_amount', sprintf( __( 'Withdraw amount must be greater than %d', 'dokan-lite' ), $this->get_withdraw_limit() ) );
         }
 
-        if ( empty( $_POST['withdraw_method'] ) ) {
+        if ( empty( $post_data['withdraw_method'] ) ) {
             $error->add( 'dokan_withdraw_method', __( 'withdraw method required', 'dokan-lite' ) );
         }
 
@@ -255,7 +261,9 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
      */
     function insert_withdraw_info() {
 
-        if ( isset( $_POST['dokan_withdraw_nonce'] ) && ! wp_verify_nonce( $_POST['dokan_withdraw_nonce'], 'dokan_withdraw' ) ) {
+        $post_data = wp_unslash( $_POST );
+
+        if ( isset( $post_data['dokan_withdraw_nonce'] ) && ! wp_verify_nonce( $post_data['dokan_withdraw_nonce'], 'dokan_withdraw' ) ) {
             return;
         }
 
@@ -265,8 +273,8 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
 
         global $current_user;
 
-        $amount = floatval( $_POST['witdraw_amount'] );
-        $method = $_POST['withdraw_method'];
+        $amount = floatval( $post_data['witdraw_amount'] );
+        $method = $post_data['withdraw_method'];
 
         $data_info = array(
             'user_id' => $current_user->ID,
@@ -309,7 +317,9 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
      * @return void
      */
     function show_alert_messages() {
-        $type    = isset( $_GET['message'] ) ? $_GET['message'] : '';
+        $get_data = wp_unslash( $_GET );
+
+        $type    = isset( $get_data['message'] ) ? $get_data['message'] : '';
         $message = '';
 
         $template = 'global/dokan-success';
@@ -342,6 +352,10 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
      * @return void
      */
     function withdraw_form( $validate = '' ) {
+
+        $get_data  = wp_unslash( $_GET );
+        $post_data = wp_unslash( $_POST );
+
         global $current_user;
 
         if ( ! current_user_can( 'dokan_manage_withdraw' ) ) {
@@ -362,7 +376,7 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
 
         if ( $this->has_pending_request( $current_user->ID ) ) {
 
-            $req_success = isset( $_GET['message'] ) ? $_GET['message'] : false;
+            $req_success = isset( $get_data['message'] ) ? $get_data['message'] : false;
 
             if( !$req_success ) {
                 $pending_warning = sprintf( "<p>%s</p><p>%s</p>", __( 'You already have pending withdraw request(s).', 'dokan-lite' ), __( 'Please submit your request after approval or cancellation of your previous request.', 'dokan-lite' ) );
@@ -389,8 +403,8 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
         $payment_methods = array_intersect( dokan_get_seller_active_withdraw_methods(), dokan_withdraw_get_active_methods() );
 
         if ( is_wp_error( $validate ) ) {
-            $amount          = sanitize_text_field( $_POST['witdraw_amount'] );
-            $withdraw_method = sanitize_text_field( $_POST['withdraw_method'] );
+            $amount          = sanitize_text_field( $post_data['witdraw_amount'] );
+            $withdraw_method = sanitize_text_field( $post_data['withdraw_method'] );
         } else {
             $amount          = '';
             $withdraw_method = '';
@@ -417,10 +431,11 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
 
         global $wpdb;
 
-        $where  = empty( $user_id ) ? '' : sprintf( "user_id ='%d' &&", $user_id );
-
-        $sql    = "SELECT * FROM {$wpdb->dokan_withdraw} WHERE $where 1=1 ORDER BY date DESC LIMIT $offset, $limit";
-        $result = $wpdb->get_results( $sql );
+        if ( empty( $user_id ) ) {
+            $result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} ORDER BY date DESC LIMIT %d, %d", $offset, $limit ) );
+        } else {
+            $result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} WHERE user_id =%d ORDER BY date DESC LIMIT %d, %d", $user_id, $offset, $limit ) );
+        }
 
         return $result;
     }

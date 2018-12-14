@@ -13,7 +13,6 @@ class Dokan_Admin_Ajax {
 	 *  Load autometically all actions
 	 */
 	function __construct() {
-        add_action( 'wp_ajax_dokan_withdraw_form_action', array( $this, 'handle_withdraw_action' ) );
         add_action( 'wp_ajax_dokan-dismiss-christmas-offer-notice', array( $this, 'dismiss_christmas_offer' ) );
 	}
 
@@ -33,81 +32,6 @@ class Dokan_Admin_Ajax {
         return $instance;
     }
 
-	/**
-	 *  Handle withdraw action via ajax
-	 *
-	 *  @return json success|error|data
-	 */
-	function handle_withdraw_action() {
-
-        parse_str( $_POST['formData'], $postdata );
-
-        if( !wp_verify_nonce( $postdata['dokan_withdraw_admin_bulk_action_nonce'], 'dokan_withdraw_admin_bulk_action' ) ) {
-            wp_send_json_error();
-        }
-
-        $withdraw = Dokan_Template_Withdraw::init();
-
-        $bulk_action = $_POST['status'];
-        $status      = $postdata['status_page'];
-        $withdraw_id = $_POST['withdraw_id'];
-
-        switch ( $bulk_action ) {
-
-            case 'delete':
-
-                $withdraw->delete_withdraw( $withdraw_id );
-
-                $url = admin_url( 'admin.php?page=dokan-withdraw&message=trashed&status=' . $status );
-                wp_send_json_success( array( 'url'=> $url ) );
-
-                break;
-
-            case 'cancel':
-
-                $user_id = $postdata['user_id'][$withdraw_id];
-                $amount  = $postdata['amount'][$withdraw_id];
-                $method  = $postdata['method'][$withdraw_id];
-                $note    = $postdata['note'][$withdraw_id];
-
-                do_action( 'dokan_withdraw_request_cancelled', $user_id, $amount, $method, $note );
-                $withdraw->update_status( $withdraw_id, $user_id, 2 );
-
-                $url = admin_url( 'admin.php?page=dokan-withdraw&message=cancelled&status=' . $status );
-                wp_send_json_success( array( 'url'=> $url ) );
-
-                break;
-
-            case 'approve':
-
-                $user_id = $postdata['user_id'][$withdraw_id];
-                $amount  = $postdata['amount'][$withdraw_id];
-                $method  = $postdata['method'][$withdraw_id];
-
-                if ( dokan_get_seller_balance( $user_id, false ) < $amount ) {
-                    continue;
-                }
-
-                $withdraw->update_status( $withdraw_id, $user_id, 1 );
-
-                do_action( 'dokan_withdraw_request_approved', $user_id, $amount, $method );
-
-                $url = admin_url( 'admin.php?page=dokan-withdraw&message=approved&status=' . $status );
-                wp_send_json_success( array( 'url'=> $url ) );
-
-                break;
-
-            case 'pending':
-
-                $withdraw->update_status( $withdraw_id, $postdata['user_id'][$withdraw_id], 0 );
-
-                $url = admin_url( 'admin.php?page=dokan-withdraw&message=pending&status=' . $status );
-                wp_send_json_success( array( 'url'=> $url ) );
-
-                break;
-        }
-    }
-
     /**
      * Dismiss promotion notice
      *
@@ -120,7 +44,10 @@ class Dokan_Admin_Ajax {
             wp_send_json_error( __( 'You have no permission to do that', 'dokan-lite' ) );
         }
 
-        if ( ! wp_verify_nonce( $_POST['nonce'], 'dokan_admin' ) ) {
+        $_post_data = wp_unslash( $_POST );
+        $nonce = isset( $_post_data['nonce'] ) ? sanitize_text_field( $_post_data['nonce'] ) : '';
+
+        if ( ! wp_verify_nonce( $nonce, 'dokan_admin' ) ) {
             wp_send_json_error( __( 'Invalid nonce', 'dokan-lite' ) );
         }
 

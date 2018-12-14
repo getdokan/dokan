@@ -36,7 +36,7 @@ function dokan_content_nav( $nav_id, $query = null ) {
     if ( is_single() )
         $nav_class = 'site-navigation post-navigation';
     ?>
-    <nav role="navigation" id="<?php echo $nav_id; ?>" class="<?php echo $nav_class; ?>">
+    <nav role="navigation" id="<?php echo esc_attr( $nav_id ); ?>" class="<?php echo esc_attr( $nav_class ); ?>">
 
         <ul class="pager">
         <?php if ( is_single() ) : // navigation links for single posts  ?>
@@ -56,7 +56,7 @@ function dokan_content_nav( $nav_id, $query = null ) {
             <?php dokan_page_navi( '', '', $wp_query ); ?>
         <?php endif; ?>
 
-    </nav><!-- #<?php echo $nav_id; ?> -->
+    </nav>
     <?php
 }
 
@@ -96,24 +96,24 @@ function dokan_page_navi( $before = '', $after = '', $wp_query ) {
         $start_page = 1;
     }
 
-    echo $before . '<div class="dokan-pagination-container"><ul class="dokan-pagination">' . "";
+    echo $before . '<div class="dokan-pagination-container"><ul class="dokan-pagination">' . ""; //phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
     if ( $paged > 1 ) {
         $first_page_text = "&laquo;";
-        echo '<li class="prev"><a href="' . get_pagenum_link() . '" title="First">' . $first_page_text . '</a></li>';
+        echo '<li class="prev"><a href="' . esc_url( get_pagenum_link() ) . '" title="First">' . esc_html( $first_page_text ) . '</a></li>';
     }
 
     $prevposts = get_previous_posts_link( __( '&larr; Previous', 'dokan-lite') );
     if ( $prevposts ) {
-        echo '<li>' . $prevposts . '</li>';
+        echo '<li>' . esc_url( $prevposts ) . '</li>';
     } else {
-        echo '<li class="disabled"><a href="#">' . __( '&larr; Previous', 'dokan-lite' ) . '</a></li>';
+        echo '<li class="disabled"><a href="#">' . esc_html__( '&larr; Previous', 'dokan-lite' ) . '</a></li>';
     }
 
     for ($i = $start_page; $i <= $end_page; $i++) {
         if ( $i == $paged ) {
-            echo '<li class="active"><a href="#">' . $i . '</a></li>';
+            echo '<li class="active"><a href="#">' . esc_html( $i ) . '</a></li>';
         } else {
-            echo '<li><a href="' . get_pagenum_link( $i ) . '">' . number_format_i18n( $i ) . '</a></li>';
+            echo '<li><a href="' . esc_url( get_pagenum_link( $i ) ) . '">' . esc_html__( number_format_i18n( $i ) ) . '</a></li>';
         }
     }
     echo '<li class="">';
@@ -121,15 +121,15 @@ function dokan_page_navi( $before = '', $after = '', $wp_query ) {
     echo '</li>';
     if ( $end_page < $max_page ) {
         $last_page_text = "&rarr;";
-        echo '<li class="next"><a href="' . get_pagenum_link( $max_page ) . '" title="Last">' . $last_page_text . '</a></li>';
+        echo '<li class="next"><a href="' . esc_url( get_pagenum_link( $max_page ) ) . '" title="Last">' . esc_html__( $last_page_text ) . '</a></li>';
     }
-    echo '</ul></div>' . $after . "";
+    echo '</ul></div>' . $after . ""; //phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
 }
 
 endif;
 
 function dokan_product_dashboard_errors() {
-    $type = isset( $_GET['message'] ) ? $_GET['message'] : '';
+    $type = isset( $_GET['message'] ) ? sanitize_text_field( wp_unslash( $_GET['message'] ) ) : '';
 
     switch ( $type ) {
         case 'product_deleted':
@@ -148,8 +148,10 @@ function dokan_product_dashboard_errors() {
 }
 
 function dokan_product_listing_status_filter() {
+    $_get_data = wp_unslash( $_GET );
+
     $permalink    = dokan_get_navigation_url( 'products' );
-    $status_class = isset( $_GET['post_status'] ) ? $_GET['post_status'] : 'all';
+    $status_class = isset( $_get_data['post_status'] ) ? $_get_data['post_status'] : 'all';
     $post_counts  = dokan_count_posts( 'product', dokan_get_current_user_id() );
     $statuses     = dokan_get_post_status();
 
@@ -162,11 +164,13 @@ function dokan_product_listing_status_filter() {
 }
 
 function dokan_order_listing_status_filter() {
+    $_get_data = wp_unslash( $_GET );
+
     $orders_url = dokan_get_navigation_url( 'orders' );
 
-    $status_class         = isset( $_GET['order_status'] ) ? $_GET['order_status'] : 'all';
+    $status_class         = isset( $_get_data['order_status'] ) ? $_get_data['order_status'] : 'all';
     $orders_counts        = dokan_count_orders( dokan_get_current_user_id() );
-    $order_date           = ( isset( $_GET['order_date'] ) ) ? $_GET['order_date'] : '';
+    $order_date           = ( isset( $_get_data['order_date'] ) ) ? $_get_data['order_date'] : '';
     $date_filter          = array();
     $all_order_url        = array();
     $complete_order_url   = array();
@@ -187,9 +191,10 @@ function dokan_order_listing_status_filter() {
                     );
                 }
                 $all_order_url = array_merge( $date_filter, array( 'order_status' => 'all' ) );
+                $all_order_url = ( empty( $all_order_url ) ) ? $orders_url : add_query_arg( $complete_order_url, $orders_url );
             ?>
-            <a href="<?php echo ( empty( $all_order_url ) ) ? $orders_url : add_query_arg( $complete_order_url, $orders_url ); ?>">
-                <?php printf( __( 'All (%d)', 'dokan-lite' ), $orders_counts->total ); ?></span>
+            <a href="<?php echo esc_url( $all_order_url );  ?>">
+                <?php printf( esc_html__( 'All (%d)', 'dokan-lite' ), esc_attr( $orders_counts->total ) ); ?></span>
             </a>
         </li>
         <li<?php echo $status_class == 'wc-completed' ? ' class="active"' : ''; ?>>
@@ -202,8 +207,8 @@ function dokan_order_listing_status_filter() {
                 }
                 $complete_order_url = array_merge( array( 'order_status' => 'wc-completed' ), $date_filter );
             ?>
-            <a href="<?php echo add_query_arg( $complete_order_url, $orders_url ); ?>">
-                <?php printf( __( 'Completed (%d)', 'dokan-lite' ), $orders_counts->{'wc-completed'} ); ?></span>
+            <a href="<?php echo esc_url( add_query_arg( $complete_order_url, $orders_url ) ); ?>">
+                <?php printf( esc_html__( 'Completed (%d)', 'dokan-lite' ), esc_attr( $orders_counts->{'wc-completed'} ) ); ?></span>
             </a>
         </li>
         <li<?php echo $status_class == 'wc-processing' ? ' class="active"' : ''; ?>>
@@ -216,8 +221,8 @@ function dokan_order_listing_status_filter() {
                 }
                 $processing_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-processing' ) );
             ?>
-            <a href="<?php echo add_query_arg( $processing_order_url, $orders_url ); ?>">
-                <?php printf( __( 'Processing (%d)', 'dokan-lite' ), $orders_counts->{'wc-processing'} ); ?></span>
+            <a href="<?php echo esc_url( add_query_arg( $processing_order_url, $orders_url ) ); ?>">
+                <?php printf( esc_html__( 'Processing (%d)', 'dokan-lite' ), esc_attr( $orders_counts->{'wc-processing'} ) ); ?></span>
             </a>
         </li>
         <li<?php echo $status_class == 'wc-on-hold' ? ' class="active"' : ''; ?>>
@@ -230,8 +235,8 @@ function dokan_order_listing_status_filter() {
                 }
                 $on_hold_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-on-hold' ) );
             ?>
-            <a href="<?php echo add_query_arg( $on_hold_order_url, $orders_url ); ?>">
-                <?php printf( __( 'On-hold (%d)', 'dokan-lite' ), $orders_counts->{'wc-on-hold'} ); ?></span>
+            <a href="<?php echo esc_url( add_query_arg( $on_hold_order_url, $orders_url ) ); ?>">
+                <?php printf( esc_html__( 'On-hold (%d)', 'dokan-lite' ), esc_attr( $orders_counts->{'wc-on-hold'} ) ); ?></span>
             </a>
         </li>
         <li<?php echo $status_class == 'wc-pending' ? ' class="active"' : ''; ?>>
@@ -244,8 +249,8 @@ function dokan_order_listing_status_filter() {
                 }
                 $pending_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-pending' ) );
             ?>
-            <a href="<?php echo add_query_arg( $pending_order_url, $orders_url ); ?>">
-                <?php printf( __( 'Pending (%d)', 'dokan-lite' ), $orders_counts->{'wc-pending'} ); ?></span>
+            <a href="<?php echo esc_url( add_query_arg( $pending_order_url, $orders_url ) ); ?>">
+                <?php printf( esc_html__( 'Pending (%d)', 'dokan-lite' ), esc_attr( $orders_counts->{'wc-pending'} ) ); ?></span>
             </a>
         </li>
         <li<?php echo $status_class == 'wc-canceled' ? ' class="active"' : ''; ?>>
@@ -258,8 +263,8 @@ function dokan_order_listing_status_filter() {
                 }
                 $canceled_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-cancelled' ) );
             ?>
-            <a href="<?php echo add_query_arg( $canceled_order_url, $orders_url ); ?>">
-                <?php printf( __( 'Cancelled (%d)', 'dokan-lite' ), $orders_counts->{'wc-cancelled'} ); ?></span>
+            <a href="<?php echo esc_url( add_query_arg( $canceled_order_url, $orders_url ) ); ?>">
+                <?php printf( esc_html__( 'Cancelled (%d)', 'dokan-lite' ), esc_attr( $orders_counts->{'wc-cancelled'} ) ); ?></span>
             </a>
         </li>
         <li<?php echo $status_class == 'wc-refunded' ? ' class="active"' : ''; ?>>
@@ -272,8 +277,8 @@ function dokan_order_listing_status_filter() {
                 }
                 $refund_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-refunded' ) );
             ?>
-            <a href="<?php echo add_query_arg( $refund_order_url, $orders_url ); ?>">
-                <?php printf( __( 'Refunded (%d)', 'dokan-lite' ), $orders_counts->{'wc-refunded'} ); ?></span>
+            <a href="<?php echo esc_url( add_query_arg( $refund_order_url, $orders_url ) ); ?>">
+                <?php printf( esc_html__( 'Refunded (%d)', 'dokan-lite' ), esc_attr( $orders_counts->{'wc-refunded'} ) ); ?></span>
             </a>
         </li>
 
@@ -483,20 +488,18 @@ function dokan_store_category_menu( $seller_id, $title = '' ) {
     <div id="cat-drop-stack">
         <?php
         global $wpdb;
-
         $categories = get_transient( 'dokan-store-category-'.$seller_id );
 
         if ( false === $categories ) {
-            $sql = "SELECT t.term_id,t.name, tt.parent FROM $wpdb->terms as t
-                    LEFT JOIN $wpdb->term_taxonomy as tt on t.term_id = tt.term_id
-                    LEFT JOIN $wpdb->term_relationships AS tr on tt.term_taxonomy_id = tr.term_taxonomy_id
-                    LEFT JOIN $wpdb->posts AS p on tr.object_id = p.ID
-                    WHERE tt.taxonomy = 'product_cat'
-                    AND p.post_type = 'product'
-                    AND p.post_status = 'publish'
-                    AND p.post_author = $seller_id GROUP BY t.term_id";
-
-            $categories = $wpdb->get_results( $sql );
+            $categories = $wpdb->get_results( $wpdb->prepare( "SELECT t.term_id,t.name, tt.parent FROM $wpdb->terms as t
+                LEFT JOIN $wpdb->term_taxonomy as tt on t.term_id = tt.term_id
+                LEFT JOIN $wpdb->term_relationships AS tr on tt.term_taxonomy_id = tr.term_taxonomy_id
+                LEFT JOIN $wpdb->posts AS p on tr.object_id = p.ID
+                WHERE tt.taxonomy = 'product_cat'
+                AND p.post_type = 'product'
+                AND p.post_status = 'publish'
+                AND p.post_author = %d GROUP BY t.term_id", $seller_id
+            ) );
             set_transient( 'dokan-store-category-'.$seller_id , $categories );
         }
 
@@ -507,7 +510,7 @@ function dokan_store_category_menu( $seller_id, $title = '' ) {
 
         $walker = new Dokan_Store_Category_Walker( $seller_id );
         echo "<ul>";
-        echo call_user_func_array( array(&$walker, 'walk'), array($categories, 0, array()) );
+        echo call_user_func_array( array(&$walker, 'walk'), array($categories, 0, array()) ); //phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
         echo "</ul>";
         ?>
     </div>

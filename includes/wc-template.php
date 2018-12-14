@@ -140,16 +140,16 @@ function dokan_author_field_quick_edit() {
     ?>
     <div class="dokan-product-author-field inline-edit-group">
         <label class="alignleft">
-            <span class="title"><?php _e( 'Vendor', 'dokan-lite' ); ?></span>
+            <span class="title"><?php esc_html_e( 'Vendor', 'dokan-lite' ); ?></span>
             <span class="input-text-wrap">
                  <select name="dokan_product_author_override" id="dokan_product_author_override" class="">
                     <?php if ( ! $sellers ): ?>
-                        <option value="<?php echo $admin_user->ID ?>"><?php echo $admin_user->display_name; ?></option>
+                        <option value="<?php echo esc_attr( $admin_user->ID ); ?>"><?php echo esc_html( $admin_user->display_name ); ?></option>
                     <?php else: ?>
-                        <option value=""><?php _e( '— No change —', 'dokan-lite' ); ?></option>
-                        <option value="<?php echo $admin_user->ID; ?>"><?php echo $admin_user->display_name; ?></option>
+                        <option value=""><?php esc_html( '— No change —', 'dokan-lite' ); ?></option>
+                        <option value="<?php echo esc_attr( $admin_user->ID ); ?>"><?php echo esc_html( $admin_user->display_name ); ?></option>
                         <?php foreach ( $sellers as $key => $user): ?>
-                            <option value="<?php echo $user->ID ?>"><?php echo $user->display_name; ?></option>
+                            <option value="<?php echo esc_attr( $user->ID ); ?>"><?php echo esc_html( $user->display_name ); ?></option>
                         <?php endforeach ?>
                     <?php endif ?>
                 </select>
@@ -190,8 +190,8 @@ function dokan_vendor_quick_edit_data( $column,$post_id ) {
     switch ( $column ) {
         case 'name' :
             ?>
-            <div class="hidden dokan_vendor_id_inline" id="dokan_vendor_id_inline_<?php echo $post_id; ?>">
-                <div id="dokan_vendor_id"><?php echo get_post_field( 'post_author', $post_id ); ?></div>
+            <div class="hidden dokan_vendor_id_inline" id="dokan_vendor_id_inline_<?php echo esc_attr( $post_id ); ?>">
+                <div id="dokan_vendor_id"><?php echo esc_html( get_post_field( 'post_author', $post_id ) ); ?></div>
             </div>
             <?php
             break;
@@ -215,7 +215,7 @@ function dokan_save_quick_edit_vendor_data ( $product ) {
     }
 
     if ( isset( $_REQUEST['dokan_product_author_override'] ) ) {
-        $vendor_id = esc_attr( $_REQUEST['dokan_product_author_override'] );
+        $vendor_id = sanitize_text_field( wp_unslash( $_REQUEST['dokan_product_author_override'] ) );
 
         if ( ! $vendor_id ) {
             return;
@@ -242,8 +242,8 @@ function dokan_set_go_to_vendor_dashboard_btn() {
     }
 
     printf( '<p><a href="%s" class="dokan-btn dokan-btn-theme vendor-dashboard" >%s</a></p>',
-        dokan_get_navigation_url(),
-        apply_filters( 'dokan_set_go_to_vendor_dashboard_btn_text', __( 'Go to Vendor Dashboard', 'dokan-lite' ) )
+        esc_url( dokan_get_navigation_url() ),
+        esc_html( apply_filters( 'dokan_set_go_to_vendor_dashboard_btn_text', __( 'Go to Vendor Dashboard', 'dokan-lite' ) ) )
     );
 }
 
@@ -274,7 +274,7 @@ function dokan_attach_vendor_name( $item_id, $order ) {
         return;
     }
 
-    printf( '<br>%s: <a href="%s">%s</a>', __( 'Vendor', 'dokan-lite' ), $vendor->get_shop_url(), $vendor->get_shop_name() );
+    printf( '<br>%s: <a href="%s">%s</a>', esc_html__( 'Vendor', 'dokan-lite' ), esc_url( $vendor->get_shop_url() ), esc_html__( $vendor->get_shop_name() ) );
 }
 
 add_action( 'woocommerce_order_item_meta_start', 'dokan_attach_vendor_name', 10, 2 );

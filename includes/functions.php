@@ -187,12 +187,14 @@ function dokan_delete_product_handler() {
     if ( isset( $_GET['action'] ) && $_GET['action'] == 'dokan-delete-product' ) {
         $product_id = isset( $_GET['product_id'] ) ? (int) $_GET['product_id'] : 0;
 
+        $getdata = wp_unslash( $_GET );
+
         if ( !$product_id ) {
             wp_redirect( add_query_arg( array( 'message' => 'error' ), dokan_get_navigation_url( 'products' ) ) );
             return;
         }
 
-        if ( !wp_verify_nonce( $_GET['_wpnonce'], 'dokan-delete-product' ) ) {
+        if ( !wp_verify_nonce( $getdata['_wpnonce'], 'dokan-delete-product' ) ) {
             wp_redirect( add_query_arg( array( 'message' => 'error' ), dokan_get_navigation_url( 'products' ) ) );
             return;
         }
@@ -229,8 +231,18 @@ function dokan_count_posts( $post_type, $user_id ) {
     $counts      = wp_cache_get( $cache_key, $cache_group );
 
     if ( false === $counts ) {
-        $query       = apply_filters( 'dokan_count_posts', "SELECT post_status, COUNT( * ) AS num_posts FROM {$wpdb->posts} WHERE post_type = %s AND post_author = %d GROUP BY post_status" );
-        $results     = $wpdb->get_results( $wpdb->prepare( $query, $post_type, $user_id ), ARRAY_A );
+        $results = apply_filters( 'dokan_count_posts', null, $post_type, $user_id );
+
+        if ( ! $results ) {
+            $results = $wpdb->get_results(
+                $wpdb->prepare(
+                    "SELECT post_status, COUNT( * ) AS num_posts FROM {$wpdb->posts} WHERE post_type = %s AND post_author = %d GROUP BY post_status",
+                    $post_type, $user_id
+                ),
+                ARRAY_A
+            );
+        }
+
         $post_status = array_keys( dokan_get_post_status() );
         $counts      = array_fill_keys( get_post_stati(), 0 );
         $total       = 0;
@@ -268,20 +280,20 @@ function dokan_count_comments( $post_type, $user_id ) {
     $counts = wp_cache_get( $cache_key, 'dokan-lite' );
 
     if ( $counts === false ) {
-        $query = "SELECT c.comment_approved, COUNT( * ) AS num_comments
+        $count = $wpdb->get_results(
+            $wpdb->prepare( "SELECT c.comment_approved, COUNT( * ) AS num_comments
             FROM $wpdb->comments as c, $wpdb->posts as p
             WHERE p.post_author = %d AND
                 p.post_status = 'publish' AND
                 c.comment_post_ID = p.ID AND
                 p.post_type = %s
-            GROUP BY c.comment_approved";
+            GROUP BY c.comment_approved", $user_id, $post_type
+        ), ARRAY_A );
 
-        $count = $wpdb->get_results( $wpdb->prepare( $query, $user_id, $post_type ), ARRAY_A );
-
-        $counts = array('moderated' => 0, 'approved' => 0, 'spam' => 0, 'trash' => 0, 'total' => 0);
-        $statuses = array('0' => 'moderated', '1' => 'approved', 'spam' => 'spam', 'trash' => 'trash', 'post-trashed' => 'post-trashed');
+        $counts = array( 'moderated' => 0, 'approved' => 0, 'spam' => 0, 'trash' => 0, 'total' => 0 );
+        $statuses = array( '0' => 'moderated', '1' => 'approved', 'spam' => 'spam', 'trash' => 'trash', 'post-trashed' => 'post-trashed' );
         $total = 0;
-        foreach ($count as $row) {
+        foreach ( $count as $row ) {
             if ( isset( $statuses[$row['comment_approved']] ) ) {
                 $counts[$statuses[$row['comment_approved']]] = (int) $row['num_comments'];
                 $total += (int) $row['num_comments'];
@@ -310,12 +322,11 @@ function dokan_author_pageviews( $seller_id ) {
     $pageview = wp_cache_get( $cache_key, 'dokan_page_view' );
 
     if ( $pageview === false ) {
-        $sql = "SELECT SUM(meta_value) as pageview
+        $count = $wpdb->get_row( $wpdb->prepare( "SELECT SUM(meta_value) as pageview
             FROM {$wpdb->postmeta} AS meta
             LEFT JOIN {$wpdb->posts} AS p ON p.ID = meta.post_id
-            WHERE meta.meta_key = 'pageview' AND p.post_author = %d AND p.post_status IN ('publish', 'pending', 'draft')";
+            WHERE meta.meta_key = 'pageview' AND p.post_author = %d AND p.post_status IN ('publish', 'pending', 'draft')", $seller_id ) );
 
-        $count = $wpdb->get_row( $wpdb->prepare( $sql, $seller_id ) );
         $pageview = $count->pageview;
 
         wp_cache_set( $cache_key, $pageview, 'dokan_page_view', 3600*4 );
@@ -339,13 +350,11 @@ function dokan_author_total_sales( $seller_id ) {
     $earnings = wp_cache_get( $cache_key, $cache_group );
 
     if ( $earnings === false ) {
-
-        $sql = "SELECT SUM(order_total) as earnings, SUM(refund_amount) as refund_total
+        $count    = $wpdb->get_row( $wpdb->prepare( "SELECT SUM(order_total) as earnings, SUM(refund_amount) as refund_total
             FROM {$wpdb->prefix}dokan_orders as do LEFT JOIN {$wpdb->prefix}posts as p ON do.order_id = p.ID
             LEFT JOIN {$wpdb->prefix}dokan_refund as refund ON do.order_id = refund.order_id AND status = '1'
-            WHERE do.seller_id = %d AND order_status IN('wc-completed', 'wc-processing', 'wc-on-hold')";
+            WHERE do.seller_id = %d AND order_status IN('wc-completed', 'wc-processing', 'wc-on-hold')", $seller_id ) );
 
-        $count    = $wpdb->get_row( $wpdb->prepare( $sql, $seller_id ) );
         $earnings = $count->earnings - $count->refund_total;
 
         wp_cache_set( $cache_key, $earnings, $cache_group );
@@ -363,21 +372,20 @@ function dokan_author_total_sales( $seller_id ) {
 function dokan_generate_sync_table() {
     global $wpdb;
 
-    $sql = "SELECT oi.order_id, p.ID as product_id, p.post_title, p.post_author as seller_id,
-                oim2.meta_value as order_total, p.post_status as order_status
-            FROM {$wpdb->prefix}woocommerce_order_items oi
-            INNER JOIN {$wpdb->prefix}woocommerce_order_itemmeta oim ON oim.order_item_id = oi.order_item_id
-            INNER JOIN {$wpdb->prefix}woocommerce_order_itemmeta oim2 ON oim2.order_item_id = oi.order_item_id
-            INNER JOIN $wpdb->posts p ON oi.order_id = p.ID
-            WHERE
-                oim.meta_key = '_product_id' AND
-                oim2.meta_key = '_line_total'
-            GROUP BY oi.order_id";
+    $orders = $wpdb->get_results( $wpdb->prepare( "SELECT oi.order_id, p.ID as product_id, p.post_title, p.post_author as seller_id,
+        oim2.meta_value as order_total, p.post_status as order_status
+    FROM {$wpdb->prefix}woocommerce_order_items oi
+    INNER JOIN {$wpdb->prefix}woocommerce_order_itemmeta oim ON oim.order_item_id = oi.order_item_id
+    INNER JOIN {$wpdb->prefix}woocommerce_order_itemmeta oim2 ON oim2.order_item_id = oi.order_item_id
+    INNER JOIN $wpdb->posts p ON oi.order_id = p.ID
+    WHERE
+        oim.meta_key = '_product_id' AND
+        oim2.meta_key = '_line_total'
+    GROUP BY oi.order_id" ) );
 
-    $orders = $wpdb->get_results( $sql );
     $table_name = $wpdb->prefix . 'dokan_orders';
 
-    $wpdb->query( 'TRUNCATE TABLE ' . $table_name );
+    $wpdb->query( $wpdb->prepare( 'TRUNCATE TABLE %s', $table_name ) );
 
     if ( $orders ) {
         foreach ($orders as $order) {
@@ -603,18 +611,20 @@ function dokan_get_new_post_status() {
 function dokan_get_client_ip() {
     $ipaddress = '';
 
-    if ( isset($_SERVER['HTTP_CLIENT_IP'] ) ) {
-        $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
-    } else if ( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
-        $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-    } else if ( isset( $_SERVER['HTTP_X_FORWARDED'] ) ) {
-        $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
-    } else if ( isset( $_SERVER['HTTP_FORWARDED_FOR'] ) ) {
-        $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
-    } else if ( isset( $_SERVER['HTTP_FORWARDED'] ) ) {
-        $ipaddress = $_SERVER['HTTP_FORWARDED'];
-    } else if ( isset( $_SERVER['REMOTE_ADDR'] ) ) {
-        $ipaddress = $_SERVER['REMOTE_ADDR'];
+    $_server = wp_unslash( $_SERVER );
+
+    if ( isset( $_server['HTTP_CLIENT_IP'] ) ) {
+        $ipaddress = $_server['HTTP_CLIENT_IP'];
+    } else if ( isset( $_server['HTTP_X_FORWARDED_FOR'] ) ) {
+        $ipaddress = $_server['HTTP_X_FORWARDED_FOR'];
+    } else if ( isset( $_server['HTTP_X_FORWARDED'] ) ) {
+        $ipaddress = $_server['HTTP_X_FORWARDED'];
+    } else if ( isset( $_server['HTTP_FORWARDED_FOR'] ) ) {
+        $ipaddress = $_server['HTTP_FORWARDED_FOR'];
+    } else if ( isset( $_server['HTTP_FORWARDED'] ) ) {
+        $ipaddress = $_server['HTTP_FORWARDED'];
+    } else if ( isset( $_server['REMOTE_ADDR'] ) ) {
+        $ipaddress = $_server['REMOTE_ADDR'];
     } else {
         $ipaddress = 'UNKNOWN';
     }
@@ -651,19 +661,19 @@ function dokan_post_input_box( $post_id, $meta_key, $attr = array(), $type = 'te
     $name        = isset( $attr['name'] ) ? esc_attr( $attr['name'] ) : $meta_key;
     $value       = isset( $attr['value'] ) ? $attr['value'] : get_post_meta( $post_id, $meta_key, true );
     $size        = isset( $attr['size'] ) ? $attr['size'] : 30;
-    $required    = isset( $attr['required'] ) ? 'required="required"' : '';
+    $required    = isset( $attr['required'] ) ? 'required' : '';
 
     switch ($type) {
         case 'text':
             ?>
-            <input <?php echo $required; ?> type="text" name="<?php echo $name; ?>" id="<?php echo $name; ?>" value="<?php echo esc_attr( $value ); ?>" class="<?php echo $class; ?>" placeholder="<?php echo $placeholder; ?>">
+            <input <?php echo esc_attr( $required ); ?> type="text" name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $name ); ?>" value="<?php echo esc_attr( $value ); ?>" class="<?php echo esc_attr( $class ); ?>" placeholder="<?php echo esc_attr( $placeholder ); ?>">
             <?php
             break;
 
         case 'textarea':
             $rows = isset( $attr['rows'] ) ? absint( $attr['rows'] ) : 4;
             ?>
-            <textarea name="<?php echo $name; ?>" id="<?php echo $name; ?>" rows="<?php echo $rows; ?>" class="<?php echo $class; ?>" placeholder="<?php echo $placeholder; ?>"><?php echo esc_textarea( $value ); ?></textarea>
+            <textarea name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $name ); ?>" rows="<?php echo esc_attr( $rows ); ?>" class="<?php echo esc_attr( $class ); ?>" placeholder="<?php echo esc_attr( $placeholder ); ?>"><?php echo esc_textarea( $value ); ?></textarea>
             <?php
             break;
 
@@ -672,10 +682,10 @@ function dokan_post_input_box( $post_id, $meta_key, $attr = array(), $type = 'te
             $class = ( $class == 'dokan-form-control' ) ? '' : $class;
             ?>
 
-            <label class="<?php echo $class; ?>" for="<?php echo $name; ?>">
-                <input type="hidden" name="<?php echo $name; ?>" value="no">
-                <input name="<?php echo $name; ?>" id="<?php echo $name; ?>" value="yes" type="checkbox"<?php checked( $value, 'yes' ); ?>>
-                <?php echo $label; ?>
+            <label class="<?php echo esc_attr( $class ); ?>" for="<?php echo esc_attr( $name ); ?>">
+                <input type="hidden" name="<?php echo esc_attr( $name ); ?>" value="no">
+                <input name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $name ); ?>" value="yes" type="checkbox"<?php checked( $value, 'yes' ); ?>>
+                <?php echo esc_html( $label ); ?>
             </label>
 
             <?php
@@ -684,9 +694,9 @@ function dokan_post_input_box( $post_id, $meta_key, $attr = array(), $type = 'te
         case 'select':
             $options = is_array( $attr['options'] ) ? $attr['options'] : array();
             ?>
-            <select name="<?php echo $name; ?>" id="<?php echo $name; ?>" class="<?php echo $class; ?>">
-                <?php foreach ($options as $key => $label) { ?>
-                    <option value="<?php echo esc_attr( $key ); ?>"<?php selected( $value, $key ); ?>><?php echo $label; ?></option>
+            <select name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $name ); ?>" class="<?php echo esc_attr( $class ); ?>">
+                <?php foreach ( $options as $key => $label ) { ?>
+                    <option value="<?php echo esc_attr( $key ); ?>"<?php selected( $value, $key ); ?>><?php echo esc_html( $label ); ?></option>
                 <?php } ?>
             </select>
 
@@ -697,7 +707,7 @@ function dokan_post_input_box( $post_id, $meta_key, $attr = array(), $type = 'te
             $min = isset( $attr['min'] ) ? $attr['min'] : 0;
             $step = isset( $attr['step'] ) ? $attr['step'] : 'any';
             ?>
-            <input <?php echo $required; ?> type="number" name="<?php echo $name; ?>" id="<?php echo $name; ?>" value="<?php echo esc_attr( $value ); ?>" class="<?php echo $class; ?>" placeholder="<?php echo $placeholder; ?>" min="<?php echo esc_attr( $min ); ?>" step="<?php echo esc_attr( $step ); ?>" size="<?php echo esc_attr( $size ); ?>">
+            <input <?php echo esc_attr( $required ); ?> type="number" name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $name ); ?>" value="<?php echo esc_attr( $value ); ?>" class="<?php echo esc_attr( $class ); ?>" placeholder="<?php echo esc_attr( $placeholder ); ?>" min="<?php echo esc_attr( $min ); ?>" step="<?php echo esc_attr( $step ); ?>" size="<?php echo esc_attr( $size ); ?>">
             <?php
             break;
 
@@ -705,15 +715,14 @@ function dokan_post_input_box( $post_id, $meta_key, $attr = array(), $type = 'te
             $options = is_array( $attr['options'] ) ? $attr['options'] : array();
             foreach ( $options as $key => $label ) {
             ?>
-            <label class="<?php echo $class; ?>" for="<?php echo $key; ?>">
-                <input name="<?php echo $name; ?>" id="<?php echo $key; ?>" value="<?php echo $key; ?>" type="radio"<?php checked( $value, $key ); ?>>
-                <?php echo $label; ?>
+            <label class="<?php echo esc_attr( $class ); ?>" for="<?php echo esc_attr( $key ); ?>">
+                <input name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $key ); ?>" value="<?php echo esc_attr( $key ); ?>" type="radio"<?php checked( $value, $key ); ?>>
+                <?php echo esc_html( $label ); ?>
             </label>
 
             <?php
             }
             break;
-
     }
 }
 
@@ -794,12 +803,13 @@ function dokan_get_product_types( $status = '' ) {
  */
 function dokan_posted_input( $key, $array = false ) {
 
+    $postdata = wp_unslash( $_POST );
     //If array value is submitted return array
-    if ( $array && isset( $_POST[$key] ) ) { // WPCS: CSRF ok.
-        return $_POST[$key];    // WPCS: CSRF ok.
+    if ( $array && isset( $postdata[$key] ) ) { // WPCS: CSRF ok.
+        return $postdata[$key];    // WPCS: CSRF ok.
     }
 
-    $value = isset( $_POST[$key] ) ? trim( $_POST[$key] ) : ''; // WPCS: CSRF ok.
+    $value = isset( $postdata[$key] ) ? trim( $postdata[$key] ) : ''; // WPCS: CSRF ok.
     return esc_attr( $value );
 }
 
@@ -810,7 +820,8 @@ function dokan_posted_input( $key, $array = false ) {
  * @return string
  */
 function dokan_posted_textarea( $key ) {
-    $value = isset( $_POST[$key] ) ? trim( $_POST[$key] ) : ''; // WPCS: CSRF ok.
+    $postdata = wp_unslash( $_POST );
+    $value    = isset( $postdata[$key] ) ? trim( $postdata[$key] ) : ''; // WPCS: CSRF ok.
 
     return esc_textarea( $value );
 }
@@ -880,7 +891,7 @@ function dokan_get_template( $template_name, $args = array(), $template_path = '
     $located = dokan_locate_template( $template_name, $template_path, $default_path );
 
     if ( ! file_exists( $located ) ) {
-        _doing_it_wrong( __FUNCTION__, sprintf( '<code>%s</code> does not exist.', $located ), '2.1' );
+        _doing_it_wrong( __FUNCTION__, sprintf( '<code>%s</code> does not exist.', esc_html( $located ) ), '2.1' );
         return;
     }
 
@@ -1017,15 +1028,6 @@ function dokan_redirect_to_register(){
 }
 
 add_action( 'login_init', 'dokan_redirect_to_register' );
-
-/**
- * Pretty print a variable
- *
- * @param var $value
- */
-function dokan_pre( $value ) {
-    printf( '<pre>%s</pre>', print_r( $value, true ) );
-}
 
 /**
  * Check if the seller is enabled
@@ -1607,7 +1609,9 @@ function dokan_filter_orders_for_current_vendor( $args, $query ) {
 
     if ( current_user_can( 'manage_woocommerce' ) ) {
         if ( ! empty( $_GET['vendor_id'] ) ) {
-            $vendor_id      = $_GET['vendor_id'];
+            $getdata        = wp_unslash( $_GET );
+
+            $vendor_id      = wc_clean( $getdata['vendor_id'] );
             $args['join']  .= " LEFT JOIN {$wpdb->prefix}dokan_orders as do ON $wpdb->posts.ID=do.order_id";
             $args['where'] .= " AND do.seller_id=$vendor_id";
         }
@@ -1795,7 +1799,7 @@ function dokan_get_navigation_url( $name = '' ) {
         $url = get_permalink( $page_id );
     }
 
-    return apply_filters( 'dokan_get_navigation_url', $url, $name );
+    return apply_filters( 'dokan_get_navigation_url', esc_url( $url ), $name );
 }
 
 
@@ -1807,17 +1811,17 @@ function dokan_get_navigation_url( $name = '' ) {
  * @param bool $everywhere
  */
 function dokan_country_dropdown( $options, $selected = '', $everywhere = false ) {
-    printf( '<option value="">%s</option>', __( '- Select a location -', 'dokan-lite' ) );
+    printf( '<option value="">%s</option>', esc_html__( '- Select a location -', 'dokan-lite' ) );
 
     if ( $everywhere ) {
         echo '<optgroup label="--------------------------">';
-        printf( '<option value="everywhere"%s>%s</option>', selected( $selected, 'everywhere', true ), __( 'Everywhere Else', 'dokan-lite' ) );
+        printf( '<option value="everywhere"%s>%s</option>', selected( $selected, 'everywhere', true ), esc_html__( 'Everywhere Else', 'dokan-lite' ) );
         echo '</optgroup>';
     }
 
     echo '<optgroup label="------------------------------">';
     foreach ($options as $key => $value) {
-        printf( '<option value="%s"%s>%s</option>', $key, selected( $selected, $key, true ), $value );
+        printf( '<option value="%s"%s>%s</option>', esc_attr( $key ), selected( $selected, $key, true ), esc_html( $value ) );
     }
     echo '</optgroup>';
 }
@@ -1830,17 +1834,17 @@ function dokan_country_dropdown( $options, $selected = '', $everywhere = false )
  * @param bool $everywhere
  */
 function dokan_state_dropdown( $options, $selected = '', $everywhere = false ) {
-    printf( '<option value="">%s</option>', __( '- Select a State -', 'dokan-lite' ) );
+    printf( '<option value="">%s</option>', esc_html__( '- Select a State -', 'dokan-lite' ) );
 
     if ( $everywhere ) {
         echo '<optgroup label="--------------------------">';
-        printf( '<option value="everywhere" %s>%s</option>', selected( $selected, 'everywhere', true ), __( 'Everywhere Else', 'dokan-lite' ) );
+        printf( '<option value="everywhere" %s>%s</option>', selected( $selected, 'everywhere', true ), esc_html__( 'Everywhere Else', 'dokan-lite' ) );
         echo '</optgroup>';
     }
 
     echo '<optgroup label="------------------------------">';
-    foreach ($options as $key => $value) {
-        printf( '<option value="%s" %s>%s</option>', $key, selected( $selected, $key, true ), $value );
+    foreach ( $options as $key => $value ) {
+        printf( '<option value="%s" %s>%s</option>', esc_attr( $key ), selected( $selected, $key, true ), esc_html( $value ) );
     }
     echo '</optgroup>';
 }
@@ -1976,7 +1980,7 @@ function dokan_product_listing_filter_months_dropdown( $user_id ) {
     $date = isset( $_GET['date'] ) ? (int) $_GET['date'] : 0;
     ?>
     <select name="date" id="filter-by-date" class="dokan-form-control">
-        <option<?php selected( $date, 0 ); ?> value="0"><?php _e( 'All dates', 'dokan-lite' ); ?></option>
+        <option<?php selected( $date, 0 ); ?> value="0"><?php esc_html_e( 'All dates', 'dokan-lite' ); ?></option>
     <?php
     foreach ( $months as $arc_row ) {
         if ( 0 == $arc_row->year )
@@ -1989,7 +1993,7 @@ function dokan_product_listing_filter_months_dropdown( $user_id ) {
             selected( $date, $year . $month, false ),
             esc_attr( $year . $month ),
             /* translators: 1: month name, 2: 4-digit year */
-            sprintf( __( '%1$s %2$d', 'dokan-lite' ), $wp_locale->get_month( $month ), $year )
+            sprintf( esc_html__( '%1$s %2$d', 'dokan-lite' ), esc_html( $wp_locale->get_month( $month ) ), esc_html( $year ) ) // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
         );
     }
     ?>
@@ -2017,19 +2021,26 @@ function dokan_product_listing_filter() {
 function dokan_product_search_by_sku( $where ) {
     global $pagenow, $wpdb, $wp;
 
-    if ( !isset( $_GET['product_search_name'] ) || empty( $_GET['product_search_name'] ) || ! isset( $_GET['dokan_product_search_nonce'] ) || ! wp_verify_nonce( $_GET['dokan_product_search_nonce'], 'dokan_product_search' ) ) {
+    $getdata = wp_unslash( $_GET );
+
+    if ( ! isset( $getdata['product_search_name'] ) || empty( $getdata['product_search_name'] ) || ! isset( $getdata['dokan_product_search_nonce'] ) || ! wp_verify_nonce( wc_clean( $getdata['dokan_product_search_nonce'] ), 'dokan_product_search' ) ) {
         return $where;
     }
 
     $search_ids = array();
-    $terms      = explode( ',', $_GET['product_search_name'] );
+    $terms      = explode( ',', wc_clean( $getdata['product_search_name'] ) );
 
     foreach ( $terms as $term ) {
         if ( is_numeric( $term ) ) {
             $search_ids[] = $term;
         }
+
         // Attempt to get a SKU
-        $sku_to_id = $wpdb->get_col( $wpdb->prepare( "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key='_sku' AND meta_value LIKE '%%%s%%';", wc_clean( $term ) ) );
+        $wild = '%';
+        $find = wc_clean( $term );
+        $like = $wild . $wpdb->esc_like( $find ) . $wild;
+
+        $sku_to_id = $wpdb->get_col( $wpdb->prepare( "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key='_sku' AND meta_value LIKE %s", $like ) );
 
         if ( $sku_to_id && sizeof( $sku_to_id ) > 0 ) {
             $search_ids = array_merge( $search_ids, $sku_to_id );
@@ -2295,8 +2306,10 @@ function dokan_after_login_redirect( $redirect_to, $user ) {
         }
     }
 
-    if ( isset( $_GET['redirect_to'] ) && !empty( $_GET['redirect_to'] ) ) {
-        $redirect_to = esc_url( $_GET['redirect_to'] );
+    $getdata = wp_unslash( $_GET );
+
+    if ( isset( $getdata['redirect_to'] ) && ! empty( $getdata['redirect_to'] ) ) {
+        $redirect_to = esc_url( $getdata['redirect_to'] );
     }
 
     return $redirect_to;

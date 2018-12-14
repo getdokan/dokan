@@ -8,6 +8,13 @@
  * @package dokan
  */
 ?>
+<?php
+
+    $get_data  = wp_unslash( $_GET );
+    $post_data = wp_unslash( $_POST );
+
+
+?>
 <?php do_action( 'dokan_product_listing_filter_before_form' ); ?>
 
     <form class="dokan-form-inline dokan-w6 dokan-product-date-filter" method="get" >
@@ -28,18 +35,18 @@
                     'title_li'         => '',
                     'class'            => 'product_cat dokan-form-control chosen',
                     'exclude'          => '',
-                    'selected'         => isset( $_GET['product_cat'] ) ? $_GET['product_cat'] : '-1',
+                    'selected'         => isset( $get_data['product_cat'] ) ? $get_data['product_cat'] : '-1',
                 ) );
             ?>
         </div>
 
         <?php
-        if ( isset( $_GET['product_search_name'] ) ) { ?>
-            <input type="hidden" name="product_search_name" value="<?php echo $_GET['product_search_name']; ?>">
+        if ( isset( $get_data['product_search_name'] ) ) { ?>
+            <input type="hidden" name="product_search_name" value="<?php echo esc_attr( $get_data['product_search_name'] ); ?>">
         <?php }
         ?>
 
-        <button type="submit" name="product_listing_filter" value="ok" class="dokan-btn dokan-btn-theme"><?php _e( 'Filter', 'dokan-lite'); ?></button>
+        <button type="submit" name="product_listing_filter" value="ok" class="dokan-btn dokan-btn-theme"><?php esc_html_e( 'Filter', 'dokan-lite'); ?></button>
 
     </form>
 
@@ -47,21 +54,21 @@
 
     <form method="get" class="dokan-form-inline dokan-w6 dokan-product-search-form">
 
-        <button type="submit" name="product_listing_search" value="ok" class="dokan-btn dokan-btn-theme"><?php _e( 'Search', 'dokan-lite'); ?></button>
+        <button type="submit" name="product_listing_search" value="ok" class="dokan-btn dokan-btn-theme"><?php esc_html_e( 'Search', 'dokan-lite' ); ?></button>
 
         <?php wp_nonce_field( 'dokan_product_search', 'dokan_product_search_nonce' ); ?>
 
         <div class="dokan-form-group">
-            <input type="text" class="dokan-form-control" name="product_search_name" placeholder="<?php _e( 'Search Products', 'dokan-lite' ) ?>" value="<?php echo isset( $_GET['product_search_name'] ) ? $_GET['product_search_name'] : '' ?>">
+            <input type="text" class="dokan-form-control" name="product_search_name" placeholder="<?php esc_html_e( 'Search Products', 'dokan-lite' ) ?>" value="<?php echo isset( $get_data['product_search_name'] ) ? esc_attr( $get_data['product_search_name'] ) : '' ?>">
         </div>
 
         <?php
-        if ( isset( $_GET['product_cat'] ) ) { ?>
-            <input type="hidden" name="product_cat" value="<?php echo $_GET['product_cat']; ?>">
+        if ( isset( $get_data['product_cat'] ) ) { ?>
+            <input type="hidden" name="product_cat" value="<?php echo esc_attr( $get_data['product_cat'] ); ?>">
         <?php }
 
-        if ( isset( $_GET['date'] ) ) { ?>
-            <input type="hidden" name="date" value="<?php echo $_GET['date']; ?>">
+        if ( isset( $get_data['date'] ) ) { ?>
+            <input type="hidden" name="date" value="<?php echo esc_attr( $get_data['date'] ); ?>">
         <?php }
         ?>
     </form>

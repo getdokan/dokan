@@ -497,33 +497,31 @@ class Dokan_Vendor {
             $installed_version = get_option( 'dokan_theme_version' );
 
             if ( ! $installed_version || version_compare( $installed_version, '2.8.2', '>' ) ) {
-                $debit_sql      = "SELECT
-                                    SUM(debit) AS earnings
+                $debit_balance  = $wpdb->get_row( $wpdb->prepare(
+                    "SELECT SUM(debit) AS earnings
                                 FROM
                                     {$wpdb->prefix}dokan_vendor_balance
                                 WHERE
-                                    vendor_id = %d AND DATE(balance_date) <= %s AND status IN({$status})";
-                $debit_balance  = $wpdb->get_row( $wpdb->prepare( $debit_sql, $this->id, $on_date ) );
+                                    vendor_id = %d AND DATE(balance_date) <= %s AND status IN ($status)"
+                    , $this->id, $on_date ) );
 
-                $credit_sql     = "SELECT
-                                        SUM(credit) AS earnings
-                                    FROM
-                                        {$wpdb->prefix}dokan_vendor_balance
-                                    WHERE
-                                        vendor_id = %d AND DATE(balance_date) <= %s AND trn_type = %s AND status = %s";
-                $credit_balance = $wpdb->get_row( $wpdb->prepare( $credit_sql, $this->id, $on_date, $trn_type, $refund_status ) );
+               $credit_balance = $wpdb->get_row( $wpdb->prepare(
+                    "SELECT SUM(credit) AS earnings FROM {$wpdb->prefix}dokan_vendor_balance WHERE
+                        vendor_id = %d AND DATE(balance_date) <= %s AND trn_type = %s AND status = %s",
+                        $this->id, $on_date, $trn_type, $refund_status ) );
 
                 $earnings         = $debit_balance->earnings - $credit_balance->earnings;
                 $result           = new stdClass;
                 $result->earnings = $earnings;
             } else {
-                $sql    = "SELECT
+                $result = $wpdb->get_row( $wpdb->prepare(
+                    "SELECT
                             SUM(net_amount) as earnings
                         FROM
                             {$wpdb->prefix}dokan_orders as do LEFT JOIN {$wpdb->prefix}posts as p ON do.order_id = p.ID
                         WHERE
-                            seller_id = %d AND DATE(p.post_date) <= %s AND order_status IN({$status})";
-                $result = $wpdb->get_row( $wpdb->prepare( $sql, $this->id, $on_date ) );
+                            seller_id = %d AND DATE(p.post_date) <= %s AND order_status IN ($status)",
+                        $this->id, $on_date ) );
             }
 
             $earning = (float) $result->earnings;
@@ -560,17 +558,27 @@ class Dokan_Vendor {
         if ( false === $earning ) {
             $installed_version = get_option( 'dokan_theme_version' );
             if ( ! $installed_version || version_compare( $installed_version, '2.8.2', '>' ) ) {
-                $sql = "SELECT SUM(debit) as earnings,
-                    (SELECT SUM(credit) FROM {$wpdb->prefix}dokan_vendor_balance WHERE vendor_id = %d AND DATE(balance_date) <= %s) as withdraw
-                    from {$wpdb->prefix}dokan_vendor_balance
-                    WHERE vendor_id = %d AND DATE(balance_date) <= %s AND status IN({$status})";
-                $result = $wpdb->get_row( $wpdb->prepare( $sql, $this->id, $on_date, $this->id, $on_date ) );
+                // $sql = "SELECT SUM(debit) as earnings,
+                //     (SELECT SUM(credit) FROM {$wpdb->prefix}dokan_vendor_balance WHERE vendor_id = %d AND DATE(balance_date) <= %s) as withdraw
+                //     from {$wpdb->prefix}dokan_vendor_balance
+                //     WHERE vendor_id = %d AND DATE(balance_date) <= %s AND status IN({$status})";
+                $result = $wpdb->get_row( $wpdb->prepare(
+                        "SELECT SUM(debit) as earnings,
+                        ( SELECT SUM(credit) FROM {$wpdb->prefix}dokan_vendor_balance WHERE vendor_id = %d AND DATE(balance_date) <= '%s' ) as withdraw
+                        from {$wpdb->prefix}dokan_vendor_balance
+                        WHERE vendor_id = '%d' AND DATE(balance_date) <= '%s' AND status IN($status)",
+                    $this->id, $on_date, $this->id, $on_date ) );
             } else {
-                $sql = "SELECT SUM(net_amount) as earnings,
+                // $sql = "SELECT SUM(net_amount) as earnings,
+                //     (SELECT SUM(amount) FROM {$wpdb->prefix}dokan_withdraw WHERE user_id = %d AND status = 1 AND DATE(`date`) <= %s) as withdraw
+                //     FROM {$wpdb->prefix}dokan_orders as do LEFT JOIN {$wpdb->prefix}posts as p ON do.order_id = p.ID
+                //     WHERE seller_id = %d AND DATE(p.post_date) <= %s AND order_status IN({$status})";
+                $result = $wpdb->get_row( $wpdb->prepare(
+                    "SELECT SUM(net_amount) as earnings,
                     (SELECT SUM(amount) FROM {$wpdb->prefix}dokan_withdraw WHERE user_id = %d AND status = 1 AND DATE(`date`) <= %s) as withdraw
                     FROM {$wpdb->prefix}dokan_orders as do LEFT JOIN {$wpdb->prefix}posts as p ON do.order_id = p.ID
-                    WHERE seller_id = %d AND DATE(p.post_date) <= %s AND order_status IN({$status})";
-                $result = $wpdb->get_row( $wpdb->prepare( $sql, $this->id, $on_date, $this->id, $date ) );
+                    WHERE seller_id = %d AND DATE(p.post_date) <= %s AND order_status IN ($status)",
+                    $this->id, $on_date, $this->id, $date ) );
             }
 
             $earning = (float) $result->earnings - (float) round( $result->withdraw, wc_get_rounding_precision() );
@@ -603,7 +611,13 @@ class Dokan_Vendor {
             AND ( cm.meta_key = 'rating' OR cm.meta_key IS NULL) AND wc.comment_approved = 1
             ORDER BY wc.comment_post_ID";
 
-        $result = $wpdb->get_row( $wpdb->prepare( $sql, $this->id ) );
+        $result = $wpdb->get_row( $wpdb->prepare(
+            "SELECT AVG(cm.meta_value) as average, COUNT(wc.comment_ID) as count FROM $wpdb->posts p
+            INNER JOIN $wpdb->comments wc ON p.ID = wc.comment_post_ID
+            LEFT JOIN $wpdb->commentmeta cm ON cm.comment_id = wc.comment_ID
+            WHERE p.post_author = %d AND p.post_type = 'product' AND p.post_status = 'publish'
+            AND ( cm.meta_key = 'rating' OR cm.meta_key IS NULL) AND wc.comment_approved = 1
+            ORDER BY wc.comment_post_ID", $this->id ) );
 
         $rating_value = apply_filters( 'dokan_seller_rating_value', array(
             'rating' => number_format( $result->average, 2 ),
@@ -647,7 +661,7 @@ class Dokan_Vendor {
             return $html;
         }
 
-        echo $html;
+        echo esc_html( $html );
     }
 
     /**
