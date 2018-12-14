@@ -220,10 +220,13 @@ function dokan_get_withdraw_count( $user_id = '' ) {
     $counts = wp_cache_get( $cache_key );
 
     if ( false === $counts ) {
-        $where_user = !empty( $user_id ) ? " AND user_id=$user_id" : '';
         $counts     = array( 'pending' => 0, 'completed' => 0, 'cancelled' => 0 );
-        $sql        = "SELECT COUNT(id) as count, status FROM {$wpdb->dokan_withdraw} WHERE 1=1{$where_user} GROUP BY status";
-        $result     = $wpdb->get_results( $sql );
+
+        if ( ! empty( $user_id ) ) {
+            $result  = $wpdb->get_results( $wpbd->prepare( "SELECT COUNT(id) as count, status FROM {$wpdb->dokan_withdraw} WHERE user_id=%d GROUP BY status", $user_id ) );
+        } else {
+            $result  = $wpdb->get_results( "SELECT COUNT(id) as count, status FROM {$wpdb->dokan_withdraw} WHERE 1=1 GROUP BY status" );
+        }
 
         if ( $result ) {
             foreach ($result as $row) {

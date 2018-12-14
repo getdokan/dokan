@@ -229,7 +229,12 @@ function dokan_count_posts( $post_type, $user_id ) {
     $counts      = wp_cache_get( $cache_key, $cache_group );
 
     if ( false === $counts ) {
-        $results     = $wpdb->get_results( $wpdb->prepare( apply_filters( 'dokan_count_posts', "SELECT post_status, COUNT( * ) AS num_posts FROM {$wpdb->posts} WHERE post_type = %s AND post_author = %d GROUP BY post_status" ), $post_type, $user_id ), ARRAY_A );
+        $results = $wpdb->get_results(
+            // phpcs:disable
+            $wpdb->prepare( apply_filters( 'dokan_count_posts', "SELECT post_status, COUNT( * ) AS num_posts FROM {$wpdb->posts} WHERE post_type = %s AND post_author = %d GROUP BY post_status" ), $post_type, $user_id ), // phpcs:disable
+            // phpcs:enable
+            ARRAY_A
+        );
         $post_status = array_keys( dokan_get_post_status() );
         $counts      = array_fill_keys( get_post_stati(), 0 );
         $total       = 0;
