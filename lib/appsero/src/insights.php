@@ -356,7 +356,11 @@ class Insights {
      * @return boolean
      */
     private function is_local_server() {
-        $is_local = in_array( $_SERVER['REMOTE_ADDR'], array( '127.0.0.1', '::1' ) );
+        $is_local = false;
+
+        $server = wp_unslash( $_SERVER );
+
+        $is_local = in_array( $server['REMOTE_ADDR'], array( '127.0.0.1', '::1' ) );
 
         return apply_filters( 'appsero_is_local', $is_local );
     }
@@ -509,10 +513,12 @@ class Insights {
     private static function get_server_info() {
         global $wpdb;
 
+        $server = wp_unslash( $_SERVER );
+
         $server_data = array();
 
-        if ( isset( $_SERVER['SERVER_SOFTWARE'] ) && ! empty( $_SERVER['SERVER_SOFTWARE'] ) ) {
-            $server_data['software'] = $_SERVER['SERVER_SOFTWARE'];
+        if ( isset( $server['SERVER_SOFTWARE'] ) && ! empty( $server['SERVER_SOFTWARE'] ) ) {
+            $server_data['software'] = $server['SERVER_SOFTWARE'];
         }
 
         if ( function_exists( 'phpversion' ) ) {
@@ -714,12 +720,13 @@ class Insights {
      * @return void
      */
     public function uninstall_reason_submission() {
+        $posted_data = wp_unslash( $_POST );
 
-        if ( ! wp_verify_nonce( $_POST['nonce'], 'wedevs_insights_nonce' ) ) {
+        if ( ! wp_verify_nonce( $posted_data['nonce'], 'wedevs_insights_nonce' ) ) {
             wp_send_json_error();
         }
 
-        if ( ! isset( $_POST['reason_id'] ) ) {
+        if ( ! isset( $posted_data['reason_id'] ) ) {
             wp_send_json_error();
         }
 
@@ -727,8 +734,8 @@ class Insights {
 
         $data = array(
             'hash'        => $this->hash,
-            'reason_id'   => sanitize_text_field( $_POST['reason_id'] ),
-            'reason_info' => isset( $_REQUEST['reason_info'] ) ? trim( stripslashes( $_REQUEST['reason_info'] ) ) : '',
+            'reason_id'   => sanitize_text_field( $posted_data['reason_id'] ),
+            'reason_info' => isset( $posted_data['reason_info'] ) ? trim( stripslashes( $posted_data['reason_info'] ) ) : '',
             'site'        => get_bloginfo( 'name' ),
             'url'         => home_url(),
             'admin_email' => get_option( 'admin_email' ),
