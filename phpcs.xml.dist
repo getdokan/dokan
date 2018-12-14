@@ -12,6 +12,7 @@
     <arg name="extensions" value="php" />
     <arg name="report" value="full" />
     <arg name="report-file" value="phpcs-report.txt" />
+    <arg name="warning-severity" value="0" />
     <file>.</file>
 
     <rule ref="WordPress.Security.ValidatedSanitizedInput" />
