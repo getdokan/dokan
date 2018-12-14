@@ -78,7 +78,7 @@ class Dokan_Admin {
 
                     wp.ajax.post( 'dokan-dismiss-christmas-offer-notice', {
                         dokan_christmas_dismissed: true,
-                        nonce: dokan.nonce
+                        nonce: '<?php echo esc_attr( wp_create_nonce( 'dokan_admin' ) ); ?>'
                     });
                 });
             </script>
