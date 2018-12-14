@@ -138,7 +138,7 @@ function dokan_admin_shop_order_row_classes( $classes, $post_id ) {
         return $classes;
     }
 
-    $vendor_id = isset( $_GET['vendor_id'] ) ? $_GET['vendor_id'] : '';
+    $vendor_id = isset( $_GET['vendor_id'] ) ? sanitize_text_field( wp_unslash( $_GET['vendor_id'] ) ) : '';
 
     if ( $vendor_id ) {
         return $classes;
@@ -334,11 +334,12 @@ function dokan_site_total_earning() {
  * @return array
  */
 function dokan_admin_report_data( $group_by = 'day', $year = '', $start = '', $end = '' ) {
-    global $wpdb, $wp_locale;
+    global $wpdb;
 
+    $_post_data   = wp_unslash( $_POST ); // WPCS: CSRF ok.
     $group_by     = apply_filters( 'dokan_report_group_by', $group_by );
-    $start_date   = isset( $_POST['start_date'] ) ? sanitize_text_field ( $_POST['start_date'] ): $start; // WPCS: CSRF ok.
-    $end_date     = isset( $_POST['end_date'] ) ? sanitize_text_field( $_POST['end_date'] ): $end; // WPCS: CSRF ok.
+    $start_date   = isset( $_post_data['start_date'] ) ? sanitize_text_field ( $_post_data['start_date'] ): $start; // WPCS: CSRF ok.
+    $end_date     = isset( $_post_data['end_date'] ) ? sanitize_text_field( $_post_data['end_date'] ): $end; // WPCS: CSRF ok.
     $current_year = date( 'Y' );
 
     if ( ! $start_date ) {
@@ -404,8 +405,10 @@ function dokan_admin_report( $group_by = 'day', $year = '', $start = '', $end = 
 
     $data = dokan_admin_report_data( $group_by, $year, $start, $end );
 
-    $start_date   = isset( $_POST['start_date'] ) ? sanitize_text_field ( $_POST['start_date'] ): $start; // WPCS: CSRF ok.
-    $end_date     = isset( $_POST['end_date'] ) ? sanitize_text_field( $_POST['end_date'] ): $end; // WPCS: CSRF ok.
+    $_post_data = wp_unslash( $_POST ); // WPCS: CSRF ok.
+
+    $start_date   = isset( $_post_data['start_date'] ) ? sanitize_text_field ( $_post_data['start_date'] ): $start; // WPCS: CSRF ok.
+    $end_date     = isset( $_post_data['end_date'] ) ? sanitize_text_field( $_post_data['end_date'] ): $end; // WPCS: CSRF ok.
     $current_year = $year ? $year : date('Y');
 
     if ( ! $start_date ) {
@@ -709,7 +712,7 @@ add_action( 'add_meta_boxes', 'dokan_add_seller_meta_box' );
 **/
 function dokan_override_product_author_by_admin( $product_id, $post ) {
     $product = wc_get_product( $product_id );
-    $seller_id = !empty( $_POST['dokan_product_author_override'] ) ? wc_clean( $_POST['dokan_product_author_override'] ): '-1'; // WPCS: CSRF ok.
+    $seller_id = !empty( $_POST['dokan_product_author_override'] ) ? sanitize_text_field( wp_unslash( $_POST['dokan_product_author_override'] )): '-1'; // WPCS: CSRF ok.
 
     if ( $seller_id < 0 ) {
         return;
@@ -754,9 +757,9 @@ function dokan_admin_report_by_seller( $chosen_seller_id) {
     $group_by     = 'day';
     $year         = '';
     $group_by     = apply_filters( 'dokan_report_group_by', $group_by );
-
-    $start_date   = isset( $_POST['start_date'] ) ? $_POST['start_date'] : ''; // WPCS: CSRF ok.
-    $end_date     = isset( $_POST['end_date'] ) ? $_POST['end_date'] : ''; // WPCS: CSRF ok.
+    $_post_data   = wp_unslash( $_POST );
+    $start_date   = isset( $_post_data['start_date'] ) ? $_post_data['start_date'] : ''; // WPCS: CSRF ok.
+    $end_date     = isset( $_post_data['end_date'] ) ? $_post_data['end_date'] : ''; // WPCS: CSRF ok.
     $current_year = date( 'Y' );
 
     if ( !isset( $chosen_seller_id ) || $chosen_seller_id == '' || $chosen_seller_id == Null ) {

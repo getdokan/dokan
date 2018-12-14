@@ -32,7 +32,9 @@ class Dokan_Settings {
             wp_send_json_error( __( 'You have no permission to get settings value', 'dokan-lite' ) );
         }
 
-        if ( ! wp_verify_nonce( $_POST['nonce'], 'dokan_admin' ) ) {
+        $_post_data = wp_unslash( $_POST );
+
+        if ( ! wp_verify_nonce( sanitize_text_field( $_post_data['nonce'] ), 'dokan_admin' ) ) {
             wp_send_json_error( __( 'Invalid nonce', 'dokan-lite' ) );
         }
 
@@ -58,17 +60,18 @@ class Dokan_Settings {
                 throw new Exception( __( 'You are not authorized to perform this action.', 'dokan-lite' ), 401 );
             }
 
-            if ( ! wp_verify_nonce( $_POST['nonce'], 'dokan_admin' ) ) {
+            $_post_data = wp_unslash( $_POST );
+            if ( ! wp_verify_nonce( sanitize_text_field( $_post_data['nonce'] ), 'dokan_admin' ) ) {
                 throw new Exception( __( 'Invalid nonce', 'dokan-lite' ), 403 );
             }
 
-            $option_name = $_POST['section'];
+            $option_name = $_post_data['section'];
 
             if ( empty( $option_name ) ) {
                 throw new Exception( __( 'Setting not saved properly', 'dokan-lite' ), 400 );
             }
 
-            $option_value = $this->sanitize_options( $_POST['settingsData'] );
+            $option_value = $this->sanitize_options( $_post_data['settingsData'] );
 
             $option_value = apply_filters( 'dokan_save_settings_value', $option_value );
 
