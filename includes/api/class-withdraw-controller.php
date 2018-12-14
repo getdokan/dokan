@@ -238,10 +238,7 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
         }
 
         // $sql    = "SELECT * FROM `{$wpdb->prefix}dokan_withdraw` WHERE `id`={$request['id']}";
-        $result = $wpdb->get_row( $wpdb->prepare( 
-            "SELECT * FROM %s WHERE id=%d",
-                $wpdb->prefix . "dokan_withdraw", $request['id']
-            ));
+        $result = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}dokan_withdraw WHERE id=%d", $request['id'] ) );
 
         if ( $result->status != '0' && ! current_user_can( 'manage_options' ) ) {
             return new WP_Error( 'not_cancel_request', __( 'This withdraw is not pending. Only pending request can be cancelled', 'dokan-lite' ), array( 'status' => 400 ) );
@@ -269,10 +266,7 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
 
             // $balance_sql    = "SELECT * FROM `{$wpdb->prefix}dokan_vendor_balance` WHERE `trn_id`={$request['id']} AND `trn_type` = 'dokan_withdraw'";
             $balance_result = $wpdb->get_row(
-                $wpdb->prepare(
-                    "SELECT * FROM %s WHERE trn_id=%d AND trn_type = %s",
-                    $wpdb->prefix . "dokan_vendor_balance", $request['id'], 'dokan_withdraw'
-                ));
+                $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}dokan_vendor_balance WHERE trn_id=%d AND trn_type = %s", $request['id'], 'dokan_withdraw' ) );
 
             if ( empty( $balance_result ) ) {
                 $wpdb->insert( $wpdb->prefix . 'dokan_vendor_balance',
@@ -332,10 +326,9 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
         }
 
         // $sql    = "SELECT * FROM `{$wpdb->prefix}dokan_withdraw` WHERE `id`={$withdraw_id}";
-        $result = $wpdb->get_row( 
+        $result = $wpdb->get_row(
             $wpdb->prepare(
-                "SELECT * FROM %s WHERE id=%d",
-                    $wpdb->prefix . "dokan_withdraw", $withdraw_id
+                "SELECT * FROM {$wpdb->prefix}dokan_withdraw WHERE id=%d", $withdraw_id
             )
         );
 
@@ -478,7 +471,7 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
         }
 
         // $withdraw = $wpdb->get_row( "SELECT * from {$table_name} WHERE id = $withdraw_id" );
-        $withdraw = $wpdb->get_row( $wpdb->prepare("SELECT * from %s WHERE id = %d", $table_name, $withdraw_id ) );
+        $withdraw = $wpdb->get_row( $wpdb->prepare("SELECT * from {$wpdb->prefix}dokan_withdraw WHERE id = %d", $withdraw_id ) );
 
         $response = $this->prepare_response_for_object( $withdraw, $request );
 
@@ -528,7 +521,7 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
                 } else {
                     foreach ( $value as $withdraw_id ) {
                         $status_code = $this->get_status( $status );
-                        $user = $wpdb->get_row( $wpdb->prepare("SELECT user_id, amount FROM %s WHERE id = %d", $wpdb->prefix . "dokan_withdraw", $withdraw_id  ) );
+                        $user = $wpdb->get_row( $wpdb->prepare("SELECT user_id, amount FROM {$wpdb->prefix}dokan_withdraw WHERE id = %d", $withdraw_id  ) );
 
                         if ( $status_code === 1 ) {
                             if ( dokan_get_seller_balance( $user->user_id, false ) < $user->amount ) {
@@ -537,10 +530,7 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
 
                             // $balance_sql    = "SELECT * FROM `{$wpdb->prefix}dokan_vendor_balance` WHERE `trn_id`={$withdraw_id} AND `trn_type` = 'dokan_withdraw'";
                             $balance_result = $wpdb->get_row(
-                                $wpdb->prepare(
-                                    "SELECT * FROM %s WHERE trn_id=%d AND trn_type = 'dokan_withdraw'",
-                                    $wpdb->prefix . "dokan_vendor_balance", $withdraw_id
-                                )
+                                $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}dokan_vendor_balance WHERE trn_id=%d AND trn_type = 'dokan_withdraw'", $withdraw_id )
                             );
 
                             if ( ! count( $balance_result ) ) {
