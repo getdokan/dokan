@@ -129,7 +129,7 @@ function dokan_page_navi( $before = '', $after = '', $wp_query ) {
 endif;
 
 function dokan_product_dashboard_errors() {
-    $type = isset( $_GET['message'] ) ? $_GET['message'] : '';
+    $type = isset( $_GET['message'] ) ? sanitize_text_field( wp_unslash( $_GET['message'] ) ) : '';
 
     switch ( $type ) {
         case 'product_deleted':
@@ -148,8 +148,10 @@ function dokan_product_dashboard_errors() {
 }
 
 function dokan_product_listing_status_filter() {
+    $_get_data = wp_unslash( $_GET );
+
     $permalink    = dokan_get_navigation_url( 'products' );
-    $status_class = isset( $_GET['post_status'] ) ? $_GET['post_status'] : 'all';
+    $status_class = isset( $_get_data['post_status'] ) ? $_get_data['post_status'] : 'all';
     $post_counts  = dokan_count_posts( 'product', dokan_get_current_user_id() );
     $statuses     = dokan_get_post_status();
 
@@ -162,11 +164,13 @@ function dokan_product_listing_status_filter() {
 }
 
 function dokan_order_listing_status_filter() {
+    $_get_data = wp_unslash( $_GET );
+
     $orders_url = dokan_get_navigation_url( 'orders' );
 
-    $status_class         = isset( $_GET['order_status'] ) ? $_GET['order_status'] : 'all';
+    $status_class         = isset( $_get_data['order_status'] ) ? $_get_data['order_status'] : 'all';
     $orders_counts        = dokan_count_orders( dokan_get_current_user_id() );
-    $order_date           = ( isset( $_GET['order_date'] ) ) ? $_GET['order_date'] : '';
+    $order_date           = ( isset( $_get_data['order_date'] ) ) ? $_get_data['order_date'] : '';
     $date_filter          = array();
     $all_order_url        = array();
     $complete_order_url   = array();
