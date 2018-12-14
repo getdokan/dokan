@@ -89,8 +89,11 @@ class Dokan_Update_2_8_3_Vendor_Balance extends Abstract_Dokan_Background_Proces
         $limit         = 100;
         $count         = $limit * $paged;
         $threshold_day = dokan_get_option( 'withdraw_date_limit', 'dokan_withdraw', 0 );
-        $sql           = "SELECT `order`.*, post.post_date from {$wpdb->prefix}dokan_orders as `order` left join {$wpdb->prefix}posts as post on post.ID = order.order_id LIMIT {$limit} OFFSET {$count}";
-        $results       = $wpdb->get_results( $sql );
+
+        $results       = $wpdb->get_results( $wpdb->prepare(
+            "SELECT `order`.*, post.post_date from {$wpdb->prefix}dokan_orders as `order` left join {$wpdb->prefix}posts as post on post.ID = order.order_id LIMIT %d OFFSET %d",
+            $limit, $count
+        ));
 
         if ( empty( $results ) ) {
             return array(
@@ -129,8 +132,11 @@ class Dokan_Update_2_8_3_Vendor_Balance extends Abstract_Dokan_Background_Proces
 
         $limit   = 100;
         $count   = $limit * $paged;
-        $sql     = "SELECT * from {$wpdb->prefix}dokan_withdraw WHERE `status` = 1 LIMIT {$limit} OFFSET {$count}";
-        $results = $wpdb->get_results( $sql );
+        // $sql     = "SELECT * from {$wpdb->prefix}dokan_withdraw WHERE `status` = 1 LIMIT {$limit} OFFSET {$count}";
+        $results = $wpdb->get_results( $wpdb->prepare(
+            "SELECT * from {$wpdb->prefix}dokan_withdraw WHERE `status` = 1 LIMIT %d OFFSET %d",
+            $limit, $count
+        ) );
 
         if ( empty( $results ) ) {
             return;

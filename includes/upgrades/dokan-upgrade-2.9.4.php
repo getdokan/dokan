@@ -34,16 +34,18 @@ function dokan_update_refund_table_2_9_4() {
 
     $table_name = $wpdb->prefix . 'dokan_refund';
 
-    if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) !== $table_name ) {
+    if ( $wpdb->get_var( $wpdb->prepare("SHOW TABLES LIKE %s", $table_name ) ) !== $table_name ) {
         return;
     }
 
     $columns = array( 'item_qtys', 'item_totals', 'item_tax_totals' );
 
-    foreach ( $columns as $column ) {
+      foreach ( $columns as $column ) {
         $wpdb->query(
-            "ALTER TABLE `{$wpdb->prefix}dokan_refund`
-            MODIFY COLUMN {$column} varchar(200)"
+            $wpdb->prepare(
+                "ALTER TABLE `{$wpdb->prefix}dokan_refund`
+                MODIFY COLUMN %s varchar(200)", $column
+            )
         );
     }
 }

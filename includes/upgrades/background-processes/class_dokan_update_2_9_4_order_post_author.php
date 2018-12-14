@@ -51,7 +51,10 @@ class Dokan_Update_2_9_4_Order_Post_Author extends Abstract_Dokan_Background_Pro
 
         $limit  = 100;
         $count  = $limit * $paged;
-        $orders = $wpdb->get_results( "SELECT `id`, `post_author` FROM {$wpdb->posts} WHERE `post_type` = 'shop_order' LIMIT {$limit} OFFSET {$count}" );
+        $orders = $wpdb->get_results( $wpdb->prepare(
+            "SELECT `id`, `post_author` FROM {$wpdb->posts} WHERE `post_type` = 'shop_order' LIMIT %d OFFSET %d",
+            $limit, $count
+        ));
 
         if ( empty( $orders ) ) {
             return;
