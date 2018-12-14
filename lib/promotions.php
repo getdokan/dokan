@@ -180,22 +180,24 @@ abstract class WeDevs_Promotion {
      * @return void
      */
     public function dismiss_upgrade_promo() {
+        $get_data = wp_unslash( $_POST );
+
         if ( ! current_user_can( 'manage_options' ) ) {
             wp_send_json_error( __( 'You have no permission to do that', 'dokan-lite' ) );
         }
 
-        if ( ! wp_verify_nonce( $_POST['nonce'], 'dokan_admin' ) ) {
+        if ( ! wp_verify_nonce( $get_data['nonce'], 'dokan_admin' ) ) {
             wp_send_json_error( __( 'Invalid nonce', 'dokan-lite' ) );
         }
 
-        if ( isset( $_POST['dokan_upgrade_promotion_dismissed'] ) && $_POST['dokan_upgrade_promotion_dismissed'] ) {
-            $promo_option_key        = $_POST['promo_key'];
-            $promo_last_display_time = $_POST['promo_key'] . '_displayed_time';
+        if ( isset( $get_data['dokan_upgrade_promotion_dismissed'] ) && $get_data['dokan_upgrade_promotion_dismissed'] ) {
+            $promo_option_key        = $get_data['promo_key'];
+            $promo_last_display_time = $get_data['promo_key'] . '_displayed_time';
 
             $already_displayed_promo = get_option( $promo_option_key, array() );
 
-            if ( ! isset( $already_displayed_promo[ $_POST['key'] ] ) ) {
-                $already_displayed_promo[ $_POST['key'] ] = array(
+            if ( ! isset( $already_displayed_promo[ $get_data['key'] ] ) ) {
+                $already_displayed_promo[ $get_data['key'] ] = array(
                     'display'        => 0,
                     'last_displayed' => current_time( 'mysql' )
                 );
