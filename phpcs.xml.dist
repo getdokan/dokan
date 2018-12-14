@@ -11,8 +11,8 @@
 
     <arg name="extensions" value="php" />
     <arg name="report" value="full" />
-    <arg name="report-file" value="../dokan-phpcs-report.txt" />
+    <arg name="report-file" value="phpcs-report.txt" />
     <file>.</file>
 
-    <rule ref="WordPress.Security" />
+    <rule ref="WordPress.Security.ValidatedSanitizedInput" />
 </ruleset>
