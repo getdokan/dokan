@@ -73,8 +73,9 @@ class Dokan_Template_Orders {
         $order_id = isset( $_GET['order_id'] ) ? intval( $_GET['order_id'] ) : 0;
 
         if ( $order_id ) {
+            $_nonce = isset( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ) : '';
 
-            if ( wp_verify_nonce( $_REQUEST['_wpnonce'], 'dokan_view_order' ) && current_user_can( 'dokan_view_order' ) ) {
+            if ( wp_verify_nonce( $_nonce, 'dokan_view_order' ) && current_user_can( 'dokan_view_order' ) ) {
                 dokan_get_template_part( 'orders/details' );
             } else {
                 dokan_get_template_part( 'global/dokan-error', '', array( 'deleted' => false, 'message' => __( 'You have no permission to view this order', 'dokan-lite' ) ) );
@@ -102,11 +103,13 @@ class Dokan_Template_Orders {
             return;
         }
 
-        if ( isset( $_POST['dokan_vendor_order_export_nonce'] ) && ! wp_verify_nonce( $_POST['dokan_vendor_order_export_nonce'], 'dokan_vendor_order_export_action' ) ) {
+        $post_data = wp_unslash( $_POST );
+
+        if ( isset( $post_data['dokan_vendor_order_export_nonce'] ) && ! wp_verify_nonce( sanitize_text_field( $post_data['dokan_vendor_order_export_nonce'] ), 'dokan_vendor_order_export_action' ) ) {
             return;
         }
 
-        if ( isset( $_POST['dokan_order_export_all'] ) ) {
+        if ( isset( $post_data['dokan_order_export_all'] ) ) {
 
             $filename = "Orders-".time();
             header( "Content-Type: application/csv; charset=" . get_option( 'blog_charset' ) );
@@ -117,14 +120,14 @@ class Dokan_Template_Orders {
             exit();
         }
 
-        if ( isset( $_POST['dokan_order_export_filtered'] ) ) {
+        if ( isset( $post_data['dokan_order_export_filtered'] ) ) {
 
             $filename = "Orders-".time();
             header( "Content-Type: application/csv; charset=" . get_option( 'blog_charset' ) );
             header( "Content-Disposition: attachment; filename=$filename.csv" );
 
-            $order_date   = ( isset( $_POST['order_date'] ) ) ? $_POST['order_date'] : NULL;
-            $order_status = ( isset( $_POST['order_status'] ) ) ? $_POST['order_status'] : 'all';
+            $order_date   = ( isset( $post_data['order_date'] ) ) ? sanitize_text_field( $post_data['order_date'] ) : NULL;
+            $order_status = ( isset( $post_data['order_status'] ) ) ? sanitize_text_field( $post_data['order_status'] ) : 'all';
 
             $user_orders  = dokan_get_seller_orders( dokan_get_current_user_id(), $order_status, $order_date, 10000000, 0 );
             dokan_order_csv_export( $user_orders );

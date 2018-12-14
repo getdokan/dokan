@@ -810,11 +810,15 @@ function dokan_filter_woocommerce_dashboard_status_widget_sales_query( $query ) 
  */
 function dokan_save_account_details(){
 
-    if ( 'POST' !== strtoupper( $_SERVER['REQUEST_METHOD'] ) ) {
+    $_server = isset( $_SERVER['REQUEST_METHOD'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) : '';
+
+    if ( 'POST' !== strtoupper( $_server ) ) {
         return;
     }
 
-    if ( empty( $_POST['_wpnonce'] ) || !wp_verify_nonce( $_POST['_wpnonce'], 'dokan_save_account_details' ) ) {
+    $postdata = wp_unslash( $_POST );
+
+    if ( empty( $postdata['_wpnonce'] ) || ! wp_verify_nonce( $postdata['_wpnonce'], 'dokan_save_account_details' ) ) {
         return;
     }
 
@@ -828,12 +832,12 @@ function dokan_save_account_details(){
         return;
     }
 
-    $account_first_name = !empty( $_POST['account_first_name'] ) ? wc_clean( $_POST['account_first_name'] ) : '';
-    $account_last_name  = !empty( $_POST['account_last_name'] ) ? wc_clean( $_POST['account_last_name'] ) : '';
-    $account_email      = !empty( $_POST['account_email'] ) ? sanitize_email( $_POST['account_email'] ) : '';
-    $pass_cur           = !empty( $_POST['password_current'] ) ? $_POST['password_current'] : '';
-    $pass1              = !empty( $_POST['password_1'] ) ? $_POST['password_1'] : '';
-    $pass2              = !empty( $_POST['password_2'] ) ? $_POST['password_2'] : '';
+    $account_first_name = !empty( $postdata['account_first_name'] ) ? wc_clean( $postdata['account_first_name'] ) : '';
+    $account_last_name  = !empty( $postdata['account_last_name'] ) ? wc_clean( $postdata['account_last_name'] ) : '';
+    $account_email      = !empty( $postdata['account_email'] ) ? sanitize_email( $postdata['account_email'] ) : '';
+    $pass_cur           = !empty( $postdata['password_current'] ) ? $postdata['password_current'] : '';
+    $pass1              = !empty( $postdata['password_1'] ) ? $postdata['password_1'] : '';
+    $pass2              = !empty( $postdata['password_2'] ) ? $postdata['password_2'] : '';
     $save_pass          = true;
 
     $user->first_name = $account_first_name;
@@ -1060,16 +1064,18 @@ function dokan_bulk_order_status_change() {
         return;
     }
 
-    if ( ! isset( $_POST['security'] ) || ! wp_verify_nonce( $_POST['security'], 'bulk_order_status_change' ) ) {
+    $postdata = wp_unslash( $_POST );
+
+    if ( ! isset( $postdata['security'] ) || ! wp_verify_nonce( $postdata['security'], 'bulk_order_status_change' ) ) {
         return;
     }
 
-    if ( ! isset( $_POST['status'] ) || ! isset( $_POST['bulk_orders'] ) ) {
+    if ( ! isset( $postdata['status'] ) || ! isset( $postdata['bulk_orders'] ) ) {
         return;
     }
 
-    $status = $_POST['status'];
-    $orders = $_POST['bulk_orders'];
+    $status = $postdata['status'];
+    $orders = $postdata['bulk_orders'];
 
     // -1 means bluk action option value
     $excluded_status = array( '-1', 'cancelled', 'refunded' );

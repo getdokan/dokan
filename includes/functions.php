@@ -187,12 +187,14 @@ function dokan_delete_product_handler() {
     if ( isset( $_GET['action'] ) && $_GET['action'] == 'dokan-delete-product' ) {
         $product_id = isset( $_GET['product_id'] ) ? (int) $_GET['product_id'] : 0;
 
+        $getdata = wp_unslash( $_GET );
+
         if ( !$product_id ) {
             wp_redirect( add_query_arg( array( 'message' => 'error' ), dokan_get_navigation_url( 'products' ) ) );
             return;
         }
 
-        if ( !wp_verify_nonce( $_GET['_wpnonce'], 'dokan-delete-product' ) ) {
+        if ( !wp_verify_nonce( $getdata['_wpnonce'], 'dokan-delete-product' ) ) {
             wp_redirect( add_query_arg( array( 'message' => 'error' ), dokan_get_navigation_url( 'products' ) ) );
             return;
         }
@@ -609,18 +611,20 @@ function dokan_get_new_post_status() {
 function dokan_get_client_ip() {
     $ipaddress = '';
 
-    if ( isset($_SERVER['HTTP_CLIENT_IP'] ) ) {
-        $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
-    } else if ( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
-        $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-    } else if ( isset( $_SERVER['HTTP_X_FORWARDED'] ) ) {
-        $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
-    } else if ( isset( $_SERVER['HTTP_FORWARDED_FOR'] ) ) {
-        $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
-    } else if ( isset( $_SERVER['HTTP_FORWARDED'] ) ) {
-        $ipaddress = $_SERVER['HTTP_FORWARDED'];
-    } else if ( isset( $_SERVER['REMOTE_ADDR'] ) ) {
-        $ipaddress = $_SERVER['REMOTE_ADDR'];
+    $_server = wp_unslash( $_SERVER );
+
+    if ( isset( $_server['HTTP_CLIENT_IP'] ) ) {
+        $ipaddress = $_server['HTTP_CLIENT_IP'];
+    } else if ( isset( $_server['HTTP_X_FORWARDED_FOR'] ) ) {
+        $ipaddress = $_server['HTTP_X_FORWARDED_FOR'];
+    } else if ( isset( $_server['HTTP_X_FORWARDED'] ) ) {
+        $ipaddress = $_server['HTTP_X_FORWARDED'];
+    } else if ( isset( $_server['HTTP_FORWARDED_FOR'] ) ) {
+        $ipaddress = $_server['HTTP_FORWARDED_FOR'];
+    } else if ( isset( $_server['HTTP_FORWARDED'] ) ) {
+        $ipaddress = $_server['HTTP_FORWARDED'];
+    } else if ( isset( $_server['REMOTE_ADDR'] ) ) {
+        $ipaddress = $_server['REMOTE_ADDR'];
     } else {
         $ipaddress = 'UNKNOWN';
     }
@@ -799,12 +803,13 @@ function dokan_get_product_types( $status = '' ) {
  */
 function dokan_posted_input( $key, $array = false ) {
 
+    $postdata = wp_unslash( $_POST );
     //If array value is submitted return array
-    if ( $array && isset( $_POST[$key] ) ) { // WPCS: CSRF ok.
-        return $_POST[$key];    // WPCS: CSRF ok.
+    if ( $array && isset( $postdata[$key] ) ) { // WPCS: CSRF ok.
+        return $postdata[$key];    // WPCS: CSRF ok.
     }
 
-    $value = isset( $_POST[$key] ) ? trim( $_POST[$key] ) : ''; // WPCS: CSRF ok.
+    $value = isset( $postdata[$key] ) ? trim( $postdata[$key] ) : ''; // WPCS: CSRF ok.
     return esc_attr( $value );
 }
 
@@ -815,7 +820,8 @@ function dokan_posted_input( $key, $array = false ) {
  * @return string
  */
 function dokan_posted_textarea( $key ) {
-    $value = isset( $_POST[$key] ) ? trim( $_POST[$key] ) : ''; // WPCS: CSRF ok.
+    $postdata = wp_unslash( $_POST );
+    $value    = isset( $postdata[$key] ) ? trim( $postdata[$key] ) : ''; // WPCS: CSRF ok.
 
     return esc_textarea( $value );
 }
@@ -1603,7 +1609,9 @@ function dokan_filter_orders_for_current_vendor( $args, $query ) {
 
     if ( current_user_can( 'manage_woocommerce' ) ) {
         if ( ! empty( $_GET['vendor_id'] ) ) {
-            $vendor_id      = $_GET['vendor_id'];
+            $getdata        = wp_unslash( $_GET );
+
+            $vendor_id      = wc_clean( $getdata['vendor_id'] );
             $args['join']  .= " LEFT JOIN {$wpdb->prefix}dokan_orders as do ON $wpdb->posts.ID=do.order_id";
             $args['where'] .= " AND do.seller_id=$vendor_id";
         }
@@ -2013,12 +2021,14 @@ function dokan_product_listing_filter() {
 function dokan_product_search_by_sku( $where ) {
     global $pagenow, $wpdb, $wp;
 
-    if ( !isset( $_GET['product_search_name'] ) || empty( $_GET['product_search_name'] ) || ! isset( $_GET['dokan_product_search_nonce'] ) || ! wp_verify_nonce( $_GET['dokan_product_search_nonce'], 'dokan_product_search' ) ) {
+    $getdata = wp_unslash( $_GET );
+
+    if ( ! isset( $getdata['product_search_name'] ) || empty( $getdata['product_search_name'] ) || ! isset( $getdata['dokan_product_search_nonce'] ) || ! wp_verify_nonce( wc_clean( $getdata['dokan_product_search_nonce'] ), 'dokan_product_search' ) ) {
         return $where;
     }
 
     $search_ids = array();
-    $terms      = explode( ',', $_GET['product_search_name'] );
+    $terms      = explode( ',', wc_clean( $getdata['product_search_name'] ) );
 
     foreach ( $terms as $term ) {
         if ( is_numeric( $term ) ) {
@@ -2296,8 +2306,10 @@ function dokan_after_login_redirect( $redirect_to, $user ) {
         }
     }
 
-    if ( isset( $_GET['redirect_to'] ) && !empty( $_GET['redirect_to'] ) ) {
-        $redirect_to = esc_url( $_GET['redirect_to'] );
+    $getdata = wp_unslash( $_GET );
+
+    if ( isset( $getdata['redirect_to'] ) && ! empty( $getdata['redirect_to'] ) ) {
+        $redirect_to = esc_url( $getdata['redirect_to'] );
     }
 
     return $redirect_to;

@@ -38,7 +38,7 @@ class Dokan_Pageviews {
             if ( empty( $_COOKIE['dokan_product_viewed'] ) ) {
                 $dokan_viewed_products = array();
             } else {
-                $dokan_viewed_products = (array) explode( ',', $_COOKIE['dokan_product_viewed'] );
+                $dokan_viewed_products = (array) explode( ',', sanitize_text_field( wp_unslash( $_COOKIE['dokan_product_viewed'] ) ) );
             }
 
             if ( ! in_array( $post->ID, $dokan_viewed_products ) ) {

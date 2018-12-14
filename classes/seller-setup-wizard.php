@@ -326,14 +326,20 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
      * Save store options.
      */
     public function dokan_setup_store_save() {
-        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'dokan-seller-setup' ) ) {
+        if ( ! isset( $_POST['_wpnonce'] ) ) {
+            return;
+        }
+
+        $nonce = sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) );
+
+        if ( ! wp_verify_nonce( $nonce, 'dokan-seller-setup' ) ) {
             return;
         }
 
         $dokan_settings = $this->store_info;
 
-        $dokan_settings['store_ppp']  = absint( $_POST['store_ppp'] );
-        $dokan_settings['address']    = isset( $_POST['address'] ) ? $_POST['address'] : [];
+        $dokan_settings['store_ppp']  = isset( $_POST['store_ppp'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['store_ppp'] ) ) ) : '';
+        $dokan_settings['address']    = isset( $_POST['address'] ) ? sanitize_text_field( wp_unslash( $_POST['address'] ) ) : [];
         $dokan_settings['show_email'] = isset( $_POST['show_email'] ) ? 'yes' : 'no';
 
         update_user_meta( $this->store_id, 'dokan_profile_settings', $dokan_settings );
@@ -389,14 +395,20 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
      * Save payment options.
      */
     public function dokan_setup_payment_save() {
-        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'dokan-seller-setup' ) ) {
+        if ( ! isset( $_POST['_wpnonce'] ) ) {
+            return;
+        }
+
+        $nonce = sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) );
+
+        if ( ! wp_verify_nonce( $nonce, 'dokan-seller-setup' ) ) {
             return;
         }
 
         $dokan_settings = $this->store_info;
 
         if ( isset( $_POST['settings']['bank'] ) ) {
-            $bank = $_POST['settings']['bank'];
+            $bank = array_map( 'sanitize_text_field', array_map( 'wp_unslash', $_POST['settings']['bank'] ) );
 
             $dokan_settings['payment']['bank'] = array(
                 'ac_name'        => sanitize_text_field( $bank['ac_name'] ),
@@ -411,13 +423,13 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
 
         if ( isset( $_POST['settings']['paypal'] ) ) {
             $dokan_settings['payment']['paypal'] = array(
-                'email' => filter_var( $_POST['settings']['paypal']['email'], FILTER_VALIDATE_EMAIL )
+                'email' => filter_var( sanitize_text_field( wp_unslash( $_POST['settings']['paypal']['email'] ) ), FILTER_VALIDATE_EMAIL )
             );
         }
 
         if ( isset( $_POST['settings']['skrill'] ) ) {
             $dokan_settings['payment']['skrill'] = array(
-                'email' => filter_var( $_POST['settings']['skrill']['email'], FILTER_VALIDATE_EMAIL )
+                'email' => filter_var( sanitize_text_field( wp_unslash( $_POST['settings']['skrill']['email'] ) ), FILTER_VALIDATE_EMAIL )
             );
         }
 
