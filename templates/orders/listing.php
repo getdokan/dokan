@@ -25,7 +25,7 @@ if ( $user_orders ) {
             <div class="dokan-form-group">
                 <label for="bulk-order-action-selector" class="screen-reader-text"><?php esc_html_e( 'Select bulk action', 'dokan-lite' ); ?></label>
 
-                <select name="statßus" id="bulk-order-action-selector" class="dokan-form-control chosen">
+                <select name="status" id="bulk-order-action-selector" class="dokan-form-control chosen">
                     <?php foreach ( $order_statuses as $key => $value ) : ?>
                         <option class="bulk-order-status" value="<?php echo esc_attr( $key ) ?>"><?php echo esc_attr( $value ); ?></option>
                     <?php endforeach; ?>
