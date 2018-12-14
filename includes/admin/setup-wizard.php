@@ -334,12 +334,13 @@ class Dokan_Setup_Wizard {
         check_admin_referer( 'dokan-setup' );
 
         $options = get_option( 'dokan_general', array() );
+        $_post_data = wp_unslash($_POST);
 
-        $options['custom_store_url']       = ! empty( $_POST['custom_store_url'] ) ? sanitize_text_field( $_POST['custom_store_url'] ) : '';
-        $options['tax_fee_recipient']      = ! empty( $_POST['tax_fee_recipient'] ) ? sanitize_text_field( $_POST['tax_fee_recipient'] ) : '';
-        $options['shipping_fee_recipient'] = ! empty( $_POST['shipping_fee_recipient'] ) ? sanitize_text_field( $_POST['shipping_fee_recipient'] ) : '';
+        $options['custom_store_url']       = ! empty( $_post_data['custom_store_url'] ) ? sanitize_text_field( $_post_data['custom_store_url'] ) : '';
+        $options['tax_fee_recipient']      = ! empty( $_post_data['tax_fee_recipient'] ) ? sanitize_text_field( $_post_data['tax_fee_recipient'] ) : '';
+        $options['shipping_fee_recipient'] = ! empty( $_post_data['shipping_fee_recipient'] ) ? sanitize_text_field( $_post_data['shipping_fee_recipient'] ) : '';
 
-        $share_essentials = sanitize_text_field( isset( $_POST['share_essentials'] ) );
+        $share_essentials = sanitize_text_field( isset( $_post_data['share_essentials'] ) );
 
         if ( $share_essentials ) {
             dokan()->tracker->insights->optin();
@@ -426,11 +427,13 @@ class Dokan_Setup_Wizard {
     public function dokan_setup_selling_save() {
         check_admin_referer( 'dokan-setup' );
 
+        $_post_data = wp_unslash( $_POST );
+
         $options = get_option( 'dokan_selling', array() );
-        $options['new_seller_enable_selling'] = isset( $_POST['new_seller_enable_selling'] ) ? 'on' : 'off';
-        $options['commission_type']           = $_POST['commission_type'];
-        $options['admin_percentage']          = is_int( $_POST['admin_percentage'] ) ? intval( $_POST['admin_percentage'] ) : floatval( $_POST['admin_percentage'] );
-        $options['order_status_change']       = isset( $_POST['order_status_change'] ) ? 'on' : 'off';
+        $options['new_seller_enable_selling'] = isset( $_post_data['new_seller_enable_selling'] ) ? 'on' : 'off';
+        $options['commission_type']           = sanitize_text_field( $_post_data['commission_type'] );
+        $options['admin_percentage']          = is_int( $_post_data['admin_percentage'] ) ? intval( $_post_data['admin_percentage'] ) : floatval( $_post_data['admin_percentage'] );
+        $options['order_status_change']       = isset( $_post_data['order_status_change'] ) ? 'on' : 'off';
 
         update_option( 'dokan_selling', $options );
 
@@ -649,11 +652,12 @@ class Dokan_Setup_Wizard {
     public function dokan_setup_withdraw_save() {
         check_admin_referer( 'dokan-setup' );
 
+        $_post_data = wp_unslash( $_POST );
         $options = array();
 
-        $options['withdraw_methods']      = ! empty( $_POST['withdraw_methods'] ) ? $_POST['withdraw_methods'] : array();
-        $options['withdraw_limit']        = ! empty( $_POST['withdraw_limit'] ) ? sanitize_text_field( $_POST['withdraw_limit'] ) : 0;
-        $options['withdraw_order_status'] = ! empty( $_POST['withdraw_order_status'] ) ? $_POST['withdraw_order_status'] : array();
+        $options['withdraw_methods']      = ! empty( $_post_data['withdraw_methods'] ) ? $_post_data['withdraw_methods'] : array();
+        $options['withdraw_limit']        = ! empty( $_post_data['withdraw_limit'] ) ? sanitize_text_field( $_post_data['withdraw_limit'] ) : 0;
+        $options['withdraw_order_status'] = ! empty( $_post_data['withdraw_order_status'] ) ? $_post_data['withdraw_order_status'] : array();
 
         /**
          * Filter dokan_withdraw options before saving in setup wizard
@@ -663,7 +667,7 @@ class Dokan_Setup_Wizard {
          * @param array $options
          * @param array $_POST
          */
-        $options = apply_filters( 'dokan_setup_wizard_save_withdraw_options', $options, $_POST );
+        $options = apply_filters( 'dokan_setup_wizard_save_withdraw_options', $options, $_post_data );
 
         update_option( 'dokan_withdraw', $options );
 

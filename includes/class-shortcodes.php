@@ -222,10 +222,12 @@ class Dokan_Shortcodes {
             'offset' => $offset
         );
 
+        $_get_data = wp_unslash( $_GET );
+
         // if search is enabled, perform a search
         if ( 'yes' == $attr['search'] ) {
 
-            $search_term = isset( $_GET['dokan_seller_search'] ) ? sanitize_text_field( $_GET['dokan_seller_search'] ) : '';
+            $search_term = isset( $_get_data['dokan_seller_search'] ) ? sanitize_text_field( $_get_data['dokan_seller_search'] ) : '';
 
             if ( '' != $search_term ) {
 

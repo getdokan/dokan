@@ -40,7 +40,7 @@ class Dokan_Admin_Pointers {
      * @return void
      */
     public function dismiss_screen( $screen = false ) {
-        $screen = isset( $_POST['screen'] ) ? wc_clean( $_POST['screen'] ) : $screen; // WPCS: CSRF ok.
+        $screen = isset( $_POST['screen'] ) ? sanitize_text_field( wp_unslash( $_POST['screen'] )) : $screen; // WPCS: CSRF ok.
         if ( !$screen ) {
             return;
         }

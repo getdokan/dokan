@@ -69,7 +69,8 @@ class Dokan_Email {
      * @return string
      */
     function get_user_agent() {
-        return substr( $_SERVER['HTTP_USER_AGENT'], 0, 150 );
+        $agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ): '';
+        return substr( $agent, 0, 150 );
     }
 
     /**
