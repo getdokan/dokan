@@ -393,7 +393,7 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
 
         $amount  = (float) $request['amount'];
         $method  = sanitize_text_field( $request['method'] );
-        $notes   = sanitize_text_field( $request['notes'] );
+        $notes   = sanitize_textarea_field( $request['notes'] );
         $limit   = $this->get_withdraw_limit();
         $balance = dokan_get_seller_balance( $store_id, false );
 
@@ -459,7 +459,7 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
         global $wpdb;
 
         $withdraw_id = isset( $request['id'] ) ? (int) $request['id'] : 0;
-        $note        = isset( $request['note'] ) ? sanitize_text_field( $request['note'] ) : '';
+        $note        = isset( $request['note'] ) ? sanitize_textarea_field( $request['note'] ) : '';
 
         if ( empty( $withdraw_id ) ) {
             return new WP_Error( 'no_withdraw', __( 'No withdraw id found', 'dokan-lite' ), array( 'status' => 404 ) );
