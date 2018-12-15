@@ -18,7 +18,7 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
 
     global $wpdb, $woocommerce, $woocommerce_errors;
 
-    $product_type = empty( $data['product_type'] ) ? 'simple' : stripslashes( $data['product_type'] );
+    $product_type = empty( $data['product_type'] ) ? 'simple' : sanitize_text_field( $data['product_type'] );
 
     // Add any default post meta
     add_post_meta( $post_id, 'total_sales', '0', true );
@@ -35,8 +35,8 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
     update_post_meta( $post_id, '_product_image_gallery', implode( ',', $attachment_ids ) );
 
     // Check product visibility and purchaces note
-    $data['_visibility']    = isset( $data['_visibility'] ) ? $data['_visibility'] : '';
-    $data['_purchase_note'] = isset( $data['_purchase_note'] ) ? $data['_purchase_note'] : '';
+    $data['_visibility']    = isset( $data['_visibility'] ) ? sanitize_text_field( $data['_visibility'] ) : '';
+    $data['_purchase_note'] = isset( $data['_purchase_note'] ) ? sanitize_textarea_field( $data['_purchase_note'] ) : '';
 
     // Set visibiliy for WC 3.0.0+
     $terms = array();
@@ -63,7 +63,7 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
     }
 
     wp_set_post_terms( $post_id, $terms, 'product_visibility', false );
-    update_post_meta( $post_id, '_visibility', stripslashes( $data['_visibility'] ) );
+    update_post_meta( $post_id, '_visibility', $data['_visibility'] );
 
     // Update post meta
     if ( isset( $data['_regular_price'] ) ) {
@@ -84,7 +84,7 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
     }
 
     if ( isset( $data['_purchase_note'] ) ) {
-        update_post_meta( $post_id, '_purchase_note', wp_kses_post( stripslashes( $data['_purchase_note'] ) ) );
+        update_post_meta( $post_id, '_purchase_note', wp_kses_post( $data['_purchase_note'] ) );
     }
 
     // Unique SKU
@@ -110,21 +110,25 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
     // Save Attributes
     $attributes = array();
 
-    if ( isset( $data['attribute_names'] ) && isset( $data['attribute_values'] ) ) {
+    if ( isset( $data['attribute_names'] ) && is_array( $data['attribute_names'] ) && isset( $data['attribute_values'] ) && is_array( $data['attribute_values'] ) ) {
+        $attribute_names  = array_map( 'sanitize_title', $data['attribute_names'] );
 
-        $attribute_names  = $data['attribute_names'];
-        $attribute_values = $data['attribute_values'];
+        $attribute_values = array();
+
+        foreach ( $data['attribute_values'] as $values ) {
+            $attribute_values[] = array_map( 'sanitize_text_field', (array) $values );
+        }
 
         if ( isset( $data['attribute_visibility'] ) ) {
-            $attribute_visibility = $data['attribute_visibility'];
+            $attribute_visibility = array_map( 'absint' , $data['attribute_visibility'] );
         }
 
         if ( isset( $data['attribute_variation'] ) ) {
-            $attribute_variation = $data['attribute_variation'];
+            $attribute_variation = array_map( 'absint', $data['attribute_variation'] );
         }
 
-        $attribute_is_taxonomy   = $data['attribute_is_taxonomy'];
-        $attribute_position      = $data['attribute_position'];
+        $attribute_is_taxonomy   = array_map( 'absint' , $data['attribute_is_taxonomy'] );
+        $attribute_position      = array_map( 'absint', $data['attribute_position'] );
         $attribute_names_max_key = max( array_keys( $attribute_names ) );
 
         for ( $i = 0; $i <= $attribute_names_max_key; $i++ ) {
@@ -177,8 +181,8 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
 
                 if ( ! empty( $values ) ) {
                     // Add attribute to array, but don't set values
-                    $attributes[ sanitize_title( $attribute_names[ $i ] ) ] = array(
-                        'name'          => wc_clean( $attribute_names[ $i ] ),
+                    $attributes[ $attribute_names[ $i ] ] = array(
+                        'name'          => $attribute_names[ $i ],
                         'value'         => '',
                         'position'      => $attribute_position[ $i ],
                         'is_visible'    => $is_visible,
@@ -192,8 +196,8 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
                 $values = implode( ' ' . WC_DELIMITER . ' ', array_map( 'wc_clean', array_map( 'stripslashes', $attribute_values[ $i ] ) ) );
 
                 // Custom attribute - Add attribute to array and set the values
-                $attributes[ sanitize_title( $attribute_names[ $i ] ) ] = array(
-                    'name'          => wc_clean( $attribute_names[ $i ] ),
+                $attributes[ $attribute_names[ $i ] ] = array(
+                    'name'          => $attribute_names[ $i ],
                     'value'         => $values,
                     'position'      => $attribute_position[ $i ],
                     'is_visible'    => $is_visible,
@@ -288,9 +292,9 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
     $manage_stock      = ! empty( $data['_manage_stock'] ) && 'grouped' !== $product_type ? 'yes' : 'no';
     $backorders        = ! empty( $data['_backorders'] ) && 'yes' === $manage_stock ? wc_clean( $data['_backorders'] ) : 'no';
     $stock_status      = ! empty( $data['_stock_status'] ) ? wc_clean( $data['_stock_status'] ) : 'instock';
-    $stock_amount      = isset( $data['_stock'] ) ? $data['_stock'] : '';
+    $stock_amount      = isset( $data['_stock'] ) ? wc_clean( $data['_stock'] ) : '';
     $stock_amount      = 'yes' === $manage_stock ? wc_stock_amount( wp_unslash( $stock_amount ) ) : '';
-    $_low_stock_amount = isset( $data['_low_stock_amount'] ) ? $data['_low_stock_amount'] : '';
+    $_low_stock_amount = isset( $data['_low_stock_amount'] ) ? wc_clean( $data['_low_stock_amount'] ) : '';
     $_low_stock_amount = 'yes' === $manage_stock ? wc_stock_amount( wp_unslash( $_low_stock_amount ) ) : '';
 
     // Stock Data
@@ -383,10 +387,10 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
         update_post_meta( $post_id, '_download_expiry', $_download_expiry );
 
         if ( isset( $data['_download_limit'] ) ) {
-            update_post_meta( $post_id, '_download_limit', esc_attr( $_download_limit ) );
+            update_post_meta( $post_id, '_download_limit', sanitize_text_field( $_download_limit ) );
         }
         if ( isset( $data['_download_expiry'] ) ) {
-            update_post_meta( $post_id, '_download_expiry', esc_attr( $_download_expiry ) );
+            update_post_meta( $post_id, '_download_expiry', sanitize_text_field( $_download_expiry ) );
         }
 
         if ( isset( $data['_download_type'] ) ) {

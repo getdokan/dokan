@@ -34,7 +34,7 @@ function dokan_save_product( $args ) {
     }
 
     if( dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) == 'single' ) {
-        $product_cat    = intval( $data['product_cat'] );
+        $product_cat    = absint( $data['product_cat'] );
         if ( $product_cat < 0 ) {
             return new WP_Error( 'no-category', __( 'Please select a category', 'dokan-lite' ) );
         }
@@ -50,18 +50,18 @@ function dokan_save_product( $args ) {
         return $error;
     }
 
-    $post_status = ! empty( $data['post_status'] ) ? $data['post_status'] : dokan_get_new_post_status();
+    $post_status = ! empty( $data['post_status'] ) ? sanitize_text_field( $data['post_status'] ) : dokan_get_new_post_status();
 
     $post_arr = array(
         'post_type'    => 'product',
         'post_status'  => $post_status,
-        'post_title'   => sanitize_text_field( $data['post_title'] ),
-        'post_content' => $data['post_content'],
-        'post_excerpt' => $data['post_excerpt'],
+        'post_title'   => sanitize_title( $data['post_title'] ),
+        'post_content' => sanitize_textarea_field( $data['post_content'] ),
+        'post_excerpt' => sanitize_textarea_field( $data['post_excerpt'] ),
     );
 
     if ( ! empty( $data['ID'] ) ) {
-        $post_arr['ID'] = $data['ID'];
+        $post_arr['ID'] = absint( $data['ID'] );
         $is_updating = true;
     } else {
         $is_updating = false;
@@ -75,11 +75,11 @@ function dokan_save_product( $args ) {
 
         /** set images **/
         if ( isset( $data['feat_image_id'] ) && ! empty( $data['feat_image_id'] ) ) {
-            set_post_thumbnail( $product_id, $data['feat_image_id'] );
+            set_post_thumbnail( $product_id, absint( $data['feat_image_id'] ) );
         }
 
         if ( isset( $data['product_tag'] ) && !empty( $data['product_tag'] ) ) {
-            $tags_ids = array_map( 'intval', (array)$data['product_tag'] );
+            $tags_ids = array_map( 'absint', (array) $data['product_tag'] );
             wp_set_object_terms( $product_id, $tags_ids, 'product_tag' );
         }
 
@@ -88,12 +88,12 @@ function dokan_save_product( $args ) {
             wp_set_object_terms( $product_id, (int) $data['product_cat'], 'product_cat' );
         } else {
             if ( isset( $data['product_cat'] ) && !empty( $data['product_cat'] ) ) {
-                $cat_ids = array_map( 'intval', (array)$data['product_cat'] );
+                $cat_ids = array_map( 'absint', (array) $data['product_cat'] );
                 wp_set_object_terms( $product_id, $cat_ids, 'product_cat' );
             }
         }
         if ( isset( $data['product_type'] ) ) {
-            wp_set_object_terms( $product_id, $data['product_type'], 'product_type' );
+            wp_set_object_terms( $product_id, sanitize_text_field( $data['product_type'] ), 'product_type' );
         } else {
             wp_set_object_terms( $product_id, 'simple', 'product_type' );
         }
@@ -112,8 +112,8 @@ function dokan_save_product( $args ) {
             update_post_meta( $product_id, '_sale_price', ( $data['_sale_price'] === '' ? '' : wc_format_decimal( $data['_sale_price'] ) ) );
         }
 
-        $date_from = isset( $data['_sale_price_dates_from'] ) ? $data['_sale_price_dates_from'] : '';
-        $date_to   = isset( $data['_sale_price_dates_to'] ) ? $data['_sale_price_dates_to'] : '';
+        $date_from = isset( $data['_sale_price_dates_from'] ) ? wc_clean( $data['_sale_price_dates_from'] ) : '';
+        $date_to   = isset( $data['_sale_price_dates_to'] ) ? wc_clean( $data['_sale_price_dates_to'] ) : '';
 
         // Dates
         if ( $date_from ) {
@@ -150,7 +150,7 @@ function dokan_save_product( $args ) {
         }
 
         if ( array_key_exists( $data['_visibility'], dokan_get_product_visibility_options() ) ) {
-            update_post_meta( $product_id, '_visibility', $data['_visibility'] );
+            update_post_meta( $product_id, '_visibility', sanitize_text_field( $data['_visibility'] ) );
         } else {
             update_post_meta( $product_id, '_visibility', 'visible' );
         }
