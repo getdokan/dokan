@@ -79,7 +79,10 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
         dokan_get_template_part( 'withdraw/header' );
 
         if ( ! current_user_can( 'dokan_manage_withdraw' ) ) {
-            dokan_get_template_part('global/dokan-error', '', array( 'deleted' => false, 'message' => __( 'You have no permission to manage withdraws', 'dokan-lite' ) ) );
+            dokan_get_template_part('global/dokan-error', '', array(
+                'deleted' => false,
+                'message' => __( 'You have no permission to manage withdraws', 'dokan-lite' ),
+            ) );
             return;
         }
     }
@@ -92,11 +95,14 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
      * @return void
      */
     public function render_withdraw_error() {
-        if ( is_wp_error( self::$validate) ) {
+        if ( is_wp_error( self::$validate ) ) {
             $messages = self::$validate->get_error_messages();
 
-            foreach( $messages as $message ) {
-                dokan_get_template_part('global/dokan-error', '', array( 'deleted' => true, 'message' => $message ) );
+            foreach ( $messages as $message ) {
+                dokan_get_template_part( 'global/dokan-error', '', array(
+                    'deleted' => true,
+                    'message' => $message,
+                ) );
             }
         }
     }
@@ -113,7 +119,9 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
             return;
         }
 
-        dokan_get_template_part( 'withdraw/status-listing', '', array( 'current' => $this->current_status ) );
+        dokan_get_template_part( 'withdraw/status-listing', '', array(
+            'current' => $this->current_status
+        ) );
     }
 
     /**
@@ -132,16 +140,20 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
         $withdraw_limit = dokan_get_option( 'withdraw_limit', 'dokan_withdraw', -1 );
         $threshold      = dokan_get_option( 'withdraw_date_limit', 'dokan_withdraw', -1 );
 
-        $message = sprintf( __('Current Balance: %s ', 'dokan-lite' ), $balance );
+        $message = sprintf( __( 'Current Balance: %s ', 'dokan-lite' ), $balance );
 
         if ( $withdraw_limit != -1 ) {
             $message .= sprintf( __( '<br>Minimum Withdraw amount: %s ', 'dokan-lite' ), wc_price( $withdraw_limit ) );
         }
+
         if ( $threshold != -1 ) {
             $message .= sprintf( __( '<br>Withdraw Threshold: %d days ', 'dokan-lite' ), $threshold );
         }
 
-        dokan_get_template_part( 'global/dokan-warning', '', array( 'message' => $message, 'deleted' => false ) );
+        dokan_get_template_part( 'global/dokan-warning', '', array(
+            'message' => $message,
+            'deleted' => false,
+        ) );
     }
 
     /**
@@ -171,7 +183,7 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
         // Withdraw functionality
         self::$validate = $this->validate();
 
-        if ( self::$validate !== false && !is_wp_error( self::$validate ) ) {
+        if ( self::$validate !== false && ! is_wp_error( self::$validate ) ) {
             $this->insert_withdraw_info();
         }
 
@@ -190,7 +202,7 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
 
         if ( isset( $get_data['action'] ) && $get_data['action'] == 'dokan_cancel_withdrow' ) {
 
-            if ( !wp_verify_nonce( $get_data['_wpnonce'], 'dokan_cancel_withdrow' ) ) {
+            if ( ! wp_verify_nonce( $get_data['_wpnonce'], 'dokan_cancel_withdrow' ) ) {
                 wp_die( esc_attr__( 'Are you cheating?', 'dokan-lite' ) );
             }
 
@@ -217,11 +229,11 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
 
         $post_data = wp_unslash( $_POST );
 
-        if ( !isset( $post_data['withdraw_submit'] ) ) {
+        if ( ! isset( $post_data['withdraw_submit'] ) ) {
             return false;
         }
 
-        if ( !wp_verify_nonce( $post_data['dokan_withdraw_nonce'], 'dokan_withdraw' ) ) {
+        if ( ! wp_verify_nonce( $post_data['dokan_withdraw_nonce'], 'dokan_withdraw' ) ) {
             wp_die( esc_attr__( 'Are you cheating?', 'dokan-lite' ) );
         }
 
@@ -282,7 +294,7 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
             'status'  => 0,
             'method'  => $method,
             'ip'      => dokan_get_client_ip(),
-            'notes'   => ''
+            'notes'   => '',
         );
 
         $update = $this->insert_withdraw( $data_info );
@@ -307,7 +319,7 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
         $withdraw_requests = $this->get_withdraw_requests( $user_id );
 
         dokan_get_template_part( 'withdraw/pending-request-listing', '', array(
-            'withdraw_requests' => $withdraw_requests
+            'withdraw_requests' => $withdraw_requests,
         ) );
     }
 
@@ -340,7 +352,10 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
         }
 
         if ( ! empty( $message ) ) {
-            dokan_get_template_part( $template, '', array( 'deleted' => true, 'message' => $message ) );
+            dokan_get_template_part( $template, '', array(
+                'deleted' => true,
+                'message' => $message,
+            ) );
         }
     }
 
@@ -369,8 +384,8 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
 
         if ( $balance < 0 ) {
             dokan_get_template_part( 'global/dokan-error', '', array(
-                'deleted'=> false,
-                'message' => sprintf( __( 'You already withdrawed %s. This amount will deducted from your balance.', 'dokan-lite' ), wc_price( $balance ) )
+                'deleted' => false,
+                'message' => sprintf( __( 'You already withdrawed %s. This amount will deducted from your balance.', 'dokan-lite' ), wc_price( $balance ) ),
             ) );
         }
 
@@ -378,23 +393,23 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
 
             $req_success = isset( $get_data['message'] ) ? $get_data['message'] : false;
 
-            if( !$req_success ) {
-                $pending_warning = sprintf( "<p>%s</p><p>%s</p>", __( 'You already have pending withdraw request(s).', 'dokan-lite' ), __( 'Please submit your request after approval or cancellation of your previous request.', 'dokan-lite' ) );
+            if ( ! $req_success ) {
+                $pending_warning = sprintf( '<p>%s</p><p>%s</p>', __( 'You already have pending withdraw request(s).', 'dokan-lite' ), __( 'Please submit your request after approval or cancellation of your previous request.', 'dokan-lite' ) );
 
                 dokan_get_template_part( 'global/dokan-error', '', array(
                     'deleted' => false,
-                    'message' => $pending_warning
+                    'message' => $pending_warning,
                 ) );
             }
 
             $this->withdraw_requests( $current_user->ID );
             return;
 
-        } else if ( !$this->has_withdraw_balance( $current_user->ID ) ) {
+        } else if ( ! $this->has_withdraw_balance( $current_user->ID ) ) {
 
             dokan_get_template_part( 'global/dokan-error', '', array(
                 'deleted' => false,
-                'message' => __( 'You don\'t have sufficient balance for a withdraw request!', 'dokan-lite' )
+                'message' => __( 'You don\'t have sufficient balance for a withdraw request!', 'dokan-lite' ),
             ) );
 
             return;
@@ -411,9 +426,9 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
         }
 
         dokan_get_template_part( 'withdraw/request-form', '', array(
-            'amount' => $amount,
+            'amount'          => $amount,
             'withdraw_method' => $withdraw_method,
-            'payment_methods' => $payment_methods
+            'payment_methods' => $payment_methods,
         ) );
     }
 
@@ -456,14 +471,14 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
         if ( $requests ) {
 
             dokan_get_template_part( 'withdraw/approved-request-listing', '', array(
-                'requests' => $requests
+                'requests' => $requests,
             ) );
 
         } else {
 
             dokan_get_template_part( 'global/dokan-warning', '', array(
                 'deleted' => false,
-                'message' => __( 'Sorry, no transactions were found!', 'dokan-lite' )
+                'message' => __( 'Sorry, no transactions were found!', 'dokan-lite' ),
             ) );
 
         }
@@ -476,7 +491,7 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
      *
      * @return void
      */
-    function user_cancelled_withdraws( $user_id ){
+    function user_cancelled_withdraws( $user_id ) {
         if ( ! current_user_can( 'dokan_manage_withdraw' ) ) {
             return;
         }
@@ -486,14 +501,14 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
         if ( $requests ) {
 
             dokan_get_template_part( 'withdraw/cancelled-request-listing', '', array(
-                'requests' => $requests
+                'requests' => $requests,
             ) );
 
         } else {
 
             dokan_get_template_part( 'global/dokan-warning', '', array(
                 'deleted' => false,
-                'message' => __( 'Sorry, no transactions were found!', 'dokan-lite' )
+                'message' => __( 'Sorry, no transactions were found!', 'dokan-lite' ),
             ) );
         }
     }

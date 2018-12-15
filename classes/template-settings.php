@@ -493,7 +493,7 @@ class Dokan_Template_Settings {
                 }
             }
 
-		} elseif ( wp_verify_nonce( $post_data['_wpnonce'], 'dokan_store_settings_nonce' ) ) {
+        } elseif ( wp_verify_nonce( $post_data['_wpnonce'], 'dokan_store_settings_nonce' ) ) {
 
             // update store setttings info
             $dokan_settings = array(
@@ -585,7 +585,7 @@ class Dokan_Template_Settings {
                     'email' => sanitize_email( $post_data['settings']['skrill']['email'] ),
                 );
             }
-		}
+        }
 
         $dokan_settings = array_merge( $prev_dokan_settings, $dokan_settings );
 

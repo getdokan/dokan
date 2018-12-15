@@ -72,7 +72,6 @@ class Dokan_Settings {
             }
 
             $option_value = $this->sanitize_options( $_post_data['settingsData'] );
-
             $option_value = apply_filters( 'dokan_save_settings_value', $option_value );
 
             do_action( 'dokan_before_saving_settings', $option_name, $option_value );
@@ -83,8 +82,8 @@ class Dokan_Settings {
 
             wp_send_json_success( array(
                 'settings' => array(
-                    'name'    => $option_name,
-                    'value'   => $option_value,
+                    'name'  => $option_name,
+                    'value' => $option_value,
                 ),
                 'message' => __( 'Setting has been saved successfully.', 'dokan-lite' ),
             ) );
@@ -102,7 +101,7 @@ class Dokan_Settings {
      * @return mixed
      */
     function sanitize_options( $options ) {
-        if ( !$options ) {
+        if ( ! $options ) {
             return $options;
         }
 
@@ -179,7 +178,7 @@ class Dokan_Settings {
      */
     public function get_post_type( $post_type ) {
         $pages_array = array( '-1' => __( '- select -', 'dokan-lite' ) );
-        $pages = get_posts( array('post_type' => $post_type, 'numberposts' => -1) );
+        $pages       = get_posts( array('post_type' => $post_type, 'numberposts' => -1) );
 
         if ( $pages ) {
             foreach ($pages as $page) {
@@ -211,22 +210,22 @@ class Dokan_Settings {
             array(
                 'id'    => 'dokan_general',
                 'title' => __( 'General', 'dokan-lite' ),
-                'icon' => 'dashicons-admin-generic'
+                'icon'  => 'dashicons-admin-generic'
             ),
             array(
                 'id'    => 'dokan_selling',
                 'title' => __( 'Selling Options', 'dokan-lite' ),
-                'icon' => 'dashicons-cart'
+                'icon'  => 'dashicons-cart'
             ),
             array(
                 'id'    => 'dokan_withdraw',
                 'title' => __( 'Withdraw Options', 'dokan-lite' ),
-                'icon' => 'dashicons-money'
+                'icon'  => 'dashicons-money'
             ),
             array(
                 'id'    => 'dokan_pages',
                 'title' => __( 'Page Settings', 'dokan-lite' ),
-                'icon' => 'dashicons-admin-page'
+                'icon'  => 'dashicons-admin-page'
             ),
             array(
                 'id'    => 'dokan_appearance',
@@ -300,20 +299,20 @@ class Dokan_Settings {
                     'type'    => 'checkbox',
                     'default' => 'on'
                 ),
-                'store_map'                  => array(
+                'store_map' => array(
                     'name'    => 'store_map',
                     'label'   => __( 'Show Map on Store Page', 'dokan-lite' ),
                     'desc'    => __( 'Enable a Google Map of the Store Location in the store sidebar', 'dokan-lite' ),
                     'type'    => 'checkbox',
                     'default' => 'on'
                 ),
-                'gmap_api_key'               => array(
+                'gmap_api_key' => array(
                     'name'  => 'gmap_api_key',
                     'label' => __( 'Google Map API Key', 'dokan-lite' ),
                     'desc'  => __( '<a href="https://developers.google.com/maps/documentation/javascript/" target="_blank">API Key</a> is needed to display map on store page', 'dokan-lite' ),
                     'type'  => 'text',
                 ),
-                'contact_seller'             => array(
+                'contact_seller' => array(
                     'name'    => 'contact_seller',
                     'label'   => __( 'Show Contact Form on Store Page', 'dokan-lite' ),
                     'desc'    => __( 'Enable Vendor Contact Form in the store sidebar', 'dokan-lite' ),

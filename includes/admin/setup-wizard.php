@@ -173,7 +173,7 @@ class Dokan_Setup_Wizard {
             <?php
                 $logo_url = ( ! empty( $this->custom_logo ) ) ? $this->custom_logo : plugins_url( 'assets/images/dokan-logo.png', DOKAN_FILE );
             ?>
-            <h1 id="wc-logo"><a href="https://wedevs.com/products/plugins/dokan/"><img src="<?php echo esc_url( $logo_url ); ?>" alt="Dokan" /></a></h1>
+            <h1 id="wc-logo"><a href="https://wedevs.com/dokan/"><img src="<?php echo esc_url( $logo_url ); ?>" alt="Dokan Logo" width="135" height="auto" /></a></h1>
         <?php
     }
 
@@ -462,10 +462,10 @@ class Dokan_Setup_Wizard {
                         <ul class="wc-wizard-payment-gateways wc-wizard-services">
                             <li class="wc-wizard-service-item">
                                 <div class="wc-wizard-service-name">
-                                    <p><?php esc_html_e( 'Paypal', 'dokan-lite' ); ?></p>
+                                    <p><?php esc_html_e( 'PayPal', 'dokan-lite' ); ?></p>
                                 </div>
                                 <div class="wc-wizard-service-description">
-                                    <?php esc_html_e( 'Enable paypal for your vendor as a withdraw method', 'dokan-lite' ); ?>
+                                    <?php esc_html_e( 'Enable PayPal for your vendor as a withdraw method', 'dokan-lite' ); ?>
                                 </div>
                                 <div class="dokan-wizard-service-enable">
                                     <input type="checkbox" name="withdraw_methods[paypal]" id="withdraw_methods[paypal]" class="switch-input" value="paypal" checked>
@@ -688,8 +688,8 @@ class Dokan_Setup_Wizard {
 
         <div class="dokan-setup-done-content">
             <p class="wc-setup-actions step">
-                <a class="button button-primary" href="<?php echo esc_url( admin_url( 'admin.php?page=dokan#/settings' ) ); ?>"><?php esc_html_e( 'Setup Your Dokan!', 'dokan-lite' ); ?></a>
-                <a class="button" href="<?php echo esc_url( admin_url( 'admin.php?page=dokan#/help' ) ); ?>"><?php esc_html_e( 'Learn More', 'dokan-lite' ); ?></a>
+                <a class="button button-primary" href="<?php echo esc_url( admin_url( 'admin.php?page=dokan' ) ); ?>"><?php esc_html_e( 'Visit Dokan Dashboard', 'dokan-lite' ); ?></a>
+                <a class="button" href="<?php echo esc_url( admin_url( 'admin.php?page=dokan#/settings' ) ); ?>"><?php esc_html_e( 'More Settings', 'dokan-lite' ); ?></a>
             </p>
         </div>
         <?php

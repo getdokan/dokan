@@ -80,9 +80,8 @@ class Dokan_Template_Orders {
             } else {
                 dokan_get_template_part( 'global/dokan-error', '', array( 'deleted' => false, 'message' => __( 'You have no permission to view this order', 'dokan-lite' ) ) );
             }
-
-        } else {
-            dokan_get_template_part( 'orders/date-export');
+		} else {
+            dokan_get_template_part( 'orders/date-export' );
             dokan_get_template_part( 'orders/listing' );
         }
     }
@@ -111,22 +110,22 @@ class Dokan_Template_Orders {
 
         if ( isset( $post_data['dokan_order_export_all'] ) ) {
 
-            $filename = "Orders-".time();
-            header( "Content-Type: application/csv; charset=" . get_option( 'blog_charset' ) );
+            $filename = 'Orders-' . time();
+            header( 'Content-Type: application/csv; charset=' . get_option( 'blog_charset' ) );
             header( "Content-Disposition: attachment; filename=$filename.csv" );
 
-            $user_orders = dokan_get_seller_orders( dokan_get_current_user_id(), 'all', NULL, 10000000, 0 );
+            $user_orders = dokan_get_seller_orders( dokan_get_current_user_id(), 'all', null, 10000000, 0 );
             dokan_order_csv_export( $user_orders );
             exit();
         }
 
         if ( isset( $post_data['dokan_order_export_filtered'] ) ) {
 
-            $filename = "Orders-".time();
-            header( "Content-Type: application/csv; charset=" . get_option( 'blog_charset' ) );
+            $filename = 'Orders-' . time();
+            header( 'Content-Type: application/csv; charset=' . get_option( 'blog_charset' ) );
             header( "Content-Disposition: attachment; filename=$filename.csv" );
 
-            $order_date   = ( isset( $post_data['order_date'] ) ) ? sanitize_text_field( $post_data['order_date'] ) : NULL;
+            $order_date   = ( isset( $post_data['order_date'] ) ) ? sanitize_text_field( $post_data['order_date'] ) : null;
             $order_status = ( isset( $post_data['order_status'] ) ) ? sanitize_text_field( $post_data['order_status'] ) : 'all';
 
             $user_orders  = dokan_get_seller_orders( dokan_get_current_user_id(), $order_status, $order_date, 10000000, 0 );

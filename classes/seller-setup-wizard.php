@@ -33,6 +33,7 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
                 $url = apply_filters( 'dokan_seller_setup_wizard_url', site_url( '?page=dokan-seller-setup' ) );
             }
         }
+
         return $url;
     }
 
@@ -60,25 +61,25 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
 
         $steps = array(
             'introduction' => array(
-                'name'    =>  __( 'Introduction', 'dokan-lite' ),
+                'name'    => __( 'Introduction', 'dokan-lite' ),
                 'view'    => array( $this, 'dokan_setup_introduction' ),
-                'handler' => ''
+                'handler' => '',
             ),
             'store' => array(
-                'name'    =>  __( 'Store', 'dokan-lite' ),
+                'name'    => __( 'Store', 'dokan-lite' ),
                 'view'    => array( $this, 'dokan_setup_store' ),
                 'handler' => array( $this, 'dokan_setup_store_save' ),
             ),
             'payment' => array(
-                'name'    =>  __( 'Payment', 'dokan-lite' ),
+                'name'    => __( 'Payment', 'dokan-lite' ),
                 'view'    => array( $this, 'dokan_setup_payment' ),
                 'handler' => array( $this, 'dokan_setup_payment_save' ),
             ),
             'next_steps' => array(
-                'name'    =>  __( 'Ready!', 'dokan-lite' ),
+                'name'    => __( 'Ready!', 'dokan-lite' ),
                 'view'    => array( $this, 'dokan_setup_ready' ),
-                'handler' => ''
-            )
+                'handler' => '',
+            ),
         );
 
         $this->steps = apply_filters( 'dokan_seller_wizard_steps', $steps );
@@ -115,14 +116,11 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
             <?php do_action( 'dokan_setup_wizard_styles' ); ?>
         </head>
         <body class="wc-setup wp-core-ui">
-            <?php
-                if ( ! empty( $this->custom_logo ) ) {
-            ?>
+            <?php if ( ! empty( $this->custom_logo ) ) { ?>
                 <h1 id="wc-logo"><a href="<?php echo esc_url( home_url() ) ?>"><img src="<?php echo esc_url( $this->custom_logo ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" /></a></h1>
-            <?php
-                } else {
-                    echo '<h1 id="wc-logo">' . esc_attr( get_bloginfo( 'name' ) ) . '</h1>';
-                }
+            <?php } else {
+                echo '<h1 id="wc-logo">' . esc_attr( get_bloginfo( 'name' ) ) . '</h1>';
+            }
     }
 
     /**
@@ -330,7 +328,7 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
             return;
         }
 
-        $nonce = sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) );
+        $nonce = sanitize_text_field( $_POST['_wpnonce'] );
 
         if ( ! wp_verify_nonce( $nonce, 'dokan-seller-setup' ) ) {
             return;
@@ -338,8 +336,8 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
 
         $dokan_settings = $this->store_info;
 
-        $dokan_settings['store_ppp']  = isset( $_POST['store_ppp'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['store_ppp'] ) ) ) : '';
-        $dokan_settings['address']    = isset( $_POST['address'] ) ? sanitize_text_field( wp_unslash( $_POST['address'] ) ) : [];
+        $dokan_settings['store_ppp']  = isset( $_POST['store_ppp'] ) ? absint( $_POST['store_ppp'] ) : '';
+        $dokan_settings['address']    = isset( $_POST['address'] ) ? array_map( 'sanitize_text_field', $_POST['address'] ) : array();
         $dokan_settings['show_email'] = isset( $_POST['show_email'] ) ? 'yes' : 'no';
 
         update_user_meta( $this->store_id, 'dokan_profile_settings', $dokan_settings );
@@ -361,21 +359,21 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
         <form method="post">
             <table class="form-table">
                 <?php
-                    foreach ( $methods as $method_key ) {
-                        $method = dokan_withdraw_get_method( $method_key );
-                ?>
+				foreach ( $methods as $method_key ) {
+					$method = dokan_withdraw_get_method( $method_key );
+					?>
                     <tr>
                         <th scope="row"><label><?php echo esc_html( $method['title'] ); ?></label></th>
                         <td>
-                            <?php
-                                if ( is_callable( $method['callback'] ) ) {
-                                    call_user_func( $method['callback'], $store_info );
-                                }
-                            ?>
+    						<?php
+        						if ( is_callable( $method['callback'] ) ) {
+        							call_user_func( $method['callback'], $store_info );
+        						}
+    						?>
                         </td>
                     </tr>
-                <?php
-                    }
+					<?php
+				}
 
                     do_action( 'dokan_seller_wizard_payment_setup_field', $this );
                 ?>
@@ -425,13 +423,13 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
 
         if ( isset( $posted_data['settings']['paypal'] ) ) {
             $dokan_settings['payment']['paypal'] = array(
-                'email' => filter_var( sanitize_text_field( wp_unslash( $posted_data['settings']['paypal']['email'] ) ), FILTER_VALIDATE_EMAIL )
+                'email' => sanitize_email( $posted_data['settings']['paypal']['email'] ),
             );
         }
 
         if ( isset( $posted_data['settings']['skrill'] ) ) {
             $dokan_settings['payment']['skrill'] = array(
-                'email' => filter_var( sanitize_text_field( wp_unslash( $posted_data['settings']['skrill']['email'] ) ), FILTER_VALIDATE_EMAIL )
+                'email' => sanitize_email( $posted_data['settings']['skrill']['email'] ),
             );
         }
 
@@ -439,7 +437,7 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
 
         do_action( 'dokan_seller_wizard_payment_field_save', $this );
 
-        wp_redirect( apply_filters( 'dokan_ww_payment_redirect',esc_url_raw( $this->get_next_step_link() ) ) );
+        wp_redirect( apply_filters( 'dokan_ww_payment_redirect', esc_url_raw( $this->get_next_step_link() ) ) );
         exit;
     }
 

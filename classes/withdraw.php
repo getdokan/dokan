@@ -45,11 +45,13 @@ class Dokan_Withdraw {
         // 1 -> active
         // 2 -> cancelled
 
-        $wpdb->query( $wpdb->prepare(
-            "UPDATE {$wpdb->dokan_withdraw}
-            SET status = %d WHERE user_id=%d AND id = %d",
-            $status, $user_id, $row_id
-        ) );
+        $wpdb->query(
+            $wpdb->prepare( "UPDATE {$wpdb->dokan_withdraw} SET status = %d WHERE user_id=%d AND id = %d",
+                $status,
+                $user_id,
+                $row_id
+            )
+        );
 
         do_action( 'dokan_withdraw_status_updated', $status, $user_id, $row_id );
 
@@ -75,7 +77,7 @@ class Dokan_Withdraw {
             'status'  => $data['status'],
             'method'  => $data['method'],
             'note'    => $data['notes'],
-            'ip'      => $data['ip']
+            'ip'      => $data['ip'],
         );
 
         $format = array( '%d', '%f', '%s', '%d', '%s', '%s', '%s' );
@@ -95,11 +97,14 @@ class Dokan_Withdraw {
 
         $wpdb->dokan_withdraw = $wpdb->prefix . 'dokan_withdraw';
 
-        $status = $wpdb->get_results( $wpdb->prepare(
-            "SELECT id
-             FROM $wpdb->dokan_withdraw
-             WHERE user_id = %d AND status = 0", $user_id
-        ) );
+        $status = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT id
+                FROM $wpdb->dokan_withdraw
+                WHERE user_id = %d AND status = 0",
+                $user_id
+            )
+        );
 
         if ( $status ) {
             return true;

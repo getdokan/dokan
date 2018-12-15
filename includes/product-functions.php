@@ -535,7 +535,7 @@ function dokan_bulk_product_status_change() {
         return;
     }
 
-    $status = $post_data['status'];
+    $status   = $post_data['status'];
     $products = $post_data['bulk_products'];
 
     // -1 means bluk action option value
@@ -543,8 +543,10 @@ function dokan_bulk_product_status_change() {
         return;
     }
 
-    foreach ( $products as $product ) {
-        wp_delete_post( $product );
+    foreach ( $products as $product_id ) {
+        if ( dokan_is_product_author( $product_id ) ) {
+            wp_delete_post( $product_id );
+        }
     }
 
     wp_redirect( add_query_arg( array( 'message' => 'product_deleted' ), dokan_get_navigation_url( 'products' ) ) );
