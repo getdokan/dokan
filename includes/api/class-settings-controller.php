@@ -80,7 +80,7 @@ class Dokan_REST_Settings_Controller extends WP_REST_Controller {
         $dokan_settings = array(
             'store_name'                   => sanitize_text_field( $request['store_name'] ),
             'store_ppp'                    => absint( $request['store_ppp'] ),
-            'address'                      => isset( $request['address'] ) ? $request['address'] : $prev_dokan_settings['address'],
+            'address'                      => isset( $request['address'] ) ? sanitize_textarea_field( $request['address'] ) : $prev_dokan_settings['address'],
             'location'                     => sanitize_text_field( $request['location'] ),
             'find_address'                 => sanitize_text_field( $request['find_address'] ),
             'banner'                       => isset( $request['banner'] ) ? absint( $request['banner'] ) : null,
@@ -88,8 +88,8 @@ class Dokan_REST_Settings_Controller extends WP_REST_Controller {
             'show_email'                   => sanitize_text_field( $request['show_email'] ),
             'show_more_ptab'               => sanitize_text_field( $request['show_more_ptab'] ),
             'gravatar'                     => absint( $request['gravatar'] ),
-            'enable_tnc'                   => isset( $request['enable_tnc'] ) ? $request['enable_tnc'] : '',
-            'store_tnc'                    => isset( $request['store_tnc'] ) ? $request['store_tnc'] : ''
+            'enable_tnc'                   => isset( $request['enable_tnc'] ) ? sanitize_text_field( $request['enable_tnc'] ) : '',
+            'store_tnc'                    => isset( $request['store_tnc'] ) ? sanitize_textarea_field( $request['store_tnc'] ) : ''
         );
 
         if ( isset( $request['social'] ) ) {
