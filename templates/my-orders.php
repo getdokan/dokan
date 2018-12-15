@@ -106,5 +106,3 @@
         <p class="dokan-info"><?php esc_html_e( 'No orders found!', 'dokan-lite' ); ?></p>
 
     <?php endif; ?>
-
-

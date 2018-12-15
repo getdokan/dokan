@@ -7,15 +7,12 @@
  *
  * @package dokan
  */
+
+$get_data  = wp_unslash( $_GET );
+$post_data = wp_unslash( $_POST );
+
+do_action( 'dokan_product_listing_filter_before_form' );
 ?>
-<?php
-
-    $get_data  = wp_unslash( $_GET );
-    $post_data = wp_unslash( $_POST );
-
-
-?>
-<?php do_action( 'dokan_product_listing_filter_before_form' ); ?>
 
     <form class="dokan-form-inline dokan-w6 dokan-product-date-filter" method="get" >
 

@@ -6,17 +6,14 @@
  *
  * @package dokan
  */
-?>
-
-<?php
 
 $address         = isset( $profile_info['address'] ) ? $profile_info['address'] : '';
-$address_street1 = isset( $profile_info['address']['street_1'] ) ? esc_attr( $profile_info['address']['street_1'] ) : '';
-$address_street2 = isset( $profile_info['address']['street_2'] ) ? esc_attr( $profile_info['address']['street_2'] ) : '';
-$address_city    = isset( $profile_info['address']['city'] ) ? esc_attr( $profile_info['address']['city'] ) : '';
-$address_zip     = isset( $profile_info['address']['zip'] ) ? esc_attr( $profile_info['address']['zip'] ) : '';
-$address_country = isset( $profile_info['address']['country'] ) ? esc_attr( $profile_info['address']['country'] ) : '';
-$address_state   = isset( $profile_info['address']['state'] ) ? esc_attr( $profile_info['address']['state'] ) : '';
+$address_street1 = isset( $profile_info['address']['street_1'] ) ? $profile_info['address']['street_1'] : '';
+$address_street2 = isset( $profile_info['address']['street_2'] ) ? $profile_info['address']['street_2'] : '';
+$address_city    = isset( $profile_info['address']['city'] ) ? $profile_info['address']['city'] : '';
+$address_zip     = isset( $profile_info['address']['zip'] ) ? $profile_info['address']['zip'] : '';
+$address_country = isset( $profile_info['address']['country'] ) ? $profile_info['address']['country'] : '';
+$address_state   = isset( $profile_info['address']['state'] ) ? $profile_info['address']['state'] : '';
 
 ?>
 

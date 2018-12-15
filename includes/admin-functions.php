@@ -6,7 +6,7 @@
  * @param WP_Query $query
  */
 function dokan_admin_shop_order_remove_parents( $query ) {
-    if ( $query->is_main_query() && $query->query['post_type'] == 'shop_order' ) {
+    if ( $query->is_main_query() && 'shop_order' == $query->query['post_type'] ) {
         $query->set( 'orderby', 'ID' );
         $query->set( 'order', 'DESC' );
     }
@@ -233,8 +233,11 @@ add_action( 'admin_footer-edit.php', 'dokan_admin_shop_order_scripts' );
 function dokan_admin_on_trash_order( $post_id ) {
     $post = get_post( $post_id );
 
-    if ( $post->post_type == 'shop_order' && $post->post_parent == 0 ) {
-        $sub_orders = get_children( array( 'post_parent' => $post_id, 'post_type' => 'shop_order' ) );
+    if ( 'shop_order' == $post->post_type && 0 == $post->post_parent ) {
+        $sub_orders = get_children( array(
+            'post_parent' => $post_id,
+            'post_type'   => 'shop_order'
+        ) );
 
         if ( $sub_orders ) {
             foreach ( $sub_orders as $order_post ) {
@@ -254,10 +257,10 @@ add_action( 'wp_trash_post', 'dokan_admin_on_trash_order' );
 function dokan_admin_on_untrash_order( $post_id ) {
     $post = get_post( $post_id );
 
-    if ( $post->post_type == 'shop_order' && $post->post_parent == 0 ) {
+    if ( 'shop_order' == $post->post_type && 0 == $post->post_parent ) {
         global $wpdb;
 
-        $suborder_ids  = $wpdb->get_col(
+        $suborder_ids = $wpdb->get_col(
             $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_parent = %d AND post_type = 'shop_order'", $post_id )
         );
 
@@ -279,10 +282,13 @@ add_action( 'untrash_post', 'dokan_admin_on_untrash_order' );
 function dokan_admin_on_delete_order( $post_id ) {
     $post = get_post( $post_id );
 
-    if ( $post->post_type == 'shop_order' ) {
+    if ( 'shop_order' == $post->post_type ) {
         dokan_delete_sync_order( $post_id );
 
-        $sub_orders = get_children( array( 'post_parent' => $post_id, 'post_type' => 'shop_order' ) );
+        $sub_orders = get_children( array(
+            'post_parent' => $post_id,
+            'post_type'   => 'shop_order'
+        ) );
 
         if ( $sub_orders ) {
             foreach ($sub_orders as $order_post) {
@@ -302,7 +308,7 @@ add_action( 'delete_post', 'dokan_admin_on_delete_order' );
 function dokan_admin_shop_order_toggle_sub_orders() {
     global $wp_query;
 
-    if ( isset( $wp_query->query['post_type'] ) && $wp_query->query['post_type'] == 'shop_order' ) {
+    if ( isset( $wp_query->query['post_type'] ) && 'shop_order' == $wp_query->query['post_type'] ) {
         echo '<button class="toggle-sub-orders button">' . esc_html__( 'Toggle Sub-orders', 'dokan-lite' ) . '</button>';
     }
 }
@@ -360,16 +366,16 @@ function dokan_admin_report_data( $group_by = 'day', $year = '', $start = '', $e
 
     $date_where = '';
 
-    if ( $group_by == 'day' ) {
-        $group_by_query       = 'YEAR(p.post_date), MONTH(p.post_date), DAY(p.post_date)';
-        $date_where           = " AND DATE(p.post_date) >= '$start_date' AND DATE(p.post_date) <= '$end_date'";
+    if ( 'day' == $group_by ) {
+        $group_by_query = 'YEAR(p.post_date), MONTH(p.post_date), DAY(p.post_date)';
+        $date_where     = " AND DATE(p.post_date) >= '$start_date' AND DATE(p.post_date) <= '$end_date'";
     } else {
         $group_by_query = 'YEAR(p.post_date), MONTH(p.post_date)';
         $date_where     = " AND DATE(p.post_date) >= '$start_date' AND DATE(p.post_date) <= '$end_date'";
     }
 
-    $left_join      = apply_filters( 'dokan_report_left_join', $date_where );
-    $date_where     = apply_filters( 'dokan_report_where', $date_where );
+    $left_join  = apply_filters( 'dokan_report_left_join', $date_where );
+    $date_where = apply_filters( 'dokan_report_where', $date_where );
 
     $sql = "SELECT
                 SUM((do.order_total - do.net_amount)) as earning,
@@ -431,8 +437,8 @@ function dokan_admin_report( $group_by = 'day', $year = '', $start = '', $end = 
     $end_date_to_time   = strtotime( $end_date );
 
     if ( $group_by == 'day' ) {
-        $chart_interval       = ceil( max( 0, ( $end_date_to_time - $start_date_to_time ) / ( 60 * 60 * 24 ) ) );
-        $barwidth             = 60 * 60 * 24 * 1000;
+        $chart_interval = ceil( max( 0, ( $end_date_to_time - $start_date_to_time ) / ( 60 * 60 * 24 ) ) );
+        $barwidth       = 60 * 60 * 24 * 1000;
     } else {
         $chart_interval = 0;
         $min_date       = $start_date_to_time;
@@ -669,6 +675,7 @@ add_action( 'pending_to_publish', 'dokan_send_notification_on_product_publish' )
  */
 function dokan_seller_meta_box( $post ) {
     global $user_ID;
+
     $admin_user = get_user_by( 'id', $user_ID );
     $selected   = empty( $post->ID ) ? $user_ID : $post->post_author;
     $user_query = new WP_User_Query( array( 'role' => 'seller' ) );
@@ -711,8 +718,8 @@ add_action( 'add_meta_boxes', 'dokan_add_seller_meta_box' );
 * @return void
 **/
 function dokan_override_product_author_by_admin( $product_id, $post ) {
-    $product = wc_get_product( $product_id );
-    $seller_id = !empty( $_POST['dokan_product_author_override'] ) ? sanitize_text_field( wp_unslash( $_POST['dokan_product_author_override'] )): '-1'; // WPCS: CSRF ok.
+    $product   = wc_get_product( $product_id );
+    $seller_id = !empty( $_POST['dokan_product_author_override'] ) ? sanitize_text_field( wp_unslash( $_POST['dokan_product_author_override'] ) ): '-1'; // WPCS: CSRF ok.
 
     if ( $seller_id < 0 ) {
         return;
@@ -758,8 +765,8 @@ function dokan_admin_report_by_seller( $chosen_seller_id) {
     $year         = '';
     $group_by     = apply_filters( 'dokan_report_group_by', $group_by );
     $_post_data   = wp_unslash( $_POST );
-    $start_date   = isset( $_post_data['start_date'] ) ? $_post_data['start_date'] : ''; // WPCS: CSRF ok.
-    $end_date     = isset( $_post_data['end_date'] ) ? $_post_data['end_date'] : ''; // WPCS: CSRF ok.
+    $start_date   = isset( $_post_data['start_date'] ) ? sanitize_text_field( $_post_data['start_date'] ) : ''; // WPCS: CSRF ok.
+    $end_date     = isset( $_post_data['end_date'] ) ? sanitize_text_field( $_post_data['end_date'] ) : ''; // WPCS: CSRF ok.
     $current_year = date( 'Y' );
 
     if ( !isset( $chosen_seller_id ) || $chosen_seller_id == '' || $chosen_seller_id == Null ) {
@@ -782,28 +789,29 @@ function dokan_admin_report_by_seller( $chosen_seller_id) {
         }
     }
 
+    $date_where         = '';
     $start_date_to_time = strtotime( $start_date );
-    $end_date_to_time = strtotime( $end_date );
-
-    $date_where = '';
+    $end_date_to_time   = strtotime( $end_date );
 
     if ( $group_by == 'day' ) {
-        $group_by_query       = 'YEAR(p.post_date), MONTH(p.post_date), DAY(p.post_date)';
-        $date_where           = " AND DATE(p.post_date) >= '$start_date' AND DATE(p.post_date) <= '$end_date'";
-        $chart_interval       = ceil( max( 0, ( $end_date_to_time - $start_date_to_time ) / ( 60 * 60 * 24 ) ) );
-        $barwidth             = 60 * 60 * 24 * 1000;
+        $group_by_query = 'YEAR(p.post_date), MONTH(p.post_date), DAY(p.post_date)';
+        $date_where     = " AND DATE(p.post_date) >= '$start_date' AND DATE(p.post_date) <= '$end_date'";
+        $chart_interval = ceil( max( 0, ( $end_date_to_time - $start_date_to_time ) / ( 60 * 60 * 24 ) ) );
+        $barwidth       = 60 * 60 * 24 * 1000;
     } else {
         $group_by_query = 'YEAR(p.post_date), MONTH(p.post_date)';
         $chart_interval = 0;
-        $min_date             = $start_date_to_time;
+        $min_date       = $start_date_to_time;
+
         while ( ( $min_date   = strtotime( "+1 MONTH", $min_date ) ) <= $end_date_to_time ) {
             $chart_interval ++;
         }
-        $barwidth             = 60 * 60 * 24 * 7 * 4 * 1000;
+
+        $barwidth = 60 * 60 * 24 * 7 * 4 * 1000;
     }
 
-    $left_join      = apply_filters( 'dokan_report_left_join', $date_where );
-    $date_where     = apply_filters( 'dokan_report_where', $date_where );
+    $left_join  = apply_filters( 'dokan_report_left_join', $date_where );
+    $date_where = apply_filters( 'dokan_report_where', $date_where );
 
     $sql = "SELECT
                 SUM((do.order_total - do.net_amount)) as earning,

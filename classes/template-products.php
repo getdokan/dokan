@@ -58,10 +58,10 @@ class Dokan_Template_Products {
      * @return void
      */
     public static function load_download_virtual_template( $post, $post_id ) {
-        $_downloadable          = get_post_meta( $post_id, '_downloadable', true );
-        $_virtual               = get_post_meta( $post_id, '_virtual', true );
-        $is_downloadable        = ( 'yes' == $_downloadable ) ? true : false;
-        $is_virtual             = ( 'yes' == $_virtual ) ? true : false;
+        $_downloadable   = get_post_meta( $post_id, '_downloadable', true );
+        $_virtual        = get_post_meta( $post_id, '_virtual', true );
+        $is_downloadable = ( 'yes' == $_downloadable ) ? true : false;
+        $is_virtual      = ( 'yes' == $_virtual ) ? true : false;
 
         dokan_get_template_part( 'products/download-virtual', '', array(
             'post_id'         => $post_id,
@@ -159,7 +159,7 @@ class Dokan_Template_Products {
         } else {
             dokan_get_template_part('global/dokan-error', '', array(
                 'deleted' => false,
-                'message' => __( 'You have no permission to view this page', 'dokan-lite' ) ,
+                'message' => __( 'You have no permission to view this page', 'dokan-lite' ),
             ) );
             return;
         }
@@ -223,10 +223,12 @@ class Dokan_Template_Products {
             }
 
             if ( dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) == 'single' ) {
-                $product_cat    = intval( $postdata['product_cat'] );
+                $product_cat = intval( $postdata['product_cat'] );
+
                 if ( $product_cat < 0 ) {
                     $errors[] = __( 'Please select a category', 'dokan-lite' );
                 }
+
             } else {
                 if ( ! isset( $postdata['product_cat'] ) && empty( $postdata['product_cat'] ) ) {
                     $errors[] = __( 'Please select AT LEAST ONE category', 'dokan-lite' );
@@ -376,9 +378,11 @@ class Dokan_Template_Products {
 
         if ( dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) == 'single' ) {
             $product_cat = absint( $postdata['product_cat'] );
+
             if ( $product_cat < 0 ) {
                 $errors[] = __( 'Please select a category', 'dokan-lite' );
             }
+
         } else {
             if ( ! isset( $postdata['product_cat'] ) && empty( $postdata['product_cat'] ) ) {
                 $errors[] = __( 'Please select AT LEAST ONE category', 'dokan-lite' );
@@ -388,7 +392,7 @@ class Dokan_Template_Products {
         $post_id = isset( $postdata['dokan_product_id'] ) ? absint( $postdata['dokan_product_id'] ) : 0;
 
         if ( ! $post_id ) {
-            $errors[] = __( 'No product found !', 'dokan-lite' );
+            $errors[] = __( 'No product found!', 'dokan-lite' );
         }
 
         self::$errors = apply_filters( 'dokan_can_edit_product', $errors );

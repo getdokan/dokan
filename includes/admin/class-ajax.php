@@ -44,8 +44,7 @@ class Dokan_Admin_Ajax {
             wp_send_json_error( __( 'You have no permission to do that', 'dokan-lite' ) );
         }
 
-        $_post_data = wp_unslash( $_POST );
-        $nonce      = isset( $_post_data['nonce'] ) ? sanitize_text_field( $_post_data['nonce'] ) : '';
+        $nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
 
         if ( ! wp_verify_nonce( $nonce, 'dokan_admin' ) ) {
             wp_send_json_error( __( 'Invalid nonce', 'dokan-lite' ) );

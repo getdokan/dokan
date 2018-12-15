@@ -40,9 +40,11 @@ class Dokan_Template_Main {
      */
     public function get_dashboard_side_navigation() {
     	global $wp;
+
     	$request = $wp->request;
     	$active = explode( '/', $request );
-    	unset( $active[0] );
+
+        unset( $active[0] );
 
     	if ( $active ) {
     		$active_menu = implode( '/', $active );

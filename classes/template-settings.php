@@ -86,6 +86,7 @@ class Dokan_Template_Settings {
      */
     public function render_settings_help() {
         global $wp;
+
         $help_text = '';
 
         if ( isset( $wp->query_vars['settings'] ) && $wp->query_vars['settings'] == 'payment' ) {
@@ -93,10 +94,9 @@ class Dokan_Template_Settings {
         }
 
         if ( $help_text = apply_filters( 'dokan_dashboard_settings_helper_text', $help_text, $wp->query_vars['settings'] ) ) {
-
             dokan_get_template_part( 'global/dokan-help', '', array(
                 'help_text' => $help_text
-            ));
+            ) );
         }
     }
 
@@ -148,7 +148,10 @@ class Dokan_Template_Settings {
 
         if ( isset( $wp->query_vars['settings'] ) && 'store' == $wp->query_vars['settings'] ) {
             if ( ! current_user_can( 'dokan_view_store_settings_menu' ) ) {
-                dokan_get_template_part('global/dokan-error', '', array( 'deleted' => false, 'message' => __( 'You have no permission to view this page', 'dokan-lite' ) ) );
+                dokan_get_template_part('global/dokan-error', '', array(
+                    'deleted' => false,
+                    'message' => __( 'You have no permission to view this page', 'dokan-lite' )
+                ) );
             } else {
                 $this->load_store_content();
             }
@@ -156,7 +159,10 @@ class Dokan_Template_Settings {
 
         if ( isset( $wp->query_vars['settings'] ) && 'payment' == $wp->query_vars['settings'] ) {
             if ( ! current_user_can( 'dokan_view_store_payment_menu' ) ) {
-                dokan_get_template_part('global/dokan-error', '', array( 'deleted' => false, 'message' => __( 'You have no permission to view this page', 'dokan-lite' ) ) );
+                dokan_get_template_part('global/dokan-error', '', array(
+                    'deleted' => false,
+                    'message' => __( 'You have no permission to view this page', 'dokan-lite' )
+                ) );
             } else {
                 $this->load_payment_content();
             }
@@ -557,7 +563,7 @@ class Dokan_Template_Settings {
 
             //update payment settings info
             $dokan_settings = array(
-                'payment'      => array(),
+                'payment' => array(),
             );
 
             if ( isset( $post_data['settings']['bank'] ) ) {

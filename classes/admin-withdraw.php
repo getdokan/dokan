@@ -76,6 +76,8 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
             return;
         }
 
+        $currency = get_option( 'woocommerce_currency' );
+
         foreach ( $result as $key => $obj ) {
 
             if ( $obj->method != 'paypal' ) {
@@ -85,7 +87,7 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
             $data[] = array(
                 'email'    => dokan_get_seller_withdraw_mail( $obj->user_id ),
                 'amount'   => $obj->amount,
-                'currency' => get_option( 'woocommerce_currency' ),
+                'currency' => $currency,
             );
 
         }

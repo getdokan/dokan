@@ -120,7 +120,7 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
         }
 
         dokan_get_template_part( 'withdraw/status-listing', '', array(
-            'current' => $this->current_status
+            'current' => $this->current_status,
         ) );
     }
 
@@ -216,7 +216,9 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
 
             $this->update_status( $row_id, $current_user->ID, 2 );
 
-            wp_redirect( add_query_arg( array( 'message' => 'request_cancelled' ), dokan_get_navigation_url( 'withdraw' ) ) );
+            wp_redirect( add_query_arg( array(
+				'message' => 'request_cancelled',
+            ), dokan_get_navigation_url( 'withdraw' ) ) );
         }
     }
 
@@ -249,7 +251,6 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
         if ( empty( $withdraw_amount ) ) {
             $error->add( 'dokan_empty_withdrad', __( 'Withdraw amount required ', 'dokan-lite' ) );
         } elseif ( $withdraw_amount > $balance ) {
-
             $error->add( 'enough_balance', __( 'You don\'t have enough balance for this request', 'dokan-lite' ) );
         } elseif ( $withdraw_amount < $limit ) {
             $error->add( 'dokan_withdraw_amount', sprintf( __( 'Withdraw amount must be greater than %d', 'dokan-lite' ), $this->get_withdraw_limit() ) );
@@ -301,7 +302,9 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
 
         do_action( 'dokan_after_withdraw_request', $current_user, $amount, $method );
 
-        wp_redirect( add_query_arg( array( 'message' => 'request_success' ), dokan_get_navigation_url( 'withdraw' ) ) );
+        wp_redirect( add_query_arg( array(
+			'message' => 'request_success',
+        ), dokan_get_navigation_url( 'withdraw' ) ) );
     }
 
     /**
@@ -331,7 +334,7 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
     function show_alert_messages() {
         $get_data = wp_unslash( $_GET );
 
-        $type    = isset( $get_data['message'] ) ? $get_data['message'] : '';
+        $type    = isset( $get_data['message'] ) ? sanitize_text_field( $get_data['message'] ) : '';
         $message = '';
 
         $template = 'global/dokan-success';
@@ -385,7 +388,7 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
         if ( $balance < 0 ) {
             dokan_get_template_part( 'global/dokan-error', '', array(
                 'deleted' => false,
-                'message' => sprintf( __( 'You already withdrawed %s. This amount will deducted from your balance.', 'dokan-lite' ), wc_price( $balance ) ),
+                'message' => sprintf( __( 'You have already withdrawn %s. This amount will be deducted from your balance.', 'dokan-lite' ), wc_price( $balance ) ),
             ) );
         }
 

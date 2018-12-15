@@ -501,9 +501,8 @@ function dokan_sub_order_get_total_coupon( $order_id ) {
 function dokan_seller_displayname( $display_name ) {
 
     if ( current_user_can( 'seller' ) && ! is_admin() ) {
-        $seller_info = dokan_get_store_info( dokan_get_current_user_id() );
+        $seller_info  = dokan_get_store_info( dokan_get_current_user_id() );
         $display_name = ( ! empty( $seller_info['store_name'] ) ) ? $seller_info['store_name'] : $display_name;
-
     }
 
     return $display_name;
@@ -819,7 +818,7 @@ function dokan_filter_woocommerce_dashboard_status_widget_sales_query( $query ) 
  */
 function dokan_save_account_details() {
 
-    $_server = isset( $_SERVER['REQUEST_METHOD'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) : '';
+    $_server = isset( $_SERVER['REQUEST_METHOD'] ) ? $_SERVER['REQUEST_METHOD'] : '';
 
     if ( 'POST' !== strtoupper( $_server ) ) {
         return;
@@ -960,6 +959,7 @@ if ( ! function_exists( 'dokan_date_time_format' ) ) {
         if ( $date_only ) {
             return date_i18n( wc_date_format(), strtotime( $time ) );
         }
+
         return date_i18n( $format, strtotime( $time ) );
     }
 }
@@ -977,6 +977,7 @@ function dokan_split_profile_completion_value( $progress_values ) {
 
     if ( 'layout3' == $store_banner ) {
         unset( $progress_values['banner_val'] );
+
         $progress_values['store_name_val'] = 15;
         $progress_values['phone_val']      = 15;
         $progress_values['address_val']    = 15;
@@ -1020,7 +1021,6 @@ add_action( 'woocommerce_product_tabs', 'dokan_set_more_from_seller_tab', 10 );
  * @param int $posts_per_page
  */
 function dokan_get_more_products_from_seller( $seller_id = 0, $posts_per_page = 6 ) {
-
     global $product, $post;
 
     if ( $seller_id == 0 ) {
@@ -1083,8 +1083,8 @@ function dokan_bulk_order_status_change() {
         return;
     }
 
-    $status = $postdata['status'];
-    $orders = $postdata['bulk_orders'];
+    $status = sanitize_text_field( $postdata['status'] );
+    $orders = sanitize_text_field( $postdata['bulk_orders'] );
 
     // -1 means bluk action option value
     $excluded_status = array( '-1', 'cancelled', 'refunded' );
@@ -1119,7 +1119,7 @@ add_action( 'template_redirect', 'dokan_bulk_order_status_change' );
  */
 function dokan_store_category_delete_transient( $post_id ) {
 
-    $post_tmp = get_post( $post_id );
+    $post_tmp  = get_post( $post_id );
     $seller_id = $post_tmp->post_author;
 
     //delete store category transient

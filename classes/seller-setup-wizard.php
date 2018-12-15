@@ -29,7 +29,7 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
 
             $url = dokan_get_navigation_url();
 
-            if ( dokan_get_option( 'disable_welcome_wizard', 'dokan_selling', 'off' ) === 'off' ) {
+            if ( 'off' == dokan_get_option( 'disable_welcome_wizard', 'dokan_selling', 'off' ) ) {
                 $url = apply_filters( 'dokan_seller_setup_wizard_url', site_url( '?page=dokan-seller-setup' ) );
             }
         }

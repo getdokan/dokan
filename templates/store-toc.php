@@ -6,7 +6,7 @@
  * @package dokan - 2014 1.0
  */
 
-$vendor = dokan()->vendor->get( get_query_var( 'author' ) );
+$vendor      = dokan()->vendor->get( get_query_var( 'author' ) );
 $vendor_info = $vendor->get_shop_info();
 
 get_header( 'shop' );

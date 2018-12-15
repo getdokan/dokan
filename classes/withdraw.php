@@ -55,7 +55,7 @@ class Dokan_Withdraw {
 
         do_action( 'dokan_withdraw_status_updated', $status, $user_id, $row_id );
 
-        $cache_key     = 'dokan_seller_balance_' . $user_id;
+        $cache_key = 'dokan_seller_balance_' . $user_id;
         wp_cache_delete( $cache_key );
     }
 

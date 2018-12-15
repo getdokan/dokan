@@ -78,8 +78,8 @@ function dokan_create_seller_order( $parent_order, $seller_id, $seller_products 
 
         // now insert line items
         foreach ($seller_products as $item) {
-            $order_total += (float) $item['line_total'];
-            $order_tax += (float) $item['line_tax'];
+            $order_total   += (float) $item['line_total'];
+            $order_tax     += (float) $item['line_tax'];
             $product_ids[] = $item['product_id'];
 
             $item_id = wc_add_order_item( $order_id, array(
@@ -187,18 +187,15 @@ function dokan_create_sub_order_coupon( $parent_order, $order_id, $product_ids )
  * @return type
  */
 function dokan_create_sub_order_shipping( $parent_order, $order_id, $seller_products ) {
-
     // Get all shipping methods for parent order
-    $shipping_methods = $parent_order->get_shipping_methods();
-
-    $order_seller_id = dokan_get_seller_id_by_order( $order_id );
-
+    $shipping_methods        = $parent_order->get_shipping_methods();
+    $order_seller_id         = dokan_get_seller_id_by_order( $order_id );
     $applied_shipping_method = array();
 
     if ( $shipping_methods ) {
         foreach ( $shipping_methods as $key => $value ) {
-            $product_id = $value['_product_ids'];
-            $product_author = get_post_field( 'post_author', $product_id );
+            $product_id                               = $value['_product_ids'];
+            $product_author                           = get_post_field( 'post_author', $product_id );
             $applied_shipping_method[$product_author] = $value;
         }
     }
@@ -255,13 +252,14 @@ function dokan_create_sub_order_shipping( $parent_order, $order_id, $seller_prod
         if ( array_key_exists( $shipping_method['method_id'], $pack['rates'] ) ) {
 
             $method = $pack['rates'][$shipping_method['method_id']];
-            $cost = wc_format_decimal( $method->cost );
+            $cost   = wc_format_decimal( $method->cost );
+
             // we assumed that the key will be always 1, if different conditinos appear in future, we'll update the script
-            $tax  = wc_format_decimal( $method->taxes[1] );
+            $tax    = wc_format_decimal( $method->taxes[1] );
 
             $item_id = wc_add_order_item( $order_id, array(
-                'order_item_name'       => $method->label,
-                'order_item_type'       => 'shipping'
+                'order_item_name' => $method->label,
+                'order_item_type' => 'shipping'
             ) );
 
             if ( $item_id ) {

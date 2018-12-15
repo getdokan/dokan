@@ -26,13 +26,13 @@ abstract class Dokan_REST_Controller extends WP_REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_items( $request ) {
-        $query_args = $this->prepare_objects_query( $request );
-        $query  = new WP_Query();
-        $result = $query->query( $query_args );
+        $query_args   = $this->prepare_objects_query( $request );
+        $query        = new WP_Query();
+        $result       = $query->query( $query_args );
 
-        $data = array();
+        $data         = array();
         $data_objects = array();
-        $objects = array_map( array( $this, 'get_object' ), $result );
+        $objects      = array_map( array( $this, 'get_object' ), $result );
 
         foreach ( $objects as $object ) {
             $data           = $this->prepare_data_for_response( $object, $request );

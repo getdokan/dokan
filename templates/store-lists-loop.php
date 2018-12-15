@@ -4,13 +4,13 @@
             <ul class="dokan-seller-wrap">
                 <?php
                 foreach ( $sellers['users'] as $seller ) {
-                    $store_info = dokan_get_store_info( $seller->ID );
-                    $banner_id  = isset( $store_info['banner'] ) ? $store_info['banner'] : 0;
-                    $store_name = isset( $store_info['store_name'] ) ? esc_html( $store_info['store_name'] ) : __( 'N/A', 'dokan-lite' );
-                    $store_url  = dokan_get_store_url( $seller->ID );
-                    $store_address  = dokan_get_seller_short_address( $seller->ID );
-                    $seller_rating  = dokan_get_seller_rating( $seller->ID );
-                    $banner_url = ( $banner_id ) ? wp_get_attachment_image_src( $banner_id, $image_size ) : DOKAN_PLUGIN_ASSEST . '/images/default-store-banner.png';
+                    $store_info      = dokan_get_store_info( $seller->ID );
+                    $banner_id       = isset( $store_info['banner'] ) ? $store_info['banner'] : 0;
+                    $store_name      = isset( $store_info['store_name'] ) ? esc_html( $store_info['store_name'] ) : __( 'N/A', 'dokan-lite' );
+                    $store_url       = dokan_get_store_url( $seller->ID );
+                    $store_address   = dokan_get_seller_short_address( $seller->ID );
+                    $seller_rating   = dokan_get_seller_rating( $seller->ID );
+                    $banner_url      = ( $banner_id ) ? wp_get_attachment_image_src( $banner_id, $image_size ) : DOKAN_PLUGIN_ASSEST . '/images/default-store-banner.png';
                     $featured_seller = get_user_meta( $seller->ID, 'dokan_feature_seller', true );
                     ?>
 
