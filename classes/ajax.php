@@ -80,7 +80,7 @@ class Dokan_Ajax {
             wp_send_json_error( __( 'You have no permission to do this action', 'dokan-lite' ) );
         }
 
-        $submited_data = isset( $_POST['postdata'] ) ? sanitize_text_field( wp_unslash( $_POST['postdata'] ) ) : '';
+        $submited_data = isset( $_POST['postdata'] ) ? wp_unslash( $_POST['postdata'] ): '';
 
         parse_str( $submited_data, $postdata );
 
