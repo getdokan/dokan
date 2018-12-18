@@ -38,7 +38,7 @@ class Dokan_Vendor_Manager {
         $vendors = array();
 
         $defaults = array(
-            'role'       => 'seller',
+            'role__in'   => array( 'seller', 'administrator' ),
             'number'     => 10,
             'offset'     => 0,
             'orderby'    => 'registered',
