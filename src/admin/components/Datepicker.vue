@@ -1,7 +1,7 @@
 <template>
     <input
         type="text"
-        value=""
+        :value="value"
         :placeholder="placeholder"
         @input="updateValue($event.target.value)"
     >
@@ -33,11 +33,6 @@
                 required: false,
                 default: false
             },
-        },
-
-        data() {
-            return {
-            };
         },
 
         mounted() {
