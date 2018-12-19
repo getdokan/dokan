@@ -103,14 +103,15 @@ class Dokan_Vendor_Withdraw_Request extends WC_Email {
      */
     public function get_content_html() {
         ob_start();
-            wc_get_template( $this->template_html, array(
-                'seller'        => $this->object,
-                'email_heading' => $this->get_heading(),
-                'sent_to_admin' => true,
-                'plain_text'    => false,
-                'email'         => $this,
-                'data'          => $this->replace
-            ), 'dokan/', $this->template_base );
+
+        wc_get_template( $this->template_html, array(
+            'seller'        => $this->object,
+            'email_heading' => $this->get_heading(),
+            'sent_to_admin' => true,
+            'plain_text'    => false,
+            'email'         => $this,
+            'data'          => $this->replace
+        ), 'dokan/', $this->template_base );
 
         return ob_get_clean();
     }
@@ -123,14 +124,15 @@ class Dokan_Vendor_Withdraw_Request extends WC_Email {
      */
     public function get_content_plain() {
         ob_start();
-            wc_get_template( $this->template_html, array(
-                'seller'        => $this->object,
-                'email_heading' => $this->get_heading(),
-                'sent_to_admin' => true,
-                'plain_text'    => true,
-                'email'         => $this,
-                'data'          => $this->replace
-            ), 'dokan/', $this->template_base );
+
+        wc_get_template( $this->template_html, array(
+            'seller'        => $this->object,
+            'email_heading' => $this->get_heading(),
+            'sent_to_admin' => true,
+            'plain_text'    => true,
+            'email'         => $this,
+            'data'          => $this->replace
+        ), 'dokan/', $this->template_base );
 
         return ob_get_clean();
     }

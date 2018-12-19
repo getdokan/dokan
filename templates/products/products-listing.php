@@ -41,9 +41,9 @@
                     <?php if ( dokan_is_seller_enabled( get_current_user_id() ) ): ?>
                         <span class="dokan-add-product-link">
                             <?php if ( current_user_can( 'dokan_add_product' ) ): ?>
-                                <a href="<?php echo dokan_get_navigation_url( 'new-product' ); ?>" class="dokan-btn dokan-btn-theme <?php echo ( 'on' == dokan_get_option( 'disable_product_popup', 'dokan_selling', 'off' ) ) ? '' : 'dokan-add-new-product'; ?>">
+                                <a href="<?php echo esc_url( dokan_get_navigation_url( 'new-product' ) ); ?>" class="dokan-btn dokan-btn-theme <?php echo ( 'on' == dokan_get_option( 'disable_product_popup', 'dokan_selling', 'off' ) ) ? '' : 'dokan-add-new-product'; ?>">
                                     <i class="fa fa-briefcase">&nbsp;</i>
-                                    <?php _e( 'Add new product', 'dokan-lite' ); ?>
+                                    <?php esc_html_e( 'Add new product', 'dokan-lite' ); ?>
                                 </a>
                             <?php endif ?>
 
@@ -64,7 +64,7 @@
 
                     <form id="product-filter" method="POST" class="dokan-form-inline">
                         <div class="dokan-form-group">
-                            <label for="bulk-product-action-selector" class="screen-reader-text"><?php _e( 'Select bulk action', 'dokan-lite' ); ?></label>
+                            <label for="bulk-product-action-selector" class="screen-reader-text"><?php esc_html_e( 'Select bulk action', 'dokan-lite' ); ?></label>
 
                             <select name="status" id="bulk-product-action-selector" class="dokan-form-control chosen">
                                 <?php foreach ( $bulk_statuses as $key => $bulk_status ) : ?>
@@ -84,27 +84,29 @@
                                         <label for="cb-select-all"></label>
                                         <input id="cb-select-all" class="dokan-checkbox" type="checkbox">
                                     </th>
-                                    <th><?php _e( 'Image', 'dokan-lite' ); ?></th>
-                                    <th><?php _e( 'Name', 'dokan-lite' ); ?></th>
-                                    <th><?php _e( 'Status', 'dokan-lite' ); ?></th>
+                                    <th><?php esc_html_e( 'Image', 'dokan-lite' ); ?></th>
+                                    <th><?php esc_html_e( 'Name', 'dokan-lite' ); ?></th>
+                                    <th><?php esc_html_e( 'Status', 'dokan-lite' ); ?></th>
 
                                     <?php do_action( 'dokan_product_list_table_after_status_table_header' ); ?>
 
-                                    <th><?php _e( 'SKU', 'dokan-lite' ); ?></th>
-                                    <th><?php _e( 'Stock', 'dokan-lite' ); ?></th>
-                                    <th><?php _e( 'Price', 'dokan-lite' ); ?></th>
-                                    <th><?php _e( 'Earning', 'dokan-lite' ); ?></th>
-                                    <th><?php _e( 'Type', 'dokan-lite' ); ?></th>
-                                    <th><?php _e( 'Views', 'dokan-lite' ); ?></th>
-                                    <th><?php _e( 'Date', 'dokan-lite' ); ?></th>
+                                    <th><?php esc_html_e( 'SKU', 'dokan-lite' ); ?></th>
+                                    <th><?php esc_html_e( 'Stock', 'dokan-lite' ); ?></th>
+                                    <th><?php esc_html_e( 'Price', 'dokan-lite' ); ?></th>
+                                    <th><?php esc_html_e( 'Earning', 'dokan-lite' ); ?></th>
+                                    <th><?php esc_html_e( 'Type', 'dokan-lite' ); ?></th>
+                                    <th><?php esc_html_e( 'Views', 'dokan-lite' ); ?></th>
+                                    <th><?php esc_html_e( 'Date', 'dokan-lite' ); ?></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
                                 $pagenum       = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
                                 $post_statuses = array( 'publish', 'draft', 'pending', 'future' );
+                                $get_data      = wp_unslash( $_GET );
+
                                 $args = array(
-                                    'posts_per_page' => 10,
+                                    'posts_per_page' => 15,
                                     'paged'          => $pagenum,
                                     'author'         => get_current_user_id(),
                                     'tax_query'      => array(
@@ -117,15 +119,15 @@
                                     ),
                                 );
 
-                                if ( isset( $_GET['post_status']) && in_array( $_GET['post_status'], $post_statuses ) ) {
-                                    $args['post_status'] = $_GET['post_status'];
+                                if ( isset( $get_data['post_status']) && in_array( $get_data['post_status'], $post_statuses ) ) {
+                                    $args['post_status'] = $get_data['post_status'];
                                 }
 
-                                if( isset( $_GET['date'] ) && $_GET['date'] != 0 ) {
-                                    $args['m'] = $_GET['date'];
+                                if( isset( $get_data['date'] ) && $get_data['date'] != 0 ) {
+                                    $args['m'] = $get_data['date'];
                                 }
 
-                                if( isset( $_GET['product_cat'] ) && $_GET['product_cat'] != -1 ) {
+                                if( isset( $get_data['product_cat'] ) && $get_data['product_cat'] != -1 ) {
                                     $args['tax_query'][] = array(
                                         'taxonomy' => 'product_cat',
                                         'field' => 'id',
@@ -134,8 +136,8 @@
                                     );
                                 }
 
-                                if ( isset( $_GET['product_search_name']) && !empty( $_GET['product_search_name'] ) ) {
-                                    $args['s'] = $_GET['product_search_name'];
+                                if ( isset( $get_data['product_search_name']) && !empty( $get_data['product_search_name'] ) ) {
+                                    $args['s'] = $get_data['product_search_name'];
                                 }
 
                                 $original_post = $post;
@@ -146,7 +148,7 @@
                                         $product_query->the_post();
 
                                         $row_actions = dokan_product_get_row_action( $post );
-                                        $tr_class = ($post->post_status == 'pending' ) ? ' class="danger"' : '';
+                                        $tr_class = ( $post->post_status == 'pending' ) ? 'danger' : '';
                                         $view_class = ($post->post_status == 'pending' ) ? 'dokan-hide' : '';
                                         $product = wc_get_product( $post->ID );
 
@@ -165,7 +167,7 @@
                                 } else {
                                 ?>
                                     <tr>
-                                        <td colspan="7"><?php _e( 'No product found', 'dokan-lite' ); ?></td>
+                                        <td colspan="7"><?php esc_html_e( 'No product found', 'dokan-lite' ); ?></td>
                                     </tr>
                                 <?php } ?>
                             </tbody>
@@ -190,10 +192,10 @@
                             'type'      => 'array',
                             'prev_text' => __( '&laquo; Previous', 'dokan-lite' ),
                             'next_text' => __( 'Next &raquo;', 'dokan-lite' )
-                            ) );
+                        ) );
 
                         echo '<ul class="pagination"><li>';
-                        echo join("</li>\n\t<li>", $page_links);
+                        echo join("</li>\n\t<li>", $page_links ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
                         echo "</li>\n</ul>\n";
                         echo '</div>';
                     }

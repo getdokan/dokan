@@ -4,21 +4,24 @@
 
     <rule ref="WordPress-Core">
         <exclude name="Generic.WhiteSpace.DisallowSpaceIndent"/>
-        <exclude name="WordPress.Arrays.CommaAfterArrayItem"/>
     </rule>
-    <rule ref="WordPress-Docs"/>
-
-    <!-- Check all PHP files in directory tree by default. -->
-    <arg name="extensions" value="php"/>
-    <file>.</file>
-
-    <!-- Show sniff codes in all reports -->
-    <arg value="s"/>
 
     <exclude-pattern>*/assets/*</exclude-pattern>
+    <exclude-pattern>*/src/*</exclude-pattern>
+    <exclude-pattern>*/lib/*</exclude-pattern>
     <exclude-pattern>*/build/*</exclude-pattern>
     <exclude-pattern>*/node_modules/*</exclude-pattern>
     <exclude-pattern>*/vendor/*</exclude-pattern>
     <exclude-pattern>*/tests/*</exclude-pattern>
     <exclude-pattern>*/bin/*</exclude-pattern>
+
+    <arg name="report" value="full" />
+    <arg name="report-file" value="phpcs-report.txt" />
+    <arg name="warning-severity" value="0" />
+
+    <!-- Check all PHP files in directory tree by default. -->
+    <arg name="extensions" value="php" />
+    <file>.</file>
+
+    <rule ref="WordPress.Security.ValidatedSanitizedInput" />
 </ruleset>

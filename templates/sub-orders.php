@@ -9,12 +9,12 @@
 ?>
 
 <header>
-    <h2><?php _e( 'Sub Orders', 'dokan-lite' ); ?></h2>
+    <h2><?php esc_html_e( 'Sub Orders', 'dokan-lite' ); ?></h2>
 </header>
 
 <div class="dokan-info">
-    <strong><?php _e( 'Note:', 'dokan-lite' ); ?></strong>
-    <?php _e( 'This order has products from multiple vendors. So we divided this order into multiple vendor orders.
+    <strong><?php esc_html_e( 'Note:', 'dokan-lite' ); ?></strong>
+    <?php esc_html_e( 'This order has products from multiple vendors. So we divided this order into multiple vendor orders.
     Each order will be handled by their respective vendor independently.', 'dokan-lite' ); ?>
 </div>
 
@@ -22,10 +22,10 @@
 
     <thead>
         <tr>
-            <th class="order-number"><span class="nobr"><?php _e( 'Order', 'dokan-lite' ); ?></span></th>
-            <th class="order-date"><span class="nobr"><?php _e( 'Date', 'dokan-lite' ); ?></span></th>
-            <th class="order-status"><span class="nobr"><?php _e( 'Status', 'dokan-lite' ); ?></span></th>
-            <th class="order-total"><span class="nobr"><?php _e( 'Total', 'dokan-lite' ); ?></span></th>
+            <th class="order-number"><span class="nobr"><?php esc_html_e( 'Order', 'dokan-lite' ); ?></span></th>
+            <th class="order-date"><span class="nobr"><?php esc_html_e( 'Date', 'dokan-lite' ); ?></span></th>
+            <th class="order-status"><span class="nobr"><?php esc_html_e( 'Status', 'dokan-lite' ); ?></span></th>
+            <th class="order-total"><span class="nobr"><?php esc_html_e( 'Total', 'dokan-lite' ); ?></span></th>
             <th class="order-actions">&nbsp;</th>
         </tr>
     </thead>
@@ -37,12 +37,12 @@
         ?>
             <tr class="order">
                 <td class="order-number">
-                    <a href="<?php echo $order->get_view_order_url(); ?>">
-                        <?php echo $order->get_order_number(); ?>
+                    <a href="<?php echo esc_url( $order->get_view_order_url() ); ?>">
+                        <?php echo esc_html( $order->get_order_number() ); ?>
                     </a>
                 </td>
                 <td class="order-date">
-                    <time datetime="<?php echo date('Y-m-d', strtotime( dokan_get_date_created( $order ) ) ); ?>" title="<?php echo esc_attr( strtotime( dokan_get_date_created( $order ) ) ); ?>"><?php echo date_i18n( get_option( 'date_format' ), strtotime( dokan_get_date_created( $order ) ) ); ?></time>
+                    <time datetime="<?php echo esc_attr( date('Y-m-d', strtotime( dokan_get_date_created( $order ) ) ) ); ?>" title="<?php echo esc_attr( strtotime( dokan_get_date_created( $order ) ) ); ?>"><?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( dokan_get_date_created( $order ) ) ) ); ?></time>
                 </td>
                 <td class="order-status" style="text-align:left; white-space:nowrap;">
                     <?php echo isset( $statuses['wc-' . dokan_get_prop( $order, 'status' )] ) ? $statuses['wc-' . dokan_get_prop( $order, 'status' )] : dokan_get_prop( $order, 'status' ); ?>

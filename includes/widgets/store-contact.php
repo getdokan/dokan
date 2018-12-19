@@ -48,10 +48,10 @@ class Dokan_Store_Contact_Form extends WP_Widget {
 
             $store_info = dokan_get_store_info( $seller_id );
 
-            echo $before_widget;
+            echo $before_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
 
             if ( ! empty( $title ) ) {
-                echo $args['before_title'] . $title . $args['after_title'];
+                echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
             }
 
             dokan_get_template_part( 'widgets/store-contact-form', '', array(
@@ -59,7 +59,7 @@ class Dokan_Store_Contact_Form extends WP_Widget {
                 'store_info' => $store_info,
             ) );
 
-            echo $after_widget;
+            echo $after_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
         }
     }
 
@@ -94,8 +94,8 @@ class Dokan_Store_Contact_Form extends WP_Widget {
         $title = $instance['title'];
         ?>
         <p>
-            <label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'dokan-lite' ); ?></label>
-            <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
+            <label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'dokan-lite' ); ?></label>
+            <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
         </p>
         <?php
     }

@@ -77,15 +77,16 @@ class Dokan_Upgrade {
         $updates_versions  = array_keys( self::$updates );
 
         if ( ! is_null( $installed_version ) && version_compare( $installed_version, end( $updates_versions ), '<' ) ) {
+            $url = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
             ?>
                 <div id="message" class="updated">
-                    <p><?php _e( '<strong>Dokan Data Update Required</strong> &#8211; We need to update your install to the latest version', 'dokan-lite' ); ?></p>
-                    <p class="submit"><a href="<?php echo add_query_arg( [ 'dokan_do_update' => true ], $_SERVER['REQUEST_URI'] ); ?>" class="dokan-update-btn button-primary"><?php _e( 'Run the updater', 'dokan-lite' ); ?></a></p>
+                    <p><?php printf( '<strong>%s  &#8211; %s</strong>', esc_attr__( 'Dokan Data Update Required', 'dokan-lite' ), esc_attr__( 'We need to update your install to the latest version', 'dokan-lite' ) ); ?></p>
+                    <p class="submit"><a href="<?php echo esc_url( add_query_arg( [ 'dokan_do_update' => true ], $url ) ); ?>" class="dokan-update-btn button-primary"><?php esc_attr_e( 'Run the updater', 'dokan-lite' ); ?></a></p>
                 </div>
 
                 <script type="text/javascript">
                     jQuery('.dokan-update-btn').click('click', function(){
-                        return confirm( '<?php _e( 'It is strongly recommended that you backup your database before proceeding. Are you sure you wish to run the updater now?', 'dokan-lite' ); ?>' );
+                        return confirm( '<?php esc_attr_e( 'It is strongly recommended that you backup your database before proceeding. Are you sure you wish to run the updater now?', 'dokan-lite' ); ?>' );
                     });
                 </script>
             <?php
@@ -103,7 +104,7 @@ class Dokan_Upgrade {
      * @return void
      */
     public function do_updates() {
-        if ( isset( $_GET['dokan_do_update'] ) && $_GET['dokan_do_update'] ) {
+        if ( isset( $_GET['dokan_do_update'] ) && sanitize_text_field( wp_unslash( $_GET['dokan_do_update'] ) ) ) {
             $this->perform_updates();
         }
     }
@@ -132,7 +133,9 @@ class Dokan_Upgrade {
 
         update_option( 'dokan_theme_version', DOKAN_PLUGIN_VERSION );
 
-        $location = remove_query_arg( ['dokan_do_update'], $_SERVER['REQUEST_URI'] );
+        $url = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+
+        $location = remove_query_arg( ['dokan_do_update'], esc_url( $url ) );
         wp_redirect( $location );
         exit();
     }

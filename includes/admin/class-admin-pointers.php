@@ -40,10 +40,12 @@ class Dokan_Admin_Pointers {
      * @return void
      */
     public function dismiss_screen( $screen = false ) {
-        $screen = isset( $_POST['screen'] ) ? wc_clean( $_POST['screen'] ) : $screen; // WPCS: CSRF ok.
-        if ( !$screen ) {
+        $screen = isset( $_POST['screen'] ) ? sanitize_text_field( wp_unslash( $_POST['screen'] )) : $screen; // WPCS: CSRF ok.
+
+        if ( ! $screen ) {
             return;
         }
+
         update_option( 'dokan_pointer_' . $screen, true );
     }
 
@@ -63,15 +65,17 @@ class Dokan_Admin_Pointers {
      */
     public function setup_pointers_for_screen() {
 
-        if ( !$screen = get_current_screen() ) {
+        if ( ! $screen = get_current_screen() ) {
             return;
         }
 
         $this->screen_id = $screen->id;
+
         switch ( $screen->id ) {
             case 'toplevel_page_dokan' :
                 $this->dashboard_tutorial();
                 break;
+
             case 'dokan_page_dokan-settings' :
                 $this->settings_tutorial();
                 break;

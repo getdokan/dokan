@@ -317,7 +317,7 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
      */
     public function prepare_object_for_database( $request ) {
         $id             = isset( $request['id'] ) ? absint( $request['id'] ) : 0;
-        $status         = isset( $request['status'] ) ? $request['status'] : '';
+        $status         = isset( $request['status'] ) ? sanitize_text_field( $request['status'] ) : '';
         $order_statuses = wc_get_order_statuses();
 
         if ( empty( $id ) ) {
@@ -395,7 +395,7 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
         $seller_id = dokan_get_current_user_id();
 
         $data = array(
-            'orders_data'   => dokan_count_orders( $seller_id ),
+            'orders_data' => dokan_count_orders( $seller_id ),
         );
 
         return rest_ensure_response( reset( $data ) );

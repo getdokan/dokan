@@ -17,12 +17,12 @@
             jQuery(function($) {
                 <?php
                 $locations = explode( ',', $map_location );
-                $def_lat = isset( $locations[0] ) ? $locations[0] : 90.40714300000002;
-                $def_long = isset( $locations[1] ) ? $locations[1] : 23.709921;
+                $def_lat   = isset( $locations[0] ) ? $locations[0] : 90.40714300000002;
+                $def_long  = isset( $locations[1] ) ? $locations[1] : 23.709921;
                 ?>
 
-                var def_longval = <?php echo $def_long; ?>;
-                var def_latval = <?php echo $def_lat; ?>;
+                var def_longval = <?php echo esc_attr( $def_long ); ?>;
+                var def_latval = <?php echo esc_attr( $def_lat ); ?>;
 
                 var curpoint = new google.maps.LatLng(def_latval, def_longval),
                     $map_area = $('#dokan-store-location');

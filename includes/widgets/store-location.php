@@ -43,10 +43,10 @@ class Dokan_Store_Location extends WP_Widget {
             return;
         }
 
-        echo $before_widget;
+        echo $before_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
 
         if ( ! empty( $title ) ) {
-            echo $args['before_title'] . $title . $args['after_title'];
+            echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
         }
         do_action('dokan-store-widget-before-map' , get_query_var( 'author' ));
 
@@ -57,7 +57,7 @@ class Dokan_Store_Location extends WP_Widget {
 
         do_action('dokan-store-widget-after-map', get_query_var( 'author' ));
 
-        echo $after_widget;
+        echo $after_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
     }
 
     /**
@@ -91,8 +91,8 @@ class Dokan_Store_Location extends WP_Widget {
         $title = $instance['title'];
         ?>
         <p>
-            <label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'dokan-lite' ); ?></label>
-            <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
+            <label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'dokan-lite' ); ?></label>
+            <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
         </p>
         <?php
     }

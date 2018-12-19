@@ -62,7 +62,7 @@ class Dokan_Template_Dashboard {
         $user_id = get_current_user_id();
 
         if ( ! dokan_is_seller_enabled( $user_id ) ) {
-            echo dokan_seller_not_enabled_notice();
+            dokan_seller_not_enabled_notice();
         }
     }
 
@@ -79,12 +79,11 @@ class Dokan_Template_Dashboard {
         }
 
         dokan_get_template_part( 'dashboard/big-counter-widget', '', array(
-                'pageviews'      => $this->pageviews,
-                'orders_count'  => $this->orders_count,
-                'earning'        => $this->earning,
-                'seller_balance' => $this->get_seller_balance()
-            )
-        );
+            'pageviews'      => $this->pageviews,
+            'orders_count'   => $this->orders_count,
+            'earning'        => $this->earning,
+            'seller_balance' => $this->get_seller_balance(),
+        ) );
     }
 
     /**
@@ -100,12 +99,36 @@ class Dokan_Template_Dashboard {
         }
 
         $order_data = array(
-            array( 'value' => $this->orders_count->{'wc-completed'}, 'color' => '#73a724', 'label' => __( 'Completed', 'dokan-lite' ) ),
-            array( 'value' => $this->orders_count->{'wc-pending'}, 'color' => '#999', 'label' => __( 'Pending', 'dokan-lite' ) ),
-            array( 'value' => $this->orders_count->{'wc-processing'}, 'color' => '#21759b', 'label' => __( 'Processing', 'dokan-lite' ) ),
-            array( 'value' => $this->orders_count->{'wc-cancelled'}, 'color' => '#d54e21', 'label' => __( 'Cancelled', 'dokan-lite' ) ),
-            array( 'value' => $this->orders_count->{'wc-refunded'}, 'color' => '#e6db55', 'label' => __( 'Refunded', 'dokan-lite' ) ),
-            array( 'value' => $this->orders_count->{'wc-on-hold'}, 'color' => '#f0ad4e', 'label' => __( 'On Hold', 'dokan-lite' ) ),
+            array(
+				'value' => $this->orders_count->{'wc-completed'},
+				'color' => '#73a724',
+				'label' => __( 'Completed', 'dokan-lite' ),
+			),
+            array(
+				'value' => $this->orders_count->{'wc-pending'},
+				'color' => '#999',
+				'label' => __( 'Pending', 'dokan-lite' ),
+			),
+            array(
+				'value' => $this->orders_count->{'wc-processing'},
+				'color' => '#21759b',
+				'label' => __( 'Processing', 'dokan-lite' ),
+			),
+            array(
+				'value' => $this->orders_count->{'wc-cancelled'},
+				'color' => '#d54e21',
+				'label' => __( 'Cancelled', 'dokan-lite' ),
+			),
+            array(
+				'value' => $this->orders_count->{'wc-refunded'},
+				'color' => '#e6db55',
+				'label' => __( 'Refunded', 'dokan-lite' ),
+			),
+            array(
+				'value' => $this->orders_count->{'wc-on-hold'},
+				'color' => '#f0ad4e',
+				'label' => __( 'On Hold', 'dokan-lite' ),
+			),
         );
 
         dokan_get_template_part( 'dashboard/orders-widget', '', array(
@@ -128,10 +151,9 @@ class Dokan_Template_Dashboard {
         }
 
         dokan_get_template_part( 'dashboard/products-widget', '', array(
-                'post_counts'=> $this->post_counts,
-                'products_url'=> dokan_get_navigation_url('products'),
-            )
-        );
+            'post_counts'  => $this->post_counts,
+            'products_url' => dokan_get_navigation_url('products'),
+        ) );
     }
 
     /**

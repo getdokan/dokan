@@ -19,8 +19,8 @@ class Dokan_Rewrites {
         add_action( 'init', array( $this, 'register_rule' ) );
 
         add_filter( 'template_include', array( $this, 'store_template' ) );
-        add_filter( 'template_include', array( $this,  'product_edit_template' ), 99 );
-        add_filter( 'template_include', array( $this,  'store_toc_template' ) );
+        add_filter( 'template_include', array( $this, 'product_edit_template' ), 99 );
+        add_filter( 'template_include', array( $this, 'store_toc_template' ) );
 
         add_filter( 'query_vars', array( $this, 'register_query_var' ) );
         add_filter( 'pre_get_posts', array( $this, 'store_query_filter' ) );
@@ -67,7 +67,7 @@ class Dokan_Rewrites {
 
         $author      = get_query_var( $this->custom_store_url );
         $seller_info = get_user_by( 'slug', $author );
-        $crumbs[1]   = array( ucwords($this->custom_store_url) , site_url().'/'.$this->custom_store_url );
+        $crumbs[1]   = array( ucwords( $this->custom_store_url ), site_url() . '/' . $this->custom_store_url );
         $crumbs[2]   = array( $author, dokan_get_store_url( $seller_info->data->ID ) );
 
         return $crumbs;
@@ -122,14 +122,14 @@ class Dokan_Rewrites {
             add_rewrite_rule( $base . '/([^/]+)(/[0-9]+)?/edit/?$', 'index.php?product=$matches[1]&page=$matches[2]&edit=true', 'top' );
         }
 
-        add_rewrite_rule( $this->custom_store_url.'/([^/]+)/?$', 'index.php?'.$this->custom_store_url.'=$matches[1]', 'top' );
-        add_rewrite_rule( $this->custom_store_url.'/([^/]+)/page/?([0-9]{1,})/?$', 'index.php?'.$this->custom_store_url.'=$matches[1]&paged=$matches[2]', 'top' );
+        add_rewrite_rule( $this->custom_store_url . '/([^/]+)/?$', 'index.php?' . $this->custom_store_url . '=$matches[1]', 'top' );
+        add_rewrite_rule( $this->custom_store_url . '/([^/]+)/page/?([0-9]{1,})/?$', 'index.php?' . $this->custom_store_url . '=$matches[1]&paged=$matches[2]', 'top' );
 
-        add_rewrite_rule( $this->custom_store_url.'/([^/]+)/section/?([0-9]{1,})/?$', 'index.php?'.$this->custom_store_url.'=$matches[1]&term=$matches[2]&term_section=true', 'top' );
-        add_rewrite_rule( $this->custom_store_url.'/([^/]+)/section/?([0-9]{1,})/page/?([0-9]{1,})/?$', 'index.php?'.$this->custom_store_url.'=$matches[1]&term=$matches[2]&paged=$matches[3]&term_section=true', 'top' );
+        add_rewrite_rule( $this->custom_store_url . '/([^/]+)/section/?([0-9]{1,})/?$', 'index.php?' . $this->custom_store_url . '=$matches[1]&term=$matches[2]&term_section=true', 'top' );
+        add_rewrite_rule( $this->custom_store_url . '/([^/]+)/section/?([0-9]{1,})/page/?([0-9]{1,})/?$', 'index.php?' . $this->custom_store_url . '=$matches[1]&term=$matches[2]&paged=$matches[3]&term_section=true', 'top' );
 
-        add_rewrite_rule( $this->custom_store_url.'/([^/]+)/toc?$', 'index.php?'.$this->custom_store_url.'=$matches[1]&toc=true', 'top' );
-        add_rewrite_rule( $this->custom_store_url.'/([^/]+)/toc/page/?([0-9]{1,})/?$', 'index.php?'.$this->custom_store_url.'=$matches[1]&paged=$matches[2]&toc=true', 'top' );
+        add_rewrite_rule( $this->custom_store_url . '/([^/]+)/toc?$', 'index.php?' . $this->custom_store_url . '=$matches[1]&toc=true', 'top' );
+        add_rewrite_rule( $this->custom_store_url . '/([^/]+)/toc/page/?([0-9]{1,})/?$', 'index.php?' . $this->custom_store_url . '=$matches[1]&paged=$matches[2]&toc=true', 'top' );
 
         do_action( 'dokan_rewrite_rules_loaded', $this->custom_store_url );
     }
@@ -169,7 +169,7 @@ class Dokan_Rewrites {
             return $template;
         }
 
-        if ( !empty( $store_name ) ) {
+        if ( ! empty( $store_name ) ) {
             $store_user = get_user_by( 'slug', $store_name );
 
             // Bell out for Vendor Stuff extensions
@@ -253,10 +253,10 @@ class Dokan_Rewrites {
 
         $author = get_query_var( $this->custom_store_url );
 
-        if ( !is_admin() && $query->is_main_query() && !empty( $author ) ) {
+        if ( ! is_admin() && $query->is_main_query() && ! empty( $author ) ) {
             $seller_info  = get_user_by( 'slug', $author );
             $store_info   = dokan_get_store_info( $seller_info->data->ID );
-            $post_per_page = isset( $store_info['store_ppp'] ) && !empty( $store_info['store_ppp'] ) ? $store_info['store_ppp'] : 12;
+            $post_per_page = isset( $store_info['store_ppp'] ) && ! empty( $store_info['store_ppp'] ) ? $store_info['store_ppp'] : 12;
             set_query_var( 'posts_per_page', $post_per_page );
             $query->set( 'post_type', 'product' );
             $query->set( 'author_name', $author );
@@ -268,8 +268,8 @@ class Dokan_Rewrites {
                         array(
                             'taxonomy' => 'product_cat',
                             'field'    => 'term_id',
-                            'terms'    => $query->query['term']
-                        )
+                            'terms'    => $query->query['term'],
+                        ),
                     )
                 );
             }

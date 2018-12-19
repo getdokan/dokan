@@ -3,12 +3,12 @@
 Plugin Name: Dokan
 Plugin URI: https://wordpress.org/plugins/dokan-lite/
 Description: An e-commerce marketplace plugin for WordPress. Powered by WooCommerce and weDevs.
-Version: 2.9.3
+Version: 2.9.6
 Author: weDevs, LLC
 Author URI: https://wedevs.com/
 Text Domain: dokan-lite
 WC requires at least: 3.0
-WC tested up to: 3.5.0
+WC tested up to: 3.5.2
 Domain Path: /languages/
 License: GPL2
 */
@@ -78,7 +78,7 @@ final class WeDevs_Dokan {
      *
      * @var string
      */
-    public $version = '2.9.3';
+    public $version = '2.9.6';
 
     /**
      * Minimum PHP version required
@@ -189,11 +189,11 @@ final class WeDevs_Dokan {
             require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
             deactivate_plugins( plugin_basename( __FILE__ ) );
 
-            wp_die( '<div class="error"><p>' . sprintf( __( '<b>Dokan</b> requires %sWooCommerce%s to be installed & activated!', 'dokan-lite' ), '<a target="_blank" href="https://wordpress.org/plugins/woocommerce/">', '</a>' ) . '</p></div>' );
+            wp_die( '<div class="error"><p>' . sprintf( esc_html__( '<b>Dokan</b> requires <a href="%s">WooCommerce</a> to be installed & activated!', 'dokan-lite' ), '<a target="_blank" href="https://wordpress.org/plugins/woocommerce/">', '</a>' ) . '</p></div>' );
         }
 
         require_once dirname( __FILE__ ) . '/includes/functions.php';
-        require_once dirname( __FILE__ ) . '/includes/functions-compatibility.php';
+    require_once dirname( __FILE__ ) . '/includes/functions-compatibility.php';
 
         // Background Processes
         require_once dirname( __FILE__ ) . '/includes/background-processes/class-dokan-background-processes.php';
@@ -292,6 +292,9 @@ final class WeDevs_Dokan {
         require_once $inc_dir . 'functions.php';
         require_once $inc_dir . 'functions-depricated.php';
         require_once $inc_dir . 'functions-compatibility.php';
+
+        // Traits
+        require_once $inc_dir . 'traits/singleton.php';
 
         // widgets
         require_once $inc_dir . 'widgets/menu-category.php';

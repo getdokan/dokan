@@ -164,7 +164,7 @@ class Dokan_Privacy extends WC_Abstract_Privacy {
      */
     public function get_vendor_personal_data( $user ) {
         $personal_data = array();
-        $vendor      = dokan()->vendor->get( $user->ID );
+        $vendor        = dokan()->vendor->get( $user->ID );
 
         if ( ! $vendor ) {
             return array();
@@ -224,14 +224,19 @@ class Dokan_Privacy extends WC_Abstract_Privacy {
 
                 foreach ( $address_field as $address_key => $address_data_title ) {
                     if ( !empty( $shop_data['address'][$address_key] ) ) {
+
                         if ( 'country' === $address_key ) {
-                            $countries = WC()->countries->get_countries();
-                            $country_name = ! empty( $countries[ $shop_data['address'][$address_key] ] ) ? $countries[ $shop_data['address'][$address_key] ] : '';
+
+                            $countries      = WC()->countries->get_countries();
+                            $country_name   = ! empty( $countries[ $shop_data['address'][$address_key] ] ) ? $countries[ $shop_data['address'][$address_key] ] : '';
                             $address_data[] = $address_data_title . ': ' . $country_name;
+
                         } elseif ( 'state' === $address_key ) {
-                            $states = WC()->countries->get_states( $shop_data['address']['country'] );
-                            $state_name = isset( $states[ $shop_data['address'][$address_key] ] ) ? $states[ $shop_data['address'][$address_key] ] : $shop_data['address'][$address_key];
+
+                            $states         = WC()->countries->get_states( $shop_data['address']['country'] );
+                            $state_name     = isset( $states[ $shop_data['address'][$address_key] ] ) ? $states[ $shop_data['address'][$address_key] ] : $shop_data['address'][$address_key];
                             $address_data[] = $address_data_title . ': ' . $state_name;
+
                         } else {
                             $address_data[] = $address_data_title . ': '. $shop_data['address'][$address_key];
                         }
@@ -243,7 +248,7 @@ class Dokan_Privacy extends WC_Abstract_Privacy {
 
             if ( in_array( $prop, array( 'banner', 'gravatar' ) ) ) {
                 $attachment_url = wp_get_attachment_url( $shop_data[$prop] );
-                $value = sprintf( '<a href="%1$s">%1$s</a>', $attachment_url );
+                $value          = sprintf( '<a href="%1$s">%1$s</a>', $attachment_url );
             }
 
             $value = apply_filters( 'dokan_privacy_export_vendor_personal_data_prop_value', $value, $prop, $vendor );
@@ -263,8 +268,8 @@ class Dokan_Privacy extends WC_Abstract_Privacy {
             $value = '';
 
             if ( 'bank' === $payment_method ) {
-                $bank_data = array();
-                $name = __( 'Bank Details', 'dokan-lite' );
+                $bank_data   = array();
+                $name        = __( 'Bank Details', 'dokan-lite' );
                 $bank_fields = array(
                     'ac_name'        =>  __( 'Account Name', 'dokan-lite' ),
                     'ac_number'      =>  __( 'Account Number', 'dokan-lite' ),
@@ -283,12 +288,12 @@ class Dokan_Privacy extends WC_Abstract_Privacy {
             }
 
             if ( 'paypal' === $payment_method ) {
-                $name = __( 'Paypal Email', 'dokan-lite' );
+                $name  = __( 'PayPal Email', 'dokan-lite' );
                 $value = isset( $method_data['email'] ) ? $method_data['email'] : '';
             }
 
             if ( 'skrill' === $payment_method ) {
-                $name = __( 'Skrill Email', 'dokan-lite' );
+                $name  = __( 'Skrill Email', 'dokan-lite' );
                 $value = isset( $method_data['email'] ) ? $method_data['email'] : '';
             }
 
