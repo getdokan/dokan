@@ -6,9 +6,6 @@
  *
  * @package dokan
  */
-?>
-
-<?php
 
 $address         = isset( $profile_info['address'] ) ? $profile_info['address'] : '';
 $address_street1 = isset( $profile_info['address']['street_1'] ) ? $profile_info['address']['street_1'] : '';

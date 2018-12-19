@@ -51,7 +51,7 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
         }
 
         header( 'Content-type: html/csv' );
-        header( 'Content-Disposition: attachment; filename="withdraw-'.date( 'd-m-y' ).'.csv"' );
+        header( 'Content-Disposition: attachment; filename="withdraw-' . date( 'd-m-y' ) . '.csv"' );
 
         $ids = isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : '';
 
@@ -76,6 +76,8 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
             return;
         }
 
+        $currency = get_option( 'woocommerce_currency' );
+
         foreach ( $result as $key => $obj ) {
 
             if ( $obj->method != 'paypal' ) {
@@ -85,7 +87,7 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
             $data[] = array(
                 'email'    => dokan_get_seller_withdraw_mail( $obj->user_id ),
                 'amount'   => $obj->amount,
-                'currency' => get_option( 'woocommerce_currency' )
+                'currency' => $currency,
             );
 
         }
@@ -93,7 +95,7 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
         if ( $data ) {
 
             header( 'Content-type: html/csv' );
-            header( 'Content-Disposition: attachment; filename="withdraw-'.date( 'd-m-y' ).'.csv"' );
+            header( 'Content-Disposition: attachment; filename="withdraw-' . date( 'd-m-y' ) . '.csv"' );
 
             foreach ( $data as $fields ) {
                 echo esc_html( $fields['email'] ) . ',';

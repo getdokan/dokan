@@ -33,6 +33,7 @@ import Currency from "admin/components/Currency.vue"
 import LazyInput from "admin/components/LazyInput.vue"
 import Progressbar from "admin/components/Progressbar.vue"
 import Search from "admin/components/Search.vue"
+import Datepicker from "admin/components/Datepicker.vue"
 
 import "vue-multiselect/dist/vue-multiselect.min.css"
 
@@ -86,6 +87,7 @@ window.dokan.libs['TextEditor']  = TextEditor;
 window.dokan.libs['LazyInput']   = LazyInput;
 window.dokan.libs['Progressbar'] = Progressbar;
 window.dokan.libs['Search']      = Search;
+window.dokan.libs['Datepicker']  = Datepicker;
 
 window.dokan.libs['ContentLoading']  = {
   VclCode,
@@ -97,3 +99,5 @@ window.dokan.libs['ContentLoading']  = {
   VueContentLoading,
 };
 
+// wp npm packages with backward compatibility
+dokan.hooks = (wp && wp.hooks) ? wp.hooks : dokan.wpPackages.hooks;

@@ -7,7 +7,7 @@
  * @return array
  */
 function dokan_product_seller_info( $item_data, $cart_item ) {
-    $seller_id =  get_post_field( 'post_author', $cart_item['data']->get_id() );
+    $seller_id   =  get_post_field( 'post_author', $cart_item['data']->get_id() );
     $seller_info = dokan_get_store_info( $seller_id );
 
     $item_data[] = array(
@@ -103,6 +103,7 @@ function dokan_get_no_seller_image() {
  */
 function dokan_get_customer_main_order( $customer_orders ) {
     $customer_orders['post_parent'] = 0;
+
     return $customer_orders;
 }
 
@@ -118,7 +119,10 @@ add_filter( 'woocommerce_my_account_my_orders_query', 'dokan_get_customer_main_o
  * @return capability array
  */
 function dokan_manage_capability_for_woocommerce_product( $capability ) {
-    $capability['capabilities'] = array( 'edit_post' => 'edit_product' );
+    $capability['capabilities'] = array(
+        'edit_post' => 'edit_product',
+    );
+
     return $capability;
 }
 
@@ -267,8 +271,8 @@ function dokan_attach_vendor_name( $item_id, $order ) {
         return;
     }
 
-    $vendor_id  = get_post_field( 'post_author', $product_id );
-    $vendor     = dokan()->vendor->get( $vendor_id );
+    $vendor_id = get_post_field( 'post_author', $product_id );
+    $vendor    = dokan()->vendor->get( $vendor_id );
 
     if ( ! is_object( $vendor ) ) {
         return;

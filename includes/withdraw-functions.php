@@ -26,7 +26,7 @@ function dokan_withdraw_register_methods() {
  * @return array
  */
 function dokan_withdraw_get_methods() {
-    $methods = array();
+    $methods    = array();
     $registered = dokan_withdraw_register_methods();
 
     foreach ($registered as $key => $value) {
@@ -55,11 +55,11 @@ function dokan_withdraw_get_active_methods() {
  */
 function dokan_get_seller_active_withdraw_methods() {
     $payment_methods = get_user_meta( dokan_get_current_user_id(), 'dokan_profile_settings' );
-    $paypal = isset( $payment_methods[0]['payment']['paypal']['email'] ) && $payment_methods[0]['payment']['paypal']['email'] !== false ? 'paypal' : '';
-    $bank = isset( $payment_methods[0]['payment']['bank']['ac_number'] ) && $payment_methods[0]['payment']['bank']['ac_number']  !== '' ? 'bank' : '';
-    $skrill = isset( $payment_methods[0]['payment']['skrill']['email'] ) && $payment_methods[0]['payment']['skrill']['email'] !== false ? 'skrill' : '';
+    $paypal          = isset( $payment_methods[0]['payment']['paypal']['email'] ) && $payment_methods[0]['payment']['paypal']['email'] !== false ? 'paypal' : '';
+    $bank            = isset( $payment_methods[0]['payment']['bank']['ac_number'] ) && $payment_methods[0]['payment']['bank']['ac_number']  !== '' ? 'bank' : '';
+    $skrill          = isset( $payment_methods[0]['payment']['skrill']['email'] ) && $payment_methods[0]['payment']['skrill']['email'] !== false ? 'skrill' : '';
 
-    $payment_methods = array( $paypal, $bank, $skrill );
+    $payment_methods        = array( $paypal, $bank, $skrill );
     $active_payment_methods = array();
 
     foreach ( $payment_methods as $payment_method ) {
@@ -155,13 +155,13 @@ function dokan_withdraw_method_skrill( $store_settings ) {
  * @param array $store_settings
  */
 function dokan_withdraw_method_bank( $store_settings ) {
-    $account_name   = isset( $store_settings['payment']['bank']['ac_name'] ) ? esc_attr( $store_settings['payment']['bank']['ac_name'] ) : '';
-    $account_number = isset( $store_settings['payment']['bank']['ac_number'] ) ? esc_attr( $store_settings['payment']['bank']['ac_number'] ) : '';
-    $bank_name      = isset( $store_settings['payment']['bank']['bank_name'] ) ? esc_attr( $store_settings['payment']['bank']['bank_name'] ) : '';
-    $bank_addr      = isset( $store_settings['payment']['bank']['bank_addr'] ) ? esc_textarea( $store_settings['payment']['bank']['bank_addr'] ) : '';
-    $routing_number = isset( $store_settings['payment']['bank']['routing_number'] ) ? esc_attr( $store_settings['payment']['bank']['routing_number'] ) : '';
-    $iban           = isset( $store_settings['payment']['bank']['iban'] ) ? esc_attr( $store_settings['payment']['bank']['iban'] ) : '';
-    $swift_code     = isset( $store_settings['payment']['bank']['swift'] ) ? esc_attr( $store_settings['payment']['bank']['swift'] ) : '';
+    $account_name   = isset( $store_settings['payment']['bank']['ac_name'] ) ? $store_settings['payment']['bank']['ac_name'] : '';
+    $account_number = isset( $store_settings['payment']['bank']['ac_number'] ) ? $store_settings['payment']['bank']['ac_number'] : '';
+    $bank_name      = isset( $store_settings['payment']['bank']['bank_name'] ) ? $store_settings['payment']['bank']['bank_name'] : '';
+    $bank_addr      = isset( $store_settings['payment']['bank']['bank_addr'] ) ? $store_settings['payment']['bank']['bank_addr'] : '';
+    $routing_number = isset( $store_settings['payment']['bank']['routing_number'] ) ? $store_settings['payment']['bank']['routing_number'] : '';
+    $iban           = isset( $store_settings['payment']['bank']['iban'] ) ? $store_settings['payment']['bank']['iban'] : '';
+    $swift_code     = isset( $store_settings['payment']['bank']['swift'] ) ? $store_settings['payment']['bank']['swift'] : '';
     ?>
     <div class="dokan-form-group">
         <div class="dokan-w8">
@@ -216,8 +216,8 @@ function dokan_withdraw_method_bank( $store_settings ) {
 function dokan_get_withdraw_count( $user_id = '' ) {
     global $wpdb;
 
-    $cache_key = 'dokan_withdraw_count';
-    $counts = wp_cache_get( $cache_key );
+    $cache_key = 'dokan_withdraw_count-' . $user_id;
+    $counts    = wp_cache_get( $cache_key );
 
     if ( false === $counts ) {
         $counts     = array( 'pending' => 0, 'completed' => 0, 'cancelled' => 0 );

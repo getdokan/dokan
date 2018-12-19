@@ -1,6 +1,6 @@
 {
   "name": "dokan",
-  "version": "2.9.6",
+  "version": "2.9.7",
   "description": "A WordPress marketplace plugin",
   "author": "weDevs",
   "license": "GPL",
@@ -11,6 +11,7 @@
     "makepot": "wpvuei18n makepot"
   },
   "dependencies": {
+    "@wordpress/hooks": "^2.0.3",
     "debounce": "^1.2.0",
     "vue": "^2.5.2",
     "vue-chartjs": "^3.2.1",

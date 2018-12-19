@@ -18,7 +18,7 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
 
     global $wpdb, $woocommerce, $woocommerce_errors;
 
-    $product_type = empty( $data['product_type'] ) ? 'simple' : stripslashes( $data['product_type'] );
+    $product_type = empty( $data['product_type'] ) ? 'simple' : sanitize_text_field( $data['product_type'] );
 
     // Add any default post meta
     add_post_meta( $post_id, 'total_sales', '0', true );
@@ -35,21 +35,21 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
     update_post_meta( $post_id, '_product_image_gallery', implode( ',', $attachment_ids ) );
 
     // Check product visibility and purchaces note
-    $data['_visibility']    = isset( $data['_visibility'] ) ? $data['_visibility'] : '';
-    $data['_purchase_note'] = isset( $data['_purchase_note'] ) ? $data['_purchase_note'] : '';
+    $data['_visibility']    = isset( $data['_visibility'] ) ? sanitize_text_field( $data['_visibility'] ) : '';
+    $data['_purchase_note'] = isset( $data['_purchase_note'] ) ? sanitize_textarea_field( $data['_purchase_note'] ) : '';
 
     // Set visibiliy for WC 3.0.0+
     $terms = array();
 
     switch ( $data['_visibility'] ) {
-        case 'hidden' :
+        case 'hidden':
             $terms[] = 'exclude-from-search';
             $terms[] = 'exclude-from-catalog';
             break;
-        case 'catalog' :
+        case 'catalog':
             $terms[] = 'exclude-from-search';
             break;
-        case 'search' :
+        case 'search':
             $terms[] = 'exclude-from-catalog';
             break;
     }
@@ -63,7 +63,7 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
     }
 
     wp_set_post_terms( $post_id, $terms, 'product_visibility', false );
-    update_post_meta( $post_id, '_visibility', stripslashes( $data['_visibility'] ) );
+    update_post_meta( $post_id, '_visibility', $data['_visibility'] );
 
     // Update post meta
     if ( isset( $data['_regular_price'] ) ) {
@@ -84,9 +84,8 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
     }
 
     if ( isset( $data['_purchase_note'] ) ) {
-        update_post_meta( $post_id, '_purchase_note', wp_kses_post( stripslashes( $data['_purchase_note'] ) ) );
+        update_post_meta( $post_id, '_purchase_note', wp_kses_post( $data['_purchase_note'] ) );
     }
-
 
     // Unique SKU
     $sku     = get_post_meta( $post_id, '_sku', true );
@@ -111,21 +110,25 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
     // Save Attributes
     $attributes = array();
 
-    if ( isset( $data['attribute_names'] ) && isset( $data['attribute_values'] ) ) {
+    if ( isset( $data['attribute_names'] ) && is_array( $data['attribute_names'] ) && isset( $data['attribute_values'] ) && is_array( $data['attribute_values'] ) ) {
+        $attribute_names  = array_map( 'sanitize_title', $data['attribute_names'] );
 
-        $attribute_names  = $data['attribute_names'];
-        $attribute_values = $data['attribute_values'];
+        $attribute_values = array();
+
+        foreach ( $data['attribute_values'] as $values ) {
+            $attribute_values[] = array_map( 'sanitize_text_field', (array) $values );
+        }
 
         if ( isset( $data['attribute_visibility'] ) ) {
-            $attribute_visibility = $data['attribute_visibility'];
+            $attribute_visibility = array_map( 'absint' , $data['attribute_visibility'] );
         }
 
         if ( isset( $data['attribute_variation'] ) ) {
-            $attribute_variation = $data['attribute_variation'];
+            $attribute_variation = array_map( 'absint', $data['attribute_variation'] );
         }
 
-        $attribute_is_taxonomy   = $data['attribute_is_taxonomy'];
-        $attribute_position      = $data['attribute_position'];
+        $attribute_is_taxonomy   = array_map( 'absint' , $data['attribute_is_taxonomy'] );
+        $attribute_position      = array_map( 'absint', $data['attribute_position'] );
         $attribute_names_max_key = max( array_keys( $attribute_names ) );
 
         for ( $i = 0; $i <= $attribute_names_max_key; $i++ ) {
@@ -145,7 +148,7 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
                     if ( is_array( $attribute_values[ $i ] ) ) {
                         $values = array_map( 'wc_clean', $attribute_values[ $i ] );
 
-                    // Text based attributes - Posted values are term names, wp_set_object_terms wants ids or slugs.
+                        // Text based attributes - Posted values are term names, wp_set_object_terms wants ids or slugs.
                     } else {
                         $values     = array();
                         $raw_values = array_map( 'wc_sanitize_term_text_based', explode( WC_DELIMITER, $attribute_values[ $i ] ) );
@@ -178,32 +181,30 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
 
                 if ( ! empty( $values ) ) {
                     // Add attribute to array, but don't set values
-                    $attributes[ sanitize_title( $attribute_names[ $i ] ) ] = array(
-                        'name'          => wc_clean( $attribute_names[ $i ] ),
+                    $attributes[ $attribute_names[ $i ] ] = array(
+                        'name'          => $attribute_names[ $i ],
                         'value'         => '',
                         'position'      => $attribute_position[ $i ],
                         'is_visible'    => $is_visible,
                         'is_variation'  => $is_variation,
-                        'is_taxonomy'   => $is_taxonomy
+                        'is_taxonomy'   => $is_taxonomy,
                     );
                 }
-
             } elseif ( isset( $attribute_values[ $i ] ) ) {
 
                 // Text based, possibly separated by pipes (WC_DELIMITER). Preserve line breaks in non-variation attributes.
                 $values = implode( ' ' . WC_DELIMITER . ' ', array_map( 'wc_clean', array_map( 'stripslashes', $attribute_values[ $i ] ) ) );
 
                 // Custom attribute - Add attribute to array and set the values
-                $attributes[ sanitize_title( $attribute_names[ $i ] ) ] = array(
-                    'name'          => wc_clean( $attribute_names[ $i ] ),
+                $attributes[ $attribute_names[ $i ] ] = array(
+                    'name'          => $attribute_names[ $i ],
                     'value'         => $values,
                     'position'      => $attribute_position[ $i ],
                     'is_visible'    => $is_visible,
                     'is_variation'  => $is_variation,
-                    'is_taxonomy'   => $is_taxonomy
+                    'is_taxonomy'   => $is_taxonomy,
                 );
             }
-
         }
     }
 
@@ -234,9 +235,9 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
     } else {
         // Sales and prices
         $date_from     = (string) isset( $data['_sale_price_dates_from'] ) ? wc_clean( $data['_sale_price_dates_from'] ) : '';
-        $date_to       = (string) isset( $data['_sale_price_dates_to'] ) ? wc_clean( $data['_sale_price_dates_to'] )     : '';
-        $regular_price = (string) isset( $data['_regular_price'] ) ? wc_clean( $data['_regular_price'] )                 : '';
-        $sale_price    = (string) isset( $data['_sale_price'] ) ? wc_clean( $data['_sale_price'] )                       : '';
+        $date_to       = (string) isset( $data['_sale_price_dates_to'] ) ? wc_clean( $data['_sale_price_dates_to'] ) : '';
+        $regular_price = (string) isset( $data['_regular_price'] ) ? wc_clean( $data['_regular_price'] ) : '';
+        $sale_price    = (string) isset( $data['_sale_price'] ) ? wc_clean( $data['_sale_price'] ) : '';
 
         update_post_meta( $post_id, '_regular_price', '' === $regular_price ? '' : wc_format_decimal( $regular_price ) );
         update_post_meta( $post_id, '_sale_price', '' === $sale_price ? '' : wc_format_decimal( $sale_price ) );
@@ -291,9 +292,9 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
     $manage_stock      = ! empty( $data['_manage_stock'] ) && 'grouped' !== $product_type ? 'yes' : 'no';
     $backorders        = ! empty( $data['_backorders'] ) && 'yes' === $manage_stock ? wc_clean( $data['_backorders'] ) : 'no';
     $stock_status      = ! empty( $data['_stock_status'] ) ? wc_clean( $data['_stock_status'] ) : 'instock';
-    $stock_amount      = isset( $data['_stock'] ) ? $data['_stock'] : '';
+    $stock_amount      = isset( $data['_stock'] ) ? wc_clean( $data['_stock'] ) : '';
     $stock_amount      = 'yes' === $manage_stock ? wc_stock_amount( wp_unslash( $stock_amount ) ) : '';
-    $_low_stock_amount = isset( $data['_low_stock_amount'] ) ? $data['_low_stock_amount'] : '';
+    $_low_stock_amount = isset( $data['_low_stock_amount'] ) ? wc_clean( $data['_low_stock_amount'] ) : '';
     $_low_stock_amount = 'yes' === $manage_stock ? wc_stock_amount( wp_unslash( $_low_stock_amount ) ) : '';
 
     // Stock Data
@@ -317,7 +318,6 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
                 $manage_stock = 'yes';
                 $backorders   = wc_clean( $data['_backorders'] );
             }
-
         } elseif ( 'grouped' !== $product_type && ! empty( $data['_manage_stock'] ) ) {
             $manage_stock = $data['_manage_stock'];
             $backorders   = wc_clean( $data['_backorders'] );
@@ -343,21 +343,22 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
             update_post_meta( $post_id, '_stock', '' );
             update_post_meta( $post_id, '_low_stock_amount', '' );
         }
-
     } else {
         wc_update_product_stock_status( $post_id, wc_clean( $data['_stock_status'] ) );
     }
 
     // Downloadable options
-    if ( 'yes' ==  $is_downloadable  ) {
+    if ( 'yes' == $is_downloadable ) {
         $_download_limit = absint( $data['_download_limit'] );
 
-        if ( ! $_download_limit )
+        if ( ! $_download_limit ) {
             $_download_limit = ''; // 0 or blank = unlimited
+        }
 
         $_download_expiry = absint( $data['_download_expiry'] );
-        if ( ! $_download_expiry )
+        if ( ! $_download_expiry ) {
             $_download_expiry = ''; // 0 or blank = unlimited
+        }
 
         // file paths will be stored in an array keyed off md5(file path)
         if ( isset( $data['_wc_file_urls'] ) ) {
@@ -368,11 +369,12 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
             $file_url_size = sizeof( $file_urls );
 
             for ( $i = 0; $i < $file_url_size; $i ++ ) {
-                if ( ! empty( $file_urls[ $i ] ) )
+                if ( ! empty( $file_urls[ $i ] ) ) {
                     $files[ md5( $file_urls[ $i ] ) ] = array(
                         'name' => $file_names[ $i ],
-                        'file' => $file_urls[ $i ]
+                        'file' => $file_urls[ $i ],
                     );
+                }
             }
 
             // grant permission to any newly added files on any existing orders for this product prior to saving
@@ -385,10 +387,10 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
         update_post_meta( $post_id, '_download_expiry', $_download_expiry );
 
         if ( isset( $data['_download_limit'] ) ) {
-            update_post_meta( $post_id, '_download_limit', esc_attr( $_download_limit ) );
+            update_post_meta( $post_id, '_download_limit', sanitize_text_field( $_download_limit ) );
         }
         if ( isset( $data['_download_expiry'] ) ) {
-            update_post_meta( $post_id, '_download_expiry', esc_attr( $_download_expiry ) );
+            update_post_meta( $post_id, '_download_expiry', sanitize_text_field( $_download_expiry ) );
         }
 
         if ( isset( $data['_download_type'] ) ) {
@@ -471,9 +473,14 @@ function dokan_process_product_file_download_paths( $product_id, $variation_id, 
 function dokan_sub_order_get_total_coupon( $order_id ) {
     global $wpdb;
 
-    $result = $wpdb->get_var( $wpdb->prepare( "SELECT SUM(oim.meta_value) FROM {$wpdb->prefix}woocommerce_order_itemmeta oim
+    $result = $wpdb->get_var(
+        $wpdb->prepare(
+            "SELECT SUM(oim.meta_value) FROM {$wpdb->prefix}woocommerce_order_itemmeta oim
             LEFT JOIN {$wpdb->prefix}woocommerce_order_items oi ON oim.order_item_id = oi.order_item_id
-            WHERE oi.order_id = %d AND oi.order_item_type = 'coupon'", $order_id ) );
+            WHERE oi.order_id = %d AND oi.order_item_type = 'coupon'",
+            $order_id
+        )
+    );
 
     if ( $result ) {
         return $result;
@@ -491,12 +498,11 @@ function dokan_sub_order_get_total_coupon( $order_id ) {
  *
  * @return string $display_name
  */
-function dokan_seller_displayname ( $display_name ) {
+function dokan_seller_displayname( $display_name ) {
 
-    if ( current_user_can( 'seller' ) && !is_admin() ) {
-        $seller_info = dokan_get_store_info ( dokan_get_current_user_id() );
-        $display_name = ( !empty( $seller_info['store_name'] ) ) ? $seller_info['store_name'] : $display_name;
-
+    if ( current_user_can( 'seller' ) && ! is_admin() ) {
+        $seller_info  = dokan_get_store_info( dokan_get_current_user_id() );
+        $display_name = ( ! empty( $seller_info['store_name'] ) ) ? $seller_info['store_name'] : $display_name;
     }
 
     return $display_name;
@@ -520,10 +526,10 @@ function dokan_get_featured_products( $per_page = 9, $seller_id = '' ) {
         'ignore_sticky_posts' => 1,
         'tax_query'           => array(
             'relation' => 'AND',
-        )
+        ),
     );
 
-    if ( !empty( $seller_id ) ) {
+    if ( ! empty( $seller_id ) ) {
         $args['author'] = (int) $seller_id;
     }
 
@@ -547,7 +553,7 @@ function dokan_get_latest_products( $per_page = 9, $seller_id = '' ) {
         'ignore_sticky_posts' => 1,
     );
 
-    if ( !empty( $seller_id ) ) {
+    if ( ! empty( $seller_id ) ) {
         $args['author'] = (int) $seller_id;
     }
 
@@ -571,7 +577,7 @@ function dokan_get_best_selling_products( $per_page = 8, $seller_id = '' ) {
         'posts_per_page'      => $per_page,
     );
 
-    if ( !empty( $seller_id ) ) {
+    if ( ! empty( $seller_id ) ) {
         $args['author'] = (int) $seller_id;
     }
 
@@ -586,12 +592,14 @@ function dokan_get_best_selling_products( $per_page = 8, $seller_id = '' ) {
  * @global object $post
  * @return boolean
  */
-function check_more_seller_product_tab(  ) {
-    global   $post;
-    $store_info    = dokan_get_store_info(  $post->post_author );
-    if( isset( $store_info['show_more_ptab'] ) AND $store_info['show_more_ptab'] == 'yes' ){
+function check_more_seller_product_tab() {
+    global $post;
+
+    $store_info = dokan_get_store_info( $post->post_author );
+
+    if ( isset( $store_info['show_more_ptab'] ) and $store_info['show_more_ptab'] == 'yes' ) {
         return true;
-    }else {
+    } else {
         return false;
     }
 }
@@ -604,16 +612,16 @@ function check_more_seller_product_tab(  ) {
  * @param int $per_page
  * @return \WP_Query
  */
-function dokan_get_top_rated_products( $per_page = 8 , $seller_id = '') {
+function dokan_get_top_rated_products( $per_page = 8, $seller_id = '' ) {
 
     $args = array(
-        'post_type'             => 'product',
-        'post_status'           => 'publish',
-        'ignore_sticky_posts'   => 1,
-        'posts_per_page'        => $per_page
+        'post_type'           => 'product',
+        'post_status'         => 'publish',
+        'ignore_sticky_posts' => 1,
+        'posts_per_page'      => $per_page,
     );
 
-    if ( !empty( $seller_id ) ) {
+    if ( ! empty( $seller_id ) ) {
         $args['author'] = (int) $seller_id;
     }
 
@@ -634,27 +642,27 @@ function dokan_get_on_sale_products( $per_page = 10, $paged = 1, $seller_id = ''
     $product_ids_on_sale = wc_get_product_ids_on_sale();
 
     $args = array(
-        'posts_per_page'    => $per_page,
-        'no_found_rows'     => 1,
-        'paged'             => $paged,
-        'post_status'       => 'publish',
-        'post_type'         => 'product',
-        'post__in'          => array_merge( array( 0 ), $product_ids_on_sale ),
-        'meta_query'        => array(
+        'posts_per_page' => $per_page,
+        'no_found_rows'  => 1,
+        'paged'          => $paged,
+        'post_status'    => 'publish',
+        'post_type'      => 'product',
+        'post__in'       => array_merge( array( 0 ), $product_ids_on_sale ),
+        'meta_query'     => array(
             array(
-                'key'       => '_visibility',
-                'value'     => array('catalog', 'visible'),
-                'compare'   => 'IN'
+                'key'     => '_visibility',
+                'value'   => array( 'catalog', 'visible' ),
+                'compare' => 'IN',
             ),
             array(
-                'key'       => '_stock_status',
-                'value'     => 'instock',
-                'compare'   => '='
-            )
-        )
+                'key'     => '_stock_status',
+                'value'   => 'instock',
+                'compare' => '=',
+            ),
+        ),
     );
 
-    if ( !empty( $seller_id ) ) {
+    if ( ! empty( $seller_id ) ) {
         $args['author'] = (int) $seller_id;
     }
 
@@ -749,8 +757,8 @@ function dokan_exclude_child_customer_receipt( &$phpmailer ) {
     $sub_receipt  = __( 'Your {site_title} order receipt from {order_date}', 'dokan-lite' );
     $sub_download = __( 'Your {site_title} order from {order_date} is complete', 'dokan-lite' );
 
-    $sub_receipt  = str_replace( array('{site_title}', '{order_date}'), array(wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ), ''), $sub_receipt);
-    $sub_download = str_replace( array('{site_title}', '{order_date} is complete'), array(wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ), ''), $sub_download);
+    $sub_receipt  = str_replace( array( '{site_title}', '{order_date}' ), array( wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ), '' ), $sub_receipt );
+    $sub_download = str_replace( array( '{site_title}', '{order_date} is complete' ), array( wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ), '' ), $sub_download );
 
     // not a customer receipt mail
     if ( ( stripos( $subject, $sub_receipt ) === false ) && ( stripos( $subject, $sub_download ) === false ) ) {
@@ -808,9 +816,9 @@ function dokan_filter_woocommerce_dashboard_status_widget_sales_query( $query ) 
  *
  * @return void
  */
-function dokan_save_account_details(){
+function dokan_save_account_details() {
 
-    $_server = isset( $_SERVER['REQUEST_METHOD'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) : '';
+    $_server = isset( $_SERVER['REQUEST_METHOD'] ) ? $_SERVER['REQUEST_METHOD'] : '';
 
     if ( 'POST' !== strtoupper( $_server ) ) {
         return;
@@ -832,12 +840,12 @@ function dokan_save_account_details(){
         return;
     }
 
-    $account_first_name = !empty( $postdata['account_first_name'] ) ? wc_clean( $postdata['account_first_name'] ) : '';
-    $account_last_name  = !empty( $postdata['account_last_name'] ) ? wc_clean( $postdata['account_last_name'] ) : '';
-    $account_email      = !empty( $postdata['account_email'] ) ? sanitize_email( $postdata['account_email'] ) : '';
-    $pass_cur           = !empty( $postdata['password_current'] ) ? $postdata['password_current'] : '';
-    $pass1              = !empty( $postdata['password_1'] ) ? $postdata['password_1'] : '';
-    $pass2              = !empty( $postdata['password_2'] ) ? $postdata['password_2'] : '';
+    $account_first_name = ! empty( $postdata['account_first_name'] ) ? wc_clean( $postdata['account_first_name'] ) : '';
+    $account_last_name  = ! empty( $postdata['account_last_name'] ) ? wc_clean( $postdata['account_last_name'] ) : '';
+    $account_email      = ! empty( $postdata['account_email'] ) ? sanitize_email( $postdata['account_email'] ) : '';
+    $pass_cur           = ! empty( $postdata['password_current'] ) ? $postdata['password_current'] : '';
+    $pass1              = ! empty( $postdata['password_1'] ) ? $postdata['password_1'] : '';
+    $pass2              = ! empty( $postdata['password_2'] ) ? $postdata['password_2'] : '';
     $save_pass          = true;
 
     $user->first_name = $account_first_name;
@@ -854,13 +862,13 @@ function dokan_save_account_details(){
     ) );
 
     foreach ( $required_fields as $field_key => $field_name ) {
-        if ( empty( $_POST[$field_key] ) ) {
+        if ( empty( $_POST[ $field_key ] ) ) {
             wc_add_notice( '<strong>' . esc_html( $field_name ) . '</strong> ' . __( 'is a required field.', 'dokan-lite' ), 'error' );
         }
     }
 
     if ( $account_email ) {
-        if ( !is_email( $account_email ) ) {
+        if ( ! is_email( $account_email ) ) {
             wc_add_notice( __( 'Please provide a valid email address.', 'dokan-lite' ), 'error' );
         } elseif ( email_exists( $account_email ) && $account_email !== $current_user->user_email ) {
             wc_add_notice( __( 'This email address is already registered.', 'dokan-lite' ), 'error' );
@@ -868,21 +876,21 @@ function dokan_save_account_details(){
         $user->user_email = $account_email;
     }
 
-    if ( !empty( $pass1 ) && !wp_check_password( $pass_cur, $current_user->user_pass, $current_user->ID ) ) {
+    if ( ! empty( $pass1 ) && ! wp_check_password( $pass_cur, $current_user->user_pass, $current_user->ID ) ) {
         wc_add_notice( __( 'Your current password is incorrect.', 'dokan-lite' ), 'error' );
         $save_pass = false;
     }
 
-    if ( !empty( $pass_cur ) && empty( $pass1 ) && empty( $pass2 ) ) {
+    if ( ! empty( $pass_cur ) && empty( $pass1 ) && empty( $pass2 ) ) {
         wc_add_notice( __( 'Please fill out all password fields.', 'dokan-lite' ), 'error' );
         $save_pass = false;
-    } elseif ( !empty( $pass1 ) && empty( $pass_cur ) ) {
+    } elseif ( ! empty( $pass1 ) && empty( $pass_cur ) ) {
         wc_add_notice( __( 'Please enter your current password.', 'dokan-lite' ), 'error' );
         $save_pass = false;
-    } elseif ( !empty( $pass1 ) && empty( $pass2 ) ) {
+    } elseif ( ! empty( $pass1 ) && empty( $pass2 ) ) {
         wc_add_notice( __( 'Please re-enter your password.', 'dokan-lite' ), 'error' );
         $save_pass = false;
-    } elseif ( (!empty( $pass1 ) || !empty( $pass2 ) ) && $pass1 !== $pass2 ) {
+    } elseif ( ( ! empty( $pass1 ) || ! empty( $pass2 ) ) && $pass1 !== $pass2 ) {
         wc_add_notice( __( 'New passwords do not match.', 'dokan-lite' ), 'error' );
         $save_pass = false;
     }
@@ -924,7 +932,7 @@ function dokan_clear_product_category_cache( $post_id ) {
 
     $product = wc_get_product( $post_id );
 
-    if ( !$product ) {
+    if ( ! $product ) {
         return;
     }
 
@@ -951,9 +959,9 @@ if ( ! function_exists( 'dokan_date_time_format' ) ) {
         if ( $date_only ) {
             return date_i18n( wc_date_format(), strtotime( $time ) );
         }
+
         return date_i18n( $format, strtotime( $time ) );
     }
-
 }
 
 /**
@@ -969,6 +977,7 @@ function dokan_split_profile_completion_value( $progress_values ) {
 
     if ( 'layout3' == $store_banner ) {
         unset( $progress_values['banner_val'] );
+
         $progress_values['store_name_val'] = 15;
         $progress_values['phone_val']      = 15;
         $progress_values['address_val']    = 15;
@@ -1012,22 +1021,22 @@ add_action( 'woocommerce_product_tabs', 'dokan_set_more_from_seller_tab', 10 );
  * @param int $posts_per_page
  */
 function dokan_get_more_products_from_seller( $seller_id = 0, $posts_per_page = 6 ) {
-
     global $product, $post;
 
     if ( $seller_id == 0 ) {
         $seller_id = $post->post_author;
     }
 
-    if ( !abs( $posts_per_page ) ) {
+    if ( ! abs( $posts_per_page ) ) {
         $posts_per_page = 4;
     }
+
     $args = array(
         'post_type'      => 'product',
         'posts_per_page' => $posts_per_page,
         'orderby'        => 'rand',
         'post__not_in'   => array( $post->ID ),
-        'author'         => $seller_id
+        'author'         => $seller_id,
     );
 
     $products = new WP_Query( $args );
@@ -1074,13 +1083,13 @@ function dokan_bulk_order_status_change() {
         return;
     }
 
-    $status = $postdata['status'];
-    $orders = $postdata['bulk_orders'];
+    $status = sanitize_text_field( $postdata['status'] );
+    $orders = sanitize_text_field( $postdata['bulk_orders'] );
 
     // -1 means bluk action option value
     $excluded_status = array( '-1', 'cancelled', 'refunded' );
 
-    if (  in_array( $status, $excluded_status ) ) {
+    if ( in_array( $status, $excluded_status ) ) {
         return;
     }
 
@@ -1110,11 +1119,11 @@ add_action( 'template_redirect', 'dokan_bulk_order_status_change' );
  */
 function dokan_store_category_delete_transient( $post_id ) {
 
-    $post_tmp = get_post( $post_id );
+    $post_tmp  = get_post( $post_id );
     $seller_id = $post_tmp->post_author;
 
     //delete store category transient
-    delete_transient( 'dokan-store-category-'.$seller_id );
+    delete_transient( 'dokan-store-category-' . $seller_id );
 }
 
 add_action( 'delete_post', 'dokan_store_category_delete_transient' );

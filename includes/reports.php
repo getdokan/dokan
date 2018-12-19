@@ -250,7 +250,7 @@ if ( ! function_exists( 'dokan_dashboard_sales_overview' ) ) :
  */
 function dokan_dashboard_sales_overview() {
     $start_date = date( 'Y-m-01', current_time('timestamp') );
-    $end_date = date( 'Y-m-d', strtotime( 'midnight', current_time( 'timestamp' ) ) );
+    $end_date   = date( 'Y-m-d', strtotime( 'midnight', current_time( 'timestamp' ) ) );
 
     dokan_sales_overview_chart_data( $start_date, $end_date, 'day' );
 }
@@ -274,7 +274,7 @@ function dokan_sales_overview_chart_data( $start_date, $end_date, $group_by ) {
     global $wp_locale;
 
     $start_date_to_time = strtotime( $start_date );
-    $end_date_to_time = strtotime( $end_date );
+    $end_date_to_time   = strtotime( $end_date );
 
     if ( $group_by == 'day' ) {
         $group_by_query       = 'YEAR(post_date), MONTH(post_date), DAY(post_date)';
@@ -284,9 +284,11 @@ function dokan_sales_overview_chart_data( $start_date, $end_date, $group_by ) {
         $group_by_query = 'YEAR(post_date), MONTH(post_date)';
         $chart_interval = 0;
         $min_date             = $start_date_to_time;
+
         while ( ( $min_date   = strtotime( "+1 MONTH", $min_date ) ) <= $end_date_to_time ) {
             $chart_interval ++;
         }
+
         $barwidth             = 60 * 60 * 24 * 7 * 4 * 1000;
     }
 

@@ -6,7 +6,7 @@
  * @package dokan - 2014 1.0
  */
 
-$vendor = dokan()->vendor->get( get_query_var( 'author' ) );
+$vendor      = dokan()->vendor->get( get_query_var( 'author' ) );
 $vendor_info = $vendor->get_shop_info();
 
 get_header( 'shop' );
@@ -68,7 +68,7 @@ get_header( 'shop' );
                     <h2 class="headline"><?php esc_html_e( 'Terms And Conditions', 'dokan-lite' ); ?></h2>
                     <div>
                         <?php
-                        echo esc_html( nl2br( $vendor->get_store_tnc() ) );
+                            echo wp_kses_post( nl2br( $vendor->get_store_tnc() ) );
                         ?>
                     </div>
                 <?php

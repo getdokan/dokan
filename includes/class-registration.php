@@ -146,10 +146,10 @@ class Dokan_Registration {
         }
 
         $dokan_settings = array(
-            'store_name'     => strip_tags( $post_data['shopname'] ),
+            'store_name'     => sanitize_text_field( wp_unslash( $post_data['shopname'] ) ),
             'social'         => array(),
             'payment'        => array(),
-            'phone'          => $post_data['phone'],
+            'phone'          => sanitize_text_field( wp_unslash( $post_data['phone'] ) ),
             'show_email'     => 'no',
             'location'       => '',
             'find_address'   => '',

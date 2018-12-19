@@ -8,13 +8,13 @@ if ( !isset( $post->ID ) && ! isset( $_GET['product_id'] ) ) {
     wp_die( esc_html__( 'Access Denied, No product found', 'dokan-lite' ) );
 }
 
-if( isset( $post->ID ) && $post->ID && $post->post_type == 'product' ) {
-    $post_id = $post->ID;
-    $post_title = $post->post_title;
+if ( isset( $post->ID ) && $post->ID && 'product' == $post->post_type ) {
+    $post_id      = $post->ID;
+    $post_title   = $post->post_title;
     $post_content = $post->post_content;
     $post_excerpt = $post->post_excerpt;
-    $post_status = $post->post_status;
-    $product        = wc_get_product( $post_id );
+    $post_status  = $post->post_status;
+    $product      = wc_get_product( $post_id );
 }
 
 if ( isset( $_GET['product_id'] ) ) {
@@ -44,14 +44,14 @@ $_sale_price_dates_to   = !empty( $_sale_price_dates_to ) ? date_i18n( 'Y-m-d', 
 $show_schedule          = false;
 
 if ( !empty( $_sale_price_dates_from ) && !empty( $_sale_price_dates_to ) ) {
-    $show_schedule          = true;
+    $show_schedule = true;
 }
 
-$_featured              = get_post_meta( $post_id, '_featured', true );
-$terms                  = wp_get_object_terms( $post_id, 'product_type' );
-$product_type           = ( ! empty( $terms ) ) ? sanitize_title( current( $terms )->name ): 'simple';
-$variations_class       = ($product_type == 'simple' ) ? 'dokan-hide' : '';
-$_visibility        = ( version_compare( WC_VERSION, '2.7', '>' ) ) ? $product->get_catalog_visibility() : get_post_meta( $post_id, '_visibility', true );
+$_featured        = get_post_meta( $post_id, '_featured', true );
+$terms            = wp_get_object_terms( $post_id, 'product_type' );
+$product_type     = ( ! empty( $terms ) ) ? sanitize_title( current( $terms )->name ): 'simple';
+$variations_class = ($product_type == 'simple' ) ? 'dokan-hide' : '';
+$_visibility      = ( version_compare( WC_VERSION, '2.7', '>' ) ) ? $product->get_catalog_visibility() : get_post_meta( $post_id, '_visibility', true );
 
 if ( ! $from_shortcode ) {
     get_header();

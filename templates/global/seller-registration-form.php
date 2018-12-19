@@ -8,7 +8,7 @@
  */
 ?>
 
-<div class="show_if_seller"<?php echo esc_attr( $role_style ); ?>>
+<div class="show_if_seller" style="<?php echo esc_attr( $role_style ); ?>">
 
     <div class="split-row form-row-wide">
         <p class="form-row form-group">

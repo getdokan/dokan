@@ -167,11 +167,11 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
             return new WP_Error( 'no_store_found', __( 'No vendor found', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
-        $status = ! empty( $request['status'] ) ? $request['status'] : '';
+        $status   = ! empty( $request['status'] ) ? sanitize_text_field( $request['status'] ) : '';
         $withdraw = new Dokan_Template_Withdraw();
 
-        $limit = $request['per_page'];
-        $offset = ( $request['page'] - 1 ) * $request['per_page'];
+        $limit  = (int) $request['per_page'];
+        $offset = (int) ( $request['page'] - 1 ) * $request['per_page'];
 
         $withdraw_count = dokan_get_withdraw_count();
 
@@ -227,18 +227,20 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
             return new WP_Error( 'no_id', __( 'Invalid ID', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
+        $request_id = (int) $request['id'];
+
         if ( empty( $store_id ) ) {
             return new WP_Error( 'no_store_found', __( 'No vendor found', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
-        $status = ! empty( $request['status'] ) ? $request['status'] : 'cancelled';
+        $status = ! empty( $request['status'] ) ? sanitize_text_field( $request['status'] ) : 'cancelled';
 
         if ( $status != 'cancelled' && ! current_user_can( 'manage_options' ) ) {
             return new WP_Error( 'cancel_request', __( 'Vendor can only cancel withdraw request', 'dokan-lite' ), array( 'status' => 400 ) );
         }
 
         // $sql    = "SELECT * FROM `{$wpdb->prefix}dokan_withdraw` WHERE `id`={$request['id']}";
-        $result = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}dokan_withdraw WHERE id=%d", $request['id'] ) );
+        $result = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}dokan_withdraw WHERE id=%d", $request_id ) );
 
         if ( $result->status != '0' && ! current_user_can( 'manage_options' ) ) {
             return new WP_Error( 'not_cancel_request', __( 'This withdraw is not pending. Only pending request can be cancelled', 'dokan-lite' ), array( 'status' => 400 ) );
@@ -266,13 +268,13 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
 
             // $balance_sql    = "SELECT * FROM `{$wpdb->prefix}dokan_vendor_balance` WHERE `trn_id`={$request['id']} AND `trn_type` = 'dokan_withdraw'";
             $balance_result = $wpdb->get_row(
-                $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}dokan_vendor_balance WHERE trn_id=%d AND trn_type = %s", $request['id'], 'dokan_withdraw' ) );
+                $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}dokan_vendor_balance WHERE trn_id=%d AND trn_type = %s", $request_id, 'dokan_withdraw' ) );
 
             if ( empty( $balance_result ) ) {
                 $wpdb->insert( $wpdb->prefix . 'dokan_vendor_balance',
                     array(
                         'vendor_id'     => $user_id,
-                        'trn_id'        => $request['id'],
+                        'trn_id'        => $request_id,
                         'trn_type'      => 'dokan_withdraw',
                         'perticulars'   => 'Approve withdraw request',
                         'debit'         => 0,
@@ -296,7 +298,7 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
             }
         }
 
-        $withdraw->update_status( $request['id'], $user_id, $status_code );
+        $withdraw->update_status( $request_id, $user_id, $status_code );
         // $response = $wpdb->get_row( $sql );
         $response = $result;
 
@@ -319,7 +321,7 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
     public function delete_withdraw( $request ) {
         global $wpdb;
 
-        $withdraw_id = !empty( $request['id'] ) ? intval( $request['id'] ) : 0;
+        $withdraw_id = !empty( $request['id'] ) ? (int) $request['id'] : 0;
 
         if ( !$withdraw_id ) {
             return new WP_Error( 'no_id', __( 'Invalid ID', 'dokan-lite' ), array( 'status' => 404 ) );
@@ -389,9 +391,9 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
             return new WP_Error( 'no_store_found', __( 'No vendor found', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
-        $amount  = floatval( $request['amount'] );
-        $method  = $request['method'];
-        $notes   = $request['notes'];
+        $amount  = (float) $request['amount'];
+        $method  = sanitize_text_field( $request['method'] );
+        $notes   = sanitize_textarea_field( $request['notes'] );
         $limit   = $this->get_withdraw_limit();
         $balance = dokan_get_seller_balance( $store_id, false );
 
@@ -456,15 +458,15 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
     public function update_withdraw_note( $request ) {
         global $wpdb;
 
-        $withdraw_id = isset( $request['id'] ) ? $request['id'] : 0;
-        $note        = isset( $request['note'] ) ? $request['note'] : '';
+        $withdraw_id = isset( $request['id'] ) ? (int) $request['id'] : 0;
+        $note        = isset( $request['note'] ) ? sanitize_textarea_field( $request['note'] ) : '';
 
         if ( empty( $withdraw_id ) ) {
             return new WP_Error( 'no_withdraw', __( 'No withdraw id found', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
         $table_name = $wpdb->prefix . 'dokan_withdraw';
-        $update     = $wpdb->update( $table_name, array( 'note' => sanitize_text_field( $note ) ), array( 'id' => $withdraw_id ) );
+        $update     = $wpdb->update( $table_name, array( 'note' => $note ), array( 'id' => $withdraw_id ) );
 
         if ( ! $update ) {
             return new WP_Error( 'note_not_udpated', __( 'Something wrong, Note not updated', 'dokan-lite' ), array( 'status' => 404 ) );
@@ -516,12 +518,12 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
             if ( in_array( $status, $allowed_status ) ) {
                 if ( 'delete' == $status ) {
                     foreach ( $value as $withdraw_id ) {
-                        $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}dokan_withdraw WHERE id = %d", $withdraw_id ) );
+                        $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}dokan_withdraw WHERE id = %d", (int) $withdraw_id ) );
                     }
                 } else {
                     foreach ( $value as $withdraw_id ) {
                         $status_code = $this->get_status( $status );
-                        $user = $wpdb->get_row( $wpdb->prepare("SELECT user_id, amount FROM {$wpdb->prefix}dokan_withdraw WHERE id = %d", $withdraw_id  ) );
+                        $user = $wpdb->get_row( $wpdb->prepare("SELECT user_id, amount FROM {$wpdb->prefix}dokan_withdraw WHERE id = %d", (int) $withdraw_id ) );
 
                         if ( $status_code === 1 ) {
                             if ( dokan_get_seller_balance( $user->user_id, false ) < $user->amount ) {
@@ -530,18 +532,18 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
 
                             // $balance_sql    = "SELECT * FROM `{$wpdb->prefix}dokan_vendor_balance` WHERE `trn_id`={$withdraw_id} AND `trn_type` = 'dokan_withdraw'";
                             $balance_result = $wpdb->get_row(
-                                $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}dokan_vendor_balance WHERE trn_id=%d AND trn_type = 'dokan_withdraw'", $withdraw_id )
+                                $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}dokan_vendor_balance WHERE trn_id=%d AND trn_type = 'dokan_withdraw'", (int) $withdraw_id )
                             );
 
                             if ( ! count( $balance_result ) ) {
                                 $wpdb->insert( $wpdb->prefix . 'dokan_vendor_balance',
                                     array(
-                                        'vendor_id'     => $user->user_id,
-                                        'trn_id'        => $withdraw_id,
+                                        'vendor_id'     => (int) $user->user_id,
+                                        'trn_id'        => (int) $withdraw_id,
                                         'trn_type'      => 'dokan_withdraw',
                                         'perticulars'   => 'Approve withdraw request',
                                         'debit'         => 0,
-                                        'credit'        => $user->amount,
+                                        'credit'        => (float) $user->amount,
                                         'status'        => 'approved',
                                         'trn_date'      => current_time( 'mysql' ),
                                         'balance_date'  => current_time( 'mysql' ),
@@ -564,7 +566,7 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
                         $wpdb->query( $wpdb->prepare(
                             "UPDATE {$wpdb->prefix}dokan_withdraw
                             SET status = %d WHERE id = %d",
-                            $status_code, $withdraw_id
+                            (int) $status_code, (int) $withdraw_id
                         ) );
                     }
                 }

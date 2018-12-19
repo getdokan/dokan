@@ -20,7 +20,7 @@ class Dokan_Installer {
         $updater = new Dokan_Upgrade();
         $updater->perform_updates();
 
-        if( class_exists( 'Dokan_Rewrites' )){
+        if ( class_exists( 'Dokan_Rewrites' ) ) {
             Dokan_Rewrites::init()->register_rule();
         }
 
@@ -91,7 +91,7 @@ class Dokan_Installer {
     function product_design() {
         $installed_version = get_option( 'dokan_theme_version' );
 
-        if ( !$installed_version ) {
+        if ( ! $installed_version ) {
             $options = get_option( 'dokan_selling' );
             update_option( 'dokan_selling', $options );
         }
@@ -107,7 +107,7 @@ class Dokan_Installer {
     function user_roles() {
         global $wp_roles;
 
-        if ( class_exists( 'WP_Roles' ) && !isset( $wp_roles ) ) {
+        if ( class_exists( 'WP_Roles' ) && ! isset( $wp_roles ) ) {
             $wp_roles = new WP_Roles();
         }
 
@@ -139,13 +139,13 @@ class Dokan_Installer {
             'manage_product_terms'      => true,
             'delete_product_terms'      => true,
             'assign_product_terms'      => true,
-            'dokandar'                  => true
+            'dokandar'                  => true,
         ) );
 
         $capabilities = array();
         $all_cap      = dokan_get_all_caps();
 
-        foreach( $all_cap as $key=>$cap ) {
+        foreach ( $all_cap as $key => $cap ) {
             $capabilities = array_merge( $capabilities, array_keys( $cap ) );
         }
 
@@ -178,39 +178,42 @@ class Dokan_Installer {
                 'post_title' => __( 'Dashboard', 'dokan-lite' ),
                 'slug'       => 'dashboard',
                 'page_id'    => 'dashboard',
-                'content'    => '[dokan-dashboard]'
+                'content'    => '[dokan-dashboard]',
             ),
             array(
                 'post_title' => __( 'Store List', 'dokan-lite' ),
                 'slug'       => 'store-listing',
                 'page_id'    => 'store_listing',
-                'content'    => '[dokan-stores]'
+                'content'    => '[dokan-stores]',
             ),
             array(
                 'post_title' => __( 'My Orders', 'dokan-lite' ),
                 'slug'       => 'my-orders',
                 'page_id'    => 'my_orders',
-                'content'    => '[dokan-my-orders]'
+                'content'    => '[dokan-my-orders]',
             ),
         );
 
         $dokan_page_settings = array();
 
         if ( $pages ) {
-            foreach ($pages as $page) {
+            foreach ( $pages as $page ) {
                 $page_id = $this->create_page( $page );
 
                 if ( $page_id ) {
-                    $dokan_page_settings[$page['page_id']] = $page_id;
+                    $dokan_page_settings[ $page['page_id'] ] = $page_id;
 
                     if ( isset( $page['child'] ) && count( $page['child'] ) > 0 ) {
-                        foreach ($page['child'] as $child_page) {
+                        foreach ( $page['child'] as $child_page ) {
                             $child_page_id = $this->create_page( $child_page );
 
                             if ( $child_page_id ) {
-                                $dokan_page_settings[$child_page['page_id']] = $child_page_id;
+                                $dokan_page_settings[ $child_page['page_id'] ] = $child_page_id;
 
-                                wp_update_post( array( 'ID' => $child_page_id, 'post_parent' => $page_id ) );
+                                wp_update_post( array(
+                                    'ID'          => $child_page_id,
+                                    'post_parent' => $page_id
+                                ) );
                             }
                         }
                     } // if child
@@ -233,10 +236,10 @@ class Dokan_Installer {
                 'post_content'   => $page['content'],
                 'post_status'    => 'publish',
                 'post_type'      => 'page',
-                'comment_status' => 'closed'
+                'comment_status' => 'closed',
             ) );
 
-            if ( $page_id && !is_wp_error( $page_id ) ) {
+            if ( $page_id && ! is_wp_error( $page_id ) ) {
 
                 if ( isset( $page['template'] ) ) {
                     update_post_meta( $page_id, $meta_key, $page['template'] );
@@ -398,10 +401,11 @@ class Dokan_Installer {
      */
     public static function in_plugin_update_message( $args ) {
         $transient_name = 'dokan_upgrade_notice_' . $args['Version'];
-
         $upgrade_notice = get_transient( $transient_name );
+
         if ( ! $upgrade_notice ) {
             $response = wp_safe_remote_get( 'https://plugins.svn.wordpress.org/dokan-lite/trunk/readme.txt' );
+
             if ( ! is_wp_error( $response ) && ! empty( $response['body'] ) ) {
                 $upgrade_notice = self::parse_update_notice( $response['body'], $args['new_version'] );
                 set_transient( $transient_name, $upgrade_notice, DAY_IN_SECONDS );

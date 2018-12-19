@@ -220,7 +220,7 @@ class Dokan_Admin {
      * @return void
      */
     public function do_updates() {
-        if ( isset( $_GET['dokan_do_update'] ) && $_GET['dokan_do_update'] == 'true' ) {
+        if ( isset( $_GET['dokan_do_update'] ) && 'true' == $_GET['dokan_do_update'] && current_user_can( 'manage_options' ) ) {
             $installer = new Dokan_Installer();
             $installer->do_upgrades();
         }

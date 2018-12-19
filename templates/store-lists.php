@@ -1,5 +1,4 @@
 <?php
-
 global $post;
 
 $pagination_base = str_replace( $post->ID, '%#%', esc_url( get_pagenum_link( $post->ID ) ) );

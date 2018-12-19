@@ -7,13 +7,13 @@
 ?>
 <?php
 
-    $gravatar       = isset( $profile_info['gravatar'] ) ? absint( $profile_info['gravatar'] ) : 0;
-    $banner         = isset( $profile_info['banner'] ) ? absint( $profile_info['banner'] ) : 0;
-    $storename      = isset( $profile_info['store_name'] ) ? esc_attr( $profile_info['store_name'] ) : '';
-    $store_ppp      = isset( $profile_info['store_ppp'] ) ? esc_attr( $profile_info['store_ppp'] ) : '';
-    $phone          = isset( $profile_info['phone'] ) ? esc_attr( $profile_info['phone'] ) : '';
-    $show_email     = isset( $profile_info['show_email'] ) ? esc_attr( $profile_info['show_email'] ) : 'no';
-    $show_more_ptab = isset( $profile_info['show_more_ptab'] ) ? esc_attr( $profile_info['show_more_ptab'] ) : 'yes';
+    $gravatar       = isset( $profile_info['gravatar'] ) ? $profile_info['gravatar'] : 0;
+    $banner         = isset( $profile_info['banner'] ) ? $profile_info['banner'] : 0;
+    $storename      = isset( $profile_info['store_name'] ) ? $profile_info['store_name'] : '';
+    $store_ppp      = isset( $profile_info['store_ppp'] ) ? $profile_info['store_ppp'] : '';
+    $phone          = isset( $profile_info['phone'] ) ? $profile_info['phone'] : '';
+    $show_email     = isset( $profile_info['show_email'] ) ? $profile_info['show_email'] : 'no';
+    $show_more_ptab = isset( $profile_info['show_more_ptab'] ) ? $profile_info['show_more_ptab'] : 'yes';
 
     $address         = isset( $profile_info['address'] ) ? $profile_info['address'] : '';
     $address_street1 = isset( $profile_info['address']['street_1'] ) ? $profile_info['address']['street_1'] : '';
@@ -23,32 +23,32 @@
     $address_country = isset( $profile_info['address']['country'] ) ? $profile_info['address']['country'] : '';
     $address_state   = isset( $profile_info['address']['state'] ) ? $profile_info['address']['state'] : '';
 
-    $map_location   = isset( $profile_info['location'] ) ? esc_attr( $profile_info['location'] ) : '';
-    $map_address    = isset( $profile_info['find_address'] ) ? esc_attr( $profile_info['find_address'] ) : '';
+    $map_location   = isset( $profile_info['location'] ) ? $profile_info['location'] : '';
+    $map_address    = isset( $profile_info['find_address'] ) ? $profile_info['find_address'] : '';
     $dokan_category = isset( $profile_info['dokan_category'] ) ? $profile_info['dokan_category'] : '';
     $enable_tnc     = isset( $profile_info['enable_tnc'] ) ? $profile_info['enable_tnc'] : '';
-    $store_tnc      = isset( $profile_info['store_tnc'] ) ? $profile_info['store_tnc'] : '' ;
+    $store_tnc      = isset( $profile_info['store_tnc'] ) ? $profile_info['store_tnc'] : '';
 
     if ( is_wp_error( $validate ) ) {
         $get_data = wp_unslash( $_POST );
 
-        $storename    = $get_data['dokan_store_name']; // WPCS: CSRF ok, Input var ok.
-        $map_location = $get_data['location'];         // WPCS: CSRF ok, Input var ok.
-        $map_address  = $get_data['find_address'];     // WPCS: CSRF ok, Input var ok.
+        $storename    = sanitize_text_field( $get_data['dokan_store_name'] ); // WPCS: CSRF ok, Input var ok.
+        $map_location = sanitize_text_field( $get_data['location'] );         // WPCS: CSRF ok, Input var ok.
+        $map_address  = sanitize_text_field( $get_data['find_address'] );     // WPCS: CSRF ok, Input var ok.
 
         $posted_address = wc_clean( $get_data['dokan_address'] ); // WPCS: CSRF ok, Input var ok.
 
-        $address_street1 = $posted_address['street_1'];
-        $address_street2 = $posted_address['street_2'];
-        $address_city    = $posted_address['city'];
-        $address_zip     = $posted_address['zip'];
-        $address_country = $posted_address['country'];
-        $address_state   = $posted_address['state'];
+        $address_street1 = sanitize_text_field( $posted_address['street_1'] );
+        $address_street2 = sanitize_text_field( $posted_address['street_2'] );
+        $address_city    = sanitize_text_field( $posted_address['city'] );
+        $address_zip     = sanitize_text_field( $posted_address['zip'] );
+        $address_country = sanitize_text_field( $posted_address['country'] );
+        $address_state   = sanitize_text_field( $posted_address['state'] );
     }
 
     $dokan_appearance         = dokan_get_option( 'store_header_template', 'dokan_appearance', 'default' );
     $show_store_open_close    = dokan_get_option( 'store_open_close', 'dokan_general', 'on' );
-    $dokan_days               = array( 'sunday','monday','tuesday','wednesday','thursday','friday','saturday' );
+    $dokan_days               = array( 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday' );
     $all_times                = isset( $profile_info['dokan_store_time'] ) ? $profile_info['dokan_store_time'] : '';
     $dokan_store_time_enabled = isset( $profile_info['dokan_store_time_enabled'] ) ? $profile_info['dokan_store_time_enabled'] : '';
     $dokan_store_open_notice  = isset( $profile_info['dokan_store_open_notice'] ) ? $profile_info['dokan_store_open_notice'] : '';
@@ -65,7 +65,7 @@
 
                 <div class="image-wrap<?php echo $banner ? '' : ' dokan-hide'; ?>">
                     <?php $banner_url = $banner ? wp_get_attachment_url( $banner ) : ''; ?>
-                    <input type="hidden" class="dokan-file-field" value="<?php echo esc_attr( $banner ); ?>" name="dokan_banner">
+                    <input type="hidden" class="dokan-file-field" value="<?php echo $banner; ?>" name="dokan_banner">
                     <img class="dokan-banner-img" src="<?php echo esc_url( $banner_url ); ?>">
 
                     <a class="close dokan-remove-banner-image">&times;</a>
@@ -83,8 +83,8 @@
                          * @since 2.4.10
                          */
                         $general_settings = get_option( 'dokan_general', [] );
-                        $banner_width = ! empty( $general_settings['store_banner_width'] ) ? $general_settings['store_banner_width'] : 625;
-                        $banner_height = ! empty( $general_settings['store_banner_height'] ) ? $general_settings['store_banner_height'] : 300;
+                        $banner_width     = ! empty( $general_settings['store_banner_width'] ) ? $general_settings['store_banner_width'] : 625;
+                        $banner_height    = ! empty( $general_settings['store_banner_height'] ) ? $general_settings['store_banner_height'] : 300;
 
                         $help_text = sprintf(
                             __('Upload a banner for your store. Banner size is (%sx%s) pixels.', 'dokan-lite' ),
@@ -109,7 +109,7 @@
                     <img class="dokan-gravatar-img" src="<?php echo esc_url( $gravatar_url ); ?>">
                     <a class="dokan-close dokan-remove-gravatar-image">&times;</a>
                 </div>
-                <div class="gravatar-button-area<?php echo $gravatar ? ' dokan-hide' : ''; ?>">
+                <div class="gravatar-button-area<?php echo esc_attr( $gravatar ) ? ' dokan-hide' : ''; ?>">
                     <a href="#" class="dokan-pro-gravatar-drag dokan-btn dokan-btn-default"><i class="fa fa-cloud-upload"></i> <?php esc_html_e( 'Upload Photo', 'dokan-lite' ); ?></a>
                 </div>
             </div>
@@ -207,7 +207,7 @@
                 <div class="dokan-w5 dokan-text-left dokan_tock_check">
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" id="dokan_store_tnc_enable" value="on" <?php echo $enable_tnc == 'on' ? 'checked':'' ; ?> name="dokan_store_tnc_enable" ><?php esc_html_e( 'Show terms and conditions in store page', 'dokan-lite' ); ?>
+                            <input type="checkbox" id="dokan_store_tnc_enable" value="on" <?php echo $enable_tnc == 'on' ? 'checked':'' ; ?> name="dokan_store_tnc_enable"> <?php esc_html_e( 'Show terms and conditions in store page', 'dokan-lite' ); ?>
                         </label>
                     </div>
                 </div>
