@@ -1,6 +1,6 @@
 dokanWebpack([3],{
 
-/***/ 152:
+/***/ 155:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14,4 +14,4 @@ dokan.wpPackages = {
 
 /***/ })
 
-},[152]);
+},[155]);

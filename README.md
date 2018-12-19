@@ -274,6 +274,19 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 ## Changelog ##
 
+v2.9.7 -> Dec 19, 2018
+------------------------
+-**Fix**   Product category and tag creation issue from product popup in vendor dashboard
+-**Fix**   Admin store is not listed in the store-listing page
+-**Fix**   Add dokan_get_payment_details hook in vue withdraw page in admin backend
+-**Fix**   Add vue datepicker component
+-**Fix**   Vendor login registration issue
+-**Fix**   Issue with divi theme
+-**Fix**   Store Terms & Conditions page is broken
+-**Fix**   Remove unwanted css for tinymce text editor vue component
+-**Tweak** Add Singleton trait
+-**Tweak** Current and withdraw balance comparison refactor
+
 v2.9.6 -> Dec 14, 2018
 ------------------------
 -**Fix**  Refactored codebase with better Input Sanitization, Validation, Escape outputs following WPCS
