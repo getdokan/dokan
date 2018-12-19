@@ -358,7 +358,7 @@ class Dokan_Assets {
             ),
             'dokan-vue-admin' => array(
                 'src'       => $asset_url . '/js/vue-admin.js',
-                'deps'      => array( 'jquery', 'dokan-i18n-jed', 'dokan-vue-vendor', 'dokan-vue-bootstrap' ),
+                'deps'      => array( 'jquery', 'jquery-ui-datepicker', 'dokan-i18n-jed', 'dokan-vue-vendor', 'dokan-vue-bootstrap' ),
                 'version'   => filemtime( $asset_path . '/js/vue-admin.js' ),
             ),
             'dokan-vue-frontend' => array(
