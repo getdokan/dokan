@@ -4,7 +4,6 @@ var Dokan_Vendor_Registration = {
 
     init: function() {
         var form = $('form.register');
-        $('.show_if_seller').hide();
 
         // bind events
         $( '.user-role input[type=radio]', form ).on( 'change', this.showSellerForm );
