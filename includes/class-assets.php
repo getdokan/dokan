@@ -52,7 +52,7 @@ class Dokan_Assets {
                     'storePrefix' => dokan_get_option( 'custom_store_url', 'dokan_general', 'store' ),
                     'assetsUrl'   => DOKAN_PLUGIN_ASSEST,
                     'buynowpro'   => dokan_pro_buynow_url()
-                )
+                ),
             ) );
 
             // Load common styles and scripts
@@ -251,9 +251,16 @@ class Dokan_Assets {
      * @return array
      */
     public function get_scripts() {
-        $prefix     = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.min' : '';
-        $asset_url  = DOKAN_PLUGIN_ASSEST;
-        $asset_path = DOKAN_DIR . '/assets/';
+        global $wp_version;
+
+        $prefix         = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.min' : '';
+        $asset_url      = DOKAN_PLUGIN_ASSEST;
+        $asset_path     = DOKAN_DIR . '/assets/';
+        $bootstrap_deps = array( 'dokan-vue-vendor', 'dokan-i18n-jed' );
+
+        if ( version_compare( $wp_version, '5.0', '<' ) ) {
+            $bootstrap_deps[] = 'dokan-wp-packages';
+        }
 
         $scripts = array(
             'dokan-i18n-jed' => array(
@@ -346,12 +353,12 @@ class Dokan_Assets {
             ),
             'dokan-vue-bootstrap' => array(
                 'src'       => $asset_url . '/js/vue-bootstrap.js',
-                'deps'      => array( 'dokan-vue-vendor', 'dokan-i18n-jed' ),
+                'deps'      => $bootstrap_deps,
                 'version'   => filemtime( $asset_path . '/js/vue-bootstrap.js' ),
             ),
             'dokan-vue-admin' => array(
                 'src'       => $asset_url . '/js/vue-admin.js',
-                'deps'      => array( 'jquery', 'dokan-i18n-jed', 'dokan-vue-vendor', 'dokan-vue-bootstrap' ),
+                'deps'      => array( 'jquery', 'jquery-ui-datepicker', 'dokan-i18n-jed', 'dokan-vue-vendor', 'dokan-vue-bootstrap' ),
                 'version'   => filemtime( $asset_path . '/js/vue-admin.js' ),
             ),
             'dokan-vue-frontend' => array(
@@ -359,6 +366,11 @@ class Dokan_Assets {
                 'deps'      => array( 'jquery', 'dokan-i18n-jed', 'dokan-vue-vendor', 'dokan-vue-bootstrap' ),
                 'version'   => filemtime( $asset_path . '/js/vue-frontend.js' ),
             ),
+            'dokan-wp-packages' => array(
+                'src'       => $asset_url . '/js/dokan-wp.js',
+                'deps'      => array( 'jquery' ),
+                'version'   => filemtime( $asset_path . '/js/dokan-wp.js' ),
+            )
         );
 
         return $scripts;

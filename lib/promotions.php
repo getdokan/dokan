@@ -73,14 +73,14 @@ abstract class WeDevs_Promotion {
         ?>
             <div class="notice dokan-upgrade-promotional-notice">
                 <div class="thumbnail">
-                    <img src="<?php echo $notice['thumbnail']; ?>" alt="<?php echo $notice['title']; ?>">
+                    <img src="<?php echo esc_url( $notice['thumbnail'] ); ?>" alt="<?php echo esc_attr( $notice['title'] ); ?>">
                 </div>
                 <div class="content">
-                    <h2><?php echo $notice['title']; ?></h2>
-                    <p><?php echo $notice['content']; ?></p>
-                    <a href="<?php echo $notice['link']; ?>" class="button button-primary promo-btn" target="_blank"><?php echo !empty( $notice['btn_text'] ) ? $notice['btn_text'] : __( 'Learn More &rarr;', 'dokan-lite' ); ?></a>
+                    <h2><?php echo esc_html( $notice['title'] ); ?></h2>
+                    <p><?php echo esc_html( $notice['content'] ); ?></p>
+                    <a href="<?php echo esc_url( $notice['link'] ); ?>" class="button button-primary promo-btn" target="_blank"><?php echo !empty( $notice['btn_text'] ) ? esc_html( $notice['btn_text'] ) : esc_html__( 'Learn More &rarr;', 'dokan-lite' ); ?></a>
                 </div>
-                <span class="prmotion-close-icon dashicons dashicons-no-alt" data-key="<?php echo $notice['key']; ?>" data-promo_key="<?php echo $this->promo_option_key; ?>"></span>
+                <span class="prmotion-close-icon dashicons dashicons-no-alt" data-key="<?php echo esc_attr( $notice['key'] ); ?>" data-promo_key="<?php echo esc_attr( $this->promo_option_key ); ?>"></span>
                 <div class="clear"></div>
             </div>
 
@@ -159,7 +159,8 @@ abstract class WeDevs_Promotion {
                             data: {
                                 dokan_upgrade_promotion_dismissed: true,
                                 key: key,
-                                promo_key: promo_key
+                                promo_key: promo_key,
+                                nonce: '<?php echo esc_attr( wp_create_nonce( 'dokan_admin' ) ); ?>'
                             },
                             complete: function( resp ) {
                                 self.closest('.dokan-upgrade-promotional-notice').fadeOut(200);
@@ -179,14 +180,24 @@ abstract class WeDevs_Promotion {
      * @return void
      */
     public function dismiss_upgrade_promo() {
-        if ( isset( $_POST['dokan_upgrade_promotion_dismissed'] ) && $_POST['dokan_upgrade_promotion_dismissed'] ) {
-            $promo_option_key        = $_POST['promo_key'];
-            $promo_last_display_time = $_POST['promo_key'] . '_displayed_time';
+        $post_data = wp_unslash( $_POST );
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( __( 'You have no permission to do that', 'dokan-lite' ) );
+        }
+
+        if ( ! wp_verify_nonce( $post_data['nonce'], 'dokan_admin' ) ) {
+            wp_send_json_error( __( 'Invalid nonce', 'dokan-lite' ) );
+        }
+
+        if ( isset( $post_data['dokan_upgrade_promotion_dismissed'] ) && $post_data['dokan_upgrade_promotion_dismissed'] ) {
+            $promo_option_key        = $post_data['promo_key'];
+            $promo_last_display_time = $post_data['promo_key'] . '_displayed_time';
 
             $already_displayed_promo = get_option( $promo_option_key, array() );
 
-            if ( ! isset( $already_displayed_promo[ $_POST['key'] ] ) ) {
-                $already_displayed_promo[ $_POST['key'] ] = array(
+            if ( ! isset( $already_displayed_promo[ $post_data['key'] ] ) ) {
+                $already_displayed_promo[ $post_data['key'] ] = array(
                     'display'        => 0,
                     'last_displayed' => current_time( 'mysql' )
                 );

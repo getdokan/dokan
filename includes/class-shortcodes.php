@@ -213,7 +213,7 @@ class Dokan_Shortcodes {
          * @param array
          */
         $attr   = shortcode_atts( apply_filters( 'dokan_store_listing_per_page', $defaults ), $atts );
-        $paged  = is_front_page() ? max( 1, get_query_var( 'page' ) ) : max( 1, get_query_var( 'paged' ) );
+        $paged  = (int) is_front_page() ? max( 1, get_query_var( 'page' ) ) : max( 1, get_query_var( 'paged' ) );
         $limit  = $attr['per_page'];
         $offset = ( $paged - 1 ) * $limit;
 
@@ -222,10 +222,12 @@ class Dokan_Shortcodes {
             'offset' => $offset
         );
 
+        $_get_data = wp_unslash( $_GET );
+
         // if search is enabled, perform a search
         if ( 'yes' == $attr['search'] ) {
 
-            $search_term = isset( $_GET['dokan_seller_search'] ) ? sanitize_text_field( $_GET['dokan_seller_search'] ) : '';
+            $search_term = isset( $_get_data['dokan_seller_search'] ) ? sanitize_text_field( $_get_data['dokan_seller_search'] ) : '';
 
             if ( '' != $search_term ) {
 

@@ -34,7 +34,6 @@
                 convert_urls: false,
                 theme: 'modern',
                 skin: 'lightgray',
-                content_css: `${dokan.cdn}/css/customizer.css`,
                 fontsize_formats: '10px 11px 13px 14px 16px 18px 22px 25px 30px 36px 40px 45px 50px 60px 65px 70px 75px 80px',
                 font_formats : 'Arial=arial,helvetica,sans-serif;' +
                     'Comic Sans MS=comic sans ms,sans-serif;' +

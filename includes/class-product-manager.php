@@ -43,6 +43,7 @@ class Dokan_Product_Manager {
 
         if ( version_compare( WC_VERSION, '2.7', '>' ) ) {
             $product_visibility_term_ids = wc_get_product_visibility_term_ids();
+
             $args['tax_query'][] = array(
                 'taxonomy' => 'product_visibility',
                 'field'    => 'term_taxonomy_id',
@@ -112,7 +113,7 @@ class Dokan_Product_Manager {
      */
     public function best_selling( $args = array() ) {
 
-        $args['meta_key']  = 'total_sales';
+        $args['meta_key'] = 'total_sales';
         $args['orderby']  = 'meta_value_num';
 
         if ( version_compare( WC_VERSION, '2.7', '>' ) ) {
