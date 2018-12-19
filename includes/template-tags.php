@@ -522,7 +522,7 @@ endif;
 function dokan_seller_reg_form_fields() {
     $postdata = wc_clean( $_POST ); // WPCS: CSRF ok, input var ok.
     $role = isset( $postdata['role'] ) ? $postdata['role'] : 'customer';
-    $role_style = ( $role == 'customer' ) ? ' style="display:none"' : '';
+    $role_style = ( $role == 'customer' ) ? 'display:none' : '';
 
     dokan_get_template_part( 'global/seller-registration-form', '', array(
         'postdata' => $postdata,
