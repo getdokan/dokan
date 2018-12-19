@@ -258,7 +258,7 @@ class Dokan_Assets {
         $asset_path     = DOKAN_DIR . '/assets/';
         $bootstrap_deps = array( 'dokan-vue-vendor', 'dokan-i18n-jed' );
 
-        if ( version_compare( $wp_version, '5.0' ) ) {
+        if ( version_compare( $wp_version, '5.0', '<' ) ) {
             $bootstrap_deps[] = 'dokan-wp-packages';
         }
 
