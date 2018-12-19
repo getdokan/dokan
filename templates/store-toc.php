@@ -68,7 +68,7 @@ get_header( 'shop' );
                     <h2 class="headline"><?php esc_html_e( 'Terms And Conditions', 'dokan-lite' ); ?></h2>
                     <div>
                         <?php
-                        echo esc_html( nl2br( $vendor->get_store_tnc() ) );
+                            echo wp_kses_post( nl2br( $vendor->get_store_tnc() ) );
                         ?>
                     </div>
                 <?php
