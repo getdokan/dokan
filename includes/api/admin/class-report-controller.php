@@ -49,11 +49,16 @@ class Dokan_REST_Admin_Report_Controller extends Dokan_REST_Admin_Controller {
     public function get_summary( $request ) {
         require_once DOKAN_INC_DIR . '/admin-functions.php';
 
+        $params = $request->get_params();
+
+        $from = isset( $params['from'] ) ? sanitize_text_field( $params['from'] ) : null;
+        $to   = isset( $params['to'] ) ? sanitize_text_field( $params['to'] ) : null;
+
         $sales = dokan_get_sales_count();
         $data = array(
-            'products'  => dokan_get_product_count(),
+            'products'  => dokan_get_product_count( $from, $to ),
             'withdraw'  => dokan_get_withdraw_count(),
-            'vendors'   => dokan_get_seller_count(),
+            'vendors'   => dokan_get_seller_count( $from, $to ),
             'orders'    => $sales['orders'],
             'earning'   => $sales['earning']
         );
