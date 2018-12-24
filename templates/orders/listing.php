@@ -109,15 +109,15 @@ if ( $user_orders ) {
                             if ( '0000-00-00 00:00:00' == dokan_get_date_created( $the_order ) ) {
                                 $t_time = $h_time = __( 'Unpublished', 'dokan-lite' );
                             } else {
-                                $t_time = get_the_time( __( 'Y/m/d g:i:s A', 'dokan-lite' ), dokan_get_prop( $the_order, 'id' ) );
-
-                                $gmt_time = strtotime( dokan_get_date_created( $the_order ) . ' UTC' );
+                                $t_time    = get_the_time( 'Y/m/d g:i:s A', dokan_get_prop( $the_order, 'id' ) );
+                                $gmt_time  = strtotime( dokan_get_date_created( $the_order ) . ' UTC' );
                                 $time_diff = current_time( 'timestamp', 1 ) - $gmt_time;
 
-                                if ( $time_diff > 0 && $time_diff < 24 * 60 * 60 )
+                                if ( $time_diff > 0 && $time_diff < 24 * 60 * 60 ) {
                                     $h_time = sprintf( __( '%s ago', 'dokan-lite' ), human_time_diff( $gmt_time, current_time( 'timestamp', 1 ) ) );
-                                else
-                                    $h_time = get_the_time( __( 'Y/m/d', 'dokan-lite' ), dokan_get_prop( $the_order, 'id' ) );
+                                } else {
+                                    $h_time = get_the_time( 'Y/m/d', dokan_get_prop( $the_order, 'id' ) );
+                                }
                             }
 
                             echo '<abbr title="' . esc_attr( dokan_date_time_format( $t_time ) ) . '">' . esc_html( apply_filters( 'post_date_column_time', dokan_date_time_format( $h_time, true ) , dokan_get_prop( $the_order, 'id' ) ) ) . '</abbr>';
