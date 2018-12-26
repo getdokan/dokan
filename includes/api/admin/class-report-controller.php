@@ -54,13 +54,14 @@ class Dokan_REST_Admin_Report_Controller extends Dokan_REST_Admin_Controller {
         $from = isset( $params['from'] ) ? sanitize_text_field( $params['from'] ) : null;
         $to   = isset( $params['to'] ) ? sanitize_text_field( $params['to'] ) : null;
 
-        $sales = dokan_get_sales_count();
+        $sales = dokan_get_sales_count( $from, $to );
         $data = array(
-            'products'  => dokan_get_product_count( $from, $to ),
-            'withdraw'  => dokan_get_withdraw_count(),
-            'vendors'   => dokan_get_seller_count( $from, $to ),
-            'orders'    => $sales['orders'],
-            'earning'   => $sales['earning']
+            'products' => dokan_get_product_count( $from, $to ),
+            'withdraw' => dokan_get_withdraw_count(),
+            'vendors'  => dokan_get_seller_count( $from, $to ),
+            'sales'    => $sales['sales'],
+            'orders'   => $sales['orders'],
+            'earning'  => $sales['earning']
         );
 
         return rest_ensure_response( $data );
