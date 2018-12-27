@@ -1528,7 +1528,7 @@ function dokan_get_seller_count( $from = null, $to = null ) {
  *
  * @return array
  */
-function dokan_get_product_count( $from = null, $to = null ) {
+function dokan_get_product_count( $from = null, $to = null, $seller_id = null ) {
 
     $this_month_posts = dokan()->product->all(
         array(
@@ -1538,6 +1538,7 @@ function dokan_get_product_count( $from = null, $to = null ) {
                     'month' => date( 'm' ),
                 ),
             ),
+            'author' => $seller_id ? $seller_id : '',
             'fields' => 'ids'
         )
     );
@@ -1550,6 +1551,7 @@ function dokan_get_product_count( $from = null, $to = null ) {
                     'month' => date( 'm', strtotime( 'last month' ) ),
                 ),
             ),
+            'author' => $seller_id ? $seller_id : '',
             'fields' => 'ids'
         )
     );
@@ -1573,6 +1575,7 @@ function dokan_get_product_count( $from = null, $to = null ) {
                         )
                     )
                 ),
+                'author' => $seller_id ? $seller_id : '',
                 'fields' => 'ids'
             )
         );
@@ -1593,6 +1596,7 @@ function dokan_get_product_count( $from = null, $to = null ) {
                         )
                     )
                 ),
+                'author' => $seller_id ? $seller_id : '',
                 'fields' => 'ids'
             )
         );
@@ -1682,9 +1686,8 @@ function dokan_prepare_date_query( $from, $to ) {
  * @global WPDB $wpdb
  * @return array
  */
-function dokan_get_sales_count( $from = null, $to = null ) {
-
-    $this_month_report_data = dokan_admin_report_data();
+function dokan_get_sales_count( $from = null, $to = null, $seller_id = 0 ) {
+    $this_month_report_data = dokan_admin_report_data( 'day', '', '', '', $seller_id );
 
     $this_month_order_total = $this_month_earning_total = $this_month_total_orders = 0;
 
@@ -1696,7 +1699,7 @@ function dokan_get_sales_count( $from = null, $to = null ) {
         }
     }
 
-    $last_month_report_data = dokan_admin_report_data( 'day', '', date( 'Y-m-d', strtotime( 'first day of previous month' ) ), date( 'Y-m-d', strtotime( 'last day of previous month' ) ) );
+    $last_month_report_data = dokan_admin_report_data( 'day', '', date( 'Y-m-d', strtotime( 'first day of previous month' ) ), date( 'Y-m-d', strtotime( 'last day of previous month' ) ), $seller_id );
     $last_month_order_total = $last_month_earning_total = $last_month_total_orders = 0;
 
     if ( $last_month_report_data ) {
@@ -1709,8 +1712,8 @@ function dokan_get_sales_count( $from = null, $to = null ) {
 
     if ( $from && $to ) {
         $date             = dokan_prepare_date_query( $from, $to );
-        $this_period_data = dokan_admin_report_data( 'day', $date['from_year'], $date['from_full_date'], $date['to_full_date'] );
-        $last_period_data = dokan_admin_report_data( 'day', $date['last_from_year'], $date['last_from_full_date'], $date['last_to_full_date'] );
+        $this_period_data = dokan_admin_report_data( 'day', $date['from_year'], $date['from_full_date'], $date['to_full_date'], $seller_id );
+        $last_period_data = dokan_admin_report_data( 'day', $date['last_from_year'], $date['last_from_full_date'], $date['last_to_full_date'], $seller_id );
 
         $this_period_order_total = $this_period_earning_total = $this_period_total_orders = 0;
         $last_period_order_total = $last_period_earning_total = $last_period_total_orders = 0;

@@ -339,7 +339,7 @@ function dokan_site_total_earning() {
  *
  * @return array
  */
-function dokan_admin_report_data( $group_by = 'day', $year = '', $start = '', $end = '' ) {
+function dokan_admin_report_data( $group_by = 'day', $year = '', $start = '', $end = '', $seller_id = '' ) {
     global $wpdb;
 
     $_post_data   = wp_unslash( $_POST ); // WPCS: CSRF ok.
@@ -374,8 +374,9 @@ function dokan_admin_report_data( $group_by = 'day', $year = '', $start = '', $e
         $date_where     = " AND DATE(p.post_date) >= '$start_date' AND DATE(p.post_date) <= '$end_date'";
     }
 
-    $left_join  = apply_filters( 'dokan_report_left_join', $date_where );
-    $date_where = apply_filters( 'dokan_report_where', $date_where );
+    $left_join    = apply_filters( 'dokan_report_left_join', $date_where );
+    $date_where   = apply_filters( 'dokan_report_where', $date_where );
+    $seller_where = $seller_id ? "seller_id = {$seller_id}" : "seller_id != " . 0;
 
     $sql = "SELECT
                 SUM((do.order_total - do.net_amount)) as earning,
@@ -386,7 +387,7 @@ function dokan_admin_report_data( $group_by = 'day', $year = '', $start = '', $e
             LEFT JOIN $wpdb->posts p ON do.order_id = p.ID
             $left_join
             WHERE
-                seller_id != 0 AND
+                $seller_where AND
                 p.post_status != 'trash' AND
                 do.order_status IN ('wc-on-hold', 'wc-completed', 'wc-processing')
                 $date_where
