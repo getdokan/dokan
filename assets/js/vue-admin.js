@@ -2022,6 +2022,22 @@ let Loading = dokan_get_lib('Loading');
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 let TextEditor = dokan_get_lib('TextEditor');
@@ -5040,6 +5056,95 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("td", [
+            _c("p", {
+              staticClass: "description",
+              domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+            })
+          ])
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    "radio" == _vm.fieldData.type
+      ? _c("tr", { class: _vm.id }, [
+          _c("th", { attrs: { scope: "row" } }, [
+            _c(
+              "label",
+              {
+                attrs: { for: _vm.sectionId + "[" + _vm.fieldData.name + "]" }
+              },
+              [_vm._v(_vm._s(_vm.fieldData.label))]
+            )
+          ]),
+          _vm._v(" "),
+          _c("td", [
+            _c(
+              "fieldset",
+              [
+                _vm._l(_vm.fieldData.options, function(optionVal, optionKey) {
+                  return [
+                    _c(
+                      "label",
+                      {
+                        attrs: {
+                          for:
+                            _vm.sectionId +
+                            "[" +
+                            _vm.fieldData.name +
+                            "][" +
+                            optionKey +
+                            "]"
+                        }
+                      },
+                      [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.fieldValue[_vm.fieldData.name],
+                              expression: "fieldValue[fieldData.name]"
+                            }
+                          ],
+                          staticClass: "radio",
+                          attrs: {
+                            type: "radio",
+                            id:
+                              _vm.sectionId +
+                              "[" +
+                              _vm.fieldData.name +
+                              "][" +
+                              optionKey +
+                              "]",
+                            name: optionKey
+                          },
+                          domProps: {
+                            value: optionKey,
+                            checked: _vm._q(
+                              _vm.fieldValue[_vm.fieldData.name],
+                              optionKey
+                            )
+                          },
+                          on: {
+                            change: function($event) {
+                              _vm.$set(
+                                _vm.fieldValue,
+                                _vm.fieldData.name,
+                                optionKey
+                              )
+                            }
+                          }
+                        }),
+                        _vm._v(
+                          " " + _vm._s(optionVal) + "\n                    "
+                        )
+                      ]
+                    )
+                  ]
+                })
+              ],
+              2
+            ),
+            _vm._v(" "),
             _c("p", {
               staticClass: "description",
               domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
