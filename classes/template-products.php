@@ -214,8 +214,8 @@ class Dokan_Template_Products {
 
         if ( isset( $postdata['add_product'] ) ) {
             $post_title     = sanitize_text_field( $postdata['post_title'] );
-            $post_content   = sanitize_text_field( $postdata['post_content'] );
-            $post_excerpt   = sanitize_text_field( $postdata['post_excerpt'] );
+            $post_content   = wp_kses_post( $postdata['post_content'] );
+            $post_excerpt   = wp_kses_post( $postdata['post_excerpt'] );
             $featured_image = absint( sanitize_text_field( $postdata['feat_image_id'] ) );
 
             if ( empty( $post_title ) ) {
@@ -401,8 +401,8 @@ class Dokan_Template_Products {
             $product_info = apply_filters( 'dokan_update_product_post_data', array(
                 'ID'             => $post_id,
                 'post_title'     => $post_title,
-                'post_content'   => sanitize_textarea_field( $postdata['post_content'] ),
-                'post_excerpt'   => sanitize_textarea_field( $postdata['post_excerpt'] ),
+                'post_content'   => wp_kses_post( $postdata['post_content'] ),
+                'post_excerpt'   => wp_kses_post( $postdata['post_excerpt'] ),
                 'post_status'    => isset( $postdata['post_status'] ) ? sanitize_text_field( $postdata['post_status'] ) : 'pending',
                 'comment_status' => isset( $postdata['_enable_reviews'] ) ? 'open' : 'closed',
             ) );
