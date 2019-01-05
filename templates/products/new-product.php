@@ -272,7 +272,7 @@
 
                             <div class="dokan-form-group">
                                 <label for="post_content" class="control-label"><?php esc_html_e( 'Description', 'dokan-lite' ) ?> <i class="fa fa-question-circle tips" data-title="<?php esc_attr_e( 'Add your product description', 'dokan-lite' ) ?>" aria-hidden="true"></i></label>
-                                <?php wp_editor( dokan_posted_textarea( 'post_content' ), 'post_content', array('editor_height' => 50, 'quicktags' => false, 'media_buttons' => false, 'teeny' => true, 'editor_class' => 'post_content') ); ?>
+                                <?php wp_editor( htmlspecialchars_decode( $post_data['post_content'], ENT_QUOTES ), 'post_content', array('editor_height' => 50, 'quicktags' => false, 'media_buttons' => false, 'teeny' => true, 'editor_class' => 'post_content') ); ?>
                             </div>
 
                             <?php do_action( 'dokan_new_product_form' ); ?>

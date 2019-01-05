@@ -214,7 +214,7 @@ class Dokan_Template_Products {
 
         if ( isset( $postdata['add_product'] ) ) {
             $post_title     = sanitize_text_field( $postdata['post_title'] );
-            $post_content   = sanitize_text_field( $postdata['post_content'] );
+            $post_content   = wp_kses_post( $postdata['post_content'] );
             $post_excerpt   = sanitize_text_field( $postdata['post_excerpt'] );
             $featured_image = absint( sanitize_text_field( $postdata['feat_image_id'] ) );
 
