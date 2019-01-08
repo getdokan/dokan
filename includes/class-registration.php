@@ -55,6 +55,11 @@ class Dokan_Registration {
      * @return \WP_Error
      */
     function validate_registration( $error ) {
+
+        if ( is_checkout() ) {
+            return $error;
+        }
+
         $post_data = wp_unslash( $_POST );
 
         $nonce_value = isset( $post_data['_wpnonce'] ) ? $post_data['_wpnonce'] : '';
@@ -100,13 +105,6 @@ class Dokan_Registration {
     function set_new_vendor_names( $data ) {
         $post_data = wp_unslash( $_POST );
 
-        $nonce_value = isset( $post_data['_wpnonce'] ) ? $post_data['_wpnonce'] : '';
-        $nonce_value = isset( $post_data['woocommerce-register-nonce'] ) ? $post_data['woocommerce-register-nonce'] : $nonce_value;
-
-        if ( ! wp_verify_nonce( $nonce_value, 'woocommerce-register' ) ) {
-            return new WP_Error( 'nonce_verification_failed', __( 'Nonce verification failed', 'dokan-lite' ) );
-        }
-
         $allowed_roles = array( 'customer', 'seller' );
         $role          = ( isset( $post_data['role'] ) && in_array( $post_data['role'], $allowed_roles ) ) ? $post_data['role'] : 'customer';
 
@@ -134,14 +132,7 @@ class Dokan_Registration {
     function save_vendor_info( $user_id, $data ) {
         $post_data = wp_unslash( $_POST );
 
-        $nonce_value = isset( $post_data['_wpnonce'] ) ? $post_data['_wpnonce'] : '';
-        $nonce_value = isset( $post_data['woocommerce-register-nonce'] ) ? $post_data['woocommerce-register-nonce'] : $nonce_value;
-
-        if ( ! wp_verify_nonce( $nonce_value, 'woocommerce-register' ) ) {
-            return new WP_Error( 'nonce_verification_failed', __( 'Nonce verification failed', 'dokan-lite' ) );
-        }
-
-        if ( $data['role'] != 'seller' ) {
+        if ( ! isset( $data['role'] ) || $data['role'] != 'seller' ) {
             return;
         }
 
