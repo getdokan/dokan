@@ -3148,3 +3148,22 @@ function dokan_get_variable_product_earning( $product_id, $seller_id, $formated 
 
     return $earning;
 }
+
+/**
+ * Get page permalink of dokan pages by page id
+ *
+ * @since DOKAN_SINCE
+ *
+ * @param string $page_id
+ *
+ * @return string
+ */
+function dokan_get_permalink( $page_id ) {
+    if ( ! $page_id ) {
+        return false;
+    }
+
+    $pages = get_option( 'dokan_pages' );
+
+    return isset( $pages[$page_id] ) ? get_permalink( $pages[$page_id] ) : false;
+}
