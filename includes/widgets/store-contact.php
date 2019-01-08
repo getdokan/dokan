@@ -31,7 +31,14 @@ class Dokan_Store_Contact_Form extends WP_Widget {
 
         if ( dokan_is_store_page() || is_product() ) {
             extract( $args, EXTR_SKIP );
-            $title      = apply_filters( 'widget_title', $instance['title'] );
+
+            $defaults = array(
+                'title' => __( 'Contact Vendor', 'dokan-lite' ),
+            );
+
+            $instance = wp_parse_args( $instance, $defaults );
+
+            $title = apply_filters( 'widget_title', $instance['title'] );
 
             if ( is_product() ) {
                 global $post;

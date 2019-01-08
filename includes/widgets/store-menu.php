@@ -34,6 +34,12 @@ class Dokan_Store_Category_Menu extends WP_Widget {
 
         echo $before_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
 
+        $defaults = array(
+            'title' => __( 'Store Category', 'dokan-lite' ),
+        );
+
+        $instance = wp_parse_args( $instance, $defaults );
+
         $title      = apply_filters( 'widget_title', $instance['title'] );
         $seller_id  = (int) get_query_var( 'author' );
 

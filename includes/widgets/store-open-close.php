@@ -30,6 +30,13 @@ class Dokan_Store_Open_Close extends WP_Widget {
 
         if ( dokan_is_store_page() ) {
             extract( $args, EXTR_SKIP );
+
+            $defaults = array(
+                'title' => __( 'Store Time', 'dokan-lite' ),
+            );
+
+            $instance = wp_parse_args( $instance, $defaults );
+
             $title      = apply_filters( 'widget_title', $instance['title'] );
             $seller_id  = (int) get_query_var( 'author' );
 
