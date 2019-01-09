@@ -184,7 +184,11 @@ class Dokan_Shortcodes {
             return;
         }
 
-        return dokan_get_template_part( 'my-orders' );
+        ob_start();
+
+        dokan_get_template_part( 'my-orders' );
+
+        return ob_get_clean();
     }
 
      /**
