@@ -23,13 +23,15 @@ class DokanCategoryWalker extends DokanTaxonomyWalker {
         $commission_val = dokan_get_seller_percentage( dokan_get_current_user_id(), $this->post_id, $category->term_id );
         $commission_type = dokan_get_commission_type( dokan_get_current_user_id(), $this->post_id, $category->term_id );
 
+        $pad      = str_repeat( '&nbsp;', $depth * 3 );
         $cat_name = apply_filters( 'list_cats', $category->name, $category );
+
         $output .= "\t<option class=\"level-$depth\" value=\"" . $category->term_id . "\"";
         $output .= ' data-commission="' . $commission_val . '" data-commission_type="' . $commission_type . '"';
         if ( $category->term_id == $args['selected'] )
             $output .= ' selected="selected"';
         $output .= '>';
-        $output .= $cat_name;
+        $output .= $pad . $cat_name;
         $output .= "</option>\n";
     }
 
