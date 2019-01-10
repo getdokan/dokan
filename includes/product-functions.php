@@ -55,7 +55,7 @@ function dokan_save_product( $args ) {
     $post_arr = array(
         'post_type'    => 'product',
         'post_status'  => $post_status,
-        'post_title'   => sanitize_title( $data['post_title'] ),
+        'post_title'   => sanitize_text_field( $data['post_title'] ),
         'post_content' => sanitize_textarea_field( $data['post_content'] ),
         'post_excerpt' => sanitize_textarea_field( $data['post_excerpt'] ),
     );
