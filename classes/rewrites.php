@@ -172,6 +172,10 @@ class Dokan_Rewrites {
         if ( ! empty( $store_name ) ) {
             $store_user = get_user_by( 'slug', $store_name );
 
+            if ( ! $store_user ) {
+                return get_404_template();
+            }
+
             // Bell out for Vendor Stuff extensions
             if ( ! is_super_admin( $store_user->ID ) && user_can( $store_user->ID, 'vendor_staff' ) ) {
                 return get_404_template();
@@ -254,8 +258,13 @@ class Dokan_Rewrites {
         $author = get_query_var( $this->custom_store_url );
 
         if ( ! is_admin() && $query->is_main_query() && ! empty( $author ) ) {
-            $seller_info  = get_user_by( 'slug', $author );
-            $store_info   = dokan_get_store_info( $seller_info->data->ID );
+            $seller_info = get_user_by( 'slug', $author );
+
+            if ( ! $seller_info ) {
+                return get_404_template();
+            }
+
+            $store_info    = dokan_get_store_info( $seller_info->data->ID );
             $post_per_page = isset( $store_info['store_ppp'] ) && ! empty( $store_info['store_ppp'] ) ? $store_info['store_ppp'] : 12;
             set_query_var( 'posts_per_page', $post_per_page );
             $query->set( 'post_type', 'product' );

@@ -127,6 +127,11 @@ class Dokan_Core {
         if ( dokan_is_store_page() ) {
             $site_title = get_bloginfo( 'name' );
             $store_user = get_userdata( get_query_var( 'author' ) );
+
+            if ( ! $store_user ) {
+                return $title;
+            }
+
             $store_info = dokan_get_store_info( $store_user->ID );
             $store_name = esc_html( $store_info['store_name'] );
             $title      = "$store_name $sep $site_title";
