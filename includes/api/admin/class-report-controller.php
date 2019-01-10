@@ -49,13 +49,21 @@ class Dokan_REST_Admin_Report_Controller extends Dokan_REST_Admin_Controller {
     public function get_summary( $request ) {
         require_once DOKAN_INC_DIR . '/admin-functions.php';
 
-        $sales = dokan_get_sales_count();
+        $params = $request->get_params();
+
+        $from      = isset( $params['from'] ) ? sanitize_text_field( $params['from'] ) : null;
+        $to        = isset( $params['to'] ) ? sanitize_text_field( $params['to'] ) : null;
+        $seller_id = isset( $params['seller_id'] ) ? (int) $params['seller_id'] : 0;
+
+        $sales = dokan_get_sales_count( $from, $to, $seller_id );
+
         $data = array(
-            'products'  => dokan_get_product_count(),
-            'withdraw'  => dokan_get_withdraw_count(),
-            'vendors'   => dokan_get_seller_count(),
-            'orders'    => $sales['orders'],
-            'earning'   => $sales['earning']
+            'products' => dokan_get_product_count( $from, $to, $seller_id ),
+            'withdraw' => dokan_get_withdraw_count(),
+            'vendors'  => dokan_get_seller_count( $from, $to ),
+            'sales'    => $sales['sales'],
+            'orders'   => $sales['orders'],
+            'earning'  => $sales['earning']
         );
 
         return rest_ensure_response( $data );
@@ -71,10 +79,18 @@ class Dokan_REST_Admin_Report_Controller extends Dokan_REST_Admin_Controller {
     public function get_overview( $request ) {
         require_once DOKAN_INC_DIR . '/admin-functions.php';
 
-        $group_by   = 'day';
-        $start_date = new DateTime( 'first day of this month' );
-        $end_date   = new DateTime();
-        $data       = dokan_admin_report_data( $group_by, '', $start_date->format( 'Y-m-d' ), $end_date->format( 'Y-m-d' ) );
+        $params = $request->get_params();
+
+        $from      = isset( $params['from'] ) ? sanitize_text_field( $params['from'] ) : 'first day of this month';
+        $to        = isset( $params['to'] ) ? sanitize_text_field( $params['to'] ) : '';
+        $seller_id = isset( $params['seller_id'] ) ? (int) $params['seller_id'] : '';
+
+        $start_date    = new DateTime( $from );
+        $end_date      = new DateTime( $to );
+
+        $date_modifier = $start_date->diff( $end_date )->m >= 11 ? '+1 month' : '+1 day';
+        $group_by      = $date_modifier === '+1 month' ? 'month' : 'day';
+        $data          = dokan_admin_report_data( $group_by, '', $start_date->format( 'Y-m-d' ), $end_date->format( 'Y-m-d' ), $seller_id );
 
         $labels          = array();
         $order_counts    = array();
@@ -82,7 +98,7 @@ class Dokan_REST_Admin_Report_Controller extends Dokan_REST_Admin_Controller {
         $order_commision = array();
 
         // initialize data
-        for ( $i = $start_date; $i <= $end_date; $i->modify( '+1 day' ) ){
+        for ( $i = $start_date; $i <= $end_date; $i->modify( $date_modifier ) ){
             $date                     = $i->format( 'Y-m-d' );
             $labels[ $date ]          = $date;
             $order_counts[ $date ]    = 0;
@@ -92,7 +108,14 @@ class Dokan_REST_Admin_Report_Controller extends Dokan_REST_Admin_Controller {
 
         // fillup real datea
         foreach ( $data as $row ) {
-            $date = date( 'Y-m-d', strtotime( $row->order_date ) );
+
+            if ( 'month' == $group_by ) {
+                $date = new DateTime( $row->order_date );
+                $date->modify( 'first day of this month' );
+                $date = $date->format( 'Y-m-d' );
+            } else {
+                $date = date( 'Y-m-d', strtotime( $row->order_date ) );
+            }
 
             $order_counts[ $date ]    = (int) $row->total_orders;
             $order_amounts[ $date ]   = $row->order_total;

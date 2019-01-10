@@ -11,10 +11,10 @@
                                 <div class="dashicons dashicons-chart-bar"></div>
                                 <a href="#">
                                     <strong>
-                                        <currency :amount="overview.orders.this_month"></currency>
+                                        <currency :amount="overview.sales.this_month"></currency>
                                     </strong>
                                     <div class="details">
-                                        {{ __( 'net sales this month', 'dokan-lite' ) }} <span :class="overview.orders.class">{{ overview.orders.parcent }}</span>
+                                        {{ __( 'net sales this month', 'dokan-lite' ) }} <span :class="overview.sales.class">{{ overview.sales.parcent }}</span>
                                     </div>
                                 </a>
                             </li>
