@@ -9,25 +9,25 @@
                         <ul>
                             <li class="sale">
                                 <div class="dashicons dashicons-chart-bar"></div>
-                                <router-link :to="{name: 'Reports'}">
+                                <a href="#">
                                     <strong>
                                         <currency :amount="overview.sales.this_month"></currency>
                                     </strong>
                                     <div class="details">
                                         {{ __( 'net sales this month', 'dokan-lite' ) }} <span :class="overview.sales.class">{{ overview.sales.parcent }}</span>
                                     </div>
-                                </router-link>
+                                </a>
                             </li>
                             <li class="commission">
                                 <div class="dashicons dashicons-chart-pie"></div>
-                                <router-link :to="{name: 'Reports'}">
+                                <a href="#">
                                     <strong>
                                         <currency :amount="overview.earning.this_month"></currency>
                                     </strong>
                                     <div class="details">
                                         {{ __( 'commission earned', 'dokan-lite' ) }} <span :class="overview.earning.class">{{ overview.earning.parcent }}</span>
                                     </div>
-                                </router-link>
+                                </a>
                             </li>
                             <li class="vendor">
                                 <div class="dashicons dashicons-id"></div>
