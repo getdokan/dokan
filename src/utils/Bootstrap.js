@@ -38,7 +38,7 @@ import Datepicker from "admin/components/Datepicker.vue"
 import "vue-multiselect/dist/vue-multiselect.min.css"
 
 Vue.use(Notifications)
-Vue.component('multiselect', Multiselect)
+// Vue.component('multiselect', Multiselect)
 
 Vue.mixin( Mixin );
 
@@ -88,6 +88,7 @@ window.dokan.libs['LazyInput']   = LazyInput;
 window.dokan.libs['Progressbar'] = Progressbar;
 window.dokan.libs['Search']      = Search;
 window.dokan.libs['Datepicker']  = Datepicker;
+window.dokan.libs['Multiselect'] = Multiselect;
 
 window.dokan.libs['ContentLoading']  = {
   VclCode,

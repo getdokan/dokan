@@ -2561,9 +2561,7 @@ var render = function() {
                             "strong",
                             [
                               _c("currency", {
-                                attrs: {
-                                  amount: _vm.overview.orders.this_month
-                                }
+                                attrs: { amount: _vm.overview.sales.this_month }
                               })
                             ],
                             1
@@ -2577,8 +2575,8 @@ var render = function() {
                                 ) +
                                 " "
                             ),
-                            _c("span", { class: _vm.overview.orders.class }, [
-                              _vm._v(_vm._s(_vm.overview.orders.parcent))
+                            _c("span", { class: _vm.overview.sales.class }, [
+                              _vm._v(_vm._s(_vm.overview.sales.parcent))
                             ])
                           ])
                         ])

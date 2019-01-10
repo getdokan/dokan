@@ -937,7 +937,7 @@ window.__ = function (text, domain) {
 
 
 _vue2.default.use(_vueNotification2.default);
-_vue2.default.component('multiselect', _vueMultiselect2.default);
+// Vue.component('multiselect', Multiselect)
 
 _vue2.default.mixin(_Mixin2.default);
 
@@ -987,6 +987,7 @@ window.dokan.libs['LazyInput'] = _LazyInput2.default;
 window.dokan.libs['Progressbar'] = _Progressbar2.default;
 window.dokan.libs['Search'] = _Search2.default;
 window.dokan.libs['Datepicker'] = _Datepicker2.default;
+window.dokan.libs['Multiselect'] = _vueMultiselect2.default;
 
 window.dokan.libs['ContentLoading'] = {
     VclCode: _vueContentLoading.VclCode,
