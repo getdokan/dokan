@@ -262,7 +262,7 @@ class Dokan_REST_Withdraw_Controller extends WP_REST_Controller {
 
         // if its an approve request and don't have enough balance then return early
         if ( $status_code === 1 ) {
-            if ( dokan_get_seller_balance( $result->user_id, false ) < $result->amount ) {
+            if ( round( dokan_get_seller_balance( $result->user_id, false ), 2 ) < $result->amount ) {
                 return;
             }
 
