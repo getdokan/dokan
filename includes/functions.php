@@ -3351,3 +3351,43 @@ function dokan_get_variable_product_earning( $product_id, $seller_id, $formated 
 
     return $earning;
 }
+
+/**
+ * Get page permalink of dokan pages by page id
+ *
+ * @since DOKAN_SINCE
+ *
+ * @param string $page_id
+ *
+ * @return string
+ */
+function dokan_get_permalink( $page_id ) {
+    if ( ! $page_id ) {
+        return false;
+    }
+
+    $pages = get_option( 'dokan_pages' );
+
+    return isset( $pages[$page_id] ) ? get_permalink( $pages[$page_id] ) : false;
+}
+
+/**
+ * Check if it's store listing page
+ *
+ * @since DOKAN_SINCE
+ *
+ * @return boolean
+ */
+function dokan_is_store_listing() {
+    $page_id = dokan_get_option( 'store_listing', 'dokan_pages' );
+
+    if ( ! $page_id ) {
+        return false;
+    }
+
+    if ( $page_id === get_the_ID() ) {
+        return true;
+    }
+
+    return false;
+}
