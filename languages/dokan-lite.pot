@@ -1,14 +1,14 @@
-# Copyright (C) 2018 weDevs, LLC
+# Copyright (C) 2019 weDevs, LLC
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 2.9.7\n"
+"Project-Id-Version: Dokan 2.9.8\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2018-12-19 11:32:49+00:00\n"
+"POT-Creation-Date: 2019-01-14 14:45:03+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2018-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2019-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -294,7 +294,7 @@ msgstr ""
 #: classes/installer.php:114 includes/admin/class-settings.php:284
 #: includes/admin/class-settings.php:292 includes/admin/setup-wizard.php:253
 #: includes/admin-functions.php:44 includes/admin-functions.php:50
-#: includes/admin-functions.php:684 includes/admin-functions.php:708
+#: includes/admin-functions.php:685 includes/admin-functions.php:709
 #: includes/wc-template.php:14 includes/wc-template.php:147
 #: includes/wc-template.php:281 src/admin/pages/Withdraw.vue:122
 #: templates/my-orders.php:31
@@ -302,8 +302,8 @@ msgid "Vendor"
 msgstr ""
 
 #: classes/installer.php:178 includes/admin/class-admin.php:130
-#: includes/admin/class-settings.php:397 includes/template-tags.php:307
-#: src/admin/pages/Dashboard.vue:3
+#: includes/admin/class-admin.php:182 includes/admin/class-settings.php:397
+#: includes/template-tags.php:307 src/admin/pages/Dashboard.vue:3
 msgid "Dashboard"
 msgstr ""
 
@@ -507,7 +507,7 @@ msgid "No product found!"
 msgstr ""
 
 #: classes/template-settings.php:70 classes/template-settings.php:74
-#: dokan.php:465 includes/admin/class-admin.php:142
+#: dokan.php:468 includes/admin/class-admin.php:142
 #: includes/admin/class-admin.php:203 includes/template-tags.php:338
 #: src/admin/pages/Settings.vue:3
 msgid "Settings"
@@ -662,17 +662,23 @@ msgstr ""
 msgid "Accepted"
 msgstr ""
 
-#: dokan.php:192
+#: dokan.php:188
 msgid ""
 "<b>Dokan</b> requires <a href=\"%s\">WooCommerce</a> to be installed & "
 "activated!"
 msgstr ""
 
-#: dokan.php:462
+#: dokan.php:194
+msgid ""
+"The Minimum PHP Version Requirement for <b>Dokan</b> is %s. You are Running "
+"PHP %s"
+msgstr ""
+
+#: dokan.php:465
 msgid "Get Pro"
 msgstr ""
 
-#: dokan.php:466
+#: dokan.php:469
 msgid "Documentation"
 msgstr ""
 
@@ -771,10 +777,6 @@ msgstr ""
 
 #: includes/admin/class-admin.php:141
 msgid "<span style=\"color:#f18500\">Help</span>"
-msgstr ""
-
-#: includes/admin/class-admin.php:182
-msgid "Dokan Dashboard"
 msgstr ""
 
 #: includes/admin/class-ajax.php:44 lib/promotions.php:186
@@ -1294,30 +1296,30 @@ msgstr ""
 msgid "Toggle Sub-orders"
 msgstr ""
 
-#: includes/admin-functions.php:494 includes/admin-functions.php:871
-#: includes/api/admin/class-report-controller.php:106
+#: includes/admin-functions.php:495 includes/admin-functions.php:872
+#: includes/api/admin/class-report-controller.php:129
 msgid "Total Sales"
 msgstr ""
 
-#: includes/admin-functions.php:501 includes/admin-functions.php:878
+#: includes/admin-functions.php:502 includes/admin-functions.php:879
 msgid "Total: "
 msgstr ""
 
-#: includes/admin-functions.php:504 includes/admin-functions.php:881
-#: includes/api/admin/class-report-controller.php:114 includes/reports.php:359
+#: includes/admin-functions.php:505 includes/admin-functions.php:882
+#: includes/api/admin/class-report-controller.php:137 includes/reports.php:359
 msgid "Number of orders"
 msgstr ""
 
-#: includes/admin-functions.php:511 includes/admin-functions.php:888
+#: includes/admin-functions.php:512 includes/admin-functions.php:889
 msgid "sales"
 msgstr ""
 
-#: includes/admin-functions.php:514 includes/admin-functions.php:891
-#: includes/api/admin/class-report-controller.php:121
+#: includes/admin-functions.php:515 includes/admin-functions.php:892
+#: includes/api/admin/class-report-controller.php:144
 msgid "Commision"
 msgstr ""
 
-#: includes/admin-functions.php:521 includes/admin-functions.php:898
+#: includes/admin-functions.php:522 includes/admin-functions.php:899
 msgid "Commision: "
 msgstr ""
 
@@ -1347,14 +1349,14 @@ msgstr ""
 msgid "Untitled"
 msgstr ""
 
-#: includes/api/admin/class-report-controller.php:110
+#: includes/api/admin/class-report-controller.php:133
 #: templates/dashboard/orders-widget.php:21
 #: templates/dashboard/products-widget.php:26 templates/my-orders.php:30
 #: templates/orders/order-fee-html.php:17 templates/sub-orders.php:28
 msgid "Total"
 msgstr ""
 
-#: includes/api/admin/class-report-controller.php:118
+#: includes/api/admin/class-report-controller.php:141
 #: includes/template-tags.php:321 templates/dashboard/orders-widget.php:15
 msgid "Orders"
 msgstr ""
@@ -1366,7 +1368,7 @@ msgid "Method '%s' not implemented. Must be overridden in subclass."
 msgstr ""
 
 #: includes/api/class-api-rest-controller.php:60
-#: includes/api/class-product-controller.php:764
+#: includes/api/class-product-controller.php:797
 msgid ""
 "To manipulate product variations you should use the "
 "/products/&lt;product_id&gt;/variations/&lt;id&gt; endpoint."
@@ -1374,8 +1376,8 @@ msgstr ""
 
 #: includes/api/class-api-rest-controller.php:62
 #: includes/api/class-order-controller.php:193
-#: includes/api/class-product-controller.php:275
-#: includes/api/class-product-controller.php:300
+#: includes/api/class-product-controller.php:295
+#: includes/api/class-product-controller.php:320
 msgid "Invalid ID."
 msgstr ""
 
@@ -1413,14 +1415,14 @@ msgid "Unique identifier for the note object."
 msgstr ""
 
 #: includes/api/class-order-controller.php:187
-#: includes/api/class-product-controller.php:232
-#: includes/api/class-product-controller.php:269
+#: includes/api/class-product-controller.php:252
+#: includes/api/class-product-controller.php:289
 msgid "No seller found"
 msgstr ""
 
 #: includes/api/class-order-controller.php:199
-#: includes/api/class-product-controller.php:281
-#: includes/api/class-product-controller.php:306
+#: includes/api/class-product-controller.php:301
+#: includes/api/class-product-controller.php:326
 msgid "Sorry, you have no permission to do this. Since it's not your product."
 msgstr ""
 
@@ -1454,7 +1456,7 @@ msgid "Invalid order ID."
 msgstr ""
 
 #: includes/api/class-order-controller.php:524
-#: includes/api/class-product-controller.php:236
+#: includes/api/class-product-controller.php:256
 msgid "Cannot create existing %s."
 msgstr ""
 
@@ -1472,7 +1474,7 @@ msgid "Invalid resource ID."
 msgstr ""
 
 #: includes/api/class-order-controller.php:770
-#: includes/api/class-product-controller.php:1659
+#: includes/api/class-product-controller.php:1692
 msgid "Unique identifier for the resource."
 msgstr ""
 
@@ -1667,7 +1669,7 @@ msgstr ""
 #: includes/api/class-order-controller.php:1363
 #: includes/api/class-order-controller.php:1461
 #: includes/api/class-order-controller.php:1519
-#: includes/api/class-product-controller.php:2236
+#: includes/api/class-product-controller.php:2269
 msgid "Meta data."
 msgstr ""
 
@@ -1677,7 +1679,7 @@ msgstr ""
 #: includes/api/class-order-controller.php:1370
 #: includes/api/class-order-controller.php:1468
 #: includes/api/class-order-controller.php:1526
-#: includes/api/class-product-controller.php:2243
+#: includes/api/class-product-controller.php:2276
 msgid "Meta ID."
 msgstr ""
 
@@ -1687,7 +1689,7 @@ msgstr ""
 #: includes/api/class-order-controller.php:1376
 #: includes/api/class-order-controller.php:1474
 #: includes/api/class-order-controller.php:1532
-#: includes/api/class-product-controller.php:2249
+#: includes/api/class-product-controller.php:2282
 msgid "Meta key."
 msgstr ""
 
@@ -1697,7 +1699,7 @@ msgstr ""
 #: includes/api/class-order-controller.php:1381
 #: includes/api/class-order-controller.php:1479
 #: includes/api/class-order-controller.php:1537
-#: includes/api/class-product-controller.php:2254
+#: includes/api/class-product-controller.php:2287
 msgid "Meta value."
 msgstr ""
 
@@ -1714,7 +1716,7 @@ msgid "Item ID."
 msgstr ""
 
 #: includes/api/class-order-controller.php:1113
-#: includes/api/class-product-controller.php:1665
+#: includes/api/class-product-controller.php:1698
 msgid "Product name."
 msgstr ""
 
@@ -1896,408 +1898,415 @@ msgstr ""
 
 #: includes/api/class-product-controller.php:126
 #: includes/api/class-product-controller.php:140
-#: includes/api/class-product-controller.php:158
-#: includes/api/class-product-controller.php:176
-#: includes/api/class-product-controller.php:194
+#: includes/api/class-product-controller.php:163
+#: includes/api/class-product-controller.php:186
+#: includes/api/class-product-controller.php:209
 msgid "Number of product you want to get top rated product"
 msgstr ""
 
 #: includes/api/class-product-controller.php:145
-#: includes/api/class-product-controller.php:163
-#: includes/api/class-product-controller.php:181
-#: includes/api/class-product-controller.php:199
+#: includes/api/class-product-controller.php:168
+#: includes/api/class-product-controller.php:191
+#: includes/api/class-product-controller.php:214
+msgid "Number of page number"
+msgstr ""
+
+#: includes/api/class-product-controller.php:150
+#: includes/api/class-product-controller.php:173
+#: includes/api/class-product-controller.php:196
+#: includes/api/class-product-controller.php:219
 msgid "Top rated product for specific vendor"
 msgstr ""
 
-#: includes/api/class-product-controller.php:240
+#: includes/api/class-product-controller.php:260
 msgid "Product title must be required"
 msgstr ""
 
-#: includes/api/class-product-controller.php:246
+#: includes/api/class-product-controller.php:266
 msgid "Category must be required"
 msgstr ""
 
-#: includes/api/class-product-controller.php:251
+#: includes/api/class-product-controller.php:271
 msgid "You can not select more than category"
 msgstr ""
 
-#: includes/api/class-product-controller.php:1238
-#: includes/api/class-product-controller.php:1239
+#: includes/api/class-product-controller.php:1271
+#: includes/api/class-product-controller.php:1272
 msgid "Placeholder"
 msgstr ""
 
-#: includes/api/class-product-controller.php:1451
+#: includes/api/class-product-controller.php:1484
 #. translators: %s: attachment id
 msgid "#%s is an invalid image ID."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1670
+#: includes/api/class-product-controller.php:1703
 msgid "Product slug."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1675
+#: includes/api/class-product-controller.php:1708
 msgid "Product URL."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1682
+#: includes/api/class-product-controller.php:1715
 msgid "The date the product was created, in the site's timezone."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1688
+#: includes/api/class-product-controller.php:1721
 msgid "The date the product was created, as GMT."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1694
+#: includes/api/class-product-controller.php:1727
 msgid "The date the product was last modified, in the site's timezone."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1700
+#: includes/api/class-product-controller.php:1733
 msgid "The date the product was last modified, as GMT."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1706
+#: includes/api/class-product-controller.php:1739
 msgid "Product type."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1713
+#: includes/api/class-product-controller.php:1746
 msgid "Product status (post status)."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1720
+#: includes/api/class-product-controller.php:1753
 msgid "Featured product."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1726
+#: includes/api/class-product-controller.php:1759
 msgid "Catalog visibility."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1733
+#: includes/api/class-product-controller.php:1766
 msgid "Product description."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1738
+#: includes/api/class-product-controller.php:1771
 msgid "Product short description."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1743
+#: includes/api/class-product-controller.php:1776
 msgid "Unique identifier."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1748
+#: includes/api/class-product-controller.php:1781
 msgid "Current product price."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1754
+#: includes/api/class-product-controller.php:1787
 msgid "Product regular price."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1759
+#: includes/api/class-product-controller.php:1792
 msgid "Product sale price."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1764
+#: includes/api/class-product-controller.php:1797
 msgid "Start date of sale price, in the site's timezone."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1769
+#: includes/api/class-product-controller.php:1802
 msgid "Start date of sale price, as GMT."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1774
+#: includes/api/class-product-controller.php:1807
 msgid "End date of sale price, in the site's timezone."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1779
+#: includes/api/class-product-controller.php:1812
 msgid "End date of sale price, as GMT."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1784
+#: includes/api/class-product-controller.php:1817
 msgid "Price formatted in HTML."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1790
+#: includes/api/class-product-controller.php:1823
 msgid "Shows if the product is on sale."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1796
+#: includes/api/class-product-controller.php:1829
 msgid "Shows if the product can be bought."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1802
+#: includes/api/class-product-controller.php:1835
 msgid "Amount of sales."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1808
+#: includes/api/class-product-controller.php:1841
 msgid "If the product is virtual."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1814
+#: includes/api/class-product-controller.php:1847
 msgid "If the product is downloadable."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1820
+#: includes/api/class-product-controller.php:1853
 msgid "List of downloadable files."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1827
+#: includes/api/class-product-controller.php:1860
 msgid "File MD5 hash."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1833
+#: includes/api/class-product-controller.php:1866
 msgid "File name."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1838
+#: includes/api/class-product-controller.php:1871
 msgid "File URL."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1846
+#: includes/api/class-product-controller.php:1879
 msgid "Number of times downloadable files can be downloaded after purchase."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1852
+#: includes/api/class-product-controller.php:1885
 msgid "Number of days until access to downloadable files expires."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1858
+#: includes/api/class-product-controller.php:1891
 msgid "Product external URL. Only for external products."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1864
+#: includes/api/class-product-controller.php:1897
 msgid "Product external button text. Only for external products."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1869
+#: includes/api/class-product-controller.php:1902
 msgid "Tax status."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1876
+#: includes/api/class-product-controller.php:1909
 msgid "Tax class."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1881
+#: includes/api/class-product-controller.php:1914
 msgid "Stock management at product level."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1887
+#: includes/api/class-product-controller.php:1920
 msgid "Stock quantity."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1892
+#: includes/api/class-product-controller.php:1925
 msgid ""
 "Controls whether or not the product is listed as \"in stock\" or \"out of "
 "stock\" on the frontend."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1898
+#: includes/api/class-product-controller.php:1931
 msgid "If managing stock, this controls if backorders are allowed."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1905
+#: includes/api/class-product-controller.php:1938
 msgid "Shows if backorders are allowed."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1911
+#: includes/api/class-product-controller.php:1944
 msgid "Shows if the product is on backordered."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1917
+#: includes/api/class-product-controller.php:1950
 msgid "Allow one item to be bought in a single order."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1924
+#: includes/api/class-product-controller.php:1957
 #. translators: %s: weight unit
 msgid "Product weight (%s)."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1929
+#: includes/api/class-product-controller.php:1962
 msgid "Product dimensions."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1935
+#: includes/api/class-product-controller.php:1968
 #. translators: %s: dimension unit
 msgid "Product length (%s)."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1941
+#: includes/api/class-product-controller.php:1974
 #. translators: %s: dimension unit
 msgid "Product width (%s)."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1947
+#: includes/api/class-product-controller.php:1980
 #. translators: %s: dimension unit
 msgid "Product height (%s)."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1954
+#: includes/api/class-product-controller.php:1987
 msgid "Shows if the product need to be shipped."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1960
+#: includes/api/class-product-controller.php:1993
 msgid "Shows whether or not the product shipping is taxable."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1966
+#: includes/api/class-product-controller.php:1999
 msgid "Shipping class slug."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1971
+#: includes/api/class-product-controller.php:2004
 msgid "Shipping class ID."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1977
+#: includes/api/class-product-controller.php:2010
 msgid "Allow reviews."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1983
+#: includes/api/class-product-controller.php:2016
 msgid "Reviews average rating."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1989
+#: includes/api/class-product-controller.php:2022
 msgid "Amount of reviews that the product have."
 msgstr ""
 
-#: includes/api/class-product-controller.php:1995
+#: includes/api/class-product-controller.php:2028
 msgid "List of related products IDs."
 msgstr ""
 
-#: includes/api/class-product-controller.php:2004
+#: includes/api/class-product-controller.php:2037
 msgid "List of up-sell products IDs."
 msgstr ""
 
-#: includes/api/class-product-controller.php:2012
+#: includes/api/class-product-controller.php:2045
 msgid "List of cross-sell products IDs."
 msgstr ""
 
-#: includes/api/class-product-controller.php:2020
+#: includes/api/class-product-controller.php:2053
 msgid "Product parent ID."
 msgstr ""
 
-#: includes/api/class-product-controller.php:2025
+#: includes/api/class-product-controller.php:2058
 msgid "Optional note to send the customer after purchase."
 msgstr ""
 
-#: includes/api/class-product-controller.php:2030
+#: includes/api/class-product-controller.php:2063
 msgid "List of categories."
 msgstr ""
 
-#: includes/api/class-product-controller.php:2037
+#: includes/api/class-product-controller.php:2070
 msgid "Category ID."
 msgstr ""
 
-#: includes/api/class-product-controller.php:2042
+#: includes/api/class-product-controller.php:2075
 msgid "Category name."
 msgstr ""
 
-#: includes/api/class-product-controller.php:2048
+#: includes/api/class-product-controller.php:2081
 msgid "Category slug."
 msgstr ""
 
-#: includes/api/class-product-controller.php:2057
+#: includes/api/class-product-controller.php:2090
 msgid "List of tags."
 msgstr ""
 
-#: includes/api/class-product-controller.php:2064
+#: includes/api/class-product-controller.php:2097
 msgid "Tag ID."
 msgstr ""
 
-#: includes/api/class-product-controller.php:2069
+#: includes/api/class-product-controller.php:2102
 msgid "Tag name."
 msgstr ""
 
-#: includes/api/class-product-controller.php:2075
+#: includes/api/class-product-controller.php:2108
 msgid "Tag slug."
 msgstr ""
 
-#: includes/api/class-product-controller.php:2084
+#: includes/api/class-product-controller.php:2117
 msgid "List of images."
 msgstr ""
 
-#: includes/api/class-product-controller.php:2091
+#: includes/api/class-product-controller.php:2124
 msgid "Image ID."
 msgstr ""
 
-#: includes/api/class-product-controller.php:2096
+#: includes/api/class-product-controller.php:2129
 msgid "The date the image was created, in the site's timezone."
 msgstr ""
 
-#: includes/api/class-product-controller.php:2102
+#: includes/api/class-product-controller.php:2135
 msgid "The date the image was created, as GMT."
 msgstr ""
 
-#: includes/api/class-product-controller.php:2108
+#: includes/api/class-product-controller.php:2141
 msgid "The date the image was last modified, in the site's timezone."
 msgstr ""
 
-#: includes/api/class-product-controller.php:2114
+#: includes/api/class-product-controller.php:2147
 msgid "The date the image was last modified, as GMT."
 msgstr ""
 
-#: includes/api/class-product-controller.php:2120
+#: includes/api/class-product-controller.php:2153
 msgid "Image URL."
 msgstr ""
 
-#: includes/api/class-product-controller.php:2126
+#: includes/api/class-product-controller.php:2159
 msgid "Image name."
 msgstr ""
 
-#: includes/api/class-product-controller.php:2131
+#: includes/api/class-product-controller.php:2164
 msgid "Image alternative text."
 msgstr ""
 
-#: includes/api/class-product-controller.php:2136
+#: includes/api/class-product-controller.php:2169
 msgid "Image position. 0 means that the image is featured."
 msgstr ""
 
-#: includes/api/class-product-controller.php:2144
+#: includes/api/class-product-controller.php:2177
 msgid "List of attributes."
 msgstr ""
 
-#: includes/api/class-product-controller.php:2151
-#: includes/api/class-product-controller.php:2196
+#: includes/api/class-product-controller.php:2184
+#: includes/api/class-product-controller.php:2229
 msgid "Attribute ID."
 msgstr ""
 
-#: includes/api/class-product-controller.php:2156
-#: includes/api/class-product-controller.php:2201
+#: includes/api/class-product-controller.php:2189
+#: includes/api/class-product-controller.php:2234
 msgid "Attribute name."
 msgstr ""
 
-#: includes/api/class-product-controller.php:2161
+#: includes/api/class-product-controller.php:2194
 msgid "Attribute position."
 msgstr ""
 
-#: includes/api/class-product-controller.php:2166
+#: includes/api/class-product-controller.php:2199
 msgid ""
 "Define if the attribute is visible on the \"Additional information\" tab in "
 "the product's page."
 msgstr ""
 
-#: includes/api/class-product-controller.php:2172
+#: includes/api/class-product-controller.php:2205
 msgid "Define if the attribute can be used as variation."
 msgstr ""
 
-#: includes/api/class-product-controller.php:2178
+#: includes/api/class-product-controller.php:2211
 msgid "List of available term names of the attribute."
 msgstr ""
 
-#: includes/api/class-product-controller.php:2189
+#: includes/api/class-product-controller.php:2222
 msgid "Defaults variation attributes."
 msgstr ""
 
-#: includes/api/class-product-controller.php:2206
+#: includes/api/class-product-controller.php:2239
 msgid "Selected attribute term name."
 msgstr ""
 
-#: includes/api/class-product-controller.php:2214
+#: includes/api/class-product-controller.php:2247
 msgid "List of variations IDs."
 msgstr ""
 
-#: includes/api/class-product-controller.php:2223
+#: includes/api/class-product-controller.php:2256
 msgid "List of grouped products ID."
 msgstr ""
 
-#: includes/api/class-product-controller.php:2231
+#: includes/api/class-product-controller.php:2264
 msgid "Menu order, used to custom sort products."
 msgstr ""
 
@@ -2673,7 +2682,7 @@ msgstr ""
 msgid "Searching&hellip;"
 msgstr ""
 
-#: includes/class-core.php:136
+#: includes/class-core.php:141
 msgid "Page %s"
 msgstr ""
 
@@ -2906,19 +2915,19 @@ msgstr ""
 msgid "Gravatar Url"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:195 includes/functions.php:2130
+#: includes/class-dokan-privacy.php:195 includes/functions.php:2333
 msgid "Facebook"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:196 includes/functions.php:2134
+#: includes/class-dokan-privacy.php:196 includes/functions.php:2337
 msgid "Google Plus"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:197 includes/functions.php:2138
+#: includes/class-dokan-privacy.php:197 includes/functions.php:2341
 msgid "Twitter"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:198 includes/functions.php:2142
+#: includes/class-dokan-privacy.php:198 includes/functions.php:2345
 msgid "Pinterest"
 msgstr ""
 
@@ -2926,15 +2935,15 @@ msgstr ""
 msgid "Linkedin"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:200 includes/functions.php:2150
+#: includes/class-dokan-privacy.php:200 includes/functions.php:2353
 msgid "Youtube"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:201 includes/functions.php:2154
+#: includes/class-dokan-privacy.php:201 includes/functions.php:2357
 msgid "Instagram"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:202 includes/functions.php:2158
+#: includes/class-dokan-privacy.php:202 includes/functions.php:2361
 msgid "Flickr"
 msgstr ""
 
@@ -3035,28 +3044,27 @@ msgstr ""
 msgid "You are already logged in"
 msgstr ""
 
-#: includes/class-registration.php:64 includes/class-registration.php:107
-#: includes/class-registration.php:141
+#: includes/class-registration.php:69
 msgid "Nonce verification failed"
 msgstr ""
 
-#: includes/class-registration.php:71
+#: includes/class-registration.php:76
 msgid "Cheating, eh?"
 msgstr ""
 
-#: includes/class-registration.php:77
+#: includes/class-registration.php:82
 msgid "Please enter your first name."
 msgstr ""
 
-#: includes/class-registration.php:78
+#: includes/class-registration.php:83
 msgid "Please enter your last name."
 msgstr ""
 
-#: includes/class-registration.php:79
+#: includes/class-registration.php:84
 msgid "Please enter your phone number."
 msgstr ""
 
-#: includes/class-registration.php:80
+#: includes/class-registration.php:85
 msgid "Please provide a shop name."
 msgstr ""
 
@@ -3390,264 +3398,268 @@ msgstr ""
 msgid "SWIFT: %s"
 msgstr ""
 
-#: includes/functions.php:1866
+#: includes/functions.php:1638
+msgid "Date is not valid"
+msgstr ""
+
+#: includes/functions.php:2069
 msgid "- Select a location -"
 msgstr ""
 
-#: includes/functions.php:1870 includes/functions.php:1893
+#: includes/functions.php:2073 includes/functions.php:2096
 msgid "Everywhere Else"
 msgstr ""
 
-#: includes/functions.php:1889
+#: includes/functions.php:2092
 msgid "- Select a State -"
 msgstr ""
 
-#: includes/functions.php:1911
+#: includes/functions.php:2114
 msgid "Ready to ship in..."
 msgstr ""
 
-#: includes/functions.php:1912
+#: includes/functions.php:2115
 msgid "1 business day"
 msgstr ""
 
-#: includes/functions.php:1913
+#: includes/functions.php:2116
 msgid "1-2 business day"
 msgstr ""
 
-#: includes/functions.php:1914
+#: includes/functions.php:2117
 msgid "1-3 business day"
 msgstr ""
 
-#: includes/functions.php:1915
+#: includes/functions.php:2118
 msgid "3-5 business day"
 msgstr ""
 
-#: includes/functions.php:1916
+#: includes/functions.php:2119
 msgid "1-2 weeks"
 msgstr ""
 
-#: includes/functions.php:1917
+#: includes/functions.php:2120
 msgid "2-3 weeks"
 msgstr ""
 
-#: includes/functions.php:1918
+#: includes/functions.php:2121
 msgid "3-4 weeks"
 msgstr ""
 
-#: includes/functions.php:1919
+#: includes/functions.php:2122
 msgid "4-6 weeks"
 msgstr ""
 
-#: includes/functions.php:1920
+#: includes/functions.php:2123
 msgid "6-8 weeks"
 msgstr ""
 
-#: includes/functions.php:2039
+#: includes/functions.php:2242
 msgid "All dates"
 msgstr ""
 
-#: includes/functions.php:2054
+#: includes/functions.php:2257
 #. translators: 1: month name, 2: 4-digit year
 msgid "%1$s %2$d"
 msgstr ""
 
-#: includes/functions.php:2146
+#: includes/functions.php:2349
 msgid "LinkedIn"
 msgstr ""
 
-#: includes/functions.php:2413
+#: includes/functions.php:2616
 msgid "Dokan Store Sidebar"
 msgstr ""
 
-#: includes/functions.php:2667
+#: includes/functions.php:2870
 msgid "View sales overview"
 msgstr ""
 
-#: includes/functions.php:2668
+#: includes/functions.php:2871
 msgid "View sales report chart"
 msgstr ""
 
-#: includes/functions.php:2669
+#: includes/functions.php:2872
 msgid "View announcement"
 msgstr ""
 
-#: includes/functions.php:2670
+#: includes/functions.php:2873
 msgid "View order report"
 msgstr ""
 
-#: includes/functions.php:2671
+#: includes/functions.php:2874
 msgid "View review report"
 msgstr ""
 
-#: includes/functions.php:2672
+#: includes/functions.php:2875
 msgid "View product status report"
 msgstr ""
 
-#: includes/functions.php:2675
+#: includes/functions.php:2878
 msgid "View overview report"
 msgstr ""
 
-#: includes/functions.php:2676
+#: includes/functions.php:2879
 msgid "View daily sales report"
 msgstr ""
 
-#: includes/functions.php:2677
+#: includes/functions.php:2880
 msgid "View top selling report"
 msgstr ""
 
-#: includes/functions.php:2678
+#: includes/functions.php:2881
 msgid "View top earning report"
 msgstr ""
 
-#: includes/functions.php:2679
+#: includes/functions.php:2882
 msgid "View statement report"
 msgstr ""
 
-#: includes/functions.php:2682
+#: includes/functions.php:2885
 msgid "View order"
 msgstr ""
 
-#: includes/functions.php:2683
+#: includes/functions.php:2886
 msgid "Manage order"
 msgstr ""
 
-#: includes/functions.php:2684
+#: includes/functions.php:2887
 msgid "Manage order note"
 msgstr ""
 
-#: includes/functions.php:2685
+#: includes/functions.php:2888
 msgid "Manage refund"
 msgstr ""
 
-#: includes/functions.php:2689
+#: includes/functions.php:2892
 msgid "Add coupon"
 msgstr ""
 
-#: includes/functions.php:2690
+#: includes/functions.php:2893
 msgid "Edit coupon"
 msgstr ""
 
-#: includes/functions.php:2691
+#: includes/functions.php:2894
 msgid "Delete coupon"
 msgstr ""
 
-#: includes/functions.php:2694
+#: includes/functions.php:2897
 msgid "View reviews"
 msgstr ""
 
-#: includes/functions.php:2695 src/admin/pages/Premium.vue:394
+#: includes/functions.php:2898 src/admin/pages/Premium.vue:394
 msgid "Manage reviews"
 msgstr ""
 
-#: includes/functions.php:2699
+#: includes/functions.php:2902
 msgid "Manage withdraw"
 msgstr ""
 
-#: includes/functions.php:2702
+#: includes/functions.php:2905
 msgid "Add product"
 msgstr ""
 
-#: includes/functions.php:2703
+#: includes/functions.php:2906
 msgid "Edit product"
 msgstr ""
 
-#: includes/functions.php:2704
+#: includes/functions.php:2907
 msgid "Delete product"
 msgstr ""
 
-#: includes/functions.php:2705
+#: includes/functions.php:2908
 msgid "View product"
 msgstr ""
 
-#: includes/functions.php:2706
+#: includes/functions.php:2909
 msgid "Duplicate product"
 msgstr ""
 
-#: includes/functions.php:2707
+#: includes/functions.php:2910
 msgid "Import product"
 msgstr ""
 
-#: includes/functions.php:2708
+#: includes/functions.php:2911
 msgid "Export product"
 msgstr ""
 
-#: includes/functions.php:2711
+#: includes/functions.php:2914
 msgid "View overview menu"
 msgstr ""
 
-#: includes/functions.php:2712
+#: includes/functions.php:2915
 msgid "View product menu"
 msgstr ""
 
-#: includes/functions.php:2713
+#: includes/functions.php:2916
 msgid "View order menu"
 msgstr ""
 
-#: includes/functions.php:2714
+#: includes/functions.php:2917
 msgid "View coupon menu"
 msgstr ""
 
-#: includes/functions.php:2715
+#: includes/functions.php:2918
 msgid "View report menu"
 msgstr ""
 
-#: includes/functions.php:2716
+#: includes/functions.php:2919
 msgid "Vuew review menu"
 msgstr ""
 
-#: includes/functions.php:2717
+#: includes/functions.php:2920
 msgid "View withdraw menu"
 msgstr ""
 
-#: includes/functions.php:2718
+#: includes/functions.php:2921
 msgid "View store settings menu"
 msgstr ""
 
-#: includes/functions.php:2719
+#: includes/functions.php:2922
 msgid "View payment settings menu"
 msgstr ""
 
-#: includes/functions.php:2720
+#: includes/functions.php:2923
 msgid "View shipping settings menu"
 msgstr ""
 
-#: includes/functions.php:2721
+#: includes/functions.php:2924
 msgid "View social settings menu"
 msgstr ""
 
-#: includes/functions.php:2722
+#: includes/functions.php:2925
 msgid "View seo settings menu"
 msgstr ""
 
-#: includes/functions.php:2899
+#: includes/functions.php:3102
 msgid "Saturday"
 msgstr ""
 
-#: includes/functions.php:2902
+#: includes/functions.php:3105
 msgid "Sunday"
 msgstr ""
 
-#: includes/functions.php:2905
+#: includes/functions.php:3108
 msgid "Monday"
 msgstr ""
 
-#: includes/functions.php:2908
+#: includes/functions.php:3111
 msgid "Tuesday"
 msgstr ""
 
-#: includes/functions.php:2911
+#: includes/functions.php:3114
 msgid "Wednesday"
 msgstr ""
 
-#: includes/functions.php:2914
+#: includes/functions.php:3117
 msgid "Thursday"
 msgstr ""
 
-#: includes/functions.php:2917
+#: includes/functions.php:3120
 msgid "Friday"
 msgstr ""
 
-#: includes/functions.php:2920
+#: includes/functions.php:3123
 msgid "Off Day"
 msgstr ""
 
@@ -3923,7 +3935,7 @@ msgstr ""
 #: src/admin/pages/Withdraw.vue:167 src/admin/pages/Withdraw.vue:195
 #: templates/my-orders.php:83 templates/orders/details.php:188
 #: templates/products/new-product-single.php:204
-#: templates/products/new-product.php:164
+#: templates/products/new-product.php:165
 #: templates/products/tmpl-add-product-popup.php:60
 #: templates/withdraw/pending-request-listing.php:17
 #: templates/withdraw/pending-request-listing.php:35
@@ -4066,70 +4078,70 @@ msgstr ""
 msgid "Product SKU must be unique."
 msgstr ""
 
-#: includes/wc-functions.php:757
+#: includes/wc-functions.php:761
 msgid "Your {site_title} order receipt from {order_date}"
 msgstr ""
 
-#: includes/wc-functions.php:758
+#: includes/wc-functions.php:762
 msgid "Your {site_title} order from {order_date} is complete"
 msgstr ""
 
-#: includes/wc-functions.php:859 templates/account/vendor-registration.php:9
+#: includes/wc-functions.php:863 templates/account/vendor-registration.php:9
 #: templates/global/seller-registration-form.php:15
 msgid "First Name"
 msgstr ""
 
-#: includes/wc-functions.php:860 templates/account/vendor-registration.php:14
+#: includes/wc-functions.php:864 templates/account/vendor-registration.php:14
 #: templates/global/seller-registration-form.php:20
 msgid "Last Name"
 msgstr ""
 
-#: includes/wc-functions.php:861 templates/account/vendor-registration.php:27
+#: includes/wc-functions.php:865 templates/account/vendor-registration.php:27
 #: templates/dashboard/edit-account.php:65
 msgid "Email address"
 msgstr ""
 
-#: includes/wc-functions.php:866
+#: includes/wc-functions.php:870
 msgid "is a required field."
 msgstr ""
 
-#: includes/wc-functions.php:872
+#: includes/wc-functions.php:876
 msgid "Please provide a valid email address."
 msgstr ""
 
-#: includes/wc-functions.php:874
+#: includes/wc-functions.php:878
 msgid "This email address is already registered."
 msgstr ""
 
-#: includes/wc-functions.php:880
+#: includes/wc-functions.php:884
 msgid "Your current password is incorrect."
 msgstr ""
 
-#: includes/wc-functions.php:885
+#: includes/wc-functions.php:889
 msgid "Please fill out all password fields."
 msgstr ""
 
-#: includes/wc-functions.php:888
+#: includes/wc-functions.php:892
 msgid "Please enter your current password."
 msgstr ""
 
-#: includes/wc-functions.php:891
+#: includes/wc-functions.php:895
 msgid "Please re-enter your password."
 msgstr ""
 
-#: includes/wc-functions.php:894
+#: includes/wc-functions.php:898
 msgid "New passwords do not match."
 msgstr ""
 
-#: includes/wc-functions.php:915
+#: includes/wc-functions.php:919
 msgid "Account details changed successfully."
 msgstr ""
 
-#: includes/wc-functions.php:1003
+#: includes/wc-functions.php:1007
 msgid "More Products"
 msgstr ""
 
-#: includes/wc-functions.php:1054
+#: includes/wc-functions.php:1058
 msgid "No product has been found!"
 msgstr ""
 
@@ -4330,11 +4342,11 @@ msgstr ""
 msgid "Clear"
 msgstr ""
 
-#: src/admin/components/Fields.vue:151
+#: src/admin/components/Fields.vue:167
 msgid "Active"
 msgstr ""
 
-#: src/admin/components/Fields.vue:155 src/admin/pages/Settings.vue:138
+#: src/admin/components/Fields.vue:171 src/admin/pages/Settings.vue:138
 msgid "Select"
 msgstr ""
 
@@ -5143,8 +5155,8 @@ msgstr ""
 #: templates/orders/details.php:326
 #: templates/products/new-product-single.php:224
 #: templates/products/new-product-single.php:231
-#: templates/products/new-product.php:178
-#: templates/products/new-product.php:185
+#: templates/products/new-product.php:179
+#: templates/products/new-product.php:186
 #: templates/products/tmpl-add-product-popup.php:74
 #: templates/products/tmpl-add-product-popup.php:81
 msgid "YYYY-MM-DD"
@@ -5204,19 +5216,9 @@ msgstr ""
 msgid "Unpublished"
 msgstr ""
 
-#: templates/orders/listing.php:112
-#: templates/products/products-listing-row.php:133
-msgid "Y/m/d g:i:s A"
-msgstr ""
-
-#: templates/orders/listing.php:118
+#: templates/orders/listing.php:117
 #: templates/products/products-listing-row.php:140
 msgid "%s ago"
-msgstr ""
-
-#: templates/orders/listing.php:120
-#: templates/products/products-listing-row.php:142
-msgid "Y/m/d"
 msgstr ""
 
 #: templates/orders/listing.php:146
@@ -5407,7 +5409,7 @@ msgstr ""
 
 #: templates/products/listing-filter.php:26
 #: templates/products/new-product-single.php:251
-#: templates/products/new-product.php:201
+#: templates/products/new-product.php:202
 #: templates/products/tmpl-add-product-popup.php:94
 msgid "- Select a category -"
 msgstr ""
@@ -5450,7 +5452,7 @@ msgid "Title"
 msgstr ""
 
 #: templates/products/new-product-single.php:161
-#: templates/products/new-product.php:147
+#: templates/products/new-product.php:148
 #: templates/products/tmpl-add-product-popup.php:43
 msgid "Product name.."
 msgstr ""
@@ -5470,7 +5472,7 @@ msgid ""
 msgstr ""
 
 #: templates/products/new-product-single.php:191
-#: templates/products/new-product.php:153
+#: templates/products/new-product.php:154
 #: templates/products/products-listing-row.php:80
 #: templates/products/products-listing.php:95
 #: templates/products/tmpl-add-product-popup.php:49
@@ -5487,13 +5489,13 @@ msgid "0.00"
 msgstr ""
 
 #: templates/products/new-product-single.php:202
-#: templates/products/new-product.php:162
+#: templates/products/new-product.php:163
 #: templates/products/tmpl-add-product-popup.php:58
 msgid "Discounted Price"
 msgstr ""
 
 #: templates/products/new-product-single.php:203
-#: templates/products/new-product.php:163
+#: templates/products/new-product.php:164
 #: templates/products/tmpl-add-product-popup.php:59
 msgid "Schedule"
 msgstr ""
@@ -5503,13 +5505,13 @@ msgid "Product price can't be less than the vendor fee!"
 msgstr ""
 
 #: templates/products/new-product-single.php:223
-#: templates/products/new-product.php:177
+#: templates/products/new-product.php:178
 #: templates/products/tmpl-add-product-popup.php:73
 msgid "From"
 msgstr ""
 
 #: templates/products/new-product-single.php:230
-#: templates/products/new-product.php:184
+#: templates/products/new-product.php:185
 #: templates/products/tmpl-add-product-popup.php:80
 msgid "To"
 msgstr ""
@@ -5519,7 +5521,7 @@ msgid "Please choose a category!"
 msgstr ""
 
 #: templates/products/new-product-single.php:292
-#: templates/products/new-product.php:240
+#: templates/products/new-product.php:241
 #: templates/products/tmpl-add-product-popup.php:129
 msgid "Select product category"
 msgstr ""
@@ -5529,7 +5531,7 @@ msgid "Tags"
 msgstr ""
 
 #: templates/products/new-product-single.php:318
-#: templates/products/new-product.php:267
+#: templates/products/new-product.php:268
 #: templates/products/tmpl-add-product-popup.php:152
 msgid "Select product tags"
 msgstr ""
@@ -5540,12 +5542,12 @@ msgid "Upload a product cover image"
 msgstr ""
 
 #: templates/products/new-product-single.php:374
-#: templates/products/new-product.php:128
+#: templates/products/new-product.php:129
 msgid "Delete image"
 msgstr ""
 
 #: templates/products/new-product-single.php:380
-#: templates/products/new-product.php:135
+#: templates/products/new-product.php:136
 #: templates/products/tmpl-add-product-popup.php:32
 msgid "Add gallery image"
 msgstr ""
@@ -5555,7 +5557,7 @@ msgid "Short Description"
 msgstr ""
 
 #: templates/products/new-product-single.php:398
-#: templates/products/new-product.php:274
+#: templates/products/new-product.php:275
 msgid "Description"
 msgstr ""
 
@@ -5573,23 +5575,23 @@ msgstr ""
 msgid "You have successfully created <a href=\"%s\"><strong>%s</strong></a> product"
 msgstr ""
 
-#: templates/products/new-product.php:99
+#: templates/products/new-product.php:100
 msgid "Upload Product Image"
 msgstr ""
 
-#: templates/products/new-product.php:192
+#: templates/products/new-product.php:193
 msgid "Short description of the product..."
 msgstr ""
 
-#: templates/products/new-product.php:274
+#: templates/products/new-product.php:275
 msgid "Add your product description"
 msgstr ""
 
-#: templates/products/new-product.php:284
+#: templates/products/new-product.php:285
 msgid "Create & Add New"
 msgstr ""
 
-#: templates/products/new-product.php:285
+#: templates/products/new-product.php:286
 msgid "Create Product"
 msgstr ""
 
@@ -5658,6 +5660,14 @@ msgstr ""
 #: templates/products/products-listing-row.php:124
 #: templates/products/products-listing.php:98
 msgid "Views"
+msgstr ""
+
+#: templates/products/products-listing-row.php:133
+msgid "Y/m/d g:i:s A"
+msgstr ""
+
+#: templates/products/products-listing-row.php:142
+msgid "Y/m/d"
 msgstr ""
 
 #: templates/products/products-listing-row.php:151

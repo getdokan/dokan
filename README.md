@@ -5,7 +5,7 @@
 **Requires at least:** 4.4  
 **Tested up to:** 5.0  
 **WC requires at least:** 3.0  
-**WC tested up to:** 3.5.2  
+**WC tested up to:** 3.5.3  
 **Requires PHP:** 5.6  
 **Stable tag:** trunk  
 **License:** GPLv2 or later  
@@ -273,6 +273,19 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 ## Changelog ##
+
+v2.9.8 -> Jan 14, 2019
+-------------------------
+-**Fix**   Show net sales of a month in admin dashboard
+-**Fix**   Change pagination param and add store info in product REST apis
+-**Fix**   New product form description escaping issue
+-**Fix**   Withdraw amount rounding issue in vendor dashboard
+-**Fix**   Withdraw request email is not showing properly is fixed
+-**Fix**   Order listing page date time format in vendor dashboard
+-**Fix**   Child category is not showing in hierarchically
+-**Fix**   Nonce verification issue is fixed during checkout
+-**Tweak** Return theme 404 page when vendor store is not found
+-**Tweak** Added quick links in admin dokan dashboard in overview section
 
 v2.9.7 -> Dec 19, 2018
 ------------------------
