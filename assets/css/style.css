@@ -1421,7 +1421,7 @@ table.my_account_orders tbody tr td.order-actions a.button {
 }
 .dokan-label {
   display: inline;
-  padding: .2em .6em .3em;
+  padding: 0.2em 0.6em 0.3em;
   font-size: 75%;
   font-weight: bold;
   line-height: 1;
@@ -1429,7 +1429,7 @@ table.my_account_orders tbody tr td.order-actions a.button {
   text-align: center;
   white-space: nowrap;
   vertical-align: baseline;
-  border-radius: .25em;
+  border-radius: 0.25em;
 }
 a.dokan-label:hover,
 a.dokan-label:focus {
@@ -1670,7 +1670,7 @@ ul.subsubsub li.active a {
   float: left;
   padding: 6px 12px;
   margin-left: -1px;
-  line-height: 1.428571429;
+  line-height: 1.42857143;
   text-decoration: none;
   background-color: #ffffff;
   border: 1px solid #dddddd;
@@ -1684,7 +1684,7 @@ ul.subsubsub li.active a {
   float: left;
   padding: 6px 12px;
   margin-left: -1px;
-  line-height: 1.428571429;
+  line-height: 1.42857143;
   text-decoration: none;
   background-color: #ffffff;
   border: 1px solid #dddddd;
@@ -3560,7 +3560,7 @@ div.media-sidebar a.edit-attachment {
   background: #000;
   top: 0;
   left: 0;
-  opacity: .7;
+  opacity: 0.7;
   font-size: 70px;
   text-align: center;
   color: #f00;
