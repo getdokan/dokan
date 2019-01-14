@@ -2022,6 +2022,22 @@ let Loading = dokan_get_lib('Loading');
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 let TextEditor = dokan_get_lib('TextEditor');
@@ -2545,9 +2561,7 @@ var render = function() {
                             "strong",
                             [
                               _c("currency", {
-                                attrs: {
-                                  amount: _vm.overview.orders.this_month
-                                }
+                                attrs: { amount: _vm.overview.sales.this_month }
                               })
                             ],
                             1
@@ -2561,8 +2575,8 @@ var render = function() {
                                 ) +
                                 " "
                             ),
-                            _c("span", { class: _vm.overview.orders.class }, [
-                              _vm._v(_vm._s(_vm.overview.orders.parcent))
+                            _c("span", { class: _vm.overview.sales.class }, [
+                              _vm._v(_vm._s(_vm.overview.sales.parcent))
                             ])
                           ])
                         ])
@@ -2601,60 +2615,89 @@ var render = function() {
                         ])
                       ]),
                       _vm._v(" "),
-                      _c("li", { staticClass: "vendor" }, [
-                        _c("div", { staticClass: "dashicons dashicons-id" }),
-                        _vm._v(" "),
-                        _c("a", { attrs: { href: "#" } }, [
-                          _c("strong", [
-                            _vm._v(
-                              _vm._s(
-                                _vm.sprintf(
-                                  _vm.__("%s Vendor", "dokan-lite"),
-                                  _vm.overview.vendors.this_month
-                                )
-                              )
-                            )
-                          ]),
+                      _c(
+                        "li",
+                        { staticClass: "vendor" },
+                        [
+                          _c("div", { staticClass: "dashicons dashicons-id" }),
                           _vm._v(" "),
-                          _c("div", { staticClass: "details" }, [
-                            _vm._v(
-                              "\n                                    " +
-                                _vm._s(
-                                  _vm.__("signup this month", "dokan-lite")
-                                ) +
-                                " "
-                            ),
-                            _c("span", { class: _vm.overview.vendors.class }, [
-                              _vm._v(_vm._s(_vm.overview.vendors.parcent))
-                            ])
-                          ])
-                        ])
-                      ]),
+                          _c(
+                            "router-link",
+                            { attrs: { to: { name: "Vendors" } } },
+                            [
+                              _c("strong", [
+                                _vm._v(
+                                  _vm._s(
+                                    _vm.sprintf(
+                                      _vm.__("%s Vendor", "dokan-lite"),
+                                      _vm.overview.vendors.this_month
+                                    )
+                                  )
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "details" }, [
+                                _vm._v(
+                                  "\n                                    " +
+                                    _vm._s(
+                                      _vm.__("signup this month", "dokan-lite")
+                                    ) +
+                                    " "
+                                ),
+                                _c(
+                                  "span",
+                                  { class: _vm.overview.vendors.class },
+                                  [_vm._v(_vm._s(_vm.overview.vendors.parcent))]
+                                )
+                              ])
+                            ]
+                          )
+                        ],
+                        1
+                      ),
                       _vm._v(" "),
-                      _c("li", { staticClass: "approval" }, [
-                        _c("div", {
-                          staticClass: "dashicons dashicons-businessman"
-                        }),
-                        _vm._v(" "),
-                        _c("a", { attrs: { href: "#" } }, [
-                          _c("strong", [
-                            _vm._v(
-                              _vm._s(
-                                _vm.sprintf(
-                                  _vm.__("%s Vendor", "dokan-lite"),
-                                  _vm.overview.vendors.inactive
-                                )
-                              )
-                            )
-                          ]),
+                      _c(
+                        "li",
+                        { staticClass: "approval" },
+                        [
+                          _c("div", {
+                            staticClass: "dashicons dashicons-businessman"
+                          }),
                           _vm._v(" "),
-                          _c("div", { staticClass: "details" }, [
-                            _vm._v(
-                              _vm._s(_vm.__("awaiting approval", "dokan-lite"))
-                            )
-                          ])
-                        ])
-                      ]),
+                          _c(
+                            "router-link",
+                            {
+                              attrs: {
+                                to: {
+                                  name: "Vendors",
+                                  query: { status: "pending" }
+                                }
+                              }
+                            },
+                            [
+                              _c("strong", [
+                                _vm._v(
+                                  _vm._s(
+                                    _vm.sprintf(
+                                      _vm.__("%s Vendor", "dokan-lite"),
+                                      _vm.overview.vendors.inactive
+                                    )
+                                  )
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "details" }, [
+                                _vm._v(
+                                  _vm._s(
+                                    _vm.__("awaiting approval", "dokan-lite")
+                                  )
+                                )
+                              ])
+                            ]
+                          )
+                        ],
+                        1
+                      ),
                       _vm._v(" "),
                       _c("li", { staticClass: "product" }, [
                         _c("div", { staticClass: "dashicons dashicons-cart" }),
@@ -2686,28 +2729,48 @@ var render = function() {
                         ])
                       ]),
                       _vm._v(" "),
-                      _c("li", { staticClass: "withdraw" }, [
-                        _c("div", { staticClass: "dashicons dashicons-money" }),
-                        _vm._v(" "),
-                        _c("a", { attrs: { href: "#" } }, [
-                          _c("strong", [
-                            _vm._v(
-                              _vm._s(
-                                _vm.sprintf(
-                                  _vm.__("%s Withdrawals", "dokan-lite"),
-                                  _vm.overview.withdraw.pending
-                                )
-                              )
-                            )
-                          ]),
+                      _c(
+                        "li",
+                        { staticClass: "withdraw" },
+                        [
+                          _c("div", {
+                            staticClass: "dashicons dashicons-money"
+                          }),
                           _vm._v(" "),
-                          _c("div", { staticClass: "details" }, [
-                            _vm._v(
-                              _vm._s(_vm.__("awaiting approval", "dokan-lite"))
-                            )
-                          ])
-                        ])
-                      ])
+                          _c(
+                            "router-link",
+                            {
+                              attrs: {
+                                to: {
+                                  name: "Withdraw",
+                                  query: { status: "pending" }
+                                }
+                              }
+                            },
+                            [
+                              _c("strong", [
+                                _vm._v(
+                                  _vm._s(
+                                    _vm.sprintf(
+                                      _vm.__("%s Withdrawals", "dokan-lite"),
+                                      _vm.overview.withdraw.pending
+                                    )
+                                  )
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "details" }, [
+                                _vm._v(
+                                  _vm._s(
+                                    _vm.__("awaiting approval", "dokan-lite")
+                                  )
+                                )
+                              ])
+                            ]
+                          )
+                        ],
+                        1
+                      )
                     ])
                   ])
                 : _c("div", { staticClass: "loading" }, [_c("loading")], 1)
@@ -5040,6 +5103,95 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("td", [
+            _c("p", {
+              staticClass: "description",
+              domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+            })
+          ])
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    "radio" == _vm.fieldData.type
+      ? _c("tr", { class: _vm.id }, [
+          _c("th", { attrs: { scope: "row" } }, [
+            _c(
+              "label",
+              {
+                attrs: { for: _vm.sectionId + "[" + _vm.fieldData.name + "]" }
+              },
+              [_vm._v(_vm._s(_vm.fieldData.label))]
+            )
+          ]),
+          _vm._v(" "),
+          _c("td", [
+            _c(
+              "fieldset",
+              [
+                _vm._l(_vm.fieldData.options, function(optionVal, optionKey) {
+                  return [
+                    _c(
+                      "label",
+                      {
+                        attrs: {
+                          for:
+                            _vm.sectionId +
+                            "[" +
+                            _vm.fieldData.name +
+                            "][" +
+                            optionKey +
+                            "]"
+                        }
+                      },
+                      [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.fieldValue[_vm.fieldData.name],
+                              expression: "fieldValue[fieldData.name]"
+                            }
+                          ],
+                          staticClass: "radio",
+                          attrs: {
+                            type: "radio",
+                            id:
+                              _vm.sectionId +
+                              "[" +
+                              _vm.fieldData.name +
+                              "][" +
+                              optionKey +
+                              "]",
+                            name: optionKey
+                          },
+                          domProps: {
+                            value: optionKey,
+                            checked: _vm._q(
+                              _vm.fieldValue[_vm.fieldData.name],
+                              optionKey
+                            )
+                          },
+                          on: {
+                            change: function($event) {
+                              _vm.$set(
+                                _vm.fieldValue,
+                                _vm.fieldData.name,
+                                optionKey
+                              )
+                            }
+                          }
+                        }),
+                        _vm._v(
+                          " " + _vm._s(optionVal) + "\n                    "
+                        )
+                      ]
+                    )
+                  ]
+                })
+              ],
+              2
+            ),
+            _vm._v(" "),
             _c("p", {
               staticClass: "description",
               domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }

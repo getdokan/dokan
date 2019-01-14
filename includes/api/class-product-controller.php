@@ -122,7 +122,7 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
                     'type'        => 'integer',
                     'required'    => true,
                 ),
-                'number' => array(
+                'per_page' => array(
                     'description' => __( 'Number of product you want to get top rated product', 'dokan-lite' ),
                     'type'        => 'integer',
                     'default'     => 10
@@ -136,10 +136,15 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
 
         register_rest_route( $this->namespace, '/' . $this->base . '/top_rated', array(
             'args' => array(
-                'number' => array(
+                'per_page' => array(
                     'description' => __( 'Number of product you want to get top rated product', 'dokan-lite' ),
                     'type'        => 'integer',
                     'default'     => 8
+                ),
+                'page' => array(
+                    'description' => __( 'Number of page number' ),
+                    'type'        => 'integer',
+                    'default'     => 1
                 ),
                 'seller_id' => array(
                     'description' => __( 'Top rated product for specific vendor', 'dokan-lite' ),
@@ -154,10 +159,15 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
 
         register_rest_route( $this->namespace, '/' . $this->base . '/best_selling', array(
             'args' => array(
-                'number' => array(
+                'per_page' => array(
                     'description' => __( 'Number of product you want to get top rated product', 'dokan-lite' ),
                     'type'        => 'integer',
                     'default'     => 8
+                ),
+                'page' => array(
+                    'description' => __( 'Number of page number' ),
+                    'type'        => 'integer',
+                    'default'     => 1
                 ),
                 'seller_id' => array(
                     'description' => __( 'Top rated product for specific vendor', 'dokan-lite' ),
@@ -172,10 +182,15 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
 
         register_rest_route( $this->namespace, '/' . $this->base . '/featured', array(
             'args' => array(
-                'number' => array(
+                'per_page' => array(
                     'description' => __( 'Number of product you want to get top rated product', 'dokan-lite' ),
                     'type'        => 'integer',
                     'default'     => 8
+                ),
+                'page' => array(
+                    'description' => __( 'Number of page number' ),
+                    'type'        => 'integer',
+                    'default'     => 1
                 ),
                 'seller_id' => array(
                     'description' => __( 'Top rated product for specific vendor', 'dokan-lite' ),
@@ -190,10 +205,15 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
 
         register_rest_route( $this->namespace, '/' . $this->base . '/latest', array(
             'args' => array(
-                'number' => array(
+                'per_page' => array(
                     'description' => __( 'Number of product you want to get top rated product', 'dokan-lite' ),
                     'type'        => 'integer',
                     'default'     => 8
+                ),
+                'page' => array(
+                    'description' => __( 'Number of page number' ),
+                    'type'        => 'integer',
+                    'default'     => 1
                 ),
                 'seller_id' => array(
                     'description' => __( 'Top rated product for specific vendor', 'dokan-lite' ),
@@ -401,7 +421,7 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
      * @return void
      */
     public function get_related_product( $request ) {
-        $related_ids = wc_get_related_products( $request['id'], $request['number'] );
+        $related_ids = wc_get_related_products( $request['id'], $request['per_page'] );
         $response = array();
 
         if ( ! empty( $related_ids )  ) {
@@ -426,7 +446,7 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
      * @return void
      */
     public function get_top_rated_product( $request ) {
-        $result   = dokan_get_top_rated_products( $request['number'], $request['seller_id'] );
+        $result   = dokan_get_top_rated_products( $request['per_page'], $request['seller_id'], $request['page'] );
         $data     = array();
         $response = array();
 
@@ -439,6 +459,7 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
             }
 
             $response = rest_ensure_response( $data_objects );
+            $response = $this->format_collection_response( $response, $request, $result->found_posts );
         }
 
         return $response;
@@ -452,7 +473,7 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
      * @return array
      */
     public function get_best_selling_product( $request ) {
-        $result   = dokan_get_best_selling_products( $request['number'], $request['seller_id'] );
+        $result   = dokan_get_best_selling_products( $request['per_page'], $request['seller_id'], $request['page'] );
         $data     = array();
         $response = array();
 
@@ -465,6 +486,7 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
             }
 
             $response = rest_ensure_response( $data_objects );
+            $response = $this->format_collection_response( $response, $request, $result->found_posts );
         }
 
         return $response;
@@ -478,7 +500,7 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
      * @return array
      */
     public function get_featured_product( $request ) {
-        $result   = dokan_get_featured_products( $request['number'], $request['seller_id'] );
+        $result   = dokan_get_featured_products( $request['per_page'], $request['seller_id'], $request['page'] );
         $data     = array();
         $response = array();
 
@@ -491,6 +513,7 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
             }
 
             $response = rest_ensure_response( $data_objects );
+            $response = $this->format_collection_response( $response, $request, $result->found_posts );
         }
 
         return $response;
@@ -503,9 +526,9 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
      * @return array
      */
     public function get_latest_product( $request ) {
-        $result   = dokan_get_latest_products( $request['number'], $request['seller_id'] );
-        $data     = array();
-        $response = array();
+        $result      = dokan_get_latest_products( $request['per_page'], $request['seller_id'], $request['page'] );
+        $data        = array();
+        $response    = array();
 
         if ( $result->posts ) {
             $objects = array_map( array( $this, 'get_object' ), $result->posts );
@@ -516,6 +539,7 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
             }
 
             $response = rest_ensure_response( $data_objects );
+            $response = $this->format_collection_response( $response, $request, $result->found_posts );
         }
 
         return $response;
@@ -654,12 +678,14 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
      * @return array
      */
     protected function prepare_data_for_response( $product, $request ) {
-        $context = ! empty( $request['context'] ) ? $request['context'] : 'view';
+        $context   = ! empty( $request['context'] ) ? $request['context'] : 'view';
+        $author_id = get_post_field( 'post_author', $product->get_id() );
+        $store     = dokan()->vendor->get( $author_id );
         $data = array(
             'id'                    => $product->get_id(),
             'name'                  => $product->get_name( $context ),
             'slug'                  => $product->get_slug( $context ),
-            'post_author'           => get_post_field( 'post_author', $product->get_id() ),
+            'post_author'           => $author_id,
             'permalink'             => $product->get_permalink(),
             'date_created'          => wc_rest_prepare_date_response( $product->get_date_created( $context ), false ),
             'date_created_gmt'      => wc_rest_prepare_date_response( $product->get_date_created( $context ) ),
@@ -727,6 +753,13 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
             'grouped_products'      => array(),
             'menu_order'            => $product->get_menu_order( $context ),
             'meta_data'             => $product->get_meta_data(),
+            'store'                 => array(
+                                        'id'      => $store->get_id(),
+                                        'name'    => $store->get_shop_name(),
+                                        'url'     => $store->get_shop_url(),
+                                        'avatar'  => $store->get_avatar(),
+                                        'address' => $store->get_address()
+                                    )
         );
 
         $response = rest_ensure_response( $data );

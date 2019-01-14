@@ -749,4 +749,20 @@ class Dokan_Vendor {
         }
     }
 
+    /**
+     * Get a vendor products
+     *
+     * @return object
+     */
+    public function get_products() {
+        $products = dokan()->product->all( [
+            'author' => $this->id
+        ] );
+
+        if ( ! $products ) {
+            return null;
+        }
+
+        return $products;
+    }
 }

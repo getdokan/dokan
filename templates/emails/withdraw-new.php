@@ -33,7 +33,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
         <strong>
             <?php esc_html_e( 'Request Amount:', 'dokan-lite' ); ?>
         </strong>
-        <?php echo esc_attr( $data['amount'] ); ?>
+        <?php echo $data['amount']; ?>
     </li>
     <li>
         <strong>

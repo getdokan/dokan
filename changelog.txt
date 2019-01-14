@@ -1,3 +1,16 @@
+v2.9.8 -> Jan 14, 2019
+------------------------
+-**Fix**   Show net sales of a month in admin dashboard
+-**Fix**   Change pagination param and add store info in product REST apis
+-**Fix**   New product form description escaping issue
+-**Fix**   Withdraw amount rounding issue in vendor dashboard
+-**Fix**   Withdraw request email is not showing properly is fixed
+-**Fix**   Order listing page date time format in vendor dashboard
+-**Fix**   Child category is not showing in hierarchically
+-**Fix**   Nonce verification issue is fixed during checkout
+-**Tweak** Return theme 404 page when vendor store is not found
+-**Tweak** Added quick links in admin dokan dashboard in overview sections
+
 v2.9.7 -> Dec 19, 2018
 ------------------------
 -**Fix**   Product category and tag creation issue from product popup in vendor dashboard

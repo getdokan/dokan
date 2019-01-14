@@ -3,12 +3,12 @@
 Plugin Name: Dokan
 Plugin URI: https://wordpress.org/plugins/dokan-lite/
 Description: An e-commerce marketplace plugin for WordPress. Powered by WooCommerce and weDevs.
-Version: 2.9.7
+Version: 2.9.8
 Author: weDevs, LLC
 Author URI: https://wedevs.com/
 Text Domain: dokan-lite
 WC requires at least: 3.0
-WC tested up to: 3.5.2
+WC tested up to: 3.5.3
 Domain Path: /languages/
 License: GPL2
 */
@@ -78,7 +78,7 @@ final class WeDevs_Dokan {
      *
      * @var string
      */
-    public $version = '2.9.7';
+    public $version = '2.9.8';
 
     /**
      * Minimum PHP version required
@@ -104,10 +104,6 @@ final class WeDevs_Dokan {
      */
     public function __construct() {
         $this->define_constants();
-
-        if ( ! $this->is_supported_php() ) {
-            return;
-        }
 
         register_activation_hook( __FILE__, array( $this, 'activate' ) );
         register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
@@ -192,8 +188,15 @@ final class WeDevs_Dokan {
             wp_die( '<div class="error"><p>' . sprintf( esc_html__( '<b>Dokan</b> requires <a href="%s">WooCommerce</a> to be installed & activated!', 'dokan-lite' ), '<a target="_blank" href="https://wordpress.org/plugins/woocommerce/">', '</a>' ) . '</p></div>' );
         }
 
+        if ( ! $this->is_supported_php() ) {
+            require_once WC_ABSPATH . 'includes/wc-notice-functions.php';
+
+            wc_print_notice( sprintf( __( 'The Minimum PHP Version Requirement for <b>Dokan</b> is %s. You are Running PHP %s', 'dokan' ), $this->min_php, phpversion(), 'error' ) );
+            exit;
+        }
+
         require_once dirname( __FILE__ ) . '/includes/functions.php';
-    require_once dirname( __FILE__ ) . '/includes/functions-compatibility.php';
+        require_once dirname( __FILE__ ) . '/includes/functions-compatibility.php';
 
         // Background Processes
         require_once dirname( __FILE__ ) . '/includes/background-processes/class-dokan-background-processes.php';

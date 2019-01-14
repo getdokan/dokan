@@ -1429,10 +1429,12 @@ function dokan_get_percentage_of( $this_period = 0, $last_period = 0 ) {
 /**
  * Get seller count based on enable, disabled sellers and time period
  *
- * @global WPDB $wpdb
+ * @param string $from
+ * @param string $to
+ *
  * @return array
  */
-function dokan_get_seller_count() {
+function dokan_get_seller_count( $from = null, $to = null ) {
 
     $inactive_sellers = dokan_get_sellers( array(
         'number' => -1,
@@ -1461,25 +1463,72 @@ function dokan_get_seller_count() {
         ),
     ) );
 
-    $vendor_parcent = dokan_get_percentage_of( $this_month['count'], $last_month['count'] );
+    if ( $from && $to ) {
+        $prepared_date = dokan_prepare_date_query( $from, $to );
+
+        $this_period = dokan_get_sellers(
+            array(
+                'date_query' => array(
+                    array(
+                        'after' => array(
+                            'year'  => $prepared_date['from_year'],
+                            'month' => $prepared_date['from_month'],
+                            'day'   => $prepared_date['from_day']
+                        ),
+                        'before' => array(
+                            'year'  => $prepared_date['to_year'],
+                            'month' => $prepared_date['to_month'],
+                            'day'   => $prepared_date['to_day']
+                        )
+                    )
+                ),
+            )
+        );
+
+        $last_period = dokan_get_sellers(
+            array(
+                'date_query' => array(
+                    array(
+                       'after' => array(
+                            'year'  => $prepared_date['last_from_year'],
+                            'month' => $prepared_date['last_from_month'],
+                            'day'   => $prepared_date['last_from_day'],
+                        ),
+                        'before' => array(
+                            'year'  => $prepared_date['last_to_year'],
+                            'month' => $prepared_date['last_to_month'],
+                            'day'   => $prepared_date['last_to_day'],
+                        )
+                    )
+                ),
+            )
+        );
+
+        $vendor_parcent = dokan_get_percentage_of( $this_period['count'], $last_period['count'] );
+    } else {
+        $vendor_parcent = dokan_get_percentage_of( $this_month['count'], $last_month['count'] );
+    }
 
     return array(
-        'inactive'      => $inactive_sellers['count'],
-        'active'        => $active_sellers['count'],
-        'this_month'    => $this_month['count'],
-        'last_month'    => $last_month['count'],
-        'class'         => $vendor_parcent['class'],
-        'parcent'       => $vendor_parcent['parcent'],
+        'inactive'    => $inactive_sellers['count'],
+        'active'      => $active_sellers['count'],
+        'this_month'  => $this_month['count'],
+        'last_month'  => $last_month['count'],
+        'this_period' => $from && $to ? $this_period['count'] : null,
+        'class'       => $vendor_parcent['class'],
+        'parcent'     => $vendor_parcent['parcent'],
     );
 }
 
 /**
  * Get product count of this month and last month with percentage
  *
- * @global WPDB $wpdb
+ * @param string $from
+ * @param string $to
+ *
  * @return array
  */
-function dokan_get_product_count() {
+function dokan_get_product_count( $from = null, $to = null, $seller_id = null ) {
 
     $this_month_posts = dokan()->product->all(
         array(
@@ -1489,6 +1538,8 @@ function dokan_get_product_count() {
                     'month' => date( 'm' ),
                 ),
             ),
+            'author' => $seller_id ? $seller_id : '',
+            'fields' => 'ids'
         )
     );
 
@@ -1500,18 +1551,133 @@ function dokan_get_product_count() {
                     'month' => date( 'm', strtotime( 'last month' ) ),
                 ),
             ),
+            'author' => $seller_id ? $seller_id : '',
+            'fields' => 'ids'
         )
     );
 
-    $product_parcent = dokan_get_percentage_of( count( $this_month_posts->posts ), count( $last_month_posts->posts ) );
+    if ( $from && $to ) {
+        $prepared_date = dokan_prepare_date_query( $from, $to );
+
+        $this_period = dokan()->product->all(
+            array(
+                'date_query' => array(
+                    array(
+                        'after' => array(
+                            'year'  => $prepared_date['from_year'],
+                            'month' => $prepared_date['from_month'],
+                            'day'   => $prepared_date['from_day']
+                        ),
+                        'before' => array(
+                            'year'  => $prepared_date['to_year'],
+                            'month' => $prepared_date['to_month'],
+                            'day'   => $prepared_date['to_day']
+                        )
+                    )
+                ),
+                'author' => $seller_id ? $seller_id : '',
+                'fields' => 'ids'
+            )
+        );
+
+        $last_period = dokan()->product->all(
+            array(
+                'date_query' => array(
+                    array(
+                        'after' => array(
+                            'year'  => $prepared_date['last_from_year'],
+                            'month' => $prepared_date['last_from_month'],
+                            'day'   => $prepared_date['last_from_day'],
+                        ),
+                        'before' => array(
+                            'year'  => $prepared_date['last_to_year'],
+                            'month' => $prepared_date['last_to_month'],
+                            'day'   => $prepared_date['last_to_day'],
+                        )
+                    )
+                ),
+                'author' => $seller_id ? $seller_id : '',
+                'fields' => 'ids'
+            )
+        );
+
+        $product_parcent = dokan_get_percentage_of( $this_period->found_posts, $last_period->found_posts );
+    } else {
+        $product_parcent = dokan_get_percentage_of( $this_month_posts->found_posts, $last_month_posts->found_posts );
+    }
 
     return array(
-        'this_month'    => count( $this_month_posts->posts ),
-        'last_month'    => count( $last_month_posts->posts ),
-        'class'         => $product_parcent['class'],
-        'parcent'       => $product_parcent['parcent'],
+        'this_month'  => $this_month_posts->found_posts,
+        'last_month'  => $last_month_posts->found_posts,
+        'this_period' => $from && $to ? $this_period->found_posts : null,
+        'class'       => $product_parcent['class'],
+        'parcent'     => $product_parcent['parcent'],
     );
+}
 
+/**
+ * Dokan prepare date query
+ *
+ * @param  string $from
+ * @param  string $to
+ *
+ * @return array
+ */
+function dokan_prepare_date_query( $from, $to ) {
+
+    if ( ! $from || ! $to ) {
+        return;
+    }
+
+    $from_date     = date_create( $from );
+    $raw_from_date = date_create( $from );
+    $to_date       = date_create( $to );
+    $raw_to_date   = date_create( $to );
+
+    if ( ! $from_date || ! $to_date ) {
+        return wp_send_json( __( 'Date is not valid', 'dokan' ) );
+    }
+
+    $from_year  = $from_date->format( 'Y' );
+    $from_month = $from_date->format( 'm' );
+    $from_day   = $from_date->format( 'd' );
+
+    $to_year    = $to_date->format( 'Y' );
+    $to_month   = $to_date->format( 'm' );
+    $to_day     = $to_date->format( 'd' );
+
+    $date_diff      = date_diff( $from_date, $to_date );
+    $last_from_date = $from_date->sub( $date_diff );
+    $last_to_date   = $to_date->sub( $date_diff );
+
+    $last_from_year  = $last_from_date->format( 'Y' );
+    $last_from_month = $last_from_date->format( 'm' );
+    $last_from_day   = $last_from_date->format( 'd' );
+
+    $last_to_year    = $last_to_date->format( 'Y' );
+    $last_to_month   = $last_to_date->format( 'm' );
+    $last_to_day     = $last_to_date->format( 'd' );
+
+    $prepared_data = [
+        'from_year'           => $from_year,
+        'from_month'          => $from_month,
+        'from_day'            => $from_day,
+        'to_year'             => $to_year,
+        'to_month'            => $to_month,
+        'to_day'              => $to_day,
+        'from_full_date'      => $raw_from_date->format( 'Y-m-d' ),
+        'to_full_date'        => $raw_to_date->format( 'Y-m-d' ),
+        'last_from_year'      => $last_from_year,
+        'last_from_month'     => $last_from_month,
+        'last_from_day'       => $last_from_day,
+        'last_from_full_date' => $last_from_date->format( 'Y-m-d' ),
+        'last_to_year'        => $last_to_year,
+        'last_to_month'       => $last_to_month,
+        'last_to_day'         => $last_to_day,
+        'last_to_full_date'   => $last_to_date->format( 'Y-m-d' ),
+    ];
+
+    return $prepared_data;
 }
 
 /**
@@ -1520,9 +1686,8 @@ function dokan_get_product_count() {
  * @global WPDB $wpdb
  * @return array
  */
-function dokan_get_sales_count() {
-
-    $this_month_report_data    = dokan_admin_report_data();
+function dokan_get_sales_count( $from = null, $to = null, $seller_id = 0 ) {
+    $this_month_report_data = dokan_admin_report_data( 'day', '', '', '', $seller_id );
 
     $this_month_order_total = $this_month_earning_total = $this_month_total_orders = 0;
 
@@ -1534,7 +1699,7 @@ function dokan_get_sales_count() {
         }
     }
 
-    $last_month_report_data = dokan_admin_report_data( 'day', '', date( 'Y-m-d', strtotime( 'first day of previous month' ) ), date( 'Y-m-d', strtotime( 'last day of previous month' ) ) );
+    $last_month_report_data = dokan_admin_report_data( 'day', '', date( 'Y-m-d', strtotime( 'first day of previous month' ) ), date( 'Y-m-d', strtotime( 'last day of previous month' ) ), $seller_id );
     $last_month_order_total = $last_month_earning_total = $last_month_total_orders = 0;
 
     if ( $last_month_report_data ) {
@@ -1545,22 +1710,60 @@ function dokan_get_sales_count() {
         }
     }
 
-    $sale_percentage       = dokan_get_percentage_of( $this_month_order_total, $last_month_order_total );
-    $earning_percentage    = dokan_get_percentage_of( $this_month_earning_total, $last_month_earning_total );
-    $order_percentage      = dokan_get_percentage_of( $this_month_total_orders, $last_month_total_orders );
+    if ( $from && $to ) {
+        $date             = dokan_prepare_date_query( $from, $to );
+        $this_period_data = dokan_admin_report_data( 'day', $date['from_year'], $date['from_full_date'], $date['to_full_date'], $seller_id );
+        $last_period_data = dokan_admin_report_data( 'day', $date['last_from_year'], $date['last_from_full_date'], $date['last_to_full_date'], $seller_id );
+
+        $this_period_order_total = $this_period_earning_total = $this_period_total_orders = 0;
+        $last_period_order_total = $last_period_earning_total = $last_period_total_orders = 0;
+
+        if ( $this_period_data ) {
+            foreach ( $this_period_data as $row ) {
+                $this_period_order_total   += $row->order_total;
+                $this_period_earning_total += $row->earning;
+                $this_period_total_orders  += $row->total_orders;
+            }
+        }
+
+        if ( $last_period_data ) {
+            foreach ( $last_period_data as $row ) {
+                $last_period_order_total   += $row->order_total;
+                $last_period_earning_total += $row->earning;
+                $last_period_total_orders  += $row->total_orders;
+            }
+        }
+
+        $sale_percentage    = dokan_get_percentage_of( $this_period_order_total, $last_period_order_total );
+        $earning_percentage = dokan_get_percentage_of( $this_period_earning_total, $last_period_earning_total );
+        $order_percentage   = dokan_get_percentage_of( $this_period_total_orders, $last_period_total_orders );
+    } else {
+        $sale_percentage    = dokan_get_percentage_of( $this_month_order_total, $last_month_order_total );
+        $earning_percentage = dokan_get_percentage_of( $this_month_earning_total, $last_month_earning_total );
+        $order_percentage   = dokan_get_percentage_of( $this_month_total_orders, $last_month_total_orders );
+    }
 
     $data = array(
+        'sales'    => array(
+            'this_month'  => $this_month_order_total,
+            'last_month'  => $last_month_order_total,
+            'this_period' => $from && $to ? $this_period_order_total : null,
+            'class'       => $sale_percentage['class'],
+            'parcent'     => $sale_percentage['parcent'],
+        ),
         'orders'    => array(
-            'this_month' => $this_month_order_total,
-            'last_month' => $last_month_order_total,
-            'class'      => $order_percentage['class'],
-            'parcent'    => $order_percentage['parcent'],
+            'this_month'  => $this_month_total_orders,
+            'last_month'  => $last_month_total_orders,
+            'this_period' => $from && $to ? $this_period_total_orders : null,
+            'class'       => $order_percentage['class'],
+            'parcent'     => $order_percentage['parcent'],
         ),
         'earning'   => array(
-            'this_month' => $this_month_earning_total,
-            'last_month' => $last_month_earning_total,
-            'class'      => $earning_percentage['class'],
-            'parcent'    => $earning_percentage['parcent'],
+            'this_month'  => $this_month_earning_total,
+            'last_month'  => $last_month_earning_total,
+            'this_period' => $from && $to ? $this_period_earning_total : null,
+            'class'       => $earning_percentage['class'],
+            'parcent'     => $earning_percentage['parcent'],
         ),
     );
 
@@ -3147,4 +3350,44 @@ function dokan_get_variable_product_earning( $product_id, $seller_id, $formated 
     $earning     = $min_earning . $seperator . $max_earning;
 
     return $earning;
+}
+
+/**
+ * Get page permalink of dokan pages by page id
+ *
+ * @since DOKAN_SINCE
+ *
+ * @param string $page_id
+ *
+ * @return string
+ */
+function dokan_get_permalink( $page_id ) {
+    if ( ! $page_id ) {
+        return false;
+    }
+
+    $pages = get_option( 'dokan_pages' );
+
+    return isset( $pages[$page_id] ) ? get_permalink( $pages[$page_id] ) : false;
+}
+
+/**
+ * Check if it's store listing page
+ *
+ * @since DOKAN_SINCE
+ *
+ * @return boolean
+ */
+function dokan_is_store_listing() {
+    $page_id = dokan_get_option( 'store_listing', 'dokan_pages' );
+
+    if ( ! $page_id ) {
+        return false;
+    }
+
+    if ( $page_id === get_the_ID() ) {
+        return true;
+    }
+
+    return false;
 }

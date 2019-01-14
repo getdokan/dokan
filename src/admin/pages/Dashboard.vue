@@ -11,10 +11,10 @@
                                 <div class="dashicons dashicons-chart-bar"></div>
                                 <a href="#">
                                     <strong>
-                                        <currency :amount="overview.orders.this_month"></currency>
+                                        <currency :amount="overview.sales.this_month"></currency>
                                     </strong>
                                     <div class="details">
-                                        {{ __( 'net sales this month', 'dokan-lite' ) }} <span :class="overview.orders.class">{{ overview.orders.parcent }}</span>
+                                        {{ __( 'net sales this month', 'dokan-lite' ) }} <span :class="overview.sales.class">{{ overview.sales.parcent }}</span>
                                     </div>
                                 </a>
                             </li>
@@ -31,19 +31,19 @@
                             </li>
                             <li class="vendor">
                                 <div class="dashicons dashicons-id"></div>
-                                <a href="#">
+                                <router-link :to="{name: 'Vendors'}">
                                     <strong>{{ sprintf( __( '%s Vendor', 'dokan-lite' ), overview.vendors.this_month ) }}</strong>
                                     <div class="details">
                                         {{ __( 'signup this month', 'dokan-lite' ) }} <span :class="overview.vendors.class">{{ overview.vendors.parcent }}</span>
                                     </div>
-                                </a>
+                                </router-link>
                             </li>
                             <li class="approval">
                                 <div class="dashicons dashicons-businessman"></div>
-                                <a href="#">
+                                <router-link :to="{name: 'Vendors', query: {status: 'pending'} }">
                                     <strong>{{ sprintf( __( '%s Vendor', 'dokan-lite' ), overview.vendors.inactive ) }}</strong>
                                     <div class="details">{{ __( 'awaiting approval', 'dokan-lite' ) }}</div>
-                                </a>
+                                </router-link>
                             </li>
                             <li class="product">
                                 <div class="dashicons dashicons-cart"></div>
@@ -56,10 +56,10 @@
                             </li>
                             <li class="withdraw">
                                 <div class="dashicons dashicons-money"></div>
-                                <a href="#">
+                                <router-link :to="{name: 'Withdraw', query: {status: 'pending'}}">
                                     <strong>{{ sprintf( __( '%s Withdrawals', 'dokan-lite' ), overview.withdraw.pending ) }}</strong>
                                     <div class="details">{{ __( 'awaiting approval', 'dokan-lite' ) }}</div>
-                                </a>
+                                </router-link>
                             </li>
                         </ul>
                     </div>

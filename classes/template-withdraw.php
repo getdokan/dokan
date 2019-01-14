@@ -245,8 +245,8 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
 
         $error           = new WP_Error();
         $limit           = $this->get_withdraw_limit();
-        $balance         = (string) dokan_get_seller_balance( dokan_get_current_user_id(), false );
-        $withdraw_amount = sanitize_text_field( $post_data['witdraw_amount'] );
+        $balance         = round( dokan_get_seller_balance( dokan_get_current_user_id(), false ), 2 );
+        $withdraw_amount = (float) $post_data['witdraw_amount'];
 
         if ( empty( $withdraw_amount ) ) {
             $error->add( 'dokan_empty_withdrad', __( 'Withdraw amount required ', 'dokan-lite' ) );

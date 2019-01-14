@@ -55,7 +55,7 @@ function dokan_save_product( $args ) {
     $post_arr = array(
         'post_type'    => 'product',
         'post_status'  => $post_status,
-        'post_title'   => sanitize_title( $data['post_title'] ),
+        'post_title'   => sanitize_text_field( $data['post_title'] ),
         'post_content' => sanitize_textarea_field( $data['post_content'] ),
         'post_excerpt' => sanitize_textarea_field( $data['post_excerpt'] ),
     );
@@ -554,3 +554,31 @@ function dokan_bulk_product_status_change() {
 }
 
 add_action( 'template_redirect', 'dokan_bulk_product_status_change' );
+
+/**
+ * Dokan get vendor by product
+ *
+ * @param int|object $id Product ID or Product Object
+ *
+ * @since  2.9.8
+ *
+ * @return object
+ */
+function dokan_get_vendor_by_product( $id ) {
+
+    if ( ! $id ) {
+        return null;
+    }
+
+    if ( $id instanceof WC_Product ) {
+        $id = $id->get_id();
+    }
+
+    $vendor_id = get_post_field( 'post_author', $id );
+
+    if ( ! $vendor_id ) {
+        return null;
+    }
+
+    return dokan()->vendor->get( $vendor_id );
+}

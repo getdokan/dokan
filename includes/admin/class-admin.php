@@ -179,7 +179,7 @@ class Dokan_Admin {
         $wp_admin_bar->add_menu( array(
             'id'     => 'dokan-dashboard',
             'parent' => 'dokan',
-            'title'  => __( 'Dokan Dashboard', 'dokan-lite' ),
+            'title'  => __( 'Dashboard', 'dokan-lite' ),
             'href'   => admin_url( 'admin.php?page=dokan' )
         ) );
 

@@ -223,7 +223,7 @@ function dokan_get_withdraw_count( $user_id = '' ) {
         $counts     = array( 'pending' => 0, 'completed' => 0, 'cancelled' => 0 );
 
         if ( ! empty( $user_id ) ) {
-            $result  = $wpdb->get_results( $wpbd->prepare( "SELECT COUNT(id) as count, status FROM {$wpdb->dokan_withdraw} WHERE user_id=%d GROUP BY status", $user_id ) );
+            $result  = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(id) as count, status FROM {$wpdb->dokan_withdraw} WHERE user_id=%d GROUP BY status", $user_id ) );
         } else {
             $result  = $wpdb->get_results( "SELECT COUNT(id) as count, status FROM {$wpdb->dokan_withdraw} WHERE 1=1 GROUP BY status" );
         }

@@ -112,6 +112,22 @@
             </td>
         </tr>
 
+        <tr :class="id" v-if="'radio' == fieldData.type">
+            <th scope="row">
+                <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
+            </th>
+            <td>
+                <fieldset>
+                    <template v-for="( optionVal, optionKey ) in fieldData.options">
+                        <label :for="sectionId + '[' + fieldData.name + '][' + optionKey + ']'">
+                            <input type="radio" :id="sectionId + '[' + fieldData.name + '][' + optionKey + ']'" class="radio" :name="optionKey" v-model="fieldValue[fieldData.name]" :value="optionKey"> {{ optionVal }}
+                        </label>
+                    </template>
+                </fieldset>
+                <p class="description" v-html="fieldData.desc"></p>
+            </td>
+        </tr>
+
         <tr :class="id" v-if="'wpeditor' == fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>

@@ -518,10 +518,11 @@ add_filter( 'pre_user_display_name', 'dokan_seller_displayname' );
  * @param int $per_page
  * @return \WP_Query
  */
-function dokan_get_featured_products( $per_page = 9, $seller_id = '' ) {
+function dokan_get_featured_products( $per_page = 9, $seller_id = '', $page = 1 ) {
 
     $args = array(
         'posts_per_page'      => $per_page,
+        'paged'               => $page,
         'post_status'         => 'publish',
         'ignore_sticky_posts' => 1,
         'tax_query'           => array(
@@ -544,10 +545,11 @@ function dokan_get_featured_products( $per_page = 9, $seller_id = '' ) {
  * @param int $per_page
  * @return \WP_Query
  */
-function dokan_get_latest_products( $per_page = 9, $seller_id = '' ) {
+function dokan_get_latest_products( $per_page = 9, $seller_id = '', $page = 1 ) {
 
     $args = array(
         'posts_per_page'      => $per_page,
+        'paged'               => $page,
         'post_status'         => 'publish',
         'orderby'             => 'publish_date',
         'ignore_sticky_posts' => 1,
@@ -568,13 +570,14 @@ function dokan_get_latest_products( $per_page = 9, $seller_id = '' ) {
  * @param int $per_page
  * @return \WP_Query
  */
-function dokan_get_best_selling_products( $per_page = 8, $seller_id = '' ) {
+function dokan_get_best_selling_products( $per_page = 8, $seller_id = '', $page = 1 ) {
 
     $args = array(
         'post_type'           => 'product',
         'post_status'         => 'publish',
         'ignore_sticky_posts' => 1,
         'posts_per_page'      => $per_page,
+        'paged'               => $page
     );
 
     if ( ! empty( $seller_id ) ) {
@@ -612,13 +615,14 @@ function check_more_seller_product_tab() {
  * @param int $per_page
  * @return \WP_Query
  */
-function dokan_get_top_rated_products( $per_page = 8, $seller_id = '' ) {
+function dokan_get_top_rated_products( $per_page = 8, $seller_id = '', $page = 1 ) {
 
     $args = array(
         'post_type'           => 'product',
         'post_status'         => 'publish',
         'ignore_sticky_posts' => 1,
         'posts_per_page'      => $per_page,
+        'paged'               => $page
     );
 
     if ( ! empty( $seller_id ) ) {
