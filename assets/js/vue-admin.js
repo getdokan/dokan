@@ -2615,60 +2615,89 @@ var render = function() {
                         ])
                       ]),
                       _vm._v(" "),
-                      _c("li", { staticClass: "vendor" }, [
-                        _c("div", { staticClass: "dashicons dashicons-id" }),
-                        _vm._v(" "),
-                        _c("a", { attrs: { href: "#" } }, [
-                          _c("strong", [
-                            _vm._v(
-                              _vm._s(
-                                _vm.sprintf(
-                                  _vm.__("%s Vendor", "dokan-lite"),
-                                  _vm.overview.vendors.this_month
-                                )
-                              )
-                            )
-                          ]),
+                      _c(
+                        "li",
+                        { staticClass: "vendor" },
+                        [
+                          _c("div", { staticClass: "dashicons dashicons-id" }),
                           _vm._v(" "),
-                          _c("div", { staticClass: "details" }, [
-                            _vm._v(
-                              "\n                                    " +
-                                _vm._s(
-                                  _vm.__("signup this month", "dokan-lite")
-                                ) +
-                                " "
-                            ),
-                            _c("span", { class: _vm.overview.vendors.class }, [
-                              _vm._v(_vm._s(_vm.overview.vendors.parcent))
-                            ])
-                          ])
-                        ])
-                      ]),
+                          _c(
+                            "router-link",
+                            { attrs: { to: { name: "Vendors" } } },
+                            [
+                              _c("strong", [
+                                _vm._v(
+                                  _vm._s(
+                                    _vm.sprintf(
+                                      _vm.__("%s Vendor", "dokan-lite"),
+                                      _vm.overview.vendors.this_month
+                                    )
+                                  )
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "details" }, [
+                                _vm._v(
+                                  "\n                                    " +
+                                    _vm._s(
+                                      _vm.__("signup this month", "dokan-lite")
+                                    ) +
+                                    " "
+                                ),
+                                _c(
+                                  "span",
+                                  { class: _vm.overview.vendors.class },
+                                  [_vm._v(_vm._s(_vm.overview.vendors.parcent))]
+                                )
+                              ])
+                            ]
+                          )
+                        ],
+                        1
+                      ),
                       _vm._v(" "),
-                      _c("li", { staticClass: "approval" }, [
-                        _c("div", {
-                          staticClass: "dashicons dashicons-businessman"
-                        }),
-                        _vm._v(" "),
-                        _c("a", { attrs: { href: "#" } }, [
-                          _c("strong", [
-                            _vm._v(
-                              _vm._s(
-                                _vm.sprintf(
-                                  _vm.__("%s Vendor", "dokan-lite"),
-                                  _vm.overview.vendors.inactive
-                                )
-                              )
-                            )
-                          ]),
+                      _c(
+                        "li",
+                        { staticClass: "approval" },
+                        [
+                          _c("div", {
+                            staticClass: "dashicons dashicons-businessman"
+                          }),
                           _vm._v(" "),
-                          _c("div", { staticClass: "details" }, [
-                            _vm._v(
-                              _vm._s(_vm.__("awaiting approval", "dokan-lite"))
-                            )
-                          ])
-                        ])
-                      ]),
+                          _c(
+                            "router-link",
+                            {
+                              attrs: {
+                                to: {
+                                  name: "Vendors",
+                                  query: { status: "pending" }
+                                }
+                              }
+                            },
+                            [
+                              _c("strong", [
+                                _vm._v(
+                                  _vm._s(
+                                    _vm.sprintf(
+                                      _vm.__("%s Vendor", "dokan-lite"),
+                                      _vm.overview.vendors.inactive
+                                    )
+                                  )
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "details" }, [
+                                _vm._v(
+                                  _vm._s(
+                                    _vm.__("awaiting approval", "dokan-lite")
+                                  )
+                                )
+                              ])
+                            ]
+                          )
+                        ],
+                        1
+                      ),
                       _vm._v(" "),
                       _c("li", { staticClass: "product" }, [
                         _c("div", { staticClass: "dashicons dashicons-cart" }),
@@ -2700,28 +2729,48 @@ var render = function() {
                         ])
                       ]),
                       _vm._v(" "),
-                      _c("li", { staticClass: "withdraw" }, [
-                        _c("div", { staticClass: "dashicons dashicons-money" }),
-                        _vm._v(" "),
-                        _c("a", { attrs: { href: "#" } }, [
-                          _c("strong", [
-                            _vm._v(
-                              _vm._s(
-                                _vm.sprintf(
-                                  _vm.__("%s Withdrawals", "dokan-lite"),
-                                  _vm.overview.withdraw.pending
-                                )
-                              )
-                            )
-                          ]),
+                      _c(
+                        "li",
+                        { staticClass: "withdraw" },
+                        [
+                          _c("div", {
+                            staticClass: "dashicons dashicons-money"
+                          }),
                           _vm._v(" "),
-                          _c("div", { staticClass: "details" }, [
-                            _vm._v(
-                              _vm._s(_vm.__("awaiting approval", "dokan-lite"))
-                            )
-                          ])
-                        ])
-                      ])
+                          _c(
+                            "router-link",
+                            {
+                              attrs: {
+                                to: {
+                                  name: "Withdraw",
+                                  query: { status: "pending" }
+                                }
+                              }
+                            },
+                            [
+                              _c("strong", [
+                                _vm._v(
+                                  _vm._s(
+                                    _vm.sprintf(
+                                      _vm.__("%s Withdrawals", "dokan-lite"),
+                                      _vm.overview.withdraw.pending
+                                    )
+                                  )
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "details" }, [
+                                _vm._v(
+                                  _vm._s(
+                                    _vm.__("awaiting approval", "dokan-lite")
+                                  )
+                                )
+                              ])
+                            ]
+                          )
+                        ],
+                        1
+                      )
                     ])
                   ])
                 : _c("div", { staticClass: "loading" }, [_c("loading")], 1)
