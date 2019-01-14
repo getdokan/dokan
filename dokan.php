@@ -105,10 +105,6 @@ final class WeDevs_Dokan {
     public function __construct() {
         $this->define_constants();
 
-        if ( ! $this->is_supported_php() ) {
-            return;
-        }
-
         register_activation_hook( __FILE__, array( $this, 'activate' ) );
         register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
 
@@ -192,8 +188,15 @@ final class WeDevs_Dokan {
             wp_die( '<div class="error"><p>' . sprintf( esc_html__( '<b>Dokan</b> requires <a href="%s">WooCommerce</a> to be installed & activated!', 'dokan-lite' ), '<a target="_blank" href="https://wordpress.org/plugins/woocommerce/">', '</a>' ) . '</p></div>' );
         }
 
+        if ( ! $this->is_supported_php() ) {
+            require_once WC_ABSPATH . 'includes/wc-notice-functions.php';
+
+            wc_print_notice( sprintf( __( 'The Minimum PHP Version Requirement for <b>Dokan</b> is %s. You are Running PHP %s', 'dokan' ), $this->min_php, phpversion(), 'error' ) );
+            exit;
+        }
+
         require_once dirname( __FILE__ ) . '/includes/functions.php';
-    require_once dirname( __FILE__ ) . '/includes/functions-compatibility.php';
+        require_once dirname( __FILE__ ) . '/includes/functions-compatibility.php';
 
         // Background Processes
         require_once dirname( __FILE__ ) . '/includes/background-processes/class-dokan-background-processes.php';
