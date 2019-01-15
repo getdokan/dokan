@@ -17,8 +17,8 @@
             jQuery(function($) {
                 <?php
                 $locations = explode( ',', $map_location );
-                $def_lat   = isset( $locations[0] ) ? $locations[0] : 90.40714300000002;
-                $def_long  = isset( $locations[1] ) ? $locations[1] : 23.709921;
+                $def_lat   = isset( $locations[0] ) ? $locations[0] : 23.709921;
+                $def_long  = isset( $locations[1] ) ? $locations[1] : 90.40714300000002;
                 ?>
 
                 var def_longval = <?php echo esc_attr( $def_long ); ?>;
