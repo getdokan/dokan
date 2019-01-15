@@ -376,22 +376,14 @@ function dokan_author_total_sales( $seller_id ) {
 
     if ( $earnings === false ) {
         $count = $wpdb->get_row(
-            $wpdb->prepare(
-                "SELECT SUM(order_total) as earnings, SUM(refund_amount) as refund_total
-                FROM {$wpdb->prefix}dokan_orders as do LEFT JOIN {$wpdb->prefix}posts as p ON do.order_id = p.ID
-                LEFT JOIN {$wpdb->prefix}dokan_refund as refund ON do.order_id = refund.order_id AND status = '1'
-                WHERE do.seller_id = %d AND order_status IN('wc-completed', 'wc-processing', 'wc-on-hold')",
-                $seller_id
-            )
+            $wpdb->prepare( "SELECT SUM(order_total) as earnings FROM {$wpdb->prefix}dokan_orders WHERE seller_id = %d AND order_status IN('wc-completed', 'wc-processing', 'wc-on-hold')", $seller_id )
         );
-
-        $earnings = $count->earnings - $count->refund_total;
 
         wp_cache_set( $cache_key, $earnings, $cache_group );
         dokan_cache_update_group( $cache_key, $cache_group );
     }
 
-    return apply_filters( 'dokan_seller_total_sales', $earnings );
+    return apply_filters( 'dokan_seller_total_sales', $count->earnings );
 }
 
 /**
