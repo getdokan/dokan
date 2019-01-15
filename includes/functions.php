@@ -2509,7 +2509,7 @@ function dokan_get_seller_short_address( $store_id, $line_break = true ) {
     } else if ( empty( $store_address['street_1'] ) && ! empty( $store_address['street_2'] ) ) {
         $short_address[] = "<span class='{$address_classes[1]}'> {$store_address['street_2']},</span>";
     } else if ( ! empty( $store_address['street_1'] ) && ! empty( $store_address['street_2'] ) ) {
-        $short_address[] = "<span class='{$address_classes[0]}'> {$store_address['street_1']},</span>";
+        $short_address[] = "<span class='{$address_classes[0]} {$address_classes[1]}'> {$store_address['street_1']}, {$store_address['street_2']}</span>";
     }
 
     if ( ! empty( $store_address['city'] ) && ! empty( $store_address['city'] ) ) {
