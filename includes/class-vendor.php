@@ -501,7 +501,7 @@ class Dokan_Vendor {
                     "SELECT SUM(debit) AS earnings
                     FROM {$wpdb->prefix}dokan_vendor_balance
                     WHERE
-                        vendor_id = %d AND DATE(balance_date) <= %s AND status IN ($status)",
+                        vendor_id = %d AND DATE(balance_date) <= %s AND status IN ($status) AND trn_type = 'dokan_orders'",
                     $this->id, $on_date ) );
 
                $credit_balance = $wpdb->get_row( $wpdb->prepare(
