@@ -217,20 +217,6 @@ class Dokan_Order_Manager {
                 }
             }
 
-            $order_id = $order->save();
-        } catch (Exception $e) {
-            return new WP_Error( 'dokan-suborder-error', $e->getMessage() );
-        }
-
-        if ( $order_id && !is_wp_error( $order_id ) ) {
-
-            // update total_sales count for sub-order
-            wc_update_total_sales_counts( $order_id );
-
-            dokan_log( 'Created sub order : #' . $order_id );
-
-            $order = wc_get_order( $order_id );
-
             // now insert line items
             $this->create_line_items( $order, $seller_products );
 
@@ -263,8 +249,18 @@ class Dokan_Order_Manager {
             // finally, let the order re-calculate itself and save
             $order->calculate_totals();
 
+            $order_id = $order->save();
+
+            // update total_sales count for sub-order
+            wc_update_total_sales_counts( $order_id );
+
+            dokan_log( 'Created sub order : #' . $order_id );
+
             do_action( 'dokan_checkout_update_order_meta', $order_id, $seller_id );
-        } // if order
+
+        } catch (Exception $e) {
+            return new WP_Error( 'dokan-suborder-error', $e->getMessage() );
+        }
     }
 
     /**

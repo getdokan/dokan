@@ -52,6 +52,7 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
         $this->post_status = array_keys( wc_get_order_statuses() );
 
         add_filter( 'woocommerce_new_order_data', array( $this, 'set_order_vendor_id' ) );
+        add_filter( 'woocommerce_rest_pre_insert_shop_order_object', array( $this, 'pre_insert_shop_order' ), 10, 3 );
         add_action( 'woocommerce_rest_insert_shop_order_object', array( $this, 'after_order_create' ), 10, 2 );
     }
 
@@ -724,6 +725,29 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
         }
 
         return $args;
+    }
+
+    /**
+     * Mark order as parent when it has products from multiple vendors
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WC_Order        $order
+     * @param WP_REST_Request $request
+     * @param bool            $creating
+     *
+     * @return WC_Order
+     */
+    public function pre_insert_shop_order( $order, $request, $creating ) {
+        if ( $creating ) {
+            $vendors = dokan_get_sellers_by( $order );
+
+            if ( count( $vendors ) > 1 ) {
+                $order->update_meta_data( 'has_sub_order', true );
+            }
+        }
+
+        return $order;
     }
 
     /**
