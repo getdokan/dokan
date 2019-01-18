@@ -353,39 +353,41 @@ if ( ! $from_shortcode ) {
                                         </div>
                                     </div><!-- .dokan-feat-image-upload -->
 
-                                    <div class="dokan-product-gallery">
-                                        <div class="dokan-side-body" id="dokan-product-images">
-                                            <div id="product_images_container">
-                                                <ul class="product_images dokan-clearfix">
-                                                    <?php
-                                                    $product_images = get_post_meta( $post_id, '_product_image_gallery', true );
-                                                    $gallery = explode( ',', $product_images );
+                                    <?php if ( apply_filters( 'dokan_product_gallery_allow_add_images', true ) ): ?>
+                                        <div class="dokan-product-gallery">
+                                            <div class="dokan-side-body" id="dokan-product-images">
+                                                <div id="product_images_container">
+                                                    <ul class="product_images dokan-clearfix">
+                                                        <?php
+                                                        $product_images = get_post_meta( $post_id, '_product_image_gallery', true );
+                                                        $gallery = explode( ',', $product_images );
 
-                                                    if ( $gallery ) {
-                                                        foreach ($gallery as $image_id) {
-                                                            if ( empty( $image_id ) ) {
-                                                                continue;
+                                                        if ( $gallery ) {
+                                                            foreach ($gallery as $image_id) {
+                                                                if ( empty( $image_id ) ) {
+                                                                    continue;
+                                                                }
+
+                                                                $attachment_image = wp_get_attachment_image_src( $image_id, 'thumbnail' );
+                                                                ?>
+                                                                <li class="image" data-attachment_id="<?php echo esc_attr( $image_id ); ?>">
+                                                                    <img src="<?php echo esc_url( $attachment_image[0] ); ?>" alt="">
+                                                                    <a href="#" class="action-delete" title="<?php esc_attr_e( 'Delete image', 'dokan-lite' ); ?>">&times;</a>
+                                                                </li>
+                                                                <?php
                                                             }
-
-                                                            $attachment_image = wp_get_attachment_image_src( $image_id, 'thumbnail' );
-                                                            ?>
-                                                            <li class="image" data-attachment_id="<?php echo esc_attr( $image_id ); ?>">
-                                                                <img src="<?php echo esc_url( $attachment_image[0] ); ?>" alt="">
-                                                                <a href="#" class="action-delete" title="<?php esc_attr_e( 'Delete image', 'dokan-lite' ); ?>">&times;</a>
-                                                            </li>
-                                                            <?php
                                                         }
-                                                    }
-                                                    ?>
-                                                    <li class="add-image add-product-images tips" data-title="<?php esc_html_e( 'Add gallery image', 'dokan-lite' ); ?>">
-                                                        <a href="#" class="add-product-images"><i class="fa fa-plus" aria-hidden="true"></i></a>
-                                                    </li>
-                                                </ul>
+                                                        ?>
+                                                        <li class="add-image add-product-images tips" data-title="<?php esc_html_e( 'Add gallery image', 'dokan-lite' ); ?>">
+                                                            <a href="#" class="add-product-images"><i class="fa fa-plus" aria-hidden="true"></i></a>
+                                                        </li>
+                                                    </ul>
 
-                                                <input type="hidden" id="product_image_gallery" name="product_image_gallery" value="<?php echo esc_attr( $product_images ); ?>">
+                                                    <input type="hidden" id="product_image_gallery" name="product_image_gallery" value="<?php echo esc_attr( $product_images ); ?>">
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div> <!-- .product-gallery -->
+                                        </div> <!-- .product-gallery -->
+                                    <?php endif; ?>
                                 </div><!-- .content-half-part -->
                             </div><!-- .dokan-form-top-area -->
 
