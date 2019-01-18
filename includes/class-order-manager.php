@@ -207,8 +207,6 @@ class Dokan_Order_Manager {
 
         try {
             $order = new WC_Order();
-            $order->set_status( $parent_order->get_status() );
-            $order->set_parent_id( $parent_order->get_id() );
 
             // save billing and shipping address
             foreach ( $bill_ship as $key ) {
@@ -248,6 +246,9 @@ class Dokan_Order_Manager {
 
             // finally, let the order re-calculate itself and save
             $order->calculate_totals();
+
+            $order->set_status( $parent_order->get_status() );
+            $order->set_parent_id( $parent_order->get_id() );
 
             $order_id = $order->save();
 
