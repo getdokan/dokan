@@ -47,6 +47,8 @@ class Dokan_Vendor {
             $this->id   = $vendor->ID;
             $this->data = $vendor;
         }
+
+        do_action( 'dokan_vendor', $this );
     }
 
     /**
