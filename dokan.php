@@ -271,7 +271,7 @@ final class WeDevs_Dokan {
         add_action( 'init', array( $this, 'localization_setup' ) );
 
         // initialize the classes
-        add_action( 'init', array( $this, 'init_classes' ),5 );
+        add_action( 'init', array( $this, 'init_classes' ), 4 );
         add_action( 'init', array( $this, 'wpdb_table_shortcuts' ) );
 
         add_action( 'plugins_loaded', array( $this, 'after_plugins_loaded' ) );
