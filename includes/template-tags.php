@@ -471,8 +471,10 @@ function dokan_dashboard_nav( $active_menu = '' ) {
 
     $menu .= '</ul>';
 
-    return $menu;
+    echo $menu;
 }
+
+add_action( 'dokan_dash_nav', 'dokan_dashboard_nav', 10, 1 );
 
 
 if ( ! function_exists( 'dokan_store_category_menu' ) ) :
