@@ -23,7 +23,8 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 <p>
     <?php esc_html_e( 'You sent a withdraw request of:', 'dokan-lite' ); ?>
     <br>
-    <?php esc_html_e( 'Amount : '.$data['amount'], 'dokan-lite' ); ?>
+    <?php esc_html_e( 'Amount : ', 'dokan-lite' ); ?>
+    <?php echo $data['amount']; ?>
     <br>
     <?php esc_html_e( 'Method : '.$data['method'], 'dokan-lite' ); ?>
 </p>
