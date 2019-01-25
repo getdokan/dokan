@@ -207,8 +207,6 @@ class Dokan_Order_Manager {
 
         try {
             $order = new WC_Order();
-            $order->set_status( $parent_order->get_status() );
-            $order->set_parent_id( $parent_order->get_id() );
 
             // save billing and shipping address
             foreach ( $bill_ship as $key ) {
@@ -216,20 +214,6 @@ class Dokan_Order_Manager {
                     $order->{"set_{$key}"}( $parent_order->{"get_{$key}"}() );
                 }
             }
-
-            $order_id = $order->save();
-        } catch (Exception $e) {
-            return new WP_Error( 'dokan-suborder-error', $e->getMessage() );
-        }
-
-        if ( $order_id && !is_wp_error( $order_id ) ) {
-
-            // update total_sales count for sub-order
-            wc_update_total_sales_counts( $order_id );
-
-            dokan_log( 'Created sub order : #' . $order_id );
-
-            $order = wc_get_order( $order_id );
 
             // now insert line items
             $this->create_line_items( $order, $seller_products );
@@ -263,8 +247,21 @@ class Dokan_Order_Manager {
             // finally, let the order re-calculate itself and save
             $order->calculate_totals();
 
+            $order->set_status( $parent_order->get_status() );
+            $order->set_parent_id( $parent_order->get_id() );
+
+            $order_id = $order->save();
+
+            // update total_sales count for sub-order
+            wc_update_total_sales_counts( $order_id );
+
+            dokan_log( 'Created sub order : #' . $order_id );
+
             do_action( 'dokan_checkout_update_order_meta', $order_id, $seller_id );
-        } // if order
+
+        } catch (Exception $e) {
+            return new WP_Error( 'dokan-suborder-error', $e->getMessage() );
+        }
     }
 
     /**

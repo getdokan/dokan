@@ -558,17 +558,21 @@ function dokan_total_orders() {
  * Return array of sellers with items
  *
  * @since 2.4.4
+ * @since DOKAN_SINCE Param can be an instance of WC_Order
  *
- * @param type $id
+ * @param WC_Order|int $order
  *
  * @return array $sellers_with_items
  */
-function dokan_get_sellers_by( $order_id ) {
+function dokan_get_sellers_by( $order ) {
+    if ( ! $order instanceof WC_Order ) {
+        $order  = wc_get_order( $order );
+    }
 
-    $order       = wc_get_order( $order_id );
     $order_items = $order->get_items();
 
     $sellers = array();
+
     foreach ( $order_items as $item ) {
         $seller_id             = get_post_field( 'post_author', $item['product_id'] );
         //New filter hook to modify the seller id at run time.
