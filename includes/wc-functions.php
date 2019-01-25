@@ -920,7 +920,7 @@ function dokan_save_account_details() {
 
         do_action( 'woocommerce_save_account_details', $user->ID );
 
-        wp_safe_redirect( dokan_get_navigation_url( ' edit-account' ) );
+        wp_safe_redirect( dokan_get_navigation_url( 'edit-account' ) );
         exit;
     }
 }
