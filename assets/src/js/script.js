@@ -68,12 +68,12 @@ jQuery(function($) {
     $.validator.setDefaults({ ignore: ":hidden" });
 
     var validatorError = function(error, element) {
-        var form_group = $(element).closest('.form-group');
+        var form_group = $(element).closest('.dokan-form-group');
         form_group.addClass('has-error').append(error);
     };
 
     var validatorSuccess = function(label, element) {
-        $(element).closest('.form-group').removeClass('has-error');
+        $(element).closest('.dokan-form-group').removeClass('has-error');
     };
 
     var api = wp.customize;
