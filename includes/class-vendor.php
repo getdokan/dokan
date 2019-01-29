@@ -29,6 +29,13 @@ class Dokan_Vendor {
     private $shop_data = array();
 
     /**
+     * Holds the updated fields
+     *
+     * @var array
+     */
+    private $changes = array();
+
+    /**
      * The constructor
      *
      * @param int|WP_User $vendor
@@ -192,6 +199,49 @@ class Dokan_Vendor {
         $shop_info = wp_parse_args( $shop_info, $defaults );
 
         $this->shop_data = apply_filters( 'dokan_vendor_shop_data', $shop_info, $this );
+    }
+
+    /**
+     * Update vendor info
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    public function update( $data = [] ) {
+
+        if ( ! $data ) {
+            return $this->shop_data;
+        }
+
+        // get previsouly saved dat
+        $this->popluate_store_data();
+
+        $posted = wp_unslash( $data );
+
+        // new data
+        $new_data = apply_filters( 'dokan_update_vendor_data', [
+            'store_name'              => ! empty( $posted['store_name'] ) ? $posted['store_name'] : '',
+            'social'                  => ! empty( $posted['social'] ) ? $posted['social'] : [],
+            'payment'                 => ! empty( $posted['payment'] ) ? $posted['paymet'] : [ 'paypal' => [ 'email' ], 'bank' => [] ],
+            'phone'                   => ! empty( $posted['phone'] ) ? $posted['phone'] : '',
+            'show_email'              => ! empty( $posted['show_email'] ) ? $posted['show_email'] : 'no',
+            'address'                 => ! empty( $posted['address'] ) ? $posted['address'] : [],
+            'location'                => ! empty( $posted['location'] ) ? $posted['location'] : '',
+            'banner'                  => ! empty( $posted['banner'] ) ? $posted['banner'] : 0,
+            'icon'                    => ! empty( $posted['icon'] ) ? $posted['icon'] : '',
+            'gravatar'                => ! empty( $posted['gravatar'] ) ? $posted['gravatar'] : 0,
+            'show_more_ptab'          => ! empty( $posted['show_more_ptab'] ) ? $posted['show_more_ptab'] : 'yes',
+            'store_ppp'               => ! empty( $posted['store_ppp'] ) ? $posted['store_ppp'] : 10,
+            'enable_tnc'              => ! empty( $posted['enable_tnc'] ) ? $posted['enable_tnc'] : 'off',
+            'store_tnc'               => ! empty( $posted['store_tnc'] ) ? $posted['store_tnc'] : '',
+            'show_min_order_discount' => ! empty( $posted['show_min_order_discount'] ) ? $posted['show_min_order_discount'] : 'no',
+            'store_seo'               => ! empty( $posted['store_seo'] ) ? $posted['store_seo'] : []
+        ] );
+
+        update_user_meta( $this->get_id(), 'dokan_profile_settings', array_replace_recursive( $this->shop_data, $new_data ) );
+
+        return $this->shop_data;
     }
 
     /**
