@@ -69,6 +69,7 @@ return [
 	__( 'Update Note', 'dokan-lite' ),
 	__( '(no name)', 'dokan-lite' ),
 	__( 'No requests found.', 'dokan-lite' ),
+	__( 'Paypal Mass Payment File is Generated.', 'dokan-lite' ),
 	__( 'Vendor', 'dokan-lite' ),
 	__( 'Amount', 'dokan-lite' ),
 	__( 'Status', 'dokan-lite' ),

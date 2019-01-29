@@ -266,7 +266,7 @@ class Dokan_Template_Settings {
         }
 
         if ( is_wp_error( $ajax_validate ) ) {
-            wp_send_json_error( $ajax_validate->errors );
+            wp_send_json_error( $ajax_validate->get_error_message() );
         }
 
         // we are good to go

@@ -111,7 +111,7 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
     $attributes = array();
 
     if ( isset( $data['attribute_names'] ) && is_array( $data['attribute_names'] ) && isset( $data['attribute_values'] ) && is_array( $data['attribute_values'] ) ) {
-        $attribute_names  = array_map( 'sanitize_title', $data['attribute_names'] );
+        $attribute_names  = array_map( 'wc_clean', $data['attribute_names'] );
 
         $attribute_values = array();
 
@@ -920,7 +920,7 @@ function dokan_save_account_details() {
 
         do_action( 'woocommerce_save_account_details', $user->ID );
 
-        wp_safe_redirect( dokan_get_navigation_url( ' edit-account' ) );
+        wp_safe_redirect( dokan_get_navigation_url( 'edit-account' ) );
         exit;
     }
 }

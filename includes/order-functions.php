@@ -558,17 +558,21 @@ function dokan_total_orders() {
  * Return array of sellers with items
  *
  * @since 2.4.4
+ * @since DOKAN_SINCE Param can be an instance of WC_Order
  *
- * @param type $id
+ * @param WC_Order|int $order
  *
  * @return array $sellers_with_items
  */
-function dokan_get_sellers_by( $order_id ) {
+function dokan_get_sellers_by( $order ) {
+    if ( ! $order instanceof WC_Order ) {
+        $order  = wc_get_order( $order );
+    }
 
-    $order       = wc_get_order( $order_id );
     $order_items = $order->get_items();
 
     $sellers = array();
+
     foreach ( $order_items as $item ) {
         $seller_id             = get_post_field( 'post_author', $item['product_id'] );
         //New filter hook to modify the seller id at run time.
@@ -684,7 +688,7 @@ function dokan_get_admin_commission_by( $order, $seller_id ) {
 
 if ( ! function_exists( 'dokan_get_customer_orders_by_seller' ) ) :
     /**
-     * Get Customer Orders by Seller
+     * Get Customer Order IDs by Seller
      *
      * @since 2.6.6
      *
@@ -692,20 +696,27 @@ if ( ! function_exists( 'dokan_get_customer_orders_by_seller' ) ) :
      *
      * @param int $seller_id
      *
-     * @return Object $order
+     * @return array|null on failure
      */
     function dokan_get_customer_orders_by_seller( $customer_id, $seller_id ) {
 
-        $customer_orders = get_posts( array(
-            'numberposts' => -1,
-            'author'      => $seller_id,
-            'meta_key'    => '_customer_user',
-            'meta_value'  => $customer_id,
-            'post_type'   => wc_get_order_types(),
-            'post_status' => array_keys( wc_get_order_statuses() ),
-        ) );
+        if ( ! $customer_id || ! $seller_id ) {
+            return null;
+        }
 
-        return $customer_orders;
+        $args = [
+            'customer_id'   => $customer_id,
+            'post_type'     => 'shop_order',
+            'meta_key'      => '_dokan_vendor_id',
+            'meta_value'    => $seller_id,
+            'post_status'   => array_keys( wc_get_order_statuses() ),
+            'return'        => 'ids',
+            'numberposts'   => -1,
+        ];
+
+        $orders = wc_get_orders( apply_filters( 'dokan_get_customer_orders_by_seller', $args ) );
+
+        return $orders ? $orders : null;
     }
 
 endif;

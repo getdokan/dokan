@@ -1,3 +1,14 @@
+v2.9.9 -> Jan 29, 2019
+------------------------
+-**Fix**   Send order email to admin, vendor & customer when an order is created via REST API
+-**Fix**   Show error message when there is an error in vendor settings page
+-**Fix**   Product attributes title saved with extra dash in vendor product edit page
+-**Fix**   Show vendor full address when a vendor wants to in vendor store page
+-**Fix**   PayPal mass payment is not generating all the info in admin dashboard
+-**Fix**   Withdraw request amount in approved & cancelled email is broken
+-**Fix**   Page is not redirecting correctly when a vendor edit his account
+-**Tweak** add filter to modify wp_editor args in vendor dashboard
+
 v2.9.8 -> Jan 14, 2019
 ------------------------
 -**Fix**   Show net sales of a month in admin dashboard

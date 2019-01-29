@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 2.9.8\n"
+"Project-Id-Version: Dokan 2.9.9\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2019-01-14 14:45:03+00:00\n"
+"POT-Creation-Date: 2019-01-29 16:28:49+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -273,8 +273,8 @@ msgid "Shipped date: "
 msgstr ""
 
 #: classes/ajax.php:467 includes/woo-views/html-product-download.php:14
-#: src/admin/pages/Withdraw.vue:163 src/admin/pages/Withdraw.vue:174
-#: src/admin/pages/Withdraw.vue:199 src/admin/pages/Withdraw.vue:214
+#: src/admin/pages/Withdraw.vue:164 src/admin/pages/Withdraw.vue:175
+#: src/admin/pages/Withdraw.vue:200 src/admin/pages/Withdraw.vue:215
 msgid "Delete"
 msgstr ""
 
@@ -296,7 +296,7 @@ msgstr ""
 #: includes/admin-functions.php:44 includes/admin-functions.php:50
 #: includes/admin-functions.php:685 includes/admin-functions.php:709
 #: includes/wc-template.php:14 includes/wc-template.php:147
-#: includes/wc-template.php:281 src/admin/pages/Withdraw.vue:122
+#: includes/wc-template.php:281 src/admin/pages/Withdraw.vue:123
 #: templates/my-orders.php:31
 msgid "Vendor"
 msgstr ""
@@ -440,8 +440,8 @@ msgstr ""
 msgid "Completed"
 msgstr ""
 
-#: classes/template-dashboard.php:110 src/admin/pages/Withdraw.vue:178
-#: src/admin/pages/Withdraw.vue:210 templates/dashboard/orders-widget.php:31
+#: classes/template-dashboard.php:110 src/admin/pages/Withdraw.vue:179
+#: src/admin/pages/Withdraw.vue:211 templates/dashboard/orders-widget.php:31
 msgid "Pending"
 msgstr ""
 
@@ -831,7 +831,7 @@ msgstr ""
 msgid "Define the seller store URL (%s<strong>[this-text]</strong>/[seller-name])"
 msgstr ""
 
-#: includes/admin/class-settings.php:274 includes/functions.php:1219
+#: includes/admin/class-settings.php:274 includes/functions.php:1213
 #: templates/settings/store-form.php:206
 msgid "Terms and Conditions"
 msgstr ""
@@ -1272,7 +1272,7 @@ msgstr ""
 msgid "Contact Admin"
 msgstr ""
 
-#: includes/admin-functions.php:45 src/admin/pages/Withdraw.vue:129
+#: includes/admin-functions.php:45 src/admin/pages/Withdraw.vue:130
 msgid "Actions"
 msgstr ""
 
@@ -1375,20 +1375,20 @@ msgid ""
 msgstr ""
 
 #: includes/api/class-api-rest-controller.php:62
-#: includes/api/class-order-controller.php:193
+#: includes/api/class-order-controller.php:194
 #: includes/api/class-product-controller.php:295
 #: includes/api/class-product-controller.php:320
 msgid "Invalid ID."
 msgstr ""
 
 #: includes/api/class-api-rest-controller.php:160
-#: includes/api/class-order-controller.php:623
+#: includes/api/class-order-controller.php:624
 msgid "The %s cannot be deleted."
 msgstr ""
 
-#: includes/api/class-order-controller.php:75
-#: includes/api/class-order-controller.php:104
-#: includes/api/class-order-controller.php:131
+#: includes/api/class-order-controller.php:76
+#: includes/api/class-order-controller.php:105
+#: includes/api/class-order-controller.php:132
 #: includes/api/class-product-controller.php:58
 #: includes/api/class-product-controller.php:80
 #: includes/api/class-product-controller.php:121
@@ -1402,477 +1402,477 @@ msgstr ""
 msgid "Unique identifier for the object."
 msgstr ""
 
-#: includes/api/class-order-controller.php:92 includes/order-functions.php:728
+#: includes/api/class-order-controller.php:93 includes/order-functions.php:739
 msgid "Order Status"
 msgstr ""
 
-#: includes/api/class-order-controller.php:121
+#: includes/api/class-order-controller.php:122
 msgid "Order note content."
 msgstr ""
 
-#: includes/api/class-order-controller.php:135
+#: includes/api/class-order-controller.php:136
 msgid "Unique identifier for the note object."
 msgstr ""
 
-#: includes/api/class-order-controller.php:187
+#: includes/api/class-order-controller.php:188
 #: includes/api/class-product-controller.php:252
 #: includes/api/class-product-controller.php:289
 msgid "No seller found"
 msgstr ""
 
-#: includes/api/class-order-controller.php:199
+#: includes/api/class-order-controller.php:200
 #: includes/api/class-product-controller.php:301
 #: includes/api/class-product-controller.php:326
 msgid "Sorry, you have no permission to do this. Since it's not your product."
 msgstr ""
 
-#: includes/api/class-order-controller.php:324
+#: includes/api/class-order-controller.php:325
 msgid "Invalid order ID"
 msgstr ""
 
-#: includes/api/class-order-controller.php:330
+#: includes/api/class-order-controller.php:331
 msgid "Order status must me required"
 msgstr ""
 
-#: includes/api/class-order-controller.php:336
+#: includes/api/class-order-controller.php:337
 msgid "Order status not valid"
 msgstr ""
 
-#: includes/api/class-order-controller.php:344
+#: includes/api/class-order-controller.php:345
 msgid "Invalid order"
 msgstr ""
 
-#: includes/api/class-order-controller.php:468
-#: includes/api/class-order-controller.php:573
-#: includes/api/class-order-controller.php:604
+#: includes/api/class-order-controller.php:469
+#: includes/api/class-order-controller.php:574
+#: includes/api/class-order-controller.php:605
 msgid "You have no permission to view this notes"
 msgstr ""
 
-#: includes/api/class-order-controller.php:472
-#: includes/api/class-order-controller.php:535
-#: includes/api/class-order-controller.php:577
-#: includes/api/class-order-controller.php:608
+#: includes/api/class-order-controller.php:473
+#: includes/api/class-order-controller.php:536
+#: includes/api/class-order-controller.php:578
+#: includes/api/class-order-controller.php:609
 msgid "Invalid order ID."
 msgstr ""
 
-#: includes/api/class-order-controller.php:524
+#: includes/api/class-order-controller.php:525
 #: includes/api/class-product-controller.php:256
 msgid "Cannot create existing %s."
 msgstr ""
 
-#: includes/api/class-order-controller.php:531
+#: includes/api/class-order-controller.php:532
 msgid "You have no permission to create this notes"
 msgstr ""
 
-#: includes/api/class-order-controller.php:542
+#: includes/api/class-order-controller.php:543
 msgid "Cannot create order note, please try again."
 msgstr ""
 
-#: includes/api/class-order-controller.php:583
-#: includes/api/class-order-controller.php:614
+#: includes/api/class-order-controller.php:584
+#: includes/api/class-order-controller.php:615
 msgid "Invalid resource ID."
 msgstr ""
 
-#: includes/api/class-order-controller.php:770
+#: includes/api/class-order-controller.php:794
 #: includes/api/class-product-controller.php:1692
 msgid "Unique identifier for the resource."
 msgstr ""
 
-#: includes/api/class-order-controller.php:776
+#: includes/api/class-order-controller.php:800
 msgid "Parent order ID."
 msgstr ""
 
-#: includes/api/class-order-controller.php:781
+#: includes/api/class-order-controller.php:805
 msgid "Order number."
 msgstr ""
 
-#: includes/api/class-order-controller.php:787
+#: includes/api/class-order-controller.php:811
 msgid "Order key."
 msgstr ""
 
-#: includes/api/class-order-controller.php:793
+#: includes/api/class-order-controller.php:817
 msgid "Shows where the order was created."
 msgstr ""
 
-#: includes/api/class-order-controller.php:799
+#: includes/api/class-order-controller.php:823
 msgid "Version of WooCommerce which last updated the order."
 msgstr ""
 
-#: includes/api/class-order-controller.php:805
+#: includes/api/class-order-controller.php:829
 msgid "Order status."
 msgstr ""
 
-#: includes/api/class-order-controller.php:812
+#: includes/api/class-order-controller.php:836
 msgid "Currency the order was created with, in ISO format."
 msgstr ""
 
-#: includes/api/class-order-controller.php:819
+#: includes/api/class-order-controller.php:843
 msgid "The date the order was created, in the site's timezone."
 msgstr ""
 
-#: includes/api/class-order-controller.php:825
+#: includes/api/class-order-controller.php:849
 msgid "The date the order was created, as GMT."
 msgstr ""
 
-#: includes/api/class-order-controller.php:831
+#: includes/api/class-order-controller.php:855
 msgid "The date the order was last modified, in the site's timezone."
 msgstr ""
 
-#: includes/api/class-order-controller.php:837
+#: includes/api/class-order-controller.php:861
 msgid "The date the order was last modified, as GMT."
 msgstr ""
 
-#: includes/api/class-order-controller.php:843
+#: includes/api/class-order-controller.php:867
 msgid "Total discount amount for the order."
 msgstr ""
 
-#: includes/api/class-order-controller.php:849
+#: includes/api/class-order-controller.php:873
 msgid "Total discount tax amount for the order."
 msgstr ""
 
-#: includes/api/class-order-controller.php:855
+#: includes/api/class-order-controller.php:879
 msgid "Total shipping amount for the order."
 msgstr ""
 
-#: includes/api/class-order-controller.php:861
+#: includes/api/class-order-controller.php:885
 msgid "Total shipping tax amount for the order."
 msgstr ""
 
-#: includes/api/class-order-controller.php:867
+#: includes/api/class-order-controller.php:891
 msgid "Sum of line item taxes only."
 msgstr ""
 
-#: includes/api/class-order-controller.php:873
+#: includes/api/class-order-controller.php:897
 msgid "Grand total."
 msgstr ""
 
-#: includes/api/class-order-controller.php:879
+#: includes/api/class-order-controller.php:903
 msgid "Sum of all taxes."
 msgstr ""
 
-#: includes/api/class-order-controller.php:885
+#: includes/api/class-order-controller.php:909
 msgid "True the prices included tax during checkout."
 msgstr ""
 
-#: includes/api/class-order-controller.php:891
+#: includes/api/class-order-controller.php:915
 msgid "User ID who owns the order. 0 for guests."
 msgstr ""
 
-#: includes/api/class-order-controller.php:897
+#: includes/api/class-order-controller.php:921
 msgid "Customer's IP address."
 msgstr ""
 
-#: includes/api/class-order-controller.php:903
+#: includes/api/class-order-controller.php:927
 msgid "User agent of the customer."
 msgstr ""
 
-#: includes/api/class-order-controller.php:909
+#: includes/api/class-order-controller.php:933
 msgid "Note left by customer during checkout."
 msgstr ""
 
-#: includes/api/class-order-controller.php:914
+#: includes/api/class-order-controller.php:938
 msgid "Billing address."
 msgstr ""
 
-#: includes/api/class-order-controller.php:919
-#: includes/api/class-order-controller.php:982
+#: includes/api/class-order-controller.php:943
+#: includes/api/class-order-controller.php:1006
 msgid "First name."
 msgstr ""
 
-#: includes/api/class-order-controller.php:924
-#: includes/api/class-order-controller.php:987
+#: includes/api/class-order-controller.php:948
+#: includes/api/class-order-controller.php:1011
 msgid "Last name."
 msgstr ""
 
-#: includes/api/class-order-controller.php:929
-#: includes/api/class-order-controller.php:992
+#: includes/api/class-order-controller.php:953
+#: includes/api/class-order-controller.php:1016
 msgid "Company name."
 msgstr ""
 
-#: includes/api/class-order-controller.php:934
-#: includes/api/class-order-controller.php:997
+#: includes/api/class-order-controller.php:958
+#: includes/api/class-order-controller.php:1021
 msgid "Address line 1"
 msgstr ""
 
-#: includes/api/class-order-controller.php:939
-#: includes/api/class-order-controller.php:1002
+#: includes/api/class-order-controller.php:963
+#: includes/api/class-order-controller.php:1026
 msgid "Address line 2"
 msgstr ""
 
-#: includes/api/class-order-controller.php:944
-#: includes/api/class-order-controller.php:1007
+#: includes/api/class-order-controller.php:968
+#: includes/api/class-order-controller.php:1031
 msgid "City name."
 msgstr ""
 
-#: includes/api/class-order-controller.php:949
-#: includes/api/class-order-controller.php:1012
+#: includes/api/class-order-controller.php:973
+#: includes/api/class-order-controller.php:1036
 msgid "ISO code or name of the state, province or district."
 msgstr ""
 
-#: includes/api/class-order-controller.php:954
-#: includes/api/class-order-controller.php:1017
+#: includes/api/class-order-controller.php:978
+#: includes/api/class-order-controller.php:1041
 msgid "Postal code."
 msgstr ""
 
-#: includes/api/class-order-controller.php:959
-#: includes/api/class-order-controller.php:1022
+#: includes/api/class-order-controller.php:983
+#: includes/api/class-order-controller.php:1046
 msgid "Country code in ISO 3166-1 alpha-2 format."
 msgstr ""
 
-#: includes/api/class-order-controller.php:964
+#: includes/api/class-order-controller.php:988
 msgid "Email address."
 msgstr ""
 
-#: includes/api/class-order-controller.php:970
+#: includes/api/class-order-controller.php:994
 msgid "Phone number."
 msgstr ""
 
-#: includes/api/class-order-controller.php:977
+#: includes/api/class-order-controller.php:1001
 msgid "Shipping address."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1029
+#: includes/api/class-order-controller.php:1053
 msgid "Payment method ID."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1034
+#: includes/api/class-order-controller.php:1058
 msgid "Payment method title."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1039
+#: includes/api/class-order-controller.php:1063
 msgid "Unique transaction ID."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1044
+#: includes/api/class-order-controller.php:1068
 msgid "The date the order was paid, in the site's timezone."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1050
+#: includes/api/class-order-controller.php:1074
 msgid "The date the order was paid, as GMT."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1056
+#: includes/api/class-order-controller.php:1080
 msgid "The date the order was completed, in the site's timezone."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1062
+#: includes/api/class-order-controller.php:1086
 msgid "The date the order was completed, as GMT."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1068
+#: includes/api/class-order-controller.php:1092
 msgid "MD5 hash of cart items to ensure orders are not modified."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1074
-#: includes/api/class-order-controller.php:1186
-#: includes/api/class-order-controller.php:1277
-#: includes/api/class-order-controller.php:1363
-#: includes/api/class-order-controller.php:1461
-#: includes/api/class-order-controller.php:1519
+#: includes/api/class-order-controller.php:1098
+#: includes/api/class-order-controller.php:1210
+#: includes/api/class-order-controller.php:1301
+#: includes/api/class-order-controller.php:1387
+#: includes/api/class-order-controller.php:1485
+#: includes/api/class-order-controller.php:1543
 #: includes/api/class-product-controller.php:2269
 msgid "Meta data."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1081
-#: includes/api/class-order-controller.php:1193
-#: includes/api/class-order-controller.php:1284
-#: includes/api/class-order-controller.php:1370
-#: includes/api/class-order-controller.php:1468
-#: includes/api/class-order-controller.php:1526
+#: includes/api/class-order-controller.php:1105
+#: includes/api/class-order-controller.php:1217
+#: includes/api/class-order-controller.php:1308
+#: includes/api/class-order-controller.php:1394
+#: includes/api/class-order-controller.php:1492
+#: includes/api/class-order-controller.php:1550
 #: includes/api/class-product-controller.php:2276
 msgid "Meta ID."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1087
-#: includes/api/class-order-controller.php:1199
-#: includes/api/class-order-controller.php:1290
-#: includes/api/class-order-controller.php:1376
-#: includes/api/class-order-controller.php:1474
-#: includes/api/class-order-controller.php:1532
+#: includes/api/class-order-controller.php:1111
+#: includes/api/class-order-controller.php:1223
+#: includes/api/class-order-controller.php:1314
+#: includes/api/class-order-controller.php:1400
+#: includes/api/class-order-controller.php:1498
+#: includes/api/class-order-controller.php:1556
 #: includes/api/class-product-controller.php:2282
 msgid "Meta key."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1092
-#: includes/api/class-order-controller.php:1204
-#: includes/api/class-order-controller.php:1295
-#: includes/api/class-order-controller.php:1381
-#: includes/api/class-order-controller.php:1479
-#: includes/api/class-order-controller.php:1537
+#: includes/api/class-order-controller.php:1116
+#: includes/api/class-order-controller.php:1228
+#: includes/api/class-order-controller.php:1319
+#: includes/api/class-order-controller.php:1405
+#: includes/api/class-order-controller.php:1503
+#: includes/api/class-order-controller.php:1561
 #: includes/api/class-product-controller.php:2287
 msgid "Meta value."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1100
+#: includes/api/class-order-controller.php:1124
 msgid "Line items data."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1107
-#: includes/api/class-order-controller.php:1235
-#: includes/api/class-order-controller.php:1313
-#: includes/api/class-order-controller.php:1399
-#: includes/api/class-order-controller.php:1497
+#: includes/api/class-order-controller.php:1131
+#: includes/api/class-order-controller.php:1259
+#: includes/api/class-order-controller.php:1337
+#: includes/api/class-order-controller.php:1423
+#: includes/api/class-order-controller.php:1521
 msgid "Item ID."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1113
+#: includes/api/class-order-controller.php:1137
 #: includes/api/class-product-controller.php:1698
 msgid "Product name."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1118
+#: includes/api/class-order-controller.php:1142
 msgid "Product ID."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1123
+#: includes/api/class-order-controller.php:1147
 msgid "Variation ID, if applicable."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1128
+#: includes/api/class-order-controller.php:1152
 msgid "Quantity ordered."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1133
+#: includes/api/class-order-controller.php:1157
 msgid "Tax class of product."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1138
+#: includes/api/class-order-controller.php:1162
 msgid "Line subtotal (before discounts)."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1143
+#: includes/api/class-order-controller.php:1167
 msgid "Line subtotal tax (before discounts)."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1149
-#: includes/api/class-order-controller.php:1329
-#: includes/api/class-order-controller.php:1421
+#: includes/api/class-order-controller.php:1173
+#: includes/api/class-order-controller.php:1353
+#: includes/api/class-order-controller.php:1445
 msgid "Line total (after discounts)."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1154
-#: includes/api/class-order-controller.php:1334
-#: includes/api/class-order-controller.php:1426
+#: includes/api/class-order-controller.php:1178
+#: includes/api/class-order-controller.php:1358
+#: includes/api/class-order-controller.php:1450
 msgid "Line total tax (after discounts)."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1160
-#: includes/api/class-order-controller.php:1340
-#: includes/api/class-order-controller.php:1432
+#: includes/api/class-order-controller.php:1184
+#: includes/api/class-order-controller.php:1364
+#: includes/api/class-order-controller.php:1456
 msgid "Line taxes."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1168
-#: includes/api/class-order-controller.php:1247
-#: includes/api/class-order-controller.php:1348
-#: includes/api/class-order-controller.php:1440
+#: includes/api/class-order-controller.php:1192
+#: includes/api/class-order-controller.php:1271
+#: includes/api/class-order-controller.php:1372
+#: includes/api/class-order-controller.php:1464
 msgid "Tax rate ID."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1173
-#: includes/api/class-order-controller.php:1354
-#: includes/api/class-order-controller.php:1446
+#: includes/api/class-order-controller.php:1197
+#: includes/api/class-order-controller.php:1378
+#: includes/api/class-order-controller.php:1470
 msgid "Tax total."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1178
-#: includes/api/class-order-controller.php:1452
+#: includes/api/class-order-controller.php:1202
+#: includes/api/class-order-controller.php:1476
 msgid "Tax subtotal."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1212
+#: includes/api/class-order-controller.php:1236
 msgid "Product SKU."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1218
+#: includes/api/class-order-controller.php:1242
 msgid "Product price."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1227
+#: includes/api/class-order-controller.php:1251
 msgid "Tax lines data."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1241
+#: includes/api/class-order-controller.php:1265
 msgid "Tax rate code."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1253
+#: includes/api/class-order-controller.php:1277
 msgid "Tax rate label."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1259
+#: includes/api/class-order-controller.php:1283
 msgid "Show if is a compound tax rate."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1265
+#: includes/api/class-order-controller.php:1289
 msgid "Tax total (not including shipping taxes)."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1271
+#: includes/api/class-order-controller.php:1295
 msgid "Shipping tax total."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1306
+#: includes/api/class-order-controller.php:1330
 msgid "Shipping lines data."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1319
+#: includes/api/class-order-controller.php:1343
 msgid "Shipping method name."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1324
+#: includes/api/class-order-controller.php:1348
 msgid "Shipping method ID."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1392
+#: includes/api/class-order-controller.php:1416
 msgid "Fee lines data."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1405
+#: includes/api/class-order-controller.php:1429
 msgid "Fee name."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1410
+#: includes/api/class-order-controller.php:1434
 msgid "Tax class of fee."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1415
+#: includes/api/class-order-controller.php:1439
 msgid "Tax status of fee."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1490
+#: includes/api/class-order-controller.php:1514
 msgid "Coupons line data."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1503
+#: includes/api/class-order-controller.php:1527
 msgid "Coupon code."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1508
+#: includes/api/class-order-controller.php:1532
 msgid "Discount total."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1513
+#: includes/api/class-order-controller.php:1537
 msgid "Discount total tax."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1548
+#: includes/api/class-order-controller.php:1572
 msgid "List of refunds."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1556
+#: includes/api/class-order-controller.php:1580
 msgid "Refund ID."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1562
+#: includes/api/class-order-controller.php:1586
 msgid "Refund reason."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1568
+#: includes/api/class-order-controller.php:1592
 msgid "Refund total."
 msgstr ""
 
-#: includes/api/class-order-controller.php:1577
+#: includes/api/class-order-controller.php:1601
 msgid ""
 "Define if the order is paid. It will set the status to processing and "
 "reduce stock items."
@@ -2429,7 +2429,7 @@ msgstr ""
 msgid "Every %d Minutes"
 msgstr ""
 
-#: includes/class-assets.php:406 src/admin/pages/Withdraw.vue:308
+#: includes/class-assets.php:406 src/admin/pages/Withdraw.vue:309
 msgid "Are you sure?"
 msgstr ""
 
@@ -2915,19 +2915,19 @@ msgstr ""
 msgid "Gravatar Url"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:195 includes/functions.php:2333
+#: includes/class-dokan-privacy.php:195 includes/functions.php:2327
 msgid "Facebook"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:196 includes/functions.php:2337
+#: includes/class-dokan-privacy.php:196 includes/functions.php:2331
 msgid "Google Plus"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:197 includes/functions.php:2341
+#: includes/class-dokan-privacy.php:197 includes/functions.php:2335
 msgid "Twitter"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:198 includes/functions.php:2345
+#: includes/class-dokan-privacy.php:198 includes/functions.php:2339
 msgid "Pinterest"
 msgstr ""
 
@@ -2935,15 +2935,15 @@ msgstr ""
 msgid "Linkedin"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:200 includes/functions.php:2353
+#: includes/class-dokan-privacy.php:200 includes/functions.php:2347
 msgid "Youtube"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:201 includes/functions.php:2357
+#: includes/class-dokan-privacy.php:201 includes/functions.php:2351
 msgid "Instagram"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:202 includes/functions.php:2361
+#: includes/class-dokan-privacy.php:202 includes/functions.php:2355
 msgid "Flickr"
 msgstr ""
 
@@ -3031,11 +3031,11 @@ msgstr ""
 msgid "Mark parent order completed when all child orders are completed."
 msgstr ""
 
-#: includes/class-order-manager.php:471
+#: includes/class-order-manager.php:468
 msgid "A coupon must be restricted with a vendor product."
 msgstr ""
 
-#: includes/class-order-manager.php:522
+#: includes/class-order-manager.php:519
 #. translators: %s item name.
 msgid "Unable to restore stock for item %s."
 msgstr ""
@@ -3072,17 +3072,17 @@ msgstr ""
 msgid "Please install <a href=\"%s\"><strong>WooCommerce</strong></a> plugin first"
 msgstr ""
 
-#: includes/class-vendor.php:635
+#: includes/class-vendor.php:627
 msgid "No ratings found yet!"
 msgstr ""
 
-#: includes/class-vendor.php:637
+#: includes/class-vendor.php:629
 msgid "%s rating from %d review"
 msgid_plural "%s rating from %d reviews"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/class-vendor.php:638
+#: includes/class-vendor.php:630
 msgid "Rated %s out of %d"
 msgstr ""
 
@@ -3328,338 +3328,338 @@ msgstr ""
 msgid "Withdrawal request for {amount} is cancelled"
 msgstr ""
 
-#: includes/functions.php:771 templates/products/others.php:16
+#: includes/functions.php:765 templates/products/others.php:16
 msgid "Online"
 msgstr ""
 
-#: includes/functions.php:772 templates/products/others.php:17
+#: includes/functions.php:766 templates/products/others.php:17
 msgid "Draft"
 msgstr ""
 
-#: includes/functions.php:773 templates/dashboard/products-widget.php:41
+#: includes/functions.php:767 templates/dashboard/products-widget.php:41
 #: templates/withdraw/pending-request-listing.php:41
 msgid "Pending Review"
 msgstr ""
 
-#: includes/functions.php:774 templates/products/products-listing-row.php:156
+#: includes/functions.php:768 templates/products/products-listing-row.php:156
 msgid "Scheduled"
 msgstr ""
 
-#: includes/functions.php:817
+#: includes/functions.php:811
 msgid "Simple Product"
 msgstr ""
 
-#: includes/functions.php:818
+#: includes/functions.php:812
 msgid "Variable Product"
 msgstr ""
 
-#: includes/functions.php:819
+#: includes/functions.php:813
 msgid "Grouped Product"
 msgstr ""
 
-#: includes/functions.php:820
+#: includes/functions.php:814
 msgid "Scheduled Product"
 msgstr ""
 
-#: includes/functions.php:1025
+#: includes/functions.php:1019
 msgid "Author"
 msgstr ""
 
-#: includes/functions.php:1209 includes/template-tags.php:314
+#: includes/functions.php:1203 includes/template-tags.php:314
 #: templates/dashboard/products-widget.php:16
 msgid "Products"
 msgstr ""
 
-#: includes/functions.php:1256 src/admin/pages/Withdraw.vue:329
+#: includes/functions.php:1250 src/admin/pages/Withdraw.vue:330
 msgid "Account Name: %s"
 msgstr ""
 
-#: includes/functions.php:1260
+#: includes/functions.php:1254
 msgid "Account Number: %s"
 msgstr ""
 
-#: includes/functions.php:1264
+#: includes/functions.php:1258
 msgid "Bank Name: %s"
 msgstr ""
 
-#: includes/functions.php:1268
+#: includes/functions.php:1262
 msgid "Address: %s"
 msgstr ""
 
-#: includes/functions.php:1272
+#: includes/functions.php:1266
 msgid "Routing Number: %s"
 msgstr ""
 
-#: includes/functions.php:1276
+#: includes/functions.php:1270
 msgid "IBAN: %s"
 msgstr ""
 
-#: includes/functions.php:1280
+#: includes/functions.php:1274
 msgid "SWIFT: %s"
 msgstr ""
 
-#: includes/functions.php:1638
+#: includes/functions.php:1632
 msgid "Date is not valid"
 msgstr ""
 
-#: includes/functions.php:2069
+#: includes/functions.php:2063
 msgid "- Select a location -"
 msgstr ""
 
-#: includes/functions.php:2073 includes/functions.php:2096
+#: includes/functions.php:2067 includes/functions.php:2090
 msgid "Everywhere Else"
 msgstr ""
 
-#: includes/functions.php:2092
+#: includes/functions.php:2086
 msgid "- Select a State -"
 msgstr ""
 
-#: includes/functions.php:2114
+#: includes/functions.php:2108
 msgid "Ready to ship in..."
 msgstr ""
 
-#: includes/functions.php:2115
+#: includes/functions.php:2109
 msgid "1 business day"
 msgstr ""
 
-#: includes/functions.php:2116
+#: includes/functions.php:2110
 msgid "1-2 business day"
 msgstr ""
 
-#: includes/functions.php:2117
+#: includes/functions.php:2111
 msgid "1-3 business day"
 msgstr ""
 
-#: includes/functions.php:2118
+#: includes/functions.php:2112
 msgid "3-5 business day"
 msgstr ""
 
-#: includes/functions.php:2119
+#: includes/functions.php:2113
 msgid "1-2 weeks"
 msgstr ""
 
-#: includes/functions.php:2120
+#: includes/functions.php:2114
 msgid "2-3 weeks"
 msgstr ""
 
-#: includes/functions.php:2121
+#: includes/functions.php:2115
 msgid "3-4 weeks"
 msgstr ""
 
-#: includes/functions.php:2122
+#: includes/functions.php:2116
 msgid "4-6 weeks"
 msgstr ""
 
-#: includes/functions.php:2123
+#: includes/functions.php:2117
 msgid "6-8 weeks"
 msgstr ""
 
-#: includes/functions.php:2242
+#: includes/functions.php:2236
 msgid "All dates"
 msgstr ""
 
-#: includes/functions.php:2257
+#: includes/functions.php:2251
 #. translators: 1: month name, 2: 4-digit year
 msgid "%1$s %2$d"
 msgstr ""
 
-#: includes/functions.php:2349
+#: includes/functions.php:2343
 msgid "LinkedIn"
 msgstr ""
 
-#: includes/functions.php:2616
+#: includes/functions.php:2610
 msgid "Dokan Store Sidebar"
 msgstr ""
 
-#: includes/functions.php:2870
+#: includes/functions.php:2864
 msgid "View sales overview"
 msgstr ""
 
-#: includes/functions.php:2871
+#: includes/functions.php:2865
 msgid "View sales report chart"
 msgstr ""
 
-#: includes/functions.php:2872
+#: includes/functions.php:2866
 msgid "View announcement"
 msgstr ""
 
-#: includes/functions.php:2873
+#: includes/functions.php:2867
 msgid "View order report"
 msgstr ""
 
-#: includes/functions.php:2874
+#: includes/functions.php:2868
 msgid "View review report"
 msgstr ""
 
-#: includes/functions.php:2875
+#: includes/functions.php:2869
 msgid "View product status report"
 msgstr ""
 
-#: includes/functions.php:2878
+#: includes/functions.php:2872
 msgid "View overview report"
 msgstr ""
 
-#: includes/functions.php:2879
+#: includes/functions.php:2873
 msgid "View daily sales report"
 msgstr ""
 
-#: includes/functions.php:2880
+#: includes/functions.php:2874
 msgid "View top selling report"
 msgstr ""
 
-#: includes/functions.php:2881
+#: includes/functions.php:2875
 msgid "View top earning report"
 msgstr ""
 
-#: includes/functions.php:2882
+#: includes/functions.php:2876
 msgid "View statement report"
 msgstr ""
 
-#: includes/functions.php:2885
+#: includes/functions.php:2879
 msgid "View order"
 msgstr ""
 
-#: includes/functions.php:2886
+#: includes/functions.php:2880
 msgid "Manage order"
 msgstr ""
 
-#: includes/functions.php:2887
+#: includes/functions.php:2881
 msgid "Manage order note"
 msgstr ""
 
-#: includes/functions.php:2888
+#: includes/functions.php:2882
 msgid "Manage refund"
 msgstr ""
 
-#: includes/functions.php:2892
+#: includes/functions.php:2886
 msgid "Add coupon"
 msgstr ""
 
-#: includes/functions.php:2893
+#: includes/functions.php:2887
 msgid "Edit coupon"
 msgstr ""
 
-#: includes/functions.php:2894
+#: includes/functions.php:2888
 msgid "Delete coupon"
 msgstr ""
 
-#: includes/functions.php:2897
+#: includes/functions.php:2891
 msgid "View reviews"
 msgstr ""
 
-#: includes/functions.php:2898 src/admin/pages/Premium.vue:394
+#: includes/functions.php:2892 src/admin/pages/Premium.vue:394
 msgid "Manage reviews"
 msgstr ""
 
-#: includes/functions.php:2902
+#: includes/functions.php:2896
 msgid "Manage withdraw"
 msgstr ""
 
-#: includes/functions.php:2905
+#: includes/functions.php:2899
 msgid "Add product"
 msgstr ""
 
-#: includes/functions.php:2906
+#: includes/functions.php:2900
 msgid "Edit product"
 msgstr ""
 
-#: includes/functions.php:2907
+#: includes/functions.php:2901
 msgid "Delete product"
 msgstr ""
 
-#: includes/functions.php:2908
+#: includes/functions.php:2902
 msgid "View product"
 msgstr ""
 
-#: includes/functions.php:2909
+#: includes/functions.php:2903
 msgid "Duplicate product"
 msgstr ""
 
-#: includes/functions.php:2910
+#: includes/functions.php:2904
 msgid "Import product"
 msgstr ""
 
-#: includes/functions.php:2911
+#: includes/functions.php:2905
 msgid "Export product"
 msgstr ""
 
-#: includes/functions.php:2914
+#: includes/functions.php:2908
 msgid "View overview menu"
 msgstr ""
 
-#: includes/functions.php:2915
+#: includes/functions.php:2909
 msgid "View product menu"
 msgstr ""
 
-#: includes/functions.php:2916
+#: includes/functions.php:2910
 msgid "View order menu"
 msgstr ""
 
-#: includes/functions.php:2917
+#: includes/functions.php:2911
 msgid "View coupon menu"
 msgstr ""
 
-#: includes/functions.php:2918
+#: includes/functions.php:2912
 msgid "View report menu"
 msgstr ""
 
-#: includes/functions.php:2919
+#: includes/functions.php:2913
 msgid "Vuew review menu"
 msgstr ""
 
-#: includes/functions.php:2920
+#: includes/functions.php:2914
 msgid "View withdraw menu"
 msgstr ""
 
-#: includes/functions.php:2921
+#: includes/functions.php:2915
 msgid "View store settings menu"
 msgstr ""
 
-#: includes/functions.php:2922
+#: includes/functions.php:2916
 msgid "View payment settings menu"
 msgstr ""
 
-#: includes/functions.php:2923
+#: includes/functions.php:2917
 msgid "View shipping settings menu"
 msgstr ""
 
-#: includes/functions.php:2924
+#: includes/functions.php:2918
 msgid "View social settings menu"
 msgstr ""
 
-#: includes/functions.php:2925
+#: includes/functions.php:2919
 msgid "View seo settings menu"
 msgstr ""
 
-#: includes/functions.php:3102
+#: includes/functions.php:3096
 msgid "Saturday"
 msgstr ""
 
-#: includes/functions.php:3105
+#: includes/functions.php:3099
 msgid "Sunday"
 msgstr ""
 
-#: includes/functions.php:3108
+#: includes/functions.php:3102
 msgid "Monday"
 msgstr ""
 
-#: includes/functions.php:3111
+#: includes/functions.php:3105
 msgid "Tuesday"
 msgstr ""
 
-#: includes/functions.php:3114
+#: includes/functions.php:3108
 msgid "Wednesday"
 msgstr ""
 
-#: includes/functions.php:3117
+#: includes/functions.php:3111
 msgid "Thursday"
 msgstr ""
 
-#: includes/functions.php:3120
+#: includes/functions.php:3114
 msgid "Friday"
 msgstr ""
 
-#: includes/functions.php:3123
+#: includes/functions.php:3117
 msgid "Off Day"
 msgstr ""
 
@@ -3671,128 +3671,128 @@ msgstr ""
 msgid "Failed"
 msgstr ""
 
-#: includes/order-functions.php:722
+#: includes/order-functions.php:733
 msgid "Order No"
 msgstr ""
 
-#: includes/order-functions.php:723 templates/orders/details.php:21
+#: includes/order-functions.php:734 templates/orders/details.php:21
 msgid "Order Items"
 msgstr ""
 
-#: includes/order-functions.php:724
+#: includes/order-functions.php:735
 msgid "Shipping method"
 msgstr ""
 
-#: includes/order-functions.php:725
+#: includes/order-functions.php:736
 msgid "Shipping Cost"
 msgstr ""
 
-#: includes/order-functions.php:726
+#: includes/order-functions.php:737
 msgid "Payment method"
 msgstr ""
 
-#: includes/order-functions.php:727 templates/orders/listing.php:48
+#: includes/order-functions.php:738 templates/orders/listing.php:48
 #: templates/orders/listing.php:74
 msgid "Order Total"
 msgstr ""
 
-#: includes/order-functions.php:729
+#: includes/order-functions.php:740
 msgid "Order Date"
 msgstr ""
 
-#: includes/order-functions.php:731
+#: includes/order-functions.php:742
 msgid "Billing Company"
 msgstr ""
 
-#: includes/order-functions.php:732
+#: includes/order-functions.php:743
 msgid "Billing First Name"
 msgstr ""
 
-#: includes/order-functions.php:733
+#: includes/order-functions.php:744
 msgid "Billing Last Name"
 msgstr ""
 
-#: includes/order-functions.php:734
+#: includes/order-functions.php:745
 msgid "Billing Full Name"
 msgstr ""
 
-#: includes/order-functions.php:735
+#: includes/order-functions.php:746
 msgid "Billing Email"
 msgstr ""
 
-#: includes/order-functions.php:736
+#: includes/order-functions.php:747
 msgid "Billing Phone"
 msgstr ""
 
-#: includes/order-functions.php:737
+#: includes/order-functions.php:748
 msgid "Billing Address 1"
 msgstr ""
 
-#: includes/order-functions.php:738
+#: includes/order-functions.php:749
 msgid "Billing Address 2"
 msgstr ""
 
-#: includes/order-functions.php:739
+#: includes/order-functions.php:750
 msgid "Billing City"
 msgstr ""
 
-#: includes/order-functions.php:740
+#: includes/order-functions.php:751
 msgid "Billing State"
 msgstr ""
 
-#: includes/order-functions.php:741
+#: includes/order-functions.php:752
 msgid "Billing Postcode"
 msgstr ""
 
-#: includes/order-functions.php:742
+#: includes/order-functions.php:753
 msgid "Billing Country"
 msgstr ""
 
-#: includes/order-functions.php:744
+#: includes/order-functions.php:755
 msgid "Shipping Company"
 msgstr ""
 
-#: includes/order-functions.php:745
+#: includes/order-functions.php:756
 msgid "Shipping First Name"
 msgstr ""
 
-#: includes/order-functions.php:746
+#: includes/order-functions.php:757
 msgid "Shipping Last Name"
 msgstr ""
 
-#: includes/order-functions.php:747
+#: includes/order-functions.php:758
 msgid "Shipping Full Name"
 msgstr ""
 
-#: includes/order-functions.php:748
+#: includes/order-functions.php:759
 msgid "Shipping Address 1"
 msgstr ""
 
-#: includes/order-functions.php:749
+#: includes/order-functions.php:760
 msgid "Shipping Address 2"
 msgstr ""
 
-#: includes/order-functions.php:750
+#: includes/order-functions.php:761
 msgid "Shipping City"
 msgstr ""
 
-#: includes/order-functions.php:751
+#: includes/order-functions.php:762
 msgid "Shipping State"
 msgstr ""
 
-#: includes/order-functions.php:752
+#: includes/order-functions.php:763
 msgid "Shipping Postcode"
 msgstr ""
 
-#: includes/order-functions.php:753
+#: includes/order-functions.php:764
 msgid "Shipping Country"
 msgstr ""
 
-#: includes/order-functions.php:755
+#: includes/order-functions.php:766
 msgid "Customer IP"
 msgstr ""
 
-#: includes/order-functions.php:756
+#: includes/order-functions.php:767
 msgid "Customer Note"
 msgstr ""
 
@@ -3814,7 +3814,7 @@ msgstr ""
 msgid "Delete all variations"
 msgstr ""
 
-#: includes/product-functions.php:219 src/admin/pages/Withdraw.vue:124
+#: includes/product-functions.php:219 src/admin/pages/Withdraw.vue:125
 #: templates/my-orders.php:29 templates/orders/listing.php:49
 #: templates/orders/listing.php:77
 #: templates/products/products-listing-row.php:52
@@ -3932,7 +3932,7 @@ msgid "Save Variations"
 msgstr ""
 
 #: includes/product-functions.php:315 lib/appsero/src/insights.php:788
-#: src/admin/pages/Withdraw.vue:167 src/admin/pages/Withdraw.vue:195
+#: src/admin/pages/Withdraw.vue:168 src/admin/pages/Withdraw.vue:196
 #: templates/my-orders.php:83 templates/orders/details.php:188
 #: templates/products/new-product-single.php:204
 #: templates/products/new-product.php:165
@@ -4599,30 +4599,34 @@ msgstr ""
 msgid "No requests found."
 msgstr ""
 
-#: src/admin/pages/Withdraw.vue:123
+#: src/admin/pages/Withdraw.vue:119
+msgid "Paypal Mass Payment File is Generated."
+msgstr ""
+
+#: src/admin/pages/Withdraw.vue:124
 #: templates/withdraw/approved-request-listing.php:14
 #: templates/withdraw/cancelled-request-listing.php:14
 #: templates/withdraw/pending-request-listing.php:14
 msgid "Amount"
 msgstr ""
 
-#: src/admin/pages/Withdraw.vue:125
+#: src/admin/pages/Withdraw.vue:126
 #: templates/withdraw/approved-request-listing.php:15
 #: templates/withdraw/cancelled-request-listing.php:15
 #: templates/withdraw/pending-request-listing.php:15
 msgid "Method"
 msgstr ""
 
-#: src/admin/pages/Withdraw.vue:126
+#: src/admin/pages/Withdraw.vue:127
 msgid "Details"
 msgstr ""
 
-#: src/admin/pages/Withdraw.vue:127
+#: src/admin/pages/Withdraw.vue:128
 #: templates/withdraw/cancelled-request-listing.php:17
 msgid "Note"
 msgstr ""
 
-#: src/admin/pages/Withdraw.vue:128 templates/my-orders.php:28
+#: src/admin/pages/Withdraw.vue:129 templates/my-orders.php:28
 #: templates/orders/listing.php:51 templates/orders/listing.php:107
 #: templates/products/products-listing-row.php:127
 #: templates/products/products-listing.php:99 templates/sub-orders.php:26
@@ -4632,24 +4636,24 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: src/admin/pages/Withdraw.vue:191
+#: src/admin/pages/Withdraw.vue:192
 msgid "Approve"
 msgstr ""
 
-#: src/admin/pages/Withdraw.vue:203 src/admin/pages/Withdraw.vue:218
-#: src/admin/pages/Withdraw.vue:225
+#: src/admin/pages/Withdraw.vue:204 src/admin/pages/Withdraw.vue:219
+#: src/admin/pages/Withdraw.vue:226
 msgid "Download PayPal mass payment file"
 msgstr ""
 
-#: src/admin/pages/Withdraw.vue:333
+#: src/admin/pages/Withdraw.vue:334
 msgid ", Account Number: %s"
 msgstr ""
 
-#: src/admin/pages/Withdraw.vue:337
+#: src/admin/pages/Withdraw.vue:338
 msgid ", Bank Name: %s"
 msgstr ""
 
-#: src/admin/pages/Withdraw.vue:341
+#: src/admin/pages/Withdraw.vue:342
 msgid ", Routing Number: %s"
 msgstr ""
 
@@ -4881,7 +4885,7 @@ msgid "We'll transfer this amount to your preferred destination shortly."
 msgstr ""
 
 #: templates/emails/plain/withdraw-approve.php:29
-#: templates/emails/withdraw-approve.php:33
+#: templates/emails/withdraw-approve.php:34
 msgid "Thanks for being with us."
 msgstr ""
 
@@ -4890,7 +4894,7 @@ msgid "Your withdraw request was cancelled"
 msgstr ""
 
 #: templates/emails/plain/withdraw-cancel.php:27
-#: templates/emails/withdraw-cancel.php:31
+#: templates/emails/withdraw-cancel.php:32
 msgid "Here's the reason, why : "
 msgstr ""
 
@@ -4907,7 +4911,12 @@ msgstr ""
 msgid "To Edit product click : <a href=\"%s\">here</a>"
 msgstr ""
 
-#: templates/emails/withdraw-approve.php:31
+#: templates/emails/withdraw-approve.php:26
+#: templates/emails/withdraw-cancel.php:26
+msgid "Amount : "
+msgstr ""
+
+#: templates/emails/withdraw-approve.php:32
 msgid "We'll transfer this amount to your preferred payment method shortly."
 msgstr ""
 
