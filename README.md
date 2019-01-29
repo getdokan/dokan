@@ -3,9 +3,9 @@
 **Donate Link:** http://tareq.co/donate/  
 **Tags:** WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, product vendors, woocommerce vendor, commission rate, e-commerce, ebay, ecommerce, yith, yithemes  
 **Requires at least:** 4.4  
-**Tested up to:** 5.0  
+**Tested up to:** 5.0.3  
 **WC requires at least:** 3.0  
-**WC tested up to:** 3.5.3  
+**WC tested up to:** 3.5.4  
 **Requires PHP:** 5.6  
 **Stable tag:** trunk  
 **License:** GPLv2 or later  
@@ -273,6 +273,17 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 ## Changelog ##
+
+v2.9.9 -> Jan 29, 2019
+------------------------
+-**Fix**   Send order email to admin, vendor & customer when an order is created via REST API
+-**Fix**   Show error message when there is an error in vendor settings page
+-**Fix**   Product attributes title saved with extra dash in vendor product edit page
+-**Fix**   Show vendor full address when a vendor wants to in vendor store page
+-**Fix**   Pyapal mass payment is not generating all the info in admin dashboard
+-**Fix**   Withdraw request amount in approved & cancelled email is broken
+-**Fix**   Page is not redirecting correctly when a vendor edit his account
+-**Tweak** add filter to modify wp_editor args in vendor dashboard
 
 v2.9.8 -> Jan 14, 2019
 -------------------------
