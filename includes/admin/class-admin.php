@@ -23,7 +23,7 @@ class Dokan_Admin {
 
         add_action( 'admin_notices', array($this, 'update_notice' ) );
 
-        add_action( 'admin_notices', array( $this, 'promotional_offer' ) );
+        // add_action( 'admin_notices', array( $this, 'promotional_offer' ) );
 
         add_action( 'wp_before_admin_bar_render', array( $this, 'dokan_admin_toolbar' ) );
     }
