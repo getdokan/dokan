@@ -492,6 +492,7 @@ let Currency = dokan_get_lib('Currency');
                 cancelled: 0
             },
             notFound: this.__('No requests found.', 'dokan-lite'),
+            massPayment: this.__('Paypal Mass Payment File is Generated.', 'dokan-lite'),
             showCb: true,
             loading: false,
             columns: {
@@ -706,6 +707,8 @@ let Currency = dokan_get_lib('Currency');
         },
 
         onBulkAction(action, items) {
+            let self = this;
+
             if (_.contains(['delete', 'approved', 'cancelled', 'pending'], action)) {
 
                 let jsonData = {};
@@ -773,8 +776,8 @@ let Currency = dokan_get_lib('Currency');
                         }
                     }
 
-                    if (response && !response.success) {
-                        alert(response.data);
+                    if (response) {
+                        alert(self.massPayment);
                         return;
                     }
                 });
