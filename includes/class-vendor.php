@@ -29,13 +29,6 @@ class Dokan_Vendor {
     private $shop_data = array();
 
     /**
-     * Holds the updated fields
-     *
-     * @var array
-     */
-    private $changes = array();
-
-    /**
      * The constructor
      *
      * @param int|WP_User $vendor
@@ -204,12 +197,13 @@ class Dokan_Vendor {
     /**
      * Update vendor info
      *
+     * @since DOKAN_SINCE
+     *
      * @param array $data
      *
      * @return array
      */
     public function update( $data = [] ) {
-
         if ( ! $data ) {
             return $this->shop_data;
         }
