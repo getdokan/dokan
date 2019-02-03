@@ -224,7 +224,7 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
 
         $store = dokan()->vendor->get( $store_id );
 
-        if ( empty( $store->id ) ) {
+        if ( empty( $store->get_id() ) ) {
             return new WP_Error( 'no_store_found', __( 'No store found', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 

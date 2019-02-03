@@ -3385,3 +3385,26 @@ function dokan_is_store_listing() {
 
     return false;
 }
+
+/**
+ * Dokan generate username
+ *
+ * @param  string $name
+ *
+ * @return string
+ */
+function dokan_generate_username( $name = 'store' ) {
+    static $i = 1;
+
+    if ( ! username_exists( $name ) ) {
+        return $name;
+    }
+
+    $new_name = sprintf( '%s-%d', $name, $i++ );
+
+    if ( ! username_exists( $new_name ) ) {
+        return $new_name;
+    }
+
+    return call_user_func( __FUNCTION__, $name );
+}

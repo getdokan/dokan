@@ -29,6 +29,13 @@ class Dokan_Vendor {
     private $shop_data = array();
 
     /**
+     * Holds the chanages data
+     *
+     * @var array
+     */
+    private $changes = array();
+
+    /**
      * The constructor
      *
      * @param int|WP_User $vendor
@@ -194,49 +201,11 @@ class Dokan_Vendor {
         $this->shop_data = apply_filters( 'dokan_vendor_shop_data', $shop_info, $this );
     }
 
-    /**
-     * Update vendor info
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    public function update( $data = [] ) {
-        if ( ! $data ) {
-            return $this->shop_data;
-        }
-
-        // get previsouly saved dat
-        $this->popluate_store_data();
-
-        $posted = wp_unslash( $data );
-
-        // new data
-        $new_data = apply_filters( 'dokan_update_vendor_data', [
-            'store_name'              => ! empty( $posted['store_name'] ) ? $posted['store_name'] : '',
-            'social'                  => ! empty( $posted['social'] ) ? $posted['social'] : [],
-            'payment'                 => ! empty( $posted['payment'] ) ? $posted['paymet'] : [ 'paypal' => [ 'email' ], 'bank' => [] ],
-            'phone'                   => ! empty( $posted['phone'] ) ? $posted['phone'] : '',
-            'show_email'              => ! empty( $posted['show_email'] ) ? $posted['show_email'] : 'no',
-            'address'                 => ! empty( $posted['address'] ) ? $posted['address'] : [],
-            'location'                => ! empty( $posted['location'] ) ? $posted['location'] : '',
-            'banner'                  => ! empty( $posted['banner'] ) ? $posted['banner'] : 0,
-            'icon'                    => ! empty( $posted['icon'] ) ? $posted['icon'] : '',
-            'gravatar'                => ! empty( $posted['gravatar'] ) ? $posted['gravatar'] : 0,
-            'show_more_ptab'          => ! empty( $posted['show_more_ptab'] ) ? $posted['show_more_ptab'] : 'yes',
-            'store_ppp'               => ! empty( $posted['store_ppp'] ) ? $posted['store_ppp'] : 10,
-            'enable_tnc'              => ! empty( $posted['enable_tnc'] ) ? $posted['enable_tnc'] : 'off',
-            'store_tnc'               => ! empty( $posted['store_tnc'] ) ? $posted['store_tnc'] : '',
-            'show_min_order_discount' => ! empty( $posted['show_min_order_discount'] ) ? $posted['show_min_order_discount'] : 'no',
-            'store_seo'               => ! empty( $posted['store_seo'] ) ? $posted['store_seo'] : []
-        ] );
-
-        update_user_meta( $this->get_id(), 'dokan_profile_settings', array_replace_recursive( $this->shop_data, $new_data ) );
-
-        return $this->shop_data;
-    }
+    /*
+    |--------------------------------------------------------------------------
+    | Getters
+    |--------------------------------------------------------------------------
+    */
 
     /**
      * Get the store info by lazyloading
@@ -504,6 +473,23 @@ class Dokan_Vendor {
     }
 
     /**
+     * Get a vendor products
+     *
+     * @return object
+     */
+    public function get_products() {
+        $products = dokan()->product->all( [
+            'author' => $this->id
+        ] );
+
+        if ( ! $products ) {
+            return null;
+        }
+
+        return $products;
+    }
+
+    /**
      * Get the total sales amount of this vendor
      *
      * @return float
@@ -738,20 +724,6 @@ class Dokan_Vendor {
     }
 
     /**
-     * Delete vendor with reassign data
-     *
-     * @since 2.8.0
-     *
-     * @return void
-     */
-    public function delete( $reassign = null ) {
-        $user = $this->to_array();
-        require_once ABSPATH . 'wp-admin/includes/user.php';;
-        wp_delete_user( $this->get_id(), $reassign );
-        return $user;
-    }
-
-    /**
      * Chnage product status when toggling seller active status
      *
      * @since 2.6.9
@@ -785,20 +757,363 @@ class Dokan_Vendor {
         }
     }
 
-    /**
-     * Get a vendor products
-     *
-     * @return object
-     */
-    public function get_products() {
-        $products = dokan()->product->all( [
-            'author' => $this->id
-        ] );
+    /*
+    |--------------------------------------------------------------------------
+    | Setters
+    |--------------------------------------------------------------------------
+    */
 
-        if ( ! $products ) {
-            return null;
+    /**
+     * Set enable tnc
+     *
+     * @param int value
+     */
+    public function set_enable_tnc( $value ) {
+        $this->set_prop( 'enable_tnc', wc_clean( $value ) );
+    }
+
+    /**
+     * Set gravatar
+     *
+     * @param int value
+     */
+    public function set_gravatar( $value ) {
+        $this->set_prop( 'gravatar', (int) $value );
+    }
+
+    /**
+     * Set banner
+     *
+     * @param int value
+     */
+    public function set_banner( $value ) {
+        $this->set_prop( 'banner', (int) $value );
+    }
+
+    /**
+     * Set banner
+     *
+     * @param int value
+     */
+    public function set_icon( $value ) {
+        $this->set_prop( 'icon', (int) $value );
+    }
+
+    /**
+     * Set store name
+     *
+     * @param string
+     */
+    public function set_store_name( $value ) {
+        $this->set_prop( 'store_name', wc_clean( $value ) );
+    }
+
+    /**
+     * Set phone
+     *
+     * @param string
+     */
+    public function set_phone( $value ) {
+        $this->set_prop( 'phone', wc_clean( $value ) );
+    }
+
+    /**
+     * Set show email
+     *
+     * @param string
+     */
+    public function set_show_email( $value ) {
+        $this->set_prop( 'show_email', wc_clean( $value ) );
+    }
+
+    /**
+     * Set show email
+     *
+     * @param string
+     */
+    public function set_fb( $value ) {
+        $this->set_social_prop( 'fb', 'social', esc_url_raw( $value ) );
+    }
+
+    /**
+     * Set show email
+     *
+     * @param string
+     */
+    public function set_gplus( $value ) {
+        $this->set_social_prop( 'gplus', 'social', esc_url_raw( $value ) );
+    }
+
+   /**
+     * Set show email
+     *
+     * @param string
+     */
+    public function set_twitter( $value ) {
+        $this->set_social_prop( 'twitter', 'social', esc_url_raw( $value ) );
+    }
+
+   /**
+     * Set show email
+     *
+     * @param string
+     */
+    public function set_pinterest( $value ) {
+        $this->set_social_prop( 'pinterest', 'social', esc_url_raw( $value ) );
+    }
+
+   /**
+     * Set show email
+     *
+     * @param string
+     */
+    public function set_linkedin( $value ) {
+        $this->set_social_prop( 'linkedin', 'social', esc_url_raw( $value ) );
+    }
+
+   /**
+     * Set show email
+     *
+     * @param string
+     */
+    public function set_youtube( $value ) {
+        $this->set_social_prop( 'youtube', 'social', esc_url_raw( $value ) );
+    }
+
+   /**
+     * Set show email
+     *
+     * @param string
+     */
+    public function set_instagram( $value ) {
+        $this->set_social_prop( 'instagram', 'social', esc_url_raw( $value ) );
+    }
+
+   /**
+     * Set flickr
+     *
+     * @param string
+     */
+    public function set_flickr( $value ) {
+        $this->set_social_prop( 'flickr', 'social', esc_url_raw( $value ) );
+    }
+
+    /**
+     * Set paypal email
+     *
+     * @param string $value
+     */
+    public function set_paypal_email( $value ) {
+        $this->set_payment_prop( 'email', 'paypal', sanitize_email( $value ) );
+    }
+
+    /**
+     * Set bank ac name
+     *
+     * @param string $value
+     */
+    public function set_bank_ac_name( $value ) {
+        $this->set_payment_prop( 'ac_name', 'bank', wc_clean( $value ) );
+    }
+
+    /**
+     * Set bank ac number
+     *
+     * @param string $value
+     */
+    public function set_bank_ac_number( $value ) {
+        $this->set_payment_prop( 'ac_number', 'bank', wc_clean( $value ) );
+    }
+
+    /**
+     * Set bank name
+     *
+     * @param string $value
+     */
+    public function set_bank_bank_name( $value ) {
+        $this->set_payment_prop( 'bank_name', 'bank', wc_clean( $value ) );
+    }
+
+    /**
+     * Set bank address
+     *
+     * @param string value
+     */
+    public function set_bank_bank_addr( $value ) {
+        $this->set_payment_prop( 'bank_addr', 'bank', wc_clean( $value ) );
+    }
+
+    /**
+     * Set bank routing number
+     *
+     * @param string value
+     */
+    public function set_bank_routing_number( $value ) {
+        $this->set_payment_prop( 'routing_number', 'bank', wc_clean( $value ) );
+    }
+
+    /**
+     * Set bank iban
+     *
+     * @param string $value
+     */
+    public function set_bank_iban( $value ) {
+        $this->set_payment_prop( 'iban', 'bank', wc_clean( $value ) );
+    }
+
+    /**
+     * Set bank swtif number
+     *
+     * @param string $value
+     */
+    public function set_bank_swift( $value ) {
+        $this->set_payment_prop( 'swift', 'bank', wc_clean( $value ) );
+    }
+
+    /**
+     * Set street 1
+     *
+     * @param string $value
+     */
+    public function set_street_1( $value ) {
+        $this->set_address_prop( 'street_1', 'address', wc_clean( $value ) );
+    }
+
+    /**
+     * Set street 2
+     *
+     * @param string $value
+     */
+    public function set_street_2( $value ) {
+        $this->set_address_prop( 'street_2', 'address', wc_clean( $value ) );
+    }
+
+    /**
+     * Set city
+     *
+     * @param string $value
+     */
+    public function set_city( $value ) {
+        $this->set_address_prop( 'city', 'address', wc_clean( $value ) );
+    }
+
+    /**
+     * Set zip
+     *
+     * @param string $value
+     */
+    public function set_zip( $value ) {
+        $this->set_address_prop( 'zip', 'address', wc_clean( $value ) );
+    }
+
+    /**
+     * Set state
+     *
+     * @param string $value
+     */
+    public function set_state( $value ) {
+        $this->set_address_prop( 'state', 'address', wc_clean( $value ) );
+    }
+
+    /**
+     * Set country
+     *
+     * @param string $value
+     */
+    public function set_country( $value ) {
+        $this->set_address_prop( 'country', 'address', wc_clean( $value ) );
+    }
+
+    /**
+     * Sets a prop for a setter method.
+     *
+     * This stores changes in a special array so we can track what needs saving
+     * the the DB later.
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param string $prop Name of prop to set.
+     * @param mixed  $value Value of the prop.
+     */
+    protected function set_prop( $prop, $value ) {
+        if ( ! $this->shop_data ) {
+            $this->popluate_store_data();
         }
 
-        return $products;
+        if ( array_key_exists( $prop, $this->shop_data ) ) {
+            if ( $value !== $this->shop_data[ $prop ] || array_key_exists( $prop, $this->changes ) ) {
+                $this->changes[ $prop ] = $value;
+            }
+        }
+    }
+
+    /**
+     * Sets a prop for a setter method.
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param string $prop    Name of prop to set.
+     * @param string $social Name of social settings to set, fb, twitter
+     * @param string $value
+     */
+    protected function set_social_prop( $prop, $social = 'social', $value ) {
+        if ( ! $this->shop_data ) {
+            $this->popluate_store_data();
+        }
+
+        if ( array_key_exists( $prop, $this->shop_data[ $social ] ) ) {
+            if ( $value !== $this->shop_data[ $social ][ $prop ] || ( isset( $this->changes[ $social ] ) && array_key_exists( $prop, $this->changes[ $social ] ) ) ) {
+                $this->changes[ $social ][ $prop ] = $value;
+            }
+        }
+    }
+
+    /**
+     * Set address props
+     *
+     * @param string $prop
+     * @param string $address
+     * @param string value
+     */
+    protected function set_address_prop( $prop, $address = 'address', $value ) {
+        $this->set_social_prop( $prop, $address, $value );
+    }
+
+    /**
+     * Set payment props
+     *
+     * @param string $prop
+     * @param string $paypal
+     * @param mix value
+     */
+    protected function set_payment_prop( $prop, $paypal = 'paypal', $value ) {
+        if ( ! $this->shop_data ) {
+            $this->popluate_store_data();
+        }
+
+        if ( array_key_exists( $prop, $this->shop_data[ 'payment' ][ $paypal ] ) ) {
+            if ( $value !== $this->shop_data[ 'payment' ][ $paypal ][ $prop ] || ( isset( $this->changes[ 'payment' ] ) && array_key_exists( $prop, $this->changes[ 'payment' ] ) ) ) {
+                $this->changes[ 'payment' ][ $paypal ][ $prop ] = $value;
+            }
+        }
+    }
+
+    /**
+     * Merge changes with data and clear.
+     *
+     * @since DOKAN_LITE_SINCE
+     */
+    public function apply_changes() {
+        update_user_meta( $this->get_id(), 'dokan_profile_settings', array_replace_recursive( $this->shop_data, $this->changes ) );
+        $this->changes = [];
+    }
+
+    /**
+     * Save the object
+     *
+     * @since DOKAN_LITE_SINCE
+     */
+    public function save() {
+        $this->apply_changes();
     }
 }

@@ -1,7 +1,7 @@
 <template>
     <div class="dokan-modal-dialog">
         <div class="dokan-modal">
-            <div class="dokan-modal-content">
+            <div class="dokan-modal-content" :style="{ width: width, height:height }">
                 <section :class="['dokan-modal-main', { 'has-footer': footer }]">
                     <header class="modal-header">
                         <slot name="header">
@@ -37,6 +37,16 @@ export default {
             type: Boolean,
             required: false,
             default: true
+        },
+        width: {
+            type: String,
+            required: false,
+            default: '500px'
+        },
+        height: {
+            type: String,
+            required: false,
+            default: 'auto'
         },
         title: {
             type: String,
@@ -81,7 +91,6 @@ export default {
         -webkit-transform: translate(-50%,-50%);
         -ms-transform: translate(-50%,-50%);
         transform: translate(-50%,-50%);
-        width: 500px;
     }
 
     .dokan-modal-main.has-footer {
@@ -137,7 +146,6 @@ export default {
     .modal-body {
         min-height: 100px;
         padding: 15px;
-        max-height: 150px;
         overflow-y: scroll;
     }
 
