@@ -191,7 +191,7 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
             }
         }
 
-        $vendor = dokan()->vendor->get( intval( $store_id ) )->delete( $reassign );
+        $vendor   = dokan()->vendor->delete( $store_id, $reassign );
         $response = rest_ensure_response( $vendor );
         $response->add_links( $this->prepare_links( $vendor, $request ) );
 
@@ -220,15 +220,24 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
      * @return WP_REST_Response
      */
     public function update_store( $request ) {
-        $store_id = (int) $request->get_param( 'id' );
-
-        $store = dokan()->vendor->get( $store_id );
+        $store = dokan()->vendor->get( (int) $request->get_param( 'id' ) );
 
         if ( empty( $store->get_id() ) ) {
             return new WP_Error( 'no_store_found', __( 'No store found', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
-        // @todo: update process. This method was introduced to update store categories.
+        $params = $request->get_params();
+
+        // unset the sote id ( we don't need this )
+        unset( $params['id'] );
+
+        $store_id = dokan()->vendor->update( $store->get_id(), $params );
+
+        if ( is_wp_error( $store_id ) ) {
+            return new WP_Error( $store_id->get_error_code(), $store_id->get_error_message() );
+        }
+
+        $store = dokan()->vendor->get( $store_id );
 
         do_action( 'dokan_rest_stores_update_store', $store, $request );
 

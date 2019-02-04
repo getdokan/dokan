@@ -203,7 +203,12 @@ class Dokan_Vendor_Manager {
             );
         }
 
-        if ( ! empty( $data['user_email'] ) && is_email( $data['user_email'] ) ) {
+        if ( ! empty( $data['user_email'] ) ) {
+
+            if ( ! is_email( $data['user_email'] ) ) {
+                return new WP_Error( 'invalid_email', __( 'Email is not valid', 'dokan-lite' ) );
+            }
+
             wp_update_user(
                 array(
                     'ID'         => $vendor->get_id(),
