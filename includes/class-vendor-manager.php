@@ -217,6 +217,20 @@ class Dokan_Vendor_Manager {
             );
         }
 
+        // update vendor other metadata | @todo: move all other metadata to 'dokan_profile_settings' meta
+        if ( ! empty( $data['enabled'] ) ) {
+            $vendor->update_meta( 'dokan_enable_selling', $data['enabled'] );
+        }
+
+        if ( ! empty( $data['featured'] ) ) {
+            $vendor->update_meta( 'dokan_feature_seller', $data['featured'] );
+        }
+
+        if ( ! empty( $data['trusted'] ) ) {
+            $vendor->update_meta( 'dokan_publishing', $data['trusted'] );
+        }
+
+        // update vendor store data
         if ( ! empty( $data['store_name'] ) ) {
             $vendor->set_store_name( $data['store_name'] );
         }

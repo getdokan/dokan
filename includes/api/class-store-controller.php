@@ -35,6 +35,11 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
                 'callback' => array( $this, 'get_stores' ),
                 'args'     => $this->get_collection_params()
             ),
+            array(
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => array( $this, 'create_store' ),
+                'permission_callback' => array( $this, 'permission_check_for_manageable_part' ),
+            ),
         ) );
 
         register_rest_route( $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)', array(
@@ -240,6 +245,23 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
         $store = dokan()->vendor->get( $store_id );
 
         do_action( 'dokan_rest_stores_update_store', $store, $request );
+
+        $stores_data = $this->prepare_item_for_response( $store, $request );
+        $response    = rest_ensure_response( $stores_data );
+
+        return $response;
+    }
+
+    public function create_store( $request ) {
+        $params = $request->get_params();
+
+        $store = dokan()->vendor->create( $params );
+
+        if ( is_wp_error( $store ) ) {
+            return new WP_Error( $store->get_error_code(), $store->get_error_message() );
+        }
+
+        do_action( 'dokan_rest_stores_create_store', $store, $request );
 
         $stores_data = $this->prepare_item_for_response( $store, $request );
         $response    = rest_ensure_response( $stores_data );

@@ -34,10 +34,12 @@ import LazyInput from "admin/components/LazyInput.vue"
 import Progressbar from "admin/components/Progressbar.vue"
 import Search from "admin/components/Search.vue"
 import Datepicker from "admin/components/Datepicker.vue"
+import VueSweetalert2 from 'vue-sweetalert2';
 
 import "vue-multiselect/dist/vue-multiselect.min.css"
 
 Vue.use(Notifications)
+Vue.use(VueSweetalert2);
 // Vue.component('multiselect', Multiselect)
 
 Vue.mixin( Mixin );

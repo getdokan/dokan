@@ -1048,6 +1048,22 @@ class Dokan_Vendor {
     }
 
     /**
+     * Update vendor meta data
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param string $key
+     * @param mix $value
+     *
+     * @return void
+     *
+     * @todo make this to a setter method
+     */
+    public function update_meta( $key, $value ) {
+        update_user_meta( $this->get_id(), $key, $value );
+    }
+
+    /**
      * Sets a prop for a setter method.
      *
      * @since DOKAN_LITE_SINCE
