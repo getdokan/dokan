@@ -32,7 +32,6 @@ class Dokan_API_Manager {
             DOKAN_DIR . '/includes/api/class-product-attribute-terms-controller.php' => 'Dokan_REST_Product_Attribute_Terms_Controller',
             DOKAN_DIR . '/includes/api/class-order-controller.php'                   => 'Dokan_REST_Order_Controller',
             DOKAN_DIR . '/includes/api/class-withdraw-controller.php'                => 'Dokan_REST_Withdraw_Controller',
-            DOKAN_DIR . '/includes/api/class-store-controller.php'                   => 'Dokan_REST_Store_Controller',
             DOKAN_DIR . '/includes/api/class-settings-controller.php'                => 'Dokan_REST_Settings_Controller',
         ) );
 
