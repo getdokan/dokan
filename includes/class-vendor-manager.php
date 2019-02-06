@@ -197,8 +197,17 @@ class Dokan_Vendor_Manager {
         if ( ! empty( $data['last_name'] ) ) {
             wp_update_user(
                 array(
-                    'ID'         => $vendor->get_id(),
+                    'ID'        => $vendor->get_id(),
                     'last_name' => wc_clean( $data['last_name'] )
+                )
+            );
+        }
+
+        if ( ! empty( $data['user_nicename'] ) ) {
+            wp_update_user(
+                array(
+                    'ID'            => $vendor->get_id(),
+                    'user_nicename' => wc_clean( $data['user_nicename'] )
                 )
             );
         }
@@ -298,6 +307,8 @@ class Dokan_Vendor_Manager {
                 }
             }
         }
+
+        do_action( 'dokan_before_update_vendor', $vendor->get_id(), $data );
 
         $vendor->save();
 
