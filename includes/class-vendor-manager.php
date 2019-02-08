@@ -122,7 +122,7 @@ class Dokan_Vendor_Manager {
     public function create( $data = [] ) {
         $defaults = [
             'role'       => 'seller',
-            'user_login' => dokan_generate_username(),
+            'user_login' => '', // dokan_generate_username()
             'user_pass'  => wp_generate_password(),
         ];
 
@@ -180,7 +180,7 @@ class Dokan_Vendor_Manager {
             wp_update_user(
                 array(
                     'ID'        => $vendor->get_id(),
-                    'user_pass' => $userpass
+                    'user_pass' => $data['user_pass']
                 )
             );
         }
