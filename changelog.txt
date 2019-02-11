@@ -1,3 +1,13 @@
+v2.9.10 -> Feb 11, 2019
+------------------------
+-**New**   Add dokan privacy policy option to facilitate GDPR
+-**Fix**   Fetch vendor own orders via REST API
+-**Fix**   Remove duplicate inclusion of Dokan_REST_Store_Controller class
+-**Tweak** Add filter to modify product image attributes
+-**Tweak** Add vendor curd options
+-**Tweak** Make color picker component globally accessible
+-**Tweak** Add filters to allow hooking classes from other modules
+
 v2.9.9 -> Jan 29, 2019
 ------------------------
 -**Fix**   Send order email to admin, vendor & customer when an order is created via REST API

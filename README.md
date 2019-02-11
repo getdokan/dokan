@@ -1,5 +1,5 @@
 # Dokan - Best WooCommerce Multivendor Marketplace Solution - Build Your Own Amazon, eBay, Etsy #
-**Contributors:** [tareq1988](https://profiles.wordpress.org/tareq1988), [wedevs](https://profiles.wordpress.org/wedevs), [sabbir1991](https://profiles.wordpress.org/sabbir1991), [rafsuntaskin](https://profiles.wordpress.org/rafsuntaskin), [sk.shaikat](https://profiles.wordpress.org/sk.shaikat), [ediamin](https://profiles.wordpress.org/ediamin), [saimonh](https://profiles.wordpress.org/saimonh)  
+**Contributors:** [tareq1988](https://profiles.wordpress.org/tareq1988), [wedevs](https://profiles.wordpress.org/wedevs), [sabbir1991](https://profiles.wordpress.org/sabbir1991), [nizamuddinbabu](https://profiles.wordpress.org/nizamuddinbabu), [rafsuntaskin](https://profiles.wordpress.org/rafsuntaskin), [sk.shaikat](https://profiles.wordpress.org/sk.shaikat), [ediamin](https://profiles.wordpress.org/ediamin), [saimonh](https://profiles.wordpress.org/saimonh)  
 **Donate Link:** http://tareq.co/donate/  
 **Tags:** WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, product vendors, woocommerce vendor, commission rate, e-commerce, ebay, ecommerce, yith, yithemes  
 **Requires at least:** 4.4  
@@ -274,13 +274,23 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 ## Changelog ##
 
+v2.9.10 -> Feb 11, 2019
+------------------------
+-**New**   Add dokan privacy policy option to facilitate GDPR
+-**Fix**   Fetch vendor own orders via REST API
+-**Fix**   Remove duplicate inclusion of Dokan_REST_Store_Controller class
+-**Tweak** Add filter to modify product image attributes
+-**Tweak** Add vendor curd options
+-**Tweak** Make color picker component globally accessible
+-**Tweak** Add filters to allow hooking classes from other modules
+
 v2.9.9 -> Jan 29, 2019
 ------------------------
 -**Fix**   Send order email to admin, vendor & customer when an order is created via REST API
 -**Fix**   Show error message when there is an error in vendor settings page
 -**Fix**   Product attributes title saved with extra dash in vendor product edit page
 -**Fix**   Show vendor full address when a vendor wants to in vendor store page
--**Fix**   Pyapal mass payment is not generating all the info in admin dashboard
+-**Fix**   PayPal mass payment is not generating all the info in admin dashboard
 -**Fix**   Withdraw request amount in approved & cancelled email is broken
 -**Fix**   Page is not redirecting correctly when a vendor edit his account
 -**Tweak** add filter to modify wp_editor args in vendor dashboard

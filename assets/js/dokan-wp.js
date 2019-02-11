@@ -1,12 +1,12 @@
 dokanWebpack([3],{
 
-/***/ 155:
+/***/ 159:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _hooks = __webpack_require__(9);
+var _hooks = __webpack_require__(15);
 
 dokan.wpPackages = {
     hooks: (0, _hooks.createHooks)()
@@ -14,4 +14,4 @@ dokan.wpPackages = {
 
 /***/ })
 
-},[155]);
+},[159]);
