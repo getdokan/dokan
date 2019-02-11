@@ -311,3 +311,16 @@ function enable_yoast_breadcrumb( $crumbs ) {
 }
 
 add_filter( 'wpseo_breadcrumb_links', 'enable_yoast_breadcrumb' );
+
+/**
+ * Dokan add privacy policy
+ *
+ * @return string
+ */
+function dokan_add_privacy_policy() {
+    echo '<div class="dokan-privacy-policy-text">';
+    dokan_privacy_policy_text();
+    echo '</div>';
+}
+
+add_action( 'dokan_contact_form', 'dokan_add_privacy_policy' );
