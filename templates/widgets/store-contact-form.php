@@ -30,6 +30,8 @@ if ( is_user_logged_in() ) {
         </li>
     </ul>
 
+    <?php do_action( 'dokan_contact_form', $seller_id ) ?>
+
     <?php wp_nonce_field( 'dokan_contact_seller' ); ?>
     <input type="hidden" name="seller_id" value="<?php echo esc_html( $seller_id ); ?>">
     <input type="hidden" name="action" value="dokan_contact_seller">

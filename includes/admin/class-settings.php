@@ -231,6 +231,11 @@ class Dokan_Settings {
                 'id'    => 'dokan_appearance',
                 'title' => __( 'Appearance', 'dokan-lite' ),
                 'icon'  => 'dashicons-admin-appearance'
+            ),
+            array(
+                'id'    => 'dokan_privacy',
+                'title' => __( 'Privacy Policy', 'dokan-lite' ),
+                'icon'  => 'dashicons-admin-network'
             )
         );
 
@@ -432,6 +437,29 @@ class Dokan_Settings {
                     'default' => 'default',
                 ),
             ),
+            'dokan_privacy' => array(
+                'enable_privacy' => array(
+                    'name'    => 'enable_privacy',
+                    'label'   => __( 'Enable Privacy Policy', 'dokan-lite' ),
+                    'type'    => 'checkbox',
+                    'desc'    => __( 'Enable privacy policy for dokan contact form', 'dokan-lite' ),
+                    'default' => 'on'
+                ),
+                'privacy_page' => array(
+                    'name'    => 'privacy_page',
+                    'label'   => __( 'Privacy Page', 'dokan-lite' ),
+                    'type'    => 'select',
+                    'desc'    => __( 'Choose privacy policy page', 'dokan-lite' ),
+                    'options' => $pages_array
+                ),
+                'privacy_policy' => array(
+                    'name'    => 'privacy_policy',
+                    'label'   => __( 'Privacy Policy', 'dokan-lite' ),
+                    'type'    => 'textarea',
+                    'rows'    => 5,
+                    'default' => __( 'Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our [dokan_privacy_policy]', 'dokan-lite' ),
+                )
+            )
         );
 
         return apply_filters( 'dokan_settings_fields', $settings_fields );
