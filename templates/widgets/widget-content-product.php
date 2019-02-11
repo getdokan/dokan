@@ -7,7 +7,7 @@
  * @package dokan
  */
 
-$img_kses = array(
+$img_kses = apply_filters( 'dokan_product_image_attributes', array(
     'img' => array(
         'alt'    => array(),
         'class'  => array(),
@@ -15,7 +15,8 @@ $img_kses = array(
         'src'    => array(),
         'width'  => array(),
     ),
-);
+) );
+
 ?>
 
 <?php if ( $r->have_posts() ) : ?>

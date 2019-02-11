@@ -1,6 +1,7 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-$img_kses = array(
+
+$img_kses = apply_filters( 'dokan_product_image_attributes', array(
     'img' => array(
         'alt'    => array(),
         'class'  => array(),
@@ -8,7 +9,8 @@ $img_kses = array(
         'src'    => array(),
         'width'  => array(),
     ),
-);
+) );
+
 ?>
 <tr class="item <?php if ( ! empty( $class ) ) echo esc_attr( $class ); ?>" data-order_item_id="<?php echo esc_attr( $item_id ); ?>">
 	<td class="thumb" width="10%">
