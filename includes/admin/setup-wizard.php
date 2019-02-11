@@ -93,6 +93,7 @@ class Dokan_Setup_Wizard {
         if ( empty( $_GET['page'] ) || 'dokan-setup' !== $_GET['page'] ) {
             return;
         }
+
         $this->steps = array(
             'introduction' => array(
                 'name'    =>  __( 'Introduction', 'dokan-lite' ),
