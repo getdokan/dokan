@@ -35,6 +35,7 @@ import Progressbar from "admin/components/Progressbar.vue"
 import Search from "admin/components/Search.vue"
 import Datepicker from "admin/components/Datepicker.vue"
 import VueSweetalert2 from 'vue-sweetalert2';
+import ColorPicker from "admin/components/ColorPicker.vue"
 
 import "vue-multiselect/dist/vue-multiselect.min.css"
 
@@ -91,6 +92,7 @@ window.dokan.libs['Progressbar'] = Progressbar;
 window.dokan.libs['Search']      = Search;
 window.dokan.libs['Datepicker']  = Datepicker;
 window.dokan.libs['Multiselect'] = Multiselect;
+window.dokan.libs['ColorPicker'] = ColorPicker;
 
 window.dokan.libs['ContentLoading']  = {
   VclCode,
