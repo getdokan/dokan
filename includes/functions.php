@@ -3385,3 +3385,42 @@ function dokan_is_store_listing() {
 
     return false;
 }
+
+/**
+ * Replaces placeholders with links to WooCommerce policy pages.
+ *
+ * @since DOKAN_LITE_SIINCE
+ *
+ * @param string $text Text to find/replace within.
+ *
+ * @return string
+ */
+function dokan_replace_policy_page_link_placeholders( $text ) {
+    $privacy_page_id = dokan_get_option( 'privacy_page', 'dokan_privacy' );
+    $privacy_link    = $privacy_page_id ? '<a href="' . esc_url( get_permalink( $privacy_page_id ) ) . '" class="dokan-privacy-policy-link" target="_blank">' . __( 'privacy policy', 'dokan-lite' ) . '</a>' : __( 'privacy policy', 'dokan-lite' );
+
+    $find_replace = [
+        '[dokan_privacy_policy]' => $privacy_link,
+    ];
+
+    return str_replace( array_keys( $find_replace ), array_values( $find_replace ), $text );
+}
+
+/**
+ * Dokan privacy policy text
+ *
+ * @since DOKAN_LITE_SIINCE
+ *
+ * @return string
+ */
+function dokan_privacy_policy_text() {
+    $is_enabled   = 'on' === dokan_get_option( 'enable_privacy', 'dokan_privacy' ) ? true : false;
+    $privacy_page = dokan_get_option( 'privacy_page', 'dokan_privacy' );
+    $privacy_text = dokan_get_option( 'privacy_policy', 'dokan_privacy', __( 'Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our [dokan_privacy_policy]', 'dokan-lite' ) );
+
+    if ( ! $is_enabled || ! $privacy_page ) {
+        return;
+    }
+
+    echo wp_kses_post( wpautop( dokan_replace_policy_page_link_placeholders( $privacy_text ), true ) );
+}
