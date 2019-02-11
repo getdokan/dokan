@@ -3387,7 +3387,7 @@ function dokan_is_store_listing() {
 }
 
 /**
- * Replaces placeholders with links to WooCommerce policy pages.
+ * Replaces placeholders with links to policy pages.
  *
  * @since DOKAN_LITE_SIINCE
  *

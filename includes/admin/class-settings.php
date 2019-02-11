@@ -235,7 +235,7 @@ class Dokan_Settings {
             array(
                 'id'    => 'dokan_privacy',
                 'title' => __( 'Privacy Policy', 'dokan-lite' ),
-                'icon'  => 'dashicons-admin-appearance'
+                'icon'  => 'dashicons-admin-network'
             )
         );
 
