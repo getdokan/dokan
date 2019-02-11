@@ -31,8 +31,10 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
     update_post_meta( $post_id, '_virtual', $is_virtual );
 
     // Gallery Images
-    $attachment_ids = array_filter( explode( ',', wc_clean( $data['product_image_gallery'] ) ) );
-    update_post_meta( $post_id, '_product_image_gallery', implode( ',', $attachment_ids ) );
+    if ( isset( $data['_product_image_gallery'] ) ) {
+        $attachment_ids = array_filter( explode( ',', wc_clean( $data['product_image_gallery'] ) ) );
+        update_post_meta( $post_id, '_product_image_gallery', implode( ',', $attachment_ids ) );
+    }
 
     // Check product visibility and purchaces note
     $data['_visibility']    = isset( $data['_visibility'] ) ? sanitize_text_field( $data['_visibility'] ) : '';
@@ -1055,7 +1057,7 @@ function dokan_get_more_products_from_seller( $seller_id = 0, $posts_per_page = 
 
         woocommerce_product_loop_end();
     } else {
-        esc_html_e( 'No product has been found!', 'dokan' );
+        esc_html_e( 'No product has been found!', 'dokan-lite' );
     }
 
     wp_reset_postdata();
