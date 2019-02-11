@@ -376,16 +376,10 @@ function dokan_author_total_sales( $seller_id ) {
 
     if ( $earnings === false ) {
         $count = $wpdb->get_row(
-            $wpdb->prepare(
-                "SELECT SUM(order_total) as earnings, SUM(refund_amount) as refund_total
-                FROM {$wpdb->prefix}dokan_orders as do LEFT JOIN {$wpdb->prefix}posts as p ON do.order_id = p.ID
-                LEFT JOIN {$wpdb->prefix}dokan_refund as refund ON do.order_id = refund.order_id AND status = '1'
-                WHERE do.seller_id = %d AND order_status IN('wc-completed', 'wc-processing', 'wc-on-hold')",
-                $seller_id
-            )
+            $wpdb->prepare( "SELECT SUM(order_total) as earnings FROM {$wpdb->prefix}dokan_orders WHERE seller_id = %d AND order_status IN('wc-completed', 'wc-processing', 'wc-on-hold')", $seller_id )
         );
 
-        $earnings = $count->earnings - $count->refund_total;
+        $earnings = $count->earnings;
 
         wp_cache_set( $cache_key, $earnings, $cache_group );
         dokan_cache_update_group( $cache_key, $cache_group );
@@ -2509,7 +2503,7 @@ function dokan_get_seller_short_address( $store_id, $line_break = true ) {
     } else if ( empty( $store_address['street_1'] ) && ! empty( $store_address['street_2'] ) ) {
         $short_address[] = "<span class='{$address_classes[1]}'> {$store_address['street_2']},</span>";
     } else if ( ! empty( $store_address['street_1'] ) && ! empty( $store_address['street_2'] ) ) {
-        $short_address[] = "<span class='{$address_classes[0]}'> {$store_address['street_1']},</span>";
+        $short_address[] = "<span class='{$address_classes[0]} {$address_classes[1]}'> {$store_address['street_1']}, {$store_address['street_2']}</span>";
     }
 
     if ( ! empty( $store_address['city'] ) && ! empty( $store_address['city'] ) ) {

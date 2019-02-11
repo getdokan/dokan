@@ -52,6 +52,7 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
         $this->post_status = array_keys( wc_get_order_statuses() );
 
         add_filter( 'woocommerce_new_order_data', array( $this, 'set_order_vendor_id' ) );
+        add_filter( 'woocommerce_rest_pre_insert_shop_order_object', array( $this, 'pre_insert_shop_order' ), 10, 3 );
         add_action( 'woocommerce_rest_insert_shop_order_object', array( $this, 'after_order_create' ), 10, 2 );
     }
 
@@ -385,6 +386,39 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
     }
 
     /**
+     * Get a collection of posts.
+     *
+     * @param WP_REST_Request $request Full details about the request.
+     * @return WP_Error|WP_REST_Response
+     */
+    public function get_items( $request ) {
+        $limit        = $request['per_page'];
+        $paged        = isset( $request['page'] ) ? absint( $request['page'] ) : 1;
+        $offset       = ( $paged - 1 ) * $limit;
+
+        $orders  = dokan_get_seller_orders( $request['seller_id'], $request['status'], $request['order_date'], $limit, $offset, $request['customer_id'] );
+
+        $data_objects = array();
+        $total_orders = 0;
+
+        if ( ! empty( $orders ) ) {
+            foreach ( $orders as $order ) {
+                $wc_order       = $this->get_object( $order->order_id );
+                $data           = $this->prepare_data_for_response( $wc_order, $request );
+                $data_objects[] = $this->prepare_response_for_collection( $data );
+            }
+
+            $order_counts = dokan_count_orders( $request['seller_id'] );
+            $total_orders = $order_counts->total;
+        }
+
+        $response = rest_ensure_response( $data_objects );
+        $response = $this->format_collection_response( $response, $request, $total_orders );
+
+        return $response;
+    }
+
+    /**
      * Get order summary report
      *
      * @since 2.8.0
@@ -504,7 +538,7 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
 
         $data = array();
         foreach ( $notes as $note ) {
-            $order_note = $this->prepare_item_for_response( $note, $request );
+            $order_note = $this->prepare_note_item_for_response( $note, $request );
             $order_note = $this->prepare_response_for_collection( $order_note );
             $data[]     = $order_note;
         }
@@ -548,7 +582,7 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
         do_action( 'dokan_rest_insert_order_note', $note, $request, true );
 
         $request->set_param( 'context', 'edit' );
-        $response = $this->prepare_item_for_response( $note, $request );
+        $response = $this->prepare_note_item_for_response( $note, $request );
         $response = rest_ensure_response( $response );
         $response->set_status( 201 );
         $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, str_replace( '(?P<id>[\d]+)', $order->get_id(), $this->rest_base ), $note_id ) ) );
@@ -583,7 +617,7 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
             return new WP_Error( 'dokan_rest_invalid_id', __( 'Invalid resource ID.', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
-        $order_note = $this->prepare_item_for_response( $note, $request );
+        $order_note = $this->prepare_note_item_for_response( $note, $request );
         $response   = rest_ensure_response( $order_note );
 
         return $response;
@@ -615,7 +649,7 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
         }
 
         $request->set_param( 'context', 'edit' );
-        $response = $this->prepare_item_for_response( $note, $request );
+        $response = $this->prepare_note_item_for_response( $note, $request );
 
         $result = wc_delete_order_note( $note->comment_ID );
 
@@ -635,7 +669,7 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
      * @param WP_REST_Request $request Request object.
      * @return WP_REST_Response $response Response data.
      */
-    public function prepare_item_for_response( $note, $request ) {
+    public function prepare_note_item_for_response( $note, $request ) {
         $data = array(
             'id'               => (int) $note->comment_ID,
             'date_created'     => wc_rest_prepare_date_response( $note->comment_date ),
@@ -672,8 +706,18 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
      *
      * @return boolean
      */
-    public function get_single_order_permissions_check() {
-        return current_user_can( 'dokan_view_order' );
+    public function get_single_order_permissions_check( $request ) {
+        if ( current_user_can( 'shop_manager' ) || current_user_can( 'administrator' ) ) {
+            return true;
+        }
+
+        $seller_id = dokan_get_seller_id_by_order( $request['id'] );
+
+        if ( $seller_id === get_current_user_id() ) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -727,6 +771,29 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
     }
 
     /**
+     * Mark order as parent when it has products from multiple vendors
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WC_Order        $order
+     * @param WP_REST_Request $request
+     * @param bool            $creating
+     *
+     * @return WC_Order
+     */
+    public function pre_insert_shop_order( $order, $request, $creating ) {
+        if ( $creating ) {
+            $vendors = dokan_get_sellers_by( $order );
+
+            if ( count( $vendors ) > 1 ) {
+                $order->update_meta_data( 'has_sub_order', true );
+            }
+        }
+
+        return $order;
+    }
+
+    /**
      * Insert into Dokan sync table once an order is created via API
      *
      * @since 2.8.2 [<description>]
@@ -777,6 +844,11 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
                     'type'        => 'integer',
                     'context'     => array( 'view' ),
                 ),
+                'seller_id'            => array(
+                    'description' => __( 'Orders belongs to specific seller', 'dokan-lite' ),
+                    'type'        => 'integer',
+                    'context'     => array( 'view' ),
+                ),
                 'number'               => array(
                     'description' => __( 'Order number.', 'dokan-lite' ),
                     'type'        => 'string',
@@ -804,7 +876,7 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
                 'status'               => array(
                     'description' => __( 'Order status.', 'dokan-lite' ),
                     'type'        => 'string',
-                    'default'     => 'pending',
+                    'default'     => 'all',
                     'enum'        => $this->get_order_statuses(),
                     'context'     => array( 'view', 'edit' ),
                 ),
@@ -818,6 +890,7 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
                 'date_created'         => array(
                     'description' => __( "The date the order was created, in the site's timezone.", 'dokan-lite' ),
                     'type'        => 'date-time',
+                    'default'     => null,
                     'context'     => array( 'view' ),
                     'readonly'    => true,
                 ),
@@ -1585,4 +1658,49 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
         return $this->add_additional_fields_schema( $schema );
     }
 
+    /**
+     * Retrieves the query params for the posts collection.
+     *
+     * @since 4.7.0
+     *
+     * @return array Collection parameters.
+     */
+    public function get_collection_params() {
+        $query_params = parent::get_collection_params();
+
+        $query_params['context']['default'] = 'view';
+
+        $schema            = $this->get_item_schema();
+        $schema_properties = $schema['properties'];
+
+        $query_params['seller_id']    = array(
+            'required'    => false,
+            'default'     => dokan_get_current_user_id(),
+            'description' => $schema_properties['seller_id']['description'],
+            'type'        => $schema_properties['seller_id']['type'],
+        );
+
+        $query_params['status'] = array(
+            'required'    => false,
+            'default'     => $schema_properties['status']['default'],
+            'description' => $schema_properties['status']['description'],
+            'type'        => $schema_properties['status']['type'],
+        );
+
+        $query_params['date_created']   = array(
+            'required'    => false,
+            'default'     => $schema_properties['date_created']['default'],
+            'description' => $schema_properties['date_created']['description'],
+            'type'        => $schema_properties['date_created']['type'],
+        );
+
+        $query_params['customer_id']  = array(
+            'required'    => false,
+            'default'     => $schema_properties['customer_id']['default'],
+            'description' => $schema_properties['customer_id']['description'],
+            'type'        => $schema_properties['customer_id']['type'],
+        );
+
+        return $query_params;
+    }
 }
