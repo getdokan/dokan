@@ -391,7 +391,7 @@ function dokan_get_seller_id_by_order( $order_id ) {
     }
 
     if ( count( $sellers ) == 1 ) {
-        return reset( $sellers )->seller_id;
+        return absint( reset( $sellers )->seller_id );
     }
 
     return 0;
