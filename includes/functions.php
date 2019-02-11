@@ -3349,7 +3349,7 @@ function dokan_get_variable_product_earning( $product_id, $seller_id, $formated 
 /**
  * Get page permalink of dokan pages by page id
  *
- * @since DOKAN_SINCE
+ * @since 2.9.10
  *
  * @param string $page_id
  *
@@ -3368,7 +3368,7 @@ function dokan_get_permalink( $page_id ) {
 /**
  * Check if it's store listing page
  *
- * @since DOKAN_SINCE
+ * @since 2.9.10
  *
  * @return boolean
  */
@@ -3412,7 +3412,7 @@ function dokan_generate_username( $name = 'store' ) {
 /**
  * Replaces placeholders with links to policy pages.
  *
- * @since DOKAN_LITE_SIINCE
+ * @since 2.9.10
  *
  * @param string $text Text to find/replace within.
  *
@@ -3432,7 +3432,7 @@ function dokan_replace_policy_page_link_placeholders( $text ) {
 /**
  * Dokan privacy policy text
  *
- * @since DOKAN_LITE_SIINCE
+ * @since 2.9.10
  *
  * @return string
  */
