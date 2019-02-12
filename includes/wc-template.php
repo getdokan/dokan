@@ -7,12 +7,11 @@
  * @return array
  */
 function dokan_product_seller_info( $item_data, $cart_item ) {
-    $seller_id   =  get_post_field( 'post_author', $cart_item['data']->get_id() );
-    $seller_info = dokan_get_store_info( $seller_id );
+    $vendor =  dokan_get_vendor_by_product( $cart_item['product_id'] );
 
     $item_data[] = array(
         'name'  => __( 'Vendor', 'dokan-lite' ),
-        'value' => $seller_info['store_name']
+        'value' => $vendor->get_shop_name(),
     );
 
     return $item_data;
