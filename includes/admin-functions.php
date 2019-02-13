@@ -1056,3 +1056,21 @@ function dokan_admin_get_help() {
 
     return $help_docs;
 }
+
+/**
+ * Dokan update pages
+ *
+ * @param array $value
+ * @param array $name
+ *
+ * @return array
+ */
+function dokan_update_pages( $value, $name ) {
+    if ( 'dokan_pages' !== $name ) {
+        return $value;
+    }
+
+    return array_replace_recursive( get_option( $name ), $value );
+}
+
+add_filter( 'dokan_save_settings_value', 'dokan_update_pages', 10, 2 );
