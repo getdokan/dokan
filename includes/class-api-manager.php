@@ -49,8 +49,8 @@ class Dokan_API_Manager {
 
         foreach ( $this->class_map as $file_name => $controller ) {
             require_once $file_name;
-            $controller = new $controller();
-            $controller->register_routes();
+            $this->$controller = new $controller();
+            $this->$controller->register_routes();
         }
     }
 
