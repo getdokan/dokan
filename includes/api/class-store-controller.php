@@ -68,7 +68,7 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
             array(
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => array( $this, 'update_store' ),
-                'permission_callback' => array( $this, 'update_product_permissions_check' ),
+                'permission_callback' => array( $this, 'update_store_permissions_check' ),
             ),
         ) );
 
@@ -204,15 +204,14 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
     }
 
     /**
-     * Update product permission check method
+     * Update store permission check method
      *
      * @since 2.9.2
      *
      * @return bool
      */
-    public function update_product_permissions_check() {
-        // This is temporary check to use store category update
-        return current_user_can( 'manage_woocommerce' ); // @todo: Update this with logic
+    public function update_store_permissions_check() {
+        return current_user_can( 'dokandar' );
     }
 
     /**
