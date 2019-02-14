@@ -1079,10 +1079,12 @@ class Dokan_Vendor {
             $this->popluate_store_data();
         }
 
-        if ( array_key_exists( $prop, $this->shop_data[ $social ] ) ) {
-            if ( $value !== $this->shop_data[ $social ][ $prop ] || ( isset( $this->changes[ $social ] ) && array_key_exists( $prop, $this->changes[ $social ] ) ) ) {
-                $this->changes[ $social ][ $prop ] = $value;
-            }
+        if ( ! isset( $this->shop_data[ $social ][ $prop ] ) ) {
+            $this->shop_data[ $social ][ $prop ] = null;
+        }
+
+        if ( $value !== $this->shop_data[ $social ][ $prop ] || ( isset( $this->changes[ $social ] ) && array_key_exists( $prop, $this->changes[ $social ] ) ) ) {
+            $this->changes[ $social ][ $prop ] = $value;
         }
     }
 
@@ -1109,10 +1111,12 @@ class Dokan_Vendor {
             $this->popluate_store_data();
         }
 
-        if ( array_key_exists( $prop, $this->shop_data[ 'payment' ][ $paypal ] ) ) {
-            if ( $value !== $this->shop_data[ 'payment' ][ $paypal ][ $prop ] || ( isset( $this->changes[ 'payment' ] ) && array_key_exists( $prop, $this->changes[ 'payment' ] ) ) ) {
-                $this->changes[ 'payment' ][ $paypal ][ $prop ] = $value;
-            }
+        if ( ! isset( $this->shop_data[ 'payment' ][ $paypal ][ $prop ] ) ) {
+            $this->shop_data[ 'payment' ][ $paypal ][ $prop ] = null;
+        }
+
+        if ( $value !== $this->shop_data[ 'payment' ][ $paypal ][ $prop ] || ( isset( $this->changes[ 'payment' ] ) && array_key_exists( $prop, $this->changes[ 'payment' ] ) ) ) {
+            $this->changes[ 'payment' ][ $paypal ][ $prop ] = $value;
         }
     }
 
