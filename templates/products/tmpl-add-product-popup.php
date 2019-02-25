@@ -156,6 +156,8 @@
                         ?>
                     </div>
 
+                    <?php do_action( 'dokan_new_product_after_product_tags' ); ?>
+
                     <div class="dokan-form-group">
                         <textarea name="post_excerpt" id="" class="dokan-form-control" rows="5" placeholder="<?php esc_attr_e( 'Enter some short description about this product...' , 'dokan-lite' ) ?>"></textarea>
                     </div>
