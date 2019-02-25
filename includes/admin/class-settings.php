@@ -72,7 +72,7 @@ class Dokan_Settings {
             }
 
             $option_value = $this->sanitize_options( $_post_data['settingsData'] );
-            $option_value = apply_filters( 'dokan_save_settings_value', $option_value );
+            $option_value = apply_filters( 'dokan_save_settings_value', $option_value, $option_name );
 
             do_action( 'dokan_before_saving_settings', $option_name, $option_value );
 
