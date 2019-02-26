@@ -250,13 +250,9 @@ class Dokan_Settings {
      * @return array settings fields
      */
     function get_settings_fields() {
-        $pages_array  = $this->get_post_type( 'page' );
-        $slider_array = $this->get_post_type( 'dokan_slider' );
-
-        $commission_types = array(
-            'flat'       => __( 'Flat', 'dokan-lite' ),
-            'percentage' => __( 'Percentage', 'dokan-lite' ),
-        );
+        $pages_array      = $this->get_post_type( 'page' );
+        $slider_array     = $this->get_post_type( 'dokan_slider' );
+        $commission_types = dokan_commission_types();
 
         $settings_fields = array(
             'dokan_general' => array(

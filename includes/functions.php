@@ -3447,3 +3447,17 @@ function dokan_privacy_policy_text() {
 
     echo wp_kses_post( wpautop( dokan_replace_policy_page_link_placeholders( $privacy_text ), true ) );
 }
+
+/**
+ * Dokan commission types
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @return array
+ */
+function dokan_commission_types() {
+    return apply_filters( 'dokan_commission_types', [
+        'flat'       => __( 'Flat', 'dokan-lite' ),
+        'percentage' => __( 'Percentage', 'dokan-lite' ),
+    ] );
+}
