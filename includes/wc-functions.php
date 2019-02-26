@@ -1090,7 +1090,7 @@ function dokan_bulk_order_status_change() {
     }
 
     $status = sanitize_text_field( $postdata['status'] );
-    $orders = sanitize_text_field( $postdata['bulk_orders'] );
+    $orders = array_map( 'sanitize_text_field', $postdata['bulk_orders'] );
 
     // -1 means bluk action option value
     $excluded_status = array( '-1', 'cancelled', 'refunded' );
