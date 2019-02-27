@@ -319,6 +319,8 @@ if ( ! $from_shortcode ) {
 
                                         ?>
                                     </div>
+
+                                    <?php do_action( 'dokan_product_edit_after_product_tags', $post, $post_id ); ?>
                                 </div><!-- .content-half-part -->
 
                                 <div class="content-half-part featured-image">
