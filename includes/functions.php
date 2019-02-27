@@ -3455,3 +3455,32 @@ function dokan_privacy_policy_text() {
 
     echo wp_kses_post( wpautop( dokan_replace_policy_page_link_placeholders( $privacy_text ), true ) );
 }
+
+/**
+ * Dokan Login Form
+ *
+ * @since DOKAN_SINCE
+ *
+ * @param array $args
+ * @param bool  $echo
+ *
+ * @return void|string
+ */
+function dokan_login_form( $args = array(), $echo = false ) {
+    $defaults = array(
+        'title'        => esc_html__( 'Please Login to Continue', 'dokan-lite' ),
+        'id'           => 'dokan-login-form',
+        'nonce_action' => 'dokan-login-form-action',
+        'nonce_name'   => 'dokan-login-form-nonce',
+    );
+
+    $args = wp_parse_args( $args, $defaults );
+
+    if ( $echo ) {
+        dokan_get_template_part( 'login-form/login-form', false, $args );
+    } else {
+        ob_start();
+        dokan_get_template_part( 'login-form/login-form', false, $args );
+        return ob_get_clean();
+    }
+}
