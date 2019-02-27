@@ -2793,6 +2793,13 @@ function dokan_cache_clear_deleted_product( $post_id ) {
  */
 function dokan_get_earning_by_product( $product_id, $seller_id ) {
     $product            = wc_get_product( $product_id );
+    $parent_id          = $product->get_parent_id();
+
+    // if parent id found, override product_id with parent id
+    if ( $parent_id ) {
+        $product_id = $parent_id;
+    }
+
     $percentage         = dokan_get_seller_percentage( $seller_id, $product_id );
     $percentage_type    = dokan_get_commission_type( $seller_id, $product_id );
     $price              = $product->get_price();
