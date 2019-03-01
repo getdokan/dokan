@@ -2148,7 +2148,7 @@ function dokan_wc_email_recipient_add_seller( $email, $order ) {
             return $email;
         }
 
-        $sellers = dokan_get_seller_id_by_order_id( $order_id );
+        $sellers = dokan_get_seller_id_by_order( $order_id );
 
         if ( $sellers ) {
             $seller       = get_userdata( $sellers );

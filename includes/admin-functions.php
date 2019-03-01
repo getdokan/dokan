@@ -113,7 +113,7 @@ function dokan_shop_order_custom_columns( $col ) {
             $has_sub = get_post_meta( $post->ID, 'has_sub_order', true );
 
             if ( $has_sub != '1' ) {
-                $seller = get_user_by( 'id', dokan_get_seller_id_by_order_id( $post->ID ) );
+                $seller = get_user_by( 'id', dokan_get_seller_id_by_order( $post->ID ) );
                 printf( '<a href="%s">%s</a>', esc_url( admin_url( 'edit.php?post_type=shop_order&vendor_id=' . $seller->ID ) ), esc_html( $seller->display_name ) );
             }
 

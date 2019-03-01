@@ -306,7 +306,7 @@ function dokan_sync_insert_order( $order_id ) {
     }
 
     $order              = wc_get_order( $order_id );
-    $seller_id          = dokan_get_seller_id_by_order_id( $order_id );
+    $seller_id          = dokan_get_seller_id_by_order( $order_id );
     $order_total        = $order->get_total();
     $order_status       = dokan_get_prop( $order, 'status' );
     $admin_commission   = dokan_get_admin_commission_by( $order, $seller_id );
@@ -377,6 +377,7 @@ add_action( 'dokan_checkout_update_order_meta', 'dokan_sync_insert_order' );
  *
  * @global object $wpdb
  * @param int $order_id
+ *
  * @return int
  */
 function dokan_get_seller_id_by_order( $order_id ) {
@@ -393,6 +394,27 @@ function dokan_get_seller_id_by_order( $order_id ) {
 
     if ( count( $sellers ) == 1 ) {
         return absint( reset( $sellers )->seller_id );
+    }
+
+    // if seller is not found, try to retrieve it via line items
+    if ( ! $sellers ) {
+        $order = wc_get_order( $order_id );
+
+        if ( $order->get_meta( 'has_sub_order' ) ) {
+            return 0;
+        }
+
+        $items = $order->get_items( 'line_item' );
+
+        if ( ! $items ) {
+            return 0;
+        }
+
+        $product_id = current( $items )->get_product_id();
+        $seller_id  = get_post_field( 'post_author', $product_id );
+        $seller_id  = apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
+
+        return $seller_id ? absint( $seller_id ) : 0;
     }
 
     return 0;
@@ -922,31 +944,9 @@ function dokan_order_csv_export( $orders, $file = null ) {
  * @return int
  */
 function dokan_get_seller_id_by_order_id( $id ) {
-    $order = wc_get_order( $id );
+    wc_deprecated_function( 'dokan_get_seller_id_by_order_id', '2.9.10', 'dokan_get_seller_id_by_order' );
 
-    if ( $order->get_meta( 'has_sub_order' ) ) {
-        return 0;
-    }
-
-    $items = $order->get_items( 'line_item' );
-
-    if ( ! is_array( $items ) || empty( $items ) ) {
-        return;
-    }
-
-    foreach ( $items as $item ) {
-        $product_id = $item->get_product_id();
-        break;
-    }
-
-    $seller_id = get_post_field( 'post_author', $product_id );
-    $seller_id = apply_filters( 'dokan_get_seller_id_by_order_id', $seller_id, $items );
-
-    if ( empty( $seller_id ) ) {
-        return;
-    }
-
-    return $seller_id;
+    return dokan_get_seller_id_by_order( $id );
 }
 
 /**
