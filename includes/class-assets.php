@@ -370,6 +370,11 @@ class Dokan_Assets {
                 'src'       => $asset_url . '/js/dokan-wp.js',
                 'deps'      => array( 'jquery' ),
                 'version'   => filemtime( $asset_path . '/js/dokan-wp.js' ),
+            ),
+            'dokan-loggin-form-popup' => array(
+                'src'       => $asset_url . '/js/login-form-popup.js',
+                'deps'      => array( 'dokan-popup' ),
+                'version'   => filemtime( $asset_path . '/js/login-form-popup.js' ),
             )
         );
 
@@ -455,6 +460,8 @@ class Dokan_Assets {
                 wp_enqueue_script( 'dokan-select2-js' );
             }
         }
+
+        wp_enqueue_script( 'dokan-loggin-form-popup' );
 
         do_action( 'dokan_enqueue_scripts' );
     }
