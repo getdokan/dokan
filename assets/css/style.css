@@ -4355,6 +4355,30 @@ div.media-sidebar a.edit-attachment {
   display: inline-block;
   padding: 0px 5px;
 }
+.dokan-login-form-popup-wrapper {
+  width: 430px !important;
+  padding: 16px !important;
+  margin: 0 auto !important;
+}
+.dokan-login-form-popup-wrapper .dokan-login-form-title {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+}
+.dokan-login-form-popup-wrapper fieldset {
+  padding: 0;
+  border: 0;
+  margin: 0;
+}
+.dokan-login-form-popup-wrapper .dokan-login-form-error {
+  color: #d9534f;
+  background-color: #f2dede;
+  font-size: 0.9em;
+}
+.dokan-login-form-popup-wrapper .dokan-login-form-error.has-error {
+  padding: 5px 8px;
+  margin-bottom: 5px;
+}
 /*--------------------------------------------------
 :: Responsive Styles
 -------------------------------------------------- */
