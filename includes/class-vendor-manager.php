@@ -322,7 +322,7 @@ class Dokan_Vendor_Manager {
     /**
      * Delete vendor with reassign data
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.11
      *
      * @return array
      */
