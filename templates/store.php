@@ -27,7 +27,7 @@ if ( function_exists( 'yoast_breadcrumb' ) ) {
                 <?php
                 if ( ! dynamic_sidebar( 'sidebar-store' ) ) {
                     $args = array(
-                        'before_widget' => '<aside class="widget %s">',
+                        'before_widget' => '<aside class="widget dokan-store-widget %s">',
                         'after_widget'  => '</aside>',
                         'before_title'  => '<h3 class="widget-title">',
                         'after_title'   => '</h3>',

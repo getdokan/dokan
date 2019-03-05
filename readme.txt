@@ -3,9 +3,9 @@ Contributors: tareq1988, wedevs, sabbir1991, nizamuddinbabu, rafsuntaskin, sk.sh
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, product vendors, woocommerce vendor, commission rate, e-commerce, ebay, ecommerce, yith, yithemes
 Requires at least: 4.4
-Tested up to: 5.0.3
+Tested up to: 5.1
 WC requires at least: 3.0
-WC tested up to: 3.5.4
+WC tested up to: 3.5.5
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv2 or later
@@ -273,6 +273,25 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 == Changelog ==
+
+v2.9.11 -> Mar 5, 2019
+---------------------------
+-**New**   Add Dokan Login Form popup
+-**Fix**   Unable create customer using WC_Rest API is
+-**Fix**   Vendor name in cart for variable products
+-**Fix**   Order tracking date format is not matching with WordPress
+-**Fix**   Font awesome 5 icons are not rendering in vendor dashboard
+-**Fix**   Show vendor, reports link in the dokan dashboard when the pro version is enabled
+-**Fix**   Escape html tags being outputing in setup-wizard
+-**Fix**   Send email to admin on adding a new product via REST API
+-**Fix**   Set default total_sales count on adding a new product
+-**Fix**   Gallery images are not getting saved in vendor product page
+-**Tweak** deprecate dokan_get_seller_id_by_order_id function
+-**Tweak** dokan_get_earning_by_product function
+-**Tweak** Make Dokan REST controllers globally accessible
+-**Tweak** Allow vendor to update his store via REST API
+-**Tweak** Widgets to show outside store single page with dummy data
+-**Tweak** Only save the newly updated pages while saving pages in dokan admin settings
 
 v2.9.10 -> Feb 11, 2019
 ------------------------

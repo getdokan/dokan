@@ -1099,6 +1099,10 @@ function dokan_is_seller_trusted( $user_id ) {
  * @return string
  */
 function dokan_get_store_url( $user_id ) {
+    if ( ! $user_id ) {
+        return '';
+    }
+
     $userdata         = get_userdata( $user_id );
     $user_nicename    = ( ! false == $userdata ) ? $userdata->user_nicename : '';
     $custom_store_url = dokan_get_option( 'custom_store_url', 'dokan_general', 'store' );
@@ -1197,23 +1201,16 @@ function dokan_get_store_info( $seller_id ) {
  * @return array
  */
 function dokan_get_store_tabs( $store_id ) {
-
     $tabs = array(
         'products' => array(
             'title' => __( 'Products', 'dokan-lite' ),
-            'url'   => dokan_get_store_url( $store_id ),
+            'url'   => dokan_get_store_url( $store_id )
         ),
-    );
-
-    $store_info = dokan_get_store_info( $store_id );
-    $tnc_enable = dokan_get_option( 'seller_enable_terms_and_conditions', 'dokan_general', 'off' );
-
-    if ( isset( $store_info['enable_tnc'] ) && $store_info['enable_tnc'] == 'on' && $tnc_enable == 'on' ) {
-        $tabs['terms_and_conditions'] = array(
+        'terms_and_conditions' => array(
             'title' => __( 'Terms and Conditions', 'dokan-lite' ),
             'url'   => dokan_get_toc_url( $store_id ),
-        );
-    }
+        )
+    );
 
     return apply_filters( 'dokan_store_tabs', $tabs, $store_id );
 }
@@ -2151,7 +2148,7 @@ function dokan_wc_email_recipient_add_seller( $email, $order ) {
             return $email;
         }
 
-        $sellers = dokan_get_seller_id_by_order_id( $order_id );
+        $sellers = dokan_get_seller_id_by_order( $order_id );
 
         if ( $sellers ) {
             $seller       = get_userdata( $sellers );
@@ -2536,6 +2533,17 @@ function dokan_get_seller_short_address( $store_id, $line_break = true ) {
  * @return string
  */
 function dokan_get_toc_url( $store_id ) {
+    if ( ! $store_id ) {
+        return '';
+    }
+
+    $store_info = dokan_get_store_info( $store_id );
+    $tnc_enable = dokan_get_option( 'seller_enable_terms_and_conditions', 'dokan_general', 'off' );
+
+    if ( ! ( isset( $store_info['enable_tnc'] ) && $store_info['enable_tnc'] == 'on' && $tnc_enable == 'on' ) ) {
+        return '';
+    }
+
     $userstore = dokan_get_store_url( $store_id );
 
     return apply_filters( 'dokan_get_toc_url', $userstore . 'toc' );
@@ -2609,7 +2617,7 @@ function dokan_register_store_widget() {
         apply_filters( 'dokan_store_widget_args', array(
                 'name'          => __( 'Dokan Store Sidebar', 'dokan-lite' ),
                 'id'            => 'sidebar-store',
-                'before_widget' => '<aside id="%1$s" class="widget %2$s">',
+                'before_widget' => '<aside id="%1$s" class="widget dokan-store-widget %2$s">',
                 'after_widget'  => '</aside>',
                 'before_title'  => '<h3 class="widget-title">',
                 'after_title'   => '</h3>',
@@ -2785,6 +2793,13 @@ function dokan_cache_clear_deleted_product( $post_id ) {
  */
 function dokan_get_earning_by_product( $product_id, $seller_id ) {
     $product            = wc_get_product( $product_id );
+    $parent_id          = $product->get_parent_id();
+
+    // if parent id found, override product_id with parent id
+    if ( $parent_id ) {
+        $product_id = $parent_id;
+    }
+
     $percentage         = dokan_get_seller_percentage( $seller_id, $product_id );
     $percentage_type    = dokan_get_commission_type( $seller_id, $product_id );
     $price              = $product->get_price();
@@ -3446,4 +3461,33 @@ function dokan_privacy_policy_text() {
     }
 
     echo wp_kses_post( wpautop( dokan_replace_policy_page_link_placeholders( $privacy_text ), true ) );
+}
+
+/**
+ * Dokan Login Form
+ *
+ * @since DOKAN_SINCE
+ *
+ * @param array $args
+ * @param bool  $echo
+ *
+ * @return void|string
+ */
+function dokan_login_form( $args = array(), $echo = false ) {
+    $defaults = array(
+        'title'        => esc_html__( 'Please Login to Continue', 'dokan-lite' ),
+        'id'           => 'dokan-login-form',
+        'nonce_action' => 'dokan-login-form-action',
+        'nonce_name'   => 'dokan-login-form-nonce',
+    );
+
+    $args = wp_parse_args( $args, $defaults );
+
+    if ( $echo ) {
+        dokan_get_template_part( 'login-form/login-form', false, $args );
+    } else {
+        ob_start();
+        dokan_get_template_part( 'login-form/login-form', false, $args );
+        return ob_get_clean();
+    }
 }

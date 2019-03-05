@@ -370,6 +370,11 @@ class Dokan_Assets {
                 'src'       => $asset_url . '/js/dokan-wp.js',
                 'deps'      => array( 'jquery' ),
                 'version'   => filemtime( $asset_path . '/js/dokan-wp.js' ),
+            ),
+            'dokan-loggin-form-popup' => array(
+                'src'       => $asset_url . '/js/login-form-popup.js',
+                'deps'      => array( 'dokan-popup' ),
+                'version'   => filemtime( $asset_path . '/js/login-form-popup.js' ),
             )
         );
 
@@ -455,6 +460,8 @@ class Dokan_Assets {
                 wp_enqueue_script( 'dokan-select2-js' );
             }
         }
+
+        wp_enqueue_script( 'dokan-loggin-form-popup' );
 
         do_action( 'dokan_enqueue_scripts' );
     }
@@ -637,7 +644,8 @@ class Dokan_Assets {
                 'i18n_selection_too_long_1'           => __( 'You can only select 1 item', 'dokan-lite' ),
                 'i18n_selection_too_long_n'           => __( 'You can only select %qty% items', 'dokan-lite' ),
                 'i18n_load_more'                      => __( 'Loading more results&hellip;', 'dokan-lite' ),
-                'i18n_searching'                      => __( 'Searching&hellip;', 'dokan-lite' )
+                'i18n_searching'                      => __( 'Searching&hellip;', 'dokan-lite' ),
+                'i18n_date_format'                    => get_option( 'date_format' )
             );
 
             $default_args = array_merge( $default_args, $custom_args );

@@ -31,7 +31,7 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
     update_post_meta( $post_id, '_virtual', $is_virtual );
 
     // Gallery Images
-    if ( isset( $data['_product_image_gallery'] ) ) {
+    if ( isset( $data['product_image_gallery'] ) ) {
         $attachment_ids = array_filter( explode( ',', wc_clean( $data['product_image_gallery'] ) ) );
         update_post_meta( $post_id, '_product_image_gallery', implode( ',', $attachment_ids ) );
     }
@@ -1090,7 +1090,7 @@ function dokan_bulk_order_status_change() {
     }
 
     $status = sanitize_text_field( $postdata['status'] );
-    $orders = sanitize_text_field( $postdata['bulk_orders'] );
+    $orders = array_map( 'sanitize_text_field', $postdata['bulk_orders'] );
 
     // -1 means bluk action option value
     $excluded_status = array( '-1', 'cancelled', 'refunded' );

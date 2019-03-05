@@ -72,7 +72,7 @@ class Dokan_Settings {
             }
 
             $option_value = $this->sanitize_options( $_post_data['settingsData'] );
-            $option_value = apply_filters( 'dokan_save_settings_value', $option_value );
+            $option_value = apply_filters( 'dokan_save_settings_value', $option_value, $option_name );
 
             do_action( 'dokan_before_saving_settings', $option_name, $option_value );
 
@@ -462,7 +462,31 @@ class Dokan_Settings {
             )
         );
 
-        return apply_filters( 'dokan_settings_fields', $settings_fields );
+        return apply_filters( 'dokan_settings_fields', $settings_fields, $this );
+    }
+
+    /**
+     * Add settings after specific option
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array  $settings_fields     Current settings
+     * @param string $section             Name of the section
+     * @param string $option              Name of the option after which we wish to add new settings
+     * @param array  $additional_settings New settings/options
+     */
+    public function add_settings_after( $settings_fields, $section, $option, $additional_settings ) {
+        $section_fields = $settings_fields[ $section ];
+
+        $afterIndex = array_search( $option, array_keys( $section_fields ) );
+
+        $settings_fields[ $section ] = array_merge(
+            array_slice( $section_fields, 0, $afterIndex + 1 ),
+            $additional_settings,
+            array_slice( $section_fields, $afterIndex + 1 )
+        );
+
+        return $settings_fields;
     }
 }
 

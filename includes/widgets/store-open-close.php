@@ -27,9 +27,15 @@ class Dokan_Store_Open_Close extends WP_Widget {
      * @return void Echoes it's output
      **/
     function widget( $args, $instance ) {
-
         if ( dokan_is_store_page() ) {
             extract( $args, EXTR_SKIP );
+
+            $defaults = array(
+                'title' => __( 'Store Time', 'dokan-lite' ),
+            );
+
+            $instance = wp_parse_args( $instance, $defaults );
+
             $title      = apply_filters( 'widget_title', $instance['title'] );
             $seller_id  = (int) get_query_var( 'author' );
 
@@ -63,6 +69,8 @@ class Dokan_Store_Open_Close extends WP_Widget {
 
             echo $after_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
         }
+
+        do_action( 'dokan_widget_store_open_close_render', $args, $instance, $this );
     }
 
     /**

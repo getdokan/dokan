@@ -156,6 +156,10 @@ function dokan_save_product( $args ) {
         }
 
         if ( ! $is_updating ) {
+            update_post_meta( $product_id, 'total_sales', 0 );
+        }
+
+        if ( ! $is_updating ) {
             do_action( 'dokan_new_product_added', $product_id, $data );
         } else {
             do_action( 'dokan_product_updated', $product_id, $data );

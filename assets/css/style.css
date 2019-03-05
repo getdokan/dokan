@@ -3866,20 +3866,20 @@ div.media-sidebar a.edit-attachment {
 .dokan-single-store .dokan-store-tabs ul li a:hover {
   background: #eee;
 }
-.dokan-store-sidebar input[type=text],
-.dokan-store-sidebar input[type=email],
-.dokan-store-sidebar textarea {
+.dokan-store-widget input[type=text],
+.dokan-store-widget input[type=email],
+.dokan-store-widget textarea {
   width: 100%;
 }
-.dokan-store-sidebar form.seller-form ul {
+.dokan-store-widget form.seller-form ul {
   margin: 0;
   padding: 0;
   list-style: none;
 }
-.dokan-store-sidebar form.seller-form ul li {
+.dokan-store-widget form.seller-form ul li {
   margin-bottom: 8px;
 }
-.dokan-store-sidebar #dokan-store-location {
+.dokan-store-widget #dokan-store-location {
   width: 100%;
   height: 200px;
 }
@@ -4354,6 +4354,30 @@ div.media-sidebar a.edit-attachment {
 .dokan-withdraw-content .dokan-withdraw-area ul li {
   display: inline-block;
   padding: 0px 5px;
+}
+.dokan-login-form-popup-wrapper {
+  width: 430px !important;
+  padding: 16px !important;
+  margin: 0 auto !important;
+}
+.dokan-login-form-popup-wrapper .dokan-login-form-title {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+}
+.dokan-login-form-popup-wrapper fieldset {
+  padding: 0;
+  border: 0;
+  margin: 0;
+}
+.dokan-login-form-popup-wrapper .dokan-login-form-error {
+  color: #d9534f;
+  background-color: #f2dede;
+  font-size: 0.9em;
+}
+.dokan-login-form-popup-wrapper .dokan-login-form-error.has-error {
+  padding: 5px 8px;
+  margin-bottom: 5px;
 }
 /*--------------------------------------------------
 :: Responsive Styles
