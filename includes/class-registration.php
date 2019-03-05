@@ -60,6 +60,10 @@ class Dokan_Registration {
             return $error;
         }
 
+        if ( defined( 'WP_CLI' ) || defined( 'REST_REQUEST' ) ) {
+            return $error;
+        }
+
         $post_data = wp_unslash( $_POST );
 
         $nonce_value = isset( $post_data['_wpnonce'] ) ? $post_data['_wpnonce'] : '';
