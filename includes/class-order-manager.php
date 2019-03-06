@@ -157,8 +157,11 @@ class Dokan_Order_Manager {
             $seller_id = reset( $temp );
 
             // record admin commision
-            $admin_fee = dokan_get_admin_commission_by( $parent_order, $seller_id );
-            $parent_order->update_meta_data( '_dokan_admin_fee', $admin_fee );
+            // $admin_fee = dokan_get_admin_commission_by( $parent_order, $seller_id );
+            $admin_earning  = Dokan_Commission::get_earning_by_order( $parent_order, 'admin' );
+            $vendor_earning = Dokan_Commission::get_earning_by_order( $parent_order, 'seller' );
+            $parent_order->update_meta_data( '_dokan_admin_fee', $admin_earning );
+            $parent_order->update_meta_data( '_dokan_vendor_earning', $vendor_earning );
             $parent_order->update_meta_data( '_dokan_vendor_id', $seller_id );
             $parent_order->save();
 
@@ -240,8 +243,13 @@ class Dokan_Order_Manager {
             $order->set_payment_method_title( $parent_order->get_payment_method_title() );
 
             // record admin fee
-            $admin_fee = dokan_get_admin_commission_by( $order, $seller_id );
-            $order->update_meta_data( '_dokan_admin_fee', $admin_fee );
+            // $admin_fee = dokan_get_admin_commission_by( $order, $seller_id );
+            // $order->update_meta_data( '_dokan_admin_fee', $admin_fee );
+            $admin_earning  = Dokan_Commission::get_earning_by_order( $order, 'admin' );
+            $vendor_earning = Dokan_Commission::get_earning_by_order( $order, 'seller' );
+            $order->update_meta_data( '_dokan_admin_fee', $admin_earning );
+            $order->update_meta_data( '_dokan_vendor_earning', $vendor_earning );
+
             $order->update_meta_data( '_dokan_vendor_id', $seller_id );
 
             // finally, let the order re-calculate itself and save
