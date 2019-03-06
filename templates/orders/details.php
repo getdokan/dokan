@@ -323,7 +323,7 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
 
                                     <div class="dokan-form-group">
                                         <label class="dokan-control-label"><?php esc_html_e( 'Date Shipped', 'dokan-lite' ); ?></label>
-                                        <input type="text" name="shipped_date" id="shipped-date" class="dokan-form-control" value="" placeholder="<?php esc_attr_e( 'YYYY-MM-DD', 'dokan-lite' ); ?>">
+                                        <input type="text" name="shipped_date" id="shipped-date" class="dokan-form-control" value="" placeholder="<?php esc_attr_e( get_option( 'date_format' ), 'dokan-lite' ); ?>">
                                     </div>
 
                                     <input type="hidden" name="security" id="security" value="<?php echo esc_attr( wp_create_nonce('add-shipping-tracking-info' ) ); ?>">

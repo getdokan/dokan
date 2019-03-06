@@ -29,35 +29,41 @@ class Dokan_Store_Location extends WP_Widget {
      */
     function widget( $args, $instance ) {
 
-        if ( ! dokan_is_store_page() ) {
-            return;
+        if ( dokan_is_store_page() ) {
+            extract( $args, EXTR_SKIP );
+
+            $defaults = array(
+                'title' => __( 'Store Location', 'dokan-lite' ),
+            );
+
+            $instance = wp_parse_args( $instance, $defaults );
+
+            $title        = apply_filters( 'widget_title', $instance['title'] );
+            $store_info   = dokan_get_store_info( get_query_var( 'author' ) );
+            $map_location = isset( $store_info['location'] ) ? esc_attr( $store_info['location'] ) : '';
+
+            if ( empty( $map_location ) ) {
+                return;
+            }
+
+            echo $before_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+
+            if ( ! empty( $title ) ) {
+                echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+            }
+            do_action('dokan-store-widget-before-map' , get_query_var( 'author' ));
+
+            dokan_get_template_part( 'widgets/store-map', '', array(
+                'store_info' => $store_info,
+                'map_location' => $map_location,
+            ) );
+
+            do_action('dokan-store-widget-after-map', get_query_var( 'author' ));
+
+            echo $after_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
         }
 
-        extract( $args, EXTR_SKIP );
-
-        $title        = apply_filters( 'widget_title', $instance['title'] );
-        $store_info   = dokan_get_store_info( get_query_var( 'author' ) );
-        $map_location = isset( $store_info['location'] ) ? esc_attr( $store_info['location'] ) : '';
-
-        if ( empty( $map_location ) ) {
-            return;
-        }
-
-        echo $before_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
-
-        if ( ! empty( $title ) ) {
-            echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
-        }
-        do_action('dokan-store-widget-before-map' , get_query_var( 'author' ));
-
-        dokan_get_template_part( 'widgets/store-map', '', array(
-            'store_info' => $store_info,
-            'map_location' => $map_location,
-        ) );
-
-        do_action('dokan-store-widget-after-map', get_query_var( 'author' ));
-
-        echo $after_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+        do_action( 'dokan_widget_store_location_render', $args, $instance, $this );
     }
 
     /**

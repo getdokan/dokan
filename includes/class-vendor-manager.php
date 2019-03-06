@@ -227,16 +227,18 @@ class Dokan_Vendor_Manager {
         }
 
         // update vendor other metadata | @todo: move all other metadata to 'dokan_profile_settings' meta
-        if ( ! empty( $data['enabled'] ) ) {
-            $vendor->update_meta( 'dokan_enable_selling', $data['enabled'] );
-        }
+        if ( current_user_can( 'manage_woocommerce' ) ) {
+            if ( ! empty( $data['enabled'] ) ) {
+                $vendor->update_meta( 'dokan_enable_selling', $data['enabled'] );
+            }
 
-        if ( ! empty( $data['featured'] ) ) {
-            $vendor->update_meta( 'dokan_feature_seller', $data['featured'] );
-        }
+            if ( ! empty( $data['featured'] ) ) {
+                $vendor->update_meta( 'dokan_feature_seller', $data['featured'] );
+            }
 
-        if ( ! empty( $data['trusted'] ) ) {
-            $vendor->update_meta( 'dokan_publishing', $data['trusted'] );
+            if ( ! empty( $data['trusted'] ) ) {
+                $vendor->update_meta( 'dokan_publishing', $data['trusted'] );
+            }
         }
 
         // update vendor store data
@@ -320,7 +322,7 @@ class Dokan_Vendor_Manager {
     /**
      * Delete vendor with reassign data
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.11
      *
      * @return array
      */

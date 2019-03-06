@@ -64,6 +64,9 @@ class Dokan_Ajax {
         add_action( 'wp_ajax_dokan_json_search_products_and_variations', array( $this, 'json_search_product' ), 10 );
         add_action( 'wp_ajax_nopriv_dokan_json_search_products_and_variations', array( $this, 'json_search_product' ), 10 );
         add_action( 'wp_ajax_dokan_json_search_vendor_customers', array( $this, 'dokan_json_search_vendor_customers' ) );
+
+        add_action( 'wp_ajax_nopriv_dokan_get_login_form', array( $this, 'get_login_form' ) );
+        add_action( 'wp_ajax_nopriv_dokan_login_user', array( $this, 'login_user' ) );
     }
 
     /**
@@ -832,4 +835,60 @@ class Dokan_Ajax {
         return $attachment_id;
     }
 
+    /**
+     * Get contents for login form popup
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function get_login_form() {
+        check_ajax_referer( 'dokan_reviews' );
+
+        ob_start();
+        dokan_get_template_part( 'login-form/login-form-popup' );
+        $popup_html = ob_get_clean();
+
+        wp_send_json_success( $popup_html );
+    }
+
+    /**
+     * Login user
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public static function login_user() {
+        check_ajax_referer( 'dokan_reviews' );
+
+        $post_data = wp_unslash( $_POST );
+
+        parse_str( $post_data['form_data'], $form_data );
+
+        $user_login    = isset( $form_data['dokan_login_form_username'] ) ? sanitize_text_field( $form_data['dokan_login_form_username'] ) : null;
+        $user_password = isset( $form_data['dokan_login_form_password'] ) ? sanitize_text_field( $form_data['dokan_login_form_password'] ) : null;
+
+        if ( empty( $user_login ) || empty( $user_password ) ) {
+            wp_send_json_error( array( 'message' => esc_html__( 'Invalid username or password.', 'dokan-lite' ) ), 400 );
+        }
+
+        $wp_user = wp_signon( array(
+            'user_login'    => $user_login,
+            'user_password' => $user_password,
+        ), '' );
+
+        if ( is_wp_error( $wp_user ) ) {
+            wp_send_json_error( array( 'message' => esc_html__( 'Wrong username or password.', 'dokan-lite' ) ), 400 );
+        }
+
+        wp_set_current_user( $wp_user->data->ID, $wp_user->data->user_login );
+        wp_set_auth_cookie( $wp_user->data->ID );
+
+        $response = apply_filters( 'dokan_ajax_login_user_response', array(
+            'message' => esc_html__( 'User logged in successfully.', 'dokan-lite' ),
+        ) );
+
+        wp_send_json_success( $response );
+    }
 }

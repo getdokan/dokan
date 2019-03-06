@@ -1032,7 +1032,7 @@ class Dokan_Vendor {
      * This stores changes in a special array so we can track what needs saving
      * the the DB later.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.11
      *
      * @param string $prop Name of prop to set.
      * @param mixed  $value Value of the prop.
@@ -1052,7 +1052,7 @@ class Dokan_Vendor {
     /**
      * Update vendor meta data
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.11
      *
      * @param string $key
      * @param mix $value
@@ -1068,7 +1068,7 @@ class Dokan_Vendor {
     /**
      * Sets a prop for a setter method.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.11
      *
      * @param string $prop    Name of prop to set.
      * @param string $social Name of social settings to set, fb, twitter
@@ -1079,10 +1079,12 @@ class Dokan_Vendor {
             $this->popluate_store_data();
         }
 
-        if ( array_key_exists( $prop, $this->shop_data[ $social ] ) ) {
-            if ( $value !== $this->shop_data[ $social ][ $prop ] || ( isset( $this->changes[ $social ] ) && array_key_exists( $prop, $this->changes[ $social ] ) ) ) {
-                $this->changes[ $social ][ $prop ] = $value;
-            }
+        if ( ! isset( $this->shop_data[ $social ][ $prop ] ) ) {
+            $this->shop_data[ $social ][ $prop ] = null;
+        }
+
+        if ( $value !== $this->shop_data[ $social ][ $prop ] || ( isset( $this->changes[ $social ] ) && array_key_exists( $prop, $this->changes[ $social ] ) ) ) {
+            $this->changes[ $social ][ $prop ] = $value;
         }
     }
 
@@ -1109,17 +1111,19 @@ class Dokan_Vendor {
             $this->popluate_store_data();
         }
 
-        if ( array_key_exists( $prop, $this->shop_data[ 'payment' ][ $paypal ] ) ) {
-            if ( $value !== $this->shop_data[ 'payment' ][ $paypal ][ $prop ] || ( isset( $this->changes[ 'payment' ] ) && array_key_exists( $prop, $this->changes[ 'payment' ] ) ) ) {
-                $this->changes[ 'payment' ][ $paypal ][ $prop ] = $value;
-            }
+        if ( ! isset( $this->shop_data[ 'payment' ][ $paypal ][ $prop ] ) ) {
+            $this->shop_data[ 'payment' ][ $paypal ][ $prop ] = null;
+        }
+
+        if ( $value !== $this->shop_data[ 'payment' ][ $paypal ][ $prop ] || ( isset( $this->changes[ 'payment' ] ) && array_key_exists( $prop, $this->changes[ 'payment' ] ) ) ) {
+            $this->changes[ 'payment' ][ $paypal ][ $prop ] = $value;
         }
     }
 
     /**
      * Merge changes with data and clear.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.11
      */
     public function apply_changes() {
         update_user_meta( $this->get_id(), 'dokan_profile_settings', array_replace_recursive( $this->shop_data, $this->changes ) );
@@ -1129,7 +1133,7 @@ class Dokan_Vendor {
     /**
      * Save the object
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.11
      */
     public function save() {
         $this->apply_changes();

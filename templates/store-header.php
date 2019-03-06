@@ -127,7 +127,9 @@ if ( 'layout3' === $profile_layout ) {
     <div class="dokan-store-tabs<?php echo esc_attr( $no_banner_class_tabs ); ?>">
         <ul class="dokan-list-inline">
             <?php foreach( $store_tabs as $key => $tab ) { ?>
-                <li><a href="<?php echo esc_url( $tab['url'] ); ?>"><?php echo esc_html( $tab['title'] ); ?></a></li>
+                <?php if ( $tab['url'] ): ?>
+                    <li><a href="<?php echo esc_url( $tab['url'] ); ?>"><?php echo esc_html( $tab['title'] ); ?></a></li>
+                <?php endif; ?>
             <?php } ?>
             <?php do_action( 'dokan_after_store_tabs', $store_user->get_id() ); ?>
         </ul>

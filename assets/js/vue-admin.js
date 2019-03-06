@@ -586,7 +586,8 @@ let Currency = dokan_get_lib('Currency');
                 success: false,
                 loading: false,
                 email: ''
-            }
+            },
+            hasPro: dokan.hasPro ? true : false
         };
     },
 
@@ -2710,69 +2711,104 @@ var render = function() {
               _vm.overview !== null
                 ? _c("div", { staticClass: "dokan-status" }, [
                     _c("ul", [
-                      _c("li", { staticClass: "sale" }, [
-                        _c("div", {
-                          staticClass: "dashicons dashicons-chart-bar"
-                        }),
-                        _vm._v(" "),
-                        _c("a", { attrs: { href: "#" } }, [
-                          _c(
-                            "strong",
-                            [
-                              _c("currency", {
-                                attrs: { amount: _vm.overview.sales.this_month }
-                              })
-                            ],
-                            1
-                          ),
+                      _c(
+                        "li",
+                        { staticClass: "sale" },
+                        [
+                          _c("div", {
+                            staticClass: "dashicons dashicons-chart-bar"
+                          }),
                           _vm._v(" "),
-                          _c("div", { staticClass: "details" }, [
-                            _vm._v(
-                              "\n                                    " +
-                                _vm._s(
-                                  _vm.__("net sales this month", "dokan-lite")
-                                ) +
-                                " "
-                            ),
-                            _c("span", { class: _vm.overview.sales.class }, [
-                              _vm._v(_vm._s(_vm.overview.sales.parcent))
-                            ])
-                          ])
-                        ])
-                      ]),
+                          _c(
+                            "router-link",
+                            {
+                              attrs: {
+                                to: _vm.hasPro ? { name: "Reports" } : ""
+                              }
+                            },
+                            [
+                              _c(
+                                "strong",
+                                [
+                                  _c("currency", {
+                                    attrs: {
+                                      amount: _vm.overview.sales.this_month
+                                    }
+                                  })
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "details" }, [
+                                _vm._v(
+                                  "\n                                    " +
+                                    _vm._s(
+                                      _vm.__(
+                                        "net sales this month",
+                                        "dokan-lite"
+                                      )
+                                    ) +
+                                    " "
+                                ),
+                                _c(
+                                  "span",
+                                  { class: _vm.overview.sales.class },
+                                  [_vm._v(_vm._s(_vm.overview.sales.parcent))]
+                                )
+                              ])
+                            ]
+                          )
+                        ],
+                        1
+                      ),
                       _vm._v(" "),
-                      _c("li", { staticClass: "commission" }, [
-                        _c("div", {
-                          staticClass: "dashicons dashicons-chart-pie"
-                        }),
-                        _vm._v(" "),
-                        _c("a", { attrs: { href: "#" } }, [
-                          _c(
-                            "strong",
-                            [
-                              _c("currency", {
-                                attrs: {
-                                  amount: _vm.overview.earning.this_month
-                                }
-                              })
-                            ],
-                            1
-                          ),
+                      _c(
+                        "li",
+                        { staticClass: "commission" },
+                        [
+                          _c("div", {
+                            staticClass: "dashicons dashicons-chart-pie"
+                          }),
                           _vm._v(" "),
-                          _c("div", { staticClass: "details" }, [
-                            _vm._v(
-                              "\n                                    " +
-                                _vm._s(
-                                  _vm.__("commission earned", "dokan-lite")
-                                ) +
-                                " "
-                            ),
-                            _c("span", { class: _vm.overview.earning.class }, [
-                              _vm._v(_vm._s(_vm.overview.earning.parcent))
-                            ])
-                          ])
-                        ])
-                      ]),
+                          _c(
+                            "router-link",
+                            {
+                              attrs: {
+                                to: _vm.hasPro ? { name: "Reports" } : ""
+                              }
+                            },
+                            [
+                              _c(
+                                "strong",
+                                [
+                                  _c("currency", {
+                                    attrs: {
+                                      amount: _vm.overview.earning.this_month
+                                    }
+                                  })
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "details" }, [
+                                _vm._v(
+                                  "\n                                    " +
+                                    _vm._s(
+                                      _vm.__("commission earned", "dokan-lite")
+                                    ) +
+                                    " "
+                                ),
+                                _c(
+                                  "span",
+                                  { class: _vm.overview.earning.class },
+                                  [_vm._v(_vm._s(_vm.overview.earning.parcent))]
+                                )
+                              ])
+                            ]
+                          )
+                        ],
+                        1
+                      ),
                       _vm._v(" "),
                       _c(
                         "li",
@@ -2782,7 +2818,11 @@ var render = function() {
                           _vm._v(" "),
                           _c(
                             "router-link",
-                            { attrs: { to: { name: "Vendors" } } },
+                            {
+                              attrs: {
+                                to: _vm.hasPro ? { name: "Vendors" } : ""
+                              }
+                            },
                             [
                               _c("strong", [
                                 _vm._v(
@@ -2827,10 +2867,12 @@ var render = function() {
                             "router-link",
                             {
                               attrs: {
-                                to: {
-                                  name: "Vendors",
-                                  query: { status: "pending" }
-                                }
+                                to: _vm.hasPro
+                                  ? {
+                                      name: "Vendors",
+                                      query: { status: "pending" }
+                                    }
+                                  : ""
                               }
                             },
                             [

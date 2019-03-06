@@ -6,21 +6,13 @@
  *
  * @package dokan
  */
-
-$name = $email = '';
-
-if ( is_user_logged_in() ) {
-    $user  = wp_get_current_user();
-    $name  = $user->display_name;
-    $email = $user->user_email;
-}
 ?>
 
 <form id="dokan-form-contact-seller" action="" method="post" class="seller-form clearfix">
     <div class="ajax-response"></div>
     <ul>
         <li class="dokan-form-group">
-            <input type="text" name="name" value="<?php echo esc_attr( $name ); ?>" placeholder="<?php esc_attr_e( 'Your Name', 'dokan-lite' ); ?>" class="dokan-form-control" minlength="5" required="required">
+            <input type="text" name="name" value="<?php echo esc_attr( $username ); ?>" placeholder="<?php esc_attr_e( 'Your Name', 'dokan-lite' ); ?>" class="dokan-form-control" minlength="5" required="required">
         </li>
         <li class="dokan-form-group">
             <input type="email" name="email" value="<?php echo esc_attr( $email ); ?>" placeholder="<?php esc_attr_e( 'you@example.com', 'dokan-lite' ); ?>" class="dokan-form-control" required="required">

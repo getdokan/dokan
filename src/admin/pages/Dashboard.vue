@@ -9,29 +9,29 @@
                         <ul>
                             <li class="sale">
                                 <div class="dashicons dashicons-chart-bar"></div>
-                                <a href="#">
+                                <router-link :to="hasPro ? {name: 'Reports'} : ''">
                                     <strong>
                                         <currency :amount="overview.sales.this_month"></currency>
                                     </strong>
                                     <div class="details">
                                         {{ __( 'net sales this month', 'dokan-lite' ) }} <span :class="overview.sales.class">{{ overview.sales.parcent }}</span>
                                     </div>
-                                </a>
+                                </router-link>
                             </li>
                             <li class="commission">
                                 <div class="dashicons dashicons-chart-pie"></div>
-                                <a href="#">
+                                <router-link :to="hasPro ? {name: 'Reports'} : ''">
                                     <strong>
                                         <currency :amount="overview.earning.this_month"></currency>
                                     </strong>
                                     <div class="details">
                                         {{ __( 'commission earned', 'dokan-lite' ) }} <span :class="overview.earning.class">{{ overview.earning.parcent }}</span>
                                     </div>
-                                </a>
+                                </router-link>
                             </li>
                             <li class="vendor">
                                 <div class="dashicons dashicons-id"></div>
-                                <router-link :to="{name: 'Vendors'}">
+                                <router-link :to="hasPro ? {name: 'Vendors'} : ''">
                                     <strong>{{ sprintf( __( '%s Vendor', 'dokan-lite' ), overview.vendors.this_month ) }}</strong>
                                     <div class="details">
                                         {{ __( 'signup this month', 'dokan-lite' ) }} <span :class="overview.vendors.class">{{ overview.vendors.parcent }}</span>
@@ -40,7 +40,7 @@
                             </li>
                             <li class="approval">
                                 <div class="dashicons dashicons-businessman"></div>
-                                <router-link :to="{name: 'Vendors', query: {status: 'pending'} }">
+                                <router-link :to="hasPro ? {name: 'Vendors', query: {status: 'pending'} } : ''">
                                     <strong>{{ sprintf( __( '%s Vendor', 'dokan-lite' ), overview.vendors.inactive ) }}</strong>
                                     <div class="details">{{ __( 'awaiting approval', 'dokan-lite' ) }}</div>
                                 </router-link>
@@ -139,7 +139,8 @@ export default {
                 success: false,
                 loading: false,
                 email: ''
-            }
+            },
+            hasPro: dokan.hasPro ? true : false
         }
     },
 

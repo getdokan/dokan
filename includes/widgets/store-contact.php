@@ -31,7 +31,14 @@ class Dokan_Store_Contact_Form extends WP_Widget {
 
         if ( dokan_is_store_page() || is_product() ) {
             extract( $args, EXTR_SKIP );
-            $title      = apply_filters( 'widget_title', $instance['title'] );
+
+            $defaults = array(
+                'title' => __( 'Contact Vendor', 'dokan-lite' ),
+            );
+
+            $instance = wp_parse_args( $instance, $defaults );
+
+            $title = apply_filters( 'widget_title', $instance['title'] );
 
             if ( is_product() ) {
                 global $post;
@@ -54,13 +61,25 @@ class Dokan_Store_Contact_Form extends WP_Widget {
                 echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
             }
 
+            $username = $email = '';
+
+            if ( is_user_logged_in() ) {
+                $user     = wp_get_current_user();
+                $username = $user->display_name;
+                $email    = $user->user_email;
+            }
+
             dokan_get_template_part( 'widgets/store-contact-form', '', array(
-                'seller_id' => $seller_id,
+                'seller_id'  => $seller_id,
                 'store_info' => $store_info,
+                'username'   => $username,
+                'email'      => $email,
             ) );
 
             echo $after_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
         }
+
+        do_action( 'dokan_widget_store_contact_form_render', $args, $instance, $this );
     }
 
     /**

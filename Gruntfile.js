@@ -64,7 +64,11 @@ module.exports = function(grunt) {
                 files: {
                     '<%= dirs.js %>/dokan.js': [
                         '<%= dirs.devJsSrc %>/*.js',
-                        '!<%= dirs.devJsSrc %>/admin.js'
+                        '!<%= dirs.devJsSrc %>/admin.js',
+                        '!<%= dirs.devJsSrc %>/login-form-popup.js'
+                    ],
+                    '<%= dirs.js %>/login-form-popup.js': [
+                        '<%= dirs.devJsSrc %>/login-form-popup.js'
                     ]
                 }
             },
