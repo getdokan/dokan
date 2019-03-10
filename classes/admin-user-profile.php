@@ -329,12 +329,11 @@ class Dokan_Admin_User_Profile {
                 <tr>
                     <th><?php esc_html_e( 'Admin Commission ', 'dokan-lite' ); ?></th>
                     <td>
-                        <input type="text" class="small-text" name="dokan_admin_percentage" value="<?php echo esc_attr( $admin_commission ); ?>">
+                        <input type="number" min="0" class="small-text" id="admin-commission" name="dokan_admin_percentage" placeholder="<?php echo esc_attr( '10' ); ?>" value="<?php echo esc_attr( $admin_commission ); ?>">
+                        <?php do_action( 'dokan_seller_meta_fields_after_admin_commission', $user ); ?>
                         <p class="description"><?php esc_html_e( 'It will override the default commission admin gets from each sales', 'dokan-lite' ); ?></p>
                     </td>
                 </tr>
-
-                <?php do_action( 'dokan_seller_meta_fields_after_admin_commission', $user ); ?>
 
                 <tr>
                     <th><?php esc_html_e( 'Featured vendor', 'dokan-lite' ); ?></th>
@@ -510,9 +509,11 @@ class Dokan_Admin_User_Profile {
             // admin additional fee
             $('#dokan_admin_percentage_type').on('change', function() {
                 if ( 'combine' === $(this).val() ) {
-                    $('#admin-additional-fee').removeClass('dokan-hide');
+                    $('span.additional-fee').removeClass('dokan-hide');
+                    // $('#admin-additional-fee').removeClass('dokan-hide');
                 } else {
-                    $('#admin-additional-fee').addClass('dokan-hide');
+                    // $('#admin-additional-fee').addClass('dokan-hide');
+                    $('span.additional-fee').addClass('dokan-hide');
                 }
             }).trigger('change');
         });

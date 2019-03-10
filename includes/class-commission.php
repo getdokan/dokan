@@ -322,14 +322,14 @@ class Dokan_Commission {
     }
 
     /**
-     * Get product wise additional fee
+     * Get global wise additional fee
      *
      * @param  int $product_id
      *
      * @return float|null on failure
      */
     public static function get_global_additional_fee() {
-        return self::validate_rate( dokan_get_option( 'admin_fee', 'dokan_selling', 0 ) );
+        return self::validate_rate( dokan_get_option( 'additional_fee', 'dokan_selling', 0 ) );
     }
 
     /**

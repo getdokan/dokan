@@ -158,6 +158,7 @@ class Dokan_Settings {
         $settings_fields = array();
         foreach ( $this->get_settings_fields() as $key => $section_fields ) {
             foreach ( $section_fields as $settings_key => $value ) {
+
                 $settings_fields[$key][$value['name']] = $value;
             }
         }
@@ -342,7 +343,7 @@ class Dokan_Settings {
                     'desc'    => __( 'Select the commission type', 'dokan-lite' ),
                     'type'    => 'select',
                     'options' => $commission_types,
-                    'default' => 'percentage'
+                    'default' => 'percentage',
                 ),
                 'admin_percentage' => array(
                     'name'    => 'admin_percentage',
@@ -352,6 +353,12 @@ class Dokan_Settings {
                     'type'    => 'number',
                     'min'     => '0',
                     'step'    => 'any',
+                    'condition' => [
+                        'type' => 'show',
+                        'logic' => [
+                            'commission_type' => [ 'flat', 'percentage' ]
+                        ]
+                    ]
                 ),
                 'order_status_change' => array(
                     'name'    => 'order_status_change',

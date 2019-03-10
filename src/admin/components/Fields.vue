@@ -10,15 +10,17 @@
             </td>
         </tr>
 
-        <tr :class="id" v-if="'number' == fieldData.type">
-            <th scope="row">
-                <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
-            </th>
-            <td>
-                <input type="number" :min="fieldData.min" :max="fieldData.max" :step="fieldData.step" class="regular-text" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
-                <p class="description" v-html="fieldData.desc"></p>
-            </td>
-        </tr>
+        <template v-if="haveCondition( fieldData ) && fieldData.condition.type == 'show' && checkConditionLogic( fieldData, fieldValue )">
+            <tr :class="id" v-if="'number' == fieldData.type" >
+                <th scope="row">
+                    <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
+                </th>
+                <td>
+                    <input type="number" :min="fieldData.min" :max="fieldData.max" :step="fieldData.step" class="regular-text" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
+                    <p class="description" v-html="fieldData.desc"></p>
+                </td>
+            </tr>
+        </template>
 
         <tr :class="id" v-if="'textarea' == fieldData.type">
             <th scope="row">
@@ -176,6 +178,25 @@
                 </div>
             </td>
         </tr>
+
+        <template v-if="haveCondition( fieldData ) && fieldData.condition.type == 'show' && checkConditionLogic( fieldData, fieldValue )">
+            <tr :class="id" v-if="'combine' == fieldData.type">
+                <th scope="row">
+                    <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
+                </th>
+
+                <td class="percent_fee">
+                    <input type="number" :min="fieldData.fields.min" :max="fieldData.fields.max" :step="fieldData.fields.step" class="regular-text" :id="sectionId + '[' + fieldData.name + ']' + '[' + 'percent_fee' + ']'" :name="sectionId + '[' + fieldData.fields.percent_fee.name + ']'" v-model="fieldValue[fieldData.fields.percent_fee.name]">
+                    {{ '%' }}
+                </td>
+
+                <td class="fixed_fee">
+                    {{ '+' }}
+                    <input type="number" :min="fieldData.fields.min" :max="fieldData.fields.max" :step="fieldData.fields.step" class="regular-text" :id="sectionId + '[' + fieldData.name + ']' + '[' + 'fixed_fee' + ']'" :name="sectionId + '[' + fieldData.fields.fixed_fee.name + ']'" v-model="fieldValue[fieldData.fields.fixed_fee.name]">
+                </td>
+                <p class="description" v-html="fieldData.desc"></p>
+            </tr>
+        </template>
     </div>
 </template>
 
@@ -221,6 +242,23 @@
 
             removeItem( optionVal, name ) {
                 this.fieldValue[name].splice( optionVal, 1 );
+            },
+
+            haveCondition( fieldData ) {
+                return fieldData.hasOwnProperty( 'condition' );
+            },
+
+            checkConditionLogic( fieldData, fieldValue ) {
+                var logic = fieldData.condition.logic;
+                var isValid = false;
+
+                _.each( logic, function( value, key ) {
+                    if ( _.contains( value, fieldValue[key] ) ) {
+                        isValid = true;
+                    }
+                } );
+
+                return isValid;
             }
         }
 
@@ -244,5 +282,14 @@
         height: 25px !important;
         line-height: 22px !important;
     }
-
+    td.percent_fee, td.fixed_fee {
+        display: inline-block;
+    }
+    td.percent_fee input, td.fixed_fee input {
+        width: 60px;
+    }
+    tr.additional_fee .description {
+        margin-left: 10px;
+        margin-top: -10px;
+    }
 </style>
