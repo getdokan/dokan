@@ -331,7 +331,7 @@ class Dokan_Admin_User_Profile {
                     <td>
                         <input type="number" min="0" class="small-text" id="admin-commission" name="dokan_admin_percentage" placeholder="<?php echo esc_attr( '10' ); ?>" value="<?php echo esc_attr( $admin_commission ); ?>">
                         <?php do_action( 'dokan_seller_meta_fields_after_admin_commission', $user ); ?>
-                        <p class="description"><?php esc_html_e( 'It will override the default commission admin gets from each sales', 'dokan-lite' ); ?></p>
+                        <p class="combine-commission-description"><?php esc_html_e( 'It will override the default commission admin gets from each sales', 'dokan-lite' ); ?></p>
                     </td>
                 </tr>
 
@@ -505,17 +505,6 @@ class Dokan_Admin_User_Profile {
                     row.unblock();
                 } );
             });
-
-            // admin additional fee
-            $('#dokan_admin_percentage_type').on('change', function() {
-                if ( 'combine' === $(this).val() ) {
-                    $('span.additional-fee').removeClass('dokan-hide');
-                    // $('#admin-additional-fee').removeClass('dokan-hide');
-                } else {
-                    // $('#admin-additional-fee').addClass('dokan-hide');
-                    $('span.additional-fee').addClass('dokan-hide');
-                }
-            }).trigger('change');
         });
         </script>
         <?php
