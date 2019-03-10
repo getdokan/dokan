@@ -120,9 +120,25 @@ class Dokan_Commission {
      * @return float
      */
     public static function get_product_wise_rate( $product_id ) {
-        $rate = get_post_meta( $product_id, '_per_product_admin_commission', true );
+        return self::validate_rate( get_post_meta( $product_id, '_per_product_admin_commission', true ) );
+    }
 
-        return self::validate_rate( $rate );
+    /**
+     * Validate product id (if it's a variable product, return it's parent id)
+     *
+     * @param  int $product_id
+     *
+     * @return int
+     */
+    public static function validate_product_id( $product_id ) {
+        $product   = wc_get_product( $product_id );
+        $parent_id = $product->get_parent_id();
+
+        if ( $parent_id ) {
+            $product_id = $parent_id;
+        }
+
+        return $product_id;
     }
 
     /**
@@ -213,7 +229,7 @@ class Dokan_Commission {
      * @return float|null on failure
      */
     public static function get_global_earning( $product_price ) {
-        return self::prepare_for_calculation( __FUNCTION__, __FUNCTION__, __FUNCTION__, null, null, $product_price );
+        return self::prepare_for_calculation( __FUNCTION__, __FUNCTION__, __FUNCTION__, null, $product_price );
     }
 
     /**
@@ -225,7 +241,7 @@ class Dokan_Commission {
      * @return float|null on failure
      */
     public static function get_vendor_wise_earning( $vendor_id, $product_price ) {
-        return self::prepare_for_calculation( __FUNCTION__, __FUNCTION__, __FUNCTION__, $vendor_id, null, $product_price );
+        return self::prepare_for_calculation( __FUNCTION__, __FUNCTION__, __FUNCTION__, $vendor_id, $product_price );
     }
 
     /**
@@ -249,7 +265,7 @@ class Dokan_Commission {
      * @return float
      */
     public static function get_product_wise_earning( $product_id, $product_price ) {
-        return self::prepare_for_calculation( __FUNCTION__, __FUNCTION__, __FUNCTION__, $product_id, null, $product_price );
+        return self::prepare_for_calculation( __FUNCTION__, __FUNCTION__, __FUNCTION__, $product_id, $product_price );
     }
 
     /**
@@ -359,6 +375,7 @@ class Dokan_Commission {
      * @return float
      */
     public static function calculate_commission( $product_id, $product_price, $vendor_id = null ) {
+        $product_id           = self::validate_product_id( $product_id );
         $product_wise_earning = self::get_product_wise_earning( $product_id, $product_price );
 
         if ( ! is_null( $product_wise_earning ) ) {

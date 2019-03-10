@@ -2792,8 +2792,12 @@ function dokan_cache_clear_deleted_product( $post_id ) {
  * @return int $earning;
  */
 function dokan_get_earning_by_product( $product_id, $seller_id ) {
-    $product            = wc_get_product( $product_id );
-    $parent_id          = $product->get_parent_id();
+    wc_deprecated_function( 'dokan_get_admin_commission_by', '2.9.11', 'Dokan_Commission::get_earning_by_product()' );
+
+    return Dokan_Commission::get_earning_by_product( $product_id );
+
+    $product   = wc_get_product( $product_id );
+    $parent_id = $product->get_parent_id();
 
     // if parent id found, override product_id with parent id
     if ( $parent_id ) {
@@ -3342,7 +3346,7 @@ function dokan_get_variable_product_earning( $product_id, $seller_id, $formated 
     }
 
     $earnings = array_map( function( $id ) use ( $seller_id ) {
-        return dokan_get_earning_by_product( $id, $seller_id );
+        return Dokan_Commission::get_earning_by_product( $id );
     }, $variations );
 
     if ( empty( $earnings ) || ! is_array( $earnings ) ) {
