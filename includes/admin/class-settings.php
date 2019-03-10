@@ -468,7 +468,7 @@ class Dokan_Settings {
     /**
      * Add settings after specific option
      *
-     * @since DOKAN_SINCE
+     * @since 2.9.11
      *
      * @param array  $settings_fields     Current settings
      * @param string $section             Name of the section
