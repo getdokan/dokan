@@ -104,11 +104,6 @@
 
                         Object.keys( self.settingFields ).forEach( function( section, index ) {
                             Object.keys( self.settingFields[section] ).forEach( function( field, i ) {
-                                // if commission type is combine
-                                // if ( 'additional_fee' === field ) {
-                                //     self.settingValues[section]['percent_fee'] = resp.data[section]['percent_fee'];
-                                //     self.settingValues[section]['fixed_fee']   = resp.data[section]['fixed_fee'];
-                                // }
 
                                 if (!self.settingValues[section]) {
                                     self.settingValues[section] = {};

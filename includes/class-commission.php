@@ -129,11 +129,10 @@ class Dokan_Commission {
      * Get category wise commission rate
      *
      * @param int $product_id
-     * @param int $category_id
      *
      * @return float
      */
-    public static function get_category_wise_rate( $product_id, $category_id = 0 ) {
+    public static function get_category_wise_rate( $product_id ) {
         $terms = get_the_terms( $product_id, 'product_cat' );
 
         if ( empty( $terms ) ) {
@@ -141,13 +140,7 @@ class Dokan_Commission {
         }
 
         $term_id = $terms[0]->term_id;
-
-        if ( $category_id ) {
-            $terms = get_term( $category_id );
-            $term_id = $terms->term_id;
-        }
-
-        $rate = ! $terms ? null: get_woocommerce_term_meta( $term_id, 'per_category_admin_commission', true );
+        $rate    = ! $terms ? null: get_woocommerce_term_meta( $term_id, 'per_category_admin_commission', true );
 
         return self::validate_rate( $rate );
     }
@@ -176,18 +169,12 @@ class Dokan_Commission {
      * Get category wise commission type
      *
      * @param int $product_id
-     * @param int $category_id
      *
      * @return string
      */
-    public static function get_category_wise_type( $product_id, $category_id = 0 ) {
+    public static function get_category_wise_type( $product_id ) {
         $terms   = get_the_terms( $product_id, 'product_cat' );
         $term_id = $terms[0]->term_id;
-
-        if ( $category_id ) {
-            $terms   = get_term( $category_id );
-            $term_id = $terms->term_id;
-        }
 
         return ! $terms ? null : get_woocommerce_term_meta( $term_id, 'per_category_admin_commission_type', true );
     }
@@ -245,13 +232,12 @@ class Dokan_Commission {
      * Get category wise earning
      *
      * @param  int $product_id
-     * @param  int $category_id
      * @param  float $product_price
      *
      * @return float|null on failure
      */
-    public static function get_category_wise_earning( $product_id, $category_id, $product_price ) {
-        return self::prepare_for_calculation( __FUNCTION__, __FUNCTION__, __FUNCTION__, $product_id, $category_id, $product_price );
+    public static function get_category_wise_earning( $product_id, $product_price ) {
+        return self::prepare_for_calculation( __FUNCTION__, __FUNCTION__, __FUNCTION__, $product_id, $product_price );
     }
 
     /**
@@ -277,37 +263,37 @@ class Dokan_Commission {
      *
      * @return float
      */
-    public static function prepare_for_calculation( $func_rate = '', $func_type = '', $func_fee = '', $product_id = 0, $cat_id = 0, $product_price = 0 ) {
+    public static function prepare_for_calculation( $func_rate = '', $func_type = '', $func_fee = '', $product_id = 0, $product_price = 0 ) {
         $func_rate = str_replace( 'earning', 'rate', $func_rate );
         $func_type = str_replace( 'earning', 'type', $func_type );
         $func_fee  = str_replace( 'earning', 'additional_fee', $func_fee );
 
         // get[product,category,vendor,global]_wise_rate
-        $rate = self::$func_rate( $product_id );
+        $commission_rate = self::$func_rate( $product_id );
 
-        if ( is_null( $rate ) ) {
+        if ( is_null( $commission_rate ) ) {
             return null;
         }
 
         $earning = null;
 
         // get[product,category,vendor,global]_wise_type
-        if ( 'flat' === self::$func_type( $product_id, $cat_id ) ) {
-            $earning = $product_price - $rate;
+        if ( 'flat' === self::$func_type( $product_id ) ) {
+            $earning = $product_price - $commission_rate;
         }
 
         // get[product,category,vendor,global]_wise_type
-        if ( 'percentage' === self::$func_type( $product_id, $cat_id ) ) {
-            $earning = ( $product_price * $rate ) / 100;
+        if ( 'percentage' === self::$func_type( $product_id ) ) {
+            $earning = ( $product_price * $commission_rate ) / 100;
             $earning = $product_price - $earning;
 
             // vendor will get 100 percent if commission rate > 100
-            if ( $rate > 100 ) {
+            if ( $commission_rate > 100 ) {
                 $earning = (float) $product_price;
             }
         }
 
-        return apply_filters( 'dokan_prepare_for_calculation', $earning, __CLASS__, $func_rate, $func_type, $func_fee, $rate, $product_id, $cat_id, $product_price );
+        return apply_filters( 'dokan_prepare_for_calculation', $earning, __CLASS__, $func_rate, $func_type, $func_fee, $commission_rate, $product_id, $product_price );
     }
 
     /**
@@ -344,13 +330,13 @@ class Dokan_Commission {
     }
 
     /**
-     * Get product wise additional fee
+     * Get category wise additional fee
      *
      * @param  int $product_id
      *
      * @return float|null on failure
      */
-    public static function get_category_wise_additional_fee( $product_id, $category_id = 0 ) {
+    public static function get_category_wise_additional_fee( $product_id ) {
         $terms = get_the_terms( $product_id, 'product_cat' );
 
         if ( empty( $terms ) ) {
@@ -358,13 +344,7 @@ class Dokan_Commission {
         }
 
         $term_id = $terms[0]->term_id;
-
-        if ( $category_id ) {
-            $terms = get_term( $category_id );
-            $term_id = $terms->term_id;
-        }
-
-        $rate = ! $terms ? null: get_woocommerce_term_meta( $term_id, 'per_category_admin_additional_fee', true );
+        $rate    = ! $terms ? null: get_woocommerce_term_meta( $term_id, 'per_category_admin_additional_fee', true );
 
         return self::validate_rate( $rate );
     }
@@ -375,18 +355,17 @@ class Dokan_Commission {
      * @param  int $product_id
      * @param  float $product_price
      * @param  int $vendor_id
-     * @param  int $category_id
      *
      * @return float
      */
-    public static function calculate_commission( $product_id, $product_price, $vendor_id = null, $category_id = null ) {
+    public static function calculate_commission( $product_id, $product_price, $vendor_id = null ) {
         $product_wise_earning = self::get_product_wise_earning( $product_id, $product_price );
 
         if ( ! is_null( $product_wise_earning ) ) {
             return $product_wise_earning;
         }
 
-        $category_wise_earning = self::get_category_wise_earning( $product_id, $category_id, $product_price );
+        $category_wise_earning = self::get_category_wise_earning( $product_id, $product_price );
 
         if ( ! is_null( $category_wise_earning ) ) {
             return $category_wise_earning;
