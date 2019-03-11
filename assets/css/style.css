@@ -4414,6 +4414,13 @@ div.media-sidebar a.edit-attachment {
 .dokan-popup-content .dokan-popup-option-list li label.dokan-popup-block-label input {
   margin: 0 4px 0 0;
 }
+.dokan-popup-content .dokan-popup-error {
+  display: none;
+  color: #d9534f;
+}
+.dokan-popup-content .dokan-popup-error.has-error {
+  display: block;
+}
 /*--------------------------------------------------
 :: Responsive Styles
 -------------------------------------------------- */
