@@ -260,6 +260,8 @@ class Dokan_Assets {
 
         if ( version_compare( $wp_version, '5.0', '<' ) ) {
             $bootstrap_deps[] = 'dokan-wp-packages';
+        } else {
+            $bootstrap_deps[] = 'wp-hooks';
         }
 
         $scripts = array(
