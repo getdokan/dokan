@@ -386,7 +386,7 @@
         } );
         $( '.time .dokan-form-control' ).timepicker({
             scrollDefault: 'now',
-            timeFormat: 'g:i A',
+            timeFormat: '<?php echo get_option( 'time_format' ); ?>'
         });
         // dokan store open close scripts end //
 
