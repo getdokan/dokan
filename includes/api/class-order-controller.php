@@ -773,7 +773,7 @@ class Dokan_REST_Order_Controller extends Dokan_REST_Controller{
     /**
      * Mark order as parent when it has products from multiple vendors
      *
-     * @since DOKAN_SINCE
+     * @since 2.9.11
      *
      * @param WC_Order        $order
      * @param WP_REST_Request $request
