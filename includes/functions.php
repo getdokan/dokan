@@ -3466,7 +3466,7 @@ function dokan_privacy_policy_text() {
 /**
  * Dokan Login Form
  *
- * @since DOKAN_SINCE
+ * @since 2.9.11
  *
  * @param array $args
  * @param bool  $echo
