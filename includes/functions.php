@@ -3491,3 +3491,16 @@ function dokan_login_form( $args = array(), $echo = false ) {
         return ob_get_clean();
     }
 }
+
+/**
+ * Validate a boolean variable
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @param mixed $var
+ *
+ * @return bool
+ */
+function dokan_validate_boolean( $var ) {
+    return filter_var( $var, FILTER_VALIDATE_BOOLEAN );
+}
