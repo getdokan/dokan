@@ -3,9 +3,9 @@ Contributors: tareq1988, wedevs, sabbir1991, nizamuddinbabu, rafsuntaskin, sk.sh
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, product vendors, woocommerce vendor, commission rate, e-commerce, ebay, ecommerce, yith, yithemes
 Requires at least: 4.4
-Tested up to: 5.1
+Tested up to: 5.1.1
 WC requires at least: 3.0
-WC tested up to: 3.5.5
+WC tested up to: 3.5.7
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv2 or later
@@ -274,58 +274,69 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+v2.9.12 -> Mar 20, 2019
+---------------------------
+-   **Fix**    Time format in store opening closing widget is not matching with Admin backend settings
+-   **Fix**    Validate boolean type properties in the update method of Dokan_Vendor_Manager class
+-   **Fix**    No confirmation message on permanent product delete in vendor dashboard
+-   **Fix**    Escape html entities in vendor's product variations
+-   **Tweak**  Refactor ajax login form popup
+-   **Tweak**  Update pro feature page with latest content in admin dashboard
+-   **Tweak**  Add wp-hooks dependency if WordPress version is greater than 5.0
+-   **Tweak**  Updating to latest version of Dokan Lite plugin from very old version triggers fatal error
+
 v2.9.11 -> Mar 5, 2019
 ---------------------------
--**New**   Add Dokan Login Form popup
--**Fix**   Unable create customer using WC_Rest API is
--**Fix**   Vendor name in cart for variable products
--**Fix**   Order tracking date format is not matching with WordPress
--**Fix**   Font awesome 5 icons are not rendering in vendor dashboard
--**Fix**   Show vendor, reports link in the dokan dashboard when the pro version is enabled
--**Fix**   Escape html tags being outputing in setup-wizard
--**Fix**   Send email to admin on adding a new product via REST API
--**Fix**   Set default total_sales count on adding a new product
--**Fix**   Gallery images are not getting saved in vendor product page
--**Tweak** deprecate dokan_get_seller_id_by_order_id function
--**Tweak** dokan_get_earning_by_product function
--**Tweak** Make Dokan REST controllers globally accessible
--**Tweak** Allow vendor to update his store via REST API
--**Tweak** Widgets to show outside store single page with dummy data
--**Tweak** Only save the newly updated pages while saving pages in dokan admin settings
+- **New**   Add Dokan Login Form popup
+- **Fix**   Unable create customer using WC_Rest API is
+- **Fix**   Vendor name in cart for variable products
+- **Fix**   Order tracking date format is not matching with WordPress
+- **Fix**   Font awesome 5 icons are not rendering in vendor dashboard
+- **Fix**   Show vendor, reports link in the dokan dashboard when the pro version is enabled
+- **Fix**   Escape html tags being outputing in setup-wizard
+- **Fix**   Send email to admin on adding a new product via REST API
+- **Fix**   Set default total_sales count on adding a new product
+- **Fix**   Gallery images are not getting saved in vendor product page
+- **Tweak** deprecate dokan_get_seller_id_by_order_id function
+- **Tweak** dokan_get_earning_by_product function
+- **Tweak** Make Dokan REST controllers globally accessible
+- **Tweak** Allow vendor to update his store via REST API
+- **Tweak** Widgets to show outside store single page with dummy data
+- **Tweak** Only save the newly updated pages while saving pages in dokan admin settings
 
 v2.9.10 -> Feb 11, 2019
 ------------------------
--**New**   Add dokan privacy policy option to facilitate GDPR
--**Fix**   Fetch vendor own orders via REST API
--**Fix**   Remove duplicate inclusion of Dokan_REST_Store_Controller class
--**Tweak** Add filter to modify product image attributes
--**Tweak** Add vendor curd options
--**Tweak** Make color picker component globally accessible
--**Tweak** Add filters to allow hooking classes from other modules
+-  **New**   Add dokan privacy policy option to facilitate GDPR
+-  **Fix**   Fetch vendor own orders via REST API
+-  **Fix**   Remove duplicate inclusion of Dokan_REST_Store_Controller class
+-  **Tweak** Add filter to modify product image attributes
+-  **Tweak** Add vendor curd options
+-  **Tweak** Make color picker component globally accessible
+-  **Tweak** Add filters to allow hooking classes from other modules
 
 v2.9.9 -> Jan 29, 2019
 ------------------------
--**Fix**   Send order email to admin, vendor & customer when an order is created via REST API
--**Fix**   Show error message when there is an error in vendor settings page
--**Fix**   Product attributes title saved with extra dash in vendor product edit page
--**Fix**   Show vendor full address when a vendor wants to in vendor store page
--**Fix**   PayPal mass payment is not generating all the info in admin dashboard
--**Fix**   Withdraw request amount in approved & cancelled email is broken
--**Fix**   Page is not redirecting correctly when a vendor edit his account
--**Tweak** add filter to modify wp_editor args in vendor dashboard
+- **Fix**   Send order email to admin, vendor & customer when an order is created via REST API
+- **Fix**   Show error message when there is an error in vendor settings page
+- **Fix**   Product attributes title saved with extra dash in vendor product edit page
+- **Fix**   Show vendor full address when a vendor wants to in vendor store page
+- **Fix**   PayPal mass payment is not generating all the info in admin dashboard
+- **Fix**   Withdraw request amount in approved & cancelled email is broken
+- **Fix**   Page is not redirecting correctly when a vendor edit his account
+- **Tweak** add filter to modify wp_editor args in vendor dashboard
 
 v2.9.8 -> Jan 14, 2019
 -------------------------
--**Fix**   Show net sales of a month in admin dashboard
--**Fix**   Change pagination param and add store info in product REST apis
--**Fix**   New product form description escaping issue
--**Fix**   Withdraw amount rounding issue in vendor dashboard
--**Fix**   Withdraw request email is not showing properly is fixed
--**Fix**   Order listing page date time format in vendor dashboard
--**Fix**   Child category is not showing in hierarchically
--**Fix**   Nonce verification issue is fixed during checkout
--**Tweak** Return theme 404 page when vendor store is not found
--**Tweak** Added quick links in admin dokan dashboard in overview section
+- **Fix**   Show net sales of a month in admin dashboard
+- **Fix**   Change pagination param and add store info in product REST apis
+- **Fix**   New product form description escaping issue
+- **Fix**   Withdraw amount rounding issue in vendor dashboard
+- **Fix**   Withdraw request email is not showing properly is fixed
+- **Fix**   Order listing page date time format in vendor dashboard
+- **Fix**   Child category is not showing in hierarchically
+- **Fix**   Nonce verification issue is fixed during checkout
+- **Tweak** Return theme 404 page when vendor store is not found
+- **Tweak** Added quick links in admin dokan dashboard in overview section
 
 v2.9.7 -> Dec 19, 2018
 ------------------------
