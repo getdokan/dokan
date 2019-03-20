@@ -228,16 +228,22 @@ class Dokan_Vendor_Manager {
 
         // update vendor other metadata | @todo: move all other metadata to 'dokan_profile_settings' meta
         if ( current_user_can( 'manage_woocommerce' ) ) {
-            if ( ! empty( $data['enabled'] ) ) {
-                $vendor->update_meta( 'dokan_enable_selling', $data['enabled'] );
+            if ( isset( $data['enabled'] ) && dokan_validate_boolean( $data['enabled'] ) ) {
+                $vendor->update_meta( 'dokan_enable_selling', 'yes' );
+            } else {
+                $vendor->update_meta( 'dokan_enable_selling', 'no' );
             }
 
-            if ( ! empty( $data['featured'] ) ) {
-                $vendor->update_meta( 'dokan_feature_seller', $data['featured'] );
+            if ( isset( $data['featured'] ) && dokan_validate_boolean( $data['featured'] ) ) {
+                $vendor->update_meta( 'dokan_feature_seller', 'yes' );
+            } else {
+                $vendor->update_meta( 'dokan_feature_seller', 'no' );
             }
 
-            if ( ! empty( $data['trusted'] ) ) {
-                $vendor->update_meta( 'dokan_publishing', $data['trusted'] );
+            if ( isset( $data['trusted'] ) && dokan_validate_boolean( $data['trusted'] ) ) {
+                $vendor->update_meta( 'dokan_publishing', 'yes' );
+            } else {
+                $vendor->update_meta( 'dokan_publishing', 'no' );
             }
         }
 
