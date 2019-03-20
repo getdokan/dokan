@@ -264,10 +264,10 @@
                             </select>
                         </label>
                         <label for="opening-time" class="time" style="visibility: <?php echo isset( $all_times[$day]['open'] ) && $all_times[$day]['open'] == 'open' ? 'visible' : 'hidden' ?>" >
-                            <input type="text" class="dokan-form-control" name="<?php echo esc_attr( strtolower( $day ) ); ?>_opening_time" id="<?php echo esc_attr( $day ) ?>-opening-time" placeholder="<?php esc_attr_e( '10:00 AM' ); ?>" value="<?php echo isset( $all_times[$day]['opening_time'] ) ? esc_attr( $all_times[$day]['opening_time'] ) : '' ?>" >
+                            <input type="text" class="dokan-form-control" name="<?php echo esc_attr( strtolower( $day ) ); ?>_opening_time" id="<?php echo esc_attr( $day ) ?>-opening-time" placeholder="<?php echo date_i18n( get_option( 'time_format', 'g:i a' ), current_time( 'timestamp' ) ); ?>" value="<?php echo isset( $all_times[$day]['opening_time'] ) ? esc_attr( $all_times[$day]['opening_time'] ) : '' ?>" >
                         </label>
                         <label for="closing-time" class="time" style="visibility: <?php echo isset( $all_times[$day]['open'] ) && $all_times[$day]['open'] == 'open' ? 'visible' : 'hidden' ?>" >
-                            <input type="text" class="dokan-form-control" name="<?php echo esc_attr( $day ) ?>_closing_time" id="<?php echo esc_attr( $day ) ?>-closing-time" placeholder="<?php esc_attr_e( '2:00 PM' ); ?>" value="<?php echo isset( $all_times[$day]['closing_time'] ) ? esc_attr( $all_times[$day]['closing_time'] ) : '' ?>">
+                            <input type="text" class="dokan-form-control" name="<?php echo esc_attr( $day ) ?>_closing_time" id="<?php echo esc_attr( $day ) ?>-closing-time" placeholder="<?php echo date_i18n( get_option( 'time_format', 'g:i a' ), current_time( 'timestamp' ) ); ?>" value="<?php echo isset( $all_times[$day]['closing_time'] ) ? esc_attr( $all_times[$day]['closing_time'] ) : '' ?>">
                         </label>
                     </div>
                 <?php endforeach; ?>
@@ -386,7 +386,8 @@
         } );
         $( '.time .dokan-form-control' ).timepicker({
             scrollDefault: 'now',
-            timeFormat: 'g:i A',
+            timeFormat: '<?php echo get_option( 'time_format' ); ?>',
+            step: <?php echo 'h' === strtolower( get_option( 'time_format' ) ) ? '60' : '30'; ?>
         });
         // dokan store open close scripts end //
 
