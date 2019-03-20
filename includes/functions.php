@@ -1179,16 +1179,17 @@ add_filter( 'ajax_query_attachments_args', 'dokan_media_uploader_restrict' );
  * Get store info based on seller ID
  *
  * @param int $seller_id
+ *
  * @return array
  */
 function dokan_get_store_info( $seller_id ) {
-    $vendor = dokan()->vendor->get( $seller_id );
+    $vendor = dokan()->vendor;
 
-    if ( ! $vendor->get_id() ) {
+    if ( ! $vendor instanceof Dokan_Vendor_Manager ) {
         return null;
     }
 
-    return $vendor->get_shop_info();
+    return $vendor->get( $seller_id )->get_shop_info();
 }
 
 /**
