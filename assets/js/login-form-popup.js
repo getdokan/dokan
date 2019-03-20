@@ -73,7 +73,7 @@
                     form_data: form_data
                 }
             } ).done( function ( response ) {
-                $( 'body' ).trigger( 'dokan:login_form_popup:logged_in' );
+                $( 'body' ).trigger( 'dokan:login_form_popup:logged_in', response );
                 $.magnificPopup.close();
             } ).always( function () {
                 $( 'body' ).trigger( 'dokan:login_form_popup:done_working' );

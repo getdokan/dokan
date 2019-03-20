@@ -581,7 +581,7 @@ function dokan_total_orders() {
  * Return array of sellers with items
  *
  * @since 2.4.4
- * @since DOKAN_SINCE Param can be an instance of WC_Order
+ * @since 2.9.11 Param can be an instance of WC_Order
  *
  * @param WC_Order|int $order
  *

@@ -1179,16 +1179,17 @@ add_filter( 'ajax_query_attachments_args', 'dokan_media_uploader_restrict' );
  * Get store info based on seller ID
  *
  * @param int $seller_id
+ *
  * @return array
  */
 function dokan_get_store_info( $seller_id ) {
-    $vendor = dokan()->vendor->get( $seller_id );
+    $vendor = dokan()->vendor;
 
-    if ( ! $vendor->get_id() ) {
+    if ( ! $vendor instanceof Dokan_Vendor_Manager ) {
         return null;
     }
 
-    return $vendor->get_shop_info();
+    return $vendor->get( $seller_id )->get_shop_info();
 }
 
 /**
@@ -3466,7 +3467,7 @@ function dokan_privacy_policy_text() {
 /**
  * Dokan Login Form
  *
- * @since DOKAN_SINCE
+ * @since 2.9.11
  *
  * @param array $args
  * @param bool  $echo
@@ -3490,4 +3491,17 @@ function dokan_login_form( $args = array(), $echo = false ) {
         dokan_get_template_part( 'login-form/login-form', false, $args );
         return ob_get_clean();
     }
+}
+
+/**
+ * Validate a boolean variable
+ *
+ * @since 2.9.12
+ *
+ * @param mixed $var
+ *
+ * @return bool
+ */
+function dokan_validate_boolean( $var ) {
+    return filter_var( $var, FILTER_VALIDATE_BOOLEAN );
 }

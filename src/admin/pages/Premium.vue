@@ -516,7 +516,7 @@ export default {
                     },
                     "professional" : {
                         "type": "icon",
-                        "value" : dokan.urls.assetsUrl + '/images/premium/available@2x.png'
+                        "value" : dokan.urls.assetsUrl + '/images/premium/unavailable@2x.png'
                     },
                     "business" : {
                         "type": "icon",
@@ -616,7 +616,7 @@ export default {
                     },
                     "professional" : {
                         "type": "icon",
-                        "value" : dokan.urls.assetsUrl + '/images/premium/unavailable@2x.png'
+                        "value" : dokan.urls.assetsUrl + '/images/premium/available@2x.png'
                     },
                     "business" : {
                         "type": "icon",
@@ -726,7 +726,127 @@ export default {
                         "type": "icon",
                         "value" : dokan.urls.assetsUrl + '/images/premium/available@2x.png'
                     }
-                }
+                },
+                {
+                    "title": "Return and Warranty Request",
+                    "url": "https:\/\/wedevs.com\/dokan\/modules\/rma\/",
+                    "starter" : {
+                        "type": "icon",
+                        "value" : dokan.urls.assetsUrl + '/images/premium/unavailable@2x.png'
+                    },
+                    "professional" : {
+                        "type": "icon",
+                        "value" : dokan.urls.assetsUrl + '/images/premium/available@2x.png'
+                    },
+                    "business" : {
+                        "type": "icon",
+                        "value" : dokan.urls.assetsUrl + '/images/premium/available@2x.png'
+                    },
+                    "enterprise" : {
+                        "type": "icon",
+                        "value" : dokan.urls.assetsUrl + '/images/premium/available@2x.png'
+                    }
+                },
+                {
+                    "title": "Moip",
+                    "url": "https:\/\/wedevs.com\/dokan\/modules\/moip\/",
+                    "starter" : {
+                        "type": "icon",
+                        "value" : dokan.urls.assetsUrl + '/images/premium/unavailable@2x.png'
+                    },
+                    "professional" : {
+                        "type": "icon",
+                        "value" : dokan.urls.assetsUrl + '/images/premium/available@2x.png'
+                    },
+                    "business" : {
+                        "type": "icon",
+                        "value" : dokan.urls.assetsUrl + '/images/premium/available@2x.png'
+                    },
+                    "enterprise" : {
+                        "type": "icon",
+                        "value" : dokan.urls.assetsUrl + '/images/premium/available@2x.png'
+                    }
+                },
+                {
+                    "title": "Follow Store",
+                    "url": "https:\/\/wedevs.com\/dokan\/modules\/follow-store\/",
+                    "starter" : {
+                        "type": "icon",
+                        "value" : dokan.urls.assetsUrl + '/images/premium/unavailable@2x.png'
+                    },
+                    "professional" : {
+                        "type": "icon",
+                        "value" : dokan.urls.assetsUrl + '/images/premium/available@2x.png'
+                    },
+                    "business" : {
+                        "type": "icon",
+                        "value" : dokan.urls.assetsUrl + '/images/premium/available@2x.png'
+                    },
+                    "enterprise" : {
+                        "type": "icon",
+                        "value" : dokan.urls.assetsUrl + '/images/premium/available@2x.png'
+                    }
+                },
+                {
+                    "title": "Geolocation",
+                    "url": "https:\/\/wedevs.com\/dokan\/modules\/geolocation\/",
+                    "starter" : {
+                        "type": "icon",
+                        "value" : dokan.urls.assetsUrl + '/images/premium/unavailable@2x.png'
+                    },
+                    "professional" : {
+                        "type": "icon",
+                        "value" : dokan.urls.assetsUrl + '/images/premium/unavailable@2x.png'
+                    },
+                    "business" : {
+                        "type": "icon",
+                        "value" : dokan.urls.assetsUrl + '/images/premium/available@2x.png'
+                    },
+                    "enterprise" : {
+                        "type": "icon",
+                        "value" : dokan.urls.assetsUrl + '/images/premium/available@2x.png'
+                    }
+                },
+                {
+                    "title": "Shipstation",
+                    "url": "https:\/\/wedevs.com\/dokan\/modules\/shipstation\/",
+                    "starter" : {
+                        "type": "icon",
+                        "value" : dokan.urls.assetsUrl + '/images/premium/unavailable@2x.png'
+                    },
+                    "professional" : {
+                        "type": "icon",
+                        "value" : dokan.urls.assetsUrl + '/images/premium/unavailable@2x.png'
+                    },
+                    "business" : {
+                        "type": "icon",
+                        "value" : dokan.urls.assetsUrl + '/images/premium/available@2x.png'
+                    },
+                    "enterprise" : {
+                        "type": "icon",
+                        "value" : dokan.urls.assetsUrl + '/images/premium/available@2x.png'
+                    }
+                },
+                {
+                    "title": "Wholesale",
+                    "url": "https:\/\/wedevs.com\/dokan\/modules\/wholesale\/",
+                    "starter" : {
+                        "type": "icon",
+                        "value" : dokan.urls.assetsUrl + '/images/premium/unavailable@2x.png'
+                    },
+                    "professional" : {
+                        "type": "icon",
+                        "value" : dokan.urls.assetsUrl + '/images/premium/unavailable@2x.png'
+                    },
+                    "business" : {
+                        "type": "icon",
+                        "value" : dokan.urls.assetsUrl + '/images/premium/available@2x.png'
+                    },
+                    "enterprise" : {
+                        "type": "icon",
+                        "value" : dokan.urls.assetsUrl + '/images/premium/available@2x.png'
+                    }
+                },
             ],
 
             payment: {
