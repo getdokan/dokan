@@ -3496,7 +3496,7 @@ function dokan_login_form( $args = array(), $echo = false ) {
 /**
  * Validate a boolean variable
  *
- * @since DOKAN_LITE_SINCE
+ * @since 2.9.12
  *
  * @param mixed $var
  *

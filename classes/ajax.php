@@ -893,7 +893,7 @@ class Dokan_Ajax {
          * using `wp_create_nonce` immediately after this point, we need to set
          * LOGGED_IN_COOKIE created in wp_set_auth_cookie function.
          *
-         * @since DOKAN_LITE_SINCE
+         * @since 2.9.12
          */
         $headers = headers_list();
         foreach( $headers as $header ) {

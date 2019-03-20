@@ -1,3 +1,14 @@
+v2.9.12 -> Mar 20, 2019
+---------------------------
+-   **Fix**    Time format in store opening closing widget is not matching with Admin backend settings
+-   **Fix**    Validate boolean type properties in the update method of Dokan_Vendor_Manager class
+-   **Fix**    No confirmation message on permanent product delete in vendor dashboard
+-   **Fix**    Escape html entities in vendor's product variations
+-   **Tweak**  Refactor ajax login form popup
+-   **Tweak**  Update pro feature page with latest content in admin dashboard
+-   **Tweak**  Add wp-hooks dependency if WordPress version is greater than 5.0
+-   **Tweak**  Updating to latest version of Dokan Lite plugin from very old version triggers fatal error
+
 v2.9.11 -> Mar 5, 2019
 ---------------------------
 -**New**   Add Dokan Login Form popup
