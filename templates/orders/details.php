@@ -124,7 +124,13 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                 <div class="dokan-panel dokan-panel-default">
                     <div class="dokan-panel-heading"><strong><?php esc_html_e( 'Billing Address', 'dokan-lite' ); ?></strong></div>
                     <div class="dokan-panel-body">
-                        <?php echo wp_kses_post( $order->get_formatted_billing_address() ); ?>
+                        <?php
+                            if ( $order->get_formatted_billing_address() ) {
+                                echo wp_kses_post( $order->get_formatted_billing_address() );
+                            } else {
+                                _e( 'No billing address set.', 'dokan-lite' );
+                            }
+                        ?>
                     </div>
                 </div>
             </div>
@@ -133,7 +139,13 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                 <div class="dokan-panel dokan-panel-default">
                     <div class="dokan-panel-heading"><strong><?php esc_html_e( 'Shipping Address', 'dokan-lite' ); ?></strong></div>
                     <div class="dokan-panel-body">
-                        <?php echo wp_kses_post( $order->get_formatted_shipping_address() ); ?>
+                        <?php
+                            if ( $order->get_formatted_shipping_address() ) {
+                                echo wp_kses_post( $order->get_formatted_shipping_address() );
+                            } else {
+                                _e( 'No shipping address set.', 'dokan-lite' );
+                            }
+                        ?>
                     </div>
                 </div>
             </div>
@@ -195,7 +207,7 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                                 <?php echo esc_html( dokan_get_date_created( $order ) ); ?>
                             </li>
                         </ul>
-                        <?php if ( $hide_customer_info == 'off' ) : ?>
+                        <?php if ( 'off' === $hide_customer_info && ( $order->get_formatted_billing_address() || $order->get_formatted_shipping_address() ) ) : ?>
                         <ul class="list-unstyled customer-details">
                             <li>
                                 <span><?php esc_html_e( 'Customer:', 'dokan-lite' ); ?></span>
