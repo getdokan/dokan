@@ -260,16 +260,18 @@ class Dokan_Vendor_Manager {
             $vendor->set_show_email( $data['show_email'] );
         }
 
-        if ( ! empty( $data['gravatar'] ) ) {
+        if ( ! empty( $data['gravatar'] ) && is_numeric( $data['gravatar'] ) ) {
             $vendor->set_gravatar( $data['gravatar'] );
         }
 
-        if ( ! empty( $data['banner'] ) ) {
+        if ( ! empty( $data['banner'] ) && is_numeric( $data['banner'] ) ) {
             $vendor->set_banner( $data['banner'] );
         }
 
-        if ( ! empty( $data['enable_tnc'] ) ) {
-            $vendor->set_enable_tnc( $data['enable_tnc'] );
+        if ( ! empty( $data['enable_tnc'] ) && dokan_validate_boolean( $data['enable_tnc'] ) ) {
+            $vendor->set_enable_tnc( 'on' );
+        } else {
+            $vendor->set_enable_tnc( 'off' );
         }
 
         if ( ! empty( $data['icon'] ) ) {
