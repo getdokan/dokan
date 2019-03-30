@@ -256,19 +256,21 @@ class Dokan_Vendor_Manager {
             $vendor->set_phone( $data['phone'] );
         }
 
-        if ( ! empty( $data['show_email'] ) ) {
-            $vendor->set_show_email( $data['show_email'] );
+        if ( isset( $data['show_email'] ) && dokan_validate_boolean( $data['show_email'] ) ) {
+            $vendor->set_show_email( 'yes' );
+        } else {
+            $vendor->set_show_email( 'no' );
         }
 
-        if ( ! empty( $data['gravatar'] ) && is_numeric( $data['gravatar'] ) ) {
-            $vendor->set_gravatar( $data['gravatar'] );
+        if ( ! empty( $data['gravatar_id'] ) && is_numeric( $data['gravatar_id'] ) ) {
+            $vendor->set_gravatar_id( $data['gravatar_id'] );
         }
 
-        if ( ! empty( $data['banner'] ) && is_numeric( $data['banner'] ) ) {
-            $vendor->set_banner( $data['banner'] );
+        if ( ! empty( $data['banner_id'] ) && is_numeric( $data['banner_id'] ) ) {
+            $vendor->set_banner_id( $data['banner_id'] );
         }
 
-        if ( ! empty( $data['enable_tnc'] ) && dokan_validate_boolean( $data['enable_tnc'] ) ) {
+        if ( isset( $data['enable_tnc'] ) && dokan_validate_boolean( $data['enable_tnc'] ) ) {
             $vendor->set_enable_tnc( 'on' );
         } else {
             $vendor->set_enable_tnc( 'off' );
