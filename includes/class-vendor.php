@@ -393,7 +393,7 @@ class Dokan_Vendor {
      * @return string
      */
     public function get_banner() {
-        $banner_id = (int) $this->get_info_part( 'banner_id' );
+        $banner_id = $this->get_banner_id();
 
         if ( ! $banner_id ) {
             return false;
@@ -423,7 +423,7 @@ class Dokan_Vendor {
      * @return string
      */
     public function get_avatar() {
-        $avatar_id = (int) $this->get_info_part( 'gravatar_id' );
+        $avatar_id = $this->get_avatar_id();
 
         if ( ! $avatar_id && ! empty( $this->data->user_email ) ) {
             return get_avatar_url( $this->data->user_email, 96 );
