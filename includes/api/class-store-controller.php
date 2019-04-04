@@ -99,6 +99,13 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
                 'args'     => $this->get_collection_params()
             ),
         ) );
+
+        register_rest_route( $this->namespace, '/' . $this->base . '/check', [
+            [
+                'methods' => WP_REST_Server::READABLE,
+                'callback' => [ $this, 'check_store_availability' ]
+            ]
+        ] );
     }
 
     /**
@@ -547,4 +554,38 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
         return $data;
     }
 
+    /**
+     * Check store availability
+     *
+     * @param  array $request
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return reponse
+     */
+    public function check_store_availability( $request ) {
+        $params = $request->get_params();
+
+        if ( empty( $params['store_slug'] ) ) {
+            return new WP_Error( 'no_store_slug', __( 'Store slug can\'t be empty', 'dokan-lite' ), array( 'status' => 404 ) );
+        }
+
+        $store_slug = sanitize_text_field( $params['store_slug'] );
+
+        if ( get_user_by( 'slug', $store_slug ) ) {
+            $response = [
+                'url'       => $store_slug,
+                'available' => false
+            ];
+
+            return rest_ensure_response( $response );
+        }
+
+        $response = [
+            'url'       => sanitize_title( $store_slug ),
+            'available' => true
+        ];
+
+        return rest_ensure_response( $response );
+    }
 }
