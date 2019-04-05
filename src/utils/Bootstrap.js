@@ -109,3 +109,12 @@ window.dokan.libs['ContentLoading']  = {
 
 // wp npm packages with backward compatibility
 dokan.hooks = (wp && wp.hooks) ? wp.hooks : dokan.wpPackages.hooks;
+
+if ( dokan.hooks ) {
+    dokan.addFilterComponent = (hookName, namespace, component, priority = 10) => {
+        dokan.hooks.addFilter(hookName, namespace, (components) => {
+            components.push(component);
+            return components;
+        }, priority );
+    };
+}
