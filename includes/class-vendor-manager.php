@@ -133,6 +133,13 @@ class Dokan_Vendor_Manager {
             return $vendor;
         }
 
+        // send vendor registration email to admin and vendor
+        if ( isset( $data['notify_vendor'] ) && dokan_validate_boolean( $data['notify_vendor' ] ) ) {
+            wp_send_new_user_notifications( $vendor, 'both' );
+        } else {
+            wp_send_new_user_notifications( $vendor, 'admin' );
+        }
+
         $store_data = apply_filters( 'dokan_vendor_create_data', [
             'store_name'              => ! empty( $data['store_name'] ) ? $data['store_name'] : '',
             'social'                  => ! empty( $data['social'] ) ? $data['social'] : [],
