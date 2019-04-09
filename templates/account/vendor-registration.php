@@ -72,6 +72,8 @@
         <?php } ?>
     <?php } ?>
 
+    <?php do_action( 'dokan_seller_registration_field_after' ); ?>
+
     <p class="form-row">
         <?php wp_nonce_field( 'woocommerce-register', 'woocommerce-register-nonce' ); ?>
 
