@@ -7,6 +7,7 @@ import Multiselect from 'vue-multiselect'
 import API_Helper from '@/utils/Api'
 import ChartJS from 'vue-chartjs'
 import Mixin from './Mixin'
+import Debounce from 'debounce'
 
 window.__ = function( text, domain ) {
   return __( text, domain );
@@ -93,6 +94,7 @@ window.dokan.libs['Search']      = Search;
 window.dokan.libs['Datepicker']  = Datepicker;
 window.dokan.libs['Multiselect'] = Multiselect;
 window.dokan.libs['ColorPicker'] = ColorPicker;
+window.dokan.libs['debounce']    = Debounce;
 
 window.dokan.libs['ContentLoading']  = {
   VclCode,
