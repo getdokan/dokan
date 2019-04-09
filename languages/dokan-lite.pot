@@ -3,29 +3,228 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Dokan 2.9.12\n"
-"Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2019-03-20 11:53:54+00:00\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/dokan\n"
+"POT-Creation-Date: 2019-04-09 05:33:53+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "PO-Revision-Date: 2019-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
-"Language: en\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Poedit-Country: United States\n"
-"X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-KeywordsList: "
-"__;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_"
-"attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c;\n"
-"X-Poedit-Basepath: ../\n"
-"X-Poedit-SearchPath-0: .\n"
-"X-Poedit-Bookmarks: \n"
-"X-Textdomain-Support: yes\n"
-"X-Generator: grunt-wp-i18n1.0.0\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"X-Generator: wp-vue-i18n 1.1.1\n"
 
 #: templates/products/inventory.php:37 templates/products/inventory.php:43
 msgid "1"
+msgstr ""
+
+#: assets/js/vue-admin.js:337 assets/js/vue-admin.js:2632
+#: assets/js/vue-admin.js:2808 assets/js/vue-admin.js:3346
+#: assets/js/vue-admin.js:3797 assets/js/vue-admin.js:4306
+#: assets/js/vue-admin.js:4437 assets/js/vue-admin.js:4643
+#: assets/js/vue-admin.js:5610 assets/js/vue-bootstrap.js:337
+#: assets/js/vue-bootstrap.js:1633 assets/js/vue-bootstrap.js:1763
+#: assets/js/vue-bootstrap.js:1848 assets/js/vue-bootstrap.js:2151
+#: assets/js/vue-bootstrap.js:2323 assets/js/vue-frontend.js:172
+#: assets/js/vue-frontend.js:304 assets/js/vue-frontend.js:394
+#: assets/js/vue-vendor.js:16294 assets/js/vue-vendor.js:20861
+#: assets/js/vue-vendor.js:22274 assets/js/vue-vendor.js:22830
+#: assets/js/vue-vendor.js:22940 assets/js/vue-vendor.js:23053
+#: assets/js/vue-vendor.js:23075 assets/js/vue-vendor.js:23132
+#: assets/js/vue-vendor.js:23389 assets/js/vue-vendor.js:24130
+msgid "div"
+msgstr ""
+
+#: assets/js/vue-admin.js:774 assets/js/vue-admin.min.js:1
+#: src/admin/pages/Withdraw.vue:118
+msgid "No requests found."
+msgstr ""
+
+#: assets/js/vue-admin.js:775 assets/js/vue-admin.min.js:1
+#: src/admin/pages/Withdraw.vue:119
+msgid "Paypal Mass Payment File is Generated."
+msgstr ""
+
+#: assets/js/vue-admin.js:779 assets/js/vue-admin.min.js:1
+#: classes/installer.php:114 includes/admin/class-settings.php:289
+#: includes/admin/class-settings.php:297 includes/admin/setup-wizard.php:254
+#: includes/admin-functions.php:44 includes/admin-functions.php:50
+#: includes/admin-functions.php:685 includes/admin-functions.php:709
+#: includes/wc-template.php:13 includes/wc-template.php:146
+#: includes/wc-template.php:280 src/admin/pages/Withdraw.vue:123
+#: templates/my-orders.php:31
+msgid "Vendor"
+msgstr ""
+
+#: assets/js/vue-admin.js:780 assets/js/vue-admin.min.js:1
+#: src/admin/pages/Withdraw.vue:124
+#: templates/withdraw/approved-request-listing.php:14
+#: templates/withdraw/cancelled-request-listing.php:14
+#: templates/withdraw/pending-request-listing.php:14
+msgid "Amount"
+msgstr ""
+
+#: assets/js/vue-admin.js:781 assets/js/vue-admin.min.js:1
+#: includes/product-functions.php:223 src/admin/pages/Withdraw.vue:125
+#: templates/my-orders.php:29 templates/orders/listing.php:49
+#: templates/orders/listing.php:77
+#: templates/products/products-listing-row.php:53
+#: templates/products/products-listing.php:89 templates/sub-orders.php:27
+#: templates/withdraw/pending-request-listing.php:18
+msgid "Status"
+msgstr ""
+
+#: assets/js/vue-admin.js:782 assets/js/vue-admin.min.js:1
+#: src/admin/pages/Withdraw.vue:126
+#: templates/withdraw/approved-request-listing.php:15
+#: templates/withdraw/cancelled-request-listing.php:15
+#: templates/withdraw/pending-request-listing.php:15
+msgid "Method"
+msgstr ""
+
+#: assets/js/vue-admin.js:783 assets/js/vue-admin.min.js:1
+#: src/admin/pages/Withdraw.vue:127
+msgid "Details"
+msgstr ""
+
+#: assets/js/vue-admin.js:784 assets/js/vue-admin.min.js:1
+#: src/admin/pages/Withdraw.vue:128
+#: templates/withdraw/cancelled-request-listing.php:17
+msgid "Note"
+msgstr ""
+
+#: assets/js/vue-admin.js:785 assets/js/vue-admin.min.js:1
+#: src/admin/pages/Withdraw.vue:129 templates/my-orders.php:28
+#: templates/orders/listing.php:51 templates/orders/listing.php:107
+#: templates/products/products-listing-row.php:128
+#: templates/products/products-listing.php:99 templates/sub-orders.php:26
+#: templates/withdraw/approved-request-listing.php:16
+#: templates/withdraw/cancelled-request-listing.php:16
+#: templates/withdraw/pending-request-listing.php:16
+msgid "Date"
+msgstr ""
+
+#: assets/js/vue-admin.js:786 assets/js/vue-admin.min.js:1
+#: includes/admin-functions.php:45 src/admin/pages/Withdraw.vue:130
+msgid "Actions"
+msgstr ""
+
+#: assets/js/vue-admin.js:819 assets/js/vue-admin.js:827
+#: assets/js/vue-admin.js:847 assets/js/vue-admin.js:858
+#: assets/js/vue-admin.min.js:1 classes/ajax.php:470
+#: includes/woo-views/html-product-download.php:14
+#: src/admin/pages/Withdraw.vue:164 src/admin/pages/Withdraw.vue:175
+#: src/admin/pages/Withdraw.vue:200 src/admin/pages/Withdraw.vue:215
+msgid "Delete"
+msgstr ""
+
+#: assets/js/vue-admin.js:822 assets/js/vue-admin.js:844
+#: assets/js/vue-admin.min.js:1 includes/product-functions.php:319
+#: lib/appsero/src/insights.php:788 src/admin/pages/Withdraw.vue:168
+#: src/admin/pages/Withdraw.vue:196 templates/my-orders.php:83
+#: templates/orders/details.php:200
+#: templates/products/new-product-single.php:204
+#: templates/products/new-product.php:165
+#: templates/products/tmpl-add-product-popup.php:63
+#: templates/withdraw/pending-request-listing.php:17
+#: templates/withdraw/pending-request-listing.php:35
+msgid "Cancel"
+msgstr ""
+
+#: assets/js/vue-admin.js:830 assets/js/vue-admin.js:855
+#: assets/js/vue-admin.min.js:1 classes/template-dashboard.php:110
+#: src/admin/pages/Withdraw.vue:179 src/admin/pages/Withdraw.vue:211
+#: templates/dashboard/orders-widget.php:31
+msgid "Pending"
+msgstr ""
+
+#: assets/js/vue-admin.js:841 assets/js/vue-admin.min.js:1
+#: src/admin/pages/Withdraw.vue:192
+msgid "Approve"
+msgstr ""
+
+#: assets/js/vue-admin.js:850 assets/js/vue-admin.js:861
+#: assets/js/vue-admin.js:866 assets/js/vue-admin.min.js:1
+#: src/admin/pages/Withdraw.vue:204 src/admin/pages/Withdraw.vue:219
+#: src/admin/pages/Withdraw.vue:226
+msgid "Download PayPal mass payment file"
+msgstr ""
+
+#: assets/js/vue-admin.js:946 assets/js/vue-admin.min.js:1
+#: includes/class-assets.php:413 src/admin/pages/Withdraw.vue:309
+msgid "Are you sure?"
+msgstr ""
+
+#: assets/js/vue-admin.js:965 assets/js/vue-admin.min.js:1
+#: includes/functions.php:1248 src/admin/pages/Withdraw.vue:330
+msgid "Account Name: %s"
+msgstr ""
+
+#: assets/js/vue-admin.js:969 assets/js/vue-admin.min.js:1
+#: src/admin/pages/Withdraw.vue:334
+msgid ", Account Number: %s"
+msgstr ""
+
+#: assets/js/vue-admin.js:973 assets/js/vue-admin.min.js:1
+#: src/admin/pages/Withdraw.vue:338
+msgid ", Bank Name: %s"
+msgstr ""
+
+#: assets/js/vue-admin.js:977 assets/js/vue-admin.min.js:1
+#: src/admin/pages/Withdraw.vue:342
+msgid ", Routing Number: %s"
+msgstr ""
+
+#: assets/js/vue-admin.min.js:1 assets/js/vue-bootstrap.min.js:1
+#: src/admin/components/ColorPicker.vue:9
+msgid "Select Color"
+msgstr ""
+
+#: assets/js/vue-admin.min.js:1 assets/js/vue-bootstrap.min.js:1
+#: src/admin/components/ColorPicker.vue:25
+msgid "Clear"
+msgstr ""
+
+#: assets/js/vue-admin.min.js:1 assets/js/vue-bootstrap.min.js:1
+#: includes/product-functions.php:329 src/admin/components/ColorPicker.vue:31
+#: templates/orders/details.php:348 templates/settings/store-form.php:259
+msgid "Close"
+msgstr ""
+
+#: assets/js/vue-bootstrap.js:733 assets/js/vue-bootstrap.js:739
+#: assets/js/vue-bootstrap.js:744 assets/js/vue-bootstrap.min.js:1
+#: src/admin/components/TextEditor.vue:125
+#: src/admin/components/TextEditor.vue:132
+#: src/admin/components/TextEditor.vue:137
+msgid "Select an image"
+msgstr ""
+
+#: assets/js/vue-bootstrap.js:787 assets/js/vue-bootstrap.min.js:1
+#: src/admin/components/TextEditor.vue:180
+msgid "Please select an image,"
+msgstr ""
+
+#: assets/js/vue-bootstrap.js:1989
+msgid "label"
+msgstr ""
+
+#: assets/js/vue-bootstrap.js:2073
+msgid "textarea"
+msgstr ""
+
+#: assets/js/vue-bootstrap.js:2228 assets/js/vue-bootstrap.js:2520
+msgid "input"
+msgstr ""
+
+#: assets/js/vue-bootstrap.js:2419
+msgid "p"
+msgstr ""
+
+#: assets/js/vue-bootstrap.min.js:1 src/admin/components/Modal.vue:12
+msgid "Close modal panel"
+msgstr ""
+
+#: assets/js/vue-vendor.js:16277 assets/js/vue-vendor.js:16344
+msgid "transition-group"
 msgstr ""
 
 #: classes/admin-user-profile.php:35 classes/ajax.php:151
@@ -256,7 +455,7 @@ msgstr ""
 msgid "Email sent successfully!"
 msgstr ""
 
-#: classes/ajax.php:400 templates/orders/details.php:271
+#: classes/ajax.php:400 templates/orders/details.php:283
 msgid "Delete note"
 msgstr ""
 
@@ -270,12 +469,6 @@ msgstr ""
 
 #: classes/ajax.php:431
 msgid "Shipped date: "
-msgstr ""
-
-#: classes/ajax.php:470 includes/woo-views/html-product-download.php:14
-#: src/admin/pages/Withdraw.vue:164 src/admin/pages/Withdraw.vue:175
-#: src/admin/pages/Withdraw.vue:200 src/admin/pages/Withdraw.vue:215
-msgid "Delete"
 msgstr ""
 
 #: classes/ajax.php:515
@@ -301,16 +494,6 @@ msgstr ""
 
 #: classes/ajax.php:909
 msgid "User logged in successfully."
-msgstr ""
-
-#: classes/installer.php:114 includes/admin/class-settings.php:289
-#: includes/admin/class-settings.php:297 includes/admin/setup-wizard.php:254
-#: includes/admin-functions.php:44 includes/admin-functions.php:50
-#: includes/admin-functions.php:685 includes/admin-functions.php:709
-#: includes/wc-template.php:13 includes/wc-template.php:146
-#: includes/wc-template.php:280 src/admin/pages/Withdraw.vue:123
-#: templates/my-orders.php:31
-msgid "Vendor"
 msgstr ""
 
 #: classes/installer.php:178 includes/admin/class-admin.php:134
@@ -450,11 +633,6 @@ msgstr ""
 #: classes/template-dashboard.php:105 includes/admin/setup-wizard.php:530
 #: includes/order-functions.php:482 templates/dashboard/orders-widget.php:26
 msgid "Completed"
-msgstr ""
-
-#: classes/template-dashboard.php:110 src/admin/pages/Withdraw.vue:179
-#: src/admin/pages/Withdraw.vue:211 templates/dashboard/orders-widget.php:31
-msgid "Pending"
 msgstr ""
 
 #: classes/template-dashboard.php:115 includes/admin/setup-wizard.php:536
@@ -1310,10 +1488,6 @@ msgstr ""
 
 #: includes/admin/setup-wizard.php:926
 msgid "Contact Admin"
-msgstr ""
-
-#: includes/admin-functions.php:45 src/admin/pages/Withdraw.vue:130
-msgid "Actions"
 msgstr ""
 
 #: includes/admin-functions.php:46 includes/admin-functions.php:51
@@ -2473,10 +2647,6 @@ msgstr ""
 msgid "Every %d Minutes"
 msgstr ""
 
-#: includes/class-assets.php:413 src/admin/pages/Withdraw.vue:309
-msgid "Are you sure?"
-msgstr ""
-
 #: includes/class-assets.php:414
 msgid "Something went wrong. Please try again."
 msgstr ""
@@ -3418,10 +3588,6 @@ msgstr ""
 msgid "Products"
 msgstr ""
 
-#: includes/functions.php:1248 src/admin/pages/Withdraw.vue:330
-msgid "Account Name: %s"
-msgstr ""
-
 #: includes/functions.php:1252
 msgid "Account Number: %s"
 msgstr ""
@@ -3870,15 +4036,6 @@ msgstr ""
 msgid "Delete all variations"
 msgstr ""
 
-#: includes/product-functions.php:223 src/admin/pages/Withdraw.vue:125
-#: templates/my-orders.php:29 templates/orders/listing.php:49
-#: templates/orders/listing.php:77
-#: templates/products/products-listing-row.php:53
-#: templates/products/products-listing.php:89 templates/sub-orders.php:27
-#: templates/withdraw/pending-request-listing.php:18
-msgid "Status"
-msgstr ""
-
 #: includes/product-functions.php:224
 msgid "Toggle &quot;Enabled&quot;"
 msgstr ""
@@ -3987,17 +4144,6 @@ msgstr ""
 msgid "Save Variations"
 msgstr ""
 
-#: includes/product-functions.php:319 lib/appsero/src/insights.php:788
-#: src/admin/pages/Withdraw.vue:168 src/admin/pages/Withdraw.vue:196
-#: templates/my-orders.php:83 templates/orders/details.php:188
-#: templates/products/new-product-single.php:204
-#: templates/products/new-product.php:165
-#: templates/products/tmpl-add-product-popup.php:63
-#: templates/withdraw/pending-request-listing.php:17
-#: templates/withdraw/pending-request-listing.php:35
-msgid "Cancel"
-msgstr ""
-
 #: includes/product-functions.php:324
 msgid "%s item"
 msgid_plural "%s items"
@@ -4006,11 +4152,6 @@ msgstr[1] ""
 
 #: includes/product-functions.php:329
 msgid "Expand"
-msgstr ""
-
-#: includes/product-functions.php:329 src/admin/components/ColorPicker.vue:31
-#: templates/orders/details.php:336 templates/settings/store-form.php:259
-msgid "Close"
 msgstr ""
 
 #: includes/product-functions.php:332
@@ -4392,34 +4533,12 @@ msgstr ""
 msgid "Learn More &rarr;"
 msgstr ""
 
-#: src/admin/components/ColorPicker.vue:9
-msgid "Select Color"
-msgstr ""
-
-#: src/admin/components/ColorPicker.vue:25
-msgid "Clear"
-msgstr ""
-
 #: src/admin/components/Fields.vue:167
 msgid "Active"
 msgstr ""
 
 #: src/admin/components/Fields.vue:171 src/admin/pages/Settings.vue:138
 msgid "Select"
-msgstr ""
-
-#: src/admin/components/Modal.vue:12
-msgid "Close modal panel"
-msgstr ""
-
-#: src/admin/components/TextEditor.vue:125
-#: src/admin/components/TextEditor.vue:132
-#: src/admin/components/TextEditor.vue:137
-msgid "Select an image"
-msgstr ""
-
-#: src/admin/components/TextEditor.vue:180
-msgid "Please select an image,"
 msgstr ""
 
 #: src/admin/pages/Dashboard.vue:17
@@ -4651,68 +4770,6 @@ msgstr ""
 
 #: src/admin/pages/Withdraw.vue:44
 msgid "(no name)"
-msgstr ""
-
-#: src/admin/pages/Withdraw.vue:118
-msgid "No requests found."
-msgstr ""
-
-#: src/admin/pages/Withdraw.vue:119
-msgid "Paypal Mass Payment File is Generated."
-msgstr ""
-
-#: src/admin/pages/Withdraw.vue:124
-#: templates/withdraw/approved-request-listing.php:14
-#: templates/withdraw/cancelled-request-listing.php:14
-#: templates/withdraw/pending-request-listing.php:14
-msgid "Amount"
-msgstr ""
-
-#: src/admin/pages/Withdraw.vue:126
-#: templates/withdraw/approved-request-listing.php:15
-#: templates/withdraw/cancelled-request-listing.php:15
-#: templates/withdraw/pending-request-listing.php:15
-msgid "Method"
-msgstr ""
-
-#: src/admin/pages/Withdraw.vue:127
-msgid "Details"
-msgstr ""
-
-#: src/admin/pages/Withdraw.vue:128
-#: templates/withdraw/cancelled-request-listing.php:17
-msgid "Note"
-msgstr ""
-
-#: src/admin/pages/Withdraw.vue:129 templates/my-orders.php:28
-#: templates/orders/listing.php:51 templates/orders/listing.php:107
-#: templates/products/products-listing-row.php:128
-#: templates/products/products-listing.php:99 templates/sub-orders.php:26
-#: templates/withdraw/approved-request-listing.php:16
-#: templates/withdraw/cancelled-request-listing.php:16
-#: templates/withdraw/pending-request-listing.php:16
-msgid "Date"
-msgstr ""
-
-#: src/admin/pages/Withdraw.vue:192
-msgid "Approve"
-msgstr ""
-
-#: src/admin/pages/Withdraw.vue:204 src/admin/pages/Withdraw.vue:219
-#: src/admin/pages/Withdraw.vue:226
-msgid "Download PayPal mass payment file"
-msgstr ""
-
-#: src/admin/pages/Withdraw.vue:334
-msgid ", Account Number: %s"
-msgstr ""
-
-#: src/admin/pages/Withdraw.vue:338
-msgid ", Bank Name: %s"
-msgstr ""
-
-#: src/admin/pages/Withdraw.vue:342
-msgid ", Routing Number: %s"
 msgstr ""
 
 #: templates/account/vendor-registration.php:21
@@ -5024,7 +5081,7 @@ msgstr ""
 msgid "Billing Address"
 msgstr ""
 
-#: templates/global/header-menu.php:51 templates/orders/details.php:134
+#: templates/global/header-menu.php:51 templates/orders/details.php:140
 msgid "Shipping Address"
 msgstr ""
 
@@ -5145,91 +5202,99 @@ msgstr ""
 msgid "Coupons"
 msgstr ""
 
-#: templates/orders/details.php:145
+#: templates/orders/details.php:131
+msgid "No billing address set."
+msgstr ""
+
+#: templates/orders/details.php:146
+msgid "No shipping address set."
+msgstr ""
+
+#: templates/orders/details.php:157
 msgid "Downloadable Product Permission"
 msgstr ""
 
-#: templates/orders/details.php:160
+#: templates/orders/details.php:172
 msgid "General Details"
 msgstr ""
 
-#: templates/orders/details.php:164
+#: templates/orders/details.php:176
 msgid "Order Status:"
 msgstr ""
 
-#: templates/orders/details.php:168
+#: templates/orders/details.php:180
 msgid "&nbsp; Edit"
 msgstr ""
 
-#: templates/orders/details.php:186
+#: templates/orders/details.php:198
 msgid "Update"
 msgstr ""
 
-#: templates/orders/details.php:194
+#: templates/orders/details.php:206
 msgid "Order Date:"
 msgstr ""
 
-#: templates/orders/details.php:201
+#: templates/orders/details.php:213
 msgid "Customer:"
 msgstr ""
 
-#: templates/orders/details.php:214
+#: templates/orders/details.php:226
 msgid "Email:"
 msgstr ""
 
-#: templates/orders/details.php:218
+#: templates/orders/details.php:230
 msgid "Phone:"
 msgstr ""
 
-#: templates/orders/details.php:222
+#: templates/orders/details.php:234
 msgid "Customer IP:"
 msgstr ""
 
-#: templates/orders/details.php:234
+#: templates/orders/details.php:246
 msgid "Customer Note:"
 msgstr ""
 
-#: templates/orders/details.php:245
+#: templates/orders/details.php:257
 msgid "Order Notes"
 msgstr ""
 
-#: templates/orders/details.php:269
+#: templates/orders/details.php:281
 msgid "added %s ago"
 msgstr ""
 
-#: templates/orders/details.php:278
+#: templates/orders/details.php:290
 msgid "There are no notes for this order yet."
 msgstr ""
 
-#: templates/orders/details.php:287
+#: templates/orders/details.php:299
 msgid "Add note"
 msgstr ""
 
-#: templates/orders/details.php:295
+#: templates/orders/details.php:307
 msgid "Customer note"
 msgstr ""
 
-#: templates/orders/details.php:296
+#: templates/orders/details.php:308
 msgid "Private note"
 msgstr ""
 
-#: templates/orders/details.php:304
+#: templates/orders/details.php:316
 msgid "Add Note"
 msgstr ""
 
-#: templates/orders/details.php:311 templates/orders/details.php:320
+#: templates/orders/details.php:323 templates/orders/details.php:332
 msgid "Tracking Number"
 msgstr ""
 
-#: templates/orders/details.php:315
+#: templates/orders/details.php:327
 msgid "Shipping Provider Name / URL"
 msgstr ""
 
-#: templates/orders/details.php:325
+#: templates/orders/details.php:337
 msgid "Date Shipped"
 msgstr ""
 
-#: templates/orders/details.php:335
+#: templates/orders/details.php:347
 msgid "Add Tracking Details"
 msgstr ""
 
