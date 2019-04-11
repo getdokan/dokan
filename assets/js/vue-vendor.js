@@ -23475,7 +23475,7 @@ var render = function() {
                 ? _c(
                     "span",
                     {
-                      staticClass: "tablenav-pages-navspan",
+                      staticClass: "tablenav-pages-navspan button disabled",
                       attrs: { "aria-hidden": "true" }
                     },
                     [_vm._v("«")]
@@ -23483,7 +23483,7 @@ var render = function() {
                 : _c(
                     "a",
                     {
-                      staticClass: "first-page",
+                      staticClass: "first-page button",
                       attrs: { href: "#" },
                       on: {
                         click: function($event) {
@@ -23503,7 +23503,7 @@ var render = function() {
                 ? _c(
                     "span",
                     {
-                      staticClass: "tablenav-pages-navspan",
+                      staticClass: "tablenav-pages-navspan button disabled",
                       attrs: { "aria-hidden": "true" }
                     },
                     [_vm._v("‹")]
@@ -23511,7 +23511,7 @@ var render = function() {
                 : _c(
                     "a",
                     {
-                      staticClass: "prev-page",
+                      staticClass: "prev-page button",
                       attrs: { href: "#" },
                       on: {
                         click: function($event) {
@@ -23561,7 +23561,7 @@ var render = function() {
                 ? _c(
                     "span",
                     {
-                      staticClass: "tablenav-pages-navspan",
+                      staticClass: "tablenav-pages-navspan button disabled",
                       attrs: { "aria-hidden": "true" }
                     },
                     [_vm._v("›")]
@@ -23569,7 +23569,7 @@ var render = function() {
                 : _c(
                     "a",
                     {
-                      staticClass: "next-page",
+                      staticClass: "next-page button",
                       attrs: { href: "#" },
                       on: {
                         click: function($event) {
@@ -23589,7 +23589,7 @@ var render = function() {
                 ? _c(
                     "span",
                     {
-                      staticClass: "tablenav-pages-navspan",
+                      staticClass: "tablenav-pages-navspan button disabled",
                       attrs: { "aria-hidden": "true" }
                     },
                     [_vm._v("»")]
@@ -23597,7 +23597,7 @@ var render = function() {
                 : _c(
                     "a",
                     {
-                      staticClass: "last-page",
+                      staticClass: "last-page button",
                       attrs: { href: "#" },
                       on: {
                         click: function($event) {
@@ -23996,7 +23996,7 @@ var render = function() {
                 ? _c(
                     "span",
                     {
-                      staticClass: "tablenav-pages-navspan",
+                      staticClass: "tablenav-pages-navspan button disabled",
                       attrs: { "aria-hidden": "true" }
                     },
                     [_vm._v("«")]
@@ -24004,7 +24004,7 @@ var render = function() {
                 : _c(
                     "a",
                     {
-                      staticClass: "first-page",
+                      staticClass: "first-page button",
                       attrs: { href: "#" },
                       on: {
                         click: function($event) {
@@ -24024,7 +24024,7 @@ var render = function() {
                 ? _c(
                     "span",
                     {
-                      staticClass: "tablenav-pages-navspan",
+                      staticClass: "tablenav-pages-navspan button disabled",
                       attrs: { "aria-hidden": "true" }
                     },
                     [_vm._v("‹")]
@@ -24032,7 +24032,7 @@ var render = function() {
                 : _c(
                     "a",
                     {
-                      staticClass: "prev-page",
+                      staticClass: "prev-page button",
                       attrs: { href: "#" },
                       on: {
                         click: function($event) {
@@ -24065,7 +24065,7 @@ var render = function() {
                 ? _c(
                     "span",
                     {
-                      staticClass: "tablenav-pages-navspan",
+                      staticClass: "tablenav-pages-navspan button disabled",
                       attrs: { "aria-hidden": "true" }
                     },
                     [_vm._v("›")]
@@ -24073,7 +24073,7 @@ var render = function() {
                 : _c(
                     "a",
                     {
-                      staticClass: "next-page",
+                      staticClass: "next-page button",
                       attrs: { href: "#" },
                       on: {
                         click: function($event) {
@@ -24093,7 +24093,7 @@ var render = function() {
                 ? _c(
                     "span",
                     {
-                      staticClass: "tablenav-pages-navspan",
+                      staticClass: "tablenav-pages-navspan button disabled",
                       attrs: { "aria-hidden": "true" }
                     },
                     [_vm._v("»")]
@@ -24101,7 +24101,7 @@ var render = function() {
                 : _c(
                     "a",
                     {
-                      staticClass: "last-page",
+                      staticClass: "last-page button",
                       attrs: { href: "#" },
                       on: {
                         click: function($event) {
