@@ -608,6 +608,37 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
             return rest_ensure_response( $response );
         }
 
+        // check whether email is available or not
+        if ( ! empty( $params['user_email'] ) ) {
+            $user_email = $params['user_email'];
+
+            if ( ! is_email( $user_email ) ) {
+                $response = [
+                    'user_email' => $user_email,
+                    'available'  => false,
+                    'message'    => __( 'This email address is not valid', 'dokan-lite' )
+                ];
+
+                return rest_ensure_response( $response );
+            }
+
+            if ( email_exists( $user_email ) ) {
+                $response = [
+                    'user_email'  => $user_email,
+                    'available' => false
+                ];
+
+                return rest_ensure_response( $response );
+            }
+
+            $response = [
+                'user_email'  => $user_email,
+                'available' => true
+            ];
+
+            return rest_ensure_response( $response );
+        }
+
         return rest_ensure_response( [] );
     }
 }
