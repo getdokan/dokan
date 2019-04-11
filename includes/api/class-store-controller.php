@@ -566,26 +566,48 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
     public function check_store_availability( $request ) {
         $params = $request->get_params();
 
-        if ( empty( $params['store_slug'] ) ) {
-            return new WP_Error( 'no_store_slug', __( 'Store slug can\'t be empty', 'dokan-lite' ), array( 'status' => 404 ) );
-        }
+        // check whether store name is available or not
+        if ( ! empty( $params['store_slug'] ) ) {
+            $store_slug = sanitize_text_field( $params['store_slug'] );
 
-        $store_slug = sanitize_text_field( $params['store_slug'] );
+            if ( get_user_by( 'slug', $store_slug ) ) {
+                $response = [
+                    'url'       => $store_slug,
+                    'available' => false
+                ];
 
-        if ( get_user_by( 'slug', $store_slug ) ) {
+                return rest_ensure_response( $response );
+            }
+
             $response = [
-                'url'       => $store_slug,
-                'available' => false
+                'url'       => sanitize_title( $store_slug ),
+                'available' => true
             ];
 
             return rest_ensure_response( $response );
         }
 
-        $response = [
-            'url'       => sanitize_title( $store_slug ),
-            'available' => true
-        ];
+        // check whether username is available or not
+        if ( ! empty( $params['username'] ) ) {
+            $username = sanitize_user( $params['username'] );
 
-        return rest_ensure_response( $response );
+            if ( get_user_by( 'login', $username ) ) {
+                $response = [
+                    'username'  => $username,
+                    'available' => false
+                ];
+
+                return rest_ensure_response( $response );
+            }
+
+            $response = [
+                'username'  => $username,
+                'available' => true
+            ];
+
+            return rest_ensure_response( $response );
+        }
+
+        return rest_ensure_response( [] );
     }
 }

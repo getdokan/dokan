@@ -127,17 +127,17 @@ class Dokan_Vendor_Manager {
         ];
 
         $vendor_data = wp_parse_args( $data, $defaults );
-        $vendor      = wp_insert_user( $vendor_data );
+        $vendor_id   = wp_insert_user( $vendor_data );
 
-        if ( is_wp_error( $vendor ) ) {
-            return $vendor;
+        if ( is_wp_error( $vendor_id ) ) {
+            return $vendor_id;
         }
 
         // send vendor registration email to admin and vendor
         if ( isset( $data['notify_vendor'] ) && dokan_validate_boolean( $data['notify_vendor' ] ) ) {
-            wp_send_new_user_notifications( $vendor, 'both' );
+            wp_send_new_user_notifications( $vendor_id, 'both' );
         } else {
-            wp_send_new_user_notifications( $vendor, 'admin' );
+            wp_send_new_user_notifications( $vendor_id, 'admin' );
         }
 
         $store_data = apply_filters( 'dokan_vendor_create_data', [
@@ -149,8 +149,10 @@ class Dokan_Vendor_Manager {
             'address'                 => ! empty( $data['address'] ) ? $data['address'] : [],
             'location'                => ! empty( $data['location'] ) ? $data['location'] : '',
             'banner'                  => ! empty( $data['banner'] ) ? $data['banner'] : 0,
+            'banner_id'               => ! empty( $data['banner_id'] ) ? $data['banner_id'] : 0,
             'icon'                    => ! empty( $data['icon'] ) ? $data['icon'] : '',
             'gravatar'                => ! empty( $data['gravatar'] ) ? $data['gravatar'] : 0,
+            'gravatar_id'             => ! empty( $data['gravatar_id'] ) ? $data['gravatar_id'] : 0,
             'show_more_ptab'          => ! empty( $data['show_more_ptab'] ) ? $data['show_more_ptab'] : 'yes',
             'store_ppp'               => ! empty( $data['store_ppp'] ) ? $data['store_ppp'] : 10,
             'enable_tnc'              => ! empty( $data['enable_tnc'] ) ? $data['enable_tnc'] : 'off',
@@ -159,11 +161,27 @@ class Dokan_Vendor_Manager {
             'store_seo'               => ! empty( $data['store_seo'] ) ? $data['store_seo'] : []
         ] );
 
-        update_user_meta( $vendor, 'dokan_profile_settings', $store_data );
+        if ( current_user_can( 'manage_woocommerce' ) ) {
+            $vendor = dokan()->vendor->get( $vendor_id );
 
-        do_action( 'dokan_new_vendor', $vendor );
+            if ( isset( $data['enabled'] ) && dokan_validate_boolean( $data['enabled'] ) ) {
+                $vendor->update_meta( 'dokan_enable_selling', 'yes' );
+            }
 
-        return $this->get( $vendor );
+            if ( isset( $data['featured'] ) && dokan_validate_boolean( $data['featured'] ) ) {
+                $vendor->update_meta( 'dokan_feature_seller', 'yes' );
+            }
+
+            if ( isset( $data['trusted'] ) && dokan_validate_boolean( $data['trusted'] ) ) {
+                $vendor->update_meta( 'dokan_publishing', 'yes' );
+            }
+        }
+
+        update_user_meta( $vendor_id, 'dokan_profile_settings', $store_data );
+
+        do_action( 'dokan_new_vendor', $vendor_id );
+
+        return $this->get( $vendor_id );
     }
 
     /**
