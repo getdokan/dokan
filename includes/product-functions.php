@@ -62,7 +62,12 @@ function dokan_save_product( $args ) {
 
     if ( ! empty( $data['ID'] ) ) {
         $post_arr['ID'] = absint( $data['ID'] );
-        $is_updating    = true;
+
+        if ( ! dokan_is_product_author( $post_arr['ID'] ) ) {
+            return new WP_Error( 'not-own', __( 'I swear this is not your product!', 'dokan-lite' ) );
+        }
+
+        $is_updating = true;
     } else {
         $is_updating = false;
     }

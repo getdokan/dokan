@@ -395,6 +395,10 @@ class Dokan_Template_Products {
             $errors[] = __( 'No product found!', 'dokan-lite' );
         }
 
+        if ( ! dokan_is_product_author( $post_id ) ) {
+            $errors[] = __( 'I swear this is not your product!', 'dokan-lite' );
+        }
+
         self::$errors = apply_filters( 'dokan_can_edit_product', $errors );
 
         if ( !self::$errors ) {
