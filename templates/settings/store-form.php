@@ -6,9 +6,8 @@
  */
 ?>
 <?php
-
-    $gravatar       = isset( $profile_info['gravatar'] ) ? $profile_info['gravatar'] : 0;
-    $banner         = isset( $profile_info['banner'] ) ? $profile_info['banner'] : 0;
+    $gravatar_id    = isset( $profile_info['gravatar_id'] ) ? $profile_info['gravatar_id'] : 0;
+    $banner_id      = isset( $profile_info['banner_id'] ) ? $profile_info['banner_id'] : 0;
     $storename      = isset( $profile_info['store_name'] ) ? $profile_info['store_name'] : '';
     $store_ppp      = isset( $profile_info['store_ppp'] ) ? $profile_info['store_ppp'] : '';
     $phone          = isset( $profile_info['phone'] ) ? $profile_info['phone'] : '';
@@ -63,9 +62,9 @@
 
             <div class="dokan-banner">
 
-                <div class="image-wrap<?php echo $banner ? '' : ' dokan-hide'; ?>">
-                    <?php $banner_url = $banner ? wp_get_attachment_url( $banner ) : ''; ?>
-                    <input type="hidden" class="dokan-file-field" value="<?php echo $banner; ?>" name="dokan_banner">
+                <div class="image-wrap<?php echo $banner_id ? '' : ' dokan-hide'; ?>">
+                    <?php $banner_url = $banner_id ? wp_get_attachment_url( $banner_id ) : ''; ?>
+                    <input type="hidden" class="dokan-file-field" value="<?php echo $banner_id; ?>" name="dokan_banner">
                     <img class="dokan-banner-img" src="<?php echo esc_url( $banner_url ); ?>">
 
                     <a class="close dokan-remove-banner-image">&times;</a>
@@ -103,13 +102,13 @@
             <label class="dokan-w3 dokan-control-label" for="dokan_gravatar"><?php esc_html_e( 'Profile Picture', 'dokan-lite' ); ?></label>
 
             <div class="dokan-w5 dokan-gravatar">
-                <div class="dokan-left gravatar-wrap<?php echo $gravatar ? '' : ' dokan-hide'; ?>">
-                    <?php $gravatar_url = $gravatar ? wp_get_attachment_url( $gravatar ) : ''; ?>
-                    <input type="hidden" class="dokan-file-field" value="<?php echo esc_attr( $gravatar ); ?>" name="dokan_gravatar">
+                <div class="dokan-left gravatar-wrap<?php echo $gravatar_id ? '' : ' dokan-hide'; ?>">
+                    <?php $gravatar_url = $gravatar_id ? wp_get_attachment_url( $gravatar_id ) : ''; ?>
+                    <input type="hidden" class="dokan-file-field" value="<?php echo esc_attr( $gravatar_id ); ?>" name="dokan_gravatar">
                     <img class="dokan-gravatar-img" src="<?php echo esc_url( $gravatar_url ); ?>">
                     <a class="dokan-close dokan-remove-gravatar-image">&times;</a>
                 </div>
-                <div class="gravatar-button-area<?php echo esc_attr( $gravatar ) ? ' dokan-hide' : ''; ?>">
+                <div class="gravatar-button-area<?php echo esc_attr( $gravatar_id ) ? ' dokan-hide' : ''; ?>">
                     <a href="#" class="dokan-pro-gravatar-drag dokan-btn dokan-btn-default"><i class="fa fa-cloud-upload"></i> <?php esc_html_e( 'Upload Photo', 'dokan-lite' ); ?></a>
                 </div>
             </div>

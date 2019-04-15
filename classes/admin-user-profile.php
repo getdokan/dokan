@@ -541,7 +541,7 @@ class Dokan_Admin_User_Profile {
         $social         = $post_data['dokan_social'];
         $social_fields  = dokan_get_social_profile_fields();
 
-        $store_settings['banner']     = intval( $post_data['dokan_banner'] );
+        $store_settings['banner_id']  = intval( $post_data['dokan_banner'] );
         $store_settings['store_name'] = sanitize_text_field( $post_data['dokan_store_name'] );
         $store_settings['address']    = isset( $post_data['dokan_store_address'] ) ? array_map( 'sanitize_text_field', $post_data['dokan_store_address'] ) : array();
         $store_settings['phone']      = sanitize_text_field( $post_data['dokan_store_phone'] );
