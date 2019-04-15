@@ -446,7 +446,16 @@ class Dokan_Template_Products {
 
             do_action( 'dokan_product_updated', $post_id, $postdata );
 
+
             $redirect = apply_filters( 'dokan_add_new_product_redirect', dokan_edit_product_url( $post_id ), $post_id );
+
+            // if any error inside dokan_process_product_meta function
+            global $woocommerce_errors;
+
+            if ( $woocommerce_errors ) {
+                wp_redirect( add_query_arg( array( 'errors' => array_map( 'urlencode', $woocommerce_errors ) ), $redirect ) );
+                exit;
+            }
 
             wp_redirect( add_query_arg( array( 'message' => 'success' ), $redirect ) );
             exit;
