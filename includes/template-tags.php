@@ -541,23 +541,23 @@ if ( !function_exists( 'dokan_seller_not_enabled_notice' ) ) :
 
 endif;
 
-if ( !function_exists( 'dokan_header_user_menu' ) ) :
+if ( ! function_exists( 'dokan_header_user_menu' ) ) :
 
-/**
- * User top navigation menu
- *
- * @return void
- */
-function dokan_header_user_menu() {
-    global $current_user;
-    $user_id = $current_user->ID;
-    $nav_urls = dokan_get_dashboard_nav();
+    /**
+     * User top navigation menu
+     *
+     * @return void
+     */
+    function dokan_header_user_menu() {
+        global $current_user;
 
-    dokan_get_template_part( 'global/header-menu', '', array( 'current_user' => $current_user, 'user_id' => $user_id, 'nav_urls' => $nav_urls ) );
-}
+        $user_id  = dokan_get_current_user_id();
+        $nav_urls = dokan_get_dashboard_nav();
+
+        dokan_get_template_part( 'global/header-menu', '', array( 'current_user' => $current_user, 'user_id' => $user_id, 'nav_urls' => $nav_urls ) );
+    }
 
 endif;
-
 
 add_action( 'template_redirect', 'dokan_myorder_login_check');
 
