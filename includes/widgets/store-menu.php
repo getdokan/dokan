@@ -31,7 +31,7 @@ class Dokan_Store_Category_Menu extends WP_Widget {
             echo $before_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
 
             $defaults = array(
-                'title' => __( 'Store Category', 'dokan-lite' ),
+                'title' => __( 'Store Product Category', 'dokan-lite' ),
             );
 
             $instance = wp_parse_args( $instance, $defaults );
@@ -114,7 +114,7 @@ class Dokan_Store_Category_Menu extends WP_Widget {
      **/
     function form( $instance ) {
         $instance = wp_parse_args( (array) $instance, array(
-            'title' => __( 'Store Category', 'dokan-lite' ),
+            'title' => __( 'Store Product Category', 'dokan-lite' ),
         ) );
 
         $title = $instance['title'];

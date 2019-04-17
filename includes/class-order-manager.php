@@ -490,6 +490,11 @@ class Dokan_Order_Manager {
      * @return void
      */
     public function restore_reduced_order_stock( $order ) {
+        // seems in rest request, there is no such issue like (stock reduced by twice), so return early
+        if ( defined( 'REST_REQUEST' ) ) {
+            return;
+        }
+
         $has_sub_order = wp_get_post_parent_id( $order->get_id() );
 
         // seems it's not a parent order so return early
