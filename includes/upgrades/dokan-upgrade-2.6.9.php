@@ -66,8 +66,8 @@ function dokan_replace_category_commission_meta() {
     $terms = $the_query->get_terms();
 
     foreach ( $terms as $t ) {
-        $admin_commission = 100 - (int) get_woocommerce_term_meta( $t->term_id, 'per_category_commission', true );
-        update_woocommerce_term_meta( $t->term_id, 'per_category_admin_commission', $admin_commission );
+        $admin_commission = 100 - (int) get_term_meta( $t->term_id, 'per_category_commission', true );
+        update_term_meta( $t->term_id, 'per_category_admin_commission', $admin_commission );
     }
 }
 

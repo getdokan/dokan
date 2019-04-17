@@ -51,7 +51,9 @@ if ( 'layout3' === $profile_layout ) {
             <div class="profile-info-summery">
                 <div class="profile-info-head">
                     <div class="profile-img <?php echo esc_attr( $profile_img_class ); ?>">
-                        <?php echo get_avatar( $store_user->get_id(), 150, '', $store_user->get_shop_name() ); ?>
+                        <img src="<?php echo esc_url( $store_user->get_avatar() ) ?>"
+                            alt="<?php echo esc_attr( $store_user->get_shop_name() ) ?>"
+                            size="150">
                     </div>
                     <?php if ( ! empty( $store_user->get_shop_name() ) && 'default' === $profile_layout ) { ?>
                         <h1 class="store-name"><?php echo esc_html( $store_user->get_shop_name() ); ?></h1>
