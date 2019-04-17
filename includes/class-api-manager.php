@@ -38,6 +38,7 @@ class Dokan_API_Manager {
         // Init REST API routes.
         add_action( 'rest_api_init', array( $this, 'register_rest_routes' ), 10 );
         add_filter( 'woocommerce_rest_prepare_product_object', array( $this, 'prepeare_product_response' ), 10, 3 );
+        add_filter( 'dokan_vendor_to_array', array( $this, 'filter_store_open_close_option' ) );
     }
 
     /**
@@ -77,5 +78,22 @@ class Dokan_API_Manager {
 
         $response->set_data( $data );
         return $response;
+    }
+
+    /**
+     * If store open close is truned off by admin, unset store_open_colse from api response
+     *
+     * @param  array $data
+     *
+     * @since  DOKAN_SINCE
+     *
+     * @return array
+     */
+    public function filter_store_open_close_option( $data ) {
+        if ( 'on' !== dokan_get_option( 'store_open_close', 'dokan_general', 'on' ) ) {
+            unset( $data['store_open_close'] );
+        }
+
+        return $data;
     }
 }

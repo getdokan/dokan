@@ -255,18 +255,18 @@
                         </label>
                         <label for="">
                             <select name="<?php echo esc_attr( $day ) ?>_on_off" class="dokan-on-off dokan-form-control">
-                                <option value="close" <?php ! empty( $all_times ) ? selected( $all_times[$day]['open'], 'close' ) : '' ?> >
+                                <option value="close" <?php ! empty( $all_times ) ? selected( $all_times[$day]['status'], 'close' ) : '' ?> >
                                     <?php esc_html_e( 'Close', 'dokan-lite' ); ?>
                                 </option>
-                                <option value="open" <?php ! empty( $all_times ) ? selected( $all_times[$day]['open'], 'open' ) : '' ?> >
+                                <option value="open" <?php ! empty( $all_times ) ? selected( $all_times[$day]['status'], 'open' ) : '' ?> >
                                     <?php esc_html_e( 'Open', 'dokan-lite' ); ?>
                                 </option>
                             </select>
                         </label>
-                        <label for="opening-time" class="time" style="visibility: <?php echo isset( $all_times[$day]['open'] ) && $all_times[$day]['open'] == 'open' ? 'visible' : 'hidden' ?>" >
+                        <label for="opening-time" class="time" style="visibility: <?php echo isset( $all_times[$day]['status'] ) && $all_times[$day]['status'] == 'open' ? 'visible' : 'hidden' ?>" >
                             <input type="text" class="dokan-form-control" name="<?php echo esc_attr( strtolower( $day ) ); ?>_opening_time" id="<?php echo esc_attr( $day ) ?>-opening-time" placeholder="<?php echo date_i18n( get_option( 'time_format', 'g:i a' ), current_time( 'timestamp' ) ); ?>" value="<?php echo isset( $all_times[$day]['opening_time'] ) ? esc_attr( $all_times[$day]['opening_time'] ) : '' ?>" >
                         </label>
-                        <label for="closing-time" class="time" style="visibility: <?php echo isset( $all_times[$day]['open'] ) && $all_times[$day]['open'] == 'open' ? 'visible' : 'hidden' ?>" >
+                        <label for="closing-time" class="time" style="visibility: <?php echo isset( $all_times[$day]['status'] ) && $all_times[$day]['status'] == 'open' ? 'visible' : 'hidden' ?>" >
                             <input type="text" class="dokan-form-control" name="<?php echo esc_attr( $day ) ?>_closing_time" id="<?php echo esc_attr( $day ) ?>-closing-time" placeholder="<?php echo date_i18n( get_option( 'time_format', 'g:i a' ), current_time( 'timestamp' ) ); ?>" value="<?php echo isset( $all_times[$day]['closing_time'] ) ? esc_attr( $all_times[$day]['closing_time'] ) : '' ?>">
                         </label>
                     </div>

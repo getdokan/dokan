@@ -230,11 +230,7 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
             return new WP_Error( 'no_store_found', __( 'No store found', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
-        $params = $request->get_params();
-
-        // unset the sote id ( we don't need this )
-        unset( $params['id'] );
-
+        $params   = $request->get_params();
         $store_id = dokan()->vendor->update( $store->get_id(), $params );
 
         if ( is_wp_error( $store_id ) ) {
