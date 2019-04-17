@@ -100,7 +100,7 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
             $unique_sku = wc_product_has_unique_sku( $post_id, $new_sku );
 
             if ( ! $unique_sku ) {
-                $woocommerce_errors[] = ( __( 'Product SKU must be unique.', 'dokan-lite' ) );
+                $woocommerce_errors[] = __( 'Product SKU must be unique', 'dokan-lite' );
             } else {
                 update_post_meta( $post_id, '_sku', $new_sku );
             }
