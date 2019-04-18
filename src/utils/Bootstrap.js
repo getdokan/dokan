@@ -95,7 +95,7 @@ window.dokan.libs['Search']      = Search;
 window.dokan.libs['Datepicker']  = Datepicker;
 window.dokan.libs['Multiselect'] = Multiselect;
 window.dokan.libs['ColorPicker'] = ColorPicker;
-window.dokan.libs['Debounce']    = Debounce;
+window.dokan.libs['debounce']    = Debounce;
 
 window.dokan.libs['ContentLoading']  = {
   VclCode,
