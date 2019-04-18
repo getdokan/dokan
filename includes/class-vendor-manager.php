@@ -158,7 +158,8 @@ class Dokan_Vendor_Manager {
             'enable_tnc'              => ! empty( $data['enable_tnc'] ) ? $data['enable_tnc'] : 'off',
             'store_tnc'               => ! empty( $data['store_tnc'] ) ? $data['store_tnc'] : '',
             'show_min_order_discount' => ! empty( $data['show_min_order_discount'] ) ? $data['show_min_order_discount'] : 'no',
-            'store_seo'               => ! empty( $data['store_seo'] ) ? $data['store_seo'] : []
+            'store_seo'               => ! empty( $data['store_seo'] ) ? $data['store_seo'] : [],
+            'dokan_store_time'        => ! empty( $data['store_open_close'] ) ? $data['store_open_close'] : []
         ] );
 
         if ( current_user_can( 'manage_woocommerce' ) ) {
@@ -350,6 +351,28 @@ class Dokan_Vendor_Manager {
                 if ( is_callable( [ $vendor, "set_{$key}" ] ) ) {
                     $vendor->{"set_{$key}"}( $value );
                 }
+            }
+        }
+
+        if ( isset( $data['store_open_close']['enabled'] ) && dokan_validate_boolean( $data['store_open_close']['enabled'] ) ) {
+            $vendor->set_store_times_enable( 'yes' );
+        } else {
+            $vendor->set_store_times_enable( 'no' );
+        }
+
+        if ( ! empty( $data['store_open_close']['open_notice'] ) ) {
+            $vendor->set_store_times_open_notice( $data['store_open_close']['open_notice'] );
+        }
+
+        if ( ! empty( $data['store_open_close']['close_notice'] ) ) {
+            $vendor->set_store_times_close_notice( $data['store_open_close']['close_notice'] );
+        }
+
+        if ( ! empty( $data['store_open_close']['time'] ) ) {
+            $data = $data['store_open_close']['time'];
+
+            if ( is_array( $data ) && is_callable( [ $vendor, 'set_store_times' ] ) ) {
+                $vendor->set_store_times( $data );
             }
         }
 
