@@ -400,6 +400,6 @@ class Dokan_Commission {
             return $global_earning;
         }
 
-        return 0;
+        return $product_price;
     }
 }
