@@ -838,7 +838,7 @@ class Dokan_Ajax {
     /**
      * Get contents for login form popup
      *
-     * @since DOKAN_SINCE
+     * @since 2.9.11
      *
      * @return void
      */
@@ -855,7 +855,7 @@ class Dokan_Ajax {
     /**
      * Login user
      *
-     * @since DOKAN_SINCE
+     * @since 2.9.11
      *
      * @return void
      */
@@ -883,7 +883,27 @@ class Dokan_Ajax {
         }
 
         wp_set_current_user( $wp_user->data->ID, $wp_user->data->user_login );
-        wp_set_auth_cookie( $wp_user->data->ID );
+
+        /**
+         * Set LOGGED_IN_COOKIE
+         *
+         * set_cookie(LOGGED_IN_COOKIE) in wp_set_auth_cookie doesn't actually
+         * set $_COOKIE[LOGGED_IN_COOKIE]. It just send a header to browser which
+         * will set after a page refresh. So, in case we try to create a nonce
+         * using `wp_create_nonce` immediately after this point, we need to set
+         * LOGGED_IN_COOKIE created in wp_set_auth_cookie function.
+         *
+         * @since 2.9.12
+         */
+        $headers = headers_list();
+        foreach( $headers as $header ) {
+            if ( 0 === strpos( $header, 'Set-Cookie: ' . LOGGED_IN_COOKIE ) ) {
+                $value = str_replace( '&', urlencode( '&' ), substr( $header, 12 ) );
+                parse_str( current( explode( ';', $value, 1 ) ), $pair );
+                $_COOKIE[LOGGED_IN_COOKIE] = $pair[LOGGED_IN_COOKIE];
+                break;
+            }
+        }
 
         $response = apply_filters( 'dokan_ajax_login_user_response', array(
             'message' => esc_html__( 'User logged in successfully.', 'dokan-lite' ),

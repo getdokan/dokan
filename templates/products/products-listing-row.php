@@ -9,20 +9,21 @@
         ),
     ) );
 
-    $row_actions_kses = array(
+    $row_actions_kses = apply_filters( 'dokan_row_actions_kses', array(
         'span' => array(
             'class' => array(),
         ),
         'a' => array(
-            'href' => array()
+            'href'    => array(),
+            'onclick' => array(),
         ),
-    );
+    ) );
 
-    $price_kses = array(
+    $price_kses = apply_filters( 'dokan_price_kses', array(
         'span' => array(
             'class' => array()
         ),
-    );
+    ) );
 ?>
 <tr class="<?php echo esc_attr( $tr_class ); ?>">
     <td class="dokan-product-select">

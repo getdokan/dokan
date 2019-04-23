@@ -7,6 +7,7 @@ import Multiselect from 'vue-multiselect'
 import API_Helper from '@/utils/Api'
 import ChartJS from 'vue-chartjs'
 import Mixin from './Mixin'
+import Debounce from 'debounce'
 
 window.__ = function( text, domain ) {
   return __( text, domain );
@@ -36,6 +37,7 @@ import Search from "admin/components/Search.vue"
 import Datepicker from "admin/components/Datepicker.vue"
 import VueSweetalert2 from 'vue-sweetalert2';
 import ColorPicker from "admin/components/ColorPicker.vue"
+
 
 import "vue-multiselect/dist/vue-multiselect.min.css"
 
@@ -93,6 +95,7 @@ window.dokan.libs['Search']      = Search;
 window.dokan.libs['Datepicker']  = Datepicker;
 window.dokan.libs['Multiselect'] = Multiselect;
 window.dokan.libs['ColorPicker'] = ColorPicker;
+window.dokan.libs['debounce']    = Debounce;
 
 window.dokan.libs['ContentLoading']  = {
   VclCode,
@@ -106,3 +109,12 @@ window.dokan.libs['ContentLoading']  = {
 
 // wp npm packages with backward compatibility
 dokan.hooks = (wp && wp.hooks) ? wp.hooks : dokan.wpPackages.hooks;
+
+if ( dokan.hooks ) {
+    dokan.addFilterComponent = (hookName, namespace, component, priority = 10) => {
+        dokan.hooks.addFilter(hookName, namespace, (components) => {
+            components.push(component);
+            return components;
+        }, priority );
+    };
+}

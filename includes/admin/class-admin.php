@@ -23,7 +23,7 @@ class Dokan_Admin {
 
         add_action( 'admin_notices', array($this, 'update_notice' ) );
 
-        // add_action( 'admin_notices', array( $this, 'promotional_offer' ) );
+        add_action( 'admin_notices', array( $this, 'promotional_offer' ) );
 
         add_action( 'wp_before_admin_bar_render', array( $this, 'dokan_admin_toolbar' ) );
     }
@@ -42,9 +42,10 @@ class Dokan_Admin {
         }
 
         // check if it has already been dismissed
-        $offer_key   = 'dokan_christmas_notice';
+        $offer_key   = 'dokan_wedevs_19_birthday_offer';
+        $offer_last_date = strtotime( '2019-03-24 12:00:00' );
         $hide_notice = get_option( $offer_key, 'show' );
-        $offer_link  = 'https://wedevs.com/dokan/?add-to-cart=15310&variation_id=15314&attribute_pa_license=professional&coupon_code=xmas30';
+        $offer_link  = 'https://wedevs.com/dokan/?add-to-cart=15310&variation_id=15314&attribute_pa_license=professional&coupon_code=BIRTHDAY33';
 
         $allowed_html = array(
             'p'       => array(),
@@ -55,8 +56,11 @@ class Dokan_Admin {
                 'target' => array()
             )
         );
+        $content = __( '<p>It’s Our Birthday 🎂 But You Get The Gifts! <strong>33%% off</strong> On All Dokan Pro Packages. Coupon Code: <strong><code>BIRTHDAY33</code></strong>. [Limited Time ⌛ Offer] <a target="_blank" href="%s">Grab The Deal</a></p>', 'dokan-lite' );
 
-        $content = __( '<p>Dokan is more affordable this Christmas! <strong>Save 30%%</strong> while building your dream multivendor marketplace. [Limited time ⏳] <a target="_blank" href="%s">Grab The Deal</a></p>', 'dokan-lite' );
+        if ( current_time( 'timestamp' ) > $offer_last_date ) {
+            return;
+        }
 
         if ( 'hide' == $hide_notice || dokan()->is_pro_exists() ) {
             return;
@@ -68,7 +72,7 @@ class Dokan_Admin {
 
             <style>
                 #dokan-christmas-notice p {
-                    font-size: 15px;
+                    font-size: 14px;
                 }
             </style>
 

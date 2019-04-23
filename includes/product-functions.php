@@ -62,7 +62,12 @@ function dokan_save_product( $args ) {
 
     if ( ! empty( $data['ID'] ) ) {
         $post_arr['ID'] = absint( $data['ID'] );
-        $is_updating    = true;
+
+        if ( ! dokan_is_product_author( $post_arr['ID'] ) ) {
+            return new WP_Error( 'not-own', __( 'I swear this is not your product!', 'dokan-lite' ) );
+        }
+
+        $is_updating = true;
     } else {
         $is_updating = false;
     }
@@ -207,7 +212,7 @@ function dokan_product_output_variations() {
 
             <div id="dokan-info-message" class="dokan-alert dokan-alert-info">
                 <p>
-                    <?php esc_html_e( 'Before you can add a variation you need to add some variation attributes on the <strong>Attributes</strong> section', 'dokan-lite' ); ?>
+                    <?php echo wp_kses( __( 'Before you can add a variation you need to add some variation attributes on the <strong>Attributes</strong> section', 'dokan-lite' ), [ 'strong' => [] ] ); ?>
                 </p>
             </div>
 

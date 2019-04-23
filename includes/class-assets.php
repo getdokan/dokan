@@ -260,6 +260,8 @@ class Dokan_Assets {
 
         if ( version_compare( $wp_version, '5.0', '<' ) ) {
             $bootstrap_deps[] = 'dokan-wp-packages';
+        } else {
+            $bootstrap_deps[] = 'wp-hooks';
         }
 
         $scripts = array(
@@ -371,7 +373,7 @@ class Dokan_Assets {
                 'deps'      => array( 'jquery' ),
                 'version'   => filemtime( $asset_path . '/js/dokan-wp.js' ),
             ),
-            'dokan-loggin-form-popup' => array(
+            'dokan-login-form-popup' => array(
                 'src'       => $asset_url . '/js/login-form-popup.js',
                 'deps'      => array( 'dokan-popup' ),
                 'version'   => filemtime( $asset_path . '/js/login-form-popup.js' ),
@@ -461,7 +463,7 @@ class Dokan_Assets {
             }
         }
 
-        wp_enqueue_script( 'dokan-loggin-form-popup' );
+        wp_enqueue_script( 'dokan-login-form-popup' );
 
         do_action( 'dokan_enqueue_scripts' );
     }
