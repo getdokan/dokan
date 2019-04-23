@@ -156,7 +156,7 @@ class Dokan_Commission {
         }
 
         $term_id = $terms[0]->term_id;
-        $rate    = ! $terms ? null: get_woocommerce_term_meta( $term_id, 'per_category_admin_commission', true );
+        $rate    = ! $terms ? null: get_term_meta( $term_id, 'per_category_admin_commission', true );
 
         return self::validate_rate( $rate );
     }
@@ -192,7 +192,7 @@ class Dokan_Commission {
         $terms   = get_the_terms( $product_id, 'product_cat' );
         $term_id = $terms[0]->term_id;
 
-        return ! $terms ? null : get_woocommerce_term_meta( $term_id, 'per_category_admin_commission_type', true );
+        return ! $terms ? null : get_term_meta( $term_id, 'per_category_admin_commission_type', true );
     }
 
     /**
@@ -360,7 +360,7 @@ class Dokan_Commission {
         }
 
         $term_id = $terms[0]->term_id;
-        $rate    = ! $terms ? null: get_woocommerce_term_meta( $term_id, 'per_category_admin_additional_fee', true );
+        $rate    = ! $terms ? null: get_term_meta( $term_id, 'per_category_admin_additional_fee', true );
 
         return self::validate_rate( $rate );
     }
