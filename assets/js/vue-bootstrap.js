@@ -210,7 +210,8 @@ dokanWebpack([0],[
 /* 6 */,
 /* 7 */,
 /* 8 */,
-/* 9 */
+/* 9 */,
+/* 10 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -262,19 +263,19 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 10 */,
-/* 11 */
+/* 11 */,
+/* 12 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ColorPicker_vue__ = __webpack_require__(4);
 /* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_01dc0d51_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ColorPicker_vue__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_01dc0d51_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ColorPicker_vue__ = __webpack_require__(14);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(12)
+  __webpack_require__(13)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -320,13 +321,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -417,7 +418,6 @@ if (false) {
 }
 
 /***/ }),
-/* 14 */,
 /* 15 */,
 /* 16 */,
 /* 17 */,
@@ -822,7 +822,7 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_debounce__);
 //
 //
@@ -937,7 +937,7 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_debounce__);
 //
 //
@@ -1132,7 +1132,7 @@ var _vue = __webpack_require__(1);
 
 var _vue2 = _interopRequireDefault(_vue);
 
-var _vueRouter = __webpack_require__(8);
+var _vueRouter = __webpack_require__(9);
 
 var _vueRouter2 = _interopRequireDefault(_vueRouter);
 
@@ -1164,6 +1164,10 @@ var _Mixin = __webpack_require__(125);
 
 var _Mixin2 = _interopRequireDefault(_Mixin);
 
+var _debounce = __webpack_require__(6);
+
+var _debounce2 = _interopRequireDefault(_debounce);
+
 var _vueContentLoading = __webpack_require__(41);
 
 var _Postbox = __webpack_require__(127);
@@ -1174,7 +1178,7 @@ var _Loading = __webpack_require__(130);
 
 var _Loading2 = _interopRequireDefault(_Loading);
 
-var _Chart = __webpack_require__(9);
+var _Chart = __webpack_require__(10);
 
 var _Chart2 = _interopRequireDefault(_Chart);
 
@@ -1214,7 +1218,7 @@ var _vueSweetalert = __webpack_require__(52);
 
 var _vueSweetalert2 = _interopRequireDefault(_vueSweetalert);
 
-var _ColorPicker = __webpack_require__(11);
+var _ColorPicker = __webpack_require__(12);
 
 var _ColorPicker2 = _interopRequireDefault(_ColorPicker);
 
@@ -1283,6 +1287,7 @@ window.dokan.libs['Search'] = _Search2.default;
 window.dokan.libs['Datepicker'] = _Datepicker2.default;
 window.dokan.libs['Multiselect'] = _vueMultiselect2.default;
 window.dokan.libs['ColorPicker'] = _ColorPicker2.default;
+window.dokan.libs['debounce'] = _debounce2.default;
 
 window.dokan.libs['ContentLoading'] = {
     VclCode: _vueContentLoading.VclCode,
@@ -1296,6 +1301,17 @@ window.dokan.libs['ContentLoading'] = {
 
 // wp npm packages with backward compatibility
 dokan.hooks = wp && wp.hooks ? wp.hooks : dokan.wpPackages.hooks;
+
+if (dokan.hooks) {
+    dokan.addFilterComponent = function (hookName, namespace, component) {
+        var priority = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 10;
+
+        dokan.hooks.addFilter(hookName, namespace, function (components) {
+            components.push(component);
+            return components;
+        }, priority);
+    };
+}
 
 /***/ }),
 /* 120 */

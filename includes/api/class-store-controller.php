@@ -555,7 +555,7 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
      *
      * @param  array $request
      *
-     * @since DOKAN_SINCE
+     * @since 2.9.13
      *
      * @return reponse
      */

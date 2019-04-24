@@ -88,7 +88,7 @@ class Dokan_API_Manager {
      *
      * @param  array $data
      *
-     * @since  DOKAN_SINCE
+     * @since  2.9.13
      *
      * @return array
      */
@@ -106,7 +106,7 @@ class Dokan_API_Manager {
      * @param  array $data
      * @param  array $store
      *
-     * @since  DOKAN_SINCE
+     * @since  2.9.13
      *
      * @return data
      */
