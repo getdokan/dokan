@@ -70,7 +70,7 @@
                     <a class="close dokan-remove-banner-image">&times;</a>
                 </div>
 
-                <div class="button-area<?php echo $banner ? ' dokan-hide' : ''; ?>">
+                <div class="button-area<?php echo $banner_id ? ' dokan-hide' : ''; ?>">
                     <i class="fa fa-cloud-upload"></i>
 
                     <a href="#" class="dokan-banner-drag dokan-btn dokan-btn-info dokan-theme"><?php esc_html_e( 'Upload banner', 'dokan-lite' ); ?></a>
@@ -254,10 +254,10 @@
                         </label>
                         <label for="">
                             <select name="<?php echo esc_attr( $day ) ?>_on_off" class="dokan-on-off dokan-form-control">
-                                <option value="close" <?php ! empty( $all_times ) ? selected( $all_times[$day]['status'], 'close' ) : '' ?> >
+                                <option value="close" <?php ! empty( $all_times[$day]['status'] ) ? selected( $all_times[$day]['status'], 'close' ) : '' ?> >
                                     <?php esc_html_e( 'Close', 'dokan-lite' ); ?>
                                 </option>
-                                <option value="open" <?php ! empty( $all_times ) ? selected( $all_times[$day]['status'], 'open' ) : '' ?> >
+                                <option value="open" <?php ! empty( $all_times[$day]['status'] ) ? selected( $all_times[$day]['status'], 'open' ) : '' ?> >
                                     <?php esc_html_e( 'Open', 'dokan-lite' ); ?>
                                 </option>
                             </select>
