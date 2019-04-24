@@ -138,7 +138,7 @@ class Dokan_Rewrites {
     /**
      * Resolve query var conflicts with WooCommerce
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.13
      *
      * @param array $query_vars
      *
