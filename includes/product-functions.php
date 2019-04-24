@@ -571,23 +571,18 @@ add_action( 'template_redirect', 'dokan_bulk_product_status_change' );
  *
  * @since  2.9.8
  *
- * @return object
+ * @return object|false on faiure
  */
-function dokan_get_vendor_by_product( $id ) {
-
-    if ( ! $id ) {
-        return null;
+function dokan_get_vendor_by_product( $product ) {
+    if ( ! $product ) {
+        return false;
     }
 
-    if ( $id instanceof WC_Product ) {
-        $id = $id->get_id();
+    if ( ! $product instanceof WC_Product ) {
+        $product = wc_get_product( $product );
     }
 
-    $vendor_id = get_post_field( 'post_author', $id );
-
-    if ( ! $vendor_id ) {
-        return null;
-    }
+    $vendor_id = get_post_field( 'post_author', $product->get_id() );
 
     return dokan()->vendor->get( $vendor_id );
 }

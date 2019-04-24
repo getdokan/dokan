@@ -295,7 +295,7 @@ class Dokan_Commission {
 
         // get[product,category,vendor,global]_wise_type
         if ( 'flat' === self::$func_type( $product_id ) ) {
-            $earning = $product_price - $commission_rate;
+            $earning = (float) $product_price - $commission_rate;
         }
 
         // get[product,category,vendor,global]_wise_type

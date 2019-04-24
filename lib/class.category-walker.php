@@ -19,15 +19,13 @@ class DokanCategoryWalker extends DokanTaxonomyWalker {
 
 
     function start_el( &$output, $category, $depth = 0, $args = array(), $id = 0 ) {
-
-        $commission_val = dokan_get_seller_percentage( dokan_get_current_user_id(), $this->post_id, $category->term_id );
-        $commission_type = dokan_get_commission_type( dokan_get_current_user_id(), $this->post_id, $category->term_id );
+        $commission_val = Dokan_Commission::get_earning_by_product( $this->post_id );
 
         $pad      = str_repeat( '&nbsp;', $depth * 3 );
         $cat_name = apply_filters( 'list_cats', $category->name, $category );
 
         $output .= "\t<option class=\"level-$depth\" value=\"" . $category->term_id . "\"";
-        $output .= ' data-commission="' . $commission_val . '" data-commission_type="' . $commission_type . '"';
+        $output .= ' data-commission="' . $commission_val . '" data-product-id="' . $this->post_id . '"';
         if ( $category->term_id == $args['selected'] )
             $output .= ' selected="selected"';
         $output .= '>';
