@@ -414,7 +414,7 @@ class Dokan_Vendor {
     /**
      * Get the shop banner id
      *
-     * @since DOKAN_SINCE
+     * @since 2.9.13
      *
      * @return int
      */
@@ -444,7 +444,7 @@ class Dokan_Vendor {
     /**
      * Get shop gravatar id
      *
-     * @since DOKAN_SINCE
+     * @since 2.9.13
      *
      * @return int
      */
@@ -1203,7 +1203,7 @@ class Dokan_Vendor {
      * @param string $prop
      * @param array $value
      *
-     * @since DOKAN_SINCE
+     * @since 2.9.13
      *
      * @return void
      */
@@ -1226,7 +1226,7 @@ class Dokan_Vendor {
      *
      * @param array $data
      *
-     * @since DOKAN_SINCE
+     * @since 2.9.13
      *
      * @return void
      */
@@ -1241,7 +1241,7 @@ class Dokan_Vendor {
      *
      * @param boolean $value
      *
-     * @since DOKAN_SINCE
+     * @since 2.9.13
      *
      * @return void
      */
@@ -1254,7 +1254,7 @@ class Dokan_Vendor {
      *
      * @param string $value
      *
-     * @since DOKAN_SINCE
+     * @since 2.9.13
      *
      * @return void
      */
@@ -1267,7 +1267,7 @@ class Dokan_Vendor {
      *
      * @param string $value
      *
-     * @since DOKAN_SINCE
+     * @since 2.9.13
      *
      * @return void
      */
