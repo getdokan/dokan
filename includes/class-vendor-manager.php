@@ -127,10 +127,17 @@ class Dokan_Vendor_Manager {
         ];
 
         $vendor_data = wp_parse_args( $data, $defaults );
-        $vendor      = wp_insert_user( $vendor_data );
+        $vendor_id   = wp_insert_user( $vendor_data );
 
-        if ( is_wp_error( $vendor ) ) {
-            return $vendor;
+        if ( is_wp_error( $vendor_id ) ) {
+            return $vendor_id;
+        }
+
+        // send vendor registration email to admin and vendor
+        if ( isset( $data['notify_vendor'] ) && dokan_validate_boolean( $data['notify_vendor' ] ) ) {
+            wp_send_new_user_notifications( $vendor_id, 'both' );
+        } else {
+            wp_send_new_user_notifications( $vendor_id, 'admin' );
         }
 
         $store_data = apply_filters( 'dokan_vendor_create_data', [
@@ -142,21 +149,40 @@ class Dokan_Vendor_Manager {
             'address'                 => ! empty( $data['address'] ) ? $data['address'] : [],
             'location'                => ! empty( $data['location'] ) ? $data['location'] : '',
             'banner'                  => ! empty( $data['banner'] ) ? $data['banner'] : 0,
+            'banner_id'               => ! empty( $data['banner_id'] ) ? $data['banner_id'] : 0,
             'icon'                    => ! empty( $data['icon'] ) ? $data['icon'] : '',
             'gravatar'                => ! empty( $data['gravatar'] ) ? $data['gravatar'] : 0,
+            'gravatar_id'             => ! empty( $data['gravatar_id'] ) ? $data['gravatar_id'] : 0,
             'show_more_ptab'          => ! empty( $data['show_more_ptab'] ) ? $data['show_more_ptab'] : 'yes',
             'store_ppp'               => ! empty( $data['store_ppp'] ) ? $data['store_ppp'] : 10,
             'enable_tnc'              => ! empty( $data['enable_tnc'] ) ? $data['enable_tnc'] : 'off',
             'store_tnc'               => ! empty( $data['store_tnc'] ) ? $data['store_tnc'] : '',
             'show_min_order_discount' => ! empty( $data['show_min_order_discount'] ) ? $data['show_min_order_discount'] : 'no',
-            'store_seo'               => ! empty( $data['store_seo'] ) ? $data['store_seo'] : []
+            'store_seo'               => ! empty( $data['store_seo'] ) ? $data['store_seo'] : [],
+            'dokan_store_time'        => ! empty( $data['store_open_close'] ) ? $data['store_open_close'] : []
         ] );
 
-        update_user_meta( $vendor, 'dokan_profile_settings', $store_data );
+        if ( current_user_can( 'manage_woocommerce' ) ) {
+            $vendor = dokan()->vendor->get( $vendor_id );
 
-        do_action( 'dokan_new_vendor', $vendor );
+            if ( isset( $data['enabled'] ) && dokan_validate_boolean( $data['enabled'] ) ) {
+                $vendor->update_meta( 'dokan_enable_selling', 'yes' );
+            }
 
-        return $this->get( $vendor );
+            if ( isset( $data['featured'] ) && dokan_validate_boolean( $data['featured'] ) ) {
+                $vendor->update_meta( 'dokan_feature_seller', 'yes' );
+            }
+
+            if ( isset( $data['trusted'] ) && dokan_validate_boolean( $data['trusted'] ) ) {
+                $vendor->update_meta( 'dokan_publishing', 'yes' );
+            }
+        }
+
+        update_user_meta( $vendor_id, 'dokan_profile_settings', $store_data );
+
+        do_action( 'dokan_new_vendor', $vendor_id );
+
+        return $this->get( $vendor_id );
     }
 
     /**
@@ -245,6 +271,14 @@ class Dokan_Vendor_Manager {
             } else {
                 $vendor->update_meta( 'dokan_publishing', 'no' );
             }
+
+            if ( isset( $data['admin_commission'] ) && is_numeric( $data['admin_commission'] ) ) {
+                $vendor->update_meta( 'dokan_admin_percentage', $data['admin_commission'] );
+            }
+
+            if ( ! empty( $data['admin_commission_type'] ) ) {
+                $vendor->update_meta( 'dokan_admin_percentage_type', $data['admin_commission_type'] );
+            }
         }
 
         // update vendor store data
@@ -256,20 +290,24 @@ class Dokan_Vendor_Manager {
             $vendor->set_phone( $data['phone'] );
         }
 
-        if ( ! empty( $data['show_email'] ) ) {
-            $vendor->set_show_email( $data['show_email'] );
+        if ( isset( $data['show_email'] ) && dokan_validate_boolean( $data['show_email'] ) ) {
+            $vendor->set_show_email( 'yes' );
+        } else {
+            $vendor->set_show_email( 'no' );
         }
 
-        if ( ! empty( $data['gravatar'] ) ) {
-            $vendor->set_gravatar( $data['gravatar'] );
+        if ( ! empty( $data['gravatar_id'] ) && is_numeric( $data['gravatar_id'] ) ) {
+            $vendor->set_gravatar_id( $data['gravatar_id'] );
         }
 
-        if ( ! empty( $data['banner'] ) ) {
-            $vendor->set_banner( $data['banner'] );
+        if ( ! empty( $data['banner_id'] ) && is_numeric( $data['banner_id'] ) ) {
+            $vendor->set_banner_id( $data['banner_id'] );
         }
 
-        if ( ! empty( $data['enable_tnc'] ) ) {
-            $vendor->set_enable_tnc( $data['enable_tnc'] );
+        if ( isset( $data['enable_tnc'] ) && dokan_validate_boolean( $data['enable_tnc'] ) ) {
+            $vendor->set_enable_tnc( 'on' );
+        } else {
+            $vendor->set_enable_tnc( 'off' );
         }
 
         if ( ! empty( $data['icon'] ) ) {
@@ -313,6 +351,28 @@ class Dokan_Vendor_Manager {
                 if ( is_callable( [ $vendor, "set_{$key}" ] ) ) {
                     $vendor->{"set_{$key}"}( $value );
                 }
+            }
+        }
+
+        if ( isset( $data['store_open_close']['enabled'] ) && dokan_validate_boolean( $data['store_open_close']['enabled'] ) ) {
+            $vendor->set_store_times_enable( 'yes' );
+        } else {
+            $vendor->set_store_times_enable( 'no' );
+        }
+
+        if ( ! empty( $data['store_open_close']['open_notice'] ) ) {
+            $vendor->set_store_times_open_notice( $data['store_open_close']['open_notice'] );
+        }
+
+        if ( ! empty( $data['store_open_close']['close_notice'] ) ) {
+            $vendor->set_store_times_close_notice( $data['store_open_close']['close_notice'] );
+        }
+
+        if ( ! empty( $data['store_open_close']['time'] ) ) {
+            $data = $data['store_open_close']['time'];
+
+            if ( is_array( $data ) && is_callable( [ $vendor, 'set_store_times' ] ) ) {
+                $vendor->set_store_times( $data );
             }
         }
 

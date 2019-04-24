@@ -56,16 +56,17 @@ $_visibility      = ( version_compare( WC_VERSION, '2.7', '>' ) ) ? $product->ge
 if ( ! $from_shortcode ) {
     get_header();
 }
-?>
 
-<?php
+if ( ! empty( $_GET['errors'] ) ) {
+    Dokan_Template_Products::$errors = $_GET['errors'];
+}
 
-    /**
-     *  dokan_dashboard_wrap_before hook
-     *
-     *  @since 2.4
-     */
-    do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
+/**
+ *  dokan_dashboard_wrap_before hook
+ *
+ *  @since 2.4
+ */
+do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
 ?>
 
 <?php do_action( 'dokan_dashboard_wrap_start' ); ?>

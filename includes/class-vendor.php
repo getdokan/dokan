@@ -102,7 +102,9 @@ class Dokan_Vendor {
             'address'               => $this->get_address(),
             'location'              => $this->get_location(),
             'banner'                => $this->get_banner(),
+            'banner_id'             => $this->get_banner_id(),
             'gravatar'              => $this->get_avatar(),
+            'gravatar_id'           => $this->get_avatar_id(),
             'shop_url'              => $this->get_shop_url(),
             'products_per_page'     => $this->get_per_page(),
             'show_more_product_tab' => $this->show_more_products_tab(),
@@ -114,6 +116,12 @@ class Dokan_Vendor {
             'registered'            => $this->get_register_date(),
             'payment'               => $this->get_payment_profiles(),
             'trusted'               => $this->is_trusted(),
+            'store_open_close'      => [
+                'enabled'      => $this->is_store_time_enabled(),
+                'time'         => $this->get_store_time(),
+                'open_notice'  => $this->get_store_open_notice(),
+                'close_notice' => $this->get_store_close_notice(),
+            ],
         );
 
         return apply_filters( 'dokan_vendor_to_array', $data, $this );
@@ -181,14 +189,19 @@ class Dokan_Vendor {
             'address'                 => array(),
             'location'                => '',
             'banner'                  => 0,
+            'banner_id'               => 0,
             'icon'                    => 0,
             'gravatar'                => 0,
+            'gravatar_id'             => 0,
             'show_more_ptab'          => 'yes',
             'store_ppp'               => 10,
             'enable_tnc'              => 'off',
             'store_tnc'               => '',
             'show_min_order_discount' => 'no',
-            'store_seo'               => array()
+            'store_seo'               => array(),
+            'dokan_store_time_enabled' => 'yes',
+            'dokan_store_open_notice'  => '',
+            'dokan_store_close_notice' => ''
         );
 
         if ( ! $this->id ) {
@@ -389,13 +402,26 @@ class Dokan_Vendor {
      * @return string
      */
     public function get_banner() {
-        $banner_id = (int) $this->get_info_part( 'banner' );
+        $banner_id = $this->get_banner_id();
 
         if ( ! $banner_id ) {
             return false;
         }
 
         return wp_get_attachment_url( $banner_id );
+    }
+
+    /**
+     * Get the shop banner id
+     *
+     * @since 2.9.13
+     *
+     * @return int
+     */
+    public function get_banner_id() {
+        $banner_id = (int) $this->get_info_part( 'banner_id' );
+
+        return $banner_id ? $banner_id : 0;
     }
 
     /**
@@ -406,13 +432,26 @@ class Dokan_Vendor {
      * @return string
      */
     public function get_avatar() {
-        $avatar_id = (int) $this->get_info_part( 'gravatar' );
+        $avatar_id = $this->get_avatar_id();
 
         if ( ! $avatar_id && ! empty( $this->data->user_email ) ) {
             return get_avatar_url( $this->data->user_email, 96 );
         }
 
         return wp_get_attachment_url( $avatar_id );
+    }
+
+    /**
+     * Get shop gravatar id
+     *
+     * @since 2.9.13
+     *
+     * @return int
+     */
+    public function get_avatar_id() {
+        $avatar_id = (int) $this->get_info_part( 'gravatar_id' );
+
+        return $avatar_id ? $avatar_id : 0;
     }
 
     /**
@@ -759,6 +798,44 @@ class Dokan_Vendor {
         }
     }
 
+    /**
+     * Get store opening closing time
+     *
+     * @return array
+     */
+    public function get_store_time() {
+        $time = $this->get_info_part( 'dokan_store_time' );
+
+        return $time ? $time : [];
+    }
+
+    /**
+     * Get store opening closing time
+     *
+     * @return boolean|null on failure
+     */
+    public function is_store_time_enabled() {
+        return 'yes' === $this->get_info_part( 'dokan_store_time_enabled' );
+    }
+
+    /**
+     * Get store open notice
+     *
+     * @return string|null on failure
+     */
+    public function get_store_open_notice() {
+        return $this->get_info_part( 'dokan_store_open_notice' );
+    }
+
+    /**
+     * Get store close notice
+     *
+     * @return string|null on failure
+     */
+    public function get_store_close_notice() {
+        return $this->get_info_part( 'dokan_store_close_notice' );
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Setters
@@ -779,8 +856,8 @@ class Dokan_Vendor {
      *
      * @param int value
      */
-    public function set_gravatar( $value ) {
-        $this->set_prop( 'gravatar', (int) $value );
+    public function set_gravatar_id( $value ) {
+        $this->set_prop( 'gravatar_id', (int) $value );
     }
 
     /**
@@ -788,8 +865,8 @@ class Dokan_Vendor {
      *
      * @param int value
      */
-    public function set_banner( $value ) {
-        $this->set_prop( 'banner', (int) $value );
+    public function set_banner_id( $value ) {
+        $this->set_prop( 'banner_id', (int) $value );
     }
 
     /**
@@ -1118,6 +1195,84 @@ class Dokan_Vendor {
         if ( $value !== $this->shop_data[ 'payment' ][ $paypal ][ $prop ] || ( isset( $this->changes[ 'payment' ] ) && array_key_exists( $prop, $this->changes[ 'payment' ] ) ) ) {
             $this->changes[ 'payment' ][ $paypal ][ $prop ] = $value;
         }
+    }
+
+    /**
+     * Set store open close props
+     *
+     * @param string $prop
+     * @param array $value
+     *
+     * @since 2.9.13
+     *
+     * @return void
+     */
+    protected function set_store_open_close_prop( $prop, $value ) {
+        if ( ! $this->shop_data ) {
+            $this->popluate_store_data();
+        }
+
+        if ( ! isset( $this->shop_data[ 'dokan_store_time' ][ $prop ] ) ) {
+            $this->shop_data[ 'dokan_store_time' ][ $prop ] = null;
+        }
+
+        if ( $value !== $this->shop_data[ 'dokan_store_time' ][ $prop ] || ( isset( $this->changes[ 'dokan_store_time' ] ) && array_key_exists( $prop, $this->changes[ 'dokan_store_time' ] ) ) ) {
+            $this->changes[ 'dokan_store_time' ][ $prop ] = $value;
+        }
+    }
+
+    /**
+     * Set store times
+     *
+     * @param array $data
+     *
+     * @since 2.9.13
+     *
+     * @return void
+     */
+    public function set_store_times( array $data ) {
+        foreach ( $data as $prop => $value ) {
+            $this->set_store_open_close_prop( $prop, $value );
+        }
+    }
+
+    /**
+     * Set store times enable
+     *
+     * @param boolean $value
+     *
+     * @since 2.9.13
+     *
+     * @return void
+     */
+    public function set_store_times_enable( $value ) {
+        $this->set_prop( 'dokan_store_time_enabled', wc_clean( $value ) );
+    }
+
+    /**
+     * Set store times open notice
+     *
+     * @param string $value
+     *
+     * @since 2.9.13
+     *
+     * @return void
+     */
+    public function set_store_times_open_notice( $value ) {
+        $this->set_prop( 'dokan_store_open_notice', wc_clean( $value ) );
+    }
+
+    /**
+     * Set store times close notice
+     *
+     * @param string $value
+     *
+     * @since 2.9.13
+     *
+     * @return void
+     */
+    public function set_store_times_close_notice( $value ) {
+        $this->set_prop( 'dokan_store_close_notice', wc_clean( $value ) );
     }
 
     /**

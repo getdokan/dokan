@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 2.9.12\n"
+"Project-Id-Version: Dokan 2.9.13\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2019-03-20 11:53:54+00:00\n"
+"POT-Creation-Date: 2019-04-24 05:04:30+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -62,7 +62,7 @@ msgstr ""
 msgid "Banner"
 msgstr ""
 
-#: classes/admin-user-profile.php:117 templates/settings/store-form.php:77
+#: classes/admin-user-profile.php:117 templates/settings/store-form.php:76
 msgid "Upload banner"
 msgstr ""
 
@@ -256,7 +256,7 @@ msgstr ""
 msgid "Email sent successfully!"
 msgstr ""
 
-#: classes/ajax.php:400 templates/orders/details.php:271
+#: classes/ajax.php:400 templates/orders/details.php:283
 msgid "Delete note"
 msgstr ""
 
@@ -273,8 +273,6 @@ msgid "Shipped date: "
 msgstr ""
 
 #: classes/ajax.php:470 includes/woo-views/html-product-download.php:14
-#: src/admin/pages/Withdraw.vue:164 src/admin/pages/Withdraw.vue:175
-#: src/admin/pages/Withdraw.vue:200 src/admin/pages/Withdraw.vue:215
 msgid "Delete"
 msgstr ""
 
@@ -308,8 +306,7 @@ msgstr ""
 #: includes/admin-functions.php:44 includes/admin-functions.php:50
 #: includes/admin-functions.php:685 includes/admin-functions.php:709
 #: includes/wc-template.php:13 includes/wc-template.php:146
-#: includes/wc-template.php:280 src/admin/pages/Withdraw.vue:123
-#: templates/my-orders.php:31
+#: includes/wc-template.php:280 templates/my-orders.php:31
 msgid "Vendor"
 msgstr ""
 
@@ -382,7 +379,7 @@ msgstr ""
 msgid "Store Setup"
 msgstr ""
 
-#: classes/seller-setup-wizard.php:179 templates/settings/store-form.php:129
+#: classes/seller-setup-wizard.php:179 templates/settings/store-form.php:128
 msgid "Store Product Per Page"
 msgstr ""
 
@@ -411,11 +408,11 @@ msgstr ""
 msgid "State Name"
 msgstr ""
 
-#: classes/seller-setup-wizard.php:224 templates/settings/store-form.php:159
+#: classes/seller-setup-wizard.php:224 templates/settings/store-form.php:158
 msgid "Email"
 msgstr ""
 
-#: classes/seller-setup-wizard.php:228 templates/settings/store-form.php:164
+#: classes/seller-setup-wizard.php:228 templates/settings/store-form.php:163
 msgid "Show email address in store"
 msgstr ""
 
@@ -452,8 +449,7 @@ msgstr ""
 msgid "Completed"
 msgstr ""
 
-#: classes/template-dashboard.php:110 src/admin/pages/Withdraw.vue:179
-#: src/admin/pages/Withdraw.vue:211 templates/dashboard/orders-widget.php:31
+#: classes/template-dashboard.php:110 templates/dashboard/orders-widget.php:31
 msgid "Pending"
 msgstr ""
 
@@ -491,7 +487,7 @@ msgstr ""
 msgid "Bulk Actions"
 msgstr ""
 
-#: classes/template-products.php:180 includes/product-functions.php:491
+#: classes/template-products.php:180 includes/product-functions.php:496
 msgid "Delete Permanently"
 msgstr ""
 
@@ -516,6 +512,10 @@ msgstr ""
 
 #: classes/template-products.php:395
 msgid "No product found!"
+msgstr ""
+
+#: classes/template-products.php:399 includes/product-functions.php:67
+msgid "I swear this is not your product!"
 msgstr ""
 
 #: classes/template-settings.php:70 classes/template-settings.php:74
@@ -648,19 +648,19 @@ msgstr ""
 msgid "Sorry, no transactions were found!"
 msgstr ""
 
-#: classes/upgrade.php:83 includes/admin/class-admin.php:268
+#: classes/upgrade.php:84 includes/admin/class-admin.php:268
 msgid "Dokan Data Update Required"
 msgstr ""
 
-#: classes/upgrade.php:83 includes/admin/class-admin.php:268
+#: classes/upgrade.php:84 includes/admin/class-admin.php:268
 msgid "We need to update your install to the latest version"
 msgstr ""
 
-#: classes/upgrade.php:84 includes/admin/class-admin.php:269
+#: classes/upgrade.php:85 includes/admin/class-admin.php:269
 msgid "Run the updater"
 msgstr ""
 
-#: classes/upgrade.php:89 includes/admin/class-admin.php:274
+#: classes/upgrade.php:90 includes/admin/class-admin.php:274
 msgid ""
 "It is strongly recommended that you backup your database before proceeding. "
 "Are you sure you wish to run the updater now?"
@@ -849,7 +849,7 @@ msgid "Define the seller store URL (%s<strong>[this-text]</strong>/[seller-name]
 msgstr ""
 
 #: includes/admin/class-settings.php:279 includes/functions.php:1211
-#: templates/settings/store-form.php:206
+#: templates/settings/store-form.php:205
 msgid "Terms and Conditions"
 msgstr ""
 
@@ -1312,7 +1312,7 @@ msgstr ""
 msgid "Contact Admin"
 msgstr ""
 
-#: includes/admin-functions.php:45 src/admin/pages/Withdraw.vue:130
+#: includes/admin-functions.php:45
 msgid "Actions"
 msgstr ""
 
@@ -2358,23 +2358,27 @@ msgstr ""
 msgid "Reassign the deleted user's posts and links to this user ID."
 msgstr ""
 
-#: includes/api/class-store-controller.php:169
-#: includes/api/class-store-controller.php:230
-#: includes/api/class-store-controller.php:387
+#: includes/api/class-store-controller.php:176
+#: includes/api/class-store-controller.php:237
+#: includes/api/class-store-controller.php:390
 msgid "No store found"
 msgstr ""
 
-#: includes/api/class-store-controller.php:190
+#: includes/api/class-store-controller.php:197
 msgid "No vendor found for updating status"
 msgstr ""
 
-#: includes/api/class-store-controller.php:195
+#: includes/api/class-store-controller.php:202
 msgid "Invalid user ID for reassignment."
 msgstr ""
 
-#: includes/api/class-store-controller.php:404
-#: includes/api/class-store-controller.php:423
+#: includes/api/class-store-controller.php:407
+#: includes/api/class-store-controller.php:426
 msgid "No reviews found"
+msgstr ""
+
+#: includes/api/class-store-controller.php:615
+msgid "This email address is not valid"
 msgstr ""
 
 #: includes/api/class-withdraw-controller.php:45
@@ -2473,7 +2477,7 @@ msgstr ""
 msgid "Every %d Minutes"
 msgstr ""
 
-#: includes/class-assets.php:413 src/admin/pages/Withdraw.vue:309
+#: includes/class-assets.php:413
 msgid "Are you sure?"
 msgstr ""
 
@@ -2931,7 +2935,7 @@ msgid ""
 "their individual privacy policy."
 msgstr ""
 
-#: includes/class-dokan-privacy.php:174 templates/settings/store-form.php:119
+#: includes/class-dokan-privacy.php:174 templates/settings/store-form.php:118
 msgid "Store Name"
 msgstr ""
 
@@ -3079,7 +3083,7 @@ msgstr ""
 msgid "A coupon must be restricted with a vendor product."
 msgstr ""
 
-#: includes/class-order-manager.php:519
+#: includes/class-order-manager.php:524
 #. translators: %s item name.
 msgid "Unable to restore stock for item %s."
 msgstr ""
@@ -3116,21 +3120,21 @@ msgstr ""
 msgid "Please install <a href=\"%s\"><strong>WooCommerce</strong></a> plugin first"
 msgstr ""
 
-#: includes/class-vendor-manager.php:218
+#: includes/class-vendor-manager.php:244
 msgid "Email is not valid"
 msgstr ""
 
-#: includes/class-vendor.php:659
+#: includes/class-vendor.php:698
 msgid "No ratings found yet!"
 msgstr ""
 
-#: includes/class-vendor.php:661
+#: includes/class-vendor.php:700
 msgid "%s rating from %d review"
 msgid_plural "%s rating from %d reviews"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/class-vendor.php:662
+#: includes/class-vendor.php:701
 msgid "Rated %s out of %d"
 msgstr ""
 
@@ -3418,7 +3422,7 @@ msgstr ""
 msgid "Products"
 msgstr ""
 
-#: includes/functions.php:1248 src/admin/pages/Withdraw.vue:330
+#: includes/functions.php:1248
 msgid "Account Name: %s"
 msgstr ""
 
@@ -3595,7 +3599,7 @@ msgstr ""
 msgid "View reviews"
 msgstr ""
 
-#: includes/functions.php:2908 src/admin/pages/Premium.vue:394
+#: includes/functions.php:2908
 msgid "Manage reviews"
 msgstr ""
 
@@ -3852,145 +3856,143 @@ msgstr ""
 msgid "Customer Note"
 msgstr ""
 
-#: includes/product-functions.php:210
+#: includes/product-functions.php:215
 msgid ""
 "Before you can add a variation you need to add some variation attributes on "
 "the <strong>Attributes</strong> section"
 msgstr ""
 
-#: includes/product-functions.php:220
+#: includes/product-functions.php:225
 msgid "Add variation"
 msgstr ""
 
-#: includes/product-functions.php:221
+#: includes/product-functions.php:226
 msgid "Create variations from all attributes"
 msgstr ""
 
-#: includes/product-functions.php:222
+#: includes/product-functions.php:227
 msgid "Delete all variations"
 msgstr ""
 
-#: includes/product-functions.php:223 src/admin/pages/Withdraw.vue:125
-#: templates/my-orders.php:29 templates/orders/listing.php:49
-#: templates/orders/listing.php:77
+#: includes/product-functions.php:228 templates/my-orders.php:29
+#: templates/orders/listing.php:49 templates/orders/listing.php:77
 #: templates/products/products-listing-row.php:53
 #: templates/products/products-listing.php:89 templates/sub-orders.php:27
 #: templates/withdraw/pending-request-listing.php:18
 msgid "Status"
 msgstr ""
 
-#: includes/product-functions.php:224
+#: includes/product-functions.php:229
 msgid "Toggle &quot;Enabled&quot;"
 msgstr ""
 
-#: includes/product-functions.php:225
+#: includes/product-functions.php:230
 msgid "Toggle &quot;Downloadable&quot;"
 msgstr ""
 
-#: includes/product-functions.php:226
+#: includes/product-functions.php:231
 msgid "Toggle &quot;Virtual&quot;"
 msgstr ""
 
-#: includes/product-functions.php:228
+#: includes/product-functions.php:233
 msgid "Pricing"
 msgstr ""
 
-#: includes/product-functions.php:229
+#: includes/product-functions.php:234
 msgid "Set regular prices"
 msgstr ""
 
-#: includes/product-functions.php:230
+#: includes/product-functions.php:235
 msgid "Increase regular prices (fixed amount or percentage)"
 msgstr ""
 
-#: includes/product-functions.php:231
+#: includes/product-functions.php:236
 msgid "Decrease regular prices (fixed amount or percentage)"
 msgstr ""
 
-#: includes/product-functions.php:232
+#: includes/product-functions.php:237
 msgid "Set sale prices"
 msgstr ""
 
-#: includes/product-functions.php:233
+#: includes/product-functions.php:238
 msgid "Increase sale prices (fixed amount or percentage)"
 msgstr ""
 
-#: includes/product-functions.php:234
+#: includes/product-functions.php:239
 msgid "Decrease sale prices (fixed amount or percentage)"
 msgstr ""
 
-#: includes/product-functions.php:235
+#: includes/product-functions.php:240
 msgid "Set scheduled sale dates"
 msgstr ""
 
-#: includes/product-functions.php:237 templates/products/inventory.php:3
+#: includes/product-functions.php:242 templates/products/inventory.php:3
 msgid "Inventory"
 msgstr ""
 
-#: includes/product-functions.php:238
+#: includes/product-functions.php:243
 msgid "Toggle &quot;Manage stock&quot;"
 msgstr ""
 
-#: includes/product-functions.php:239
+#: includes/product-functions.php:244
 #: templates/products/products-listing-row.php:68
 #: templates/products/products-listing.php:94
 msgid "Stock"
 msgstr ""
 
-#: includes/product-functions.php:241
+#: includes/product-functions.php:246
 msgid "Shipping"
 msgstr ""
 
-#: includes/product-functions.php:242
+#: includes/product-functions.php:247
 msgid "Length"
 msgstr ""
 
-#: includes/product-functions.php:243
+#: includes/product-functions.php:248
 msgid "Width"
 msgstr ""
 
-#: includes/product-functions.php:244
+#: includes/product-functions.php:249
 msgid "Height"
 msgstr ""
 
-#: includes/product-functions.php:245
+#: includes/product-functions.php:250
 msgid "Weight"
 msgstr ""
 
-#: includes/product-functions.php:247
+#: includes/product-functions.php:252
 msgid "Downloadable products"
 msgstr ""
 
-#: includes/product-functions.php:248
+#: includes/product-functions.php:253
 msgid "Download limit"
 msgstr ""
 
-#: includes/product-functions.php:249
+#: includes/product-functions.php:254
 msgid "Download expiry"
 msgstr ""
 
-#: includes/product-functions.php:253
+#: includes/product-functions.php:258
 msgid "Go"
 msgstr ""
 
-#: includes/product-functions.php:260
+#: includes/product-functions.php:265
 msgid ""
 "Default Form Values: These are the attributes that will be pre-selected on "
 "the frontend."
 msgstr ""
 
-#: includes/product-functions.php:278
+#: includes/product-functions.php:283
 msgid "No default"
 msgstr ""
 
-#: includes/product-functions.php:318
+#: includes/product-functions.php:323
 msgid "Save Variations"
 msgstr ""
 
-#: includes/product-functions.php:319 lib/appsero/src/insights.php:788
-#: src/admin/pages/Withdraw.vue:168 src/admin/pages/Withdraw.vue:196
-#: templates/my-orders.php:83 templates/orders/details.php:188
-#: templates/products/new-product-single.php:204
+#: includes/product-functions.php:324 lib/appsero/src/insights.php:788
+#: templates/my-orders.php:83 templates/orders/details.php:200
+#: templates/products/new-product-single.php:205
 #: templates/products/new-product.php:165
 #: templates/products/tmpl-add-product-popup.php:63
 #: templates/withdraw/pending-request-listing.php:17
@@ -3998,67 +4000,67 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: includes/product-functions.php:324
+#: includes/product-functions.php:329
 msgid "%s item"
 msgid_plural "%s items"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/product-functions.php:329
+#: includes/product-functions.php:334
 msgid "Expand"
 msgstr ""
 
-#: includes/product-functions.php:329 src/admin/components/ColorPicker.vue:31
-#: templates/orders/details.php:336 templates/settings/store-form.php:259
+#: includes/product-functions.php:334 src/admin/components/ColorPicker.vue:31
+#: templates/orders/details.php:348 templates/settings/store-form.php:258
 msgid "Close"
 msgstr ""
 
-#: includes/product-functions.php:332
+#: includes/product-functions.php:337
 msgid "Go to the first page"
 msgstr ""
 
-#: includes/product-functions.php:333
+#: includes/product-functions.php:338
 msgid "Go to the previous page"
 msgstr ""
 
-#: includes/product-functions.php:335
+#: includes/product-functions.php:340
 msgid "Select Page"
 msgstr ""
 
-#: includes/product-functions.php:336
+#: includes/product-functions.php:341
 msgid "Current page"
 msgstr ""
 
-#: includes/product-functions.php:343
+#: includes/product-functions.php:348
 msgid "Go to the next page"
 msgstr ""
 
-#: includes/product-functions.php:344
+#: includes/product-functions.php:349
 msgid "Go to the last page"
 msgstr ""
 
-#: includes/product-functions.php:367
+#: includes/product-functions.php:372
 msgid "Visible"
 msgstr ""
 
-#: includes/product-functions.php:368
+#: includes/product-functions.php:373
 msgid "Catalog"
 msgstr ""
 
-#: includes/product-functions.php:369 templates/products/listing-filter.php:54
+#: includes/product-functions.php:374 templates/products/listing-filter.php:54
 msgid "Search"
 msgstr ""
 
-#: includes/product-functions.php:370
-#: templates/products/new-product-single.php:115
+#: includes/product-functions.php:375
+#: templates/products/new-product-single.php:116
 msgid "Hidden"
 msgstr ""
 
-#: includes/product-functions.php:483
+#: includes/product-functions.php:488
 msgid "Edit"
 msgstr ""
 
-#: includes/product-functions.php:500 templates/my-orders.php:88
+#: includes/product-functions.php:505 templates/my-orders.php:88
 #: templates/orders/listing.php:156 templates/sub-orders.php:59
 msgid "View"
 msgstr ""
@@ -4131,7 +4133,7 @@ msgid "Log out"
 msgstr ""
 
 #: includes/wc-functions.php:103
-msgid "Product SKU must be unique."
+msgid "Product SKU must be unique"
 msgstr ""
 
 #: includes/wc-functions.php:763
@@ -4281,7 +4283,7 @@ msgstr ""
 
 #: includes/widgets/store-menu.php:34 includes/widgets/store-menu.php:117
 #: templates/store-toc.php:31 templates/store.php:37
-msgid "Store Category"
+msgid "Store Product Category"
 msgstr ""
 
 #: includes/widgets/store-open-close.php:17
@@ -4422,6 +4424,10 @@ msgstr ""
 msgid "Please select an image,"
 msgstr ""
 
+#: src/admin/pages/Dashboard.vue:7
+msgid "At a Glance"
+msgstr ""
+
 #: src/admin/pages/Dashboard.vue:17
 msgid "net sales this month"
 msgstr ""
@@ -4454,6 +4460,10 @@ msgstr ""
 msgid "%s Withdrawals"
 msgstr ""
 
+#: src/admin/pages/Dashboard.vue:71
+msgid "Dokan News Updates"
+msgstr ""
+
 #: src/admin/pages/Dashboard.vue:84
 msgid "Stay up-to-date"
 msgstr ""
@@ -4472,11 +4482,15 @@ msgstr ""
 msgid "Thank you for subscribing!"
 msgstr ""
 
+#: src/admin/pages/Dashboard.vue:103
+msgid "Overview"
+msgstr ""
+
 #: src/admin/pages/Help.vue:3
 msgid "Help"
 msgstr ""
 
-#: src/admin/pages/Premium.vue:10
+#: src/admin/pages/Premium.vue:7 src/admin/pages/Premium.vue:10
 msgid "Upgrade to Dokan Pro!"
 msgstr ""
 
@@ -4525,112 +4539,12 @@ msgstr ""
 msgid "People We Have Helped"
 msgstr ""
 
-#: src/admin/pages/Premium.vue:223
-msgid "Convinced?"
+#: src/admin/pages/Premium.vue:213
+msgid "We are proud to say the official"
 msgstr ""
 
-#: src/admin/pages/Premium.vue:224
-msgid "With all the advance features you get it’s hard to resist buying Dokan Pro."
-msgstr ""
-
-#: src/admin/pages/Premium.vue:226
-msgid "I Want To Buy Now"
-msgstr ""
-
-#: src/admin/pages/Premium.vue:257
-msgid "Premium modules to make everything easier & better"
-msgstr ""
-
-#: src/admin/pages/Premium.vue:261
-msgid "Frontend dashboard for vendors with advanced controls"
-msgstr ""
-
-#: src/admin/pages/Premium.vue:265
-msgid "Unlimited Product Variations and group product upload"
-msgstr ""
-
-#: src/admin/pages/Premium.vue:269
-msgid "Zone wise shipping with multiple method for vendors"
-msgstr ""
-
-#: src/admin/pages/Premium.vue:273
-msgid "Store support based on ticket system for your customers"
-msgstr ""
-
-#: src/admin/pages/Premium.vue:277
-msgid "Vendors will be able to generate coupon codes"
-msgstr ""
-
-#: src/admin/pages/Premium.vue:281
-msgid "Earning, Selling and Commission Reports & Statement"
-msgstr ""
-
-#: src/admin/pages/Premium.vue:285
-msgid "24/7 super fast premium customer support for you"
-msgstr ""
-
-#: src/admin/pages/Premium.vue:289
-msgid "Add Social profile to your vendor’s store and support for store SEO"
-msgstr ""
-
-#: src/admin/pages/Premium.vue:296
-msgid "Frontend order management"
-msgstr ""
-
-#: src/admin/pages/Premium.vue:303
-msgid "Seller Statement Reports"
-msgstr ""
-
-#: src/admin/pages/Premium.vue:310
-msgid "Making Announcements"
-msgstr ""
-
-#: src/admin/pages/Premium.vue:317
-msgid "Customized Product Categories"
-msgstr ""
-
-#: src/admin/pages/Premium.vue:324
-msgid "Store SEO"
-msgstr ""
-
-#: src/admin/pages/Premium.vue:331
-msgid "Back Ordering System"
-msgstr ""
-
-#: src/admin/pages/Premium.vue:338
-msgid "Store Contact Form"
-msgstr ""
-
-#: src/admin/pages/Premium.vue:345
-msgid "Single Product Multiple Seller"
-msgstr ""
-
-#: src/admin/pages/Premium.vue:352
-msgid "Seller Verification"
-msgstr ""
-
-#: src/admin/pages/Premium.vue:359
-msgid "Featured Seller"
-msgstr ""
-
-#: src/admin/pages/Premium.vue:366
-msgid "Multiple Commission Types"
-msgstr ""
-
-#: src/admin/pages/Premium.vue:373
-msgid "Frontend Shipping Tracking"
-msgstr ""
-
-#: src/admin/pages/Premium.vue:380
-msgid "Setup Wizard"
-msgstr ""
-
-#: src/admin/pages/Premium.vue:387
-msgid "Google Maps"
-msgstr ""
-
-#: src/admin/pages/Premium.vue:401
-msgid "Bookable Product"
+#: src/admin/pages/Premium.vue:213
+msgid "is built using Dokan"
 msgstr ""
 
 #: src/admin/pages/Settings.vue:8
@@ -4645,74 +4559,20 @@ msgstr ""
 msgid "Withdraw Requests"
 msgstr ""
 
-#: src/admin/pages/Withdraw.vue:15
+#: src/admin/pages/Withdraw.vue:6 src/admin/pages/Withdraw.vue:15
 msgid "Update Note"
 msgstr ""
 
-#: src/admin/pages/Withdraw.vue:44
-msgid "(no name)"
+#: src/admin/pages/Withdraw.vue:20
+msgid "Pending <span class='count'>(%s)</span>"
 msgstr ""
 
-#: src/admin/pages/Withdraw.vue:118
-msgid "No requests found."
+#: src/admin/pages/Withdraw.vue:21
+msgid "Approved <span class='count'>(%s)</span>"
 msgstr ""
 
-#: src/admin/pages/Withdraw.vue:119
-msgid "Paypal Mass Payment File is Generated."
-msgstr ""
-
-#: src/admin/pages/Withdraw.vue:124
-#: templates/withdraw/approved-request-listing.php:14
-#: templates/withdraw/cancelled-request-listing.php:14
-#: templates/withdraw/pending-request-listing.php:14
-msgid "Amount"
-msgstr ""
-
-#: src/admin/pages/Withdraw.vue:126
-#: templates/withdraw/approved-request-listing.php:15
-#: templates/withdraw/cancelled-request-listing.php:15
-#: templates/withdraw/pending-request-listing.php:15
-msgid "Method"
-msgstr ""
-
-#: src/admin/pages/Withdraw.vue:127
-msgid "Details"
-msgstr ""
-
-#: src/admin/pages/Withdraw.vue:128
-#: templates/withdraw/cancelled-request-listing.php:17
-msgid "Note"
-msgstr ""
-
-#: src/admin/pages/Withdraw.vue:129 templates/my-orders.php:28
-#: templates/orders/listing.php:51 templates/orders/listing.php:107
-#: templates/products/products-listing-row.php:128
-#: templates/products/products-listing.php:99 templates/sub-orders.php:26
-#: templates/withdraw/approved-request-listing.php:16
-#: templates/withdraw/cancelled-request-listing.php:16
-#: templates/withdraw/pending-request-listing.php:16
-msgid "Date"
-msgstr ""
-
-#: src/admin/pages/Withdraw.vue:192
-msgid "Approve"
-msgstr ""
-
-#: src/admin/pages/Withdraw.vue:204 src/admin/pages/Withdraw.vue:219
-#: src/admin/pages/Withdraw.vue:226
-msgid "Download PayPal mass payment file"
-msgstr ""
-
-#: src/admin/pages/Withdraw.vue:334
-msgid ", Account Number: %s"
-msgstr ""
-
-#: src/admin/pages/Withdraw.vue:338
-msgid ", Bank Name: %s"
-msgstr ""
-
-#: src/admin/pages/Withdraw.vue:342
-msgid ", Routing Number: %s"
+#: src/admin/pages/Withdraw.vue:22
+msgid "Cancelled <span class='count'>(%s)</span>"
 msgstr ""
 
 #: templates/account/vendor-registration.php:21
@@ -4746,7 +4606,7 @@ msgid ""
 "Conditions</a>."
 msgstr ""
 
-#: templates/account/vendor-registration.php:78
+#: templates/account/vendor-registration.php:80
 msgid "Register"
 msgstr ""
 
@@ -5024,7 +4884,7 @@ msgstr ""
 msgid "Billing Address"
 msgstr ""
 
-#: templates/global/header-menu.php:51 templates/orders/details.php:134
+#: templates/global/header-menu.php:51 templates/orders/details.php:140
 msgid "Shipping Address"
 msgstr ""
 
@@ -5061,7 +4921,7 @@ msgid "I am a vendor"
 msgstr ""
 
 #: templates/global/seller-warning.php:11
-#: templates/products/new-product-single.php:126
+#: templates/products/new-product-single.php:127
 #: templates/products/new-product.php:59
 msgid "Error!"
 msgstr ""
@@ -5080,6 +4940,16 @@ msgstr ""
 
 #: templates/my-orders.php:21
 msgid "Recent Orders"
+msgstr ""
+
+#: templates/my-orders.php:28 templates/orders/listing.php:51
+#: templates/orders/listing.php:107
+#: templates/products/products-listing-row.php:128
+#: templates/products/products-listing.php:99 templates/sub-orders.php:26
+#: templates/withdraw/approved-request-listing.php:16
+#: templates/withdraw/cancelled-request-listing.php:16
+#: templates/withdraw/pending-request-listing.php:16
+msgid "Date"
 msgstr ""
 
 #: templates/my-orders.php:55 templates/sub-orders.php:51
@@ -5145,91 +5015,99 @@ msgstr ""
 msgid "Coupons"
 msgstr ""
 
-#: templates/orders/details.php:145
+#: templates/orders/details.php:131
+msgid "No billing address set."
+msgstr ""
+
+#: templates/orders/details.php:146
+msgid "No shipping address set."
+msgstr ""
+
+#: templates/orders/details.php:157
 msgid "Downloadable Product Permission"
 msgstr ""
 
-#: templates/orders/details.php:160
+#: templates/orders/details.php:172
 msgid "General Details"
 msgstr ""
 
-#: templates/orders/details.php:164
+#: templates/orders/details.php:176
 msgid "Order Status:"
 msgstr ""
 
-#: templates/orders/details.php:168
+#: templates/orders/details.php:180
 msgid "&nbsp; Edit"
 msgstr ""
 
-#: templates/orders/details.php:186
+#: templates/orders/details.php:198
 msgid "Update"
 msgstr ""
 
-#: templates/orders/details.php:194
+#: templates/orders/details.php:206
 msgid "Order Date:"
 msgstr ""
 
-#: templates/orders/details.php:201
+#: templates/orders/details.php:213
 msgid "Customer:"
 msgstr ""
 
-#: templates/orders/details.php:214
+#: templates/orders/details.php:226
 msgid "Email:"
 msgstr ""
 
-#: templates/orders/details.php:218
+#: templates/orders/details.php:230
 msgid "Phone:"
 msgstr ""
 
-#: templates/orders/details.php:222
+#: templates/orders/details.php:234
 msgid "Customer IP:"
 msgstr ""
 
-#: templates/orders/details.php:234
+#: templates/orders/details.php:246
 msgid "Customer Note:"
 msgstr ""
 
-#: templates/orders/details.php:245
+#: templates/orders/details.php:257
 msgid "Order Notes"
 msgstr ""
 
-#: templates/orders/details.php:269
+#: templates/orders/details.php:281
 msgid "added %s ago"
 msgstr ""
 
-#: templates/orders/details.php:278
+#: templates/orders/details.php:290
 msgid "There are no notes for this order yet."
 msgstr ""
 
-#: templates/orders/details.php:287
+#: templates/orders/details.php:299
 msgid "Add note"
 msgstr ""
 
-#: templates/orders/details.php:295
+#: templates/orders/details.php:307
 msgid "Customer note"
 msgstr ""
 
-#: templates/orders/details.php:296
+#: templates/orders/details.php:308
 msgid "Private note"
 msgstr ""
 
-#: templates/orders/details.php:304
+#: templates/orders/details.php:316
 msgid "Add Note"
 msgstr ""
 
-#: templates/orders/details.php:311 templates/orders/details.php:320
+#: templates/orders/details.php:323 templates/orders/details.php:332
 msgid "Tracking Number"
 msgstr ""
 
-#: templates/orders/details.php:315
+#: templates/orders/details.php:327
 msgid "Shipping Provider Name / URL"
 msgstr ""
 
-#: templates/orders/details.php:325
+#: templates/orders/details.php:337
 msgid "Date Shipped"
 msgstr ""
 
-#: templates/orders/details.php:335
+#: templates/orders/details.php:347
 msgid "Add Tracking Details"
 msgstr ""
 
@@ -5475,7 +5353,7 @@ msgid "Allow only one quantity of this product to be bought in a single order"
 msgstr ""
 
 #: templates/products/listing-filter.php:26
-#: templates/products/new-product-single.php:251
+#: templates/products/new-product-single.php:252
 #: templates/products/new-product.php:202
 #: templates/products/tmpl-add-product-popup.php:97
 msgid "- Select a category -"
@@ -5493,52 +5371,52 @@ msgstr ""
 msgid "Access Denied"
 msgstr ""
 
-#: templates/products/new-product-single.php:103
+#: templates/products/new-product-single.php:104
 msgid "Edit Product"
 msgstr ""
 
-#: templates/products/new-product-single.php:110
+#: templates/products/new-product-single.php:111
 msgid "View Product"
 msgstr ""
 
-#: templates/products/new-product-single.php:134
+#: templates/products/new-product-single.php:135
 #: templates/products/new-product.php:68
 msgid "Success!"
 msgstr ""
 
-#: templates/products/new-product-single.php:134
+#: templates/products/new-product-single.php:135
 msgid "The product has been saved successfully."
 msgstr ""
 
-#: templates/products/new-product-single.php:137
+#: templates/products/new-product-single.php:138
 msgid "View Product &rarr;"
 msgstr ""
 
-#: templates/products/new-product-single.php:160
+#: templates/products/new-product-single.php:161
 msgid "Title"
 msgstr ""
 
-#: templates/products/new-product-single.php:161
+#: templates/products/new-product-single.php:162
 #: templates/products/new-product.php:148
 #: templates/products/tmpl-add-product-popup.php:46
 msgid "Product name.."
 msgstr ""
 
-#: templates/products/new-product-single.php:163
+#: templates/products/new-product-single.php:164
 msgid "Please enter product title!"
 msgstr ""
 
-#: templates/products/new-product-single.php:175
+#: templates/products/new-product-single.php:176
 msgid "Product Type"
 msgstr ""
 
-#: templates/products/new-product-single.php:175
+#: templates/products/new-product-single.php:176
 msgid ""
 "Choose Variable if your product has multiple attributes - like sizes, "
 "colors, quality etc"
 msgstr ""
 
-#: templates/products/new-product-single.php:191
+#: templates/products/new-product-single.php:192
 #: templates/products/new-product.php:154
 #: templates/products/products-listing-row.php:81
 #: templates/products/products-listing.php:95
@@ -5546,39 +5424,39 @@ msgstr ""
 msgid "Price"
 msgstr ""
 
-#: templates/products/new-product-single.php:192
+#: templates/products/new-product-single.php:193
 msgid " You Earn : "
 msgstr ""
 
-#: templates/products/new-product-single.php:196
-#: templates/products/new-product-single.php:209
+#: templates/products/new-product-single.php:197
+#: templates/products/new-product-single.php:210
 msgid "0.00"
 msgstr ""
 
-#: templates/products/new-product-single.php:202
+#: templates/products/new-product-single.php:203
 #: templates/products/new-product.php:163
 #: templates/products/tmpl-add-product-popup.php:61
 msgid "Discounted Price"
 msgstr ""
 
-#: templates/products/new-product-single.php:203
+#: templates/products/new-product-single.php:204
 #: templates/products/new-product.php:164
 #: templates/products/tmpl-add-product-popup.php:62
 msgid "Schedule"
 msgstr ""
 
-#: templates/products/new-product-single.php:216
+#: templates/products/new-product-single.php:217
 msgid "Product price can't be less than the vendor fee!"
 msgstr ""
 
-#: templates/products/new-product-single.php:223
+#: templates/products/new-product-single.php:224
 #: templates/products/new-product.php:178
 #: templates/products/tmpl-add-product-popup.php:76
 msgid "From"
 msgstr ""
 
-#: templates/products/new-product-single.php:224
-#: templates/products/new-product-single.php:231
+#: templates/products/new-product-single.php:225
+#: templates/products/new-product-single.php:232
 #: templates/products/new-product.php:179
 #: templates/products/new-product.php:186
 #: templates/products/tmpl-add-product-popup.php:77
@@ -5586,64 +5464,64 @@ msgstr ""
 msgid "YYYY-MM-DD"
 msgstr ""
 
-#: templates/products/new-product-single.php:230
+#: templates/products/new-product-single.php:231
 #: templates/products/new-product.php:185
 #: templates/products/tmpl-add-product-popup.php:83
 msgid "To"
 msgstr ""
 
-#: templates/products/new-product-single.php:239
-#: templates/products/new-product-single.php:272
+#: templates/products/new-product-single.php:240
+#: templates/products/new-product-single.php:273
 msgid "Category"
 msgstr ""
 
-#: templates/products/new-product-single.php:267
+#: templates/products/new-product-single.php:268
 msgid "Please choose a category!"
 msgstr ""
 
-#: templates/products/new-product-single.php:292
+#: templates/products/new-product-single.php:293
 #: templates/products/new-product.php:241
 #: templates/products/tmpl-add-product-popup.php:132
 msgid "Select product category"
 msgstr ""
 
-#: templates/products/new-product-single.php:298
+#: templates/products/new-product-single.php:299
 msgid "Tags"
 msgstr ""
 
-#: templates/products/new-product-single.php:318
+#: templates/products/new-product-single.php:319
 #: templates/products/new-product.php:268
 #: templates/products/tmpl-add-product-popup.php:155
 msgid "Select product tags"
 msgstr ""
 
-#: templates/products/new-product-single.php:345
+#: templates/products/new-product-single.php:346
 #: templates/products/tmpl-add-product-popup.php:18
 msgid "Upload a product cover image"
 msgstr ""
 
-#: templates/products/new-product-single.php:377
+#: templates/products/new-product-single.php:378
 #: templates/products/new-product.php:129
 msgid "Delete image"
 msgstr ""
 
-#: templates/products/new-product-single.php:383
+#: templates/products/new-product-single.php:384
 #: templates/products/new-product.php:136
 #: templates/products/tmpl-add-product-popup.php:33
 msgid "Add gallery image"
 msgstr ""
 
-#: templates/products/new-product-single.php:397
+#: templates/products/new-product-single.php:398
 msgid "Short Description"
 msgstr ""
 
-#: templates/products/new-product-single.php:402
+#: templates/products/new-product-single.php:403
 #: templates/products/new-product.php:277
 msgid "Description"
 msgstr ""
 
-#: templates/products/new-product-single.php:418
 #: templates/products/new-product-single.php:419
+#: templates/products/new-product-single.php:420
 msgid "Save Product"
 msgstr ""
 
@@ -5835,87 +5713,87 @@ msgstr ""
 msgid "State "
 msgstr ""
 
-#: templates/settings/payment.php:39 templates/settings/store-form.php:304
+#: templates/settings/payment.php:39 templates/settings/store-form.php:303
 msgid "Update Settings"
 msgstr ""
 
-#: templates/settings/store-form.php:90
+#: templates/settings/store-form.php:89
 msgid "Upload a banner for your store. Banner size is (%sx%s) pixels."
 msgstr ""
 
-#: templates/settings/store-form.php:103
+#: templates/settings/store-form.php:102
 msgid "Profile Picture"
 msgstr ""
 
-#: templates/settings/store-form.php:113
+#: templates/settings/store-form.php:112
 msgid "Upload Photo"
 msgstr ""
 
-#: templates/settings/store-form.php:122
+#: templates/settings/store-form.php:121
 msgid "store name"
 msgstr ""
 
-#: templates/settings/store-form.php:152
+#: templates/settings/store-form.php:151
 msgid "Phone No"
 msgstr ""
 
-#: templates/settings/store-form.php:154
+#: templates/settings/store-form.php:153
 msgid "+123456.."
 msgstr ""
 
-#: templates/settings/store-form.php:171
+#: templates/settings/store-form.php:170
 msgid "More products"
 msgstr ""
 
-#: templates/settings/store-form.php:176
+#: templates/settings/store-form.php:175
 msgid "Enable tab on product single page view"
 msgstr ""
 
-#: templates/settings/store-form.php:184
+#: templates/settings/store-form.php:183
 msgid "Map"
 msgstr ""
 
-#: templates/settings/store-form.php:191
+#: templates/settings/store-form.php:190
 msgid "Type an address to find"
 msgstr ""
 
-#: templates/settings/store-form.php:192
+#: templates/settings/store-form.php:191
 msgid "Find Address"
 msgstr ""
 
-#: templates/settings/store-form.php:210
+#: templates/settings/store-form.php:209
 msgid "Show terms and conditions in store page"
 msgstr ""
 
-#: templates/settings/store-form.php:216
+#: templates/settings/store-form.php:215
 msgid "TOC Details"
 msgstr ""
 
-#: templates/settings/store-form.php:235
+#: templates/settings/store-form.php:234
 msgid "Store Opening Closing Time"
 msgstr ""
 
-#: templates/settings/store-form.php:242
+#: templates/settings/store-form.php:241
 msgid "Show store opening closing time widget in store page"
 msgstr ""
 
-#: templates/settings/store-form.php:262
+#: templates/settings/store-form.php:261
 msgid "Open"
 msgstr ""
 
-#: templates/settings/store-form.php:279
+#: templates/settings/store-form.php:278
 msgid "Store Open Notice"
 msgstr ""
 
-#: templates/settings/store-form.php:283
+#: templates/settings/store-form.php:282
 msgid "Store is open"
 msgstr ""
 
-#: templates/settings/store-form.php:289
+#: templates/settings/store-form.php:288
 msgid "Store Close Notice"
 msgstr ""
 
-#: templates/settings/store-form.php:293
+#: templates/settings/store-form.php:292
 msgid "Store is closed"
 msgstr ""
 
@@ -5978,12 +5856,28 @@ msgstr ""
 msgid "Send Message"
 msgstr ""
 
-#: templates/widgets/store-open-close.php:16
+#: templates/widgets/store-open-close.php:18
 msgid "<span> %s %s %s </span>"
 msgstr ""
 
 #: templates/widgets/widget-content-product.php:44
 msgid "No products found"
+msgstr ""
+
+#: templates/withdraw/approved-request-listing.php:14
+#: templates/withdraw/cancelled-request-listing.php:14
+#: templates/withdraw/pending-request-listing.php:14
+msgid "Amount"
+msgstr ""
+
+#: templates/withdraw/approved-request-listing.php:15
+#: templates/withdraw/cancelled-request-listing.php:15
+#: templates/withdraw/pending-request-listing.php:15
+msgid "Method"
+msgstr ""
+
+#: templates/withdraw/cancelled-request-listing.php:17
+msgid "Note"
 msgstr ""
 
 #: templates/withdraw/request-form.php:16
@@ -6098,7 +5992,7 @@ msgctxt "enhanced select"
 msgid "Searching&hellip;"
 msgstr ""
 
-#: includes/product-functions.php:341
+#: includes/product-functions.php:346
 msgctxt "number of pages"
 msgid "of"
 msgstr ""

@@ -5,7 +5,7 @@ Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi selle
 Requires at least: 4.4
 Tested up to: 5.1.1
 WC requires at least: 3.0
-WC tested up to: 3.5.7
+WC tested up to: 3.6.1
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv2 or later
@@ -273,6 +273,24 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 == Changelog ==
+
+v2.9.13 -> Apr 24, 2019
+------------------------------------
+-   **New**   Include store open close functionality in Dokan REST API
+-   **Fix***  Vendor order and edit account page is shows 404 not found
+-   **Fix***  Vue list table pagination style
+-   **Fix***  Product stock is not reducing while order is placed via REST API
+-   **Fix***  Show notice if product SKU is not unique while updating product in vendor dashboard
+-   **Fix***  Product attributes with different language other than english was rendering incorrectly
+-   **Tweak** If customer billing or shipping address is not found, show not found message in vendor dashboard
+-   **Tweak** Refactor Dokan_Vendor_Manager class
+-   **Tweak** Rename store category widget to store product category
+-   **Tweak** Replace get_woocommerce_term_meta with get_term_meta as it was deprecated
+-   **Tweak** Add action hook in vendor migration template
+-   **Tweak** Check if it's vendor's own product while updating from vendor dashboard
+-   **Tweak** Use correct function to retrieve current vendor id
+-   **Tweak** Make debounce module public available
+-   **Tweak** Load dokan vendor dashboard template classes in the frontend only
 
 v2.9.12 -> Mar 20, 2019
 ---------------------------

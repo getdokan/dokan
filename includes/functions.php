@@ -2657,7 +2657,7 @@ function dokan_get_category_wise_seller_commission( $product_id, $category_id = 
     }
 
     if ( $terms ) {
-        $category_commision = get_woocommerce_term_meta( $term_id, 'per_category_admin_commission', true );
+        $category_commision = get_term_meta( $term_id, 'per_category_admin_commission', true );
     }
 
     if ( ! empty( $category_commision ) ) {
@@ -2689,7 +2689,7 @@ function dokan_get_category_wise_seller_commission_type( $product_id, $category_
     }
 
     if ( $terms ) {
-        $category_commision = get_woocommerce_term_meta( $term_id, 'per_category_admin_commission_type', true );
+        $category_commision = get_term_meta( $term_id, 'per_category_admin_commission_type', true );
     }
 
     return $category_commision;
@@ -3159,7 +3159,7 @@ function dokan_is_store_open( $user_id ) {
 
     $schedule = $open_days[ $today ];
 
-    if ( 'open' === $schedule['open'] ) {
+    if ( 'open' === $schedule['status'] ) {
         if ( empty( $schedule['opening_time'] ) || empty( $schedule['closing_time'] ) ) {
             return true;
         }

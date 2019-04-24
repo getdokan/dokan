@@ -17,6 +17,7 @@ class Dokan_Rewrites {
         $this->custom_store_url = dokan_get_option( 'custom_store_url', 'dokan_general', 'store' );
 
         add_action( 'init', array( $this, 'register_rule' ) );
+        add_filter( 'woocommerce_get_query_vars', array( $this, 'resolve_wc_query_conflict' ) );
 
         add_filter( 'template_include', array( $this, 'store_template' ) );
         add_filter( 'template_include', array( $this, 'product_edit_template' ), 99 );
@@ -132,6 +133,28 @@ class Dokan_Rewrites {
         add_rewrite_rule( $this->custom_store_url . '/([^/]+)/toc/page/?([0-9]{1,})/?$', 'index.php?' . $this->custom_store_url . '=$matches[1]&paged=$matches[2]&toc=true', 'top' );
 
         do_action( 'dokan_rewrite_rules_loaded', $this->custom_store_url );
+    }
+
+    /**
+     * Resolve query var conflicts with WooCommerce
+     *
+     * @since 2.9.13
+     *
+     * @param array $query_vars
+     *
+     * @return array
+     */
+    public function resolve_wc_query_conflict( $query_vars ) {
+        global $post;
+
+        $dashboard = dokan_get_option( 'dashboard', 'dokan_pages', 0 );
+
+        if ( ! empty( $post->ID ) && $post->ID === absint( $dashboard ) ) {
+            unset( $query_vars['orders'] );
+            unset( $query_vars['edit-account'] );
+        }
+
+        return $query_vars;
     }
 
     /**

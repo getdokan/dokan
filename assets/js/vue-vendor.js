@@ -11026,7 +11026,7 @@ Vue$3.compile = compileToFunctions;
 
 /* harmony default export */ __webpack_exports__["default"] = (Vue$3);
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(6), __webpack_require__(2), __webpack_require__(55).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(7), __webpack_require__(2), __webpack_require__(55).setImmediate))
 
 /***/ }),
 /* 2 */
@@ -11095,6 +11095,82 @@ var VueCharts = {
 
 /***/ }),
 /* 6 */
+/***/ (function(module, exports) {
+
+/**
+ * Returns a function, that, as long as it continues to be invoked, will not
+ * be triggered. The function will be called after it stops being called for
+ * N milliseconds. If `immediate` is passed, trigger the function on the
+ * leading edge, instead of the trailing. The function also has a property 'clear' 
+ * that is a function which will clear the timer to prevent previously scheduled executions. 
+ *
+ * @source underscore.js
+ * @see http://unscriptable.com/2009/03/20/debouncing-javascript-methods/
+ * @param {Function} function to wrap
+ * @param {Number} timeout in ms (`100`)
+ * @param {Boolean} whether to execute at the beginning (`false`)
+ * @api public
+ */
+function debounce(func, wait, immediate){
+  var timeout, args, context, timestamp, result;
+  if (null == wait) wait = 100;
+
+  function later() {
+    var last = Date.now() - timestamp;
+
+    if (last < wait && last >= 0) {
+      timeout = setTimeout(later, wait - last);
+    } else {
+      timeout = null;
+      if (!immediate) {
+        result = func.apply(context, args);
+        context = args = null;
+      }
+    }
+  };
+
+  var debounced = function(){
+    context = this;
+    args = arguments;
+    timestamp = Date.now();
+    var callNow = immediate && !timeout;
+    if (!timeout) timeout = setTimeout(later, wait);
+    if (callNow) {
+      result = func.apply(context, args);
+      context = args = null;
+    }
+
+    return result;
+  };
+
+  debounced.clear = function() {
+    if (timeout) {
+      clearTimeout(timeout);
+      timeout = null;
+    }
+  };
+  
+  debounced.flush = function() {
+    if (timeout) {
+      result = func.apply(context, args);
+      context = args = null;
+      
+      clearTimeout(timeout);
+      timeout = null;
+    }
+  };
+
+  return debounced;
+};
+
+// Adds compatibility for ES modules
+debounce.debounce = debounce;
+
+module.exports = debounce;
+
+
+/***/ }),
+/* 7 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -11284,7 +11360,7 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports) {
 
 /*
@@ -11366,7 +11442,7 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -13995,11 +14071,11 @@ if (inBrowser && window.Vue) {
 
 /* harmony default export */ __webpack_exports__["default"] = (VueRouter);
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(6)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(7)))
 
 /***/ }),
-/* 9 */,
-/* 10 */
+/* 10 */,
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -14381,85 +14457,9 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 11 */,
 /* 12 */,
 /* 13 */,
-/* 14 */
-/***/ (function(module, exports) {
-
-/**
- * Returns a function, that, as long as it continues to be invoked, will not
- * be triggered. The function will be called after it stops being called for
- * N milliseconds. If `immediate` is passed, trigger the function on the
- * leading edge, instead of the trailing. The function also has a property 'clear' 
- * that is a function which will clear the timer to prevent previously scheduled executions. 
- *
- * @source underscore.js
- * @see http://unscriptable.com/2009/03/20/debouncing-javascript-methods/
- * @param {Function} function to wrap
- * @param {Number} timeout in ms (`100`)
- * @param {Boolean} whether to execute at the beginning (`false`)
- * @api public
- */
-function debounce(func, wait, immediate){
-  var timeout, args, context, timestamp, result;
-  if (null == wait) wait = 100;
-
-  function later() {
-    var last = Date.now() - timestamp;
-
-    if (last < wait && last >= 0) {
-      timeout = setTimeout(later, wait - last);
-    } else {
-      timeout = null;
-      if (!immediate) {
-        result = func.apply(context, args);
-        context = args = null;
-      }
-    }
-  };
-
-  var debounced = function(){
-    context = this;
-    args = arguments;
-    timestamp = Date.now();
-    var callNow = immediate && !timeout;
-    if (!timeout) timeout = setTimeout(later, wait);
-    if (callNow) {
-      result = func.apply(context, args);
-      context = args = null;
-    }
-
-    return result;
-  };
-
-  debounced.clear = function() {
-    if (timeout) {
-      clearTimeout(timeout);
-      timeout = null;
-    }
-  };
-  
-  debounced.flush = function() {
-    if (timeout) {
-      result = func.apply(context, args);
-      context = args = null;
-      
-      clearTimeout(timeout);
-      timeout = null;
-    }
-  };
-
-  return debounced;
-};
-
-// Adds compatibility for ES modules
-debounce.debounce = debounce;
-
-module.exports = debounce;
-
-
-/***/ }),
+/* 14 */,
 /* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -17391,7 +17391,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
     attachTo.clearImmediate = clearImmediate;
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(6)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(7)))
 
 /***/ }),
 /* 57 */,
@@ -17637,7 +17637,7 @@ var options = {"hmr":true}
 options.transform = transform
 options.insertInto = undefined;
 
-var update = __webpack_require__(10)(content, options);
+var update = __webpack_require__(11)(content, options);
 
 if(content.locals) module.exports = content.locals;
 
@@ -17672,7 +17672,7 @@ if(false) {
 /* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(7)(false);
+exports = module.exports = __webpack_require__(8)(false);
 // imports
 
 
@@ -23475,7 +23475,7 @@ var render = function() {
                 ? _c(
                     "span",
                     {
-                      staticClass: "tablenav-pages-navspan",
+                      staticClass: "tablenav-pages-navspan button disabled",
                       attrs: { "aria-hidden": "true" }
                     },
                     [_vm._v("«")]
@@ -23483,7 +23483,7 @@ var render = function() {
                 : _c(
                     "a",
                     {
-                      staticClass: "first-page",
+                      staticClass: "first-page button",
                       attrs: { href: "#" },
                       on: {
                         click: function($event) {
@@ -23503,7 +23503,7 @@ var render = function() {
                 ? _c(
                     "span",
                     {
-                      staticClass: "tablenav-pages-navspan",
+                      staticClass: "tablenav-pages-navspan button disabled",
                       attrs: { "aria-hidden": "true" }
                     },
                     [_vm._v("‹")]
@@ -23511,7 +23511,7 @@ var render = function() {
                 : _c(
                     "a",
                     {
-                      staticClass: "prev-page",
+                      staticClass: "prev-page button",
                       attrs: { href: "#" },
                       on: {
                         click: function($event) {
@@ -23561,7 +23561,7 @@ var render = function() {
                 ? _c(
                     "span",
                     {
-                      staticClass: "tablenav-pages-navspan",
+                      staticClass: "tablenav-pages-navspan button disabled",
                       attrs: { "aria-hidden": "true" }
                     },
                     [_vm._v("›")]
@@ -23569,7 +23569,7 @@ var render = function() {
                 : _c(
                     "a",
                     {
-                      staticClass: "next-page",
+                      staticClass: "next-page button",
                       attrs: { href: "#" },
                       on: {
                         click: function($event) {
@@ -23589,7 +23589,7 @@ var render = function() {
                 ? _c(
                     "span",
                     {
-                      staticClass: "tablenav-pages-navspan",
+                      staticClass: "tablenav-pages-navspan button disabled",
                       attrs: { "aria-hidden": "true" }
                     },
                     [_vm._v("»")]
@@ -23597,7 +23597,7 @@ var render = function() {
                 : _c(
                     "a",
                     {
-                      staticClass: "last-page",
+                      staticClass: "last-page button",
                       attrs: { href: "#" },
                       on: {
                         click: function($event) {
@@ -23996,7 +23996,7 @@ var render = function() {
                 ? _c(
                     "span",
                     {
-                      staticClass: "tablenav-pages-navspan",
+                      staticClass: "tablenav-pages-navspan button disabled",
                       attrs: { "aria-hidden": "true" }
                     },
                     [_vm._v("«")]
@@ -24004,7 +24004,7 @@ var render = function() {
                 : _c(
                     "a",
                     {
-                      staticClass: "first-page",
+                      staticClass: "first-page button",
                       attrs: { href: "#" },
                       on: {
                         click: function($event) {
@@ -24024,7 +24024,7 @@ var render = function() {
                 ? _c(
                     "span",
                     {
-                      staticClass: "tablenav-pages-navspan",
+                      staticClass: "tablenav-pages-navspan button disabled",
                       attrs: { "aria-hidden": "true" }
                     },
                     [_vm._v("‹")]
@@ -24032,7 +24032,7 @@ var render = function() {
                 : _c(
                     "a",
                     {
-                      staticClass: "prev-page",
+                      staticClass: "prev-page button",
                       attrs: { href: "#" },
                       on: {
                         click: function($event) {
@@ -24065,7 +24065,7 @@ var render = function() {
                 ? _c(
                     "span",
                     {
-                      staticClass: "tablenav-pages-navspan",
+                      staticClass: "tablenav-pages-navspan button disabled",
                       attrs: { "aria-hidden": "true" }
                     },
                     [_vm._v("›")]
@@ -24073,7 +24073,7 @@ var render = function() {
                 : _c(
                     "a",
                     {
-                      staticClass: "next-page",
+                      staticClass: "next-page button",
                       attrs: { href: "#" },
                       on: {
                         click: function($event) {
@@ -24093,7 +24093,7 @@ var render = function() {
                 ? _c(
                     "span",
                     {
-                      staticClass: "tablenav-pages-navspan",
+                      staticClass: "tablenav-pages-navspan button disabled",
                       attrs: { "aria-hidden": "true" }
                     },
                     [_vm._v("»")]
@@ -24101,7 +24101,7 @@ var render = function() {
                 : _c(
                     "a",
                     {
-                      staticClass: "last-page",
+                      staticClass: "last-page button",
                       attrs: { href: "#" },
                       on: {
                         click: function($event) {
@@ -24196,7 +24196,7 @@ var options = {"hmr":true}
 options.transform = transform
 options.insertInto = undefined;
 
-var update = __webpack_require__(10)(content, options);
+var update = __webpack_require__(11)(content, options);
 
 if(content.locals) module.exports = content.locals;
 
@@ -24231,7 +24231,7 @@ if(false) {
 /* 155 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(7)(false);
+exports = module.exports = __webpack_require__(8)(false);
 // imports
 
 
@@ -24260,7 +24260,7 @@ var options = {"hmr":true}
 options.transform = transform
 options.insertInto = undefined;
 
-var update = __webpack_require__(10)(content, options);
+var update = __webpack_require__(11)(content, options);
 
 if(content.locals) module.exports = content.locals;
 
@@ -24295,7 +24295,7 @@ if(false) {
 /* 157 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(7)(false);
+exports = module.exports = __webpack_require__(8)(false);
 // imports
 
 
@@ -24309,13 +24309,13 @@ exports.push([module.i, "fieldset[disabled] .multiselect{pointer-events:none}.mu
 /* 158 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(14);
+__webpack_require__(6);
 __webpack_require__(1);
 __webpack_require__(5);
 __webpack_require__(41);
 __webpack_require__(40);
 __webpack_require__(37);
-__webpack_require__(8);
+__webpack_require__(9);
 __webpack_require__(52);
 module.exports = __webpack_require__(38);
 

@@ -38,6 +38,10 @@ class Dokan_API_Manager {
         // Init REST API routes.
         add_action( 'rest_api_init', array( $this, 'register_rest_routes' ), 10 );
         add_filter( 'woocommerce_rest_prepare_product_object', array( $this, 'prepeare_product_response' ), 10, 3 );
+        add_filter( 'dokan_vendor_to_array', array( $this, 'filter_store_open_close_option' ) );
+
+        // populate admin commission data for admin
+        add_filter( 'dokan_rest_store_additional_fields', array( $this, 'populate_admin_commission' ), 10, 2 );
     }
 
     /**
@@ -77,5 +81,51 @@ class Dokan_API_Manager {
 
         $response->set_data( $data );
         return $response;
+    }
+
+    /**
+     * If store open close is truned off by admin, unset store_open_colse from api response
+     *
+     * @param  array $data
+     *
+     * @since  2.9.13
+     *
+     * @return array
+     */
+    public function filter_store_open_close_option( $data ) {
+        if ( 'on' !== dokan_get_option( 'store_open_close', 'dokan_general', 'on' ) ) {
+            unset( $data['store_open_close'] );
+        }
+
+        return $data;
+    }
+
+    /**
+     * Populate admin commission
+     *
+     * @param  array $data
+     * @param  array $store
+     *
+     * @since  2.9.13
+     *
+     * @return data
+     */
+    public function populate_admin_commission( $data, $store ) {
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            return $data;
+        }
+
+        $store_id = $store->get_id();
+
+        if ( ! $store_id ) {
+            return $data;
+        }
+
+        $commission                    = get_user_meta( $store_id, 'dokan_admin_percentage', true );
+        $commission_type               = get_user_meta( $store_id, 'dokan_admin_percentage_type', true );
+        $data['admin_commission']      = $commission;
+        $data['admin_commission_type'] = $commission_type;
+
+        return $data;
     }
 }
