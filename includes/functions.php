@@ -3158,8 +3158,9 @@ function dokan_is_store_open( $user_id ) {
     }
 
     $schedule = $open_days[ $today ];
+    $status   = isset( $schedule['open'] ) ? $schedule['open'] : $schedule['status'];
 
-    if ( 'open' === $schedule['status'] ) {
+    if ( 'open' === $status ) {
         if ( empty( $schedule['opening_time'] ) || empty( $schedule['closing_time'] ) ) {
             return true;
         }

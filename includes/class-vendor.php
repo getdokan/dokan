@@ -405,7 +405,13 @@ class Dokan_Vendor {
         $banner_id = $this->get_banner_id();
 
         if ( ! $banner_id ) {
-            return false;
+            $banner = $this->get_info_part( 'banner' );
+
+            if ( $banner ) {
+                $banner_id = $banner;
+            } else {
+                return false;
+            }
         }
 
         return wp_get_attachment_url( $banner_id );
