@@ -6,7 +6,8 @@
  */
 ?>
 <?php
-    $gravatar_id    = isset( $profile_info['gravatar_id'] ) ? $profile_info['gravatar_id'] : 0;
+    $gravatar_id    = ! empty( $profile_info['gravatar_id'] ) ? $profile_info['gravatar_id'] : 0;
+    $gravatar_id    = ! empty( $profile_info['gravatar'] ) ? $profile_info['gravatar'] : $gravatar_id;
     $banner_id      = ! empty( $profile_info['banner_id'] ) ? $profile_info['banner_id'] : 0;
     $banner_id      = ! empty( $profile_info['banner'] ) ? $profile_info['banner'] : $banner_id;
     $storename      = isset( $profile_info['store_name'] ) ? $profile_info['store_name'] : '';

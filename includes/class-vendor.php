@@ -440,6 +440,10 @@ class Dokan_Vendor {
     public function get_avatar() {
         $avatar_id = $this->get_avatar_id();
 
+        if ( ! $avatar_id ) {
+            $avatar_id = $this->get_info_part( 'gravatar' );
+        }
+
         if ( ! $avatar_id && ! empty( $this->data->user_email ) ) {
             return get_avatar_url( $this->data->user_email, 96 );
         }
