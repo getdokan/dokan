@@ -297,7 +297,7 @@ class Dokan_Template_Products {
                         }
 
                         if ( $date_to ) {
-                            update_post_meta( $product_id, '_sale_price_dates_to', strtotime( $date_to ) );
+                            update_post_meta( $product_id, '_sale_price_dates_to', strtotime( '+23 hours', strtotime( $date_to ) ) );
                         } else {
                             update_post_meta( $product_id, '_sale_price_dates_to', '' );
                         }
@@ -314,12 +314,6 @@ class Dokan_Template_Products {
                         // Update price if on sale
                         if ( '' !== $postdata['_sale_price'] && $date_from && strtotime( $date_from ) < strtotime( 'NOW', current_time( 'timestamp' ) ) ) {
                             update_post_meta( $product_id, '_price', wc_format_decimal( $postdata['_sale_price'] ) );
-                        }
-
-                        if ( $date_to && strtotime( $date_to ) < strtotime( 'NOW', current_time( 'timestamp' ) ) ) {
-                            update_post_meta( $product_id, '_price', ( $postdata['_regular_price'] === '' ) ? '' : wc_format_decimal( $postdata['_regular_price'] ) );
-                            update_post_meta( $product_id, '_sale_price_dates_from', '' );
-                            update_post_meta( $product_id, '_sale_price_dates_to', '' );
                         }
                     }
 
