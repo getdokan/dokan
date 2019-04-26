@@ -6,8 +6,10 @@
  */
 ?>
 <?php
-    $gravatar_id    = isset( $profile_info['gravatar_id'] ) ? $profile_info['gravatar_id'] : 0;
-    $banner_id      = isset( $profile_info['banner_id'] ) ? $profile_info['banner_id'] : 0;
+    $gravatar_id    = ! empty( $profile_info['gravatar_id'] ) ? $profile_info['gravatar_id'] : 0;
+    $gravatar_id    = ! empty( $profile_info['gravatar'] ) ? $profile_info['gravatar'] : $gravatar_id;
+    $banner_id      = ! empty( $profile_info['banner_id'] ) ? $profile_info['banner_id'] : 0;
+    $banner_id      = ! empty( $profile_info['banner'] ) ? $profile_info['banner'] : $banner_id;
     $storename      = isset( $profile_info['store_name'] ) ? $profile_info['store_name'] : '';
     $store_ppp      = isset( $profile_info['store_ppp'] ) ? $profile_info['store_ppp'] : '';
     $phone          = isset( $profile_info['phone'] ) ? $profile_info['phone'] : '';
@@ -248,24 +250,28 @@
             <label class="dokan-w3 control-label"></label>
             <div class="dokan-w6" style="width: auto">
                 <?php foreach ( $dokan_days as $key => $day ) : ?>
+                    <?php
+                        $status = isset( $all_times[$day]['status'] ) ? $all_times[$day]['status'] : '';
+                        $status = isset( $all_times[$day]['open'] ) ? $all_times[$day]['open'] : $status;
+                    ?>
                     <div class="dokan-form-group">
                         <label class="day control-label" for="<?php echo esc_attr( $day ) ?>-opening-time">
                             <?php echo esc_html( dokan_get_translated_days( $day ) ); ?>
                         </label>
                         <label for="">
                             <select name="<?php echo esc_attr( $day ) ?>_on_off" class="dokan-on-off dokan-form-control">
-                                <option value="close" <?php ! empty( $all_times[$day]['status'] ) ? selected( $all_times[$day]['status'], 'close' ) : '' ?> >
+                                <option value="close" <?php ! empty( $status ) ? selected( $status, 'close' ) : '' ?> >
                                     <?php esc_html_e( 'Close', 'dokan-lite' ); ?>
                                 </option>
-                                <option value="open" <?php ! empty( $all_times[$day]['status'] ) ? selected( $all_times[$day]['status'], 'open' ) : '' ?> >
+                                <option value="open" <?php ! empty( $status ) ? selected( $status, 'open' ) : '' ?> >
                                     <?php esc_html_e( 'Open', 'dokan-lite' ); ?>
                                 </option>
                             </select>
                         </label>
-                        <label for="opening-time" class="time" style="visibility: <?php echo isset( $all_times[$day]['status'] ) && $all_times[$day]['status'] == 'open' ? 'visible' : 'hidden' ?>" >
+                        <label for="opening-time" class="time" style="visibility: <?php echo isset( $status ) && $status == 'open' ? 'visible' : 'hidden' ?>" >
                             <input type="text" class="dokan-form-control" name="<?php echo esc_attr( strtolower( $day ) ); ?>_opening_time" id="<?php echo esc_attr( $day ) ?>-opening-time" placeholder="<?php echo date_i18n( get_option( 'time_format', 'g:i a' ), current_time( 'timestamp' ) ); ?>" value="<?php echo isset( $all_times[$day]['opening_time'] ) ? esc_attr( $all_times[$day]['opening_time'] ) : '' ?>" >
                         </label>
-                        <label for="closing-time" class="time" style="visibility: <?php echo isset( $all_times[$day]['status'] ) && $all_times[$day]['status'] == 'open' ? 'visible' : 'hidden' ?>" >
+                        <label for="closing-time" class="time" style="visibility: <?php echo isset( $status ) && $status == 'open' ? 'visible' : 'hidden' ?>" >
                             <input type="text" class="dokan-form-control" name="<?php echo esc_attr( $day ) ?>_closing_time" id="<?php echo esc_attr( $day ) ?>-closing-time" placeholder="<?php echo date_i18n( get_option( 'time_format', 'g:i a' ), current_time( 'timestamp' ) ); ?>" value="<?php echo isset( $all_times[$day]['closing_time'] ) ? esc_attr( $all_times[$day]['closing_time'] ) : '' ?>">
                         </label>
                     </div>

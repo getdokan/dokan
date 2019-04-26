@@ -2010,7 +2010,8 @@ function dokan_get_avatar_url( $url, $id_or_email, $args ) {
 
     // see if there is a user_avatar meta field
     $user_avatar = get_user_meta( $user->ID, 'dokan_profile_settings', true );
-    $gravatar_id = isset( $user_avatar['gravatar'] ) ? $user_avatar['gravatar'] : 0;
+    $gravatar_id = isset( $user_avatar['gravatar_id'] ) ? $user_avatar['gravatar_id'] : 0;
+    $gravatar_id = isset( $user_avatar['gravatar'] ) ? $user_avatar['gravatar'] : $gravatar_id;
 
     if ( empty( $gravatar_id ) ) {
         return $url;
@@ -3153,13 +3154,14 @@ function dokan_is_store_open( $user_id ) {
     $open_days  = isset( $store_info['dokan_store_time'] ) ? $store_info['dokan_store_time'] : '';
     $today      = strtolower( date( 'l' ) );
 
-    if ( ! is_array( $open_days ) && ! isset( $open_days[ $today ] ) ) {
+    if ( ! isset( $open_days[ $today ] ) ) {
         return false;
     }
 
     $schedule = $open_days[ $today ];
+    $status   = isset( $schedule['open'] ) ? $schedule['open'] : $schedule['status'];
 
-    if ( 'open' === $schedule['status'] ) {
+    if ( 'open' === $status ) {
         if ( empty( $schedule['opening_time'] ) || empty( $schedule['closing_time'] ) ) {
             return true;
         }

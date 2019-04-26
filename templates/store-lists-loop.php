@@ -5,7 +5,8 @@
                 <?php
                 foreach ( $sellers['users'] as $seller ) {
                     $store_info      = dokan_get_store_info( $seller->ID );
-                    $banner_id       = isset( $store_info['banner'] ) ? $store_info['banner'] : 0;
+                    $banner_id       = ! empty( $store_info['banner_id'] ) ? $store_info['banner_id'] : 0;
+                    $banner_id       = ! empty( $store_info['banner'] ) ? $store_info['banner'] : $banner_id;
                     $store_name      = isset( $store_info['store_name'] ) ? esc_html( $store_info['store_name'] ) : __( 'N/A', 'dokan-lite' );
                     $store_url       = dokan_get_store_url( $seller->ID );
                     $store_address   = dokan_get_seller_short_address( $seller->ID );

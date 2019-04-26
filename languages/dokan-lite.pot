@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 2.9.13\n"
+"Project-Id-Version: Dokan 2.9.14\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2019-04-24 05:04:30+00:00\n"
+"POT-Creation-Date: 2019-04-26 10:50:11+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -62,7 +62,7 @@ msgstr ""
 msgid "Banner"
 msgstr ""
 
-#: classes/admin-user-profile.php:117 templates/settings/store-form.php:76
+#: classes/admin-user-profile.php:117 templates/settings/store-form.php:78
 msgid "Upload banner"
 msgstr ""
 
@@ -379,7 +379,7 @@ msgstr ""
 msgid "Store Setup"
 msgstr ""
 
-#: classes/seller-setup-wizard.php:179 templates/settings/store-form.php:128
+#: classes/seller-setup-wizard.php:179 templates/settings/store-form.php:130
 msgid "Store Product Per Page"
 msgstr ""
 
@@ -408,11 +408,11 @@ msgstr ""
 msgid "State Name"
 msgstr ""
 
-#: classes/seller-setup-wizard.php:224 templates/settings/store-form.php:158
+#: classes/seller-setup-wizard.php:224 templates/settings/store-form.php:160
 msgid "Email"
 msgstr ""
 
-#: classes/seller-setup-wizard.php:228 templates/settings/store-form.php:163
+#: classes/seller-setup-wizard.php:228 templates/settings/store-form.php:165
 msgid "Show email address in store"
 msgstr ""
 
@@ -487,7 +487,7 @@ msgstr ""
 msgid "Bulk Actions"
 msgstr ""
 
-#: classes/template-products.php:180 includes/product-functions.php:496
+#: classes/template-products.php:180 includes/product-functions.php:490
 msgid "Delete Permanently"
 msgstr ""
 
@@ -495,26 +495,26 @@ msgstr ""
 msgid "Details of your product ..."
 msgstr ""
 
-#: classes/template-products.php:222 classes/template-products.php:376
+#: classes/template-products.php:222 classes/template-products.php:370
 #: includes/product-functions.php:33
 msgid "Please enter product title"
 msgstr ""
 
-#: classes/template-products.php:229 classes/template-products.php:383
+#: classes/template-products.php:229 classes/template-products.php:377
 #: includes/product-functions.php:39
 msgid "Please select a category"
 msgstr ""
 
-#: classes/template-products.php:234 classes/template-products.php:388
+#: classes/template-products.php:234 classes/template-products.php:382
 #: includes/product-functions.php:43
 msgid "Please select AT LEAST ONE category"
 msgstr ""
 
-#: classes/template-products.php:395
+#: classes/template-products.php:389
 msgid "No product found!"
 msgstr ""
 
-#: classes/template-products.php:399 includes/product-functions.php:67
+#: classes/template-products.php:393 includes/product-functions.php:67
 msgid "I swear this is not your product!"
 msgstr ""
 
@@ -849,7 +849,7 @@ msgid "Define the seller store URL (%s<strong>[this-text]</strong>/[seller-name]
 msgstr ""
 
 #: includes/admin/class-settings.php:279 includes/functions.php:1211
-#: templates/settings/store-form.php:205
+#: templates/settings/store-form.php:207
 msgid "Terms and Conditions"
 msgstr ""
 
@@ -1026,7 +1026,7 @@ msgstr ""
 msgid "Choose privacy policy page"
 msgstr ""
 
-#: includes/admin/class-settings.php:460 includes/functions.php:3458
+#: includes/admin/class-settings.php:460 includes/functions.php:3460
 msgid ""
 "Your personal data will be used to support your experience throughout this "
 "website, to manage access to your account, and for other purposes described "
@@ -2935,7 +2935,7 @@ msgid ""
 "their individual privacy policy."
 msgstr ""
 
-#: includes/class-dokan-privacy.php:174 templates/settings/store-form.php:118
+#: includes/class-dokan-privacy.php:174 templates/settings/store-form.php:120
 msgid "Store Name"
 msgstr ""
 
@@ -2963,19 +2963,19 @@ msgstr ""
 msgid "Gravatar Url"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:195 includes/functions.php:2325
+#: includes/class-dokan-privacy.php:195 includes/functions.php:2326
 msgid "Facebook"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:196 includes/functions.php:2329
+#: includes/class-dokan-privacy.php:196 includes/functions.php:2330
 msgid "Google Plus"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:197 includes/functions.php:2333
+#: includes/class-dokan-privacy.php:197 includes/functions.php:2334
 msgid "Twitter"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:198 includes/functions.php:2337
+#: includes/class-dokan-privacy.php:198 includes/functions.php:2338
 msgid "Pinterest"
 msgstr ""
 
@@ -2983,15 +2983,15 @@ msgstr ""
 msgid "Linkedin"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:200 includes/functions.php:2345
+#: includes/class-dokan-privacy.php:200 includes/functions.php:2346
 msgid "Youtube"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:201 includes/functions.php:2349
+#: includes/class-dokan-privacy.php:201 includes/functions.php:2350
 msgid "Instagram"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:202 includes/functions.php:2353
+#: includes/class-dokan-privacy.php:202 includes/functions.php:2354
 msgid "Flickr"
 msgstr ""
 
@@ -3124,17 +3124,17 @@ msgstr ""
 msgid "Email is not valid"
 msgstr ""
 
-#: includes/class-vendor.php:698
+#: includes/class-vendor.php:708
 msgid "No ratings found yet!"
 msgstr ""
 
-#: includes/class-vendor.php:700
+#: includes/class-vendor.php:710
 msgid "%s rating from %d review"
 msgid_plural "%s rating from %d reviews"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/class-vendor.php:701
+#: includes/class-vendor.php:711
 msgid "Rated %s out of %d"
 msgstr ""
 
@@ -3454,272 +3454,272 @@ msgstr ""
 msgid "Date is not valid"
 msgstr ""
 
-#: includes/functions.php:2061
+#: includes/functions.php:2062
 msgid "- Select a location -"
 msgstr ""
 
-#: includes/functions.php:2065 includes/functions.php:2088
+#: includes/functions.php:2066 includes/functions.php:2089
 msgid "Everywhere Else"
 msgstr ""
 
-#: includes/functions.php:2084
+#: includes/functions.php:2085
 msgid "- Select a State -"
 msgstr ""
 
-#: includes/functions.php:2106
+#: includes/functions.php:2107
 msgid "Ready to ship in..."
 msgstr ""
 
-#: includes/functions.php:2107
+#: includes/functions.php:2108
 msgid "1 business day"
 msgstr ""
 
-#: includes/functions.php:2108
+#: includes/functions.php:2109
 msgid "1-2 business day"
 msgstr ""
 
-#: includes/functions.php:2109
+#: includes/functions.php:2110
 msgid "1-3 business day"
 msgstr ""
 
-#: includes/functions.php:2110
+#: includes/functions.php:2111
 msgid "3-5 business day"
 msgstr ""
 
-#: includes/functions.php:2111
+#: includes/functions.php:2112
 msgid "1-2 weeks"
 msgstr ""
 
-#: includes/functions.php:2112
+#: includes/functions.php:2113
 msgid "2-3 weeks"
 msgstr ""
 
-#: includes/functions.php:2113
+#: includes/functions.php:2114
 msgid "3-4 weeks"
 msgstr ""
 
-#: includes/functions.php:2114
+#: includes/functions.php:2115
 msgid "4-6 weeks"
 msgstr ""
 
-#: includes/functions.php:2115
+#: includes/functions.php:2116
 msgid "6-8 weeks"
 msgstr ""
 
-#: includes/functions.php:2234
+#: includes/functions.php:2235
 msgid "All dates"
 msgstr ""
 
-#: includes/functions.php:2249
+#: includes/functions.php:2250
 #. translators: 1: month name, 2: 4-digit year
 msgid "%1$s %2$d"
 msgstr ""
 
-#: includes/functions.php:2341
+#: includes/functions.php:2342
 msgid "LinkedIn"
 msgstr ""
 
-#: includes/functions.php:2619
+#: includes/functions.php:2620
 msgid "Dokan Store Sidebar"
 msgstr ""
 
-#: includes/functions.php:2880
+#: includes/functions.php:2881
 msgid "View sales overview"
 msgstr ""
 
-#: includes/functions.php:2881
+#: includes/functions.php:2882
 msgid "View sales report chart"
 msgstr ""
 
-#: includes/functions.php:2882
+#: includes/functions.php:2883
 msgid "View announcement"
 msgstr ""
 
-#: includes/functions.php:2883
+#: includes/functions.php:2884
 msgid "View order report"
 msgstr ""
 
-#: includes/functions.php:2884
+#: includes/functions.php:2885
 msgid "View review report"
 msgstr ""
 
-#: includes/functions.php:2885
+#: includes/functions.php:2886
 msgid "View product status report"
 msgstr ""
 
-#: includes/functions.php:2888
+#: includes/functions.php:2889
 msgid "View overview report"
 msgstr ""
 
-#: includes/functions.php:2889
+#: includes/functions.php:2890
 msgid "View daily sales report"
 msgstr ""
 
-#: includes/functions.php:2890
+#: includes/functions.php:2891
 msgid "View top selling report"
 msgstr ""
 
-#: includes/functions.php:2891
+#: includes/functions.php:2892
 msgid "View top earning report"
 msgstr ""
 
-#: includes/functions.php:2892
+#: includes/functions.php:2893
 msgid "View statement report"
 msgstr ""
 
-#: includes/functions.php:2895
+#: includes/functions.php:2896
 msgid "View order"
 msgstr ""
 
-#: includes/functions.php:2896
+#: includes/functions.php:2897
 msgid "Manage order"
 msgstr ""
 
-#: includes/functions.php:2897
+#: includes/functions.php:2898
 msgid "Manage order note"
 msgstr ""
 
-#: includes/functions.php:2898
+#: includes/functions.php:2899
 msgid "Manage refund"
 msgstr ""
 
-#: includes/functions.php:2902
+#: includes/functions.php:2903
 msgid "Add coupon"
 msgstr ""
 
-#: includes/functions.php:2903
+#: includes/functions.php:2904
 msgid "Edit coupon"
 msgstr ""
 
-#: includes/functions.php:2904
+#: includes/functions.php:2905
 msgid "Delete coupon"
 msgstr ""
 
-#: includes/functions.php:2907
+#: includes/functions.php:2908
 msgid "View reviews"
 msgstr ""
 
-#: includes/functions.php:2908
+#: includes/functions.php:2909
 msgid "Manage reviews"
 msgstr ""
 
-#: includes/functions.php:2912
+#: includes/functions.php:2913
 msgid "Manage withdraw"
 msgstr ""
 
-#: includes/functions.php:2915
+#: includes/functions.php:2916
 msgid "Add product"
 msgstr ""
 
-#: includes/functions.php:2916
+#: includes/functions.php:2917
 msgid "Edit product"
 msgstr ""
 
-#: includes/functions.php:2917
+#: includes/functions.php:2918
 msgid "Delete product"
 msgstr ""
 
-#: includes/functions.php:2918
+#: includes/functions.php:2919
 msgid "View product"
 msgstr ""
 
-#: includes/functions.php:2919
+#: includes/functions.php:2920
 msgid "Duplicate product"
 msgstr ""
 
-#: includes/functions.php:2920
+#: includes/functions.php:2921
 msgid "Import product"
 msgstr ""
 
-#: includes/functions.php:2921
+#: includes/functions.php:2922
 msgid "Export product"
 msgstr ""
 
-#: includes/functions.php:2924
+#: includes/functions.php:2925
 msgid "View overview menu"
 msgstr ""
 
-#: includes/functions.php:2925
+#: includes/functions.php:2926
 msgid "View product menu"
 msgstr ""
 
-#: includes/functions.php:2926
+#: includes/functions.php:2927
 msgid "View order menu"
 msgstr ""
 
-#: includes/functions.php:2927
+#: includes/functions.php:2928
 msgid "View coupon menu"
 msgstr ""
 
-#: includes/functions.php:2928
+#: includes/functions.php:2929
 msgid "View report menu"
 msgstr ""
 
-#: includes/functions.php:2929
+#: includes/functions.php:2930
 msgid "Vuew review menu"
 msgstr ""
 
-#: includes/functions.php:2930
+#: includes/functions.php:2931
 msgid "View withdraw menu"
 msgstr ""
 
-#: includes/functions.php:2931
+#: includes/functions.php:2932
 msgid "View store settings menu"
 msgstr ""
 
-#: includes/functions.php:2932
+#: includes/functions.php:2933
 msgid "View payment settings menu"
 msgstr ""
 
-#: includes/functions.php:2933
+#: includes/functions.php:2934
 msgid "View shipping settings menu"
 msgstr ""
 
-#: includes/functions.php:2934
+#: includes/functions.php:2935
 msgid "View social settings menu"
 msgstr ""
 
-#: includes/functions.php:2935
+#: includes/functions.php:2936
 msgid "View seo settings menu"
 msgstr ""
 
-#: includes/functions.php:3112
+#: includes/functions.php:3113
 msgid "Saturday"
 msgstr ""
 
-#: includes/functions.php:3115
+#: includes/functions.php:3116
 msgid "Sunday"
 msgstr ""
 
-#: includes/functions.php:3118
+#: includes/functions.php:3119
 msgid "Monday"
 msgstr ""
 
-#: includes/functions.php:3121
+#: includes/functions.php:3122
 msgid "Tuesday"
 msgstr ""
 
-#: includes/functions.php:3124
+#: includes/functions.php:3125
 msgid "Wednesday"
 msgstr ""
 
-#: includes/functions.php:3127
+#: includes/functions.php:3128
 msgid "Thursday"
 msgstr ""
 
-#: includes/functions.php:3130
+#: includes/functions.php:3131
 msgid "Friday"
 msgstr ""
 
-#: includes/functions.php:3133
+#: includes/functions.php:3134
 msgid "Off Day"
 msgstr ""
 
-#: includes/functions.php:3439
+#: includes/functions.php:3441
 msgid "privacy policy"
 msgstr ""
 
-#: includes/functions.php:3479
+#: includes/functions.php:3481
 msgid "Please Login to Continue"
 msgstr ""
 
@@ -3856,25 +3856,25 @@ msgstr ""
 msgid "Customer Note"
 msgstr ""
 
-#: includes/product-functions.php:215
+#: includes/product-functions.php:209
 msgid ""
 "Before you can add a variation you need to add some variation attributes on "
 "the <strong>Attributes</strong> section"
 msgstr ""
 
-#: includes/product-functions.php:225
+#: includes/product-functions.php:219
 msgid "Add variation"
 msgstr ""
 
-#: includes/product-functions.php:226
+#: includes/product-functions.php:220
 msgid "Create variations from all attributes"
 msgstr ""
 
-#: includes/product-functions.php:227
+#: includes/product-functions.php:221
 msgid "Delete all variations"
 msgstr ""
 
-#: includes/product-functions.php:228 templates/my-orders.php:29
+#: includes/product-functions.php:222 templates/my-orders.php:29
 #: templates/orders/listing.php:49 templates/orders/listing.php:77
 #: templates/products/products-listing-row.php:53
 #: templates/products/products-listing.php:89 templates/sub-orders.php:27
@@ -3882,115 +3882,115 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: includes/product-functions.php:229
+#: includes/product-functions.php:223
 msgid "Toggle &quot;Enabled&quot;"
 msgstr ""
 
-#: includes/product-functions.php:230
+#: includes/product-functions.php:224
 msgid "Toggle &quot;Downloadable&quot;"
 msgstr ""
 
-#: includes/product-functions.php:231
+#: includes/product-functions.php:225
 msgid "Toggle &quot;Virtual&quot;"
 msgstr ""
 
-#: includes/product-functions.php:233
+#: includes/product-functions.php:227
 msgid "Pricing"
 msgstr ""
 
-#: includes/product-functions.php:234
+#: includes/product-functions.php:228
 msgid "Set regular prices"
 msgstr ""
 
-#: includes/product-functions.php:235
+#: includes/product-functions.php:229
 msgid "Increase regular prices (fixed amount or percentage)"
 msgstr ""
 
-#: includes/product-functions.php:236
+#: includes/product-functions.php:230
 msgid "Decrease regular prices (fixed amount or percentage)"
 msgstr ""
 
-#: includes/product-functions.php:237
+#: includes/product-functions.php:231
 msgid "Set sale prices"
 msgstr ""
 
-#: includes/product-functions.php:238
+#: includes/product-functions.php:232
 msgid "Increase sale prices (fixed amount or percentage)"
 msgstr ""
 
-#: includes/product-functions.php:239
+#: includes/product-functions.php:233
 msgid "Decrease sale prices (fixed amount or percentage)"
 msgstr ""
 
-#: includes/product-functions.php:240
+#: includes/product-functions.php:234
 msgid "Set scheduled sale dates"
 msgstr ""
 
-#: includes/product-functions.php:242 templates/products/inventory.php:3
+#: includes/product-functions.php:236 templates/products/inventory.php:3
 msgid "Inventory"
 msgstr ""
 
-#: includes/product-functions.php:243
+#: includes/product-functions.php:237
 msgid "Toggle &quot;Manage stock&quot;"
 msgstr ""
 
-#: includes/product-functions.php:244
+#: includes/product-functions.php:238
 #: templates/products/products-listing-row.php:68
 #: templates/products/products-listing.php:94
 msgid "Stock"
 msgstr ""
 
-#: includes/product-functions.php:246
+#: includes/product-functions.php:240
 msgid "Shipping"
 msgstr ""
 
-#: includes/product-functions.php:247
+#: includes/product-functions.php:241
 msgid "Length"
 msgstr ""
 
-#: includes/product-functions.php:248
+#: includes/product-functions.php:242
 msgid "Width"
 msgstr ""
 
-#: includes/product-functions.php:249
+#: includes/product-functions.php:243
 msgid "Height"
 msgstr ""
 
-#: includes/product-functions.php:250
+#: includes/product-functions.php:244
 msgid "Weight"
 msgstr ""
 
-#: includes/product-functions.php:252
+#: includes/product-functions.php:246
 msgid "Downloadable products"
 msgstr ""
 
-#: includes/product-functions.php:253
+#: includes/product-functions.php:247
 msgid "Download limit"
 msgstr ""
 
-#: includes/product-functions.php:254
+#: includes/product-functions.php:248
 msgid "Download expiry"
 msgstr ""
 
-#: includes/product-functions.php:258
+#: includes/product-functions.php:252
 msgid "Go"
 msgstr ""
 
-#: includes/product-functions.php:265
+#: includes/product-functions.php:259
 msgid ""
 "Default Form Values: These are the attributes that will be pre-selected on "
 "the frontend."
 msgstr ""
 
-#: includes/product-functions.php:283
+#: includes/product-functions.php:277
 msgid "No default"
 msgstr ""
 
-#: includes/product-functions.php:323
+#: includes/product-functions.php:317
 msgid "Save Variations"
 msgstr ""
 
-#: includes/product-functions.php:324 lib/appsero/src/insights.php:788
+#: includes/product-functions.php:318 lib/appsero/src/insights.php:788
 #: templates/my-orders.php:83 templates/orders/details.php:200
 #: templates/products/new-product-single.php:205
 #: templates/products/new-product.php:165
@@ -4000,67 +4000,67 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: includes/product-functions.php:329
+#: includes/product-functions.php:323
 msgid "%s item"
 msgid_plural "%s items"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/product-functions.php:334
+#: includes/product-functions.php:328
 msgid "Expand"
 msgstr ""
 
-#: includes/product-functions.php:334 src/admin/components/ColorPicker.vue:31
-#: templates/orders/details.php:348 templates/settings/store-form.php:258
+#: includes/product-functions.php:328 src/admin/components/ColorPicker.vue:31
+#: templates/orders/details.php:348 templates/settings/store-form.php:264
 msgid "Close"
 msgstr ""
 
-#: includes/product-functions.php:337
+#: includes/product-functions.php:331
 msgid "Go to the first page"
 msgstr ""
 
-#: includes/product-functions.php:338
+#: includes/product-functions.php:332
 msgid "Go to the previous page"
 msgstr ""
 
-#: includes/product-functions.php:340
+#: includes/product-functions.php:334
 msgid "Select Page"
 msgstr ""
 
-#: includes/product-functions.php:341
+#: includes/product-functions.php:335
 msgid "Current page"
 msgstr ""
 
-#: includes/product-functions.php:348
+#: includes/product-functions.php:342
 msgid "Go to the next page"
 msgstr ""
 
-#: includes/product-functions.php:349
+#: includes/product-functions.php:343
 msgid "Go to the last page"
 msgstr ""
 
-#: includes/product-functions.php:372
+#: includes/product-functions.php:366
 msgid "Visible"
 msgstr ""
 
-#: includes/product-functions.php:373
+#: includes/product-functions.php:367
 msgid "Catalog"
 msgstr ""
 
-#: includes/product-functions.php:374 templates/products/listing-filter.php:54
+#: includes/product-functions.php:368 templates/products/listing-filter.php:54
 msgid "Search"
 msgstr ""
 
-#: includes/product-functions.php:375
+#: includes/product-functions.php:369
 #: templates/products/new-product-single.php:116
 msgid "Hidden"
 msgstr ""
 
-#: includes/product-functions.php:488
+#: includes/product-functions.php:482
 msgid "Edit"
 msgstr ""
 
-#: includes/product-functions.php:505 templates/my-orders.php:88
+#: includes/product-functions.php:499 templates/my-orders.php:88
 #: templates/orders/listing.php:156 templates/sub-orders.php:59
 msgid "View"
 msgstr ""
@@ -4074,11 +4074,11 @@ msgid "Sales"
 msgstr ""
 
 #: includes/template-tags.php:105 includes/template-tags.php:109
-#: templates/store-lists-loop.php:92
+#: templates/store-lists-loop.php:93
 msgid "&larr; Previous"
 msgstr ""
 
-#: includes/template-tags.php:120 templates/store-lists-loop.php:93
+#: includes/template-tags.php:120 templates/store-lists-loop.php:94
 msgid "Next &rarr;"
 msgstr ""
 
@@ -4120,7 +4120,7 @@ msgid "Back to Dashboard"
 msgstr ""
 
 #: includes/template-tags.php:465 templates/settings/header.php:13
-#: templates/store-lists-loop.php:69
+#: templates/store-lists-loop.php:70
 msgid "Visit Store"
 msgstr ""
 
@@ -4136,70 +4136,70 @@ msgstr ""
 msgid "Product SKU must be unique"
 msgstr ""
 
-#: includes/wc-functions.php:763
+#: includes/wc-functions.php:758
 msgid "Your {site_title} order receipt from {order_date}"
 msgstr ""
 
-#: includes/wc-functions.php:764
+#: includes/wc-functions.php:759
 msgid "Your {site_title} order from {order_date} is complete"
 msgstr ""
 
-#: includes/wc-functions.php:865 templates/account/vendor-registration.php:9
+#: includes/wc-functions.php:860 templates/account/vendor-registration.php:9
 #: templates/global/seller-registration-form.php:15
 msgid "First Name"
 msgstr ""
 
-#: includes/wc-functions.php:866 templates/account/vendor-registration.php:14
+#: includes/wc-functions.php:861 templates/account/vendor-registration.php:14
 #: templates/global/seller-registration-form.php:20
 msgid "Last Name"
 msgstr ""
 
-#: includes/wc-functions.php:867 templates/account/vendor-registration.php:27
+#: includes/wc-functions.php:862 templates/account/vendor-registration.php:27
 #: templates/dashboard/edit-account.php:65
 msgid "Email address"
 msgstr ""
 
-#: includes/wc-functions.php:872
+#: includes/wc-functions.php:867
 msgid "is a required field."
 msgstr ""
 
-#: includes/wc-functions.php:878
+#: includes/wc-functions.php:873
 msgid "Please provide a valid email address."
 msgstr ""
 
-#: includes/wc-functions.php:880
+#: includes/wc-functions.php:875
 msgid "This email address is already registered."
 msgstr ""
 
-#: includes/wc-functions.php:886
+#: includes/wc-functions.php:881
 msgid "Your current password is incorrect."
 msgstr ""
 
-#: includes/wc-functions.php:891
+#: includes/wc-functions.php:886
 msgid "Please fill out all password fields."
 msgstr ""
 
-#: includes/wc-functions.php:894
+#: includes/wc-functions.php:889
 msgid "Please enter your current password."
 msgstr ""
 
-#: includes/wc-functions.php:897
+#: includes/wc-functions.php:892
 msgid "Please re-enter your password."
 msgstr ""
 
-#: includes/wc-functions.php:900
+#: includes/wc-functions.php:895
 msgid "New passwords do not match."
 msgstr ""
 
-#: includes/wc-functions.php:921
+#: includes/wc-functions.php:916
 msgid "Account details changed successfully."
 msgstr ""
 
-#: includes/wc-functions.php:1009
+#: includes/wc-functions.php:1004
 msgid "More Products"
 msgstr ""
 
-#: includes/wc-functions.php:1060
+#: includes/wc-functions.php:1055
 msgid "No product has been found!"
 msgstr ""
 
@@ -5216,7 +5216,7 @@ msgstr ""
 msgid "Tax Rate:"
 msgstr ""
 
-#: templates/orders/order-tax-html.php:8 templates/store-lists-loop.php:9
+#: templates/orders/order-tax-html.php:8 templates/store-lists-loop.php:10
 msgid "N/A"
 msgstr ""
 
@@ -5713,87 +5713,87 @@ msgstr ""
 msgid "State "
 msgstr ""
 
-#: templates/settings/payment.php:39 templates/settings/store-form.php:303
+#: templates/settings/payment.php:39 templates/settings/store-form.php:309
 msgid "Update Settings"
 msgstr ""
 
-#: templates/settings/store-form.php:89
+#: templates/settings/store-form.php:91
 msgid "Upload a banner for your store. Banner size is (%sx%s) pixels."
 msgstr ""
 
-#: templates/settings/store-form.php:102
+#: templates/settings/store-form.php:104
 msgid "Profile Picture"
 msgstr ""
 
-#: templates/settings/store-form.php:112
+#: templates/settings/store-form.php:114
 msgid "Upload Photo"
 msgstr ""
 
-#: templates/settings/store-form.php:121
+#: templates/settings/store-form.php:123
 msgid "store name"
 msgstr ""
 
-#: templates/settings/store-form.php:151
+#: templates/settings/store-form.php:153
 msgid "Phone No"
 msgstr ""
 
-#: templates/settings/store-form.php:153
+#: templates/settings/store-form.php:155
 msgid "+123456.."
 msgstr ""
 
-#: templates/settings/store-form.php:170
+#: templates/settings/store-form.php:172
 msgid "More products"
 msgstr ""
 
-#: templates/settings/store-form.php:175
+#: templates/settings/store-form.php:177
 msgid "Enable tab on product single page view"
 msgstr ""
 
-#: templates/settings/store-form.php:183
+#: templates/settings/store-form.php:185
 msgid "Map"
 msgstr ""
 
-#: templates/settings/store-form.php:190
+#: templates/settings/store-form.php:192
 msgid "Type an address to find"
 msgstr ""
 
-#: templates/settings/store-form.php:191
+#: templates/settings/store-form.php:193
 msgid "Find Address"
 msgstr ""
 
-#: templates/settings/store-form.php:209
+#: templates/settings/store-form.php:211
 msgid "Show terms and conditions in store page"
 msgstr ""
 
-#: templates/settings/store-form.php:215
+#: templates/settings/store-form.php:217
 msgid "TOC Details"
 msgstr ""
 
-#: templates/settings/store-form.php:234
+#: templates/settings/store-form.php:236
 msgid "Store Opening Closing Time"
 msgstr ""
 
-#: templates/settings/store-form.php:241
+#: templates/settings/store-form.php:243
 msgid "Show store opening closing time widget in store page"
 msgstr ""
 
-#: templates/settings/store-form.php:261
+#: templates/settings/store-form.php:267
 msgid "Open"
 msgstr ""
 
-#: templates/settings/store-form.php:278
+#: templates/settings/store-form.php:284
 msgid "Store Open Notice"
 msgstr ""
 
-#: templates/settings/store-form.php:282
+#: templates/settings/store-form.php:288
 msgid "Store is open"
 msgstr ""
 
-#: templates/settings/store-form.php:288
+#: templates/settings/store-form.php:294
 msgid "Store Close Notice"
 msgstr ""
 
-#: templates/settings/store-form.php:292
+#: templates/settings/store-form.php:298
 msgid "Store is closed"
 msgstr ""
 
@@ -5805,15 +5805,15 @@ msgstr ""
 msgid "Store Closed"
 msgstr ""
 
-#: templates/store-lists-loop.php:24
+#: templates/store-lists-loop.php:25
 msgid "Featured"
 msgstr ""
 
-#: templates/store-lists-loop.php:34
+#: templates/store-lists-loop.php:35
 msgid "Rated %s out of 5"
 msgstr ""
 
-#: templates/store-lists-loop.php:119
+#: templates/store-lists-loop.php:120
 msgid "No vendor found!"
 msgstr ""
 
@@ -5856,7 +5856,7 @@ msgstr ""
 msgid "Send Message"
 msgstr ""
 
-#: templates/widgets/store-open-close.php:18
+#: templates/widgets/store-open-close.php:19
 msgid "<span> %s %s %s </span>"
 msgstr ""
 
@@ -5992,7 +5992,7 @@ msgctxt "enhanced select"
 msgid "Searching&hellip;"
 msgstr ""
 
-#: includes/product-functions.php:346
+#: includes/product-functions.php:340
 msgctxt "number of pages"
 msgid "of"
 msgstr ""

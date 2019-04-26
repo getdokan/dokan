@@ -5,7 +5,7 @@ Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi selle
 Requires at least: 4.4
 Tested up to: 5.1.1
 WC requires at least: 3.0
-WC tested up to: 3.6.1
+WC tested up to: 3.6.2
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv2 or later
@@ -273,6 +273,11 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 == Changelog ==
+
+v2.9.14 -> Apr 26, 2019
+------------------------------------
+-   **Fix***  Schedule product price not showing correctly
+-   **Fix***  Backward compatibility for banner and store time
 
 v2.9.13 -> Apr 24, 2019
 ------------------------------------

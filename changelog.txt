@@ -1,3 +1,8 @@
+v2.9.14 -> Apr 26, 2019
+------------------------------------
+-   **Fix***  Schedule product price not showing correctly
+-   **Fix***  Backward compatibility for banner and store time
+
 v2.9.13 -> Apr 24, 2019
 ------------------------------------
 -   **New**   Include store open close functionality in Dokan REST API
