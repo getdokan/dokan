@@ -3154,7 +3154,7 @@ function dokan_is_store_open( $user_id ) {
     $open_days  = isset( $store_info['dokan_store_time'] ) ? $store_info['dokan_store_time'] : '';
     $today      = strtolower( date( 'l' ) );
 
-    if ( ! is_array( $open_days ) && ! isset( $open_days[ $today ] ) ) {
+    if ( ! isset( $open_days[ $today ] ) ) {
         return false;
     }
 
