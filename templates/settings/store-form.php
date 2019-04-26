@@ -250,7 +250,10 @@
             <label class="dokan-w3 control-label"></label>
             <div class="dokan-w6" style="width: auto">
                 <?php foreach ( $dokan_days as $key => $day ) : ?>
-                    <?php $status = isset( $all_times[$day]['open'] ) ? $all_times[$day]['open'] : $all_times[$day]['status']; ?>
+                    <?php
+                        $status = isset( $all_times[$day]['status'] ) ? $all_times[$day]['status'] : '';
+                        $status = isset( $all_times[$day]['open'] ) ? $all_times[$day]['open'] : $status;
+                    ?>
                     <div class="dokan-form-group">
                         <label class="day control-label" for="<?php echo esc_attr( $day ) ?>-opening-time">
                             <?php echo esc_html( dokan_get_translated_days( $day ) ); ?>
