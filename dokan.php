@@ -81,6 +81,13 @@ final class WeDevs_Dokan {
     public $version = '2.9.14';
 
     /**
+     * Instance of self
+     *
+     * @var WeDevs_Dokan
+     */
+    private static $instance = null;
+
+    /**
      * Minimum PHP version required
      *
      * @var string
@@ -102,13 +109,15 @@ final class WeDevs_Dokan {
      * Sets up all the appropriate hooks and actions
      * within our plugin.
      */
-    public function __construct() {
+    private function __construct() {
         $this->define_constants();
 
         register_activation_hook( __FILE__, array( $this, 'activate' ) );
         register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
 
         add_action( 'woocommerce_loaded', array( $this, 'init_plugin' ) );
+
+        $this->init_appsero_tracker();
     }
 
     /**
@@ -118,13 +127,12 @@ final class WeDevs_Dokan {
      * and if it doesn't find one, creates it.
      */
     public static function init() {
-        static $instance = false;
 
-        if ( ! $instance ) {
-            $instance = new WeDevs_Dokan();
+        if ( self::$instance === null ) {
+            self::$instance = new self();
         }
 
-        return $instance;
+        return self::$instance;
     }
 
     /**
@@ -362,7 +370,6 @@ final class WeDevs_Dokan {
 
         $this->container['pageview']      = new Dokan_Pageviews();
         $this->container['rewrite']       = new Dokan_Rewrites();
-        $this->container['tracker']       = new Dokan_Tracker();
         $this->container['seller_wizard'] = new Dokan_Seller_Setup_Wizard();
         $this->container['core']          = new Dokan_Core();
         $this->container['scripts']       = new Dokan_Assets();
@@ -471,6 +478,15 @@ final class WeDevs_Dokan {
         $links[] = '<a href="https://docs.wedevs.com/docs/dokan/" target="_blank">' . __( 'Documentation', 'dokan-lite' ) . '</a>';
 
         return $links;
+    }
+
+    /**
+     * Initialize Appsero Tracker
+     *
+     * @return  void
+     */
+    public function init_appsero_tracker() {
+        $this->container['tracker'] = new Dokan_Tracker();
     }
 
 } // WeDevs_Dokan
