@@ -62,8 +62,8 @@ class Dokan_Admin_User_Profile {
         $selling               = get_user_meta( $user->ID, 'dokan_enable_selling', true );
         $publishing            = get_user_meta( $user->ID, 'dokan_publishing', true );
         $store_settings        = dokan_get_store_info( $user->ID );
-        $banner                = isset( $store_settings['banner'] ) ? absint( $store_settings['banner'] ) : 0;
-        // seller_percentage      = get_user_meta( $user->ID, 'dokan_seller_percentage', true );
+        $banner_id             = ! empty( $store_settings['banner_id'] ) ? $store_settings['banner_id'] : 0;
+        $banner                = ! empty( $store_settings['banner'] ) ? absint( $store_settings['banner'] ) : $banner_id;
         $admin_commission      = get_user_meta( $user->ID, 'dokan_admin_percentage', true );
         $admin_commission_type = get_user_meta( $user->ID, 'dokan_admin_percentage_type', true );
         $feature_seller        = get_user_meta( $user->ID, 'dokan_feature_seller', true );
