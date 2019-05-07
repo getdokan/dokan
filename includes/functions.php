@@ -1033,6 +1033,7 @@ add_filter( 'manage_edit-product_columns', 'dokan_admin_product_columns' );
  * @return mixed
  */
 function dokan_get_option( $option, $section, $default = '' ) {
+    list( $option, $section ) = dokan_settings_rearrange_map( $option, $section );
 
     $options = get_option( $section );
 
@@ -3506,4 +3507,29 @@ function dokan_login_form( $args = array(), $echo = false ) {
  */
 function dokan_validate_boolean( $var ) {
     return filter_var( $var, FILTER_VALIDATE_BOOLEAN );
+}
+
+/**
+ * Backward compatibile settings option map
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @param string $option
+ * @param string $section
+ *
+ * @return array
+ */
+function dokan_settings_rearrange_map( $option, $section ) {
+    $id = $option . '_' . $section;
+
+    $map = array(
+        'shipping_fee_recipient_dokan_general'   => array( 'shipping_fee_recipient', 'dokan_selling' ),
+        'setup_wizard_logo_url_dokan_appearance' => array( 'setup_wizard_logo_url', 'dokan_general' ),
+    );
+
+    if ( isset( $map[ $id ] ) ) {
+        return $map[ $id ];
+    }
+
+    return array( $option, $section );
 }
