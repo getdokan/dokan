@@ -25,65 +25,70 @@ class Dokan_Store_Category_Menu extends WP_Widget {
      * @return void Echoes it's output
      **/
     function widget( $args, $instance ) {
+        if ( dokan_is_store_page() ) {
+            extract( $args, EXTR_SKIP );
 
-        if ( ! dokan_is_store_page() ) {
-            return;
-        }
+            echo $before_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
 
-        extract( $args, EXTR_SKIP );
+            $defaults = array(
+                'title' => __( 'Store Product Category', 'dokan-lite' ),
+            );
 
-        echo $before_widget;
+            $instance = wp_parse_args( $instance, $defaults );
 
-        $title      = apply_filters( 'widget_title', $instance['title'] );
-        $seller_id  = (int) get_query_var( 'author' );
+            $title      = apply_filters( 'widget_title', $instance['title'] );
+            $seller_id  = (int) get_query_var( 'author' );
 
-        if ( ! empty( $title ) ) {
-            echo $args['before_title'] . $title . $args['after_title'];
-        }
+            if ( ! empty( $title ) ) {
+                echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+            }
 
-        dokan_store_category_menu( $seller_id, $title );
+            dokan_store_category_menu( $seller_id, $title );
 
-        ?>
-        <script>
-            ( function ( $ ) {
+            ?>
+            <script>
+                ( function ( $ ) {
 
-                $( '#cat-drop-stack li.has-children' ).on( 'click', '> a span.caret-icon', function ( e ) {
-                    e.preventDefault();
-                    var self = $( this ),
-                        liHasChildren = self.closest( 'li.has-children' );
+                    $( '#cat-drop-stack li.has-children' ).on( 'click', '> a span.caret-icon', function ( e ) {
+                        e.preventDefault();
+                        var self = $( this ),
+                            liHasChildren = self.closest( 'li.has-children' );
 
-                    if ( !liHasChildren.find( '> ul.children' ).is( ':visible' ) ) {
-                        self.find( 'i.fa' ).addClass( 'fa-rotate-90' );
-                        if ( liHasChildren.find( '> ul.children' ).hasClass( 'level-0' ) ) {
-                            self.closest( 'a' ).css( { 'borderBottom': 'none' } );
-                        }
-                    }
-
-                    liHasChildren.find( '> ul.children' ).slideToggle( 'fast', function () {
-                        if ( !$( this ).is( ':visible' ) ) {
-                            self.find( 'i.fa' ).removeClass( 'fa-rotate-90' );
-
+                        if ( !liHasChildren.find( '> ul.children' ).is( ':visible' ) ) {
+                            self.find( 'i.fa' ).addClass( 'fa-rotate-90' );
                             if ( liHasChildren.find( '> ul.children' ).hasClass( 'level-0' ) ) {
-                                self.closest( 'a' ).css( { 'borderBottom': '1px solid #eee' } );
+                                self.closest( 'a' ).css( { 'borderBottom': 'none' } );
                             }
                         }
+
+                        liHasChildren.find( '> ul.children' ).slideToggle( 'fast', function () {
+                            if ( !$( this ).is( ':visible' ) ) {
+                                self.find( 'i.fa' ).removeClass( 'fa-rotate-90' );
+
+                                if ( liHasChildren.find( '> ul.children' ).hasClass( 'level-0' ) ) {
+                                    self.closest( 'a' ).css( { 'borderBottom': '1px solid #eee' } );
+                                }
+                            }
+                        } );
                     } );
-                } );
 
-                $(document).ready(function(){
-                    var selectedLi = $('#cat-drop-stack ul').find( 'a.selected' );
-                    selectedLi.css({ fontWeight: 'bold' });
+                    $(document).ready(function(){
+                        var selectedLi = $('#cat-drop-stack ul').find( 'a.selected' );
+                        selectedLi.css({ fontWeight: 'bold' });
 
-                    selectedLi.parents('ul.children').each( function( i, val ) {
-                        $( val ).css({ display: 'block' });
+                        selectedLi.parents('ul.children').each( function( i, val ) {
+                            $( val ).css({ display: 'block' });
+                        });
                     });
-                });
-            } )( jQuery );
-        </script>
+                } )( jQuery );
+            </script>
 
-        <?php
+            <?php
 
-        echo $after_widget;
+            echo $after_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+        }
+
+        do_action( 'dokan_widget_store_categories_render', $args, $instance, $this );
     }
 
     /**
@@ -109,14 +114,14 @@ class Dokan_Store_Category_Menu extends WP_Widget {
      **/
     function form( $instance ) {
         $instance = wp_parse_args( (array) $instance, array(
-            'title' => __( 'Category', 'dokan-lite' ),
+            'title' => __( 'Store Product Category', 'dokan-lite' ),
         ) );
 
         $title = $instance['title'];
         ?>
         <p>
-            <label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'dokan-lite' ); ?></label>
-            <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
+            <label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'dokan-lite' ); ?></label>
+            <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
         </p>
         <?php
     }

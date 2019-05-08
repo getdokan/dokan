@@ -41,7 +41,8 @@ class Dokan_Core {
         $no_access   = dokan_get_option( 'admin_access', 'dokan_general', 'on' );
         $valid_pages = array( 'admin-ajax.php', 'admin-post.php', 'async-upload.php', 'media-upload.php' );
         $user_role   = reset( $current_user->roles );
-        if ( ( $no_access == 'on' ) && ( !in_array( $pagenow, $valid_pages ) ) && in_array( $user_role, array( 'seller', 'customer', 'vendor_staff' ) ) ) {
+
+        if ( ( 'on' == $no_access ) && ( !in_array( $pagenow, $valid_pages ) ) && in_array( $user_role, array( 'seller', 'customer', 'vendor_staff' ) ) ) {
             wp_redirect( home_url() );
             exit;
         }
@@ -126,6 +127,11 @@ class Dokan_Core {
         if ( dokan_is_store_page() ) {
             $site_title = get_bloginfo( 'name' );
             $store_user = get_userdata( get_query_var( 'author' ) );
+
+            if ( ! $store_user ) {
+                return $title;
+            }
+
             $store_info = dokan_get_store_info( $store_user->ID );
             $store_name = esc_html( $store_info['store_name'] );
             $title      = "$store_name $sep $site_title";

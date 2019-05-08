@@ -29,6 +29,13 @@ class Dokan_Vendor {
     private $shop_data = array();
 
     /**
+     * Holds the chanages data
+     *
+     * @var array
+     */
+    private $changes = array();
+
+    /**
      * The constructor
      *
      * @param int|WP_User $vendor
@@ -47,6 +54,8 @@ class Dokan_Vendor {
             $this->id   = $vendor->ID;
             $this->data = $vendor;
         }
+
+        do_action( 'dokan_vendor', $this );
     }
 
     /**
@@ -93,7 +102,9 @@ class Dokan_Vendor {
             'address'               => $this->get_address(),
             'location'              => $this->get_location(),
             'banner'                => $this->get_banner(),
+            'banner_id'             => $this->get_banner_id(),
             'gravatar'              => $this->get_avatar(),
+            'gravatar_id'           => $this->get_avatar_id(),
             'shop_url'              => $this->get_shop_url(),
             'products_per_page'     => $this->get_per_page(),
             'show_more_product_tab' => $this->show_more_products_tab(),
@@ -105,6 +116,12 @@ class Dokan_Vendor {
             'registered'            => $this->get_register_date(),
             'payment'               => $this->get_payment_profiles(),
             'trusted'               => $this->is_trusted(),
+            'store_open_close'      => [
+                'enabled'      => $this->is_store_time_enabled(),
+                'time'         => $this->get_store_time(),
+                'open_notice'  => $this->get_store_open_notice(),
+                'close_notice' => $this->get_store_close_notice(),
+            ],
         );
 
         return apply_filters( 'dokan_vendor_to_array', $data, $this );
@@ -172,14 +189,19 @@ class Dokan_Vendor {
             'address'                 => array(),
             'location'                => '',
             'banner'                  => 0,
+            'banner_id'               => 0,
             'icon'                    => 0,
             'gravatar'                => 0,
+            'gravatar_id'             => 0,
             'show_more_ptab'          => 'yes',
             'store_ppp'               => 10,
             'enable_tnc'              => 'off',
             'store_tnc'               => '',
             'show_min_order_discount' => 'no',
-            'store_seo'               => array()
+            'store_seo'               => array(),
+            'dokan_store_time_enabled' => 'yes',
+            'dokan_store_open_notice'  => '',
+            'dokan_store_close_notice' => ''
         );
 
         if ( ! $this->id ) {
@@ -193,6 +215,12 @@ class Dokan_Vendor {
 
         $this->shop_data = apply_filters( 'dokan_vendor_shop_data', $shop_info, $this );
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Getters
+    |--------------------------------------------------------------------------
+    */
 
     /**
      * Get the store info by lazyloading
@@ -374,13 +402,32 @@ class Dokan_Vendor {
      * @return string
      */
     public function get_banner() {
-        $banner_id = (int) $this->get_info_part( 'banner' );
+        $banner_id = $this->get_banner_id();
 
         if ( ! $banner_id ) {
-            return false;
+            $banner = $this->get_info_part( 'banner' );
+
+            if ( $banner ) {
+                $banner_id = $banner;
+            } else {
+                return false;
+            }
         }
 
         return wp_get_attachment_url( $banner_id );
+    }
+
+    /**
+     * Get the shop banner id
+     *
+     * @since 2.9.13
+     *
+     * @return int
+     */
+    public function get_banner_id() {
+        $banner_id = (int) $this->get_info_part( 'banner_id' );
+
+        return $banner_id ? $banner_id : 0;
     }
 
     /**
@@ -391,13 +438,30 @@ class Dokan_Vendor {
      * @return string
      */
     public function get_avatar() {
-        $avatar_id = (int) $this->get_info_part( 'gravatar' );
+        $avatar_id = $this->get_avatar_id();
+
+        if ( ! $avatar_id ) {
+            $avatar_id = $this->get_info_part( 'gravatar' );
+        }
 
         if ( ! $avatar_id && ! empty( $this->data->user_email ) ) {
             return get_avatar_url( $this->data->user_email, 96 );
         }
 
         return wp_get_attachment_url( $avatar_id );
+    }
+
+    /**
+     * Get shop gravatar id
+     *
+     * @since 2.9.13
+     *
+     * @return int
+     */
+    public function get_avatar_id() {
+        $avatar_id = (int) $this->get_info_part( 'gravatar_id' );
+
+        return $avatar_id ? $avatar_id : 0;
     }
 
     /**
@@ -460,6 +524,23 @@ class Dokan_Vendor {
     }
 
     /**
+     * Get a vendor products
+     *
+     * @return object
+     */
+    public function get_products() {
+        $products = dokan()->product->all( [
+            'author' => $this->id
+        ] );
+
+        if ( ! $products ) {
+            return null;
+        }
+
+        return $products;
+    }
+
+    /**
      * Get the total sales amount of this vendor
      *
      * @return float
@@ -497,33 +578,32 @@ class Dokan_Vendor {
             $installed_version = get_option( 'dokan_theme_version' );
 
             if ( ! $installed_version || version_compare( $installed_version, '2.8.2', '>' ) ) {
-                $debit_sql      = "SELECT
-                                    SUM(debit) AS earnings
-                                FROM
-                                    {$wpdb->prefix}dokan_vendor_balance
-                                WHERE
-                                    vendor_id = %d AND DATE(balance_date) <= %s AND status IN({$status})";
-                $debit_balance  = $wpdb->get_row( $wpdb->prepare( $debit_sql, $this->id, $on_date ) );
+                $debit_balance  = $wpdb->get_row( $wpdb->prepare(
+                    "SELECT SUM(debit) AS earnings
+                    FROM {$wpdb->prefix}dokan_vendor_balance
+                    WHERE
+                        vendor_id = %d AND DATE(balance_date) <= %s AND status IN ($status) AND trn_type = 'dokan_orders'",
+                    $this->id, $on_date ) );
 
-                $credit_sql     = "SELECT
-                                        SUM(credit) AS earnings
-                                    FROM
-                                        {$wpdb->prefix}dokan_vendor_balance
-                                    WHERE
-                                        vendor_id = %d AND DATE(balance_date) <= %s AND trn_type = %s AND status = %s";
-                $credit_balance = $wpdb->get_row( $wpdb->prepare( $credit_sql, $this->id, $on_date, $trn_type, $refund_status ) );
+               $credit_balance = $wpdb->get_row( $wpdb->prepare(
+                    "SELECT SUM(credit) AS earnings
+                    FROM {$wpdb->prefix}dokan_vendor_balance
+                    WHERE
+                        vendor_id = %d AND DATE(balance_date) <= %s AND trn_type = %s AND status = %s",
+                    $this->id, $on_date, $trn_type, $refund_status ) );
 
                 $earnings         = $debit_balance->earnings - $credit_balance->earnings;
                 $result           = new stdClass;
                 $result->earnings = $earnings;
             } else {
-                $sql    = "SELECT
-                            SUM(net_amount) as earnings
-                        FROM
-                            {$wpdb->prefix}dokan_orders as do LEFT JOIN {$wpdb->prefix}posts as p ON do.order_id = p.ID
-                        WHERE
-                            seller_id = %d AND DATE(p.post_date) <= %s AND order_status IN({$status})";
-                $result = $wpdb->get_row( $wpdb->prepare( $sql, $this->id, $on_date ) );
+                $result = $wpdb->get_row( $wpdb->prepare(
+                    "SELECT
+                        SUM(net_amount) as earnings
+                    FROM
+                        {$wpdb->prefix}dokan_orders as do LEFT JOIN {$wpdb->prefix}posts as p ON do.order_id = p.ID
+                    WHERE
+                        seller_id = %d AND DATE(p.post_date) <= %s AND order_status IN ($status)",
+                    $this->id, $on_date ) );
             }
 
             $earning = (float) $result->earnings;
@@ -560,17 +640,19 @@ class Dokan_Vendor {
         if ( false === $earning ) {
             $installed_version = get_option( 'dokan_theme_version' );
             if ( ! $installed_version || version_compare( $installed_version, '2.8.2', '>' ) ) {
-                $sql = "SELECT SUM(debit) as earnings,
-                    (SELECT SUM(credit) FROM {$wpdb->prefix}dokan_vendor_balance WHERE vendor_id = %d AND DATE(balance_date) <= %s) as withdraw
-                    from {$wpdb->prefix}dokan_vendor_balance
-                    WHERE vendor_id = %d AND DATE(balance_date) <= %s AND status IN({$status})";
-                $result = $wpdb->get_row( $wpdb->prepare( $sql, $this->id, $on_date, $this->id, $on_date ) );
+                $result = $wpdb->get_row( $wpdb->prepare(
+                        "SELECT SUM(debit) as earnings,
+                        ( SELECT SUM(credit) FROM {$wpdb->prefix}dokan_vendor_balance WHERE vendor_id = %d AND DATE(balance_date) <= '%s' ) as withdraw
+                        from {$wpdb->prefix}dokan_vendor_balance
+                        WHERE vendor_id = '%d' AND DATE(balance_date) <= '%s' AND status IN($status)",
+                    $this->id, $on_date, $this->id, $on_date ) );
             } else {
-                $sql = "SELECT SUM(net_amount) as earnings,
+                $result = $wpdb->get_row( $wpdb->prepare(
+                    "SELECT SUM(net_amount) as earnings,
                     (SELECT SUM(amount) FROM {$wpdb->prefix}dokan_withdraw WHERE user_id = %d AND status = 1 AND DATE(`date`) <= %s) as withdraw
                     FROM {$wpdb->prefix}dokan_orders as do LEFT JOIN {$wpdb->prefix}posts as p ON do.order_id = p.ID
-                    WHERE seller_id = %d AND DATE(p.post_date) <= %s AND order_status IN({$status})";
-                $result = $wpdb->get_row( $wpdb->prepare( $sql, $this->id, $on_date, $this->id, $date ) );
+                    WHERE seller_id = %d AND DATE(p.post_date) <= %s AND order_status IN ($status)",
+                    $this->id, $on_date, $this->id, $date ) );
             }
 
             $earning = (float) $result->earnings - (float) round( $result->withdraw, wc_get_rounding_precision() );
@@ -596,14 +678,13 @@ class Dokan_Vendor {
     public function get_rating() {
         global $wpdb;
 
-        $sql = "SELECT AVG(cm.meta_value) as average, COUNT(wc.comment_ID) as count FROM $wpdb->posts p
+        $result = $wpdb->get_row( $wpdb->prepare(
+            "SELECT AVG(cm.meta_value) as average, COUNT(wc.comment_ID) as count FROM $wpdb->posts p
             INNER JOIN $wpdb->comments wc ON p.ID = wc.comment_post_ID
             LEFT JOIN $wpdb->commentmeta cm ON cm.comment_id = wc.comment_ID
             WHERE p.post_author = %d AND p.post_type = 'product' AND p.post_status = 'publish'
             AND ( cm.meta_key = 'rating' OR cm.meta_key IS NULL) AND wc.comment_approved = 1
-            ORDER BY wc.comment_post_ID";
-
-        $result = $wpdb->get_row( $wpdb->prepare( $sql, $this->id ) );
+            ORDER BY wc.comment_post_ID", $this->id ) );
 
         $rating_value = apply_filters( 'dokan_seller_rating_value', array(
             'rating' => number_format( $result->average, 2 ),
@@ -647,7 +728,7 @@ class Dokan_Vendor {
             return $html;
         }
 
-        echo $html;
+        echo esc_html( $html );
     }
 
     /**
@@ -694,20 +775,6 @@ class Dokan_Vendor {
     }
 
     /**
-     * Delete vendor with reassign data
-     *
-     * @since 2.8.0
-     *
-     * @return void
-     */
-    public function delete( $reassign = null ) {
-        $user = $this->to_array();
-        require_once ABSPATH . 'wp-admin/includes/user.php';;
-        wp_delete_user( $this->get_id(), $reassign );
-        return $user;
-    }
-
-    /**
      * Chnage product status when toggling seller active status
      *
      * @since 2.6.9
@@ -741,4 +808,499 @@ class Dokan_Vendor {
         }
     }
 
+    /**
+     * Get store opening closing time
+     *
+     * @return array
+     */
+    public function get_store_time() {
+        $time = $this->get_info_part( 'dokan_store_time' );
+
+        return $time ? $time : [];
+    }
+
+    /**
+     * Get store opening closing time
+     *
+     * @return boolean|null on failure
+     */
+    public function is_store_time_enabled() {
+        return 'yes' === $this->get_info_part( 'dokan_store_time_enabled' );
+    }
+
+    /**
+     * Get store open notice
+     *
+     * @return string|null on failure
+     */
+    public function get_store_open_notice() {
+        return $this->get_info_part( 'dokan_store_open_notice' );
+    }
+
+    /**
+     * Get store close notice
+     *
+     * @return string|null on failure
+     */
+    public function get_store_close_notice() {
+        return $this->get_info_part( 'dokan_store_close_notice' );
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Setters
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Set enable tnc
+     *
+     * @param int value
+     */
+    public function set_enable_tnc( $value ) {
+        $this->set_prop( 'enable_tnc', wc_clean( $value ) );
+    }
+
+    /**
+     * Set gravatar
+     *
+     * @param int value
+     */
+    public function set_gravatar_id( $value ) {
+        $this->set_prop( 'gravatar_id', (int) $value );
+    }
+
+    /**
+     * Set banner
+     *
+     * @param int value
+     */
+    public function set_banner_id( $value ) {
+        $this->set_prop( 'banner_id', (int) $value );
+    }
+
+    /**
+     * Set banner
+     *
+     * @param int value
+     */
+    public function set_icon( $value ) {
+        $this->set_prop( 'icon', (int) $value );
+    }
+
+    /**
+     * Set store name
+     *
+     * @param string
+     */
+    public function set_store_name( $value ) {
+        $this->set_prop( 'store_name', wc_clean( $value ) );
+    }
+
+    /**
+     * Set phone
+     *
+     * @param string
+     */
+    public function set_phone( $value ) {
+        $this->set_prop( 'phone', wc_clean( $value ) );
+    }
+
+    /**
+     * Set show email
+     *
+     * @param string
+     */
+    public function set_show_email( $value ) {
+        $this->set_prop( 'show_email', wc_clean( $value ) );
+    }
+
+    /**
+     * Set show email
+     *
+     * @param string
+     */
+    public function set_fb( $value ) {
+        $this->set_social_prop( 'fb', 'social', esc_url_raw( $value ) );
+    }
+
+    /**
+     * Set show email
+     *
+     * @param string
+     */
+    public function set_gplus( $value ) {
+        $this->set_social_prop( 'gplus', 'social', esc_url_raw( $value ) );
+    }
+
+   /**
+     * Set show email
+     *
+     * @param string
+     */
+    public function set_twitter( $value ) {
+        $this->set_social_prop( 'twitter', 'social', esc_url_raw( $value ) );
+    }
+
+   /**
+     * Set show email
+     *
+     * @param string
+     */
+    public function set_pinterest( $value ) {
+        $this->set_social_prop( 'pinterest', 'social', esc_url_raw( $value ) );
+    }
+
+   /**
+     * Set show email
+     *
+     * @param string
+     */
+    public function set_linkedin( $value ) {
+        $this->set_social_prop( 'linkedin', 'social', esc_url_raw( $value ) );
+    }
+
+   /**
+     * Set show email
+     *
+     * @param string
+     */
+    public function set_youtube( $value ) {
+        $this->set_social_prop( 'youtube', 'social', esc_url_raw( $value ) );
+    }
+
+   /**
+     * Set show email
+     *
+     * @param string
+     */
+    public function set_instagram( $value ) {
+        $this->set_social_prop( 'instagram', 'social', esc_url_raw( $value ) );
+    }
+
+   /**
+     * Set flickr
+     *
+     * @param string
+     */
+    public function set_flickr( $value ) {
+        $this->set_social_prop( 'flickr', 'social', esc_url_raw( $value ) );
+    }
+
+    /**
+     * Set paypal email
+     *
+     * @param string $value
+     */
+    public function set_paypal_email( $value ) {
+        $this->set_payment_prop( 'email', 'paypal', sanitize_email( $value ) );
+    }
+
+    /**
+     * Set bank ac name
+     *
+     * @param string $value
+     */
+    public function set_bank_ac_name( $value ) {
+        $this->set_payment_prop( 'ac_name', 'bank', wc_clean( $value ) );
+    }
+
+    /**
+     * Set bank ac number
+     *
+     * @param string $value
+     */
+    public function set_bank_ac_number( $value ) {
+        $this->set_payment_prop( 'ac_number', 'bank', wc_clean( $value ) );
+    }
+
+    /**
+     * Set bank name
+     *
+     * @param string $value
+     */
+    public function set_bank_bank_name( $value ) {
+        $this->set_payment_prop( 'bank_name', 'bank', wc_clean( $value ) );
+    }
+
+    /**
+     * Set bank address
+     *
+     * @param string value
+     */
+    public function set_bank_bank_addr( $value ) {
+        $this->set_payment_prop( 'bank_addr', 'bank', wc_clean( $value ) );
+    }
+
+    /**
+     * Set bank routing number
+     *
+     * @param string value
+     */
+    public function set_bank_routing_number( $value ) {
+        $this->set_payment_prop( 'routing_number', 'bank', wc_clean( $value ) );
+    }
+
+    /**
+     * Set bank iban
+     *
+     * @param string $value
+     */
+    public function set_bank_iban( $value ) {
+        $this->set_payment_prop( 'iban', 'bank', wc_clean( $value ) );
+    }
+
+    /**
+     * Set bank swtif number
+     *
+     * @param string $value
+     */
+    public function set_bank_swift( $value ) {
+        $this->set_payment_prop( 'swift', 'bank', wc_clean( $value ) );
+    }
+
+    /**
+     * Set street 1
+     *
+     * @param string $value
+     */
+    public function set_street_1( $value ) {
+        $this->set_address_prop( 'street_1', 'address', wc_clean( $value ) );
+    }
+
+    /**
+     * Set street 2
+     *
+     * @param string $value
+     */
+    public function set_street_2( $value ) {
+        $this->set_address_prop( 'street_2', 'address', wc_clean( $value ) );
+    }
+
+    /**
+     * Set city
+     *
+     * @param string $value
+     */
+    public function set_city( $value ) {
+        $this->set_address_prop( 'city', 'address', wc_clean( $value ) );
+    }
+
+    /**
+     * Set zip
+     *
+     * @param string $value
+     */
+    public function set_zip( $value ) {
+        $this->set_address_prop( 'zip', 'address', wc_clean( $value ) );
+    }
+
+    /**
+     * Set state
+     *
+     * @param string $value
+     */
+    public function set_state( $value ) {
+        $this->set_address_prop( 'state', 'address', wc_clean( $value ) );
+    }
+
+    /**
+     * Set country
+     *
+     * @param string $value
+     */
+    public function set_country( $value ) {
+        $this->set_address_prop( 'country', 'address', wc_clean( $value ) );
+    }
+
+    /**
+     * Sets a prop for a setter method.
+     *
+     * This stores changes in a special array so we can track what needs saving
+     * the the DB later.
+     *
+     * @since 2.9.11
+     *
+     * @param string $prop Name of prop to set.
+     * @param mixed  $value Value of the prop.
+     */
+    protected function set_prop( $prop, $value ) {
+        if ( ! $this->shop_data ) {
+            $this->popluate_store_data();
+        }
+
+        if ( array_key_exists( $prop, $this->shop_data ) ) {
+            if ( $value !== $this->shop_data[ $prop ] || array_key_exists( $prop, $this->changes ) ) {
+                $this->changes[ $prop ] = $value;
+            }
+        }
+    }
+
+    /**
+     * Update vendor meta data
+     *
+     * @since 2.9.11
+     *
+     * @param string $key
+     * @param mix $value
+     *
+     * @return void
+     *
+     * @todo make this to a setter method
+     */
+    public function update_meta( $key, $value ) {
+        update_user_meta( $this->get_id(), $key, $value );
+    }
+
+    /**
+     * Sets a prop for a setter method.
+     *
+     * @since 2.9.11
+     *
+     * @param string $prop    Name of prop to set.
+     * @param string $social Name of social settings to set, fb, twitter
+     * @param string $value
+     */
+    protected function set_social_prop( $prop, $social = 'social', $value ) {
+        if ( ! $this->shop_data ) {
+            $this->popluate_store_data();
+        }
+
+        if ( ! isset( $this->shop_data[ $social ][ $prop ] ) ) {
+            $this->shop_data[ $social ][ $prop ] = null;
+        }
+
+        if ( $value !== $this->shop_data[ $social ][ $prop ] || ( isset( $this->changes[ $social ] ) && array_key_exists( $prop, $this->changes[ $social ] ) ) ) {
+            $this->changes[ $social ][ $prop ] = $value;
+        }
+    }
+
+    /**
+     * Set address props
+     *
+     * @param string $prop
+     * @param string $address
+     * @param string value
+     */
+    protected function set_address_prop( $prop, $address = 'address', $value ) {
+        $this->set_social_prop( $prop, $address, $value );
+    }
+
+    /**
+     * Set payment props
+     *
+     * @param string $prop
+     * @param string $paypal
+     * @param mix value
+     */
+    protected function set_payment_prop( $prop, $paypal = 'paypal', $value ) {
+        if ( ! $this->shop_data ) {
+            $this->popluate_store_data();
+        }
+
+        if ( ! isset( $this->shop_data[ 'payment' ][ $paypal ][ $prop ] ) ) {
+            $this->shop_data[ 'payment' ][ $paypal ][ $prop ] = null;
+        }
+
+        if ( $value !== $this->shop_data[ 'payment' ][ $paypal ][ $prop ] || ( isset( $this->changes[ 'payment' ] ) && array_key_exists( $prop, $this->changes[ 'payment' ] ) ) ) {
+            $this->changes[ 'payment' ][ $paypal ][ $prop ] = $value;
+        }
+    }
+
+    /**
+     * Set store open close props
+     *
+     * @param string $prop
+     * @param array $value
+     *
+     * @since 2.9.13
+     *
+     * @return void
+     */
+    protected function set_store_open_close_prop( $prop, $value ) {
+        if ( ! $this->shop_data ) {
+            $this->popluate_store_data();
+        }
+
+        if ( ! isset( $this->shop_data[ 'dokan_store_time' ][ $prop ] ) ) {
+            $this->shop_data[ 'dokan_store_time' ][ $prop ] = null;
+        }
+
+        if ( $value !== $this->shop_data[ 'dokan_store_time' ][ $prop ] || ( isset( $this->changes[ 'dokan_store_time' ] ) && array_key_exists( $prop, $this->changes[ 'dokan_store_time' ] ) ) ) {
+            $this->changes[ 'dokan_store_time' ][ $prop ] = $value;
+        }
+    }
+
+    /**
+     * Set store times
+     *
+     * @param array $data
+     *
+     * @since 2.9.13
+     *
+     * @return void
+     */
+    public function set_store_times( array $data ) {
+        foreach ( $data as $prop => $value ) {
+            $this->set_store_open_close_prop( $prop, $value );
+        }
+    }
+
+    /**
+     * Set store times enable
+     *
+     * @param boolean $value
+     *
+     * @since 2.9.13
+     *
+     * @return void
+     */
+    public function set_store_times_enable( $value ) {
+        $this->set_prop( 'dokan_store_time_enabled', wc_clean( $value ) );
+    }
+
+    /**
+     * Set store times open notice
+     *
+     * @param string $value
+     *
+     * @since 2.9.13
+     *
+     * @return void
+     */
+    public function set_store_times_open_notice( $value ) {
+        $this->set_prop( 'dokan_store_open_notice', wc_clean( $value ) );
+    }
+
+    /**
+     * Set store times close notice
+     *
+     * @param string $value
+     *
+     * @since 2.9.13
+     *
+     * @return void
+     */
+    public function set_store_times_close_notice( $value ) {
+        $this->set_prop( 'dokan_store_close_notice', wc_clean( $value ) );
+    }
+
+    /**
+     * Merge changes with data and clear.
+     *
+     * @since 2.9.11
+     */
+    public function apply_changes() {
+        update_user_meta( $this->get_id(), 'dokan_profile_settings', array_replace_recursive( $this->shop_data, $this->changes ) );
+        $this->changes = [];
+    }
+
+    /**
+     * Save the object
+     *
+     * @since 2.9.11
+     */
+    public function save() {
+        $this->apply_changes();
+    }
 }

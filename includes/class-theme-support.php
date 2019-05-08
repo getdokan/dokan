@@ -20,7 +20,7 @@ class Dokan_Theme_Support {
      * Constructor
      */
     public function __construct() {
-        $this->theme = get_template();
+        $this->theme = strtolower( get_template() );
 
         $this->include_support();
     }
@@ -37,6 +37,10 @@ class Dokan_Theme_Support {
                 break;
 
             case 'flatsome':
+                require_once __DIR__ . '/theme-support/class-' . $this->theme . '.php';
+                break;
+
+            case 'divi':
                 require_once __DIR__ . '/theme-support/class-' . $this->theme . '.php';
                 break;
         }

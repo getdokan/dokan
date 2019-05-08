@@ -215,7 +215,7 @@ function dokan_get_order_report_data( $args = array(), $start_date, $end_date ) 
     $query_hash = md5( $query_type . $query );
 
     if ( $debug ) {
-        printf( '<pre>%s</pre>', print_r( $query, true ) );
+        error_log( '<pre>%s</pre>', print_r( $query, true ) );
     }
 
     if ( $debug || $nocache || ( false === ( $result = get_transient( 'dokan_wc_report_' . $query_hash ) ) ) ) {
@@ -250,7 +250,7 @@ if ( ! function_exists( 'dokan_dashboard_sales_overview' ) ) :
  */
 function dokan_dashboard_sales_overview() {
     $start_date = date( 'Y-m-01', current_time('timestamp') );
-    $end_date = date( 'Y-m-d', strtotime( 'midnight', current_time( 'timestamp' ) ) );
+    $end_date   = date( 'Y-m-d', strtotime( 'midnight', current_time( 'timestamp' ) ) );
 
     dokan_sales_overview_chart_data( $start_date, $end_date, 'day' );
 }
@@ -274,7 +274,7 @@ function dokan_sales_overview_chart_data( $start_date, $end_date, $group_by ) {
     global $wp_locale;
 
     $start_date_to_time = strtotime( $start_date );
-    $end_date_to_time = strtotime( $end_date );
+    $end_date_to_time   = strtotime( $end_date );
 
     if ( $group_by == 'day' ) {
         $group_by_query       = 'YEAR(post_date), MONTH(post_date), DAY(post_date)';
@@ -284,9 +284,11 @@ function dokan_sales_overview_chart_data( $start_date, $end_date, $group_by ) {
         $group_by_query = 'YEAR(post_date), MONTH(post_date)';
         $chart_interval = 0;
         $min_date             = $start_date_to_time;
+
         while ( ( $min_date   = strtotime( "+1 MONTH", $min_date ) ) <= $end_date_to_time ) {
             $chart_interval ++;
         }
+
         $barwidth             = 60 * 60 * 24 * 7 * 4 * 1000;
     }
 
@@ -322,10 +324,10 @@ function dokan_sales_overview_chart_data( $start_date, $end_date, $group_by ) {
     $order_amounts     = dokan_prepare_chart_data( $orders, 'post_date', 'total_sales', $chart_interval, $start_date_to_time, $group_by );
 
     // Encode in json format
-    $chart_data = json_encode( array(
+    $chart_data = array(
         'order_counts'      => array_values( $order_counts ),
         'order_amounts'     => array_values( $order_amounts )
-    ) );
+    );
 
     $chart_colours = array(
         'order_counts'  => '#3498db',
@@ -340,7 +342,7 @@ function dokan_sales_overview_chart_data( $start_date, $end_date, $group_by ) {
     <script type="text/javascript">
         jQuery(function($) {
 
-            var order_data = jQuery.parseJSON( '<?php echo $chart_data; ?>' );
+            var order_data = jQuery.parseJSON( '<?php echo wp_json_encode($chart_data); ?>' );
             var isRtl = '<?php echo is_rtl() ? "1" : "0"; ?>';
             var series = [
                 {
@@ -351,7 +353,7 @@ function dokan_sales_overview_chart_data( $start_date, $end_date, $group_by ) {
                     points: { show: true, radius: 5, lineWidth: 1, fillColor: '#fff', fill: true },
                     lines: { show: true, lineWidth: 2, fill: false },
                     shadowSize: 0,
-                    prepend_tooltip: "<?php echo get_woocommerce_currency_symbol(); ?>"
+                    prepend_tooltip: "<?php echo esc_attr( get_woocommerce_currency_symbol()); ?>"
                 },
                 {
                     label: "<?php echo esc_js( __( 'Number of orders', 'dokan-lite' ) ) ?>",
@@ -361,7 +363,7 @@ function dokan_sales_overview_chart_data( $start_date, $end_date, $group_by ) {
                     points: { show: true, radius: 5, lineWidth: 2, fillColor: '#fff', fill: true },
                     lines: { show: true, lineWidth: 3, fill: false },
                     shadowSize: 0,
-                    append_tooltip: " <?php echo __( 'sales', 'dokan-lite' ); ?>"
+                    append_tooltip: " <?php echo esc_html__( 'Sales', 'dokan-lite' ); ?>"
                 },
             ];
 
@@ -393,7 +395,7 @@ function dokan_sales_overview_chart_data( $start_date, $end_date, $group_by ) {
                         timeformat: "<?php if ( $group_by == 'day' ) echo '%d %b'; else echo '%b'; ?>",
                         monthNames: <?php echo json_encode( array_values( $wp_locale->month_abbrev ) ) ?>,
                         tickLength: 1,
-                        minTickSize: [1, "<?php echo $group_by; ?>"],
+                        minTickSize: [1, "<?php echo esc_attr( $group_by ); ?>"],
                         font: {
                             color: "#aaa"
                         },
@@ -418,7 +420,7 @@ function dokan_sales_overview_chart_data( $start_date, $end_date, $group_by ) {
                             font: { color: "#aaa" }
                         }
                     ],
-                    colors: ["<?php echo $chart_colours['order_counts']; ?>", "<?php echo $chart_colours['order_amounts']; ?>"]
+                    colors: ["<?php echo esc_attr($chart_colours['order_counts']); ?>", "<?php echo esc_attr($chart_colours['order_amounts']); ?>"]
                 }
             );
 

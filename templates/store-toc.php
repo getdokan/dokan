@@ -6,7 +6,7 @@
  * @package dokan - 2014 1.0
  */
 
-$vendor = dokan()->vendor->get( get_query_var( 'author' ) );
+$vendor      = dokan()->vendor->get( get_query_var( 'author' ) );
 $vendor_info = $vendor->get_shop_info();
 
 get_header( 'shop' );
@@ -28,7 +28,7 @@ get_header( 'shop' );
                 );
 
                 if ( class_exists( 'Dokan_Store_Location' ) ) {
-                    the_widget( 'Dokan_Store_Category_Menu', array( 'title' => __( 'Store Category', 'dokan-lite' ) ), $args );
+                    the_widget( 'Dokan_Store_Category_Menu', array( 'title' => __( 'Store Product Category', 'dokan-lite' ) ), $args );
 
                     if ( dokan_get_option( 'store_map', 'dokan_general', 'on' ) == 'on' ) {
                         the_widget( 'Dokan_Store_Location', array( 'title' => __( 'Store Location', 'dokan-lite' ) ), $args );
@@ -65,10 +65,10 @@ get_header( 'shop' );
                 <?php
                 if( ! empty( $vendor->get_store_tnc() ) ):
                 ?>
-                    <h2 class="headline"><?php _e( 'Terms And Conditions', 'dokan-lite' ); ?></h2>
+                    <h2 class="headline"><?php esc_html_e( 'Terms And Conditions', 'dokan-lite' ); ?></h2>
                     <div>
                         <?php
-                        echo nl2br( $vendor->get_store_tnc() );
+                            echo wp_kses_post( nl2br( $vendor->get_store_tnc() ) );
                         ?>
                     </div>
                 <?php

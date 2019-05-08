@@ -1,0 +1,51 @@
+.dokan-popup-content {
+    padding: 18px;
+
+    .dokan-popup-title {
+        border-bottom: 1px solid @gray-lighter;
+        padding-bottom: 10px;
+        margin-bottom: 15px;
+        line-height: 1;
+    }
+
+    fieldset {
+        padding: 0;
+        margin: 0;
+        border: 0;
+        background: none;
+    }
+
+    .mfp-close {
+        top: 4px;
+        right: 3px;
+    }
+
+    .dokan-popup-option-list {
+        list-style-type: none;
+        padding: 0;
+        margin: 10px 0;
+
+        li {
+            margin: 0 0 3px;
+
+            label.dokan-popup-block-label {
+                display: block;
+                margin: 0;
+                cursor: pointer;
+
+                input {
+                    margin: 0 4px 0 0;
+                }
+            }
+        }
+    }
+
+    .dokan-popup-error {
+        display: none;
+        color: @brand-danger;
+
+        &.has-error {
+            display: block;
+        }
+    }
+}

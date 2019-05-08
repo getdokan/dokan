@@ -22,6 +22,9 @@ class Dokan_Order_Manager {
         if ( is_admin() ) {
             add_action( 'woocommerce_process_shop_order_meta', 'dokan_sync_insert_order' );
         }
+
+        // restore order stock if it's been reduced by twice
+        add_action( 'woocommerce_reduce_order_stock', array( $this, 'restore_reduced_order_stock' ) );
     }
 
     /**
@@ -51,14 +54,6 @@ class Dokan_Order_Manager {
             array( '%d' )
         );
 
-        // update on vendor-balance table
-        $wpdb->update( $wpdb->prefix . 'dokan_vendor_balance',
-            array( 'status' => $new_status ),
-            array( 'trn_id' => $order_id, 'trn_type' => 'dokan_orders' ),
-            array( '%s' ),
-            array( '%d', '%s' )
-        );
-
         // if any child orders found, change the orders as well
         $sub_orders = get_children( array( 'post_parent' => $order_id, 'post_type' => 'shop_order' ) );
 
@@ -68,6 +63,14 @@ class Dokan_Order_Manager {
                 $order->update_status( $new_status );
             }
         }
+
+        // update on vendor-balance table
+       $wpdb->update( $wpdb->prefix . 'dokan_vendor_balance',
+            array( 'status' => $new_status ),
+            array( 'trn_id' => $order_id, 'trn_type' => 'dokan_orders' ),
+            array( '%s' ),
+            array( '%d', '%s' )
+        );
     }
 
     /**
@@ -204,8 +207,6 @@ class Dokan_Order_Manager {
 
         try {
             $order = new WC_Order();
-            $order->set_status( $parent_order->get_status() );
-            $order->set_parent_id( $parent_order->get_id() );
 
             // save billing and shipping address
             foreach ( $bill_ship as $key ) {
@@ -213,20 +214,6 @@ class Dokan_Order_Manager {
                     $order->{"set_{$key}"}( $parent_order->{"get_{$key}"}() );
                 }
             }
-
-            $order_id = $order->save();
-        } catch (Exception $e) {
-            return new WP_Error( 'dokan-suborder-error', $e->getMessage() );
-        }
-
-        if ( $order_id && !is_wp_error( $order_id ) ) {
-
-            // update total_sales count for sub-order
-            wc_update_total_sales_counts( $order_id );
-
-            dokan_log( 'Created sub order : #' . $order_id );
-
-            $order = wc_get_order( $order_id );
 
             // now insert line items
             $this->create_line_items( $order, $seller_products );
@@ -260,8 +247,21 @@ class Dokan_Order_Manager {
             // finally, let the order re-calculate itself and save
             $order->calculate_totals();
 
+            $order->set_status( $parent_order->get_status() );
+            $order->set_parent_id( $parent_order->get_id() );
+
+            $order_id = $order->save();
+
+            // update total_sales count for sub-order
+            wc_update_total_sales_counts( $order_id );
+
+            dokan_log( 'Created sub order : #' . $order_id );
+
             do_action( 'dokan_checkout_update_order_meta', $order_id, $seller_id );
-        } // if order
+
+        } catch (Exception $e) {
+            return new WP_Error( 'dokan-suborder-error', $e->getMessage() );
+        }
     }
 
     /**
@@ -299,6 +299,8 @@ class Dokan_Order_Manager {
         }
 
         $order->save();
+
+        do_action( 'dokan_after_create_line_items', $order );
     }
 
     /**
@@ -351,7 +353,7 @@ class Dokan_Order_Manager {
 
         // Get all shipping methods for parent order
         $shipping_methods = $parent_order->get_shipping_methods();
-        $order_seller_id  = dokan_get_seller_id_by_order_id( $order->get_id() );
+        $order_seller_id  = dokan_get_seller_id_by_order( $order->get_id() );
 
         $applied_shipping_method = '';
 
@@ -477,5 +479,54 @@ class Dokan_Order_Manager {
         }
 
         return $valid;
+    }
+
+
+    /**
+     * Restore order stock if it's been reduced by twice
+     *
+     * @param  object $order
+     *
+     * @return void
+     */
+    public function restore_reduced_order_stock( $order ) {
+        // seems in rest request, there is no such issue like (stock reduced by twice), so return early
+        if ( defined( 'REST_REQUEST' ) ) {
+            return;
+        }
+
+        $has_sub_order = wp_get_post_parent_id( $order->get_id() );
+
+        // seems it's not a parent order so return early
+        if ( ! $has_sub_order ) {
+            return;
+        }
+
+        // Loop over all items.
+        foreach ( $order->get_items() as $item ) {
+            if ( ! $item->is_type( 'line_item' ) ) {
+                continue;
+            }
+
+            // Only reduce stock once for each item.
+            $product            = $item->get_product();
+            $item_stock_reduced = $item->get_meta( '_reduced_stock', true );
+
+            if ( ! $item_stock_reduced || ! $product || ! $product->managing_stock() ) {
+                continue;
+            }
+
+            $item_name = $product->get_formatted_name();
+            $new_stock = wc_update_product_stock( $product, $item_stock_reduced, 'increase' );
+
+            if ( is_wp_error( $new_stock ) ) {
+                /* translators: %s item name. */
+                $order->add_order_note( sprintf( __( 'Unable to restore stock for item %s.', 'dokan-lite' ), $item_name ) );
+                continue;
+            }
+
+            $item->delete_meta_data( '_reduced_stock' );
+            $item->save();
+        }
     }
 }

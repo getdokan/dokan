@@ -64,7 +64,11 @@ module.exports = function(grunt) {
                 files: {
                     '<%= dirs.js %>/dokan.js': [
                         '<%= dirs.devJsSrc %>/*.js',
-                        '!<%= dirs.devJsSrc %>/admin.js'
+                        '!<%= dirs.devJsSrc %>/admin.js',
+                        '!<%= dirs.devJsSrc %>/login-form-popup.js'
+                    ],
+                    '<%= dirs.js %>/login-form-popup.js': [
+                        '<%= dirs.devJsSrc %>/login-form-popup.js'
                     ]
                 }
             },
@@ -148,12 +152,15 @@ module.exports = function(grunt) {
                     '**',
                     '!node_modules/**',
                     '!build/**',
+                    '!vendor/**',
                     '!bin/**',
                     '!.git/**',
                     '!Gruntfile.js',
                     '!CONTRIBUTING.md',
                     '!package.json',
                     '!package-lock.json',
+                    '!composer.json',
+                    '!composer.lock',
                     '!config.json',
                     '!phpcs.xml.dist',
                     '!webpack.config.js',

@@ -3,12 +3,12 @@
 Plugin Name: Dokan
 Plugin URI: https://wordpress.org/plugins/dokan-lite/
 Description: An e-commerce marketplace plugin for WordPress. Powered by WooCommerce and weDevs.
-Version: 2.9.3
+Version: 2.9.14
 Author: weDevs, LLC
 Author URI: https://wedevs.com/
 Text Domain: dokan-lite
 WC requires at least: 3.0
-WC tested up to: 3.5.0
+WC tested up to: 3.6.2
 Domain Path: /languages/
 License: GPL2
 */
@@ -78,7 +78,14 @@ final class WeDevs_Dokan {
      *
      * @var string
      */
-    public $version = '2.9.3';
+    public $version = '2.9.14';
+
+    /**
+     * Instance of self
+     *
+     * @var WeDevs_Dokan
+     */
+    private static $instance = null;
 
     /**
      * Minimum PHP version required
@@ -102,17 +109,15 @@ final class WeDevs_Dokan {
      * Sets up all the appropriate hooks and actions
      * within our plugin.
      */
-    public function __construct() {
+    private function __construct() {
         $this->define_constants();
-
-        if ( ! $this->is_supported_php() ) {
-            return;
-        }
 
         register_activation_hook( __FILE__, array( $this, 'activate' ) );
         register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
 
         add_action( 'woocommerce_loaded', array( $this, 'init_plugin' ) );
+
+        $this->init_appsero_tracker();
     }
 
     /**
@@ -122,13 +127,12 @@ final class WeDevs_Dokan {
      * and if it doesn't find one, creates it.
      */
     public static function init() {
-        static $instance = false;
 
-        if ( ! $instance ) {
-            $instance = new WeDevs_Dokan();
+        if ( self::$instance === null ) {
+            self::$instance = new self();
         }
 
-        return $instance;
+        return self::$instance;
     }
 
     /**
@@ -189,7 +193,14 @@ final class WeDevs_Dokan {
             require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
             deactivate_plugins( plugin_basename( __FILE__ ) );
 
-            wp_die( '<div class="error"><p>' . sprintf( __( '<b>Dokan</b> requires %sWooCommerce%s to be installed & activated!', 'dokan-lite' ), '<a target="_blank" href="https://wordpress.org/plugins/woocommerce/">', '</a>' ) . '</p></div>' );
+            wp_die( '<div class="error"><p>' . sprintf( esc_html__( '<b>Dokan</b> requires <a href="%s">WooCommerce</a> to be installed & activated!', 'dokan-lite' ), '<a target="_blank" href="https://wordpress.org/plugins/woocommerce/">', '</a>' ) . '</p></div>' );
+        }
+
+        if ( ! $this->is_supported_php() ) {
+            require_once WC_ABSPATH . 'includes/wc-notice-functions.php';
+
+            wc_print_notice( sprintf( __( 'The Minimum PHP Version Requirement for <b>Dokan</b> is %s. You are Running PHP %s', 'dokan' ), $this->min_php, phpversion(), 'error' ) );
+            exit;
         }
 
         require_once dirname( __FILE__ ) . '/includes/functions.php';
@@ -268,7 +279,7 @@ final class WeDevs_Dokan {
         add_action( 'init', array( $this, 'localization_setup' ) );
 
         // initialize the classes
-        add_action( 'init', array( $this, 'init_classes' ),5 );
+        add_action( 'init', array( $this, 'init_classes' ), 4 );
         add_action( 'init', array( $this, 'wpdb_table_shortcuts' ) );
 
         add_action( 'plugins_loaded', array( $this, 'after_plugins_loaded' ) );
@@ -292,6 +303,9 @@ final class WeDevs_Dokan {
         require_once $inc_dir . 'functions.php';
         require_once $inc_dir . 'functions-depricated.php';
         require_once $inc_dir . 'functions-compatibility.php';
+
+        // Traits
+        require_once $inc_dir . 'traits/singleton.php';
 
         // widgets
         require_once $inc_dir . 'widgets/menu-category.php';
@@ -356,7 +370,6 @@ final class WeDevs_Dokan {
 
         $this->container['pageview']      = new Dokan_Pageviews();
         $this->container['rewrite']       = new Dokan_Rewrites();
-        $this->container['tracker']       = new Dokan_Tracker();
         $this->container['seller_wizard'] = new Dokan_Seller_Setup_Wizard();
         $this->container['core']          = new Dokan_Core();
         $this->container['scripts']       = new Dokan_Assets();
@@ -368,7 +381,9 @@ final class WeDevs_Dokan {
         $this->container['orders']        = new Dokan_Order_Manager();
         $this->container['api']           = new Dokan_API_Manager();
 
-        if ( is_user_logged_in() ) {
+        $this->container = apply_filters( 'dokan_get_class_container', $this->container );
+
+        if ( ! is_admin() && is_user_logged_in() ) {
             Dokan_Template_Main::init();
             Dokan_Template_Dashboard::init();
             Dokan_Template_Products::init();
@@ -463,6 +478,15 @@ final class WeDevs_Dokan {
         $links[] = '<a href="https://docs.wedevs.com/docs/dokan/" target="_blank">' . __( 'Documentation', 'dokan-lite' ) . '</a>';
 
         return $links;
+    }
+
+    /**
+     * Initialize Appsero Tracker
+     *
+     * @return  void
+     */
+    public function init_appsero_tracker() {
+        $this->container['tracker'] = new Dokan_Tracker();
     }
 
 } // WeDevs_Dokan

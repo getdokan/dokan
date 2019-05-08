@@ -26,13 +26,13 @@ abstract class Dokan_REST_Controller extends WP_REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_items( $request ) {
-        $query_args = $this->prepare_objects_query( $request );
-        $query  = new WP_Query();
-        $result = $query->query( $query_args );
+        $query_args   = $this->prepare_objects_query( $request );
+        $query        = new WP_Query();
+        $result       = $query->query( $query_args );
 
-        $data = array();
+        $data         = array();
         $data_objects = array();
-        $objects = array_map( array( $this, 'get_object' ), $result );
+        $objects      = array_map( array( $this, 'get_object' ), $result );
 
         foreach ( $objects as $object ) {
             $data           = $this->prepare_data_for_response( $object, $request );
@@ -94,6 +94,10 @@ abstract class Dokan_REST_Controller extends WP_REST_Controller {
 
             //Update post author
             wp_update_post( array( 'ID' => $object->get_id(), 'post_author' => dokan_get_current_user_id() ) );
+
+            // send email to admin on adding a new product
+            do_action( 'dokan_new_product_added', $object->get_id(), $request );
+
             return $this->prepare_data_for_response( $this->get_object( $object->get_id() ), $request );
         } catch ( WC_Data_Exception $e ) {
             return new WP_Error( $e->getErrorCode(), $e->getMessage(), $e->getErrorData() );
