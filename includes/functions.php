@@ -1033,7 +1033,7 @@ add_filter( 'manage_edit-product_columns', 'dokan_admin_product_columns' );
  * @return mixed
  */
 function dokan_get_option( $option, $section, $default = '' ) {
-    list( $option, $section ) = dokan_settings_rearrange_map( $option, $section );
+    list( $option, $section ) = dokan_admin_settings_rearrange_map( $option, $section );
 
     $options = get_option( $section );
 
@@ -3519,13 +3519,19 @@ function dokan_validate_boolean( $var ) {
  *
  * @return array
  */
-function dokan_settings_rearrange_map( $option, $section ) {
+function dokan_admin_settings_rearrange_map( $option, $section ) {
     $id = $option . '_' . $section;
 
-    $map = array(
-        'shipping_fee_recipient_dokan_general'   => array( 'shipping_fee_recipient', 'dokan_selling' ),
-        'setup_wizard_logo_url_dokan_appearance' => array( 'setup_wizard_logo_url', 'dokan_general' ),
-    );
+    $map = apply_filters( 'dokan_admin_settings_rearrange_map', array(
+        'shipping_fee_recipient_dokan_general'     => array( 'shipping_fee_recipient', 'dokan_selling' ),
+        'tax_fee_recipient_dokan_general'          => array( 'tax_fee_recipient', 'dokan_selling' ),
+        'store_open_close_dokan_general'           => array( 'store_open_close', 'dokan_appearance' ),
+        'store_map_dokan_general'                  => array( 'store_map', 'dokan_appearance' ),
+        'gmap_api_key_dokan_general'               => array( 'gmap_api_key', 'dokan_appearance' ),
+        'contact_seller_dokan_general'             => array( 'contact_seller', 'dokan_appearance' ),
+        'enable_theme_store_sidebar_dokan_general' => array( 'enable_theme_store_sidebar', 'dokan_appearance' ),
+        'setup_wizard_logo_url_dokan_appearance'   => array( 'setup_wizard_logo_url', 'dokan_general' ),
+    ) );
 
     if ( isset( $map[ $id ] ) ) {
         return $map[ $id ];
