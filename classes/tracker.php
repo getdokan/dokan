@@ -18,7 +18,8 @@ class Dokan_Tracker {
      * @return void
      */
     public function __construct() {
-        add_action( 'init', array( $this, 'appsero_init_tracker_dokan' ) );
+
+        $this->appsero_init_tracker_dokan();
     }
 
     /**
@@ -29,17 +30,20 @@ class Dokan_Tracker {
      * @return void
      */
     public function appsero_init_tracker_dokan() {
-        if ( ! class_exists( 'AppSero\Insights' ) ) {
-            require_once DOKAN_LIB_DIR . '/appsero/src/insights.php';
+
+        if ( ! class_exists( 'Appsero\Client' ) ) {
+            require_once DOKAN_LIB_DIR . '/appsero/Client.php';
         }
 
-        $this->insights = new AppSero\Insights( '559bcc0d-21b4-4b34-8317-3e072badf46d', 'Dokan Multivendor Marketplace', DOKAN_FILE );
+        $client = new Appsero\Client( '559bcc0d-21b4-4b34-8317-3e072badf46d', 'Dokan Multivendor Marketplace', DOKAN_FILE );
 
-        $this->insights->add_extra(array(
+        $this->insights = $client->insights();
+
+        $this->insights->add_extra( [
             'products' => $this->insights->get_post_count( 'product' ),
             'orders'   => $this->get_order_count(),
-            'is_pro'   => dokan()->is_pro_exists() ? 'Yes' : 'No',
-        ));
+            'is_pro'   => class_exists( 'Dokan_Pro' ) ? 'Yes' : 'No',
+        ] );
 
         $this->insights->init_plugin();
     }
@@ -54,4 +58,5 @@ class Dokan_Tracker {
 
         return (int) $wpdb->get_var( "SELECT count(ID) FROM $wpdb->posts WHERE post_type = 'shop_order' and post_status IN ('wc-completed', 'wc-processing', 'wc-on-hold', 'wc-refunded');");
     }
+
 }
