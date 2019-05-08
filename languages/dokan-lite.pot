@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 2.9.14\n"
+"Project-Id-Version: Dokan 2.9.15\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2019-04-26 10:50:11+00:00\n"
+"POT-Creation-Date: 2019-05-08 09:11:01+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -519,7 +519,7 @@ msgid "I swear this is not your product!"
 msgstr ""
 
 #: classes/template-settings.php:70 classes/template-settings.php:74
-#: dokan.php:470 includes/admin/class-admin.php:146
+#: dokan.php:477 includes/admin/class-admin.php:146
 #: includes/admin/class-admin.php:207 includes/template-tags.php:338
 #: src/admin/pages/Settings.vue:3
 msgid "Settings"
@@ -674,23 +674,23 @@ msgstr ""
 msgid "Accepted"
 msgstr ""
 
-#: dokan.php:188
+#: dokan.php:196
 msgid ""
 "<b>Dokan</b> requires <a href=\"%s\">WooCommerce</a> to be installed & "
 "activated!"
 msgstr ""
 
-#: dokan.php:194
+#: dokan.php:202
 msgid ""
 "The Minimum PHP Version Requirement for <b>Dokan</b> is %s. You are Running "
 "PHP %s"
 msgstr ""
 
-#: dokan.php:467
+#: dokan.php:474
 msgid "Get Pro"
 msgstr ""
 
-#: dokan.php:471
+#: dokan.php:478
 msgid "Documentation"
 msgstr ""
 
@@ -3990,7 +3990,7 @@ msgstr ""
 msgid "Save Variations"
 msgstr ""
 
-#: includes/product-functions.php:318 lib/appsero/src/insights.php:788
+#: includes/product-functions.php:318 lib/appsero/Insights.php:749
 #: templates/my-orders.php:83 templates/orders/details.php:200
 #: templates/products/new-product-single.php:205
 #: templates/products/new-product.php:165
@@ -4356,37 +4356,37 @@ msgstr ""
 msgid "Choose file"
 msgstr ""
 
-#: lib/appsero/src/insights.php:411
+#: lib/appsero/Insights.php:358
 msgid ""
 "Want to help make <strong>%1$s</strong> even more awesome? Allow %1$s to "
 "collect non-sensitive diagnostic data and usage information."
 msgstr ""
 
-#: lib/appsero/src/insights.php:416
+#: lib/appsero/Insights.php:363
 msgid "what we collect"
 msgstr ""
 
-#: lib/appsero/src/insights.php:434 templates/products/inventory.php:53
+#: lib/appsero/Insights.php:369 templates/products/inventory.php:53
 msgid "Allow"
 msgstr ""
 
-#: lib/appsero/src/insights.php:435
+#: lib/appsero/Insights.php:370
 msgid "No thanks"
 msgstr ""
 
-#: lib/appsero/src/insights.php:633
+#: lib/appsero/Insights.php:569
 msgid "Once Weekly"
 msgstr ""
 
-#: lib/appsero/src/insights.php:772
+#: lib/appsero/Insights.php:733
 msgid "If you have a moment, please let us know why you are deactivating:"
 msgstr ""
 
-#: lib/appsero/src/insights.php:786
+#: lib/appsero/Insights.php:747
 msgid "I rather wouldn't say"
 msgstr ""
 
-#: lib/appsero/src/insights.php:787
+#: lib/appsero/Insights.php:748
 msgid "Submit & Deactivate"
 msgstr ""
 

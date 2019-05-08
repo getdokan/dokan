@@ -274,6 +274,12 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+v2.9.15 -> May 08, 2019
+------------------------------------
+-   **Fix***   Vendor banner is not showing in the backend edit user profile page
+-   **Fix***   Add filter to allow or skip nonce checking while registering new user
+-   **Tweak*** Update appsero SDK
+
 v2.9.14 -> Apr 26, 2019
 ------------------------------------
 -   **Fix***  Schedule product price not showing correctly
