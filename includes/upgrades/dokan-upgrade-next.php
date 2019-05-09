@@ -42,9 +42,9 @@ function dokan_update_admin_settings_next() {
 
                 $options_to_save[ $new_section ][ $new_option_option ] = $old_settings[ $old_option ];
 
-                if ( $options_to_save[ $old_section ][ $old_option ] ) {
-                    unset( $options_to_save[ $old_section ][ $old_option ] );
-                }
+                // if ( $options_to_save[ $old_section ][ $old_option ] ) {
+                //     unset( $options_to_save[ $old_section ][ $old_option ] );
+                // }
             }
         }
     }
