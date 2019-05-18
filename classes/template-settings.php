@@ -508,11 +508,11 @@ class Dokan_Template_Settings {
                 'address'                  => isset( $post_data['dokan_address'] ) ? array_map( 'sanitize_text_field', $post_data['dokan_address'] ) : $prev_dokan_settings['address'],
                 'location'                 => sanitize_text_field( $post_data['location'] ),
                 'find_address'             => sanitize_text_field( $post_data['find_address'] ),
-                'banner_id'                => isset( $post_data['dokan_banner'] ) ? absint( $post_data['dokan_banner'] ) : 0,
+                'banner'                   => isset( $post_data['dokan_banner'] ) ? absint( $post_data['dokan_banner'] ) : 0,
                 'phone'                    => sanitize_text_field( $post_data['setting_phone'] ),
                 'show_email'               => sanitize_text_field( $post_data['setting_show_email'] ),
                 'show_more_ptab'           => sanitize_text_field( $post_data['setting_show_more_ptab'] ),
-                'gravatar_id'              => isset( $post_data['dokan_gravatar'] ) ? absint( $post_data['dokan_gravatar'] ) : 0,
+                'gravatar'                 => isset( $post_data['dokan_gravatar'] ) ? absint( $post_data['dokan_gravatar'] ) : 0,
                 'enable_tnc'               => isset( $post_data['dokan_store_tnc_enable'] ) && 'on' == $post_data['dokan_store_tnc_enable'] ? 'on' : 'off',
                 'store_tnc'                => isset( $post_data['dokan_store_tnc'] ) ? wp_kses_post( $post_data['dokan_store_tnc'] ) : '',
                 'dokan_store_time'         => array(

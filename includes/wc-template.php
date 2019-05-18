@@ -331,19 +331,9 @@ add_action( 'dokan_contact_form', 'dokan_add_privacy_policy' );
  */
 add_action( 'dokan_store_profile_saved', function( $store_id, $settings ) {
     $store_info        = dokan_get_store_info( $store_id );
-    $banner            = isset( $store_info['banner'] ) ? true : false;
-    $gravatar          = isset( $store_info['gravatar'] ) ? true : false;
     $all_times         = isset( $store_info['dokan_store_time'] ) ? $store_info['dokan_store_time'] : false;
     $days              = [ 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday' ];
     $is_status_unsated = false;
-
-    if ( $banner ) {
-        unset( $store_info['banner'] );
-    }
-
-    if ( $gravatar ) {
-        unset( $store_info['gravatar'] );
-    }
 
     if ( $all_times ) {
         foreach ( $days as $day => $value ) {
@@ -355,7 +345,7 @@ add_action( 'dokan_store_profile_saved', function( $store_id, $settings ) {
         }
     }
 
-    if ( $banner || $gravatar || $is_status_unsated ) {
+    if ( $is_status_unsated ) {
         update_user_meta( $store_id, 'dokan_profile_settings', $store_info );
     }
 
