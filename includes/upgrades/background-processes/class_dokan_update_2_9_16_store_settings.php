@@ -47,7 +47,7 @@ class Dokan_Update_2_9_16_Store_Settings extends Abstract_Dokan_Background_Proce
      * @return void
      */
     private function update_store_settings( $paged ) {
-        $limit = 10;
+        $limit = 50;
         $count = $limit * $paged;
 
         $query_args = [
