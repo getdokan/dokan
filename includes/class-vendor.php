@@ -815,19 +815,29 @@ class Dokan_Vendor {
     /**
      * Get store open notice
      *
-     * @return string|null on failure
+     * @param string $default_notice
+     *
+     * @return string
      */
-    public function get_store_open_notice() {
-        return $this->get_info_part( 'dokan_store_open_notice' );
+    public function get_store_open_notice( $default_notice = '' ) {
+        $notice         = $this->get_info_part( 'dokan_store_open_notice' );
+        $default_notice = $default_notice ? $default_notice : __( 'Store is open', 'dokan' );
+
+        return $notice ? $notice : $default_notice;
     }
 
     /**
      * Get store close notice
      *
-     * @return string|null on failure
+     * @param string $default_notice
+     *
+     * @return string
      */
-    public function get_store_close_notice() {
-        return $this->get_info_part( 'dokan_store_close_notice' );
+    public function get_store_close_notice( $default_notice = '' ) {
+        $notice         = $this->get_info_part( 'dokan_store_close_notice' );
+        $default_notice = $default_notice ? $default_notice : __( 'Store is closed', 'dokan' );
+
+        return $notice ? $notice : $default_notice;
     }
 
     /*
