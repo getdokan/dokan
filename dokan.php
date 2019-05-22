@@ -111,6 +111,7 @@ final class WeDevs_Dokan {
      */
     private function __construct() {
         $this->define_constants();
+        $this->include_exceptions();
 
         register_activation_hook( __FILE__, array( $this, 'activate' ) );
         register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
@@ -181,6 +182,17 @@ final class WeDevs_Dokan {
      */
     public function template_path() {
         return apply_filters( 'dokan_template_path', 'dokan/' );
+    }
+
+    /**
+     * Include custom throwable exceptions
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return void
+     */
+    private function include_exceptions() {
+        require_once DOKAN_INC_DIR . '/exceptions/class-dokan-exception.php';
     }
 
     /**
