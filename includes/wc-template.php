@@ -217,15 +217,19 @@ function dokan_save_quick_edit_vendor_data ( $product ) {
         return;
     }
 
-    if ( isset( $_REQUEST['dokan_product_author_override'] ) ) {
-        $vendor_id = sanitize_text_field( wp_unslash( $_REQUEST['dokan_product_author_override'] ) );
+    $posted_vendor_id = ! empty( $_REQUEST['dokan_product_author_override'] ) ? (int) $_REQUEST['dokan_product_author_override'] : 0;
 
-        if ( ! $vendor_id ) {
-            return;
-        }
-
-        wp_update_post( array( 'ID' => $product->get_id(), 'post_author' => $vendor_id  ) );
+    if ( ! $posted_vendor_id ) {
+        return;
     }
+
+    $vendor = dokan_get_vendor_by_product( $product );
+
+    if ( $posted_vendor_id === $vendor->get_id() ) {
+        return;
+    }
+
+    wp_update_post( array( 'ID' => $product->get_id(), 'post_author' => $posted_vendor_id  ) );
 }
 
 add_action( 'woocommerce_product_quick_edit_save', 'dokan_save_quick_edit_vendor_data', 10, 1 );
