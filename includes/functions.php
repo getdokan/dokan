@@ -2008,12 +2008,10 @@ function dokan_get_avatar_url( $url, $id_or_email, $args ) {
         return $url;
     }
 
-    // see if there is a user_avatar meta field
-    $user_avatar = get_user_meta( $user->ID, 'dokan_profile_settings', true );
-    $gravatar_id = ! empty( $user_avatar['gravatar_id'] ) ? $user_avatar['gravatar_id'] : 0;
-    $gravatar_id = ! empty( $user_avatar['gravatar'] ) ? $user_avatar['gravatar'] : $gravatar_id;
+    $vendor      = dokan()->vendor->get( $user->ID );
+    $gravatar_id = $vendor->get_avatar_id();
 
-    if ( empty( $gravatar_id ) ) {
+    if ( ! $gravatar_id ) {
         return $url;
     }
 
