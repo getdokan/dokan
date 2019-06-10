@@ -338,7 +338,7 @@
     .store-open-close select.dokan-form-control {
         width: auto;
     }
-    @media only screen and ( max-width: 400px ) {
+    @media only screen and ( max-width: 415px ) {
         .store-open-close label:first-child {
             width: 100%;
             text-align: left;
