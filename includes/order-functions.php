@@ -231,7 +231,16 @@ function dokan_count_orders( $user_id ) {
     $counts      = wp_cache_get( $cache_key, $cache_group );
 
     if ( $counts === false ) {
-        $counts = array('wc-pending' => 0, 'wc-completed' => 0, 'wc-on-hold' => 0, 'wc-processing' => 0, 'wc-refunded' => 0, 'wc-cancelled' => 0, 'total' => 0);
+        $counts = [
+            'wc-pending'    => 0,
+            'wc-completed'  => 0,
+            'wc-on-hold'    => 0,
+            'wc-processing' => 0,
+            'wc-refunded'   => 0,
+            'wc-cancelled'  => 0,
+            'wc-failed'     => 0,
+            'total'         => 0
+        ];
 
         $results = $wpdb->get_results( $wpdb->prepare( "SELECT do.order_status
             FROM {$wpdb->prefix}dokan_orders AS do
