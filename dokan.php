@@ -250,20 +250,31 @@ final class WeDevs_Dokan {
      * @return void
      */
     public function define_constants() {
-        define( 'DOKAN_PLUGIN_VERSION', $this->version );
-        define( 'DOKAN_FILE', __FILE__ );
-        define( 'DOKAN_DIR', dirname( __FILE__ ) );
-        define( 'DOKAN_INC_DIR', dirname( __FILE__ ) . '/includes' );
-        define( 'DOKAN_LIB_DIR', dirname( __FILE__ ) . '/lib' );
-        define( 'DOKAN_PLUGIN_ASSEST', plugins_url( 'assets', __FILE__ ) );
+        $this->define( 'DOKAN_PLUGIN_VERSION', $this->version );
+        $this->define( 'DOKAN_FILE', __FILE__ );
+        $this->define( 'DOKAN_DIR', dirname( __FILE__ ) );
+        $this->define( 'DOKAN_INC_DIR', dirname( __FILE__ ) . '/includes' );
+        $this->define( 'DOKAN_LIB_DIR', dirname( __FILE__ ) . '/lib' );
+        $this->define( 'DOKAN_PLUGIN_ASSEST', plugins_url( 'assets', __FILE__ ) );
 
         // give a way to turn off loading styles and scripts from parent theme
-        if ( ! defined( 'DOKAN_LOAD_STYLE' ) ) {
-            define( 'DOKAN_LOAD_STYLE', true );
-        }
+        $this->define( 'DOKAN_LOAD_STYLE', true );
+        $this->define( 'DOKAN_LOAD_SCRIPTS', true );
+    }
 
-        if ( ! defined( 'DOKAN_LOAD_SCRIPTS' ) ) {
-            define( 'DOKAN_LOAD_SCRIPTS', true );
+    /**
+     * Define constant if not already defined
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param string $name
+     * @param string|bool $value
+     *
+     * @return void
+     */
+    private function define( $name, $value ) {
+        if ( ! defined( $name ) ) {
+            define( $name, $value );
         }
     }
 
