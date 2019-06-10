@@ -11,7 +11,7 @@
 
     <td>
         <p>
-            <a href="#" class="dokan-btn dokan-btn-sm dokan-btn-danger delete"><span><?php esc_html_e( 'Delete', 'dokan-lite' ); ?></span></a>
+            <a href="#" class="dokan-btn dokan-btn-sm dokan-btn-danger dokan-product-delete"><span><?php esc_html_e( 'Delete', 'dokan-lite' ); ?></span></a>
         </p>
     </td>
 </tr>
