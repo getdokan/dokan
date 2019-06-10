@@ -56,6 +56,10 @@ class Dokan_Upgrade {
             return false;
         }
 
+        if ( get_transient( 'dokan_theme_version_for_updater' ) ) {
+            return version_compare( get_transient( 'dokan_theme_version_for_updater' ), DOKAN_PLUGIN_VERSION, '<'  );
+        }
+
         if ( version_compare( $installed_version, DOKAN_PLUGIN_VERSION, '<' ) ) {
             return true;
         }
@@ -111,7 +115,6 @@ class Dokan_Upgrade {
         }
     }
 
-
     /**
      * Perform all updates
      *
@@ -126,6 +129,10 @@ class Dokan_Upgrade {
 
         $installed_version = get_option( 'dokan_theme_version' );
 
+        if ( get_transient( 'dokan_theme_version_for_updater' ) ) {
+            $installed_version = get_transient( 'dokan_theme_version_for_updater' );
+        }
+
         foreach ( self::$updates as $version => $path ) {
             if ( version_compare( $installed_version, $version, '<' ) ) {
                 include DOKAN_INC_DIR . '/' . $path;
@@ -133,6 +140,7 @@ class Dokan_Upgrade {
             }
         }
 
+        delete_transient( 'dokan_theme_version_for_updater' );
         update_option( 'dokan_theme_version', DOKAN_PLUGIN_VERSION );
 
         $url = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
@@ -141,5 +149,4 @@ class Dokan_Upgrade {
         wp_redirect( $location );
         exit();
     }
-
 }
