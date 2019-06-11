@@ -594,7 +594,7 @@ jQuery(function($) {
                 return false;
             });
 
-            $('body').on('click', 'a.delete', function(){
+            $('body').on('click', 'a.dokan-product-delete', function() {
                 $(this).closest('tr').remove();
                 return false;
             });
