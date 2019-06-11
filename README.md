@@ -3,9 +3,9 @@
 **Donate Link:** http://tareq.co/donate/  
 **Tags:** WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, product vendors, woocommerce vendor, commission rate, e-commerce, ebay, ecommerce, yith, yithemes  
 **Requires at least:** 4.4  
-**Tested up to:** 5.1.1  
+**Tested up to:** 5.2.1  
 **WC requires at least:** 3.0  
-**WC tested up to:** 3.6.2  
+**WC tested up to:** 3.6.4  
 **Requires PHP:** 5.6  
 **Stable tag:** trunk  
 **License:** GPLv2 or later  
@@ -273,6 +273,21 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 ## Changelog ##
+
+v2.9.16 -> June 11, 2019
+------------------------------------
+-   **Fix***   Hide hidden and out of stock products in vendor store page
+-   **Fix***   A non-numeric value encountered warning in vendor product listing page, if product price is not given
+-   **Fix***   Add failed order in vendor order listing page
+-   **Fix***   Creating product from admin backend returns 2 instance of the product author
+-   **Tweak*** Ensure dokan_get_seller_id_by_order filter is always taking effect
+-   **Tweak*** Make dokan vendor dashboard responsive
+-   **Tweak*** Show admin notice stating WooCommerce is required if not found on dokan installation
+-   **Tweak*** Add hook after creating and updating object via dokan REST API
+-   **Tweak*** Add dokan_ensure_vendor_coupon filter while ensuring vendor coupon restriction
+-   **Tweak*** Add updater class to fix banner issue where store settings and listing template was overridden
+-   **Tweak*** Add filter hook while fetching vendor products
+-   **Tweak*** Add define method to define plugin constants
 
 v2.9.15 -> May 08, 2019
 ------------------------------------

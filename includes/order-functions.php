@@ -231,7 +231,16 @@ function dokan_count_orders( $user_id ) {
     $counts      = wp_cache_get( $cache_key, $cache_group );
 
     if ( $counts === false ) {
-        $counts = array('wc-pending' => 0, 'wc-completed' => 0, 'wc-on-hold' => 0, 'wc-processing' => 0, 'wc-refunded' => 0, 'wc-cancelled' => 0, 'total' => 0);
+        $counts = [
+            'wc-pending'    => 0,
+            'wc-completed'  => 0,
+            'wc-on-hold'    => 0,
+            'wc-processing' => 0,
+            'wc-refunded'   => 0,
+            'wc-cancelled'  => 0,
+            'wc-failed'     => 0,
+            'total'         => 0
+        ];
 
         $results = $wpdb->get_results( $wpdb->prepare( "SELECT do.order_status
             FROM {$wpdb->prefix}dokan_orders AS do
@@ -378,46 +387,52 @@ add_action( 'dokan_checkout_update_order_meta', 'dokan_sync_insert_order' );
  * @global object $wpdb
  * @param int $order_id
  *
- * @return int
+ * @return int | 0 on failure
  */
 function dokan_get_seller_id_by_order( $order_id ) {
     global $wpdb;
 
     $cache_key   = 'dokan_get_seller_id_' . $order_id;
     $cache_group = 'dokan_get_seller_id_by_order';
-    $sellers     = wp_cache_get( $cache_key, $cache_group );
+    $seller      = wp_cache_get( $cache_key, $cache_group );
+    $items       = [];
+    $seller_id   = 0;
 
-    if ( false === $sellers ) {
-        $sellers = $wpdb->get_results( $wpdb->prepare( "SELECT seller_id FROM {$wpdb->prefix}dokan_orders WHERE order_id = %d", $order_id ) );
-        wp_cache_set( $cache_key, $sellers, $cache_group );
+    if ( false === $seller ) {
+        $seller = $wpdb->get_results( $wpdb->prepare( "SELECT seller_id FROM {$wpdb->prefix}dokan_orders WHERE order_id = %d", $order_id ) );
+        wp_cache_set( $cache_key, $seller, $cache_group );
     }
 
-    if ( count( $sellers ) == 1 ) {
-        return absint( reset( $sellers )->seller_id );
+    if ( count( $seller ) === 1 ) {
+        $seller_id = absint( reset( $seller )->seller_id );
+
+        return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
     }
 
     // if seller is not found, try to retrieve it via line items
-    if ( ! $sellers ) {
+    if ( ! $seller ) {
         $order = wc_get_order( $order_id );
 
+        if ( ! $order instanceof WC_Order ) {
+            return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
+        }
+
         if ( $order->get_meta( 'has_sub_order' ) ) {
-            return 0;
+            return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
         }
 
         $items = $order->get_items( 'line_item' );
 
         if ( ! $items ) {
-            return 0;
+            return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
         }
 
         $product_id = current( $items )->get_product_id();
         $seller_id  = get_post_field( 'post_author', $product_id );
-        $seller_id  = apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
+        $seller_id  = $seller_id ? absint( $seller_id ) : 0;
 
-        return $seller_id ? absint( $seller_id ) : 0;
+        return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
     }
-
-    return 0;
 }
 
 /**

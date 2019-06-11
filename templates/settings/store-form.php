@@ -6,10 +6,8 @@
  */
 ?>
 <?php
-    $gravatar_id    = ! empty( $profile_info['gravatar_id'] ) ? $profile_info['gravatar_id'] : 0;
-    $gravatar_id    = ! empty( $profile_info['gravatar'] ) ? $profile_info['gravatar'] : $gravatar_id;
-    $banner_id      = ! empty( $profile_info['banner_id'] ) ? $profile_info['banner_id'] : 0;
-    $banner_id      = ! empty( $profile_info['banner'] ) ? $profile_info['banner'] : $banner_id;
+    $gravatar_id    = ! empty( $profile_info['gravatar'] ) ? $profile_info['gravatar'] : 0;
+    $banner_id      = ! empty( $profile_info['banner'] ) ? $profile_info['banner'] : 0;
     $storename      = isset( $profile_info['store_name'] ) ? $profile_info['store_name'] : '';
     $store_ppp      = isset( $profile_info['store_ppp'] ) ? $profile_info['store_ppp'] : '';
     $phone          = isset( $profile_info['phone'] ) ? $profile_info['phone'] : '';
@@ -338,7 +336,7 @@
     .store-open-close select.dokan-form-control {
         width: auto;
     }
-    @media only screen and ( max-width: 400px ) {
+    @media only screen and ( max-width: 415px ) {
         .store-open-close label:first-child {
             width: 100%;
             text-align: left;

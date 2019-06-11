@@ -42,6 +42,9 @@ class Dokan_API_Manager {
 
         // populate admin commission data for admin
         add_filter( 'dokan_rest_store_additional_fields', array( $this, 'populate_admin_commission' ), 10, 2 );
+
+        // Send email to admin on adding a new product
+        add_action( 'dokan_rest_insert_product_object', array( $this, 'on_dokan_rest_insert_product' ), 10, 3 );
     }
 
     /**
@@ -127,5 +130,23 @@ class Dokan_API_Manager {
         $data['admin_commission_type'] = $commission_type;
 
         return $data;
+    }
+
+    /**
+     * Send email to admin on adding a new product
+     *
+     * @param  WC_Data $object
+     * @param  WP_REST_Request $request
+     * @param  Boolean $creating
+     *
+     * @return void
+     */
+    public function on_dokan_rest_insert_product( $object, $request, $creating ) {
+        // if not creating, meaning product is updating. So return early
+        if ( ! $creating ) {
+            return;
+        }
+
+        do_action( 'dokan_new_product_added', $object->get_id(), $request );
     }
 }

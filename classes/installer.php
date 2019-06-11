@@ -17,8 +17,16 @@ class Dokan_Installer {
         $this->product_design();
 
         // does it needs any update?
-        $updater = new Dokan_Upgrade();
-        $updater->perform_updates();
+        if ( dokan()->has_woocommerce() ) {
+            dokan()->include_backgorund_processing_files();
+
+            $updater = new Dokan_Upgrade();
+            $updater->perform_updates();
+        }
+
+        if ( ! dokan()->has_woocommerce() ) {
+            set_transient( 'dokan_theme_version_for_updater', get_option( 'dokan_theme_version', false ) );
+        }
 
         if ( class_exists( 'Dokan_Rewrites' ) ) {
             Dokan_Rewrites::init()->register_rule();

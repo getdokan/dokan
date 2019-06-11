@@ -62,8 +62,7 @@ class Dokan_Admin_User_Profile {
         $selling               = get_user_meta( $user->ID, 'dokan_enable_selling', true );
         $publishing            = get_user_meta( $user->ID, 'dokan_publishing', true );
         $store_settings        = dokan_get_store_info( $user->ID );
-        $banner_id             = ! empty( $store_settings['banner_id'] ) ? $store_settings['banner_id'] : 0;
-        $banner                = ! empty( $store_settings['banner'] ) ? absint( $store_settings['banner'] ) : $banner_id;
+        $banner                = ! empty( $store_settings['banner'] ) ? absint( $store_settings['banner'] ) : 0;
         $admin_commission      = get_user_meta( $user->ID, 'dokan_admin_percentage', true );
         $admin_commission_type = get_user_meta( $user->ID, 'dokan_admin_percentage_type', true );
         $feature_seller        = get_user_meta( $user->ID, 'dokan_feature_seller', true );
@@ -541,7 +540,7 @@ class Dokan_Admin_User_Profile {
         $social         = $post_data['dokan_social'];
         $social_fields  = dokan_get_social_profile_fields();
 
-        $store_settings['banner_id']  = intval( $post_data['dokan_banner'] );
+        $store_settings['banner']     = intval( $post_data['dokan_banner'] );
         $store_settings['store_name'] = sanitize_text_field( $post_data['dokan_store_name'] );
         $store_settings['address']    = isset( $post_data['dokan_store_address'] ) ? array_map( 'sanitize_text_field', $post_data['dokan_store_address'] ) : array();
         $store_settings['phone']      = sanitize_text_field( $post_data['dokan_store_phone'] );

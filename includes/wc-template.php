@@ -217,15 +217,19 @@ function dokan_save_quick_edit_vendor_data ( $product ) {
         return;
     }
 
-    if ( isset( $_REQUEST['dokan_product_author_override'] ) ) {
-        $vendor_id = sanitize_text_field( wp_unslash( $_REQUEST['dokan_product_author_override'] ) );
+    $posted_vendor_id = ! empty( $_REQUEST['dokan_product_author_override'] ) ? (int) $_REQUEST['dokan_product_author_override'] : 0;
 
-        if ( ! $vendor_id ) {
-            return;
-        }
-
-        wp_update_post( array( 'ID' => $product->get_id(), 'post_author' => $vendor_id  ) );
+    if ( ! $posted_vendor_id ) {
+        return;
     }
+
+    $vendor = dokan_get_vendor_by_product( $product );
+
+    if ( $posted_vendor_id === $vendor->get_id() ) {
+        return;
+    }
+
+    wp_update_post( array( 'ID' => $product->get_id(), 'post_author' => $posted_vendor_id  ) );
 }
 
 add_action( 'woocommerce_product_quick_edit_save', 'dokan_save_quick_edit_vendor_data', 10, 1 );
@@ -331,19 +335,9 @@ add_action( 'dokan_contact_form', 'dokan_add_privacy_policy' );
  */
 add_action( 'dokan_store_profile_saved', function( $store_id, $settings ) {
     $store_info        = dokan_get_store_info( $store_id );
-    $banner            = isset( $store_info['banner'] ) ? true : false;
-    $gravatar          = isset( $store_info['gravatar'] ) ? true : false;
     $all_times         = isset( $store_info['dokan_store_time'] ) ? $store_info['dokan_store_time'] : false;
     $days              = [ 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday' ];
     $is_status_unsated = false;
-
-    if ( $banner ) {
-        unset( $store_info['banner'] );
-    }
-
-    if ( $gravatar ) {
-        unset( $store_info['gravatar'] );
-    }
 
     if ( $all_times ) {
         foreach ( $days as $day => $value ) {
@@ -355,7 +349,7 @@ add_action( 'dokan_store_profile_saved', function( $store_id, $settings ) {
         }
     }
 
-    if ( $banner || $gravatar || $is_status_unsated ) {
+    if ( $is_status_unsated ) {
         update_user_meta( $store_id, 'dokan_profile_settings', $store_info );
     }
 

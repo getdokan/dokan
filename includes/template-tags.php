@@ -179,6 +179,7 @@ function dokan_order_listing_status_filter() {
     $on_hold_order_url    = array();
     $canceled_order_url   = array();
     $refund_order_url     = array();
+    $failed_order_url     = array();
     ?>
 
     <ul class="list-inline order-statuses-filter">
@@ -279,6 +280,21 @@ function dokan_order_listing_status_filter() {
             ?>
             <a href="<?php echo esc_url( add_query_arg( $refund_order_url, $orders_url ) ); ?>">
                 <?php printf( esc_html__( 'Refunded (%d)', 'dokan-lite' ), esc_attr( $orders_counts->{'wc-refunded'} ) ); ?></span>
+            </a>
+        </li>
+        <li<?php echo $status_class == 'wc-failed' ? ' class="active"' : ''; ?>>
+            <?php
+                if ( $order_date ) {
+                    $date_filter = array(
+                        'order_date'         => $order_date,
+                        'dokan_order_filter' => 'Filter',
+                    );
+                }
+
+                $failed_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-failed' ) );
+            ?>
+            <a href="<?php echo esc_url( add_query_arg( $failed_order_url, $orders_url ) ); ?>">
+                <?php printf( esc_html__( 'Failed (%d)', 'dokan-lite' ), esc_attr( $orders_counts->{'wc-failed'} ) ); ?></span>
             </a>
         </li>
 

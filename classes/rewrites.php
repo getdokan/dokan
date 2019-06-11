@@ -289,9 +289,12 @@ class Dokan_Rewrites {
 
             $store_info    = dokan_get_store_info( $seller_info->data->ID );
             $post_per_page = isset( $store_info['store_ppp'] ) && ! empty( $store_info['store_ppp'] ) ? $store_info['store_ppp'] : 12;
+
             set_query_var( 'posts_per_page', $post_per_page );
+
             $query->set( 'post_type', 'product' );
             $query->set( 'author_name', $author );
+
             $query->query['term_section'] = isset( $query->query['term_section'] ) ? $query->query['term_section'] : array();
 
             if ( $query->query['term_section'] ) {
@@ -305,6 +308,28 @@ class Dokan_Rewrites {
                     )
                 );
             }
+
+            $product_visibility_terms  = wc_get_product_visibility_term_ids();
+            $product_visibility_not_in = [ is_search() && $main_query ? $product_visibility_terms['exclude-from-search'] : $product_visibility_terms['exclude-from-catalog'] ];
+
+            // Hide out of stock products.
+            if ( 'yes' === get_option( 'woocommerce_hide_out_of_stock_items' ) ) {
+                $product_visibility_not_in[] = $product_visibility_terms['outofstock'];
+            }
+
+            if ( ! empty( $product_visibility_not_in ) ) {
+                $query->set( 'tax_query',
+                    [
+                        [
+                            'taxonomy' => 'product_visibility',
+                            'field'    => 'term_taxonomy_id',
+                            'terms'    => $product_visibility_not_in,
+                            'operator' => 'NOT IN'
+                        ],
+                    ]
+                );
+            }
+
         }
     }
 }
