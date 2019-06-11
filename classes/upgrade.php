@@ -143,9 +143,7 @@ class Dokan_Upgrade {
         delete_transient( 'dokan_theme_version_for_updater' );
         update_option( 'dokan_theme_version', DOKAN_PLUGIN_VERSION );
 
-        $url = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
-
-        $location = remove_query_arg( ['dokan_do_update'], esc_url( $url ) );
+        $location = wp_unslash( add_query_arg( [ 'page' => 'dokan' ], admin_url( 'admin.php' ) ) );
         wp_redirect( $location );
         exit();
     }
