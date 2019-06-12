@@ -148,7 +148,6 @@ function dokan_is_seller_dashboard() {
     }
 
     return false;
-
 }
 
 /**
@@ -3509,4 +3508,21 @@ function dokan_login_form( $args = array(), $echo = false ) {
  */
 function dokan_validate_boolean( $var ) {
     return filter_var( $var, FILTER_VALIDATE_BOOLEAN );
+}
+
+/**
+ * Dokan get terms and condition page url
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @return url | null on failure
+ */
+function dokan_get_terms_condition_url() {
+    $page_id = dokan_get_option( 'reg_tc_page', 'dokan_pages' );
+
+    if ( ! $page_id ) {
+        return null;
+    }
+
+    return apply_filters( 'dokan_get_terms_condition_url', get_permalink( $page_id ), $page_id );
 }
