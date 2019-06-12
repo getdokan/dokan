@@ -585,3 +585,14 @@ function dokan_get_vendor_by_product( $id ) {
 
     return dokan()->vendor->get( $vendor_id );
 }
+
+/**
+ * Check if woocommerce stock management is enabled or not
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @return boolean
+ */
+function dokan_is_wc_manage_stock() {
+    return 'yes' === get_option( 'woocommerce_manage_stock' );
+}

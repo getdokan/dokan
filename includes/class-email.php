@@ -104,6 +104,7 @@ class Dokan_Email {
         $wc_emails['Dokan_Email_Withdraw_Approved']   = include( DOKAN_INC_DIR.'/emails/class-dokan-withdraw-approved.php' );
         $wc_emails['Dokan_Email_Withdraw_Cancelled']  = include( DOKAN_INC_DIR.'/emails/class-dokan-withdraw-cancelled.php' );
         $wc_emails['Dokan_Email_Contact_Seller']      = include( DOKAN_INC_DIR.'/emails/class-dokan-email-contact-seller.php' );
+        $wc_emails['Dokan_Email_Stock_Notifications'] = include( DOKAN_INC_DIR.'/emails/class-dokan-email-stock-notifications.php' );
 
         return apply_filters( 'dokan_email_classes', $wc_emails );
     }
@@ -130,7 +131,8 @@ class Dokan_Email {
                 'new-seller-registered.php',
                 'withdraw-new.php',
                 'withdraw-cancel.php',
-                'withdraw-approve.php'
+                'withdraw-approve.php',
+                'stock-notifications.php'
             )
         );
 
@@ -162,7 +164,8 @@ class Dokan_Email {
             'dokan_withdraw_request_approved',
             'dokan_withdraw_request_cancelled',
             'dokan_pending_product_published_notification',
-            'dokan_trigger_contact_seller_mail'
+            'dokan_trigger_contact_seller_mail',
+            'send_out_of_notifications_email'
         ) );
 
         foreach ( $dokan_email_actions as $action ) {

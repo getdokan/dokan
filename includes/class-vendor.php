@@ -525,6 +525,53 @@ class Dokan_Vendor {
     }
 
     /**
+     * Get out of stock products
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return array|null on failure
+     */
+    public function get_out_of_stock_products() {
+        $products = dokan()->product->all( [
+            'author' => $this->id,
+            'fields' => 'ids',
+            'meta_query' => [
+                [
+                    'key'     => '_stock_status',
+                    'value'   =>  'outofstock',
+                    'compare' => '='
+                ]
+            ]
+        ] );
+
+        return $products ? $products : null;
+    }
+
+    /**
+     * Get low stock products
+     *
+     * @since DOKAN_LITE_SNICE
+     *
+     * @return array|null on failure
+     */
+    public function get_low_stock_products() {
+        $products = dokan()->product->all( [
+            'author' => $this->id,
+            'fields' => 'ids',
+            'meta_query' => [
+                [
+                    'key'     => '_stock',
+                    'type'    => 'numeric',
+                    'value'   =>  $this->get_low_stock_threshold(),
+                    'compare' => '<='
+                ]
+            ]
+        ] );
+
+        return $products ? $products : null;
+    }
+
+    /**
      * Get the total sales amount of this vendor
      *
      * @return float
@@ -838,6 +885,50 @@ class Dokan_Vendor {
         $default_notice = $default_notice ? $default_notice : __( 'Store is closed', 'dokan' );
 
         return $notice ? $notice : $default_notice;
+    }
+
+    /**
+     * Check whether out of stock notifications is enabled or not
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return boolean
+     */
+    public function is_out_of_stock_notifications_enabled() {
+        return 'yes' === $this->get_info_part( 'out_of_stock_notifications' );
+    }
+
+    /**
+     * Check whether low stock notifications is enabled or not
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return boolean
+     */
+    public function is_low_stock_notifications_enabled() {
+        return 'yes' === $this->get_info_part( 'low_stock_notifications' );
+    }
+
+    /**
+     * Get low stock threshold for notifications
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return int
+     */
+    public function get_low_stock_threshold() {
+        return absint( $this->get_info_part( 'low_stock_threshold' ) );
+    }
+
+    /**
+     * Get out of stock threshold for notifications
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return int
+     */
+    public function get_out_of_stock_threshold() {
+        return absint( $this->get_info_part( 'out_of_stock_threshold' ) );
     }
 
     /*

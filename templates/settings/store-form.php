@@ -53,6 +53,12 @@
     $dokan_store_open_notice  = isset( $profile_info['dokan_store_open_notice'] ) ? $profile_info['dokan_store_open_notice'] : '';
     $dokan_store_close_notice = isset( $profile_info['dokan_store_close_notice'] ) ? $profile_info['dokan_store_close_notice'] : '';
 
+    if ( dokan_is_wc_manage_stock() ) {
+        $low_stock_notifications    = isset( $profile_info['low_stock_notifications'] ) ? $profile_info['low_stock_notifications'] : '';
+        $out_of_stock_notifications = isset( $profile_info['out_of_stock_notifications'] ) ? $profile_info['out_of_stock_notifications'] : '';
+        $low_stock_threshold        = isset( $profile_info['low_stock_threshold'] ) ? $profile_info['low_stock_threshold'] : '';
+        $out_of_stock_threshold     = isset( $profile_info['out_of_stock_threshold'] ) ? $profile_info['out_of_stock_threshold'] : '';
+    }
 ?>
 <?php do_action( 'dokan_settings_before_form', $current_user, $profile_info ); ?>
 
@@ -298,6 +304,45 @@
             </div>
         </div>
         <?php endif; ?>
+
+        <?php if ( dokan_is_wc_manage_stock() ) : ?>
+        <div class="dokan-form-group stock-management">
+            <label class="dokan-w3 control-label">
+                <?php esc_html_e( 'Stock Notifications', 'dokan-lite' ); ?>
+            </label>
+            <div class="dokan-w5 dokan-text-left">
+                <div class="checkbox">
+                    <label>
+                        <input type="hidden" name="low_stock_notifications" value="no">
+                        <input type="checkbox" name="low_stock_notifications" value="yes"<?php checked( $low_stock_notifications, 'yes' ); ?>> <?php esc_html_e( 'Enable low stock notifications', 'dokan-lite' ); ?>
+                    </label>
+                </div>
+
+                <div class="checkbox">
+                    <label>
+                        <input type="hidden" name="out_of_stock_notifications" value="no">
+                        <input type="checkbox" name="out_of_stock_notifications" value="yes"<?php checked( $out_of_stock_notifications, 'yes' ); ?>> <?php esc_html_e( 'Enable out of stock notifications', 'dokan-lite' ); ?>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="dokan-form-group stock-management">
+            <label class="dokan-w3 dokan-control-label" for="dokan_store_ppp"><?php esc_html_e( 'Low Stock Threshold', 'dokan-lite' ); ?></label>
+
+            <div class="dokan-w5 dokan-text-left">
+                <input id="dokan_store_ppp" value="<?php echo esc_attr( $low_stock_threshold ); ?>" name="low_stock_threshold" placeholder="10" class="dokan-form-control" type="number">
+            </div>
+        </div>
+
+        <div class="dokan-form-group stock-management">
+            <label class="dokan-w3 dokan-control-label" for="dokan_store_ppp"><?php esc_html_e( 'Out of Stock Threshold', 'dokan-lite' ); ?></label>
+
+            <div class="dokan-w5 dokan-text-left">
+                <input id="dokan_store_ppp" value="<?php echo esc_attr( $out_of_stock_threshold ); ?>" name="out_of_stock_threshold" placeholder="10" class="dokan-form-control" type="number">
+            </div>
+        </div>
+        <?php endif ?>
 
         <?php do_action( 'dokan_settings_form_bottom', $current_user, $profile_info ); ?>
 

@@ -552,9 +552,13 @@ class Dokan_Template_Settings {
                         'closing_time'     => isset( $post_data['saturday_closing_time'] ) ? sanitize_text_field( $post_data['saturday_closing_time'] ) : '',
                     ),
                 ),
-                'dokan_store_time_enabled' => isset( $post_data['dokan_store_time_enabled'] ) && 'yes' == $post_data['dokan_store_time_enabled'] ? 'yes' : 'no',
-                'dokan_store_open_notice'  => isset( $post_data['dokan_store_open_notice'] ) ? sanitize_textarea_field( $post_data['dokan_store_open_notice'] ) : '',
-                'dokan_store_close_notice' => isset( $post_data['dokan_store_close_notice'] ) ? sanitize_textarea_field( $post_data['dokan_store_close_notice'] ) : '',
+                'dokan_store_time_enabled'   => isset( $post_data['dokan_store_time_enabled'] ) && 'yes' == $post_data['dokan_store_time_enabled'] ? 'yes' : 'no',
+                'dokan_store_open_notice'    => isset( $post_data['dokan_store_open_notice'] ) ? sanitize_textarea_field( $post_data['dokan_store_open_notice'] ) : '',
+                'dokan_store_close_notice'   => isset( $post_data['dokan_store_close_notice'] ) ? sanitize_textarea_field( $post_data['dokan_store_close_notice'] ) : '',
+                'low_stock_notifications'    => isset( $post_data['low_stock_notifications'] ) ? sanitize_textarea_field( $post_data['low_stock_notifications'] ) : '',
+                'out_of_stock_notifications' => isset( $post_data['out_of_stock_notifications'] ) ? sanitize_textarea_field( $post_data['out_of_stock_notifications'] ) : '',
+                'low_stock_threshold'        => isset( $post_data['low_stock_threshold'] ) ? intval( $post_data['low_stock_threshold'] ) : '',
+                'out_of_stock_threshold'     => isset( $post_data['out_of_stock_threshold'] ) ? intval( $post_data['out_of_stock_threshold'] ) : '',
             );
 
             update_user_meta( $store_id, 'dokan_store_name', $dokan_settings['store_name'] );
