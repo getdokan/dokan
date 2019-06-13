@@ -46,7 +46,7 @@ class Dokan_Theme_Support {
      *
      * @param string $file
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.17
      *
      * @return string|null on failure
      */
