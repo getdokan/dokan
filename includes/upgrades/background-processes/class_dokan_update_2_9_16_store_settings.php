@@ -3,16 +3,16 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Dokan DOKAN_LITE_SINCE updater class
+ * Dokan 2.9.16 updater class
  *
- * @since DOKAN_LITE_SINCE
+ * @since 2.9.16
  */
 class Dokan_Update_2_9_16_Store_Settings extends Abstract_Dokan_Background_Processes {
 
     /**
      * Action
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.16
      *
      * @var string
      */
@@ -21,7 +21,7 @@ class Dokan_Update_2_9_16_Store_Settings extends Abstract_Dokan_Background_Proce
     /**
      * Perform updates
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.16
      *
      * @param mixed $item
      *
@@ -42,7 +42,7 @@ class Dokan_Update_2_9_16_Store_Settings extends Abstract_Dokan_Background_Proce
     /**
      * Update store settings
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.16
      *
      * @return void
      */

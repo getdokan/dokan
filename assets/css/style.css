@@ -1931,18 +1931,18 @@ article.dokan-notice-single-notice-area span.dokan-single-announcement-date {
   overflow: hidden;
   background-color: #242424;
 }
-.dokan-dashboard .dokan-dash-sidebar #dokan-navigation ul.dokan-dashboard-menu {
+.dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu {
   background: #242424;
   list-style: none;
   margin: 0 0 20px 0;
   padding: 0;
 }
-.dokan-dashboard .dokan-dash-sidebar #dokan-navigation ul.dokan-dashboard-menu li {
+.dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li {
   margin: 0;
   border-bottom: 1px solid #454545;
   position: relative;
 }
-.dokan-dashboard .dokan-dash-sidebar #dokan-navigation ul.dokan-dashboard-menu li a {
+.dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li a {
   padding: 10px 0 10px 18px;
   display: block;
   color: #fff;
@@ -1950,36 +1950,36 @@ article.dokan-notice-single-notice-area span.dokan-single-announcement-date {
   font-weight: normal;
   text-decoration: none;
 }
-.dokan-dashboard .dokan-dash-sidebar #dokan-navigation ul.dokan-dashboard-menu li a i {
+.dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li a i {
   font-size: 17px;
   padding-right: 15px;
 }
-.dokan-dashboard .dokan-dash-sidebar #dokan-navigation ul.dokan-dashboard-menu li:hover {
+.dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li:hover {
   background: #f05025;
   color: #fff;
 }
-.dokan-dashboard .dokan-dash-sidebar #dokan-navigation ul.dokan-dashboard-menu li.dokan-common-links:hover {
+.dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li.dokan-common-links:hover {
   background: none !important;
 }
-.dokan-dashboard .dokan-dash-sidebar #dokan-navigation ul.dokan-dashboard-menu li.dokan-common-links a {
+.dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li.dokan-common-links a {
   display: inline-block !important;
   width: 33.333333%;
   padding: 6% 13%;
   float: left;
   border-right: 1px solid #454545;
 }
-.dokan-dashboard .dokan-dash-sidebar #dokan-navigation ul.dokan-dashboard-menu li.dokan-common-links a:hover {
+.dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li.dokan-common-links a:hover {
   background: #f05025;
   color: #fff;
 }
-.dokan-dashboard .dokan-dash-sidebar #dokan-navigation ul.dokan-dashboard-menu li.dokan-common-links a:last-child {
+.dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li.dokan-common-links a:last-child {
   border-right: none;
 }
-.dokan-dashboard .dokan-dash-sidebar #dokan-navigation ul.dokan-dashboard-menu li.active {
+.dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li.active {
   position: relative;
   background: #f05025;
 }
-.dokan-dashboard .dokan-dash-sidebar #dokan-navigation ul.dokan-dashboard-menu li.active:after {
+.dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li.active:after {
   left: 93%;
   top: 50%;
   border: transparent solid;
@@ -1993,7 +1993,7 @@ article.dokan-notice-single-notice-area span.dokan-single-announcement-date {
   border-width: 16px 16px 16px 0;
   margin-top: -16px;
 }
-.dokan-dashboard .dokan-dash-sidebar #dokan-navigation ul.dokan-dashboard-menu li ul.sub-menu {
+.dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li ul.sub-menu {
   background: #fff;
   margin: 0;
   list-style: none;
@@ -2008,36 +2008,39 @@ article.dokan-notice-single-notice-area span.dokan-single-announcement-date {
   border-right: 1px solid #ECECEC;
   border-bottom: 1px solid #ECECEC;
 }
-.dokan-dashboard .dokan-dash-sidebar #dokan-navigation ul.dokan-dashboard-menu li ul.sub-menu a {
+.dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li ul.sub-menu a {
   padding: 2px 0 2px 10px;
   font-size: 13px;
   color: #333;
   font-weight: normal;
 }
-.dokan-dashboard .dokan-dash-sidebar #dokan-navigation ul.dokan-dashboard-menu li ul.sub-menu a:hover {
+.dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li ul.sub-menu a:hover {
   background: #f37655;
   color: #fff;
 }
-.dokan-dashboard .dokan-dash-sidebar #dokan-navigation ul.dokan-dashboard-menu li ul.sub-menu li {
+.dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li ul.sub-menu li {
   border-bottom: 1px solid #ccc;
 }
-.dokan-dashboard .dokan-dash-sidebar #dokan-navigation ul.dokan-dashboard-menu li ul.sub-menu li:last-child {
+.dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li ul.sub-menu li:last-child {
   border-bottom: none;
 }
-.dokan-dashboard .dokan-dash-sidebar #dokan-navigation ul.dokan-dashboard-menu li.settings i.pull-right {
+.dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li.settings i.pull-right {
   padding-top: 5px;
 }
 .dokan-dashboard .dokan-dash-sidebar #dokan-navigation #toggle-mobile-menu {
   display: none;
 }
-#dokan-navigation > label {
-  display: block;
+.dokan-dashboard .dokan-dash-sidebar #dokan-navigation #mobile-menu-icon {
+  display: none;
+}
+.dokan-dashboard .dokan-dash-sidebar #dokan-navigation > #mobile-menu-icon {
   font-size: 17px;
   color: #fff;
   position: absolute;
   top: 10px;
   right: 15px;
   width: 33px;
+  z-index: 99999;
   cursor: pointer;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -2049,14 +2052,10 @@ article.dokan-notice-single-notice-area span.dokan-single-announcement-date {
   border-radius: 3px;
   padding: 3px 8px;
 }
-#dokan-navigation > input:checked + ul.dokan-dashboard-menu {
+.dokan-dashboard .dokan-dash-sidebar #dokan-navigation > input:checked + ul.dokan-dashboard-menu {
   display: block !important;
-  clear: both;
-  top: 48px;
-  position: absolute;
   background: #000;
   color: #fff;
-  z-index: 9999;
   animation: showNav 350ms ease-in-out both;
 }
 @keyframes showNav {
@@ -2068,17 +2067,21 @@ article.dokan-notice-single-notice-area span.dokan-single-announcement-date {
   }
 }
 @media only screen and (max-width: 450px) {
-  #dokan-navigation {
-    display: #303030;
+  .dokan-dashboard .dokan-dash-sidebar #dokan-navigation {
     background: #000;
     height: 48px;
+    position: relative;
   }
-  #dokan-navigation #toggle-mobile-menu {
-    display: block;
+  .dokan-dashboard .dokan-dash-sidebar #dokan-navigation #mobile-menu-icon {
+    display: block !important;
   }
-  #dokan-navigation ul.dokan-dashboard-menu {
+  .dokan-dashboard .dokan-dash-sidebar #dokan-navigation #toggle-mobile-menu {
+    display: none !important;
+  }
+  .dokan-dashboard .dokan-dash-sidebar #dokan-navigation ul.dokan-dashboard-menu {
     display: none;
     height: auto !important;
+    padding-top: 48px !important;
   }
 }
 html,
