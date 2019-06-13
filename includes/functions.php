@@ -3513,7 +3513,7 @@ function dokan_validate_boolean( $var ) {
 /**
  * Dokan get terms and condition page url
  *
- * @since DOKAN_LITE_SINCE
+ * @since 2.9.16
  *
  * @return url | null on failure
  */

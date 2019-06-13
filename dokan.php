@@ -188,7 +188,7 @@ final class WeDevs_Dokan {
     /**
      * Include custom throwable exceptions
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.16
      *
      * @return void
      */
@@ -259,7 +259,7 @@ final class WeDevs_Dokan {
     /**
      * Define constant if not already defined
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.16
      *
      * @param string $name
      * @param string|bool $value
@@ -508,7 +508,7 @@ final class WeDevs_Dokan {
     /**
      * Missing woocomerce notice
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.16
      *
      * @return void
      */
@@ -530,7 +530,7 @@ final class WeDevs_Dokan {
     /**
      * Check whether woocommerce is installed or not
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.16
      *
      * @return boolean
      */
@@ -542,7 +542,7 @@ final class WeDevs_Dokan {
      * Maybe perform updates (only runs when dokan was installed before
      * but wc wasn't installed)
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.16
      *
      * @return void
      */
@@ -558,7 +558,7 @@ final class WeDevs_Dokan {
     /**
      * Include background processing files
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.16
      *
      * @return void
      */
