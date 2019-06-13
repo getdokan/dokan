@@ -128,14 +128,19 @@
                     }
                 }
             }
+
             #toggle-mobile-menu {
+                display: none;
+            }
+
+            #mobile-menu-icon {
                 display: none;
             }
         }
 	}
 }
 
-#dokan-navigation > label {
+#dokan-navigation > #mobile-menu-icon {
     display: block;
     font-size: 17px;
     color: #fff;
@@ -143,6 +148,7 @@
     top: 10px;
     right: 15px;
     width: 33px;
+    z-index: 99999;
     cursor: pointer;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -157,12 +163,8 @@
 
 #dokan-navigation > input:checked + ul.dokan-dashboard-menu {
     display: block !important;
-    clear: both;
-    top: 48px;
-    position: absolute;
     background: #000;
     color: #fff;
-    z-index: 9999;
     animation: showNav 350ms ease-in-out both;
 }
 
@@ -176,18 +178,24 @@
 }
 
 @media only screen and ( max-width: 450px ) {
+
     #dokan-navigation {
-        display: #303030;
         background: #000;
         height: 48px;
+        position: relative;
+
+        #mobile-menu-icon {
+            display: block !important;
+        }
 
         #toggle-mobile-menu {
-            display: block;
+            display: none !important;
         }
 
         ul.dokan-dashboard-menu {
             display: none;
-            height: auto !important
+            height: auto !important;
+            padding-top: 48px !important;
         }
     }
 }
