@@ -3,7 +3,7 @@
 /**
  * Rehub Theme Support
  *
- * @since DOKAN_LITE_SINCE
+ * @since 2.9.17
  */
 class Dokan_Theme_Support_Rehub {
     /**
@@ -16,7 +16,7 @@ class Dokan_Theme_Support_Rehub {
     /**
      * Remove hamburger menu
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.17
      *
      * @return boolean
      */

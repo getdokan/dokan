@@ -274,6 +274,11 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 ## Changelog ##
 
+v2.9.17 -> June 13, 2019
+------------------------------------
+-   **Fix***   Remove unwanted code to fix conflict with yith plugin
+-   **Tweak*** Dokan theme support and responsive menu
+
 v2.9.16 -> June 11, 2019
 ------------------------------------
 -   **Fix***   Hide hidden and out of stock products in vendor store page

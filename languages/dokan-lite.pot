@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 2.9.16\n"
+"Project-Id-Version: Dokan 2.9.17\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2019-06-11 03:21:00+00:00\n"
+"POT-Creation-Date: 2019-06-13 09:18:57+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4131,16 +4131,16 @@ msgstr ""
 msgid "Back to Dashboard"
 msgstr ""
 
-#: includes/template-tags.php:481 templates/settings/header.php:13
+#: includes/template-tags.php:490 templates/settings/header.php:13
 #: templates/store-lists-loop.php:71
 msgid "Visit Store"
 msgstr ""
 
-#: includes/template-tags.php:482 templates/global/header-menu.php:48
+#: includes/template-tags.php:491 templates/global/header-menu.php:48
 msgid "Edit Account"
 msgstr ""
 
-#: includes/template-tags.php:483
+#: includes/template-tags.php:492
 msgid "Log out"
 msgstr ""
 
