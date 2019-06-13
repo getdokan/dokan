@@ -23,7 +23,6 @@
             // gallery
             $('body, #dokan-product-images').on('click', 'a.add-product-images', this.gallery.addImages );
             $('body, #dokan-product-images').on( 'click', 'a.action-delete', this.gallery.deleteImage );
-            $('body, #dokan-product-images').on( 'click', 'a.delete', this.gallery.deleteImage );
             this.gallery.sortable();
 
             // featured image
