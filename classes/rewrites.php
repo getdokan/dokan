@@ -307,7 +307,7 @@ class Dokan_Rewrites {
 
             // Hide out of stock products
             $product_visibility_terms  = wc_get_product_visibility_term_ids();
-            $product_visibility_not_in = [ is_search() && $main_query ? $product_visibility_terms['exclude-from-search'] : $product_visibility_terms['exclude-from-catalog'] ];
+            $product_visibility_not_in = [ is_search() && $query->is_main_query() ? $product_visibility_terms['exclude-from-search'] : $product_visibility_terms['exclude-from-catalog'] ];
 
             if ( 'yes' === get_option( 'woocommerce_hide_out_of_stock_items' ) ) {
                 $product_visibility_not_in[] = $product_visibility_terms['outofstock'];
