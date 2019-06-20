@@ -3,9 +3,18 @@
 defined( 'ABSPATH' ) || exit;
 
 class Dokan_Stock_Notifications {
+    /**
+     * Cron job action
+     *
+     * @var string
+     */
     protected $job;
-    protected $has_fired = false;
 
+    /**
+     * Constructor method
+     *
+     * @since DOKAN_LITE_SINCE
+     */
     public function __construct() {
         if ( ! dokan_is_wc_manage_stock() ) {
             return;
@@ -17,15 +26,15 @@ class Dokan_Stock_Notifications {
     }
 
     /**
-     * Maybe register corn jobs
+     * Maybe register cron jobs
      *
      * @since DOKAN_LITE_SINCE
      *
-     * @return boolean
+     * @return void
      */
     public function maybe_register_cron_jobs() {
         if ( ! wp_next_scheduled( $this->job ) ) {
-            wp_schedule_event( current_time( 'mysql' ), 'daily', $this->job );
+            wp_schedule_event( strtotime( current_time( 'mysql' ) ), 'daily', $this->job );
         }
     }
 

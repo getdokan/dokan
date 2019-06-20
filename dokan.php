@@ -366,7 +366,6 @@ final class WeDevs_Dokan {
         // API includes
         require_once $inc_dir . 'api/class-api-rest-controller.php';
         require_once $inc_dir . 'class-api-manager.php';
-        require_once $inc_dir . 'class-dokan-cron-jobs.php';
 
         // Background Processes
         $this->include_backgorund_processing_files();

@@ -44,9 +44,9 @@ class Dokan_Stock_Notifications_Background_Process extends Abstract_Dokan_Backgr
      *
      * @since DOKAN_LITE_SINCE
      *
-     * @param $number
+     * @param int $number
      *
-     * @return array
+     * @return array|null on failure
      */
     public function send_stock_notifications( $number ) {
         $limit = 5;

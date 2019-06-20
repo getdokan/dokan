@@ -40,7 +40,7 @@ class Dokan_Email_Stock_Notifications extends WC_Email {
      * @return string
      */
     public function get_default_subject() {
-        return __( '[{site_name}] Product Stock Notifications', 'dokan-lite' );
+        return __( '[{site_name}] Product Stock Notification', 'dokan-lite' );
     }
 
     /**
