@@ -1,5 +1,4 @@
 <?php
-
 defined( 'ABSPATH' ) || exit;
 
 if ( ! class_exists( 'Dokan_Email_Stock_Notifications' ) ) :

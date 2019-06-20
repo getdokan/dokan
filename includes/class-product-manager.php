@@ -170,43 +170,4 @@ class Dokan_Product_Manager {
 
         return $products;
     }
-
-    /**
-     * Get out of stock products
-     *
-     * @since DOKAN_LITE_SINCE
-     *
-     * @return array
-     */
-    public function out_of_stocks( $args = [] ) {
-        $args['meta_query'] = [
-            [
-                'key'     => '_stock_status',
-                'value'   => 'outofstock',
-                'compare' => '='
-            ]
-        ];
-
-        return $this->all( apply_filters( 'dokan_out_of_stocks_product_query', $args ) );
-    }
-
-    /**
-     * Get out of stock products
-     *
-     * @since DOKAN_LITE_SINCE
-     *
-     * @return array
-     */
-    public function low_stocks( $args = [] ) {
-        $args['meta_query'] = [
-            [
-                'key'     => '_stock',
-                'type'    => 'numeric',
-                'value'   => 0,
-                'compare' => '>'
-            ]
-        ];
-
-        return $this->all( apply_filters( 'dokan_low_stocks_product_query', $args ) );
-    }
 }
