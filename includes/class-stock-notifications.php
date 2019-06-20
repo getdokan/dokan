@@ -4,6 +4,7 @@ defined( 'ABSPATH' ) || exit;
 
 class Dokan_Stock_Notifications {
     protected $job;
+    protected $has_fired = false;
 
     public function __construct() {
         if ( ! dokan_is_wc_manage_stock() ) {
@@ -11,7 +12,7 @@ class Dokan_Stock_Notifications {
         }
 
         $this->job = 'dokan_send_stock_notifications';
-        $this->maybe_register_corn_jobs();
+        $this->maybe_register_cron_jobs();
         $this->hooks();
     }
 
@@ -22,7 +23,7 @@ class Dokan_Stock_Notifications {
      *
      * @return boolean
      */
-    public function maybe_register_corn_jobs() {
+    public function maybe_register_cron_jobs() {
         if ( ! wp_next_scheduled( $this->job ) ) {
             wp_schedule_event( current_time( 'mysql' ), 'daily', $this->job );
         }
@@ -36,7 +37,30 @@ class Dokan_Stock_Notifications {
      * @return void
      */
     protected function hooks() {
+        add_action( 'woocommerce_before_product_object_save', [ $this, 'make_product_outofstock' ] );
         add_action( $this->job, [ $this, 'prepare_data_for_processing' ] );
+    }
+
+    /**
+     * Override out of stock treshhold
+     *
+     * @param WC_Product $product
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return void
+     */
+    public function make_product_outofstock( $product ) {
+        $vendor_id = dokan_get_current_user_id();
+        $vendor    = dokan()->vendor->get( $vendor_id );
+
+        if ( ! $vendor instanceof Dokan_Vendor ) {
+            return;
+        }
+
+        if ( $product->get_stock_quantity() <= $vendor->get_out_of_stock_threshold() && 'no' === $product->get_backorders() ) {
+            $product->set_stock_status( 'outofstock' );
+        }
     }
 
     /**
