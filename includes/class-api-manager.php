@@ -45,6 +45,7 @@ class Dokan_API_Manager {
 
         // Send email to admin on adding a new product
         add_action( 'dokan_rest_insert_product_object', array( $this, 'on_dokan_rest_insert_product' ), 10, 3 );
+        add_filter( 'dokan_vendor_to_array', [ $this, 'filter_payment_response' ] );
     }
 
     /**
@@ -148,5 +149,28 @@ class Dokan_API_Manager {
         }
 
         do_action( 'dokan_new_product_added', $object->get_id(), $request );
+    }
+
+    /**
+     * Make payment field hidden in api response for other vendor
+     *
+     * @param array $data
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return array
+     */
+    public function filter_payment_response( $data ) {
+        if ( current_user_can( 'manage_woocommerce' ) ) {
+            return $data;
+        }
+
+        $vendor_id = ! empty( $data['id'] ) ? absint( $data['id'] ) : 0;
+
+        if ( $vendor_id !== dokan_get_current_user_id() ) {
+            $data['payment'] = '******';
+        }
+
+        return $data;
     }
 }
