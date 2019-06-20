@@ -470,7 +470,16 @@ function dokan_dashboard_nav( $active_menu = '' ) {
         $urls = $nav_menu;
     }
 
-    $menu = '<ul class="dokan-dashboard-menu">';
+    $menu           = '';
+    $hamburger_menu = apply_filters( 'dokan_load_hamburger_menu', true );
+
+    if ( $hamburger_menu ) {
+        $menu .= '<div id="dokan-navigation" area-label="Menu">';
+        $menu .= '<label id="mobile-menu-icon" for="toggle-mobile-menu" aria-label="Menu">&#9776;</label>';
+        $menu .= '<input id="toggle-mobile-menu" type="checkbox" />';
+    }
+
+    $menu .= '<ul class="dokan-dashboard-menu">';
 
     foreach ( $urls as $key => $item ) {
         $class = ( $active_menu == $key ) ? 'active ' . $key : $key;
@@ -486,6 +495,10 @@ function dokan_dashboard_nav( $active_menu = '' ) {
     $menu .= apply_filters( 'dokan_dashboard_nav_common_link', $common_links );
 
     $menu .= '</ul>';
+
+    if ( $hamburger_menu ) {
+        $menu .= '</div>';
+    }
 
     return $menu;
 }

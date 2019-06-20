@@ -5,7 +5,7 @@ class Dokan_Exception extends Exception {
     /**
      * Error code
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.16
      *
      * @var string
      */
@@ -14,7 +14,7 @@ class Dokan_Exception extends Exception {
     /**
      * Class constructor
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.16
      *
      * @param string $error_code
      * @param string $message
@@ -29,7 +29,7 @@ class Dokan_Exception extends Exception {
     /**
      * Get error code
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.16
      *
      * @return string
      */
@@ -40,7 +40,7 @@ class Dokan_Exception extends Exception {
     /**
      * Get error message
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.16
      *
      * @return string
      */
@@ -51,7 +51,7 @@ class Dokan_Exception extends Exception {
     /**
      * Get error status code
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.16
      *
      * @return int
      */
