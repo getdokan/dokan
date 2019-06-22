@@ -25,6 +25,10 @@ class Dokan_Order_Manager {
 
         // restore order stock if it's been reduced by twice
         add_action( 'woocommerce_reduce_order_stock', array( $this, 'restore_reduced_order_stock' ) );
+
+        // Split orders when order containing producuts from multiple vendor is created from admin dashboard.
+        add_action( 'save_post_shop_order', array( $this, 'split_order_admin_dashbaord' ), 10, 3 );
+
     }
 
     /**
@@ -527,6 +531,30 @@ class Dokan_Order_Manager {
 
             $item->delete_meta_data( '_reduced_stock' );
             $item->save();
+        }
+    }
+
+    /**
+     * Split orders when order containing producuts from multiple vendor is created from admin dashboard.
+     * 
+     * @param int     $post_ID Post ID.
+     * @param WP_Post $post    Post object.
+     * @param bool    $update  Whether this is an existing post being updated or not.
+     */
+
+    public function split_order_admin_dashbaord( $post_ID, $post, $update ) {
+        // Bail early if not admin.
+        if( ! is_admin() ) {
+            return;
+        }
+
+        // Split the order if the order is created.
+        if ( 'draft' === get_post_status( $post_ID ) ) {
+            remove_action( 'save_post_shop_order', array( $this,'split_order_admin_dashbaord' ), 10 );
+		
+            $this->maybe_split_orders( $post_ID );
+        
+            add_action( 'save_post_shop_order', array( $this, 'split_order_admin_dashbaord' ), 10, 3 );
         }
     }
 }
