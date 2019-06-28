@@ -156,6 +156,8 @@ class Dokan_Order_Manager {
             $temp      = array_keys( $vendors );
             $seller_id = reset( $temp );
 
+            do_action( 'dokan_create_parent_order', $parent_order, $seller_id );
+
             // record admin commision
             $admin_fee = dokan_get_admin_commission_by( $parent_order, $seller_id );
             $parent_order->update_meta_data( '_dokan_admin_fee', $admin_fee );
