@@ -183,8 +183,8 @@
             </th>
 
             <td>
-                <input type="hidden" :name="sectionId + '[' + fieldData.name + ']'" :value="Object.assign(fieldValue[fieldData.name], gmapData )">
-                <gmap @updateGmap="updateGmapData" gmapKey="AIzaSyD9N67E6zpGuZqT-o_EI8da5qLbWonLOWw" :location="getMapLocation(fieldValue[fieldData.name])" />
+                <input type="hidden" :name="sectionId + '[' + fieldData.name + ']'" :value="Object.assign( fieldValue[fieldData.name], gmapData )">
+                <gmap @updateGmap="updateGmapData" gmapKey="AIzaSyD9N67E6zpGuZqT-o_EI8da5qLbWonLOWw" :location="getMapLocation( fieldValue[fieldData.name] )" />
                 <p class="description" v-html="fieldData.desc"></p>
             </td>
         </tr>
