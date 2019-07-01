@@ -176,12 +176,25 @@
                 </div>
             </td>
         </tr>
+
+        <tr :class="id" v-if="'gmap' == fieldData.type">
+            <th scope="row">
+                <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
+            </th>
+
+            <td>
+                <input type="hidden" :name="sectionId + '[' + fieldData.name + ']'" :value="Object.assign(fieldValue[fieldData.name], gmapData )">
+                <gmap @updateGmap="updateGmapData" gmapKey="AIzaSyD9N67E6zpGuZqT-o_EI8da5qLbWonLOWw" :location="getMapLocation(fieldValue[fieldData.name])" />
+                <p class="description" v-html="fieldData.desc"></p>
+            </td>
+        </tr>
     </div>
 </template>
 
 <script>
     import colorPicker from "admin/components/ColorPicker.vue";
     let TextEditor = dokan_get_lib('TextEditor');
+    let Gmap = dokan_get_lib('Gmap');
 
     export default {
         name: 'Fields',
@@ -189,11 +202,13 @@
         components: {
             colorPicker,
             TextEditor,
+            Gmap
         },
 
         data() {
             return {
-                repeatableItem: {}
+                repeatableItem: {},
+                gmapData: {}
             }
         },
 
@@ -221,6 +236,19 @@
 
             removeItem( optionVal, name ) {
                 this.fieldValue[name].splice( optionVal, 1 );
+            },
+
+            getMapLocation(savedLocation) {
+                return {
+                    latitude: savedLocation.latitude ? savedLocation.latitude : 23.709921,
+                    longitude: savedLocation.longitude ? savedLocation.longitude: 90.40714300000002,
+                    address: savedLocation.address ? savedLocation.address : 'Dhaka',
+                    zoom: 10
+                }
+            },
+
+            updateGmapData( payload ) {
+                this.gmapData = payload;
             }
         }
 
