@@ -7,7 +7,11 @@
  * @return array
  */
 function dokan_product_seller_info( $item_data, $cart_item ) {
-    $vendor =  dokan_get_vendor_by_product( $cart_item['product_id'] );
+    $vendor = dokan_get_vendor_by_product( $cart_item['product_id'] );
+
+    if ( ! $vendor ) {
+        return $item_data;
+    }
 
     $item_data[] = array(
         'name'  => __( 'Vendor', 'dokan-lite' ),
@@ -224,6 +228,10 @@ function dokan_save_quick_edit_vendor_data ( $product ) {
     }
 
     $vendor = dokan_get_vendor_by_product( $product );
+
+    if ( ! $vendor ) {
+        return;
+    }
 
     if ( $posted_vendor_id === $vendor->get_id() ) {
         return;

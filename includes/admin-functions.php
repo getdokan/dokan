@@ -728,6 +728,10 @@ function dokan_override_product_author_by_admin( $product_id, $post ) {
 
     $vendor = dokan_get_vendor_by_product( $product );
 
+    if ( ! $vendor ) {
+        return;
+    }
+
     if ( $posted_vendor_id === $vendor->get_id() ) {
         return;
     }
