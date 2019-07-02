@@ -14,7 +14,7 @@ export default {
 
     props: {
         gmapKey: {
-            type: String
+            type: [String, Function]
         },
         location: {
             type: Object,

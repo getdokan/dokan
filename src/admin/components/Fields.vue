@@ -184,7 +184,7 @@
 
             <td>
                 <input type="hidden" :name="sectionId + '[' + fieldData.name + ']'" :value="Object.assign( fieldValue[fieldData.name], gmapData )">
-                <gmap @updateGmap="updateGmapData" gmapKey="AIzaSyD9N67E6zpGuZqT-o_EI8da5qLbWonLOWw" :location="getMapLocation( fieldValue[fieldData.name] )" />
+                <gmap @updateGmap="updateGmapData" :gmapKey="getGmapApiKey()" :location="getMapLocation( fieldValue[fieldData.name] )" />
                 <p class="description" v-html="fieldData.desc"></p>
             </td>
         </tr>
@@ -212,7 +212,7 @@
             }
         },
 
-        props: ['id', 'fieldData', 'sectionId', 'fieldValue'],
+        props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues'],
 
         methods: {
             containCommonFields( type ) {
@@ -249,6 +249,14 @@
 
             updateGmapData( payload ) {
                 this.gmapData = payload;
+            },
+
+            getGmapApiKey() {
+                let settings = this.allSettingsValues;
+
+                if ( 'dokan_general' in settings && 'gmap_api_key' in settings.dokan_general  ) {
+                    return settings.dokan_general.gmap_api_key
+                }
             }
         }
 

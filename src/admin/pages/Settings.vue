@@ -30,6 +30,7 @@
                                         :id="fieldId"
                                         :field-data="field"
                                         :field-value="settingValues[index]"
+                                        :all-settings-values="settingValues"
                                         @openMedia="showMedia"
                                         :key="fieldId"
                                     ></fields>
