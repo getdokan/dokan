@@ -17,14 +17,13 @@ class Dokan_Rewrites {
         $this->custom_store_url = dokan_get_option( 'custom_store_url', 'dokan_general', 'store' );
 
         add_action( 'init', array( $this, 'register_rule' ) );
-        add_filter( 'woocommerce_get_query_vars', array( $this, 'resolve_wc_query_conflict' ) );
+        add_action( 'pre_get_posts', array( $this, 'store_query_filter' ) );
 
+        add_filter( 'woocommerce_get_query_vars', array( $this, 'resolve_wc_query_conflict' ) );
         add_filter( 'template_include', array( $this, 'store_template' ) );
         add_filter( 'template_include', array( $this, 'product_edit_template' ), 99 );
         add_filter( 'template_include', array( $this, 'store_toc_template' ) );
-
         add_filter( 'query_vars', array( $this, 'register_query_var' ) );
-        add_filter( 'pre_get_posts', array( $this, 'store_query_filter' ) );
         add_filter( 'woocommerce_get_breadcrumb', array( $this, 'store_page_breadcrumb' ) );
     }
 
@@ -295,41 +294,35 @@ class Dokan_Rewrites {
             $query->set( 'post_type', 'product' );
             $query->set( 'author_name', $author );
 
+            $tax_query                    = [];
             $query->query['term_section'] = isset( $query->query['term_section'] ) ? $query->query['term_section'] : array();
 
             if ( $query->query['term_section'] ) {
-                $query->set( 'tax_query',
-                    array(
-                        array(
-                            'taxonomy' => 'product_cat',
-                            'field'    => 'term_id',
-                            'terms'    => $query->query['term'],
-                        ),
-                    )
-                );
+                array_push( $tax_query, [
+                    'taxonomy' => 'product_cat',
+                    'field'    => 'term_id',
+                    'terms'    => $query->query['term']
+                ] );
             }
 
+            // Hide out of stock products
             $product_visibility_terms  = wc_get_product_visibility_term_ids();
-            $product_visibility_not_in = [ is_search() && $main_query ? $product_visibility_terms['exclude-from-search'] : $product_visibility_terms['exclude-from-catalog'] ];
+            $product_visibility_not_in = [ is_search() && $query->is_main_query() ? $product_visibility_terms['exclude-from-search'] : $product_visibility_terms['exclude-from-catalog'] ];
 
-            // Hide out of stock products.
             if ( 'yes' === get_option( 'woocommerce_hide_out_of_stock_items' ) ) {
                 $product_visibility_not_in[] = $product_visibility_terms['outofstock'];
             }
 
             if ( ! empty( $product_visibility_not_in ) ) {
-                $query->set( 'tax_query',
-                    [
-                        [
-                            'taxonomy' => 'product_visibility',
-                            'field'    => 'term_taxonomy_id',
-                            'terms'    => $product_visibility_not_in,
-                            'operator' => 'NOT IN'
-                        ],
-                    ]
-                );
+                array_push( $tax_query, [
+                    'taxonomy' => 'product_visibility',
+                    'field'    => 'term_taxonomy_id',
+                    'terms'    => $product_visibility_not_in,
+                    'operator' => 'NOT IN'
+                ] );
             }
 
+            $query->set( 'tax_query', apply_filters( 'dokan_store_tax_query', $tax_query ) );
         }
     }
 }

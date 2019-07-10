@@ -1,3 +1,11 @@
+v2.9.18 -> July 10, 2019
+------------------------------------
+-   **Feat***  Add google map type option field component
+-   **Feat***  Add dokan_array_after helper function
+-   **Fix***   Admin settings default value for multicheck field
+-   **Tweek*** Remove unnecessary code and add hook after creating parent order
+-   **Tweek*** Refactor dokan_get_vendor_by_product function and explicit error checking while using it
+
 v2.9.17 -> June 13, 2019
 ------------------------------------
 -   **Fix***   Remove unwanted code to fix conflict with yith plugin
