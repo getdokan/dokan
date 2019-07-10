@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 2.9.17\n"
+"Project-Id-Version: Dokan 2.9.19\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2019-06-13 09:18:57+00:00\n"
+"POT-Creation-Date: 2019-07-10 10:49:17+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -29,11 +29,11 @@ msgid "1"
 msgstr ""
 
 #: classes/admin-user-profile.php:35 classes/ajax.php:151
-#: includes/class-assets.php:410
+#: includes/class-assets.php:411
 msgid "Available"
 msgstr ""
 
-#: classes/admin-user-profile.php:36 includes/class-assets.php:411
+#: classes/admin-user-profile.php:36 includes/class-assets.php:412
 msgid "Not Available"
 msgstr ""
 
@@ -305,8 +305,8 @@ msgstr ""
 #: includes/admin/class-settings.php:297 includes/admin/setup-wizard.php:254
 #: includes/admin-functions.php:44 includes/admin-functions.php:50
 #: includes/admin-functions.php:685 includes/admin-functions.php:709
-#: includes/wc-template.php:13 includes/wc-template.php:146
-#: includes/wc-template.php:284 templates/my-orders.php:31
+#: includes/wc-template.php:17 includes/wc-template.php:150
+#: includes/wc-template.php:292 templates/my-orders.php:31
 msgid "Vendor"
 msgstr ""
 
@@ -1336,30 +1336,30 @@ msgstr ""
 msgid "Toggle Sub-orders"
 msgstr ""
 
-#: includes/admin-functions.php:495 includes/admin-functions.php:878
+#: includes/admin-functions.php:495 includes/admin-functions.php:882
 #: includes/api/admin/class-report-controller.php:129
 msgid "Total Sales"
 msgstr ""
 
-#: includes/admin-functions.php:502 includes/admin-functions.php:885
+#: includes/admin-functions.php:502 includes/admin-functions.php:889
 msgid "Total: "
 msgstr ""
 
-#: includes/admin-functions.php:505 includes/admin-functions.php:888
+#: includes/admin-functions.php:505 includes/admin-functions.php:892
 #: includes/api/admin/class-report-controller.php:137 includes/reports.php:359
 msgid "Number of orders"
 msgstr ""
 
-#: includes/admin-functions.php:512 includes/admin-functions.php:895
+#: includes/admin-functions.php:512 includes/admin-functions.php:899
 msgid "sales"
 msgstr ""
 
-#: includes/admin-functions.php:515 includes/admin-functions.php:898
+#: includes/admin-functions.php:515 includes/admin-functions.php:902
 #: includes/api/admin/class-report-controller.php:144
 msgid "Commision"
 msgstr ""
 
-#: includes/admin-functions.php:522 includes/admin-functions.php:905
+#: includes/admin-functions.php:522 includes/admin-functions.php:909
 msgid "Commision: "
 msgstr ""
 
@@ -2359,8 +2359,8 @@ msgid "Reassign the deleted user's posts and links to this user ID."
 msgstr ""
 
 #: includes/api/class-store-controller.php:176
-#: includes/api/class-store-controller.php:237
-#: includes/api/class-store-controller.php:390
+#: includes/api/class-store-controller.php:243
+#: includes/api/class-store-controller.php:396
 msgid "No store found"
 msgstr ""
 
@@ -2372,12 +2372,12 @@ msgstr ""
 msgid "Invalid user ID for reassignment."
 msgstr ""
 
-#: includes/api/class-store-controller.php:407
-#: includes/api/class-store-controller.php:426
+#: includes/api/class-store-controller.php:413
+#: includes/api/class-store-controller.php:432
 msgid "No reviews found"
 msgstr ""
 
-#: includes/api/class-store-controller.php:615
+#: includes/api/class-store-controller.php:621
 msgid "This email address is not valid"
 msgstr ""
 
@@ -2477,256 +2477,256 @@ msgstr ""
 msgid "Every %d Minutes"
 msgstr ""
 
-#: includes/class-assets.php:413
+#: includes/class-assets.php:414
 msgid "Are you sure?"
 msgstr ""
 
-#: includes/class-assets.php:414
+#: includes/class-assets.php:415
 msgid "Something went wrong. Please try again."
 msgstr ""
 
-#: includes/class-assets.php:480
+#: includes/class-assets.php:481
 msgid "This field is required"
 msgstr ""
 
-#: includes/class-assets.php:481
+#: includes/class-assets.php:482
 msgid "Please fix this field."
 msgstr ""
 
-#: includes/class-assets.php:482
+#: includes/class-assets.php:483
 msgid "Please enter a valid email address."
 msgstr ""
 
-#: includes/class-assets.php:483
+#: includes/class-assets.php:484
 msgid "Please enter a valid URL."
 msgstr ""
 
-#: includes/class-assets.php:484
+#: includes/class-assets.php:485
 msgid "Please enter a valid date."
 msgstr ""
 
-#: includes/class-assets.php:485
+#: includes/class-assets.php:486
 msgid "Please enter a valid date (ISO)."
 msgstr ""
 
-#: includes/class-assets.php:486
+#: includes/class-assets.php:487
 msgid "Please enter a valid number."
 msgstr ""
 
-#: includes/class-assets.php:487
+#: includes/class-assets.php:488
 msgid "Please enter only digits."
 msgstr ""
 
-#: includes/class-assets.php:488
+#: includes/class-assets.php:489
 msgid "Please enter a valid credit card number."
 msgstr ""
 
-#: includes/class-assets.php:489
+#: includes/class-assets.php:490
 msgid "Please enter the same value again."
 msgstr ""
 
-#: includes/class-assets.php:490
+#: includes/class-assets.php:491
 msgid "Please enter no more than {0} characters."
 msgstr ""
 
-#: includes/class-assets.php:491
+#: includes/class-assets.php:492
 msgid "Please enter at least {0} characters."
 msgstr ""
 
-#: includes/class-assets.php:492
+#: includes/class-assets.php:493
 msgid "Please enter a value between {0} and {1} characters long."
 msgstr ""
 
-#: includes/class-assets.php:493
+#: includes/class-assets.php:494
 msgid "Please enter a value between {0} and {1}."
 msgstr ""
 
-#: includes/class-assets.php:494
+#: includes/class-assets.php:495
 msgid "Please enter a value less than or equal to {0}."
 msgstr ""
 
-#: includes/class-assets.php:495
+#: includes/class-assets.php:496
 msgid "Please enter a value greater than or equal to {0}."
 msgstr ""
 
-#: includes/class-assets.php:595
+#: includes/class-assets.php:596
 msgid "Upload featured image"
 msgstr ""
 
-#: includes/class-assets.php:596
+#: includes/class-assets.php:597
 msgid "Choose a file"
 msgstr ""
 
-#: includes/class-assets.php:597
+#: includes/class-assets.php:598
 msgid "Add Images to Product Gallery"
 msgstr ""
 
-#: includes/class-assets.php:598
+#: includes/class-assets.php:599
 msgid "Set featured image"
 msgstr ""
 
-#: includes/class-assets.php:599 includes/woo-views/html-product-download.php:8
+#: includes/class-assets.php:600 includes/woo-views/html-product-download.php:8
 msgid "Insert file URL"
 msgstr ""
 
-#: includes/class-assets.php:600
+#: includes/class-assets.php:601
 msgid "Add to gallery"
 msgstr ""
 
-#: includes/class-assets.php:601
+#: includes/class-assets.php:602
 msgid "Sorry, this attribute option already exists, Try a different one."
 msgstr ""
 
-#: includes/class-assets.php:602
+#: includes/class-assets.php:603
 msgid ""
 "Warning! This product will not have any variations if this option is not "
 "checked."
 msgstr ""
 
-#: includes/class-assets.php:603
+#: includes/class-assets.php:604
 msgid "Enter a name for the new attribute term:"
 msgstr ""
 
-#: includes/class-assets.php:604
+#: includes/class-assets.php:605
 msgid "Remove this attribute?"
 msgstr ""
 
-#: includes/class-assets.php:612
+#: includes/class-assets.php:613
 msgid ""
 "Are you sure you want to link all variations? This will create a new "
 "variation for each and every possible combination of variation attributes "
 "(max %d per run)."
 msgstr ""
 
-#: includes/class-assets.php:613
+#: includes/class-assets.php:614
 msgid "Enter a value"
 msgstr ""
 
-#: includes/class-assets.php:614
+#: includes/class-assets.php:615
 msgid "Variation menu order (determines position in the list of variations)"
 msgstr ""
 
-#: includes/class-assets.php:615
+#: includes/class-assets.php:616
 msgid "Enter a value (fixed or %)"
 msgstr ""
 
-#: includes/class-assets.php:616
+#: includes/class-assets.php:617
 msgid "Are you sure you want to delete all variations? This cannot be undone."
 msgstr ""
 
-#: includes/class-assets.php:617
+#: includes/class-assets.php:618
 msgid "Last warning, are you sure?"
 msgstr ""
 
-#: includes/class-assets.php:618
+#: includes/class-assets.php:619
 msgid "Choose an image"
 msgstr ""
 
-#: includes/class-assets.php:619
+#: includes/class-assets.php:620
 msgid "Set variation image"
 msgstr ""
 
-#: includes/class-assets.php:620
+#: includes/class-assets.php:621
 msgid "variation added"
 msgstr ""
 
-#: includes/class-assets.php:621
+#: includes/class-assets.php:622
 msgid "variations added"
 msgstr ""
 
-#: includes/class-assets.php:622
+#: includes/class-assets.php:623
 msgid "No variations added"
 msgstr ""
 
-#: includes/class-assets.php:623
+#: includes/class-assets.php:624
 msgid "Are you sure you want to remove this variation?"
 msgstr ""
 
-#: includes/class-assets.php:624
+#: includes/class-assets.php:625
 msgid "Sale start date (YYYY-MM-DD format or leave blank)"
 msgstr ""
 
-#: includes/class-assets.php:625
+#: includes/class-assets.php:626
 msgid "Sale end date (YYYY-MM-DD format or leave blank)"
 msgstr ""
 
-#: includes/class-assets.php:626
+#: includes/class-assets.php:627
 msgid "Save changes before changing page?"
 msgstr ""
 
-#: includes/class-assets.php:627
+#: includes/class-assets.php:628
 msgid "%qty% variation"
 msgstr ""
 
-#: includes/class-assets.php:628
+#: includes/class-assets.php:629
 msgid "%qty% variations"
 msgstr ""
 
-#: includes/class-assets.php:629
+#: includes/class-assets.php:630
 msgid "No Result Found"
 msgstr ""
 
-#: includes/class-assets.php:632
+#: includes/class-assets.php:633
 msgid "Select and Crop"
 msgstr ""
 
-#: includes/class-assets.php:633
+#: includes/class-assets.php:634
 msgid "Choose Image"
 msgstr ""
 
-#: includes/class-assets.php:634
+#: includes/class-assets.php:635
 msgid "Product title is required"
 msgstr ""
 
-#: includes/class-assets.php:635
+#: includes/class-assets.php:636
 msgid "Product category is required"
 msgstr ""
 
-#: includes/class-assets.php:638
+#: includes/class-assets.php:639
 msgid "One result is available, press enter to select it."
 msgstr ""
 
-#: includes/class-assets.php:639
+#: includes/class-assets.php:640
 msgid "%qty% results are available, use up and down arrow keys to navigate."
 msgstr ""
 
-#: includes/class-assets.php:640
+#: includes/class-assets.php:641
 msgid "No matches found"
 msgstr ""
 
-#: includes/class-assets.php:641
+#: includes/class-assets.php:642
 msgid "Loading failed"
 msgstr ""
 
-#: includes/class-assets.php:642
+#: includes/class-assets.php:643
 msgid "Please enter 1 or more characters"
 msgstr ""
 
-#: includes/class-assets.php:643
+#: includes/class-assets.php:644
 msgid "Please enter %qty% or more characters"
 msgstr ""
 
-#: includes/class-assets.php:644
+#: includes/class-assets.php:645
 msgid "Please delete 1 character"
 msgstr ""
 
-#: includes/class-assets.php:645
+#: includes/class-assets.php:646
 msgid "Please delete %qty% characters"
 msgstr ""
 
-#: includes/class-assets.php:646
+#: includes/class-assets.php:647
 msgid "You can only select 1 item"
 msgstr ""
 
-#: includes/class-assets.php:647
+#: includes/class-assets.php:648
 msgid "You can only select %qty% items"
 msgstr ""
 
-#: includes/class-assets.php:648
+#: includes/class-assets.php:649
 msgid "Loading more results&hellip;"
 msgstr ""
 
-#: includes/class-assets.php:649
+#: includes/class-assets.php:650
 msgid "Searching&hellip;"
 msgstr ""
 
@@ -3079,11 +3079,11 @@ msgstr ""
 msgid "Mark parent order completed when all child orders are completed."
 msgstr ""
 
-#: includes/class-order-manager.php:472
+#: includes/class-order-manager.php:474
 msgid "A coupon must be restricted with a vendor product."
 msgstr ""
 
-#: includes/class-order-manager.php:528
+#: includes/class-order-manager.php:530
 #. translators: %s item name.
 msgid "Unable to restore stock for item %s."
 msgstr ""
@@ -4219,11 +4219,11 @@ msgstr ""
 msgid "Order &ndash; %s"
 msgstr ""
 
-#: includes/wc-template.php:31
+#: includes/wc-template.php:35
 msgid "Vendor Info"
 msgstr ""
 
-#: includes/wc-template.php:253
+#: includes/wc-template.php:261
 msgid "Go to Vendor Dashboard"
 msgstr ""
 
@@ -4418,8 +4418,12 @@ msgstr ""
 msgid "Active"
 msgstr ""
 
-#: src/admin/components/Fields.vue:171 src/admin/pages/Settings.vue:138
+#: src/admin/components/Fields.vue:171 src/admin/pages/Settings.vue:139
 msgid "Select"
+msgstr ""
+
+#: src/admin/components/Gmap.vue:7
+msgid "Please enter google map API key"
 msgstr ""
 
 #: src/admin/components/Modal.vue:12
@@ -4563,7 +4567,7 @@ msgstr ""
 msgid "Dismiss this notice."
 msgstr ""
 
-#: src/admin/pages/Settings.vue:136
+#: src/admin/pages/Settings.vue:137
 msgid "Choose your file"
 msgstr ""
 
