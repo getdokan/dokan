@@ -76,6 +76,7 @@ class Dokan_Assets {
             wp_enqueue_script( 'dokan-vue-vendor' );
             wp_localize_script( 'dokan-vue-vendor', 'dokan', $localize_script );
             wp_enqueue_script( 'dokan-vue-bootstrap' );
+            $this->load_gmap_script();
 
             // allow other plugins to load scripts before the main app loads
             do_action( 'dokan-vue-admin-scripts' );
