@@ -3526,3 +3526,32 @@ function dokan_get_terms_condition_url() {
 
     return apply_filters( 'dokan_get_terms_condition_url', get_permalink( $page_id ), $page_id );
 }
+
+/**
+ * Add item in specefic position of an array
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @param array $array
+ * @param int|string $position <index position or name of the key after which you want to add the new array>
+ * @param array $new_array
+ *
+ * @return array
+ */
+function dokan_array_after( $array, $position, $new_array ) {
+    if ( is_int( $position ) ) {
+        return array_merge(
+            array_slice( $array, 0, $position ),
+            $new_array,
+            array_slice( $array, $position )
+        );
+    }
+
+    $pos = array_search( $position, array_keys( $array ) );
+
+    return array_merge(
+        array_slice( $array, 0, $pos + 1 ),
+        $new_array,
+        array_slice( $array, $pos )
+    );
+}
