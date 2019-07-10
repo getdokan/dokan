@@ -3,9 +3,9 @@ Contributors: tareq1988, wedevs, sabbir1991, nizamuddinbabu, rafsuntaskin, sk.sh
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, product vendors, woocommerce vendor, commission rate, e-commerce, ebay, ecommerce, yith, yithemes
 Requires at least: 4.4
-Tested up to: 5.2.1
+Tested up to: 5.2.2
 WC requires at least: 3.0
-WC tested up to: 3.6.4
+WC tested up to: 3.6.5
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv2 or later
@@ -91,6 +91,7 @@ You can have unlimited vendors and vendors can create unlimited products. You wi
 * Variable product
 * Bookable products through the [Dokan WC Bookings add-on](https://wedevs.com/products/plugins/dokan/woocommerce-booking-integration/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org)
 * Auction products through the [Dokan Simple Auction add-on](https://wedevs.com/products/plugins/dokan/dokan-simple-auctions/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org)
+* More freedom to customize the store [Elementor add-on](https://wedevs.com/dokan/modules/elementor/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org)
 
 = EARN IN MULTIPLE WAYS =
 
@@ -113,6 +114,14 @@ Dokan is compatible with more than 60+ plugins so that you don’t have to worry
 From Shipping plugins, Payment plugins to Wallets you have the peace of mind when building Dokan for a global audience.
 
 👉 [CLICK HERE TO LEARN MORE](https://wedevs.com/dokan/compatible-plugins/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org)👈
+
+= More Freedom To Customize The Store =
+
+Now never get bored with the old fashioned appearance of your store. Have full control over your store customization with the Elementor Module for Dokan. Simply get the customizer to be able to customize the global outlook of the vendor store pages. Drag & drop more than 12 incredible store widgets made exclusively for Dokan and place it anywhere you want it. Save as many customized templates as you want to use it whenever you need it
+
+➡️ [Learn More](https://wedevs.com/dokan/modules/elementor/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) ⬅️
+
+* [Elementor Customizer](https://wedevs.com/dokan/modules/elementor/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): Get the complete store customization authority for the vendor store page to change its default appearance hassle-free.
 
 = FEATURES =
 
@@ -183,27 +192,28 @@ From Shipping plugins, Payment plugins to Wallets you have the peace of mind whe
     * Store location widget
     * And much more.
 
-👉 [CLICK HERE TO LEARN MORE](https://wedevs.com/docs/dokan/tutorials/https://wedevs.com/97615/dokan-vendor-review-brings-customer-power/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org)👈
+👉 [CLICK HERE TO LEARN MORE](https://wedevs.com/docs/dokan/tutorials/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org)👈
 
 = EXTENDED FEATURES BY SIMPLY ENABLE A TOGGLE BUTTON =
 
 Dokan comes with a number of extended features that were built around idea that someone with the potential should not be restricted to achieve his/her dream because of any shortcomings. Like,
 
-* [PDF Invoice](https://wedevs.com/dokan/modules/pdf-invoice/https://wedevs.com/97615/dokan-vendor-review-brings-customer-power/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org): Create automated multi seller invoices with templates & download in PDF.
-* [Product Duplicator](https://wedevs.com/dokan/modules/product-duplicator/https://wedevs.com/97615/dokan-vendor-review-brings-customer-power/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org): Enable vendors to copy a product that another seller is already selling.
-* [Ajax Live Search](https://wedevs.com/dokan/modules/ajax-live-search/https://wedevs.com/97615/dokan-vendor-review-brings-customer-power/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): Turn your regular search bar into an instant advanced product searching tool.
-* [Geolocation](https://wedevs.com/dokan/modules/geolocation/https://wedevs.com/97615/dokan-vendor-review-brings-customer-power/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): Let your customers search by location.
-* [Live Chat](https://wedevs.com/dokan/modules/live-chat/https://wedevs.com/97615/dokan-vendor-review-brings-customer-power/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): Let your vendors give quick real-time support to registered users & customers.
-* [Seller Verification](https://wedevs.com/dokan/modules/seller-verification/https://wedevs.com/97615/dokan-vendor-review-brings-customer-power/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): Verify your vendors using their social profiles, phone and even their photo ID.
-* [Stripe Connect](https://wedevs.com/dokan/modules/stripe-connect/https://wedevs.com/97615/dokan-vendor-review-brings-customer-power/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): Famous for its low fees, use Stripe to all handle all your payments in real time and much more.
-* [MOIP](https://wedevs.com/dokan/modules/moip/https://wedevs.com/97615/dokan-vendor-review-brings-customer-power/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): Use Moip, the popular payment network with Dokan.
-* [Subscriptions](https://wedevs.com/dokan/modules/subscription/https://wedevs.com/97615/dokan-vendor-review-brings-customer-power/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): Create highly customized subscription packs and charge vendors as you like.
-* [Vendor Review](https://wedevs.com/dokan/modules/dokan-vendor-review/https://wedevs.com/97615/dokan-vendor-review-brings-customer-power/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): This feature enables your customers to post a review for each store available on your site.
-* [Vendor Staff Manager](https://wedevs.com/dokan/modules/vendor-staff-manager/https://wedevs.com/97615/dokan-vendor-review-brings-customer-power/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): Let the sellers of your multivendor marketplace a unique opportunity to appoint an unlimited number of staffs to manage their personal eCommerce stores.
-* [Dokan WooCommerce Booking](https://wedevs.com/products/plugins/dokan/woocommerce-booking-integration/https://wedevs.com/97615/dokan-vendor-review-brings-customer-power/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): Allows vendors to create & sell bookable products and customers to customize their booking orders.
-* [Dokan Simple Auctions](https://wedevs.com/products/plugins/dokan/dokan-simple-auctions/https://wedevs.com/97615/dokan-vendor-review-brings-customer-power/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): Offer your vendors to enable auction-able products selling feature.
+* [PDF Invoice](https://wedevs.com/dokan/modules/pdf-invoice/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org): Create automated multi seller invoices with templates & download in PDF.
+* [Product Duplicator](https://wedevs.com/dokan/modules/product-duplicator/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org): Enable vendors to copy a product that another seller is already selling.
+* [Ajax Live Search](https://wedevs.com/dokan/modules/ajax-live-search/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): Turn your regular search bar into an instant advanced product searching tool.
+* [Geolocation](https://wedevs.com/dokan/modules/geolocation/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): Let your customers search by location.
+* [Live Chat](https://wedevs.com/dokan/modules/live-chat/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): Let your vendors give quick real-time support to registered users & customers.
+* [Seller Verification](https://wedevs.com/dokan/modules/seller-verification/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): Verify your vendors using their social profiles, phone and even their photo ID.
+* [Stripe Connect](https://wedevs.com/dokan/modules/stripe-connect/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): Famous for its low fees, use Stripe to all handle all your payments in real time and much more.
+* [Wirecard(Moip)](https://wedevs.com/dokan/modules/moip/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): Get to use the popular payment system Wirecard previously known as Moip with Dokan.
+* [Elementor Customizer](https://wedevs.com/dokan/modules/elementor/https://wedevs.com/dokan/modules/elementor/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): Get the complete store customization authority for the vendor store page to change its default appearance hassle-free.
+* [Subscriptions](https://wedevs.com/dokan/modules/subscription/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): Create highly customized subscription packs and charge vendors as you like.
+* [Vendor Review](https://wedevs.com/dokan/modules/dokan-vendor-review/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): This feature enables your customers to post a review for each store available on your site.
+* [Vendor Staff Manager](https://wedevs.com/dokan/modules/vendor-staff-manager/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): Let the sellers of your multivendor marketplace a unique opportunity to appoint an unlimited number of staffs to manage their personal eCommerce stores.
+* [Dokan WooCommerce Booking](https://wedevs.com/products/plugins/dokan/woocommerce-booking-integration/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): Allows vendors to create & sell bookable products and customers to customize their booking orders.
+* [Dokan Simple Auctions](https://wedevs.com/products/plugins/dokan/dokan-simple-auctions/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): Offer your vendors to enable auction-able products selling feature.
 
-[AND MANY MORE](https://wedevs.com/dokan/modules/https://wedevs.com/97615/dokan-vendor-review-brings-customer-power/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) ⏩
+[AND MANY MORE](https://wedevs.com/dokan/modules/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) ⏩
 
 = WE KNOW WE ARE NOT PERFECT THAT’S WHY WE ARE IMPROVING EVERYDAY =
 
@@ -273,6 +283,14 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 == Changelog ==
+
+v2.9.18 -> July 10, 2019
+------------------------------------
+-   **Feat***  Add google map type option field component
+-   **Feat***  Add dokan_array_after helper function
+-   **Fix***   Admin settings default value for multicheck field
+-   **Tweek*** Remove unnecessary code and add hook after creating parent order
+-   **Tweek*** Refactor dokan_get_vendor_by_product function and explicit error checking while using it
 
 v2.9.17 -> June 13, 2019
 ------------------------------------
