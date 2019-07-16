@@ -584,3 +584,22 @@ function dokan_get_vendor_by_product( $product ) {
 
     return dokan()->vendor->get( $vendor_id );
 }
+
+/**
+ * Get translated product stock status
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @param  mix $stock
+ *
+ * @return string | array if stock parameter is not provided
+ */
+function dokan_get_translated_product_stock_status( $stock = false ) {
+    $stock_status = wc_get_product_stock_status_options();
+
+    if ( ! $stock ) {
+        return $stock_status;
+    }
+
+    return isset( $stock_status[$stock] ) ? $stock_status[$stock] : '';
+}
