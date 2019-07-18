@@ -161,8 +161,8 @@
   display: block;
   color: #aaa;
   padding: 10px;
-  -webkit-transition: all ease .5s;
-  transition: all ease .5s;
+  -webkit-transition: all ease 0.5s;
+  transition: all ease 0.5s;
   position: relative;
   font-size: 12px;
 }

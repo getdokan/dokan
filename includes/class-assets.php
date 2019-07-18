@@ -52,7 +52,7 @@ class Dokan_Assets {
                     'storePrefix' => dokan_get_option( 'custom_store_url', 'dokan_general', 'store' ),
                     'assetsUrl'   => DOKAN_PLUGIN_ASSEST,
                     'buynowpro'   => dokan_pro_buynow_url()
-                )
+                ),
             ) );
 
             // Load common styles and scripts
@@ -76,6 +76,7 @@ class Dokan_Assets {
             wp_enqueue_script( 'dokan-vue-vendor' );
             wp_localize_script( 'dokan-vue-vendor', 'dokan', $localize_script );
             wp_enqueue_script( 'dokan-vue-bootstrap' );
+            $this->load_gmap_script();
 
             // allow other plugins to load scripts before the main app loads
             do_action( 'dokan-vue-admin-scripts' );
@@ -199,9 +200,6 @@ class Dokan_Assets {
             'dokan-fontawesome' => array(
                 'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/font-awesome/font-awesome.min.css',
             ),
-            'dokan-chosen-style' => array(
-                'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/chosen/chosen.min.css',
-            ),
             'dokan-magnific-popup' => array(
                 'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/magnific/magnific-popup.css',
             ),
@@ -254,9 +252,18 @@ class Dokan_Assets {
      * @return array
      */
     public function get_scripts() {
-        $prefix     = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.min' : '';
-        $asset_url  = DOKAN_PLUGIN_ASSEST;
-        $asset_path = DOKAN_DIR . '/assets/';
+        global $wp_version;
+
+        $prefix         = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.min' : '';
+        $asset_url      = DOKAN_PLUGIN_ASSEST;
+        $asset_path     = DOKAN_DIR . '/assets/';
+        $bootstrap_deps = array( 'dokan-vue-vendor', 'dokan-i18n-jed' );
+
+        if ( version_compare( $wp_version, '5.0', '<' ) ) {
+            $bootstrap_deps[] = 'dokan-wp-packages';
+        } else {
+            $bootstrap_deps[] = 'wp-hooks';
+        }
 
         $scripts = array(
             'dokan-i18n-jed' => array(
@@ -284,10 +291,6 @@ class Dokan_Assets {
             ),
             'dokan-tabs' => array(
                 'src'       => $asset_url . '/vendors/easytab/jquery.easytabs.min.js',
-                'deps'      => array( 'jquery' ),
-            ),
-            'dokan-chosen' => array(
-                'src'       => $asset_url . '/vendors/chosen/chosen.jquery.min.js',
                 'deps'      => array( 'jquery' ),
             ),
             'dokan-popup' => array(
@@ -353,12 +356,12 @@ class Dokan_Assets {
             ),
             'dokan-vue-bootstrap' => array(
                 'src'       => $asset_url . '/js/vue-bootstrap.js',
-                'deps'      => array( 'dokan-vue-vendor', 'dokan-i18n-jed' ),
+                'deps'      => $bootstrap_deps,
                 'version'   => filemtime( $asset_path . '/js/vue-bootstrap.js' ),
             ),
             'dokan-vue-admin' => array(
                 'src'       => $asset_url . '/js/vue-admin.js',
-                'deps'      => array( 'jquery', 'dokan-i18n-jed', 'dokan-vue-vendor', 'dokan-vue-bootstrap' ),
+                'deps'      => array( 'jquery', 'jquery-ui-datepicker', 'dokan-i18n-jed', 'dokan-vue-vendor', 'dokan-vue-bootstrap' ),
                 'version'   => filemtime( $asset_path . '/js/vue-admin.js' ),
             ),
             'dokan-vue-frontend' => array(
@@ -366,6 +369,16 @@ class Dokan_Assets {
                 'deps'      => array( 'jquery', 'dokan-i18n-jed', 'dokan-vue-vendor', 'dokan-vue-bootstrap' ),
                 'version'   => filemtime( $asset_path . '/js/vue-frontend.js' ),
             ),
+            'dokan-wp-packages' => array(
+                'src'       => $asset_url . '/js/dokan-wp.js',
+                'deps'      => array( 'jquery' ),
+                'version'   => filemtime( $asset_path . '/js/dokan-wp.js' ),
+            ),
+            'dokan-login-form-popup' => array(
+                'src'       => $asset_url . '/js/login-form-popup.js',
+                'deps'      => array( 'dokan-popup' ),
+                'version'   => filemtime( $asset_path . '/js/login-form-popup.js' ),
+            )
         );
 
         return $scripts;
@@ -443,7 +456,6 @@ class Dokan_Assets {
                 wp_enqueue_script( 'jquery-ui-sortable' );
                 wp_enqueue_script( 'jquery-ui-datepicker' );
                 wp_enqueue_script( 'dokan-tooltip' );
-                wp_enqueue_script( 'dokan-chosen' );
                 wp_enqueue_script( 'dokan-form-validate' );
                 wp_enqueue_script( 'speaking-url' );
                 wp_enqueue_script( 'dokan-vendor-registration' );
@@ -451,6 +463,8 @@ class Dokan_Assets {
                 wp_enqueue_script( 'dokan-select2-js' );
             }
         }
+
+        wp_enqueue_script( 'dokan-login-form-popup' );
 
         do_action( 'dokan_enqueue_scripts' );
     }
@@ -500,7 +514,6 @@ class Dokan_Assets {
             wp_enqueue_style( 'dokan-magnific-popup' );
             wp_enqueue_style( 'woocommerce-general' );
             wp_enqueue_style( 'dokan-select2-css' );
-            wp_enqueue_style( 'dokan-chosen-style' );
             wp_enqueue_style( 'dokan-timepicker' );
         }
 
@@ -519,7 +532,6 @@ class Dokan_Assets {
             wp_enqueue_script( 'dokan-tabs' );
             wp_enqueue_script( 'dokan-chart' );
             wp_enqueue_script( 'dokan-flot' );
-            wp_enqueue_script( 'dokan-chosen' );
             wp_enqueue_script( 'dokan-select2-js' );
             wp_enqueue_media();
             wp_enqueue_script( 'dokan-accounting' );
@@ -635,7 +647,8 @@ class Dokan_Assets {
                 'i18n_selection_too_long_1'           => __( 'You can only select 1 item', 'dokan-lite' ),
                 'i18n_selection_too_long_n'           => __( 'You can only select %qty% items', 'dokan-lite' ),
                 'i18n_load_more'                      => __( 'Loading more results&hellip;', 'dokan-lite' ),
-                'i18n_searching'                      => __( 'Searching&hellip;', 'dokan-lite' )
+                'i18n_searching'                      => __( 'Searching&hellip;', 'dokan-lite' ),
+                'i18n_date_format'                    => get_option( 'date_format' )
             );
 
             $default_args = array_merge( $default_args, $custom_args );

@@ -1,0 +1,158 @@
+.dokan-spinner {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: url('../images/spinner-2x.gif') center center no-repeat;
+  z-index: 99;
+  background-size: 20px;
+}
+/* Variables */
+/* Toggle switch */
+.form-table .updated p {
+  margin-bottom: 10px;
+}
+.form-table .switch-input {
+  display: none;
+}
+.form-table .switch-label {
+  position: relative;
+  display: inline-block;
+  min-width: 112px;
+  cursor: pointer;
+  font-weight: 500;
+  text-align: left;
+  margin: 2px 0;
+  padding: 0 0 0 44px;
+}
+.form-table .switch-label:before,
+.form-table .switch-label:after {
+  content: "";
+  position: absolute;
+  margin: 0;
+  outline: 0;
+  top: 50%;
+  -ms-transform: translate(0, -50%);
+  -webkit-transform: translate(0, -50%);
+  transform: translate(0, -50%);
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+.form-table .switch-label:before {
+  left: 1px;
+  width: 34px;
+  height: 14px;
+  background-color: #9E9E9E;
+  border-radius: 8px;
+}
+.form-table .switch-label:after {
+  left: 0;
+  width: 20px;
+  height: 20px;
+  background-color: #FAFAFA;
+  border-radius: 50%;
+  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.14), 0 2px 2px 0 rgba(0, 0, 0, 0.098), 0 1px 5px 0 rgba(0, 0, 0, 0.084);
+}
+.form-table .switch-label .toggle--on {
+  display: none;
+}
+.form-table .switch-label .toggle--off {
+  display: inline-block;
+}
+.form-table .switch-input:checked + .switch-label:before {
+  background-color: #fbcbc4;
+}
+.form-table .switch-input:checked + .switch-label:after {
+  background-color: #f2624d;
+  -ms-transform: translate(80%, -50%);
+  -webkit-transform: translate(80%, -50%);
+  transform: translate(80%, -50%);
+}
+.form-table .switch-input:checked + .switch-label .toggle--on {
+  display: inline-block;
+}
+.form-table .switch-input:checked + .switch-label .toggle--off {
+  display: none;
+}
+.form-table .list-unstyled {
+  padding: 0;
+  margin-top: 0;
+}
+.form-table .list-unstyled li {
+  list-style-type: none;
+  margin-bottom: 5px;
+}
+.dokan-form-group .dokan-w8 {
+  margin-bottom: 10px;
+}
+.dokan-form-group textarea {
+  font-size: 15px;
+}
+/* WC Overrides */
+.wc-setup .wc-setup-steps li.done,
+.wc-setup .wc-setup-steps li.active {
+  color: #f2624d;
+  border-color: #f2624d;
+}
+.wc-setup .wc-setup-steps li.done:before,
+.wc-setup .wc-setup-steps li.active:before {
+  background: #f2624d;
+  border-color: #f2624d;
+}
+.wc-setup .wc-setup-steps li.active:before {
+  background: #fff;
+}
+.wc-setup .wc-setup-actions .button {
+  color: #555;
+  -webkit-transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease;
+}
+.wc-setup .wc-setup-actions .button-primary {
+  color: #fff;
+  background: #f2624d;
+  border-color: #f2624d;
+}
+.wc-setup .wc-setup-actions .button-primary:hover,
+.wc-setup .wc-setup-actions .button-primary:active,
+.wc-setup .wc-setup-actions .button-primary:focus {
+  background-color: #ef381d;
+}
+.wc-setup .wc-setup-content a {
+  color: #f2624d;
+}
+.wc-setup .wc-setup-content .checkbox input[type=checkbox]:checked + label::before {
+  background: #f2624d;
+  border-color: #f2624d;
+}
+.wc-setup .wc-setup-content .checkbox label {
+  font-weight: 400;
+  line-height: 1.7;
+}
+.wc-wizard-service-item .wc-wizard-service-name {
+  padding-left: 20px;
+}
+.wc-wizard-service-item .dokan-wizard-service-enable {
+  flex-basis: 0;
+  min-width: 75px;
+  text-align: center;
+  cursor: pointer;
+  padding: 2em 0;
+  position: relative;
+  max-height: 1.5em;
+  align-self: flex-start;
+}
+.wc-wizard-service-item .dokan-wizard-service-enable .switch-label {
+  left: 20px;
+}
+.dokan-setup-done h1 {
+  text-align: center;
+}
+.dokan-setup-done img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  padding-bottom: 30px;
+}
+.dokan-setup-done-content {
+  display: flex;
+  justify-content: center;
+}

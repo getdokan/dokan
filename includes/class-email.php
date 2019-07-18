@@ -69,7 +69,8 @@ class Dokan_Email {
      * @return string
      */
     function get_user_agent() {
-        return substr( $_SERVER['HTTP_USER_AGENT'], 0, 150 );
+        $agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ): '';
+        return substr( $agent, 0, 150 );
     }
 
     /**
@@ -104,7 +105,7 @@ class Dokan_Email {
         $wc_emails['Dokan_Email_Withdraw_Cancelled']  = include( DOKAN_INC_DIR.'/emails/class-dokan-withdraw-cancelled.php' );
         $wc_emails['Dokan_Email_Contact_Seller']      = include( DOKAN_INC_DIR.'/emails/class-dokan-email-contact-seller.php' );
 
-        return $wc_emails;
+        return apply_filters( 'dokan_email_classes', $wc_emails );
     }
 
     /**

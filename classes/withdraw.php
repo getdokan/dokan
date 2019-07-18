@@ -45,15 +45,17 @@ class Dokan_Withdraw {
         // 1 -> active
         // 2 -> cancelled
 
-        $wpdb->query( $wpdb->prepare(
-            "UPDATE {$wpdb->dokan_withdraw}
-            SET status = %d WHERE user_id=%d AND id = %d",
-            $status, $user_id, $row_id
-        ) );
+        $wpdb->query(
+            $wpdb->prepare( "UPDATE {$wpdb->dokan_withdraw} SET status = %d WHERE user_id=%d AND id = %d",
+                $status,
+                $user_id,
+                $row_id
+            )
+        );
 
         do_action( 'dokan_withdraw_status_updated', $status, $user_id, $row_id );
 
-        $cache_key     = 'dokan_seller_balance_' . $user_id;
+        $cache_key = 'dokan_seller_balance_' . $user_id;
         wp_cache_delete( $cache_key );
     }
 
@@ -75,7 +77,7 @@ class Dokan_Withdraw {
             'status'  => $data['status'],
             'method'  => $data['method'],
             'note'    => $data['notes'],
-            'ip'      => $data['ip']
+            'ip'      => $data['ip'],
         );
 
         $format = array( '%d', '%f', '%s', '%d', '%s', '%s', '%s' );
@@ -95,11 +97,14 @@ class Dokan_Withdraw {
 
         $wpdb->dokan_withdraw = $wpdb->prefix . 'dokan_withdraw';
 
-        $status = $wpdb->get_results( $wpdb->prepare(
-            "SELECT id
-             FROM $wpdb->dokan_withdraw
-             WHERE user_id = %d AND status = 0", $user_id
-        ) );
+        $status = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT id
+                FROM $wpdb->dokan_withdraw
+                WHERE user_id = %d AND status = 0",
+                $user_id
+            )
+        );
 
         if ( $status ) {
             return true;
@@ -121,10 +126,11 @@ class Dokan_Withdraw {
     function get_withdraw_requests( $user_id = '', $status = 0, $limit = 10, $offset = 0 ) {
         global $wpdb;
 
-        $where  = empty( $user_id ) ? '' : sprintf( "user_id ='%d' &&", $user_id );
-
-        $sql    = $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} WHERE $where status = %d LIMIT %d, %d", $status, $offset, $limit );
-        $result = $wpdb->get_results( $sql );
+        if ( empty( $user_id ) ) {
+            $result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} WHERE status = %d LIMIT %d, %d", $status, $offset, $limit ) );
+        } else {
+            $result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} WHERE user_id = %d AND status = %d LIMIT %d, %d", $user_id, $status, $offset, $limit ) );
+        }
 
         return $result;
     }

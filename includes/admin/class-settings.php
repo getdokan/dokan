@@ -32,7 +32,9 @@ class Dokan_Settings {
             wp_send_json_error( __( 'You have no permission to get settings value', 'dokan-lite' ) );
         }
 
-        if ( ! wp_verify_nonce( $_POST['nonce'], 'dokan_admin' ) ) {
+        $_post_data = wp_unslash( $_POST );
+
+        if ( ! wp_verify_nonce( sanitize_text_field( $_post_data['nonce'] ), 'dokan_admin' ) ) {
             wp_send_json_error( __( 'Invalid nonce', 'dokan-lite' ) );
         }
 
@@ -53,24 +55,44 @@ class Dokan_Settings {
      * @return void
      */
     public function save_settings_value() {
-        if ( ! current_user_can( 'manage_options' ) ) {
-            wp_send_json_error( __( 'You have no permission to get settings value', 'dokan-lite' ) );
+        try {
+            if ( ! current_user_can( 'manage_options' ) ) {
+                throw new Exception( __( 'You are not authorized to perform this action.', 'dokan-lite' ), 401 );
+            }
+
+            $_post_data = wp_unslash( $_POST );
+            if ( ! wp_verify_nonce( sanitize_text_field( $_post_data['nonce'] ), 'dokan_admin' ) ) {
+                throw new Exception( __( 'Invalid nonce', 'dokan-lite' ), 403 );
+            }
+
+            $option_name = $_post_data['section'];
+
+            if ( empty( $option_name ) ) {
+                throw new Exception( __( 'Setting not saved properly', 'dokan-lite' ), 400 );
+            }
+
+            $option_value = $this->sanitize_options( $_post_data['settingsData'] );
+            $option_value = apply_filters( 'dokan_save_settings_value', $option_value, $option_name );
+
+            do_action( 'dokan_before_saving_settings', $option_name, $option_value );
+
+            update_option( $option_name, $option_value );
+
+            do_action( 'dokan_after_saving_settings', $option_name, $option_value );
+
+            wp_send_json_success( array(
+                'settings' => array(
+                    'name'  => $option_name,
+                    'value' => $option_value,
+                ),
+                'message' => __( 'Setting has been saved successfully.', 'dokan-lite' ),
+            ) );
+
+        } catch ( Exception $e ) {
+            $error_code = $e->getCode() ? $e->getCode() : 422;
+
+            wp_send_json_error( new WP_Error( 'error_saving_dokan_settings', $e->getMessage() ), $error_code );
         }
-
-        if ( ! wp_verify_nonce( $_POST['nonce'], 'dokan_admin' ) ) {
-            wp_send_json_error( __( 'Invalid nonce', 'dokan-lite' ) );
-        }
-
-        $option_key = $_POST['section'];
-
-        if ( empty( $option_key ) ) {
-            wp_send_json_error( __( 'Setting not saved properly', 'dokan-lite' ) );
-        }
-
-        $option_values = $this->sanitize_options( $_POST['settingsData'] );
-
-        update_option( $option_key, $option_values );
-        wp_send_json_success( __( 'Setting Saved', 'dokan-lite' ) );
     }
 
     /**
@@ -79,7 +101,7 @@ class Dokan_Settings {
      * @return mixed
      */
     function sanitize_options( $options ) {
-        if ( !$options ) {
+        if ( ! $options ) {
             return $options;
         }
 
@@ -156,7 +178,7 @@ class Dokan_Settings {
      */
     public function get_post_type( $post_type ) {
         $pages_array = array( '-1' => __( '- select -', 'dokan-lite' ) );
-        $pages = get_posts( array('post_type' => $post_type, 'numberposts' => -1) );
+        $pages       = get_posts( array('post_type' => $post_type, 'numberposts' => -1) );
 
         if ( $pages ) {
             foreach ($pages as $page) {
@@ -188,27 +210,32 @@ class Dokan_Settings {
             array(
                 'id'    => 'dokan_general',
                 'title' => __( 'General', 'dokan-lite' ),
-                'icon' => 'dashicons-admin-generic'
+                'icon'  => 'dashicons-admin-generic'
             ),
             array(
                 'id'    => 'dokan_selling',
                 'title' => __( 'Selling Options', 'dokan-lite' ),
-                'icon' => 'dashicons-cart'
+                'icon'  => 'dashicons-cart'
             ),
             array(
                 'id'    => 'dokan_withdraw',
                 'title' => __( 'Withdraw Options', 'dokan-lite' ),
-                'icon' => 'dashicons-money'
+                'icon'  => 'dashicons-money'
             ),
             array(
                 'id'    => 'dokan_pages',
                 'title' => __( 'Page Settings', 'dokan-lite' ),
-                'icon' => 'dashicons-admin-page'
+                'icon'  => 'dashicons-admin-page'
             ),
             array(
                 'id'    => 'dokan_appearance',
                 'title' => __( 'Appearance', 'dokan-lite' ),
                 'icon'  => 'dashicons-admin-appearance'
+            ),
+            array(
+                'id'    => 'dokan_privacy',
+                'title' => __( 'Privacy Policy', 'dokan-lite' ),
+                'icon'  => 'dashicons-admin-network'
             )
         );
 
@@ -277,20 +304,20 @@ class Dokan_Settings {
                     'type'    => 'checkbox',
                     'default' => 'on'
                 ),
-                'store_map'                  => array(
+                'store_map' => array(
                     'name'    => 'store_map',
                     'label'   => __( 'Show Map on Store Page', 'dokan-lite' ),
                     'desc'    => __( 'Enable a Google Map of the Store Location in the store sidebar', 'dokan-lite' ),
                     'type'    => 'checkbox',
                     'default' => 'on'
                 ),
-                'gmap_api_key'               => array(
+                'gmap_api_key' => array(
                     'name'  => 'gmap_api_key',
                     'label' => __( 'Google Map API Key', 'dokan-lite' ),
                     'desc'  => __( '<a href="https://developers.google.com/maps/documentation/javascript/" target="_blank">API Key</a> is needed to display map on store page', 'dokan-lite' ),
                     'type'  => 'text',
                 ),
-                'contact_seller'             => array(
+                'contact_seller' => array(
                     'name'    => 'contact_seller',
                     'label'   => __( 'Show Contact Form on Store Page', 'dokan-lite' ),
                     'desc'    => __( 'Enable Vendor Contact Form in the store sidebar', 'dokan-lite' ),
@@ -367,7 +394,7 @@ class Dokan_Settings {
                     'desc'    => __( 'Minimum balance required to make a withdraw request. Leave blank to set no minimum limits.', 'dokan-lite' ),
                     'default' => '50',
                     'type'    => 'text',
-                ),
+                )
             ),
             'dokan_pages' => array(
                 'dashboard' => array(
@@ -410,9 +437,56 @@ class Dokan_Settings {
                     'default' => 'default',
                 ),
             ),
+            'dokan_privacy' => array(
+                'enable_privacy' => array(
+                    'name'    => 'enable_privacy',
+                    'label'   => __( 'Enable Privacy Policy', 'dokan-lite' ),
+                    'type'    => 'checkbox',
+                    'desc'    => __( 'Enable privacy policy for dokan contact form', 'dokan-lite' ),
+                    'default' => 'on'
+                ),
+                'privacy_page' => array(
+                    'name'    => 'privacy_page',
+                    'label'   => __( 'Privacy Page', 'dokan-lite' ),
+                    'type'    => 'select',
+                    'desc'    => __( 'Choose privacy policy page', 'dokan-lite' ),
+                    'options' => $pages_array
+                ),
+                'privacy_policy' => array(
+                    'name'    => 'privacy_policy',
+                    'label'   => __( 'Privacy Policy', 'dokan-lite' ),
+                    'type'    => 'textarea',
+                    'rows'    => 5,
+                    'default' => __( 'Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our [dokan_privacy_policy]', 'dokan-lite' ),
+                )
+            )
         );
 
-        return apply_filters( 'dokan_settings_fields', $settings_fields );
+        return apply_filters( 'dokan_settings_fields', $settings_fields, $this );
+    }
+
+    /**
+     * Add settings after specific option
+     *
+     * @since 2.9.11
+     *
+     * @param array  $settings_fields     Current settings
+     * @param string $section             Name of the section
+     * @param string $option              Name of the option after which we wish to add new settings
+     * @param array  $additional_settings New settings/options
+     */
+    public function add_settings_after( $settings_fields, $section, $option, $additional_settings ) {
+        $section_fields = $settings_fields[ $section ];
+
+        $afterIndex = array_search( $option, array_keys( $section_fields ) );
+
+        $settings_fields[ $section ] = array_merge(
+            array_slice( $section_fields, 0, $afterIndex + 1 ),
+            $additional_settings,
+            array_slice( $section_fields, $afterIndex + 1 )
+        );
+
+        return $settings_fields;
     }
 }
 

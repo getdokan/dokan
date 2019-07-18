@@ -29,7 +29,7 @@ class Dokan_Product_Manager {
 
         $args = wp_parse_args( $args, $defaults );
 
-        return new WP_Query( $args );
+        return new WP_Query( apply_filters( 'dokan_all_products_query', $args ) );
     }
 
     /**
@@ -43,6 +43,7 @@ class Dokan_Product_Manager {
 
         if ( version_compare( WC_VERSION, '2.7', '>' ) ) {
             $product_visibility_term_ids = wc_get_product_visibility_term_ids();
+
             $args['tax_query'][] = array(
                 'taxonomy' => 'product_visibility',
                 'field'    => 'term_taxonomy_id',
@@ -69,7 +70,7 @@ class Dokan_Product_Manager {
             );
         }
 
-        return $this->all( $args );
+        return $this->all( apply_filters( 'dokan_featured_products_query', $args ) );
     }
 
     /**
@@ -100,7 +101,7 @@ class Dokan_Product_Manager {
             );
         }
 
-        return $this->all( $args );
+        return $this->all( apply_filters( 'dokan_latest_products_query', $args ) );
     }
 
     /**
@@ -112,7 +113,7 @@ class Dokan_Product_Manager {
      */
     public function best_selling( $args = array() ) {
 
-        $args['meta_key']  = 'total_sales';
+        $args['meta_key'] = 'total_sales';
         $args['orderby']  = 'meta_value_num';
 
         if ( version_compare( WC_VERSION, '2.7', '>' ) ) {
@@ -133,7 +134,7 @@ class Dokan_Product_Manager {
             );
         }
 
-        return $this->all( $args );
+        return $this->all( apply_filters( 'dokan_best_selling_products_query', $args ) );
     }
 
     /**
@@ -164,7 +165,7 @@ class Dokan_Product_Manager {
         }
 
         add_filter( 'posts_clauses', array( 'WC_Shortcodes', 'order_by_rating_post_clauses' ) );
-        $products = $this->all( $args );
+        $products = $this->all( apply_filters( 'dokan_top_rated_products_query', $args ) );
         remove_filter( 'posts_clauses', array( 'WC_Shortcodes', 'order_by_rating_post_clauses' ) );
 
         return $products;

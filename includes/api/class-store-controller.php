@@ -35,6 +35,11 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
                 'callback' => array( $this, 'get_stores' ),
                 'args'     => $this->get_collection_params()
             ),
+            array(
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => array( $this, 'create_store' ),
+                'permission_callback' => array( $this, 'permission_check_for_manageable_part' ),
+            ),
         ) );
 
         register_rest_route( $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)', array(
@@ -59,6 +64,11 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
                         'required'    => true,
                     ),
                 )
+            ),
+            array(
+                'methods'             => WP_REST_Server::EDITABLE,
+                'callback'            => array( $this, 'update_store' ),
+                'permission_callback' => array( $this, 'update_store_permissions_check' ),
             ),
         ) );
 
@@ -89,6 +99,13 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
                 'args'     => $this->get_collection_params()
             ),
         ) );
+
+        register_rest_route( $this->namespace, '/' . $this->base . '/check', [
+            [
+                'methods' => WP_REST_Server::READABLE,
+                'callback' => [ $this, 'check_store_availability' ]
+            ]
+        ] );
     }
 
     /**
@@ -102,26 +119,32 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
         $params = $request->get_params();
 
         $args = array(
-            'number' => $params['per_page'],
-            'offset' => ( $params['page'] - 1 ) * $params['per_page']
+            'number' => (int) $params['per_page'],
+            'offset' => (int) ( $params['page'] - 1 ) * $params['per_page']
         );
 
         if ( ! empty( $params['search'] ) ) {
-            $args['search']         = '*' . esc_attr( $params['search'] ) . '*';
+            $args['search']         = '*' . sanitize_text_field( ( $params['search'] ) ) . '*';
             $args['search_columns'] = array( 'user_login', 'user_email', 'display_name' );
         }
 
         if ( ! empty( $params['status'] ) ) {
-            $args['status'] = $params['status'];
+            $args['status'] = sanitize_text_field( $params['status'] );
         }
 
         if ( ! empty( $params['orderby'] ) ) {
-            $args['orderby'] = $params['orderby'];
+            $args['orderby'] = sanitize_sql_orderby( $params['orderby'] );
         }
 
         if ( ! empty( $params['order'] ) ) {
-            $args['order'] = $params['order'];
+            $args['order'] = sanitize_text_field( $params['order'] );
         }
+
+        if ( ! empty( $params['featured'] ) ) {
+            $args['featured'] = sanitize_text_field( $params['featured'] );
+        }
+
+        $args = apply_filters( 'dokan_rest_get_stores_args', $args, $request );
 
         $stores       = dokan()->vendor->get_vendors( $args );
         $data_objects = array();
@@ -145,7 +168,7 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
      * @return void
      */
     public function get_store( $request ) {
-        $store_id = $request['id'];
+        $store_id = (int) $request['id'];
 
         $store = dokan()->vendor->get( $store_id );
 
@@ -167,7 +190,7 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
      * @return void
      */
     public function delete_store( $request ) {
-        $store_id = !empty( $request['id'] ) ? $request['id'] : 0;
+        $store_id = ! empty( $request['id'] ) ? (int) $request['id'] : 0;
         $reassign = false === $request['reassign'] ? null : absint( $request['reassign'] );
 
         if ( empty( $store_id ) ) {
@@ -180,9 +203,76 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
             }
         }
 
-        $vendor = dokan()->vendor->get( intval( $store_id ) )->delete( $reassign );
+        $vendor   = dokan()->vendor->delete( $store_id, $reassign );
         $response = rest_ensure_response( $vendor );
         $response->add_links( $this->prepare_links( $vendor, $request ) );
+
+        return $response;
+    }
+
+    /**
+     * Update store permission check method
+     *
+     * @since 2.9.2
+     *
+     * @return bool
+     */
+    public function update_store_permissions_check( $request ) {
+        if ( current_user_can( 'manage_woocommerce' ) ) {
+            return true;
+        }
+
+        if ( current_user_can( 'dokandar' ) ) {
+            return dokan_get_current_user_id() === absint( $request->get_param( 'id' ) );
+        }
+    }
+
+    /**
+     * Update Store
+     *
+     * @since 2.9.2
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_REST_Response
+     */
+    public function update_store( $request ) {
+        $store = dokan()->vendor->get( (int) $request->get_param( 'id' ) );
+
+        if ( empty( $store->get_id() ) ) {
+            return new WP_Error( 'no_store_found', __( 'No store found', 'dokan-lite' ), array( 'status' => 404 ) );
+        }
+
+        $params   = $request->get_params();
+        $store_id = dokan()->vendor->update( $store->get_id(), $params );
+
+        if ( is_wp_error( $store_id ) ) {
+            return new WP_Error( $store_id->get_error_code(), $store_id->get_error_message() );
+        }
+
+        $store = dokan()->vendor->get( $store_id );
+
+        do_action( 'dokan_rest_stores_update_store', $store, $request );
+
+        $stores_data = $this->prepare_item_for_response( $store, $request );
+        $response    = rest_ensure_response( $stores_data );
+
+        return $response;
+    }
+
+    public function create_store( $request ) {
+        $params = $request->get_params();
+
+        $store = dokan()->vendor->create( $params );
+
+        if ( is_wp_error( $store ) ) {
+            return new WP_Error( $store->get_error_code(), $store->get_error_message() );
+        }
+
+        do_action( 'dokan_rest_stores_create_store', $store, $request );
+
+        $stores_data = $this->prepare_item_for_response( $store, $request );
+        $response    = rest_ensure_response( $stores_data );
 
         return $response;
     }
@@ -300,29 +390,56 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
     public function get_store_reviews( $request ) {
         $params = $request->get_params();
 
-        $store_id = $params['id'];
+        $store_id = (int) $params['id'];
 
         if ( empty( $store_id ) ) {
             return new WP_Error( 'no_store_found', __( 'No store found', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
-        $dokan_template_reviews = Dokan_Pro_Reviews::init();
-        $post_type              = 'product';
-        $limit                  = $params['per_page'];
-        $paged                  = ( $params['page'] - 1 ) * $params['per_page'];
-        $status                 = '1';
-        $comments               = $dokan_template_reviews->comment_query( $store_id, $post_type, $limit, $status, $paged );
+        if ( class_exists( 'Dokan_Store_Reviews' ) ) {
+            $args = array(
+                'post_type'      => 'dokan_store_reviews',
+                'meta_key'       => 'store_id',
+                'meta_value'     => $store_id,
+                'post_status'    => 'publish',
+                'posts_per_page' => (int) $request['per_page'],
+                'paged'          => (int) $request['page'],
+                'author__not_in' => array( get_current_user_id(), $store_id )
+            );
 
-        if ( empty( $comments ) ) {
-            return new WP_Error( 'no_reviews_found', __( 'No reviews found', 'dokan-lite' ), array( 'status' => 404 ) );
+            $query = new WP_Query( $args );
+
+            if ( empty( $query->posts ) ) {
+                return new WP_Error( 'no_reviews_found', __( 'No reviews found', 'dokan-lite' ), array( 'status' => 404 ) );
+            }
+
+            $data = array();
+
+            foreach ( $query->posts as $post ) {
+                $data[] = $this->prepare_reviews_for_response( $post, $request );
+            }
+
+            $total_count = $query->found_posts;
+        } else {
+            $dokan_template_reviews = Dokan_Pro_Reviews::init();
+            $post_type              = 'product';
+            $limit                  = (int) $params['per_page'];
+            $paged                  = (int) ( $params['page'] - 1 ) * $params['per_page'];
+            $status                 = '1';
+            $comments               = $dokan_template_reviews->comment_query( $store_id, $post_type, $limit, $status, $paged );
+
+            if ( empty( $comments ) ) {
+                return new WP_Error( 'no_reviews_found', __( 'No reviews found', 'dokan-lite' ), array( 'status' => 404 ) );
+            }
+
+            $data = array();
+
+            foreach ( $comments as $comment ) {
+                $data[] = $this->prepare_reviews_for_response( $comment, $request );
+            }
+
+            $total_count = $this->get_total_review_count( $store_id, $post_type, $status );
         }
-
-        $data = array();
-        foreach ( $comments as $comment ) {
-            $data[] = $this->prepare_reviews_for_response( $comment, $request );
-        }
-
-        $total_count = $this->get_total_review_count( $store_id, $post_type, $status );
 
         $response = rest_ensure_response( $data );
         $response = $this->format_collection_response( $response, $request, $total_count );
@@ -344,15 +461,21 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
     public function get_total_review_count( $id, $post_type, $status ) {
         global $wpdb;
 
-        $total = $wpdb->get_var(
-            "SELECT COUNT(*)
+        // $sql = "SELECT COUNT(*)
+        //             FROM $wpdb->comments, $wpdb->posts
+        //             WHERE $wpdb->posts.post_author=%d AND
+        //             $wpdb->posts.post_status='publish' AND
+        //             $wpdb->comments.comment_post_ID=$wpdb->posts.ID AND
+        //             $wpdb->comments.comment_approved=%s AND
+        //             $wpdb->posts.post_type=%s";
+
+        $total = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*)
             FROM $wpdb->comments, $wpdb->posts
-            WHERE   $wpdb->posts.post_author='$id' AND
+            WHERE $wpdb->posts.post_author=%d AND
             $wpdb->posts.post_status='publish' AND
             $wpdb->comments.comment_post_ID=$wpdb->posts.ID AND
-            $wpdb->comments.comment_approved='$status' AND
-            $wpdb->posts.post_type='$post_type'"
-        );
+            $wpdb->comments.comment_approved=%s AND
+            $wpdb->posts.post_type=%s", $id, $status, $post_type ) );
 
         return intval( $total );
     }
@@ -372,7 +495,8 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
         $data = array_merge( $data, apply_filters( 'dokan_rest_store_additional_fields', $additional_fields, $store, $request ) );
         $response = rest_ensure_response( $data );
         $response->add_links( $this->prepare_links( $data, $request ) );
-        return $response;
+
+        return apply_filters( 'dokan_rest_prepare_store_item_for_response', $response );
     }
 
     /**
@@ -385,26 +509,138 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
      * @return WP_REST_Response $response Response data.
      */
     public function prepare_reviews_for_response( $item, $request, $additional_fields = [] ) {
+        if ( class_exists( 'Dokan_Store_Reviews' ) ) {
+            $user          = get_user_by( 'id', $item->post_author );
+            $user_gravatar = get_avatar_url( $user->user_email );
 
-        $comment_author_img_url = get_avatar_url( $item->comment_author_email );
-        $data = [
-            'comment_id'            => (int) $item->comment_ID,
-            'comment_author'        => $item->comment_author,
-            'comment_author_email'  => $item->comment_author_email,
-            'comment_author_url'    => $item->comment_author_url,
-            'comment_author_avatar' => $comment_author_img_url,
-            'comment_content'       => $item->comment_content,
-            'comment_permalink'     => get_comment_link( $item ),
-            'user_id'               => $item->user_id,
-            'comment_post_ID'       => $item->comment_post_ID,
-            'comment_approved'      => $item->comment_approved,
-            'comment_date'          => mysql_to_rfc3339( $item->comment_date ),
-            'rating'                => intval( get_comment_meta( $item->comment_ID, 'rating', true ) ),
-        ];
+            $data = [
+                'id'            => (int) $item->ID,
+                'author'        => array(
+                    'id'     => $user->ID,
+                    'name'   => $user->user_login,
+                    'email'  => $user->user_email,
+                    'url'    => $user->user_url,
+                    'avatar' => $user_gravatar
+                ),
+                'title'         => $item->post_title,
+                'content'       => $item->post_content,
+                'permalink'     => null,
+                'product_id'    => null,
+                'approved'      => true,
+                'date'          => mysql_to_rfc3339( $item->post_date ),
+                'rating'        => intval( get_post_meta( $item->ID, 'rating', true ) ),
+            ];
+        } else {
+            $comment_author_img_url = get_avatar_url( $item->comment_author_email );
+            $data = [
+                'id'            => (int) $item->comment_ID,
+                'author'        => array(
+                    'id'     => $item->user_id,
+                    'name'   => $item->comment_author,
+                    'email'  => $item->comment_author_email,
+                    'url'    => $item->comment_author_url,
+                    'avatar' => $comment_author_img_url
+                ),
+                'title'         => null,
+                'content'       => $item->comment_content,
+                'permalink'     => get_comment_link( $item ),
+                'product_id'    => $item->comment_post_ID,
+                'approved'      => (bool)$item->comment_approved,
+                'date'          => mysql_to_rfc3339( $item->comment_date ),
+                'rating'        => intval( get_comment_meta( $item->comment_ID, 'rating', true ) ),
+            ];
+        }
 
         $data = array_merge( $data, $additional_fields );
 
         return $data;
     }
 
+    /**
+     * Check store availability
+     *
+     * @param  array $request
+     *
+     * @since 2.9.13
+     *
+     * @return reponse
+     */
+    public function check_store_availability( $request ) {
+        $params = $request->get_params();
+
+        // check whether store name is available or not
+        if ( ! empty( $params['store_slug'] ) ) {
+            $store_slug = sanitize_text_field( $params['store_slug'] );
+
+            if ( get_user_by( 'slug', $store_slug ) ) {
+                $response = [
+                    'url'       => $store_slug,
+                    'available' => false
+                ];
+
+                return rest_ensure_response( $response );
+            }
+
+            $response = [
+                'url'       => sanitize_title( $store_slug ),
+                'available' => true
+            ];
+
+            return rest_ensure_response( $response );
+        }
+
+        // check whether username is available or not
+        if ( ! empty( $params['username'] ) ) {
+            $username = sanitize_user( $params['username'] );
+
+            if ( get_user_by( 'login', $username ) ) {
+                $response = [
+                    'username'  => $username,
+                    'available' => false
+                ];
+
+                return rest_ensure_response( $response );
+            }
+
+            $response = [
+                'username'  => $username,
+                'available' => true
+            ];
+
+            return rest_ensure_response( $response );
+        }
+
+        // check whether email is available or not
+        if ( ! empty( $params['user_email'] ) ) {
+            $user_email = $params['user_email'];
+
+            if ( ! is_email( $user_email ) ) {
+                $response = [
+                    'user_email' => $user_email,
+                    'available'  => false,
+                    'message'    => __( 'This email address is not valid', 'dokan-lite' )
+                ];
+
+                return rest_ensure_response( $response );
+            }
+
+            if ( email_exists( $user_email ) ) {
+                $response = [
+                    'user_email'  => $user_email,
+                    'available' => false
+                ];
+
+                return rest_ensure_response( $response );
+            }
+
+            $response = [
+                'user_email'  => $user_email,
+                'available' => true
+            ];
+
+            return rest_ensure_response( $response );
+        }
+
+        return rest_ensure_response( [] );
+    }
 }

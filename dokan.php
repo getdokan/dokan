@@ -3,12 +3,12 @@
 Plugin Name: Dokan
 Plugin URI: https://wordpress.org/plugins/dokan-lite/
 Description: An e-commerce marketplace plugin for WordPress. Powered by WooCommerce and weDevs.
-Version: 2.8.6
+Version: 2.9.18
 Author: weDevs, LLC
 Author URI: https://wedevs.com/
 Text Domain: dokan-lite
 WC requires at least: 3.0
-WC tested up to: 3.4.5
+WC tested up to: 3.6.5
 Domain Path: /languages/
 License: GPL2
 */
@@ -78,7 +78,14 @@ final class WeDevs_Dokan {
      *
      * @var string
      */
-    public $version = '2.8.6';
+    public $version = '2.9.18';
+
+    /**
+     * Instance of self
+     *
+     * @var WeDevs_Dokan
+     */
+    private static $instance = null;
 
     /**
      * Minimum PHP version required
@@ -102,17 +109,17 @@ final class WeDevs_Dokan {
      * Sets up all the appropriate hooks and actions
      * within our plugin.
      */
-    public function __construct() {
+    private function __construct() {
         $this->define_constants();
-
-        if ( ! $this->is_supported_php() ) {
-            return;
-        }
+        $this->include_exceptions();
 
         register_activation_hook( __FILE__, array( $this, 'activate' ) );
         register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
 
         add_action( 'woocommerce_loaded', array( $this, 'init_plugin' ) );
+        add_action( 'admin_notices', array( $this, 'render_missing_woocommerce_notice' ) );
+
+        $this->init_appsero_tracker();
     }
 
     /**
@@ -122,13 +129,12 @@ final class WeDevs_Dokan {
      * and if it doesn't find one, creates it.
      */
     public static function init() {
-        static $instance = false;
 
-        if ( ! $instance ) {
-            $instance = new WeDevs_Dokan();
+        if ( self::$instance === null ) {
+            self::$instance = new self();
         }
 
-        return $instance;
+        return self::$instance;
     }
 
     /**
@@ -180,16 +186,31 @@ final class WeDevs_Dokan {
     }
 
     /**
+     * Include custom throwable exceptions
+     *
+     * @since 2.9.16
+     *
+     * @return void
+     */
+    private function include_exceptions() {
+        require_once DOKAN_INC_DIR . '/exceptions/class-dokan-exception.php';
+    }
+
+    /**
      * Placeholder for activation function
      *
      * Nothing being called here yet.
      */
     public function activate() {
-        if ( ! function_exists( 'WC' ) ) {
-            require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-            deactivate_plugins( plugin_basename( __FILE__ ) );
+        if ( ! $this->has_woocommerce() ) {
+            set_transient( 'dokan_wc_missing_notice', true );
+        }
 
-            wp_die( '<div class="error"><p>' . sprintf( __( '<b>Dokan</b> requires %sWooCommerce%s to be installed & activated!', 'dokan-lite' ), '<a target="_blank" href="https://wordpress.org/plugins/woocommerce/">', '</a>' ) . '</p></div>' );
+        if ( ! $this->is_supported_php() ) {
+            require_once WC_ABSPATH . 'includes/wc-notice-functions.php';
+
+            wc_print_notice( sprintf( __( 'The Minimum PHP Version Requirement for <b>Dokan</b> is %s. You are Running PHP %s', 'dokan' ), $this->min_php, phpversion(), 'error' ) );
+            exit;
         }
 
         require_once dirname( __FILE__ ) . '/includes/functions.php';
@@ -205,7 +226,7 @@ final class WeDevs_Dokan {
      * Nothing being called here yet.
      */
     public function deactivate() {
-
+        delete_transient( 'dokan_wc_missing_notice', true );
     }
 
     /**
@@ -223,20 +244,31 @@ final class WeDevs_Dokan {
      * @return void
      */
     public function define_constants() {
-        define( 'DOKAN_PLUGIN_VERSION', $this->version );
-        define( 'DOKAN_FILE', __FILE__ );
-        define( 'DOKAN_DIR', dirname( __FILE__ ) );
-        define( 'DOKAN_INC_DIR', dirname( __FILE__ ) . '/includes' );
-        define( 'DOKAN_LIB_DIR', dirname( __FILE__ ) . '/lib' );
-        define( 'DOKAN_PLUGIN_ASSEST', plugins_url( 'assets', __FILE__ ) );
+        $this->define( 'DOKAN_PLUGIN_VERSION', $this->version );
+        $this->define( 'DOKAN_FILE', __FILE__ );
+        $this->define( 'DOKAN_DIR', dirname( __FILE__ ) );
+        $this->define( 'DOKAN_INC_DIR', dirname( __FILE__ ) . '/includes' );
+        $this->define( 'DOKAN_LIB_DIR', dirname( __FILE__ ) . '/lib' );
+        $this->define( 'DOKAN_PLUGIN_ASSEST', plugins_url( 'assets', __FILE__ ) );
 
         // give a way to turn off loading styles and scripts from parent theme
-        if ( ! defined( 'DOKAN_LOAD_STYLE' ) ) {
-            define( 'DOKAN_LOAD_STYLE', true );
-        }
+        $this->define( 'DOKAN_LOAD_STYLE', true );
+        $this->define( 'DOKAN_LOAD_SCRIPTS', true );
+    }
 
-        if ( ! defined( 'DOKAN_LOAD_SCRIPTS' ) ) {
-            define( 'DOKAN_LOAD_SCRIPTS', true );
+    /**
+     * Define constant if not already defined
+     *
+     * @since 2.9.16
+     *
+     * @param string $name
+     * @param string|bool $value
+     *
+     * @return void
+     */
+    private function define( $name, $value ) {
+        if ( ! defined( $name ) ) {
+            define( $name, $value );
         }
     }
 
@@ -247,8 +279,8 @@ final class WeDevs_Dokan {
      */
     public function init_plugin() {
         $this->includes();
-
         $this->init_hooks();
+        $this->maybe_perform_updates();
 
         do_action( 'dokan_loaded' );
     }
@@ -264,8 +296,10 @@ final class WeDevs_Dokan {
         add_action( 'init', array( $this, 'localization_setup' ) );
 
         // initialize the classes
-        add_action( 'init', array( $this, 'init_classes' ),5 );
+        add_action( 'init', array( $this, 'init_classes' ), 4 );
         add_action( 'init', array( $this, 'wpdb_table_shortcuts' ) );
+
+        add_action( 'plugins_loaded', array( $this, 'after_plugins_loaded' ) );
 
         add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), array( $this, 'plugin_action_links' ) );
         add_action( 'in_plugin_update_message-dokan-lite/dokan.php', array( 'Dokan_Installer', 'in_plugin_update_message' ) );
@@ -287,6 +321,9 @@ final class WeDevs_Dokan {
         require_once $inc_dir . 'functions-depricated.php';
         require_once $inc_dir . 'functions-compatibility.php';
 
+        // Traits
+        require_once $inc_dir . 'traits/singleton.php';
+
         // widgets
         require_once $inc_dir . 'widgets/menu-category.php';
         require_once $inc_dir . 'widgets/bestselling-product.php';
@@ -297,7 +334,6 @@ final class WeDevs_Dokan {
         require_once $inc_dir . 'widgets/store-contact.php';
         require_once $inc_dir . 'widgets/store-open-close.php';
         require_once $inc_dir . 'wc-functions.php';
-        require_once $lib_dir . 'class-wedevs-insights.php';
         require_once $inc_dir . '/admin/setup-wizard.php';
         require_once $classes_dir . 'seller-setup-wizard.php';
 
@@ -320,13 +356,18 @@ final class WeDevs_Dokan {
             require_once $inc_dir . 'admin/class-ajax.php';
             require_once $inc_dir . 'admin/class-admin-pointers.php';
             require_once $inc_dir . 'admin-functions.php';
+            require_once $inc_dir . 'admin/promotion.php';
         } else {
             require_once $inc_dir . 'template-tags.php';
+            require_once $inc_dir . 'class-theme-support.php';
         }
 
         // API includes
         require_once $inc_dir . 'api/class-api-rest-controller.php';
         require_once $inc_dir . 'class-api-manager.php';
+
+        // Background Processes
+        $this->include_backgorund_processing_files();
     }
 
     /**
@@ -340,11 +381,11 @@ final class WeDevs_Dokan {
             Dokan_Admin_Ajax::init();
             new Dokan_Upgrade();
             new Dokan_Setup_Wizard();
+            new Dokan_Promotion();
         }
 
         $this->container['pageview']      = new Dokan_Pageviews();
         $this->container['rewrite']       = new Dokan_Rewrites();
-        $this->container['tracker']       = new Dokan_Tracker();
         $this->container['seller_wizard'] = new Dokan_Seller_Setup_Wizard();
         $this->container['core']          = new Dokan_Core();
         $this->container['scripts']       = new Dokan_Assets();
@@ -356,13 +397,19 @@ final class WeDevs_Dokan {
         $this->container['orders']        = new Dokan_Order_Manager();
         $this->container['api']           = new Dokan_API_Manager();
 
-        if ( is_user_logged_in() ) {
+        $this->container = apply_filters( 'dokan_get_class_container', $this->container );
+
+        if ( ! is_admin() && is_user_logged_in() ) {
             Dokan_Template_Main::init();
             Dokan_Template_Dashboard::init();
             Dokan_Template_Products::init();
             Dokan_Template_Orders::init();
             Dokan_Template_Withdraw::init();
             Dokan_Template_Settings::init();
+        }
+
+        if ( ! is_admin() ) {
+            new Dokan_Theme_Support();
         }
 
         if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
@@ -385,6 +432,19 @@ final class WeDevs_Dokan {
         $wpdb->dokan_announcement   = $wpdb->prefix . 'dokan_announcement';
         $wpdb->dokan_refund         = $wpdb->prefix . 'dokan_refund';
         $wpdb->dokan_vendor_balance = $wpdb->prefix . 'dokan_vendor_balance';
+    }
+
+    /**
+     * Executed after all plugins are loaded
+     *
+     * At this point Dokan Pro is loaded
+     *
+     * @since 2.8.7
+     *
+     * @return void
+     */
+    public function after_plugins_loaded() {
+        new Dokan_Background_Processes();
     }
 
     /**
@@ -434,6 +494,82 @@ final class WeDevs_Dokan {
         $links[] = '<a href="https://docs.wedevs.com/docs/dokan/" target="_blank">' . __( 'Documentation', 'dokan-lite' ) . '</a>';
 
         return $links;
+    }
+
+    /**
+     * Initialize Appsero Tracker
+     *
+     * @return  void
+     */
+    public function init_appsero_tracker() {
+        $this->container['tracker'] = new Dokan_Tracker();
+    }
+
+    /**
+     * Missing woocomerce notice
+     *
+     * @since 2.9.16
+     *
+     * @return void
+     */
+    public function render_missing_woocommerce_notice() {
+        if ( ! get_transient( 'dokan_wc_missing_notice' ) ) {
+            return;
+        }
+
+        if ( $this->has_woocommerce() ) {
+            return delete_transient( 'dokan_wc_missing_notice' );
+        }
+
+        $plugin_url = self_admin_url( 'plugin-install.php?s=woocommerce&tab=search&type=term' );
+        $message    = sprintf( esc_html__( 'Dokan requires WooCommerce to be installed and active. You can activate %s here.', 'dokan-lite' ), '<a href="' . $plugin_url . '">WooCommerce</a>' );
+
+        printf( '<div class="error"><p><strong>%1$s</strong></p></div>', $message );
+    }
+
+    /**
+     * Check whether woocommerce is installed or not
+     *
+     * @since 2.9.16
+     *
+     * @return boolean
+     */
+    public function has_woocommerce() {
+        return class_exists( 'WooCommerce' );
+    }
+
+    /**
+     * Maybe perform updates (only runs when dokan was installed before
+     * but wc wasn't installed)
+     *
+     * @since 2.9.16
+     *
+     * @return void
+     */
+    public function maybe_perform_updates() {
+        if ( ! get_transient( 'dokan_theme_version_for_updater' ) ) {
+            return;
+        }
+
+        $updater = new Dokan_Upgrade;
+        $updater->perform_updates();
+    }
+
+    /**
+     * Include background processing files
+     *
+     * @since 2.9.16
+     *
+     * @return void
+     */
+    public function include_backgorund_processing_files() {
+        if ( ! class_exists( 'Abstract_Dokan_Background_Processes' ) ) {
+            require_once DOKAN_INC_DIR . '/background-processes/abstract-class-dokan-background-processes.php';
+        }
+
+        if ( ! class_exists( 'Dokan_Background_Processes' ) ) {
+            require_once DOKAN_INC_DIR . '/background-processes/class-dokan-background-processes.php';
+        }
     }
 
 } // WeDevs_Dokan

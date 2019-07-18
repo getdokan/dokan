@@ -1,7 +1,6 @@
 jQuery(function($) {
 
     $('.tips').tooltip();
-    //$('select.grant_access_id').chosen();
 
     $('ul.order-status').on('click', 'a.dokan-edit-status', function(e) {
         $(this).addClass('dokan-hide').closest('li').next('li').removeClass('dokan-hide');
@@ -164,8 +163,41 @@ jQuery(function($) {
     var dokan_seller_meta_boxes_order_items = {
         init: function() {
 
+            let formatMap = {
+                // Day
+                d: 'dd',
+                D: 'D',
+                j: 'd',
+                l: 'DD',
+
+                // Month
+                F: 'MM',
+                m: 'mm',
+                M: 'M',
+                n: 'm',
+
+                // Year
+                o: 'yy', // not exactly same. see php date doc for details
+                Y: 'yy',
+                y: 'y'
+            }
+
+            let i = 0;
+            let char = '';
+            let datepickerFormat = '';
+
+            for (i = 0; i < dokan.i18n_date_format.length; i++) {
+                char = dokan.i18n_date_format[i];
+
+                if (char in formatMap) {
+                    datepickerFormat += formatMap[char];
+                } else {
+                    datepickerFormat += char;
+                }
+            }
+
             $( "#shipped-date" ).datepicker({
-                dateFormat: "yy-mm-dd"
+                dateFormat: datepickerFormat
             });
 
             //saving note

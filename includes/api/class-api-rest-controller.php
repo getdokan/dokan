@@ -26,12 +26,13 @@ abstract class Dokan_REST_Controller extends WP_REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_items( $request ) {
-        $query_args = $this->prepare_objects_query( $request );
-        $query  = new WP_Query();
-        $result = $query->query( $query_args );
+        $query_args   = $this->prepare_objects_query( $request );
+        $query        = new WP_Query();
+        $result       = $query->query( $query_args );
 
-        $data = array();
-        $objects = array_map( array( $this, 'get_object' ), $result );
+        $data         = array();
+        $data_objects = array();
+        $objects      = array_map( array( $this, 'get_object' ), $result );
 
         foreach ( $objects as $object ) {
             $data           = $this->prepare_data_for_response( $object, $request );
@@ -93,6 +94,16 @@ abstract class Dokan_REST_Controller extends WP_REST_Controller {
 
             //Update post author
             wp_update_post( array( 'ID' => $object->get_id(), 'post_author' => dokan_get_current_user_id() ) );
+
+            /**
+             * Fires after a single object is created or updated via the REST API.
+             *
+             * @param WC_Data         $object    Inserted object.
+             * @param WP_REST_Request $request   Request object.
+             * @param boolean         $creating  True when creating object, false when updating.
+             */
+            do_action( "dokan_rest_insert_{$this->post_type}_object", $object, $request, true );
+
             return $this->prepare_data_for_response( $this->get_object( $object->get_id() ), $request );
         } catch ( WC_Data_Exception $e ) {
             return new WP_Error( $e->getErrorCode(), $e->getMessage(), $e->getErrorData() );
@@ -124,6 +135,16 @@ abstract class Dokan_REST_Controller extends WP_REST_Controller {
 
             $object->save();
             $this->update_additional_fields_for_object( $object, $request );
+
+            /**
+             * Fires after a single object is created or updated via the REST API.
+             *
+             * @param WC_Data         $object    Inserted object.
+             * @param WP_REST_Request $request   Request object.
+             * @param boolean         $creating  True when creating object, false when updating.
+             */
+            do_action( "dokan_rest_insert_{$this->post_type}_object", $object, $request, false );
+
             return $this->prepare_data_for_response( $this->get_object( $object->get_id() ), $request );
         } catch ( WC_Data_Exception $e ) {
             return new WP_Error( $e->getErrorCode(), $e->getMessage(), $e->getErrorData() );

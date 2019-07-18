@@ -36,12 +36,14 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
     protected $post_status = array( 'publish', 'pending', 'draft' );
 
     /**
-     * Load autometically when class initiate
+     * Constructor function
      *
-     * @since 2.8.0
+     * @since 2.7.0
+     *
+     * @return void
      */
     public function __construct() {
-
+        # code...
     }
 
     /**
@@ -113,6 +115,116 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
             ),
         ) );
 
+        register_rest_route( $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/related', array(
+            'args' => array(
+                'id' => array(
+                    'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
+                    'type'        => 'integer',
+                    'required'    => true,
+                ),
+                'per_page' => array(
+                    'description' => __( 'Number of product you want to get top rated product', 'dokan-lite' ),
+                    'type'        => 'integer',
+                    'default'     => 10
+                )
+            ),
+            array(
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => array( $this, 'get_related_product' ),
+            ),
+        ) );
+
+        register_rest_route( $this->namespace, '/' . $this->base . '/top_rated', array(
+            'args' => array(
+                'per_page' => array(
+                    'description' => __( 'Number of product you want to get top rated product', 'dokan-lite' ),
+                    'type'        => 'integer',
+                    'default'     => 8
+                ),
+                'page' => array(
+                    'description' => __( 'Number of page number' ),
+                    'type'        => 'integer',
+                    'default'     => 1
+                ),
+                'seller_id' => array(
+                    'description' => __( 'Top rated product for specific vendor', 'dokan-lite' ),
+                    'type'        => 'integer',
+                ),
+            ),
+            array(
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => array( $this, 'get_top_rated_product' ),
+            ),
+        ) );
+
+        register_rest_route( $this->namespace, '/' . $this->base . '/best_selling', array(
+            'args' => array(
+                'per_page' => array(
+                    'description' => __( 'Number of product you want to get top rated product', 'dokan-lite' ),
+                    'type'        => 'integer',
+                    'default'     => 8
+                ),
+                'page' => array(
+                    'description' => __( 'Number of page number' ),
+                    'type'        => 'integer',
+                    'default'     => 1
+                ),
+                'seller_id' => array(
+                    'description' => __( 'Top rated product for specific vendor', 'dokan-lite' ),
+                    'type'        => 'integer',
+                ),
+            ),
+            array(
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => array( $this, 'get_best_selling_product' ),
+            ),
+        ) );
+
+        register_rest_route( $this->namespace, '/' . $this->base . '/featured', array(
+            'args' => array(
+                'per_page' => array(
+                    'description' => __( 'Number of product you want to get top rated product', 'dokan-lite' ),
+                    'type'        => 'integer',
+                    'default'     => 8
+                ),
+                'page' => array(
+                    'description' => __( 'Number of page number' ),
+                    'type'        => 'integer',
+                    'default'     => 1
+                ),
+                'seller_id' => array(
+                    'description' => __( 'Top rated product for specific vendor', 'dokan-lite' ),
+                    'type'        => 'integer',
+                ),
+            ),
+            array(
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => array( $this, 'get_featured_product' ),
+            ),
+        ) );
+
+        register_rest_route( $this->namespace, '/' . $this->base . '/latest', array(
+            'args' => array(
+                'per_page' => array(
+                    'description' => __( 'Number of product you want to get top rated product', 'dokan-lite' ),
+                    'type'        => 'integer',
+                    'default'     => 8
+                ),
+                'page' => array(
+                    'description' => __( 'Number of page number' ),
+                    'type'        => 'integer',
+                    'default'     => 1
+                ),
+                'seller_id' => array(
+                    'description' => __( 'Top rated product for specific vendor', 'dokan-lite' ),
+                    'type'        => 'integer',
+                ),
+            ),
+            array(
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => array( $this, 'get_latest_product' ),
+            ),
+        ) );
     }
 
     /**
@@ -301,13 +413,138 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
         return rest_ensure_response( $data );
     }
 
-        /**
-     * Prepare objects query.
+    /**
+     * Get related product
      *
-     * @since  3.0.0
-     * @param  WP_REST_Request $request Full details about the request.
+     * @since 2.9.1
+     *
+     * @return void
+     */
+    public function get_related_product( $request ) {
+        $related_ids = wc_get_related_products( $request['id'], $request['per_page'] );
+        $response = array();
+
+        if ( ! empty( $related_ids )  ) {
+            $objects = array_map( array( $this, 'get_object' ), $related_ids );
+
+            foreach ( $objects as $object ) {
+                $data           = $this->prepare_data_for_response( $object, $request );
+                $data_objects[] = $this->prepare_response_for_collection( $data );
+            }
+
+            $response = rest_ensure_response( $data_objects );
+        }
+
+        return $response;
+    }
+
+    /**
+     * Top rated product
+     *
+     * @since 2.9.1
+     *
+     * @return void
+     */
+    public function get_top_rated_product( $request ) {
+        $result   = dokan_get_top_rated_products( $request['per_page'], $request['seller_id'], $request['page'] );
+        $data     = array();
+        $response = array();
+
+        if ( $result->posts ) {
+            $objects = array_map( array( $this, 'get_object' ), $result->posts );
+
+            foreach ( $objects as $object ) {
+                $data           = $this->prepare_data_for_response( $object, $request );
+                $data_objects[] = $this->prepare_response_for_collection( $data );
+            }
+
+            $response = rest_ensure_response( $data_objects );
+            $response = $this->format_collection_response( $response, $request, $result->found_posts );
+        }
+
+        return $response;
+    }
+
+    /**
+     * Best selling product
+     *
+     * @since 2.9.1
+     *
      * @return array
      */
+    public function get_best_selling_product( $request ) {
+        $result   = dokan_get_best_selling_products( $request['per_page'], $request['seller_id'], $request['page'] );
+        $data     = array();
+        $response = array();
+
+        if ( $result->posts ) {
+            $objects = array_map( array( $this, 'get_object' ), $result->posts );
+
+            foreach ( $objects as $object ) {
+                $data           = $this->prepare_data_for_response( $object, $request );
+                $data_objects[] = $this->prepare_response_for_collection( $data );
+            }
+
+            $response = rest_ensure_response( $data_objects );
+            $response = $this->format_collection_response( $response, $request, $result->found_posts );
+        }
+
+        return $response;
+    }
+
+    /**
+     * Featured product
+     *
+     * @since 2.9.1
+     *
+     * @return array
+     */
+    public function get_featured_product( $request ) {
+        $result   = dokan_get_featured_products( $request['per_page'], $request['seller_id'], $request['page'] );
+        $data     = array();
+        $response = array();
+
+        if ( $result->posts ) {
+            $objects = array_map( array( $this, 'get_object' ), $result->posts );
+
+            foreach ( $objects as $object ) {
+                $data           = $this->prepare_data_for_response( $object, $request );
+                $data_objects[] = $this->prepare_response_for_collection( $data );
+            }
+
+            $response = rest_ensure_response( $data_objects );
+            $response = $this->format_collection_response( $response, $request, $result->found_posts );
+        }
+
+        return $response;
+    }
+    /**
+     * Latest product
+     *
+     * @since 2.9.1
+     *
+     * @return array
+     */
+    public function get_latest_product( $request ) {
+        $result      = dokan_get_latest_products( $request['per_page'], $request['seller_id'], $request['page'] );
+        $data        = array();
+        $response    = array();
+
+        if ( $result->posts ) {
+            $objects = array_map( array( $this, 'get_object' ), $result->posts );
+
+            foreach ( $objects as $object ) {
+                $data           = $this->prepare_data_for_response( $object, $request );
+                $data_objects[] = $this->prepare_response_for_collection( $data );
+            }
+
+            $response = rest_ensure_response( $data_objects );
+            $response = $this->format_collection_response( $response, $request, $result->found_posts );
+        }
+
+        return $response;
+    }
+
     protected function prepare_objects_query( $request ) {
         $args = parent::prepare_objects_query( $request );
 
@@ -441,12 +678,14 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
      * @return array
      */
     protected function prepare_data_for_response( $product, $request ) {
-        $context = ! empty( $request['context'] ) ? $request['context'] : 'view';
+        $context   = ! empty( $request['context'] ) ? $request['context'] : 'view';
+        $author_id = get_post_field( 'post_author', $product->get_id() );
+        $store     = dokan()->vendor->get( $author_id );
         $data = array(
             'id'                    => $product->get_id(),
             'name'                  => $product->get_name( $context ),
             'slug'                  => $product->get_slug( $context ),
-            'post_author'           => get_post_field( 'post_author', $product->get_id() ),
+            'post_author'           => $author_id,
             'permalink'             => $product->get_permalink(),
             'date_created'          => wc_rest_prepare_date_response( $product->get_date_created( $context ), false ),
             'date_created_gmt'      => wc_rest_prepare_date_response( $product->get_date_created( $context ) ),
@@ -481,6 +720,7 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
             'tax_class'             => $product->get_tax_class( $context ),
             'manage_stock'          => $product->managing_stock(),
             'stock_quantity'        => $product->get_stock_quantity( $context ),
+            'low_stock_amount'      => version_compare( WC_VERSION, '3.4.7', '>' ) ? $product->get_low_stock_amount( $context ) : '',
             'in_stock'              => $product->is_in_stock(),
             'backorders'            => $product->get_backorders( $context ),
             'backorders_allowed'    => $product->backorders_allowed(),
@@ -513,6 +753,13 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
             'grouped_products'      => array(),
             'menu_order'            => $product->get_menu_order( $context ),
             'meta_data'             => $product->get_meta_data(),
+            'store'                 => array(
+                                        'id'      => $store->get_id(),
+                                        'name'    => $store->get_shop_name(),
+                                        'url'     => $store->get_shop_url(),
+                                        'avatar'  => $store->get_avatar(),
+                                        'address' => $store->get_address()
+                                    )
         );
 
         $response = rest_ensure_response( $data );
@@ -765,11 +1012,21 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
                 $product->set_backorders( 'no' );
                 $product->set_stock_quantity( '' );
                 $product->set_stock_status( $stock_status );
+
+                if ( version_compare( WC_VERSION, '3.4.7', '>' ) ) {
+                    $product->set_low_stock_amount( '' );
+                }
+
             } elseif ( $product->is_type( 'external' ) ) {
                 $product->set_manage_stock( 'no' );
                 $product->set_backorders( 'no' );
                 $product->set_stock_quantity( '' );
                 $product->set_stock_status( 'instock' );
+
+                if ( version_compare( WC_VERSION, '3.4.7', '>' ) ) {
+                    $product->set_low_stock_amount( '' );
+                }
+
             } elseif ( $product->get_manage_stock() ) {
                 // Stock status is always determined by children so sync later.
                 if ( ! $product->is_type( 'variable' ) ) {
@@ -779,10 +1036,15 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
                 // Stock quantity.
                 if ( isset( $request['stock_quantity'] ) ) {
                     $product->set_stock_quantity( wc_stock_amount( $request['stock_quantity'] ) );
+
                 } elseif ( isset( $request['inventory_delta'] ) ) {
                     $stock_quantity  = wc_stock_amount( $product->get_stock_quantity() );
                     $stock_quantity += wc_stock_amount( $request['inventory_delta'] );
                     $product->set_stock_quantity( wc_stock_amount( $stock_quantity ) );
+                }
+
+                if ( version_compare( WC_VERSION, '3.4.7', '>' ) && isset( $request['low_stock_amount'] ) ) {
+                    $product->set_low_stock_amount( wc_stock_amount( $request['low_stock_amount'] ) );
                 }
             } else {
                 // Don't manage stock.
@@ -1417,6 +1679,7 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
      *
      * @return array
      */
+
     public function get_item_schema() {
         $weight_unit    = get_option( 'woocommerce_weight_unit' );
         $dimension_unit = get_option( 'woocommerce_dimension_unit' );

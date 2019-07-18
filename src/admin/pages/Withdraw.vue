@@ -45,7 +45,7 @@
             </template>
 
             <template slot="amount" slot-scope="data">
-                {{ data.row.amount | currency }}
+                <currency :amount="data.row.amount"></currency>
             </template>
 
             <template slot="status" slot-scope="data">
@@ -85,7 +85,8 @@
 
 <script>
 let ListTable = dokan_get_lib('ListTable');
-let Modal = dokan_get_lib('Modal');
+let Modal     = dokan_get_lib('Modal');
+let Currency  = dokan_get_lib('Currency');
 
 export default {
 
@@ -94,6 +95,7 @@ export default {
     components: {
         ListTable,
         Modal,
+        Currency
     },
 
     data () {
@@ -114,6 +116,7 @@ export default {
                 cancelled: 0
             },
             notFound: this.__( 'No requests found.', 'dokan-lite' ),
+            massPayment: this.__( 'Paypal Mass Payment File is Generated.', 'dokan-lite' ),
             showCb: true,
             loading: false,
             columns: {
@@ -341,7 +344,7 @@ export default {
                 }
             }
 
-            return details;
+            return dokan.hooks.applyFilters( 'dokan_get_payment_details', details, method, data );
         },
 
         moment(date) {
@@ -349,6 +352,8 @@ export default {
         },
 
         onBulkAction(action, items) {
+            let self = this;
+
             if ( _.contains(['delete', 'approved', 'cancelled', 'pending'], action) ) {
 
                 let jsonData = {};
@@ -369,49 +374,57 @@ export default {
                 $.post(ajaxurl, {
                     'dokan_withdraw_bulk': 'paypal',
                     'id': ids,
-                    'action': 'withdraw_ajax_submission'
+                    'action': 'withdraw_ajax_submission',
+                    'nonce': dokan.nonce
                 }, function(response, status, xhr) {
-                    var filename = "";
-                    var disposition = xhr.getResponseHeader('Content-Disposition');
+                    if ( 'html/csv' === xhr.getResponseHeader('Content-type') ) {
+                        var filename = "";
+                        var disposition = xhr.getResponseHeader('Content-Disposition');
 
-                    if (disposition && disposition.indexOf('attachment') !== -1) {
-                        var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-                        var matches = filenameRegex.exec(disposition);
+                        if (disposition && disposition.indexOf('attachment') !== -1) {
+                            var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                            var matches = filenameRegex.exec(disposition);
 
-                        if (matches != null && matches[1]) {
-                            filename = matches[1].replace(/['"]/g, '');
+                            if (matches != null && matches[1]) {
+                                filename = matches[1].replace(/['"]/g, '');
+                            }
+                        }
+
+                        var type = xhr.getResponseHeader('Content-Type');
+
+                        var blob = typeof File === 'function' ? new File([response], filename, { type: type }) : new Blob([response], { type: type });
+                        if (typeof window.navigator.msSaveBlob !== 'undefined') {
+                            // IE workaround for "HTML7007: One or more blob URLs were revoked by closing the blob for which they were created. These URLs will no longer resolve as the data backing the URL has been freed."
+                            window.navigator.msSaveBlob(blob, filename);
+                        } else {
+                            var URL = window.URL || window.webkitURL;
+                            var downloadUrl = URL.createObjectURL(blob);
+
+                            if (filename) {
+                                // use HTML5 a[download] attribute to specify filename
+                                var a = document.createElement("a");
+                                // safari doesn't support this yet
+                                if (typeof a.download === 'undefined') {
+                                    window.location = downloadUrl;
+                                } else {
+                                    a.href = downloadUrl;
+                                    a.download = filename;
+                                    document.body.appendChild(a);
+                                    a.click();
+                                }
+                            } else {
+                                window.location = downloadUrl;
+                            }
+
+                            setTimeout(function () {
+                                URL.revokeObjectURL(downloadUrl);
+                            }, 100); // cleanup
                         }
                     }
 
-                    var type = xhr.getResponseHeader('Content-Type');
-
-                    var blob = typeof File === 'function'
-                        ? new File([response], filename, { type: type })
-                        : new Blob([response], { type: type });
-                    if (typeof window.navigator.msSaveBlob !== 'undefined') {
-                        // IE workaround for "HTML7007: One or more blob URLs were revoked by closing the blob for which they were created. These URLs will no longer resolve as the data backing the URL has been freed."
-                        window.navigator.msSaveBlob(blob, filename);
-                    } else {
-                        var URL = window.URL || window.webkitURL;
-                        var downloadUrl = URL.createObjectURL(blob);
-
-                        if (filename) {
-                            // use HTML5 a[download] attribute to specify filename
-                            var a = document.createElement("a");
-                            // safari doesn't support this yet
-                            if (typeof a.download === 'undefined') {
-                                window.location = downloadUrl;
-                            } else {
-                                a.href = downloadUrl;
-                                a.download = filename;
-                                document.body.appendChild(a);
-                                a.click();
-                            }
-                        } else {
-                            window.location = downloadUrl;
-                        }
-
-                        setTimeout(function () { URL.revokeObjectURL(downloadUrl); }, 100); // cleanup
+                    if ( response ) {
+                        alert( self.massPayment );
+                        return;
                     }
                 });
             }
@@ -509,6 +522,64 @@ export default {
             color: #761919
         }
     }
+}
 
+@media only screen and (max-width: 600px) {
+    .withdraw-requests {
+
+        table td.seller, td.amount, td.actions {
+            display: table-cell !important;
+        }
+
+        table th:not(.check-column):not(.seller):not(.amount):not(.actions) {
+            display: none;
+        }
+
+        table td:not(.check-column):not(.seller):not(.amount):not(.actions) {
+            display: none;
+        }
+
+        table th.column, table td.column {
+            width: auto;
+        }
+
+        table td.column.actions .dashicons {
+            width: 14px;
+            height: 14px;
+            font-size: 18px;
+        }
+
+        table td.seller {
+            .row-actions {
+                display: inline-block;
+                span {
+                    font-size: 11px;
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 376px) {
+    .withdraw-requests {
+        table td.seller {
+            .row-actions {
+                display: inline-block;
+                span {
+                    font-size: 9px;
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 320px) {
+    .withdraw-requests {
+        table td.column.actions .dashicons {
+            width: 10px;
+            height: 10px;
+            font-size: 14px;
+        }
+    }
 }
 </style>

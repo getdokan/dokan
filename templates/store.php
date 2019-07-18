@@ -13,6 +13,10 @@ $store_info   = $store_user->get_shop_info();
 $map_location = $store_user->get_location();
 
 get_header( 'shop' );
+
+if ( function_exists( 'yoast_breadcrumb' ) ) {
+    yoast_breadcrumb( '<p id="breadcrumbs">', '</p>' );
+}
 ?>
     <?php do_action( 'woocommerce_before_main_content' ); ?>
 
@@ -23,14 +27,14 @@ get_header( 'shop' );
                 <?php
                 if ( ! dynamic_sidebar( 'sidebar-store' ) ) {
                     $args = array(
-                        'before_widget' => '<aside class="widget %s">',
+                        'before_widget' => '<aside class="widget dokan-store-widget %s">',
                         'after_widget'  => '</aside>',
                         'before_title'  => '<h3 class="widget-title">',
                         'after_title'   => '</h3>',
                     );
 
                     if ( class_exists( 'Dokan_Store_Location' ) ) {
-                        the_widget( 'Dokan_Store_Category_Menu', array( 'title' => __( 'Store Category', 'dokan-lite' ) ), $args );
+                        the_widget( 'Dokan_Store_Category_Menu', array( 'title' => __( 'Store Product Category', 'dokan-lite' ) ), $args );
 
                         if ( dokan_get_option( 'store_map', 'dokan_general', 'on' ) == 'on'  && !empty( $map_location ) ) {
                             the_widget( 'Dokan_Store_Location', array( 'title' => __( 'Store Location', 'dokan-lite' ) ), $args );
@@ -83,7 +87,7 @@ get_header( 'shop' );
 
             <?php } else { ?>
 
-                <p class="dokan-info"><?php _e( 'No products were found of this vendor!', 'dokan-lite' ); ?></p>
+                <p class="dokan-info"><?php esc_html_e( 'No products were found of this vendor!', 'dokan-lite' ); ?></p>
 
             <?php } ?>
         </div>

@@ -23,7 +23,10 @@ class Dokan_Upgrade {
         '2.7.6'  => 'upgrades/dokan-upgrade-2.7.6.php',
         '2.8.0'  => 'upgrades/dokan-upgrade-2.8.0.php',
         '2.8.3'  => 'upgrades/dokan-upgrade-2.8.3.php',
-        '2.8.6'  => 'upgrades/dokan-upgrade-2.8.6.php'
+        '2.8.6'  => 'upgrades/dokan-upgrade-2.8.6.php',
+        '2.9.4'  => 'upgrades/dokan-upgrade-2.9.4.php',
+        '2.9.13' => 'upgrades/dokan-upgrade-2.9.13.php',
+        '2.9.16' => 'upgrades/dokan-upgrade-2.9.16.php',
     ];
 
     /**
@@ -53,6 +56,10 @@ class Dokan_Upgrade {
             return false;
         }
 
+        if ( get_transient( 'dokan_theme_version_for_updater' ) ) {
+            return version_compare( get_transient( 'dokan_theme_version_for_updater' ), DOKAN_PLUGIN_VERSION, '<'  );
+        }
+
         if ( version_compare( $installed_version, DOKAN_PLUGIN_VERSION, '<' ) ) {
             return true;
         }
@@ -76,15 +83,16 @@ class Dokan_Upgrade {
         $updates_versions  = array_keys( self::$updates );
 
         if ( ! is_null( $installed_version ) && version_compare( $installed_version, end( $updates_versions ), '<' ) ) {
+            $url = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
             ?>
                 <div id="message" class="updated">
-                    <p><?php _e( '<strong>Dokan Data Update Required</strong> &#8211; We need to update your install to the latest version', 'dokan-lite' ); ?></p>
-                    <p class="submit"><a href="<?php echo add_query_arg( [ 'dokan_do_update' => true ], $_SERVER['REQUEST_URI'] ); ?>" class="dokan-update-btn button-primary"><?php _e( 'Run the updater', 'dokan-lite' ); ?></a></p>
+                    <p><?php printf( '<strong>%s  &#8211; %s</strong>', esc_attr__( 'Dokan Data Update Required', 'dokan-lite' ), esc_attr__( 'We need to update your install to the latest version', 'dokan-lite' ) ); ?></p>
+                    <p class="submit"><a href="<?php echo esc_url( add_query_arg( [ 'dokan_do_update' => true ], $url ) ); ?>" class="dokan-update-btn button-primary"><?php esc_attr_e( 'Run the updater', 'dokan-lite' ); ?></a></p>
                 </div>
 
                 <script type="text/javascript">
                     jQuery('.dokan-update-btn').click('click', function(){
-                        return confirm( '<?php _e( 'It is strongly recommended that you backup your database before proceeding. Are you sure you wish to run the updater now?', 'dokan-lite' ); ?>' );
+                        return confirm( '<?php esc_attr_e( 'It is strongly recommended that you backup your database before proceeding. Are you sure you wish to run the updater now?', 'dokan-lite' ); ?>' );
                     });
                 </script>
             <?php
@@ -102,11 +110,10 @@ class Dokan_Upgrade {
      * @return void
      */
     public function do_updates() {
-        if ( isset( $_GET['dokan_do_update'] ) && $_GET['dokan_do_update'] ) {
+        if ( isset( $_GET['dokan_do_update'] ) && sanitize_text_field( wp_unslash( $_GET['dokan_do_update'] ) ) ) {
             $this->perform_updates();
         }
     }
-
 
     /**
      * Perform all updates
@@ -122,6 +129,10 @@ class Dokan_Upgrade {
 
         $installed_version = get_option( 'dokan_theme_version' );
 
+        if ( get_transient( 'dokan_theme_version_for_updater' ) ) {
+            $installed_version = get_transient( 'dokan_theme_version_for_updater' );
+        }
+
         foreach ( self::$updates as $version => $path ) {
             if ( version_compare( $installed_version, $version, '<' ) ) {
                 include DOKAN_INC_DIR . '/' . $path;
@@ -129,11 +140,11 @@ class Dokan_Upgrade {
             }
         }
 
+        delete_transient( 'dokan_theme_version_for_updater' );
         update_option( 'dokan_theme_version', DOKAN_PLUGIN_VERSION );
 
-        $location = remove_query_arg( ['dokan_do_update'], $_SERVER['REQUEST_URI'] );
+        $location = wp_unslash( add_query_arg( [ 'page' => 'dokan' ], admin_url( 'admin.php' ) ) );
         wp_redirect( $location );
         exit();
     }
-
 }

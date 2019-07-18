@@ -17,14 +17,14 @@ class Dokan_Rewrites {
         $this->custom_store_url = dokan_get_option( 'custom_store_url', 'dokan_general', 'store' );
 
         add_action( 'init', array( $this, 'register_rule' ) );
+        add_action( 'pre_get_posts', array( $this, 'store_query_filter' ) );
 
+        add_filter( 'woocommerce_get_query_vars', array( $this, 'resolve_wc_query_conflict' ) );
         add_filter( 'template_include', array( $this, 'store_template' ) );
-        add_filter( 'template_include', array( $this,  'product_edit_template' ), 99 );
-        add_filter( 'template_include', array( $this,  'store_toc_template' ) );
-
+        add_filter( 'template_include', array( $this, 'product_edit_template' ), 99 );
+        add_filter( 'template_include', array( $this, 'store_toc_template' ) );
         add_filter( 'query_vars', array( $this, 'register_query_var' ) );
-        add_filter( 'pre_get_posts', array( $this, 'store_query_filter' ) );
-        add_filter( 'woocommerce_get_breadcrumb', array( $this, 'store_page_breadcrumb'), 10 ,1  );
+        add_filter( 'woocommerce_get_breadcrumb', array( $this, 'store_page_breadcrumb' ) );
     }
 
 
@@ -55,13 +55,20 @@ class Dokan_Rewrites {
      *
      * @return array $crumbs
      */
-    public function store_page_breadcrumb( $crumbs ){
-        if (  dokan_is_store_page() ) {
-            $author      = get_query_var( $this->custom_store_url );
-            $seller_info = get_user_by( 'slug', $author );
-            $crumbs[1]   = array( ucwords($this->custom_store_url) , site_url().'/'.$this->custom_store_url );
-            $crumbs[2]   = array( $author, dokan_get_store_url( $seller_info->data->ID ) );
+    public function store_page_breadcrumb( $crumbs ) {
+        if ( ! dokan_is_store_page() ) {
+            return $crumbs;
         }
+
+        if ( function_exists( 'yoast_breadcrumb' ) && WPSEO_Options::get( 'breadcrumbs-enable' ) ) {
+            unset( $crumbs );
+            return;
+        }
+
+        $author      = get_query_var( $this->custom_store_url );
+        $seller_info = get_user_by( 'slug', $author );
+        $crumbs[1]   = array( ucwords( $this->custom_store_url ), site_url() . '/' . $this->custom_store_url );
+        $crumbs[2]   = array( $author, dokan_get_store_url( $seller_info->data->ID ) );
 
         return $crumbs;
     }
@@ -115,16 +122,38 @@ class Dokan_Rewrites {
             add_rewrite_rule( $base . '/([^/]+)(/[0-9]+)?/edit/?$', 'index.php?product=$matches[1]&page=$matches[2]&edit=true', 'top' );
         }
 
-        add_rewrite_rule( $this->custom_store_url.'/([^/]+)/?$', 'index.php?'.$this->custom_store_url.'=$matches[1]', 'top' );
-        add_rewrite_rule( $this->custom_store_url.'/([^/]+)/page/?([0-9]{1,})/?$', 'index.php?'.$this->custom_store_url.'=$matches[1]&paged=$matches[2]', 'top' );
+        add_rewrite_rule( $this->custom_store_url . '/([^/]+)/?$', 'index.php?' . $this->custom_store_url . '=$matches[1]', 'top' );
+        add_rewrite_rule( $this->custom_store_url . '/([^/]+)/page/?([0-9]{1,})/?$', 'index.php?' . $this->custom_store_url . '=$matches[1]&paged=$matches[2]', 'top' );
 
-        add_rewrite_rule( $this->custom_store_url.'/([^/]+)/section/?([0-9]{1,})/?$', 'index.php?'.$this->custom_store_url.'=$matches[1]&term=$matches[2]&term_section=true', 'top' );
-        add_rewrite_rule( $this->custom_store_url.'/([^/]+)/section/?([0-9]{1,})/page/?([0-9]{1,})/?$', 'index.php?'.$this->custom_store_url.'=$matches[1]&term=$matches[2]&paged=$matches[3]&term_section=true', 'top' );
+        add_rewrite_rule( $this->custom_store_url . '/([^/]+)/section/?([0-9]{1,})/?$', 'index.php?' . $this->custom_store_url . '=$matches[1]&term=$matches[2]&term_section=true', 'top' );
+        add_rewrite_rule( $this->custom_store_url . '/([^/]+)/section/?([0-9]{1,})/page/?([0-9]{1,})/?$', 'index.php?' . $this->custom_store_url . '=$matches[1]&term=$matches[2]&paged=$matches[3]&term_section=true', 'top' );
 
-        add_rewrite_rule( $this->custom_store_url.'/([^/]+)/toc?$', 'index.php?'.$this->custom_store_url.'=$matches[1]&toc=true', 'top' );
-        add_rewrite_rule( $this->custom_store_url.'/([^/]+)/toc/page/?([0-9]{1,})/?$', 'index.php?'.$this->custom_store_url.'=$matches[1]&paged=$matches[2]&toc=true', 'top' );
+        add_rewrite_rule( $this->custom_store_url . '/([^/]+)/toc?$', 'index.php?' . $this->custom_store_url . '=$matches[1]&toc=true', 'top' );
+        add_rewrite_rule( $this->custom_store_url . '/([^/]+)/toc/page/?([0-9]{1,})/?$', 'index.php?' . $this->custom_store_url . '=$matches[1]&paged=$matches[2]&toc=true', 'top' );
 
         do_action( 'dokan_rewrite_rules_loaded', $this->custom_store_url );
+    }
+
+    /**
+     * Resolve query var conflicts with WooCommerce
+     *
+     * @since 2.9.13
+     *
+     * @param array $query_vars
+     *
+     * @return array
+     */
+    public function resolve_wc_query_conflict( $query_vars ) {
+        global $post;
+
+        $dashboard = dokan_get_option( 'dashboard', 'dokan_pages', 0 );
+
+        if ( ! empty( $post->ID ) && $post->ID === absint( $dashboard ) ) {
+            unset( $query_vars['orders'] );
+            unset( $query_vars['edit-account'] );
+        }
+
+        return $query_vars;
     }
 
     /**
@@ -162,8 +191,12 @@ class Dokan_Rewrites {
             return $template;
         }
 
-        if ( !empty( $store_name ) ) {
+        if ( ! empty( $store_name ) ) {
             $store_user = get_user_by( 'slug', $store_name );
+
+            if ( ! $store_user ) {
+                return get_404_template();
+            }
 
             // Bell out for Vendor Stuff extensions
             if ( ! is_super_admin( $store_user->ID ) && user_can( $store_user->ID, 'vendor_staff' ) ) {
@@ -229,7 +262,6 @@ class Dokan_Rewrites {
         }
 
         $edit_product_url = dokan_locate_template( 'products/new-product-single.php' );
-
         return apply_filters( 'dokan_get_product_edit_template', $edit_product_url );
     }
 
@@ -247,26 +279,50 @@ class Dokan_Rewrites {
 
         $author = get_query_var( $this->custom_store_url );
 
-        if ( !is_admin() && $query->is_main_query() && !empty( $author ) ) {
-            $seller_info  = get_user_by( 'slug', $author );
-            $store_info   = dokan_get_store_info( $seller_info->data->ID );
-            $post_per_page = isset( $store_info['store_ppp'] ) && !empty( $store_info['store_ppp'] ) ? $store_info['store_ppp'] : 12;
+        if ( ! is_admin() && $query->is_main_query() && ! empty( $author ) ) {
+            $seller_info = get_user_by( 'slug', $author );
+
+            if ( ! $seller_info ) {
+                return get_404_template();
+            }
+
+            $store_info    = dokan_get_store_info( $seller_info->data->ID );
+            $post_per_page = isset( $store_info['store_ppp'] ) && ! empty( $store_info['store_ppp'] ) ? $store_info['store_ppp'] : 12;
+
             set_query_var( 'posts_per_page', $post_per_page );
+
             $query->set( 'post_type', 'product' );
             $query->set( 'author_name', $author );
+
+            $tax_query                    = [];
             $query->query['term_section'] = isset( $query->query['term_section'] ) ? $query->query['term_section'] : array();
 
             if ( $query->query['term_section'] ) {
-                $query->set( 'tax_query',
-                    array(
-                        array(
-                            'taxonomy' => 'product_cat',
-                            'field'    => 'term_id',
-                            'terms'    => $query->query['term']
-                        )
-                    )
-                );
+                array_push( $tax_query, [
+                    'taxonomy' => 'product_cat',
+                    'field'    => 'term_id',
+                    'terms'    => $query->query['term']
+                ] );
             }
+
+            // Hide out of stock products
+            $product_visibility_terms  = wc_get_product_visibility_term_ids();
+            $product_visibility_not_in = [ is_search() && $query->is_main_query() ? $product_visibility_terms['exclude-from-search'] : $product_visibility_terms['exclude-from-catalog'] ];
+
+            if ( 'yes' === get_option( 'woocommerce_hide_out_of_stock_items' ) ) {
+                $product_visibility_not_in[] = $product_visibility_terms['outofstock'];
+            }
+
+            if ( ! empty( $product_visibility_not_in ) ) {
+                array_push( $tax_query, [
+                    'taxonomy' => 'product_visibility',
+                    'field'    => 'term_taxonomy_id',
+                    'terms'    => $product_visibility_not_in,
+                    'operator' => 'NOT IN'
+                ] );
+            }
+
+            $query->set( 'tax_query', apply_filters( 'dokan_store_tax_query', $tax_query ) );
         }
     }
 }

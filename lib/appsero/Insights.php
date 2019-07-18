@@ -1,40 +1,14 @@
 <?php
-
-if ( ! class_exists( 'WeDevs_Insights' ) ) :
+namespace Appsero;
 
 /**
- * weDevs Tracker
+ * Appsero Insights
  *
  * This is a tracker class to track plugin usage based on if the customer has opted in.
  * No personal information is being tracked by this class, only general settings, active plugins, environment details
  * and admin email.
- *
- * @version 1.0
- *
- * @author Tareq Hasan <tareq@wedevs.com>
  */
-class WeDevs_Insights {
-
-    /**
-     * Slug of the plugin
-     *
-     * @var string
-     */
-    public $slug;
-
-    /**
-     * Name of the plugin
-     *
-     * @var string
-     */
-    public $name;
-
-    /**
-     * Main plugin file
-     *
-     * @var string
-     */
-    public $basename;
+class Insights {
 
     /**
      * The notice text
@@ -44,48 +18,147 @@ class WeDevs_Insights {
     public $notice;
 
     /**
-     * URL to the API endpoint
+     * Wheather to the notice or not
      *
-     * @var string
+     * @var boolean
      */
-    private static $api_url = 'http://tracking.wedevs.com/';
+    protected $show_notice = true;
+
+    /**
+     * If extra data needs to be sent
+     *
+     * @var array
+     */
+    protected $extra_data = array();
+
+    /**
+     * AppSero\Client
+     *
+     * @var object
+     */
+    protected $client;
 
     /**
      * Initialize the class
      *
-     * @param string  $slug slug of the plugin
-     * @param string  $name readable name of the plugin
-     * @param string  $file main plugin file path
-     * @param string  $notice the notice texts if needs customizing
+     * @param AppSero\Client
      */
-    public function __construct( $slug, $name, $file, $notice = '' ) {
-        $this->slug     = $slug;
-        $this->name     = $name;
-        $this->basename = plugin_basename( $file );
-        $this->notice   = $notice;
+    public function __construct( $client, $name = null, $file = null ) {
 
-        // tracking notice
-        add_action( 'admin_notices', array( $this, 'admin_notice' ) );
+        if ( is_string( $client ) && ! empty( $name ) && ! empty( $file ) ) {
+            $client = new Client( $client, $name, $file );
+        }
+
+        if ( is_object( $client ) && is_a( $client, 'Appsero\Client' ) ) {
+            $this->client = $client;
+        }
+    }
+
+    /**
+     * Don't show the notice
+     *
+     * @return \self
+     */
+    public function hide_notice() {
+        $this->show_notice = false;
+
+        return $this;
+    }
+
+    /**
+     * Add extra data if needed
+     *
+     * @param array $data
+     *
+     * @return \self
+     */
+    public function add_extra( $data = array() ) {
+        $this->extra_data = $data;
+
+        return $this;
+    }
+
+    /**
+     * Set custom notice text
+     *
+     * @param  string $text
+     *
+     * @return \self
+     */
+    public function notice( $text ) {
+        $this->notice = $text;
+
+        return $this;
+    }
+
+    /**
+     * Initialize insights
+     *
+     * @return void
+     */
+    public function init() {
+        if ( $this->client->type == 'plugin' ) {
+            $this->init_plugin();
+        } else if ( $this->client->type == 'theme' ) {
+            $this->init_theme();
+        }
+    }
+
+    /**
+     * Initialize theme hooks
+     *
+     * @return void
+     */
+    public function init_theme() {
+        $this->init_common();
+
+        add_action( 'switch_theme', array( $this, 'deactivation_cleanup' ) );
+        add_action( 'switch_theme', array( $this, 'theme_deactivated' ), 12, 3 );
+    }
+
+    /**
+     * Initialize plugin hooks
+     *
+     * @return void
+     */
+    public function init_plugin() {
+        // plugin deactivate popup
+        if ( ! $this->is_local_server() ) {
+            add_action( 'plugin_action_links_' . $this->client->basename, array( $this, 'plugin_action_links' ) );
+            add_action( 'admin_footer', array( $this, 'deactivate_scripts' ) );
+        }
+
+        $this->init_common();
+
+        register_activation_hook( $this->client->file, array( $this, 'activate_plugin' ) );
+        register_deactivation_hook( $this->client->file, array( $this, 'deactivation_cleanup' ) );
+    }
+
+    /**
+     * Initialize common hooks
+     *
+     * @return void
+     */
+    protected function init_common() {
+
+        if ( $this->show_notice ) {
+            // tracking notice
+            add_action( 'admin_notices', array( $this, 'admin_notice' ) );
+        }
+
         add_action( 'admin_init', array( $this, 'handle_optin_optout' ) );
 
-        // plugin deactivate actions
-        add_action( 'plugin_action_links_' . $this->basename, array( $this, 'plugin_action_links' ) );
-        add_action( 'admin_footer', array( $this, 'deactivate_scripts' ) );
-
-        // clean events and options on deactivation
-        register_deactivation_hook( $file, array( $this, 'deactivate_plugin' ) );
-
         // uninstall reason
-        add_action( 'wp_ajax_' . $this->slug . '_submit-uninstall-reason', array( $this, 'uninstall_reason_submission' ) );
+        add_action( 'wp_ajax_' . $this->client->slug . '_submit-uninstall-reason', array( $this, 'uninstall_reason_submission' ) );
 
         // cron events
         add_action( 'cron_schedules', array( $this, 'add_weekly_schedule' ) );
-        add_action( $this->slug . '_tracker_send_event', array( $this, 'send_tracking_data' ) );
+        add_action( $this->client->slug . '_tracker_send_event', array( $this, 'send_tracking_data' ) );
         // add_action( 'admin_init', array( $this, 'send_tracking_data' ) ); // test
     }
 
     /**
-     * Send tracking data to weDevs server
+     * Send tracking data to AppSero server
      *
      * @param  boolean  $override
      *
@@ -103,35 +176,14 @@ class WeDevs_Insights {
 
         // Send a maximum of once per week
         $last_send = $this->get_last_send();
+
         if ( $last_send && $last_send > strtotime( '-1 week' ) ) {
             return;
         }
 
-        $this->send_request( $this->get_tracking_data(), 'track' );
+        $response = $this->client->send_request( $this->get_tracking_data(), 'track' );
 
-        update_option( $this->slug . '_tracking_last_send', time() );
-    }
-
-    /**
-     * Send request to remote endpoint
-     *
-     * @param  array  $params
-     * @param  string $route
-     *
-     * @return void
-     */
-    private function send_request( $params, $route ) {
-        $resp = wp_remote_post( self::$api_url . $route, array(
-                'method'      => 'POST',
-                'timeout'     => 45,
-                'redirection' => 5,
-                'httpversion' => '1.0',
-                'blocking'    => false,
-                'headers'     => array( 'user-agent' => 'WeDevsTracker/' . md5( esc_url( home_url() ) ) . ';' ),
-                'body'        => $params,
-                'cookies'     => array()
-            )
-        );
+        update_option( $this->client->slug . '_tracking_last_send', time() );
     }
 
     /**
@@ -141,20 +193,38 @@ class WeDevs_Insights {
      */
     protected function get_tracking_data() {
         $all_plugins = $this->get_all_plugins();
-        $admin_user  = get_user_by( 'id', 1 );
+
+        $users = get_users( array(
+            'role'    => 'administrator',
+            'orderby' => 'ID',
+            'order'   => 'ASC',
+            'number'  => 1,
+            'paged'   => 1,
+        ) );
+
+        $admin_user =  ( is_array( $users ) && ! empty( $users ) ) ? $users[0] : false;
+        $first_name = $last_name = '';
+
+        if ( $admin_user ) {
+            $first_name = $admin_user->first_name ? $admin_user->first_name : $admin_user->display_name;
+            $last_name  = $admin_user->last_name;
+        }
 
         $data = array(
-            'url'              => home_url(),
-            'site'             => get_bloginfo( 'name' ),
+            'version'          => $this->client->project_version,
+            'url'              => esc_url( home_url() ),
+            'site'             => $this->get_site_name(),
             'admin_email'      => get_option( 'admin_email' ),
-            'user_name'        => $admin_user->display_name,
-            'user_email'       => $admin_user->user_email,
-            'plugin'           => $this->slug,
+            'first_name'       => $first_name,
+            'last_name'        => $last_name,
+            'hash'             => $this->client->hash,
             'server'           => $this->get_server_info(),
             'wp'               => $this->get_wp_info(),
             'users'            => $this->get_user_counts(),
             'active_plugins'   => count( $all_plugins['active_plugins'] ),
             'inactive_plugins' => count( $all_plugins['inactive_plugins'] ),
+            'ip_address'       => $this->get_user_ip_address(),
+            'theme'            => get_stylesheet(),
         );
 
         // for child classes
@@ -162,7 +232,7 @@ class WeDevs_Insights {
             $data['extra'] = $extra;
         }
 
-        return apply_filters( $this->slug . '_tracker_data', $data );
+        return apply_filters( $this->client->slug . '_tracker_data', $data );
     }
 
     /**
@@ -171,7 +241,7 @@ class WeDevs_Insights {
      * @return mixed
      */
     protected function get_extra_data() {
-        return false;
+        return $this->extra_data;
     }
 
     /**
@@ -198,7 +268,7 @@ class WeDevs_Insights {
      * @return bool
      */
     private function tracking_allowed() {
-        $allow_tracking = get_option( $this->slug . '_allow_tracking', 'no' );
+        $allow_tracking = get_option( $this->client->slug . '_allow_tracking', 'no' );
 
         return $allow_tracking == 'yes';
     }
@@ -209,7 +279,7 @@ class WeDevs_Insights {
      * @return false|string
      */
     private function get_last_send() {
-        return get_option( $this->slug . '_tracking_last_send', false );
+        return get_option( $this->client->slug . '_tracking_last_send', false );
     }
 
     /**
@@ -218,7 +288,7 @@ class WeDevs_Insights {
      * @return boolean
      */
     private function notice_dismissed() {
-        $hide_notice = get_option( $this->slug . '_tracking_notice', 'no' );
+        $hide_notice = get_option( $this->client->slug . '_tracking_notice', 'no' );
 
         if ( 'hide' == $hide_notice ) {
             return true;
@@ -233,7 +303,11 @@ class WeDevs_Insights {
      * @return boolean
      */
     private function is_local_server() {
-        return in_array( dokan_get_client_ip(), array( '127.0.0.1', '::1' ) );
+        return false;
+
+        $is_local = in_array( $_SERVER['REMOTE_ADDR'], array( '127.0.0.1', '::1' ) );
+
+        return apply_filters( 'appsero_is_local', $is_local );
     }
 
     /**
@@ -242,7 +316,8 @@ class WeDevs_Insights {
      * @return void
      */
     private function schedule_event() {
-        wp_schedule_event( time(), 'weekly', $this->slug . '_tracker_send_event' );
+        wp_schedule_event( time(), 'weekly', $this->client->slug . '_tracker_send_event' );
+        wp_schedule_event( time(), 'daily', $this->client->slug . '_license_check_event' );
     }
 
     /**
@@ -251,7 +326,8 @@ class WeDevs_Insights {
      * @return void
      */
     private function clear_schedule_event() {
-        wp_clear_scheduled_hook( $this->slug . '_tracker_send_event' );
+        wp_clear_scheduled_hook( $this->client->slug . '_tracker_send_event' );
+        wp_clear_scheduled_hook( $this->client->slug . '_license_check_event' );
     }
 
     /**
@@ -275,29 +351,32 @@ class WeDevs_Insights {
 
         // don't show tracking if a local server
         if ( ! $this->is_local_server() ) {
-            $optin_url  = add_query_arg( $this->slug . '_tracker_optin', 'true' );
-            $optout_url = add_query_arg( $this->slug . '_tracker_optout', 'true' );
+            $optin_url  = add_query_arg( $this->client->slug . '_tracker_optin', 'true' );
+            $optout_url = add_query_arg( $this->client->slug . '_tracker_optout', 'true' );
 
             if ( empty( $this->notice ) ) {
-                $notice = sprintf( __( 'Want to help make <strong>%s</strong> even more awesome? Allow weDevs to collect non-sensitive diagnostic data and usage information.', 'dokan-lite' ), $this->name );
+                $notice = sprintf( __( 'Want to help make <strong>%1$s</strong> even more awesome? Allow %1$s to collect non-sensitive diagnostic data and usage information.', 'textdomain' ), $this->client->name );
             } else {
                 $notice = $this->notice;
             }
 
-            $notice .= ' (<a class="insights-data-we-collect" href="#">' . __( 'what we collect', 'dokan-lite' ) . '</a>)';
+            $notice .= ' (<a class="' . $this->client->slug . '-insights-data-we-collect" href="#">' . __( 'what we collect', 'textdomain' ) . '</a>)';
             $notice .= '<p class="description" style="display:none;">' . implode( ', ', $this->data_we_collect() ) . '. No sensitive data is tracked.</p>';
 
             echo '<div class="updated"><p>';
                 echo $notice;
                 echo '</p><p class="submit">';
-                echo '&nbsp;<a href="' . esc_url( $optin_url ) . '" class="button-primary button-large">' . __( 'Allow', 'dokan-lite' ) . '</a>';
-                echo '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary button-large">' . __( 'No thanks', 'dokan-lite' ) . '</a>';
+                echo '&nbsp;<a href="' . esc_url( $optin_url ) . '" class="button-primary button-large">' . __( 'Allow', 'textdomain' ) . '</a>';
+                echo '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary button-large">' . __( 'No thanks', 'textdomain' ) . '</a>';
             echo '</p></div>';
 
-            echo "<script type='text/javascript'>jQuery('.insights-data-we-collect').on('click', function(e) {
+            echo "<script type='text/javascript'>jQuery('." . $this->client->slug . "-insights-data-we-collect').on('click', function(e) {
                     e.preventDefault();
                     jQuery(this).parents('.updated').find('p.description').slideToggle('fast');
                 });
+                jQuery.getJSON('https://api.ipify.org?format=jsonp&callback=?', function(json) {
+                    json.ip;
+                } );
                 </script>
             ";
         }
@@ -309,27 +388,46 @@ class WeDevs_Insights {
      * @return void
      */
     public function handle_optin_optout() {
-        if ( isset( $_GET[ $this->slug . '_tracker_optin' ] ) && $_GET[ $this->slug . '_tracker_optin' ] == 'true' ) {
-            update_option( $this->slug . '_allow_tracking', 'yes' );
-            update_option( $this->slug . '_tracking_notice', 'hide' );
 
-            $this->clear_schedule_event();
-            $this->schedule_event();
-            $this->send_tracking_data();
+        if ( isset( $_GET[ $this->client->slug . '_tracker_optin' ] ) && $_GET[ $this->client->slug . '_tracker_optin' ] == 'true' ) {
+            $this->optin();
 
-            wp_redirect( remove_query_arg( $this->slug . '_tracker_optin' ) );
+            wp_redirect( remove_query_arg( $this->client->slug . '_tracker_optin' ) );
             exit;
         }
 
-        if ( isset( $_GET[ $this->slug . '_tracker_optout' ] ) && $_GET[ $this->slug . '_tracker_optout' ] == 'true' ) {
-            update_option( $this->slug . '_allow_tracking', 'no' );
-            update_option( $this->slug . '_tracking_notice', 'hide' );
+        if ( isset( $_GET[ $this->client->slug . '_tracker_optout' ] ) && $_GET[ $this->client->slug . '_tracker_optout' ] == 'true' ) {
+            $this->optout();
 
-            $this->clear_schedule_event();
-
-            wp_redirect( remove_query_arg( $this->slug . '_tracker_optout' ) );
+            wp_redirect( remove_query_arg( $this->client->slug . '_tracker_optout' ) );
             exit;
         }
+    }
+
+    /**
+     * Tracking optin
+     *
+     * @return void
+     */
+    public function optin() {
+        update_option( $this->client->slug . '_allow_tracking', 'yes' );
+        update_option( $this->client->slug . '_tracking_notice', 'hide' );
+
+        $this->clear_schedule_event();
+        $this->schedule_event();
+        $this->send_tracking_data();
+    }
+
+    /**
+     * Optout from tracking
+     *
+     * @return void
+     */
+    public function optout() {
+        update_option( $this->client->slug . '_allow_tracking', 'no' );
+        update_option( $this->client->slug . '_tracking_notice', 'hide' );
+
+        $this->clear_schedule_event();
     }
 
     /**
@@ -339,7 +437,7 @@ class WeDevs_Insights {
      *
      * @return integer
      */
-    protected function get_post_count( $post_type ) {
+    public function get_post_count( $post_type ) {
         global $wpdb;
 
         return (int) $wpdb->get_var( "SELECT count(ID) FROM $wpdb->posts WHERE post_type = '$post_type' and post_status = 'publish'");
@@ -444,7 +542,7 @@ class WeDevs_Insights {
      *
      * @return array
      */
-    private function get_user_counts() {
+    public function get_user_counts() {
         $user_count          = array();
         $user_count_data     = count_users();
         $user_count['total'] = $user_count_data['total_users'];
@@ -468,10 +566,30 @@ class WeDevs_Insights {
 
         $schedules['weekly'] = array(
             'interval' => DAY_IN_SECONDS * 7,
-            'display'  => __( 'Once Weekly', 'dokan-lite' )
+            'display'  => __( 'Once Weekly', 'textdomain' )
         );
 
         return $schedules;
+    }
+
+    /**
+     * Plugin activation hook
+     *
+     * @return void
+     */
+    public function activate_plugin() {
+        $allowed = get_option( $this->client->slug . '_allow_tracking', 'no' );
+
+        // if it wasn't allowed before, do nothing
+        if ( 'yes' !== $allowed ) {
+            return;
+        }
+
+        // re-schedule and delete the last sent time so we could force send again
+        wp_schedule_event( time(), 'weekly', $this->client->slug . '_tracker_send_event' );
+        delete_option( $this->client->slug . '_tracking_last_send' );
+
+        $this->send_tracking_data( true );
     }
 
     /**
@@ -479,12 +597,15 @@ class WeDevs_Insights {
      *
      * @return void
      */
-    public function deactivate_plugin() {
+    public function deactivation_cleanup() {
         $this->clear_schedule_event();
 
-        delete_option( $this->slug . '_allow_tracking' );
-        delete_option( $this->slug . '_tracking_notice' );
-        delete_option( $this->slug . '_tracking_last_send' );
+        if ( 'theme' == $this->client->type ) {
+            delete_option( $this->client->slug . '_tracking_last_send' );
+            delete_option( $this->client->slug . '_allow_tracking' );
+        }
+
+        delete_option( $this->client->slug . '_tracking_notice' );
     }
 
     /**
@@ -497,7 +618,7 @@ class WeDevs_Insights {
     public function plugin_action_links( $links ) {
 
         if ( array_key_exists( 'deactivate', $links ) ) {
-            $links['deactivate'] = str_replace( '<a', '<a class="' . $this->slug . '-deactivate-link"', $links['deactivate'] );
+            $links['deactivate'] = str_replace( '<a', '<a class="' . $this->client->slug . '-deactivate-link"', $links['deactivate'] );
         }
 
         return $links;
@@ -558,30 +679,35 @@ class WeDevs_Insights {
      * @return void
      */
     public function uninstall_reason_submission() {
-        global $wpdb;
 
-        if ( ! isset( $_POST['reason_id'] ) ) { // WPCS: CSRF ok, Input var ok.
+        if ( ! isset( $_POST['reason_id'] ) ) {
             wp_send_json_error();
         }
 
         $current_user = wp_get_current_user();
 
         $data = array(
-            'reason_id'     => sanitize_text_field( $_POST['reason_id'] ), // WPCS: CSRF ok, Input var ok.
-            'plugin'        => $this->slug,
-            'url'           => home_url(),
-            'user_email'    => $current_user->user_email,
-            'user_name'     => $current_user->display_name,
-            'reason_info'   => isset( $_REQUEST['reason_info'] ) ? trim( stripslashes( $_REQUEST['reason_info'] ) ) : '',
-            'software'      => $_SERVER['SERVER_SOFTWARE'],
-            'php_version'   => phpversion(),
-            'mysql_version' => $wpdb->db_version(),
-            'wp_version'    => get_bloginfo( 'version' ),
-            'locale'        => get_locale(),
-            'multisite'     => is_multisite() ? 'Yes' : 'No'
+            'hash'        => $this->client->hash,
+            'reason_id'   => sanitize_text_field( $_POST['reason_id'] ),
+            'reason_info' => isset( $_REQUEST['reason_info'] ) ? trim( stripslashes( $_REQUEST['reason_info'] ) ) : '',
+            'site'        => $this->get_site_name(),
+            'url'         => esc_url( home_url() ),
+            'admin_email' => get_option( 'admin_email' ),
+            'user_email'  => $current_user->user_email,
+            'first_name'  => $current_user->first_name,
+            'last_name'   => $current_user->last_name,
+            'server'      => $this->get_server_info(),
+            'wp'          => $this->get_wp_info(),
+            'ip_address'  => $this->get_user_ip_address(),
+            'version'     => $this->client->project_version,
         );
 
-        $this->send_request( $data, 'uninstall_reason' );
+        // Add extra data
+        if ( $extra = $this->get_extra_data() ) {
+            $data['extra'] = $extra;
+        }
+
+        $this->client->send_request( $data, 'deactivate' );
 
         wp_send_json_success();
     }
@@ -601,10 +727,10 @@ class WeDevs_Insights {
         $reasons = $this->get_uninstall_reasons();
         ?>
 
-        <div class="wd-dr-modal" id="<?php echo $this->slug; ?>-wd-dr-modal">
+        <div class="wd-dr-modal" id="<?php echo $this->client->slug; ?>-wd-dr-modal">
             <div class="wd-dr-modal-wrap">
                 <div class="wd-dr-modal-header">
-                    <h3><?php _e( 'If you have a moment, please let us know why you are deactivating:', 'dokan-lite' ); ?></h3>
+                    <h3><?php _e( 'If you have a moment, please let us know why you are deactivating:', 'domain' ); ?></h3>
                 </div>
 
                 <div class="wd-dr-modal-body">
@@ -618,9 +744,9 @@ class WeDevs_Insights {
                 </div>
 
                 <div class="wd-dr-modal-footer">
-                    <a href="#" class="dont-bother-me"><?php _e( 'I rather wouldn\'t say', 'dokan-lite' ); ?></a>
-                    <button class="button-secondary"><?php _e( 'Submit & Deactivate', 'dokan-lite' ); ?></button>
-                    <button class="button-primary"><?php _e( 'Canel', 'dokan-lite' ); ?></button>
+                    <a href="#" class="dont-bother-me"><?php _e( 'I rather wouldn\'t say', 'domain' ); ?></a>
+                    <button class="button-secondary"><?php _e( 'Submit & Deactivate', 'domain' ); ?></button>
+                    <button class="button-primary"><?php _e( 'Cancel', 'domain' ); ?></button>
                 </div>
             </div>
         </div>
@@ -676,10 +802,10 @@ class WeDevs_Insights {
         <script type="text/javascript">
             (function($) {
                 $(function() {
-                    var modal = $( '#<?php echo $this->slug; ?>-wd-dr-modal' );
+                    var modal = $( '#<?php echo $this->client->slug; ?>-wd-dr-modal' );
                     var deactivateLink = '';
 
-                    $( '#the-list' ).on('click', 'a.<?php echo $this->slug; ?>-deactivate-link', function(e) {
+                    $( '#the-list' ).on('click', 'a.<?php echo $this->client->slug; ?>-deactivate-link', function(e) {
                         e.preventDefault();
 
                         modal.addClass('modal-active');
@@ -726,7 +852,7 @@ class WeDevs_Insights {
                             url: ajaxurl,
                             type: 'POST',
                             data: {
-                                action: '<?php echo $this->slug; ?>_submit-uninstall-reason',
+                                action: '<?php echo $this->client->slug; ?>_submit-uninstall-reason',
                                 reason_id: ( 0 === $radio.length ) ? 'none' : $radio.val(),
                                 reason_info: ( 0 !== $input.length ) ? $input.val().trim() : ''
                             },
@@ -745,6 +871,73 @@ class WeDevs_Insights {
 
         <?php
     }
-}
 
-endif;
+    /**
+     * Run after theme deactivated
+     * @param  string $new_name
+     * @param  object $new_theme
+     * @param  object $old_theme
+     * @return void
+     */
+    public function theme_deactivated( $new_name, $new_theme, $old_theme ) {
+        // Make sure this is appsero theme
+        if ( $old_theme->get_template() == $this->client->slug ) {
+            $current_user = wp_get_current_user();
+
+            $data = array(
+                'hash'        => $this->client->hash,
+                'reason_id'   => 'none',
+                'reason_info' => '',
+                'site'        => $this->get_site_name(),
+                'url'         => esc_url( home_url() ),
+                'admin_email' => get_option( 'admin_email' ),
+                'user_email'  => $current_user->user_email,
+                'first_name'  => $current_user->first_name,
+                'last_name'   => $current_user->last_name,
+                'server'      => $this->get_server_info(),
+                'wp'          => $this->get_wp_info(),
+                'ip_address'  => $this->get_user_ip_address(),
+                'version'     => $this->client->project_version,
+            );
+
+            $this->client->send_request( $data, 'deactivate' );
+        }
+    }
+
+    /**
+     * Get user IP Address
+     */
+    private function get_user_ip_address() {
+        $response = wp_remote_get( 'https://icanhazip.com/' );
+
+        if ( is_wp_error( $response ) ) {
+            return '';
+        }
+
+        $ip = trim( wp_remote_retrieve_body( $response ) );
+
+        if ( ! filter_var( $ip, FILTER_VALIDATE_IP ) ) {
+            return '';
+        }
+
+        return $ip;
+    }
+
+    /**
+     * Get site name
+     */
+    private function get_site_name() {
+        $site_name = get_bloginfo( 'name' );
+
+        if ( empty( $site_name ) ) {
+            $site_name = get_bloginfo( 'description' );
+            $site_name = wp_trim_words( $site_name, 3, '' );
+        }
+
+        if ( empty( $site_name ) ) {
+            $site_name = get_bloginfo( 'url' );
+        }
+
+        return $site_name;
+    }
+}

@@ -4,58 +4,48 @@
  * Dokan tracker
  *
  * @since 2.4.11
+ * @since 2.8.7 Using AppSero\Insights for tracking
  */
-class Dokan_Tracker extends WeDevs_Insights {
+class Dokan_Tracker {
 
+    public $insights = null;
+
+    /**
+     * Class constructor
+     *
+     * @since 2.8.7
+     *
+     * @return void
+     */
     public function __construct() {
 
-        $notice = __( 'Want to help make <strong>Dokan</strong> even more awesome? Allow weDevs to collect non-sensitive diagnostic data and usage information. Enjoy <strong>20% discount</strong> on upgrades and add-on purchase.', 'dokan-lite' );
-
-        parent::__construct( 'dokan', 'dokan-lite', DOKAN_FILE, $notice );
+        $this->appsero_init_tracker_dokan();
     }
 
     /**
-     * Data we colelct
+     * Initialize the plugin tracker
      *
-     * @return array
-     */
-    protected function data_we_collect() {
-        $core_data = parent::data_we_collect();
-        $dokan_data = array(
-            'Number of products and orders'
-        );
-
-        $data = array_merge( $core_data, $dokan_data );
-
-        return $data;
-    }
-
-    /**
-     * Check if this is the pro version
+     * @since 2.8.7
      *
-     * @return boolean
+     * @return void
      */
-    private function is_pro_exists() {
-        if ( file_exists( DOKAN_INC_DIR . '/pro/dokan-pro-loader.php' ) ) {
-            return true;
+    public function appsero_init_tracker_dokan() {
+
+        if ( ! class_exists( 'Appsero\Client' ) ) {
+            require_once DOKAN_LIB_DIR . '/appsero/Client.php';
         }
 
-        return false;
-    }
+        $client = new Appsero\Client( '559bcc0d-21b4-4b34-8317-3e072badf46d', 'Dokan Multivendor Marketplace', DOKAN_FILE );
 
-    /**
-     * Get the extra data
-     *
-     * @return array
-     */
-    protected function get_extra_data() {
-        $data = array(
-            'products' => $this->get_post_count( 'product' ),
+        $this->insights = $client->insights();
+
+        $this->insights->add_extra( [
+            'products' => $this->insights->get_post_count( 'product' ),
             'orders'   => $this->get_order_count(),
-            'is_pro'   => $this->is_pro_exists() ? 'yes' : 'no'
-        );
+            'is_pro'   => class_exists( 'Dokan_Pro' ) ? 'Yes' : 'No',
+        ] );
 
-        return $data;
+        $this->insights->init_plugin();
     }
 
     /**

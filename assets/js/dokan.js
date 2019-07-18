@@ -1,7 +1,6 @@
 jQuery(function($) {
 
     $('.tips').tooltip();
-    //$('select.grant_access_id').chosen();
 
     $('ul.order-status').on('click', 'a.dokan-edit-status', function(e) {
         $(this).addClass('dokan-hide').closest('li').next('li').removeClass('dokan-hide');
@@ -164,8 +163,41 @@ jQuery(function($) {
     var dokan_seller_meta_boxes_order_items = {
         init: function() {
 
+            let formatMap = {
+                // Day
+                d: 'dd',
+                D: 'D',
+                j: 'd',
+                l: 'DD',
+
+                // Month
+                F: 'MM',
+                m: 'mm',
+                M: 'M',
+                n: 'm',
+
+                // Year
+                o: 'yy', // not exactly same. see php date doc for details
+                Y: 'yy',
+                y: 'y'
+            }
+
+            let i = 0;
+            let char = '';
+            let datepickerFormat = '';
+
+            for (i = 0; i < dokan.i18n_date_format.length; i++) {
+                char = dokan.i18n_date_format[i];
+
+                if (char in formatMap) {
+                    datepickerFormat += formatMap[char];
+                } else {
+                    datepickerFormat += char;
+                }
+            }
+
             $( "#shipped-date" ).datepicker({
-                dateFormat: "yy-mm-dd"
+                dateFormat: datepickerFormat
             });
 
             //saving note
@@ -541,7 +573,6 @@ jQuery(function($) {
             // gallery
             $('body, #dokan-product-images').on('click', 'a.add-product-images', this.gallery.addImages );
             $('body, #dokan-product-images').on( 'click', 'a.action-delete', this.gallery.deleteImage );
-            $('body, #dokan-product-images').on( 'click', 'a.delete', this.gallery.deleteImage );
             this.gallery.sortable();
 
             // featured image
@@ -562,7 +593,7 @@ jQuery(function($) {
                 return false;
             });
 
-            $('body').on('click', 'a.delete', function(){
+            $('body').on('click', 'a.dokan-product-delete', function() {
                 $(this).closest('tr').remove();
                 return false;
             });
@@ -1522,12 +1553,12 @@ jQuery(function($) {
     $.validator.setDefaults({ ignore: ":hidden" });
 
     var validatorError = function(error, element) {
-        var form_group = $(element).closest('.form-group');
+        var form_group = $(element).closest('.dokan-form-group');
         form_group.addClass('has-error').append(error);
     };
 
     var validatorSuccess = function(label, element) {
-        $(element).closest('.form-group').removeClass('has-error');
+        $(element).closest('.dokan-form-group').removeClass('has-error');
     };
 
     var api = wp.customize;
@@ -1867,7 +1898,8 @@ jQuery(function($) {
                 errorElement: 'span',
                 errorClass: 'error',
                 errorPlacement: validatorError,
-                success: validatorSuccess
+                success: validatorSuccess,
+                ignore: '.select2-search__field, :hidden'
             });
 
         },
