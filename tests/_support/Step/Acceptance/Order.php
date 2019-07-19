@@ -42,6 +42,6 @@ class Order extends \AcceptanceTester
     {
         $I = $this;
         $I->click('Orders');        
-        $I->click('Order 18');
+        $I->click('Order 269');
     }
 }

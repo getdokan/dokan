@@ -17,7 +17,7 @@ class AddProductCest
         $I->click('Add new product');
         //$I->seeCurrentURLEquals('/wpbddtesting/dashboard/new-product/');             
         
-        $I->fillField('post_title', 'Yellow Cap');
+        $I->fillField('post_title', 'White Cap');
         $I->fillField('_regular_price', '300');        
         //$I->fillField('_sale_price', '20');      
         $I->fillField('post_excerpt', 'this is unique');
