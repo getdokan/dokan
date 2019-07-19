@@ -36,5 +36,5 @@ modules:
             browser: chrome
             restart: true
             window_size: false
-            port: 9515
+            port: 4444
             

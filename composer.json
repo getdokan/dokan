@@ -14,7 +14,8 @@
     "require-dev": {
         "wp-coding-standards/wpcs": "dev-master",
         "higidi/composer-phpcodesniffer-standards-plugin": "^1.0@dev",
-        "dealerdirect/phpcodesniffer-composer-installer": "^0.4.3"
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.4.3",
+        "lucatume/wp-browser": "dev-master"
     },
     "scripts": {
       "phpcs": [
