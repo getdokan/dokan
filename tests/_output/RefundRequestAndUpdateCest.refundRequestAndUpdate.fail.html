@@ -1,0 +1,2173 @@
+<html lang="en-US"><head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard | Dokan</title>
+<link rel="profile" href="http://gmpg.org/xfn/11">
+<link rel="pingback" href="http://localhost:8888/dokan/xmlrpc.php">
+
+<!--[if lt IE 9]>
+<script src="http://localhost:8888/dokan/wp-content/themes/dokan-theme/assets/js/html5.js" type="text/javascript"></script>
+<![endif]-->
+
+<link rel="dns-prefetch" href="//maps.googleapis.com">
+<link rel="dns-prefetch" href="//fonts.googleapis.com">
+<link rel="dns-prefetch" href="//s.w.org">
+<link rel="alternate" type="application/rss+xml" title="Dokan » Feed" href="http://localhost:8888/dokan/feed/">
+<link rel="alternate" type="application/rss+xml" title="Dokan » Comments Feed" href="http://localhost:8888/dokan/comments/feed/">
+		<script src="http://localhost:8888/dokan/wp-includes/js/zxcvbn.min.js" type="text/javascript" async=""></script><script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/12.0.0-1\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/12.0.0-1\/svg\/","svgExt":".svg","source":{"concatemoji":"http:\/\/localhost:8888\/dokan\/wp-includes\/js\/wp-emoji-release.min.js?ver=5.2.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55357,56424,55356,57342,8205,55358,56605,8205,55357,56424,55356,57340],[55357,56424,55356,57342,8203,55358,56605,8203,55357,56424,55356,57340]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script><script src="http://localhost:8888/dokan/wp-includes/js/wp-emoji-release.min.js?ver=5.2.2" type="text/javascript" defer=""></script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+	<link rel="stylesheet" id="wp-block-library-css" href="http://localhost:8888/dokan/wp-includes/css/dist/block-library/style.min.css?ver=5.2.2" type="text/css" media="all">
+<link rel="stylesheet" id="wc-block-style-css" href="http://localhost:8888/dokan/wp-content/plugins/woocommerce/assets/css/blocks/style.css?ver=3.6.5" type="text/css" media="all">
+<link rel="stylesheet" id="woocommerce-layout-css" href="http://localhost:8888/dokan/wp-content/plugins/woocommerce/assets/css/woocommerce-layout.css?ver=3.6.5" type="text/css" media="all">
+<link rel="stylesheet" id="woocommerce-smallscreen-css" href="http://localhost:8888/dokan/wp-content/plugins/woocommerce/assets/css/woocommerce-smallscreen.css?ver=3.6.5" type="text/css" media="only screen and (max-width: 768px)">
+<link rel="stylesheet" id="woocommerce-general-css" href="http://localhost:8888/dokan/wp-content/plugins/woocommerce/assets/css/woocommerce.css?ver=3.6.5" type="text/css" media="all">
+<style id="woocommerce-inline-inline-css" type="text/css">
+.woocommerce form .form-row .required { visibility: visible; }
+</style>
+<link rel="stylesheet" id="dpi-styles-css" href="http://localhost:8888/dokan/wp-content/plugins/dokan-plugin/includes/modules/export-import/assets/css/style.css?ver=20190720" type="text/css" media="all">
+<link rel="stylesheet" id="dokan-style-css" href="http://localhost:8888/dokan/wp-content/plugins/dokan/assets/css/style.css?ver=1563467412" type="text/css" media="all">
+<link rel="stylesheet" id="dokan-fontawesome-css" href="http://localhost:8888/dokan/wp-content/plugins/dokan/assets/vendors/font-awesome/font-awesome.min.css?ver=2.9.18" type="text/css" media="all">
+<link rel="stylesheet" id="dokan-follow-store-css" href="http://localhost:8888/dokan/wp-content/plugins/dokan-plugin/includes/modules/follow-store/assets/css/follow-store.css?ver=1.0.0" type="text/css" media="all">
+<link rel="stylesheet" id="dokan-geolocation-css" href="http://localhost:8888/dokan/wp-content/plugins/dokan-plugin/includes/modules/geolocation/assets/css/geolocation.css?ver=2.9.11" type="text/css" media="all">
+<link rel="stylesheet" id="dokan-ls-custom-style-css" href="http://localhost:8888/dokan/wp-content/plugins/dokan-plugin/includes/modules/live-search/assets/css/style.css?ver=20190720" type="text/css" media="all">
+<link rel="stylesheet" id="dokan-store-support-styles-css" href="http://localhost:8888/dokan/wp-content/plugins/dokan-plugin/includes/modules/store-support/assets/css/style.css?ver=20190720" type="text/css" media="all">
+<link rel="stylesheet" id="bootstrap-css" href="http://localhost:8888/dokan/wp-content/themes/dokan-theme/assets/css/bootstrap.css" type="text/css" media="all">
+<link rel="stylesheet" id="flexslider-css" href="http://localhost:8888/dokan/wp-content/themes/dokan-theme/assets/css/flexslider.css" type="text/css" media="all">
+<link rel="stylesheet" id="dokan-opensans-css" href="http://fonts.googleapis.com/css?family=Open+Sans%3A400%2C700&amp;ver=5.2.2" type="text/css" media="all">
+<link rel="stylesheet" id="dokan-theme-css" href="http://localhost:8888/dokan/wp-content/themes/dokan-theme/style.css" type="text/css" media="all">
+<link rel="stylesheet" id="dokan-theme-skin-css" href="http://localhost:8888/dokan/wp-content/themes/dokan-theme/assets/css/skins/orange.css" type="text/css" media="all">
+<link rel="stylesheet" id="jquery-ui-css" href="http://localhost:8888/dokan/wp-content/plugins/dokan/assets/vendors/jquery-ui/jquery-ui-1.10.0.custom.css?ver=2.9.18" type="text/css" media="all">
+<link rel="stylesheet" id="dokan-magnific-popup-css" href="http://localhost:8888/dokan/wp-content/plugins/dokan/assets/vendors/magnific/magnific-popup.css?ver=2.9.18" type="text/css" media="all">
+<link rel="stylesheet" id="dokan-select2-css-css" href="http://localhost:8888/dokan/wp-content/plugins/dokan/assets/vendors/select2/select2.css?ver=2.9.18" type="text/css" media="all">
+<link rel="stylesheet" id="dokan-timepicker-css" href="http://localhost:8888/dokan/wp-content/plugins/dokan/assets/vendors/jquery-ui/timepicker/timepicker.min.css?ver=2.9.18" type="text/css" media="all">
+<link rel="stylesheet" id="buttons-css" href="http://localhost:8888/dokan/wp-includes/css/buttons.min.css?ver=5.2.2" type="text/css" media="all">
+<link rel="stylesheet" id="dashicons-css" href="http://localhost:8888/dokan/wp-includes/css/dashicons.min.css?ver=5.2.2" type="text/css" media="all">
+<link rel="stylesheet" id="mediaelement-css" href="http://localhost:8888/dokan/wp-includes/js/mediaelement/mediaelementplayer-legacy.min.css?ver=4.2.6-78496d1" type="text/css" media="all">
+<link rel="stylesheet" id="wp-mediaelement-css" href="http://localhost:8888/dokan/wp-includes/js/mediaelement/wp-mediaelement.min.css?ver=5.2.2" type="text/css" media="all">
+<link rel="stylesheet" id="media-views-css" href="http://localhost:8888/dokan/wp-includes/css/media-views.min.css?ver=5.2.2" type="text/css" media="all">
+<link rel="stylesheet" id="imgareaselect-css" href="http://localhost:8888/dokan/wp-includes/js/imgareaselect/imgareaselect.css?ver=0.9.8" type="text/css" media="all">
+<link rel="stylesheet" id="dokan-pro-style-css" href="http://localhost:8888/dokan/wp-content/plugins/dokan-plugin/assets/css/style.css?ver=1563618019" type="text/css" media="all">
+<link rel="stylesheet" id="dokan-verification-styles-css" href="http://localhost:8888/dokan/wp-content/plugins/dokan-plugin/includes/modules/vendor-verification/assets/css/style.css?ver=20190720" type="text/css" media="all">
+<script type="text/javascript">
+/* <![CDATA[ */
+var dokan = {"ajaxurl":"http:\/\/localhost:8888\/dokan\/wp-admin\/admin-ajax.php","nonce":"3a54a9bf18","ajax_loader":"http:\/\/localhost:8888\/dokan\/wp-content\/plugins\/dokan\/assets\/images\/ajax-loader.gif","seller":{"available":"Available","notAvailable":"Not Available"},"delete_confirm":"Are you sure?","wrong_message":"Something went wrong. Please try again.","vendor_percentage":"10","commission_type":"flat","rounding_precision":"6","mon_decimal_point":".","i18n_choose_featured_img":"Upload featured image","i18n_choose_file":"Choose a file","i18n_choose_gallery":"Add Images to Product Gallery","i18n_choose_featured_img_btn_text":"Set featured image","i18n_choose_file_btn_text":"Insert file URL","i18n_choose_gallery_btn_text":"Add to gallery","duplicates_attribute_messg":"Sorry, this attribute option already exists, Try a different one.","variation_unset_warning":"Warning! This product will not have any variations if this option is not checked.","new_attribute_prompt":"Enter a name for the new attribute term:","remove_attribute":"Remove this attribute?","dokan_placeholder_img_src":"http:\/\/localhost:8888\/dokan\/wp-content\/uploads\/woocommerce-placeholder.png","add_variation_nonce":"93c461d230","link_variation_nonce":"235e953fc1","delete_variations_nonce":"95842ba4ff","load_variations_nonce":"c1eecb2bff","save_variations_nonce":"e2f9b2f837","bulk_edit_variations_nonce":"129c40114d","i18n_link_all_variations":"Are you sure you want to link all variations? This will create a new variation for each and every possible combination of variation attributes (max 50 per run).","i18n_enter_a_value":"Enter a value","i18n_enter_menu_order":"Variation menu order (determines position in the list of variations)","i18n_enter_a_value_fixed_or_percent":"Enter a value (fixed or %)","i18n_delete_all_variations":"Are you sure you want to delete all variations? This cannot be undone.","i18n_last_warning":"Last warning, are you sure?","i18n_choose_image":"Choose an image","i18n_set_image":"Set variation image","i18n_variation_added":"variation added","i18n_variations_added":"variations added","i18n_no_variations_added":"No variations added","i18n_remove_variation":"Are you sure you want to remove this variation?","i18n_scheduled_sale_start":"Sale start date (YYYY-MM-DD format or leave blank)","i18n_scheduled_sale_end":"Sale end date (YYYY-MM-DD format or leave blank)","i18n_edited_variations":"Save changes before changing page?","i18n_variation_count_single":"%qty% variation","i18n_variation_count_plural":"%qty% variations","i18n_no_result_found":"No Result Found","variations_per_page":"10","store_banner_dimension":{"width":"625","height":"300","flex-width":true,"flex-height":true},"selectAndCrop":"Select and Crop","chooseImage":"Choose Image","product_title_required":"Product title is required","product_category_required":"Product category is required","search_products_nonce":"b0ba9473bb","search_customer_nonce":"807661e4b2","i18n_matches_1":"One result is available, press enter to select it.","i18n_matches_n":"%qty% results are available, use up and down arrow keys to navigate.","i18n_no_matches":"No matches found","i18n_ajax_error":"Loading failed","i18n_input_too_short_1":"Please enter 1 or more characters","i18n_input_too_short_n":"Please enter %qty% or more characters","i18n_input_too_long_1":"Please delete 1 character","i18n_input_too_long_n":"Please delete %qty% characters","i18n_selection_too_long_1":"You can only select 1 item","i18n_selection_too_long_n":"You can only select %qty% items","i18n_load_more":"Loading more results\u2026","i18n_searching":"Searching\u2026","i18n_date_format":"F j, Y","product_vendors_can_create_tags":"off","product_inline_edit_nonce":"8167ffc271","is_vendor_enabled":"","not_enable_message":"Error! Your account is not enabled for selling, please contact the admin","rest":{"root":"http:\/\/localhost:8888\/dokan\/wp-json\/","nonce":"7514d313d9","version":"dokan\/v1"},"api":null,"libs":[],"routeComponents":{"default":null},"routes":[],"wholesale":{"activeStatusMessage":"You are succefully converted as a wholesale customer","deactiveStatusMessage":"Your wholesale customer request send to the admin. Please wait for approval"}};
+/* ]]> */
+</script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-includes/js/jquery/jquery.js?ver=1.12.4-wp"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.4.1"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-content/plugins/dokan-plugin/includes/modules/single-product-multiple-vendor/assets/js/tinysort.min.js?ver=5.2.2"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var userSettings = {"url":"\/dokan\/","uid":"20","time":"1563618019","secure":""};
+/* ]]> */
+</script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-includes/js/utils.min.js?ver=5.2.2"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-includes/js/plupload/moxie.min.js?ver=1.3.5"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-includes/js/plupload/plupload.min.js?ver=2.1.9"></script>
+<!--[if lt IE 8]>
+<script type='text/javascript' src='http://localhost:8888/dokan/wp-includes/js/json2.min.js?ver=2015-05-03'></script>
+<![endif]-->
+<script type="text/javascript">
+var mejsL10n = {"language":"en","strings":{"mejs.install-flash":"You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https:\/\/get.adobe.com\/flashplayer\/","mejs.fullscreen-off":"Turn off Fullscreen","mejs.fullscreen-on":"Go Fullscreen","mejs.download-video":"Download Video","mejs.fullscreen":"Fullscreen","mejs.time-jump-forward":["Jump forward 1 second","Jump forward %1 seconds"],"mejs.loop":"Toggle Loop","mejs.play":"Play","mejs.pause":"Pause","mejs.close":"Close","mejs.time-slider":"Time Slider","mejs.time-help-text":"Use Left\/Right Arrow keys to advance one second, Up\/Down arrows to advance ten seconds.","mejs.time-skip-back":["Skip back 1 second","Skip back %1 seconds"],"mejs.captions-subtitles":"Captions\/Subtitles","mejs.captions-chapters":"Chapters","mejs.none":"None","mejs.mute-toggle":"Mute Toggle","mejs.volume-help-text":"Use Up\/Down Arrow keys to increase or decrease volume.","mejs.unmute":"Unmute","mejs.mute":"Mute","mejs.volume-slider":"Volume Slider","mejs.video-player":"Video Player","mejs.audio-player":"Audio Player","mejs.ad-skip":"Skip ad","mejs.ad-skip-info":["Skip in 1 second","Skip in %1 seconds"],"mejs.source-chooser":"Source Chooser","mejs.stop":"Stop","mejs.speed-rate":"Speed Rate","mejs.live-broadcast":"Live Broadcast","mejs.afrikaans":"Afrikaans","mejs.albanian":"Albanian","mejs.arabic":"Arabic","mejs.belarusian":"Belarusian","mejs.bulgarian":"Bulgarian","mejs.catalan":"Catalan","mejs.chinese":"Chinese","mejs.chinese-simplified":"Chinese (Simplified)","mejs.chinese-traditional":"Chinese (Traditional)","mejs.croatian":"Croatian","mejs.czech":"Czech","mejs.danish":"Danish","mejs.dutch":"Dutch","mejs.english":"English","mejs.estonian":"Estonian","mejs.filipino":"Filipino","mejs.finnish":"Finnish","mejs.french":"French","mejs.galician":"Galician","mejs.german":"German","mejs.greek":"Greek","mejs.haitian-creole":"Haitian Creole","mejs.hebrew":"Hebrew","mejs.hindi":"Hindi","mejs.hungarian":"Hungarian","mejs.icelandic":"Icelandic","mejs.indonesian":"Indonesian","mejs.irish":"Irish","mejs.italian":"Italian","mejs.japanese":"Japanese","mejs.korean":"Korean","mejs.latvian":"Latvian","mejs.lithuanian":"Lithuanian","mejs.macedonian":"Macedonian","mejs.malay":"Malay","mejs.maltese":"Maltese","mejs.norwegian":"Norwegian","mejs.persian":"Persian","mejs.polish":"Polish","mejs.portuguese":"Portuguese","mejs.romanian":"Romanian","mejs.russian":"Russian","mejs.serbian":"Serbian","mejs.slovak":"Slovak","mejs.slovenian":"Slovenian","mejs.spanish":"Spanish","mejs.swahili":"Swahili","mejs.swedish":"Swedish","mejs.tagalog":"Tagalog","mejs.thai":"Thai","mejs.turkish":"Turkish","mejs.ukrainian":"Ukrainian","mejs.vietnamese":"Vietnamese","mejs.welsh":"Welsh","mejs.yiddish":"Yiddish"}};
+</script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-includes/js/mediaelement/mediaelement-and-player.min.js?ver=4.2.6-78496d1"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-includes/js/mediaelement/mediaelement-migrate.min.js?ver=5.2.2"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var _wpmejsSettings = {"pluginPath":"\/dokan\/wp-includes\/js\/mediaelement\/","classPrefix":"mejs-","stretching":"responsive"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-content/plugins/woocommerce/assets/js/jquery-serializejson/jquery.serializejson.min.js?ver=2.6.1"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var _zxcvbnSettings = {"src":"http:\/\/localhost:8888\/dokan\/wp-includes\/js\/zxcvbn.min.js"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-includes/js/zxcvbn-async.min.js?ver=1.0"></script>
+<link rel="https://api.w.org/" href="http://localhost:8888/dokan/wp-json/">
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://localhost:8888/dokan/xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://localhost:8888/dokan/wp-includes/wlwmanifest.xml"> 
+<meta name="generator" content="WordPress 5.2.2">
+<meta name="generator" content="WooCommerce 3.6.5">
+<link rel="canonical" href="http://localhost:8888/dokan/dashboard/">
+<link rel="shortlink" href="http://localhost:8888/dokan/?p=9">
+<link rel="alternate" type="application/json+oembed" href="http://localhost:8888/dokan/wp-json/oembed/1.0/embed?url=http%3A%2F%2Flocalhost%3A8888%2Fdokan%2Fdashboard%2F">
+<link rel="alternate" type="text/xml+oembed" href="http://localhost:8888/dokan/wp-json/oembed/1.0/embed?url=http%3A%2F%2Flocalhost%3A8888%2Fdokan%2Fdashboard%2F&amp;format=xml">
+	<noscript><style>.woocommerce-product-gallery{ opacity: 1 !important; }</style></noscript>
+			<style type="text/css">.recentcomments a{display:inline !important;padding:0 !important;margin:0 !important;}</style>
+		        <style>
+            input[type="submit"].dokan-btn-theme, a.dokan-btn-theme, .dokan-btn-theme {
+                color: #ffffff !important;
+                background-color: #f05025 !important;
+                border-color: #f05025 !important;
+            }
+            input[type="submit"].dokan-btn-theme:hover,
+            a.dokan-btn-theme:hover, .dokan-btn-theme:hover,
+            input[type="submit"].dokan-btn-theme:focus,
+            a.dokan-btn-theme:focus, .dokan-btn-theme:focus,
+            input[type="submit"].dokan-btn-theme:active,
+            a.dokan-btn-theme:active, .dokan-btn-theme:active,
+            input[type="submit"].dokan-btn-theme.active, a.dokan-btn-theme.active,
+            .dokan-btn-theme.active,
+            .open .dropdown-toggleinput[type="submit"].dokan-btn-theme,
+            .open .dropdown-togglea.dokan-btn-theme,
+            .open .dropdown-toggle.dokan-btn-theme{
+                color: #ffffff !important;
+                background-color: #dd3b0f !important;
+                border-color: #ca360e !important;
+            }
+
+            .dokan-dashboard .dokan-dash-sidebar,
+            .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu{
+                background-color : #242424 !important;
+            }
+
+            .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li a{
+                color : #ffffff !important;
+            }
+
+            .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li.active,
+            .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li:hover,
+            .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li.active,
+            .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li.dokan-common-links a:hover{
+                background-color : #f05025 !important;
+            }
+
+            .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li,
+            .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li a,
+            .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li.dokan-common-links a{
+                border-color : #454545 !important;
+            }
+        </style>
+
+                <style type="text/css">
+                                                                                                                                                                                </style>
+        <style type="text/css">/* Chart.js */
+@-webkit-keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}@keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}.chartjs-render-monitor{-webkit-animation:chartjs-render-animation 0.001s;animation:chartjs-render-animation 0.001s;}</style></head>
+
+<body class="page-template page-template-page-template page-template-full-width page-template-page-templatefull-width-php page page-id-9 page-parent logged-in woocommerce woocommerce-js dokan-dashboard dokan-theme-dokan-theme">
+
+    <div id="page" class="hfeed site">
+        
+        <nav class="navbar navbar-inverse navbar-top-area">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 col-sm-5">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-top-collapse">
+                                <span class="sr-only">Toggle navigation</span>
+                                <i class="fa fa-bars"></i>
+                            </button>
+                        </div>
+                                            </div>
+
+                    <div class="col-md-6 col-sm-7">
+                        <div class="collapse navbar-collapse navbar-top-collapse">
+                            
+<ul class="nav navbar-nav navbar-right">
+    <li>
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Cart <span class="dokan-cart-amount-top">(<span class="woocommerce-Price-amount amount"><span class="woocommerce-Price-currencySymbol">$</span>0.00</span>)</span> <b class="caret"></b></a>
+
+        <ul class="dropdown-menu">
+            <li>
+                <div class="widget_shopping_cart_content">
+
+
+		<li class="empty">No products in the cart.</li>
+
+	
+<!-- end product list -->
+
+
+</div>
+            </li>
+        </ul>
+    </li>
+
+    
+                    <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Vendor Dashboard <b class="caret"></b></a>
+
+                <ul class="dropdown-menu">
+                    <li><a href="http://localhost:8888/dokan/store/vendorone-shop-2/" target="_blank">Visit your store <i class="fa fa-external-link"></i></a></li>
+                    <li class="divider"></li>
+                    <li><a href="http://localhost:8888/dokan/dashboard/"><i class="fa fa-tachometer"></i> &nbsp;Dashboard</a></li><li><a href="http://localhost:8888/dokan/dashboard/products/"><i class="fa fa-briefcase"></i> &nbsp;Products</a></li><li><a href="http://localhost:8888/dokan/dashboard/orders/"><i class="fa fa-shopping-cart"></i> &nbsp;Orders</a></li><li><a href="http://localhost:8888/dokan/dashboard/coupons/"><i class="fa fa-gift"></i> &nbsp;Coupons</a></li><li><a href="http://localhost:8888/dokan/dashboard/reports/"><i class="fa fa-line-chart"></i> &nbsp;Reports</a></li><li><a href="http://localhost:8888/dokan/dashboard/reviews/"><i class="fa fa-comments-o"></i> &nbsp;Reviews</a></li><li><a href="http://localhost:8888/dokan/dashboard/withdraw/"><i class="fa fa-upload"></i> &nbsp;Withdraw</a></li><li><a href="http://localhost:8888/dokan/dashboard/followers/"><i class="fa fa-heart"></i> &nbsp;Followers</a></li><li><a href="http://localhost:8888/dokan/wepos/#"><i class="fa fa-barcode" aria-hidden="true"></i> &nbsp;View POS</a></li><li><a href="http://localhost:8888/dokan/dashboard/settings/store/"><i class="fa fa-cog"></i> &nbsp;Settings <i class="fa fa-angle-right pull-right"></i></a></li>                </ul>
+            </li>
+        
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">vendor one <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+                <li><a href="http://localhost:8888/dokan/my-orders/">My Orders</a></li>
+                <li><a href="http://localhost:8888/dokan/my-account/">My Account</a></li>
+                <li><a href="http://localhost:8888/dokan/my-account/edit-account/">Edit Account</a></li>
+                <li class="divider"></li>
+                <li><a href="http://localhost:8888/dokan/my-account/edit-address/billing/">Billing Address</a></li>
+                <li><a href="http://localhost:8888/dokan/my-account/edit-address/shipping/">Shipping Address</a></li>
+            </ul>
+        </li>
+
+        <li><a href="http://localhost:8888/dokan/wp-login.php?action=logout&amp;redirect_to=http%3A%2F%2Flocalhost%3A8888%2Fdokan&amp;_wpnonce=6428e18454">Log out</a></li>
+
+    </ul>
+                        </div>
+                    </div>
+                </div> <!-- .row -->
+            </div> <!-- .container -->
+        </nav>
+
+        <header id="masthead" class="site-header" role="banner">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 col-sm-5">
+                        <hgroup>
+                            <h1 class="site-title"><a href="http://localhost:8888/dokan/" title="Dokan" rel="home">Dokan <small> - Just another WordPress site</small></a></h1>
+                        </hgroup>
+                    </div><!-- .col-md-6 -->
+
+                    <div class="col-md-8 col-sm-7 clearfix">
+                                            </div>
+                </div><!-- .row -->
+            </div><!-- .container -->
+
+            <div class="menu-container">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <nav role="navigation" class="site-navigation main-navigation clearfix">
+                                <h1 class="assistive-text"><i class="icon-reorder"></i> Menu</h1>
+                                <div class="assistive-text skip-link"><a href="#content" title="Skip to content">Skip to content</a></div>
+                                    <nav class="navbar navbar-default" role="navigation">
+                                        <div class="navbar-header">
+                                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-main-collapse">
+                                                <span class="sr-only">Toggle navigation</span>
+                                                <i class="fa fa-bars"></i>
+                                            </button>
+                                            <a class="navbar-brand" href="http://localhost:8888/dokan"><i class="fa fa-home"></i> Home</a>
+                                        </div>
+                                        <div class="collapse navbar-collapse navbar-main-collapse">
+                                                                                    </div>
+                                    </nav>
+                            </nav><!-- .site-navigation .main-navigation -->
+                        </div><!-- .span12 -->
+                    </div><!-- .row -->
+                </div><!-- .container -->
+            </div> <!-- .menu-container -->
+        </header><!-- #masthead .site-header -->
+
+        <div id="main" class="site-main">
+            <div class="container content-wrap">
+                <div class="row">
+
+<div id="primary" class="content-area col-md-12">
+    <div id="content" class="site-content" role="main">
+
+        
+            
+<article id="post-9" class="post-9 page type-page status-publish hentry">
+    <header class="entry-header">
+        <h1 class="entry-title">Dashboard</h1>
+    </header><!-- .entry-header -->
+
+    <div class="entry-content">
+        
+
+    <div class="dokan-dashboard-wrap">
+
+        
+<div class="dokan-dash-sidebar">
+    <div id="dokan-navigation" area-label="Menu"><label id="mobile-menu-icon" for="toggle-mobile-menu" aria-label="Menu">☰</label><input id="toggle-mobile-menu" type="checkbox"><ul class="dokan-dashboard-menu" style="height: 1117px;"><li class="dashboard"><a href="http://localhost:8888/dokan/dashboard/"><i class="fa fa-tachometer"></i> Dashboard</a></li><li class="products"><a href="http://localhost:8888/dokan/dashboard/products/"><i class="fa fa-briefcase"></i> Products</a></li><li class="active orders"><a href="http://localhost:8888/dokan/dashboard/orders/"><i class="fa fa-shopping-cart"></i> Orders</a></li><li class="coupons"><a href="http://localhost:8888/dokan/dashboard/coupons/"><i class="fa fa-gift"></i> Coupons</a></li><li class="reports"><a href="http://localhost:8888/dokan/dashboard/reports/"><i class="fa fa-line-chart"></i> Reports</a></li><li class="reviews"><a href="http://localhost:8888/dokan/dashboard/reviews/"><i class="fa fa-comments-o"></i> Reviews</a></li><li class="withdraw"><a href="http://localhost:8888/dokan/dashboard/withdraw/"><i class="fa fa-upload"></i> Withdraw</a></li><li class="followers"><a href="http://localhost:8888/dokan/dashboard/followers/"><i class="fa fa-heart"></i> Followers</a></li><li class="wepos"><a href="http://localhost:8888/dokan/wepos/#"><i class="fa fa-barcode" aria-hidden="true"></i> View POS</a></li><li class="settings"><a href="http://localhost:8888/dokan/dashboard/settings/store/"><i class="fa fa-cog"></i> Settings <i class="fa fa-angle-right pull-right"></i></a></li><li class="dokan-common-links dokan-clearfix">
+            <a title="" class="tips" data-placement="top" href="http://localhost:8888/dokan/store/vendorone-shop-2/" target="_blank" data-original-title="Visit Store"><i class="fa fa-external-link"></i></a>
+            <a title="" class="tips" data-placement="top" href="http://localhost:8888/dokan/dashboard/edit-account/" data-original-title="Edit Account"><i class="fa fa-user"></i></a>
+            <a title="" class="tips" data-placement="top" href="http://localhost:8888/dokan/wp-login.php?action=logout&amp;redirect_to=http%3A%2F%2Flocalhost%3A8888%2Fdokan&amp;_wpnonce=6428e18454" data-original-title="Log out"><i class="fa fa-power-off"></i></a>
+        </li></ul></div></div>
+        <div class="dokan-dashboard-content dokan-orders-content">
+
+            <div class="dokan-alert dokan-alert-warning">
+    <strong>Error!</strong>
+    Your account is not enabled for selling, please contact the admin</div>
+
+
+            <article class="dokan-orders-area">
+
+                        <a href="http://localhost:8888/dokan/dashboard/orders/" class="dokan-btn">← Orders</a>
+    <div class="dokan-clearfix">
+    <div class="dokan-w8 dokan-order-left-content">
+
+        <div class="dokan-clearfix">
+            <div class="" style="width:100%">
+                <div class="dokan-panel dokan-panel-default">
+                    <div class="dokan-panel-heading"><strong>Order#269</strong> → Order Items</div>
+                    <div class="dokan-panel-body" id="woocommerce-order-items">
+
+                        <div class="woocommerce_order_items_wrapper wc-order-items-editable">
+    <table cellpadding="0" cellspacing="0" class="woocommerce_order_items dokan-table dokan-table-strip">
+        <thead>
+            <tr>
+                <!-- <th><input type="checkbox" class="check-column" /></th> -->
+                <th class="item sortable" colspan="2" data-sort="string-ins">Item</th>
+
+                
+                <th class="item_cost sortable" data-sort="float">Cost</th>
+                <th class="quantity sortable" data-sort="int">Qty</th>
+                <th class="line_cost sortable" data-sort="float">Total</th>
+
+                                <th class="wc-order-edit-line-item" width="1%">&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody id="order_line_items">
+        <tr class="item " data-order_item_id="119">
+	<!-- <td class="check-column"><input type="checkbox" /></td> -->
+	<td class="thumb">
+					<a href="http://localhost:8888/dokan/wp-admin/post.php?post=266&amp;action=edit" class="tips" data-tip="<strong>Product ID:</strong> 266" data-original-title="" title=""><img width="100" height="100" src="http://localhost:8888/dokan/wp-content/uploads/woocommerce-placeholder.png" class="woocommerce-placeholder wp-post-image" alt="Placeholder" srcset="http://localhost:8888/dokan/wp-content/uploads/woocommerce-placeholder.png 1200w, http://localhost:8888/dokan/wp-content/uploads/woocommerce-placeholder-150x150.png 150w, http://localhost:8888/dokan/wp-content/uploads/woocommerce-placeholder-300x300.png 300w, http://localhost:8888/dokan/wp-content/uploads/woocommerce-placeholder-768x768.png 768w, http://localhost:8888/dokan/wp-content/uploads/woocommerce-placeholder-1024x1024.png 1024w" sizes="(max-width: 100px) 100vw, 100px"></a>
+			</td>
+	<td class="name" data-sort-value="Yellow Cap">
+
+		
+					<a target="_blank" href="http://localhost:8888/dokan/product/yellow-cap/edit/">
+				Yellow Cap			</a>
+		
+		<input type="hidden" class="order_item_id" name="order_item_id[]" value="119">
+		<input type="hidden" name="order_item_tax_class[119]" value="">
+			
+		
+		<div class="view">
+					</div>
+		<div class="edit" style="display: none;">
+			<table class="meta dokan-table dokan-table-strip" cellspacing="0">
+				<tbody class="meta_items">
+								</tbody>
+				<tfoot>
+					<tr>
+						<td colspan="4"><button class="add_order_item_meta button">Add&nbsp;meta</button></td>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+
+		
+	</td>
+
+	
+	<td class="item_cost" width="1%" data-sort-value="300.00">
+		<div class="view">
+			<span class="woocommerce-Price-amount amount"><span class="woocommerce-Price-currencySymbol">$</span>300.00</span>		</div>
+	</td>
+
+	<td class="quantity" width="1%">
+		<div class="view">
+			1		</div>
+		<div class="edit" style="display: none;">
+						<input style="width:60px" type="number" step="1" min="0" autocomplete="off" name="order_item_qty[119]" placeholder="0" value="1" data-qty="1" class="quantity">
+ 		</div>
+		<div class="refund" style="display: none;">
+			<input style="width:60px" type="number" step="1" min="0" max="1" autocomplete="off" name="refund_order_item_qty[119]" placeholder="0" size="4" class="refund_order_item_qty">
+		</div>
+	</td>
+
+	<td class="line_cost" width="1%" data-sort-value="300">
+		<div class="view">
+			<span class="woocommerce-Price-amount amount"><span class="woocommerce-Price-currencySymbol">$</span>300.00</span>		</div>
+		<div class="edit" style="display: none;">
+			<div class="split-input">
+								<input style="width:60px" type="text" name="line_total[119]" placeholder="0" value="300" class="line_total wc_input_price tips" data-tip="After pre-tax discounts." data-total="300" data-original-title="" title="">
+
+								<input style="width:60px" type="text" name="line_subtotal[119]" value="300" class="line_subtotal wc_input_price tips" data-tip="Before pre-tax discounts." data-subtotal="300" data-original-title="" title="">
+			</div>
+		</div>
+		<div class="refund" style="display: none;">
+			<input style="width:60px" type="text" name="refund_line_total[119]" placeholder="0" class="refund_line_total wc_input_price">
+		</div>
+	</td>
+
+	
+	<td class="wc-order-edit-line-item">
+			</td>
+</tr>
+        </tbody>
+        <tbody id="order_shipping_line_items">
+        <tr class="shipping " data-order_item_id="120">
+	<!-- <td class="check-column"><input type="checkbox" /></td> -->
+
+	<td class="thumb"><div><i class="fa fa-truck"></i></div></td>
+
+	<td class="name">
+		<div class="view">
+			Local pickup		</div>
+		<div class="edit" style="display: none;">
+			<input style="width:60px" type="text" placeholder="Shipping Name" name="shipping_method_title[120]" value="Local pickup">
+			<select name="shipping_method[120]">
+				<optgroup label="Shipping Method">
+					<option value="">N/A</option>
+					<option value="flat_rate"></option><option value="free_shipping"></option><option value="local_pickup" selected="selected"></option><option value="dokan_product_shipping">Regular Shipping</option><option value="dokan_vendor_shipping"></option><option value="other">Other</option>				</optgroup>
+			</select>
+			<input type="hidden" name="shipping_method_id[]" value="120">
+		</div>
+	</td>
+
+	
+	<td class="item_cost" width="1%">&nbsp;</td>
+	<td class="quantity" width="1%">&nbsp;</td>
+
+	<td class="line_cost" width="1%">
+		<div class="view">
+			<span class="woocommerce-Price-amount amount"><span class="woocommerce-Price-currencySymbol">$</span>0.00</span>		</div>
+		<div class="edit" style="display: none;">
+			<input style="width:60px" type="text" name="shipping_cost[120]" placeholder="0" value="0.00" class="line_total wc_input_price">
+		</div>
+		<div class="refund" style="display: none;">
+			<input style="width:60px" type="text" name="refund_line_total[120]" placeholder="0" class="refund_line_total wc_input_price">
+		</div>
+	</td>
+
+	
+	<td class="wc-order-edit-line-item">
+			</td>
+</tr>
+        </tbody>
+        <tbody id="order_fee_line_items">
+                </tbody>
+        <tbody id="order_refunds">
+                </tbody>
+    </table>
+</div>
+<div class="wc-order-data-row wc-order-totals-items wc-order-items-editable">
+        <table class="wc-order-totals">
+        <tbody><tr>
+            <td>Discount <span class="tips" data-tip="This is the total discount. Discounts are defined per line item." data-original-title="" title="">[?]</span>:</td>
+            <td class="total">
+                <span class="woocommerce-Price-amount amount"><span class="woocommerce-Price-currencySymbol">$</span>0.00</span>            </td>
+            <td width="1%"></td>
+        </tr>
+
+        
+        <tr>
+            <td>Shipping <span class="tips" data-tip="This is the shipping and handling total costs for the order." data-original-title="" title="">[?]</span>:</td>
+            <td class="total"><span class="woocommerce-Price-amount amount"><span class="woocommerce-Price-currencySymbol">$</span>0.00</span></td>
+            <td width="1%"></td>
+        </tr>
+
+        
+                            
+        
+        <tr>
+            <td>Order Total:</td>
+            <td class="total">
+                <div class="view"><span class="woocommerce-Price-amount amount"><span class="woocommerce-Price-currencySymbol">$</span>300.00</span></div>
+                <div class="edit" style="display: none;">
+                    <input type="text" class="wc_input_price" id="_order_total" name="_order_total" placeholder="0" value="300.00">
+                    <div class="clear"></div>
+                </div>
+            </td>
+            <td></td>
+        </tr>
+
+        
+        <tr>
+            <td class="refunded-total">Refunded:</td>
+            <td class="total refunded-total">-<span class="woocommerce-Price-amount amount"><span class="woocommerce-Price-currencySymbol">$</span>0.00</span></td>
+            <td width="1%"></td>
+        </tr>
+
+        
+    </tbody></table>
+    <div class="clear"></div>
+</div>
+
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="dokan-left dokan-order-billing-address">
+                <div class="dokan-panel dokan-panel-default">
+                    <div class="dokan-panel-heading"><strong>Billing Address</strong></div>
+                    <div class="dokan-panel-body">
+                        Customer One<br>Customer_choice<br>Address, 205/4, West Kafrul, Begum Rokeya Shoroni, Taltola, Mirpur, Dhaka - 1207.<br>dhaka<br>Dhaka<br>1207                    </div>
+                </div>
+            </div>
+
+            <div class="dokan-left dokan-order-shipping-address">
+                <div class="dokan-panel dokan-panel-default">
+                    <div class="dokan-panel-heading"><strong>Shipping Address</strong></div>
+                    <div class="dokan-panel-body">
+                        Customer One<br>Customer_choice<br>Address, 205/4, West Kafrul, Begum Rokeya Shoroni, Taltola, Mirpur, Dhaka - 1207.<br>dhaka<br>Dhaka<br>1207                    </div>
+                </div>
+            </div>
+
+            <div class="clear"></div>
+
+            <div class="" style="width: 100%">
+                <div class="dokan-panel dokan-panel-default">
+                    <div class="dokan-panel-heading"><strong>Downloadable Product Permission</strong></div>
+                    <div class="dokan-panel-body">
+                        <div class="order_download_permissions wc-metaboxes-wrapper">
+
+    <div class="panel-group" id="accordion">
+            </div>
+
+    <div class="toolbar dokan-clearfix">
+
+        <div class="dokan-w7" style="margin-right: 5px;">
+            <select name="grant_access_id" class="grant_access_id dokan-select2 dokan-form-control select2-hidden-accessible" data-placeholder="Choose a downloadable product…" multiple="" tabindex="-1" aria-hidden="true">
+                <option value=""></option>            </select><span class="select2 select2-container select2-container--default" dir="ltr" style="width: 309px;"><span class="selection"><span class="select2-selection select2-selection--multiple" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="-1"><ul class="select2-selection__rendered"><li class="select2-search select2-search--inline"><input class="select2-search__field" type="search" tabindex="0" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" role="textbox" aria-autocomplete="list" placeholder="Choose a downloadable product…" style="width: 303px;"></li></ul></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+        </div>
+
+        <div class="dokan-w4">
+            <button type="button" class="dokan-btn dokan-btn-success grant_access" data-order-id="269" data-nonce="2f6d62d0f6">Grant Access</button>
+        </div>
+
+    </div> <!-- .toolbar -->
+</div> <!-- .order_download_permissions -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="dokan-w4 dokan-order-right-content">
+        <div class="dokan-clearfix">
+            <div class="" style="width:100%">
+                <div class="dokan-panel dokan-panel-default">
+                    <div class="dokan-panel-heading"><strong>General Details</strong></div>
+                    <div class="dokan-panel-body general-details">
+                        <ul class="list-unstyled order-status">
+                            <li>
+                                <span>Order Status:</span>
+                                <label class="dokan-label dokan-label-default">Cancelled</label>
+
+                                                            </li>
+                                                            <li class="dokan-hide">
+                                    <form id="dokan-order-status-form" action="" method="post">
+
+                                        <select id="order_status" name="order_status" class="form-control">
+                                            <option value="wc-pending">Pending payment</option><option value="wc-processing">Processing</option><option value="wc-on-hold">On hold</option><option value="wc-completed">Completed</option><option value="wc-cancelled" selected="selected">Cancelled</option><option value="wc-refunded">Refunded</option><option value="wc-failed">Failed</option>                                        </select>
+
+                                        <input type="hidden" name="order_id" value="269">
+                                        <input type="hidden" name="action" value="dokan_change_status">
+                                        <input type="hidden" name="_wpnonce" value="26004e8412">
+                                        <input type="submit" class="dokan-btn dokan-btn-success dokan-btn-sm" name="dokan_change_status" value="Update">
+
+                                        <a href="#" class="dokan-btn dokan-btn-default dokan-btn-sm dokan-cancel-status">Cancel</a>
+                                    </form>
+                                </li>
+                            
+                            <li>
+                                <span>Order Date:</span>
+                                July 19, 2019, 3:14 pm                            </li>
+                        </ul>
+                                                <ul class="list-unstyled customer-details">
+                            <li>
+                                <span>Customer:</span>
+                                                                <a href="#">customer</a><br>
+                            </li>
+                            <li>
+                                <span>Email:</span>
+                                customer@yahoo.com                            </li>
+                            <li>
+                                <span>Phone:</span>
+                                0187453458                            </li>
+                            <li>
+                                <span>Customer IP:</span>
+                                ::1                            </li>
+                        </ul>
+                                                                                            </div>
+                </div>
+            </div>
+
+            <div class="" style="width:100%">
+                <div class="dokan-panel dokan-panel-default">
+                    <div class="dokan-panel-heading"><strong>Order Notes</strong></div>
+                    <div class="dokan-panel-body" id="dokan-order-notes">
+                        <ul class="order_notes list-unstyled">                                <li rel="235" class="note">
+                                    <div class="note_content">
+                                        <p>Unpaid order cancelled – time limit reached. Order status changed from Pending payment to Cancelled.</p>
+                                    </div>
+                                    <p class="meta">
+                                        added 21 hours ago                                                                                    <a href="#" class="delete_note">Delete note</a>
+                                                                            </p>
+                                </li>
+                                                                <li rel="234" class="note">
+                                    <div class="note_content">
+                                        <p>Order status changed from On hold to Pending payment.</p>
+                                    </div>
+                                    <p class="meta">
+                                        added 22 hours ago                                                                                    <a href="#" class="delete_note">Delete note</a>
+                                                                            </p>
+                                </li>
+                                                                <li rel="233" class="note">
+                                    <div class="note_content">
+                                        <p>Awaiting BACS payment Order status changed from Pending payment to On hold.</p>
+                                    </div>
+                                    <p class="meta">
+                                        added 1 day ago                                                                                    <a href="#" class="delete_note">Delete note</a>
+                                                                            </p>
+                                </li>
+                                </ul>                        <div class="add_note">
+                                                            <h4>Add note</h4>
+                                <form class="dokan-form-inline" id="add-order-note" role="form" method="post">
+                                    <p>
+                                        <textarea type="text" id="add-note-content" name="note" class="form-control" cols="19" rows="3"></textarea>
+                                    </p>
+                                    <div class="clearfix">
+                                        <div class="order_note_type dokan-form-group">
+                                            <select name="note_type" id="order_note_type" class="dokan-form-control">
+                                                <option value="customer">Customer note</option>
+                                                <option value="">Private note</option>
+                                            </select>
+                                        </div>
+
+                                        <input type="hidden" name="security" value="0c6fa4c863">
+                                        <input type="hidden" name="delete-note-security" id="delete-note-security" value="cce1dee495">
+                                        <input type="hidden" name="post_id" value="269">
+                                        <input type="hidden" name="action" value="dokan_add_order_note">
+                                        <input type="submit" name="add_order_note" class="add_note btn btn-sm btn-theme" value="Add Note">
+                                    </div>
+                                </form>
+                            
+                            <div class="clearfix dokan-form-group" style="margin-top: 10px;">
+                                <!-- Trigger the modal with a button -->
+                                <input type="button" id="dokan-add-tracking-number" name="add_tracking_number" class="dokan-btn dokan-btn-success" value="Tracking Number">
+
+                                <form id="add-shipping-tracking-form" method="post" class="dokan-hide" style="margin-top: 10px;">
+                                    <div class="dokan-form-group">
+                                        <label class="dokan-control-label">Shipping Provider Name / URL</label>
+                                        <input type="text" name="shipping_provider" id="shipping_provider" class="dokan-form-control" value="">
+                                    </div>
+
+                                    <div class="dokan-form-group">
+                                        <label class="dokan-control-label">Tracking Number</label>
+                                        <input type="text" name="tracking_number" id="tracking_number" class="dokan-form-control" value="">
+                                    </div>
+
+                                    <div class="dokan-form-group">
+                                        <label class="dokan-control-label">Date Shipped</label>
+                                        <input type="text" name="shipped_date" id="shipped-date" class="dokan-form-control hasDatepicker" value="" placeholder="F j, Y">
+                                    </div>
+
+                                    <input type="hidden" name="security" id="security" value="8aad016136">
+                                    <input type="hidden" id="dokan_security_nonce" name="dokan_security_nonce" value="53b7749d8c"><input type="hidden" name="_wp_http_referer" value="/dokan/dashboard/orders/?order_id=269&amp;_wpnonce=f82533812e">                                    <input type="hidden" name="post_id" id="post-id" value="269">
+                                    <input type="hidden" name="action" id="action" value="dokan_add_shipping_tracking_info">
+
+                                    <div class="dokan-form-group">
+                                        <input id="add-tracking-details" type="button" class="btn btn-primary" value="Add Tracking Details">
+                                        <button type="button" class="btn btn-default" id="dokan-cancel-tracking-note">Close</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div> <!-- .add_note -->
+                    </div> <!-- .dokan-panel-body -->
+                </div> <!-- .dokan-panel -->
+            </div>
+        </div> <!-- .row -->
+    </div> <!-- .col-md-4 -->
+</div>
+
+            </article>
+
+
+            
+        </div> <!-- #primary .content-area -->
+
+        
+    </div><!-- .dokan-dashboard-wrap -->
+
+
+                    </div><!-- .entry-content -->
+</article><!-- #post-9 -->
+
+            
+        
+    </div><!-- #content .site-content -->
+</div><!-- #primary .content-area -->
+
+</div><!-- .row -->
+</div><!-- .container -->
+</div><!-- #main .site-main -->
+
+<footer id="colophon" class="site-footer" role="contentinfo">
+    <div class="footer-widget-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                                    </div>
+
+                <div class="col-md-3">
+                                    </div>
+
+                <div class="col-md-3">
+                                    </div>
+
+                <div class="col-md-3">
+                                    </div>
+            </div> <!-- .footer-widget-area -->
+        </div>
+    </div>
+
+    <div class="copy-container">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="footer-copy">
+                        <div class="col-md-6 site-info">
+                            © 2019, Dokan. All rights are reserved.Powered by <a href="http://wedevs.com/theme/dokan/?utm_source=dokan&amp;utm_medium=theme_footer&amp;utm_campaign=product" target="_blank">Dokan</a> from <a href="http://wedevs.com/?utm_source=dokan&amp;utm_medium=theme_footer&amp;utm_campaign=product" target="_blank">weDevs</a>                        </div><!-- .site-info -->
+
+                        <div class="col-md-6 footer-gateway">
+                            <div class="menu list-inline pull-right"><ul>
+<li class="page_item page-item-6"><a href="http://localhost:8888/dokan/cart/">Cart</a></li>
+<li class="page_item page-item-7"><a href="http://localhost:8888/dokan/checkout/">Checkout</a></li>
+<li class="page_item page-item-9 page_item_has_children current_page_item"><a href="http://localhost:8888/dokan/dashboard/" aria-current="page">Dashboard</a></li>
+<li class="page_item page-item-8"><a href="http://localhost:8888/dokan/my-account/">My account</a></li>
+<li class="page_item page-item-11"><a href="http://localhost:8888/dokan/my-orders/">My Orders</a></li>
+<li class="page_item page-item-2"><a href="http://localhost:8888/dokan/sample-page/">Sample Page</a></li>
+<li class="page_item page-item-5"><a href="http://localhost:8888/dokan/shop/">Shop</a></li>
+<li class="page_item page-item-10"><a href="http://localhost:8888/dokan/store-listing/">Store List</a></li>
+</ul></div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- .row -->
+        </div><!-- .container -->
+    </div> <!-- .copy-container -->
+</footer><!-- #colophon .site-footer -->
+</div><!-- #page .hfeed .site -->
+
+	<!--[if lte IE 8]>
+	<style>
+		.attachment:focus {
+			outline: #1e8cbe solid;
+		}
+		.selected.attachment {
+			outline: #1e8cbe solid;
+		}
+	</style>
+	<![endif]-->
+	<script type="text/html" id="tmpl-media-frame">
+		<div class="media-frame-menu"></div>
+		<div class="media-frame-title"></div>
+		<div class="media-frame-router"></div>
+		<div class="media-frame-content"></div>
+		<div class="media-frame-toolbar"></div>
+		<div class="media-frame-uploader"></div>
+	</script>
+
+	<script type="text/html" id="tmpl-media-modal">
+		<div tabindex="0" class="media-modal wp-core-ui">
+			<button type="button" class="media-modal-close"><span class="media-modal-icon"><span class="screen-reader-text">Close media panel</span></span></button>
+			<div class="media-modal-content"></div>
+		</div>
+		<div class="media-modal-backdrop"></div>
+	</script>
+
+	<script type="text/html" id="tmpl-uploader-window">
+		<div class="uploader-window-content">
+			<h1>Drop files to upload</h1>
+		</div>
+	</script>
+
+	<script type="text/html" id="tmpl-uploader-editor">
+		<div class="uploader-editor-content">
+			<div class="uploader-editor-title">Drop files to upload</div>
+		</div>
+	</script>
+
+	<script type="text/html" id="tmpl-uploader-inline">
+		<# var messageClass = data.message ? 'has-upload-message' : 'no-upload-message'; #>
+		<# if ( data.canClose ) { #>
+		<button class="close dashicons dashicons-no"><span class="screen-reader-text">Close uploader</span></button>
+		<# } #>
+		<div class="uploader-inline-content {{ messageClass }}">
+		<# if ( data.message ) { #>
+			<h2 class="upload-message">{{ data.message }}</h2>
+		<# } #>
+					<div class="upload-ui">
+				<h2 class="upload-instructions drop-instructions">Drop files anywhere to upload</h2>
+				<p class="upload-instructions drop-instructions">or</p>
+				<button type="button" class="browser button button-hero">Select Files</button>
+			</div>
+
+			<div class="upload-inline-status"></div>
+
+			<div class="post-upload-ui">
+				
+				<p class="max-upload-size">
+				Maximum upload file size: 8 MB.				</p>
+
+				<# if ( data.suggestedWidth && data.suggestedHeight ) { #>
+					<p class="suggested-dimensions">
+						Suggested image dimensions: {{data.suggestedWidth}} by {{data.suggestedHeight}} pixels.					</p>
+				<# } #>
+
+							</div>
+				</div>
+	</script>
+
+	<script type="text/html" id="tmpl-media-library-view-switcher">
+		<a href="/dokan/dashboard/orders/?order_id=269&#038;_wpnonce=f82533812e&#038;mode=list" class="view-list">
+			<span class="screen-reader-text">List View</span>
+		</a>
+		<a href="/dokan/dashboard/orders/?order_id=269&#038;_wpnonce=f82533812e&#038;mode=grid" class="view-grid current">
+			<span class="screen-reader-text">Grid View</span>
+		</a>
+	</script>
+
+	<script type="text/html" id="tmpl-uploader-status">
+		<h2>Uploading</h2>
+		<button type="button" class="button-link upload-dismiss-errors"><span class="screen-reader-text">Dismiss Errors</span></button>
+
+		<div class="media-progress-bar"><div></div></div>
+		<div class="upload-details">
+			<span class="upload-count">
+				<span class="upload-index"></span> / <span class="upload-total"></span>
+			</span>
+			<span class="upload-detail-separator">&ndash;</span>
+			<span class="upload-filename"></span>
+		</div>
+		<div class="upload-errors"></div>
+	</script>
+
+	<script type="text/html" id="tmpl-uploader-status-error">
+		<span class="upload-error-filename">{{{ data.filename }}}</span>
+		<span class="upload-error-message">{{ data.message }}</span>
+	</script>
+
+	<script type="text/html" id="tmpl-edit-attachment-frame">
+		<div class="edit-media-header">
+			<button class="left dashicons <# if ( ! data.hasPrevious ) { #> disabled <# } #>"><span class="screen-reader-text">Edit previous media item</span></button>
+			<button class="right dashicons <# if ( ! data.hasNext ) { #> disabled <# } #>"><span class="screen-reader-text">Edit next media item</span></button>
+		</div>
+		<div class="media-frame-title"></div>
+		<div class="media-frame-content"></div>
+	</script>
+
+	<script type="text/html" id="tmpl-attachment-details-two-column">
+		<div class="attachment-media-view {{ data.orientation }}">
+			<div class="thumbnail thumbnail-{{ data.type }}">
+				<# if ( data.uploading ) { #>
+					<div class="media-progress-bar"><div></div></div>
+				<# } else if ( data.sizes && data.sizes.large ) { #>
+					<img class="details-image" src="{{ data.sizes.large.url }}" draggable="false" alt="" />
+				<# } else if ( data.sizes && data.sizes.full ) { #>
+					<img class="details-image" src="{{ data.sizes.full.url }}" draggable="false" alt="" />
+				<# } else if ( -1 === jQuery.inArray( data.type, [ 'audio', 'video' ] ) ) { #>
+					<img class="details-image icon" src="{{ data.icon }}" draggable="false" alt="" />
+				<# } #>
+
+				<# if ( 'audio' === data.type ) { #>
+				<div class="wp-media-wrapper">
+					<audio style="visibility: hidden" controls class="wp-audio-shortcode" width="100%" preload="none">
+						<source type="{{ data.mime }}" src="{{ data.url }}"/>
+					</audio>
+				</div>
+				<# } else if ( 'video' === data.type ) {
+					var w_rule = '';
+					if ( data.width ) {
+						w_rule = 'width: ' + data.width + 'px;';
+					} else if ( wp.media.view.settings.contentWidth ) {
+						w_rule = 'width: ' + wp.media.view.settings.contentWidth + 'px;';
+					}
+				#>
+				<div style="{{ w_rule }}" class="wp-media-wrapper wp-video">
+					<video controls="controls" class="wp-video-shortcode" preload="metadata"
+						<# if ( data.width ) { #>width="{{ data.width }}"<# } #>
+						<# if ( data.height ) { #>height="{{ data.height }}"<# } #>
+						<# if ( data.image && data.image.src !== data.icon ) { #>poster="{{ data.image.src }}"<# } #>>
+						<source type="{{ data.mime }}" src="{{ data.url }}"/>
+					</video>
+				</div>
+				<# } #>
+
+				<div class="attachment-actions">
+					<# if ( 'image' === data.type && ! data.uploading && data.sizes && data.can.save ) { #>
+					<button type="button" class="button edit-attachment">Edit Image</button>
+					<# } else if ( 'pdf' === data.subtype && data.sizes ) { #>
+					Document Preview					<# } #>
+				</div>
+			</div>
+		</div>
+		<div class="attachment-info">
+			<span class="settings-save-status">
+				<span class="spinner"></span>
+				<span class="saved">Saved.</span>
+			</span>
+			<div class="details">
+				<div class="filename"><strong>File name:</strong> {{ data.filename }}</div>
+				<div class="filename"><strong>File type:</strong> {{ data.mime }}</div>
+				<div class="uploaded"><strong>Uploaded on:</strong> {{ data.dateFormatted }}</div>
+
+				<div class="file-size"><strong>File size:</strong> {{ data.filesizeHumanReadable }}</div>
+				<# if ( 'image' === data.type && ! data.uploading ) { #>
+					<# if ( data.width && data.height ) { #>
+						<div class="dimensions"><strong>Dimensions:</strong>
+							{{ data.width }} by {{ data.height }} pixels						</div>
+					<# } #>
+				<# } #>
+
+				<# if ( data.fileLength && data.fileLengthHumanReadable ) { #>
+					<div class="file-length"><strong>Length:</strong>
+						<span aria-hidden="true">{{ data.fileLength }}</span>
+						<span class="screen-reader-text">{{ data.fileLengthHumanReadable }}</span>
+					</div>
+				<# } #>
+
+				<# if ( 'audio' === data.type && data.meta.bitrate ) { #>
+					<div class="bitrate">
+						<strong>Bitrate:</strong> {{ Math.round( data.meta.bitrate / 1000 ) }}kb/s
+						<# if ( data.meta.bitrate_mode ) { #>
+						{{ ' ' + data.meta.bitrate_mode.toUpperCase() }}
+						<# } #>
+					</div>
+				<# } #>
+
+				<div class="compat-meta">
+					<# if ( data.compat && data.compat.meta ) { #>
+						{{{ data.compat.meta }}}
+					<# } #>
+				</div>
+			</div>
+
+			<div class="settings">
+				<# var maybeReadOnly = data.can.save || data.allowLocalEdits ? '' : 'readonly'; #>
+				<# if ( 'image' === data.type ) { #>
+					<label class="setting" data-setting="alt">
+						<span class="name">Alternative Text</span>
+						<input type="text" value="{{ data.alt }}" aria-describedby="alt-text-description" {{ maybeReadOnly }} />
+					</label>
+					<p class="description" id="alt-text-description"><a href="https://www.w3.org/WAI/tutorials/images/decision-tree" target="_blank" rel="noopener noreferrer">Describe the purpose of the image<span class="screen-reader-text"> (opens in a new tab)</span></a>. Leave empty if the image is purely decorative.</p>
+				<# } #>
+								<label class="setting" data-setting="title">
+					<span class="name">Title</span>
+					<input type="text" value="{{ data.title }}" {{ maybeReadOnly }} />
+				</label>
+								<# if ( 'audio' === data.type ) { #>
+								<label class="setting" data-setting="artist">
+					<span class="name">Artist</span>
+					<input type="text" value="{{ data.artist || data.meta.artist || '' }}" />
+				</label>
+								<label class="setting" data-setting="album">
+					<span class="name">Album</span>
+					<input type="text" value="{{ data.album || data.meta.album || '' }}" />
+				</label>
+								<# } #>
+				<label class="setting" data-setting="caption">
+					<span class="name">Caption</span>
+					<textarea {{ maybeReadOnly }}>{{ data.caption }}</textarea>
+				</label>
+				<label class="setting" data-setting="description">
+					<span class="name">Description</span>
+					<textarea {{ maybeReadOnly }}>{{ data.description }}</textarea>
+				</label>
+				<div class="setting">
+					<span class="name">Uploaded By</span>
+					<span class="value">{{ data.authorName }}</span>
+				</div>
+				<# if ( data.uploadedToTitle ) { #>
+					<div class="setting">
+						<span class="name">Uploaded To</span>
+						<# if ( data.uploadedToLink ) { #>
+							<span class="value"><a href="{{ data.uploadedToLink }}">{{ data.uploadedToTitle }}</a></span>
+						<# } else { #>
+							<span class="value">{{ data.uploadedToTitle }}</span>
+						<# } #>
+					</div>
+				<# } #>
+				<label class="setting" data-setting="url">
+					<span class="name">Copy Link</span>
+					<input type="text" value="{{ data.url }}" readonly />
+				</label>
+				<div class="attachment-compat"></div>
+			</div>
+
+			<div class="actions">
+				<a class="view-attachment" href="{{ data.link }}">View attachment page</a>
+				<# if ( data.can.save ) { #> |
+					<a href="{{ data.editLink }}">Edit more details</a>
+				<# } #>
+				<# if ( ! data.uploading && data.can.remove ) { #> |
+											<button type="button" class="button-link delete-attachment">Delete Permanently</button>
+									<# } #>
+			</div>
+
+		</div>
+	</script>
+
+	<script type="text/html" id="tmpl-attachment">
+		<div class="attachment-preview js--select-attachment type-{{ data.type }} subtype-{{ data.subtype }} {{ data.orientation }}">
+			<div class="thumbnail">
+				<# if ( data.uploading ) { #>
+					<div class="media-progress-bar"><div style="width: {{ data.percent }}%"></div></div>
+				<# } else if ( 'image' === data.type && data.sizes ) { #>
+					<div class="centered">
+						<img src="{{ data.size.url }}" draggable="false" alt="" />
+					</div>
+				<# } else { #>
+					<div class="centered">
+						<# if ( data.image && data.image.src && data.image.src !== data.icon ) { #>
+							<img src="{{ data.image.src }}" class="thumbnail" draggable="false" alt="" />
+						<# } else if ( data.sizes && data.sizes.medium ) { #>
+							<img src="{{ data.sizes.medium.url }}" class="thumbnail" draggable="false" alt="" />
+						<# } else { #>
+							<img src="{{ data.icon }}" class="icon" draggable="false" alt="" />
+						<# } #>
+					</div>
+					<div class="filename">
+						<div>{{ data.filename }}</div>
+					</div>
+				<# } #>
+			</div>
+			<# if ( data.buttons.close ) { #>
+				<button type="button" class="button-link attachment-close media-modal-icon"><span class="screen-reader-text">Remove</span></button>
+			<# } #>
+		</div>
+		<# if ( data.buttons.check ) { #>
+			<button type="button" class="check" tabindex="-1"><span class="media-modal-icon"></span><span class="screen-reader-text">Deselect</span></button>
+		<# } #>
+		<#
+		var maybeReadOnly = data.can.save || data.allowLocalEdits ? '' : 'readonly';
+		if ( data.describe ) {
+			if ( 'image' === data.type ) { #>
+				<input type="text" value="{{ data.caption }}" class="describe" data-setting="caption"
+					placeholder="Caption this image&hellip;" {{ maybeReadOnly }} />
+			<# } else { #>
+				<input type="text" value="{{ data.title }}" class="describe" data-setting="title"
+					<# if ( 'video' === data.type ) { #>
+						placeholder="Describe this video&hellip;"
+					<# } else if ( 'audio' === data.type ) { #>
+						placeholder="Describe this audio file&hellip;"
+					<# } else { #>
+						placeholder="Describe this media file&hellip;"
+					<# } #> {{ maybeReadOnly }} />
+			<# }
+		} #>
+	</script>
+
+	<script type="text/html" id="tmpl-attachment-details">
+		<h2>
+			Attachment Details			<span class="settings-save-status">
+				<span class="spinner"></span>
+				<span class="saved">Saved.</span>
+			</span>
+		</h2>
+		<div class="attachment-info">
+			<div class="thumbnail thumbnail-{{ data.type }}">
+				<# if ( data.uploading ) { #>
+					<div class="media-progress-bar"><div></div></div>
+				<# } else if ( 'image' === data.type && data.sizes ) { #>
+					<img src="{{ data.size.url }}" draggable="false" alt="" />
+				<# } else { #>
+					<img src="{{ data.icon }}" class="icon" draggable="false" alt="" />
+				<# } #>
+			</div>
+			<div class="details">
+				<div class="filename">{{ data.filename }}</div>
+				<div class="uploaded">{{ data.dateFormatted }}</div>
+
+				<div class="file-size">{{ data.filesizeHumanReadable }}</div>
+				<# if ( 'image' === data.type && ! data.uploading ) { #>
+					<# if ( data.width && data.height ) { #>
+						<div class="dimensions">
+							{{ data.width }} by {{ data.height }} pixels						</div>
+					<# } #>
+
+					<# if ( data.can.save && data.sizes ) { #>
+						<a class="edit-attachment" href="{{ data.editLink }}&amp;image-editor" target="_blank">Edit Image</a>
+					<# } #>
+				<# } #>
+
+				<# if ( data.fileLength && data.fileLengthHumanReadable ) { #>
+					<div class="file-length">Length:						<span aria-hidden="true">{{ data.fileLength }}</span>
+						<span class="screen-reader-text">{{ data.fileLengthHumanReadable }}</span>
+					</div>
+				<# } #>
+
+				<# if ( ! data.uploading && data.can.remove ) { #>
+											<button type="button" class="button-link delete-attachment">Delete Permanently</button>
+									<# } #>
+
+				<div class="compat-meta">
+					<# if ( data.compat && data.compat.meta ) { #>
+						{{{ data.compat.meta }}}
+					<# } #>
+				</div>
+			</div>
+		</div>
+
+		<# var maybeReadOnly = data.can.save || data.allowLocalEdits ? '' : 'readonly'; #>
+		<# if ( 'image' === data.type ) { #>
+			<label class="setting" data-setting="alt">
+				<span class="name">Alt Text</span>
+				<input type="text" value="{{ data.alt }}" aria-describedby="alt-text-description" {{ maybeReadOnly }} />
+			</label>
+			<p class="description" id="alt-text-description"><a href="https://www.w3.org/WAI/tutorials/images/decision-tree" target="_blank" rel="noopener noreferrer">Describe the purpose of the image<span class="screen-reader-text"> (opens in a new tab)</span></a>. Leave empty if the image is purely decorative.</p>
+		<# } #>
+				<label class="setting" data-setting="title">
+			<span class="name">Title</span>
+			<input type="text" value="{{ data.title }}" {{ maybeReadOnly }} />
+		</label>
+				<# if ( 'audio' === data.type ) { #>
+				<label class="setting" data-setting="artist">
+			<span class="name">Artist</span>
+			<input type="text" value="{{ data.artist || data.meta.artist || '' }}" />
+		</label>
+				<label class="setting" data-setting="album">
+			<span class="name">Album</span>
+			<input type="text" value="{{ data.album || data.meta.album || '' }}" />
+		</label>
+				<# } #>
+		<label class="setting" data-setting="caption">
+			<span class="name">Caption</span>
+			<textarea {{ maybeReadOnly }}>{{ data.caption }}</textarea>
+		</label>
+		<label class="setting" data-setting="description">
+			<span class="name">Description</span>
+			<textarea {{ maybeReadOnly }}>{{ data.description }}</textarea>
+		</label>
+		<label class="setting" data-setting="url">
+			<span class="name">Copy Link</span>
+			<input type="text" value="{{ data.url }}" readonly />
+		</label>
+	</script>
+
+	<script type="text/html" id="tmpl-media-selection">
+		<div class="selection-info">
+			<span class="count"></span>
+			<# if ( data.editable ) { #>
+				<button type="button" class="button-link edit-selection">Edit Selection</button>
+			<# } #>
+			<# if ( data.clearable ) { #>
+				<button type="button" class="button-link clear-selection">Clear</button>
+			<# } #>
+		</div>
+		<div class="selection-view"></div>
+	</script>
+
+	<script type="text/html" id="tmpl-attachment-display-settings">
+		<h2>Attachment Display Settings</h2>
+
+		<# if ( 'image' === data.type ) { #>
+			<label class="setting align">
+				<span>Alignment</span>
+				<select class="alignment"
+					data-setting="align"
+					<# if ( data.userSettings ) { #>
+						data-user-setting="align"
+					<# } #>>
+
+					<option value="left">
+						Left					</option>
+					<option value="center">
+						Center					</option>
+					<option value="right">
+						Right					</option>
+					<option value="none" selected>
+						None					</option>
+				</select>
+			</label>
+		<# } #>
+
+		<div class="setting">
+			<label>
+				<# if ( data.model.canEmbed ) { #>
+					<span>Embed or Link</span>
+				<# } else { #>
+					<span>Link To</span>
+				<# } #>
+
+				<select class="link-to"
+					data-setting="link"
+					<# if ( data.userSettings && ! data.model.canEmbed ) { #>
+						data-user-setting="urlbutton"
+					<# } #>>
+
+				<# if ( data.model.canEmbed ) { #>
+					<option value="embed" selected>
+						Embed Media Player					</option>
+					<option value="file">
+				<# } else { #>
+					<option value="none" selected>
+						None					</option>
+					<option value="file">
+				<# } #>
+					<# if ( data.model.canEmbed ) { #>
+						Link to Media File					<# } else { #>
+						Media File					<# } #>
+					</option>
+					<option value="post">
+					<# if ( data.model.canEmbed ) { #>
+						Link to Attachment Page					<# } else { #>
+						Attachment Page					<# } #>
+					</option>
+				<# if ( 'image' === data.type ) { #>
+					<option value="custom">
+						Custom URL					</option>
+				<# } #>
+				</select>
+			</label>
+			<input type="text" class="link-to-custom" data-setting="linkUrl" />
+		</div>
+
+		<# if ( 'undefined' !== typeof data.sizes ) { #>
+			<label class="setting">
+				<span>Size</span>
+				<select class="size" name="size"
+					data-setting="size"
+					<# if ( data.userSettings ) { #>
+						data-user-setting="imgsize"
+					<# } #>>
+											<#
+						var size = data.sizes['thumbnail'];
+						if ( size ) { #>
+							<option value="thumbnail" >
+								Thumbnail &ndash; {{ size.width }} &times; {{ size.height }}
+							</option>
+						<# } #>
+											<#
+						var size = data.sizes['medium'];
+						if ( size ) { #>
+							<option value="medium" >
+								Medium &ndash; {{ size.width }} &times; {{ size.height }}
+							</option>
+						<# } #>
+											<#
+						var size = data.sizes['large'];
+						if ( size ) { #>
+							<option value="large" >
+								Large &ndash; {{ size.width }} &times; {{ size.height }}
+							</option>
+						<# } #>
+											<#
+						var size = data.sizes['full'];
+						if ( size ) { #>
+							<option value="full"  selected='selected'>
+								Full Size &ndash; {{ size.width }} &times; {{ size.height }}
+							</option>
+						<# } #>
+									</select>
+			</label>
+		<# } #>
+	</script>
+
+	<script type="text/html" id="tmpl-gallery-settings">
+		<h2>Gallery Settings</h2>
+
+		<label class="setting">
+			<span>Link To</span>
+			<select class="link-to"
+				data-setting="link"
+				<# if ( data.userSettings ) { #>
+					data-user-setting="urlbutton"
+				<# } #>>
+
+				<option value="post" <# if ( ! wp.media.galleryDefaults.link || 'post' == wp.media.galleryDefaults.link ) {
+					#>selected="selected"<# }
+				#>>
+					Attachment Page				</option>
+				<option value="file" <# if ( 'file' == wp.media.galleryDefaults.link ) { #>selected="selected"<# } #>>
+					Media File				</option>
+				<option value="none" <# if ( 'none' == wp.media.galleryDefaults.link ) { #>selected="selected"<# } #>>
+					None				</option>
+			</select>
+		</label>
+
+		<label class="setting">
+			<span>Columns</span>
+			<select class="columns" name="columns"
+				data-setting="columns">
+									<option value="1" <#
+						if ( 1 == wp.media.galleryDefaults.columns ) { #>selected="selected"<# }
+					#>>
+						1					</option>
+									<option value="2" <#
+						if ( 2 == wp.media.galleryDefaults.columns ) { #>selected="selected"<# }
+					#>>
+						2					</option>
+									<option value="3" <#
+						if ( 3 == wp.media.galleryDefaults.columns ) { #>selected="selected"<# }
+					#>>
+						3					</option>
+									<option value="4" <#
+						if ( 4 == wp.media.galleryDefaults.columns ) { #>selected="selected"<# }
+					#>>
+						4					</option>
+									<option value="5" <#
+						if ( 5 == wp.media.galleryDefaults.columns ) { #>selected="selected"<# }
+					#>>
+						5					</option>
+									<option value="6" <#
+						if ( 6 == wp.media.galleryDefaults.columns ) { #>selected="selected"<# }
+					#>>
+						6					</option>
+									<option value="7" <#
+						if ( 7 == wp.media.galleryDefaults.columns ) { #>selected="selected"<# }
+					#>>
+						7					</option>
+									<option value="8" <#
+						if ( 8 == wp.media.galleryDefaults.columns ) { #>selected="selected"<# }
+					#>>
+						8					</option>
+									<option value="9" <#
+						if ( 9 == wp.media.galleryDefaults.columns ) { #>selected="selected"<# }
+					#>>
+						9					</option>
+							</select>
+		</label>
+
+		<label class="setting">
+			<span>Random Order</span>
+			<input type="checkbox" data-setting="_orderbyRandom" />
+		</label>
+
+		<label class="setting size">
+			<span>Size</span>
+			<select class="size" name="size"
+				data-setting="size"
+				<# if ( data.userSettings ) { #>
+					data-user-setting="imgsize"
+				<# } #>
+				>
+									<option value="thumbnail">
+						Thumbnail					</option>
+									<option value="medium">
+						Medium					</option>
+									<option value="large">
+						Large					</option>
+									<option value="full">
+						Full Size					</option>
+							</select>
+		</label>
+	</script>
+
+	<script type="text/html" id="tmpl-playlist-settings">
+		<h2>Playlist Settings</h2>
+
+		<# var emptyModel = _.isEmpty( data.model ),
+			isVideo = 'video' === data.controller.get('library').props.get('type'); #>
+
+		<label class="setting">
+			<input type="checkbox" data-setting="tracklist" <# if ( emptyModel ) { #>
+				checked="checked"
+			<# } #> />
+			<# if ( isVideo ) { #>
+			<span>Show Video List</span>
+			<# } else { #>
+			<span>Show Tracklist</span>
+			<# } #>
+		</label>
+
+		<# if ( ! isVideo ) { #>
+		<label class="setting">
+			<input type="checkbox" data-setting="artists" <# if ( emptyModel ) { #>
+				checked="checked"
+			<# } #> />
+			<span>Show Artist Name in Tracklist</span>
+		</label>
+		<# } #>
+
+		<label class="setting">
+			<input type="checkbox" data-setting="images" <# if ( emptyModel ) { #>
+				checked="checked"
+			<# } #> />
+			<span>Show Images</span>
+		</label>
+	</script>
+
+	<script type="text/html" id="tmpl-embed-link-settings">
+		<label class="setting link-text">
+			<span>Link Text</span>
+			<input type="text" class="alignment" data-setting="linkText" />
+		</label>
+		<div class="embed-container" style="display: none;">
+			<div class="embed-preview"></div>
+		</div>
+	</script>
+
+	<script type="text/html" id="tmpl-embed-image-settings">
+		<div class="thumbnail">
+			<img src="{{ data.model.url }}" draggable="false" alt="" />
+		</div>
+
+		<label class="setting alt-text has-description">
+			<span>Alternative Text</span>
+			<input type="text" data-setting="alt" aria-describedby="alt-text-description" />
+		</label>
+		<p class="description" id="alt-text-description"><a href="https://www.w3.org/WAI/tutorials/images/decision-tree" target="_blank" rel="noopener noreferrer">Describe the purpose of the image<span class="screen-reader-text"> (opens in a new tab)</span></a>. Leave empty if the image is purely decorative.</p>
+
+					<label class="setting caption">
+				<span>Caption</span>
+				<textarea data-setting="caption" />
+			</label>
+		
+		<div class="setting align">
+			<span>Align</span>
+			<div class="button-group button-large" data-setting="align">
+				<button class="button" value="left">
+					Left				</button>
+				<button class="button" value="center">
+					Center				</button>
+				<button class="button" value="right">
+					Right				</button>
+				<button class="button active" value="none">
+					None				</button>
+			</div>
+		</div>
+
+		<div class="setting link-to">
+			<span>Link To</span>
+			<div class="button-group button-large" data-setting="link">
+				<button class="button" value="file">
+					Image URL				</button>
+				<button class="button" value="custom">
+					Custom URL				</button>
+				<button class="button active" value="none">
+					None				</button>
+			</div>
+			<input type="text" class="link-to-custom" data-setting="linkUrl" />
+		</div>
+	</script>
+
+	<script type="text/html" id="tmpl-image-details">
+		<div class="media-embed">
+			<div class="embed-media-settings">
+				<div class="column-image">
+					<div class="image">
+						<img src="{{ data.model.url }}" draggable="false" alt="" />
+
+						<# if ( data.attachment && window.imageEdit ) { #>
+							<div class="actions">
+								<input type="button" class="edit-attachment button" value="Edit Original" />
+								<input type="button" class="replace-attachment button" value="Replace" />
+							</div>
+						<# } #>
+					</div>
+				</div>
+				<div class="column-settings">
+					<label class="setting alt-text has-description">
+						<span>Alternative Text</span>
+						<input type="text" data-setting="alt" value="{{ data.model.alt }}" aria-describedby="alt-text-description" />
+					</label>
+					<p class="description" id="alt-text-description"><a href="https://www.w3.org/WAI/tutorials/images/decision-tree" target="_blank" rel="noopener noreferrer">Describe the purpose of the image<span class="screen-reader-text"> (opens in a new tab)</span></a>. Leave empty if the image is purely decorative.</p>
+
+											<label class="setting caption">
+							<span>Caption</span>
+							<textarea data-setting="caption">{{ data.model.caption }}</textarea>
+						</label>
+					
+					<h2>Display Settings</h2>
+					<div class="setting align">
+						<span>Align</span>
+						<div class="button-group button-large" data-setting="align">
+							<button class="button" value="left">
+								Left							</button>
+							<button class="button" value="center">
+								Center							</button>
+							<button class="button" value="right">
+								Right							</button>
+							<button class="button active" value="none">
+								None							</button>
+						</div>
+					</div>
+
+					<# if ( data.attachment ) { #>
+						<# if ( 'undefined' !== typeof data.attachment.sizes ) { #>
+							<label class="setting size">
+								<span>Size</span>
+								<select class="size" name="size"
+									data-setting="size"
+									<# if ( data.userSettings ) { #>
+										data-user-setting="imgsize"
+									<# } #>>
+																			<#
+										var size = data.sizes['thumbnail'];
+										if ( size ) { #>
+											<option value="thumbnail">
+												Thumbnail &ndash; {{ size.width }} &times; {{ size.height }}
+											</option>
+										<# } #>
+																			<#
+										var size = data.sizes['medium'];
+										if ( size ) { #>
+											<option value="medium">
+												Medium &ndash; {{ size.width }} &times; {{ size.height }}
+											</option>
+										<# } #>
+																			<#
+										var size = data.sizes['large'];
+										if ( size ) { #>
+											<option value="large">
+												Large &ndash; {{ size.width }} &times; {{ size.height }}
+											</option>
+										<# } #>
+																			<#
+										var size = data.sizes['full'];
+										if ( size ) { #>
+											<option value="full">
+												Full Size &ndash; {{ size.width }} &times; {{ size.height }}
+											</option>
+										<# } #>
+																		<option value="custom">
+										Custom Size									</option>
+								</select>
+							</label>
+						<# } #>
+							<div class="custom-size<# if ( data.model.size !== 'custom' ) { #> hidden<# } #>">
+								<label><span>Width <small>(px)</small></span> <input data-setting="customWidth" type="number" step="1" value="{{ data.model.customWidth }}" /></label><span class="sep">&times;</span><label><span>Height <small>(px)</small></span><input data-setting="customHeight" type="number" step="1" value="{{ data.model.customHeight }}" /></label>
+							</div>
+					<# } #>
+
+					<div class="setting link-to">
+						<span>Link To</span>
+						<select data-setting="link">
+						<# if ( data.attachment ) { #>
+							<option value="file">
+								Media File							</option>
+							<option value="post">
+								Attachment Page							</option>
+						<# } else { #>
+							<option value="file">
+								Image URL							</option>
+						<# } #>
+							<option value="custom">
+								Custom URL							</option>
+							<option value="none">
+								None							</option>
+						</select>
+						<input type="text" class="link-to-custom" data-setting="linkUrl" />
+					</div>
+					<div class="advanced-section">
+						<h2><button type="button" class="button-link advanced-toggle">Advanced Options</button></h2>
+						<div class="advanced-settings hidden">
+							<div class="advanced-image">
+								<label class="setting title-text">
+									<span>Image Title Attribute</span>
+									<input type="text" data-setting="title" value="{{ data.model.title }}" />
+								</label>
+								<label class="setting extra-classes">
+									<span>Image CSS Class</span>
+									<input type="text" data-setting="extraClasses" value="{{ data.model.extraClasses }}" />
+								</label>
+							</div>
+							<div class="advanced-link">
+								<div class="setting link-target">
+									<label><input type="checkbox" data-setting="linkTargetBlank" value="_blank" <# if ( data.model.linkTargetBlank ) { #>checked="checked"<# } #>>Open link in a new tab</label>
+								</div>
+								<label class="setting link-rel">
+									<span>Link Rel</span>
+									<input type="text" data-setting="linkRel" value="{{ data.model.linkRel }}" />
+								</label>
+								<label class="setting link-class-name">
+									<span>Link CSS Class</span>
+									<input type="text" data-setting="linkClassName" value="{{ data.model.linkClassName }}" />
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</script>
+
+	<script type="text/html" id="tmpl-image-editor">
+		<div id="media-head-{{ data.id }}"></div>
+		<div id="image-editor-{{ data.id }}"></div>
+	</script>
+
+	<script type="text/html" id="tmpl-audio-details">
+		<# var ext, html5types = {
+			mp3: wp.media.view.settings.embedMimes.mp3,
+			ogg: wp.media.view.settings.embedMimes.ogg
+		}; #>
+
+				<div class="media-embed media-embed-details">
+			<div class="embed-media-settings embed-audio-settings">
+				<audio style="visibility: hidden"
+	controls
+	class="wp-audio-shortcode"
+	width="{{ _.isUndefined( data.model.width ) ? 400 : data.model.width }}"
+	preload="{{ _.isUndefined( data.model.preload ) ? 'none' : data.model.preload }}"
+	<#
+		if ( ! _.isUndefined( data.model.autoplay ) && data.model.autoplay ) {
+		#> autoplay<#
+	}
+		if ( ! _.isUndefined( data.model.loop ) && data.model.loop ) {
+		#> loop<#
+	}
+	#>
+>
+	<# if ( ! _.isEmpty( data.model.src ) ) { #>
+	<source src="{{ data.model.src }}" type="{{ wp.media.view.settings.embedMimes[ data.model.src.split('.').pop() ] }}" />
+	<# } #>
+
+		<# if ( ! _.isEmpty( data.model.mp3 ) ) { #>
+	<source src="{{ data.model.mp3 }}" type="{{ wp.media.view.settings.embedMimes[ 'mp3' ] }}" />
+	<# } #>
+			<# if ( ! _.isEmpty( data.model.ogg ) ) { #>
+	<source src="{{ data.model.ogg }}" type="{{ wp.media.view.settings.embedMimes[ 'ogg' ] }}" />
+	<# } #>
+			<# if ( ! _.isEmpty( data.model.flac ) ) { #>
+	<source src="{{ data.model.flac }}" type="{{ wp.media.view.settings.embedMimes[ 'flac' ] }}" />
+	<# } #>
+			<# if ( ! _.isEmpty( data.model.m4a ) ) { #>
+	<source src="{{ data.model.m4a }}" type="{{ wp.media.view.settings.embedMimes[ 'm4a' ] }}" />
+	<# } #>
+			<# if ( ! _.isEmpty( data.model.wav ) ) { #>
+	<source src="{{ data.model.wav }}" type="{{ wp.media.view.settings.embedMimes[ 'wav' ] }}" />
+	<# } #>
+		</audio>
+	
+				<# if ( ! _.isEmpty( data.model.src ) ) {
+					ext = data.model.src.split('.').pop();
+					if ( html5types[ ext ] ) {
+						delete html5types[ ext ];
+					}
+				#>
+				<div class="setting">
+					<label for="audio-source">URL</label>
+					<input type="text" id="audio-source" readonly data-setting="src" value="{{ data.model.src }}" />
+					<button type="button" class="button-link remove-setting">Remove audio source</button>
+				</div>
+				<# } #>
+								<# if ( ! _.isEmpty( data.model.mp3 ) ) {
+					if ( ! _.isUndefined( html5types.mp3 ) ) {
+						delete html5types.mp3;
+					}
+				#>
+				<div class="setting">
+					<label for="mp3-source">MP3</span>
+					<input type="text" id="mp3-source" readonly data-setting="mp3" value="{{ data.model.mp3 }}" />
+					<button type="button" class="button-link remove-setting">Remove audio source</button>
+				</div>
+				<# } #>
+								<# if ( ! _.isEmpty( data.model.ogg ) ) {
+					if ( ! _.isUndefined( html5types.ogg ) ) {
+						delete html5types.ogg;
+					}
+				#>
+				<div class="setting">
+					<label for="ogg-source">OGG</span>
+					<input type="text" id="ogg-source" readonly data-setting="ogg" value="{{ data.model.ogg }}" />
+					<button type="button" class="button-link remove-setting">Remove audio source</button>
+				</div>
+				<# } #>
+								<# if ( ! _.isEmpty( data.model.flac ) ) {
+					if ( ! _.isUndefined( html5types.flac ) ) {
+						delete html5types.flac;
+					}
+				#>
+				<div class="setting">
+					<label for="flac-source">FLAC</span>
+					<input type="text" id="flac-source" readonly data-setting="flac" value="{{ data.model.flac }}" />
+					<button type="button" class="button-link remove-setting">Remove audio source</button>
+				</div>
+				<# } #>
+								<# if ( ! _.isEmpty( data.model.m4a ) ) {
+					if ( ! _.isUndefined( html5types.m4a ) ) {
+						delete html5types.m4a;
+					}
+				#>
+				<div class="setting">
+					<label for="m4a-source">M4A</span>
+					<input type="text" id="m4a-source" readonly data-setting="m4a" value="{{ data.model.m4a }}" />
+					<button type="button" class="button-link remove-setting">Remove audio source</button>
+				</div>
+				<# } #>
+								<# if ( ! _.isEmpty( data.model.wav ) ) {
+					if ( ! _.isUndefined( html5types.wav ) ) {
+						delete html5types.wav;
+					}
+				#>
+				<div class="setting">
+					<label for="wav-source">WAV</span>
+					<input type="text" id="wav-source" readonly data-setting="wav" value="{{ data.model.wav }}" />
+					<button type="button" class="button-link remove-setting">Remove audio source</button>
+				</div>
+				<# } #>
+				
+				<# if ( ! _.isEmpty( html5types ) ) { #>
+				<div class="setting">
+					<span>Add alternate sources for maximum HTML5 playback:</span>
+					<div class="button-large">
+					<# _.each( html5types, function (mime, type) { #>
+					<button class="button add-media-source" data-mime="{{ mime }}">{{ type }}</button>
+					<# } ) #>
+					</div>
+				</div>
+				<# } #>
+
+				<div class="setting preload">
+					<span>Preload</span>
+					<div class="button-group button-large" data-setting="preload">
+						<button class="button" value="auto">Auto</button>
+						<button class="button" value="metadata">Metadata</button>
+						<button class="button active" value="none">None</button>
+					</div>
+				</div>
+
+				<label class="setting checkbox-setting autoplay">
+					<input type="checkbox" data-setting="autoplay" />
+					<span>Autoplay</span>
+				</label>
+
+				<label class="setting checkbox-setting">
+					<input type="checkbox" data-setting="loop" />
+					<span>Loop</span>
+				</label>
+			</div>
+		</div>
+	</script>
+
+	<script type="text/html" id="tmpl-video-details">
+		<# var ext, html5types = {
+			mp4: wp.media.view.settings.embedMimes.mp4,
+			ogv: wp.media.view.settings.embedMimes.ogv,
+			webm: wp.media.view.settings.embedMimes.webm
+		}; #>
+
+				<div class="media-embed media-embed-details">
+			<div class="embed-media-settings embed-video-settings">
+				<div class="wp-video-holder">
+				<#
+				var w = ! data.model.width || data.model.width > 640 ? 640 : data.model.width,
+					h = ! data.model.height ? 360 : data.model.height;
+
+				if ( data.model.width && w !== data.model.width ) {
+					h = Math.ceil( ( h * w ) / data.model.width );
+				}
+				#>
+
+				<#  var w_rule = '', classes = [],
+		w, h, settings = wp.media.view.settings,
+		isYouTube = isVimeo = false;
+
+	if ( ! _.isEmpty( data.model.src ) ) {
+		isYouTube = data.model.src.match(/youtube|youtu\.be/);
+		isVimeo = -1 !== data.model.src.indexOf('vimeo');
+	}
+
+	if ( settings.contentWidth && data.model.width >= settings.contentWidth ) {
+		w = settings.contentWidth;
+	} else {
+		w = data.model.width;
+	}
+
+	if ( w !== data.model.width ) {
+		h = Math.ceil( ( data.model.height * w ) / data.model.width );
+	} else {
+		h = data.model.height;
+	}
+
+	if ( w ) {
+		w_rule = 'width: ' + w + 'px; ';
+	}
+
+	if ( isYouTube ) {
+		classes.push( 'youtube-video' );
+	}
+
+	if ( isVimeo ) {
+		classes.push( 'vimeo-video' );
+	}
+
+#>
+<div style="{{ w_rule }}" class="wp-video">
+<video controls
+	class="wp-video-shortcode {{ classes.join( ' ' ) }}"
+	<# if ( w ) { #>width="{{ w }}"<# } #>
+	<# if ( h ) { #>height="{{ h }}"<# } #>
+			<#
+		if ( ! _.isUndefined( data.model.poster ) && data.model.poster ) {
+			#> poster="{{ data.model.poster }}"<#
+		} #>
+			preload			="{{ _.isUndefined( data.model.preload ) ? 'metadata' : data.model.preload }}"
+				<#
+		if ( ! _.isUndefined( data.model.autoplay ) && data.model.autoplay ) {
+		#> autoplay<#
+	}
+		if ( ! _.isUndefined( data.model.loop ) && data.model.loop ) {
+		#> loop<#
+	}
+	#>
+>
+	<# if ( ! _.isEmpty( data.model.src ) ) {
+		if ( isYouTube ) { #>
+		<source src="{{ data.model.src }}" type="video/youtube" />
+		<# } else if ( isVimeo ) { #>
+		<source src="{{ data.model.src }}" type="video/vimeo" />
+		<# } else { #>
+		<source src="{{ data.model.src }}" type="{{ settings.embedMimes[ data.model.src.split('.').pop() ] }}" />
+		<# }
+	} #>
+
+		<# if ( data.model.mp4 ) { #>
+	<source src="{{ data.model.mp4 }}" type="{{ settings.embedMimes[ 'mp4' ] }}" />
+	<# } #>
+		<# if ( data.model.m4v ) { #>
+	<source src="{{ data.model.m4v }}" type="{{ settings.embedMimes[ 'm4v' ] }}" />
+	<# } #>
+		<# if ( data.model.webm ) { #>
+	<source src="{{ data.model.webm }}" type="{{ settings.embedMimes[ 'webm' ] }}" />
+	<# } #>
+		<# if ( data.model.ogv ) { #>
+	<source src="{{ data.model.ogv }}" type="{{ settings.embedMimes[ 'ogv' ] }}" />
+	<# } #>
+		<# if ( data.model.flv ) { #>
+	<source src="{{ data.model.flv }}" type="{{ settings.embedMimes[ 'flv' ] }}" />
+	<# } #>
+		{{{ data.model.content }}}
+</video>
+</div>
+	
+				<# if ( ! _.isEmpty( data.model.src ) ) {
+					ext = data.model.src.split('.').pop();
+					if ( html5types[ ext ] ) {
+						delete html5types[ ext ];
+					}
+				#>
+				<div class="setting">
+					<label for="video-source">URL</label>
+					<input type="text" id="video-source" readonly data-setting="src" value="{{ data.model.src }}" />
+					<button type="button" class="button-link remove-setting">Remove video source</button>
+				</div>
+				<# } #>
+								<# if ( ! _.isEmpty( data.model.mp4 ) ) {
+					if ( ! _.isUndefined( html5types.mp4 ) ) {
+						delete html5types.mp4;
+					}
+				#>
+				<div class="setting">
+					<label for="mp4-source">MP4</label>
+					<input type="text" id="mp4-source" readonly data-setting="mp4" value="{{ data.model.mp4 }}" />
+					<button type="button" class="button-link remove-setting">Remove video source</button>
+				</div>
+				<# } #>
+								<# if ( ! _.isEmpty( data.model.m4v ) ) {
+					if ( ! _.isUndefined( html5types.m4v ) ) {
+						delete html5types.m4v;
+					}
+				#>
+				<div class="setting">
+					<label for="m4v-source">M4V</label>
+					<input type="text" id="m4v-source" readonly data-setting="m4v" value="{{ data.model.m4v }}" />
+					<button type="button" class="button-link remove-setting">Remove video source</button>
+				</div>
+				<# } #>
+								<# if ( ! _.isEmpty( data.model.webm ) ) {
+					if ( ! _.isUndefined( html5types.webm ) ) {
+						delete html5types.webm;
+					}
+				#>
+				<div class="setting">
+					<label for="webm-source">WEBM</label>
+					<input type="text" id="webm-source" readonly data-setting="webm" value="{{ data.model.webm }}" />
+					<button type="button" class="button-link remove-setting">Remove video source</button>
+				</div>
+				<# } #>
+								<# if ( ! _.isEmpty( data.model.ogv ) ) {
+					if ( ! _.isUndefined( html5types.ogv ) ) {
+						delete html5types.ogv;
+					}
+				#>
+				<div class="setting">
+					<label for="ogv-source">OGV</label>
+					<input type="text" id="ogv-source" readonly data-setting="ogv" value="{{ data.model.ogv }}" />
+					<button type="button" class="button-link remove-setting">Remove video source</button>
+				</div>
+				<# } #>
+								<# if ( ! _.isEmpty( data.model.flv ) ) {
+					if ( ! _.isUndefined( html5types.flv ) ) {
+						delete html5types.flv;
+					}
+				#>
+				<div class="setting">
+					<label for="flv-source">FLV</label>
+					<input type="text" id="flv-source" readonly data-setting="flv" value="{{ data.model.flv }}" />
+					<button type="button" class="button-link remove-setting">Remove video source</button>
+				</div>
+				<# } #>
+								</div>
+
+				<# if ( ! _.isEmpty( html5types ) ) { #>
+				<div class="setting">
+					<span>Add alternate sources for maximum HTML5 playback:</span>
+					<div class="button-large">
+					<# _.each( html5types, function (mime, type) { #>
+					<button class="button add-media-source" data-mime="{{ mime }}">{{ type }}</button>
+					<# } ) #>
+					</div>
+				</div>
+				<# } #>
+
+				<# if ( ! _.isEmpty( data.model.poster ) ) { #>
+				<div class="setting">
+					<label for="poster-image">Poster Image</label>
+					<input type="text" id="poster-image" readonly data-setting="poster" value="{{ data.model.poster }}" />
+					<button type="button" class="button-link remove-setting">Remove poster image</button>
+				</div>
+				<# } #>
+				<div class="setting preload">
+					<span>Preload</span>
+					<div class="button-group button-large" data-setting="preload">
+						<button class="button" value="auto">Auto</button>
+						<button class="button" value="metadata">Metadata</button>
+						<button class="button active" value="none">None</button>
+					</div>
+				</div>
+
+				<label class="setting checkbox-setting autoplay">
+					<input type="checkbox" data-setting="autoplay" />
+					<span>Autoplay</span>
+				</label>
+
+				<label class="setting checkbox-setting">
+					<input type="checkbox" data-setting="loop" />
+					<span>Loop</span>
+				</label>
+
+				<div class="setting" data-setting="content">
+					<#
+					var content = '';
+					if ( ! _.isEmpty( data.model.content ) ) {
+						var tracks = jQuery( data.model.content ).filter( 'track' );
+						_.each( tracks.toArray(), function (track) {
+							content += track.outerHTML; #>
+						<label for="video-track">Tracks (subtitles, captions, descriptions, chapters, or metadata)</span>
+						<input class="content-track" type="text" id="video-track" readonly value="{{ track.outerHTML }}" />
+						<button type="button" class="button-link remove-setting remove-track">Remove video track</button>
+						<# } ); #>
+					<# } else { #>
+					<span>Tracks (subtitles, captions, descriptions, chapters, or metadata)</span>
+					<em>There are no associated subtitles.</em>
+					<# } #>
+					<textarea class="hidden content-setting">{{ content }}</textarea>
+				</div>
+			</div>
+		</div>
+	</script>
+
+	<script type="text/html" id="tmpl-editor-gallery">
+		<# if ( data.attachments.length ) { #>
+			<div class="gallery gallery-columns-{{ data.columns }}">
+				<# _.each( data.attachments, function( attachment, index ) { #>
+					<dl class="gallery-item">
+						<dt class="gallery-icon">
+							<# if ( attachment.thumbnail ) { #>
+								<img src="{{ attachment.thumbnail.url }}" width="{{ attachment.thumbnail.width }}" height="{{ attachment.thumbnail.height }}" alt="" />
+							<# } else { #>
+								<img src="{{ attachment.url }}" alt="" />
+							<# } #>
+						</dt>
+						<# if ( attachment.caption ) { #>
+							<dd class="wp-caption-text gallery-caption">
+								{{{ data.verifyHTML( attachment.caption ) }}}
+							</dd>
+						<# } #>
+					</dl>
+					<# if ( index % data.columns === data.columns - 1 ) { #>
+						<br style="clear: both;">
+					<# } #>
+				<# } ); #>
+			</div>
+		<# } else { #>
+			<div class="wpview-error">
+				<div class="dashicons dashicons-format-gallery"></div><p>No items found.</p>
+			</div>
+		<# } #>
+	</script>
+
+	<script type="text/html" id="tmpl-crop-content">
+		<img class="crop-image" src="{{ data.url }}" alt="Image crop area preview. Requires mouse interaction.">
+		<div class="upload-errors"></div>
+	</script>
+
+	<script type="text/html" id="tmpl-site-icon-preview">
+		<h2>Preview</h2>
+		<strong aria-hidden="true">As a browser icon</strong>
+		<div class="favicon-preview">
+			<img src="http://localhost:8888/dokan/wp-admin/images/browser.png" class="browser-preview" width="182" height="" alt="" />
+
+			<div class="favicon">
+				<img id="preview-favicon" src="{{ data.url }}" alt="Preview as a browser icon"/>
+			</div>
+			<span class="browser-title" aria-hidden="true">Dokan</span>
+		</div>
+
+		<strong aria-hidden="true">As an app icon</strong>
+		<div class="app-icon-preview">
+			<img id="preview-app-icon" src="{{ data.url }}" alt="Preview as an app icon"/>
+		</div>
+	</script>
+
+		<script type="text/javascript">
+		var c = document.body.className;
+		c = c.replace(/woocommerce-no-js/, 'woocommerce-js');
+		document.body.className = c;
+	</script>
+	<script type="text/javascript" src="http://localhost:8888/dokan/wp-content/plugins/woocommerce/assets/js/jquery-blockui/jquery.blockUI.min.js?ver=2.70"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var wc_add_to_cart_params = {"ajax_url":"\/dokan\/wp-admin\/admin-ajax.php","wc_ajax_url":"\/dokan\/?wc-ajax=%%endpoint%%","i18n_view_cart":"View cart","cart_url":"http:\/\/localhost:8888\/dokan\/cart\/","is_cart":"","cart_redirect_after_add":"no"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-content/plugins/woocommerce/assets/js/frontend/add-to-cart.min.js?ver=3.6.5"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-content/plugins/woocommerce/assets/js/js-cookie/js.cookie.min.js?ver=2.1.4"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var woocommerce_params = {"ajax_url":"\/dokan\/wp-admin\/admin-ajax.php","wc_ajax_url":"\/dokan\/?wc-ajax=%%endpoint%%"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-content/plugins/woocommerce/assets/js/frontend/woocommerce.min.js?ver=3.6.5"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var wc_cart_fragments_params = {"ajax_url":"\/dokan\/wp-admin\/admin-ajax.php","wc_ajax_url":"\/dokan\/?wc-ajax=%%endpoint%%","cart_hash_key":"wc_cart_hash_a9d793ead15d9475a3b4e024fd1fd4b3","fragment_name":"wc_fragments_a9d793ead15d9475a3b4e024fd1fd4b3","request_timeout":"5000"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-content/plugins/woocommerce/assets/js/frontend/cart-fragments.min.js?ver=3.6.5"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var dokanFollowStore = {"_nonce":"dff8d9181c","button_labels":{"follow":"Follow","following":"Following","unfollow":"Unfollow"}};
+/* ]]> */
+</script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-content/plugins/dokan-plugin/includes/modules/follow-store/assets/js/follow-store.js?ver=1.0.0"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCiSPh9A7SYaO2sbZQ4qQo11AWyYB3UFvY&amp;libraries=places&amp;ver=5.2.2"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-content/plugins/dokan-plugin/includes/modules/geolocation/assets/js/geolocation.js?ver=2.9.11"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var dokan_live_chat = {"seller_dashboard":"yes"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-content/plugins/dokan-plugin/includes/modules/live-chat/assets/js/script.js?ver=5.2.2"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var dokanLiveSearch = {"ajaxurl":"http:\/\/localhost:8888\/dokan\/wp-admin\/admin-ajax.php","loading_img":"http:\/\/localhost:8888\/dokan\/wp-content\/plugins\/dokan-plugin\/includes\/modules\/live-search\/assets\/images\/loading.gif","currentTheme":"dokan-theme","themeTags":{"dokan-theme":"#primary"}};
+/* ]]> */
+</script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-content/plugins/dokan-plugin/includes/modules/live-search/assets/js/script.js?ver=5.2.2"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var DokanEnquiry = {"ajaxurl":"http:\/\/localhost:8888\/dokan\/wp-admin\/admin-ajax.php"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-content/plugins/dokan-plugin/includes/modules/product-enquiry/assets/js/enquiry.js?ver=5.2.2"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var wait_string = {"wait":"wait..."};
+/* ]]> */
+</script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-content/plugins/dokan-plugin/includes/modules/store-support/assets/js/script.js?ver=5.2.2"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-content/themes/dokan-theme/assets/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-content/plugins/woocommerce/assets/js/flexslider/jquery.flexslider.min.js?ver=2.7.2"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-content/themes/dokan-theme/assets/js/script.js"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-includes/js/jquery/ui/core.min.js?ver=1.11.4"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-includes/js/jquery/ui/widget.min.js?ver=1.11.4"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-includes/js/jquery/ui/position.min.js?ver=1.11.4"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-includes/js/jquery/ui/menu.min.js?ver=1.11.4"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-includes/js/wp-a11y.min.js?ver=5.2.2"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var uiAutocompleteL10n = {"noResults":"No results found.","oneResult":"1 result found. Use up and down arrow keys to navigate.","manyResults":"%d results found. Use up and down arrow keys to navigate.","itemSelected":"Item selected."};
+/* ]]> */
+</script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-includes/js/jquery/ui/autocomplete.min.js?ver=1.11.4"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-includes/js/jquery/ui/datepicker.min.js?ver=1.11.4"></script>
+<script type="text/javascript">
+jQuery(document).ready(function(jQuery){jQuery.datepicker.setDefaults({"closeText":"Close","currentText":"Today","monthNames":["January","February","March","April","May","June","July","August","September","October","November","December"],"monthNamesShort":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"nextText":"Next","prevText":"Previous","dayNames":["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],"dayNamesShort":["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],"dayNamesMin":["S","M","T","W","T","F","S"],"dateFormat":"MM d, yy","firstDay":1,"isRTL":false});});
+</script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-includes/js/underscore.min.js?ver=1.8.3"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-content/plugins/dokan/assets/vendors/tooltips/tooltips.js?ver=2.9.18"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var DokanValidateMsg = {"required":"This field is required","remote":"Please fix this field.","email":"Please enter a valid email address.","url":"Please enter a valid URL.","date":"Please enter a valid date.","dateISO":"Please enter a valid date (ISO).","number":"Please enter a valid number.","digits":"Please enter only digits.","creditcard":"Please enter a valid credit card number.","equalTo":"Please enter the same value again.","maxlength_msg":"Please enter no more than {0} characters.","minlength_msg":"Please enter at least {0} characters.","rangelength_msg":"Please enter a value between {0} and {1} characters long.","range_msg":"Please enter a value between {0} and {1}.","max_msg":"Please enter a value less than or equal to {0}.","min_msg":"Please enter a value greater than or equal to {0}."};
+/* ]]> */
+</script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-content/plugins/dokan/assets/vendors/form-validate/form-validate.js?ver=2.9.18"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-content/plugins/dokan/assets/vendors/easytab/jquery.easytabs.min.js?ver=2.9.18"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-content/plugins/dokan/assets/vendors/moment/moment.min.js?ver=2.9.18"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-content/plugins/dokan/assets/vendors/chart/Chart.min.js?ver=2.9.18"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-content/plugins/dokan/assets/js/flot-all.min.js?ver=2.9.18"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-content/plugins/dokan/assets/vendors/select2/select2.full.min.js?ver=2.9.18"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-includes/js/shortcode.min.js?ver=5.2.2"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-includes/js/backbone.min.js?ver=1.2.3"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var _wpUtilSettings = {"ajax":{"url":"\/dokan\/wp-admin\/admin-ajax.php"}};
+/* ]]> */
+</script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-includes/js/wp-util.min.js?ver=5.2.2"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-includes/js/wp-backbone.min.js?ver=5.2.2"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var _wpMediaModelsL10n = {"settings":{"ajaxurl":"\/dokan\/wp-admin\/admin-ajax.php","post":{"id":0}}};
+/* ]]> */
+</script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-includes/js/media-models.min.js?ver=5.2.2"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var pluploadL10n = {"queue_limit_exceeded":"You have attempted to queue too many files.","file_exceeds_size_limit":"%s exceeds the maximum upload size for this site.","zero_byte_file":"This file is empty. Please try another.","invalid_filetype":"Sorry, this file type is not permitted for security reasons.","not_an_image":"This file is not an image. Please try another.","image_memory_exceeded":"Memory exceeded. Please try another smaller file.","image_dimensions_exceeded":"This is larger than the maximum size. Please try another.","default_error":"An error occurred in the upload. Please try again later.","missing_upload_url":"There was a configuration error. Please contact the server administrator.","upload_limit_exceeded":"You may only upload 1 file.","http_error":"HTTP error.","upload_failed":"Upload failed.","big_upload_failed":"Please try uploading this file with the %1$sbrowser uploader%2$s.","big_upload_queued":"%s exceeds the maximum upload size for the multi-file uploader when used in your browser.","io_error":"IO error.","security_error":"Security error.","file_cancelled":"File canceled.","upload_stopped":"Upload stopped.","dismiss":"Dismiss","crunching":"Crunching\u2026","deleted":"moved to the trash.","error_uploading":"\u201c%s\u201d has failed to upload."};
+var _wpPluploadSettings = {"defaults":{"file_data_name":"async-upload","url":"\/dokan\/wp-admin\/async-upload.php","filters":{"max_file_size":"8388608b","mime_types":[{"extensions":"jpg,jpeg,jpe,gif,png,bmp,tiff,tif,ico,asf,asx,wmv,wmx,wm,avi,divx,flv,mov,qt,mpeg,mpg,mpe,mp4,m4v,ogv,webm,mkv,3gp,3gpp,3g2,3gp2,txt,asc,c,cc,h,srt,csv,tsv,ics,rtx,css,htm,html,vtt,dfxp,mp3,m4a,m4b,aac,ra,ram,wav,ogg,oga,flac,mid,midi,wma,wax,mka,rtf,js,pdf,class,tar,zip,gz,gzip,rar,7z,psd,xcf,doc,pot,pps,ppt,wri,xla,xls,xlt,xlw,mdb,mpp,docx,docm,dotx,dotm,xlsx,xlsm,xlsb,xltx,xltm,xlam,pptx,pptm,ppsx,ppsm,potx,potm,ppam,sldx,sldm,onetoc,onetoc2,onetmp,onepkg,oxps,xps,odt,odp,ods,odg,odc,odb,odf,wp,wpd,key,numbers,pages"}]},"multipart_params":{"action":"upload-attachment","_wpnonce":"3d7dc1f9ae"}},"browser":{"mobile":false,"supported":true},"limitExceeded":false};
+/* ]]> */
+</script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-includes/js/plupload/wp-plupload.min.js?ver=5.2.2"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-includes/js/jquery/ui/mouse.min.js?ver=1.11.4"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-includes/js/jquery/ui/sortable.min.js?ver=1.11.4"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-includes/js/mediaelement/wp-mediaelement.min.js?ver=5.2.2"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var wpApiSettings = {"root":"http:\/\/localhost:8888\/dokan\/wp-json\/","nonce":"7514d313d9","versionString":"wp\/v2\/"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-includes/js/api-request.min.js?ver=5.2.2"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var _wpMediaViewsL10n = {"url":"URL","addMedia":"Add Media","search":"Search","select":"Select","cancel":"Cancel","update":"Update","replace":"Replace","remove":"Remove","back":"Back","selected":"%d selected","dragInfo":"Drag and drop to reorder media files.","uploadFilesTitle":"Upload Files","uploadImagesTitle":"Upload Images","mediaLibraryTitle":"Media Library","insertMediaTitle":"Add Media","createNewGallery":"Create a new gallery","createNewPlaylist":"Create a new playlist","createNewVideoPlaylist":"Create a new video playlist","returnToLibrary":"\u2190 Return to library","allMediaItems":"All media items","allDates":"All dates","noItemsFound":"No items found.","insertIntoPost":"Insert into post","unattached":"Unattached","mine":"Mine","trash":"Trash","uploadedToThisPost":"Uploaded to this post","warnDelete":"You are about to permanently delete this item from your site.\nThis action cannot be undone.\n 'Cancel' to stop, 'OK' to delete.","warnBulkDelete":"You are about to permanently delete these items from your site.\nThis action cannot be undone.\n 'Cancel' to stop, 'OK' to delete.","warnBulkTrash":"You are about to trash these items.\n  'Cancel' to stop, 'OK' to delete.","bulkSelect":"Bulk Select","trashSelected":"Move to Trash","restoreSelected":"Restore from Trash","deletePermanently":"Delete Permanently","apply":"Apply","filterByDate":"Filter by date","filterByType":"Filter by type","searchMediaLabel":"Search Media","searchMediaPlaceholder":"Search media items...","noMedia":"No media files found.","attachmentDetails":"Attachment Details","insertFromUrlTitle":"Insert from URL","setFeaturedImageTitle":"Featured Image","setFeaturedImage":"Set featured image","createGalleryTitle":"Create Gallery","editGalleryTitle":"Edit Gallery","cancelGalleryTitle":"\u2190 Cancel Gallery","insertGallery":"Insert gallery","updateGallery":"Update gallery","addToGallery":"Add to gallery","addToGalleryTitle":"Add to Gallery","reverseOrder":"Reverse order","imageDetailsTitle":"Image Details","imageReplaceTitle":"Replace Image","imageDetailsCancel":"Cancel Edit","editImage":"Edit Image","chooseImage":"Choose Image","selectAndCrop":"Select and Crop","skipCropping":"Skip Cropping","cropImage":"Crop Image","cropYourImage":"Crop your image","cropping":"Cropping\u2026","suggestedDimensions":"Suggested image dimensions: %1$s by %2$s pixels.","cropError":"There has been an error cropping your image.","audioDetailsTitle":"Audio Details","audioReplaceTitle":"Replace Audio","audioAddSourceTitle":"Add Audio Source","audioDetailsCancel":"Cancel Edit","videoDetailsTitle":"Video Details","videoReplaceTitle":"Replace Video","videoAddSourceTitle":"Add Video Source","videoDetailsCancel":"Cancel Edit","videoSelectPosterImageTitle":"Select Poster Image","videoAddTrackTitle":"Add Subtitles","playlistDragInfo":"Drag and drop to reorder tracks.","createPlaylistTitle":"Create Audio Playlist","editPlaylistTitle":"Edit Audio Playlist","cancelPlaylistTitle":"\u2190 Cancel Audio Playlist","insertPlaylist":"Insert audio playlist","updatePlaylist":"Update audio playlist","addToPlaylist":"Add to audio playlist","addToPlaylistTitle":"Add to Audio Playlist","videoPlaylistDragInfo":"Drag and drop to reorder videos.","createVideoPlaylistTitle":"Create Video Playlist","editVideoPlaylistTitle":"Edit Video Playlist","cancelVideoPlaylistTitle":"\u2190 Cancel Video Playlist","insertVideoPlaylist":"Insert video playlist","updateVideoPlaylist":"Update video playlist","addToVideoPlaylist":"Add to video playlist","addToVideoPlaylistTitle":"Add to Video Playlist","attachmentsList":"Attachments list","settings":{"tabs":[],"tabUrl":"http:\/\/localhost:8888\/dokan\/wp-admin\/media-upload.php?chromeless=1","mimeTypes":{"image":"Images","audio":"Audio","video":"Video"},"captions":true,"nonce":{"sendToEditor":"0a9ce96d6a"},"post":{"id":0},"defaultProps":{"link":"none","align":"","size":""},"attachmentCounts":{"audio":1,"video":1},"oEmbedProxyUrl":"http:\/\/localhost:8888\/dokan\/wp-json\/oembed\/1.0\/proxy","embedExts":["mp3","ogg","flac","m4a","wav","mp4","m4v","webm","ogv","flv"],"embedMimes":{"mp3":"audio\/mpeg","ogg":"audio\/ogg","flac":"audio\/flac","m4a":"audio\/mpeg","wav":"audio\/wav","mp4":"video\/mp4","m4v":"video\/mp4","webm":"video\/webm","ogv":"video\/ogg","flv":"video\/x-flv"},"contentWidth":640,"months":[{"year":"2019","month":"6","text":"June 2019"},{"year":"2019","month":"5","text":"May 2019"},{"year":"2019","month":"4","text":"April 2019"},{"year":"2019","month":"3","text":"March 2019"}],"mediaTrash":0}};
+/* ]]> */
+</script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-includes/js/media-views.min.js?ver=5.2.2"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-includes/js/media-editor.min.js?ver=5.2.2"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-includes/js/media-audiovideo.min.js?ver=5.2.2"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-content/plugins/woocommerce/assets/js/accounting/accounting.min.js?ver=2.9.18"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-content/plugins/dokan/assets/vendors/magnific/jquery.magnific-popup.min.js?ver=2.9.18"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var pwsL10n = {"unknown":"Password strength unknown","short":"Very weak","bad":"Weak","good":"Medium","strong":"Strong","mismatch":"Mismatch"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-admin/js/password-strength-meter.min.js?ver=5.2.2"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var wc_password_strength_meter_params = {"min_password_strength":"3","i18n_password_error":"Please enter a stronger password.","i18n_password_hint":"Hint: The password should be at least twelve characters long. To make it stronger, use upper and lower case letters, numbers, and symbols like ! \" ? $ % ^ & )."};
+/* ]]> */
+</script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-content/plugins/woocommerce/assets/js/frontend/password-strength-meter.min.js?ver=3.6.5"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-includes/js/imgareaselect/jquery.imgareaselect.min.js?ver=5.2.2"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-includes/js/customize-base.min.js?ver=5.2.2"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-includes/js/customize-models.js?ver=2.9.18"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-content/plugins/dokan/assets/vendors/i18n/jed.js?ver=2.9.18"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var dokan_refund = {"mon_decimal_point":".","remove_item_notice":"Are you sure you want to remove the selected items? If you have previously reduced this item's stock, or this order was submitted by a customer, you will need to manually restore the item's stock.","i18n_select_items":"Please select some items.","i18n_do_refund":"Are you sure you wish to process this refund request? This action cannot be undone.","i18n_delete_refund":"Are you sure you wish to delete this refund? This action cannot be undone.","remove_item_meta":"Remove this item meta?","ajax_url":"http:\/\/localhost:8888\/dokan\/wp-admin\/admin-ajax.php","order_item_nonce":"ce48509e2c","post_id":"269","currency_format_num_decimals":"2","currency_format_symbol":"$","currency_format_decimal_sep":".","currency_format_thousand_sep":",","currency_format":"%s%v","rounding_precision":"6"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-content/plugins/dokan/assets/js/dokan.js?ver=1563467412"></script><div id="ui-datepicker-div" class="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all"></div>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-content/plugins/dokan/assets/js/login-form-popup.js?ver=1563467412"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-content/plugins/dokan-plugin/assets/js/dokan-pro.js"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-content/plugins/dokan-plugin/includes/modules/vendor-verification/assets/js/script.js?ver=5.2.2"></script>
+<script type="text/javascript" src="http://localhost:8888/dokan/wp-includes/js/wp-embed.min.js?ver=5.2.2"></script>
+
+<div id="yith-wcwl-popup-message" style="display:none;"><div id="yith-wcwl-message"></div></div>
+
+<div id="wp-a11y-speak-polite" aria-live="polite" aria-relevant="additions text" aria-atomic="true" class="screen-reader-text wp-a11y-speak-region"></div><div id="wp-a11y-speak-assertive" aria-live="assertive" aria-relevant="additions text" aria-atomic="true" class="screen-reader-text wp-a11y-speak-region"></div></body></html>
