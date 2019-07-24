@@ -148,7 +148,6 @@ function dokan_is_seller_dashboard() {
     }
 
     return false;
-
 }
 
 /**
@@ -2009,12 +2008,10 @@ function dokan_get_avatar_url( $url, $id_or_email, $args ) {
         return $url;
     }
 
-    // see if there is a user_avatar meta field
-    $user_avatar = get_user_meta( $user->ID, 'dokan_profile_settings', true );
-    $gravatar_id = isset( $user_avatar['gravatar_id'] ) ? $user_avatar['gravatar_id'] : 0;
-    $gravatar_id = isset( $user_avatar['gravatar'] ) ? $user_avatar['gravatar'] : $gravatar_id;
+    $vendor      = dokan()->vendor->get( $user->ID );
+    $gravatar_id = $vendor->get_avatar_id();
 
-    if ( empty( $gravatar_id ) ) {
+    if ( ! $gravatar_id ) {
         return $url;
     }
 
@@ -2792,7 +2789,7 @@ function dokan_cache_clear_deleted_product( $post_id ) {
  *
  * @param int $seller_id
  *
- * @return int $earning;
+ * @return float $earning | zero on failure or no price
  */
 function dokan_get_earning_by_product( $product_id, $seller_id ) {
     $product            = wc_get_product( $product_id );
@@ -2806,7 +2803,12 @@ function dokan_get_earning_by_product( $product_id, $seller_id ) {
     $percentage         = dokan_get_seller_percentage( $seller_id, $product_id );
     $percentage_type    = dokan_get_commission_type( $seller_id, $product_id );
     $price              = $product->get_price();
-    $earning            = 'percentage' == $percentage_type ? (float) ( $price * $percentage ) / 100 : $price - $percentage;
+
+    if ( ! $price || 0 > $price ) {
+        return 0;
+    }
+
+    $earning = 'percentage' == $percentage_type ? (float) ( $price * $percentage ) / 100 : $price - $percentage;
 
     return wc_format_decimal( $earning );
 }
@@ -3538,4 +3540,50 @@ function dokan_admin_settings_rearrange_map( $option, $section ) {
     }
 
     return array( $option, $section );
+}
+
+/**
+ * Dokan get terms and condition page url
+ *
+ * @since 2.9.16
+ *
+ * @return url | null on failure
+ */
+function dokan_get_terms_condition_url() {
+    $page_id = dokan_get_option( 'reg_tc_page', 'dokan_pages' );
+
+    if ( ! $page_id ) {
+        return null;
+    }
+
+    return apply_filters( 'dokan_get_terms_condition_url', get_permalink( $page_id ), $page_id );
+}
+
+/**
+ * Add item in specefic position of an array
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @param array $array
+ * @param int|string $position <index position or name of the key after which you want to add the new array>
+ * @param array $new_array
+ *
+ * @return array
+ */
+function dokan_array_after( $array, $position, $new_array ) {
+    if ( is_int( $position ) ) {
+        return array_merge(
+            array_slice( $array, 0, $position ),
+            $new_array,
+            array_slice( $array, $position )
+        );
+    }
+
+    $pos = array_search( $position, array_keys( $array ) );
+
+    return array_merge(
+        array_slice( $array, 0, $pos + 1 ),
+        $new_array,
+        array_slice( $array, $pos )
+    );
 }

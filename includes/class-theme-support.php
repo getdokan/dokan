@@ -31,19 +31,32 @@ class Dokan_Theme_Support {
      * @return void
      */
     private function include_support() {
-        switch ( $this->theme ) {
-            case 'storefront':
-                require_once __DIR__ . '/theme-support/class-' . $this->theme . '.php';
-                break;
+        $themes = apply_filters( 'dokan_load_theme_support_files', [
+            'storefront',
+            'flatsome',
+            'divi',
+            'rehub'
+        ] );
 
-            case 'flatsome':
-                require_once __DIR__ . '/theme-support/class-' . $this->theme . '.php';
-                break;
-
-            case 'divi':
-                require_once __DIR__ . '/theme-support/class-' . $this->theme . '.php';
-                break;
-        }
+        return in_array( $this->theme, $themes ) ? $this->load_file( $this->theme ) : false;
     }
 
+    /**
+     * Load file classes
+     *
+     * @param string $file
+     *
+     * @since 2.9.17
+     *
+     * @return string|null on failure
+     */
+    private function load_file( $file ) {
+        $file = __DIR__ . '/theme-support/class-' . $file . '.php';
+
+        if ( ! file_exists( $file ) ) {
+            return;
+        }
+
+        require_once $file;
+    }
 }

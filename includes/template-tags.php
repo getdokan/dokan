@@ -179,6 +179,7 @@ function dokan_order_listing_status_filter() {
     $on_hold_order_url    = array();
     $canceled_order_url   = array();
     $refund_order_url     = array();
+    $failed_order_url     = array();
     ?>
 
     <ul class="list-inline order-statuses-filter">
@@ -279,6 +280,21 @@ function dokan_order_listing_status_filter() {
             ?>
             <a href="<?php echo esc_url( add_query_arg( $refund_order_url, $orders_url ) ); ?>">
                 <?php printf( esc_html__( 'Refunded (%d)', 'dokan-lite' ), esc_attr( $orders_counts->{'wc-refunded'} ) ); ?></span>
+            </a>
+        </li>
+        <li<?php echo $status_class == 'wc-failed' ? ' class="active"' : ''; ?>>
+            <?php
+                if ( $order_date ) {
+                    $date_filter = array(
+                        'order_date'         => $order_date,
+                        'dokan_order_filter' => 'Filter',
+                    );
+                }
+
+                $failed_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-failed' ) );
+            ?>
+            <a href="<?php echo esc_url( add_query_arg( $failed_order_url, $orders_url ) ); ?>">
+                <?php printf( esc_html__( 'Failed (%d)', 'dokan-lite' ), esc_attr( $orders_counts->{'wc-failed'} ) ); ?></span>
             </a>
         </li>
 
@@ -454,7 +470,16 @@ function dokan_dashboard_nav( $active_menu = '' ) {
         $urls = $nav_menu;
     }
 
-    $menu = '<ul class="dokan-dashboard-menu">';
+    $menu           = '';
+    $hamburger_menu = apply_filters( 'dokan_load_hamburger_menu', true );
+
+    if ( $hamburger_menu ) {
+        $menu .= '<div id="dokan-navigation" area-label="Menu">';
+        $menu .= '<label id="mobile-menu-icon" for="toggle-mobile-menu" aria-label="Menu">&#9776;</label>';
+        $menu .= '<input id="toggle-mobile-menu" type="checkbox" />';
+    }
+
+    $menu .= '<ul class="dokan-dashboard-menu">';
 
     foreach ( $urls as $key => $item ) {
         $class = ( $active_menu == $key ) ? 'active ' . $key : $key;
@@ -470,6 +495,10 @@ function dokan_dashboard_nav( $active_menu = '' ) {
     $menu .= apply_filters( 'dokan_dashboard_nav_common_link', $common_links );
 
     $menu .= '</ul>';
+
+    if ( $hamburger_menu ) {
+        $menu .= '</div>';
+    }
 
     return $menu;
 }

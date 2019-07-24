@@ -6,33 +6,32 @@
         overflow: hidden;
         background-color: #242424;
 
-	    ul.dokan-dashboard-menu {
-	        background: #242424;
-	        list-style: none;
-	        margin: 0 0 20px 0;
-	        padding: 0;
+        ul.dokan-dashboard-menu {
+            background: #242424;
+            list-style: none;
+            margin: 0 0 20px 0;
+            padding: 0;
 
-	        li {
-	            margin: 0;
-	            // padding: 8px 0;
-	            border-bottom: 1px solid lighten(#2b2b2b, 10%);
-	            position: relative;
+            li {
+                margin: 0;
+                border-bottom: 1px solid lighten(#2b2b2b, 10%);
+                position: relative;
 
-	            a {
-	                padding: 10px 0 10px 18px;
-	                display: block;
-	                color: #fff;
-	                font-size: 14px;
-	                font-weight: normal;
-	                text-decoration: none;
+                a {
+                    padding: 10px 0 10px 18px;
+                    display: block;
+                    color: #fff;
+                    font-size: 14px;
+                    font-weight: normal;
+                    text-decoration: none;
 
-	                i {
-	                    font-size: 17px;
-	                    padding-right: 15px;
-	                }
-	            }
+                    i {
+                        font-size: 17px;
+                        padding-right: 15px;
+                    }
+                }
 
-	            &:hover {
+                &:hover {
                     background: @mainColor;
                     color: #fff;
                 }
@@ -56,77 +55,150 @@
                         }
 
                         &:last-child {
-                        	border-right: none;
+                            border-right: none;
                         }
                     }
                 }
 
-	            &.active {
-	                position: relative;
+                &.active {
+                    position: relative;
                     background: @mainColor;
 
-	                &:after {
-	                    left: 93%;
-	                    top: 50%;
-	                    border: transparent solid;
-	                    content: " ";
-	                    height: 0;
-	                    width: 0;
-	                    position: absolute;
-	                    pointer-events: none;
-	                    border-color: transparent #fff transparent transparent;
-	                    border-left-color: #fff;
-	                    border-width: 16px 16px 16px 0;
-	                    margin-top: -16px;
-	                }
-	            }
+                    &:after {
+                        left: 93%;
+                        top: 50%;
+                        border: transparent solid;
+                        content: " ";
+                        height: 0;
+                        width: 0;
+                        position: absolute;
+                        pointer-events: none;
+                        border-color: transparent #fff transparent transparent;
+                        border-left-color: #fff;
+                        border-width: 16px 16px 16px 0;
+                        margin-top: -16px;
+                    }
+                }
 
-	            ul.sub-menu {
-	                background: #fff;
-	                margin: 0;
-	                list-style: none;
-	                padding: 0;
-	                position: absolute;
-	                right: -100%;
-	                top: -4px;
-	                z-index: 99;
-	                width: 165px;
-	                display: none;
-	                border-top: 1px solid #ECECEC;
-	                border-right: 1px solid #ECECEC;
-	                border-bottom: 1px solid #ECECEC;
+                ul.sub-menu {
+                    background: #fff;
+                    margin: 0;
+                    list-style: none;
+                    padding: 0;
+                    position: absolute;
+                    right: -100%;
+                    top: -4px;
+                    z-index: 99;
+                    width: 165px;
+                    display: none;
+                    border-top: 1px solid #ECECEC;
+                    border-right: 1px solid #ECECEC;
+                    border-bottom: 1px solid #ECECEC;
 
-	                a {
-	                    padding: 2px 0 2px 10px;
-	                    font-size: 13px;
-	                    color: #333;
-	                    font-weight: normal;
+                    a {
+                        padding: 2px 0 2px 10px;
+                        font-size: 13px;
+                        color: #333;
+                        font-weight: normal;
 
-	                    &:hover {
-	                        background: lighten(@mainColor, 10%);
-	                        color: #fff;
-	                    }
-	                }
+                        &:hover {
+                            background: lighten(@mainColor, 10%);
+                            color: #fff;
+                        }
+                    }
 
-	                li {
-	                    border-bottom: 1px solid #ccc;
+                    li {
+                        border-bottom: 1px solid #ccc;
 
-	                    &:last-child {
-	                        border-bottom: none;
-	                    }
-	                }
-	            }
+                        &:last-child {
+                            border-bottom: none;
+                        }
+                    }
+                }
 
-	            &:hover {
-	                ul.sub-menu {
-	                    // display: block;
-	                }
-	            }
+                &:hover {
+                    ul.sub-menu {
+                        // display: block;
+                    }
+                }
 
-	            &.settings i.pull-right {
-	            	padding-top: 5px;
-	            }
-	        }
-	    }
+                &.settings i.pull-right {
+                    padding-top: 5px;
+                }
+            }
+        }
+
+        #dokan-navigation {
+            #toggle-mobile-menu {
+                display: none;
+            }
+
+            #mobile-menu-icon {
+                display: none;
+            }
+
+            > #mobile-menu-icon {
+                font-size: 17px;
+                color: #fff;
+                position: absolute;
+                top: 10px;
+                right: 15px;
+                width: 33px;
+                z-index: 99999;
+                cursor: pointer;
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                -khtml-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+                border: 1px solid #f0f0f0;
+                border-radius: 3px;
+                padding: 3px 8px;
+            }
+
+            > input:checked + ul.dokan-dashboard-menu {
+                display: block !important;
+                background: #000;
+                color: #fff;
+                animation: showNav 350ms ease-in-out both;
+            }
+        }
 	}
+}
+
+
+@keyframes showNav {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@media only screen and ( max-width: 450px ) {
+    .dokan-dashboard {
+        .dokan-dash-sidebar {
+            #dokan-navigation {
+                background: #000;
+                height: 48px;
+                position: relative;
+
+                #mobile-menu-icon {
+                    display: block !important;
+                }
+
+                #toggle-mobile-menu {
+                    display: none !important;
+                }
+
+                ul.dokan-dashboard-menu {
+                    display: none;
+                    height: auto !important;
+                    padding-top: 48px !important;
+                }
+            }
+        }
+    }
 }

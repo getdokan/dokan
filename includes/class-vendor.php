@@ -189,10 +189,8 @@ class Dokan_Vendor {
             'address'                 => array(),
             'location'                => '',
             'banner'                  => 0,
-            'banner_id'               => 0,
             'icon'                    => 0,
             'gravatar'                => 0,
-            'gravatar_id'             => 0,
             'show_more_ptab'          => 'yes',
             'store_ppp'               => 10,
             'enable_tnc'              => 'off',
@@ -404,17 +402,7 @@ class Dokan_Vendor {
     public function get_banner() {
         $banner_id = $this->get_banner_id();
 
-        if ( ! $banner_id ) {
-            $banner = $this->get_info_part( 'banner' );
-
-            if ( $banner ) {
-                $banner_id = $banner;
-            } else {
-                return false;
-            }
-        }
-
-        return wp_get_attachment_url( $banner_id );
+        return $banner_id ? wp_get_attachment_url( $banner_id ) : '';
     }
 
     /**
@@ -425,7 +413,7 @@ class Dokan_Vendor {
      * @return int
      */
     public function get_banner_id() {
-        $banner_id = (int) $this->get_info_part( 'banner_id' );
+        $banner_id = (int) $this->get_info_part( 'banner' );
 
         return $banner_id ? $banner_id : 0;
     }
@@ -439,10 +427,6 @@ class Dokan_Vendor {
      */
     public function get_avatar() {
         $avatar_id = $this->get_avatar_id();
-
-        if ( ! $avatar_id ) {
-            $avatar_id = $this->get_info_part( 'gravatar' );
-        }
 
         if ( ! $avatar_id && ! empty( $this->data->user_email ) ) {
             return get_avatar_url( $this->data->user_email, 96 );
@@ -459,7 +443,7 @@ class Dokan_Vendor {
      * @return int
      */
     public function get_avatar_id() {
-        $avatar_id = (int) $this->get_info_part( 'gravatar_id' );
+        $avatar_id = (int) $this->get_info_part( 'gravatar' );
 
         return $avatar_id ? $avatar_id : 0;
     }
@@ -831,19 +815,29 @@ class Dokan_Vendor {
     /**
      * Get store open notice
      *
-     * @return string|null on failure
+     * @param string $default_notice
+     *
+     * @return string
      */
-    public function get_store_open_notice() {
-        return $this->get_info_part( 'dokan_store_open_notice' );
+    public function get_store_open_notice( $default_notice = '' ) {
+        $notice         = $this->get_info_part( 'dokan_store_open_notice' );
+        $default_notice = $default_notice ? $default_notice : __( 'Store is open', 'dokan' );
+
+        return $notice ? $notice : $default_notice;
     }
 
     /**
      * Get store close notice
      *
-     * @return string|null on failure
+     * @param string $default_notice
+     *
+     * @return string
      */
-    public function get_store_close_notice() {
-        return $this->get_info_part( 'dokan_store_close_notice' );
+    public function get_store_close_notice( $default_notice = '' ) {
+        $notice         = $this->get_info_part( 'dokan_store_close_notice' );
+        $default_notice = $default_notice ? $default_notice : __( 'Store is closed', 'dokan' );
+
+        return $notice ? $notice : $default_notice;
     }
 
     /*
@@ -867,7 +861,7 @@ class Dokan_Vendor {
      * @param int value
      */
     public function set_gravatar_id( $value ) {
-        $this->set_prop( 'gravatar_id', (int) $value );
+        $this->set_prop( 'gravatar', (int) $value );
     }
 
     /**
@@ -876,7 +870,7 @@ class Dokan_Vendor {
      * @param int value
      */
     public function set_banner_id( $value ) {
-        $this->set_prop( 'banner_id', (int) $value );
+        $this->set_prop( 'banner', (int) $value );
     }
 
     /**

@@ -58,21 +58,18 @@
     <?php do_action( 'register_form' ); ?>
 
     <?php
-    $show_toc = dokan_get_option( 'enable_tc_on_reg', 'dokan_general' );
+    $show_terms_condition = dokan_get_option( 'enable_tc_on_reg', 'dokan_general' );
+    $terms_condition_url  = dokan_get_terms_condition_url();
 
-    if ( $show_toc == 'on' ) {
-        $toc_page_id = dokan_get_option( 'reg_tc_page', 'dokan_pages' );
+    if ( 'on' === $show_terms_condition && $terms_condition_url ) { ?>
+        <p class="form-row form-group form-row-wide">
+            <input class="tc_check_box" type="checkbox" id="tc_agree" name="tc_agree" required="required">
+            <label style="display: inline" for="tc_agree"><?php echo sprintf( __( 'I have read and agree to the <a target="_blank" href="%s">Terms &amp; Conditions</a>.', 'dokan-lite' ), esc_url( $terms_condition_url ) ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped  ?></label>
+        </p>
+    <?php }
 
-        if ( $toc_page_id != -1 ) {
-            $toc_page_url = get_permalink( $toc_page_id ); ?>
-            <p class="form-row form-group form-row-wide">
-                <input class="tc_check_box" type="checkbox" id="tc_agree" name="tc_agree" required="required">
-                <label style="display: inline" for="tc_agree"><?php echo sprintf( __( 'I have read and agree to the <a target="_blank" href="%s">Terms &amp; Conditions</a>.', 'dokan-lite' ), $toc_page_url ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped  ?></label>
-            </p>
-        <?php } ?>
-    <?php } ?>
-
-    <?php do_action( 'dokan_seller_registration_field_after' ); ?>
+    do_action( 'dokan_seller_registration_field_after' );
+    ?>
 
     <p class="form-row">
         <?php wp_nonce_field( 'woocommerce-register', 'woocommerce-register-nonce' ); ?>

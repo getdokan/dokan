@@ -38,23 +38,20 @@
         <label for="shop-phone"><?php esc_html_e( 'Phone Number', 'dokan-lite' ); ?><span class="required">*</span></label>
         <input type="text" class="input-text form-control" name="phone" id="shop-phone" value="<?php if ( ! empty( $postdata['phone'] ) ) echo esc_attr($postdata['phone']); ?>" required="required" />
     </p>
+
     <?php
+    $show_terms_condition = dokan_get_option( 'enable_tc_on_reg', 'dokan_general' );
+    $terms_condition_url  = dokan_get_terms_condition_url();
 
-        $show_toc = dokan_get_option( 'enable_tc_on_reg', 'dokan_general' );
+    if ( 'on' === $show_terms_condition && $terms_condition_url ) { ?>
+        <p class="form-row form-group form-row-wide">
+            <input class="tc_check_box" type="checkbox" id="tc_agree" name="tc_agree" required="required">
+            <label style="display: inline" for="tc_agree"><?php echo sprintf( __( 'I have read and agree to the <a target="_blank" href="%s">Terms &amp; Conditions</a>.', 'dokan-lite' ), esc_url( $terms_condition_url ) ); ?></label>
+        </p>
+    <?php }
 
-        if ( $show_toc == 'on' ) {
-            $toc_page_id = dokan_get_option( 'reg_tc_page', 'dokan_pages' );
-            if ( $toc_page_id != -1 ) {
-                $toc_page_url = get_permalink( $toc_page_id );
+    do_action( 'dokan_seller_registration_field_after' );
     ?>
-            <p class="form-row form-group form-row-wide">
-                <input class="tc_check_box" type="checkbox" id="tc_agree" name="tc_agree" required="required">
-                <label style="display: inline" for="tc_agree"><?php echo sprintf( __( 'I have read and agree to the <a target="_blank" href="%s">Terms &amp; Conditions</a>.', 'dokan-lite' ), esc_url( $toc_page_url ) ); ?></label>
-            </p>
-            <?php } ?>
-        <?php } ?>
-    <?php  do_action( 'dokan_seller_registration_field_after' ); ?>
-
 </div>
 
 <?php do_action( 'dokan_reg_form_field' ); ?>

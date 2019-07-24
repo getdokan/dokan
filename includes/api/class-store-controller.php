@@ -217,8 +217,14 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
      *
      * @return bool
      */
-    public function update_store_permissions_check() {
-        return current_user_can( 'dokandar' );
+    public function update_store_permissions_check( $request ) {
+        if ( current_user_can( 'manage_woocommerce' ) ) {
+            return true;
+        }
+
+        if ( current_user_can( 'dokandar' ) ) {
+            return dokan_get_current_user_id() === absint( $request->get_param( 'id' ) );
+        }
     }
 
     /**

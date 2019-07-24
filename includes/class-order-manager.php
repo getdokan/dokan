@@ -17,7 +17,7 @@ class Dokan_Order_Manager {
         add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'maybe_split_orders' ) );
 
         // prevent non-vendor coupons from being added
-        add_filter( 'woocommerce_coupon_is_valid', array( $this, 'ensure_vendor_coupon' ), 10, 3 );
+        add_filter( 'woocommerce_coupon_is_valid', array( $this, 'ensure_vendor_coupon' ), 10, 2 );
 
         if ( is_admin() ) {
             add_action( 'woocommerce_process_shop_order_meta', 'dokan_sync_insert_order' );
@@ -155,6 +155,8 @@ class Dokan_Order_Manager {
 
             $temp      = array_keys( $vendors );
             $seller_id = reset( $temp );
+
+            do_action( 'dokan_create_parent_order', $parent_order, $seller_id );
 
             // record admin commision
             $admin_fee = dokan_get_admin_commission_by( $parent_order, $seller_id );
@@ -462,6 +464,10 @@ class Dokan_Order_Manager {
         $coupon_id         = $coupon->get_id();
         $vendor_id         = get_post_field( 'post_author', $coupon_id );
         $available_vendors = array();
+
+        if ( ! apply_filters( 'dokan_ensure_vendor_coupon', true ) ) {
+            return $valid;
+        }
 
         // a coupon must be bound with a product
         if ( count( $coupon->get_product_ids() ) == 0 ) {
