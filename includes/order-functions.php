@@ -13,8 +13,8 @@ function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
     $net_amount         = dokan_get_seller_earnings_by_order( $order, $seller_id );
     $order_shipping     = $order->get_total_shipping();
     $order_tax          = $order->get_total_tax();
-    $shipping_recipient = dokan_get_option( 'shipping_fee_recipient', 'dokan_general', 'seller' );
-    $tax_recipient      = dokan_get_option( 'tax_fee_recipient', 'dokan_general', 'seller' );
+    $shipping_recipient = dokan_get_option( 'shipping_fee_recipient', 'dokan_selling', 'seller' );
+    $tax_recipient      = dokan_get_option( 'tax_fee_recipient', 'dokan_selling', 'seller' );
 
     if ( $get_array ) {
         $amount = array(
@@ -684,8 +684,8 @@ function dokan_get_admin_commission_by( $order, $seller_id ) {
     $commissions        = array();
     $i                  = 0;
     $total_line         = 0;
-    $shipping_recipient = dokan_get_option( 'shipping_fee_recipient', 'dokan_general', 'seller' );
-    $tax_recipient      = dokan_get_option( 'tax_fee_recipient', 'dokan_general', 'seller' );
+    $shipping_recipient = dokan_get_option( 'shipping_fee_recipient', 'dokan_selling', 'seller' );
+    $tax_recipient      = dokan_get_option( 'tax_fee_recipient', 'dokan_selling', 'seller' );
 
     foreach ( $order->get_items() as $item_id => $item ) {
 

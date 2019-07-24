@@ -553,7 +553,7 @@ class Dokan_Assets {
      * @since 2.5.3
      */
     function load_gmap_script() {
-        $api_key = dokan_get_option( 'gmap_api_key', 'dokan_general', false );
+        $api_key = dokan_get_option( 'gmap_api_key', 'dokan_appearance', false );
 
         if ( $api_key ) {
             $query_args = apply_filters( 'dokan_google_maps_script_query_args', array(
@@ -587,8 +587,8 @@ class Dokan_Assets {
         {
             $general_settings = get_option( 'dokan_general', array() );
 
-            $banner_width    = !empty( $general_settings['store_banner_width'] ) ? $general_settings['store_banner_width'] : 625;
-            $banner_height   = !empty( $general_settings['store_banner_height'] ) ? $general_settings['store_banner_height'] : 300;
+            $banner_width    = dokan_get_option( 'store_banner_width', 'dokan_appearance', 625 );
+            $banner_height   = dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 );
             $has_flex_width  = !empty( $general_settings['store_banner_flex_width'] ) ? $general_settings['store_banner_flex_width'] : true;
             $has_flex_height = !empty( $general_settings['store_banner_flex_height'] ) ? $general_settings['store_banner_flex_height'] : true;
 
