@@ -20,12 +20,14 @@
 
             <?php dokan_post_input_box( $post_id, '_stock_status', array( 'options' => array(
                 'instock'     => __( 'In Stock', 'dokan-lite' ),
-                'outofstock' => __( 'Out of Stock', 'dokan-lite' ),
+                'outofstock'  => __( 'Out of Stock', 'dokan-lite' ),
+                'onbackorder' => __( 'On Backorder', 'dokan-lite' ),
             ) ), 'select' ); ?>
         </div>
 
         <div class="dokan-clearfix"></div>
 
+        <?php if ( 'yes' === get_option( 'woocommerce_manage_stock' ) ) : ?>
         <div class="dokan-form-group hide_if_variation hide_if_grouped">
             <?php dokan_post_input_box( $post_id, '_manage_stock', array( 'label' => __( 'Enable product stock management', 'dokan-lite' ) ), 'checkbox' ); ?>
         </div>
@@ -55,6 +57,7 @@
             </div>
             <div class="dokan-clearfix"></div>
         </div><!-- .show_if_stock -->
+        <?php endif; ?>
 
         <div class="dokan-form-group hide_if_grouped">
             <label class="" for="_sold_individually">
