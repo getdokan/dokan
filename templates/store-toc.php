@@ -14,7 +14,7 @@ get_header( 'shop' );
 
 <?php do_action( 'woocommerce_before_main_content' ); ?>
 
-<?php if ( dokan_get_option( 'enable_theme_store_sidebar', 'dokan_general', 'off' ) == 'off' ) { ?>
+<?php if ( dokan_get_option( 'enable_theme_store_sidebar', 'dokan_appearance', 'off' ) == 'off' ) { ?>
     <div id="dokan-secondary" class="dokan-clearfix dokan-w3 dokan-store-sidebar" role="complementary" style="margin-right:3%;">
         <div class="dokan-widget-area widget-collapse">
             <?php
@@ -30,15 +30,15 @@ get_header( 'shop' );
                 if ( class_exists( 'Dokan_Store_Location' ) ) {
                     the_widget( 'Dokan_Store_Category_Menu', array( 'title' => __( 'Store Product Category', 'dokan-lite' ) ), $args );
 
-                    if ( dokan_get_option( 'store_map', 'dokan_general', 'on' ) == 'on' ) {
+                    if ( dokan_get_option( 'store_map', 'dokan_appearance', 'on' ) == 'on' ) {
                         the_widget( 'Dokan_Store_Location', array( 'title' => __( 'Store Location', 'dokan-lite' ) ), $args );
                     }
 
-                    if ( dokan_get_option( 'store_open_close', 'dokan_general', 'on' ) == 'on' ) {
+                    if ( dokan_get_option( 'store_open_close', 'dokan_appearance', 'on' ) == 'on' ) {
                         the_widget( 'Dokan_Store_Open_Close', array( 'title' => __( 'Store Time', 'dokan-lite' ) ), $args );
                     }
 
-                    if ( dokan_get_option( 'contact_seller', 'dokan_general', 'on' ) == 'on' ) {
+                    if ( dokan_get_option( 'contact_seller', 'dokan_appearance', 'on' ) == 'on' ) {
                         the_widget( 'Dokan_Store_Contact_Form', array( 'title' => __( 'Contact Vendor', 'dokan-lite' ) ), $args );
                     }
                 }

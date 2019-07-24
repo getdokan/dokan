@@ -50,7 +50,7 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
         }
 
         $this->custom_logo = null;
-        $setup_wizard_logo_url = dokan_get_option( 'setup_wizard_logo_url', 'dokan_appearance', '' );
+        $setup_wizard_logo_url = dokan_get_option( 'setup_wizard_logo_url', 'dokan_general', '' );
 
         if ( ! empty( $setup_wizard_logo_url ) ) {
             $this->custom_logo = $setup_wizard_logo_url;
