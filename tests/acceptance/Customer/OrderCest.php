@@ -16,8 +16,8 @@ class OrderCest
     	$I->amOnpage('/');
 
         //Scenario 1: Single vendor single order
-    	   // $O->singleOrder();
-    	   // $I->click('Place order');
+    	   $O->singleOrder();
+    	   $I->click('Place order');
 
         //Scenario 2: Single vendor Multiple Order
             // $O->multipleOrder();

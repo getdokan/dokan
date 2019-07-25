@@ -17,10 +17,10 @@ class AddProductCest
         $I->click('Add new product');
         //$I->seeCurrentURLEquals('/wpbddtesting/dashboard/new-product/');             
         
-        $I->fillField('post_title', 'White Cap');
-        $I->fillField('_regular_price', '300');        
+        $I->fillField('post_title', 'Green Cap');
+        $I->fillField('_regular_price', '350');        
         //$I->fillField('_sale_price', '20');      
-        $I->fillField('post_excerpt', 'this is unique');
+        $I->fillField('post_excerpt', 'this is unique for cap');
         $I->selectOption('#product_cat','demo');        
         $I->click('Create product');
     }

@@ -6,7 +6,7 @@ class Order extends \AcceptanceTester
 	public function singleOrder()
 	{
 		$I = $this;
-    	$I->click('Yellow Cap');
+    	$I->click('Black Cap');
     	$I->click('Add to cart');
     	$I->click('View cart');
     	$I->click('Proceed to checkout');
