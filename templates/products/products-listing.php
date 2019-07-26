@@ -140,9 +140,8 @@
                                     $args['s'] = $get_data['product_search_name'];
                                 }
 
-                                $product_args = apply_filters( 'dokan_pre_product_listing', $args, $get_data );
-
                                 $original_post = $post;
+                                $product_args  = apply_filters( 'dokan_pre_product_listing_args', $args, $get_data );
                                 $product_query = dokan()->product->all( apply_filters( 'dokan_product_listing_arg', $product_args ) );
 
                                 if ( $product_query->have_posts() ) {
