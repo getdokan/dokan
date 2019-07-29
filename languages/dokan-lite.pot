@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Dokan 2.9.19\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2019-07-10 10:49:17+00:00\n"
+"POT-Creation-Date: 2019-07-29 05:14:28+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24,7 +24,7 @@ msgstr ""
 "X-Textdomain-Support: yes\n"
 "X-Generator: grunt-wp-i18n1.0.0\n"
 
-#: templates/products/inventory.php:37 templates/products/inventory.php:43
+#: templates/products/inventory.php:39 templates/products/inventory.php:45
 msgid "1"
 msgstr ""
 
@@ -37,166 +37,166 @@ msgstr ""
 msgid "Not Available"
 msgstr ""
 
-#: classes/admin-user-profile.php:86 classes/seller-setup-wizard.php:207
+#: classes/admin-user-profile.php:85 classes/seller-setup-wizard.php:207
 #: includes/class-dokan-privacy.php:221
 msgid "Country"
 msgstr ""
 
-#: classes/admin-user-profile.php:90
+#: classes/admin-user-profile.php:89
 msgid "Select a country&hellip;"
 msgstr ""
 
-#: classes/admin-user-profile.php:93
+#: classes/admin-user-profile.php:92
 msgid "State/County"
 msgstr ""
 
-#: classes/admin-user-profile.php:94
+#: classes/admin-user-profile.php:93
 msgid "State/County or state code"
 msgstr ""
 
-#: classes/admin-user-profile.php:99
+#: classes/admin-user-profile.php:98
 msgid "Dokan Options"
 msgstr ""
 
-#: classes/admin-user-profile.php:104
+#: classes/admin-user-profile.php:103
 msgid "Banner"
 msgstr ""
 
-#: classes/admin-user-profile.php:116 templates/settings/store-form.php:76
+#: classes/admin-user-profile.php:115 templates/settings/store-form.php:76
 msgid "Upload banner"
 msgstr ""
 
-#: classes/admin-user-profile.php:120
+#: classes/admin-user-profile.php:119
 msgid "Upload a banner for your store. Banner size is (%1$sx%2$s) pixels."
 msgstr ""
 
-#: classes/admin-user-profile.php:132
+#: classes/admin-user-profile.php:131
 msgid "Store name"
 msgstr ""
 
-#: classes/admin-user-profile.php:139
+#: classes/admin-user-profile.php:138
 msgid "Store URL"
 msgstr ""
 
-#: classes/admin-user-profile.php:147 includes/class-dokan-privacy.php:217
+#: classes/admin-user-profile.php:146 includes/class-dokan-privacy.php:217
 msgid "Address 1"
 msgstr ""
 
-#: classes/admin-user-profile.php:154 includes/class-dokan-privacy.php:218
+#: classes/admin-user-profile.php:153 includes/class-dokan-privacy.php:218
 msgid "Address 2"
 msgstr ""
 
-#: classes/admin-user-profile.php:161
+#: classes/admin-user-profile.php:160
 msgid "Town/City"
 msgstr ""
 
-#: classes/admin-user-profile.php:168
+#: classes/admin-user-profile.php:167
 msgid "Zip Code"
 msgstr ""
 
-#: classes/admin-user-profile.php:209
+#: classes/admin-user-profile.php:208
 #: templates/account/vendor-registration.php:33
 #: templates/global/seller-registration-form.php:38
 msgid "Phone Number"
 msgstr ""
 
-#: classes/admin-user-profile.php:227
+#: classes/admin-user-profile.php:226
 msgid "Payment Options : "
 msgstr ""
 
-#: classes/admin-user-profile.php:232
+#: classes/admin-user-profile.php:231
 msgid "Paypal Email "
 msgstr ""
 
-#: classes/admin-user-profile.php:240
+#: classes/admin-user-profile.php:239
 msgid "Skrill Email "
 msgstr ""
 
-#: classes/admin-user-profile.php:249
+#: classes/admin-user-profile.php:248
 msgid "Bank name "
 msgstr ""
 
-#: classes/admin-user-profile.php:255
+#: classes/admin-user-profile.php:254
 msgid "Account Name "
 msgstr ""
 
-#: classes/admin-user-profile.php:261
+#: classes/admin-user-profile.php:260
 msgid "Account Number "
 msgstr ""
 
-#: classes/admin-user-profile.php:267
+#: classes/admin-user-profile.php:266
 msgid "Bank Address "
 msgstr ""
 
-#: classes/admin-user-profile.php:273 includes/class-dokan-privacy.php:278
+#: classes/admin-user-profile.php:272 includes/class-dokan-privacy.php:278
 msgid "Routing Number"
 msgstr ""
 
-#: classes/admin-user-profile.php:279
+#: classes/admin-user-profile.php:278
 msgid "Bank IBAN "
 msgstr ""
 
-#: classes/admin-user-profile.php:285
+#: classes/admin-user-profile.php:284
 msgid "Bank Swift "
 msgstr ""
 
-#: classes/admin-user-profile.php:292 includes/admin/setup-wizard.php:109
+#: classes/admin-user-profile.php:291 includes/admin/setup-wizard.php:109
 msgid "Selling"
 msgstr ""
 
-#: classes/admin-user-profile.php:297
+#: classes/admin-user-profile.php:296
 msgid "Enable Adding Products"
 msgstr ""
 
-#: classes/admin-user-profile.php:300
+#: classes/admin-user-profile.php:299
 msgid "Enable or disable product adding capability"
 msgstr ""
 
-#: classes/admin-user-profile.php:305
+#: classes/admin-user-profile.php:304
 msgid "Publishing"
 msgstr ""
 
-#: classes/admin-user-profile.php:310
+#: classes/admin-user-profile.php:309
 msgid "Publish product directly"
 msgstr ""
 
-#: classes/admin-user-profile.php:313
+#: classes/admin-user-profile.php:312
 msgid "Bypass pending, publish products directly"
 msgstr ""
 
-#: classes/admin-user-profile.php:318
+#: classes/admin-user-profile.php:317
 msgid "Admin Commission Type "
 msgstr ""
 
-#: classes/admin-user-profile.php:321 includes/admin/class-settings.php:258
+#: classes/admin-user-profile.php:320 includes/admin/class-settings.php:257
 msgid "Percentage"
 msgstr ""
 
-#: classes/admin-user-profile.php:322 includes/admin/class-settings.php:257
+#: classes/admin-user-profile.php:321 includes/admin/class-settings.php:256
 msgid "Flat"
 msgstr ""
 
-#: classes/admin-user-profile.php:324
+#: classes/admin-user-profile.php:323
 msgid "Set the commmission type admin gets from this seller"
 msgstr ""
 
-#: classes/admin-user-profile.php:328
+#: classes/admin-user-profile.php:327
 msgid "Admin Commission "
 msgstr ""
 
-#: classes/admin-user-profile.php:332
+#: classes/admin-user-profile.php:331
 msgid "It will override the default commission admin gets from each sales"
 msgstr ""
 
-#: classes/admin-user-profile.php:337
+#: classes/admin-user-profile.php:336
 msgid "Featured vendor"
 msgstr ""
 
-#: classes/admin-user-profile.php:342
+#: classes/admin-user-profile.php:341
 msgid "Mark as featured vendor"
 msgstr ""
 
-#: classes/admin-user-profile.php:345
+#: classes/admin-user-profile.php:344
 msgid "This vendor will be marked as a featured vendor."
 msgstr ""
 
@@ -301,8 +301,8 @@ msgstr ""
 msgid "User logged in successfully."
 msgstr ""
 
-#: classes/installer.php:122 includes/admin/class-settings.php:289
-#: includes/admin/class-settings.php:297 includes/admin/setup-wizard.php:254
+#: classes/installer.php:122 includes/admin/class-settings.php:338
+#: includes/admin/class-settings.php:346 includes/admin/setup-wizard.php:256
 #: includes/admin-functions.php:44 includes/admin-functions.php:50
 #: includes/admin-functions.php:685 includes/admin-functions.php:709
 #: includes/wc-template.php:17 includes/wc-template.php:150
@@ -311,7 +311,7 @@ msgid "Vendor"
 msgstr ""
 
 #: classes/installer.php:186 includes/admin/class-admin.php:134
-#: includes/admin/class-admin.php:186 includes/admin/class-settings.php:402
+#: includes/admin/class-admin.php:186 includes/admin/class-settings.php:409
 #: includes/template-tags.php:323 src/admin/pages/Dashboard.vue:3
 msgid "Dashboard"
 msgstr ""
@@ -320,7 +320,7 @@ msgstr ""
 msgid "Store List"
 msgstr ""
 
-#: classes/installer.php:198 includes/admin/class-settings.php:408
+#: classes/installer.php:198 includes/admin/class-settings.php:417
 #: templates/global/header-menu.php:46
 msgid "My Orders"
 msgstr ""
@@ -375,7 +375,7 @@ msgstr ""
 msgid "Not right now"
 msgstr ""
 
-#: classes/seller-setup-wizard.php:175 includes/admin/setup-wizard.php:258
+#: classes/seller-setup-wizard.php:175 includes/admin/setup-wizard.php:260
 msgid "Store Setup"
 msgstr ""
 
@@ -417,14 +417,14 @@ msgid "Show email address in store"
 msgstr ""
 
 #: classes/seller-setup-wizard.php:237 classes/seller-setup-wizard.php:382
-#: includes/admin/setup-wizard.php:316 includes/admin/setup-wizard.php:417
-#: includes/admin/setup-wizard.php:552 includes/admin/setup-wizard.php:604
+#: includes/admin/setup-wizard.php:318 includes/admin/setup-wizard.php:422
+#: includes/admin/setup-wizard.php:557 includes/admin/setup-wizard.php:609
 msgid "Continue"
 msgstr ""
 
 #: classes/seller-setup-wizard.php:238 classes/seller-setup-wizard.php:383
-#: includes/admin/setup-wizard.php:317 includes/admin/setup-wizard.php:418
-#: includes/admin/setup-wizard.php:553
+#: includes/admin/setup-wizard.php:319 includes/admin/setup-wizard.php:423
+#: includes/admin/setup-wizard.php:558
 msgid "Skip this step"
 msgstr ""
 
@@ -444,7 +444,7 @@ msgstr ""
 msgid "Go to your Store Dashboard!"
 msgstr ""
 
-#: classes/template-dashboard.php:105 includes/admin/setup-wizard.php:530
+#: classes/template-dashboard.php:105 includes/admin/setup-wizard.php:535
 #: includes/order-functions.php:497 templates/dashboard/orders-widget.php:26
 msgid "Completed"
 msgstr ""
@@ -453,7 +453,7 @@ msgstr ""
 msgid "Pending"
 msgstr ""
 
-#: classes/template-dashboard.php:115 includes/admin/setup-wizard.php:536
+#: classes/template-dashboard.php:115 includes/admin/setup-wizard.php:541
 #: includes/order-functions.php:512 templates/dashboard/orders-widget.php:36
 #: templates/orders/listing.php:137
 msgid "Processing"
@@ -648,19 +648,19 @@ msgstr ""
 msgid "Sorry, no transactions were found!"
 msgstr ""
 
-#: classes/upgrade.php:89 includes/admin/class-admin.php:268
+#: classes/upgrade.php:90 includes/admin/class-admin.php:268
 msgid "Dokan Data Update Required"
 msgstr ""
 
-#: classes/upgrade.php:89 includes/admin/class-admin.php:268
+#: classes/upgrade.php:90 includes/admin/class-admin.php:268
 msgid "We need to update your install to the latest version"
 msgstr ""
 
-#: classes/upgrade.php:90 includes/admin/class-admin.php:269
+#: classes/upgrade.php:91 includes/admin/class-admin.php:269
 msgid "Run the updater"
 msgstr ""
 
-#: classes/upgrade.php:95 includes/admin/class-admin.php:274
+#: classes/upgrade.php:96 includes/admin/class-admin.php:274
 msgid ""
 "It is strongly recommended that you backup your database before proceeding. "
 "Are you sure you wish to run the updater now?"
@@ -812,10 +812,6 @@ msgstr ""
 msgid "Setting has been saved successfully."
 msgstr ""
 
-#: includes/admin/class-settings.php:180
-msgid "- select -"
-msgstr ""
-
 #: includes/admin/class-settings.php:212
 msgid "General"
 msgstr ""
@@ -828,205 +824,237 @@ msgstr ""
 msgid "Appearance"
 msgstr ""
 
-#: includes/admin/class-settings.php:237 includes/admin/class-settings.php:457
+#: includes/admin/class-settings.php:237 includes/admin/class-settings.php:499
 msgid "Privacy Policy"
 msgstr ""
 
-#: includes/admin/class-settings.php:265
+#: includes/admin/class-settings.php:263
+msgid "Site Options"
+msgstr ""
+
+#: includes/admin/class-settings.php:268
 msgid "Admin area access"
 msgstr ""
 
-#: includes/admin/class-settings.php:266
-msgid "Disable Vendors and Customers from accessing the wp-admin dashboard area"
+#: includes/admin/class-settings.php:269
+msgid "Disallow Vendors and Customers from accessing the wp-admin dashboard area"
 msgstr ""
 
-#: includes/admin/class-settings.php:272 includes/admin/setup-wizard.php:262
+#: includes/admin/class-settings.php:275 includes/admin/setup-wizard.php:264
 msgid "Vendor Store URL"
 msgstr ""
 
-#: includes/admin/class-settings.php:273
-msgid "Define the seller store URL (%s<strong>[this-text]</strong>/[seller-name])"
+#: includes/admin/class-settings.php:276
+msgid "Define the Vendor store URL (%s<strong>[this-text]</strong>/[vendor-name])"
 msgstr ""
 
-#: includes/admin/class-settings.php:279 includes/functions.php:1210
-#: templates/settings/store-form.php:205
-msgid "Terms and Conditions"
-msgstr ""
-
-#: includes/admin/class-settings.php:280
-msgid "Enable Terms and Conditions for vendor stores"
-msgstr ""
-
-#: includes/admin/class-settings.php:286 includes/admin/setup-wizard.php:269
-msgid "Shipping Fee Recipient"
-msgstr ""
-
-#: includes/admin/class-settings.php:287
-msgid "Should Shipping fees go to the Vendor or the Admin?"
-msgstr ""
-
-#: includes/admin/class-settings.php:289 includes/admin/class-settings.php:297
-#: includes/admin/setup-wizard.php:255
-msgid "Admin"
-msgstr ""
-
-#: includes/admin/class-settings.php:294 includes/admin/setup-wizard.php:283
-msgid "Tax Fee Recipient"
-msgstr ""
-
-#: includes/admin/class-settings.php:295
-msgid "Should Tax fees go to the Vendor or the Admin?"
-msgstr ""
-
-#: includes/admin/class-settings.php:302
-msgid "Store Opening Closing Time Widget"
-msgstr ""
-
-#: includes/admin/class-settings.php:303
-msgid "Enable store opening closing time widget in the store sidebar"
-msgstr ""
-
-#: includes/admin/class-settings.php:309
-msgid "Show Map on Store Page"
-msgstr ""
-
-#: includes/admin/class-settings.php:310
-msgid "Enable a Google Map of the Store Location in the store sidebar"
-msgstr ""
-
-#: includes/admin/class-settings.php:316
-msgid "Google Map API Key"
-msgstr ""
-
-#: includes/admin/class-settings.php:317
-msgid ""
-"<a href=\"https://developers.google.com/maps/documentation/javascript/\" "
-"target=\"_blank\">API Key</a> is needed to display map on store page"
-msgstr ""
-
-#: includes/admin/class-settings.php:322
-msgid "Show Contact Form on Store Page"
-msgstr ""
-
-#: includes/admin/class-settings.php:323
-msgid "Enable Vendor Contact Form in the store sidebar"
-msgstr ""
-
-#: includes/admin/class-settings.php:329
-msgid "Enable Store Sidebar From Theme"
-msgstr ""
-
-#: includes/admin/class-settings.php:330
-msgid "Enable showing Store Sidebar From Your Theme."
-msgstr ""
-
-#: includes/admin/class-settings.php:338
-msgid "New Vendor Product Upload"
-msgstr ""
-
-#: includes/admin/class-settings.php:339
-msgid "Allow newly registered vendors to add products"
-msgstr ""
-
-#: includes/admin/class-settings.php:345
-msgid "Commission Type "
-msgstr ""
-
-#: includes/admin/class-settings.php:346
-msgid "Select the commission type"
-msgstr ""
-
-#: includes/admin/class-settings.php:353
-msgid "Admin Commission"
-msgstr ""
-
-#: includes/admin/class-settings.php:354
-msgid "Amount you get from sales"
-msgstr ""
-
-#: includes/admin/class-settings.php:362 includes/admin/setup-wizard.php:403
-msgid "Order Status Change"
-msgstr ""
-
-#: includes/admin/class-settings.php:363
-msgid "Vendor can update order status"
-msgstr ""
-
-#: includes/admin/class-settings.php:369
-msgid "Disable Product Popup"
-msgstr ""
-
-#: includes/admin/class-settings.php:370
-msgid "Disable add new product in popup view"
-msgstr ""
-
-#: includes/admin/class-settings.php:376
-msgid "Disable Welcome Wizard"
-msgstr ""
-
-#: includes/admin/class-settings.php:377
-msgid "Disable welcome wizard for newly registered vendors"
-msgstr ""
-
-#: includes/admin/class-settings.php:385 includes/admin/setup-wizard.php:459
-msgid "Withdraw Methods"
-msgstr ""
-
-#: includes/admin/class-settings.php:386
-msgid "Withdraw methods for vendors"
-msgstr ""
-
-#: includes/admin/class-settings.php:393 includes/admin/setup-wizard.php:517
-msgid "Minimum Withdraw Limit"
-msgstr ""
-
-#: includes/admin/class-settings.php:394
-msgid ""
-"Minimum balance required to make a withdraw request. Leave blank to set no "
-"minimum limits."
-msgstr ""
-
-#: includes/admin/class-settings.php:414
-msgid "Terms and Conditions Page"
-msgstr ""
-
-#: includes/admin/class-settings.php:417
-msgid ""
-"Select where you want to add Dokan pages <a target=\"_blank\" href=\"%s\"> "
-"Learn More </a>"
-msgstr ""
-
-#: includes/admin/class-settings.php:423
+#: includes/admin/class-settings.php:282
 msgid "Vendor Setup Wizard Logo"
 msgstr ""
 
-#: includes/admin/class-settings.php:425
+#: includes/admin/class-settings.php:284
 msgid ""
 "Recommended Logo size ( 270px X 90px ). If no logo is uploaded, site title "
 "is shown by default."
 msgstr ""
 
-#: includes/admin/class-settings.php:429
-msgid "Store Header Template"
+#: includes/admin/class-settings.php:288
+msgid "Disable Welcome Wizard"
+msgstr ""
+
+#: includes/admin/class-settings.php:289
+msgid "Disable welcome wizard for newly registered vendors"
+msgstr ""
+
+#: includes/admin/class-settings.php:298
+msgid "Vendor Store Options"
+msgstr ""
+
+#: includes/admin/class-settings.php:303
+msgid "Store Terms and Conditions"
+msgstr ""
+
+#: includes/admin/class-settings.php:304
+msgid "Enable Terms and Conditions for vendor stores"
+msgstr ""
+
+#: includes/admin/class-settings.php:313
+msgid "Commission"
+msgstr ""
+
+#: includes/admin/class-settings.php:318
+msgid "Commission Type "
+msgstr ""
+
+#: includes/admin/class-settings.php:319
+msgid "Select a commission type for Vendor"
+msgstr ""
+
+#: includes/admin/class-settings.php:326
+msgid "Admin Commission"
+msgstr ""
+
+#: includes/admin/class-settings.php:327
+msgid "Amount you get from each sale"
+msgstr ""
+
+#: includes/admin/class-settings.php:335 includes/admin/setup-wizard.php:271
+msgid "Shipping Fee Recipient"
+msgstr ""
+
+#: includes/admin/class-settings.php:336
+msgid "Who will be receiving the Shipping fees"
+msgstr ""
+
+#: includes/admin/class-settings.php:338 includes/admin/class-settings.php:346
+#: includes/admin/setup-wizard.php:257
+msgid "Admin"
+msgstr ""
+
+#: includes/admin/class-settings.php:343 includes/admin/setup-wizard.php:285
+msgid "Tax Fee Recipient"
+msgstr ""
+
+#: includes/admin/class-settings.php:344
+msgid "Who will be receiving the Tax fees"
+msgstr ""
+
+#: includes/admin/class-settings.php:354
+msgid "Vendor Capability"
+msgstr ""
+
+#: includes/admin/class-settings.php:359
+msgid "New Vendor Product Upload"
+msgstr ""
+
+#: includes/admin/class-settings.php:360
+msgid "Allow newly registered vendors to add products"
+msgstr ""
+
+#: includes/admin/class-settings.php:366
+msgid "Disable Product Popup"
+msgstr ""
+
+#: includes/admin/class-settings.php:367
+msgid "Disable add new product in popup view"
+msgstr ""
+
+#: includes/admin/class-settings.php:373 includes/admin/setup-wizard.php:408
+msgid "Order Status Change"
+msgstr ""
+
+#: includes/admin/class-settings.php:374
+msgid "Allow/Disallow vendor to update order status"
+msgstr ""
+
+#: includes/admin/class-settings.php:392 includes/admin/setup-wizard.php:464
+msgid "Withdraw Methods"
+msgstr ""
+
+#: includes/admin/class-settings.php:393
+msgid "Select suitable Withdraw methods for Vendors"
+msgstr ""
+
+#: includes/admin/class-settings.php:400 includes/admin/setup-wizard.php:522
+msgid "Minimum Withdraw Limit"
+msgstr ""
+
+#: includes/admin/class-settings.php:401
+msgid ""
+"Minimum balance required to make a withdraw request. Leave blank to set no "
+"minimum limits."
+msgstr ""
+
+#: includes/admin/class-settings.php:410
+msgid "Select a page to show Vendor Dashboard"
+msgstr ""
+
+#: includes/admin/class-settings.php:412 includes/admin/class-settings.php:420
+#: includes/admin/class-settings.php:428 includes/admin/class-settings.php:494
+msgid "Select page"
+msgstr ""
+
+#: includes/admin/class-settings.php:418
+msgid "Select a page to show My Orders"
+msgstr ""
+
+#: includes/admin/class-settings.php:425
+msgid "Terms and Conditions Page"
+msgstr ""
+
+#: includes/admin/class-settings.php:426
+msgid "Select a page to show Terms and Conditions"
+msgstr ""
+
+#: includes/admin/class-settings.php:430
+msgid ""
+"Select where you want to add Dokan pages <a target=\"_blank\" href=\"%s\"> "
+"Learn More </a>"
+msgstr ""
+
+#: includes/admin/class-settings.php:436
+msgid "Show Map on Store Page"
+msgstr ""
+
+#: includes/admin/class-settings.php:437
+msgid "Enable Google Maps of the Store Location in the store sidebar"
 msgstr ""
 
 #: includes/admin/class-settings.php:443
-msgid "Enable Privacy Policy"
+msgid "Google Map API Key"
 msgstr ""
 
-#: includes/admin/class-settings.php:445
-msgid "Enable privacy policy for dokan contact form"
+#: includes/admin/class-settings.php:444
+msgid ""
+"<a href=\"https://developers.google.com/maps/documentation/javascript/\" "
+"target=\"_blank\">API Key</a> is needed to display map on store page"
+msgstr ""
+
+#: includes/admin/class-settings.php:449
+msgid "Show Contact Form on Store Page"
 msgstr ""
 
 #: includes/admin/class-settings.php:450
+msgid "Display a vendor contact form in the store sidebar"
+msgstr ""
+
+#: includes/admin/class-settings.php:456
+msgid "Store Header Template"
+msgstr ""
+
+#: includes/admin/class-settings.php:468
+msgid "Store Opening Closing Time Widget"
+msgstr ""
+
+#: includes/admin/class-settings.php:469
+msgid "Enable store opening & closing time widget in the store sidebar"
+msgstr ""
+
+#: includes/admin/class-settings.php:475
+msgid "Enable Store Sidebar From Theme"
+msgstr ""
+
+#: includes/admin/class-settings.php:476
+msgid "Enable showing Store Sidebar From Your Theme."
+msgstr ""
+
+#: includes/admin/class-settings.php:484
+msgid "Enable Privacy Policy"
+msgstr ""
+
+#: includes/admin/class-settings.php:486
+msgid "Enable privacy policy for Vendor store contact form"
+msgstr ""
+
+#: includes/admin/class-settings.php:491
 msgid "Privacy Page"
 msgstr ""
 
-#: includes/admin/class-settings.php:452
-msgid "Choose privacy policy page"
+#: includes/admin/class-settings.php:493
+msgid "Select a page to show your privacy policy"
 msgstr ""
 
-#: includes/admin/class-settings.php:460 includes/functions.php:3462
+#: includes/admin/class-settings.php:502 includes/functions.php:3463
 msgid ""
 "Your personal data will be used to support your experience throughout this "
 "website, to manage access to your account, and for other purposes described "
@@ -1136,43 +1164,43 @@ msgid ""
 "mind!"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:265
+#: includes/admin/setup-wizard.php:267
 msgid "Define vendor store URL"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:279
+#: includes/admin/setup-wizard.php:281
 msgid "Shipping fees will go to"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:293
+#: includes/admin/setup-wizard.php:295
 msgid "Tax fees will go to"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:297
+#: includes/admin/setup-wizard.php:299
 msgid "Share Essentials"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:302 includes/admin/setup-wizard.php:377
-#: includes/admin/setup-wizard.php:407
+#: includes/admin/setup-wizard.php:304 includes/admin/setup-wizard.php:382
+#: includes/admin/setup-wizard.php:412
 msgid "On"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:303 includes/admin/setup-wizard.php:378
-#: includes/admin/setup-wizard.php:408
+#: includes/admin/setup-wizard.php:305 includes/admin/setup-wizard.php:383
+#: includes/admin/setup-wizard.php:413
 msgid "Off"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:306
+#: includes/admin/setup-wizard.php:308
 msgid ""
 "Want to help make Dokan even more awesome? Allow weDevs to collect "
 "non-sensitive diagnostic data and usage information."
 msgstr ""
 
-#: includes/admin/setup-wizard.php:307
+#: includes/admin/setup-wizard.php:309
 msgid "What we collect"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:310
+#: includes/admin/setup-wizard.php:312
 msgid ""
 "Server environment details (php, mysql, server, WordPress versions), Number "
 "of users in your site, Site language, Number of active and inactive "
@@ -1180,135 +1208,135 @@ msgid ""
 "is tracked."
 msgstr ""
 
-#: includes/admin/setup-wizard.php:369
+#: includes/admin/setup-wizard.php:374
 msgid "Selling Setup"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:373
+#: includes/admin/setup-wizard.php:378
 msgid "New Vendor Enable Selling"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:381
+#: includes/admin/setup-wizard.php:386
 msgid "Make selling status enable for new registred vendor"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:386
+#: includes/admin/setup-wizard.php:391
 msgid "Commission Type"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:392
+#: includes/admin/setup-wizard.php:397
 msgid "Set your commission type"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:396
+#: includes/admin/setup-wizard.php:401
 msgid "Admin Commission %"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:399
+#: includes/admin/setup-wizard.php:404
 msgid "How much amount (%) you will get from each order"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:411
+#: includes/admin/setup-wizard.php:416
 msgid "Vendor can change order status"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:455
+#: includes/admin/setup-wizard.php:460
 msgid "Withdraw Setup"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:466 includes/withdraw-functions.php:11
+#: includes/admin/setup-wizard.php:471 includes/withdraw-functions.php:11
 msgid "PayPal"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:469
+#: includes/admin/setup-wizard.php:474
 msgid "Enable PayPal for your vendor as a withdraw method"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:479
+#: includes/admin/setup-wizard.php:484
 msgid "Bank"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:482
+#: includes/admin/setup-wizard.php:487
 msgid "Enable bank transfer for your vendor as a withdraw method"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:492
+#: includes/admin/setup-wizard.php:497
 msgid "Skrill"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:495
+#: includes/admin/setup-wizard.php:500
 msgid "Enable skrill for your vendor as a withdraw method"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:520
+#: includes/admin/setup-wizard.php:525
 msgid ""
 "Minimum balance required to make a withdraw request ( Leave it blank to set "
 "no limits )"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:524
+#: includes/admin/setup-wizard.php:529
 msgid "Order Status for Withdraw"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:542 includes/order-functions.php:507
+#: includes/admin/setup-wizard.php:547 includes/order-functions.php:507
 msgid "On-hold"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:547
+#: includes/admin/setup-wizard.php:552
 msgid "Order status for which vendor can make a withdraw request."
 msgstr ""
 
-#: includes/admin/setup-wizard.php:569
+#: includes/admin/setup-wizard.php:574
 msgid "Recommended for All Dokan Marketplaces"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:571
+#: includes/admin/setup-wizard.php:576
 msgid "Enhance your store with these recommended features."
 msgstr ""
 
-#: includes/admin/setup-wizard.php:581 includes/admin/setup-wizard.php:585
-#: includes/admin/setup-wizard.php:628
+#: includes/admin/setup-wizard.php:586 includes/admin/setup-wizard.php:590
+#: includes/admin/setup-wizard.php:633
 msgid "WooCommerce Conversion Tracking"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:582
+#: includes/admin/setup-wizard.php:587
 msgid "Track conversions on your WooCommerce store like a pro!"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:584
+#: includes/admin/setup-wizard.php:589
 msgid "WooCommerce Conversion Tracking logo"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:592 includes/admin/setup-wizard.php:596
-#: includes/admin/setup-wizard.php:639
+#: includes/admin/setup-wizard.php:597 includes/admin/setup-wizard.php:601
+#: includes/admin/setup-wizard.php:644
 msgid "weForms"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:593
+#: includes/admin/setup-wizard.php:598
 msgid "Best Contact Form Plugin for WordPress."
 msgstr ""
 
-#: includes/admin/setup-wizard.php:595
+#: includes/admin/setup-wizard.php:600
 msgid "weForms logo"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:687
+#: includes/admin/setup-wizard.php:692
 msgid "Your Marketplace is Ready!"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:692
+#: includes/admin/setup-wizard.php:697
 msgid "Visit Dokan Dashboard"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:693
+#: includes/admin/setup-wizard.php:698
 msgid "More Settings"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:794
+#: includes/admin/setup-wizard.php:799
 msgid "The following plugins will be installed and activated for you:"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:926
+#: includes/admin/setup-wizard.php:931
 msgid "Contact Admin"
 msgstr ""
 
@@ -2963,19 +2991,19 @@ msgstr ""
 msgid "Gravatar Url"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:195 includes/functions.php:2323
+#: includes/class-dokan-privacy.php:195 includes/functions.php:2324
 msgid "Facebook"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:196 includes/functions.php:2327
+#: includes/class-dokan-privacy.php:196 includes/functions.php:2328
 msgid "Google Plus"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:197 includes/functions.php:2331
+#: includes/class-dokan-privacy.php:197 includes/functions.php:2332
 msgid "Twitter"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:198 includes/functions.php:2335
+#: includes/class-dokan-privacy.php:198 includes/functions.php:2336
 msgid "Pinterest"
 msgstr ""
 
@@ -2983,15 +3011,15 @@ msgstr ""
 msgid "Linkedin"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:200 includes/functions.php:2343
+#: includes/class-dokan-privacy.php:200 includes/functions.php:2344
 msgid "Youtube"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:201 includes/functions.php:2347
+#: includes/class-dokan-privacy.php:201 includes/functions.php:2348
 msgid "Instagram"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:202 includes/functions.php:2351
+#: includes/class-dokan-privacy.php:202 includes/functions.php:2352
 msgid "Flickr"
 msgstr ""
 
@@ -3075,15 +3103,15 @@ msgstr ""
 msgid "[%s] Your product has been approved!"
 msgstr ""
 
-#: includes/class-order-manager.php:114
+#: includes/class-order-manager.php:127
 msgid "Mark parent order completed when all child orders are completed."
 msgstr ""
 
-#: includes/class-order-manager.php:474
+#: includes/class-order-manager.php:487
 msgid "A coupon must be restricted with a vendor product."
 msgstr ""
 
-#: includes/class-order-manager.php:530
+#: includes/class-order-manager.php:543
 #. translators: %s item name.
 msgid "Unable to restore stock for item %s."
 msgstr ""
@@ -3401,7 +3429,7 @@ msgstr ""
 msgid "Pending Review"
 msgstr ""
 
-#: includes/functions.php:767 templates/products/products-listing-row.php:157
+#: includes/functions.php:767 templates/products/products-listing-row.php:153
 msgid "Scheduled"
 msgstr ""
 
@@ -3425,309 +3453,313 @@ msgstr ""
 msgid "Author"
 msgstr ""
 
-#: includes/functions.php:1206 includes/template-tags.php:330
+#: includes/functions.php:1207 includes/template-tags.php:330
 #: templates/dashboard/products-widget.php:16
 msgid "Products"
 msgstr ""
 
-#: includes/functions.php:1247
+#: includes/functions.php:1211 templates/settings/store-form.php:205
+msgid "Terms and Conditions"
+msgstr ""
+
+#: includes/functions.php:1248
 msgid "Account Name: %s"
 msgstr ""
 
-#: includes/functions.php:1251
+#: includes/functions.php:1252
 msgid "Account Number: %s"
 msgstr ""
 
-#: includes/functions.php:1255
+#: includes/functions.php:1256
 msgid "Bank Name: %s"
 msgstr ""
 
-#: includes/functions.php:1259
+#: includes/functions.php:1260
 msgid "Address: %s"
 msgstr ""
 
-#: includes/functions.php:1263
+#: includes/functions.php:1264
 msgid "Routing Number: %s"
 msgstr ""
 
-#: includes/functions.php:1267
+#: includes/functions.php:1268
 msgid "IBAN: %s"
 msgstr ""
 
-#: includes/functions.php:1271
+#: includes/functions.php:1272
 msgid "SWIFT: %s"
 msgstr ""
 
-#: includes/functions.php:1629
+#: includes/functions.php:1630
 msgid "Date is not valid"
 msgstr ""
 
-#: includes/functions.php:2059
+#: includes/functions.php:2060
 msgid "- Select a location -"
 msgstr ""
 
-#: includes/functions.php:2063 includes/functions.php:2086
+#: includes/functions.php:2064 includes/functions.php:2087
 msgid "Everywhere Else"
 msgstr ""
 
-#: includes/functions.php:2082
+#: includes/functions.php:2083
 msgid "- Select a State -"
 msgstr ""
 
-#: includes/functions.php:2104
+#: includes/functions.php:2105
 msgid "Ready to ship in..."
 msgstr ""
 
-#: includes/functions.php:2105
+#: includes/functions.php:2106
 msgid "1 business day"
 msgstr ""
 
-#: includes/functions.php:2106
+#: includes/functions.php:2107
 msgid "1-2 business day"
 msgstr ""
 
-#: includes/functions.php:2107
+#: includes/functions.php:2108
 msgid "1-3 business day"
 msgstr ""
 
-#: includes/functions.php:2108
+#: includes/functions.php:2109
 msgid "3-5 business day"
 msgstr ""
 
-#: includes/functions.php:2109
+#: includes/functions.php:2110
 msgid "1-2 weeks"
 msgstr ""
 
-#: includes/functions.php:2110
+#: includes/functions.php:2111
 msgid "2-3 weeks"
 msgstr ""
 
-#: includes/functions.php:2111
+#: includes/functions.php:2112
 msgid "3-4 weeks"
 msgstr ""
 
-#: includes/functions.php:2112
+#: includes/functions.php:2113
 msgid "4-6 weeks"
 msgstr ""
 
-#: includes/functions.php:2113
+#: includes/functions.php:2114
 msgid "6-8 weeks"
 msgstr ""
 
-#: includes/functions.php:2232
+#: includes/functions.php:2233
 msgid "All dates"
 msgstr ""
 
-#: includes/functions.php:2247
+#: includes/functions.php:2248
 #. translators: 1: month name, 2: 4-digit year
 msgid "%1$s %2$d"
 msgstr ""
 
-#: includes/functions.php:2339
+#: includes/functions.php:2340
 msgid "LinkedIn"
 msgstr ""
 
-#: includes/functions.php:2617
+#: includes/functions.php:2618
 msgid "Dokan Store Sidebar"
 msgstr ""
 
-#: includes/functions.php:2883
+#: includes/functions.php:2884
 msgid "View sales overview"
 msgstr ""
 
-#: includes/functions.php:2884
+#: includes/functions.php:2885
 msgid "View sales report chart"
 msgstr ""
 
-#: includes/functions.php:2885
+#: includes/functions.php:2886
 msgid "View announcement"
 msgstr ""
 
-#: includes/functions.php:2886
+#: includes/functions.php:2887
 msgid "View order report"
 msgstr ""
 
-#: includes/functions.php:2887
+#: includes/functions.php:2888
 msgid "View review report"
 msgstr ""
 
-#: includes/functions.php:2888
+#: includes/functions.php:2889
 msgid "View product status report"
 msgstr ""
 
-#: includes/functions.php:2891
+#: includes/functions.php:2892
 msgid "View overview report"
 msgstr ""
 
-#: includes/functions.php:2892
+#: includes/functions.php:2893
 msgid "View daily sales report"
 msgstr ""
 
-#: includes/functions.php:2893
+#: includes/functions.php:2894
 msgid "View top selling report"
 msgstr ""
 
-#: includes/functions.php:2894
+#: includes/functions.php:2895
 msgid "View top earning report"
 msgstr ""
 
-#: includes/functions.php:2895
+#: includes/functions.php:2896
 msgid "View statement report"
 msgstr ""
 
-#: includes/functions.php:2898
+#: includes/functions.php:2899
 msgid "View order"
 msgstr ""
 
-#: includes/functions.php:2899
+#: includes/functions.php:2900
 msgid "Manage order"
 msgstr ""
 
-#: includes/functions.php:2900
+#: includes/functions.php:2901
 msgid "Manage order note"
 msgstr ""
 
-#: includes/functions.php:2901
+#: includes/functions.php:2902
 msgid "Manage refund"
 msgstr ""
 
-#: includes/functions.php:2905
+#: includes/functions.php:2906
 msgid "Add coupon"
 msgstr ""
 
-#: includes/functions.php:2906
+#: includes/functions.php:2907
 msgid "Edit coupon"
 msgstr ""
 
-#: includes/functions.php:2907
+#: includes/functions.php:2908
 msgid "Delete coupon"
 msgstr ""
 
-#: includes/functions.php:2910
+#: includes/functions.php:2911
 msgid "View reviews"
 msgstr ""
 
-#: includes/functions.php:2911
+#: includes/functions.php:2912
 msgid "Manage reviews"
 msgstr ""
 
-#: includes/functions.php:2915
+#: includes/functions.php:2916
 msgid "Manage withdraw"
 msgstr ""
 
-#: includes/functions.php:2918
+#: includes/functions.php:2919
 msgid "Add product"
 msgstr ""
 
-#: includes/functions.php:2919
+#: includes/functions.php:2920
 msgid "Edit product"
 msgstr ""
 
-#: includes/functions.php:2920
+#: includes/functions.php:2921
 msgid "Delete product"
 msgstr ""
 
-#: includes/functions.php:2921
+#: includes/functions.php:2922
 msgid "View product"
 msgstr ""
 
-#: includes/functions.php:2922
+#: includes/functions.php:2923
 msgid "Duplicate product"
 msgstr ""
 
-#: includes/functions.php:2923
+#: includes/functions.php:2924
 msgid "Import product"
 msgstr ""
 
-#: includes/functions.php:2924
+#: includes/functions.php:2925
 msgid "Export product"
 msgstr ""
 
-#: includes/functions.php:2927
+#: includes/functions.php:2928
 msgid "View overview menu"
 msgstr ""
 
-#: includes/functions.php:2928
+#: includes/functions.php:2929
 msgid "View product menu"
 msgstr ""
 
-#: includes/functions.php:2929
+#: includes/functions.php:2930
 msgid "View order menu"
 msgstr ""
 
-#: includes/functions.php:2930
+#: includes/functions.php:2931
 msgid "View coupon menu"
 msgstr ""
 
-#: includes/functions.php:2931
+#: includes/functions.php:2932
 msgid "View report menu"
 msgstr ""
 
-#: includes/functions.php:2932
+#: includes/functions.php:2933
 msgid "Vuew review menu"
 msgstr ""
 
-#: includes/functions.php:2933
+#: includes/functions.php:2934
 msgid "View withdraw menu"
 msgstr ""
 
-#: includes/functions.php:2934
+#: includes/functions.php:2935
 msgid "View store settings menu"
 msgstr ""
 
-#: includes/functions.php:2935
+#: includes/functions.php:2936
 msgid "View payment settings menu"
 msgstr ""
 
-#: includes/functions.php:2936
+#: includes/functions.php:2937
 msgid "View shipping settings menu"
 msgstr ""
 
-#: includes/functions.php:2937
+#: includes/functions.php:2938
 msgid "View social settings menu"
 msgstr ""
 
-#: includes/functions.php:2938
+#: includes/functions.php:2939
 msgid "View seo settings menu"
 msgstr ""
 
-#: includes/functions.php:3115
+#: includes/functions.php:3116
 msgid "Saturday"
 msgstr ""
 
-#: includes/functions.php:3118
+#: includes/functions.php:3119
 msgid "Sunday"
 msgstr ""
 
-#: includes/functions.php:3121
+#: includes/functions.php:3122
 msgid "Monday"
 msgstr ""
 
-#: includes/functions.php:3124
+#: includes/functions.php:3125
 msgid "Tuesday"
 msgstr ""
 
-#: includes/functions.php:3127
+#: includes/functions.php:3128
 msgid "Wednesday"
 msgstr ""
 
-#: includes/functions.php:3130
+#: includes/functions.php:3131
 msgid "Thursday"
 msgstr ""
 
-#: includes/functions.php:3133
+#: includes/functions.php:3134
 msgid "Friday"
 msgstr ""
 
-#: includes/functions.php:3136
+#: includes/functions.php:3137
 msgid "Off Day"
 msgstr ""
 
-#: includes/functions.php:3443
+#: includes/functions.php:3444
 msgid "privacy policy"
 msgstr ""
 
-#: includes/functions.php:3483
+#: includes/functions.php:3484
 msgid "Please Login to Continue"
 msgstr ""
 
@@ -4055,7 +4087,7 @@ msgstr ""
 msgid "Catalog"
 msgstr ""
 
-#: includes/product-functions.php:368 templates/products/listing-filter.php:54
+#: includes/product-functions.php:368 templates/products/listing-filter.php:56
 msgid "Search"
 msgstr ""
 
@@ -4378,7 +4410,7 @@ msgstr ""
 msgid "what we collect"
 msgstr ""
 
-#: lib/appsero/Insights.php:369 templates/products/inventory.php:53
+#: lib/appsero/Insights.php:369 templates/products/inventory.php:55
 msgid "Allow"
 msgstr ""
 
@@ -4414,11 +4446,11 @@ msgstr ""
 msgid "Clear"
 msgstr ""
 
-#: src/admin/components/Fields.vue:167
+#: src/admin/components/Fields.vue:173
 msgid "Active"
 msgstr ""
 
-#: src/admin/components/Fields.vue:171 src/admin/pages/Settings.vue:139
+#: src/admin/components/Fields.vue:177 src/admin/pages/Settings.vue:155
 msgid "Select"
 msgstr ""
 
@@ -4567,7 +4599,7 @@ msgstr ""
 msgid "Dismiss this notice."
 msgstr ""
 
-#: src/admin/pages/Settings.vue:137
+#: src/admin/pages/Settings.vue:153
 msgid "Choose your file"
 msgstr ""
 
@@ -4627,7 +4659,7 @@ msgid "Register"
 msgstr ""
 
 #: templates/dashboard/big-counter-widget.php:21
-#: templates/products/products-listing-row.php:90
+#: templates/products/products-listing-row.php:86
 #: templates/products/products-listing.php:96
 msgid "Earning"
 msgstr ""
@@ -4960,7 +4992,7 @@ msgstr ""
 
 #: templates/my-orders.php:28 templates/orders/listing.php:51
 #: templates/orders/listing.php:107
-#: templates/products/products-listing-row.php:128
+#: templates/products/products-listing-row.php:124
 #: templates/products/products-listing.php:99 templates/sub-orders.php:26
 #: templates/withdraw/approved-request-listing.php:16
 #: templates/withdraw/cancelled-request-listing.php:16
@@ -4999,7 +5031,7 @@ msgstr ""
 msgid "Filter by Customer"
 msgstr ""
 
-#: templates/orders/date-export.php:39 templates/products/listing-filter.php:46
+#: templates/orders/date-export.php:39 templates/products/listing-filter.php:48
 msgid "Filter"
 msgstr ""
 
@@ -5173,12 +5205,12 @@ msgid "Guest"
 msgstr ""
 
 #: templates/orders/listing.php:110
-#: templates/products/products-listing-row.php:131
+#: templates/products/products-listing-row.php:127
 msgid "Unpublished"
 msgstr ""
 
 #: templates/orders/listing.php:117
-#: templates/products/products-listing-row.php:141
+#: templates/products/products-listing-row.php:137
 msgid "%s ago"
 msgstr ""
 
@@ -5249,7 +5281,7 @@ msgid "&larr; Orders"
 msgstr ""
 
 #: templates/products/download-virtual.php:4
-#: templates/products/products-listing-row.php:112
+#: templates/products/products-listing-row.php:108
 msgid "Downloadable"
 msgstr ""
 
@@ -5258,7 +5290,7 @@ msgid "Downloadable products give access to a file upon purchase."
 msgstr ""
 
 #: templates/products/download-virtual.php:9
-#: templates/products/products-listing-row.php:110
+#: templates/products/products-listing-row.php:106
 msgid "Virtual"
 msgstr ""
 
@@ -5340,31 +5372,35 @@ msgstr ""
 msgid "Out of Stock"
 msgstr ""
 
-#: templates/products/inventory.php:30
+#: templates/products/inventory.php:24
+msgid "On Backorder"
+msgstr ""
+
+#: templates/products/inventory.php:32
 msgid "Enable product stock management"
 msgstr ""
 
-#: templates/products/inventory.php:36
+#: templates/products/inventory.php:38
 msgid "Stock quantity"
 msgstr ""
 
-#: templates/products/inventory.php:42
+#: templates/products/inventory.php:44
 msgid "Low stock threshold"
 msgstr ""
 
-#: templates/products/inventory.php:48
+#: templates/products/inventory.php:50
 msgid "Allow Backorders"
 msgstr ""
 
-#: templates/products/inventory.php:51
+#: templates/products/inventory.php:53
 msgid "Do not allow"
 msgstr ""
 
-#: templates/products/inventory.php:52
+#: templates/products/inventory.php:54
 msgid "Allow but notify customer"
 msgstr ""
 
-#: templates/products/inventory.php:62
+#: templates/products/inventory.php:65
 msgid "Allow only one quantity of this product to be bought in a single order"
 msgstr ""
 
@@ -5375,7 +5411,7 @@ msgstr ""
 msgid "- Select a category -"
 msgstr ""
 
-#: templates/products/listing-filter.php:59
+#: templates/products/listing-filter.php:61
 msgid "Search Products"
 msgstr ""
 
@@ -5434,7 +5470,7 @@ msgstr ""
 
 #: templates/products/new-product-single.php:192
 #: templates/products/new-product.php:154
-#: templates/products/products-listing-row.php:81
+#: templates/products/products-listing-row.php:77
 #: templates/products/products-listing.php:95
 #: templates/products/tmpl-add-product-popup.php:52
 msgid "Price"
@@ -5603,57 +5639,49 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
-#: templates/products/products-listing-row.php:71
-msgid "In stock"
-msgstr ""
-
-#: templates/products/products-listing-row.php:73
-msgid "Out of stock"
-msgstr ""
-
-#: templates/products/products-listing-row.php:101
+#: templates/products/products-listing-row.php:97
 #: templates/products/products-listing.php:97
 msgid "Type"
 msgstr ""
 
-#: templates/products/products-listing-row.php:104
+#: templates/products/products-listing-row.php:100
 msgid "Grouped"
 msgstr ""
 
-#: templates/products/products-listing-row.php:106
+#: templates/products/products-listing-row.php:102
 msgid "External/Affiliate"
 msgstr ""
 
-#: templates/products/products-listing-row.php:114
+#: templates/products/products-listing-row.php:110
 msgid "Simple"
 msgstr ""
 
-#: templates/products/products-listing-row.php:118
+#: templates/products/products-listing-row.php:114
 msgid "Variable"
 msgstr ""
 
-#: templates/products/products-listing-row.php:125
+#: templates/products/products-listing-row.php:121
 #: templates/products/products-listing.php:98
 msgid "Views"
 msgstr ""
 
-#: templates/products/products-listing-row.php:134
+#: templates/products/products-listing-row.php:130
 msgid "Y/m/d g:i:s A"
 msgstr ""
 
-#: templates/products/products-listing-row.php:143
+#: templates/products/products-listing-row.php:139
 msgid "Y/m/d"
 msgstr ""
 
-#: templates/products/products-listing-row.php:152
+#: templates/products/products-listing-row.php:148
 msgid "Published"
 msgstr ""
 
-#: templates/products/products-listing-row.php:155
+#: templates/products/products-listing-row.php:151
 msgid "Missed schedule"
 msgstr ""
 
-#: templates/products/products-listing-row.php:160
+#: templates/products/products-listing-row.php:156
 msgid "Last Modified"
 msgstr ""
 
@@ -5661,15 +5689,15 @@ msgstr ""
 msgid "Add new product"
 msgstr ""
 
-#: templates/products/products-listing.php:170
+#: templates/products/products-listing.php:171
 msgid "No product found"
 msgstr ""
 
-#: templates/products/products-listing.php:193
+#: templates/products/products-listing.php:194
 msgid "&laquo; Previous"
 msgstr ""
 
-#: templates/products/products-listing.php:194
+#: templates/products/products-listing.php:195
 msgid "Next &raquo;"
 msgstr ""
 

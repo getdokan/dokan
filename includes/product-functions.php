@@ -546,6 +546,18 @@ function dokan_bulk_product_status_change() {
         return;
     }
 
+    do_action( 'dokan_bulk_product_status_change', $status, $products );
+}
+
+add_action( 'template_redirect', 'dokan_bulk_product_status_change' );
+
+add_action( 'dokan_bulk_product_status_change', 'dokan_bulk_product_delete', 10, 2 );
+
+function dokan_bulk_product_delete( $action, $products ) {
+    if ( 'delete' !== $action || empty( $products ) ) {
+        return;
+    }
+
     foreach ( $products as $product_id ) {
         if ( dokan_is_product_author( $product_id ) ) {
             wp_delete_post( $product_id );
@@ -555,8 +567,6 @@ function dokan_bulk_product_status_change() {
     wp_redirect( add_query_arg( array( 'message' => 'product_deleted' ), dokan_get_navigation_url( 'products' ) ) );
     exit;
 }
-
-add_action( 'template_redirect', 'dokan_bulk_product_status_change' );
 
 /**
  * Dokan get vendor by product
@@ -583,4 +593,23 @@ function dokan_get_vendor_by_product( $product ) {
     }
 
     return dokan()->vendor->get( $vendor_id );
+}
+
+/**
+ * Get translated product stock status
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @param  mix $stock
+ *
+ * @return string | array if stock parameter is not provided
+ */
+function dokan_get_translated_product_stock_status( $stock = false ) {
+    $stock_status = wc_get_product_stock_status_options();
+
+    if ( ! $stock ) {
+        return $stock_status;
+    }
+
+    return isset( $stock_status[$stock] ) ? $stock_status[$stock] : '';
 }

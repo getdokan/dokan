@@ -362,3 +362,21 @@ add_action( 'dokan_store_profile_saved', function( $store_id, $settings ) {
     }
 
 }, 99, 2 );
+
+/**
+ * Remove store avatar set by ultimate member from store and store listing page
+ *
+ * @since DOKAN_LITE_SINCE
+ */
+add_action( 'pre_get_avatar', function() {
+    $page_id = get_queried_object_id();
+    $page    = get_page( $page_id );
+
+    if ( ! $page instanceof WP_Post ) {
+        return;
+    }
+
+    if ( dokan_is_store_page() || dokan_is_store_listing() || has_shortcode( $page->post_content, 'dokan-stores' ) ) {
+        remove_filter( 'get_avatar', 'um_get_avatar', 99999 );
+    }
+} );
