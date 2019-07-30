@@ -10,14 +10,14 @@ class Dokan_Order_Manager {
     function __construct() {
 
         // on order status change
-        add_action( 'woocommerce_order_status_changed', array( $this, 'on_order_status_change' ), 10, 3 );
+        add_action( 'woocommerce_order_status_changed', array( $this, 'on_order_status_change' ), 10, 4 );
         add_action( 'woocommerce_order_status_changed', array( $this, 'on_sub_order_change' ), 99, 3 );
 
         // create sub-orders
         add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'maybe_split_orders' ) );
 
         // prevent non-vendor coupons from being added
-        add_filter( 'woocommerce_coupon_is_valid', array( $this, 'ensure_vendor_coupon' ), 10, 3 );
+        add_filter( 'woocommerce_coupon_is_valid', array( $this, 'ensure_vendor_coupon' ), 10, 2 );
 
         if ( is_admin() ) {
             add_action( 'woocommerce_process_shop_order_meta', 'dokan_sync_insert_order' );
@@ -38,8 +38,21 @@ class Dokan_Order_Manager {
      *
      * @return void
      */
-    function on_order_status_change( $order_id, $old_status, $new_status ) {
+    function on_order_status_change( $order_id, $old_status, $new_status, $order ) {
         global $wpdb;
+
+        // Split order if the order doesn't have parent and sub orders,
+        // and the order is created from dashboard.
+        if ( empty( $order->post_parent ) && empty( $order->get_meta( 'has_sub_order' ) ) && is_admin() ) {
+            // Remove the hook to prevent recursive callas.
+            remove_action( 'woocommerce_order_status_changed', array( $this, 'on_order_status_change' ), 10 );
+
+            // Split the order.
+            $this->maybe_split_orders( $order_id );
+
+            // Add the hook back.
+            add_action( 'woocommerce_order_status_changed', array( $this, 'on_order_status_change' ), 10, 4 );
+        }
 
         // make sure order status contains "wc-" prefix
         if ( stripos( $new_status, 'wc-' ) === false ) {
@@ -155,6 +168,8 @@ class Dokan_Order_Manager {
 
             $temp      = array_keys( $vendors );
             $seller_id = reset( $temp );
+
+            do_action( 'dokan_create_parent_order', $parent_order, $seller_id );
 
             // record admin commision
             $admin_earning  = Dokan_Commission::get_earning_by_order( $parent_order, 'admin' );
@@ -467,6 +482,10 @@ class Dokan_Order_Manager {
         $coupon_id         = $coupon->get_id();
         $vendor_id         = get_post_field( 'post_author', $coupon_id );
         $available_vendors = array();
+
+        if ( ! apply_filters( 'dokan_ensure_vendor_coupon', true ) ) {
+            return $valid;
+        }
 
         // a coupon must be bound with a product
         if ( count( $coupon->get_product_ids() ) == 0 ) {

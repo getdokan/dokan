@@ -7,7 +7,11 @@
  * @return array
  */
 function dokan_product_seller_info( $item_data, $cart_item ) {
-    $vendor =  dokan_get_vendor_by_product( $cart_item['product_id'] );
+    $vendor = dokan_get_vendor_by_product( $cart_item['product_id'] );
+
+    if ( ! $vendor ) {
+        return $item_data;
+    }
 
     $item_data[] = array(
         'name'  => __( 'Vendor', 'dokan-lite' ),
@@ -217,15 +221,23 @@ function dokan_save_quick_edit_vendor_data ( $product ) {
         return;
     }
 
-    if ( isset( $_REQUEST['dokan_product_author_override'] ) ) {
-        $vendor_id = sanitize_text_field( wp_unslash( $_REQUEST['dokan_product_author_override'] ) );
+    $posted_vendor_id = ! empty( $_REQUEST['dokan_product_author_override'] ) ? (int) $_REQUEST['dokan_product_author_override'] : 0;
 
-        if ( ! $vendor_id ) {
-            return;
-        }
-
-        wp_update_post( array( 'ID' => $product->get_id(), 'post_author' => $vendor_id  ) );
+    if ( ! $posted_vendor_id ) {
+        return;
     }
+
+    $vendor = dokan_get_vendor_by_product( $product );
+
+    if ( ! $vendor ) {
+        return;
+    }
+
+    if ( $posted_vendor_id === $vendor->get_id() ) {
+        return;
+    }
+
+    wp_update_post( array( 'ID' => $product->get_id(), 'post_author' => $posted_vendor_id  ) );
 }
 
 add_action( 'woocommerce_product_quick_edit_save', 'dokan_save_quick_edit_vendor_data', 10, 1 );
@@ -323,3 +335,48 @@ function dokan_add_privacy_policy() {
 }
 
 add_action( 'dokan_contact_form', 'dokan_add_privacy_policy' );
+
+/**
+ * Unset unnecessary data
+ *
+ * @since 2.9.14
+ */
+add_action( 'dokan_store_profile_saved', function( $store_id, $settings ) {
+    $store_info        = dokan_get_store_info( $store_id );
+    $all_times         = isset( $store_info['dokan_store_time'] ) ? $store_info['dokan_store_time'] : false;
+    $days              = [ 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday' ];
+    $is_status_unsated = false;
+
+    if ( $all_times ) {
+        foreach ( $days as $day => $value ) {
+            if ( isset( $all_times[$day]['open'] ) ) {
+                $is_status_unsated = true;
+
+                unset( $all_times[$day]['open'] );
+            }
+        }
+    }
+
+    if ( $is_status_unsated ) {
+        update_user_meta( $store_id, 'dokan_profile_settings', $store_info );
+    }
+
+}, 99, 2 );
+
+/**
+ * Remove store avatar set by ultimate member from store and store listing page
+ *
+ * @since DOKAN_LITE_SINCE
+ */
+add_action( 'pre_get_avatar', function() {
+    $page_id = get_queried_object_id();
+    $page    = get_page( $page_id );
+
+    if ( ! $page instanceof WP_Post ) {
+        return;
+    }
+
+    if ( dokan_is_store_page() || dokan_is_store_listing() || has_shortcode( $page->post_content, 'dokan-stores' ) ) {
+        remove_filter( 'get_avatar', 'um_get_avatar', 99999 );
+    }
+} );

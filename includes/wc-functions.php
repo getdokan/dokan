@@ -246,7 +246,9 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
 
         // Dates
         update_post_meta( $post_id, '_sale_price_dates_from', $date_from ? strtotime( $date_from ) : '' );
-        update_post_meta( $post_id, '_sale_price_dates_to', $date_to ? strtotime( $date_to ) : '' );
+
+        // error_log( var_export( date('y-m-d H:i:s'), true ) );
+        update_post_meta( $post_id, '_sale_price_dates_to', $date_to ? strtotime( '+ 23 hours', strtotime( $date_to ) ): '' );
 
         if ( $date_to && ! $date_from ) {
             $date_from = date( 'Y-m-d' );
@@ -260,13 +262,6 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
             update_post_meta( $post_id, '_price', wc_format_decimal( $sale_price ) );
         } else {
             update_post_meta( $post_id, '_price', '' === $regular_price ? '' : wc_format_decimal( $regular_price ) );
-        }
-
-        if ( $date_to && strtotime( $date_to ) < strtotime( 'NOW', current_time( 'timestamp' ) ) ) {
-            update_post_meta( $post_id, '_price', '' === $regular_price ? '' : wc_format_decimal( $regular_price ) );
-            update_post_meta( $post_id, '_sale_price', '' );
-            update_post_meta( $post_id, '_sale_price_dates_from', '' );
-            update_post_meta( $post_id, '_sale_price_dates_to', '' );
         }
     }
 

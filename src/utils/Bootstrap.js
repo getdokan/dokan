@@ -37,6 +37,7 @@ import Search from "admin/components/Search.vue"
 import Datepicker from "admin/components/Datepicker.vue"
 import VueSweetalert2 from 'vue-sweetalert2';
 import ColorPicker from "admin/components/ColorPicker.vue"
+import Gmap from "admin/components/Gmap.vue"
 
 
 import "vue-multiselect/dist/vue-multiselect.min.css"
@@ -96,6 +97,7 @@ window.dokan.libs['Datepicker']  = Datepicker;
 window.dokan.libs['Multiselect'] = Multiselect;
 window.dokan.libs['ColorPicker'] = ColorPicker;
 window.dokan.libs['debounce']    = Debounce;
+window.dokan.libs['Gmap']        = Gmap;
 
 window.dokan.libs['ContentLoading']  = {
   VclCode,

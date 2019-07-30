@@ -719,14 +719,24 @@ add_action( 'add_meta_boxes', 'dokan_add_seller_meta_box' );
 * @return void
 **/
 function dokan_override_product_author_by_admin( $product_id, $post ) {
-    $product   = wc_get_product( $product_id );
-    $seller_id = !empty( $_POST['dokan_product_author_override'] ) ? sanitize_text_field( wp_unslash( $_POST['dokan_product_author_override'] ) ): '-1'; // WPCS: CSRF ok.
+    $product          = wc_get_product( $product_id );
+    $posted_vendor_id = ! empty( $_POST['dokan_product_author_override'] ) ? (int) $_POST['dokan_product_author_override'] : 0;
 
-    if ( $seller_id < 0 ) {
+    if ( ! $posted_vendor_id ) {
         return;
     }
 
-    dokan_override_product_author( $product, $seller_id );
+    $vendor = dokan_get_vendor_by_product( $product );
+
+    if ( ! $vendor ) {
+        return;
+    }
+
+    if ( $posted_vendor_id === $vendor->get_id() ) {
+        return;
+    }
+
+    dokan_override_product_author( $product, $posted_vendor_id );
 }
 
 add_action( 'woocommerce_process_product_meta', 'dokan_override_product_author_by_admin', 12, 2 );
@@ -1070,7 +1080,11 @@ function dokan_update_pages( $value, $name ) {
         return $value;
     }
 
-    return array_replace_recursive( get_option( $name ), $value );
+    $current_settings = get_option( $name, array() );
+    $current_settings = is_array( $current_settings ) ? $current_settings : array();
+    $value            = is_array( $value ) ? $value : array();
+
+    return array_replace_recursive( $current_settings, $value );
 }
 
 add_filter( 'dokan_save_settings_value', 'dokan_update_pages', 10, 2 );

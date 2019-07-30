@@ -69,7 +69,7 @@
         max-width: 100%;
 
         thead {
-            
+
         }
         tbody{
             display: table-row-group;
@@ -216,6 +216,15 @@
                 overflow: scroll;
             }
 
+            // settings page
+            .dokan-settings-area {
+                .dokan-banner {
+                    width: auto !important;
+                    height: auto !important;
+                    margin: 0 !important;
+                    margin-bottom: 15px !important;
+                }
+            }
         }
 
         .dashboard-content-area {
@@ -226,6 +235,10 @@
                 .dokan-left {
                     float: left !important;
                 }
+            }
+
+             .dokan-dash-left {
+                padding-right: 0 !important;
             }
         }
 
@@ -242,10 +255,52 @@
             }
         }
 
+        // order listing
+        .dokan-orders-area {
+            .dokan-order-filter-serach {
+                padding: 10px 0 10px 0;
+                .dokan-btn {
+                    padding: 6px 13px;
+                }
+            }
+        }
+
         // product listing
         .dokan-product-listing .dokan-product-listing-area {
-            .product-listing-top ul.dokan-listing-filter {
-                width: 100%;
+            .product-listing-top {
+                border-bottom: 0;
+
+                ul.dokan-listing-filter {
+                    width: 100%;
+                }
+                .dokan-add-product-link {
+                    display: flex;
+                    justify-content: space-between;
+                    width: auto;
+                    float: none;
+                }
+            }
+            .dokan-product-date-filter {
+                display: flex;
+                justify-content: space-between;
+
+                .dokan-form-group {
+                    margin-bottom: 0;
+                }
+            }
+            .dokan-product-search-form {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 15px;
+
+                .dokan-form-group {
+                    margin-bottom: 0;
+                    margin-right: 0;
+                }
+            }
+
+            #product-filter .dokan-form-group {
+                margin-top: 15px;
             }
         }
 
@@ -280,7 +335,7 @@
             float: none;
             width: 100%;
         }
-        
+
         .content-half-part{
             margin-bottom: 8px;
         }
@@ -288,7 +343,7 @@
             padding-left: 0px;
         }
         .content-half-part:first-child {
-            padding-right: 0px; 
+            padding-right: 0px;
         }
 
         ul.dokan_tabs {
@@ -321,9 +376,13 @@
             }
         }
     }
-}    
+}
 
-
+@media (max-width: 375px) {
+    .dokan-order-filter-serach form:first-child .dokan-form-group {
+        display: flex;
+    }
+}
 
 @media (max-width: 360px) {
     .dokan-single-store {

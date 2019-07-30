@@ -128,7 +128,7 @@ function dokan_save_product( $args ) {
         }
 
         if ( $date_to ) {
-            update_post_meta( $product_id, '_sale_price_dates_to', strtotime( $date_to ) );
+            update_post_meta( $product_id, '_sale_price_dates_to', strtotime( '+ 23 hours', strtotime( $date_to ) ) );
         } else {
             update_post_meta( $product_id, '_sale_price_dates_to', '' );
         }
@@ -146,12 +146,6 @@ function dokan_save_product( $args ) {
 
         if ( '' !== $data['_sale_price'] && $date_from && strtotime( $date_from ) < strtotime( 'NOW', current_time( 'timestamp' ) ) ) {
             update_post_meta( $product_id, '_price', wc_format_decimal( $data['_sale_price'] ) );
-        }
-
-        if ( $date_to && strtotime( $date_to ) < strtotime( 'NOW', current_time( 'timestamp' ) ) ) {
-            update_post_meta( $product_id, '_price', ( $data['_regular_price'] === '' ) ? '' : wc_format_decimal( $data['_regular_price'] ) );
-            update_post_meta( $product_id, '_sale_price_dates_from', '' );
-            update_post_meta( $product_id, '_sale_price_dates_to', '' );
         }
 
         if ( array_key_exists( $data['_visibility'], dokan_get_product_visibility_options() ) ) {
@@ -552,6 +546,18 @@ function dokan_bulk_product_status_change() {
         return;
     }
 
+    do_action( 'dokan_bulk_product_status_change', $status, $products );
+}
+
+add_action( 'template_redirect', 'dokan_bulk_product_status_change' );
+
+add_action( 'dokan_bulk_product_status_change', 'dokan_bulk_product_delete', 10, 2 );
+
+function dokan_bulk_product_delete( $action, $products ) {
+    if ( 'delete' !== $action || empty( $products ) ) {
+        return;
+    }
+
     foreach ( $products as $product_id ) {
         if ( dokan_is_product_author( $product_id ) ) {
             wp_delete_post( $product_id );
@@ -561,8 +567,6 @@ function dokan_bulk_product_status_change() {
     wp_redirect( add_query_arg( array( 'message' => 'product_deleted' ), dokan_get_navigation_url( 'products' ) ) );
     exit;
 }
-
-add_action( 'template_redirect', 'dokan_bulk_product_status_change' );
 
 /**
  * Dokan get vendor by product
@@ -574,15 +578,38 @@ add_action( 'template_redirect', 'dokan_bulk_product_status_change' );
  * @return object|false on faiure
  */
 function dokan_get_vendor_by_product( $product ) {
-    if ( ! $product ) {
-        return false;
-    }
-
     if ( ! $product instanceof WC_Product ) {
         $product = wc_get_product( $product );
     }
 
+    if ( ! $product ) {
+        return false;
+    }
+
     $vendor_id = get_post_field( 'post_author', $product->get_id() );
 
+    if ( ! $vendor_id ) {
+        return false;
+    }
+
     return dokan()->vendor->get( $vendor_id );
+}
+
+/**
+ * Get translated product stock status
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @param  mix $stock
+ *
+ * @return string | array if stock parameter is not provided
+ */
+function dokan_get_translated_product_stock_status( $stock = false ) {
+    $stock_status = wc_get_product_stock_status_options();
+
+    if ( ! $stock ) {
+        return $stock_status;
+    }
+
+    return isset( $stock_status[$stock] ) ? $stock_status[$stock] : '';
 }

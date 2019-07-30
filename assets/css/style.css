@@ -2027,6 +2027,63 @@ article.dokan-notice-single-notice-area span.dokan-single-announcement-date {
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li.settings i.pull-right {
   padding-top: 5px;
 }
+.dokan-dashboard .dokan-dash-sidebar #dokan-navigation #toggle-mobile-menu {
+  display: none;
+}
+.dokan-dashboard .dokan-dash-sidebar #dokan-navigation #mobile-menu-icon {
+  display: none;
+}
+.dokan-dashboard .dokan-dash-sidebar #dokan-navigation > #mobile-menu-icon {
+  font-size: 17px;
+  color: #fff;
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  width: 33px;
+  z-index: 99999;
+  cursor: pointer;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: 1px solid #f0f0f0;
+  border-radius: 3px;
+  padding: 3px 8px;
+}
+.dokan-dashboard .dokan-dash-sidebar #dokan-navigation > input:checked + ul.dokan-dashboard-menu {
+  display: block !important;
+  background: #000;
+  color: #fff;
+  animation: showNav 350ms ease-in-out both;
+}
+@keyframes showNav {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media only screen and (max-width: 450px) {
+  .dokan-dashboard .dokan-dash-sidebar #dokan-navigation {
+    background: #000;
+    height: 48px;
+    position: relative;
+  }
+  .dokan-dashboard .dokan-dash-sidebar #dokan-navigation #mobile-menu-icon {
+    display: block !important;
+  }
+  .dokan-dashboard .dokan-dash-sidebar #dokan-navigation #toggle-mobile-menu {
+    display: none !important;
+  }
+  .dokan-dashboard .dokan-dash-sidebar #dokan-navigation ul.dokan-dashboard-menu {
+    display: none;
+    height: auto !important;
+    padding-top: 48px !important;
+  }
+}
 html,
 body {
   -webkit-backface-visibility: hidden;
@@ -4553,11 +4610,21 @@ div.media-sidebar a.edit-attachment {
   .dokan-dashboard .dokan-dashboard-content article {
     overflow: scroll;
   }
+  .dokan-dashboard .dokan-dash-sidebar .dokan-settings-area .dokan-banner,
+  .dokan-dashboard .dokan-dashboard-content .dokan-settings-area .dokan-banner {
+    width: auto !important;
+    height: auto !important;
+    margin: 0 !important;
+    margin-bottom: 15px !important;
+  }
   .dokan-dashboard .dashboard-content-area .dokan-announcement-widget .dokan-right {
     float: right !important;
   }
   .dokan-dashboard .dashboard-content-area .dokan-announcement-widget .dokan-left {
     float: left !important;
+  }
+  .dokan-dashboard .dashboard-content-area .dokan-dash-left {
+    padding-right: 0 !important;
   }
   .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu:before,
   .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu:after {
@@ -4574,8 +4641,42 @@ div.media-sidebar a.edit-attachment {
   .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li a {
     padding: 12px 18px;
   }
+  .dokan-dashboard .dokan-orders-area .dokan-order-filter-serach {
+    padding: 10px 0 10px 0;
+  }
+  .dokan-dashboard .dokan-orders-area .dokan-order-filter-serach .dokan-btn {
+    padding: 6px 13px;
+  }
+  .dokan-dashboard .dokan-product-listing .dokan-product-listing-area .product-listing-top {
+    border-bottom: 0;
+  }
   .dokan-dashboard .dokan-product-listing .dokan-product-listing-area .product-listing-top ul.dokan-listing-filter {
     width: 100%;
+  }
+  .dokan-dashboard .dokan-product-listing .dokan-product-listing-area .product-listing-top .dokan-add-product-link {
+    display: flex;
+    justify-content: space-between;
+    width: auto;
+    float: none;
+  }
+  .dokan-dashboard .dokan-product-listing .dokan-product-listing-area .dokan-product-date-filter {
+    display: flex;
+    justify-content: space-between;
+  }
+  .dokan-dashboard .dokan-product-listing .dokan-product-listing-area .dokan-product-date-filter .dokan-form-group {
+    margin-bottom: 0;
+  }
+  .dokan-dashboard .dokan-product-listing .dokan-product-listing-area .dokan-product-search-form {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+  }
+  .dokan-dashboard .dokan-product-listing .dokan-product-listing-area .dokan-product-search-form .dokan-form-group {
+    margin-bottom: 0;
+    margin-right: 0;
+  }
+  .dokan-dashboard .dokan-product-listing .dokan-product-listing-area #product-filter .dokan-form-group {
+    margin-top: 15px;
   }
   .dokan-dashboard .dokan-right,
   .dokan-dashboard .dokan-left {
@@ -4621,6 +4722,11 @@ div.media-sidebar a.edit-attachment {
   }
   .dokan-single-store .profile-frame .profile-info-box.profile-layout-layout1 .profile-info-summery-wrapper .profile-info-summery .profile-info .dokan-store-info {
     max-width: 280px;
+  }
+}
+@media (max-width: 375px) {
+  .dokan-order-filter-serach form:first-child .dokan-form-group {
+    display: flex;
   }
 }
 @media (max-width: 360px) {

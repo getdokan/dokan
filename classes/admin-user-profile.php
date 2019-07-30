@@ -62,8 +62,7 @@ class Dokan_Admin_User_Profile {
         $selling               = get_user_meta( $user->ID, 'dokan_enable_selling', true );
         $publishing            = get_user_meta( $user->ID, 'dokan_publishing', true );
         $store_settings        = dokan_get_store_info( $user->ID );
-        $banner                = isset( $store_settings['banner'] ) ? absint( $store_settings['banner'] ) : 0;
-        // seller_percentage      = get_user_meta( $user->ID, 'dokan_seller_percentage', true );
+        $banner                = ! empty( $store_settings['banner'] ) ? absint( $store_settings['banner'] ) : 0;
         $admin_commission      = get_user_meta( $user->ID, 'dokan_admin_percentage', true );
         $admin_commission_type = get_user_meta( $user->ID, 'dokan_admin_percentage_type', true );
         $feature_seller        = get_user_meta( $user->ID, 'dokan_feature_seller', true );
@@ -78,9 +77,8 @@ class Dokan_Admin_User_Profile {
         $address_country   = isset( $store_settings['address']['country'] ) ? $store_settings['address']['country'] : '';
         $address_state     = isset( $store_settings['address']['state'] ) ? $store_settings['address']['state'] : '';
 
-        $general_settings = get_option( 'dokan_general', array() );
-        $banner_width    = ! empty( $general_settings['store_banner_width'] ) ? $general_settings['store_banner_width'] : 625;
-        $banner_height   = ! empty( $general_settings['store_banner_height'] ) ? $general_settings['store_banner_height'] : 300;
+        $banner_width    = dokan_get_option( 'store_banner_width', 'dokan_appearance', 625 );
+        $banner_height   = dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 );
 
         $country_state     = array(
             'country' => array(
@@ -542,7 +540,7 @@ class Dokan_Admin_User_Profile {
         $social         = $post_data['dokan_social'];
         $social_fields  = dokan_get_social_profile_fields();
 
-        $store_settings['banner_id']  = intval( $post_data['dokan_banner'] );
+        $store_settings['banner']     = intval( $post_data['dokan_banner'] );
         $store_settings['store_name'] = sanitize_text_field( $post_data['dokan_store_name'] );
         $store_settings['address']    = isset( $post_data['dokan_store_address'] ) ? array_map( 'sanitize_text_field', $post_data['dokan_store_address'] ) : array();
         $store_settings['phone']      = sanitize_text_field( $post_data['dokan_store_phone'] );

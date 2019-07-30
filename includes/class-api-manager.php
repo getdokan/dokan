@@ -42,6 +42,10 @@ class Dokan_API_Manager {
 
         // populate admin commission data for admin
         add_filter( 'dokan_rest_store_additional_fields', array( $this, 'populate_admin_commission' ), 10, 2 );
+
+        // Send email to admin on adding a new product
+        add_action( 'dokan_rest_insert_product_object', array( $this, 'on_dokan_rest_insert_product' ), 10, 3 );
+        add_filter( 'dokan_vendor_to_array', [ $this, 'filter_payment_response' ] );
     }
 
     /**
@@ -93,7 +97,7 @@ class Dokan_API_Manager {
      * @return array
      */
     public function filter_store_open_close_option( $data ) {
-        if ( 'on' !== dokan_get_option( 'store_open_close', 'dokan_general', 'on' ) ) {
+        if ( 'on' !== dokan_get_option( 'store_open_close', 'dokan_appearance', 'on' ) ) {
             unset( $data['store_open_close'] );
         }
 
@@ -125,6 +129,47 @@ class Dokan_API_Manager {
         $commission_type               = get_user_meta( $store_id, 'dokan_admin_percentage_type', true );
         $data['admin_commission']      = $commission;
         $data['admin_commission_type'] = $commission_type;
+
+        return $data;
+    }
+
+    /**
+     * Send email to admin on adding a new product
+     *
+     * @param  WC_Data $object
+     * @param  WP_REST_Request $request
+     * @param  Boolean $creating
+     *
+     * @return void
+     */
+    public function on_dokan_rest_insert_product( $object, $request, $creating ) {
+        // if not creating, meaning product is updating. So return early
+        if ( ! $creating ) {
+            return;
+        }
+
+        do_action( 'dokan_new_product_added', $object->get_id(), $request );
+    }
+
+    /**
+     * Make payment field hidden in api response for other vendor
+     *
+     * @param array $data
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return array
+     */
+    public function filter_payment_response( $data ) {
+        if ( current_user_can( 'manage_woocommerce' ) ) {
+            return $data;
+        }
+
+        $vendor_id = ! empty( $data['id'] ) ? absint( $data['id'] ) : 0;
+
+        if ( $vendor_id !== dokan_get_current_user_id() ) {
+            $data['payment'] = '******';
+        }
 
         return $data;
     }

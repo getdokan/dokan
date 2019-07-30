@@ -12,10 +12,10 @@ $store_address            = dokan_get_seller_short_address( $store_user->get_id(
 $dokan_store_time_enabled = isset( $store_info['dokan_store_time_enabled'] ) ? $store_info['dokan_store_time_enabled'] : '';
 $store_open_notice        = isset( $store_info['dokan_store_open_notice'] ) && ! empty( $store_info['dokan_store_open_notice'] ) ? $store_info['dokan_store_open_notice'] : __( 'Store Open', 'dokan-lite' );
 $store_closed_notice      = isset( $store_info['dokan_store_close_notice'] ) && ! empty( $store_info['dokan_store_close_notice'] ) ? $store_info['dokan_store_close_notice'] : __( 'Store Closed', 'dokan-lite' );
-$show_store_open_close    = dokan_get_option( 'store_open_close', 'dokan_general', 'on' );
+$show_store_open_close    = dokan_get_option( 'store_open_close', 'dokan_appearance', 'on' );
 
 $general_settings         = get_option( 'dokan_general', [] );
-$banner_width             = ! empty( $general_settings['store_banner_width'] ) ? $general_settings['store_banner_width'] : 625;
+$banner_width             = dokan_get_option( 'store_banner_width', 'dokan_appearance', 625 );
 
 if ( ( 'default' === $profile_layout ) || ( 'layout2' === $profile_layout ) ) {
     $profile_img_class = 'profile-img-circle';

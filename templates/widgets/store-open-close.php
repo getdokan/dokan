@@ -10,8 +10,9 @@
 <div class="dokan-store-open-close">
     <?php foreach( $dokan_store_time as $day => $value ) : ?>
     	<?php
-            $to = ! empty( dokan_get_translated_days( $value['status'] ) ) ? dokan_get_translated_days( $value['status'] ) : '-';
-            $is_open =  $value['status'] == 'open' ? true : false;
+            $status = isset( $value['open'] ) ? $value['open'] : $value['status'];
+            $to = ! empty( dokan_get_translated_days( $status ) ) ? dokan_get_translated_days( $status ) : '-';
+            $is_open =  $status == 'open' ? true : false;
         ?>
         <div class="open-close-day <?php echo esc_attr( $day ) . '-time' ?>">
             <label for=""><?php echo esc_attr( dokan_get_translated_days( $day ) ); ?></label>:

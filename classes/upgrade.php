@@ -26,6 +26,8 @@ class Dokan_Upgrade {
         '2.8.6'  => 'upgrades/dokan-upgrade-2.8.6.php',
         '2.9.4'  => 'upgrades/dokan-upgrade-2.9.4.php',
         '2.9.13' => 'upgrades/dokan-upgrade-2.9.13.php',
+        '2.9.16' => 'upgrades/dokan-upgrade-2.9.16.php',
+        '2.9.19' => 'upgrades/dokan-upgrade-2.9.19.php',
     ];
 
     /**
@@ -53,6 +55,10 @@ class Dokan_Upgrade {
         // may be it's the first install
         if ( ! $installed_version ) {
             return false;
+        }
+
+        if ( get_transient( 'dokan_theme_version_for_updater' ) ) {
+            return version_compare( get_transient( 'dokan_theme_version_for_updater' ), DOKAN_PLUGIN_VERSION, '<'  );
         }
 
         if ( version_compare( $installed_version, DOKAN_PLUGIN_VERSION, '<' ) ) {
@@ -110,7 +116,6 @@ class Dokan_Upgrade {
         }
     }
 
-
     /**
      * Perform all updates
      *
@@ -125,6 +130,10 @@ class Dokan_Upgrade {
 
         $installed_version = get_option( 'dokan_theme_version' );
 
+        if ( get_transient( 'dokan_theme_version_for_updater' ) ) {
+            $installed_version = get_transient( 'dokan_theme_version_for_updater' );
+        }
+
         foreach ( self::$updates as $version => $path ) {
             if ( version_compare( $installed_version, $version, '<' ) ) {
                 include DOKAN_INC_DIR . '/' . $path;
@@ -132,13 +141,11 @@ class Dokan_Upgrade {
             }
         }
 
+        delete_transient( 'dokan_theme_version_for_updater' );
         update_option( 'dokan_theme_version', DOKAN_PLUGIN_VERSION );
 
-        $url = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
-
-        $location = remove_query_arg( ['dokan_do_update'], esc_url( $url ) );
+        $location = wp_unslash( add_query_arg( [ 'page' => 'dokan' ], admin_url( 'admin.php' ) ) );
         wp_redirect( $location );
         exit();
     }
-
 }
