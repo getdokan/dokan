@@ -4,11 +4,15 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Dokan Commission Class
+ *
+ * @since  DOKAN_LITE_SINCE
  */
 class Dokan_Commission {
 
     /**
      * Get earning by product
+     *
+     * @since  DOKAN_LITE_SINCE
      *
      * @param  int|WC_Product $product
      * @param  string $context[admin|seller]
@@ -35,6 +39,8 @@ class Dokan_Commission {
 
     /**
      * Get earning by order
+     *
+     * @since  DOKAN_LITE_SINCE
      *
      * @param  int|WC_Order $order
      * @param  string $context
@@ -95,6 +101,8 @@ class Dokan_Commission {
     /**
      * Get global rate
      *
+     * @since  DOKAN_LITE_SINCE
+     *
      * @return float
      */
     public static function get_global_rate() {
@@ -103,6 +111,8 @@ class Dokan_Commission {
 
     /**
      * Get vendor wise commission rate
+     *
+     * @since  DOKAN_LITE_SINCE
      *
      * @param  int $vendor_id
      *
@@ -115,6 +125,8 @@ class Dokan_Commission {
     /**
      * Get product wise commission rate
      *
+     * @since  DOKAN_LITE_SINCE
+     *
      * @param int $product_id
      *
      * @return float
@@ -125,6 +137,8 @@ class Dokan_Commission {
 
     /**
      * Validate product id (if it's a variable product, return it's parent id)
+     *
+     * @since  DOKAN_LITE_SINCE
      *
      * @param  int $product_id
      *
@@ -143,6 +157,8 @@ class Dokan_Commission {
 
     /**
      * Get category wise commission rate
+     *
+     * @since  DOKAN_LITE_SINCE
      *
      * @param int $product_id
      *
@@ -164,6 +180,8 @@ class Dokan_Commission {
     /**
      * Get global commission type
      *
+     * @since  DOKAN_LITE_SINCE
+     *
      * @return string
      */
     public static function get_global_type() {
@@ -172,6 +190,8 @@ class Dokan_Commission {
 
     /**
      * Get vendor wise commission type
+     *
+     * @since  DOKAN_LITE_SINCE
      *
      * @param int $vendor_id
      *
@@ -183,6 +203,8 @@ class Dokan_Commission {
 
     /**
      * Get category wise commission type
+     *
+     * @since  DOKAN_LITE_SINCE
      *
      * @param int $product_id
      *
@@ -198,6 +220,8 @@ class Dokan_Commission {
     /**
      * Get product wise commission type
      *
+     * @since  DOKAN_LITE_SINCE
+     *
      * @param int $product_id
      *
      * @return string
@@ -208,6 +232,8 @@ class Dokan_Commission {
 
     /**
      * Validate commission rate
+     *
+     * @since  DOKAN_LITE_SINCE
      *
      * @param  float $rate
      *
@@ -224,6 +250,8 @@ class Dokan_Commission {
     /**
      * Get global earning
      *
+     * @since  DOKAN_LITE_SINCE
+     *
      * @param  float $product_price
      *
      * @return float|null on failure
@@ -234,6 +262,8 @@ class Dokan_Commission {
 
     /**
      * Get vendor wise earning
+     *
+     * @since  DOKAN_LITE_SINCE
      *
      * @param  int $vendor_id
      * @param  float $product_price
@@ -247,6 +277,8 @@ class Dokan_Commission {
     /**
      * Get category wise earning
      *
+     * @since  DOKAN_LITE_SINCE
+     *
      * @param  int $product_id
      * @param  float $product_price
      *
@@ -258,6 +290,8 @@ class Dokan_Commission {
 
     /**
      * Get product wise earning
+     *
+     * @since  DOKAN_LITE_SINCE
      *
      * @param  int $product_id
      * @param  int $product_price
@@ -271,21 +305,27 @@ class Dokan_Commission {
     /**
      * Prepare for calculation
      *
+     * @since  DOKAN_LITE_SINCE
+     *
      * @param  string $func_rate
      * @param  string $func_type
      * @param  string $func_fee
      * @param  int $product_id
      * @param  float Product_price
      *
-     * @return float
+     * @return float | null on failure
      */
     public static function prepare_for_calculation( $func_rate = '', $func_type = '', $func_fee = '', $product_id = 0, $product_price = 0 ) {
         $func_rate = str_replace( 'earning', 'rate', $func_rate );
         $func_type = str_replace( 'earning', 'type', $func_type );
         $func_fee  = str_replace( 'earning', 'additional_fee', $func_fee );
 
+        $commission_rate = null;
+
         // get[product,category,vendor,global]_wise_rate
-        $commission_rate = self::$func_rate( $product_id );
+        if ( is_callable( [ __CLASS__, $func_rate ] ) ) {
+            $commission_rate = self::$func_rate( $product_id );
+        }
 
         if ( is_null( $commission_rate ) ) {
             return null;
@@ -294,12 +334,12 @@ class Dokan_Commission {
         $earning = null;
 
         // get[product,category,vendor,global]_wise_type
-        if ( 'flat' === self::$func_type( $product_id ) ) {
+        if ( is_callable( __CLASS__, $func_type ) && 'flat' === self::$func_type( $product_id ) ) {
             $earning = (float) $product_price - $commission_rate;
         }
 
         // get[product,category,vendor,global]_wise_type
-        if ( 'percentage' === self::$func_type( $product_id ) ) {
+        if ( is_callable( __CLASS__, $func_type ) && 'percentage' === self::$func_type( $product_id ) ) {
             $earning = ( $product_price * $commission_rate ) / 100;
             $earning = $product_price - $earning;
 
@@ -315,6 +355,8 @@ class Dokan_Commission {
     /**
      * Get product wise additional fee
      *
+     * @since  DOKAN_LITE_SINCE
+     *
      * @param  int $product_id
      *
      * @return float|null on failure
@@ -325,6 +367,8 @@ class Dokan_Commission {
 
     /**
      * Get global wise additional fee
+     *
+     * @since  DOKAN_LITE_SINCE
      *
      * @param  int $product_id
      *
@@ -337,6 +381,8 @@ class Dokan_Commission {
     /**
      * Get vendor wise additional fee
      *
+     * @since  DOKAN_LITE_SINCE
+     *
      * @param  int $vendor_id
      *
      * @return float|null on failure
@@ -347,6 +393,8 @@ class Dokan_Commission {
 
     /**
      * Get category wise additional fee
+     *
+     * @since  DOKAN_LITE_SINCE
      *
      * @param  int $product_id
      *
@@ -367,6 +415,8 @@ class Dokan_Commission {
 
     /**
      * Calculate commission (commission priority [1.product, 2.category, 3.vendor, 4.global] wise)
+     *
+     * @since  DOKAN_LITE_SINCE
      *
      * @param  int $product_id
      * @param  float $product_price
