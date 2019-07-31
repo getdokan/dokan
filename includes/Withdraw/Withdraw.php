@@ -6,8 +6,20 @@ use WP_Error;
 
 class Withdraw {
 
+    /**
+     * Witthdraw data
+     *
+     * @var array
+     */
     protected $data = [];
 
+    /**
+     * Class constructor
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return void
+     */
     public function __construct( $data = [] ) {
         $defaults = [
             'id'      => 0,
@@ -34,77 +46,210 @@ class Withdraw {
         ];
     }
 
+    /**
+     * Get withdraw data
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return array
+     */
     public function get_withdraw() {
         return $this->data;
     }
 
+    /**
+     * Get withdraw id
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return int
+     */
     public function get_id() {
         return $this->data['id'];
     }
 
+    /**
+     * Get user_id
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return int
+     */
     public function get_user_id() {
         return $this->data['user_id'];
     }
 
+    /**
+     * Get amount
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return string
+     */
     public function get_amount() {
         return $this->data['amount'];
     }
 
+    /**
+     * Get date
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return string
+     */
     public function get_date() {
         return $this->data['date'];
     }
 
+    /**
+     * Get status
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return string
+     */
     public function get_status() {
         return $this->data['status'];
     }
 
+    /**
+     * Get ip
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return string
+     */
     public function get_method() {
         return $this->data['method'];
     }
 
+    /**
+     * Get note
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return string
+     */
     public function get_note() {
         return $this->data['note'];
     }
 
+    /**
+     * Get ip
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return string
+     */
     public function get_ip() {
         return $this->data['ip'];
     }
 
+    /**
+     * Set user_id
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param int $user_id
+     *
+     * @return \WeDevs\Dokan\Withdraw\Withdraw
+     */
     public function set_user_id( $user_id ) {
         $this->data['user_id'] = $user_id;
         return $this;
     }
 
+    /**
+     * Set amount
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param string $amount
+     *
+     * @return \WeDevs\Dokan\Withdraw\Withdraw
+     */
     public function set_amount( $amount ) {
         $this->data['amount'] = $amount;
         return $this;
     }
 
+    /**
+     * Set date
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param string $date
+     *
+     * @return \WeDevs\Dokan\Withdraw\Withdraw
+     */
     public function set_date( $date ) {
         $this->data['date'] = $date;
         return $this;
     }
 
+    /**
+     * Set status
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param string $status
+     *
+     * @return \WeDevs\Dokan\Withdraw\Withdraw
+     */
     public function set_status( $status ) {
         $this->data['status'] = $status;
         return $this;
     }
 
+    /**
+     * Set method
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param string $method
+     *
+     * @return \WeDevs\Dokan\Withdraw\Withdraw
+     */
     public function set_method( $method ) {
         $this->data['method'] = $method;
         return $this;
     }
 
+    /**
+     * Set note
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param string $note
+     *
+     * @return \WeDevs\Dokan\Withdraw\Withdraw
+     */
     public function set_note( $note ) {
         $this->data['note'] = $note;
         return $this;
     }
 
+    /**
+     * Set ip
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param string $ip
+     *
+     * @return \WeDevs\Dokan\Withdraw\Withdraw
+     */
     public function set_ip( $ip ) {
         $this->data['ip'] = $ip;
         return $this;
     }
 
+    /**
+     * Create or update a withdraw
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return \WeDevs\Dokan\Withdraw\Withdraw|\WP_Error
+     */
     public function save() {
         if ( ! $this->data['id'] ) {
             return $this->create();
@@ -113,6 +258,13 @@ class Withdraw {
         }
     }
 
+    /**
+     * Create or add a withdraw request
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return \WeDevs\Dokan\Withdraw\Withdraw|\WP_Error
+     */
     protected function create() {
         global $wpdb;
 
@@ -149,7 +301,7 @@ class Withdraw {
      *
      * @since DOKAN_LITE_SINCE
      *
-     * @return \WeDevs\Dokan\Withdraw\Withdraw
+     * @return \WeDevs\Dokan\Withdraw\Withdraw|\WP_Error
      */
     protected function update() {
         global $wpdb;
@@ -200,7 +352,7 @@ class Withdraw {
      *
      * @since DOKAN_LITE_SINCE
      *
-     * @return bool|\WP_Error
+     * @return \WeDevs\Dokan\Withdraw\Withdraw|\WP_Error
      */
     public function delete() {
         global $wpdb;
@@ -224,6 +376,6 @@ class Withdraw {
          */
         do_action( 'dokan_withdraw_deleted', $this );
 
-        return true;
+        return $this;
     }
 }
