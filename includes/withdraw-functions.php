@@ -51,10 +51,17 @@ function dokan_withdraw_get_active_methods() {
 
 /**
  * Get active withdraw methods for seller.
+ *
+ * @since DOKAN_LITE_SINCE add $vendor_id param
+ *
+ * @param int $vendor_id Seller vendor id
+ *
  * @return array
  */
-function dokan_get_seller_active_withdraw_methods() {
-    $payment_methods = get_user_meta( dokan_get_current_user_id(), 'dokan_profile_settings' );
+function dokan_get_seller_active_withdraw_methods( $vendor_id = 0 ) {
+    $vendor_id = $vendor_id ? $vendor_id : dokan_get_current_user_id();
+
+    $payment_methods = get_user_meta( $vendor_id, 'dokan_profile_settings' );
     $paypal          = isset( $payment_methods[0]['payment']['paypal']['email'] ) && $payment_methods[0]['payment']['paypal']['email'] !== false ? 'paypal' : '';
     $bank            = isset( $payment_methods[0]['payment']['bank']['ac_number'] ) && $payment_methods[0]['payment']['bank']['ac_number']  !== '' ? 'bank' : '';
     $skrill          = isset( $payment_methods[0]['payment']['skrill']['email'] ) && $payment_methods[0]['payment']['skrill']['email'] !== false ? 'skrill' : '';

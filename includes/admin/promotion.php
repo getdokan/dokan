@@ -1,15 +1,15 @@
 <?php
 
-if ( ! class_exists( 'WeDevs_Promotion' ) ) {
-    require_once DOKAN_LIB_DIR . '/promotions.php';
-}
+namespace WeDevs\Dokan\Admin;
+
+use WeDevs\Dokan\Abstracts\DokanPromotion;
 
 /**
 * Promotion class
 *
 * For displaying AI base add on admin panel
 */
-class Dokan_Promotion extends WeDevs_Promotion {
+class Promotion extends DokanPromotion {
 
     /**
      * Time interval for displaying promo

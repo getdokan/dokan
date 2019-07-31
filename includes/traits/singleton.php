@@ -1,6 +1,6 @@
 <?php
 
-namespace Dokan\Traits;
+namespace WeDevs\Dokan\Traits;
 
 /**
  * Singleton Trait
