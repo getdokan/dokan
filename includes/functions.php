@@ -3332,13 +3332,17 @@ function dokan_remove_hook_for_anonymous_class( $hook_name = '', $class_name = '
 /**
  * Dokan get variable product earnings
  *
- * @param  int $id
- * @param  int $seller_id
+ * @param  int $product_id
  * @param  boolean $formated
+ * @param  boolean $deprecated
  *
- * @return int
+ * @return float|string
  */
-function dokan_get_variable_product_earning( $product_id, $seller_id, $formated = true ) {
+function dokan_get_variable_product_earning( $product_id, $formated = true, $deprecated = false ) {
+    if ( $deprecated ) {
+        wc_deprecated_argument( 'seller_id', '2.9.19', 'dokan_get_variable_product_earning() does not require a seller_id anymore.' );
+    }
+
     $product = wc_get_product( $product_id );
 
     if ( ! $product ) {
@@ -3351,7 +3355,7 @@ function dokan_get_variable_product_earning( $product_id, $seller_id, $formated 
         return null;
     }
 
-    $earnings = array_map( function( $id ) use ( $seller_id ) {
+    $earnings = array_map( function( $id ) {
         return Dokan_Commission::get_earning_by_product( $id );
     }, $variations );
 
