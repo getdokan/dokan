@@ -2,18 +2,16 @@
 
 namespace WeDevs\Dokan\REST;
 
+use Exception;
 use WP_Error;
 use WP_REST_Controller;
 use WP_REST_Server;
+use WeDevs\Dokan\Exceptions\DokanException;
+use WeDevs\Dokan\Traits\RESTResponseError;
 
-/**
-* Dokan WIthdraw REST API Controller
-*
-* @since 2.8.0
-*
-* @package dokan
-*/
 class WithdrawController extends WP_REST_Controller {
+
+    use RESTResponseError;
 
     /**
      * Endpoint namespace.
@@ -35,67 +33,67 @@ class WithdrawController extends WP_REST_Controller {
      * @return void
      */
     public function register_routes() {
-        register_rest_route( $this->namespace, '/' . $this->rest_base, array(
-            array(
+        register_rest_route( $this->namespace, '/' . $this->rest_base, [
+            [
                 'methods'             => WP_REST_Server::READABLE,
-                'callback'            => array( $this, 'get_items' ),
-                'args'                => array_merge( $this->get_collection_params(),  array(
-                    'ids' => array(
+                'callback'            => [ $this, 'get_items' ],
+                'args'                => array_merge( $this->get_collection_params(),  [
+                    'ids' => [
                         'description' => __( 'IDs of withdraws', 'dokan-lite' ),
                         'type'        => 'array',
-                        'context'     => array( 'view' ),
-                        'items'       => array(
+                        'context'     => [ 'view' ],
+                        'items'       => [
                             'type'    => 'integer',
-                        ),
-                    ),
-                ) ),
-                'permission_callback' => array( $this, 'get_items_permissions_check' ),
-            ),
-            array(
+                        ],
+                    ],
+                ] ),
+                'permission_callback' => [ $this, 'get_items_permissions_check' ],
+            ],
+            [
                 'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => array( $this, 'create_item' ),
+                'callback'            => [ $this, 'create_item' ],
                 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
-                'permission_callback' => array( $this, 'create_item_permissions_check' ),
-            ),
-        ) );
+                'permission_callback' => [ $this, 'create_item_permissions_check' ],
+            ],
+        ] );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)/', array(
-            'args' => array(
-                'id' => array(
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)/', [
+            'args' => [
+                'id' => [
                     'description'       => __( 'Unique identifier for the object.', 'dokan-lite' ),
                     'type'              => 'integer',
-                    'validate_callback' => array( $this, 'withdraw_exists' ),
-                ),
-            ),
-            array(
+                    'validate_callback' => [ $this, 'withdraw_exists' ],
+                ],
+            ],
+            [
                 'methods'             => WP_REST_Server::READABLE,
-                'callback'            => array( $this, 'get_item' ),
-                'permission_callback' => array( $this, 'get_item_permissions_check' ),
-            ),
-            array(
+                'callback'            => [ $this, 'get_item' ],
+                'permission_callback' => [ $this, 'get_item_permissions_check' ],
+            ],
+            [
                 'methods'             => WP_REST_Server::EDITABLE,
-                'callback'            => array( $this, 'update_item' ),
+                'callback'            => [ $this, 'update_item' ],
                 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-                'permission_callback' => array( $this, 'update_item_permissions_check' ),
-            ),
-            array(
+                'permission_callback' => [ $this, 'update_item_permissions_check' ],
+            ],
+            [
                 'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => array( $this, 'delete_item' ),
-                'permission_callback' => array( $this, 'delete_item_permissions_check' ),
-            ),
+                'callback'            => [ $this, 'delete_item' ],
+                'permission_callback' => [ $this, 'delete_item_permissions_check' ],
+            ],
 
-        ) );
+        ] );
 
         $batch_items_schema = $this->get_public_batch_schema();
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/batch', array(
-            array(
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/batch', [
+            [
                 'methods'             => WP_REST_Server::EDITABLE,
-                'callback'            => array( $this, 'batch_items' ),
-                'permission_callback' => array( $this, 'batch_items_permissions_check' ),
+                'callback'            => [ $this, 'batch_items' ],
+                'permission_callback' => [ $this, 'batch_items_permissions_check' ],
                 'args'                => $batch_items_schema['properties'],
-            ),
-            'schema' => array( $this, 'get_public_batch_schema' ),
-        ) );
+            ],
+            'schema' => [ $this, 'get_public_batch_schema' ],
+        ] );
     }
 
     /**
@@ -189,13 +187,17 @@ class WithdrawController extends WP_REST_Controller {
      * @return bool|\WP_Error
      */
     public function withdraw_exists( $id ) {
-        $withdraw = dokan()->withdraw->get( $id );
+        try {
+            $withdraw = dokan()->withdraw->get( $id );
 
-        if ( $withdraw ) {
-            return true;
+            if ( $withdraw ) {
+                return true;
+            }
+
+            throw new DokanException( 'dokan_rest_withdraw_error', __( 'Withdraw not found', 'dokan-lite' ), 404 );
+        } catch ( Exception $e ) {
+            return $this->send_response_error( $e );
         }
-
-        return new WP_Error( 'dokan_rest_withdraw_error', __( 'Withdraw not found', 'dokan-lite' ), array( 'status' => 404 ) );
     }
 
     /**
@@ -219,12 +221,12 @@ class WithdrawController extends WP_REST_Controller {
      * @return \WP_REST_Response
      */
     public function get_items( $request ) {
-        $args = array(
+        $args = [
             'status'   => dokan()->withdraw->get_status_code( $request['status'] ),
             'paginate' => true,
             'page'     => $request['page'],
             'limit'    => $request['per_page'],
-        );
+        ];
 
         $user_id = null;
 
@@ -233,7 +235,7 @@ class WithdrawController extends WP_REST_Controller {
             $user_id = dokan_get_current_user_id();
 
             if ( empty( $user_id ) ) {
-                return new WP_Error( 'dokan_rest_withdraw_no_vendor_found', __( 'No vendor found', 'dokan-lite' ), array( 'status' => 404 ) );
+                return new WP_Error( 'dokan_rest_withdraw_no_vendor_found', __( 'No vendor found', 'dokan-lite' ), [ 'status' => 404 ] );
             }
 
         } else if ( isset( $request['user_id'] ) ) {
@@ -251,7 +253,7 @@ class WithdrawController extends WP_REST_Controller {
 
         $withdraws = dokan()->withdraw->all( $args );
 
-        $data = array();
+        $data = [];
         foreach ( $withdraws->withdraws as $withdraw ) {
             $item   = $this->prepare_item_for_response( $withdraw, $request );
             $data[] = $this->prepare_response_for_collection( $item );
@@ -276,57 +278,61 @@ class WithdrawController extends WP_REST_Controller {
      * @return \WP_REST_Response
      */
     public function create_item( $request ) {
-        // vendors are only allowed to set amount and method params
-        $user_id = dokan_get_current_user_id();
+        try {
+            // vendors are only allowed to set amount and method params
+            $user_id = dokan_get_current_user_id();
 
-        if ( current_user_can( 'manage_woocommerce' ) ) {
-            // A user could be both wc manager and a vendor. In that case,
-            // we should allow to set `user_id` param for that manager.
-            if ( isset( $request['user_id'] ) ) {
-                $user_id = $request['user_id'];
+            if ( current_user_can( 'manage_woocommerce' ) ) {
+                // A user could be both wc manager and a vendor. In that case,
+                // we should allow to set `user_id` param for that manager.
+                if ( isset( $request['user_id'] ) ) {
+                    $user_id = $request['user_id'];
 
-                if ( ! user_can( $user_id, 'dokan_manage_withdraw' ) ) {
-                    return new WP_Error( 'dokan_rest_withdraw_error', __( 'User does not have permission to withdraw', 'dokan-lite' ) );
+                    if ( ! user_can( $user_id, 'dokan_manage_withdraw' ) ) {
+                        throw new DokanException( 'dokan_rest_withdraw_error', __( 'User does not have permission to withdraw', 'dokan-lite' ), 401 );
+                    }
                 }
+
+                $note = $request['note'];
+            } else {
+                $note = '';
             }
 
-            $note = $request['note'];
-        } else {
-            $note = '';
+            if ( empty( $user_id ) ) {
+                throw new DokanException( 'dokan_rest_withdraw_error', __( 'No vendor found', 'dokan-lite' ), 404 );
+            }
+
+            $args = [
+                'user_id' => $user_id,
+                'amount'  => $request['amount'],
+                'date'    => current_time( 'mysql' ),
+                'method'  => $request['method'],
+                'note'    => $note,
+                'ip'      => dokan_get_client_ip(),
+            ];
+
+            $validate_request = dokan()->withdraw->is_valid_approval_request( $args );
+
+            if ( is_wp_error( $validate_request ) ) {
+                throw new DokanException( 'dokan_rest_withdraw_error', $validate_request->get_error_message(), 400 );
+            }
+
+            $withdraw = dokan()->withdraw->create( $args );
+
+            if ( is_wp_error( $withdraw ) ) {
+                throw new DokanException( $withdraw->get_error_code(), $withdraw->get_error_message(), 400 );
+            }
+
+            $response = $this->prepare_item_for_response( $withdraw, $request );
+            $response = rest_ensure_response( $response );
+
+            $response->set_status( 201 );
+            $response->header( 'Location', rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $withdraw->get_id() ) ) );
+
+            return $response;
+        } catch ( Exception $e ) {
+            return $this->send_response_error( $e );
         }
-
-        if ( empty( $user_id ) ) {
-            return new WP_Error( 'dokan_rest_withdraw_error', __( 'No vendor found', 'dokan-lite' ), array( 'status' => 404 ) );
-        }
-
-        $args = array(
-            'user_id' => $user_id,
-            'amount'  => $request['amount'],
-            'date'    => current_time( 'mysql' ),
-            'method'  => $request['method'],
-            'note'    => $note,
-            'ip'      => dokan_get_client_ip(),
-        );
-
-        $validate_request = dokan()->withdraw->is_valid_approval_request( $args );
-
-        if ( is_wp_error( $validate_request ) ) {
-            return new WP_Error( 'dokan_rest_withdraw_error', $validate_request->get_error_message(), array( 'status' => 400 ) );
-        }
-
-        $withdraw = dokan()->withdraw->create( $args );
-
-        if ( is_wp_error( $withdraw ) ) {
-            return $withdraw;
-        }
-
-        $response = $this->prepare_item_for_response( $withdraw, $request );
-        $response = rest_ensure_response( $response );
-
-        $response->set_status( 201 );
-        $response->header( 'Location', rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $withdraw->get_id() ) ) );
-
-        return $response;
     }
 
     /**
@@ -339,6 +345,7 @@ class WithdrawController extends WP_REST_Controller {
      * @return \WP_REST_Response
      */
     public function get_item( $request ) {
+        // No need to try-catch here, `withdraw_exists` will handle that
         $withdraw = dokan()->withdraw->get( $request['id'] );
         $data     = $this->prepare_item_for_response( $withdraw, $request );
 
@@ -353,58 +360,62 @@ class WithdrawController extends WP_REST_Controller {
      * @return void
      */
     public function update_item( $request ) {
-        global $wpdb;
+        try {
+            global $wpdb;
 
-        $withdraw = dokan()->withdraw->get( $request['id'] );
+            $withdraw = dokan()->withdraw->get( $request['id'] );
 
-        if ( ! current_user_can( 'manage_woocommerce' ) ) {
-            $validate_request = dokan()->withdraw->is_valid_cancellation_request( $withdraw->get_withdraw() );
+            if ( ! current_user_can( 'manage_woocommerce' ) ) {
+                $validate_request = dokan()->withdraw->is_valid_cancellation_request( $withdraw->get_withdraw() );
 
-            if ( is_wp_error( $validate_request )  ) {
-                return new WP_Error( 'dokan_rest_withdraw_error', $validate_request->get_error_message(), array( 'status' => 422 ) );
-            }
-
-            // Vendors are allowed to cancel request only
-            $withdraw->set_status( dokan()->withdraw->get_status_code( 'cancelled' ) );
-        } else {
-            if ( isset( $request['user_id'] ) ) {
-                $withdraw->set_user_id( $request['user_id'] );
-            }
-
-            if ( isset( $request['amount'] ) ) {
-                $withdraw->set_amount( $request['amount'] );
-            }
-
-            if ( isset( $request['status'] ) ) {
-                if ( 'approved' === $request['status'] ) {
-                    $validate_request = dokan()->withdraw->is_valid_approval_request( $withdraw->get_withdraw() );
-
-                    if ( is_wp_error( $validate_request )  ) {
-                        return new WP_Error( 'dokan_rest_withdraw_error', $validate_request->get_error_message(), array( 'status' => 422 ) );
-                    }
+                if ( is_wp_error( $validate_request )  ) {
+                    throw new DokanException( 'dokan_rest_withdraw_error', $validate_request->get_error_message(), 422 );
                 }
 
-                $withdraw->set_status( dokan()->withdraw->get_status_code( $request['status'] ) );
+                // Vendors are allowed to cancel request only
+                $withdraw->set_status( dokan()->withdraw->get_status_code( 'cancelled' ) );
+            } else {
+                if ( isset( $request['user_id'] ) ) {
+                    $withdraw->set_user_id( $request['user_id'] );
+                }
+
+                if ( isset( $request['amount'] ) ) {
+                    $withdraw->set_amount( $request['amount'] );
+                }
+
+                if ( isset( $request['status'] ) ) {
+                    if ( 'approved' === $request['status'] ) {
+                        $validate_request = dokan()->withdraw->is_valid_approval_request( $withdraw->get_withdraw() );
+
+                        if ( is_wp_error( $validate_request )  ) {
+                            throw new DokanException( 'dokan_rest_withdraw_error', $validate_request->get_error_message(), 422 );
+                        }
+                    }
+
+                    $withdraw->set_status( dokan()->withdraw->get_status_code( $request['status'] ) );
+                }
+
+                if ( isset( $request['method'] ) ) {
+                    $withdraw->set_method( $request['method'] );
+                }
+
+                if ( isset( $request['note'] ) ) {
+                    $withdraw->set_note( $request['note'] );
+                }
             }
 
-            if ( isset( $request['method'] ) ) {
-                $withdraw->set_method( $request['method'] );
+            $withdraw = $withdraw->save();
+
+            if ( is_wp_error( $withdraw ) ) {
+                throw new DokanException( $withdraw->get_error_code(), $withdraw->get_error_message(), 500 );
             }
 
-            if ( isset( $request['note'] ) ) {
-                $withdraw->set_note( $request['note'] );
-            }
+            $response = $this->prepare_item_for_response( $withdraw, $request );
+
+            return rest_ensure_response( $response );
+        } catch ( Exception $e ) {
+            return $this->send_response_error( $e );
         }
-
-        $withdraw->save();
-
-        if ( is_wp_error( $withdraw ) ) {
-            return $withdraw;
-        }
-
-        $response = $this->prepare_item_for_response( $withdraw, $request );
-
-        return rest_ensure_response( $response );
     }
 
     /**
@@ -415,13 +426,22 @@ class WithdrawController extends WP_REST_Controller {
      * @return \WP_REST_Request
      */
     public function delete_item( $request ) {
-        $withdraw = dokan()->withdraw->get( $request['id'] );
+        try {
+            $withdraw = dokan()->withdraw->get( $request['id'] );
 
-        $withdraw->delete();
+            $withdraw = $withdraw->delete();
 
-        $response = $this->prepare_item_for_response( $withdraw, $request );
+            if ( is_wp_error( $withdraw ) ) {
+                throw new DokanException( $withdraw->get_error_code(), $withdraw->get_error_message(), 500 );
+            }
 
-        return rest_ensure_response( $response );
+            $response = $this->prepare_item_for_response( $withdraw, $request );
+
+            return rest_ensure_response( $response );
+
+        } catch ( Exception $e ) {
+            return $this->send_response_error( $e );
+        }
     }
 
     /**
@@ -448,8 +468,8 @@ class WithdrawController extends WP_REST_Controller {
      * @return void
      */
     public function batch_items( $request ) {
-        $success = array();
-        $failed  = array();
+        $success = [];
+        $failed  = [];
 
         foreach ( $request['approved'] as $id ) {
             $withdraw = dokan()->withdraw->get( $id );
@@ -513,10 +533,10 @@ class WithdrawController extends WP_REST_Controller {
             }
         }
 
-        return rest_ensure_response( array(
+        return rest_ensure_response( [
             'success' => $success,
             'failed'  => $failed,
-        ) );
+        ] );
     }
 
     /**
@@ -528,7 +548,7 @@ class WithdrawController extends WP_REST_Controller {
      */
     public function prepare_item_for_response( $withdraw, $request ) {
         $methods = dokan_withdraw_get_methods();
-        $data = array(
+        $data = [
             'id'           => absint( $withdraw->get_id() ),
             'user'         => $this->get_user_data( $withdraw->get_user_id() ),
             'amount'       => floatval( $withdraw->get_amount() ),
@@ -538,7 +558,7 @@ class WithdrawController extends WP_REST_Controller {
             'method_title' => array_key_exists( $withdraw->get_method(), $methods ) ? $methods[ $withdraw->get_method() ] : $withdraw->get_method(),
             'note'         => $withdraw->get_note(),
             'ip'           => $withdraw->get_ip()
-        );
+        ];
 
         $response = rest_ensure_response( $data );
         $response->add_links( $this->prepare_links( $withdraw, $request ) );
@@ -602,14 +622,14 @@ class WithdrawController extends WP_REST_Controller {
      * @return array Links for the given post.
      */
     protected function prepare_links( $withdraw, $request ) {
-        $links = array(
-            'self' => array(
+        $links = [
+            'self' => [
                 'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $withdraw->get_id() ) ),
-            ),
-            'collection' => array(
+            ],
+            'collection' => [
                 'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ),
-            ),
-        );
+            ],
+        ];
 
         return $links;
     }
@@ -622,71 +642,71 @@ class WithdrawController extends WP_REST_Controller {
      * @return array
      */
     public function get_item_schema() {
-        $schema = array(
+        $schema = [
             '$schema'    => 'http://json-schema.org/draft-04/schema#',
             'title'      => 'Withdraw',
             'type'       => 'object',
-            'properties' => array(
-                'id' => array(
+            'properties' => [
+                'id' => [
                     'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
                     'type'        => 'integer',
-                    'context'     => array( 'view', 'edit' ),
+                    'context'     => [ 'view', 'edit' ],
                     'readonly'    => true,
-                ),
-                'user' => array(
+                ],
+                'user' => [
                     'description' => __( 'Requested User', 'dokan-lite' ),
                     'type'        => 'object',
-                    'context'     => array( 'view' ),
+                    'context'     => [ 'view' ],
                     'readonly'    => true,
-                ),
-                'user_id' => array(
+                ],
+                'user_id' => [
                     'required'    => false,
                     'description' => __( 'Requested User ID', 'dokan-lite' ),
                     'type'        => 'integer',
-                    'context'     => array( 'edit' ),
-                ),
-                'amount' => array(
+                    'context'     => [ 'edit' ],
+                ],
+                'amount' => [
                     'required'    => true,
                     'description' => __( 'The amount of discount. Should always be numeric, even if setting a percentage.', 'dokan-lite' ),
                     'type'        => 'string',
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'created_date' => array(
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'created_date' => [
                     'description' => __( "The date the withdraw request has beed created in the site's timezone.", 'dokan-lite' ),
                     'type'        => 'date-time',
-                    'context'     => array( 'view' ),
+                    'context'     => [ 'view' ],
                     'readonly'    => true,
-                ),
-                'status' => array(
+                ],
+                'status' => [
                     'required'    => false,
                     'description' => __( "Withdraw status", 'dokan-lite' ),
                     'type'        => 'string',
-                    'enum'        => array( 'pending', 'approved', 'cancelled' ),
-                    'context'     => array( 'view', 'edit' ),
+                    'enum'        => [ 'pending', 'approved', 'cancelled' ],
+                    'context'     => [ 'view', 'edit' ],
                     'default'     => 'pending',
-                ),
-                'method' => array(
+                ],
+                'method' => [
                     'required'    => true,
                     'description' => __( "Withdraw Method", 'dokan-lite' ),
                     'type'        => 'string',
                     'enum'        => array_keys( dokan_withdraw_register_methods() ),
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'note'   => array(
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'note'   => [
                     'required'    => false,
                     'description' => __( "Withdraw Notes", 'dokan-lite' ),
                     'type'        => 'string',
-                    'context'     => array( 'view', 'edit' ),
+                    'context'     => [ 'view', 'edit' ],
                     'default'     => '',
-                ),
-                'ip'     => array(
+                ],
+                'ip'     => [
                     'description' => __( "User IP", 'dokan-lite' ),
                     'type'        => 'string',
-                    'context'     => array( 'view' ),
+                    'context'     => [ 'view' ],
                     'readonly'    => true,
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
 
         return $this->add_additional_fields_schema( $schema );
     }
@@ -699,43 +719,43 @@ class WithdrawController extends WP_REST_Controller {
      * @return array
      */
     public function get_public_batch_schema() {
-        $schema = array(
+        $schema = [
             '$schema'    => 'http://json-schema.org/draft-04/schema#',
             'title'      => 'batch',
             'type'       => 'object',
-            'properties' => array(
-                'approved'  => array(
+            'properties' => [
+                'approved'  => [
                     'required'    => false,
                     'description' => __( 'List of withdraw IDs to be approved', 'dokan-lite' ),
                     'type'        => 'array',
-                    'context'     => array( 'edit' ),
-                    'default'     => array(),
-                    'items'       => array(
+                    'context'     => [ 'edit' ],
+                    'default'     => [],
+                    'items'       => [
                         'type' => 'integer',
-                    ),
-                ),
-                'cancelled' => array(
+                    ],
+                ],
+                'cancelled' => [
                     'required'    => false,
                     'description' => __( 'List of withdraw IDs to be cancelled', 'dokan-lite' ),
                     'type'        => 'array',
-                    'context'     => array( 'edit' ),
-                    'default'     => array(),
-                    'items'       => array(
+                    'context'     => [ 'edit' ],
+                    'default'     => [],
+                    'items'       => [
                         'type' => 'integer',
-                    ),
-                ),
-                'delete'    => array(
+                    ],
+                ],
+                'delete'    => [
                     'required'    => false,
                     'description' => __( 'List of withdraw IDs to be deleted', 'dokan-lite' ),
                     'type'        => 'array',
-                    'context'     => array( 'edit' ),
-                    'default'     => array(),
-                    'items'       => array(
+                    'context'     => [ 'edit' ],
+                    'default'     => [],
+                    'items'       => [
                         'type' => 'integer',
-                    ),
-                )
-            ),
-        );
+                    ],
+                ]
+            ],
+        ];
 
         return $schema;
     }
