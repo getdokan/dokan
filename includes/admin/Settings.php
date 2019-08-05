@@ -4,7 +4,6 @@ namespace WeDevs\Dokan\Admin;
 
 use Exception;
 use WP_Error;
-use WeDevs\Dokan\Exceptions\DokanException;
 
 /**
 * Admin Settings Class
@@ -256,8 +255,12 @@ class Settings {
      * @return array settings fields
      */
     public function get_settings_fields() {
-        $pages_array      = $this->get_post_type( 'page' );
-        $commission_types = dokan_commission_types();
+        $pages_array  = $this->get_post_type( 'page' );
+
+        $commission_types = array(
+            'flat'       => __( 'Flat', 'dokan-lite' ),
+            'percentage' => __( 'Percentage', 'dokan-lite' ),
+        );
 
         $general_site_options = apply_filters( 'dokan_settings_general_site_options', array(
             'site_options' => array(
@@ -384,36 +387,6 @@ class Settings {
                 $general_site_options,
                 $general_vendor_store_options
             ),
-            'dokan_selling' => array(
-                'new_seller_enable_selling' => array(
-                    'name'    => 'new_seller_enable_selling',
-                    'label'   => __( 'New Vendor Product Upload', 'dokan-lite' ),
-                    'desc'    => __( 'Allow newly registered vendors to add products', 'dokan-lite' ),
-                    'type'    => 'checkbox',
-                    'default' => 'on'
-                ),
-                'order_status_change' => array(
-                    'name'    => 'order_status_change',
-                    'label'   => __( 'Order Status Change', 'dokan-lite' ),
-                    'desc'    => __( 'Vendor can update order status', 'dokan-lite' ),
-                    'type'    => 'checkbox',
-                    'default' => 'on'
-                ),
-                'disable_product_popup' => array(
-                    'name'    => 'disable_product_popup',
-                    'label'   => __( 'Disable Product Popup', 'dokan-lite' ),
-                    'desc'    => __( 'Disable add new product in popup view', 'dokan-lite' ),
-                    'type'    => 'checkbox',
-                    'default' => 'off'
-                ),
-                'disable_welcome_wizard' => array(
-                    'name'    => 'disable_welcome_wizard',
-                    'label'   => __( 'Disable Welcome Wizard', 'dokan-lite' ),
-                    'desc'    => __( 'Disable welcome wizard for newly registered vendors', 'dokan-lite' ),
-                    'type'    => 'checkbox',
-                    'default' => 'off'
-                ),
-            ),
             'dokan_selling' => array_merge(
                 $selling_option_commission,
                 $selling_option_vendor_capability
@@ -473,7 +446,7 @@ class Settings {
                 'gmap_api_key' => array(
                     'name'  => 'gmap_api_key',
                     'label' => __( 'Google Map API Key', 'dokan-lite' ),
-                    'desc'  => __( '<a href="https://developers.google.com/maps/documentation/javascript/get-api-key" target="_blank">API Key</a> is needed to display map on store page', 'dokan-lite' ),
+                    'desc'  => __( '<a href="https://developers.google.com/maps/documentation/javascript/" target="_blank">API Key</a> is needed to display map on store page', 'dokan-lite' ),
                     'type'  => 'text',
                 ),
                 'contact_seller' => array(
