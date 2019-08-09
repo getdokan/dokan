@@ -29,6 +29,76 @@ class Manager {
     }
 
     /**
+     * Get all orders
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return void
+     */
+    public function all( $args = [] ) {
+        global $wpdb;
+
+        $default = [
+            'seller_id'   => dokan_get_current_user_id(),
+            'customer_id' => null,
+            'status'      => 'all',
+            'paged'       => 1,
+            'limit'       => 10,
+            'date'        => null
+        ];
+
+        $args = wp_parse_args( $args, $default );
+
+        $offset       = ( $args['paged'] - 1 ) * $args['limit'];
+        $cache_group = 'dokan_seller_data_'.$args['seller_id'];
+        $cache_key   = 'dokan-seller-orders-' . $args['status'] . '-' . $args['seller_id'];
+        $orders      = wp_cache_get( $cache_key, $cache_group );
+
+        $join        = $args['customer_id'] ? "LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id" : '';
+        $where       = $args['customer_id'] ? sprintf( "pm.meta_key = '_customer_user' AND pm.meta_value = %d AND", $args['customer_id'] ) : '';
+
+        if ( $orders === false ) {
+            $status_where = ( $args['status'] == 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', $args['status'] );
+            $date_query   = ( $args['date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $args['date'] ) : '';
+
+            $orders = $wpdb->get_results( $wpdb->prepare( "SELECT do.order_id, p.post_date
+                FROM {$wpdb->prefix}dokan_orders AS do
+                LEFT JOIN $wpdb->posts p ON do.order_id = p.ID
+                {$join}
+                WHERE
+                    do.seller_id = %d AND
+                    {$where}
+                    p.post_status != 'trash'
+                    {$date_query}
+                    {$status_where}
+                GROUP BY do.order_id
+                ORDER BY p.post_date DESC
+                LIMIT %d, %d", $args['seller_id'], $offset, $args['limit']
+            ) );
+
+            $orders = array_map( function( $order_data ) {
+                return wc_get_order( $order_data->order_id );
+            }, $orders );
+
+            wp_cache_set( $cache_key, $orders, $cache_group );
+            dokan_cache_update_group( $cache_key, $cache_group );
+        }
+
+        return $orders;
+    }
+
+    /**
+     * Get single order details
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return void
+     */
+    public function get( $id ) {
+        return wc_get_order( $id );
+    }
+
+    /**
      * Update the child order status when a parent order status is changed
      *
      * @global object $wpdb

@@ -7,7 +7,6 @@
  * @return float
  */
 function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
-
     $order              = wc_get_order( $order_id );
     $seller_id          = dokan_get_seller_id_by_order( $order_id );
     $net_amount         = dokan_get_seller_earnings_by_order( $order, $seller_id );

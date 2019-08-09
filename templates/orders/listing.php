@@ -8,7 +8,17 @@ $paged        = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
 $limit        = 10;
 $offset       = ( $paged - 1 ) * $limit;
 $order_date   = isset( $_GET['order_date'] ) ? sanitize_key( $_GET['order_date'] ) : NULL;
-$user_orders  = dokan_get_seller_orders( $seller_id, $order_status, $order_date, $limit, $offset, $customer_id );
+// $user_orders  = dokan_get_seller_orders( $seller_id, $order_status, $order_date, $limit, $offset, $customer_id );
+
+// $output = array_map( function( $order ) {
+//     return wc_get_order( $order->order_id );
+// }, $user_orders );
+
+$output
+
+var_dump( $output );
+die();
+// $user_orders = dokan()->vendor->get()->get_orders(( $args )
 
 $order_statuses = array(
     '-1'            => __( 'Bulk Actions', 'dokan-lite' ),
