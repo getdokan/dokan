@@ -12,8 +12,6 @@ function dokan_admin_shop_order_remove_parents( $query ) {
     }
 }
 
-add_action( 'pre_get_posts', 'dokan_admin_shop_order_remove_parents' );
-
 /**
  * Remove child orders from WC reports
  *
@@ -21,13 +19,10 @@ add_action( 'pre_get_posts', 'dokan_admin_shop_order_remove_parents' );
  * @return array
  */
 function dokan_admin_order_reports_remove_parents( $query ) {
-
     $query['where'] .= ' AND posts.post_parent = 0';
 
     return $query;
 }
-
-add_filter( 'woocommerce_reports_get_order_report_query', 'dokan_admin_order_reports_remove_parents' );
 
 /**
  * Change the columns shown in admin.
@@ -69,8 +64,6 @@ function dokan_admin_shop_order_edit_columns( $existing_columns ) {
 
     return apply_filters( 'dokan_edit_shop_order_columns', $existing_columns );
 }
-
-add_filter( 'manage_edit-shop_order_columns', 'dokan_admin_shop_order_edit_columns', 11 );
 
 /**
  * Adds custom column on dokan admin shop order table
@@ -121,8 +114,6 @@ function dokan_shop_order_custom_columns( $col ) {
     }
 }
 
-add_action( 'manage_shop_order_posts_custom_column', 'dokan_shop_order_custom_columns', 11 );
-
 /**
  * Adds css classes on admin shop order table
  *
@@ -150,8 +141,6 @@ function dokan_admin_shop_order_row_classes( $classes, $post_id ) {
 
     return $classes;
 }
-
-add_filter( 'post_class', 'dokan_admin_shop_order_row_classes', 10, 2);
 
 /**
  * Show/hide sub order css/js
@@ -223,8 +212,6 @@ function dokan_admin_shop_order_scripts() {
     <?php
 }
 
-add_action( 'admin_footer-edit.php', 'dokan_admin_shop_order_scripts' );
-
 /**
  * Delete sub orders when parent order is trashed
  *
@@ -246,8 +233,6 @@ function dokan_admin_on_trash_order( $post_id ) {
         }
     }
 }
-
-add_action( 'wp_trash_post', 'dokan_admin_on_trash_order' );
 
 /**
  * Untrash sub orders when parent orders are untrashed
@@ -271,8 +256,6 @@ function dokan_admin_on_untrash_order( $post_id ) {
         }
     }
 }
-
-add_action( 'untrash_post', 'dokan_admin_on_untrash_order' );
 
 /**
  * Delete sub orders and from dokan sync table when a order is deleted
@@ -298,8 +281,6 @@ function dokan_admin_on_delete_order( $post_id ) {
     }
 }
 
-add_action( 'delete_post', 'dokan_admin_on_delete_order' );
-
 /**
  * Show a toggle button to toggle all the sub orders
  *
@@ -312,8 +293,6 @@ function dokan_admin_shop_order_toggle_sub_orders() {
         echo '<button class="toggle-sub-orders button">' . esc_html__( 'Toggle Sub-orders', 'dokan-lite' ) . '</button>';
     }
 }
-
-add_action( 'restrict_manage_posts', 'dokan_admin_shop_order_toggle_sub_orders');
 
 /**
  * Get total commision earning of the site
@@ -663,10 +642,6 @@ function dokan_send_notification_on_product_publish( $post ) {
     do_action( 'dokan_pending_product_published_notification', $post, $seller );
 }
 
-add_action( 'pending_to_publish', 'dokan_send_notification_on_product_publish' );
-
-
-
 /**
  * Display form field with list of authors.
  *
@@ -709,8 +684,6 @@ function dokan_add_seller_meta_box(){
     add_meta_box( 'sellerdiv', __('Vendor', 'dokan-lite' ), 'dokan_seller_meta_box', 'product', 'normal', 'core' );
 }
 
-add_action( 'add_meta_boxes', 'dokan_add_seller_meta_box' );
-
 /**
 * Override product vendor ID from admin panel
 *
@@ -738,8 +711,6 @@ function dokan_override_product_author_by_admin( $product_id, $post ) {
 
     dokan_override_product_author( $product, $posted_vendor_id );
 }
-
-add_action( 'woocommerce_process_product_meta', 'dokan_override_product_author_by_admin', 12, 2 );
 
 /**
  * Dokan override author ID from admin
@@ -1028,8 +999,6 @@ function dokan_admin_report_by_seller( $chosen_seller_id) {
     return $data;
 }
 
-add_filter( 'post_types_to_delete_with_user', 'dokan_add_wc_post_types_to_delete_user', 10, 2 );
-
 function dokan_add_wc_post_types_to_delete_user( $post_types, $user_id ) {
     if ( ! dokan_is_user_seller( $user_id ) ) {
         return $post_types;
@@ -1086,5 +1055,3 @@ function dokan_update_pages( $value, $name ) {
 
     return array_replace_recursive( $current_settings, $value );
 }
-
-add_filter( 'dokan_save_settings_value', 'dokan_update_pages', 10, 2 );

@@ -11,7 +11,6 @@ use WP_Query;
 */
 class Manager {
 
-
     /**
      * Get all Product for a vendor
      *
@@ -19,17 +18,17 @@ class Manager {
      *
      * @return void
      */
-    public function all( $args = array() ) {
-        $post_statuses = apply_filters( 'dokan_get_product_status', array( 'publish', 'draft', 'pending', 'future' ) );
+    public function all( $args = [] ) {
+        $post_statuses = apply_filters( 'dokan_get_product_status', [ 'publish', 'draft', 'pending', 'future' ] );
 
-        $defaults = array(
+        $defaults = [
             'post_type'      => 'product',
             'post_status'    => $post_statuses,
             'posts_per_page' => -1,
             'orderby'        => 'post_date',
             'order'          => 'DESC',
             'paged'          => 1,
-        );
+        ];
 
         $args = wp_parse_args( $args, $defaults );
 
@@ -43,35 +42,34 @@ class Manager {
      *
      * @return void
      */
-    public function featured( $args = array() ) {
-
+    public function featured( $args = [] ) {
         if ( version_compare( WC_VERSION, '2.7', '>' ) ) {
             $product_visibility_term_ids = wc_get_product_visibility_term_ids();
 
-            $args['tax_query'][] = array(
+            $args['tax_query'][] = [
                 'taxonomy' => 'product_visibility',
                 'field'    => 'term_taxonomy_id',
                 'terms'    => is_search() ? $product_visibility_term_ids['exclude-from-search'] : $product_visibility_term_ids['exclude-from-catalog'],
                 'operator' => 'NOT IN',
-            );
+            ];
 
-            $args['tax_query'][] = array(
+            $args['tax_query'][] = [
                 'taxonomy' => 'product_visibility',
                 'field'    => 'term_taxonomy_id',
                 'terms'    => $product_visibility_term_ids['featured'],
-            );
+            ];
         } else {
-            $args['meta_query'] = array(
-                array(
+            $args['meta_query'] = [
+                [
                     'key'     => '_visibility',
                     'value'   => array( 'catalog', 'visible' ),
                     'compare' => 'IN'
-                ),
-                array(
+                ],
+                [
                     'key'   => '_featured',
                     'value' => 'yes'
-                )
-            );
+                ]
+            ];
         }
 
         return $this->all( apply_filters( 'dokan_featured_products_query', $args ) );
@@ -84,25 +82,24 @@ class Manager {
      *
      * @return void
      */
-    public function latest( $args = array() ) {
-
+    public function latest( $args = [] ) {
         if ( version_compare( WC_VERSION, '2.7', '>' ) ) {
             $product_visibility_term_ids = wc_get_product_visibility_term_ids();
 
-            $args['tax_query'] = array(
+            $args['tax_query'] = [
                 'taxonomy' => 'product_visibility',
                 'field'    => 'term_taxonomy_id',
                 'terms'    => is_search() ? $product_visibility_term_ids['exclude-from-search'] : $product_visibility_term_ids['exclude-from-catalog'],
                 'operator' => 'NOT IN',
-            );
+            ];
         } else {
-            $args['meta_query']  = array(
-                array(
+            $args['meta_query']  = [
+                [
                     'key'     => '_visibility',
-                    'value'   => array('catalog', 'visible'),
+                    'value'   => [ 'catalog', 'visible' ],
                     'compare' => 'IN'
-                )
-            );
+                ]
+            ];
         }
 
         return $this->all( apply_filters( 'dokan_latest_products_query', $args ) );
@@ -115,27 +112,27 @@ class Manager {
      *
      * @return void
      */
-    public function best_selling( $args = array() ) {
+    public function best_selling( $args = [] ) {
 
         $args['meta_key'] = 'total_sales';
         $args['orderby']  = 'meta_value_num';
 
         if ( version_compare( WC_VERSION, '2.7', '>' ) ) {
             $product_visibility_term_ids = wc_get_product_visibility_term_ids();
-            $args['tax_query'] = array(
+            $args['tax_query'] = [
                 'taxonomy' => 'product_visibility',
                 'field'    => 'term_taxonomy_id',
                 'terms'    => is_search() ? $product_visibility_term_ids['exclude-from-search'] : $product_visibility_term_ids['exclude-from-catalog'],
                 'operator' => 'NOT IN',
-            );
+            ];
         } else {
-            $args['meta_query']  = array(
-                array(
+            $args['meta_query']  = [
+                [
                     'key'     => '_visibility',
                     'value'   => array('catalog', 'visible'),
                     'compare' => 'IN'
-                )
-            );
+                ]
+            ];
         }
 
         return $this->all( apply_filters( 'dokan_best_selling_products_query', $args ) );
@@ -152,25 +149,25 @@ class Manager {
         if ( version_compare( WC_VERSION, '2.7', '>' ) ) {
             $product_visibility_term_ids = wc_get_product_visibility_term_ids();
 
-            $args['tax_query'] = array(
+            $args['tax_query'] = [
                 'taxonomy' => 'product_visibility',
                 'field'    => 'term_taxonomy_id',
                 'terms'    => is_search() ? $product_visibility_term_ids['exclude-from-search'] : $product_visibility_term_ids['exclude-from-catalog'],
                 'operator' => 'NOT IN',
-            );
+            ];
         } else {
-            $args['meta_query']  = array(
-                array(
+            $args['meta_query']  = [
+                [
                     'key'     => '_visibility',
-                    'value'   => array('catalog', 'visible'),
+                    'value'   => [ 'catalog', 'visible' ],
                     'compare' => 'IN'
-                )
-            );
+                ]
+            ];
         }
 
-        add_filter( 'posts_clauses', array( 'WC_Shortcodes', 'order_by_rating_post_clauses' ) );
+        add_filter( 'posts_clauses', [ 'WC_Shortcodes', 'order_by_rating_post_clauses' ] );
         $products = $this->all( apply_filters( 'dokan_top_rated_products_query', $args ) );
-        remove_filter( 'posts_clauses', array( 'WC_Shortcodes', 'order_by_rating_post_clauses' ) );
+        remove_filter( 'posts_clauses', [ 'WC_Shortcodes', 'order_by_rating_post_clauses' ] );
 
         return $products;
     }
