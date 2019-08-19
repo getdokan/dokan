@@ -669,7 +669,7 @@ function dokan_get_suborder_ids_by( $parent_order_id ) {
  */
 function dokan_get_admin_commission_by( $order, $seller_id ) {
 
-    wc_deprecated_function( 'dokan_get_admin_commission_by', '2.9.11', 'Dokan_Commission::get_earning_by_order()' );
+    wc_deprecated_function( 'dokan_get_admin_commission_by', 'DOKAN_LITE_SINCE', 'Dokan_Commission::get_earning_by_order()' );
 
     return Dokan_Commission::get_earning_by_order( $order );
 

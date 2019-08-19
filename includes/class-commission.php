@@ -66,25 +66,24 @@ class Dokan_Commission {
 
         // if saved vendor_earning is found, return it
         if ( isset( $saved_vendor_earning ) && '' !== $saved_vendor_earning ) {
-            return apply_filters_deprecated( 'dokan_order_admin_commission', array( (float) $saved_vendor_earning, $order, $context ), '2.9.10', 'dokan_get_earning_by_order' );
+            return apply_filters_deprecated( 'dokan_order_admin_commission', array( (float) $saved_vendor_earning, $order, $context ), 'DOKAN_LITE_SINCE', 'dokan_get_earning_by_order' );
         }
 
         $saved_admin_earning = $order->get_meta( '_dokan_admin_fee', true );
 
         // if saved admin earning is found, retrun it
         if ( '' !== $saved_admin_earning ) {
-            return apply_filters_deprecated( 'dokan_order_admin_commission', array( (float) $saved_admin_earning, $order, $context ), '2.9.10', 'dokan_get_earning_by_order' );
+            return apply_filters_deprecated( 'dokan_order_admin_commission', array( (float) $saved_admin_earning, $order, $context ), 'DOKAN_LITE_SINCE', 'dokan_get_earning_by_order' );
         }
-
-        $line_items = $order->get_items( 'line_item' );
 
         $earning            = 0;
         $shipping_recipient = dokan_get_option( 'shipping_fee_recipient', 'dokan_general', 'seller' );
         $tax_recipient      = dokan_get_option( 'tax_fee_recipient', 'dokan_general', 'seller' );
 
-        foreach ( $line_items as $item ) {
-            $product_id = $item->get_product_id();
-            $earning    += self::get_earning_by_product( $product_id, $context );
+        foreach ( $order->get_items( 'line_item' ) as $item ) {
+            $product_id     = $item->get_product_id();
+            $earning        += self::get_earning_by_product( $product_id, $context );
+            $earning        *=  $item->get_quantity();
         }
 
         if ( $context === $shipping_recipient ) {
@@ -95,7 +94,7 @@ class Dokan_Commission {
             $earning += $order->get_total_tax();
         }
 
-        return apply_filters_deprecated( 'dokan_order_admin_commission', array( $earning, $order, $context ), '2.9.10', 'dokan_get_earning_by_order' );
+        return apply_filters_deprecated( 'dokan_order_admin_commission', array( $earning, $order, $context ), 'DOKAN_LITE_SINCE', 'dokan_get_earning_by_order' );
     }
 
     /**
@@ -257,7 +256,7 @@ class Dokan_Commission {
      * @return float|null on failure
      */
     public static function get_global_earning( $product_price ) {
-        return self::prepare_for_calculation( __FUNCTION__, __FUNCTION__, __FUNCTION__, null, $product_price );
+        return self::prepare_for_calculation( __FUNCTION__, null, $product_price );
     }
 
     /**
@@ -271,7 +270,7 @@ class Dokan_Commission {
      * @return float|null on failure
      */
     public static function get_vendor_wise_earning( $vendor_id, $product_price ) {
-        return self::prepare_for_calculation( __FUNCTION__, __FUNCTION__, __FUNCTION__, $vendor_id, $product_price );
+        return self::prepare_for_calculation( __FUNCTION__, $vendor_id, $product_price );
     }
 
     /**
@@ -285,7 +284,7 @@ class Dokan_Commission {
      * @return float|null on failure
      */
     public static function get_category_wise_earning( $product_id, $product_price ) {
-        return self::prepare_for_calculation( __FUNCTION__, __FUNCTION__, __FUNCTION__, $product_id, $product_price );
+        return self::prepare_for_calculation( __FUNCTION__, $product_id, $product_price );
     }
 
     /**
@@ -299,7 +298,7 @@ class Dokan_Commission {
      * @return float
      */
     public static function get_product_wise_earning( $product_id, $product_price ) {
-        return self::prepare_for_calculation( __FUNCTION__, __FUNCTION__, __FUNCTION__, $product_id, $product_price );
+        return self::prepare_for_calculation( __FUNCTION__, $product_id, $product_price );
     }
 
     /**
@@ -307,18 +306,16 @@ class Dokan_Commission {
      *
      * @since  DOKAN_LITE_SINCE
      *
-     * @param  string $func_rate
-     * @param  string $func_type
-     * @param  string $func_fee
+     * @param  function $callable_func
      * @param  int $product_id
      * @param  float Product_price
      *
      * @return float | null on failure
      */
-    public static function prepare_for_calculation( $func_rate = '', $func_type = '', $func_fee = '', $product_id = 0, $product_price = 0 ) {
-        $func_rate = str_replace( 'earning', 'rate', $func_rate );
-        $func_type = str_replace( 'earning', 'type', $func_type );
-        $func_fee  = str_replace( 'earning', 'additional_fee', $func_fee );
+    public static function prepare_for_calculation( $callable_func, $product_id = 0, $product_price = 0 ) {
+        $func_rate = str_replace( 'earning', 'rate', $callable_func );
+        $func_type = str_replace( 'earning', 'type', $callable_func );
+        $func_fee  = str_replace( 'earning', 'additional_fee', $callable_func );
 
         $commission_rate = null;
 
@@ -335,7 +332,7 @@ class Dokan_Commission {
 
         // get[product,category,vendor,global]_wise_type
         if ( is_callable( __CLASS__, $func_type ) && 'flat' === self::$func_type( $product_id ) ) {
-            $earning = (float) $product_price - $commission_rate;
+            $earning = (float) ( $product_price - $commission_rate );
         }
 
         // get[product,category,vendor,global]_wise_type

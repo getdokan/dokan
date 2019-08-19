@@ -3340,7 +3340,7 @@ function dokan_remove_hook_for_anonymous_class( $hook_name = '', $class_name = '
  */
 function dokan_get_variable_product_earning( $product_id, $formated = true, $deprecated = false ) {
     if ( $deprecated ) {
-        wc_deprecated_argument( 'seller_id', '2.9.19', 'dokan_get_variable_product_earning() does not require a seller_id anymore.' );
+        wc_deprecated_argument( 'seller_id', 'DOKAN_LITE_SINCE', 'dokan_get_variable_product_earning() does not require a seller_id anymore.' );
     }
 
     $product = wc_get_product( $product_id );
