@@ -81,7 +81,7 @@ class Dokan_Commission {
         $tax_recipient      = dokan_get_option( 'tax_fee_recipient', 'dokan_general', 'seller' );
 
         foreach ( $order->get_items( 'line_item' ) as $item ) {
-            $product_id     = $item->get_product_id();
+            $product_id     = $item->get_product()->get_id();
             $earning        += self::get_earning_by_product( $product_id, $context );
             $earning        *=  $item->get_quantity();
         }
@@ -131,7 +131,7 @@ class Dokan_Commission {
      * @return float
      */
     public static function get_product_wise_rate( $product_id ) {
-        return self::validate_rate( get_post_meta( $product_id, '_per_product_admin_commission', true ) );
+        return self::validate_rate( get_post_meta( self::validate_product_id( $product_id ), '_per_product_admin_commission', true ) );
     }
 
     /**
@@ -147,11 +147,7 @@ class Dokan_Commission {
         $product   = wc_get_product( $product_id );
         $parent_id = $product->get_parent_id();
 
-        if ( $parent_id ) {
-            $product_id = $parent_id;
-        }
-
-        return $product_id;
+        return $parent_id ? $parent_id : $product_id;
     }
 
     /**
@@ -164,7 +160,7 @@ class Dokan_Commission {
      * @return float
      */
     public static function get_category_wise_rate( $product_id ) {
-        $terms = get_the_terms( $product_id, 'product_cat' );
+        $terms = get_the_terms( self::validate_product_id( $product_id ), 'product_cat' );
 
         if ( empty( $terms ) ) {
             return null;
@@ -210,7 +206,7 @@ class Dokan_Commission {
      * @return string
      */
     public static function get_category_wise_type( $product_id ) {
-        $terms   = get_the_terms( $product_id, 'product_cat' );
+        $terms   = get_the_terms( self::validate_product_id( $product_id ), 'product_cat' );
         $term_id = $terms[0]->term_id;
 
         return ! $terms ? null : get_term_meta( $term_id, 'per_category_admin_commission_type', true );
@@ -226,7 +222,7 @@ class Dokan_Commission {
      * @return string
      */
     public static function get_product_wise_type( $product_id ) {
-        return get_post_meta( $product_id, '_per_product_admin_commission_type', true );
+        return get_post_meta( self::validate_product_id( $product_id ), '_per_product_admin_commission_type', true );
     }
 
     /**
@@ -359,7 +355,7 @@ class Dokan_Commission {
      * @return float|null on failure
      */
     public static function get_product_wise_additional_fee( $product_id ) {
-        return self::validate_rate( get_post_meta( $product_id, '_per_product_admin_additional_fee', true ) );
+        return self::validate_rate( get_post_meta( self::validate_product_id( $product_id ), '_per_product_admin_additional_fee', true ) );
     }
 
     /**
@@ -398,7 +394,7 @@ class Dokan_Commission {
      * @return float|null on failure
      */
     public static function get_category_wise_additional_fee( $product_id ) {
-        $terms = get_the_terms( $product_id, 'product_cat' );
+        $terms = get_the_terms( self::validate_product_id( $product_id ), 'product_cat' );
 
         if ( empty( $terms ) ) {
             return null;
@@ -422,7 +418,6 @@ class Dokan_Commission {
      * @return float
      */
     public static function calculate_commission( $product_id, $product_price, $vendor_id = null ) {
-        $product_id           = self::validate_product_id( $product_id );
         $product_wise_earning = self::get_product_wise_earning( $product_id, $product_price );
 
         if ( ! is_null( $product_wise_earning ) ) {
