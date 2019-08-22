@@ -387,29 +387,6 @@ class Dokan_Settings {
                     'type'    => 'checkbox',
                     'default' => 'on'
                 ),
-                'commission_type' => array(
-                    'name'    => 'commission_type',
-                    'label'   => __( 'Commission Type ', 'dokan-lite' ),
-                    'desc'    => __( 'Select the commission type', 'dokan-lite' ),
-                    'type'    => 'select',
-                    'options' => $commission_types,
-                    'default' => 'percentage',
-                ),
-                'admin_percentage' => array(
-                    'name'    => 'admin_percentage',
-                    'label'   => __( 'Admin Commission', 'dokan-lite' ),
-                    'desc'    => __( 'Amount you get from sales', 'dokan-lite' ),
-                    'default' => '10',
-                    'type'    => 'number',
-                    'min'     => '0',
-                    'step'    => 'any',
-                    'condition' => [
-                        'type' => 'show',
-                        'logic' => [
-                            'commission_type' => [ 'flat', 'percentage' ]
-                        ]
-                    ]
-                ),
                 'order_status_change' => array(
                     'name'    => 'order_status_change',
                     'label'   => __( 'Order Status Change', 'dokan-lite' ),

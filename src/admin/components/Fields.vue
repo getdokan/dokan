@@ -16,17 +16,34 @@
             </td>
         </template>
 
-        <template v-if="'number' == fieldData.type && haveCondition( fieldData ) && fieldData.condition.type == 'show' && checkConditionLogic( fieldData, fieldValue )">
+        <template v-if="'number' == fieldData.type && allSettingsValues.dokan_selling && 'combine' !== allSettingsValues.dokan_selling.commission_type">
+            <th scope="row">
+                <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
+            </th>
+            <td>
+                <input type="number" :min="fieldData.min" :max="fieldData.max" :step="fieldData.step" class="regular-text" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
+                <p class="description" v-html="fieldData.desc"></p>
+            </td>
+        </template>
+
+        <template v-if="'combine' == fieldData.type && haveCondition( fieldData ) && fieldData.condition.type == 'show' && checkConditionLogic( fieldData, fieldValue )">
                 <th scope="row">
                     <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
                 </th>
-                <td>
-                    <input type="number" :min="fieldData.min" :max="fieldData.max" :step="fieldData.step" class="regular-text" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
-                    <p class="description" v-html="fieldData.desc"></p>
+
+                <td class="percent_fee">
+                    <input type="number" :min="fieldData.fields.min" :max="fieldData.fields.max" :step="fieldData.fields.step" class="regular-text" :id="sectionId + '[' + fieldData.name + ']' + '[' + 'percent_fee' + ']'" :name="sectionId + '[' + fieldData.fields.percent_fee.name + ']'" v-model="fieldValue[fieldData.fields.percent_fee.name]">
+                    {{ '%' }}
                 </td>
+
+                <td class="fixed_fee">
+                    {{ '+' }}
+                    <input type="number" :min="fieldData.fields.min" :max="fieldData.fields.max" :step="fieldData.fields.step" class="regular-text" :id="sectionId + '[' + fieldData.name + ']' + '[' + 'fixed_fee' + ']'" :name="sectionId + '[' + fieldData.fields.fixed_fee.name + ']'" v-model="fieldValue[fieldData.fields.fixed_fee.name]">
+                </td>
+                <p class="description" v-html="fieldData.desc"></p>
         </template>
 
-        <template v-if="'number' == fieldData.type">
+        <template v-if="'number' == fieldData.type && 'admin_percentage' !== id">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
@@ -191,23 +208,6 @@
                     </template>
                 </div>
             </td>
-        </template>
-
-        <template v-if="'combine' == fieldData.type && haveCondition( fieldData ) && fieldData.condition.type == 'show' && checkConditionLogic( fieldData, fieldValue )">
-                <th scope="row">
-                    <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
-                </th>
-
-                <td class="percent_fee">
-                    <input type="number" :min="fieldData.fields.min" :max="fieldData.fields.max" :step="fieldData.fields.step" class="regular-text" :id="sectionId + '[' + fieldData.name + ']' + '[' + 'percent_fee' + ']'" :name="sectionId + '[' + fieldData.fields.percent_fee.name + ']'" v-model="fieldValue[fieldData.fields.percent_fee.name]">
-                    {{ '%' }}
-                </td>
-
-                <td class="fixed_fee">
-                    {{ '+' }}
-                    <input type="number" :min="fieldData.fields.min" :max="fieldData.fields.max" :step="fieldData.fields.step" class="regular-text" :id="sectionId + '[' + fieldData.name + ']' + '[' + 'fixed_fee' + ']'" :name="sectionId + '[' + fieldData.fields.fixed_fee.name + ']'" v-model="fieldValue[fieldData.fields.fixed_fee.name]">
-                </td>
-                <p class="description" v-html="fieldData.desc"></p>
         </template>
 
         <template v-if="'gmap' == fieldData.type">
