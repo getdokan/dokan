@@ -304,6 +304,7 @@ final class WeDevs_Dokan {
      */
     function init_classes() {
         new \WeDevs\Dokan\Withdraw\Hooks();
+        new \WeDevs\Dokan\Order\Hooks();
 
         if ( is_admin() ) {
             new \WeDevs\Dokan\Admin\Hooks();
