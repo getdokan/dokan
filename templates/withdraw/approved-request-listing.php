@@ -22,7 +22,7 @@
         <tr>
             <td><?php echo wc_price( $row->amount ); ?></td>
             <td><?php echo esc_html( dokan_withdraw_get_method_title( $row->method ) ); ?></td>
-            <td><?php echo esc_html( date_i18n( 'M j, Y g:ia', strtotime( $row->date ) ) ); ?></td>
+            <td><?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $row->date ) ) ); ?></td>
         </tr>
     <?php } ?>
 
