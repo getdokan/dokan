@@ -529,6 +529,18 @@ class Vendor {
     }
 
     /**
+     * Get vendor orders
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return wc_get_order objects
+     */
+    public function get_orders( $args = [] ) {
+        $args['seller_id'] = $this->id;
+        return dokan()->orders->all( $args );
+    }
+
+    /**
      * Get the total sales amount of this vendor
      *
      * @return float
