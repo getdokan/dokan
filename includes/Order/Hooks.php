@@ -1,15 +1,21 @@
 <?php
-
 namespace WeDevs\Dokan\Order;
 
 /**
- * Order Management API
- *
- * @since 2.8
- */
-class Manager {
+* Admin Hooks
+*
+* @package dokan
+*
+* @since DOKAN_LITE_SINCE
+*/
+class Hooks {
 
-    function __construct() {
+    /**
+     * Load autometically when class initiate
+     *
+     * @since DOKAN_LITE_SINCE
+     */
+    public function __construct() {
         // on order status change
         add_action( 'woocommerce_order_status_changed', array( $this, 'on_order_status_change' ), 10, 4 );
         add_action( 'woocommerce_order_status_changed', array( $this, 'on_sub_order_change' ), 99, 3 );
@@ -29,73 +35,62 @@ class Manager {
     }
 
     /**
-     * Get all orders
+     * Update the child order status when a parent order status is changed
      *
-     * @since DOKAN_LITE_SINCE
+     * @global object $wpdb
+     *
+     * @param integer $order_id
+     * @param string $old_status
+     * @param string $new_status
      *
      * @return void
      */
-    public function all( $args = [] ) {
+    public function on_order_status_change( $order_id, $old_status, $new_status, $order ) {
         global $wpdb;
 
-        $default = [
-            'seller_id'   => dokan_get_current_user_id(),
-            'customer_id' => null,
-            'status'      => 'all',
-            'paged'       => 1,
-            'limit'       => 10,
-            'date'        => null
-        ];
+        // Split order if the order doesn't have parent and sub orders,
+        // and the order is created from dashboard.
+        if ( empty( $order->post_parent ) && empty( $order->get_meta( 'has_sub_order' ) ) && is_admin() ) {
+            // Remove the hook to prevent recursive callas.
+            remove_action( 'woocommerce_order_status_changed', array( $this, 'on_order_status_change' ), 10 );
 
-        $args = wp_parse_args( $args, $default );
+            // Split the order.
+            $this->maybe_split_orders( $order_id );
 
-        $offset       = ( $args['paged'] - 1 ) * $args['limit'];
-        $cache_group = 'dokan_seller_data_'.$args['seller_id'];
-        $cache_key   = 'dokan-seller-orders-' . $args['status'] . '-' . $args['seller_id'];
-        $orders      = wp_cache_get( $cache_key, $cache_group );
-
-        $join        = $args['customer_id'] ? "LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id" : '';
-        $where       = $args['customer_id'] ? sprintf( "pm.meta_key = '_customer_user' AND pm.meta_value = %d AND", $args['customer_id'] ) : '';
-
-        if ( $orders === false ) {
-            $status_where = ( $args['status'] == 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', $args['status'] );
-            $date_query   = ( $args['date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $args['date'] ) : '';
-
-            $orders = $wpdb->get_results( $wpdb->prepare( "SELECT do.order_id, p.post_date
-                FROM {$wpdb->prefix}dokan_orders AS do
-                LEFT JOIN $wpdb->posts p ON do.order_id = p.ID
-                {$join}
-                WHERE
-                    do.seller_id = %d AND
-                    {$where}
-                    p.post_status != 'trash'
-                    {$date_query}
-                    {$status_where}
-                GROUP BY do.order_id
-                ORDER BY p.post_date DESC
-                LIMIT %d, %d", $args['seller_id'], $offset, $args['limit']
-            ) );
-
-            $orders = array_map( function( $order_data ) {
-                return wc_get_order( $order_data->order_id );
-            }, $orders );
-
-            wp_cache_set( $cache_key, $orders, $cache_group );
-            dokan_cache_update_group( $cache_key, $cache_group );
+            // Add the hook back.
+            add_action( 'woocommerce_order_status_changed', array( $this, 'on_order_status_change' ), 10, 4 );
         }
 
-        return $orders;
-    }
+        // make sure order status contains "wc-" prefix
+        if ( stripos( $new_status, 'wc-' ) === false ) {
+            $new_status = 'wc-' . $new_status;
+        }
 
-    /**
-     * Get single order details
-     *
-     * @since DOKAN_LITE_SINCE
-     *
-     * @return void
-     */
-    public function get( $id ) {
-        return wc_get_order( $id );
+        // insert on dokan sync table
+        $wpdb->update( $wpdb->prefix . 'dokan_orders',
+            array( 'order_status' => $new_status ),
+            array( 'order_id' => $order_id ),
+            array( '%s' ),
+            array( '%d' )
+        );
+
+        // if any child orders found, change the orders as well
+        $sub_orders = get_children( array( 'post_parent' => $order_id, 'post_type' => 'shop_order' ) );
+
+        if ( $sub_orders ) {
+            foreach ( $sub_orders as $order_post ) {
+                $order = wc_get_order( $order_post->ID );
+                $order->update_status( $new_status );
+            }
+        }
+
+        // update on vendor-balance table
+       $wpdb->update( $wpdb->prefix . 'dokan_vendor_balance',
+            array( 'status' => $new_status ),
+            array( 'trn_id' => $order_id, 'trn_type' => 'dokan_orders' ),
+            array( '%s' ),
+            array( '%d', '%s' )
+        );
     }
 
     /**
@@ -107,7 +102,7 @@ class Manager {
      *
      * @return void
      */
-    function on_sub_order_change( $order_id, $old_status, $new_status ) {
+    public function on_sub_order_change( $order_id, $old_status, $new_status ) {
         $order_post = get_post( $order_id );
 
         // we are monitoring only child orders
@@ -151,7 +146,7 @@ class Manager {
      *
      * @return void
      */
-    function maybe_split_orders( $parent_order_id ) {
+    public function maybe_split_orders( $parent_order_id ) {
         $parent_order = wc_get_order( $parent_order_id );
 
         dokan_log( sprintf( 'New Order #%d created. Init sub order.', $parent_order_id ) );
@@ -183,13 +178,16 @@ class Manager {
 
             do_action( 'dokan_create_parent_order', $parent_order, $seller_id );
 
+            // record admin commision
+            $admin_fee = dokan_get_admin_commission_by( $parent_order, $seller_id );
+            $parent_order->update_meta_data( '_dokan_admin_fee', $admin_fee );
             $parent_order->update_meta_data( '_dokan_vendor_id', $seller_id );
             $parent_order->save();
 
-			// if the request is made from rest api then insert the order data to the sync table
-			if ( defined( 'REST_REQUEST' ) ) {
-				do_action( 'dokan_checkout_update_order_meta', $parent_order_id, $seller_id );
-			}
+            // if the request is made from rest api then insert the order data to the sync table
+            if ( defined( 'REST_REQUEST' ) ) {
+                do_action( 'dokan_checkout_update_order_meta', $parent_order_id, $seller_id );
+            }
 
             return;
         }
@@ -217,7 +215,7 @@ class Manager {
      *
      * @return void
      */
-    function create_sub_order( $parent_order, $seller_id, $seller_products ) {
+    public function create_sub_order( $parent_order, $seller_id, $seller_products ) {
 
         dokan_log( 'Creating sub order for vendor: #' . $seller_id );
 
@@ -262,6 +260,10 @@ class Manager {
             $order->set_customer_note( $parent_order->get_customer_note() );
             $order->set_payment_method( $parent_order->get_payment_method() );
             $order->set_payment_method_title( $parent_order->get_payment_method_title() );
+
+            // record admin fee
+            $admin_fee = dokan_get_admin_commission_by( $order, $seller_id );
+            $order->update_meta_data( '_dokan_admin_fee', $admin_fee );
             $order->update_meta_data( '_dokan_vendor_id', $seller_id );
 
             // finally, let the order re-calculate itself and save
@@ -284,11 +286,20 @@ class Manager {
         }
     }
 
-    /**
+        /**
      * Create sub order line items
      *
      * @param  \WC_Order $order_id
      * @param  array $products
+     *
+     * @return void
+     */
+
+    /**
+     * Create line items for order
+     *
+     * @param object $order    wc_get_order
+     * @param array $products
      *
      * @return void
      */
@@ -367,7 +378,7 @@ class Manager {
      *
      * @return void
      */
-    function create_shipping( $order, $parent_order ) {
+    public function create_shipping( $order, $parent_order ) {
 
         dokan_log( sprintf( '#%d - Creating Shipping.', $order->get_id() ) );
 
@@ -431,7 +442,7 @@ class Manager {
      *
      * @return void
      */
-    function create_coupons( $order, $parent_order, $products ) {
+    public function create_coupons( $order, $parent_order, $products ) {
         $used_coupons = $parent_order->get_items( 'coupon' );
         $product_ids = array_map(function($item) {
             return $item->get_product_id();
@@ -552,4 +563,5 @@ class Manager {
             $item->save();
         }
     }
+
 }
