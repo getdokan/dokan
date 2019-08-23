@@ -144,14 +144,12 @@ final class WeDevs_Dokan {
      *
      * @param $prop
      *
-     * @return mixed
+     * @return Class Instance
      */
     public function __get( $prop ) {
         if ( array_key_exists( $prop, $this->container ) ) {
             return $this->container[ $prop ];
         }
-
-        return $this->{$prop};
     }
 
     /**
