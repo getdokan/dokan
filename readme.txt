@@ -5,7 +5,7 @@ Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi selle
 Requires at least: 4.4
 Tested up to: 5.2.2
 WC requires at least: 3.0
-WC tested up to: 3.6.5
+WC tested up to: 3.7.0
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv2 or later
@@ -283,6 +283,14 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 == Changelog ==
+
+v2.9.20 -> August 23, 2019
+------------------------------------
+-   **Fix***   Geolocation map settings value is not saving
+-   **Fix***   Fix warning in vendor dashboard widget when seller setup wizard is not run
+-   **Fix***   Store banner height in vendor settings page it not honouring the saved settings
+-   **Fix***   Conflict with avada theme fution builder
+-   **Tweak*** Use WordPress backend date format while printing date in approved and cancelled withdraw request
 
 v2.9.19 -> July 29, 2019
 ------------------------------------
