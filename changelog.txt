@@ -1,3 +1,11 @@
+v2.9.20 -> August 23, 2019
+------------------------------------
+-   **Fix***   Geolocation map settings value is not saving
+-   **Fix***   Fix warning in vendor dashboard widget when seller setup wizard is not run
+-   **Fix***   Store banner height in vendor settings page it not honouring the saved settings
+-   **Fix***   Conflict with avada theme fution builder
+-   **Tweak*** Use WordPress backend date format while printing date in approved and cancelled withdraw request
+
 v2.9.19 -> July 29, 2019
 ------------------------------------
 -   **Fix***    Split orders created from admin dashboard

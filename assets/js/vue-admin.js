@@ -2536,8 +2536,8 @@ let Gmap = dokan_get_lib('Gmap');
         getGmapApiKey() {
             let settings = this.allSettingsValues;
 
-            if ('dokan_general' in settings && 'gmap_api_key' in settings.dokan_general) {
-                return settings.dokan_general.gmap_api_key;
+            if ('dokan_appearance' in settings && 'gmap_api_key' in settings.dokan_appearance) {
+                return settings.dokan_appearance.gmap_api_key;
             }
         }
     }
