@@ -80,6 +80,15 @@ final class WeDevs_Dokan {
     private $container = array();
 
     /**
+     * Databse version key
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @var string
+     */
+    private $db_version_key = 'dokan_theme_version';
+
+    /**
      * Constructor for the WeDevs_Dokan class
      *
      * Sets up all the appropriate hooks and actions
@@ -182,6 +191,7 @@ final class WeDevs_Dokan {
         require_once dirname( __FILE__ ) . '/includes/functions.php';
         require_once dirname( __FILE__ ) . '/includes/functions-compatibility.php';
 
+        $this->container['upgrades'] = new \WeDevs\Dokan\Upgrade\Manager();
         $installer = new \WeDevs\Dokan\Install\Installer();
         $installer->do_install();
     }
@@ -246,7 +256,6 @@ final class WeDevs_Dokan {
     public function init_plugin() {
         $this->includes();
         $this->init_hooks();
-        $this->maybe_perform_updates();
 
         do_action( 'dokan_loaded' );
     }
@@ -304,6 +313,7 @@ final class WeDevs_Dokan {
     function init_classes() {
         new \WeDevs\Dokan\Withdraw\Hooks();
         new \WeDevs\Dokan\Order\Hooks();
+        new \WeDevs\Dokan\Upgrade\Hooks();
 
         if ( is_admin() ) {
             new \WeDevs\Dokan\Admin\Hooks();
@@ -314,7 +324,6 @@ final class WeDevs_Dokan {
             new \WeDevs\Dokan\Admin\UserProfile();
             new \WeDevs\Dokan\Admin\SetupWizard();
             new \WeDevs\Dokan\Admin\Promotion();
-            new \WeDevs\Dokan\Install\Upgrade();
         }
 
         $this->container['pageview']      = new \WeDevs\Dokan\PageViews();
@@ -332,6 +341,7 @@ final class WeDevs_Dokan {
         $this->container['dashboard']     = new \WeDevs\Dokan\Dashboard\Manager();
         $this->container['rewrite']       = new \WeDevs\Dokan\Rewrites();
         $this->container['commission']    = new \WeDevs\Dokan\Commission();
+        $this->container['upgrades']      = new \WeDevs\Dokan\Upgrade\Manager();
 
         $this->container = apply_filters( 'dokan_get_class_container', $this->container );
 
@@ -488,23 +498,6 @@ final class WeDevs_Dokan {
     }
 
     /**
-     * Maybe perform updates (only runs when dokan was installed before
-     * but wc wasn't installed)
-     *
-     * @since 2.9.16
-     *
-     * @return void
-     */
-    public function maybe_perform_updates() {
-        if ( ! get_transient( 'dokan_theme_version_for_updater' ) ) {
-            return;
-        }
-
-        $updater = new \WeDevs\Dokan\Install\Upgrade();
-        $updater->perform_updates();
-    }
-
-    /**
      * Include background processing files
      *
      * @since 2.9.16
@@ -545,7 +538,17 @@ final class WeDevs_Dokan {
         new Dokan_Admin_Setup_Wizard_No_WC();
     }
 
-} // WeDevs_Dokan
+    /**
+     * Get Dokan db version key
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return string
+     */
+    public function get_db_version_key() {
+        return $this->db_version_key;
+    }
+}
 
 /**
  * Load Dokan Plugin when all plugins loaded

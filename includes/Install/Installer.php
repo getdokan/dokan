@@ -21,11 +21,9 @@ class Installer {
         $this->product_design();
 
         // does it needs any update?
-        if ( dokan()->has_woocommerce() ) {
+        if ( dokan()->has_woocommerce() && dokan()->upgrades->is_upgrade_required() ) {
             dokan()->include_backgorund_processing_files();
-
-            $updater = new Upgrade();
-            $updater->perform_updates();
+            dokan()->upgrades->do_upgrade();
         }
 
         if ( ! dokan()->has_woocommerce() ) {
