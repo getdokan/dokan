@@ -9,25 +9,6 @@ namespace WeDevs\Dokan\Order;
  */
 class Manager {
 
-    function __construct() {
-        // on order status change
-        add_action( 'woocommerce_order_status_changed', array( $this, 'on_order_status_change' ), 10, 4 );
-        add_action( 'woocommerce_order_status_changed', array( $this, 'on_sub_order_change' ), 99, 3 );
-
-        // create sub-orders
-        add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'maybe_split_orders' ) );
-
-        // prevent non-vendor coupons from being added
-        add_filter( 'woocommerce_coupon_is_valid', array( $this, 'ensure_vendor_coupon' ), 10, 2 );
-
-        if ( is_admin() ) {
-            add_action( 'woocommerce_process_shop_order_meta', 'dokan_sync_insert_order' );
-        }
-
-        // restore order stock if it's been reduced by twice
-        add_action( 'woocommerce_reduce_order_stock', array( $this, 'restore_reduced_order_stock' ) );
-    }
-
     /**
      * Get all orders
      *
