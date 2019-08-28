@@ -58,7 +58,7 @@ class Manager {
             ) );
 
             $orders = array_map( function( $order_data ) {
-                return wc_get_order( $order_data->order_id );
+                return $this->get( $order_data->order_id );
             }, $orders );
 
             wp_cache_set( $cache_key, $orders, $cache_group );
@@ -80,116 +80,6 @@ class Manager {
     }
 
     /**
-     * Mark the parent order as complete when all the child order are completed
-     *
-     * @param integer $order_id
-     * @param string $old_status
-     * @param string $new_status
-     *
-     * @return void
-     */
-    function on_sub_order_change( $order_id, $old_status, $new_status ) {
-        $order_post = get_post( $order_id );
-
-        // we are monitoring only child orders
-        if ( $order_post->post_parent === 0 ) {
-            return;
-        }
-
-        // get all the child orders and monitor the status
-        $parent_order_id = $order_post->post_parent;
-        $sub_orders      = get_children( array( 'post_parent' => $parent_order_id, 'post_type' => 'shop_order' ) );
-
-        // return if any child order is not completed
-        $all_complete = true;
-
-        if ( $sub_orders ) {
-            foreach ($sub_orders as $sub) {
-                $order = wc_get_order( $sub->ID );
-
-                if ( $order->get_status() != 'completed' ) {
-                    $all_complete = false;
-                }
-            }
-        }
-
-        // seems like all the child orders are completed
-        // mark the parent order as complete
-        if ( $all_complete ) {
-            $parent_order = wc_get_order( $parent_order_id );
-            $parent_order->update_status( 'wc-completed', __( 'Mark parent order completed when all child orders are completed.', 'dokan-lite' ) );
-        }
-    }
-
-    /**
-     * Monitors a new order and attempts to create sub-orders
-     *
-     * If an order contains products from multiple vendor, we can't show the order
-     * to each seller dashboard. That's why we need to divide the main order to
-     * some sub-orders based on the number of sellers.
-     *
-     * @param int $parent_order_id
-     *
-     * @return void
-     */
-    function maybe_split_orders( $parent_order_id ) {
-        $parent_order = wc_get_order( $parent_order_id );
-
-        dokan_log( sprintf( 'New Order #%d created. Init sub order.', $parent_order_id ) );
-
-        if ( $parent_order->get_meta( 'has_sub_order' ) == true ) {
-
-            $args = array(
-                'post_parent' => $parent_order_id,
-                'post_type'   => 'shop_order',
-                'numberposts' => -1,
-                'post_status' => 'any'
-            );
-
-            $child_orders = get_children( $args );
-
-            foreach ( $child_orders as $child ) {
-                wp_delete_post( $child->ID, true );
-            }
-        }
-
-        $vendors = dokan_get_sellers_by( $parent_order_id );
-
-        // return if we've only ONE seller
-        if ( count( $vendors ) == 1 ) {
-            dokan_log( '1 vendor only, skipping sub order.');
-
-            $temp      = array_keys( $vendors );
-            $seller_id = reset( $temp );
-
-            do_action( 'dokan_create_parent_order', $parent_order, $seller_id );
-
-            $parent_order->update_meta_data( '_dokan_vendor_id', $seller_id );
-            $parent_order->save();
-
-			// if the request is made from rest api then insert the order data to the sync table
-			if ( defined( 'REST_REQUEST' ) ) {
-				do_action( 'dokan_checkout_update_order_meta', $parent_order_id, $seller_id );
-			}
-
-            return;
-        }
-
-        // flag it as it has a suborder
-        $parent_order->update_meta_data( 'has_sub_order', true );
-        $parent_order->save();
-
-        dokan_log( sprintf( 'Got %s vendors, starting sub order.', count( $vendors ) ) );
-
-        // seems like we've got multiple sellers
-        foreach ( $vendors as $seller_id => $seller_products ) {
-            $this->create_sub_order( $parent_order, $seller_id, $seller_products );
-        }
-
-        dokan_log( sprintf( 'Completed sub order for #%d.', $parent_order_id ) );
-    }
-
-    /**
      * Creates a sub order
      *
      * @param integer $parent_order
@@ -198,8 +88,7 @@ class Manager {
      *
      * @return void
      */
-    function create_sub_order( $parent_order, $seller_id, $seller_products ) {
-
+    public function create_sub_order( $parent_order, $seller_id, $seller_products ) {
         dokan_log( 'Creating sub order for vendor: #' . $seller_id );
 
         $bill_ship = array(
@@ -211,7 +100,7 @@ class Manager {
         );
 
         try {
-            $order = new WC_Order();
+            $order = new \WC_Order();
 
             // save billing and shipping address
             foreach ( $bill_ship as $key ) {
@@ -266,17 +155,17 @@ class Manager {
     }
 
     /**
-     * Create sub order line items
+     * Create line items for order
      *
-     * @param  \WC_Order $order_id
-     * @param  array $products
+     * @param object $order    wc_get_order
+     * @param array $products
      *
      * @return void
      */
     public function create_line_items( $order, $products ) {
 
         foreach ( $products as $item ) {
-            $product_item = new WC_Order_Item_Product();
+            $product_item = new \WC_Order_Item_Product();
 
             $product_item->set_name( $item->get_name() );
             $product_item->set_product_id( $item->get_product_id() );
@@ -324,12 +213,12 @@ class Manager {
         foreach ( $parent_order->get_taxes() as $tax ) {
             $seller_shipping = reset( $shipping );
 
-            $item = new WC_Order_Item_Tax();
+            $item = new \WC_Order_Item_Tax();
             $item->set_props( array(
                 'rate_id'            => $tax->get_rate_id(),
                 'label'              => $tax->get_label(),
                 'compound'           => $tax->get_compound(),
-                'rate_code'          => WC_Tax::get_rate_code( $tax->get_rate_id() ),
+                'rate_code'          => \WC_Tax::get_rate_code( $tax->get_rate_id() ),
                 'tax_total'          => $tax_total,
                 'shipping_tax_total' => is_bool( $seller_shipping ) ? '' : $seller_shipping->get_total_tax()
             ) );
@@ -348,7 +237,7 @@ class Manager {
      *
      * @return void
      */
-    function create_shipping( $order, $parent_order ) {
+    public function create_shipping( $order, $parent_order ) {
 
         dokan_log( sprintf( '#%d - Creating Shipping.', $order->get_id() ) );
 
@@ -378,7 +267,7 @@ class Manager {
         }
 
         if ( is_a( $shipping_method, 'WC_Order_Item_Shipping' ) ) {
-            $item = new WC_Order_Item_Shipping();
+            $item = new \WC_Order_Item_Shipping();
 
             dokan_log( sprintf( '#%d - Adding shipping item.', $order->get_id() ) );
 
@@ -412,9 +301,9 @@ class Manager {
      *
      * @return void
      */
-    function create_coupons( $order, $parent_order, $products ) {
+    public function create_coupons( $order, $parent_order, $products ) {
         $used_coupons = $parent_order->get_items( 'coupon' );
-        $product_ids = array_map(function($item) {
+        $product_ids = array_map( function( $item ) {
             return $item->get_product_id();
         }, $products );
 
@@ -423,11 +312,11 @@ class Manager {
         }
 
         foreach ( $used_coupons as $item ) {
-            $coupon = new WC_Coupon( $item->get_code() );
+            $coupon = new \WC_Coupon( $item->get_code() );
 
             if ( $coupon && !is_wp_error( $coupon ) && array_intersect( $product_ids, $coupon->get_product_ids() ) ) {
 
-                $new_item = new WC_Order_Item_Coupon();
+                $new_item = new \WC_Order_Item_Coupon();
                 $new_item->set_props( array(
                     'code'         => $item->get_code(),
                     'discount'     => $item->get_discount(),
@@ -441,96 +330,5 @@ class Manager {
         }
 
         $order->save();
-    }
-
-    /**
-     * Ensure vendor coupon
-     *
-     * For consistancy, restrict coupons in cart if only
-     * products from that vendor exists in the cart. Also, a coupon
-     * should be restricted with a product.
-     *
-     * For example: When entering a coupon created by admin is applied, make
-     * sure a product of the admin is in the cart. Otherwise it wouldn't be
-     * possible to distribute the coupon in sub orders.
-     *
-     * @param  boolean $valid
-     * @param  \WC_Coupon $coupon
-     *
-     * @return boolean|Execption
-     */
-    public function ensure_vendor_coupon( $valid, $coupon ) {
-        $coupon_id         = $coupon->get_id();
-        $vendor_id         = get_post_field( 'post_author', $coupon_id );
-        $available_vendors = array();
-
-        if ( ! apply_filters( 'dokan_ensure_vendor_coupon', true ) ) {
-            return $valid;
-        }
-
-        // a coupon must be bound with a product
-        if ( count( $coupon->get_product_ids() ) == 0 ) {
-            throw new Exception( __( 'A coupon must be restricted with a vendor product.', 'dokan-lite' ) );
-        }
-
-        foreach ( WC()->cart->get_cart() as $item ) {
-            $product_id = $item['data']->get_id();
-
-            $available_vendors[] = get_post_field( 'post_author', $product_id );
-        }
-
-        if ( ! in_array( $vendor_id, $available_vendors ) ) {
-            return false;
-        }
-
-        return $valid;
-    }
-
-    /**
-     * Restore order stock if it's been reduced by twice
-     *
-     * @param  object $order
-     *
-     * @return void
-     */
-    public function restore_reduced_order_stock( $order ) {
-        // seems in rest request, there is no such issue like (stock reduced by twice), so return early
-        if ( defined( 'REST_REQUEST' ) ) {
-            return;
-        }
-
-        $has_sub_order = wp_get_post_parent_id( $order->get_id() );
-
-        // seems it's not a parent order so return early
-        if ( ! $has_sub_order ) {
-            return;
-        }
-
-        // Loop over all items.
-        foreach ( $order->get_items() as $item ) {
-            if ( ! $item->is_type( 'line_item' ) ) {
-                continue;
-            }
-
-            // Only reduce stock once for each item.
-            $product            = $item->get_product();
-            $item_stock_reduced = $item->get_meta( '_reduced_stock', true );
-
-            if ( ! $item_stock_reduced || ! $product || ! $product->managing_stock() ) {
-                continue;
-            }
-
-            $item_name = $product->get_formatted_name();
-            $new_stock = wc_update_product_stock( $product, $item_stock_reduced, 'increase' );
-
-            if ( is_wp_error( $new_stock ) ) {
-                /* translators: %s item name. */
-                $order->add_order_note( sprintf( __( 'Unable to restore stock for item %s.', 'dokan-lite' ), $item_name ) );
-                continue;
-            }
-
-            $item->delete_meta_data( '_reduced_stock' );
-            $item->save();
-        }
     }
 }
