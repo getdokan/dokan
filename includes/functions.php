@@ -2008,7 +2008,13 @@ function dokan_get_avatar_url( $url, $id_or_email, $args ) {
         return $url;
     }
 
-    $vendor      = dokan()->vendor->get( $user->ID );
+    $vendor = dokan()->vendor;
+
+    if ( ! $vendor ) {
+        return $url;
+    }
+
+    $vendor      = $vendor->get( $user->ID );
     $gravatar_id = $vendor->get_avatar_id();
 
     if ( ! $gravatar_id ) {
