@@ -1155,12 +1155,11 @@ function dokan_log( $message, $level = 'debug' ) {
  * Do not show other sellers images to a seller. He can see images only by him
  *
  * @param array $args
+ *
  * @return array
  */
 function dokan_media_uploader_restrict( $args ) {
-
-    // bail out for admin and editor
-    if ( current_user_can( 'delete_pages' ) ) {
+    if ( current_user_can( 'manage_options' ) ) {
         return $args;
     }
 
