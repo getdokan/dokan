@@ -5,7 +5,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Dokan Commission Class
  *
- * @since  DOKAN_LITE_SINCE
+ * @since DOKAN_LITE_SINCE
  */
 class Dokan_Commission {
 
@@ -131,7 +131,7 @@ class Dokan_Commission {
      *
      * @since  DOKAN_LITE_SINCE
      *
-     * @param int $product_id
+     * @param  int $product_id
      *
      * @return float
      */
@@ -160,7 +160,7 @@ class Dokan_Commission {
      *
      * @since  DOKAN_LITE_SINCE
      *
-     * @param int $product_id
+     * @param  int $product_id
      *
      * @return float
      */
@@ -193,7 +193,7 @@ class Dokan_Commission {
      *
      * @since  DOKAN_LITE_SINCE
      *
-     * @param int $vendor_id
+     * @param  int $vendor_id
      *
      * @return string
      */
@@ -206,7 +206,7 @@ class Dokan_Commission {
      *
      * @since  DOKAN_LITE_SINCE
      *
-     * @param int $product_id
+     * @param  int $product_id
      *
      * @return string
      */
@@ -222,7 +222,7 @@ class Dokan_Commission {
      *
      * @since  DOKAN_LITE_SINCE
      *
-     * @param int $product_id
+     * @param  int $product_id
      *
      * @return string
      */

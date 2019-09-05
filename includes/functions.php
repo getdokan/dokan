@@ -2798,7 +2798,7 @@ function dokan_cache_clear_deleted_product( $post_id ) {
  * @return float $earning | zero on failure or no price
  */
 function dokan_get_earning_by_product( $product_id, $seller_id ) {
-    wc_deprecated_function( 'dokan_get_admin_commission_by', '2.9.11', 'Dokan_Commission::get_earning_by_product()' );
+    wc_deprecated_function( 'dokan_get_earning_by_product', 'DOKAN_LITE_SINCE', 'Dokan_Commission::get_earning_by_product()' );
 
     return Dokan_Commission::get_earning_by_product( $product_id );
 
