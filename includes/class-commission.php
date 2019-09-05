@@ -62,10 +62,15 @@ class Dokan_Commission {
 
         if ( 'seller' === $context ) {
             $saved_vendor_earning = $order->get_meta( '_dokan_vendor_earning', true );
+
+            // _dokan_vendor_earning is introduced in DOKAN_LITE_SINCE. So to get vendor earning from order which is placed before DOKAN_LITE_SINCE, deduct _dokan_admin_fee from order total.
+            if ( '' === $saved_vendor_earning ) {
+                $saved_vendor_earning =  $order->get_total() - (float) $order->get_meta( '_dokan_admin_fee', true );
+            }
         }
 
         // if saved vendor_earning is found, return it
-        if ( isset( $saved_vendor_earning ) && '' !== $saved_vendor_earning ) {
+        if ( isset( $saved_vendor_earning ) ) {
             return apply_filters_deprecated( 'dokan_order_admin_commission', array( (float) $saved_vendor_earning, $order, $context ), 'DOKAN_LITE_SINCE', 'dokan_get_earning_by_order' );
         }
 
