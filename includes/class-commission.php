@@ -8,6 +8,12 @@ defined( 'ABSPATH' ) || exit;
  * @since DOKAN_LITE_SINCE
  */
 class Dokan_Commission {
+    /**
+     * Order id holder
+     *
+     * @var integer
+     */
+    public static $order_id = 0;
 
     /**
      * Get earning by product
@@ -16,10 +22,11 @@ class Dokan_Commission {
      *
      * @param  int|WC_Product $product
      * @param  string $context[admin|seller]
+     * @param  float $price
      *
      * @return float
      */
-    public static function get_earning_by_product( $product, $context = 'seller' ) {
+    public static function get_earning_by_product( $product, $context = 'seller', $price = null ) {
         if ( ! $product instanceof WC_Product ) {
             $product = wc_get_product( $product );
         }
@@ -28,7 +35,7 @@ class Dokan_Commission {
             return new WP_Error( __( 'Product not found', 'dokan-lite' ), 404 );
         }
 
-        $product_price = $product->get_price();
+        $product_price = is_null( $price ) ? $product->get_price() : $price;
         $vendor        = dokan_get_vendor_by_product( $product );
 
         $earning = self::calculate_commission( $product->get_id(), $product_price, $vendor->get_id() );
@@ -60,44 +67,45 @@ class Dokan_Commission {
             return;
         }
 
-        if ( 'seller' === $context ) {
-            $saved_vendor_earning = $order->get_meta( '_dokan_vendor_earning', true );
+        self::$order_id = $order->get_id();
+        $earning        = self::get_earning_from_order_table( self::$order_id, $context );
 
-            // _dokan_vendor_earning is introduced in DOKAN_LITE_SINCE. So to get vendor earning from order which is placed before DOKAN_LITE_SINCE, deduct _dokan_admin_fee from order total.
-            if ( '' === $saved_vendor_earning ) {
-                $saved_vendor_earning =  $order->get_total() - (float) $order->get_meta( '_dokan_admin_fee', true );
-            }
-        }
-
-        // if saved vendor_earning is found, return it
-        if ( isset( $saved_vendor_earning ) ) {
-            return apply_filters_deprecated( 'dokan_order_admin_commission', array( (float) $saved_vendor_earning, $order, $context ), 'DOKAN_LITE_SINCE', 'dokan_get_earning_by_order' );
-        }
-
-        $saved_admin_earning = $order->get_meta( '_dokan_admin_fee', true );
-
-        // if saved admin earning is found, retrun it
-        if ( '' !== $saved_admin_earning ) {
-            return apply_filters_deprecated( 'dokan_order_admin_commission', array( (float) $saved_admin_earning, $order, $context ), 'DOKAN_LITE_SINCE', 'dokan_get_earning_by_order' );
+        if ( ! is_null( $earning ) ) {
+            return $earning;
         }
 
         $earning            = 0;
         $shipping_recipient = dokan_get_option( 'shipping_fee_recipient', 'dokan_general', 'seller' );
         $tax_recipient      = dokan_get_option( 'tax_fee_recipient', 'dokan_general', 'seller' );
 
-        foreach ( $order->get_items( 'line_item' ) as $item ) {
-            $product_id     = $item->get_product()->get_id();
-            $earning        += self::get_earning_by_product( $product_id, $context );
-            $earning        *=  $item->get_quantity();
+        foreach ( $order->get_items() as $item_id => $item ) {
+            if ( ! $item->get_product() ) {
+                continue;
+            }
+
+            $product_id = $item->get_product()->get_id();
+            $refund     = $order->get_total_refunded_for_item( $item_id );
+
+            if ( $refund ) {
+                $earning += self::get_earning_by_product( $product_id, $context, $item->get_total() - $refund );
+            } else {
+                $earning += self::get_earning_by_product( $product_id, $context, $item->get_total() );
+            }
+
+            // if ( 'admin' === $context ) {
+            //     $earning *= $item->get_quantity();
+            // }
         }
 
         if ( $context === $shipping_recipient ) {
-            $earning += $order->get_total_shipping();
+            $earning += $order->get_total_shipping() - $order->get_total_shipping_refunded();
         }
 
         if ( $context === $tax_recipient ) {
-            $earning += $order->get_total_tax();
+            $earning += $order->get_total_tax() - $order->get_total_tax_refunded();
         }
+
+        $order->save();
 
         return apply_filters_deprecated( 'dokan_order_admin_commission', array( $earning, $order, $context ), 'DOKAN_LITE_SINCE', 'dokan_get_earning_by_order' );
     }
@@ -309,7 +317,7 @@ class Dokan_Commission {
      *
      * @param  function $callable_func
      * @param  int $product_id
-     * @param  float Product_price
+     * @param  float $product_price
      *
      * @return float | null on failure
      */
@@ -332,12 +340,46 @@ class Dokan_Commission {
         $earning = null;
 
         // get[product,category,vendor,global]_wise_type
-        if ( is_callable( __CLASS__, $func_type ) && 'flat' === self::$func_type( $product_id ) ) {
-            $earning = (float) ( $product_price - $commission_rate );
+        if ( is_callable( __CLASS__, $func_type ) ) {
+            $commission_type = self::$func_type( $product_id );
         }
 
         // get[product,category,vendor,global]_wise_type
-        if ( is_callable( __CLASS__, $func_type ) && 'percentage' === self::$func_type( $product_id ) ) {
+        if ( is_callable( __CLASS__, $func_fee ) ) {
+            $additional_fee = self::$func_fee( $product_id );
+        }
+
+        if ( self::$order_id ) {
+            // If an order has been purchased previously, calculate the earning with the previously sated commisson rate.
+            // It's important cause commission rate may get changed by admin during the order table re-generation.
+            $dokan_commission_rate = get_post_meta( self::$order_id, '_dokan_commission_rate', true );
+            $dokan_commission_type = get_post_meta( self::$order_id, '_dokan_commission_type', true );
+            $dokan_additional_fee  = get_post_meta( self::$order_id, '_dokan_additional_fee', true );
+
+            if ( $dokan_commission_rate ) {
+                $commission_rate = $dokan_commission_rate;
+            } else {
+                update_post_meta( self::$order_id, '_dokan_commission_rate', $commission_rate );
+            }
+
+            if ( $dokan_commission_type ) {
+                $commission_type = $dokan_commission_type;
+            } else {
+                update_post_meta( self::$order_id, '_dokan_commission_type', $commission_type );
+            }
+
+            if ( $dokan_additional_fee ) {
+                $additional_fee = $dokan_additional_fee;
+            } else {
+                update_post_meta( self::$order_id, '_dokan_additional_fee', $additional_fee );
+            }
+        }
+
+        if ( 'flat' === $commission_type ) {
+            $earning = (float) ( $product_price - $commission_rate );
+        }
+
+        if ( 'percentage' === $commission_type ) {
             $earning = ( $product_price * $commission_rate ) / 100;
             $earning = $product_price - $earning;
 
@@ -347,7 +389,7 @@ class Dokan_Commission {
             }
         }
 
-        return apply_filters( 'dokan_prepare_for_calculation', $earning, __CLASS__, $func_rate, $func_type, $func_fee, $commission_rate, $product_id, $product_price );
+        return apply_filters( 'dokan_prepare_for_calculation', $earning, $commission_rate, $commission_type, $additional_fee, $product_price );
     }
 
     /**
@@ -409,6 +451,41 @@ class Dokan_Commission {
         $rate    = ! $terms ? null: get_term_meta( $term_id, 'per_category_admin_additional_fee', true );
 
         return self::validate_rate( $rate );
+    }
+
+    /**
+     * Get earning from order table
+     *
+     * @since  DOKAN_LITE_SINCE
+     *
+     * @param  int $order_id
+     * @param  string $context
+     *
+     * @return float|null on failure
+     */
+    public static function get_earning_from_order_table( $order_id, $context = 'seller' ) {
+        global $wpdb;
+
+        $cache_key = 'dokan_get_earning_from_order_table' . $order_id . $context;
+        $earning = wp_cache_get( $cache_key );
+
+        if ( false !== $earning ) {
+            return $earning;
+        }
+
+        $result = $wpdb->get_row( $wpdb->prepare(
+            "SELECT `net_amount`, `order_total` FROM {$wpdb->dokan_orders} WHERE `order_id` = %d",
+            $order_id
+        ) );
+
+        if ( ! $result ) {
+            return null;
+        }
+
+        $earning = 'seller' === $context ? (float) $result->net_amount : (float) $result->order_total - (float) $result->net_amount;
+        wp_cache_set( $cache_key, $earning );
+
+        return $earning;
     }
 
     /**
