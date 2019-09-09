@@ -11,9 +11,20 @@ class Dokan_Commission {
     /**
      * Order id holder
      *
+     * @since DOKAN_LITE_SINCE
+     *
      * @var integer
      */
     public static $order_id = 0;
+
+    /**
+     * Order quantity holder
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @var integer
+     */
+    public static $quantity = 0;
 
     /**
      * Get earning by product
@@ -83,18 +94,15 @@ class Dokan_Commission {
                 continue;
             }
 
-            $product_id = $item->get_product()->get_id();
-            $refund     = $order->get_total_refunded_for_item( $item_id );
+            self::$quantity = $item->get_quantity();
+            $product_id     = $item->get_product()->get_id();
+            $refund         = $order->get_total_refunded_for_item( $item_id );
 
             if ( $refund ) {
                 $earning += self::get_earning_by_product( $product_id, $context, $item->get_total() - $refund );
             } else {
                 $earning += self::get_earning_by_product( $product_id, $context, $item->get_total() );
             }
-
-            // if ( 'admin' === $context ) {
-            //     $earning *= $item->get_quantity();
-            // }
         }
 
         if ( $context === $shipping_recipient ) {
@@ -104,8 +112,6 @@ class Dokan_Commission {
         if ( $context === $tax_recipient ) {
             $earning += $order->get_total_tax() - $order->get_total_tax_refunded();
         }
-
-        $order->save();
 
         return apply_filters_deprecated( 'dokan_order_admin_commission', array( $earning, $order, $context ), 'DOKAN_LITE_SINCE', 'dokan_get_earning_by_order' );
     }
@@ -376,6 +382,10 @@ class Dokan_Commission {
         }
 
         if ( 'flat' === $commission_type ) {
+            if ( self::$quantity ) {
+                $commission_rate *= apply_filters( 'dokan_commission_multiply_by_order_quantity', self::$quantity );
+            }
+
             $earning = (float) ( $product_price - $commission_rate );
         }
 
