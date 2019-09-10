@@ -27,6 +27,32 @@ class Dokan_Commission {
     public static $quantity = 0;
 
     /**
+     * Set order id
+     *
+     * @since  DOKAN_LITE_SINCE
+     *
+     * @param  int $id
+     *
+     * @return void
+     */
+    public static function set_order_id( $id ) {
+        self::$order_id = $id;
+    }
+
+    /**
+     * Set order quantity
+     *
+     * @since  DOKAN_LITE_SINCE
+     *
+     * @param  int $number
+     *
+     * @return void
+     */
+    public static function set_order_qunatity( $number ) {
+        self::$quantity = $number;
+    }
+
+    /**
      * Get earning by product
      *
      * @since  DOKAN_LITE_SINCE
@@ -79,7 +105,7 @@ class Dokan_Commission {
         }
 
         self::$order_id = $order->get_id();
-        $earning        = self::get_earning_from_order_table( self::$order_id, $context );
+        $earning        = self::get_earning_from_order_table( $order->get_id(), $context );
 
         if ( ! is_null( $earning ) ) {
             return $earning;
@@ -399,7 +425,7 @@ class Dokan_Commission {
             }
         }
 
-        return apply_filters( 'dokan_prepare_for_calculation', $earning, $commission_rate, $commission_type, $additional_fee, $product_price );
+        return apply_filters( 'dokan_prepare_for_calculation', $earning, $commission_rate, $commission_type, $additional_fee, $product_price, self::$order_id );
     }
 
     /**
