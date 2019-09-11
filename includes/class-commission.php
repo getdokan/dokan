@@ -412,6 +412,13 @@ class Dokan_Commission {
                 $commission_rate *= apply_filters( 'dokan_commission_multiply_by_order_quantity', self::$quantity );
             }
 
+            // If `_dokan_item_total` returns value non-falsy value, it means the request is comming from the `order refund requst`.
+            // As it's `flat` fee, So modify `commission rate` to the correct amount to get refunded. (commission_rate/item_total)*product_price.
+            $item_total = get_post_meta( self::$order_id, '_dokan_item_total', true );
+            if ( $item_total ) {
+                $commission_rate = ( $commission_rate / $item_total ) * $product_price;
+            }
+
             $earning = (float) ( $product_price - $commission_rate );
         }
 
