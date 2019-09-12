@@ -208,7 +208,7 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                             </li>
                             <li class="earning-from-order">
                                 <span><?php esc_html_e( 'Earning From Order:', 'dokan-lite' ); ?></span>
-                                <?php echo wp_kses_post( wc_price( Dokan_Commission::get_earning_by_order( $order ) ) ); ?>
+                                <?php echo wp_kses_post( wc_price( dokan()->commission->get_earning_by_order( $order ) ) ); ?>
                             </li>
                         </ul>
                         <?php if ( 'off' === $hide_customer_info && ( $order->get_formatted_billing_address() || $order->get_formatted_shipping_address() ) ) : ?>

@@ -934,7 +934,7 @@ class Dokan_Ajax {
 
         $vendor_id = $vendor->get_id();
 
-        $vendor_earning = Dokan_Commission::calculate_commission( $product_id, $product_price, $vendor_id );
+        $vendor_earning = dokan()->commission->calculate_commission( $product_id, $product_price, $vendor_id );
 
         wp_send_json( $vendor_earning );
     }

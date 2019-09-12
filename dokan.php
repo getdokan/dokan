@@ -395,6 +395,7 @@ final class WeDevs_Dokan {
         $this->container['registration']  = new Dokan_Registration();
         $this->container['orders']        = new Dokan_Order_Manager();
         $this->container['api']           = new Dokan_API_Manager();
+        $this->container['commission']    = Dokan_Commission::instance();
 
         $this->container = apply_filters( 'dokan_get_class_container', $this->container );
 

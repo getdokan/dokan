@@ -19,7 +19,7 @@ class DokanCategoryWalker extends DokanTaxonomyWalker {
 
 
     function start_el( &$output, $category, $depth = 0, $args = array(), $id = 0 ) {
-        $commission_val = Dokan_Commission::get_earning_by_product( $this->post_id );
+        $commission_val = dokan()->commission->get_earning_by_product( $this->post_id );
 
         $pad      = str_repeat( '&nbsp;', $depth * 3 );
         $cat_name = apply_filters( 'list_cats', $category->name, $category );

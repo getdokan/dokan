@@ -239,7 +239,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
      * @return void
      */
     public function test_get_global_type() {
-        $type = Dokan_Commission::get_global_type();
+        $type = dokan()->commission->get_global_type();
         $this->assertEquals( $this->global_commission_type, $type );
     }
 
@@ -251,7 +251,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
      * @return void
      */
     public function test_global_rate() {
-        $rate = Dokan_Commission::get_global_rate();
+        $rate = dokan()->commission->get_global_rate();
         $this->assertEquals( $this->global_commission_rate, $rate );
     }
 
@@ -263,7 +263,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
      * @return void
      */
     public function test_get_global_additional_fee() {
-        $fee = Dokan_Commission::get_global_additional_fee();
+        $fee = dokan()->commission->get_global_additional_fee();
         $this->assertEquals( $this->global_additional_fee, $fee );
     }
 
@@ -275,7 +275,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
      * @return void
      */
     public function test_get_vendor_wise_type() {
-        $type = Dokan_Commission::get_vendor_wise_type( $this->vendor_id );
+        $type = dokan()->commission->get_vendor_wise_type( $this->vendor_id );
         $this->assertEquals( $this->vendor_wise_commission_type, $type );
     }
 
@@ -287,7 +287,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
      * @return void
      */
     public function test_get_vendor_wise_rate() {
-        $rate = Dokan_Commission::get_vendor_wise_rate( $this->vendor_id );
+        $rate = dokan()->commission->get_vendor_wise_rate( $this->vendor_id );
         $this->assertEquals( $this->vendor_wise_commission_rate, $rate );
     }
 
@@ -299,7 +299,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
      * @return void
      */
     public function test_get_vendor_wise_additional_fee() {
-        $fee = Dokan_Commission::get_vendor_wise_additional_fee( $this->vendor_id );
+        $fee = dokan()->commission->get_vendor_wise_additional_fee( $this->vendor_id );
         $this->assertEquals( $this->vendor_wise_additional_fee, $fee );
     }
 
@@ -335,7 +335,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
      * @return void
      */
     public function test_get_category_wise_type() {
-        $type = Dokan_Commission::get_category_wise_type( $this->product_id );
+        $type = dokan()->commission->get_category_wise_type( $this->product_id );
         $this->assertEquals( $this->category_wise_commission_type, $type );
     }
 
@@ -347,7 +347,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
      * @return void
      */
     public function test_get_category_wise_rate() {
-        $rate = Dokan_Commission::get_category_wise_rate( $this->product_id );
+        $rate = dokan()->commission->get_category_wise_rate( $this->product_id );
         $this->assertEquals( $this->category_wise_commission_rate, $rate );
     }
 
@@ -359,7 +359,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
      * @return void
      */
     public function test_get_category_wise_additional_fee() {
-        $fee = Dokan_Commission::get_category_wise_additional_fee( $this->product_id );
+        $fee = dokan()->commission->get_category_wise_additional_fee( $this->product_id );
         $this->assertEquals( $this->category_wise_additional_fee, $fee );
     }
 
@@ -371,7 +371,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
      * @return void
      */
     public function test_get_product_wise_type() {
-        $type = Dokan_Commission::get_product_wise_type( $this->product_id );
+        $type = dokan()->commission->get_product_wise_type( $this->product_id );
         $this->assertEquals( $this->product_wise_commission_type, $type );
     }
 
@@ -383,7 +383,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
      * @return void
      */
     public function test_get_product_wise_rate() {
-        $rate = Dokan_Commission::get_product_wise_rate( $this->product_id );
+        $rate = dokan()->commission->get_product_wise_rate( $this->product_id );
         $this->assertEquals( $this->product_wise_commission_rate, $rate );
     }
 
@@ -395,7 +395,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
      * @return void
      */
     public function test_get_product_wise_additional_fee() {
-        $fee = Dokan_Commission::get_product_wise_additional_fee( $this->product_id );
+        $fee = dokan()->commission->get_product_wise_additional_fee( $this->product_id );
         $this->assertEquals( $this->product_wise_additional_fee, $fee );
     }
 
@@ -407,7 +407,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
      * @return void
      */
     public function test_vendor_earning_by_product() {
-        $earning = Dokan_Commission::get_earning_by_product( $this->product_id, 'seller' );
+        $earning = dokan()->commission->get_earning_by_product( $this->product_id, 'seller' );
         $this->assertEquals( $this->vendor_earning, $earning );
     }
 
@@ -419,40 +419,52 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
      * @return void
      */
     public function test_admin_earning_by_product() {
-        $earning = Dokan_Commission::get_earning_by_product( $this->product_id, 'admin' );
+        $earning = dokan()->commission->get_earning_by_product( $this->product_id, 'admin' );
         $this->assertEquals( $this->admin_earning, $earning );
     }
-
 
     /**
      * Dokan add combine commission
      *
+     * @since  DOKAN_PRO_SINCE
+     *
      * @param  float $earning  [earning for a vendor or admin]
-     * @param  Dokan_Commission $class
-     * @param  string $func_rate  [get_product|category|vendor|_wise_rate] function
-     * @param  string $func_type  [get_product|category|vendor|_wise_type] function
-     * @param  string $func_fee   [get_product|category|vendor|_wise_additional_fee] function
      * @param  float $commission_rate
-     * @param  int $product_id
+     * @param  string $commission_type
+     * @param  float $additional_fee
      * @param  float $product_price
+     * @param  int $order_id
      *
      * @return float
      */
-    function dokan_add_combine_commission( $earning, $class, $func_rate, $func_type, $func_fee, $commission_rate, $product_id, $product_price ) {
-
-        if ( 'combine' === $class::$func_type( $product_id ) ) {
+    public function dokan_add_combine_commission( $earning, $commission_rate, $commission_type, $additional_fee, $product_price, $order_id ) {
+        if ( 'combine' === $commission_type ) {
             // vendor will get 100 percent if commission rate > 100
             if ( $commission_rate > 100 ) {
                 return (float) $product_price;
             }
 
-            // get[product,category,vendor,global]_wise_additional_fee
-            $additional_fee = $class::$func_fee( $product_id );
-            $earning        = ( (float) $product_price * $commission_rate ) / 100;
+            // Add `additional_fee` to `earning` only once for an order. ignore it if it's from product listing page
+            static $is_additional_fee_added = false;
+
+            // If `_dokan_additional_fee_added` returns `true` that means, the request comes from the `order refund request`.
+            // So modify `additional_fee` to the correct amount to get refunded. (additional_fee/order_total)*line_item_total.
+            if ( $order_id && get_post_meta( $order_id, '_dokan_additional_fee_added', true ) ) {
+                $order                   = wc_get_order( $order_id );
+                $additional_fee          = ( $additional_fee / $order->get_total() ) * $product_price;
+                $is_additional_fee_added = false;
+            }
 
             // if earning + additional fee > product price, then vendor will get 100 percent of the product price
-            $total_earning = $earning + $additional_fee;
+            $earning       = ( (float) $product_price * $commission_rate ) / 100;
+            $total_earning = $is_additional_fee_added ? $earning : $earning + $additional_fee;
             $earning       = $total_earning > $product_price ? (float) $product_price : (float) $product_price - $total_earning;
+
+            // if order id found, means it's not from the product listing page. So we can use the `is_additional_fee_added` static
+            // Variable flag to add `additional_fee` only once.
+            if ( $order_id ) {
+                $is_additional_fee_added = true;
+            }
         }
 
         return $earning;
