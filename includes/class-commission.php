@@ -104,6 +104,8 @@ class Dokan_Commission {
             return;
         }
 
+        // Set static `order_id` to `order_id` so that we can track if any commission_rate has been saved previously.
+        // Specially on order table `re-generation`.
         self::$order_id = $order->get_id();
         $earning        = self::get_earning_from_order_table( $order->get_id(), $context );
 
@@ -381,29 +383,39 @@ class Dokan_Commission {
             $additional_fee = self::$func_fee( $product_id );
         }
 
+        // If an order has been purchased previously, calculate the earning with the previously sated commisson rate.
+        // It's important cause commission rate may get changed by admin during the order table re-generation.
         if ( self::$order_id ) {
-            // If an order has been purchased previously, calculate the earning with the previously sated commisson rate.
-            // It's important cause commission rate may get changed by admin during the order table re-generation.
-            $dokan_commission_rate = get_post_meta( self::$order_id, '_dokan_commission_rate', true );
-            $dokan_commission_type = get_post_meta( self::$order_id, '_dokan_commission_type', true );
-            $dokan_additional_fee  = get_post_meta( self::$order_id, '_dokan_additional_fee', true );
+            $order      = wc_get_order( self::$order_id );
+            $line_items = $order->get_items();
+            static $i   = 0;
 
-            if ( $dokan_commission_rate ) {
-                $commission_rate = $dokan_commission_rate;
-            } else {
-                update_post_meta( self::$order_id, '_dokan_commission_rate', $commission_rate );
-            }
+            foreach ( $line_items as $item ) {
+                $items                 = array_keys( $line_items );
+                $saved_commission_rate = wc_get_order_item_meta( $items[$i], '_dokan_commission_rate', true );
+                $saved_commission_type = wc_get_order_item_meta( $items[$i], '_dokan_commission_type', true );
+                $saved_additional_fee  = wc_get_order_item_meta( $items[$i], '_dokan_additional_fee', true );
 
-            if ( $dokan_commission_type ) {
-                $commission_type = $dokan_commission_type;
-            } else {
-                update_post_meta( self::$order_id, '_dokan_commission_type', $commission_type );
-            }
+                if ( $saved_commission_rate ) {
+                    $commission_rate = $saved_commission_rate;
+                } else {
+                    wc_add_order_item_meta( $items[$i], '_dokan_commission_rate', $commission_rate );
+                }
 
-            if ( $dokan_additional_fee ) {
-                $additional_fee = $dokan_additional_fee;
-            } else {
-                update_post_meta( self::$order_id, '_dokan_additional_fee', $additional_fee );
+                if ( $saved_commission_type ) {
+                    $commission_type = $saved_commission_type;
+                } else {
+                    wc_add_order_item_meta( $items[$i], '_dokan_commission_type', $commission_type );
+                }
+
+                if ( $saved_additional_fee ) {
+                    $additional_fee = $saved_additional_fee;
+                } else {
+                    wc_add_order_item_meta( $items[$i], '_dokan_additional_fee', $additional_fee );
+                }
+
+                $i++;
+                break;
             }
         }
 
