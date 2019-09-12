@@ -411,15 +411,20 @@ class Dokan_Commission {
             $additional_fee = $this->$func_fee( $product_id );
         }
 
-        // If an order has been purchased previously, calculate the earning with the previously sated commisson rate.
-        // It's important cause commission rate may get changed by admin during the order table re-generation.
+        // If an order has been purchased previously, calculate the earning with the previously stated commisson rate.
+        // It's important cause commission rate may get changed by admin during the order table `re-generation`.
         if ( $this->get_order_id() ) {
             $order      = wc_get_order( $this->get_order_id() );
             $line_items = $order->get_items();
-            static $i   = 0;
 
+            static $i = 0;
             foreach ( $line_items as $item ) {
-                $items                 = array_keys( $line_items );
+                $items = array_keys( $line_items );
+
+                if ( ! isset( $items[$i] ) ) {
+                    continue;
+                }
+
                 $saved_commission_rate = wc_get_order_item_meta( $items[$i], '_dokan_commission_rate', true );
                 $saved_commission_type = wc_get_order_item_meta( $items[$i], '_dokan_commission_type', true );
                 $saved_additional_fee  = wc_get_order_item_meta( $items[$i], '_dokan_additional_fee', true );
@@ -445,6 +450,10 @@ class Dokan_Commission {
                 $i++;
                 break;
             }
+
+            // Reset `static` $i to 0 when the value of $i is equals to the line_items as we don't need to hold the value anymore.
+            // This is required cause on order table `re-generation` the php process keeps runnig.
+            $i = count( $line_items ) === $i ? 0 : $i;
         }
 
         if ( 'flat' === $commission_type ) {
