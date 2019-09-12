@@ -546,6 +546,18 @@ function dokan_bulk_product_status_change() {
         return;
     }
 
+    do_action( 'dokan_bulk_product_status_change', $status, $products );
+}
+
+add_action( 'template_redirect', 'dokan_bulk_product_status_change' );
+
+add_action( 'dokan_bulk_product_status_change', 'dokan_bulk_product_delete', 10, 2 );
+
+function dokan_bulk_product_delete( $action, $products ) {
+    if ( 'delete' !== $action || empty( $products ) ) {
+        return;
+    }
+
     foreach ( $products as $product_id ) {
         if ( dokan_is_product_author( $product_id ) ) {
             wp_delete_post( $product_id );
@@ -556,8 +568,6 @@ function dokan_bulk_product_status_change() {
     exit;
 }
 
-add_action( 'template_redirect', 'dokan_bulk_product_status_change' );
-
 /**
  * Dokan get vendor by product
  *
@@ -565,22 +575,21 @@ add_action( 'template_redirect', 'dokan_bulk_product_status_change' );
  *
  * @since  2.9.8
  *
- * @return object
+ * @return object|false on faiure
  */
-function dokan_get_vendor_by_product( $id ) {
-
-    if ( ! $id ) {
-        return null;
+function dokan_get_vendor_by_product( $product ) {
+    if ( ! $product instanceof WC_Product ) {
+        $product = wc_get_product( $product );
     }
 
-    if ( $id instanceof WC_Product ) {
-        $id = $id->get_id();
+    if ( ! $product ) {
+        return false;
     }
 
-    $vendor_id = get_post_field( 'post_author', $id );
+    $vendor_id = get_post_field( 'post_author', $product->get_id() );
 
     if ( ! $vendor_id ) {
-        return null;
+        return false;
     }
 
     return dokan()->vendor->get( $vendor_id );
@@ -595,4 +604,23 @@ function dokan_get_vendor_by_product( $id ) {
  */
 function dokan_is_wc_manage_stock() {
     return 'yes' === get_option( 'woocommerce_manage_stock' );
+}
+
+/**
+ * Get translated product stock status
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @param  mix $stock
+ *
+ * @return string | array if stock parameter is not provided
+ */
+function dokan_get_translated_product_stock_status( $stock = false ) {
+    $stock_status = wc_get_product_stock_status_options();
+
+    if ( ! $stock ) {
+        return $stock_status;
+    }
+
+    return isset( $stock_status[$stock] ) ? $stock_status[$stock] : '';
 }

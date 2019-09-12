@@ -78,6 +78,10 @@ class Dokan_Template_Dashboard {
             return;
         }
 
+        if ( ! (array) $this->orders_count ) {
+            return;
+        }
+
         dokan_get_template_part( 'dashboard/big-counter-widget', '', array(
             'pageviews'      => $this->pageviews,
             'orders_count'   => $this->orders_count,
@@ -95,6 +99,10 @@ class Dokan_Template_Dashboard {
      */
     public function get_orders_widgets() {
         if ( ! current_user_can( 'dokan_view_order_report' ) ) {
+            return;
+        }
+
+        if ( ! (array) $this->orders_count ) {
             return;
         }
 

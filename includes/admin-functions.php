@@ -728,6 +728,10 @@ function dokan_override_product_author_by_admin( $product_id, $post ) {
 
     $vendor = dokan_get_vendor_by_product( $product );
 
+    if ( ! $vendor ) {
+        return;
+    }
+
     if ( $posted_vendor_id === $vendor->get_id() ) {
         return;
     }
@@ -1076,7 +1080,11 @@ function dokan_update_pages( $value, $name ) {
         return $value;
     }
 
-    return array_replace_recursive( get_option( $name ), $value );
+    $current_settings = get_option( $name, array() );
+    $current_settings = is_array( $current_settings ) ? $current_settings : array();
+    $value            = is_array( $value ) ? $value : array();
+
+    return array_replace_recursive( $current_settings, $value );
 }
 
 add_filter( 'dokan_save_settings_value', 'dokan_update_pages', 10, 2 );

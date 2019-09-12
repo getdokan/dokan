@@ -1,6 +1,12 @@
 <template>
-    <div>
-        <tr :class="id" v-if="containCommonFields( fieldData.type )">
+    <tr :class="[id, `dokan-settings-field-type-${fieldData.type}`]">
+        <template v-if="'sub_section' === fieldData.type">
+            <th colspan="2" class="dokan-settings-sub-section-title">
+                <label>{{ fieldData.label }}</label>
+            </th>
+        </template>
+
+        <template v-if="containCommonFields( fieldData.type )">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
@@ -8,9 +14,9 @@
                 <input type="text" class="regular-text" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
                 <p class="description" v-html="fieldData.desc"></p>
             </td>
-        </tr>
+        </template>
 
-        <tr :class="id" v-if="'number' == fieldData.type">
+        <template v-if="'number' == fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
@@ -18,9 +24,9 @@
                 <input type="number" :min="fieldData.min" :max="fieldData.max" :step="fieldData.step" class="regular-text" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
                 <p class="description" v-html="fieldData.desc"></p>
             </td>
-        </tr>
+        </template>
 
-        <tr :class="id" v-if="'textarea' == fieldData.type">
+        <template v-if="'textarea' == fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
@@ -28,9 +34,9 @@
                 <textarea type="textarea" :rows="fieldData.rows" :cols="fieldData.cols" class="regular-text" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]"></textarea>
                 <p class="description" v-html="fieldData.desc"></p>
             </td>
-        </tr>
+        </template>
 
-        <tr :class="id" v-if="'checkbox' == fieldData.type">
+        <template v-if="'checkbox' == fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
@@ -42,9 +48,9 @@
                     </label>
                 </fieldset>
             </td>
-        </tr>
+        </template>
 
-        <tr :class="id" v-if="'multicheck' == fieldData.type">
+        <template v-if="'multicheck' == fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
@@ -59,9 +65,9 @@
                     </template>
                 </fieldset>
             </td>
-        </tr>
+        </template>
 
-        <tr :class="id" v-if="'select' == fieldData.type">
+        <template v-if="'select' == fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
@@ -80,9 +86,9 @@
 
                 <p class="description" v-html="fieldData.desc"></p>
             </td>
-        </tr>
+        </template>
 
-        <tr :class="id" v-if="'file' == fieldData.type">
+        <template v-if="'file' == fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
@@ -91,9 +97,9 @@
                 <input type="button" class="button wpsa-browse" value="Choose File" v-on:click.prevent="$emit( 'openMedia', { sectionId: sectionId, name: fieldData.name }, $event )">
                 <p class="description" v-html="fieldData.desc"></p>
             </td>
-        </tr>
+        </template>
 
-        <tr :class="id" v-if="'color' == fieldData.type">
+        <template v-if="'color' == fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
@@ -101,18 +107,18 @@
                 <color-picker v-model="fieldValue[fieldData.name]"></color-picker>
                 <p class="description" v-html="fieldData.desc"></p>
             </td>
-        </tr>
+        </template>
 
-        <tr :class="id" v-if="'html' == fieldData.type">
+        <template v-if="'html' == fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
             <td>
                 <p class="description" v-html="fieldData.desc"></p>
             </td>
-        </tr>
+        </template>
 
-        <tr :class="id" v-if="'radio' == fieldData.type">
+        <template v-if="'radio' == fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
@@ -126,9 +132,9 @@
                 </fieldset>
                 <p class="description" v-html="fieldData.desc"></p>
             </td>
-        </tr>
+        </template>
 
-        <tr :class="id" v-if="'wpeditor' == fieldData.type">
+        <template v-if="'wpeditor' == fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
@@ -136,9 +142,9 @@
                 <text-editor v-model="fieldValue[fieldData.name]"></text-editor>
                 <p class="description" v-html="fieldData.desc"></p>
             </td>
-        </tr>
+        </template>
 
-        <tr :class="id" v-if="'repeatable' == fieldData.type">
+        <template v-if="'repeatable' == fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
@@ -153,9 +159,9 @@
                 <a href="#" class="button dokan-repetable-add-item-btn" @click.prevent="addItem( fieldData.type, fieldData.name )">+</a>
                 <p class="description" v-html="fieldData.desc"></p>
             </td>
-        </tr>
+        </template>
 
-        <tr :class="id" v-if="'radio_image' == fieldData.type">
+        <template v-if="'radio_image' == fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
@@ -175,13 +181,25 @@
                     </template>
                 </div>
             </td>
-        </tr>
-    </div>
+        </template>
+        <template v-if="'gmap' == fieldData.type">
+            <th scope="row">
+                <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
+            </th>
+
+            <td>
+                <input type="hidden" :name="sectionId + '[' + fieldData.name + ']'" :value="Object.assign( fieldValue[fieldData.name], gmapData )">
+                <gmap @updateGmap="updateGmapData" :gmapKey="getGmapApiKey()" :location="getMapLocation( fieldValue[fieldData.name] )" />
+                <p class="description" v-html="fieldData.desc"></p>
+            </td>
+        </template>
+    </tr>
 </template>
 
 <script>
     import colorPicker from "admin/components/ColorPicker.vue";
     let TextEditor = dokan_get_lib('TextEditor');
+    let Gmap = dokan_get_lib('Gmap');
 
     export default {
         name: 'Fields',
@@ -189,15 +207,23 @@
         components: {
             colorPicker,
             TextEditor,
+            Gmap
         },
 
         data() {
             return {
-                repeatableItem: {}
+                repeatableItem: {},
+                gmapData: {}
             }
         },
 
-        props: ['id', 'fieldData', 'sectionId', 'fieldValue'],
+        props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues'],
+
+        beforeMount() {
+            if ( 'multicheck' === this.fieldData.type && ! this.fieldValue[ this.fieldData.name ] ) {
+                this.fieldValue[ this.fieldData.name ] = this.fieldData.default;
+            }
+        },
 
         methods: {
             containCommonFields( type ) {
@@ -221,14 +247,34 @@
 
             removeItem( optionVal, name ) {
                 this.fieldValue[name].splice( optionVal, 1 );
+            },
+
+            getMapLocation(savedLocation) {
+                return {
+                    latitude: savedLocation.latitude ? savedLocation.latitude : 23.709921,
+                    longitude: savedLocation.longitude ? savedLocation.longitude: 90.40714300000002,
+                    address: savedLocation.address ? savedLocation.address : 'Dhaka',
+                    zoom: 10
+                }
+            },
+
+            updateGmapData( payload ) {
+                this.gmapData = payload;
+            },
+
+            getGmapApiKey() {
+                let settings = this.allSettingsValues;
+
+                if ( 'dokan_appearance' in settings && 'gmap_api_key' in settings.dokan_appearance  ) {
+                    return settings.dokan_appearance.gmap_api_key
+                }
             }
         }
 
     };
 </script>
 
-<style>
-
+<style lang="less">
     ul.dokan-settings-repeatable-list {
         list-style-type: disc;
         padding-left: 20px;

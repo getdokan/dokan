@@ -12,7 +12,13 @@
         <div class="dokan-settings-wrap">
             <h2 class="nav-tab-wrapper">
                 <template v-for="section in settingSections">
-                    <a href="#" class="nav-tab" :class="{ 'nav-tab-active': currentTab === section.id }" id="dokan_general-tab" @click.prevent="changeTab(section)"><span class="dashicons" :class="section.icon"></span> {{ section.title }}</a>
+                    <a
+                        href="#"
+                        :class="['nav-tab', currentTab === section.id ? 'nav-tab-active' : '']"
+                        @click.prevent="changeTab(section)"
+                    >
+                        <span class="dashicons" :class="section.icon"></span> {{ section.title }}
+                    </a>
                 </template>
             </h2>
 
@@ -22,14 +28,21 @@
                         <form method="post" action="options.php">
                             <input type="hidden" name="option_page" :value="index">
                             <input type="hidden" name="action" value="update">
-                            <h2>{{ showSectionTitle( index ) }}</h2>
                             <table class="form-table">
+                                <thead v-if="showSectionTitle(fields)">
+                                    <tr class="dokan-settings-field-type-sub_section">
+                                        <th colspan="2" class="dokan-settings-sub-section-title">
+                                            <label>{{ sectionTitle( index ) }}</label>
+                                        </th>
+                                    </tr>
+                                </thead>
                                 <tbody>
                                     <fields v-for="(field, fieldId) in fields"
                                         :section-id="index"
                                         :id="fieldId"
                                         :field-data="field"
                                         :field-value="settingValues[index]"
+                                        :all-settings-values="settingValues"
                                         @openMedia="showMedia"
                                         :key="fieldId"
                                     ></fields>
@@ -86,7 +99,11 @@
                 }
             },
 
-            showSectionTitle( index ) {
+            showSectionTitle(fields) {
+                return ! _.findWhere(fields, {type: 'sub_section'});
+            },
+
+            sectionTitle( index ) {
                 return _.findWhere( this.settingSections, { id:index} ).title;
             },
 
@@ -263,6 +280,12 @@
                 transition-property: none;
                 transition:none;
 
+                &:focus,
+                &:active {
+                    box-shadow: none;
+                    outline: 0;
+                }
+
                 &.nav-tab-active {
                     background: #fff !important;
                     border-right: 1px solid #c8d7e1;
@@ -362,4 +385,23 @@
          }
     }
 
+    .form-table th.dokan-settings-sub-section-title {
+        border-bottom: 1px solid #cccccc;
+        padding: 0 0 10px;
+
+        label {
+            display: block;
+            margin-top: 20px;
+            color: #0073aa;
+            font-weight: 500;
+            font-size: 1.3em;
+        }
+    }
+
+    .form-table .dokan-settings-field-type-sub_section:first-child th.dokan-settings-sub-section-title {
+
+        label {
+            margin-top: 0;
+        }
+    }
 </style>

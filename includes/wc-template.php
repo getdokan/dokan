@@ -7,7 +7,11 @@
  * @return array
  */
 function dokan_product_seller_info( $item_data, $cart_item ) {
-    $vendor =  dokan_get_vendor_by_product( $cart_item['product_id'] );
+    $vendor = dokan_get_vendor_by_product( $cart_item['product_id'] );
+
+    if ( ! $vendor ) {
+        return $item_data;
+    }
 
     $item_data[] = array(
         'name'  => __( 'Vendor', 'dokan-lite' ),
@@ -225,6 +229,10 @@ function dokan_save_quick_edit_vendor_data ( $product ) {
 
     $vendor = dokan_get_vendor_by_product( $product );
 
+    if ( ! $vendor ) {
+        return;
+    }
+
     if ( $posted_vendor_id === $vendor->get_id() ) {
         return;
     }
@@ -354,3 +362,21 @@ add_action( 'dokan_store_profile_saved', function( $store_id, $settings ) {
     }
 
 }, 99, 2 );
+
+/**
+ * Remove store avatar set by ultimate member from store and store listing page
+ *
+ * @since DOKAN_LITE_SINCE
+ */
+add_action( 'pre_get_avatar', function() {
+    $page_id = get_queried_object_id();
+    $page    = get_page( $page_id );
+
+    if ( ! $page instanceof WP_Post ) {
+        return;
+    }
+
+    if ( dokan_is_store_page() || dokan_is_store_listing() || has_shortcode( $page->post_content, 'dokan-stores' ) ) {
+        remove_filter( 'get_avatar', 'um_get_avatar', 99999 );
+    }
+} );

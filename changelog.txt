@@ -1,3 +1,28 @@
+v2.9.20 -> August 23, 2019
+------------------------------------
+-   **Fix***   Geolocation map settings value is not saving
+-   **Fix***   Fix warning in vendor dashboard widget when seller setup wizard is not run
+-   **Fix***   Store banner height in vendor settings page it not honouring the saved settings
+-   **Fix***   Conflict with avada theme fution builder
+-   **Tweak*** Use WordPress backend date format while printing date in approved and cancelled withdraw request
+
+v2.9.19 -> July 29, 2019
+------------------------------------
+-   **Fix***    Split orders created from admin dashboard
+-   **Fix***    Add on backorder in product stock management
+-   **Fix***    Dokan dashboard menu returning 404 with the latest version of visual composer plugin
+-   **Tweak***  Dokan admin settings rearrange
+-   **Tweak***  Add compatibility with ultimate member plugin
+-   **Tweak***  Add few hooks in product listing template
+
+v2.9.18 -> July 10, 2019
+------------------------------------
+-   **Feat***  Add google map type option field component
+-   **Feat***  Add dokan_array_after helper function
+-   **Fix***   Admin settings default value for multicheck field
+-   **Tweek*** Remove unnecessary code and add hook after creating parent order
+-   **Tweek*** Refactor dokan_get_vendor_by_product function and explicit error checking while using it
+
 v2.9.17 -> June 13, 2019
 ------------------------------------
 -   **Fix***   Remove unwanted code to fix conflict with yith plugin

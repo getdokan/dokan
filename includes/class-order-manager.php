@@ -10,7 +10,7 @@ class Dokan_Order_Manager {
     function __construct() {
 
         // on order status change
-        add_action( 'woocommerce_order_status_changed', array( $this, 'on_order_status_change' ), 10, 3 );
+        add_action( 'woocommerce_order_status_changed', array( $this, 'on_order_status_change' ), 10, 4 );
         add_action( 'woocommerce_order_status_changed', array( $this, 'on_sub_order_change' ), 99, 3 );
 
         // create sub-orders
@@ -38,8 +38,21 @@ class Dokan_Order_Manager {
      *
      * @return void
      */
-    function on_order_status_change( $order_id, $old_status, $new_status ) {
+    function on_order_status_change( $order_id, $old_status, $new_status, $order ) {
         global $wpdb;
+
+        // Split order if the order doesn't have parent and sub orders,
+        // and the order is created from dashboard.
+        if ( empty( $order->post_parent ) && empty( $order->get_meta( 'has_sub_order' ) ) && is_admin() ) {
+            // Remove the hook to prevent recursive callas.
+            remove_action( 'woocommerce_order_status_changed', array( $this, 'on_order_status_change' ), 10 );
+
+            // Split the order.
+            $this->maybe_split_orders( $order_id );
+
+            // Add the hook back.
+            add_action( 'woocommerce_order_status_changed', array( $this, 'on_order_status_change' ), 10, 4 );
+        }
 
         // make sure order status contains "wc-" prefix
         if ( stripos( $new_status, 'wc-' ) === false ) {
@@ -155,6 +168,8 @@ class Dokan_Order_Manager {
 
             $temp      = array_keys( $vendors );
             $seller_id = reset( $temp );
+
+            do_action( 'dokan_create_parent_order', $parent_order, $seller_id );
 
             // record admin commision
             $admin_fee = dokan_get_admin_commission_by( $parent_order, $seller_id );

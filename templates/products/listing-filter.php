@@ -14,8 +14,8 @@ $post_data = wp_unslash( $_POST );
 do_action( 'dokan_product_listing_filter_before_form' );
 ?>
 
-    <form class="dokan-form-inline dokan-w6 dokan-product-date-filter" method="get" >
-
+    <form class="dokan-form-inline dokan-w8 dokan-product-date-filter" method="get" >
+        <?php do_action( 'dokan_product_listing_filter_from_start', $get_data ); ?>
         <div class="dokan-form-group">
             <?php dokan_product_listing_filter_months_dropdown( dokan_get_current_user_id() ); ?>
         </div>
@@ -37,6 +37,8 @@ do_action( 'dokan_product_listing_filter_before_form' );
             ?>
         </div>
 
+        <?php do_action( 'dokan_product_listing_filter_from_end', $get_data ); ?>
+
         <?php
         if ( isset( $get_data['product_search_name'] ) ) { ?>
             <input type="hidden" name="product_search_name" value="<?php echo esc_attr( $get_data['product_search_name'] ); ?>">
@@ -49,7 +51,7 @@ do_action( 'dokan_product_listing_filter_before_form' );
 
     <?php do_action( 'dokan_product_listing_filter_before_search_form' ); ?>
 
-    <form method="get" class="dokan-form-inline dokan-w6 dokan-product-search-form">
+    <form method="get" class="dokan-form-inline dokan-w5 dokan-product-search-form">
 
         <button type="submit" name="product_listing_search" value="ok" class="dokan-btn dokan-btn-theme"><?php esc_html_e( 'Search', 'dokan-lite' ); ?></button>
 
