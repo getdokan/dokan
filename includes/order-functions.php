@@ -667,11 +667,11 @@ function dokan_get_suborder_ids_by( $parent_order_id ) {
  *
  * @return float $commission
  */
-function dokan_get_admin_commission_by( $order, $seller_id ) {
-
+function dokan_get_admin_commission_by( $order, $context ) {
+    $context = 'seller' === $context ? $context : 'admin';
     wc_deprecated_function( 'dokan_get_admin_commission_by', 'DOKAN_LITE_SINCE', 'Dokan_Commission::get_earning_by_order()' );
 
-    return dokan()->commission->get_earning_by_order( $order );
+    return dokan()->commission->get_earning_by_order( $order, $context );
 
     if ( get_posts( array( 'post_parent' => $order->get_id(), 'post_type' => 'shop_order', 'post_status' => 'any' ) ) ) {
         return;
