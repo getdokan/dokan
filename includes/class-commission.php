@@ -130,6 +130,14 @@ class Dokan_Commission {
             return;
         }
 
+        // If `_dokan_admin_fee` is found means, the commission has been calculated for this order without the `Dokan_Commission` class.
+        // So we'll return the previously earned commission to keep backward compatability.
+        $saved_admin_fee = get_post_meta( $order->get_id(), '_dokan_admin_fee', true );
+
+        if ( $saved_admin_fee != '' ) {
+            return apply_filters( 'dokan_order_admin_commission', $saved_admin_fee, $order );
+        }
+
         // Set user passed `order_id` so that we can track if any commission_rate has been saved previously.
         // Specially on order table `re-generation`.
         $this->set_order_id( $order->get_id() );
