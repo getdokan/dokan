@@ -147,9 +147,7 @@ class Dokan_Commission {
             return $earning;
         }
 
-        $earning            = 0;
-        $shipping_recipient = dokan_get_option( 'shipping_fee_recipient', 'dokan_general', 'seller' );
-        $tax_recipient      = dokan_get_option( 'tax_fee_recipient', 'dokan_general', 'seller' );
+        $earning = 0;
 
         foreach ( $order->get_items() as $item_id => $item ) {
             if ( ! $item->get_product() ) {
@@ -169,11 +167,11 @@ class Dokan_Commission {
             }
         }
 
-        if ( $context === $shipping_recipient ) {
+        if ( $context === $this->get_shipping_fee_recipient( $order->get_id() ) ) {
             $earning += $order->get_total_shipping() - $order->get_total_shipping_refunded();
         }
 
-        if ( $context === $tax_recipient ) {
+        if ( $context === $this->get_tax_fee_recipient( $order->get_id() ) ) {
             $earning += $order->get_total_tax() - $order->get_total_tax_refunded();
         }
 
@@ -586,6 +584,50 @@ class Dokan_Commission {
         wp_cache_set( $cache_key, $earning );
 
         return $earning;
+    }
+
+    /**
+     * Get shipping fee recipient
+     *
+     * @since  DOKAN_LITE_SINCE
+     *
+     * @param  int $order_id
+     *
+     * @return string
+     */
+    public function get_shipping_fee_recipient( $order_id ) {
+        $saved_shipping_recipient = get_post_meta( $order_id, 'shipping_fee_recipient', true );
+
+        if ( $saved_shipping_recipient ) {
+            $shipping_recipient = $saved_shipping_recipient;
+        } else {
+            $shipping_recipient = dokan_get_option( 'shipping_fee_recipient', 'dokan_general', 'seller' );
+            update_post_meta( $order_id, 'shipping_fee_recipient', $shipping_recipient );
+        }
+
+        return $shipping_recipient;
+    }
+
+    /**
+     * Get tax fee recipient
+     *
+     * @since  DOKAN_LITE_SINCE
+     *
+     * @param  int $order_id
+     *
+     * @return string
+     */
+    public function get_tax_fee_recipient( $order_id ) {
+        $saved_tax_recipient = get_post_meta( $order_id, 'tax_fee_recipient', true );
+
+        if ( $saved_tax_recipient ) {
+            $tax_recipient = $saved_tax_recipient;
+        } else {
+            $tax_recipient = dokan_get_option( 'tax_fee_recipient', 'dokan_general', 'seller' );
+            update_post_meta( $order_id, 'tax_fee_recipient', $tax_recipient );
+        }
+
+        return $tax_recipient;
     }
 
     /**
