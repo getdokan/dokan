@@ -266,7 +266,7 @@ class Dokan_Settings {
             'admin_access' => array(
                 'name'    => 'admin_access',
                 'label'   => __( 'Admin area access', 'dokan-lite' ),
-                'desc'    => __( 'Allow/Disallow Vendors and Customers from accessing the wp-admin dashboard area', 'dokan-lite' ),
+                'desc'    => __( 'Disallow Vendors and Customers from accessing the wp-admin dashboard area', 'dokan-lite' ),
                 'type'    => 'checkbox',
                 'default' => 'on'
             ),

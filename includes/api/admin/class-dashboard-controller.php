@@ -77,7 +77,7 @@ class Dokan_REST_Admin_Dashboard_Controller extends Dokan_REST_Admin_Controller 
         $show_author   = (int) $request['show_author'];
         $show_date     = (int) $request['show_date'];
 
-        $url = 'https://wedevs.com/tag/dokan/feed/';
+        $url = 'https://wedevs.com/account/tag/dokan/feed/';
         $rss = fetch_feed( $url );
 
         if ( is_wp_error( $rss ) ) {
