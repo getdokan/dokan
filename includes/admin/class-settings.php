@@ -177,7 +177,7 @@ class Dokan_Settings {
      * @return array
      */
     public function get_post_type( $post_type ) {
-        $pages_array = array( '-1' => __( '- select -', 'dokan-lite' ) );
+        $pages_array = array();
         $pages       = get_posts( array('post_type' => $post_type, 'numberposts' => -1) );
 
         if ( $pages ) {
@@ -251,139 +251,146 @@ class Dokan_Settings {
      */
     function get_settings_fields() {
         $pages_array  = $this->get_post_type( 'page' );
-        $slider_array = $this->get_post_type( 'dokan_slider' );
 
         $commission_types = array(
             'flat'       => __( 'Flat', 'dokan-lite' ),
             'percentage' => __( 'Percentage', 'dokan-lite' ),
         );
 
-        $settings_fields = array(
-            'dokan_general' => array(
-                'admin_access' => array(
-                    'name'    => 'admin_access',
-                    'label'   => __( 'Admin area access', 'dokan-lite' ),
-                    'desc'    => __( 'Disable Vendors and Customers from accessing the wp-admin dashboard area', 'dokan-lite' ),
-                    'type'    => 'checkbox',
-                    'default' => 'on'
-                ),
-                'custom_store_url' => array(
-                    'name'    => 'custom_store_url',
-                    'label'   => __( 'Vendor Store URL', 'dokan-lite' ),
-                    'desc'    => sprintf( __( 'Define the seller store URL (%s<strong>[this-text]</strong>/[seller-name])', 'dokan-lite' ), site_url( '/' ) ),
-                    'default' => 'store',
-                    'type'    => 'text',
-                ),
-                'seller_enable_terms_and_conditions' => array(
-                    'name'    => 'seller_enable_terms_and_conditions',
-                    'label'   => __( 'Terms and Conditions', 'dokan-lite' ),
-                    'desc'    => __( 'Enable Terms and Conditions for vendor stores', 'dokan-lite' ),
-                    'type'    => 'checkbox',
-                    'default' => 'off'
-                 ),
-                'shipping_fee_recipient' => array(
-                    'name'    => 'shipping_fee_recipient',
-                    'label'   => __( 'Shipping Fee Recipient', 'dokan-lite' ),
-                    'desc'    => __( 'Should Shipping fees go to the Vendor or the Admin?', 'dokan-lite' ),
-                    'type'    => 'select',
-                    'options' => array( 'seller' => __( 'Vendor', 'dokan-lite' ), 'admin' => __( 'Admin', 'dokan-lite' ) ),
-                    'default' => 'seller'
-                ),
-                'tax_fee_recipient' => array(
-                    'name'    => 'tax_fee_recipient',
-                    'label'   => __( 'Tax Fee Recipient', 'dokan-lite' ),
-                    'desc'    => __( 'Should Tax fees go to the Vendor or the Admin?', 'dokan-lite' ),
-                    'type'    => 'select',
-                    'options' => array( 'seller' => __( 'Vendor', 'dokan-lite' ), 'admin' => __( 'Admin', 'dokan-lite' ) ),
-                    'default' => 'seller'
-                ),
-                'store_open_close'  => array(
-                    'name'    => 'store_open_close',
-                    'label'   => __( 'Store Opening Closing Time Widget', 'dokan-lite' ),
-                    'desc'    => __( 'Enable store opening closing time widget in the store sidebar', 'dokan-lite' ),
-                    'type'    => 'checkbox',
-                    'default' => 'on'
-                ),
-                'store_map' => array(
-                    'name'    => 'store_map',
-                    'label'   => __( 'Show Map on Store Page', 'dokan-lite' ),
-                    'desc'    => __( 'Enable a Google Map of the Store Location in the store sidebar', 'dokan-lite' ),
-                    'type'    => 'checkbox',
-                    'default' => 'on'
-                ),
-                'gmap_api_key' => array(
-                    'name'  => 'gmap_api_key',
-                    'label' => __( 'Google Map API Key', 'dokan-lite' ),
-                    'desc'  => __( '<a href="https://developers.google.com/maps/documentation/javascript/" target="_blank">API Key</a> is needed to display map on store page', 'dokan-lite' ),
-                    'type'  => 'text',
-                ),
-                'contact_seller' => array(
-                    'name'    => 'contact_seller',
-                    'label'   => __( 'Show Contact Form on Store Page', 'dokan-lite' ),
-                    'desc'    => __( 'Enable Vendor Contact Form in the store sidebar', 'dokan-lite' ),
-                    'type'    => 'checkbox',
-                    'default' => 'on'
-                ),
-                'enable_theme_store_sidebar' => array(
-                    'name'    => 'enable_theme_store_sidebar',
-                    'label'   => __( 'Enable Store Sidebar From Theme', 'dokan-lite' ),
-                    'desc'    => __( 'Enable showing Store Sidebar From Your Theme.', 'dokan-lite' ),
-                    'type'    => 'checkbox',
-                    'default' => 'off'
-                ),
+        $general_site_options = apply_filters( 'dokan_settings_general_site_options', array(
+            'site_options' => array(
+                'name'  => 'site_options',
+                'label' => __( 'Site Options', 'dokan-lite' ),
+                'type'  => 'sub_section',
             ),
-            'dokan_selling' => array(
-                'new_seller_enable_selling' => array(
-                    'name'    => 'new_seller_enable_selling',
-                    'label'   => __( 'New Vendor Product Upload', 'dokan-lite' ),
-                    'desc'    => __( 'Allow newly registered vendors to add products', 'dokan-lite' ),
-                    'type'    => 'checkbox',
-                    'default' => 'on'
-                ),
-                'commission_type' => array(
-                    'name'    => 'commission_type',
-                    'label'   => __( 'Commission Type ', 'dokan-lite' ),
-                    'desc'    => __( 'Select the commission type', 'dokan-lite' ),
-                    'type'    => 'select',
-                    'options' => $commission_types,
-                    'default' => 'percentage'
-                ),
-                'admin_percentage' => array(
-                    'name'    => 'admin_percentage',
-                    'label'   => __( 'Admin Commission', 'dokan-lite' ),
-                    'desc'    => __( 'Amount you get from sales', 'dokan-lite' ),
-                    'default' => '10',
-                    'type'    => 'number',
-                    'min'     => '0',
-                    'step'    => 'any',
-                ),
-                'order_status_change' => array(
-                    'name'    => 'order_status_change',
-                    'label'   => __( 'Order Status Change', 'dokan-lite' ),
-                    'desc'    => __( 'Vendor can update order status', 'dokan-lite' ),
-                    'type'    => 'checkbox',
-                    'default' => 'on'
-                ),
-                'disable_product_popup' => array(
-                    'name'    => 'disable_product_popup',
-                    'label'   => __( 'Disable Product Popup', 'dokan-lite' ),
-                    'desc'    => __( 'Disable add new product in popup view', 'dokan-lite' ),
-                    'type'    => 'checkbox',
-                    'default' => 'off'
-                ),
-                'disable_welcome_wizard' => array(
-                    'name'    => 'disable_welcome_wizard',
-                    'label'   => __( 'Disable Welcome Wizard', 'dokan-lite' ),
-                    'desc'    => __( 'Disable welcome wizard for newly registered vendors', 'dokan-lite' ),
-                    'type'    => 'checkbox',
-                    'default' => 'off'
-                ),
+            'admin_access' => array(
+                'name'    => 'admin_access',
+                'label'   => __( 'Admin area access', 'dokan-lite' ),
+                'desc'    => __( 'Disallow Vendors and Customers from accessing the wp-admin dashboard area', 'dokan-lite' ),
+                'type'    => 'checkbox',
+                'default' => 'on'
+            ),
+            'custom_store_url' => array(
+                'name'    => 'custom_store_url',
+                'label'   => __( 'Vendor Store URL', 'dokan-lite' ),
+                'desc'    => sprintf( __( 'Define the Vendor store URL (%s<strong>[this-text]</strong>/[vendor-name])', 'dokan-lite' ), site_url( '/' ) ),
+                'default' => 'store',
+                'type'    => 'text',
+            ),
+            'setup_wizard_logo_url' => array(
+                'name'    => 'setup_wizard_logo_url',
+                'label'   => __( 'Vendor Setup Wizard Logo', 'dokan-lite' ),
+                'type'    => 'file',
+                'desc'    => __( 'Recommended Logo size ( 270px X 90px ). If no logo is uploaded, site title is shown by default.', 'dokan-lite' ),
+            ),
+            'disable_welcome_wizard' => array(
+                'name'    => 'disable_welcome_wizard',
+                'label'   => __( 'Disable Welcome Wizard', 'dokan-lite' ),
+                'desc'    => __( 'Disable welcome wizard for newly registered vendors', 'dokan-lite' ),
+                'type'    => 'checkbox',
+                'default' => 'off'
+            ),
+        ) );
+
+        $general_vendor_store_options = apply_filters( 'dokan_settings_general_vendor_store_options', array(
+            'vendor_store_options' => array(
+                'name'  => 'vendor_store_options',
+                'label' => __( 'Vendor Store Options', 'dokan-lite' ),
+                'type'  => 'sub_section',
+            ),
+            'seller_enable_terms_and_conditions' => array(
+                'name'    => 'seller_enable_terms_and_conditions',
+                'label'   => __( 'Store Terms and Conditions', 'dokan-lite' ),
+                'desc'    => __( 'Enable Terms and Conditions for vendor stores', 'dokan-lite' ),
+                'type'    => 'checkbox',
+                'default' => 'off'
+             ),
+        ) );
+
+        $selling_option_commission = apply_filters( 'dokan_settings_selling_option_commission', array(
+            'commission' => array(
+                'name'  => 'commission',
+                'label' => __( 'Commission', 'dokan-lite' ),
+                'type'  => 'sub_section',
+            ),
+            'commission_type' => array(
+                'name'    => 'commission_type',
+                'label'   => __( 'Commission Type ', 'dokan-lite' ),
+                'desc'    => __( 'Select a commission type for Vendor', 'dokan-lite' ),
+                'type'    => 'select',
+                'options' => $commission_types,
+                'default' => 'percentage'
+            ),
+            'admin_percentage' => array(
+                'name'    => 'admin_percentage',
+                'label'   => __( 'Admin Commission', 'dokan-lite' ),
+                'desc'    => __( 'Amount you get from each sale', 'dokan-lite' ),
+                'default' => '10',
+                'type'    => 'number',
+                'min'     => '0',
+                'step'    => 'any',
+            ),
+            'shipping_fee_recipient' => array(
+                'name'    => 'shipping_fee_recipient',
+                'label'   => __( 'Shipping Fee Recipient', 'dokan-lite' ),
+                'desc'    => __( 'Who will be receiving the Shipping fees', 'dokan-lite' ),
+                'type'    => 'select',
+                'options' => array( 'seller' => __( 'Vendor', 'dokan-lite' ), 'admin' => __( 'Admin', 'dokan-lite' ) ),
+                'default' => 'seller'
+            ),
+            'tax_fee_recipient' => array(
+                'name'    => 'tax_fee_recipient',
+                'label'   => __( 'Tax Fee Recipient', 'dokan-lite' ),
+                'desc'    => __( 'Who will be receiving the Tax fees', 'dokan-lite' ),
+                'type'    => 'select',
+                'options' => array( 'seller' => __( 'Vendor', 'dokan-lite' ), 'admin' => __( 'Admin', 'dokan-lite' ) ),
+                'default' => 'seller'
+            ),
+        ) );
+
+        $selling_option_vendor_capability = apply_filters( 'dokan_settings_selling_option_vendor_capability', array(
+            'vendor_capability' => array(
+                'name'  => 'vendor_capability',
+                'label' => __( 'Vendor Capability', 'dokan-lite' ),
+                'type'  => 'sub_section',
+            ),
+            'new_seller_enable_selling' => array(
+                'name'    => 'new_seller_enable_selling',
+                'label'   => __( 'New Vendor Product Upload', 'dokan-lite' ),
+                'desc'    => __( 'Allow newly registered vendors to add products', 'dokan-lite' ),
+                'type'    => 'checkbox',
+                'default' => 'on'
+            ),
+            'disable_product_popup' => array(
+                'name'    => 'disable_product_popup',
+                'label'   => __( 'Disable Product Popup', 'dokan-lite' ),
+                'desc'    => __( 'Disable add new product in popup view', 'dokan-lite' ),
+                'type'    => 'checkbox',
+                'default' => 'off'
+            ),
+            'order_status_change' => array(
+                'name'    => 'order_status_change',
+                'label'   => __( 'Order Status Change', 'dokan-lite' ),
+                'desc'    => __( 'Allow/Disallow vendor to update order status', 'dokan-lite' ),
+                'type'    => 'checkbox',
+                'default' => 'on'
+            ),
+        ) );
+
+        $settings_fields = array(
+            'dokan_general' => array_merge(
+                $general_site_options,
+                $general_vendor_store_options
+            ),
+            'dokan_selling' => array_merge(
+                $selling_option_commission,
+                $selling_option_vendor_capability
             ),
             'dokan_withdraw' => array(
                 'withdraw_methods' => array(
                     'name'    => 'withdraw_methods',
                     'label'   => __( 'Withdraw Methods', 'dokan-lite' ),
-                    'desc'    => __( 'Withdraw methods for vendors', 'dokan-lite' ),
+                    'desc'    => __( 'Select suitable Withdraw methods for Vendors', 'dokan-lite' ),
                     'type'    => 'multicheck',
                     'default' => array( 'paypal' => 'paypal' ),
                     'options' => dokan_withdraw_get_methods()
@@ -398,31 +405,51 @@ class Dokan_Settings {
             ),
             'dokan_pages' => array(
                 'dashboard' => array(
-                    'name'    => 'dashboard',
-                    'label'   => __( 'Dashboard', 'dokan-lite' ),
-                    'type'    => 'select',
-                    'options' => $pages_array
+                    'name'        => 'dashboard',
+                    'label'       => __( 'Dashboard', 'dokan-lite' ),
+                    'desc'        => __( 'Select a page to show Vendor Dashboard', 'dokan-lite' ),
+                    'type'        => 'select',
+                    'placeholder' => __( 'Select page', 'dokan-lite' ),
+                    'options'     => $pages_array,
                 ),
                 'my_orders' => array(
                     'name'    => 'my_orders',
                     'label'   => __( 'My Orders', 'dokan-lite' ),
+                    'desc'        => __( 'Select a page to show My Orders', 'dokan-lite' ),
                     'type'    => 'select',
-                    'options' => $pages_array
+                    'placeholder' => __( 'Select page', 'dokan-lite' ),
+                    'options' => $pages_array,
                 ),
                 'reg_tc_page' => array(
-                    'name'    => 'reg_tc_page',
-                    'label'   => __( 'Terms and Conditions Page', 'dokan-lite' ),
-                    'type'    => 'select',
-                    'options' => $pages_array,
-                    'desc'    => sprintf( __( 'Select where you want to add Dokan pages <a target="_blank" href="%s"> Learn More </a>', 'dokan-lite' ), 'https://wedevs.com/docs/dokan/settings/page-settings-2/' )
+                    'name'        => 'reg_tc_page',
+                    'label'       => __( 'Terms and Conditions Page', 'dokan-lite' ),
+                    'desc'        => __( 'Select a page to show Terms and Conditions', 'dokan-lite' ),
+                    'type'        => 'select',
+                    'placeholder' => __( 'Select page', 'dokan-lite' ),
+                    'options'     => $pages_array,
+                    'desc'        => sprintf( __( 'Select where you want to add Dokan pages <a target="_blank" href="%s"> Learn More </a>', 'dokan-lite' ), 'https://wedevs.com/docs/dokan/settings/page-settings-2/' ),
                 )
             ),
             'dokan_appearance' => array(
-                'setup_wizard_logo_url' => array(
-                    'name'    => 'setup_wizard_logo_url',
-                    'label'   => __( 'Vendor Setup Wizard Logo', 'dokan-lite' ),
-                    'type'    => 'file',
-                    'desc'    => __( 'Recommended Logo size ( 270px X 90px ). If no logo is uploaded, site title is shown by default.', 'dokan-lite' ),
+                'store_map' => array(
+                    'name'    => 'store_map',
+                    'label'   => __( 'Show Map on Store Page', 'dokan-lite' ),
+                    'desc'    => __( 'Enable Google Maps of the Store Location in the store sidebar', 'dokan-lite' ),
+                    'type'    => 'checkbox',
+                    'default' => 'on'
+                ),
+                'gmap_api_key' => array(
+                    'name'  => 'gmap_api_key',
+                    'label' => __( 'Google Map API Key', 'dokan-lite' ),
+                    'desc'  => __( '<a href="https://developers.google.com/maps/documentation/javascript/" target="_blank">API Key</a> is needed to display map on store page', 'dokan-lite' ),
+                    'type'  => 'text',
+                ),
+                'contact_seller' => array(
+                    'name'    => 'contact_seller',
+                    'label'   => __( 'Show Contact Form on Store Page', 'dokan-lite' ),
+                    'desc'    => __( 'Display a vendor contact form in the store sidebar', 'dokan-lite' ),
+                    'type'    => 'checkbox',
+                    'default' => 'on'
                 ),
                 'store_header_template' => array(
                     'name'    => 'store_header_template',
@@ -436,21 +463,36 @@ class Dokan_Settings {
                     ),
                     'default' => 'default',
                 ),
+                'store_open_close'  => array(
+                    'name'    => 'store_open_close',
+                    'label'   => __( 'Store Opening Closing Time Widget', 'dokan-lite' ),
+                    'desc'    => __( 'Enable store opening & closing time widget in the store sidebar', 'dokan-lite' ),
+                    'type'    => 'checkbox',
+                    'default' => 'on'
+                ),
+                'enable_theme_store_sidebar' => array(
+                    'name'    => 'enable_theme_store_sidebar',
+                    'label'   => __( 'Enable Store Sidebar From Theme', 'dokan-lite' ),
+                    'desc'    => __( 'Enable showing Store Sidebar From Your Theme.', 'dokan-lite' ),
+                    'type'    => 'checkbox',
+                    'default' => 'off'
+                ),
             ),
             'dokan_privacy' => array(
                 'enable_privacy' => array(
                     'name'    => 'enable_privacy',
                     'label'   => __( 'Enable Privacy Policy', 'dokan-lite' ),
                     'type'    => 'checkbox',
-                    'desc'    => __( 'Enable privacy policy for dokan contact form', 'dokan-lite' ),
+                    'desc'    => __( 'Enable privacy policy for Vendor store contact form', 'dokan-lite' ),
                     'default' => 'on'
                 ),
                 'privacy_page' => array(
-                    'name'    => 'privacy_page',
-                    'label'   => __( 'Privacy Page', 'dokan-lite' ),
-                    'type'    => 'select',
-                    'desc'    => __( 'Choose privacy policy page', 'dokan-lite' ),
-                    'options' => $pages_array
+                    'name'        => 'privacy_page',
+                    'label'       => __( 'Privacy Page', 'dokan-lite' ),
+                    'type'        => 'select',
+                    'desc'        => __( 'Select a page to show your privacy policy', 'dokan-lite' ),
+                    'placeholder' => __( 'Select page', 'dokan-lite' ),
+                    'options'     => $pages_array
                 ),
                 'privacy_policy' => array(
                     'name'    => 'privacy_policy',

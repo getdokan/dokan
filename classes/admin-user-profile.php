@@ -77,9 +77,8 @@ class Dokan_Admin_User_Profile {
         $address_country   = isset( $store_settings['address']['country'] ) ? $store_settings['address']['country'] : '';
         $address_state     = isset( $store_settings['address']['state'] ) ? $store_settings['address']['state'] : '';
 
-        $general_settings = get_option( 'dokan_general', array() );
-        $banner_width    = ! empty( $general_settings['store_banner_width'] ) ? $general_settings['store_banner_width'] : 625;
-        $banner_height   = ! empty( $general_settings['store_banner_height'] ) ? $general_settings['store_banner_height'] : 300;
+        $banner_width    = dokan_get_option( 'store_banner_width', 'dokan_appearance', 625 );
+        $banner_height   = dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 );
 
         $country_state     = array(
             'country' => array(

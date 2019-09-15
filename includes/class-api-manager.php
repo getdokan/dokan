@@ -97,7 +97,7 @@ class Dokan_API_Manager {
      * @return array
      */
     public function filter_store_open_close_option( $data ) {
-        if ( 'on' !== dokan_get_option( 'store_open_close', 'dokan_general', 'on' ) ) {
+        if ( 'on' !== dokan_get_option( 'store_open_close', 'dokan_appearance', 'on' ) ) {
             unset( $data['store_open_close'] );
         }
 

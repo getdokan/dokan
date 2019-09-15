@@ -245,10 +245,12 @@ class Dokan_Setup_Wizard {
      * Store step.
      */
     public function dokan_setup_store() {
-        $options                = get_option( 'dokan_general', array() );
-        $custom_store_url       = ! empty( $options['custom_store_url'] ) ? $options['custom_store_url'] : 'store';
-        $shipping_fee_recipient = ! empty( $options['shipping_fee_recipient'] ) ? $options['shipping_fee_recipient'] : 'seller';
-        $tax_fee_recipient      = ! empty( $options['tax_fee_recipient'] ) ? $options['tax_fee_recipient'] : 'seller';
+        $general_options        = get_option( 'dokan_general', array() );
+        $custom_store_url       = ! empty( $general_options['custom_store_url'] ) ? $general_options['custom_store_url'] : 'store';
+
+        $selling_options        = get_option( 'dokan_selling', array() );
+        $shipping_fee_recipient = ! empty( $selling_options['shipping_fee_recipient'] ) ? $selling_options['shipping_fee_recipient'] : 'seller';
+        $tax_fee_recipient      = ! empty( $selling_options['tax_fee_recipient'] ) ? $selling_options['tax_fee_recipient'] : 'seller';
 
         $recipients = array(
             'seller' => __( 'Vendor', 'dokan-lite' ),
@@ -334,12 +336,14 @@ class Dokan_Setup_Wizard {
     public function dokan_setup_store_save() {
         check_admin_referer( 'dokan-setup' );
 
-        $options = get_option( 'dokan_general', array() );
         $_post_data = wp_unslash($_POST);
 
-        $options['custom_store_url']       = ! empty( $_post_data['custom_store_url'] ) ? sanitize_text_field( $_post_data['custom_store_url'] ) : '';
-        $options['tax_fee_recipient']      = ! empty( $_post_data['tax_fee_recipient'] ) ? sanitize_text_field( $_post_data['tax_fee_recipient'] ) : '';
-        $options['shipping_fee_recipient'] = ! empty( $_post_data['shipping_fee_recipient'] ) ? sanitize_text_field( $_post_data['shipping_fee_recipient'] ) : '';
+        $general_options = get_option( 'dokan_general', array() );
+        $selling_options = get_option( 'dokan_selling', array() );
+
+        $general_options['custom_store_url']       = ! empty( $_post_data['custom_store_url'] ) ? sanitize_text_field( $_post_data['custom_store_url'] ) : '';
+        $selling_options['shipping_fee_recipient'] = ! empty( $_post_data['shipping_fee_recipient'] ) ? sanitize_text_field( $_post_data['shipping_fee_recipient'] ) : '';
+        $selling_options['tax_fee_recipient']      = ! empty( $_post_data['tax_fee_recipient'] ) ? sanitize_text_field( $_post_data['tax_fee_recipient'] ) : '';
 
         $share_essentials = sanitize_text_field( isset( $_post_data['share_essentials'] ) );
 
@@ -349,7 +353,8 @@ class Dokan_Setup_Wizard {
             dokan()->tracker->insights->optout();
         }
 
-        update_option( 'dokan_general', $options );
+        update_option( 'dokan_general', $general_options );
+        update_option( 'dokan_selling', $selling_options );
 
         wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
         exit;
