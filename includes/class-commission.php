@@ -31,6 +31,50 @@ class Dokan_Commission {
     public $quantity = 0;
 
     /**
+     * Boot method
+     *
+     * @since  DOKAN_LITE_SINCE
+     *
+     * @return void
+     */
+    private function boot() {
+        $this->hooks();
+    }
+
+    /**
+     * Init hooks
+     *
+     * @since  DOKAN_LITE_SINCE
+     *
+     * @return void
+     */
+    private function hooks() {
+        add_filter( 'woocommerce_order_item_get_formatted_meta_data', [ $this, 'hide_extra_data' ] );
+    }
+
+    /**
+     * Hide extra meta data
+     *
+     * @since  DOKAN_LITE_SINCE
+     *
+     * @param  array
+     *
+     * @return array
+     */
+    public function hide_extra_data( $formated_meta ) {
+        $meta_to_hide   = [ '_dokan_commission_rate', '_dokan_commission_type', '_dokan_additional_fee' ];
+        $meta_to_return = [];
+
+        foreach ( $formated_meta as $key => $meta ) {
+            if ( ! in_array( $meta->key, $meta_to_hide ) ) {
+                array_push( $meta_to_return, $meta );
+            }
+        }
+
+        return $meta_to_return;
+    }
+
+    /**
      * Set order id
      *
      * @since  DOKAN_LITE_SINCE
