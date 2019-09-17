@@ -434,6 +434,8 @@ class Dokan_Commission {
      * @return float | null on failure
      */
     public function prepare_for_calculation( $callable, $product_id = 0, $product_price = 0 ) {
+        do_action( 'dokan_before_prepare_for_calculation', $callable, $product_id, $product_price, $this );
+
         $func_rate = str_replace( 'earning', 'rate', $callable );
         $func_type = str_replace( 'earning', 'type', $callable );
         $func_fee  = str_replace( 'earning', 'additional_fee', $callable );
@@ -502,7 +504,7 @@ class Dokan_Commission {
             }
 
             // Reset `static` $i to 0 when the value of $i is equals to the line_items as we don't need to hold the value anymore.
-            // This is required cause on order table `re-generation` the php process keeps runnig.
+            // This is required cause on order table `re-generation` the php process keeps running.
             $i = count( $line_items ) === $i ? 0 : $i;
         }
 
