@@ -524,8 +524,8 @@ class Dokan_Commission {
         }
 
         if ( 'percentage' === $commission_type ) {
-            $earning = ( $product_price * $commission_rate ) / 100;
-            $earning = $product_price - $earning;
+            $earning = ( (float) $product_price * $commission_rate ) / 100;
+            $earning = (float) $product_price - $earning;
 
             // vendor will get 100 percent if commission rate > 100
             if ( $commission_rate > 100 ) {
