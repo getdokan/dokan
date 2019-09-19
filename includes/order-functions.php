@@ -318,7 +318,7 @@ function dokan_sync_insert_order( $order_id ) {
     $seller_id          = dokan_get_seller_id_by_order( $order_id );
     $order_total        = $order->get_total();
     $order_status       = dokan_get_prop( $order, 'status' );
-    $admin_commission   = dokan_get_admin_commission_by( $order, $seller_id );
+    $admin_commission   = dokan()->commission->get_earning_by_order( $order, 'admin' );
     $net_amount         = $order_total - $admin_commission;
     $net_amount         = apply_filters( 'dokan_order_net_amount', $net_amount, $order );
     $threshold_day      = dokan_get_option( 'withdraw_date_limit', 'dokan_withdraw', 0 );
@@ -667,7 +667,11 @@ function dokan_get_suborder_ids_by( $parent_order_id ) {
  *
  * @return float $commission
  */
-function dokan_get_admin_commission_by( $order, $seller_id ) {
+function dokan_get_admin_commission_by( $order, $context ) {
+    $context = 'seller' === $context ? $context : 'admin';
+    wc_deprecated_function( 'dokan_get_admin_commission_by', 'DOKAN_LITE_SINCE', 'Dokan_Commission::get_earning_by_order()' );
+
+    return dokan()->commission->get_earning_by_order( $order, $context );
 
     if ( get_posts( array( 'post_parent' => $order->get_id(), 'post_type' => 'shop_order', 'post_status' => 'any' ) ) ) {
         return;

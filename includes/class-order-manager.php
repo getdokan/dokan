@@ -171,9 +171,6 @@ class Dokan_Order_Manager {
 
             do_action( 'dokan_create_parent_order', $parent_order, $seller_id );
 
-            // record admin commision
-            $admin_fee = dokan_get_admin_commission_by( $parent_order, $seller_id );
-            $parent_order->update_meta_data( '_dokan_admin_fee', $admin_fee );
             $parent_order->update_meta_data( '_dokan_vendor_id', $seller_id );
             $parent_order->save();
 
@@ -253,10 +250,6 @@ class Dokan_Order_Manager {
             $order->set_customer_note( $parent_order->get_customer_note() );
             $order->set_payment_method( $parent_order->get_payment_method() );
             $order->set_payment_method_title( $parent_order->get_payment_method_title() );
-
-            // record admin fee
-            $admin_fee = dokan_get_admin_commission_by( $order, $seller_id );
-            $order->update_meta_data( '_dokan_admin_fee', $admin_fee );
             $order->update_meta_data( '_dokan_vendor_id', $seller_id );
 
             // finally, let the order re-calculate itself and save
