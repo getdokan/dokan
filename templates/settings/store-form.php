@@ -397,6 +397,11 @@
         var dokan_address_wrapper = $( '.dokan-address-fields' );
         var dokan_address_select = {
             init: function () {
+                var savedState = '<?php echo esc_html( $address_state ); ?>';
+
+                if ( ! savedState || 'N/A' === savedState ) {
+                    $('#dokan-states-box').hide();
+                }
 
                 dokan_address_wrapper.on( 'change', 'select.country_to_state', this.state_select );
             },
