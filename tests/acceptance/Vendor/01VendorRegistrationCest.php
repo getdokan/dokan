@@ -15,16 +15,16 @@ class VendorRegistrationCest
     {
       $I->amOnPage(Vendor::$URL);
       $I->click(Vendor::$registrationLink);
-      $I->fillField(Vendor::$emailField, 'david123@g.c');
+      $I->fillField(Vendor::$emailField, 'sk1@g.c');
       $I->click(Vendor::$userRol);
       $I->waitForElement('.show_if_seller', 30);
-      $I->fillField(Vendor::$firstName, 'david123');
-      $I->fillField(Vendor::$lastName,  'bakon123');
-      $I->fillField(Vendor::$companyName,'david123');
-      $I->fillField(Vendor::$shopUrl,     'david123');
-      $I->fillField(Vendor::$phoneNumber,  '0167697344541');
+      $I->fillField(Vendor::$firstName, 'sk1');
+      $I->fillField(Vendor::$lastName,  'sk12');
+      $I->fillField(Vendor::$companyName,'sk2');
+      $I->fillField(Vendor::$shopUrl,     'sk2');
+      $I->fillField(Vendor::$phoneNumber,  '02334452');
       $I->click(Vendor::$registrationButton);
-      $I->grabTextFrom(Vendor::$welcomeMessage, 'Welcome to the Marketplace!');
+      // $I->grabTextFrom(Vendor::$welcomeMessage, 'Welcome to the Marketplace!');
       $I->click(Vendor::$ignoreWizard);
     }
 }

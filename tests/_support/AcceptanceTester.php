@@ -23,8 +23,26 @@ class AcceptanceTester extends \Codeception\Actor
    /**
     * Define custom actions here
     */
+    //ReusingTestCode Authorization	& session snapshot
+    	public function login($name, $password)
+        {
+            $I = $this;
+            // if snapshot exists - skipping login
+            if ($I->loadSessionSnapshot('login')) {
+                return;
+            }
+            // logging in
+            $I->amOnPage('/my-account');
+            $I->submitForm('.login', [
+                'username' => $name,
+                'password' => $password
+            ]);
+    		//$I->see($name, '.navbar');
+    		$I->see('dashboard');
+             // saving snapshot
+            $I->saveSessionSnapshot('login');
+        }
 
-   
 	//Others function
     public function haveVisible($element)
 	{
@@ -53,5 +71,5 @@ class AcceptanceTester extends \Codeception\Actor
 		}
 		return true;
 	}
-   
+
 }

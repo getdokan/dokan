@@ -1,6 +1,7 @@
 <?php
 namespace Step\Acceptance;
 // use \Codeception\Step\Argument\PasswordArgument;
+use Codeception\Util\Locator;
 
 class Vendor extends \AcceptanceTester
 {
@@ -23,17 +24,17 @@ class Vendor extends \AcceptanceTester
          $I->see('dashboard');
          $I->expect('the form is sucessfully submitted');
          $I->wait(5);
-         
+
         /* $I->click('.settings');
          $abc = $I->grabTextFrom('#dokan_address[street_1]');
          $I->fillField('dokan_address[street_2]', $abc);
          $I->click('Update Settings');
-         $I->wait(5);*/         
+         $I->wait(5);*/
     }
     public function orderNumberTest()
     {
         $I = $this;
-        $I->click('Orders');        
+        $I->click('Orders');
         $I->click('Order 269');
     }
     public function orderStatusTest()
@@ -44,4 +45,17 @@ class Vendor extends \AcceptanceTester
     public function productSellingTest(){
         $I = $this;
     }
+		public function updateOrderStatus()
+		{
+			$I =$this;
+			$I->click('Orders');
+      $I->click(Locator::elementAt('//table/tbody/tr/td[2]', 1));
+      $I->wait(5);
+      $I->see('edit');
+      $I->click('.dokan-edit-status');
+      // $I->orderStatusTest();
+      $I->selectOption('#order_status','Completed');
+      $I->click('Update');
+      $I->wait('5');
+		}
 }

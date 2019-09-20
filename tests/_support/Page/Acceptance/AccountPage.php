@@ -26,9 +26,12 @@ class AccountPage
     public static $phoneNumber = '.register #shop-phone';
     public static $welcomeMessage = '.wc-setup-content';
 
+    // Wizard Set Up
     public static $setupWizard = '.wc-setup-actions.step';
     public static $ignoreWizard = '/html/body/div[1]/p[3]/a[2]';
 
+    //Logout
+    public static $logout ='//*[@id="page"]/nav/div/div/div[2]/div/ul/li[4]/a';
 
 // $I->click('(//input[@name="role"])[2]');
 
