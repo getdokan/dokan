@@ -67,6 +67,7 @@ class Dokan_Ajax {
 
         add_action( 'wp_ajax_nopriv_dokan_get_login_form', array( $this, 'get_login_form' ) );
         add_action( 'wp_ajax_nopriv_dokan_login_user', array( $this, 'login_user' ) );
+        add_action( 'wp_ajax_get_vendor_earning', [ $this, 'get_vendor_earning' ] );
     }
 
     /**
@@ -910,5 +911,31 @@ class Dokan_Ajax {
         ) );
 
         wp_send_json_success( $response );
+    }
+
+    /**
+     * Get vendor earning
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function get_vendor_earning() {
+        check_ajax_referer( 'dokan_reviews' );
+
+        $product_id    = ! empty( $_GET['product_id'] ) ? absint( $_GET['product_id'] ) : 0;
+        $product_price = ! empty( $_GET['product_price'] ) ? (float) $_GET['product_price'] : 0;
+
+        $vendor = dokan_get_vendor_by_product( $product_id );
+
+        if ( ! $vendor ) {
+            return;
+        }
+
+        $vendor_id = $vendor->get_id();
+
+        $vendor_earning = dokan()->commission->calculate_commission( $product_id, $product_price, $vendor_id );
+
+        wp_send_json( $vendor_earning );
     }
 }
