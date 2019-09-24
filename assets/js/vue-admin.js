@@ -2468,6 +2468,34 @@ let Loading = dokan_get_lib('Loading');
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 let TextEditor = dokan_get_lib('TextEditor');
@@ -2518,6 +2546,23 @@ let Gmap = dokan_get_lib('Gmap');
 
         removeItem(optionVal, name) {
             this.fieldValue[name].splice(optionVal, 1);
+        },
+
+        haveCondition(fieldData) {
+            return fieldData.hasOwnProperty('condition');
+        },
+
+        checkConditionLogic(fieldData, fieldValue) {
+            var logic = fieldData.condition.logic;
+            var isValid = false;
+
+            _.each(logic, function (value, key) {
+                if (_.contains(value, fieldValue[key])) {
+                    isValid = true;
+                }
+            });
+
+            return isValid;
         },
 
         getMapLocation(savedLocation) {
@@ -4773,7 +4818,184 @@ var render = function() {
           ]
         : _vm._e(),
       _vm._v(" "),
-      "number" == _vm.fieldData.type
+      "number" == _vm.fieldData.type &&
+      _vm.allSettingsValues.dokan_selling &&
+      "combine" !== _vm.allSettingsValues.dokan_selling.commission_type
+        ? [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c(
+                "label",
+                {
+                  attrs: { for: _vm.sectionId + "[" + _vm.fieldData.name + "]" }
+                },
+                [_vm._v(_vm._s(_vm.fieldData.label))]
+              )
+            ]),
+            _vm._v(" "),
+            _c("td", [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.fieldValue[_vm.fieldData.name],
+                    expression: "fieldValue[fieldData.name]"
+                  }
+                ],
+                staticClass: "regular-text",
+                attrs: {
+                  type: "number",
+                  min: _vm.fieldData.min,
+                  max: _vm.fieldData.max,
+                  step: _vm.fieldData.step,
+                  id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                  name: _vm.sectionId + "[" + _vm.fieldData.name + "]"
+                },
+                domProps: { value: _vm.fieldValue[_vm.fieldData.name] },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(
+                      _vm.fieldValue,
+                      _vm.fieldData.name,
+                      $event.target.value
+                    )
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("p", {
+                staticClass: "description",
+                domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+              })
+            ])
+          ]
+        : _vm._e(),
+      _vm._v(" "),
+      "combine" == _vm.fieldData.type &&
+      _vm.haveCondition(_vm.fieldData) &&
+      _vm.fieldData.condition.type == "show" &&
+      _vm.checkConditionLogic(_vm.fieldData, _vm.fieldValue)
+        ? [
+            _c("th", { attrs: { scope: "row" } }, [
+              _c(
+                "label",
+                {
+                  attrs: { for: _vm.sectionId + "[" + _vm.fieldData.name + "]" }
+                },
+                [_vm._v(_vm._s(_vm.fieldData.label))]
+              )
+            ]),
+            _vm._v(" "),
+            _c("td", { staticClass: "percent_fee" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value:
+                      _vm.fieldValue[_vm.fieldData.fields.percent_fee.name],
+                    expression: "fieldValue[fieldData.fields.percent_fee.name]"
+                  }
+                ],
+                staticClass: "regular-text",
+                attrs: {
+                  type: "number",
+                  min: _vm.fieldData.fields.min,
+                  max: _vm.fieldData.fields.max,
+                  step: _vm.fieldData.fields.step,
+                  id:
+                    _vm.sectionId +
+                    "[" +
+                    _vm.fieldData.name +
+                    "]" +
+                    "[" +
+                    "percent_fee" +
+                    "]",
+                  name:
+                    _vm.sectionId +
+                    "[" +
+                    _vm.fieldData.fields.percent_fee.name +
+                    "]"
+                },
+                domProps: {
+                  value: _vm.fieldValue[_vm.fieldData.fields.percent_fee.name]
+                },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(
+                      _vm.fieldValue,
+                      _vm.fieldData.fields.percent_fee.name,
+                      $event.target.value
+                    )
+                  }
+                }
+              }),
+              _vm._v("\n                " + _vm._s("%") + "\n            ")
+            ]),
+            _vm._v(" "),
+            _c("td", { staticClass: "fixed_fee" }, [
+              _vm._v("\n                " + _vm._s("+") + "\n                "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.fieldValue[_vm.fieldData.fields.fixed_fee.name],
+                    expression: "fieldValue[fieldData.fields.fixed_fee.name]"
+                  }
+                ],
+                staticClass: "regular-text",
+                attrs: {
+                  type: "number",
+                  min: _vm.fieldData.fields.min,
+                  max: _vm.fieldData.fields.max,
+                  step: _vm.fieldData.fields.step,
+                  id:
+                    _vm.sectionId +
+                    "[" +
+                    _vm.fieldData.name +
+                    "]" +
+                    "[" +
+                    "fixed_fee" +
+                    "]",
+                  name:
+                    _vm.sectionId +
+                    "[" +
+                    _vm.fieldData.fields.fixed_fee.name +
+                    "]"
+                },
+                domProps: {
+                  value: _vm.fieldValue[_vm.fieldData.fields.fixed_fee.name]
+                },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(
+                      _vm.fieldValue,
+                      _vm.fieldData.fields.fixed_fee.name,
+                      $event.target.value
+                    )
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("p", {
+              staticClass: "description",
+              domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+            })
+          ]
+        : _vm._e(),
+      _vm._v(" "),
+      "number" == _vm.fieldData.type && "admin_percentage" !== _vm.id
         ? [
             _c("th", { attrs: { scope: "row" } }, [
               _c(
