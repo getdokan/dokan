@@ -15,7 +15,8 @@
         "wp-coding-standards/wpcs": "dev-master",
         "higidi/composer-phpcodesniffer-standards-plugin": "^1.0@dev",
         "dealerdirect/phpcodesniffer-composer-installer": "^0.4.3",
-        "lucatume/wp-browser": "dev-master"
+        "lucatume/wp-browser": "dev-master",
+        "fzaninotto/faker": "^1.9@dev"
     },
     "scripts": {
       "phpcs": [

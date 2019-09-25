@@ -24,6 +24,8 @@ class AcceptanceTester extends \Codeception\Actor
     * Define custom actions here
     */
     //ReusingTestCode Authorization	& session snapshot
+
+
     	public function login($name, $password)
         {
             $I = $this;
