@@ -1,5 +1,5 @@
 === Dokan - Best WooCommerce Multivendor Marketplace Solution - Build Your Own Amazon, eBay, Etsy ===
-Contributors: tareq1988, wedevs, sabbir1991, nizamuddinbabu, rafsuntaskin, sk.shaikat, ediamin, saimonh
+Contributors: tareq1988, wedevs, sabbir1991, nizamuddinbabu, sk.shaikat, ediamin, saimonh
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, product vendors, woocommerce vendor, commission rate, e-commerce, ebay, ecommerce, yith, yithemes
 Requires at least: 4.4
