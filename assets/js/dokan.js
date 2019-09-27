@@ -1388,96 +1388,48 @@ jQuery(function($) {
             return false;
         });
 
-        function dokan_show_earning_suggestion() {
-            var selectedCategoryWrapper = $('select#product_cat').find('option:selected');
+        function dokan_show_earning_suggestion( callback ) {
+            let commission = $('span.vendor-earning').attr( 'data-commission' );
+            let product_id = $( 'span.vendor-earning' ).attr( 'data-product-id' );
+            let product_price = $( 'input.dokan-product-regular-price' ).val();
+            let sale_price = $( 'input.dokan-product-sales-price' ).val();
+            let earning_suggestion = $('.simple-product span.vendor-price');
 
-            if ( selectedCategoryWrapper.data( 'commission' ) != '' ) {
-                var vendor_percentage = selectedCategoryWrapper.data( 'commission' );
-                var commission_type = selectedCategoryWrapper.data( 'commission_type' );
-            } else {
-                var commission_type = $('span.vendor-earning').attr( 'data-commission_type' );
-                var vendor_percentage = $('span.vendor-earning').attr( 'data-commission' );
-            }
+            earning_suggestion.html( 'Calculating' );
 
-            if ( commission_type == 'percentage' ) {
-                if ( $('input.dokan-product-sales-price' ).val() == '' ) {
-                    $( 'span.vendor-price' ).html(
-                        parseFloat( accounting.formatNumber( ( ( $( 'input.dokan-product-regular-price' ).val() * vendor_percentage ) / 100 ), dokan.rounding_precision, '' ) )
-                            .toString()
-                            .replace( '.', dokan.mon_decimal_point )
-                    );
-                } else {
-                    $( 'span.vendor-price' ).html(
-                        parseFloat( accounting.formatNumber( ( ( $( 'input.dokan-product-sales-price' ).val() * vendor_percentage ) / 100 ), dokan.rounding_precision, '' ) )
-                            .toString()
-                            .replace( '.', dokan.mon_decimal_point )
-                    );
+            $.get( dokan.ajaxurl, {
+                action: 'get_vendor_earning',
+                product_id: product_id,
+                product_price: product_price,
+                product_price: sale_price ? sale_price : product_price,
+                _wpnonce: dokan.nonce
+            } )
+            .done( ( response ) => {
+                earning_suggestion.html( response );
+
+                if ( typeof callback === 'function' ) {
+                    callback();
                 }
-            } else {
-                if ( $('input.dokan-product-sales-price' ).val() == '' ) {
-                    $( 'span.vendor-price' ).html(
-                        parseFloat( accounting.formatNumber( ( $( 'input.dokan-product-regular-price' ).val() - vendor_percentage ), dokan.rounding_precision, '' ) )
-                            .toString()
-                            .replace( '.', dokan.mon_decimal_point )
-                    );
-                } else {
-                    $( 'span.vendor-price' ).html(
-                        parseFloat( accounting.formatNumber( ( $( 'input.dokan-product-sales-price' ).val() - vendor_percentage ), dokan.rounding_precision, '' ) )
-                            .toString()
-                            .replace( '.', dokan.mon_decimal_point )
-                    );
-                }
-            }
+            } );
         }
 
-        $('select#product_cat').on('change', function() {
-            dokan_show_earning_suggestion();
+        $( "input.dokan-product-regular-price, input.dokan-product-sales-price" ).on( 'keyup', _.debounce( () => {
+            dokan_show_earning_suggestion( function() {
 
-            if ( $( '#product_type' ).val() == 'variable' || $( '#product_type' ).val() == undefined ) {
-                return;
-            }
-
-            if ( Number( $('span.vendor-price').text() ) <= 0  ) {
-                $( 'input[type=submit]' ).attr( 'disabled', 'disabled' );
-                $( '.dokan-product-less-price-alert' ).removeClass( 'dokan-hide' );
-            } else {
-                $( 'input[type=submit]' ).removeAttr( 'disabled');
-                $( '.dokan-product-less-price-alert' ).addClass( 'dokan-hide' );
-            }
-        });
-
-        $( "input.dokan-product-regular-price, input.dokan-product-sales-price" ).on( 'keyup', function () {
-            dokan_show_earning_suggestion();
-
-            if ( $( '#product_type' ).val() == 'simple' || $( '#product_type' ).text() == '' ) {
-                if ( Number( $('span.vendor-price').text() ) < 0  ) {
-                    $( $('.dokan-product-less-price-alert').removeClass('dokan-hide') );
-                    $( 'input[type=submit]' ).attr( 'disabled', 'disabled' );
-                    $( 'button[type=submit]' ).attr( 'disabled', 'disabled' );
-                } else {
-                    $( $('.dokan-product-less-price-alert').addClass('dokan-hide') );
-                    $( 'input[type=submit]' ).removeAttr( 'disabled');
-                    $( 'button[type=submit]' ).removeAttr( 'disabled');
-                }
-            }
-
-            $( '#product_type' ).on( 'change', function() {
-                var self = $(this);
-
-                if ( self.val() == 'variable' || self.val() == 'grouped' ) {
-                    $( 'input[type=submit]' ).removeAttr( 'disabled' );
-                } else {
-                    if ( Number( $('span.vendor-price').text() ) > 0 ) {
-                        $( 'input[type=submit]' ).removeAttr( 'disabled');
-                        $( '.dokan-product-less-price-alert' ).addClass( 'dokan-hide' );
-                    } else {
-                        $( '.dokan-product-less-price-alert' ).removeClass( 'dokan-hide ');
+                if ( $( '#product_type' ).val() == 'simple' || $( '#product_type' ).text() == '' ) {
+                    if ( Number( $('.simple-product span.vendor-price').text() ) < 0  ) {
+                        $( $('.dokan-product-less-price-alert').removeClass('dokan-hide') );
                         $( 'input[type=submit]' ).attr( 'disabled', 'disabled' );
+                        $( 'button[type=submit]' ).attr( 'disabled', 'disabled' );
+                    } else {
+                        $( $('.dokan-product-less-price-alert').addClass('dokan-hide') );
+                        $( 'input[type=submit]' ).removeAttr( 'disabled');
+                        $( 'button[type=submit]' ).removeAttr( 'disabled');
                     }
                 }
             } );
 
-        } ).trigger('keyup');
+        }, 750 ) );
 
     });
 

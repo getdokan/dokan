@@ -698,7 +698,7 @@ function dokan_post_input_box( $post_id, $meta_key, $attr = array(), $type = 'te
         case 'textarea':
             $rows = isset( $attr['rows'] ) ? absint( $attr['rows'] ) : 4;
             ?>
-            <textarea name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $name ); ?>" rows="<?php echo esc_attr( $rows ); ?>" class="<?php echo esc_attr( $class ); ?>" placeholder="<?php echo esc_attr( $placeholder ); ?>"><?php echo esc_textarea( $value ); ?></textarea>
+            <textarea <?php echo esc_attr( $required ); ?> name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $name ); ?>" rows="<?php echo esc_attr( $rows ); ?>" class="<?php echo esc_attr( $class ); ?>" placeholder="<?php echo esc_attr( $placeholder ); ?>"><?php echo esc_textarea( $value ); ?></textarea>
             <?php
             break;
 
@@ -709,7 +709,7 @@ function dokan_post_input_box( $post_id, $meta_key, $attr = array(), $type = 'te
 
             <label class="<?php echo esc_attr( $class ); ?>" for="<?php echo esc_attr( $name ); ?>">
                 <input type="hidden" name="<?php echo esc_attr( $name ); ?>" value="no">
-                <input name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $name ); ?>" value="yes" type="checkbox"<?php checked( $value, 'yes' ); ?>>
+                <input <?php echo esc_attr( $required ); ?> name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $name ); ?>" value="yes" type="checkbox"<?php checked( $value, 'yes' ); ?>>
                 <?php echo esc_html( $label ); ?>
             </label>
 
@@ -1155,12 +1155,11 @@ function dokan_log( $message, $level = 'debug' ) {
  * Do not show other sellers images to a seller. He can see images only by him
  *
  * @param array $args
+ *
  * @return array
  */
 function dokan_media_uploader_restrict( $args ) {
-
-    // bail out for admin and editor
-    if ( current_user_can( 'delete_pages' ) ) {
+    if ( current_user_can( 'manage_options' ) ) {
         return $args;
     }
 
@@ -2798,8 +2797,12 @@ function dokan_cache_clear_deleted_product( $post_id ) {
  * @return float $earning | zero on failure or no price
  */
 function dokan_get_earning_by_product( $product_id, $seller_id ) {
-    $product            = wc_get_product( $product_id );
-    $parent_id          = $product->get_parent_id();
+    wc_deprecated_function( 'dokan_get_earning_by_product', 'DOKAN_LITE_SINCE', 'Dokan_Commission::get_earning_by_product()' );
+
+    return dokan()->commission->get_earning_by_product( $product_id );
+
+    $product   = wc_get_product( $product_id );
+    $parent_id = $product->get_parent_id();
 
     // if parent id found, override product_id with parent id
     if ( $parent_id ) {
@@ -3334,13 +3337,17 @@ function dokan_remove_hook_for_anonymous_class( $hook_name = '', $class_name = '
 /**
  * Dokan get variable product earnings
  *
- * @param  int $id
- * @param  int $seller_id
+ * @param  int $product_id
  * @param  boolean $formated
+ * @param  boolean $deprecated
  *
- * @return int
+ * @return float|string
  */
-function dokan_get_variable_product_earning( $product_id, $seller_id, $formated = true ) {
+function dokan_get_variable_product_earning( $product_id, $formated = true, $deprecated = false ) {
+    if ( $deprecated ) {
+        wc_deprecated_argument( 'seller_id', 'DOKAN_LITE_SINCE', 'dokan_get_variable_product_earning() does not require a seller_id anymore.' );
+    }
+
     $product = wc_get_product( $product_id );
 
     if ( ! $product ) {
@@ -3353,8 +3360,8 @@ function dokan_get_variable_product_earning( $product_id, $seller_id, $formated 
         return null;
     }
 
-    $earnings = array_map( function( $id ) use ( $seller_id ) {
-        return dokan_get_earning_by_product( $id, $seller_id );
+    $earnings = array_map( function( $id ) {
+        return dokan()->commission->get_earning_by_product( $id );
     }, $variations );
 
     if ( empty( $earnings ) || ! is_array( $earnings ) ) {
@@ -3473,6 +3480,20 @@ function dokan_privacy_policy_text() {
     }
 
     echo wp_kses_post( wpautop( dokan_replace_policy_page_link_placeholders( $privacy_text ), true ) );
+}
+
+/**
+ * Dokan commission types
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @return array
+ */
+function dokan_commission_types() {
+    return apply_filters( 'dokan_commission_types', [
+        'flat'       => __( 'Flat', 'dokan-lite' ),
+        'percentage' => __( 'Percentage', 'dokan-lite' ),
+    ] );
 }
 
 /**

@@ -3,7 +3,7 @@
 **Donate Link:** http://tareq.co/donate/  
 **Tags:** WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, product vendors, woocommerce vendor, commission rate, e-commerce, ebay, ecommerce, yith, yithemes  
 **Requires at least:** 4.4  
-**Tested up to:** 5.2.2  
+**Tested up to:** 5.2.3  
 **WC requires at least:** 3.0  
 **WC tested up to:** 3.7.0  
 **Requires PHP:** 5.6  
@@ -259,7 +259,8 @@ A. Obviously, you can use this on a single seller site to give them a nice front
 
 ### Q. How to upgrade to the Pro version?
 A. Just install and activate the PRO version without deleting the free plugin. All your data will be safe on the database and some extra features will be added. If you feel something may go wrong, please consult with our [support](https://wedevs.com/contact/) staff first.
-###
+
+###
 ## Screenshots ##
 
 1. Admin Dashboard
@@ -283,6 +284,15 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 ## Changelog ##
+
+v2.9.21 -> September 24, 2019
+-----------------------------------
+-   **fix***   If state is not found for a country in store settings, remove the state field on reload
+-   **fix***   Only show vendor's own uploaded media to a vendor.
+-   **fix***   Add required attribute for various input field in dokan_post_input_box function.
+-   **fix***   Calculate commission for item by quantity when the commission is set to flat.
+-   **Tweak*** Introduce Dokan_Commission class to calculate admin and vendor's commission.
+-   **Tweak*** Remove unnecessary placeholder in admin commission field.
 
 v2.9.20 -> August 23, 2019
 ------------------------------------

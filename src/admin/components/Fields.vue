@@ -16,7 +16,34 @@
             </td>
         </template>
 
-        <template v-if="'number' == fieldData.type">
+        <template v-if="'number' == fieldData.type && allSettingsValues.dokan_selling && 'combine' !== allSettingsValues.dokan_selling.commission_type">
+            <th scope="row">
+                <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
+            </th>
+            <td>
+                <input type="number" :min="fieldData.min" :max="fieldData.max" :step="fieldData.step" class="regular-text" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
+                <p class="description" v-html="fieldData.desc"></p>
+            </td>
+        </template>
+
+        <template v-if="'combine' == fieldData.type && haveCondition( fieldData ) && fieldData.condition.type == 'show' && checkConditionLogic( fieldData, fieldValue )">
+                <th scope="row">
+                    <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
+                </th>
+
+                <td class="percent_fee">
+                    <input type="number" :min="fieldData.fields.min" :max="fieldData.fields.max" :step="fieldData.fields.step" class="regular-text" :id="sectionId + '[' + fieldData.name + ']' + '[' + 'percent_fee' + ']'" :name="sectionId + '[' + fieldData.fields.percent_fee.name + ']'" v-model="fieldValue[fieldData.fields.percent_fee.name]">
+                    {{ '%' }}
+                </td>
+
+                <td class="fixed_fee">
+                    {{ '+' }}
+                    <input type="number" :min="fieldData.fields.min" :max="fieldData.fields.max" :step="fieldData.fields.step" class="regular-text" :id="sectionId + '[' + fieldData.name + ']' + '[' + 'fixed_fee' + ']'" :name="sectionId + '[' + fieldData.fields.fixed_fee.name + ']'" v-model="fieldValue[fieldData.fields.fixed_fee.name]">
+                </td>
+                <p class="description" v-html="fieldData.desc"></p>
+        </template>
+
+        <template v-if="'number' == fieldData.type && 'admin_percentage' !== id">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
@@ -182,6 +209,7 @@
                 </div>
             </td>
         </template>
+
         <template v-if="'gmap' == fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
@@ -249,6 +277,23 @@
                 this.fieldValue[name].splice( optionVal, 1 );
             },
 
+            haveCondition( fieldData ) {
+                return fieldData.hasOwnProperty( 'condition' );
+            },
+
+            checkConditionLogic( fieldData, fieldValue ) {
+                var logic = fieldData.condition.logic;
+                var isValid = false;
+
+                _.each( logic, function( value, key ) {
+                    if ( _.contains( value, fieldValue[key] ) ) {
+                        isValid = true;
+                    }
+                } );
+
+                return isValid;
+            },
+
             getMapLocation(savedLocation) {
                 return {
                     latitude: savedLocation.latitude ? savedLocation.latitude : 23.709921,
@@ -283,12 +328,20 @@
         padding-top: 0px;
         cursor: pointer;
     }
-
     .dokan-repetable-add-item-btn {
         font-size: 16px !important;
         font-weight: bold !important;
         height: 25px !important;
         line-height: 22px !important;
     }
-
+    td.percent_fee, td.fixed_fee {
+        display: inline-block;
+    }
+    td.percent_fee input, td.fixed_fee input {
+        width: 60px;
+    }
+    tr.additional_fee .description {
+        margin-left: 10px;
+        margin-top: -10px;
+    }
 </style>
