@@ -317,8 +317,9 @@ class Dokan_Admin_User_Profile {
                     <th><?php esc_html_e( 'Admin Commission Type ', 'dokan-lite' ); ?></th>
                     <td>
                         <select id="dokan_admin_percentage_type" name="dokan_admin_percentage_type">
-                            <option value="percentage" <?php selected( $admin_commission_type, 'percentage' ); ?> ><?php esc_html_e( 'Percentage', 'dokan-lite' ); ?></option>
-                            <option value="flat" <?php selected( $admin_commission_type, 'flat' ); ?>><?php esc_html_e( 'Flat', 'dokan-lite' ); ?></option>
+                            <?php foreach ( dokan_commission_types() as $key => $value ) : ?>
+                                <option value="<?php echo wc_clean( $key ); ?>" <?php selected( $admin_commission_type, $key );  ?>><?php echo $value ?></option>
+                            <?php endforeach; ?>
                         </select>
                         <p class="description"><?php esc_html_e( 'Set the commmission type admin gets from this seller', 'dokan-lite' ); ?></p>
                     </td>
@@ -326,9 +327,9 @@ class Dokan_Admin_User_Profile {
                 <tr>
                     <th><?php esc_html_e( 'Admin Commission ', 'dokan-lite' ); ?></th>
                     <td>
-                        <input type="text" class="small-text" name="dokan_admin_percentage" value="<?php echo esc_attr( $admin_commission ); ?>">
-
-                        <p class="description"><?php esc_html_e( 'It will override the default commission admin gets from each sales', 'dokan-lite' ); ?></p>
+                        <input type="number" min="0" class="small-text" id="admin-commission" name="dokan_admin_percentage" value="<?php echo esc_attr( $admin_commission ); ?>">
+                        <?php do_action( 'dokan_seller_meta_fields_after_admin_commission', $user ); ?>
+                        <p class="combine-commission-description"><?php esc_html_e( 'It will override the default commission admin gets from each sales', 'dokan-lite' ); ?></p>
                     </td>
                 </tr>
 

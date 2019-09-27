@@ -46,6 +46,7 @@ if ( $user_orders ) {
                     </th>
                     <th><?php esc_html_e( 'Order', 'dokan-lite' ); ?></th>
                     <th><?php esc_html_e( 'Order Total', 'dokan-lite' ); ?></th>
+                    <th><?php esc_html_e( 'Earning', 'dokan-lite' ); ?></th>
                     <th><?php esc_html_e( 'Status', 'dokan-lite' ); ?></th>
                     <th><?php esc_html_e( 'Customer', 'dokan-lite' ); ?></th>
                     <th><?php esc_html_e( 'Date', 'dokan-lite' ); ?></th>
@@ -73,6 +74,9 @@ if ( $user_orders ) {
                         </td>
                         <td class="dokan-order-total" data-title="<?php esc_attr_e( 'Order Total', 'dokan-lite' ); ?>" >
                             <?php echo $the_order->get_formatted_order_total(); ?>
+                        </td>
+                        <td class="dokan-order-earning" data-title="<?php esc_attr_e( 'Earning', 'dokan-lite' ); ?>" >
+                            <?php echo wc_price( dokan()->commission->get_earning_by_order( $the_order ) ); ?>
                         </td>
                         <td class="dokan-order-status" data-title="<?php esc_attr_e( 'Status', 'dokan-lite' ); ?>" >
                             <?php echo '<span class="dokan-label dokan-label-' . dokan_get_order_status_class( dokan_get_prop( $the_order, 'status' ) ) . '">' . dokan_get_order_status_translated( dokan_get_prop( $the_order, 'status' ) ) . '</span>'; ?>

@@ -250,12 +250,9 @@ class Dokan_Settings {
      * @return array settings fields
      */
     function get_settings_fields() {
-        $pages_array  = $this->get_post_type( 'page' );
-
-        $commission_types = array(
-            'flat'       => __( 'Flat', 'dokan-lite' ),
-            'percentage' => __( 'Percentage', 'dokan-lite' ),
-        );
+        $pages_array      = $this->get_post_type( 'page' );
+        $slider_array     = $this->get_post_type( 'dokan_slider' );
+        $commission_types = dokan_commission_types();
 
         $general_site_options = apply_filters( 'dokan_settings_general_site_options', array(
             'site_options' => array(
@@ -381,6 +378,36 @@ class Dokan_Settings {
             'dokan_general' => array_merge(
                 $general_site_options,
                 $general_vendor_store_options
+            ),
+            'dokan_selling' => array(
+                'new_seller_enable_selling' => array(
+                    'name'    => 'new_seller_enable_selling',
+                    'label'   => __( 'New Vendor Product Upload', 'dokan-lite' ),
+                    'desc'    => __( 'Allow newly registered vendors to add products', 'dokan-lite' ),
+                    'type'    => 'checkbox',
+                    'default' => 'on'
+                ),
+                'order_status_change' => array(
+                    'name'    => 'order_status_change',
+                    'label'   => __( 'Order Status Change', 'dokan-lite' ),
+                    'desc'    => __( 'Vendor can update order status', 'dokan-lite' ),
+                    'type'    => 'checkbox',
+                    'default' => 'on'
+                ),
+                'disable_product_popup' => array(
+                    'name'    => 'disable_product_popup',
+                    'label'   => __( 'Disable Product Popup', 'dokan-lite' ),
+                    'desc'    => __( 'Disable add new product in popup view', 'dokan-lite' ),
+                    'type'    => 'checkbox',
+                    'default' => 'off'
+                ),
+                'disable_welcome_wizard' => array(
+                    'name'    => 'disable_welcome_wizard',
+                    'label'   => __( 'Disable Welcome Wizard', 'dokan-lite' ),
+                    'desc'    => __( 'Disable welcome wizard for newly registered vendors', 'dokan-lite' ),
+                    'type'    => 'checkbox',
+                    'default' => 'off'
+                ),
             ),
             'dokan_selling' => array_merge(
                 $selling_option_commission,
