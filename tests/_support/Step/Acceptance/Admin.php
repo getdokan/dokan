@@ -8,8 +8,8 @@ class Admin extends \AcceptanceTester
         $I = $this;
         $I->amOnPage('/wp-admin');
         // $I->click('Log in');        
-        $I->fillField('Username', 'admin');
-        $I->fillField('Password', 'admin');
+        $I->fillField('#loginform #user_login', 'admin');
+        $I->fillField('#loginform #user_pass', 'admin');
         $I->checkOption('rememberme');
         $I->click('Log In');
        
