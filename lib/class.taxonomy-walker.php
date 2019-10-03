@@ -52,6 +52,10 @@ class DokanTaxonomyWalker extends Walker{
             $commission_type = dokan_get_commission_type( dokan_get_current_user_id(), $this->post_id, $category->term_id );
         } else {
             $commission_val = dokan()->commission->get_earning_by_product( $this->post_id );
+
+            if ( is_wp_error( $commission_val ) ) {
+                $commission_val = 0;
+            }
         }
 
         $pad      = str_repeat( '&nbsp;', $depth * 3 );
