@@ -1,5 +1,5 @@
 === Dokan - Best WooCommerce Multivendor Marketplace Solution - Build Your Own Amazon, eBay, Etsy ===
-Contributors: tareq1988, wedevs, sabbir1991, nizamuddinbabu, rafsuntaskin, sk.shaikat, ediamin, saimonh
+Contributors: tareq1988, wedevs, sabbir1991, nizamuddinbabu, sk.shaikat, ediamin, saimonh
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, product vendors, woocommerce vendor, commission rate, e-commerce, ebay, ecommerce, yith, yithemes
 Requires at least: 4.4
@@ -17,7 +17,7 @@ The pioneer multi-vendor plugin for WordPress. Start your own marketplace in min
 
 = DOKAN MULTIVENDOR MARKETPLACE PLUGIN FOR WORDPRESS =
 
-👉 Official Free Demo Link: [Official Demo](https://wedevs.com/in/dokandemo)
+👉 Official Free Demo Link: [Official Demo](https://wedevs.com/dokan/demo)
 👉 Learn More About Dokan(PRO): [All The Features of Dokan](https://wedevs.com/dokan/features/)
 
 = POWERED BY WooCommerce =
@@ -283,6 +283,12 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 == Changelog ==
+
+v2.9.22 -> October 03, 2019
+-----------------------------------
+-   **fix***   Remove duplicate inpute filed in dokan admin settings form
+-   **fix***   Make commissison value to 0 if no product found
+-   **fix***   Attribute value's are swapped after changing the order of the attributes
 
 v2.9.21 -> September 24, 2019
 -----------------------------------

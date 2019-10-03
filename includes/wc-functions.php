@@ -114,12 +114,9 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
 
     if ( isset( $data['attribute_names'] ) && is_array( $data['attribute_names'] ) && isset( $data['attribute_values'] ) && is_array( $data['attribute_values'] ) ) {
         $attribute_names  = array_map( 'wc_clean', $data['attribute_names'] );
-
-        $attribute_values = array();
-
-        foreach ( $data['attribute_values'] as $values ) {
-            $attribute_values[] = $values;
-        }
+        $attribute_values = array_map( function( $value ) {
+            return $value;
+        }, $data['attribute_values'] );
 
         if ( isset( $data['attribute_visibility'] ) ) {
             $attribute_visibility = array_map( 'absint' , $data['attribute_visibility'] );
