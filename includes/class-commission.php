@@ -179,7 +179,8 @@ class Dokan_Commission {
         $saved_admin_fee = get_post_meta( $order->get_id(), '_dokan_admin_fee', true );
 
         if ( $saved_admin_fee != '' ) {
-            return apply_filters( 'dokan_order_admin_commission', $saved_admin_fee, $order );
+            $saved_fee = ( 'seller' == $context ) ? $order->get_total() - $saved_admin_fee : $saved_admin_fee;
+            return apply_filters( 'dokan_order_admin_commission', $saved_fee, $order );
         }
 
         // Set user passed `order_id` so that we can track if any commission_rate has been saved previously.
