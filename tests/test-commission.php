@@ -3,7 +3,7 @@
 /**
  * Dokan Commission Test Class
  *
- * @since DOKAN_LITE_SINCE
+ * @since 2.9.21
  */
 class Dokan_Commission_Test extends WP_UnitTestCase {
     /**
@@ -128,7 +128,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
     /**
      * Setup method
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.21
      */
     public function setUp() {
         parent::setUp();
@@ -151,7 +151,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
     /**
      * Set global settings
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.21
      *
      * @return void
      */
@@ -168,7 +168,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
     /**
      * Set vendor wise commission settings
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.21
      *
      * @return void
      */
@@ -181,7 +181,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
     /**
      * Create vendor
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.21
      *
      * @return void
      */
@@ -196,7 +196,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
     /**
      * Set category wise commission settings
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.21
      *
      * @return void
      */
@@ -209,7 +209,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
     /**
      * Set product wise commission settings
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.21
      *
      * @return void
      */
@@ -222,7 +222,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
     /**
      * Create term
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.21
      *
      * @return void
      */
@@ -234,7 +234,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
     /**
      * Test global commission type
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.21
      *
      * @return void
      */
@@ -246,7 +246,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
     /**
      * Test global commission rate
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.21
      *
      * @return void
      */
@@ -258,7 +258,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
     /**
      * Test global additional fee
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.21
      *
      * @return void
      */
@@ -270,7 +270,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
     /**
      * Test vendor wise commission type
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.21
      *
      * @return void
      */
@@ -282,7 +282,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
     /**
      * Test vendor wise commission rate
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.21
      *
      * @return void
      */
@@ -294,7 +294,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
     /**
      * Test vendor wise additional fee
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.21
      *
      * @return void
      */
@@ -306,7 +306,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
     /**
      * Create product
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.21
      *
      * @return void
      */
@@ -330,7 +330,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
     /**
      * Test category wise commission type
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.21
      *
      * @return void
      */
@@ -342,7 +342,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
     /**
      * Test category wise commission rate
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.21
      *
      * @return void
      */
@@ -354,7 +354,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
     /**
      * Test category wise additional fee
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.21
      *
      * @return void
      */
@@ -366,7 +366,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
     /**
      * Test product wise commission type
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.21
      *
      * @return void
      */
@@ -378,7 +378,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
     /**
      * Test product wise commission rate
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.21
      *
      * @return void
      */
@@ -390,7 +390,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
     /**
      * Test product wise additioanl fee
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.21
      *
      * @return void
      */
@@ -402,7 +402,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
     /**
      * Test vendor earning by product
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.21
      *
      * @return void
      */
@@ -414,7 +414,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
     /**
      * Test admin earning by product
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.21
      *
      * @return void
      */

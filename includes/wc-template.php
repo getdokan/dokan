@@ -366,7 +366,7 @@ add_action( 'dokan_store_profile_saved', function( $store_id, $settings ) {
 /**
  * Remove store avatar set by ultimate member from store and store listing page
  *
- * @since DOKAN_LITE_SINCE
+ * @since 2.9.21
  */
 add_action( 'pre_get_avatar', function() {
     $page_id = get_queried_object_id();
