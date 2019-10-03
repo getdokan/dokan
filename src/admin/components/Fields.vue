@@ -43,16 +43,6 @@
                 <p class="description" v-html="fieldData.desc"></p>
         </template>
 
-        <template v-if="'number' == fieldData.type && 'admin_percentage' !== id">
-            <th scope="row">
-                <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
-            </th>
-            <td>
-                <input type="number" :min="fieldData.min" :max="fieldData.max" :step="fieldData.step" class="regular-text" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
-                <p class="description" v-html="fieldData.desc"></p>
-            </td>
-        </template>
-
         <template v-if="'textarea' == fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>

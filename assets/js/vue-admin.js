@@ -2486,16 +2486,6 @@ let Loading = dokan_get_lib('Loading');
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 let TextEditor = dokan_get_lib('TextEditor');
@@ -4992,60 +4982,6 @@ var render = function() {
               staticClass: "description",
               domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
             })
-          ]
-        : _vm._e(),
-      _vm._v(" "),
-      "number" == _vm.fieldData.type && "admin_percentage" !== _vm.id
-        ? [
-            _c("th", { attrs: { scope: "row" } }, [
-              _c(
-                "label",
-                {
-                  attrs: { for: _vm.sectionId + "[" + _vm.fieldData.name + "]" }
-                },
-                [_vm._v(_vm._s(_vm.fieldData.label))]
-              )
-            ]),
-            _vm._v(" "),
-            _c("td", [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.fieldValue[_vm.fieldData.name],
-                    expression: "fieldValue[fieldData.name]"
-                  }
-                ],
-                staticClass: "regular-text",
-                attrs: {
-                  type: "number",
-                  min: _vm.fieldData.min,
-                  max: _vm.fieldData.max,
-                  step: _vm.fieldData.step,
-                  id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                  name: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                },
-                domProps: { value: _vm.fieldValue[_vm.fieldData.name] },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(
-                      _vm.fieldValue,
-                      _vm.fieldData.name,
-                      $event.target.value
-                    )
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _c("p", {
-                staticClass: "description",
-                domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-              })
-            ])
           ]
         : _vm._e(),
       _vm._v(" "),
