@@ -587,7 +587,8 @@ function dokan_get_vendor_by_product( $product ) {
     }
 
     $vendor_id = get_post_field( 'post_author', $product->get_id() );
-
+    //New filter hook to modify the seller id at run time.
+    $vendor_id = apply_filters( 'dokan_get_vendor_by_product', $vendor_id, $product->get_id() );
     if ( ! $vendor_id ) {
         return false;
     }
