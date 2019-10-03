@@ -1,10 +1,10 @@
-# Copyright (C) 2019 weDevs, LLC
+# Copyright (C) 2019 weDevs
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 2.9.21\n"
+"Project-Id-Version: Dokan 2.9.22\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2019-09-24 15:48:45+00:00\n"
+"POT-Creation-Date: 2019-10-03 04:15:27+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4193,70 +4193,70 @@ msgstr ""
 msgid "Product SKU must be unique"
 msgstr ""
 
-#: includes/wc-functions.php:758
+#: includes/wc-functions.php:755
 msgid "Your {site_title} order receipt from {order_date}"
 msgstr ""
 
-#: includes/wc-functions.php:759
+#: includes/wc-functions.php:756
 msgid "Your {site_title} order from {order_date} is complete"
 msgstr ""
 
-#: includes/wc-functions.php:860 templates/account/vendor-registration.php:9
+#: includes/wc-functions.php:857 templates/account/vendor-registration.php:9
 #: templates/global/seller-registration-form.php:15
 msgid "First Name"
 msgstr ""
 
-#: includes/wc-functions.php:861 templates/account/vendor-registration.php:14
+#: includes/wc-functions.php:858 templates/account/vendor-registration.php:14
 #: templates/global/seller-registration-form.php:20
 msgid "Last Name"
 msgstr ""
 
-#: includes/wc-functions.php:862 templates/account/vendor-registration.php:27
+#: includes/wc-functions.php:859 templates/account/vendor-registration.php:27
 #: templates/dashboard/edit-account.php:65
 msgid "Email address"
 msgstr ""
 
-#: includes/wc-functions.php:867
+#: includes/wc-functions.php:864
 msgid "is a required field."
 msgstr ""
 
-#: includes/wc-functions.php:873
+#: includes/wc-functions.php:870
 msgid "Please provide a valid email address."
 msgstr ""
 
-#: includes/wc-functions.php:875
+#: includes/wc-functions.php:872
 msgid "This email address is already registered."
 msgstr ""
 
-#: includes/wc-functions.php:881
+#: includes/wc-functions.php:878
 msgid "Your current password is incorrect."
 msgstr ""
 
-#: includes/wc-functions.php:886
+#: includes/wc-functions.php:883
 msgid "Please fill out all password fields."
 msgstr ""
 
-#: includes/wc-functions.php:889
+#: includes/wc-functions.php:886
 msgid "Please enter your current password."
 msgstr ""
 
-#: includes/wc-functions.php:892
+#: includes/wc-functions.php:889
 msgid "Please re-enter your password."
 msgstr ""
 
-#: includes/wc-functions.php:895
+#: includes/wc-functions.php:892
 msgid "New passwords do not match."
 msgstr ""
 
-#: includes/wc-functions.php:916
+#: includes/wc-functions.php:913
 msgid "Account details changed successfully."
 msgstr ""
 
-#: includes/wc-functions.php:1004
+#: includes/wc-functions.php:1001
 msgid "More Products"
 msgstr ""
 
-#: includes/wc-functions.php:1055
+#: includes/wc-functions.php:1052
 msgid "No product has been found!"
 msgstr ""
 
@@ -4459,11 +4459,11 @@ msgstr ""
 msgid "Clear"
 msgstr ""
 
-#: src/admin/components/Fields.vue:200
+#: src/admin/components/Fields.vue:190
 msgid "Active"
 msgstr ""
 
-#: src/admin/components/Fields.vue:204 src/admin/pages/Settings.vue:155
+#: src/admin/components/Fields.vue:194 src/admin/pages/Settings.vue:155
 msgid "Select"
 msgstr ""
 
@@ -5983,7 +5983,7 @@ msgid ""
 msgstr ""
 
 #. Author of the plugin/theme
-msgid "weDevs, LLC"
+msgid "weDevs"
 msgstr ""
 
 #. Author URI of the plugin/theme

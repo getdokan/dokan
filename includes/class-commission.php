@@ -7,7 +7,7 @@ use Dokan\Traits\Singleton;
 /**
  * Dokan Commission Class
  *
- * @since DOKAN_LITE_SINCE
+ * @since 2.9.21
  */
 class Dokan_Commission {
     use Singleton;
@@ -15,7 +15,7 @@ class Dokan_Commission {
     /**
      * Order id holder
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.21
      *
      * @var integer
      */
@@ -24,7 +24,7 @@ class Dokan_Commission {
     /**
      * Order quantity holder
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.21
      *
      * @var integer
      */
@@ -33,7 +33,7 @@ class Dokan_Commission {
     /**
      * Boot method
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.21
      *
      * @return void
      */
@@ -44,7 +44,7 @@ class Dokan_Commission {
     /**
      * Init hooks
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.21
      *
      * @return void
      */
@@ -55,7 +55,7 @@ class Dokan_Commission {
     /**
      * Hide extra meta data
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.21
      *
      * @param  array
      *
@@ -77,7 +77,7 @@ class Dokan_Commission {
     /**
      * Set order id
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.21
      *
      * @param  int $id
      *
@@ -90,7 +90,7 @@ class Dokan_Commission {
     /**
      * Get order id
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.21
      *
      * @return int
      */
@@ -101,7 +101,7 @@ class Dokan_Commission {
     /**
      * Set order quantity
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.21
      *
      * @param  int $number
      *
@@ -114,7 +114,7 @@ class Dokan_Commission {
     /**
      * Get order quantity
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.21
      *
      * @return int
      */
@@ -125,7 +125,7 @@ class Dokan_Commission {
     /**
      * Get earning by product
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.21
      *
      * @param  int|WC_Product $product
      * @param  string $context[admin|seller]
@@ -154,7 +154,7 @@ class Dokan_Commission {
     /**
      * Get earning by order
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.21
      *
      * @param  int|WC_Order $order
      * @param  string $context
@@ -179,7 +179,8 @@ class Dokan_Commission {
         $saved_admin_fee = get_post_meta( $order->get_id(), '_dokan_admin_fee', true );
 
         if ( $saved_admin_fee != '' ) {
-            return apply_filters( 'dokan_order_admin_commission', $saved_admin_fee, $order );
+            $saved_fee = ( 'seller' == $context ) ? $order->get_total() - $saved_admin_fee : $saved_admin_fee;
+            return apply_filters( 'dokan_order_admin_commission', $saved_fee, $order );
         }
 
         // Set user passed `order_id` so that we can track if any commission_rate has been saved previously.
@@ -219,13 +220,13 @@ class Dokan_Commission {
             $earning += $order->get_total_tax() - $order->get_total_tax_refunded();
         }
 
-        return apply_filters_deprecated( 'dokan_order_admin_commission', array( $earning, $order, $context ), 'DOKAN_LITE_SINCE', 'dokan_get_earning_by_order' );
+        return apply_filters_deprecated( 'dokan_order_admin_commission', array( $earning, $order, $context ), '2.9.21', 'dokan_get_earning_by_order' );
     }
 
     /**
      * Get global rate
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.21
      *
      * @return float
      */
@@ -236,7 +237,7 @@ class Dokan_Commission {
     /**
      * Get vendor wise commission rate
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.21
      *
      * @param  int $vendor_id
      *
@@ -249,7 +250,7 @@ class Dokan_Commission {
     /**
      * Get product wise commission rate
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.21
      *
      * @param  int $product_id
      *
@@ -262,7 +263,7 @@ class Dokan_Commission {
     /**
      * Validate product id (if it's a variable product, return it's parent id)
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.21
      *
      * @param  int $product_id
      *
@@ -278,7 +279,7 @@ class Dokan_Commission {
     /**
      * Get category wise commission rate
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.21
      *
      * @param  int $product_id
      *
@@ -300,7 +301,7 @@ class Dokan_Commission {
     /**
      * Get global commission type
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.21
      *
      * @return string
      */
@@ -311,7 +312,7 @@ class Dokan_Commission {
     /**
      * Get vendor wise commission type
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.21
      *
      * @param  int $vendor_id
      *
@@ -324,7 +325,7 @@ class Dokan_Commission {
     /**
      * Get category wise commission type
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.21
      *
      * @param  int $product_id
      *
@@ -340,7 +341,7 @@ class Dokan_Commission {
     /**
      * Get product wise commission type
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.21
      *
      * @param  int $product_id
      *
@@ -353,7 +354,7 @@ class Dokan_Commission {
     /**
      * Validate commission rate
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.21
      *
      * @param  float $rate
      *
@@ -370,7 +371,7 @@ class Dokan_Commission {
     /**
      * Get global earning
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.21
      *
      * @param  float $product_price
      *
@@ -383,7 +384,7 @@ class Dokan_Commission {
     /**
      * Get vendor wise earning
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.21
      *
      * @param  int $vendor_id
      * @param  float $product_price
@@ -397,7 +398,7 @@ class Dokan_Commission {
     /**
      * Get category wise earning
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.21
      *
      * @param  int $product_id
      * @param  float $product_price
@@ -411,7 +412,7 @@ class Dokan_Commission {
     /**
      * Get product wise earning
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.21
      *
      * @param  int $product_id
      * @param  int $product_price
@@ -425,7 +426,7 @@ class Dokan_Commission {
     /**
      * Prepare for calculation
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.21
      *
      * @param  function $callable
      * @param  int $product_id
@@ -539,7 +540,7 @@ class Dokan_Commission {
     /**
      * Get product wise additional fee
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.21
      *
      * @param  int $product_id
      *
@@ -552,7 +553,7 @@ class Dokan_Commission {
     /**
      * Get global wise additional fee
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.21
      *
      * @param  int $product_id
      *
@@ -565,7 +566,7 @@ class Dokan_Commission {
     /**
      * Get vendor wise additional fee
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.21
      *
      * @param  int $vendor_id
      *
@@ -578,7 +579,7 @@ class Dokan_Commission {
     /**
      * Get category wise additional fee
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.21
      *
      * @param  int $product_id
      *
@@ -600,7 +601,7 @@ class Dokan_Commission {
     /**
      * Get earning from order table
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.21
      *
      * @param  int $order_id
      * @param  string $context
@@ -635,7 +636,7 @@ class Dokan_Commission {
     /**
      * Get shipping fee recipient
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.21
      *
      * @param  int $order_id
      *
@@ -657,7 +658,7 @@ class Dokan_Commission {
     /**
      * Get tax fee recipient
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.21
      *
      * @param  int $order_id
      *
@@ -679,7 +680,7 @@ class Dokan_Commission {
     /**
      * Calculate commission (commission priority [1.product, 2.category, 3.vendor, 4.global] wise)
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.21
      *
      * @param  int $product_id
      * @param  float $product_price
