@@ -2797,7 +2797,7 @@ function dokan_cache_clear_deleted_product( $post_id ) {
  * @return float $earning | zero on failure or no price
  */
 function dokan_get_earning_by_product( $product_id, $seller_id ) {
-    wc_deprecated_function( 'dokan_get_earning_by_product', 'DOKAN_LITE_SINCE', 'Dokan_Commission::get_earning_by_product()' );
+    wc_deprecated_function( 'dokan_get_earning_by_product', '2.9.21', 'Dokan_Commission::get_earning_by_product()' );
 
     return dokan()->commission->get_earning_by_product( $product_id );
 
@@ -3345,7 +3345,7 @@ function dokan_remove_hook_for_anonymous_class( $hook_name = '', $class_name = '
  */
 function dokan_get_variable_product_earning( $product_id, $formated = true, $deprecated = false ) {
     if ( $deprecated ) {
-        wc_deprecated_argument( 'seller_id', 'DOKAN_LITE_SINCE', 'dokan_get_variable_product_earning() does not require a seller_id anymore.' );
+        wc_deprecated_argument( 'seller_id', '2.9.21', 'dokan_get_variable_product_earning() does not require a seller_id anymore.' );
     }
 
     $product = wc_get_product( $product_id );
@@ -3485,7 +3485,7 @@ function dokan_privacy_policy_text() {
 /**
  * Dokan commission types
  *
- * @since DOKAN_LITE_SINCE
+ * @since 2.9.21
  *
  * @return array
  */
@@ -3541,7 +3541,7 @@ function dokan_validate_boolean( $var ) {
 /**
  * Backward compatibile settings option map
  *
- * @since DOKAN_LITE_SINCE
+ * @since 2.9.21
  *
  * @param string $option
  * @param string $section
@@ -3590,7 +3590,7 @@ function dokan_get_terms_condition_url() {
 /**
  * Add item in specefic position of an array
  *
- * @since DOKAN_LITE_SINCE
+ * @since 2.9.21
  *
  * @param array $array
  * @param int|string $position <index position or name of the key after which you want to add the new array>

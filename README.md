@@ -1,5 +1,5 @@
 # Dokan - Best WooCommerce Multivendor Marketplace Solution - Build Your Own Amazon, eBay, Etsy #
-**Contributors:** [tareq1988](https://profiles.wordpress.org/tareq1988), [wedevs](https://profiles.wordpress.org/wedevs), [sabbir1991](https://profiles.wordpress.org/sabbir1991), [nizamuddinbabu](https://profiles.wordpress.org/nizamuddinbabu), [rafsuntaskin](https://profiles.wordpress.org/rafsuntaskin), [sk.shaikat](https://profiles.wordpress.org/sk.shaikat), [ediamin](https://profiles.wordpress.org/ediamin), [saimonh](https://profiles.wordpress.org/saimonh)  
+**Contributors:** [tareq1988](https://profiles.wordpress.org/tareq1988), [wedevs](https://profiles.wordpress.org/wedevs), [sabbir1991](https://profiles.wordpress.org/sabbir1991), [nizamuddinbabu](https://profiles.wordpress.org/nizamuddinbabu), [sk.shaikat](https://profiles.wordpress.org/sk.shaikat), [ediamin](https://profiles.wordpress.org/ediamin), [saimonh](https://profiles.wordpress.org/saimonh)  
 **Donate Link:** http://tareq.co/donate/  
 **Tags:** WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, product vendors, woocommerce vendor, commission rate, e-commerce, ebay, ecommerce, yith, yithemes  
 **Requires at least:** 4.4  
@@ -17,7 +17,7 @@ The pioneer multi-vendor plugin for WordPress. Start your own marketplace in min
 
 ### DOKAN MULTIVENDOR MARKETPLACE PLUGIN FOR WORDPRESS ###
 
-👉 Official Free Demo Link: [Official Demo](https://wedevs.com/in/dokandemo)
+👉 Official Free Demo Link: [Official Demo](https://wedevs.com/dokan/demo)
 👉 Learn More About Dokan(PRO): [All The Features of Dokan](https://wedevs.com/dokan/features/)
 
 ### POWERED BY WooCommerce ###
@@ -259,8 +259,7 @@ A. Obviously, you can use this on a single seller site to give them a nice front
 
 ### Q. How to upgrade to the Pro version?
 A. Just install and activate the PRO version without deleting the free plugin. All your data will be safe on the database and some extra features will be added. If you feel something may go wrong, please consult with our [support](https://wedevs.com/contact/) staff first.
-
-###
+###
 ## Screenshots ##
 
 1. Admin Dashboard
@@ -284,6 +283,12 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 ## Changelog ##
+
+v2.9.22 -> October 03, 2019
+-----------------------------------
+-   **fix***   Remove duplicate inpute filed in dokan admin settings form
+-   **fix***   Make commissison value to 0 if no product found
+-   **fix***   Attribute value's are swapped after changing the order of the attributes
 
 v2.9.21 -> September 24, 2019
 -----------------------------------

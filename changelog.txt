@@ -1,3 +1,9 @@
+v2.9.22 -> October 03, 2019
+-----------------------------------
+-   **fix***   Remove duplicate inpute filed in dokan admin settings form
+-   **fix***   Make commissison value to 0 if no product found
+-   **fix***   Attribute value's are swapped after changing the order of the attributes
+
 v2.9.21 -> September 24, 2019
 -----------------------------------
 -   **fix***   If state is not found for a country in store settings, remove the state field on reload

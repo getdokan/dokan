@@ -158,7 +158,7 @@ class Dokan_API_Manager {
      *
      * @param array $data
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.21
      *
      * @return array
      */
