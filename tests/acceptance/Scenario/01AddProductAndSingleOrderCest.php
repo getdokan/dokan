@@ -23,8 +23,11 @@ class AddProductAndSingleOrderCest
                                 \Step\Acceptance\Order $customerSingle)
     {
       $customer->loginAsCustomer();
-      $I->amOnPage('/');
-      $I->click('//div[@id="content"]/div[3]/div/div/ul/li/a/img');
+      $I->amOnPage('store-listing/');
+      $I->click('//div[@id="dokan-seller-listing-wrap"]/div/ul/li/div/div[2]/a');
+      $I->click('//div[@id="dokan-content"]/div[4]/ul/li/a/img');
+      // $I->amOnPage('/');
+      // $I->click('//div[@id="content"]/div[3]/div/div/ul/li/a/img');
       $customerSingle->orderProcessing();
     }
 

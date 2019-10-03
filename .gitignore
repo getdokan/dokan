@@ -11,7 +11,7 @@ secret.json
 debug.log
 package-lock.json
 config.json
-
+.env
 # Composer
 /vendor/
 phpcs-report.txt

@@ -10,7 +10,7 @@ class RefundRequestAndUpdateCest
     }
 
     // tests
-    public function refundRequest(\Step\Acceptance\Login $I, \Step\Acceptance\Admin $Admin )
+    public function refundRequest(\Step\Acceptance\Login $I)
     {
     	$I->loginAsVendor();
     	$I->click('Orders');
@@ -24,12 +24,14 @@ class RefundRequestAndUpdateCest
         $I->wait(5);
         $I->acceptPopup();
         $I->click('Log out');
-
-        $Admin->loginAsAdmin();
+    }
+    public function approveRequest(\Step\Acceptance\Admin $I)
+    {
+        $I->loginAsAdmin();
         $I->click('#toplevel_page_dokan');
         $I->click('Refunds');
         $I->wait(5);
-		$I->checkOption(Locator::firstElement('//input[@name="item[]"]'));
+        $I->checkOption(Locator::firstElement('//input[@name="item[]"]'));
         $I->selectOption('#bulk-action-selector-top','Approve Refund');
         $I->click('Apply');       
         $I->wait(10);
