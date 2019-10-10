@@ -120,6 +120,8 @@ final class WeDevs_Dokan {
         add_action( 'admin_notices', array( $this, 'render_missing_woocommerce_notice' ) );
 
         $this->init_appsero_tracker();
+
+        add_action( 'plugins_loaded', array( $this, 'woocommerce_not_loaded' ) );
     }
 
     /**
@@ -570,6 +572,24 @@ final class WeDevs_Dokan {
         if ( ! class_exists( 'Dokan_Background_Processes' ) ) {
             require_once DOKAN_INC_DIR . '/background-processes/class-dokan-background-processes.php';
         }
+    }
+
+    /**
+     * Handles scenerios when WooCommerce is not active
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return void
+     */
+    public function woocommerce_not_loaded() {
+        if ( did_action( 'woocommerce_loaded' ) ) {
+            return;
+        }
+
+        require_once DOKAN_INC_DIR . '/admin/setup-wizard.php';
+        require_once DOKAN_INC_DIR . '/admin/setup-wizard-no-wc.php';
+
+        new Dokan_Admin_Setup_Wizard_No_WC();
     }
 
 } // WeDevs_Dokan

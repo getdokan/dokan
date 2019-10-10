@@ -33,7 +33,8 @@ module.exports = function(grunt) {
             admin: {
                 files: {
                     '<%= dirs.css %>/admin.css': ['<%= dirs.devLessSrc %>/admin.less' ],
-                    '<%= dirs.css %>/setup.css': ['<%= dirs.devLessSrc %>/setup.less' ]
+                    '<%= dirs.css %>/setup.css': ['<%= dirs.devLessSrc %>/setup.less' ],
+                    '<%= dirs.css %>/setup-no-wc.css': ['<%= dirs.devLessSrc %>/setup-no-wc.less' ]
                 }
             }
         },
