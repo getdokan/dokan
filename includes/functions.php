@@ -1626,7 +1626,7 @@ function dokan_prepare_date_query( $from, $to ) {
     $raw_to_date   = date_create( $to );
 
     if ( ! $from_date || ! $to_date ) {
-        return wp_send_json( __( 'Date is not valid', 'dokan' ) );
+        return wp_send_json( __( 'Date is not valid', 'dokan-lite' ) );
     }
 
     $from_year  = $from_date->format( 'Y' );

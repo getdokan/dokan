@@ -1,10 +1,10 @@
 <template>
     <div v-if="loadMap" class="gmap-wrap regular-text">
-        <input ref="searchAddress" class="search-address regular-text" type="text" :placeholder="__( 'Search Address', 'dokan') ">
+        <input ref="searchAddress" class="search-address regular-text" type="text" :placeholder="__( 'Search Address', 'dokan-lite') ">
         <div id="gmap" ref="gmapArea"></div>
     </div>
     <p v-else>
-        {{ __( 'Please enter google map API key', 'dokan' ) }}
+        {{ __( 'Please enter google map API key', 'dokan-lite' ) }}
     </p>
 </template>
 

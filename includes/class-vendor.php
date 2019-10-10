@@ -821,7 +821,7 @@ class Dokan_Vendor {
      */
     public function get_store_open_notice( $default_notice = '' ) {
         $notice         = $this->get_info_part( 'dokan_store_open_notice' );
-        $default_notice = $default_notice ? $default_notice : __( 'Store is open', 'dokan' );
+        $default_notice = $default_notice ? $default_notice : __( 'Store is open', 'dokan-lite' );
 
         return $notice ? $notice : $default_notice;
     }
@@ -835,7 +835,7 @@ class Dokan_Vendor {
      */
     public function get_store_close_notice( $default_notice = '' ) {
         $notice         = $this->get_info_part( 'dokan_store_close_notice' );
-        $default_notice = $default_notice ? $default_notice : __( 'Store is closed', 'dokan' );
+        $default_notice = $default_notice ? $default_notice : __( 'Store is closed', 'dokan-lite' );
 
         return $notice ? $notice : $default_notice;
     }
