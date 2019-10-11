@@ -106,6 +106,37 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
                 'callback' => [ $this, 'check_store_availability' ]
             ]
         ] );
+
+        register_rest_route( $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/contact' , array(
+            'args' => [
+                'id' => [
+                    'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
+                    'type'        => 'integer',
+                ],
+            ],
+            [
+                'methods'  => WP_REST_Server::CREATABLE,
+                'callback' => array( $this, 'send_email' ),
+                'args'     => [
+                    'name' => [
+                        'type'        => 'string',
+                        'description' => __( 'Your Name', 'dokan-lite' ),
+                        'required'    => true
+                    ],
+                    'email' => [
+                        'type'        => 'string',
+                        'format'      => 'email',
+                        'description' => __( 'Your email', 'dokan-lite' ),
+                        'required'    => true
+                    ],
+                    'message' => [
+                        'type'        => 'string',
+                        'description' => __( 'Your Message', 'dokan-lite' ),
+                        'required'    => true
+                    ]
+                ]
+            ],
+        ) );
     }
 
     /**
@@ -642,5 +673,58 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
         }
 
         return rest_ensure_response( [] );
+    }
+
+    /**
+     * Send email to vendor
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param  WP_REST_Request
+     *
+     * @return WP_REST_Response
+     */
+    public function send_email( $request ) {
+        $params = $request->get_params();
+        $vendor = dokan()->vendor->get( $params['id'] );
+
+        if ( ! $vendor instanceof Dokan_Vendor || ! $vendor->get_id() ) {
+            return rest_ensure_response(
+                new WP_Error(
+                    'vendor_not_found',
+                    __( 'No vendor is found to be send an email.', 'dokan-lite' ),
+                    [
+                        'status' => 404
+                    ]
+                )
+            );
+        }
+
+        /**
+         * Fires before sedning email to vendor via the REST API.
+         *
+         * @since  DOKAN_LITE_SINCE
+         *
+         * @param WP_REST_Request $request   Request object.
+         * @param boolean         $creating  True when creating object, false when updating.
+         */
+        do_action( "dokan_rest_pre_{$this->base}_send_email", $request, true );
+
+        $vendor_email   = $vendor->get_email();
+        $sender_name    = $params['name'];
+        $sender_email   = $params['email'];
+        $sender_message = $params['message'];
+
+        WC()->mailer()->emails['Dokan_Email_Contact_Seller']->trigger( $vendor_email, $sender_name, $sender_email, $sender_message );
+
+        $response = apply_filters( "dokan_{$this->base}_send_email_response", [
+            'store_id'       => $vendor->get_id(),
+            'data'           => __( 'Email sent successfully!', 'dokan-lite' ),
+            'sender_name'    => $sender_name,
+            'sender_email'   => $sender_email,
+            'sender_message' => $sender_message,
+        ] );
+
+        return rest_ensure_response( $response );
     }
 }
