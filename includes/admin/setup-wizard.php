@@ -87,18 +87,17 @@ class Dokan_Setup_Wizard {
     }
 
     /**
-     * Show the setup wizard.
+     * Set wizard steps
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return void
      */
-    public function setup_wizard() {
-        if ( empty( $_GET['page'] ) || 'dokan-setup' !== $_GET['page'] ) {
-            return;
-        }
-
+    protected function set_steps() {
         $this->steps = array(
             'introduction' => array(
                 'name'    =>  __( 'Introduction', 'dokan-lite' ),
                 'view'    => array( $this, 'dokan_setup_introduction' ),
-                'handler' => ''
             ),
             'store' => array(
                 'name'    =>  __( 'Store', 'dokan-lite' ),
@@ -126,6 +125,31 @@ class Dokan_Setup_Wizard {
                 'handler' => ''
             )
         );
+    }
+
+    /**
+     * Wizard templates
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return void
+     */
+    protected function set_setup_wizard_template() {
+        $this->setup_wizard_header();
+        $this->setup_wizard_steps();
+        $this->setup_wizard_content();
+        $this->setup_wizard_footer();
+    }
+
+    /**
+     * Show the setup wizard.
+     */
+    public function setup_wizard() {
+        if ( empty( $_GET['page'] ) || 'dokan-setup' !== $_GET['page'] ) {
+            return;
+        }
+
+        $this->set_steps();
 
         // Hide recommended step if nothing is going to be shown there.
         if ( ! $this->should_show_recommended_step() ) {
@@ -141,10 +165,7 @@ class Dokan_Setup_Wizard {
         }
 
         ob_start();
-        $this->setup_wizard_header();
-        $this->setup_wizard_steps();
-        $this->setup_wizard_content();
-        $this->setup_wizard_footer();
+        $this->set_setup_wizard_template();
         exit;
     }
 

@@ -3666,3 +3666,61 @@ if ( ! function_exists( 'dokan_get_seller_status_count' ) ) {
         ] );
     }
 }
+/**
+ * Install an plugin from wp.org
+ *
+ * Example:
+ * To download WooCommerce `dokan_install_wp_org_plugin( 'woocommerce' )`
+ * To download plugin like dokan-lite that has different slug and main plugin file,
+ * `dokan_install_wp_org_plugin( 'dokan-lite', 'dokan.php' )`
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @param string $plugin_slug
+ * @param string $main_file
+ *
+ * @return bool|\WP_Error
+ */
+function dokan_install_wp_org_plugin( $plugin_slug, $main_file = null ) {
+    $plugin = $plugin_slug . '/' . ( $main_file ? $main_file : $plugin_slug . '.php'  );
+
+    if ( ! file_exists( WP_PLUGIN_DIR . '/' . $plugin ) ) {
+        include_once ABSPATH . 'wp-admin/includes/file.php';
+        include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+        include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+
+        $api = plugins_api( 'plugin_information', array(
+            'slug'   => $plugin_slug,
+            'fields' => array(
+                'sections' => false
+            )
+        ) );
+
+        if ( is_wp_error( $api ) ) {
+            return new WP_Error(
+                'dokan_install_wp_org_plugin_error_api',
+                sprintf( __( 'Unable to fetch plugin information from wordpress.org for %s.', 'dokan-lite' ), $plugin_slug )
+            );
+        }
+
+        $upgrader  = new Plugin_Upgrader( new WP_Ajax_Upgrader_Skin() );
+        $installed = $upgrader->install( $api->download_link );
+
+        if ( is_wp_error( $installed ) ) {
+            return $installed;
+        } else if ( ! $installed ) {
+            return new WP_Error(
+                'dokan_install_wp_org_plugin_error',
+                sprintf( __( 'Unable to install %s from wordpress.org', 'dokan-lite' ), $plugin_slug )
+            );
+        }
+    }
+
+    $activate_plugin = activate_plugin( $plugin );
+
+    if ( is_wp_error( $activate_plugin ) ) {
+        return $activate_plugin;
+    }
+
+    return true;
+}
