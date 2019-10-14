@@ -38,7 +38,10 @@ class Dokan_Admin_Setup_Wizard_No_WC extends Dokan_Setup_Wizard {
      * @return void
      */
     public function enqueue_scripts() {
+        wp_register_script( 'jquery-blockui', DOKAN_PLUGIN_ASSEST . '/vendors/jquery-blockui/jquery.blockUI.min.js', array( 'jquery' ), '2.70', true );
+
         wp_enqueue_style( 'dokan-setup', DOKAN_PLUGIN_ASSEST . '/css/setup-no-wc.css', array( 'install' ), DOKAN_PLUGIN_VERSION );
+        wp_enqueue_script( 'wc-setup', DOKAN_PLUGIN_ASSEST . '/js/dokan-setup-no-wc.js', array( 'jquery', 'jquery-blockui' ), DOKAN_PLUGIN_VERSION, true );
     }
 
     /**
@@ -94,7 +97,7 @@ class Dokan_Admin_Setup_Wizard_No_WC extends Dokan_Setup_Wizard {
      */
     public function step_introduction() {
         ?>
-            <form method="post">
+            <form method="post" id="dokan-admin-setup-wizard">
                 <h1><?php esc_html_e( 'Welcome to the world of Dokan!', 'dokan-lite' ); ?></h1>
                 <p><?php echo wp_kses( __( 'Thank you for choosing Dokan to power your online marketplace! This quick setup wizard will help you configure the basic settings. <strong>It’s completely optional and shouldn’t take longer than three minutes.</strong>', 'dokan-lite' ), [ 'strong' => [] ] ); ?></p>
                 <p>
