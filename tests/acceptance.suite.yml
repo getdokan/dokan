@@ -42,3 +42,9 @@ modules:
             restart: true
             window_size: false
             port: 4444
+            # wait: 5
+            # capabilities:
+            #     browserName: chrome
+            #     chromeOptions:
+            #         args:
+            #           - --headless

@@ -8,8 +8,9 @@ class Login extends \AcceptanceTester
 		$I = $this;
 		$I->amOnPage('/wp-admin');
          //$I->click('Log in');
-         $I->fillField('username', 'admin');
-         $I->fillField('password', 'admin');
+         $I->fillField('#user_login', 'admin');
+         $I->fillField('#user_pass', 'admin');
+         $I->click('Log In');
 	}
 	public function loginAsVendor()
 	{
