@@ -39,6 +39,21 @@
             </td>
         </tr>
         <tr>
+            <th scope="row"><label for="gmap_api_key"><?php esc_html_e( 'Google Map API Key', 'dokan-lite' ); ?></label></th>
+            <td>
+                <input type="text" id="gmap_api_key" name="gmap_api_key" class="location-input" value="<?php echo esc_attr( $gmap_api_key ); ?>" />
+                <p class="description">
+                    <?php
+                        printf(
+                            esc_html__( '%sAPI Key%s is needed to display map on store page', 'dokan-lite' ),
+                            '<a href="https://developers.google.com/maps/documentation/javascript/get-api-key" target="_blank">',
+                            '</a>'
+                        );
+                    ?>
+                </p>
+            </td>
+        </tr>
+        <tr>
             <th scope="row"><label for="share_essentials"><?php esc_html_e( 'Share Essentials', 'dokan-lite' ); ?></label></th>
 
             <td>

@@ -291,6 +291,7 @@ class Dokan_Setup_Wizard {
         $selling_options        = get_option( 'dokan_selling', array() );
         $shipping_fee_recipient = ! empty( $selling_options['shipping_fee_recipient'] ) ? $selling_options['shipping_fee_recipient'] : 'seller';
         $tax_fee_recipient      = ! empty( $selling_options['tax_fee_recipient'] ) ? $selling_options['tax_fee_recipient'] : 'seller';
+        $gmap_api_key           = dokan_get_option( 'gmap_api_key', 'dokan_appearance', '' );
 
         $recipients = array(
             'seller' => __( 'Vendor', 'dokan-lite' ),
@@ -302,6 +303,7 @@ class Dokan_Setup_Wizard {
             'recipients'             => $recipients,
             'shipping_fee_recipient' => $shipping_fee_recipient,
             'tax_fee_recipient'      => $tax_fee_recipient,
+            'gmap_api_key'           => $gmap_api_key,
             'setup_wizard'           => $this,
         ) );
 
@@ -318,10 +320,12 @@ class Dokan_Setup_Wizard {
 
         $general_options = get_option( 'dokan_general', array() );
         $selling_options = get_option( 'dokan_selling', array() );
+        $appearance      = get_option( 'dokan_appearance', array() );
 
         $general_options['custom_store_url']       = ! empty( $_post_data['custom_store_url'] ) ? sanitize_text_field( $_post_data['custom_store_url'] ) : '';
         $selling_options['shipping_fee_recipient'] = ! empty( $_post_data['shipping_fee_recipient'] ) ? sanitize_text_field( $_post_data['shipping_fee_recipient'] ) : '';
         $selling_options['tax_fee_recipient']      = ! empty( $_post_data['tax_fee_recipient'] ) ? sanitize_text_field( $_post_data['tax_fee_recipient'] ) : '';
+        $appearance['gmap_api_key']           = ! empty( $_post_data['gmap_api_key'] ) ? sanitize_text_field( $_post_data['gmap_api_key'] ) : '';
 
         $share_essentials = sanitize_text_field( isset( $_post_data['share_essentials'] ) );
 
@@ -333,6 +337,7 @@ class Dokan_Setup_Wizard {
 
         update_option( 'dokan_general', $general_options );
         update_option( 'dokan_selling', $selling_options );
+        update_option( 'dokan_appearance', $appearance );
 
         do_action( 'dokan_admin_setup_wizard_save_step_store' );
 
@@ -583,6 +588,18 @@ class Dokan_Setup_Wizard {
                 )
             );
         }
+
+        /**
+         * WooCoomerce settings manipulation
+         */
+        // Enable registration by default
+        update_option( 'woocommerce_enable_myaccount_registration', 'yes' );
+
+        // Generate usename by default
+        update_option( 'woocommerce_registration_generate_username', 'yes' );
+
+        // Let vendors/customers set their own password
+        update_option( 'woocommerce_registration_generate_password', 'no' );
 
         wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
         exit;
