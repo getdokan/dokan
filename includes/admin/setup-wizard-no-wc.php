@@ -116,11 +116,14 @@ class Dokan_Admin_Setup_Wizard_No_WC extends Dokan_Setup_Wizard {
         $installed = dokan_install_wp_org_plugin( 'woocommerce' );
         ob_get_clean();
 
+        delete_transient( '_wc_activation_redirect' );
+
         if ( is_wp_error( $installed ) ) {
             wp_die( $installed->get_error_message(), __( 'Error installing WooCommerce plugin', 'dokan-lite' ) );
         }
 
-        set_transient( 'dokan_setup_wizard_no_wc', true );
+        set_transient( 'dokan_setup_wizard_no_wc', true, 5 * MINUTE_IN_SECONDS );
+        delete_transient( 'dokan_wc_missing_notice' );
 
         wp_safe_redirect( esc_url_raw( add_query_arg( 'step', 'store' ) ) );
         exit;
@@ -329,6 +332,8 @@ class Dokan_Admin_Setup_Wizard_No_WC extends Dokan_Setup_Wizard {
      */
     public static function wc_setup_shipping_save( $dokan_admin_setup_wizard ) {
         $wc_setup_wizard = self::get_wc_setup_wizard( $dokan_admin_setup_wizard->get_steps() );
+
+        WC_Admin_Notices::remove_notice( 'install' );
 
         $wc_setup_wizard->set_step( 'shipping' );
         $wc_setup_wizard->wc_setup_shipping_save();

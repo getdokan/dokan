@@ -121,7 +121,7 @@ final class WeDevs_Dokan {
 
         $this->init_appsero_tracker();
 
-        add_action( 'plugins_loaded', array( $this, 'woocommerce_not_loaded' ) );
+        add_action( 'plugins_loaded', array( $this, 'woocommerce_not_loaded' ), 11 );
     }
 
     /**
@@ -582,11 +582,16 @@ final class WeDevs_Dokan {
      * @return void
      */
     public function woocommerce_not_loaded() {
-        if ( did_action( 'woocommerce_loaded' ) ) {
+        if ( did_action( 'woocommerce_loaded' ) || ! is_admin() ) {
             return;
         }
 
         require_once DOKAN_INC_DIR . '/functions.php';
+
+        if ( get_transient( '_dokan_setup_page_redirect' ) ) {
+            dokan_redirect_to_admin_setup_wizard();
+        }
+
         require_once DOKAN_INC_DIR . '/admin/setup-wizard.php';
         require_once DOKAN_INC_DIR . '/admin/setup-wizard-no-wc.php';
 
