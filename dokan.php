@@ -586,6 +586,7 @@ final class WeDevs_Dokan {
             return;
         }
 
+        require_once DOKAN_INC_DIR . '/functions.php';
         require_once DOKAN_INC_DIR . '/admin/setup-wizard.php';
         require_once DOKAN_INC_DIR . '/admin/setup-wizard-no-wc.php';
 

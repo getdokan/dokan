@@ -17,7 +17,6 @@
 .form-table .switch-label {
   position: relative;
   display: inline-block;
-  min-width: 112px;
   cursor: pointer;
   font-weight: 500;
   text-align: left;
@@ -131,6 +130,12 @@
   font-weight: 400;
   line-height: 1.7;
 }
+.wc-setup .wc-setup-content table {
+  font-weight: 400;
+}
+.wc-setup .wc-setup-content table th {
+  font-weight: 500;
+}
 .wc-wizard-service-item .wc-wizard-service-name {
   padding-left: 20px;
 }
@@ -159,4 +164,22 @@
 .dokan-setup-done-content {
   display: flex;
   justify-content: center;
+}
+.margin-bottom-10 {
+  margin-bottom: 10px;
+}
+.wc-wizard-service-item .dokan-wc-wizard-service-enable {
+  -webkit-flex-basis: 0;
+  flex-basis: 0;
+  min-width: 75px;
+  text-align: center;
+  cursor: pointer;
+  padding: 2em 0;
+  position: relative;
+  max-height: 1.5em;
+  -webkit-align-self: flex-start;
+  align-self: flex-start;
+  -webkit-box-ordinal-group: 4;
+  -webkit-order: 3;
+  order: 3;
 }

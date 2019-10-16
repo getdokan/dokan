@@ -18,7 +18,6 @@
     .switch-label {
         position: relative;
         display: inline-block;
-        min-width: 112px;
         cursor: pointer;
         font-weight: 500;
         text-align: left;
@@ -174,6 +173,14 @@
                 line-height: 1.7;
             }
         }
+
+        table {
+            font-weight: 400;
+
+            th {
+                font-weight: 500;
+            }
+        }
     }
 }
 
@@ -217,4 +224,28 @@
 .dokan-setup-done-content {
     display: flex;
     justify-content: center;
+}
+
+.margin-bottom-10 {
+    margin-bottom: 10px;
+}
+
+// WC setup wizard form compatibilities
+.wc-wizard-service-item  {
+
+    .dokan-wc-wizard-service-enable {
+        -webkit-flex-basis: 0;
+        flex-basis: 0;
+        min-width: 75px;
+        text-align: center;
+        cursor: pointer;
+        padding: 2em 0;
+        position: relative;
+        max-height: 1.5em;
+        -webkit-align-self: flex-start;
+        align-self: flex-start;
+        -webkit-box-ordinal-group: 4;
+        -webkit-order: 3;
+        order: 3;
+    }
 }
