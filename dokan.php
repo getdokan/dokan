@@ -118,6 +118,7 @@ final class WeDevs_Dokan {
 
         add_action( 'woocommerce_loaded', array( $this, 'init_plugin' ) );
         add_action( 'admin_notices', array( $this, 'render_missing_woocommerce_notice' ) );
+        add_action( 'admin_notices', array( $this, 'render_run_admin_setup_wizard_notice' ) );
 
         $this->init_appsero_tracker();
 
@@ -527,6 +528,25 @@ final class WeDevs_Dokan {
         $message    = sprintf( esc_html__( 'Dokan requires WooCommerce to be installed and active. You can activate %s here.', 'dokan-lite' ), '<a href="' . $plugin_url . '">WooCommerce</a>' );
 
         printf( '<div class="error"><p><strong>%1$s</strong></p></div>', $message );
+    }
+
+    /**
+     * Render run admin setup wizard notice
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return void
+     */
+    public function render_run_admin_setup_wizard_notice() {
+        $ran_wizard = get_option( 'dokan_admin_setup_wizard_ready', false );
+
+        if ( $ran_wizard ) {
+            return;
+        }
+
+        require_once DOKAN_INC_DIR . '/functions.php';
+
+        dokan_get_template( 'admin-setup-wizard/run-wizard-notice.php' );
     }
 
     /**

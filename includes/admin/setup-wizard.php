@@ -638,6 +638,8 @@ class Dokan_Setup_Wizard {
      * Final step.
      */
     public function dokan_setup_ready() {
+        update_option( 'dokan_admin_setup_wizard_ready', true );
+
         $this->after_weforms_activate();
         ?>
         <div class="dokan-setup-done">

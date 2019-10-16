@@ -40,6 +40,7 @@ class Dokan_Installer {
         update_option( 'dokan_theme_version', DOKAN_PLUGIN_VERSION );
 
         if ( ! $was_installed_before ) {
+            update_option( 'dokan_admin_setup_wizard_ready', false );
             set_transient( '_dokan_setup_page_redirect', true, 30 );
         }
     }
