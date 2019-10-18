@@ -25,7 +25,7 @@ class Dokan_Installer {
         }
 
         if ( ! dokan()->has_woocommerce() ) {
-            set_transient( 'dokan_setup_wizard_no_wc', true, 5 * MINUTE_IN_SECONDS );
+            set_transient( 'dokan_setup_wizard_no_wc', true, 15 * MINUTE_IN_SECONDS );
             set_transient( 'dokan_theme_version_for_updater', get_option( 'dokan_theme_version', false ) );
         }
 
