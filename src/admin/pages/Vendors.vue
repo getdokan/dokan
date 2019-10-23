@@ -1,7 +1,7 @@
 <template>
     <div class="vendor-list">
-        <h1 class="wp-heading-inline">{{ __( 'Vendors', 'dokan') }}</h1>
-        <button @click="addNew()" class="page-title-action">{{ __( 'Add New', 'dokan' ) }}</button>
+        <h1 class="wp-heading-inline">{{ __( 'Vendors', 'dokan-lite') }}</h1>
+        <button @click="addNew()" class="page-title-action">{{ __( 'Add New', 'dokan-lite' ) }}</button>
 
         <!-- Add other component here here -->
         <component v-for="(vendorHeaderArea, index) in dokanVendorHeaderArea"
@@ -12,9 +12,9 @@
         <hr class="wp-header-end">
 
         <ul class="subsubsub">
-            <li><router-link :to="{ name: 'Vendors', query: { status: 'all' }}" active-class="current" exact v-html="sprintf( __( 'All <span class=\'count\'>(%s)</span>', 'dokan' ), counts.all )"></router-link> | </li>
-            <li><router-link :to="{ name: 'Vendors', query: { status: 'approved' }}" active-class="current" exact v-html="sprintf( __( 'Approved <span class=\'count\'>(%s)</span>', 'dokan' ), counts.approved )"></router-link> | </li>
-            <li><router-link :to="{ name: 'Vendors', query: { status: 'pending' }}" active-class="current" exact v-html="sprintf( __( 'Pending <span class=\'count\'>(%s)</span>', 'dokan' ), counts.pending )"></router-link></li>
+            <li><router-link :to="{ name: 'Vendors', query: { status: 'all' }}" active-class="current" exact v-html="sprintf( __( 'All <span class=\'count\'>(%s)</span>', 'dokan-lite' ), counts.all )"></router-link> | </li>
+            <li><router-link :to="{ name: 'Vendors', query: { status: 'approved' }}" active-class="current" exact v-html="sprintf( __( 'Approved <span class=\'count\'>(%s)</span>', 'dokan-lite' ), counts.approved )"></router-link> | </li>
+            <li><router-link :to="{ name: 'Vendors', query: { status: 'pending' }}" active-class="current" exact v-html="sprintf( __( 'Pending <span class=\'count\'>(%s)</span>', 'dokan-lite' ), counts.pending )"></router-link></li>
         </ul>
 
         <search title="Search Vendors" @searched="doSearch"></search>
@@ -47,8 +47,8 @@
             <template slot="store_name" slot-scope="data">
                 <img :src="data.row.gravatar" :alt="data.row.store_name" width="50">
                 <strong>
-                    <router-link v-if="hasPro" :to="'/vendors/' + data.row.id">{{ data.row.store_name ? data.row.store_name : __( '(no name)', 'dokan' ) }}</router-link>
-                    <a v-else :href="editUrl(data.row.id)">{{ data.row.store_name ? data.row.store_name : __( '(no name)', 'dokan' ) }}</a>
+                    <router-link v-if="hasPro" :to="'/vendors/' + data.row.id">{{ data.row.store_name ? data.row.store_name : __( '(no name)', 'dokan-lite' ) }}</router-link>
+                    <a v-else :href="editUrl(data.row.id)">{{ data.row.store_name ? data.row.store_name : __( '(no name)', 'dokan-lite' ) }}</a>
                 </strong>
             </template>
 
@@ -120,46 +120,46 @@ export default {
 
             columns: {
                 'store_name': {
-                    label: this.__( 'Store', 'dokan' ),
+                    label: this.__( 'Store', 'dokan-lite' ),
                     sortable: true
                 },
                 'email': {
-                    label: this.__( 'E-mail', 'dokan' )
+                    label: this.__( 'E-mail', 'dokan-lite' )
                 },
                 'phone': {
-                    label: this.__( 'Phone', 'dokan' )
+                    label: this.__( 'Phone', 'dokan-lite' )
                 },
                 'registered': {
-                    label: this.__( 'Registered', 'dokan' ),
+                    label: this.__( 'Registered', 'dokan-lite' ),
                     sortable: true
                 },
                 'enabled': {
-                    label: this.__( 'Status', 'dokan' )
+                    label: this.__( 'Status', 'dokan-lite' )
                 }
             },
             actionColumn: 'title',
             actions: [
                 {
                     key: 'edit',
-                    label: this.__( 'Edit', 'dokan' )
+                    label: this.__( 'Edit', 'dokan-lite' )
                 },
                 {
                     key: 'products',
-                    label: this.__( 'Products', 'dokan' )
+                    label: this.__( 'Products', 'dokan-lite' )
                 },
                 {
                     key: 'orders',
-                    label: this.__( 'Orders', 'dokan' )
+                    label: this.__( 'Orders', 'dokan-lite' )
                 },
             ],
             bulkActions: [
                 {
                     key: 'approved',
-                    label: this.__( 'Approve Vendors', 'dokan' )
+                    label: this.__( 'Approve Vendors', 'dokan-lite' )
                 },
                 {
                     key: 'pending',
-                    label: this.__( 'Disable Selling', 'dokan' )
+                    label: this.__( 'Disable Selling', 'dokan-lite' )
                 }
             ],
             vendors: [],
@@ -302,14 +302,14 @@ export default {
 
         onSwitch(status, vendor_id) {
 
-            let message = ( status === false ) ? this.__( 'The vendor has been disabled.', 'dokan' ) : this.__( 'Selling has been enabled', 'dokan' );
+            let message = ( status === false ) ? this.__( 'The vendor has been disabled.', 'dokan-lite' ) : this.__( 'Selling has been enabled', 'dokan-lite' );
 
             dokan.api.put('/stores/' + vendor_id + '/status', {
                 status: ( status === false ) ? 'inactive' : 'active'
             })
             .done(response => {
                 this.$notify({
-                    title: this.__( 'Success!', 'dokan' ),
+                    title: this.__( 'Success!', 'dokan-lite' ),
                     type: 'success',
                     text: message,
                 });

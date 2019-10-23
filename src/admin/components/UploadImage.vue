@@ -72,7 +72,7 @@ export default {
             const fileStatesOptions = {
                 library: wp.media.query(),
                 multiple: false, // set it true for multiple image
-                title: this.__('Select & Crop Image', 'dokan'),
+                title: this.__('Select & Crop Image', 'dokan-lite'),
                 priority: 20,
                 filterable: 'uploaded',
                 autoSelect: true,
@@ -136,9 +136,9 @@ export default {
             ];
 
             const mediaOptions = {
-                title: this.__('Select Image', 'dokan'),
+                title: this.__('Select Image', 'dokan-lite'),
                 button: {
-                    text: this.__('Select Image', 'dokan'),
+                    text: this.__('Select Image', 'dokan-lite'),
                     close: false
                 },
                 multiple: false

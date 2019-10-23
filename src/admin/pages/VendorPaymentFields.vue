@@ -1,44 +1,44 @@
 <template>
     <div :class="{'payment-info': true, 'edit-mode': getId()}">
         <div class="content-header">
-            {{__( 'Payment Options', 'dokan' )}}
+            {{__( 'Payment Options', 'dokan-lite' )}}
         </div>
 
         <div class="content-body">
             <div class="dokan-form-group">
                 <div class="column">
-                    <label for="account-name">{{ __( 'Account Name', 'dokan') }}</label>
-                    <input type="text" class="dokan-form-input" v-model="vendorInfo.payment.bank.ac_name" :placeholder="__( 'Account Name', 'dokan')">
+                    <label for="account-name">{{ __( 'Account Name', 'dokan-lite') }}</label>
+                    <input type="text" class="dokan-form-input" v-model="vendorInfo.payment.bank.ac_name" :placeholder="__( 'Account Name', 'dokan-lite')">
                 </div>
 
                 <div class="column">
-                    <label for="account-number">{{ __( 'Account Number', 'dokan') }}</label>
-                    <input type="text" class="dokan-form-input" v-model="vendorInfo.payment.bank.ac_number" :placeholder="__( '1233456789', 'dokan')">
+                    <label for="account-number">{{ __( 'Account Number', 'dokan-lite') }}</label>
+                    <input type="text" class="dokan-form-input" v-model="vendorInfo.payment.bank.ac_number" :placeholder="__( '1233456789', 'dokan-lite')">
                 </div>
 
                 <div class="column">
-                    <label for="bank-name">{{ __( 'Bank Name', 'dokan') }}</label>
-                    <input type="text" class="dokan-form-input" v-model="vendorInfo.payment.bank.bank_name" :placeholder="__( 'Bank Name', 'dokan')">
+                    <label for="bank-name">{{ __( 'Bank Name', 'dokan-lite') }}</label>
+                    <input type="text" class="dokan-form-input" v-model="vendorInfo.payment.bank.bank_name" :placeholder="__( 'Bank Name', 'dokan-lite')">
                 </div>
 
                 <div class="column">
-                    <label for="bank-address">{{ __( 'Bank Address', 'dokan') }}</label>
-                    <input type="text" class="dokan-form-input" v-model="vendorInfo.payment.bank.bank_addr" :placeholder="__( 'Bank Address', 'dokan')">
+                    <label for="bank-address">{{ __( 'Bank Address', 'dokan-lite') }}</label>
+                    <input type="text" class="dokan-form-input" v-model="vendorInfo.payment.bank.bank_addr" :placeholder="__( 'Bank Address', 'dokan-lite')">
                 </div>
 
                 <div class="column">
-                    <label for="routing-number">{{ __( 'Routing Number', 'dokan') }}</label>
-                    <input type="text" class="dokan-form-input" v-model="vendorInfo.payment.bank.routing_number" :placeholder="__( '123456789', 'dokan')">
+                    <label for="routing-number">{{ __( 'Routing Number', 'dokan-lite') }}</label>
+                    <input type="text" class="dokan-form-input" v-model="vendorInfo.payment.bank.routing_number" :placeholder="__( '123456789', 'dokan-lite')">
                 </div>
 
                 <div class="column">
-                    <label for="iban">{{ __( 'IBAN', 'dokan') }}</label>
-                    <input type="text" class="dokan-form-input" v-model="vendorInfo.payment.bank.iban" :placeholder="__( '123456789', 'dokan')">
+                    <label for="iban">{{ __( 'IBAN', 'dokan-lite') }}</label>
+                    <input type="text" class="dokan-form-input" v-model="vendorInfo.payment.bank.iban" :placeholder="__( '123456789', 'dokan-lite')">
                 </div>
 
                 <div class="column">
-                    <label for="swift">{{ __( 'Swift', 'dokan') }}</label>
-                    <input type="text" class="dokan-form-input" v-model="vendorInfo.payment.bank.swift" :placeholder="__( '123456789', 'dokan')">
+                    <label for="swift">{{ __( 'Swift', 'dokan-lite') }}</label>
+                    <input type="text" class="dokan-form-input" v-model="vendorInfo.payment.bank.swift" :placeholder="__( '123456789', 'dokan-lite')">
                 </div>
 
                 <!-- Add other bank fields here -->
@@ -52,21 +52,21 @@
             <div class="dokan-form-group">
 
                 <div :class="{'column': getId(), 'checkbox-group': ! getId()}">
-                    <label for="account-name">{{ __( 'PayPal Email', 'dokan') }}</label>
-                    <input type="email" class="dokan-form-input" v-model="vendorInfo.payment.paypal.email" :placeholder="__( 'store@email.com', 'dokan')">
+                    <label for="account-name">{{ __( 'PayPal Email', 'dokan-lite') }}</label>
+                    <input type="email" class="dokan-form-input" v-model="vendorInfo.payment.paypal.email" :placeholder="__( 'store@email.com', 'dokan-lite')">
                 </div>
 
                 <!-- Admin commission only load on vendor edit page -->
                 <template v-if="getId()">
                     <div class="column">
                         <div class="column">
-                            <label>{{ __( 'Admin Commission Type', 'dokan' ) }}</label>
+                            <label>{{ __( 'Admin Commission Type', 'dokan-lite' ) }}</label>
                             <Multiselect @input="saveCommissionType" v-model="selectedCommissionType" :options="commissionTypes" :multiselect="false" :searchable="false" :showLabels="false" />
                         </div>
                     </div>
 
                     <div class="column combine-commission" v-if="'Combine' === selectedCommissionType">
-                        <label>{{ __( 'Admin Commission', 'dokan' )  }}</label>
+                        <label>{{ __( 'Admin Commission', 'dokan-lite' )  }}</label>
                         <div class="combine-commission-field">
                             <input type="number" class="dokan-form-input percent_fee" v-model="vendorInfo.admin_commission">
                             {{ '% &nbsp;&nbsp; +' }}
@@ -75,7 +75,7 @@
                     </div>
 
                     <div class="column" v-else>
-                        <label>{{ __( 'Admin Commission', 'dokan' )  }}</label>
+                        <label>{{ __( 'Admin Commission', 'dokan-lite' )  }}</label>
                         <input type="number" class="dokan-form-input" v-model="vendorInfo.admin_commission">
                     </div>
                 </template>
@@ -83,21 +83,21 @@
                 <div class="checkbox-group">
                     <div class="checkbox-left">
                         <switches @input="setValue" :enabled="enabled" value="enabled"></switches>
-                        <span class="desc">{{ __( 'Enable Selling', 'dokan' ) }}</span>
+                        <span class="desc">{{ __( 'Enable Selling', 'dokan-lite' ) }}</span>
                     </div>
                 </div>
 
                 <div class="checkbox-group">
                     <div class="checkbox-left">
                         <switches @input="setValue" :enabled="trusted" value="trusted"></switches>
-                        <span class="desc">{{ __( 'Publish Product Directly', 'dokan' ) }}</span>
+                        <span class="desc">{{ __( 'Publish Product Directly', 'dokan-lite' ) }}</span>
                     </div>
                 </div>
 
                 <div class="checkbox-group">
                     <div class="checkbox-left">
                         <switches @input="setValue" :enabled="featured" value="featured"></switches>
-                        <span class="desc">{{ __( 'Make Vendor Featured', 'dokan' ) }}</span>
+                        <span class="desc">{{ __( 'Make Vendor Featured', 'dokan-lite' ) }}</span>
                     </div>
                 </div>
 
@@ -137,11 +137,11 @@ export default {
             trusted: false,
             featured: false,
             commissionTypes: [
-                this.__( 'Flat', 'dokan' ),
-                this.__( 'Percentage', 'dokan' ),
-                this.__( 'Combine', 'dokan' )
+                this.__( 'Flat', 'dokan-lite' ),
+                this.__( 'Percentage', 'dokan-lite' ),
+                this.__( 'Combine', 'dokan-lite' )
             ],
-            selectedCommissionType: this.__( 'Flat', 'dokan' ),
+            selectedCommissionType: this.__( 'Flat', 'dokan-lite' ),
             getBankFields: dokan.hooks.applyFilters( 'getVendorBankFields', [] ),
             getPyamentFields: dokan.hooks.applyFilters( 'AfterPyamentFields', [] ),
         }

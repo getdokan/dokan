@@ -1,44 +1,44 @@
 <template>
     <div class="account-info">
         <div class="content-header">
-            {{__( 'Address', 'dokan' )}}
+            {{__( 'Address', 'dokan-lite' )}}
         </div>
 
         <div class="content-body">
             <div class="dokan-form-group">
 
                 <div class="column">
-                    <label for="street-1">{{ __( 'Street 1', 'dokan') }}</label>
-                    <input type="text" class="dokan-form-input" v-model="vendorInfo.address.street_1" :placeholder="__( 'Street 1', 'dokan')">
+                    <label for="street-1">{{ __( 'Street 1', 'dokan-lite') }}</label>
+                    <input type="text" class="dokan-form-input" v-model="vendorInfo.address.street_1" :placeholder="__( 'Street 1', 'dokan-lite')">
                 </div>
 
                 <div class="column">
-                    <label for="street-2">{{ __( 'Street 2', 'dokan') }}</label>
-                    <input type="text" class="dokan-form-input" v-model="vendorInfo.address.street_2" :placeholder="__( 'Street 2', 'dokan')">
+                    <label for="street-2">{{ __( 'Street 2', 'dokan-lite') }}</label>
+                    <input type="text" class="dokan-form-input" v-model="vendorInfo.address.street_2" :placeholder="__( 'Street 2', 'dokan-lite')">
                 </div>
 
                 <div class="column">
-                    <label for="city">{{ __( 'City', 'dokan') }}</label>
-                    <input type="text" class="dokan-form-input" v-model="vendorInfo.address.city" :placeholder="__( 'City', 'dokan')">
+                    <label for="city">{{ __( 'City', 'dokan-lite') }}</label>
+                    <input type="text" class="dokan-form-input" v-model="vendorInfo.address.city" :placeholder="__( 'City', 'dokan-lite')">
                 </div>
 
                 <div class="column">
-                    <label for="zip">{{ __( 'Zip', 'dokan') }}</label>
-                    <input type="text" class="dokan-form-input" v-model="vendorInfo.address.zip" :placeholder="__( 'Zip', 'dokan')">
+                    <label for="zip">{{ __( 'Zip', 'dokan-lite') }}</label>
+                    <input type="text" class="dokan-form-input" v-model="vendorInfo.address.zip" :placeholder="__( 'Zip', 'dokan-lite')">
                 </div>
 
                 <div class="column">
-                    <label for="country">{{ __( 'Country', 'dokan') }}</label>
-                    <Multiselect @input="saveCountry" v-model="selectedCountry" :options="countries" :multiselect="false" label="name" track-by="name" :showLabels="false" :placeholder="__( 'Select Country', 'dokan' )" />
+                    <label for="country">{{ __( 'Country', 'dokan-lite') }}</label>
+                    <Multiselect @input="saveCountry" v-model="selectedCountry" :options="countries" :multiselect="false" label="name" track-by="name" :showLabels="false" :placeholder="__( 'Select Country', 'dokan-lite' )" />
                 </div>
 
                 <div class="column">
-                    <label for="state">{{ __( 'State', 'dokan') }}</label>
+                    <label for="state">{{ __( 'State', 'dokan-lite') }}</label>
                     <template v-if="getStatesFromCountryCode(selectedCode).length < 1">
-                        <input class="dokan-form-input" type="text" v-model="vendorInfo.address.state" :placeholder="__( 'State', 'dokan' )">
+                        <input class="dokan-form-input" type="text" v-model="vendorInfo.address.state" :placeholder="__( 'State', 'dokan-lite' )">
                     </template>
                     <template v-else>
-                        <Multiselect @input="saveState" v-model="selectedState" :options="getStatesFromCountryCode( selectedCode )" :multiselect="false" :showLabels="false" label="name" track-by="name" :placeholder="__( 'Select State', 'dokan' )" />
+                        <Multiselect @input="saveState" v-model="selectedState" :options="getStatesFromCountryCode( selectedCode )" :multiselect="false" :showLabels="false" label="name" track-by="name" :placeholder="__( 'Select State', 'dokan-lite' )" />
                     </template>
                 </div>
 

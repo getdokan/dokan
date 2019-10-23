@@ -28,7 +28,7 @@
             </div>
 
             <div slot="footer">
-                <button class="dokan-btn" @click="createVendor">{{ 'VendorPaymentFields' === currentTab ? __( 'Create Vendor', 'dokan' ) : this.nextBtn }}</button>
+                <button class="dokan-btn" @click="createVendor">{{ 'VendorPaymentFields' === currentTab ? __( 'Create Vendor', 'dokan-lite' ) : this.nextBtn }}</button>
             </div>
         </modal>
     </div>
@@ -61,21 +61,21 @@ export default {
         return {
             isLoading: false,
             storeId: '',
-            nextBtn: this.__( 'Next', 'dokan' ),
-            title: this.__( 'Add New Vendor', 'dokan' ),
+            nextBtn: this.__( 'Next', 'dokan-lite' ),
+            title: this.__( 'Add New Vendor', 'dokan-lite' ),
             tabs: {
                 VendorAccountFields: {
-                    label: this.__( 'Account Info', 'dokan' ),
+                    label: this.__( 'Account Info', 'dokan-lite' ),
                     name: 'VendorAccountFields',
                     icon: 'dashicons dashicons-admin-users',
                 },
                 VendorAddressFields: {
-                    label: this.__( 'Address', 'dokan' ),
+                    label: this.__( 'Address', 'dokan-lite' ),
                     name: 'VendorAddressFields',
                     icon: 'dashicons dashicons-admin-home',
                 },
                 VendorPaymentFields: {
-                    label: this.__( 'Payment Options', 'dokan' ),
+                    label: this.__( 'Payment Options', 'dokan-lite' ),
                     name: 'VendorPaymentFields',
                     icon: 'dashicons dashicons-money',
                 }
@@ -171,12 +171,12 @@ export default {
 
                     this.$swal( {
                         type: 'success',
-                        title: this.__( 'Vendor Created', 'dokan' ),
-                        text: this.__( 'A vendor has been created successfully!', 'dokan' ),
+                        title: this.__( 'Vendor Created', 'dokan-lite' ),
+                        text: this.__( 'A vendor has been created successfully!', 'dokan-lite' ),
                         showCloseButton: true,
                         showCancelButton: true,
-                        confirmButtonText: this.__( 'Add Another', 'dokan' ),
-                        cancelButtonText: this.__( 'Edit Vendor', 'dokan' ),
+                        confirmButtonText: this.__( 'Add Another', 'dokan-lite' ),
+                        cancelButtonText: this.__( 'Edit Vendor', 'dokan-lite' ),
                         focusConfirm: false
                     } )
                     .then( ( result ) => {
@@ -193,7 +193,7 @@ export default {
                     } );
                 } )
                 .fail( ( response ) => {
-                    this.showAlert( this.__( response.responseJSON.message, 'dokan' ), '', 'error' );
+                    this.showAlert( this.__( response.responseJSON.message, 'dokan-lite' ), '', 'error' );
                 } )
                 .always( () => {
                     this.$root.$emit('modalClosed');
