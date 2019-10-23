@@ -134,7 +134,8 @@ export default {
             errors: [],
             storeAvailable: false,
             userNameAvailable: false,
-            emailAvailable: false
+            emailAvailable: false,
+            hasPro: dokan.hasPro
         };
     },
 
@@ -182,7 +183,12 @@ export default {
                         if ( result.value ) {
                             this.$root.$emit( 'addAnotherVendor' );
                         } else if ( result.dismiss === this.$swal.DismissReason.cancel ) {
-                            this.$router.push( { path: 'vendors/' + response.id, query:{ edit: 'true' } } );
+
+                            if ( this.hasPro ) {
+                                this.$router.push( { path: 'vendors/' + response.id, query:{ edit: 'true' } } );
+                            } else {
+                                window.location.replace( `${dokan.urls.adminRoot}user-edit.php?user_id=${response.id}` );
+                            }
                         }
                     } );
                 } )

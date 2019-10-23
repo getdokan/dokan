@@ -2,7 +2,13 @@
     <div class="vendor-list">
         <h1 class="wp-heading-inline">{{ __( 'Vendors', 'dokan') }}</h1>
         <button @click="addNew()" class="page-title-action">{{ __( 'Add New', 'dokan' ) }}</button>
-        <router-link v-if="categories.length" class="page-title-action" :to="{name: 'StoreCategoriesIndex'}">{{ __( 'Store Categories', 'dokan' ) }}</router-link>
+
+        <!-- Add other component here here -->
+        <component v-for="(vendorHeaderArea, index) in dokanVendorHeaderArea"
+            :key="index"
+            :is="vendorHeaderArea"
+        />
+
         <hr class="wp-header-end">
 
         <ul class="subsubsub">
@@ -158,9 +164,7 @@ export default {
             ],
             vendors: [],
             loadAddVendor: false,
-            categories: [],
-            isCategoryMultiple: false,
-            storeCategoryType: dokan.store_category_type
+            dokanVendorHeaderArea: dokan.hooks.applyFilters( 'getDokanVendorHeaderArea', [] ),
         }
     },
 
@@ -214,10 +218,6 @@ export default {
 
         this.fetchVendors();
 
-        if (this.storeCategoryType !== 'none') {
-            this.fetchCategories();
-        }
-
         this.$root.$on( 'vendorAdded', ( payload ) => {
             this.vendors.unshift( payload );
         } );
@@ -225,6 +225,12 @@ export default {
         this.$root.$on( 'addAnotherVendor', () => {
             this.loadAddVendor = true;
         } );
+
+        this.$root.$on( 'categoryFetched', ( payload ) => {
+            this.categories = payload.categories;
+            this.isCategoryMultiple = payload.isCategoryMultiple;
+            this.columns = payload.columns;
+        });
     },
 
     methods: {
@@ -284,39 +290,6 @@ export default {
                     self.updatedCounts(xhr);
                     self.updatePagination(xhr);
                 });
-        },
-
-        fetchCategories() {
-            const self = this;
-
-            dokan.api.get( '/store-categories' )
-                .done( ( response, status, xhr ) => {
-                    self.categories = response;
-                    self.isCategoryMultiple = ( 'multiple' === xhr.getResponseHeader( 'X-WP-Store-Category-Type' ) );
-
-                    self.columns = {
-                        'store_name': {
-                            label: this.__( 'Store', 'dokan' ),
-                            sortable: true
-                        },
-                        'email': {
-                            label: this.__( 'E-mail', 'dokan' )
-                        },
-                        'categories': {
-                            label: self.isCategoryMultiple ? this.__( 'Categories', 'dokan' ) : this.__( 'Category', 'dokan' )
-                        },
-                        'phone': {
-                            label: this.__( 'Phone', 'dokan' )
-                        },
-                        'registered': {
-                            label: this.__( 'Registered', 'dokan' ),
-                            sortable: true
-                        },
-                        'enabled': {
-                            label: this.__( 'Status', 'dokan' )
-                        }
-                    };
-                } );
         },
 
         onActionClick(action, row) {
