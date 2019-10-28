@@ -158,10 +158,11 @@ class Dokan_Commission {
      *
      * @param  int|WC_Order $order
      * @param  string $context
+     * @param  bool $force If sets true, try to re-calculate earning by ignoring Dokan_Commission::get_earning_from_order_table() method.
      *
      * @return float|null on failure
      */
-    public function get_earning_by_order( $order, $context = 'seller' ) {
+    public function get_earning_by_order( $order, $context = 'seller', $force = false ) {
         if ( ! $order instanceof WC_Order ) {
             $order = wc_get_order( $order );
         }
@@ -186,7 +187,8 @@ class Dokan_Commission {
         // Set user passed `order_id` so that we can track if any commission_rate has been saved previously.
         // Specially on order table `re-generation`.
         $this->set_order_id( $order->get_id() );
-        $earning = $this->get_earning_from_order_table( $order->get_id(), $context );
+
+        $earning = ! $force ? $this->get_earning_from_order_table( $order->get_id(), $context ) : null;
 
         if ( ! is_null( $earning ) ) {
             return $earning;
@@ -208,7 +210,7 @@ class Dokan_Commission {
             if ( $refund ) {
                 $earning += $this->get_earning_by_product( $product_id, $context, $item->get_total() - $refund );
             } else {
-                $earning += $this->get_earning_by_product( $product_id, $context, $item->get_total() );
+                $earning += $this->get_earning_by_product( $product_id, $context, ! $force ? $item->get_total() : $item->get_subtotal() );
             }
         }
 

@@ -16,15 +16,15 @@ class Dokan_Order_Manager {
         // create sub-orders
         add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'maybe_split_orders' ) );
 
-        // prevent non-vendor coupons from being added
-        add_filter( 'woocommerce_coupon_is_valid', array( $this, 'ensure_vendor_coupon' ), 10, 2 );
-
         if ( is_admin() ) {
             add_action( 'woocommerce_process_shop_order_meta', 'dokan_sync_insert_order' );
         }
 
         // restore order stock if it's been reduced by twice
         add_action( 'woocommerce_reduce_order_stock', array( $this, 'restore_reduced_order_stock' ) );
+
+        // Adjust vendor balance if admin coupon is being applied on an order
+        add_filter( 'dokan_order_net_amount', array( $this, 'maybe_add_admin_discount_to_vendor_balance' ), 10, 2 );
     }
 
     /**
@@ -451,50 +451,6 @@ class Dokan_Order_Manager {
     }
 
     /**
-     * Ensure vendor coupon
-     *
-     * For consistancy, restrict coupons in cart if only
-     * products from that vendor exists in the cart. Also, a coupon
-     * should be restricted with a product.
-     *
-     * For example: When entering a coupon created by admin is applied, make
-     * sure a product of the admin is in the cart. Otherwise it wouldn't be
-     * possible to distribute the coupon in sub orders.
-     *
-     * @param  boolean $valid
-     * @param  \WC_Coupon $coupon
-     *
-     * @return boolean|Execption
-     */
-    public function ensure_vendor_coupon( $valid, $coupon ) {
-        $coupon_id         = $coupon->get_id();
-        $vendor_id         = get_post_field( 'post_author', $coupon_id );
-        $available_vendors = array();
-
-        if ( ! apply_filters( 'dokan_ensure_vendor_coupon', true ) ) {
-            return $valid;
-        }
-
-        // a coupon must be bound with a product
-        if ( count( $coupon->get_product_ids() ) == 0 ) {
-            throw new Exception( __( 'A coupon must be restricted with a vendor product.', 'dokan-lite' ) );
-        }
-
-        foreach ( WC()->cart->get_cart() as $item ) {
-            $product_id = $item['data']->get_id();
-
-            $available_vendors[] = get_post_field( 'post_author', $product_id );
-        }
-
-        if ( ! in_array( $vendor_id, $available_vendors ) ) {
-            return false;
-        }
-
-        return $valid;
-    }
-
-
-    /**
      * Restore order stock if it's been reduced by twice
      *
      * @param  object $order
@@ -540,5 +496,75 @@ class Dokan_Order_Manager {
             $item->delete_meta_data( '_reduced_stock' );
             $item->save();
         }
+    }
+
+    /**
+     * Maybe add admin discount to vendor_balance
+     *
+     * @since  DOKAN_LITE_SINCE
+     *
+     * @param  float $net_amount
+     * @param  WC_Order $sub_order
+     *
+     * @return float
+     */
+    public function maybe_add_admin_discount_to_vendor_balance( $net_amount, $sub_order ) {
+        $admin_coupon_data = dokan_get_admin_coupon_data_from_order( $sub_order );
+
+        if ( empty( $admin_coupon_data['discount'] ) ) {
+            return $net_amount;
+        }
+
+        if ( ! dokan_is_suborder( $sub_order ) ) {
+            /**
+             * Admin coupon is fully applied on this main order. So we'll remove the coupon first from this order.
+             *
+             * @since DOKAN_LITE_SINCE
+             */
+            $coupons = $admin_coupon_data['coupons'];
+
+            foreach ( $coupons as $coupon_code ) {
+                $sub_order->remove_coupon( $coupon_code );
+            }
+        } else {
+            /**
+             * Admin coupon is not fully applied on sub-orders but the discount has been calculated.
+             * So we'll call WC_Order::recalculate_coupons to remove those applied discount from this order.
+             *
+             * We simply can't call WC_Order::remove_coupon here cause doing so will remove the `coupon` from the parent order.
+             * So there will be no way to distinguish `discount amount` for sub-orders.
+             *
+             * @since DOKAN_LITE_SINCE
+             */
+            $rm = new ReflectionMethod( $sub_order, 'recalculate_coupons' );
+            $rm->setAccessible( true );
+            $rm->invoke( $sub_order );
+        }
+
+        $discount_total = isset( $admin_coupon_data['discount'] ) ? $admin_coupon_data['discount'] : 0;
+        $coupon_code    = $sub_order->get_id() . '_coupon';
+
+        /**
+         * We'll apply on-time coupon for this order and delete it as this coupon is no longer needed.
+         *
+         * @since  DOKAN_LITE_SINCE
+         */
+        dokan_apply_coupon_on_order_and_delete( $coupon_code, $discount_total, $sub_order );
+
+        /**
+         * If order status is pending, make it processing so that we can show it in the report.
+         *
+         * @since  DOKAN_LITE_SINCE
+         */
+        add_filter( 'dokan_get_order_status', function( $status ) {
+            return 'pending' === $status ? 'processing' : $status;
+        } );
+
+        $admin_commission = dokan()->commission->get_earning_by_order( $sub_order, 'admin', true );
+        $order_total      = $sub_order->get_total() + $discount_total;
+        $net_amount       = $order_total - $admin_commission;
+        $net_amount       = $net_amount > 0 ? $net_amount : 0;
+
+        return apply_filters( 'dokan_get_adjusted_net_amount', $net_amount );
     }
 }

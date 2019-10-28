@@ -97,10 +97,15 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                                         <tr>
                                             <th><?php esc_html_e( 'Coupons', 'dokan-lite' ); ?></th>
                                             <td>
-                                                <ul class="list-inline"><?php
+                                                <ul class="dokan-coupon-list"><?php
                                                     foreach ( $coupons as $item_id => $item ) {
-
                                                         $post_id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_title = %s AND post_type = 'shop_coupon' AND post_status = 'publish' LIMIT 1;", $item['name'] ) );
+                                                        $author  = get_post_field( 'post_author', $post_id );
+
+                                                        if ( $author && user_can( $author, 'manage_options' ) ) {
+                                                            echo '<li><a data-html="true" class="tips code" title="' . esc_attr( wc_price( $item['discount_amount'] ) ) . '" href="#"><span>' . esc_html( $item['name'] ). '</span></a> (' . sprintf( __( 'This %s coupon is created by admin', 'dokan' ), wc_price( $item['discount_amount'] ) ) . ')</li>';
+                                                            continue;
+                                                        }
 
                                                         $link = dokan_get_coupon_edit_url( $post_id );
 

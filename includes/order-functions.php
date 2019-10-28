@@ -317,12 +317,13 @@ function dokan_sync_insert_order( $order_id ) {
     $order              = wc_get_order( $order_id );
     $seller_id          = dokan_get_seller_id_by_order( $order_id );
     $order_total        = $order->get_total();
-    $order_status       = dokan_get_prop( $order, 'status' );
     $admin_commission   = dokan()->commission->get_earning_by_order( $order, 'admin' );
     $net_amount         = $order_total - $admin_commission;
+    $net_amount         = $net_amount > 0 ? $net_amount : 0;
     $net_amount         = apply_filters( 'dokan_order_net_amount', $net_amount, $order );
     $threshold_day      = dokan_get_option( 'withdraw_date_limit', 'dokan_withdraw', 0 );
     $threshold_day      = $threshold_day ? $threshold_day : 0;
+    $order_status       = apply_filters( 'dokan_get_order_status', dokan_get_prop( $order, 'status' ), $order );
 
     dokan_delete_sync_duplicate_order( $order_id, $seller_id );
 
@@ -985,4 +986,201 @@ function dokan_is_order_already_exists( $id ) {
     $order_id = $wpdb->get_var( $wpdb->prepare( "SELECT order_id FROM {$wpdb->prefix}dokan_orders WHERE order_id=%d", $id ) );
 
     return $order_id ? true : false;
+}
+
+/**
+ * Dokan get admin coupon data from an order
+ *
+ * @since  DOKAN_LITE_SINCE
+ *
+ * @param  int|WC_Order $order
+ *
+ * @return array|null on failure
+ */
+function dokan_get_admin_coupon_data_from_order( $order ) {
+    if ( ! $order instanceof WC_Order ) {
+        $order = wc_get_order( $order );
+    }
+
+    if ( ! $order ) {
+        return;
+    }
+
+    $parent_order = dokan_get_parent_order( $order );
+
+    if ( ! $parent_order ) {
+        $parent_order = $order;
+    }
+
+    $coupon_codes = $parent_order->get_coupon_codes();
+
+    if ( empty( $coupon_codes ) ) {
+        return;
+    }
+
+    $admin_coupons = [];
+
+    foreach ( $coupon_codes as $coupon_code ) {
+        $coupon = new WC_Coupon( $coupon_code );
+
+        if ( ! $coupon instanceof WC_Coupon ) {
+            continue;
+        }
+
+        $author = get_post_field( 'post_author', $coupon->get_id() );
+
+        if ( $author && user_can( $author, 'manage_woocommerce' ) ) {
+            array_push( $admin_coupons, $coupon->get_code() );
+        }
+    }
+
+    $vendor_discount = dokan_get_vendor_coupon_discount_from_order( $order );
+    $admin_discount  = $order->get_discount_total() - $vendor_discount;
+
+    return apply_filters( 'dokan_get_admin_coupon_data_from_order', [
+        'coupons'  => $admin_coupons,
+        'discount' => $admin_discount
+    ] );
+}
+
+/**
+ * Dokan get vendor coupon discount from an order
+ *
+ * @since  DOKAN_LITE_SINCE
+ *
+ * @param  int|WC_Order $order
+ *
+ * @return float|null on failure
+ */
+function dokan_get_vendor_coupon_discount_from_order( $order ) {
+    if ( ! $order instanceof WC_Order ) {
+        $order = wc_get_order( $order );
+    }
+
+    if ( ! $order ) {
+        return;
+    }
+
+    $coupon_codes = $order->get_coupon_codes();
+
+    if ( empty( $coupon_codes ) ) {
+        return;
+    }
+
+    $discount_total = 0;
+
+    foreach ( $coupon_codes as $coupon_code ) {
+        $coupon = new WC_Coupon( $coupon_code );
+
+        if ( ! $coupon instanceof WC_Coupon ) {
+            continue;
+        }
+
+        $author = get_post_field( 'post_author', $coupon->get_id() );
+
+        if ( $author && ! user_can( $author, 'manage_woocommerce' ) ) {
+            $discount_total += $coupon->get_amount();
+        }
+    }
+
+    return apply_filters( 'dokan_get_vendor_coupon_discount_from_order', $discount_total );
+}
+
+/**
+ * Dokan apply coupon on order and delete
+ *
+ * @since  DOKAN_LITE_SINCE
+ *
+ * @param  string $coupon_code
+ * @param  float $amount
+ * @param  int|WC_Order $order
+ *
+ * @return void
+ */
+function dokan_apply_coupon_on_order_and_delete( $coupon_code, $amount = 0, $order ) {
+    $coupon_id = wp_insert_post( apply_filters( 'dokan_create_tmp_coupon', [
+        'post_title'  => $coupon_code,
+        'post_type'   => 'shop_coupon',
+        'post_status' => 'publish',
+    ] ) );
+
+    if ( ! $coupon_id || is_wp_error( $coupon_id ) ) {
+        return;
+    }
+
+    $meta = apply_filters( 'dokan_create_tmp_coupon_meta', [
+        'discount_type'              => 'fixed_cart',
+        'coupon_amount'              => $amount,
+        'individual_use'             => 'no',
+        'product_ids'                => '',
+        'exclude_product_ids'        => '',
+        'usage_limit'                => '',
+        'usage_limit_per_user'       => '',
+        'limit_usage_to_x_items'     => '',
+        'expiry_date'                => '',
+        'free_shipping'              => 'no',
+        'exclude_sale_items'         => 'no',
+        'product_categories'         => [],
+        'exclude_product_categories' => [],
+        'minimum_amount'             => '',
+        'maximum_amount'             => '',
+        'customer_email'             => [],
+        'usage_count'                => '0',
+    ] );
+
+    foreach ( $meta as $key => $value ) {
+        update_post_meta( $coupon_id, $key, $value );
+    }
+
+    $coupon = new WC_Coupon( $coupon_code );
+
+    do_action( 'dokan_pre_apply_coupon_on_order_and_delete', $coupon, $order );
+
+    if ( $order->apply_coupon( $coupon ) ) {
+        wp_delete_post( $coupon_id, true );
+        do_action( 'dokan_coupon_applied_and_deleted', $coupon, $order );
+    }
+}
+
+/**
+ * Check whether the order is suborder or not
+ *
+ * @since  DOKAN_LITE_SINCE
+ *
+ * @param  int|WC_Order $order
+ *
+ * @return bool
+ */
+function dokan_is_suborder( $order ) {
+    $parent_order = dokan_get_parent_order( $order );
+
+    if ( ! $parent_order ) {
+        return false;
+    }
+
+    return apply_filters( 'dokan_is_suborder', (bool) $parent_order->get_meta( 'has_sub_order' ) );
+}
+
+/**
+ * Dokan get parent order. If no sub orders is found count it as a parent order too.
+ *
+ * @since  DOKAN_LITE_SINCE
+ *
+ * @param  int|WC_Order $order
+ *
+ * @return WC_order|false on failure
+ */
+function dokan_get_parent_order( $order ) {
+    if ( ! $order instanceof WC_Order ) {
+        $order = wc_get_order( $order );
+    }
+
+    if ( ! $order ) {
+        return false;
+    }
+
+    $parent_order_id = $order->get_parent_id();
+    $parent_order    = $parent_order_id ? wc_get_order( $parent_order_id ) : $order;
+
+    return apply_filters( 'dokan_get_parent_order', $parent_order );
 }
