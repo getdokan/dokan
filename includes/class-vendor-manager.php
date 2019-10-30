@@ -177,6 +177,7 @@ class Dokan_Vendor_Manager {
         }
 
         update_user_meta( $vendor_id, 'dokan_profile_settings', $store_data );
+        update_user_meta( $vendor_id, 'dokan_store_name', $store_data['store_name'] );
 
         do_action( 'dokan_new_vendor', $vendor_id );
 

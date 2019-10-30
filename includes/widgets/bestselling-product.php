@@ -22,8 +22,11 @@ class Dokan_Best_Selling_Widget extends WP_Widget {
      * @param array $instance Saved values from database.
      */
     public function widget( $args, $instance ) {
-        $title = apply_filters( 'widget_title', $instance['title'] );
+        $title = ! empty( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : '';
         extract( $instance );
+
+        $no_of_product = isset( $no_of_product ) ? $no_of_product : 8;
+        $show_rating   = isset( $show_rating ) ? $show_rating : false;
 
         $r = dokan_get_best_selling_products( $no_of_product );
 
@@ -86,10 +89,11 @@ class Dokan_Best_Selling_Widget extends WP_Widget {
      * @return array Updated safe values to be saved.
      */
     public function update( $new_instance, $old_instance ) {
-        $instance = array();
-        $instance['title'] = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
+        $instance                  = [];
+        $instance['title']         = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
         $instance['no_of_product'] = ( ! empty( $new_instance['no_of_product'] ) && is_numeric( $new_instance['no_of_product'] ) && $new_instance['no_of_product'] > 0 ) ? strip_tags( intval( $new_instance['no_of_product'] ) ) : '8';
-        $instance['show_rating'] = ( ! empty( $new_instance['show_rating'] ) ) ? strip_tags( $new_instance['show_rating'] ) : '';
+        $instance['show_rating']   = ( ! empty( $new_instance['show_rating'] ) ) ? strip_tags( $new_instance['show_rating'] ) : '';
+
         return $instance;
     }
 
