@@ -79,10 +79,14 @@ class AccountPage
 
         $I->amOnPage(self::$URL);
         $I->click(self::$registrationLink);
-        $I->fillField(self::$emailField, $email);
+        $I->fillField(self::$emailField, randomGenerate()->email);
         $I->click(self::$registrationButton);
 
         return $this;
     }
 
+}
+
+function randomGenerate() {
+  return \Faker\Factory::create();
 }

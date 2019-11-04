@@ -9,7 +9,8 @@ class checkPermmissionCest
     }
 
     // tests
-    public function checkPermission(\Step\Acceptance\MultiSteps $I)
+    public function checkPermission(\Step\Acceptance\MultiSteps $I, 
+                                    \Step\Acceptance\Commissions $Admin)
     {
     	$I->loginAsAdmin();
     	$I->amOnPage('/wp-admin/options-general.php');
@@ -22,5 +23,6 @@ class checkPermmissionCest
         $I->seeCheckboxIsChecked('#dokan_selling[new_seller_enable_selling]');
         $I->seeCheckboxIsChecked('#dokan_selling[order_status_change]');
         $I->seeOptionIsSelected('#dokan_selling[product_status]', 'Published');
+        $Admin->setFlatCommission();
     }
 }

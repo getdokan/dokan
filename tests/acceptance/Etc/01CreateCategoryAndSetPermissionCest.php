@@ -21,4 +21,18 @@ class CreateCategoryAndSetPermissionCest
       // $I->seeCheckboxIsChecked('#dokan_selling[order_status_change]');
 
     }
+    public function module(\Step\Acceptance\Login $I)
+    {
+      $I->loginAsAdmin();
+       $I->click('Dokan');
+       $I->click('Modules');
+       $I->wait(3);
+       $I->seeCheckboxIsChecked('//div[14]/div/div[2]/ul/li/label/span');
+       // $I->checkOption('//div[14]/div/div[2]/ul/li/label/span');
+       $I->wait(3);
+       $I->click('Settings');
+       $I->wait(5);
+       $I->click(['link' => 'Single Product MultiVendor']);
+       $I->seeCheckboxIsChecked('#dokan_spmv[enable_pricing]');
+    }
 }

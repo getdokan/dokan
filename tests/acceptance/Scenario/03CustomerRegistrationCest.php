@@ -1,5 +1,5 @@
 <?php
-
+use  Page\Acceptance\AccountPage as Customer;
 
 class CustomerRegistrationCest
 {
@@ -11,8 +11,14 @@ class CustomerRegistrationCest
     public function registrationAsCustomer(AcceptanceTester $I,
                                 \Page\Acceptance\AccountPage $customer)
     {
-    	$customer->registration('sk22@g.c');
+        $I->amOnPage(Customer::$URL);
+      $I->click(Customer::$registrationLink);
+      $I->fillField(Customer::$emailField, randomGenerateCustomer()->email );
       $I->dontSee('Error: An account is already registered with your email address. Please log in.');
       $I->see('dashboard');
     }
+}
+
+function randomGenerateCustomer() {
+  return \Faker\Factory::create();
 }

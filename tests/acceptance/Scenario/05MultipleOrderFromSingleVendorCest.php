@@ -8,13 +8,11 @@ class MultipleOrderFromSingleVendorCest
     }
 
     // Customer add to cart multiple order
-    public function multipleOrderFromSingleVendor(\Step\Acceptance\Login $I, 
-                                                  \Step\Acceptance\Product $Customer,
-                                                  \Step\Acceptance\Order $Multiple)
+    public function multipleOrderFromSingleVendor(\Step\Acceptance\MultiSteps $I)
     {
       $I->loginAsCustomer();
-      $Customer->viewMultipleProduct();
-      $Multiple->orderProcessing();
+      $I->viewMultipleProduct();
+      $I->placeOrder();
 
     }
 
