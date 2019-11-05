@@ -441,15 +441,11 @@ class Dokan_Commission {
         $func_type = str_replace( 'earning', 'type', $callable );
         $func_fee  = str_replace( 'earning', 'additional_fee', $callable );
 
-        $commission_rate = null;
+        $commission_rate = 0;
 
         // get[product,category,vendor,global]_wise_rate
         if ( is_callable( [ $this, $func_rate ] ) ) {
             $commission_rate = $this->$func_rate( $product_id );
-        }
-
-        if ( is_null( $commission_rate ) ) {
-            return null;
         }
 
         $earning = null;
