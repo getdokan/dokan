@@ -67,8 +67,7 @@ class Dokan_Update_2_9_23_Store_Name extends Abstract_Dokan_Background_Processes
                 continue;
             }
 
-            $vendor->set_shop_name( $vendor->get_shop_name() );
-            $vendor->save();
+            $vendor->update_meta( 'dokan_store_name', $vendor->get_shop_name() );
         }
 
         return array(
