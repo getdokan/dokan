@@ -765,13 +765,13 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
      */
     public function update_vendor_status( $request ) {
         if ( ! in_array( $request['status'], array( 'active', 'inactive' ) ) ) {
-            return new WP_Error( 'no_valid_status', __( 'Status parameter must be active or inactive' ), array( 'status' => 400 ) );
+            return new WP_Error( 'no_valid_status', __( 'Status parameter must be active or inactive', 'dokan-lite' ), array( 'status' => 400 ) );
         }
 
         $store_id = ! empty( $request['id'] ) ? $request['id'] : 0;
 
         if ( empty( $store_id ) ) {
-            return new WP_Error( 'no_vendor_found', __( 'No vendor found for updating status' ), array( 'status' => 400 ) );
+            return new WP_Error( 'no_vendor_found', __( 'No vendor found for updating status', 'dokan-lite' ), array( 'status' => 400 ) );
         }
 
         if ( 'active' == $request['status'] ) {
@@ -796,12 +796,11 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
         $params = $request->get_params();
 
         if ( empty( $params ) ) {
-            return new WP_Error( 'no_item_found', __( 'No items found for bulk updating', 'dokan' ), array( 'status' => 404 ) );
+            return new WP_Error( 'no_item_found', __( 'No items found for bulk updating', 'dokan-lite' ), [ 'status' => 404 ] );
         }
 
-        $allowed_status = array( 'approved', 'pending', 'delete' );
-
-        $response = array();
+        $allowed_status = ['approved', 'pending', 'delete'];
+        $response       = [];
 
         foreach ( $params as $status => $value ) {
             if ( in_array( $status, $allowed_status ) ) {
