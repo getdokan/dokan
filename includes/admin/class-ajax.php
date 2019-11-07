@@ -51,7 +51,7 @@ class Dokan_Admin_Ajax {
         }
 
         if ( ! empty( $_POST['dokan_christmas_dismissed'] ) ) {
-            $offer_key = 'dokan_wedevs_19_birthday_offer';
+            $offer_key = 'dokan_wedevs_19_blackfriday';
             update_option( $offer_key, 'hide' );
         }
     }
