@@ -1,3 +1,17 @@
+v2.9.23 -> November 07, 2019
+-----------------------------------
+-   **Feat*** Add REST API support for store contact form widget
+-   **Feat*** Add Vendor listing page in dokan backend
+-   **Feat*** Add vendor active inactive REST API
+-   **Fix***  Increase refund table data length to allow more refund items
+-   **Fix***  Withdraw threshold field disappears when commission type is selected in dokan settings
+-   **Fix***  Order listing page shows the same orders when object cache is enabled
+-   **Fix***  Best selling widgets warning in store sidebar
+-   **Fix***  Save store name in vendor's user_meta so that store search form widget works correctly
+-   **Fix***  If percent commission rate is not set while using combine commission calculation is not correct
+-   **Dev***  Add filter to modify current page id in dokan_is_seller_dashboard function
+-   **Localization*** Store open and close notice placeholder strings remains untranslated
+
 v2.9.22 -> October 03, 2019
 -----------------------------------
 -   **fix***   Remove duplicate inpute filed in dokan admin settings form

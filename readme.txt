@@ -3,9 +3,9 @@ Contributors: tareq1988, wedevs, sabbir1991, nizamuddinbabu, sk.shaikat, ediamin
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, product vendors, woocommerce vendor, commission rate, e-commerce, ebay, ecommerce, yith, yithemes
 Requires at least: 4.4
-Tested up to: 5.2.3
+Tested up to: 5.2.4
 WC requires at least: 3.0
-WC tested up to: 3.7.0
+WC tested up to: 3.8.0
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv2 or later
@@ -283,6 +283,20 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 == Changelog ==
+
+v2.9.23 -> November 07, 2019
+-----------------------------------
+-   **Feat*** Add REST API support for store contact form widget
+-   **Feat*** Add Vendor listing page in dokan backend
+-   **Feat*** Add vendor active inactive REST API
+-   **Fix***  Increase refund table data length to allow more refund items
+-   **Fix***  Withdraw threshold field disappears when commission type is selected in dokan settings
+-   **Fix***  Order listing page shows the same orders when object cache is enabled
+-   **Fix***  Best selling widgets warning in store sidebar
+-   **Fix***  Save store name in vendor's user_meta so that store search form widget works correctly
+-   **Fix***  If percent commission rate is not set while using combine commission calculation is not correct
+-   **Dev***  Add filter to modify current page id in dokan_is_seller_dashboard function
+-   **Localization*** Store open and close notice placeholder strings remains untranslated
 
 v2.9.22 -> October 03, 2019
 -----------------------------------

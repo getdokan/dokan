@@ -1133,7 +1133,7 @@ class Dokan_Vendor {
     /**
      * Get vendor meta data
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.23
      *
      * @param string $key
      * @param bool $single  Whether to return a single value
@@ -1161,7 +1161,7 @@ class Dokan_Vendor {
     /**
      * Update meta data
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.23
      *
      * @return void
      */
