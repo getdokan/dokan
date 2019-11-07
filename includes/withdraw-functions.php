@@ -245,22 +245,31 @@ function dokan_get_withdraw_count( $user_id = '' ) {
 }
 
 /**
- * Get active withdraw order status.
+ * Get active withdwrawable order status
  *
- * Default is 'completed', 'processing', 'on-hold'
+ * @since  1.0.0
  *
+ * @return array
  */
 function dokan_withdraw_get_active_order_status() {
-    $order_status  = dokan_get_option( 'withdraw_order_status', 'dokan_withdraw', array( 'wc-completed' ) );
-    $saving_status = [ 'wc-refunded' ];
+    $order_status = dokan_get_option( 'withdraw_order_status', 'dokan_withdraw', [ 'wc-completed' => 'wc-completed' ] );
+
+    /**
+     * wc-refunded status is not visible in dokan order status for withdraw settings (backend).
+     * But it's needed for report and other calculations.
+     *
+     * @var array
+     */
+    $active_status = [ 'wc-refunded' ];
 
     foreach ( $order_status as $key => $status ) {
         if ( ! empty( $status ) ) {
-            $saving_status[] = $status;
+            $key = strpos( $key, 'wc-' ) === 0 ? $key : 'wc-' . $key;
+            array_push( $active_status, strtolower( $key ) );
         }
     }
 
-    return apply_filters( 'dokan_withdraw_active_status', $saving_status );
+    return apply_filters( 'dokan_withdraw_active_status', $active_status );
 }
 
 /**
