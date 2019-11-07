@@ -36,57 +36,126 @@ class Dokan_Admin {
      * @return void
      */
     public function promotional_offer() {
-
         if ( ! current_user_can( 'manage_options' ) ) {
             return;
         }
 
-        // check if it has already been dismissed
-        $offer_key   = 'dokan_wedevs_19_birthday_offer';
-        $offer_last_date = strtotime( '2019-03-24 12:00:00' );
-        $hide_notice = get_option( $offer_key, 'show' );
-        $offer_link  = 'https://wedevs.com/dokan/?add-to-cart=15310&variation_id=15314&attribute_pa_license=professional&coupon_code=BIRTHDAY33';
-
-        $allowed_html = array(
-            'p'       => array(),
-            'strong'  => array(),
-            'a'       => array(
-                'href'   => array(),
-                'title'  => array(),
-                'target' => array()
-            )
-        );
-        $content = __( '<p>It’s Our Birthday 🎂 But You Get The Gifts! <strong>33%% off</strong> On All Dokan Pro Packages. Coupon Code: <strong><code>BIRTHDAY33</code></strong>. [Limited Time ⌛ Offer] <a target="_blank" href="%s">Grab The Deal</a></p>', 'dokan-lite' );
-
-        if ( current_time( 'timestamp' ) > $offer_last_date ) {
+        if ( ! isset( $_GET['page'] ) ) {
             return;
         }
+
+        if ( $_GET['page'] != 'dokan' ) {
+            return;
+        }
+
+        // check if it has already been dismissed
+        $offer_key        = 'dokan_wedevs_19_blackfriday';
+        $offer_start_date = strtotime( '2019-11-26 00:00:01' );
+        $offer_last_date  = strtotime( '2019-12-04 23:59:00' );
+        $hide_notice      = get_option( $offer_key, 'show' );
+        $offer_link       = 'https://wedevs.com/dokan/?add-to-cart=15310&variation_id=15314&attribute_pa_license=professional&coupon_code=BFCM2019';
 
         if ( 'hide' == $hide_notice || dokan()->is_pro_exists() ) {
             return;
         }
-        ?>
-            <div class="notice notice-success is-dismissible" id="dokan-christmas-notice">
-                <?php printf( wp_kses( $content, $allowed_html ), esc_url( $offer_link ) ); ?>
-            </div>
 
-            <style>
-                #dokan-christmas-notice p {
-                    font-size: 14px;
-                }
-            </style>
+        if ( $offer_start_date < current_time( 'timestamp' ) && current_time( 'timestamp' ) < $offer_last_date ) {
+            ?>
+                <div class="notice notice-success is-dismissible" id="dokan-christmas-notice">
+                    <div class="logo">
+                        <img src="<?php echo DOKAN_PLUGIN_ASSEST . '/images/promo-logo.png' ?>" alt="Dokan">
+                    </div>
+                    <div class="content">
+                        <h3><span class="highlight-red">Black Friday</span> & <span class="highlight-blue">Cyber Monday</span></h3>
+                        <p>Don't miss out on the biggest sale of the year on <span class="highlight-red">Dokan Multi-Vendor</span></p>
+                        <p style="margin-top:12px"><span class="highlight-red">Use this coupon</span><span class="highlight-code">BFCM2019</span></p>
+                    </div>
+                    <div class="call-to-action">
+                        <a href="https://wedevs.com/dokan/pricing?utm_campaign=black_friday_&_cyber_monday&utm_medium=banner&utm_source=plugin_dashboard">Save 33%</a>
+                        <p>Valid till 4th December</p>
+                    </div>
+                </div>
 
-            <script type='text/javascript'>
-                jQuery('body').on('click', '#dokan-christmas-notice .notice-dismiss', function(e) {
-                    e.preventDefault();
+                <style>
+                    #dokan-christmas-notice {
+                        font-size: 14px;
+                        border-left: none;
+                        background: #000;
+                        color: #fff;
+                        display: flex
+                    }
 
-                    wp.ajax.post( 'dokan-dismiss-christmas-offer-notice', {
-                        dokan_christmas_dismissed: true,
-                        nonce: '<?php echo esc_attr( wp_create_nonce( 'dokan_admin' ) ); ?>'
+                    #dokan-christmas-notice .logo{
+                        text-align: center;
+                        text-align: center;
+                        margin: 13px 30px 5px 15px;
+                    }
+
+                    #dokan-christmas-notice .logo img{
+                        width: 80%;
+                    }
+
+                    #dokan-christmas-notice .highlight-red {
+                        color: #FF0000;
+                    }
+                    #dokan-christmas-notice .highlight-blue {
+                        color: #48ABFF;
+                    }
+
+                    #dokan-christmas-notice .content {
+                        margin-top: 5px;
+                    }
+
+                    #dokan-christmas-notice .content h3{
+                        color: #FFF;
+                        margin: 12px 0px 5px;
+                    }
+
+                    #dokan-christmas-notice .content p{
+                        margin: 0px 0px;
+                        padding: 0px;
+                        letter-spacing: 0.4px;
+                    }
+
+                    #dokan-christmas-notice .content p span.highlight-code{
+                        margin: 0 0 0 10px;
+                        border: 1px dotted #fff;
+                        padding: 5px 10px;
+                        border-radius: 15px;
+                    }
+                    #dokan-christmas-notice .call-to-action {
+                        margin-left: 8%;
+                        margin-top: 25px;
+                    }
+                    #dokan-christmas-notice .call-to-action a {
+                        border: none;
+                        background: #FF0000;
+                        padding: 8px 15px;
+                        font-size: 15px;
+                        color: #fff;
+                        border-radius: 20px;
+                        text-decoration: none;
+                        display: block;
+                        text-align: center;
+                    }
+                    #dokan-christmas-notice .call-to-action p {
+                        font-size: 12px;
+                        margin-top: 1px;
+                    }
+                </style>
+
+                <script type='text/javascript'>
+                    jQuery('body').on('click', '#dokan-christmas-notice .notice-dismiss', function(e) {
+                        e.preventDefault();
+
+                        wp.ajax.post( 'dokan-dismiss-christmas-offer-notice', {
+                            dokan_christmas_dismissed: true,
+                            nonce: '<?php echo esc_attr( wp_create_nonce( 'dokan_admin' ) ); ?>'
+                        });
                     });
-                });
-            </script>
-        <?php
+                </script>
+            <?php
+        }
     }
 
     /**
@@ -133,6 +202,11 @@ class Dokan_Admin {
         if ( current_user_can( $capability ) ) {
             $submenu[ $slug ][] = array( __( 'Dashboard', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/' );
             $submenu[ $slug ][] = array( __( 'Withdraw', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/withdraw?status=pending' );
+
+            // if dokan pro not installed or dokan pro is greater than 2.9.14 register the `vendor` sub-menu
+            if ( ! dokan()->is_pro_exists() || version_compare( DOKAN_PRO_PLUGIN_VERSION, '2.9.14', '>' ) ) {
+                $submenu[ $slug ][] = array( __( 'Vendors', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/vendors' );
+            }
 
             if ( ! dokan()->is_pro_exists() ) {
                 $submenu[ $slug ][] = array( __( 'PRO Features', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/premium' );
