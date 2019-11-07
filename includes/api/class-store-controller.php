@@ -706,7 +706,7 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
     /**
      * Send email to vendor
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.23
      *
      * @param  WP_REST_Request
      *
@@ -731,7 +731,7 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
         /**
          * Fires before sedning email to vendor via the REST API.
          *
-         * @since  DOKAN_LITE_SINCE
+         * @since  2.9.23
          *
          * @param WP_REST_Request $request   Request object.
          * @param boolean         $creating  True when creating object, false when updating.
@@ -759,7 +759,7 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
     /**
      * update_vendor_status
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.23
      *
      * @return void
      */
@@ -788,7 +788,7 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
     /**
      * Batch udpate for vendor listing
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.23
      *
      * @return void
      */

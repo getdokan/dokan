@@ -3619,7 +3619,7 @@ if ( ! function_exists( 'dokan_get_seller_status_count' ) ) {
     /**
      * Get Seller status counts, used in admin area
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.23
      *
      * @return array
      */
