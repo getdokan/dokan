@@ -137,6 +137,34 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
                 ]
             ],
         ) );
+
+        register_rest_route( $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/status', array(
+            'args' => array(
+                'id' => array(
+                    'description' => __( 'Unique identifier for the object.' ),
+                    'type'        => 'integer',
+                    'required'    => true
+                ),
+                'status' => array(
+                    'description' => __( 'Status for the store object.' ),
+                    'type'        => 'string',
+                    'required'    => true
+                ),
+            ),
+            array(
+                'methods'  => WP_REST_Server::EDITABLE,
+                'callback' => array( $this, 'update_vendor_status' ),
+                'permission_callback' => array( $this, 'permission_check_for_manageable_part' ),
+            ),
+        ) );
+
+        register_rest_route( $this->namespace, '/' . $this->base . '/batch', array(
+            array(
+                'methods'  => WP_REST_Server::EDITABLE,
+                'callback' => array( $this, 'batch_update' ),
+                'permission_callback' => array( $this, 'permission_check_for_manageable_part' ),
+            ),
+        ) );
     }
 
     /**
@@ -726,5 +754,84 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
         ] );
 
         return rest_ensure_response( $response );
+    }
+
+    /**
+     * update_vendor_status
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return void
+     */
+    public function update_vendor_status( $request ) {
+        if ( ! in_array( $request['status'], array( 'active', 'inactive' ) ) ) {
+            return new WP_Error( 'no_valid_status', __( 'Status parameter must be active or inactive' ), array( 'status' => 400 ) );
+        }
+
+        $store_id = ! empty( $request['id'] ) ? $request['id'] : 0;
+
+        if ( empty( $store_id ) ) {
+            return new WP_Error( 'no_vendor_found', __( 'No vendor found for updating status' ), array( 'status' => 400 ) );
+        }
+
+        if ( 'active' == $request['status'] ) {
+            $user = dokan()->vendor->get( $store_id )->make_active();
+        } else {
+            $user = dokan()->vendor->get( $store_id )->make_inactive();
+        }
+
+        $response = rest_ensure_response( $user );
+        $response->add_links( $this->prepare_links( $user, $request ) );
+        return $response;
+    }
+
+    /**
+     * Batch udpate for vendor listing
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return void
+     */
+    public function batch_update( $request ) {
+        $params = $request->get_params();
+
+        if ( empty( $params ) ) {
+            return new WP_Error( 'no_item_found', __( 'No items found for bulk updating', 'dokan' ), array( 'status' => 404 ) );
+        }
+
+        $allowed_status = array( 'approved', 'pending', 'delete' );
+
+        $response = array();
+
+        foreach ( $params as $status => $value ) {
+            if ( in_array( $status, $allowed_status ) ) {
+
+                switch ( $status ) {
+                    case 'approved':
+
+                        foreach ( $value as $vendor_id ) {
+                            $response['approved'][] = dokan()->vendor->get( $vendor_id )->make_active();
+                        }
+                        break;
+
+                    case 'pending':
+
+                        foreach ( $value as $vendor_id ) {
+                            $response['pending'][] = dokan()->vendor->get( $vendor_id )->make_inactive();
+                        }
+                        break;
+
+                    case 'delete':
+
+                        foreach ( $value as $vendor_id ) {
+                            $user = dokan()->vendor->get( $vendor_id )->delete();
+                            $response['delete'][] = $user;
+                        }
+                        break;
+                }
+            }
+        }
+
+        return $response;
     }
 }
