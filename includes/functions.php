@@ -139,11 +139,11 @@ function dokan_is_product_edit_page() {
 function dokan_is_seller_dashboard() {
     $page_id = dokan_get_option( 'dashboard', 'dokan_pages' );
 
-    if ( ! $page_id ) {
+    if ( ! apply_filters( 'dokan_get_dashboard_page_id', $page_id ) ) {
         return false;
     }
 
-    if ( $page_id == get_the_ID() ) {
+    if ( $page_id == apply_filters( 'dokan_get_current_page_id', get_the_ID() ) ) {
         return true;
     }
 
