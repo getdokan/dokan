@@ -5,7 +5,7 @@ return [
 	__( 'Close', 'dokan-lite' ),
 	__( 'Active', 'dokan-lite' ),
 	__( 'Select', 'dokan-lite' ),
-	__( 'Please enter google map API key', 'dokan' ),
+	__( 'Please enter google map API key', 'dokan-lite' ),
 	__( 'Close modal panel', 'dokan-lite' ),
 	__( 'Select an image', 'dokan-lite' ),
 	__( 'Please select an image,', 'dokan-lite' ),

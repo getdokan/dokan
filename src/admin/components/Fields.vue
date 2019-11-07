@@ -16,6 +16,16 @@
             </td>
         </template>
 
+        <template v-if="'number' === fieldData.type && 'combine' === allSettingsValues.dokan_selling.commission_type && 'admin_percentage' !== fieldData.name">
+            <th scope="row">
+                <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
+            </th>
+            <td>
+                <input type="number" :min="fieldData.min" :max="fieldData.max" :step="fieldData.step" class="regular-text" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
+                <p class="description" v-html="fieldData.desc"></p>
+            </td>
+        </template>
+
         <template v-if="'number' == fieldData.type && allSettingsValues.dokan_selling && 'combine' !== allSettingsValues.dokan_selling.commission_type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>

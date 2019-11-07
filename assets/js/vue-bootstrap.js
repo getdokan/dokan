@@ -6,7 +6,66 @@ dokanWebpack([0],[
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(5);
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Switches_vue__ = __webpack_require__(9);
+/* empty harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_aa8ad7dc_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Switches_vue__ = __webpack_require__(27);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(26)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Switches_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_aa8ad7dc_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Switches_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src/admin/components/Switches.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-aa8ad7dc", Component.options)
+  } else {
+    hotAPI.reload("data-v-aa8ad7dc", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+
+
+/***/ }),
+/* 4 */,
+/* 5 */,
+/* 6 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(14);
 
 
 
@@ -82,11 +141,11 @@ dokanWebpack([0],[
 });
 
 /***/ }),
-/* 4 */
+/* 7 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_color_src_components_Sketch_vue__ = __webpack_require__(29);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_color_src_components_Sketch_vue__ = __webpack_require__(51);
 //
 //
 //
@@ -206,17 +265,1318 @@ dokanWebpack([0],[
 });
 
 /***/ }),
-/* 5 */,
-/* 6 */,
-/* 7 */,
-/* 8 */,
-/* 9 */,
+/* 8 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_debounce__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_Switches_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_UploadImage_vue__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_PasswordGenerator_vue__ = __webpack_require__(16);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+    name: 'VendorAccountFields',
+
+    components: {
+        Switches: __WEBPACK_IMPORTED_MODULE_1_admin_components_Switches_vue__["default"],
+        UploadImage: __WEBPACK_IMPORTED_MODULE_2_admin_components_UploadImage_vue__["default"],
+        PasswordGenerator: __WEBPACK_IMPORTED_MODULE_3_admin_components_PasswordGenerator_vue__["default"]
+    },
+
+    props: {
+        vendorInfo: {
+            type: Object
+        },
+        errors: {
+            type: Array,
+            required: false
+        }
+    },
+
+    data() {
+        return {
+            showStoreUrl: true,
+            showPassword: false,
+            otherStoreUrl: null,
+            banner: '',
+            defaultUrl: dokan.urls.siteUrl + dokan.urls.storePrefix + '/',
+            showButton: true,
+            placeholderData: '',
+            delay: 500,
+            storeAvailable: null,
+            userNameAvailable: null,
+            emailAvailable: null,
+            storeAvailabilityText: '',
+            userNameAvailabilityText: '',
+            emailAvailabilityText: '',
+            getAccountFields: dokan.hooks.applyFilters('getVendorAccountFields', [])
+        };
+    },
+
+    watch: {
+        'vendorInfo.store_name'(value) {
+            this.showStoreUrl = true;
+        },
+
+        'vendorInfo.user_nicename'(newValue) {
+            if (typeof newValue !== 'undefined') {
+                this.showStoreUrl = false;
+                this.otherStoreUrl = this.defaultUrl + newValue.trim().split(' ').join('-');
+                this.vendorInfo.user_nicename = newValue.split(' ').join('-');
+
+                // check if the typed url is available
+                this.checkStoreName();
+            }
+        },
+
+        'vendorInfo.user_login'(value) {
+            this.checkUsername();
+        },
+
+        'vendorInfo.user_email'(value) {
+            this.checkEmail();
+        }
+    },
+
+    computed: {
+        storeUrl() {
+            let storeUrl = this.vendorInfo.store_name.trim().split(' ').join('-');
+            this.vendorInfo.user_nicename = storeUrl;
+            this.otherStoreUrl = this.defaultUrl + storeUrl;
+
+            return this.defaultUrl + storeUrl;
+        }
+    },
+
+    created() {
+        this.checkStoreName = Object(__WEBPACK_IMPORTED_MODULE_0_debounce__["debounce"])(this.checkStore, this.delay);
+        this.checkUsername = Object(__WEBPACK_IMPORTED_MODULE_0_debounce__["debounce"])(this.searchUsername, this.delay);
+        this.checkEmail = Object(__WEBPACK_IMPORTED_MODULE_0_debounce__["debounce"])(this.searchEmail, this.delay);
+        this.$root.$on('passwordCancelled', () => {
+            this.showPassword = false;
+        });
+    },
+
+    methods: {
+        uploadBanner(image) {
+            this.vendorInfo.banner_id = image.id;
+
+            // hide button and footer text after uploading banner
+            this.showButton = false;
+        },
+
+        uploadGravatar(image) {
+            this.vendorInfo.gravatar_id = image.id;
+        },
+
+        // getId function has been used to identify whether is it vendor edit page or not
+        getId() {
+            return this.$route.params.id;
+        },
+
+        onSelectBanner(image) {
+            this.banner = image.url;
+            this.vendorInfo.banner_id = image.id;
+        },
+
+        getError(key) {
+            let errors = this.errors;
+
+            if (!errors || typeof errors === 'undefined') {
+                return false;
+            }
+
+            if (errors.length < 1) {
+                return false;
+            }
+
+            if (errors.includes(key)) {
+                return key;
+            }
+        },
+
+        checkStore() {
+            const storeName = this.vendorInfo.user_nicename;
+
+            if (!storeName) {
+                return;
+            }
+
+            this.storeAvailabilityText = this.__('Searching...', 'dokan-lite');
+
+            dokan.api.get(`/stores/check`, {
+                store_slug: storeName
+            }).then(response => {
+                if (response.available) {
+                    this.storeAvailable = true;
+                    this.$root.$emit('vendorInfoChecked', {
+                        userNameAvailable: this.userNameAvailable,
+                        storeAvailable: this.storeAvailable,
+                        emailAvailable: this.emailAvailable
+                    });
+                    this.storeAvailabilityText = this.__('Available', 'dokan-lite');
+                } else {
+                    this.storeAvailable = false;
+                    this.$root.$emit('vendorInfoChecked', {
+                        userNameAvailable: this.userNameAvailable,
+                        storeAvailable: this.storeAvailable,
+                        emailAvailable: this.emailAvailable
+                    });
+                    this.storeAvailabilityText = this.__('Not Available', 'dokan-lite');
+                }
+            });
+        },
+
+        searchUsername() {
+            const userName = this.vendorInfo.user_login;
+
+            if (!userName) {
+                return;
+            }
+
+            this.userNameAvailabilityText = this.__('Searching...', 'dokan-lite');
+
+            dokan.api.get(`/stores/check`, {
+                username: userName
+            }).then(response => {
+                if (response.available) {
+                    this.userNameAvailable = true;
+                    this.$root.$emit('vendorInfoChecked', {
+                        userNameAvailable: this.userNameAvailable,
+                        storeAvailable: this.storeAvailable,
+                        emailAvailable: this.emailAvailable
+                    });
+                    this.userNameAvailabilityText = this.__('Available', 'dokan-lite');
+                } else {
+                    this.userNameAvailable = false;
+                    this.$root.$emit('vendorInfoChecked', {
+                        userNameAvailable: this.userNameAvailable,
+                        storeAvailable: this.storeAvailable,
+                        emailAvailable: this.emailAvailable
+                    });
+                    this.userNameAvailabilityText = this.__('Not Available', 'dokan-lite');
+                }
+            });
+        },
+
+        searchEmail() {
+            const userEmail = this.vendorInfo.user_email;
+
+            if (!userEmail) {
+                return;
+            }
+
+            this.emailAvailabilityText = this.__('Searching...', 'dokan-lite');
+
+            dokan.api.get(`/stores/check`, {
+                user_email: userEmail
+            }).then(response => {
+                if (response.available) {
+                    this.emailAvailable = true;
+                    this.$root.$emit('vendorInfoChecked', {
+                        userNameAvailable: this.userNameAvailable,
+                        storeAvailable: this.storeAvailable,
+                        emailAvailable: this.emailAvailable
+                    });
+                    this.emailAvailabilityText = this.__('Available', 'dokan-lite');
+                } else {
+                    this.emailAvailable = false;
+                    this.$root.$emit('vendorInfoChecked', {
+                        userNameAvailable: this.userNameAvailable,
+                        storeAvailable: this.storeAvailable,
+                        emailAvailable: this.emailAvailable
+                    });
+                    this.emailAvailabilityText = response.message ? response.message : this.__('This email is already registered, please choose another one.', 'dokan-lite');
+                }
+            });
+        },
+
+        setPassword(password) {
+            this.showPassword = true;
+            this.vendorInfo.user_pass = password;
+        },
+
+        sendEmail(status, key) {
+            if ('notify_vendor' !== key) {
+                return;
+            }
+
+            this.vendorInfo.notify_vendor = status;
+        },
+
+        getUploadBannerText() {
+            let width = dokan.store_banner_dimension.width;
+            let height = dokan.store_banner_dimension.height;
+
+            return this.__(`Upload banner for your store. Banner size is (${width}x${height}) pixels.`, 'dokan-lite');
+        }
+
+    }
+});
+
+/***/ }),
+/* 9 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+
+    name: 'Switches',
+
+    props: {
+        enabled: {
+            type: Boolean, // String, Number, Boolean, Function, Object, Array
+            required: true,
+            default: false
+        },
+        value: {
+            type: [String, Number]
+        }
+    },
+
+    data() {
+        return {};
+    },
+
+    methods: {
+
+        trigger(e) {
+            this.$emit('input', e.target.checked, e.target.value);
+        }
+    }
+});
+
+/***/ }),
 /* 10 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+    name: 'UploadImage',
+
+    inheritAttrs: false,
+
+    props: {
+        src: {
+            default: dokan.urls.assetsUrl + '/images/store-pic.png'
+        },
+        showButton: {
+            type: Boolean,
+            default: false
+        },
+        buttonLabel: {
+            type: String,
+            default: 'Upload Image'
+        },
+        croppingWidth: {
+            type: Number
+        },
+        croppingHeight: {
+            type: Number
+        }
+    },
+
+    data() {
+        return {
+            image: {
+                src: '',
+                id: ''
+            }
+        };
+    },
+
+    methods: {
+        uploadImage() {
+            this.openMediaManager(this.onSelectImage);
+        },
+
+        onSelectImage(image) {
+            this.image.src = image.url;
+            this.image.id = image.id;
+            this.$emit('uploadedImage', this.image);
+        },
+
+        /**
+         * Open Image Media Uploader
+         *
+         * @param  function callback
+         *
+         * @return callback
+         */
+        openMediaManager(callback) {
+            const self = this;
+
+            if (self.fileFrame) {
+                self.fileFrame.open();
+                return;
+            }
+
+            const fileStatesOptions = {
+                library: wp.media.query(),
+                multiple: false, // set it true for multiple image
+                title: this.__('Select & Crop Image', 'dokan-lite'),
+                priority: 20,
+                filterable: 'uploaded',
+                autoSelect: true,
+                suggestedWidth: 500,
+                suggestedHeight: 300
+            };
+
+            const cropControl = {
+                id: "control-id",
+                params: {
+                    width: this.croppingWidth ? parseInt(this.croppingWidth, 10) : parseInt(dokan.store_banner_dimension.width, 10),
+                    height: this.croppingHeight ? parseInt(this.croppingHeight, 10) : parseInt(dokan.store_banner_dimension.height, 10),
+                    flex_width: !!parseInt(dokan.store_banner_dimension['flex-width'], 10),
+                    flex_height: !!parseInt(dokan.store_banner_dimension['flex-height'], 10)
+                }
+            };
+
+            cropControl.mustBeCropped = function (flexW, flexH, dstW, dstH, imgW, imgH) {
+
+                // If the width and height are both flexible
+                // then the user does not need to crop the image.
+                if (true === flexW && true === flexH) {
+                    return false;
+                }
+
+                // If the width is flexible and the cropped image height matches the current image height,
+                // then the user does not need to crop the image.
+                if (true === flexW && dstH === imgH) {
+                    return false;
+                }
+
+                // If the height is flexible and the cropped image width matches the current image width,
+                // then the user does not need to crop the image.
+                if (true === flexH && dstW === imgW) {
+                    return false;
+                }
+
+                // If the cropped image width matches the current image width,
+                // and the cropped image height matches the current image height
+                // then the user does not need to crop the image.
+                if (dstW === imgW && dstH === imgH) {
+                    return false;
+                }
+
+                // If the destination width is equal to or greater than the cropped image width
+                // then the user does not need to crop the image...
+                if (imgW <= dstW) {
+                    return false;
+                }
+
+                return true;
+            };
+
+            const fileStates = [new wp.media.controller.Library(fileStatesOptions), new wp.media.controller.CustomizeImageCropper({
+                imgSelectOptions: self.calculateImageSelectOptions,
+                control: cropControl
+            })];
+
+            const mediaOptions = {
+                title: this.__('Select Image', 'dokan-lite'),
+                button: {
+                    text: this.__('Select Image', 'dokan-lite'),
+                    close: false
+                },
+                multiple: false
+            };
+
+            mediaOptions.states = fileStates;
+
+            self.fileFrame = wp.media(mediaOptions);
+
+            self.fileFrame.on('select', () => {
+                self.fileFrame.setState('cropper');
+            });
+
+            self.fileFrame.on('cropped', croppedImage => {
+                callback(croppedImage);
+                self.fileFrame = null;
+            });
+
+            self.fileFrame.on('skippedcrop', () => {
+                const selection = self.fileFrame.state().get('selection');
+
+                const files = selection.map(attachment => {
+                    return attachment.toJSON();
+                });
+
+                const file = files.pop();
+
+                callback(file);
+
+                self.fileFrame = null;
+            });
+
+            self.fileFrame.on('close', () => {
+                self.fileFrame = null;
+            });
+
+            self.fileFrame.on('ready', () => {
+                self.fileFrame.uploader.options.uploader.params = {
+                    type: 'dokan-vendor-option-media'
+                };
+            });
+
+            self.fileFrame.open();
+        },
+
+        /**
+         * Calculate image section options
+         *
+         * @param  object attachment
+         * @param  object controller
+         *
+         * @return object
+         */
+        calculateImageSelectOptions: function (attachment, controller) {
+            let xInit = this.croppingWidth ? parseInt(this.croppingWidth, 10) : parseInt(dokan.store_banner_dimension.width, 10);
+            let yInit = this.croppingHeight ? parseInt(this.croppingHeight, 10) : parseInt(dokan.store_banner_dimension.height, 10);
+            let flexWidth = !!parseInt(dokan.store_banner_dimension['flex-width'], 10);
+            let flexHeight = !!parseInt(dokan.store_banner_dimension['flex-height'], 10);
+
+            let ratio, xImg, yImg, realHeight, realWidth, imgSelectOptions;
+
+            realWidth = attachment.get('width');
+            realHeight = attachment.get('height');
+
+            let control = controller.get('control');
+
+            controller.set('canSkipCrop', !control.mustBeCropped(flexWidth, flexHeight, xInit, yInit, realWidth, realHeight));
+
+            ratio = xInit / yInit;
+            xImg = realWidth;
+            yImg = realHeight;
+
+            if (xImg / yImg > ratio) {
+                yInit = yImg;
+                xInit = yInit * ratio;
+            } else {
+                xInit = xImg;
+                yInit = xInit / ratio;
+            }
+
+            imgSelectOptions = {
+                handles: true,
+                keys: true,
+                instance: true,
+                persistent: true,
+                imageWidth: realWidth,
+                imageHeight: realHeight,
+                x1: 0,
+                y1: 0,
+                x2: xInit,
+                y2: yInit
+            };
+
+            if (flexHeight === false && flexWidth === false) {
+                imgSelectOptions.aspectRatio = xInit + ':' + yInit;
+            }
+            if (flexHeight === false) {
+                imgSelectOptions.maxHeight = yInit;
+            }
+            if (flexWidth === false) {
+                imgSelectOptions.maxWidth = xInit;
+            }
+
+            return imgSelectOptions;
+        }
+    }
+});
+
+/***/ }),
+/* 11 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+    name: 'PasswordGenerator',
+
+    props: {
+        title: {
+            type: String,
+            default: 'Generate Password'
+        },
+
+        cancelTitle: {
+            type: String,
+            default: 'Cancel'
+        },
+
+        regenrateTitle: {
+            type: String,
+            default: 'Regenrate'
+        },
+
+        length: {
+            type: Number,
+            default: 25
+        }
+    },
+
+    data() {
+        return {
+            password: '',
+            hideGenerateButton: false,
+            showCancelButton: false
+        };
+    },
+
+    methods: {
+        generatePassword() {
+            this.password = this.makePassword(this.length);
+
+            this.$emit('passwordGenerated', this.password);
+
+            this.hideGenerateButton = true;
+            this.showCancelButton = true;
+        },
+
+        makePassword(len = 25) {
+            let lowerCaseChars = 'abcdefghijklmnopqurstuvwxyz';
+            let upperCaseChars = 'ABCDEFGHIJKLMNOPQURSTUVWXYZ';
+            let specialChars = '!@#$%^&*()';
+            let randomChars = '';
+
+            for (let i = 0; i <= len; i++) {
+                let mixUp = lowerCaseChars[Math.floor(Math.random() * len)] + upperCaseChars[Math.floor(Math.random() * 10)] + specialChars[Math.floor(Math.random() * specialChars.length)];
+                randomChars += mixUp;
+            }
+
+            return randomChars.slice(-len);
+        },
+
+        cancelButton() {
+            this.hideGenerateButton = false;
+            this.showCancelButton = false;
+
+            this.$root.$emit('passwordCancelled');
+        },
+
+        regenratePassword() {
+            this.password = this.makePassword(this.length);
+            this.$emit('passwordGenerated', this.password);
+        }
+    }
+});
+
+/***/ }),
+/* 12 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_multiselect__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_multiselect___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue_multiselect__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+    name: 'VendorAddressFields',
+
+    components: {
+        Multiselect: __WEBPACK_IMPORTED_MODULE_0_vue_multiselect__["Multiselect"]
+    },
+
+    props: {
+        vendorInfo: {
+            type: Object
+        }
+    },
+
+    data() {
+        return {
+            countries: [],
+            states: [],
+            selectedCountry: {},
+            selectedState: {},
+            getAddressFields: dokan.hooks.applyFilters('getVendorAddressFields', [])
+        };
+    },
+
+    computed: {
+        selectedCode() {
+            // let selected = this.selectedCountry;
+            let selected = this.vendorInfo.address.country;
+
+            if ('' !== selected) {
+                return selected;
+            }
+
+            return [];
+        }
+    },
+
+    created() {
+        this.countries = this.transformCountries(dokan.countries);
+        this.states = dokan.states;
+
+        let savedCountry = this.vendorInfo.address.country;
+        let savedState = this.vendorInfo.address.state;
+
+        if ('' !== savedCountry) {
+            this.selectedCountry = {
+                name: this.getCountryFromCountryCode(savedCountry),
+                code: savedCountry
+            };
+
+            this.selectedState = {
+                name: this.getStateFromStateCode(savedState, savedCountry),
+                code: savedState
+            };
+        }
+    },
+
+    methods: {
+        transformCountries(countryObject) {
+            let countries = [];
+
+            for (let key in countryObject) {
+                countries.push({
+                    name: countryObject[key],
+                    code: key
+                });
+            }
+
+            return countries;
+        },
+
+        getCountryFromCountryCode(countryCode) {
+            if ('' === countryCode) {
+                return;
+            }
+
+            return dokan.countries[countryCode];
+        },
+
+        getStateFromStateCode(stateCode, countryCode) {
+            if ('' === stateCode) {
+                return;
+            }
+
+            let states = dokan.states[countryCode];
+            let state = states && states[stateCode];
+
+            return typeof state !== 'undefined' ? state : [];
+        },
+
+        getStatesFromCountryCode(countryCode) {
+            if ('' === countryCode) {
+                return;
+            }
+
+            let states = [];
+            let statesObject = this.states;
+
+            for (let state in statesObject) {
+                if (state !== countryCode) {
+                    continue;
+                }
+
+                if (statesObject[state] && statesObject[state].length < 1) {
+                    continue;
+                }
+
+                for (let name in statesObject[state]) {
+                    states.push({
+                        name: statesObject[state][name],
+                        code: name
+                    });
+                }
+            }
+
+            return states;
+        },
+
+        saveCountry(value) {
+            if (!value) return;
+
+            // if reset default state values
+            this.vendorInfo.address.state = null;
+            this.selectedState = {};
+
+            this.vendorInfo.address.country = value.code;
+        },
+
+        saveState(value) {
+            if (!value) return;
+
+            this.vendorInfo.address.state = value.code;
+        }
+    }
+});
+
+/***/ }),
+/* 13 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_Switches_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_multiselect__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_multiselect___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vue_multiselect__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+    name: 'VendorPaymentFields',
+
+    components: {
+        Switches: __WEBPACK_IMPORTED_MODULE_0_admin_components_Switches_vue__["default"],
+        Multiselect: __WEBPACK_IMPORTED_MODULE_1_vue_multiselect__["Multiselect"]
+    },
+
+    props: {
+        vendorInfo: {
+            type: Object
+        }
+    },
+
+    data() {
+        return {
+            enabled: false,
+            trusted: false,
+            featured: false,
+            commissionTypes: [this.__('Flat', 'dokan-lite'), this.__('Percentage', 'dokan-lite'), this.__('Combine', 'dokan-lite')],
+            selectedCommissionType: this.__('Flat', 'dokan-lite'),
+            getBankFields: dokan.hooks.applyFilters('getVendorBankFields', []),
+            getPyamentFields: dokan.hooks.applyFilters('AfterPyamentFields', [])
+        };
+    },
+
+    created() {
+        if (this.vendorInfo.enabled) {
+            this.enabled = true;
+            this.vendorInfo.enabled = true;
+        }
+
+        if (this.vendorInfo.trusted) {
+            this.trusted = true;
+            this.vendorInfo.trusted = true;
+        }
+
+        if (this.vendorInfo.featured) {
+            this.featured = true;
+            this.vendorInfo.featured = true;
+        }
+
+        let commissionType = this.vendorInfo.admin_commission_type;
+
+        if (commissionType) {
+            this.selectedCommissionType = commissionType.charAt(0).toUpperCase() + commissionType.slice(1);
+        }
+    },
+
+    methods: {
+        setValue(status, key) {
+            if ('enabled' === key) {
+                if (status) {
+                    this.vendorInfo.enabled = true;
+                } else {
+                    this.vendorInfo.enabled = false;
+                }
+            }
+
+            if ('trusted' === key) {
+                if (status) {
+                    this.vendorInfo.trusted = true;
+                } else {
+                    this.vendorInfo.trusted = false;
+                }
+            }
+
+            if ('featured' === key) {
+                if (status) {
+                    this.vendorInfo.featured = true;
+                } else {
+                    this.vendorInfo.featured = false;
+                }
+            }
+        },
+
+        getId() {
+            return this.$route.params.id;
+        },
+
+        saveCommissionType(value) {
+            if (!value) {
+                this.vendorInfo.admin_commission_type = 'flat';
+            }
+
+            this.vendorInfo.admin_commission_type = value.toLowerCase();
+        }
+
+    }
+
+});
+
+/***/ }),
+/* 14 */,
+/* 15 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Chart_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_UploadImage_vue__ = __webpack_require__(10);
+/* empty harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_40b3524c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_UploadImage_vue__ = __webpack_require__(29);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(28)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_UploadImage_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_40b3524c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_UploadImage_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src/admin/components/UploadImage.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-40b3524c", Component.options)
+  } else {
+    hotAPI.reload("data-v-40b3524c", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+
+
+/***/ }),
+/* 16 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_PasswordGenerator_vue__ = __webpack_require__(11);
+/* empty harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4084a478_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_PasswordGenerator_vue__ = __webpack_require__(30);
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_PasswordGenerator_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4084a478_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_PasswordGenerator_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src/admin/components/PasswordGenerator.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-4084a478", Component.options)
+  } else {
+    hotAPI.reload("data-v-4084a478", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+
+
+/***/ }),
+/* 17 */,
+/* 18 */,
+/* 19 */,
+/* 20 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Chart_vue__ = __webpack_require__(6);
 /* empty harmony namespace reexport */
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
@@ -263,19 +1623,19 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 11 */,
-/* 12 */
+/* 21 */,
+/* 22 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ColorPicker_vue__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ColorPicker_vue__ = __webpack_require__(7);
 /* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_01dc0d51_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ColorPicker_vue__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_01dc0d51_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ColorPicker_vue__ = __webpack_require__(24);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(13)
+  __webpack_require__(23)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -321,13 +1681,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 13 */
+/* 23 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 14 */
+/* 24 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -418,34 +1778,1687 @@ if (false) {
 }
 
 /***/ }),
-/* 15 */,
-/* 16 */,
-/* 17 */,
-/* 18 */,
-/* 19 */,
-/* 20 */,
-/* 21 */,
-/* 22 */,
-/* 23 */,
-/* 24 */,
-/* 25 */,
-/* 26 */,
-/* 27 */,
-/* 28 */,
-/* 29 */,
-/* 30 */,
-/* 31 */,
-/* 32 */,
-/* 33 */,
-/* 34 */,
-/* 35 */,
-/* 36 */,
+/* 25 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorAccountFields_vue__ = __webpack_require__(8);
+/* empty harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2b13daea_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorAccountFields_vue__ = __webpack_require__(31);
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorAccountFields_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2b13daea_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorAccountFields_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src/admin/pages/VendorAccountFields.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-2b13daea", Component.options)
+  } else {
+    hotAPI.reload("data-v-2b13daea", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 27 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("label", { staticClass: "switch tips" }, [
+    _c("input", {
+      staticClass: "toogle-checkbox",
+      attrs: { type: "checkbox" },
+      domProps: { checked: _vm.enabled, value: _vm.value },
+      on: { change: _vm.trigger }
+    }),
+    _vm._v(" "),
+    _c("span", { staticClass: "slider round" })
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-aa8ad7dc", esExports)
+  }
+}
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 29 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "dokan-upload-image", on: { click: _vm.uploadImage } },
+    [
+      !_vm.showButton
+        ? _c("img", { attrs: { src: _vm.image.src ? _vm.image.src : _vm.src } })
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.showButton
+        ? _c(
+            "button",
+            {
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  _vm.uploadImage($event)
+                }
+              }
+            },
+            [_vm._v("\n        " + _vm._s(_vm.buttonLabel) + "\n    ")]
+          )
+        : _vm._e()
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-40b3524c", esExports)
+  }
+}
+
+/***/ }),
+/* 30 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "password-generator" }, [
+    !_vm.hideGenerateButton
+      ? _c(
+          "button",
+          {
+            staticClass: "button button-secondary",
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                _vm.generatePassword($event)
+              }
+            }
+          },
+          [_vm._v("\n        " + _vm._s(_vm.title) + "\n    ")]
+        )
+      : _vm._e(),
+    _vm._v(" "),
+    _vm.showCancelButton
+      ? _c(
+          "button",
+          {
+            staticClass: "button regen-button",
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                _vm.regenratePassword($event)
+              }
+            }
+          },
+          [
+            _c("span", { staticClass: "dashicons dashicons-controls-repeat" }),
+            _vm._v("\n        " + _vm._s(_vm.regenrateTitle) + "\n    ")
+          ]
+        )
+      : _vm._e(),
+    _vm._v(" "),
+    _vm.showCancelButton
+      ? _c(
+          "button",
+          {
+            staticClass: "button cancel-button",
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                _vm.cancelButton($event)
+              }
+            }
+          },
+          [_vm._v("\n        " + _vm._s(_vm.cancelTitle) + "\n    ")]
+        )
+      : _vm._e()
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-4084a478", esExports)
+  }
+}
+
+/***/ }),
+/* 31 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("form", { staticClass: "account-info" }, [
+    _c("div", { staticClass: "content-header" }, [
+      _vm._v(
+        "\n        " + _vm._s(_vm.__("Account Info", "dokan-lite")) + "\n    "
+      )
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "content-body" }, [
+      !_vm.getId()
+        ? _c("div", { staticClass: "vendor-image" }, [
+            _c("div", { staticClass: "picture" }, [
+              _c("p", { staticClass: "picture-header" }, [
+                _vm._v(_vm._s(_vm.__("Vendor Picture", "dokan-lite")))
+              ]),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "profile-image" },
+                [
+                  _c("upload-image", {
+                    attrs: { croppingWidth: 150, croppingHeight: 150 },
+                    on: { uploadedImage: _vm.uploadGravatar }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("p", {
+                staticClass: "picture-footer",
+                domProps: {
+                  innerHTML: _vm._s(
+                    _vm.sprintf(
+                      _vm.__(
+                        "You can change your profile picutre on %s",
+                        "dokan-lite"
+                      ),
+                      "<a href='https://gravatar.com/' target='_blank'>Gravatar</a>"
+                    )
+                  )
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                class: [
+                  "picture banner",
+                  { "has-banner": _vm.vendorInfo.banner_id }
+                ]
+              },
+              [
+                _c(
+                  "div",
+                  { staticClass: "banner-image" },
+                  [
+                    _c("upload-image", {
+                      attrs: {
+                        showButton: _vm.showButton,
+                        buttonLabel: _vm.__("Upload Banner", "dokan-lite")
+                      },
+                      on: { uploadedImage: _vm.uploadBanner }
+                    })
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _vm.showButton
+                  ? _c("p", { staticClass: "picture-footer" }, [
+                      _vm._v(_vm._s(_vm.getUploadBannerText()))
+                    ])
+                  : _vm._e()
+              ]
+            )
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "dokan-form-group" },
+        [
+          _c("div", { staticClass: "column" }, [
+            _c("label", { attrs: { for: "store-email" } }, [
+              _vm._v(_vm._s(_vm.__("First Name", "dokan-lite")))
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.vendorInfo.first_name,
+                  expression: "vendorInfo.first_name"
+                }
+              ],
+              staticClass: "dokan-form-input",
+              attrs: {
+                type: "email",
+                placeholder: _vm.__("First Name", "dokan-lite")
+              },
+              domProps: { value: _vm.vendorInfo.first_name },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.vendorInfo, "first_name", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "column" }, [
+            _c("label", { attrs: { for: "store-email" } }, [
+              _vm._v(_vm._s(_vm.__("Last Name", "dokan-lite")))
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.vendorInfo.last_name,
+                  expression: "vendorInfo.last_name"
+                }
+              ],
+              staticClass: "dokan-form-input",
+              attrs: {
+                type: "email",
+                placeholder: _vm.__("Last Name", "dokan-lite")
+              },
+              domProps: { value: _vm.vendorInfo.last_name },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.vendorInfo, "last_name", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "column" }, [
+            _c("label", { attrs: { for: "store-name" } }, [
+              _vm._v(_vm._s(_vm.__("Store Name", "dokan-lite")))
+            ]),
+            _vm._v(" "),
+            !_vm.getId()
+              ? _c("span", { staticClass: "required-field" }, [_vm._v("*")])
+              : _vm._e(),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.vendorInfo.store_name,
+                  expression: "vendorInfo.store_name"
+                }
+              ],
+              class: {
+                "dokan-form-input": true,
+                "has-error": _vm.getError("store_name")
+              },
+              attrs: {
+                type: "text",
+                placeholder: _vm.getError("store_name")
+                  ? _vm.__("Store Name is required", "dokan-lite")
+                  : _vm.__("Store Name", "dokan-lite")
+              },
+              domProps: { value: _vm.vendorInfo.store_name },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.vendorInfo, "store_name", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          !_vm.getId()
+            ? _c("div", { staticClass: "column" }, [
+                _c("label", { attrs: { for: "store-url" } }, [
+                  _vm._v(_vm._s(_vm.__("Store URL", "dokan-lite")))
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.vendorInfo.user_nicename,
+                      expression: "vendorInfo.user_nicename"
+                    }
+                  ],
+                  staticClass: "dokan-form-input",
+                  attrs: {
+                    type: "text",
+                    placeholder: _vm.__("Store Url", "dokan-lite")
+                  },
+                  domProps: { value: _vm.vendorInfo.user_nicename },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.vendorInfo,
+                        "user_nicename",
+                        $event.target.value
+                      )
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("div", { staticClass: "store-avaibility-info" }, [
+                  _vm.showStoreUrl
+                    ? _c("p", { staticClass: "store-url" }, [
+                        _vm._v(_vm._s(_vm.storeUrl))
+                      ])
+                    : _c("p", { staticClass: "store-url" }, [
+                        _vm._v(_vm._s(_vm.otherStoreUrl))
+                      ]),
+                  _vm._v(" "),
+                  _c(
+                    "span",
+                    {
+                      class: {
+                        "is-available": _vm.storeAvailable,
+                        "not-available": !_vm.storeAvailable
+                      }
+                    },
+                    [_vm._v(_vm._s(_vm.storeAvailabilityText))]
+                  )
+                ])
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c("div", { staticClass: "column" }, [
+            _c("label", { attrs: { for: "store-phone" } }, [
+              _vm._v(_vm._s(_vm.__("Phone Number", "dokan-lite")))
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.vendorInfo.phone,
+                  expression: "vendorInfo.phone"
+                }
+              ],
+              staticClass: "dokan-form-input",
+              attrs: {
+                type: "number",
+                placeholder: _vm.__("123456789", "dokan-lite")
+              },
+              domProps: { value: _vm.vendorInfo.phone },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.vendorInfo, "phone", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "column" }, [
+            _c("label", { attrs: { for: "store-email" } }, [
+              _vm._v(_vm._s(_vm.__("Email", "dokan-lite")))
+            ]),
+            _vm._v(" "),
+            !_vm.getId()
+              ? _c("span", { staticClass: "required-field" }, [_vm._v("*")])
+              : _vm._e(),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.vendorInfo.user_email,
+                  expression: "vendorInfo.user_email"
+                }
+              ],
+              class: {
+                "dokan-form-input": true,
+                "has-error": _vm.getError("user_email")
+              },
+              attrs: {
+                type: "email",
+                placeholder: _vm.getError("user_email")
+                  ? _vm.__("Email is required", "dokan-lite")
+                  : _vm.__("store@email.com", "dokan-lite")
+              },
+              domProps: { value: _vm.vendorInfo.user_email },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.vendorInfo, "user_email", $event.target.value)
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("div", { staticClass: "store-avaibility-info" }, [
+              _c(
+                "span",
+                {
+                  class: {
+                    "is-available": _vm.emailAvailable,
+                    "not-available": !_vm.emailAvailable
+                  }
+                },
+                [_vm._v(_vm._s(_vm.emailAvailabilityText))]
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          !_vm.getId()
+            ? [
+                _c("div", { staticClass: "column" }, [
+                  _c("label", { attrs: { for: "store-username" } }, [
+                    _vm._v(_vm._s(_vm.__("Username", "dokan-lite")))
+                  ]),
+                  _c("span", { staticClass: "required-field" }, [_vm._v("*")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.vendorInfo.user_login,
+                        expression: "vendorInfo.user_login"
+                      }
+                    ],
+                    staticClass: "dokan-form-input",
+                    class: {
+                      "dokan-form-input": true,
+                      "has-error": _vm.getError("user_login")
+                    },
+                    attrs: {
+                      type: "text",
+                      placeholder: _vm.getError("user_login")
+                        ? _vm.__("Username is required", "dokan-lite")
+                        : _vm.__("Username", "dokan-lite")
+                    },
+                    domProps: { value: _vm.vendorInfo.user_login },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.vendorInfo,
+                          "user_login",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "store-avaibility-info" }, [
+                    _c(
+                      "span",
+                      {
+                        class: {
+                          "is-available": _vm.userNameAvailable,
+                          "not-available": !_vm.userNameAvailable
+                        }
+                      },
+                      [_vm._v(_vm._s(_vm.userNameAvailabilityText))]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "checkbox-left notify-vendor" },
+                    [
+                      _c("switches", {
+                        attrs: { enabled: true, value: "notify_vendor" },
+                        on: { input: _vm.sendEmail }
+                      }),
+                      _vm._v(" "),
+                      _c("span", { staticClass: "desc" }, [
+                        _vm._v(
+                          _vm._s(
+                            _vm.__(
+                              "Send the vendor an email about their account.",
+                              "dokan-lite"
+                            )
+                          )
+                        )
+                      ])
+                    ],
+                    1
+                  )
+                ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "column" },
+                  [
+                    _c("label", { attrs: { for: "store-password" } }, [
+                      _vm._v(_vm._s(_vm.__("Passwrod", "dokan-lite")))
+                    ]),
+                    _vm._v(" "),
+                    _vm.showPassword
+                      ? _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.vendorInfo.user_pass,
+                              expression: "vendorInfo.user_pass"
+                            }
+                          ],
+                          staticClass: "dokan-form-input",
+                          attrs: { type: "text", placeholder: "********" },
+                          domProps: { value: _vm.vendorInfo.user_pass },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.vendorInfo,
+                                "user_pass",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        })
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c("password-generator", {
+                      attrs: {
+                        title: _vm.__("Generate Password", "dokan-lite")
+                      },
+                      on: { passwordGenerated: _vm.setPassword }
+                    })
+                  ],
+                  1
+                )
+              ]
+            : _vm._e(),
+          _vm._v(" "),
+          _vm._l(_vm.getAccountFields, function(component, index) {
+            return _c(component, {
+              key: index,
+              tag: "component",
+              attrs: { vendorInfo: _vm.vendorInfo }
+            })
+          })
+        ],
+        2
+      )
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-2b13daea", esExports)
+  }
+}
+
+/***/ }),
+/* 32 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorAddressFields_vue__ = __webpack_require__(12);
+/* empty harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_9504c01e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorAddressFields_vue__ = __webpack_require__(33);
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorAddressFields_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_9504c01e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorAddressFields_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src/admin/pages/VendorAddressFields.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-9504c01e", Component.options)
+  } else {
+    hotAPI.reload("data-v-9504c01e", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+
+
+/***/ }),
+/* 33 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "account-info" }, [
+    _c("div", { staticClass: "content-header" }, [
+      _vm._v("\n        " + _vm._s(_vm.__("Address", "dokan-lite")) + "\n    ")
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "content-body" }, [
+      _c(
+        "div",
+        { staticClass: "dokan-form-group" },
+        [
+          _c("div", { staticClass: "column" }, [
+            _c("label", { attrs: { for: "street-1" } }, [
+              _vm._v(_vm._s(_vm.__("Street 1", "dokan-lite")))
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.vendorInfo.address.street_1,
+                  expression: "vendorInfo.address.street_1"
+                }
+              ],
+              staticClass: "dokan-form-input",
+              attrs: {
+                type: "text",
+                placeholder: _vm.__("Street 1", "dokan-lite")
+              },
+              domProps: { value: _vm.vendorInfo.address.street_1 },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(
+                    _vm.vendorInfo.address,
+                    "street_1",
+                    $event.target.value
+                  )
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "column" }, [
+            _c("label", { attrs: { for: "street-2" } }, [
+              _vm._v(_vm._s(_vm.__("Street 2", "dokan-lite")))
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.vendorInfo.address.street_2,
+                  expression: "vendorInfo.address.street_2"
+                }
+              ],
+              staticClass: "dokan-form-input",
+              attrs: {
+                type: "text",
+                placeholder: _vm.__("Street 2", "dokan-lite")
+              },
+              domProps: { value: _vm.vendorInfo.address.street_2 },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(
+                    _vm.vendorInfo.address,
+                    "street_2",
+                    $event.target.value
+                  )
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "column" }, [
+            _c("label", { attrs: { for: "city" } }, [
+              _vm._v(_vm._s(_vm.__("City", "dokan-lite")))
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.vendorInfo.address.city,
+                  expression: "vendorInfo.address.city"
+                }
+              ],
+              staticClass: "dokan-form-input",
+              attrs: {
+                type: "text",
+                placeholder: _vm.__("City", "dokan-lite")
+              },
+              domProps: { value: _vm.vendorInfo.address.city },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.vendorInfo.address, "city", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "column" }, [
+            _c("label", { attrs: { for: "zip" } }, [
+              _vm._v(_vm._s(_vm.__("Zip", "dokan-lite")))
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.vendorInfo.address.zip,
+                  expression: "vendorInfo.address.zip"
+                }
+              ],
+              staticClass: "dokan-form-input",
+              attrs: { type: "text", placeholder: _vm.__("Zip", "dokan-lite") },
+              domProps: { value: _vm.vendorInfo.address.zip },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.vendorInfo.address, "zip", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "column" },
+            [
+              _c("label", { attrs: { for: "country" } }, [
+                _vm._v(_vm._s(_vm.__("Country", "dokan-lite")))
+              ]),
+              _vm._v(" "),
+              _c("Multiselect", {
+                attrs: {
+                  options: _vm.countries,
+                  multiselect: false,
+                  label: "name",
+                  "track-by": "name",
+                  showLabels: false,
+                  placeholder: _vm.__("Select Country", "dokan-lite")
+                },
+                on: { input: _vm.saveCountry },
+                model: {
+                  value: _vm.selectedCountry,
+                  callback: function($$v) {
+                    _vm.selectedCountry = $$v
+                  },
+                  expression: "selectedCountry"
+                }
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "column" },
+            [
+              _c("label", { attrs: { for: "state" } }, [
+                _vm._v(_vm._s(_vm.__("State", "dokan-lite")))
+              ]),
+              _vm._v(" "),
+              _vm.getStatesFromCountryCode(_vm.selectedCode).length < 1
+                ? [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.vendorInfo.address.state,
+                          expression: "vendorInfo.address.state"
+                        }
+                      ],
+                      staticClass: "dokan-form-input",
+                      attrs: {
+                        type: "text",
+                        placeholder: _vm.__("State", "dokan-lite")
+                      },
+                      domProps: { value: _vm.vendorInfo.address.state },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.vendorInfo.address,
+                            "state",
+                            $event.target.value
+                          )
+                        }
+                      }
+                    })
+                  ]
+                : [
+                    _c("Multiselect", {
+                      attrs: {
+                        options: _vm.getStatesFromCountryCode(_vm.selectedCode),
+                        multiselect: false,
+                        showLabels: false,
+                        label: "name",
+                        "track-by": "name",
+                        placeholder: _vm.__("Select State", "dokan-lite")
+                      },
+                      on: { input: _vm.saveState },
+                      model: {
+                        value: _vm.selectedState,
+                        callback: function($$v) {
+                          _vm.selectedState = $$v
+                        },
+                        expression: "selectedState"
+                      }
+                    })
+                  ]
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _vm._l(_vm.getAddressFields, function(component, index) {
+            return _c(component, {
+              key: index,
+              tag: "component",
+              attrs: { vendorInfo: _vm.vendorInfo }
+            })
+          })
+        ],
+        2
+      )
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-9504c01e", esExports)
+  }
+}
+
+/***/ }),
+/* 34 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorPaymentFields_vue__ = __webpack_require__(13);
+/* empty harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2ed34783_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorPaymentFields_vue__ = __webpack_require__(36);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(35)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorPaymentFields_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2ed34783_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorPaymentFields_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src/admin/pages/VendorPaymentFields.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-2ed34783", Component.options)
+  } else {
+    hotAPI.reload("data-v-2ed34783", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 36 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { class: { "payment-info": true, "edit-mode": _vm.getId() } },
+    [
+      _c("div", { staticClass: "content-header" }, [
+        _vm._v(
+          "\n        " +
+            _vm._s(_vm.__("Payment Options", "dokan-lite")) +
+            "\n    "
+        )
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "content-body" },
+        [
+          _c(
+            "div",
+            { staticClass: "dokan-form-group" },
+            [
+              _c("div", { staticClass: "column" }, [
+                _c("label", { attrs: { for: "account-name" } }, [
+                  _vm._v(_vm._s(_vm.__("Account Name", "dokan-lite")))
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.vendorInfo.payment.bank.ac_name,
+                      expression: "vendorInfo.payment.bank.ac_name"
+                    }
+                  ],
+                  staticClass: "dokan-form-input",
+                  attrs: {
+                    type: "text",
+                    placeholder: _vm.__("Account Name", "dokan-lite")
+                  },
+                  domProps: { value: _vm.vendorInfo.payment.bank.ac_name },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.vendorInfo.payment.bank,
+                        "ac_name",
+                        $event.target.value
+                      )
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "column" }, [
+                _c("label", { attrs: { for: "account-number" } }, [
+                  _vm._v(_vm._s(_vm.__("Account Number", "dokan-lite")))
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.vendorInfo.payment.bank.ac_number,
+                      expression: "vendorInfo.payment.bank.ac_number"
+                    }
+                  ],
+                  staticClass: "dokan-form-input",
+                  attrs: {
+                    type: "text",
+                    placeholder: _vm.__("1233456789", "dokan-lite")
+                  },
+                  domProps: { value: _vm.vendorInfo.payment.bank.ac_number },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.vendorInfo.payment.bank,
+                        "ac_number",
+                        $event.target.value
+                      )
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "column" }, [
+                _c("label", { attrs: { for: "bank-name" } }, [
+                  _vm._v(_vm._s(_vm.__("Bank Name", "dokan-lite")))
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.vendorInfo.payment.bank.bank_name,
+                      expression: "vendorInfo.payment.bank.bank_name"
+                    }
+                  ],
+                  staticClass: "dokan-form-input",
+                  attrs: {
+                    type: "text",
+                    placeholder: _vm.__("Bank Name", "dokan-lite")
+                  },
+                  domProps: { value: _vm.vendorInfo.payment.bank.bank_name },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.vendorInfo.payment.bank,
+                        "bank_name",
+                        $event.target.value
+                      )
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "column" }, [
+                _c("label", { attrs: { for: "bank-address" } }, [
+                  _vm._v(_vm._s(_vm.__("Bank Address", "dokan-lite")))
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.vendorInfo.payment.bank.bank_addr,
+                      expression: "vendorInfo.payment.bank.bank_addr"
+                    }
+                  ],
+                  staticClass: "dokan-form-input",
+                  attrs: {
+                    type: "text",
+                    placeholder: _vm.__("Bank Address", "dokan-lite")
+                  },
+                  domProps: { value: _vm.vendorInfo.payment.bank.bank_addr },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.vendorInfo.payment.bank,
+                        "bank_addr",
+                        $event.target.value
+                      )
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "column" }, [
+                _c("label", { attrs: { for: "routing-number" } }, [
+                  _vm._v(_vm._s(_vm.__("Routing Number", "dokan-lite")))
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.vendorInfo.payment.bank.routing_number,
+                      expression: "vendorInfo.payment.bank.routing_number"
+                    }
+                  ],
+                  staticClass: "dokan-form-input",
+                  attrs: {
+                    type: "text",
+                    placeholder: _vm.__("123456789", "dokan-lite")
+                  },
+                  domProps: {
+                    value: _vm.vendorInfo.payment.bank.routing_number
+                  },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.vendorInfo.payment.bank,
+                        "routing_number",
+                        $event.target.value
+                      )
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "column" }, [
+                _c("label", { attrs: { for: "iban" } }, [
+                  _vm._v(_vm._s(_vm.__("IBAN", "dokan-lite")))
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.vendorInfo.payment.bank.iban,
+                      expression: "vendorInfo.payment.bank.iban"
+                    }
+                  ],
+                  staticClass: "dokan-form-input",
+                  attrs: {
+                    type: "text",
+                    placeholder: _vm.__("123456789", "dokan-lite")
+                  },
+                  domProps: { value: _vm.vendorInfo.payment.bank.iban },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.vendorInfo.payment.bank,
+                        "iban",
+                        $event.target.value
+                      )
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "column" }, [
+                _c("label", { attrs: { for: "swift" } }, [
+                  _vm._v(_vm._s(_vm.__("Swift", "dokan-lite")))
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.vendorInfo.payment.bank.swift,
+                      expression: "vendorInfo.payment.bank.swift"
+                    }
+                  ],
+                  staticClass: "dokan-form-input",
+                  attrs: {
+                    type: "text",
+                    placeholder: _vm.__("123456789", "dokan-lite")
+                  },
+                  domProps: { value: _vm.vendorInfo.payment.bank.swift },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.vendorInfo.payment.bank,
+                        "swift",
+                        $event.target.value
+                      )
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.getBankFields, function(component, index) {
+                return _c(component, {
+                  key: index,
+                  tag: "component",
+                  attrs: { vendorInfo: _vm.vendorInfo }
+                })
+              })
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "dokan-form-group" },
+            [
+              _c(
+                "div",
+                {
+                  class: { column: _vm.getId(), "checkbox-group": !_vm.getId() }
+                },
+                [
+                  _c("label", { attrs: { for: "account-name" } }, [
+                    _vm._v(_vm._s(_vm.__("PayPal Email", "dokan-lite")))
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.vendorInfo.payment.paypal.email,
+                        expression: "vendorInfo.payment.paypal.email"
+                      }
+                    ],
+                    staticClass: "dokan-form-input",
+                    attrs: {
+                      type: "email",
+                      placeholder: _vm.__("store@email.com", "dokan-lite")
+                    },
+                    domProps: { value: _vm.vendorInfo.payment.paypal.email },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.vendorInfo.payment.paypal,
+                          "email",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ]
+              ),
+              _vm._v(" "),
+              _vm.getId()
+                ? [
+                    _c("div", { staticClass: "column" }, [
+                      _c(
+                        "div",
+                        { staticClass: "column" },
+                        [
+                          _c("label", [
+                            _vm._v(
+                              _vm._s(
+                                _vm.__("Admin Commission Type", "dokan-lite")
+                              )
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("Multiselect", {
+                            attrs: {
+                              options: _vm.commissionTypes,
+                              multiselect: false,
+                              searchable: false,
+                              showLabels: false
+                            },
+                            on: { input: _vm.saveCommissionType },
+                            model: {
+                              value: _vm.selectedCommissionType,
+                              callback: function($$v) {
+                                _vm.selectedCommissionType = $$v
+                              },
+                              expression: "selectedCommissionType"
+                            }
+                          })
+                        ],
+                        1
+                      )
+                    ]),
+                    _vm._v(" "),
+                    "Combine" === _vm.selectedCommissionType
+                      ? _c(
+                          "div",
+                          { staticClass: "column combine-commission" },
+                          [
+                            _c("label", [
+                              _vm._v(
+                                _vm._s(_vm.__("Admin Commission", "dokan-lite"))
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              { staticClass: "combine-commission-field" },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.vendorInfo.admin_commission,
+                                      expression: "vendorInfo.admin_commission"
+                                    }
+                                  ],
+                                  staticClass: "dokan-form-input percent_fee",
+                                  attrs: { type: "number" },
+                                  domProps: {
+                                    value: _vm.vendorInfo.admin_commission
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.vendorInfo,
+                                        "admin_commission",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                }),
+                                _vm._v(
+                                  "\n                        " +
+                                    _vm._s("%    +") +
+                                    "\n                        "
+                                ),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value:
+                                        _vm.vendorInfo.admin_additional_fee,
+                                      expression:
+                                        "vendorInfo.admin_additional_fee"
+                                    }
+                                  ],
+                                  staticClass: "dokan-form-input fixed_fee",
+                                  attrs: { type: "number" },
+                                  domProps: {
+                                    value: _vm.vendorInfo.admin_additional_fee
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.vendorInfo,
+                                        "admin_additional_fee",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            )
+                          ]
+                        )
+                      : _c("div", { staticClass: "column" }, [
+                          _c("label", [
+                            _vm._v(
+                              _vm._s(_vm.__("Admin Commission", "dokan-lite"))
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.vendorInfo.admin_commission,
+                                expression: "vendorInfo.admin_commission"
+                              }
+                            ],
+                            staticClass: "dokan-form-input",
+                            attrs: { type: "number" },
+                            domProps: {
+                              value: _vm.vendorInfo.admin_commission
+                            },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.vendorInfo,
+                                  "admin_commission",
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          })
+                        ])
+                  ]
+                : _vm._e(),
+              _vm._v(" "),
+              _c("div", { staticClass: "checkbox-group" }, [
+                _c(
+                  "div",
+                  { staticClass: "checkbox-left" },
+                  [
+                    _c("switches", {
+                      attrs: { enabled: _vm.enabled, value: "enabled" },
+                      on: { input: _vm.setValue }
+                    }),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "desc" }, [
+                      _vm._v(_vm._s(_vm.__("Enable Selling", "dokan-lite")))
+                    ])
+                  ],
+                  1
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "checkbox-group" }, [
+                _c(
+                  "div",
+                  { staticClass: "checkbox-left" },
+                  [
+                    _c("switches", {
+                      attrs: { enabled: _vm.trusted, value: "trusted" },
+                      on: { input: _vm.setValue }
+                    }),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "desc" }, [
+                      _vm._v(
+                        _vm._s(_vm.__("Publish Product Directly", "dokan-lite"))
+                      )
+                    ])
+                  ],
+                  1
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "checkbox-group" }, [
+                _c(
+                  "div",
+                  { staticClass: "checkbox-left" },
+                  [
+                    _c("switches", {
+                      attrs: { enabled: _vm.featured, value: "featured" },
+                      on: { input: _vm.setValue }
+                    }),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "desc" }, [
+                      _vm._v(
+                        _vm._s(_vm.__("Make Vendor Featured", "dokan-lite"))
+                      )
+                    ])
+                  ],
+                  1
+                )
+              ])
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _vm._l(_vm.getPyamentFields, function(component, index) {
+            return _c(component, {
+              key: index,
+              tag: "component",
+              attrs: { vendorInfo: _vm.vendorInfo }
+            })
+          })
+        ],
+        2
+      )
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-2ed34783", esExports)
+  }
+}
+
+/***/ }),
 /* 37 */,
 /* 38 */,
 /* 39 */,
 /* 40 */,
 /* 41 */,
-/* 42 */
+/* 42 */,
+/* 43 */,
+/* 44 */,
+/* 45 */,
+/* 46 */,
+/* 47 */,
+/* 48 */,
+/* 49 */,
+/* 50 */,
+/* 51 */,
+/* 52 */,
+/* 53 */,
+/* 54 */,
+/* 55 */,
+/* 56 */,
+/* 57 */,
+/* 58 */,
+/* 59 */,
+/* 60 */,
+/* 61 */,
+/* 62 */,
+/* 63 */,
+/* 64 */,
+/* 65 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -488,7 +3501,7 @@ if (false) {
 });
 
 /***/ }),
-/* 43 */
+/* 66 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -507,7 +3520,7 @@ if (false) {
 });
 
 /***/ }),
-/* 44 */
+/* 67 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -574,47 +3587,7 @@ if (false) {
 });
 
 /***/ }),
-/* 45 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["a"] = ({
-
-    name: 'Switches',
-
-    props: {
-        enabled: {
-            type: Boolean, // String, Number, Boolean, Function, Object, Array
-            required: true,
-            default: false
-        },
-        value: {
-            type: [String, Number]
-        }
-    },
-
-    data() {
-        return {};
-    },
-
-    methods: {
-
-        trigger(e) {
-            this.$emit('input', e.target.checked, e.target.value);
-        }
-    }
-});
-
-/***/ }),
-/* 46 */
+/* 68 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -798,7 +3771,7 @@ if (false) {
 });
 
 /***/ }),
-/* 47 */
+/* 69 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -818,11 +3791,11 @@ if (false) {
 });
 
 /***/ }),
-/* 48 */
+/* 70 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_debounce__);
 //
 //
@@ -898,7 +3871,7 @@ if (false) {
 });
 
 /***/ }),
-/* 49 */
+/* 71 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -933,11 +3906,11 @@ if (false) {
 });
 
 /***/ }),
-/* 50 */
+/* 72 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_debounce__);
 //
 //
@@ -984,7 +3957,7 @@ if (false) {
 });
 
 /***/ }),
-/* 51 */
+/* 73 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1055,8 +4028,8 @@ if (false) {
 });
 
 /***/ }),
-/* 52 */,
-/* 53 */
+/* 74 */,
+/* 75 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1189,29 +4162,89 @@ if (false) {
 });
 
 /***/ }),
-/* 54 */,
-/* 55 */,
-/* 56 */,
-/* 57 */,
-/* 58 */,
-/* 59 */,
-/* 60 */,
-/* 61 */,
-/* 62 */,
-/* 63 */,
-/* 64 */,
-/* 65 */,
-/* 66 */,
-/* 67 */,
-/* 68 */,
-/* 69 */,
-/* 70 */,
-/* 71 */,
-/* 72 */,
-/* 73 */,
-/* 74 */,
-/* 75 */,
-/* 76 */,
+/* 76 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+    name: 'VendorSocialFields',
+
+    props: {
+        vendorInfo: {
+            type: Object
+        }
+    },
+
+    data() {
+        return {
+            getSocialFields: dokan.hooks.applyFilters('getVendorSocialFields', [])
+        };
+    }
+});
+
+/***/ }),
 /* 77 */,
 /* 78 */,
 /* 79 */,
@@ -1255,7 +4288,36 @@ if (false) {
 /* 117 */,
 /* 118 */,
 /* 119 */,
-/* 120 */
+/* 120 */,
+/* 121 */,
+/* 122 */,
+/* 123 */,
+/* 124 */,
+/* 125 */,
+/* 126 */,
+/* 127 */,
+/* 128 */,
+/* 129 */,
+/* 130 */,
+/* 131 */,
+/* 132 */,
+/* 133 */,
+/* 134 */,
+/* 135 */,
+/* 136 */,
+/* 137 */,
+/* 138 */,
+/* 139 */,
+/* 140 */,
+/* 141 */,
+/* 142 */,
+/* 143 */,
+/* 144 */,
+/* 145 */,
+/* 146 */,
+/* 147 */,
+/* 148 */,
+/* 149 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1265,101 +4327,129 @@ var _vue = __webpack_require__(1);
 
 var _vue2 = _interopRequireDefault(_vue);
 
-var _vueRouter = __webpack_require__(9);
+var _vueRouter = __webpack_require__(19);
 
 var _vueRouter2 = _interopRequireDefault(_vueRouter);
 
-var _moment = __webpack_require__(121);
+var _moment = __webpack_require__(150);
 
 var _moment2 = _interopRequireDefault(_moment);
 
-var _vueNotification = __webpack_require__(37);
+var _vueNotification = __webpack_require__(61);
 
 var _vueNotification2 = _interopRequireDefault(_vueNotification);
 
-var _vueWpListTable = __webpack_require__(38);
+var _vueWpListTable = __webpack_require__(62);
 
 var _vueWpListTable2 = _interopRequireDefault(_vueWpListTable);
 
-var _vueMultiselect = __webpack_require__(40);
+var _vueMultiselect = __webpack_require__(4);
 
 var _vueMultiselect2 = _interopRequireDefault(_vueMultiselect);
 
-var _Api = __webpack_require__(125);
+var _Api = __webpack_require__(154);
 
 var _Api2 = _interopRequireDefault(_Api);
 
-var _vueChartjs = __webpack_require__(5);
+var _vueChartjs = __webpack_require__(14);
 
 var _vueChartjs2 = _interopRequireDefault(_vueChartjs);
 
-var _Mixin = __webpack_require__(126);
+var _Mixin = __webpack_require__(155);
 
 var _Mixin2 = _interopRequireDefault(_Mixin);
 
-var _debounce = __webpack_require__(6);
+var _debounce = __webpack_require__(2);
 
 var _debounce2 = _interopRequireDefault(_debounce);
 
-var _vueContentLoading = __webpack_require__(41);
+var _VersionCompare = __webpack_require__(157);
 
-var _Postbox = __webpack_require__(128);
+var _VersionCompare2 = _interopRequireDefault(_VersionCompare);
+
+var _vueContentLoading = __webpack_require__(64);
+
+var _Postbox = __webpack_require__(158);
 
 var _Postbox2 = _interopRequireDefault(_Postbox);
 
-var _Loading = __webpack_require__(131);
+var _Loading = __webpack_require__(161);
 
 var _Loading2 = _interopRequireDefault(_Loading);
 
-var _Chart = __webpack_require__(10);
+var _Chart = __webpack_require__(20);
 
 var _Chart2 = _interopRequireDefault(_Chart);
 
-var _Modal = __webpack_require__(134);
+var _Modal = __webpack_require__(164);
 
 var _Modal2 = _interopRequireDefault(_Modal);
 
-var _Switches = __webpack_require__(137);
+var _Switches = __webpack_require__(3);
 
 var _Switches2 = _interopRequireDefault(_Switches);
 
-var _TextEditor = __webpack_require__(140);
+var _TextEditor = __webpack_require__(167);
 
 var _TextEditor2 = _interopRequireDefault(_TextEditor);
 
-var _Currency = __webpack_require__(142);
+var _Currency = __webpack_require__(169);
 
 var _Currency2 = _interopRequireDefault(_Currency);
 
-var _LazyInput = __webpack_require__(144);
+var _LazyInput = __webpack_require__(171);
 
 var _LazyInput2 = _interopRequireDefault(_LazyInput);
 
-var _Progressbar = __webpack_require__(146);
+var _Progressbar = __webpack_require__(173);
 
 var _Progressbar2 = _interopRequireDefault(_Progressbar);
 
-var _Search = __webpack_require__(149);
+var _Search = __webpack_require__(176);
 
 var _Search2 = _interopRequireDefault(_Search);
 
-var _Datepicker = __webpack_require__(152);
+var _Datepicker = __webpack_require__(179);
 
 var _Datepicker2 = _interopRequireDefault(_Datepicker);
 
-var _vueSweetalert = __webpack_require__(52);
+var _vueSweetalert = __webpack_require__(74);
 
 var _vueSweetalert2 = _interopRequireDefault(_vueSweetalert);
 
-var _ColorPicker = __webpack_require__(12);
+var _ColorPicker = __webpack_require__(22);
 
 var _ColorPicker2 = _interopRequireDefault(_ColorPicker);
 
-var _Gmap = __webpack_require__(157);
+var _Gmap = __webpack_require__(184);
 
 var _Gmap2 = _interopRequireDefault(_Gmap);
 
-__webpack_require__(160);
+var _UploadImage = __webpack_require__(15);
+
+var _UploadImage2 = _interopRequireDefault(_UploadImage);
+
+var _PasswordGenerator = __webpack_require__(16);
+
+var _PasswordGenerator2 = _interopRequireDefault(_PasswordGenerator);
+
+var _VendorAccountFields = __webpack_require__(25);
+
+var _VendorAccountFields2 = _interopRequireDefault(_VendorAccountFields);
+
+var _VendorAddressFields = __webpack_require__(32);
+
+var _VendorAddressFields2 = _interopRequireDefault(_VendorAddressFields);
+
+var _VendorSocialFields = __webpack_require__(187);
+
+var _VendorSocialFields2 = _interopRequireDefault(_VendorSocialFields);
+
+var _VendorPaymentFields = __webpack_require__(34);
+
+var _VendorPaymentFields2 = _interopRequireDefault(_VendorPaymentFields);
+
+__webpack_require__(189);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1372,7 +4462,6 @@ window.__ = function (text, domain) {
 
 _vue2.default.use(_vueNotification2.default);
 _vue2.default.use(_vueSweetalert2.default);
-// Vue.component('multiselect', Multiselect)
 
 _vue2.default.mixin(_Mixin2.default);
 
@@ -1425,7 +4514,14 @@ window.dokan.libs['Datepicker'] = _Datepicker2.default;
 window.dokan.libs['Multiselect'] = _vueMultiselect2.default;
 window.dokan.libs['ColorPicker'] = _ColorPicker2.default;
 window.dokan.libs['debounce'] = _debounce2.default;
+window.dokan.libs['VersionCompare'] = _VersionCompare2.default;
 window.dokan.libs['Gmap'] = _Gmap2.default;
+window.dokan.libs['UploadImage'] = _UploadImage2.default;
+window.dokan.libs['PasswordGenerator'] = _PasswordGenerator2.default;
+window.dokan.libs['VendorAccountFields'] = _VendorAccountFields2.default;
+window.dokan.libs['VendorAddressFields'] = _VendorAddressFields2.default;
+window.dokan.libs['VendorSocialFields'] = _VendorSocialFields2.default;
+window.dokan.libs['VendorPaymentFields'] = _VendorPaymentFields2.default;
 
 window.dokan.libs['ContentLoading'] = {
     VclCode: _vueContentLoading.VclCode,
@@ -1452,16 +4548,16 @@ if (dokan.hooks) {
 }
 
 /***/ }),
-/* 121 */
+/* 150 */
 /***/ (function(module, exports) {
 
 module.exports = moment;
 
 /***/ }),
-/* 122 */,
-/* 123 */,
-/* 124 */,
-/* 125 */
+/* 151 */,
+/* 152 */,
+/* 153 */,
+/* 154 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1552,7 +4648,7 @@ var Dokan_API = function () {
 exports.default = Dokan_API;
 
 /***/ }),
-/* 126 */
+/* 155 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1562,7 +4658,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _i18n = __webpack_require__(127);
+var _i18n = __webpack_require__(156);
 
 exports.default = {
     methods: {
@@ -1589,7 +4685,7 @@ exports.default = {
 };
 
 /***/ }),
-/* 127 */
+/* 156 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1713,18 +4809,140 @@ function _nx(single, plural, number, context, domain) {
 var sprintf = exports.sprintf = Jed.sprintf;
 
 /***/ }),
-/* 128 */
+/* 157 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function versionCompare(v1, v2, operator) {
+  // eslint-disable-line camelcase
+  //       discuss at: https://locutus.io/php/version_compare/
+  //      original by: Philippe Jausions (https://pear.php.net/user/jausions)
+  //      original by: Aidan Lister (https://aidanlister.com/)
+  // reimplemented by: Kankrelune (https://www.webfaktory.info/)
+  //      improved by: Brett Zamir (https://brett-zamir.me)
+  //      improved by: Scott Baker
+  //      improved by: Theriault (https://github.com/Theriault)
+  //        example 1: versionCompare('8.2.5rc', '8.2.5a')
+  //        returns 1: 1
+  //        example 2: versionCompare('8.2.50', '8.2.52', '<')
+  //        returns 2: true
+  //        example 3: versionCompare('5.3.0-dev', '5.3.0')
+  //        returns 3: -1
+  //        example 4: versionCompare('4.1.0.52','4.01.0.51')
+  //        returns 4: 1
+
+  // Important: compare must be initialized at 0.
+  var i;
+  var x;
+  var compare = 0;
+
+  // vm maps textual PHP versions to negatives so they're less than 0.
+  // PHP currently defines these as CASE-SENSITIVE. It is important to
+  // leave these as negatives so that they can come before numerical versions
+  // and as if no letters were there to begin with.
+  // (1alpha is < 1 and < 1.1 but > 1dev1)
+  // If a non-numerical value can't be mapped to this table, it receives
+  // -7 as its value.
+  var vm = {
+    'dev': -6,
+    'alpha': -5,
+    'a': -5,
+    'beta': -4,
+    'b': -4,
+    'RC': -3,
+    'rc': -3,
+    '#': -2,
+    'p': 1,
+    'pl': 1
+
+    // This function will be called to prepare each version argument.
+    // It replaces every _, -, and + with a dot.
+    // It surrounds any nonsequence of numbers/dots with dots.
+    // It replaces sequences of dots with a single dot.
+    //    version_compare('4..0', '4.0') === 0
+    // Important: A string of 0 length needs to be converted into a value
+    // even less than an unexisting value in vm (-7), hence [-8].
+    // It's also important to not strip spaces because of this.
+    //   version_compare('', ' ') === 1
+  };var _prepVersion = function _prepVersion(v) {
+    v = ('' + v).replace(/[_\-+]/g, '.');
+    v = v.replace(/([^.\d]+)/g, '.$1.').replace(/\.{2,}/g, '.');
+    return !v.length ? [-8] : v.split('.');
+  };
+  // This converts a version component to a number.
+  // Empty component becomes 0.
+  // Non-numerical component becomes a negative number.
+  // Numerical component becomes itself as an integer.
+  var _numVersion = function _numVersion(v) {
+    return !v ? 0 : isNaN(v) ? vm[v] || -7 : parseInt(v, 10);
+  };
+
+  v1 = _prepVersion(v1);
+  v2 = _prepVersion(v2);
+  x = Math.max(v1.length, v2.length);
+  for (i = 0; i < x; i++) {
+    if (v1[i] === v2[i]) {
+      continue;
+    }
+    v1[i] = _numVersion(v1[i]);
+    v2[i] = _numVersion(v2[i]);
+    if (v1[i] < v2[i]) {
+      compare = -1;
+      break;
+    } else if (v1[i] > v2[i]) {
+      compare = 1;
+      break;
+    }
+  }
+  if (!operator) {
+    return compare;
+  }
+
+  // Important: operator is CASE-SENSITIVE.
+  // "No operator" seems to be treated as "<."
+  // Any other values seem to make the function return null.
+  switch (operator) {
+    case '>':
+    case 'gt':
+      return compare > 0;
+    case '>=':
+    case 'ge':
+      return compare >= 0;
+    case '<=':
+    case 'le':
+      return compare <= 0;
+    case '===':
+    case '=':
+    case 'eq':
+      return compare === 0;
+    case '<>':
+    case '!==':
+    case 'ne':
+      return compare !== 0;
+    case '':
+    case '<':
+    case 'lt':
+      return compare < 0;
+    default:
+      return null;
+  }
+};
+
+/***/ }),
+/* 158 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Postbox_vue__ = __webpack_require__(42);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Postbox_vue__ = __webpack_require__(65);
 /* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_36a997ab_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Postbox_vue__ = __webpack_require__(130);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_36a997ab_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Postbox_vue__ = __webpack_require__(160);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(129)
+  __webpack_require__(159)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -1770,13 +4988,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 129 */
+/* 159 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 130 */
+/* 160 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1836,18 +5054,18 @@ if (false) {
 }
 
 /***/ }),
-/* 131 */
+/* 161 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Loading_vue__ = __webpack_require__(43);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Loading_vue__ = __webpack_require__(66);
 /* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_67db673c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Loading_vue__ = __webpack_require__(133);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_67db673c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Loading_vue__ = __webpack_require__(163);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(132)
+  __webpack_require__(162)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -1893,13 +5111,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 132 */
+/* 162 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 133 */
+/* 163 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1928,18 +5146,18 @@ if (false) {
 }
 
 /***/ }),
-/* 134 */
+/* 164 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Modal_vue__ = __webpack_require__(44);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Modal_vue__ = __webpack_require__(67);
 /* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4bd79a2d_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Modal_vue__ = __webpack_require__(136);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4bd79a2d_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Modal_vue__ = __webpack_require__(166);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(135)
+  __webpack_require__(165)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -1985,13 +5203,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 135 */
+/* 165 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 136 */
+/* 166 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2069,108 +5287,14 @@ if (false) {
 }
 
 /***/ }),
-/* 137 */
+/* 167 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Switches_vue__ = __webpack_require__(45);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_TextEditor_vue__ = __webpack_require__(68);
 /* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_aa8ad7dc_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Switches_vue__ = __webpack_require__(139);
-var disposed = false
-function injectStyle (ssrContext) {
-  if (disposed) return
-  __webpack_require__(138)
-}
-var normalizeComponent = __webpack_require__(0)
-/* script */
-
-
-/* template */
-
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = injectStyle
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Switches_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_aa8ad7dc_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Switches_vue__["a" /* default */],
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "src/admin/components/Switches.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-aa8ad7dc", Component.options)
-  } else {
-    hotAPI.reload("data-v-aa8ad7dc", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
-
-
-/***/ }),
-/* 138 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 139 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("label", { staticClass: "switch tips" }, [
-    _c("input", {
-      staticClass: "toogle-checkbox",
-      attrs: { type: "checkbox" },
-      domProps: { checked: _vm.enabled, value: _vm.value },
-      on: { change: _vm.trigger }
-    }),
-    _vm._v(" "),
-    _c("span", { staticClass: "slider round" })
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-aa8ad7dc", esExports)
-  }
-}
-
-/***/ }),
-/* 140 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_TextEditor_vue__ = __webpack_require__(46);
-/* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_70730fac_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TextEditor_vue__ = __webpack_require__(141);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_70730fac_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TextEditor_vue__ = __webpack_require__(168);
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -2216,7 +5340,7 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 141 */
+/* 168 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2241,14 +5365,14 @@ if (false) {
 }
 
 /***/ }),
-/* 142 */
+/* 169 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Currency_vue__ = __webpack_require__(47);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Currency_vue__ = __webpack_require__(69);
 /* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_7df58dc1_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Currency_vue__ = __webpack_require__(143);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_7df58dc1_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Currency_vue__ = __webpack_require__(170);
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -2294,7 +5418,7 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 143 */
+/* 170 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2318,14 +5442,14 @@ if (false) {
 }
 
 /***/ }),
-/* 144 */
+/* 171 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_LazyInput_vue__ = __webpack_require__(48);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_LazyInput_vue__ = __webpack_require__(70);
 /* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_588d4894_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_LazyInput_vue__ = __webpack_require__(145);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_588d4894_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_LazyInput_vue__ = __webpack_require__(172);
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -2371,7 +5495,7 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 145 */
+/* 172 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2403,18 +5527,18 @@ if (false) {
 }
 
 /***/ }),
-/* 146 */
+/* 173 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Progressbar_vue__ = __webpack_require__(49);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Progressbar_vue__ = __webpack_require__(71);
 /* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_356fabc6_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Progressbar_vue__ = __webpack_require__(148);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_356fabc6_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Progressbar_vue__ = __webpack_require__(175);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(147)
+  __webpack_require__(174)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -2460,13 +5584,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 147 */
+/* 174 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 148 */
+/* 175 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2499,18 +5623,18 @@ if (false) {
 }
 
 /***/ }),
-/* 149 */
+/* 176 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Search_vue__ = __webpack_require__(50);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Search_vue__ = __webpack_require__(72);
 /* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_5d8365d8_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Search_vue__ = __webpack_require__(151);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_5d8365d8_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Search_vue__ = __webpack_require__(178);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(150)
+  __webpack_require__(177)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -2556,13 +5680,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 150 */
+/* 177 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 151 */
+/* 178 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2610,14 +5734,14 @@ if (false) {
 }
 
 /***/ }),
-/* 152 */
+/* 179 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Datepicker_vue__ = __webpack_require__(51);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Datepicker_vue__ = __webpack_require__(73);
 /* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_ae257028_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Datepicker_vue__ = __webpack_require__(153);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_ae257028_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Datepicker_vue__ = __webpack_require__(180);
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -2663,7 +5787,7 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 153 */
+/* 180 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2693,21 +5817,21 @@ if (false) {
 }
 
 /***/ }),
-/* 154 */,
-/* 155 */,
-/* 156 */,
-/* 157 */
+/* 181 */,
+/* 182 */,
+/* 183 */,
+/* 184 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Gmap_vue__ = __webpack_require__(53);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Gmap_vue__ = __webpack_require__(75);
 /* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_03f03f45_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Gmap_vue__ = __webpack_require__(159);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_03f03f45_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Gmap_vue__ = __webpack_require__(186);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(158)
+  __webpack_require__(185)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -2753,13 +5877,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 158 */
+/* 185 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 159 */
+/* 186 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2774,7 +5898,7 @@ var render = function() {
           staticClass: "search-address regular-text",
           attrs: {
             type: "text",
-            placeholder: _vm.__("Search Address", "dokan")
+            placeholder: _vm.__("Search Address", "dokan-lite")
           }
         }),
         _vm._v(" "),
@@ -2783,7 +5907,7 @@ var render = function() {
     : _c("p", [
         _vm._v(
           "\n    " +
-            _vm._s(_vm.__("Please enter google map API key", "dokan")) +
+            _vm._s(_vm.__("Please enter google map API key", "dokan-lite")) +
             "\n"
         )
       ])
@@ -2799,5 +5923,371 @@ if (false) {
   }
 }
 
+/***/ }),
+/* 187 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorSocialFields_vue__ = __webpack_require__(76);
+/* empty harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_21406e92_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorSocialFields_vue__ = __webpack_require__(188);
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorSocialFields_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_21406e92_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorSocialFields_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src/admin/pages/VendorSocialFields.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-21406e92", Component.options)
+  } else {
+    hotAPI.reload("data-v-21406e92", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+
+
+/***/ }),
+/* 188 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "social-info" }, [
+    _c("div", { staticClass: "content-header" }, [
+      _vm._v(
+        "\n        " + _vm._s(_vm.__("Social Options", "dokan-lite")) + "\n    "
+      )
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "content-body" }, [
+      _c(
+        "div",
+        { staticClass: "dokan-form-group" },
+        [
+          _c("div", { staticClass: "column" }, [
+            _c("label", { attrs: { for: "" } }, [
+              _vm._v(_vm._s(_vm.__("Facebook", "dokan-lite")))
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.vendorInfo.social.fb,
+                  expression: "vendorInfo.social.fb"
+                }
+              ],
+              staticClass: "dokan-form-input",
+              attrs: {
+                type: "text",
+                placeholder: _vm.__("https://exmaple.com")
+              },
+              domProps: { value: _vm.vendorInfo.social.fb },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.vendorInfo.social, "fb", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "column" }, [
+            _c("label", { attrs: { for: "" } }, [
+              _vm._v(_vm._s(_vm.__("Flickr", "dokan-lite")))
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.vendorInfo.social.flickr,
+                  expression: "vendorInfo.social.flickr"
+                }
+              ],
+              staticClass: "dokan-form-input",
+              attrs: {
+                type: "text",
+                placeholder: _vm.__("https://exmaple.com")
+              },
+              domProps: { value: _vm.vendorInfo.social.flickr },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.vendorInfo.social, "flickr", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "column" }, [
+            _c("label", { attrs: { for: "" } }, [
+              _vm._v(_vm._s(_vm.__("Google Plus", "dokan-lite")))
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.vendorInfo.social.gplus,
+                  expression: "vendorInfo.social.gplus"
+                }
+              ],
+              staticClass: "dokan-form-input",
+              attrs: {
+                type: "text",
+                placeholder: _vm.__("https://exmaple.com")
+              },
+              domProps: { value: _vm.vendorInfo.social.gplus },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.vendorInfo.social, "gplus", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "column" }, [
+            _c("label", { attrs: { for: "" } }, [
+              _vm._v(_vm._s(_vm.__("Twitter", "dokan-lite")))
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.vendorInfo.social.twitter,
+                  expression: "vendorInfo.social.twitter"
+                }
+              ],
+              staticClass: "dokan-form-input",
+              attrs: {
+                type: "text",
+                placeholder: _vm.__("https://exmaple.com")
+              },
+              domProps: { value: _vm.vendorInfo.social.twitter },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(
+                    _vm.vendorInfo.social,
+                    "twitter",
+                    $event.target.value
+                  )
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "column" }, [
+            _c("label", { attrs: { for: "" } }, [
+              _vm._v(_vm._s(_vm.__("Youtube", "dokan-lite")))
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.vendorInfo.social.youtube,
+                  expression: "vendorInfo.social.youtube"
+                }
+              ],
+              staticClass: "dokan-form-input",
+              attrs: {
+                type: "text",
+                placeholder: _vm.__("https://exmaple.com")
+              },
+              domProps: { value: _vm.vendorInfo.social.youtube },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(
+                    _vm.vendorInfo.social,
+                    "youtube",
+                    $event.target.value
+                  )
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "column" }, [
+            _c("label", { attrs: { for: "" } }, [
+              _vm._v(_vm._s(_vm.__("Linkedin", "dokan-lite")))
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.vendorInfo.social.linkedin,
+                  expression: "vendorInfo.social.linkedin"
+                }
+              ],
+              staticClass: "dokan-form-input",
+              attrs: {
+                type: "text",
+                placeholder: _vm.__("https://exmaple.com")
+              },
+              domProps: { value: _vm.vendorInfo.social.linkedin },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(
+                    _vm.vendorInfo.social,
+                    "linkedin",
+                    $event.target.value
+                  )
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "column" }, [
+            _c("label", { attrs: { for: "" } }, [
+              _vm._v(_vm._s(_vm.__("Pinterest", "dokan-lite")))
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.vendorInfo.social.pinterest,
+                  expression: "vendorInfo.social.pinterest"
+                }
+              ],
+              staticClass: "dokan-form-input",
+              attrs: {
+                type: "text",
+                placeholder: _vm.__("https://exmaple.com")
+              },
+              domProps: { value: _vm.vendorInfo.social.pinterest },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(
+                    _vm.vendorInfo.social,
+                    "pinterest",
+                    $event.target.value
+                  )
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "column" }, [
+            _c("label", { attrs: { for: "" } }, [
+              _vm._v(_vm._s(_vm.__("Instagram", "dokan-lite")))
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.vendorInfo.social.instagram,
+                  expression: "vendorInfo.social.instagram"
+                }
+              ],
+              staticClass: "dokan-form-input",
+              attrs: {
+                type: "text",
+                placeholder: _vm.__("https://exmaple.com")
+              },
+              domProps: { value: _vm.vendorInfo.social.instagram },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(
+                    _vm.vendorInfo.social,
+                    "instagram",
+                    $event.target.value
+                  )
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _vm._l(_vm.getSocialFields, function(component, index) {
+            return _c(component, {
+              key: index,
+              tag: "component",
+              attrs: { vendorInfo: _vm.vendorInfo }
+            })
+          })
+        ],
+        2
+      )
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-21406e92", esExports)
+  }
+}
+
 /***/ })
-],[120]);
+],[149]);
