@@ -293,7 +293,7 @@
             </label>
             <div class="dokan-w6" style="width: auto">
                 <div class="dokan-form-group">
-                    <input type="text" class="dokan-form-control input-md" name="dokan_store_close_notice" placeholder="<?php esc_attr_e( 'Store is closed', 'dokan' ) ?>" value="<?php echo esc_attr( $dokan_store_close_notice ); ?>">
+                    <input type="text" class="dokan-form-control input-md" name="dokan_store_close_notice" placeholder="<?php esc_attr_e( 'Store is closed', 'dokan-lite' ) ?>" value="<?php echo esc_attr( $dokan_store_close_notice ); ?>">
                 </div>
             </div>
         </div>
