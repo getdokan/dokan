@@ -417,6 +417,7 @@ class Dokan_Assets {
             'commission_type'    => dokan_get_commission_type( dokan_get_current_user_id() ),
             'rounding_precision' => wc_get_rounding_precision(),
             'mon_decimal_point'  => wc_get_price_decimal_separator(),
+            'product_types'      => apply_filters( 'dokan_product_types', [ 'simple' ] ),
         );
 
         $localize_script = apply_filters( 'dokan_localized_args', $default_script );

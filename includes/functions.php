@@ -892,7 +892,6 @@ function dokan_get_template_part( $slug, $name = '', $args = array() ) {
 
     // Allow 3rd party plugin filter template file from their plugin
     $template = apply_filters( 'dokan_get_template_part', $template, $slug, $name );
-
     if ( $template ) {
         include( $template );
     }
