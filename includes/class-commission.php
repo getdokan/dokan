@@ -441,7 +441,7 @@ class Dokan_Commission {
         $func_type = str_replace( 'earning', 'type', $callable );
         $func_fee  = str_replace( 'earning', 'additional_fee', $callable );
 
-        $commission_rate = 0;
+        $commission_rate = null;
 
         // get[product,category,vendor,global]_wise_rate
         if ( is_callable( [ $this, $func_rate ] ) ) {
@@ -506,6 +506,10 @@ class Dokan_Commission {
         }
 
         if ( 'flat' === $commission_type ) {
+            if ( is_null( $commission_rate ) ) {
+                return $commission_rate;
+            }
+
             if ( $this->get_order_qunatity() ) {
                 $commission_rate *= apply_filters( 'dokan_commission_multiply_by_order_quantity', $this->get_order_qunatity() );
             }
@@ -521,6 +525,10 @@ class Dokan_Commission {
         }
 
         if ( 'percentage' === $commission_type ) {
+            if ( is_null( $commission_rate ) ) {
+                return $commission_rate;
+            }
+
             $earning = ( (float) $product_price * $commission_rate ) / 100;
             $earning = (float) $product_price - $earning;
 
