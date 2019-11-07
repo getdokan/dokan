@@ -8,6 +8,7 @@ import API_Helper from '@/utils/Api'
 import ChartJS from 'vue-chartjs'
 import Mixin from './Mixin'
 import Debounce from 'debounce'
+import VersionCompare from '@/utils/VersionCompare'
 
 window.__ = function( text, domain ) {
   return __( text, domain );
@@ -101,6 +102,7 @@ window.dokan.libs['Datepicker']          = Datepicker;
 window.dokan.libs['Multiselect']         = Multiselect;
 window.dokan.libs['ColorPicker']         = ColorPicker;
 window.dokan.libs['debounce']            = Debounce;
+window.dokan.libs['VersionCompare']      = VersionCompare;
 window.dokan.libs['Gmap']                = Gmap;
 window.dokan.libs['UploadImage']         = UploadImage;
 window.dokan.libs['PasswordGenerator']   = PasswordGenerator;
