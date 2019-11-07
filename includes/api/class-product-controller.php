@@ -101,7 +101,7 @@ class Dokan_REST_Product_Controller extends Dokan_REST_Controller {
                     'force' => array(
                         'type'        => 'boolean',
                         'default'     => false,
-                        'description' => __( 'Whether to bypass trash and force deletion.', 'dokan' ),
+                        'description' => __( 'Whether to bypass trash and force deletion.', 'dokan-lite' ),
                     ),
                 ),
             )

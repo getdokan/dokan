@@ -139,11 +139,11 @@ function dokan_is_product_edit_page() {
 function dokan_is_seller_dashboard() {
     $page_id = dokan_get_option( 'dashboard', 'dokan_pages' );
 
-    if ( ! $page_id ) {
+    if ( ! apply_filters( 'dokan_get_dashboard_page_id', $page_id ) ) {
         return false;
     }
 
-    if ( $page_id == get_the_ID() ) {
+    if ( $page_id == apply_filters( 'dokan_get_current_page_id', get_the_ID() ) ) {
         return true;
     }
 
@@ -1625,7 +1625,7 @@ function dokan_prepare_date_query( $from, $to ) {
     $raw_to_date   = date_create( $to );
 
     if ( ! $from_date || ! $to_date ) {
-        return wp_send_json( __( 'Date is not valid', 'dokan' ) );
+        return wp_send_json( __( 'Date is not valid', 'dokan-lite' ) );
     }
 
     $from_year  = $from_date->format( 'Y' );
@@ -3613,4 +3613,32 @@ function dokan_array_after( $array, $position, $new_array ) {
         $new_array,
         array_slice( $array, $pos )
     );
+}
+
+if ( ! function_exists( 'dokan_get_seller_status_count' ) ) {
+    /**
+     * Get Seller status counts, used in admin area
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return array
+     */
+    function dokan_get_seller_status_count() {
+        $active_users = new WP_User_Query( array(
+            'role'       => 'seller',
+            'meta_key'   => 'dokan_enable_selling',
+            'meta_value' => 'yes',
+            'fields'     => 'ID'
+        ) );
+
+        $all_users      = new WP_User_Query( array( 'role' => 'seller', 'fields' => 'ID' ) );
+        $active_count   = $active_users->get_total();
+        $inactive_count = $all_users->get_total() - $active_count;
+
+        return apply_filters( 'dokan_get_seller_status_count', [
+            'total'    => $active_count + $inactive_count,
+            'active'   => $active_count,
+            'inactive' => $inactive_count,
+        ] );
+    }
 }
