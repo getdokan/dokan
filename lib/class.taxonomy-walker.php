@@ -47,8 +47,8 @@ class DokanTaxonomyWalker extends Walker{
      * @return string
      */
     public function start_el( &$output, $category, $depth = 0, $args = array(), $id = 0 ) {
-        if ( version_compare( DOKAN_PRO_PLUGIN_VERSION, '2.9.14', '<' ) ) {
-            $commission_val = dokan_get_seller_percentage( dokan_get_current_user_id(), $this->post_id, $category->term_id );
+        if ( defined( 'DOKAN_PRO_PLUGIN_VERSION' ) && version_compare( DOKAN_PRO_PLUGIN_VERSION, '2.9.14', '<' ) ) {
+            $commission_val  = dokan_get_seller_percentage( dokan_get_current_user_id(), $this->post_id, $category->term_id );
             $commission_type = dokan_get_commission_type( dokan_get_current_user_id(), $this->post_id, $category->term_id );
         } else {
             $commission_val = dokan()->commission->get_earning_by_product( $this->post_id );
@@ -62,7 +62,7 @@ class DokanTaxonomyWalker extends Walker{
         $cat_name = apply_filters( 'list_cats', $category->name, $category );
         $output   .= "\<option class=\"level-$depth\" value=\"" . $category->term_id . "\"";
 
-        if ( version_compare( DOKAN_PRO_PLUGIN_VERSION, '2.9.14', '<' ) ) {
+        if ( defined( 'DOKAN_PRO_PLUGIN_VERSION' ) && version_compare( DOKAN_PRO_PLUGIN_VERSION, '2.9.14', '<' ) ) {
             $output .= ' data-commission="' . $commission_val . '" data-commission_type="' . $commission_type . '"';
         } else {
             $output .= ' data-commission="' . $commission_val . '" data-product-id="' . $this->post_id . '"';

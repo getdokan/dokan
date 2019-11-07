@@ -3615,3 +3615,31 @@ function dokan_array_after( $array, $position, $new_array ) {
         array_slice( $array, $pos )
     );
 }
+
+if ( ! function_exists( 'dokan_get_seller_status_count' ) ) {
+    /**
+     * Get Seller status counts, used in admin area
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return array
+     */
+    function dokan_get_seller_status_count() {
+        $active_users = new WP_User_Query( array(
+            'role'       => 'seller',
+            'meta_key'   => 'dokan_enable_selling',
+            'meta_value' => 'yes',
+            'fields'     => 'ID'
+        ) );
+
+        $all_users      = new WP_User_Query( array( 'role' => 'seller', 'fields' => 'ID' ) );
+        $active_count   = $active_users->get_total();
+        $inactive_count = $all_users->get_total() - $active_count;
+
+        return apply_filters( 'dokan_get_seller_status_count', [
+            'total'    => $active_count + $inactive_count,
+            'active'   => $active_count,
+            'inactive' => $inactive_count,
+        ] );
+    }
+}
