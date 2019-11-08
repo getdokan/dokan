@@ -991,20 +991,32 @@ function dokan_get_page_url( $page, $context = 'dokan' ) {
 /**
  * Get edit product url
  *
- * @param type $product_id
- * @return type
+ * @param int|WC_Product $product
+ *
+ * @return string|false on filure
  */
-function dokan_edit_product_url( $product_id ) {
-    if ( get_post_field( 'post_status', $product_id ) == 'publish' ) {
-        return trailingslashit( get_permalink( $product_id ) ) . 'edit/';
+function dokan_edit_product_url( $product ) {
+    if ( ! $product instanceof WC_Product ) {
+        $product = wc_get_product( $product );
     }
 
-    $new_product_url = dokan_get_navigation_url( 'products' );
+    if ( ! $product ) {
+        return false;
+    }
 
-    return add_query_arg( array(
-        'product_id' => $product_id,
-        'action'     => 'edit',
-    ), $new_product_url );
+    if ( 'publish' === $product->get_status() ) {
+        $url = trailingslashit( get_permalink( $product->get_id() ) ) . 'edit/';
+    } else {
+        $url = add_query_arg(
+            [
+                'product_id' => $product->get_id(),
+                'action'     => 'edit',
+            ],
+            dokan_get_navigation_url( 'products' )
+        );
+    }
+
+    return apply_filters( 'dokan_get_edit_product_url', $url, $product );
 }
 
 /**
