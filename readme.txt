@@ -7,7 +7,7 @@ Tested up to: 5.2.4
 WC requires at least: 3.0
 WC tested up to: 3.8.0
 Requires PHP: 5.6
-Stable tag: trunk
+Stable tag: 2.9.24
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -286,94 +286,94 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 v2.9.24 -> November 08, 2019
 -----------------------------------
-- **Fix:*** Assets URL localization was creating a problem in frontend vendor shipping area, this has been fixed.
+- **Fix:** Assets URL localization was creating a problem in frontend vendor shipping area, this has been fixed.
 - **Improvement:** Added a new filter `dokan_get_edit_product_url` to override the product edit URL.
 
 
 v2.9.23 -> November 07, 2019
 -----------------------------------
--   **Feat*** Add REST API support for store contact form widget
--   **Feat*** Add Vendor listing page in dokan backend
--   **Feat*** Add vendor active inactive REST API
--   **Fix***  Increase refund table data length to allow more refund items
--   **Fix***  Withdraw threshold field disappears when commission type is selected in dokan settings
--   **Fix***  Order listing page shows the same orders when object cache is enabled
--   **Fix***  Best selling widgets warning in store sidebar
--   **Fix***  Save store name in vendor's user_meta so that store search form widget works correctly
--   **Fix***  If percent commission rate is not set while using combine commission calculation is not correct
--   **Dev***  Add filter to modify current page id in dokan_is_seller_dashboard function
--   **Localization*** Store open and close notice placeholder strings remains untranslated
+-   **Feat:** Add REST API support for store contact form widget
+-   **Feat:** Add Vendor listing page in dokan backend
+-   **Feat:** Add vendor active inactive REST API
+-   **Fix:**  Increase refund table data length to allow more refund items
+-   **Fix:**  Withdraw threshold field disappears when commission type is selected in dokan settings
+-   **Fix:**  Order listing page shows the same orders when object cache is enabled
+-   **Fix:**  Best selling widgets warning in store sidebar
+-   **Fix:**  Save store name in vendor's user_meta so that store search form widget works correctly
+-   **Fix:**  If percent commission rate is not set while using combine commission calculation is not correct
+-   **Dev:**  Add filter to modify current page id in dokan_is_seller_dashboard function
+-   **Localization:** Store open and close notice placeholder strings remains untranslated
 
 v2.9.22 -> October 03, 2019
 -----------------------------------
--   **fix***   Remove duplicate inpute filed in dokan admin settings form
--   **fix***   Make commissison value to 0 if no product found
--   **fix***   Attribute value's are swapped after changing the order of the attributes
+-   **fix:**   Remove duplicate inpute filed in dokan admin settings form
+-   **fix:**   Make commissison value to 0 if no product found
+-   **fix:**   Attribute value's are swapped after changing the order of the attributes
 
 v2.9.21 -> September 24, 2019
 -----------------------------------
--   **fix***   If state is not found for a country in store settings, remove the state field on reload
--   **fix***   Only show vendor's own uploaded media to a vendor.
--   **fix***   Add required attribute for various input field in dokan_post_input_box function.
--   **fix***   Calculate commission for item by quantity when the commission is set to flat.
--   **Tweak*** Introduce Dokan_Commission class to calculate admin and vendor's commission.
--   **Tweak*** Remove unnecessary placeholder in admin commission field.
+-   **fix:**   If state is not found for a country in store settings, remove the state field on reload
+-   **fix:**   Only show vendor's own uploaded media to a vendor.
+-   **fix:**   Add required attribute for various input field in dokan_post_input_box function.
+-   **fix:**   Calculate commission for item by quantity when the commission is set to flat.
+-   **Tweak:** Introduce Dokan_Commission class to calculate admin and vendor's commission.
+-   **Tweak:** Remove unnecessary placeholder in admin commission field.
 
 v2.9.20 -> August 23, 2019
 ------------------------------------
--   **Fix***   Geolocation map settings value is not saving
--   **Fix***   Fix warning in vendor dashboard widget when seller setup wizard is not run
--   **Fix***   Store banner height in vendor settings page it not honouring the saved settings
--   **Fix***   Conflict with avada theme fution builder
--   **Tweak*** Use WordPress backend date format while printing date in approved and cancelled withdraw request
+-   **Fix:**   Geolocation map settings value is not saving
+-   **Fix:**   Fix warning in vendor dashboard widget when seller setup wizard is not run
+-   **Fix:**   Store banner height in vendor settings page it not honouring the saved settings
+-   **Fix:**   Conflict with avada theme fution builder
+-   **Tweak:** Use WordPress backend date format while printing date in approved and cancelled withdraw request
 
 v2.9.19 -> July 29, 2019
 ------------------------------------
--   **Fix***    Split orders created from admin dashboard
--   **Fix***    Add on backorder in product stock management
--   **Fix***    Dokan dashboard menu returning 404 with the latest version of visual composer plugin
--   **Tweak***  Dokan admin settings rearrange
--   **Tweak***  Add compatibility with ultimate member plugin
--   **Tweak***  Add few hooks in product listing template
+-   **Fix:**    Split orders created from admin dashboard
+-   **Fix:**    Add on backorder in product stock management
+-   **Fix:**    Dokan dashboard menu returning 404 with the latest version of visual composer plugin
+-   **Tweak:**  Dokan admin settings rearrange
+-   **Tweak:**  Add compatibility with ultimate member plugin
+-   **Tweak:**  Add few hooks in product listing template
 
 v2.9.18 -> July 10, 2019
 ------------------------------------
--   **Feat***  Add google map type option field component
--   **Feat***  Add dokan_array_after helper function
--   **Fix***   Admin settings default value for multicheck field
--   **Tweek*** Remove unnecessary code and add hook after creating parent order
--   **Tweek*** Refactor dokan_get_vendor_by_product function and explicit error checking while using it
+-   **Feat:**  Add google map type option field component
+-   **Feat:**  Add dokan_array_after helper function
+-   **Fix:**   Admin settings default value for multicheck field
+-   **Tweek:** Remove unnecessary code and add hook after creating parent order
+-   **Tweek:** Refactor dokan_get_vendor_by_product function and explicit error checking while using it
 
 v2.9.17 -> June 13, 2019
 ------------------------------------
--   **Fix***   Remove unwanted code to fix conflict with yith plugin
--   **Tweak*** Dokan theme support and responsive menu
+-   **Fix:**   Remove unwanted code to fix conflict with yith plugin
+-   **Tweak:** Dokan theme support and responsive menu
 
 v2.9.16 -> June 11, 2019
 ------------------------------------
--   **Fix***   Hide hidden and out of stock products in vendor store page
--   **Fix***   A non-numeric value encountered warning in vendor product listing page, if product price is not given
--   **Fix***   Add failed order in vendor order listing page
--   **Fix***   Creating product from admin backend returns 2 instance of the product author
--   **Tweak*** Ensure dokan_get_seller_id_by_order filter is always taking effect
--   **Tweak*** Make dokan vendor dashboard responsive
--   **Tweak*** Show admin notice stating WooCommerce is required if not found on dokan installation
--   **Tweak*** Add hook after creating and updating object via dokan REST API
--   **Tweak*** Add dokan_ensure_vendor_coupon filter while ensuring vendor coupon restriction
--   **Tweak*** Add updater class to fix banner issue where store settings and listing template was overridden
--   **Tweak*** Add filter hook while fetching vendor products
--   **Tweak*** Add define method to define plugin constants
+-   **Fix:**   Hide hidden and out of stock products in vendor store page
+-   **Fix:**   A non-numeric value encountered warning in vendor product listing page, if product price is not given
+-   **Fix:**   Add failed order in vendor order listing page
+-   **Fix:**   Creating product from admin backend returns 2 instance of the product author
+-   **Tweak:** Ensure dokan_get_seller_id_by_order filter is always taking effect
+-   **Tweak:** Make dokan vendor dashboard responsive
+-   **Tweak:** Show admin notice stating WooCommerce is required if not found on dokan installation
+-   **Tweak:** Add hook after creating and updating object via dokan REST API
+-   **Tweak:** Add dokan_ensure_vendor_coupon filter while ensuring vendor coupon restriction
+-   **Tweak:** Add updater class to fix banner issue where store settings and listing template was overridden
+-   **Tweak:** Add filter hook while fetching vendor products
+-   **Tweak:** Add define method to define plugin constants
 
 v2.9.15 -> May 08, 2019
 ------------------------------------
--   **Fix***   Vendor banner is not showing in the backend edit user profile page
--   **Fix***   Add filter to allow or skip nonce checking while registering new user
--   **Tweak*** Update appsero SDK
+-   **Fix:**   Vendor banner is not showing in the backend edit user profile page
+-   **Fix:**   Add filter to allow or skip nonce checking while registering new user
+-   **Tweak:** Update appsero SDK
 
 v2.9.14 -> Apr 26, 2019
 ------------------------------------
--   **Fix***  Schedule product price not showing correctly
--   **Fix***  Backward compatibility for banner and store time
+-   **Fix:**  Schedule product price not showing correctly
+-   **Fix:**  Backward compatibility for banner and store time
 
 For the changelog history, view the full [changelog.txt](https://github.com/weDevsOfficial/dokan/blob/develop/changelog.txt).
 
