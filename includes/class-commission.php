@@ -448,6 +448,10 @@ class Dokan_Commission {
             $commission_rate = $this->$func_rate( $product_id );
         }
 
+        if ( is_null( $commission_rate ) ) {
+            return $commission_rate;
+        }
+
         $earning = null;
 
         // get[product,category,vendor,global]_wise_type
@@ -506,10 +510,6 @@ class Dokan_Commission {
         }
 
         if ( 'flat' === $commission_type ) {
-            if ( is_null( $commission_rate ) ) {
-                return $commission_rate;
-            }
-
             if ( $this->get_order_qunatity() ) {
                 $commission_rate *= apply_filters( 'dokan_commission_multiply_by_order_quantity', $this->get_order_qunatity() );
             }
@@ -525,10 +525,6 @@ class Dokan_Commission {
         }
 
         if ( 'percentage' === $commission_type ) {
-            if ( is_null( $commission_rate ) ) {
-                return $commission_rate;
-            }
-
             $earning = ( (float) $product_price * $commission_rate ) / 100;
             $earning = (float) $product_price - $earning;
 
