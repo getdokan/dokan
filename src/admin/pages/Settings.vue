@@ -249,6 +249,11 @@
                         if ( field in value && value[field].length < 1 ) {
                             if ( ! this.errors.includes( field ) ) {
                                 this.errors.push( field );
+
+                                // If flat or percentage commission is set. Remove the required field.
+                                if ( 'flat' === value['commission_type'] || 'percentage' === value['commission_type'] ) {
+                                    this.errors = this.arrayRemove( this.errors, 'admin_percentage' );
+                                }
                             }
                         }
                     } );
@@ -259,6 +264,12 @@
                 }
 
                 return false;
+            },
+
+            arrayRemove( array, value ) {
+               return array.filter( ( element ) => {
+                   return element !== value;
+               });
             }
         },
 
