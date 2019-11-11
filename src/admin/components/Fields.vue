@@ -11,7 +11,15 @@
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
             <td>
-                <input type="text" class="regular-text" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
+                <input type="text"
+                    class="regular-text"
+                    :id="sectionId + '[' + fieldData.name + ']'"
+                    :name="sectionId + '[' + fieldData.name + ']'"
+                    v-model="fieldValue[fieldData.name]"
+                >
+                <p v-if="hasError( fieldData.name )" class="dokan-error">
+                    {{ getError( fieldData.label ) }}
+                </p>
                 <p class="description" v-html="fieldData.desc"></p>
             </td>
         </template>
@@ -22,6 +30,9 @@
             </th>
             <td>
                 <input type="number" :min="fieldData.min" :max="fieldData.max" :step="fieldData.step" class="regular-text" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
+                <p v-if="hasError( fieldData.name )" class="dokan-error">
+                    {{ getError( fieldData.label ) }}
+                </p>
                 <p class="description" v-html="fieldData.desc"></p>
             </td>
         </template>
@@ -32,6 +43,9 @@
             </th>
             <td>
                 <input type="number" :min="fieldData.min" :max="fieldData.max" :step="fieldData.step" class="regular-text" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
+                <p v-if="hasError( fieldData.name )" class="dokan-error">
+                    {{ getError( fieldData.label ) }}
+                </p>
                 <p class="description" v-html="fieldData.desc"></p>
             </td>
         </template>
@@ -50,6 +64,19 @@
                     {{ '+' }}
                     <input type="number" :min="fieldData.fields.min" :max="fieldData.fields.max" :step="fieldData.fields.step" class="regular-text" :id="sectionId + '[' + fieldData.name + ']' + '[' + 'fixed_fee' + ']'" :name="sectionId + '[' + fieldData.fields.fixed_fee.name + ']'" v-model="fieldValue[fieldData.fields.fixed_fee.name]">
                 </td>
+
+                <p class="dokan-error combine-commission" v-if="hasError( fieldData.fields.percent_fee.name ) && hasError( fieldData.fields.fixed_fee.name )">
+                    {{ __( 'Both percentage and fixed fee is required.', 'dokan-lite' ) }}
+                </p>
+
+                <p v-else-if="hasError( fieldData.fields.percent_fee.name )" class="dokan-error combine-commission">
+                    {{ getError( fieldData.fields.percent_fee.label ) }}
+                </p>
+
+                <p v-else-if="hasError( fieldData.fields.fixed_fee.name )" class="dokan-error combine-commission">
+                    {{ getError( fieldData.fields.fixed_fee.label ) }}
+                </p>
+
                 <p class="description" v-html="fieldData.desc"></p>
         </template>
 
@@ -59,6 +86,9 @@
             </th>
             <td>
                 <textarea type="textarea" :rows="fieldData.rows" :cols="fieldData.cols" class="regular-text" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]"></textarea>
+                <p v-if="hasError( fieldData.name )" class="dokan-error">
+                    {{ getError( fieldData.label ) }}
+                </p>
                 <p class="description" v-html="fieldData.desc"></p>
             </td>
         </template>
@@ -122,6 +152,9 @@
             <td>
                 <input type="text" class="regular-text wpsa-url" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
                 <input type="button" class="button wpsa-browse" value="Choose File" v-on:click.prevent="$emit( 'openMedia', { sectionId: sectionId, name: fieldData.name }, $event )">
+                <p v-if="hasError( fieldData.name )" class="dokan-error">
+                    {{ getError( fieldData.label ) }}
+                </p>
                 <p class="description" v-html="fieldData.desc"></p>
             </td>
         </template>
@@ -132,6 +165,9 @@
             </th>
             <td>
                 <color-picker v-model="fieldValue[fieldData.name]"></color-picker>
+                <p v-if="hasError( fieldData.name )" class="dokan-error">
+                    {{ getError( fieldData.label ) }}
+                </p>
                 <p class="description" v-html="fieldData.desc"></p>
             </td>
         </template>
@@ -141,6 +177,9 @@
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
             <td>
+                <p v-if="hasError( fieldData.name )" class="dokan-error">
+                    {{ getError( fieldData.label ) }}
+                </p>
                 <p class="description" v-html="fieldData.desc"></p>
             </td>
         </template>
@@ -218,6 +257,9 @@
             <td>
                 <input type="hidden" :name="sectionId + '[' + fieldData.name + ']'" :value="Object.assign( fieldValue[fieldData.name], gmapData )">
                 <gmap @updateGmap="updateGmapData" :gmapKey="getGmapApiKey()" :location="getMapLocation( fieldValue[fieldData.name] )" />
+                <p v-if="hasError( fieldData.name )" class="dokan-error">
+                    {{ getError( fieldData.label ) }}
+                </p>
                 <p class="description" v-html="fieldData.desc"></p>
             </td>
         </template>
@@ -245,7 +287,7 @@
             }
         },
 
-        props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues'],
+        props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues', 'errors'],
 
         beforeMount() {
             if ( 'multicheck' === this.fieldData.type && ! this.fieldValue[ this.fieldData.name ] ) {
@@ -313,6 +355,26 @@
                 if ( 'dokan_appearance' in settings && 'gmap_api_key' in settings.dokan_appearance  ) {
                     return settings.dokan_appearance.gmap_api_key
                 }
+            },
+
+            hasError( key ) {
+                let errors = this.errors;
+
+                if ( ! errors || typeof errors === 'undefined' ) {
+                    return false;
+                }
+
+                if ( errors.length < 1 ) {
+                    return false;
+                }
+
+                if ( errors.includes( key ) ) {
+                    return key;
+                }
+            },
+
+            getError( label ) {
+                return label + ' ' + this.__( 'is required.', 'dokan-lite' )
             }
         }
 
@@ -343,5 +405,13 @@
     tr.additional_fee .description {
         margin-left: 10px;
         margin-top: -10px;
+    }
+    .dokan-error {
+        color: red;
+        margin-top: -10px;
+        font-style: italic;
+    }
+    .dokan-error.combine-commission {
+        margin-left: 10px;
     }
 </style>

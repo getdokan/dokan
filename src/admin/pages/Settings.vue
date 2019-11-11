@@ -45,6 +45,7 @@
                                         :all-settings-values="settingValues"
                                         @openMedia="showMedia"
                                         :key="fieldId"
+                                        :errors="errors"
                                     ></fields>
                                 </tbody>
                             </table>
@@ -85,7 +86,9 @@
                 currentTab: null,
                 settingSections: [],
                 settingFields: {},
-                settingValues: {}
+                settingValues: {},
+                requiredFields: [],
+                errors: []
             }
         },
 
@@ -93,6 +96,7 @@
             changeTab( section ) {
                 var activetab = '';
                 this.currentTab = section.id;
+                this.requiredFields = [];
 
                 if ( typeof( localStorage ) != 'undefined' ) {
                     localStorage.setItem( "activetab", this.currentTab );
@@ -166,6 +170,10 @@
             },
 
             saveSettings( fieldData, section ) {
+                if ( ! this.formIsValid( section ) ) {
+                    return;
+                }
+
                 var self = this,
                     data = {
                         action : 'dokan_save_settings',
@@ -196,6 +204,61 @@
                     .always( function () {
                         self.showLoading = false;
                     } );
+            },
+
+            formIsValid( section ) {
+                let allFields = Object.keys( this.settingFields );
+                let requiredFields = this.requiredFields;
+
+                if ( ! allFields ) {
+                    return false;
+                }
+
+                allFields.forEach( ( fields, index ) => {
+                    if ( section === fields ) {
+                        let sectionFields = this.settingFields[fields];
+
+                        Object.values(sectionFields).forEach( ( field ) => {
+                            let subFields = field.fields;
+
+                            if ( subFields ) {
+                                Object.values( subFields ).forEach( ( subField ) => {
+                                    if (
+                                        subField
+                                        && subField.required
+                                        && subField.required === 'yes'
+                                        && !requiredFields.includes( subField.name ) ) {
+                                        requiredFields.push(subField.name);
+                                    }
+                                } );
+                            }
+
+                            if ( field && field.required && field.required === 'yes' ) {
+                                if ( ! requiredFields.includes( field.name ) ) {
+                                    requiredFields.push(field.name);
+                                }
+                            }
+                        } );
+                    }
+                });
+
+                // empty the errors array on new form submit
+                this.errors = [];
+                requiredFields.forEach( ( field ) => {
+                    Object.values( this.settingValues ).forEach( ( value ) => {
+                        if ( field in value && value[field].length < 1 ) {
+                            if ( ! this.errors.includes( field ) ) {
+                                this.errors.push( field );
+                            }
+                        }
+                    } );
+                } );
+
+                if ( this.errors.length < 1 ) {
+                    return true;
+                }
+
+                return false;
             }
         },
 
