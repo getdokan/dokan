@@ -7,7 +7,7 @@ Tested up to: 5.2.4
 WC requires at least: 3.0
 WC tested up to: 3.8.0
 Requires PHP: 5.6
-Stable tag: 2.9.24
+Stable tag: 2.9.25
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -284,14 +284,18 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
-v2.9.24 -> November 08, 2019
------------------------------------
-- **Fix:** Assets URL localization was creating a problem in frontend vendor shipping area, this has been fixed.
-- **Improvement:** Added a new filter `dokan_get_edit_product_url` to override the product edit URL.
+= v2.9.25 (November 12, 2019) =
 
+ - **Dev:** Add dokan backend settings input required field validation.
+ - **Improvement:** Dokan_Commission::prepare_for_calculation() method.
 
-v2.9.23 -> November 07, 2019
------------------------------------
+= v2.9.24 (November 08, 2019) =
+
+ - **Fix:** Assets URL localization was creating a problem in frontend vendor shipping area, this has been fixed.
+ - **Improvement:** Added a new filter `dokan_get_edit_product_url` to override the product edit URL.
+
+= v2.9.23 (November 07, 2019) =
+
 -   **Feat:** Add REST API support for store contact form widget
 -   **Feat:** Add Vendor listing page in dokan backend
 -   **Feat:** Add vendor active inactive REST API
