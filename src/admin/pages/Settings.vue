@@ -253,6 +253,7 @@
                                 // If flat or percentage commission is set. Remove the required field.
                                 if ( 'flat' === value['commission_type'] || 'percentage' === value['commission_type'] ) {
                                     this.errors = this.arrayRemove( this.errors, 'admin_percentage' );
+                                    this.errors = this.arrayRemove( this.errors, 'additional_fee' );
                                 }
                             }
                         }
