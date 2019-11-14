@@ -3,7 +3,7 @@
 /**
  * Update update store settings
  *
- * @since DOKAN_LITE_SINCE
+ * @since 2.9.23
  *
  * @return void
  */

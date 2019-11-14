@@ -450,7 +450,10 @@ class Dokan_Assets {
             'api'             => null,
             'libs'            => array(),
             'routeComponents' => array( 'default' => null ),
-            'routes'          => $this->get_vue_frontend_routes()
+            'routes'          => $this->get_vue_frontend_routes(),
+            'urls'            => [
+                'assetsUrl' => DOKAN_PLUGIN_ASSEST,
+            ]
         ) );
 
         $localize_data = array_merge( $localize_script, $vue_localize_script );
