@@ -8,7 +8,7 @@ class checkPermmissionCest
     {
     }
 
-    // tests
+    // 
     public function checkPermission(\Step\Acceptance\MultiSteps $I, 
                                     \Step\Acceptance\Commissions $Admin)
     {
