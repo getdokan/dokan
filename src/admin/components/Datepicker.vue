@@ -38,13 +38,13 @@
         mounted() {
             const vm = this;
 
-            $(vm.$el).datepicker({
+            jQuery(vm.$el).datepicker({
                 dateFormat:  vm.format,
                 changeMonth: vm.changeMonthYear,
                 changeYear:  vm.changeMonthYear,
 
                 beforeShow() {
-                    $(this).datepicker('widget').addClass('dokan-datepicker');
+                    jQuery(this).datepicker('widget').addClass('dokan-datepicker');
                 },
 
                 onSelect(date) {
