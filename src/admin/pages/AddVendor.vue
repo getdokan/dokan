@@ -28,7 +28,7 @@
             </div>
 
             <div slot="footer">
-                <button class="dokan-btn" @click="createVendor">{{ 'VendorPaymentFields' === currentTab ? __( 'Create Vendor', 'dokan-lite' ) : this.nextBtn }}</button>
+                <button class="button button-primary button-hero" @click="createVendor">{{ 'VendorPaymentFields' === currentTab ? __( 'Create Vendor', 'dokan-lite' ) : this.nextBtn }}</button>
             </div>
         </modal>
     </div>
@@ -485,7 +485,7 @@ export default {
 
             .dokan-form-input {
                 width: 100%; /* Full width */
-                padding: 12px; /* Some padding */
+                padding: 7px 12px; /* Some padding */
                 border: 1px solid #ccc; /* Gray border */
                 border-radius: 4px; /* Rounded borders */
                 box-sizing: border-box; /* Make sure that padding and width stays in place */
@@ -546,7 +546,7 @@ export default {
                         }
 
                         button {
-                            background: #1A9ED4;
+                            background: #007cba;
                             color: white;
                             padding: 10px 15px;
                             border-radius: 3px;

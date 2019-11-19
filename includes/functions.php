@@ -3483,10 +3483,11 @@ function dokan_replace_policy_page_link_placeholders( $text ) {
  * Dokan privacy policy text
  *
  * @since 2.9.10
+ * @since DOKAN_LITE_VERSION Add `$return` param to return the text on demand instead of printing
  *
  * @return string
  */
-function dokan_privacy_policy_text() {
+function dokan_privacy_policy_text( $return = false ) {
     $is_enabled   = 'on' === dokan_get_option( 'enable_privacy', 'dokan_privacy' ) ? true : false;
     $privacy_page = dokan_get_option( 'privacy_page', 'dokan_privacy' );
     $privacy_text = dokan_get_option( 'privacy_policy', 'dokan_privacy', __( 'Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our [dokan_privacy_policy]', 'dokan-lite' ) );
@@ -3495,7 +3496,13 @@ function dokan_privacy_policy_text() {
         return;
     }
 
-    echo wp_kses_post( wpautop( dokan_replace_policy_page_link_placeholders( $privacy_text ), true ) );
+    $text = wp_kses_post( wpautop( dokan_replace_policy_page_link_placeholders( $privacy_text ), true ) );
+
+    if ( $return ) {
+        return $text;
+    }
+
+    echo $text;
 }
 
 /**
