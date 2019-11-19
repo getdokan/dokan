@@ -1,0 +1,10 @@
+/**
+ * Dokan backend vendor listing page
+ */
+.dokan-vendor-edit .tab-contents .content-body .dokan-form-input {
+    padding: 12px;
+}
+
+.search-box #post-search-input {
+    padding: 15px 18px;
+}

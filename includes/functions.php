@@ -991,20 +991,32 @@ function dokan_get_page_url( $page, $context = 'dokan' ) {
 /**
  * Get edit product url
  *
- * @param type $product_id
- * @return type
+ * @param int|WC_Product $product
+ *
+ * @return string|false on filure
  */
-function dokan_edit_product_url( $product_id ) {
-    if ( get_post_field( 'post_status', $product_id ) == 'publish' ) {
-        return trailingslashit( get_permalink( $product_id ) ) . 'edit/';
+function dokan_edit_product_url( $product ) {
+    if ( ! $product instanceof WC_Product ) {
+        $product = wc_get_product( $product );
     }
 
-    $new_product_url = dokan_get_navigation_url( 'products' );
+    if ( ! $product ) {
+        return false;
+    }
 
-    return add_query_arg( array(
-        'product_id' => $product_id,
-        'action'     => 'edit',
-    ), $new_product_url );
+    if ( 'publish' === $product->get_status() ) {
+        $url = trailingslashit( get_permalink( $product->get_id() ) ) . 'edit/';
+    } else {
+        $url = add_query_arg(
+            [
+                'product_id' => $product->get_id(),
+                'action'     => 'edit',
+            ],
+            dokan_get_navigation_url( 'products' )
+        );
+    }
+
+    return apply_filters( 'dokan_get_edit_product_url', $url, $product );
 }
 
 /**
@@ -1841,15 +1853,7 @@ add_filter( 'pre_get_posts', 'dokan_filter_product_for_current_vendor' );
 function dokan_filter_orders_for_current_vendor( $args, $query ) {
     global $wpdb;
 
-    if ( current_user_can( 'manage_woocommerce' ) ) {
-        if ( ! empty( $_GET['vendor_id'] ) ) {
-            $getdata        = wp_unslash( $_GET );
-
-            $vendor_id      = wc_clean( $getdata['vendor_id'] );
-            $args['join']  .= " LEFT JOIN {$wpdb->prefix}dokan_orders as do ON $wpdb->posts.ID=do.order_id";
-            $args['where'] .= " AND do.seller_id=$vendor_id";
-        }
-
+    if ( ! is_admin() || ! $query->is_main_query() ) {
         return $args;
     }
 
@@ -1857,12 +1861,25 @@ function dokan_filter_orders_for_current_vendor( $args, $query ) {
         return $args;
     }
 
-    $vendor_id = get_current_user_id();
-
-    if ( is_admin() && $query->is_main_query() && ( $query->query_vars['post_type'] == 'shop_order' || $query->query_vars['post_type'] == 'wc_booking' ) ) {
-        $args['join']  .= " LEFT JOIN {$wpdb->prefix}dokan_orders as do ON $wpdb->posts.ID=do.order_id";
-        $args['where'] .= " AND do.seller_id=$vendor_id";
+    if ( ! in_array( $query->query_vars['post_type'], [ 'shop_order', 'wc_booking' ] ) ) {
+        return $args;
     }
+
+    $vendor_id = 0;
+
+    if ( ! current_user_can( 'manage_woocommerce' ) ) {
+        $vendor_id = dokan_get_current_user_id();
+    } else if ( ! empty( $_GET['vendor_id'] ) ) {
+        $get = wp_unslash( $_GET );
+        $vendor_id = absint( $get['vendor_id'] );
+    }
+
+    if ( ! $vendor_id ) {
+        return $args;
+    }
+
+    $args['join']  .= " LEFT JOIN {$wpdb->prefix}dokan_orders as do ON $wpdb->posts.ID=do.order_id";
+    $args['where'] .= " AND do.seller_id=$vendor_id";
 
     return $args;
 }
@@ -3466,10 +3483,11 @@ function dokan_replace_policy_page_link_placeholders( $text ) {
  * Dokan privacy policy text
  *
  * @since 2.9.10
+ * @since DOKAN_LITE_VERSION Add `$return` param to return the text on demand instead of printing
  *
  * @return string
  */
-function dokan_privacy_policy_text() {
+function dokan_privacy_policy_text( $return = false ) {
     $is_enabled   = 'on' === dokan_get_option( 'enable_privacy', 'dokan_privacy' ) ? true : false;
     $privacy_page = dokan_get_option( 'privacy_page', 'dokan_privacy' );
     $privacy_text = dokan_get_option( 'privacy_policy', 'dokan_privacy', __( 'Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our [dokan_privacy_policy]', 'dokan-lite' ) );
@@ -3478,7 +3496,13 @@ function dokan_privacy_policy_text() {
         return;
     }
 
-    echo wp_kses_post( wpautop( dokan_replace_policy_page_link_placeholders( $privacy_text ), true ) );
+    $text = wp_kses_post( wpautop( dokan_replace_policy_page_link_placeholders( $privacy_text ), true ) );
+
+    if ( $return ) {
+        return $text;
+    }
+
+    echo $text;
 }
 
 /**

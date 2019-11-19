@@ -158,6 +158,7 @@ class Dokan_Setup_Wizard {
      * Setup Wizard Header.
      */
     public function setup_wizard_header() {
+        set_current_screen();
         ?>
         <!DOCTYPE html>
         <html <?php language_attributes(); ?>>
