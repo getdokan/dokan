@@ -142,7 +142,7 @@ class Dokan_Commission {
             return new WP_Error( __( 'Product not found', 'dokan-lite' ), 404 );
         }
 
-        $product_price = is_null( $price ) ? $product->get_price() : $price;
+        $product_price = is_null( $price ) ? (float) $product->get_price() : (float) $price;
         $vendor        = dokan_get_vendor_by_product( $product );
 
         $earning = $this->calculate_commission( $product->get_id(), $product_price, $vendor->get_id() );
@@ -521,16 +521,16 @@ class Dokan_Commission {
                 $commission_rate = ( $commission_rate / $item_total ) * $product_price;
             }
 
-            $earning = (float) ( $product_price - $commission_rate );
+            $earning = $product_price - $commission_rate;
         }
 
         if ( 'percentage' === $commission_type ) {
-            $earning = ( (float) $product_price * $commission_rate ) / 100;
-            $earning = (float) $product_price - $earning;
+            $earning = ( $product_price * $commission_rate ) / 100;
+            $earning = $product_price - $earning;
 
             // vendor will get 100 percent if commission rate > 100
             if ( $commission_rate > 100 ) {
-                $earning = (float) $product_price;
+                $earning = $product_price;
             }
         }
 
