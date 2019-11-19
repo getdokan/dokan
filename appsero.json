@@ -30,6 +30,6 @@
         "vendor",
         "composer.lock",
         "composer.json",
-        ".editorconfig",
+        ".editorconfig"
     ]
 }
