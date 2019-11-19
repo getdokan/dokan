@@ -5129,6 +5129,7 @@ let Loading = dokan_get_lib('Loading');
 //
 //
 //
+//
 
 let Loading = dokan_get_lib('Loading');
 
@@ -5152,7 +5153,9 @@ let Loading = dokan_get_lib('Loading');
             currentTab: null,
             settingSections: [],
             settingFields: {},
-            settingValues: {}
+            settingValues: {},
+            requiredFields: [],
+            errors: []
         };
     },
 
@@ -5160,6 +5163,7 @@ let Loading = dokan_get_lib('Loading');
         changeTab(section) {
             var activetab = '';
             this.currentTab = section.id;
+            this.requiredFields = [];
 
             if (typeof localStorage != 'undefined') {
                 localStorage.setItem("activetab", this.currentTab);
@@ -5233,6 +5237,10 @@ let Loading = dokan_get_lib('Loading');
         },
 
         saveSettings(fieldData, section) {
+            if (!this.formIsValid(section)) {
+                return;
+            }
+
             var self = this,
                 data = {
                 action: 'dokan_save_settings',
@@ -5259,6 +5267,69 @@ let Loading = dokan_get_lib('Loading');
                 alert(messages.join(' '));
             }).always(function () {
                 self.showLoading = false;
+            });
+        },
+
+        formIsValid(section) {
+            let allFields = Object.keys(this.settingFields);
+            let requiredFields = this.requiredFields;
+
+            if (!allFields) {
+                return false;
+            }
+
+            allFields.forEach((fields, index) => {
+                if (section === fields) {
+                    let sectionFields = this.settingFields[fields];
+
+                    Object.values(sectionFields).forEach(field => {
+                        let subFields = field.fields;
+
+                        if (subFields) {
+                            Object.values(subFields).forEach(subField => {
+                                if (subField && subField.required && subField.required === 'yes' && !requiredFields.includes(subField.name)) {
+                                    requiredFields.push(subField.name);
+                                }
+                            });
+                        }
+
+                        if (field && field.required && field.required === 'yes') {
+                            if (!requiredFields.includes(field.name)) {
+                                requiredFields.push(field.name);
+                            }
+                        }
+                    });
+                }
+            });
+
+            // empty the errors array on new form submit
+            this.errors = [];
+            requiredFields.forEach(field => {
+                Object.values(this.settingValues).forEach(value => {
+                    if (field in value && value[field].length < 1) {
+                        if (!this.errors.includes(field)) {
+                            this.errors.push(field);
+
+                            // If flat or percentage commission is set. Remove the required field.
+                            if ('flat' === value['commission_type'] || 'percentage' === value['commission_type']) {
+                                this.errors = this.arrayRemove(this.errors, 'admin_percentage');
+                                this.errors = this.arrayRemove(this.errors, 'additional_fee');
+                            }
+                        }
+                    }
+                });
+            });
+
+            if (this.errors.length < 1) {
+                return true;
+            }
+
+            return false;
+        },
+
+        arrayRemove(array, value) {
+            return array.filter(element => {
+                return element !== value;
             });
         }
     },
@@ -5508,6 +5579,48 @@ let Loading = dokan_get_lib('Loading');
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 let TextEditor = dokan_get_lib('TextEditor');
@@ -5529,7 +5642,7 @@ let Gmap = dokan_get_lib('Gmap');
         };
     },
 
-    props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues'],
+    props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues', 'errors'],
 
     beforeMount() {
         if ('multicheck' === this.fieldData.type && !this.fieldValue[this.fieldData.name]) {
@@ -5596,6 +5709,26 @@ let Gmap = dokan_get_lib('Gmap');
             if ('dokan_appearance' in settings && 'gmap_api_key' in settings.dokan_appearance) {
                 return settings.dokan_appearance.gmap_api_key;
             }
+        },
+
+        hasError(key) {
+            let errors = this.errors;
+
+            if (!errors || typeof errors === 'undefined') {
+                return false;
+            }
+
+            if (errors.length < 1) {
+                return false;
+            }
+
+            if (errors.includes(key)) {
+                return key;
+            }
+        },
+
+        getError(label) {
+            return label + ' ' + this.__('is required.', 'dokan-lite');
         }
     }
 
@@ -8445,6 +8578,16 @@ var render = function() {
                 }
               }),
               _vm._v(" "),
+              _vm.hasError(_vm.fieldData.name)
+                ? _c("p", { staticClass: "dokan-error" }, [
+                    _vm._v(
+                      "\n                " +
+                        _vm._s(_vm.getError(_vm.fieldData.label)) +
+                        "\n            "
+                    )
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
               _c("p", {
                 staticClass: "description",
                 domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
@@ -8501,6 +8644,16 @@ var render = function() {
                 }
               }),
               _vm._v(" "),
+              _vm.hasError(_vm.fieldData.name)
+                ? _c("p", { staticClass: "dokan-error" }, [
+                    _vm._v(
+                      "\n                " +
+                        _vm._s(_vm.getError(_vm.fieldData.label)) +
+                        "\n            "
+                    )
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
               _c("p", {
                 staticClass: "description",
                 domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
@@ -8556,6 +8709,16 @@ var render = function() {
                   }
                 }
               }),
+              _vm._v(" "),
+              _vm.hasError(_vm.fieldData.name)
+                ? _c("p", { staticClass: "dokan-error" }, [
+                    _vm._v(
+                      "\n                " +
+                        _vm._s(_vm.getError(_vm.fieldData.label)) +
+                        "\n            "
+                    )
+                  ])
+                : _vm._e(),
               _vm._v(" "),
               _c("p", {
                 staticClass: "description",
@@ -8679,6 +8842,42 @@ var render = function() {
               })
             ]),
             _vm._v(" "),
+            _vm.hasError(_vm.fieldData.fields.percent_fee.name) &&
+            _vm.hasError(_vm.fieldData.fields.fixed_fee.name)
+              ? _c("p", { staticClass: "dokan-error combine-commission" }, [
+                  _vm._v(
+                    "\n                " +
+                      _vm._s(
+                        _vm.__(
+                          "Both percentage and fixed fee is required.",
+                          "dokan-lite"
+                        )
+                      ) +
+                      "\n            "
+                  )
+                ])
+              : _vm.hasError(_vm.fieldData.fields.percent_fee.name)
+                ? _c("p", { staticClass: "dokan-error combine-commission" }, [
+                    _vm._v(
+                      "\n                " +
+                        _vm._s(
+                          _vm.getError(_vm.fieldData.fields.percent_fee.label)
+                        ) +
+                        "\n            "
+                    )
+                  ])
+                : _vm.hasError(_vm.fieldData.fields.fixed_fee.name)
+                  ? _c("p", { staticClass: "dokan-error combine-commission" }, [
+                      _vm._v(
+                        "\n                " +
+                          _vm._s(
+                            _vm.getError(_vm.fieldData.fields.fixed_fee.label)
+                          ) +
+                          "\n            "
+                      )
+                    ])
+                  : _vm._e(),
+            _vm._v(" "),
             _c("p", {
               staticClass: "description",
               domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
@@ -8730,6 +8929,16 @@ var render = function() {
                   }
                 }
               }),
+              _vm._v(" "),
+              _vm.hasError(_vm.fieldData.name)
+                ? _c("p", { staticClass: "dokan-error" }, [
+                    _vm._v(
+                      "\n                " +
+                        _vm._s(_vm.getError(_vm.fieldData.label)) +
+                        "\n            "
+                    )
+                  ])
+                : _vm._e(),
               _vm._v(" "),
               _c("p", {
                 staticClass: "description",
@@ -9159,6 +9368,16 @@ var render = function() {
                 }
               }),
               _vm._v(" "),
+              _vm.hasError(_vm.fieldData.name)
+                ? _c("p", { staticClass: "dokan-error" }, [
+                    _vm._v(
+                      "\n                " +
+                        _vm._s(_vm.getError(_vm.fieldData.label)) +
+                        "\n            "
+                    )
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
               _c("p", {
                 staticClass: "description",
                 domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
@@ -9192,6 +9411,16 @@ var render = function() {
                   }
                 }),
                 _vm._v(" "),
+                _vm.hasError(_vm.fieldData.name)
+                  ? _c("p", { staticClass: "dokan-error" }, [
+                      _vm._v(
+                        "\n                " +
+                          _vm._s(_vm.getError(_vm.fieldData.label)) +
+                          "\n            "
+                      )
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
                 _c("p", {
                   staticClass: "description",
                   domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
@@ -9215,6 +9444,16 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("td", [
+              _vm.hasError(_vm.fieldData.name)
+                ? _c("p", { staticClass: "dokan-error" }, [
+                    _vm._v(
+                      "\n                " +
+                        _vm._s(_vm.getError(_vm.fieldData.label)) +
+                        "\n            "
+                    )
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
               _c("p", {
                 staticClass: "description",
                 domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
@@ -9584,6 +9823,16 @@ var render = function() {
                   on: { updateGmap: _vm.updateGmapData }
                 }),
                 _vm._v(" "),
+                _vm.hasError(_vm.fieldData.name)
+                  ? _c("p", { staticClass: "dokan-error" }, [
+                      _vm._v(
+                        "\n                " +
+                          _vm._s(_vm.getError(_vm.fieldData.label)) +
+                          "\n            "
+                      )
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
                 _c("p", {
                   staticClass: "description",
                   domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
@@ -9769,7 +10018,8 @@ var render = function() {
                                     id: fieldId,
                                     "field-data": field,
                                     "field-value": _vm.settingValues[index],
-                                    "all-settings-values": _vm.settingValues
+                                    "all-settings-values": _vm.settingValues,
+                                    errors: _vm.errors
                                   },
                                   on: { openMedia: _vm.showMedia }
                                 })
@@ -10057,7 +10307,10 @@ var render = function() {
           _c("div", { attrs: { slot: "footer" }, slot: "footer" }, [
             _c(
               "button",
-              { staticClass: "dokan-btn", on: { click: _vm.createVendor } },
+              {
+                staticClass: "button button-primary button-hero",
+                on: { click: _vm.createVendor }
+              },
               [
                 _vm._v(
                   _vm._s(
