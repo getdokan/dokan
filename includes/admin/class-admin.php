@@ -50,7 +50,7 @@ class Dokan_Admin {
 
         // check if it has already been dismissed
         $offer_key        = 'dokan_wedevs_19_blackfriday';
-        $offer_start_date = strtotime( '2019-11-26 00:00:01' );
+        $offer_start_date = strtotime( '2019-11-20 00:00:01' );
         $offer_last_date  = strtotime( '2019-12-04 23:59:00' );
         $hide_notice      = get_option( $offer_key, 'show' );
         $offer_link       = 'https://wedevs.com/dokan/?add-to-cart=15310&variation_id=15314&attribute_pa_license=professional&coupon_code=BFCM2019';
@@ -66,23 +66,24 @@ class Dokan_Admin {
                         <img src="<?php echo DOKAN_PLUGIN_ASSEST . '/images/promo-logo.png' ?>" alt="Dokan">
                     </div>
                     <div class="content">
+                        <p class="highlight-magento">Biggest Sale of the year on this</p>
                         <h3><span class="highlight-red">Black Friday</span> & <span class="highlight-blue">Cyber Monday</span></h3>
-                        <p>Don't miss out on the biggest sale of the year on <span class="highlight-red">Dokan Multi-Vendor</span></p>
-                        <p style="margin-top:12px"><span class="highlight-red">Use this coupon</span><span class="highlight-code">BFCM2019</span></p>
+                        <p class="highlight-magento">Claim your discount on <span class="highlight-red">Dokan Multi-Vendor</span> till 4th December.</p>
                     </div>
                     <div class="call-to-action">
-                        <a href="https://wedevs.com/dokan/pricing?utm_campaign=black_friday_&_cyber_monday&utm_medium=banner&utm_source=plugin_dashboard">Save 33%</a>
-                        <p>Valid till 4th December</p>
+                        <a href="https://wedevs.com/dokan/pricing?utm_campaign=black_friday_&_cyber_monday&utm_medium=banner&utm_source=plugin_dashboard">Save <span class="bold">33%</span></a>
+                        <p class="highlight-magento-light">Coupon: <span class="highlight-black">BFCM2019</span></p>
                     </div>
                 </div>
 
                 <style>
                     #dokan-christmas-notice {
                         font-size: 14px;
-                        border-left: none;
-                        background: #000;
+                        border-left: 1px solid #FEDEDE;
+                        background-image: linear-gradient(50deg, #fedede85 50%, #fedede5e);
                         color: #fff;
-                        display: flex
+                        display: flex;
+                        border-color: #FEDEDE;
                     }
 
                     #dokan-christmas-notice .logo{
@@ -96,51 +97,73 @@ class Dokan_Admin {
                     }
 
                     #dokan-christmas-notice .highlight-red {
-                        color: #FF0000;
+                        color: #FC3B7B;
                     }
+
+                    #dokan-christmas-notice .highlight-magento {
+                        color: #812525;
+                    }
+
                     #dokan-christmas-notice .highlight-blue {
-                        color: #48ABFF;
+                        color: #487FFF;
                     }
 
                     #dokan-christmas-notice .content {
                         margin-top: 5px;
                     }
 
-                    #dokan-christmas-notice .content h3{
-                        color: #FFF;
-                        margin: 12px 0px 5px;
+                    #dokan-christmas-notice .content h3 {
+                        font-size: 23px;
+                        font-weight: normal;
+                        margin: 10px 0px 5px;
                     }
 
-                    #dokan-christmas-notice .content p{
-                        margin: 0px 0px;
+                    #dokan-christmas-notice .content p {
+                        margin: 5px 0px 0px 0px;
                         padding: 0px;
                         letter-spacing: 0.4px;
                     }
 
-                    #dokan-christmas-notice .content p span.highlight-code{
-                        margin: 0 0 0 10px;
-                        border: 1px dotted #fff;
-                        padding: 5px 10px;
-                        border-radius: 15px;
+                    #dokan-christmas-notice .content p:last-child {
+                        margin: 11px 0px 0px 0px;
                     }
+
                     #dokan-christmas-notice .call-to-action {
                         margin-left: 8%;
-                        margin-top: 25px;
+                        margin-top: 36px;
                     }
+
                     #dokan-christmas-notice .call-to-action a {
                         border: none;
                         background: #FF0000;
-                        padding: 8px 15px;
+                        padding: 8px 50px;
                         font-size: 15px;
                         color: #fff;
                         border-radius: 20px;
                         text-decoration: none;
                         display: block;
                         text-align: center;
+                        background-image: linear-gradient(46deg, #F2709C 0%, #FF9472 100%);
+                        box-shadow: 0 5px 11px 0 rgba(132,0,0,0.13);
+                        font-weight: 400;
                     }
+
+                    #dokan-christmas-notice .call-to-action a .bold {
+                        font-weight: 700;
+                    }
+
                     #dokan-christmas-notice .call-to-action p {
                         font-size: 12px;
                         margin-top: 1px;
+                        margin-left: 23px;
+                    }
+
+                    #dokan-christmas-notice .call-to-action .highlight-magento-light {
+                        color: #FF85A3;
+                    }
+
+                    #dokan-christmas-notice .call-to-action .highlight-black {
+                        color: #000;
                     }
                 </style>
 
