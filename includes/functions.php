@@ -1853,15 +1853,7 @@ add_filter( 'pre_get_posts', 'dokan_filter_product_for_current_vendor' );
 function dokan_filter_orders_for_current_vendor( $args, $query ) {
     global $wpdb;
 
-    if ( current_user_can( 'manage_woocommerce' ) ) {
-        if ( ! empty( $_GET['vendor_id'] ) ) {
-            $getdata        = wp_unslash( $_GET );
-
-            $vendor_id      = wc_clean( $getdata['vendor_id'] );
-            $args['join']  .= " LEFT JOIN {$wpdb->prefix}dokan_orders as do ON $wpdb->posts.ID=do.order_id";
-            $args['where'] .= " AND do.seller_id=$vendor_id";
-        }
-
+    if ( ! is_admin() || ! $query->is_main_query() ) {
         return $args;
     }
 
@@ -1869,12 +1861,25 @@ function dokan_filter_orders_for_current_vendor( $args, $query ) {
         return $args;
     }
 
-    $vendor_id = get_current_user_id();
-
-    if ( is_admin() && $query->is_main_query() && ( $query->query_vars['post_type'] == 'shop_order' || $query->query_vars['post_type'] == 'wc_booking' ) ) {
-        $args['join']  .= " LEFT JOIN {$wpdb->prefix}dokan_orders as do ON $wpdb->posts.ID=do.order_id";
-        $args['where'] .= " AND do.seller_id=$vendor_id";
+    if ( ! in_array( $query->query_vars['post_type'], [ 'shop_order', 'wc_booking' ] ) ) {
+        return $args;
     }
+
+    $vendor_id = 0;
+
+    if ( ! current_user_can( 'manage_woocommerce' ) ) {
+        $vendor_id = dokan_get_current_user_id();
+    } else if ( ! empty( $_GET['vendor_id'] ) ) {
+        $get = wp_unslash( $_GET );
+        $vendor_id = absint( $get['vendor_id'] );
+    }
+
+    if ( ! $vendor_id ) {
+        return $args;
+    }
+
+    $args['join']  .= " LEFT JOIN {$wpdb->prefix}dokan_orders as do ON $wpdb->posts.ID=do.order_id";
+    $args['where'] .= " AND do.seller_id=$vendor_id";
 
     return $args;
 }
