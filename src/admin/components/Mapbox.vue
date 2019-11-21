@@ -48,7 +48,7 @@
         }
 
         onRemove() {
-            this._container.parentNode.removeChild(this._container);
+            this._container.parentNode.removeChild( this._container );
             this._map = undefined;
         }
     }
@@ -121,7 +121,7 @@
                     container: this.mapboxId,
                     style: 'mapbox://styles/mapbox/streets-v10',
                     center: [ this.location.longitude, this.location.latitude ],
-                    zoom: this.location.zoom
+                    zoom: this.location.zoom,
                 } );
 
                 this.dokanMapbox.addControl( new mapboxgl.NavigationControl() );
@@ -138,7 +138,7 @@
                         accessToken: mapboxgl.accessToken,
                         mapboxgl: mapboxgl,
                         zoom: this.dokanMapbox.getZoom(),
-                        placeholder: this.__( 'Search Address', 'dokan-lite'),
+                        placeholder: this.__( 'Search Address', 'dokan-lite' ),
                         marker: false,
                         reverseGeocode: true,
                     });

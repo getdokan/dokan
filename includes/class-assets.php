@@ -577,7 +577,8 @@ class Dokan_Assets {
      * @since 2.5.3
      */
     function load_gmap_script() {
-        $source = dokan_get_option('map_api_source', 'dokan_appearance', 'google_maps');
+        $script_src = null;
+        $source     = dokan_get_option( 'map_api_source', 'dokan_appearance', 'google_maps' );
 
         if ( 'google_maps' === $source ) {
             $api_key = dokan_get_option( 'gmap_api_key', 'dokan_appearance', false );
@@ -587,9 +588,9 @@ class Dokan_Assets {
                     'key' => $api_key,
                 ) );
 
-                $src = add_query_arg( $query_args, 'https://maps.googleapis.com/maps/api/js' );
+                $script_src = add_query_arg( $query_args, 'https://maps.googleapis.com/maps/api/js' );
 
-                wp_enqueue_script( 'dokan-maps', $src, array(), false, true );
+                wp_enqueue_script( 'dokan-maps', $script_src, array(), false, true );
             }
         } else if ( 'mapbox' === $source ) {
             $access_token = dokan_get_option( 'mapbox_access_token', 'dokan_appearance', null );
@@ -603,7 +604,8 @@ class Dokan_Assets {
             }
         }
 
-
+        // Backward compatibility script handler
+        wp_register_script( 'google-maps', DOKAN_PLUGIN_ASSEST . '/js/dokan-maps-compat.js', array( 'dokan-maps' ), false, true );
     }
 
     /**
