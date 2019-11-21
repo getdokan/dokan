@@ -22,6 +22,15 @@ class MultiSteps extends \AcceptanceTester
         $I->fillField('password', '123456');
         $I->click('login');
 	}
+	public function loginAsVendorTwo()
+	{
+		$I = $this;
+		$I->amOnPage('/');
+        $I->click('Log in');
+        $I->fillField('username', 'vendor');
+        $I->fillField('password', 'vendor');
+        $I->click('login');
+	}
 	public function loginAsCustomer()
 	{
 		$I = $this;

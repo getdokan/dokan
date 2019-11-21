@@ -7,53 +7,72 @@ class SingleProductMultipleVendorCest
     {
     }
 
-
-    public function adminEnableModule(\Step\Acceptance\Login $I)
+    public function moduleConfiguration(\Step\Acceptance\MultiSteps $I)
     {
-    	
-
-
 
        $I->loginAsAdmin();
        $I->click('Dokan');
+       // $I->click('Modules');
        $I->wait(3);
+       // $I->dontSeeCheckboxIsChecked('//div[14]/div/div[2]/ul/li/label/span');
+       // $I->checkOption('//div[14]/div/div[2]/ul/li/label/span');
+       // $I->wait(3);
        $I->click('Settings');
        $I->wait(5);
        $I->click('Single Product MultiVendor');
+       // $I->fillfield('dokan_spmv[sell_item_btn]','sell this one');
+       // $I->fillfield('dokan_spmv[available_vendor_list_title]','Available');
        $I->selectOption('dokan_spmv[available_vendor_list_position]','Above Single Product Tabs');
        $I->selectOption('dokan_spmv[show_order]','min_price');
        $I->click('//div[@id="dokan_spmv"]/form/p/input');
-
-         $CustomerViewForMinPrice = $I->haveFriend('CustomerViewForMinPrice');
-         $CustomerViewForMinPrice->does(function(AcceptanceTester $I){
-              $I->loginAsCustomer();
-              $I->click('Shop');
-              $I->wait(5);
-         });
-        $CustomerViewForMinPrice->leave();
-
-       $I->selectOption('dokan_spmv[available_vendor_list_position]','Above Single Product Tabs');
-       $I->selectOption('dokan_spmv[show_order]','max_price');
-       $I->click('//div[@id="dokan_spmv"]/form/p/input');
-
-         $CustomerViewForMaxPrice = $I->haveFriend('CustomerViewForMaxPrice');
-               $CustomerViewForMaxPrice->does(function(AcceptanceTester $I){
-                    $I->loginAsCustomer();
-                    $I->click('Shop');
-                    $I->wait(5);
-         });
-        $CustomerViewForMaxPrice->leave();
-
-      $I->selectOption('dokan_spmv[available_vendor_list_position]','Above Single Product Tabs');
-      $I->selectOption('dokan_spmv[show_order]','top_rated_vendor');
-      $I->click('//div[@id="dokan_spmv"]/form/p/input');
-
-           $CustomerViewTopratedView = $I->haveFriend('CustomerViewTopratedView');
-             $CustomerViewTopratedView->does(function(AcceptanceTester $I){
-                  $I->loginAsCustomer();
-                  $I->click('Shop');
-                  $I->wait(5);
-       });
-        $CustomerViewTopratedView->leave();
+       $I->seeElement('#setting-message_updated','Setting has been saved successfully.');
     }
+
+    public function vendorSettings(\Step\Acceptance\MultiSteps $I, \Page\Acceptance\AccountPage $vendor,
+                                  \Page\Acceptance\ProductPage $product)
+    {
+        $I->loginAsVendor();
+          $product->create('Green Watch1','252','Uncategorized');
+          $I->see('Online');
+          $I->wait(5);
+          $I->click('Log out');
+        $I->click('Log in');
+        $I->loginAsVendorTwo();
+          $I->click('Store List');
+          $I->click('/html/body/div[1]/div/div/div/div[1]/div/article/div/div/div/ul/li[1]/div/div[2]/a');
+          $I->click('/html/body/div[1]/div/div/div/div/main/div[2]/div/div[3]/ul/li/a/img');
+          $I->click('dokan_sell_this_item');
+          // $I->wait(3);
+          $I->fillField('_regular_price', '100');
+          $I->click('dokan_update_product');
+          $I->wait(5);
+          $I->click('Log out');
+        $I->click('Log in');
+        $I->loginAsCustomer();
+          $I->click('Store List');
+          $I->click('/html/body/div[1]/div/div/div/div[1]/div/article/div/div/div/ul/li[1]/div/div[2]/a');
+          $I->click('/html/body/div[1]/div/div/div/div/main/div[2]/div/div[3]/ul/li/a/img');
+          $I->scrollTo('#primary', 100,600);
+          $I->wait(10);
+    }
+
+    // public function vendorTwoSettings(\Step\Acceptance\Login $I, \Page\Acceptance\AccountPage $vendor,
+    //                               \Page\Acceptance\ProductPage $product)
+    
+    // {
+    //     $I->loginAsVendorTwo();
+    //     $I->click('Store List');
+    //     $I->click('/html/body/div[1]/div/div/div/div[1]/div/article/div/div/div/ul/li[1]/div/div[2]/a');
+    //     $I->click('/html/body/div[1]/div/div/div/div/main/div[2]/div/div[3]/ul/li/a/img');
+    //     $I->click('dokan_sell_this_item');
+    //     $I->wait(3);
+    //     $I->fillField('_regular_price', '100');
+    //    $I->click('dokan_update_product');
+    // }
+    // public function customerView(\Step\Acceptance\Login $I)
+    // { 
+    //     $I->loginAsCustomer();
+    //     $I->click('Shop');
+    //     $I->wait(10);
+    // }
 }
