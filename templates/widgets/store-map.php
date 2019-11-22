@@ -6,40 +6,47 @@
  *
  * @package dokan
  */
+
+if ( empty( $map_location ) ) {
+    return;
+}
+
 ?>
-
 <div class="location-container">
-
-    <?php if ( ! empty( $map_location ) ) { ?>
-        <div id="dokan-store-location"></div>
-
-        <script type="text/javascript">
-            jQuery(function($) {
-                <?php
-                $locations = explode( ',', $map_location );
-                $def_lat   = isset( $locations[0] ) ? $locations[0] : 23.709921;
-                $def_long  = isset( $locations[1] ) ? $locations[1] : 90.40714300000002;
-                ?>
-
-                var def_longval = <?php echo esc_attr( $def_long ); ?>;
-                var def_latval = <?php echo esc_attr( $def_lat ); ?>;
-
-                var curpoint = new google.maps.LatLng(def_latval, def_longval),
-                    $map_area = $('#dokan-store-location');
-
-                var gmap = new google.maps.Map( $map_area[0], {
-                    center: curpoint,
-                    zoom: 15,
-                    mapTypeId: window.google.maps.MapTypeId.ROADMAP
-                });
-
-                var marker = new window.google.maps.Marker({
-                    position: curpoint,
-                    map: gmap
-                });
-            })
-
-        </script>
-    <?php } ?>
-
+    <div id="dokan-store-location"></div>
 </div>
+<?php
+
+$source = dokan_get_option( 'map_api_source', 'dokan_appearance', 'google_maps' );
+
+$location  = explode( ',', $map_location );
+$longitude = ! empty( $location[1] ) ? $location[1] : 90.40714300000002;
+$latitude  = ! empty( $location[0] ) ? $location[0] : 23.709921;
+
+if ( 'mapbox' === $source ) {
+    $access_token = dokan_get_option( 'mapbox_access_token', 'dokan_appearance', null );
+
+    if ( ! $access_token ) {
+        esc_html_e( 'Mapbox Access Token not found', 'dokan-lite' );
+        return;
+    }
+
+    dokan_get_template_part( 'widgets/store-map-mapbox', '', array(
+        'map_location' => $map_location,
+        'access_token' => $access_token,
+        'location'     => array(
+            'longitude' => $longitude,
+            'latitude'  => $latitude,
+            'zoom'      => 10,
+        ),
+    ) );
+} else {
+    dokan_get_template_part( 'widgets/store-map-google-maps', '', array(
+        'map_location' => $map_location,
+        'location'     => array(
+            'longitude' => $longitude,
+            'latitude'  => $latitude,
+            'zoom'      => 15,
+        ),
+    ) );
+}

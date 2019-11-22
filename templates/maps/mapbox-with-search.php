@@ -76,9 +76,6 @@
             var lng = dokanMarker.getLngLat().wrap().lng;
             var lat = dokanMarker.getLngLat().wrap().lat;
 
-            console.log(lng);
-            console.log(lat);
-
             dokanMapbox.setCenter( [ lng, lat ] );
 
             setLocation( {
