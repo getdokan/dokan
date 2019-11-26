@@ -10,7 +10,6 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {},
     "require-dev": {
         "wp-coding-standards/wpcs": "dev-master",
         "higidi/composer-phpcodesniffer-standards-plugin": "^1.0@dev",

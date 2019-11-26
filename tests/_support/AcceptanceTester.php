@@ -48,31 +48,32 @@ class AcceptanceTester extends \Codeception\Actor
 
 	//Others function
     public function haveVisible($element)
-	{
-		$I = $this;
-		$value = false;
-		$I->executeInSelenium(function(RemoteWebDriver $webDriver)use($element, &$value)
 		{
-			try
+			$I = $this;
+			$value = false;
+			$I->executeInSelenium(function(\WebDriver $webDriver)use($element, &$value)
 			{
-				$element = $webDriver->findElement(WebDriverBy::cssSelector($element));
-				$value = $element instanceof RemoteWebElement;
-			}
-			catch (Exception $e)
-			{
-				// Swallow exception silently
-			}
-		});
-		return $value;
-	}
-	function seeElement($element)
-	{
-		try {
-			$this->getModule('WebDriver')->_findElements($element);
-		} catch (\PHPUnit_Framework_AssertionFailedError $f) {
-			return false;
+				try
+				{
+					$element = $webDriver->findElement(WebDriverBy::cssSelector($element));
+					$value = $element instanceof RemoteWebElement;
+				}
+				catch (Exception $e)
+				{
+					// Swallow exception silently
+				}
+			});
+			return $value;
 		}
-		return true;
-	}
+	
+	function seeElement($element)
+		{
+			try {
+				$this->getModule('WebDriver')->_findElements($element);
+			} catch (\PHPUnit_Framework_AssertionFailedError $f) {
+				return false;
+			}
+			return true;
+		}
 
 }

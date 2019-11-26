@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "98254a329ae2b1ae24f4ed36b0683e79",
+    "content-hash": "284b956e6588663b5602ea81ca71d643",
     "packages": [],
     "packages-dev": [
         {
@@ -975,12 +975,12 @@
             "version": "v4.6.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/oscarotero/Gettext.git",
+                "url": "https://github.com/php-gettext/Gettext.git",
                 "reference": "70c6ff2fecd275e6ef9cdd542f55939a3d1904d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/oscarotero/Gettext/zipball/70c6ff2fecd275e6ef9cdd542f55939a3d1904d6",
+                "url": "https://api.github.com/repos/php-gettext/Gettext/zipball/70c6ff2fecd275e6ef9cdd542f55939a3d1904d6",
                 "reference": "70c6ff2fecd275e6ef9cdd542f55939a3d1904d6",
                 "shasum": ""
             },
@@ -7466,9 +7466,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "wp-coding-standards/wpcs": 20,
-        "higidi/composer-phpcodesniffer-standards-plugin": 20,
-        "lucatume/wp-browser": 20,
-        "fzaninotto/faker": 20
+        "higidi/composer-phpcodesniffer-standards-plugin": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

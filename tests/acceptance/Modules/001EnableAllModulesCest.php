@@ -19,7 +19,8 @@ class EnableAllModulesCest
     	$I->wait(5);
     	$I->click('#view-switch-list');
     	$I->click('//input[@type="checkbox"]');
-    	$I->checkOption('#bulk-action-selector-top','Active');
+    	$I->selectOption('#bulk-action-selector-top','Activate');
     	$I->click('Apply');
+        $I->wait(5);
     }
 }

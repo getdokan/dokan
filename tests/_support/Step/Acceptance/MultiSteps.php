@@ -27,8 +27,8 @@ class MultiSteps extends \AcceptanceTester
 		$I = $this;
 		$I->amOnPage('/');
         $I->click('Log in');
-        $I->fillField('username', 'vendor');
-        $I->fillField('password', 'vendor');
+        $I->fillField('username', 'vendor-two');
+        $I->fillField('password', '123456');
         $I->click('login');
 	}
 	public function loginAsCustomer()
@@ -37,8 +37,19 @@ class MultiSteps extends \AcceptanceTester
 		$I->amOnPage('/');
         $I->click('Log in');
         $I->fillField('username', 'customer');
-        $I->fillField('password', 'customer');
+        $I->fillField('password', '123456');
         $I->click('login');
+	}
+	public function addProduct()
+	{
+		$I = $this;
+		$I->click('.products');	
+		$I->dontSee('.dokan-alert.dokan-alert-warning');
+		$I->click('.dokan-add-product-link a');
+		$I->fillField('.dokan-form-control', 'Gold Color Shoe');
+		$I->fillField('_regular_price', '500');
+		$I->selectOption('#product_cat', 'Uncategorized');
+		$I->click('#dokan-create-new-product-btn');
 	}
 	public function viewSingleProduct()
 	{

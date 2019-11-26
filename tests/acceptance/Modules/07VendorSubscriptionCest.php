@@ -27,24 +27,41 @@ class VendorSubscriptionCest
  //       $I->click('Save Changes');
  //    }
 
+    // public function vendorProductSubscriptionPackage(\Step\Acceptance\Login $I)
+    // {
+    //     $I->loginAsAdmin();
+    //            $I->amOnPage('/wp-admin/index.php');
+
+    //     $I->click('Products');
+    //     $I->wait(5);
+    //     $I->click('//*[@id="menu-posts-product"]/ul/li[3]/a');
+
+    //     // $I->wait(3);
+    //     // $I->click('//*[@id="wpbody-content"]/div[4]/a[1]');
+    //     $I->wait(2);
+    //     $I->fillField('#title','Gold Subcroption');
+    //     $I->appendField('#product-type','Dokan Subscription');
+    //     $I->fillField('_regular_price','260');
+    //     $I->fillField('_no_of_product','500');
+    //     $I->appendField('_subscription_product_admin_commission_type','Flat');
+    //     // $I->appendField('//div[3]/div/div[5]/div/select','grocery');
+    //     $I->click('#publishing-action','Publish');
+    // }
     public function VendorProductSubscriptionPackage(\Step\Acceptance\Login $I)
     {
         $I->loginAsAdmin();
-               $I->amOnPage('/wp-admin/index.php');
-
         $I->click('Products');
-        $I->wait(5);
-        $I->click('//*[@id="menu-posts-product"]/ul/li[3]/a');
-
-        // $I->wait(3);
+        $I->wait(3);
         // $I->click('//*[@id="wpbody-content"]/div[4]/a[1]');
+        // $I->click('Add New');
+        $I->amOnPage('/wp-admin/post-new.php?post_type=product');
         $I->wait(2);
-        $I->fillField('#title','Gold Subcroption');
-        $I->appendField('#product-type','Dokan Subscription');
+        $I->fillField('#title','Gold Subscription');
+        $I->checkOption('#product-type','Dokan Subscription');
         $I->fillField('_regular_price','260');
-        $I->fillField('_no_of_product','500');
+        $I->fillField('//div[@id="general_product_data"]/div[4]/p/input','200');
         $I->appendField('_subscription_product_admin_commission_type','Flat');
-        // $I->appendField('//div[3]/div/div[5]/div/select','grocery');
-        $I->click('#publishing-action','Publish');
+        $I->appendField('//div[3]/div/div[5]/div/select','grocery');
+        $I->click('Publish');
     }
 }
