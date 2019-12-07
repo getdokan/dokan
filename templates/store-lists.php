@@ -11,6 +11,12 @@ if ( 'yes' === $search ) {
     $search_query = isset( $get_data['dokan_seller_search'] ) ? sanitize_text_field( $get_data['dokan_seller_search'] ) : '';
 }
 
+if ( apply_filters( 'dokan_store_lists_filter', true ) ) {
+    do_action( 'dokan_store_lists_filter_form', $sellers );
+
+    add_filter( 'dokan_show_seller_search', '__return_false' );
+}
+
 /**
  * Filter to toggle seller search form
  *

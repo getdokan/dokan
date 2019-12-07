@@ -1,0 +1,311 @@
+#dokan-store-listing-filter-wrap {
+    background: #ffffff;
+    padding: 20px;
+    box-shadow: 1px 1px 20px 0px #E9E9E9;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    .left {
+        .store-count {
+            margin-top: 10px;
+        }
+    }
+    .right {
+        display: flex;
+
+        .item {
+            position: relative;
+
+            .dokan-icons {
+                position: absolute;
+                left: 14%;
+                top: 30%;
+                cursor: pointer;
+
+                .dokan-icon-div {
+                    background: #fff;
+                    height: 2px;
+                    margin: 2px auto;
+                }
+
+                .dokan-icon-div:nth-child(1) {
+                    width: 15px;
+                }
+
+                .dokan-icon-div:nth-child(2) {
+                    width: 10px;
+                }
+
+                .dokan-icon-div:nth-child(3) {
+                    width: 4px;
+                }
+            }
+
+            &:not(:first-child) {
+                padding-left: 40px;
+            }
+
+            button {
+                padding-top: 8px;
+                padding-bottom: 8px;
+                padding-left: 35px;
+                padding-right: 25px;
+
+                &:focus {
+                    outline: none;
+                }
+            }
+
+            select {
+                background: #ffffff;
+                border-color: #edecec;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                padding: 8px 20px;
+
+                &:before {
+                    content: "\f140";
+                }
+
+                &:focus {
+                    outline: none;
+                }
+            }
+        }
+
+        .toggle-view {
+            margin-top: 8px;
+
+            .dashicons {
+                font-size: 22px;
+                cursor: pointer;
+            }
+
+            .active {
+                color: #ee5035;
+            }
+        }
+    }
+}
+
+
+#dokan-store-listing-filter-form-wrap {
+    background: #ffffff;
+    margin-top: 25px;
+    padding: 20px;
+    box-shadow: 1px 1px 20px 0px #E9E9E9;
+
+    &:before {
+        content: "\f142";
+        position: relative;
+        top: -35px;
+        transform: translate(45%, 0);
+        left: 45%;
+        display: inline-block;
+        -webkit-font-smoothing: antialiased;
+        font-family: 'dashicons';
+        vertical-align: top;
+        font-size: 60px;
+        color: #ffffff;
+        font-weight: bold;
+    }
+
+    .store-search {
+        .store-search-input {
+            width: 100%;
+            padding: 10px 20px;
+            border-radius: 3px;
+            margin-top: -11px;
+            border: 1px solid #cccccc;
+
+            &:placeholder {
+                color: #7e7e7ec9;
+            }
+
+            &:focus {
+                outline: none;
+                border-color: #8080809e;
+            }
+        }
+    }
+
+    .apply-filter {
+        display: flex;
+        justify-content: flex-end;
+
+        #apply-filter-btn {
+            padding: 8px 25px;
+            margin-top: 15px;
+
+            &:focus {
+                outline: none;
+            }
+        }
+    }
+}
+
+.site-content {
+    .entry-header {
+        .entry-title[class] {
+            border: none;
+        }
+    }
+}
+
+
+#dokan-seller-listing-wrap {
+
+    &.grid-view {
+
+        .store-wrapper {
+            position: relative;
+        }
+
+        .store-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 9;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            color: #fff;
+            padding: 20px 15px;
+
+            .star-rating {
+                float: none;
+            }
+        }
+
+        .store-footer {
+            background: #fff;
+            position: relative;
+            z-index: 99;
+        }
+    }
+}
+
+#dokan-seller-listing-wrap {
+    .seller-listing-content {
+        .dokan-error {
+            margin: 15px;
+        }
+    }
+
+    .dokan-single-seller {
+        .store-wrapper {
+            .store-header {
+                .store-banner {
+                    min-height: 220px;
+                    position: relative;
+
+                    img {
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        max-width: 100%;
+                        height: 100%;
+                        width: auto;
+                    }
+                }
+            }
+        }
+    }
+
+    &.list-view {
+
+        .dokan-seller-wrap {
+
+            .dokan-single-seller {
+                width: 100%;
+
+                .store-wrapper {
+                    display: flex;
+                    flex-wrap: wrap;
+                    align-items: center;
+                    padding: 20px 50px 20px 15px;
+                    background: #fff;
+                    border-radius: 3px;
+
+                    .store-header {
+
+                        .store-banner {
+                            min-height: 180px;
+
+                            img {
+                                border-radius: 3px;
+                            }
+                        }
+                    }
+
+                    .store-content {
+
+                        .store-data-container {
+
+                            .store-data {
+
+                                h2 {
+                                    margin-top: 0;
+                                    margin-bottom: 15px;
+                                }
+
+                                .dokan-seller-rating {
+                                    margin-bottom: 10px;
+                                    float: none;
+                                }
+
+                                .store-address {
+                                    margin-top: 5px;
+                                    display: inline;
+
+                                    & :not( .country ) {
+                                        display: none;
+                                    }
+
+                                    .country {
+                                        &:before {
+                                            content: "\f230";
+                                            font-family: dashicons;
+                                            color: #0bb90b;
+                                            font-size: 18px;
+                                            position: relative;
+                                            top: 4px;
+                                        }
+                                    }
+                                }
+
+                                .store-phone {
+                                    display: inline;
+                                    margin-left: 20px;
+                                }
+                            }
+                        }
+                    }
+
+                    > div {
+                        flex-basis: 33.33%;
+                        max-width: 33.33%;
+                        padding: 0 15px;
+                    }
+
+                    .store-footer[class] {
+                        border: none;
+                        text-align: right;
+                        background: #fff;
+
+                        .seller-avatar {
+                            display: none;
+                        }
+
+                        button {
+                            margin-left: 5px;
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+}
