@@ -126,6 +126,8 @@ class Dokan_Withdraw {
     function get_withdraw_requests( $user_id = '', $status = 0, $limit = 10, $offset = 0 ) {
         global $wpdb;
 
+        $limit = apply_filters( 'dokan_withdraw_requests_limit', $limit, $status );
+
         if ( empty( $user_id ) ) {
             $result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} WHERE status = %d LIMIT %d, %d", $status, $offset, $limit ) );
         } else {
