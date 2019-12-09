@@ -238,7 +238,7 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                                 <span><?php esc_html_e( 'Customer IP:', 'dokan-lite' ); ?></span>
                                 <?php echo esc_html( get_post_meta( dokan_get_prop( $order, 'id' ), '_customer_ip_address', true ) ); ?>
                             </li>
-                            <?php apply_filters( 'dokan_manage_order_details_after', $order, $order_id, $order_items);?>
+                            <?php apply_filters( 'dokan_order_details_after_customer_info', $order, $order_id, $order_items);?>
                         </ul>
                         <?php endif; ?>
                         <?php
