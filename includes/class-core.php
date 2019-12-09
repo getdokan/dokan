@@ -181,11 +181,7 @@ class Dokan_Core {
             return;
         }
 
-        // Delete the redirect transient
-        delete_transient( '_dokan_setup_page_redirect' );
-
-        wp_safe_redirect( add_query_arg( array( 'page' => 'dokan-setup' ), admin_url( 'index.php' ) ) );
-        exit;
+        dokan_redirect_to_admin_setup_wizard();
     }
 
 }
