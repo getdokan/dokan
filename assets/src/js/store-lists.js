@@ -165,7 +165,6 @@
             event.preventDefault();
 
             const queryString = $.param( storeLists.query );
-            // const queryString = decodeURIComponent( $.param( storeLists.query ) );
 
             window.history.pushState( null, null, `?${queryString}` );
             window.location.reload();
@@ -197,9 +196,8 @@
         setParams: function( key, value ) {
             const self = storeLists;
             const elements = self.form ? self.form.elements : '';
-
-            let sortingForm = document.forms.stores_sorting;
-                sortingFormElements = sortingForm ? sortingForm.elements : '';
+            const sortingForm = document.forms.stores_sorting;
+            const sortingFormElements = sortingForm ? sortingForm.elements : '';
 
             Object.values( sortingFormElements ).forEach( function( element ) {
                 if ( element.name === key[0] ) {
@@ -216,7 +214,6 @@
                         element.value = value[0];
                     }
                 }
-
 
                 if ( key[0] === 'store_category[]' && key[0].includes( '[' ) ) {
                     const trimedValue = value[0].split( ' ' ).join( '-' );

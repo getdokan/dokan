@@ -12,6 +12,13 @@ if ( 'yes' === $search ) {
 }
 
 if ( apply_filters( 'dokan_store_lists_filter', true ) ) {
+    /**
+     * Hooks: dokan_store_lists_filter_form
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @hooked Dokan_Store_Lists_Filter::filter_area() - 10
+     */
     do_action( 'dokan_store_lists_filter_form', $sellers );
 
     add_filter( 'dokan_show_seller_search', '__return_false' );

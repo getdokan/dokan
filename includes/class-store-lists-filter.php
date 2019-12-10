@@ -1,5 +1,4 @@
 <?php
-
 use Dokan\Traits\Singleton;
 
 defined( 'ABSPATH' ) || exit;
@@ -7,12 +6,23 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Store Lists Class
  *
- * @since  DOKAN_LITE_SINCE
+ * @since DOKAN_LITE_SINCE
  */
 class Dokan_Store_Lists_Filter {
     use Singleton;
 
+    /**
+     * WP_User_Query holder
+     *
+     * @var object
+     */
     private $query;
+
+    /**
+     * Orderby holder
+     *
+     * @var string
+     */
     private $orderby;
 
     /**
