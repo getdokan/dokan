@@ -10,16 +10,17 @@ class WithdrawRequestAndUpdateCest
     }
 
     //Vendor request for withdraw
-    public function withdrawRequest(\Step\Acceptance\Vendor $I)
+    public function withdrawRequest(\Step\Acceptance\MultiSteps $I)
     {
     	$I->loginAsVendor();
         //$I->wait(10);
         $I->click('Withdraw');
-        $I->fillField('#withdraw-amount','80');
+        $I->fillField('#withdraw-amount','200');
         $I->selectOption('#withdraw-method','Bank Transfer');
         $I->click('Submit Request');
         $I->wait('5');
-        $I->click('Log out');
+        $I->see('Your request has been received successfully and being reviewed!');
+        // $I->click('Log out');
         
     }
     //Admin approved the request 

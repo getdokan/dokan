@@ -18,7 +18,7 @@ class AddProductAndSingleOrderCest
     }
 
     //Vendor Update order status
-    public function orderStatusChange(\Step\Acceptance\Login $I,
+    public function orderStatusChange(\Step\Acceptance\MultiSteps $I,
                                         \Step\Acceptance\Vendor $vendor)
     {
       $I->loginAsVendor();

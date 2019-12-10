@@ -6,11 +6,17 @@
 # If you need both WPWebDriver and WPBrowser tests - create a separate suite.
 
 actor: AcceptanceTester
-# extensions:
-#     enabled:
-#         - Codeception\Extension\RunProcess:
-#             - php -S 127.0.0.1:8000
-#             - java -jar selenium-server.jar
+extensions:
+    enabled:
+        - Codeception\Extension\RunProcess:
+            # - php -S 127.0.0.1:8000 /Users/hello/Local/QA/run-server
+            0: java -jar selenium-server.jar
+            1: mailcatcher
+            sleep: 5
+step_decorators:
+  - \Codeception\Step\Retry
+  - \Codeception\Step\TryTo
+
 modules:
     enabled:
         - WPDb
@@ -42,7 +48,7 @@ modules:
             restart: true
             window_size: false
             port: 4444
-            # wait: 5
+            # wait: 5         #it's using for smart wait
             # capabilities:
             #     browserName: chrome
             #     chromeOptions:

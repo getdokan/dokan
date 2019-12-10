@@ -7,7 +7,7 @@ class Module extends \AcceptanceTester
     public function productAddonForAllProduct()
     {
         $I = $this;
-        $I->click(' Settings ');
+        $I->click('Settings');
     	$I->click( 'Addons');
     	$I->click('Create New addon');
     	$I->wait(3);
@@ -33,24 +33,29 @@ class Module extends \AcceptanceTester
     }
 
 
-    public function productAddonForUncatagorized()
+    public function productAddonForCategory()
     {   
 
         $I = $this;
-    	$I->click( 'Addons');
+        $I->click('Settings');
+    	$I->click('Addons');
     	$I->click('Create New addon');
     	$I->wait(3);
     	$I->fillField('#addon-reference','Addon2-Vendor1');
     	$I->fillField('addon-priority','10');
-        $I->click('/html/body/div[1]/div/div/div/div[1]/div/article/div/div/div[2]/article/div[3]/form/table/tbody/tr[3]/td/span/span[1]/span/ul/li[1]/span');
+        // $I->click('/html/body/div[1]/div/div/div/div[1]/div/article/div/div/div[2]/article/div[3]/form/table/tbody/tr[3]/td/span/span[1]/span/ul/li[1]/span');
        // $I->click('/html/body/div[1]/div/div/div/div[1]/div/article/div/div/div[2]/article/div[3]/form/table/tbody/tr[3]/td/span/span[1]/span/ul/li/input');
         // $I->appendfield('/html/body/div[1]/div/div/div/div[1]/div/article/div/div/div[2]/article/div[3]/form/table/tbody/tr[3]/td/span/span[1]/span/ul/li/input','Uncategorized');
-         $I->wait(2);
+         // $I->wait(2);
          // $I->pressKey('/html/body/div[1]/div/div/div/div[1]/div/article/div/div/div[2]/article/div[3]/form/table/tbody/tr[3]/td/span/span[1]/span/ul/li[1]',WebDriverKeys::TAB,'Uncategorized');
 
-         $I->appendfield('/html/body/span/span/span/ul/li[2]/strong','Uncategorized');
+         // $I->appendField('/html/body/span/span/span/ul/li[2]/strong','Uncategorized');
+         $I->click(['css' => '.select2-selection__rendered']);
+         $I->wait(5);
+         $I->selectOption('/html/body/span/span/span/ul/li[2]/strong','Uncategorized');
+         // $I->fillField('Uncategorized');
 
-         $I->selectOption('/html/body/div[1]/div/div/div/div[1]/div/article/div/div/div[2]/article/div[3]/form/table/tbody/tr[3]/td/span/span[1]/span/ul/li[1]','Uncategorized');
+         // $I->selectOption('/html/body/div[1]/div/div/div/div[1]/div/article/div/div/div[2]/article/div[3]/form/table/tbody/tr[3]/td/span/span[1]/span/ul/li[1]','Uncategorized');
     	 $I->click('Add Field');
     	 $I->wait(2);
          $I->CheckOption('//*[@id="wc-pao-addon-content-type-0"]','Checkboxes');

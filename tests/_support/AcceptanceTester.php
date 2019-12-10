@@ -20,6 +20,7 @@ class AcceptanceTester extends \Codeception\Actor
 {
     use _generated\AcceptanceTesterActions;
     use \Codeception\Lib\Actor\Shared\Friend; 
+    use \Codeception\Lib\Actor\Shared\Retry;
 
    /**
     * Define custom actions here
@@ -75,5 +76,25 @@ class AcceptanceTester extends \Codeception\Actor
 			}
 			return true;
 		}
+
+	//Close browser tab
+	public function closeBrowserTab()
+	{
+	    $I = $this;
+	    $I->executeInSelenium(function (\Facebook\WebDriver\Remote\RemoteWebDriver $webdriver) {
+	        $webdriver->close();
+	    });
+	}
+
+	//Switch to last browser
+	public function lastBrowserTab()
+	{
+	    $I = $this;
+	    $I->executeInSelenium(function (\Facebook\WebDriver\Remote\RemoteWebDriver $webdriver) {
+	        $handles=$webdriver->getWindowHandles();
+	        $last_window = end($handles);
+	        $webdriver->switchTo()->window($last_window);
+	    });
+	}
 
 }

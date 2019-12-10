@@ -18,6 +18,8 @@ class Commissions extends \AcceptanceTester
 		$I->selectOption('#dokan_selling[commission_type]', 'Flat');
         $I->fillField('#dokan_selling[admin_percentage]', '15');
         $I->click('#dokan_selling #submit');
+        $I->waitForElementVisible('#setting-message_updated', 5);
+        $I->waitForElement('.metabox-holder', 30);
 	}
 	public function setPercentageCommission()
 	{

@@ -23,7 +23,7 @@ class RefundRequestAndUpdateCest
         $I->acceptPopup();
         $I->wait(5);
         $I->acceptPopup();
-        $I->click('Log out');
+        // $I->click('Log out');
     }
     public function approveRequest(\Step\Acceptance\Admin $I)
     {

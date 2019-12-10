@@ -49,7 +49,8 @@ class Vendor extends \AcceptanceTester
 	{
     	$I =$this;
     	$I->click('Orders');
-      $I->click(Locator::elementAt('//table/tbody/tr/td[2]', 1));
+      // $I->click(Locator::elementAt('//table/tbody/tr/td[2]', 1));
+        $I->click(Locator::elementAt('//form[@id="order-filter"]/table/tbody/tr/td[2]/a/strong', 1));
       $I->wait(5);
       $I->see('edit');
       $I->click('.dokan-edit-status');

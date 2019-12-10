@@ -14,7 +14,7 @@ class AddNewProductCest
     {
       $I->loginAsVendor();
       // $vendor->login('vendor','vendor');
-      $product->create('Green Watch','250','watch');
+      $product->create('Green Watch','250','Uncategorized');
 
     }
 }

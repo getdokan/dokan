@@ -10,6 +10,7 @@ class Product extends \AcceptanceTester
     	$I->click('//div[@id="dokan-seller-listing-wrap"]/div/ul/li/div/div[2]/a');
      	$I->click('//div[@id="dokan-content"]/div[4]/ul/li/a/img');
      	// $I->click('//button[@name="add-to-cart"]');
+     	
 	}
 		public function viewMultipleProduct()
 	{
