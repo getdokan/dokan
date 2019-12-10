@@ -2240,8 +2240,7 @@ function dokan_product_listing_filter_months_dropdown( $user_id ) {
      *
      * @param object $months    The months drop-down query results.
      */
-    $months = apply_filters( 'months_dropdown_results', $months );
-
+    $months      = apply_filters( 'months_dropdown_results', $months, 'product' );
     $month_count = count( $months );
 
     if ( ! $month_count || ( 1 == $month_count && 0 == $months[0]->month ) ) {
