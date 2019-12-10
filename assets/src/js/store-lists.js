@@ -147,7 +147,11 @@
          * @return void
          */
         buildSearchQuery: function( event ) {
-            storeLists.query.dokan_seller_search = event.target.value;
+            if ( event.target.value ) {
+                storeLists.query.dokan_seller_search = event.target.value;
+            } else {
+                delete storeLists.query.dokan_seller_search;
+            }
         },
 
         /**
@@ -160,9 +164,8 @@
         submitForm: function( event ) {
             event.preventDefault();
 
-            // const queryString = $.param( storeLists.query );
-            const queryString = decodeURIComponent( $.param( storeLists.query ) );
-            console.log(queryString);
+            const queryString = $.param( storeLists.query );
+            // const queryString = decodeURIComponent( $.param( storeLists.query ) );
 
             window.history.pushState( null, null, `?${queryString}` );
             window.location.reload();
@@ -193,11 +196,12 @@
 
         setParams: function( key, value ) {
             const self = storeLists;
-            const elements = self.form.elements;
+            const elements = self.form ? self.form.elements : '';
 
-            const sortingForm = document.forms.stores_sorting;
+            let sortingForm = document.forms.stores_sorting;
+                sortingFormElements = sortingForm ? sortingForm.elements : '';
 
-            Object.values( sortingForm.elements ).forEach( function( element ) {
+            Object.values( sortingFormElements ).forEach( function( element ) {
                 if ( element.name === key[0] ) {
                     $( element ).val( value[0] );
                 }
