@@ -90,6 +90,8 @@ if ( function_exists( 'yoast_breadcrumb' ) ) {
                 <p class="dokan-info"><?php esc_html_e( 'No products were found of this vendor!', 'dokan-lite' ); ?></p>
 
             <?php } ?>
+            
+            <?php do_action( 'dokan_store_profile_product_after', $store_user->data, $store_info ); ?>
         </div>
 
     </div><!-- .dokan-single-store -->
