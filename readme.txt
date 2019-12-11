@@ -3,11 +3,11 @@ Contributors: tareq1988, wedevs, sabbir1991, nizamuddinbabu, sk.shaikat, ediamin
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, product vendors, woocommerce vendor, commission rate, e-commerce, ebay, ecommerce, yith, yithemes
 Requires at least: 4.4
-Tested up to: 5.2.4
+Tested up to: 5.3.0
 WC requires at least: 3.0
 WC tested up to: 3.8.0
 Requires PHP: 5.6
-Stable tag: 2.9.25
+Stable tag: 2.9.26
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -283,6 +283,11 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 == Changelog ==
+
+= v2.9.26 (November 19, 2019) =
+
+ - **Feat:** Add option to hide out of stock products in best selling widget #697.
+ - **Improvement:** Make dokan add vendor UI consistent to WordPress UI #696.
 
 = v2.9.25 (November 12, 2019) =
 

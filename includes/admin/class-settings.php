@@ -468,7 +468,7 @@ class Dokan_Settings {
                 'gmap_api_key' => array(
                     'name'  => 'gmap_api_key',
                     'label' => __( 'Google Map API Key', 'dokan-lite' ),
-                    'desc'  => __( '<a href="https://developers.google.com/maps/documentation/javascript/" target="_blank">API Key</a> is needed to display map on store page', 'dokan-lite' ),
+                    'desc'  => __( '<a href="https://developers.google.com/maps/documentation/javascript/get-api-key" target="_blank">API Key</a> is needed to display map on store page', 'dokan-lite' ),
                     'type'  => 'text',
                 ),
                 'contact_seller' => array(

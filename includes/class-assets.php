@@ -69,6 +69,7 @@ class Dokan_Assets {
                     'flex-width'  => $has_flex_width,
                     'flex-height' => $has_flex_height
                 ],
+                'ajax_loader'        => DOKAN_PLUGIN_ASSEST . '/images/spinner-2x.gif',
             ) );
 
             // Load common styles and scripts
