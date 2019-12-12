@@ -982,9 +982,10 @@ jQuery(function($) {
 
                     $parent.fadeOut( 300, function() {
                         if ( $parent.is( '.taxonomy' ) ) {
+                            $parent.find( 'select, input[type=text]' ).val( '' );
                             $( 'select.dokan_attribute_taxonomy' ).find( 'option[value="' + $parent.data( 'taxonomy' ) + '"]' ).removeAttr( 'disabled' );
                         }
-                        $(this).remove();
+
                         Dokan_Editor.attribute.reArrangeAttribute();
                     });
                 }
