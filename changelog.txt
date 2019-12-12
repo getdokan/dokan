@@ -1,3 +1,11 @@
+= v2.9.27 (December 11, 2019) =
+
+ - **Feat:** Run Dokan Admin Setup Wizard without being WooCommerce installed #708
+ - **Improvement:** Remove empty div from vendor payment settings page #695
+ - **Improvement:** Deleting a attribute from predefined attributes and add the attribute again mess up attributes #703
+ - **Improvement:** Add hooks in order details and admin setup wizard #715
+ - **Improvement:*  Pass post_type as a second parameter to the months_dropdown_results hook #710
+
 = v2.9.26 (November 19, 2019) =
 
  - **Feat:** Add option to hide out of stock products in best selling widget #697.

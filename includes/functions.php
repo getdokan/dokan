@@ -3673,7 +3673,7 @@ if ( ! function_exists( 'dokan_get_seller_status_count' ) ) {
  * To download plugin like dokan-lite that has different slug and main plugin file,
  * `dokan_install_wp_org_plugin( 'dokan-lite', 'dokan.php' )`
  *
- * @since DOKAN_LITE_SINCE
+ * @since 2.9.27
  *
  * @param string $plugin_slug
  * @param string $main_file
@@ -3727,7 +3727,7 @@ function dokan_install_wp_org_plugin( $plugin_slug, $main_file = null ) {
 /**
  * Redirect to Dokan admin setup wizard page
  *
- * @since DOKAN_LITE_SINCE
+ * @since 2.9.27
  *
  * @return void
  */
