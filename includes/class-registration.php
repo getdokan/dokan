@@ -100,6 +100,8 @@ class Dokan_Registration {
             }
         }
 
+        $error = apply_filters( 'dokan_validate_registration', $error, $post_data );
+
         return $error;
     }
 

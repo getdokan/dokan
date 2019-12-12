@@ -428,6 +428,8 @@ class Dokan_Template_Settings {
             }
         }
 
+        $error = apply_filters( 'dokan_ajax_settings_store_validate', $error, $post_data );
+
         if ( $error->get_error_codes() ) {
             return $error;
         }
