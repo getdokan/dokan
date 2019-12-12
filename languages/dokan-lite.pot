@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Dokan 2.9.27\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2019-12-11 11:21:14+00:00\n"
+"POT-Creation-Date: 2019-12-12 10:31:48+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -160,7 +160,7 @@ msgstr ""
 msgid "Bank Swift "
 msgstr ""
 
-#: classes/admin-user-profile.php:291 includes/admin/setup-wizard.php:115
+#: classes/admin-user-profile.php:291 includes/admin/setup-wizard.php:138
 msgid "Selling"
 msgstr ""
 
@@ -314,7 +314,7 @@ msgid "User logged in successfully."
 msgstr ""
 
 #: classes/installer.php:124 includes/admin/class-settings.php:335
-#: includes/admin/class-settings.php:343 includes/admin/setup-wizard.php:297
+#: includes/admin/class-settings.php:343 includes/admin/setup-wizard.php:320
 #: includes/admin-functions.php:44 includes/admin-functions.php:50
 #: includes/admin-functions.php:685 includes/admin-functions.php:709
 #: includes/wc-template.php:17 includes/wc-template.php:150
@@ -337,21 +337,21 @@ msgstr ""
 msgid "My Orders"
 msgstr ""
 
-#: classes/seller-setup-wizard.php:64 includes/admin/setup-wizard.php:106
+#: classes/seller-setup-wizard.php:64 includes/admin/setup-wizard.php:129
 msgid "Introduction"
 msgstr ""
 
-#: classes/seller-setup-wizard.php:69 includes/admin/setup-wizard.php:110
+#: classes/seller-setup-wizard.php:69 includes/admin/setup-wizard.php:133
 #: includes/template-tags.php:368
 msgid "Store"
 msgstr ""
 
-#: classes/seller-setup-wizard.php:74 includes/admin/setup-wizard-no-wc.php:187
+#: classes/seller-setup-wizard.php:74 includes/admin/setup-wizard-no-wc.php:173
 #: includes/template-tags.php:375
 msgid "Payment"
 msgstr ""
 
-#: classes/seller-setup-wizard.php:79 includes/admin/setup-wizard.php:130
+#: classes/seller-setup-wizard.php:79 includes/admin/setup-wizard.php:153
 msgid "Ready!"
 msgstr ""
 
@@ -380,12 +380,12 @@ msgid ""
 "and return to the Store!"
 msgstr ""
 
-#: classes/seller-setup-wizard.php:149 includes/admin/setup-wizard.php:278
+#: classes/seller-setup-wizard.php:149 includes/admin/setup-wizard.php:301
 #: templates/admin-setup-wizard/step-no-wc-introduction.php:22
 msgid "Let's Go!"
 msgstr ""
 
-#: classes/seller-setup-wizard.php:150 includes/admin/setup-wizard.php:279
+#: classes/seller-setup-wizard.php:150 includes/admin/setup-wizard.php:302
 msgid "Not right now"
 msgstr ""
 
@@ -445,14 +445,14 @@ msgstr ""
 
 #: classes/seller-setup-wizard.php:237 classes/seller-setup-wizard.php:382
 #: includes/admin/setup-wizard-wc-admin.php:230
-#: includes/admin/setup-wizard.php:498 includes/admin/setup-wizard.php:550
+#: includes/admin/setup-wizard.php:521 includes/admin/setup-wizard.php:573
 #: templates/admin-setup-wizard/step-selling.php:53
 #: templates/admin-setup-wizard/step-store.php:76
 msgid "Continue"
 msgstr ""
 
 #: classes/seller-setup-wizard.php:238 classes/seller-setup-wizard.php:383
-#: includes/admin/setup-wizard.php:499
+#: includes/admin/setup-wizard.php:522
 #: templates/admin-setup-wizard/step-selling.php:54
 #: templates/admin-setup-wizard/step-store.php:77
 msgid "Skip this step"
@@ -474,7 +474,7 @@ msgstr ""
 msgid "Go to your Store Dashboard!"
 msgstr ""
 
-#: classes/template-dashboard.php:113 includes/admin/setup-wizard.php:476
+#: classes/template-dashboard.php:113 includes/admin/setup-wizard.php:499
 #: includes/order-functions.php:498 templates/dashboard/orders-widget.php:26
 msgid "Completed"
 msgstr ""
@@ -483,7 +483,7 @@ msgstr ""
 msgid "Pending"
 msgstr ""
 
-#: classes/template-dashboard.php:123 includes/admin/setup-wizard.php:482
+#: classes/template-dashboard.php:123 includes/admin/setup-wizard.php:505
 #: includes/order-functions.php:513 templates/dashboard/orders-widget.php:36
 #: templates/orders/listing.php:141
 msgid "Processing"
@@ -793,7 +793,7 @@ msgid "Dokan requires some pages to be configured and you can set them up here"
 msgstr ""
 
 #: includes/admin/class-admin.php:216 includes/admin/class-admin.php:227
-#: includes/admin/class-admin.php:290 includes/admin/setup-wizard.php:120
+#: includes/admin/class-admin.php:290 includes/admin/setup-wizard.php:143
 #: includes/template-tags.php:345 templates/withdraw/header.php:11
 msgid "Withdraw"
 msgstr ""
@@ -938,7 +938,7 @@ msgid "Who will be receiving the Shipping fees"
 msgstr ""
 
 #: includes/admin/class-settings.php:335 includes/admin/class-settings.php:343
-#: includes/admin/setup-wizard.php:298
+#: includes/admin/setup-wizard.php:321
 msgid "Admin"
 msgstr ""
 
@@ -984,7 +984,7 @@ msgstr ""
 msgid "Vendor can update order status"
 msgstr ""
 
-#: includes/admin/class-settings.php:419 includes/admin/setup-wizard.php:405
+#: includes/admin/class-settings.php:419 includes/admin/setup-wizard.php:428
 msgid "Withdraw Methods"
 msgstr ""
 
@@ -992,7 +992,7 @@ msgstr ""
 msgid "Select suitable Withdraw methods for Vendors"
 msgstr ""
 
-#: includes/admin/class-settings.php:427 includes/admin/setup-wizard.php:463
+#: includes/admin/class-settings.php:427 includes/admin/setup-wizard.php:486
 msgid "Minimum Withdraw Limit"
 msgstr ""
 
@@ -1177,15 +1177,15 @@ msgstr ""
 msgid "Welcome to Dokan"
 msgstr ""
 
-#: includes/admin/setup-wizard-no-wc.php:85 includes/admin/setup-wizard.php:227
+#: includes/admin/setup-wizard-no-wc.php:91 includes/admin/setup-wizard.php:250
 msgid "Return to the WordPress Dashboard"
 msgstr ""
 
-#: includes/admin/setup-wizard-no-wc.php:122
+#: includes/admin/setup-wizard-no-wc.php:128
 msgid "Error installing WooCommerce plugin"
 msgstr ""
 
-#: includes/admin/setup-wizard-no-wc.php:193
+#: includes/admin/setup-wizard-no-wc.php:179
 #: includes/admin/setup-wizard-wc-admin.php:82
 #: includes/product-functions.php:240
 msgid "Shipping"
@@ -1260,130 +1260,130 @@ msgstr ""
 msgid "We'll use %1$s for product weight and %2$s for product dimensions."
 msgstr ""
 
-#: includes/admin/setup-wizard.php:125
+#: includes/admin/setup-wizard.php:148
 msgid "Recommended"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:207
+#: includes/admin/setup-wizard.php:230
 msgid "Dokan &rsaquo; Setup Wizard"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:274
+#: includes/admin/setup-wizard.php:297
 #: templates/admin-setup-wizard/step-no-wc-introduction.php:2
 msgid "Welcome to the world of Dokan!"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:275
+#: includes/admin/setup-wizard.php:298
 msgid ""
 "Thank you for choosing Dokan to power your online marketplace! This quick "
 "setup wizard will help you configure the basic settings. <strong>It’s "
 "completely optional and shouldn’t take longer than three minutes.</strong>"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:276
+#: includes/admin/setup-wizard.php:299
 msgid ""
 "No time right now? If you don’t want to go through the wizard, you can skip "
 "and return to the WordPress dashboard. Come back anytime if you change your "
 "mind!"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:401
+#: includes/admin/setup-wizard.php:424
 msgid "Withdraw Setup"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:412 includes/withdraw-functions.php:11
+#: includes/admin/setup-wizard.php:435 includes/withdraw-functions.php:11
 msgid "PayPal"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:415
+#: includes/admin/setup-wizard.php:438
 msgid "Enable PayPal for your vendor as a withdraw method"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:425
+#: includes/admin/setup-wizard.php:448
 msgid "Bank"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:428
+#: includes/admin/setup-wizard.php:451
 msgid "Enable bank transfer for your vendor as a withdraw method"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:438
+#: includes/admin/setup-wizard.php:461
 msgid "Skrill"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:441
+#: includes/admin/setup-wizard.php:464
 msgid "Enable skrill for your vendor as a withdraw method"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:466
+#: includes/admin/setup-wizard.php:489
 msgid ""
 "Minimum balance required to make a withdraw request ( Leave it blank to set "
 "no limits )"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:470
+#: includes/admin/setup-wizard.php:493
 msgid "Order Status for Withdraw"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:488 includes/order-functions.php:508
+#: includes/admin/setup-wizard.php:511 includes/order-functions.php:508
 msgid "On-hold"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:493
+#: includes/admin/setup-wizard.php:516
 msgid "Order status for which vendor can make a withdraw request."
 msgstr ""
 
-#: includes/admin/setup-wizard.php:515
+#: includes/admin/setup-wizard.php:538
 msgid "Recommended for All Dokan Marketplaces"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:517
+#: includes/admin/setup-wizard.php:540
 msgid "Enhance your store with these recommended features."
 msgstr ""
 
-#: includes/admin/setup-wizard.php:527 includes/admin/setup-wizard.php:531
-#: includes/admin/setup-wizard.php:574
+#: includes/admin/setup-wizard.php:550 includes/admin/setup-wizard.php:554
+#: includes/admin/setup-wizard.php:597
 msgid "WooCommerce Conversion Tracking"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:528
+#: includes/admin/setup-wizard.php:551
 msgid "Track conversions on your WooCommerce store like a pro!"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:530
+#: includes/admin/setup-wizard.php:553
 msgid "WooCommerce Conversion Tracking logo"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:538 includes/admin/setup-wizard.php:542
-#: includes/admin/setup-wizard.php:585
+#: includes/admin/setup-wizard.php:561 includes/admin/setup-wizard.php:565
+#: includes/admin/setup-wizard.php:608
 msgid "weForms"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:539
+#: includes/admin/setup-wizard.php:562
 msgid "Best Contact Form Plugin for WordPress."
 msgstr ""
 
-#: includes/admin/setup-wizard.php:541
+#: includes/admin/setup-wizard.php:564
 msgid "weForms logo"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:647
+#: includes/admin/setup-wizard.php:668
 msgid "Your Marketplace is Ready!"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:652
+#: includes/admin/setup-wizard.php:673
 msgid "Visit Dokan Dashboard"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:653
+#: includes/admin/setup-wizard.php:674
 msgid "More Settings"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:754
+#: includes/admin/setup-wizard.php:775
 msgid "The following plugins will be installed and activated for you:"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:886
+#: includes/admin/setup-wizard.php:907
 msgid "Contact Admin"
 msgstr ""
 
@@ -4975,8 +4975,8 @@ msgstr ""
 
 #: templates/admin-setup-wizard/step-no-wc-introduction.php:3
 msgid ""
-"hanks for choosing Dokan to power your online marketplace! This quick setup "
-"wizard will help you configure the basic settings.\n"
+"Thanks for choosing Dokan to power your online marketplace! This quick "
+"setup wizard will help you configure the basic settings.\n"
 "        <strong>This setup wizard is completely optional and shouldn't take "
 "longer than three minutes.</strong>"
 msgstr ""
@@ -6442,62 +6442,62 @@ msgstr ""
 msgid "https://wedevs.com/"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:59
+#: includes/admin/setup-wizard.php:60
 msgctxt "enhanced select"
 msgid "One result is available, press enter to select it."
 msgstr ""
 
-#: includes/admin/setup-wizard.php:60
+#: includes/admin/setup-wizard.php:61
 msgctxt "enhanced select"
 msgid "%qty% results are available, use up and down arrow keys to navigate."
 msgstr ""
 
-#: includes/admin/setup-wizard.php:61
+#: includes/admin/setup-wizard.php:62
 msgctxt "enhanced select"
 msgid "No matches found"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:62
+#: includes/admin/setup-wizard.php:63
 msgctxt "enhanced select"
 msgid "Loading failed"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:63
+#: includes/admin/setup-wizard.php:64
 msgctxt "enhanced select"
 msgid "Please enter 1 or more characters"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:64
+#: includes/admin/setup-wizard.php:65
 msgctxt "enhanced select"
 msgid "Please enter %qty% or more characters"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:65
+#: includes/admin/setup-wizard.php:66
 msgctxt "enhanced select"
 msgid "Please delete 1 character"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:66
+#: includes/admin/setup-wizard.php:67
 msgctxt "enhanced select"
 msgid "Please delete %qty% characters"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:67
+#: includes/admin/setup-wizard.php:68
 msgctxt "enhanced select"
 msgid "You can only select 1 item"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:68
+#: includes/admin/setup-wizard.php:69
 msgctxt "enhanced select"
 msgid "You can only select %qty% items"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:69
+#: includes/admin/setup-wizard.php:70
 msgctxt "enhanced select"
 msgid "Loading more results&hellip;"
 msgstr ""
 
-#: includes/admin/setup-wizard.php:70
+#: includes/admin/setup-wizard.php:71
 msgctxt "enhanced select"
 msgid "Searching&hellip;"
 msgstr ""
