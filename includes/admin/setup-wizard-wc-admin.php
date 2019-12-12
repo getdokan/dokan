@@ -9,7 +9,7 @@ class Dokan_Admin_Setup_Wizard_WC_Admin extends WC_Admin_Setup_Wizard {
     /**
      * Current step
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.27
      *
      * @var string
      */
@@ -18,7 +18,7 @@ class Dokan_Admin_Setup_Wizard_WC_Admin extends WC_Admin_Setup_Wizard {
     /**
      * Steps for the setup wizard
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.27
      *
      * @var array
      */
@@ -27,7 +27,7 @@ class Dokan_Admin_Setup_Wizard_WC_Admin extends WC_Admin_Setup_Wizard {
     /**
      * Class constuctor
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.27
      *
      * @param array $steps
      *
@@ -42,7 +42,7 @@ class Dokan_Admin_Setup_Wizard_WC_Admin extends WC_Admin_Setup_Wizard {
     /**
      * Set current step
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.27
      *
      * @param string $step
      */
@@ -55,7 +55,7 @@ class Dokan_Admin_Setup_Wizard_WC_Admin extends WC_Admin_Setup_Wizard {
      *
      * @see WC_Admin_Setup_Wizard::wc_setup_shipping Override the input/checkbox only
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.27
      *
      * @return void
      */
@@ -349,7 +349,7 @@ class Dokan_Admin_Setup_Wizard_WC_Admin extends WC_Admin_Setup_Wizard {
      * @see WC_Admin_Setup_Wizard::get_next_step_link Without the override, $this in parent class
      *                                                will refer to parent class object
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.27
      *
      * @param string $step  slug (default: current step).
      * @return string       URL for next step if a next step exists.

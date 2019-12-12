@@ -1,6 +1,6 @@
 <form method="post" id="dokan-admin-setup-wizard">
     <h1><?php esc_html_e( 'Welcome to the world of Dokan!', 'dokan-lite' ); ?></h1>
-    <p><?php echo wp_kses( __( 'hanks for choosing Dokan to power your online marketplace! This quick setup wizard will help you configure the basic settings.
+    <p><?php echo wp_kses( __( 'Thanks for choosing Dokan to power your online marketplace! This quick setup wizard will help you configure the basic settings.
         <strong>This setup wizard is completely optional and shouldn\'t take longer than three minutes.</strong>', 'dokan-lite' ), [ 'strong' => [] ] ); ?></p>
     <p>
         <?php
