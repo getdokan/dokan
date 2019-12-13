@@ -371,7 +371,7 @@ export default {
             if ( 'paypal' === action ) {
                 let ids = items.join(",");
 
-                $.post(ajaxurl, {
+                jQuery.post(ajaxurl, {
                     'dokan_withdraw_bulk': 'paypal',
                     'id': ids,
                     'action': 'withdraw_ajax_submission',

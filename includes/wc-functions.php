@@ -564,8 +564,7 @@ function dokan_get_latest_products( $per_page = 9, $seller_id = '', $page = 1 ) 
  * @param int $per_page
  * @return \WP_Query
  */
-function dokan_get_best_selling_products( $per_page = 8, $seller_id = '', $page = 1 ) {
-
+function dokan_get_best_selling_products( $per_page = 8, $seller_id = '', $page = 1, $hide_outofstock = false ) {
     $args = array(
         'post_type'           => 'product',
         'post_status'         => 'publish',
@@ -576,6 +575,16 @@ function dokan_get_best_selling_products( $per_page = 8, $seller_id = '', $page 
 
     if ( ! empty( $seller_id ) ) {
         $args['author'] = (int) $seller_id;
+    }
+
+    if ( $hide_outofstock ) {
+        $args['meta_query'] = [
+            [
+                'key'     => '_stock_status',
+                'value'   => 'outofstock',
+                'compare' => '!='
+            ]
+        ];
     }
 
     return dokan()->product->best_selling( apply_filters( 'dokan_best_selling_query', $args ) );

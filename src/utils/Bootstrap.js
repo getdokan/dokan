@@ -8,6 +8,7 @@ import API_Helper from '@/utils/Api'
 import ChartJS from 'vue-chartjs'
 import Mixin from './Mixin'
 import Debounce from 'debounce'
+import VersionCompare from '@/utils/VersionCompare'
 
 window.__ = function( text, domain ) {
   return __( text, domain );
@@ -38,13 +39,17 @@ import Datepicker from "admin/components/Datepicker.vue"
 import VueSweetalert2 from 'vue-sweetalert2';
 import ColorPicker from "admin/components/ColorPicker.vue"
 import Gmap from "admin/components/Gmap.vue"
-
+import UploadImage from "admin/components/UploadImage.vue"
+import PasswordGenerator from "admin/components/PasswordGenerator.vue"
+import VendorAccountFields from "admin/pages/VendorAccountFields.vue";
+import VendorAddressFields from "admin/pages/VendorAddressFields.vue";
+import VendorSocialFields from "admin/pages/VendorSocialFields.vue";
+import VendorPaymentFields from "admin/pages/VendorPaymentFields.vue";
 
 import "vue-multiselect/dist/vue-multiselect.min.css"
 
 Vue.use(Notifications)
 Vue.use(VueSweetalert2);
-// Vue.component('multiselect', Multiselect)
 
 Vue.mixin( Mixin );
 
@@ -61,10 +66,10 @@ Vue.filter('capitalize', function (value) {
 // Tooltip directive
 Vue.directive('tooltip', {
     bind: function( el, binding, vnode ) {
-        $(el).tooltip('show');
+        jQuery(el).tooltip('show');
     },
     unbind: function( el, binding, vnode ) {
-        $(el).tooltip('destroy');
+        jQuery(el).tooltip('destroy');
     }
 });
 
@@ -77,27 +82,34 @@ window.dokan_add_route = function(component) {
 }
 
 // setup global Dokan libraries
-window.dokan.api                 = new API_Helper();
-window.dokan.libs['Vue']         = Vue;
-window.dokan.libs['Router']      = Router;
-window.dokan.libs['moment']      = Moment;
-window.dokan.libs['ListTable']   = ListTable;
-window.dokan.libs['Currency']    = Currency;
-window.dokan.libs['Postbox']     = Postbox;
-window.dokan.libs['Loading']     = Loading;
-window.dokan.libs['ChartJS']     = ChartJS;
-window.dokan.libs['Chart']       = Chart;
-window.dokan.libs['Modal']       = Modal;
-window.dokan.libs['Switches']    = Switches;
-window.dokan.libs['TextEditor']  = TextEditor;
-window.dokan.libs['LazyInput']   = LazyInput;
-window.dokan.libs['Progressbar'] = Progressbar;
-window.dokan.libs['Search']      = Search;
-window.dokan.libs['Datepicker']  = Datepicker;
-window.dokan.libs['Multiselect'] = Multiselect;
-window.dokan.libs['ColorPicker'] = ColorPicker;
-window.dokan.libs['debounce']    = Debounce;
-window.dokan.libs['Gmap']        = Gmap;
+window.dokan.api                         = new API_Helper();
+window.dokan.libs['Vue']                 = Vue;
+window.dokan.libs['Router']              = Router;
+window.dokan.libs['moment']              = Moment;
+window.dokan.libs['ListTable']           = ListTable;
+window.dokan.libs['Currency']            = Currency;
+window.dokan.libs['Postbox']             = Postbox;
+window.dokan.libs['Loading']             = Loading;
+window.dokan.libs['ChartJS']             = ChartJS;
+window.dokan.libs['Chart']               = Chart;
+window.dokan.libs['Modal']               = Modal;
+window.dokan.libs['Switches']            = Switches;
+window.dokan.libs['TextEditor']          = TextEditor;
+window.dokan.libs['LazyInput']           = LazyInput;
+window.dokan.libs['Progressbar']         = Progressbar;
+window.dokan.libs['Search']              = Search;
+window.dokan.libs['Datepicker']          = Datepicker;
+window.dokan.libs['Multiselect']         = Multiselect;
+window.dokan.libs['ColorPicker']         = ColorPicker;
+window.dokan.libs['debounce']            = Debounce;
+window.dokan.libs['VersionCompare']      = VersionCompare;
+window.dokan.libs['Gmap']                = Gmap;
+window.dokan.libs['UploadImage']         = UploadImage;
+window.dokan.libs['PasswordGenerator']   = PasswordGenerator;
+window.dokan.libs['VendorAccountFields'] = VendorAccountFields;
+window.dokan.libs['VendorAddressFields'] = VendorAddressFields;
+window.dokan.libs['VendorSocialFields']  = VendorSocialFields;
+window.dokan.libs['VendorPaymentFields'] = VendorPaymentFields;
 
 window.dokan.libs['ContentLoading']  = {
   VclCode,

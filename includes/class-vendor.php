@@ -734,7 +734,7 @@ class Dokan_Vendor {
      * @return void
      */
     public function make_active() {
-        update_user_meta( $this->get_id(), 'dokan_enable_selling', 'yes' );
+        $this->update_meta( 'dokan_enable_selling', 'yes' );
         $this->change_product_status( 'publish' );
 
         do_action( 'dokan_vendor_enabled', $this->get_id() );
@@ -750,7 +750,7 @@ class Dokan_Vendor {
      * @return void
      */
     public function make_inactive() {
-        update_user_meta( $this->get_id(), 'dokan_enable_selling', 'no' );
+        $this->update_meta( 'dokan_enable_selling', 'no' );
         $this->change_product_status( 'pending' );
 
         do_action( 'dokan_vendor_disabled', $this->get_id() );
@@ -821,7 +821,7 @@ class Dokan_Vendor {
      */
     public function get_store_open_notice( $default_notice = '' ) {
         $notice         = $this->get_info_part( 'dokan_store_open_notice' );
-        $default_notice = $default_notice ? $default_notice : __( 'Store is open', 'dokan' );
+        $default_notice = $default_notice ? $default_notice : __( 'Store is open', 'dokan-lite' );
 
         return $notice ? $notice : $default_notice;
     }
@@ -835,7 +835,7 @@ class Dokan_Vendor {
      */
     public function get_store_close_notice( $default_notice = '' ) {
         $notice         = $this->get_info_part( 'dokan_store_close_notice' );
-        $default_notice = $default_notice ? $default_notice : __( 'Store is closed', 'dokan' );
+        $default_notice = $default_notice ? $default_notice : __( 'Store is closed', 'dokan-lite' );
 
         return $notice ? $notice : $default_notice;
     }
@@ -1131,6 +1131,20 @@ class Dokan_Vendor {
     }
 
     /**
+     * Get vendor meta data
+     *
+     * @since 2.9.23
+     *
+     * @param string $key
+     * @param bool $single  Whether to return a single value
+     *
+     * @return Mix
+     */
+    public function get_meta( $key, $single = false ) {
+        return get_user_meta( $this->get_id(), $key, $single );
+    }
+
+    /**
      * Update vendor meta data
      *
      * @since 2.9.11
@@ -1139,11 +1153,26 @@ class Dokan_Vendor {
      * @param mix $value
      *
      * @return void
-     *
-     * @todo make this to a setter method
      */
     public function update_meta( $key, $value ) {
-        update_user_meta( $this->get_id(), $key, $value );
+        update_user_meta( $this->get_id(), $key, wc_clean( $value ) );
+    }
+
+    /**
+     * Update meta data
+     *
+     * @since  2.9.23
+     *
+     * @return void
+     */
+    public function update_meta_data() {
+        if ( ! $this->changes ) {
+            return;
+        }
+
+        if ( ! empty( $this->changes['store_name'] ) ) {
+            $this->update_meta( 'dokan_store_name', $this->changes['store_name'] );
+        }
     }
 
     /**
@@ -1285,7 +1314,9 @@ class Dokan_Vendor {
      * @since 2.9.11
      */
     public function apply_changes() {
-        update_user_meta( $this->get_id(), 'dokan_profile_settings', array_replace_recursive( $this->shop_data, $this->changes ) );
+        $this->update_meta( 'dokan_profile_settings', array_replace_recursive( $this->shop_data, $this->changes ) );
+        $this->update_meta_data();
+
         $this->changes = [];
     }
 

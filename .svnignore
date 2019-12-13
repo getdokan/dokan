@@ -25,3 +25,4 @@ webpack.config.js
 vendor
 composer.lock
 composer.json
+.editorconfig

@@ -146,9 +146,9 @@ class Dokan_Rewrites {
     public function resolve_wc_query_conflict( $query_vars ) {
         global $post;
 
-        $dashboard = dokan_get_option( 'dashboard', 'dokan_pages', 0 );
+        $dashboard_id = apply_filters( 'dokan_get_dashboard_page_id', dokan_get_option( 'dashboard', 'dokan_pages', 0 ) );
 
-        if ( ! empty( $post->ID ) && $post->ID === absint( $dashboard ) ) {
+        if ( ! empty( $post->ID ) && apply_filters( 'dokan_get_current_page_id', $post->ID ) === absint( $dashboard_id ) ) {
             unset( $query_vars['orders'] );
             unset( $query_vars['edit-account'] );
         }

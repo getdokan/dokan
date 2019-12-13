@@ -31,6 +31,16 @@ class Dokan_Setup_Wizard {
             add_action( 'admin_menu', array( $this, 'admin_menus' ) );
             add_action( 'admin_init', array( $this, 'setup_wizard' ), 99 );
             add_action( 'activated_plugin', array( $this, 'activated_plugin' ) );
+            add_action( 'weforms_loaded', [ $this, 'after_weforms_activate' ] );
+
+            if ( get_transient( 'dokan_setup_wizard_no_wc' ) ) {
+                require_once DOKAN_INC_DIR . '/admin/setup-wizard-no-wc.php';
+
+                add_filter( 'dokan_admin_setup_wizard_steps', array( 'Dokan_Admin_Setup_Wizard_No_WC', 'add_wc_steps_to_wizard' ) );
+                add_filter( 'dokan_setup_wizard_enqueue_scripts', array( 'Dokan_Admin_Setup_Wizard_No_WC', 'enqueue_wc_localized_scripts' ) );
+                add_action( 'dokan_admin_setup_wizard_step_store_start', array( 'Dokan_Admin_Setup_Wizard_No_WC', 'add_wc_html_step_start' ) );
+                add_action( 'dokan_admin_setup_wizard_save_step_store', array( 'Dokan_Admin_Setup_Wizard_No_WC', 'save_wc_store_setup_data' ) );
+            }
         }
     }
 
@@ -69,14 +79,34 @@ class Dokan_Setup_Wizard {
         wp_register_script( 'jquery-tiptip', WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip.min.js', array( 'jquery' ), WC_VERSION, true );
         wp_register_script( 'wc-setup', WC()->plugin_url() . '/assets/js/admin/wc-setup.min.js', array( 'jquery', 'wc-enhanced-select', 'jquery-blockui', 'wp-util', 'jquery-tiptip' ), WC_VERSION );
 
-        wp_localize_script( 'wc-setup', 'wc_setup_params', array() );
-
+        wp_localize_script(
+            'wc-setup',
+            'wc_setup_params',
+            array()
+        );
         /**
          * Action fires after finishing enqueuing setup wizard assets
          *
          * @since 2.8.7
          */
         do_action( 'dokan_setup_wizard_enqueue_scripts' );
+    }
+
+    /**
+     * Helper method to get postcode configurations from `WC()->countries->get_country_locale()`.
+     * We don't use `wp_list_pluck` because it will throw notices when postcode configuration is not defined for a country.
+     *
+     * @return array
+     */
+    protected static function get_postcodes() {
+        $locales   = WC()->countries->get_country_locale();
+        $postcodes = array();
+        foreach ( $locales as $country_code => $locale ) {
+            if ( isset( $locale['postcode'] ) ) {
+                $postcodes[ $country_code ] = $locale['postcode'];
+            }
+        }
+        return $postcodes;
     }
 
     /**
@@ -87,18 +117,17 @@ class Dokan_Setup_Wizard {
     }
 
     /**
-     * Show the setup wizard.
+     * Set wizard steps
+     *
+     * @since 2.9.27
+     *
+     * @return void
      */
-    public function setup_wizard() {
-        if ( empty( $_GET['page'] ) || 'dokan-setup' !== $_GET['page'] ) {
-            return;
-        }
-
-        $this->steps = array(
+    protected function set_steps() {
+        $this->steps = apply_filters( 'dokan_admin_setup_wizard_steps', array(
             'introduction' => array(
                 'name'    =>  __( 'Introduction', 'dokan-lite' ),
                 'view'    => array( $this, 'dokan_setup_introduction' ),
-                'handler' => ''
             ),
             'store' => array(
                 'name'    =>  __( 'Store', 'dokan-lite' ),
@@ -125,7 +154,43 @@ class Dokan_Setup_Wizard {
                 'view'    => array( $this, 'dokan_setup_ready' ),
                 'handler' => ''
             )
-        );
+        ) );
+    }
+
+    /**
+     * Get wizard steps
+     *
+     * @since 2.9.27
+     *
+     * @return array
+     */
+    public function get_steps() {
+        return $this->steps;
+    }
+
+    /**
+     * Wizard templates
+     *
+     * @since 2.9.27
+     *
+     * @return void
+     */
+    protected function set_setup_wizard_template() {
+        $this->setup_wizard_header();
+        $this->setup_wizard_steps();
+        $this->setup_wizard_content();
+        $this->setup_wizard_footer();
+    }
+
+    /**
+     * Show the setup wizard.
+     */
+    public function setup_wizard() {
+        if ( empty( $_GET['page'] ) || 'dokan-setup' !== $_GET['page'] ) {
+            return;
+        }
+
+        $this->set_steps();
 
         // Hide recommended step if nothing is going to be shown there.
         if ( ! $this->should_show_recommended_step() ) {
@@ -137,14 +202,11 @@ class Dokan_Setup_Wizard {
         $this->enqueue_scripts();
 
         if ( ! empty( $_POST['save_step'] ) && isset( $this->steps[ $this->step ]['handler'] ) ) { // WPCS: CSRF ok.
-            call_user_func( $this->steps[ $this->step ]['handler'] );
+            call_user_func_array( $this->steps[ $this->step ]['handler'], array( $this ) );
         }
 
         ob_start();
-        $this->setup_wizard_header();
-        $this->setup_wizard_steps();
-        $this->setup_wizard_content();
-        $this->setup_wizard_footer();
+        $this->set_setup_wizard_template();
         exit;
     }
 
@@ -158,6 +220,7 @@ class Dokan_Setup_Wizard {
      * Setup Wizard Header.
      */
     public function setup_wizard_header() {
+        set_current_screen();
         ?>
         <!DOCTYPE html>
         <html <?php language_attributes(); ?>>
@@ -170,7 +233,7 @@ class Dokan_Setup_Wizard {
             <?php do_action( 'admin_head' ); ?>
             <?php do_action( 'dokan_setup_wizard_styles' ); ?>
         </head>
-        <body class="wc-setup wp-core-ui">
+        <body class="wc-setup wp-core-ui<?php echo get_transient( 'dokan_setup_wizard_no_wc' ) ? ' dokan-setup-wizard-activated-wc' : '';  ?>">
             <?php
                 $logo_url = ( ! empty( $this->custom_logo ) ) ? $this->custom_logo : plugins_url( 'assets/images/dokan-logo.png', DOKAN_FILE );
             ?>
@@ -251,83 +314,23 @@ class Dokan_Setup_Wizard {
         $selling_options        = get_option( 'dokan_selling', array() );
         $shipping_fee_recipient = ! empty( $selling_options['shipping_fee_recipient'] ) ? $selling_options['shipping_fee_recipient'] : 'seller';
         $tax_fee_recipient      = ! empty( $selling_options['tax_fee_recipient'] ) ? $selling_options['tax_fee_recipient'] : 'seller';
+        $gmap_api_key           = dokan_get_option( 'gmap_api_key', 'dokan_appearance', '' );
 
         $recipients = array(
             'seller' => __( 'Vendor', 'dokan-lite' ),
             'admin'  => __( 'Admin', 'dokan-lite' ),
         );
-        ?>
-        <h1><?php esc_html_e( 'Store Setup', 'dokan-lite' ); ?></h1>
-        <form method="post">
-            <table class="form-table">
-                <tr>
-                    <th scope="row"><label for="custom_store_url"><?php esc_html_e( 'Vendor Store URL', 'dokan-lite' ); ?></label></th>
-                    <td>
-                        <input type="text" id="custom_store_url" name="custom_store_url" value="<?php echo esc_attr( $custom_store_url ); ?>" />
-                        <p class="description"><?php esc_html_e( 'Define vendor store URL', 'dokan-lite' ); ?> (<?php echo esc_url( site_url() ); ?>/[this-text]/[seller-name])</p>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row"><label for="shipping_fee_recipient"><?php esc_html_e( 'Shipping Fee Recipient', 'dokan-lite' ); ?></label></th>
-                    <td>
-                        <select class="wc-enhanced-select" id="shipping_fee_recipient" name="shipping_fee_recipient">
-                            <?php
-                                foreach ( $recipients as $key => $value ) {
-                                    $selected = ( $shipping_fee_recipient == $key ) ? ' selected="true"' : '';
-                                    echo '<option value="' . esc_attr( $key ) . '" ' . esc_attr( $selected ) . '>' . esc_html( $value ) . '</option>';
-                                }
-                            ?>
-                        </select>
-                        <p class="description"><?php esc_html_e( 'Shipping fees will go to', 'dokan-lite' ); ?></p>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row"><label for="tax_fee_recipient"><?php esc_html_e( 'Tax Fee Recipient', 'dokan-lite' ); ?></label></th>
-                    <td>
-                        <select class="wc-enhanced-select" id="tax_fee_recipient" name="tax_fee_recipient">
-                            <?php
-                                foreach ( $recipients as $key => $value ) {
-                                    $selected = ( $tax_fee_recipient == $key ) ? ' selected="true"' : '';
-                                    echo '<option value="' . esc_attr( $key ) . '" ' . esc_attr( $selected ) . '>' . esc_html( $value ) . '</option>';
-                                }
-                            ?>
-                        </select>
-                        <p class="description"><?php esc_html_e( 'Tax fees will go to', 'dokan-lite' ); ?></p>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row"><label for="share_essentials"><?php esc_html_e( 'Share Essentials', 'dokan-lite' ); ?></label></th>
 
-                    <td>
-                        <input type="checkbox" name="share_essentials" id="share_essentials" class="switch-input" checked>
-                        <label for="share_essentials" class="switch-label">
-                            <span class="toggle--on"><?php esc_html_e( 'On', 'dokan-lite' ); ?></span>
-                            <span class="toggle--off"><?php esc_html_e( 'Off', 'dokan-lite' ); ?></span>
-                        </label>
-                        <span class="description">
-                            <?php esc_html_e( 'Want to help make Dokan even more awesome? Allow weDevs to collect non-sensitive diagnostic data and usage information.', 'dokan-lite' ); ?>
-                            <?php printf( '<a class="insights-data-we-collect" href="#">%s</a>', esc_html__( 'What we collect', 'dokan-lite' ) ); ?>
-                        </span>
-                        <p id="collection-info" class="description" style="display:none;">
-                            <?php esc_html_e( 'Server environment details (php, mysql, server, WordPress versions), Number of users in your site, Site language, Number of active and inactive plugins, Site name and url, Your name and email address. No sensitive data is tracked.', 'dokan-lite' ); ?>
-                        </p>
-                    </td>
-                </tr>
-            </table>
-            <p class="wc-setup-actions step">
-                <input type="submit" class="button-primary button button-large button-next" value="<?php esc_attr_e( 'Continue', 'dokan-lite' ); ?>" name="save_step" />
-                <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button button-large button-next"><?php esc_html_e( 'Skip this step', 'dokan-lite' ); ?></a>
-                <?php wp_nonce_field( 'dokan-setup' ); ?>
-            </p>
-        </form>
+        $args = apply_filters( 'dokan_admin_setup_wizard_step_setup_store_template_args', array(
+            'custom_store_url'       => $custom_store_url,
+            'recipients'             => $recipients,
+            'shipping_fee_recipient' => $shipping_fee_recipient,
+            'tax_fee_recipient'      => $tax_fee_recipient,
+            'gmap_api_key'           => $gmap_api_key,
+            'setup_wizard'           => $this,
+        ) );
 
-        <script type="text/javascript">
-            jQuery('.insights-data-we-collect').on('click', function(e) {
-                e.preventDefault();
-                jQuery('#collection-info').slideToggle('fast');
-            });
-        </script>
-        <?php
+        dokan_get_template( 'admin-setup-wizard/step-store.php', $args );
     }
 
     /**
@@ -340,10 +343,12 @@ class Dokan_Setup_Wizard {
 
         $general_options = get_option( 'dokan_general', array() );
         $selling_options = get_option( 'dokan_selling', array() );
+        $appearance      = get_option( 'dokan_appearance', array() );
 
         $general_options['custom_store_url']       = ! empty( $_post_data['custom_store_url'] ) ? sanitize_text_field( $_post_data['custom_store_url'] ) : '';
         $selling_options['shipping_fee_recipient'] = ! empty( $_post_data['shipping_fee_recipient'] ) ? sanitize_text_field( $_post_data['shipping_fee_recipient'] ) : '';
         $selling_options['tax_fee_recipient']      = ! empty( $_post_data['tax_fee_recipient'] ) ? sanitize_text_field( $_post_data['tax_fee_recipient'] ) : '';
+        $appearance['gmap_api_key']           = ! empty( $_post_data['gmap_api_key'] ) ? sanitize_text_field( $_post_data['gmap_api_key'] ) : '';
 
         $share_essentials = sanitize_text_field( isset( $_post_data['share_essentials'] ) );
 
@@ -355,6 +360,9 @@ class Dokan_Setup_Wizard {
 
         update_option( 'dokan_general', $general_options );
         update_option( 'dokan_selling', $selling_options );
+        update_option( 'dokan_appearance', $appearance );
+
+        do_action( 'dokan_admin_setup_wizard_save_step_store' );
 
         wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
         exit;
@@ -369,62 +377,18 @@ class Dokan_Setup_Wizard {
         $commission_type           = ! empty( $options['commission_type'] ) ? $options['commission_type'] : 'percentage';
         $admin_percentage          = ! empty( $options['admin_percentage'] ) ? $options['admin_percentage'] : '';
         $order_status_change       = ! empty( $options['order_status_change'] ) ? $options['order_status_change'] : '';
+        $dokan_commission_types    = dokan_commission_types();
 
-        ?>
-        <h1><?php esc_html_e( 'Selling Setup', 'dokan-lite' ); ?></h1>
-        <form method="post">
-            <table class="form-table">
-                <tr>
-                    <th scope="row"><label for="new_seller_enable_selling"><?php esc_html_e( 'New Vendor Enable Selling', 'dokan-lite' ); ?></label></th>
-                    <td>
-                        <input type="checkbox" name="new_seller_enable_selling" id="new_seller_enable_selling" class="switch-input" <?php echo ( $new_seller_enable_selling == 'on' ) ? 'checked="checked"' : ''; ?>>
-                        <label for="new_seller_enable_selling" class="switch-label">
-                            <span class="toggle--on"><?php esc_html_e( 'On', 'dokan-lite' ); ?></span>
-                            <span class="toggle--off"><?php esc_html_e( 'Off', 'dokan-lite' ); ?></span>
-                        </label>
-                        <span class="description">
-                            <?php esc_html_e( 'Make selling status enable for new registred vendor', 'dokan-lite' ); ?>
-                        </span>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row"><label for="admin_percentage"><?php esc_html_e( 'Commission Type', 'dokan-lite' ); ?></label></th>
-                    <td>
-                        <select class="commission_type wc-enhanced-select" name="commission_type">
-                            <option value="percentage">Percentage(%)</option>
-                            <option value="flat">Flat</option>
-                        </select>
-                        <p class="description"><?php esc_html_e( 'Set your commission type', 'dokan-lite' ); ?></p>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row"><label for="admin_percentage"><?php esc_html_e( 'Admin Commission %', 'dokan-lite' ); ?></label></th>
-                    <td>
-                        <input type="text" id="admin_percentage" name="admin_percentage" value="<?php echo esc_attr( $admin_percentage ); ?>" />
-                        <p class="description"><?php esc_html_e( 'How much amount (%) you will get from each order', 'dokan-lite' ); ?></p>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row"><label for="order_status_change"><?php esc_html_e( 'Order Status Change', 'dokan-lite' ); ?></label></th>
-                    <td>
-                        <input type="checkbox" name="order_status_change" id="order_status_change" class="switch-input" <?php echo ( $order_status_change == 'on' ) ? 'checked="checked"' : ''; ?>>
-                        <label for="order_status_change" class="switch-label">
-                            <span class="toggle--on"><?php esc_html_e( 'On', 'dokan-lite' ); ?></span>
-                            <span class="toggle--off"><?php esc_html_e( 'Off', 'dokan-lite' ); ?></span>
-                        </label>
-                        <span class="description">
-                            <?php esc_html_e( 'Vendor can change order status', 'dokan-lite' ); ?>
-                        </span>
-                    </td>
-                </tr>
-            </table>
-            <p class="wc-setup-actions step">
-                <input type="submit" class="button-primary button button-large button-next" value="<?php esc_attr_e( 'Continue', 'dokan-lite' ); ?>" name="save_step" />
-                <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button button-large button-next"><?php esc_html_e( 'Skip this step', 'dokan-lite' ); ?></a>
-                <?php wp_nonce_field( 'dokan-setup' ); ?>
-            </p>
-        </form>
-        <?php
+        $args = apply_filters( 'dokan_admin_setup_wizard_step_setup_selling_template_args', array(
+            'new_seller_enable_selling' => $new_seller_enable_selling,
+            'commission_type'           => $commission_type,
+            'admin_percentage'          => $admin_percentage,
+            'order_status_change'       => $order_status_change,
+            'dokan_commission_types'    => $dokan_commission_types,
+            'setup_wizard'              => $this,
+        ) );
+
+        dokan_get_template( 'admin-setup-wizard/step-selling.php', $args );
     }
 
     /**
@@ -648,6 +612,18 @@ class Dokan_Setup_Wizard {
             );
         }
 
+        /**
+         * WooCoomerce settings manipulation
+         */
+        // Enable registration by default
+        update_option( 'woocommerce_enable_myaccount_registration', 'yes' );
+
+        // Generate usename by default
+        update_option( 'woocommerce_registration_generate_username', 'yes' );
+
+        // Let vendors/customers set their own password
+        update_option( 'woocommerce_registration_generate_password', 'no' );
+
         wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
         exit;
     }
@@ -685,7 +661,7 @@ class Dokan_Setup_Wizard {
      * Final step.
      */
     public function dokan_setup_ready() {
-        $this->after_weforms_activate();
+        update_option( 'dokan_admin_setup_wizard_ready', true );
         ?>
         <div class="dokan-setup-done">
             <img src="<?php echo esc_url( plugins_url( 'assets/images/dokan-checked.png', DOKAN_FILE ) ); ?>" alt="dokan setup">
@@ -907,7 +883,7 @@ class Dokan_Setup_Wizard {
      *
      * @return void
      */
-    private function after_weforms_activate() {
+    public function after_weforms_activate() {
         $did_activate = get_option( 'dokan_setup_wizard_activated_weforms', false );
 
         if ( ! $did_activate ) {

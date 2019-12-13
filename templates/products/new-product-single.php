@@ -244,6 +244,8 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                         </div><!-- .sale-schedule-container -->
                                     </div>
 
+                                    <?php do_action( 'dokan_product_edit_after_pricing', $post, $post_id ); ?>
+
                                     <?php if ( dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) == 'single' ): ?>
                                         <div class="dokan-form-group">
                                             <label for="product_cat" class="form-label"><?php esc_html_e( 'Category', 'dokan-lite' ); ?></label>

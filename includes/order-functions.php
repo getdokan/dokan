@@ -52,8 +52,9 @@ function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
 function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = NULL, $limit = 10, $offset = 0, $customer_id = null ) {
     global $wpdb;
 
-    $cache_group = 'dokan_seller_data_'.$seller_id;
-    $cache_key   = 'dokan-seller-orders-' . $status . '-' . $seller_id;
+    $pagenum     = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
+    $cache_group = "dokan_seller_data_{$seller_id}";
+    $cache_key   = "dokan-seller-orders-{$status}-{$seller_id}-page-{$pagenum}";
     $orders      = wp_cache_get( $cache_key, $cache_group );
 
     $join        = $customer_id ? "LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id" : '';

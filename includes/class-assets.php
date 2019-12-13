@@ -27,14 +27,20 @@ class Dokan_Assets {
      */
     public function enqueue_admin_scripts( $hook ) {
         global $post;
+        global $wp_version;
 
         // load vue app inside the parent menu only
         if ( 'toplevel_page_dokan' == $hook ) {
+            $general_settings = get_option( 'dokan_general', [] );
+            $banner_width     = dokan_get_option( 'store_banner_width', 'dokan_appearance', 625 );
+            $banner_height    = dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 );
+            $has_flex_width   = ! empty( $general_settings['store_banner_flex_width'] ) ? $general_settings['store_banner_flex_width'] : true;
+            $has_flex_height  = ! empty( $general_settings['store_banner_flex_height'] ) ? $general_settings['store_banner_flex_height'] : true;
 
             $localize_script = apply_filters( 'dokan_admin_localize_script', array(
                 'ajaxurl' => admin_url( 'admin-ajax.php' ),
                 'nonce'   => wp_create_nonce( 'dokan_admin' ),
-                'rest' => array(
+                'rest'    => array(
                     'root'    => esc_url_raw( get_rest_url() ),
                     'nonce'   => wp_create_nonce( 'wp_rest' ),
                     'version' => 'dokan/v1',
@@ -45,6 +51,7 @@ class Dokan_Assets {
                 'routes'          => $this->get_vue_admin_routes(),
                 'currency'        => $this->get_localized_price(),
                 'hasPro'          => dokan()->is_pro_exists(),
+                'proVersion'      => dokan()->is_pro_exists() ? dokan_pro()->version : '',
                 'i18n'            => array( 'dokan-lite' => dokan_get_jed_locale_data( 'dokan-lite' ) ) ,
                 'urls'            => array(
                     'adminRoot'   => admin_url(),
@@ -53,6 +60,16 @@ class Dokan_Assets {
                     'assetsUrl'   => DOKAN_PLUGIN_ASSEST,
                     'buynowpro'   => dokan_pro_buynow_url()
                 ),
+                'states'          => WC()->countries->get_allowed_country_states(),
+                'countries'       => WC()->countries->get_allowed_countries(),
+                'current_time'    => current_time( 'mysql' ),
+                'store_banner_dimension' => [
+                    'width'       => $banner_width,
+                    'height'      => $banner_height,
+                    'flex-width'  => $has_flex_width,
+                    'flex-height' => $has_flex_height
+                ],
+                'ajax_loader'        => DOKAN_PLUGIN_ASSEST . '/images/spinner-2x.gif',
             ) );
 
             // Load common styles and scripts
@@ -83,6 +100,10 @@ class Dokan_Assets {
 
             // fire the admin app
             wp_enqueue_script( 'dokan-vue-admin' );
+
+            if ( version_compare( $wp_version, '5.3', '<' ) ) {
+                wp_enqueue_style( 'dokan-wp-version-before-5-3' );
+            }
         }
 
         if ( 'dokan_page_dokan-modules' === $hook ) {
@@ -153,6 +174,11 @@ class Dokan_Assets {
                 'name'      => 'Settings',
                 'component' => 'Settings'
             ),
+            array(
+                'path'      => '/vendors',
+                'name'      => 'Vendors',
+                'component' => 'Vendors'
+            )
         );
 
         return apply_filters( 'dokan-admin-routes', $routes );
@@ -240,6 +266,10 @@ class Dokan_Assets {
             'dokan-vue-frontend' => array(
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/vue-frontend.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/vue-frontend.css' ),
+            ),
+            'dokan-wp-version-before-5-3' => array(
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/wp-version-before-5-3.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/css/wp-version-before-5-3.css' ),
             ),
         );
 
@@ -417,6 +447,7 @@ class Dokan_Assets {
             'commission_type'    => dokan_get_commission_type( dokan_get_current_user_id() ),
             'rounding_precision' => wc_get_rounding_precision(),
             'mon_decimal_point'  => wc_get_price_decimal_separator(),
+            'product_types'      => apply_filters( 'dokan_product_types', [ 'simple' ] ),
         );
 
         $localize_script = apply_filters( 'dokan_localized_args', $default_script );
@@ -429,7 +460,10 @@ class Dokan_Assets {
             'api'             => null,
             'libs'            => array(),
             'routeComponents' => array( 'default' => null ),
-            'routes'          => $this->get_vue_frontend_routes()
+            'routes'          => $this->get_vue_frontend_routes(),
+            'urls'            => [
+                'assetsUrl' => DOKAN_PLUGIN_ASSEST,
+            ]
         ) );
 
         $localize_data = array_merge( $localize_script, $vue_localize_script );

@@ -3,18 +3,18 @@
 Plugin Name: Dokan
 Plugin URI: https://wordpress.org/plugins/dokan-lite/
 Description: An e-commerce marketplace plugin for WordPress. Powered by WooCommerce and weDevs.
-Version: 2.9.22
+Version: 2.9.27
 Author: weDevs
 Author URI: https://wedevs.com/
 Text Domain: dokan-lite
 WC requires at least: 3.0
-WC tested up to: 3.7.0
+WC tested up to: 3.8.1
 Domain Path: /languages/
 License: GPL2
 */
 
 /**
- * Copyright (c) 2018 weDevs (email: info@wedevs.com). All rights reserved.
+ * Copyright (c) 2019 weDevs (email: info@wedevs.com). All rights reserved.
  *
  * Released under the GPL license
  * http://www.opensource.org/licenses/gpl-license.php
@@ -78,7 +78,7 @@ final class WeDevs_Dokan {
      *
      * @var string
      */
-    public $version = '2.9.22';
+    public $version = '2.9.27';
 
     /**
      * Instance of self
@@ -118,8 +118,11 @@ final class WeDevs_Dokan {
 
         add_action( 'woocommerce_loaded', array( $this, 'init_plugin' ) );
         add_action( 'admin_notices', array( $this, 'render_missing_woocommerce_notice' ) );
+        add_action( 'admin_notices', array( $this, 'render_run_admin_setup_wizard_notice' ) );
 
         $this->init_appsero_tracker();
+
+        add_action( 'plugins_loaded', array( $this, 'woocommerce_not_loaded' ), 11 );
     }
 
     /**
@@ -528,6 +531,25 @@ final class WeDevs_Dokan {
     }
 
     /**
+     * Render run admin setup wizard notice
+     *
+     * @since 2.9.27
+     *
+     * @return void
+     */
+    public function render_run_admin_setup_wizard_notice() {
+        $ran_wizard = get_option( 'dokan_admin_setup_wizard_ready', false );
+
+        if ( $ran_wizard ) {
+            return;
+        }
+
+        require_once DOKAN_INC_DIR . '/functions.php';
+
+        dokan_get_template( 'admin-setup-wizard/run-wizard-notice.php' );
+    }
+
+    /**
      * Check whether woocommerce is installed or not
      *
      * @since 2.9.16
@@ -570,6 +592,30 @@ final class WeDevs_Dokan {
         if ( ! class_exists( 'Dokan_Background_Processes' ) ) {
             require_once DOKAN_INC_DIR . '/background-processes/class-dokan-background-processes.php';
         }
+    }
+
+    /**
+     * Handles scenerios when WooCommerce is not active
+     *
+     * @since 2.9.27
+     *
+     * @return void
+     */
+    public function woocommerce_not_loaded() {
+        if ( did_action( 'woocommerce_loaded' ) || ! is_admin() ) {
+            return;
+        }
+
+        require_once DOKAN_INC_DIR . '/functions.php';
+
+        if ( get_transient( '_dokan_setup_page_redirect' ) ) {
+            dokan_redirect_to_admin_setup_wizard();
+        }
+
+        require_once DOKAN_INC_DIR . '/admin/setup-wizard.php';
+        require_once DOKAN_INC_DIR . '/admin/setup-wizard-no-wc.php';
+
+        new Dokan_Admin_Setup_Wizard_No_WC();
     }
 
 } // WeDevs_Dokan

@@ -106,6 +106,65 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
                 'callback' => [ $this, 'check_store_availability' ]
             ]
         ] );
+
+        register_rest_route( $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/contact' , array(
+            'args' => [
+                'id' => [
+                    'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
+                    'type'        => 'integer',
+                ],
+            ],
+            [
+                'methods'  => WP_REST_Server::CREATABLE,
+                'callback' => array( $this, 'send_email' ),
+                'args'     => [
+                    'name' => [
+                        'type'        => 'string',
+                        'description' => __( 'Your Name', 'dokan-lite' ),
+                        'required'    => true
+                    ],
+                    'email' => [
+                        'type'        => 'string',
+                        'format'      => 'email',
+                        'description' => __( 'Your email', 'dokan-lite' ),
+                        'required'    => true
+                    ],
+                    'message' => [
+                        'type'        => 'string',
+                        'description' => __( 'Your Message', 'dokan-lite' ),
+                        'required'    => true
+                    ]
+                ]
+            ],
+        ) );
+
+        register_rest_route( $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/status', array(
+            'args' => array(
+                'id' => array(
+                    'description' => __( 'Unique identifier for the object.' ),
+                    'type'        => 'integer',
+                    'required'    => true
+                ),
+                'status' => array(
+                    'description' => __( 'Status for the store object.' ),
+                    'type'        => 'string',
+                    'required'    => true
+                ),
+            ),
+            array(
+                'methods'  => WP_REST_Server::EDITABLE,
+                'callback' => array( $this, 'update_vendor_status' ),
+                'permission_callback' => array( $this, 'permission_check_for_manageable_part' ),
+            ),
+        ) );
+
+        register_rest_route( $this->namespace, '/' . $this->base . '/batch', array(
+            array(
+                'methods'  => WP_REST_Server::EDITABLE,
+                'callback' => array( $this, 'batch_update' ),
+                'permission_callback' => array( $this, 'permission_check_for_manageable_part' ),
+            ),
+        ) );
     }
 
     /**
@@ -642,5 +701,136 @@ class Dokan_REST_Store_Controller extends WP_REST_Controller {
         }
 
         return rest_ensure_response( [] );
+    }
+
+    /**
+     * Send email to vendor
+     *
+     * @since 2.9.23
+     *
+     * @param  WP_REST_Request
+     *
+     * @return WP_REST_Response
+     */
+    public function send_email( $request ) {
+        $params = $request->get_params();
+        $vendor = dokan()->vendor->get( $params['id'] );
+
+        if ( ! $vendor instanceof Dokan_Vendor || ! $vendor->get_id() ) {
+            return rest_ensure_response(
+                new WP_Error(
+                    'vendor_not_found',
+                    __( 'No vendor is found to be send an email.', 'dokan-lite' ),
+                    [
+                        'status' => 404
+                    ]
+                )
+            );
+        }
+
+        /**
+         * Fires before sedning email to vendor via the REST API.
+         *
+         * @since  2.9.23
+         *
+         * @param WP_REST_Request $request   Request object.
+         * @param boolean         $creating  True when creating object, false when updating.
+         */
+        do_action( "dokan_rest_pre_{$this->base}_send_email", $request, true );
+
+        $vendor_email   = $vendor->get_email();
+        $sender_name    = $params['name'];
+        $sender_email   = $params['email'];
+        $sender_message = $params['message'];
+
+        WC()->mailer()->emails['Dokan_Email_Contact_Seller']->trigger( $vendor_email, $sender_name, $sender_email, $sender_message );
+
+        $response = apply_filters( "dokan_{$this->base}_send_email_response", [
+            'store_id'       => $vendor->get_id(),
+            'data'           => __( 'Email sent successfully!', 'dokan-lite' ),
+            'sender_name'    => $sender_name,
+            'sender_email'   => $sender_email,
+            'sender_message' => $sender_message,
+        ] );
+
+        return rest_ensure_response( $response );
+    }
+
+    /**
+     * update_vendor_status
+     *
+     * @since 2.9.23
+     *
+     * @return void
+     */
+    public function update_vendor_status( $request ) {
+        if ( ! in_array( $request['status'], array( 'active', 'inactive' ) ) ) {
+            return new WP_Error( 'no_valid_status', __( 'Status parameter must be active or inactive', 'dokan-lite' ), array( 'status' => 400 ) );
+        }
+
+        $store_id = ! empty( $request['id'] ) ? $request['id'] : 0;
+
+        if ( empty( $store_id ) ) {
+            return new WP_Error( 'no_vendor_found', __( 'No vendor found for updating status', 'dokan-lite' ), array( 'status' => 400 ) );
+        }
+
+        if ( 'active' == $request['status'] ) {
+            $user = dokan()->vendor->get( $store_id )->make_active();
+        } else {
+            $user = dokan()->vendor->get( $store_id )->make_inactive();
+        }
+
+        $response = rest_ensure_response( $user );
+        $response->add_links( $this->prepare_links( $user, $request ) );
+        return $response;
+    }
+
+    /**
+     * Batch udpate for vendor listing
+     *
+     * @since 2.9.23
+     *
+     * @return void
+     */
+    public function batch_update( $request ) {
+        $params = $request->get_params();
+
+        if ( empty( $params ) ) {
+            return new WP_Error( 'no_item_found', __( 'No items found for bulk updating', 'dokan-lite' ), [ 'status' => 404 ] );
+        }
+
+        $allowed_status = ['approved', 'pending', 'delete'];
+        $response       = [];
+
+        foreach ( $params as $status => $value ) {
+            if ( in_array( $status, $allowed_status ) ) {
+
+                switch ( $status ) {
+                    case 'approved':
+
+                        foreach ( $value as $vendor_id ) {
+                            $response['approved'][] = dokan()->vendor->get( $vendor_id )->make_active();
+                        }
+                        break;
+
+                    case 'pending':
+
+                        foreach ( $value as $vendor_id ) {
+                            $response['pending'][] = dokan()->vendor->get( $vendor_id )->make_inactive();
+                        }
+                        break;
+
+                    case 'delete':
+
+                        foreach ( $value as $vendor_id ) {
+                            $user = dokan()->vendor->get( $vendor_id )->delete();
+                            $response['delete'][] = $user;
+                        }
+                        break;
+                }
+            }
+        }
+
+        return $response;
     }
 }

@@ -25,6 +25,7 @@ class Dokan_Installer {
         }
 
         if ( ! dokan()->has_woocommerce() ) {
+            set_transient( 'dokan_setup_wizard_no_wc', true, 15 * MINUTE_IN_SECONDS );
             set_transient( 'dokan_theme_version_for_updater', get_option( 'dokan_theme_version', false ) );
         }
 
@@ -39,6 +40,7 @@ class Dokan_Installer {
         update_option( 'dokan_theme_version', DOKAN_PLUGIN_VERSION );
 
         if ( ! $was_installed_before ) {
+            update_option( 'dokan_admin_setup_wizard_ready', false );
             set_transient( '_dokan_setup_page_redirect', true, 30 );
         }
     }
@@ -363,9 +365,9 @@ class Dokan_Installer {
                `seller_id` bigint(20) NOT NULL,
                `refund_amount` float(11) NOT NULL,
                `refund_reason` text NULL,
-               `item_qtys` varchar(50) NULL,
-               `item_totals` varchar(50) NULL,
-               `item_tax_totals` varchar(50) NULL,
+               `item_qtys` varchar(200) NULL,
+               `item_totals` varchar(200) NULL,
+               `item_tax_totals` varchar(200) NULL,
                `restock_items` varchar(10) NULL,
                `date` timestamp NOT NULL,
                `status` int(1) NOT NULL,

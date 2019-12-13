@@ -37,7 +37,7 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
      */
     public function withdraw_ajax() {
         if ( ! current_user_can( 'manage_woocommerce' ) ) {
-            wp_send_json_error( __( 'You have no permission to do this action', 'dokan' ) );
+            wp_send_json_error( __( 'You have no permission to do this action', 'dokan-lite' ) );
         }
 
         if ( ! isset( $_POST['nonce'] ) ) {
@@ -47,7 +47,7 @@ class Dokan_Admin_Withdraw extends Dokan_Withdraw {
         $nonce = sanitize_text_field( wp_unslash( $_POST['nonce'] ) );
 
         if ( ! wp_verify_nonce( $nonce, 'dokan_admin' ) ) {
-            wp_send_json_error( __( 'Invalid nonce', 'dokan' ) );
+            wp_send_json_error( __( 'Invalid nonce', 'dokan-lite' ) );
         }
 
         header( 'Content-type: html/csv' );

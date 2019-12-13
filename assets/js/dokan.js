@@ -982,9 +982,10 @@ jQuery(function($) {
 
                     $parent.fadeOut( 300, function() {
                         if ( $parent.is( '.taxonomy' ) ) {
+                            $parent.find( 'select, input[type=text]' ).val( '' );
                             $( 'select.dokan_attribute_taxonomy' ).find( 'option[value="' + $parent.data( 'taxonomy' ) + '"]' ).removeAttr( 'disabled' );
                         }
-                        $(this).remove();
+
                         Dokan_Editor.attribute.reArrangeAttribute();
                     });
                 }
@@ -1316,7 +1317,7 @@ jQuery(function($) {
             var hide_classes = '.hide_if_downloadable, .hide_if_virtual';
             var show_classes = '.show_if_downloadable, .show_if_virtual';
 
-            $.each( [ 'simple', 'variable', 'grouped' ], function( index, value ) {
+            $.each( Object.keys( dokan.product_types ), function( index, value ) {
                 hide_classes = hide_classes + ', .hide_if_' + value;
                 show_classes = show_classes + ', .show_if_' + value;
             });

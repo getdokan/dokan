@@ -117,7 +117,7 @@ class Dokan_Vendor_Manager {
      *
      * @param array $data
      *
-     * @return object
+     * @return Dokan_Vendor|WP_Error on failure
      */
     public function create( $data = [] ) {
         $defaults = [
@@ -160,9 +160,17 @@ class Dokan_Vendor_Manager {
             'dokan_store_time'        => ! empty( $data['store_open_close'] ) ? $data['store_open_close'] : []
         ] );
 
-        if ( current_user_can( 'manage_woocommerce' ) ) {
-            $vendor = dokan()->vendor->get( $vendor_id );
+        $vendor = dokan()->vendor->get( $vendor_id );
 
+        if ( ! $vendor instanceof Dokan_Vendor || $vendor->get_id() === 0 ) {
+            return new WP_Error(
+                'unable_to_create_vendor',
+                __( 'Unable to create vendor', 'dokan-lite' ),
+                400
+            );
+        }
+
+        if ( current_user_can( 'manage_woocommerce' ) ) {
             if ( isset( $data['enabled'] ) && dokan_validate_boolean( $data['enabled'] ) ) {
                 $vendor->update_meta( 'dokan_enable_selling', 'yes' );
             }
@@ -176,7 +184,9 @@ class Dokan_Vendor_Manager {
             }
         }
 
-        update_user_meta( $vendor_id, 'dokan_profile_settings', $store_data );
+        $vendor->update_meta( 'dokan_profile_settings', $store_data );
+        $vendor->set_store_name( $store_data['store_name'] );
+        $vendor->save();
 
         do_action( 'dokan_new_vendor', $vendor_id );
 

@@ -42,9 +42,3 @@ export default {
     }
 };
 </script>
-
-<style scoped>
-.search-box #post-search-input {
-    padding: 15px 18px;
-}
-</style>
