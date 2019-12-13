@@ -509,11 +509,7 @@ class Dokan_Order_Manager {
      * @return float
      */
     public function maybe_add_admin_discount_to_vendor_balance( $net_amount, $sub_order ) {
-        /**
-         * Marketplace doesn't bear the discount created by admin, don't need to add the balace to vendor account.
-         *
-         * @since DOKAN_LITE_SINCE
-         **/
+        // If marketplace doesn't bear the discount created by admin, don't need to add the balace to vendor account.
         if ( 'admin' !== dokan_get_admin_coupon_discount_bearer() ) {
             return $net_amount;
         }
@@ -533,7 +529,7 @@ class Dokan_Order_Manager {
             $coupons = $admin_coupon_data['coupons'];
 
             foreach ( $coupons as $coupon_code ) {
-                $sub_order->remove_coupon( $coupon_code );
+                $sub_order->remove_coupon( wc_format_coupon_code( $coupon_code ) );
             }
         } else {
             /**
