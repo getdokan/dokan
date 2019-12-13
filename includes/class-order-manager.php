@@ -509,6 +509,15 @@ class Dokan_Order_Manager {
      * @return float
      */
     public function maybe_add_admin_discount_to_vendor_balance( $net_amount, $sub_order ) {
+        /**
+         * Marketplace doesn't bear the discount created by admin, don't need to add the balace to vendor account.
+         *
+         * @since DOKAN_LITE_SINCE
+         **/
+        if ( 'admin' !== dokan_get_admin_coupon_discount_bearer() ) {
+            return $net_amount;
+        }
+
         $admin_coupon_data = dokan_get_admin_coupon_data_from_order( $sub_order );
 
         if ( empty( $admin_coupon_data['discount'] ) ) {
@@ -536,9 +545,13 @@ class Dokan_Order_Manager {
              *
              * @since DOKAN_LITE_SINCE
              */
-            $rm = new ReflectionMethod( $sub_order, 'recalculate_coupons' );
-            $rm->setAccessible( true );
-            $rm->invoke( $sub_order );
+            if ( version_compare( WC()->version, '3.8.0', '>=' ) ) {
+                $sub_order->recalculate_coupons();
+            } else {
+                $rm = new ReflectionMethod( $sub_order, 'recalculate_coupons' );
+                $rm->setAccessible( true );
+                $rm->invoke( $sub_order );
+            }
         }
 
         $discount_total = isset( $admin_coupon_data['discount'] ) ? $admin_coupon_data['discount'] : 0;
@@ -547,14 +560,14 @@ class Dokan_Order_Manager {
         /**
          * We'll apply on-time coupon for this order and delete it as this coupon is no longer needed.
          *
-         * @since  DOKAN_LITE_SINCE
+         * @since DOKAN_LITE_SINCE
          */
         dokan_apply_coupon_on_order_and_delete( $coupon_code, $discount_total, $sub_order );
 
         /**
          * If order status is pending, make it processing so that we can show it in the report.
          *
-         * @since  DOKAN_LITE_SINCE
+         * @since DOKAN_LITE_SINCE
          */
         add_filter( 'dokan_get_order_status', function( $status ) {
             return 'pending' === $status ? 'processing' : $status;

@@ -343,6 +343,17 @@ class Dokan_Settings {
                 'options' => array( 'seller' => __( 'Vendor', 'dokan-lite' ), 'admin' => __( 'Admin', 'dokan-lite' ) ),
                 'default' => 'seller'
             ),
+            'admin_coupon_bearer' => array(
+                'name'    => 'admin_coupon_bearer',
+                'label'   => __( 'Admin Coupon', 'dokan-lite' ),
+                'desc'    => __( 'Who will bear the coupon discount created by Admin', 'dokan-lite' ),
+                'type'    => 'select',
+                'options' => array(
+                    'admin'  => __( 'Admin', 'dokan-lite' ),
+                    'vendor' => __( 'Vendor', 'dokan-lite' ),
+                ),
+                'default' => 'admin'
+            )
         ) );
 
         $selling_option_vendor_capability = apply_filters( 'dokan_settings_selling_option_vendor_capability', array(

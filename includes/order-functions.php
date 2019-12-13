@@ -1099,10 +1099,12 @@ function dokan_get_vendor_coupon_discount_from_order( $order ) {
  * @return void
  */
 function dokan_apply_coupon_on_order_and_delete( $coupon_code, $amount = 0, $order ) {
+    $admin     = get_user_by( 'email', get_option( 'admin_email' ) );
     $coupon_id = wp_insert_post( apply_filters( 'dokan_create_tmp_coupon', [
         'post_title'  => $coupon_code,
         'post_type'   => 'shop_coupon',
         'post_status' => 'publish',
+        'post_author' => ! empty( $admin->ID ) ? $admin->ID : 1,
     ] ) );
 
     if ( ! $coupon_id || is_wp_error( $coupon_id ) ) {
@@ -1138,8 +1140,15 @@ function dokan_apply_coupon_on_order_and_delete( $coupon_code, $amount = 0, $ord
     do_action( 'dokan_pre_apply_coupon_on_order_and_delete', $coupon, $order );
 
     if ( $order->apply_coupon( $coupon ) ) {
-        wp_delete_post( $coupon_id, true );
-        do_action( 'dokan_coupon_applied_and_deleted', $coupon, $order );
+
+        /**
+         * Delete the coupon once it's fully applied, to prevent error such as 'Error during status transition. Invalid coupon'.
+         *
+         * @since DOKAN_LITE_SINCE
+         */
+        add_action( 'shutdown', function() use ( $coupon ) {
+            wp_delete_post( $coupon->get_id(), true );
+        } );
     }
 }
 

@@ -3738,3 +3738,14 @@ function dokan_redirect_to_admin_setup_wizard() {
     wp_safe_redirect( add_query_arg( array( 'page' => 'dokan-setup' ), admin_url( 'index.php' ) ) );
     exit;
 }
+
+/**
+ * Dokan get admin coupon discount bearer
+ *
+ * @since  DOKAN_LITE_SINCE
+ *
+ * @return string
+ */
+function dokan_get_admin_coupon_discount_bearer() {
+    return apply_filters( 'dokan_get_admin_coupon_discount_bearer', dokan_get_option( 'admin_coupon_bearer', 'dokan_selling', 'admin' ) );
+}
