@@ -65,8 +65,6 @@ class VendorWithdrawRequest extends WC_Email {
      */
     public function trigger( $user_id, $amount, $method ) {
         $seller = get_user_by( 'id', $user_id );
-        error_log( print_r( 'seller', true ) );
-        error_log( print_r( $seller, true ) );
 
         if ( ! $this->is_enabled() || ! $this->get_recipient() ) {
             return;

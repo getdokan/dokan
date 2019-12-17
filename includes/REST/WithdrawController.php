@@ -616,8 +616,8 @@ class WithdrawController extends WP_REST_Controller {
     /**
      * Prepare links for the request.
      *
-     * @param WC_Data         $object  Object data.
-     * @param WP_REST_Request $request Request object.
+     * @param \WeDevs\Dokan\Withdraw\Withdraw         $object  Object data.
+     * @param WP_REST_Request $request                Request object.
      *
      * @return array Links for the given post.
      */

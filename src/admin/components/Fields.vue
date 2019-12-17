@@ -396,6 +396,7 @@
         height: 25px !important;
         line-height: 22px !important;
     }
+
     td.percent_fee, td.fixed_fee {
         display: inline-block;
     }
