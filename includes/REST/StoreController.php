@@ -488,7 +488,7 @@ class StoreController extends WP_REST_Controller {
 
             $total_count = $query->found_posts;
         } else {
-            $dokan_template_reviews = Dokan_Pro_Reviews::init();
+            $dokan_template_reviews = dokan_pro()->review;
             $post_type              = 'product';
             $limit                  = (int) $params['per_page'];
             $paged                  = (int) ( $params['page'] - 1 ) * $params['per_page'];

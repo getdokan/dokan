@@ -220,7 +220,7 @@ function dokan_withdraw_method_bank( $store_settings ) {
  * @global WPDB $wpdb
  * @return array
  */
-function dokan_get_withdraw_count( $user_id = '' ) {
+function dokan_get_withdraw_count( $user_id = null ) {
     global $wpdb;
 
     $cache_key = 'dokan_withdraw_count-' . $user_id;

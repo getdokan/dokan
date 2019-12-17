@@ -384,14 +384,26 @@ jQuery(function($) {
                     };
 
                     $.post( dokan_refund.ajax_url, data, function( response ) {
-                        if ( true === response.success ) {
-                            window.alert( response.data );
-                            dokan_seller_meta_boxes_order_items.reload_items();
-                        } else {
-                            window.alert( response.data );
-                            dokan_seller_meta_boxes_order_items.unblock();
+                        response.data.message ? window.alert( response.data.message ) : null;
+                        dokan_seller_meta_boxes_order_items.reload_items();
+                    }).fail( function ( jqXHR ) {
+                        var message = [];
+
+                        if ( jqXHR.responseJSON.data ) {
+                            var data = jqXHR.responseJSON.data;
+
+                            if ( $.isArray( data ) ) {
+                                message = jqXHR.responseJSON.data.map( function ( item ) {
+                                    return item.message;
+                                } );
+                            } else {
+                                message.push( data );
+                            }
                         }
-                    });
+
+                        window.alert( message.join( ' ' ) );
+                        dokan_seller_meta_boxes_order_items.unblock();
+                    } );
                 } else {
                     dokan_seller_meta_boxes_order_items.unblock();
                 }
