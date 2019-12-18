@@ -11,5 +11,5 @@
     <?php if ( $deleted ): ?>
         <button type="button" class="dokan-close" data-dismiss="alert">&times;</button>
     <?php endif ?>
-    <strong><?php echo $message; ?></strong>
+    <strong><?php echo wp_kses_post( $message ); ?></strong>
 </div>
