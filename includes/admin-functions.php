@@ -720,7 +720,7 @@ add_action( 'add_meta_boxes', 'dokan_add_seller_meta_box' );
 **/
 function dokan_override_product_author_by_admin( $product_id, $post ) {
     $product          = wc_get_product( $product_id );
-    $posted_vendor_id = ! empty( $_POST['dokan_product_author_override'] ) ? (int) $_POST['dokan_product_author_override'] : 0;
+    $posted_vendor_id = ! empty( $_POST['dokan_product_author_override'] ) ? intval( $_POST['dokan_product_author_override'] ) : 0; // WPCS: CSRF ok.
 
     if ( ! $posted_vendor_id ) {
         return;
@@ -775,7 +775,7 @@ function dokan_admin_report_by_seller( $chosen_seller_id) {
     $group_by     = 'day';
     $year         = '';
     $group_by     = apply_filters( 'dokan_report_group_by', $group_by );
-    $_post_data   = wp_unslash( $_POST );
+    $_post_data   = wp_unslash( $_POST ); // WPCS: CSRF ok.
     $start_date   = isset( $_post_data['start_date'] ) ? sanitize_text_field( $_post_data['start_date'] ) : ''; // WPCS: CSRF ok.
     $end_date     = isset( $_post_data['end_date'] ) ? sanitize_text_field( $_post_data['end_date'] ) : ''; // WPCS: CSRF ok.
     $current_year = date( 'Y' );

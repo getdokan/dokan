@@ -328,7 +328,7 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
             return;
         }
 
-        $nonce = sanitize_text_field( $_POST['_wpnonce'] );
+        $nonce = sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) );
 
         if ( ! wp_verify_nonce( $nonce, 'dokan-seller-setup' ) ) {
             return;
@@ -337,7 +337,7 @@ class Dokan_Seller_Setup_Wizard extends Dokan_Setup_Wizard {
         $dokan_settings = $this->store_info;
 
         $dokan_settings['store_ppp']  = isset( $_POST['store_ppp'] ) ? absint( $_POST['store_ppp'] ) : '';
-        $dokan_settings['address']    = isset( $_POST['address'] ) ? array_map( 'sanitize_text_field', $_POST['address'] ) : array();
+        $dokan_settings['address']    = isset( $_POST['address'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['address'] ) ) : array();
         $dokan_settings['show_email'] = isset( $_POST['show_email'] ) ? 'yes' : 'no';
 
         update_user_meta( $this->store_id, 'dokan_profile_settings', $dokan_settings );

@@ -52,7 +52,7 @@
                             <?php echo isset( $statuses['wc-'.dokan_get_prop( $order, 'status' )] ) ? esc_html( $statuses['wc-'.dokan_get_prop( $order, 'status' )] ) : esc_html( dokan_get_prop( $order, 'status' ) ); ?>
                         </td>
                         <td class="order-total">
-                            <?php echo sprintf( _n( '%s for %s item', '%s for %s items', esc_html( $item_count ), 'dokan-lite' ), $order->get_formatted_order_total(), esc_html( $item_count ) ); ?>
+                            <?php echo wp_kses_post( sprintf( _n( '%s for %s item', '%s for %s items', $item_count, 'dokan-lite' ), $order->get_formatted_order_total(), $item_count ) ); ?>
                         </td>
 
                         <td class="order-total">

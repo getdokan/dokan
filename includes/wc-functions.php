@@ -825,7 +825,7 @@ function dokan_filter_woocommerce_dashboard_status_widget_sales_query( $query ) 
  */
 function dokan_save_account_details() {
 
-    $_server = isset( $_SERVER['REQUEST_METHOD'] ) ? $_SERVER['REQUEST_METHOD'] : '';
+    $_server = isset( $_SERVER['REQUEST_METHOD'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) : '';
 
     if ( 'POST' !== strtoupper( $_server ) ) {
         return;
