@@ -26,6 +26,4 @@
 
     <rule ref="WordPress.DB" />
     <rule ref="WordPress.Security" />
-    <rule ref="WordPress.XSS" />
-    <rule ref="WordPress.CSRF" />
 </ruleset>
