@@ -31,7 +31,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
         <strong>
             <?php esc_html_e( 'Price :', 'dokan-lite' ); ?>
         </strong>
-        <?php echo wc_price( esc_attr( $data['price'] ) ); ?>
+        <?php echo wp_kses_post( wc_price( $data['price'] ) ); ?>
     </li>
     <li>
         <strong>

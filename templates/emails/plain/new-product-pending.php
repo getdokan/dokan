@@ -30,7 +30,7 @@ echo "= " . esc_html( $email_heading ) . " =\n\n";
 
 <?php esc_html_e( 'The product is currently in "pending" state.', 'dokan-lite' ); echo " \n";?>
 
-<?php echo sprintf( __( 'In case it needs to be moderated  <a href="%s"> click here </a>', 'dokan-lite' ), $data['product_link'] ); ?>
+<?php echo wp_kses_post( sprintf( __( 'In case it needs to be moderated  <a href="%s"> click here </a>', 'dokan-lite' ), $data['product_link'] ) ); ?>
 
 <?php
 

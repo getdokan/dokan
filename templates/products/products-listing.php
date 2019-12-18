@@ -131,7 +131,7 @@
                                     $args['tax_query'][] = array(
                                         'taxonomy' => 'product_cat',
                                         'field' => 'id',
-                                        'terms' => (int)  $_GET['product_cat'],
+                                        'terms' => (int) $get_data['product_cat'],
                                         'include_children' => false,
                                     );
                                 }
