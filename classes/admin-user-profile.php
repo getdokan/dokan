@@ -318,7 +318,7 @@ class Dokan_Admin_User_Profile {
                     <td>
                         <select id="dokan_admin_percentage_type" name="dokan_admin_percentage_type">
                             <?php foreach ( dokan_commission_types() as $key => $value ) : ?>
-                                <option value="<?php echo wc_clean( $key ); ?>" <?php selected( $admin_commission_type, $key );  ?>><?php echo $value ?></option>
+                                <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $admin_commission_type, $key );  ?>><?php echo esc_attr( $value ); ?></option>
                             <?php endforeach; ?>
                         </select>
                         <p class="description"><?php esc_html_e( 'Set the commmission type admin gets from this seller', 'dokan-lite' ); ?></p>

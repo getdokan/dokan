@@ -58,7 +58,7 @@ if ( ! $from_shortcode ) {
 }
 
 if ( ! empty( $_GET['errors'] ) ) {
-    Dokan_Template_Products::$errors = $_GET['errors'];
+    Dokan_Template_Products::$errors = array_map( 'sanitize_text_field', wp_unslash( $_GET['errors'] ) );
 }
 
 /**

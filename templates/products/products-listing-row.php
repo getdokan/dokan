@@ -67,7 +67,7 @@
     </td>
     <td data-title="<?php esc_attr_e( 'Stock', 'dokan-lite' ); ?>">
         <?php
-        echo '<mark class="' . $product->get_stock_status() . '">' . esc_html( dokan_get_translated_product_stock_status( $product->get_stock_status() ) ) . '</mark>';
+        echo '<mark class="' . esc_attr( $product->get_stock_status() ) . '">' . esc_html( dokan_get_translated_product_stock_status( $product->get_stock_status() ) ) . '</mark>';
 
         if ( $product->managing_stock() ) :
             echo ' &times; ' . esc_html( $product->get_stock_quantity() );

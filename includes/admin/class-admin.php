@@ -63,7 +63,7 @@ class Dokan_Admin {
             ?>
                 <div class="notice notice-success is-dismissible" id="dokan-christmas-notice">
                     <div class="logo">
-                        <img src="<?php echo DOKAN_PLUGIN_ASSEST . '/images/promo-logo.png' ?>" alt="Dokan">
+                        <img src="<?php echo esc_url( DOKAN_PLUGIN_ASSEST . '/images/promo-logo.png' ); ?>" alt="Dokan">
                     </div>
                     <div class="content">
                         <p class="highlight-magento">Biggest Sale of the year on this</p>
