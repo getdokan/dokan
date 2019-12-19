@@ -59,6 +59,7 @@ function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = NUL
 
     $join        = $customer_id ? "LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id" : '';
     $where       = $customer_id ? sprintf( "pm.meta_key = '_customer_user' AND pm.meta_value = %d AND", $customer_id ) : '';
+    $where      .= "p.post_type = 'shop_order' AND";
 
     if ( $orders === false ) {
         $status_where = ( $status == 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', $status );
