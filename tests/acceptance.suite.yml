@@ -48,6 +48,7 @@ modules:
             restart: true
             window_size: false
             port: 4444
+            log_js_errors: true
             # wait: 5         #it's using for smart wait
             # capabilities:
             #     browserName: chrome

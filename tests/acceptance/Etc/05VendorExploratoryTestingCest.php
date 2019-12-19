@@ -88,5 +88,6 @@ class VendorExploratoryTestingCest
 			$I->waitForElement('.woocommerce-MyAccount-content', 30);
 			// $I->dontSee('.woocommerce','Notice');
 			$I->click('Log out');
+			$logs = $I->getJsLog();
     }
 }

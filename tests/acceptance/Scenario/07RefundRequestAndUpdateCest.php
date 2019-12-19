@@ -24,6 +24,7 @@ class RefundRequestAndUpdateCest
         $I->wait(5);
         $I->acceptPopup();
         // $I->click('Log out');
+        // $I->waitForElement('.dokan-panel dokan-panel-default', 30);
     }
     public function approveRequest(\Step\Acceptance\Admin $I)
     {

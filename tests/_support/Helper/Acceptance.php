@@ -6,5 +6,10 @@ namespace Helper;
 
 class Acceptance extends \Codeception\Module
 {
-	
+	function getJsLog() 
+	{
+	    $wb = $this->getModule("WebDriver");
+	    $logs = $wb->webDriver->manage()->getLog("browser");
+	    return $logs;
+	}
 }

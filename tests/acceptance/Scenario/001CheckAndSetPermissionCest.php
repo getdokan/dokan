@@ -36,7 +36,7 @@ class checkPermmissionCest
         $I->click('#dokan_selling #submit');
         $I->waitForElementVisible('#setting-message_updated', 5);
         $I->waitForElement('.metabox-holder', 30);
-
+        $logs = $I->getJsLog();
         //tax
         // $I->loginAsAdmin();
         // $I->amOnPage('/wp-admin/admin.php?page=wc-settings');
