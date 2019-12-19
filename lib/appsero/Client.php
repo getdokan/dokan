@@ -2,7 +2,7 @@
 namespace Appsero;
 
 /**
- * AppSero Client
+ * Appsero Client
  *
  * This class is necessary to set project data
  */
@@ -13,7 +13,7 @@ class Client {
      *
      * @var string
      */
-    public $version = '1.0.1';
+    public $version = '1.1.9';
 
     /**
      * Hash identifier of the plugin
@@ -66,6 +66,13 @@ class Client {
      * @var string
      */
     public $type;
+
+    /**
+     * textdomain
+     *
+     * @var string
+     */
+    public $textdomain;
 
 	/**
      * Initialize the class
@@ -154,6 +161,7 @@ class Client {
 
             $this->project_version = $plugin_data['Version'];
             $this->type = 'plugin';
+            $this->textdomain = $this->slug;
 
         } else {
 
