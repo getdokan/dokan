@@ -29,14 +29,12 @@
     $store_tnc      = isset( $profile_info['store_tnc'] ) ? $profile_info['store_tnc'] : '';
 
     if ( is_wp_error( $validate ) ) {
-        $get_data = wp_unslash( $_POST );
+        $posted_data = wp_unslash( $_POST ); // WPCS: CSRF ok, Input var ok.
 
-        $storename    = sanitize_text_field( $get_data['dokan_store_name'] ); // WPCS: CSRF ok, Input var ok.
-        $map_location = sanitize_text_field( $get_data['location'] );         // WPCS: CSRF ok, Input var ok.
-        $map_address  = sanitize_text_field( $get_data['find_address'] );     // WPCS: CSRF ok, Input var ok.
-
-        $posted_address = wc_clean( $get_data['dokan_address'] ); // WPCS: CSRF ok, Input var ok.
-
+        $storename       = sanitize_text_field( $posted_data['dokan_store_name'] );
+        $map_location    = sanitize_text_field( $posted_data['location'] );
+        $map_address     = sanitize_text_field( $posted_data['find_address'] );
+        $posted_address  = sanitize_text_field( $posted_data['dokan_address'] );
         $address_street1 = sanitize_text_field( $posted_address['street_1'] );
         $address_street2 = sanitize_text_field( $posted_address['street_2'] );
         $address_city    = sanitize_text_field( $posted_address['city'] );
@@ -64,7 +62,7 @@
 
                 <div class="image-wrap<?php echo $banner_id ? '' : ' dokan-hide'; ?>">
                     <?php $banner_url = $banner_id ? wp_get_attachment_url( $banner_id ) : ''; ?>
-                    <input type="hidden" class="dokan-file-field" value="<?php echo $banner_id; ?>" name="dokan_banner">
+                    <input type="hidden" class="dokan-file-field" value="<?php echo esc_attr( $banner_id ); ?>" name="dokan_banner">
                     <img class="dokan-banner-img" src="<?php echo esc_url( $banner_url ); ?>">
 
                     <a class="close dokan-remove-banner-image">&times;</a>
@@ -267,10 +265,10 @@
                             </select>
                         </label>
                         <label for="opening-time" class="time" style="visibility: <?php echo isset( $status ) && $status == 'open' ? 'visible' : 'hidden' ?>" >
-                            <input type="text" class="dokan-form-control" name="<?php echo esc_attr( strtolower( $day ) ); ?>_opening_time" id="<?php echo esc_attr( $day ) ?>-opening-time" placeholder="<?php echo date_i18n( get_option( 'time_format', 'g:i a' ), current_time( 'timestamp' ) ); ?>" value="<?php echo isset( $all_times[$day]['opening_time'] ) ? esc_attr( $all_times[$day]['opening_time'] ) : '' ?>" >
+                            <input type="text" class="dokan-form-control" name="<?php echo esc_attr( strtolower( $day ) ); ?>_opening_time" id="<?php echo esc_attr( $day ) ?>-opening-time" placeholder="<?php echo esc_attr( date_i18n( get_option( 'time_format', 'g:i a' ), current_time( 'timestamp' ) ) ); ?>" value="<?php echo isset( $all_times[$day]['opening_time'] ) ? esc_attr( $all_times[$day]['opening_time'] ) : '' ?>" >
                         </label>
                         <label for="closing-time" class="time" style="visibility: <?php echo isset( $status ) && $status == 'open' ? 'visible' : 'hidden' ?>" >
-                            <input type="text" class="dokan-form-control" name="<?php echo esc_attr( $day ) ?>_closing_time" id="<?php echo esc_attr( $day ) ?>-closing-time" placeholder="<?php echo date_i18n( get_option( 'time_format', 'g:i a' ), current_time( 'timestamp' ) ); ?>" value="<?php echo isset( $all_times[$day]['closing_time'] ) ? esc_attr( $all_times[$day]['closing_time'] ) : '' ?>">
+                            <input type="text" class="dokan-form-control" name="<?php echo esc_attr( $day ) ?>_closing_time" id="<?php echo esc_attr( $day ) ?>-closing-time" placeholder="<?php echo esc_attr( date_i18n( get_option( 'time_format', 'g:i a' ), current_time( 'timestamp' ) ) ); ?>" value="<?php echo isset( $all_times[$day]['closing_time'] ) ? esc_attr( $all_times[$day]['closing_time'] ) : '' ?>">
                         </label>
                     </div>
                 <?php endforeach; ?>
@@ -389,7 +387,7 @@
         } );
         $( '.time .dokan-form-control' ).timepicker({
             scrollDefault: 'now',
-            timeFormat: '<?php echo get_option( 'time_format' ); ?>',
+            timeFormat: '<?php echo esc_attr( get_option( 'time_format' ) ); ?>',
             step: <?php echo 'h' === strtolower( get_option( 'time_format' ) ) ? '60' : '30'; ?>
         });
         // dokan store open close scripts end //

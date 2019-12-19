@@ -17,7 +17,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 
 <p><?php esc_attr_e( 'Hello,', 'dokan-lite' ); ?></p>
 
-<p><?php esc_attr_e( 'A new product is submitted to your site', 'dokan-lite' ); ?> <a href="<?php echo esc_url( $data['site_url'] ); ?>" ><?php echo $data['site_name'] ?></a> </p>
+<p><?php esc_attr_e( 'A new product is submitted to your site', 'dokan-lite' ); ?> <a href="<?php echo esc_url( $data['site_url'] ); ?>" ><?php echo esc_attr( $data['site_name'] ); ?></a> </p>
 <p><?php esc_attr_e( 'Summary of the product:', 'dokan-lite' ); ?></p>
 <hr>
 <ul>
@@ -31,7 +31,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
         <strong>
             <?php esc_attr_e( 'Price :', 'dokan-lite' ); ?>
         </strong>
-        <?php echo wc_price( esc_attr( $data['price'] ) ); ?>
+        <?php echo wp_kses_post( wc_price( esc_attr( $data['price'] ) ) ); ?>
     </li>
     <li>
         <strong>

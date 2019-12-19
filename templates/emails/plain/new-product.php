@@ -30,7 +30,7 @@ echo "= " . esc_attr( $email_heading ) . " =\n\n";
 
 <?php esc_attr_e( 'The product is currently in "publish" state. So everyone can view the product.', 'dokan-lite' ); echo " \n";?>
 
-<?php echo sprintf( __( 'In case it needs to be moderated  <a href="%s"> click here </a>', 'dokan-lite' ), esc_url( $data['product_link'] ) ); ?>
+<?php echo wp_kses_post( sprintf( __( 'In case it needs to be moderated  <a href="%s"> click here </a>', 'dokan-lite' ), esc_url( $data['product_link'] ) ) ); ?>
 
 <?php
 

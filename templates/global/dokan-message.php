@@ -9,5 +9,5 @@
 ?>
 <div class="dokan-message">
     <button type="button" class="dokan-close" data-dismiss="alert">&times;</button>
-    <strong><?php echo $message; ?></strong>
+    <strong><?php echo wp_kses_post( $message ); ?></strong>
 </div>

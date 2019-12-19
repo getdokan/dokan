@@ -46,7 +46,7 @@
     if ( 'on' === $show_terms_condition && $terms_condition_url ) { ?>
         <p class="form-row form-group form-row-wide">
             <input class="tc_check_box" type="checkbox" id="tc_agree" name="tc_agree" required="required">
-            <label style="display: inline" for="tc_agree"><?php echo sprintf( __( 'I have read and agree to the <a target="_blank" href="%s">Terms &amp; Conditions</a>.', 'dokan-lite' ), esc_url( $terms_condition_url ) ); ?></label>
+            <label style="display: inline" for="tc_agree"><?php echo wp_kses_post( sprintf( __( 'I have read and agree to the <a target="_blank" href="%s">Terms &amp; Conditions</a>.', 'dokan-lite' ), esc_url( $terms_condition_url ) ) ); ?></label>
         </p>
     <?php }
 

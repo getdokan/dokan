@@ -64,7 +64,6 @@
                                         <?php } ?>
 
                                         <?php do_action( 'dokan_seller_listing_after_store_data', $seller, $store_info ); ?>
-
                                     </div>
                                 </div>
                             </div>

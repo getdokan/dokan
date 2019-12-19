@@ -19,7 +19,7 @@ $img_kses = apply_filters( 'dokan_product_image_attributes', array(
 				<?php echo wp_kses( $_product->get_image( 'shop_thumbnail', array( 'title' => '' ) ), $img_kses ); ?>
 			</a>
 		<?php else : ?>
-			<?php echo woocommerce_placeholder_img( 'shop_thumbnail' ); ?>
+			<?php echo wp_kses_post( woocommerce_placeholder_img( 'shop_thumbnail' ) ); ?>
 		<?php endif; ?>
 	</td>
 
@@ -85,9 +85,11 @@ $img_kses = apply_filters( 'dokan_product_image_attributes', array(
     <td class="line_cost" width="1%">
         <?php
             if ( isset( $item['line_total'] ) ) {
-                if ( isset( $item['line_subtotal'] ) && $item['line_subtotal'] != $item['line_total'] ) echo '<del>' . wc_price( $item['line_subtotal'] ) . '</del> ';
+                if ( isset( $item['line_subtotal'] ) && $item['line_subtotal'] != $item['line_total'] ) {
+                    echo wp_kses_post( '<del>' . wc_price( $item['line_subtotal'] ) . '</del> ' );
+                }
 
-                echo wc_price( $item['line_total'], array( 'currency' => dokan_replace_func( 'get_order_currency', 'get_currency', $order ) ) );
+                echo wp_kses_post( wc_price( $item['line_total'], array( 'currency' => dokan_replace_func( 'get_order_currency', 'get_currency', $order ) ) ) );
             }
         ?>
     </td>

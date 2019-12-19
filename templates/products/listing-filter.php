@@ -8,8 +8,8 @@
  * @package dokan
  */
 
-$get_data  = wp_unslash( $_GET );
-$post_data = wp_unslash( $_POST );
+$get_data  = wp_unslash( $_GET ); // WPCS: CSRF ok.
+$post_data = wp_unslash( $_POST ); // WPCS: CSRF ok.
 
 do_action( 'dokan_product_listing_filter_before_form' );
 ?>
