@@ -626,9 +626,9 @@ class Dokan_Vendor {
             if ( ! $installed_version || version_compare( $installed_version, '2.8.2', '>' ) ) {
                 $result = $wpdb->get_row( $wpdb->prepare(
                         "SELECT SUM(debit) as earnings,
-                        ( SELECT SUM(credit) FROM {$wpdb->prefix}dokan_vendor_balance WHERE vendor_id = %d AND DATE(balance_date) <= '%s' ) as withdraw
+                        ( SELECT SUM(credit) FROM {$wpdb->prefix}dokan_vendor_balance WHERE vendor_id = %d AND DATE(balance_date) <= %s ) as withdraw
                         from {$wpdb->prefix}dokan_vendor_balance
-                        WHERE vendor_id = '%d' AND DATE(balance_date) <= '%s' AND status IN($status)",
+                        WHERE vendor_id = %d AND DATE(balance_date) <= %s AND status IN($status)",
                     $this->id, $on_date, $this->id, $on_date ) );
             } else {
                 $result = $wpdb->get_row( $wpdb->prepare(

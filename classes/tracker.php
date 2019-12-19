@@ -32,7 +32,7 @@ class Dokan_Tracker {
     public function appsero_init_tracker_dokan() {
 
         if ( ! class_exists( 'Appsero\Client' ) ) {
-            require_once DOKAN_LIB_DIR . '/appsero/Client.php';
+            require_once DOKAN_DIR . '/vendor/autoload.php';
         }
 
         $client = new Appsero\Client( '559bcc0d-21b4-4b34-8317-3e072badf46d', 'Dokan Multivendor Marketplace', DOKAN_FILE );

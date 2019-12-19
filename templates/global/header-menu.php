@@ -10,7 +10,7 @@
 
 <ul class="nav navbar-nav navbar-right">
     <li>
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php printf( __( 'Cart %s', 'dokan-lite' ), '<span class="dokan-cart-amount-top">(' . WC()->cart->get_cart_total() . ')</span>' ); ?> <b class="caret"></b></a>
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo wp_kses_post( sprintf( __( 'Cart %s', 'dokan-lite' ), '<span class="dokan-cart-amount-top">(' . WC()->cart->get_cart_total() . ')</span>' ) ); ?> <b class="caret"></b></a>
 
         <ul class="dropdown-menu">
             <li>
@@ -33,7 +33,7 @@
                     <li class="divider"></li>
                     <?php
                     foreach ( $nav_urls as $key => $item ) {
-                        printf( '<li><a href="%s">%s &nbsp;%s</a></li>', esc_url( $item['url'] ), $item['icon'], $item['title'] );
+                        echo wp_kses_post( sprintf( '<li><a href="%s">%s &nbsp;%s</a></li>', esc_url( $item['url'] ), $item['icon'], $item['title'] ) );
                     }
                     ?>
                 </ul>

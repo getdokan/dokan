@@ -35,7 +35,7 @@
                                             <?php if ( !empty( $store_rating['count'] ) ): ?>
                                                 <div class="star-rating dokan-seller-rating" title="<?php echo sprintf( esc_attr__( 'Rated %s out of 5', 'dokan-lite' ), esc_attr( $store_rating['rating'] ) ) ?>">
                                                     <span style="width: <?php echo ( esc_attr( ( $store_rating['rating'] / 5 ) ) * 100 - 1 ); ?>%">
-                                                        <strong class="rating"><?php echo esc_html( $store_rating['rating'] ); ?></strong> <?php _e( 'out of 5', 'dokan-lite' ); ?>
+                                                        <strong class="rating"><?php echo esc_html( $store_rating['rating'] ); ?></strong> <?php esc_html_e( 'out of 5', 'dokan-lite' ); ?>
                                                     </span>
                                                 </div>
                                             <?php endif ?>

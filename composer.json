@@ -10,10 +10,11 @@
     }
   ],
   "minimum-stability": "dev",
-  "require": {},
+  "require": {
+    "appsero/client": "dev-master"
+  },
   "require-dev": {
     "wp-coding-standards/wpcs": "dev-master",
-    "higidi/composer-phpcodesniffer-standards-plugin": "^1.0@dev",
     "dealerdirect/phpcodesniffer-composer-installer": "^0.4.3"
   },
   "scripts": {

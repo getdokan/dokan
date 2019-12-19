@@ -371,8 +371,8 @@ class Dokan_Template_Withdraw extends Dokan_Withdraw {
      */
     function withdraw_form( $validate = '' ) {
 
-        $get_data  = wp_unslash( $_GET );
-        $post_data = wp_unslash( $_POST );
+        $get_data  = wp_unslash( $_GET ); // WPCS: CSRF ok
+        $post_data = wp_unslash( $_POST ); // WPCS: CSRF ok
 
         global $current_user;
 

@@ -9,5 +9,5 @@
 ?>
 
 <div class="dokan-page-help">
-    <?php echo $help_text; ?>
+    <?php echo wp_kses_post( $help_text ); ?>
 </div>
