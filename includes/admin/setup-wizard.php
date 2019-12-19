@@ -31,6 +31,7 @@ class Dokan_Setup_Wizard {
             add_action( 'admin_menu', array( $this, 'admin_menus' ) );
             add_action( 'admin_init', array( $this, 'setup_wizard' ), 99 );
             add_action( 'activated_plugin', array( $this, 'activated_plugin' ) );
+            add_action( 'weforms_loaded', [ $this, 'after_weforms_activate' ] );
 
             if ( get_transient( 'dokan_setup_wizard_no_wc' ) ) {
                 require_once DOKAN_INC_DIR . '/admin/setup-wizard-no-wc.php';
@@ -78,12 +79,34 @@ class Dokan_Setup_Wizard {
         wp_register_script( 'jquery-tiptip', WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip.min.js', array( 'jquery' ), WC_VERSION, true );
         wp_register_script( 'wc-setup', WC()->plugin_url() . '/assets/js/admin/wc-setup.min.js', array( 'jquery', 'wc-enhanced-select', 'jquery-blockui', 'wp-util', 'jquery-tiptip' ), WC_VERSION );
 
+        wp_localize_script(
+            'wc-setup',
+            'wc_setup_params',
+            array()
+        );
         /**
          * Action fires after finishing enqueuing setup wizard assets
          *
          * @since 2.8.7
          */
         do_action( 'dokan_setup_wizard_enqueue_scripts' );
+    }
+
+    /**
+     * Helper method to get postcode configurations from `WC()->countries->get_country_locale()`.
+     * We don't use `wp_list_pluck` because it will throw notices when postcode configuration is not defined for a country.
+     *
+     * @return array
+     */
+    protected static function get_postcodes() {
+        $locales   = WC()->countries->get_country_locale();
+        $postcodes = array();
+        foreach ( $locales as $country_code => $locale ) {
+            if ( isset( $locale['postcode'] ) ) {
+                $postcodes[ $country_code ] = $locale['postcode'];
+            }
+        }
+        return $postcodes;
     }
 
     /**
@@ -96,7 +119,7 @@ class Dokan_Setup_Wizard {
     /**
      * Set wizard steps
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.27
      *
      * @return void
      */
@@ -137,7 +160,7 @@ class Dokan_Setup_Wizard {
     /**
      * Get wizard steps
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.27
      *
      * @return array
      */
@@ -148,7 +171,7 @@ class Dokan_Setup_Wizard {
     /**
      * Wizard templates
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.27
      *
      * @return void
      */
@@ -639,8 +662,6 @@ class Dokan_Setup_Wizard {
      */
     public function dokan_setup_ready() {
         update_option( 'dokan_admin_setup_wizard_ready', true );
-
-        $this->after_weforms_activate();
         ?>
         <div class="dokan-setup-done">
             <img src="<?php echo esc_url( plugins_url( 'assets/images/dokan-checked.png', DOKAN_FILE ) ); ?>" alt="dokan setup">
@@ -862,7 +883,7 @@ class Dokan_Setup_Wizard {
      *
      * @return void
      */
-    private function after_weforms_activate() {
+    public function after_weforms_activate() {
         $did_activate = get_option( 'dokan_setup_wizard_activated_weforms', false );
 
         if ( ! $did_activate ) {

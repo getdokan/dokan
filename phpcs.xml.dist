@@ -2,9 +2,9 @@
 <ruleset name="WordPress Coding Standards for Plugins">
     <description>Generally-applicable sniffs for WordPress plugins</description>
 
-    <rule ref="WordPress-Core">
+    <!-- <rule ref="WordPress-Core">
         <exclude name="Generic.WhiteSpace.DisallowSpaceIndent"/>
-    </rule>
+    </rule> -->
 
     <exclude-pattern>*/assets/*</exclude-pattern>
     <exclude-pattern>*/src/*</exclude-pattern>
@@ -21,7 +21,9 @@
 
     <!-- Check all PHP files in directory tree by default. -->
     <arg name="extensions" value="php" />
+    <arg name="extensions" value="html" />
     <file>.</file>
 
-    <rule ref="WordPress.Security.ValidatedSanitizedInput" />
+    <rule ref="WordPress.DB" />
+    <rule ref="WordPress.Security" />
 </ruleset>

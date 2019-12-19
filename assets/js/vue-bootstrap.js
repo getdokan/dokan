@@ -4478,10 +4478,10 @@ _vue2.default.filter('capitalize', function (value) {
 // Tooltip directive
 _vue2.default.directive('tooltip', {
     bind: function bind(el, binding, vnode) {
-        $(el).tooltip('show');
+        jQuery(el).tooltip('show');
     },
     unbind: function unbind(el, binding, vnode) {
-        $(el).tooltip('destroy');
+        jQuery(el).tooltip('destroy');
     }
 });
 

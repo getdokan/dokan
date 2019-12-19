@@ -1,5 +1,5 @@
 <?php if ( $title ): ?>
-    <h2 class="dokan-login-form-title"><?php echo $title; ?></h2>
+    <h2 class="dokan-login-form-title"><?php echo esc_html( $title ); ?></h2>
 <?php endif; ?>
 
 <form class="dokan-form-container" id="<?php echo esc_attr( $id ); ?>">

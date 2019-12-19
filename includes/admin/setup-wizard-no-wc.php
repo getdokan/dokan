@@ -5,7 +5,7 @@ class Dokan_Admin_Setup_Wizard_No_WC extends Dokan_Setup_Wizard {
     /**
      * Set wizard steps
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.27
      *
      * @return void
      */
@@ -22,7 +22,7 @@ class Dokan_Admin_Setup_Wizard_No_WC extends Dokan_Setup_Wizard {
     /**
      * Should show any recommended step
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.27
      *
      * @return bool
      */
@@ -33,7 +33,7 @@ class Dokan_Admin_Setup_Wizard_No_WC extends Dokan_Setup_Wizard {
     /**
      * Enqueue wizard scripts
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.27
      *
      * @return void
      */
@@ -41,13 +41,19 @@ class Dokan_Admin_Setup_Wizard_No_WC extends Dokan_Setup_Wizard {
         wp_register_script( 'jquery-blockui', DOKAN_PLUGIN_ASSEST . '/vendors/jquery-blockui/jquery.blockUI.min.js', array( 'jquery' ), '2.70', true );
 
         wp_enqueue_style( 'dokan-setup', DOKAN_PLUGIN_ASSEST . '/css/setup-no-wc.css', array( 'install' ), DOKAN_PLUGIN_VERSION );
+
         wp_enqueue_script( 'wc-setup', DOKAN_PLUGIN_ASSEST . '/js/dokan-setup-no-wc.js', array( 'jquery', 'jquery-blockui' ), DOKAN_PLUGIN_VERSION, true );
+        wp_localize_script(
+            'wc-setup',
+            'wc_setup_params',
+            array()
+        );
     }
 
     /**
      * Wizard templates
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.27
      */
     protected function set_setup_wizard_template() {
         $this->setup_wizard_header();
@@ -58,7 +64,7 @@ class Dokan_Admin_Setup_Wizard_No_WC extends Dokan_Setup_Wizard {
     /**
      * Setup wizard main content
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.27
      *
      * @return void
      */
@@ -76,7 +82,7 @@ class Dokan_Admin_Setup_Wizard_No_WC extends Dokan_Setup_Wizard {
     /**
      * Setup wizard footer
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.27
      *
      * @return void
      */
@@ -91,7 +97,7 @@ class Dokan_Admin_Setup_Wizard_No_WC extends Dokan_Setup_Wizard {
     /**
      * Introduction page
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.27
      *
      * @return void
      */
@@ -102,7 +108,7 @@ class Dokan_Admin_Setup_Wizard_No_WC extends Dokan_Setup_Wizard {
     /**
      * Install WooCommerce and redirect to store setup step
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.27
      *
      * @return void
      */
@@ -119,7 +125,10 @@ class Dokan_Admin_Setup_Wizard_No_WC extends Dokan_Setup_Wizard {
         delete_transient( '_wc_activation_redirect' );
 
         if ( is_wp_error( $installed ) ) {
-            wp_die( $installed->get_error_message(), __( 'Error installing WooCommerce plugin', 'dokan-lite' ) );
+            wp_die(
+                esc_html( $installed->get_error_message() ),
+                esc_html( __( 'Error installing WooCommerce plugin', 'dokan-lite' ) )
+            );
         }
 
         set_transient( 'dokan_setup_wizard_no_wc', true, 15 * MINUTE_IN_SECONDS );
@@ -132,7 +141,7 @@ class Dokan_Admin_Setup_Wizard_No_WC extends Dokan_Setup_Wizard {
     /**
      * Get WooCommerce Setup wizard
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.27
      *
      * @param array $steps
      *
@@ -150,29 +159,9 @@ class Dokan_Admin_Setup_Wizard_No_WC extends Dokan_Setup_Wizard {
     }
 
     /**
-     * Helper method to get postcode configurations from `WC()->countries->get_country_locale()`.
-     *
-     * @see \WC_Admin_Setup_Wizard::get_postcodes()
-     *
-     * @since DOKAN_LITE_SINCE
-     *
-     * @return array
-     */
-    protected static function get_postcodes() {
-        $locales   = WC()->countries->get_country_locale();
-        $postcodes = array();
-        foreach ( $locales as $country_code => $locale ) {
-            if ( isset( $locale['postcode'] ) ) {
-                $postcodes[ $country_code ] = $locale['postcode'];
-            }
-        }
-        return $postcodes;
-    }
-
-    /**
      * Add WooCommerce steps in Dokan admin setup wizard
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.27
      *
      * @param array $steps
      */
@@ -203,7 +192,7 @@ class Dokan_Admin_Setup_Wizard_No_WC extends Dokan_Setup_Wizard {
     /**
      * Add WC localized scripts
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.27
      *
      * @return void
      */
@@ -222,7 +211,7 @@ class Dokan_Admin_Setup_Wizard_No_WC extends Dokan_Setup_Wizard {
     /**
      * Add WC fields to Store setup form
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.27
      *
      * @return void
      */
@@ -233,20 +222,22 @@ class Dokan_Admin_Setup_Wizard_No_WC extends Dokan_Setup_Wizard {
     /**
      * Save WC data in store setup step
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.27
      *
      * @return void
      */
     public static function save_wc_store_setup_data() {
-        $address        = isset( $_POST['store_address'] ) ? wc_clean( wp_unslash( $_POST['store_address'] ) ) : '';
-        $address_2      = isset( $_POST['store_address_2'] ) ? wc_clean( wp_unslash( $_POST['store_address_2'] ) ) : '';
-        $city           = isset( $_POST['store_city'] ) ? wc_clean( wp_unslash( $_POST['store_city'] ) ) : '';
-        $country        = isset( $_POST['store_country'] ) ? wc_clean( wp_unslash( $_POST['store_country'] ) ) : '';
-        $state          = isset( $_POST['store_state'] ) ? wc_clean( wp_unslash( $_POST['store_state'] ) ) : '*';
-        $postcode       = isset( $_POST['store_postcode'] ) ? wc_clean( wp_unslash( $_POST['store_postcode'] ) ) : '';
-        $currency_code  = isset( $_POST['currency_code'] ) ? wc_clean( wp_unslash( $_POST['currency_code'] ) ) : '';
-        $product_type   = isset( $_POST['product_type'] ) ? wc_clean( wp_unslash( $_POST['product_type'] ) ) : '';
-        $sell_in_person = isset( $_POST['sell_in_person'] ) && ( 'on' === wc_clean( wp_unslash( $_POST['sell_in_person'] ) ) );
+        check_admin_referer( 'dokan-setup' );
+
+        $address        = isset( $_POST['store_address'] ) ? sanitize_text_field( wp_unslash( $_POST['store_address'] ) ) : '';
+        $address_2      = isset( $_POST['store_address_2'] ) ? sanitize_text_field( wp_unslash( $_POST['store_address_2'] ) ) : '';
+        $city           = isset( $_POST['store_city'] ) ? sanitize_text_field( wp_unslash( $_POST['store_city'] ) ) : '';
+        $country        = isset( $_POST['store_country'] ) ? sanitize_text_field( wp_unslash( $_POST['store_country'] ) ) : '';
+        $state          = isset( $_POST['store_state'] ) ? sanitize_text_field( wp_unslash( $_POST['store_state'] ) ) : '*';
+        $postcode       = isset( $_POST['store_postcode'] ) ? sanitize_text_field( wp_unslash( $_POST['store_postcode'] ) ) : '';
+        $currency_code  = isset( $_POST['currency_code'] ) ? sanitize_text_field( wp_unslash( $_POST['currency_code'] ) ) : '';
+        $product_type   = isset( $_POST['product_type'] ) ? sanitize_text_field( wp_unslash( $_POST['product_type'] ) ) : '';
+        $sell_in_person = isset( $_POST['sell_in_person'] ) && ( 'on' === sanitize_text_field( wp_unslash( $_POST['sell_in_person'] ) ) );
 
         update_option( 'woocommerce_store_address', $address );
         update_option( 'woocommerce_store_address_2', $address_2 );
@@ -278,7 +269,7 @@ class Dokan_Admin_Setup_Wizard_No_WC extends Dokan_Setup_Wizard {
     /**
      * WC payment setup step form
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.27
      *
      * @return void
      */
@@ -293,7 +284,7 @@ class Dokan_Admin_Setup_Wizard_No_WC extends Dokan_Setup_Wizard {
     /**
      * WC payment step post data handler
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.27
      *
      * @param \Dokan_Setup_Wizard $dokan_admin_setup_wizard
      *
@@ -309,7 +300,7 @@ class Dokan_Admin_Setup_Wizard_No_WC extends Dokan_Setup_Wizard {
     /**
      * WC shipping setup step form
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.27
      *
      * @return void
      */
@@ -324,7 +315,7 @@ class Dokan_Admin_Setup_Wizard_No_WC extends Dokan_Setup_Wizard {
     /**
      * WC shipping step post data handler
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.27
      *
      * @param \Dokan_Setup_Wizard $dokan_admin_setup_wizard
      *
