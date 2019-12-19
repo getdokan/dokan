@@ -24,7 +24,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
     <?php esc_html_e( 'You sent a withdraw request of:', 'dokan-lite' ); ?>
     <br>
     <?php esc_html_e( 'Amount : ', 'dokan-lite' ); ?>
-    <?php echo $data['amount']; ?>
+    <?php echo wp_kses_post( $data['amount'] ); ?>
     <br>
     <?php esc_html_e( 'Method : '.$data['method'], 'dokan-lite' ); ?>
 </p>

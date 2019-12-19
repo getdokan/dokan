@@ -110,7 +110,7 @@ class Dokan_Registration {
      * @return array
      */
     function set_new_vendor_names( $data ) {
-        $post_data = wp_unslash( $_POST );
+        $post_data = wp_unslash( $_POST ); // WPCS: CSRF ok.
 
         $allowed_roles = array( 'customer', 'seller' );
         $role          = ( isset( $post_data['role'] ) && in_array( $post_data['role'], $allowed_roles ) ) ? $post_data['role'] : 'customer';
@@ -137,7 +137,7 @@ class Dokan_Registration {
      * @return void
      */
     function save_vendor_info( $user_id, $data ) {
-        $post_data = wp_unslash( $_POST );
+        $post_data = wp_unslash( $_POST ); // WPCS: CSRF ok.
 
         if ( ! isset( $data['role'] ) || $data['role'] != 'seller' ) {
             return;

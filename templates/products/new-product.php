@@ -1,7 +1,7 @@
 <?php
 
-    $get_data  = wp_unslash( $_GET );
-    $post_data = wp_unslash( $_POST );
+    $get_data  = wp_unslash( $_GET ); // WPCS: CSRF ok.
+    $post_data = wp_unslash( $_POST ); // WPCS: CSRF ok.
 
     /**
      *  dokan_new_product_wrap_before hook

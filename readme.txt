@@ -5,9 +5,9 @@ Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi selle
 Requires at least: 4.4
 Tested up to: 5.3.0
 WC requires at least: 3.0
-WC tested up to: 3.8.0
+WC tested up to: 3.8.1
 Requires PHP: 5.6
-Stable tag: 2.9.26
+Stable tag: 2.9.27
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -283,6 +283,14 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 == Changelog ==
+
+= v2.9.27 (December 11, 2019) =
+
+ - **Feat:** Run Dokan Admin Setup Wizard without being WooCommerce installed #708
+ - **Improvement:** Remove empty div from vendor payment settings page #695
+ - **Improvement:** Deleting a attribute from predefined attributes and add the attribute again mess up attributes #703
+ - **Improvement:** Add hooks in order details and admin setup wizard #715
+ - **Improvement:*  Pass post_type as a second parameter to the months_dropdown_results hook #710
 
 = v2.9.26 (November 19, 2019) =
 

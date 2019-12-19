@@ -827,14 +827,15 @@ function dokan_get_product_types( $status = '' ) {
  * @return string
  */
 function dokan_posted_input( $key, $array = false ) {
-    $postdata = wp_unslash( $_POST );
+    $postdata = wp_unslash( $_POST ); // WPCS: CSRF ok.
 
     // If array value is submitted return array
-    if ( $array && isset( $postdata[ $key ] ) ) { // WPCS: CSRF ok.
-        return $postdata[ $key ];    // WPCS: CSRF ok.
+    if ( $array && isset( $postdata[ $key ] ) ) {
+        return $postdata[ $key ];
     }
 
     $value = isset( $postdata[ $key ] ) ? trim( $postdata[ $key ] ) : ''; // WPCS: CSRF ok.
+
     return esc_attr( $value );
 }
 
@@ -845,7 +846,7 @@ function dokan_posted_input( $key, $array = false ) {
  * @return string
  */
 function dokan_posted_textarea( $key ) {
-    $postdata = wp_unslash( $_POST );
+    $postdata = wp_unslash( $_POST ); // WPCS: CSRF ok.
     $value    = isset( $postdata[ $key ] ) ? trim( $postdata[ $key ] ) : ''; // WPCS: CSRF ok.
 
     return esc_textarea( $value );
@@ -3495,13 +3496,13 @@ function dokan_privacy_policy_text( $return = false ) {
         return;
     }
 
-    $text = wp_kses_post( wpautop( dokan_replace_policy_page_link_placeholders( $privacy_text ), true ) );
+    $text = wpautop( dokan_replace_policy_page_link_placeholders( $privacy_text ), true );
 
     if ( $return ) {
-        return $text;
+        return wp_kses_post( $text );
     }
 
-    echo $text;
+    echo wp_kses_post( $text );
 }
 
 /**
@@ -3673,7 +3674,7 @@ if ( ! function_exists( 'dokan_get_seller_status_count' ) ) {
  * To download plugin like dokan-lite that has different slug and main plugin file,
  * `dokan_install_wp_org_plugin( 'dokan-lite', 'dokan.php' )`
  *
- * @since DOKAN_LITE_SINCE
+ * @since 2.9.27
  *
  * @param string $plugin_slug
  * @param string $main_file
@@ -3727,7 +3728,7 @@ function dokan_install_wp_org_plugin( $plugin_slug, $main_file = null ) {
 /**
  * Redirect to Dokan admin setup wizard page
  *
- * @since DOKAN_LITE_SINCE
+ * @since 2.9.27
  *
  * @return void
  */
