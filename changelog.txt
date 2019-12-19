@@ -1,3 +1,8 @@
+= v2.9.28 (December 19, 2019) =
+
+ - **Fix:** Sanitize and Escape data before saving and rendering #717
+ - **Improvement:** Add privacy policy in readme.
+
 = v2.9.27 (December 11, 2019) =
 
  - **Feat:** Run Dokan Admin Setup Wizard without being WooCommerce installed #708
