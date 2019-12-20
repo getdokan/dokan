@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/AppSero/client.git",
-                "reference": "a2f9dc393c02845b1a865b9d272d7233212658c3"
+                "reference": "0b40040a22c46a7e101dec09a886f551a02b8737"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AppSero/client/zipball/a2f9dc393c02845b1a865b9d272d7233212658c3",
-                "reference": "a2f9dc393c02845b1a865b9d272d7233212658c3",
+                "url": "https://api.github.com/repos/AppSero/client/zipball/0b40040a22c46a7e101dec09a886f551a02b8737",
+                "reference": "0b40040a22c46a7e101dec09a886f551a02b8737",
                 "shasum": ""
             },
             "require": {
@@ -46,7 +46,7 @@
                 "theme",
                 "wordpress"
             ],
-            "time": "2019-12-18T10:54:22+00:00"
+            "time": "2019-12-19T09:55:46+00:00"
         }
     ],
     "packages-dev": [

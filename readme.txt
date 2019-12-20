@@ -3,11 +3,11 @@ Contributors: tareq1988, wedevs, sabbir1991, nizamuddinbabu, sk.shaikat, ediamin
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, product vendors, woocommerce vendor, commission rate, e-commerce, ebay, ecommerce, yith, yithemes
 Requires at least: 4.4
-Tested up to: 5.3.0
+Tested up to: 5.3.2
 WC requires at least: 3.0
 WC tested up to: 3.8.1
 Requires PHP: 5.6
-Stable tag: 2.9.27
+Stable tag: 2.9.28
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -221,6 +221,13 @@ This may have bugs and lack of many features. If you want to contribute to this 
 
 👨‍💻 [Please fork the repository from Github](https://github.com/weDevsOfficial/dokan) 👨‍💻
 
+= Privacy Policy =
+Dokan Lite uses [Appsero](https://appsero.com) SDK to collect some telemetry data upon user's confirmation. This helps us to troubleshoot problems faster & make product improvements.
+
+Appsero SDK **does not gather any data by default.** The SDK only starts gathering basic telemetry data **when a user allows it via the admin notice**. We collect the data to ensure great user experience for all our users.
+
+Integrating Appsero SDK **DOES NOT IMMEDIATELY** start gathering data, **without confirmation from users in any case.**
+
 = Contribute =
 This may have bugs and lack of many features. If you want to contribute on this project, you are more than welcome. Please fork the repository from [Github](https://github.com/weDevsOfficial/dokan).
 
@@ -283,6 +290,11 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 == Changelog ==
+
+= v2.9.28 (December 19, 2019) =
+
+ - **Fix:** Sanitize and Escape data before saving and rendering #717
+ - **Improvement:** Add privacy policy in readme.
 
 = v2.9.27 (December 11, 2019) =
 
