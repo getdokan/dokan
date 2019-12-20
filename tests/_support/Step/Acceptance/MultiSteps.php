@@ -143,4 +143,11 @@ class MultiSteps extends \AcceptanceTester
 	        $I->click('Update');
 	        $I->wait('5');
 		}
+		public function checkError()
+	    {
+	        $I = $this;
+	        $I->dontSee('Warning');
+	        $I->dontSee('Fatal error');
+	        $I->dontSee('Notice:');
+	    }
 }
