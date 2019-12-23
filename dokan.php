@@ -294,15 +294,13 @@ final class WeDevs_Dokan {
         require_once DOKAN_INC_DIR . '/wc-functions.php';
 
         require_once DOKAN_INC_DIR . '/wc-template.php';
+        require_once DOKAN_INC_DIR . '/depricated/depricated-classes.php';
 
         if ( is_admin() ) {
             require_once DOKAN_INC_DIR . '/admin-functions.php';
         } else {
             require_once DOKAN_INC_DIR . '/template-tags.php';
         }
-
-        // Background Processes
-        $this->include_backgorund_processing_files();
     }
 
     /**
@@ -495,23 +493,6 @@ final class WeDevs_Dokan {
      */
     public function has_woocommerce() {
         return class_exists( 'WooCommerce' );
-    }
-
-    /**
-     * Include background processing files
-     *
-     * @since 2.9.16
-     *
-     * @return void
-     */
-    public function include_backgorund_processing_files() {
-        if ( ! class_exists( 'Abstract_Dokan_Background_Processes' ) ) {
-            require_once DOKAN_INC_DIR . '/background-processes/abstract-class-dokan-background-processes.php';
-        }
-
-        if ( ! class_exists( 'Dokan_Background_Processes' ) ) {
-            require_once DOKAN_INC_DIR . '/background-processes/class-dokan-background-processes.php';
-        }
     }
 
     /**
