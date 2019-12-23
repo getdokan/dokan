@@ -1,6 +1,6 @@
 <?php
 
-namespace WeDevs\Dokan\Shortcodes;
+namespace WeDevs\Dokan;
 
 /**
  * Dokan Commission Class
@@ -34,18 +34,7 @@ class Commission {
      *
      * @return void
      */
-    private function __construct() {
-        $this->hooks();
-    }
-
-    /**
-     * Init hooks
-     *
-     * @since  2.9.21
-     *
-     * @return void
-     */
-    private function hooks() {
+    public function __construct() {
         add_filter( 'woocommerce_order_item_get_formatted_meta_data', [ $this, 'hide_extra_data' ] );
     }
 
