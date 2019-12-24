@@ -71,8 +71,8 @@ class Manager {
      * Run upgrades
      *
      * This will execute every method found in a
-     * upgrader class executed in `run` method defined
-     * in `DokanUpgrader` abstract class. Finally,
+     * upgrader class, execute `run` method defined
+     * in `DokanUpgrader` abstract class and then finally,
      * `update_db_version` will update the db version
      * reference in database.
      *
