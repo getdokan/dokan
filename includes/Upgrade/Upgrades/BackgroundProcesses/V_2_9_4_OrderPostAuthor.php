@@ -1,22 +1,15 @@
 <?php
 
-defined( 'ABSPATH' ) || exit;
+namespace WeDevs\Dokan\Upgrade\Upgrades\BackgroundProcesses;
+
+use WeDevs\Dokan\Abstracts\DokanBackgroundProcesses;
 
 /**
  * Dokan 2.9.4 updater class
  *
  * @since 2.9.4
  */
-class Dokan_Update_2_9_4_Order_Post_Author extends Abstract_Dokan_Background_Processes {
-
-    /**
-     * Action
-     *
-     * @since 2.9.4
-     *
-     * @var string
-     */
-    protected $action = 'dokan_update_2_9_4_order_post_author';
+class V_2_9_4_OrderPostAuthor extends DokanBackgroundProcesses {
 
     /**
      * Perform updates

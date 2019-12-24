@@ -1,22 +1,15 @@
 <?php
 
-defined( 'ABSPATH' ) || exit;
+namespace WeDevs\Dokan\Upgrade\Upgrades\BackgroundProcesses;
+
+use WeDevs\Dokan\Abstracts\DokanBackgroundProcesses;
 
 /**
  * Update vendor and product geolocation data
  *
  * @since 2.8.6
  */
-class Dokan_Update_2_8_3_Vendor_Balance extends Abstract_Dokan_Background_Processes {
-
-    /**
-     * Action
-     *
-     * @since 2.8.6
-     *
-     * @var string
-     */
-    protected $action = 'dokan_update_2_8_3_vendor_balance';
+class V_2_8_3_VendorBalance extends DokanBackgroundProcesses {
 
     /**
      * Perform updates

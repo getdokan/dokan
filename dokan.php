@@ -383,7 +383,17 @@ final class WeDevs_Dokan {
      * @return void
      */
     public function after_plugins_loaded() {
-        new Dokan_Background_Processes();
+        // Initiate background processes
+        $processes = get_option( 'dokan_background_processes', array() );
+
+        if ( ! empty( $processes ) ) {
+            foreach ( $processes as $processor => $file ) {
+                if ( file_exists( $file ) ) {
+                    include_once $file;
+                    new $processor();
+                }
+            }
+        }
     }
 
     /**

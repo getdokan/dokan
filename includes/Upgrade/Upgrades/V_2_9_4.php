@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Upgrade\Upgrades;
 
 use WeDevs\Dokan\Abstracts\DokanUpgrader;
+use WeDevs\Dokan\Upgrade\Upgrades\BackgroundProcesses\V_2_9_4_OrderPostAuthor;
 
 class V_2_9_4 extends DokanUpgrader {
 
@@ -14,18 +15,14 @@ class V_2_9_4 extends DokanUpgrader {
      * @return void
      */
     public static function update_shop_order_post_author() {
-        $processor_file = DOKAN_INC_DIR . '/Upgrade/Upgrades/background-processes/class_dokan_update_2_9_4_order_post_author.php';
-
-        include_once $processor_file;
-
-        $processor = new \Dokan_Update_2_9_4_Order_Post_Author();
+        $processor = new V_2_9_4_OrderPostAuthor();
 
         $args = [
             'updating' => 'shop_order_post_author',
             'paged'    => 0
         ];
 
-        $processor->push_to_queue( $args )->dispatch_process( $processor_file );
+        $processor->push_to_queue( $args )->dispatch_process();
     }
 
     /**
