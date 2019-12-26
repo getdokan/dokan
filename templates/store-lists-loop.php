@@ -20,7 +20,9 @@
                         <div class="store-wrapper">
                             <div class="store-header">
                                 <div class="store-banner">
-                                    <img src="<?php echo is_array( $store_banner_url ) ? esc_attr( $store_banner_url[0] ) : esc_attr( $store_banner_url ); ?>">
+                                    <a href="<?php echo esc_url( $store_url ); ?>">
+                                        <img src="<?php echo is_array( $store_banner_url ) ? esc_attr( $store_banner_url[0] ) : esc_attr( $store_banner_url ); ?>">
+                                    </a>
                                 </div>
                             </div>
 
@@ -39,9 +41,10 @@
 
                                         <?php if ( !empty( $store_rating['count'] ) ): ?>
                                             <div class="star-rating dokan-seller-rating" title="<?php echo sprintf( esc_attr__( 'Rated %s out of 5', 'dokan-lite' ), esc_attr( $store_rating['rating'] ) ) ?>">
-                                                <span style="width: <?php echo ( esc_attr( ( $store_rating['rating'] / 5 ) ) * 100 - 1 ); ?>%">
-                                                    <strong class="rating"><?php echo esc_html( $store_rating['rating'] ); ?></strong> <?php _e( 'out of 5', 'dokan-lite' ); ?>
-                                                </span>
+                                                <span style="width: <?php echo ( esc_attr( ( $store_rating['rating'] / 5 ) ) * 100 - 1 ); ?>%"></span>
+                                                <p class="rating">
+                                                    <?php echo esc_html( sprintf( __( '%s out of 5', 'dokan-lite' ), $store_rating['rating'] ) ); ?>
+                                                </p>
                                             </div>
                                         <?php endif ?>
 
@@ -72,8 +75,9 @@
                                 <div class="seller-avatar">
                                     <?php echo get_avatar( $seller->ID, 150 ); ?>
                                 </div>
-                                <a href="<?php echo esc_url( $store_url ); ?>" class="dokan-btn dokan-btn-theme"><?php esc_html_e( 'Visit Store', 'dokan-lite' ); ?></a>
-
+                                <a href="<?php echo esc_url( $store_url ); ?>" title="<?php esc_attr_e( 'Visit Store', 'dokan-lite' );?>">
+                                    <span class="dashicons dashicons-arrow-right-alt2 dokan-btn-theme dokan-btn-round"></span>
+                                </a>
                                 <?php do_action( 'dokan_seller_listing_footer_content', $seller, $store_info ); ?>
                             </div>
                         </div>
