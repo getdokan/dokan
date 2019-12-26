@@ -1,6 +1,11 @@
 <?php
 
-class Dokan_Admin_Setup_Wizard_No_WC extends Dokan_Setup_Wizard {
+namespace WeDevs\Dokan\Admin;
+
+use WeDevs\Dokan\Admin\SetupWizard as DokanSetupWizard;
+use WeDevs\Dokan\Admin\SetupWizardWCAdmin;
+
+class SetupWizardNoWC extends DokanSetupWizard {
 
     /**
      * Set wizard steps
@@ -142,14 +147,13 @@ class Dokan_Admin_Setup_Wizard_No_WC extends Dokan_Setup_Wizard {
      *
      * @param array $steps
      *
-     * @return \Dokan_Admin_Setup_Wizard_WC_Admin
+     * @return \WeDevs\Dokan\Admin\SetupWizardWCAdmin
      */
     protected static function get_wc_setup_wizard( $steps = array() ) {
         static $setup_wizard = null;
 
         if ( is_null( $setup_wizard ) ) {
-            include_once DOKAN_INC_DIR . '/admin/setup-wizard-wc-admin.php';
-            $setup_wizard = new Dokan_Admin_Setup_Wizard_WC_Admin( $steps );
+            $setup_wizard = new SetupWizardWCAdmin( $steps );
         }
 
         return $setup_wizard;
@@ -258,7 +262,7 @@ class Dokan_Admin_Setup_Wizard_No_WC extends Dokan_Setup_Wizard {
             }
         }
 
-        WC_Install::create_pages();
+        \WC_Install::create_pages();
     }
 
     /**
@@ -319,7 +323,7 @@ class Dokan_Admin_Setup_Wizard_No_WC extends Dokan_Setup_Wizard {
     public static function wc_setup_shipping_save( $dokan_admin_setup_wizard ) {
         $wc_setup_wizard = self::get_wc_setup_wizard( $dokan_admin_setup_wizard->get_steps() );
 
-        WC_Admin_Notices::remove_notice( 'install' );
+        \WC_Admin_Notices::remove_notice( 'install' );
 
         $wc_setup_wizard->set_step( 'shipping' );
         $wc_setup_wizard->wc_setup_shipping_save();

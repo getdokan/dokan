@@ -525,10 +525,7 @@ final class WeDevs_Dokan {
             dokan_redirect_to_admin_setup_wizard();
         }
 
-        require_once DOKAN_INC_DIR . '/admin/setup-wizard.php';
-        require_once DOKAN_INC_DIR . '/admin/setup-wizard-no-wc.php';
-
-        new Dokan_Admin_Setup_Wizard_No_WC();
+        new \WeDevs\Dokan\Admin\SetupWizardNoWC();
     }
 
     /**
