@@ -57,17 +57,18 @@
             <th scope="row"><label for="share_essentials"><?php esc_html_e( 'Share Essentials', 'dokan-lite' ); ?></label></th>
 
             <td>
-                <input type="checkbox" name="share_essentials" id="share_essentials" class="switch-input" checked>
+                <input type="checkbox" name="share_essentials" id="share_essentials" class="switch-input">
                 <label for="share_essentials" class="switch-label">
                     <span class="toggle--on"><?php esc_html_e( 'On', 'dokan-lite' ); ?></span>
                     <span class="toggle--off"><?php esc_html_e( 'Off', 'dokan-lite' ); ?></span>
                 </label>
                 <span class="description">
-                    <?php esc_html_e( 'Want to help make Dokan even more awesome? Allow weDevs to collect non-sensitive diagnostic data and usage information.', 'dokan-lite' ); ?>
+                    <?php esc_html_e( 'Want to help make Dokan even more awesome? Allow Dokan Multivendor Marketplace to collect non-sensitive diagnostic data and usage information', 'dokan-lite' ); ?>
                     <?php printf( '<a class="insights-data-we-collect" href="#">%s</a>', esc_html__( 'What we collect', 'dokan-lite' ) ); ?>
                 </span>
                 <p id="collection-info" class="description" style="display:none;">
                     <?php esc_html_e( 'Server environment details (php, mysql, server, WordPress versions), Number of users in your site, Site language, Number of active and inactive plugins, Site name and url, Your name and email address. No sensitive data is tracked.', 'dokan-lite' ); ?>
+                    <?php printf( __( 'We are using %1$s to collect your data. <a href="%2$s" target="_blank">Learn more</a> about how %1$s collects and handle your data.', 'dokan-lite' ), '<a href="https://appsero.com" target="_blank">Appsero</a>', 'https://appsero.com/privacy-policy/' ); ?>
                 </p>
             </td>
         </tr>
