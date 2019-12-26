@@ -1,10 +1,12 @@
 <?php
 
+namespace WeDevs\Dokan\Admin;
+
 add_filter( 'woocommerce_enable_setup_wizard', '__return_false' );
 
 include_once WC_ABSPATH . '/includes/admin/class-wc-admin-setup-wizard.php';
 
-class Dokan_Admin_Setup_Wizard_WC_Admin extends WC_Admin_Setup_Wizard {
+class SetupWizardWCAdmin extends \WC_Admin_Setup_Wizard {
 
     /**
      * Current step
@@ -64,7 +66,7 @@ class Dokan_Admin_Setup_Wizard_WC_Admin extends WC_Admin_Setup_Wizard {
         $country_name          = WC()->countries->countries[ $country_code ];
         $prefixed_country_name = WC()->countries->estimated_for_prefix( $country_code ) . $country_name;
         $currency_code         = get_woocommerce_currency();
-        $existing_zones        = WC_Shipping_Zones::get_zones();
+        $existing_zones        = \WC_Shipping_Zones::get_zones();
         $intro_text            = '';
 
         if ( empty( $existing_zones ) ) {
