@@ -7,7 +7,7 @@ Tested up to: 5.3.2
 WC requires at least: 3.0
 WC tested up to: 3.8.1
 Requires PHP: 5.6
-Stable tag: 2.9.28
+Stable tag: 2.9.29
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -290,6 +290,14 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 == Changelog ==
+
+= v2.9.29 (December 26, 2019) =
+
+ - **Fix:** Don't show the admin setup wizard who ran the setup wizard before
+ - **Fix:** Remove non-ascii characters from some file names
+ - **Fix:** Dokan dashboard hamburger menu is not working fixed
+ - **Fix:** Downloadable product grunt and revoke access issue is fixed
+ - **Tweak:** Added privacy policy info in setup wizard for admin
 
 = v2.9.28 (December 19, 2019) =
 

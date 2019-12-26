@@ -132,6 +132,7 @@ jQuery(function($) {
                     product_id: product,
                     download_id: file,
                     order_id: self.data('order-id'),
+                    permission_id: self.data('permission-id'),
                     security: self.data('nonce')
                 };
 

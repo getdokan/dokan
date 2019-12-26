@@ -474,7 +474,7 @@ function dokan_dashboard_nav( $active_menu = '' ) {
     $hamburger_menu = apply_filters( 'dokan_load_hamburger_menu', true );
 
     if ( $hamburger_menu ) {
-        $menu .= '<div id="dokan-navigation" area-label="Menu">';
+        $menu .= '<div id="dokan-navigation" aria-label="Menu">';
         $menu .= '<label id="mobile-menu-icon" for="toggle-mobile-menu" aria-label="Menu">&#9776;</label>';
         $menu .= '<input id="toggle-mobile-menu" type="checkbox" />';
     }
