@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 2.9.28\n"
+"Project-Id-Version: Dokan 2.9.29\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2019-12-19 11:14:59+00:00\n"
+"POT-Creation-Date: 2019-12-26 11:24:21+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -39,7 +39,7 @@ msgstr ""
 msgid "1233456789"
 msgstr ""
 
-#: classes/admin-user-profile.php:35 classes/ajax.php:152
+#: classes/admin-user-profile.php:35 classes/ajax.php:151
 #: includes/class-assets.php:441 src/admin/pages/VendorAccountFields.vue:279
 #: src/admin/pages/VendorAccountFields.vue:311
 #: src/admin/pages/VendorAccountFields.vue:343
@@ -212,7 +212,7 @@ msgstr ""
 msgid "This vendor will be marked as a featured vendor."
 msgstr ""
 
-#: classes/admin-withdraw.php:40 classes/ajax.php:84
+#: classes/admin-withdraw.php:40 classes/ajax.php:83
 #: classes/template-withdraw.php:210 classes/template-withdraw.php:243
 msgid "You have no permission to do this action"
 msgstr ""
@@ -223,11 +223,11 @@ msgstr ""
 msgid "Invalid nonce"
 msgstr ""
 
-#: classes/ajax.php:106
+#: classes/ajax.php:105
 msgid "Something wrong, please try again later"
 msgstr ""
 
-#: classes/ajax.php:121 classes/template-settings.php:223
+#: classes/ajax.php:120 classes/template-settings.php:223
 #: classes/template-settings.php:237 classes/template-settings.php:249
 #: classes/template-settings.php:261 classes/template-settings.php:298
 #: classes/template-settings.php:364 classes/template-settings.php:405
@@ -236,15 +236,15 @@ msgstr ""
 msgid "Are you cheating?"
 msgstr ""
 
-#: classes/ajax.php:169 classes/ajax.php:204
+#: classes/ajax.php:168 classes/ajax.php:203
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
-#: classes/ajax.php:173 classes/ajax.php:208
+#: classes/ajax.php:172 classes/ajax.php:207
 msgid "You have taken too long. Please go back and retry."
 msgstr ""
 
-#: classes/ajax.php:183 classes/ajax.php:218
+#: classes/ajax.php:182 classes/ajax.php:217
 msgid "You do not have permission to change this order"
 msgstr ""
 
@@ -268,48 +268,48 @@ msgstr ""
 msgid "Email sent successfully!"
 msgstr ""
 
-#: classes/ajax.php:401 templates/orders/details.php:288
+#: classes/ajax.php:405 templates/orders/details.php:288
 msgid "Delete note"
 msgstr ""
 
-#: classes/ajax.php:432
+#: classes/ajax.php:436
 msgid "Shipping provider: "
 msgstr ""
 
-#: classes/ajax.php:432
+#: classes/ajax.php:436
 msgid "Shipping number: "
 msgstr ""
 
-#: classes/ajax.php:432
+#: classes/ajax.php:436
 msgid "Shipped date: "
 msgstr ""
 
-#: classes/ajax.php:471 includes/woo-views/html-product-download.php:14
+#: classes/ajax.php:475 includes/woo-views/html-product-download.php:14
 msgid "Delete"
 msgstr ""
 
-#: classes/ajax.php:516
+#: classes/ajax.php:520
 msgid "Error: Nonce verification failed"
 msgstr ""
 
-#: classes/ajax.php:603
+#: classes/ajax.php:607
 msgid "Image could not be processed. Please go back and try again."
 msgstr ""
 
-#: classes/ajax.php:724
+#: classes/ajax.php:728
 #. translators: 1: user display name 2: user ID 3: user email
 msgid "%1$s (#%2$s &ndash; %3$s)"
 msgstr ""
 
-#: classes/ajax.php:870
+#: classes/ajax.php:874
 msgid "Invalid username or password."
 msgstr ""
 
-#: classes/ajax.php:879
+#: classes/ajax.php:883
 msgid "Wrong username or password."
 msgstr ""
 
-#: classes/ajax.php:906
+#: classes/ajax.php:910
 msgid "User logged in successfully."
 msgstr ""
 
@@ -447,14 +447,14 @@ msgstr ""
 #: includes/admin/setup-wizard-wc-admin.php:230
 #: includes/admin/setup-wizard.php:521 includes/admin/setup-wizard.php:573
 #: templates/admin-setup-wizard/step-selling.php:53
-#: templates/admin-setup-wizard/step-store.php:76
+#: templates/admin-setup-wizard/step-store.php:77
 msgid "Continue"
 msgstr ""
 
 #: classes/seller-setup-wizard.php:238 classes/seller-setup-wizard.php:383
 #: includes/admin/setup-wizard.php:522
 #: templates/admin-setup-wizard/step-selling.php:54
-#: templates/admin-setup-wizard/step-store.php:77
+#: templates/admin-setup-wizard/step-store.php:78
 msgid "Skip this step"
 msgstr ""
 
@@ -4156,7 +4156,7 @@ msgstr ""
 msgid "Save Variations"
 msgstr ""
 
-#: includes/product-functions.php:318 lib/appsero/Insights.php:749
+#: includes/product-functions.php:318 lib/appsero/Insights.php:764
 #: templates/my-orders.php:83 templates/orders/details.php:199
 #: templates/products/new-product-single.php:214
 #: templates/products/new-product.php:165
@@ -4535,38 +4535,34 @@ msgstr ""
 msgid "Choose file"
 msgstr ""
 
-#: lib/appsero/Insights.php:358 vendor/appsero/client/src/Insights.php:369
+#: lib/appsero/Insights.php:369 vendor/appsero/client/src/Insights.php:369
 msgid ""
 "Want to help make <strong>%1$s</strong> even more awesome? Allow %1$s to "
 "collect non-sensitive diagnostic data and usage information."
 msgstr ""
 
-#: lib/appsero/Insights.php:363 vendor/appsero/client/src/Insights.php:374
+#: lib/appsero/Insights.php:374 vendor/appsero/client/src/Insights.php:374
 msgid "what we collect"
 msgstr ""
 
-#: lib/appsero/Insights.php:369 templates/products/inventory.php:55
+#: lib/appsero/Insights.php:381 templates/products/inventory.php:55
 #: vendor/appsero/client/src/Insights.php:381
 msgid "Allow"
 msgstr ""
 
-#: lib/appsero/Insights.php:370 vendor/appsero/client/src/Insights.php:382
+#: lib/appsero/Insights.php:382 vendor/appsero/client/src/Insights.php:382
 msgid "No thanks"
 msgstr ""
 
-#: lib/appsero/Insights.php:569
-msgid "Once Weekly"
-msgstr ""
-
-#: lib/appsero/Insights.php:733 vendor/appsero/client/src/Insights.php:747
+#: lib/appsero/Insights.php:747 vendor/appsero/client/src/Insights.php:747
 msgid "If you have a moment, please let us know why you are deactivating:"
 msgstr ""
 
-#: lib/appsero/Insights.php:747 vendor/appsero/client/src/Insights.php:762
+#: lib/appsero/Insights.php:762 vendor/appsero/client/src/Insights.php:762
 msgid "I rather wouldn't say"
 msgstr ""
 
-#: lib/appsero/Insights.php:748 vendor/appsero/client/src/Insights.php:763
+#: lib/appsero/Insights.php:763 vendor/appsero/client/src/Insights.php:763
 msgid "Submit & Deactivate"
 msgstr ""
 
@@ -5113,8 +5109,8 @@ msgstr ""
 
 #: templates/admin-setup-wizard/step-store.php:66
 msgid ""
-"Want to help make Dokan even more awesome? Allow weDevs to collect "
-"non-sensitive diagnostic data and usage information."
+"Want to help make Dokan even more awesome? Allow Dokan Multivendor "
+"Marketplace to collect non-sensitive diagnostic data and usage information"
 msgstr ""
 
 #: templates/admin-setup-wizard/step-store.php:67
@@ -5127,6 +5123,13 @@ msgid ""
 "of users in your site, Site language, Number of active and inactive "
 "plugins, Site name and url, Your name and email address. No sensitive data "
 "is tracked."
+msgstr ""
+
+#: templates/admin-setup-wizard/step-store.php:71
+msgid ""
+"We are using %1$s to collect your data. <a href=\"%2$s\" "
+"target=\"_blank\">Learn more</a> about how %1$s collects and handle your "
+"data."
 msgstr ""
 
 #: templates/dashboard/big-counter-widget.php:21
@@ -5702,33 +5705,33 @@ msgstr ""
 msgid "File %d: %s"
 msgstr ""
 
-#: templates/orders/order-download-permission-html.php:10
+#: templates/orders/order-download-permission-html.php:17
 msgid "Revoke Access"
 msgstr ""
 
-#: templates/orders/order-download-permission-html.php:20
+#: templates/orders/order-download-permission-html.php:28
 msgid "Downloaded"
 msgstr ""
 
-#: templates/orders/order-download-permission-html.php:22
+#: templates/orders/order-download-permission-html.php:30
 msgid "%s time"
 msgid_plural "%s times"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/orders/order-download-permission-html.php:25
+#: templates/orders/order-download-permission-html.php:33
 msgid "Downloads Remaining"
 msgstr ""
 
-#: templates/orders/order-download-permission-html.php:28
+#: templates/orders/order-download-permission-html.php:36
 msgid "Unlimited"
 msgstr ""
 
-#: templates/orders/order-download-permission-html.php:31
+#: templates/orders/order-download-permission-html.php:39
 msgid "Access Expires"
 msgstr ""
 
-#: templates/orders/order-download-permission-html.php:32
+#: templates/orders/order-download-permission-html.php:40
 msgid "Never"
 msgstr ""
 
