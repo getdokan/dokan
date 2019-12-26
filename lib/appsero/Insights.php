@@ -124,7 +124,7 @@ class Insights {
     public function init_plugin() {
         // plugin deactivate popup
         if ( ! $this->is_local_server() ) {
-            add_action( 'plugin_action_links_' . $this->client->basename, array( $this, 'plugin_action_links' ) );
+            add_filter( 'plugin_action_links_' . $this->client->basename, array( $this, 'plugin_action_links' ) );
             add_action( 'admin_footer', array( $this, 'deactivate_scripts' ) );
         }
 
@@ -152,7 +152,7 @@ class Insights {
         add_action( 'wp_ajax_' . $this->client->slug . '_submit-uninstall-reason', array( $this, 'uninstall_reason_submission' ) );
 
         // cron events
-        add_action( 'cron_schedules', array( $this, 'add_weekly_schedule' ) );
+        add_filter( 'cron_schedules', array( $this, 'add_weekly_schedule' ) );
         add_action( $this->client->slug . '_tracker_send_event', array( $this, 'send_tracking_data' ) );
         // add_action( 'admin_init', array( $this, 'send_tracking_data' ) ); // test
     }
@@ -225,9 +225,10 @@ class Insights {
             'inactive_plugins' => count( $all_plugins['inactive_plugins'] ),
             'ip_address'       => $this->get_user_ip_address(),
             'theme'            => get_stylesheet(),
+            'version'          => $this->client->project_version,
         );
 
-        // for child classes
+        // Add metadata
         if ( $extra = $this->get_extra_data() ) {
             $data['extra'] = $extra;
         }
@@ -241,7 +242,15 @@ class Insights {
      * @return mixed
      */
     protected function get_extra_data() {
-        return $this->extra_data;
+        if ( is_callable( $this->extra_data ) ) {
+            return call_user_func( $this->extra_data );
+        }
+
+        if ( is_array( $this->extra_data ) ) {
+            return $this->extra_data;
+        }
+
+        return array();
     }
 
     /**
@@ -267,7 +276,7 @@ class Insights {
      *
      * @return bool
      */
-    private function tracking_allowed() {
+    public function tracking_allowed() {
         $allow_tracking = get_option( $this->client->slug . '_allow_tracking', 'no' );
 
         return $allow_tracking == 'yes';
@@ -288,7 +297,7 @@ class Insights {
      * @return boolean
      */
     private function notice_dismissed() {
-        $hide_notice = get_option( $this->client->slug . '_tracking_notice', 'no' );
+        $hide_notice = get_option( $this->client->slug . '_tracking_notice', null );
 
         if ( 'hide' == $hide_notice ) {
             return true;
@@ -316,8 +325,11 @@ class Insights {
      * @return void
      */
     private function schedule_event() {
-        wp_schedule_event( time(), 'weekly', $this->client->slug . '_tracker_send_event' );
-        wp_schedule_event( time(), 'daily', $this->client->slug . '_license_check_event' );
+        $hook_name = $this->client->slug . '_tracker_send_event';
+
+        if ( ! wp_next_scheduled( $hook_name ) ) {
+            wp_schedule_event( time(), 'weekly', $hook_name );
+        }
     }
 
     /**
@@ -327,7 +339,6 @@ class Insights {
      */
     private function clear_schedule_event() {
         wp_clear_scheduled_hook( $this->client->slug . '_tracker_send_event' );
-        wp_clear_scheduled_hook( $this->client->slug . '_license_check_event' );
     }
 
     /**
@@ -355,28 +366,26 @@ class Insights {
             $optout_url = add_query_arg( $this->client->slug . '_tracker_optout', 'true' );
 
             if ( empty( $this->notice ) ) {
-                $notice = sprintf( __( 'Want to help make <strong>%1$s</strong> even more awesome? Allow %1$s to collect non-sensitive diagnostic data and usage information.', 'textdomain' ), $this->client->name );
+                $notice = sprintf( __( 'Want to help make <strong>%1$s</strong> even more awesome? Allow %1$s to collect non-sensitive diagnostic data and usage information.', $this->client->textdomain ), $this->client->name );
             } else {
                 $notice = $this->notice;
             }
 
-            $notice .= ' (<a class="' . $this->client->slug . '-insights-data-we-collect" href="#">' . __( 'what we collect', 'textdomain' ) . '</a>)';
-            $notice .= '<p class="description" style="display:none;">' . implode( ', ', $this->data_we_collect() ) . '. No sensitive data is tracked.</p>';
+            $notice .= ' (<a class="' . $this->client->slug . '-insights-data-we-collect" href="#">' . __( 'what we collect', $this->client->textdomain ) . '</a>)';
+            $notice .= '<p class="description" style="display:none;">' . implode( ', ', $this->data_we_collect() ) . '. No sensitive data is tracked. ';
+            $notice .= 'We are using Appsero to collect your data. <a href="https://appsero.com/privacy-policy/">Learn more</a> about how Appsero collects and handle your data.</p>';
 
             echo '<div class="updated"><p>';
                 echo $notice;
                 echo '</p><p class="submit">';
-                echo '&nbsp;<a href="' . esc_url( $optin_url ) . '" class="button-primary button-large">' . __( 'Allow', 'textdomain' ) . '</a>';
-                echo '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary button-large">' . __( 'No thanks', 'textdomain' ) . '</a>';
+                echo '&nbsp;<a href="' . esc_url( $optin_url ) . '" class="button-primary button-large">' . __( 'Allow', $this->client->textdomain ) . '</a>';
+                echo '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary button-large">' . __( 'No thanks', $this->client->textdomain ) . '</a>';
             echo '</p></div>';
 
             echo "<script type='text/javascript'>jQuery('." . $this->client->slug . "-insights-data-we-collect').on('click', function(e) {
                     e.preventDefault();
                     jQuery(this).parents('.updated').find('p.description').slideToggle('fast');
                 });
-                jQuery.getJSON('https://api.ipify.org?format=jsonp&callback=?', function(json) {
-                    json.ip;
-                } );
                 </script>
             ";
         }
@@ -566,7 +575,7 @@ class Insights {
 
         $schedules['weekly'] = array(
             'interval' => DAY_IN_SECONDS * 7,
-            'display'  => __( 'Once Weekly', 'textdomain' )
+            'display'  => 'Once Weekly',
         );
 
         return $schedules;
@@ -586,7 +595,11 @@ class Insights {
         }
 
         // re-schedule and delete the last sent time so we could force send again
-        wp_schedule_event( time(), 'weekly', $this->client->slug . '_tracker_send_event' );
+        $hook_name = $this->client->slug . '_tracker_send_event';
+        if ( ! wp_next_scheduled( $hook_name ) ) {
+            wp_schedule_event( time(), 'weekly', $hook_name );
+        }
+
         delete_option( $this->client->slug . '_tracking_last_send' );
 
         $this->send_tracking_data( true );
@@ -699,10 +712,11 @@ class Insights {
             'server'      => $this->get_server_info(),
             'wp'          => $this->get_wp_info(),
             'ip_address'  => $this->get_user_ip_address(),
+            'theme'       => get_stylesheet(),
             'version'     => $this->client->project_version,
         );
 
-        // Add extra data
+        // Add metadata
         if ( $extra = $this->get_extra_data() ) {
             $data['extra'] = $extra;
         }
@@ -730,7 +744,7 @@ class Insights {
         <div class="wd-dr-modal" id="<?php echo $this->client->slug; ?>-wd-dr-modal">
             <div class="wd-dr-modal-wrap">
                 <div class="wd-dr-modal-header">
-                    <h3><?php _e( 'If you have a moment, please let us know why you are deactivating:', 'domain' ); ?></h3>
+                    <h3><?php _e( 'If you have a moment, please let us know why you are deactivating:', $this->client->textdomain ); ?></h3>
                 </div>
 
                 <div class="wd-dr-modal-body">
@@ -741,12 +755,13 @@ class Insights {
                             </li>
                         <?php } ?>
                     </ul>
+                    <p class="wd-dr-modal-reasons-bottom">We share your data with <a href="https://appsero.com/">Appsero</a> to troubleshoot problems &amp; make product improvements. <a href="https://appsero.com/privacy-policy/">Learn more</a> about how Appsero handles your data.</p>
                 </div>
 
                 <div class="wd-dr-modal-footer">
-                    <a href="#" class="dont-bother-me"><?php _e( 'I rather wouldn\'t say', 'domain' ); ?></a>
-                    <button class="button-secondary"><?php _e( 'Submit & Deactivate', 'domain' ); ?></button>
-                    <button class="button-primary"><?php _e( 'Cancel', 'domain' ); ?></button>
+                    <a href="#" class="dont-bother-me"><?php _e( 'I rather wouldn\'t say', $this->client->textdomain ); ?></a>
+                    <button class="button-secondary"><?php _e( 'Submit & Deactivate', $this->client->textdomain ); ?></button>
+                    <button class="button-primary"><?php _e( 'Cancel', $this->client->textdomain ); ?></button>
                 </div>
             </div>
         </div>
@@ -796,6 +811,9 @@ class Insights {
                 border-top: 1px solid #eee;
                 padding: 12px 20px;
                 text-align: right;
+            }
+            .wd-dr-modal-reasons-bottom {
+                margin: 15px 0 0 0;
             }
         </style>
 
@@ -897,6 +915,7 @@ class Insights {
                 'server'      => $this->get_server_info(),
                 'wp'          => $this->get_wp_info(),
                 'ip_address'  => $this->get_user_ip_address(),
+                'theme'       => get_stylesheet(),
                 'version'     => $this->client->project_version,
             );
 
