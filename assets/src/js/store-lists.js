@@ -27,6 +27,7 @@
          * @return void
          */
         init: function() {
+            this.hideListView();
             $( '#dokan-store-listing-filter-wrap .sort-by #stores_orderby' ).on( 'change', this.buildSortByQuery );
             $( '#dokan-store-listing-filter-wrap .toggle-view span' ).on( 'click', this.toggleView );
             $( '#dokan-store-listing-filter-wrap .dokan-store-list-filter-button, #dokan-store-listing-filter-wrap .dokan-icons ' ).on( 'click', this.toggleForm );
@@ -91,7 +92,7 @@
             const view = currentElement.data( 'view' );
 
             self.setView( view, elements );
-            self.addLocal( 'dokan-layout', view );
+            self.setLocal( 'dokan-layout', view );
         },
 
         /**
@@ -178,7 +179,7 @@
          *
          * @return void
          */
-        addLocal: function( key, value ) {
+        setLocal: function( key, value ) {
             window.localStorage.setItem( key, value );
         },
 
@@ -256,6 +257,33 @@
             });
 
             return allParams;
+        },
+
+        /**
+         * On mobile screen hide the grid, list view button
+         *
+         * @return void
+         */
+        hideListView: function() {
+            const self = storeLists;
+
+            if ( window.matchMedia( '(max-width: 767px)' ).matches ) {
+                if ( 'list-view' === self.getLocal( 'dokan-layout' ) ) {
+                    self.setLocal( 'dokan-layout', 'grid-view' );
+                }
+            }
+
+            $( window ).on( 'resize', function() {
+                const win = $(this);
+
+                if ( win.width() < 767 ) {
+                    $( '#dokan-seller-listing-wrap' ).removeClass( 'list-view' );
+                    $( '#dokan-seller-listing-wrap' ).addClass( 'grid-view' );
+                } else {
+                    $( '.toggle-view.item span' ).last().removeClass( 'active' );
+                    $( '.toggle-view.item span' ).first().addClass( 'active' );
+                }
+            });
         }
     };
 
