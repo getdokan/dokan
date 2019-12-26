@@ -6,7 +6,7 @@
 class Dokan_Depricated_Classes {
 
     public function __construct() {
-        $dir_path = DOKAN_INC_DIR . '/depricated';
+        $dir_path = DOKAN_DIR . '/depricated';
 
         require_once $dir_path . '/class-abstract-class-dokan-background-processes.php';
         require_once $dir_path . '/Singleton.php';

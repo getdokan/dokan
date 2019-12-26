@@ -287,14 +287,14 @@ final class WeDevs_Dokan {
      * @return void
      */
     function includes() {
+        require_once DOKAN_DIR . '/depricated/depricated-functions.php';
         require_once DOKAN_INC_DIR . '/functions.php';
-        require_once DOKAN_INC_DIR . '/functions-depricated.php';
         require_once DOKAN_INC_DIR . '/functions-compatibility.php';
 
         require_once DOKAN_INC_DIR . '/wc-functions.php';
 
         require_once DOKAN_INC_DIR . '/wc-template.php';
-        require_once DOKAN_INC_DIR . '/depricated/depricated-classes.php';
+        require_once DOKAN_DIR . '/depricated/depricated-classes.php';
 
         if ( is_admin() ) {
             require_once DOKAN_INC_DIR . '/admin-functions.php';
