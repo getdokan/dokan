@@ -49,7 +49,6 @@ class Dokan_Ajax {
         add_action( 'wp_ajax_dokan_add_shipping_tracking_info', array( $this, 'add_shipping_tracking_info' ) );
 
         add_action( 'wp_ajax_dokan_revoke_access_to_download', array( $this, 'revoke_access_to_download' ) );
-        add_action( 'wp_ajax_nopriv_dokan_revoke_access_to_download', array( $this, 'revoke_access_to_download' ) );
 
         add_action( 'wp_ajax_shop_url', array( $this, 'shop_url_check' ) );
         add_action( 'wp_ajax_nopriv_shop_url', array( $this, 'shop_url_check' ) );
@@ -232,40 +231,41 @@ class Dokan_Ajax {
      * @return void
      */
     function grant_access_to_download() {
-        global $wpdb;
-
         check_ajax_referer( 'grant-access', 'security' );
 
-        $order_id       = isset( $_POST['order_id'] ) ? intval( $_POST['order_id'] ) : 0;
-        $product_ids    = isset( $_POST['product_ids'] ) ? intval( $_POST['product_ids'] ) : 0;
-        $loop           = isset( $_POST['loop'] ) ? intval( $_POST['loop'] ) : 0;
-        $file_counter   = 0;
-        $order          = wc_get_order( $order_id );
-
-        if ( ! is_array( $product_ids ) ) {
-            $product_ids = array( $product_ids );
+        if (  ! current_user_can( 'dokandar' ) || ! isset( $_POST['loop'], $_POST['order_id'], $_POST['product_ids']) ) {
+            wp_die( -1 );
         }
+
+        global $wpdb;
+
+        $wpdb->hide_errors();
+
+        $order_id     = intval( $_POST['order_id'] );
+        $product_ids  = array_filter( array_map( 'absint', (array) wp_unslash( $_POST['product_ids'] ) ) );
+        $loop         = intval( $_POST['loop'] );
+        $file_counter = 0;
+        $order        = wc_get_order( $order_id );
 
         foreach ( $product_ids as $product_id ) {
             $product = wc_get_product( $product_id );
-            $files   = $product->get_files();
+            $files   = $product->get_downloads();
 
-            if ( ! $order->billing_email ) {
-                die();
+            if ( ! $order->get_billing_email() ) {
+                wp_die();
             }
 
             if ( $files ) {
                 foreach ( $files as $download_id => $file ) {
-                    if ( $inserted_id = wc_downloadable_file_permission( $download_id, $product_id, $order ) ) {
+                    $inserted_id = wc_downloadable_file_permission( $download_id, $product_id, $order );
 
-                        // insert complete - get inserted data
-                        $download = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}woocommerce_downloadable_product_permissions WHERE permission_id = %d", $inserted_id ) );
-
+                    if ( $inserted_id ) {
+                        $download = new WC_Customer_Download( $inserted_id );
                         $loop ++;
                         $file_counter ++;
 
-                        if ( isset( $file['name'] ) ) {
-                            $file_count = $file['name'];
+                        if ( $file->get_name() ) {
+                            $file_count = $file->get_name();
                         } else {
                             $file_count = sprintf( __( 'File %d', 'dokan-lite' ), $file_counter );
                         }
@@ -276,7 +276,7 @@ class Dokan_Ajax {
             }
         }
 
-        die();
+        wp_die();
     }
 
     /**
@@ -347,24 +347,28 @@ class Dokan_Ajax {
         wp_send_json_success( $success );
     }
 
+    /**
+     * Rovoke file download access for customer
+     *
+     * @return void
+     */
     function revoke_access_to_download() {
         check_ajax_referer( 'revoke-access', 'security' );
 
-        if ( ! current_user_can( 'dokandar' ) ) {
-            die( -1 );
+        if ( ! current_user_can( 'dokandar' ) || ! isset( $_POST['download_id'], $_POST['product_id'], $_POST['order_id'], $_POST['permission_id'] ) ) {
+            wp_die( -1 );
         }
 
-        global $wpdb;
+        $download_id   = intval( wp_unslash( $_POST['download_id'] ) );
+        $product_id    = intval( $_POST['product_id'] );
+        $order_id      = intval( $_POST['order_id'] );
+        $permission_id = absint( $_POST['permission_id'] );
 
-        $download_id = isset( $_POST['download_id'] ) ? intval( $_POST['download_id'] ) : 0;
-        $product_id  = isset( $_POST['product_id'] ) ? intval( $_POST['product_id'] ) : 0;
-        $order_id    = isset( $_POST['order_id'] ) ? intval( $_POST['order_id'] ) : 0;
+        $data_store = WC_Data_Store::load( 'customer-download' );
+        $data_store->delete_by_id( $permission_id );
 
-        $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}woocommerce_downloadable_product_permissions WHERE order_id = %d AND product_id = %d AND download_id = %s;", $order_id, $product_id, $download_id ) );
-
-        do_action( 'woocommerce_ajax_revoke_access_to_product_download', $download_id, $product_id, $order_id );
-
-        die();
+        do_action( 'woocommerce_ajax_revoke_access_to_product_download', $download_id, $product_id, $order_id, $permission_id );
+        wp_die();
     }
 
     /**
