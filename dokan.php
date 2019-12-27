@@ -362,6 +362,7 @@ final class WeDevs_Dokan {
         } else {
             require_once $inc_dir . 'template-tags.php';
             require_once $inc_dir . 'class-theme-support.php';
+            require_once $inc_dir . 'class-store-lists-filter.php';
         }
 
         // API includes
@@ -413,6 +414,7 @@ final class WeDevs_Dokan {
 
         if ( ! is_admin() ) {
             new Dokan_Theme_Support();
+            Dokan_Store_Lists_Filter::instance();
         }
 
         if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
