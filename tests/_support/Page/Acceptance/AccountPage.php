@@ -18,6 +18,7 @@ class AccountPage
     public static $loginButton = '.login button[type=submit]';
 
     // Vendor Sign up
+    public static $vendorPasswordField = '.register #reg_password';
     public static $userRol = '(//input[@name="role"])[2]';
     public static $firstName = '.show_if_seller #first-name';
     public static $lastName = '.show_if_seller #last-name';

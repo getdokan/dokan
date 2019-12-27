@@ -8,7 +8,9 @@ class VendorExploratoryTestingCest
     {
     }
 
-    // Exploratory testing for vendor dashboard
+    
+
+    Exploratory testing for vendor dashboard
     public function vendorExploratoryTesting(\Step\Acceptance\MultiSteps $I)
     {
     	$I->loginAsVendor();

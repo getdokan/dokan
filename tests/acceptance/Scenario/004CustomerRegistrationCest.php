@@ -12,11 +12,12 @@ class CustomerRegistrationCest
                                 \Page\Acceptance\AccountPage $customer)
     {
         $I->amOnPage(Customer::$URL);
-      $I->click(Customer::$registrationLink);
-      $I->fillField(Customer::$emailField, randomGenerateCustomer()->email );
-      $I->dontSee('Error: An account is already registered with your email address. Please log in.');
-      $I->click('Register');
-      $I->see('dashboard');
+        $I->click(Customer::$registrationLink);
+        $I->fillField(Customer::$emailField, randomGenerateCustomer()->email );
+        $I->dontSee('Error: An account is already registered with your email address. Please log in.');
+        $I->click('Register');
+        $I->see('dashboard');
+     
     }
 }
 

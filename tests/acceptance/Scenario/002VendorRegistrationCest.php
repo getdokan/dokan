@@ -17,6 +17,7 @@ class VendorRegistrationCest
       $I->amOnPage(Vendor::$URL);
       $I->click(Vendor::$registrationLink);
       $I->fillField(Vendor::$emailField, randomGenerate()->email );
+      $I->fillField(Vendor::$vendorPasswordField, randomGenerate()->password );
       $I->click(Vendor::$userRol);
       $I->waitForElement('.show_if_seller', 30);
       $I->fillField(Vendor::$firstName, randomGenerate()->firstName);
@@ -27,6 +28,7 @@ class VendorRegistrationCest
       $I->click(Vendor::$registrationButton);
       // $I->grabTextFrom(Vendor::$welcomeMessage, 'Welcome to the Marketplace!');
       $I->click(Vendor::$ignoreWizard);
+      // $I->seeInCurrentUrl('/dashboard');
     }
 }
 

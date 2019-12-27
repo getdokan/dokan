@@ -23,6 +23,8 @@ class AddProductAndSingleOrderCest
     {
       $I->loginAsVendor();
       $vendor->updateOrderStatus();
+      $I->see('Completed');
+      // $I->seeRecord('wp_dokan_orders', ['order_id' => $order_id]);
 
     }
 }
