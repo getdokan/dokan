@@ -27,16 +27,17 @@
          * @return void
          */
         init: function() {
-            this.hideListView();
             $( '#dokan-store-listing-filter-wrap .sort-by #stores_orderby' ).on( 'change', this.buildSortByQuery );
             $( '#dokan-store-listing-filter-wrap .toggle-view span' ).on( 'click', this.toggleView );
-            $( '#dokan-store-listing-filter-wrap .dokan-store-list-filter-button, #dokan-store-listing-filter-wrap .dokan-icons ' ).on( 'click', this.toggleForm );
+            $( '#dokan-store-listing-filter-wrap .dokan-store-list-filter-button, #dokan-store-listing-filter-wrap .dokan-icons, #dokan-store-listing-filter-form-wrap .apply-filter #cancel-filter-btn ' ).on( 'click', this.toggleForm );
 
             // Build query string
             $( '#dokan-store-listing-filter-form-wrap .store-search-input' ).on( 'change', this.buildSearchQuery );
 
             // Submit the form
             $( '#dokan-store-listing-filter-form-wrap .apply-filter #apply-filter-btn' ).on( 'click', this.submitForm );
+
+            this.maybeHideListView();
 
             const self = storeLists;
 
@@ -264,7 +265,7 @@
          *
          * @return void
          */
-        hideListView: function() {
+        maybeHideListView: function() {
             const self = storeLists;
 
             if ( window.matchMedia( '(max-width: 767px)' ).matches ) {

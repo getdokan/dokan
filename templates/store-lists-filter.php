@@ -78,6 +78,7 @@ defined( 'ABSPATH' ) || exit; ?>
     ?>
 
     <div class="apply-filter">
+        <button id="cancel-filter-btn" class="dokan-btn dokan-btn-theme"><?php esc_html_e( 'Cancel', 'dokan-lite' ); ?></button>
         <button id="apply-filter-btn" class="dokan-btn dokan-btn-theme" type="submit"><?php esc_html_e( 'Apply', 'dokan-lite' ); ?></button>
     </div>
 
