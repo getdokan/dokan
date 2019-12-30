@@ -53,7 +53,7 @@ class AdminReportController extends DokanRESTAdminController {
      * @return void
      */
     public function get_summary( $request ) {
-        require_once DOKAN_INC_DIR . '/admin-functions.php';
+        require_once DOKAN_INC_DIR . '/Admin/functions.php';
 
         $params = $request->get_params();
 
@@ -83,7 +83,7 @@ class AdminReportController extends DokanRESTAdminController {
      * @return void
      */
     public function get_overview( $request ) {
-        require_once DOKAN_INC_DIR . '/admin-functions.php';
+        require_once DOKAN_INC_DIR . '/Admin/functions.php';
 
         $params = $request->get_params();
 

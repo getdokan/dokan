@@ -23,6 +23,12 @@ class Hooks {
         // create sub-orders
         add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'maybe_split_orders' ) );
 
+        // order table synced for WooCommerce update order meta
+        add_action( 'woocommerce_checkout_update_order_meta', 'dokan_sync_insert_order', 20 );
+
+        // order table synced for dokan update order meta
+        add_action( 'dokan_checkout_update_order_meta', 'dokan_sync_insert_order' );
+
         // prevent non-vendor coupons from being added
         add_filter( 'woocommerce_coupon_is_valid', array( $this, 'ensure_vendor_coupon' ), 10, 2 );
 
@@ -119,7 +125,7 @@ class Hooks {
 
         if ( $sub_orders ) {
             foreach ($sub_orders as $sub) {
-                $order = wc_get_order( $sub->ID );
+                $order = dokan()->orders->get( $sub->ID );
 
                 if ( $order->get_status() != 'completed' ) {
                     $all_complete = false;

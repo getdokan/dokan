@@ -289,6 +289,10 @@ final class WeDevs_Dokan {
     function includes() {
         require_once DOKAN_DIR . '/depricated/depricated-functions.php';
         require_once DOKAN_INC_DIR . '/functions.php';
+        require_once DOKAN_INC_DIR . '/Order/functions.php';
+        require_once DOKAN_INC_DIR . '/Product/functions.php';
+        require_once DOKAN_INC_DIR . '/Withdraw/functions.php';
+
         require_once DOKAN_INC_DIR . '/functions-compatibility.php';
 
         require_once DOKAN_INC_DIR . '/wc-functions.php';
@@ -297,7 +301,7 @@ final class WeDevs_Dokan {
         require_once DOKAN_DIR . '/depricated/depricated-classes.php';
 
         if ( is_admin() ) {
-            require_once DOKAN_INC_DIR . '/admin-functions.php';
+            require_once DOKAN_INC_DIR . '/Admin/functions.php';
         } else {
             require_once DOKAN_INC_DIR . '/template-tags.php';
         }

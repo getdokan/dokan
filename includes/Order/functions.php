@@ -7,7 +7,7 @@
  * @return float
  */
 function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
-    $order              = wc_get_order( $order_id );
+    $order              = dokan()->orders->get( $order_id );
     $seller_id          = dokan_get_seller_id_by_order( $order_id );
     $net_amount         = dokan_get_seller_earnings_by_order( $order, $seller_id );
     $order_shipping     = $order->get_total_shipping();
@@ -35,6 +35,7 @@ function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
 
     return apply_filters( 'dokan_get_seller_amount_from_order', $net_amount, $order, $seller_id );
 }
+
 /**
  * Get all the orders from a specific seller
  *
@@ -270,7 +271,6 @@ function dokan_count_orders( $user_id ) {
     return $counts;
 }
 
-
 /**
  * Delete a order row from sync table when a order is deleted from WooCommerce
  *
@@ -279,7 +279,6 @@ function dokan_count_orders( $user_id ) {
  */
 function dokan_delete_sync_order( $order_id ) {
     global $wpdb;
-
     $wpdb->delete( $wpdb->prefix . 'dokan_orders', array( 'order_id' => $order_id ) );
 }
 
@@ -293,7 +292,6 @@ function dokan_delete_sync_order( $order_id ) {
  */
 function dokan_delete_sync_duplicate_order( $order_id, $seller_id ) {
     global $wpdb;
-
     $wpdb->delete( $wpdb->prefix . 'dokan_orders', array( 'order_id' => $order_id, 'seller_id' => $seller_id ) );
 }
 
@@ -314,7 +312,7 @@ function dokan_sync_insert_order( $order_id ) {
         return;
     }
 
-    $order              = wc_get_order( $order_id );
+    $order              = dokan()->orders->get( $order_id );
     $seller_id          = dokan_get_seller_id_by_order( $order_id );
     $order_total        = $order->get_total();
     $order_status       = dokan_get_prop( $order, 'status' );
@@ -374,10 +372,6 @@ function dokan_sync_insert_order( $order_id ) {
     );
 }
 
-add_action( 'woocommerce_checkout_update_order_meta', 'dokan_sync_insert_order', 20 );
-add_action( 'dokan_checkout_update_order_meta', 'dokan_sync_insert_order' );
-
-
 /**
  * Get a seller ID based on WooCommerce order.
  *
@@ -405,13 +399,12 @@ function dokan_get_seller_id_by_order( $order_id ) {
 
     if ( count( $seller ) === 1 ) {
         $seller_id = absint( reset( $seller )->seller_id );
-
         return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
     }
 
     // if seller is not found, try to retrieve it via line items
     if ( ! $seller ) {
-        $order = wc_get_order( $order_id );
+        $order = dokan()->orders->get( $order_id );
 
         if ( ! $order instanceof WC_Order ) {
             return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
@@ -576,7 +569,6 @@ function dokan_is_sub_order( $order_id ) {
     return false;
 }
 
-
 /**
  * Get toal number of orders in Dokan order table
  *
@@ -604,7 +596,7 @@ function dokan_total_orders() {
  */
 function dokan_get_sellers_by( $order ) {
     if ( ! $order instanceof WC_Order ) {
-        $order  = wc_get_order( $order );
+        $order  = dokan()->orders->get( $order );
     }
 
     $order_items = $order->get_items();
@@ -613,8 +605,9 @@ function dokan_get_sellers_by( $order ) {
 
     foreach ( $order_items as $item ) {
         $seller_id             = get_post_field( 'post_author', $item['product_id'] );
+
         //New filter hook to modify the seller id at run time.
-   		$seller_id = apply_filters( 'dokan_get_sellers_by', $seller_id, $item );
+        $seller_id = apply_filters( 'dokan_get_sellers_by', $seller_id, $item );
         $sellers[$seller_id][] = $item;
     }
 
@@ -631,9 +624,7 @@ function dokan_get_sellers_by( $order ) {
  * @return array $seller_ids
  */
 function dokan_get_seller_ids_by( $order_id ) {
-
     $sellers = dokan_get_sellers_by( $order_id );
-
     return array_unique( array_keys( $sellers ) );
 }
 
@@ -692,7 +683,6 @@ function dokan_get_admin_commission_by( $order, $context ) {
     $tax_recipient      = dokan_get_option( 'tax_fee_recipient', 'dokan_selling', 'seller' );
 
     foreach ( $order->get_items() as $item_id => $item ) {
-
         $refund_t                      += $order->get_total_refunded_for_item( $item_id );
         $commissions[$i]['total_line'] = $item->get_total() - $order->get_total_refunded_for_item( $item_id );
         $commissions[$i]['fee_type']   = dokan_get_commission_type( $seller_id, $item['product_id'] );
@@ -728,40 +718,36 @@ function dokan_get_admin_commission_by( $order, $context ) {
     return apply_filters( 'dokan_order_admin_commission', $admin_commission, $order );
 }
 
-if ( ! function_exists( 'dokan_get_customer_orders_by_seller' ) ) :
-    /**
-     * Get Customer Order IDs by Seller
-     *
-     * @since 2.6.6
-     *
-     * @param int $customer_id
-     *
-     * @param int $seller_id
-     *
-     * @return array|null on failure
-     */
-    function dokan_get_customer_orders_by_seller( $customer_id, $seller_id ) {
-
-        if ( ! $customer_id || ! $seller_id ) {
-            return null;
-        }
-
-        $args = [
-            'customer_id'   => $customer_id,
-            'post_type'     => 'shop_order',
-            'meta_key'      => '_dokan_vendor_id',
-            'meta_value'    => $seller_id,
-            'post_status'   => array_keys( wc_get_order_statuses() ),
-            'return'        => 'ids',
-            'numberposts'   => -1,
-        ];
-
-        $orders = wc_get_orders( apply_filters( 'dokan_get_customer_orders_by_seller', $args ) );
-
-        return $orders ? $orders : null;
+/**
+ * Get Customer Order IDs by Seller
+ *
+ * @since 2.6.6
+ *
+ * @param int $customer_id
+ *
+ * @param int $seller_id
+ *
+ * @return array|null on failure
+ */
+function dokan_get_customer_orders_by_seller( $customer_id, $seller_id ) {
+    if ( ! $customer_id || ! $seller_id ) {
+        return null;
     }
 
-endif;
+    $args = [
+        'customer_id'   => $customer_id,
+        'post_type'     => 'shop_order',
+        'meta_key'      => '_dokan_vendor_id',
+        'meta_value'    => $seller_id,
+        'post_status'   => array_keys( wc_get_order_statuses() ),
+        'return'        => 'ids',
+        'numberposts'   => -1,
+    ];
+
+    $orders = dokan()->orders->get( apply_filters( 'dokan_get_customer_orders_by_seller', $args ) );
+
+    return $orders ? $orders : null;
+}
 
 /**
  * Header rows for CSV order export
@@ -771,7 +757,7 @@ endif;
  * @return array
  */
 function dokan_order_csv_headers() {
-    $headers = array(
+    return apply_filters( 'dokan_csv_export_headers', array(
         'order_id'             => __( 'Order No', 'dokan-lite' ),
         'order_items'          => __( 'Order Items', 'dokan-lite' ),
         'order_shipping'       => __( 'Shipping method', 'dokan-lite' ),
@@ -780,7 +766,6 @@ function dokan_order_csv_headers() {
         'order_total'          => __( 'Order Total', 'dokan-lite' ),
         'order_status'         => __( 'Order Status', 'dokan-lite' ),
         'order_date'           => __( 'Order Date', 'dokan-lite' ),
-
         'billing_company'      => __( 'Billing Company', 'dokan-lite' ),
         'billing_first_name'   => __( 'Billing First Name', 'dokan-lite' ),
         'billing_last_name'    => __( 'Billing Last Name', 'dokan-lite' ),
@@ -793,7 +778,6 @@ function dokan_order_csv_headers() {
         'billing_state'        => __( 'Billing State', 'dokan-lite' ),
         'billing_postcode'     => __( 'Billing Postcode', 'dokan-lite' ),
         'billing_country'      => __( 'Billing Country', 'dokan-lite' ),
-
         'shipping_company'     => __( 'Shipping Company', 'dokan-lite' ),
         'shipping_first_name'  => __( 'Shipping First Name', 'dokan-lite' ),
         'shipping_last_name'   => __( 'Shipping Last Name', 'dokan-lite' ),
@@ -804,12 +788,9 @@ function dokan_order_csv_headers() {
         'shipping_state'       => __( 'Shipping State', 'dokan-lite' ),
         'shipping_postcode'    => __( 'Shipping Postcode', 'dokan-lite' ),
         'shipping_country'     => __( 'Shipping Country', 'dokan-lite' ),
-
         'customer_ip'          => __( 'Customer IP', 'dokan-lite' ),
         'customer_note'        => __( 'Customer Note', 'dokan-lite' ),
-    );
-
-    return apply_filters( 'dokan_csv_export_headers', $headers );
+    ) );
 }
 
 /**
@@ -832,11 +813,10 @@ function dokan_order_csv_export( $orders, $file = null ) {
     fputcsv( $output, $headers );
 
     foreach ( $orders as $order ) {
-        $the_order = wc_get_order( $order->order_id );
         $line      = array();
+        $the_order = dokan()->orders->get( $order->order_id );
 
         foreach ( $headers as $row_key => $label ) {
-
             switch ( $row_key ) {
                 case 'order_id':
                     $line[ $row_key ] = $the_order->get_id();
@@ -964,7 +944,6 @@ function dokan_order_csv_export( $orders, $file = null ) {
  */
 function dokan_get_seller_id_by_order_id( $id ) {
     wc_deprecated_function( 'dokan_get_seller_id_by_order_id', '2.9.10', 'dokan_get_seller_id_by_order' );
-
     return dokan_get_seller_id_by_order( $id );
 }
 
