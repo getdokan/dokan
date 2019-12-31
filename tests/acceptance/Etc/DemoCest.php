@@ -8,7 +8,7 @@ class DemoCest
     public function _before(AcceptanceTester $I)
     {
     }
-
+    
     //TESTING DYNAMIC DATA WITH SNAPSHOTS https://codeception.com/docs/09-Data
     public function productsAreSame(\Step\Acceptance\MultiSteps $I,  
                         \Step\Acceptance\Vendor $vendor, \Snapshot\Products $snapshot)
