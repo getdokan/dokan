@@ -257,10 +257,7 @@ class Settings {
     public function get_settings_fields() {
         $pages_array  = $this->get_post_type( 'page' );
 
-        $commission_types = array(
-            'flat'       => __( 'Flat', 'dokan-lite' ),
-            'percentage' => __( 'Percentage', 'dokan-lite' ),
-        );
+        $commission_types = dokan_commission_types();
 
         $general_site_options = apply_filters( 'dokan_settings_general_site_options', array(
             'site_options' => array(

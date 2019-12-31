@@ -1,21 +1,22 @@
 <?php
-
 /**
- * Get default withdraw methods
+ * Get default withdraw methods for vendor
+ *
+ * @since 1.0.0
  *
  * @return array
  */
 function dokan_withdraw_register_methods() {
-    $methods = array(
-        'paypal' => array(
+    $methods = [
+        'paypal' => [
             'title'    =>  __( 'PayPal', 'dokan-lite' ),
             'callback' => 'dokan_withdraw_method_paypal'
-        ),
-        'bank' => array(
+        ],
+        'bank' => [
             'title'    => __( 'Bank Transfer', 'dokan-lite' ),
             'callback' => 'dokan_withdraw_method_bank'
-        ),
-    );
+        ]
+    ];
 
     return apply_filters( 'dokan_withdraw_methods', $methods );
 }
@@ -26,10 +27,10 @@ function dokan_withdraw_register_methods() {
  * @return array
  */
 function dokan_withdraw_get_methods() {
-    $methods    = array();
+    $methods    = [];
     $registered = dokan_withdraw_register_methods();
 
-    foreach ($registered as $key => $value) {
+    foreach ( $registered as $key => $value ) {
         $methods[$key] = $value['title'];
     }
 
@@ -37,14 +38,12 @@ function dokan_withdraw_get_methods() {
 }
 
 /**
- * Get active withdraw methods.
- *
- * Default is paypal
+ * Get active withdraw methods.( Default is paypal )
  *
  * @return array
  */
 function dokan_withdraw_get_active_methods() {
-    $methods = dokan_get_option( 'withdraw_methods', 'dokan_withdraw', array( 'paypal' ) );
+    $methods = dokan_get_option( 'withdraw_methods', 'dokan_withdraw', [ 'paypal' ] );
 
     return $methods;
 }
@@ -66,8 +65,8 @@ function dokan_get_seller_active_withdraw_methods( $vendor_id = 0 ) {
     $bank            = isset( $payment_methods[0]['payment']['bank']['ac_number'] ) && $payment_methods[0]['payment']['bank']['ac_number']  !== '' ? 'bank' : '';
     $skrill          = isset( $payment_methods[0]['payment']['skrill']['email'] ) && $payment_methods[0]['payment']['skrill']['email'] !== false ? 'skrill' : '';
 
-    $payment_methods        = array( $paypal, $bank, $skrill );
-    $active_payment_methods = array();
+    $payment_methods        = [ $paypal, $bank, $skrill ];
+    $active_payment_methods = [];
 
     foreach ( $payment_methods as $payment_method ) {
         if ( ! empty( $payment_method ) ) {
@@ -252,39 +251,33 @@ function dokan_get_withdraw_count( $user_id = null ) {
 }
 
 /**
- * Get active withdwrawable order status
+ * Get active withdraw order status.
  *
- * @since  1.0.0
+ * Default is 'completed', 'processing', 'on-hold'
  *
  * @return array
  */
 function dokan_withdraw_get_active_order_status() {
-    $order_status = dokan_get_option( 'withdraw_order_status', 'dokan_withdraw', [ 'wc-completed' => 'wc-completed' ] );
-
-    /**
-     * wc-refunded status is not visible in dokan order status for withdraw settings (backend).
-     * But it's needed for report and other calculations.
-     *
-     * @var array
-     */
-    $active_status = [ 'wc-refunded' ];
+    $order_status  = dokan_get_option( 'withdraw_order_status', 'dokan_withdraw', [ 'wc-completed' ] );
+    $saving_status = [ 'wc-refunded' ];
 
     foreach ( $order_status as $key => $status ) {
         if ( ! empty( $status ) ) {
-            $key = strpos( $key, 'wc-' ) === 0 ? $key : 'wc-' . $key;
-            array_push( $active_status, strtolower( $key ) );
+            $saving_status[] = $status;
         }
     }
 
-    return apply_filters( 'dokan_withdraw_active_status', $active_status );
+    return apply_filters( 'dokan_withdraw_active_status', $saving_status );
 }
 
 /**
- * get comma seperated value from "dokan_withdraw_get_active_order_status()" return array
+ * Get comma seperated value from "dokan_withdraw_get_active_order_status()" return array
+ *
  * @param array array
  */
 function dokan_withdraw_get_active_order_status_in_comma() {
     $order_status = dokan_withdraw_get_active_order_status();
-    $status = "'" . implode("', '", $order_status ) . "'";
+    $status       = "'" . implode("', '", $order_status ) . "'";
+
     return $status;
 }

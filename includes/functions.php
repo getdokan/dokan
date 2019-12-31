@@ -1,9 +1,4 @@
 <?php
-
-require_once dirname( __FILE__ ) . '/product-functions.php';
-require_once dirname( __FILE__ ) . '/order-functions.php';
-require_once dirname( __FILE__ ) . '/withdraw-functions.php';
-
 /**
  * Dokan Admin menu position
  *
