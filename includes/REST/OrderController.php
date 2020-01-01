@@ -810,7 +810,7 @@ class OrderController extends DokanRESTController {
      * @return void
      */
     public function after_order_create( $object, $request ) {
-        dokan()->orders->maybe_split_orders( $object->get_id() );
+        dokan()->order->maybe_split_orders( $object->get_id() );
     }
 
     /**

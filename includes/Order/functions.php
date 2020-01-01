@@ -7,7 +7,7 @@
  * @return float
  */
 function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
-    $order              = dokan()->orders->get( $order_id );
+    $order              = dokan()->order->get( $order_id );
     $seller_id          = dokan_get_seller_id_by_order( $order_id );
     $net_amount         = dokan_get_seller_earnings_by_order( $order, $seller_id );
     $order_shipping     = $order->get_total_shipping();
@@ -312,7 +312,7 @@ function dokan_sync_insert_order( $order_id ) {
         return;
     }
 
-    $order              = dokan()->orders->get( $order_id );
+    $order              = dokan()->order->get( $order_id );
     $seller_id          = dokan_get_seller_id_by_order( $order_id );
     $order_total        = $order->get_total();
     $order_status       = dokan_get_prop( $order, 'status' );
@@ -404,7 +404,7 @@ function dokan_get_seller_id_by_order( $order_id ) {
 
     // if seller is not found, try to retrieve it via line items
     if ( ! $seller ) {
-        $order = dokan()->orders->get( $order_id );
+        $order = dokan()->order->get( $order_id );
 
         if ( ! $order instanceof WC_Order ) {
             return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
@@ -596,7 +596,7 @@ function dokan_total_orders() {
  */
 function dokan_get_sellers_by( $order ) {
     if ( ! $order instanceof WC_Order ) {
-        $order  = dokan()->orders->get( $order );
+        $order  = dokan()->order->get( $order );
     }
 
     $order_items = $order->get_items();
@@ -744,7 +744,7 @@ function dokan_get_customer_orders_by_seller( $customer_id, $seller_id ) {
         'numberposts'   => -1,
     ];
 
-    $orders = dokan()->orders->get( apply_filters( 'dokan_get_customer_orders_by_seller', $args ) );
+    $orders = dokan()->order->get( apply_filters( 'dokan_get_customer_orders_by_seller', $args ) );
 
     return $orders ? $orders : null;
 }
@@ -814,7 +814,7 @@ function dokan_order_csv_export( $orders, $file = null ) {
 
     foreach ( $orders as $order ) {
         $line      = array();
-        $the_order = dokan()->orders->get( $order->order_id );
+        $the_order = dokan()->order->get( $order->order_id );
 
         foreach ( $headers as $row_key => $label ) {
             switch ( $row_key ) {

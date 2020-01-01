@@ -337,7 +337,7 @@ final class WeDevs_Dokan {
         $this->container['product']       = new \WeDevs\Dokan\Product\Manager();
         $this->container['shortcodes']    = new \WeDevs\Dokan\Shortcodes\Shortcodes();
         $this->container['registration']  = new \WeDevs\Dokan\Registration();
-        $this->container['orders']        = new \WeDevs\Dokan\Order\Manager();
+        $this->container['order']        = new \WeDevs\Dokan\Order\Manager();
         $this->container['api']           = new \WeDevs\Dokan\REST\Manager();
         $this->container['withdraw']      = new \WeDevs\Dokan\Withdraw\Manager();
         $this->container['dashboard']     = new \WeDevs\Dokan\Dashboard\Manager();

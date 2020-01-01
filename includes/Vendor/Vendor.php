@@ -536,8 +536,7 @@ class Vendor {
      * @return wc_get_order objects
      */
     public function get_orders( $args = [] ) {
-        $args['seller_id'] = $this->id;
-        return dokan()->orders->all( $args );
+        return dokan()->order->all( $args );
     }
 
     /**

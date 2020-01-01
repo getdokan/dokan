@@ -85,7 +85,7 @@ class Hooks {
 
         if ( $sub_orders ) {
             foreach ( $sub_orders as $order_post ) {
-                $order = dokan()->orders->get( $order_post->ID );
+                $order = dokan()->order->get( $order_post->ID );
                 $order->update_status( $new_status );
             }
         }
@@ -125,7 +125,7 @@ class Hooks {
 
         if ( $sub_orders ) {
             foreach ($sub_orders as $sub) {
-                $order = dokan()->orders->get( $sub->ID );
+                $order = dokan()->order->get( $sub->ID );
 
                 if ( $order->get_status() != 'completed' ) {
                     $all_complete = false;
@@ -136,7 +136,7 @@ class Hooks {
         // seems like all the child orders are completed
         // mark the parent order as complete
         if ( $all_complete ) {
-            $parent_order = dokan()->orders->get( $parent_order_id );
+            $parent_order = dokan()->order->get( $parent_order_id );
             $parent_order->update_status( 'wc-completed', __( 'Mark parent order completed when all child orders are completed.', 'dokan-lite' ) );
         }
     }
@@ -153,7 +153,7 @@ class Hooks {
      * @return void
      */
     public function maybe_split_orders( $parent_order_id ) {
-        $parent_order = dokan()->orders->get( $parent_order_id );
+        $parent_order = dokan()->order->get( $parent_order_id );
 
         dokan_log( sprintf( 'New Order #%d created. Init sub order.', $parent_order_id ) );
 
@@ -206,7 +206,7 @@ class Hooks {
 
         // seems like we've got multiple sellers
         foreach ( $vendors as $seller_id => $seller_products ) {
-            dokan()->orders->create_sub_order( $parent_order, $seller_id, $seller_products );
+            dokan()->order->create_sub_order( $parent_order, $seller_id, $seller_products );
         }
 
         dokan_log( sprintf( 'Completed sub order for #%d.', $parent_order_id ) );

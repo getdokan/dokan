@@ -170,7 +170,7 @@ class Ajax {
             wp_die( esc_html__( 'You do not have permission to change this order', 'dokan-lite' ) );
         }
 
-        $order = dokan()->orders->get( $order_id );
+        $order = dokan()->order->get( $order_id );
         $order->update_status( 'completed' );
 
         wp_safe_redirect( wp_get_referer() );
@@ -205,7 +205,7 @@ class Ajax {
             wp_die( esc_html__( 'You do not have permission to change this order', 'dokan-lite' ) );
         }
 
-        $order = dokan()->orders->get( $order_id );
+        $order = dokan()->order->get( $order_id );
         $order->update_status( 'processing' );
 
         wp_safe_redirect( wp_get_referer() );
@@ -231,7 +231,7 @@ class Ajax {
         $product_ids    = isset( $_POST['product_ids'] ) ? intval( $_POST['product_ids'] ) : 0;
         $loop           = isset( $_POST['loop'] ) ? intval( $_POST['loop'] ) : 0;
         $file_counter   = 0;
-        $order          = dokan()->orders->get( $order_id );
+        $order          = dokan()->order->get( $order_id );
 
         if ( ! is_array( $product_ids ) ) {
             $product_ids = array( $product_ids );
@@ -243,10 +243,10 @@ class Ajax {
         $product_ids  = array_filter( array_map( 'absint', (array) wp_unslash( $_POST['product_ids'] ) ) );
         $loop         = intval( $_POST['loop'] );
         $file_counter = 0;
-        $order        = wc_get_order( $order_id );
+        $order        = dokan()->order->get( $order_id );
 
         foreach ( $product_ids as $product_id ) {
-            $product = wc_get_product( $product_id );
+            $product = dokan()->product->get( $product_id );
             $files   = $product->get_downloads();
 
             if ( ! $order->get_billing_email() ) {
@@ -294,7 +294,7 @@ class Ajax {
         $order_id     = isset( $_POST['order_id'] ) ? intval( $_POST['order_id'] ) : '';
         $order_status = isset( $_POST['order_status'] ) ? sanitize_text_field( wp_unslash( $_POST['order_status'] ) ) : '';
 
-        $order = dokan()->orders->get( $order_id );
+        $order = dokan()->order->get( $order_id );
         $order->update_status( $order_status );
 
         $statuses     = wc_get_order_statuses();
@@ -390,7 +390,7 @@ class Ajax {
         $is_customer_note = ( $note_type == 'customer' ) ? 1 : 0;
 
         if ( $post_id > 0 ) {
-            $order      = dokan()->orders->get( $post_id );
+            $order      = dokan()->order->get( $post_id );
             $comment_id = $order->add_order_note( $note, $is_customer_note );
 
             echo '<li rel="' . esc_attr( $comment_id ) . '" class="note ';
@@ -436,7 +436,7 @@ class Ajax {
         }
 
         if ( $post_id > 0 ) {
-            $order = dokan()->orders->get( $post_id );
+            $order = dokan()->order->get( $post_id );
             $time  = current_time( 'mysql' );
 
             $data = array(
