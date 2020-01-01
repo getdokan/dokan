@@ -1,5 +1,5 @@
 <?php if ( ! empty( $search_query ) ): ?>
-    <h2><?php printf( __( 'Search Results for: %s', 'dokan-lite' ), esc_attr( $search_query ) ); ?></h2>
+    <h2><?php echo wp_kses_post( sprintf( __( 'Search Results for: %s', 'dokan-lite' ), esc_attr( $search_query ) ) ); ?></h2>
 <?php endif; ?>
 
 <form role="search" method="get" class="dokan-seller-search-form" action="">
@@ -12,7 +12,7 @@
     </div>
 
     <input type="hidden" id="pagination_base" name="pagination_base" value="<?php echo esc_attr( $pagination_base ) ?>" />
-    <input type="hidden" id="nonce" name="nonce" value="<?php echo wp_create_nonce( 'dokan-seller-listing-search' ); ?>" />
+    <input type="hidden" id="nonce" name="nonce" value="<?php echo esc_attr( wp_create_nonce( 'dokan-seller-listing-search' ) ); ?>" />
     <div class="dokan-overlay" style="display: none;"><span class="dokan-ajax-loader"></span></div>
 </form>
 

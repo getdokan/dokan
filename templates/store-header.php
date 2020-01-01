@@ -68,7 +68,7 @@ if ( 'layout3' === $profile_layout ) {
                     <ul class="dokan-store-info">
                         <?php if ( isset( $store_address ) && !empty( $store_address ) ) { ?>
                             <li class="dokan-store-address"><i class="fa fa-map-marker"></i>
-                                <?php echo $store_address; ?>
+                                <?php echo wp_kses_post( $store_address ); ?>
                             </li>
                         <?php } ?>
 
@@ -88,7 +88,7 @@ if ( 'layout3' === $profile_layout ) {
 
                         <li class="dokan-store-rating">
                             <i class="fa fa-star"></i>
-                            <?php echo dokan_get_readable_seller_rating( $store_user->get_id() ); ?>
+                            <?php echo wp_kses_post( dokan_get_readable_seller_rating( $store_user->get_id() ) ); ?>
                         </li>
 
                         <?php if ( $show_store_open_close == 'on' && $dokan_store_time_enabled == 'yes') : ?>

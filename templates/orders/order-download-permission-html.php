@@ -4,10 +4,18 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 <div class="dokan-panel dokan-panel-default">
 	<div class="dokan-panel-heading" style="overflow: hidden;">
 		<a class="title" data-toggle="collapse" data-parent="#accordion" href="#collapse-<?php echo esc_attr( $download->download_id ); ?>">
-			<?php echo '#' . esc_attr( absint( dokan_get_prop( $product, 'id' ) ) ) . ' &mdash; ' . apply_filters( 'woocommerce_admin_download_permissions_title', $product->get_title(), $download->product_id, $download->order_id, $download->order_key, $download->download_id ) . ' &mdash; ' . sprintf( __( 'File %d: %s', 'dokan-lite' ), $file_count, wc_get_filename_from_url( $product->get_file_download_path( $download->download_id ) ) ); ?>
+			<?php echo wp_kses_post( '#' . esc_attr( absint( dokan_get_prop( $product, 'id' ) ) ) . ' &mdash; ' . apply_filters( 'woocommerce_admin_download_permissions_title', $product->get_title(), $download->product_id, $download->order_id, $download->order_key, $download->download_id ) . ' &mdash; ' . sprintf( __( 'File %d: %s', 'dokan-lite' ), $file_count, wc_get_filename_from_url( $product->get_file_download_path( $download->download_id ) ) ) ); ?>
 		</a>
 
-		<button rel="<?php echo esc_attr( absint( $download->product_id ) ) . ',' . esc_attr( $download->download_id ); ?>" class="revoke_access btn btn-danger btn-sm pull-right" data-order-id="<?php echo esc_attr( $download->order_id ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'revoke-access' ) ); ?>"><?php _e( 'Revoke Access', 'dokan-lite' ); ?></button>
+		<button
+			rel="<?php echo esc_attr( absint( $download->product_id ) ) . ',' . esc_attr( $download->download_id ); ?>"
+			class="revoke_access btn btn-danger btn-sm pull-right"
+			data-order-id="<?php echo esc_attr( $download->order_id ); ?>"
+			data-permission-id="<?php echo esc_attr( $download->permission_id ); ?>"
+			data-nonce="<?php echo esc_attr( wp_create_nonce( 'revoke-access' ) ); ?>"
+		>
+			<?php esc_html_e( 'Revoke Access', 'dokan-lite' ); ?>
+		</button>
 	</div>
 
 	<div id="collapse-<?php echo esc_attr( $download->download_id ); ?>" class="panel-collapse collapse">
@@ -19,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 						<td width="20%">
 							<label><?php esc_html_e( 'Downloaded', 'dokan-lite' ); ?></label><br>
 
-							<?php printf( _n('%s time', '%s times', absint( $download->download_count ), 'dokan-lite'), absint( $download->download_count ) ); ?>
+							<?php echo wp_kses_post( sprintf( _n('%s time', '%s times', absint( $download->download_count ), 'dokan-lite'), absint( $download->download_count ) ) ); ?>
 						</td>
 						<td width="30%">
 							<label><?php esc_html_e( 'Downloads Remaining', 'dokan-lite' ); ?>:</label>

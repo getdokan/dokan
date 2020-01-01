@@ -4,5 +4,18 @@ $active_class = ' class="active"'
 ?>
 
 <div class="dokan-dash-sidebar">
-    <?php echo dokan_dashboard_nav( $active_menu ); ?>
+    <?php
+        global $allowedposttags;
+
+        // These are required for the hamburger menu.
+        if ( is_array( $allowedposttags ) ) {
+            $allowedposttags['input'] = [
+                'id'      => [],
+                'type'    => [],
+                'checked' => []
+            ];
+        }
+
+        echo wp_kses( dokan_dashboard_nav( $active_menu ), $allowedposttags );
+    ?>
 </div>

@@ -14,7 +14,7 @@ function dokan_update_spmv_product_map_table_2_9_13() {
         return;
     }
 
-    $columns = $wpdb->get_results( "describe {$map_table}" );
+    $columns = $wpdb->get_results( "describe {$wpdb->prefix}dokan_product_map" );
 
     $columns = array_filter( $columns, function ( $column ) {
         return 'visibility' === $column->Field;
@@ -22,7 +22,7 @@ function dokan_update_spmv_product_map_table_2_9_13() {
 
     if ( empty( $columns ) ) {
         $wpdb->query(
-            "alter table {$map_table} add column visibility tinyint(1) default 1"
+            $wpdb->prepare( "alter table `{$wpdb->prefix}dokan_product_map` add column visibility tinyint(1) default %d", 1 )
         );
     }
 }

@@ -132,6 +132,7 @@ jQuery(function($) {
                     product_id: product,
                     download_id: file,
                     order_id: self.data('order-id'),
+                    permission_id: self.data('permission-id'),
                     security: self.data('nonce')
                 };
 
@@ -982,9 +983,10 @@ jQuery(function($) {
 
                     $parent.fadeOut( 300, function() {
                         if ( $parent.is( '.taxonomy' ) ) {
+                            $parent.find( 'select, input[type=text]' ).val( '' );
                             $( 'select.dokan_attribute_taxonomy' ).find( 'option[value="' + $parent.data( 'taxonomy' ) + '"]' ).removeAttr( 'disabled' );
                         }
-                        $(this).remove();
+
                         Dokan_Editor.attribute.reArrangeAttribute();
                     });
                 }

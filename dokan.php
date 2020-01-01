@@ -3,12 +3,12 @@
 Plugin Name: Dokan
 Plugin URI: https://wordpress.org/plugins/dokan-lite/
 Description: An e-commerce marketplace plugin for WordPress. Powered by WooCommerce and weDevs.
-Version: 2.9.26
+Version: 2.9.29
 Author: weDevs
 Author URI: https://wedevs.com/
 Text Domain: dokan-lite
 WC requires at least: 3.0
-WC tested up to: 3.8.0
+WC tested up to: 3.8.1
 Domain Path: /languages/
 License: GPL2
 */
@@ -78,7 +78,7 @@ final class WeDevs_Dokan {
      *
      * @var string
      */
-    public $version = '2.9.26';
+    public $version = '2.9.29';
 
     /**
      * Instance of self
@@ -118,8 +118,11 @@ final class WeDevs_Dokan {
 
         add_action( 'woocommerce_loaded', array( $this, 'init_plugin' ) );
         add_action( 'admin_notices', array( $this, 'render_missing_woocommerce_notice' ) );
+        add_action( 'admin_notices', array( $this, 'render_run_admin_setup_wizard_notice' ) );
 
         $this->init_appsero_tracker();
+
+        add_action( 'plugins_loaded', array( $this, 'woocommerce_not_loaded' ), 11 );
     }
 
     /**
@@ -359,6 +362,7 @@ final class WeDevs_Dokan {
         } else {
             require_once $inc_dir . 'template-tags.php';
             require_once $inc_dir . 'class-theme-support.php';
+            require_once $inc_dir . 'class-store-lists-filter.php';
         }
 
         // API includes
@@ -410,6 +414,7 @@ final class WeDevs_Dokan {
 
         if ( ! is_admin() ) {
             new Dokan_Theme_Support();
+            Dokan_Store_Lists_Filter::instance();
         }
 
         if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
@@ -524,7 +529,34 @@ final class WeDevs_Dokan {
         $plugin_url = self_admin_url( 'plugin-install.php?s=woocommerce&tab=search&type=term' );
         $message    = sprintf( esc_html__( 'Dokan requires WooCommerce to be installed and active. You can activate %s here.', 'dokan-lite' ), '<a href="' . $plugin_url . '">WooCommerce</a>' );
 
-        printf( '<div class="error"><p><strong>%1$s</strong></p></div>', $message );
+        echo wp_kses_post( sprintf( '<div class="error"><p><strong>%1$s</strong></p></div>', $message ) );
+    }
+
+    /**
+     * Render run admin setup wizard notice
+     *
+     * @since 2.9.27
+     *
+     * @return void
+     */
+    public function render_run_admin_setup_wizard_notice() {
+        $ran_wizard = get_option( 'dokan_admin_setup_wizard_ready', false );
+
+        if ( $ran_wizard ) {
+            return;
+        }
+
+        // If vendor found, don't show the setup wizard as admin already ran the `setup wizard`
+        // without the `dokan_admin_setup_wizard_ready` option.
+        $vendor_count = dokan_get_seller_status_count();
+
+        if ( ! empty( $vendor_count['active'] ) ) {
+            return update_option( 'dokan_admin_setup_wizard_ready', true );
+        }
+
+        require_once DOKAN_INC_DIR . '/functions.php';
+
+        dokan_get_template( 'admin-setup-wizard/run-wizard-notice.php' );
     }
 
     /**
@@ -570,6 +602,30 @@ final class WeDevs_Dokan {
         if ( ! class_exists( 'Dokan_Background_Processes' ) ) {
             require_once DOKAN_INC_DIR . '/background-processes/class-dokan-background-processes.php';
         }
+    }
+
+    /**
+     * Handles scenerios when WooCommerce is not active
+     *
+     * @since 2.9.27
+     *
+     * @return void
+     */
+    public function woocommerce_not_loaded() {
+        if ( did_action( 'woocommerce_loaded' ) || ! is_admin() ) {
+            return;
+        }
+
+        require_once DOKAN_INC_DIR . '/functions.php';
+
+        if ( get_transient( '_dokan_setup_page_redirect' ) ) {
+            dokan_redirect_to_admin_setup_wizard();
+        }
+
+        require_once DOKAN_INC_DIR . '/admin/setup-wizard.php';
+        require_once DOKAN_INC_DIR . '/admin/setup-wizard-no-wc.php';
+
+        new Dokan_Admin_Setup_Wizard_No_WC();
     }
 
 } // WeDevs_Dokan

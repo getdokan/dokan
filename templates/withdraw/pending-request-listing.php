@@ -21,7 +21,7 @@ if ( $withdraw_requests ) {
         <?php foreach ( $withdraw_requests as $request ) { ?>
 
             <tr>
-                <td><?php echo wc_price( $request->amount ); ?></td>
+                <td><?php echo wp_kses_post( wc_price( $request->amount ) ); ?></td>
                 <td><?php echo esc_html( dokan_withdraw_get_method_title( $request->method ) ); ?></td>
                 <td><?php echo esc_html( dokan_format_time( $request->date ) ); ?></td>
                 <td>

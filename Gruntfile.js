@@ -33,7 +33,8 @@ module.exports = function(grunt) {
             admin: {
                 files: {
                     '<%= dirs.css %>/admin.css': ['<%= dirs.devLessSrc %>/admin.less' ],
-                    '<%= dirs.css %>/setup.css': ['<%= dirs.devLessSrc %>/setup.less' ]
+                    '<%= dirs.css %>/setup.css': ['<%= dirs.devLessSrc %>/setup.less' ],
+                    '<%= dirs.css %>/setup-no-wc.css': ['<%= dirs.devLessSrc %>/setup-no-wc.less' ]
                 }
             }
         },
@@ -67,6 +68,7 @@ module.exports = function(grunt) {
                         '!<%= dirs.devJsSrc %>/admin.js',
                         '!<%= dirs.devJsSrc %>/login-form-popup.js',
                         '!<%= dirs.devJsSrc %>/dokan-maps-compat.js'
+                        '!<%= dirs.devJsSrc %>/setup-no-wc.js'
                     ],
                     '<%= dirs.js %>/login-form-popup.js': [
                         '<%= dirs.devJsSrc %>/login-form-popup.js'
@@ -81,6 +83,9 @@ module.exports = function(grunt) {
                 files: {
                     '<%= dirs.js %>/dokan-admin.js': [
                         '<%= dirs.devJsSrc %>/admin.js'
+                    ],
+                    '<%= dirs.js %>/dokan-setup-no-wc.js': [
+                        '<%= dirs.devJsSrc %>/setup-no-wc.js'
                     ]
                 }
             },

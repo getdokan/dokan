@@ -187,7 +187,7 @@ export default {
 
             this.subscribe.loading = true;
 
-            $.ajax({
+            jQuery.ajax({
                 url: action,
                 data: {
                     EMAIL: this.subscribe.email,

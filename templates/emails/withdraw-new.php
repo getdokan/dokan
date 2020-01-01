@@ -33,7 +33,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
         <strong>
             <?php esc_html_e( 'Request Amount:', 'dokan-lite' ); ?>
         </strong>
-        <?php echo $data['amount']; ?>
+        <?php echo wp_kses_post( $data['amount'] ); ?>
     </li>
     <li>
         <strong>
@@ -43,8 +43,6 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
     </li>
 </ul>
 
-<?php echo sprintf( __( 'You can approve or deny it by going <a href="%s"> here </a>', 'dokan-lite' ), esc_attr( $data['withdraw_page'] ) ); ?>
-
-<?php
+<?php echo wp_kses_post( sprintf( __( 'You can approve or deny it by going <a href="%s"> here </a>', 'dokan-lite' ), esc_attr( $data['withdraw_page'] ) ) );
 
 do_action( 'woocommerce_email_footer', $email );

@@ -17,7 +17,6 @@
 .form-table .switch-label {
   position: relative;
   display: inline-block;
-  min-width: 112px;
   cursor: pointer;
   font-weight: 500;
   text-align: left;
@@ -110,11 +109,15 @@
   color: #fff;
   background: #f2624d;
   border-color: #f2624d;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 1px 0 #f2624d;
+  text-shadow: 0 -1px 1px #f2624d, 1px 0 1px #f2624d, 0 1px 1px #f2624d, -1px 0 1px #f2624d;
 }
 .wc-setup .wc-setup-actions .button-primary:hover,
 .wc-setup .wc-setup-actions .button-primary:active,
 .wc-setup .wc-setup-actions .button-primary:focus {
   background-color: #ef381d;
+  border-color: #ef381d;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 1px 0 #ef381d;
 }
 .wc-setup .wc-setup-content a {
   color: #f2624d;
@@ -126,6 +129,12 @@
 .wc-setup .wc-setup-content .checkbox label {
   font-weight: 400;
   line-height: 1.7;
+}
+.wc-setup .wc-setup-content table {
+  font-weight: 400;
+}
+.wc-setup .wc-setup-content table th {
+  font-weight: 500;
 }
 .wc-wizard-service-item .wc-wizard-service-name {
   padding-left: 20px;
@@ -155,4 +164,22 @@
 .dokan-setup-done-content {
   display: flex;
   justify-content: center;
+}
+.margin-bottom-10 {
+  margin-bottom: 10px;
+}
+.wc-wizard-service-item .dokan-wc-wizard-service-enable {
+  -webkit-flex-basis: 0;
+  flex-basis: 0;
+  min-width: 75px;
+  text-align: center;
+  cursor: pointer;
+  padding: 2em 0;
+  position: relative;
+  max-height: 1.5em;
+  -webkit-align-self: flex-start;
+  align-self: flex-start;
+  -webkit-box-ordinal-group: 4;
+  -webkit-order: 3;
+  order: 3;
 }
