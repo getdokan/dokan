@@ -168,7 +168,7 @@ class Manager {
 
         $vendor = dokan()->vendor->get( $vendor_id );
 
-        if ( ! $vendor instanceof Dokan_Vendor || $vendor->get_id() === 0 ) {
+        if ( ! $vendor instanceof Vendor || $vendor->get_id() === 0 ) {
             return new WP_Error(
                 'unable_to_create_vendor',
                 __( 'Unable to create vendor', 'dokan-lite' ),
