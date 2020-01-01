@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\Dashboard\Templates;
 
+use WP_Error;
+
 /**
  * Dokan Dashboard Withdraw class
  *
@@ -17,6 +19,13 @@ class Withdraw {
     protected $current_status = null;
 
     /**
+     * Error bag
+     *
+     * @var null|\WP_Error;
+     */
+    protected $errors = null;
+
+    /**
      * Load Autometically When class initiate
      *
      * Trigger all actions
@@ -28,12 +37,26 @@ class Withdraw {
             return;
         }
 
+        $this->errors = new WP_Error();
+
         add_action( 'template_redirect', array( $this, 'handle_request' ) );
         add_action( 'dokan_withdraw_content_inside_before', array( $this, 'show_seller_enable_message' ) );
         add_action( 'dokan_withdraw_content_area_header', array( $this, 'withdraw_header_render' ) );
         add_action( 'dokan_withdraw_content', array( $this, 'withdraw_status_filter' ), 15 );
         add_action( 'dokan_withdraw_content', array( $this, 'show_seller_balance' ), 5 );
         add_action( 'dokan_withdraw_content', array( $this, 'withdraw_form_and_listing' ), 20 );
+    }
+
+    /**
+     * Add error to error bag
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param string $message
+     * @param string $code
+     */
+    public function add_error( $message, $code = 'dokan_vendor_dashboard_template_withdraw_error' ) {
+        $this->errors->add( $code, $message );
     }
 
     /**
@@ -80,22 +103,26 @@ class Withdraw {
         $get_data = wp_unslash( $_GET );
 
         if ( ! wp_verify_nonce( $get_data['_wpnonce'], 'dokan_cancel_withdraw' ) ) {
-            wp_die( esc_html__( 'Are you cheating?', 'dokan-lite' ) );
+            $this->add_error( esc_html__( 'Are you cheating?', 'dokan-lite' ) );
         }
 
         if ( ! current_user_can( 'dokan_manage_withdraw' ) ) {
-            wp_die( esc_html__( 'You have no permission to do this action', 'dokan-lite' ) );
+            $this->add_error( esc_html__( 'You have no permission to do this action', 'dokan-lite' ) );
         }
 
         if ( empty( $get_data['id'] ) ) {
-            wp_die( esc_html__( 'Missing withdraw id.', 'dokan-lite' ) );
+            $this->add_error( esc_html__( 'Missing withdraw id.', 'dokan-lite' ) );
+        }
+
+        if ( $this->errors->has_errors() ) {
+            return;
         }
 
         $user_id     = get_current_user_id();
         $withdraw_id = absint( $get_data['id'] );
 
         if ( ! dokan_is_seller_enabled( $user_id ) ) {
-            wp_die( esc_html__( 'Your account is not enabled for selling, please contact the admin', 'dokan-lite' ) );
+            return $this->add_error( esc_html__( 'Your account is not enabled for selling, please contact the admin', 'dokan-lite' ) );
         }
 
         $args = array(
@@ -106,7 +133,7 @@ class Withdraw {
         $validate_request = dokan()->withdraw->is_valid_cancellation_request( $args );
 
         if ( is_wp_error( $validate_request )  ) {
-            wp_die( $validate_request->get_error_message() );
+            return $this->add_error( $validate_request->get_error_message(), $validate_request->get_code() );
         }
 
         $withdraw = dokan()
@@ -116,7 +143,7 @@ class Withdraw {
             ->save();
 
         if ( is_wp_error( $withdraw )  ) {
-            wp_die( $withdraw->get_error_message() );
+            return $this->add_error( $withdraw->get_error_message(), $withdraw->get_code() );
         }
 
         wp_redirect( add_query_arg( array(
@@ -135,19 +162,23 @@ class Withdraw {
         $post_data = wp_unslash( $_POST );
 
         if ( ! isset( $post_data['dokan_withdraw_nonce'] ) || ! wp_verify_nonce( sanitize_key( $post_data['dokan_withdraw_nonce'] ), 'dokan_withdraw' ) ) {
-            wp_die( esc_html__( 'Are you cheating?', 'dokan-lite' ) );
+            $this->add_error( esc_html__( 'Are you cheating?', 'dokan-lite' ) );
         }
 
         if ( ! current_user_can( 'dokan_manage_withdraw' ) ) {
-            wp_die( esc_html__( 'You have no permission to do this action', 'dokan-lite' ) );
+            $this->add_error( esc_html__( 'You have no permission to do this action', 'dokan-lite' ) );
         }
 
         if ( empty( $post_data['withdraw_amount'] ) ) {
-            wp_die( esc_html__( 'withdraw_amount is required', 'dokan-lite' ) );
+            $this->add_error( esc_html__( 'withdraw_amount is required', 'dokan-lite' ) );
         }
 
         if ( empty( $post_data['withdraw_method'] ) ) {
-            wp_die( esc_html__( 'withdraw_method is required', 'dokan-lite' ) );
+            $this->add_error( esc_html__( 'withdraw_method is required', 'dokan-lite' ) );
+        }
+
+        if ( $this->errors->has_errors() ) {
+            return;
         }
 
         $user_id = get_current_user_id();
@@ -163,7 +194,7 @@ class Withdraw {
         $validate_request = dokan()->withdraw->is_valid_approval_request( $args );
 
         if ( is_wp_error( $validate_request )  ) {
-            wp_die( $validate_request->get_error_message() );
+            return $this->add_error( $validate_request->get_error_message(), $validate_request->get_error_code() );
         }
 
         $data = array(
@@ -178,7 +209,7 @@ class Withdraw {
         $withdraw = dokan()->withdraw->create( $data );
 
         if ( is_wp_error( $withdraw ) ) {
-            wp_die( $withdraw->get_error_message() );
+            return $this->add_error( $withdraw->get_error_message(), $withdraw->get_error_code() );
         }
 
         wp_redirect( add_query_arg( array(
@@ -202,7 +233,7 @@ class Withdraw {
     }
 
     /**
-     * Print error message
+     * Print error messages
      *
      * @since DOKAN_LITE_SINCE
      *
@@ -211,11 +242,17 @@ class Withdraw {
      *
      * @return void
      */
-    protected function show_error_message( $message, $deleted = false ) {
-        dokan_get_template_part( 'global/dokan-error', '', array(
-            'message' => $message,
-            'deleted' => $deleted,
-        ) );
+    protected function show_error_messages( $messages, $deleted = false ) {
+        if ( ! is_array( $messages ) ) {
+            $messages = array( $messages );
+        }
+
+        foreach ( $messages as $message ) {
+            dokan_get_template_part( 'global/dokan-error', '', array(
+                'deleted' => $deleted,
+                'message' => $message,
+            ) );
+        }
     }
 
     /**
@@ -372,11 +409,15 @@ class Withdraw {
         // show alert messages
         $this->show_alert_messages();
 
+        if ( $this->errors->has_errors() ) {
+            $this->show_error_messages( $this->errors->get_error_messages() );
+        }
+
         $balance = dokan()->withdraw->get_user_balance( $current_user->ID );
 
         if ( $balance < 0 ) {
             $message = sprintf( __( 'You have already withdrawn %s. This amount will be deducted from your balance.', 'dokan-lite' ), wc_price( $balance ) );
-            $this->show_error_message( $message );
+            $this->show_error_messages( $message );
         }
 
         if ( dokan()->withdraw->has_pending_request( $current_user->ID ) ) {
@@ -386,7 +427,7 @@ class Withdraw {
             if ( ! $req_success ) {
                 $message = sprintf( '<p>%s</p><p>%s</p>', __( 'You already have pending withdraw request(s).', 'dokan-lite' ), __( 'Please submit your request after approval or cancellation of your previous request.', 'dokan-lite' ) );
 
-                $this->show_error_message( $message );
+                $this->show_error_messages( $message );
             }
 
             $this->withdraw_requests( $current_user->ID );
@@ -395,7 +436,7 @@ class Withdraw {
 
         } else if ( ! dokan()->withdraw->has_withdraw_balance( $current_user->ID ) ) {
             $message = __( 'You don\'t have sufficient balance for a withdraw request!', 'dokan-lite' );
-            $this->show_error_message( $message );
+            $this->show_error_messages( $message );
             return;
         }
 

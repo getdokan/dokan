@@ -9,8 +9,6 @@
 ?>
 <?php if ( ! empty( $payment_methods ) ) : ?>
 <form class="dokan-form-horizontal withdraw" role="form" method="post">
-    <?php wp_nonce_field( 'dokan_withdraw', 'dokan_withdraw_nonce' ); ?>
-
     <div class="dokan-form-group">
         <label for="withdraw-amount" class="dokan-w3 dokan-control-label">
             <?php esc_html_e( 'Withdraw Amount', 'dokan-lite' ); ?>
