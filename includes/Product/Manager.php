@@ -402,10 +402,10 @@ class Manager {
      *
      * @return void
      */
-    public function delete( $product_id ) {
+    public function delete( $product_id, $force = false ) {
         $product = $this->get( $product_id );
         if ( $product ) {
-            $product->delete( [ 'force_delete' => true ] );
+            $product->delete( [ 'force_delete' => $force ] );
         }
 
         return $product;

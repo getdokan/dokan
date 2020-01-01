@@ -68,7 +68,7 @@ class Hooks {
 
         foreach ( $products as $product_id ) {
             if ( dokan_is_product_author( $product_id ) ) {
-                wp_delete_post( $product_id );
+                dokan()->product->delete( $product_id, true );
             }
         }
 

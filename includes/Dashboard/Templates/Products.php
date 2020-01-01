@@ -457,12 +457,7 @@ class Products {
      * @return void
      */
     function handle_delete_product() {
-
-        if ( ! is_user_logged_in() ) {
-            return;
-        }
-
-        if ( ! dokan_is_user_seller( get_current_user_id() ) ) {
+        if ( ! dokan_is_user_seller( dokan_get_current_user_id() ) ) {
             return;
         }
 
@@ -470,7 +465,35 @@ class Products {
             return;
         }
 
-        dokan_delete_product_handler();
+        if ( isset( $_GET['action'] ) && $_GET['action'] == 'dokan-delete-product' ) {
+            $product_id = isset( $_GET['product_id'] ) ? (int) $_GET['product_id'] : 0;
+
+            $getdata = wp_unslash( $_GET );
+
+            if ( ! $product_id ) {
+                wp_redirect( add_query_arg( array( 'message' => 'error' ), dokan_get_navigation_url( 'products' ) ) );
+                return;
+            }
+
+            if ( ! wp_verify_nonce( $getdata['_wpnonce'], 'dokan-delete-product' ) ) {
+                wp_redirect( add_query_arg( array( 'message' => 'error' ), dokan_get_navigation_url( 'products' ) ) );
+                return;
+            }
+
+            if ( ! dokan_is_product_author( $product_id ) ) {
+                wp_redirect( add_query_arg( array( 'message' => 'error' ), dokan_get_navigation_url( 'products' ) ) );
+                return;
+            }
+
+            dokan()->product->delete( $product_id, true );
+
+            do_action( 'dokan_product_deleted', $product_id );
+
+            $redirect = apply_filters( 'dokan_add_new_product_redirect', dokan_get_navigation_url( 'products' ), '' );
+
+            wp_redirect( add_query_arg( array( 'message' => 'product_deleted' ), $redirect ) );
+            exit;
+        }
     }
 
 }
