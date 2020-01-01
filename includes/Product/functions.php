@@ -23,6 +23,7 @@ function dokan_save_product( $args ) {
         'post_excerpt'   => '',
         'post_status'    => '',
         'post_type'      => 'product',
+        'product_tag'      => [],
         '_visibility'    => 'visible',
     );
 
@@ -98,16 +99,12 @@ function dokan_save_product( $args ) {
         'catalog_visibility' => array_key_exists( $data['_visibility'], dokan_get_product_visibility_options() ) ? sanitize_text_field( $data['_visibility'] ) : 'visible'
     ];
 
-    if ( ! $is_updating ) {
-        $post_data['total_sales'] = 0;
-    }
-
     $product = dokan()->product->create( $post_data );
 
     if ( ! $is_updating ) {
-        do_action( 'dokan_new_product_added', $product_id, $data );
+        do_action( 'dokan_new_product_added', $product->get_id(), $data );
     } else {
-        do_action( 'dokan_product_updated', $product_id, $data );
+        do_action( 'dokan_product_updated', $product->get_id(), $data );
     }
 
     if ( $product ) {
