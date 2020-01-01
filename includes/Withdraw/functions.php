@@ -44,7 +44,6 @@ function dokan_withdraw_get_methods() {
  */
 function dokan_withdraw_get_active_methods() {
     $methods = dokan_get_option( 'withdraw_methods', 'dokan_withdraw', [ 'paypal' ] );
-
     return $methods;
 }
 
