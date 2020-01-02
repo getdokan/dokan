@@ -61,7 +61,7 @@ if ( ! $from_shortcode ) {
 }
 
 if ( ! empty( $_GET['errors'] ) ) {
-    dokan()->dashboard->templates->products::$errors = array_map( 'sanitize_text_field', wp_unslash( $_GET['errors'] ) );
+    dokan()->dashboard->templates->products->set_errors( array_map( 'sanitize_text_field', wp_unslash( $_GET['errors'] ) ) );
 }
 
 /**
@@ -122,11 +122,11 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
             </header><!-- .entry-header -->
 
             <div class="product-edit-new-container product-edit-container">
-                <?php if ( dokan()->dashboard->templates->products::$errors ) { ?>
+                <?php if ( dokan()->dashboard->templates->products->has_errors() ) { ?>
                     <div class="dokan-alert dokan-alert-danger">
                         <a class="dokan-close" data-dismiss="alert">&times;</a>
 
-                        <?php foreach ( dokan()->dashboard->templates->products::$errors as $error) { ?>
+                        <?php foreach ( dokan()->dashboard->templates->products->get_errors() as $error ) { ?>
                             <strong><?php esc_html_e( 'Error!', 'dokan-lite' ); ?></strong> <?php echo esc_html( $error ) ?>.<br>
                         <?php } ?>
                     </div>
