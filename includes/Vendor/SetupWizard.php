@@ -372,7 +372,7 @@ class SetupWizard extends DokanSetupWizard {
                         <th scope="row"><label><?php echo esc_html( $method['title'] ); ?></label></th>
                         <td>
     						<?php
-        						if ( is_callable( $method['callback'] ) ) {
+        						if ( isset( $method['callback'] ) && is_callable( $method['callback'] ) ) {
         							call_user_func( $method['callback'], $store_info );
         						}
     						?>
