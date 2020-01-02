@@ -52,11 +52,11 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
 
 
             <div class="dokan-new-product-area">
-                <?php if ( dokan()->dashboard->templates->products::$errors ) { ?>
+                <?php if ( dokan()->dashboard->templates->products->has_errors() ) { ?>
                     <div class="dokan-alert dokan-alert-danger">
                         <a class="dokan-close" data-dismiss="alert">&times;</a>
 
-                        <?php foreach ( dokan()->dashboard->templates->products::$errors as $error) { ?>
+                        <?php foreach ( dokan()->dashboard->templates->products->get_errors() as $error) { ?>
 
                             <strong><?php esc_html_e( 'Error!', 'dokan-lite' ); ?></strong> <?php echo esc_html( $error ); ?>.<br>
 
