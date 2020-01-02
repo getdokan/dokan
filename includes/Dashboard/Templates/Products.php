@@ -23,7 +23,7 @@ class Products {
      *  @uses actions
      *  @uses filters
      */
-    function __construct() {
+    public function __construct() {
         add_action( 'dokan_render_product_listing_template', array( $this, 'render_product_listing_template' ), 11 );
         add_action( 'template_redirect', array( $this, 'handle_product_add' ), 11 );
         add_action( 'template_redirect', array( $this, 'handle_product_update' ), 11 );
@@ -35,6 +35,41 @@ class Products {
         add_action( 'dokan_product_edit_after_main', array( __CLASS__, 'load_inventory_template' ), 5, 2 );
         add_action( 'dokan_product_edit_after_main', array( __CLASS__, 'load_downloadable_template' ), 10, 2 );
         add_action( 'dokan_product_edit_after_inventory_variants', array( __CLASS__, 'load_others_template' ), 85, 2 );
+    }
+
+    /**
+     * Set errors
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param void $errors
+     *
+     * @return void
+     */
+    public function set_errors( $errors ) {
+        self::$errors = $errors;
+    }
+
+    /**
+     * Verify if the instance contains errors
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return bool
+     */
+    public function has_errors() {
+        return ! empty( self::$errors );
+    }
+
+    /**
+     * Retrieve all errors
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return array
+     */
+    public function get_errors() {
+        return self::$errors;
     }
 
     /**
@@ -175,7 +210,7 @@ class Products {
      *
      * @return void
      */
-    function handle_product_add() {
+    public function handle_product_add() {
 
         if ( ! is_user_logged_in() ) {
             return;
@@ -447,7 +482,7 @@ class Products {
         }
     }
 
-    function load_add_new_product_popup() {
+    public function load_add_new_product_popup() {
         dokan_get_template_part( 'products/tmpl-add-product-popup' );
     }
 
@@ -456,7 +491,7 @@ class Products {
      *
      * @return void
      */
-    function handle_delete_product() {
+    public function handle_delete_product() {
         if ( ! dokan_is_user_seller( dokan_get_current_user_id() ) ) {
             return;
         }
