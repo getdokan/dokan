@@ -12,11 +12,13 @@ class Dokan_Depricated_Classes {
         require_once $dir_path . '/Singleton.php';
         require_once $dir_path . '/class-dokan-template-dashboard.php';
         require_once $dir_path . '/class-dokan-template-settings.php';
+        require_once $dir_path . '/class-dokan-template-products.php';
         require_once $dir_path . '/class-dokan-rest-controller.php';
         require_once $dir_path . '/class-dokan-rest-product-controller.php';
         require_once $dir_path . '/class-dokan-rest-store-controller.php';
         require_once $dir_path . '/class-abstrct-dokan-rest-store-controller.php';
         require_once $dir_path . '/class-dokan-vendor.php';
+        // require_once $dir_path . '/class-dokan-taxonomy-walker.php';
     }
 }
 
