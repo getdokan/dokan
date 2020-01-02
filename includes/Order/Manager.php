@@ -331,4 +331,76 @@ class Manager {
 
         $order->save();
     }
+
+    /**
+     * Monitors a new order and attempts to create sub-orders
+     *
+     * If an order contains products from multiple vendor, we can't show the order
+     * to each seller dashboard. That's why we need to divide the main order to
+     * some sub-orders based on the number of sellers.
+     *
+     * @param int $parent_order_id
+     *
+     * @return void
+     */
+    public function maybe_split_orders( $parent_order_id ) {
+        $parent_order = dokan()->order->get( $parent_order_id );
+
+        dokan_log( sprintf( 'New Order #%d created. Init sub order.', $parent_order_id ) );
+
+        if ( $parent_order->get_meta( 'has_sub_order' ) == true ) {
+
+            $args = array(
+                'post_parent' => $parent_order_id,
+                'post_type'   => 'shop_order',
+                'numberposts' => -1,
+                'post_status' => 'any'
+            );
+
+            $child_orders = get_children( $args );
+
+            foreach ( $child_orders as $child ) {
+                wp_delete_post( $child->ID, true );
+            }
+        }
+
+        $vendors = dokan_get_sellers_by( $parent_order_id );
+
+        // return if we've only ONE seller
+        if ( count( $vendors ) == 1 ) {
+            dokan_log( '1 vendor only, skipping sub order.');
+
+            $temp      = array_keys( $vendors );
+            $seller_id = reset( $temp );
+
+            do_action( 'dokan_create_parent_order', $parent_order, $seller_id );
+
+            // record admin commision
+            $admin_fee = dokan_get_admin_commission_by( $parent_order, $seller_id );
+            $parent_order->update_meta_data( '_dokan_admin_fee', $admin_fee );
+            $parent_order->update_meta_data( '_dokan_vendor_id', $seller_id );
+            $parent_order->save();
+
+            // if the request is made from rest api then insert the order data to the sync table
+            if ( defined( 'REST_REQUEST' ) ) {
+                do_action( 'dokan_checkout_update_order_meta', $parent_order_id, $seller_id );
+            }
+
+            return;
+        }
+
+        // flag it as it has a suborder
+        $parent_order->update_meta_data( 'has_sub_order', true );
+        $parent_order->save();
+
+        dokan_log( sprintf( 'Got %s vendors, starting sub order.', count( $vendors ) ) );
+
+        // seems like we've got multiple sellers
+        foreach ( $vendors as $seller_id => $seller_products ) {
+            dokan()->order->create_sub_order( $parent_order, $seller_id, $seller_products );
+        }
+
+        dokan_log( sprintf( 'Completed sub order for #%d.', $parent_order_id ) );
+    }
+
 }
