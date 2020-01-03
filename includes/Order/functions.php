@@ -744,7 +744,7 @@ function dokan_get_customer_orders_by_seller( $customer_id, $seller_id ) {
         'numberposts'   => -1,
     ];
 
-    $orders = dokan()->order->get( apply_filters( 'dokan_get_customer_orders_by_seller', $args ) );
+    $orders = wc_get_orders( apply_filters( 'dokan_get_customer_orders_by_seller', $args ) );
 
     return $orders ? $orders : null;
 }
