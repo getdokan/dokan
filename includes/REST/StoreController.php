@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\REST;
 
+use WeDevs\Dokan\Vendor\Vendor;
 use Dokan_REST_Product_Controller;
 use WP_Error;
 use WP_Query;
@@ -724,7 +725,7 @@ class StoreController extends WP_REST_Controller {
         $params = $request->get_params();
         $vendor = dokan()->vendor->get( $params['id'] );
 
-        if ( ! $vendor instanceof Dokan_Vendor || ! $vendor->get_id() ) {
+        if ( ! $vendor instanceof Vendor || ! $vendor->get_id() ) {
             return rest_ensure_response(
                 new WP_Error(
                     'vendor_not_found',
