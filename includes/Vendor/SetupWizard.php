@@ -367,21 +367,19 @@ class SetupWizard extends DokanSetupWizard {
                 <?php
 				foreach ( $methods as $method_key ) {
 					$method = dokan_withdraw_get_method( $method_key );
-					?>
-                    <tr>
-                        <th scope="row"><label><?php echo esc_html( $method['title'] ); ?></label></th>
-                        <td>
-    						<?php
-        						if ( isset( $method['callback'] ) && is_callable( $method['callback'] ) ) {
-        							call_user_func( $method['callback'], $store_info );
-        						}
-    						?>
-                        </td>
-                    </tr>
-					<?php
+					if ( isset( $method['callback'] ) && is_callable( $method['callback'] ) ) {
+                        ?>
+                        <tr>
+                            <th scope="row"><label><?php echo esc_html( $method['title'] ); ?></label></th>
+                            <td>
+        						<?php call_user_func( $method['callback'], $store_info ); ?>
+                            </td>
+                        </tr>
+    					<?php
+                    }
 				}
 
-                    do_action( 'dokan_seller_wizard_payment_setup_field', $this );
+                do_action( 'dokan_seller_wizard_payment_setup_field', $this );
                 ?>
             </table>
             <p class="wc-setup-actions step">
