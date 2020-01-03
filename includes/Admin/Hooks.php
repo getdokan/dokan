@@ -363,7 +363,7 @@ class Hooks {
      */
     public function add_seller_meta_box(){
         remove_meta_box( 'authordiv', 'product', 'core' );
-        add_meta_box( 'sellerdiv', __( 'Vendor', 'dokan-lite' ), 'seller_meta_box_content', 'product', 'normal', 'core' );
+        add_meta_box( 'sellerdiv', __( 'Vendor', 'dokan-lite' ), [ $this, 'seller_meta_box_content' ], 'product', 'normal', 'core' );
     }
 
     /**
@@ -378,17 +378,18 @@ class Hooks {
 
         $admin_user = get_user_by( 'id', $user_ID );
         $selected   = empty( $post->ID ) ? $user_ID : $post->post_author;
-        $user_query = new WP_User_Query( array( 'role' => 'seller' ) );
-        $sellers    = $user_query->get_results();
+        $vendors = dokan()->vendor->all( [ 'number' => -1, 'role__in' => [ 'seller' ] ] );
+
+        // $sellers    = $user_query->get_results();
         ?>
         <label class="screen-reader-text" for="dokan_product_author_override"><?php esc_html_e( 'Vendor', 'dokan-lite' ); ?></label>
         <select name="dokan_product_author_override" id="dokan_product_author_override" class="">
-            <?php if ( ! $sellers ): ?>
+            <?php if ( empty( $vendors ) ): ?>
                 <option value="<?php echo esc_attr( $admin_user->ID ); ?>"><?php echo esc_html( $admin_user->display_name ); ?></option>
             <?php else: ?>
                 <option value="<?php echo esc_attr( $user_ID ); ?>" <?php selected( $selected, $user_ID ); ?>><?php echo esc_html( $admin_user->display_name ); ?></option>
-                <?php foreach ( $sellers as $key => $user): ?>
-                    <option value="<?php echo esc_attr( $user->ID ) ?>" <?php selected( $selected, $user->ID ); ?>><?php echo esc_html( $user->display_name ); ?></option>
+                <?php foreach ( $vendors as $key => $vendor ): ?>
+                    <option value="<?php echo esc_attr( $vendor->get_id() ) ?>" <?php selected( $selected, $vendor->get_id() ); ?>><?php echo ! empty( $vendor->get_shop_name() ) ? esc_html( $vendor->get_shop_name() ) : $vendor->get_name(); ?></option>
                 <?php endforeach ?>
             <?php endif ?>
         </select>
