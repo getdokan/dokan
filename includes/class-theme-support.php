@@ -20,9 +20,25 @@ class Dokan_Theme_Support {
      * Constructor
      */
     public function __construct() {
-        $this->theme = strtolower( get_template() );
-
+        $this->theme = $this->format( strtolower( get_template() ) );
         $this->include_support();
+    }
+
+    /**
+     * Format theme name. ( Remove `-theme` from the string )
+     *
+     * @since  DOKAN_LITE_SINCE
+     *
+     * @param  string $string
+     *
+     * @return string
+     */
+    private function format( $string ) {
+        if ( false !== strpos( $string, '-theme' ) ) {
+            $string = substr( $string, 0, strlen( $string ) - 6 );
+        }
+
+        return $string;
     }
 
     /**
