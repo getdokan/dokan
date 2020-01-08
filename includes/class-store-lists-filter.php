@@ -46,6 +46,7 @@ class Dokan_Store_Lists_Filter {
     public function hooks() {
         $this->maybe_disable_stote_lists_filter();
 
+        wp_enqueue_style( 'dashicons' );
         add_action( 'dokan_store_lists_filter_form', [ $this, 'filter_area' ] );
         add_filter( 'dokan_seller_listing_args', [ $this, 'filter_pre_user_query' ], 10, 2 );
     }
