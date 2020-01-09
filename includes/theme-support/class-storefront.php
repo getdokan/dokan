@@ -67,8 +67,33 @@ class Dokan_Theme_Support_Storefront {
         $style .= '#dokan-store-listing-filter-wrap .left .store-count {margin-bottom: 0}';
         $style .= '#dokan-seller-listing-wrap.list-view .dokan-seller-wrap .dokan-single-seller .store-wrapper .store-content .store-data-container .store-data .dokan-seller-rating[class] {font-size: 14px}';
 
+        // responsive
+        $style .= '@media (max-width: 414px) { #dokan-store-listing-filter-wrap .right .item .dokan-store-list-filter-button {margin: 0}';
+        $style .= '#dokan-store-listing-filter-wrap .right {margin-top: 15px}';
+        $style .= '#dokan-store-listing-filter-wrap .right .item {font-size: 15px}';
+        $style .= '#dokan-store-listing-filter-wrap .right .item #stores_orderby {padding: 8px 15px 8px 16px}';
+        $style .= '#dokan-store-listing-filter-form-wrap .store-lists-other-filter-wrap .item:not(.store-lists-category) label {width: 252px !important}';
+        $style .= '#dokan-store-listing-filter-form-wrap .store-lists-other-filter-wrap .store-ratings .stars {margin-left: -5px !important}';
+        $style .= '}';
+
+        $style .= '@media (max-width: 375px) { ';
+        $style .= '#dokan-store-listing-filter-wrap .right .item {font-size: 14px}';
+        $style .= '#dokan-store-listing-filter-wrap .right .item:not(:first-child) {padding-left: 27px}';
+        $style .= '#dokan-store-listing-filter-form-wrap .store-lists-other-filter-wrap .item:not(.store-lists-category) label {width: 217px !important}';
+        $style .= '#dokan-store-listing-filter-form-wrap .store-lists-other-filter-wrap .store-ratings .stars {margin-left: -5px !important}';
+        $style .= '}';
+
+        $style .= '@media (max-width: 360px) { ';
+        $style .= '#dokan-store-listing-filter-wrap .right .item:not(:first-child) {padding-left: 12px}';
+        $style .= '#dokan-store-listing-filter-form-wrap .store-lists-other-filter-wrap .item:not(.store-lists-category) label {width: 204px !important}';
+        $style .= '}';
+
+        $style .= '@media (max-width: 320px) { ';
+        $style .= '#dokan-store-listing-filter-form-wrap .store-lists-other-filter-wrap .item:not(.store-lists-category) label {width: 168px !important}';
+        $style .= '}';
+
         wp_add_inline_style( 'dokan-style', $style );
-        wp_enqueue_style( 'woocommerce-general', WC()->plugin_url() . '/assets/css/woocommerce.css', array( '' ), false, 'all' );
+        wp_enqueue_style( 'woocommerce-general', WC()->plugin_url() . '/assets/css/woocommerce.css', '', WC_VERSION, 'all' );
     }
 }
 

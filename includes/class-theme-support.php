@@ -51,7 +51,9 @@ class Dokan_Theme_Support {
             'storefront',
             'flatsome',
             'divi',
-            'rehub'
+            'rehub',
+            'electro',
+            'enfold'
         ] );
 
         return in_array( $this->theme, $themes ) ? $this->load_file( $this->theme ) : false;
