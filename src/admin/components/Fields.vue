@@ -1,5 +1,5 @@
 <template>
-    <tr :class="[id, `dokan-settings-field-type-${fieldData.type}`]">
+    <tr :class="[id, `dokan-settings-field-type-${fieldData.type}`]" v-if="shoudShow">
         <template v-if="'sub_section' === fieldData.type">
             <th colspan="2" class="dokan-settings-sub-section-title">
                 <label>{{ fieldData.label }}</label>
@@ -188,7 +188,7 @@
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
-            <td>
+            <td class="dokan-settings-field-type-radio">
                 <fieldset>
                     <template v-for="( optionVal, optionKey ) in fieldData.options">
                         <label :for="sectionId + '[' + fieldData.name + '][' + optionKey + ']'">
@@ -249,14 +249,29 @@
             </td>
         </template>
 
-        <template v-if="'gmap' == fieldData.type">
+        <template v-if="'gmap' == fieldData.type && ! hideMap">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
 
             <td>
-                <input type="hidden" :name="sectionId + '[' + fieldData.name + ']'" :value="Object.assign( fieldValue[fieldData.name], gmapData )">
-                <gmap @updateGmap="updateGmapData" :gmapKey="getGmapApiKey()" :location="getMapLocation( fieldValue[fieldData.name] )" />
+                <input type="hidden" :name="sectionId + '[' + fieldData.name + ']'" :value="mapLocation">
+                <Mapbox
+                    v-if="mapApiSource === 'mapbox'"
+                    @hideMap="onHideMap"
+                    @updateMap="onUpdateMap"
+                    :accessToken="mapboxAccessToken"
+                    :location="mapLocation"
+                    width="100%"
+                    height="300px"
+                />
+                <GoogleMaps
+                    v-else
+                    @hideMap="onHideMap"
+                    @updateMap="onUpdateMap"
+                    :apiKey="googleMapApiKey"
+                    :location="mapLocation"
+                />
                 <p v-if="hasError( fieldData.name )" class="dokan-error">
                     {{ getError( fieldData.label ) }}
                 </p>
@@ -269,7 +284,8 @@
 <script>
     import colorPicker from "admin/components/ColorPicker.vue";
     let TextEditor = dokan_get_lib('TextEditor');
-    let Gmap = dokan_get_lib('Gmap');
+    let GoogleMaps = dokan_get_lib('GoogleMaps');
+    let Mapbox = dokan_get_lib('Mapbox');
 
     export default {
         name: 'Fields',
@@ -277,17 +293,111 @@
         components: {
             colorPicker,
             TextEditor,
-            Gmap
+            GoogleMaps,
+            Mapbox,
         },
+
+        props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues', 'errors'],
 
         data() {
             return {
                 repeatableItem: {},
-                gmapData: {}
+                hideMap: false,
             }
         },
 
-        props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues', 'errors'],
+        computed: {
+            shoudShow() {
+                let shoudShow = true;
+
+                if ( this.fieldData.show_if ) {
+                    const conditions = this.fieldData.show_if;
+                    const dependencies = Object.keys( conditions );
+
+                    let i = 0;
+
+                    for ( i = 0; i < dependencies.length; i++ ) {
+                        const dependency = dependencies[i];
+                        const [ optionId, sectionId = this.sectionId ] = dependency.split( '.' ).reverse();
+                        const dependencyValue = this.allSettingsValues[ sectionId ][ optionId ];
+                        const [ operator, value ] = _.chain( conditions[ dependency ] ).pairs().first().value();
+
+                        switch ( operator ) {
+                            case 'greater_than':
+                                if ( ! (dependencyValue > value ) ) {
+                                    shoudShow = false;
+                                }
+                                break;
+
+                            case 'greater_than_equal':
+                                if ( ! (dependencyValue >= value ) ) {
+                                    shoudShow = false;
+                                }
+                                break;
+
+                            case 'less_than':
+                                if ( ! (dependencyValue < value ) ) {
+                                    shoudShow = false;
+                                }
+                                break;
+
+                            case 'less_than':
+                                if ( ! (dependencyValue <= value ) ) {
+                                    shoudShow = false;
+                                }
+                                break;
+
+                            case 'equal':
+                            default:
+                                if ( dependencyValue != value ) {
+                                    shoudShow = false;
+                                }
+                                break;
+                        }
+
+                        if ( ! shoudShow ) {
+                            break;
+                        }
+                    }
+                }
+
+                return shoudShow;
+            },
+
+            mapApiSource() {
+                return this.allSettingsValues?.dokan_appearance?.map_api_source;
+            },
+
+            mapLocation() {
+                let location = {
+                    ...{
+                        latitude: 23.709921,
+                        longitude: 90.40714300000002,
+                        address: 'Dhaka',
+                        zoom: 10
+                    },
+
+                    ...this.fieldValue[ this.fieldData.name ],
+                };
+
+                location = {
+                    latitude: parseFloat( location.latitude ),
+                    longitude: parseFloat( location.longitude ),
+                    address: `${location.address}`,
+                    zoom: parseInt( location.zoom ),
+                };
+
+                return location;
+            },
+
+            googleMapApiKey() {
+                return this.allSettingsValues?.dokan_appearance?.gmap_api_key;
+            },
+
+            mapboxAccessToken() {
+                return this.allSettingsValues?.dokan_appearance?.mapbox_access_token;
+            }
+        },
 
         beforeMount() {
             if ( 'multicheck' === this.fieldData.type && ! this.fieldValue[ this.fieldData.name ] ) {
@@ -336,25 +446,12 @@
                 return isValid;
             },
 
-            getMapLocation(savedLocation) {
-                return {
-                    latitude: savedLocation.latitude ? savedLocation.latitude : 23.709921,
-                    longitude: savedLocation.longitude ? savedLocation.longitude: 90.40714300000002,
-                    address: savedLocation.address ? savedLocation.address : 'Dhaka',
-                    zoom: 10
-                }
+            onHideMap( hideMap ) {
+                this.hideMap = hideMap;
             },
 
-            updateGmapData( payload ) {
-                this.gmapData = payload;
-            },
-
-            getGmapApiKey() {
-                let settings = this.allSettingsValues;
-
-                if ( 'dokan_appearance' in settings && 'gmap_api_key' in settings.dokan_appearance  ) {
-                    return settings.dokan_appearance.gmap_api_key
-                }
+            onUpdateMap( payload ) {
+                this.fieldValue[this.fieldData.name] = { ...this.mapLocation, ...payload };
             },
 
             hasError( key ) {
@@ -375,7 +472,7 @@
 
             getError( label ) {
                 return label + ' ' + this.__( 'is required.', 'dokan-lite' )
-            }
+            },
         }
 
     };
@@ -413,5 +510,18 @@
     }
     .dokan-error.combine-commission {
         margin-left: 10px;
+    }
+
+    .dokan-settings-field-type-radio {
+
+        fieldset {
+            & > label:not(:last-child) {
+                margin-right: 12px !important;
+
+                & > input[type="radio"] {
+                    margin-right: 2px;
+                }
+            }
+        }
     }
 </style>

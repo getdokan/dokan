@@ -239,18 +239,14 @@ class Dokan_Shortcodes {
 
         // if search is enabled, perform a search
         if ( 'yes' == $attr['search'] ) {
-
-            $search_term = isset( $_get_data['dokan_seller_search'] ) ? sanitize_text_field( $_get_data['dokan_seller_search'] ) : '';
-
-            if ( '' != $search_term ) {
-
-                $seller_args['meta_query'] = array(
-                    array(
+            if ( ! empty( $_get_data['dokan_seller_search'] ) ) {
+                $seller_args['meta_query'] = [
+                    [
                         'key'     => 'dokan_store_name',
-                        'value'   => $search_term,
+                        'value'   => wc_clean( $_get_data['dokan_seller_search'] ),
                         'compare' => 'LIKE'
-                    )
-                );
+                    ]
+                ];
             }
         }
 

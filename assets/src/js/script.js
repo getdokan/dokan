@@ -414,7 +414,7 @@ jQuery(function($) {
                 errorClass: 'error',
                 errorPlacement: validatorError,
                 success: validatorSuccess,
-                ignore: '.select2-search__field, :hidden'
+                ignore: '.select2-search__field, :hidden, .mapboxgl-ctrl-geocoder--input'
             });
 
         },
