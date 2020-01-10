@@ -1,3 +1,16 @@
+= v2.9.29 (December 26, 2019) =
+
+ - **Fix:** Don't show the admin setup wizard who ran the setup wizard before
+ - **Fix:** Remove non-ascii characters from some file names
+ - **Fix:** Dokan dashboard hamburger menu is not working fixed
+ - **Fix:** Downloadable product grunt and revoke access issue is fixed
+ - **Tweak:** Added privacy policy info in setup wizard for admin
+
+= v2.9.28 (December 19, 2019) =
+
+ - **Fix:** Sanitize and Escape data before saving and rendering #717
+ - **Improvement:** Add privacy policy in readme.
+
 = v2.9.27 (December 11, 2019) =
 
  - **Feat:** Run Dokan Admin Setup Wizard without being WooCommerce installed #708

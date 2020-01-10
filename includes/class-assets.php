@@ -476,8 +476,13 @@ class Dokan_Assets {
         }
 
         // store and my account page
-        if ( dokan_is_store_page() || dokan_is_store_review_page() || is_account_page() || is_product() ) {
-
+        if (
+            dokan_is_store_page()
+            || dokan_is_store_review_page()
+            || is_account_page()
+            || is_product()
+            || dokan_is_store_listing()
+        ) {
             if ( DOKAN_LOAD_STYLE ) {
                 wp_enqueue_style( 'dokan-select2-css' );
             }
@@ -587,17 +592,35 @@ class Dokan_Assets {
      * @since 2.5.3
      */
     function load_gmap_script() {
-        $api_key = dokan_get_option( 'gmap_api_key', 'dokan_appearance', false );
+        $script_src = null;
+        $source     = dokan_get_option( 'map_api_source', 'dokan_appearance', 'google_maps' );
 
-        if ( $api_key ) {
-            $query_args = apply_filters( 'dokan_google_maps_script_query_args', array(
-                'key' => $api_key,
-            ) );
+        if ( 'google_maps' === $source ) {
+            $api_key = dokan_get_option( 'gmap_api_key', 'dokan_appearance', false );
 
-            $src = add_query_arg( $query_args, 'https://maps.googleapis.com/maps/api/js' );
+            if ( $api_key ) {
+                $query_args = apply_filters( 'dokan_google_maps_script_query_args', array(
+                    'key' => $api_key,
+                ) );
 
-            wp_enqueue_script( 'google-maps', $src, array(), false, true );
+                $script_src = add_query_arg( $query_args, 'https://maps.googleapis.com/maps/api/js' );
+
+                wp_enqueue_script( 'dokan-maps', $script_src, array(), false, true );
+            }
+        } else if ( 'mapbox' === $source ) {
+            $access_token = dokan_get_option( 'mapbox_access_token', 'dokan_appearance', null );
+
+            if ( $access_token ) {
+                wp_enqueue_style( 'dokan-mapbox-gl', 'https://api.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.css', array(), false );
+                wp_enqueue_style( 'dokan-mapbox-gl-geocoder', 'https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.2.0/mapbox-gl-geocoder.css', array( 'dokan-mapbox-gl' ), false );
+
+                wp_enqueue_script( 'dokan-mapbox-gl-geocoder', 'https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.2.0/mapbox-gl-geocoder.min.js', array(), false, true );
+                wp_enqueue_script( 'dokan-maps', 'https://api.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.js', array( 'dokan-mapbox-gl-geocoder' ), false, true );
+            }
         }
+
+        // Backward compatibility script handler
+        wp_register_script( 'google-maps', DOKAN_PLUGIN_ASSEST . '/js/dokan-maps-compat.js', array( 'dokan-maps' ), false, true );
     }
 
     /**
@@ -616,9 +639,9 @@ class Dokan_Assets {
             || dokan_is_store_page()
             || is_account_page()
             || is_product()
+            || dokan_is_store_listing()
             || apply_filters( 'dokan_force_load_extra_args', false )
-        )
-        {
+        ) {
             $general_settings = get_option( 'dokan_general', array() );
 
             $banner_width    = dokan_get_option( 'store_banner_width', 'dokan_appearance', 625 );

@@ -1,0 +1,453 @@
+#dokan-store-listing-filter-wrap {
+    background: #ffffff;
+    padding: 20px;
+    box-shadow: 1px 1px 20px 0px #E9E9E9;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    .left {
+        .store-count {
+            margin-top: 10px;
+        }
+    }
+    .right {
+        display: flex;
+
+        .item {
+            position: relative;
+            .dokan-store-list-filter-button {
+                border-radius: 3px;
+            }
+
+            .dokan-icons {
+                position: absolute;
+                left: 14%;
+                top: 30%;
+                cursor: pointer;
+
+                .dokan-icon-div {
+                    background: #fff;
+                    height: 2px;
+                    margin: 2px auto;
+                }
+
+                .dokan-icon-div:nth-child(1) {
+                    width: 15px;
+                }
+
+                .dokan-icon-div:nth-child(2) {
+                    width: 10px;
+                }
+
+                .dokan-icon-div:nth-child(3) {
+                    width: 4px;
+                }
+            }
+
+            &:not(:first-child) {
+                padding-left: 40px;
+            }
+
+            button {
+                padding-top: 8px;
+                padding-bottom: 8px;
+                padding-left: 35px;
+                padding-right: 25px;
+
+                &:focus {
+                    outline: none;
+                }
+            }
+
+            select {
+                background: #ffffff;
+                border-color: #edecec;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                padding: 8px 20px;
+
+                &:before {
+                    content: "\f140";
+                }
+
+                &:focus {
+                    outline: none;
+                }
+            }
+        }
+
+        .toggle-view {
+            margin-top: 8px;
+
+            .dashicons {
+                font-size: 22px;
+                cursor: pointer;
+            }
+
+            .active {
+                color: #ee5035;
+            }
+        }
+    }
+}
+
+
+#dokan-store-listing-filter-form-wrap {
+    background: #ffffff;
+    margin-top: 25px;
+    padding: 20px;
+    box-shadow: 1px 1px 20px 0px #E9E9E9;
+
+    &:before {
+        content: "\f142";
+        position: relative;
+        top: -35px;
+        transform: translate(45%, 0);
+        left: 45%;
+        display: inline-block;
+        -webkit-font-smoothing: antialiased;
+        font-family: 'dashicons';
+        vertical-align: top;
+        font-size: 60px;
+        color: #ffffff;
+        font-weight: bold;
+    }
+
+    .store-search {
+        .store-search-input {
+            width: 100%;
+            padding: 10px 20px;
+            border-radius: 3px;
+            margin-top: -11px;
+            border: 1px solid #cccccc;
+
+            &:placeholder {
+                color: #7e7e7ec9;
+            }
+
+            &:focus {
+                outline: none;
+                border-color: #8080809e;
+            }
+        }
+    }
+
+    .apply-filter {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 20px;
+
+        #cancel-filter-btn {
+            padding: 8px 25px;
+            border-radius: 3px;
+            background: #fff !important;
+            color: #000 !important;
+            border-color: #edecec !important;
+            margin-right: 20px;
+            display: none;
+
+            &:focus {
+                outline: none;
+            }
+        }
+
+        #apply-filter-btn {
+            padding: 8px 25px;
+            border-radius: 3px;
+
+            &:focus {
+                outline: none;
+            }
+        }
+    }
+}
+
+.site-content {
+    .entry-header {
+        .entry-title[class] {
+            border: none;
+        }
+    }
+}
+
+
+#dokan-seller-listing-wrap {
+
+    &.grid-view {
+
+        .store-wrapper {
+            position: relative;
+        }
+
+        .store-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 9;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.45);
+            color: #fff;
+
+            &.default-store-banner {
+                background: transparent;
+            }
+            .store-data-container {
+                padding: 5px 20px;
+
+                .featured-favourite {
+                    position: relative;
+                    top: 10px;
+
+                    .featured-label {
+                        width: 80px;
+                        padding: 2px 10px;
+                        background: #2d54a3;
+                        color: #fff;
+                        border-radius: 3px;
+                        box-shadow: 0px 0px 25px -5px #afafaf;
+                    }
+                }
+
+                .store-data {
+                    h2 {
+                        a {
+                            color: #fff;
+                            text-shadow: rgba(0, 0, 0, 0.8) 0 1px 0;
+
+                            &:active,
+                            &:focus {
+                                text-decoration: none;
+                                outline: none;
+                            }
+                        }
+                    }
+                    .star-rating {
+                        float: none;
+                        margin: 12px 0px 10px;
+
+                        &:before {
+                            font-family: star;
+                        }
+
+                        span {
+                            &:before {
+                                font-family: star;
+                                color: #fa9a00;
+                            }
+                        }
+
+                        p.rating {
+                            display: none !important;
+                        }
+                    }
+                    .store-address {
+                        line-height: 23px;
+                    }
+                }
+
+            }
+        }
+
+        .store-footer {
+            background: #fff;
+            position: relative;
+            z-index: 99;
+
+            a {
+                &:active,
+                &:focus {
+                    outline: none;
+                    text-decoration: none;
+                }
+            }
+
+            .dokan-btn-theme.dokan-btn-round {
+                margin-right: 10px;
+            }
+        }
+    }
+}
+
+#dokan-seller-listing-wrap {
+    .seller-listing-content {
+        .dokan-error {
+            margin: 15px;
+        }
+    }
+
+    .dokan-single-seller {
+        .store-wrapper {
+            .store-header {
+                .store-banner {
+                    min-height: 220px;
+                    position: relative;
+
+                    img {
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        max-width: 100%;
+                        height: 100%;
+                        width: -moz-available;
+                        width: -webkit-fill-available;
+                        width: fill-available;
+                    }
+                }
+            }
+        }
+    }
+
+    &.list-view {
+
+        .dokan-seller-wrap {
+
+            .dokan-single-seller {
+                width: 100%;
+
+                .store-wrapper {
+                    display: flex;
+                    flex-wrap: wrap;
+                    align-items: center;
+                    padding: 0px 50px 0px 0px;
+                    background: #fff;
+                    border-radius: 3px;
+
+                    .store-header {
+
+                        .store-banner {
+                            min-height: 140px;
+
+                            img {
+                                margin-left: -15px;
+                                border-top-left-radius: 3px;
+                                border-bottom-left-radius: 3px;
+                            }
+                        }
+                    }
+
+                    .store-content {
+
+                        .store-data-container {
+                            .featured-favourite {
+                                .featured-label {
+                                    width: 60px;
+                                    padding: 0px 5px;
+                                    background: #2d54a3;
+                                    color: #fff;
+                                    border-radius: 3px;
+                                    box-shadow: 0px 0px 25px -5px #afafaf;
+                                    font-size: 12px;
+                                }
+                            }
+
+                            .store-data {
+
+                                h2 {
+                                    margin-top: 0;
+                                    margin-bottom: 15px;
+
+                                    a {
+                                        color: #000;
+
+                                        &:active,
+                                        &:focus {
+                                            text-decoration: none;
+                                            outline: none;
+                                        }
+                                    }
+                                }
+
+                                .dokan-seller-rating[class] {
+                                    overflow: visible;
+                                    left: 25%;
+                                    z-index: 1;
+                                    top: -10px;
+                                    min-width: 85px;
+                                    font-family: 'Open Sans', sans-serif;
+                                    color: gray;
+
+                                    p.rating {
+                                        margin-top: 22px;
+                                    }
+
+                                    &:before {
+                                        font-family: star;
+                                    }
+
+                                    span {
+                                        &:before {
+                                            font-family: star;
+                                            color: #fa9a00;
+                                        }
+                                    }
+                                }
+
+                                .store-address {
+                                    &:before {
+                                        content: "\f230";
+                                        font-family: dashicons;
+                                        color: #0bb90b;
+                                        font-size: 22px;
+                                        position: relative;
+                                        top: 5px;
+                                        left: -5px;
+                                    }
+
+                                    margin-top: 5px;
+                                    display: inline;
+                                    font-size: 15px;
+
+                                    br {
+                                        display: none;
+                                    }
+                                }
+
+                                .store-phone {
+                                    display: none;
+                                }
+                            }
+                        }
+                    }
+
+                    > div {
+                        flex-basis: 37.5%;
+                        max-width: 37.5%;
+                        padding: 0 15px;
+                    }
+
+                    .store-header {
+                        flex-basis: 25%;
+                    }
+
+                    .store-footer[class] {
+                        display: flex;
+                        flex-direction: row-reverse;
+                        border: none;
+                        text-align: right;
+                        background: #fff;
+
+                        a {
+                            &:active,
+                            &:focus {
+                                outline: none;
+                                text-decoration: none;
+                            }
+                        }
+
+                        .seller-avatar {
+                            display: none;
+                        }
+
+                        button {
+                            margin-right: 20px;
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+}
