@@ -5,7 +5,7 @@
  *
  * @see https://themeforest.net/item/electro-electronics-store-woocommerce-theme/15720624?ref=wedevs
  *
- * @since DOKAN_LITE_SINCE
+ * @since 2.9.30
  */
 class Dokan_Theme_Support_Electro {
 
@@ -19,7 +19,7 @@ class Dokan_Theme_Support_Electro {
     /**
      * Reset store listing style
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.30
      *
      * @return void
      */

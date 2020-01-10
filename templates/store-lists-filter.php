@@ -12,7 +12,7 @@
  *
  * @see     https://docs.woocommerce.com/document/template-structure/
  * @package Dokan/Templates
- * @version DOKAN_LITE_SINCE
+ * @version 2.9.30
  */
 
 defined( 'ABSPATH' ) || exit; ?>
