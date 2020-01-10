@@ -27,7 +27,7 @@ class Dokan_Theme_Support {
     /**
      * Format theme name. ( Remove `-theme` from the string )
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.30
      *
      * @param  string $string
      *

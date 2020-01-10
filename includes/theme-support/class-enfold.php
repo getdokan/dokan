@@ -5,7 +5,7 @@
  *
  * @see https://themeforest.net/item/enfold-responsive-multipurpose-theme/4519990?ref=wedevs
  *
- * @since DOKAN_LITE_SINCE
+ * @since 2.9.30
  */
 class Dokan_Theme_Support_Enfold {
 
@@ -30,7 +30,7 @@ class Dokan_Theme_Support_Enfold {
     /**
      * Reset store listing style
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.30
      *
      * @return void
      */
