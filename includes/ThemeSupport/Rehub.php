@@ -7,7 +7,7 @@ namespace WeDevs\Dokan\ThemeSupport;
  *
  * @since 2.9.17
  */
-class Dokan_Theme_Support_Rehub {
+class Rehub {
     /**
      * The constructor
      */

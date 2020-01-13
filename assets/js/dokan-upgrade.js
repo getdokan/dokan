@@ -7,44 +7,37 @@ module.exports = jQuery;
 
 /***/ }),
 
-/***/ 201:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _App = __webpack_require__(202);
-
-var _App2 = _interopRequireDefault(_App);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var Vue = dokan_get_lib('Vue');
-
-new Vue({
-    el: '#dokan-upgrade-notice',
-    render: function render(h) {
-        return h(_App2.default);
-    },
-    created: function created() {
-        this.setLocaleData(dokan.i18n['dokan-lite']);
-    }
-});
-
-/***/ }),
-
-/***/ 202:
+/***/ 213:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_App_vue__ = __webpack_require__(79);
-/* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_46238d45_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__ = __webpack_require__(204);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__App_vue__ = __webpack_require__(214);
+
+var Vue = dokan_get_lib('Vue');
+new Vue({
+  el: '#dokan-upgrade-notice',
+  render: function render(h) {
+    return h(__WEBPACK_IMPORTED_MODULE_0__App_vue__["a" /* default */]);
+  },
+  created: function created() {
+    this.setLocaleData(dokan.i18n['dokan-lite']);
+  }
+});
+
+/***/ }),
+
+/***/ 214:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_App_vue__ = __webpack_require__(82);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_46238d45_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__ = __webpack_require__(216);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(203)
+  __webpack_require__(215)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -86,19 +79,19 @@ if (false) {(function () {
   })
 })()}
 
-/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
 
 /***/ }),
 
-/***/ 203:
+/***/ 215:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ 204:
+/***/ 216:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -264,25 +257,20 @@ if (false) {
 /***/ }),
 
 /***/ 38:
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.setLocaleData = setLocaleData;
-exports.getI18n = getI18n;
-exports.__ = __;
-exports._x = _x;
-exports._n = _n;
-exports._nx = _nx;
+/* harmony export (immutable) */ __webpack_exports__["c"] = setLocaleData;
+/* unused harmony export getI18n */
+/* harmony export (immutable) */ __webpack_exports__["a"] = __;
+/* unused harmony export _x */
+/* unused harmony export _n */
+/* harmony export (immutable) */ __webpack_exports__["b"] = _nx;
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return sprintf; });
 /**
  * External dependencies
  */
 var i18n = {};
-
 /**
  * Creates a new Jed instance with specified locale data configuration.
  *
@@ -290,27 +278,29 @@ var i18n = {};
  *
  * @param {Object} data Locale data configuration.
  */
+
 function setLocaleData(data) {
   var jed = new Jed(data);
   i18n[jed._textdomain] = jed;
 }
-
 /**
  * Returns the current Jed instance, initializing with a default configuration
  * if not already assigned.
  *
  * @return {Jed} Jed instance.
  */
+
 function getI18n() {
   var domain = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
 
   if (!i18n[domain]) {
-    setLocaleData({ '': {} });
+    setLocaleData({
+      '': {}
+    });
   }
 
   return i18n[domain];
 }
-
 /**
  * Retrieve the translation of text.
  *
@@ -321,10 +311,10 @@ function getI18n() {
  *
  * @return {string} Translated text.
  */
+
 function __(text, domain) {
   return getI18n(domain) ? getI18n(domain).dgettext(domain, text) : text;
 }
-
 /**
  * Retrieve translated string with gettext context.
  *
@@ -336,10 +326,10 @@ function __(text, domain) {
  *
  * @return {string} Translated context string without pipe.
  */
+
 function _x(text, context, domain) {
   return getI18n(domain).dpgettext(domain, context, text);
 }
-
 /**
  * Translates and retrieves the singular or plural form based on the supplied
  * number.
@@ -354,10 +344,10 @@ function _x(text, context, domain) {
  *
  * @return {string} The translated singular or plural form.
  */
+
 function _n(single, plural, number, domain) {
   return getI18n(domain).dngettext(domain, single, plural, number);
 }
-
 /**
  * Translates and retrieves the singular or plural form based on the supplied
  * number, with gettext context.
@@ -373,10 +363,10 @@ function _n(single, plural, number, domain) {
  *
  * @return {string} The translated singular or plural form.
  */
+
 function _nx(single, plural, number, context, domain) {
   return getI18n(domain).dnpgettext(domain, context, single, plural, number);
 }
-
 /**
  * Returns a formatted string.
  *
@@ -384,18 +374,18 @@ function _nx(single, plural, number, context, domain) {
  *
  * @type {string}
  */
-var sprintf = exports.sprintf = Jed.sprintf;
+
+var sprintf = Jed.sprintf;
 
 /***/ }),
 
-/***/ 79:
+/***/ 82:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_i18n__ = __webpack_require__(38);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_i18n___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__utils_i18n__);
 //
 //
 //
@@ -452,56 +442,51 @@ var sprintf = exports.sprintf = Jed.sprintf;
 //
 //
 //
-
-
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
-    data() {
-        return {
-            isUpgrading: false,
-            showConfirmation: false,
-            updateCompleted: false
-        };
+  data: function data() {
+    return {
+      isUpgrading: false,
+      showConfirmation: false,
+      updateCompleted: false
+    };
+  },
+  computed: {
+    dokanLogo: function dokanLogo() {
+      return "".concat(dokan.urls.assetsUrl, "/images/dokan-logo-small.svg");
     },
-
-    computed: {
-        dokanLogo() {
-            return `${dokan.urls.assetsUrl}/images/dokan-logo-small.svg`;
-        },
-
-        containerStyle() {
-            return {
-                backgroundImage: `url(${dokan.urls.assetsUrl}/images/dokan-notification-banner.svg)`
-            };
-        }
-    },
-
-    methods: {
-        doUpgrade() {
-            this.isUpgrading = true;
-
-            __WEBPACK_IMPORTED_MODULE_0_jquery___default.a.ajax({
-                url: dokan.ajaxurl,
-                method: 'post',
-                dataType: 'json',
-                data: {
-                    action: 'dokan_do_upgrade',
-                    _wpnonce: dokan.nonce
-                }
-            }).always(() => {
-                this.isUpgrading = false;
-            }).done(() => {
-                this.updateCompleted = true;
-            });
-        },
-
-        refreshPage() {
-            window.location.reload();
-        }
+    containerStyle: function containerStyle() {
+      return {
+        backgroundImage: "url(".concat(dokan.urls.assetsUrl, "/images/dokan-notification-banner.svg)")
+      };
     }
+  },
+  methods: {
+    doUpgrade: function doUpgrade() {
+      var _this = this;
+
+      this.isUpgrading = true;
+      __WEBPACK_IMPORTED_MODULE_0_jquery___default.a.ajax({
+        url: dokan.ajaxurl,
+        method: 'post',
+        dataType: 'json',
+        data: {
+          action: 'dokan_do_upgrade',
+          _wpnonce: dokan.nonce
+        }
+      }).always(function () {
+        _this.isUpgrading = false;
+      }).done(function () {
+        _this.updateCompleted = true;
+      });
+    },
+    refreshPage: function refreshPage() {
+      window.location.reload();
+    }
+  }
 });
 
 /***/ })
 
-},[201]);
+},[213]);

@@ -1,5 +1,7 @@
 <?php
 
+namespace WeDevs\Dokan\ThemeSupport;
+
 /**
  * Electro Theme Support
  *
@@ -7,7 +9,7 @@
  *
  * @since 2.9.30
  */
-class Dokan_Theme_Support_Electro {
+class Electro {
 
     /**
      * The constructor
@@ -49,5 +51,3 @@ class Dokan_Theme_Support_Electro {
         wp_enqueue_style( 'woocommerce-general', WC()->plugin_url() . '/assets/css/woocommerce.css', '', WC_VERSION, 'all' );
     }
 }
-
-return new Dokan_Theme_Support_Electro();
