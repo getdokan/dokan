@@ -1,15 +1,13 @@
 <?php
-use Dokan\Traits\Singleton;
 
-defined( 'ABSPATH' ) || exit;
+namespace WeDevs\Dokan\Vendor;
 
 /**
  * Store Lists Class
  *
  * @since 2.9.30
  */
-class Dokan_Store_Lists_Filter {
-    use Singleton;
+class StoreListsFilter {
 
     /**
      * WP_User_Query holder
@@ -32,18 +30,7 @@ class Dokan_Store_Lists_Filter {
      *
      * @return void
      */
-    public function boot() {
-        $this->hooks();
-    }
-
-    /**
-     * Init hooks
-     *
-     * @since  2.9.30
-     *
-     * @return void
-     */
-    public function hooks() {
+    public function __construct() {
         $this->maybe_disable_stote_lists_filter();
 
         wp_enqueue_style( 'dashicons' );

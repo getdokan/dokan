@@ -302,7 +302,6 @@ final class WeDevs_Dokan {
             require_once DOKAN_INC_DIR . '/Admin/functions.php';
         } else {
             require_once DOKAN_INC_DIR . '/template-tags.php';
-            require_once DOKAN_INC_DIR . '/class-store-lists-filter.php';
         }
     }
 
@@ -348,7 +347,7 @@ final class WeDevs_Dokan {
         $this->container = apply_filters( 'dokan_get_class_container', $this->container );
 
         if ( ! is_admin() ) {
-            Dokan_Store_Lists_Filter::instance();
+            new \WeDevs\Dokan\Vendor\StoreListsFilter();
             new \WeDevs\Dokan\ThemeSupport\Manager();
         }
 
