@@ -24,7 +24,7 @@
 
             <div class="metabox-holder">
                 <template v-for="(fields, index) in settingFields" v-if="isLoaded">
-                    <div :id="index" class="group" v-show="currentTab===index">
+                    <div :id="index" class="group" v-if="currentTab === index">
                         <form method="post" action="options.php">
                             <input type="hidden" name="option_page" :value="index">
                             <input type="hidden" name="action" value="update">
@@ -37,7 +37,8 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <fields v-for="(field, fieldId) in fields"
+                                    <Fields
+                                        v-for="(field, fieldId) in fields"
                                         :section-id="index"
                                         :id="fieldId"
                                         :field-data="field"
@@ -46,7 +47,7 @@
                                         @openMedia="showMedia"
                                         :key="fieldId"
                                         :errors="errors"
-                                    ></fields>
+                                    />
                                 </tbody>
                             </table>
                             <p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes" @click.prevent="saveSettings( settingValues[index], index )"></p>
@@ -89,6 +90,26 @@
                 settingValues: {},
                 requiredFields: [],
                 errors: []
+            }
+        },
+
+        computed: {
+            refreshable_props() {
+                const props = {};
+                let sectionId;
+
+                for ( sectionId in this.settingFields ) {
+                    let sectionFields = this.settingFields[ sectionId ];
+                    let optionId;
+
+                    for ( optionId in sectionFields ) {
+                        if ( sectionFields[ optionId ].refresh_after_save ) {
+                            props[ `${sectionId}.${optionId}` ] = true;
+                        }
+                    }
+                }
+
+                return props;
             }
         },
 
@@ -193,6 +214,17 @@
                         self.message = response.data.message;
 
                         self.settingValues[ settings.name ] = settings.value;
+
+                        let option;
+
+                        for ( option in fieldData ) {
+                            const fieldName = `${section}.${option}`;
+
+                            if ( self.refreshable_props[ fieldName ] ) {
+                                window.location.reload();
+                                break;
+                            }
+                        }
                     } )
                     .fail( function ( jqXHR ) {
                         var messages = jqXHR.responseJSON.data.map( function ( error ) {

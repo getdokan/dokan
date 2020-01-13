@@ -1,6 +1,6 @@
 <template>
-    <div v-if="loadMap" class="gmap-wrap regular-text">
-        <input ref="searchAddress" class="search-address regular-text" type="text" :placeholder="__( 'Search Address', 'dokan-lite') ">
+    <div v-if="apiKey" class="gmap-wrap regular-text">
+        <input ref="searchAddress" class="search-address regular-text" type="text" :placeholder="__( 'Search Address', 'dokan-lite')">
         <div id="gmap" ref="gmapArea"></div>
     </div>
     <p v-else>
@@ -10,12 +10,14 @@
 
 <script>
 export default {
-    name: 'Gmap',
+    name: 'GoogleMaps',
 
     props: {
-        gmapKey: {
-            type: [String, Function]
+        apiKey: {
+            type: String,
+            default: null,
         },
+
         location: {
             type: Object,
             default() {
@@ -31,19 +33,31 @@ export default {
 
     data() {
         return {
-            gmap: '',
-            marker: '',
-            loadMap: this.gmapKey.length > 1
+            dokanGoogleMap: null,
+            marker: null,
+            loadMap: this.apiKey.length > 1
         }
     },
 
     mounted() {
-        this.renderMap();
+        if ( ! ( this.apiKey && window.google && this.renderMap() ) ) {
+            this.$emit( 'hideMap', true );
+        }
+    },
+
+    beforeDestroy() {
+        if ( this.dokanGoogleMap ) {
+            this.dokanGoogleMap = null;
+        }
+
+        if ( this.marker ) {
+            this.marker = null;
+        }
     },
 
     methods: {
         setMap() {
-            this.gmap = new google.maps.Map( this.getMapArea(), {
+            this.dokanGoogleMap = new google.maps.Map( this.getMapArea(), {
                 center: this.getCenter(),
                 zoom: this.location.zoom,
                 mapTypeId: google.maps.MapTypeId.ROADMAP
@@ -53,7 +67,7 @@ export default {
         setMarker() {
             this.marker = new google.maps.Marker( {
                 position: this.getCenter(),
-                map: this.gmap
+                map: this.dokanGoogleMap
             } );
         },
 
@@ -83,13 +97,13 @@ export default {
         updateMap( latitude, longitude, formatted_address ) {
             let curpoint = new google.maps.LatLng( latitude, longitude )
 
-            this.$emit( 'updateGmap', {
+            this.$emit( 'updateMap', {
                 latitude: curpoint.lat(),
                 longitude: curpoint.lng(),
                 address: formatted_address
             } );
 
-            this.gmap.setCenter( curpoint );
+            this.dokanGoogleMap.setCenter( curpoint );
             this.marker.setPosition( curpoint );
 
             if ( ! formatted_address ) {
@@ -107,13 +121,10 @@ export default {
         },
 
         renderMap() {
-            if ( ! this.loadMap ) {
-                return;
-            }
-
             this.setMap();
             this.setMarker();
             this.setAutoComplete();
+            return true;
         },
 
         getCenter() {

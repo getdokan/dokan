@@ -26,7 +26,7 @@
                                 </div>
                             </div>
 
-                            <div class="store-content">
+                            <div class="store-content <?php echo ! $store_banner_id ? esc_attr( 'default-store-banner' ) : '' ?>">
                                 <div class="store-data-container">
                                     <div class="featured-favourite">
                                         <?php if ( $is_store_featured ) : ?>

@@ -468,7 +468,7 @@ function dokan_product_get_row_action( $post ) {
  *
  * @since  2.9.8
  *
- * @return object|false on faiure
+ * @return Dokan_Vendor|false on faiure
  */
 function dokan_get_vendor_by_product( $product ) {
     if ( ! $product instanceof WC_Product ) {
@@ -481,9 +481,11 @@ function dokan_get_vendor_by_product( $product ) {
 
     $vendor_id = get_post_field( 'post_author', $product->get_id() );
 
-    if ( ! $vendor_id ) {
-        return false;
+    if ( ! $vendor_id && 'variation' === $product->get_type() ) {
+        $vendor_id = get_post_field( 'post_author', $product->get_parent_id() );
     }
+
+    $vendor_id = apply_filters( 'dokan_get_vendor_by_product', $vendor_id, $product );
 
     return dokan()->vendor->get( $vendor_id );
 }

@@ -549,17 +549,35 @@ class Assets {
      * @since 2.5.3
      */
     function load_gmap_script() {
-        $api_key = dokan_get_option( 'gmap_api_key', 'dokan_appearance', false );
+        $script_src = null;
+        $source     = dokan_get_option( 'map_api_source', 'dokan_appearance', 'google_maps' );
 
-        if ( $api_key ) {
-            $query_args = apply_filters( 'dokan_google_maps_script_query_args', array(
-                'key' => $api_key,
-            ) );
+        if ( 'google_maps' === $source ) {
+            $api_key = dokan_get_option( 'gmap_api_key', 'dokan_appearance', false );
 
-            $src = add_query_arg( $query_args, 'https://maps.googleapis.com/maps/api/js' );
+            if ( $api_key ) {
+                $query_args = apply_filters( 'dokan_google_maps_script_query_args', array(
+                    'key' => $api_key,
+                ) );
 
-            wp_enqueue_script( 'google-maps', $src, array(), false, true );
+                $script_src = add_query_arg( $query_args, 'https://maps.googleapis.com/maps/api/js' );
+
+                wp_enqueue_script( 'dokan-maps', $script_src, array(), false, true );
+            }
+        } else if ( 'mapbox' === $source ) {
+            $access_token = dokan_get_option( 'mapbox_access_token', 'dokan_appearance', null );
+
+            if ( $access_token ) {
+                wp_enqueue_style( 'dokan-mapbox-gl', 'https://api.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.css', array(), false );
+                wp_enqueue_style( 'dokan-mapbox-gl-geocoder', 'https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.2.0/mapbox-gl-geocoder.css', array( 'dokan-mapbox-gl' ), false );
+
+                wp_enqueue_script( 'dokan-mapbox-gl-geocoder', 'https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.2.0/mapbox-gl-geocoder.min.js', array(), false, true );
+                wp_enqueue_script( 'dokan-maps', 'https://api.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.js', array( 'dokan-mapbox-gl-geocoder' ), false, true );
+            }
         }
+
+        // Backward compatibility script handler
+        wp_register_script( 'google-maps', DOKAN_PLUGIN_ASSEST . '/js/dokan-maps-compat.js', array( 'dokan-maps' ), false, true );
     }
 
     /**
