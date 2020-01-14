@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 2.9.30\n"
+"Project-Id-Version: Dokan 2.9.31\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2020-01-10 05:16:52+00:00\n"
+"POT-Creation-Date: 2020-01-14 10:13:21+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -850,7 +850,7 @@ msgstr ""
 msgid "Appearance"
 msgstr ""
 
-#: includes/admin/class-settings.php:237 includes/admin/class-settings.php:554
+#: includes/admin/class-settings.php:237 includes/admin/class-settings.php:562
 msgid "Privacy Policy"
 msgstr ""
 
@@ -1007,7 +1007,8 @@ msgid "Select a page to show Vendor Dashboard"
 msgstr ""
 
 #: includes/admin/class-settings.php:439 includes/admin/class-settings.php:447
-#: includes/admin/class-settings.php:455 includes/admin/class-settings.php:549
+#: includes/admin/class-settings.php:455 includes/admin/class-settings.php:463
+#: includes/admin/class-settings.php:557
 msgid "Select page"
 msgstr ""
 
@@ -1016,111 +1017,119 @@ msgid "Select a page to show My Orders"
 msgstr ""
 
 #: includes/admin/class-settings.php:452
-msgid "Terms and Conditions Page"
+msgid "Store Listing"
 msgstr ""
 
 #: includes/admin/class-settings.php:453
+msgid "Select a page to show all Stores"
+msgstr ""
+
+#: includes/admin/class-settings.php:460
+msgid "Terms and Conditions Page"
+msgstr ""
+
+#: includes/admin/class-settings.php:461
 msgid "Select a page to show Terms and Conditions"
 msgstr ""
 
-#: includes/admin/class-settings.php:457
+#: includes/admin/class-settings.php:465
 msgid ""
 "Select where you want to add Dokan pages <a target=\"_blank\" href=\"%s\"> "
 "Learn More </a>"
 msgstr ""
 
-#: includes/admin/class-settings.php:463
+#: includes/admin/class-settings.php:471
 msgid "Show Map on Store Page"
 msgstr ""
 
-#: includes/admin/class-settings.php:464
+#: includes/admin/class-settings.php:472
 msgid "Enable Map of the Store Location in the store sidebar"
 msgstr ""
 
-#: includes/admin/class-settings.php:470
+#: includes/admin/class-settings.php:478
 msgid "Map API Source"
 msgstr ""
 
-#: includes/admin/class-settings.php:471
+#: includes/admin/class-settings.php:479
 msgid "Which Map API source you want to use in your site?"
 msgstr ""
 
-#: includes/admin/class-settings.php:476
+#: includes/admin/class-settings.php:484
 msgid "Google Maps"
 msgstr ""
 
-#: includes/admin/class-settings.php:477
+#: includes/admin/class-settings.php:485
 msgid "Mapbox"
 msgstr ""
 
-#: includes/admin/class-settings.php:487
+#: includes/admin/class-settings.php:495
 #: templates/admin-setup-wizard/step-store.php:42
 msgid "Google Map API Key"
 msgstr ""
 
-#: includes/admin/class-settings.php:488
+#: includes/admin/class-settings.php:496
 msgid ""
 "<a href=\"https://developers.google.com/maps/documentation/javascript/\" "
 "target=\"_blank\" rel=\"noopener noreferrer\">API Key</a> is needed to "
 "display map on store page"
 msgstr ""
 
-#: includes/admin/class-settings.php:498
+#: includes/admin/class-settings.php:506
 msgid "Mapbox Access Token"
 msgstr ""
 
-#: includes/admin/class-settings.php:499
+#: includes/admin/class-settings.php:507
 msgid ""
 "<a href=\"https://docs.mapbox.com/help/how-mapbox-works/access-tokens/\" "
 "target=\"_blank\" rel=\"noopener noreferrer\">Access Token</a> is needed to "
 "display map on store page"
 msgstr ""
 
-#: includes/admin/class-settings.php:504
+#: includes/admin/class-settings.php:512
 msgid "Show Contact Form on Store Page"
 msgstr ""
 
-#: includes/admin/class-settings.php:505
+#: includes/admin/class-settings.php:513
 msgid "Display a vendor contact form in the store sidebar"
 msgstr ""
 
-#: includes/admin/class-settings.php:511
+#: includes/admin/class-settings.php:519
 msgid "Store Header Template"
 msgstr ""
 
-#: includes/admin/class-settings.php:523
+#: includes/admin/class-settings.php:531
 msgid "Store Opening Closing Time Widget"
 msgstr ""
 
-#: includes/admin/class-settings.php:524
+#: includes/admin/class-settings.php:532
 msgid "Enable store opening & closing time widget in the store sidebar"
 msgstr ""
 
-#: includes/admin/class-settings.php:530
+#: includes/admin/class-settings.php:538
 msgid "Enable Store Sidebar From Theme"
 msgstr ""
 
-#: includes/admin/class-settings.php:531
+#: includes/admin/class-settings.php:539
 msgid "Enable showing Store Sidebar From Your Theme."
 msgstr ""
 
-#: includes/admin/class-settings.php:539
+#: includes/admin/class-settings.php:547
 msgid "Enable Privacy Policy"
 msgstr ""
 
-#: includes/admin/class-settings.php:541
+#: includes/admin/class-settings.php:549
 msgid "Enable privacy policy for Vendor store contact form"
 msgstr ""
 
-#: includes/admin/class-settings.php:546
+#: includes/admin/class-settings.php:554
 msgid "Privacy Page"
 msgstr ""
 
-#: includes/admin/class-settings.php:548
+#: includes/admin/class-settings.php:556
 msgid "Select a page to show your privacy policy"
 msgstr ""
 
-#: includes/admin/class-settings.php:557 includes/functions.php:3483
+#: includes/admin/class-settings.php:565 includes/functions.php:3498
 msgid ""
 "Your personal data will be used to support your experience throughout this "
 "website, to manage access to your account, and for other purposes described "
@@ -3904,28 +3913,28 @@ msgstr ""
 msgid "Off Day"
 msgstr ""
 
-#: includes/functions.php:3463
+#: includes/functions.php:3478
 msgid "privacy policy"
 msgstr ""
 
-#: includes/functions.php:3507 src/admin/pages/VendorPaymentFields.vue:140
+#: includes/functions.php:3522 src/admin/pages/VendorPaymentFields.vue:140
 #: src/admin/pages/VendorPaymentFields.vue:144
 msgid "Flat"
 msgstr ""
 
-#: includes/functions.php:3508 src/admin/pages/VendorPaymentFields.vue:141
+#: includes/functions.php:3523 src/admin/pages/VendorPaymentFields.vue:141
 msgid "Percentage"
 msgstr ""
 
-#: includes/functions.php:3524
+#: includes/functions.php:3539
 msgid "Please Login to Continue"
 msgstr ""
 
-#: includes/functions.php:3692
+#: includes/functions.php:3707
 msgid "Unable to fetch plugin information from wordpress.org for %s."
 msgstr ""
 
-#: includes/functions.php:3704
+#: includes/functions.php:3719
 msgid "Unable to install %s from wordpress.org"
 msgstr ""
 

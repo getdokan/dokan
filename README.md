@@ -7,7 +7,7 @@
 **WC requires at least:** 3.0  
 **WC tested up to:** 3.8.1  
 **Requires PHP:** 5.6  
-**Stable tag:** 2.9.30  
+**Stable tag:** 2.9.31  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -290,6 +290,10 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 ## Changelog ##
+
+### v2.9.31 (January 14, 2020) ###
+
+ - **Fix:** Add option to set dokan store listing page for rendering all stores
 
 ### v2.9.30 (January 10, 2020) ###
 
