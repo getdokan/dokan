@@ -422,6 +422,14 @@ class Settings {
                     'placeholder' => __( 'Select page', 'dokan-lite' ),
                     'options' => $pages_array,
                 ),
+                'store_listing' => array(
+                    'name'        => 'store_listing',
+                    'label'       => __( 'Store Listing', 'dokan-lite' ),
+                    'desc'        => __( 'Select a page to show all Stores', 'dokan-lite' ),
+                    'type'        => 'select',
+                    'placeholder' => __( 'Select page', 'dokan-lite' ),
+                    'options'     => $pages_array,
+                ),
                 'reg_tc_page' => array(
                     'name'        => 'reg_tc_page',
                     'label'       => __( 'Terms and Conditions Page', 'dokan-lite' ),

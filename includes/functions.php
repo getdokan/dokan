@@ -3411,7 +3411,22 @@ function dokan_get_permalink( $page_id ) {
  * @return boolean
  */
 function dokan_is_store_listing() {
-    return get_the_ID() === intval( dokan_get_option( 'store_listing', 'dokan_pages' ) );
+    $page_id = get_the_ID();
+    $found   = false;
+
+    if ( $page_id === intval( dokan_get_option( 'store_listing', 'dokan_pages' ) ) ) {
+        $found = true;
+    }
+
+    if ( ! $found ) {
+        $post = get_post( $page_id );
+
+        if ( $post && false !== strpos( $post->post_content, '[dokan-stores]' ) ) {
+            $found = true;
+        }
+    }
+
+    return apply_filters( 'dokan_is_store_listing', $found, $page_id );
 }
 
 /**
