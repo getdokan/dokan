@@ -314,7 +314,9 @@ class Dokan_Setup_Wizard {
         $selling_options        = get_option( 'dokan_selling', array() );
         $shipping_fee_recipient = ! empty( $selling_options['shipping_fee_recipient'] ) ? $selling_options['shipping_fee_recipient'] : 'seller';
         $tax_fee_recipient      = ! empty( $selling_options['tax_fee_recipient'] ) ? $selling_options['tax_fee_recipient'] : 'seller';
+        $map_api_source         = dokan_get_option( 'map_api_source', 'dokan_appearance', 'google_maps' );
         $gmap_api_key           = dokan_get_option( 'gmap_api_key', 'dokan_appearance', '' );
+        $mapbox_access_token    = dokan_get_option( 'mapbox_access_token', 'dokan_appearance', '' );
 
         $recipients = array(
             'seller' => __( 'Vendor', 'dokan-lite' ),
@@ -326,7 +328,13 @@ class Dokan_Setup_Wizard {
             'recipients'             => $recipients,
             'shipping_fee_recipient' => $shipping_fee_recipient,
             'tax_fee_recipient'      => $tax_fee_recipient,
+            'map_api_source'         => $map_api_source,
             'gmap_api_key'           => $gmap_api_key,
+            'mapbox_access_token'    => $mapbox_access_token,
+            'map_api_source_options' => array(
+                'google_maps' => __( 'Google Maps', 'dokan-lite' ),
+                'mapbox'      => __( 'Mapbox', 'dokan-lite' ),
+            ),
             'setup_wizard'           => $this,
         ) );
 
@@ -348,7 +356,9 @@ class Dokan_Setup_Wizard {
         $general_options['custom_store_url']       = ! empty( $_post_data['custom_store_url'] ) ? sanitize_text_field( $_post_data['custom_store_url'] ) : '';
         $selling_options['shipping_fee_recipient'] = ! empty( $_post_data['shipping_fee_recipient'] ) ? sanitize_text_field( $_post_data['shipping_fee_recipient'] ) : '';
         $selling_options['tax_fee_recipient']      = ! empty( $_post_data['tax_fee_recipient'] ) ? sanitize_text_field( $_post_data['tax_fee_recipient'] ) : '';
-        $appearance['gmap_api_key']           = ! empty( $_post_data['gmap_api_key'] ) ? sanitize_text_field( $_post_data['gmap_api_key'] ) : '';
+        $appearance['map_api_source']              = ! empty( $_post_data['map_api_source'] ) ? sanitize_text_field( $_post_data['map_api_source'] ) : '';
+        $appearance['gmap_api_key']                = ! empty( $_post_data['gmap_api_key'] ) ? sanitize_text_field( $_post_data['gmap_api_key'] ) : '';
+        $appearance['mapbox_access_token']         = ! empty( $_post_data['mapbox_access_token'] ) ? sanitize_text_field( $_post_data['mapbox_access_token'] ) : '';
 
         $share_essentials = sanitize_text_field( isset( $_post_data['share_essentials'] ) );
 
