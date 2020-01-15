@@ -10,7 +10,7 @@ class VendorExploratoryTestingCest
 
     
 
-   // Exploratory testing for vendor dashboard
+    Exploratory testing for vendor dashboard
     public function vendorExploratoryTesting(\Step\Acceptance\MultiSteps $I)
     {
     	$I->loginAsVendor();
@@ -135,7 +135,7 @@ class VendorExploratoryTestingCest
 			$I->click('Seller Support Ticket');
 				$I->waitForElementVisible('.woocommerce-MyAccount-content', 30);
 				$I->checkError();
-			// $I->dontSee('.woocommerce','Notice');
+			$I->dontSee('.woocommerce','Notice');
 			$I->click('Log out');
 			$logs = $I->getJsLog();
     }

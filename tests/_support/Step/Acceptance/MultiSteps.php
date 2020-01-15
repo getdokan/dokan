@@ -68,14 +68,11 @@ class MultiSteps extends \AcceptanceTester
 		{
 			$I = $this;
 			$I->amOnPage('store-listing/');
-			// $I->click('//div[@id="dokan-seller-listing-wrap"]/div/ul/li/div/div[2]/a');
-			$I->click('//div[@id="dokan-seller-listing-wrap"]/div/ul/li/div/div/div/a/img');
-
+			$I->click('//div[@id="dokan-seller-listing-wrap"]/div/ul/li/div/div[2]/a');
 			$I->click('//div[@id="dokan-content"]/div[3]/ul/li/a/img');
 			$I->click('Add to cart');
 			$I->amOnPage('store-listing/');
-			// $I->click('//div[@id="dokan-seller-listing-wrap"]/div/ul/li/div/div[2]/a');
-			$I->click('//div[@id="dokan-seller-listing-wrap"]/div/ul/li/div/div/div/a/img');
+			$I->click('//div[@id="dokan-seller-listing-wrap"]/div/ul/li/div/div[2]/a');
 			$I->click('//div[@id="dokan-content"]/div[3]/ul/li[2]/a/img');
 			// $I->click('//button[@name="add-to-cart"]');
 		}
