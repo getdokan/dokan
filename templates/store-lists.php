@@ -15,7 +15,7 @@ if ( apply_filters( 'dokan_store_lists_filter', true ) ) {
     /**
      * Hooks: dokan_store_lists_filter_form
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.30
      *
      * @hooked Dokan_Store_Lists_Filter::filter_area() - 10
      */

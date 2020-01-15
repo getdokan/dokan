@@ -447,6 +447,14 @@ class Dokan_Settings {
                     'placeholder' => __( 'Select page', 'dokan-lite' ),
                     'options' => $pages_array,
                 ),
+                'store_listing' => array(
+                    'name'        => 'store_listing',
+                    'label'       => __( 'Store Listing', 'dokan-lite' ),
+                    'desc'        => __( 'Select a page to show all Stores', 'dokan-lite' ),
+                    'type'        => 'select',
+                    'placeholder' => __( 'Select page', 'dokan-lite' ),
+                    'options'     => $pages_array,
+                ),
                 'reg_tc_page' => array(
                     'name'        => 'reg_tc_page',
                     'label'       => __( 'Terms and Conditions Page', 'dokan-lite' ),
@@ -461,15 +469,43 @@ class Dokan_Settings {
                 'store_map' => array(
                     'name'    => 'store_map',
                     'label'   => __( 'Show Map on Store Page', 'dokan-lite' ),
-                    'desc'    => __( 'Enable Google Maps of the Store Location in the store sidebar', 'dokan-lite' ),
+                    'desc'    => __( 'Enable Map of the Store Location in the store sidebar', 'dokan-lite' ),
                     'type'    => 'checkbox',
                     'default' => 'on'
                 ),
+                'map_api_source' => array(
+                    'name'               => 'map_api_source',
+                    'label'              => __( 'Map API Source', 'dokan-lite' ),
+                    'desc'               => __( 'Which Map API source you want to use in your site?', 'dokan-lite' ),
+                    'refresh_after_save' => true,
+                    'type'               => 'radio',
+                    'default'            => 'google_maps',
+                    'options'            => array(
+                        'google_maps' => __( 'Google Maps', 'dokan-lite' ),
+                        'mapbox'      => __( 'Mapbox', 'dokan-lite' ),
+                    ),
+                ),
                 'gmap_api_key' => array(
-                    'name'  => 'gmap_api_key',
-                    'label' => __( 'Google Map API Key', 'dokan-lite' ),
-                    'desc'  => __( '<a href="https://developers.google.com/maps/documentation/javascript/get-api-key" target="_blank">API Key</a> is needed to display map on store page', 'dokan-lite' ),
-                    'type'  => 'text',
+                    'name'    => 'gmap_api_key',
+                    'show_if' => array(
+                        'map_api_source' => array(
+                            'equal' => 'google_maps',
+                        )
+                    ),
+                    'label'   => __( 'Google Map API Key', 'dokan-lite' ),
+                    'desc'    => __( '<a href="https://developers.google.com/maps/documentation/javascript/" target="_blank" rel="noopener noreferrer">API Key</a> is needed to display map on store page', 'dokan-lite' ),
+                    'type'    => 'text',
+                ),
+                'mapbox_access_token' => array(
+                    'name'    => 'mapbox_access_token',
+                    'show_if' => array(
+                        'map_api_source' => array(
+                            'equal' => 'mapbox',
+                        )
+                    ),
+                    'label'   => __( 'Mapbox Access Token', 'dokan-lite' ),
+                    'desc'    => __( '<a href="https://docs.mapbox.com/help/how-mapbox-works/access-tokens/" target="_blank" rel="noopener noreferrer">Access Token</a> is needed to display map on store page', 'dokan-lite' ),
+                    'type'    => 'text',
                 ),
                 'contact_seller' => array(
                     'name'    => 'contact_seller',

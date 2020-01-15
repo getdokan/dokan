@@ -20,9 +20,25 @@ class Dokan_Theme_Support {
      * Constructor
      */
     public function __construct() {
-        $this->theme = strtolower( get_template() );
-
+        $this->theme = $this->format( strtolower( get_template() ) );
         $this->include_support();
+    }
+
+    /**
+     * Format theme name. ( Remove `-theme` from the string )
+     *
+     * @since  2.9.30
+     *
+     * @param  string $string
+     *
+     * @return string
+     */
+    private function format( $string ) {
+        if ( false !== strpos( $string, '-theme' ) ) {
+            $string = substr( $string, 0, strlen( $string ) - 6 );
+        }
+
+        return $string;
     }
 
     /**
@@ -35,7 +51,9 @@ class Dokan_Theme_Support {
             'storefront',
             'flatsome',
             'divi',
-            'rehub'
+            'rehub',
+            'electro',
+            'enfold'
         ] );
 
         return in_array( $this->theme, $themes ) ? $this->load_file( $this->theme ) : false;

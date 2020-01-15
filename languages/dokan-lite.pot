@@ -1,14 +1,14 @@
-# Copyright (C) 2019 weDevs
+# Copyright (C) 2020 weDevs
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 2.9.29\n"
+"Project-Id-Version: Dokan 2.9.31\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2019-12-26 11:24:21+00:00\n"
+"POT-Creation-Date: 2020-01-14 10:13:21+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2019-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2020-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -549,7 +549,7 @@ msgid "I swear this is not your product!"
 msgstr ""
 
 #: classes/template-settings.php:70 classes/template-settings.php:74
-#: dokan.php:496 includes/admin/class-admin.php:243
+#: dokan.php:498 includes/admin/class-admin.php:243
 #: includes/admin/class-admin.php:304 includes/template-tags.php:354
 #: src/admin/pages/Settings.vue:3
 msgid "Settings"
@@ -710,15 +710,15 @@ msgid ""
 "PHP %s"
 msgstr ""
 
-#: dokan.php:493
+#: dokan.php:495
 msgid "Get Pro"
 msgstr ""
 
-#: dokan.php:497
+#: dokan.php:499
 msgid "Documentation"
 msgstr ""
 
-#: dokan.php:528
+#: dokan.php:530
 msgid ""
 "Dokan requires WooCommerce to be installed and active. You can activate %s "
 "here."
@@ -850,7 +850,7 @@ msgstr ""
 msgid "Appearance"
 msgstr ""
 
-#: includes/admin/class-settings.php:237 includes/admin/class-settings.php:526
+#: includes/admin/class-settings.php:237 includes/admin/class-settings.php:562
 msgid "Privacy Policy"
 msgstr ""
 
@@ -1007,7 +1007,8 @@ msgid "Select a page to show Vendor Dashboard"
 msgstr ""
 
 #: includes/admin/class-settings.php:439 includes/admin/class-settings.php:447
-#: includes/admin/class-settings.php:455 includes/admin/class-settings.php:521
+#: includes/admin/class-settings.php:455 includes/admin/class-settings.php:463
+#: includes/admin/class-settings.php:557
 msgid "Select page"
 msgstr ""
 
@@ -1016,84 +1017,119 @@ msgid "Select a page to show My Orders"
 msgstr ""
 
 #: includes/admin/class-settings.php:452
-msgid "Terms and Conditions Page"
+msgid "Store Listing"
 msgstr ""
 
 #: includes/admin/class-settings.php:453
+msgid "Select a page to show all Stores"
+msgstr ""
+
+#: includes/admin/class-settings.php:460
+msgid "Terms and Conditions Page"
+msgstr ""
+
+#: includes/admin/class-settings.php:461
 msgid "Select a page to show Terms and Conditions"
 msgstr ""
 
-#: includes/admin/class-settings.php:457
+#: includes/admin/class-settings.php:465
 msgid ""
 "Select where you want to add Dokan pages <a target=\"_blank\" href=\"%s\"> "
 "Learn More </a>"
 msgstr ""
 
-#: includes/admin/class-settings.php:463
+#: includes/admin/class-settings.php:471
 msgid "Show Map on Store Page"
 msgstr ""
 
-#: includes/admin/class-settings.php:464
-msgid "Enable Google Maps of the Store Location in the store sidebar"
+#: includes/admin/class-settings.php:472
+msgid "Enable Map of the Store Location in the store sidebar"
 msgstr ""
 
-#: includes/admin/class-settings.php:470
+#: includes/admin/class-settings.php:478
+msgid "Map API Source"
+msgstr ""
+
+#: includes/admin/class-settings.php:479
+msgid "Which Map API source you want to use in your site?"
+msgstr ""
+
+#: includes/admin/class-settings.php:484
+msgid "Google Maps"
+msgstr ""
+
+#: includes/admin/class-settings.php:485
+msgid "Mapbox"
+msgstr ""
+
+#: includes/admin/class-settings.php:495
 #: templates/admin-setup-wizard/step-store.php:42
 msgid "Google Map API Key"
 msgstr ""
 
-#: includes/admin/class-settings.php:471
+#: includes/admin/class-settings.php:496
 msgid ""
-"<a "
-"href=\"https://developers.google.com/maps/documentation/javascript/get-api-"
-"key\" target=\"_blank\">API Key</a> is needed to display map on store page"
+"<a href=\"https://developers.google.com/maps/documentation/javascript/\" "
+"target=\"_blank\" rel=\"noopener noreferrer\">API Key</a> is needed to "
+"display map on store page"
 msgstr ""
 
-#: includes/admin/class-settings.php:476
+#: includes/admin/class-settings.php:506
+msgid "Mapbox Access Token"
+msgstr ""
+
+#: includes/admin/class-settings.php:507
+msgid ""
+"<a href=\"https://docs.mapbox.com/help/how-mapbox-works/access-tokens/\" "
+"target=\"_blank\" rel=\"noopener noreferrer\">Access Token</a> is needed to "
+"display map on store page"
+msgstr ""
+
+#: includes/admin/class-settings.php:512
 msgid "Show Contact Form on Store Page"
 msgstr ""
 
-#: includes/admin/class-settings.php:477
+#: includes/admin/class-settings.php:513
 msgid "Display a vendor contact form in the store sidebar"
 msgstr ""
 
-#: includes/admin/class-settings.php:483
+#: includes/admin/class-settings.php:519
 msgid "Store Header Template"
 msgstr ""
 
-#: includes/admin/class-settings.php:495
+#: includes/admin/class-settings.php:531
 msgid "Store Opening Closing Time Widget"
 msgstr ""
 
-#: includes/admin/class-settings.php:496
+#: includes/admin/class-settings.php:532
 msgid "Enable store opening & closing time widget in the store sidebar"
 msgstr ""
 
-#: includes/admin/class-settings.php:502
+#: includes/admin/class-settings.php:538
 msgid "Enable Store Sidebar From Theme"
 msgstr ""
 
-#: includes/admin/class-settings.php:503
+#: includes/admin/class-settings.php:539
 msgid "Enable showing Store Sidebar From Your Theme."
 msgstr ""
 
-#: includes/admin/class-settings.php:511
+#: includes/admin/class-settings.php:547
 msgid "Enable Privacy Policy"
 msgstr ""
 
-#: includes/admin/class-settings.php:513
+#: includes/admin/class-settings.php:549
 msgid "Enable privacy policy for Vendor store contact form"
 msgstr ""
 
-#: includes/admin/class-settings.php:518
+#: includes/admin/class-settings.php:554
 msgid "Privacy Page"
 msgstr ""
 
-#: includes/admin/class-settings.php:520
+#: includes/admin/class-settings.php:556
 msgid "Select a page to show your privacy policy"
 msgstr ""
 
-#: includes/admin/class-settings.php:529 includes/functions.php:3493
+#: includes/admin/class-settings.php:565 includes/functions.php:3498
 msgid ""
 "Your personal data will be used to support your experience throughout this "
 "website, to manage access to your account, and for other purposes described "
@@ -2591,248 +2627,248 @@ msgstr ""
 msgid "Something went wrong. Please try again."
 msgstr ""
 
-#: includes/class-assets.php:515
+#: includes/class-assets.php:520
 msgid "This field is required"
 msgstr ""
 
-#: includes/class-assets.php:516
+#: includes/class-assets.php:521
 msgid "Please fix this field."
 msgstr ""
 
-#: includes/class-assets.php:517
+#: includes/class-assets.php:522
 msgid "Please enter a valid email address."
 msgstr ""
 
-#: includes/class-assets.php:518
+#: includes/class-assets.php:523
 msgid "Please enter a valid URL."
 msgstr ""
 
-#: includes/class-assets.php:519
+#: includes/class-assets.php:524
 msgid "Please enter a valid date."
 msgstr ""
 
-#: includes/class-assets.php:520
+#: includes/class-assets.php:525
 msgid "Please enter a valid date (ISO)."
 msgstr ""
 
-#: includes/class-assets.php:521
+#: includes/class-assets.php:526
 msgid "Please enter a valid number."
 msgstr ""
 
-#: includes/class-assets.php:522
+#: includes/class-assets.php:527
 msgid "Please enter only digits."
 msgstr ""
 
-#: includes/class-assets.php:523
+#: includes/class-assets.php:528
 msgid "Please enter a valid credit card number."
 msgstr ""
 
-#: includes/class-assets.php:524
+#: includes/class-assets.php:529
 msgid "Please enter the same value again."
 msgstr ""
 
-#: includes/class-assets.php:525
+#: includes/class-assets.php:530
 msgid "Please enter no more than {0} characters."
 msgstr ""
 
-#: includes/class-assets.php:526
+#: includes/class-assets.php:531
 msgid "Please enter at least {0} characters."
 msgstr ""
 
-#: includes/class-assets.php:527
+#: includes/class-assets.php:532
 msgid "Please enter a value between {0} and {1} characters long."
 msgstr ""
 
-#: includes/class-assets.php:528
+#: includes/class-assets.php:533
 msgid "Please enter a value between {0} and {1}."
 msgstr ""
 
-#: includes/class-assets.php:529
+#: includes/class-assets.php:534
 msgid "Please enter a value less than or equal to {0}."
 msgstr ""
 
-#: includes/class-assets.php:530
+#: includes/class-assets.php:535
 msgid "Please enter a value greater than or equal to {0}."
 msgstr ""
 
-#: includes/class-assets.php:630
+#: includes/class-assets.php:653
 msgid "Upload featured image"
 msgstr ""
 
-#: includes/class-assets.php:631
+#: includes/class-assets.php:654
 msgid "Choose a file"
 msgstr ""
 
-#: includes/class-assets.php:632
+#: includes/class-assets.php:655
 msgid "Add Images to Product Gallery"
 msgstr ""
 
-#: includes/class-assets.php:633
+#: includes/class-assets.php:656
 msgid "Set featured image"
 msgstr ""
 
-#: includes/class-assets.php:634 includes/woo-views/html-product-download.php:8
+#: includes/class-assets.php:657 includes/woo-views/html-product-download.php:8
 msgid "Insert file URL"
 msgstr ""
 
-#: includes/class-assets.php:635
+#: includes/class-assets.php:658
 msgid "Add to gallery"
 msgstr ""
 
-#: includes/class-assets.php:636
+#: includes/class-assets.php:659
 msgid "Sorry, this attribute option already exists, Try a different one."
 msgstr ""
 
-#: includes/class-assets.php:637
+#: includes/class-assets.php:660
 msgid ""
 "Warning! This product will not have any variations if this option is not "
 "checked."
 msgstr ""
 
-#: includes/class-assets.php:638
+#: includes/class-assets.php:661
 msgid "Enter a name for the new attribute term:"
 msgstr ""
 
-#: includes/class-assets.php:639
+#: includes/class-assets.php:662
 msgid "Remove this attribute?"
 msgstr ""
 
-#: includes/class-assets.php:647
+#: includes/class-assets.php:670
 msgid ""
 "Are you sure you want to link all variations? This will create a new "
 "variation for each and every possible combination of variation attributes "
 "(max %d per run)."
 msgstr ""
 
-#: includes/class-assets.php:648
+#: includes/class-assets.php:671
 msgid "Enter a value"
 msgstr ""
 
-#: includes/class-assets.php:649
+#: includes/class-assets.php:672
 msgid "Variation menu order (determines position in the list of variations)"
 msgstr ""
 
-#: includes/class-assets.php:650
+#: includes/class-assets.php:673
 msgid "Enter a value (fixed or %)"
 msgstr ""
 
-#: includes/class-assets.php:651
+#: includes/class-assets.php:674
 msgid "Are you sure you want to delete all variations? This cannot be undone."
 msgstr ""
 
-#: includes/class-assets.php:652
+#: includes/class-assets.php:675
 msgid "Last warning, are you sure?"
 msgstr ""
 
-#: includes/class-assets.php:653
+#: includes/class-assets.php:676
 msgid "Choose an image"
 msgstr ""
 
-#: includes/class-assets.php:654
+#: includes/class-assets.php:677
 msgid "Set variation image"
 msgstr ""
 
-#: includes/class-assets.php:655
+#: includes/class-assets.php:678
 msgid "variation added"
 msgstr ""
 
-#: includes/class-assets.php:656
+#: includes/class-assets.php:679
 msgid "variations added"
 msgstr ""
 
-#: includes/class-assets.php:657
+#: includes/class-assets.php:680
 msgid "No variations added"
 msgstr ""
 
-#: includes/class-assets.php:658
+#: includes/class-assets.php:681
 msgid "Are you sure you want to remove this variation?"
 msgstr ""
 
-#: includes/class-assets.php:659
+#: includes/class-assets.php:682
 msgid "Sale start date (YYYY-MM-DD format or leave blank)"
 msgstr ""
 
-#: includes/class-assets.php:660
+#: includes/class-assets.php:683
 msgid "Sale end date (YYYY-MM-DD format or leave blank)"
 msgstr ""
 
-#: includes/class-assets.php:661
+#: includes/class-assets.php:684
 msgid "Save changes before changing page?"
 msgstr ""
 
-#: includes/class-assets.php:662
+#: includes/class-assets.php:685
 msgid "%qty% variation"
 msgstr ""
 
-#: includes/class-assets.php:663
+#: includes/class-assets.php:686
 msgid "%qty% variations"
 msgstr ""
 
-#: includes/class-assets.php:664
+#: includes/class-assets.php:687
 msgid "No Result Found"
 msgstr ""
 
-#: includes/class-assets.php:667
+#: includes/class-assets.php:690
 msgid "Select and Crop"
 msgstr ""
 
-#: includes/class-assets.php:668
+#: includes/class-assets.php:691
 msgid "Choose Image"
 msgstr ""
 
-#: includes/class-assets.php:669
+#: includes/class-assets.php:692
 msgid "Product title is required"
 msgstr ""
 
-#: includes/class-assets.php:670
+#: includes/class-assets.php:693
 msgid "Product category is required"
 msgstr ""
 
-#: includes/class-assets.php:673
+#: includes/class-assets.php:696
 msgid "One result is available, press enter to select it."
 msgstr ""
 
-#: includes/class-assets.php:674
+#: includes/class-assets.php:697
 msgid "%qty% results are available, use up and down arrow keys to navigate."
 msgstr ""
 
-#: includes/class-assets.php:675
+#: includes/class-assets.php:698
 msgid "No matches found"
 msgstr ""
 
-#: includes/class-assets.php:676
+#: includes/class-assets.php:699
 msgid "Loading failed"
 msgstr ""
 
-#: includes/class-assets.php:677
+#: includes/class-assets.php:700
 msgid "Please enter 1 or more characters"
 msgstr ""
 
-#: includes/class-assets.php:678
+#: includes/class-assets.php:701
 msgid "Please enter %qty% or more characters"
 msgstr ""
 
-#: includes/class-assets.php:679
+#: includes/class-assets.php:702
 msgid "Please delete 1 character"
 msgstr ""
 
-#: includes/class-assets.php:680
+#: includes/class-assets.php:703
 msgid "Please delete %qty% characters"
 msgstr ""
 
-#: includes/class-assets.php:681
+#: includes/class-assets.php:704
 msgid "You can only select 1 item"
 msgstr ""
 
-#: includes/class-assets.php:682
+#: includes/class-assets.php:705
 msgid "You can only select %qty% items"
 msgstr ""
 
-#: includes/class-assets.php:683
+#: includes/class-assets.php:706
 msgid "Loading more results&hellip;"
 msgstr ""
 
-#: includes/class-assets.php:684
+#: includes/class-assets.php:707
 msgid "Searching&hellip;"
 msgstr ""
 
@@ -3064,9 +3100,10 @@ msgstr ""
 msgid "Phone"
 msgstr ""
 
-#: includes/class-dokan-privacy.php:177 src/admin/pages/AddVendor.vue:73
-#: src/admin/pages/VendorAddressFields.vue:4
+#: includes/class-dokan-privacy.php:177 src/admin/components/Mapbox.vue:8
+#: src/admin/pages/AddVendor.vue:73 src/admin/pages/VendorAddressFields.vue:4
 #: templates/admin-setup-wizard/step-store-wc-fields.php:33
+#: templates/maps/mapbox-with-search.php:5
 #: templates/settings/address-form.php:23
 msgid "Address"
 msgstr ""
@@ -3257,6 +3294,14 @@ msgstr ""
 msgid "Please install <a href=\"%s\"><strong>WooCommerce</strong></a> plugin first"
 msgstr ""
 
+#: includes/class-store-lists-filter.php:95
+msgid "Most Recent"
+msgstr ""
+
+#: includes/class-store-lists-filter.php:96
+msgid "Most Popular"
+msgstr ""
+
 #: includes/class-vendor-manager.php:168
 msgid "Unable to create vendor"
 msgstr ""
@@ -3279,11 +3324,11 @@ msgstr[1] ""
 msgid "Rated %s out of %d"
 msgstr ""
 
-#: includes/class-vendor.php:824 templates/settings/store-form.php:284
+#: includes/class-vendor.php:824 templates/settings/store-form.php:280
 msgid "Store is open"
 msgstr ""
 
-#: includes/class-vendor.php:838 templates/settings/store-form.php:294
+#: includes/class-vendor.php:838 templates/settings/store-form.php:290
 msgid "Store is closed"
 msgstr ""
 
@@ -3571,7 +3616,7 @@ msgstr ""
 msgid "Products"
 msgstr ""
 
-#: includes/functions.php:1222 templates/settings/store-form.php:203
+#: includes/functions.php:1222 templates/settings/store-form.php:199
 msgid "Terms and Conditions"
 msgstr ""
 
@@ -3868,28 +3913,28 @@ msgstr ""
 msgid "Off Day"
 msgstr ""
 
-#: includes/functions.php:3473
+#: includes/functions.php:3478
 msgid "privacy policy"
 msgstr ""
 
-#: includes/functions.php:3517 src/admin/pages/VendorPaymentFields.vue:140
+#: includes/functions.php:3522 src/admin/pages/VendorPaymentFields.vue:140
 #: src/admin/pages/VendorPaymentFields.vue:144
 msgid "Flat"
 msgstr ""
 
-#: includes/functions.php:3518 src/admin/pages/VendorPaymentFields.vue:141
+#: includes/functions.php:3523 src/admin/pages/VendorPaymentFields.vue:141
 msgid "Percentage"
 msgstr ""
 
-#: includes/functions.php:3534
+#: includes/functions.php:3539
 msgid "Please Login to Continue"
 msgstr ""
 
-#: includes/functions.php:3702
+#: includes/functions.php:3707
 msgid "Unable to fetch plugin information from wordpress.org for %s."
 msgstr ""
 
-#: includes/functions.php:3714
+#: includes/functions.php:3719
 msgid "Unable to install %s from wordpress.org"
 msgstr ""
 
@@ -4161,6 +4206,7 @@ msgstr ""
 #: templates/products/new-product-single.php:214
 #: templates/products/new-product.php:165
 #: templates/products/tmpl-add-product-popup.php:63
+#: templates/store-lists-filter.php:81
 #: templates/withdraw/pending-request-listing.php:17
 #: templates/withdraw/pending-request-listing.php:35
 #: vendor/appsero/client/src/Insights.php:764
@@ -4178,7 +4224,7 @@ msgid "Expand"
 msgstr ""
 
 #: includes/product-functions.php:328 src/admin/components/ColorPicker.vue:31
-#: templates/orders/details.php:353 templates/settings/store-form.php:260
+#: templates/orders/details.php:353 templates/settings/store-form.php:256
 msgid "Close"
 msgstr ""
 
@@ -4241,11 +4287,11 @@ msgid "Sales"
 msgstr ""
 
 #: includes/template-tags.php:105 includes/template-tags.php:109
-#: templates/store-lists-loop.php:94
+#: templates/store-lists-loop.php:102
 msgid "&larr; Previous"
 msgstr ""
 
-#: includes/template-tags.php:120 templates/store-lists-loop.php:95
+#: includes/template-tags.php:120 templates/store-lists-loop.php:103
 msgid "Next &rarr;"
 msgstr ""
 
@@ -4291,7 +4337,7 @@ msgid "Back to Dashboard"
 msgstr ""
 
 #: includes/template-tags.php:490 templates/settings/header.php:13
-#: templates/store-lists-loop.php:71
+#: templates/store-lists-loop.php:78
 msgid "Visit Store"
 msgstr ""
 
@@ -4586,16 +4632,27 @@ msgstr ""
 msgid "Active"
 msgstr ""
 
-#: src/admin/components/Fields.vue:243 src/admin/pages/Settings.vue:159
+#: src/admin/components/Fields.vue:243 src/admin/pages/Settings.vue:180
 msgid "Select"
 msgstr ""
 
-#: src/admin/components/Fields.vue:377
+#: src/admin/components/Fields.vue:474
 msgid "is required."
 msgstr ""
 
-#: src/admin/components/Gmap.vue:7
+#: src/admin/components/GoogleMaps.vue:3 src/admin/components/Mapbox.vue:141
+#: templates/maps/mapbox-with-search.php:120
+msgid "Search Address"
+msgstr ""
+
+#: src/admin/components/GoogleMaps.vue:7
 msgid "Please enter google map API key"
+msgstr ""
+
+#: src/admin/components/Mapbox.vue:3
+msgid ""
+"Please enter Mapbox access token in `Appearance > Mapbox Access Token` "
+"settings."
 msgstr ""
 
 #: src/admin/components/Modal.vue:12
@@ -4780,7 +4837,7 @@ msgstr ""
 msgid "Dismiss this notice."
 msgstr ""
 
-#: src/admin/pages/Settings.vue:157
+#: src/admin/pages/Settings.vue:178
 msgid "Choose your file"
 msgstr ""
 
@@ -5461,6 +5518,20 @@ msgstr ""
 msgid "Logging in"
 msgstr ""
 
+#: templates/maps/dokan-maps-with-search.php:9
+#: templates/widgets/store-map.php:30
+msgid "Mapbox Access Token not found"
+msgstr ""
+
+#: templates/maps/google-maps-with-search.php:5
+msgid "Type an address to find"
+msgstr ""
+
+#: templates/maps/google-maps-with-search.php:6
+#: templates/maps/mapbox-with-search.php:6
+msgid "Find Address"
+msgstr ""
+
 #: templates/my-orders.php:21
 msgid "Recent Orders"
 msgstr ""
@@ -5507,6 +5578,7 @@ msgid "Filter by Customer"
 msgstr ""
 
 #: templates/orders/date-export.php:39 templates/products/listing-filter.php:48
+#: templates/store-lists-filter.php:40
 msgid "Filter"
 msgstr ""
 
@@ -5663,6 +5735,7 @@ msgid "Select bulk action"
 msgstr ""
 
 #: templates/orders/listing.php:37 templates/products/products-listing.php:78
+#: templates/store-lists-filter.php:82
 msgid "Apply"
 msgstr ""
 
@@ -6236,7 +6309,7 @@ msgstr ""
 msgid "State "
 msgstr ""
 
-#: templates/settings/payment.php:39 templates/settings/store-form.php:305
+#: templates/settings/payment.php:39 templates/settings/store-form.php:301
 msgid "Update Settings"
 msgstr ""
 
@@ -6276,39 +6349,31 @@ msgstr ""
 msgid "Map"
 msgstr ""
 
-#: templates/settings/store-form.php:188
-msgid "Type an address to find"
-msgstr ""
-
-#: templates/settings/store-form.php:189
-msgid "Find Address"
-msgstr ""
-
-#: templates/settings/store-form.php:207
+#: templates/settings/store-form.php:203
 msgid "Show terms and conditions in store page"
 msgstr ""
 
-#: templates/settings/store-form.php:213
+#: templates/settings/store-form.php:209
 msgid "TOC Details"
 msgstr ""
 
-#: templates/settings/store-form.php:232
+#: templates/settings/store-form.php:228
 msgid "Store Opening Closing Time"
 msgstr ""
 
-#: templates/settings/store-form.php:239
+#: templates/settings/store-form.php:235
 msgid "Show store opening closing time widget in store page"
 msgstr ""
 
-#: templates/settings/store-form.php:263
+#: templates/settings/store-form.php:259
 msgid "Open"
 msgstr ""
 
-#: templates/settings/store-form.php:280
+#: templates/settings/store-form.php:276
 msgid "Store Open Notice"
 msgstr ""
 
-#: templates/settings/store-form.php:290
+#: templates/settings/store-form.php:286
 msgid "Store Close Notice"
 msgstr ""
 
@@ -6320,19 +6385,31 @@ msgstr ""
 msgid "Store Closed"
 msgstr ""
 
-#: templates/store-lists-loop.php:26
+#: templates/store-lists-filter.php:26
+msgid "Total store showing"
+msgstr ""
+
+#: templates/store-lists-filter.php:45 templates/store-lists-filter.php:47
+msgid "Sort by"
+msgstr ""
+
+#: templates/store-lists-filter.php:73
+msgid "Search Vendors"
+msgstr ""
+
+#: templates/store-lists-loop.php:33
 msgid "Featured"
 msgstr ""
 
-#: templates/store-lists-loop.php:36
+#: templates/store-lists-loop.php:43
 msgid "Rated %s out of 5"
 msgstr ""
 
-#: templates/store-lists-loop.php:38
-msgid "out of 5"
+#: templates/store-lists-loop.php:46
+msgid "%s out of 5"
 msgstr ""
 
-#: templates/store-lists-loop.php:121
+#: templates/store-lists-loop.php:129
 msgid "No vendor found!"
 msgstr ""
 

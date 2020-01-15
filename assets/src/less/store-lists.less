@@ -137,6 +137,7 @@
     .apply-filter {
         display: flex;
         justify-content: flex-end;
+        margin-top: 20px;
 
         #cancel-filter-btn {
             padding: 8px 25px;
@@ -190,6 +191,9 @@
             background: rgba(0,0,0,0.45);
             color: #fff;
 
+            &.default-store-banner {
+                background: transparent;
+            }
             .store-data-container {
                 padding: 5px 20px;
 
@@ -224,8 +228,13 @@
                         float: none;
                         margin: 12px 0px 10px;
 
+                        &:before {
+                            font-family: star;
+                        }
+
                         span {
                             &:before {
+                                font-family: star;
                                 color: #fa9a00;
                             }
                         }
@@ -282,7 +291,9 @@
                         top: 0;
                         max-width: 100%;
                         height: 100%;
-                        width: auto;
+                        width: -moz-available;
+                        width: -webkit-fill-available;
+                        width: fill-available;
                     }
                 }
             }
@@ -350,8 +361,6 @@
                                 }
 
                                 .dokan-seller-rating[class] {
-                                    // margin-bottom: 10px;
-                                    // float: none;
                                     overflow: visible;
                                     left: 25%;
                                     z-index: 1;
@@ -394,26 +403,9 @@
                                     br {
                                         display: none;
                                     }
-
-                                    // & :not( .country ) {
-                                    //     display: none;
-                                    // }
-
-                                    // .country {
-                                    //     &:before {
-                                    //         content: "\f230";
-                                    //         font-family: dashicons;
-                                    //         color: #0bb90b;
-                                    //         font-size: 18px;
-                                    //         position: relative;
-                                    //         top: 4px;
-                                    //     }
-                                    // }
                                 }
 
                                 .store-phone {
-                                    // display: inline;
-                                    // margin-left: 20px;
                                     display: none;
                                 }
                             }

@@ -38,7 +38,8 @@ import Search from "admin/components/Search.vue"
 import Datepicker from "admin/components/Datepicker.vue"
 import VueSweetalert2 from 'vue-sweetalert2';
 import ColorPicker from "admin/components/ColorPicker.vue"
-import Gmap from "admin/components/Gmap.vue"
+import GoogleMaps from "admin/components/GoogleMaps.vue"
+import Mapbox from "admin/components/Mapbox.vue"
 import UploadImage from "admin/components/UploadImage.vue"
 import PasswordGenerator from "admin/components/PasswordGenerator.vue"
 import VendorAccountFields from "admin/pages/VendorAccountFields.vue";
@@ -103,7 +104,8 @@ window.dokan.libs['Multiselect']         = Multiselect;
 window.dokan.libs['ColorPicker']         = ColorPicker;
 window.dokan.libs['debounce']            = Debounce;
 window.dokan.libs['VersionCompare']      = VersionCompare;
-window.dokan.libs['Gmap']                = Gmap;
+window.dokan.libs['GoogleMaps']          = GoogleMaps;
+window.dokan.libs['Mapbox']              = Mapbox;
 window.dokan.libs['UploadImage']         = UploadImage;
 window.dokan.libs['PasswordGenerator']   = PasswordGenerator;
 window.dokan.libs['VendorAccountFields'] = VendorAccountFields;

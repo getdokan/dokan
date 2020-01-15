@@ -6,9 +6,8 @@ dokanWebpack([0],[
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Switches_vue__ = __webpack_require__(9);
-/* empty harmony namespace reexport */
+/* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_aa8ad7dc_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Switches_vue__ = __webpack_require__(27);
 var disposed = false
 function injectStyle (ssrContext) {
@@ -55,7 +54,7 @@ if (false) {(function () {
   })
 })()}
 
-/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
 
 /***/ }),
@@ -67,77 +66,72 @@ if (false) {(function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(14);
 
-
-
 /* harmony default export */ __webpack_exports__["a"] = ({
-    extends: __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__["Line"],
-    props: ['data'],
-    data() {
-        return {
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    xAxes: [{
-                        type: 'time',
-                        scaleLabel: {
-                            display: false
-                        },
-                        gridLines: {
-                            display: false
-                        },
-                        ticks: {
-                            fontColor: '#aaa',
-                            fontSize: 11
-                        }
-                    }],
-                    yAxes: [{
-                        scaleLabel: {
-                            display: false
-                        },
-                        ticks: {
-                            fontColor: '#aaa'
-                        }
-                    }]
-                },
-                legend: {
-                    position: 'top',
-                    onClick: false
-                },
-                elements: {
-                    line: {
-                        tension: 0,
-                        borderWidth: 4
-                    },
-                    point: {
-                        radius: 5,
-                        borderWidth: 3,
-                        backgroundColor: '#fff',
-                        borderColor: '#fff'
-                    }
-                },
-                tooltips: {
-                    displayColors: false,
-                    callbacks: {
-                        label: function (tooltipItems, data) {
-                            let label = data.datasets[tooltipItems.datasetIndex].label || '';
-                            let customLabel = data.datasets[tooltipItems.datasetIndex].tooltipLabel || '';
-                            let prefix = data.datasets[tooltipItems.datasetIndex].tooltipPrefix || '';
-
-                            let tooltipLabel = customLabel ? customLabel + ': ' : label + ': ';
-
-                            tooltipLabel += prefix + tooltipItems.yLabel;
-
-                            return tooltipLabel;
-                        }
-                    }
-                }
+  extends: __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__["Line"],
+  props: ['data'],
+  data: function data() {
+    return {
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          xAxes: [{
+            type: 'time',
+            scaleLabel: {
+              display: false
+            },
+            gridLines: {
+              display: false
+            },
+            ticks: {
+              fontColor: '#aaa',
+              fontSize: 11
             }
-        };
-    },
-    mounted() {
-        this.renderChart(this.data, this.options);
-    }
+          }],
+          yAxes: [{
+            scaleLabel: {
+              display: false
+            },
+            ticks: {
+              fontColor: '#aaa'
+            }
+          }]
+        },
+        legend: {
+          position: 'top',
+          onClick: false
+        },
+        elements: {
+          line: {
+            tension: 0,
+            borderWidth: 4
+          },
+          point: {
+            radius: 5,
+            borderWidth: 3,
+            backgroundColor: '#fff',
+            borderColor: '#fff'
+          }
+        },
+        tooltips: {
+          displayColors: false,
+          callbacks: {
+            label: function label(tooltipItems, data) {
+              var label = data.datasets[tooltipItems.datasetIndex].label || '';
+              var customLabel = data.datasets[tooltipItems.datasetIndex].tooltipLabel || '';
+              var prefix = data.datasets[tooltipItems.datasetIndex].tooltipPrefix || '';
+              var tooltipLabel = customLabel ? customLabel + ': ' : label + ': ';
+              tooltipLabel += prefix + tooltipItems.yLabel;
+              return tooltipLabel;
+            }
+          }
+        }
+      }
+    };
+  },
+  mounted: function mounted() {
+    this.renderChart(this.data, this.options);
+  }
 });
 
 /***/ }),
@@ -191,77 +185,66 @@ if (false) {(function () {
 //
 //
 
-
-
 /* harmony default export */ __webpack_exports__["a"] = ({
-    components: {
-        Sketch: __WEBPACK_IMPORTED_MODULE_0_vue_color_src_components_Sketch_vue__["a" /* default */]
+  components: {
+    Sketch: __WEBPACK_IMPORTED_MODULE_0_vue_color_src_components_Sketch_vue__["a" /* default */]
+  },
+  props: {
+    value: {
+      type: String,
+      required: true,
+      default: ''
     },
-
-    props: {
-        value: {
-            type: String,
-            required: true,
-            default: ''
-        },
-
-        format: {
-            type: String,
-            required: false,
-            default: 'hex',
-            validator(type) {
-                return ['hsl', 'hex', 'rgba', 'hsv'].indexOf(type) !== -1;
-            }
-        },
-
-        presetColors: {
-            type: Array,
-            required: false,
-            default() {
-                return ['#000', '#fff', '#d33', '#d93', '#ee2', '#81d742', '#1e73be', '#8224e3'];
-            }
-        },
-
-        disableAlpha: {
-            type: Boolean,
-            required: false,
-            default: true
-        },
-
-        disableFields: {
-            type: Boolean,
-            required: false,
-            default: true
-        }
+    format: {
+      type: String,
+      required: false,
+      default: 'hex',
+      validator: function validator(type) {
+        return ['hsl', 'hex', 'rgba', 'hsv'].indexOf(type) !== -1;
+      }
     },
-
-    data() {
-        return {
-            showColorPicker: false
-        };
+    presetColors: {
+      type: Array,
+      required: false,
+      default: function _default() {
+        return ['#000', '#fff', '#d33', '#d93', '#ee2', '#81d742', '#1e73be', '#8224e3'];
+      }
     },
-
-    methods: {
-        updateColor(colors) {
-            let color = '';
-
-            if (colors[this.format]) {
-                color = colors[this.format];
-            }
-
-            this.$emit('input', color);
-        },
-
-        toggleColorPicker() {
-            this.showColorPicker = !this.showColorPicker;
-        },
-
-        setHexColor(color) {
-            this.updateColor({
-                hex: color
-            });
-        }
+    disableAlpha: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
+    disableFields: {
+      type: Boolean,
+      required: false,
+      default: true
     }
+  },
+  data: function data() {
+    return {
+      showColorPicker: false
+    };
+  },
+  methods: {
+    updateColor: function updateColor(colors) {
+      var color = '';
+
+      if (colors[this.format]) {
+        color = colors[this.format];
+      }
+
+      this.$emit('input', color);
+    },
+    toggleColorPicker: function toggleColorPicker() {
+      this.showColorPicker = !this.showColorPicker;
+    },
+    setHexColor: function setHexColor(color) {
+      this.updateColor({
+        hex: color
+      });
+    }
+  }
 });
 
 /***/ }),
@@ -410,246 +393,236 @@ if (false) {(function () {
 
 
 
-
-
 /* harmony default export */ __webpack_exports__["a"] = ({
-    name: 'VendorAccountFields',
-
-    components: {
-        Switches: __WEBPACK_IMPORTED_MODULE_1_admin_components_Switches_vue__["default"],
-        UploadImage: __WEBPACK_IMPORTED_MODULE_2_admin_components_UploadImage_vue__["default"],
-        PasswordGenerator: __WEBPACK_IMPORTED_MODULE_3_admin_components_PasswordGenerator_vue__["default"]
+  name: 'VendorAccountFields',
+  components: {
+    Switches: __WEBPACK_IMPORTED_MODULE_1_admin_components_Switches_vue__["a" /* default */],
+    UploadImage: __WEBPACK_IMPORTED_MODULE_2_admin_components_UploadImage_vue__["a" /* default */],
+    PasswordGenerator: __WEBPACK_IMPORTED_MODULE_3_admin_components_PasswordGenerator_vue__["a" /* default */]
+  },
+  props: {
+    vendorInfo: {
+      type: Object
     },
-
-    props: {
-        vendorInfo: {
-            type: Object
-        },
-        errors: {
-            type: Array,
-            required: false
-        }
-    },
-
-    data() {
-        return {
-            showStoreUrl: true,
-            showPassword: false,
-            otherStoreUrl: null,
-            banner: '',
-            defaultUrl: dokan.urls.siteUrl + dokan.urls.storePrefix + '/',
-            showButton: true,
-            placeholderData: '',
-            delay: 500,
-            storeAvailable: null,
-            userNameAvailable: null,
-            emailAvailable: null,
-            storeAvailabilityText: '',
-            userNameAvailabilityText: '',
-            emailAvailabilityText: '',
-            getAccountFields: dokan.hooks.applyFilters('getVendorAccountFields', [])
-        };
-    },
-
-    watch: {
-        'vendorInfo.store_name'(value) {
-            this.showStoreUrl = true;
-        },
-
-        'vendorInfo.user_nicename'(newValue) {
-            if (typeof newValue !== 'undefined') {
-                this.showStoreUrl = false;
-                this.otherStoreUrl = this.defaultUrl + newValue.trim().split(' ').join('-');
-                this.vendorInfo.user_nicename = newValue.split(' ').join('-');
-
-                // check if the typed url is available
-                this.checkStoreName();
-            }
-        },
-
-        'vendorInfo.user_login'(value) {
-            this.checkUsername();
-        },
-
-        'vendorInfo.user_email'(value) {
-            this.checkEmail();
-        }
-    },
-
-    computed: {
-        storeUrl() {
-            let storeUrl = this.vendorInfo.store_name.trim().split(' ').join('-');
-            this.vendorInfo.user_nicename = storeUrl;
-            this.otherStoreUrl = this.defaultUrl + storeUrl;
-
-            return this.defaultUrl + storeUrl;
-        }
-    },
-
-    created() {
-        this.checkStoreName = Object(__WEBPACK_IMPORTED_MODULE_0_debounce__["debounce"])(this.checkStore, this.delay);
-        this.checkUsername = Object(__WEBPACK_IMPORTED_MODULE_0_debounce__["debounce"])(this.searchUsername, this.delay);
-        this.checkEmail = Object(__WEBPACK_IMPORTED_MODULE_0_debounce__["debounce"])(this.searchEmail, this.delay);
-        this.$root.$on('passwordCancelled', () => {
-            this.showPassword = false;
-        });
-    },
-
-    methods: {
-        uploadBanner(image) {
-            this.vendorInfo.banner_id = image.id;
-
-            // hide button and footer text after uploading banner
-            this.showButton = false;
-        },
-
-        uploadGravatar(image) {
-            this.vendorInfo.gravatar_id = image.id;
-        },
-
-        // getId function has been used to identify whether is it vendor edit page or not
-        getId() {
-            return this.$route.params.id;
-        },
-
-        onSelectBanner(image) {
-            this.banner = image.url;
-            this.vendorInfo.banner_id = image.id;
-        },
-
-        getError(key) {
-            let errors = this.errors;
-
-            if (!errors || typeof errors === 'undefined') {
-                return false;
-            }
-
-            if (errors.length < 1) {
-                return false;
-            }
-
-            if (errors.includes(key)) {
-                return key;
-            }
-        },
-
-        checkStore() {
-            const storeName = this.vendorInfo.user_nicename;
-
-            if (!storeName) {
-                return;
-            }
-
-            this.storeAvailabilityText = this.__('Searching...', 'dokan-lite');
-
-            dokan.api.get(`/stores/check`, {
-                store_slug: storeName
-            }).then(response => {
-                if (response.available) {
-                    this.storeAvailable = true;
-                    this.$root.$emit('vendorInfoChecked', {
-                        userNameAvailable: this.userNameAvailable,
-                        storeAvailable: this.storeAvailable,
-                        emailAvailable: this.emailAvailable
-                    });
-                    this.storeAvailabilityText = this.__('Available', 'dokan-lite');
-                } else {
-                    this.storeAvailable = false;
-                    this.$root.$emit('vendorInfoChecked', {
-                        userNameAvailable: this.userNameAvailable,
-                        storeAvailable: this.storeAvailable,
-                        emailAvailable: this.emailAvailable
-                    });
-                    this.storeAvailabilityText = this.__('Not Available', 'dokan-lite');
-                }
-            });
-        },
-
-        searchUsername() {
-            const userName = this.vendorInfo.user_login;
-
-            if (!userName) {
-                return;
-            }
-
-            this.userNameAvailabilityText = this.__('Searching...', 'dokan-lite');
-
-            dokan.api.get(`/stores/check`, {
-                username: userName
-            }).then(response => {
-                if (response.available) {
-                    this.userNameAvailable = true;
-                    this.$root.$emit('vendorInfoChecked', {
-                        userNameAvailable: this.userNameAvailable,
-                        storeAvailable: this.storeAvailable,
-                        emailAvailable: this.emailAvailable
-                    });
-                    this.userNameAvailabilityText = this.__('Available', 'dokan-lite');
-                } else {
-                    this.userNameAvailable = false;
-                    this.$root.$emit('vendorInfoChecked', {
-                        userNameAvailable: this.userNameAvailable,
-                        storeAvailable: this.storeAvailable,
-                        emailAvailable: this.emailAvailable
-                    });
-                    this.userNameAvailabilityText = this.__('Not Available', 'dokan-lite');
-                }
-            });
-        },
-
-        searchEmail() {
-            const userEmail = this.vendorInfo.user_email;
-
-            if (!userEmail) {
-                return;
-            }
-
-            this.emailAvailabilityText = this.__('Searching...', 'dokan-lite');
-
-            dokan.api.get(`/stores/check`, {
-                user_email: userEmail
-            }).then(response => {
-                if (response.available) {
-                    this.emailAvailable = true;
-                    this.$root.$emit('vendorInfoChecked', {
-                        userNameAvailable: this.userNameAvailable,
-                        storeAvailable: this.storeAvailable,
-                        emailAvailable: this.emailAvailable
-                    });
-                    this.emailAvailabilityText = this.__('Available', 'dokan-lite');
-                } else {
-                    this.emailAvailable = false;
-                    this.$root.$emit('vendorInfoChecked', {
-                        userNameAvailable: this.userNameAvailable,
-                        storeAvailable: this.storeAvailable,
-                        emailAvailable: this.emailAvailable
-                    });
-                    this.emailAvailabilityText = response.message ? response.message : this.__('This email is already registered, please choose another one.', 'dokan-lite');
-                }
-            });
-        },
-
-        setPassword(password) {
-            this.showPassword = true;
-            this.vendorInfo.user_pass = password;
-        },
-
-        sendEmail(status, key) {
-            if ('notify_vendor' !== key) {
-                return;
-            }
-
-            this.vendorInfo.notify_vendor = status;
-        },
-
-        getUploadBannerText() {
-            let width = dokan.store_banner_dimension.width;
-            let height = dokan.store_banner_dimension.height;
-
-            return this.__(`Upload banner for your store. Banner size is (${width}x${height}) pixels.`, 'dokan-lite');
-        }
-
+    errors: {
+      type: Array,
+      required: false
     }
+  },
+  data: function data() {
+    return {
+      showStoreUrl: true,
+      showPassword: false,
+      otherStoreUrl: null,
+      banner: '',
+      defaultUrl: dokan.urls.siteUrl + dokan.urls.storePrefix + '/',
+      showButton: true,
+      placeholderData: '',
+      delay: 500,
+      storeAvailable: null,
+      userNameAvailable: null,
+      emailAvailable: null,
+      storeAvailabilityText: '',
+      userNameAvailabilityText: '',
+      emailAvailabilityText: '',
+      getAccountFields: dokan.hooks.applyFilters('getVendorAccountFields', [])
+    };
+  },
+  watch: {
+    'vendorInfo.store_name': function vendorInfoStore_name(value) {
+      this.showStoreUrl = true;
+    },
+    'vendorInfo.user_nicename': function vendorInfoUser_nicename(newValue) {
+      if (typeof newValue !== 'undefined') {
+        this.showStoreUrl = false;
+        this.otherStoreUrl = this.defaultUrl + newValue.trim().split(' ').join('-');
+        this.vendorInfo.user_nicename = newValue.split(' ').join('-'); // check if the typed url is available
+
+        this.checkStoreName();
+      }
+    },
+    'vendorInfo.user_login': function vendorInfoUser_login(value) {
+      this.checkUsername();
+    },
+    'vendorInfo.user_email': function vendorInfoUser_email(value) {
+      this.checkEmail();
+    }
+  },
+  computed: {
+    storeUrl: function storeUrl() {
+      var storeUrl = this.vendorInfo.store_name.trim().split(' ').join('-');
+      this.vendorInfo.user_nicename = storeUrl;
+      this.otherStoreUrl = this.defaultUrl + storeUrl;
+      return this.defaultUrl + storeUrl;
+    }
+  },
+  created: function created() {
+    var _this = this;
+
+    this.checkStoreName = Object(__WEBPACK_IMPORTED_MODULE_0_debounce__["debounce"])(this.checkStore, this.delay);
+    this.checkUsername = Object(__WEBPACK_IMPORTED_MODULE_0_debounce__["debounce"])(this.searchUsername, this.delay);
+    this.checkEmail = Object(__WEBPACK_IMPORTED_MODULE_0_debounce__["debounce"])(this.searchEmail, this.delay);
+    this.$root.$on('passwordCancelled', function () {
+      _this.showPassword = false;
+    });
+  },
+  methods: {
+    uploadBanner: function uploadBanner(image) {
+      this.vendorInfo.banner_id = image.id; // hide button and footer text after uploading banner
+
+      this.showButton = false;
+    },
+    uploadGravatar: function uploadGravatar(image) {
+      this.vendorInfo.gravatar_id = image.id;
+    },
+    // getId function has been used to identify whether is it vendor edit page or not
+    getId: function getId() {
+      return this.$route.params.id;
+    },
+    onSelectBanner: function onSelectBanner(image) {
+      this.banner = image.url;
+      this.vendorInfo.banner_id = image.id;
+    },
+    getError: function getError(key) {
+      var errors = this.errors;
+
+      if (!errors || typeof errors === 'undefined') {
+        return false;
+      }
+
+      if (errors.length < 1) {
+        return false;
+      }
+
+      if (errors.includes(key)) {
+        return key;
+      }
+    },
+    checkStore: function checkStore() {
+      var _this2 = this;
+
+      var storeName = this.vendorInfo.user_nicename;
+
+      if (!storeName) {
+        return;
+      }
+
+      this.storeAvailabilityText = this.__('Searching...', 'dokan-lite');
+      dokan.api.get("/stores/check", {
+        store_slug: storeName
+      }).then(function (response) {
+        if (response.available) {
+          _this2.storeAvailable = true;
+
+          _this2.$root.$emit('vendorInfoChecked', {
+            userNameAvailable: _this2.userNameAvailable,
+            storeAvailable: _this2.storeAvailable,
+            emailAvailable: _this2.emailAvailable
+          });
+
+          _this2.storeAvailabilityText = _this2.__('Available', 'dokan-lite');
+        } else {
+          _this2.storeAvailable = false;
+
+          _this2.$root.$emit('vendorInfoChecked', {
+            userNameAvailable: _this2.userNameAvailable,
+            storeAvailable: _this2.storeAvailable,
+            emailAvailable: _this2.emailAvailable
+          });
+
+          _this2.storeAvailabilityText = _this2.__('Not Available', 'dokan-lite');
+        }
+      });
+    },
+    searchUsername: function searchUsername() {
+      var _this3 = this;
+
+      var userName = this.vendorInfo.user_login;
+
+      if (!userName) {
+        return;
+      }
+
+      this.userNameAvailabilityText = this.__('Searching...', 'dokan-lite');
+      dokan.api.get("/stores/check", {
+        username: userName
+      }).then(function (response) {
+        if (response.available) {
+          _this3.userNameAvailable = true;
+
+          _this3.$root.$emit('vendorInfoChecked', {
+            userNameAvailable: _this3.userNameAvailable,
+            storeAvailable: _this3.storeAvailable,
+            emailAvailable: _this3.emailAvailable
+          });
+
+          _this3.userNameAvailabilityText = _this3.__('Available', 'dokan-lite');
+        } else {
+          _this3.userNameAvailable = false;
+
+          _this3.$root.$emit('vendorInfoChecked', {
+            userNameAvailable: _this3.userNameAvailable,
+            storeAvailable: _this3.storeAvailable,
+            emailAvailable: _this3.emailAvailable
+          });
+
+          _this3.userNameAvailabilityText = _this3.__('Not Available', 'dokan-lite');
+        }
+      });
+    },
+    searchEmail: function searchEmail() {
+      var _this4 = this;
+
+      var userEmail = this.vendorInfo.user_email;
+
+      if (!userEmail) {
+        return;
+      }
+
+      this.emailAvailabilityText = this.__('Searching...', 'dokan-lite');
+      dokan.api.get("/stores/check", {
+        user_email: userEmail
+      }).then(function (response) {
+        if (response.available) {
+          _this4.emailAvailable = true;
+
+          _this4.$root.$emit('vendorInfoChecked', {
+            userNameAvailable: _this4.userNameAvailable,
+            storeAvailable: _this4.storeAvailable,
+            emailAvailable: _this4.emailAvailable
+          });
+
+          _this4.emailAvailabilityText = _this4.__('Available', 'dokan-lite');
+        } else {
+          _this4.emailAvailable = false;
+
+          _this4.$root.$emit('vendorInfoChecked', {
+            userNameAvailable: _this4.userNameAvailable,
+            storeAvailable: _this4.storeAvailable,
+            emailAvailable: _this4.emailAvailable
+          });
+
+          _this4.emailAvailabilityText = response.message ? response.message : _this4.__('This email is already registered, please choose another one.', 'dokan-lite');
+        }
+      });
+    },
+    setPassword: function setPassword(password) {
+      this.showPassword = true;
+      this.vendorInfo.user_pass = password;
+    },
+    sendEmail: function sendEmail(status, key) {
+      if ('notify_vendor' !== key) {
+        return;
+      }
+
+      this.vendorInfo.notify_vendor = status;
+    },
+    getUploadBannerText: function getUploadBannerText() {
+      var width = dokan.store_banner_dimension.width;
+      var height = dokan.store_banner_dimension.height;
+      return this.__("Upload banner for your store. Banner size is (".concat(width, "x").concat(height, ") pixels."), 'dokan-lite');
+    }
+  }
 });
 
 /***/ }),
@@ -664,32 +637,27 @@ if (false) {(function () {
 //
 //
 //
-
 /* harmony default export */ __webpack_exports__["a"] = ({
-
-    name: 'Switches',
-
-    props: {
-        enabled: {
-            type: Boolean, // String, Number, Boolean, Function, Object, Array
-            required: true,
-            default: false
-        },
-        value: {
-            type: [String, Number]
-        }
+  name: 'Switches',
+  props: {
+    enabled: {
+      type: Boolean,
+      // String, Number, Boolean, Function, Object, Array
+      required: true,
+      default: false
     },
-
-    data() {
-        return {};
-    },
-
-    methods: {
-
-        trigger(e) {
-            this.$emit('input', e.target.checked, e.target.value);
-        }
+    value: {
+      type: [String, Number]
     }
+  },
+  data: function data() {
+    return {};
+  },
+  methods: {
+    trigger: function trigger(e) {
+      this.$emit('input', e.target.checked, e.target.value);
+    }
+  }
 });
 
 /***/ }),
@@ -707,239 +675,216 @@ if (false) {(function () {
 //
 //
 //
-
 /* harmony default export */ __webpack_exports__["a"] = ({
-    name: 'UploadImage',
-
-    inheritAttrs: false,
-
-    props: {
-        src: {
-            default: dokan.urls.assetsUrl + '/images/store-pic.png'
-        },
-        showButton: {
-            type: Boolean,
-            default: false
-        },
-        buttonLabel: {
-            type: String,
-            default: 'Upload Image'
-        },
-        croppingWidth: {
-            type: Number
-        },
-        croppingHeight: {
-            type: Number
-        }
+  name: 'UploadImage',
+  inheritAttrs: false,
+  props: {
+    src: {
+      default: dokan.urls.assetsUrl + '/images/store-pic.png'
     },
-
-    data() {
-        return {
-            image: {
-                src: '',
-                id: ''
-            }
-        };
+    showButton: {
+      type: Boolean,
+      default: false
     },
-
-    methods: {
-        uploadImage() {
-            this.openMediaManager(this.onSelectImage);
-        },
-
-        onSelectImage(image) {
-            this.image.src = image.url;
-            this.image.id = image.id;
-            this.$emit('uploadedImage', this.image);
-        },
-
-        /**
-         * Open Image Media Uploader
-         *
-         * @param  function callback
-         *
-         * @return callback
-         */
-        openMediaManager(callback) {
-            const self = this;
-
-            if (self.fileFrame) {
-                self.fileFrame.open();
-                return;
-            }
-
-            const fileStatesOptions = {
-                library: wp.media.query(),
-                multiple: false, // set it true for multiple image
-                title: this.__('Select & Crop Image', 'dokan-lite'),
-                priority: 20,
-                filterable: 'uploaded',
-                autoSelect: true,
-                suggestedWidth: 500,
-                suggestedHeight: 300
-            };
-
-            const cropControl = {
-                id: "control-id",
-                params: {
-                    width: this.croppingWidth ? parseInt(this.croppingWidth, 10) : parseInt(dokan.store_banner_dimension.width, 10),
-                    height: this.croppingHeight ? parseInt(this.croppingHeight, 10) : parseInt(dokan.store_banner_dimension.height, 10),
-                    flex_width: !!parseInt(dokan.store_banner_dimension['flex-width'], 10),
-                    flex_height: !!parseInt(dokan.store_banner_dimension['flex-height'], 10)
-                }
-            };
-
-            cropControl.mustBeCropped = function (flexW, flexH, dstW, dstH, imgW, imgH) {
-
-                // If the width and height are both flexible
-                // then the user does not need to crop the image.
-                if (true === flexW && true === flexH) {
-                    return false;
-                }
-
-                // If the width is flexible and the cropped image height matches the current image height,
-                // then the user does not need to crop the image.
-                if (true === flexW && dstH === imgH) {
-                    return false;
-                }
-
-                // If the height is flexible and the cropped image width matches the current image width,
-                // then the user does not need to crop the image.
-                if (true === flexH && dstW === imgW) {
-                    return false;
-                }
-
-                // If the cropped image width matches the current image width,
-                // and the cropped image height matches the current image height
-                // then the user does not need to crop the image.
-                if (dstW === imgW && dstH === imgH) {
-                    return false;
-                }
-
-                // If the destination width is equal to or greater than the cropped image width
-                // then the user does not need to crop the image...
-                if (imgW <= dstW) {
-                    return false;
-                }
-
-                return true;
-            };
-
-            const fileStates = [new wp.media.controller.Library(fileStatesOptions), new wp.media.controller.CustomizeImageCropper({
-                imgSelectOptions: self.calculateImageSelectOptions,
-                control: cropControl
-            })];
-
-            const mediaOptions = {
-                title: this.__('Select Image', 'dokan-lite'),
-                button: {
-                    text: this.__('Select Image', 'dokan-lite'),
-                    close: false
-                },
-                multiple: false
-            };
-
-            mediaOptions.states = fileStates;
-
-            self.fileFrame = wp.media(mediaOptions);
-
-            self.fileFrame.on('select', () => {
-                self.fileFrame.setState('cropper');
-            });
-
-            self.fileFrame.on('cropped', croppedImage => {
-                callback(croppedImage);
-                self.fileFrame = null;
-            });
-
-            self.fileFrame.on('skippedcrop', () => {
-                const selection = self.fileFrame.state().get('selection');
-
-                const files = selection.map(attachment => {
-                    return attachment.toJSON();
-                });
-
-                const file = files.pop();
-
-                callback(file);
-
-                self.fileFrame = null;
-            });
-
-            self.fileFrame.on('close', () => {
-                self.fileFrame = null;
-            });
-
-            self.fileFrame.on('ready', () => {
-                self.fileFrame.uploader.options.uploader.params = {
-                    type: 'dokan-vendor-option-media'
-                };
-            });
-
-            self.fileFrame.open();
-        },
-
-        /**
-         * Calculate image section options
-         *
-         * @param  object attachment
-         * @param  object controller
-         *
-         * @return object
-         */
-        calculateImageSelectOptions: function (attachment, controller) {
-            let xInit = this.croppingWidth ? parseInt(this.croppingWidth, 10) : parseInt(dokan.store_banner_dimension.width, 10);
-            let yInit = this.croppingHeight ? parseInt(this.croppingHeight, 10) : parseInt(dokan.store_banner_dimension.height, 10);
-            let flexWidth = !!parseInt(dokan.store_banner_dimension['flex-width'], 10);
-            let flexHeight = !!parseInt(dokan.store_banner_dimension['flex-height'], 10);
-
-            let ratio, xImg, yImg, realHeight, realWidth, imgSelectOptions;
-
-            realWidth = attachment.get('width');
-            realHeight = attachment.get('height');
-
-            let control = controller.get('control');
-
-            controller.set('canSkipCrop', !control.mustBeCropped(flexWidth, flexHeight, xInit, yInit, realWidth, realHeight));
-
-            ratio = xInit / yInit;
-            xImg = realWidth;
-            yImg = realHeight;
-
-            if (xImg / yImg > ratio) {
-                yInit = yImg;
-                xInit = yInit * ratio;
-            } else {
-                xInit = xImg;
-                yInit = xInit / ratio;
-            }
-
-            imgSelectOptions = {
-                handles: true,
-                keys: true,
-                instance: true,
-                persistent: true,
-                imageWidth: realWidth,
-                imageHeight: realHeight,
-                x1: 0,
-                y1: 0,
-                x2: xInit,
-                y2: yInit
-            };
-
-            if (flexHeight === false && flexWidth === false) {
-                imgSelectOptions.aspectRatio = xInit + ':' + yInit;
-            }
-            if (flexHeight === false) {
-                imgSelectOptions.maxHeight = yInit;
-            }
-            if (flexWidth === false) {
-                imgSelectOptions.maxWidth = xInit;
-            }
-
-            return imgSelectOptions;
-        }
+    buttonLabel: {
+      type: String,
+      default: 'Upload Image'
+    },
+    croppingWidth: {
+      type: Number
+    },
+    croppingHeight: {
+      type: Number
     }
+  },
+  data: function data() {
+    return {
+      image: {
+        src: '',
+        id: ''
+      }
+    };
+  },
+  methods: {
+    uploadImage: function uploadImage() {
+      this.openMediaManager(this.onSelectImage);
+    },
+    onSelectImage: function onSelectImage(image) {
+      this.image.src = image.url;
+      this.image.id = image.id;
+      this.$emit('uploadedImage', this.image);
+    },
+
+    /**
+     * Open Image Media Uploader
+     *
+     * @param  function callback
+     *
+     * @return callback
+     */
+    openMediaManager: function openMediaManager(callback) {
+      var self = this;
+
+      if (self.fileFrame) {
+        self.fileFrame.open();
+        return;
+      }
+
+      var fileStatesOptions = {
+        library: wp.media.query(),
+        multiple: false,
+        // set it true for multiple image
+        title: this.__('Select & Crop Image', 'dokan-lite'),
+        priority: 20,
+        filterable: 'uploaded',
+        autoSelect: true,
+        suggestedWidth: 500,
+        suggestedHeight: 300
+      };
+      var cropControl = {
+        id: "control-id",
+        params: {
+          width: this.croppingWidth ? parseInt(this.croppingWidth, 10) : parseInt(dokan.store_banner_dimension.width, 10),
+          height: this.croppingHeight ? parseInt(this.croppingHeight, 10) : parseInt(dokan.store_banner_dimension.height, 10),
+          flex_width: !!parseInt(dokan.store_banner_dimension['flex-width'], 10),
+          flex_height: !!parseInt(dokan.store_banner_dimension['flex-height'], 10)
+        }
+      };
+
+      cropControl.mustBeCropped = function (flexW, flexH, dstW, dstH, imgW, imgH) {
+        // If the width and height are both flexible
+        // then the user does not need to crop the image.
+        if (true === flexW && true === flexH) {
+          return false;
+        } // If the width is flexible and the cropped image height matches the current image height,
+        // then the user does not need to crop the image.
+
+
+        if (true === flexW && dstH === imgH) {
+          return false;
+        } // If the height is flexible and the cropped image width matches the current image width,
+        // then the user does not need to crop the image.
+
+
+        if (true === flexH && dstW === imgW) {
+          return false;
+        } // If the cropped image width matches the current image width,
+        // and the cropped image height matches the current image height
+        // then the user does not need to crop the image.
+
+
+        if (dstW === imgW && dstH === imgH) {
+          return false;
+        } // If the destination width is equal to or greater than the cropped image width
+        // then the user does not need to crop the image...
+
+
+        if (imgW <= dstW) {
+          return false;
+        }
+
+        return true;
+      };
+
+      var fileStates = [new wp.media.controller.Library(fileStatesOptions), new wp.media.controller.CustomizeImageCropper({
+        imgSelectOptions: self.calculateImageSelectOptions,
+        control: cropControl
+      })];
+      var mediaOptions = {
+        title: this.__('Select Image', 'dokan-lite'),
+        button: {
+          text: this.__('Select Image', 'dokan-lite'),
+          close: false
+        },
+        multiple: false
+      };
+      mediaOptions.states = fileStates;
+      self.fileFrame = wp.media(mediaOptions);
+      self.fileFrame.on('select', function () {
+        self.fileFrame.setState('cropper');
+      });
+      self.fileFrame.on('cropped', function (croppedImage) {
+        callback(croppedImage);
+        self.fileFrame = null;
+      });
+      self.fileFrame.on('skippedcrop', function () {
+        var selection = self.fileFrame.state().get('selection');
+        var files = selection.map(function (attachment) {
+          return attachment.toJSON();
+        });
+        var file = files.pop();
+        callback(file);
+        self.fileFrame = null;
+      });
+      self.fileFrame.on('close', function () {
+        self.fileFrame = null;
+      });
+      self.fileFrame.on('ready', function () {
+        self.fileFrame.uploader.options.uploader.params = {
+          type: 'dokan-vendor-option-media'
+        };
+      });
+      self.fileFrame.open();
+    },
+
+    /**
+     * Calculate image section options
+     *
+     * @param  object attachment
+     * @param  object controller
+     *
+     * @return object
+     */
+    calculateImageSelectOptions: function calculateImageSelectOptions(attachment, controller) {
+      var xInit = this.croppingWidth ? parseInt(this.croppingWidth, 10) : parseInt(dokan.store_banner_dimension.width, 10);
+      var yInit = this.croppingHeight ? parseInt(this.croppingHeight, 10) : parseInt(dokan.store_banner_dimension.height, 10);
+      var flexWidth = !!parseInt(dokan.store_banner_dimension['flex-width'], 10);
+      var flexHeight = !!parseInt(dokan.store_banner_dimension['flex-height'], 10);
+      var ratio, xImg, yImg, realHeight, realWidth, imgSelectOptions;
+      realWidth = attachment.get('width');
+      realHeight = attachment.get('height');
+      var control = controller.get('control');
+      controller.set('canSkipCrop', !control.mustBeCropped(flexWidth, flexHeight, xInit, yInit, realWidth, realHeight));
+      ratio = xInit / yInit;
+      xImg = realWidth;
+      yImg = realHeight;
+
+      if (xImg / yImg > ratio) {
+        yInit = yImg;
+        xInit = yInit * ratio;
+      } else {
+        xInit = xImg;
+        yInit = xInit / ratio;
+      }
+
+      imgSelectOptions = {
+        handles: true,
+        keys: true,
+        instance: true,
+        persistent: true,
+        imageWidth: realWidth,
+        imageHeight: realHeight,
+        x1: 0,
+        y1: 0,
+        x2: xInit,
+        y2: yInit
+      };
+
+      if (flexHeight === false && flexWidth === false) {
+        imgSelectOptions.aspectRatio = xInit + ':' + yInit;
+      }
+
+      if (flexHeight === false) {
+        imgSelectOptions.maxHeight = yInit;
+      }
+
+      if (flexWidth === false) {
+        imgSelectOptions.maxWidth = xInit;
+      }
+
+      return imgSelectOptions;
+    }
+  }
 });
 
 /***/ }),
@@ -965,76 +910,64 @@ if (false) {(function () {
 //
 //
 //
-
 /* harmony default export */ __webpack_exports__["a"] = ({
-    name: 'PasswordGenerator',
-
-    props: {
-        title: {
-            type: String,
-            default: 'Generate Password'
-        },
-
-        cancelTitle: {
-            type: String,
-            default: 'Cancel'
-        },
-
-        regenrateTitle: {
-            type: String,
-            default: 'Regenrate'
-        },
-
-        length: {
-            type: Number,
-            default: 25
-        }
+  name: 'PasswordGenerator',
+  props: {
+    title: {
+      type: String,
+      default: 'Generate Password'
     },
-
-    data() {
-        return {
-            password: '',
-            hideGenerateButton: false,
-            showCancelButton: false
-        };
+    cancelTitle: {
+      type: String,
+      default: 'Cancel'
     },
-
-    methods: {
-        generatePassword() {
-            this.password = this.makePassword(this.length);
-
-            this.$emit('passwordGenerated', this.password);
-
-            this.hideGenerateButton = true;
-            this.showCancelButton = true;
-        },
-
-        makePassword(len = 25) {
-            let lowerCaseChars = 'abcdefghijklmnopqurstuvwxyz';
-            let upperCaseChars = 'ABCDEFGHIJKLMNOPQURSTUVWXYZ';
-            let specialChars = '!@#$%^&*()';
-            let randomChars = '';
-
-            for (let i = 0; i <= len; i++) {
-                let mixUp = lowerCaseChars[Math.floor(Math.random() * len)] + upperCaseChars[Math.floor(Math.random() * 10)] + specialChars[Math.floor(Math.random() * specialChars.length)];
-                randomChars += mixUp;
-            }
-
-            return randomChars.slice(-len);
-        },
-
-        cancelButton() {
-            this.hideGenerateButton = false;
-            this.showCancelButton = false;
-
-            this.$root.$emit('passwordCancelled');
-        },
-
-        regenratePassword() {
-            this.password = this.makePassword(this.length);
-            this.$emit('passwordGenerated', this.password);
-        }
+    regenrateTitle: {
+      type: String,
+      default: 'Regenrate'
+    },
+    length: {
+      type: Number,
+      default: 25
     }
+  },
+  data: function data() {
+    return {
+      password: '',
+      hideGenerateButton: false,
+      showCancelButton: false
+    };
+  },
+  methods: {
+    generatePassword: function generatePassword() {
+      this.password = this.makePassword(this.length);
+      this.$emit('passwordGenerated', this.password);
+      this.hideGenerateButton = true;
+      this.showCancelButton = true;
+    },
+    makePassword: function makePassword() {
+      var len = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 25;
+      var lowerCaseChars = 'abcdefghijklmnopqurstuvwxyz';
+      var upperCaseChars = 'ABCDEFGHIJKLMNOPQURSTUVWXYZ';
+      var specialChars = '!@#$%^&*()';
+      var randomChars = '';
+
+      for (var i = 0; i <= len; i++) {
+        var mixUp = lowerCaseChars[Math.floor(Math.random() * len)] + upperCaseChars[Math.floor(Math.random() * 10)] + specialChars[Math.floor(Math.random() * specialChars.length)];
+        randomChars += mixUp;
+      }
+
+      return randomChars.slice(-len);
+    },
+    cancelButton: function cancelButton() {
+      this.hideGenerateButton = false;
+      this.showCancelButton = false;
+      this.$root.$emit('passwordCancelled');
+    },
+    regenratePassword: function regenratePassword() {
+      this.password = this.makePassword(this.length);
+      this.$emit('passwordGenerated', this.password);
+    }
+  }
 });
 
 /***/ }),
@@ -1100,141 +1033,122 @@ if (false) {(function () {
 //
 //
 
-
-
 /* harmony default export */ __webpack_exports__["a"] = ({
-    name: 'VendorAddressFields',
-
-    components: {
-        Multiselect: __WEBPACK_IMPORTED_MODULE_0_vue_multiselect__["Multiselect"]
-    },
-
-    props: {
-        vendorInfo: {
-            type: Object
-        }
-    },
-
-    data() {
-        return {
-            countries: [],
-            states: [],
-            selectedCountry: {},
-            selectedState: {},
-            getAddressFields: dokan.hooks.applyFilters('getVendorAddressFields', [])
-        };
-    },
-
-    computed: {
-        selectedCode() {
-            // let selected = this.selectedCountry;
-            let selected = this.vendorInfo.address.country;
-
-            if ('' !== selected) {
-                return selected;
-            }
-
-            return [];
-        }
-    },
-
-    created() {
-        this.countries = this.transformCountries(dokan.countries);
-        this.states = dokan.states;
-
-        let savedCountry = this.vendorInfo.address.country;
-        let savedState = this.vendorInfo.address.state;
-
-        if ('' !== savedCountry) {
-            this.selectedCountry = {
-                name: this.getCountryFromCountryCode(savedCountry),
-                code: savedCountry
-            };
-
-            this.selectedState = {
-                name: this.getStateFromStateCode(savedState, savedCountry),
-                code: savedState
-            };
-        }
-    },
-
-    methods: {
-        transformCountries(countryObject) {
-            let countries = [];
-
-            for (let key in countryObject) {
-                countries.push({
-                    name: countryObject[key],
-                    code: key
-                });
-            }
-
-            return countries;
-        },
-
-        getCountryFromCountryCode(countryCode) {
-            if ('' === countryCode) {
-                return;
-            }
-
-            return dokan.countries[countryCode];
-        },
-
-        getStateFromStateCode(stateCode, countryCode) {
-            if ('' === stateCode) {
-                return;
-            }
-
-            let states = dokan.states[countryCode];
-            let state = states && states[stateCode];
-
-            return typeof state !== 'undefined' ? state : [];
-        },
-
-        getStatesFromCountryCode(countryCode) {
-            if ('' === countryCode) {
-                return;
-            }
-
-            let states = [];
-            let statesObject = this.states;
-
-            for (let state in statesObject) {
-                if (state !== countryCode) {
-                    continue;
-                }
-
-                if (statesObject[state] && statesObject[state].length < 1) {
-                    continue;
-                }
-
-                for (let name in statesObject[state]) {
-                    states.push({
-                        name: statesObject[state][name],
-                        code: name
-                    });
-                }
-            }
-
-            return states;
-        },
-
-        saveCountry(value) {
-            if (!value) return;
-
-            // if reset default state values
-            this.vendorInfo.address.state = null;
-            this.selectedState = {};
-
-            this.vendorInfo.address.country = value.code;
-        },
-
-        saveState(value) {
-            if (!value) return;
-
-            this.vendorInfo.address.state = value.code;
-        }
+  name: 'VendorAddressFields',
+  components: {
+    Multiselect: __WEBPACK_IMPORTED_MODULE_0_vue_multiselect__["Multiselect"]
+  },
+  props: {
+    vendorInfo: {
+      type: Object
     }
+  },
+  data: function data() {
+    return {
+      countries: [],
+      states: [],
+      selectedCountry: {},
+      selectedState: {},
+      getAddressFields: dokan.hooks.applyFilters('getVendorAddressFields', [])
+    };
+  },
+  computed: {
+    selectedCode: function selectedCode() {
+      // let selected = this.selectedCountry;
+      var selected = this.vendorInfo.address.country;
+
+      if ('' !== selected) {
+        return selected;
+      }
+
+      return [];
+    }
+  },
+  created: function created() {
+    this.countries = this.transformCountries(dokan.countries);
+    this.states = dokan.states;
+    var savedCountry = this.vendorInfo.address.country;
+    var savedState = this.vendorInfo.address.state;
+
+    if ('' !== savedCountry) {
+      this.selectedCountry = {
+        name: this.getCountryFromCountryCode(savedCountry),
+        code: savedCountry
+      };
+      this.selectedState = {
+        name: this.getStateFromStateCode(savedState, savedCountry),
+        code: savedState
+      };
+    }
+  },
+  methods: {
+    transformCountries: function transformCountries(countryObject) {
+      var countries = [];
+
+      for (var key in countryObject) {
+        countries.push({
+          name: countryObject[key],
+          code: key
+        });
+      }
+
+      return countries;
+    },
+    getCountryFromCountryCode: function getCountryFromCountryCode(countryCode) {
+      if ('' === countryCode) {
+        return;
+      }
+
+      return dokan.countries[countryCode];
+    },
+    getStateFromStateCode: function getStateFromStateCode(stateCode, countryCode) {
+      if ('' === stateCode) {
+        return;
+      }
+
+      var states = dokan.states[countryCode];
+      var state = states && states[stateCode];
+      return typeof state !== 'undefined' ? state : [];
+    },
+    getStatesFromCountryCode: function getStatesFromCountryCode(countryCode) {
+      if ('' === countryCode) {
+        return;
+      }
+
+      var states = [];
+      var statesObject = this.states;
+
+      for (var state in statesObject) {
+        if (state !== countryCode) {
+          continue;
+        }
+
+        if (statesObject[state] && statesObject[state].length < 1) {
+          continue;
+        }
+
+        for (var name in statesObject[state]) {
+          states.push({
+            name: statesObject[state][name],
+            code: name
+          });
+        }
+      }
+
+      return states;
+    },
+    saveCountry: function saveCountry(value) {
+      if (!value) return; // if reset default state values
+
+      this.vendorInfo.address.state = null;
+      this.selectedState = {};
+      this.vendorInfo.address.country = value.code;
+    },
+    saveState: function saveState(value) {
+      if (!value) return;
+      this.vendorInfo.address.state = value.code;
+    }
+  }
 });
 
 /***/ }),
@@ -1362,98 +1276,87 @@ if (false) {(function () {
 //
 
 
-
-
 /* harmony default export */ __webpack_exports__["a"] = ({
-    name: 'VendorPaymentFields',
-
-    components: {
-        Switches: __WEBPACK_IMPORTED_MODULE_0_admin_components_Switches_vue__["default"],
-        Multiselect: __WEBPACK_IMPORTED_MODULE_1_vue_multiselect__["Multiselect"]
-    },
-
-    props: {
-        vendorInfo: {
-            type: Object
-        }
-    },
-
-    data() {
-        return {
-            enabled: false,
-            trusted: false,
-            featured: false,
-            commissionTypes: [this.__('Flat', 'dokan-lite'), this.__('Percentage', 'dokan-lite'), this.__('Combine', 'dokan-lite')],
-            selectedCommissionType: this.__('Flat', 'dokan-lite'),
-            getBankFields: dokan.hooks.applyFilters('getVendorBankFields', []),
-            getPyamentFields: dokan.hooks.applyFilters('AfterPyamentFields', [])
-        };
-    },
-
-    created() {
-        if (this.vendorInfo.enabled) {
-            this.enabled = true;
-            this.vendorInfo.enabled = true;
-        }
-
-        if (this.vendorInfo.trusted) {
-            this.trusted = true;
-            this.vendorInfo.trusted = true;
-        }
-
-        if (this.vendorInfo.featured) {
-            this.featured = true;
-            this.vendorInfo.featured = true;
-        }
-
-        let commissionType = this.vendorInfo.admin_commission_type;
-
-        if (commissionType) {
-            this.selectedCommissionType = commissionType.charAt(0).toUpperCase() + commissionType.slice(1);
-        }
-    },
-
-    methods: {
-        setValue(status, key) {
-            if ('enabled' === key) {
-                if (status) {
-                    this.vendorInfo.enabled = true;
-                } else {
-                    this.vendorInfo.enabled = false;
-                }
-            }
-
-            if ('trusted' === key) {
-                if (status) {
-                    this.vendorInfo.trusted = true;
-                } else {
-                    this.vendorInfo.trusted = false;
-                }
-            }
-
-            if ('featured' === key) {
-                if (status) {
-                    this.vendorInfo.featured = true;
-                } else {
-                    this.vendorInfo.featured = false;
-                }
-            }
-        },
-
-        getId() {
-            return this.$route.params.id;
-        },
-
-        saveCommissionType(value) {
-            if (!value) {
-                this.vendorInfo.admin_commission_type = 'flat';
-            }
-
-            this.vendorInfo.admin_commission_type = value.toLowerCase();
-        }
-
+  name: 'VendorPaymentFields',
+  components: {
+    Switches: __WEBPACK_IMPORTED_MODULE_0_admin_components_Switches_vue__["a" /* default */],
+    Multiselect: __WEBPACK_IMPORTED_MODULE_1_vue_multiselect__["Multiselect"]
+  },
+  props: {
+    vendorInfo: {
+      type: Object
+    }
+  },
+  data: function data() {
+    return {
+      enabled: false,
+      trusted: false,
+      featured: false,
+      commissionTypes: [this.__('Flat', 'dokan-lite'), this.__('Percentage', 'dokan-lite'), this.__('Combine', 'dokan-lite')],
+      selectedCommissionType: this.__('Flat', 'dokan-lite'),
+      getBankFields: dokan.hooks.applyFilters('getVendorBankFields', []),
+      getPyamentFields: dokan.hooks.applyFilters('AfterPyamentFields', [])
+    };
+  },
+  created: function created() {
+    if (this.vendorInfo.enabled) {
+      this.enabled = true;
+      this.vendorInfo.enabled = true;
     }
 
+    if (this.vendorInfo.trusted) {
+      this.trusted = true;
+      this.vendorInfo.trusted = true;
+    }
+
+    if (this.vendorInfo.featured) {
+      this.featured = true;
+      this.vendorInfo.featured = true;
+    }
+
+    var commissionType = this.vendorInfo.admin_commission_type;
+
+    if (commissionType) {
+      this.selectedCommissionType = commissionType.charAt(0).toUpperCase() + commissionType.slice(1);
+    }
+  },
+  methods: {
+    setValue: function setValue(status, key) {
+      if ('enabled' === key) {
+        if (status) {
+          this.vendorInfo.enabled = true;
+        } else {
+          this.vendorInfo.enabled = false;
+        }
+      }
+
+      if ('trusted' === key) {
+        if (status) {
+          this.vendorInfo.trusted = true;
+        } else {
+          this.vendorInfo.trusted = false;
+        }
+      }
+
+      if ('featured' === key) {
+        if (status) {
+          this.vendorInfo.featured = true;
+        } else {
+          this.vendorInfo.featured = false;
+        }
+      }
+    },
+    getId: function getId() {
+      return this.$route.params.id;
+    },
+    saveCommissionType: function saveCommissionType(value) {
+      if (!value) {
+        this.vendorInfo.admin_commission_type = 'flat';
+      }
+
+      this.vendorInfo.admin_commission_type = value.toLowerCase();
+    }
+  }
 });
 
 /***/ }),
@@ -1462,9 +1365,8 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_UploadImage_vue__ = __webpack_require__(10);
-/* empty harmony namespace reexport */
+/* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_40b3524c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_UploadImage_vue__ = __webpack_require__(29);
 var disposed = false
 function injectStyle (ssrContext) {
@@ -1511,7 +1413,7 @@ if (false) {(function () {
   })
 })()}
 
-/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
 
 /***/ }),
@@ -1519,9 +1421,8 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_PasswordGenerator_vue__ = __webpack_require__(11);
-/* empty harmony namespace reexport */
+/* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4084a478_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_PasswordGenerator_vue__ = __webpack_require__(30);
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
@@ -1564,7 +1465,7 @@ if (false) {(function () {
   })
 })()}
 
-/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
 
 /***/ }),
@@ -1575,9 +1476,8 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Chart_vue__ = __webpack_require__(6);
-/* empty harmony namespace reexport */
+/* unused harmony namespace reexport */
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -1619,7 +1519,7 @@ if (false) {(function () {
   })
 })()}
 
-/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
 
 /***/ }),
@@ -1628,9 +1528,8 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ColorPicker_vue__ = __webpack_require__(7);
-/* empty harmony namespace reexport */
+/* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_01dc0d51_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ColorPicker_vue__ = __webpack_require__(24);
 var disposed = false
 function injectStyle (ssrContext) {
@@ -1677,7 +1576,7 @@ if (false) {(function () {
   })
 })()}
 
-/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
 
 /***/ }),
@@ -1782,9 +1681,8 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorAccountFields_vue__ = __webpack_require__(8);
-/* empty harmony namespace reexport */
+/* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2b13daea_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorAccountFields_vue__ = __webpack_require__(31);
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
@@ -1827,7 +1725,7 @@ if (false) {(function () {
   })
 })()}
 
-/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
 
 /***/ }),
@@ -2482,9 +2380,8 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorAddressFields_vue__ = __webpack_require__(12);
-/* empty harmony namespace reexport */
+/* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_9504c01e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorAddressFields_vue__ = __webpack_require__(33);
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
@@ -2527,7 +2424,7 @@ if (false) {(function () {
   })
 })()}
 
-/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
 
 /***/ }),
@@ -2800,9 +2697,8 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorPaymentFields_vue__ = __webpack_require__(13);
-/* empty harmony namespace reexport */
+/* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2ed34783_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorPaymentFields_vue__ = __webpack_require__(36);
 var disposed = false
 function injectStyle (ssrContext) {
@@ -2849,7 +2745,7 @@ if (false) {(function () {
   })
 })()}
 
-/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
 
 /***/ }),
@@ -3458,68 +3354,8 @@ if (false) {
 /* 62 */,
 /* 63 */,
 /* 64 */,
-/* 65 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["a"] = ({
-
-    name: 'Postbox',
-    props: {
-        title: {
-            type: String,
-            required: true,
-            default: ''
-        },
-        extraClass: {
-            type: String,
-            default: null
-        }
-    },
-
-    data() {
-        return {
-            showing: true
-        };
-    }
-});
-
-/***/ }),
-/* 66 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["a"] = ({
-
-    name: 'Loading',
-
-    data() {
-        return {};
-    }
-});
-
-/***/ }),
+/* 65 */,
+/* 66 */,
 /* 67 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -3539,51 +3375,24 @@ if (false) {
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
 /* harmony default export */ __webpack_exports__["a"] = ({
-
-    name: 'Modal',
-
-    props: {
-        footer: {
-            type: Boolean,
-            required: false,
-            default: true
-        },
-        width: {
-            type: String,
-            required: false,
-            default: '500px'
-        },
-        height: {
-            type: String,
-            required: false,
-            default: 'auto'
-        },
-        title: {
-            type: String,
-            required: true,
-            default: ''
-        }
+  name: 'Postbox',
+  props: {
+    title: {
+      type: String,
+      required: true,
+      default: ''
     },
-
-    data() {
-        return {};
+    extraClass: {
+      type: String,
+      default: null
     }
+  },
+  data: function data() {
+    return {
+      showing: true
+    };
+  }
 });
 
 /***/ }),
@@ -3595,179 +3404,11 @@ if (false) {
 //
 //
 //
-
 /* harmony default export */ __webpack_exports__["a"] = ({
-    props: {
-        value: {
-            type: String,
-            required: true
-        },
-
-        shortcodes: {
-            type: Object,
-            required: false
-        }
-    },
-
-    data() {
-        return {
-            editorId: this._uid,
-            fileFrame: null
-        };
-    },
-
-    mounted() {
-        const vm = this;
-
-        window.tinymce.init({
-            selector: `#dokan-tinymce-${this.editorId}`,
-            branding: false,
-            height: 200,
-            menubar: false,
-            convert_urls: false,
-            theme: 'modern',
-            skin: 'lightgray',
-            fontsize_formats: '10px 11px 13px 14px 16px 18px 22px 25px 30px 36px 40px 45px 50px 60px 65px 70px 75px 80px',
-            font_formats: 'Arial=arial,helvetica,sans-serif;' + 'Comic Sans MS=comic sans ms,sans-serif;' + 'Courier New=courier new,courier;' + 'Georgia=georgia,palatino;' + 'Lucida=Lucida Sans Unicode, Lucida Grande, sans-serif;' + 'Tahoma=tahoma,arial,helvetica,sans-serif;' + 'Times New Roman=times new roman,times;' + 'Trebuchet MS=trebuchet ms,geneva;' + 'Verdana=verdana,geneva;',
-            plugins: 'textcolor colorpicker wplink wordpress code hr wpeditimage',
-            toolbar: ['shortcodes bold italic underline bullist numlist alignleft aligncenter alignjustify alignright link image wp_adv', 'formatselect forecolor backcolor blockquote hr code fontselect fontsizeselect removeformat undo redo'],
-            setup(editor) {
-                const shortcodeMenuItems = [];
-
-                _.forEach(vm.shortcodes, (shortcodeObj, shortcodeType) => {
-                    shortcodeMenuItems.push({
-                        text: shortcodeObj.title,
-                        classes: 'menu-section-title'
-                    });
-
-                    _.forEach(shortcodeObj.codes, (codeObj, shortcode) => {
-                        shortcodeMenuItems.push({
-                            text: codeObj.title,
-                            onclick() {
-                                let code = `[${shortcodeType}:${shortcode}]`;
-
-                                if (codeObj.default) {
-                                    code = `[${shortcodeType}:${shortcode} default="${codeObj.default}"]`;
-                                }
-
-                                if (codeObj.text) {
-                                    code = `[${shortcodeType}:${shortcode} text="${codeObj.text}"]`;
-                                }
-
-                                if (codeObj.plainText) {
-                                    code = codeObj.text;
-                                }
-
-                                editor.insertContent(code);
-                            }
-                        });
-                    });
-                });
-
-                // editor.addButton('shortcodes', {
-                //     type: 'menubutton',
-                //     icon: 'shortcode',
-                //     tooltip: 'Shortcodes',
-                //     menu: shortcodeMenuItems
-                // });
-
-                editor.addButton('image', {
-                    icon: 'image',
-                    onclick() {
-                        vm.browseImage(editor);
-                    }
-                });
-
-                // editor change triggers
-                editor.on('change keyup NodeChange', () => {
-                    vm.$emit('input', editor.getContent());
-                });
-            }
-        });
-    },
-
-    methods: {
-        browseImage(editor) {
-            const vm = this;
-            const selectedFile = {
-                id: 0,
-                url: '',
-                type: ''
-            };
-
-            if (vm.fileFrame) {
-                vm.fileFrame.open();
-                return;
-            }
-
-            const fileStates = [new wp.media.controller.Library({
-                library: wp.media.query(),
-                multiple: false,
-                title: this.__('Select an image', 'dokan-lite'),
-                priority: 20,
-                filterable: 'uploaded'
-            })];
-
-            vm.fileFrame = wp.media({
-                title: this.__('Select an image', 'dokan-lite'),
-                library: {
-                    type: ''
-                },
-                button: {
-                    text: this.__('Select an image', 'dokan-lite')
-                },
-                multiple: false,
-                states: fileStates
-            });
-
-            vm.fileFrame.on('select', () => {
-                const selection = vm.fileFrame.state().get('selection');
-
-                selection.map(image => {
-                    image = image.toJSON();
-
-                    if (image.id) {
-                        selectedFile.id = image.id;
-                    }
-
-                    if (image.url) {
-                        selectedFile.url = image.url;
-                    }
-
-                    if (image.type) {
-                        selectedFile.type = image.type;
-                    }
-
-                    vm.insertImage(editor, selectedFile);
-
-                    return null;
-                });
-            });
-
-            vm.fileFrame.on('ready', () => {
-                vm.fileFrame.uploader.options.uploader.params = {
-                    type: 'dokan-image-uploader'
-                };
-            });
-
-            vm.fileFrame.open();
-        },
-
-        insertImage(editor, image) {
-            if (!image.id || image.type !== 'image') {
-                this.alert({
-                    type: 'error',
-                    text: this.__('Please select an image,', 'dokan-lite')
-                });
-
-                return;
-            }
-
-            const img = `<img src="${image.url}" alt="${image.alt}" title="${image.title}" style="max-width: 100%; height: auto;">`;
-
-            editor.insertContent(img);
-        }
-    }
+  name: 'Loading',
+  data: function data() {
+    return {};
+  }
 });
 
 /***/ }),
@@ -3779,15 +3420,58 @@ if (false) {
 //
 //
 //
-
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["a"] = ({
-    props: ['amount'],
-
-    methods: {
-        formattedPrice(value) {
-            return accounting.formatMoney(value, dokan.currency);
-        }
+  name: 'Modal',
+  props: {
+    footer: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
+    width: {
+      type: String,
+      required: false,
+      default: '500px'
+    },
+    height: {
+      type: String,
+      required: false,
+      default: 'auto'
+    },
+    title: {
+      type: String,
+      required: true,
+      default: ''
     }
+  },
+  data: function data() {
+    return {};
+  }
 });
 
 /***/ }),
@@ -3795,79 +3479,166 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_debounce__);
 //
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-
-
-
 /* harmony default export */ __webpack_exports__["a"] = ({
-    name: 'LazyInput',
-
-    props: {
-        value: {
-            type: String,
-            required: true,
-            default: ''
-        },
-
-        type: {
-            type: String,
-            required: false,
-            default: 'text'
-        },
-
-        placeholder: {
-            type: String,
-            required: false,
-            default: ''
-        }
+  props: {
+    value: {
+      type: String,
+      required: true
     },
-
-    data() {
-        return {
-            delay: 500,
-            debouncer: null
-        };
-    },
-
-    methods: {
-        updateValue(value) {
-            const vm = this;
-
-            if (vm.debouncer) {
-                vm.debouncer.clear();
-            }
-
-            vm.debouncer = Object(__WEBPACK_IMPORTED_MODULE_0_debounce__["debounce"])(() => {
-                vm.triggerInput(value);
-            }, vm.delay);
-
-            vm.debouncer();
-        },
-
-        focus() {
-            this.$emit('focus');
-        },
-
-        blur() {
-            this.$emit('blur');
-        },
-
-        triggerInput(value) {
-            this.$emit('input', value);
-        }
+    shortcodes: {
+      type: Object,
+      required: false
     }
+  },
+  data: function data() {
+    return {
+      editorId: this._uid,
+      fileFrame: null
+    };
+  },
+  mounted: function mounted() {
+    var vm = this;
+    window.tinymce.init({
+      selector: "#dokan-tinymce-".concat(this.editorId),
+      branding: false,
+      height: 200,
+      menubar: false,
+      convert_urls: false,
+      theme: 'modern',
+      skin: 'lightgray',
+      fontsize_formats: '10px 11px 13px 14px 16px 18px 22px 25px 30px 36px 40px 45px 50px 60px 65px 70px 75px 80px',
+      font_formats: 'Arial=arial,helvetica,sans-serif;' + 'Comic Sans MS=comic sans ms,sans-serif;' + 'Courier New=courier new,courier;' + 'Georgia=georgia,palatino;' + 'Lucida=Lucida Sans Unicode, Lucida Grande, sans-serif;' + 'Tahoma=tahoma,arial,helvetica,sans-serif;' + 'Times New Roman=times new roman,times;' + 'Trebuchet MS=trebuchet ms,geneva;' + 'Verdana=verdana,geneva;',
+      plugins: 'textcolor colorpicker wplink wordpress code hr wpeditimage',
+      toolbar: ['shortcodes bold italic underline bullist numlist alignleft aligncenter alignjustify alignright link image wp_adv', 'formatselect forecolor backcolor blockquote hr code fontselect fontsizeselect removeformat undo redo'],
+      setup: function setup(editor) {
+        var shortcodeMenuItems = [];
+
+        _.forEach(vm.shortcodes, function (shortcodeObj, shortcodeType) {
+          shortcodeMenuItems.push({
+            text: shortcodeObj.title,
+            classes: 'menu-section-title'
+          });
+
+          _.forEach(shortcodeObj.codes, function (codeObj, shortcode) {
+            shortcodeMenuItems.push({
+              text: codeObj.title,
+              onclick: function onclick() {
+                var code = "[".concat(shortcodeType, ":").concat(shortcode, "]");
+
+                if (codeObj.default) {
+                  code = "[".concat(shortcodeType, ":").concat(shortcode, " default=\"").concat(codeObj.default, "\"]");
+                }
+
+                if (codeObj.text) {
+                  code = "[".concat(shortcodeType, ":").concat(shortcode, " text=\"").concat(codeObj.text, "\"]");
+                }
+
+                if (codeObj.plainText) {
+                  code = codeObj.text;
+                }
+
+                editor.insertContent(code);
+              }
+            });
+          });
+        }); // editor.addButton('shortcodes', {
+        //     type: 'menubutton',
+        //     icon: 'shortcode',
+        //     tooltip: 'Shortcodes',
+        //     menu: shortcodeMenuItems
+        // });
+
+
+        editor.addButton('image', {
+          icon: 'image',
+          onclick: function onclick() {
+            vm.browseImage(editor);
+          }
+        }); // editor change triggers
+
+        editor.on('change keyup NodeChange', function () {
+          vm.$emit('input', editor.getContent());
+        });
+      }
+    });
+  },
+  methods: {
+    browseImage: function browseImage(editor) {
+      var vm = this;
+      var selectedFile = {
+        id: 0,
+        url: '',
+        type: ''
+      };
+
+      if (vm.fileFrame) {
+        vm.fileFrame.open();
+        return;
+      }
+
+      var fileStates = [new wp.media.controller.Library({
+        library: wp.media.query(),
+        multiple: false,
+        title: this.__('Select an image', 'dokan-lite'),
+        priority: 20,
+        filterable: 'uploaded'
+      })];
+      vm.fileFrame = wp.media({
+        title: this.__('Select an image', 'dokan-lite'),
+        library: {
+          type: ''
+        },
+        button: {
+          text: this.__('Select an image', 'dokan-lite')
+        },
+        multiple: false,
+        states: fileStates
+      });
+      vm.fileFrame.on('select', function () {
+        var selection = vm.fileFrame.state().get('selection');
+        selection.map(function (image) {
+          image = image.toJSON();
+
+          if (image.id) {
+            selectedFile.id = image.id;
+          }
+
+          if (image.url) {
+            selectedFile.url = image.url;
+          }
+
+          if (image.type) {
+            selectedFile.type = image.type;
+          }
+
+          vm.insertImage(editor, selectedFile);
+          return null;
+        });
+      });
+      vm.fileFrame.on('ready', function () {
+        vm.fileFrame.uploader.options.uploader.params = {
+          type: 'dokan-image-uploader'
+        };
+      });
+      vm.fileFrame.open();
+    },
+    insertImage: function insertImage(editor, image) {
+      if (!image.id || image.type !== 'image') {
+        this.alert({
+          type: 'error',
+          text: this.__('Please select an image,', 'dokan-lite')
+        });
+        return;
+      }
+
+      var img = "<img src=\"".concat(image.url, "\" alt=\"").concat(image.alt, "\" title=\"").concat(image.title, "\" style=\"max-width: 100%; height: auto;\">");
+      editor.insertContent(img);
+    }
+  }
 });
 
 /***/ }),
@@ -3879,30 +3650,13 @@ if (false) {
 //
 //
 //
-//
-//
-//
-//
-
 /* harmony default export */ __webpack_exports__["a"] = ({
-    props: {
-        value: {
-            type: Number,
-            default: 0
-        },
-        hidden: {
-            type: Boolean,
-            default: false
-        },
-        bgColor: {
-            type: String,
-            default: 'defaultBg'
-        },
-        fgColor: {
-            type: String,
-            default: 'defaultFg'
-        }
+  props: ['amount'],
+  methods: {
+    formattedPrice: function formattedPrice(value) {
+      return accounting.formatMoney(value, dokan.currency);
     }
+  }
 });
 
 /***/ }),
@@ -3918,42 +3672,60 @@ if (false) {
 //
 //
 //
-
-
-
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["a"] = ({
-
-    name: 'Search',
-    props: {
-        title: {
-            type: String,
-            default: 'Search'
-        }
+  name: 'LazyInput',
+  props: {
+    value: {
+      type: String,
+      required: true,
+      default: ''
     },
-
-    data() {
-        return {
-            delay: 500,
-            searchItems: ''
-        };
+    type: {
+      type: String,
+      required: false,
+      default: 'text'
     },
-
-    watch: {
-        searchItems() {
-            this.makeDelay();
-        }
-    },
-
-    created() {
-        this.makeDelay = Object(__WEBPACK_IMPORTED_MODULE_0_debounce__["debounce"])(this.doSearch, this.delay);
-    },
-
-    methods: {
-        doSearch() {
-            this.$emit('searched', this.searchItems);
-        }
+    placeholder: {
+      type: String,
+      required: false,
+      default: ''
     }
+  },
+  data: function data() {
+    return {
+      delay: 500,
+      debouncer: null
+    };
+  },
+  methods: {
+    updateValue: function updateValue(value) {
+      var vm = this;
+
+      if (vm.debouncer) {
+        vm.debouncer.clear();
+      }
+
+      vm.debouncer = Object(__WEBPACK_IMPORTED_MODULE_0_debounce__["debounce"])(function () {
+        vm.triggerInput(value);
+      }, vm.delay);
+      vm.debouncer();
+    },
+    focus: function focus() {
+      this.$emit('focus');
+    },
+    blur: function blur() {
+      this.$emit('blur');
+    },
+    triggerInput: function triggerInput(value) {
+      this.$emit('input', value);
+    }
+  }
 });
 
 /***/ }),
@@ -3969,66 +3741,71 @@ if (false) {
 //
 //
 //
-//
-
 /* harmony default export */ __webpack_exports__["a"] = ({
-    props: {
-        value: {
-            type: String,
-            required: true,
-            default: ''
-        },
-
-        format: {
-            type: String,
-            required: false,
-            default: ''
-        },
-
-        placeholder: {
-            type: String,
-            required: false,
-            default: ''
-        },
-
-        changeMonthYear: {
-            type: Boolean,
-            required: false,
-            default: false
-        }
+  props: {
+    value: {
+      type: Number,
+      default: 0
     },
-
-    mounted() {
-        const vm = this;
-
-        jQuery(vm.$el).datepicker({
-            dateFormat: vm.format,
-            changeMonth: vm.changeMonthYear,
-            changeYear: vm.changeMonthYear,
-
-            beforeShow() {
-                jQuery(this).datepicker('widget').addClass('dokan-datepicker');
-            },
-
-            onSelect(date) {
-                vm.updateValue(date);
-            }
-        });
+    hidden: {
+      type: Boolean,
+      default: false
     },
-
-    methods: {
-        updateValue(value) {
-            if (!value) {
-                value = moment().format('YYYY-MM-DD');
-            }
-
-            this.$emit('input', value);
-        }
+    bgColor: {
+      type: String,
+      default: 'defaultBg'
+    },
+    fgColor: {
+      type: String,
+      default: 'defaultFg'
     }
+  }
 });
 
 /***/ }),
-/* 74 */,
+/* 74 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_debounce__);
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+  name: 'Search',
+  props: {
+    title: {
+      type: String,
+      default: 'Search'
+    }
+  },
+  data: function data() {
+    return {
+      delay: 500,
+      searchItems: ''
+    };
+  },
+  watch: {
+    searchItems: function searchItems() {
+      this.makeDelay();
+    }
+  },
+  created: function created() {
+    this.makeDelay = Object(__WEBPACK_IMPORTED_MODULE_0_debounce__["debounce"])(this.doSearch, this.delay);
+  },
+  methods: {
+    doSearch: function doSearch() {
+      this.$emit('searched', this.searchItems);
+    }
+  }
+});
+
+/***/ }),
 /* 75 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -4042,127 +3819,402 @@ if (false) {
 //
 //
 //
-//
-
 /* harmony default export */ __webpack_exports__["a"] = ({
-    name: 'Gmap',
-
-    props: {
-        gmapKey: {
-            type: [String, Function]
-        },
-        location: {
-            type: Object,
-            default() {
-                return {
-                    latitude: 23.709921,
-                    longitude: 90.40714300000002,
-                    address: 'dhaka',
-                    zoom: 10
-                };
-            }
-        }
+  props: {
+    value: {
+      type: String,
+      required: true,
+      default: ''
     },
-
-    data() {
-        return {
-            gmap: '',
-            marker: '',
-            loadMap: this.gmapKey.length > 1
-        };
+    format: {
+      type: String,
+      required: false,
+      default: ''
     },
-
-    mounted() {
-        this.renderMap();
+    placeholder: {
+      type: String,
+      required: false,
+      default: ''
     },
-
-    methods: {
-        setMap() {
-            this.gmap = new google.maps.Map(this.getMapArea(), {
-                center: this.getCenter(),
-                zoom: this.location.zoom,
-                mapTypeId: google.maps.MapTypeId.ROADMAP
-            });
-        },
-
-        setMarker() {
-            this.marker = new google.maps.Marker({
-                position: this.getCenter(),
-                map: this.gmap
-            });
-        },
-
-        GetGeocoder() {
-            return new google.maps.Geocoder();
-        },
-
-        getSearchAddress() {
-            if (this.location.address) {
-                this.$refs['searchAddress'].value = this.location.address;
-            }
-
-            return this.$refs['searchAddress'];
-        },
-
-        setAutoComplete() {
-            let autocomplete = new google.maps.places.Autocomplete(this.getSearchAddress());
-
-            autocomplete.addListener('place_changed', () => {
-                let place = autocomplete.getPlace();
-                let location = place.geometry.location;
-
-                this.updateMap(location.lat(), location.lng(), place.formatted_address);
-            });
-        },
-
-        updateMap(latitude, longitude, formatted_address) {
-            let curpoint = new google.maps.LatLng(latitude, longitude);
-
-            this.$emit('updateGmap', {
-                latitude: curpoint.lat(),
-                longitude: curpoint.lng(),
-                address: formatted_address
-            });
-
-            this.gmap.setCenter(curpoint);
-            this.marker.setPosition(curpoint);
-
-            if (!formatted_address) {
-                this.GetGeocoder.geocode({
-                    location: {
-                        lat: latitude,
-                        lng: longitude
-                    }
-                }, function (results, status) {
-                    if ('OK' === status) {
-                        address.val(results[0].formatted_address);
-                    }
-                });
-            }
-        },
-
-        renderMap() {
-            if (!this.loadMap) {
-                return;
-            }
-
-            this.setMap();
-            this.setMarker();
-            this.setAutoComplete();
-        },
-
-        getCenter() {
-            return new google.maps.LatLng(this.location.latitude, this.location.longitude);
-        },
-
-        getMapArea() {
-            return this.$refs['gmapArea'];
-        }
+    changeMonthYear: {
+      type: Boolean,
+      required: false,
+      default: false
     }
+  },
+  mounted: function mounted() {
+    var vm = this;
+    jQuery(vm.$el).datepicker({
+      dateFormat: vm.format,
+      changeMonth: vm.changeMonthYear,
+      changeYear: vm.changeMonthYear,
+      beforeShow: function beforeShow() {
+        jQuery(this).datepicker('widget').addClass('dokan-datepicker');
+      },
+      onSelect: function onSelect(date) {
+        vm.updateValue(date);
+      }
+    });
+  },
+  methods: {
+    updateValue: function updateValue(value) {
+      if (!value) {
+        value = moment().format('YYYY-MM-DD');
+      }
+
+      this.$emit('input', value);
+    }
+  }
 });
 
 /***/ }),
-/* 76 */
+/* 76 */,
+/* 77 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["a"] = ({
+  name: 'GoogleMaps',
+  props: {
+    apiKey: {
+      type: String,
+      default: null
+    },
+    location: {
+      type: Object,
+      default: function _default() {
+        return {
+          latitude: 23.709921,
+          longitude: 90.40714300000002,
+          address: 'dhaka',
+          zoom: 10
+        };
+      }
+    }
+  },
+  data: function data() {
+    return {
+      dokanGoogleMap: null,
+      marker: null,
+      loadMap: this.apiKey.length > 1
+    };
+  },
+  mounted: function mounted() {
+    if (!(this.apiKey && window.google && this.renderMap())) {
+      this.$emit('hideMap', true);
+    }
+  },
+  beforeDestroy: function beforeDestroy() {
+    if (this.dokanGoogleMap) {
+      this.dokanGoogleMap = null;
+    }
+
+    if (this.marker) {
+      this.marker = null;
+    }
+  },
+  methods: {
+    setMap: function setMap() {
+      this.dokanGoogleMap = new google.maps.Map(this.getMapArea(), {
+        center: this.getCenter(),
+        zoom: this.location.zoom,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      });
+    },
+    setMarker: function setMarker() {
+      this.marker = new google.maps.Marker({
+        position: this.getCenter(),
+        map: this.dokanGoogleMap
+      });
+    },
+    GetGeocoder: function GetGeocoder() {
+      return new google.maps.Geocoder();
+    },
+    getSearchAddress: function getSearchAddress() {
+      if (this.location.address) {
+        this.$refs['searchAddress'].value = this.location.address;
+      }
+
+      return this.$refs['searchAddress'];
+    },
+    setAutoComplete: function setAutoComplete() {
+      var _this = this;
+
+      var autocomplete = new google.maps.places.Autocomplete(this.getSearchAddress());
+      autocomplete.addListener('place_changed', function () {
+        var place = autocomplete.getPlace();
+        var location = place.geometry.location;
+
+        _this.updateMap(location.lat(), location.lng(), place.formatted_address);
+      });
+    },
+    updateMap: function updateMap(latitude, longitude, formatted_address) {
+      var curpoint = new google.maps.LatLng(latitude, longitude);
+      this.$emit('updateMap', {
+        latitude: curpoint.lat(),
+        longitude: curpoint.lng(),
+        address: formatted_address
+      });
+      this.dokanGoogleMap.setCenter(curpoint);
+      this.marker.setPosition(curpoint);
+
+      if (!formatted_address) {
+        this.GetGeocoder.geocode({
+          location: {
+            lat: latitude,
+            lng: longitude
+          }
+        }, function (results, status) {
+          if ('OK' === status) {
+            address.val(results[0].formatted_address);
+          }
+        });
+      }
+    },
+    renderMap: function renderMap() {
+      this.setMap();
+      this.setMarker();
+      this.setAutoComplete();
+      return true;
+    },
+    getCenter: function getCenter() {
+      return new google.maps.LatLng(this.location.latitude, this.location.longitude);
+    },
+    getMapArea: function getMapArea() {
+      return this.$refs['gmapArea'];
+    }
+  }
+});
+
+/***/ }),
+/* 78 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_classCallCheck__ = __webpack_require__(64);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_classCallCheck___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_classCallCheck__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_createClass__ = __webpack_require__(65);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_createClass___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_createClass__);
+
+
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var SearchButtonControl =
+/*#__PURE__*/
+function () {
+  function SearchButtonControl(mapId) {
+    __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_classCallCheck___default()(this, SearchButtonControl);
+
+    this._mapId = mapId;
+  }
+
+  __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_createClass___default()(SearchButtonControl, [{
+    key: "onAdd",
+    value: function onAdd(map) {
+      var _this = this;
+
+      this._map = map;
+      var icon = document.createElement('span');
+      icon.className = 'dashicons dashicons-search';
+      var label = document.createTextNode('Search Map');
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'button';
+      button.appendChild(icon);
+      button.appendChild(label);
+      button.addEventListener('click', function (e) {
+        e.preventDefault();
+        var control = document.getElementById(_this._mapId).getElementsByClassName('mapboxgl-ctrl-top-left')[0];
+        control.className = control.className + ' ' + 'show-geocoder';
+      });
+      var container = document.createElement('div');
+      container.className = 'mapboxgl-ctrl dokan-mapboxgl-ctrl';
+      container.appendChild(button);
+      this._container = container;
+      return this._container;
+    }
+  }, {
+    key: "onRemove",
+    value: function onRemove() {
+      this._container.parentNode.removeChild(this._container);
+
+      this._map = undefined;
+    }
+  }]);
+
+  return SearchButtonControl;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+  name: 'Mapbox',
+  props: {
+    accessToken: {
+      type: String,
+      default: null
+    },
+    location: {
+      type: Object,
+      required: true
+    },
+    width: {
+      type: String,
+      required: false,
+      default: '100%'
+    },
+    height: {
+      type: String,
+      required: false,
+      default: '300px'
+    }
+  },
+  data: function data() {
+    return {
+      dokanMapbox: null,
+      dokanGeocoder: null,
+      dokanMarker: null
+    };
+  },
+  computed: {
+    mapboxId: function mapboxId() {
+      return "dokan-mapbox-".concat(this._uid);
+    },
+    address: function address() {
+      return this.location.address;
+    }
+  },
+  mounted: function mounted() {
+    if (!(this.accessToken && window.mapboxgl && this.initializeMapbox())) {
+      this.$emit('hideMap', true);
+    }
+
+    window.mapboxgl = mapboxgl;
+  },
+  beforeDestroy: function beforeDestroy() {
+    if (this.dokanMapbox) {
+      this.dokanMarker.remove();
+      this.dokanMapbox.remove();
+    }
+  },
+  methods: {
+    initializeMapbox: function initializeMapbox() {
+      var _this2 = this;
+
+      mapboxgl.accessToken = this.accessToken;
+      this.dokanMapbox = new mapboxgl.Map({
+        container: this.mapboxId,
+        style: 'mapbox://styles/mapbox/streets-v10',
+        center: [this.location.longitude, this.location.latitude],
+        zoom: this.location.zoom
+      });
+      this.dokanMapbox.addControl(new mapboxgl.NavigationControl());
+      this.dokanMapbox.addControl(new SearchButtonControl(this.mapboxId), 'top-left');
+      this.dokanMapbox.on('zoomend', function (e) {
+        _this2.setLocation({
+          zoom: e.target.getZoom()
+        });
+      });
+      this.dokanMapbox.on('load', function () {
+        _this2.dokanGeocoder = new MapboxGeocoder({
+          accessToken: mapboxgl.accessToken,
+          mapboxgl: mapboxgl,
+          zoom: _this2.dokanMapbox.getZoom(),
+          placeholder: _this2.__('Search Address', 'dokan-lite'),
+          marker: false,
+          reverseGeocode: true
+        });
+
+        _this2.dokanMapbox.addControl(_this2.dokanGeocoder, 'top-left');
+
+        _this2.dokanGeocoder.setInput(_this2.location.address);
+
+        _this2.dokanGeocoder.on('result', function (_ref) {
+          var result = _ref.result;
+          var lngLat = result.center;
+          var address = result.place_name;
+
+          _this2.dokanMarker.setLngLat(lngLat);
+
+          _this2.dokanMapbox.setCenter([lngLat[0], lngLat[1]]);
+
+          _this2.setLocation({
+            address: result.place_name,
+            latitude: lngLat[1],
+            longitude: lngLat[0],
+            zoom: _this2.dokanMapbox.getZoom()
+          });
+        });
+      });
+      this.dokanMarker = new mapboxgl.Marker({
+        draggable: true
+      }).setLngLat([this.location.longitude, this.location.latitude]).addTo(this.dokanMapbox).on('dragend', this.onMarkerDragEnd);
+      return true;
+    },
+    onMarkerDragEnd: function onMarkerDragEnd() {
+      var _this3 = this;
+
+      var urlOrigin = this.dokanGeocoder.geocoderService.client.origin;
+      var accessToken = this.dokanGeocoder.geocoderService.client.accessToken;
+
+      var _this$dokanMarker$get = this.dokanMarker.getLngLat().wrap(),
+          lng = _this$dokanMarker$get.lng,
+          lat = _this$dokanMarker$get.lat;
+
+      this.dokanMapbox.setCenter([lng, lat]);
+      this.setLocation({
+        latitude: lat,
+        longitude: lng
+      });
+      var url = "".concat(urlOrigin, "/geocoding/v5/mapbox.places/").concat(lng, "%2C").concat(lat, ".json?access_token=").concat(accessToken, "&cachebuster=").concat(+new Date(), "&autocomplete=true");
+      this.dokanGeocoder._inputEl.disabled = true;
+      this.dokanGeocoder._loadingEl.style.display = 'block';
+      jQuery.ajax({
+        url: url,
+        method: 'get'
+      }).done(function (response) {
+        _this3.dokanGeocoder._typeahead.update(response.features);
+      }).fail(function () {//
+      }).always(function () {
+        _this3.dokanGeocoder._inputEl.disabled = false;
+        _this3.dokanGeocoder._loadingEl.style.display = '';
+      });
+    },
+    setLocation: function setLocation(location) {
+      this.$emit('updateMap', location);
+    },
+    onChangeAddress: function onChangeAddress(e) {
+      this.setLocation({
+        address: e.target.value
+      });
+    }
+  }
+});
+
+/***/ }),
+/* 79 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4227,27 +4279,21 @@ if (false) {
 //
 //
 //
-
 /* harmony default export */ __webpack_exports__["a"] = ({
-    name: 'VendorSocialFields',
-
-    props: {
-        vendorInfo: {
-            type: Object
-        }
-    },
-
-    data() {
-        return {
-            getSocialFields: dokan.hooks.applyFilters('getVendorSocialFields', [])
-        };
+  name: 'VendorSocialFields',
+  props: {
+    vendorInfo: {
+      type: Object
     }
+  },
+  data: function data() {
+    return {
+      getSocialFields: dokan.hooks.applyFilters('getVendorSocialFields', [])
+    };
+  }
 });
 
 /***/ }),
-/* 77 */,
-/* 78 */,
-/* 79 */,
 /* 80 */,
 /* 81 */,
 /* 82 */,
@@ -4317,394 +4363,322 @@ if (false) {
 /* 146 */,
 /* 147 */,
 /* 148 */,
-/* 149 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 149 */,
+/* 150 */,
+/* 151 */,
+/* 152 */,
+/* 153 */,
+/* 154 */,
+/* 155 */,
+/* 156 */,
+/* 157 */,
+/* 158 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_router__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_moment__ = __webpack_require__(159);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_moment__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vue_notification__ = __webpack_require__(61);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vue_notification___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_vue_notification__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_vue_wp_list_table__ = __webpack_require__(62);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_vue_multiselect__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_vue_multiselect___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_vue_multiselect__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__utils_Api__ = __webpack_require__(163);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_vue_chartjs__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__Mixin__ = __webpack_require__(164);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_debounce__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_debounce___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9_debounce__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__utils_VersionCompare__ = __webpack_require__(166);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__utils_VersionCompare___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_10__utils_VersionCompare__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_vue_content_loading__ = __webpack_require__(66);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_vue_content_loading___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_11_vue_content_loading__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12_admin_components_Postbox_vue__ = __webpack_require__(167);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13_admin_components_Loading_vue__ = __webpack_require__(170);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14_admin_components_Chart_vue__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15_admin_components_Modal_vue__ = __webpack_require__(173);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16_admin_components_Switches_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17_admin_components_TextEditor_vue__ = __webpack_require__(176);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18_admin_components_Currency_vue__ = __webpack_require__(178);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19_admin_components_LazyInput_vue__ = __webpack_require__(180);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20_admin_components_Progressbar_vue__ = __webpack_require__(182);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21_admin_components_Search_vue__ = __webpack_require__(185);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22_admin_components_Datepicker_vue__ = __webpack_require__(187);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23_vue_sweetalert2__ = __webpack_require__(76);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24_admin_components_ColorPicker_vue__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_25_admin_components_GoogleMaps_vue__ = __webpack_require__(192);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_26_admin_components_Mapbox_vue__ = __webpack_require__(195);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_27_admin_components_UploadImage_vue__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_28_admin_components_PasswordGenerator_vue__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_29_admin_pages_VendorAccountFields_vue__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_30_admin_pages_VendorAddressFields_vue__ = __webpack_require__(32);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_31_admin_pages_VendorSocialFields_vue__ = __webpack_require__(198);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_32_admin_pages_VendorPaymentFields_vue__ = __webpack_require__(34);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_33_vue_multiselect_dist_vue_multiselect_min_css__ = __webpack_require__(200);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_33_vue_multiselect_dist_vue_multiselect_min_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_33_vue_multiselect_dist_vue_multiselect_min_css__);
 
 
-var _vue = __webpack_require__(1);
 
-var _vue2 = _interopRequireDefault(_vue);
 
-var _vueRouter = __webpack_require__(19);
 
-var _vueRouter2 = _interopRequireDefault(_vueRouter);
 
-var _moment = __webpack_require__(150);
 
-var _moment2 = _interopRequireDefault(_moment);
 
-var _vueNotification = __webpack_require__(61);
 
-var _vueNotification2 = _interopRequireDefault(_vueNotification);
 
-var _vueWpListTable = __webpack_require__(62);
 
-var _vueWpListTable2 = _interopRequireDefault(_vueWpListTable);
-
-var _vueMultiselect = __webpack_require__(4);
-
-var _vueMultiselect2 = _interopRequireDefault(_vueMultiselect);
-
-var _Api = __webpack_require__(154);
-
-var _Api2 = _interopRequireDefault(_Api);
-
-var _vueChartjs = __webpack_require__(14);
-
-var _vueChartjs2 = _interopRequireDefault(_vueChartjs);
-
-var _Mixin = __webpack_require__(155);
-
-var _Mixin2 = _interopRequireDefault(_Mixin);
-
-var _debounce = __webpack_require__(2);
-
-var _debounce2 = _interopRequireDefault(_debounce);
-
-var _VersionCompare = __webpack_require__(157);
-
-var _VersionCompare2 = _interopRequireDefault(_VersionCompare);
-
-var _vueContentLoading = __webpack_require__(64);
-
-var _Postbox = __webpack_require__(158);
-
-var _Postbox2 = _interopRequireDefault(_Postbox);
-
-var _Loading = __webpack_require__(161);
-
-var _Loading2 = _interopRequireDefault(_Loading);
-
-var _Chart = __webpack_require__(20);
-
-var _Chart2 = _interopRequireDefault(_Chart);
-
-var _Modal = __webpack_require__(164);
-
-var _Modal2 = _interopRequireDefault(_Modal);
-
-var _Switches = __webpack_require__(3);
-
-var _Switches2 = _interopRequireDefault(_Switches);
-
-var _TextEditor = __webpack_require__(167);
-
-var _TextEditor2 = _interopRequireDefault(_TextEditor);
-
-var _Currency = __webpack_require__(169);
-
-var _Currency2 = _interopRequireDefault(_Currency);
-
-var _LazyInput = __webpack_require__(171);
-
-var _LazyInput2 = _interopRequireDefault(_LazyInput);
-
-var _Progressbar = __webpack_require__(173);
-
-var _Progressbar2 = _interopRequireDefault(_Progressbar);
-
-var _Search = __webpack_require__(176);
-
-var _Search2 = _interopRequireDefault(_Search);
-
-var _Datepicker = __webpack_require__(178);
-
-var _Datepicker2 = _interopRequireDefault(_Datepicker);
-
-var _vueSweetalert = __webpack_require__(74);
-
-var _vueSweetalert2 = _interopRequireDefault(_vueSweetalert);
-
-var _ColorPicker = __webpack_require__(22);
-
-var _ColorPicker2 = _interopRequireDefault(_ColorPicker);
-
-var _Gmap = __webpack_require__(183);
-
-var _Gmap2 = _interopRequireDefault(_Gmap);
-
-var _UploadImage = __webpack_require__(15);
-
-var _UploadImage2 = _interopRequireDefault(_UploadImage);
-
-var _PasswordGenerator = __webpack_require__(16);
-
-var _PasswordGenerator2 = _interopRequireDefault(_PasswordGenerator);
-
-var _VendorAccountFields = __webpack_require__(25);
-
-var _VendorAccountFields2 = _interopRequireDefault(_VendorAccountFields);
-
-var _VendorAddressFields = __webpack_require__(32);
-
-var _VendorAddressFields2 = _interopRequireDefault(_VendorAddressFields);
-
-var _VendorSocialFields = __webpack_require__(186);
-
-var _VendorSocialFields2 = _interopRequireDefault(_VendorSocialFields);
-
-var _VendorPaymentFields = __webpack_require__(34);
-
-var _VendorPaymentFields2 = _interopRequireDefault(_VendorPaymentFields);
-
-__webpack_require__(188);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 window.__ = function (text, domain) {
-    return __(text, domain);
+  return __(text, domain);
 };
 
-// core components
+ // core components
 
 
-_vue2.default.use(_vueNotification2.default);
-_vue2.default.use(_vueSweetalert2.default);
 
-_vue2.default.mixin(_Mixin2.default);
 
-_vue2.default.filter('currency', function (value) {
-    return accounting.formatMoney(value, dokan.currency);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+__WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_3_vue_notification___default.a);
+__WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_23_vue_sweetalert2__["default"]);
+__WEBPACK_IMPORTED_MODULE_0_vue__["default"].mixin(__WEBPACK_IMPORTED_MODULE_8__Mixin__["a" /* default */]);
+__WEBPACK_IMPORTED_MODULE_0_vue__["default"].filter('currency', function (value) {
+  return accounting.formatMoney(value, dokan.currency);
 });
+__WEBPACK_IMPORTED_MODULE_0_vue__["default"].filter('capitalize', function (value) {
+  if (!value) return '';
+  value = value.toString();
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}); // Tooltip directive
 
-_vue2.default.filter('capitalize', function (value) {
-    if (!value) return '';
-    value = value.toString();
-    return value.charAt(0).toUpperCase() + value.slice(1);
-});
-
-// Tooltip directive
-_vue2.default.directive('tooltip', {
-    bind: function bind(el, binding, vnode) {
-        jQuery(el).tooltip('show');
-    },
-    unbind: function unbind(el, binding, vnode) {
-        jQuery(el).tooltip('destroy');
-    }
+__WEBPACK_IMPORTED_MODULE_0_vue__["default"].directive('tooltip', {
+  bind: function bind(el, binding, vnode) {
+    jQuery(el).tooltip('show');
+  },
+  unbind: function unbind(el, binding, vnode) {
+    jQuery(el).tooltip('destroy');
+  }
 });
 
 window.dokan_get_lib = function (lib) {
-    return window.dokan.libs[lib];
+  return window.dokan.libs[lib];
 };
 
 window.dokan_add_route = function (component) {
-    window.dokan.routeComponents[component.name] = component;
-};
+  window.dokan.routeComponents[component.name] = component;
+}; // setup global Dokan libraries
 
-// setup global Dokan libraries
-window.dokan.api = new _Api2.default();
-window.dokan.libs['Vue'] = _vue2.default;
-window.dokan.libs['Router'] = _vueRouter2.default;
-window.dokan.libs['moment'] = _moment2.default;
-window.dokan.libs['ListTable'] = _vueWpListTable2.default;
-window.dokan.libs['Currency'] = _Currency2.default;
-window.dokan.libs['Postbox'] = _Postbox2.default;
-window.dokan.libs['Loading'] = _Loading2.default;
-window.dokan.libs['ChartJS'] = _vueChartjs2.default;
-window.dokan.libs['Chart'] = _Chart2.default;
-window.dokan.libs['Modal'] = _Modal2.default;
-window.dokan.libs['Switches'] = _Switches2.default;
-window.dokan.libs['TextEditor'] = _TextEditor2.default;
-window.dokan.libs['LazyInput'] = _LazyInput2.default;
-window.dokan.libs['Progressbar'] = _Progressbar2.default;
-window.dokan.libs['Search'] = _Search2.default;
-window.dokan.libs['Datepicker'] = _Datepicker2.default;
-window.dokan.libs['Multiselect'] = _vueMultiselect2.default;
-window.dokan.libs['ColorPicker'] = _ColorPicker2.default;
-window.dokan.libs['debounce'] = _debounce2.default;
-window.dokan.libs['VersionCompare'] = _VersionCompare2.default;
-window.dokan.libs['Gmap'] = _Gmap2.default;
-window.dokan.libs['UploadImage'] = _UploadImage2.default;
-window.dokan.libs['PasswordGenerator'] = _PasswordGenerator2.default;
-window.dokan.libs['VendorAccountFields'] = _VendorAccountFields2.default;
-window.dokan.libs['VendorAddressFields'] = _VendorAddressFields2.default;
-window.dokan.libs['VendorSocialFields'] = _VendorSocialFields2.default;
-window.dokan.libs['VendorPaymentFields'] = _VendorPaymentFields2.default;
 
+window.dokan.api = new __WEBPACK_IMPORTED_MODULE_6__utils_Api__["a" /* default */]();
+window.dokan.libs['Vue'] = __WEBPACK_IMPORTED_MODULE_0_vue__["default"];
+window.dokan.libs['Router'] = __WEBPACK_IMPORTED_MODULE_1_vue_router__["default"];
+window.dokan.libs['moment'] = __WEBPACK_IMPORTED_MODULE_2_moment___default.a;
+window.dokan.libs['ListTable'] = __WEBPACK_IMPORTED_MODULE_4_vue_wp_list_table__["default"];
+window.dokan.libs['Currency'] = __WEBPACK_IMPORTED_MODULE_18_admin_components_Currency_vue__["a" /* default */];
+window.dokan.libs['Postbox'] = __WEBPACK_IMPORTED_MODULE_12_admin_components_Postbox_vue__["a" /* default */];
+window.dokan.libs['Loading'] = __WEBPACK_IMPORTED_MODULE_13_admin_components_Loading_vue__["a" /* default */];
+window.dokan.libs['ChartJS'] = __WEBPACK_IMPORTED_MODULE_7_vue_chartjs__["default"];
+window.dokan.libs['Chart'] = __WEBPACK_IMPORTED_MODULE_14_admin_components_Chart_vue__["a" /* default */];
+window.dokan.libs['Modal'] = __WEBPACK_IMPORTED_MODULE_15_admin_components_Modal_vue__["a" /* default */];
+window.dokan.libs['Switches'] = __WEBPACK_IMPORTED_MODULE_16_admin_components_Switches_vue__["a" /* default */];
+window.dokan.libs['TextEditor'] = __WEBPACK_IMPORTED_MODULE_17_admin_components_TextEditor_vue__["a" /* default */];
+window.dokan.libs['LazyInput'] = __WEBPACK_IMPORTED_MODULE_19_admin_components_LazyInput_vue__["a" /* default */];
+window.dokan.libs['Progressbar'] = __WEBPACK_IMPORTED_MODULE_20_admin_components_Progressbar_vue__["a" /* default */];
+window.dokan.libs['Search'] = __WEBPACK_IMPORTED_MODULE_21_admin_components_Search_vue__["a" /* default */];
+window.dokan.libs['Datepicker'] = __WEBPACK_IMPORTED_MODULE_22_admin_components_Datepicker_vue__["a" /* default */];
+window.dokan.libs['Multiselect'] = __WEBPACK_IMPORTED_MODULE_5_vue_multiselect___default.a;
+window.dokan.libs['ColorPicker'] = __WEBPACK_IMPORTED_MODULE_24_admin_components_ColorPicker_vue__["a" /* default */];
+window.dokan.libs['debounce'] = __WEBPACK_IMPORTED_MODULE_9_debounce___default.a;
+window.dokan.libs['VersionCompare'] = __WEBPACK_IMPORTED_MODULE_10__utils_VersionCompare___default.a;
+window.dokan.libs['GoogleMaps'] = __WEBPACK_IMPORTED_MODULE_25_admin_components_GoogleMaps_vue__["a" /* default */];
+window.dokan.libs['Mapbox'] = __WEBPACK_IMPORTED_MODULE_26_admin_components_Mapbox_vue__["a" /* default */];
+window.dokan.libs['UploadImage'] = __WEBPACK_IMPORTED_MODULE_27_admin_components_UploadImage_vue__["a" /* default */];
+window.dokan.libs['PasswordGenerator'] = __WEBPACK_IMPORTED_MODULE_28_admin_components_PasswordGenerator_vue__["a" /* default */];
+window.dokan.libs['VendorAccountFields'] = __WEBPACK_IMPORTED_MODULE_29_admin_pages_VendorAccountFields_vue__["a" /* default */];
+window.dokan.libs['VendorAddressFields'] = __WEBPACK_IMPORTED_MODULE_30_admin_pages_VendorAddressFields_vue__["a" /* default */];
+window.dokan.libs['VendorSocialFields'] = __WEBPACK_IMPORTED_MODULE_31_admin_pages_VendorSocialFields_vue__["a" /* default */];
+window.dokan.libs['VendorPaymentFields'] = __WEBPACK_IMPORTED_MODULE_32_admin_pages_VendorPaymentFields_vue__["a" /* default */];
 window.dokan.libs['ContentLoading'] = {
-    VclCode: _vueContentLoading.VclCode,
-    VclList: _vueContentLoading.VclList,
-    VclTwitch: _vueContentLoading.VclTwitch,
-    VclFacebook: _vueContentLoading.VclFacebook,
-    VclInstagram: _vueContentLoading.VclInstagram,
-    VclBulletList: _vueContentLoading.VclBulletList,
-    VueContentLoading: _vueContentLoading.VueContentLoading
-};
+  VclCode: __WEBPACK_IMPORTED_MODULE_11_vue_content_loading__["VclCode"],
+  VclList: __WEBPACK_IMPORTED_MODULE_11_vue_content_loading__["VclList"],
+  VclTwitch: __WEBPACK_IMPORTED_MODULE_11_vue_content_loading__["VclTwitch"],
+  VclFacebook: __WEBPACK_IMPORTED_MODULE_11_vue_content_loading__["VclFacebook"],
+  VclInstagram: __WEBPACK_IMPORTED_MODULE_11_vue_content_loading__["VclInstagram"],
+  VclBulletList: __WEBPACK_IMPORTED_MODULE_11_vue_content_loading__["VclBulletList"],
+  VueContentLoading: __WEBPACK_IMPORTED_MODULE_11_vue_content_loading__["VueContentLoading"]
+}; // wp npm packages with backward compatibility
 
-// wp npm packages with backward compatibility
 dokan.hooks = wp && wp.hooks ? wp.hooks : dokan.wpPackages.hooks;
 
 if (dokan.hooks) {
-    dokan.addFilterComponent = function (hookName, namespace, component) {
-        var priority = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 10;
-
-        dokan.hooks.addFilter(hookName, namespace, function (components) {
-            components.push(component);
-            return components;
-        }, priority);
-    };
+  dokan.addFilterComponent = function (hookName, namespace, component) {
+    var priority = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 10;
+    dokan.hooks.addFilter(hookName, namespace, function (components) {
+      components.push(component);
+      return components;
+    }, priority);
+  };
 }
 
 /***/ }),
-/* 150 */
+/* 159 */
 /***/ (function(module, exports) {
 
 module.exports = moment;
 
 /***/ }),
-/* 151 */,
-/* 152 */,
-/* 153 */,
-/* 154 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 160 */,
+/* 161 */,
+/* 162 */,
+/* 163 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_classCallCheck__ = __webpack_require__(64);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_classCallCheck___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_classCallCheck__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_createClass__ = __webpack_require__(65);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_createClass___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_createClass__);
 
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var Dokan_API =
+/*#__PURE__*/
+function () {
+  function Dokan_API() {
+    __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_classCallCheck___default()(this, Dokan_API);
+  }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Dokan_API = function () {
-    function Dokan_API() {
-        _classCallCheck(this, Dokan_API);
+  __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_createClass___default()(Dokan_API, [{
+    key: "endpoint",
+    value: function endpoint() {
+      return window.dokan.rest.root + window.dokan.rest.version;
     }
+  }, {
+    key: "headers",
+    value: function headers() {
+      return {};
+    }
+  }, {
+    key: "get",
+    value: function get(path) {
+      var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      return this.ajax(path, 'GET', this.headers(), data);
+    }
+  }, {
+    key: "post",
+    value: function post(path) {
+      var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      return this.ajax(path, 'POST', this.headers(), data);
+    }
+  }, {
+    key: "put",
+    value: function put(path) {
+      var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      return this.ajax(path, 'PUT', this.headers(), data);
+    }
+  }, {
+    key: "delete",
+    value: function _delete(path) {
+      var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      return this.ajax(path, 'DELETE', this.headers(), data);
+    } // jQuery ajax wrapper
 
-    _createClass(Dokan_API, [{
-        key: 'endpoint',
-        value: function endpoint() {
-            return window.dokan.rest.root + window.dokan.rest.version;
-        }
-    }, {
-        key: 'headers',
-        value: function headers() {
-            return {};
-        }
-    }, {
-        key: 'get',
-        value: function get(path) {
-            var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  }, {
+    key: "ajax",
+    value: function ajax(path, method, headers, data) {
+      var override = null;
 
-            return this.ajax(path, 'GET', this.headers(), data);
-        }
-    }, {
-        key: 'post',
-        value: function post(path) {
-            var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      if ('PUT' === method || 'DELETE' === method) {
+        override = method;
+        method = 'POST';
+      }
 
-            return this.ajax(path, 'POST', this.headers(), data);
-        }
-    }, {
-        key: 'put',
-        value: function put(path) {
-            var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      return jQuery.ajax({
+        url: this.endpoint() + path,
+        beforeSend: function beforeSend(xhr) {
+          xhr.setRequestHeader('X-WP-Nonce', window.dokan.rest.nonce);
 
-            return this.ajax(path, 'PUT', this.headers(), data);
-        }
-    }, {
-        key: 'delete',
-        value: function _delete(path) {
-            var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+          if (override) {
+            xhr.setRequestHeader('X-HTTP-Method-Override', override);
+          }
+        },
+        type: method,
+        data: data
+      });
+    }
+  }]);
 
-            return this.ajax(path, 'DELETE', this.headers(), data);
-        }
-
-        // jQuery ajax wrapper
-
-    }, {
-        key: 'ajax',
-        value: function ajax(path, method, headers, data) {
-            var override = null;
-
-            if ('PUT' === method || 'DELETE' === method) {
-                override = method;
-                method = 'POST';
-            }
-
-            return jQuery.ajax({
-                url: this.endpoint() + path,
-                beforeSend: function beforeSend(xhr) {
-                    xhr.setRequestHeader('X-WP-Nonce', window.dokan.rest.nonce);
-
-                    if (override) {
-                        xhr.setRequestHeader('X-HTTP-Method-Override', override);
-                    }
-                },
-                type: method,
-                data: data
-            });
-        }
-    }]);
-
-    return Dokan_API;
+  return Dokan_API;
 }();
 
-exports.default = Dokan_API;
+/* harmony default export */ __webpack_exports__["a"] = (Dokan_API);
 
 /***/ }),
-/* 155 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 164 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_i18n__ = __webpack_require__(165);
 
+/* harmony default export */ __webpack_exports__["a"] = ({
+  methods: {
+    setLocaleData: function setLocaleData(data) {
+      return Object(__WEBPACK_IMPORTED_MODULE_0__utils_i18n__["c" /* setLocaleData */])(data);
+    },
+    __: function __(text, domain) {
+      return Object(__WEBPACK_IMPORTED_MODULE_0__utils_i18n__["a" /* __ */])(text, domain);
+    },
+    _nx: function _nx(single, plural, number, context, domain) {
+      return Object(__WEBPACK_IMPORTED_MODULE_0__utils_i18n__["b" /* _nx */])(single, plural, number, context, domain);
+    },
+    __n: function __n(single, plural, number, domain) {
+      return _n(single, plural, number, domain);
+    },
+    sprintf: function sprintf(fmt) {
+      for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+        args[_key - 1] = arguments[_key];
+      }
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _i18n = __webpack_require__(156);
-
-exports.default = {
-    methods: {
-        setLocaleData: function setLocaleData(data) {
-            return (0, _i18n.setLocaleData)(data);
-        },
-        __: function __(text, domain) {
-            return (0, _i18n.__)(text, domain);
-        },
-        _nx: function _nx(single, plural, number, context, domain) {
-            return (0, _i18n._nx)(single, plural, number, context, domain);
-        },
-        __n: function __n(single, plural, number, domain) {
-            return _n(single, plural, number, domain);
-        },
-        sprintf: function sprintf(fmt) {
-            for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-                args[_key - 1] = arguments[_key];
-            }
-
-            return _i18n.sprintf.apply(undefined, [fmt].concat(args));
-        }
+      return __WEBPACK_IMPORTED_MODULE_0__utils_i18n__["d" /* sprintf */].apply(void 0, [fmt].concat(args));
     }
-};
+  }
+});
 
 /***/ }),
-/* 156 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 165 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.setLocaleData = setLocaleData;
-exports.getI18n = getI18n;
-exports.__ = __;
-exports._x = _x;
-exports._n = _n;
-exports._nx = _nx;
+/* harmony export (immutable) */ __webpack_exports__["c"] = setLocaleData;
+/* unused harmony export getI18n */
+/* harmony export (immutable) */ __webpack_exports__["a"] = __;
+/* unused harmony export _x */
+/* unused harmony export _n */
+/* harmony export (immutable) */ __webpack_exports__["b"] = _nx;
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return sprintf; });
 /**
  * External dependencies
  */
 var i18n = {};
-
 /**
  * Creates a new Jed instance with specified locale data configuration.
  *
@@ -4712,27 +4686,29 @@ var i18n = {};
  *
  * @param {Object} data Locale data configuration.
  */
+
 function setLocaleData(data) {
   var jed = new Jed(data);
   i18n[jed._textdomain] = jed;
 }
-
 /**
  * Returns the current Jed instance, initializing with a default configuration
  * if not already assigned.
  *
  * @return {Jed} Jed instance.
  */
+
 function getI18n() {
   var domain = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
 
   if (!i18n[domain]) {
-    setLocaleData({ '': {} });
+    setLocaleData({
+      '': {}
+    });
   }
 
   return i18n[domain];
 }
-
 /**
  * Retrieve the translation of text.
  *
@@ -4743,10 +4719,10 @@ function getI18n() {
  *
  * @return {string} Translated text.
  */
+
 function __(text, domain) {
   return getI18n(domain) ? getI18n(domain).dgettext(domain, text) : text;
 }
-
 /**
  * Retrieve translated string with gettext context.
  *
@@ -4758,10 +4734,10 @@ function __(text, domain) {
  *
  * @return {string} Translated context string without pipe.
  */
+
 function _x(text, context, domain) {
   return getI18n(domain).dpgettext(domain, context, text);
 }
-
 /**
  * Translates and retrieves the singular or plural form based on the supplied
  * number.
@@ -4776,10 +4752,10 @@ function _x(text, context, domain) {
  *
  * @return {string} The translated singular or plural form.
  */
+
 function _n(single, plural, number, domain) {
   return getI18n(domain).dngettext(domain, single, plural, number);
 }
-
 /**
  * Translates and retrieves the singular or plural form based on the supplied
  * number, with gettext context.
@@ -4795,10 +4771,10 @@ function _n(single, plural, number, domain) {
  *
  * @return {string} The translated singular or plural form.
  */
+
 function _nx(single, plural, number, context, domain) {
   return getI18n(domain).dnpgettext(domain, context, single, plural, number);
 }
-
 /**
  * Returns a formatted string.
  *
@@ -4806,14 +4782,12 @@ function _nx(single, plural, number, context, domain) {
  *
  * @type {string}
  */
-var sprintf = exports.sprintf = Jed.sprintf;
+
+var sprintf = Jed.sprintf;
 
 /***/ }),
-/* 157 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
+/* 166 */
+/***/ (function(module, exports) {
 
 module.exports = function versionCompare(v1, v2, operator) {
   // eslint-disable-line camelcase
@@ -4832,19 +4806,17 @@ module.exports = function versionCompare(v1, v2, operator) {
   //        returns 3: -1
   //        example 4: versionCompare('4.1.0.52','4.01.0.51')
   //        returns 4: 1
-
   // Important: compare must be initialized at 0.
   var i;
   var x;
-  var compare = 0;
-
-  // vm maps textual PHP versions to negatives so they're less than 0.
+  var compare = 0; // vm maps textual PHP versions to negatives so they're less than 0.
   // PHP currently defines these as CASE-SENSITIVE. It is important to
   // leave these as negatives so that they can come before numerical versions
   // and as if no letters were there to begin with.
   // (1alpha is < 1 and < 1.1 but > 1dev1)
   // If a non-numerical value can't be mapped to this table, it receives
   // -7 as its value.
+
   var vm = {
     'dev': -6,
     'alpha': -5,
@@ -4856,25 +4828,26 @@ module.exports = function versionCompare(v1, v2, operator) {
     '#': -2,
     'p': 1,
     'pl': 1
+  }; // This function will be called to prepare each version argument.
+  // It replaces every _, -, and + with a dot.
+  // It surrounds any nonsequence of numbers/dots with dots.
+  // It replaces sequences of dots with a single dot.
+  //    version_compare('4..0', '4.0') === 0
+  // Important: A string of 0 length needs to be converted into a value
+  // even less than an unexisting value in vm (-7), hence [-8].
+  // It's also important to not strip spaces because of this.
+  //   version_compare('', ' ') === 1
 
-    // This function will be called to prepare each version argument.
-    // It replaces every _, -, and + with a dot.
-    // It surrounds any nonsequence of numbers/dots with dots.
-    // It replaces sequences of dots with a single dot.
-    //    version_compare('4..0', '4.0') === 0
-    // Important: A string of 0 length needs to be converted into a value
-    // even less than an unexisting value in vm (-7), hence [-8].
-    // It's also important to not strip spaces because of this.
-    //   version_compare('', ' ') === 1
-  };var _prepVersion = function _prepVersion(v) {
+  var _prepVersion = function _prepVersion(v) {
     v = ('' + v).replace(/[_\-+]/g, '.');
     v = v.replace(/([^.\d]+)/g, '.$1.').replace(/\.{2,}/g, '.');
     return !v.length ? [-8] : v.split('.');
-  };
-  // This converts a version component to a number.
+  }; // This converts a version component to a number.
   // Empty component becomes 0.
   // Non-numerical component becomes a negative number.
   // Numerical component becomes itself as an integer.
+
+
   var _numVersion = function _numVersion(v) {
     return !v ? 0 : isNaN(v) ? vm[v] || -7 : parseInt(v, 10);
   };
@@ -4882,12 +4855,15 @@ module.exports = function versionCompare(v1, v2, operator) {
   v1 = _prepVersion(v1);
   v2 = _prepVersion(v2);
   x = Math.max(v1.length, v2.length);
+
   for (i = 0; i < x; i++) {
     if (v1[i] === v2[i]) {
       continue;
     }
+
     v1[i] = _numVersion(v1[i]);
     v2[i] = _numVersion(v2[i]);
+
     if (v1[i] < v2[i]) {
       compare = -1;
       break;
@@ -4896,53 +4872,59 @@ module.exports = function versionCompare(v1, v2, operator) {
       break;
     }
   }
+
   if (!operator) {
     return compare;
-  }
-
-  // Important: operator is CASE-SENSITIVE.
+  } // Important: operator is CASE-SENSITIVE.
   // "No operator" seems to be treated as "<."
   // Any other values seem to make the function return null.
+
+
   switch (operator) {
     case '>':
     case 'gt':
       return compare > 0;
+
     case '>=':
     case 'ge':
       return compare >= 0;
+
     case '<=':
     case 'le':
       return compare <= 0;
+
     case '===':
     case '=':
     case 'eq':
       return compare === 0;
+
     case '<>':
     case '!==':
     case 'ne':
       return compare !== 0;
+
     case '':
     case '<':
     case 'lt':
       return compare < 0;
+
     default:
       return null;
   }
 };
 
 /***/ }),
-/* 158 */
+/* 167 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Postbox_vue__ = __webpack_require__(65);
-/* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_36a997ab_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Postbox_vue__ = __webpack_require__(160);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Postbox_vue__ = __webpack_require__(67);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_36a997ab_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Postbox_vue__ = __webpack_require__(169);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(159)
+  __webpack_require__(168)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -4984,17 +4966,17 @@ if (false) {(function () {
   })
 })()}
 
-/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
 
 /***/ }),
-/* 159 */
+/* 168 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 160 */
+/* 169 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5054,18 +5036,17 @@ if (false) {
 }
 
 /***/ }),
-/* 161 */
+/* 170 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Loading_vue__ = __webpack_require__(66);
-/* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_67db673c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Loading_vue__ = __webpack_require__(163);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Loading_vue__ = __webpack_require__(68);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_67db673c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Loading_vue__ = __webpack_require__(172);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(162)
+  __webpack_require__(171)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -5107,17 +5088,17 @@ if (false) {(function () {
   })
 })()}
 
-/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
 
 /***/ }),
-/* 162 */
+/* 171 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 163 */
+/* 172 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5146,18 +5127,17 @@ if (false) {
 }
 
 /***/ }),
-/* 164 */
+/* 173 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Modal_vue__ = __webpack_require__(67);
-/* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4bd79a2d_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Modal_vue__ = __webpack_require__(166);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Modal_vue__ = __webpack_require__(69);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4bd79a2d_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Modal_vue__ = __webpack_require__(175);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(165)
+  __webpack_require__(174)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -5199,17 +5179,17 @@ if (false) {(function () {
   })
 })()}
 
-/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
 
 /***/ }),
-/* 165 */
+/* 174 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 166 */
+/* 175 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5287,14 +5267,13 @@ if (false) {
 }
 
 /***/ }),
-/* 167 */
+/* 176 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_TextEditor_vue__ = __webpack_require__(68);
-/* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_70730fac_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TextEditor_vue__ = __webpack_require__(168);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_TextEditor_vue__ = __webpack_require__(70);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_70730fac_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TextEditor_vue__ = __webpack_require__(177);
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -5336,11 +5315,11 @@ if (false) {(function () {
   })
 })()}
 
-/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
 
 /***/ }),
-/* 168 */
+/* 177 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5365,14 +5344,13 @@ if (false) {
 }
 
 /***/ }),
-/* 169 */
+/* 178 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Currency_vue__ = __webpack_require__(69);
-/* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_7df58dc1_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Currency_vue__ = __webpack_require__(170);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Currency_vue__ = __webpack_require__(71);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_7df58dc1_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Currency_vue__ = __webpack_require__(179);
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -5414,11 +5392,11 @@ if (false) {(function () {
   })
 })()}
 
-/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
 
 /***/ }),
-/* 170 */
+/* 179 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5442,14 +5420,13 @@ if (false) {
 }
 
 /***/ }),
-/* 171 */
+/* 180 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_LazyInput_vue__ = __webpack_require__(70);
-/* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_588d4894_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_LazyInput_vue__ = __webpack_require__(172);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_LazyInput_vue__ = __webpack_require__(72);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_588d4894_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_LazyInput_vue__ = __webpack_require__(181);
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -5491,11 +5468,11 @@ if (false) {(function () {
   })
 })()}
 
-/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
 
 /***/ }),
-/* 172 */
+/* 181 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5527,18 +5504,17 @@ if (false) {
 }
 
 /***/ }),
-/* 173 */
+/* 182 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Progressbar_vue__ = __webpack_require__(71);
-/* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_356fabc6_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Progressbar_vue__ = __webpack_require__(175);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Progressbar_vue__ = __webpack_require__(73);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_356fabc6_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Progressbar_vue__ = __webpack_require__(184);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(174)
+  __webpack_require__(183)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -5580,17 +5556,17 @@ if (false) {(function () {
   })
 })()}
 
-/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
 
 /***/ }),
-/* 174 */
+/* 183 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 175 */
+/* 184 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5623,14 +5599,13 @@ if (false) {
 }
 
 /***/ }),
-/* 176 */
+/* 185 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Search_vue__ = __webpack_require__(72);
-/* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_5d8365d8_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Search_vue__ = __webpack_require__(177);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Search_vue__ = __webpack_require__(74);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_5d8365d8_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Search_vue__ = __webpack_require__(186);
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -5672,11 +5647,11 @@ if (false) {(function () {
   })
 })()}
 
-/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
 
 /***/ }),
-/* 177 */
+/* 186 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5724,14 +5699,13 @@ if (false) {
 }
 
 /***/ }),
-/* 178 */
+/* 187 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Datepicker_vue__ = __webpack_require__(73);
-/* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_ae257028_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Datepicker_vue__ = __webpack_require__(179);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Datepicker_vue__ = __webpack_require__(75);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_ae257028_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Datepicker_vue__ = __webpack_require__(188);
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -5773,11 +5747,11 @@ if (false) {(function () {
   })
 })()}
 
-/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
 
 /***/ }),
-/* 179 */
+/* 188 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5807,21 +5781,20 @@ if (false) {
 }
 
 /***/ }),
-/* 180 */,
-/* 181 */,
-/* 182 */,
-/* 183 */
+/* 189 */,
+/* 190 */,
+/* 191 */,
+/* 192 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Gmap_vue__ = __webpack_require__(75);
-/* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_03f03f45_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Gmap_vue__ = __webpack_require__(185);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_GoogleMaps_vue__ = __webpack_require__(77);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4f45e4a0_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_GoogleMaps_vue__ = __webpack_require__(194);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(184)
+  __webpack_require__(193)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -5834,18 +5807,18 @@ var __vue_template_functional__ = false
 /* styles */
 var __vue_styles__ = injectStyle
 /* scopeId */
-var __vue_scopeId__ = "data-v-03f03f45"
+var __vue_scopeId__ = "data-v-4f45e4a0"
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
-  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Gmap_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_03f03f45_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Gmap_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_GoogleMaps_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4f45e4a0_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_GoogleMaps_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "src/admin/components/Gmap.vue"
+Component.options.__file = "src/admin/components/GoogleMaps.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -5854,26 +5827,26 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-03f03f45", Component.options)
+    hotAPI.createRecord("data-v-4f45e4a0", Component.options)
   } else {
-    hotAPI.reload("data-v-03f03f45", Component.options)
+    hotAPI.reload("data-v-4f45e4a0", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
   })
 })()}
 
-/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
 
 /***/ }),
-/* 184 */
+/* 193 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 185 */
+/* 194 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5881,7 +5854,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm.loadMap
+  return _vm.apiKey
     ? _c("div", { staticClass: "gmap-wrap regular-text" }, [
         _c("input", {
           ref: "searchAddress",
@@ -5909,19 +5882,135 @@ var esExports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-03f03f45", esExports)
+    require("vue-hot-reload-api")      .rerender("data-v-4f45e4a0", esExports)
   }
 }
 
 /***/ }),
-/* 186 */
+/* 195 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorSocialFields_vue__ = __webpack_require__(76);
-/* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_21406e92_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorSocialFields_vue__ = __webpack_require__(187);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Mapbox_vue__ = __webpack_require__(78);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2fe28f9f_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Mapbox_vue__ = __webpack_require__(197);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(196)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Mapbox_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2fe28f9f_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Mapbox_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src/admin/components/Mapbox.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-2fe28f9f", Component.options)
+  } else {
+    hotAPI.reload("data-v-2fe28f9f", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
+
+
+/***/ }),
+/* 196 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 197 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return !_vm.accessToken
+    ? _c("p", [
+        _vm._v(
+          "\n    " +
+            _vm._s(
+              _vm.__(
+                "Please enter Mapbox access token in `Appearance > Mapbox Access Token` settings.",
+                "dokan-lite"
+              )
+            ) +
+            "\n"
+        )
+      ])
+    : _c("div", { staticClass: "mapbox-wrapper" }, [
+        _c("div", { staticClass: "address-input" }, [
+          _c("label", [
+            _vm._v(
+              "\n            " +
+                _vm._s(_vm.__("Address", "dokan-lite")) +
+                "\n            "
+            ),
+            _c("input", {
+              attrs: { type: "text" },
+              domProps: { value: _vm.address },
+              on: { input: _vm.onChangeAddress }
+            })
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", {
+          style: { width: _vm.width, height: _vm.height },
+          attrs: { id: _vm.mapboxId }
+        })
+      ])
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-2fe28f9f", esExports)
+  }
+}
+
+/***/ }),
+/* 198 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorSocialFields_vue__ = __webpack_require__(79);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_21406e92_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorSocialFields_vue__ = __webpack_require__(199);
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -5963,11 +6052,11 @@ if (false) {(function () {
   })
 })()}
 
-/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
 
 /***/ }),
-/* 187 */
+/* 199 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6280,4 +6369,4 @@ if (false) {
 }
 
 /***/ })
-],[149]);
+],[158]);
