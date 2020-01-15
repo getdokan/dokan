@@ -91,7 +91,7 @@ class Dokan_Theme_Support_Flatsome {
     /**
      * Reset store listing style
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 2.9.30
      *
      * @return void
      */

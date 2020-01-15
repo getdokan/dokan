@@ -6,7 +6,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Store Lists Class
  *
- * @since DOKAN_LITE_SINCE
+ * @since 2.9.30
  */
 class Dokan_Store_Lists_Filter {
     use Singleton;
@@ -28,7 +28,7 @@ class Dokan_Store_Lists_Filter {
     /**
      * Boot method
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.30
      *
      * @return void
      */
@@ -39,7 +39,7 @@ class Dokan_Store_Lists_Filter {
     /**
      * Init hooks
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.30
      *
      * @return void
      */
@@ -54,7 +54,7 @@ class Dokan_Store_Lists_Filter {
     /**
      * Maybe disable the store lists filter form
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.30
      *
      * @return void
      */
@@ -69,7 +69,7 @@ class Dokan_Store_Lists_Filter {
     /**
      * Filter area
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.30
      *
      * @param  WP_Users $stores
      *
@@ -86,7 +86,7 @@ class Dokan_Store_Lists_Filter {
     /**
      * Get sort by options
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.30
      *
      * @return array
      */
@@ -100,7 +100,7 @@ class Dokan_Store_Lists_Filter {
     /**
      * Filter pre user query
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.30
      *
      * @param  array $args
      * @param  array $request
@@ -121,7 +121,7 @@ class Dokan_Store_Lists_Filter {
     /**
      * Filter user query
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.30
      *
      * @param  WP_User_Query
      *
@@ -140,7 +140,7 @@ class Dokan_Store_Lists_Filter {
     /**
      * Filter query form
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.30
      *
      * @return void
      */
@@ -161,7 +161,7 @@ class Dokan_Store_Lists_Filter {
     /**
      * Filter query orderby
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  2.9.30
      *
      * @return void
      */

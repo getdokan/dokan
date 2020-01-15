@@ -1,3 +1,15 @@
+= v2.9.31 (January 14, 2020) =
+
+ - **Fix:** Add option to set dokan store listing page for rendering all stores
+
+= v2.9.30 (January 10, 2020) =
+
+ - **Feat:** Grid and List view for store listing page #712
+ - **Feat:** Store sorting options in store listing page #712
+ - **Feat:** Add Mapbox as Google map alternative
+ - **Feat:** Add Enfold theme support
+ - **Improvement:** dokan_get_vendor_by_product function so that it reruns vendor for product variation #726
+
 = v2.9.29 (December 26, 2019) =
 
  - **Fix:** Don't show the admin setup wizard who ran the setup wizard before
