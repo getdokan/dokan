@@ -25,29 +25,35 @@ class Manager {
      */
     private function include_support() {
         $supported_themes = apply_filters( 'dokan_load_theme_support_files', [
-            'storefront' => [
-                'file'       => DOKAN_INC_DIR . '/ThemeSupport/Storefront.php',
-                'class_name' => '\WeDevs\Dokan\ThemeSupport\Storefront',
-            ],
-            'flatsome'   => [
-                'file'       => DOKAN_INC_DIR . '/ThemeSupport/Flatsome.php',
-                'class_name' => '\WeDevs\Dokan\ThemeSupport\Flatsome',
-            ],
-            'divi'       => [
-                'file'       => DOKAN_INC_DIR . '/ThemeSupport/Divi.php',
-                'class_name' => '\WeDevs\Dokan\ThemeSupport\Divi',
-            ],
-            'rehub'      => [
-                'file'       => DOKAN_INC_DIR . '/ThemeSupport/Rehub.php',
-                'class_name' => '\WeDevs\Dokan\ThemeSupport\Rehub',
-            ],
+            'storefront' => Storefront::class,
+            'flatsome'   => Flatsome::class,
+            'divi'       => Divi::class,
+            'rehub'      => Rehub::class,
+            'electro'    => Electro::class,
+            'enfold'     => Enfold::class,
         ] );
 
-        $theme = strtolower( get_template() );
+        $theme = $this->format( strtolower( get_template() ) );
 
-        if ( array_key_exists( $theme , $supported_themes ) && file_exists( $supported_themes[ $theme ]['file'] ) ) {
-            require_once $supported_themes[ $theme ]['file'];
-            new $supported_themes[ $theme ]['class_name']();
+        if ( array_key_exists( $theme, $supported_themes ) && class_exists( $supported_themes[ $theme ] ) ) {
+            new $supported_themes[ $theme ]();
         }
+    }
+
+    /**
+     * Format theme name. ( Remove `-theme` from the string )
+     *
+     * @since  2.9.30
+     *
+     * @param  string $string
+     *
+     * @return string
+     */
+    private function format( $string ) {
+        if ( false !== strpos( $string, '-theme' ) ) {
+            $string = substr( $string, 0, strlen( $string ) - 6 );
+        }
+
+        return $string;
     }
 }

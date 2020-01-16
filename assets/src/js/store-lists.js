@@ -166,7 +166,7 @@
         submitForm: function( event ) {
             event.preventDefault();
 
-            const queryString = $.param( storeLists.query );
+            const queryString = decodeURIComponent( $.param( storeLists.query ) );
 
             window.history.pushState( null, null, `?${queryString}` );
             window.location.reload();
@@ -275,9 +275,9 @@
             }
 
             $( window ).on( 'resize', function() {
-                const win = $(this);
+                const container = $(this);
 
-                if ( win.width() < 767 ) {
+                if ( container.width() < 767 ) {
                     $( '#dokan-seller-listing-wrap' ).removeClass( 'list-view' );
                     $( '#dokan-seller-listing-wrap' ).addClass( 'grid-view' );
                 } else {
