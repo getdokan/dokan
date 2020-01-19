@@ -62,8 +62,10 @@ class Dokan_Theme_Support_Storefront {
 
         $style = '#dokan-seller-listing-wrap .store-content .store-data-container .store-data h2 a {text-decoration: none}';
         $style .= '#dokan-seller-listing-wrap .store-content .store-data-container .store-data h2 {font-size: 24px; margin: 20px 0 10px 0}';
-        $style .= '#dokan-store-listing-filter-form-wrap:before {top: -74px; height: 0}';
+        $style .= '#dokan-store-listing-filter-form-wrap:before {top: -55px; height: 0}';
         $style .= 'form.sort-by.item {margin-bottom: 0}';
+        $style .= '#dokan-store-listing-filter-form-wrap .store-lists-other-filter-wrap .store-lists-category .category-box:before {top: -27px}';
+        $style .= '#dokan-store-listing-filter-form-wrap .store-lists-other-filter-wrap .store-lists-category .category-box > ul {margin-top: -30px}';
         $style .= '#dokan-store-listing-filter-wrap .left .store-count {margin-bottom: 0}';
         $style .= '#dokan-seller-listing-wrap.list-view .dokan-seller-wrap .dokan-single-seller .store-wrapper .store-content .store-data-container .store-data .dokan-seller-rating[class] {font-size: 14px}';
 
@@ -73,14 +75,14 @@ class Dokan_Theme_Support_Storefront {
         $style .= '#dokan-store-listing-filter-wrap .right .item {font-size: 15px}';
         $style .= '#dokan-store-listing-filter-wrap .right .item #stores_orderby {padding: 8px 15px 8px 16px}';
         $style .= '#dokan-store-listing-filter-form-wrap .store-lists-other-filter-wrap .item:not(.store-lists-category) label {width: 252px !important}';
-        $style .= '#dokan-store-listing-filter-form-wrap .store-lists-other-filter-wrap .store-ratings .stars {margin-left: -5px !important}';
+        $style .= '#dokan-store-listing-filter-form-wrap .store-lists-other-filter-wrap .store-ratings .dokan-stars {margin-left: -5px !important}';
         $style .= '}';
 
         $style .= '@media (max-width: 375px) { ';
         $style .= '#dokan-store-listing-filter-wrap .right .item {font-size: 14px}';
         $style .= '#dokan-store-listing-filter-wrap .right .item:not(:first-child) {padding-left: 27px}';
         $style .= '#dokan-store-listing-filter-form-wrap .store-lists-other-filter-wrap .item:not(.store-lists-category) label {width: 217px !important}';
-        $style .= '#dokan-store-listing-filter-form-wrap .store-lists-other-filter-wrap .store-ratings .stars {margin-left: -5px !important}';
+        $style .= '#dokan-store-listing-filter-form-wrap .store-lists-other-filter-wrap .store-ratings .dokan-stars {margin-left: -5px !important}';
         $style .= '}';
 
         $style .= '@media (max-width: 360px) { ';
@@ -93,7 +95,6 @@ class Dokan_Theme_Support_Storefront {
         $style .= '}';
 
         wp_add_inline_style( 'dokan-style', $style );
-        wp_enqueue_style( 'woocommerce-general', WC()->plugin_url() . '/assets/css/woocommerce.css', '', WC_VERSION, 'all' );
     }
 }
 
