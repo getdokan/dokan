@@ -58,39 +58,6 @@ class Dokan_Theme_Support_Enfold {
         $style .= '.template-page .entry-content-wrapper h2 a {text-transform: capitalize !important}';
         $style .= '#dokan-seller-listing-wrap .dokan-single-seller .store-content .store-data-container .store-data {margin-top: 15px}';
 
-        // responsive
-        $style .= '@media (max-width: 414px) { #dokan-store-listing-filter-wrap .right .item .dokan-store-list-filter-button {margin: 0}';
-        $style .= '#dokan-store-listing-filter-wrap .right {margin-top: 15px}';
-        $style .= '#dokan-store-listing-filter-wrap .right .item {font-size: 15px}';
-        $style .= '#dokan-store-listing-filter-wrap .right .item .dokan-icons{top: 20%}';
-        $style .= '#dokan-store-listing-filter-wrap .right .item:not(:first-child) {padding-left: 30px}';
-        $style .= '#dokan-store-listing-filter-wrap .right .item #stores_orderby {padding: 11px 15px 10px 16px}';
-        $style .= '#dokan-store-listing-filter-form-wrap .store-lists-other-filter-wrap .item:not(.store-lists-category) label {width: 238px !important}';
-        $style .= '#dokan-store-listing-filter-form-wrap .store-lists-other-filter-wrap .store-ratings .dokan-stars {margin-left: -25px !important}';
-        $style .= '#dokan-store-listing-filter-wrap .right .item #stores_orderby {width: 133px}';
-        $style .= '}';
-
-        $style .= '@media (max-width: 375px) { ';
-        $style .= '#dokan-store-listing-filter-wrap .right .item {font-size: 14px}';
-        $style .= '#dokan-store-listing-filter-wrap .right .item:not(:first-child) {padding-left: 27px}';
-        $style .= '#dokan-store-listing-filter-wrap .right .item #stores_orderby {font-size: 13px; padding: 11px; width: 104px}';
-        $style .= '#dokan-store-listing-filter-wrap .right .item .sort-by.item label {font-size: 13px !important}';
-        $style .= '#dokan-store-listing-filter-form-wrap .store-lists-other-filter-wrap .item:not(.store-lists-category) label {width: 208px !important}';
-        $style .= '#dokan-store-listing-filter-form-wrap .store-lists-other-filter-wrap .store-ratings .dokan-stars {margin-left: -19px !important}';
-        $style .= '}';
-
-        $style .= '@media (max-width: 360px) { ';
-        $style .= '#dokan-store-listing-filter-wrap .right .item:not(:first-child) {padding-left: 12px}';
-        $style .= '#dokan-store-listing-filter-wrap .right .item #stores_orderby {font-size: 13px; padding: 11px; width: 105px}';
-        $style .= '#dokan-store-listing-filter-wrap .right .item .sort-by.item label {font-size: 13px !important}';
-        $style .= '#dokan-store-listing-filter-form-wrap .store-lists-other-filter-wrap .item:not(.store-lists-category) label {width: 198px !important}';
-        $style .= '#dokan-store-listing-filter-form-wrap .store-lists-other-filter-wrap .store-ratings .dokan-stars {margin-left: -15px !important}';
-        $style .= '}';
-
-        $style .= '@media (max-width: 320px) { ';
-        $style .= '#dokan-store-listing-filter-form-wrap .store-lists-other-filter-wrap .item:not(.store-lists-category) label {width: 166px !important}';
-        $style .= '#dokan-store-listing-filter-form-wrap .store-lists-other-filter-wrap .store-ratings .dokan-stars {margin-left: -8px !important}';
-        $style .= '}';
 
         wp_add_inline_style( 'dokan-style', $style );
     }
