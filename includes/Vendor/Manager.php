@@ -286,7 +286,7 @@ class Manager {
                 $vendor->update_meta( 'dokan_publishing', 'no' );
             }
 
-            if ( isset( $data['admin_commission'] ) && is_numeric( $data['admin_commission'] ) ) {
+            if ( isset( $data['admin_commission'] ) && ( is_numeric( $data['admin_commission'] ) || '' === $data['admin_commission'] ) ) {
                 $vendor->update_meta( 'dokan_admin_percentage', $data['admin_commission'] );
             }
 
