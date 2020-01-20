@@ -3744,3 +3744,29 @@ function dokan_redirect_to_admin_setup_wizard() {
     wp_safe_redirect( add_query_arg( array( 'page' => 'dokan-setup' ), admin_url( 'index.php' ) ) );
     exit;
 }
+
+/**
+ * Dokan generate star ratings
+ *
+ * @since  DOKAN_LITE_SINCE
+ *
+ * @param  int $rating Number of rating point
+ * @param  int $starts Total number of stars
+ *
+ * @return string
+ */
+function dokan_generate_ratings( $rating, $stars ) {
+    $result = '';
+
+    for ( $i = 1; $i <= $stars; $i++ ) {
+        if ( $rating >= $i ) {
+            $result .= "<i class='dashicons dashicons-star-filled'></i>";
+        } else if ( $rating > ( $i - 1 ) && $rating < $i ) {
+            $result .= "<i class='dashicons dashicons-star-half'></i>";
+        } else {
+            $result .= "<i class='dashicons dashicons-star-empty'></i>";
+        }
+    }
+
+    return apply_filters( 'dokan_generate_ratings', $result );
+}
