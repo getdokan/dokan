@@ -40,8 +40,8 @@
                                         <h2><a href="<?php echo esc_attr( $store_url ); ?>"><?php echo esc_html( $store_name ); ?></a></h2>
 
                                         <?php if ( !empty( $store_rating['count'] ) ): ?>
-                                            <div class="star-rating dokan-seller-rating" title="<?php echo sprintf( esc_attr__( 'Rated %s out of 5', 'dokan-lite' ), esc_attr( $store_rating['rating'] ) ) ?>">
-                                                <span style="width: <?php echo ( esc_attr( ( $store_rating['rating'] / 5 ) ) * 100 - 1 ); ?>%"></span>
+                                            <div class="dokan-seller-rating" title="<?php echo sprintf( esc_attr__( 'Rated %s out of 5', 'dokan-lite' ), esc_attr( $store_rating['rating'] ) ) ?>">
+                                                <?php echo wp_kses_post( dokan_generate_ratings( $store_rating['rating'], 5 ) ); ?>
                                                 <p class="rating">
                                                     <?php echo esc_html( sprintf( __( '%s out of 5', 'dokan-lite' ), $store_rating['rating'] ) ); ?>
                                                 </p>

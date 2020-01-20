@@ -30,24 +30,9 @@ class Electro {
             return;
         }
 
-        $style = '#dokan-seller-listing-wrap .store-content .store-data-container .store-data h2 a {text-decoration: none}';
-        $style .= '#dokan-store-listing-filter-wrap .left .store-count {margin-bottom: 0}';
+        $style = '#dokan-seller-listing-wrap .store-content .store-data-container .store-data {margin-top: 10px}';
         $style .= '#dokan-seller-listing-wrap .dokan-btn-theme.dokan-follow-store-button {border: 1px solid; padding: 7px 12px 7px 12px}';
 
-        // responsive
-        $style .= '@media (max-width: 414px) { #dokan-store-listing-filter-wrap .right .item .dokan-store-list-filter-button {margin: 0}';
-        $style .= '#dokan-store-listing-filter-wrap .right {margin-top: 15px}';
-        $style .= '#dokan-store-listing-filter-wrap .right .item {font-size: 15px}';
-        $style .= '#dokan-store-listing-filter-wrap .right .item #stores_orderby {padding: 8px 9px 8px 9px}';
-        $style .= '#dokan-store-listing-filter-form-wrap .apply-filter #cancel-filter-btn {border: 1px solid #ccc !important}';
-        $style .= '#dokan-store-listing-filter-form-wrap .store-lists-other-filter-wrap .store-ratings .stars a {padding: 0 !important}';
-        $style .= '}';
-
-        $style .= '@media (max-width: 375px) { ';
-        $style .= '#dokan-store-listing-filter-wrap .right .item:not(:first-child) { padding-left: 6px}';
-        $style .= '}';
-
         wp_add_inline_style( 'dokan-style', $style );
-        wp_enqueue_style( 'woocommerce-general', WC()->plugin_url() . '/assets/css/woocommerce.css', '', WC_VERSION, 'all' );
     }
 }
