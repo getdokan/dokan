@@ -61,3 +61,14 @@ function dokan_depricated_widget_classes() {
 }
 
 add_action( 'woocommerce_before_main_content', 'dokan_depricated_widget_classes' );
+
+/**
+ * Depricated function for render seller metabox in product
+ *
+ * @param object $post
+ *
+ * @return void|html
+ */
+function dokan_seller_meta_box( $post ) {
+    \WeDevs\Dokan\Admin\Hooks::seller_meta_box_content( $post );
+}
