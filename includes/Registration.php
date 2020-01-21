@@ -116,9 +116,15 @@ class Registration {
             return;
         }
 
+        $social_profiles = array();
+
+        foreach ( dokan_get_social_profile_fields() as $key => $item ) {
+            $social_profiles[$key] = '';
+        }
+
         $dokan_settings = array(
             'store_name'     => sanitize_text_field( wp_unslash( $post_data['shopname'] ) ),
-            'social'         => array(),
+            'social'         => $social_profiles,
             'payment'        => array(),
             'phone'          => sanitize_text_field( wp_unslash( $post_data['phone'] ) ),
             'show_email'     => 'no',
