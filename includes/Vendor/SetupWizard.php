@@ -346,6 +346,15 @@ class SetupWizard extends DokanSetupWizard {
         $dokan_settings['address']    = isset( $_POST['address'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['address'] ) ) : array();
         $dokan_settings['show_email'] = isset( $_POST['show_email'] ) ? 'yes' : 'no';
 
+        // Check address and add manually values on Profile Completion also increase progress value
+        if ( $dokan_settings['address'] ) {
+            $dokan_settings['profile_completion']['address']   = 10;
+            $profile_settings = get_user_meta( $this->store_id, 'dokan_profile_settings', true );
+            if ( ! empty( $profile_settings['profile_completion']['progress'] ) ) {
+                $dokan_settings['profile_completion']['progress']   = $profile_settings['profile_completion']['progress'] + 10; 
+            }
+        }
+
         update_user_meta( $this->store_id, 'dokan_profile_settings', $dokan_settings );
 
         do_action( 'dokan_seller_wizard_store_field_save', $this );
@@ -429,12 +438,24 @@ class SetupWizard extends DokanSetupWizard {
             $dokan_settings['payment']['paypal'] = array(
                 'email' => sanitize_email( $posted_data['settings']['paypal']['email'] ),
             );
+            $dokan_settings['profile_completion']['paypal'] = 15;
+            $dokan_settings['profile_completion']['skrill'] = 0;
         }
 
         if ( isset( $posted_data['settings']['skrill'] ) ) {
             $dokan_settings['payment']['skrill'] = array(
                 'email' => sanitize_email( $posted_data['settings']['skrill']['email'] ),
             );
+            $dokan_settings['profile_completion']['skrill'] = 15;
+            $dokan_settings['profile_completion']['paypal'] = 0;
+        }
+
+        // Check any payment methods setups and add manually value on Profile Completion also increase progress value
+        if ( isset( $posted_data['settings']['paypal'] ) || isset( $posted_data['settings']['skrill'] ) ) {
+            $profile_settings = get_user_meta( $this->store_id, 'dokan_profile_settings', true );
+            if ( ! empty( $profile_settings['profile_completion']['progress'] ) ) {
+                $dokan_settings['profile_completion']['progress']   = $profile_settings['profile_completion']['progress'] + 15; 
+            }
         }
 
         update_user_meta( $this->store_id, 'dokan_profile_settings', $dokan_settings );
