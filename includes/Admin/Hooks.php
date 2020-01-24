@@ -363,7 +363,7 @@ class Hooks {
      */
     public function add_seller_meta_box(){
         remove_meta_box( 'authordiv', 'product', 'core' );
-        add_meta_box( 'sellerdiv', __( 'Vendor', 'dokan-lite' ), [ $this, 'seller_meta_box_content' ], 'product', 'normal', 'core' );
+        add_meta_box( 'sellerdiv', __( 'Vendor', 'dokan-lite' ), [ self::class, 'seller_meta_box_content' ], 'product', 'normal', 'core' );
     }
 
     /**
@@ -373,14 +373,12 @@ class Hooks {
      *
      * @param object $post
      */
-    public function seller_meta_box_content( $post ) {
+    public static function seller_meta_box_content( $post ) {
         global $user_ID;
 
         $admin_user = get_user_by( 'id', $user_ID );
         $selected   = empty( $post->ID ) ? $user_ID : $post->post_author;
         $vendors = dokan()->vendor->all( [ 'number' => -1, 'role__in' => [ 'seller' ] ] );
-
-        // $sellers    = $user_query->get_results();
         ?>
         <label class="screen-reader-text" for="dokan_product_author_override"><?php esc_html_e( 'Vendor', 'dokan-lite' ); ?></label>
         <select name="dokan_product_author_override" id="dokan_product_author_override" class="">
