@@ -383,10 +383,10 @@ class Manager {
         }
 
         if ( ! empty( $data['store_open_close']['time'] ) ) {
-            $data = $data['store_open_close']['time'];
+            $store_time = $data['store_open_close']['time'];
 
-            if ( is_array( $data ) && is_callable( [ $vendor, 'set_store_times' ] ) ) {
-                $vendor->set_store_times( $data );
+            if ( is_array( $store_time ) && is_callable( [ $vendor, 'set_store_times' ] ) ) {
+                $vendor->set_store_times( $store_time );
             }
         }
 
