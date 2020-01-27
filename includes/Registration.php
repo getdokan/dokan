@@ -135,24 +135,24 @@ class Registration {
         );
 
         // Intially add values on profile completion progress bar
-        $dokan_settings['profile_completion']['store_name'] = 10;
-        $dokan_settings['profile_completion']['phone']      = 10;
-        $dokan_settings['profile_completion']['next_todo']  = 'banner_val';
-        $dokan_settings['profile_completion']['progress']   = 20;
-        $dokan_settings['profile_completion']['progress_vals'] = array(
-            'banner_val' => 15,
-            'profile_picture_val' => 15,
-            'store_name_val' => 10,
-            'address_val' => 10,
-            'phone_val' => 10,
-            'map_val' => 15,
-            'payment_method_val' => 15,
+        $dokan_settings['profile_completion']['store_name']     = 10;
+        $dokan_settings['profile_completion']['phone']          = 10;
+        $dokan_settings['profile_completion']['next_todo']      = 'banner_val';
+        $dokan_settings['profile_completion']['progress']       = 20;
+        $dokan_settings['profile_completion']['progress_vals']  = array(
+            'banner_val'            => 15,
+            'profile_picture_val'   => 15,
+            'store_name_val'        => 10,
+            'address_val'           => 10,
+            'phone_val'             => 10,
+            'map_val'               => 15,
+            'payment_method_val'    => 15,
             'social_val' => array(
-                'fb' => 2,
-                'gplus' => 2,
-                'twitter' => 2,
-                'youtube' => 2,
-                'linkedin' => 2,
+                'fb'        => 2,
+                'gplus'     => 2,
+                'twitter'   => 2,
+                'youtube'   => 2,
+                'linkedin'  => 2,
             ),
         );
 
