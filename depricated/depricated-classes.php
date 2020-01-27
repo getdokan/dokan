@@ -20,6 +20,9 @@ class Dokan_Depricated_Classes {
         require_once $dir_path . '/class-dokan-vendor.php';
         require_once $dir_path . '/class-dokan-email.php';
         require_once $dir_path . '/class-dokan-store-location-widget.php';
+        require_once $dir_path . '/class-dokan-seller-setup-wizard.php';
+        require_once $dir_path . '/class-dokan-withdraw.php';
+        require_once $dir_path . '/class-dokan-store-category-walker.php';
     }
 }
 

@@ -286,7 +286,7 @@ class Manager {
                 $vendor->update_meta( 'dokan_publishing', 'no' );
             }
 
-            if ( isset( $data['admin_commission'] ) && is_numeric( $data['admin_commission'] ) ) {
+            if ( isset( $data['admin_commission'] ) && ( is_numeric( $data['admin_commission'] ) || '' === $data['admin_commission'] ) ) {
                 $vendor->update_meta( 'dokan_admin_percentage', $data['admin_commission'] );
             }
 
@@ -383,10 +383,10 @@ class Manager {
         }
 
         if ( ! empty( $data['store_open_close']['time'] ) ) {
-            $data = $data['store_open_close']['time'];
+            $store_time = $data['store_open_close']['time'];
 
-            if ( is_array( $data ) && is_callable( [ $vendor, 'set_store_times' ] ) ) {
-                $vendor->set_store_times( $data );
+            if ( is_array( $store_time ) && is_callable( [ $vendor, 'set_store_times' ] ) ) {
+                $vendor->set_store_times( $store_time );
             }
         }
 
