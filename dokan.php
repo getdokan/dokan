@@ -288,6 +288,7 @@ final class WeDevs_Dokan {
      */
     function includes() {
         require_once DOKAN_DIR . '/depricated/depricated-functions.php';
+        require_once DOKAN_DIR . '/depricated/depricated-hooks.php';
         require_once DOKAN_INC_DIR . '/functions.php';
         require_once DOKAN_INC_DIR . '/Order/functions.php';
         require_once DOKAN_INC_DIR . '/Product/functions.php';
