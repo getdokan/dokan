@@ -871,6 +871,19 @@ class Vendor {
     }
 
     /**
+     * Set store tnc
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param string
+     *
+     * @return void
+     */
+    public function set_store_tnc( $value ) {
+        $this->set_prop( 'store_tnc', wc_clean( $value ) );
+    }
+
+    /**
      * Set gravatar
      *
      * @param int value
