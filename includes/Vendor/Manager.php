@@ -324,6 +324,10 @@ class Manager {
             $vendor->set_enable_tnc( 'off' );
         }
 
+        if ( ! empty( $data['store_tnc'] ) ) {
+            $vendor->set_store_tnc( $data['store_tnc'] );
+        }
+
         if ( ! empty( $data['icon'] ) ) {
             $vendor->set_icon( $data['icon'] );
         }
