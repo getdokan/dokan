@@ -3439,6 +3439,8 @@ function dokan_is_store_listing() {
 function dokan_generate_username( $name = 'store' ) {
     static $i = 1;
 
+    $name = implode( '', explode( ' ', $name ) );
+
     if ( ! username_exists( $name ) ) {
         return $name;
     }
