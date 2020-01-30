@@ -13,7 +13,7 @@
     <?php
         if ( ! dokan_met_minimum_php_version_for_wc() ) {
             $wc_link = '<a href="https://wordpress.org/plugins/woocommerce" target="_blank" rel="noopener">WooCommerce</a>';
-            $message = '<p class="doakn-no-wc-warning">';
+            $message = '<p class="dokan-no-wc-warning">';
             $message .= sprintf( __( 'Please note that %1$s is necessary for Dokan to work but the current PHP version does not meet minimum requirements for WooCommerce. ', 'dokan-lite' ), $wc_link );
             $message .= sprintf( '<a href="https://wordpress.org/support/update-php/" target="_blank" rel="noopener">' . __( 'Please learn more about updating PHP', 'dokan-lite' ) . '.</a>' );
             $message .= '</p>';
