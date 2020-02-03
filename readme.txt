@@ -5,9 +5,9 @@ Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi selle
 Requires at least: 4.4
 Tested up to: 5.3.2
 WC requires at least: 3.0
-WC tested up to: 3.8.1
+WC tested up to: 3.9.1
 Requires PHP: 5.6
-Stable tag: 2.9.31
+Stable tag: 3.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -291,6 +291,19 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v3.0.0 (February 03, 2020) =
+
+ - **Fix:** Add mapbox option in dokan admin setup wizard
+ - **Fix:** Pass order object into woocommerce_order_item_{type}_html hook
+ - **Fix:** Allow vendor to update store terms and condition with REST API #714
+ - **Fix:** If show_email is truned off don't show the eamil in REST API response #748
+ - **Fix:** Remove space while generating user_name via dokan_generate_username function #749
+ - **Fix:** If a product is deleted and no vendor is found for that product display (no name) in backend order listing page #746
+ - **Improvement:** Store listing filter styles so that it works with almost any theme
+ - **Improvement:** Show notice in dokan admin setup wizard if minimum PHP version is not met for WooCommerce
+ - **Improvement:** If dokan pro doesn't exist but commmision type is found in database, ignore that saved commission type #746
+ - **Improvement:** Code quality and performance
+
 = v2.9.31 (January 14, 2020) =
 
  - **Fix:** Add option to set dokan store listing page for rendering all stores
@@ -428,5 +441,5 @@ For the changelog history, view the full [changelog.txt](https://github.com/weDe
 
 == Upgrade Notice ==
 
-= 2.6.0 =
-**Important Update** This update is compatible with WooCommerce 3.0. Make sure to backup and read full [changelog](https://docs.wedevs.com/docs/dokan/changelog/) for more details.
+= 3.0.0 =
+**Important Update** This update changes code structures for improving performance. Make sure to take backup and read the changlogs first before upgrade process.
