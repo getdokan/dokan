@@ -27,7 +27,6 @@
         "config.json",
         "phpcs.xml.dist",
         "webpack.config.js",
-        "vendor",
         "composer.lock",
         "composer.json",
         ".editorconfig"

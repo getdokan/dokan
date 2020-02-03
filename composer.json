@@ -1,5 +1,5 @@
 {
-  "name": "weDevsOfficial/dokan",
+  "name": "wedevs/dokan",
   "description": "An e-commerce marketplace plugin for WordPress.",
   "type": "wordpress-plugin",
   "license": "GPL2",
@@ -16,6 +16,11 @@
   "require-dev": {
     "wp-coding-standards/wpcs": "dev-master",
     "dealerdirect/phpcodesniffer-composer-installer": "^0.4.3"
+  },
+  "autoload" : {
+    "psr-4": {
+        "WeDevs\\Dokan\\": "includes/"
+    }
   },
   "scripts": {
     "phpcs": [

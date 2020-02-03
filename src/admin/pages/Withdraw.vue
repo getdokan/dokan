@@ -442,7 +442,7 @@ export default {
             this.showModal = false;
             this.loading = true;
 
-            dokan.api.put('/withdraw/' + this.editing.id + '/note', {
+            dokan.api.put('/withdraw/' + this.editing.id, {
                 note: this.editing.note
             })
             .done((response) => {

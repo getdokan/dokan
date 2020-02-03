@@ -1,5 +1,7 @@
 <?php
 
+use WeDevs\Dokan\Walkers\TaxonomyDropdown;
+
     $get_data  = wp_unslash( $_GET ); // WPCS: CSRF ok.
     $post_data = wp_unslash( $_POST ); // WPCS: CSRF ok.
 
@@ -50,11 +52,11 @@
 
 
             <div class="dokan-new-product-area">
-                <?php if ( Dokan_Template_Products::$errors ) { ?>
+                <?php if ( dokan()->dashboard->templates->products->has_errors() ) { ?>
                     <div class="dokan-alert dokan-alert-danger">
                         <a class="dokan-close" data-dismiss="alert">&times;</a>
 
-                        <?php foreach ( Dokan_Template_Products::$errors as $error) { ?>
+                        <?php foreach ( dokan()->dashboard->templates->products->get_errors() as $error) { ?>
 
                             <strong><?php esc_html_e( 'Error!', 'dokan-lite' ); ?></strong> <?php echo esc_html( $error ); ?>.<br>
 
@@ -235,7 +237,7 @@
                                                 'exclude'          => '',
                                                 'selected'         => $selected_cat,
                                                 'echo'             => 0,
-                                                'walker'           => new DokanTaxonomyWalker()
+                                                'walker'           => new TaxonomyDropdown()
                                             ) ) );
 
                                             echo str_replace( '<select', '<select data-placeholder="'.esc_attr__( 'Select product category', 'dokan-lite' ).'" multiple="multiple" ', $drop_down_category ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
@@ -262,7 +264,7 @@
                                             'exclude'          => '',
                                             'selected'         => $selected_tag,
                                             'echo'             => 0,
-                                            'walker'           => new DokanTaxonomyWalker()
+                                            'walker'           => new TaxonomyDropdown()
                                         ) );
 
                                         echo str_replace( '<select', '<select data-placeholder="'.esc_attr__( 'Select product tags', 'dokan-lite' ).'" multiple="multiple" ', $drop_down_tags ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped

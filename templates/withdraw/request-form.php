@@ -9,8 +9,6 @@
 ?>
 <?php if ( ! empty( $payment_methods ) ) : ?>
 <form class="dokan-form-horizontal withdraw" role="form" method="post">
-    <?php wp_nonce_field( 'dokan_withdraw', 'dokan_withdraw_nonce' ); ?>
-
     <div class="dokan-form-group">
         <label for="withdraw-amount" class="dokan-w3 dokan-control-label">
             <?php esc_html_e( 'Withdraw Amount', 'dokan-lite' ); ?>
@@ -19,7 +17,7 @@
         <div class="dokan-w5 dokan-text-left">
             <div class="dokan-input-group">
                 <span class="dokan-input-group-addon"><?php echo esc_html( get_woocommerce_currency_symbol() ); ?></span>
-                <input name="witdraw_amount" required number min="<?php echo esc_attr( dokan_get_option( 'withdraw_limit', 'dokan_withdraw', 0 ) ); ?>" class="dokan-form-control" id="withdraw-amount" name="price" type="number" placeholder="0.00" value="<?php echo esc_attr( $amount ); ?>"  >
+                <input name="withdraw_amount" required number min="<?php echo esc_attr( dokan_get_option( 'withdraw_limit', 'dokan_withdraw', 0 ) ); ?>" class="dokan-form-control" id="withdraw-amount" name="price" type="number" placeholder="0.00" value="<?php echo esc_attr( $amount ); ?>"  >
             </div>
         </div>
     </div>
@@ -41,7 +39,8 @@
     <div class="dokan-form-group">
         <div class="dokan-w3 ajax_prev" style="margin-left:19%; width: 200px;">
             <?php wp_nonce_field( 'dokan_withdraw', 'dokan_withdraw_nonce' ); ?>
-            <input type="submit" class="dokan-btn dokan-btn-theme" value="<?php esc_attr_e( 'Submit Request', 'dokan-lite' ); ?>" name="withdraw_submit">
+            <input type="submit" class="dokan-btn dokan-btn-theme" value="<?php esc_attr_e( 'Submit Request', 'dokan-lite' ); ?>">
+            <input type="hidden" name="dokan_handle_withdraw_request" value="approval">
         </div>
     </div>
 </form>
