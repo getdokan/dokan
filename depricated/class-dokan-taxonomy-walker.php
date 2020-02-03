@@ -1,5 +1,5 @@
 <?php
 
-use WeDevs\Dokan\Walkers\TaxonomyDropdown\DokanTaxonomyWalker;
+use WeDevs\Dokan\Walkers\TaxonomyDropdown\DokanTaxonomyWalker as DokanTaxWalker;
 
-class DokanTaxonomyWalker extends DokanTaxonomyWalker {}
+class DokanTaxonomyWalker extends DokanTaxWalker {}
