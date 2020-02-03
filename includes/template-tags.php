@@ -537,7 +537,7 @@ function dokan_store_category_menu( $seller_id, $title = '' ) {
             'selected_cats' => ''
         );
 
-        $walker = new Dokan_Store_Category_Walker( $seller_id );
+        $walker = new \WeDevs\Dokan\Walkers\StoreCategory( $seller_id );
         echo "<ul>";
         echo call_user_func_array( array(&$walker, 'walk'), array($categories, 0, array()) ); //phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
         echo "</ul>";

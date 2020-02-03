@@ -1,3 +1,8 @@
+<?php
+
+use WeDevs\Dokan\Walkers\TaxonomyDropdown;
+
+?>
 <script type="text/html" id="tmpl-dokan-add-new-product">
     <div id="dokan-add-new-product-popup" class="white-popup dokan-add-new-product-popup">
         <h2><i class="fa fa-briefcase">&nbsp;</i>&nbsp;<?php esc_html_e( 'Add New Product', 'dokan-lite' ); ?></h2>
@@ -126,7 +131,7 @@
                                 'exclude'          => '',
                                 'selected'         => $term,
                                 'echo'             => 0,
-                                'walker'           => new DokanTaxonomyWalker()
+                                'walker'           => new TaxonomyDropdown()
                             ) ) );
 
                             echo str_replace( '<select', '<select data-placeholder="'.__( 'Select product category', 'dokan-lite' ).'" multiple="multiple" ', $drop_down_category ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
@@ -149,7 +154,7 @@
                             'exclude'          => '',
                             'selected'         => array(),
                             'echo'             => 0,
-                            'walker'           => new DokanTaxonomyWalker()
+                            'walker'           => new TaxonomyDropdown()
                         ) );
 
                         echo str_replace( '<select', '<select data-placeholder="'.__( 'Select product tags', 'dokan-lite' ).'" multiple="multiple" ', $drop_down_tags ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped

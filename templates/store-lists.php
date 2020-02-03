@@ -17,7 +17,7 @@ if ( apply_filters( 'dokan_store_lists_filter', true ) ) {
      *
      * @since 2.9.30
      *
-     * @hooked Dokan_Store_Lists_Filter::filter_area() - 10
+     * @hooked \WeDevs\Dokan\Vendor\StoreListsFilter::filter_area() - 10
      */
     do_action( 'dokan_store_lists_filter_form', $sellers );
 

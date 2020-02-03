@@ -64,7 +64,7 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                                                     break;
                                                 }
 
-                                                do_action( 'woocommerce_order_item_' . $item['type'] . '_html', $item_id, $item );
+                                                do_action( 'woocommerce_order_item_' . $item['type'] . '_html', $item_id, $item, $order );
 
                                             }
                                         ?>

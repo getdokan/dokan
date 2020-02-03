@@ -125,4 +125,13 @@ return [
 	__( 'Withdraw Requests', 'dokan-lite' ),
 	__( 'Update Note', 'dokan-lite' ),
 	__( 'Cancelled <span class=\'count\'>(%s)</span>', 'dokan-lite' ),
+	__( 'Dokan Logo', 'dokan-lite' ),
+	__( 'Dokan Data Update Required', 'dokan-lite' ),
+	__( 'We need to update your install to the latest version', 'dokan-lite' ),
+	__( 'It is strongly recommended that you backup your database before proceeding. Are you sure you wish to run the updater now?', 'dokan-lite' ),
+	__( 'Update', 'dokan-lite' ),
+	__( 'Yes, Update Now', 'dokan-lite' ),
+	__( 'No, Cancel', 'dokan-lite' ),
+	__( 'Dokan Data Updated Successfully!', 'dokan-lite' ),
+	__( 'All data updated successfully. Thank you for using Dokan.', 'dokan-lite' ),
 ];

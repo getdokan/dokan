@@ -493,6 +493,7 @@
         height: 25px !important;
         line-height: 22px !important;
     }
+
     td.percent_fee, td.fixed_fee {
         display: inline-block;
     }
@@ -511,7 +512,6 @@
     .dokan-error.combine-commission {
         margin-left: 10px;
     }
-
     .dokan-settings-field-type-radio {
 
         fieldset {

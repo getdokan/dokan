@@ -43,10 +43,17 @@ body {
 }
 .wc-setup-content a {
   color: #a16696;
+  text-decoration: none;
 }
 .wc-setup-content a:hover,
 .wc-setup-content a:focus {
   color: #111;
+}
+.wc-setup-content .dokan-no-wc-warning {
+  border: 1px solid #f1f1f1;
+  padding: 10px 12px;
+  border-left-width: 4px;
+  border-left-color: #dc3232;
 }
 .wc-setup .wc-setup-actions {
   overflow: hidden;

@@ -3696,6 +3696,11 @@ div.media-sidebar a.edit-attachment {
   width: 100%;
   height: auto;
 }
+.dokan-single-store .profile-frame .profile-info-box .profile-info-img.dummy-image {
+  background-image: url(../images/default-store-banner.png);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
 .dokan-single-store .profile-frame .profile-info-box .profile-info-summery-wrapper {
   position: absolute;
   top: 0;
@@ -4488,22 +4493,105 @@ div.media-sidebar a.edit-attachment {
 .dokan-popup-content .dokan-popup-error.has-error {
   display: block;
 }
+#dokan-seller-listing-wrap button {
+  margin: unset;
+  padding: 6px 12px;
+}
+#dokan-store-listing-filter-wrap .left,
+.store-lists-other-filter-wrap .left,
+#dokan-store-listing-filter-wrap .right,
+.store-lists-other-filter-wrap .right,
+#dokan-store-listing-filter-wrap .item,
+.store-lists-other-filter-wrap .item {
+  display: unset;
+  overflow: unset;
+  z-index: unset;
+  position: unset;
+  height: unset;
+  width: unset;
+  margin: unset;
+  padding: unset;
+  border: unset;
+}
+#dokan-store-listing-filter-wrap,
+#dokan-store-listing-filter-wrap form,
+#dokan-store-listing-filter-form-wrap * {
+  padding: unset;
+  margin: unset;
+  box-sizing: border-box;
+}
+#dokan-store-listing-filter-wrap ul,
+#dokan-store-listing-filter-wrap form ul,
+#dokan-store-listing-filter-form-wrap * ul,
+#dokan-store-listing-filter-wrap ul li,
+#dokan-store-listing-filter-wrap form ul li,
+#dokan-store-listing-filter-form-wrap * ul li {
+  margin: unset;
+  padding: unset;
+}
+#dokan-store-listing-filter-wrap div p,
+#dokan-store-listing-filter-wrap form div p,
+#dokan-store-listing-filter-form-wrap * div p {
+  margin: unset;
+  padding: unset;
+  line-height: unset;
+}
+#dokan-store-listing-filter-wrap label,
+#dokan-store-listing-filter-wrap form label,
+#dokan-store-listing-filter-form-wrap * label,
+#dokan-store-listing-filter-wrap input,
+#dokan-store-listing-filter-wrap form input,
+#dokan-store-listing-filter-form-wrap * input,
+#dokan-store-listing-filter-wrap select,
+#dokan-store-listing-filter-wrap form select,
+#dokan-store-listing-filter-form-wrap * select,
+#dokan-store-listing-filter-wrap button,
+#dokan-store-listing-filter-wrap form button,
+#dokan-store-listing-filter-form-wrap * button,
+#dokan-store-listing-filter-wrap a,
+#dokan-store-listing-filter-wrap form a,
+#dokan-store-listing-filter-form-wrap * a,
+#dokan-store-listing-filter-wrap i,
+#dokan-store-listing-filter-wrap form i,
+#dokan-store-listing-filter-form-wrap * i,
+#dokan-store-listing-filter-wrap span,
+#dokan-store-listing-filter-wrap form span,
+#dokan-store-listing-filter-form-wrap * span,
+#dokan-store-listing-filter-wrap textarea,
+#dokan-store-listing-filter-wrap form textarea,
+#dokan-store-listing-filter-form-wrap * textarea {
+  width: unset;
+  border: unset;
+  padding: unset;
+  margin: unset;
+  display: unset;
+  text-transform: unset;
+  font-weight: unset;
+  line-height: unset;
+  font-size: unset;
+  letter-spacing: unset;
+  box-shadow: unset;
+  box-sizing: border-box;
+}
 #dokan-store-listing-filter-wrap {
-  background: #ffffff;
+  background-color: #ffffff;
   padding: 20px;
   box-shadow: 1px 1px 20px 0px #E9E9E9;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   flex-wrap: wrap;
-}
-#dokan-store-listing-filter-wrap .left .store-count {
-  margin-top: 10px;
 }
 #dokan-store-listing-filter-wrap .right {
   display: flex;
+  align-items: center;
 }
 #dokan-store-listing-filter-wrap .right .item {
   position: relative;
+  white-space: nowrap;
+}
+#dokan-store-listing-filter-wrap .right .item.sort-by {
+  margin: 0px 30px;
 }
 #dokan-store-listing-filter-wrap .right .item .dokan-store-list-filter-button {
   border-radius: 3px;
@@ -4511,8 +4599,12 @@ div.media-sidebar a.edit-attachment {
 #dokan-store-listing-filter-wrap .right .item .dokan-icons {
   position: absolute;
   left: 14%;
-  top: 30%;
+  top: 50%;
   cursor: pointer;
+  margin: 0;
+  padding: 0;
+  transform: translate(0, -50%);
+  z-index: 999;
 }
 #dokan-store-listing-filter-wrap .right .item .dokan-icons .dokan-icon-div {
   background: #fff;
@@ -4528,9 +4620,6 @@ div.media-sidebar a.edit-attachment {
 #dokan-store-listing-filter-wrap .right .item .dokan-icons .dokan-icon-div:nth-child(3) {
   width: 4px;
 }
-#dokan-store-listing-filter-wrap .right .item:not(:first-child) {
-  padding-left: 40px;
-}
 #dokan-store-listing-filter-wrap .right .item button {
   padding-top: 8px;
   padding-bottom: 8px;
@@ -4542,7 +4631,7 @@ div.media-sidebar a.edit-attachment {
 }
 #dokan-store-listing-filter-wrap .right .item select {
   background: #ffffff;
-  border-color: #edecec;
+  border: 1px solid #edecec;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -4555,7 +4644,10 @@ div.media-sidebar a.edit-attachment {
   outline: none;
 }
 #dokan-store-listing-filter-wrap .right .toggle-view {
-  margin-top: 8px;
+  margin: 0;
+  padding: 0;
+  line-height: 0;
+  height: 0;
 }
 #dokan-store-listing-filter-wrap .right .toggle-view .dashicons {
   font-size: 22px;
@@ -4566,29 +4658,32 @@ div.media-sidebar a.edit-attachment {
 }
 #dokan-store-listing-filter-form-wrap {
   background: #ffffff;
-  margin-top: 25px;
-  padding: 20px;
+  margin-top: 32px;
+  padding: 32px 20px 20px 20px;
   box-shadow: 1px 1px 20px 0px #E9E9E9;
+  position: relative;
+}
+#dokan-store-listing-filter-form-wrap div {
+  margin: 0;
+  padding: 0;
 }
 #dokan-store-listing-filter-form-wrap:before {
   content: "\f142";
-  position: relative;
-  top: -35px;
-  transform: translate(45%, 0);
-  left: 45%;
-  display: inline-block;
-  -webkit-font-smoothing: antialiased;
-  font-family: 'dashicons';
-  vertical-align: top;
+  height: 0 !important;
+  top: -8px;
+  left: 50%;
+  position: absolute;
+  transform: translate(0, -50%);
+  font-family: dashicons;
   font-size: 60px;
-  color: #ffffff;
+  color: #fff;
   font-weight: bold;
+  line-height: 0 !important;
 }
 #dokan-store-listing-filter-form-wrap .store-search .store-search-input {
   width: 100%;
   padding: 10px 20px;
   border-radius: 3px;
-  margin-top: -11px;
   border: 1px solid #cccccc;
 }
 #dokan-store-listing-filter-form-wrap .store-search .store-search-input:placeholder {
@@ -4608,7 +4703,7 @@ div.media-sidebar a.edit-attachment {
   border-radius: 3px;
   background: #fff !important;
   color: #000 !important;
-  border-color: #edecec !important;
+  border: 1px solid #edecec !important;
   margin-right: 20px;
   display: none;
 }
@@ -4624,6 +4719,17 @@ div.media-sidebar a.edit-attachment {
 }
 .site-content .entry-header .entry-title[class] {
   border: none;
+}
+#dokan-seller-listing-wrap .seller-listing-content .dokan-seller-wrap .dokan-single-seller .store-wrapper .store-data h2 {
+  padding: 0 !important;
+}
+#dokan-seller-listing-wrap .seller-listing-content .dokan-seller-wrap .dokan-single-seller .store-wrapper .store-data .dokan-seller-rating i.dashicons {
+  width: 15px;
+  font-size: 17px;
+}
+#dokan-seller-listing-wrap .seller-listing-content .dokan-seller-wrap .dokan-single-seller .store-wrapper .store-data .dokan-seller-rating i.dashicons.dashicons-star-filled,
+#dokan-seller-listing-wrap .seller-listing-content .dokan-seller-wrap .dokan-single-seller .store-wrapper .store-data .dokan-seller-rating i.dashicons.dashicons-star-half {
+  color: #fa9a00;
 }
 #dokan-seller-listing-wrap.grid-view .store-wrapper {
   position: relative;
@@ -4649,7 +4755,9 @@ div.media-sidebar a.edit-attachment {
   top: 10px;
 }
 #dokan-seller-listing-wrap.grid-view .store-content .store-data-container .featured-favourite .featured-label {
-  width: 80px;
+  width: max-content;
+  width: -moz-max-content;
+  width: -webkit-max-content;
   padding: 2px 10px;
   background: #2d54a3;
   color: #fff;
@@ -4659,28 +4767,25 @@ div.media-sidebar a.edit-attachment {
 #dokan-seller-listing-wrap.grid-view .store-content .store-data-container .store-data h2 a {
   color: #fff;
   text-shadow: rgba(0, 0, 0, 0.8) 0 1px 0;
+  font-size: 25px;
+  padding: 0;
+  margin: 0;
+  text-decoration: none;
 }
 #dokan-seller-listing-wrap.grid-view .store-content .store-data-container .store-data h2 a:active,
 #dokan-seller-listing-wrap.grid-view .store-content .store-data-container .store-data h2 a:focus {
   text-decoration: none;
   outline: none;
 }
-#dokan-seller-listing-wrap.grid-view .store-content .store-data-container .store-data .star-rating {
-  float: none;
-  margin: 12px 0px 10px;
-}
-#dokan-seller-listing-wrap.grid-view .store-content .store-data-container .store-data .star-rating:before {
-  font-family: star;
-}
-#dokan-seller-listing-wrap.grid-view .store-content .store-data-container .store-data .star-rating span:before {
-  font-family: star;
-  color: #fa9a00;
-}
-#dokan-seller-listing-wrap.grid-view .store-content .store-data-container .store-data .star-rating p.rating {
+#dokan-seller-listing-wrap.grid-view .store-content .store-data-container .store-data .dokan-seller-rating p.rating {
   display: none !important;
 }
 #dokan-seller-listing-wrap.grid-view .store-content .store-data-container .store-data .store-address {
+  margin: 0 0 5px 0;
   line-height: 23px;
+}
+#dokan-seller-listing-wrap.grid-view .store-content .store-data-container .store-data .store-phone {
+  margin: 0 0 5px 0;
 }
 #dokan-seller-listing-wrap.grid-view .store-footer {
   background: #fff;
@@ -4719,26 +4824,26 @@ div.media-sidebar a.edit-attachment {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  padding: 0px 50px 0px 0px;
   background: #fff;
   border-radius: 3px;
+  position: relative;
 }
 #dokan-seller-listing-wrap.list-view .dokan-seller-wrap .dokan-single-seller .store-wrapper .store-header .store-banner {
   min-height: 140px;
 }
 #dokan-seller-listing-wrap.list-view .dokan-seller-wrap .dokan-single-seller .store-wrapper .store-header .store-banner img {
-  margin-left: -15px;
   border-top-left-radius: 3px;
   border-bottom-left-radius: 3px;
 }
 #dokan-seller-listing-wrap.list-view .dokan-seller-wrap .dokan-single-seller .store-wrapper .store-content .store-data-container .featured-favourite .featured-label {
-  width: 60px;
-  padding: 0px 5px;
+  padding: 2px 10px;
   background: #2d54a3;
   color: #fff;
   border-radius: 3px;
   box-shadow: 0px 0px 25px -5px #afafaf;
-  font-size: 12px;
+  position: absolute;
+  left: 8px;
+  top: 10px;
 }
 #dokan-seller-listing-wrap.list-view .dokan-seller-wrap .dokan-single-seller .store-wrapper .store-content .store-data-container .store-data h2 {
   margin-top: 0;
@@ -4746,6 +4851,7 @@ div.media-sidebar a.edit-attachment {
 }
 #dokan-seller-listing-wrap.list-view .dokan-seller-wrap .dokan-single-seller .store-wrapper .store-content .store-data-container .store-data h2 a {
   color: #000;
+  text-decoration: none;
 }
 #dokan-seller-listing-wrap.list-view .dokan-seller-wrap .dokan-single-seller .store-wrapper .store-content .store-data-container .store-data h2 a:active,
 #dokan-seller-listing-wrap.list-view .dokan-seller-wrap .dokan-single-seller .store-wrapper .store-content .store-data-container .store-data h2 a:focus {
@@ -4754,15 +4860,14 @@ div.media-sidebar a.edit-attachment {
 }
 #dokan-seller-listing-wrap.list-view .dokan-seller-wrap .dokan-single-seller .store-wrapper .store-content .store-data-container .store-data .dokan-seller-rating[class] {
   overflow: visible;
-  left: 25%;
   z-index: 1;
-  top: -10px;
   min-width: 85px;
   font-family: 'Open Sans', sans-serif;
   color: gray;
-}
-#dokan-seller-listing-wrap.list-view .dokan-seller-wrap .dokan-single-seller .store-wrapper .store-content .store-data-container .store-data .dokan-seller-rating[class] p.rating {
-  margin-top: 22px;
+  float: right;
+  position: relative;
+  top: -15px;
+  left: 25%;
 }
 #dokan-seller-listing-wrap.list-view .dokan-seller-wrap .dokan-single-seller .store-wrapper .store-content .store-data-container .store-data .dokan-seller-rating[class]:before {
   font-family: star;
@@ -4791,17 +4896,17 @@ div.media-sidebar a.edit-attachment {
 #dokan-seller-listing-wrap.list-view .dokan-seller-wrap .dokan-single-seller .store-wrapper .store-content .store-data-container .store-data .store-phone {
   display: none;
 }
-#dokan-seller-listing-wrap.list-view .dokan-seller-wrap .dokan-single-seller .store-wrapper > div {
-  flex-basis: 37.5%;
-  max-width: 37.5%;
-  padding: 0 15px;
+#dokan-seller-listing-wrap.list-view .dokan-seller-wrap .dokan-single-seller .store-wrapper > .store-content {
+  flex-basis: 43%;
+  padding-left: 4%;
 }
 #dokan-seller-listing-wrap.list-view .dokan-seller-wrap .dokan-single-seller .store-wrapper .store-header {
-  flex-basis: 25%;
+  flex-basis: 20%;
 }
 #dokan-seller-listing-wrap.list-view .dokan-seller-wrap .dokan-single-seller .store-wrapper .store-footer[class] {
   display: flex;
   flex-direction: row-reverse;
+  flex-basis: 33%;
   border: none;
   text-align: right;
   background: #fff;
@@ -4849,11 +4954,15 @@ div.media-sidebar a.edit-attachment {
   }
 }
 @media (max-width: 767px) {
-  #dokan-store-listing-filter-wrap .left .store-count {
-    margin-top: -5px;
+  #dokan-store-listing-filter-wrap {
+    display: block;
   }
-  #dokan-store-listing-filter-wrap .right .item:not(:first-child) {
-    padding-left: 50px;
+  #dokan-store-listing-filter-wrap .right {
+    justify-content: space-between;
+    margin-top: 15px;
+  }
+  #dokan-store-listing-filter-wrap .right .item.sort-by {
+    margin: 0;
   }
   #dokan-store-listing-filter-wrap .toggle-view {
     display: none;
@@ -4963,11 +5072,7 @@ div.media-sidebar a.edit-attachment {
 }
 @media (max-width: 430px) {
   #dokan-store-listing-filter-form-wrap:before {
-    left: -5%;
-  }
-  #dokan-store-listing-filter-form-wrap .right .item:not(:first-child) {
-    padding: 0;
-    margin-left: 50px;
+    left: 10%;
   }
   .apply-filter {
     margin-top: 20px;
@@ -5105,17 +5210,11 @@ div.media-sidebar a.edit-attachment {
   .dokan-order-filter-serach form:first-child .dokan-form-group {
     display: flex;
   }
-  #dokan-store-listing-filter-wrap .right .item:not(:first-child) {
-    padding-left: 35px;
-  }
   #dokan-store-listing-filter-wrap .right .item #stores_orderby {
     padding: 8px 0px 8px 16px;
   }
 }
 @media (max-width: 360px) {
-  #dokan-store-listing-filter-wrap .right .item:not(:first-child) {
-    padding-left: 20px;
-  }
   .dokan-single-store .profile-frame .profile-info-box.profile-layout-layout1 .profile-info-summery-wrapper .profile-info-summery .profile-info .dokan-store-info {
     max-width: 200px;
   }
