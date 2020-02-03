@@ -31,10 +31,6 @@ class Tracker {
      * @return void
      */
     public function appsero_init_tracker_dokan() {
-        if ( ! class_exists( 'Appsero\Client' ) ) {
-            require_once DOKAN_LIB_DIR . '/appsero/Client.php';
-        }
-
         $client = new \Appsero\Client( '559bcc0d-21b4-4b34-8317-3e072badf46d', 'Dokan Multivendor Marketplace', DOKAN_FILE );
 
         $this->insights = $client->insights();
