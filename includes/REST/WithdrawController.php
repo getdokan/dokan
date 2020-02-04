@@ -110,7 +110,7 @@ class WithdrawController extends WP_REST_Controller {
     /**
      * Check permission for get a withdraw
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @param \WP_Request $request
      *
@@ -134,7 +134,7 @@ class WithdrawController extends WP_REST_Controller {
     /**
      * Check permission for creating a withdraw request
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return bool
      */
@@ -145,7 +145,7 @@ class WithdrawController extends WP_REST_Controller {
     /**
      * Check permission for update a withdraw
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @param \WP_Request $request
      *
@@ -180,7 +180,7 @@ class WithdrawController extends WP_REST_Controller {
     /**
      * Validate a withdraw is exists
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @param int $id
      *
@@ -216,7 +216,7 @@ class WithdrawController extends WP_REST_Controller {
     /**
      * Get withdraws
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return \WP_REST_Response
      */
@@ -273,7 +273,7 @@ class WithdrawController extends WP_REST_Controller {
     /**
      * Make a withdraw request
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return \WP_REST_Response
      */
@@ -338,7 +338,7 @@ class WithdrawController extends WP_REST_Controller {
     /**
      * Get a withdraw
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @param \WP_Request $request
      *
@@ -355,7 +355,7 @@ class WithdrawController extends WP_REST_Controller {
     /**
      * Cancel withdraw status
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return void
      */
@@ -421,7 +421,7 @@ class WithdrawController extends WP_REST_Controller {
     /**
      * Delete a withdraw
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return \WP_REST_Request
      */
@@ -714,7 +714,7 @@ class WithdrawController extends WP_REST_Controller {
     /**
      * Schema for batch processing
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return array
      */

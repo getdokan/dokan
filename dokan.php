@@ -82,7 +82,7 @@ final class WeDevs_Dokan {
     /**
      * Databse version key
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @var string
      */
@@ -534,7 +534,7 @@ final class WeDevs_Dokan {
     /**
      * Get Dokan db version key
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return string
      */

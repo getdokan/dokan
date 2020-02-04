@@ -7,7 +7,7 @@ class Upgrades {
     /**
      * Dokan Lite upgraders
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @var array
      */
@@ -34,7 +34,7 @@ class Upgrades {
     /**
      * Get DB installed version number
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return string
      */
@@ -45,7 +45,7 @@ class Upgrades {
     /**
      * Checks if upgrade is required or not
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @param bool $is_required
      *
@@ -65,7 +65,7 @@ class Upgrades {
     /**
      * Update Dokan DB version
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return void
      */
@@ -80,7 +80,7 @@ class Upgrades {
     /**
      * Get upgrades
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @param array $upgrades
      *

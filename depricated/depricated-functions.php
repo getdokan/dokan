@@ -3,7 +3,7 @@
 /**
  * Wrapper for wc_doing_it_wrong.
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.0.0
  *
  * @param string $function Function used.
  * @param string $message Message to log.
@@ -39,7 +39,7 @@ function dokan_get_product_status( $status ) {
 /**
  * Load depericated widget class dynamically
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.0.0
  *
  * @return void
  */

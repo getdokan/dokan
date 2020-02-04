@@ -50,7 +50,7 @@ function dokan_withdraw_get_active_methods() {
 /**
  * Get active withdraw methods for seller.
  *
- * @since DOKAN_LITE_SINCE add $vendor_id param
+ * @since 3.0.0 add $vendor_id param
  *
  * @param int $vendor_id Seller vendor id
  *

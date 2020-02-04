@@ -493,7 +493,7 @@ function dokan_get_vendor_by_product( $product ) {
 /**
  * Get translated product stock status
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.0.0
  *
  * @param  mix $stock
  *
