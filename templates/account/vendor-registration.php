@@ -1,4 +1,13 @@
-<?php wc_print_notices(); ?>
+<?php
+
+defined( 'ABSPATH' ) || exit;
+
+if ( is_user_logged_in() ) {
+    esc_html_e( 'You are already logged in', 'dokan-lite' );
+    return;
+}
+
+wc_print_notices(); ?>
 
 <form id="dokan-vendor-register" method="post" class="register dokan-vendor-register">
 
