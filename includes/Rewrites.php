@@ -43,7 +43,7 @@ class Rewrites {
             return $crumbs;
         }
 
-        if ( function_exists( 'yoast_breadcrumb' ) && WPSEO_Options::get( 'breadcrumbs-enable' ) ) {
+        if ( function_exists( 'yoast_breadcrumb' ) && \WPSEO_Options::get( 'breadcrumbs-enable' ) ) {
             unset( $crumbs );
             return;
         }
