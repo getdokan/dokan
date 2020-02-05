@@ -33,7 +33,7 @@ class Settings {
      * @return void
      */
     public function get_settings_value() {
-        if ( ! current_user_can( 'manage_options' ) ) {
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
             wp_send_json_error( __( 'You have no permission to get settings value', 'dokan-lite' ) );
         }
 
@@ -61,7 +61,7 @@ class Settings {
      */
     public function save_settings_value() {
         try {
-            if ( ! current_user_can( 'manage_options' ) ) {
+            if ( ! current_user_can( 'manage_woocommerce' ) ) {
                 throw new DokanException( 'dokan_settings_unauthorized_operation', __( 'You are not authorized to perform this action.', 'dokan-lite' ), 401 );
             }
 

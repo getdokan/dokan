@@ -230,7 +230,7 @@ class WithdrawController extends WP_REST_Controller {
 
         $user_id = null;
 
-        if ( ! current_user_can( 'manage_options' ) ) {
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
             // Vendors can only see their own requests
             $user_id = dokan_get_current_user_id();
 

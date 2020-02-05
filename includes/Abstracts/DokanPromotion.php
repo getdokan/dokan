@@ -54,7 +54,7 @@ abstract class DokanPromotion {
      * @return void
      */
     public function show_promotions() {
-        if ( ! current_user_can( 'manage_options' ) ) {
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
             return;
         }
 
@@ -182,7 +182,7 @@ abstract class DokanPromotion {
     public function dismiss_upgrade_promo() {
         $post_data = wp_unslash( $_POST );
 
-        if ( ! current_user_can( 'manage_options' ) ) {
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
             wp_send_json_error( __( 'You have no permission to do that', 'dokan-lite' ) );
         }
 

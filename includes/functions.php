@@ -18,7 +18,7 @@ function dokan_admin_menu_position() {
  * @return void
  */
 function dokana_admin_menu_capability() {
-    return apply_filters( 'dokan_menu_capability', 'manage_options' );
+    return apply_filters( 'dokan_menu_capability', 'manage_woocommerce' );
 }
 
 /**
@@ -1165,7 +1165,7 @@ function dokan_log( $message, $level = 'debug' ) {
  * @return array
  */
 function dokan_media_uploader_restrict( $args ) {
-    if ( current_user_can( 'manage_options' ) ) {
+    if ( current_user_can( 'manage_woocommerce' ) ) {
         return $args;
     }
 
