@@ -884,4 +884,37 @@
 
     });
 
+    function debounce_delay( callback, ms ) {
+        var timer   = 0;
+        return function() {
+            var context = this, args = arguments;
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+              callback.apply(context, args);
+            }, ms || 0);
+        };
+    }
+
+    $('body').on( 'keyup', '.dokan-product-sales-price, .dokan-product-regular-price', debounce_delay( function(evt) {
+        evt.preventDefault();
+        let product_price   = $( 'input.dokan-product-regular-price' ).val();
+        let sale_price      = $( 'input.dokan-product-sales-price' ).val();
+
+        if( parseFloat( product_price ) <= parseFloat( sale_price ) ) {
+            var sale_price_input        = $( 'input.dokan-product-sales-price' );
+            var sale_price_input_msg    = "<span class='error'>Please insert value less than the regular price!</span>";
+            sale_price_input.parent( 'div.dokan-input-group' ).parent( 'div.sale-price' ).find( 'span.error' ).remove();
+            sale_price_input.parent( 'div.dokan-input-group' ).after( sale_price_input_msg );
+            
+            $( 'input.dokan-product-sales-price' ).val('');
+            setTimeout(function(){ 
+                sale_price_input.parent( 'div.dokan-input-group' ).parent( 'div.sale-price' ).find( 'span.error' ).remove();
+            }, 5000);
+        }else{
+            var sale_price_input        = $( 'input.dokan-product-sales-price' );
+            sale_price_input.parent( 'div.dokan-input-group' ).parent( 'div.sale-price' ).find( 'span.error' ).remove();
+        }
+        
+    } ,750 ) );
+
 })(jQuery);
