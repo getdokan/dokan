@@ -20,7 +20,7 @@ class Manager {
     /**
      * Validate approval request
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @param array $args
      *
@@ -60,7 +60,7 @@ class Manager {
         /**
          * Filter validated withdraw request
          *
-         * @since DOKAN_LITE_SINCE
+         * @since 3.0.0
          *
          * @param bool
          * @param array $args
@@ -71,7 +71,7 @@ class Manager {
     /**
      * Validate cancellation request
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @param array $args
      *
@@ -174,7 +174,7 @@ class Manager {
         /**
          * After completed withdraw request
          *
-         * @since DOKAN_LITE_SINCE move action from template class to here.
+         * @since 3.0.0 move action from template class to here.
          *            Change first param from global $current_user
          *            to dynamic $user_id
          *
@@ -266,7 +266,7 @@ class Manager {
     /**
      * Get withdraw status from code
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @param int $code
      *
@@ -293,7 +293,7 @@ class Manager {
     /**
      * Get list of withdraws
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @param array $args
      *
@@ -316,9 +316,9 @@ class Manager {
     /**
      * Get a single withdraw
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
-     * @param DOKAN_LITE_SINCE $id
+     * @param 3.0.0 $id
      *
      * @return \WeDevs\Dokan\Withdraw\Withdraw|null
      */
@@ -367,7 +367,7 @@ class Manager {
     /**
      * Create a withdraw request
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @param array $args
      *
@@ -425,7 +425,7 @@ class Manager {
     /**
      * Export withdraw data
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @param array $args
      *

@@ -13,7 +13,7 @@ abstract class DokanUpgrader {
      * upgrader class dynamically. Keep in mind that methods
      * should be public static function.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @param string $required_lite_version Required in case of Pro upgraders
      *
@@ -49,7 +49,7 @@ abstract class DokanUpgrader {
      * for version 1.23.40, the the filename should be
      * V_1_23_40.php.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return void
      */
@@ -66,7 +66,7 @@ abstract class DokanUpgrader {
      *
      * This method should be overriden in Dokan Pro
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return string
      */

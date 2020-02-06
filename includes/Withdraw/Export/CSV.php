@@ -14,7 +14,7 @@ class CSV {
     /**
      * Class constructor
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @param array $withdraws
      */
@@ -25,7 +25,7 @@ class CSV {
     /**
      * Export withdraws
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return void
      */

@@ -6,14 +6,14 @@ namespace WeDevs\Dokan\Admin;
 *
 * @package dokan
 *
-* @since DOKAN_LITE_SINCE
+* @since 3.0.0
 */
 class Hooks {
 
     /**
      * Load autometically when class initiate
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      */
     public function __construct() {
         // Load all actions
@@ -147,9 +147,10 @@ class Hooks {
             case 'seller':
                 $has_sub = get_post_meta( $post->ID, 'has_sub_order', true );
 
-                if ( $has_sub != '1' ) {
-                    $seller = get_user_by( 'id', dokan_get_seller_id_by_order( $post->ID ) );
+                if ( $has_sub != '1' && $seller = get_user_by( 'id', dokan_get_seller_id_by_order( $post->ID ) ) ) {
                     printf( '<a href="%s">%s</a>', esc_url( admin_url( 'edit.php?post_type=shop_order&vendor_id=' . $seller->ID ) ), esc_html( $seller->display_name ) );
+                } else {
+                    esc_html_e( '(no name)', 'dokan-lite' );
                 }
 
                 break;

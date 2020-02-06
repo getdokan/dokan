@@ -744,7 +744,7 @@ class Assets {
     /**
      * Admin localized scripts
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return array
      */

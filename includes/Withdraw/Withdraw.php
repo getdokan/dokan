@@ -16,7 +16,7 @@ class Withdraw {
     /**
      * Class constructor
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return void
      */
@@ -49,7 +49,7 @@ class Withdraw {
     /**
      * Get withdraw data
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return array
      */
@@ -60,7 +60,7 @@ class Withdraw {
     /**
      * Get withdraw id
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return int
      */
@@ -71,7 +71,7 @@ class Withdraw {
     /**
      * Get user_id
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return int
      */
@@ -82,7 +82,7 @@ class Withdraw {
     /**
      * Get amount
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return string
      */
@@ -93,7 +93,7 @@ class Withdraw {
     /**
      * Get date
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return string
      */
@@ -104,7 +104,7 @@ class Withdraw {
     /**
      * Get status
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return string
      */
@@ -115,7 +115,7 @@ class Withdraw {
     /**
      * Get ip
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return string
      */
@@ -126,7 +126,7 @@ class Withdraw {
     /**
      * Get note
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return string
      */
@@ -137,7 +137,7 @@ class Withdraw {
     /**
      * Get ip
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return string
      */
@@ -148,7 +148,7 @@ class Withdraw {
     /**
      * Set user_id
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @param int $user_id
      *
@@ -162,7 +162,7 @@ class Withdraw {
     /**
      * Set amount
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @param string $amount
      *
@@ -176,7 +176,7 @@ class Withdraw {
     /**
      * Set date
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @param string $date
      *
@@ -190,7 +190,7 @@ class Withdraw {
     /**
      * Set status
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @param string $status
      *
@@ -204,7 +204,7 @@ class Withdraw {
     /**
      * Set method
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @param string $method
      *
@@ -218,7 +218,7 @@ class Withdraw {
     /**
      * Set note
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @param string $note
      *
@@ -232,7 +232,7 @@ class Withdraw {
     /**
      * Set ip
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @param string $ip
      *
@@ -246,7 +246,7 @@ class Withdraw {
     /**
      * Create or update a withdraw
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return \WeDevs\Dokan\Withdraw\Withdraw|\WP_Error
      */
@@ -261,7 +261,7 @@ class Withdraw {
     /**
      * Create or add a withdraw request
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return \WeDevs\Dokan\Withdraw\Withdraw|\WP_Error
      */
@@ -285,7 +285,7 @@ class Withdraw {
         /**
          * After completed withdraw request
          *
-         * @since DOKAN_LITE_SINCE
+         * @since 3.0.0
          *
          * @param int    $user_id
          * @param float  $amount
@@ -299,7 +299,7 @@ class Withdraw {
     /**
      * Update a withdraw
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return \WeDevs\Dokan\Withdraw\Withdraw|\WP_Error
      */
@@ -329,7 +329,7 @@ class Withdraw {
         /**
          * Action based on withdraw status
          *
-         * @since DOKAN_LITE_SINCE
+         * @since 3.0.0
          *
          * @param \WeDevs\Dokan\Withdraw\Withdraw $this
          */
@@ -338,7 +338,7 @@ class Withdraw {
         /**
          * Fires after update a withdraw
          *
-         * @since DOKAN_LITE_SINCE
+         * @since 3.0.0
          *
          * @param \WeDevs\Dokan\Withdraw\Withdraw $this
          */
@@ -350,7 +350,7 @@ class Withdraw {
     /**
      * Delete a withdraw
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return \WeDevs\Dokan\Withdraw\Withdraw|\WP_Error
      */
@@ -370,7 +370,7 @@ class Withdraw {
         /**
          * Fires after delete a withdraw
          *
-         * @since DOKAN_LITE_SINCE
+         * @since 3.0.0
          *
          * @param array $data
          */

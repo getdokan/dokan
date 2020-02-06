@@ -99,6 +99,10 @@ class Manager {
             unset( $data['store_open_close'] );
         }
 
+        if ( empty( $data['show_email'] ) ) {
+            unset( $data['email'] );
+        }
+
         return $data;
     }
 

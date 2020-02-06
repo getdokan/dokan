@@ -3439,6 +3439,8 @@ function dokan_is_store_listing() {
 function dokan_generate_username( $name = 'store' ) {
     static $i = 1;
 
+    $name = implode( '', explode( ' ', $name ) );
+
     if ( ! username_exists( $name ) ) {
         return $name;
     }
@@ -3736,7 +3738,7 @@ function dokan_redirect_to_admin_setup_wizard() {
 /**
  * Dokan generate star ratings
  *
- * @since  DOKAN_LITE_SINCE
+ * @since  3.0.0
  *
  * @param  int $rating Number of rating point
  * @param  int $starts Total number of stars
@@ -3757,4 +3759,17 @@ function dokan_generate_ratings( $rating, $stars ) {
     }
 
     return apply_filters( 'dokan_generate_ratings', $result );
+}
+
+/**
+ * Check if current PHP version met the minimum requried PHP version for WooCommerce
+ *
+ * @since 3.0.0
+ *
+ * @param string $required_version
+ *
+ * @return bool
+ */
+function dokan_met_minimum_php_version_for_wc( $required_version = '7.0' ) {
+    return apply_filters( 'dokan_met_minimum_php_version_for_wc', version_compare( PHP_VERSION, $required_version, '>=' ), $required_version );
 }

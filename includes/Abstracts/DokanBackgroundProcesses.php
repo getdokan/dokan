@@ -29,6 +29,21 @@ abstract class DokanBackgroundProcesses extends \WP_Background_Process {
     protected $action = null;
 
     /**
+     * Class constructor
+     *
+     * @since 3.0.0
+     *
+     * @return void
+     */
+    public function __construct() {
+        if ( ! $this->action ) {
+            $this->set_action();
+        }
+
+        parent::__construct();
+    }
+
+    /**
      * Execute after complete a task
      *
      * @since 2.8.7
@@ -91,12 +106,12 @@ abstract class DokanBackgroundProcesses extends \WP_Background_Process {
     /**
      * Set process action
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return void
      */
     protected function set_action() {
-        $this->action = static::class;
+        $this->action = 'dokan_' . md5( static::class );
     }
 
     /**
@@ -116,14 +131,10 @@ abstract class DokanBackgroundProcesses extends \WP_Background_Process {
             $processor_file = $reflector->getFileName();
         }
 
-        if ( ! $this->action ) {
-            $this->set_action();
-        }
-
         $this->save()->dispatch();
 
         $processes = get_option( 'dokan_background_processes', array() );
-        $processes[ $this->action ] = $processor_file;
+        $processes[ static::class ] = $processor_file;
 
         update_option( 'dokan_background_processes', $processes, 'no' );
 
@@ -140,8 +151,8 @@ abstract class DokanBackgroundProcesses extends \WP_Background_Process {
     public function clear_process() {
         $processes = get_option( 'dokan_background_processes', array() );
 
-        if ( array_key_exists( $this->action , $processes ) ) {
-            unset( $processes[ $this->action ] );
+        if ( array_key_exists( static::class , $processes ) ) {
+            unset( $processes[ static::class ] );
             update_option( 'dokan_background_processes', $processes, 'no' );
         }
 

@@ -19,7 +19,7 @@ class DokanException extends Exception {
      * Class constructor
      *
      * @since 2.9.16
-     * @since DOKAN_LITE_SINCE $error_code can be instance of WP_Error which is
+     * @since 3.0.0 $error_code can be instance of WP_Error which is
      *                         useful for multiple error codes and messages in
      *                         a single WP_Error instance.
      *

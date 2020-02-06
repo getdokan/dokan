@@ -3,7 +3,7 @@
 /**
  * Support for Elementor Store Widgets
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.0.0
  *
  * @param array             $default_widget_args
  * @param \Widget_WordPress $widget_wordpress

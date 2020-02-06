@@ -7,14 +7,14 @@ namespace WeDevs\Dokan\Product;
 *
 * @package dokan
 *
-* @since DOKAN_LITE_SINCE
+* @since 3.0.0
 */
 class Hooks {
 
     /**
      * Load autometically when class initiate
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      */
     public function __construct() {
         add_action( 'template_redirect', [ $this, 'bulk_product_status_change' ] );

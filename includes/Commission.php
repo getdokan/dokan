@@ -392,6 +392,10 @@ class Commission {
      * @return float|null on failure
      */
     public function get_category_wise_earning( $product_id, $product_price ) {
+        if ( ! dokan()->is_pro_exists() ) {
+            return null;
+        }
+
         return $this->prepare_for_calculation( __FUNCTION__, $product_id, $product_price );
     }
 
@@ -403,9 +407,13 @@ class Commission {
      * @param  int $product_id
      * @param  int $product_price
      *
-     * @return float
+     * @return float|null on failure
      */
     public function get_product_wise_earning( $product_id, $product_price ) {
+        if ( ! dokan()->is_pro_exists() ) {
+            return null;
+        }
+
         return $this->prepare_for_calculation( __FUNCTION__, $product_id, $product_price );
     }
 
@@ -443,6 +451,17 @@ class Commission {
         // get[product,category,vendor,global]_wise_type
         if ( is_callable( [ $this, $func_type ] ) ) {
             $commission_type = $this->$func_type( $product_id );
+        }
+
+        /**
+         * If dokan pro doesn't exists but combine commission is found in database due to it was active before
+         * Then make the commission type 'flat'. We are making it flat cause when commission type is there in database
+         * But in option field, looks like flat commission is selected.
+         *
+         * @since 3.0.0
+         */
+        if ( ! dokan()->is_pro_exists() && 'combine' === $commission_type ) {
+            $commission_type = 'flat';
         }
 
         // get[product,category,vendor,global]_wise_additional_fee

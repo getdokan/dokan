@@ -7,7 +7,7 @@ class Menu {
     /**
      * Class constructor
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return void
      */
@@ -19,7 +19,7 @@ class Menu {
      * Add Dokan admin menu
      *
      * @since 1.0.0
-     * @since DOKAN_LITE_SINCE Moved to Menu class
+     * @since 3.0.0 Moved to Menu class
      *
      * @return void
      */
@@ -66,7 +66,7 @@ class Menu {
      * Dashboard scripts and styles
      *
      * @since 1.0
-     * @since DOKAN_LITE_SINCE Moved to Menu class
+     * @since 3.0.0 Moved to Menu class
      *
      * @return void
      */
@@ -86,7 +86,7 @@ class Menu {
      * Load Dashboard Template
      *
      * @since 1.0
-     * @since DOKAN_LITE_SINCE Moved to Menu class
+     * @since 3.0.0 Moved to Menu class
      *
      * @return void
      */

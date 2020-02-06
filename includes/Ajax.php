@@ -935,7 +935,7 @@ class Ajax {
     /**
      * Export witdraw requests
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return void
      */
