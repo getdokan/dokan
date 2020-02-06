@@ -895,7 +895,7 @@
         };
     }
 
-    $('body').on( 'keyup', '.dokan-product-sales-price, .dokan-product-regular-price', debounce_delay( function(evt) {
+    $('body').on( 'keyup', '.dokan-product-sales-price, .dokan-product-regular-price', debounce_delay( function( evt ) {
         evt.preventDefault();
         let product_price   = $( 'input.dokan-product-regular-price' ).val();
         let sale_price      = $( 'input.dokan-product-sales-price' ).val();
