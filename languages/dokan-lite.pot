@@ -5622,7 +5622,7 @@ msgid "Filter by Date"
 msgstr ""
 
 #: templates/orders/date-export.php:36
-msgid "Filter by Customer"
+msgid "Filter by registered customer"
 msgstr ""
 
 #: templates/orders/date-export.php:39 templates/products/listing-filter.php:48
