@@ -26,7 +26,7 @@ class SetupWizard {
      * Hook in tabs.
      */
     public function __construct() {
-        if ( current_user_can( 'manage_options' ) ) {
+        if ( current_user_can( 'manage_woocommerce' ) ) {
             add_action( 'admin_menu', array( $this, 'admin_menus' ) );
             add_action( 'admin_init', array( $this, 'setup_wizard' ), 99 );
             add_action( 'activated_plugin', array( $this, 'activated_plugin' ) );
@@ -110,7 +110,7 @@ class SetupWizard {
      * Add admin menus/screens.
      */
     public function admin_menus() {
-        add_submenu_page( null, '', '', 'manage_options', 'dokan-setup', '' );
+        add_submenu_page( null, '', '', 'manage_woocommerce', 'dokan-setup', '' );
     }
 
     /**

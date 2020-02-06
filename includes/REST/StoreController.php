@@ -353,7 +353,7 @@ class StoreController extends WP_REST_Controller {
      * @return void
      */
     public function permission_check_for_manageable_part() {
-        return current_user_can( 'manage_options' );
+        return current_user_can( 'manage_woocommerce' );
     }
 
     /**
@@ -394,7 +394,7 @@ class StoreController extends WP_REST_Controller {
         $page      = (int) ( ! empty( $request['page'] ) ? $request['page'] : 1 );
         $max_pages = ceil( $total_items / $per_page );
 
-        if ( function_exists( 'dokan_get_seller_status_count' ) && current_user_can( 'manage_options' ) ) {
+        if ( function_exists( 'dokan_get_seller_status_count' ) && current_user_can( 'manage_woocommerce' ) ) {
             $counts = dokan_get_seller_status_count();
             $response->header( 'X-Status-Pending', (int) $counts['inactive'] );
             $response->header( 'X-Status-Approved', (int) $counts['active'] );
