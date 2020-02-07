@@ -7,7 +7,7 @@ Tested up to: 5.3.2
 WC requires at least: 3.0
 WC tested up to: 3.9.1
 Requires PHP: 5.6
-Stable tag: 3.0.0
+Stable tag: 3.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -290,6 +290,13 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 == Changelog ==
+
+= v3.0.1 (February 07, 2020) =
+
+ - **Fix:** Fixed yoast seo causing conflict issue in single store page
+ - **Fix:** Permission issue fixed for shop manager
+ - **Fix:** Handle sales price error if its greater than regular price or empty
+ - **Fix:** Change placholder text for filter by customer to registered customer
 
 = v3.0.0 (February 03, 2020) =
 

@@ -1,3 +1,10 @@
+= v3.0.1 (February 07, 2020) =
+
+ - **Fix:** Fixed yoast seo causing conflict issue in single store page
+ - **Fix:** Permission issue fixed for shop manager
+ - **Fix:** Handle sales price error if its greater than regular price or empty
+ - **Fix:** Change placholder text for filter by customer to registered customer
+
 = v3.0.0 (February 03, 2020) =
 
  - **Fix:** Add mapbox option in dokan admin setup wizard
