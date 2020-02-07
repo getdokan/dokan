@@ -531,7 +531,7 @@ class Vendor {
     /**
      * Get vendor orders
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return wc_get_order objects
      */
@@ -873,7 +873,7 @@ class Vendor {
     /**
      * Set store tnc
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @param string
      *

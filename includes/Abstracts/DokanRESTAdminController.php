@@ -28,7 +28,7 @@ abstract class DokanRESTAdminController extends WP_REST_Controller {
      * @return void
      */
     public function check_permission() {
-        return current_user_can( 'manage_options' );
+        return current_user_can( 'manage_woocommerce' );
     }
 
     /**

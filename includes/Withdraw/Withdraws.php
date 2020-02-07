@@ -35,7 +35,7 @@ class Withdraws {
     /**
      * Class constructor
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @param array $args
      *
@@ -55,7 +55,7 @@ class Withdraws {
     /**
      * Get withdraws
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return array
      */
@@ -66,7 +66,7 @@ class Withdraws {
     /**
      * Query withdraws
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return \WeDevs\Dokan\Withdraw\Withdraws
      */
@@ -160,7 +160,7 @@ class Withdraws {
     /**
      * Get total number of withdraws
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return int
      */
@@ -177,7 +177,7 @@ class Withdraws {
     /**
      * Get maximum number of pages
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return int
      */

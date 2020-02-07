@@ -11,7 +11,7 @@ trait RESTResponseError {
     /**
      * Send REST error response
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @param \Exception $e
      * @param string     $default_message

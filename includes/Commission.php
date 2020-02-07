@@ -458,7 +458,7 @@ class Commission {
          * Then make the commission type 'flat'. We are making it flat cause when commission type is there in database
          * But in option field, looks like flat commission is selected.
          *
-         * @since DOKAN_LITE_SINCE
+         * @since 3.0.0
          */
         if ( ! dokan()->is_pro_exists() && 'combine' === $commission_type ) {
             $commission_type = 'flat';

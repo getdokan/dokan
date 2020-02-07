@@ -12,7 +12,7 @@ class Manager {
     /**
      * Get all orders
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return void
      */
@@ -71,7 +71,7 @@ class Manager {
     /**
      * Get single order details
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return void
      */

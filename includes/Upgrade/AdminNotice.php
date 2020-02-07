@@ -13,7 +13,7 @@ class AdminNotice {
     /**
      * Show admin notice to upgrade Dokan
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return void
      */
@@ -26,7 +26,7 @@ class AdminNotice {
             /**
              * Fires when upgrade is not required
              *
-             * @since DOKAN_LITE_SINCE
+             * @since 3.0.0
              */
             do_action( 'dokan_upgrade_is_not_required' );
             return;
@@ -41,7 +41,7 @@ class AdminNotice {
     /**
      * Ajax handler method to initiate Dokan upgrade process
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return void
      */

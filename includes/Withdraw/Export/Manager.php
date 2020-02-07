@@ -15,7 +15,7 @@ class Manager {
     /**
      * Class constructor
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @param array $args
      */
@@ -26,7 +26,7 @@ class Manager {
     /**
      * Export data in CSV
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return void
      */

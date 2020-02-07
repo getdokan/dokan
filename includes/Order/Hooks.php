@@ -6,14 +6,14 @@ namespace WeDevs\Dokan\Order;
 *
 * @package dokan
 *
-* @since DOKAN_LITE_SINCE
+* @since 3.0.0
 */
 class Hooks {
 
     /**
      * Load autometically when class initiate
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      */
     public function __construct() {
         // on order status change
@@ -144,7 +144,7 @@ class Hooks {
     /**
      * Split order for vendor
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return void
      */

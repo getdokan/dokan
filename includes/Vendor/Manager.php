@@ -58,7 +58,7 @@ class Manager {
         $status = $args['status'];
 
         // check if the user has permission to see pending vendors
-        if ( 'approved' != $args['status'] && current_user_can( 'manage_options' ) ) {
+        if ( 'approved' != $args['status'] && current_user_can( 'manage_woocommerce' ) ) {
             $status = $args['status'];
         }
 

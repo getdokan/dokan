@@ -9,7 +9,7 @@ class Manager {
     /**
      * Checks if update is required or not
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return bool
      */
@@ -17,7 +17,7 @@ class Manager {
         /**
          * Filter to upgrade is required or not
          *
-         * @since DOKAN_LITE_SINCE
+         * @since 3.0.0
          *
          * @param bool $is_required Is upgrade required
          */
@@ -27,7 +27,7 @@ class Manager {
     /**
      * Checks for any ongoing process
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return bool
      */
@@ -38,7 +38,7 @@ class Manager {
     /**
      * Get upgradable upgrades
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return array
      */
@@ -52,7 +52,7 @@ class Manager {
         /**
          * Filter upgrades
          *
-         * @since DOKAN_LITE_SINCE
+         * @since 3.0.0
          *
          * @var array
          */
@@ -76,7 +76,7 @@ class Manager {
      * `update_db_version` will update the db version
      * reference in database.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return void
      */
@@ -105,7 +105,7 @@ class Manager {
          * At this point plugin should update the
          * db version key to version constant like DOKAN_PLUGIN_VERSION
          *
-         * @since DOKAN_LITE_SINCE
+         * @since 3.0.0
          */
         do_action( 'dokan_upgrade_finished' );
     }

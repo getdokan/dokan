@@ -18,7 +18,7 @@ function dokan_admin_menu_position() {
  * @return void
  */
 function dokana_admin_menu_capability() {
-    return apply_filters( 'dokan_menu_capability', 'manage_options' );
+    return apply_filters( 'dokan_menu_capability', 'manage_woocommerce' );
 }
 
 /**
@@ -1165,7 +1165,7 @@ function dokan_log( $message, $level = 'debug' ) {
  * @return array
  */
 function dokan_media_uploader_restrict( $args ) {
-    if ( current_user_can( 'manage_options' ) ) {
+    if ( current_user_can( 'manage_woocommerce' ) ) {
         return $args;
     }
 
@@ -3738,7 +3738,7 @@ function dokan_redirect_to_admin_setup_wizard() {
 /**
  * Dokan generate star ratings
  *
- * @since  DOKAN_LITE_SINCE
+ * @since  3.0.0
  *
  * @param  int $rating Number of rating point
  * @param  int $starts Total number of stars
@@ -3764,7 +3764,7 @@ function dokan_generate_ratings( $rating, $stars ) {
 /**
  * Check if current PHP version met the minimum requried PHP version for WooCommerce
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.0.0
  *
  * @param string $required_version
  *

@@ -11,7 +11,7 @@ class Manager {
     /**
      * Class constructor
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return void
      */
@@ -36,7 +36,7 @@ class Manager {
     /**
      * Check if widget class exists
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @param string $widget_id
      *
@@ -49,7 +49,7 @@ class Manager {
     /**
      * Get widget id from widget class
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @param string $widget_class
      *
