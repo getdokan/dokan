@@ -516,7 +516,7 @@ function dokan_get_translated_product_stock_status( $stock = false ) {
  *
  */
  function dokan_render_blank_state_product_list( ) {
-    if( !is_user_logged_in() ) {
+    if( ! is_user_logged_in() ) {
         return;
     }
 
