@@ -508,3 +508,60 @@ function dokan_get_translated_product_stock_status( $stock = false ) {
 
     return isset( $stock_status[$stock] ) ? $stock_status[$stock] : '';
 }
+
+/**
+ * Show blank slate product list.
+ *
+ * @since 3.0.0
+ *
+ */
+ function dokan_render_blank_state_product_list( ) {
+    if( !is_user_logged_in() ) {
+        return;
+    }
+
+    $post_type  = 'product';
+    $user_id    = get_current_user_id();
+
+    $args = array(
+        'numberposts'   => -1,
+        'post_type'     => $post_type,
+        'post_status'   => array( 'publish', 'private', 'draft', 'pending' ),
+        'author'        => $user_id
+    );
+    $count_posts = count( get_posts( $args ) ); 
+
+    if ( 0 < $count_posts ) {
+        return;
+    }
+
+    dokan_render_blank_state_on_product_list();
+    
+    echo '<style type="text/css">.dokan-dashboard-wrap .dokan-product-listing .dokan-product-listing-area  { display: none; } .dokan-dashboard-wrap .dokan-product-listing { height: auto; } .dokan-BlankState{max-width: 764px; text-align: center; margin: 50px auto;} .dokan-BlankState-message{ font-weight: bold; color: #444; font-size:18px; margin-bottom:20px; } .dokan-BlankState-icon i{color: #ddd; font-size: 130px;}</style>';
+
+}
+add_action( 'dokan_after_listing_product', 'dokan_render_blank_state_product_list' );
+
+/**
+ * Render blank state.
+ */
+function dokan_render_blank_state_on_product_list() {
+
+    $dokan_add_new_product_class = ( 'on' == dokan_get_option( 'disable_product_popup', 'dokan_selling', 'off' ) ) ? '' : 'dokan-add-new-product';
+
+    echo '<div class="dokan-BlankState">';
+
+    echo '<div class="dokan-BlankState-icon"><i class="fa fa-cube"></i></div>';
+
+    echo '<h2 class="dokan-BlankState-message">' . esc_html__( 'Ready to start selling something awesome?', 'dokan' ) . '</h2>';
+
+    echo '<div class="dokan-BlankState-buttons">';
+
+    echo '<a class="dokan-btn dokan-btn-theme '.$dokan_add_new_product_class.'" href="' . esc_url( dokan_get_navigation_url( 'new-product' ) ) . '"> <i class="fa fa-briefcase">&nbsp;</i> ' . esc_html__( 'Add new product', 'dokan' ) . '</a>';
+
+    echo '</div>';
+
+    do_action( 'dokan_products_empty_state' );
+
+    echo '</div>';
+}
