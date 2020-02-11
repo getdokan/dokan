@@ -379,6 +379,67 @@ class Manager {
     }
 
     /**
+     * Save default attributes.
+     *
+     * @since 3.0.0
+     *
+     * @param WC_Product      $product Product instance.
+     * @param WP_REST_Request $request Request data.
+     * @return WC_Product
+     */
+    public function save_default_attributes( $product, $request ) {
+        if ( isset( $request['default_attributes'] ) && is_array( $request['default_attributes'] ) ) {
+
+            $attributes         = $product->get_attributes();
+            $default_attributes = array();
+
+            foreach ( $request['default_attributes'] as $attribute ) {
+                $attribute_id   = 0;
+                $attribute_name = '';
+
+                // Check ID for global attributes or name for product attributes.
+                if ( ! empty( $attribute['id'] ) ) {
+                    $attribute_id   = absint( $attribute['id'] );
+                    $attribute_name = wc_attribute_taxonomy_name_by_id( $attribute_id );
+                } elseif ( ! empty( $attribute['name'] ) ) {
+                    $attribute_name = sanitize_title( $attribute['name'] );
+                }
+
+                if ( ! $attribute_id && ! $attribute_name ) {
+                    continue;
+                }
+
+                if ( isset( $attributes[ $attribute_name ] ) ) {
+                    $_attribute = $attributes[ $attribute_name ];
+
+                    if ( $_attribute['is_variation'] ) {
+                        $value = isset( $attribute['option'] ) ? wc_clean( stripslashes( $attribute['option'] ) ) : '';
+
+                        if ( ! empty( $_attribute['is_taxonomy'] ) ) {
+                            // If dealing with a taxonomy, we need to get the slug from the name posted to the API.
+                            $term = get_term_by( 'name', $value, $attribute_name );
+
+                            if ( $term && ! is_wp_error( $term ) ) {
+                                $value = $term->slug;
+                            } else {
+                                $value = sanitize_title( $value );
+                            }
+                        }
+
+                        if ( $value ) {
+                            $default_attributes[ $attribute_name ] = $value;
+                        }
+                    }
+                }
+            }
+
+            $product->set_default_attributes( $default_attributes );
+        }
+
+        return $product;
+    }
+
+    /**
      * Update product data
      *
      * @since 3.0.0

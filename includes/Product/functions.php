@@ -84,7 +84,7 @@ function dokan_save_product( $args ) {
     $post_data = [
         'id'                 => $is_updating ? $post_arr['ID'] : '',
         'name'               => $post_arr['post_title'],
-        'type'               => 'simple',
+        'type'               => $data['product_type'],
         'description'        => $post_arr['post_content'],
         'short_description'  => $post_arr['post_excerpt'],
         'status'             => $post_status,
