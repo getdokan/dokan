@@ -336,7 +336,7 @@ class Manager {
         }
 
         // Set featured image id
-        if ( isset( $args['featured_image_id'] ) ) {
+        if ( ! empty( $args['featured_image_id'] ) ) {
             $product->set_image_id( $args['featured_image_id'] );
         }
 
