@@ -391,7 +391,7 @@ class Vendor {
         $default  = array( 'lat' => 0, 'long' => 0 );
         $location = $this->get_info_part( 'location' );
 
-        if ( $location ) {
+        if ( $location AND "NULL" != $location ) {
             list( $default['lat'], $default['long'] ) = explode( ',', $location );
         }
 
