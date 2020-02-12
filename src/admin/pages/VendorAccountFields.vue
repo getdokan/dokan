@@ -70,7 +70,7 @@
                     <span v-if="! getId()" class="required-field">*</span>
 
                     <input type="email"
-                        v-model="vendorInfo.user_email"
+                        v-model="vendorInfo.email"
                         :class="{'dokan-form-input': true, 'has-error': getError('user_email')}"
                         :placeholder="getError( 'user_email' ) ? __( 'Email is required', 'dokan-lite' ) : __( 'store@email.com', 'dokan-lite' )"
                     >
@@ -195,7 +195,7 @@ export default {
             this.checkUsername();
         },
 
-        'vendorInfo.user_email'( value ) {
+        'vendorInfo.email'( value ) {
             this.checkEmail();
         },
     },
@@ -322,7 +322,7 @@ export default {
         },
 
         searchEmail() {
-            const userEmail = this.vendorInfo.user_email;
+            const userEmail = this.vendorInfo.email;
 
             if ( ! userEmail ) {
                 return;

@@ -444,7 +444,7 @@ if (false) {(function () {
     'vendorInfo.user_login': function vendorInfoUser_login(value) {
       this.checkUsername();
     },
-    'vendorInfo.user_email': function vendorInfoUser_email(value) {
+    'vendorInfo.email': function vendorInfoEmail(value) {
       this.checkEmail();
     }
   },
@@ -573,7 +573,7 @@ if (false) {(function () {
     searchEmail: function searchEmail() {
       var _this4 = this;
 
-      var userEmail = this.vendorInfo.user_email;
+      var userEmail = this.vendorInfo.email;
 
       if (!userEmail) {
         return;
@@ -2185,8 +2185,8 @@ var render = function() {
                 {
                   name: "model",
                   rawName: "v-model",
-                  value: _vm.vendorInfo.user_email,
-                  expression: "vendorInfo.user_email"
+                  value: _vm.vendorInfo.email,
+                  expression: "vendorInfo.email"
                 }
               ],
               class: {
@@ -2199,13 +2199,13 @@ var render = function() {
                   ? _vm.__("Email is required", "dokan-lite")
                   : _vm.__("store@email.com", "dokan-lite")
               },
-              domProps: { value: _vm.vendorInfo.user_email },
+              domProps: { value: _vm.vendorInfo.email },
               on: {
                 input: function($event) {
                   if ($event.target.composing) {
                     return
                   }
-                  _vm.$set(_vm.vendorInfo, "user_email", $event.target.value)
+                  _vm.$set(_vm.vendorInfo, "email", $event.target.value)
                 }
               }
             }),

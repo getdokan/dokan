@@ -99,7 +99,7 @@ class Manager {
             unset( $data['store_open_close'] );
         }
 
-        if ( empty( $data['show_email'] ) ) {
+        if ( empty( $data['show_email'] ) && ! current_user_can( 'manage_woocommerce' ) ) {
             unset( $data['email'] );
         }
 
