@@ -463,6 +463,7 @@ class SetupWizard {
                                 </div>
                             </li>
 
+                            <?php if ( dokan()->is_pro_exists() ) { ?>
                             <li class="wc-wizard-service-item <?php echo ( array_key_exists( 'paypal', $withdraw_methods ) ) ? 'checked="checked"' : ''; ?>">
                                 <div class="wc-wizard-service-name">
                                     <p><?php esc_html_e( 'Skrill', 'dokan-lite' ); ?></p>
@@ -475,6 +476,7 @@ class SetupWizard {
                                     <label for="withdraw_methods[skrill]" class="switch-label"></label>
                                 </div>
                             </li>
+                            <?php } ?>
 
                             <?php
                                 /**
