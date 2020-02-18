@@ -28,6 +28,24 @@ class Commission {
     public $quantity = 0;
 
     /**
+     * Total additional fee
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @var float
+     */
+    public $total_additional_fee = 0;
+
+    /**
+     * Order item meta to update
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @var array
+     */
+    public $order_item_meta_to_update = [];
+
+    /**
      * Class constructor
      *
      * @since  2.9.21
@@ -206,7 +224,9 @@ class Commission {
             $earning += $order->get_total_tax() - $order->get_total_tax_refunded();
         }
 
-        return apply_filters_deprecated( 'dokan_order_admin_commission', array( $earning, $order, $context ), '2.9.21', 'dokan_get_earning_by_order' );
+        apply_filters_deprecated( 'dokan_order_admin_commission', array( $earning, $order, $context ), '2.9.21', 'dokan_get_earning_by_order' );
+
+        return apply_filters( 'dokan_get_earning_by_order', $earning, $order, $context, $this );
     }
 
     /**
@@ -505,6 +525,10 @@ class Commission {
                     wc_add_order_item_meta( $items[$i], '_dokan_additional_fee', $additional_fee );
                 }
 
+                if ( $this->maybe_count_additional_fee_once( $callable ) ) {
+                    array_push( $this->order_item_meta_to_update, $items[$i] );
+                }
+
                 $i++;
                 break;
             }
@@ -539,7 +563,7 @@ class Commission {
             }
         }
 
-        return apply_filters( 'dokan_prepare_for_calculation', $earning, $commission_rate, $commission_type, $additional_fee, $product_price, $this->order_id );
+        return apply_filters( 'dokan_prepare_for_calculation', $earning, $commission_rate, $commission_type, $additional_fee, $product_price, $callable, $this );
     }
 
     /**
@@ -680,6 +704,52 @@ class Commission {
         }
 
         return $tax_recipient;
+    }
+
+    /**
+     * Calculate order wise
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return boolean
+     */
+    public function calculate_order_wise() {
+        return dokan_validate_boolean( dokan_get_option( 'order_wise_calculation', 'dokan_selling', 'off' ) );
+    }
+
+    /**
+     * Get total additional fee
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return float
+     */
+    public function get_total_additional_fee() {
+        return $this->total_additional_fee;
+    }
+
+    /**
+     * Get order item meta ids to update
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return array
+     */
+    public function get_order_item_meta_to_update() {
+        return $this->order_item_meta_to_update;
+    }
+
+    /**
+     * Maybe count additional fee once. Include additional fee once while calculatin global or vendor wise commission.
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param string $string
+     *
+     * @return boolean
+     */
+    public function maybe_count_additional_fee_once( $string ) {
+        return ( false !== strpos( $string, 'get_global' ) || false !== strpos( $string, 'get_vendor' ) );
     }
 
     /**
