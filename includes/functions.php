@@ -3421,7 +3421,7 @@ function dokan_is_store_listing() {
     if ( ! $found ) {
         $post = get_post( $page_id );
 
-        if ( $post && false !== strpos( $post->post_content, '[dokan-stores]' ) ) {
+        if ( $post && false !== strpos( $post->post_content, '[dokan-stores' ) ) {
             $found = true;
         }
     }
