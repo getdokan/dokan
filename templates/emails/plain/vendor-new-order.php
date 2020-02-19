@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 echo "= " . $email_heading . " =\n\n";
-echo sprintf( __( 'You have received an order from %s.', 'woocommerce' ), $order->get_formatted_billing_full_name() ) . "\n\n";
+echo sprintf( __( 'You have received an order from %s.', 'dokan-lite' ), $order->get_formatted_billing_full_name() ) . "\n\n";
 echo "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n\n";
 /**
  * @hooked WC_Emails::customer_details() Shows customer details

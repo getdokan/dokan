@@ -2142,12 +2142,10 @@ function dokan_get_processing_time_value( $index ) {
 }
 
 /**
- * Dokan get vendor order details by order_id
+ * Dokan get vendor order details by order ID
  *
  * @param  int $order
- *
  * @param  int $vendor_id
- *
  * @return array
  */
 function dokan_get_vendor_order_details( $order_id, $vendor_id ) {

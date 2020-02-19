@@ -20,17 +20,17 @@ $text_align = is_rtl() ? 'right' : 'left';
   */
  do_action( 'woocommerce_email_header', $email_heading, $email );
 
- $order_url = site_url().'/dashboard/orders/';
+ $order_url = dokan_get_navigation_url( 'orders' );
 ?>
 
-<p><?php printf( __( 'You have received an order from %s.', 'woocommerce' ), $order->get_formatted_billing_full_name() ); ?></p>
+<p><?php printf( __( 'You have received an order from %s.', 'dokan-lite' ), $order->get_formatted_billing_full_name() ); ?></p>
 
 <h2>
     <?php
     $before = '<a class="link" href="' . esc_url( $order_url ) . '">';
     $after  = '</a>';
     /* translators: %s: Order ID. */
-    echo wp_kses_post( $before . sprintf( __( '[Order #%s]', 'woocommerce' ) . $after . ' (<time datetime="%s">%s</time>)', $order->get_order_number(), $order->get_date_created()->format( 'c' ), wc_format_datetime( $order->get_date_created() ) ) );
+    echo wp_kses_post( $before . sprintf( __( '[Order #%s]', 'dokan-lite' ) . $after . ' (<time datetime="%s">%s</time>)', $order->get_order_number(), $order->get_date_created()->format( 'c' ), wc_format_datetime( $order->get_date_created() ) ) );
     ?>
 </h2>
 
@@ -39,9 +39,9 @@ $text_align = is_rtl() ? 'right' : 'left';
     <table class="td" cellspacing="0" cellpadding="6" style="width: 100%; font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;" border="1">
         <thead>
             <tr>
-                <th class="td" scope="col" style="text-align:<?php echo esc_attr( $text_align ); ?>;"><?php esc_html_e( 'Product', 'woocommerce' ); ?></th>
-                <th class="td" scope="col" style="text-align:<?php echo esc_attr( $text_align ); ?>;"><?php esc_html_e( 'Quantity', 'woocommerce' ); ?></th>
-                <th class="td" scope="col" style="text-align:<?php echo esc_attr( $text_align ); ?>;"><?php esc_html_e( 'Price', 'woocommerce' ); ?></th>
+                <th class="td" scope="col" style="text-align:<?php echo esc_attr( $text_align ); ?>;"><?php esc_html_e( 'Product', 'dokan-lite' ); ?></th>
+                <th class="td" scope="col" style="text-align:<?php echo esc_attr( $text_align ); ?>;"><?php esc_html_e( 'Quantity', 'dokan-lite' ); ?></th>
+                <th class="td" scope="col" style="text-align:<?php echo esc_attr( $text_align ); ?>;"><?php esc_html_e( 'Price', 'dokan-lite' ); ?></th>
             </tr>
         </thead>
 
@@ -63,7 +63,7 @@ $text_align = is_rtl() ? 'right' : 'left';
         <?php endforeach; ?>
 
         <tr>
-            <th class="td" scope="row" colspan="2" style="text-align: left;color: #636363;border: 1px solid #e5e5e5;vertical-align: middle;padding: 12px"><?php esc_attr_e( 'Subtotal', 'dokan' ); ?>:
+            <th class="td" scope="row" colspan="2" style="text-align: left;color: #636363;border: 1px solid #e5e5e5;vertical-align: middle;padding: 12px"><?php esc_attr_e( 'Subtotal', 'dokan-lite' ); ?>:
             </th>
 
             <td class="td" style="text-align: left;color: #636363;border: 1px solid #e5e5e5;vertical-align: middle;padding: 12px">
@@ -73,7 +73,7 @@ $text_align = is_rtl() ? 'right' : 'left';
 
         <?php if ( $order->get_discount_total() ) : ?>
         <tr>
-            <th class="td" scope="row" colspan="2" style="text-align: left;color: #636363;border: 1px solid #e5e5e5;vertical-align: middle;padding: 12px"><?php esc_attr_e( 'Discount', 'dokan' ); ?>:
+            <th class="td" scope="row" colspan="2" style="text-align: left;color: #636363;border: 1px solid #e5e5e5;vertical-align: middle;padding: 12px"><?php esc_attr_e( 'Discount', 'dokan-lite' ); ?>:
             </th>
 
             <td class="td" style="text-align: left;color: #636363;border: 1px solid #e5e5e5;vertical-align: middle;padding: 12px">
@@ -83,7 +83,7 @@ $text_align = is_rtl() ? 'right' : 'left';
         <?php endif; ?>
 
         <tr>
-            <th class="td" scope="row" colspan="2" style="text-align: left;color: #636363;border: 1px solid #e5e5e5;vertical-align: middle;padding: 12px"><?php esc_attr_e( 'Shipping', 'dokan' ); ?>:
+            <th class="td" scope="row" colspan="2" style="text-align: left;color: #636363;border: 1px solid #e5e5e5;vertical-align: middle;padding: 12px"><?php esc_attr_e( 'Shipping', 'dokan-lite' ); ?>:
             </th>
 
             <td class="td" style="text-align: left;color: #636363;border: 1px solid #e5e5e5;vertical-align: middle;padding: 12px">
@@ -93,7 +93,7 @@ $text_align = is_rtl() ? 'right' : 'left';
 
         <?php if ( $order->get_total_tax() ) : ?>
         <tr>
-            <th class="td" scope="row" colspan="2" style="text-align: left;color: #636363;border: 1px solid #e5e5e5;vertical-align: middle;padding: 12px"><?php esc_attr_e( 'Tax', 'dokan' ); ?>:
+            <th class="td" scope="row" colspan="2" style="text-align: left;color: #636363;border: 1px solid #e5e5e5;vertical-align: middle;padding: 12px"><?php esc_attr_e( 'Tax', 'dokan-lite' ); ?>:
             </th>
 
             <td class="td" style="text-align: left;color: #636363;border: 1px solid #e5e5e5;vertical-align: middle;padding: 12px">
@@ -103,7 +103,7 @@ $text_align = is_rtl() ? 'right' : 'left';
         <?php endif; ?>
 
         <tr>
-            <th class="td" scope="row" colspan="2" style="text-align: left;color: #636363;border: 1px solid #e5e5e5;vertical-align: middle;padding: 12px"><?php esc_attr_e( 'Payment Method', 'dokan' ); ?>:
+            <th class="td" scope="row" colspan="2" style="text-align: left;color: #636363;border: 1px solid #e5e5e5;vertical-align: middle;padding: 12px"><?php esc_attr_e( 'Payment Method', 'dokan-lite' ); ?>:
             </th>
 
             <td class="td" style="text-align: left;color: #636363;border: 1px solid #e5e5e5;vertical-align: middle;padding: 12px">
@@ -112,7 +112,7 @@ $text_align = is_rtl() ? 'right' : 'left';
         </tr>
 
         <tr>
-            <th class="td" scope="row" colspan="2" style="text-align: left;color: #636363;border: 1px solid #e5e5e5;vertical-align: middle;padding: 12px"><?php esc_attr_e( 'Total', 'dokan' ); ?>:
+            <th class="td" scope="row" colspan="2" style="text-align: left;color: #636363;border: 1px solid #e5e5e5;vertical-align: middle;padding: 12px"><?php esc_attr_e( 'Total', 'dokan-lite' ); ?>:
             </th>
 
             <td class="td" style="text-align: left;color: #636363;border: 1px solid #e5e5e5;vertical-align: middle;padding: 12px">

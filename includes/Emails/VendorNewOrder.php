@@ -10,8 +10,9 @@ use WC_Email;
  * An email sent to the admin when a new order is received/paid for.
  *
  * @class       VendorNewOrder
- * @version     2.0.0
- * @package     WooCommerce/Classes/Emails
+ * @version     2.6.8
+ * @package     Dokan/Classes/Emails
+ * @author      weDevs
  * @extends     WC_Email
  */
 class VendorNewOrder extends WC_Email {
@@ -21,8 +22,8 @@ class VendorNewOrder extends WC_Email {
      */
     public function __construct() {
         $this->id             = 'dokan_vendor_new_order';
-        $this->title          = __( 'Dokan Vendor New Order', 'woocommerce' );
-        $this->description    = __( 'New order emails are sent to chosen recipient(s) when a new order is received.', 'woocommerce' );
+        $this->title          = __( 'Dokan Vendor New Order', 'dokan-lite' );
+        $this->description    = __( 'New order emails are sent to chosen recipient(s) when a new order is received.', 'dokan-lite' );
         $this->template_html  = 'emails/vendor-new-order.php';
         $this->template_plain = 'emails/plain/vendor-new-order.php';
         $this->template_base  = DOKAN_DIR.'/templates/';
@@ -33,7 +34,7 @@ class VendorNewOrder extends WC_Email {
         );
 
         // Triggers for this email.
-        add_action( 'woocommerce_order_status_pending_to_processing_notification', array( $this, 'custom_trigger_email_action' ), 10, 2 );
+        add_action( 'woocommerce_order_status_pending_to_processing_notification', array( $this, 'trigger' ), 10, 2 );
         add_action( 'woocommerce_order_status_pending_to_completed_notification', array( $this, 'trigger' ), 10, 2 );
         add_action( 'woocommerce_order_status_pending_to_on-hold_notification', array( $this, 'trigger' ), 10, 2 );
         add_action( 'woocommerce_order_status_failed_to_processing_notification', array( $this, 'trigger' ), 10, 2 );
@@ -54,7 +55,7 @@ class VendorNewOrder extends WC_Email {
      * @return string
      */
     public function get_default_subject() {
-        return __( '[{site_title}] New customer order ({order_number}) - {order_date}', 'woocommerce' );
+        return __( '[{site_title}] New customer order ({order_number}) - {order_date}', 'dokan-lite' );
     }
 
     /**
@@ -64,16 +65,16 @@ class VendorNewOrder extends WC_Email {
      * @return string
      */
     public function get_default_heading() {
-        return __( 'New Customer Order: #{order_number}', 'woocommerce' );
+        return __( 'New Customer Order: #{order_number}', 'dokan-lite' );
     }
 
     /**
      * Trigger the sending of this email.
      *
-     * @param int            $order_id The order ID.
-     * @param WC_Order|false $order Order object.
+     * @param int $order_id The Order ID.
+     * @param array $order.
      */
-    public function custom_trigger_email_action( $order_id, $order = false ) {
+    public function trigger( $order_id, $order = false ) {
 
         if ( ! $this->is_enabled() ) {
             return;
@@ -85,28 +86,28 @@ class VendorNewOrder extends WC_Email {
         }
 
         if ( is_a( $order, 'WC_Order' ) ) {
-            $this->object                           = $order;
-            $this->placeholders['{order_date}']     = wc_format_datetime( $this->object->get_date_created() );
-            $this->placeholders['{order_number}']   = $this->object->get_order_number();
+            $this->object                         = $order;
+            $this->placeholders['{order_date}']   = wc_format_datetime( $this->object->get_date_created() );
+            $this->placeholders['{order_number}'] = $this->object->get_order_number();
         }
         
-        $sellers 	  = dokan_get_seller_id_by_order( $order_id );
+        $sellers = dokan_get_seller_id_by_order( $order_id );
         if ( empty( $sellers ) ) {
             return;
         }
         
         // check has sub order 
-        if ( get_post_meta( $order_id, 'has_sub_order', true ) ) {
+        if ( dokan_is_sub_order( $order_id ) ) {
         	foreach ($sellers as $seller) {
-        		$seller_info       	= get_userdata( $seller );
-		        $seller_email 		= $seller_info->user_email;
-		        $this->order_info 	= dokan_get_vendor_order_details( $order_id, $seller );
+        		$seller_info      = get_userdata( $seller );
+		        $seller_email 	  = $seller_info->user_email;
+		        $this->order_info = dokan_get_vendor_order_details( $order_id, $seller );
 			    $this->send( $seller_email, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
         	}
         }else{
-        	$seller_info       	= get_userdata( $sellers );
-		    $seller_email 		= $seller_info->user_email;
-        	$this->order_info 	= dokan_get_vendor_order_details( $order_id, $sellers );
+        	$seller_info      = get_userdata( $sellers );
+		    $seller_email 	  = $seller_info->user_email;
+        	$this->order_info = dokan_get_vendor_order_details( $order_id, $sellers );
 	        $this->send( $seller_email, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
         }
         $this->restore_locale();
@@ -156,33 +157,33 @@ class VendorNewOrder extends WC_Email {
     public function init_form_fields() {
         $this->form_fields = array(
             'enabled'    => array(
-                'title'   => __( 'Enable/Disable', 'woocommerce' ),
+                'title'   => __( 'Enable/Disable', 'dokan-lite' ),
                 'type'    => 'checkbox',
-                'label'   => __( 'Enable this email notification', 'woocommerce' ),
+                'label'   => __( 'Enable this email notification', 'dokan-lite' ),
                 'default' => 'yes',
             ),
             'subject'    => array(
-                'title'       => __( 'Subject', 'woocommerce' ),
+                'title'       => __( 'Subject', 'dokan-lite' ),
                 'type'        => 'text',
                 'desc_tip'    => true,
                 /* translators: %s: list of placeholders */
-                'description' => sprintf( __( 'Available placeholders: %s', 'woocommerce' ), '<code>{site_title}, {order_date}, {order_number}</code>' ),
+                'description' => sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>{site_title}, {order_date}, {order_number}</code>' ),
                 'placeholder' => $this->get_default_subject(),
                 'default'     => '',
             ),
             'heading'    => array(
-                'title'       => __( 'Email heading', 'woocommerce' ),
+                'title'       => __( 'Email heading', 'dokan-lite' ),
                 'type'        => 'text',
                 'desc_tip'    => true,
                 /* translators: %s: list of placeholders */
-                'description' => sprintf( __( 'Available placeholders: %s', 'woocommerce' ), '<code>{site_title}, {order_date}, {order_number}</code>' ),
+                'description' => sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>{site_title}, {order_date}, {order_number}</code>' ),
                 'placeholder' => $this->get_default_heading(),
                 'default'     => '',
             ),
             'email_type' => array(
-                'title'       => __( 'Email type', 'woocommerce' ),
+                'title'       => __( 'Email type', 'dokan-lite' ),
                 'type'        => 'select',
-                'description' => __( 'Choose which format of email to send.', 'woocommerce' ),
+                'description' => __( 'Choose which format of email to send.', 'dokan-lite' ),
                 'default'     => 'html',
                 'class'       => 'email_type wc-enhanced-select',
                 'options'     => $this->get_email_type_options(),
