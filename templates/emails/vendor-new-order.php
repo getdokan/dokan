@@ -20,7 +20,7 @@ $text_align = is_rtl() ? 'right' : 'left';
   */
  do_action( 'woocommerce_email_header', $email_heading, $email );
 
- $order_url = dokan_get_navigation_url( 'orders' );
+ $order_url = dokan_get_navigation_url( 'orders?order_id='.$order->get_order_number().'&_view_mode=email&permission=1' );
 ?>
 
 <p><?php printf( __( 'You have received an order from %s.', 'dokan-lite' ), $order->get_formatted_billing_full_name() ); ?></p>
