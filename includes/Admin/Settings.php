@@ -257,6 +257,7 @@ class Settings {
     public function get_settings_fields() {
         $pages_array  = $this->get_post_type( 'page' );
 
+        $commission_bases = dokan_get_commission_bases();
         $commission_types = dokan_commission_types();
 
         $general_site_options = apply_filters( 'dokan_settings_general_site_options', array(
@@ -314,6 +315,14 @@ class Settings {
                 'name'  => 'commission',
                 'label' => __( 'Commission', 'dokan-lite' ),
                 'type'  => 'sub_section',
+            ),
+            'commission_base' => array(
+                'name'    => 'commission_base',
+                'label'   => __( 'Commission Based On ', 'dokan-lite' ),
+                'desc'    => __( 'Select how commission should be calculated based on product or order', 'dokan-lite' ),
+                'type'    => 'select',
+                'options' => $commission_bases,
+                'default' => 'product'
             ),
             'commission_type' => array(
                 'name'    => 'commission_type',

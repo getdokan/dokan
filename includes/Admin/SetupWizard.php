@@ -381,16 +381,20 @@ class SetupWizard {
     public function dokan_setup_selling() {
         $options = get_option( 'dokan_selling', array() );
         $new_seller_enable_selling = ! empty( $options['new_seller_enable_selling'] ) ? $options['new_seller_enable_selling'] : '';
+        $commission_base           = ! empty( $options['commission_base'] ) ? $options['commission_base'] : 'product';
         $commission_type           = ! empty( $options['commission_type'] ) ? $options['commission_type'] : 'percentage';
         $admin_percentage          = ! empty( $options['admin_percentage'] ) ? $options['admin_percentage'] : '';
         $order_status_change       = ! empty( $options['order_status_change'] ) ? $options['order_status_change'] : '';
+        $dokan_commission_bases    = dokan_get_commission_bases();
         $dokan_commission_types    = dokan_commission_types();
 
         $args = apply_filters( 'dokan_admin_setup_wizard_step_setup_selling_template_args', array(
             'new_seller_enable_selling' => $new_seller_enable_selling,
+            'commission_base'           => $commission_base,
             'commission_type'           => $commission_type,
             'admin_percentage'          => $admin_percentage,
             'order_status_change'       => $order_status_change,
+            'dokan_commission_bases'    => $dokan_commission_bases,
             'dokan_commission_types'    => $dokan_commission_types,
             'setup_wizard'              => $this,
         ) );
@@ -408,6 +412,7 @@ class SetupWizard {
 
         $options = get_option( 'dokan_selling', array() );
         $options['new_seller_enable_selling'] = isset( $_post_data['new_seller_enable_selling'] ) ? 'on' : 'off';
+        $options['commission_base']           = sanitize_text_field( $_post_data['commission_base'] );
         $options['commission_type']           = sanitize_text_field( $_post_data['commission_type'] );
         $options['admin_percentage']          = is_int( $_post_data['admin_percentage'] ) ? intval( $_post_data['admin_percentage'] ) : floatval( $_post_data['admin_percentage'] );
         $options['order_status_change']       = isset( $_post_data['order_status_change'] ) ? 'on' : 'off';

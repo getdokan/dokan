@@ -10,6 +10,42 @@ namespace WeDevs\Dokan;
 class Commission {
 
     /**
+     * Commission base holder
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @var string
+     */
+    CONST COMMISSION_BASE = '_dokan_commission_base';
+
+    /**
+     * Commission type holder
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @var string
+     */
+    CONST COMMISSION_TYPE = '_dokan_commission_type';
+
+    /**
+     * Commission rate holder
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @var string
+     */
+    CONST COMMISSION_RATE = '_dokan_commission_rate';
+
+    /**
+     * Additional fee holder
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @var string
+     */
+    CONST ADDITIONAL_FEE = '_dokan_additional_fee';
+
+    /**
      * Order id holder
      *
      * @since 2.9.21
@@ -26,6 +62,33 @@ class Commission {
      * @var integer
      */
     public $quantity = 0;
+
+    /**
+     * Total flat fee
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @var float
+     */
+    public $total_flat_fee = 0;
+
+    /**
+     * Total additional fee
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @var float
+     */
+    public $total_additional_fee = 0;
+
+    /**
+     * Order item meta to update
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @var array
+     */
+    public $order_item_meta_to_update = [];
 
     /**
      * Class constructor
@@ -48,7 +111,7 @@ class Commission {
      * @return array
      */
     public function hide_extra_data( $formated_meta ) {
-        $meta_to_hide   = [ '_dokan_commission_rate', '_dokan_commission_type', '_dokan_additional_fee' ];
+        $meta_to_hide   = [ self::COMMISSION_BASE, self::COMMISSION_TYPE, self::COMMISSION_RATE, self::ADDITIONAL_FEE ];
         $meta_to_return = [];
 
         foreach ( $formated_meta as $key => $meta ) {
@@ -206,7 +269,16 @@ class Commission {
             $earning += $order->get_total_tax() - $order->get_total_tax_refunded();
         }
 
-        return apply_filters_deprecated( 'dokan_order_admin_commission', array( $earning, $order, $context ), '2.9.21', 'dokan_get_earning_by_order' );
+        if ( $this->calculate_order_wise() ) {
+            $earning += $this->get_total_flat_fee();
+            $earning += $this->get_total_additional_fee();
+
+            $this->maybe_update_metadata();
+        }
+
+        apply_filters_deprecated( 'dokan_order_admin_commission', array( $earning, $order, $context ), '2.9.21', 'dokan_get_earning_by_order' );
+
+        return apply_filters( 'dokan_get_earning_by_order', $earning, $order, $context, $this );
     }
 
     /**
@@ -436,6 +508,7 @@ class Commission {
         $func_fee  = str_replace( 'earning', 'additional_fee', $callable );
 
         $commission_rate = null;
+        $commission_base = $this->get_commission_base();
 
         // get[product,category,vendor,global]_wise_rate
         if ( is_callable( [ $this, $func_rate ] ) ) {
@@ -483,26 +556,46 @@ class Commission {
                     continue;
                 }
 
-                $saved_commission_rate = wc_get_order_item_meta( $items[$i], '_dokan_commission_rate', true );
-                $saved_commission_type = wc_get_order_item_meta( $items[$i], '_dokan_commission_type', true );
-                $saved_additional_fee  = wc_get_order_item_meta( $items[$i], '_dokan_additional_fee', true );
+                $saved_commission_base = wc_get_order_item_meta( $items[$i], self::COMMISSION_BASE, true );
+                $saved_commission_rate = wc_get_order_item_meta( $items[$i], self::COMMISSION_RATE, true );
+                $saved_commission_type = wc_get_order_item_meta( $items[$i], self::COMMISSION_TYPE, true );
+
+                if ( $saved_commission_base ) {
+                    $commission_base = $saved_commission_base;
+                } else {
+                    wc_add_order_item_meta( $items[$i], self::COMMISSION_BASE, $commission_base );
+                }
 
                 if ( $saved_commission_rate ) {
                     $commission_rate = $saved_commission_rate;
                 } else {
-                    wc_add_order_item_meta( $items[$i], '_dokan_commission_rate', $commission_rate );
+                    wc_add_order_item_meta( $items[$i], self::COMMISSION_RATE, $commission_rate );
                 }
 
                 if ( $saved_commission_type ) {
                     $commission_type = $saved_commission_type;
                 } else {
-                    wc_add_order_item_meta( $items[$i], '_dokan_commission_type', $commission_type );
+                    wc_add_order_item_meta( $items[$i], self::COMMISSION_TYPE, $commission_type );
                 }
 
-                if ( $saved_additional_fee ) {
-                    $additional_fee = $saved_additional_fee;
-                } else {
-                    wc_add_order_item_meta( $items[$i], '_dokan_additional_fee', $additional_fee );
+                if ( 'combine' === $commission_type ) {
+                    $saved_additional_fee = wc_get_order_item_meta( $items[$i], self::ADDITIONAL_FEE, true );
+
+                    if ( $saved_additional_fee ) {
+                        $additional_fee = $saved_additional_fee;
+                    } else {
+                        wc_add_order_item_meta( $items[$i], self::ADDITIONAL_FEE, $additional_fee );
+                    }
+                }
+
+                /**
+                 * While calculating order based commission for global and vendor wise. We need to add flat fee once in the order.
+                 * So we are tracking the line item here, so that we can adjust commission rate, type etc later.
+                 *
+                 * @since DOKAN_LITE_SINCE
+                 */
+                if ( $this->maybe_count_flat_fee_once( $callable ) ) {
+                    array_push( $this->order_item_meta_to_update, $items[$i] );
                 }
 
                 $i++;
@@ -515,7 +608,7 @@ class Commission {
         }
 
         if ( 'flat' === $commission_type ) {
-            if ( $this->get_order_qunatity() ) {
+            if ( $this->get_order_qunatity() && ! $this->calculate_order_wise() ) {
                 $commission_rate *= apply_filters( 'dokan_commission_multiply_by_order_quantity', $this->get_order_qunatity() );
             }
 
@@ -524,6 +617,21 @@ class Commission {
             $item_total = get_post_meta( $this->get_order_id(), '_dokan_item_total', true );
             if ( $item_total ) {
                 $commission_rate = ( $commission_rate / $item_total ) * $product_price;
+            }
+
+            if ( $this->calculate_order_wise() ) {
+                static $called = false;
+
+                if ( $called && $this->maybe_count_flat_fee_once( $callable ) ) {
+                    $commission_rate = 0;
+                }
+
+                if ( $this->maybe_count_flat_fee_once( $callable ) ) {
+                    $called = true;
+                }
+
+                $this->total_flat_fee += $commission_rate;
+                $commission_rate      = 0;
             }
 
             $earning = $product_price - $commission_rate;
@@ -539,7 +647,7 @@ class Commission {
             }
         }
 
-        return apply_filters( 'dokan_prepare_for_calculation', $earning, $commission_rate, $commission_type, $additional_fee, $product_price, $this->order_id );
+        return apply_filters( 'dokan_prepare_for_calculation', $earning, $commission_rate, $commission_type, $additional_fee, $product_price, $callable, $this );
     }
 
     /**
@@ -680,6 +788,107 @@ class Commission {
         }
 
         return $tax_recipient;
+    }
+
+    /**
+     * Calculate order wise
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return boolean
+     */
+    public function calculate_order_wise() {
+        return 'order' === $this->get_commission_base();
+    }
+
+    /**
+     * Get commission base
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return string
+     */
+    public function get_commission_base() {
+        $commission_base = dokan_get_option( 'commission_base', 'dokan_selling', 'product' );
+
+        return $commission_base ? $commission_base : 'product';
+    }
+
+    /**
+     * Get total additional fee
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return float
+     */
+    public function get_total_flat_fee() {
+        return $this->total_flat_fee;
+    }
+
+    /**
+     * Get total additional fee
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return float
+     */
+    public function get_total_additional_fee() {
+        return $this->total_additional_fee;
+    }
+
+    /**
+     * Get order item meta ids to update. This is only applicable when calculating order base commission.
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return array
+     */
+    public function get_order_item_meta_to_update() {
+        return $this->order_item_meta_to_update;
+    }
+
+    /**
+     * Maybe count flat fee once. Include flat fee once while calculatin global or vendor wise commission
+     * And calculating commission based on order.
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param string $string
+     *
+     * @return boolean
+     */
+    public function maybe_count_flat_fee_once( $string ) {
+        return $this->calculate_order_wise() && ( false !== strpos( $string, 'get_global' ) || false !== strpos( $string, 'get_vendor' ) );
+    }
+
+    /**
+     * Maybe update metadata
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return void
+     */
+    public function maybe_update_metadata() {
+        $item_ids       = $this->get_order_item_meta_to_update();
+        $number_of_item = count( $item_ids );
+
+        if ( ! $number_of_item ) {
+            return;
+        }
+
+        $saved_commission_type = wc_get_order_item_meta( $item_ids[0], self::COMMISSION_TYPE, true );
+        $saved_commission_rate = wc_get_order_item_meta( $item_ids[0], self::COMMISSION_RATE, true );
+        $saved_additional_fee  = wc_get_order_item_meta( $item_ids[0], self::ADDITIONAL_FEE, true );
+
+        foreach ( $item_ids as $item_id ) {
+            if ( 'flat' === $saved_commission_type && saved_commission_rate ) {
+                wc_update_order_item_meta( $item_id, self::COMMISSION_RATE, ( $saved_commission_rate / $number_of_item ) );
+            }
+
+            if ( 'combine' === $saved_commission_type && $saved_additional_fee ) {
+                wc_update_order_item_meta( $item_id, self::ADDITIONAL_FEE, ( $saved_additional_fee / $number_of_item ) );
+            }
+        }
     }
 
     /**

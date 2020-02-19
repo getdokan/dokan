@@ -15,6 +15,19 @@
             </td>
         </tr>
         <tr>
+            <th scope="row"><label for="commission_base"><?php esc_html_e( 'Commission Based On', 'dokan-lite' ); ?></label></th>
+            <td>
+                <select class="commission_base wc-enhanced-select" name="commission_base">
+                    <?php foreach ( $dokan_commission_bases as $base => $title ): ?>
+                        <option value="<?php echo esc_attr( $base ); ?>" <?php selected( $commission_base, $base ); ?>>
+                            <?php echo esc_html( $title ); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+                <p class="description"><?php esc_html_e( 'Set how commission should be calculated based on product or order', 'dokan-lite' ); ?></p>
+            </td>
+        </tr>
+        <tr>
             <th scope="row"><label for="admin_percentage"><?php esc_html_e( 'Commission Type', 'dokan-lite' ); ?></label></th>
             <td>
                 <select class="commission_type wc-enhanced-select" name="commission_type">

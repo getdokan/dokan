@@ -3515,6 +3515,20 @@ function dokan_commission_types() {
 }
 
 /**
+ * Get dokan commission bases
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @return array
+ */
+function dokan_get_commission_bases() {
+    return apply_filters( 'dokan_get_commission_bases', [
+        'product' => __( 'Product', 'dokan-lite' ),
+        'order'   => __( 'Order', 'dokan-lite' ),
+    ] );
+}
+
+/**
  * Dokan Login Form
  *
  * @since 2.9.11
