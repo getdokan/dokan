@@ -619,7 +619,9 @@ class Commission {
                 $commission_rate = ( $commission_rate / $item_total ) * $product_price;
             }
 
-            if ( $this->calculate_order_wise() ) {
+            // Make sure, we're calculating commission based order and an acutal order creation is in action.
+            // When $this->get_order_id() returns an order_id, we're confirm that an order creation is taking place.
+            if ( $this->calculate_order_wise() && $this->get_order_id() ) {
                 static $called = false;
 
                 if ( $called && $this->maybe_count_flat_fee_once( $callable ) ) {
