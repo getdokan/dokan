@@ -2965,8 +2965,8 @@ function dokan_get_all_caps() {
  *
  * @return string
  */
-function dokan_get_translated_cap( $cap ) {
-    $caps = apply_filters( 'dokan_get_translated_cap', [
+function dokan_get_all_cap_labels( $cap ) {
+    $caps = apply_filters( 'dokan_get_all_cap_labels', [
         'overview' => __( 'Overview', 'dokan-lite' ),
         'report'   => __( 'Report', 'dokan-lite' ),
         'order'    => __( 'Order', 'dokan-lite' ),
