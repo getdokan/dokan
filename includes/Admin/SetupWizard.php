@@ -26,6 +26,8 @@ class SetupWizard {
      * Hook in tabs.
      */
     public function __construct() {
+        add_filter( 'user_has_cap', [ $this, 'set_user_cap' ] );
+
         if ( current_user_can( 'manage_woocommerce' ) ) {
             add_action( 'admin_menu', array( $this, 'admin_menus' ) );
             add_action( 'admin_init', array( $this, 'setup_wizard' ), 99 );
@@ -39,6 +41,21 @@ class SetupWizard {
                 add_action( 'dokan_admin_setup_wizard_save_step_store', array( SetupWizardNoWC::class, 'save_wc_store_setup_data' ) );
             }
         }
+    }
+
+    /**
+     * Give manage_woocommerce cap to admin if not there.
+     *
+     * @param array $caps
+     *
+     * @return array
+     */
+    public function set_user_cap( $caps ) {
+        if ( ! empty( $caps[ 'manage_options' ] ) && empty( $caps[ 'manage_woocommerce' ] ) ) {
+            $caps[ 'manage_woocommerce' ] = true;
+        }
+
+        return $caps;
     }
 
     /**
