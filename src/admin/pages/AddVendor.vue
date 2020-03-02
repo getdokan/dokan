@@ -86,7 +86,7 @@ export default {
                 user_pass: '',
                 store_url: '',
                 user_login: '',
-                user_email: '',
+                email: '',
                 user_nicename: '',
                 notify_vendor: true,
                 phone: '',
@@ -129,7 +129,7 @@ export default {
             requiredFields: [
                 'store_name',
                 'user_login',
-                'user_email'
+                'email'
             ],
             errors: [],
             storeAvailable: false,

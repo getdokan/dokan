@@ -132,6 +132,11 @@ class Manager {
             'user_pass'  => wp_generate_password(),
         ];
 
+        if ( ! empty( $data['email'] ) ) {
+            $data['user_email'] = $data['email'];
+            unset( $data['email'] );
+        }
+
         $vendor_data = wp_parse_args( $data, $defaults );
         $vendor_id   = wp_insert_user( $vendor_data );
 
@@ -252,16 +257,15 @@ class Manager {
             );
         }
 
-        if ( ! empty( $data['user_email'] ) ) {
-
-            if ( ! is_email( $data['user_email'] ) ) {
+        if ( ! empty( $data['email'] ) ) {
+            if ( ! is_email( $data['email'] ) ) {
                 return new WP_Error( 'invalid_email', __( 'Email is not valid', 'dokan-lite' ) );
             }
 
             wp_update_user(
                 array(
                     'ID'         => $vendor->get_id(),
-                    'user_email' => sanitize_email( $data['user_email'] ),
+                    'user_email' => sanitize_email( $data['email'] ),
                 )
             );
         }
