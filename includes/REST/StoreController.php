@@ -679,14 +679,14 @@ class StoreController extends WP_REST_Controller {
         }
 
         // check whether email is available or not
-        if ( ! empty( $params['user_email'] ) ) {
-            $user_email = $params['user_email'];
+        if ( ! empty( $params['email'] ) ) {
+            $user_email = $params['email'];
 
             if ( ! is_email( $user_email ) ) {
                 $response = [
-                    'user_email' => $user_email,
-                    'available'  => false,
-                    'message'    => __( 'This email address is not valid', 'dokan-lite' )
+                    'email'     => $user_email,
+                    'available' => false,
+                    'message'   => __( 'This email address is not valid', 'dokan-lite' )
                 ];
 
                 return rest_ensure_response( $response );
@@ -694,7 +694,7 @@ class StoreController extends WP_REST_Controller {
 
             if ( email_exists( $user_email ) ) {
                 $response = [
-                    'user_email'  => $user_email,
+                    'email'     => $user_email,
                     'available' => false
                 ];
 
@@ -702,7 +702,7 @@ class StoreController extends WP_REST_Controller {
             }
 
             $response = [
-                'user_email'  => $user_email,
+                'email'     => $user_email,
                 'available' => true
             ];
 

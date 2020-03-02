@@ -71,8 +71,8 @@
 
                     <input type="email"
                         v-model="vendorInfo.email"
-                        :class="{'dokan-form-input': true, 'has-error': getError('user_email')}"
-                        :placeholder="getError( 'user_email' ) ? __( 'Email is required', 'dokan-lite' ) : __( 'store@email.com', 'dokan-lite' )"
+                        :class="{'dokan-form-input': true, 'has-error': getError('email')}"
+                        :placeholder="getError( 'email' ) ? __( 'Email is required', 'dokan-lite' ) : __( 'store@email.com', 'dokan-lite' )"
                     >
 
                     <div class="store-avaibility-info">
@@ -331,7 +331,7 @@ export default {
             this.emailAvailabilityText = this.__( 'Searching...', 'dokan-lite' );
 
             dokan.api.get( `/stores/check`, {
-                user_email: userEmail
+                email: userEmail
             } ).then( ( response ) => {
                 if ( response.available ) {
                     this.emailAvailable = true;
