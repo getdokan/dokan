@@ -2114,9 +2114,9 @@ function dokan_get_shipping_processing_times() {
     $times = array(
         '' => __( 'Ready to ship in...', 'dokan-lite' ),
         '1' => __( '1 business day', 'dokan-lite' ),
-        '2' => __( '1-2 business day', 'dokan-lite' ),
-        '3' => __( '1-3 business day', 'dokan-lite' ),
-        '4' => __( '3-5 business day', 'dokan-lite' ),
+        '2' => __( '1-2 business days', 'dokan-lite' ),
+        '3' => __( '1-3 business days', 'dokan-lite' ),
+        '4' => __( '3-5 business days', 'dokan-lite' ),
         '5' => __( '1-2 weeks', 'dokan-lite' ),
         '6' => __( '2-3 weeks', 'dokan-lite' ),
         '7' => __( '3-4 weeks', 'dokan-lite' ),
