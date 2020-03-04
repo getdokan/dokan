@@ -26,7 +26,9 @@ class SetupWizard {
      * Hook in tabs.
      */
     public function __construct() {
-        add_filter( 'user_has_cap', [ $this, 'set_user_cap' ] );
+        if ( ! dokan()->has_woocommerce() ) {
+            add_filter( 'user_has_cap', [ $this, 'set_user_cap' ] );
+        }
 
         if ( current_user_can( 'manage_woocommerce' ) ) {
             add_action( 'admin_menu', array( $this, 'admin_menus' ) );
@@ -51,7 +53,7 @@ class SetupWizard {
      * @return array
      */
     public function set_user_cap( $caps ) {
-        if ( ! empty( $caps[ 'manage_options' ] ) && empty( $caps[ 'manage_woocommerce' ] ) ) {
+        if ( ! empty( $caps[ 'manage_options' ] ) ) {
             $caps[ 'manage_woocommerce' ] = true;
         }
 
