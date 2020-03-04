@@ -50,18 +50,6 @@
     $dokan_store_time_enabled = isset( $profile_info['dokan_store_time_enabled'] ) ? $profile_info['dokan_store_time_enabled'] : '';
     $dokan_store_open_notice  = isset( $profile_info['dokan_store_open_notice'] ) ? $profile_info['dokan_store_open_notice'] : '';
     $dokan_store_close_notice = isset( $profile_info['dokan_store_close_notice'] ) ? $profile_info['dokan_store_close_notice'] : '';
-
-    $map_api_source           = dokan_get_option( 'map_api_source', 'dokan_appearance', '' );
-    $gmap_api_key             = dokan_get_option( 'gmap_api_key', 'dokan_appearance', '' );
-    $mapbox_access_token      = dokan_get_option( 'mapbox_access_token', 'dokan_appearance', '' );
-    $show_map_status          = false;
-
-    if( 'google_maps' == $map_api_source && ! empty( $gmap_api_key ) ) {
-        $show_map_status = true;
-    } else if( 'mapbox' == $map_api_source && ! empty( $mapbox_access_token ) ) {
-        $show_map_status = true;
-    }
-
 ?>
 <?php do_action( 'dokan_settings_before_form', $current_user, $profile_info ); ?>
 
@@ -187,7 +175,7 @@
             </div>
         </div>
 
-        <?php if( $show_map_status ) { ?>
+        <?php if ( dokan_has_map_api_key() ) { ?>
         <div class="dokan-form-group">
             <label class="dokan-w3 dokan-control-label" for="setting_map"><?php esc_html_e( 'Map', 'dokan-lite' ); ?></label>
 
