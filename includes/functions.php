@@ -2957,6 +2957,30 @@ function dokan_get_all_caps() {
 }
 
 /**
+ * Get translated capability
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @param  string $cap
+ *
+ * @return string
+ */
+function dokan_get_all_cap_labels( $cap ) {
+    $caps = apply_filters( 'dokan_get_all_cap_labels', [
+        'overview' => __( 'Overview', 'dokan-lite' ),
+        'report'   => __( 'Report', 'dokan-lite' ),
+        'order'    => __( 'Order', 'dokan-lite' ),
+        'coupon'   => __( 'Coupon', 'dokan-lite' ),
+        'review'   => __( 'Review', 'dokan-lite' ),
+        'withdraw' => __( 'Withdraw', 'dokan-lite' ),
+        'product'  => __( 'Product', 'dokan-lite' ),
+        'menu'     => __( 'Menu', 'dokan-lite' ),
+    ] );
+
+    return ! empty( $caps[ $cap ] ) ? $caps[ $cap ] : '';
+}
+
+/**
  * Merge user defined arguments into defaults array.
  *
  * This function is similiar to wordpress wp_parse_args().

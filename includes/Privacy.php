@@ -46,11 +46,10 @@ class Privacy extends WC_Abstract_Privacy {
      */
     public function get_privacy_message() {
         $content = '
-            <div contenteditable="false">' .
-                '<p class="wp-policy-help">' .
-                    __( 'This sample privacy policy includes the basics around what personal data your multivendor store may be collecting, storing and sharing, as well as who may have access to that data. Depending on what settings are enabled and which additional plugins are used, the specific information shared by your store will vary. We recommend consulting with a lawyer when deciding what information to disclose on your privacy policy.', 'dokan-lite' ) .
-                '</p>' .
-            '</div>' .
+            <div class="wp-suggested-text">' .
+            '<p class="privacy-policy-tutorial">' .
+                __( 'This sample privacy policy includes the basics around what personal data your multivendor store may be collecting, storing and sharing, as well as who may have access to that data. Depending on what settings are enabled and which additional plugins are used, the specific information shared by your store will vary. We recommend consulting with a lawyer when deciding what information to disclose on your privacy policy.', 'dokan-lite' ) .
+            '</p>' .
             '<p>' . __( 'We collect information about you during the checkout process on our store.', 'dokan-lite' ) . '</p>' .
             '<h2>' . __( 'What we collect and store', 'dokan-lite' ) . '</h2>' .
             '<p>' . __( 'While you visit our site, we’ll track:', 'dokan-lite' ) . '</p>' .
@@ -61,9 +60,7 @@ class Privacy extends WC_Abstract_Privacy {
                 '<li>' . __( 'Shipping address: we’ll ask you to enter this so we can, for instance, estimate shipping before you place an order, and send you the order!', 'dokan-lite' ) . '</li>' .
             '</ul>' .
             '<p>' . __( 'We’ll also use cookies to keep track of cart contents while you’re browsing our site.', 'dokan-lite' ) . '</p>' .
-            '<div contenteditable="false">' .
-                '<p class="wp-policy-help">' . __( 'Note: you may want to further detail your cookie policy, and link to that section from here.', 'dokan-lite' ) . '</p>' .
-            '</div>' .
+            '<p class="privacy-policy-tutorial">' . __( 'Note: you may want to further detail your cookie policy, and link to that section from here.', 'dokan-lite' ) . '</p>' .
             '<p>' . __( 'When you purchase from us, we’ll ask you to provide information including your name, billing address, shipping address, email address, phone number, credit card/payment details and optional account information like username and password. We’ll use this information for purposes, such as, to:', 'dokan-lite' ) . '</p>' .
             '<ul>' .
                 '<li>' . __( 'Send you information about your account and order', 'dokan-lite' ) . '</li>' .
@@ -85,19 +82,14 @@ class Privacy extends WC_Abstract_Privacy {
             '</ul>' .
             '<p>' . __( 'Our team members have access to this information to help fulfill orders, process refunds and support you.', 'dokan-lite' ) . '</p>' .
             '<h2>' . __( 'What we share with others', 'dokan-lite' ) . '</h2>' .
-            '<div contenteditable="false">' .
-                '<p class="wp-policy-help">' . __( 'In this section you should list who you’re sharing data with, and for what purpose. This could include, but may not be limited to, analytics, marketing, payment gateways, shipping providers, and third party embeds.', 'dokan-lite' ) . '</p>' .
-            '</div>' .
+            '<p class="privacy-policy-tutorial">' . __( 'In this section you should list who you’re sharing data with, and for what purpose. This could include, but may not be limited to, analytics, marketing, payment gateways, shipping providers, and third party embeds.', 'dokan-lite' ) . '</p>' .
             '<p>' . __( 'We share information with third parties who help us provide our orders and store services to you; for example --', 'dokan-lite' ) . '</p>' .
             '<h3>' . __( 'Payments', 'dokan-lite' ) . '</h3>' .
-            '<div contenteditable="false">' .
-                '<p class="wp-policy-help">' . __( 'In this subsection you should list which third party payment processors you’re using to take payments on your store since these may handle customer data. We’ve included PayPal as an example, but you should remove this if you’re not using PayPal.', 'dokan-lite' ) . '</p>' .
-            '</div>' .
+            '<p class="privacy-policy-tutorial">' . __( 'In this subsection you should list which third party payment processors you’re using to take payments on your store since these may handle customer data. We’ve included PayPal as an example, but you should remove this if you’re not using PayPal.', 'dokan-lite' ) . '</p>' .
             '<p>' . __( 'We accept payments through PayPal. When processing payments, some of your data will be passed to PayPal, including information required to process or support the payment, such as the purchase total and billing information.', 'dokan-lite' ) . '</p>' .
             '<p>' . __( 'Please see the <a href="https://www.paypal.com/us/webapps/mpp/ua/privacy-full">PayPal Privacy Policy</a> for more details.', 'dokan-lite' ) . '</p>'.
             '<h3>' . __( 'Modules', 'dokan-lite' ) . '</h3>' .
-            '<div contenteditable="false">' .
-                '<p class="wp-policy-help">' . __( 'Dokan has premium modules that perform specific and special purpose tasks. Each of the modules collect additional information. Also third party extensions and integrations collect data that is applicable to the each of their individual privacy policy.', 'dokan-lite' ) . '</p>' .
+            '<p class="privacy-policy-tutorial">' . __( 'Dokan has premium modules that perform specific and special purpose tasks. Each of the modules collect additional information. Also third party extensions and integrations collect data that is applicable to the each of their individual privacy policy.', 'dokan-lite' ) . '</p>' .
             '</div>';
 
         return apply_filters( 'dokan_privacy_policy_content', $content );
@@ -148,10 +140,11 @@ class Privacy extends WC_Abstract_Privacy {
 
         if ( $user instanceof WP_User ) {
             $data_to_export[] = array(
-                'group_id'    => 'dokan_vendor',
-                'group_label' => __( 'Vendor Data', 'dokan-lite' ),
-                'item_id'     => 'user',
-                'data'        => $this->get_vendor_personal_data( $user ),
+                'group_id'          => 'dokan_vendor',
+                'group_label'       => __( 'Vendor Data', 'dokan-lite' ),
+                'group_description' => __( 'Dokan vendor personal data.', 'dokan-lite' ),
+                'item_id'           => 'user',
+                'data'              => $this->get_vendor_personal_data( $user ),
             );
         }
 

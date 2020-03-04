@@ -15,8 +15,7 @@ class VendorRegistration extends DokanShortcode {
      */
     public function render_shortcode( $atts ) {
         if ( is_user_logged_in() ) {
-            esc_html_e( 'You are already logged in', 'dokan-lite' );
-            return;
+            return esc_html__( 'You are already logged in', 'dokan-lite' );
         }
 
         dokan()->scripts->load_form_validate_script();
