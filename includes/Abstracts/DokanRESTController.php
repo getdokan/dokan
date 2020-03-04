@@ -448,4 +448,23 @@ abstract class DokanRESTController extends WP_REST_Controller {
         return $response;
     }
 
+    /**
+     * Add meta query.
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param array $args       Query args.
+     * @param array $meta_query Meta query.
+     *
+     * @return array
+     */
+    protected function add_meta_query( $args, $meta_query ) {
+        if ( empty( $args['meta_query'] ) ) {
+            $args['meta_query'] = array();
+        }
+
+        $args['meta_query'][] = $meta_query;
+
+        return $args['meta_query'];
+    }
 }
