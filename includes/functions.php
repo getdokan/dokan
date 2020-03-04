@@ -3797,3 +3797,20 @@ function dokan_generate_ratings( $rating, $stars ) {
 function dokan_met_minimum_php_version_for_wc( $required_version = '7.0' ) {
     return apply_filters( 'dokan_met_minimum_php_version_for_wc', version_compare( PHP_VERSION, $required_version, '>=' ), $required_version );
 }
+
+/**
+ * Checks if Dokan settings has map api key
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @return bool
+ */
+function dokan_has_map_api_key() {
+    $dokan_appearance = get_option( 'dokan_appearance', array() );
+    if( 'google_maps' === $dokan_appearance['map_api_source'] && ! empty( $dokan_appearance['gmap_api_key'] ) ) {
+        return true;
+    } else if( 'mapbox' === $dokan_appearance['map_api_source'] && ! empty( $dokan_appearance['mapbox_access_token'] ) ) {
+        return true;
+    }   
+    return false;
+}

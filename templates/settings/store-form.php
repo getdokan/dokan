@@ -50,7 +50,6 @@
     $dokan_store_time_enabled = isset( $profile_info['dokan_store_time_enabled'] ) ? $profile_info['dokan_store_time_enabled'] : '';
     $dokan_store_open_notice  = isset( $profile_info['dokan_store_open_notice'] ) ? $profile_info['dokan_store_open_notice'] : '';
     $dokan_store_close_notice = isset( $profile_info['dokan_store_close_notice'] ) ? $profile_info['dokan_store_close_notice'] : '';
-
 ?>
 <?php do_action( 'dokan_settings_before_form', $current_user, $profile_info ); ?>
 
@@ -176,7 +175,7 @@
             </div>
         </div>
 
-
+        <?php if ( dokan_has_map_api_key() ) { ?>
         <div class="dokan-form-group">
             <label class="dokan-w3 dokan-control-label" for="setting_map"><?php esc_html_e( 'Map', 'dokan-lite' ); ?></label>
 
@@ -189,6 +188,7 @@
                 ?>
             </div> <!-- col.md-4 -->
         </div> <!-- .dokan-form-group -->
+        <?php } ?>
 
         <!--terms and conditions enable or not -->
         <?php
