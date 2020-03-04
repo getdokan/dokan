@@ -104,7 +104,7 @@ class VendorNewOrder extends WC_Email {
 		        $this->order_info = dokan_get_vendor_order_details( $order_id, $seller );
 			    $this->send( $seller_email, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
         	}
-        }else{
+        } else {
         	$seller_info      = get_userdata( $sellers );
 		    $seller_email 	  = $seller_info->user_email;
         	$this->order_info = dokan_get_vendor_order_details( $order_id, $sellers );
