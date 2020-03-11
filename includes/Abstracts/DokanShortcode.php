@@ -8,7 +8,7 @@ abstract class DokanShortcode {
 
     public function __construct() {
         if ( empty( $this->shortcode ) ) {
-            dokan_doing_it_wrong( static::class, __( '$shortcode property is empty.', 'dokan-lite' ), 'DOKAN_LITE_SINCE' );
+            dokan_doing_it_wrong( static::class, __( '$shortcode property is empty.', 'dokan-lite' ), '3.0.0' );
         }
 
         add_shortcode( $this->shortcode, [ $this, 'render_shortcode' ] );

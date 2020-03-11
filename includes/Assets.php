@@ -642,6 +642,7 @@ class Assets {
                 'i18n_variation_count_single'         => esc_js( __( '%qty% variation', 'dokan-lite' ) ),
                 'i18n_variation_count_plural'         => esc_js( __( '%qty% variations', 'dokan-lite' ) ),
                 'i18n_no_result_found'                => esc_js( __( 'No Result Found', 'dokan-lite' ) ),
+                'i18n_sales_price_error'              => esc_js( __( 'Please insert value less than the regular price!', 'dokan-lite' ) ),
                 'variations_per_page'                 => absint( apply_filters( 'dokan_product_variations_per_page', 10 ) ),
                 'store_banner_dimension'              => [ 'width' => $banner_width, 'height' => $banner_height, 'flex-width' => $has_flex_width, 'flex-height' => $has_flex_height ],
                 'selectAndCrop'                       => __( 'Select and Crop', 'dokan-lite' ),
@@ -744,7 +745,7 @@ class Assets {
     /**
      * Admin localized scripts
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return array
      */

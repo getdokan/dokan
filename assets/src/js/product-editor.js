@@ -434,6 +434,9 @@
                         if ( $parent.is( '.taxonomy' ) ) {
                             $parent.find( 'select, input[type=text]' ).val( '' );
                             $( 'select.dokan_attribute_taxonomy' ).find( 'option[value="' + $parent.data( 'taxonomy' ) + '"]' ).removeAttr( 'disabled' );
+                        } else {
+                            $parent.find( 'select, input[type=text]' ).val( '' );
+                            $parent.hide();
                         }
 
                         Dokan_Editor.attribute.reArrangeAttribute();
@@ -881,6 +884,54 @@
             } );
 
         }, 750 ) );
+
+        function debounce_delay( callback, ms ) {
+            var timer   = 0;
+            return function() {
+                var context = this, args = arguments;
+                clearTimeout(timer);
+                timer = setTimeout(function () {
+                  callback.apply(context, args);
+                }, ms || 0);
+            };
+        }
+
+        $('body').on( 'keyup', '.dokan-product-sales-price, .dokan-product-regular-price', debounce_delay( function(evt) {
+            evt.preventDefault();
+            var product_price           = $( 'input.dokan-product-regular-price' ).val();
+            var sale_price_wrap         = $( 'input.dokan-product-sales-price' );
+            var sale_price              = sale_price_wrap.val();
+            var sale_price_input_div    = sale_price_wrap.parent( 'div.dokan-input-group' );
+            var sale_price_input_msg    = "<span class='error'>" + dokan.i18n_sales_price_error + "</span>";
+            var sale_price_parent_div   = sale_price_input_div.parent( 'div.sale-price' ).find( 'span.error' );
+
+            if ( '' == product_price ) {
+
+                sale_price_parent_div.remove();
+                sale_price_input_div.after( sale_price_input_msg );
+
+                sale_price_wrap.val('');
+                setTimeout(function(){
+                    sale_price_parent_div.remove();
+                }, 5000);
+
+            } else if( parseFloat( product_price ) <= parseFloat( sale_price ) ) {
+
+                sale_price_parent_div.remove();
+                sale_price_input_div.after( sale_price_input_msg );
+
+                sale_price_wrap.val('');
+                setTimeout(function(){
+                    sale_price_parent_div.remove();
+                }, 5000);
+
+            } else {
+
+                sale_price_parent_div.remove();
+
+            }
+
+        } ,600 ) );
 
     });
 

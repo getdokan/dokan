@@ -40,7 +40,7 @@ class Products {
     /**
      * Set errors
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @param void $errors
      *
@@ -53,7 +53,7 @@ class Products {
     /**
      * Verify if the instance contains errors
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return bool
      */
@@ -64,7 +64,7 @@ class Products {
     /**
      * Retrieve all errors
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return array
      */

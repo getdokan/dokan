@@ -6,14 +6,14 @@ namespace WeDevs\Dokan\Admin;
 *
 * @package dokan
 *
-* @since DOKAN_LITE_SINCE
+* @since 3.0.0
 */
 class Hooks {
 
     /**
      * Load autometically when class initiate
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      */
     public function __construct() {
         // Load all actions

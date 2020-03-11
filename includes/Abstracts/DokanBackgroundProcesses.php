@@ -31,7 +31,7 @@ abstract class DokanBackgroundProcesses extends \WP_Background_Process {
     /**
      * Class constructor
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return void
      */
@@ -106,7 +106,7 @@ abstract class DokanBackgroundProcesses extends \WP_Background_Process {
     /**
      * Set process action
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return void
      */

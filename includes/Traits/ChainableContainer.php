@@ -14,7 +14,7 @@ trait ChainableContainer {
     /**
      * Magic getter to get chainable container instance
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @param string $prop
      *

@@ -29,7 +29,7 @@ class AdminBar {
     public function dokan_admin_toolbar() {
         global $wp_admin_bar;
 
-        if ( ! current_user_can( 'manage_options' ) ) {
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
             return;
         }
 

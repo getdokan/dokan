@@ -70,9 +70,9 @@
                     <span v-if="! getId()" class="required-field">*</span>
 
                     <input type="email"
-                        v-model="vendorInfo.user_email"
-                        :class="{'dokan-form-input': true, 'has-error': getError('user_email')}"
-                        :placeholder="getError( 'user_email' ) ? __( 'Email is required', 'dokan-lite' ) : __( 'store@email.com', 'dokan-lite' )"
+                        v-model="vendorInfo.email"
+                        :class="{'dokan-form-input': true, 'has-error': getError('email')}"
+                        :placeholder="getError( 'email' ) ? __( 'Email is required', 'dokan-lite' ) : __( 'store@email.com', 'dokan-lite' )"
                     >
 
                     <div class="store-avaibility-info">
@@ -195,7 +195,7 @@ export default {
             this.checkUsername();
         },
 
-        'vendorInfo.user_email'( value ) {
+        'vendorInfo.email'( value ) {
             this.checkEmail();
         },
     },
@@ -322,7 +322,7 @@ export default {
         },
 
         searchEmail() {
-            const userEmail = this.vendorInfo.user_email;
+            const userEmail = this.vendorInfo.email;
 
             if ( ! userEmail ) {
                 return;
@@ -331,7 +331,7 @@ export default {
             this.emailAvailabilityText = this.__( 'Searching...', 'dokan-lite' );
 
             dokan.api.get( `/stores/check`, {
-                user_email: userEmail
+                email: userEmail
             } ).then( ( response ) => {
                 if ( response.available ) {
                     this.emailAvailable = true;

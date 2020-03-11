@@ -935,7 +935,7 @@ class Ajax {
     /**
      * Export witdraw requests
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return void
      */
@@ -958,6 +958,8 @@ class Ajax {
             'ids'    => $ids,
             'method' => 'paypal'
         );
+
+        $args = apply_filters( 'dokan_withdraw_export_csv_args', $args );
 
         dokan()->withdraw->export( $args )->csv();
     }

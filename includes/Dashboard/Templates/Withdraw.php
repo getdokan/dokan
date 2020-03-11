@@ -50,7 +50,7 @@ class Withdraw {
     /**
      * Add error to error bag
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @param string $message
      * @param string $code
@@ -62,7 +62,7 @@ class Withdraw {
     /**
      * Get current withdraw status
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return string
      */
@@ -95,7 +95,7 @@ class Withdraw {
     /**
      * Handle withdraw cancellation request
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return void
      */
@@ -154,7 +154,7 @@ class Withdraw {
     /**
      * Handle withdraw approval request
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return void
      */
@@ -235,7 +235,7 @@ class Withdraw {
     /**
      * Print error messages
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @param string $message
      * @param bool   $deleted
@@ -258,7 +258,7 @@ class Withdraw {
     /**
      * Print warning message
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @param string $message
      * @param bool   $deleted

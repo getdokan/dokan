@@ -7,7 +7,7 @@ class Hooks {
     /**
      * Class constructor
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return void
      */
@@ -19,7 +19,7 @@ class Hooks {
     /**
      * Delete seller balance cache after a withdraw update
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @param string $status
      * @param int    $user_id
@@ -34,7 +34,7 @@ class Hooks {
     /**
      * Update vendor balance after approve a request
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @param \WeDevs\Dokan\Withdraw\Withdraw $withdraw
      *

@@ -18,7 +18,7 @@ function dokan_admin_menu_position() {
  * @return void
  */
 function dokana_admin_menu_capability() {
-    return apply_filters( 'dokan_menu_capability', 'manage_options' );
+    return apply_filters( 'dokan_menu_capability', 'manage_woocommerce' );
 }
 
 /**
@@ -1165,7 +1165,7 @@ function dokan_log( $message, $level = 'debug' ) {
  * @return array
  */
 function dokan_media_uploader_restrict( $args ) {
-    if ( current_user_can( 'manage_options' ) ) {
+    if ( current_user_can( 'manage_woocommerce' ) ) {
         return $args;
     }
 
@@ -2114,9 +2114,9 @@ function dokan_get_shipping_processing_times() {
     $times = array(
         '' => __( 'Ready to ship in...', 'dokan-lite' ),
         '1' => __( '1 business day', 'dokan-lite' ),
-        '2' => __( '1-2 business day', 'dokan-lite' ),
-        '3' => __( '1-3 business day', 'dokan-lite' ),
-        '4' => __( '3-5 business day', 'dokan-lite' ),
+        '2' => __( '1-2 business days', 'dokan-lite' ),
+        '3' => __( '1-3 business days', 'dokan-lite' ),
+        '4' => __( '3-5 business days', 'dokan-lite' ),
         '5' => __( '1-2 weeks', 'dokan-lite' ),
         '6' => __( '2-3 weeks', 'dokan-lite' ),
         '7' => __( '3-4 weeks', 'dokan-lite' ),
@@ -2957,6 +2957,30 @@ function dokan_get_all_caps() {
 }
 
 /**
+ * Get translated capability
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @param  string $cap
+ *
+ * @return string
+ */
+function dokan_get_all_cap_labels( $cap ) {
+    $caps = apply_filters( 'dokan_get_all_cap_labels', [
+        'overview' => __( 'Overview', 'dokan-lite' ),
+        'report'   => __( 'Report', 'dokan-lite' ),
+        'order'    => __( 'Order', 'dokan-lite' ),
+        'coupon'   => __( 'Coupon', 'dokan-lite' ),
+        'review'   => __( 'Review', 'dokan-lite' ),
+        'withdraw' => __( 'Withdraw', 'dokan-lite' ),
+        'product'  => __( 'Product', 'dokan-lite' ),
+        'menu'     => __( 'Menu', 'dokan-lite' ),
+    ] );
+
+    return ! empty( $caps[ $cap ] ) ? $caps[ $cap ] : '';
+}
+
+/**
  * Merge user defined arguments into defaults array.
  *
  * This function is similiar to wordpress wp_parse_args().
@@ -3738,7 +3762,7 @@ function dokan_redirect_to_admin_setup_wizard() {
 /**
  * Dokan generate star ratings
  *
- * @since  DOKAN_LITE_SINCE
+ * @since  3.0.0
  *
  * @param  int $rating Number of rating point
  * @param  int $starts Total number of stars
@@ -3764,7 +3788,7 @@ function dokan_generate_ratings( $rating, $stars ) {
 /**
  * Check if current PHP version met the minimum requried PHP version for WooCommerce
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.0.0
  *
  * @param string $required_version
  *
@@ -3772,4 +3796,21 @@ function dokan_generate_ratings( $rating, $stars ) {
  */
 function dokan_met_minimum_php_version_for_wc( $required_version = '7.0' ) {
     return apply_filters( 'dokan_met_minimum_php_version_for_wc', version_compare( PHP_VERSION, $required_version, '>=' ), $required_version );
+}
+
+/**
+ * Checks if Dokan settings has map api key
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @return bool
+ */
+function dokan_has_map_api_key() {
+    $dokan_appearance = get_option( 'dokan_appearance', array() );
+    if( 'google_maps' === $dokan_appearance['map_api_source'] && ! empty( $dokan_appearance['gmap_api_key'] ) ) {
+        return true;
+    } else if( 'mapbox' === $dokan_appearance['map_api_source'] && ! empty( $dokan_appearance['mapbox_access_token'] ) ) {
+        return true;
+    }   
+    return false;
 }

@@ -7,7 +7,7 @@ abstract class DokanModel {
     /**
      * Set model data
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @param array $data
      */
@@ -16,7 +16,7 @@ abstract class DokanModel {
     /**
      * Get model data
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return array
      */
@@ -27,7 +27,7 @@ abstract class DokanModel {
     /**
      * Save model data
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return \WeDevs\Dokan\Abstracts\Model
      */
@@ -36,7 +36,7 @@ abstract class DokanModel {
     /**
      * Create a model
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return \WeDevs\Dokan\Abstracts\Model
      */
@@ -45,7 +45,7 @@ abstract class DokanModel {
     /**
      * Update a model
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return \WeDevs\Dokan\Abstracts\Model
      */
@@ -54,7 +54,7 @@ abstract class DokanModel {
     /**
      * Delete a model
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return \WeDevs\Dokan\Abstracts\Model
      */
