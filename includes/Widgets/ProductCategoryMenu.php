@@ -35,7 +35,7 @@ class ProductCategoryMenu extends WP_Widget {
             echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
 
         ?>
-            <div id="cat-drop-stack">
+            <div id="cat-drop-stack" class="product-cat-stack-dokan">
                 <?php
                 $args = apply_filters( 'dokan_category_widget', array(
                     'hide_empty' => false,
@@ -56,33 +56,6 @@ class ProductCategoryMenu extends WP_Widget {
                 echo "</ul>";
                 ?>
             </div>
-            <script>
-            ( function ( $ ) {
-
-                $( '#cat-drop-stack li.has-children' ).on( 'click', '> a span.caret-icon', function ( e ) {
-                    e.preventDefault();
-                    var self = $( this ),
-                        liHasChildren = self.closest( 'li.has-children' );
-
-                    if ( !liHasChildren.find( '> ul.children' ).is( ':visible' ) ) {
-                        self.find( 'i.fa' ).addClass( 'fa-rotate-90' );
-                        if ( liHasChildren.find( '> ul.children' ).hasClass( 'level-0' ) ) {
-                            self.closest( 'a' ).css( { 'borderBottom': 'none' } );
-                        }
-                    }
-
-                    liHasChildren.find( '> ul.children' ).slideToggle( 'fast', function () {
-                        if ( !$( this ).is( ':visible' ) ) {
-                            self.find( 'i.fa' ).removeClass( 'fa-rotate-90' );
-
-                            if ( liHasChildren.find( '> ul.children' ).hasClass( 'level-0' ) ) {
-                                self.closest( 'a' ).css( { 'borderBottom': '1px solid #eee' } );
-                            }
-                        }
-                    } );
-                } );
-            } )( jQuery );
-        </script>
         <?php
 
         echo $after_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
