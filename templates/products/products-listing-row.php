@@ -32,9 +32,9 @@
     </td>
     <td data-title="<?php esc_attr_e( 'Image', 'dokan-lite' ); ?>">
         <?php if ( current_user_can( 'dokan_edit_product' ) ): ?>
-            <a href="<?php echo esc_url( dokan_edit_product_url( $post->ID ) ); ?>"><?php echo wp_kses( $product->get_image(), $img_kses ); ?></a>
+            <a href="<?php echo esc_url( dokan_edit_product_url( $post->ID ) ); ?>"><?php echo wp_kses( $product->get_image( 'thumbnail' ), $img_kses ); ?></a>
         <?php else: ?>
-            <?php echo wp_kses( $product->get_image(), $img_kses ); ?>
+            <?php echo wp_kses( $product->get_image( 'thumbnail' ), $img_kses ); ?>
         <?php endif ?>
     </td>
     <td data-title="<?php esc_attr_e( 'Name', 'dokan-lite' ); ?>">
