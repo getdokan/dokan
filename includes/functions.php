@@ -2155,12 +2155,13 @@ function dokan_get_vendor_order_details( $order_id, $vendor_id ) {
         $product_id  = $item->get_product()->get_id();
         $author_id   = get_post_field( 'post_author', $product_id );
         if ( $vendor_id == $author_id ) {
-            $info['product']  = $item['name'];
-            $info['quantity'] = $item['quantity'];
-            $info['total']    = $item['total'];
-            array_push( $order_info, $info );
+            $order_info['product']  = $item['name'];
+            $order_info['quantity'] = $item['quantity'];
+            $order_info['total']    = $item['total'];
         }
     }
+
+    apply_filters( 'dokan_get_vendor_order_details', $order_info, $order, $vendor_id );
     return $order_info;
 }
 
