@@ -2162,9 +2162,8 @@ function dokan_get_vendor_order_details( $order_id, $vendor_id ) {
             array_push( $order_info, $info );
         }
     }
-    
-    apply_filters( 'dokan_get_vendor_order_details', $order_info, $order_id, $vendor_id );
-    return $order_info;
+
+    return apply_filters( 'dokan_get_vendor_order_details', $order_info, $order_id, $vendor_id );
 }
 
 /**
