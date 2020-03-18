@@ -2142,44 +2142,29 @@ function dokan_get_processing_time_value( $index ) {
 }
 
 /**
- * Adds seller email to the new order notification email
+ * Dokan get vendor order details by order ID
  *
- * @param string  $admin_email
- * @param WC_Order $order
- *
+ * @param  int $order
+ * @param  int $vendor_id
  * @return array
  */
-function dokan_wc_email_recipient_add_seller( $email, $order ) {
-
-    if ( $order ) {
-        $order_id = $order->get_id();
-
-        if ( get_post_meta( $order_id, 'has_sub_order', true ) ) {
-            return $email;
-        }
-
-        $sellers = dokan_get_seller_id_by_order( $order_id );
-
-        if ( $sellers ) {
-            $seller       = get_userdata( $sellers );
-            $seller_email = $seller->user_email;
-
-            if ( ! wp_get_post_parent_id( $order_id ) ) {
-                if ( $email != $seller_email ) {
-                    $email .= ',' . $seller_email;
-                }
-            } else {
-                if ( $email != $seller_email ) {
-                    $email = $seller_email;
-                }
-            }
+function dokan_get_vendor_order_details( $order_id, $vendor_id ) {
+    $order      = wc_get_order( $order_id );
+    $info       = array();
+    $order_info = array();
+    foreach ( $order->get_items( 'line_item' ) as $item ) {
+        $product_id  = $item->get_product()->get_id();
+        $author_id   = get_post_field( 'post_author', $product_id );
+        if ( $vendor_id == $author_id ) {
+            $info['product']  = $item['name'];
+            $info['quantity'] = $item['quantity'];
+            $info['total']    = $item['total'];
+            array_push( $order_info, $info );
         }
     }
 
-    return apply_filters( 'dokan_email_recipient_new_order', $email );
+    return apply_filters( 'dokan_get_vendor_order_details', $order_info, $order_id, $vendor_id );
 }
-
-add_filter( 'woocommerce_email_recipient_new_order', 'dokan_wc_email_recipient_add_seller', 10, 2 );
 
 /**
  * Send email to seller and admin when there is no product in stock or low stock

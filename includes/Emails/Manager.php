@@ -89,6 +89,7 @@ class Manager {
         $wc_emails['Dokan_Email_Withdraw_Approved']       = new WithdrawApproved();
         $wc_emails['Dokan_Email_Withdraw_Cancelled']      = new WithdrawCancelled();
         $wc_emails['Dokan_Email_Contact_Seller']          = new ContactSeller();
+        $wc_emails['Dokan_Email_New_Order']               = new VendorNewOrder();
 
         return apply_filters( 'dokan_email_classes', $wc_emails );
     }
@@ -115,7 +116,8 @@ class Manager {
                 'new-seller-registered.php',
                 'withdraw-new.php',
                 'withdraw-cancel.php',
-                'withdraw-approve.php'
+                'withdraw-approve.php',
+                'vendor-new-order.php'
             )
         );
 
