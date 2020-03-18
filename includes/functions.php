@@ -2153,7 +2153,7 @@ function dokan_get_vendor_order_details( $order_id, $vendor_id ) {
     $info       = array();
     $order_info = array();
     foreach ( $order->get_items( 'line_item' ) as $item ) {
-        $product_id  = $item['product_id'];
+        $product_id  = $item->get_product()->get_id();
         $author_id   = get_post_field( 'post_author', $product_id );
         if ( $vendor_id == $author_id ) {
             $info['product']  = $item['name'];
