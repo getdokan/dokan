@@ -2150,18 +2150,20 @@ function dokan_get_processing_time_value( $index ) {
  */
 function dokan_get_vendor_order_details( $order_id, $vendor_id ) {
     $order      = wc_get_order( $order_id );
+    $info       = array();
     $order_info = array();
     foreach ( $order->get_items( 'line_item' ) as $item ) {
-        $product_id  = $item->get_product()->get_id();
+        $product_id  = $item['product_id'];
         $author_id   = get_post_field( 'post_author', $product_id );
         if ( $vendor_id == $author_id ) {
-            $order_info['product']  = $item['name'];
-            $order_info['quantity'] = $item['quantity'];
-            $order_info['total']    = $item['total'];
+            $info['product']  = $item['name'];
+            $info['quantity'] = $item['quantity'];
+            $info['total']    = $item['total'];
+            array_push( $order_info, $info );
         }
     }
-
-    apply_filters( 'dokan_get_vendor_order_details', $order_info, $order, $vendor_id );
+    
+    apply_filters( 'dokan_get_vendor_order_details', $order_info, $order_id, $vendor_id );
     return $order_info;
 }
 
