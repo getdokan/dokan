@@ -2150,7 +2150,6 @@ function dokan_get_processing_time_value( $index ) {
  */
 function dokan_get_vendor_order_details( $order_id, $vendor_id ) {
     $order      = wc_get_order( $order_id );
-    $info       = array();
     $order_info = array();
     foreach ( $order->get_items( 'line_item' ) as $item ) {
         $product_id  = $item['product_id'];
