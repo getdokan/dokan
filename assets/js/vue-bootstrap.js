@@ -444,7 +444,7 @@ if (false) {(function () {
     'vendorInfo.user_login': function vendorInfoUser_login(value) {
       this.checkUsername();
     },
-    'vendorInfo.user_email': function vendorInfoUser_email(value) {
+    'vendorInfo.email': function vendorInfoEmail(value) {
       this.checkEmail();
     }
   },
@@ -573,7 +573,7 @@ if (false) {(function () {
     searchEmail: function searchEmail() {
       var _this4 = this;
 
-      var userEmail = this.vendorInfo.user_email;
+      var userEmail = this.vendorInfo.email;
 
       if (!userEmail) {
         return;
@@ -581,7 +581,7 @@ if (false) {(function () {
 
       this.emailAvailabilityText = this.__('Searching...', 'dokan-lite');
       dokan.api.get("/stores/check", {
-        user_email: userEmail
+        email: userEmail
       }).then(function (response) {
         if (response.available) {
           _this4.emailAvailable = true;
@@ -2185,27 +2185,27 @@ var render = function() {
                 {
                   name: "model",
                   rawName: "v-model",
-                  value: _vm.vendorInfo.user_email,
-                  expression: "vendorInfo.user_email"
+                  value: _vm.vendorInfo.email,
+                  expression: "vendorInfo.email"
                 }
               ],
               class: {
                 "dokan-form-input": true,
-                "has-error": _vm.getError("user_email")
+                "has-error": _vm.getError("email")
               },
               attrs: {
                 type: "email",
-                placeholder: _vm.getError("user_email")
+                placeholder: _vm.getError("email")
                   ? _vm.__("Email is required", "dokan-lite")
                   : _vm.__("store@email.com", "dokan-lite")
               },
-              domProps: { value: _vm.vendorInfo.user_email },
+              domProps: { value: _vm.vendorInfo.email },
               on: {
                 input: function($event) {
                   if ($event.target.composing) {
                     return
                   }
-                  _vm.$set(_vm.vendorInfo, "user_email", $event.target.value)
+                  _vm.$set(_vm.vendorInfo, "email", $event.target.value)
                 }
               }
             }),

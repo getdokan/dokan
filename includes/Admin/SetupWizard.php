@@ -26,6 +26,10 @@ class SetupWizard {
      * Hook in tabs.
      */
     public function __construct() {
+        if ( ! dokan()->has_woocommerce() ) {
+            add_filter( 'user_has_cap', [ $this, 'set_user_cap' ] );
+        }
+
         if ( current_user_can( 'manage_woocommerce' ) ) {
             add_action( 'admin_menu', array( $this, 'admin_menus' ) );
             add_action( 'admin_init', array( $this, 'setup_wizard' ), 99 );
@@ -39,6 +43,21 @@ class SetupWizard {
                 add_action( 'dokan_admin_setup_wizard_save_step_store', array( SetupWizardNoWC::class, 'save_wc_store_setup_data' ) );
             }
         }
+    }
+
+    /**
+     * Give manage_woocommerce cap to admin if not there.
+     *
+     * @param array $caps
+     *
+     * @return array
+     */
+    public function set_user_cap( $caps ) {
+        if ( ! empty( $caps[ 'manage_options' ] ) ) {
+            $caps[ 'manage_woocommerce' ] = true;
+        }
+
+        return $caps;
     }
 
     /**
@@ -437,44 +456,23 @@ class SetupWizard {
                 <tr>
                     <td colspan="2">
                         <ul class="wc-wizard-payment-gateways wc-wizard-services">
-                            <li class="wc-wizard-service-item">
-                                <div class="wc-wizard-service-name">
-                                    <p><?php esc_html_e( 'PayPal', 'dokan-lite' ); ?></p>
-                                </div>
-                                <div class="wc-wizard-service-description">
-                                    <?php esc_html_e( 'Enable PayPal for your vendor as a withdraw method', 'dokan-lite' ); ?>
-                                </div>
-                                <div class="dokan-wizard-service-enable">
-                                    <input type="checkbox" name="withdraw_methods[paypal]" id="withdraw_methods[paypal]" class="switch-input" value="paypal" checked>
-                                    <label for="withdraw_methods[paypal]" class="switch-label"></label>
-                                </div>
-                            </li>
-
-                            <li class="wc-wizard-service-item <?php echo ( array_key_exists( 'paypal', $withdraw_methods ) ) ? 'checked="checked"' : ''; ?>">
-                                <div class="wc-wizard-service-name">
-                                    <p><?php esc_html_e( 'Bank', 'dokan-lite' ); ?></p>
-                                </div>
-                                <div class="wc-wizard-service-description">
-                                    <?php esc_html_e( 'Enable bank transfer for your vendor as a withdraw method', 'dokan-lite' ); ?>
-                                </div>
-                                <div class="dokan-wizard-service-enable">
-                                    <input type="checkbox" name="withdraw_methods[bank]" id="withdraw_methods[bank]" value="bank" class="switch-input" checked>
-                                    <label for="withdraw_methods[bank]" class="switch-label"></label>
-                                </div>
-                            </li>
-
-                            <li class="wc-wizard-service-item <?php echo ( array_key_exists( 'paypal', $withdraw_methods ) ) ? 'checked="checked"' : ''; ?>">
-                                <div class="wc-wizard-service-name">
-                                    <p><?php esc_html_e( 'Skrill', 'dokan-lite' ); ?></p>
-                                </div>
-                                <div class="wc-wizard-service-description">
-                                    <?php esc_html_e( 'Enable skrill for your vendor as a withdraw method', 'dokan-lite' ); ?>
-                                </div>
-                                <div class="dokan-wizard-service-enable">
-                                    <input type="checkbox" name="withdraw_methods[skrill]" id="withdraw_methods[skrill]" value="skrill" class="switch-input" checked>
-                                    <label for="withdraw_methods[skrill]" class="switch-label"></label>
-                                </div>
-                            </li>
+                            <?php foreach ( dokan_withdraw_register_methods() as $key => $method ): ?>
+                                <li class="wc-wizard-service-item <?php echo ( in_array( $key, array_values( $withdraw_methods ) ) ) ? 'checked="checked"' : ''; ?>">
+                                    <div class="wc-wizard-service-name">
+                                        <p><?php echo $method['title']; ?></p>
+                                    </div>
+                                    <div class="wc-wizard-service-description">
+                                        <?php printf(
+                                            esc_html__( 'Enable %s for your vendor as a withdraw method', 'dokan-lite' ),
+                                            $method['title']
+                                        ); ?>
+                                    </div>
+                                    <div class="dokan-wizard-service-enable">
+                                        <input type="checkbox" name="withdraw_methods[<?php esc_attr_e( $key ); ?>]" id="withdraw_methods[<?php esc_attr_e( $key ); ?>]" class="switch-input" value="<?php esc_attr_e( $key ); ?>" <?php echo ( in_array( $key, array_values( $withdraw_methods ) ) ) ? 'checked="checked"' : ''; ?>>
+                                        <label for="withdraw_methods[<?php esc_attr_e( $key ); ?>]" class="switch-label"></label>
+                                    </div>
+                                </li>
+                            <?php endforeach ?>
 
                             <?php
                                 /**

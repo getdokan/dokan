@@ -2425,6 +2425,8 @@ div.media-sidebar a.edit-attachment {
   visibility: visible;
 }
 .dokan-product-listing .dokan-product-listing-area table td img {
+  width: auto;
+  height: auto;
   max-width: 48px;
   max-height: 48px;
 }

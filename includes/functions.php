@@ -2114,9 +2114,9 @@ function dokan_get_shipping_processing_times() {
     $times = array(
         '' => __( 'Ready to ship in...', 'dokan-lite' ),
         '1' => __( '1 business day', 'dokan-lite' ),
-        '2' => __( '1-2 business day', 'dokan-lite' ),
-        '3' => __( '1-3 business day', 'dokan-lite' ),
-        '4' => __( '3-5 business day', 'dokan-lite' ),
+        '2' => __( '1-2 business days', 'dokan-lite' ),
+        '3' => __( '1-3 business days', 'dokan-lite' ),
+        '4' => __( '3-5 business days', 'dokan-lite' ),
         '5' => __( '1-2 weeks', 'dokan-lite' ),
         '6' => __( '2-3 weeks', 'dokan-lite' ),
         '7' => __( '3-4 weeks', 'dokan-lite' ),
@@ -2142,44 +2142,29 @@ function dokan_get_processing_time_value( $index ) {
 }
 
 /**
- * Adds seller email to the new order notification email
+ * Dokan get vendor order details by order ID
  *
- * @param string  $admin_email
- * @param WC_Order $order
- *
+ * @param  int $order
+ * @param  int $vendor_id
  * @return array
  */
-function dokan_wc_email_recipient_add_seller( $email, $order ) {
-
-    if ( $order ) {
-        $order_id = $order->get_id();
-
-        if ( get_post_meta( $order_id, 'has_sub_order', true ) ) {
-            return $email;
-        }
-
-        $sellers = dokan_get_seller_id_by_order( $order_id );
-
-        if ( $sellers ) {
-            $seller       = get_userdata( $sellers );
-            $seller_email = $seller->user_email;
-
-            if ( ! wp_get_post_parent_id( $order_id ) ) {
-                if ( $email != $seller_email ) {
-                    $email .= ',' . $seller_email;
-                }
-            } else {
-                if ( $email != $seller_email ) {
-                    $email = $seller_email;
-                }
-            }
+function dokan_get_vendor_order_details( $order_id, $vendor_id ) {
+    $order      = wc_get_order( $order_id );
+    $info       = array();
+    $order_info = array();
+    foreach ( $order->get_items( 'line_item' ) as $item ) {
+        $product_id  = $item->get_product()->get_id();
+        $author_id   = get_post_field( 'post_author', $product_id );
+        if ( $vendor_id == $author_id ) {
+            $info['product']  = $item['name'];
+            $info['quantity'] = $item['quantity'];
+            $info['total']    = $item['total'];
+            array_push( $order_info, $info );
         }
     }
 
-    return apply_filters( 'dokan_email_recipient_new_order', $email );
+    return apply_filters( 'dokan_get_vendor_order_details', $order_info, $order_id, $vendor_id );
 }
-
-add_filter( 'woocommerce_email_recipient_new_order', 'dokan_wc_email_recipient_add_seller', 10, 2 );
 
 /**
  * Send email to seller and admin when there is no product in stock or low stock
@@ -2957,6 +2942,30 @@ function dokan_get_all_caps() {
 }
 
 /**
+ * Get translated capability
+ *
+ * @since 3.0.2
+ *
+ * @param  string $cap
+ *
+ * @return string
+ */
+function dokan_get_all_cap_labels( $cap ) {
+    $caps = apply_filters( 'dokan_get_all_cap_labels', [
+        'overview' => __( 'Overview', 'dokan-lite' ),
+        'report'   => __( 'Report', 'dokan-lite' ),
+        'order'    => __( 'Order', 'dokan-lite' ),
+        'coupon'   => __( 'Coupon', 'dokan-lite' ),
+        'review'   => __( 'Review', 'dokan-lite' ),
+        'withdraw' => __( 'Withdraw', 'dokan-lite' ),
+        'product'  => __( 'Product', 'dokan-lite' ),
+        'menu'     => __( 'Menu', 'dokan-lite' ),
+    ] );
+
+    return ! empty( $caps[ $cap ] ) ? $caps[ $cap ] : '';
+}
+
+/**
  * Merge user defined arguments into defaults array.
  *
  * This function is similiar to wordpress wp_parse_args().
@@ -3421,7 +3430,7 @@ function dokan_is_store_listing() {
     if ( ! $found ) {
         $post = get_post( $page_id );
 
-        if ( $post && false !== strpos( $post->post_content, '[dokan-stores]' ) ) {
+        if ( $post && false !== strpos( $post->post_content, '[dokan-stores' ) ) {
             $found = true;
         }
     }
@@ -3772,4 +3781,21 @@ function dokan_generate_ratings( $rating, $stars ) {
  */
 function dokan_met_minimum_php_version_for_wc( $required_version = '7.0' ) {
     return apply_filters( 'dokan_met_minimum_php_version_for_wc', version_compare( PHP_VERSION, $required_version, '>=' ), $required_version );
+}
+
+/**
+ * Checks if Dokan settings has map api key
+ *
+ * @since 3.0.2
+ *
+ * @return bool
+ */
+function dokan_has_map_api_key() {
+    $dokan_appearance = get_option( 'dokan_appearance', array() );
+    if( 'google_maps' === $dokan_appearance['map_api_source'] && ! empty( $dokan_appearance['gmap_api_key'] ) ) {
+        return true;
+    } else if( 'mapbox' === $dokan_appearance['map_api_source'] && ! empty( $dokan_appearance['mapbox_access_token'] ) ) {
+        return true;
+    }
+    return false;
 }

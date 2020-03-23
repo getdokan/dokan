@@ -434,6 +434,9 @@
                         if ( $parent.is( '.taxonomy' ) ) {
                             $parent.find( 'select, input[type=text]' ).val( '' );
                             $( 'select.dokan_attribute_taxonomy' ).find( 'option[value="' + $parent.data( 'taxonomy' ) + '"]' ).removeAttr( 'disabled' );
+                        } else {
+                            $parent.find( 'select, input[type=text]' ).val( '' );
+                            $parent.hide();
                         }
 
                         Dokan_Editor.attribute.reArrangeAttribute();
@@ -906,19 +909,19 @@
 
                 sale_price_parent_div.remove();
                 sale_price_input_div.after( sale_price_input_msg );
-                
+
                 sale_price_wrap.val('');
-                setTimeout(function(){ 
+                setTimeout(function(){
                     sale_price_parent_div.remove();
                 }, 5000);
 
             } else if( parseFloat( product_price ) <= parseFloat( sale_price ) ) {
-                
+
                 sale_price_parent_div.remove();
                 sale_price_input_div.after( sale_price_input_msg );
-                
+
                 sale_price_wrap.val('');
-                setTimeout(function(){ 
+                setTimeout(function(){
                     sale_price_parent_div.remove();
                 }, 5000);
 
@@ -927,7 +930,7 @@
                 sale_price_parent_div.remove();
 
             }
-            
+
         } ,600 ) );
 
     });

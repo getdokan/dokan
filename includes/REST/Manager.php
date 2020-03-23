@@ -99,6 +99,12 @@ class Manager {
             unset( $data['store_open_close'] );
         }
 
+        $vendor_id = ! empty( $data['id'] ) ? absint( $data['id'] ) : 0;
+
+        if ( current_user_can( 'manage_woocommerce' ) || $vendor_id === absint( dokan_get_current_user_id() ) ) {
+            return $data;
+        }
+
         if ( empty( $data['show_email'] ) ) {
             unset( $data['email'] );
         }

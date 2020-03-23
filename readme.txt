@@ -5,9 +5,9 @@ Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi selle
 Requires at least: 4.4
 Tested up to: 5.3.2
 WC requires at least: 3.0
-WC tested up to: 3.9.1
+WC tested up to: 4.0.1
 Requires PHP: 5.6
-Stable tag: 3.0.1
+Stable tag: 3.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,7 +17,7 @@ The pioneer multi-vendor plugin for WordPress. Start your own marketplace in min
 
 = DOKAN MULTIVENDOR MARKETPLACE PLUGIN FOR WORDPRESS =
 
-👉 Official Free Demo Link: [Official Demo](https://wedevs.com/dokan/demo)
+👉 Official Free Demo Link: [Official Demo](https://dokan.wedevsdemos.com/)
 👉 Learn More About Dokan(PRO): [All The Features of Dokan](https://wedevs.com/dokan/features/)
 
 = POWERED BY WooCommerce =
@@ -290,6 +290,27 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 == Changelog ==
+
+= v3.0.2 (March 23, 2020) =
+
+ - **Fix:** Unable to remove attributes in vendor product edit page #637
+ - **Fix:** Feature image is not saving on quick edit
+ - **Fix:** Vendor image issue #769
+ - **Fix:** Set vendor eamil on new vendor creation #787
+ - **Fix:** Return content from shotcode instead of being outputting #752
+ - **Fix:** Map still showing on vendor dashabord settings page even if there is no API key
+ - **Fix:** Product type not saving when quick edit #767
+ - **Fix:** Render withdraw methods dynamically in setup wizard #771
+ - **Fix:** Show vendor email to admin and actual vendor #773
+ - **Fix:** Product type error in dokan_save_product function
+ - **Fix:** Admin is unable to see the setup wizard on new dokan installation when WooCommerce is not installed #783
+ - **Fix:** Add missing add_meta_query method in dokan REST API #788
+ - **Fix:** Only render map if api key is availabe in store settings page #774
+ - **Feat:** Add dokan_get_all_cap_labels function #781
+ - **Improvement:** Added group description to exporters and updated privacy policy guide to drop use of deprecated classes #755
+ - **Improvement:** dokan_get_shipping_processing_times function #785
+ - **Improvement:** Add filter on withdraw export csv args #786
+ - **Improvement:** Get correct product thumbnail size in vendor product list page #795
 
 = v3.0.1 (February 07, 2020) =
 
