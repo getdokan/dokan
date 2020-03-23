@@ -2944,7 +2944,7 @@ function dokan_get_all_caps() {
 /**
  * Get translated capability
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.0.2
  *
  * @param  string $cap
  *
@@ -3786,7 +3786,7 @@ function dokan_met_minimum_php_version_for_wc( $required_version = '7.0' ) {
 /**
  * Checks if Dokan settings has map api key
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.0.2
  *
  * @return bool
  */
@@ -3796,6 +3796,6 @@ function dokan_has_map_api_key() {
         return true;
     } else if( 'mapbox' === $dokan_appearance['map_api_source'] && ! empty( $dokan_appearance['mapbox_access_token'] ) ) {
         return true;
-    }   
+    }
     return false;
 }
