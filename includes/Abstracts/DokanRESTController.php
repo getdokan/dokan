@@ -451,7 +451,7 @@ abstract class DokanRESTController extends WP_REST_Controller {
     /**
      * Add meta query.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.2
      *
      * @param array $args       Query args.
      * @param array $meta_query Meta query.

@@ -1,3 +1,24 @@
+= v3.0.2 (March 23, 2020) =
+
+ - **Fix:** Unable to remove attributes in vendor product edit page #637
+ - **Fix:** Feature image is not saving on quick edit
+ - **Fix:** Vendor image issue #769
+ - **Fix:** Set vendor eamil on new vendor creation #787
+ - **Fix:** Return content from shotcode instead of being outputting #752
+ - **Fix:** Map still showing on vendor dashabord settings page even if there is no API key
+ - **Fix:** Product type not saving when quick edit #767
+ - **Fix:** Render withdraw methods dynamically in setup wizard #771
+ - **Fix:** Show vendor email to admin and actual vendor #773
+ - **Fix:** Product type error in dokan_save_product function
+ - **Fix:** Admin is unable to see the setup wizard on new dokan installation when WooCommerce is not installed #783
+ - **Fix:** Add missing add_meta_query method in dokan REST API #788
+ - **Fix:** Only render map if api key is availabe in store settings page #774
+ - **Feat:** Add dokan_get_all_cap_labels function #781
+ - **Improvement:** Added group description to exporters and updated privacy policy guide to drop use of deprecated classes #755
+ - **Improvement:** dokan_get_shipping_processing_times function #785
+ - **Improvement:** Add filter on withdraw export csv args #786
+ - **Improvement:** Get correct product thumbnail size in vendor product list page #795
+
 = v3.0.1 (February 07, 2020) =
 
  - **Fix:** Fixed yoast seo causing conflict issue in single store page
