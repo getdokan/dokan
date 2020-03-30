@@ -97,7 +97,7 @@ class VendorNewOrder extends WC_Email {
         }
         
         // check has sub order 
-        if ( get_post_meta( $order_id, 'has_sub_order', true ) ) {
+        if ( $order->get_meta('has_sub_order') ) {
         	foreach ($sellers as $seller) {
         		$seller_info      = get_userdata( $seller );
 		        $seller_email 	  = $seller_info->user_email;
