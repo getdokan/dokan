@@ -7,7 +7,7 @@
 **WC requires at least:** 3.0  
 **WC tested up to:** 4.0.1  
 **Requires PHP:** 5.6  
-**Stable tag:** 3.0.2  
+**Stable tag:** 3.0.3  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -290,6 +290,12 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 ## Changelog ##
+
+### v3.0.3 (April 03, 2020) ###
+
+ - **Fix:** Clear caches on product update #804
+ - **Fix:** Vendor is not receiving email for new order #803
+ - **Fix:** Remove weForms promotion from admin setup wizard #798
 
 ### v3.0.2 (March 23, 2020) ###
 
