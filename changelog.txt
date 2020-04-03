@@ -1,3 +1,9 @@
+= v3.0.3 (April 03, 2020) =
+
+ - **Fix:** Clear caches on product update #804
+ - **Fix:** Vendor is not receiving email for new order #803
+ - **Fix:** Remove weForms promotion from admin setup wizard #798
+
 = v3.0.2 (March 23, 2020) =
 
  - **Fix:** Unable to remove attributes in vendor product edit page #637

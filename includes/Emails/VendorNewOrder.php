@@ -97,7 +97,7 @@ class VendorNewOrder extends WC_Email {
         }
         
         // check has sub order 
-        if ( ! dokan_is_sub_order( $order_id ) ) {
+        if ( $order->get_meta('has_sub_order') ) {
         	foreach ($sellers as $seller) {
         		$seller_info      = get_userdata( $seller );
 		        $seller_email 	  = $seller_info->user_email;

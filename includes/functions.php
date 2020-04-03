@@ -2757,6 +2757,7 @@ function dokan_cache_reset_order_data_on_status( $order_id, $from_status, $to_st
 function dokan_cache_clear_seller_product_data( $product_id, $post_data = array() ) {
     $seller_id = dokan_get_current_user_id();
 
+    dokan_clear_product_caches( $product_id );
     dokan_cache_clear_group( 'dokan_seller_product_data_' . $seller_id );
     delete_transient( 'dokan-store-category-' . $seller_id );
 }
@@ -3798,4 +3799,34 @@ function dokan_has_map_api_key() {
         return true;
     }
     return false;
+}
+
+/**
+ * Dokan clear product caches.
+ * We'll be calling `WC_Product_Data_Store_CPT::clear_caches()` to clear product caches.
+ *
+ * @since 3.0.3
+ *
+ * @param int|\WC_Product $product
+ *
+ * @return void
+ */
+function dokan_clear_product_caches( $product ) {
+    if ( ! $product instanceof \WC_Product ) {
+        $product = wc_get_product( $product );
+    }
+
+    $store       = \WC_Data_Store::load( 'product-' . $product->get_type() );
+    $class       = $store->get_current_class_name();
+    $class       = is_object( $class ) ? $class : new $class;
+    $reflection  = new \ReflectionClass( $class );
+    $method_name = 'clear_caches';
+
+    if ( ! $reflection->hasMethod( $method_name ) ) {
+        return;
+    }
+
+    $method = $reflection->getMethod( $method_name );
+    $method->setAccessible( true );
+    $method->invokeArgs( $class, [ &$product ] );
 }
