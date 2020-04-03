@@ -3805,7 +3805,7 @@ function dokan_has_map_api_key() {
  * Dokan clear product caches.
  * We'll be calling `WC_Product_Data_Store_CPT::clear_caches()` to clear product caches.
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.0.3
  *
  * @param int|\WC_Product $product
  *
