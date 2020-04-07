@@ -100,7 +100,7 @@
                     </div>
 
                     <div class="column">
-                        <label for="store-password">{{ __( 'Passwrod', 'dokan-lite') }}</label>
+                        <label for="store-password">{{ __( 'Password', 'dokan-lite') }}</label>
                         <input
                             v-if="showPassword"
                             type="text"
