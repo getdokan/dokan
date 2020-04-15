@@ -116,7 +116,6 @@
 <script>
 import Switches from 'admin/components/Switches.vue'
 import { Multiselect } from 'vue-multiselect';
-import { find } from 'lodash';
 
 export default {
     name: 'VendorPaymentFields',
@@ -179,7 +178,7 @@ export default {
         const commissionType = this.vendorInfo.admin_commission_type;
 
         if ( commissionType ) {
-            const { name, label } = find( this.commissionTypes, [ 'name', commissionType ] );
+            const { name, label } = _.findWhere( this.commissionTypes, { name: commissionType } );
 
             this.selectedCommissionType.name  = name;
             this.selectedCommissionType.label = label;
