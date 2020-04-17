@@ -9,18 +9,18 @@
  *
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
+ if ( ! defined( 'ABSPATH' ) ) {
     exit;
-}
+ }
 
 $text_align = is_rtl() ? 'right' : 'left';
 
-/**
- * @hooked WC_Emails::email_header() Output the email header
- */
+ /**
+  * @hooked WC_Emails::email_header() Output the email header
+  */
  do_action( 'woocommerce_email_header', $email_heading, $email );
 
-$order_url = esc_url( add_query_arg( array(
+ $order_url = esc_url( add_query_arg( array(
                 'order_id'   => $order->get_order_number(),
                 '_view_mode' => 'email',
                 'permission' => '1',
