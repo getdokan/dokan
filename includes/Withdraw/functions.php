@@ -73,7 +73,7 @@ function dokan_get_seller_active_withdraw_methods( $vendor_id = 0 ) {
         }
     }
 
-    return apply_filters( 'dokan_get_seller_active_withdraw_methods', $active_payment_methods );
+    return apply_filters( 'dokan_get_seller_active_withdraw_methods', $active_payment_methods, $vendor_id );
 }
 
 
