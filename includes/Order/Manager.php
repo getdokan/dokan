@@ -34,7 +34,7 @@ class Manager {
         $cache_group = 'dokan_seller_data_'.$args['seller_id'];
         
         // Use all arguments to create a hash used as cache key
-        $cache_key = md5(json_encode($args));
+        $cache_key = 'dokan_seller_orders_'.md5(json_encode($args));
         
         $orders      = wp_cache_get( $cache_key, $cache_group );
 
