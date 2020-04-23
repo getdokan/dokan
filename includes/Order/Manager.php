@@ -32,7 +32,10 @@ class Manager {
 
         $offset       = ( $args['paged'] - 1 ) * $args['limit'];
         $cache_group = 'dokan_seller_data_'.$args['seller_id'];
-        $cache_key   = 'dokan-seller-orders-' . $args['status'] . '-' . $args['seller_id'];
+        
+        // Use all arguments to create a hash used as cache key
+        $cache_key = md5(json_encode($args));
+        
         $orders      = wp_cache_get( $cache_key, $cache_group );
 
         $join        = $args['customer_id'] ? "LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id" : '';
