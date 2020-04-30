@@ -1,5 +1,8 @@
 <?php
+
 namespace WeDevs\Dokan\Order;
+
+use Exception;
 
 /**
 * Admin Hooks

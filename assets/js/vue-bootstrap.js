@@ -581,7 +581,7 @@ if (false) {(function () {
 
       this.emailAvailabilityText = this.__('Searching...', 'dokan-lite');
       dokan.api.get("/stores/check", {
-        user_email: userEmail
+        email: userEmail
       }).then(function (response) {
         if (response.available) {
           _this4.emailAvailable = true;
@@ -2191,11 +2191,11 @@ var render = function() {
               ],
               class: {
                 "dokan-form-input": true,
-                "has-error": _vm.getError("user_email")
+                "has-error": _vm.getError("email")
               },
               attrs: {
                 type: "email",
-                placeholder: _vm.getError("user_email")
+                placeholder: _vm.getError("email")
                   ? _vm.__("Email is required", "dokan-lite")
                   : _vm.__("store@email.com", "dokan-lite")
               },

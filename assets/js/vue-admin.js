@@ -581,7 +581,7 @@ if (false) {(function () {
 
       this.emailAvailabilityText = this.__('Searching...', 'dokan-lite');
       dokan.api.get("/stores/check", {
-        user_email: userEmail
+        email: userEmail
       }).then(function (response) {
         if (response.available) {
           _this4.emailAvailable = true;
@@ -2196,11 +2196,11 @@ var render = function() {
               ],
               class: {
                 "dokan-form-input": true,
-                "has-error": _vm.getError("user_email")
+                "has-error": _vm.getError("email")
               },
               attrs: {
                 type: "email",
-                placeholder: _vm.getError("user_email")
+                placeholder: _vm.getError("email")
                   ? _vm.__("Email is required", "dokan-lite")
                   : _vm.__("store@email.com", "dokan-lite")
               },
@@ -4602,7 +4602,7 @@ var Currency = dokan_get_lib('Currency');
         }
       }, {
         "title": "WC Booking Integration",
-        "url": "https:\/\/wedevs.com\/dokan\/modules\/woocommerce-booking-integration\/",
+        "url": "https:\/\/wedevs.com\/dokan\/extensions\/woocommerce-booking-integration\/",
         "starter": {
           "type": "icon",
           "value": dokan.urls.assetsUrl + '/images/premium/unavailable@2x.png'
@@ -6163,7 +6163,7 @@ var Loading = dokan_get_lib('Loading');
         user_pass: '',
         store_url: '',
         user_login: '',
-        user_email: '',
+        email: '',
         user_nicename: '',
         notify_vendor: true,
         phone: '',
@@ -6203,7 +6203,7 @@ var Loading = dokan_get_lib('Loading');
           country: ''
         }
       },
-      requiredFields: ['store_name', 'user_login', 'user_email'],
+      requiredFields: ['store_name', 'user_login', 'email'],
       errors: [],
       storeAvailable: false,
       userNameAvailable: false,

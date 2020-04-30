@@ -2142,44 +2142,29 @@ function dokan_get_processing_time_value( $index ) {
 }
 
 /**
- * Adds seller email to the new order notification email
+ * Dokan get vendor order details by order ID
  *
- * @param string  $admin_email
- * @param WC_Order $order
- *
+ * @param  int $order
+ * @param  int $vendor_id
  * @return array
  */
-function dokan_wc_email_recipient_add_seller( $email, $order ) {
-
-    if ( $order ) {
-        $order_id = $order->get_id();
-
-        if ( get_post_meta( $order_id, 'has_sub_order', true ) ) {
-            return $email;
-        }
-
-        $sellers = dokan_get_seller_id_by_order( $order_id );
-
-        if ( $sellers ) {
-            $seller       = get_userdata( $sellers );
-            $seller_email = $seller->user_email;
-
-            if ( ! wp_get_post_parent_id( $order_id ) ) {
-                if ( $email != $seller_email ) {
-                    $email .= ',' . $seller_email;
-                }
-            } else {
-                if ( $email != $seller_email ) {
-                    $email = $seller_email;
-                }
-            }
+function dokan_get_vendor_order_details( $order_id, $vendor_id ) {
+    $order      = wc_get_order( $order_id );
+    $info       = array();
+    $order_info = array();
+    foreach ( $order->get_items( 'line_item' ) as $item ) {
+        $product_id  = $item->get_product()->get_id();
+        $author_id   = get_post_field( 'post_author', $product_id );
+        if ( $vendor_id == $author_id ) {
+            $info['product']  = $item['name'];
+            $info['quantity'] = $item['quantity'];
+            $info['total']    = $item['total'];
+            array_push( $order_info, $info );
         }
     }
 
-    return apply_filters( 'dokan_email_recipient_new_order', $email );
+    return apply_filters( 'dokan_get_vendor_order_details', $order_info, $order_id, $vendor_id );
 }
-
-add_filter( 'woocommerce_email_recipient_new_order', 'dokan_wc_email_recipient_add_seller', 10, 2 );
 
 /**
  * Send email to seller and admin when there is no product in stock or low stock
@@ -2333,8 +2318,8 @@ function dokan_get_social_profile_fields() {
             'title' => __( 'Facebook', 'dokan-lite' ),
         ),
         'gplus' => array(
-            'icon'  => 'google-plus-square',
-            'title' => __( 'Google Plus', 'dokan-lite' ),
+            'icon'  => 'google',
+            'title' => __( 'Google', 'dokan-lite' ),
         ),
         'twitter' => array(
             'icon'  => 'twitter-square',
@@ -2772,6 +2757,7 @@ function dokan_cache_reset_order_data_on_status( $order_id, $from_status, $to_st
 function dokan_cache_clear_seller_product_data( $product_id, $post_data = array() ) {
     $seller_id = dokan_get_current_user_id();
 
+    dokan_clear_product_caches( $product_id );
     dokan_cache_clear_group( 'dokan_seller_product_data_' . $seller_id );
     delete_transient( 'dokan-store-category-' . $seller_id );
 }
@@ -2959,7 +2945,7 @@ function dokan_get_all_caps() {
 /**
  * Get translated capability
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.0.2
  *
  * @param  string $cap
  *
@@ -3445,7 +3431,7 @@ function dokan_is_store_listing() {
     if ( ! $found ) {
         $post = get_post( $page_id );
 
-        if ( $post && false !== strpos( $post->post_content, '[dokan-stores]' ) ) {
+        if ( $post && false !== strpos( $post->post_content, '[dokan-stores' ) ) {
             $found = true;
         }
     }
@@ -3801,7 +3787,7 @@ function dokan_met_minimum_php_version_for_wc( $required_version = '7.0' ) {
 /**
  * Checks if Dokan settings has map api key
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.0.2
  *
  * @return bool
  */
@@ -3811,6 +3797,36 @@ function dokan_has_map_api_key() {
         return true;
     } else if( 'mapbox' === $dokan_appearance['map_api_source'] && ! empty( $dokan_appearance['mapbox_access_token'] ) ) {
         return true;
-    }   
+    }
     return false;
+}
+
+/**
+ * Dokan clear product caches.
+ * We'll be calling `WC_Product_Data_Store_CPT::clear_caches()` to clear product caches.
+ *
+ * @since 3.0.3
+ *
+ * @param int|\WC_Product $product
+ *
+ * @return void
+ */
+function dokan_clear_product_caches( $product ) {
+    if ( ! $product instanceof \WC_Product ) {
+        $product = wc_get_product( $product );
+    }
+
+    $store       = \WC_Data_Store::load( 'product-' . $product->get_type() );
+    $class       = $store->get_current_class_name();
+    $class       = is_object( $class ) ? $class : new $class;
+    $reflection  = new \ReflectionClass( $class );
+    $method_name = 'clear_caches';
+
+    if ( ! $reflection->hasMethod( $method_name ) ) {
+        return;
+    }
+
+    $method = $reflection->getMethod( $method_name );
+    $method->setAccessible( true );
+    $method->invokeArgs( $class, [ &$product ] );
 }

@@ -514,7 +514,7 @@ if ( ! function_exists( 'dokan_store_category_menu' ) ) :
  */
 function dokan_store_category_menu( $seller_id, $title = '' ) {
     ?>
-    <div id="cat-drop-stack">
+    <div id="cat-drop-stack" class="store-cat-stack-dokan">
         <?php
         global $wpdb;
         $categories = get_transient( 'dokan-store-category-'.$seller_id );

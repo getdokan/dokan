@@ -65,9 +65,12 @@ class Orders {
 
             if ( wp_verify_nonce( $_nonce, 'dokan_view_order' ) && current_user_can( 'dokan_view_order' ) ) {
                 dokan_get_template_part( 'orders/details' );
+            } else if ( isset ( $_REQUEST['_view_mode'] ) && 'email' == $_REQUEST['_view_mode'] && current_user_can( 'dokan_view_order' ) ) {
+                dokan_get_template_part( 'orders/details' );
             } else {
                 dokan_get_template_part( 'global/dokan-error', '', array( 'deleted' => false, 'message' => __( 'You have no permission to view this order', 'dokan-lite' ) ) );
             }
+            
 		} else {
             dokan_get_template_part( 'orders/date-export' );
             dokan_get_template_part( 'orders/listing' );

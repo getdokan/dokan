@@ -2192,6 +2192,63 @@ jQuery(function($) {
 
     bulkItemsSelection.init();
 
+    
+
+    $( '.product-cat-stack-dokan li.has-children' ).on( 'click', '> a span.caret-icon', function ( e ) {
+        e.preventDefault();
+        var self = $( this ),
+            liHasChildren = self.closest( 'li.has-children' );
+
+        if ( !liHasChildren.find( '> ul.children' ).is( ':visible' ) ) {
+            self.find( 'i.fa' ).addClass( 'fa-rotate-90' );
+            if ( liHasChildren.find( '> ul.children' ).hasClass( 'level-0' ) ) {
+                self.closest( 'a' ).css( { 'borderBottom': 'none' } );
+            }
+        }
+
+        liHasChildren.find( '> ul.children' ).slideToggle( 'fast', function () {
+            if ( !$( this ).is( ':visible' ) ) {
+                self.find( 'i.fa' ).removeClass( 'fa-rotate-90' );
+
+                if ( liHasChildren.find( '> ul.children' ).hasClass( 'level-0' ) ) {
+                    self.closest( 'a' ).css( { 'borderBottom': '1px solid #eee' } );
+                }
+            }
+        } );
+    } );
+
+    $( '.store-cat-stack-dokan li.has-children' ).on( 'click', '> a span.caret-icon', function ( e ) {
+        e.preventDefault();
+        var self = $( this ),
+            liHasChildren = self.closest( 'li.has-children' );
+
+        if ( !liHasChildren.find( '> ul.children' ).is( ':visible' ) ) {
+            self.find( 'i.fa' ).addClass( 'fa-rotate-90' );
+            if ( liHasChildren.find( '> ul.children' ).hasClass( 'level-0' ) ) {
+                self.closest( 'a' ).css( { 'borderBottom': 'none' } );
+            }
+        }
+
+        liHasChildren.find( '> ul.children' ).slideToggle( 'fast', function () {
+            if ( !$( this ).is( ':visible' ) ) {
+                self.find( 'i.fa' ).removeClass( 'fa-rotate-90' );
+
+                if ( liHasChildren.find( '> ul.children' ).hasClass( 'level-0' ) ) {
+                    self.closest( 'a' ).css( { 'borderBottom': '1px solid #eee' } );
+                }
+            }
+        } );
+    } );
+
+    $(document).ready(function(){
+        var selectedLi = $('#cat-drop-stack ul').find( 'a.selected' );
+        selectedLi.css({ fontWeight: 'bold' });
+
+        selectedLi.parents('ul.children').each( function( i, val ) {
+            $( val ).css({ display: 'block' });
+        });
+    });
+
 
 })(jQuery);
 
@@ -2414,7 +2471,8 @@ jQuery(function($) {
                     }
                 }
 
-                if ( key[0] === 'store_category[]' && key[0].includes( '[' ) ) {
+                // for backward compatibility we'll allow `store_category[]` query_var.
+                if ( key[0].includes( 'store_categories[' ) || key[0].includes( 'store_category[' ) ) {
                     const trimedValue = value[0].split( ' ' ).join( '-' );
                     const cateItem = $( `[data-slug=${trimedValue}]` );
 
