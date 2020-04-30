@@ -29,6 +29,7 @@ class Upgrades {
         '2.9.16' => Upgrades\V_2_9_16::class,
         '2.9.19' => Upgrades\V_2_9_19::class,
         '2.9.23' => Upgrades\V_2_9_23::class,
+        '3.0.4'  => Upgrades\V_3_0_4::class,
     ];
 
     /**
