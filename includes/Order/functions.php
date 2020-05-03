@@ -608,8 +608,8 @@ function dokan_get_sellers_by( $order ) {
 
         //New filter hook to modify the seller id at run time.
         $seller_id = apply_filters( 'dokan_get_sellers_by', $seller_id, $item );
-        if(!empty($seller_id)){
-            $sellers[$seller_id][] = $item;
+        if ( ! empty( $seller_id ) ) {
+            $sellers[ $seller_id ][] = $item;
         }
     }
 
