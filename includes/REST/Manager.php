@@ -105,7 +105,15 @@ class Manager {
             return $data;
         }
 
-        if ( empty( $data['show_email'] ) ) {
+        if ( dokan_is_vendor_info_hidden( 'address' ) ) {
+            unset( $data['address'] );
+        }
+
+        if ( dokan_is_vendor_info_hidden( 'phone' ) ) {
+            unset( $data['phone'] );
+        }
+
+        if ( dokan_is_vendor_info_hidden( 'email' ) || empty( $data['show_email'] ) ) {
             unset( $data['email'] );
         }
 
