@@ -48,7 +48,7 @@
                                             </div>
                                         <?php endif ?>
 
-                                        <?php if ( $store_address ): ?>
+                                        <?php if ( ! dokan_is_vendor_info_hidden( 'address' ) && $store_address ): ?>
                                             <?php
                                                 $allowed_tags = array(
                                                     'span' => array(
@@ -60,7 +60,7 @@
                                             <p class="store-address"><?php echo wp_kses( $store_address, $allowed_tags ); ?></p>
                                         <?php endif ?>
 
-                                        <?php if ( $store_phone ) { ?>
+                                        <?php if ( ! dokan_is_vendor_info_hidden( 'phone' ) && $store_phone ) { ?>
                                             <p class="store-phone">
                                                 <i class="fa fa-phone" aria-hidden="true"></i> <?php echo esc_html( $store_phone ); ?>
                                             </p>

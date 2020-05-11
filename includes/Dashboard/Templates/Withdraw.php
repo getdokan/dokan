@@ -212,6 +212,8 @@ class Withdraw {
             return $this->add_error( $withdraw->get_error_message(), $withdraw->get_error_code() );
         }
 
+        do_action( 'dokan_after_withdraw_request', $user_id, $amount, $method );
+
         wp_redirect( add_query_arg( array(
             'message' => 'request_success',
         ), dokan_get_navigation_url( 'withdraw' ) ) );
