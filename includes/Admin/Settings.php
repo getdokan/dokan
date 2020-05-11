@@ -515,6 +515,21 @@ class Settings {
                     'type'    => 'checkbox',
                     'default' => 'off'
                 ),
+                'hide_vendor_info' => array(
+                    'name'    => 'hide_vendor_info',
+                    'label'   => __( 'Hide Vendor Info', 'dokan' ),
+                    'type'    => 'multicheck',
+                    'default' => array(
+                        'email'   => '',
+                        'phone'   => '',
+                        'address' => '',
+                    ),
+                    'options' => array(
+                        'email'   => __( 'Email Address', 'dokan' ),
+                        'phone'   => __( 'Phone Number', 'dokan' ),
+                        'address' => __( 'Store Address', 'dokan' ),
+                    )
+                ),
             ),
             'dokan_privacy' => array(
                 'enable_privacy' => array(
