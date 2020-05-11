@@ -661,10 +661,10 @@ class Vendor {
         }
 
         if ( $formatted ) {
-            return apply_filters( 'dokan_get_formatted_seller_balance', wc_price( $earning ) );
+            return apply_filters( 'dokan_get_formatted_seller_balance', wc_price( $earning ), $this->id );
         }
 
-        return apply_filters( 'dokan_get_seller_balance', $earning );
+        return apply_filters( 'dokan_get_seller_balance', $earning, $this->id );
     }
 
     /**
