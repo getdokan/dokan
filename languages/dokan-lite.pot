@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 3.0.3\n"
+"Project-Id-Version: Dokan 3.0.4\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2020-04-03 15:39:25+00:00\n"
+"POT-Creation-Date: 2020-05-15 10:35:00+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -487,11 +487,15 @@ msgstr ""
 msgid "Searching&hellip;"
 msgstr ""
 
-#: includes/Commission.php:128
+#: includes/Commission.php:89
+msgid "Payment gateway processing fee %s"
+msgstr ""
+
+#: includes/Commission.php:181
 msgid "Product not found"
 msgstr ""
 
-#: includes/Commission.php:156
+#: includes/Commission.php:209
 msgid "Order not found"
 msgstr ""
 
@@ -657,52 +661,52 @@ msgstr ""
 msgid "withdraw_method is required"
 msgstr ""
 
-#: includes/Dashboard/Templates/Withdraw.php:311
+#: includes/Dashboard/Templates/Withdraw.php:313
 msgid "Current Balance: %s "
 msgstr ""
 
-#: includes/Dashboard/Templates/Withdraw.php:314
+#: includes/Dashboard/Templates/Withdraw.php:316
 msgid "<br>Minimum Withdraw amount: %s "
 msgstr ""
 
-#: includes/Dashboard/Templates/Withdraw.php:318
+#: includes/Dashboard/Templates/Withdraw.php:320
 msgid "<br>Withdraw Threshold: %d days "
 msgstr ""
 
-#: includes/Dashboard/Templates/Withdraw.php:375
+#: includes/Dashboard/Templates/Withdraw.php:377
 msgid "Your request has been cancelled successfully!"
 msgstr ""
 
-#: includes/Dashboard/Templates/Withdraw.php:379
+#: includes/Dashboard/Templates/Withdraw.php:381
 msgid "Your request has been received successfully and being reviewed!"
 msgstr ""
 
-#: includes/Dashboard/Templates/Withdraw.php:383
+#: includes/Dashboard/Templates/Withdraw.php:385
 msgid "Unknown error!"
 msgstr ""
 
-#: includes/Dashboard/Templates/Withdraw.php:419
+#: includes/Dashboard/Templates/Withdraw.php:421
 msgid ""
 "You have already withdrawn %s. This amount will be deducted from your "
 "balance."
 msgstr ""
 
-#: includes/Dashboard/Templates/Withdraw.php:428
+#: includes/Dashboard/Templates/Withdraw.php:430
 msgid "You already have pending withdraw request(s)."
 msgstr ""
 
-#: includes/Dashboard/Templates/Withdraw.php:428
+#: includes/Dashboard/Templates/Withdraw.php:430
 msgid ""
 "Please submit your request after approval or cancellation of your previous "
 "request."
 msgstr ""
 
-#: includes/Dashboard/Templates/Withdraw.php:438
+#: includes/Dashboard/Templates/Withdraw.php:440
 msgid "You don't have sufficient balance for a withdraw request!"
 msgstr ""
 
-#: includes/Dashboard/Templates/Withdraw.php:498
-#: includes/Dashboard/Templates/Withdraw.php:524
+#: includes/Dashboard/Templates/Withdraw.php:500
+#: includes/Dashboard/Templates/Withdraw.php:526
 msgid "Sorry, no transactions were found!"
 msgstr ""
 
@@ -755,132 +759,132 @@ msgstr ""
 msgid "Failed"
 msgstr ""
 
-#: includes/Order/functions.php:761
+#: includes/Order/functions.php:763
 msgid "Order No"
 msgstr ""
 
-#: includes/Order/functions.php:762 templates/orders/details.php:21
+#: includes/Order/functions.php:764 templates/orders/details.php:21
 msgid "Order Items"
 msgstr ""
 
-#: includes/Order/functions.php:763
+#: includes/Order/functions.php:765
 msgid "Shipping method"
 msgstr ""
 
-#: includes/Order/functions.php:764
+#: includes/Order/functions.php:766
 msgid "Shipping Cost"
 msgstr ""
 
-#: includes/Order/functions.php:765
+#: includes/Order/functions.php:767
 msgid "Payment method"
 msgstr ""
 
-#: includes/Order/functions.php:766 templates/orders/listing.php:52
+#: includes/Order/functions.php:768 templates/orders/listing.php:52
 #: templates/orders/listing.php:77
 msgid "Order Total"
 msgstr ""
 
-#: includes/Order/functions.php:767 includes/REST/OrderController.php:99
+#: includes/Order/functions.php:769 includes/REST/OrderController.php:99
 msgid "Order Status"
 msgstr ""
 
-#: includes/Order/functions.php:768
+#: includes/Order/functions.php:770
 msgid "Order Date"
 msgstr ""
 
-#: includes/Order/functions.php:769
+#: includes/Order/functions.php:771
 msgid "Billing Company"
 msgstr ""
 
-#: includes/Order/functions.php:770
+#: includes/Order/functions.php:772
 msgid "Billing First Name"
 msgstr ""
 
-#: includes/Order/functions.php:771
+#: includes/Order/functions.php:773
 msgid "Billing Last Name"
 msgstr ""
 
-#: includes/Order/functions.php:772
+#: includes/Order/functions.php:774
 msgid "Billing Full Name"
 msgstr ""
 
-#: includes/Order/functions.php:773
+#: includes/Order/functions.php:775
 msgid "Billing Email"
 msgstr ""
 
-#: includes/Order/functions.php:774
+#: includes/Order/functions.php:776
 msgid "Billing Phone"
 msgstr ""
 
-#: includes/Order/functions.php:775
+#: includes/Order/functions.php:777
 msgid "Billing Address 1"
 msgstr ""
 
-#: includes/Order/functions.php:776
+#: includes/Order/functions.php:778
 msgid "Billing Address 2"
 msgstr ""
 
-#: includes/Order/functions.php:777
+#: includes/Order/functions.php:779
 msgid "Billing City"
 msgstr ""
 
-#: includes/Order/functions.php:778
+#: includes/Order/functions.php:780
 msgid "Billing State"
 msgstr ""
 
-#: includes/Order/functions.php:779
+#: includes/Order/functions.php:781
 msgid "Billing Postcode"
 msgstr ""
 
-#: includes/Order/functions.php:780
+#: includes/Order/functions.php:782
 msgid "Billing Country"
 msgstr ""
 
-#: includes/Order/functions.php:781
+#: includes/Order/functions.php:783
 msgid "Shipping Company"
 msgstr ""
 
-#: includes/Order/functions.php:782
+#: includes/Order/functions.php:784
 msgid "Shipping First Name"
 msgstr ""
 
-#: includes/Order/functions.php:783
+#: includes/Order/functions.php:785
 msgid "Shipping Last Name"
 msgstr ""
 
-#: includes/Order/functions.php:784
+#: includes/Order/functions.php:786
 msgid "Shipping Full Name"
 msgstr ""
 
-#: includes/Order/functions.php:785
+#: includes/Order/functions.php:787
 msgid "Shipping Address 1"
 msgstr ""
 
-#: includes/Order/functions.php:786
+#: includes/Order/functions.php:788
 msgid "Shipping Address 2"
 msgstr ""
 
-#: includes/Order/functions.php:787
+#: includes/Order/functions.php:789
 msgid "Shipping City"
 msgstr ""
 
-#: includes/Order/functions.php:788
+#: includes/Order/functions.php:790
 msgid "Shipping State"
 msgstr ""
 
-#: includes/Order/functions.php:789
+#: includes/Order/functions.php:791
 msgid "Shipping Postcode"
 msgstr ""
 
-#: includes/Order/functions.php:790
+#: includes/Order/functions.php:792
 msgid "Shipping Country"
 msgstr ""
 
-#: includes/Order/functions.php:791
+#: includes/Order/functions.php:793
 msgid "Customer IP"
 msgstr ""
 
-#: includes/Order/functions.php:792
+#: includes/Order/functions.php:794
 msgid "Customer Note"
 msgstr ""
 
@@ -1132,8 +1136,7 @@ msgid "Facebook"
 msgstr ""
 
 #: includes/Privacy.php:195 includes/functions.php:2322
-#: src/admin/pages/VendorSocialFields.vue:21
-msgid "Google Plus"
+msgid "Google"
 msgstr ""
 
 #: includes/Privacy.php:196 includes/functions.php:2326
@@ -1338,7 +1341,6 @@ msgstr ""
 
 #: includes/Product/functions.php:184 includes/admin/SetupWizardNoWC.php:183
 #: includes/admin/SetupWizardWCAdmin.php:84
-#: templates/emails/vendor-new-order.php:91
 msgid "Shipping"
 msgstr ""
 
@@ -1499,8 +1501,7 @@ msgstr ""
 
 #: includes/REST/AdminReportController.php:138
 #: templates/dashboard/orders-widget.php:21
-#: templates/dashboard/products-widget.php:26
-#: templates/emails/vendor-new-order.php:120 templates/my-orders.php:30
+#: templates/dashboard/products-widget.php:26 templates/my-orders.php:30
 #: templates/orders/order-fee-html.php:17 templates/sub-orders.php:28
 msgid "Total"
 msgstr ""
@@ -3060,7 +3061,7 @@ msgstr ""
 msgid "Appearance"
 msgstr ""
 
-#: includes/admin/Settings.php:242 includes/admin/Settings.php:537
+#: includes/admin/Settings.php:242 includes/admin/Settings.php:552
 msgid "Privacy Policy"
 msgstr ""
 
@@ -3213,7 +3214,7 @@ msgstr ""
 
 #: includes/admin/Settings.php:414 includes/admin/Settings.php:422
 #: includes/admin/Settings.php:430 includes/admin/Settings.php:438
-#: includes/admin/Settings.php:532
+#: includes/admin/Settings.php:547
 msgid "Select page"
 msgstr ""
 
@@ -3322,23 +3323,42 @@ msgstr ""
 msgid "Enable showing Store Sidebar From Your Theme."
 msgstr ""
 
-#: includes/admin/Settings.php:522
+#: includes/admin/Settings.php:520
+msgid "Hide Vendor Info"
+msgstr ""
+
+#: includes/admin/Settings.php:528
+msgid "Email Address"
+msgstr ""
+
+#: includes/admin/Settings.php:529 includes/admin/UserProfile.php:211
+#: src/admin/pages/VendorAccountFields.vue:64
+#: templates/account/vendor-registration.php:33
+#: templates/global/seller-registration-form.php:38
+msgid "Phone Number"
+msgstr ""
+
+#: includes/admin/Settings.php:530
+msgid "Store Address"
+msgstr ""
+
+#: includes/admin/Settings.php:537
 msgid "Enable Privacy Policy"
 msgstr ""
 
-#: includes/admin/Settings.php:524
+#: includes/admin/Settings.php:539
 msgid "Enable privacy policy for Vendor store contact form"
 msgstr ""
 
-#: includes/admin/Settings.php:529
+#: includes/admin/Settings.php:544
 msgid "Privacy Page"
 msgstr ""
 
-#: includes/admin/Settings.php:531
+#: includes/admin/Settings.php:546
 msgid "Select a page to show your privacy policy"
 msgstr ""
 
-#: includes/admin/Settings.php:540 includes/functions.php:3498
+#: includes/admin/Settings.php:555 includes/functions.php:3498
 msgid ""
 "Your personal data will be used to support your experience throughout this "
 "website, to manage access to your account, and for other purposes described "
@@ -3559,13 +3579,6 @@ msgstr ""
 
 #: includes/admin/UserProfile.php:170
 msgid "Zip Code"
-msgstr ""
-
-#: includes/admin/UserProfile.php:211
-#: src/admin/pages/VendorAccountFields.vue:64
-#: templates/account/vendor-registration.php:33
-#: templates/global/seller-registration-form.php:38
-msgid "Phone Number"
 msgstr ""
 
 #: includes/admin/UserProfile.php:229
@@ -4280,7 +4293,7 @@ msgstr ""
 msgid "Review"
 msgstr ""
 
-#: includes/functions.php:2962 templates/emails/vendor-new-order.php:47
+#: includes/functions.php:2962 templates/emails/vendor-new-order.php:46
 msgid "Product"
 msgstr ""
 
@@ -4324,12 +4337,12 @@ msgstr ""
 msgid "privacy policy"
 msgstr ""
 
-#: includes/functions.php:3522 src/admin/pages/VendorPaymentFields.vue:140
-#: src/admin/pages/VendorPaymentFields.vue:144
+#: includes/functions.php:3522 src/admin/pages/VendorPaymentFields.vue:142
+#: src/admin/pages/VendorPaymentFields.vue:155
 msgid "Flat"
 msgstr ""
 
-#: includes/functions.php:3523 src/admin/pages/VendorPaymentFields.vue:141
+#: includes/functions.php:3523 src/admin/pages/VendorPaymentFields.vue:146
 msgid "Percentage"
 msgstr ""
 
@@ -4890,7 +4903,9 @@ msgid "Send the vendor an email about their account."
 msgstr ""
 
 #: src/admin/pages/VendorAccountFields.vue:103
-msgid "Passwrod"
+#: templates/account/vendor-registration.php:39
+#: templates/login-form/login-form.php:13
+msgid "Password"
 msgstr ""
 
 #: src/admin/pages/VendorAccountFields.vue:114
@@ -4945,7 +4960,7 @@ msgstr ""
 msgid "Make Vendor Featured"
 msgstr ""
 
-#: src/admin/pages/VendorPaymentFields.vue:142
+#: src/admin/pages/VendorPaymentFields.vue:150
 msgid "Combine"
 msgstr ""
 
@@ -4961,7 +4976,11 @@ msgstr ""
 #: src/admin/pages/VendorSocialFields.vue:37
 #: src/admin/pages/VendorSocialFields.vue:42
 #: src/admin/pages/VendorSocialFields.vue:47
-msgid "https://exmaple.com"
+msgid "https://example.com"
+msgstr ""
+
+#: src/admin/pages/VendorSocialFields.vue:21
+msgid "Google Plus"
 msgstr ""
 
 #: src/admin/pages/Vendors.vue:4
@@ -5028,11 +5047,6 @@ msgstr ""
 
 #: src/upgrade/App.vue:43
 msgid "All data updated successfully. Thank you for using Dokan."
-msgstr ""
-
-#: templates/account/vendor-registration.php:39
-#: templates/login-form/login-form.php:13
-msgid "Password"
 msgstr ""
 
 #: templates/account/vendor-registration.php:44
@@ -5466,11 +5480,11 @@ msgstr ""
 msgid "[Order #%s]"
 msgstr ""
 
-#: templates/emails/vendor-new-order.php:48
+#: templates/emails/vendor-new-order.php:47
 msgid "Quantity"
 msgstr ""
 
-#: templates/emails/vendor-new-order.php:49
+#: templates/emails/vendor-new-order.php:48
 #: templates/products/new-product-single.php:195
 #: templates/products/new-product.php:156
 #: templates/products/products-listing-row.php:77
@@ -5479,21 +5493,8 @@ msgstr ""
 msgid "Price"
 msgstr ""
 
-#: templates/emails/vendor-new-order.php:71
-msgid "Subtotal"
-msgstr ""
-
-#: templates/emails/vendor-new-order.php:81
-msgid "Discount"
-msgstr ""
-
-#: templates/emails/vendor-new-order.php:101
-msgid "Tax"
-msgstr ""
-
-#: templates/emails/vendor-new-order.php:111
-#: templates/withdraw/request-form.php:27
-msgid "Payment Method"
+#: templates/emails/vendor-new-order.php:84 templates/sub-orders.php:16
+msgid "Note:"
 msgstr ""
 
 #: templates/emails/withdraw-approve.php:26
@@ -6503,10 +6504,6 @@ msgstr ""
 msgid "Sub Orders"
 msgstr ""
 
-#: templates/sub-orders.php:16
-msgid "Note:"
-msgstr ""
-
 #: templates/sub-orders.php:17
 msgid ""
 "This order has products from multiple vendors. So we divided this order "
@@ -6556,6 +6553,10 @@ msgstr ""
 
 #: templates/withdraw/request-form.php:14
 msgid "Withdraw Amount"
+msgstr ""
+
+#: templates/withdraw/request-form.php:27
+msgid "Payment Method"
 msgstr ""
 
 #: templates/withdraw/request-form.php:42
