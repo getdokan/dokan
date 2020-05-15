@@ -322,7 +322,9 @@ class Manager {
             $vendor->set_banner_id( $data['banner_id'] );
         }
 
-        if ( isset( $data['enable_tnc'] ) && dokan_validate_boolean( $data['enable_tnc'] ) ) {
+        // for backward compatibility we'll allow both `enable_tnc` and `toc_enabled` to set store trams and condition settings
+        if ( ( isset( $data['enable_tnc'] ) && dokan_validate_boolean( $data['enable_tnc'] ) )
+            || ( isset( $data['toc_enabled'] ) && dokan_validate_boolean( $data['toc_enabled'] ) ) ) {
             $vendor->set_enable_tnc( 'on' );
         } else {
             $vendor->set_enable_tnc( 'off' );

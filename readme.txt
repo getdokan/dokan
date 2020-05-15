@@ -1,13 +1,13 @@
 === Dokan - Best WooCommerce Multivendor Marketplace Solution - Build Your Own Amazon, eBay, Etsy ===
-Contributors: tareq1988, wedevs, sabbir1991, nizamuddinbabu, sk.shaikat, ediamin, saimonh
+Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, product vendors, woocommerce vendor, commission rate, e-commerce, ebay, ecommerce, yith, yithemes
 Requires at least: 4.4
 Tested up to: 5.3.2
 WC requires at least: 3.0
-WC tested up to: 4.0.1
+WC tested up to: 4.1.0
 Requires PHP: 5.6
-Stable tag: 3.0.3
+Stable tag: 3.0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -290,6 +290,23 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 == Changelog ==
+
+ = v3.0.4 (May 15, 2020) =
+
+ - **Fix:** Rename google plus to google as google plus is deprecated #807
+ - **Fix:** Unable to set store trams and condition settings through REST API #808
+ - **Fix:** Vendor order email does not have the TAX details #809
+ - **Fix:** Withdraw request email is not send to admin #810
+ - **Fix:** Typo in backend add and edit vendor page #811
+ - **Fix:** On updating commission type in backend vendor dashboard, translated commission type is getting saved into database #814
+ - **Fix:** Store listing filter does not work when its saved as frontpage #815
+ - **Fix:** When a product is purchased with a price of more than 8 digit the calculation is wrong #819
+ - **Fix:** Caching issue on vendor's order listing page #821
+ - **Fix:** Filter out empty seller ids when a product is deleted `dokan_get_sellers_by` function #827
+ - **Fix:** Deduct PayPal gateway fee from vendor's earning #830
+ - **Feat:** Hide vendor info if admin wants to #829
+ - **Improvement:** Pass vendor id in dokan_get_seller_active_withdraw_methods hook #813
+
 
 = v3.0.3 (April 03, 2020) =
 

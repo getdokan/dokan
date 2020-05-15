@@ -85,11 +85,11 @@
     </td>
     <td data-title="<?php esc_attr_e( 'Earning', 'dokan-lite' ); ?>">
         <?php
-        if ( $product->get_type() == 'simple' ) {
-            $price = wc_price( dokan()->commission->get_earning_by_product( $product ) );
+        if ( $product->get_type() == 'variable' ) {
+            $price = dokan_get_variable_product_earning( $product->get_id() );
             echo wp_kses( $price, $price_kses );
         } else {
-            $price = dokan_get_variable_product_earning( $product->get_id() );
+            $price = wc_price( dokan()->commission->get_earning_by_product( $product ) );
             echo wp_kses( $price, $price_kses );
         }
         ?>

@@ -61,11 +61,11 @@
                     <div class="column">
                         <div class="column">
                             <label>{{ __( 'Admin Commission Type', 'dokan-lite' ) }}</label>
-                            <Multiselect @input="saveCommissionType" v-model="selectedCommissionType" :options="commissionTypes" :multiselect="false" :searchable="false" :showLabels="false" />
+                            <Multiselect @input="saveCommissionType" v-model="selectedCommissionType" :options="commissionTypes" track-by="name" label="label" :allow-empty="false" :multiselect="false" :searchable="false" :showLabels="false" />
                         </div>
                     </div>
 
-                    <div class="column combine-commission" v-if="'Combine' === selectedCommissionType">
+                    <div class="column combine-commission" v-if="'combine' === selectedCommissionType.name">
                         <label>{{ __( 'Admin Commission', 'dokan-lite' )  }}</label>
                         <div class="combine-commission-field">
                             <input type="number" class="dokan-form-input percent_fee" v-model="vendorInfo.admin_commission">
@@ -114,8 +114,8 @@
 </template>
 
 <script>
-import Switches from "admin/components/Switches.vue"
-import { Multiselect } from "vue-multiselect";
+import Switches from 'admin/components/Switches.vue'
+import { Multiselect } from 'vue-multiselect';
 
 export default {
     name: 'VendorPaymentFields',
@@ -137,11 +137,23 @@ export default {
             trusted: false,
             featured: false,
             commissionTypes: [
-                this.__( 'Flat', 'dokan-lite' ),
-                this.__( 'Percentage', 'dokan-lite' ),
-                this.__( 'Combine', 'dokan-lite' )
+                {
+                    name: 'flat',
+                    label: this.__( 'Flat', 'dokan-lite' )
+                },
+                {
+                    name: 'percentage',
+                    label: this.__( 'Percentage', 'dokan-lite' )
+                },
+                {
+                    name: 'combine',
+                    label: this.__( 'Combine', 'dokan-lite' )
+                }
             ],
-            selectedCommissionType: this.__( 'Flat', 'dokan-lite' ),
+            selectedCommissionType: {
+                name: 'flat',
+                label: this.__( 'Flat', 'dokan-lite' )
+            },
             getBankFields: dokan.hooks.applyFilters( 'getVendorBankFields', [] ),
             getPyamentFields: dokan.hooks.applyFilters( 'AfterPyamentFields', [] ),
         }
@@ -163,10 +175,13 @@ export default {
             this.vendorInfo.featured = true
         }
 
-        let commissionType = this.vendorInfo.admin_commission_type;
+        const commissionType = this.vendorInfo.admin_commission_type;
 
         if ( commissionType ) {
-            this.selectedCommissionType = commissionType.charAt( 0 ).toUpperCase() + commissionType.slice( 1 );
+            const { name, label } = _.findWhere( this.commissionTypes, { name: commissionType } );
+
+            this.selectedCommissionType.name  = name;
+            this.selectedCommissionType.label = label;
         }
     },
 
@@ -201,16 +216,14 @@ export default {
             return this.$route.params.id;
         },
 
-        saveCommissionType( value ) {
-            if ( ! value ) {
+        saveCommissionType( {name} ) {
+            if ( ! name ) {
                 this.vendorInfo.admin_commission_type = 'flat';
             }
 
-            this.vendorInfo.admin_commission_type = value.toLowerCase();
+            this.vendorInfo.admin_commission_type = name;
         }
-
     }
-
 };
 </script>
 

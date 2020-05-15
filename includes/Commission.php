@@ -36,6 +36,59 @@ class Commission {
      */
     public function __construct() {
         add_filter( 'woocommerce_order_item_get_formatted_meta_data', [ $this, 'hide_extra_data' ] );
+        add_action( 'woocommerce_order_status_changed', [ $this, 'calculate_gateway_fee' ], 100 );
+        add_action( 'woocommerce_thankyou_ppec_paypal', [ $this, 'calculate_gateway_fee' ] );
+    }
+
+    /**
+     * Calculate gateway fee
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param $order_id
+     *
+     * @return void
+     */
+    public function calculate_gateway_fee( $order_id ) {
+        global $wpdb;
+        $order           = wc_get_order( $order_id );
+        $processing_fee  = $this->get_processing_fee( $order );
+
+        if ( ! $processing_fee ) {
+            return;
+        }
+
+        foreach ( $this->get_all_order_to_be_processed( $order ) as $tmp_order ) {
+            $gateway_fee_added = $tmp_order->get_meta( 'dokan_gateway_fee' );
+            $vendor_earning    = $this->get_earning_from_order_table( $tmp_order->get_id() );
+
+            if ( is_null( $vendor_earning ) || $gateway_fee_added ) {
+                continue;
+            }
+
+            $gateway_fee = ( $processing_fee / $order->get_total() ) * $tmp_order->get_total();
+            $net_amount  = $vendor_earning - $gateway_fee;
+
+            $wpdb->update(
+                $wpdb->dokan_orders,
+                [ 'net_amount' => (float) $net_amount ],
+                [ 'order_id'   => $tmp_order->get_id() ],
+                [ '%f' ],
+                [ '%d' ]
+            );
+
+            $wpdb->update(
+                $wpdb->dokan_vendor_balance,
+                [ 'debit' => (float) $net_amount ],
+                [ 'trn_id'   => $tmp_order->get_id(), 'trn_type' => 'dokan_orders' ],
+                [ '%f' ],
+                [ '%d', '%s' ]
+            );
+
+            $tmp_order->update_meta_data( 'dokan_gateway_fee', $gateway_fee );
+            $tmp_order->add_order_note( sprintf( __( 'Payment gateway processing fee %s', 'dokan-lite' ), round( $gateway_fee, 2 ) ) );
+            $tmp_order->save_meta_data();
+        }
     }
 
     /**
@@ -206,7 +259,9 @@ class Commission {
             $earning += $order->get_total_tax() - $order->get_total_tax_refunded();
         }
 
-        return apply_filters_deprecated( 'dokan_order_admin_commission', array( $earning, $order, $context ), '2.9.21', 'dokan_get_earning_by_order' );
+        $earning = apply_filters_deprecated( 'dokan_order_admin_commission', [ $earning, $order, $context ], '2.9.21', 'dokan_get_earning_by_order' );
+
+        return apply_filters( 'dokan_get_earning_by_order', $earning );
     }
 
     /**
@@ -680,6 +735,57 @@ class Commission {
         }
 
         return $tax_recipient;
+    }
+
+    /**
+     * Get processing fee
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param \WC_Order $order
+     *
+     * @return float
+     */
+    public function get_processing_fee( $order ) {
+        $processing_fee = 0;
+        $payment_mthod  = $order->get_payment_method();
+
+        if ( 'paypal' === $payment_mthod ) {
+            $processing_fee = $order->get_meta( 'PayPal Transaction Fee' );
+        }
+
+        if ( 'ppec_paypal' === $payment_mthod && defined( 'PPEC_FEE_META_NAME_NEW' ) ) {
+            $processing_fee = $order->get_meta( PPEC_FEE_META_NAME_NEW );
+        }
+
+        return apply_filters( 'dokan_get_processing_fee', $processing_fee, $order );
+    }
+
+    /**
+     * Get all the orders to be processed
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param \WC_Order $order
+     *
+     * @return array
+     */
+    public function get_all_order_to_be_processed( $order ) {
+        $has_suborder = $order->get_meta( 'has_sub_order' );
+        $all_orders   = [];
+
+        if ( $has_suborder ) {
+            $sub_order_ids = get_children( [ 'post_parent' => $order->get_id(), 'post_type' => 'shop_order', 'fields' => 'ids' ] );
+
+            foreach ( $sub_order_ids as $sub_order_id ) {
+                $sub_order    = wc_get_order( $sub_order_id );
+                $all_orders[] = $sub_order;
+            }
+        } else {
+            $all_orders[] = $order;
+        }
+
+        return $all_orders;
     }
 
     /**

@@ -31,7 +31,7 @@
             <?php printf( '<a href="%s">%s</a>', esc_url( dokan_get_store_url( $author->ID ) ), esc_attr( $author->display_name ) ); ?>
         </span>
     </li>
-    <?php if ( !empty( $store_info['address'] ) ) { ?>
+    <?php if ( ! dokan_is_vendor_info_hidden( 'address' ) && ! empty( $store_info['address'] ) ) { ?>
         <li class="store-address">
             <span><b><?php esc_html_e( 'Address:', 'dokan-lite' ); ?></b></span>
             <span class="details">

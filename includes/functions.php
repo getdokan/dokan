@@ -2318,8 +2318,8 @@ function dokan_get_social_profile_fields() {
             'title' => __( 'Facebook', 'dokan-lite' ),
         ),
         'gplus' => array(
-            'icon'  => 'google-plus-square',
-            'title' => __( 'Google Plus', 'dokan-lite' ),
+            'icon'  => 'google',
+            'title' => __( 'Google', 'dokan-lite' ),
         ),
         'twitter' => array(
             'icon'  => 'twitter-square',
@@ -3829,4 +3829,23 @@ function dokan_clear_product_caches( $product ) {
     $method = $reflection->getMethod( $method_name );
     $method->setAccessible( true );
     $method->invokeArgs( $class, [ &$product ] );
+}
+
+/**
+ * Check which vendor info should be hidden
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @param string $option
+ *
+ * @return bool|array if no param is passed
+ */
+function dokan_is_vendor_info_hidden( $option = null ) {
+    $options = dokan_get_option( 'hide_vendor_info', 'dokan_appearance' );
+
+    if ( is_null( $option ) ) {
+        return $options;
+    }
+
+    return ! empty( $options[ $option ] );
 }

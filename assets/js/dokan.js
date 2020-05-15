@@ -2471,7 +2471,8 @@ jQuery(function($) {
                     }
                 }
 
-                if ( key[0] === 'store_category[]' && key[0].includes( '[' ) ) {
+                // for backward compatibility we'll allow `store_category[]` query_var.
+                if ( key[0].includes( 'store_categories[' ) || key[0].includes( 'store_category[' ) ) {
                     const trimedValue = value[0].split( ' ' ).join( '-' );
                     const cateItem = $( `[data-slug=${trimedValue}]` );
 
