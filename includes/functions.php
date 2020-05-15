@@ -3253,26 +3253,56 @@ function dokan_pro_buynow_url() {
  *
  * @param object $response
  *
- * @return object
+ * @return WP_REST_Response
  */
 function dokan_add_vendor_info_in_rest_order( $response ) {
+    $vendor_ids = [];
+
     foreach ( $response as $data ) {
-        if ( isset( $data['line_items'] ) ) {
-            $product_id = $data['line_items'][0]['product_id'];
-            $author_id  = get_post_field( 'post_author', $product_id );
+        if ( empty( $data['line_items'] ) ) {
+            continue;
+        }
+
+        foreach ( $data['line_items'] as $item ) {
+            $product_id = ! empty( $item['product_id'] ) ? $item['product_id'] : 0;
+            $vendor_id  = get_post_field( 'post_author', $product_id );
+
+            if ( $vendor_id && ! in_array( $vendor_id, $vendor_ids ) ) {
+                array_push( $vendor_ids, $vendor_id );
+            }
         }
     }
 
-    $store = dokan()->vendor->get( $author_id );
-    $data  = $response->get_data();
+    if ( ! $vendor_ids ) {
+        return $response;
+    }
 
-    $data['store'] = array(
-        'id'        => $store->get_id(),
-        'name'      => $store->get_name(),
-        'shop_name' => $store->get_shop_name(),
-        'url'       => $store->get_shop_url(),
-        'address'   => $store->get_address(),
-    );
+    $data = $response->get_data();
+
+    foreach ( $vendor_ids as $store_id ) {
+        $store = dokan()->vendor->get( $store_id );
+        $data['stores'][] = [
+            'id'        => $store->get_id(),
+            'name'      => $store->get_name(),
+            'shop_name' => $store->get_shop_name(),
+            'url'       => $store->get_shop_url(),
+            'address'   => $store->get_address(),
+        ];
+    }
+
+    // for backward compatibility, if there are multiple vendors, pass empty array.
+    if ( count( $vendor_ids ) > 1 ) {
+        $data['store'] = [];
+    } else {
+        $store = dokan()->vendor->get( $vendor_ids[0] );
+        $data['store'] = [
+            'id'        => $store->get_id(),
+            'name'      => $store->get_name(),
+            'shop_name' => $store->get_shop_name(),
+            'url'       => $store->get_shop_url(),
+            'address'   => $store->get_address(),
+        ];
+    }
 
     $response->set_data( $data );
 
