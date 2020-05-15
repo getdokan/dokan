@@ -1292,8 +1292,20 @@ if (false) {(function () {
       enabled: false,
       trusted: false,
       featured: false,
-      commissionTypes: [this.__('Flat', 'dokan-lite'), this.__('Percentage', 'dokan-lite'), this.__('Combine', 'dokan-lite')],
-      selectedCommissionType: this.__('Flat', 'dokan-lite'),
+      commissionTypes: [{
+        name: 'flat',
+        label: this.__('Flat', 'dokan-lite')
+      }, {
+        name: 'percentage',
+        label: this.__('Percentage', 'dokan-lite')
+      }, {
+        name: 'combine',
+        label: this.__('Combine', 'dokan-lite')
+      }],
+      selectedCommissionType: {
+        name: 'flat',
+        label: this.__('Flat', 'dokan-lite')
+      },
       getBankFields: dokan.hooks.applyFilters('getVendorBankFields', []),
       getPyamentFields: dokan.hooks.applyFilters('AfterPyamentFields', [])
     };
@@ -1317,7 +1329,14 @@ if (false) {(function () {
     var commissionType = this.vendorInfo.admin_commission_type;
 
     if (commissionType) {
-      this.selectedCommissionType = commissionType.charAt(0).toUpperCase() + commissionType.slice(1);
+      var _$findWhere = _.findWhere(this.commissionTypes, {
+        name: commissionType
+      }),
+          name = _$findWhere.name,
+          label = _$findWhere.label;
+
+      this.selectedCommissionType.name = name;
+      this.selectedCommissionType.label = label;
     }
   },
   methods: {
@@ -1349,12 +1368,14 @@ if (false) {(function () {
     getId: function getId() {
       return this.$route.params.id;
     },
-    saveCommissionType: function saveCommissionType(value) {
-      if (!value) {
+    saveCommissionType: function saveCommissionType(_ref) {
+      var name = _ref.name;
+
+      if (!name) {
         this.vendorInfo.admin_commission_type = 'flat';
       }
 
-      this.vendorInfo.admin_commission_type = value.toLowerCase();
+      this.vendorInfo.admin_commission_type = name;
     }
   }
 });
@@ -2309,7 +2330,7 @@ var render = function() {
                   { staticClass: "column" },
                   [
                     _c("label", { attrs: { for: "store-password" } }, [
-                      _vm._v(_vm._s(_vm.__("Passwrod", "dokan-lite")))
+                      _vm._v(_vm._s(_vm.__("Password", "dokan-lite")))
                     ]),
                     _vm._v(" "),
                     _vm.showPassword
@@ -3105,6 +3126,9 @@ var render = function() {
                           _c("Multiselect", {
                             attrs: {
                               options: _vm.commissionTypes,
+                              "track-by": "name",
+                              label: "label",
+                              "allow-empty": false,
                               multiselect: false,
                               searchable: false,
                               showLabels: false
@@ -3123,7 +3147,7 @@ var render = function() {
                       )
                     ]),
                     _vm._v(" "),
-                    "Combine" === _vm.selectedCommissionType
+                    "combine" === _vm.selectedCommissionType.name
                       ? _c(
                           "div",
                           { staticClass: "column combine-commission" },
@@ -6094,7 +6118,7 @@ var render = function() {
               staticClass: "dokan-form-input",
               attrs: {
                 type: "text",
-                placeholder: _vm.__("https://exmaple.com")
+                placeholder: _vm.__("https://example.com")
               },
               domProps: { value: _vm.vendorInfo.social.fb },
               on: {
@@ -6125,7 +6149,7 @@ var render = function() {
               staticClass: "dokan-form-input",
               attrs: {
                 type: "text",
-                placeholder: _vm.__("https://exmaple.com")
+                placeholder: _vm.__("https://example.com")
               },
               domProps: { value: _vm.vendorInfo.social.flickr },
               on: {
@@ -6156,7 +6180,7 @@ var render = function() {
               staticClass: "dokan-form-input",
               attrs: {
                 type: "text",
-                placeholder: _vm.__("https://exmaple.com")
+                placeholder: _vm.__("https://example.com")
               },
               domProps: { value: _vm.vendorInfo.social.gplus },
               on: {
@@ -6187,7 +6211,7 @@ var render = function() {
               staticClass: "dokan-form-input",
               attrs: {
                 type: "text",
-                placeholder: _vm.__("https://exmaple.com")
+                placeholder: _vm.__("https://example.com")
               },
               domProps: { value: _vm.vendorInfo.social.twitter },
               on: {
@@ -6222,7 +6246,7 @@ var render = function() {
               staticClass: "dokan-form-input",
               attrs: {
                 type: "text",
-                placeholder: _vm.__("https://exmaple.com")
+                placeholder: _vm.__("https://example.com")
               },
               domProps: { value: _vm.vendorInfo.social.youtube },
               on: {
@@ -6257,7 +6281,7 @@ var render = function() {
               staticClass: "dokan-form-input",
               attrs: {
                 type: "text",
-                placeholder: _vm.__("https://exmaple.com")
+                placeholder: _vm.__("https://example.com")
               },
               domProps: { value: _vm.vendorInfo.social.linkedin },
               on: {
@@ -6292,7 +6316,7 @@ var render = function() {
               staticClass: "dokan-form-input",
               attrs: {
                 type: "text",
-                placeholder: _vm.__("https://exmaple.com")
+                placeholder: _vm.__("https://example.com")
               },
               domProps: { value: _vm.vendorInfo.social.pinterest },
               on: {
@@ -6327,7 +6351,7 @@ var render = function() {
               staticClass: "dokan-form-input",
               attrs: {
                 type: "text",
-                placeholder: _vm.__("https://exmaple.com")
+                placeholder: _vm.__("https://example.com")
               },
               domProps: { value: _vm.vendorInfo.social.instagram },
               on: {
