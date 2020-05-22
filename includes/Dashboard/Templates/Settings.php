@@ -17,9 +17,9 @@ class Settings {
     /**
      * Loading autometically when class initiate
      *
+     * @return void
      * @since 2.4
      *
-     * @return void
      */
     function __construct() {
         add_action( 'dokan_settings_content_inside_before', array( $this, 'show_enable_seller_message' ) );
@@ -33,9 +33,9 @@ class Settings {
     /**
      * Show Seller Enable Error Message
      *
+     * @return void
      * @since 2.4
      *
-     * @return void
      */
     public function show_enable_seller_message() {
         $user_id = get_current_user_id();
@@ -44,12 +44,13 @@ class Settings {
             dokan_seller_not_enabled_notice();
         }
     }
+
     /**
      * Render Settings Header
      *
+     * @return void
      * @since 2.4
      *
-     * @return void
      */
     public function render_settings_header() {
         global $wp;
@@ -68,9 +69,9 @@ class Settings {
     /**
      * Render Settings help
      *
+     * @return void
      * @since 2.4
      *
-     * @return void
      */
     public function render_settings_help() {
         global $wp;
@@ -91,24 +92,24 @@ class Settings {
     /**
      * Render Settings Progressbar
      *
+     * @return void
      * @since 2.4
      *
-     * @return void
      */
     public function render_settings_load_progressbar() {
         ?>
-            <div class="dokan-ajax-response">
-                <?php do_action( 'dokan_settings_load_ajax_response' ); ?>
-            </div>
+        <div class="dokan-ajax-response">
+            <?php do_action( 'dokan_settings_load_ajax_response' ); ?>
+        </div>
         <?php
     }
 
     /**
      * Render Settings Store Errors
      *
+     * @return void
      * @since 2.4
      *
-     * @return void
      */
     public function render_settings_store_errors() {
         $validate = $this->validate();
@@ -127,16 +128,16 @@ class Settings {
     /**
      * Render Settings Content
      *
+     * @return void
      * @since 2.4
      *
-     * @return void
      */
     public function render_settings_content() {
         global $wp;
 
         if ( isset( $wp->query_vars['settings'] ) && 'store' == $wp->query_vars['settings'] ) {
             if ( ! current_user_can( 'dokan_view_store_settings_menu' ) ) {
-                dokan_get_template_part('global/dokan-error', '', array(
+                dokan_get_template_part( 'global/dokan-error', '', array(
                     'deleted' => false,
                     'message' => __( 'You have no permission to view this page', 'dokan-lite' )
                 ) );
@@ -147,7 +148,7 @@ class Settings {
 
         if ( isset( $wp->query_vars['settings'] ) && 'payment' == $wp->query_vars['settings'] ) {
             if ( ! current_user_can( 'dokan_view_store_payment_menu' ) ) {
-                dokan_get_template_part('global/dokan-error', '', array(
+                dokan_get_template_part( 'global/dokan-error', '', array(
                     'deleted' => false,
                     'message' => __( 'You have no permission to view this page', 'dokan-lite' )
                 ) );
@@ -162,9 +163,9 @@ class Settings {
     /**
      * Load Store Content
      *
+     * @return void
      * @since 2.4
      *
-     * @return void
      */
     public function load_store_content() {
         $validate     = $this->validate();
@@ -182,9 +183,9 @@ class Settings {
     /**
      * Load Payment Content
      *
+     * @return void
      * @since 2.4
      *
-     * @return void
      */
     public function load_payment_content() {
         $methods      = dokan_withdraw_get_active_methods();
@@ -201,9 +202,9 @@ class Settings {
     /**
      * Save settings via ajax
      *
+     * @return void
      * @since 2.4
      *
-     * @return void
      */
     function ajax_settings() {
 
@@ -427,9 +428,9 @@ class Settings {
     /**
      * validate payment settings
      *
+     * @return bool|WP_Error
      * @since 2.4
      *
-     * @return bool|WP_Error
      */
     function payment_validate() {
 
@@ -504,40 +505,33 @@ class Settings {
                 'enable_tnc'               => isset( $post_data['dokan_store_tnc_enable'] ) && 'on' == $post_data['dokan_store_tnc_enable'] ? 'on' : 'off',
                 'store_tnc'                => isset( $post_data['dokan_store_tnc'] ) ? wp_kses_post( $post_data['dokan_store_tnc'] ) : '',
                 'dokan_store_time'         => array(
-                    'sunday'               => array(
-                        'status'           => isset( $post_data['sunday_on_off'] ) && 'open' == $post_data['sunday_on_off'] ? 'open' : 'close',
-                        'opening_time'     => isset( $post_data['sunday_opening_time'] ) ? sanitize_text_field( $post_data['sunday_opening_time'] ) : '',
-                        'closing_time'     => isset( $post_data['sunday_closing_time'] ) ? sanitize_text_field( $post_data['sunday_closing_time'] ) : '',
+                    'sunday'    => array(
+                        'status' => isset( $post_data['sunday_on_off'] ) && 'open' == $post_data['sunday_on_off'] ? 'open' : 'close',
+                        'shift'  => $this->get_dokan_daypair( $post_data, 'sunday' )
                     ),
-                    'monday'               => array(
-                        'status'           => isset( $post_data['monday_on_off'] ) && 'open' == $post_data['monday_on_off'] ? 'open' : 'close',
-                        'opening_time'     => isset( $post_data['monday_opening_time'] ) ? sanitize_text_field( $post_data['monday_opening_time'] ) : '',
-                        'closing_time'     => isset( $post_data['monday_closing_time'] ) ? sanitize_text_field( $post_data['monday_closing_time'] ) : '',
+                    'monday'    => array(
+                        'status' => isset( $post_data['monday_on_off'] ) && 'open' == $post_data['monday_on_off'] ? 'open' : 'close',
+                        'shift'  => $this->get_dokan_daypair( $post_data, 'monday' )
                     ),
-                    'tuesday'              => array(
-                        'status'           => isset( $post_data['tuesday_on_off'] ) && 'open' == $post_data['tuesday_on_off'] ? 'open' : 'close',
-                        'opening_time'     => isset( $post_data['tuesday_opening_time'] ) ? sanitize_text_field( $post_data['tuesday_opening_time'] ) : '',
-                        'closing_time'     => isset( $post_data['tuesday_closing_time'] ) ? sanitize_text_field( $post_data['tuesday_closing_time'] ) : '',
+                    'tuesday'   => array(
+                        'status' => isset( $post_data['tuesday_on_off'] ) && 'open' == $post_data['tuesday_on_off'] ? 'open' : 'close',
+                        'shift'  => $this->get_dokan_daypair( $post_data, 'tuesday' )
                     ),
-                    'wednesday'            => array(
-                        'status'           => isset( $post_data['wednesday_on_off'] ) && 'open' == $post_data['wednesday_on_off'] ? 'open' : 'close',
-                        'opening_time'     => isset( $post_data['wednesday_opening_time'] ) ? sanitize_text_field( $post_data['wednesday_opening_time'] ) : '',
-                        'closing_time'     => isset( $post_data['wednesday_closing_time'] ) ? sanitize_text_field( $post_data['wednesday_closing_time'] ) : '',
+                    'wednesday' => array(
+                        'status' => isset( $post_data['wednesday_on_off'] ) && 'open' == $post_data['wednesday_on_off'] ? 'open' : 'close',
+                        'shift'  => $this->get_dokan_daypair( $post_data, 'wednesday' )
                     ),
-                    'thursday'             => array(
-                        'status'           => isset( $post_data['thursday_on_off'] ) && 'open' == $post_data['thursday_on_off'] ? 'open' : 'close',
-                        'opening_time'     => isset( $post_data['thursday_opening_time'] ) ? sanitize_text_field( $post_data['thursday_opening_time'] ) : '',
-                        'closing_time'     => isset( $post_data['thursday_closing_time'] ) ? sanitize_text_field( $post_data['thursday_closing_time'] ) : '',
+                    'thursday'  => array(
+                        'status' => isset( $post_data['thursday_on_off'] ) && 'open' == $post_data['thursday_on_off'] ? 'open' : 'close',
+                        'shift'  => $this->get_dokan_daypair( $post_data, 'thursday' )
                     ),
-                    'friday'               => array(
-                        'status'           => isset( $post_data['friday_on_off'] ) && 'open' == $post_data['friday_on_off'] ? 'open' : 'close',
-                        'opening_time'     => isset( $post_data['friday_opening_time'] ) ? sanitize_text_field( $post_data['friday_opening_time'] ) : '',
-                        'closing_time'     => isset( $post_data['friday_closing_time'] ) ? sanitize_text_field( $post_data['friday_closing_time'] ) : '',
+                    'friday'    => array(
+                        'status' => isset( $post_data['friday_on_off'] ) && 'open' == $post_data['friday_on_off'] ? 'open' : 'close',
+                        'shift'  => $this->get_dokan_daypair( $post_data, 'friday' )
                     ),
-                    'saturday'             => array(
-                        'status'           => isset( $post_data['saturday_on_off'] ) && 'open' == $post_data['saturday_on_off'] ? 'open' : 'close',
-                        'opening_time'     => isset( $post_data['saturday_opening_time'] ) ? sanitize_text_field( $post_data['saturday_opening_time'] ) : '',
-                        'closing_time'     => isset( $post_data['saturday_closing_time'] ) ? sanitize_text_field( $post_data['saturday_closing_time'] ) : '',
+                    'saturday'  => array(
+                        'status' => isset( $post_data['saturday_on_off'] ) && 'open' == $post_data['saturday_on_off'] ? 'open' : 'close',
+                        'shift'  => $this->get_dokan_daypair( $post_data, 'saturday' )
                     ),
                 ),
                 'dokan_store_time_enabled' => isset( $post_data['dokan_store_time_enabled'] ) && 'yes' == $post_data['dokan_store_time_enabled'] ? 'yes' : 'no',
@@ -593,11 +587,34 @@ class Settings {
     }
 
     /**
+     * Open-Close time for Multiple shift
+     *
+     * @param $post_data from $_POST
+     * @param $day from weekday
+     *
+     * @return array|bool
+     */
+    function get_dokan_daypair( $post_data, $day ) {
+        $dayclose = $post_data[ $day . '_closing_time' ];
+
+        if ( $post_data[ $day . '_on_off' ] == 'open' ) {
+            $daypair = [];
+            foreach ( $post_data[ $day . '_opening_time' ] as $k => $v ) {
+                $daypair[ $k ] = [ 'opening_time' => $v, 'closing_time' => $dayclose[ $k ] ];
+            }
+
+            return $daypair;
+        }
+
+        return false;
+    }
+
+    /**
      * Dokan Get Category Format
      *
+     * @return array
      * @since 1.0
      *
-     * @return array
      */
     function get_dokan_categories() {
         $dokan_category = array(

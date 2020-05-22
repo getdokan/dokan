@@ -16,7 +16,15 @@
         ?>
         <div class="open-close-day <?php echo esc_attr( $day ) . '-time' ?>">
             <label for=""><?php echo esc_attr( dokan_get_translated_days( $day ) ); ?></label>:
-            <?php echo sprintf( __( '<span> %s %s %s </span>', 'dokan-lite' ), $is_open ? esc_attr( ucfirst( $value['opening_time'] ) ) : '' , $to, $is_open ? esc_attr( ucfirst( $value['closing_time'] ) ) : '' ); //// phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped  ?>
+            <?php if ( ! empty( $value['shift'] ) ) { ?>
+                <?php foreach ( $value['shift'] as $time ): ?>
+                    <div style="padding-left: 30px"></div>
+                    <?php echo sprintf( __( '<span> %s %s %s </span>', 'dokan-lite' ), $is_open ? esc_attr( ucfirst( $time['opening_time'] ) ) : '', $to, $is_open ? esc_attr( ucfirst( $time['closing_time'] ) ) : '' ); //// phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped  ?>
+                <?php endforeach; ?>
+            <?php } else { ?>
+                <div style="padding-left: 30px"></div>
+                <?php echo sprintf( __( '<span> %s  </span>', 'dokan-lite' ), 'Off Day' ); //// phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped  ?>
+            <?php } ?>
         </div>
     <?php endforeach; ?>
 </div>
