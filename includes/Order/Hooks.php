@@ -94,14 +94,13 @@ class Hooks {
         }
 
         /**
-         * If `offline_payments` is enabled, don't include the fund in vendor's withdrawal balance.
+         * If `exclude_cod_payment` is enabled, don't include the fund in vendor's withdrawal balance.
          *
          * @since DOKAN_LITE_SINCE
          */
-        $offline_payment_methods = apply_filters( 'dokan_offline_payment_methods', [ 'cod', 'bacs', 'cheque' ] );
-        $exclude_offline_payment = 'on' === dokan_get_option( 'offline_payments', 'dokan_withdraw', 'off' );
+        $exclude_cod_payment = 'on' === dokan_get_option( 'exclude_cod_payment', 'dokan_withdraw', 'off' );
 
-        if ( $exclude_offline_payment && in_array( $order->get_payment_method(), $offline_payment_methods ) ) {
+        if ( $exclude_cod_payment && 'cod' === $order->get_payment_method() ) {
             return;
         }
 

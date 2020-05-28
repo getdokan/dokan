@@ -404,10 +404,10 @@ class Settings {
                     'default' => '50',
                     'type'    => 'text',
                 ),
-                'offline_payments' => array(
-                    'name'    => 'offline_payments',
-                    'label'   => __( 'Exclude Offline Payments', 'dokan-lite' ),
-                    'desc'    => __( 'If an order is paid with any offline payment method(COD, BACS, Cheque), then exclude those payment from vendor balance.', 'dokan-lite' ),
+                'exclude_cod_payment' => array(
+                    'name'    => 'exclude_cod_payment',
+                    'label'   => __( 'Exclude COD Payments', 'dokan-lite' ),
+                    'desc'    => __( 'If an order is paid with Cash on Delivery (COD), then exclude that payment from vendor balance.', 'dokan-lite' ),
                     'type'    => 'checkbox',
                     'default' => 'off',
                 )
