@@ -93,6 +93,17 @@ class Hooks {
             }
         }
 
+        /**
+         * If `exclude_cod_payment` is enabled, don't include the fund in vendor's withdrawal balance.
+         *
+         * @since DOKAN_LITE_SINCE
+         */
+        $exclude_cod_payment = 'on' === dokan_get_option( 'exclude_cod_payment', 'dokan_withdraw', 'off' );
+
+        if ( $exclude_cod_payment && 'cod' === $order->get_payment_method() ) {
+            return;
+        }
+
         // update on vendor-balance table
        $wpdb->update( $wpdb->prefix . 'dokan_vendor_balance',
             array( 'status' => $new_status ),
