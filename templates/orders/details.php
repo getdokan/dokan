@@ -223,7 +223,7 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                                     $display_name = get_post_meta( dokan_get_prop( $order, 'id' ), '_billing_first_name', true ). ' '. get_post_meta( dokan_get_prop( $order, 'id' ), '_billing_last_name', true );
                                 }
                                 ?>
-                                <a href="#"><?php echo esc_html( $display_name ); ?></a><br>
+                                <?php echo esc_html( $display_name ); ?><br>
                             </li>
                             <li>
                                 <span><?php esc_html_e( 'Email:', 'dokan-lite' ); ?></span>
