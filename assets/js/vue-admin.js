@@ -5913,7 +5913,8 @@ var Search = dokan_get_lib('Search');
       }],
       vendors: [],
       loadAddVendor: false,
-      dokanVendorHeaderArea: dokan.hooks.applyFilters('getDokanVendorHeaderArea', [])
+      dokanVendorHeaderArea: dokan.hooks.applyFilters('getDokanVendorHeaderArea', []),
+      isVendorSwitchingEnabled: false
     };
   },
   watch: {
@@ -5967,6 +5968,14 @@ var Search = dokan_get_lib('Search');
       _this.isCategoryMultiple = payload.isCategoryMultiple;
       _this.columns = payload.columns;
     });
+    this.isVendorSwitchingEnabled = dokan.is_vendor_switching_enabled ? true : false;
+
+    if (this.isVendorSwitchingEnabled) {
+      this.actions.push({
+        key: 'switch_to',
+        label: this.__('Switch To', 'dokan-lite')
+      });
+    }
   },
   methods: {
     addNew: function addNew() {
@@ -6095,6 +6104,9 @@ var Search = dokan_get_lib('Search');
     },
     editUrl: function editUrl(id) {
       return dokan.urls.adminRoot + 'user-edit.php?user_id=' + id;
+    },
+    switchToUrl: function switchToUrl(row) {
+      return row.switch_url;
     }
   }
 });
@@ -10654,9 +10666,17 @@ var render = function() {
                                 { attrs: { href: _vm.ordersUrl(data.row.id) } },
                                 [_vm._v(_vm._s(action.label))]
                               )
-                            : _c("a", { attrs: { href: "#" } }, [
-                                _vm._v(_vm._s(action.label))
-                              ]),
+                            : action.key == "switch_to"
+                              ? _c(
+                                  "a",
+                                  {
+                                    attrs: { href: _vm.switchToUrl(data.row) }
+                                  },
+                                  [_vm._v(_vm._s(action.label))]
+                                )
+                              : _c("a", { attrs: { href: "#" } }, [
+                                  _vm._v(_vm._s(action.label))
+                                ]),
                     _vm._v(" "),
                     index !== _vm.actions.length - 1
                       ? [_vm._v(" | ")]
