@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\ThemeSupport;
 
+use stdClass;
+
 /**
  * Divi Theme Support
  *
@@ -18,6 +20,7 @@ class Divi {
         add_action( 'template_redirect', [ $this, 'remove_sidebar'] );
         add_filter( 'body_class', [ $this, 'full_width_page'] );
         add_action( 'wp_enqueue_scripts', [ $this, 'style_reset' ] );
+        add_action( 'dokan_store_page_query_filter', [ $this, 'set_current_page' ], 10, 2 );
     }
 
     /**
@@ -64,5 +67,36 @@ class Divi {
         }
 
         return $classes;
+    }
+
+    /**
+     * Set current page for the query
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @see https://github.com/weDevsOfficial/dokan/issues/838
+     *
+     * @param \WP_Query $query
+     * @param array $store_info
+     *
+     * @return void
+     */
+    public function set_current_page( $query, $store_info ) {
+        /**
+         * Divi is tightly coupled with singular page data in general and dokan store page is not a regular WordPress page
+         * But created with custom rewrite rules. So we'll trick Divi builder to assume dokan store page is really `page` post_type.
+         * So lets create a fake page object, and set it to `WP_Query->queried_object` and make the page `is_singular`.
+         */
+        $page            = new stdClass;
+        $page->ID        = get_option( 'woocommerce_shop_page_id' ); // So it's created by admin, vendor can't see the edit page menu on navbar
+        $page->post_type = 'page';
+
+        $query->is_singular       = true;
+        $query->queried_object    = $page;
+        $query->queried_object_id = $page->ID;
+
+        add_filter( 'pre_get_document_title', function() use ( $store_info ) {
+            return ! empty( $store_info['store_name'] ) ? $store_info['store_name'] : __( 'No Name', 'dokan-lite' );
+        } );
     }
 }

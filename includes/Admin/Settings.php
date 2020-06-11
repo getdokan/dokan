@@ -403,6 +403,13 @@ class Settings {
                     'desc'    => __( 'Minimum balance required to make a withdraw request. Leave blank to set no minimum limits.', 'dokan-lite' ),
                     'default' => '50',
                     'type'    => 'text',
+                ),
+                'exclude_cod_payment' => array(
+                    'name'    => 'exclude_cod_payment',
+                    'label'   => __( 'Exclude COD Payments', 'dokan-lite' ),
+                    'desc'    => __( 'If an order is paid with Cash on Delivery (COD), then exclude that payment from vendor balance.', 'dokan-lite' ),
+                    'type'    => 'checkbox',
+                    'default' => 'off',
                 )
             ),
             'dokan_pages' => array(

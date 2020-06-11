@@ -161,7 +161,6 @@ module.exports = function(grunt) {
                     '**',
                     '!node_modules/**',
                     '!build/**',
-                    '!vendor/**',
                     '!bin/**',
                     '!.git/**',
                     '!Gruntfile.js',

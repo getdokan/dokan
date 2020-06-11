@@ -272,6 +272,7 @@ class Rewrites {
             $store_info    = dokan_get_store_info( $seller_info->data->ID );
             $post_per_page = isset( $store_info['store_ppp'] ) && ! empty( $store_info['store_ppp'] ) ? $store_info['store_ppp'] : 12;
 
+            do_action( 'dokan_store_page_query_filter', $query, $store_info );
             set_query_var( 'posts_per_page', $post_per_page );
 
             $query->set( 'post_type', 'product' );

@@ -3,11 +3,11 @@ Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, product vendors, woocommerce vendor, commission rate, e-commerce, ebay, ecommerce, yith, yithemes
 Requires at least: 4.4
-Tested up to: 5.3.2
+Tested up to: 5.4.2
 WC requires at least: 3.0
-WC tested up to: 4.1.0
+WC tested up to: 4.2.0
 Requires PHP: 5.6
-Stable tag: 3.0.4
+Stable tag: 3.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -291,6 +291,15 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+ = v3.0.5 (June 11, 2020) =
+
+- [new] Exclude cash on delivery payments from vendor withdrawal balance (COD)
+- [fix] Remove vendor folder from the excluded list
+- [fix] Earning column missing on vendor dashboard order list
+- [fix] Default location not working in vendor dashboard
+- [fix] Remove link from customer name in vendor order details
+- [fix] Custom header, footer template does not work in Dokan store page (Divi Theme)
+
  = v3.0.4 (May 15, 2020) =
 
  - **Fix:** Rename google plus to google as google plus is deprecated #807
@@ -306,7 +315,6 @@ A. Just install and activate the PRO version without deleting the free plugin. A
  - **Fix:** Deduct PayPal gateway fee from vendor's earning #830
  - **Feat:** Hide vendor info if admin wants to #829
  - **Improvement:** Pass vendor id in dokan_get_seller_active_withdraw_methods hook #813
-
 
 = v3.0.3 (April 03, 2020) =
 
