@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 3.0.4\n"
+"Project-Id-Version: Dokan 3.0.5\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2020-05-15 10:35:00+00:00\n"
+"POT-Creation-Date: 2020-06-11 13:41:40+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -516,7 +516,7 @@ msgstr ""
 
 #: includes/Dashboard/Templates/Dashboard.php:111
 #: includes/Order/functions.php:505 includes/admin/SetupWizard.php:508
-#: templates/dashboard/orders-widget.php:36 templates/orders/listing.php:138
+#: templates/dashboard/orders-widget.php:36 templates/orders/listing.php:142
 msgid "Processing"
 msgstr ""
 
@@ -720,7 +720,7 @@ msgid "Vendor"
 msgstr ""
 
 #: includes/Install/Installer.php:157 includes/admin/AdminBar.php:47
-#: includes/admin/Menu.php:42 includes/admin/Settings.php:411
+#: includes/admin/Menu.php:42 includes/admin/Settings.php:418
 #: includes/template-tags.php:323 src/admin/pages/Dashboard.vue:3
 msgid "Dashboard"
 msgstr ""
@@ -729,20 +729,20 @@ msgstr ""
 msgid "Store List"
 msgstr ""
 
-#: includes/Install/Installer.php:169 includes/admin/Settings.php:419
+#: includes/Install/Installer.php:169 includes/admin/Settings.php:426
 #: templates/global/header-menu.php:46
 msgid "My Orders"
 msgstr ""
 
-#: includes/Order/Hooks.php:143
+#: includes/Order/Hooks.php:154
 msgid "Mark parent order completed when all child orders are completed."
 msgstr ""
 
-#: includes/Order/Hooks.php:185
+#: includes/Order/Hooks.php:196
 msgid "A coupon must be restricted with a vendor product."
 msgstr ""
 
-#: includes/Order/Hooks.php:240
+#: includes/Order/Hooks.php:251
 #. translators: %s item name.
 msgid "Unable to restore stock for item %s."
 msgstr ""
@@ -780,7 +780,7 @@ msgid "Payment method"
 msgstr ""
 
 #: includes/Order/functions.php:768 templates/orders/listing.php:52
-#: templates/orders/listing.php:77
+#: templates/orders/listing.php:78
 msgid "Order Total"
 msgstr ""
 
@@ -1274,7 +1274,7 @@ msgid "Delete all variations"
 msgstr ""
 
 #: includes/Product/functions.php:166 templates/my-orders.php:29
-#: templates/orders/listing.php:53 templates/orders/listing.php:80
+#: templates/orders/listing.php:54 templates/orders/listing.php:84
 #: templates/products/products-listing-row.php:53
 #: templates/products/products-listing.php:89 templates/sub-orders.php:27
 #: templates/withdraw/pending-request-listing.php:18
@@ -1464,7 +1464,7 @@ msgid "Edit"
 msgstr ""
 
 #: includes/Product/functions.php:443 templates/my-orders.php:88
-#: templates/orders/listing.php:157 templates/sub-orders.php:59
+#: templates/orders/listing.php:161 templates/sub-orders.php:59
 msgid "View"
 msgstr ""
 
@@ -2586,6 +2586,10 @@ msgstr ""
 msgid "You are already logged in"
 msgstr ""
 
+#: includes/ThemeSupport/Divi.php:99
+msgid "No Name"
+msgstr ""
+
 #: includes/Upgrade/AdminNotice.php:53
 msgid "You are not authorize to perform this operation."
 msgstr ""
@@ -3061,7 +3065,7 @@ msgstr ""
 msgid "Appearance"
 msgstr ""
 
-#: includes/admin/Settings.php:242 includes/admin/Settings.php:552
+#: includes/admin/Settings.php:242 includes/admin/Settings.php:559
 msgid "Privacy Policy"
 msgstr ""
 
@@ -3208,86 +3212,96 @@ msgid ""
 "minimum limits."
 msgstr ""
 
-#: includes/admin/Settings.php:412
+#: includes/admin/Settings.php:409
+msgid "Exclude COD Payments"
+msgstr ""
+
+#: includes/admin/Settings.php:410
+msgid ""
+"If an order is paid with Cash on Delivery (COD), then exclude that payment "
+"from vendor balance."
+msgstr ""
+
+#: includes/admin/Settings.php:419
 msgid "Select a page to show Vendor Dashboard"
 msgstr ""
 
-#: includes/admin/Settings.php:414 includes/admin/Settings.php:422
-#: includes/admin/Settings.php:430 includes/admin/Settings.php:438
-#: includes/admin/Settings.php:547
+#: includes/admin/Settings.php:421 includes/admin/Settings.php:429
+#: includes/admin/Settings.php:437 includes/admin/Settings.php:445
+#: includes/admin/Settings.php:554
 msgid "Select page"
 msgstr ""
 
-#: includes/admin/Settings.php:420
+#: includes/admin/Settings.php:427
 msgid "Select a page to show My Orders"
 msgstr ""
 
-#: includes/admin/Settings.php:427
+#: includes/admin/Settings.php:434
 msgid "Store Listing"
 msgstr ""
 
-#: includes/admin/Settings.php:428
+#: includes/admin/Settings.php:435
 msgid "Select a page to show all Stores"
 msgstr ""
 
-#: includes/admin/Settings.php:435
+#: includes/admin/Settings.php:442
 msgid "Terms and Conditions Page"
 msgstr ""
 
-#: includes/admin/Settings.php:436
+#: includes/admin/Settings.php:443
 msgid "Select a page to show Terms and Conditions"
 msgstr ""
 
-#: includes/admin/Settings.php:440
+#: includes/admin/Settings.php:447
 msgid ""
 "Select where you want to add Dokan pages <a target=\"_blank\" href=\"%s\"> "
 "Learn More </a>"
 msgstr ""
 
-#: includes/admin/Settings.php:446
+#: includes/admin/Settings.php:453
 msgid "Show Map on Store Page"
 msgstr ""
 
-#: includes/admin/Settings.php:447
+#: includes/admin/Settings.php:454
 msgid "Enable Map of the Store Location in the store sidebar"
 msgstr ""
 
-#: includes/admin/Settings.php:453
+#: includes/admin/Settings.php:460
 #: templates/admin-setup-wizard/step-store.php:42
 msgid "Map API Source"
 msgstr ""
 
-#: includes/admin/Settings.php:454
+#: includes/admin/Settings.php:461
 #: templates/admin-setup-wizard/step-store.php:52
 msgid "Which Map API source you want to use in your site?"
 msgstr ""
 
-#: includes/admin/Settings.php:459 includes/admin/SetupWizard.php:349
+#: includes/admin/Settings.php:466 includes/admin/SetupWizard.php:349
 msgid "Google Maps"
 msgstr ""
 
-#: includes/admin/Settings.php:460 includes/admin/SetupWizard.php:350
+#: includes/admin/Settings.php:467 includes/admin/SetupWizard.php:350
 msgid "Mapbox"
 msgstr ""
 
-#: includes/admin/Settings.php:470
+#: includes/admin/Settings.php:477
 #: templates/admin-setup-wizard/step-store.php:56
 msgid "Google Map API Key"
 msgstr ""
 
-#: includes/admin/Settings.php:471
+#: includes/admin/Settings.php:478
 msgid ""
 "<a href=\"https://developers.google.com/maps/documentation/javascript/\" "
 "target=\"_blank\" rel=\"noopener noreferrer\">API Key</a> is needed to "
 "display map on store page"
 msgstr ""
 
-#: includes/admin/Settings.php:481
+#: includes/admin/Settings.php:488
 #: templates/admin-setup-wizard/step-store.php:71
 msgid "Mapbox Access Token"
 msgstr ""
 
-#: includes/admin/Settings.php:482
+#: includes/admin/Settings.php:489
 #: templates/admin-setup-wizard/step-store.php:75
 msgid ""
 "<a href=\"https://docs.mapbox.com/help/how-mapbox-works/access-tokens/\" "
@@ -3295,70 +3309,70 @@ msgid ""
 "display map on store page"
 msgstr ""
 
-#: includes/admin/Settings.php:487
+#: includes/admin/Settings.php:494
 msgid "Show Contact Form on Store Page"
 msgstr ""
 
-#: includes/admin/Settings.php:488
+#: includes/admin/Settings.php:495
 msgid "Display a vendor contact form in the store sidebar"
 msgstr ""
 
-#: includes/admin/Settings.php:494
+#: includes/admin/Settings.php:501
 msgid "Store Header Template"
 msgstr ""
 
-#: includes/admin/Settings.php:506
+#: includes/admin/Settings.php:513
 msgid "Store Opening Closing Time Widget"
 msgstr ""
 
-#: includes/admin/Settings.php:507
+#: includes/admin/Settings.php:514
 msgid "Enable store opening & closing time widget in the store sidebar"
 msgstr ""
 
-#: includes/admin/Settings.php:513
+#: includes/admin/Settings.php:520
 msgid "Enable Store Sidebar From Theme"
 msgstr ""
 
-#: includes/admin/Settings.php:514
+#: includes/admin/Settings.php:521
 msgid "Enable showing Store Sidebar From Your Theme."
 msgstr ""
 
-#: includes/admin/Settings.php:520
+#: includes/admin/Settings.php:527
 msgid "Hide Vendor Info"
 msgstr ""
 
-#: includes/admin/Settings.php:528
+#: includes/admin/Settings.php:535
 msgid "Email Address"
 msgstr ""
 
-#: includes/admin/Settings.php:529 includes/admin/UserProfile.php:211
+#: includes/admin/Settings.php:536 includes/admin/UserProfile.php:211
 #: src/admin/pages/VendorAccountFields.vue:64
 #: templates/account/vendor-registration.php:33
 #: templates/global/seller-registration-form.php:38
 msgid "Phone Number"
 msgstr ""
 
-#: includes/admin/Settings.php:530
+#: includes/admin/Settings.php:537
 msgid "Store Address"
 msgstr ""
 
-#: includes/admin/Settings.php:537
+#: includes/admin/Settings.php:544
 msgid "Enable Privacy Policy"
 msgstr ""
 
-#: includes/admin/Settings.php:539
+#: includes/admin/Settings.php:546
 msgid "Enable privacy policy for Vendor store contact form"
 msgstr ""
 
-#: includes/admin/Settings.php:544
+#: includes/admin/Settings.php:551
 msgid "Privacy Page"
 msgstr ""
 
-#: includes/admin/Settings.php:546
+#: includes/admin/Settings.php:553
 msgid "Select a page to show your privacy policy"
 msgstr ""
 
-#: includes/admin/Settings.php:555 includes/functions.php:3498
+#: includes/admin/Settings.php:562 includes/functions.php:3498
 msgid ""
 "Your personal data will be used to support your experience throughout this "
 "website, to manage access to your account, and for other purposes described "
@@ -4280,7 +4294,7 @@ msgstr ""
 
 #: includes/functions.php:2958 templates/dashboard/big-counter-widget.php:29
 #: templates/my-orders.php:27 templates/orders/details.php:21
-#: templates/orders/listing.php:51 templates/orders/listing.php:70
+#: templates/orders/listing.php:51 templates/orders/listing.php:71
 #: templates/sub-orders.php:25
 msgid "Order"
 msgstr ""
@@ -5256,6 +5270,7 @@ msgid ""
 msgstr ""
 
 #: templates/dashboard/big-counter-widget.php:21
+#: templates/orders/listing.php:53 templates/orders/listing.php:81
 #: templates/products/products-listing-row.php:86
 #: templates/products/products-listing.php:96
 msgid "Earning"
@@ -5618,8 +5633,8 @@ msgstr ""
 msgid "Recent Orders"
 msgstr ""
 
-#: templates/my-orders.php:28 templates/orders/listing.php:55
-#: templates/orders/listing.php:108
+#: templates/my-orders.php:28 templates/orders/listing.php:56
+#: templates/orders/listing.php:112
 #: templates/products/products-listing-row.php:124
 #: templates/products/products-listing.php:99 templates/sub-orders.php:26
 #: templates/withdraw/approved-request-listing.php:16
@@ -5817,38 +5832,38 @@ msgstr ""
 msgid "Apply"
 msgstr ""
 
-#: templates/orders/listing.php:54 templates/orders/listing.php:83
+#: templates/orders/listing.php:55 templates/orders/listing.php:87
 msgid "Customer"
 msgstr ""
 
-#: templates/orders/listing.php:57 templates/orders/listing.php:128
+#: templates/orders/listing.php:58 templates/orders/listing.php:132
 #: templates/products/downloadable.php:37
 msgid "Action"
 msgstr ""
 
-#: templates/orders/listing.php:72 templates/orders/listing.php:74
+#: templates/orders/listing.php:73 templates/orders/listing.php:75
 msgid "Order %s"
 msgstr ""
 
-#: templates/orders/listing.php:102
+#: templates/orders/listing.php:106
 msgid "Guest"
 msgstr ""
 
-#: templates/orders/listing.php:111
+#: templates/orders/listing.php:115
 #: templates/products/products-listing-row.php:127
 msgid "Unpublished"
 msgstr ""
 
-#: templates/orders/listing.php:118
+#: templates/orders/listing.php:122
 #: templates/products/products-listing-row.php:137
 msgid "%s ago"
 msgstr ""
 
-#: templates/orders/listing.php:147
+#: templates/orders/listing.php:151
 msgid "Complete"
 msgstr ""
 
-#: templates/orders/listing.php:221
+#: templates/orders/listing.php:225
 msgid "No orders found"
 msgstr ""
 

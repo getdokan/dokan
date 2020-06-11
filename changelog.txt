@@ -1,3 +1,12 @@
+ = v3.0.5 (June 11, 2020) =
+
+- [new] Exclude cash on delivery payments from vendor withdrawal balance (COD)
+- [fix] Remove vendor folder from the excluded list
+- [fix] Earning column missing on vendor dashboard order list
+- [fix] Default location not working in vendor dashboard
+- [fix] Remove link from customer name in vendor order details
+- [fix] Custom header, footer template does not work in Dokan store page (Divi Theme)
+
  = v3.0.4 (May 15, 2020) =
 
  - **Fix:** Rename google plus to google as google plus is deprecated #807
