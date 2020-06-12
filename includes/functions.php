@@ -3849,3 +3849,35 @@ function dokan_is_vendor_info_hidden( $option = null ) {
 
     return ! empty( $options[ $option ] );
 }
+
+/**
+ * Get COD Order List if COD Enable
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @param in $seller_id
+ *
+ * @return array $cod_orders_ids
+ */
+function dokan_get_cod_orders_list( $seller_id ) {
+    $exclude_cod_payment = 'on' === dokan_get_option( 'exclude_cod_payment', 'dokan_withdraw', 'off' );
+    $cod_orders_ids      = array(); 
+
+    if ( ! isset( $seller_id ) || ! $exclude_cod_payment ) {
+        return;
+    }
+
+    $seller_orders = dokan()->vendor->get( $seller_id )->get_orders();
+
+    if ( empty( $seller_orders ) ) {
+        return;
+    }
+
+    foreach ( $seller_orders as $orders ) {
+        if ( 'cod' == $orders->get_payment_method() ) {
+            $cod_orders_ids[] = $orders->get_id();
+        }
+    }  
+
+    return $cod_orders_ids;
+}

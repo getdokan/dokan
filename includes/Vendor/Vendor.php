@@ -572,6 +572,17 @@ class Vendor {
         $on_date       = $on_date ? date( 'Y-m-d', strtotime( $on_date ) ) : current_time( 'mysql' );
         $trn_type      = 'dokan_refund';
         $refund_status = 'approved';
+        $cod_order_ids = '';
+
+        /**
+         * If `exclude_cod_payment` is enabled, don't include the fund in vendor's earnings balance.
+         *
+         * @since DOKAN_LITE_SINCE
+         */
+        if ( dokan_get_cod_orders_list( $this->id ) ) {
+            $cod_order_list = "'" . implode("', '", dokan_get_cod_orders_list( $this->id ) ) . "'";
+            $cod_order_ids  = "AND trn_id NOT IN( $cod_order_list )";
+        }
 
         if ( false === $earning ) {
             $installed_version = get_option( 'dokan_theme_version' );
@@ -581,14 +592,14 @@ class Vendor {
                     "SELECT SUM(debit) AS earnings
                     FROM {$wpdb->prefix}dokan_vendor_balance
                     WHERE
-                        vendor_id = %d AND DATE(balance_date) <= %s AND status IN ($status) AND trn_type = 'dokan_orders'",
+                        vendor_id = %d AND DATE(balance_date) <= %s AND status IN ($status) AND trn_type = 'dokan_orders' {$cod_order_ids}",
                     $this->id, $on_date ) );
 
                $credit_balance = $wpdb->get_row( $wpdb->prepare(
                     "SELECT SUM(credit) AS earnings
                     FROM {$wpdb->prefix}dokan_vendor_balance
                     WHERE
-                        vendor_id = %d AND DATE(balance_date) <= %s AND trn_type = %s AND status = %s",
+                        vendor_id = %d AND DATE(balance_date) <= %s AND trn_type = %s AND status = %s {$cod_order_ids}",
                     $this->id, $on_date, $trn_type, $refund_status ) );
 
                 $earnings         = $debit_balance->earnings - $credit_balance->earnings;
@@ -635,6 +646,17 @@ class Vendor {
         $threshold_day = dokan_get_option( 'withdraw_date_limit', 'dokan_withdraw', 0 );
         $on_date       = $on_date ? date( 'Y-m-d', strtotime( $on_date ) ) : current_time( 'mysql' );
         $date          = date( 'Y-m-d', strtotime( $on_date . ' -'.$threshold_day.' days' ) );
+        $cod_order_ids = '';
+
+        /**
+         * If `exclude_cod_payment` is enabled, don't include the fund in vendor's withdrawal balance.
+         *
+         * @since DOKAN_LITE_SINCE
+         */
+        if ( dokan_get_cod_orders_list( $this->id ) ) {
+            $cod_order_list = "'" . implode("', '", dokan_get_cod_orders_list( $this->id ) ) . "'";
+            $cod_order_ids  = "AND trn_id NOT IN( $cod_order_list )";
+        }
 
         if ( false === $earning ) {
             $installed_version = get_option( 'dokan_theme_version' );
@@ -643,7 +665,7 @@ class Vendor {
                         "SELECT SUM(debit) as earnings,
                         ( SELECT SUM(credit) FROM {$wpdb->prefix}dokan_vendor_balance WHERE vendor_id = %d AND DATE(balance_date) <= %s ) as withdraw
                         from {$wpdb->prefix}dokan_vendor_balance
-                        WHERE vendor_id = %d AND DATE(balance_date) <= %s AND status IN($status)",
+                        WHERE vendor_id = %d AND DATE(balance_date) <= %s AND status IN($status) {$cod_order_ids}",
                     $this->id, $on_date, $this->id, $on_date ) );
             } else {
                 $result = $wpdb->get_row( $wpdb->prepare(
