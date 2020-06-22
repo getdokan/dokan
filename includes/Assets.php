@@ -650,6 +650,7 @@ class Assets {
                 'product_title_required'              => __( 'Product title is required', 'dokan-lite' ),
                 'product_category_required'           => __( 'Product category is required', 'dokan-lite' ),
                 'search_products_nonce'               => wp_create_nonce( 'search-products' ),
+                'search_products_tags_nonce'          => wp_create_nonce( 'search-products-tags' ),
                 'search_customer_nonce'               => wp_create_nonce( 'search-customer' ),
                 'i18n_matches_1'                      => __( 'One result is available, press enter to select it.', 'dokan-lite' ),
                 'i18n_matches_n'                      => __( '%qty% results are available, use up and down arrow keys to navigate.', 'dokan-lite' ),

@@ -935,4 +935,39 @@
 
     });
 
+    $(document).ready(function () {
+        // Ajax search products tags
+        $("#product_tag_search").select2({
+            allowClear: false,
+            ajax: {
+                url: dokan.ajaxurl,
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        q: params.term,
+                        action: 'dokan_json_search_products_tags',
+                        security: dokan.search_products_tags_nonce,
+                        page: params.page || 1
+                    };
+                },
+                processResults: function( data ) {
+                    var options = [];
+                    if ( data ) {
+                        $.each( data, function( index, text ) {
+                            options.push( { id: text[0], text: text[1]  } );
+                        });
+                    }
+                    return {
+                        results: options,
+                        pagination: {
+                            more: true
+                        }
+                    };
+                },
+                cache: true
+            }
+        });
+    });
+
 })(jQuery);
