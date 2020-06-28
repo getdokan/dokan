@@ -32,6 +32,8 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
 
     // Gallery Images
     if ( isset( $data['product_image_gallery'] ) ) {
+        $data = apply_filters( 'restrict_product_image_gallery_on_edit', $data );
+
         $attachment_ids = array_filter( explode( ',', wc_clean( $data['product_image_gallery'] ) ) );
         update_post_meta( $post_id, '_product_image_gallery', implode( ',', $attachment_ids ) );
     }
