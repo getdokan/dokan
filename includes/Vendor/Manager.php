@@ -44,7 +44,7 @@ class Manager {
         $vendors = array();
 
         $defaults = array(
-            'role__in'   => array( 'seller', 'administrator' ),
+            'role__in'   => array( 'seller' ),
             'number'     => 10,
             'offset'     => 0,
             'orderby'    => 'registered',
