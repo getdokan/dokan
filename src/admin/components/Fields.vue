@@ -141,6 +141,13 @@
                     </optgroup>
                 </select>
 
+                <RefreshSettingOptions
+                    v-if="fieldData.refresh_options"
+                    :section="sectionId"
+                    :field="fieldData"
+                    :toggle-loading-state="toggleLoadingState"
+                />
+
                 <p class="description" v-html="fieldData.desc"></p>
             </td>
         </template>
@@ -286,6 +293,7 @@
     let TextEditor = dokan_get_lib('TextEditor');
     let GoogleMaps = dokan_get_lib('GoogleMaps');
     let Mapbox = dokan_get_lib('Mapbox');
+    let RefreshSettingOptions = dokan_get_lib('RefreshSettingOptions');
 
     export default {
         name: 'Fields',
@@ -295,9 +303,10 @@
             TextEditor,
             GoogleMaps,
             Mapbox,
+            RefreshSettingOptions,
         },
 
-        props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues', 'errors'],
+        props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues', 'errors', 'toggleLoadingState'],
 
         data() {
             return {

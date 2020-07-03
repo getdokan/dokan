@@ -42,6 +42,7 @@ import GoogleMaps from "admin/components/GoogleMaps.vue"
 import Mapbox from "admin/components/Mapbox.vue"
 import UploadImage from "admin/components/UploadImage.vue"
 import PasswordGenerator from "admin/components/PasswordGenerator.vue"
+import RefreshSettingOptions from "admin/components/RefreshSettingOptions.vue"
 import VendorAccountFields from "admin/pages/VendorAccountFields.vue";
 import VendorAddressFields from "admin/pages/VendorAddressFields.vue";
 import VendorSocialFields from "admin/pages/VendorSocialFields.vue";
@@ -112,6 +113,7 @@ window.dokan.libs['VendorAccountFields'] = VendorAccountFields;
 window.dokan.libs['VendorAddressFields'] = VendorAddressFields;
 window.dokan.libs['VendorSocialFields']  = VendorSocialFields;
 window.dokan.libs['VendorPaymentFields'] = VendorPaymentFields;
+window.dokan.libs['RefreshSettingOptions'] = RefreshSettingOptions;
 
 window.dokan.libs['ContentLoading']  = {
   VclCode,
