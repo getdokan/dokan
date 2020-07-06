@@ -4,6 +4,8 @@ namespace WeDevs\Dokan\Admin;
 
 use Exception;
 use WP_Error;
+use WeDevs\Dokan\Exceptions\DokanException;
+use WeDevs\Dokan\Traits\AjaxResponseError;
 
 /**
 * Admin Settings Class
@@ -14,6 +16,8 @@ use WP_Error;
 */
 class Settings {
 
+    use AjaxResponseError;
+
     /**
      * Load autometically when class initiate
      *
@@ -23,6 +27,8 @@ class Settings {
         add_filter( 'dokan_admin_localize_script', array( $this, 'settings_localize_data' ), 10 );
         add_action( 'wp_ajax_dokan_get_setting_values', array( $this, 'get_settings_value' ), 10 );
         add_action( 'wp_ajax_dokan_save_settings', array( $this, 'save_settings_value' ), 10 );
+        add_filter( 'dokan_admin_localize_script', array( $this, 'add_admin_settings_nonce' ) );
+        add_action( 'wp_ajax_dokan_refresh_admin_settings_field_options', array( $this, 'refresh_admin_settings_field_options' ) );
     }
 
     /**
@@ -589,5 +595,64 @@ class Settings {
         );
 
         return $settings_fields;
+    }
+
+    /**
+     * Add settings nonce to localized vars
+     *
+     * @since DOKNA_LITE_SINCE
+     *
+     * @param array $vars
+     *
+     * @return array
+     */
+    public function add_admin_settings_nonce( $vars ) {
+        $vars['admin_settings_nonce'] = wp_create_nonce( 'dokan_admin_settings' );
+        return $vars;
+    }
+
+    /**
+     * Get refreshed options for a admin setting
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return void
+     */
+    public function refresh_admin_settings_field_options() {
+        try {
+            if ( ! check_ajax_referer( 'dokan_admin_settings', false, false ) ) {
+                throw new DokanException(
+                    'dokan_ajax_unauthorized_operation',
+                    __( 'You are not authorized to perform this action.', 'dokan-lite' ),
+                    403
+                );
+            }
+
+            $post_data = wp_unslash( $_POST );
+            $section   = ! empty( $post_data['section'] ) ? sanitize_text_field( $post_data['section'] ) : null;
+            $field     = ! empty( $post_data['field'] ) ? sanitize_text_field( $post_data['field'] ) : null;
+
+            if ( ! $section || ! $field ) {
+                throw new DokanException(
+                    'dokan_ajax_missing_params',
+                    __( 'Both section and field params are required.', 'dokan-lite' )
+                );
+            }
+
+            $tag = "dokan_settings_refresh_option_{$section}_{$field}";
+
+            if ( ! has_filter( $tag ) ) {
+                throw new DokanException(
+                    'dokan_ajax_no_filter',
+                    __( 'No filter found to refresh the setting options', 'dokan-lite' )
+                );
+            }
+
+            $options = apply_filters( $tag, array() );
+
+            wp_send_json_success( $options );
+        } catch ( Exception $e ) {
+            $this->send_response_error( $e );
+        }
     }
 }
