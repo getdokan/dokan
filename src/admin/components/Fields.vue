@@ -11,7 +11,8 @@
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
             <td>
-                <input type="text"
+                <input
+                    :type="fieldData.type || 'text'"
                     class="regular-text"
                     :id="sectionId + '[' + fieldData.name + ']'"
                     :name="sectionId + '[' + fieldData.name + ']'"
@@ -416,7 +417,7 @@
 
         methods: {
             containCommonFields( type ) {
-                return _.contains( [ undefined, 'text', 'email', 'url', 'phone' ], type );
+                return _.contains( [ undefined, 'text', 'email', 'url', 'phone', 'time' ], type );
             },
 
             addItem( type, name ) {
