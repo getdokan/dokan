@@ -199,14 +199,14 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                                         data-product-id="<?php echo esc_attr( $post_id ); ?>">
                                                             ( <?php esc_html_e( ' You Earn : ', 'dokan-lite' ) ?><?php echo esc_html( get_woocommerce_currency_symbol() ); ?>
                                                                 <span class="vendor-price">
-                                                                    <?php echo esc_attr( dokan()->commission->get_earning_by_product( $post_id ) ); ?>
+                                                                    <?php echo wc_format_localized_price( esc_attr( dokan()->commission->get_earning_by_product( $post_id ) ) ); ?>
                                                                 </span>
                                                             )
                                                     </span>
                                                 </label>
                                                 <div class="dokan-input-group">
                                                     <span class="dokan-input-group-addon"><?php echo esc_html( get_woocommerce_currency_symbol() ); ?></span>
-                                                    <?php dokan_post_input_box( $post_id, '_regular_price', array( 'class' => 'dokan-product-regular-price', 'placeholder' => __( '0.00', 'dokan-lite' ) ), 'number' ); ?>
+                                                    <?php dokan_post_input_box( $post_id, '_regular_price', array( 'class' => 'dokan-product-regular-price', 'placeholder' => __( '0.00', 'dokan-lite' ) ), 'price' ); ?>
                                                 </div>
                                             </div>
 
@@ -219,7 +219,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
 
                                                 <div class="dokan-input-group">
                                                     <span class="dokan-input-group-addon"><?php echo esc_html( get_woocommerce_currency_symbol() ); ?></span>
-                                                    <?php dokan_post_input_box( $post_id, '_sale_price', array( 'class' => 'dokan-product-sales-price','placeholder' => __( '0.00', 'dokan-lite' ) ), 'number' ); ?>
+                                                    <?php dokan_post_input_box( $post_id, '_sale_price', array( 'class' => 'dokan-product-sales-price','placeholder' => __( '0.00', 'dokan-lite' ) ), 'price' ); ?>
                                                 </div>
                                             </div>
                                         </div>

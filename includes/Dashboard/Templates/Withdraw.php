@@ -182,7 +182,7 @@ class Withdraw {
         }
 
         $user_id = get_current_user_id();
-        $amount  = (float) $post_data['withdraw_amount'];
+        $amount  = $post_data['withdraw_amount'];
         $method  = sanitize_text_field( $post_data['withdraw_method'] );
 
         $args = array(

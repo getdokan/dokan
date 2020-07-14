@@ -1426,6 +1426,30 @@ table.my_account_orders tbody tr td.order-actions a.button {
 .dokan-dashboard-content ul.dokan_tabs li.active {
   border-bottom: 1px solid #fff !important;
 }
+.wc_error_tip {
+  max-width: 20em;
+  line-height: 1.8em;
+  position: absolute;
+  white-space: normal;
+  background: #d82223;
+  margin: 2em 1px 0 -1em;
+  z-index: 9999999;
+  color: #fff;
+  font-size: 12px;
+  padding: 8px;
+}
+.wc_error_tip:after {
+  content: "";
+  display: block;
+  border: 8px solid #d82223;
+  border-right-color: transparent;
+  border-left-color: transparent;
+  border-top-color: transparent;
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  margin: -1em 0 0 -3px;
+}
 .dokan-label {
   display: inline;
   padding: 0.2em 0.6em 0.3em;

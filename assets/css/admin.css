@@ -306,6 +306,30 @@
   padding-right: 10px;
   background: #fff;
 }
+.wc_error_tip {
+  max-width: 20em;
+  line-height: 1.8em;
+  position: absolute;
+  white-space: normal;
+  background: #d82223;
+  margin: 1.2em 1px 0 -1em;
+  z-index: 9999999;
+  color: #fff;
+  font-size: 12px;
+  padding: 8px;
+}
+.wc_error_tip:after {
+  content: "";
+  display: block;
+  border: 8px solid #d82223;
+  border-right-color: transparent;
+  border-left-color: transparent;
+  border-top-color: transparent;
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  margin: -1em 0 0 -3px;
+}
 .dokan-settings-radio-image {
   display: block;
   width: 50%;

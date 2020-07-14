@@ -174,13 +174,13 @@ class SetupWizardNoWC extends DokanSetupWizard {
 
             if ( 'selling' === $step ) {
                 $new_steps['payment'] = array(
-                    'name'    => __( 'Payment', 'woocommerce' ),
+                    'name'    => __( 'Payment', 'dokan-lite' ),
                     'view'    => array( self::class, 'wc_setup_payment' ),
                     'handler' => array( self::class, 'wc_setup_payment_save' ),
                 );
 
                 $new_steps['shipping'] = array(
-                    'name'    => __( 'Shipping', 'woocommerce' ),
+                    'name'    => __( 'Shipping', 'dokan-lite' ),
                     'view'    => array( self::class, 'wc_setup_shipping' ),
                     'handler' => array( self::class, 'wc_setup_shipping_save' ),
                 );

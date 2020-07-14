@@ -929,7 +929,7 @@ class Ajax {
 
         $vendor_earning = dokan()->commission->calculate_commission( $product_id, $product_price, $vendor_id );
 
-        wp_send_json( $vendor_earning );
+        wp_send_json( wc_format_localized_price( $vendor_earning ) );
     }
 
     /**
