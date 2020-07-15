@@ -29,7 +29,6 @@ class Manager {
     public function is_valid_approval_request( $args ) {
         $user_id = $args['user_id'];
         $limit   = $this->get_withdraw_limit();
-        var_dump( $limit );
         $balance = round( dokan_get_seller_balance( $user_id, false ), 2 );
         $amount  = wc_format_decimal( $args['amount'] );
         $method  = $args['method'];
