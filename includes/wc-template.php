@@ -142,21 +142,20 @@ function dokan_author_field_quick_edit() {
     }
 
     $admin_user = get_user_by( 'id', get_current_user_id() );
-    $user_query = new WP_User_Query( array( 'role' => 'seller' ) );
-    $sellers    = $user_query->get_results();
+    $vendors    = dokan()->vendor->all( [ 'number' => -1, 'role__in' => [ 'seller' ] ] );
     ?>
     <div class="dokan-product-author-field inline-edit-group">
         <label class="alignleft">
             <span class="title"><?php esc_html_e( 'Vendor', 'dokan-lite' ); ?></span>
             <span class="input-text-wrap">
                  <select name="dokan_product_author_override" id="dokan_product_author_override" class="">
-                    <?php if ( ! $sellers ): ?>
+                    <?php if ( empty( $vendors ) ): ?>
                         <option value="<?php echo esc_attr( $admin_user->ID ); ?>"><?php echo esc_html( $admin_user->display_name ); ?></option>
                     <?php else: ?>
                         <option value=""><?php esc_html( '— No change —', 'dokan-lite' ); ?></option>
                         <option value="<?php echo esc_attr( $admin_user->ID ); ?>"><?php echo esc_html( $admin_user->display_name ); ?></option>
-                        <?php foreach ( $sellers as $key => $user): ?>
-                            <option value="<?php echo esc_attr( $user->ID ); ?>"><?php echo esc_html( $user->display_name ); ?></option>
+                        <?php foreach ( $vendors as $key => $vendor): ?>
+                            <option value="<?php echo esc_attr( $vendor->get_id() ); ?>"><?php echo ! empty( $vendor->get_shop_name() ) ? esc_html( $vendor->get_shop_name() ) : $vendor->get_name(); ?></option>
                         <?php endforeach ?>
                     <?php endif ?>
                 </select>
