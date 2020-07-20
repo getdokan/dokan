@@ -3176,8 +3176,9 @@ var render = function() {
                                       expression: "vendorInfo.admin_commission"
                                     }
                                   ],
-                                  staticClass: "dokan-form-input percent_fee",
-                                  attrs: { type: "number" },
+                                  staticClass:
+                                    "wc_input_decimal dokan-form-input percent_fee",
+                                  attrs: { type: "text" },
                                   domProps: {
                                     value: _vm.vendorInfo.admin_commission
                                   },
@@ -3210,8 +3211,9 @@ var render = function() {
                                         "vendorInfo.admin_additional_fee"
                                     }
                                   ],
-                                  staticClass: "dokan-form-input fixed_fee",
-                                  attrs: { type: "number" },
+                                  staticClass:
+                                    "wc_input_price dokan-form-input fixed_fee",
+                                  attrs: { type: "text" },
                                   domProps: {
                                     value: _vm.vendorInfo.admin_additional_fee
                                   },
@@ -3249,7 +3251,13 @@ var render = function() {
                               }
                             ],
                             staticClass: "dokan-form-input",
-                            attrs: { type: "number" },
+                            class: {
+                              wc_input_price:
+                                _vm.selectedCommissionType.name == "flat",
+                              wc_input_decimal:
+                                _vm.selectedCommissionType.name != "flat"
+                            },
+                            attrs: { type: "text" },
                             domProps: {
                               value: _vm.vendorInfo.admin_commission
                             },

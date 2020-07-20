@@ -290,12 +290,12 @@ class Manager {
                 $vendor->update_meta( 'dokan_publishing', 'no' );
             }
 
-            if ( isset( $data['admin_commission'] ) && ( is_numeric( $data['admin_commission'] ) || '' === $data['admin_commission'] ) ) {
-                $vendor->update_meta( 'dokan_admin_percentage', $data['admin_commission'] );
-            }
-
             if ( ! empty( $data['admin_commission_type'] ) ) {
                 $vendor->update_meta( 'dokan_admin_percentage_type', $data['admin_commission_type'] );
+            }
+
+            if ( isset( $data['admin_commission'] ) && ( is_numeric( $data['admin_commission'] ) || '' === $data['admin_commission'] ) ) {
+                $vendor->update_meta( 'dokan_admin_percentage', wc_format_decimal( $data['admin_commission'] ) );
             }
         }
 
