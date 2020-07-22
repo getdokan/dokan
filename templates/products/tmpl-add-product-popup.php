@@ -57,7 +57,7 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                                 <label for="_regular_price" class="form-label"><?php esc_html_e( 'Price', 'dokan-lite' ); ?></label>
                                 <div class="dokan-input-group">
                                     <span class="dokan-input-group-addon"><?php echo esc_html( get_woocommerce_currency_symbol() ); ?></span>
-                                    <input type="number" class="dokan-product-regular-price dokan-form-control" name="_regular_price" placeholder="0.00" min="0" step="any">
+                                    <input type="text" class="dokan-product-regular-price wc_input_price dokan-form-control" name="_regular_price" id="_regular_price" placeholder="0.00">
                                 </div>
                             </div>
 
@@ -70,7 +70,7 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
 
                                 <div class="dokan-input-group">
                                     <span class="dokan-input-group-addon"><?php echo esc_html( get_woocommerce_currency_symbol() ); ?></span>
-                                    <input type="number" class="dokan-product-sales-price dokan-form-control" name="_sale_price" placeholder="0.00" min="0" step="any">
+                                    <input type="text" class="dokan-product-sales-price wc_input_price dokan-form-control"  name="_sale_price" placeholder="0.00" id="_sale_price">
                                 </div>
                             </div>
                         </div>

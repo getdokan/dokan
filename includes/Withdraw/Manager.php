@@ -30,7 +30,7 @@ class Manager {
         $user_id = $args['user_id'];
         $limit   = $this->get_withdraw_limit();
         $balance = round( dokan_get_seller_balance( $user_id, false ), 2 );
-        $amount  = $args['amount'];
+        $amount  = wc_format_decimal( $args['amount'] );
         $method  = $args['method'];
 
         if ( empty( $amount ) ) {
@@ -42,7 +42,7 @@ class Manager {
         }
 
         if ( $amount < $limit ) {
-            return new WP_Error( 'dokan_withdraw_amount', sprintf( __( 'Withdraw amount must be greater than %d', 'dokan-lite' ), $limit ) );
+            return new WP_Error( 'dokan_withdraw_amount', sprintf( __( 'Withdraw amount must be greater than %s', 'dokan-lite' ), wc_price( $limit ) ) );
         }
 
         if ( ! in_array( $method, dokan_get_seller_active_withdraw_methods( $user_id ) ) ) {
@@ -407,8 +407,7 @@ class Manager {
      * @return integer
      */
     public function get_withdraw_limit() {
-        $limit = dokan_get_option( 'withdraw_limit', 'dokan_withdraw', 0 );
-        return absint( $limit );
+        return dokan_get_option( 'withdraw_limit', 'dokan_withdraw', 0 );
     }
 
     /**

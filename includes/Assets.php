@@ -601,6 +601,8 @@ class Assets {
         ) {
             $general_settings = get_option( 'dokan_general', array() );
 
+            $locale  = localeconv();
+            $decimal = isset( $locale['decimal_point'] ) ? $locale['decimal_point'] : '.';
             $banner_width    = dokan_get_option( 'store_banner_width', 'dokan_appearance', 625 );
             $banner_height   = dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 );
             $has_flex_width  = !empty( $general_settings['store_banner_flex_width'] ) ? $general_settings['store_banner_flex_width'] : true;
@@ -643,6 +645,16 @@ class Assets {
                 'i18n_variation_count_plural'         => esc_js( __( '%qty% variations', 'dokan-lite' ) ),
                 'i18n_no_result_found'                => esc_js( __( 'No Result Found', 'dokan-lite' ) ),
                 'i18n_sales_price_error'              => esc_js( __( 'Please insert value less than the regular price!', 'dokan-lite' ) ),
+                /* translators: %s: decimal */
+                'i18n_decimal_error'                  => sprintf( __( 'Please enter with one decimal point (%s) without thousand separators.', 'dokan-lite' ), $decimal ),
+                /* translators: %s: price decimal separator */
+                'i18n_mon_decimal_error'              => sprintf( __( 'Please enter with one monetary decimal point (%s) without thousand separators and currency symbols.', 'dokan-lite' ), wc_get_price_decimal_separator() ),
+                'i18n_country_iso_error'              => __( 'Please enter in country code with two capital letters.', 'dokan-lite' ),
+                'i18n_sale_less_than_regular_error'   => __( 'Please enter in a value less than the regular price.', 'dokan-lite' ),
+                'i18n_delete_product_notice'          => __( 'This product has produced sales and may be linked to existing orders. Are you sure you want to delete it?', 'dokan-lite' ),
+                'i18n_remove_personal_data_notice'    => __( 'This action cannot be reversed. Are you sure you wish to erase personal data from the selected orders?', 'dokan-lite' ),
+                'decimal_point'                       => $decimal,
+                'mon_decimal_point'                   => wc_get_price_decimal_separator(),
                 'variations_per_page'                 => absint( apply_filters( 'dokan_product_variations_per_page', 10 ) ),
                 'store_banner_dimension'              => [ 'width' => $banner_width, 'height' => $banner_height, 'flex-width' => $has_flex_width, 'flex-height' => $has_flex_height ],
                 'selectAndCrop'                       => __( 'Select and Crop', 'dokan-lite' ),
@@ -755,6 +767,8 @@ class Assets {
         $banner_height    = dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 );
         $has_flex_width   = ! empty( $general_settings['store_banner_flex_width'] ) ? $general_settings['store_banner_flex_width'] : true;
         $has_flex_height  = ! empty( $general_settings['store_banner_flex_height'] ) ? $general_settings['store_banner_flex_height'] : true;
+        $locale           = localeconv();
+        $decimal          = isset( $locale['decimal_point'] ) ? $locale['decimal_point'] : '.';
 
         return apply_filters( 'dokan_admin_localize_script', array(
             'ajaxurl' => admin_url( 'admin-ajax.php' ),
@@ -789,6 +803,16 @@ class Assets {
                 'flex-height' => $has_flex_height
             ],
             'ajax_loader'        => DOKAN_PLUGIN_ASSEST . '/images/spinner-2x.gif',
+            /* translators: %s: decimal */
+            'i18n_decimal_error'                  => sprintf( __( 'Please enter with one decimal point (%s) without thousand separators.', 'dokan-lite' ), $decimal ),
+            /* translators: %s: price decimal separator */
+            'i18n_mon_decimal_error'              => sprintf( __( 'Please enter with one monetary decimal point (%s) without thousand separators and currency symbols.', 'dokan-lite' ), wc_get_price_decimal_separator() ),
+            'i18n_country_iso_error'              => __( 'Please enter in country code with two capital letters.', 'dokan-lite' ),
+            'i18n_sale_less_than_regular_error'   => __( 'Please enter in a value less than the regular price.', 'dokan-lite' ),
+            'i18n_delete_product_notice'          => __( 'This product has produced sales and may be linked to existing orders. Are you sure you want to delete it?', 'dokan-lite' ),
+            'i18n_remove_personal_data_notice'    => __( 'This action cannot be reversed. Are you sure you wish to erase personal data from the selected orders?', 'dokan-lite' ),
+            'decimal_point'                       => $decimal,
+            'mon_decimal_point'                   => wc_get_price_decimal_separator(),
         ) );
     }
 }

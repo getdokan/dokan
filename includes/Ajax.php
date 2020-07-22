@@ -391,7 +391,7 @@ class Ajax {
 
         if ( $post_id > 0 ) {
             $order      = dokan()->order->get( $post_id );
-            $comment_id = $order->add_order_note( $note, $is_customer_note );
+            $comment_id = $order->add_order_note( $note, $is_customer_note, true );
 
             echo '<li rel="' . esc_attr( $comment_id ) . '" class="note ';
             if ( $is_customer_note ) {
@@ -929,7 +929,7 @@ class Ajax {
 
         $vendor_earning = dokan()->commission->calculate_commission( $product_id, $product_price, $vendor_id );
 
-        wp_send_json( $vendor_earning );
+        wp_send_json( wc_format_localized_price( $vendor_earning ) );
     }
 
     /**

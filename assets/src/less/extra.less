@@ -441,3 +441,30 @@ table.my_account_orders{
         }
     }
 }
+
+.wc_error_tip {
+    max-width: 20em;
+    line-height: 1.8em;
+    position: absolute;
+    white-space: normal;
+    background: #d82223;
+    margin: 2em 1px 0 -1em;
+    z-index: 9999999;
+    color: #fff;
+    font-size: 12px;
+    padding: 8px;
+
+    &:after {
+        content: "";
+        display: block;
+        border: 8px solid #d82223;
+        border-right-color: transparent;
+        border-left-color: transparent;
+        border-top-color: transparent;
+        position: absolute;
+        top: -3px;
+        left: 50%;
+        margin: -1em 0 0 -3px;
+    }
+}
+

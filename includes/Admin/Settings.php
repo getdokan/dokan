@@ -4,6 +4,8 @@ namespace WeDevs\Dokan\Admin;
 
 use Exception;
 use WP_Error;
+use WeDevs\Dokan\Exceptions\DokanException;
+use WeDevs\Dokan\Traits\AjaxResponseError;
 
 /**
 * Admin Settings Class
@@ -14,6 +16,8 @@ use WP_Error;
 */
 class Settings {
 
+    use AjaxResponseError;
+
     /**
      * Load autometically when class initiate
      *
@@ -23,6 +27,28 @@ class Settings {
         add_filter( 'dokan_admin_localize_script', array( $this, 'settings_localize_data' ), 10 );
         add_action( 'wp_ajax_dokan_get_setting_values', array( $this, 'get_settings_value' ), 10 );
         add_action( 'wp_ajax_dokan_save_settings', array( $this, 'save_settings_value' ), 10 );
+        add_filter( 'dokan_admin_localize_script', array( $this, 'add_admin_settings_nonce' ) );
+        add_action( 'wp_ajax_dokan_refresh_admin_settings_field_options', array( $this, 'refresh_admin_settings_field_options' ) );
+        add_filter( 'dokan_get_settings_values', array( $this, 'format_price_values' ), 12, 2 );
+    }
+
+    /**
+     * Format price values for price settings
+     *
+     * @since 1.0.0
+     *
+     * @return void
+     */
+    public function format_price_values( $option_values, $option_name ) {
+        if ( 'dokan_selling' === $option_name ) {
+            if ( isset( $option_values['commission_type'] ) && 'flat' === $option_values['commission_type'] ) {
+                $option_values['admin_percentage'] = wc_format_localized_price( $option_values['admin_percentage'] );
+            } else {
+                $option_values['admin_percentage'] = wc_format_decimal( $option_values['admin_percentage'] );
+            }
+        }
+
+        return $option_values;
     }
 
     /**
@@ -46,7 +72,7 @@ class Settings {
         $settings = array();
 
         foreach ( $this->get_settings_sections() as $key => $section ) {
-            $settings[$section['id']] = get_option( $section['id'], array() );
+            $settings[$section['id']] = apply_filters( 'dokan_get_settings_values', $this->sanitize_options( get_option( $section['id'], array() ), 'read' ), $section['id'] );
         }
 
         wp_send_json_success( $settings );
@@ -76,7 +102,7 @@ class Settings {
             }
 
             $option_name  = $_post_data['section'];
-            $option_value = $this->sanitize_options( $_post_data['settingsData'] );
+            $option_value = $this->sanitize_options( $_post_data['settingsData'], 'edit' );
             $option_value = apply_filters( 'dokan_save_settings_value', $option_value, $option_name );
 
             do_action( 'dokan_before_saving_settings', $option_name, $option_value );
@@ -88,7 +114,7 @@ class Settings {
             wp_send_json_success( array(
                 'settings' => array(
                     'name'  => $option_name,
-                    'value' => $option_value,
+                    'value' => apply_filters( 'dokan_get_settings_values', $this->sanitize_options( $option_value, 'read' ), $option_name ),
                 ),
                 'message' => __( 'Setting has been saved successfully.', 'dokan-lite' ),
             ) );
@@ -105,13 +131,13 @@ class Settings {
      *
      * @return mixed
      */
-    public function sanitize_options( $options ) {
+    public function sanitize_options( $options, $context = 'read' ) {
         if ( ! $options ) {
             return $options;
         }
 
         foreach( $options as $option_slug => $option_value ) {
-            $sanitize_callback = $this->get_sanitize_callback( $option_slug );
+            $sanitize_callback = $this->get_sanitize_callback( $option_slug, $context );
 
             // If callback is set, call it
             if ( $sanitize_callback ) {
@@ -130,7 +156,7 @@ class Settings {
      *
      * @return mixed string or bool false
      */
-    public function get_sanitize_callback( $slug = '' ) {
+    public function get_sanitize_callback( $slug = '', $context = 'read' ) {
         if ( empty( $slug ) ) {
             return false;
         }
@@ -143,7 +169,13 @@ class Settings {
                 }
 
                 // Return the callback name
-                return isset( $option['sanitize_callback'] ) && is_callable( $option['sanitize_callback'] ) ? $option['sanitize_callback'] : false;
+                if ( 'read' === $context ) {
+                    return isset( $option['response_sanitize_callback'] ) && is_callable( $option['response_sanitize_callback'] ) ? $option['response_sanitize_callback'] : false;
+                }
+
+                if ( 'edit' === $context ) {
+                    return isset( $option['sanitize_callback'] ) && is_callable( $option['sanitize_callback'] ) ? $option['sanitize_callback'] : false;
+                }
             }
         }
 
@@ -324,13 +356,13 @@ class Settings {
                 'default' => 'percentage'
             ),
             'admin_percentage' => array(
-                'name'    => 'admin_percentage',
-                'label'   => __( 'Admin Commission', 'dokan-lite' ),
-                'desc'    => __( 'Amount you get from each sale', 'dokan-lite' ),
-                'default' => '10',
-                'type'    => 'number',
-                'min'     => '0',
-                'step'    => 'any',
+                'name'                       => 'admin_percentage',
+                'label'                      => __( 'Admin Commission', 'dokan-lite' ),
+                'desc'                       => __( 'Amount you get from each sale', 'dokan-lite' ),
+                'default'                    => '10',
+                'type'                       => 'price',
+                'sanitize_callback'          => 'wc_format_decimal',
+                // 'response_sanitize_callback' => 'wc_format_localized_price',
             ),
             'shipping_fee_recipient' => array(
                 'name'    => 'shipping_fee_recipient',
@@ -398,11 +430,14 @@ class Settings {
                     'options' => dokan_withdraw_get_methods()
                 ),
                 'withdraw_limit' => array(
-                    'name'    => 'withdraw_limit',
-                    'label'   => __( 'Minimum Withdraw Limit', 'dokan-lite' ),
-                    'desc'    => __( 'Minimum balance required to make a withdraw request. Leave blank to set no minimum limits.', 'dokan-lite' ),
-                    'default' => '50',
-                    'type'    => 'text',
+                    'name'                       => 'withdraw_limit',
+                    'label'                      => __( 'Minimum Withdraw Limit', 'dokan-lite' ),
+                    'desc'                       => __( 'Minimum balance required to make a withdraw request. Leave blank to set no minimum limits.', 'dokan-lite' ),
+                    'default'                    => '50',
+                    'type'                       => 'text',
+                    'class'                      => 'wc_input_price',
+                    'sanitize_callback'          => 'wc_format_decimal',
+                    'response_sanitize_callback' => 'wc_format_localized_price',
                 ),
                 'exclude_cod_payment' => array(
                     'name'    => 'exclude_cod_payment',
@@ -589,5 +624,64 @@ class Settings {
         );
 
         return $settings_fields;
+    }
+
+    /**
+     * Add settings nonce to localized vars
+     *
+     * @since DOKNA_LITE_SINCE
+     *
+     * @param array $vars
+     *
+     * @return array
+     */
+    public function add_admin_settings_nonce( $vars ) {
+        $vars['admin_settings_nonce'] = wp_create_nonce( 'dokan_admin_settings' );
+        return $vars;
+    }
+
+    /**
+     * Get refreshed options for a admin setting
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return void
+     */
+    public function refresh_admin_settings_field_options() {
+        try {
+            if ( ! check_ajax_referer( 'dokan_admin_settings', false, false ) ) {
+                throw new DokanException(
+                    'dokan_ajax_unauthorized_operation',
+                    __( 'You are not authorized to perform this action.', 'dokan-lite' ),
+                    403
+                );
+            }
+
+            $post_data = wp_unslash( $_POST );
+            $section   = ! empty( $post_data['section'] ) ? sanitize_text_field( $post_data['section'] ) : null;
+            $field     = ! empty( $post_data['field'] ) ? sanitize_text_field( $post_data['field'] ) : null;
+
+            if ( ! $section || ! $field ) {
+                throw new DokanException(
+                    'dokan_ajax_missing_params',
+                    __( 'Both section and field params are required.', 'dokan-lite' )
+                );
+            }
+
+            $tag = "dokan_settings_refresh_option_{$section}_{$field}";
+
+            if ( ! has_filter( $tag ) ) {
+                throw new DokanException(
+                    'dokan_ajax_no_filter',
+                    __( 'No filter found to refresh the setting options', 'dokan-lite' )
+                );
+            }
+
+            $options = apply_filters( $tag, array() );
+
+            wp_send_json_success( $options );
+        } catch ( Exception $e ) {
+            $this->send_response_error( $e );
+        }
     }
 }

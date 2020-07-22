@@ -156,7 +156,7 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                                                 <label for="_regular_price" class="dokan-form-label"><?php esc_html_e( 'Price', 'dokan-lite' ); ?></label>
                                                 <div class="dokan-input-group">
                                                     <span class="dokan-input-group-addon"><?php echo esc_attr__( get_woocommerce_currency_symbol() ); ?></span>
-                                                    <input type="number" class="dokan-form-control dokan-product-regular-price" name="_regular_price" placeholder="0.00" value="<?php echo esc_attr( dokan_posted_input( '_regular_price' ) ) ?>" min="0" step="any">
+                                                    <input type="text" class="dokan-form-control wc_input_price dokan-product-regular-price" name="_regular_price" placeholder="0.00" id="_regular_price" value="<?php echo esc_attr( dokan_posted_input( '_regular_price' ) ) ?>">
                                                 </div>
                                             </div>
 
@@ -169,7 +169,7 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
 
                                                 <div class="dokan-input-group">
                                                     <span class="dokan-input-group-addon"><?php echo esc_attr__( get_woocommerce_currency_symbol() ); ?></span>
-                                                    <input type="number" class="dokan-form-control dokan-product-sales-price" name="_sale_price" placeholder="0.00" value="<?php echo esc_attr( dokan_posted_input( '_sale_price' ) ) ?>" min="0" step="any">
+                                                    <input type="text" class="dokan-form-control wc_input_price dokan-product-sales-price" name="_sale_price" placeholder="0.00" id="_sale_price" value="<?php echo esc_attr( dokan_posted_input( '_sale_price' ) ) ?>">
                                                 </div>
                                             </div>
                                         </div>

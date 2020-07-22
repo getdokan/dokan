@@ -3,12 +3,12 @@
 Plugin Name: Dokan
 Plugin URI: https://wordpress.org/plugins/dokan-lite/
 Description: An e-commerce marketplace plugin for WordPress. Powered by WooCommerce and weDevs.
-Version: 3.0.5
+Version: 3.0.6
 Author: weDevs
 Author URI: https://wedevs.com/
 Text Domain: dokan-lite
 WC requires at least: 3.0
-WC tested up to: 4.2.0
+WC tested up to: 4.3.1
 Domain Path: /languages/
 License: GPL2
 */
@@ -54,7 +54,7 @@ final class WeDevs_Dokan {
      *
      * @var string
      */
-    public $version = '3.0.5';
+    public $version = '3.0.6';
 
     /**
      * Instance of self
@@ -316,6 +316,7 @@ final class WeDevs_Dokan {
         new \WeDevs\Dokan\Order\Hooks();
         new \WeDevs\Dokan\Product\Hooks();
         new \WeDevs\Dokan\Upgrade\Hooks();
+        new \WeDevs\Dokan\Vendor\UserSwitch();
 
         if ( is_admin() ) {
             new \WeDevs\Dokan\Admin\Hooks();
@@ -326,6 +327,9 @@ final class WeDevs_Dokan {
             new \WeDevs\Dokan\Admin\UserProfile();
             new \WeDevs\Dokan\Admin\SetupWizard();
             new \WeDevs\Dokan\Admin\Promotion();
+        } else {
+            new \WeDevs\Dokan\Vendor\StoreListsFilter();
+            new \WeDevs\Dokan\ThemeSupport\Manager();
         }
 
         $this->container['pageview']      = new \WeDevs\Dokan\PageViews();
@@ -346,11 +350,6 @@ final class WeDevs_Dokan {
         $this->container['upgrades']      = new \WeDevs\Dokan\Upgrade\Manager();
 
         $this->container = apply_filters( 'dokan_get_class_container', $this->container );
-
-        if ( ! is_admin() ) {
-            new \WeDevs\Dokan\Vendor\StoreListsFilter();
-            new \WeDevs\Dokan\ThemeSupport\Manager();
-        }
 
         if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
             new \WeDevs\Dokan\Ajax();

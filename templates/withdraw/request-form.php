@@ -17,7 +17,7 @@
         <div class="dokan-w5 dokan-text-left">
             <div class="dokan-input-group">
                 <span class="dokan-input-group-addon"><?php echo esc_html( get_woocommerce_currency_symbol() ); ?></span>
-                <input name="withdraw_amount" required number min="<?php echo esc_attr( dokan_get_option( 'withdraw_limit', 'dokan_withdraw', 0 ) ); ?>" class="dokan-form-control" id="withdraw-amount" name="price" type="number" placeholder="0.00" value="<?php echo esc_attr( $amount ); ?>"  >
+                <input name="withdraw_amount" required class="wc_input_price dokan-form-control" id="withdraw-amount" name="price" type="text" placeholder="0.00" value="<?php echo esc_attr( wc_format_localized_price( $amount ) ); ?>"  >
             </div>
         </div>
     </div>

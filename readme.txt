@@ -5,9 +5,9 @@ Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi selle
 Requires at least: 4.4
 Tested up to: 5.4.2
 WC requires at least: 3.0
-WC tested up to: 4.2.0
+WC tested up to: 4.3.1
 Requires PHP: 5.6
-Stable tag: 3.0.5
+Stable tag: 3.0.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -291,14 +291,23 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v3.0.6 (July 23, 2020) =
+
+- **Feat:** Vendor user switching (User Switching plugin support)
+- **Feat:** Decimal and Thousand Separator with Comma
+- **Fix:** Add system to refresh options for select fields in admin settings
+- **Fix:** Admin settings input field type for common types of fields
+- **Fix:** Shop name not showing on product listing quick edit section
+- **Fix:** Order notes in vendor dashboard insert wrong author data
+
  = v3.0.5 (June 11, 2020) =
 
-- [new] Exclude cash on delivery payments from vendor withdrawal balance (COD)
-- [fix] Remove vendor folder from the excluded list
-- [fix] Earning column missing on vendor dashboard order list
-- [fix] Default location not working in vendor dashboard
-- [fix] Remove link from customer name in vendor order details
-- [fix] Custom header, footer template does not work in Dokan store page (Divi Theme)
+- **New:** Exclude cash on delivery payments from vendor withdrawal balance (COD)
+- **Fix:** Remove vendor folder from the excluded list
+- **Fix:** Earning column missing on vendor dashboard order list
+- **Fix:** Default location not working in vendor dashboard
+- **Fix:** Remove link from customer name in vendor order details
+- **Fix:** Custom header, footer template does not work in Dokan store page (Divi Theme)
 
  = v3.0.4 (May 15, 2020) =
 

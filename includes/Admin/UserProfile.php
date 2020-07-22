@@ -82,6 +82,7 @@ class UserProfile {
 
         $banner_width    = dokan_get_option( 'store_banner_width', 'dokan_appearance', 625 );
         $banner_height   = dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 );
+        $admin_commission = ( 'flat' == $admin_commission_type ) ? wc_format_localized_price( $admin_commission ) : wc_format_localized_decimal( $admin_commission );
 
         $country_state     = array(
             'country' => array(
@@ -330,7 +331,7 @@ class UserProfile {
                 <tr>
                     <th><?php esc_html_e( 'Admin Commission ', 'dokan-lite' ); ?></th>
                     <td>
-                        <input type="number" min="0" class="small-text" id="admin-commission" name="dokan_admin_percentage" value="<?php echo esc_attr( $admin_commission ); ?>">
+                        <input type="text" class="wc_input_price small-text" id="admin-commission" name="dokan_admin_percentage" value="<?php echo esc_attr( $admin_commission ); ?>">
                         <?php do_action( 'dokan_seller_meta_fields_after_admin_commission', $user ); ?>
                         <p class="combine-commission-description"><?php esc_html_e( 'It will override the default commission admin gets from each sales', 'dokan-lite' ); ?></p>
                     </td>
@@ -402,6 +403,8 @@ class UserProfile {
                 init: function() {
                     $('a.dokan-banner-drag').on('click', this.imageUpload);
                     $('a.dokan-remove-banner-image').on('click', this.removeBanner);
+                    $('#dokan_admin_percentage_type').on('change', this.setPriceClass );
+                    $('#dokan_admin_percentage_type').trigger('change');
                 },
 
                 imageUpload: function(e) {
@@ -450,6 +453,17 @@ class UserProfile {
                     wrap.addClass('dokan-hide');
                     instruction.removeClass('dokan-hide');
                 },
+
+                setPriceClass: function() {
+                    var self = $(this),
+                        val = self.val();
+
+                    if ( 'flat' == val ) {
+                        $('input#admin-commission').removeClass( 'wc_input_decimal' ).addClass( 'wc_input_price' );
+                    } else {
+                        $('input#admin-commission').removeClass( 'wc_input_price' ).addClass( 'wc_input_decimal' );
+                    }
+                }
             };
 
             Dokan_Settings.init();
@@ -535,7 +549,7 @@ class UserProfile {
 
         $selling         = sanitize_text_field( $post_data['dokan_enable_selling'] );
         $publishing      = sanitize_text_field( $post_data['dokan_publish'] );
-        $percentage      = isset( $post_data['dokan_admin_percentage'] ) && $post_data['dokan_admin_percentage'] != '' ? floatval( $post_data['dokan_admin_percentage'] ) : '';
+        $percentage      = isset( $post_data['dokan_admin_percentage'] ) && $post_data['dokan_admin_percentage'] != '' ? $post_data['dokan_admin_percentage'] : '';
         $percentage_type = empty( $post_data['dokan_admin_percentage_type'] ) ? 'percentage' : sanitize_text_field( $post_data['dokan_admin_percentage_type'] );
         $feature_seller  = sanitize_text_field( $post_data['dokan_feature'] );
         $store_settings  = dokan_get_store_info( $user_id );
@@ -565,7 +579,7 @@ class UserProfile {
         update_user_meta( $user_id, 'dokan_profile_settings', $store_settings );
         update_user_meta( $user_id, 'dokan_enable_selling', $selling );
         update_user_meta( $user_id, 'dokan_publishing', $publishing );
-        update_user_meta( $user_id, 'dokan_admin_percentage', $percentage );
+        update_user_meta( $user_id, 'dokan_admin_percentage', wc_format_decimal( $percentage ) );
         update_user_meta( $user_id, 'dokan_admin_percentage_type', $percentage_type );
         update_user_meta( $user_id, 'dokan_feature_seller', $feature_seller );
         update_user_meta( $user_id, 'dokan_store_name', $store_settings['store_name'] );
