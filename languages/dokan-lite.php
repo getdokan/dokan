@@ -12,6 +12,8 @@ return [
 	__( 'Please enter Mapbox access token in `Appearance > Mapbox Access Token` settings.', 'dokan-lite' ),
 	__( 'Address', 'dokan-lite' ),
 	__( 'Close modal panel', 'dokan-lite' ),
+	__( 'Refreshing options', 'dokan-lite' ),
+	__( 'Option refreshed!', 'dokan-lite' ),
 	__( 'Select an image', 'dokan-lite' ),
 	__( 'Please select an image,', 'dokan-lite' ),
 	__( 'Select & Crop Image', 'dokan-lite' ),
