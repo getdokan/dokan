@@ -1,3 +1,7 @@
+= v3.0.7 (July 23, 2020) =
+
+- **Fix:** Showing fatal error for user switching
+
 = v3.0.6 (July 23, 2020) =
 
 - **Feat:** Vendor user switching (User Switching plugin support)

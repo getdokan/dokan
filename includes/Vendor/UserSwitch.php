@@ -202,6 +202,10 @@ class UserSwitch {
      * @return html
      */
     public function show_user_switching_message() {
+        if ( ! class_exists( 'user_switching' ) ) {
+            return;
+        }
+
         $user     = wp_get_current_user();
         $old_user = user_switching::get_old_user();
 

@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 3.0.6\n"
+"Project-Id-Version: Dokan 3.0.7\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2020-07-22 18:22:43+00:00\n"
+"POT-Creation-Date: 2020-07-23 02:40:23+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3943,17 +3943,17 @@ msgstr ""
 msgid "Install Now"
 msgstr ""
 
-#: includes/Vendor/UserSwitch.php:241 includes/Vendor/UserSwitch.php:291
+#: includes/Vendor/UserSwitch.php:245 includes/Vendor/UserSwitch.php:295
 #. Translators: 1: user display name; 2: username;
 msgid "Switched to %1$s (%2$s)."
 msgstr ""
 
-#: includes/Vendor/UserSwitch.php:255
+#: includes/Vendor/UserSwitch.php:259
 #. Translators: 1: user display name; 2: username;
 msgid "Switch back to %1$s (%2$s)"
 msgstr ""
 
-#: includes/Vendor/UserSwitch.php:284
+#: includes/Vendor/UserSwitch.php:288
 #. Translators: 1: user display name; 2: username;
 msgid "Switched back to %1$s (%2$s)."
 msgstr ""
