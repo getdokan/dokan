@@ -109,7 +109,7 @@ class Hooks {
      *
      * @global type $post
      * @global type $woocommerce
-     * @global WC_Order $the_order
+     * @global \WC_Order $the_order
      *
      * @param type $col
      *
@@ -119,7 +119,7 @@ class Hooks {
         global $post, $the_order;
 
         if ( empty( $the_order ) || $the_order->get_id() != $post->ID ) {
-            $the_order = new WC_Order( $post->ID );
+            $the_order = new \WC_Order( $post->ID );
         }
 
         if ( ! current_user_can( 'manage_woocommerce' ) ) {
