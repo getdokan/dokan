@@ -28,7 +28,9 @@ class Hooks {
      * @return void
      */
     public static function delete_seller_balance_cache( $status, $user_id, $id ) {
-        wp_cache_delete( 'dokan_seller_balance_' . $user_id );
+        $cache_group = 'dokan_seller_data_' . $user_id;
+        $cache_key = 'dokan_seller_balance_' . $user_id;
+        wp_cache_delete( $cache_key, $cache_group );
     }
 
     /**
@@ -80,5 +82,7 @@ class Hooks {
                 )
             );
         }
+
+        self::delete_seller_balance_cache( $withdraw->get_status(), $withdraw->get_user_id(), $withdraw->get_id() );
     }
 }
