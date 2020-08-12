@@ -3,11 +3,11 @@ Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, product vendors, woocommerce vendor, commission rate, e-commerce, ebay, ecommerce, yith, yithemes
 Requires at least: 4.4
-Tested up to: 5.4.2
+Tested up to: 5.5
 WC requires at least: 3.0
-WC tested up to: 4.3.1
+WC tested up to: 4.3.2
 Requires PHP: 5.6
-Stable tag: 3.0.7
+Stable tag: 3.0.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -290,6 +290,11 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 == Changelog ==
+
+= v3.0.8 (August 12, 2020) =
+
+- **Fix:** WordPress v5.5 compatibility issue fixed
+- **Fix:** Namespacing issues on class declaration
 
 = v3.0.7 (July 23, 2020) =
 
