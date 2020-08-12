@@ -255,6 +255,7 @@ class Assets {
         $scripts = array(
             'dokan-i18n-jed' => array(
                 'src'       => $asset_url . '/vendors/i18n/jed.js',
+                'deps'      => array( 'jquery' ),
             ),
             'dokan-accounting' => array(
                 'src'       => WC()->plugin_url() . '/assets/js/accounting/accounting.min.js',
@@ -363,7 +364,7 @@ class Assets {
             ),
             'dokan-login-form-popup' => array(
                 'src'       => $asset_url . '/js/login-form-popup.js',
-                'deps'      => array( 'dokan-popup' ),
+                'deps'      => array( 'dokan-popup', 'dokan-i18n-jed' ),
                 'version'   => filemtime( $asset_path . '/js/login-form-popup.js' ),
             )
         );
@@ -425,7 +426,7 @@ class Assets {
 
         $localize_data = array_merge( $localize_script, $vue_localize_script );
 
-        wp_localize_script( 'jquery', 'dokan', $localize_data );
+        wp_localize_script( 'dokan-i18n-jed', 'dokan', $localize_data );
 
         // load only in dokan dashboard and product edit page
         if ( ( dokan_is_seller_dashboard() || ( get_query_var( 'edit' ) && is_singular( 'product' ) ) ) || apply_filters( 'dokan_forced_load_scripts', false ) ) {
