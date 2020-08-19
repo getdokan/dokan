@@ -67,6 +67,10 @@ class Commission {
             }
 
             $gateway_fee = ( $processing_fee / $order->get_total() ) * $tmp_order->get_total();
+            if ($order !== $tmp_order) {
+                // Ensure sub-orders also get the correct payment gateway fee (if any)
+                $gateway_fee = apply_filters( 'dokan_get_processing_fee', $gateway_fee, $tmp_order );
+            }
             $net_amount  = $vendor_earning - $gateway_fee;
 
             $wpdb->update(
