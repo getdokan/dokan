@@ -175,4 +175,4 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
         </form>
     </div>
 </script>
-<?php do_action( 'dokan_product_gallery_image_count' );?>
+<?php do_action( 'dokan_add_product_js_template_end' );?>
