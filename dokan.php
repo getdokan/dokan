@@ -545,7 +545,7 @@ final class WeDevs_Dokan {
 /**
  * Load Dokan Plugin when all plugins loaded
  *
- * @return void
+ * @return WeDevs_Dokan
  */
 function dokan() {
     return WeDevs_Dokan::init();
