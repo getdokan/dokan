@@ -246,29 +246,18 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                                     <?php endif; ?>
 
                                     <div class="dokan-form-group">
+                                        <label for="product_tag" class="form-label"><?php esc_html_e( 'Tags', 'dokan-lite' ); ?></label>
                                         <?php
                                         require_once DOKAN_LIB_DIR.'/class.taxonomy-walker.php';
+                                        
+                                        $drop_down_tags = array(
+                                            'hide_empty' => 0,
+                                        );
 
-                                        $selected_tag   = dokan_posted_input( 'product_tag', true );
-                                        $selected_tag  = empty( $selected_tag ) ? array() : $selected_tag;
-
-                                        $drop_down_tags = wp_dropdown_categories( array(
-                                            'show_option_none' => __( '', 'dokan-lite' ),
-                                            'hierarchical'     => 1,
-                                            'hide_empty'       => 0,
-                                            'name'             => 'product_tag[]',
-                                            'id'               => 'product_tag',
-                                            'taxonomy'         => 'product_tag',
-                                            'title_li'         => '',
-                                            'class'            => 'product_tags dokan-form-control',
-                                            'exclude'          => '',
-                                            'selected'         => $selected_tag,
-                                            'echo'             => 0,
-                                            'walker'           => new TaxonomyDropdown()
-                                        ) );
-
-                                        echo str_replace( '<select', '<select data-placeholder="'.esc_attr__( 'Select product tags', 'dokan-lite' ).'" multiple="multiple" ', $drop_down_tags ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+                                        $my_tax_terms = get_terms( 'product_tag', $drop_down_tags );
                                         ?>
+                                        <select multiple="multiple" placeholder="<?php esc_attr_e( 'Select product tags', 'dokan-lite' ); ?>" name="product_tag[]" id="product_tag_search" class="product_tags dokan-form-control dokan-select2">
+                                        </select>
                                     </div>
 
                                     <?php do_action( 'dokan_new_product_after_product_tags' ); ?>
