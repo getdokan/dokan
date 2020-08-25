@@ -5,9 +5,9 @@ Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi selle
 Requires at least: 4.4
 Tested up to: 5.5
 WC requires at least: 3.0
-WC tested up to: 4.3.2
+WC tested up to: 4.4.1
 Requires PHP: 5.6
-Stable tag: 3.0.8
+Stable tag: 3.0.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -290,6 +290,14 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 == Changelog ==
+
+= v3.0.9 (August 25, 2020) =
+
+- **Fix:** Some security issues fixed
+- **Fix:** Loading issue when long tags list on add/edit product page (Vendor Dashboard)
+- **Fix:** Add missing permission callback in REST routes to make WordPress 5.5 compatible
+- **Fix:** Vendor can send multiple withdraw request from vendor dashboard
+- **Fix:** API endpoint added
 
 = v3.0.8 (August 12, 2020) =
 
