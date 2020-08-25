@@ -15,8 +15,8 @@
     jQuery(document).ready(function ($) {
         'use strict';
 
-        var accessToken = '<?php echo $access_token; ?>';
-        var mapboxId = '<?php echo $map_id; ?>';
+        var accessToken = '<?php echo esc_attr( $access_token ); ?>';
+        var mapboxId = '<?php echo esc_attr( $map_id ); ?>';
         var location = <?php echo json_encode( $location ); ?>
 
         mapboxgl.accessToken = accessToken;

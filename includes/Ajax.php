@@ -675,8 +675,8 @@ class Ajax {
         check_ajax_referer( 'search-products-tags', 'security' );
 
         $return = array();
-        $name   = ( $_GET['q'] ) ? sanitize_text_field( wp_unslash( $_GET['q'] ) ) : '';
-        $page   = ( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : 1;
+        $name   = ! empty( $_GET['q'] ) ? sanitize_text_field( wp_unslash( $_GET['q'] ) ) : '';
+        $page   = ! empty( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : 1;
         $offset = ( $page-1 ) * 10;
 
         $drop_down_tags = array(
@@ -684,7 +684,7 @@ class Ajax {
             'hide_empty' => 0,
             'orderby'    => 'name',
             'order'      => 'ASC',
-            'number'     => 10, 
+            'number'     => 10,
             'offset'     => $offset
         );
 

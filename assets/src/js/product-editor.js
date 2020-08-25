@@ -958,10 +958,11 @@
                             options.push( { id: text[0], text: text[1]  } );
                         });
                     }
+
                     return {
                         results: options,
                         pagination: {
-                            more: true
+                            more: options.length == 0 ? false : true
                         }
                     };
                 },

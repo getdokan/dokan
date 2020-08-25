@@ -70,7 +70,7 @@ class Orders {
             } else {
                 dokan_get_template_part( 'global/dokan-error', '', array( 'deleted' => false, 'message' => __( 'You have no permission to view this order', 'dokan-lite' ) ) );
             }
-            
+
 		} else {
             dokan_get_template_part( 'orders/date-export' );
             dokan_get_template_part( 'orders/listing' );
@@ -95,7 +95,11 @@ class Orders {
 
         $post_data = wp_unslash( $_POST );
 
-        if ( isset( $post_data['dokan_vendor_order_export_nonce'] ) && ! wp_verify_nonce( sanitize_text_field( $post_data['dokan_vendor_order_export_nonce'] ), 'dokan_vendor_order_export_action' ) ) {
+        if ( ! isset( $post_data['dokan_vendor_order_export_nonce'] ) ) {
+            return;
+        }
+
+        if ( ! wp_verify_nonce( sanitize_text_field( $post_data['dokan_vendor_order_export_nonce'] ), 'dokan_vendor_order_export_action' ) ) {
             return;
         }
 
