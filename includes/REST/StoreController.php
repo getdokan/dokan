@@ -40,9 +40,10 @@ class StoreController extends WP_REST_Controller {
     public function register_routes() {
         register_rest_route( $this->namespace, '/' . $this->base, array(
             array(
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => array( $this, 'get_stores' ),
-                'args'     => $this->get_collection_params()
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => array( $this, 'get_stores' ),
+                'args'                => $this->get_collection_params(),
+                'permission_callback' => '__return_true',
             ),
             array(
                 'methods'             => WP_REST_Server::CREATABLE,
@@ -59,8 +60,9 @@ class StoreController extends WP_REST_Controller {
                 ),
             ),
             array(
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => array( $this, 'get_store' )
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => array( $this, 'get_store' ),
+                'permission_callback' => '__return_true',
             ),
             array(
                 'methods'  => WP_REST_Server::DELETABLE,
@@ -89,9 +91,10 @@ class StoreController extends WP_REST_Controller {
                 ),
             ),
             array(
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => array( $this, 'get_store_products' ),
-                'args'     => $this->get_collection_params()
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => array( $this, 'get_store_products' ),
+                'args'                => $this->get_collection_params(),
+                'permission_callback' => '__return_true',
             ),
         ) );
 
@@ -103,16 +106,18 @@ class StoreController extends WP_REST_Controller {
                 ),
             ),
             array(
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => array( $this, 'get_store_reviews' ),
-                'args'     => $this->get_collection_params()
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => array( $this, 'get_store_reviews' ),
+                'args'                => $this->get_collection_params(),
+                'permission_callback' => '__return_true',
             ),
         ) );
 
         register_rest_route( $this->namespace, '/' . $this->base . '/check', [
             [
-                'methods' => WP_REST_Server::READABLE,
-                'callback' => [ $this, 'check_store_availability' ]
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'check_store_availability' ],
+                'permission_callback' => '__return_true',
             ]
         ] );
 
@@ -143,7 +148,8 @@ class StoreController extends WP_REST_Controller {
                         'description' => __( 'Your Message', 'dokan-lite' ),
                         'required'    => true
                     ]
-                ]
+                ],
+                'permission_callback' => '__return_true',
             ],
         ) );
 
@@ -627,11 +633,11 @@ class StoreController extends WP_REST_Controller {
     /**
      * Check store availability
      *
-     * @param  array $request
+     * @param WP_REST_Request $request
      *
      * @since 2.9.13
      *
-     * @return reponse
+     * @return WP_REST_Response
      */
     public function check_store_availability( $request ) {
         $params = $request->get_params();

@@ -321,7 +321,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
 
                                         $my_tax_terms = get_terms( 'product_tag', $drop_down_tags );
                                         ?>
-                                        <select multiple="multiple" name="product_tag[]" id="product_tag_search" class="product_tags dokan-form-control dokan-select2">';
+                                        <select multiple="multiple" name="product_tag[]" id="product_tag_search" class="product_tags dokan-form-control dokan-select2">
                                             <?php foreach ( $my_tax_terms as $tax_term ) : ?>
                                                 <?php if ( ! empty( $term ) && in_array( $tax_term->term_id, $term ) ) : ?>
                                                     <option value="<?php echo esc_attr( $tax_term->term_id ); ?>" selected="selected" ><?php echo esc_html( $tax_term->name ); ?></option>

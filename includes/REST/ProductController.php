@@ -131,6 +131,7 @@ class ProductController extends DokanRESTController {
             array(
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => array( $this, 'get_related_product' ),
+                'permission_callback' => '__return_true',
             ),
         ) );
 
@@ -154,6 +155,7 @@ class ProductController extends DokanRESTController {
             array(
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => array( $this, 'get_top_rated_product' ),
+                'permission_callback' => '__return_true',
             ),
         ) );
 
@@ -177,6 +179,7 @@ class ProductController extends DokanRESTController {
             array(
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => array( $this, 'get_best_selling_product' ),
+                'permission_callback' => '__return_true',
             ),
         ) );
 
@@ -200,6 +203,7 @@ class ProductController extends DokanRESTController {
             array(
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => array( $this, 'get_featured_product' ),
+                'permission_callback' => '__return_true',
             ),
         ) );
 
@@ -223,6 +227,7 @@ class ProductController extends DokanRESTController {
             array(
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => array( $this, 'get_latest_product' ),
+                'permission_callback' => '__return_true',
             ),
         ) );
     }
@@ -232,7 +237,7 @@ class ProductController extends DokanRESTController {
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return WC_Product|null|false
      */
     public function get_object( $id ) {
         return wc_get_product( $id );
