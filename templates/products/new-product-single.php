@@ -199,7 +199,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                                         data-product-id="<?php echo esc_attr( $post_id ); ?>">
                                                             ( <?php esc_html_e( ' You Earn : ', 'dokan-lite' ) ?><?php echo esc_html( get_woocommerce_currency_symbol() ); ?>
                                                                 <span class="vendor-price">
-                                                                    <?php echo wc_format_localized_price( esc_attr( dokan()->commission->get_earning_by_product( $post_id ) ) ); ?>
+                                                                    <?php echo esc_html( wc_format_localized_price( esc_attr( dokan()->commission->get_earning_by_product( $post_id ) ) ) ); ?>
                                                                 </span>
                                                             )
                                                     </span>
@@ -314,25 +314,20 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                         <?php
                                         require_once DOKAN_LIB_DIR.'/class.taxonomy-walker.php';
                                         $term = wp_get_post_terms( $post_id, 'product_tag', array( 'fields' => 'ids') );
-                                        $selected = ( $term ) ? $term : array();
-                                        $drop_down_tags = wp_dropdown_categories( array(
-                                            'show_option_none' => __( '', 'dokan-lite' ),
-                                            'hierarchical'     => 1,
-                                            'hide_empty'       => 0,
-                                            'name'             => 'product_tag[]',
-                                            'id'               => 'product_tag',
-                                            'taxonomy'         => 'product_tag',
-                                            'title_li'         => '',
-                                            'class'            => 'product_tags dokan-form-control dokan-select2',
-                                            'exclude'          => '',
-                                            'selected'         => $selected,
-                                            'echo'             => 0,
-                                            'walker'           => new TaxonomyDropdown( $post_id )
-                                        ) );
 
-                                        echo str_replace( '<select', '<select data-placeholder="' . esc_html__( 'Select product tags', 'dokan-lite' ) . '" multiple="multiple" ', $drop_down_tags ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+                                        $drop_down_tags = array(
+                                            'hide_empty' => 0,
+                                        );
 
+                                        $my_tax_terms = get_terms( 'product_tag', $drop_down_tags );
                                         ?>
+                                        <select multiple="multiple" name="product_tag[]" id="product_tag_search" class="product_tags dokan-form-control dokan-select2">
+                                            <?php foreach ( $my_tax_terms as $tax_term ) : ?>
+                                                <?php if ( ! empty( $term ) && in_array( $tax_term->term_id, $term ) ) : ?>
+                                                    <option value="<?php echo esc_attr( $tax_term->term_id ); ?>" selected="selected" ><?php echo esc_html( $tax_term->name ); ?></option>
+                                                <?php endif ?>
+                                            <?php endforeach ?>
+                                        </select>
                                     </div>
 
                                     <?php do_action( 'dokan_product_edit_after_product_tags', $post, $post_id ); ?>

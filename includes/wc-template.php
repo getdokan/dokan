@@ -155,7 +155,7 @@ function dokan_author_field_quick_edit() {
                         <option value=""><?php esc_html( '— No change —', 'dokan-lite' ); ?></option>
                         <option value="<?php echo esc_attr( $admin_user->ID ); ?>"><?php echo esc_html( $admin_user->display_name ); ?></option>
                         <?php foreach ( $vendors as $key => $vendor): ?>
-                            <option value="<?php echo esc_attr( $vendor->get_id() ); ?>"><?php echo ! empty( $vendor->get_shop_name() ) ? esc_html( $vendor->get_shop_name() ) : $vendor->get_name(); ?></option>
+                            <option value="<?php echo esc_attr( $vendor->get_id() ); ?>"><?php echo ! empty( $vendor->get_shop_name() ) ? esc_html( $vendor->get_shop_name() ) : esc_html( $vendor->get_name() ); ?></option>
                         <?php endforeach ?>
                     <?php endif ?>
                 </select>

@@ -49,11 +49,13 @@ class WithdrawController extends WP_REST_Controller {
                 ] ),
                 'permission_callback' => [ $this, 'get_items_permissions_check' ],
             ],
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/balance', [
             [
-                'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => [ $this, 'create_item' ],
-                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
-                'permission_callback' => [ $this, 'create_item_permissions_check' ],
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_balance' ],
+                'permission_callback' => [ $this, 'get_items_permissions_check' ],
             ],
         ] );
 
@@ -270,6 +272,20 @@ class WithdrawController extends WP_REST_Controller {
         return $response;
     }
 
+    /**
+     * Get vendor balance
+     *
+     * @return \WP_REST_Response
+     */
+    public function get_balance() {
+        $data = [];
+
+        $data ['current_balance']   = dokan_get_seller_balance( dokan_get_current_user_id(), false );
+        $data['withdraw_limit']     = dokan_get_option( 'withdraw_limit', 'dokan_withdraw', - 1 );
+        $data['withdraw_threshold'] = dokan_get_option( 'withdraw_date_limit', 'dokan_withdraw', - 1 );
+
+        return rest_ensure_response( $data );
+    }
     /**
      * Make a withdraw request
      *
