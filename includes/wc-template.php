@@ -173,7 +173,7 @@ function dokan_author_field_quick_edit() {
                 var $vendor_id_inline_data = $('#dokan_vendor_id_inline_' + post_id).find('#dokan_vendor_id').text(),
                     $wc_inline_data = $('#woocommerce_inline_' + post_id );
 
-                $( 'select[name="dokan_product_author_override"] option:selected', '.inline-edit-row' ).attr( 'selected', false ).change();
+                $( 'select[name="dokan_product_author_override"] option', '.inline-edit-row' ).attr( 'selected', false ).change();
                 $( 'select[name="dokan_product_author_override"] option[value="' + $vendor_id_inline_data + '"]' ).attr( 'selected', 'selected' ).change();
             });
         })(jQuery);
