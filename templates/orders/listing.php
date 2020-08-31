@@ -103,7 +103,7 @@ if ( $user_orders ) {
                                 }
 
                             } else {
-                                $user = __( 'Guest', 'dokan-lite' );
+                                $user = __( $order->get_formatted_billing_full_name(), 'dokan-lite' );
                             }
 
                             echo esc_html( $user );
