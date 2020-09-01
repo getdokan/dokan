@@ -398,7 +398,7 @@ class StoreController extends WP_REST_Controller {
             $counts = dokan_get_seller_status_count();
             $response->header( 'X-Status-Pending', (int) $counts['inactive'] );
             $response->header( 'X-Status-Approved', (int) $counts['active'] );
-            $response->header( 'X-Status-All', (int) $total_items );
+            $response->header( 'X-Status-All', (int) $counts['total'] );
         }
 
         $response->header( 'X-WP-Total', (int) $total_items );
