@@ -40,10 +40,11 @@ class VendorNewOrder extends WC_Email {
         add_action( 'woocommerce_order_status_failed_to_processing_notification', array( $this, 'trigger' ), 10, 2 );
         add_action( 'woocommerce_order_status_failed_to_completed_notification', array( $this, 'trigger' ), 10, 2 );
         add_action( 'woocommerce_order_status_failed_to_on-hold_notification', array( $this, 'trigger' ), 10, 2 );
-        
+       //Prevent admin email for sub-order
+        add_filter( 'woocommerce_email_enabled_new_order', [ $this, 'prevent_sub_order_admin_email' ], 10, 2 );
         // Call parent constructor.
         parent::__construct();
-        
+
         // Other settings.
         $this->recipient = 'vendor@ofthe.product';
     }
@@ -90,13 +91,13 @@ class VendorNewOrder extends WC_Email {
             $this->placeholders['{order_date}']   = wc_format_datetime( $this->object->get_date_created() );
             $this->placeholders['{order_number}'] = $this->object->get_order_number();
         }
-        
+
         $sellers = dokan_get_seller_id_by_order( $order_id );
         if ( empty( $sellers ) ) {
             return;
         }
-        
-        // check has sub order 
+
+        // check has sub order
         if ( $order->get_meta('has_sub_order') ) {
         	foreach ($sellers as $seller) {
         		$seller_info      = get_userdata( $seller );
@@ -190,5 +191,21 @@ class VendorNewOrder extends WC_Email {
                 'desc_tip'    => true,
             ),
         );
+    }
+
+    /**
+     * Prevent sub-order email for admin
+     *
+     * @param $bool
+     * @param $order
+     *
+     * @return bool
+     */
+    public function prevent_sub_order_admin_email( $bool, $order ) {
+        if ( $order->parent_id ) {
+            return false;
+        }
+
+        return true;
     }
 }
