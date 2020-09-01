@@ -3660,7 +3660,7 @@ if ( ! function_exists( 'dokan_get_seller_status_count' ) ) {
             'fields'     => 'ID'
         ) );
 
-        $all_users      = new WP_User_Query( array( 'role' => 'seller', 'fields' => 'ID' ) );
+        $all_users      = new WP_User_Query( array( 'role__in' => [ 'seller', 'administrator' ], 'fields' => 'ID' ) );
         $active_count   = $active_users->get_total();
         $inactive_count = $all_users->get_total() - $active_count;
 
