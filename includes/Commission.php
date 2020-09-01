@@ -333,7 +333,7 @@ class Commission {
     public function get_category_wise_rate( $product_id ) {
         $terms = get_the_terms( $this->validate_product_id( $product_id ), 'product_cat' );
 
-        if ( empty( $terms ) ) {
+        if ( empty( $terms ) || count( $terms ) > 1 ) {
             return null;
         }
 
