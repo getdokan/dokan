@@ -516,30 +516,28 @@ function dokan_store_category_menu( $seller_id, $title = '' ) {
     ?>
     <div id="cat-drop-stack" class="store-cat-stack-dokan">
         <?php
-        global $wpdb;
-        $categories = get_transient( 'dokan-store-category-'.$seller_id );
-
-        if ( false === $categories ) {
-            $categories = $wpdb->get_results( $wpdb->prepare( "SELECT t.term_id,t.name, tt.parent FROM $wpdb->terms as t
-                LEFT JOIN $wpdb->term_taxonomy as tt on t.term_id = tt.term_id
-                LEFT JOIN $wpdb->term_relationships AS tr on tt.term_taxonomy_id = tr.term_taxonomy_id
-                LEFT JOIN $wpdb->posts AS p on tr.object_id = p.ID
-                WHERE tt.taxonomy = 'product_cat'
-                AND p.post_type = 'product'
-                AND p.post_status = 'publish'
-                AND p.post_author = %d GROUP BY t.term_id", $seller_id
-            ) );
-            set_transient( 'dokan-store-category-'.$seller_id , $categories );
+        $vendor      = dokan()->vendor->get( get_query_var( 'author' ) );
+        $vendor_id   = $vendor->get_id();
+        $products    = $vendor->get_products();
+        $product_ids = [];
+        foreach ( $products->posts as $product ) {
+            array_push( $product_ids, $product->ID );
         }
-
-        $args = array(
-            'taxonomy'      => 'product_cat',
-            'selected_cats' => ''
-        );
-
+        // hold all the terms
+        $all_terms = [];
+        foreach ( $product_ids as $product_id ) {
+            $terms = get_the_terms( $product_id, 'product_cat' );
+            array_push( $all_terms, $terms[0] );
+        }
+        // hold unique categoreis
+        $categories = [];
+        foreach ( $all_terms as $term ) {
+            $categories[ serialize( $term ) ] = $term;
+        }
+        $categories = array_values( $categories );
         $walker = new \WeDevs\Dokan\Walkers\StoreCategory( $seller_id );
         echo "<ul>";
-        echo call_user_func_array( array(&$walker, 'walk'), array($categories, 0, array()) ); //phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+        echo call_user_func_array( array( &$walker, 'walk' ), array( $categories, 0, array() ) ); //phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
         echo "</ul>";
         ?>
     </div>
