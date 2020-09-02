@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "33109f4cd374dd729d2a87a562b8d3c5",
+    "content-hash": "0bfc8fc508fadda60cdc0db1ddab15fe",
     "packages": [
         {
             "name": "appsero/client",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/AppSero/client.git",
-                "reference": "0b40040a22c46a7e101dec09a886f551a02b8737"
+                "url": "https://github.com/Appsero/client.git",
+                "reference": "c0d3dcc937ab68d690d8fb8f6511db37d7d7d7e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AppSero/client/zipball/0b40040a22c46a7e101dec09a886f551a02b8737",
-                "reference": "0b40040a22c46a7e101dec09a886f551a02b8737",
+                "url": "https://api.github.com/repos/Appsero/client/zipball/c0d3dcc937ab68d690d8fb8f6511db37d7d7d7e9",
+                "reference": "c0d3dcc937ab68d690d8fb8f6511db37d7d7d7e9",
                 "shasum": ""
             },
             "require": {
@@ -46,7 +46,7 @@
                 "theme",
                 "wordpress"
             ],
-            "time": "2019-12-19T09:55:46+00:00"
+            "time": "2020-09-01T07:57:56+00:00"
         }
     ],
     "packages-dev": [
@@ -124,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "90b719decdb5009b9949cf51e7544c66f182cad1"
+                "reference": "82efb1e6a3d8ae695f5cdb81a77d881ed29b6057"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/90b719decdb5009b9949cf51e7544c66f182cad1",
-                "reference": "90b719decdb5009b9949cf51e7544c66f182cad1",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/82efb1e6a3d8ae695f5cdb81a77d881ed29b6057",
+                "reference": "82efb1e6a3d8ae695f5cdb81a77d881ed29b6057",
                 "shasum": ""
             },
             "require": {
@@ -167,7 +167,40 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2019-12-16T21:52:11+00:00"
+            "time": "2020-09-02T05:32:19+00:00"
+        },
+        {
+            "name": "tareq1988/wp-php-cs-fixer",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tareq1988/wp-php-cs-fixer.git",
+                "reference": "bb389b8a95422885abe1121b92813b4a9f129e9f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tareq1988/wp-php-cs-fixer/zipball/bb389b8a95422885abe1121b92813b4a9f129e9f",
+                "reference": "bb389b8a95422885abe1121b92813b4a9f129e9f",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "WeDevs\\Fixer\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tareq Hasan",
+                    "email": "tareq@wedevs.com"
+                }
+            ],
+            "description": "WordPress rules for php-cs-fixer",
+            "time": "2020-05-21T07:06:37+00:00"
         },
         {
             "name": "wp-coding-standards/wpcs",
@@ -175,12 +208,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress/WordPress-Coding-Standards.git",
-                "reference": "f90e8692ce97b693633db7ab20bfa78d930f536a"
+                "reference": "7da1894633f168fe244afc6de00d141f27517b62"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/f90e8692ce97b693633db7ab20bfa78d930f536a",
-                "reference": "f90e8692ce97b693633db7ab20bfa78d930f536a",
+                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/7da1894633f168fe244afc6de00d141f27517b62",
+                "reference": "7da1894633f168fe244afc6de00d141f27517b62",
                 "shasum": ""
             },
             "require": {
@@ -188,12 +221,13 @@
                 "squizlabs/php_codesniffer": "^3.3.1"
             },
             "require-dev": {
-                "dealerdirect/phpcodesniffer-composer-installer": "^0.5.0",
+                "dealerdirect/phpcodesniffer-composer-installer": "^0.5 || ^0.6",
                 "phpcompatibility/php-compatibility": "^9.0",
+                "phpcsstandards/phpcsdevtools": "^1.0",
                 "phpunit/phpunit": "^4.0 || ^5.0 || ^6.0 || ^7.0"
             },
             "suggest": {
-                "dealerdirect/phpcodesniffer-composer-installer": "^0.5.0 || This Composer plugin will sort out the PHPCS 'installed_paths' automatically."
+                "dealerdirect/phpcodesniffer-composer-installer": "^0.6 || This Composer plugin will sort out the PHPCS 'installed_paths' automatically."
             },
             "type": "phpcodesniffer-standard",
             "notification-url": "https://packagist.org/downloads/",
@@ -212,17 +246,19 @@
                 "standards",
                 "wordpress"
             ],
-            "time": "2019-11-11T12:34:03+00:00"
+            "time": "2020-05-13T23:57:56+00:00"
         }
     ],
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
         "appsero/client": 20,
-        "wp-coding-standards/wpcs": 20
+        "wp-coding-standards/wpcs": 20,
+        "tareq1988/wp-php-cs-fixer": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "1.1.0"
 }
