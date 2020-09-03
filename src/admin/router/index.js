@@ -3,7 +3,7 @@ import Withdraw from 'admin/pages/Withdraw.vue'
 import Premium from 'admin/pages/Premium.vue'
 import Help from 'admin/pages/Help.vue'
 import Settings from 'admin/pages/Settings.vue'
-import Vendors from 'admin/pages/vendors.vue'
+import Vendors from 'admin/pages/Vendors.vue'
 
 let Vue            = dokan_get_lib('Vue')
 let Router         = dokan_get_lib('Router')

@@ -1,13 +1,13 @@
 # Dokan - Best WooCommerce Multivendor Marketplace Solution - Build Your Own Amazon, eBay, Etsy #
-**Contributors:** [tareq1988](https://profiles.wordpress.org/tareq1988), [wedevs](https://profiles.wordpress.org/wedevs), [sabbir1991](https://profiles.wordpress.org/sabbir1991), [nizamuddinbabu](https://profiles.wordpress.org/nizamuddinbabu), [sk.shaikat](https://profiles.wordpress.org/sk.shaikat), [ediamin](https://profiles.wordpress.org/ediamin), [saimonh](https://profiles.wordpress.org/saimonh)  
+**Contributors:** [tareq1988](https://profiles.wordpress.org/tareq1988), [wedevs](https://profiles.wordpress.org/wedevs), [nizamuddinbabu](https://profiles.wordpress.org/nizamuddinbabu)  
 **Donate Link:** http://tareq.co/donate/  
 **Tags:** WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, product vendors, woocommerce vendor, commission rate, e-commerce, ebay, ecommerce, yith, yithemes  
 **Requires at least:** 4.4  
-**Tested up to:** 5.3.2  
+**Tested up to:** 5.5  
 **WC requires at least:** 3.0  
-**WC tested up to:** 4.0.1  
+**WC tested up to:** 4.4.1  
 **Requires PHP:** 5.6  
-**Stable tag:** 3.0.3  
+**Stable tag:** 3.0.9  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -290,6 +290,57 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 ## Changelog ##
+
+### v3.0.9 (August 25, 2020) ###
+
+- **Fix:** Some security issues fixed
+- **Fix:** Loading issue when long tags list on add/edit product page (Vendor Dashboard)
+- **Fix:** Add missing permission callback in REST routes to make WordPress 5.5 compatible
+- **Fix:** Vendor can send multiple withdraw request from vendor dashboard
+- **Fix:** API endpoint added
+
+### v3.0.8 (August 12, 2020) ###
+
+- **Fix:** WordPress v5.5 compatibility issue fixed
+- **Fix:** Namespacing issues on class declaration
+
+### v3.0.7 (July 23, 2020) ###
+
+- **Fix:** Showing fatal error for user switching
+
+### v3.0.6 (July 23, 2020) ###
+
+- **Feat:** Vendor user switching (User Switching plugin support)
+- **Feat:** Decimal and Thousand Separator with Comma
+- **Fix:** Add system to refresh options for select fields in admin settings
+- **Fix:** Admin settings input field type for common types of fields
+- **Fix:** Shop name not showing on product listing quick edit section
+- **Fix:** Order notes in vendor dashboard insert wrong author data
+
+ = v3.0.5 (June 11, 2020) =
+
+- **New:** Exclude cash on delivery payments from vendor withdrawal balance (COD)
+- **Fix:** Remove vendor folder from the excluded list
+- **Fix:** Earning column missing on vendor dashboard order list
+- **Fix:** Default location not working in vendor dashboard
+- **Fix:** Remove link from customer name in vendor order details
+- **Fix:** Custom header, footer template does not work in Dokan store page (Divi Theme)
+
+ = v3.0.4 (May 15, 2020) =
+
+ - **Fix:** Rename google plus to google as google plus is deprecated #807
+ - **Fix:** Unable to set store trams and condition settings through REST API #808
+ - **Fix:** Vendor order email does not have the TAX details #809
+ - **Fix:** Withdraw request email is not send to admin #810
+ - **Fix:** Typo in backend add and edit vendor page #811
+ - **Fix:** On updating commission type in backend vendor dashboard, translated commission type is getting saved into database #814
+ - **Fix:** Store listing filter does not work when its saved as frontpage #815
+ - **Fix:** When a product is purchased with a price of more than 8 digit the calculation is wrong #819
+ - **Fix:** Caching issue on vendor's order listing page #821
+ - **Fix:** Filter out empty seller ids when a product is deleted `dokan_get_sellers_by` function #827
+ - **Fix:** Deduct PayPal gateway fee from vendor's earning #830
+ - **Feat:** Hide vendor info if admin wants to #829
+ - **Improvement:** Pass vendor id in dokan_get_seller_active_withdraw_methods hook #813
 
 ### v3.0.3 (April 03, 2020) ###
 

@@ -15,6 +15,18 @@ if ( 'mapbox' === $source ) {
 
     $map_address = ! empty( $map_address ) ? $map_address : 'Dhaka';
 
+    if ( empty( $map_location ) && function_exists( 'dokan_geo_get_default_location' ) && ! empty( dokan_geo_get_default_location() ) ) {
+        $default_location = dokan_geo_get_default_location();
+
+        $map_address  = ! empty( $default_location['address'] ) ? $default_location['address'] : 'Dhaka';
+        $longitude    = ! empty( $default_location['longitude'] ) ? $default_location['longitude'] : 90.40714300000002;
+        $latitude     = ! empty( $default_location['latitude'] ) ? $default_location['latitude'] : 23.709921;
+        $map_location = $latitude . ',' . $longitude;
+    } else {
+        $longitude   = ! empty( $location[1] ) ? $location[1] : 90.40714300000002;
+        $latitude    = ! empty( $location[0] ) ? $location[0] : 23.709921;
+    }
+
     dokan_get_template( 'maps/mapbox-with-search.php', array(
         'map_location' => $map_location,
         'map_address'  => $map_address,
@@ -22,22 +34,34 @@ if ( 'mapbox' === $source ) {
         'map_id'       => $map_id,
         'location'     => array(
             'address'   => $map_address,
-            'longitude' => ! empty( $location[1] ) ? $location[1] : 90.40714300000002,
-            'latitude'  => ! empty( $location[0] ) ? $location[0] : 23.709921,
-            'zoom'      => 10,
+            'longitude' => $longitude,
+            'latitude'  => $latitude,
+            'zoom'      => 12,
         ),
     ) );
 } else {
-    $location = explode( ',', $map_location );
+    $location    = explode( ',', $map_location );
     $map_address = ! empty( $map_address ) ? $map_address : 'Dhaka';
+
+    if ( empty( $map_location ) && function_exists( 'dokan_geo_get_default_location' ) && ! empty( dokan_geo_get_default_location() ) ) {
+        $default_location = dokan_geo_get_default_location();
+
+        $map_address  = ! empty( $default_location['address'] ) ? $default_location['address'] : 'Dhaka';
+        $longitude    = ! empty( $default_location['longitude'] ) ? $default_location['longitude'] : 90.40714300000002;
+        $latitude     = ! empty( $default_location['latitude'] ) ? $default_location['latitude'] : 23.709921;
+        $map_location = $latitude . ',' . $longitude;
+    } else {
+        $longitude   = ! empty( $location[1] ) ? $location[1] : 90.40714300000002;
+        $latitude    = ! empty( $location[0] ) ? $location[0] : 23.709921;
+    }
 
     dokan_get_template( 'maps/google-maps-with-search.php', array(
         'map_location' => $map_location,
         'map_address'  => $map_address,
         'location'     => array(
             'address'   => $map_address,
-            'longitude' => ! empty( $location[1] ) ? $location[1] : 90.40714300000002,
-            'latitude'  => ! empty( $location[0] ) ? $location[0] : 23.709921,
+            'longitude' => $longitude,
+            'latitude'  => $latitude,
             'zoom'      => 12,
         ),
     ) );

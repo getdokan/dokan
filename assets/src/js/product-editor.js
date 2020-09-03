@@ -896,43 +896,79 @@
             };
         }
 
-        $('body').on( 'keyup', '.dokan-product-sales-price, .dokan-product-regular-price', debounce_delay( function(evt) {
-            evt.preventDefault();
-            var product_price           = $( 'input.dokan-product-regular-price' ).val();
-            var sale_price_wrap         = $( 'input.dokan-product-sales-price' );
-            var sale_price              = sale_price_wrap.val();
-            var sale_price_input_div    = sale_price_wrap.parent( 'div.dokan-input-group' );
-            var sale_price_input_msg    = "<span class='error'>" + dokan.i18n_sales_price_error + "</span>";
-            var sale_price_parent_div   = sale_price_input_div.parent( 'div.sale-price' ).find( 'span.error' );
+        // $('body').on( 'keyup', '.dokan-product-sales-price, .dokan-product-regular-price', debounce_delay( function(evt) {
+        //     evt.preventDefault();
+        //     var product_price           = $( 'input.dokan-product-regular-price' ).val();
+        //     var sale_price_wrap         = $( 'input.dokan-product-sales-price' );
+        //     var sale_price              = sale_price_wrap.val();
+        //     var sale_price_input_div    = sale_price_wrap.parent( 'div.dokan-input-group' );
+        //     var sale_price_input_msg    = "<span class='error'>" + dokan.i18n_sales_price_error + "</span>";
+        //     var sale_price_parent_div   = sale_price_input_div.parent( 'div.sale-price' ).find( 'span.error' );
 
-            if ( '' == product_price ) {
+        //     if ( '' == product_price ) {
 
-                sale_price_parent_div.remove();
-                sale_price_input_div.after( sale_price_input_msg );
+        //         sale_price_parent_div.remove();
+        //         sale_price_input_div.after( sale_price_input_msg );
 
-                sale_price_wrap.val('');
-                setTimeout(function(){
-                    sale_price_parent_div.remove();
-                }, 5000);
+        //         sale_price_wrap.val('');
+        //         setTimeout(function(){
+        //             sale_price_parent_div.remove();
+        //         }, 5000);
 
-            } else if( parseFloat( product_price ) <= parseFloat( sale_price ) ) {
+        //     } else if( parseFloat( product_price ) <= parseFloat( sale_price ) ) {
 
-                sale_price_parent_div.remove();
-                sale_price_input_div.after( sale_price_input_msg );
+        //         sale_price_parent_div.remove();
+        //         sale_price_input_div.after( sale_price_input_msg );
 
-                sale_price_wrap.val('');
-                setTimeout(function(){
-                    sale_price_parent_div.remove();
-                }, 5000);
+        //         sale_price_wrap.val('');
+        //         setTimeout(function(){
+        //             sale_price_parent_div.remove();
+        //         }, 5000);
 
-            } else {
+        //     } else {
 
-                sale_price_parent_div.remove();
+        //         sale_price_parent_div.remove();
 
+        //     }
+
+        // } ,600 ) );
+
+    });
+
+    $(document).ready(function () {
+        // Ajax search products tags
+        $("#product_tag_search").select2({
+            allowClear: false,
+            ajax: {
+                url: dokan.ajaxurl,
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        q: params.term,
+                        action: 'dokan_json_search_products_tags',
+                        security: dokan.search_products_tags_nonce,
+                        page: params.page || 1
+                    };
+                },
+                processResults: function( data ) {
+                    var options = [];
+                    if ( data ) {
+                        $.each( data, function( index, text ) {
+                            options.push( { id: text[0], text: text[1]  } );
+                        });
+                    }
+
+                    return {
+                        results: options,
+                        pagination: {
+                            more: options.length == 0 ? false : true
+                        }
+                    };
+                },
+                cache: true
             }
-
-        } ,600 ) );
-
+        });
     });
 
 })(jQuery);

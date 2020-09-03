@@ -68,15 +68,15 @@
                     <div class="column combine-commission" v-if="'combine' === selectedCommissionType.name">
                         <label>{{ __( 'Admin Commission', 'dokan-lite' )  }}</label>
                         <div class="combine-commission-field">
-                            <input type="number" class="dokan-form-input percent_fee" v-model="vendorInfo.admin_commission">
+                            <input type="text" class="wc_input_decimal dokan-form-input percent_fee" v-model="vendorInfo.admin_commission">
                             {{ '% &nbsp;&nbsp; +' }}
-                            <input type="number" class="dokan-form-input fixed_fee" v-model="vendorInfo.admin_additional_fee">
+                            <input type="text" class="wc_input_price dokan-form-input fixed_fee" v-model="vendorInfo.admin_additional_fee">
                         </div>
                     </div>
 
                     <div class="column" v-else>
                         <label>{{ __( 'Admin Commission', 'dokan-lite' )  }}</label>
-                        <input type="number" class="dokan-form-input" v-model="vendorInfo.admin_commission">
+                        <input type="text" class="dokan-form-input" :class="{ 'wc_input_price': selectedCommissionType.name == 'flat', 'wc_input_decimal': selectedCommissionType.name != 'flat' }" v-model="vendorInfo.admin_commission">
                     </div>
                 </template>
 

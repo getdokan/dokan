@@ -693,6 +693,18 @@ function dokan_post_input_box( $post_id, $meta_key, $attr = array(), $type = 'te
             <?php
             break;
 
+        case 'price':
+            ?>
+            <input <?php echo esc_attr( $required ); ?> type="text" name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $name ); ?>" value="<?php echo esc_attr( wc_format_localized_price( $value ) ); ?>" class="wc_input_price <?php echo esc_attr( $class ); ?>" placeholder="<?php echo esc_attr( $placeholder ); ?>">
+            <?php
+            break;
+
+        case 'decimal':
+            ?>
+            <input <?php echo esc_attr( $required ); ?> type="text" name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $name ); ?>" value="<?php echo esc_attr( wc_format_localized_price( $value ) ); ?>" class="wc_input_decimal <?php echo esc_attr( $class ); ?>" placeholder="<?php echo esc_attr( $placeholder ); ?>">
+            <?php
+            break;
+
         case 'textarea':
             $rows = isset( $attr['rows'] ) ? absint( $attr['rows'] ) : 4;
             ?>
@@ -3660,7 +3672,7 @@ if ( ! function_exists( 'dokan_get_seller_status_count' ) ) {
             'fields'     => 'ID'
         ) );
 
-        $all_users      = new WP_User_Query( array( 'role' => 'seller', 'fields' => 'ID' ) );
+        $all_users      = new WP_User_Query( array( 'role__in' => [ 'seller', 'administrator' ], 'fields' => 'ID' ) );
         $active_count   = $active_users->get_total();
         $inactive_count = $all_users->get_total() - $active_count;
 
@@ -3829,4 +3841,23 @@ function dokan_clear_product_caches( $product ) {
     $method = $reflection->getMethod( $method_name );
     $method->setAccessible( true );
     $method->invokeArgs( $class, [ &$product ] );
+}
+
+/**
+ * Check which vendor info should be hidden
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @param string $option
+ *
+ * @return bool|array if no param is passed
+ */
+function dokan_is_vendor_info_hidden( $option = null ) {
+    $options = dokan_get_option( 'hide_vendor_info', 'dokan_appearance' );
+
+    if ( is_null( $option ) ) {
+        return $options;
+    }
+
+    return ! empty( $options[ $option ] );
 }

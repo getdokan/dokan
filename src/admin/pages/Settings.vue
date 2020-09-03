@@ -47,6 +47,7 @@
                                         @openMedia="showMedia"
                                         :key="fieldId"
                                         :errors="errors"
+                                        :toggle-loading-state="toggleLoadingState"
                                     />
                                 </tbody>
                             </table>
@@ -303,7 +304,11 @@
                return array.filter( ( element ) => {
                    return element !== value;
                });
-            }
+            },
+
+            toggleLoadingState() {
+                this.showLoading = ! this.showLoading;
+            },
         },
 
         created() {

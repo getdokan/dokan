@@ -17,7 +17,6 @@ class Hooks {
      */
     public function __construct() {
         // Load all actions
-        add_action( 'pre_get_posts', [ $this, 'admin_shop_order_remove_parents' ] );
         add_action( 'manage_shop_order_posts_custom_column', [ $this, 'shop_order_custom_columns' ], 11 );
         add_action( 'admin_footer-edit.php', [ $this, 'admin_shop_order_scripts' ] );
         add_action( 'wp_trash_post', [ $this, 'admin_on_trash_order' ] );
@@ -34,19 +33,6 @@ class Hooks {
         add_filter( 'post_class', [ $this, 'admin_shop_order_row_classes' ], 10, 2);
         add_filter( 'post_types_to_delete_with_user', [ $this, 'add_wc_post_types_to_delete_user' ], 10, 2 );
         add_filter( 'dokan_save_settings_value', [ $this, 'update_pages' ], 10, 2 );
-    }
-
-
-    /**
-     * Filter all the shop orders to remove child orders
-     *
-     * @param WP_Query $query
-     */
-    public function admin_shop_order_remove_parents( $query ) {
-        if ( $query->is_main_query() && 'shop_order' == $query->query['post_type'] ) {
-            $query->set( 'orderby', 'ID' );
-            $query->set( 'order', 'DESC' );
-        }
     }
 
     /**
@@ -109,7 +95,7 @@ class Hooks {
      *
      * @global type $post
      * @global type $woocommerce
-     * @global WC_Order $the_order
+     * @global \WC_Order $the_order
      *
      * @param type $col
      *
@@ -119,7 +105,7 @@ class Hooks {
         global $post, $the_order;
 
         if ( empty( $the_order ) || $the_order->get_id() != $post->ID ) {
-            $the_order = new WC_Order( $post->ID );
+            $the_order = new \WC_Order( $post->ID );
         }
 
         if ( ! current_user_can( 'manage_woocommerce' ) ) {
@@ -388,7 +374,7 @@ class Hooks {
             <?php else: ?>
                 <option value="<?php echo esc_attr( $user_ID ); ?>" <?php selected( $selected, $user_ID ); ?>><?php echo esc_html( $admin_user->display_name ); ?></option>
                 <?php foreach ( $vendors as $key => $vendor ): ?>
-                    <option value="<?php echo esc_attr( $vendor->get_id() ) ?>" <?php selected( $selected, $vendor->get_id() ); ?>><?php echo ! empty( $vendor->get_shop_name() ) ? esc_html( $vendor->get_shop_name() ) : $vendor->get_name(); ?></option>
+                    <option value="<?php echo esc_attr( $vendor->get_id() ) ?>" <?php selected( $selected, $vendor->get_id() ); ?>><?php echo ! empty( $vendor->get_shop_name() ) ? esc_html( $vendor->get_shop_name() ) : esc_html( $vendor->get_name() ); ?></option>
                 <?php endforeach ?>
             <?php endif ?>
         </select>

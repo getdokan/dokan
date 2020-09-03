@@ -159,7 +159,13 @@ class Withdraw {
      * @return void
      */
     protected function handle_approval_request() {
+        global $current_user;
+
         $post_data = wp_unslash( $_POST );
+
+        if ( dokan()->withdraw->has_pending_request( $current_user->ID ) ) {
+            return;
+        }
 
         if ( ! isset( $post_data['dokan_withdraw_nonce'] ) || ! wp_verify_nonce( sanitize_key( $post_data['dokan_withdraw_nonce'] ), 'dokan_withdraw' ) ) {
             $this->add_error( esc_html__( 'Are you cheating?', 'dokan-lite' ) );
@@ -182,7 +188,7 @@ class Withdraw {
         }
 
         $user_id = get_current_user_id();
-        $amount  = (float) $post_data['withdraw_amount'];
+        $amount  = $post_data['withdraw_amount'];
         $method  = sanitize_text_field( $post_data['withdraw_method'] );
 
         $args = array(

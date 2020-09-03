@@ -741,7 +741,7 @@ class SetupWizard {
     public function plugin_install_info() {
         ?>
         <span class="plugin-install-info">
-            <span class="plugin-install-info-label"><?php esc_html_e( 'The following plugins will be installed and activated for you:', 'woocommerce' ); ?></span>
+            <span class="plugin-install-info-label"><?php esc_html_e( 'The following plugins will be installed and activated for you:', 'dokan-lite' ); ?></span>
             <span class="plugin-install-info-list"></span>
         </span>
         <?php

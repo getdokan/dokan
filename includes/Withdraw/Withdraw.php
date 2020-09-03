@@ -37,7 +37,7 @@ class Withdraw {
         $this->data = [
             'id'      => absint( $data['id'] ),
             'user_id' => absint( $data['user_id'] ),
-            'amount'  => $data['amount'],
+            'amount'  => wc_format_decimal( $data['amount'] ),
             'date'    => $data['date'],
             'status'  => absint( $data['status'] ),
             'method'  => $data['method'],
@@ -169,7 +169,7 @@ class Withdraw {
      * @return \WeDevs\Dokan\Withdraw\Withdraw
      */
     public function set_amount( $amount ) {
-        $this->data['amount'] = $amount;
+        $this->data['amount'] = wc_format_decimal( $amount );
         return $this;
     }
 

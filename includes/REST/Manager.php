@@ -32,6 +32,7 @@ class Manager {
             DOKAN_DIR . '/includes/REST/ProductAttributeTermsController.php' => '\WeDevs\Dokan\REST\ProductAttributeTermsController',
             DOKAN_DIR . '/includes/REST/OrderController.php'                 => '\WeDevs\Dokan\REST\OrderController',
             DOKAN_DIR . '/includes/REST/WithdrawController.php'              => '\WeDevs\Dokan\REST\WithdrawController',
+            DOKAN_DIR . '/includes/REST/StoreSettingController.php'              => '\WeDevs\Dokan\REST\StoreSettingController',
         ) );
 
         // Init REST API routes.
@@ -105,7 +106,15 @@ class Manager {
             return $data;
         }
 
-        if ( empty( $data['show_email'] ) ) {
+        if ( dokan_is_vendor_info_hidden( 'address' ) ) {
+            unset( $data['address'] );
+        }
+
+        if ( dokan_is_vendor_info_hidden( 'phone' ) ) {
+            unset( $data['phone'] );
+        }
+
+        if ( dokan_is_vendor_info_hidden( 'email' ) || empty( $data['show_email'] ) ) {
             unset( $data['email'] );
         }
 

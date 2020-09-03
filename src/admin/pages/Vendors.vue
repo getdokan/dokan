@@ -74,8 +74,8 @@
                     <a v-else-if="! hasPro && action.key == 'edit'" :href="editUrl(data.row.id)">{{ action.label }}</a>
                     <a v-else-if="action.key == 'products'" :href="productUrl(data.row.id)">{{ action.label }}</a>
                     <a v-else-if="action.key == 'orders'" :href="ordersUrl(data.row.id)">{{ action.label }}</a>
+                    <a v-else-if="action.key == 'switch_to'" :href="switchToUrl(data.row)">{{ action.label }}</a>
                     <a v-else href="#">{{ action.label }}</a>
-
                     <template v-if="index !== (actions.length - 1)"> | </template>
                 </span>
             </template>
@@ -165,6 +165,7 @@ export default {
             vendors: [],
             loadAddVendor: false,
             dokanVendorHeaderArea: dokan.hooks.applyFilters( 'getDokanVendorHeaderArea', [] ),
+            isVendorSwitchingEnabled: false
         }
     },
 
@@ -231,6 +232,15 @@ export default {
             this.isCategoryMultiple = payload.isCategoryMultiple;
             this.columns = payload.columns;
         });
+
+        this.isVendorSwitchingEnabled = dokan.is_vendor_switching_enabled ? true : false;
+
+        if ( this.isVendorSwitchingEnabled ) {
+            this.actions.push({
+                key: 'switch_to',
+                label: this.__( 'Switch To', 'dokan-lite' )
+            });
+        }
     },
 
     methods: {
@@ -370,6 +380,10 @@ export default {
         editUrl(id) {
             return dokan.urls.adminRoot + 'user-edit.php?user_id=' + id;
         },
+
+        switchToUrl(row) {
+            return row.switch_url;
+        }
     }
 };
 </script>

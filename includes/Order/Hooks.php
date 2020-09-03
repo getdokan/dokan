@@ -41,6 +41,10 @@ class Hooks {
 
         // restore order stock if it's been reduced by twice
         add_action( 'woocommerce_reduce_order_stock', array( $this, 'restore_reduced_order_stock' ) );
+
+        //Wc remove child order from wc_order_product_lookup & trim child order from posts for analytics
+        add_action( 'wc-admin_import_orders', [ $this, 'delete_child_order_from_wc_order_product' ] );
+        add_filter( 'woocommerce_analytics_orders_select_query', [ $this, 'trim_child_order_for_analytics_order' ] );
     }
 
     /**
@@ -91,6 +95,17 @@ class Hooks {
                 $order = dokan()->order->get( $order_post->ID );
                 $order->update_status( $new_status );
             }
+        }
+
+        /**
+         * If `exclude_cod_payment` is enabled, don't include the fund in vendor's withdrawal balance.
+         *
+         * @since DOKAN_LITE_SINCE
+         */
+        $exclude_cod_payment = 'on' === dokan_get_option( 'exclude_cod_payment', 'dokan_withdraw', 'off' );
+
+        if ( $exclude_cod_payment && 'cod' === $order->get_payment_method() ) {
+            return;
         }
 
         // update on vendor-balance table
@@ -244,5 +259,37 @@ class Hooks {
             $item->delete_meta_data( '_reduced_stock' );
             $item->save();
         }
+    }
+
+    /**
+     * @param \ActionScheduler_Action $args
+     *
+     * @return void
+     */
+    public function delete_child_order_from_wc_order_product( $args ) {
+        $order = get_post( $args );
+
+        if ( $order->post_parent ) {
+            global $wpdb;
+            $wpdb->delete( $wpdb->prefix . 'wc_order_product_lookup', [ 'order_id' => $order->ID ] );
+            $wpdb->delete( $wpdb->prefix . 'wc_order_stats', [ 'order_id' => $order->ID ] );
+        }
+    }
+
+    /**
+     * Trim child order if parent exist from wc_order_product_lookup for analytics order
+     *
+     * @param \WC_Order $orders
+     *
+     * @return \WC_Order
+     */
+    public function trim_child_order_for_analytics_order( $orders ) {
+        foreach ( $orders->data as $key => $order ) {
+            if ( $order['parent_id'] ) {
+                unset( $orders->data[ $key ] );
+            }
+        }
+
+        return $orders;
     }
 }
