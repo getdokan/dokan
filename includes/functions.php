@@ -820,7 +820,7 @@ function dokan_get_product_types( $status = '' ) {
         'simple'   => __( 'Simple Product', 'dokan-lite' ),
         'variable' => __( 'Variable Product', 'dokan-lite' ),
         'grouped'  => __( 'Grouped Product', 'dokan-lite' ),
-        'external' => __( 'Scheduled Product', 'dokan-lite' ),
+        'external' => __( 'External/Affiliate Product', 'dokan-lite' ),
     ) );
 
     if ( $status ) {
