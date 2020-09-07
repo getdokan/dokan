@@ -3099,6 +3099,9 @@ div.media-sidebar a.edit-attachment {
 .product-edit-container .dokan-feat-image-upload .image-wrap:hover a.close {
   display: block;
 }
+.product-edit-container .dokan-feat-image-upload .container-image-and-badge {
+  position: inherit;
+}
 .product-edit-container .dokan-list-category-box {
   border: 1px solid #ccc;
   background: #fff;

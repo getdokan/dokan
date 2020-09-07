@@ -939,6 +939,7 @@
         // Ajax search products tags
         $("#product_tag_search").select2({
             allowClear: false,
+            tags: true,
             ajax: {
                 url: dokan.ajaxurl,
                 dataType: 'json',
