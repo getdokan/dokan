@@ -2,16 +2,16 @@
 
 namespace WeDevs\Dokan\Upgrade\Upgrades;
 
+use WeDevs\Dokan\Abstracts\DokanUpgrader;
 use WP_Query;
 use WP_Roles;
-use WeDevs\Dokan\Abstracts\DokanUpgrader;
 
 class V_2_7_3 extends DokanUpgrader {
 
     /**
      * Save admin fee as meta for existing sub-orders
      */
-    public static function update_order_meta(){
+    public static function update_order_meta() {
         $args = [
             'post_type'      => 'shop_order',
             'posts_per_page' => -1,
@@ -25,22 +25,22 @@ class V_2_7_3 extends DokanUpgrader {
                     'key'     => '_dokan_admin_fee',
                     'compare' => 'NOT EXISTS',
                 ],
-            ]
+            ],
         ];
 
         $query = new WP_Query( $args );
 
-        foreach (  $query->posts as $sub_order ) {
+        foreach ( $query->posts as $sub_order ) {
             $order     = wc_get_order( $sub_order->ID );
             $admin_fee = dokan_get_admin_commission_by( $order, dokan_get_seller_id_by_order( $sub_order->ID ) );
-            update_post_meta( $sub_order->ID , '_dokan_admin_fee', $admin_fee );
+            update_post_meta( $sub_order->ID, '_dokan_admin_fee', $admin_fee );
         }
     }
 
     /**
      * Modify column structure to support upto 4 decimals
      */
-    public static function update_table_structure(){
+    public static function update_table_structure() {
         global $wpdb;
 
         $wpdb->query(
@@ -52,7 +52,6 @@ class V_2_7_3 extends DokanUpgrader {
             "ALTER TABLE `{$wpdb->prefix}dokan_orders`
             MODIFY COLUMN net_amount float(11,4)"
         );
-
     }
 
     /**
@@ -72,7 +71,7 @@ class V_2_7_3 extends DokanUpgrader {
         $capabilities = [];
         $all_cap      = dokan_get_all_caps();
 
-        foreach( $all_cap as $key=>$cap ) {
+        foreach ( $all_cap as $key => $cap ) {
             $capabilities = array_merge( $capabilities, array_keys( $cap ) );
         }
 
