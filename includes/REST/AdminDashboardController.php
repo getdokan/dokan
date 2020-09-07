@@ -83,8 +83,12 @@ class AdminDashboardController extends DokanRESTAdminController {
         $show_author   = (int) $request['show_author'];
         $show_date     = (int) $request['show_date'];
 
+        add_filter( 'http_response', array( self::class, 'dokan_compat_simple_pie_after_five_point_five' ), 10, 3 );
+
         $url = 'https://wedevs.com/account/tag/dokan/feed/';
         $rss = fetch_feed( $url );
+
+        remove_filter( 'http_response', array( self::class, 'dokan_compat_simple_pie_after_five_point_five' ), 10, 3 );
 
         if ( is_wp_error( $rss ) ) {
             return $rss;
@@ -157,4 +161,27 @@ class AdminDashboardController extends DokanRESTAdminController {
         return rest_ensure_response( $feeds );
     }
 
+    /**
+     * Support SimplePie class in WP 5.5+
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param array  $response    HTTP response.
+     * @param array  $parsed_args HTTP request arguments.
+     * @param string $url         The request URL.
+     *
+     * @return array
+     */
+    public static function dokan_compat_simple_pie_after_five_point_five( $response, $parsed_args, $url ) {
+        if (
+            version_compare( get_bloginfo( 'version' ), '5.5', '>=' )
+            && 'https://wedevs.com/account/tag/dokan/feed/' === $url
+            && isset( $response['headers']['link'] )
+            && is_array( $response['headers']['link'] )
+        ) {
+            $response['headers']['link'] = $response['headers']['link'][0];
+        }
+
+        return $response;
+    }
 }
