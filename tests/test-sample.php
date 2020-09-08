@@ -13,9 +13,8 @@ class SampleTest extends WP_UnitTestCase {
     }
 
     public function test_order() {
-        $order = wc_create_order( array( 'customer_id' => 1 ) );
+        $order = wc_create_order( [ 'customer_id' => 1 ] );
 
         $this->assertInstanceOf( 'WC_Order', $order );
     }
 }
-
