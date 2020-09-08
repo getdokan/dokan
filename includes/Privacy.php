@@ -5,7 +5,7 @@ namespace WeDevs\Dokan;
 use WC_Abstract_Privacy;
 use WP_User;
 
-/**
+/*
  * Privacy/GDPR related functionality which ties into WordPress functionality.
  *
  * @since 2.8.2
@@ -30,13 +30,13 @@ class Privacy extends WC_Abstract_Privacy {
         parent::__construct( __( 'Dokan', 'dokan-lite' ) );
 
         // This hook registers WooCommerce data exporters.
-        $this->add_exporter( 'dokan-vendor-data', __( 'Vendor Data', 'dokan-lite' ), array( $this, 'vendor_data_exporter' ) );
+        $this->add_exporter( 'dokan-vendor-data', __( 'Vendor Data', 'dokan-lite' ), [ $this, 'vendor_data_exporter' ] );
 
         // This hook registers WooCommerce data erasers.
-        $this->add_eraser( 'dokan-vendor-data', __( 'Vendor Data', 'dokan-lite' ), array( $this, 'vendor_data_eraser' ) );
+        $this->add_eraser( 'dokan-vendor-data', __( 'Vendor Data', 'dokan-lite' ), [ $this, 'vendor_data_eraser' ] );
 
         // Handles custom anonomization types not included in core.
-        add_filter( 'wp_privacy_anonymize_data', array( $this, 'anonymize_custom_data_types' ), 10, 3 );
+        add_filter( 'wp_privacy_anonymize_data', [ $this, 'anonymize_custom_data_types' ], 10, 3 );
     }
 
     /**
@@ -87,7 +87,7 @@ class Privacy extends WC_Abstract_Privacy {
             '<h3>' . __( 'Payments', 'dokan-lite' ) . '</h3>' .
             '<p class="privacy-policy-tutorial">' . __( 'In this subsection you should list which third party payment processors you’re using to take payments on your store since these may handle customer data. We’ve included PayPal as an example, but you should remove this if you’re not using PayPal.', 'dokan-lite' ) . '</p>' .
             '<p>' . __( 'We accept payments through PayPal. When processing payments, some of your data will be passed to PayPal, including information required to process or support the payment, such as the purchase total and billing information.', 'dokan-lite' ) . '</p>' .
-            '<p>' . __( 'Please see the <a href="https://www.paypal.com/us/webapps/mpp/ua/privacy-full">PayPal Privacy Policy</a> for more details.', 'dokan-lite' ) . '</p>'.
+            '<p>' . __( 'Please see the <a href="https://www.paypal.com/us/webapps/mpp/ua/privacy-full">PayPal Privacy Policy</a> for more details.', 'dokan-lite' ) . '</p>' .
             '<h3>' . __( 'Modules', 'dokan-lite' ) . '</h3>' .
             '<p class="privacy-policy-tutorial">' . __( 'Dokan has premium modules that perform specific and special purpose tasks. Each of the modules collect additional information. Also third party extensions and integrations collect data that is applicable to the each of their individual privacy policy.', 'dokan-lite' ) . '</p>' .
             '</div>';
@@ -98,11 +98,11 @@ class Privacy extends WC_Abstract_Privacy {
     /**
      * Handle some custom types of data and anonymize them.
      *
-     * @param string $anonymous Anonymized string.
-     * @param string $type Type of data.
-     * @param string $data The data being anonymized.
+     * @param string $anonymous anonymized string
+     * @param string $type      type of data
+     * @param string $data      the data being anonymized
      *
-     * @return string Anonymized string.
+     * @return string anonymized string
      */
     public function anonymize_custom_data_types( $anonymous, $type, $data ) {
         switch ( $type ) {
@@ -110,13 +110,16 @@ class Privacy extends WC_Abstract_Privacy {
             case 'address_country':
                 $anonymous = ''; // Empty string - we don't want to store anything after removal.
                 break;
+
             case 'phone':
                 $anonymous = preg_replace( '/\d/u', '0', $data );
                 break;
+
             case 'numeric_id':
                 $anonymous = 0;
                 break;
         }
+
         return $anonymous;
     }
 
@@ -129,29 +132,29 @@ class Privacy extends WC_Abstract_Privacy {
      */
     public function vendor_data_exporter( $email_address, $page ) {
         $user           = get_user_by( 'email', $email_address ); // Check if user has an ID in the DB to load stored personal data.
-        $data_to_export = array();
+        $data_to_export = [];
 
         if ( ! user_can( $user->ID, 'dokandar' ) ) {
-            return array(
+            return [
                 'data' => $data_to_export,
                 'done' => true,
-            );
+            ];
         }
 
         if ( $user instanceof WP_User ) {
-            $data_to_export[] = array(
+            $data_to_export[] = [
                 'group_id'          => 'dokan_vendor',
                 'group_label'       => __( 'Vendor Data', 'dokan-lite' ),
                 'group_description' => __( 'Dokan vendor personal data.', 'dokan-lite' ),
                 'item_id'           => 'user',
                 'data'              => $this->get_vendor_personal_data( $user ),
-            );
+            ];
         }
 
-        return array(
+        return [
             'data' => $data_to_export,
             'done' => true,
-        );
+        ];
     }
 
     /**
@@ -162,35 +165,39 @@ class Privacy extends WC_Abstract_Privacy {
      * @return void
      */
     public function get_vendor_personal_data( $user ) {
-        $personal_data = array();
+        $personal_data = [];
         $vendor        = dokan()->vendor->get( $user->ID );
 
         if ( ! $vendor ) {
-            return array();
+            return [];
         }
 
-        $props_to_export = apply_filters( 'dokan_privacy_export_vendor_personal_data_props', array(
-            'store_name' => __( 'Store Name', 'dokan-lite' ),
-            'social'     => __( 'Social', 'dokan-lite' ),
-            'phone'      => __( 'Phone', 'dokan-lite' ),
-            'address'    => __( 'Address', 'dokan-lite' ),
-            'location'   => __( 'GEO Locations', 'dokan-lite' ),
-            'banner'     => __( 'Banner Url', 'dokan-lite' ),
-            'gravatar'   => __( 'Gravatar Url', 'dokan-lite' ),
-        ), $vendor );
+        $props_to_export = apply_filters(
+            'dokan_privacy_export_vendor_personal_data_props',
+            [
+                'store_name' => __( 'Store Name', 'dokan-lite' ),
+                'social'     => __( 'Social', 'dokan-lite' ),
+                'phone'      => __( 'Phone', 'dokan-lite' ),
+                'address'    => __( 'Address', 'dokan-lite' ),
+                'location'   => __( 'GEO Locations', 'dokan-lite' ),
+                'banner'     => __( 'Banner Url', 'dokan-lite' ),
+                'gravatar'   => __( 'Gravatar Url', 'dokan-lite' ),
+            ],
+            $vendor
+        );
 
         $shop_data = $vendor->get_shop_info();
 
         foreach ( $props_to_export as $prop => $description ) {
             $value = '';
 
-            if ( isset( $shop_data[$prop] ) && !is_array( $shop_data[$prop] ) ) {
-                $value = $shop_data[$prop];
+            if ( isset( $shop_data[ $prop ] ) && ! is_array( $shop_data[ $prop ] ) ) {
+                $value = $shop_data[ $prop ];
             }
 
             if ( 'social' === $prop ) {
-                $social_data = array();
-                $social_field = array(
+                $social_data  = [];
+                $social_field = [
                     'fb'        => __( 'Facebook', 'dokan-lite' ),
                     'gplus'     => __( 'Google', 'dokan-lite' ),
                     'twitter'   => __( 'Twitter', 'dokan-lite' ),
@@ -198,12 +205,12 @@ class Privacy extends WC_Abstract_Privacy {
                     'linkedin'  => __( 'Linkedin', 'dokan-lite' ),
                     'youtube'   => __( 'Youtube', 'dokan-lite' ),
                     'instagram' => __( 'Instagram', 'dokan-lite' ),
-                    'flickr'    => __( 'Flickr', 'dokan-lite' )
-                );
+                    'flickr'    => __( 'Flickr', 'dokan-lite' ),
+                ];
 
                 foreach ( $social_field as $social_key => $social_data_title ) {
-                    if ( !empty( $shop_data['social'][$social_key] ) ) {
-                        $social_data[] = $social_data_title . ': ' . '<a href="' . $shop_data['social'][$social_key] .'">' . $shop_data['social'][$social_key] . '</a>';
+                    if ( ! empty( $shop_data['social'][ $social_key ] ) ) {
+                        $social_data[] = sprintf( '%1$s: <a href="%2$s">%2$s</a>', $social_data_title, $shop_data['social'][ $social_key ] );
                     }
                 }
 
@@ -211,33 +218,28 @@ class Privacy extends WC_Abstract_Privacy {
             }
 
             if ( 'address' === $prop ) {
-                $address_data = array();
-                $address_field = array(
+                $address_data  = [];
+                $address_field = [
                     'street_1' => __( 'Address 1', 'dokan-lite' ),
                     'street_2' => __( 'Address 2', 'dokan-lite' ),
                     'city'     => __( 'City', 'dokan-lite' ),
                     'zip'      => __( 'Postal Code', 'dokan-lite' ),
                     'country'  => __( 'Country', 'dokan-lite' ),
-                    'state'    => __( 'State', 'dokan-lite' )
-                );
+                    'state'    => __( 'State', 'dokan-lite' ),
+                ];
 
                 foreach ( $address_field as $address_key => $address_data_title ) {
-                    if ( !empty( $shop_data['address'][$address_key] ) ) {
-
+                    if ( ! empty( $shop_data['address'][ $address_key ] ) ) {
                         if ( 'country' === $address_key ) {
-
                             $countries      = WC()->countries->get_countries();
-                            $country_name   = ! empty( $countries[ $shop_data['address'][$address_key] ] ) ? $countries[ $shop_data['address'][$address_key] ] : '';
+                            $country_name   = ! empty( $countries[ $shop_data['address'][ $address_key ] ] ) ? $countries[ $shop_data['address'][ $address_key ] ] : '';
                             $address_data[] = $address_data_title . ': ' . $country_name;
-
                         } elseif ( 'state' === $address_key ) {
-
                             $states         = WC()->countries->get_states( $shop_data['address']['country'] );
-                            $state_name     = isset( $states[ $shop_data['address'][$address_key] ] ) ? $states[ $shop_data['address'][$address_key] ] : $shop_data['address'][$address_key];
+                            $state_name     = isset( $states[ $shop_data['address'][ $address_key ] ] ) ? $states[ $shop_data['address'][ $address_key ] ] : $shop_data['address'][ $address_key ];
                             $address_data[] = $address_data_title . ': ' . $state_name;
-
                         } else {
-                            $address_data[] = $address_data_title . ': '. $shop_data['address'][$address_key];
+                            $address_data[] = $address_data_title . ': ' . $shop_data['address'][ $address_key ];
                         }
                     }
                 }
@@ -245,42 +247,42 @@ class Privacy extends WC_Abstract_Privacy {
                 $value = implode( ', ', $address_data );
             }
 
-            if ( in_array( $prop, array( 'banner', 'gravatar' ) ) ) {
-                $attachment_url = wp_get_attachment_url( $shop_data[$prop] );
+            if ( in_array( $prop, [ 'banner', 'gravatar' ], true ) ) {
+                $attachment_url = wp_get_attachment_url( $shop_data[ $prop ] );
                 $value          = sprintf( '<a href="%1$s">%1$s</a>', $attachment_url );
             }
 
             $value = apply_filters( 'dokan_privacy_export_vendor_personal_data_prop_value', $value, $prop, $vendor );
 
             if ( $value ) {
-                $personal_data[] = array(
+                $personal_data[] = [
                     'name'  => $description,
-                    'value' => $value
-                );
+                    'value' => $value,
+                ];
             }
         }
 
-        $payment_data = array();
+        $payment_data    = [];
         $payment_profile = $vendor->get_payment_profiles();
 
         foreach ( $payment_profile as $payment_method => $method_data ) {
             $value = '';
 
             if ( 'bank' === $payment_method ) {
-                $bank_data   = array();
+                $bank_data   = [];
                 $name        = __( 'Bank Details', 'dokan-lite' );
-                $bank_fields = array(
-                    'ac_name'        =>  __( 'Account Name', 'dokan-lite' ),
-                    'ac_number'      =>  __( 'Account Number', 'dokan-lite' ),
-                    'bank_name'      =>  __( 'Bank Name', 'dokan-lite' ),
-                    'bank_addr'      =>  __( 'Bank Address', 'dokan-lite' ),
-                    'routing_number' =>  __( 'Routing Number', 'dokan-lite' ),
-                    'iban'           =>  __( 'IBAN', 'dokan-lite' ),
-                    'swift'          =>  __( 'Swift Code', 'dokan-lite' ),
-                );
+                $bank_fields = [
+                    'ac_name'        => __( 'Account Name', 'dokan-lite' ),
+                    'ac_number'      => __( 'Account Number', 'dokan-lite' ),
+                    'bank_name'      => __( 'Bank Name', 'dokan-lite' ),
+                    'bank_addr'      => __( 'Bank Address', 'dokan-lite' ),
+                    'routing_number' => __( 'Routing Number', 'dokan-lite' ),
+                    'iban'           => __( 'IBAN', 'dokan-lite' ),
+                    'swift'          => __( 'Swift Code', 'dokan-lite' ),
+                ];
 
                 foreach ( $bank_fields as $field_key => $field_value ) {
-                    $bank_data[] = $field_value . ': ' . $payment_profile['bank'][$field_key];
+                    $bank_data[] = $field_value . ': ' . $payment_profile['bank'][ $field_key ];
                 }
 
                 $value = implode( ', ', $bank_data );
@@ -297,10 +299,10 @@ class Privacy extends WC_Abstract_Privacy {
             }
 
             if ( $value ) {
-                $payment_data[] = array(
+                $payment_data[] = [
                     'name'  => $name,
                     'value' => $value,
-                );
+                ];
             }
 
             $payment_data = apply_filters( 'dokan_privacy_export_vendor_payment_data', $payment_data, $value, $name, $payment_profile );
@@ -312,8 +314,9 @@ class Privacy extends WC_Abstract_Privacy {
          * Allow extensions to register their own personal data for this vendor for the export.
          *
          * @since 2.8.2
-         * @param array    $personal_data Array of name value pairs.
-         * @param WC_Order $order A vendor object.
+         *
+         * @param array    $personal_data array of name value pairs
+         * @param WC_Order $order         a vendor object
          */
         $personal_data = apply_filters( 'dokan_privacy_export_vendor_personal_data', $personal_data, $vendor );
 
@@ -321,19 +324,19 @@ class Privacy extends WC_Abstract_Privacy {
     }
 
     /**
-     * vendor_data_eraser
+     * Vendor Data Eraser.
      *
      * @since 2.8.2
      *
      * @return array
      */
     public function vendor_data_eraser( $email_address, $page ) {
-        $response = array(
+        $response = [
             'items_removed'  => false,
             'items_retained' => false,
-            'message'        => array(),
+            'message'        => [],
             'done'           => true,
-        );
+        ];
 
         $user = get_user_by( 'email', $email_address ); // Check if user has an ID in the DB to load stored personal data.
 
@@ -351,7 +354,7 @@ class Privacy extends WC_Abstract_Privacy {
 
         $this->erase_array_data( $shop_data );
 
-        $update_data = array();
+        $update_data  = [];
         $updated_data = $shop_data;
 
         if ( is_array( $updated_data ) && ! empty( $updated_data ) ) {
@@ -363,12 +366,12 @@ class Privacy extends WC_Abstract_Privacy {
         if ( $erased ) {
             update_user_meta( $user->ID, 'dokan_profile_settings', $updated_data );
 
+            /* translators: vendor name. */
             $response['messages'][]    = sprintf( __( 'Vendor %s data is removed.', 'dokan-lite' ), $vendor->get_name() );
             $response['items_removed'] = true;
         }
 
-
-        /**
+        /*
          * Allow extensions to remove data for this vendor and adjust the response.
          *
          * @since 2.8.2
@@ -394,11 +397,10 @@ class Privacy extends WC_Abstract_Privacy {
 
         foreach ( $data as $key => &$value ) {
             if ( is_array( $value ) ) {
-                $this->erase_array_data($value);
+                $this->erase_array_data( $value );
             } else {
                 $value = '';
             }
         }
     }
-
 }
