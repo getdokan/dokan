@@ -23,16 +23,17 @@ jobs:
         uses: pat-s/always-upload-cache@v1.1.4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          # Use the hash of composer.json as the key for your cache if you do not commit composer.lock.
-          # key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-suggest --no-progress
 
-      - id: files
-        uses: jitterbit/get-changed-files@v1
+      - id: changes
+        run: |
+          URL="https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files"
+          FILES=$(curl -s -X GET -G $URL | jq -r '.[] | .filename' | xargs)
+          echo "::set-output name=files::$FILES"
 
       - name: Detect coding standard violations
-        run: vendor/bin/phpcs ${{ steps.files.outputs.all }} -q --report=checkstyle | cs2pr --graceful-warnings
+        run: vendor/bin/phpcs ${{ steps.changes.outputs.files }} -q --report=checkstyle | cs2pr --graceful-warnings
