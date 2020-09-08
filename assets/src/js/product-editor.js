@@ -937,7 +937,7 @@
 
     $(document).ready(function () {
         // Ajax search products tags
-        $("#product_tag_search").select2({
+        $(".product_tag_search").select2({
             allowClear: false,
             tags: true,
             ajax: {
