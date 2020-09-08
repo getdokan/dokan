@@ -267,7 +267,7 @@ function dokan_get_withdraw_count( $user_id = null ) {
  */
 function dokan_withdraw_get_active_order_status() {
     $order_status  = dokan_get_option( 'withdraw_order_status', 'dokan_withdraw', [ 'wc-completed' ] );
-    $saving_status = [ 'wc-refunded' ];
+    $saving_status = [];
 
     foreach ( $order_status as $key => $status ) {
         if ( ! empty( $status ) ) {
