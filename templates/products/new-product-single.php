@@ -313,20 +313,18 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                         <label for="product_tag" class="form-label"><?php esc_html_e( 'Tags', 'dokan-lite' ); ?></label>
                                         <?php
                                         require_once DOKAN_LIB_DIR.'/class.taxonomy-walker.php';
-                                        $term = wp_get_post_terms( $post_id, 'product_tag', array( 'fields' => 'ids') );
+                                        $terms = wp_get_post_terms( $post_id, 'product_tag', array( 'fields' => 'all' ) );
 
                                         $drop_down_tags = array(
                                             'hide_empty' => 0,
                                         );
-
-                                        $my_tax_terms = get_terms( 'product_tag', $drop_down_tags );
                                         ?>
-                                        <select multiple="multiple" name="product_tag[]" id="product_tag_search" class="product_tags dokan-form-control dokan-select2">
-                                            <?php foreach ( $my_tax_terms as $tax_term ) : ?>
-                                                <?php if ( ! empty( $term ) && in_array( $tax_term->term_id, $term ) ) : ?>
+                                        <select multiple="multiple" name="product_tag[]" id="product_tag_search" class="product_tag_search product_tags dokan-form-control dokan-select2">
+                                            <?php if ( ! empty( $terms ) ) : ?>
+                                                <?php foreach ( $terms as $tax_term ) : ?>
                                                     <option value="<?php echo esc_attr( $tax_term->term_id ); ?>" selected="selected" ><?php echo esc_html( $tax_term->name ); ?></option>
-                                                <?php endif ?>
-                                            <?php endforeach ?>
+                                                <?php endforeach ?>
+                                            <?php endif ?>
                                         </select>
                                     </div>
 
