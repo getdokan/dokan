@@ -59,16 +59,17 @@ function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = nul
     $getdata     = wp_unslash( $_GET );
     $order       = empty( $getdata['order'] ) ? 'DESC' : esc_url( $getdata['order'] );
     $order_by    = empty( $getdata['orderby'] ) ? 'p.post_date' : 'do.' . esc_url( $getdata['order'] );
-    $exclude     = ! empty( $getdata['exclude'] ) ? ' AND do.order_id NOT IN ' . '(' . esc_url( $getdata['exclude'] ) . ')' : '';
+    $exclude     = ! empty( $getdata['exclude'] ) ? ' AND do.order_id NOT IN (' . $getdata['exclude'] . ')' : '';
 
     $join  = $customer_id ? "LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id" : '';
     $where = $customer_id ? sprintf( "pm.meta_key = '_customer_user' AND pm.meta_value = %d AND", $customer_id ) : '';
 
     if ( $orders === false ) {
-        $status_where = ( $status == 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', 'wc-' . $status );
+        $status_where = ( $status === 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', 'wc-' . $status );
         $date_query   = ( $order_date ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $order_date ) : '';
 
-        $orders = $wpdb->get_results( $wpdb->prepare( "SELECT do.order_id, p.post_date
+        $orders = $wpdb->get_results(
+            $wpdb->prepare( "SELECT do.order_id, p.post_date
             FROM {$wpdb->prefix}dokan_orders AS do
             LEFT JOIN $wpdb->posts p ON do.order_id = p.ID
             {$join}
