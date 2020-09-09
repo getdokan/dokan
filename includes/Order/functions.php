@@ -69,7 +69,8 @@ function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = nul
         $date_query   = ( $order_date ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $order_date ) : '';
 
         $orders = $wpdb->get_results(
-            $wpdb->prepare( "SELECT do.order_id, p.post_date
+            $wpdb->prepare(
+            "SELECT do.order_id, p.post_date
             FROM {$wpdb->prefix}dokan_orders AS do
             LEFT JOIN $wpdb->posts p ON do.order_id = p.ID
             {$join}
@@ -83,7 +84,8 @@ function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = nul
             GROUP BY do.order_id
             ORDER BY {$order_by} {$order}
             LIMIT %d, %d", $seller_id, $offset, $limit
-        ) );
+        ) 
+        );
 
         wp_cache_set( $cache_key, $orders, $cache_group );
         dokan_cache_update_group( $cache_key, $cache_group );
