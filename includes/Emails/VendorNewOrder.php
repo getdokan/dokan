@@ -202,6 +202,10 @@ class VendorNewOrder extends WC_Email {
      * @return bool
      */
     public function prevent_sub_order_admin_email( $bool, $order ) {
+        if ( ! $order ) {
+            return $bool;
+        }
+
         if ( $order->get_parent_id() ) {
             return false;
         }
