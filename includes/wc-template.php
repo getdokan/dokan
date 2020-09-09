@@ -236,7 +236,7 @@ function dokan_save_quick_edit_vendor_data ( $product ) {
         return;
     }
 
-    wp_update_post( array( 'ID' => $product->get_id(), 'post_author' => $posted_vendor_id  ) );
+    dokan_override_product_author( $product, $posted_vendor_id );
 }
 
 add_action( 'woocommerce_product_quick_edit_save', 'dokan_save_quick_edit_vendor_data', 10, 1 );
