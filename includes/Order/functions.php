@@ -56,12 +56,15 @@ function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = NUL
     $cache_group = "dokan_seller_data_{$seller_id}";
     $cache_key   = "dokan-seller-orders-{$status}-{$seller_id}-page-{$pagenum}";
     $orders      = wp_cache_get( $cache_key, $cache_group );
+    $order       = empty( $_GET['order'] ) ? 'DESC' : $_GET['order'];
+    $order_by    = empty( $_GET['orderby'] ) ? 'p.post_date' : 'do.' . $_GET['orderby'];
+    $exclude     = ! empty( $_GET['exclude'] ) ? ' AND do.order_id NOT IN ' . '(' . $_GET['exclude'] . ')' : '';
 
-    $join        = $customer_id ? "LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id" : '';
-    $where       = $customer_id ? sprintf( "pm.meta_key = '_customer_user' AND pm.meta_value = %d AND", $customer_id ) : '';
+    $join  = $customer_id ? "LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id" : '';
+    $where = $customer_id ? sprintf( "pm.meta_key = '_customer_user' AND pm.meta_value = %d AND", $customer_id ) : '';
 
     if ( $orders === false ) {
-        $status_where = ( $status == 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', $status );
+        $status_where = ( $status == 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', 'wc-' . $status );
         $date_query   = ( $order_date ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $order_date ) : '';
 
         $orders = $wpdb->get_results( $wpdb->prepare( "SELECT do.order_id, p.post_date
@@ -74,8 +77,9 @@ function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = NUL
                 p.post_status != 'trash'
                 {$date_query}
                 {$status_where}
+                {$exclude}
             GROUP BY do.order_id
-            ORDER BY p.post_date DESC
+            ORDER BY {$order_by} {$order}
             LIMIT %d, %d", $seller_id, $offset, $limit
         ) );
 
