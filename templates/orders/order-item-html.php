@@ -79,7 +79,19 @@ $img_kses = apply_filters( 'dokan_product_image_attributes', array(
 	<?php do_action( 'woocommerce_admin_order_item_values', $_product, $item, absint( $item_id ) ); ?>
 
     <td width="1%">
-        <?php if ( isset( $item['qty'] ) ) echo esc_html( $item['qty'] ); ?>
+        <?php
+            if ( isset( $item['qty'] ) ) {
+                $item_qty = $item['qty'];
+                $refunded_qty = $order->get_qty_refunded_for_item( $item_id );
+
+                if ( $refunded_qty ) {
+                    echo '<del>' . esc_html( $item_qty ) . '</del> ';
+                    $item_qty = $item_qty + $refunded_qty; // $refunded_qty is already negative
+                }
+
+                echo esc_html( $item_qty );
+            }
+        ?>
     </td>
 
     <td class="line_cost" width="1%">
@@ -89,7 +101,15 @@ $img_kses = apply_filters( 'dokan_product_image_attributes', array(
                     echo wp_kses_post( '<del>' . wc_price( $item['line_subtotal'] ) . '</del> ' );
                 }
 
-                echo wp_kses_post( wc_price( $item['line_total'], array( 'currency' => dokan_replace_func( 'get_order_currency', 'get_currency', $order ) ) ) );
+                $line_total = $item['line_total'];
+                $refunded = $order->get_total_refunded_for_item( $item_id );
+
+                if ( $refunded ) {
+                    echo wp_kses_post( '<del>' . wc_price( $line_total, array( 'currency' => dokan_replace_func( 'get_order_currency', 'get_currency', $order ) ) ) ) . '</del> ';
+                    $line_total = $line_total - $refunded;
+                }
+
+                echo wp_kses_post( wc_price( $line_total, array( 'currency' => dokan_replace_func( 'get_order_currency', 'get_currency', $order ) ) ) );
             }
         ?>
     </td>
