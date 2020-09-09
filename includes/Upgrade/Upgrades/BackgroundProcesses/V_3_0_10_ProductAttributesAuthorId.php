@@ -33,7 +33,7 @@ class V_3_0_10_ProductAttributesAuthorId extends DokanBackgroundProcesses {
     }
 
     /**
-     * update product attribute author
+     * Update product attribute author
      * if its not same as product author id
      *
      * @param $paged
@@ -69,10 +69,10 @@ class V_3_0_10_ProductAttributesAuthorId extends DokanBackgroundProcesses {
                 $variation_author_id = get_post_field( 'post_author', $child_id );
 
                 /**
-                 * we will change the variation post author id if its not
-                 * same as product author id
+                 * We will change the variation post author id if its not
+                 * Same as product author id
                  */
-                if ( $product_author != $variation_author_id ) {
+                if ( $product_author !== $variation_author_id ) {
                     dokan_override_author_for_variations( $product, $product_author );
                 }
             }

@@ -8,7 +8,7 @@ use WeDevs\Dokan\Upgrade\Upgrades\BackgroundProcesses\V_3_0_10_ProductAttributes
 class V_3_0_10 extends DokanUpgrader {
 
     /**
-     * update product attribute id to same as product author id
+     * Update product attribute id to same as product author id
      *
      * @return void
      */
