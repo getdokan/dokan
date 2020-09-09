@@ -43,7 +43,7 @@ class V_3_0_10_ProductAttributesAuthorId extends DokanBackgroundProcesses {
      * @return array|boolean
      */
     private function update_product_attribute_author( $paged ) {
-        $limit = 2;
+        $limit = 100;
         $count = $limit * $paged;
 
         $query_args = [
