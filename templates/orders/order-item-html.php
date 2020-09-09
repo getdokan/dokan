@@ -79,16 +79,16 @@ $img_kses = apply_filters( 'dokan_product_image_attributes', array(
 	<?php do_action( 'woocommerce_admin_order_item_values', $_product, $item, absint( $item_id ) ); ?>
 
     <td width="1%">
-        <?php 
+        <?php
             if ( isset( $item['qty'] ) ) {
                 $refunded_qty = $order->get_qty_refunded_for_item( $item_id );
 
-				if ( $refunded_qty ) {
-					echo '<del>' . esc_html( $item['qty'] ) . '</del> ';
-					echo esc_html( $item['qty'] + $refunded_qty );
-				} else {
-					echo esc_html( $item['qty'] );
-				}
+                if ( $refunded_qty ) {
+                    echo '<del>' . esc_html( $item['qty'] ) . '</del> ';
+                    echo esc_html( $item['qty'] + $refunded_qty );
+                } else {
+                    echo esc_html( $item['qty'] );
+                }
             }
         ?>
     </td>
