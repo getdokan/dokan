@@ -69,7 +69,7 @@ class V_2_8_3_VendorBalance extends DokanBackgroundProcesses {
 
         return array(
             'updating' => 'migrate_order_data',
-            'paged'    => 0
+            'paged'    => 0,
         );
     }
 
@@ -83,10 +83,12 @@ class V_2_8_3_VendorBalance extends DokanBackgroundProcesses {
         $count         = $limit * $paged;
         $threshold_day = dokan_get_option( 'withdraw_date_limit', 'dokan_withdraw', 0 );
 
-        $results       = $wpdb->get_results( $wpdb->prepare(
-            "SELECT `order`.*, post.post_date from {$wpdb->prefix}dokan_orders as `order` left join {$wpdb->prefix}posts as post on post.ID = order.order_id LIMIT %d OFFSET %d",
-            $limit, $count
-        ));
+        $results = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT `order`.*, post.post_date from {$wpdb->prefix}dokan_orders as `order` left join {$wpdb->prefix}posts as post on post.ID = order.order_id LIMIT %d OFFSET %d",
+                $limit, $count
+            )
+        );
 
         if ( empty( $results ) ) {
             return array(
@@ -105,7 +107,7 @@ class V_2_8_3_VendorBalance extends DokanBackgroundProcesses {
                 'credit'        => 0,
                 'status'        => $result->order_status,
                 'trn_date'      => $result->post_date,
-                'balance_date'  => date( 'Y-m-d h:i:s', strtotime( $result->post_date . ' + '.$threshold_day.' days' ) ),
+                'balance_date'  => date( 'Y-m-d h:i:s', strtotime( $result->post_date . ' + ' . $threshold_day . ' days' ) ),
             );
 
             $this->insert_vendor_balance_data_283( $data );
@@ -126,10 +128,12 @@ class V_2_8_3_VendorBalance extends DokanBackgroundProcesses {
         $limit   = 100;
         $count   = $limit * $paged;
         // $sql     = "SELECT * from {$wpdb->prefix}dokan_withdraw WHERE `status` = 1 LIMIT {$limit} OFFSET {$count}";
-        $results = $wpdb->get_results( $wpdb->prepare(
-            "SELECT * from {$wpdb->prefix}dokan_withdraw WHERE `status` = 1 LIMIT %d OFFSET %d",
-            $limit, $count
-        ) );
+        $results = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT * from {$wpdb->prefix}dokan_withdraw WHERE `status` = 1 LIMIT %d OFFSET %d",
+                $limit, $count
+            )
+        );
 
         if ( empty( $results ) ) {
             return;
@@ -160,10 +164,11 @@ class V_2_8_3_VendorBalance extends DokanBackgroundProcesses {
     /**
      * get insert vendor_balance table data
      */
-    private function insert_vendor_balance_data_283( $data ){
+    private function insert_vendor_balance_data_283( $data ) {
         global $wpdb;
 
-        $wpdb->insert( $wpdb->prefix . 'dokan_vendor_balance', $data,
+        $wpdb->insert(
+            $wpdb->prefix . 'dokan_vendor_balance', $data,
             array(
                 '%d',
                 '%d',

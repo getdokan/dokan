@@ -35,7 +35,7 @@ class V_3_0_4 extends DokanUpgrader {
         foreach ( self::get_tables() as $table => $columns ) {
             $table_name = $wpdb->prefix . $table;
 
-            if ( $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $table_name ) ) !== $table_name ) {
+            if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) ) !== $table_name ) {
                 continue;
             }
 

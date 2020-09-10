@@ -2,7 +2,6 @@
 
 namespace WeDevs\Dokan\Withdraw\Export;
 
-
 class Manager {
 
     /**

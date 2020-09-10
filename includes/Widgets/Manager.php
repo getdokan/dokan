@@ -16,15 +16,17 @@ class Manager {
      * @return void
      */
     public function __construct() {
-        $dokan_widgets = apply_filters( 'dokan_widgets', [
-            'best_selling_products' => 'WeDevs\Dokan\Widgets\BestSellingProducts',
-            'product_category_menu' => 'WeDevs\Dokan\Widgets\ProductCategoryMenu',
-            'store_contact_form'    => 'WeDevs\Dokan\Widgets\StoreContactForm',
-            'store_location'        => 'WeDevs\Dokan\Widgets\StoreLocation',
-            'store_category_menu'   => 'WeDevs\Dokan\Widgets\StoreCategoryMenu',
-            'toprated_products'     => 'WeDevs\Dokan\Widgets\TopratedProducts',
-            'store_open_close'      => 'WeDevs\Dokan\Widgets\StoreOpenClose',
-        ] );
+        $dokan_widgets = apply_filters(
+            'dokan_widgets', [
+				'best_selling_products' => 'WeDevs\Dokan\Widgets\BestSellingProducts',
+				'product_category_menu' => 'WeDevs\Dokan\Widgets\ProductCategoryMenu',
+				'store_contact_form'    => 'WeDevs\Dokan\Widgets\StoreContactForm',
+				'store_location'        => 'WeDevs\Dokan\Widgets\StoreLocation',
+				'store_category_menu'   => 'WeDevs\Dokan\Widgets\StoreCategoryMenu',
+				'toprated_products'     => 'WeDevs\Dokan\Widgets\TopratedProducts',
+				'store_open_close'      => 'WeDevs\Dokan\Widgets\StoreOpenClose',
+			]
+        );
 
         foreach ( $dokan_widgets as $widget_id => $widget_class ) {
             register_widget( $widget_class );

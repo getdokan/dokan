@@ -47,11 +47,13 @@ class Hooks {
             return;
         }
 
-        $balance_result = $wpdb->get_row( $wpdb->prepare(
-            "select * from {$wpdb->dokan_vendor_balance} where trn_id = %d and trn_type = %s",
-            $withdraw->get_id(),
-            'dokan_withdraw'
-        ) );
+        $balance_result = $wpdb->get_row(
+            $wpdb->prepare(
+                "select * from {$wpdb->dokan_vendor_balance} where trn_id = %d and trn_type = %s",
+                $withdraw->get_id(),
+                'dokan_withdraw'
+            )
+        );
 
         if ( empty( $balance_result ) ) {
             $wpdb->insert(

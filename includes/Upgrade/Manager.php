@@ -32,7 +32,7 @@ class Manager {
      * @return bool
      */
     public function has_ongoing_process() {
-        return !! get_option( $this->is_upgrading_db_key, false );
+        return ! ! get_option( $this->is_upgrading_db_key, false );
     }
 
     /**
@@ -58,9 +58,11 @@ class Manager {
          */
         $upgrades = apply_filters( 'dokan_upgrade_upgrades', [] );
 
-        uksort( $upgrades, function ( $a, $b ) {
-            return version_compare( $b, $a, '<' );
-        } );
+        uksort(
+            $upgrades, function ( $a, $b ) {
+				return version_compare( $b, $a, '<' );
+			}
+        );
 
         update_option( $this->is_upgrading_db_key, $upgrades, false );
 

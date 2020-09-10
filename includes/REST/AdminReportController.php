@@ -28,21 +28,25 @@ class AdminReportController extends DokanRESTAdminController {
      * @return void
      */
     public function register_routes() {
-        register_rest_route( $this->namespace, '/' . $this->base . '/summary', array(
-            array(
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => array( $this, 'get_summary' ),
-                'permission_callback' => array( $this, 'check_permission' ),
-            ),
-        ) );
+        register_rest_route(
+            $this->namespace, '/' . $this->base . '/summary', array(
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_summary' ),
+					'permission_callback' => array( $this, 'check_permission' ),
+				),
+            )
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->base . '/overview', array(
-            array(
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => array( $this, 'get_overview' ),
-                'permission_callback' => array( $this, 'check_permission' ),
-            ),
-        ) );
+        register_rest_route(
+            $this->namespace, '/' . $this->base . '/overview', array(
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_overview' ),
+					'permission_callback' => array( $this, 'check_permission' ),
+				),
+            )
+        );
     }
 
     /**
@@ -69,7 +73,7 @@ class AdminReportController extends DokanRESTAdminController {
             'vendors'  => dokan_get_seller_count( $from, $to ),
             'sales'    => $sales['sales'],
             'orders'   => $sales['orders'],
-            'earning'  => $sales['earning']
+            'earning'  => $sales['earning'],
         );
 
         return rest_ensure_response( $data );
@@ -104,7 +108,7 @@ class AdminReportController extends DokanRESTAdminController {
         $order_commision = array();
 
         // initialize data
-        for ( $i = $start_date; $i <= $end_date; $i->modify( $date_modifier ) ){
+        for ( $i = $start_date; $i <= $end_date; $i->modify( $date_modifier ) ) {
             $date                     = $i->format( 'Y-m-d' );
             $labels[ $date ]          = $date;
             $order_counts[ $date ]    = 0;
@@ -136,7 +140,7 @@ class AdminReportController extends DokanRESTAdminController {
                     'fill'            => false,
                     'data'            => array_values( $order_amounts ),
                     'tooltipLabel'    => __( 'Total', 'dokan-lite' ),
-                    'tooltipPrefix'   => html_entity_decode( get_woocommerce_currency_symbol() )
+                    'tooltipPrefix'   => html_entity_decode( get_woocommerce_currency_symbol() ),
                 ),
                 array(
                     'label'           => __( 'Number of orders', 'dokan-lite' ),
@@ -150,9 +154,9 @@ class AdminReportController extends DokanRESTAdminController {
                     'borderColor'     => '#73a724',
                     'fill'            => false,
                     'data'            => array_values( $order_commision ),
-                    'tooltipPrefix'   => html_entity_decode( get_woocommerce_currency_symbol() )
+                    'tooltipPrefix'   => html_entity_decode( get_woocommerce_currency_symbol() ),
                 ),
-            )
+            ),
         );
 
         return rest_ensure_response( $response );

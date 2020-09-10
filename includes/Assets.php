@@ -35,7 +35,6 @@ class Assets {
             wp_enqueue_script( 'underscore' );
             wp_enqueue_media();
 
-
             wp_enqueue_script( 'dokan-tooltip' );
             wp_enqueue_script( 'dokan-admin' );
 
@@ -109,33 +108,33 @@ class Assets {
             array(
                 'path'      => '/',
                 'name'      => 'Dashboard',
-                'component' => 'Dashboard'
+                'component' => 'Dashboard',
             ),
             array(
                 'path'      => '/withdraw',
                 'name'      => 'Withdraw',
-                'component' => 'Withdraw'
+                'component' => 'Withdraw',
             ),
             array(
                 'path'      => '/premium',
                 'name'      => 'Premium',
-                'component' => 'Premium'
+                'component' => 'Premium',
             ),
             array(
                 'path'      => '/help',
                 'name'      => 'Help',
-                'component' => 'Help'
+                'component' => 'Help',
             ),
             array(
                 'path'      => '/settings',
                 'name'      => 'Settings',
-                'component' => 'Settings'
+                'component' => 'Settings',
             ),
             array(
                 'path'      => '/vendors',
                 'name'      => 'Vendors',
-                'component' => 'Vendors'
-            )
+                'component' => 'Vendors',
+            ),
         );
 
         return apply_filters( 'dokan-admin-routes', $routes );
@@ -166,7 +165,6 @@ class Assets {
      * @return array
      */
     public function get_styles() {
-
         $styles = array(
             'dokan-style' => array(
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/style.css',
@@ -175,7 +173,7 @@ class Assets {
             'dokan-tinymce' => array(
                 'src'     => site_url( '/wp-includes/css/editor.css' ),
                 'deps'    => array(),
-                'version' => time()
+                'version' => time(),
             ),
             'jquery-ui' => array(
                 'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/jquery-ui/jquery-ui-1.10.0.custom.css',
@@ -259,23 +257,23 @@ class Assets {
             ),
             'dokan-accounting' => array(
                 'src'       => WC()->plugin_url() . '/assets/js/accounting/accounting.min.js',
-                'deps'      => array( 'jquery' )
+                'deps'      => array( 'jquery' ),
             ),
             'dokan-tinymce' => array(
                 'src'       => site_url( '/wp-includes/js/tinymce/tinymce.min.js' ),
-                'deps'      => array()
+                'deps'      => array(),
             ),
             'dokan-tinymce-plugin' => array(
                 'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/tinymce/code/plugin.min.js',
-                'deps'    => array('dokan-tinymce'),
-                'version' => time()
+                'deps'    => array( 'dokan-tinymce' ),
+                'version' => time(),
             ),
             'dokan-moment' => array(
                 'src'       => $asset_url . '/vendors/moment/moment.min.js',
             ),
             'dokan-chart' => array(
                 'src'       => $asset_url . '/vendors/chart/Chart.min.js',
-                'deps'      => array( 'dokan-moment', 'jquery' )
+                'deps'      => array( 'dokan-moment', 'jquery' ),
             ),
             'dokan-tabs' => array(
                 'src'       => $asset_url . '/vendors/easytab/jquery.easytabs.min.js',
@@ -306,11 +304,11 @@ class Assets {
             // customize scripts
             'customize-base' => array(
                 'src'       => site_url( 'wp-includes/js/customize-base.js' ),
-                'deps'      => array( 'jquery', 'json2', 'underscore' )
+                'deps'      => array( 'jquery', 'json2', 'underscore' ),
             ),
             'customize-model' => array(
                 'src'       => site_url( 'wp-includes/js/customize-models.js' ),
-                'deps'      => array( 'underscore', 'backbone' )
+                'deps'      => array( 'underscore', 'backbone' ),
             ),
 
             // Register core scripts
@@ -340,7 +338,7 @@ class Assets {
             'dokan-vue-vendor' => array(
                 'src'       => $asset_url . '/js/vue-vendor.js',
                 'version'   => filemtime( $asset_path . '/js/vue-vendor.js' ),
-                'deps'      => array( 'dokan-i18n-jed', 'dokan-tinymce-plugin', 'dokan-chart' )
+                'deps'      => array( 'dokan-i18n-jed', 'dokan-tinymce-plugin', 'dokan-chart' ),
             ),
             'dokan-vue-bootstrap' => array(
                 'src'       => $asset_url . '/js/vue-bootstrap.js',
@@ -366,7 +364,7 @@ class Assets {
                 'src'       => $asset_url . '/js/login-form-popup.js',
                 'deps'      => array( 'dokan-popup', 'dokan-i18n-jed' ),
                 'version'   => filemtime( $asset_path . '/js/login-form-popup.js' ),
-            )
+            ),
         );
 
         return $scripts;
@@ -376,8 +374,7 @@ class Assets {
      * Enqueue front-end scripts
      */
     public function enqueue_front_scripts() {
-
-        if ( !function_exists( 'WC' ) ) {
+        if ( ! function_exists( 'WC' ) ) {
             return;
         }
 
@@ -397,7 +394,7 @@ class Assets {
             'ajax_loader'        => DOKAN_PLUGIN_ASSEST . '/images/ajax-loader.gif',
             'seller'             => array(
                 'available'     => __( 'Available', 'dokan-lite' ),
-                'notAvailable'  => __( 'Not Available', 'dokan-lite' )
+                'notAvailable'  => __( 'Not Available', 'dokan-lite' ),
             ),
             'delete_confirm'     => __( 'Are you sure?', 'dokan-lite' ),
             'wrong_message'      => __( 'Something went wrong. Please try again.', 'dokan-lite' ),
@@ -409,20 +406,22 @@ class Assets {
         );
 
         $localize_script = apply_filters( 'dokan_localized_args', $default_script );
-        $vue_localize_script = apply_filters( 'dokan_frontend_localize_script', array(
-            'rest' => array(
-                'root'    => esc_url_raw( get_rest_url() ),
-                'nonce'   => wp_create_nonce( 'wp_rest' ),
-                'version' => 'dokan/v1',
-            ),
-            'api'             => null,
-            'libs'            => array(),
-            'routeComponents' => array( 'default' => null ),
-            'routes'          => $this->get_vue_frontend_routes(),
-            'urls'            => [
-                'assetsUrl' => DOKAN_PLUGIN_ASSEST,
-            ]
-        ) );
+        $vue_localize_script = apply_filters(
+            'dokan_frontend_localize_script', array(
+				'rest' => array(
+					'root'    => esc_url_raw( get_rest_url() ),
+					'nonce'   => wp_create_nonce( 'wp_rest' ),
+					'version' => 'dokan/v1',
+				),
+				'api'             => null,
+				'libs'            => array(),
+				'routeComponents' => array( 'default' => null ),
+				'routes'          => $this->get_vue_frontend_routes(),
+				'urls'            => [
+					'assetsUrl' => DOKAN_PLUGIN_ASSEST,
+				],
+            )
+        );
 
         $localize_data = array_merge( $localize_script, $vue_localize_script );
 
@@ -446,7 +445,6 @@ class Assets {
             }
 
             if ( DOKAN_LOAD_SCRIPTS ) {
-
                 self::load_form_validate_script();
                 $this->load_gmap_script();
 
@@ -470,27 +468,25 @@ class Assets {
      * Load form validate script args
      *
      * @since 2.5.3
-     *
      */
     public static function load_form_validate_script() {
-
         $form_validate_messages = array(
-            'required'        => __( "This field is required", 'dokan-lite' ),
-            'remote'          => __( "Please fix this field.", 'dokan-lite' ),
-            'email'           => __( "Please enter a valid email address.", 'dokan-lite' ),
-            'url'             => __( "Please enter a valid URL.", 'dokan-lite' ),
-            'date'            => __( "Please enter a valid date.", 'dokan-lite' ),
-            'dateISO'         => __( "Please enter a valid date (ISO).", 'dokan-lite' ),
-            'number'          => __( "Please enter a valid number.", 'dokan-lite' ),
-            'digits'          => __( "Please enter only digits.", 'dokan-lite' ),
-            'creditcard'      => __( "Please enter a valid credit card number.", 'dokan-lite' ),
-            'equalTo'         => __( "Please enter the same value again.", 'dokan-lite' ),
-            'maxlength_msg'   => __( "Please enter no more than {0} characters.", 'dokan-lite' ),
-            'minlength_msg'   => __( "Please enter at least {0} characters.", 'dokan-lite' ),
-            'rangelength_msg' => __( "Please enter a value between {0} and {1} characters long.", 'dokan-lite' ),
-            'range_msg'       => __( "Please enter a value between {0} and {1}.", 'dokan-lite' ),
-            'max_msg'         => __( "Please enter a value less than or equal to {0}.", 'dokan-lite' ),
-            'min_msg'         => __( "Please enter a value greater than or equal to {0}.", 'dokan-lite' ),
+            'required'        => __( 'This field is required', 'dokan-lite' ),
+            'remote'          => __( 'Please fix this field.', 'dokan-lite' ),
+            'email'           => __( 'Please enter a valid email address.', 'dokan-lite' ),
+            'url'             => __( 'Please enter a valid URL.', 'dokan-lite' ),
+            'date'            => __( 'Please enter a valid date.', 'dokan-lite' ),
+            'dateISO'         => __( 'Please enter a valid date (ISO).', 'dokan-lite' ),
+            'number'          => __( 'Please enter a valid number.', 'dokan-lite' ),
+            'digits'          => __( 'Please enter only digits.', 'dokan-lite' ),
+            'creditcard'      => __( 'Please enter a valid credit card number.', 'dokan-lite' ),
+            'equalTo'         => __( 'Please enter the same value again.', 'dokan-lite' ),
+            'maxlength_msg'   => __( 'Please enter no more than {0} characters.', 'dokan-lite' ),
+            'minlength_msg'   => __( 'Please enter at least {0} characters.', 'dokan-lite' ),
+            'rangelength_msg' => __( 'Please enter a value between {0} and {1} characters long.', 'dokan-lite' ),
+            'range_msg'       => __( 'Please enter a value between {0} and {1}.', 'dokan-lite' ),
+            'max_msg'         => __( 'Please enter a value less than or equal to {0}.', 'dokan-lite' ),
+            'min_msg'         => __( 'Please enter a value greater than or equal to {0}.', 'dokan-lite' ),
         );
 
         wp_localize_script( 'dokan-form-validate', 'DokanValidateMsg', apply_filters( 'DokanValidateMsg_args', $form_validate_messages ) );
@@ -557,15 +553,17 @@ class Assets {
             $api_key = dokan_get_option( 'gmap_api_key', 'dokan_appearance', false );
 
             if ( $api_key ) {
-                $query_args = apply_filters( 'dokan_google_maps_script_query_args', array(
-                    'key' => $api_key,
-                ) );
+                $query_args = apply_filters(
+                    'dokan_google_maps_script_query_args', array(
+						'key' => $api_key,
+                    )
+                );
 
                 $script_src = add_query_arg( $query_args, 'https://maps.googleapis.com/maps/api/js' );
 
                 wp_enqueue_script( 'dokan-maps', $script_src, array(), false, true );
             }
-        } else if ( 'mapbox' === $source ) {
+        } elseif ( 'mapbox' === $source ) {
             $access_token = dokan_get_option( 'mapbox_access_token', 'dokan_appearance', null );
 
             if ( $access_token ) {
@@ -591,7 +589,6 @@ class Assets {
      * @return $default_args
      */
     public function conditional_localized_args( $default_args ) {
-
         if ( dokan_is_seller_dashboard()
             || ( get_query_var( 'edit' ) && is_singular( 'product' ) )
             || dokan_is_store_page()
@@ -606,8 +603,8 @@ class Assets {
             $decimal = isset( $locale['decimal_point'] ) ? $locale['decimal_point'] : '.';
             $banner_width    = dokan_get_option( 'store_banner_width', 'dokan_appearance', 625 );
             $banner_height   = dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 );
-            $has_flex_width  = !empty( $general_settings['store_banner_flex_width'] ) ? $general_settings['store_banner_flex_width'] : true;
-            $has_flex_height = !empty( $general_settings['store_banner_flex_height'] ) ? $general_settings['store_banner_flex_height'] : true;
+            $has_flex_width  = ! empty( $general_settings['store_banner_flex_width'] ) ? $general_settings['store_banner_flex_width'] : true;
+            $has_flex_height = ! empty( $general_settings['store_banner_flex_height'] ) ? $general_settings['store_banner_flex_height'] : true;
 
             $custom_args = array(
                 'i18n_choose_featured_img'            => __( 'Upload featured image', 'dokan-lite' ),
@@ -635,9 +632,9 @@ class Assets {
                 'i18n_last_warning'                   => esc_js( __( 'Last warning, are you sure?', 'dokan-lite' ) ),
                 'i18n_choose_image'                   => esc_js( __( 'Choose an image', 'dokan-lite' ) ),
                 'i18n_set_image'                      => esc_js( __( 'Set variation image', 'dokan-lite' ) ),
-                'i18n_variation_added'                => esc_js( __( "variation added", 'dokan-lite' ) ),
-                'i18n_variations_added'               => esc_js( __( "variations added", 'dokan-lite' ) ),
-                'i18n_no_variations_added'            => esc_js( __( "No variations added", 'dokan-lite' ) ),
+                'i18n_variation_added'                => esc_js( __( 'variation added', 'dokan-lite' ) ),
+                'i18n_variations_added'               => esc_js( __( 'variations added', 'dokan-lite' ) ),
+                'i18n_no_variations_added'            => esc_js( __( 'No variations added', 'dokan-lite' ) ),
                 'i18n_remove_variation'               => esc_js( __( 'Are you sure you want to remove this variation?', 'dokan-lite' ) ),
                 'i18n_scheduled_sale_start'           => esc_js( __( 'Sale start date (YYYY-MM-DD format or leave blank)', 'dokan-lite' ) ),
                 'i18n_scheduled_sale_end'             => esc_js( __( 'Sale end date (YYYY-MM-DD format or leave blank)', 'dokan-lite' ) ),
@@ -657,7 +654,12 @@ class Assets {
                 'decimal_point'                       => $decimal,
                 'mon_decimal_point'                   => wc_get_price_decimal_separator(),
                 'variations_per_page'                 => absint( apply_filters( 'dokan_product_variations_per_page', 10 ) ),
-                'store_banner_dimension'              => [ 'width' => $banner_width, 'height' => $banner_height, 'flex-width' => $has_flex_width, 'flex-height' => $has_flex_height ],
+                'store_banner_dimension'              => [
+					'width' => $banner_width,
+					'height' => $banner_height,
+					'flex-width' => $has_flex_width,
+					'flex-height' => $has_flex_height,
+				],
                 'selectAndCrop'                       => __( 'Select and Crop', 'dokan-lite' ),
                 'chooseImage'                         => __( 'Choose Image', 'dokan-lite' ),
                 'product_title_required'              => __( 'Product title is required', 'dokan-lite' ),
@@ -677,7 +679,7 @@ class Assets {
                 'i18n_selection_too_long_n'           => __( 'You can only select %qty% items', 'dokan-lite' ),
                 'i18n_load_more'                      => __( 'Loading more results&hellip;', 'dokan-lite' ),
                 'i18n_searching'                      => __( 'Searching&hellip;', 'dokan-lite' ),
-                'i18n_date_format'                    => get_option( 'date_format' )
+                'i18n_date_format'                    => get_option( 'date_format' ),
             );
 
             $default_args = array_merge( $default_args, $custom_args );
@@ -772,49 +774,51 @@ class Assets {
         $locale           = localeconv();
         $decimal          = isset( $locale['decimal_point'] ) ? $locale['decimal_point'] : '.';
 
-        return apply_filters( 'dokan_admin_localize_script', array(
-            'ajaxurl' => admin_url( 'admin-ajax.php' ),
-            'nonce'   => wp_create_nonce( 'dokan_admin' ),
-            'rest'    => array(
-                'root'    => esc_url_raw( get_rest_url() ),
-                'nonce'   => wp_create_nonce( 'wp_rest' ),
-                'version' => 'dokan/v1',
-            ),
-            'api'             => null,
-            'libs'            => array(),
-            'routeComponents' => array( 'default' => null ),
-            'routes'          => $this->get_vue_admin_routes(),
-            'currency'        => $this->get_localized_price(),
-            'hasPro'          => dokan()->is_pro_exists(),
-            'proVersion'      => dokan()->is_pro_exists() ? dokan_pro()->version : '',
-            'i18n'            => array( 'dokan-lite' => dokan_get_jed_locale_data( 'dokan-lite' ) ) ,
-            'urls'            => array(
-                'adminRoot'   => admin_url(),
-                'siteUrl'     => home_url( '/' ),
-                'storePrefix' => dokan_get_option( 'custom_store_url', 'dokan_general', 'store' ),
-                'assetsUrl'   => DOKAN_PLUGIN_ASSEST,
-                'buynowpro'   => dokan_pro_buynow_url()
-            ),
-            'states'          => WC()->countries->get_allowed_country_states(),
-            'countries'       => WC()->countries->get_allowed_countries(),
-            'current_time'    => current_time( 'mysql' ),
-            'store_banner_dimension' => [
-                'width'       => $banner_width,
-                'height'      => $banner_height,
-                'flex-width'  => $has_flex_width,
-                'flex-height' => $has_flex_height
-            ],
-            'ajax_loader'        => DOKAN_PLUGIN_ASSEST . '/images/spinner-2x.gif',
-            /* translators: %s: decimal */
-            'i18n_decimal_error'                  => sprintf( __( 'Please enter with one decimal point (%s) without thousand separators.', 'dokan-lite' ), $decimal ),
-            /* translators: %s: price decimal separator */
-            'i18n_mon_decimal_error'              => sprintf( __( 'Please enter with one monetary decimal point (%s) without thousand separators and currency symbols.', 'dokan-lite' ), wc_get_price_decimal_separator() ),
-            'i18n_country_iso_error'              => __( 'Please enter in country code with two capital letters.', 'dokan-lite' ),
-            'i18n_sale_less_than_regular_error'   => __( 'Please enter in a value less than the regular price.', 'dokan-lite' ),
-            'i18n_delete_product_notice'          => __( 'This product has produced sales and may be linked to existing orders. Are you sure you want to delete it?', 'dokan-lite' ),
-            'i18n_remove_personal_data_notice'    => __( 'This action cannot be reversed. Are you sure you wish to erase personal data from the selected orders?', 'dokan-lite' ),
-            'decimal_point'                       => $decimal,
-            'mon_decimal_point'                   => wc_get_price_decimal_separator(),
-        ) );
+        return apply_filters(
+            'dokan_admin_localize_script', array(
+				'ajaxurl' => admin_url( 'admin-ajax.php' ),
+				'nonce'   => wp_create_nonce( 'dokan_admin' ),
+				'rest'    => array(
+					'root'    => esc_url_raw( get_rest_url() ),
+					'nonce'   => wp_create_nonce( 'wp_rest' ),
+					'version' => 'dokan/v1',
+				),
+				'api'             => null,
+				'libs'            => array(),
+				'routeComponents' => array( 'default' => null ),
+				'routes'          => $this->get_vue_admin_routes(),
+				'currency'        => $this->get_localized_price(),
+				'hasPro'          => dokan()->is_pro_exists(),
+				'proVersion'      => dokan()->is_pro_exists() ? dokan_pro()->version : '',
+				'i18n'            => array( 'dokan-lite' => dokan_get_jed_locale_data( 'dokan-lite' ) ),
+				'urls'            => array(
+					'adminRoot'   => admin_url(),
+					'siteUrl'     => home_url( '/' ),
+					'storePrefix' => dokan_get_option( 'custom_store_url', 'dokan_general', 'store' ),
+					'assetsUrl'   => DOKAN_PLUGIN_ASSEST,
+					'buynowpro'   => dokan_pro_buynow_url(),
+				),
+				'states'          => WC()->countries->get_allowed_country_states(),
+				'countries'       => WC()->countries->get_allowed_countries(),
+				'current_time'    => current_time( 'mysql' ),
+				'store_banner_dimension' => [
+					'width'       => $banner_width,
+					'height'      => $banner_height,
+					'flex-width'  => $has_flex_width,
+					'flex-height' => $has_flex_height,
+				],
+				'ajax_loader'        => DOKAN_PLUGIN_ASSEST . '/images/spinner-2x.gif',
+				/* translators: %s: decimal */
+				'i18n_decimal_error'                  => sprintf( __( 'Please enter with one decimal point (%s) without thousand separators.', 'dokan-lite' ), $decimal ),
+				/* translators: %s: price decimal separator */
+				'i18n_mon_decimal_error'              => sprintf( __( 'Please enter with one monetary decimal point (%s) without thousand separators and currency symbols.', 'dokan-lite' ), wc_get_price_decimal_separator() ),
+				'i18n_country_iso_error'              => __( 'Please enter in country code with two capital letters.', 'dokan-lite' ),
+				'i18n_sale_less_than_regular_error'   => __( 'Please enter in a value less than the regular price.', 'dokan-lite' ),
+				'i18n_delete_product_notice'          => __( 'This product has produced sales and may be linked to existing orders. Are you sure you want to delete it?', 'dokan-lite' ),
+				'i18n_remove_personal_data_notice'    => __( 'This action cannot be reversed. Are you sure you wish to erase personal data from the selected orders?', 'dokan-lite' ),
+				'decimal_point'                       => $decimal,
+				'mon_decimal_point'                   => wc_get_price_decimal_separator(),
+            )
+        );
     }
 }

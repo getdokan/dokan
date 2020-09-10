@@ -186,7 +186,7 @@ final class WeDevs_Dokan {
         if ( ! $this->is_supported_php() ) {
             require_once WC_ABSPATH . 'includes/wc-notice-functions.php';
 
-            wc_print_notice( sprintf( __( 'The Minimum PHP Version Requirement for <b>Dokan</b> is %s. You are Running PHP %s', 'dokan-lite' ), $this->min_php, phpversion(), 'error' ) );
+            wc_print_notice( sprintf( __( 'The Minimum PHP Version Requirement for <b>Dokan</b> is %1$s. You are Running PHP %2$s', 'dokan-lite' ), $this->min_php, phpversion() ), 'error' );
             exit;
         }
 
@@ -468,7 +468,7 @@ final class WeDevs_Dokan {
         }
 
         $plugin_url = self_admin_url( 'plugin-install.php?s=woocommerce&tab=search&type=term' );
-        $message    = sprintf( esc_html__( 'Dokan requires WooCommerce to be installed and active. You can activate %s here.', 'dokan-lite' ), '<a href="' . $plugin_url . '">WooCommerce</a>' );
+        $message    = sprintf( __( 'Dokan requires WooCommerce to be installed and active. You can activate <a href="%s">WooCommerce</a> here.', 'dokan-lite' ), $plugin_url );
 
         echo wp_kses_post( sprintf( '<div class="error"><p><strong>%1$s</strong></p></div>', $message ) );
     }

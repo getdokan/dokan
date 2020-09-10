@@ -72,7 +72,7 @@ class Dashboard extends DokanShortcode {
         }
 
         if ( isset( $wp->query_vars['settings'] ) ) {
-            dokan_get_template_part('settings/store');
+            dokan_get_template_part( 'settings/store' );
 
             return ob_get_clean();
         }

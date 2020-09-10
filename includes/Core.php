@@ -44,7 +44,7 @@ class Core {
         $valid_pages = array( 'admin-ajax.php', 'admin-post.php', 'async-upload.php', 'media-upload.php' );
         $user_role   = reset( $current_user->roles );
 
-        if ( ( 'on' == $no_access ) && ( !in_array( $pagenow, $valid_pages ) ) && in_array( $user_role, array( 'seller', 'customer', 'vendor_staff' ) ) ) {
+        if ( ( 'on' == $no_access ) && ( ! in_array( $pagenow, $valid_pages ) ) && in_array( $user_role, array( 'seller', 'customer', 'vendor_staff' ) ) ) {
             wp_redirect( home_url() );
             exit;
         }
@@ -72,7 +72,7 @@ class Core {
             return $where;
         }
 
-        if ( ( $pagenow == 'upload.php' || $pagenow == 'media-upload.php' ) && current_user_can( 'dokandar' )  ) {
+        if ( ( $pagenow == 'upload.php' || $pagenow == 'media-upload.php' ) && current_user_can( 'dokandar' ) ) {
             $user_id = dokan_get_current_user_id();
 
             $where .= " AND $wpdb->posts.post_author = $user_id";
@@ -99,7 +99,7 @@ class Core {
             $classes[] = 'dokan-dashboard';
         }
 
-        if ( dokan_is_store_page () ) {
+        if ( dokan_is_store_page() ) {
             $classes[] = 'dokan-store';
         }
 
