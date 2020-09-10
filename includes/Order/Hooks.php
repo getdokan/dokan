@@ -80,8 +80,7 @@ class Hooks {
         }
 
         // insert on dokan sync table
-        $wpdb->update(
-            $wpdb->prefix . 'dokan_orders',
+        $wpdb->update( $wpdb->dokan_orders,
             array( 'order_status' => $new_status ),
             array( 'order_id' => $order_id ),
             array( '%s' ),
@@ -89,10 +88,12 @@ class Hooks {
         );
 
         // if any child orders found, change the orders as well
-        $sub_orders = get_children( array( 
-            'post_parent' => $order_id, 
-            'post_type' => 'shop_order' 
-        ) );
+        $sub_orders = get_children(
+            [
+                'post_parent' => $order_id,
+                'post_type' => 'shop_order',
+            ]
+        );
 
         if ( $sub_orders ) {
             foreach ( $sub_orders as $order_post ) {
@@ -113,17 +114,17 @@ class Hooks {
         }
 
         // update on vendor-balance table
-        $wpdb->update( $wpdb->prefix . 'dokan_vendor_balance',
+        $wpdb->update( $wpdb->dokan_vendor_balance,
             array( 'status' => $new_status ),
             array(
                 'trn_id' => $order_id,
-                'trn_type' => 'dokan_orders'
+                'trn_type' => 'dokan_orders',
             ),
             array( '%s' ),
-            array( '%d', '%s' )
+            array( '%d', '%s' ),
         );
 
-        if ( $new_status == 'wc-refunded' ) {
+        if ( $new_status === 'wc-refunded' ) {
 
             $balance_data = $wpdb->get_row( $wpdb->prepare(
                 "select * from $wpdb->dokan_vendor_balance where trn_id = %d AND status = 'approved'",
@@ -210,10 +211,10 @@ class Hooks {
         // get all the child orders and monitor the status
         $parent_order_id = $order_post->post_parent;
         $sub_orders      = get_children(
-            array(
-				'post_parent' => $parent_order_id,
-				'post_type' => 'shop_order',
-            )
+            [
+                'post_parent' => $parent_order_id,
+                'post_type' => 'shop_order',
+            ]
         );
 
         // return if any child order is not completed
