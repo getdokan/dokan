@@ -21,14 +21,16 @@ class Shortcodes {
      * @return void
      */
     public function __construct() {
-        $this->shortcodes = apply_filters( 'dokan_shortcodes', [
-            'dokan-dashboard'            => new Dashboard(),
-            'dokan-best-selling-product' => new BestSellingProduct(),
-            'dokan-top-rated-product'    => new TopRatedProduct(),
-            'dokan-my-orders'            => new MyOrders(),
-            'dokan-stores'               => new Stores(),
-            'dokan-vendor-registration'  => new VendorRegistration(),
-        ] );
+        $this->shortcodes = apply_filters(
+            'dokan_shortcodes', [
+				'dokan-dashboard'            => new Dashboard(),
+				'dokan-best-selling-product' => new BestSellingProduct(),
+				'dokan-top-rated-product'    => new TopRatedProduct(),
+				'dokan-my-orders'            => new MyOrders(),
+				'dokan-stores'               => new Stores(),
+				'dokan-vendor-registration'  => new VendorRegistration(),
+			]
+        );
     }
 
     /**

@@ -25,7 +25,7 @@ class PageViews {
             jQuery(document).ready( function($) {
                 var data = {
                     action: "dokan_pageview",
-                    _ajax_nonce: "'. esc_html( $nonce ) .'",
+                    _ajax_nonce: "' . esc_html( $nonce ) . '",
                     post_id: ' . get_the_ID() . ',
                 }
                 $.post( "' . esc_url( admin_url( 'admin-ajax.php' ) ) . '", data );
@@ -47,7 +47,7 @@ class PageViews {
                 $dokan_viewed_products[] = $post->ID;
 
                 wp_enqueue_script( 'jquery' );
-                add_action( 'wp_footer', array($this, 'load_scripts') );
+                add_action( 'wp_footer', array( $this, 'load_scripts' ) );
             }
             // Store for single product view
             setcookie( 'dokan_product_viewed', implode( ',', $dokan_viewed_products ) );

@@ -7,7 +7,10 @@ use Walker;
 class Category extends Walker {
     public $tree_type = 'category';
 
-    public $db_fields = ['parent' => 'parent', 'id' => 'term_id']; //TODO: decouple this
+    public $db_fields = [
+		'parent' => 'parent',
+		'id' => 'term_id',
+	]; //TODO: decouple this
 
     public function start_lvl( &$output, $depth = 0, $args = [] ) {
         $indent = str_repeat( "\t", $depth );

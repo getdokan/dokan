@@ -12,9 +12,12 @@ class CategoryDropdownSingle extends TaxonomyDropdown {
      * @see Walker::$db_fields
      * @var array
      */
-    var $db_fields = array('parent' => 'parent', 'id' => 'term_id');
+    var $db_fields = array(
+		'parent' => 'parent',
+		'id' => 'term_id',
+	);
 
-    public function __construct( $post_id )  {
+    public function __construct( $post_id ) {
         $this->post_id = $post_id;
     }
 
@@ -33,7 +36,7 @@ class CategoryDropdownSingle extends TaxonomyDropdown {
 
         $pad      = str_repeat( '&nbsp;', $depth * 3 );
         $cat_name = apply_filters( 'list_cats', $category->name, $category );
-        $output   .= "\t<option class=\"level-$depth\" value=\"" . $category->term_id . "\"";
+        $output   .= "\t<option class=\"level-$depth\" value=\"" . $category->term_id . '"';
 
         if ( defined( 'DOKAN_PRO_PLUGIN_VERSION' ) && version_compare( DOKAN_PRO_PLUGIN_VERSION, '2.9.14', '<' ) ) {
             $output .= ' data-commission="' . $commission_val . '" data-commission_type="' . $commission_type . '"';

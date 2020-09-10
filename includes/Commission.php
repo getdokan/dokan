@@ -71,12 +71,12 @@ class Commission {
             // Ensure sub-orders also get the correct payment gateway fee (if any)
             $gateway_fee = apply_filters( 'dokan_get_processing_gateway_fee', $gateway_fee, $tmp_order, $order );
 
-            $net_amount  = $vendor_earning - $gateway_fee;
+            $net_amount = $vendor_earning - $gateway_fee;
 
             $wpdb->update(
                 $wpdb->dokan_orders,
                 [ 'net_amount' => (float) $net_amount ],
-                [ 'order_id'   => $tmp_order->get_id() ],
+                [ 'order_id' => $tmp_order->get_id() ],
                 [ '%f' ],
                 [ '%d' ]
             );
@@ -84,7 +84,10 @@ class Commission {
             $wpdb->update(
                 $wpdb->dokan_vendor_balance,
                 [ 'debit' => (float) $net_amount ],
-                [ 'trn_id'   => $tmp_order->get_id(), 'trn_type' => 'dokan_orders' ],
+                [
+					'trn_id' => $tmp_order->get_id(),
+					'trn_type' => 'dokan_orders',
+				],
                 [ '%f' ],
                 [ '%d', '%s' ]
             );
@@ -210,7 +213,7 @@ class Commission {
         }
 
         if ( ! $order ) {
-           return new \WP_Error( __( 'Order not found', 'dokan-lite' ), 404 );
+			return new \WP_Error( __( 'Order not found', 'dokan-lite' ), 404 );
         }
 
         if ( $order->get_meta( 'has_sub_order' ) ) {
@@ -338,7 +341,7 @@ class Commission {
         }
 
         $term_id = $terms[0]->term_id;
-        $rate    = ! $terms ? null: get_term_meta( $term_id, 'per_category_admin_commission', true );
+        $rate    = ! $terms ? null : get_term_meta( $term_id, 'per_category_admin_commission', true );
 
         return $this->validate_rate( $rate );
     }
@@ -538,30 +541,30 @@ class Commission {
             foreach ( $line_items as $item ) {
                 $items = array_keys( $line_items );
 
-                if ( ! isset( $items[$i] ) ) {
+                if ( ! isset( $items[ $i ] ) ) {
                     continue;
                 }
 
-                $saved_commission_rate = wc_get_order_item_meta( $items[$i], '_dokan_commission_rate', true );
-                $saved_commission_type = wc_get_order_item_meta( $items[$i], '_dokan_commission_type', true );
-                $saved_additional_fee  = wc_get_order_item_meta( $items[$i], '_dokan_additional_fee', true );
+                $saved_commission_rate = wc_get_order_item_meta( $items[ $i ], '_dokan_commission_rate', true );
+                $saved_commission_type = wc_get_order_item_meta( $items[ $i ], '_dokan_commission_type', true );
+                $saved_additional_fee  = wc_get_order_item_meta( $items[ $i ], '_dokan_additional_fee', true );
 
                 if ( $saved_commission_rate ) {
                     $commission_rate = $saved_commission_rate;
                 } else {
-                    wc_add_order_item_meta( $items[$i], '_dokan_commission_rate', $commission_rate );
+                    wc_add_order_item_meta( $items[ $i ], '_dokan_commission_rate', $commission_rate );
                 }
 
                 if ( $saved_commission_type ) {
                     $commission_type = $saved_commission_type;
                 } else {
-                    wc_add_order_item_meta( $items[$i], '_dokan_commission_type', $commission_type );
+                    wc_add_order_item_meta( $items[ $i ], '_dokan_commission_type', $commission_type );
                 }
 
                 if ( $saved_additional_fee ) {
                     $additional_fee = $saved_additional_fee;
                 } else {
-                    wc_add_order_item_meta( $items[$i], '_dokan_additional_fee', $additional_fee );
+                    wc_add_order_item_meta( $items[ $i ], '_dokan_additional_fee', $additional_fee );
                 }
 
                 $i++;
@@ -657,7 +660,7 @@ class Commission {
         }
 
         $term_id = $terms[0]->term_id;
-        $rate    = ! $terms ? null: get_term_meta( $term_id, 'per_category_admin_additional_fee', true );
+        $rate    = ! $terms ? null : get_term_meta( $term_id, 'per_category_admin_additional_fee', true );
 
         return $this->validate_rate( $rate );
     }
@@ -682,10 +685,12 @@ class Commission {
             return $earning;
         }
 
-        $result = $wpdb->get_row( $wpdb->prepare(
-            "SELECT `net_amount`, `order_total` FROM {$wpdb->dokan_orders} WHERE `order_id` = %d",
-            $order_id
-        ) );
+        $result = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT `net_amount`, `order_total` FROM {$wpdb->dokan_orders} WHERE `order_id` = %d",
+                $order_id
+            )
+        );
 
         if ( ! $result ) {
             return null;
@@ -779,7 +784,13 @@ class Commission {
         $all_orders   = [];
 
         if ( $has_suborder ) {
-            $sub_order_ids = get_children( [ 'post_parent' => $order->get_id(), 'post_type' => 'shop_order', 'fields' => 'ids' ] );
+            $sub_order_ids = get_children(
+                [
+					'post_parent' => $order->get_id(),
+					'post_type' => 'shop_order',
+					'fields' => 'ids',
+				]
+            );
 
             foreach ( $sub_order_ids as $sub_order_id ) {
                 $sub_order    = wc_get_order( $sub_order_id );

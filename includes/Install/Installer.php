@@ -89,36 +89,38 @@ class Installer {
             $wp_roles = new WP_Roles();
         }
 
-        add_role( 'seller', __( 'Vendor', 'dokan-lite' ), [
-            'read'                      => true,
-            'publish_posts'             => true,
-            'edit_posts'                => true,
-            'delete_published_posts'    => true,
-            'edit_published_posts'      => true,
-            'delete_posts'              => true,
-            'manage_categories'         => true,
-            'moderate_comments'         => true,
-            'unfiltered_html'           => true,
-            'upload_files'              => true,
-            'edit_shop_orders'          => true,
-            'edit_product'              => true,
-            'read_product'              => true,
-            'delete_product'            => true,
-            'edit_products'             => true,
-            'publish_products'          => true,
-            'read_private_products'     => true,
-            'delete_products'           => true,
-            'delete_products'           => true,
-            'delete_private_products'   => true,
-            'delete_published_products' => true,
-            'delete_published_products' => true,
-            'edit_private_products'     => true,
-            'edit_published_products'   => true,
-            'manage_product_terms'      => true,
-            'delete_product_terms'      => true,
-            'assign_product_terms'      => true,
-            'dokandar'                  => true,
-        ] );
+        add_role(
+            'seller', __( 'Vendor', 'dokan-lite' ), [
+				'read'                      => true,
+				'publish_posts'             => true,
+				'edit_posts'                => true,
+				'delete_published_posts'    => true,
+				'edit_published_posts'      => true,
+				'delete_posts'              => true,
+				'manage_categories'         => true,
+				'moderate_comments'         => true,
+				'unfiltered_html'           => true,
+				'upload_files'              => true,
+				'edit_shop_orders'          => true,
+				'edit_product'              => true,
+				'read_product'              => true,
+				'delete_product'            => true,
+				'edit_products'             => true,
+				'publish_products'          => true,
+				'read_private_products'     => true,
+				'delete_products'           => true,
+				'delete_products'           => true,
+				'delete_private_products'   => true,
+				'delete_published_products' => true,
+				'delete_published_products' => true,
+				'edit_private_products'     => true,
+				'edit_published_products'   => true,
+				'manage_product_terms'      => true,
+				'delete_product_terms'      => true,
+				'assign_product_terms'      => true,
+				'dokandar'                  => true,
+			]
+        );
 
         $capabilities = [];
         $all_cap      = dokan_get_all_caps();
@@ -189,10 +191,12 @@ class Installer {
                             if ( $child_page_id ) {
                                 $dokan_page_settings[ $child_page['page_id'] ] = $child_page_id;
 
-                                wp_update_post( [
-                                    'ID'          => $child_page_id,
-                                    'post_parent' => $page_id,
-                                ] );
+                                wp_update_post(
+                                    [
+										'ID'          => $child_page_id,
+										'post_parent' => $page_id,
+									]
+                                );
                             }
                         }
                     }
@@ -209,14 +213,16 @@ class Installer {
         $page_obj = get_page_by_path( $page['post_title'] );
 
         if ( ! $page_obj ) {
-            $page_id = wp_insert_post( [
-                'post_title'     => $page['post_title'],
-                'post_name'      => $page['slug'],
-                'post_content'   => $page['content'],
-                'post_status'    => 'publish',
-                'post_type'      => 'page',
-                'comment_status' => 'closed',
-            ] );
+            $page_id = wp_insert_post(
+                [
+					'post_title'     => $page['post_title'],
+					'post_name'      => $page['slug'],
+					'post_content'   => $page['content'],
+					'post_status'    => 'publish',
+					'post_type'      => 'page',
+					'comment_status' => 'closed',
+				]
+            );
 
             if ( $page_id && ! is_wp_error( $page_id ) ) {
                 if ( isset( $page['template'] ) ) {

@@ -25,18 +25,18 @@ class Manager {
             'status'      => 'all',
             'paged'       => 1,
             'limit'       => 10,
-            'date'        => null
+            'date'        => null,
         ];
 
         $args = wp_parse_args( $args, $default );
 
         $offset      = ( $args['paged'] - 1 ) * $args['limit'];
-        $cache_group = 'dokan_seller_data_'.$args['seller_id'];
-        
+        $cache_group = 'dokan_seller_data_' . $args['seller_id'];
+
         // Use all arguments to create a hash used as cache key
-        $cache_key   = 'dokan_seller_orders-' . md5(json_encode($args));
-        
-        $orders      = wp_cache_get( $cache_key, $cache_group );
+        $cache_key = 'dokan_seller_orders-' . md5( json_encode( $args ) );
+
+        $orders = wp_cache_get( $cache_key, $cache_group );
 
         $join        = $args['customer_id'] ? "LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id" : '';
         $where       = $args['customer_id'] ? sprintf( "pm.meta_key = '_customer_user' AND pm.meta_value = %d AND", $args['customer_id'] ) : '';
@@ -45,7 +45,9 @@ class Manager {
             $status_where = ( $args['status'] == 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', $args['status'] );
             $date_query   = ( $args['date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $args['date'] ) : '';
 
-            $orders = $wpdb->get_results( $wpdb->prepare( "SELECT do.order_id, p.post_date
+            $orders = $wpdb->get_results(
+                $wpdb->prepare(
+                    "SELECT do.order_id, p.post_date
                 FROM {$wpdb->prefix}dokan_orders AS do
                 LEFT JOIN $wpdb->posts p ON do.order_id = p.ID
                 {$join}
@@ -58,11 +60,14 @@ class Manager {
                 GROUP BY do.order_id
                 ORDER BY p.post_date DESC
                 LIMIT %d, %d", $args['seller_id'], $offset, $args['limit']
-            ) );
+                )
+            );
 
-            $orders = array_map( function( $order_data ) {
-                return $this->get( $order_data->order_id );
-            }, $orders );
+            $orders = array_map(
+                function( $order_data ) {
+                    return $this->get( $order_data->order_id );
+                }, $orders
+            );
 
             wp_cache_set( $cache_key, $orders, $cache_group );
             dokan_cache_update_group( $cache_key, $cache_group );
@@ -95,11 +100,26 @@ class Manager {
         dokan_log( 'Creating sub order for vendor: #' . $seller_id );
 
         $bill_ship = array(
-            'billing_country', 'billing_first_name', 'billing_last_name', 'billing_company',
-            'billing_address_1', 'billing_address_2', 'billing_city', 'billing_state', 'billing_postcode',
-            'billing_email', 'billing_phone', 'shipping_country', 'shipping_first_name', 'shipping_last_name',
-            'shipping_company', 'shipping_address_1', 'shipping_address_2', 'shipping_city',
-            'shipping_state', 'shipping_postcode'
+            'billing_country',
+			'billing_first_name',
+			'billing_last_name',
+			'billing_company',
+            'billing_address_1',
+			'billing_address_2',
+			'billing_city',
+			'billing_state',
+			'billing_postcode',
+            'billing_email',
+			'billing_phone',
+			'shipping_country',
+			'shipping_first_name',
+			'shipping_last_name',
+            'shipping_company',
+			'shipping_address_1',
+			'shipping_address_2',
+			'shipping_city',
+            'shipping_state',
+			'shipping_postcode',
         );
 
         try {
@@ -151,8 +171,7 @@ class Manager {
             dokan_log( 'Created sub order : #' . $order_id );
 
             do_action( 'dokan_checkout_update_order_meta', $order_id, $seller_id );
-
-        } catch (Exception $e) {
+        } catch ( Exception $e ) {
             return new WP_Error( 'dokan-suborder-error', $e->getMessage() );
         }
     }
@@ -166,7 +185,6 @@ class Manager {
      * @return void
      */
     public function create_line_items( $order, $products ) {
-
         foreach ( $products as $item ) {
             $product_item = new \WC_Order_Item_Product();
 
@@ -217,14 +235,16 @@ class Manager {
             $seller_shipping = reset( $shipping );
 
             $item = new \WC_Order_Item_Tax();
-            $item->set_props( array(
-                'rate_id'            => $tax->get_rate_id(),
-                'label'              => $tax->get_label(),
-                'compound'           => $tax->get_compound(),
-                'rate_code'          => \WC_Tax::get_rate_code( $tax->get_rate_id() ),
-                'tax_total'          => $tax_total,
-                'shipping_tax_total' => is_bool( $seller_shipping ) ? '' : $seller_shipping->get_total_tax()
-            ) );
+            $item->set_props(
+                array(
+					'rate_id'            => $tax->get_rate_id(),
+					'label'              => $tax->get_label(),
+					'compound'           => $tax->get_compound(),
+					'rate_code'          => \WC_Tax::get_rate_code( $tax->get_rate_id() ),
+					'tax_total'          => $tax_total,
+					'shipping_tax_total' => is_bool( $seller_shipping ) ? '' : $seller_shipping->get_total_tax(),
+                )
+            );
 
             $order->add_item( $item );
         }
@@ -241,7 +261,6 @@ class Manager {
      * @return void
      */
     public function create_shipping( $order, $parent_order ) {
-
         dokan_log( sprintf( '#%d - Creating Shipping.', $order->get_id() ) );
 
         // Get all shipping methods for parent order
@@ -274,12 +293,14 @@ class Manager {
 
             dokan_log( sprintf( '#%d - Adding shipping item.', $order->get_id() ) );
 
-            $item->set_props( array(
-                'method_title' => $shipping_method->get_name(),
-                'method_id'    => $shipping_method->get_method_id(),
-                'total'        => $shipping_method->get_total(),
-                'taxes'        => $shipping_method->get_taxes(),
-            ) );
+            $item->set_props(
+                array(
+					'method_title' => $shipping_method->get_name(),
+					'method_id'    => $shipping_method->get_method_id(),
+					'total'        => $shipping_method->get_total(),
+					'taxes'        => $shipping_method->get_taxes(),
+                )
+            );
 
             $metadata = $shipping_method->get_meta_data();
 
@@ -306,9 +327,11 @@ class Manager {
      */
     public function create_coupons( $order, $parent_order, $products ) {
         $used_coupons = $parent_order->get_items( 'coupon' );
-        $product_ids = array_map( function( $item ) {
-            return $item->get_product_id();
-        }, $products );
+        $product_ids = array_map(
+            function( $item ) {
+                return $item->get_product_id();
+            }, $products
+        );
 
         if ( ! $used_coupons ) {
             return;
@@ -317,14 +340,15 @@ class Manager {
         foreach ( $used_coupons as $item ) {
             $coupon = new \WC_Coupon( $item->get_code() );
 
-            if ( $coupon && !is_wp_error( $coupon ) && array_intersect( $product_ids, $coupon->get_product_ids() ) ) {
-
+            if ( $coupon && ! is_wp_error( $coupon ) && array_intersect( $product_ids, $coupon->get_product_ids() ) ) {
                 $new_item = new \WC_Order_Item_Coupon();
-                $new_item->set_props( array(
-                    'code'         => $item->get_code(),
-                    'discount'     => $item->get_discount(),
-                    'discount_tax' => $item->get_discount_tax(),
-                ) );
+                $new_item->set_props(
+                    array(
+						'code'         => $item->get_code(),
+						'discount'     => $item->get_discount(),
+						'discount_tax' => $item->get_discount_tax(),
+                    )
+                );
 
                 $new_item->add_meta_data( 'coupon_data', $coupon->get_data() );
 
@@ -352,12 +376,11 @@ class Manager {
         dokan_log( sprintf( 'New Order #%d created. Init sub order.', $parent_order_id ) );
 
         if ( $parent_order->get_meta( 'has_sub_order' ) == true ) {
-
             $args = array(
                 'post_parent' => $parent_order_id,
                 'post_type'   => 'shop_order',
                 'numberposts' => -1,
-                'post_status' => 'any'
+                'post_status' => 'any',
             );
 
             $child_orders = get_children( $args );
@@ -371,7 +394,7 @@ class Manager {
 
         // return if we've only ONE seller
         if ( count( $vendors ) == 1 ) {
-            dokan_log( '1 vendor only, skipping sub order.');
+            dokan_log( '1 vendor only, skipping sub order.' );
 
             $temp      = array_keys( $vendors );
             $seller_id = reset( $temp );

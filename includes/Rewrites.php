@@ -71,14 +71,16 @@ class Rewrites {
      * @return void
      */
     function register_rule() {
-        $this->query_vars = apply_filters( 'dokan_query_var_filter', array(
-            'products',
-            'new-product',
-            'orders',
-            'withdraw',
-            'settings',
-            'edit-account'
-        ) );
+        $this->query_vars = apply_filters(
+            'dokan_query_var_filter', array(
+				'products',
+				'new-product',
+				'orders',
+				'withdraw',
+				'settings',
+				'edit-account',
+            )
+        );
 
         foreach ( $this->query_vars as $var ) {
             add_rewrite_endpoint( $var, EP_PAGES );
@@ -100,7 +102,6 @@ class Rewrites {
             $cat_base = isset( $base_array[0] ) ? $base_array[0] : 'shop';
 
             add_rewrite_rule( $cat_base . '/(.+?)/([^/]+)(/[0-9]+)?/edit?$', 'index.php?product_cat=$matches[1]&product=$matches[2]&page=$matches[3]&edit=true', 'top' );
-
         } else {
             add_rewrite_rule( $base . '/([^/]+)(/[0-9]+)?/edit/?$', 'index.php?product=$matches[1]&page=$matches[2]&edit=true', 'top' );
         }
@@ -167,7 +168,6 @@ class Rewrites {
      * @return string
      */
     function store_template( $template ) {
-
         $store_name = get_query_var( $this->custom_store_url );
 
         if ( ! $this->is_woo_installed() ) {
@@ -212,7 +212,6 @@ class Rewrites {
      * @return string
      */
     function store_toc_template( $template ) {
-
         if ( ! $this->is_woo_installed() ) {
             return $template;
         }
@@ -221,7 +220,6 @@ class Rewrites {
         }
 
         return $template;
-
     }
 
     /**
@@ -282,11 +280,13 @@ class Rewrites {
             $query->query['term_section'] = isset( $query->query['term_section'] ) ? $query->query['term_section'] : array();
 
             if ( $query->query['term_section'] ) {
-                array_push( $tax_query, [
-                    'taxonomy' => 'product_cat',
-                    'field'    => 'term_id',
-                    'terms'    => $query->query['term']
-                ] );
+                array_push(
+                    $tax_query, [
+						'taxonomy' => 'product_cat',
+						'field'    => 'term_id',
+						'terms'    => $query->query['term'],
+					]
+                );
             }
 
             // Hide out of stock products
@@ -298,12 +298,14 @@ class Rewrites {
             }
 
             if ( ! empty( $product_visibility_not_in ) ) {
-                array_push( $tax_query, [
-                    'taxonomy' => 'product_visibility',
-                    'field'    => 'term_taxonomy_id',
-                    'terms'    => $product_visibility_not_in,
-                    'operator' => 'NOT IN'
-                ] );
+                array_push(
+                    $tax_query, [
+						'taxonomy' => 'product_visibility',
+						'field'    => 'term_taxonomy_id',
+						'terms'    => $product_visibility_not_in,
+						'operator' => 'NOT IN',
+					]
+                );
             }
 
             $query->set( 'tax_query', apply_filters( 'dokan_store_tax_query', $tax_query ) );

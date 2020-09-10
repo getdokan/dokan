@@ -16,11 +16,11 @@ class Flatsome {
      */
     function __construct() {
         // page layout fix
-        add_action( 'wp_head', [ $this, 'store_page'] );
-        add_action( 'wp_head', [ $this, 'edit_page'] );
+        add_action( 'wp_head', [ $this, 'store_page' ] );
+        add_action( 'wp_head', [ $this, 'edit_page' ] );
 
         // login popup fix
-        add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts'] );
+        add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
         add_action( 'wp_enqueue_scripts', [ $this, 'store_listing_style' ], 100 );
     }
 
@@ -45,8 +45,8 @@ class Flatsome {
      */
     public function store_page() {
         if ( dokan_is_store_page() ) {
-            add_action( 'woocommerce_before_main_content', [ $this, 'start_wrapper'] );
-            add_action( 'woocommerce_after_main_content', [ $this, 'end_wrapper'] );
+            add_action( 'woocommerce_before_main_content', [ $this, 'start_wrapper' ] );
+            add_action( 'woocommerce_after_main_content', [ $this, 'end_wrapper' ] );
         }
     }
 
@@ -57,8 +57,8 @@ class Flatsome {
      */
     public function edit_page() {
         if ( dokan_is_product_edit_page() ) {
-            add_action( 'dokan_dashboard_wrap_before', [ $this, 'start_wrapper'] );
-            add_action( 'dokan_dashboard_wrap_after', [ $this, 'end_wrapper'] );
+            add_action( 'dokan_dashboard_wrap_before', [ $this, 'start_wrapper' ] );
+            add_action( 'dokan_dashboard_wrap_after', [ $this, 'end_wrapper' ] );
         }
     }
 

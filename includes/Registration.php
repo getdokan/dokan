@@ -52,22 +52,24 @@ class Registration {
         $allowed_roles = apply_filters( 'dokan_register_user_role', array( 'customer', 'seller' ) );
 
         // is the role name allowed or user is trying to manipulate?
-        if ( isset( $post_data['role'] ) && !in_array( $post_data['role'], $allowed_roles ) ) {
+        if ( isset( $post_data['role'] ) && ! in_array( $post_data['role'], $allowed_roles ) ) {
             return new WP_Error( 'role-error', __( 'Cheating, eh?', 'dokan-lite' ) );
         }
 
         $role = $post_data['role'];
 
-        $required_fields = apply_filters( 'dokan_seller_registration_required_fields', array(
-            'fname'    => __( 'Please enter your first name.', 'dokan-lite' ),
-            'lname'    => __( 'Please enter your last name.', 'dokan-lite' ),
-            'phone'    => __( 'Please enter your phone number.', 'dokan-lite' ),
-            'shopname' => __( 'Please provide a shop name.', 'dokan-lite' ),
-        ) );
+        $required_fields = apply_filters(
+            'dokan_seller_registration_required_fields', array(
+				'fname'    => __( 'Please enter your first name.', 'dokan-lite' ),
+				'lname'    => __( 'Please enter your last name.', 'dokan-lite' ),
+				'phone'    => __( 'Please enter your phone number.', 'dokan-lite' ),
+				'shopname' => __( 'Please provide a shop name.', 'dokan-lite' ),
+            )
+        );
 
         if ( $role == 'seller' ) {
             foreach ( $required_fields as $field => $msg ) {
-                if ( empty( trim( $post_data[$field] ) ) ) {
+                if ( empty( trim( $post_data[ $field ] ) ) ) {
                     return new WP_Error( "$field-error", $msg );
                 }
             }
@@ -119,7 +121,7 @@ class Registration {
         $social_profiles = array();
 
         foreach ( dokan_get_social_profile_fields() as $key => $item ) {
-            $social_profiles[$key] = '';
+            $social_profiles[ $key ] = '';
         }
 
         $dokan_settings = array(

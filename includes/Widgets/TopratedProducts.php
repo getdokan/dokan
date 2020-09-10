@@ -10,8 +10,12 @@ class TopratedProducts extends WP_Widget {
      * Register widget with WordPress.
      */
     public function __construct() {
-        parent::__construct( 'dokan-top-rated', __( 'Dokan: Top Rated Product Widget', 'dokan-lite'), // Name
-            array( 'description' => __( 'A Widget for displaying To rated products for dokan', 'dokan-lite' ), 'classname' => 'woocommerce widget_products dokan-top-rated' ) // Args
+        parent::__construct(
+            'dokan-top-rated', __( 'Dokan: Top Rated Product Widget', 'dokan-lite' ), // Name
+            array(
+				'description' => __( 'A Widget for displaying To rated products for dokan', 'dokan-lite' ),
+				'classname' => 'woocommerce widget_products dokan-top-rated',
+            ) // Args
         );
     }
 
@@ -34,7 +38,12 @@ class TopratedProducts extends WP_Widget {
             echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
         }
 
-        dokan_get_template_part( 'widgets/widget-content-product', '', array( 'r' => $r, 'show_rating' => $show_rating ) );
+        dokan_get_template_part(
+            'widgets/widget-content-product', '', array(
+				'r' => $r,
+				'show_rating' => $show_rating,
+            )
+        );
 
         echo $args['after_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
 
@@ -49,11 +58,11 @@ class TopratedProducts extends WP_Widget {
      * @param array $instance Previously saved values from database.
      */
     public function form( $instance ) {
-        if ( isset( $instance[ 'title' ] ) ) {
-            $title         = esc_attr( $instance[ 'title' ] );
-            $no_of_product = esc_attr( intval( $instance[ 'no_of_product' ] ) );
+        if ( isset( $instance['title'] ) ) {
+            $title         = esc_attr( $instance['title'] );
+            $no_of_product = esc_attr( intval( $instance['no_of_product'] ) );
             $show_rating   = esc_attr( $instance['show_rating'] );
-        }  else {
+        } else {
             $title         = __( 'Top Rated Product', 'dokan-lite' );
             $no_of_product = '8';
             $show_rating   = '0';

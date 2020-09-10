@@ -27,14 +27,15 @@ class AdminMiscController extends DokanRESTAdminController {
      * @return void
      */
     public function register_routes() {
-        register_rest_route( $this->namespace, '/help', array(
-            array(
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => array( $this, 'get_help' ),
-                'permission_callback' => array( $this, 'check_permission' ),
+        register_rest_route(
+            $this->namespace, '/help', array(
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_help' ),
+					'permission_callback' => array( $this, 'check_permission' ),
+				),
             )
-        ) );
-
+        );
     }
 
     /**

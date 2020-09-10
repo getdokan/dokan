@@ -4,7 +4,7 @@ namespace WeDevs\Dokan\Admin;
 
 add_filter( 'woocommerce_enable_setup_wizard', '__return_false' );
 
-include_once WC_ABSPATH . '/includes/admin/class-wc-admin-setup-wizard.php';
+require_once WC_ABSPATH . '/includes/admin/class-wc-admin-setup-wizard.php';
 
 class SetupWizardWCAdmin extends \WC_Admin_Setup_Wizard {
 
