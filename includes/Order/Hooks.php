@@ -80,7 +80,8 @@ class Hooks {
         }
 
         // insert on dokan sync table
-        $wpdb->update( $wpdb->dokan_orders,
+        $wpdb->update(
+            $wpdb->dokan_orders,
             array( 'order_status' => $new_status ),
             array( 'order_id' => $order_id ),
             array( '%s' ),
@@ -114,22 +115,30 @@ class Hooks {
         }
 
         // update on vendor-balance table
-        $wpdb->update( $wpdb->dokan_vendor_balance,
+        $wpdb->update(
+            $wpdb->dokan_vendor_balance,
             array( 'status' => $new_status ),
             array(
                 'trn_id' => $order_id,
                 'trn_type' => 'dokan_orders',
             ),
             array( '%s' ),
-            array( '%d', '%s' ),
+            array( '%d', '%s' )
         );
 
         if ( $new_status === 'wc-refunded' ) {
+            $postdata = wp_unslash( $_POST );
 
-            $balance_data = $wpdb->get_row( $wpdb->prepare(
-                "select * from $wpdb->dokan_vendor_balance where trn_id = %d AND status = 'approved'",
-                $order_id
-            ) );
+            if ( ! isset( $postdata['action'] ) ) {
+                return;
+            }
+
+            $balance_data = $wpdb->get_row(
+                $wpdb->prepare(
+                    "select * from $wpdb->dokan_vendor_balance where trn_id = %d AND status = 'approved'",
+                    $order_id
+                )
+            );
 
             if ( $balance_data ) {
                 return;
@@ -138,7 +147,8 @@ class Hooks {
             $seller_id  = dokan_get_seller_id_by_order( $order_id );
             $net_amount = dokan()->commission->get_earning_by_order( $order );
 
-            $wpdb->insert( $wpdb->dokan_vendor_balance,
+            $wpdb->insert(
+                $wpdb->dokan_vendor_balance,
                 [
                     'vendor_id'     => $seller_id,
                     'trn_id'        => $order_id,
@@ -162,10 +172,12 @@ class Hooks {
             );
 
             // update the order table with new refund amount
-            $order_data = $wpdb->get_row( $wpdb->prepare(
-                "select * from $wpdb->dokan_orders where order_id = %d",
-                $order_id
-            ) );
+            $order_data = $wpdb->get_row(
+                $wpdb->prepare(
+                    "select * from $wpdb->dokan_orders where order_id = %d",
+                    $order_id
+                )
+            );
 
             if ( isset( $order_data->order_total, $order_data->net_amount ) ) {
                 // insert on dokan sync table
@@ -183,11 +195,10 @@ class Hooks {
                         '%f',
                     ],
                     [
-                        '%d'
+                        '%d',
                     ]
                 );
             }
-
         }
     }
 
@@ -224,7 +235,7 @@ class Hooks {
             foreach ( $sub_orders as $sub ) {
                 $order = dokan()->order->get( $sub->ID );
 
-                if ( $order->get_status() != 'completed' ) {
+                if ( $order->get_status() !== 'completed' ) {
                     $all_complete = false;
                 }
             }
@@ -275,7 +286,7 @@ class Hooks {
         }
 
         // a coupon must be bound with a product
-        if ( count( $coupon->get_product_ids() ) == 0 ) {
+        if ( count( $coupon->get_product_ids() ) === 0 ) {
             throw new Exception( __( 'A coupon must be restricted with a vendor product.', 'dokan-lite' ) );
         }
 
