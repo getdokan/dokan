@@ -129,75 +129,73 @@ class Hooks {
         if ( $new_status === 'wc-refunded' ) {
             $postdata = wp_unslash( $_POST );
 
-            if ( ! isset( $postdata['action'] ) ) {
-                return;
-            }
+            if ( ! empty( $postdata['_wpnonce'] ) && ( wp_verify_nonce( $postdata['_wpnonce'], 'dokan_change_status' ) || $postdata['post_type'] === 'shop_order' ) ) {
+                $balance_data = $wpdb->get_row(
+                    $wpdb->prepare(
+                        "select * from $wpdb->dokan_vendor_balance where trn_id = %d AND status = 'approved'",
+                        $order_id
+                    )
+                );
 
-            $balance_data = $wpdb->get_row(
-                $wpdb->prepare(
-                    "select * from $wpdb->dokan_vendor_balance where trn_id = %d AND status = 'approved'",
-                    $order_id
-                )
-            );
+                if ( $balance_data ) {
+                    return;
+                }
 
-            if ( $balance_data ) {
-                return;
-            }
+                $seller_id  = dokan_get_seller_id_by_order( $order_id );
+                $net_amount = dokan()->commission->get_earning_by_order( $order );
 
-            $seller_id  = dokan_get_seller_id_by_order( $order_id );
-            $net_amount = dokan()->commission->get_earning_by_order( $order );
-
-            $wpdb->insert(
-                $wpdb->dokan_vendor_balance,
-                [
-                    'vendor_id'     => $seller_id,
-                    'trn_id'        => $order_id,
-                    'trn_type'      => 'dokan_refund',
-                    'debit'         => 0,
-                    'credit'        => $net_amount,
-                    'status'        => 'approved',
-                    'trn_date'      => current_time( 'mysql' ),
-                    'balance_date'  => current_time( 'mysql' ),
-                ],
-                [
-                    '%d',
-                    '%d',
-                    '%s',
-                    '%f',
-                    '%f',
-                    '%s',
-                    '%s',
-                    '%s',
-                ]
-            );
-
-            // update the order table with new refund amount
-            $order_data = $wpdb->get_row(
-                $wpdb->prepare(
-                    "select * from $wpdb->dokan_orders where order_id = %d",
-                    $order_id
-                )
-            );
-
-            if ( isset( $order_data->order_total, $order_data->net_amount ) ) {
-                // insert on dokan sync table
-                $wpdb->update(
-                    $wpdb->dokan_orders,
+                $wpdb->insert(
+                    $wpdb->dokan_vendor_balance,
                     [
-                        'order_total' => 0,
-                        'net_amount'  => 0,
-                    ],
-                    [
-                        'order_id' => $order_id,
-                    ],
-                    [
-                        '%f',
-                        '%f',
+                        'vendor_id'     => $seller_id,
+                        'trn_id'        => $order_id,
+                        'trn_type'      => 'dokan_refund',
+                        'debit'         => 0,
+                        'credit'        => $net_amount,
+                        'status'        => 'approved',
+                        'trn_date'      => current_time( 'mysql' ),
+                        'balance_date'  => current_time( 'mysql' ),
                     ],
                     [
                         '%d',
+                        '%d',
+                        '%s',
+                        '%f',
+                        '%f',
+                        '%s',
+                        '%s',
+                        '%s',
                     ]
                 );
+
+                // update the order table with new refund amount
+                $order_data = $wpdb->get_row(
+                    $wpdb->prepare(
+                        "select * from $wpdb->dokan_orders where order_id = %d",
+                        $order_id
+                    )
+                );
+
+                if ( isset( $order_data->order_total, $order_data->net_amount ) ) {
+                    // insert on dokan sync table
+                    $wpdb->update(
+                        $wpdb->dokan_orders,
+                        [
+                            'order_total' => 0,
+                            'net_amount'  => 0,
+                        ],
+                        [
+                            'order_id' => $order_id,
+                        ],
+                        [
+                            '%f',
+                            '%f',
+                        ],
+                        [
+                            '%d',
+                        ]
+                    );
+                }
             }
         }
     }
@@ -296,7 +294,7 @@ class Hooks {
             $available_vendors[] = get_post_field( 'post_author', $product_id );
         }
 
-        if ( ! in_array( $vendor_id, $available_vendors ) ) {
+        if ( ! in_array( $vendor_id, $available_vendors, true ) ) {
             return false;
         }
 
