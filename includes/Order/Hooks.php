@@ -89,12 +89,10 @@ class Hooks {
         );
 
         // if any child orders found, change the orders as well
-        $sub_orders = get_children(
-            array(
-				'post_parent' => $order_id,
-				'post_type' => 'shop_order',
-            )
-        );
+        $sub_orders = get_children( array( 
+            'post_parent' => $order_id, 
+            'post_type' => 'shop_order' 
+        ) );
 
         if ( $sub_orders ) {
             foreach ( $sub_orders as $order_post ) {
@@ -115,17 +113,15 @@ class Hooks {
         }
 
         // update on vendor-balance table
-		$wpdb->update(
-            $wpdb->prefix . 'dokan_vendor_balance',
+        $wpdb->update( $wpdb->prefix . 'dokan_vendor_balance',
             array( 'status' => $new_status ),
             array(
-				'trn_id' => $order_id,
-				'trn_type' => 'dokan_orders',
+                'trn_id' => $order_id,
+                'trn_type' => 'dokan_orders'
             ),
             array( '%s' ),
             array( '%d', '%s' )
         );
-
 
         if ( $new_status == 'wc-refunded' ) {
 
