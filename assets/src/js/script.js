@@ -470,13 +470,14 @@ jQuery(function($) {
         },
 
         validate: function(self) {
-            // e.preventDefault();
-
             $('form#dokan-form-contact-seller').validate({
                 errorPlacement: validatorError,
-                success: validatorSuccess,
+                errorElement: 'span',
+                success: function( label, element ) {
+                    label.removeClass('error');
+                    label.remove();
+                },
                 submitHandler: function(form) {
-
                     $(form).block({ message: null, overlayCSS: { background: '#fff url(' + dokan.ajax_loader + ') no-repeat center', opacity: 0.6 } });
 
                     var form_data = $(form).serialize();
@@ -489,7 +490,7 @@ jQuery(function($) {
 
                         $(form).find('input[type=text], input[type=email], textarea').val('').removeClass('valid');
                     });
-                }
+                },
             });
         }
     };
