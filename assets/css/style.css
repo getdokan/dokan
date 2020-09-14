@@ -3099,6 +3099,9 @@ div.media-sidebar a.edit-attachment {
 .product-edit-container .dokan-feat-image-upload .image-wrap:hover a.close {
   display: block;
 }
+.product-edit-container .dokan-feat-image-upload .container-image-and-badge {
+  position: inherit;
+}
 .product-edit-container .dokan-list-category-box {
   border: 1px solid #ccc;
   background: #fff;
@@ -3973,6 +3976,12 @@ div.media-sidebar a.edit-attachment {
 }
 .dokan-store-widget form.seller-form ul li {
   margin-bottom: 8px;
+  border-bottom: none;
+}
+.dokan-store-widget form.seller-form ul li label.error {
+  font-size: 12px;
+  margin-top: 2px;
+  margin-bottom: 0px;
 }
 .dokan-store-widget #dokan-store-location {
   width: 100%;
