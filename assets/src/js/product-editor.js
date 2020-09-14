@@ -160,6 +160,7 @@
             }
 
             $( '#product_tag' ).select2( {
+                tags: true,
                 language: {
                     noResults: function () {
                         return dokan.i18n_no_result_found;
