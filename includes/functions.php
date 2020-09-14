@@ -87,7 +87,7 @@ function dokan_is_product_author( $product_id = 0 ) {
         $author = get_post_field( 'post_author', $product_id );
     }
 
-    if ( $author == dokan_get_current_user_id() ) {
+    if ( absint( $author ) === dokan_get_current_user_id() ) {
         return true;
     }
 
@@ -138,7 +138,7 @@ function dokan_is_seller_dashboard() {
         return false;
     }
 
-    if ( $page_id == apply_filters( 'dokan_get_current_page_id', get_the_ID() ) ) {
+    if ( $page_id === apply_filters( 'dokan_get_current_page_id', get_the_ID() ) ) {
         return true;
     }
 
@@ -153,8 +153,8 @@ function dokan_is_seller_dashboard() {
 function dokan_redirect_login() {
     if ( ! is_user_logged_in() ) {
         $url = apply_filters( 'dokan_redirect_login', dokan_get_page_url( 'myaccount', 'woocommerce' ) );
-        wp_redirect( $url );
-        exit;
+        wp_safe_redirect( $url );
+        exit();
     }
 }
 
@@ -167,45 +167,8 @@ function dokan_redirect_if_not_seller( $redirect = '' ) {
     if ( ! dokan_is_user_seller( dokan_get_current_user_id() ) ) {
         $redirect = empty( $redirect ) ? home_url( '/' ) : $redirect;
 
-        wp_redirect( $redirect );
-        exit;
-    }
-}
-
-/**
- * Handles the product delete action
- *
- * @return void
- */
-function dokan_delete_product_handler() {
-    if ( isset( $_GET['action'] ) && $_GET['action'] == 'dokan-delete-product' ) {
-        $product_id = isset( $_GET['product_id'] ) ? (int) $_GET['product_id'] : 0;
-
-        $getdata = wp_unslash( $_GET );
-
-        if ( ! $product_id ) {
-            wp_redirect( add_query_arg( array( 'message' => 'error' ), dokan_get_navigation_url( 'products' ) ) );
-            return;
-        }
-
-        if ( ! wp_verify_nonce( $getdata['_wpnonce'], 'dokan-delete-product' ) ) {
-            wp_redirect( add_query_arg( array( 'message' => 'error' ), dokan_get_navigation_url( 'products' ) ) );
-            return;
-        }
-
-        if ( ! dokan_is_product_author( $product_id ) ) {
-            wp_redirect( add_query_arg( array( 'message' => 'error' ), dokan_get_navigation_url( 'products' ) ) );
-            return;
-        }
-
-        wp_delete_post( $product_id );
-        do_action( 'dokan_product_deleted', $product_id );
-
-        $redirect = apply_filters( 'dokan_add_new_product_redirect', dokan_get_navigation_url( 'products' ), '' );
-
-        wp_redirect( add_query_arg( array( 'message' => 'product_deleted' ), $redirect ) );
-
-        exit;
+        wp_safe_redirect( $redirect );
+        exit();
     }
 }
 
@@ -243,7 +206,7 @@ function dokan_count_posts( $post_type, $user_id ) {
         $total       = 0;
 
         foreach ( $results as $row ) {
-            if ( ! in_array( $row['post_status'], $post_status ) ) {
+            if ( ! in_array( $row['post_status'], $post_status, true ) ) {
                 continue;
             }
 
@@ -409,7 +372,7 @@ function dokan_generate_sync_table() {
 
     $table_name = $wpdb->prefix . 'dokan_orders';
 
-    $wpdb->query( "TRUNCATE TABLE $table_name" );
+    $wpdb->query( "TRUNCATE TABLE {$wpdb->prefix}dokan_orders" );
 
     if ( $orders ) {
         foreach ( $orders as $order ) {
@@ -475,14 +438,14 @@ if ( ! function_exists( 'dokan_get_seller_percentage' ) ) :
         //Global percentage
         $global_percentage = dokan_get_option( 'admin_percentage', 'dokan_selling', 0 );
 
-        if ( $global_percentage != '' && is_numeric( $global_percentage ) && $global_percentage >= 0 ) {
+        if ( $global_percentage !== '' && is_numeric( $global_percentage ) && $global_percentage >= 0 ) {
             $global_type = dokan_get_option( 'commission_type', 'dokan_selling', 'percentage' );
 
-            if ( 'percentage' == $global_type ) {
+            if ( 'percentage' === $global_type ) {
                 if ( $global_percentage <= 100 ) {
                     $commission_val = (float) ( 100 - $global_percentage );
                 }
-            } elseif ( 'flat' == $global_type ) {
+            } elseif ( 'flat' === $global_type ) {
                 $commission_val = (float) $global_percentage;
             }
         }
@@ -491,14 +454,14 @@ if ( ! function_exists( 'dokan_get_seller_percentage' ) ) :
         if ( $seller_id ) {
             $admin_commission = get_user_meta( $seller_id, 'dokan_admin_percentage', true );
 
-            if ( $admin_commission != '' && is_numeric( $admin_commission ) && $admin_commission >= 0 ) {
+            if ( $admin_commission !== '' && is_numeric( $admin_commission ) && $admin_commission >= 0 ) {
                 $admin_percentage_type = get_user_meta( $seller_id, 'dokan_admin_percentage_type', true );
 
-                if ( 'percentage' == $admin_percentage_type ) {
+                if ( 'percentage' === $admin_percentage_type ) {
                     if ( $admin_commission <= 100 ) {
                         $commission_val = (float) ( 100 - $admin_commission );
                     }
-                } elseif ( 'flat' == $admin_percentage_type ) {
+                } elseif ( 'flat' === $admin_percentage_type ) {
                     $commission_val = (float) $admin_commission;
                 }
             }
@@ -511,14 +474,14 @@ if ( ! function_exists( 'dokan_get_seller_percentage' ) ) :
             $category_commission = dokan_get_category_wise_seller_commission( $product_id, $category_id );
             $is_single_category  = dokan_get_option( 'product_category_style', 'dokan_selling', 'single' );
 
-            if ( $is_single_category == 'single' && $category_commission != '' && is_numeric( $category_commission ) && $category_commission >= 0 ) {
+            if ( $is_single_category === 'single' && $category_commission !== '' && is_numeric( $category_commission ) && $category_commission >= 0 ) {
                 $category_commission_type = dokan_get_category_wise_seller_commission_type( $product_id, $category_id );
 
-                if ( 'percentage' == $category_commission_type ) {
+                if ( 'percentage' === $category_commission_type ) {
                     if ( $category_commission <= 100 ) {
                         $commission_val = (float) ( 100 - $category_commission );
                     }
-                } elseif ( 'flat' == $category_commission_type ) {
+                } elseif ( 'flat' === $category_commission_type ) {
                     $commission_val = (float) $category_commission;
                 }
             }
@@ -526,7 +489,7 @@ if ( ! function_exists( 'dokan_get_seller_percentage' ) ) :
             //product wise percentage
             $_per_product_commission = get_post_meta( $product_id, '_per_product_admin_commission', true );
 
-            if ( $_per_product_commission != '' && is_numeric( $_per_product_commission ) && $_per_product_commission >= 0 ) {
+            if ( $_per_product_commission !== '' && is_numeric( $_per_product_commission ) && $_per_product_commission >= 0 ) {
                 $_per_product_commission_type = get_post_meta( $product_id, '_per_product_admin_commission_type', true );
 
                 if ( 'percentage' == $_per_product_commission_type ) {
