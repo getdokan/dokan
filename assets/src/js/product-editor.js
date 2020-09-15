@@ -177,7 +177,6 @@
                                 options.push( { id: text[0], text: text[1]  } );
                             });
                         }
-
                         return {
                             results: options,
                             pagination: {
