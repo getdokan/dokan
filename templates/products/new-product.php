@@ -247,17 +247,7 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
 
                                     <div class="dokan-form-group">
                                         <label for="product_tag" class="form-label"><?php esc_html_e( 'Tags', 'dokan-lite' ); ?></label>
-                                        <?php
-                                        require_once DOKAN_LIB_DIR.'/class.taxonomy-walker.php';
-                                        
-                                        $drop_down_tags = array(
-                                            'hide_empty' => 0,
-                                        );
-
-                                        $my_tax_terms = get_terms( 'product_tag', $drop_down_tags );
-                                        ?>
-                                        <select multiple="multiple" placeholder="<?php esc_attr_e( 'Select product tags', 'dokan-lite' ); ?>" name="product_tag[]" id="product_tag_search" class="product_tags dokan-form-control dokan-select2">
-                                        </select>
+                                        <select multiple="multiple" placeholder="<?php esc_attr_e( 'Select product tags', 'dokan-lite' ); ?>" name="product_tag[]" id="product_tag_search" class="product_tag_search product_tags dokan-form-control dokan-select2" data-placeholder="<?php esc_attr_e( 'Select tags', 'dokan-lite' ); ?>"></select>
                                     </div>
 
                                     <?php do_action( 'dokan_new_product_after_product_tags' ); ?>
