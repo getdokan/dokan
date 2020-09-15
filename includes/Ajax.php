@@ -636,15 +636,14 @@ class Ajax {
     public function json_search_product() {
         check_ajax_referer( 'search-products', 'security' );
 
-        $term               = ! empty( $_GET['term'] ) ? sanitize_text_field( wp_unslash( $_GET['term'] ) ) : '';
-        $include_variations = ! empty( $_GET['include_variations'] ) ? true : false;
-        $user_ids           = ! empty( $_GET['user_ids'] ) ? sanitize_text_field( wp_unslash( $_GET['user_ids'] ) ) : false;
+        $term     = ! empty( $_GET['term'] ) ? sanitize_text_field( wp_unslash( $_GET['term'] ) ) : '';
+        $user_ids = ! empty( $_GET['user_ids'] ) ? sanitize_text_field( wp_unslash( $_GET['user_ids'] ) ) : false;
 
         if ( empty( $term ) ) {
             wp_die();
         }
 
-        $ids = dokan_search_seller_products( $term, $user_ids, '', (bool) $include_variations );
+        $ids = dokan_search_seller_products( $term, $user_ids, '', true );
 
         if ( ! empty( $_GET['exclude'] ) ) {
             $ids = array_diff( $ids, (array) sanitize_text_field( wp_unslash( $_GET['exclude'] ) ) );
