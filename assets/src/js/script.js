@@ -5,6 +5,29 @@ jQuery(function($) {
         dateFormat: 'yy-mm-dd'
     });
 
+    $('.dokan-start-date').datepicker({
+        defaultDate: "",
+        dateFormat: "yy-mm-dd",
+        numberOfMonths: 1,
+        onSelect: function (selectedDate) {
+            let date = new Date(selectedDate);
+            date.setDate(date.getDate() + 1);
+            $('.dokan-end-date').datepicker('option', {'minDate': date})
+        }
+
+    });
+
+    $('.dokan-end-date').datepicker({
+        defaultDate: "",
+        dateFormat: "yy-mm-dd",
+        numberOfMonths: 1,
+        onSelect: function (selectedDate) {
+            let date = new Date(selectedDate);
+            date.setDate(date.getDate() - 1);
+            $('dokan-start-date').datepicker('option', {'maxDate': date})
+        }
+    });
+
     $('.tips').tooltip();
 
     function showTooltip(x, y, contents) {

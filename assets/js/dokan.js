@@ -1567,8 +1567,27 @@ jQuery(function($) {
 jQuery(function($) {
     var api = wp.customize;
 
-    $('.datepicker').datepicker({
-        dateFormat: 'yy-mm-dd'
+    $('.sale_price_dates_fields input[name="_sale_price_dates_from"]').datepicker({
+        defaultDate: "",
+        dateFormat: "yy-mm-dd",
+        numberOfMonths: 1,
+        onSelect: function (selectedDate) {
+            let date = new Date(selectedDate);
+            date.setDate(date.getDate() + 1);
+            $('input[name="_sale_price_dates_to"]').datepicker('option', {'minDate': date})
+        }
+
+    });
+
+    $('.sale_price_dates_fields input[name="_sale_price_dates_to"]').datepicker({
+        defaultDate: "",
+        dateFormat: "yy-mm-dd",
+        numberOfMonths: 1,
+        onSelect: function (selectedDate) {
+            let date = new Date(selectedDate);
+            date.setDate(date.getDate() - 1);
+            $('input[name="_sale_price_dates_from"]').datepicker('option', {'maxDate': date})
+        }
     });
 
     $('.tips').tooltip();
