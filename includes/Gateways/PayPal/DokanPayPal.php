@@ -142,8 +142,8 @@ class DokanPayPal extends WC_Payment_Gateway {
                 'default'     => 'no',
                 'description' => sprintf( __( 'PayPal sandbox can be used to test payments. Sign up for a developer account <a href="%s">here</a>.', 'dokan-lite' ), 'https://developer.paypal.com/' ),
             ],
-            'app_id'          => [
-                'title'       => __( 'App ID', 'dokan-lite' ),
+            'partner_id'      => [
+                'title'       => __( 'Partner ID', 'dokan-lite' ),
                 'type'        => 'text',
                 'description' => __( 'For this payment method your need an application credential', 'dokan-lite' ),
                 'default'     => '',

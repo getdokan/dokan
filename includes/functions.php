@@ -26,7 +26,7 @@ function dokana_admin_menu_capability() {
  *
  * @since 2.7.3
  *
- * @return void
+ * @return int
  */
 function dokan_get_current_user_id() {
     if ( current_user_can( 'vendor_staff' ) ) {

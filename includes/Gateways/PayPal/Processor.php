@@ -28,114 +28,137 @@ class Processor {
     }
 
     /**
-     * create partner referral
+     * Create partner referral
      *
      * @param $vendor_email_address
+     * @param $tracking_id
      *
-     * @return array|\WP_Error
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return string|\WP_Error
      */
-    public function create_partner_referral( $vendor_email_address ) {
+    public function create_partner_referral( $vendor_email_address, $tracking_id ) {
         $partner_referral_data = [
-//            "individual_owners"       => [
-//                [
-//                    "names"         => [
-//                        [
-//                            "prefix"      => "Mr.",
-//                            "given_name"  => "John",
-//                            "surname"     => "Doe",
-//                            "middle_name" => "Middle",
-//                            "suffix"      => "Jr.",
-//                            "full_name"   => "John Middle Doe Jr.",
-//                            "type"        => "LEGAL",
-//                        ],
-//                    ],
-//                    "citizenship"   => "US",
-//                    "addresses"     => [
-//                        [
-//                            "address_line_1" => "One Washington Square",
-//                            "address_line_2" => "Apt 123",
-//                            "admin_area_2"   => "San Jose",
-//                            "admin_area_1"   => "CA",
-//                            "postal_code"    => "95112",
-//                            "country_code"   => "US",
-//                            "type"           => "HOME",
-//                        ],
-//                    ],
-//                    "phones"        => [
-//                        [
-//                            "country_code"     => "1",
-//                            "national_number"  => "6692468839",
-//                            "extension_number" => "1234",
-//                            "type"             => "MOBILE",
-//                        ],
-//                    ],
-//                    "birth_details" => [
-//                        "date_of_birth" => "1955-12-29",
-//                    ],
-//                    "type"          => "PRIMARY",
-//                ],
-//            ],
-            "email"                   => $vendor_email_address,
-            "preferred_language_code" => "en-US",
-            "tracking_id"             => "hello-dokan-test-ent01",
-            "partner_config_override" => [
-                "partner_logo_url"       => "https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_111x69.jpg",
-                "return_url"             => dokan_get_navigation_url( 'settings/payment' ),
-                "return_url_description" => "the url to return the merchant after the paypal onboarding process.",
-                "action_renewal_url"     => "https://testenterprises.com/renew-exprired-url",
+            'email'                   => $vendor_email_address,
+            'preferred_language_code' => 'en-US',
+            'tracking_id'             => $tracking_id,
+            'partner_config_override' => [
+                'partner_logo_url'       => 'https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_111x69.jpg',
+                'return_url'             => add_query_arg(
+                    [
+                        'action'   => 'paypal-marketplace-connect-success',
+                        'status'   => 'success',
+                        '_wpnonce' => wp_create_nonce( 'paypal-marketplace-connect-success' ),
+                    ],
+                    dokan_get_navigation_url( 'settings/payment' )
+                ),
+                'return_url_description' => 'the url to return the merchant after the paypal onboarding process.',
+                'action_renewal_url'     => 'https://testenterprises.com/renew-exprired-url',
             ],
-            "legal_consents"          => [
+            'legal_consents'          => [
                 [
-                    "type"    => "SHARE_DATA_CONSENT",
-                    "granted" => true,
+                    'type'    => 'SHARE_DATA_CONSENT',
+                    'granted' => true,
                 ],
             ],
-            "operations"              => [
+            'operations'              => [
                 [
-                    "operation"                  => "API_INTEGRATION",
-                    "api_integration_preference" => [
-                        "rest_api_integration" => [
-                            "integration_method"  => "PAYPAL",
-                            "integration_type"    => "THIRD_PARTY",
-                            "third_party_details" => [
-                                "features" => [
-                                    "PAYMENT",
-                                    "REFUND",
-                                    "DELAY_FUNDS_DISBURSEMENT",
-                                    "PARTNER_FEE",
-                                    "READ_SELLER_DISPUTE",
-                                    "UPDATE_SELLER_DISPUTE",
+                    'operation'                  => 'API_INTEGRATION',
+                    'api_integration_preference' => [
+                        'rest_api_integration' => [
+                            'integration_method'  => 'PAYPAL',
+                            'integration_type'    => 'THIRD_PARTY',
+                            'third_party_details' => [
+                                'features' => [
+                                    'PAYMENT',
+                                    'REFUND',
+                                    'DELAY_FUNDS_DISBURSEMENT',
+                                    'PARTNER_FEE',
+                                    'READ_SELLER_DISPUTE',
+                                    'UPDATE_SELLER_DISPUTE',
                                 ],
                             ],
                         ],
                     ],
                 ],
             ],
-            "products"                => [
-                "PPCP",
+            'products'                => [
+                'PPCP',
             ],
         ];
 
         $url      = $this->make_paypal_url( 'v2/customer/partner-referrals/' );
-        $response = $this->make_request( $url, json_encode( $partner_referral_data ) );
+        $response = $this->make_request( $url, wp_json_encode( $partner_referral_data ) );
 
         if ( is_wp_error( $response ) ) {
             return $response;
         }
 
-        return $response['links'][1]['href'];
+        if ( isset( $response['links'][1] ) && 'action_url' === $response['links'][1]['rel'] ) {
+            return $response['links'][1]['href'];
+        }
+
+        return new \WP_Error( 'dokan_paypal_create_partner_referral_error', $response );
     }
 
     /**
-     * get access token
+     * Get merchant ID from tracking id
+     *
+     * @param $tracking_id
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return string|\WP_Error
+     */
+    public function get_merchant_id( $tracking_id ) {
+        $partner_id = $this->get_option( 'partner_id' );
+        $url        = $this->make_paypal_url( "v1/customer/partners/{$partner_id}/merchant-integrations/?tracking_id={$tracking_id}" );
+
+        $response = $this->get_request( $url );
+
+        if ( is_wp_error( $response ) ) {
+            return $response;
+        }
+
+        if ( isset( $response['merchant_id'] ) ) {
+            return $response['merchant_id'];
+        }
+
+        return new \WP_Error( 'dokan_paypal_get_merchant_id_error', $response );
+    }
+
+    /**
+     * Get merchant id
+     *
+     * @param $merchant_id
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return array|\WP_Error
+     */
+    public function get_merchant_status( $merchant_id ) {
+        $partner_id = $this->get_option( 'partner_id' );
+        $url        = $this->make_paypal_url( "v1/customer/partners/{$partner_id}/merchant-integrations/{$merchant_id}" );
+
+        $response = $this->get_request( $url );
+
+        if ( is_wp_error( $response ) ) {
+            return $response;
+        }
+
+        return $response;
+    }
+
+    /**
+     * Get access token
      *
      * @since DOKAN_LITE_SINCE
      *
      * @return string|\WP_Error
      */
     public function get_access_token() {
-        if ( $access_token = get_transient( '_dokan_paypal_marketplace_access_token' ) ) {
-            return $access_token;
+        if ( get_transient( '_dokan_paypal_marketplace_access_token' ) ) {
+            return get_transient( '_dokan_paypal_marketplace_access_token' );
         }
 
         $access_token = $this->create_access_token();
@@ -148,7 +171,7 @@ class Processor {
     }
 
     /**
-     * create access token
+     * Create access token
      *
      * @since DOKAN_LITE_SINCE
      *
@@ -169,7 +192,7 @@ class Processor {
     }
 
     /**
-     * make paypal full url
+     * Make paypal full url
      *
      * @param $path
      *
@@ -182,7 +205,39 @@ class Processor {
     }
 
     /**
-     * make request
+     * Send get request
+     *
+     * @param $url
+     *
+     * @return array|mixed|\WP_Error
+     */
+    public function get_request( $url ) {
+        $args = [
+            'timeout'     => '30',
+            'redirection' => '30',
+            'httpversion' => '1.0',
+            'blocking'    => true,
+            'headers'     => $this->get_header(),
+            'cookies'     => [],
+        ];
+
+        $response = wp_remote_get( $url, $args );
+
+        if ( is_wp_error( $response ) ) {
+            return $response;
+        }
+
+        $body = wp_remote_retrieve_body( $response );
+
+        if ( 200 !== wp_remote_retrieve_response_code( $response ) ) {
+            return new \WP_Error( 'dokan_paypal_request_error', $body );
+        }
+
+        return json_decode( $body, true );
+    }
+
+    /**
+     * Make request
      *
      * @param $url
      * @param $data
@@ -195,13 +250,15 @@ class Processor {
      * @return array|\WP_Error
      */
     public function make_request( $url, $data, $header = true, $content_type_json = true, $request_with_token = true ) {
+        $header = $header ? $this->get_header( $content_type_json, $request_with_token ) : [];
+
         $args = [
             'body'        => $data,
             'timeout'     => '30',
             'redirection' => '30',
             'httpversion' => '1.0',
             'blocking'    => true,
-            'headers'     => $header ? $this->get_header( $content_type_json, $request_with_token ) : [],
+            'headers'     => $header,
             'cookies'     => [],
         ];
 
@@ -250,7 +307,7 @@ class Processor {
     }
 
     /**
-     * get base64 encoded authorization data
+     * Get base64 encoded authorization data
      *
      * @since DOKAN_LITE_SINCE
      *

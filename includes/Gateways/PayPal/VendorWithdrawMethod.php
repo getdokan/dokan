@@ -51,11 +51,19 @@ class VendorWithdrawMethod {
     public function paypal_connect_button( $store_settings ) {
         global $current_user;
 
-        $email = isset( $store_settings['payment']['paypal']['email'] ) ?
-            esc_attr( $store_settings['payment']['paypal']['email'] ) : $current_user->user_email;
+        $email = isset( $store_settings['payment']['paypal']['email'] ) ? esc_attr( $store_settings['payment']['paypal']['email'] ) : $current_user->user_email;
+
+        $partner_id = isset( $store_settings['payment']['paypal']['partner_id'] ) ? esc_attr( $store_settings['payment']['paypal']['partner_id'] ) : '';
+
+        $merchant_id = get_user_meta( get_current_user_id(), '_dokan_paypal_marketplace_merchant_id', true );
+        $button_text = $merchant_id ? __( 'Connected', 'dokan-lite' ) : __( 'Connect', 'dokan-lite' );
 
         dokan_get_template( 'gateways/paypal/vendor-settings-payment.php', [
-            'email' => $email
+            'email'           => $email,
+            'partner_id'      => $partner_id,
+            'button_text'     => $button_text,
+            'button_disabled' => $merchant_id ? true : false,
+            'button_class'    => $merchant_id ? 'disabled' : '',
         ] );
     }
 }

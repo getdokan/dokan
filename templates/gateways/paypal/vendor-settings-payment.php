@@ -14,12 +14,15 @@
     </div>
 
     <p class="dokan-text-left">
-        <a href="#" class="button button-primary vendor_paypal_connect">
-            <?php esc_html_e( 'Connect', 'dokan-lite' ); ?>
+        <a href="#" class="button button-primary vendor_paypal_connect <?php echo $button_class; ?>">
+            <?php echo esc_html( $button_text ); ?>
         </a>
     </p>
 </div>
 
+<?php
+if ( ! $button_disabled ) :
+?>
 <script type="text/javascript">
     <?php
     $url = add_query_arg( [
@@ -43,3 +46,4 @@
         });
     })(jQuery);
 </script>
+<?php endif; ?>
