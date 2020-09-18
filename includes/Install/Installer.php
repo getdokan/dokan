@@ -85,7 +85,11 @@ class Installer {
     public function user_roles() {
         global $wp_roles;
 
-        if ( class_exists( 'WP_Roles' ) && ! isset( $wp_roles ) ) {
+        if ( ! class_exists( 'WP_Roles' ) ) {
+            return;
+        }
+
+        if ( ! isset( $wp_roles ) ) {
             $wp_roles = new WP_Roles();
         }
 
