@@ -59,7 +59,7 @@ class Installer {
     /**
      * Update product new style options
      *
-     * when user first install this plugin
+     * When user first install this plugin
      * the new product style options changed to new
      *
      * @since 2.3
@@ -419,7 +419,7 @@ class Installer {
             $notice_version_parts  = explode( '.', trim( $matches[1] ) );
             $current_version_parts = explode( '.', DOKAN_PLUGIN_VERSION );
 
-            if ( 3 !== sizeof( $notice_version_parts ) ) {
+            if ( 3 !== count( $notice_version_parts ) ) {
                 return;
             }
 
