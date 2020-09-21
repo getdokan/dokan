@@ -11,9 +11,20 @@ namespace WeDevs\Dokan\Gateways\PayPal;
  * @author weDevs
  */
 class Processor {
-
+    /**
+     * @var bool
+     */
     private $test_mode = false;
+
+    /**
+     * @var string
+     */
     private $api_base_url = '';
+
+    /**
+     * @var array
+     */
+    private $additional_request_header = [];
 
     /**
      * Processor constructor.
@@ -147,6 +158,72 @@ class Processor {
         }
 
         return $response;
+    }
+
+    /**
+     * Create order with details in PayPal
+     *
+     * @param $order_data
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return string|\WP_Error
+     */
+    public function create_order( $order_data ) {
+        $url      = $this->make_paypal_url( 'v2/checkout/orders' );
+        $this->additional_request_header = [
+            'Prefer'                        => 'return=representation',
+            'PayPal-Partner-Attribution-Id' => 'weDevs_SP_Dokan',
+        ];
+
+        $response = $this->make_request( $url, wp_json_encode( $order_data ) );
+
+        if ( is_wp_error( $response ) ) {
+            return $response;
+        }
+
+        if (
+            isset( $response['status'] ) &&
+            'CREATED' === $response['status'] &&
+            isset( $response['links'][1] ) &&
+            'approve' === $response['links'][1]['rel']
+        ) {
+            return $response['links'][1]['href'];
+        }
+
+        return new \WP_Error( 'dokan_paypal_create_order_error', $response );
+    }
+
+    /**
+     * Capture payment
+     *
+     * @param $order_id
+     *
+     * @return array|bool|\WP_Error
+     */
+    public function capture_payment( $order_id ) {
+        $url = $this->make_paypal_url( "v2/checkout/orders/{$order_id}/capture" );
+        $this->additional_request_header = [
+            'Prefer'                        => 'return=representation',
+            'PayPal-Partner-Attribution-Id' => 'weDevs_SP_Dokan',
+        ];
+
+        $response = $this->make_request( $url, [] );
+
+        if ( is_wp_error( $response ) ) {
+            return $response;
+        }
+
+        if (
+            isset( $response['intent'] ) &&
+            isset( $response['status'] ) &&
+            'CAPTURE' === $response['intent'] &&
+            'COMPLETED' === $response['status']
+        ) {
+            return true;
+        }
+
+        return new \WP_Error( 'dokan_paypal_capture_order_error', $response );
     }
 
     /**
@@ -302,6 +379,9 @@ class Processor {
         }
 
         $headers['Authorization'] = 'Bearer ' . $this->get_access_token();
+
+        //merge array if there is any additional data
+        $headers = array_merge( $headers, $this->additional_request_header );
 
         return $headers;
     }
