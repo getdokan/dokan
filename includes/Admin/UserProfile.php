@@ -538,7 +538,7 @@ class UserProfile {
 
         $post_data = wp_unslash( $_POST );
 
-        if ( isset( $post_data['dokan_update_user_profile_info_nonce'] ) && ! wp_verify_nonce( $post_data['dokan_update_user_profile_info_nonce'], 'dokan_update_user_profile_info' ) ) {
+        if ( ! isset( $post_data['dokan_update_user_profile_info_nonce'] ) || ! wp_verify_nonce( $post_data['dokan_update_user_profile_info_nonce'], 'dokan_update_user_profile_info' ) ) {
             return;
         }
 
