@@ -27,11 +27,11 @@ class Manager {
      * @since DOKAN_LITE_SINCE
      */
     public function __construct() {
-        $this->container['paypal_marketplace'] = new \WeDevs\Dokan\Gateways\PayPal\Manager();
+        $this->container['paypal_marketplace'] = new PayPal\Manager();
     }
 
     /**
-     * set payment gateway
+     * Set payment gateway
      *
      * @param $class_name
      *

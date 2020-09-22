@@ -1,12 +1,12 @@
 <?php
 
-namespace WeDevs\Dokan\Gateways\PayPal;
+namespace WeDevs\Dokan\Gateways\PayPal\Utilities;
 
 /**
  * Class Processor
  * @since DOKAN_LITE_SINCE
  *
- * @package WeDevs\Dokan\Gateways\PayPal
+ * @package WeDevs\Dokan\Gateways\PayPal\Utilities
  *
  * @author weDevs
  */

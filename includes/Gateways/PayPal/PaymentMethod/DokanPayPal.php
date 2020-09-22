@@ -1,13 +1,14 @@
 <?php
 
-namespace WeDevs\Dokan\Gateways\PayPal;
+namespace WeDevs\Dokan\Gateways\PayPal\PaymentMethod;
 
 use WC_Logger;
 use WC_Payment_Gateway;
+use WeDevs\Dokan\Gateways\PayPal\Utilities\Processor;
 
 /**
  * Class DokanPayPal
- * @package WeDevs\Dokan\Gateways\PayPal
+ * @package WeDevs\Dokan\Gateways\PayPal\PaymentMethod
  *
  * @since DOKAN_LITE_SINCE
  *
@@ -229,16 +230,9 @@ class DokanPayPal extends WC_Payment_Gateway {
      * @return void
      */
     public function init_hooks() {
-        // Payment listener/API hook
         add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, [ &$this, 'process_admin_options' ] );
-
-        add_action( 'woocommerce_api_dokan-paypal-marketplace-payment-authorized', [ $this, 'check_ipn_response' ] );
-//        add_action( 'dokan-valid-paypal-marketplace-request', [ $this, 'successful_request' ] );
         add_action( 'admin_footer', [ $this, 'admin_script' ] );
-//        add_action( 'wp_enqueue_scripts', [ $this, 'payment_scripts' ] );
         add_action( 'woocommerce_after_checkout_validation', [ $this, 'after_checkout_validation' ], 15, 2 );
-
-//        add_action( 'woocommerce_thankyou_' . $this->id, array( $this, 'thank_you_page' ) );
     }
 
     /**
@@ -377,17 +371,6 @@ class DokanPayPal extends WC_Payment_Gateway {
         }
 
         return $state;
-    }
-
-    /**
-     * Check if ipn request is valid or not
-     *
-     * @since DOKAN_LITE_SINCE
-     *
-     * @return boolean true/false
-     */
-    public function check_ipn_response() {
-        error_log( print_r( $_GET, true ) );
     }
 
     /**
@@ -632,8 +615,8 @@ class DokanPayPal extends WC_Payment_Gateway {
                     ],
                 ],
             ],
-            'invoice_id'          => $order->get_id(),
-            'custom_id'           => $order->get_parent_id(),
+            'invoice_id'          => $order->get_parent_id() ? $order->get_parent_id() : $order->get_id(),
+            'custom_id'           => $order->get_id(),
         ];
 
         return $purchase_units;
@@ -760,37 +743,5 @@ class DokanPayPal extends WC_Payment_Gateway {
             }
         }
     }
-
-    /**
-     * Thank you page after order
-     *
-     * @param $order_id
-     *
-     * @since DOKAN_LITE_SINCE
-     *
-     * @return void
-     */
-    public function thank_you_page( $order_id ) {
-        $paypal_order_id = sanitize_text_field( $_GET['token'] );
-        $paypal_payer_id = sanitize_text_field( $_GET['PayerID'] );
-        $processor       = new Processor();
-        $capture_payment = $processor->capture_payment( $paypal_order_id );
-        $order           = wc_get_order( $order_id );
-
-        if ( is_wp_error( $capture_payment ) ) {
-            wp_safe_redirect( $order->get_checkout_order_received_url() );
-            exit();
-        }
-
-        $order->add_order_note(
-            sprintf( __( 'PayPal payment completed. PayPal Order ID #%s! Payer ID: %s', 'dokan-lite' ),
-                $paypal_order_id,
-                $paypal_payer_id
-            )
-        );
-
-        $order->payment_complete();
-    }
-
 }
 
