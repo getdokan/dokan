@@ -233,6 +233,7 @@ class DokanPayPal extends WC_Payment_Gateway {
         add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, [ &$this, 'process_admin_options' ] );
         add_action( 'admin_footer', [ $this, 'admin_script' ] );
         add_action( 'woocommerce_after_checkout_validation', [ $this, 'after_checkout_validation' ], 15, 2 );
+        add_action( 'admin_notices', [ $this, 'admin_notice' ] );
     }
 
     /**
@@ -742,6 +743,19 @@ class DokanPayPal extends WC_Payment_Gateway {
                 );
             }
         }
+    }
+
+    /**
+     * Admin options with extra information
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return void
+     */
+    public function admin_options() {
+        dokan_get_template( 'gateways/paypal/admin-options.php' );
+
+        parent::admin_options();
     }
 }
 
