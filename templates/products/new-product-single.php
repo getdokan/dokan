@@ -404,7 +404,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                             </div>
                                         </div> <!-- .product-gallery -->
 
-                                    <?php do_action( 'dokan_product_gallery_image_count' );?>
+                                    <?php do_action( 'dokan_add_product_js_template_end' );?>
 
                                 </div><!-- .content-half-part -->
                             </div><!-- .dokan-form-top-area -->
