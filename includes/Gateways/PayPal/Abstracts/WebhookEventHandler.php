@@ -24,7 +24,7 @@ abstract class WebhookEventHandler {
      *
      * @return void
      */
-    abstract function handle();
+    abstract public function handle();
 
     /**
      * Set event

@@ -197,6 +197,5 @@ class Manager {
             'email' => $paypal_settings['email'],
         ];
         update_user_meta( $user_id, 'dokan_profile_settings', $dokan_settings );
-
     }
 }

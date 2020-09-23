@@ -69,7 +69,7 @@ class EventFactory {
         if ( ! class_exists( $class ) ) {
             throw new DokanException(
                 'dokan_paypal_unsupported_event',
-                sprintf( __( 'This %s is not supported yet', 'dokan-lite' ), $class ),
+                sprintf( 'This %s is not supported yet', $class ),
                 422
             );
         }

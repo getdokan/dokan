@@ -20,9 +20,11 @@ class Helper {
      * @return array
      */
     public static function get_supported_webhook_events() {
-        return apply_filters( 'dokan_paypal_get_supported_webhook_events', [
-            'CHECKOUT.ORDER.APPROVED'  => 'CheckoutOrderApproved',
-            'CHECKOUT.ORDER.COMPLETED' => 'CheckoutOrderCompleted',
-        ] );
+        return apply_filters(
+            'dokan_paypal_get_supported_webhook_events', [
+                'CHECKOUT.ORDER.APPROVED'  => 'CheckoutOrderApproved',
+                'CHECKOUT.ORDER.COMPLETED' => 'CheckoutOrderCompleted',
+            ]
+        );
     }
 }

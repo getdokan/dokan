@@ -58,12 +58,15 @@ class VendorWithdrawMethod {
         $merchant_id = get_user_meta( get_current_user_id(), '_dokan_paypal_marketplace_merchant_id', true );
         $button_text = $merchant_id ? __( 'Connected', 'dokan-lite' ) : __( 'Connect', 'dokan-lite' );
 
-        dokan_get_template( 'gateways/paypal/vendor-settings-payment.php', [
-            'email'           => $email,
-            'partner_id'      => $partner_id,
-            'button_text'     => $button_text,
-            'button_disabled' => $merchant_id ? true : false,
-            'button_class'    => $merchant_id ? 'disabled' : '',
-        ] );
+        dokan_get_template(
+            'gateways/paypal/vendor-settings-payment.php',
+            [
+                'email'           => $email,
+                'partner_id'      => $partner_id,
+                'button_text'     => $button_text,
+                'button_disabled' => $merchant_id ? true : false,
+                'button_class'    => $merchant_id ? 'dokan-btn-success disabled' : '',
+            ]
+        );
     }
 }

@@ -86,26 +86,26 @@ class DokanPayPal extends WC_Payment_Gateway {
      */
     public function init_form_fields() {
         $this->form_fields = [
-            'enabled'        => [
+            'enabled'                    => [
                 'title'   => __( 'Enable/Disable', 'dokan-lite' ),
                 'type'    => 'checkbox',
                 'label'   => __( 'Enable PayPal Marketplace', 'dokan-lite' ),
                 'default' => 'no',
             ],
-            'title'          => [
+            'title'                      => [
                 'title'       => __( 'Title', 'dokan-lite' ),
                 'type'        => 'text',
                 'description' => __( 'This controls the title which the user sees during checkout.', 'dokan-lite' ),
                 'default'     => __( 'PayPal Marketplace', 'dokan-lite' ),
                 'desc_tip'    => true,
             ],
-            'description'    => [
+            'description'                => [
                 'title'       => __( 'Description', 'dokan-lite' ),
                 'type'        => 'textarea',
                 'description' => __( 'This controls the description which the user sees during checkout.', 'dokan-lite' ),
                 'default'     => __( 'Pay via PayPal Marketplace; you can pay with your credit card if you don\'t have a PayPal account', 'dokan-lite' ),
             ],
-            'pa_admin_email' => [
+            'pa_admin_email'             => [
                 'title'       => __( 'PayPal Email', 'dokan-lite' ),
                 'type'        => 'email',
                 'description' => __( 'Please enter your PayPal email address; this is needed in order to take payment.', 'dokan-lite' ),
@@ -113,43 +113,25 @@ class DokanPayPal extends WC_Payment_Gateway {
                 'desc_tip'    => true,
                 'placeholder' => 'you@youremail.com',
             ],
-//            'single_mode'    => [
-//                'title'       => __( 'Mode', 'dokan-lite' ),
-//                'label'       => __( 'Single Vendor Mode (Recommended)', 'dokan-lite' ),
-//                'type'        => 'checkbox',
-//                'default'     => 'yes',
-//            ],
-//            'fees_payer'     => [
-//                'title'       => __( 'Fees Payer', 'dokan-lite' ),
-//                'type'        => 'select',
-//                'description' => __( 'Please choose who will pay the fee', 'dokan-lite' ),
-//                'desc_tip'    => true,
-//                'default'     => 'each',
-//                'options'     => [
-//                    'each'   => __( 'Each receiver', 'dokan-lite' ),
-//                    'admin'  => __( 'Admin', 'dokan-lite' ),
-//                    'seller' => __( 'Vendor', 'dokan-lite' ),
-//                ],
-//            ],
-//            'send_shipping'  => [
-//                'title' => __( 'Shipping details', 'dokan-lite' ),
-//                'label' => __( 'Send shipping details to PayPal instead of billing.', 'dokan-lite' ),
-//                'type'  => 'checkbox',
-//            ],
             'allow_non_connected_seller' => [
                 'title'   => __( 'Allow Non connected Seller', 'dokan-lite' ),
                 'type'    => 'checkbox',
                 'label'   => __( 'Allow Non connected Seller', 'dokan-lite' ),
                 'default' => 'no',
             ],
-            'test_mode'      => [
+            'test_mode'                  => [
                 'title'       => __( 'PayPal sandbox', 'dokan-lite' ),
                 'type'        => 'checkbox',
                 'label'       => __( 'Enable PayPal sandbox', 'dokan-lite' ),
                 'default'     => 'no',
-                'description' => sprintf( __( 'PayPal sandbox can be used to test payments. Sign up for a developer account <a href="%s">here</a>.', 'dokan-lite' ), 'https://developer.paypal.com/' ),
+                'description' => sprintf(
+                    __(
+                        'PayPal sandbox can be used to test payments. Sign up for a developer account <a href="%s">here</a>.', 'dokan-lite'
+                    ),
+                    'https://developer.paypal.com/'
+                ),
             ],
-            'partner_id'      => [
+            'partner_id'                 => [
                 'title'       => __( 'Partner ID', 'dokan-lite' ),
                 'type'        => 'text',
                 'description' => __( 'For this payment method your need an application credential', 'dokan-lite' ),
@@ -157,7 +139,7 @@ class DokanPayPal extends WC_Payment_Gateway {
                 'desc_tip'    => true,
                 'placeholder' => 'api appID',
             ],
-            'app_user'        => [
+            'app_user'                   => [
                 'title'       => __( 'API Username', 'dokan-lite' ),
                 'type'        => 'text',
                 'description' => __( 'For this payment method your need an application credential', 'dokan-lite' ),
@@ -165,7 +147,7 @@ class DokanPayPal extends WC_Payment_Gateway {
                 'desc_tip'    => true,
                 'placeholder' => 'username',
             ],
-            'app_pass'        => [
+            'app_pass'                   => [
                 'title'       => __( 'API Password', 'dokan-lite' ),
                 'type'        => 'text',
                 'description' => __( 'For this payment method your need an application credential', 'dokan-lite' ),
@@ -173,7 +155,7 @@ class DokanPayPal extends WC_Payment_Gateway {
                 'desc_tip'    => true,
                 'placeholder' => 'password',
             ],
-            'app_sig'         => [
+            'app_sig'                    => [
                 'title'       => __( 'API Signature', 'dokan-lite' ),
                 'type'        => 'text',
                 'description' => __( 'For this payment method your need an application credential', 'dokan-lite' ),
@@ -181,7 +163,7 @@ class DokanPayPal extends WC_Payment_Gateway {
                 'desc_tip'    => true,
                 'placeholder' => 'signature',
             ],
-            'test_app_user'   => [
+            'test_app_user'              => [
                 'title'       => __( 'Sandbox App Username', 'dokan-lite' ),
                 'type'        => 'text',
                 'description' => __( 'For this system please sign up in developer account and get your  application credential', 'dokan-lite' ),
@@ -189,7 +171,7 @@ class DokanPayPal extends WC_Payment_Gateway {
                 'desc_tip'    => true,
                 'placeholder' => 'username',
             ],
-            'test_app_pass'   => [
+            'test_app_pass'              => [
                 'title'       => __( 'Sandbox App Password', 'dokan-lite' ),
                 'type'        => 'text',
                 'description' => __( 'For this system please sign up in developer account and get your  application credential', 'dokan-lite' ),
@@ -197,7 +179,7 @@ class DokanPayPal extends WC_Payment_Gateway {
                 'desc_tip'    => true,
                 'placeholder' => 'password',
             ],
-            'test_app_sig'    => [
+            'test_app_sig'               => [
                 'title'       => __( 'Sandbox App Signature', 'dokan-lite' ),
                 'type'        => 'text',
                 'description' => __( 'For this system please sign up in developer account and get your  application credential', 'dokan-lite' ),
@@ -205,19 +187,22 @@ class DokanPayPal extends WC_Payment_Gateway {
                 'desc_tip'    => true,
                 'placeholder' => 'signature',
             ],
-            'max_error'      => [
+            'max_error'                  => [
                 'title'       => __( 'Error Message', 'dokan-lite' ),
                 'type'        => 'text',
                 'description' => __( 'This is the error message displayed to a shopper when attempting to add too many vendor items to the cart due to PayPal limitation.', 'dokan-lite' ),
                 'default'     => __( 'Cart item quantity total exceeded - item not added to cart. Please checkout to purchase the items in your cart.', 'dokan-lite' ),
                 'desc_tip'    => true,
             ],
-            'debug'          => [
+            'debug'                      => [
                 'title'       => __( 'Debug Log', 'dokan-lite' ),
                 'type'        => 'checkbox',
                 'label'       => __( 'Enable logging', 'dokan-lite' ),
                 'default'     => 'no',
-                'description' => sprintf( __( 'Log PayPal events, such as IPN requests, inside <code>woocommerce/logs/paypal-%s.txt</code>', 'dokan-lite' ), sanitize_file_name( wp_hash( 'paypal' ) ) ),
+                'description' => sprintf(
+                    __( 'Log PayPal events, such as IPN requests, inside <code>woocommerce/logs/paypal-%s.txt</code>', 'dokan-lite' ),
+                    sanitize_file_name( wp_hash( 'paypal' ) )
+                ),
             ],
         ];
     }
@@ -303,7 +288,12 @@ class DokanPayPal extends WC_Payment_Gateway {
      */
     public function process_payment( $order_id ) {
         $order      = wc_get_order( $order_id );
-        $sub_orders = get_children( [ 'post_parent' => $order_id, 'post_type' => 'shop_order' ] );
+        $sub_orders = get_children(
+            [
+                'post_parent' => $order_id,
+                'post_type'   => 'shop_order',
+            ]
+        );
 
         $purchase_units = [];
 
@@ -375,128 +365,16 @@ class DokanPayPal extends WC_Payment_Gateway {
     }
 
     /**
-     * Do successful request...
-     *
-     * @return void
-     */
-    public function successful_request() {
-        $posted = $_POST;
-        $paykey = isset( $posted['pay_key'] ) ? $posted['pay_key'] : '';
-
-        if ( ! $paykey ) {
-            $this->add_log( __( 'No pay key found, abort.', 'dokan-lite' ) );
-            exit;
-        }
-
-        $order_id = $this->get_order_by_paykey( $paykey );
-
-        if ( ! $order_id ) {
-            $this->add_log( sprintf( __( 'No order id found by pay key: %s', 'dokan-lite' ), $paykey ) );
-            exit;
-        }
-
-        $order = new WC_Order( $order_id );
-
-        // yet another check to make sure
-        if ( ! isset( $order->id ) || empty( $order->id ) || absint( $order->id ) <= 0 ) {
-            $this->add_log( sprintf( __( 'No order found by pay key: %s', 'dokan-lite' ), $paykey ) );
-            exit;
-        }
-
-        $this->add_log( "Payment post data: \n" . print_r( $posted, true ) . "\n-----------\n" );
-
-        $status = strtolower( $posted['status'] );
-
-        switch ( $status ) {
-            case 'completed' :
-
-                // Check order not already completed
-                if ( $order->status == 'completed' ) {
-                    $this->add_log( 'Aborting, Order #' . $order->id . ' is already complete.' );
-                    exit;
-                }
-
-                $order->add_order_note( __( 'IPN payment completed', 'dokan-lite' ) );
-                $order->payment_complete();
-
-                if ( ! empty( $posted['sender_email'] ) ) {
-                    update_post_meta( $order_id, "Payer's PayPal address", $posted['sender_email'] );
-                }
-
-                if ( ! empty( $posted['fees_payer'] ) ) {
-                    update_post_meta( $order_id, 'Fee Payer', $posted['fees_payer'] );
-                }
-
-                if ( ! empty( $posted['payment_request_date'] ) ) {
-                    update_post_meta( $order_id, "PayPal's Date Stamp", $posted['payment_request_date'] );
-                }
-
-                break;
-
-            case 'error' :
-            case 'reversalerror':
-            case 'denied' :
-            case 'expired' :
-            case 'failed' :
-            case 'voided' :
-                // Order failed
-                $order->update_status( 'failed', sprintf( __( 'Payment %s via IPN.', 'dokan-lite' ), strtolower( $posted['status'] ) ) );
-
-                break;
-
-            case 'incomplete':
-            case 'processing':
-            case 'pending':
-            case 'created' :
-                // order pending
-                $order->update_status( 'on-hold', sprintf( __( 'Payment %s via IPN. Order is pending completion. PayPal will notify this site of further status updates. Or check your PayPal account for further information', 'dokan-lite' ), strtolower( $_POST['status'] ) ) );
-
-                break;
-
-            case "refunded" :
-
-                // Handle full refunds, not partial refunds
-                if ( $order->get_total() == ( $posted['mc_gross'] * - 1 ) ) {
-
-                    // Mark order as refunded
-                    $order->update_status( 'refunded', sprintf( __( 'Payment %s via IPN.', 'dokan-lite' ), strtolower( $posted['status'] ) ) );
-
-                    $mailer  = WC()->mailer();
-                    $message = $mailer->wrap_message( __( 'Order refunded/reversed', 'dokan-lite' ), sprintf( __( 'Order %s has been marked as refunded - PayPal reason code: %s', 'dokan-lite' ), $order->get_order_number(), $posted['reason_code'] ) );
-
-                    $mailer->send( get_option( 'admin_email' ), sprintf( __( 'Payment for order %s refunded/reversed', 'dokan-lite' ), $order->get_order_number() ), $message );
-                }
-
-                break;
-
-            case "reversed" :
-            case "chargeback" :
-
-                // Mark order as refunded
-                $order->update_status( 'refunded', sprintf( __( 'Payment %s via IPN.', 'dokan-lite' ), strtolower( $posted['status'] ) ) );
-
-                $mailer  = WC()->mailer();
-                $message = $mailer->wrap_message( __( 'Order refunded/reversed', 'dokan-lite' ), sprintf( __( 'Order %s has been marked as refunded - PayPal reason code: %s', 'dokan-lite' ), $order->get_order_number(), $posted['reason_code'] ) );
-                $mailer->send( get_option( 'admin_email' ), sprintf( __( 'Payment for order %s refunded/reversed', 'dokan-lite' ), $order->get_order_number() ), $message );
-
-                break;
-
-            default :
-                // No action
-                break;
-        }
-    }
-
-    /**
      * Add to log file if debug enabled
      *
      * @param string $message
      *
      * @since DOKAN_LITE_SINCE
      *
+     * @return void
      */
     public function add_log( $message ) {
-        if ( 'yes' == $this->debug ) {
+        if ( 'yes' === $this->debug ) {
             $this->log->add( 'dokan-paypal-marketplace', $message );
         }
     }
@@ -511,7 +389,7 @@ class DokanPayPal extends WC_Payment_Gateway {
     public function admin_script() {
         ?>
         <script type="text/javascript">
-            ;(function($) {
+            ;(function ($) {
                 var inputToggle = function (val) {
                     let payment_id_prefix = 'woocommerce_<?php echo $this->id; ?>_';
 
@@ -539,7 +417,7 @@ class DokanPayPal extends WC_Payment_Gateway {
 
                 inputToggle(test_mode.val());
 
-                test_mode.on('change', function() {
+                test_mode.on('change', function () {
                     inputToggle(this.checked);
                 });
 
@@ -717,7 +595,7 @@ class DokanPayPal extends WC_Payment_Gateway {
 
         $available_vendors = [];
         foreach ( WC()->cart->get_cart() as $item ) {
-            $product_id = $item['data']->get_id();
+            $product_id                                                               = $item['data']->get_id();
             $available_vendors[ get_post_field( 'post_author', $product_id ) ][] = $item['data'];
         }
 
