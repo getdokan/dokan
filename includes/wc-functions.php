@@ -95,7 +95,7 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
     $sku     = get_post_meta( $post_id, '_sku', true );
     $new_sku = (string) wc_clean( $data['_sku'] );
 
-    if ( '' == $new_sku ) {
+    if ( '' === $new_sku ) {
         update_post_meta( $post_id, '_sku', '' );
     } elseif ( $new_sku !== $sku ) {
         if ( ! empty( $new_sku ) ) {
@@ -227,7 +227,7 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
 
     update_post_meta( $post_id, '_product_attributes', $attributes );
 
-    if ( in_array( $product_type, array( 'variable', 'grouped' ) ) ) {
+    if ( in_array( $product_type, array( 'variable', 'grouped' ), true ) ) {
         // Variable and grouped products have no prices
         update_post_meta( $post_id, '_regular_price', '' );
         update_post_meta( $post_id, '_sale_price', '' );
@@ -250,7 +250,7 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
         update_post_meta( $post_id, '_sale_price_dates_to', $date_to ? strtotime( '+ 23 hours', strtotime( $date_to ) ): '' );
 
         if ( $date_to && ! $date_from ) {
-            $date_from = date( 'Y-m-d' );
+            $date_from = gmdate( 'Y-m-d' );
             update_post_meta( $post_id, '_sale_price_dates_from', strtotime( $date_from ) );
         }
 
@@ -267,7 +267,7 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
     //enable reviews
     $comment_status = 'closed';
 
-    if ( $data['_enable_reviews'] == 'yes' ) {
+    if ( $data['_enable_reviews'] === 'yes' ) {
         $comment_status = 'open';
     }
 
@@ -310,7 +310,7 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
             // Stock status is always determined by children so sync later
             $stock_status = '';
 
-            if ( ! empty( $data['_manage_stock'] ) && $data['_manage_stock'] == 'yes' ) {
+            if ( ! empty( $data['_manage_stock'] ) && $data['_manage_stock'] === 'yes' ) {
                 $manage_stock = 'yes';
                 $backorders   = wc_clean( $data['_backorders'] );
             }
@@ -344,7 +344,7 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
     }
 
     // Downloadable options
-    if ( 'yes' == $is_downloadable ) {
+    if ( 'yes' === $is_downloadable ) {
         $_download_limit = absint( $data['_download_limit'] );
 
         if ( ! $_download_limit ) {
@@ -362,7 +362,7 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
 
             $file_names    = isset( $data['_wc_file_names'] ) ? array_map( 'wc_clean', $data['_wc_file_names'] ) : array();
             $file_urls     = isset( $data['_wc_file_urls'] ) ? array_map( 'esc_url_raw', array_map( 'trim', $data['_wc_file_urls'] ) ) : array();
-            $file_url_size = sizeof( $file_urls );
+            $file_url_size = count( $file_urls );
 
             for ( $i = 0; $i < $file_url_size; $i ++ ) {
                 if ( ! empty( $file_urls[ $i ] ) ) {
@@ -605,7 +605,7 @@ function check_more_seller_product_tab() {
 
     $store_info = dokan_get_store_info( $post->post_author );
 
-    if ( isset( $store_info['show_more_ptab'] ) and $store_info['show_more_ptab'] == 'yes' ) {
+    if ( isset( $store_info['show_more_ptab'] ) && $store_info['show_more_ptab'] === 'yes' ) {
         return true;
     } else {
         return false;
@@ -760,6 +760,7 @@ function dokan_get_readable_seller_rating( $seller_id ) {
  * @return array
  */
 function dokan_exclude_child_customer_receipt( &$phpmailer ) {
+    // phpcs:ignore
     $subject      = $phpmailer->Subject;
 
     // order receipt
