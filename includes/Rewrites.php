@@ -70,7 +70,7 @@ class Rewrites {
      *
      * @return void
      */
-    function register_rule() {
+    public function register_rule() {
         $this->query_vars = apply_filters(
             'dokan_query_var_filter', array(
 				'products',
@@ -147,7 +147,7 @@ class Rewrites {
      *
      * @return array
      */
-    function register_query_var( $vars ) {
+    public function register_query_var( $vars ) {
         $vars[] = $this->custom_store_url;
         $vars[] = 'edit';
         $vars[] = 'term_section';
@@ -167,7 +167,7 @@ class Rewrites {
      *
      * @return string
      */
-    function store_template( $template ) {
+    public function store_template( $template ) {
         $store_name = get_query_var( $this->custom_store_url );
 
         if ( ! $this->is_woo_installed() ) {
@@ -211,7 +211,7 @@ class Rewrites {
      *
      * @return string
      */
-    function store_toc_template( $template ) {
+    public function store_toc_template( $template ) {
         $store_name = get_query_var( $this->custom_store_url );
 
         if ( ! $this->is_woo_installed() ) {
@@ -241,7 +241,7 @@ class Rewrites {
      *
      * @return string
      */
-    function product_edit_template( $template ) {
+    public function product_edit_template( $template ) {
         if ( ! $this->is_woo_installed() ) {
             return $template;
         }
@@ -267,7 +267,7 @@ class Rewrites {
      *
      * @return void
      */
-    function store_query_filter( $query ) {
+    public function store_query_filter( $query ) {
         global $wp_query;
 
         $author = get_query_var( $this->custom_store_url );
