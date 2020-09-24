@@ -212,11 +212,23 @@ class Rewrites {
      * @return string
      */
     function store_toc_template( $template ) {
+        $store_name = get_query_var( $this->custom_store_url );
+
         if ( ! $this->is_woo_installed() ) {
             return $template;
         }
-        if ( get_query_var( 'toc' ) ) {
-            return dokan_locate_template( 'store-toc.php' );
+
+        if ( ! empty( $store_name ) ) {
+            $seller = get_user_by( 'slug', $store_name );
+
+            //redirect to 404 if no seller found
+            if ( ! $seller ) {
+                return get_404_template();
+            }
+
+            if ( get_query_var( 'toc' ) ) {
+                return dokan_locate_template( 'store-toc.php' );
+            }
         }
 
         return $template;
