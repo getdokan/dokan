@@ -62,7 +62,7 @@ class Commission {
             $gateway_fee_added = $tmp_order->get_meta( 'dokan_gateway_fee' );
             $vendor_earning    = $this->get_earning_from_order_table( $tmp_order->get_id() );
 
-            if ( is_null( $vendor_earning ) || $gateway_fee_added ) {
+            if ( $order->get_meta( 'has_sub_order' ) && ( is_null( $vendor_earning ) || $gateway_fee_added ) ) {
                 continue;
             }
 
