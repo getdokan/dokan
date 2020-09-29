@@ -138,7 +138,7 @@ function dokan_is_seller_dashboard() {
         return false;
     }
 
-    if ( $page_id === apply_filters( 'dokan_get_current_page_id', get_the_ID() ) ) {
+    if ( absint( $page_id ) === apply_filters( 'dokan_get_current_page_id', get_the_ID() ) ) {
         return true;
     }
 
