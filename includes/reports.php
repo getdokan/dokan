@@ -396,15 +396,7 @@ if ( ! function_exists( 'dokan_sales_overview_chart_data' ) ) :
                         position: "bottom",
                         tickColor: 'transparent',
                         mode: "time",
-                        timeformat: "
-                        <?php
-                        if ( $group_by == 'day' ) {
-							echo '%d %b';
-						} else {
-							echo '%b';
-						}
-						?>
-                        ",
+                        timeformat: "<?php if ( $group_by == 'day' ) echo '%d %b'; else echo '%b'; ?>",
                         monthNames: <?php echo json_encode( array_values( $wp_locale->month_abbrev ) ); ?>,
                         tickLength: 1,
                         minTickSize: [1, "<?php echo esc_attr( $group_by ); ?>"],
