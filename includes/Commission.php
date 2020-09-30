@@ -72,6 +72,7 @@ class Commission {
             $gateway_fee = apply_filters( 'dokan_get_processing_gateway_fee', $gateway_fee, $tmp_order, $order );
 
             $net_amount = $vendor_earning - $gateway_fee;
+            $net_amount = apply_filters( 'dokan_orders_vendor_net_amount', $net_amount, $vendor_earning, $gateway_fee, $tmp_order, $order );
 
             $wpdb->update(
                 $wpdb->dokan_orders,
