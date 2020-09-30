@@ -5,6 +5,7 @@ namespace WeDevs\Dokan\Gateways\PayPal;
 use WeDevs\Dokan\Gateways\PayPal\PaymentMethod\DokanPayPal;
 use WeDevs\Dokan\Gateways\PayPal\Utilities\Processor;
 use WeDevs\Dokan\Traits\ChainableContainer;
+use WeDevs\Dokan\Gateways\Manager as GatewayManager;
 
 /**
  * Class Manager
@@ -38,8 +39,9 @@ class Manager {
      */
     private function set_controllers() {
         $this->container['vendor_withdraw_methods'] = new VendorWithdrawMethod();
-        $this->container['dokan_paypal_wc_gateway'] = new DokanPayPal();
+        $this->container['paypal_wc_gateway']       = new DokanPayPal();
         $this->container['paypal_webhook']          = new WebhookHandler();
+        $this->container['paypal_cart']             = new CartHandler();
     }
 
     /**
@@ -50,7 +52,7 @@ class Manager {
      * @return void
      */
     public function register_gateway() {
-        \WeDevs\Dokan\Gateways\Manager::set_gateway( DokanPayPal::class );
+        GatewayManager::set_gateway( DokanPayPal::class );
     }
 
     /**

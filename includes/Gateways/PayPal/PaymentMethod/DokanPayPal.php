@@ -217,7 +217,6 @@ class DokanPayPal extends WC_Payment_Gateway {
     public function init_hooks() {
         add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, [ &$this, 'process_admin_options' ] );
         add_action( 'admin_footer', [ $this, 'admin_script' ] );
-        add_action( 'woocommerce_after_checkout_validation', [ $this, 'after_checkout_validation' ], 15, 2 );
     }
 
     /**
@@ -320,16 +319,10 @@ class DokanPayPal extends WC_Payment_Gateway {
         $create_order_url = $processor->create_order( $create_order_data );
 
         if ( is_wp_error( $create_order_url ) ) {
-            wp_safe_redirect(
-                add_query_arg(
-                    [
-                        'status'  => 'paypal-create-order-error',
-                        'message' => $create_order_url['error'],
-                    ],
-                    $order->get_checkout_order_received_url()
-                )
-            );
-            exit();
+            return [
+                'result'   => 'error',
+                'redirect' => $order->get_checkout_order_received_url(),
+            ];
         }
 
         // Return thank you redirect
@@ -571,55 +564,6 @@ class DokanPayPal extends WC_Payment_Gateway {
         }
 
         return wc_format_decimal( $tax_amount );
-    }
-
-    /**
-     * Validation after checkout
-     *
-     * @param $data
-     * @param $errors
-     *
-     * @since DOKAN_LITE_SINCE
-     *
-     * @return void
-     */
-    public function after_checkout_validation( $data, $errors ) {
-        if ( 'yes' === $this->get_option( 'allow_non_connected_seller' ) ) {
-            return;
-        }
-
-        if ( $this->id !== $data['payment_method'] ) {
-            return;
-        }
-
-        $available_vendors = [];
-        foreach ( WC()->cart->get_cart() as $item ) {
-            $product_id                                                               = $item['data']->get_id();
-            $available_vendors[ get_post_field( 'post_author', $product_id ) ][] = $item['data'];
-        }
-
-        foreach ( array_keys( $available_vendors ) as $vendor_id ) {
-            $merchant_id = get_user_meta( $vendor_id, '_dokan_paypal_marketplace_merchant_id', true );
-
-            if ( ! $merchant_id ) {
-                $vendor      = dokan()->vendor->get( $vendor_id );
-                $vendor_name = sprintf( '<a href="%s">%s</a>', esc_url( $vendor->get_shop_url() ), $vendor->get_shop_name() );
-
-                $vendor_products = [];
-                foreach ( $available_vendors[ $vendor_id ] as $product ) {
-                    $vendor_products[] = sprintf( '<a href="%s">%s</a>', $product->get_permalink(), $product->get_name() );
-                }
-
-                $errors->add(
-                    'paypal-not-configured',
-                    sprintf(
-                        __( '<strong>Error!</strong> You cannot complete your purchase until <strong>%s</strong> has connected PayPal as a payment gateway. Please remove %s to continue.', 'dokan-lite' ),
-                        $vendor_name,
-                        implode( ', ', $vendor_products )
-                    )
-                );
-            }
-        }
     }
 
     /**

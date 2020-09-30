@@ -32,7 +32,7 @@ class Processor {
      * @since DOKAN_LITE_SINCE
      */
     public function __construct() {
-        if ( $this->get_option( 'test_mode' ) === 'yes' ) {
+        if ( 'yes' === $this->get_option( 'test_mode' ) ) {
             $this->test_mode    = true;
             $this->api_base_url = 'https://api.sandbox.paypal.com/';
         }
@@ -362,7 +362,7 @@ class Processor {
      *
      * @since DOKAN_LITE_SINCE
      *
-     * @return array
+     * @return array|\WP_Error
      */
     public function get_header( $content_type_json = true, $request_with_token = true ) {
         $content_type = $content_type_json ? 'json' : 'x-www-form-urlencoded';
@@ -378,7 +378,13 @@ class Processor {
             return $headers;
         }
 
-        $headers['Authorization'] = 'Bearer ' . $this->get_access_token();
+        $access_token = $this->get_access_token();
+
+        if ( is_wp_error( $access_token ) ) {
+            return $access_token;
+        }
+
+        $headers['Authorization'] = 'Bearer ' . $access_token;
 
         //merge array if there is any additional data
         $headers = array_merge( $headers, $this->additional_request_header );
@@ -410,6 +416,6 @@ class Processor {
      * @return mixed
      */
     public function get_option( $key ) {
-        return dokan()->payment_gateway->paypal_marketplace->dokan_paypal_wc_gateway->get_option( $key );
+        return dokan()->payment_gateway->paypal_marketplace->paypal_wc_gateway->get_option( $key );
     }
 }

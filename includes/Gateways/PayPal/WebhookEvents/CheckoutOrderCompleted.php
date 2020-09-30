@@ -39,6 +39,10 @@ class CheckoutOrderCompleted extends WebhookEventHandler {
         $order_id        = $event->resource->purchase_units[0]->invoice_id;
         $order           = wc_get_order( $order_id );
 
+        if ( ! is_object( $order ) ) {
+            exit();
+        }
+
         $order->add_order_note(
             sprintf(
                 __( 'PayPal payment completed. PayPal Order ID #%s! Payer ID: %s', 'dokan-lite' ),
