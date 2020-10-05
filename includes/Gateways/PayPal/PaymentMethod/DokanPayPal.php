@@ -2,9 +2,11 @@
 
 namespace WeDevs\Dokan\Gateways\PayPal\PaymentMethod;
 
+use DokanPro\Modules\Subscription\Helper;
 use WC_Logger;
 use WC_Payment_Gateway;
 use WeDevs\Dokan\Gateways\PayPal\Utilities\Processor;
+use WeDevs\DokanPro\Payment\Paypal\PaypalProcessor;
 
 /**
  * Class DokanPayPal
@@ -293,6 +295,12 @@ class DokanPayPal extends WC_Payment_Gateway {
             ]
         );
 
+        $process_payment = apply_filters( 'dokan_paypal_process_payment', $order );
+
+        if ( isset( $process_payment['product_type'] ) && 'product_pack' === $process_payment['product_type'] ) {
+            return $process_payment['data'];
+        }
+
         $purchase_units = [];
 
         if ( $order->get_meta( 'has_sub_order' ) ) {
@@ -327,8 +335,10 @@ class DokanPayPal extends WC_Payment_Gateway {
 
         // Return thank you redirect
         return [
-            'result'   => 'success',
-            'redirect' => $create_order_url,
+            'result'              => 'success',
+            'paypal_redirect_url' => $create_order_url['links'][1]['href'],
+            'paypal_order_id'     => $create_order_url['id'],
+            'redirect'            => $order->get_checkout_order_received_url(),
         ];
     }
 

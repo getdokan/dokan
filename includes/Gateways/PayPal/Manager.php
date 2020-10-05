@@ -9,9 +9,9 @@ use WeDevs\Dokan\Gateways\Manager as GatewayManager;
 
 /**
  * Class Manager
- * @since DOKAN_LITE_SINCE
  * @package WeDevs\Dokan\Gateways\PayPal
  *
+ * @since DOKAN_LITE_SINCE
  * @author weDevs
  */
 class Manager {
@@ -121,7 +121,7 @@ class Manager {
         $current_user  = _wp_get_current_user();
         $tracking_id   = '_dokan_paypal_' . $current_user->user_login . '_' . $user_id;
 
-        $processor = new Processor();
+        $processor  = new Processor();
         $paypal_url = $processor->create_partner_referral( $email_address, $tracking_id );
 
         if ( is_wp_error( $paypal_url ) ) {
@@ -137,6 +137,10 @@ class Manager {
             exit();
         }
 
+        if ( isset( $paypal_url['links'][1] ) && 'action_url' === $paypal_url['links'][1]['rel'] ) {
+            $paypal_action_url = $paypal_url['links'][1]['href'];
+        }
+
         //keeping email and partner id for later use
         update_user_meta(
             $user_id,
@@ -149,7 +153,7 @@ class Manager {
             ]
         );
 
-        wp_redirect( $paypal_url );
+        wp_redirect( $paypal_action_url );
         exit();
     }
 
@@ -165,15 +169,15 @@ class Manager {
 
         $paypal_settings = get_user_meta( $user_id, '_dokan_paypal_marketplace_settings', true );
 
-        $processor   = new Processor();
-        $merchant_id = $processor->get_merchant_id( $paypal_settings['tracking_id'] );
+        $processor     = new Processor();
+        $merchant_data = $processor->get_merchant_id( $paypal_settings['tracking_id'] );
 
-        if ( is_wp_error( $merchant_id ) ) {
+        if ( is_wp_error( $merchant_data ) ) {
             wp_safe_redirect(
                 add_query_arg(
                     [
                         'status'  => 'paypal-merchant-error',
-                        'message' => $merchant_id['error'],
+                        'message' => $merchant_data['error'],
                     ],
                     dokan_get_navigation_url( 'settings/payment' )
                 )
@@ -182,7 +186,7 @@ class Manager {
         }
 
         //storing paypal merchant id
-        update_user_meta( $user_id, '_dokan_paypal_marketplace_merchant_id', $merchant_id );
+        update_user_meta( $user_id, '_dokan_paypal_marketplace_merchant_id', $merchant_data['merchant_id'] );
 
         $paypal_settings['connection_status'] = 'success';
 

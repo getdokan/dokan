@@ -99,3 +99,173 @@
 
     dokan.login_form_popup.init();
 })(jQuery);
+
+
+//paypal smart checkout button
+;(function ( $, window, document ) {
+    'use strict';
+
+    var selected_payment_method;
+
+    var payment_method = {
+        toggle_buttons: function (payment_method) {
+            var isPayPal = payment_method === 'dokan_paypal_marketplace';
+            var togglePaypal = isPayPal ? 'show' : 'hide';
+            var toggleSubmit = isPayPal ? 'hide' : 'show';
+
+            $( '#paypal-button-container' ).animate( { opacity: togglePaypal, height: togglePaypal, padding: togglePaypal }, 230 );
+            $( '#place_order' ).animate( { opacity: toggleSubmit, height: toggleSubmit, padding: toggleSubmit }, 230 );
+        },
+        on_change: function () {
+            $( 'form.checkout' ).on( 'click', 'input[name="payment_method"]', function(e) {
+                if ( 'smart' !== dokan_paypal.payment_button_type ) {
+                    return;
+                }
+
+                if ( selected_payment_method === e.target.value ) {
+                    return;
+                }
+
+                selected_payment_method = e.target.value;
+                payment_method.toggle_buttons(e.target.value);
+            } );
+        },
+        init: function () {
+            let checked_payment_method = $('.woocommerce-checkout').find('input[name="payment_method"]:checked').val();
+            payment_method.toggle_buttons(checked_payment_method);
+
+            payment_method.on_change();
+        }
+    };
+
+    setTimeout(() => {
+        payment_method.init();
+    }, 6000);
+
+})( jQuery, window, document );
+
+//paypal checkout process
+;(function($, window, document) {
+
+    if ('undefined' === typeof dokan_paypal || ! dokan_paypal.is_checkout_page) {
+        return;
+    }
+
+    var dokan_paypal_marketplace = {
+        checkout_form: $('form.checkout, form#order_review'),
+        is_paypal_selected: function() {
+            return (
+                $('.woocommerce-checkout').find('input[name="payment_method"]:checked').val() ===
+                'dokan_paypal_marketplace'
+            );
+        },
+        set_loading_on: function() {
+            dokan_paypal_marketplace.checkout_form.addClass('processing').block({
+                message: null,
+                overlayCSS: {
+                    background: '#fff',
+                    opacity: 0.6
+                }
+            });
+        },
+        set_loading_done: function() {
+            dokan_paypal_marketplace.checkout_form.removeClass('processing').unblock();
+        },
+        submit_error: function(errorMessage) {
+            dokan_paypal_marketplace.set_loading_done();
+            $('.woocommerce-NoticeGroup-checkout, .woocommerce-error, .woocommerce-message').remove();
+            dokan_paypal_marketplace.checkout_form.prepend(
+                '<div class="woocommerce-NoticeGroup woocommerce-NoticeGroup-checkout">' + errorMessage + '</div>'
+            );
+
+            dokan_paypal_marketplace.checkout_form.removeClass('processing');
+            dokan_paypal_marketplace.checkout_form
+                .find('.input-text, select, input:checkbox')
+                .trigger('validate')
+                .blur();
+
+            dokan_paypal_marketplace.scroll_to_notice();
+            $(document.body).trigger('checkout_error');
+        },
+        scroll_to_notice: function () {
+            $('html, body').animate(
+                {
+                    scrollTop: $('form.checkout, form#order_review').offset().top - 100
+                },
+                1000
+            );
+        },
+        set_order: function() {
+            return $.ajax({
+                type: 'POST',
+                url: wc_checkout_params.checkout_url,
+                data: dokan_paypal_marketplace.checkout_form.serialize(),
+                dataType: 'json',
+            }).done(function(result) {
+                try {
+                    if (result.result === 'success') {
+                        return result.paypal_order_id;
+                    } else if (result.result === 'failure') {
+                        throw new Error('Result failure');
+                    } else {
+                        throw new Error('Invalid response');
+                    }
+                } catch (err) {
+                    // Reload page
+                    if (result.reload === true) {
+                        window.location.reload();
+                        return;
+                    }
+                    // Trigger update in case we need a fresh nonce
+                    if (result.refresh === true) {
+                        jQuery(document.body).trigger('update_checkout');
+                    }
+                    // Add new errors
+                    if (result.messages) {
+                        dokan_paypal_marketplace.submit_error(result.messages);
+                    } else {
+                        dokan_paypal_marketplace.submit_error('<div class="woocommerce-error">' + wc_checkout_params.i18n_checkout_error + '</div>');
+                    }
+                }
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                dokan_paypal_marketplace.submit_error('<div class="woocommerce-error">' + errorThrown + '</div>');
+            });
+        },
+        do_submit: function() {
+            dokan_paypal_marketplace.set_loading_on();
+
+            return dokan_paypal_marketplace.set_order();
+        },
+        init_paypal: function () {
+            var order_redirect_url;
+            window.paypal.Buttons({
+                createOrder: function(data, actions) {
+                    if ( dokan_paypal_marketplace.is_paypal_selected() ) {
+                        let submit = dokan_paypal_marketplace.do_submit();
+
+                        return submit.then(res => {
+                            order_redirect_url = res.redirect;
+                            return res.paypal_order_id;
+                        });
+                    }
+                    return false;
+                },
+                onApprove: function(data, actions) {
+                    window.location.href = order_redirect_url;
+                },
+                onCancel: function() {
+                    window.location.href = order_redirect_url;
+                },
+                onError: function (err) {
+                    window.location.href = order_redirect_url;
+                }
+            }).render('#paypal-button-container');
+        }
+    };
+
+    setTimeout(() => {
+        console.log('paypal init');
+        dokan_paypal_marketplace.init_paypal();
+    }, 5000);
+
+})(jQuery, window, document);

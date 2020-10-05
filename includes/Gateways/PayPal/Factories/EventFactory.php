@@ -3,8 +3,9 @@
 namespace WeDevs\Dokan\Gateways\PayPal\Factories;
 
 use WeDevs\Dokan\Exceptions\DokanException;
-use WeDevs\Dokan\Gateways\PayPal\Helper;
+use WeDevs\Dokan\Gateways\PayPal\Abstracts\WebhookEventHandler;
 use BadMethodCallException;
+use WeDevs\Dokan\Gateways\PayPal\Helper;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -36,9 +37,14 @@ class EventFactory {
             }
 
             if ( ! empty( $arguments[0] ) ) {
-                $webhook_event_handler_instance = self::get( $arguments[0] );
+                $event                          = $arguments[0];
+                $webhook_event_handler_instance = self::get( $event );
 
-                return $webhook_event_handler_instance->$name();
+                if ( $webhook_event_handler_instance instanceof WebhookEventHandler ) {
+                    return $webhook_event_handler_instance->$name();
+                }
+
+                do_action( 'dokan_paypal_marketplace_events', $event, $name );
             }
         } catch ( \Exception $e ) {
             error_log( $e->getMessage() );

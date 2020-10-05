@@ -4,9 +4,9 @@ namespace WeDevs\Dokan\Gateways\PayPal\Utilities;
 
 /**
  * Class Processor
- * @since DOKAN_LITE_SINCE
- *
  * @package WeDevs\Dokan\Gateways\PayPal\Utilities
+ *
+ * @since DOKAN_LITE_SINCE
  *
  * @author weDevs
  */
@@ -19,12 +19,17 @@ class Processor {
     /**
      * @var string
      */
-    private $api_base_url = '';
+    protected $bn_code = 'weDevs_SP_Dokan';
+
+    /**
+     * @var string
+     */
+    private $api_base_url = 'https://api.paypal.com/';
 
     /**
      * @var array
      */
-    private $additional_request_header = [];
+    protected $additional_request_header = [];
 
     /**
      * Processor constructor.
@@ -106,7 +111,7 @@ class Processor {
         }
 
         if ( isset( $response['links'][1] ) && 'action_url' === $response['links'][1]['rel'] ) {
-            return $response['links'][1]['href'];
+            return $response;
         }
 
         return new \WP_Error( 'dokan_paypal_create_partner_referral_error', $response );
@@ -132,7 +137,7 @@ class Processor {
         }
 
         if ( isset( $response['merchant_id'] ) ) {
-            return $response['merchant_id'];
+            return $response;
         }
 
         return new \WP_Error( 'dokan_paypal_get_merchant_id_error', $response );
@@ -170,10 +175,10 @@ class Processor {
      * @return string|\WP_Error
      */
     public function create_order( $order_data ) {
-        $url      = $this->make_paypal_url( 'v2/checkout/orders' );
+        $url                             = $this->make_paypal_url( 'v2/checkout/orders' );
         $this->additional_request_header = [
             'Prefer'                        => 'return=representation',
-            'PayPal-Partner-Attribution-Id' => 'weDevs_SP_Dokan',
+            'PayPal-Partner-Attribution-Id' => $this->bn_code,
         ];
 
         $response = $this->make_request( $url, wp_json_encode( $order_data ) );
@@ -188,7 +193,7 @@ class Processor {
             isset( $response['links'][1] ) &&
             'approve' === $response['links'][1]['rel']
         ) {
-            return $response['links'][1]['href'];
+            return $response;
         }
 
         return new \WP_Error( 'dokan_paypal_create_order_error', $response );
@@ -202,7 +207,7 @@ class Processor {
      * @return array|bool|\WP_Error
      */
     public function capture_payment( $order_id ) {
-        $url = $this->make_paypal_url( "v2/checkout/orders/{$order_id}/capture" );
+        $url                             = $this->make_paypal_url( "v2/checkout/orders/{$order_id}/capture" );
         $this->additional_request_header = [
             'Prefer'                        => 'return=representation',
             'PayPal-Partner-Attribution-Id' => 'weDevs_SP_Dokan',
@@ -264,6 +269,7 @@ class Processor {
 
         if ( isset( $response['access_token'] ) && isset( $response['expires_in'] ) ) {
             set_transient( '_dokan_paypal_marketplace_access_token', $response['access_token'], $response['expires_in'] );
+
             return $response['access_token'];
         }
     }
@@ -347,7 +353,11 @@ class Processor {
 
         $body = wp_remote_retrieve_body( $response );
 
-        if ( 200 !== wp_remote_retrieve_response_code( $response ) && 201 !== wp_remote_retrieve_response_code( $response ) ) {
+        if (
+            200 !== wp_remote_retrieve_response_code( $response ) &&
+            201 !== wp_remote_retrieve_response_code( $response ) &&
+            204 !== wp_remote_retrieve_response_code( $response )
+        ) {
             return new \WP_Error( 'dokan_paypal_request_error', $body );
         }
 
@@ -368,12 +378,12 @@ class Processor {
         $content_type = $content_type_json ? 'json' : 'x-www-form-urlencoded';
 
         $headers = [
-            'Content-Type'  => 'application/' . $content_type,
+            'Content-Type' => 'application/' . $content_type,
         ];
 
         if ( ! $request_with_token ) {
             $headers['Authorization'] = 'Basic ' . $this->get_authorization_data();
-            $headers['Ignorecache'] = true;
+            $headers['Ignorecache']   = true;
 
             return $headers;
         }

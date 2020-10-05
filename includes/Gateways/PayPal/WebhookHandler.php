@@ -3,7 +3,6 @@
 namespace WeDevs\Dokan\Gateways\PayPal;
 
 use WeDevs\Dokan\Gateways\PayPal\Factories\EventFactory;
-use WeDevs\Dokan\Gateways\PayPal\Utilities\Processor;
 
 /**
  * Class WebhookHandler
@@ -53,8 +52,6 @@ class WebhookHandler {
 
         dokan_log( "[Dokan PayPal Marketplace] Webhook request body:\n" . print_r( $event, true ) );
 
-        if ( array_key_exists( $event->event_type, Helper::get_supported_webhook_events() ) ) {
-            EventFactory::handle( $event );
-        }
+        EventFactory::handle( $event );
     }
 }
