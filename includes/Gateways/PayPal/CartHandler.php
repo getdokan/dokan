@@ -47,18 +47,14 @@ class CartHandler extends DokanPayPal {
             return;
         }
 
+        if ( 'smart' !== $this->get_option( 'button_type' ) ) {
+            return;
+        }
+
         //loading this scripts only in checkout page
         if ( ! is_order_received_page() && is_checkout() || is_checkout_pay_page() ) {
 
-            if ( 'yes' === $this->get_option( 'test_mode' ) ) {
-                $app_user = $this->get_option( 'test_app_user' );
-            } else {
-                $app_user = $this->get_option( 'app_user' );
-            }
-
-            $partner_id = $this->get_option( 'partner_id' );
-
-            $paypal_js_sdk_url = esc_url( "https://www.paypal.com/sdk/js?components=hosted-fields,buttons&client-id={$app_user}&currency=USD&intent=capture" );
+            $paypal_js_sdk_url = $this->get_paypal_sdk_url();
 
             wp_enqueue_script( 'dokan_paypal_sdk', $paypal_js_sdk_url, [], null, false );
 
@@ -100,12 +96,14 @@ class CartHandler extends DokanPayPal {
                 $source .= '&merchant-id=' . $paypal_merchant_ids[0];
             }
 
-            //TODO: need to add settings for non-branded credit card. no need to generate the token if non branded credit card are not supported
-            $processor    = Processor::init();
-            $client_token = $processor->get_generated_client_token();
+            //get token if ucc mode enabled
+            if ( 'yes' === $this->get_option( 'ucc_mode' ) ) {
+                $processor    = Processor::init();
+                $client_token = $processor->get_generated_client_token();
 
-            if ( is_wp_error( $client_token ) ) {
-                error_log( 'dokan paypal marketplace generated access token error', $client_token );
+                if ( is_wp_error( $client_token ) ) {
+                    error_log( 'dokan paypal marketplace generated access token error', $client_token );
+                }
             }
 
             $tag = '<script async type="text/javascript" src="' . $source . '" id="' . $handle . '-js" 
@@ -125,10 +123,12 @@ data-merchant-id="' . implode( ',', $paypal_merchant_ids ) . '" data-client-toke
     public function display_paypal_button() {
         ?>
         <div id="paypal-button-container" style="display:none;">
-            <div class="unbranded_checkout">
-                <a id="pay_unbranded_order" class="button alt" value="Place order">Pay</a>
-                <hr>
-            </div>
+            <?php if ( 'yes' === $this->get_option( 'ucc_mode' ) ) : ?>
+                <div class="unbranded_checkout">
+                    <a id="pay_unbranded_order" href="#" class="button alt" value="Place order">Pay</a>
+                    <hr>
+                </div>
+            <?php endif; ?>
         </div>
         <?php
     }
@@ -180,5 +180,31 @@ data-merchant-id="' . implode( ',', $paypal_merchant_ids ) . '" data-client-toke
                 );
             }
         }
+    }
+
+    /**
+     * Make paypal sdk url based on settings
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return string
+     */
+    public function get_paypal_sdk_url() {
+        if ( 'yes' === $this->get_option( 'test_mode' ) ) {
+            $app_user = $this->get_option( 'test_app_user' );
+        } else {
+            $app_user = $this->get_option( 'app_user' );
+        }
+
+        $paypal_js_sdk_url = esc_url( "https://www.paypal.com/sdk/js?" );
+
+        //add hosted fields component if ucc mode is enabled
+        if ( 'yes' === $this->get_option( 'ucc_mode' ) ) {
+            $paypal_js_sdk_url .= "components=hosted-fields,buttons&";
+        }
+
+        $paypal_js_sdk_url .= "client-id={$app_user}&currency=USD&intent=capture";
+
+        return $paypal_js_sdk_url;
     }
 }

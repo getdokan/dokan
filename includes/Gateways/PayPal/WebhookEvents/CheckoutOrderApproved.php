@@ -36,7 +36,7 @@ class CheckoutOrderApproved extends WebhookEventHandler {
         $event           = $this->get_event();
         $paypal_order_id = sanitize_text_field( $event->resource->id );
 
-        $processor       = new Processor();
+        $processor       = Processor::init();
         $capture_payment = $processor->capture_payment( $paypal_order_id );
 
         if ( is_wp_error( $capture_payment ) ) {

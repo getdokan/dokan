@@ -121,7 +121,7 @@ class Manager {
         $current_user  = _wp_get_current_user();
         $tracking_id   = '_dokan_paypal_' . $current_user->user_login . '_' . $user_id;
 
-        $processor  = new Processor();
+        $processor    = Processor::init();
         $paypal_url = $processor->create_partner_referral( $email_address, $tracking_id );
 
         if ( is_wp_error( $paypal_url ) ) {
@@ -169,7 +169,7 @@ class Manager {
 
         $paypal_settings = get_user_meta( $user_id, '_dokan_paypal_marketplace_settings', true );
 
-        $processor     = new Processor();
+        $processor    = Processor::init();
         $merchant_data = $processor->get_merchant_id( $paypal_settings['tracking_id'] );
 
         if ( is_wp_error( $merchant_data ) ) {

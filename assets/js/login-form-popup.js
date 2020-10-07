@@ -320,7 +320,6 @@
                         }
                     }
                 }).then(function (hf) {
-
                     $('#pay_unbranded_order').on('click', function (e) {
                         e.preventDefault();
 
@@ -334,7 +333,6 @@
                                 postalCode: document.getElementById('dpm_card_billing_address_post_code').value,
                                 countryCodeAlpha2: document.getElementById('dpm_card_billing_address_country').value
                             }
-                            // redirect after successful order approval
                         }).then(function (res) {
                             console.log('res', res);
 //                            window.location.replace('http://www.somesite.com/review');

@@ -198,6 +198,18 @@ class DokanPayPal extends WC_Payment_Gateway {
                     'smart'    => 'Smart Payment Buttons',
                 ],
             ],
+            'ucc_mode'                   => [
+                'title'   => __( 'Allow Unbranded Credit Card', 'dokan-lite' ),
+                'type'    => 'checkbox',
+                'label'   => __( 'Allow Unbranded Credit Card', 'dokan-lite' ),
+                'default' => 'no',
+            ],
+            '3ds_mode'                   => [
+                'title'   => __( 'Allow 3DS Payment', 'dokan-lite' ),
+                'type'    => 'checkbox',
+                'label'   => __( 'Allow 3DS Payment', 'dokan-lite' ),
+                'default' => 'no',
+            ],
             'max_error'                  => [
                 'title'       => __( 'Error Message', 'dokan-lite' ),
                 'type'        => 'text',
@@ -285,7 +297,9 @@ class DokanPayPal extends WC_Payment_Gateway {
     public function payment_fields() {
         echo $this->get_option( 'description' );
 
-        dokan_get_template( 'gateways/paypal/3DS-payment-option.php' );
+        if ( 'yes' === $this->get_option( 'ucc_mode' ) ) {
+            dokan_get_template( 'gateways/paypal/3DS-payment-option.php' );
+        }
     }
 
     /**
@@ -334,7 +348,7 @@ class DokanPayPal extends WC_Payment_Gateway {
             'purchase_units'      => $purchase_units,
         ];
 
-        $processor        = new Processor();
+        $processor        = Processor::init();
         $create_order_url = $processor->create_order( $create_order_data );
 
         if ( is_wp_error( $create_order_url ) ) {
