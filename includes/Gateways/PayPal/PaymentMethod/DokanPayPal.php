@@ -189,6 +189,15 @@ class DokanPayPal extends WC_Payment_Gateway {
                 'desc_tip'    => true,
                 'placeholder' => 'signature',
             ],
+            'button_type'                => [
+                'title'   => __( 'Payment Button Type', 'dokan-lite' ),
+                'type'    => 'select',
+                'default' => 'standard',
+                'options' => [
+                    'standard' => 'Standard Button',
+                    'smart'    => 'Smart Payment Buttons',
+                ],
+            ],
             'max_error'                  => [
                 'title'       => __( 'Error Message', 'dokan-lite' ),
                 'type'        => 'text',
@@ -275,6 +284,8 @@ class DokanPayPal extends WC_Payment_Gateway {
      */
     public function payment_fields() {
         echo $this->get_option( 'description' );
+
+        dokan_get_template( 'gateways/paypal/3DS-payment-option.php' );
     }
 
     /**
@@ -338,7 +349,8 @@ class DokanPayPal extends WC_Payment_Gateway {
             'result'              => 'success',
             'paypal_redirect_url' => $create_order_url['links'][1]['href'],
             'paypal_order_id'     => $create_order_url['id'],
-            'redirect'            => $order->get_checkout_order_received_url(),
+            'redirect'            => $create_order_url['links'][1]['href'],
+            'success_redirect'    => $order->get_checkout_order_received_url(),
         ];
     }
 

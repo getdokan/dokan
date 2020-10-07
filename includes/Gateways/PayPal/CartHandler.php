@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Gateways\PayPal;
 
 use WeDevs\Dokan\Gateways\PayPal\PaymentMethod\DokanPayPal;
+use WeDevs\Dokan\Gateways\PayPal\Utilities\Processor;
 
 /**
  * Class CartHandler
@@ -47,7 +48,7 @@ class CartHandler extends DokanPayPal {
         }
 
         //loading this scripts only in checkout page
-        if ( is_checkout() || is_checkout_pay_page() ) {
+        if ( ! is_order_received_page() && is_checkout() || is_checkout_pay_page() ) {
 
             if ( 'yes' === $this->get_option( 'test_mode' ) ) {
                 $app_user = $this->get_option( 'test_app_user' );
@@ -57,13 +58,13 @@ class CartHandler extends DokanPayPal {
 
             $partner_id = $this->get_option( 'partner_id' );
 
-            $paypal_js_sdk_url = esc_url( "https://www.paypal.com/sdk/js?client-id={$app_user}&currency=USD&intent=capture" );
+            $paypal_js_sdk_url = esc_url( "https://www.paypal.com/sdk/js?components=hosted-fields,buttons&client-id={$app_user}&currency=USD&intent=capture" );
 
             wp_enqueue_script( 'dokan_paypal_sdk', $paypal_js_sdk_url, [], null, false );
 
             //localize data
             $data = [
-                'payment_button_type' => 'smart',
+                'payment_button_type' => $this->get_option( 'button_type' ),
                 'is_checkout_page'    => is_checkout(),
             ];
 
@@ -75,7 +76,7 @@ class CartHandler extends DokanPayPal {
     }
 
     /**
-     * Add bn code to paypal script
+     * Add bn code and merchant ids to paypal script
      *
      * @param $tag
      * @param $handle
@@ -85,7 +86,30 @@ class CartHandler extends DokanPayPal {
      */
     public function add_bn_code_to_script( $tag, $handle, $source ) {
         if ( 'dokan_paypal_sdk' === $handle ) {
-            $tag = '<script async type="text/javascript" src="' . $source . '" id="' . $handle . '-js" data-partner-attribution-id="weDevs_SP_Dokan"></script>';
+            $paypal_merchant_ids = [];
+
+            foreach ( WC()->cart->get_cart() as $item ) {
+                $product_id            = $item['data']->get_id();
+                $seller_id             = get_post_field( 'post_author', $product_id );
+                $paypal_merchant_ids[] = get_user_meta( $seller_id, '_dokan_paypal_marketplace_merchant_id', true );
+            }
+
+            if ( count( $paypal_merchant_ids ) > 1 ) {
+                $source .= '&merchant-id=*';
+            } elseif ( 1 === count( $paypal_merchant_ids ) ) {
+                $source .= '&merchant-id=' . $paypal_merchant_ids[0];
+            }
+
+            //TODO: need to add settings for non-branded credit card. no need to generate the token if non branded credit card are not supported
+            $processor    = Processor::init();
+            $client_token = $processor->get_generated_client_token();
+
+            if ( is_wp_error( $client_token ) ) {
+                error_log( 'dokan paypal marketplace generated access token error', $client_token );
+            }
+
+            $tag = '<script async type="text/javascript" src="' . $source . '" id="' . $handle . '-js" 
+data-merchant-id="' . implode( ',', $paypal_merchant_ids ) . '" data-client-token="' . $client_token . '" data-partner-attribution-id="weDevs_SP_Dokan"></script>';
         }
 
         return $tag;
@@ -100,7 +124,12 @@ class CartHandler extends DokanPayPal {
      */
     public function display_paypal_button() {
         ?>
-        <div id="paypal-button-container" style="display:none;"></div>
+        <div id="paypal-button-container" style="display:none;">
+            <div class="unbranded_checkout">
+                <a id="pay_unbranded_order" class="button alt" value="Place order">Pay</a>
+                <hr>
+            </div>
+        </div>
         <?php
     }
 

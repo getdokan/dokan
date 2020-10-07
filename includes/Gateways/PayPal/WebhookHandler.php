@@ -53,5 +53,10 @@ class WebhookHandler {
         dokan_log( "[Dokan PayPal Marketplace] Webhook request body:\n" . print_r( $event, true ) );
 
         EventFactory::handle( $event );
+
+        wp_send_json_success( [
+            'status'  => 200,
+            'message' => 'success',
+        ] );
     }
 }

@@ -4957,6 +4957,27 @@ div.media-sidebar a.edit-attachment {
 #dokan-seller-listing-wrap.list-view .dokan-seller-wrap .dokan-single-seller .store-wrapper .store-footer[class] button {
   margin-right: 20px;
 }
+.card_container {
+  margin-top: 15px;
+}
+.card_container p {
+  margin-bottom: 10px !important;
+}
+.card_container .card_field {
+  box-shadow: inset 2px 0 0 #0f834d;
+  width: 100%;
+  padding: 0.61804697em;
+  background-color: #f2f2f2;
+  color: #43454b;
+  border: 0;
+  box-sizing: border-box;
+  font-weight: normal;
+  height: 40px;
+  margin-bottom: 5px;
+}
+.unbranded_checkout {
+  margin-bottom: 15px;
+}
 /*--------------------------------------------------
 :: Responsive Styles
 -------------------------------------------------- */

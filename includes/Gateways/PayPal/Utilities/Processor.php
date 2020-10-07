@@ -11,6 +11,14 @@ namespace WeDevs\Dokan\Gateways\PayPal\Utilities;
  * @author weDevs
  */
 class Processor {
+
+    /**
+     * Instance of self
+     *
+     * @var Processor
+     */
+    private static $instance = null;
+
     /**
      * @var bool
      */
@@ -41,6 +49,21 @@ class Processor {
             $this->test_mode    = true;
             $this->api_base_url = 'https://api.sandbox.paypal.com/';
         }
+    }
+
+    /**
+     * Initialize Processor() class
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return Processor
+     */
+    public static function init() {
+        if ( self::$instance === null ) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
     }
 
     /**
@@ -427,5 +450,53 @@ class Processor {
      */
     public function get_option( $key ) {
         return dokan()->payment_gateway->paypal_marketplace->paypal_wc_gateway->get_option( $key );
+    }
+
+    /**
+     * Get generated client token
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return array|mixed|\WP_Error
+     */
+    public function get_generated_client_token() {
+        if ( get_transient( '_dokan_paypal_marketplace_client_token' ) ) {
+            return get_transient( '_dokan_paypal_marketplace_client_token' );
+        }
+
+        $client_token = $this->generate_client_token();
+
+        if ( is_wp_error( $client_token ) ) {
+            return $client_token;
+        }
+
+        return $client_token;
+    }
+
+    /**
+     * Generate a client token for your buyer
+     * read more at
+     * https://developer.paypal.com/docs/business/checkout/advanced-card-payments/#step-2-generate-a-client-token-for-your-buyer
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return array|\WP_Error
+     */
+    public function generate_client_token() {
+        $url = $this->make_paypal_url( 'v1/identity/generate-token' );
+
+        $response = $this->make_request( $url, [] );
+
+        if ( is_wp_error( $response ) ) {
+            return $response;
+        }
+
+        if ( isset( $response['client_token'] ) ) {
+            set_transient( '_dokan_paypal_marketplace_client_token', $response['client_token'], $response['expires_in'] );
+
+            return $response['client_token'];
+        }
+
+        return new \WP_Error( 'dokan_paypal_generate_client_token_error', $response );
     }
 }

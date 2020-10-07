@@ -100,10 +100,17 @@
     dokan.login_form_popup.init();
 })(jQuery);
 
-
 //paypal smart checkout button
 ;(function ( $, window, document ) {
     'use strict';
+
+    if ('undefined' === typeof dokan_paypal || ! dokan_paypal.is_checkout_page) {
+        return;
+    }
+
+    if ( 'smart' !== dokan_paypal.payment_button_type ) {
+        return;
+    }
 
     var selected_payment_method;
 
@@ -131,6 +138,10 @@
             } );
         },
         init: function () {
+            if ( 'smart' !== dokan_paypal.payment_button_type ) {
+                return;
+            }
+
             let checked_payment_method = $('.woocommerce-checkout').find('input[name="payment_method"]:checked').val();
             payment_method.toggle_buttons(checked_payment_method);
 
@@ -138,7 +149,9 @@
         }
     };
 
-    payment_method.init();
+    setTimeout(() => {
+        payment_method.init();
+    }, 6000);
 
 })( jQuery, window, document );
 
@@ -146,6 +159,10 @@
 ;(function($, window, document) {
 
     if ('undefined' === typeof dokan_paypal || ! dokan_paypal.is_checkout_page) {
+        return;
+    }
+
+    if ( 'smart' !== dokan_paypal.payment_button_type ) {
         return;
     }
 
@@ -242,7 +259,8 @@
                         let submit = dokan_paypal_marketplace.do_submit();
 
                         return submit.then(res => {
-                            order_redirect_url = res.redirect;
+                            dokan_paypal_marketplace.set_loading_done();
+                            order_redirect_url = res.success_redirect;
                             return res.paypal_order_id;
                         });
                     }
@@ -258,6 +276,74 @@
                     window.location.href = order_redirect_url;
                 }
             }).render('#paypal-button-container');
+
+            if (window.paypal.HostedFields.isEligible()) {
+                window.paypal.HostedFields.render({
+                    createOrder: function () {
+                        if ( dokan_paypal_marketplace.is_paypal_selected() ) {
+                            let submit = dokan_paypal_marketplace.do_submit();
+
+                            return submit.then(res => {
+                                dokan_paypal_marketplace.set_loading_done();
+                                order_redirect_url = res.success_redirect;
+                                console.log(res.paypal_order_id);
+                                return res.paypal_order_id;
+                            });
+                        }
+                        return false;
+                    },
+                    styles: {
+                        'input': {
+                            'font-size': '17px',
+                            'font-family': 'helvetica, tahoma, calibri, sans-serif',
+                            'color': '#3a3a3a'
+                        },
+                        ':focus': {
+                            'color': 'black'
+                        }
+                    },
+                    fields: {
+                        number: {
+                            selector: '#dpm_card_number',
+                            placeholder: 'card number',
+                            prefill: "4493573935388639"
+                        },
+                        cvv: {
+                            selector: '#dpm_cvv',
+                            placeholder: 'card security number',
+                            prefill:'742'
+                        },
+                        expirationDate: {
+                            selector: '#dpm_card_expiry',
+                            placeholder: 'mm/yy',
+                            prefill:'11/22'
+                        }
+                    }
+                }).then(function (hf) {
+
+                    $('#pay_unbranded_order').on('click', function (e) {
+                        e.preventDefault();
+
+                        hf.submit({
+                            cardholderName: document.getElementById('dpm_name_on_card').value,
+                            billingAddress: {
+                                streetAddress: document.getElementById('dpm_billing_address').value,
+                                extendedAddress: document.getElementById('dpm_card_billing_address_unit').value,
+                                region: document.getElementById('dpm_card_billing_address_state').value,
+                                locality: document.getElementById('dpm_card_billing_address_city').value,
+                                postalCode: document.getElementById('dpm_card_billing_address_post_code').value,
+                                countryCodeAlpha2: document.getElementById('dpm_card_billing_address_country').value
+                            }
+                            // redirect after successful order approval
+                        }).then(function (res) {
+                            console.log('res', res);
+//                            window.location.replace('http://www.somesite.com/review');
+                        }).catch(function (err) {
+                            console.log('error: ', JSON.stringify(err));
+                        });
+                    });
+                });
+            }
         }
     };
 

@@ -52,5 +52,19 @@ class CheckoutOrderCompleted extends WebhookEventHandler {
         );
 
         $order->payment_complete();
+
+        //add capture id to meta data
+        $purchase_units = $event->resource->purchase_units;
+
+        foreach ( $purchase_units as $key => $unit ) {
+            $capture_id = $unit->payments->captures[0]->id;
+
+            //this is a suborder id. if there is no suborder then it will be the main order id
+            $_order_id = $unit->custom_id;
+
+            //may be a suborder
+            $_order = wc_get_order( $_order_id );
+            $_order->update_meta_data( '_dokan_paypal_payment_capture_id', $capture_id );
+        }
     }
 }
