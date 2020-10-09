@@ -56,12 +56,20 @@ class CartHandler extends DokanPayPal {
 
             $paypal_js_sdk_url = $this->get_paypal_sdk_url();
 
+            //paypal sdk enqueue
             wp_enqueue_script( 'dokan_paypal_sdk', $paypal_js_sdk_url, [], null, false );
+
+            wp_enqueue_script( 'dokan_paypal_checkout', DOKAN_PLUGIN_ASSEST . '/js/paypal-checkout.js', [
+                'dokan_paypal_sdk',
+            ] );
 
             //localize data
             $data = [
                 'payment_button_type' => $this->get_option( 'button_type' ),
                 'is_checkout_page'    => is_checkout(),
+                'is_ucc_enabled'      => Helper::is_ucc_enabled(),
+                'is_3ds_enabled'      => Helper::is_3ds_enabled(),
+                'nonce'               => wp_create_nonce( 'dokan_paypal' ),
             ];
 
             wp_localize_script( 'dokan_paypal_sdk', 'dokan_paypal', $data );
@@ -85,29 +93,35 @@ class CartHandler extends DokanPayPal {
             $paypal_merchant_ids = [];
 
             foreach ( WC()->cart->get_cart() as $item ) {
-                $product_id            = $item['data']->get_id();
-                $seller_id             = get_post_field( 'post_author', $product_id );
-                $paypal_merchant_ids[] = get_user_meta( $seller_id, '_dokan_paypal_marketplace_merchant_id', true );
+                $product_id                                    = $item['data']->get_id();
+                $seller_id                                     = get_post_field( 'post_author', $product_id );
+                $paypal_merchant_ids[ 'seller_' . $seller_id ] = get_user_meta( $seller_id, '_dokan_paypal_marketplace_merchant_id', true );
             }
 
             if ( count( $paypal_merchant_ids ) > 1 ) {
                 $source .= '&merchant-id=*';
             } elseif ( 1 === count( $paypal_merchant_ids ) ) {
-                $source .= '&merchant-id=' . $paypal_merchant_ids[0];
+                //get the first item of associative array
+                $paypal_merchant_id = reset( $paypal_merchant_ids );
+                $source             .= '&merchant-id=' . $paypal_merchant_id;
             }
 
             //get token if ucc mode enabled
-            if ( 'yes' === $this->get_option( 'ucc_mode' ) ) {
+            $data_client_token = '';
+            if ( Helper::is_ucc_enabled() ) {
                 $processor    = Processor::init();
                 $client_token = $processor->get_generated_client_token();
 
                 if ( is_wp_error( $client_token ) ) {
                     error_log( 'dokan paypal marketplace generated access token error', $client_token );
                 }
+
+                $data_client_token = 'data-client-token="' . $client_token . '"';
             }
 
-            $tag = '<script async type="text/javascript" src="' . $source . '" id="' . $handle . '-js" 
-data-merchant-id="' . implode( ',', $paypal_merchant_ids ) . '" data-client-token="' . $client_token . '" data-partner-attribution-id="weDevs_SP_Dokan"></script>';
+            $tag = '<script async type="text/javascript" src="' . $source . '" id="' . $handle . '-js"
+data-merchant-id="' . implode( ',', $paypal_merchant_ids ) . '" ' . $data_client_token . ' data-partner-attribution-id="weDevs_SP_Dokan"></script>';
+
         }
 
         return $tag;
@@ -123,7 +137,7 @@ data-merchant-id="' . implode( ',', $paypal_merchant_ids ) . '" data-client-toke
     public function display_paypal_button() {
         ?>
         <div id="paypal-button-container" style="display:none;">
-            <?php if ( 'yes' === $this->get_option( 'ucc_mode' ) ) : ?>
+            <?php if ( Helper::is_ucc_enabled() ) : ?>
                 <div class="unbranded_checkout">
                     <a id="pay_unbranded_order" href="#" class="button alt" value="Place order">Pay</a>
                     <hr>
@@ -199,7 +213,7 @@ data-merchant-id="' . implode( ',', $paypal_merchant_ids ) . '" data-client-toke
         $paypal_js_sdk_url = esc_url( "https://www.paypal.com/sdk/js?" );
 
         //add hosted fields component if ucc mode is enabled
-        if ( 'yes' === $this->get_option( 'ucc_mode' ) ) {
+        if ( Helper::is_ucc_enabled() ) {
             $paypal_js_sdk_url .= "components=hosted-fields,buttons&";
         }
 

@@ -43,9 +43,14 @@ class CheckoutOrderCompleted extends WebhookEventHandler {
             exit();
         }
 
+        //allow if the order is pending
+        if ( 'wc-pending' !== $order->get_status() ) {
+            return;
+        }
+
         $order->add_order_note(
             sprintf(
-                __( 'PayPal payment completed. PayPal Order ID #%s! Payer ID: %s', 'dokan-lite' ),
+                __( 'PayPal payment completed. PayPal Order ID #%s. Payer ID: %s', 'dokan-lite' ),
                 $paypal_order_id,
                 $paypal_payer_id
             )

@@ -4978,6 +4978,9 @@ div.media-sidebar a.edit-attachment {
 .unbranded_checkout {
   margin-bottom: 15px;
 }
+.unbranded_checkout #pay_unbranded_order {
+  text-align: center;
+}
 /*--------------------------------------------------
 :: Responsive Styles
 -------------------------------------------------- */

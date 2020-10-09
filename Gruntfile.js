@@ -68,13 +68,17 @@ module.exports = function(grunt) {
                         '!<%= dirs.devJsSrc %>/admin.js',
                         '!<%= dirs.devJsSrc %>/login-form-popup.js',
                         '!<%= dirs.devJsSrc %>/dokan-maps-compat.js',
-                        '!<%= dirs.devJsSrc %>/setup-no-wc.js'
+                        '!<%= dirs.devJsSrc %>/setup-no-wc.js',
+                        '!<%= dirs.devJsSrc %>/paypal-checkout.js',
                     ],
                     '<%= dirs.js %>/login-form-popup.js': [
                         '<%= dirs.devJsSrc %>/login-form-popup.js'
                     ],
                     '<%= dirs.js %>/dokan-maps-compat.js': [
                         '<%= dirs.devJsSrc %>/dokan-maps-compat.js'
+                    ],
+                    '<%= dirs.js %>/paypal-checkout.js': [
+                        '<%= dirs.devJsSrc %>/paypal-checkout.js'
                     ],
                 }
             },

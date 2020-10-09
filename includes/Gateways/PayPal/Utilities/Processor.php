@@ -167,7 +167,7 @@ class Processor {
     }
 
     /**
-     * Get merchant id
+     * Get merchant status
      *
      * @param $merchant_id
      *
@@ -248,7 +248,7 @@ class Processor {
             'CAPTURE' === $response['intent'] &&
             'COMPLETED' === $response['status']
         ) {
-            return true;
+            return $response;
         }
 
         return new \WP_Error( 'dokan_paypal_capture_order_error', $response );
@@ -374,17 +374,24 @@ class Processor {
             return $response;
         }
 
-        $body = wp_remote_retrieve_body( $response );
+        $body            = wp_remote_retrieve_body( $response );
+        $paypal_debug_id = wp_remote_retrieve_header( $response, 'paypal-debug-id' );
 
         if (
             200 !== wp_remote_retrieve_response_code( $response ) &&
             201 !== wp_remote_retrieve_response_code( $response ) &&
             204 !== wp_remote_retrieve_response_code( $response )
         ) {
-            return new \WP_Error( 'dokan_paypal_request_error', $body );
+            return new \WP_Error( 'dokan_paypal_request_error', $body, [ 'paypal_debug_id' => $paypal_debug_id, ] );
         }
 
-        return json_decode( $body, true );
+        $data = json_decode( $body, true );
+
+        if ( $paypal_debug_id ) {
+            $data['paypal_debug_id'] = $paypal_debug_id;
+        }
+
+        return $data;
     }
 
     /**
@@ -475,8 +482,8 @@ class Processor {
 
     /**
      * Generate a client token for your buyer
-     * read more at
-     * https://developer.paypal.com/docs/business/checkout/advanced-card-payments/#step-2-generate-a-client-token-for-your-buyer
+     *
+     * @see https://developer.paypal.com/docs/business/checkout/advanced-card-payments/#step-2-generate-a-client-token-for-your-buyer
      *
      * @since DOKAN_LITE_SINCE
      *

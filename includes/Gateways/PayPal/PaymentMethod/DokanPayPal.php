@@ -2,11 +2,10 @@
 
 namespace WeDevs\Dokan\Gateways\PayPal\PaymentMethod;
 
-use DokanPro\Modules\Subscription\Helper;
 use WC_Logger;
 use WC_Payment_Gateway;
+use WeDevs\Dokan\Gateways\PayPal\Helper;
 use WeDevs\Dokan\Gateways\PayPal\Utilities\Processor;
-use WeDevs\DokanPro\Payment\Paypal\PaypalProcessor;
 
 /**
  * Class DokanPayPal
@@ -297,8 +296,10 @@ class DokanPayPal extends WC_Payment_Gateway {
     public function payment_fields() {
         echo $this->get_option( 'description' );
 
-        if ( 'yes' === $this->get_option( 'ucc_mode' ) ) {
-            dokan_get_template( 'gateways/paypal/3DS-payment-option.php' );
+        if ( Helper::is_ucc_enabled() ) {
+            dokan_get_template( 'gateways/paypal/3DS-payment-option.php', [
+                'is_3ds_enabled' => Helper::is_3ds_enabled(),
+            ] );
         }
     }
 
@@ -352,15 +353,25 @@ class DokanPayPal extends WC_Payment_Gateway {
         $create_order_url = $processor->create_order( $create_order_data );
 
         if ( is_wp_error( $create_order_url ) ) {
+            wc_add_wp_error_notices( $create_order_url );
+
+            $error_data = $create_order_url->get_error_data();
+            //store paypal debug id
+            update_post_meta( $order->get_id(), '_dokan_paypal_create_order_debug_id', $error_data['paypal_debug_id'] );
+
             return [
                 'result'   => 'error',
                 'redirect' => $order->get_checkout_order_received_url(),
             ];
         }
+        //store paypal debug id
+        update_post_meta( $order->get_id(), '_dokan_paypal_create_order_debug_id', $create_order_url['paypal_debug_id'] );
+        update_post_meta( $order->get_id(), '_dokan_paypal_order_id', $create_order_url['id'] );
 
         // Return thank you redirect
         return [
             'result'              => 'success',
+            'id'                  => $order_id,
             'paypal_redirect_url' => $create_order_url['links'][1]['href'],
             'paypal_order_id'     => $create_order_url['id'],
             'redirect'            => $create_order_url['links'][1]['href'],
