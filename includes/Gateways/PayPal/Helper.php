@@ -184,10 +184,47 @@ class Helper {
     public static function is_3ds_enabled() {
         $_3ds_mode = dokan()->payment_gateway->paypal_marketplace->paypal_wc_gateway->get_option( '3ds_mode' );
 
-        if ( 'yes' === $_3ds_mode && static::is_ucc_enabled() ) {
+        if ( 'yes' === $_3ds_mode && static::is_ucc_enabled_for_all_seller_in_cart() ) {
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * Check if the seller is enabled for receive paypal payment
+     *
+     * @param $seller_id
+     *
+     * @return bool
+     */
+    public static function is_seller_enable_for_receive_payment( $seller_id ) {
+        $merchant_id     = get_user_meta( $seller_id, '_dokan_paypal_marketplace_merchant_id', true );
+        $receive_payment = get_user_meta( $seller_id, '_dokan_paypal_enable_for_receive_payment', true );
+
+        if ( $merchant_id && $receive_payment ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if ucc mode is enabled for all seller in the cart
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return bool
+     */
+    public static function is_ucc_enabled_for_all_seller_in_cart() {
+        foreach ( WC()->cart->get_cart() as $item ) {
+            $product_id = $item['data']->get_id();
+            $seller_id  = get_post_field( 'post_author', $product_id );
+            if ( ! get_user_meta( $seller_id, '_dokan_paypal_enable_for_ucc', true ) && static::is_ucc_enabled() ) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

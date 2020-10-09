@@ -67,7 +67,7 @@ class CartHandler extends DokanPayPal {
             $data = [
                 'payment_button_type' => $this->get_option( 'button_type' ),
                 'is_checkout_page'    => is_checkout(),
-                'is_ucc_enabled'      => Helper::is_ucc_enabled(),
+                'is_ucc_enabled'      => Helper::is_ucc_enabled_for_all_seller_in_cart(),
                 'is_3ds_enabled'      => Helper::is_3ds_enabled(),
                 'nonce'               => wp_create_nonce( 'dokan_paypal' ),
             ];
@@ -108,7 +108,7 @@ class CartHandler extends DokanPayPal {
 
             //get token if ucc mode enabled
             $data_client_token = '';
-            if ( Helper::is_ucc_enabled() ) {
+            if ( Helper::is_ucc_enabled_for_all_seller_in_cart() ) {
                 $processor    = Processor::init();
                 $client_token = $processor->get_generated_client_token();
 
@@ -137,7 +137,7 @@ data-merchant-id="' . implode( ',', $paypal_merchant_ids ) . '" ' . $data_client
     public function display_paypal_button() {
         ?>
         <div id="paypal-button-container" style="display:none;">
-            <?php if ( Helper::is_ucc_enabled() ) : ?>
+            <?php if ( Helper::is_ucc_enabled_for_all_seller_in_cart() ) : ?>
                 <div class="unbranded_checkout">
                     <a id="pay_unbranded_order" href="#" class="button alt" value="Place order">Pay</a>
                     <hr>
@@ -173,9 +173,7 @@ data-merchant-id="' . implode( ',', $paypal_merchant_ids ) . '" ' . $data_client
         }
 
         foreach ( array_keys( $available_vendors ) as $vendor_id ) {
-            $merchant_id = get_user_meta( $vendor_id, '_dokan_paypal_marketplace_merchant_id', true );
-
-            if ( ! $merchant_id ) {
+            if ( Helper::is_seller_enable_for_receive_payment( $vendor_id ) ) {
                 $vendor      = dokan()->vendor->get( $vendor_id );
                 $vendor_name = sprintf( '<a href="%s">%s</a>', esc_url( $vendor->get_shop_url() ), $vendor->get_shop_name() );
 
@@ -213,7 +211,7 @@ data-merchant-id="' . implode( ',', $paypal_merchant_ids ) . '" ' . $data_client
         $paypal_js_sdk_url = esc_url( "https://www.paypal.com/sdk/js?" );
 
         //add hosted fields component if ucc mode is enabled
-        if ( Helper::is_ucc_enabled() ) {
+        if ( Helper::is_ucc_enabled_for_all_seller_in_cart() ) {
             $paypal_js_sdk_url .= "components=hosted-fields,buttons&";
         }
 

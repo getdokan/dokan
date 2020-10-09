@@ -182,7 +182,7 @@
 
                     window.paypal.HostedFields.render({
                         createOrder: function () {
-                            if ( dokan_paypal_marketplace.is_paypal_selected() ) {
+                            if (dokan_paypal_marketplace.is_paypal_selected()) {
                                 let submit = dokan_paypal_marketplace.do_submit();
 
                                 return submit.then(res => {
@@ -214,18 +214,17 @@
                             cvv: {
                                 selector: '#dpm_cvv',
                                 placeholder: 'card security number',
-                                prefill:'742'
+                                prefill: '742'
                             },
                             expirationDate: {
                                 selector: '#dpm_card_expiry',
                                 placeholder: 'mm/yy',
-                                prefill:'11/22'
+                                prefill: '11/22'
                             }
                         }
                     }).then(function (hf) {
                         $('#pay_unbranded_order').on('click', function (e) {
                             e.preventDefault();
-
                             var args = {
                                 cardholderName: document.getElementById('dpm_name_on_card').value,
                                 billingAddress: {
@@ -245,8 +244,8 @@
                                 }
                             };
 
-                            if ( dokan_paypal.is_3ds_enabled ) {
-                                args.contingencies = [ '3D_SECURE' ];
+                            if (dokan_paypal.is_3ds_enabled) {
+                                args.contingencies = ['3D_SECURE'];
                             }
 
                             hf.submit(args).then(function (res) {

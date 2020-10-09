@@ -296,7 +296,7 @@ class DokanPayPal extends WC_Payment_Gateway {
     public function payment_fields() {
         echo $this->get_option( 'description' );
 
-        if ( Helper::is_ucc_enabled() ) {
+        if ( Helper::is_ucc_enabled_for_all_seller_in_cart() ) {
             dokan_get_template( 'gateways/paypal/3DS-payment-option.php', [
                 'is_3ds_enabled' => Helper::is_3ds_enabled(),
             ] );
