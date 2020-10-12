@@ -135,6 +135,11 @@ class Assets {
                 'name'      => 'Vendors',
                 'component' => 'Vendors',
             ),
+            array(
+                'path'      => '/vendor-capabilities',
+                'name'      => 'VendorCapabilities',
+                'component' => 'VendorCapabilities',
+            ),
         );
 
         return apply_filters( 'dokan-admin-routes', $routes );

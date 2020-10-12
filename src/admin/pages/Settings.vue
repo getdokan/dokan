@@ -68,6 +68,7 @@
 <script>
     let Loading = dokan_get_lib('Loading');
     import Fields from "admin/components/Fields.vue"
+    import SettingsBanner from "admin/components/SettingsBanner.vue";
 
     export default {
 
@@ -75,7 +76,8 @@
 
         components: {
             Fields,
-            Loading
+            Loading,
+            SettingsBanner,
         },
 
         data () {
@@ -90,7 +92,8 @@
                 settingFields: {},
                 settingValues: {},
                 requiredFields: [],
-                errors: []
+                errors: [],
+                hasPro: dokan.hasPro ? true : false
             }
         },
 
