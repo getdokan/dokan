@@ -295,51 +295,16 @@ class Manager {
 
             $paypal_order_id = get_post_meta( $order_id, '_dokan_paypal_order_id', true );
 
-            $order           = wc_get_order( $order_id );
-            $processor       = Processor::init();
-            $capture_payment = $processor->capture_payment( $paypal_order_id );
-
-            dokan_log( "[Dokan PayPal Marketplace] Capture Payment:\n" . print_r( $capture_payment, true ) );
-
-            if ( is_wp_error( $capture_payment ) ) {
-                $error_data = $capture_payment->get_error_data();
-                //store paypal debug id
-                update_post_meta( $order->get_id(), '_dokan_paypal_capture_payment_debug_id', $error_data['paypal_debug_id'] );
-
-                dokan_log( "[Dokan PayPal Marketplace] Capture Payment Error:\n" . print_r( $capture_payment, true ) );
-
+            if ( ! $paypal_order_id ) {
                 wp_send_json_error(
                     [
-                        'type'    => 'paypal_capture_payment',
-                        'message' => __( 'Error in capturing payment.', 'dokan-lite' ),
+                        'type'    => 'no_order_id',
+                        'message' => __( 'No PayPal order id found.', 'dokan-lite' ),
                     ]
                 );
             }
 
-            $order_id = $capture_payment['purchase_units'][0]['invoice_id'];
-            $order    = wc_get_order( $order_id );
-
-            //store paypal debug id
-            update_post_meta( $order->get_id(), '_dokan_paypal_capture_payment_debug_id', $capture_payment['paypal_debug_id'] );
-
-            $order->add_order_note(
-                sprintf(
-                    __( 'PayPal payment completed. PayPal Order ID #%s', 'dokan-lite' ),
-                    $paypal_order_id
-                )
-            );
-
-            $order->payment_complete();
-
-            $this->store_capture_payment_data( $capture_payment['purchase_units'] );
-
-            wp_send_json_success(
-                [
-                    'type'    => 'paypal_capture_payment',
-                    'message' => __( 'Successfully captured payment!', 'dokan-lite' ),
-                    'data'    => $capture_payment,
-                ]
-            );
+            $this->handle_capture_payment_validation( $order_id, $paypal_order_id );
 
         } catch ( \Exception $e ) {
             wp_send_json_error(
@@ -349,6 +314,86 @@ class Manager {
                 ]
             );
         }
+    }
+
+    /**
+     * Handle capture payment/store data
+     *
+     * @param $order_id
+     * @param $paypal_order_id
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return void
+     */
+    public function handle_capture_payment_validation( $order_id, $paypal_order_id ) {
+        $order     = wc_get_order( $order_id );
+        $processor = Processor::init();
+
+        //first fetch the order details
+        $paypal_order = $processor->get_order( $paypal_order_id );
+
+        if ( is_wp_error( $paypal_order ) ) {
+            wp_send_json_error(
+                [
+                    'type'    => 'paypal_capture_payment',
+                    'message' => __( 'Error in getting paypal order.', 'dokan-lite' ),
+                ]
+            );
+        }
+
+        if ( ! $processor->continue_transaction( $paypal_order ) ) {
+            wp_send_json_error(
+                [
+                    'type'    => 'paypal_capture_payment',
+                    'message' => __( 'Authorization not supported.', 'dokan-lite' ),
+                ]
+            );
+        }
+
+        $capture_payment = $processor->capture_payment( $paypal_order_id );
+
+        if ( is_wp_error( $capture_payment ) ) {
+            $error_data = $capture_payment->get_error_data();
+            //store paypal debug id
+            update_post_meta( $order->get_id(), '_dokan_paypal_capture_payment_debug_id', $error_data['paypal_debug_id'] );
+
+            dokan_log( "[Dokan PayPal Marketplace] Capture Payment Error:\n" . print_r( $capture_payment, true ) );
+
+            wp_send_json_error(
+                [
+                    'type'    => 'paypal_capture_payment',
+                    'message' => __( 'Error in capturing payment.', 'dokan-lite' ),
+                ]
+            );
+        }
+
+        dokan_log( "[Dokan PayPal Marketplace] Capture Payment:\n" . print_r( $capture_payment, true ) );
+
+        $order_id = $capture_payment['purchase_units'][0]['invoice_id'];
+        $order    = wc_get_order( $order_id );
+
+        //store paypal debug id
+        update_post_meta( $order->get_id(), '_dokan_paypal_capture_payment_debug_id', $capture_payment['paypal_debug_id'] );
+
+        $order->add_order_note(
+            sprintf(
+                __( 'PayPal payment completed. PayPal Order ID #%s', 'dokan-lite' ),
+                $paypal_order_id
+            )
+        );
+
+        $order->payment_complete();
+
+        $this->store_capture_payment_data( $capture_payment['purchase_units'] );
+
+        wp_send_json_success(
+            [
+                'type'    => 'paypal_capture_payment',
+                'message' => __( 'Successfully captured payment!', 'dokan-lite' ),
+                'data'    => $capture_payment,
+            ]
+        );
     }
 
     /**

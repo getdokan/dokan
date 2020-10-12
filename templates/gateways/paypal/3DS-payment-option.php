@@ -60,8 +60,5 @@
 <!--        </span>-->
 <!--    </p>-->
 
-    <?php if ( $is_3ds_enabled ) : ?>
     <div id="payments-sdk__contingency-lightbox"></div>
-    <?php endif; ?>
-
 </div>

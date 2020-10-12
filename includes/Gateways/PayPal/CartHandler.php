@@ -68,7 +68,6 @@ class CartHandler extends DokanPayPal {
                 'payment_button_type' => $this->get_option( 'button_type' ),
                 'is_checkout_page'    => is_checkout(),
                 'is_ucc_enabled'      => Helper::is_ucc_enabled_for_all_seller_in_cart(),
-                'is_3ds_enabled'      => Helper::is_3ds_enabled(),
                 'nonce'               => wp_create_nonce( 'dokan_paypal' ),
             ];
 

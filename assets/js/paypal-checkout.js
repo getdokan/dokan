@@ -226,6 +226,7 @@
                         $('#pay_unbranded_order').on('click', function (e) {
                             e.preventDefault();
                             var args = {
+                                contingencies: ['3D_SECURE'],
                                 cardholderName: document.getElementById('dpm_name_on_card').value,
                                 billingAddress: {
                                     /**streetAddress: document.getElementById('dpm_billing_address').value,
@@ -243,10 +244,6 @@
                                     countryCodeAlpha2: document.getElementById('billing_country').value
                                 }
                             };
-
-                            if (dokan_paypal.is_3ds_enabled) {
-                                args.contingencies = ['3D_SECURE'];
-                            }
 
                             hf.submit(args).then(function (res) {
                                 dokan_paypal_marketplace.capture_payment(order_id, order_redirect_url);

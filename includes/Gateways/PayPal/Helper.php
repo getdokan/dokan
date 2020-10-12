@@ -175,23 +175,6 @@ class Helper {
     }
 
     /**
-     * 3DS enabled for paypal
-     *
-     * @since DOKAN_LITE_SINCE
-     *
-     * @return bool
-     */
-    public static function is_3ds_enabled() {
-        $_3ds_mode = dokan()->payment_gateway->paypal_marketplace->paypal_wc_gateway->get_option( '3ds_mode' );
-
-        if ( 'yes' === $_3ds_mode && static::is_ucc_enabled_for_all_seller_in_cart() ) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * Check if the seller is enabled for receive paypal payment
      *
      * @param $seller_id

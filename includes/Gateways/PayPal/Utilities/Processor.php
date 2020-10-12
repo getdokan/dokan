@@ -255,6 +255,27 @@ class Processor {
     }
 
     /**
+     * Get order details by order id
+     *
+     * @param $order_id
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return array|mixed|\WP_Error
+     */
+    public function get_order( $order_id ) {
+        $url = $this->make_paypal_url( "v2/checkout/orders/{$order_id}" );
+
+        $response = $this->get_request( $url );
+
+        if ( is_wp_error( $response ) ) {
+            return $response;
+        }
+
+        return $response;
+    }
+
+    /**
      * Get access token
      *
      * @since DOKAN_LITE_SINCE
@@ -373,6 +394,9 @@ class Processor {
         if ( is_wp_error( $response ) ) {
             return $response;
         }
+
+        error_log(print_r($args, true));
+        error_log( 'header data: ' . print_r( wp_remote_retrieve_headers($response), true ) );
 
         $body            = wp_remote_retrieve_body( $response );
         $paypal_debug_id = wp_remote_retrieve_header( $response, 'paypal-debug-id' );
@@ -505,5 +529,52 @@ class Processor {
         }
 
         return new \WP_Error( 'dokan_paypal_generate_client_token_error', $response );
+    }
+
+    /**
+     * Make decision based on some condition for continue transaction
+     *
+     * @see https://developer.paypal.com/docs/business/checkout/add-capabilities/3d-secure/#3d-secure-response-parameters
+     *
+     * @param $order_data
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return bool
+     */
+    public function continue_transaction( $order_data ) {
+        $payment_source        = $order_data['payment_source']['card'];
+        $authentication_result = $payment_source['authentication_result'];
+        $liability_shift       = isset( $authentication_result['liability_shift'] ) ? $authentication_result['liability_shift'] : 'unknown';
+
+        $enrollment_status     = isset( $authentication_result['three_d_secure']['enrollment_status'] ) ?
+            $authentication_result['three_d_secure']['enrollment_status'] : 'unknown';
+
+        $authentication_status = isset( $authentication_result['three_d_secure']['authentication_status'] ) ?
+            $authentication_result['three_d_secure']['authentication_status'] : 'unknown';
+
+        /**
+         * EnrollmentStatus, AuthenticationStatus, LiabilityShift
+         * where only two parameter, placed 'unknown' for that blank field
+         */
+        $allowed_transaction_conditions = [
+            [ 'Y', 'Y', 'POSSIBLE' ],
+            [ 'Y', 'A', 'POSSIBLE' ],
+            [ 'N', 'unknown', 'NO' ],
+            [ 'U', 'unknown', 'NO' ],
+            [ 'B', 'unknown', 'NO' ],
+        ];
+
+        foreach ( $allowed_transaction_conditions as $condition ) {
+            if (
+                $enrollment_status === $condition[0] &&
+                $authentication_status === $condition[1] &&
+                $liability_shift === $condition[2]
+            ) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

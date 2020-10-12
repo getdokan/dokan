@@ -203,12 +203,6 @@ class DokanPayPal extends WC_Payment_Gateway {
                 'label'   => __( 'Allow Unbranded Credit Card', 'dokan-lite' ),
                 'default' => 'no',
             ],
-            '3ds_mode'                   => [
-                'title'   => __( 'Allow 3DS Payment', 'dokan-lite' ),
-                'type'    => 'checkbox',
-                'label'   => __( 'Allow 3DS Payment', 'dokan-lite' ),
-                'default' => 'no',
-            ],
             'max_error'                  => [
                 'title'       => __( 'Error Message', 'dokan-lite' ),
                 'type'        => 'text',
@@ -297,9 +291,7 @@ class DokanPayPal extends WC_Payment_Gateway {
         echo $this->get_option( 'description' );
 
         if ( Helper::is_ucc_enabled_for_all_seller_in_cart() ) {
-            dokan_get_template( 'gateways/paypal/3DS-payment-option.php', [
-                'is_3ds_enabled' => Helper::is_3ds_enabled(),
-            ] );
+            dokan_get_template( 'gateways/paypal/3DS-payment-option.php');
         }
     }
 
