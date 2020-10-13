@@ -44,88 +44,88 @@ export default {
             selectedCapabilityImage: '',
             capabilityCards: [
                 {
-                    title: 'Coupons',
-                    content: 'Each vendor can create unlimited discount coupon codes for their products.',
+                    title: this.__( 'Coupons', 'dokan-lite' ),
+                    content: this.__( 'Each vendor can create unlimited discount coupon codes for their products.', 'dokan-lite' ),
                     image: `${dokan.urls.assetsUrl}/images/vendor-capability/cap-coupon.svg`
                 },
                 {
-                    title: 'Shipping',
-                    content: 'Vendors can configure their own shipping costs for each country, state & single products.',
+                    title: this.__( 'Shipping', 'dokan-lite' ),
+                    content: this.__( 'Vendors can configure their own shipping costs for each country, state & single products.', 'dokan-lite' ),
                     image: `${dokan.urls.assetsUrl}/images/vendor-capability/cap-shipping.svg`
                 },
                 {
-                    title: 'Duplicate Product',
-                    content: 'Vendors can duplicate their own products for ease and time saving.',
+                    title: this.__( 'Duplicate Product' , 'dokan-lite' ),
+                    content: this.__('Vendors can duplicate their own products for ease and time saving.', 'dokan-lite' ),
                     image: `${dokan.urls.assetsUrl}/images/vendor-capability/cap-duplicate-product.svg`
                 },
                 {
-                    title: 'Reporting',
-                    content: 'Earning, selling and commissions reports for vendors to improve sales & take major decisions.',
+                    title: this.__( 'Reporting', 'dokan-lite' ),
+                    content: this.__( 'Earning, selling and commissions reports for vendors to improve sales & take major decisions.', 'dokan-lite' ),
                     image: `${dokan.urls.assetsUrl}/images/vendor-capability/cap-reports.svg`
                 },
                 {
-                    title: 'Create Tags',
-                    content: 'Vendors can create & attach tags to products to categorize & for better search engine optimization.',
+                    title: this.__('Create Tags', 'dokan-lite' ),
+                    content: this.__( 'Vendors can create & attach tags to products to categorize & for better search engine optimization.', 'dokan-lite' ),
                     image: `${dokan.urls.assetsUrl}/images/vendor-capability/cap-create-tags.svg`
                 },
                 {
-                    title: 'Vendor Biography',
-                    content: 'Vendors can write about themselves & about their store in a text field which visitors can see from the store page',
+                    title: this.__( 'Vendor Biography', 'dokan-lite' ),
+                    content: this.__( 'Vendors can write about themselves & about their store in a text field which visitors can see from the store page', 'dokan-lite' ),
                     image: `${dokan.urls.assetsUrl}/images/vendor-capability/cap-vendor-biography.svg`
                 },
                 {
-                    title: 'Vendor Product Upload',
-                    content: 'New vendors can start uploading products upon registration if admins allow.\n',
+                    title: this.__('Vendor Product Upload', 'dokan-lite' ),
+                    content: this.__( 'New vendors can start uploading products upon registration if admins allow.', 'dokan-lite' ),
                     image: `${dokan.urls.assetsUrl}/images/vendor-capability/cap-vendor-product-upload.svg`
                 },
                 {
-                    title: 'Order Status Change',
-                    content: 'Vendors will be able to mark products as draft & update the order status to inform customers about progress.',
+                    title: this.__( 'Order Status Change', 'dokan-lite' ),
+                    content: this.__( 'Vendors will be able to mark products as draft & update the order status to inform customers about progress.', 'dokan-lite' ),
                     image: `${dokan.urls.assetsUrl}/images/vendor-capability/cap-order-status-change.svg`
                 },
                 {
-                    title: 'Social Share',
-                    content: 'Visitors and customers can share a store page with their friends and acquaintances on their social profiles.',
+                    title: this.__( 'Social Share', 'dokan-lite' ),
+                    content: this.__( 'Visitors and customers can share a store page with their friends and acquaintances on their social profiles.', 'dokan-lite' ),
                     image: `${dokan.urls.assetsUrl}/images/vendor-capability/cap-social-share.svg`
                 },
                 {
-                    title: 'Variable Product',
-                    content: 'Vendors can create variable products with predefined and custom attributes.',
+                    title: this.__( 'Variable Product', 'dokan-lite' ),
+                    content: this.__( 'Vendors can create variable products with predefined and custom attributes.', 'dokan-lite' ),
                     image: `${dokan.urls.assetsUrl}/images/vendor-capability/cap-variable-product.svg`
                 },
                 {
-                    title: 'Store Opening & Closing Time',
-                    content: 'Vendors can define the working hours of their online store for each day of the week for visitors to see.',
+                    title: this.__( 'Store Opening & Closing Time', 'dokan-lite' ),
+                    content: this.__( 'Vendors can define the working hours of their online store for each day of the week for visitors to see.', 'dokan-lite' ),
                     image: `${dokan.urls.assetsUrl}/images/vendor-capability/cap-opening-closing-hours.svg`
                 },
                 {
-                    title: 'Woocommerce Booking Integration',
-                    content: 'Create hotel rooms, resorts, conference rooms, cars, bikes, etc for renting out.',
+                    title: this.__( 'Woocommerce Booking Integration', 'dokan-lite' ),
+                    content: this.__( 'Create hotel rooms, resorts, conference rooms, cars, bikes, etc for renting out.', 'dokan-lite' ),
                     image: `${dokan.urls.assetsUrl}/images/vendor-capability/cap-woocommerce-booking.svg`
                 },
                 {
-                    title: 'Announcement For Vendors',
-                    content: 'Admins can make announcements targeted to a single vendor, multiple or all vendors.',
+                    title: this.__( 'Announcement For Vendors', 'dokan-lite' ),
+                    content: this.__( 'Admins can make announcements targeted to a single vendor, multiple or all vendors.', 'dokan-lite' ),
                     image: `${dokan.urls.assetsUrl}/images/vendor-capability/cap-announcement-vendors.svg`
                 },
                 {
-                    title: 'Woocommerce Simple Auctions Integration',
-                    content: 'Sell auction-able products in your store with Dokan’s integration.',
+                    title: this.__( 'Woocommerce Simple Auctions Integration', 'dokan-lite' ),
+                    content: this.__( 'Sell auction-able products in your store with Dokan’s integration.', 'dokan-lite' ),
                     image: `${dokan.urls.assetsUrl}/images/vendor-capability/cap-simple-auction.svg`
                 },
                 {
-                    title: 'Social Profiles',
-                    content: 'Vendors can upload & showcase their Facebook, Twitter and Linkedin profiles on their store page.',
+                    title: this.__( 'Social Profiles', 'dokan-lite' ),
+                    content: this.__( 'Vendors can upload & showcase their Facebook, Twitter and Linkedin profiles on their store page.', 'dokan-lite' ),
                     image: `${dokan.urls.assetsUrl}/images/vendor-capability/cap-social-profile.svg`
                 },
                 {
-                    title: 'Refund',
-                    content: 'Vendors can send refund requests for an order to the admins who can approve or deny it from the dashboard.',
+                    title: this.__( 'Refund', 'dokan-lite' ),
+                    content: this.__( 'Vendors can send refund requests for an order to the admins who can approve or deny it from the dashboard.', 'dokan-lite' ),
                     image: `${dokan.urls.assetsUrl}/images/vendor-capability/cap-refund.svg`
                 },
                 {
-                    title: 'Store Seo',
-                    content: 'The Yoast SEO integration lets vendors define Store Title, Description, Slug and Keyword to appear in search engine results.',
+                    title: this.__( 'Store Seo', 'dokan-lite' ),
+                    content: this.__( 'The Yoast SEO integration lets vendors define Store Title, Description, Slug and Keyword to appear in search engine results.', 'dokan-lite' ),
                     image: `${dokan.urls.assetsUrl}/images/vendor-capability/cap-store-seo.svg`
                 },
             ],

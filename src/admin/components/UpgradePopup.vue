@@ -1,8 +1,8 @@
 <template>
     <div id="dokan-upgrade-wrapper">
         <div id="dokan-upgrade-popper">
-            <p>{{ __("You're using", 'dokan-lite' ) }} <span>Dokan Lite</span>. {{ __( 'To unlock more features, consider', 'dokan-lite' ) }}</p>
-            <button @click="openPopup" class="button">{{ __( 'Upgrading to Pro', 'dokan-lite' ) }}</button>
+            <p>{{ __("You're using", 'dokan-lite' ) }} <span>{{ __( 'Dokan Lite', 'dokan-lite' ) }}</span>. {{ __( 'To unlock more features, consider', 'dokan-lite' ) }}</p>
+            <button @click="openPopup" class="button">{{ __( 'Upgrade to Pro', 'dokan-lite' ) }}</button>
         </div>
 
         <div v-if="showPopup" id="dokan-upgrade-popup">
@@ -18,7 +18,7 @@
                 </div>
 
                 <div class="body">
-                    <button class="button">{{ __( 'Upgrading to Pro', 'dokan-lite' ) }}</button>
+                    <button class="button">{{ __( 'Upgrade to Pro', 'dokan-lite' ) }}</button>
 
                     <div class="promo-card">
                         <img :src="bonusImage" :alt="__( 'Dokan Upgrade Promo', 'dokan-lite' )">

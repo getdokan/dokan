@@ -2,10 +2,12 @@
 <div id="dokan-settings-banner">
     <img :src="bannerImage" :alt="__( 'Dokan Settings Banner', 'dokan-lite' )">
     <div class="content">
-        <h1>Looking for Coupons, Variable Products, SEO or Shipping?</h1>
-        <p>Unlock these awesome frontend features with Dokan PRO</p>
-        <a class="button" href="#">Upgrade to Pro</a>
-        <router-link class="button custom-button" :to="{ name: 'VendorCapabilities' }">Check Out All Vendor Functionalities</router-link>
+        <h1>{{ __( 'Looking for Coupons, Variable Products, SEO or Shipping?', 'dokan-lite' ) }}</h1>
+        <p>{{ __( 'Unlock these awesome frontend features with Dokan PRO', 'dokan-lite' ) }}</p>
+        <a class="button" href="#">{{ __( 'Upgrade to Pro', 'dokan-lite' ) }}</a>
+        <router-link class="button custom-button" :to="{ name: 'VendorCapabilities' }">
+            {{ __( 'Check Out All Vendor Functionalities', 'dokan-lite' ) }}
+        </router-link>
     </div>
 </div>
 </template>
