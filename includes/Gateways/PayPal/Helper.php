@@ -29,7 +29,7 @@ class Helper {
     }
 
     /**
-     * Get advanced credit card debit card supported countries
+     * Get advanced credit card debit card supported countries (UCC/Unbranded payments)
      *
      * @see https://developer.paypal.com/docs/business/checkout/reference/currency-availability-advanced-cards/
      *
@@ -71,7 +71,7 @@ class Helper {
             'GB' => 'United Kingdom',
         ];
 
-        return apply_filters( 'dokan_paypal_supported_countries', $supported_countries );
+        return apply_filters( 'dokan_paypal_advanced_credit_card_debit_card_supported_countries', $supported_countries );
     }
 
     /**
@@ -114,23 +114,23 @@ class Helper {
     public static function get_supported_currencies() {
         return apply_filters(
             'dokan_paypal_supported_currencies', [
-				'AUD',
-				'CAD',
-				'CHF',
-				'CZK',
-				'DKK',
-				'EUR',
-				'GBP',
-				'HKD',
-				'HUF',
-				'JPY',
-				'NOK',
-				'NZD',
-				'PLN',
-				'SEK',
-				'SGD',
-				'USD',
-			]
+                'AUD',
+                'CAD',
+                'CHF',
+                'CZK',
+                'DKK',
+                'EUR',
+                'GBP',
+                'HKD',
+                'HUF',
+                'JPY',
+                'NOK',
+                'NZD',
+                'PLN',
+                'SEK',
+                'SGD',
+                'USD',
+            ]
         );
     }
 
@@ -146,13 +146,13 @@ class Helper {
     public static function get_advanced_credit_card_debit_card_us_supported_currencies() {
         return apply_filters(
             'dokan_paypal_us_supported_currencies', [
-				'AUD',
-				'CAD',
-				'EUR',
-				'GBP',
-				'JPY',
-				'USD',
-			]
+                'AUD',
+                'CAD',
+                'EUR',
+                'GBP',
+                'JPY',
+                'USD',
+            ]
         );
     }
 
@@ -213,5 +213,77 @@ class Helper {
         }
 
         return true;
+    }
+
+    /**
+     * Get branded payment supported countries
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return array
+     */
+    public static function get_branded_payment_supported_countries() {
+        $supported_countries = [
+            'AU' => 'Australia',
+            'AT' => 'Austria',
+            'BE' => 'Belgium',
+            'BG' => 'Bulgaria',
+            'CA' => 'Canada',
+            'CY' => 'Cyprus',
+            'CZ' => 'Czech',
+            'DK' => 'Denmark',
+            'EE' => 'Estonia',
+            'FI' => 'Finland',
+            'FR' => 'France',
+            'GR' => 'Greece',
+            'DE' => 'Germany',
+            'HU' => 'Hungary',
+            'IE' => 'Ireland',
+            'IT' => 'Italy',
+            'LV' => 'Latvia',
+            'LI' => 'Liechtenstein',
+            'LT' => 'Lithuania',
+            'LU' => 'Luxembourg',
+            'MT' => 'Malta',
+            'NL' => 'Netherlands',
+            'NO' => 'Norway',
+            'PL' => 'Poland',
+            'PT' => 'Portugal',
+            'RO' => 'Romania',
+            'SK' => 'Slovakia',
+            'SI' => 'Slovenia',
+            'ES' => 'Spain',
+            'SE' => 'Sweden',
+            'US' => 'United States',
+            'GB' => 'United Kingdom',
+        ];
+
+        return apply_filters( 'dokan_paypal_branded_payment_supported_countries', $supported_countries );
+    }
+
+    /**
+     * Get PayPal product type based on country
+     *
+     * @param $country_code
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return bool|string
+     */
+    public static function get_product_type( $country_code ) {
+        $branded_ucc_supported_countries = static::get_advanced_credit_card_debit_card_supported_countries();
+        $branded_supported_countries     = static::get_branded_payment_supported_countries();
+
+        if ( ! array_key_exists( $country_code, array_merge( $branded_ucc_supported_countries, $branded_supported_countries ) ) ) {
+            return false;
+        }
+
+        if ( array_key_exists( $country_code, $branded_ucc_supported_countries ) ) {
+            return 'PPCP';
+        }
+
+        if ( array_key_exists( $country_code, $branded_supported_countries ) ) {
+            return 'EXPRESS_CHECKOUT';
+        }
     }
 }

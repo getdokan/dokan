@@ -233,6 +233,10 @@ class DokanPayPal extends WC_Payment_Gateway {
     public function init_hooks() {
         add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, [ &$this, 'process_admin_options' ] );
         add_action( 'admin_footer', [ $this, 'admin_script' ] );
+        add_filter( 'dokan_paypal_advanced_credit_card_debit_card_supported_countries', [
+            $this,
+            'supported_countries',
+        ] );
     }
 
     /**
@@ -613,6 +617,26 @@ class DokanPayPal extends WC_Payment_Gateway {
         dokan_get_template( 'gateways/paypal/admin-options.php' );
 
         parent::admin_options();
+    }
+
+    /**
+     * Currently supported countries
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return array
+     */
+    public function supported_countries() {
+        $supported_countries = [
+            'US' => 'United States',
+            'AU' => 'Australia',
+            'GB' => 'UK',
+            'FR' => 'France',
+            'IT' => 'Italy',
+            'ES' => 'Spain',
+        ];
+
+        return $supported_countries;
     }
 }
 

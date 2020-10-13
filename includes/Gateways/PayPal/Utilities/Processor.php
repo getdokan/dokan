@@ -69,14 +69,17 @@ class Processor {
     /**
      * Create partner referral
      *
+     * @see https://developer.paypal.com/docs/api/partner-referrals/v2/#partner-referrals_create
+     *
      * @param $vendor_email_address
      * @param $tracking_id
+     * @param array $products
      *
      * @since DOKAN_LITE_SINCE
      *
      * @return string|\WP_Error
      */
-    public function create_partner_referral( $vendor_email_address, $tracking_id ) {
+    public function create_partner_referral( $vendor_email_address, $tracking_id, $products = [ 'PPCP' ] ) {
         $partner_referral_data = [
             'email'                   => $vendor_email_address,
             'preferred_language_code' => 'en-US',
@@ -121,9 +124,7 @@ class Processor {
                     ],
                 ],
             ],
-            'products'                => [
-                'PPCP',
-            ],
+            'products'                => $products,
         ];
 
         $url      = $this->make_paypal_url( 'v2/customer/partner-referrals/' );

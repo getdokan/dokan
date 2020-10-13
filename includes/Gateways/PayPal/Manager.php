@@ -120,12 +120,29 @@ class Manager {
             return;
         }
 
-        $email_address = sanitize_email( $get_data['vendor_paypal_email_address'] );
-        $current_user  = _wp_get_current_user();
-        $tracking_id   = '_dokan_paypal_' . $current_user->user_login . '_' . $user_id;
+        $email_address  = sanitize_email( $get_data['vendor_paypal_email_address'] );
+        $current_user   = _wp_get_current_user();
+        $tracking_id    = '_dokan_paypal_' . $current_user->user_login . '_' . $user_id;
+        $dokan_settings = get_user_meta( $user_id, 'dokan_profile_settings', true );
+
+        //get paypal product type based on seller country
+        $product_type = Helper::get_product_type( $dokan_settings['address']['country'] );
+
+        if ( ! $product_type ) {
+            wp_safe_redirect(
+                add_query_arg(
+                    [
+                        'status'  => 'error',
+                        'message' => __( 'Seller country not supported.', 'dokan-lite' ),
+                    ],
+                    dokan_get_navigation_url( 'settings/payment' )
+                )
+            );
+            exit();
+        }
 
         $processor  = Processor::init();
-        $paypal_url = $processor->create_partner_referral( $email_address, $tracking_id );
+        $paypal_url = $processor->create_partner_referral( $email_address, $tracking_id, [ $product_type ] );
 
         if ( is_wp_error( $paypal_url ) ) {
             wp_safe_redirect(
