@@ -395,8 +395,8 @@ class Processor {
             return $response;
         }
 
-        error_log(print_r($args, true));
-        error_log( 'header data: ' . print_r( wp_remote_retrieve_headers($response), true ) );
+        error_log( print_r( $args, true ) );
+        error_log( 'header data: ' . print_r( wp_remote_retrieve_headers( $response ), true ) );
 
         $body            = wp_remote_retrieve_body( $response );
         $paypal_debug_id = wp_remote_retrieve_header( $response, 'paypal-debug-id' );
@@ -406,7 +406,7 @@ class Processor {
             201 !== wp_remote_retrieve_response_code( $response ) &&
             204 !== wp_remote_retrieve_response_code( $response )
         ) {
-            return new \WP_Error( 'dokan_paypal_request_error', $body, [ 'paypal_debug_id' => $paypal_debug_id, ] );
+            return new \WP_Error( 'dokan_paypal_request_error', $body, [ 'paypal_debug_id' => $paypal_debug_id ] );
         }
 
         $data = json_decode( $body, true );
@@ -547,7 +547,7 @@ class Processor {
         $authentication_result = $payment_source['authentication_result'];
         $liability_shift       = isset( $authentication_result['liability_shift'] ) ? $authentication_result['liability_shift'] : 'unknown';
 
-        $enrollment_status     = isset( $authentication_result['three_d_secure']['enrollment_status'] ) ?
+        $enrollment_status = isset( $authentication_result['three_d_secure']['enrollment_status'] ) ?
             $authentication_result['three_d_secure']['enrollment_status'] : 'unknown';
 
         $authentication_status = isset( $authentication_result['three_d_secure']['authentication_status'] ) ?

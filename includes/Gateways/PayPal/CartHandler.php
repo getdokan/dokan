@@ -53,15 +53,18 @@ class CartHandler extends DokanPayPal {
 
         //loading this scripts only in checkout page
         if ( ! is_order_received_page() && is_checkout() || is_checkout_pay_page() ) {
-
             $paypal_js_sdk_url = $this->get_paypal_sdk_url();
 
             //paypal sdk enqueue
             wp_enqueue_script( 'dokan_paypal_sdk', $paypal_js_sdk_url, [], null, false );
 
-            wp_enqueue_script( 'dokan_paypal_checkout', DOKAN_PLUGIN_ASSEST . '/js/paypal-checkout.js', [
-                'dokan_paypal_sdk',
-            ] );
+            wp_enqueue_script(
+                'dokan_paypal_checkout', DOKAN_PLUGIN_ASSEST . '/js/paypal-checkout.js', [
+					'dokan_paypal_sdk',
+				],
+                '',
+                true
+            );
 
             //localize data
             $data = [
@@ -120,7 +123,6 @@ class CartHandler extends DokanPayPal {
 
             $tag = '<script async type="text/javascript" src="' . $source . '" id="' . $handle . '-js"
 data-merchant-id="' . implode( ',', $paypal_merchant_ids ) . '" ' . $data_client_token . ' data-partner-attribution-id="weDevs_SP_Dokan"></script>';
-
         }
 
         return $tag;
@@ -167,7 +169,7 @@ data-merchant-id="' . implode( ',', $paypal_merchant_ids ) . '" ' . $data_client
 
         $available_vendors = [];
         foreach ( WC()->cart->get_cart() as $item ) {
-            $product_id                                                          = $item['data']->get_id();
+            $product_id = $item['data']->get_id();
             $available_vendors[ get_post_field( 'post_author', $product_id ) ][] = $item['data'];
         }
 
@@ -184,7 +186,7 @@ data-merchant-id="' . implode( ',', $paypal_merchant_ids ) . '" ' . $data_client
                 $errors->add(
                     'paypal-not-configured',
                     sprintf(
-                        __( '<strong>Error!</strong> You cannot complete your purchase until <strong>%s</strong> connected PayPal as a payment gateway. Please remove %s to continue.', 'dokan-lite' ),
+                        __( '<strong>Error!</strong> You cannot complete your purchase until <strong>%1$s</strong> connected PayPal as a payment gateway. Please remove %2$s to continue.', 'dokan-lite' ),
                         $vendor_name,
                         implode( ', ', $vendor_products )
                     )
@@ -207,11 +209,11 @@ data-merchant-id="' . implode( ',', $paypal_merchant_ids ) . '" ' . $data_client
             $app_user = $this->get_option( 'app_user' );
         }
 
-        $paypal_js_sdk_url = esc_url( "https://www.paypal.com/sdk/js?" );
+        $paypal_js_sdk_url = esc_url( 'https://www.paypal.com/sdk/js?' );
 
         //add hosted fields component if ucc mode is enabled
         if ( Helper::is_ucc_enabled_for_all_seller_in_cart() ) {
-            $paypal_js_sdk_url .= "components=hosted-fields,buttons&";
+            $paypal_js_sdk_url .= 'components=hosted-fields,buttons&';
         }
 
         $paypal_js_sdk_url .= "client-id={$app_user}&currency=USD&intent=capture";

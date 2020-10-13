@@ -247,21 +247,25 @@ class Manager {
         if ( $merchant_status['payments_receivable'] && $merchant_status['primary_email_confirmed'] ) {
             $oauth_integrations = $merchant_status['oauth_integrations'];
 
-            array_map( function ( $integration ) use ( $user_id ) {
-                if ( 'OAUTH_THIRD_PARTY' === $integration['integration_type'] && count( $integration['oauth_third_party'] ) ) {
-                    update_user_meta( $user_id, '_dokan_paypal_enable_for_receive_payment', true );
-                }
-            }, $oauth_integrations );
+            array_map(
+                function ( $integration ) use ( $user_id ) {
+                    if ( 'OAUTH_THIRD_PARTY' === $integration['integration_type'] && count( $integration['oauth_third_party'] ) ) {
+                        update_user_meta( $user_id, '_dokan_paypal_enable_for_receive_payment', true );
+                    }
+                }, $oauth_integrations
+            );
         }
 
         //check if the user is able to use UCC mode
         $products = $merchant_status['products'];
 
-        array_map( function ( $value ) use ( $user_id ) {
-            if ( 'PPCP_CUSTOM' === $value['name'] && 'SUBSCRIBED' === $value['vetting_status'] ) {
-                update_user_meta( $user_id, '_dokan_paypal_enable_for_ucc', true );
-            }
-        }, $products );
+        array_map(
+            function ( $value ) use ( $user_id ) {
+                if ( 'PPCP_CUSTOM' === $value['name'] && 'SUBSCRIBED' === $value['vetting_status'] ) {
+                    update_user_meta( $user_id, '_dokan_paypal_enable_for_ucc', true );
+                }
+            }, $products
+        );
     }
 
     /**
@@ -273,7 +277,9 @@ class Manager {
      */
     public function capture_payment() {
         try {
-            if ( ! wp_verify_nonce( $_POST['nonce'], 'dokan_paypal' ) ) {
+            $post_data = wp_unslash( $_POST );
+
+            if ( isset( $post_data['nonce'] ) && ! wp_verify_nonce( sanitize_text_field( $post_data['nonce'] ), 'dokan_paypal' ) ) {
                 wp_send_json_error(
                     [
                         'type'    => 'nonce',
@@ -282,7 +288,7 @@ class Manager {
                 );
             }
 
-            $order_id = ( isset( $_POST['order_id'] ) ) ? sanitize_key( $_POST['order_id'] ) : 0;
+            $order_id = ( isset( $post_data['order_id'] ) ) ? sanitize_key( $post_data['order_id'] ) : 0;
 
             if ( ! $order_id ) {
                 wp_send_json_error(
@@ -305,7 +311,6 @@ class Manager {
             }
 
             $this->handle_capture_payment_validation( $order_id, $paypal_order_id );
-
         } catch ( \Exception $e ) {
             wp_send_json_error(
                 [

@@ -272,7 +272,7 @@ class DokanPayPal extends WC_Payment_Gateway {
             'RUB',
         ];
 
-        if ( ! in_array( get_woocommerce_currency(), apply_filters( 'woocommerce_paypal_supported_currencies', $supported_currencies ) ) ) {
+        if ( ! in_array( get_woocommerce_currency(), apply_filters( 'woocommerce_paypal_supported_currencies', $supported_currencies ), true ) ) {
             return false;
         }
 
@@ -291,7 +291,7 @@ class DokanPayPal extends WC_Payment_Gateway {
         echo $this->get_option( 'description' );
 
         if ( Helper::is_ucc_enabled_for_all_seller_in_cart() ) {
-            dokan_get_template( 'gateways/paypal/3DS-payment-option.php');
+            dokan_get_template( 'gateways/paypal/3DS-payment-option.php' );
         }
     }
 
@@ -519,9 +519,6 @@ class DokanPayPal extends WC_Payment_Gateway {
                             'currency_code' => 'USD',
                             'value'         => dokan()->commission->get_earning_by_order( $order, 'admin' ),
                         ],
-//                        'payee'  => [
-//                            'merchant_id' => $merchant_id,
-//                        ],
                     ],
                 ],
             ],

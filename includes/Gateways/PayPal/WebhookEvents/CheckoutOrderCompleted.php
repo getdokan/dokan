@@ -50,7 +50,7 @@ class CheckoutOrderCompleted extends WebhookEventHandler {
 
         $order->add_order_note(
             sprintf(
-                __( 'PayPal payment completed. PayPal Order ID #%s. Payer ID: %s', 'dokan-lite' ),
+                __( 'PayPal payment completed. PayPal Order ID #%1$s. Payer ID: %2$s', 'dokan-lite' ),
                 $paypal_order_id,
                 $paypal_payer_id
             )

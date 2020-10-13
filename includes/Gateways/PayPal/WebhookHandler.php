@@ -54,9 +54,11 @@ class WebhookHandler {
 
         EventFactory::handle( $event );
 
-        wp_send_json_success( [
-            'status'  => 200,
-            'message' => 'success',
-        ] );
+        wp_send_json_success(
+            [
+				'status'  => 200,
+				'message' => 'success',
+			]
+        );
     }
 }

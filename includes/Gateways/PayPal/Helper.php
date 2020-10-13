@@ -112,24 +112,26 @@ class Helper {
      * @return array
      */
     public static function get_supported_currencies() {
-        return apply_filters( 'dokan_paypal_supported_currencies', [
-            'AUD',
-            'CAD',
-            'CHF',
-            'CZK',
-            'DKK',
-            'EUR',
-            'GBP',
-            'HKD',
-            'HUF',
-            'JPY',
-            'NOK',
-            'NZD',
-            'PLN',
-            'SEK',
-            'SGD',
-            'USD',
-        ] );
+        return apply_filters(
+            'dokan_paypal_supported_currencies', [
+				'AUD',
+				'CAD',
+				'CHF',
+				'CZK',
+				'DKK',
+				'EUR',
+				'GBP',
+				'HKD',
+				'HUF',
+				'JPY',
+				'NOK',
+				'NZD',
+				'PLN',
+				'SEK',
+				'SGD',
+				'USD',
+			]
+        );
     }
 
     /**
@@ -142,14 +144,16 @@ class Helper {
      * @return array
      */
     public static function get_advanced_credit_card_debit_card_us_supported_currencies() {
-        return apply_filters( 'dokan_paypal_us_supported_currencies', [
-            'AUD',
-            'CAD',
-            'EUR',
-            'GBP',
-            'JPY',
-            'USD',
-        ] );
+        return apply_filters(
+            'dokan_paypal_us_supported_currencies', [
+				'AUD',
+				'CAD',
+				'EUR',
+				'GBP',
+				'JPY',
+				'USD',
+			]
+        );
     }
 
     /**
