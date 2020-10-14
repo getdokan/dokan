@@ -27,6 +27,7 @@ class CartHandler extends DokanPayPal {
 
         //show paypal smart payment buttons
         add_action( 'woocommerce_review_order_after_submit', [ $this, 'display_paypal_button' ] );
+        add_action( 'woocommerce_pay_order_after_submit', [ $this, 'display_paypal_button' ], 20 );
         add_action( 'wp_enqueue_scripts', [ $this, 'payment_scripts' ] );
     }
 
@@ -53,6 +54,10 @@ class CartHandler extends DokanPayPal {
 
         //loading this scripts only in checkout page
         if ( ! is_order_received_page() && is_checkout() || is_checkout_pay_page() ) {
+
+            global $wp;
+            $order_id = $wp->query_vars['order-pay'];
+
             $paypal_js_sdk_url = $this->get_paypal_sdk_url();
 
             //paypal sdk enqueue
@@ -60,18 +65,20 @@ class CartHandler extends DokanPayPal {
 
             wp_enqueue_script(
                 'dokan_paypal_checkout', DOKAN_PLUGIN_ASSEST . '/js/paypal-checkout.js', [
-					'dokan_paypal_sdk',
-				],
+                'dokan_paypal_sdk',
+            ],
                 '',
                 true
             );
 
             //localize data
             $data = [
-                'payment_button_type' => $this->get_option( 'button_type' ),
-                'is_checkout_page'    => is_checkout(),
-                'is_ucc_enabled'      => Helper::is_ucc_enabled_for_all_seller_in_cart(),
-                'nonce'               => wp_create_nonce( 'dokan_paypal' ),
+                'payment_button_type'  => $this->get_option( 'button_type' ),
+                'is_checkout_page'     => is_checkout(),
+                'is_ucc_enabled'       => Helper::is_ucc_enabled_for_all_seller_in_cart(),
+                'nonce'                => wp_create_nonce( 'dokan_paypal' ),
+                'is_checkout_pay_page' => is_checkout_pay_page(),
+                'order_id'             => $order_id,
             ];
 
             wp_localize_script( 'dokan_paypal_sdk', 'dokan_paypal', $data );
@@ -169,7 +176,7 @@ data-merchant-id="' . implode( ',', $paypal_merchant_ids ) . '" ' . $data_client
 
         $available_vendors = [];
         foreach ( WC()->cart->get_cart() as $item ) {
-            $product_id = $item['data']->get_id();
+            $product_id                                                          = $item['data']->get_id();
             $available_vendors[ get_post_field( 'post_author', $product_id ) ][] = $item['data'];
         }
 

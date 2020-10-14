@@ -396,9 +396,6 @@ class Processor {
             return $response;
         }
 
-        error_log( print_r( $args, true ) );
-        error_log( 'header data: ' . print_r( wp_remote_retrieve_headers( $response ), true ) );
-
         $body            = wp_remote_retrieve_body( $response );
         $paypal_debug_id = wp_remote_retrieve_header( $response, 'paypal-debug-id' );
 
@@ -545,6 +542,12 @@ class Processor {
      */
     public function continue_transaction( $order_data ) {
         $payment_source        = $order_data['payment_source']['card'];
+
+        //if no source considered it as a paypal payment not using any card
+        if ( ! $payment_source ) {
+            return true;
+        }
+
         $authentication_result = $payment_source['authentication_result'];
         $liability_shift       = isset( $authentication_result['liability_shift'] ) ? $authentication_result['liability_shift'] : 'unknown';
 

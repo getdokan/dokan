@@ -28,9 +28,6 @@ class Manager {
         $this->set_controllers();
 
         add_action( 'template_redirect', [ $this, 'handle_paypal_marketplace' ], 10 );
-
-        //add ajax url for capture payment
-        add_action( 'wp_ajax_dokan_paypal_capture_payment', [ $this, 'capture_payment' ] );
     }
 
     /**
@@ -45,6 +42,7 @@ class Manager {
         $this->container['paypal_wc_gateway']       = new DokanPayPal();
         $this->container['paypal_webhook']          = new WebhookHandler();
         $this->container['paypal_cart']             = new CartHandler();
+        $this->container['ajax']                    = new Ajax();
     }
 
     /**
@@ -145,6 +143,8 @@ class Manager {
         $paypal_url = $processor->create_partner_referral( $email_address, $tracking_id, [ $product_type ] );
 
         if ( is_wp_error( $paypal_url ) ) {
+            Helper::log_paypal_error( $user_id, $paypal_url, 'create_partner_referral', 'user' );
+
             wp_safe_redirect(
                 add_query_arg(
                     [
@@ -283,161 +283,5 @@ class Manager {
                 }
             }, $products
         );
-    }
-
-    /**
-     * Capture Payment
-     *
-     * @since DOKAN_LITE_SINCE
-     *
-     * @return void
-     */
-    public function capture_payment() {
-        try {
-            $post_data = wp_unslash( $_POST );
-
-            if ( isset( $post_data['nonce'] ) && ! wp_verify_nonce( sanitize_text_field( $post_data['nonce'] ), 'dokan_paypal' ) ) {
-                wp_send_json_error(
-                    [
-                        'type'    => 'nonce',
-                        'message' => __( 'Are you cheating?', 'dokan-lite' ),
-                    ]
-                );
-            }
-
-            $order_id = ( isset( $post_data['order_id'] ) ) ? sanitize_key( $post_data['order_id'] ) : 0;
-
-            if ( ! $order_id ) {
-                wp_send_json_error(
-                    [
-                        'type'    => 'no_order_id',
-                        'message' => __( 'No Order ID provided.', 'dokan-lite' ),
-                    ]
-                );
-            }
-
-            $paypal_order_id = get_post_meta( $order_id, '_dokan_paypal_order_id', true );
-
-            if ( ! $paypal_order_id ) {
-                wp_send_json_error(
-                    [
-                        'type'    => 'no_order_id',
-                        'message' => __( 'No PayPal order id found.', 'dokan-lite' ),
-                    ]
-                );
-            }
-
-            $this->handle_capture_payment_validation( $order_id, $paypal_order_id );
-        } catch ( \Exception $e ) {
-            wp_send_json_error(
-                [
-                    'type'    => 'paypal_capture_payment',
-                    'message' => __( 'Error in capturing payment.', 'dokan-lite' ),
-                ]
-            );
-        }
-    }
-
-    /**
-     * Handle capture payment/store data
-     *
-     * @param $order_id
-     * @param $paypal_order_id
-     *
-     * @since DOKAN_LITE_SINCE
-     *
-     * @return void
-     */
-    public function handle_capture_payment_validation( $order_id, $paypal_order_id ) {
-        $order     = wc_get_order( $order_id );
-        $processor = Processor::init();
-
-        //first fetch the order details
-        $paypal_order = $processor->get_order( $paypal_order_id );
-
-        if ( is_wp_error( $paypal_order ) ) {
-            wp_send_json_error(
-                [
-                    'type'    => 'paypal_capture_payment',
-                    'message' => __( 'Error in getting paypal order.', 'dokan-lite' ),
-                ]
-            );
-        }
-
-        if ( ! $processor->continue_transaction( $paypal_order ) ) {
-            wp_send_json_error(
-                [
-                    'type'    => 'paypal_capture_payment',
-                    'message' => __( 'Authorization not supported.', 'dokan-lite' ),
-                ]
-            );
-        }
-
-        $capture_payment = $processor->capture_payment( $paypal_order_id );
-
-        if ( is_wp_error( $capture_payment ) ) {
-            $error_data = $capture_payment->get_error_data();
-            //store paypal debug id
-            update_post_meta( $order->get_id(), '_dokan_paypal_capture_payment_debug_id', $error_data['paypal_debug_id'] );
-
-            dokan_log( "[Dokan PayPal Marketplace] Capture Payment Error:\n" . print_r( $capture_payment, true ) );
-
-            wp_send_json_error(
-                [
-                    'type'    => 'paypal_capture_payment',
-                    'message' => __( 'Error in capturing payment.', 'dokan-lite' ),
-                ]
-            );
-        }
-
-        dokan_log( "[Dokan PayPal Marketplace] Capture Payment:\n" . print_r( $capture_payment, true ) );
-
-        $order_id = $capture_payment['purchase_units'][0]['invoice_id'];
-        $order    = wc_get_order( $order_id );
-
-        //store paypal debug id
-        update_post_meta( $order->get_id(), '_dokan_paypal_capture_payment_debug_id', $capture_payment['paypal_debug_id'] );
-
-        $order->add_order_note(
-            sprintf(
-                __( 'PayPal payment completed. PayPal Order ID #%s', 'dokan-lite' ),
-                $paypal_order_id
-            )
-        );
-
-        $order->payment_complete();
-
-        $this->store_capture_payment_data( $capture_payment['purchase_units'] );
-
-        wp_send_json_success(
-            [
-                'type'    => 'paypal_capture_payment',
-                'message' => __( 'Successfully captured payment!', 'dokan-lite' ),
-                'data'    => $capture_payment,
-            ]
-        );
-    }
-
-    /**
-     * Store each order capture id
-     *
-     * @param array $purchase_units
-     *
-     * @since DOKAN_LITE_SINCE
-     *
-     * @return void
-     */
-    public function store_capture_payment_data( $purchase_units ) {
-        //add capture id to meta data
-        foreach ( $purchase_units as $key => $unit ) {
-            $capture_id = $unit['payments']['captures'][0]['id'];
-
-            //this is a suborder id. if there is no suborder then it will be the main order id
-            $_order_id = $unit['custom_id'];
-
-            //may be a suborder
-            $_order = wc_get_order( $_order_id );
-            update_post_meta( $_order->get_id(), '_dokan_paypal_payment_capture_id', $capture_id );
-        }
     }
 }

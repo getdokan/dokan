@@ -164,10 +164,12 @@ class Helper {
      * @return bool
      */
     public static function is_ucc_enabled() {
+        $button_type     = dokan()->payment_gateway->paypal_marketplace->paypal_wc_gateway->get_option( 'button_type' );
         $ucc_mode        = dokan()->payment_gateway->paypal_marketplace->paypal_wc_gateway->get_option( 'ucc_mode' );
         $wc_base_country = WC()->countries->get_base_country();
 
         if (
+            'smart' === $button_type &&
             'yes' === $ucc_mode &&
             array_key_exists( $wc_base_country, static::get_advanced_credit_card_debit_card_supported_countries() ) &&
             in_array( get_woocommerce_currency(), static::get_advanced_credit_card_debit_card_supported_currencies( $wc_base_country ), true )
@@ -207,7 +209,7 @@ class Helper {
         foreach ( WC()->cart->get_cart() as $item ) {
             $product_id = $item['data']->get_id();
             $seller_id  = get_post_field( 'post_author', $product_id );
-            if ( ! get_user_meta( $seller_id, '_dokan_paypal_enable_for_ucc', true ) && static::is_ucc_enabled() ) {
+            if ( ! static::is_ucc_enabled() && ! get_user_meta( $seller_id, '_dokan_paypal_enable_for_ucc', true ) ) {
                 return false;
             }
         }
@@ -285,5 +287,36 @@ class Helper {
         if ( array_key_exists( $country_code, $branded_supported_countries ) ) {
             return 'EXPRESS_CHECKOUT';
         }
+    }
+
+    /**
+     * Log PayPal error data with debug id
+     *
+     * @param $id
+     * @param $error
+     * @param $meta_key
+     *
+     * @param string $context
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return void
+     */
+    public static function log_paypal_error( $id, $error, $meta_key, $context = 'order' ) {
+        $error_data = $error->get_error_data();
+
+        //store paypal debug id
+        switch ( $context ) {
+            case 'order':
+                update_post_meta( $id, "_dokan_paypal_{$meta_key}_debug_id", $error_data['paypal_debug_id'] );
+
+                break;
+            case 'user' :
+                update_user_meta( $id, "_dokan_paypal_{$meta_key}_debug_id", $error_data['paypal_debug_id'] );
+
+                break;
+        }
+
+        dokan_log( "[Dokan PayPal Marketplace] $meta_key Error:\n" . print_r( $error, true ), 'error' );
     }
 }

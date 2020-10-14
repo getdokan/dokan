@@ -23,7 +23,7 @@
             $( '#place_order' ).animate( { opacity: toggleSubmit, height: toggleSubmit, padding: toggleSubmit }, 230 );
         },
         on_change: function () {
-            $( 'form.checkout' ).on( 'click', 'input[name="payment_method"]', function(e) {
+            $( 'form.checkout, form#order_review' ).on( 'click', 'input[name="payment_method"]', function(e) {
                 if ( 'smart' !== dokan_paypal.payment_button_type ) {
                     return;
                 }
@@ -148,7 +148,54 @@
             do_submit: function() {
                 dokan_paypal_marketplace.set_loading_on();
 
-                return dokan_paypal_marketplace.set_order();
+                let set_order;
+                if (dokan_paypal.is_checkout_pay_page) {
+                    set_order = dokan_paypal_marketplace.create_order();
+                } else {
+                    set_order = dokan_paypal_marketplace.set_order();
+                }
+
+                return set_order;
+            },
+            create_order: function () {
+                dokan_paypal_marketplace.set_loading_on();
+
+                let create_order_data = {
+                    order_id: dokan_paypal.order_id,
+                    action: "dokan_paypal_create_order",
+                    nonce: dokan_paypal.nonce
+                };
+
+                return $.ajax({
+                    type: 'POST',
+                    url: dokan.ajaxurl,
+                    data: create_order_data,
+                    dataType: 'json',
+                }).done(function(result) {
+                    dokan_paypal_marketplace.set_loading_done();
+
+                    try {
+                        if (result.success) {
+                            return result.data.data;
+                        } else {
+                            throw new Error(result.data.message);
+                        }
+                    } catch (err) {
+                        // Reload page
+                        if (result.reload === true) {
+                            window.location.reload();
+                            return;
+                        }
+
+                        // Add new errors
+                        if (result.data.message) {
+                            dokan_paypal_marketplace.submit_error('<div class="woocommerce-error">' + result.data.message + '</div>');
+                        }
+                    }
+                }).fail(function(jqXHR, textStatus, errorThrown) {
+                    dokan_paypal_marketplace.set_loading_done();
+                    dokan_paypal_marketplace.submit_error('<div class="woocommerce-error">' + errorThrown + '</div>');
+                });
             },
             capture_payment: function (order_id, order_redirect_url) {
                 dokan_paypal_marketplace.set_loading_on();
@@ -167,8 +214,23 @@
                 }).done(function(result) {
                     dokan_paypal_marketplace.set_loading_done();
 
-                    if (result.success) {
-                        window.location.href = order_redirect_url;
+                    try {
+                        if (result.success) {
+                            window.location.href = order_redirect_url;
+                        } else {
+                            throw new Error(result.data.message);
+                        }
+                    } catch (err) {
+                        // Reload page
+                        if (result.reload === true) {
+                            window.location.reload();
+                            return;
+                        }
+
+                        // Add new errors
+                        if (result.data.message) {
+                            dokan_paypal_marketplace.submit_error('<div class="woocommerce-error">' + result.data.message + '</div>');
+                        }
                     }
                 }).fail(function(jqXHR, textStatus, errorThrown) {
                     dokan_paypal_marketplace.set_loading_done();
@@ -189,7 +251,6 @@
                                     dokan_paypal_marketplace.set_loading_done();
                                     order_redirect_url = res.success_redirect;
                                     order_id = res.id;
-                                    console.log(res.paypal_order_id);
                                     return res.paypal_order_id;
                                 });
                             }
@@ -248,11 +309,11 @@
                             hf.submit(args).then(function (res) {
                                 dokan_paypal_marketplace.capture_payment(order_id, order_redirect_url);
                             }).catch(function (err) {
-                                console.log('error: ', JSON.stringify(err));
+                                dokan_paypal_marketplace.submit_error('<div class="woocommerce-error">' + JSON.stringify(err) + '</div>');
                             });
                         });
                     }).catch(function (err) {
-                        console.log('error: ', JSON.stringify(err));
+                        dokan_paypal_marketplace.submit_error('<div class="woocommerce-error">' + JSON.stringify(err) + '</div>');
                     });
                 }
             },
@@ -265,6 +326,9 @@
                             let submit = dokan_paypal_marketplace.do_submit();
 
                             return submit.then(res => {
+                                if (dokan_paypal.is_checkout_pay_page) {
+                                    res = res.data.data;
+                                }
                                 dokan_paypal_marketplace.set_loading_done();
                                 order_redirect_url = res.success_redirect;
                                 order_id = res.id;
@@ -280,7 +344,7 @@
                         window.location.href = order_redirect_url;
                     },
                     onError: function (err) {
-                        window.location.href = order_redirect_url;
+                        //window.location.href = order_redirect_url;
                     }
                 }).render('#paypal-button-container');
 

@@ -317,6 +317,17 @@ class DokanPayPal extends WC_Payment_Gateway {
             ]
         );
 
+        if ( get_post_meta( $order->get_id(), '_dokan_paypal_order_id', true ) ) {
+            return [
+                'result'              => 'success',
+                'id'                  => $order_id,
+                'paypal_redirect_url' => get_post_meta( $order->get_id(), '_dokan_paypal_redirect_url', true ),
+                'paypal_order_id'     => get_post_meta( $order->get_id(), '_dokan_paypal_order_id', true ),
+                'redirect'            => get_post_meta( $order->get_id(), '_dokan_paypal_redirect_url', true ),
+                'success_redirect'    => $order->get_checkout_order_received_url(),
+            ];
+        }
+
         $process_payment = apply_filters( 'dokan_paypal_process_payment', $order );
 
         if ( isset( $process_payment['product_type'] ) && 'product_pack' === $process_payment['product_type'] ) {
@@ -350,21 +361,18 @@ class DokanPayPal extends WC_Payment_Gateway {
 
         if ( is_wp_error( $create_order_url ) ) {
             wc_add_wp_error_notices( $create_order_url );
-
-            $error_data = $create_order_url->get_error_data();
-            //store paypal debug id
-            update_post_meta( $order->get_id(), '_dokan_paypal_create_order_debug_id', $error_data['paypal_debug_id'] );
+            Helper::log_paypal_error( $order->get_id(), $create_order_url, 'create_order' );
 
             return [
                 'result'   => 'error',
                 'redirect' => $order->get_checkout_order_received_url(),
             ];
         }
-        //store paypal debug id
+        //store paypal debug id & create order id
         update_post_meta( $order->get_id(), '_dokan_paypal_create_order_debug_id', $create_order_url['paypal_debug_id'] );
         update_post_meta( $order->get_id(), '_dokan_paypal_order_id', $create_order_url['id'] );
+        update_post_meta( $order->get_id(), '_dokan_paypal_redirect_url', $create_order_url['links'][1]['href'] );
 
-        // Return thank you redirect
         return [
             'result'              => 'success',
             'id'                  => $order_id,
