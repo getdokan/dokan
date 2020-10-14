@@ -17,7 +17,7 @@ class Hooks {
      */
     public function __construct() {
         // Load all actions
-        add_action( 'manage_shop_order_posts_custom_column', [ $this, 'shop_order_custom_columns' ], 11 );
+        add_action( 'manage_shop_order_posts_custom_column', [ $this, 'shop_order_custom_columns' ], 11, 2 );
         add_action( 'admin_footer-edit.php', [ $this, 'admin_shop_order_scripts' ] );
         add_action( 'wp_trash_post', [ $this, 'admin_on_trash_order' ] );
         add_action( 'untrash_post', [ $this, 'admin_on_untrash_order' ] );
@@ -98,10 +98,11 @@ class Hooks {
      * @global \WC_Order $the_order
      *
      * @param type $col
+     * @param type $order_id
      *
      * @return void
      */
-    public function shop_order_custom_columns( $col ) {
+    public function shop_order_custom_columns( $col, $order_id ) {
         global $post, $the_order;
 
         if ( empty( $the_order ) || $the_order->get_id() != $post->ID ) {
@@ -133,7 +134,7 @@ class Hooks {
             case 'seller':
                 $has_sub = get_post_meta( $post->ID, 'has_sub_order', true );
 
-                if ( $has_sub != '1' && $seller = get_user_by( 'id', dokan_get_seller_id_by_order( $post->ID ) ) ) {
+                if ( $has_sub != '1' && $seller = get_user_by( 'id', dokan_get_seller_id_by_order( $order_id ) ) ) {
                     printf( '<a href="%s">%s</a>', esc_url( admin_url( 'edit.php?post_type=shop_order&vendor_id=' . $seller->ID ) ), esc_html( $seller->display_name ) );
                 } else {
                     esc_html_e( '(no name)', 'dokan-lite' );
