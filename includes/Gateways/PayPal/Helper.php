@@ -290,6 +290,17 @@ class Helper {
     }
 
     /**
+     * Get PayPal gateway id
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return string
+     */
+    public static function get_gateway_id() {
+        return 'dokan_paypal_marketplace';
+    }
+
+    /**
      * Log PayPal error data with debug id
      *
      * @param $id
@@ -302,12 +313,12 @@ class Helper {
      *
      * @return void
      */
-    public static function log_paypal_error( $id, $error, $meta_key, $context = 'order' ) {
+    public static function log_paypal_error( $id, $error, $meta_key, $context = 'post' ) {
         $error_data = $error->get_error_data();
 
         //store paypal debug id
         switch ( $context ) {
-            case 'order':
+            case 'post':
                 update_post_meta( $id, "_dokan_paypal_{$meta_key}_debug_id", $error_data['paypal_debug_id'] );
 
                 break;

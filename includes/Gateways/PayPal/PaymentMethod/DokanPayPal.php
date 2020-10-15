@@ -53,7 +53,7 @@ class DokanPayPal extends WC_Payment_Gateway {
      * @return void
      */
     public function init_fields() {
-        $this->id                 = 'dokan_paypal_marketplace';
+        $this->id                 = Helper::get_gateway_id();
         $this->icon               = false;
         $this->has_fields         = true;
         $this->method_title       = __( 'Dokan PayPal Marketplace Payments', 'dokan-lite' );
@@ -113,12 +113,6 @@ class DokanPayPal extends WC_Payment_Gateway {
                 'default'     => '',
                 'desc_tip'    => true,
                 'placeholder' => 'you@youremail.com',
-            ],
-            'allow_non_connected_seller' => [
-                'title'   => __( 'Allow Non connected Seller', 'dokan-lite' ),
-                'type'    => 'checkbox',
-                'label'   => __( 'Allow Non connected Seller', 'dokan-lite' ),
-                'default' => 'no',
             ],
             'test_mode'                  => [
                 'title'       => __( 'PayPal sandbox', 'dokan-lite' ),

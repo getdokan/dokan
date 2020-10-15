@@ -462,8 +462,10 @@ class Processor {
      * @return string
      */
     public function get_authorization_data() {
-        $client_id     = $this->get_option( 'test_app_user' );
-        $client_secret = $this->get_option( 'test_app_pass' );
+        $prefix = $this->test_mode ? 'test_' : '';
+
+        $client_id     = $this->get_option( $prefix . 'app_user' );
+        $client_secret = $this->get_option( $prefix . 'app_pass' );
 
         return base64_encode( $client_id . ':' . $client_secret );
     }
@@ -541,7 +543,7 @@ class Processor {
      * @return bool
      */
     public function continue_transaction( $order_data ) {
-        $payment_source        = $order_data['payment_source']['card'];
+        $payment_source = $order_data['payment_source']['card'];
 
         //if no source considered it as a paypal payment not using any card
         if ( ! $payment_source ) {

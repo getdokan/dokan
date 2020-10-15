@@ -210,11 +210,8 @@ data-merchant-id="' . implode( ',', $paypal_merchant_ids ) . '" ' . $data_client
      * @return string
      */
     public function get_paypal_sdk_url() {
-        if ( 'yes' === $this->get_option( 'test_mode' ) ) {
-            $app_user = $this->get_option( 'test_app_user' );
-        } else {
-            $app_user = $this->get_option( 'app_user' );
-        }
+        $prefix   = 'yes' === $this->get_option( 'test_mode' ) ? 'test_' : '';
+        $app_user = $this->get_option( $prefix . 'app_user' );
 
         $paypal_js_sdk_url = esc_url( 'https://www.paypal.com/sdk/js?' );
 
