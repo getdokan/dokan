@@ -43,7 +43,7 @@ class Hooks {
     public static function update_vendor_balance( $withdraw ) {
         global $wpdb;
 
-        if ( round( dokan_get_seller_balance( $withdraw->get_user_id(), false ), 2 ) < $withdraw->get_amount() ) {
+        if ( round( dokan_get_seller_balance( $withdraw->get_user_id(), false ), 2 ) < round( $withdraw->get_amount(), 2 ) ) {
             return;
         }
 
