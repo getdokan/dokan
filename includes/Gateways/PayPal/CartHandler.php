@@ -102,9 +102,13 @@ class CartHandler extends DokanPayPal {
             $paypal_merchant_ids = [];
 
             foreach ( WC()->cart->get_cart() as $item ) {
-                $product_id                                    = $item['data']->get_id();
-                $seller_id                                     = get_post_field( 'post_author', $product_id );
-                $paypal_merchant_ids[ 'seller_' . $seller_id ] = get_user_meta( $seller_id, '_dokan_paypal_marketplace_merchant_id', true );
+                $product_id = $item['data']->get_id();
+                $seller_id  = get_post_field( 'post_author', $product_id );
+
+                $merchant_id = get_user_meta( $seller_id, '_dokan_paypal_marketplace_merchant_id', true );
+                $merchant_id = apply_filters( '_dokan_paypal_marketplace_merchant_id', $merchant_id, $product_id );
+
+                $paypal_merchant_ids[ 'seller_' . $seller_id ] = $merchant_id;
             }
 
             if ( count( $paypal_merchant_ids ) > 1 ) {
@@ -181,7 +185,7 @@ data-merchant-id="' . implode( ',', $paypal_merchant_ids ) . '" ' . $data_client
         }
 
         foreach ( array_keys( $available_vendors ) as $vendor_id ) {
-            if ( Helper::is_seller_enable_for_receive_payment( $vendor_id ) ) {
+            if ( ! Helper::is_seller_enable_for_receive_payment( $vendor_id ) ) {
                 $vendor      = dokan()->vendor->get( $vendor_id );
                 $vendor_name = sprintf( '<a href="%s">%s</a>', esc_url( $vendor->get_shop_url() ), $vendor->get_shop_name() );
 

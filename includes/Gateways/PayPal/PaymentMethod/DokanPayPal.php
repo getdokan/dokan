@@ -546,15 +546,15 @@ class DokanPayPal extends WC_Payment_Gateway {
         $address = [
             'address' => [
                 'name'           => [
-                    'given_name' => $order->get_shipping_first_name(),
-                    'surname'    => $order->get_shipping_last_name(),
+                    'given_name' => $order->get_billing_first_name(),
+                    'surname'    => $order->get_billing_last_name(),
                 ],
-                'address_line_1' => $order->get_shipping_address_1(),
-                'address_line_2' => $order->get_shipping_address_2(),
-                'admin_area_2'   => $order->get_shipping_city(),
-                'admin_area_1'   => $order->get_shipping_state(),
-                'postal_code'    => $order->get_shipping_postcode(),
-                'country_code'   => $order->get_shipping_country(),
+                'address_line_1' => $order->get_billing_address_1(),
+                'address_line_2' => $order->get_billing_address_2(),
+                'admin_area_2'   => $order->get_billing_city(),
+                'admin_area_1'   => $order->get_billing_state(),
+                'postal_code'    => $order->get_billing_postcode(),
+                'country_code'   => $order->get_billing_country(),
             ],
         ];
 
@@ -572,11 +572,13 @@ class DokanPayPal extends WC_Payment_Gateway {
         $items = [];
 
         foreach ( $order->get_items( 'line_item' ) as $key => $line_item ) {
-            $product = wc_get_product( $line_item->get_product_id() );
+            $product  = wc_get_product( $line_item->get_product_id() );
+            $category = $product->is_downloadable() || $product->is_virtual() ? 'DIGITAL_GOODS' : 'PHYSICAL_GOODS';
 
             $items[] = [
                 'name'        => $line_item->get_name(),
                 'sku'         => $product->get_sku(),
+                'category'    => $category,
                 'unit_amount' => [
                     'currency_code' => 'USD',
                     'value'         => $line_item->get_total(),

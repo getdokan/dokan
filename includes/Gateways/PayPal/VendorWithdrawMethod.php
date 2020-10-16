@@ -56,7 +56,7 @@ class VendorWithdrawMethod {
         $partner_id = isset( $store_settings['payment']['paypal']['partner_id'] ) ? esc_attr( $store_settings['payment']['paypal']['partner_id'] ) : '';
 
         $merchant_id = get_user_meta( get_current_user_id(), '_dokan_paypal_marketplace_merchant_id', true );
-        $button_text = $merchant_id ? __( 'Connected', 'dokan-lite' ) : __( 'Connect', 'dokan-lite' );
+        $button_text = $merchant_id ? __( 'Connected', 'dokan-lite' ) : __( 'Sign up for PayPal', 'dokan-lite' );
 
         dokan_get_template(
             'gateways/paypal/vendor-settings-payment.php',
