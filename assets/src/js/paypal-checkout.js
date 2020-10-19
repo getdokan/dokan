@@ -37,6 +37,10 @@
             } );
         },
         init: function () {
+            if (!window.paypal) {
+                return;
+            }
+
             if ( 'smart' !== dokan_paypal.payment_button_type ) {
                 return;
             }

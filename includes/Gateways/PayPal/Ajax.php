@@ -191,7 +191,11 @@ class Ajax {
         $order    = wc_get_order( $order_id );
 
         //store paypal debug id
-        update_post_meta( $order->get_id(), '_dokan_paypal_capture_payment_debug_id', $capture_payment['paypal_debug_id'] );
+        update_post_meta(
+            $order->get_id(),
+            '_dokan_paypal_capture_payment_debug_id',
+            $capture_payment['paypal_debug_id']
+        );
 
         $order->add_order_note(
             sprintf(
@@ -203,6 +207,8 @@ class Ajax {
         $order->payment_complete();
 
         $this->store_capture_payment_data( $capture_payment['purchase_units'] );
+
+        do_action( 'dokan_paypal_capture_payment_completed', $order );
 
         wp_send_json_success(
             [

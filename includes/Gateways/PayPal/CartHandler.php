@@ -52,24 +52,24 @@ class CartHandler extends DokanPayPal {
             return;
         }
 
+        if ( ! apply_filters( 'dokan_paypal_load_payment_scripts', true ) ) {
+            return;
+        }
+
         //loading this scripts only in checkout page
         if ( ! is_order_received_page() && is_checkout() || is_checkout_pay_page() ) {
 
             global $wp;
-            $order_id = $wp->query_vars['order-pay'];
+
+            //get order id if this is a order review page
+            $order_id = isset( $wp->query_vars['order-pay'] ) ? $wp->query_vars['order-pay'] : null;
 
             $paypal_js_sdk_url = $this->get_paypal_sdk_url();
 
             //paypal sdk enqueue
             wp_enqueue_script( 'dokan_paypal_sdk', $paypal_js_sdk_url, [], null, false );
 
-            wp_enqueue_script(
-                'dokan_paypal_checkout', DOKAN_PLUGIN_ASSEST . '/js/paypal-checkout.js', [
-                'dokan_paypal_sdk',
-            ],
-                '',
-                true
-            );
+            wp_enqueue_script( 'dokan_paypal_checkout', DOKAN_PLUGIN_ASSEST . '/js/paypal-checkout.js', [ 'dokan_paypal_sdk' ], '', true );
 
             //localize data
             $data = [
@@ -106,7 +106,7 @@ class CartHandler extends DokanPayPal {
                 $seller_id  = get_post_field( 'post_author', $product_id );
 
                 $merchant_id = get_user_meta( $seller_id, '_dokan_paypal_marketplace_merchant_id', true );
-                $merchant_id = apply_filters( '_dokan_paypal_marketplace_merchant_id', $merchant_id, $product_id );
+                $merchant_id = apply_filters( 'dokan_paypal_marketplace_merchant_id', $merchant_id, $product_id );
 
                 $paypal_merchant_ids[ 'seller_' . $seller_id ] = $merchant_id;
             }
@@ -147,6 +147,10 @@ data-merchant-id="' . implode( ',', $paypal_merchant_ids ) . '" ' . $data_client
      * @return void
      */
     public function display_paypal_button() {
+        if ( ! apply_filters( 'dokan_paypal_display_paypal_button', true ) ) {
+            return;
+        }
+
         ?>
         <div id="paypal-button-container" style="display:none;">
             <?php if ( Helper::is_ucc_enabled_for_all_seller_in_cart() ) : ?>

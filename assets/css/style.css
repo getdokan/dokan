@@ -4980,6 +4980,7 @@ div.media-sidebar a.edit-attachment {
 }
 .unbranded_checkout #pay_unbranded_order {
   text-align: center;
+  width: 100%;
 }
 /*--------------------------------------------------
 :: Responsive Styles
