@@ -4,7 +4,7 @@
     <div class="content">
         <h1>{{ __( 'Looking for Coupons, Variable Products, SEO or Shipping?', 'dokan-lite' ) }}</h1>
         <p>{{ __( 'Unlock these awesome frontend features with Dokan PRO', 'dokan-lite' ) }}</p>
-        <a class="button" href="https://wedevs.com/dokan-lite-upgrade-to-pro">{{ __( 'Upgrade to Pro', 'dokan-lite' ) }}</a>
+        <a class="button" :href="upgradeURL">{{ __( 'Upgrade to Pro', 'dokan-lite' ) }}</a>
         <router-link class="button custom-button" :to="{ name: 'VendorCapabilities' }">
             {{ __( 'Check Out All Vendor Functionalities', 'dokan-lite' ) }}
         </router-link>
@@ -15,6 +15,11 @@
 <script>
 export default {
     name: "SettingsBanner",
+    data() {
+        return {
+            upgradeURL: dokan.dokan_upgrade_to_pro_url
+        }
+    },
     computed: {
         bannerImage() {
             return `${dokan.urls.assetsUrl}/images/dokan-settings-banner.svg`;

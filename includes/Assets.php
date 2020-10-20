@@ -828,6 +828,7 @@ class Assets {
                 'i18n_remove_personal_data_notice'    => __( 'This action cannot be reversed. Are you sure you wish to erase personal data from the selected orders?', 'dokan-lite' ),
                 'decimal_point'                       => $decimal,
                 'mon_decimal_point'                   => wc_get_price_decimal_separator(),
+                'dokan_upgrade_to_pro_url'            => 'https://wedevs.com/dokan-lite-upgrade-to-pro',
             ]
         );
     }

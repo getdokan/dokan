@@ -4,7 +4,7 @@
 
         <div class="widgets-wrapper">
 
-            <UpgradePopup v-if="! hasPro"></UpgradePopup>
+            <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
 
             <div class="left-side">
                 <postbox :title="__( 'At a Glance', 'dokan-lite' )" extraClass="dokan-status">
@@ -121,7 +121,7 @@ let Loading  = dokan_get_lib('Loading');
 let Currency = dokan_get_lib('Currency');
 
 import Chart from "admin/components/Chart.vue"
-import UpgradePopup from "admin/components/UpgradePopup.vue"
+import UpgradeBanner from "admin/components/UpgradeBanner.vue"
 
 export default {
 
@@ -132,7 +132,7 @@ export default {
         Loading,
         Chart,
         Currency,
-        UpgradePopup
+        UpgradeBanner
     },
 
     data () {

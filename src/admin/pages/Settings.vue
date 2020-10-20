@@ -64,7 +64,7 @@
             </div>
         </div>
 
-        <SettingsBanner if=" ! hasPro"></SettingsBanner>
+        <SettingsBanner if="! hasPro"></SettingsBanner>
     </div>
 
 </template>
