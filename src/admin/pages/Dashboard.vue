@@ -3,6 +3,9 @@
         <h1>{{ __( 'Dashboard', 'dokan-lite' ) }}</h1>
 
         <div class="widgets-wrapper">
+
+            <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
+
             <div class="left-side">
                 <postbox :title="__( 'At a Glance', 'dokan-lite' )" extraClass="dokan-status">
                     <div class="dokan-status" v-if="overview !== null">
@@ -118,6 +121,7 @@ let Loading  = dokan_get_lib('Loading');
 let Currency = dokan_get_lib('Currency');
 
 import Chart from "admin/components/Chart.vue"
+import UpgradeBanner from "admin/components/UpgradeBanner.vue"
 
 export default {
 
@@ -127,7 +131,8 @@ export default {
         Postbox,
         Loading,
         Chart,
-        Currency
+        Currency,
+        UpgradeBanner
     },
 
     data () {

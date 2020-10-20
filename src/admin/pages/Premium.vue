@@ -13,6 +13,20 @@
         </div>
         <!-- End of Header Section -->
 
+        <!--   Vendor Capabilities Banner     -->
+        <div class="vendor-capabilities-banner" :style="bannerBg">
+            <img :src="bannerImage" :alt="__( 'Dokan Vendor Capabilities Banner', 'dokan-lite' )">
+            <div class="content">
+                <p class="title">{{ __( 'Vendor Capabilities', 'dokan-lite' ) }}</p>
+                <p>
+                    {{ __( 'One of the finest attractions of Dokan PRO is the vast array of powerful vendor controls & functions it provides so sellers can enjoy ownership, automation & freedom to run their stores. To use these awesome vendor features listed below, consider Upgrading to PRO.', 'dokan-lite' ) }}
+                </p>
+                <router-link class="button" :to="{ name: 'VendorCapabilities' }">
+                    {{ __( 'Check Out All Vendor Functionalities', 'dokan-lite' ) }}
+                </router-link>
+            </div>
+        </div>
+
         <!-- Service Section -->
         <div class="service-section">
             <h2 class="section-title">{{ __( 'Why Upgrade', 'dokan-lite' ) }}</h2>
@@ -932,7 +946,15 @@ export default {
     computed: {
         buyNowProUrl() {
             return dokan.urls.buynowpro.substr(-1) === '/' ? dokan.urls.buynowpro + '?' : dokan.urls.buynowpro + '&';
-        }
+        },
+        bannerBg() {
+            return {
+                backgroundImage: `url(${dokan.urls.assetsUrl}/images/dokan-vendor-capabilities-banner-bg.svg)`,
+            };
+        },
+        bannerImage() {
+            return `${dokan.urls.assetsUrl}/images/dokan-settings-banner.svg`;
+        },
     }
 };
 </script>
@@ -942,6 +964,40 @@ export default {
     .dokan-pro-features {
         font-family: 'Open Sans', sans-serif;
         margin: -10px -20px 0 -22px;
+
+        .vendor-capabilities-banner {
+            display: flex;
+            align-items: center;
+            padding: 50px;
+            height: auto;
+            border-radius: 9px;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            margin: 20px 70px;
+
+            .content {
+                margin: 30px;
+
+                .title {
+                    font-size: 26px;
+                    font-weight: bold;
+                    color: #FF0000;
+                }
+            }
+
+            a {
+                box-shadow: none;
+                background: #FF5722;
+                color: #fff;
+                border-color: #FF5722;
+
+                &:hover {
+                    color: #fff;
+                    background: lighten(#FF5722, 5%);
+                }
+            }
+        }
 
         a {
             transition: all .2s ease;
