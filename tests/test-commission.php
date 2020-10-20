@@ -6,24 +6,25 @@
  * @since 2.9.21
  */
 class Dokan_Commission_Test extends WP_UnitTestCase {
+
     /**
      * Vendor id holder
      *
-     * @var integer
+     * @var int
      */
     protected $vendor_id = 0;
 
     /**
      * Product id holder
      *
-     * @var integer
+     * @var int
      */
     protected $product_id = 0;
 
     /**
      * Category id holder
      *
-     * @var integer
+     * @var int
      */
     protected $category_id = 0;
 
@@ -159,7 +160,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
         $args = [
             'commission_type'  => $this->global_commission_type,
             'admin_percentage' => $this->global_commission_rate,
-            'additional_fee'   => $this->global_additional_fee
+            'additional_fee'   => $this->global_additional_fee,
         ];
 
         update_option( 'dokan_selling', $args );
@@ -227,7 +228,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
      * @return void
      */
     public function create_term() {
-        $term = wp_insert_term( 'cat 1', 'product_cat' );
+        $term              = wp_insert_term( 'cat 1', 'product_cat' );
         $this->category_id = $term['term_id'];
     }
 
@@ -321,7 +322,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
 
         wp_update_post( [
             'ID'          => $product->get_id(),
-            'post_author' => $this->vendor_id
+            'post_author' => $this->vendor_id,
         ] );
 
         $this->product_id = $product->get_id();
@@ -428,12 +429,12 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
      *
      * @since  DOKAN_PRO_SINCE
      *
-     * @param  float $earning  [earning for a vendor or admin]
-     * @param  float $commission_rate
-     * @param  string $commission_type
-     * @param  float $additional_fee
-     * @param  float $product_price
-     * @param  int $order_id
+     * @param float  $earning         [earning for a vendor or admin]
+     * @param float  $commission_rate
+     * @param string $commission_type
+     * @param float  $additional_fee
+     * @param float  $product_price
+     * @param int    $order_id
      *
      * @return float
      */

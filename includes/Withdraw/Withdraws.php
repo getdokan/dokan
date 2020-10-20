@@ -143,10 +143,12 @@ class Withdraws {
             $found_rows = 'SQL_CALC_FOUND_ROWS';
         }
 
-        $withdraws = $wpdb->get_results( $wpdb->prepare(
-            "SELECT $found_rows $fields FROM {$wpdb->dokan_withdraw} $join WHERE %d=%d $where $groupby $orderby $limits",
-            ...$query_args
-        ), ARRAY_A );
+        $withdraws = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT $found_rows $fields FROM {$wpdb->dokan_withdraw} $join WHERE %d=%d $where $groupby $orderby $limits",
+                ...$query_args
+            ), ARRAY_A
+        );
 
         if ( ! empty( $withdraws ) ) {
             foreach ( $withdraws as $withdraw ) {
@@ -168,7 +170,7 @@ class Withdraws {
         global $wpdb;
 
         if ( ! isset( $this->total ) ) {
-            $this->total = absint( $wpdb->get_var( "SELECT FOUND_ROWS()" ) );
+            $this->total = absint( $wpdb->get_var( 'SELECT FOUND_ROWS()' ) );
         }
 
         return $this->total;

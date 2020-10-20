@@ -85,7 +85,6 @@ abstract class DokanRESTController extends WP_REST_Controller {
      * @return void
      */
     public function create_item( $request ) {
-
         $validate = $this->validation_before_create_item( $request );
 
         if ( is_wp_error( $validate ) ) {
@@ -102,7 +101,12 @@ abstract class DokanRESTController extends WP_REST_Controller {
             $object->save();
 
             //Update post author
-            wp_update_post( array( 'ID' => $object->get_id(), 'post_author' => dokan_get_current_user_id() ) );
+            wp_update_post(
+                array(
+					'ID' => $object->get_id(),
+					'post_author' => dokan_get_current_user_id(),
+                )
+            );
 
             /**
              * Fires after a single object is created or updated via the REST API.
@@ -170,7 +174,6 @@ abstract class DokanRESTController extends WP_REST_Controller {
      * @return void
      */
     public function delete_item( $request ) {
-
         $validate = $this->validation_before_delete_item( $request );
 
         if ( is_wp_error( $validate ) ) {
@@ -289,8 +292,8 @@ abstract class DokanRESTController extends WP_REST_Controller {
     protected function prepare_objects_query( $request ) {
         $args                        = array();
         $args['fields']              = 'ids';
-        $args['post_status']         = !isset( $request['post_status'] ) ? $this->post_status : $request['post_status'];
-        $args['author']              = !isset( $request['id'] ) ? dokan_get_current_user_id() : $request['id'];
+        $args['post_status']         = ! isset( $request['post_status'] ) ? $this->post_status : $request['post_status'];
+        $args['author']              = ! isset( $request['id'] ) ? dokan_get_current_user_id() : $request['id'];
         $args['offset']              = $request['offset'];
         $args['order']               = $request['order'];
         $args['orderby']             = $request['orderby'];
@@ -348,7 +351,6 @@ abstract class DokanRESTController extends WP_REST_Controller {
      * @return array          $query_args
      */
     protected function prepare_items_query( $prepared_args = array(), $request = null ) {
-
         $valid_vars = array_flip( $this->get_allowed_query_vars() );
 
         $query_args = array();
@@ -439,7 +441,6 @@ abstract class DokanRESTController extends WP_REST_Controller {
             $response->link_header( 'prev', $prev_link );
         }
         if ( $max_pages > $page ) {
-
             $next_page = $page + 1;
             $next_link = add_query_arg( 'page', $next_page, $base );
             $response->link_header( 'next', $next_link );

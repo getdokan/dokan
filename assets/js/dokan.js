@@ -506,6 +506,46 @@ jQuery(function($) {
             escapeMarkup: function( m ) {
                 return m;
             },
+            language: {
+                errorLoading: function() {
+                    // Workaround for https://github.com/select2/select2/issues/4355 instead of i18n_ajax_error.
+                    return dokan.i18n_searching;
+                },
+                inputTooLong: function( args ) {
+                    var overChars = args.input.length - args.maximum;
+
+                    if ( 1 === overChars ) {
+                        return dokan.i18n_input_too_long_1;
+                    }
+
+                    return dokan.i18n_input_too_long_n.replace( '%qty%', overChars );
+                },
+                inputTooShort: function( args ) {
+                    var remainingChars = args.minimum - args.input.length;
+
+                    if ( 1 === remainingChars ) {
+                        return dokan.i18n_input_too_short_1;
+                    }
+
+                    return dokan.i18n_input_too_short_n.replace( '%qty%', remainingChars );
+                },
+                loadingMore: function() {
+                    return dokan.i18n_load_more;
+                },
+                maximumSelected: function( args ) {
+                    if ( args.maximum === 1 ) {
+                        return dokan.i18n_selection_too_long_1;
+                    }
+
+                    return dokan.i18n_selection_too_long_n.replace( '%qty%', args.maximum );
+                },
+                noResults: function() {
+                    return dokan.i18n_no_matches;
+                },
+                searching: function() {
+                    return dokan.i18n_searching;
+                }
+            },
             ajax: {
                 url:         dokan.ajaxurl,
                 dataType:    'json',
@@ -718,17 +758,77 @@ jQuery(function($) {
         },
 
         bindProductTagDropdown: function () {
-            if ( dokan.product_vendors_can_create_tags && 'on' === dokan.product_vendors_can_create_tags ) {
-                return;
-            }
-
-            $( '#product_tag' ).select2( {
+            $(".product_tag_search").select2({
+                allowClear: false,
+                tags: ( dokan.product_vendors_can_create_tags && 'on' === dokan.product_vendors_can_create_tags ),
+                ajax: {
+                    url: dokan.ajaxurl,
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            q: params.term,
+                            action: 'dokan_json_search_products_tags',
+                            security: dokan.search_products_tags_nonce,
+                            page: params.page || 1
+                        };
+                    },
+                    processResults: function( data ) {
+                        var options = [];
+                        if ( data ) {
+                            $.each( data, function( index, text ) {
+                                options.push( { id: text[0], text: text[1]  } );
+                            });
+                        }
+                        return {
+                            results: options,
+                            pagination: {
+                                more: options.length == 0 ? false : true
+                            }
+                        };
+                    },
+                    cache: true
+                },
                 language: {
-                    noResults: function () {
-                        return dokan.i18n_no_result_found;
+                    errorLoading: function() {
+                        return dokan.i18n_searching;
+                    },
+                    inputTooLong: function( args ) {
+                        var overChars = args.input.length - args.maximum;
+
+                        if ( 1 === overChars ) {
+                            return dokan.i18n_input_too_long_1;
+                        }
+
+                        return dokan.i18n_input_too_long_n.replace( '%qty%', overChars );
+                    },
+                    inputTooShort: function( args ) {
+                        var remainingChars = args.minimum - args.input.length;
+
+                        if ( 1 === remainingChars ) {
+                            return dokan.i18n_input_too_short_1;
+                        }
+
+                        return dokan.i18n_input_too_short_n.replace( '%qty%', remainingChars );
+                    },
+                    loadingMore: function() {
+                        return dokan.i18n_load_more;
+                    },
+                    maximumSelected: function( args ) {
+                        if ( args.maximum === 1 ) {
+                            return dokan.i18n_selection_too_long_1;
+                        }
+
+                        return dokan.i18n_selection_too_long_n.replace( '%qty%', args.maximum );
+                    },
+                    noResults: function() {
+                        return dokan.i18n_no_matches;
+                    },
+                    searching: function() {
+                        return dokan.i18n_searching;
                     }
-                }
-            } );
+                },
+            });
         },
 
         addProductPopup: function (e) {
@@ -1459,79 +1559,6 @@ jQuery(function($) {
             };
         }
 
-        // $('body').on( 'keyup', '.dokan-product-sales-price, .dokan-product-regular-price', debounce_delay( function(evt) {
-        //     evt.preventDefault();
-        //     var product_price           = $( 'input.dokan-product-regular-price' ).val();
-        //     var sale_price_wrap         = $( 'input.dokan-product-sales-price' );
-        //     var sale_price              = sale_price_wrap.val();
-        //     var sale_price_input_div    = sale_price_wrap.parent( 'div.dokan-input-group' );
-        //     var sale_price_input_msg    = "<span class='error'>" + dokan.i18n_sales_price_error + "</span>";
-        //     var sale_price_parent_div   = sale_price_input_div.parent( 'div.sale-price' ).find( 'span.error' );
-
-        //     if ( '' == product_price ) {
-
-        //         sale_price_parent_div.remove();
-        //         sale_price_input_div.after( sale_price_input_msg );
-
-        //         sale_price_wrap.val('');
-        //         setTimeout(function(){
-        //             sale_price_parent_div.remove();
-        //         }, 5000);
-
-        //     } else if( parseFloat( product_price ) <= parseFloat( sale_price ) ) {
-
-        //         sale_price_parent_div.remove();
-        //         sale_price_input_div.after( sale_price_input_msg );
-
-        //         sale_price_wrap.val('');
-        //         setTimeout(function(){
-        //             sale_price_parent_div.remove();
-        //         }, 5000);
-
-        //     } else {
-
-        //         sale_price_parent_div.remove();
-
-        //     }
-
-        // } ,600 ) );
-
-    });
-
-    $(document).ready(function () {
-        // Ajax search products tags
-        $("#product_tag_search").select2({
-            allowClear: false,
-            ajax: {
-                url: dokan.ajaxurl,
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        q: params.term,
-                        action: 'dokan_json_search_products_tags',
-                        security: dokan.search_products_tags_nonce,
-                        page: params.page || 1
-                    };
-                },
-                processResults: function( data ) {
-                    var options = [];
-                    if ( data ) {
-                        $.each( data, function( index, text ) {
-                            options.push( { id: text[0], text: text[1]  } );
-                        });
-                    }
-
-                    return {
-                        results: options,
-                        pagination: {
-                            more: options.length == 0 ? false : true
-                        }
-                    };
-                },
-                cache: true
-            }
-        });
     });
 
 })(jQuery);
@@ -1541,6 +1568,29 @@ jQuery(function($) {
 
     $('.datepicker').datepicker({
         dateFormat: 'yy-mm-dd'
+    });
+
+    $('.dokan-start-date').datepicker({
+        defaultDate: "",
+        dateFormat: "yy-mm-dd",
+        numberOfMonths: 1,
+        onSelect: function (selectedDate) {
+            let date = new Date(selectedDate);
+            date.setDate(date.getDate() + 1);
+            $('.dokan-end-date').datepicker('option', {'minDate': date})
+        }
+
+    });
+
+    $('.dokan-end-date').datepicker({
+        defaultDate: "",
+        dateFormat: "yy-mm-dd",
+        numberOfMonths: 1,
+        onSelect: function (selectedDate) {
+            let date = new Date(selectedDate);
+            date.setDate(date.getDate() - 1);
+            $('dokan-start-date').datepicker('option', {'maxDate': date})
+        }
     });
 
     $('.tips').tooltip();
@@ -2008,13 +2058,14 @@ jQuery(function($) {
         },
 
         validate: function(self) {
-            // e.preventDefault();
-
             $('form#dokan-form-contact-seller').validate({
                 errorPlacement: validatorError,
-                success: validatorSuccess,
+                errorElement: 'span',
+                success: function( label, element ) {
+                    label.removeClass('error');
+                    label.remove();
+                },
                 submitHandler: function(form) {
-
                     $(form).block({ message: null, overlayCSS: { background: '#fff url(' + dokan.ajax_loader + ') no-repeat center', opacity: 0.6 } });
 
                     var form_data = $(form).serialize();
@@ -2027,7 +2078,7 @@ jQuery(function($) {
 
                         $(form).find('input[type=text], input[type=email], textarea').val('').removeClass('valid');
                     });
-                }
+                },
             });
         }
     };

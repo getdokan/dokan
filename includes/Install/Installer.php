@@ -2,8 +2,8 @@
 
 namespace WeDevs\Dokan\Install;
 
-use WeDevs\Dokan\Install\Upgrade;
 use WeDevs\Dokan\Rewrites;
+use WP_Roles;
 
 /**
  * Dokan installer class
@@ -11,8 +11,7 @@ use WeDevs\Dokan\Rewrites;
  * @author weDevs
  */
 class Installer {
-
-    function do_install() {
+    public function do_install() {
         // installs
         $this->user_roles();
         $this->setup_pages();
@@ -53,21 +52,21 @@ class Installer {
      *
      * @return void
      */
-    function woocommerce_settings() {
+    public function woocommerce_settings() {
         update_option( 'woocommerce_enable_myaccount_registration', 'yes' );
     }
 
     /**
      * Update product new style options
      *
-     * when user first install this plugin
+     * When user first install this plugin
      * the new product style options changed to new
      *
      * @since 2.3
      *
      * @return void
      */
-    function product_design() {
+    public function product_design() {
         $installed_version = get_option( 'dokan_theme_version' );
 
         if ( ! $installed_version ) {
@@ -83,45 +82,45 @@ class Installer {
      *
      * @global WP_Roles $wp_roles
      */
-    function user_roles() {
+    public function user_roles() {
         global $wp_roles;
 
         if ( class_exists( 'WP_Roles' ) && ! isset( $wp_roles ) ) {
-            $wp_roles = new \WP_Roles();
+            $wp_roles = new WP_Roles(); // @codingStandardsIgnoreLine
         }
 
-        add_role( 'seller', __( 'Vendor', 'dokan-lite' ), array(
-            'read'                      => true,
-            'publish_posts'             => true,
-            'edit_posts'                => true,
-            'delete_published_posts'    => true,
-            'edit_published_posts'      => true,
-            'delete_posts'              => true,
-            'manage_categories'         => true,
-            'moderate_comments'         => true,
-            'unfiltered_html'           => true,
-            'upload_files'              => true,
-            'edit_shop_orders'          => true,
-            'edit_product'              => true,
-            'read_product'              => true,
-            'delete_product'            => true,
-            'edit_products'             => true,
-            'publish_products'          => true,
-            'read_private_products'     => true,
-            'delete_products'           => true,
-            'delete_products'           => true,
-            'delete_private_products'   => true,
-            'delete_published_products' => true,
-            'delete_published_products' => true,
-            'edit_private_products'     => true,
-            'edit_published_products'   => true,
-            'manage_product_terms'      => true,
-            'delete_product_terms'      => true,
-            'assign_product_terms'      => true,
-            'dokandar'                  => true,
-        ) );
+        add_role(
+            'seller', __( 'Vendor', 'dokan-lite' ), [
+				'read'                      => true,
+				'publish_posts'             => true,
+				'edit_posts'                => true,
+				'delete_published_posts'    => true,
+				'edit_published_posts'      => true,
+				'delete_posts'              => true,
+				'manage_categories'         => true,
+				'moderate_comments'         => true,
+				'unfiltered_html'           => true,
+				'upload_files'              => true,
+				'edit_shop_orders'          => true,
+				'edit_product'              => true,
+				'read_product'              => true,
+				'delete_product'            => true,
+				'edit_products'             => true,
+				'publish_products'          => true,
+				'read_private_products'     => true,
+				'delete_products'           => true,
+				'delete_private_products'   => true,
+				'delete_published_products' => true,
+				'edit_private_products'     => true,
+				'edit_published_products'   => true,
+				'manage_product_terms'      => true,
+				'delete_product_terms'      => true,
+				'assign_product_terms'      => true,
+				'dokandar'                  => true,
+			]
+        );
 
-        $capabilities = array();
+        $capabilities = [];
         $all_cap      = dokan_get_all_caps();
 
         foreach ( $all_cap as $key => $cap ) {
@@ -143,37 +142,38 @@ class Installer {
      *
      * @return void
      */
-    function setup_pages() {
+    public function setup_pages() {
         $meta_key = '_wp_page_template';
 
         // return if pages were created before
         $page_created = get_option( 'dokan_pages_created', false );
+
         if ( $page_created ) {
             return;
         }
 
-        $pages = array(
-            array(
+        $pages = [
+            [
                 'post_title' => __( 'Dashboard', 'dokan-lite' ),
                 'slug'       => 'dashboard',
                 'page_id'    => 'dashboard',
                 'content'    => '[dokan-dashboard]',
-            ),
-            array(
+            ],
+            [
                 'post_title' => __( 'Store List', 'dokan-lite' ),
                 'slug'       => 'store-listing',
                 'page_id'    => 'store_listing',
                 'content'    => '[dokan-stores]',
-            ),
-            array(
+            ],
+            [
                 'post_title' => __( 'My Orders', 'dokan-lite' ),
                 'slug'       => 'my-orders',
                 'page_id'    => 'my_orders',
                 'content'    => '[dokan-my-orders]',
-            ),
-        );
+            ],
+        ];
 
-        $dokan_page_settings = array();
+        $dokan_page_settings = [];
 
         if ( $pages ) {
             foreach ( $pages as $page ) {
@@ -189,10 +189,12 @@ class Installer {
                             if ( $child_page_id ) {
                                 $dokan_page_settings[ $child_page['page_id'] ] = $child_page_id;
 
-                                wp_update_post( array(
-                                    'ID'          => $child_page_id,
-                                    'post_parent' => $page_id
-                                ) );
+                                wp_update_post(
+                                    [
+										'ID'          => $child_page_id,
+										'post_parent' => $page_id,
+									]
+                                );
                             }
                         }
                     }
@@ -204,22 +206,23 @@ class Installer {
         update_option( 'dokan_pages_created', true );
     }
 
-    function create_page( $page ) {
+    public function create_page( $page ) {
         $meta_key = '_wp_page_template';
         $page_obj = get_page_by_path( $page['post_title'] );
 
         if ( ! $page_obj ) {
-            $page_id = wp_insert_post( array(
-                'post_title'     => $page['post_title'],
-                'post_name'      => $page['slug'],
-                'post_content'   => $page['content'],
-                'post_status'    => 'publish',
-                'post_type'      => 'page',
-                'comment_status' => 'closed',
-            ) );
+            $page_id = wp_insert_post(
+                [
+					'post_title'     => $page['post_title'],
+					'post_name'      => $page['slug'],
+					'post_content'   => $page['content'],
+					'post_status'    => 'publish',
+					'post_type'      => 'page',
+					'comment_status' => 'closed',
+				]
+            );
 
             if ( $page_id && ! is_wp_error( $page_id ) ) {
-
                 if ( isset( $page['template'] ) ) {
                     update_post_meta( $page_id, $meta_key, $page['template'] );
                 }
@@ -238,7 +241,7 @@ class Installer {
      *
      * @return void
      */
-    function create_tables() {
+    public function create_tables() {
         include_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
         $this->create_withdraw_table();
@@ -253,7 +256,7 @@ class Installer {
      *
      * @return void
      */
-    function create_withdraw_table() {
+    public function create_withdraw_table() {
         global $wpdb;
 
         $sql = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}dokan_withdraw` (
@@ -276,7 +279,7 @@ class Installer {
      *
      * @return void
      */
-    function create_sync_table() {
+    public function create_sync_table() {
         global $wpdb;
 
         $sql = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}dokan_orders` (
@@ -300,10 +303,10 @@ class Installer {
      * @since  2.1
      *
      * @return void
-     *
      */
-    function create_announcement_table() {
+    public function create_announcement_table() {
         global $wpdb;
+
         $table_name = $wpdb->prefix . 'dokan_announcement';
 
         $sql = "CREATE TABLE IF NOT EXISTS {$table_name} (
@@ -325,7 +328,7 @@ class Installer {
      *
      * @return void
      */
-    function create_refund_table() {
+    public function create_refund_table() {
         global $wpdb;
 
         $sql = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}dokan_refund` (
@@ -352,7 +355,7 @@ class Installer {
      *
      * @return void
      */
-    function create_vendor_balance_table() {
+    public function create_vendor_balance_table() {
         global $wpdb;
 
         $sql = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}dokan_vendor_balance` (
@@ -376,7 +379,6 @@ class Installer {
      * Show plugin changes from upgrade notice
      *
      * @since 2.5.8
-     *
      */
     public static function in_plugin_update_message( $args ) {
         $transient_name = 'dokan_upgrade_notice_' . $args['Version'];
@@ -399,14 +401,15 @@ class Installer {
      *
      * @since 2.5.8
      *
-     * @param  string $content
-     * @param  string $new_version
+     * @param string $content
+     * @param string $new_version
+     *
      * @return string
      */
     private static function parse_update_notice( $content, $new_version ) {
         // Output Upgrade Notice.
         $matches        = null;
-        $regexp         = '~==\s*Upgrade Notice\s*==\s*=\s*(.*)\s*=(.*)(=\s*' . preg_quote( DOKAN_PLUGIN_VERSION ) . '\s*=|$)~Uis';
+        $regexp         = '~==\s*Upgrade Notice\s*==\s*=\s*(.*)\s*=(.*)(=\s*' . preg_quote( DOKAN_PLUGIN_VERSION, '/' ) . '\s*=|$)~Uis';
         $upgrade_notice = '';
 
         if ( preg_match( $regexp, $content, $matches ) ) {
@@ -416,7 +419,7 @@ class Installer {
             $notice_version_parts  = explode( '.', trim( $matches[1] ) );
             $current_version_parts = explode( '.', DOKAN_PLUGIN_VERSION );
 
-            if ( 3 !== sizeof( $notice_version_parts ) ) {
+            if ( 3 !== count( $notice_version_parts ) ) {
                 return;
             }
 
@@ -425,7 +428,6 @@ class Installer {
 
             // Check the latest stable version and ignore trunk.
             if ( version_compare( $current_version, $notice_version, '<' ) ) {
-
                 $upgrade_notice .= '</p><p class="dokan-plugin-upgrade-notice">';
 
                 foreach ( $notices as $index => $line ) {

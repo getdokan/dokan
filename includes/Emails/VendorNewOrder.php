@@ -26,7 +26,7 @@ class VendorNewOrder extends WC_Email {
         $this->description    = __( 'New order emails are sent to chosen recipient(s) when a new order is received.', 'dokan-lite' );
         $this->template_html  = 'emails/vendor-new-order.php';
         $this->template_plain = 'emails/plain/vendor-new-order.php';
-        $this->template_base  = DOKAN_DIR.'/templates/';
+        $this->template_base  = DOKAN_DIR . '/templates/';
         $this->placeholders   = array(
             '{site_title}'   => $this->get_blogname(),
             '{order_date}'   => '',
@@ -40,10 +40,11 @@ class VendorNewOrder extends WC_Email {
         add_action( 'woocommerce_order_status_failed_to_processing_notification', array( $this, 'trigger' ), 10, 2 );
         add_action( 'woocommerce_order_status_failed_to_completed_notification', array( $this, 'trigger' ), 10, 2 );
         add_action( 'woocommerce_order_status_failed_to_on-hold_notification', array( $this, 'trigger' ), 10, 2 );
-        
+		//Prevent admin email for sub-order
+        add_filter( 'woocommerce_email_enabled_new_order', [ $this, 'prevent_sub_order_admin_email' ], 10, 2 );
         // Call parent constructor.
         parent::__construct();
-        
+
         // Other settings.
         $this->recipient = 'vendor@ofthe.product';
     }
@@ -75,7 +76,6 @@ class VendorNewOrder extends WC_Email {
      * @param array $order.
      */
     public function trigger( $order_id, $order = false ) {
-
         if ( ! $this->is_enabled() ) {
             return;
         }
@@ -90,23 +90,23 @@ class VendorNewOrder extends WC_Email {
             $this->placeholders['{order_date}']   = wc_format_datetime( $this->object->get_date_created() );
             $this->placeholders['{order_number}'] = $this->object->get_order_number();
         }
-        
+
         $sellers = dokan_get_seller_id_by_order( $order_id );
         if ( empty( $sellers ) ) {
             return;
         }
-        
-        // check has sub order 
-        if ( $order->get_meta('has_sub_order') ) {
-        	foreach ($sellers as $seller) {
+
+        // check has sub order
+        if ( $order->get_meta( 'has_sub_order' ) ) {
+        	foreach ( $sellers as $seller ) {
         		$seller_info      = get_userdata( $seller );
-		        $seller_email 	  = $seller_info->user_email;
+		        $seller_email     = $seller_info->user_email;
 		        $this->order_info = dokan_get_vendor_order_details( $order_id, $seller );
 			    $this->send( $seller_email, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
         	}
         } else {
         	$seller_info      = get_userdata( $sellers );
-		    $seller_email 	  = $seller_info->user_email;
+		    $seller_email     = $seller_info->user_email;
         	$this->order_info = dokan_get_vendor_order_details( $order_id, $sellers );
 	        $this->send( $seller_email, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
         }
@@ -128,7 +128,7 @@ class VendorNewOrder extends WC_Email {
                 'plain_text'    => false,
                 'email'         => $this,
                 'order_info'    => $this->order_info,
-            ), 'dokan' ,$this->template_base
+            ), 'dokan', $this->template_base
         );
     }
 
@@ -190,5 +190,25 @@ class VendorNewOrder extends WC_Email {
                 'desc_tip'    => true,
             ),
         );
+    }
+
+    /**
+     * Prevent sub-order email for admin
+     *
+     * @param $bool
+     * @param $order
+     *
+     * @return bool
+     */
+    public function prevent_sub_order_admin_email( $bool, $order ) {
+        if ( ! $order ) {
+            return $bool;
+        }
+
+        if ( $order->get_parent_id() ) {
+            return false;
+        }
+
+        return true;
     }
 }

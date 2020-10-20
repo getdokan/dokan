@@ -33,69 +33,79 @@ class WithdrawController extends WP_REST_Controller {
      * @return void
      */
     public function register_routes() {
-        register_rest_route( $this->namespace, '/' . $this->rest_base, [
-            [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_items' ],
-                'args'                => array_merge( $this->get_collection_params(),  [
-                    'ids' => [
-                        'description' => __( 'IDs of withdraws', 'dokan-lite' ),
-                        'type'        => 'array',
-                        'context'     => [ 'view' ],
-                        'items'       => [
-                            'type'    => 'integer',
-                        ],
-                    ],
-                ] ),
-                'permission_callback' => [ $this, 'get_items_permissions_check' ],
-            ],
-        ] );
+        register_rest_route(
+            $this->namespace, '/' . $this->rest_base, [
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_items' ],
+					'args'                => array_merge(
+						$this->get_collection_params(), [
+							'ids' => [
+								'description' => __( 'IDs of withdraws', 'dokan-lite' ),
+								'type'        => 'array',
+								'context'     => [ 'view' ],
+								'items'       => [
+									'type'    => 'integer',
+								],
+							],
+						]
+					),
+					'permission_callback' => [ $this, 'get_items_permissions_check' ],
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/balance', [
-            [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_balance' ],
-                'permission_callback' => [ $this, 'get_items_permissions_check' ],
-            ],
-        ] );
+        register_rest_route(
+            $this->namespace, '/' . $this->rest_base . '/balance', [
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_balance' ],
+					'permission_callback' => [ $this, 'get_items_permissions_check' ],
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)/', [
-            'args' => [
-                'id' => [
-                    'description'       => __( 'Unique identifier for the object.', 'dokan-lite' ),
-                    'type'              => 'integer',
-                    'validate_callback' => [ $this, 'withdraw_exists' ],
-                ],
-            ],
-            [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_item' ],
-                'permission_callback' => [ $this, 'get_item_permissions_check' ],
-            ],
-            [
-                'methods'             => WP_REST_Server::EDITABLE,
-                'callback'            => [ $this, 'update_item' ],
-                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-                'permission_callback' => [ $this, 'update_item_permissions_check' ],
-            ],
-            [
-                'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => [ $this, 'delete_item' ],
-                'permission_callback' => [ $this, 'delete_item_permissions_check' ],
-            ],
+        register_rest_route(
+            $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)/', [
+				'args' => [
+					'id' => [
+						'description'       => __( 'Unique identifier for the object.', 'dokan-lite' ),
+						'type'              => 'integer',
+						'validate_callback' => [ $this, 'withdraw_exists' ],
+					],
+				],
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_item' ],
+					'permission_callback' => [ $this, 'get_item_permissions_check' ],
+				],
+				[
+					'methods'             => WP_REST_Server::EDITABLE,
+					'callback'            => [ $this, 'update_item' ],
+					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+					'permission_callback' => [ $this, 'update_item_permissions_check' ],
+				],
+				[
+					'methods'             => WP_REST_Server::DELETABLE,
+					'callback'            => [ $this, 'delete_item' ],
+					'permission_callback' => [ $this, 'delete_item_permissions_check' ],
+				],
 
-        ] );
+			]
+        );
 
         $batch_items_schema = $this->get_public_batch_schema();
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/batch', [
-            [
-                'methods'             => WP_REST_Server::EDITABLE,
-                'callback'            => [ $this, 'batch_items' ],
-                'permission_callback' => [ $this, 'batch_items_permissions_check' ],
-                'args'                => $batch_items_schema['properties'],
-            ],
-            'schema' => [ $this, 'get_public_batch_schema' ],
-        ] );
+        register_rest_route(
+            $this->namespace, '/' . $this->rest_base . '/batch', [
+				[
+					'methods'             => WP_REST_Server::EDITABLE,
+					'callback'            => [ $this, 'batch_items' ],
+					'permission_callback' => [ $this, 'batch_items_permissions_check' ],
+					'args'                => $batch_items_schema['properties'],
+				],
+				'schema' => [ $this, 'get_public_batch_schema' ],
+			]
+        );
     }
 
     /**
@@ -239,8 +249,7 @@ class WithdrawController extends WP_REST_Controller {
             if ( empty( $user_id ) ) {
                 return new WP_Error( 'dokan_rest_withdraw_no_vendor_found', __( 'No vendor found', 'dokan-lite' ), [ 'status' => 404 ] );
             }
-
-        } else if ( isset( $request['user_id'] ) ) {
+        } elseif ( isset( $request['user_id'] ) ) {
             // Allow manager to filter request with user or vendor id
             $user_id = $request['user_id'];
         }
@@ -384,7 +393,7 @@ class WithdrawController extends WP_REST_Controller {
             if ( ! current_user_can( 'manage_woocommerce' ) ) {
                 $validate_request = dokan()->withdraw->is_valid_cancellation_request( $withdraw->get_withdraw() );
 
-                if ( is_wp_error( $validate_request )  ) {
+                if ( is_wp_error( $validate_request ) ) {
                     throw new DokanException( 'dokan_rest_withdraw_error', $validate_request->get_error_message(), 422 );
                 }
 
@@ -403,7 +412,7 @@ class WithdrawController extends WP_REST_Controller {
                     if ( 'approved' === $request['status'] ) {
                         $validate_request = dokan()->withdraw->is_valid_approval_request( $withdraw->get_withdraw() );
 
-                        if ( is_wp_error( $validate_request )  ) {
+                        if ( is_wp_error( $validate_request ) ) {
                             throw new DokanException( 'dokan_rest_withdraw_error', $validate_request->get_error_message(), 422 );
                         }
                     }
@@ -454,7 +463,6 @@ class WithdrawController extends WP_REST_Controller {
             $response = $this->prepare_item_for_response( $withdraw, $request );
 
             return rest_ensure_response( $response );
-
         } catch ( Exception $e ) {
             return $this->send_response_error( $e );
         }
@@ -549,10 +557,12 @@ class WithdrawController extends WP_REST_Controller {
             }
         }
 
-        return rest_ensure_response( [
-            'success' => $success,
-            'failed'  => $failed,
-        ] );
+        return rest_ensure_response(
+            [
+				'success' => $success,
+				'failed'  => $failed,
+			]
+        );
     }
 
     /**
@@ -573,13 +583,13 @@ class WithdrawController extends WP_REST_Controller {
             'method'       => $withdraw->get_method(),
             'method_title' => array_key_exists( $withdraw->get_method(), $methods ) ? $methods[ $withdraw->get_method() ] : $withdraw->get_method(),
             'note'         => $withdraw->get_note(),
-            'ip'           => $withdraw->get_ip()
+            'ip'           => $withdraw->get_ip(),
         ];
 
         $response = rest_ensure_response( $data );
         $response->add_links( $this->prepare_links( $withdraw, $request ) );
 
-        return apply_filters( "dokan_rest_prepare_withdraw_object", $response, $withdraw, $request );
+        return apply_filters( 'dokan_rest_prepare_withdraw_object', $response, $withdraw, $request );
     }
 
     /**
@@ -620,7 +630,6 @@ class WithdrawController extends WP_REST_Controller {
         }
 
         if ( $max_pages > $page ) {
-
             $next_page = $page + 1;
             $next_link = add_query_arg( 'page', $next_page, $base );
             $response->link_header( 'next', $next_link );
@@ -695,7 +704,7 @@ class WithdrawController extends WP_REST_Controller {
                 ],
                 'status' => [
                     'required'    => false,
-                    'description' => __( "Withdraw status", 'dokan-lite' ),
+                    'description' => __( 'Withdraw status', 'dokan-lite' ),
                     'type'        => 'string',
                     'enum'        => [ 'pending', 'approved', 'cancelled' ],
                     'context'     => [ 'view', 'edit' ],
@@ -703,20 +712,20 @@ class WithdrawController extends WP_REST_Controller {
                 ],
                 'method' => [
                     'required'    => true,
-                    'description' => __( "Withdraw Method", 'dokan-lite' ),
+                    'description' => __( 'Withdraw Method', 'dokan-lite' ),
                     'type'        => 'string',
                     'enum'        => array_keys( dokan_withdraw_register_methods() ),
                     'context'     => [ 'view', 'edit' ],
                 ],
                 'note'   => [
                     'required'    => false,
-                    'description' => __( "Withdraw Notes", 'dokan-lite' ),
+                    'description' => __( 'Withdraw Notes', 'dokan-lite' ),
                     'type'        => 'string',
                     'context'     => [ 'view', 'edit' ],
                     'default'     => '',
                 ],
                 'ip'     => [
-                    'description' => __( "User IP", 'dokan-lite' ),
+                    'description' => __( 'User IP', 'dokan-lite' ),
                     'type'        => 'string',
                     'context'     => [ 'view' ],
                     'readonly'    => true,
@@ -769,7 +778,7 @@ class WithdrawController extends WP_REST_Controller {
                     'items'       => [
                         'type' => 'integer',
                     ],
-                ]
+                ],
             ],
         ];
 

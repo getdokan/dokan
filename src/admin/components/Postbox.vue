@@ -1,10 +1,14 @@
 <template>
     <div :class="['postbox', 'dokan-postbox', { 'closed': !showing }, extraClass]">
-        <button type="button" class="handlediv" aria-expanded="false" @click="showing = !showing">
-            <span class="toggle-indicator" aria-hidden="true"></span>
-        </button>
+        <div class="postbox-header">
+            <h2 class="hndle"><span>{{ title }}</span></h2>
+            <div class="handle-actions hide-if-no-js">
+                <button type="button" class="handlediv" aria-expanded="false" @click="showing = !showing">
+                    <span class="toggle-indicator" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
 
-        <h2 class="hndle"><span>{{ title }}</span></h2>
         <div class="inside">
             <div class="main">
                 <slot></slot>

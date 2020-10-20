@@ -16,7 +16,7 @@ class Promotion extends DokanPromotion {
      *
      * @var integer
      */
-    public $time_interval = 60*60*24*7;
+    public $time_interval = 60 * 60 * 24 * 7;
 
     /**
      * Promo option key

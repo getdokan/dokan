@@ -370,7 +370,7 @@ class Manager {
 
         // Set total sales for newly created product
         if ( ! empty( $id ) ) {
-            $product->set_total_sales(0);
+            $product->set_total_sales( 0 );
         }
 
         $product->save();
@@ -389,7 +389,6 @@ class Manager {
      */
     public function save_default_attributes( $product, $request ) {
         if ( isset( $request['default_attributes'] ) && is_array( $request['default_attributes'] ) ) {
-
             $attributes         = $product->get_attributes();
             $default_attributes = array();
 
@@ -554,7 +553,7 @@ class Manager {
             $download->set_id( $key );
             $download->set_name( $file['name'] ? $file['name'] : wc_get_filename_from_url( $file['file'] ) );
             $download->set_file( apply_filters( 'woocommerce_file_download_path', $file['file'], $product, $key ) );
-            $files[]  = $download;
+            $files[] = $download;
         }
         $product->set_downloads( $files );
 
@@ -589,12 +588,12 @@ class Manager {
                 [
                     'key'     => '_visibility',
                     'value'   => array( 'catalog', 'visible' ),
-                    'compare' => 'IN'
+                    'compare' => 'IN',
                 ],
                 [
                     'key'   => '_featured',
-                    'value' => 'yes'
-                ]
+                    'value' => 'yes',
+                ],
             ];
         }
 
@@ -619,12 +618,12 @@ class Manager {
                 'operator' => 'NOT IN',
             ];
         } else {
-            $args['meta_query']  = [
+            $args['meta_query'] = [
                 [
                     'key'     => '_visibility',
                     'value'   => [ 'catalog', 'visible' ],
-                    'compare' => 'IN'
-                ]
+                    'compare' => 'IN',
+                ],
             ];
         }
 
@@ -639,7 +638,6 @@ class Manager {
      * @return void
      */
     public function best_selling( $args = [] ) {
-
         $args['meta_key'] = 'total_sales';
         $args['orderby']  = 'meta_value_num';
 
@@ -652,12 +650,12 @@ class Manager {
                 'operator' => 'NOT IN',
             ];
         } else {
-            $args['meta_query']  = [
+            $args['meta_query'] = [
                 [
                     'key'     => '_visibility',
-                    'value'   => array('catalog', 'visible'),
-                    'compare' => 'IN'
-                ]
+                    'value'   => array( 'catalog', 'visible' ),
+                    'compare' => 'IN',
+                ],
             ];
         }
 
@@ -682,12 +680,12 @@ class Manager {
                 'operator' => 'NOT IN',
             ];
         } else {
-            $args['meta_query']  = [
+            $args['meta_query'] = [
                 [
                     'key'     => '_visibility',
                     'value'   => [ 'catalog', 'visible' ],
-                    'compare' => 'IN'
-                ]
+                    'compare' => 'IN',
+                ],
             ];
         }
 

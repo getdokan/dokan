@@ -31,7 +31,13 @@ class Enfold {
      */
     public function filter_layout_classes( $classes ) {
         if ( dokan_is_store_listing() && ! empty( $classes['current'] ) ) {
-            $classes['current'] = [ 'content' => 'av-content-full alpha', 'sidebar' => 'hidden', 'meta' => '','entry' => '', 'main' => '' ];
+            $classes['current'] = [
+				'content' => 'av-content-full alpha',
+				'sidebar' => 'hidden',
+				'meta' => '',
+				'entry' => '',
+				'main' => '',
+			];
         }
 
         return $classes;
@@ -59,7 +65,6 @@ class Enfold {
         $style .= '#top label {font-weight: normal; font-size: 14px}';
         $style .= '.template-page .entry-content-wrapper h2 a {text-transform: capitalize !important}';
         $style .= '#dokan-seller-listing-wrap .dokan-single-seller .store-content .store-data-container .store-data {margin-top: 15px}';
-
 
         wp_add_inline_style( 'dokan-style', $style );
     }

@@ -3529,6 +3529,10 @@ var sprintf = Jed.sprintf;
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'Postbox',
   props: {
@@ -5122,27 +5126,31 @@ var render = function() {
       ]
     },
     [
-      _c(
-        "button",
-        {
-          staticClass: "handlediv",
-          attrs: { type: "button", "aria-expanded": "false" },
-          on: {
-            click: function($event) {
-              _vm.showing = !_vm.showing
-            }
-          }
-        },
-        [
-          _c("span", {
-            staticClass: "toggle-indicator",
-            attrs: { "aria-hidden": "true" }
-          })
-        ]
-      ),
-      _vm._v(" "),
-      _c("h2", { staticClass: "hndle" }, [
-        _c("span", [_vm._v(_vm._s(_vm.title))])
+      _c("div", { staticClass: "postbox-header" }, [
+        _c("h2", { staticClass: "hndle" }, [
+          _c("span", [_vm._v(_vm._s(_vm.title))])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "handle-actions hide-if-no-js" }, [
+          _c(
+            "button",
+            {
+              staticClass: "handlediv",
+              attrs: { type: "button", "aria-expanded": "false" },
+              on: {
+                click: function($event) {
+                  _vm.showing = !_vm.showing
+                }
+              }
+            },
+            [
+              _c("span", {
+                staticClass: "toggle-indicator",
+                attrs: { "aria-hidden": "true" }
+              })
+            ]
+          )
+        ])
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "inside" }, [

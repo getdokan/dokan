@@ -17,7 +17,6 @@ class Hooks {
      */
     public function __construct() {
         // Load all actions
-        add_action( 'pre_get_posts', [ $this, 'admin_shop_order_remove_parents' ] );
         add_action( 'manage_shop_order_posts_custom_column', [ $this, 'shop_order_custom_columns' ], 11 );
         add_action( 'admin_footer-edit.php', [ $this, 'admin_shop_order_scripts' ] );
         add_action( 'wp_trash_post', [ $this, 'admin_on_trash_order' ] );
@@ -31,22 +30,9 @@ class Hooks {
         // Load all filters
         add_filter( 'woocommerce_reports_get_order_report_query', [ $this, 'admin_order_reports_remove_parents' ] );
         add_filter( 'manage_edit-shop_order_columns', [ $this, 'admin_shop_order_edit_columns' ], 11 );
-        add_filter( 'post_class', [ $this, 'admin_shop_order_row_classes' ], 10, 2);
+        add_filter( 'post_class', [ $this, 'admin_shop_order_row_classes' ], 10, 2 );
         add_filter( 'post_types_to_delete_with_user', [ $this, 'add_wc_post_types_to_delete_user' ], 10, 2 );
         add_filter( 'dokan_save_settings_value', [ $this, 'update_pages' ], 10, 2 );
-    }
-
-
-    /**
-     * Filter all the shop orders to remove child orders
-     *
-     * @param WP_Query $query
-     */
-    public function admin_shop_order_remove_parents( $query ) {
-        if ( $query->is_main_query() && 'shop_order' == $query->query['post_type'] ) {
-            $query->set( 'orderby', 'ID' );
-            $query->set( 'order', 'DESC' );
-        }
     }
 
     /**
@@ -126,9 +112,9 @@ class Hooks {
             return $col;
         }
 
-        switch ($col) {
+        switch ( $col ) {
             case 'order_number':
-                if ($post->post_parent !== 0) {
+                if ( $post->post_parent !== 0 ) {
                     echo '<strong>';
                     echo esc_html__( '&nbsp;Sub Order of', 'dokan-lite' );
                     printf( ' <a href="%s">#%s</a>', esc_url( admin_url( 'post.php?action=edit&post=' . $post->post_parent ) ), esc_html( $post->post_parent ) );
@@ -266,10 +252,12 @@ class Hooks {
         $post = get_post( $post_id );
 
         if ( 'shop_order' == $post->post_type && 0 == $post->post_parent ) {
-            $sub_orders = get_children( array(
-                'post_parent' => $post_id,
-                'post_type'   => 'shop_order'
-            ) );
+            $sub_orders = get_children(
+                array(
+					'post_parent' => $post_id,
+					'post_type'   => 'shop_order',
+                )
+            );
 
             if ( $sub_orders ) {
                 foreach ( $sub_orders as $order_post ) {
@@ -313,13 +301,15 @@ class Hooks {
         if ( 'shop_order' == $post->post_type ) {
             dokan_delete_sync_order( $post_id );
 
-            $sub_orders = get_children( array(
-                'post_parent' => $post_id,
-                'post_type'   => 'shop_order'
-            ) );
+            $sub_orders = get_children(
+                array(
+					'post_parent' => $post_id,
+					'post_type'   => 'shop_order',
+                )
+            );
 
             if ( $sub_orders ) {
-                foreach ($sub_orders as $order_post) {
+                foreach ( $sub_orders as $order_post ) {
                     wp_delete_post( $order_post->ID );
                 }
             }
@@ -362,7 +352,7 @@ class Hooks {
      *
      * @return void
      */
-    public function add_seller_meta_box(){
+    public function add_seller_meta_box() {
         remove_meta_box( 'authordiv', 'product', 'core' );
         add_meta_box( 'sellerdiv', __( 'Vendor', 'dokan-lite' ), [ self::class, 'seller_meta_box_content' ], 'product', 'normal', 'core' );
     }
@@ -379,16 +369,21 @@ class Hooks {
 
         $admin_user = get_user_by( 'id', $user_ID );
         $selected   = empty( $post->ID ) ? $user_ID : $post->post_author;
-        $vendors = dokan()->vendor->all( [ 'number' => -1, 'role__in' => [ 'seller' ] ] );
+        $vendors = dokan()->vendor->all(
+            [
+				'number' => -1,
+				'role__in' => [ 'seller' ],
+			]
+        );
         ?>
         <label class="screen-reader-text" for="dokan_product_author_override"><?php esc_html_e( 'Vendor', 'dokan-lite' ); ?></label>
         <select name="dokan_product_author_override" id="dokan_product_author_override" class="">
-            <?php if ( empty( $vendors ) ): ?>
+            <?php if ( empty( $vendors ) ) : ?>
                 <option value="<?php echo esc_attr( $admin_user->ID ); ?>"><?php echo esc_html( $admin_user->display_name ); ?></option>
-            <?php else: ?>
+            <?php else : ?>
                 <option value="<?php echo esc_attr( $user_ID ); ?>" <?php selected( $selected, $user_ID ); ?>><?php echo esc_html( $admin_user->display_name ); ?></option>
-                <?php foreach ( $vendors as $key => $vendor ): ?>
-                    <option value="<?php echo esc_attr( $vendor->get_id() ) ?>" <?php selected( $selected, $vendor->get_id() ); ?>><?php echo ! empty( $vendor->get_shop_name() ) ? esc_html( $vendor->get_shop_name() ) : esc_html( $vendor->get_name() ); ?></option>
+                <?php foreach ( $vendors as $key => $vendor ) : ?>
+                    <option value="<?php echo esc_attr( $vendor->get_id() ); ?>" <?php selected( $selected, $vendor->get_id() ); ?>><?php echo ! empty( $vendor->get_shop_name() ) ? esc_html( $vendor->get_shop_name() ) : esc_html( $vendor->get_name() ); ?></option>
                 <?php endforeach ?>
             <?php endif ?>
         </select>

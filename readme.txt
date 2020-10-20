@@ -5,9 +5,9 @@ Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi selle
 Requires at least: 4.4
 Tested up to: 5.5
 WC requires at least: 3.0
-WC tested up to: 4.4.1
+WC tested up to: 4.6
 Requires PHP: 5.6
-Stable tag: 3.0.9
+Stable tag: 3.0.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -290,6 +290,34 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 == Changelog ==
+
+= v3.0.10 (October 20, 2020) =
+
+- **Fix:** Vendor balance remains same after refund
+- **Fix:** Vendor name is not showing correctly on WooCommerce product list quick edit
+- **Fix:** CSS conflicting with the YITH Badge Management Plugin
+- **Fix:** Added postbox header div in postbox component
+- **Fix:** Guest checkout name in vendor order details
+- **Fix:** Phone field pasting option enabled settings page
+- **Fix:** Admin dashboard feed REST Request error
+- **Fix:** Prevent admin email for sub-order
+- **Fix:** Multiple category commission issue fallback to vendor commission
+- **Fix:** Admin vendor total count
+- **Fix:** Default order sorting issue
+- **Fix:** WC deprecate notice for using order parent_id directly
+- **Fix:** Label changed for external product type
+- **Fix:** Product tag add if do not exist
+- **Fix:** Store category widget not translate problem with WPML
+- **Fix:** On RESTful order creation, only single store is added into the response even if there are multiple stores
+- **Fix:** Product variation author id update for product quick save
+- **Fix:** Translation issue on Select2
+- **Fix:** Price schedule selection date added
+- **Fix:** Remove duplicate capabilities form seller role
+- **Fix:** Dashboard header add new button not showing with theme conflict
+- **Fix:** Order details page showing warning issue
+- **Fix:** After withdraw approval, sometimes it's not inserting in balance table
+- **Fix:** Redirect to 404 if vendor do not exist for TOC template
+- **Fix:** Withdrawal current balance is incorrect cause of cache issue
 
 = v3.0.9 (August 25, 2020) =
 

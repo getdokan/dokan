@@ -25,7 +25,7 @@ class ProductPublished extends WC_Email {
         $this->description      = __( 'These emails are sent to vendor of the product when a pending product is published.', 'dokan-lite' );
         $this->template_html    = 'emails/product-published.php';
         $this->template_plain   = 'emails/plain/product-published.php';
-        $this->template_base    = DOKAN_DIR.'/templates/';
+        $this->template_base    = DOKAN_DIR . '/templates/';
 
         // Triggers for this email
         add_action( 'dokan_pending_product_published_notification', array( $this, 'trigger' ), 30, 2 );
@@ -64,32 +64,31 @@ class ProductPublished extends WC_Email {
      * @param array $postdata.
      */
     public function trigger( $post, $seller ) {
+		if ( ! $this->is_enabled() || ! $this->get_recipient() ) {
+			return;
+		}
 
-            if ( ! $this->is_enabled() || ! $this->get_recipient() ) {
-                return;
-            }
+            $product = wc_get_product( $post->ID );
 
-            $product       = wc_get_product( $post->ID );
+		if ( is_a( $product, 'WC_Product' ) ) {
+			$this->object = $product;
 
-            if ( is_a( $product, 'WC_Product' ) ) {
-                $this->object                = $product;
+			$this->find['product-title']     = '{product_title}';
+			$this->find['price']             = '{price}';
+			$this->find['seller-name']       = '{seller_name}';
+			$this->find['product_url']       = '{product_url}';
+			$this->find['product_edit_link'] = '{product_edit_link}';
+			$this->find['site_name']         = '{site_name}';
+			$this->find['site_url']          = '{site_url}';
 
-                $this->find['product-title']     = '{product_title}';
-                $this->find['price']             = '{price}';
-                $this->find['seller-name']       = '{seller_name}';
-                $this->find['product_url']       = '{product_url}';
-                $this->find['product_edit_link'] = '{product_edit_link}';
-                $this->find['site_name']         = '{site_name}';
-                $this->find['site_url']          = '{site_url}';
-
-                $this->replace['product-title']     = $product->get_title();
-                $this->replace['price']             = $product->get_price();
-                $this->replace['seller-name']       = $seller->display_name;
-                $this->replace['product_url']       = get_permalink( $post->ID );
-                $this->replace['product_edit_link'] = dokan_edit_product_url( $post->ID );
-                $this->replace['site_name']         = $this->get_from_name();
-                $this->replace['site_url']          = site_url();
-            }
+			$this->replace['product-title']     = $product->get_title();
+			$this->replace['price']             = $product->get_price();
+			$this->replace['seller-name']       = $seller->display_name;
+			$this->replace['product_url']       = get_permalink( $post->ID );
+			$this->replace['product_edit_link'] = dokan_edit_product_url( $post->ID );
+			$this->replace['site_name']         = $this->get_from_name();
+			$this->replace['site_url']          = site_url();
+		}
 
             $this->setup_locale();
             $this->send( $seller->user_email, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
@@ -104,16 +103,17 @@ class ProductPublished extends WC_Email {
      */
     public function get_content_html() {
             ob_start();
-                wc_get_template( $this->template_html, array(
-                    'product'       => $this->object,
-                    'email_heading' => $this->get_heading(),
-                    'sent_to_admin' => true,
-                    'plain_text'    => false,
-                    'email'         => $this,
-                    'data'          => $this->replace
-                ), 'dokan/', $this->template_base );
+                wc_get_template(
+                    $this->template_html, array(
+						'product'       => $this->object,
+						'email_heading' => $this->get_heading(),
+						'sent_to_admin' => true,
+						'plain_text'    => false,
+						'email'         => $this,
+						'data'          => $this->replace,
+                    ), 'dokan/', $this->template_base
+                );
             return ob_get_clean();
-
     }
 
     /**
@@ -124,14 +124,16 @@ class ProductPublished extends WC_Email {
      */
     public function get_content_plain() {
             ob_start();
-                wc_get_template( $this->template_html, array(
-                    'product'       => $this->object,
-                    'email_heading' => $this->get_heading(),
-                    'sent_to_admin' => true,
-                    'plain_text'    => true,
-                    'email'         => $this,
-                    'data'          => $this->replace
-                ), 'dokan/', $this->template_base );
+                wc_get_template(
+                    $this->template_html, array(
+						'product'       => $this->object,
+						'email_heading' => $this->get_heading(),
+						'sent_to_admin' => true,
+						'plain_text'    => true,
+						'email'         => $this,
+						'data'          => $this->replace,
+                    ), 'dokan/', $this->template_base
+                );
             return ob_get_clean();
     }
 

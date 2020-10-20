@@ -15,11 +15,14 @@
   },
   "require-dev": {
     "wp-coding-standards/wpcs": "dev-master",
-    "dealerdirect/phpcodesniffer-composer-installer": "^0.4.3"
+    "dealerdirect/phpcodesniffer-composer-installer": "^0.4.3",
+    "tareq1988/wp-php-cs-fixer": "dev-master",
+    "phpcompatibility/phpcompatibility-wp": "dev-master",
+    "phpunit/phpunit": "7.5.9"
   },
-  "autoload" : {
+  "autoload": {
     "psr-4": {
-        "WeDevs\\Dokan\\": "includes/"
+      "WeDevs\\Dokan\\": "includes/"
     }
   },
   "scripts": {

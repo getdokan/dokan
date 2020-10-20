@@ -23,7 +23,7 @@ class NewSeller extends WC_Email {
         $this->description      = __( 'These emails are sent to chosen recipient(s) when a new vendor registers in marketplace', 'dokan-lite' );
         $this->template_html    = 'emails/new-seller-registered.php';
         $this->template_plain   = 'emails/plain/new-seller-registered.php';
-        $this->template_base    = DOKAN_DIR.'/templates/';
+        $this->template_base    = DOKAN_DIR . '/templates/';
 
         // Triggers for this email
         add_action( 'dokan_new_seller_created', array( $this, 'trigger' ), 30, 2 );
@@ -62,10 +62,9 @@ class NewSeller extends WC_Email {
      * @param array $postdata.
      */
     public function trigger( $user_id, $dokan_settings ) {
-
-            if ( ! $this->is_enabled() || ! $this->get_recipient() ) {
-                return;
-            }
+		if ( ! $this->is_enabled() || ! $this->get_recipient() ) {
+			return;
+		}
 
             $seller                    = get_user_by( 'id', $user_id );
             $this->object              = $seller;
@@ -96,16 +95,17 @@ class NewSeller extends WC_Email {
      */
     public function get_content_html() {
             ob_start();
-                wc_get_template( $this->template_html, array(
-                    'seller'        => $this->object,
-                    'email_heading' => $this->get_heading(),
-                    'sent_to_admin' => true,
-                    'plain_text'    => false,
-                    'email'         => $this,
-                    'data'          => $this->replace
-                ), 'dokan/', $this->template_base );
+                wc_get_template(
+                    $this->template_html, array(
+						'seller'        => $this->object,
+						'email_heading' => $this->get_heading(),
+						'sent_to_admin' => true,
+						'plain_text'    => false,
+						'email'         => $this,
+						'data'          => $this->replace,
+                    ), 'dokan/', $this->template_base
+                );
             return ob_get_clean();
-
     }
 
     /**
@@ -116,14 +116,16 @@ class NewSeller extends WC_Email {
      */
     public function get_content_plain() {
             ob_start();
-                wc_get_template( $this->template_html, array(
-                    'seller'        => $this->object,
-                    'email_heading' => $this->get_heading(),
-                    'sent_to_admin' => true,
-                    'plain_text'    => true,
-                    'email'         => $this,
-                    'data'          => $this->replace
-                ), 'dokan/', $this->template_base );
+                wc_get_template(
+                    $this->template_html, array(
+						'seller'        => $this->object,
+						'email_heading' => $this->get_heading(),
+						'sent_to_admin' => true,
+						'plain_text'    => true,
+						'email'         => $this,
+						'data'          => $this->replace,
+                    ), 'dokan/', $this->template_base
+                );
             return ob_get_clean();
     }
 

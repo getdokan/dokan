@@ -151,7 +151,7 @@ abstract class DokanBackgroundProcesses extends \WP_Background_Process {
     public function clear_process() {
         $processes = get_option( 'dokan_background_processes', array() );
 
-        if ( array_key_exists( static::class , $processes ) ) {
+        if ( array_key_exists( static::class, $processes ) ) {
             unset( $processes[ static::class ] );
             update_option( 'dokan_background_processes', $processes, 'no' );
         }

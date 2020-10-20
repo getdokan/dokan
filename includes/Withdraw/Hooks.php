@@ -28,7 +28,9 @@ class Hooks {
      * @return void
      */
     public static function delete_seller_balance_cache( $status, $user_id, $id ) {
-        wp_cache_delete( 'dokan_seller_balance_' . $user_id );
+        $cache_group = 'dokan_seller_data_' . $user_id;
+        $cache_key = 'dokan_seller_balance_' . $user_id;
+        wp_cache_delete( $cache_key, $cache_group );
     }
 
     /**
@@ -43,15 +45,17 @@ class Hooks {
     public static function update_vendor_balance( $withdraw ) {
         global $wpdb;
 
-        if ( round( dokan_get_seller_balance( $withdraw->get_user_id(), false ), 2 ) < $withdraw->get_amount() ) {
+        if ( round( dokan_get_seller_balance( $withdraw->get_user_id(), false ), 2 ) < round( $withdraw->get_amount(), 2 ) ) {
             return;
         }
 
-        $balance_result = $wpdb->get_row( $wpdb->prepare(
-            "select * from {$wpdb->dokan_vendor_balance} where trn_id = %d and trn_type = %s",
-            $withdraw->get_id(),
-            'dokan_withdraw'
-        ) );
+        $balance_result = $wpdb->get_row(
+            $wpdb->prepare(
+                "select * from {$wpdb->dokan_vendor_balance} where trn_id = %d and trn_type = %s",
+                $withdraw->get_id(),
+                'dokan_withdraw'
+            )
+        );
 
         if ( empty( $balance_result ) ) {
             $wpdb->insert(
@@ -80,5 +84,7 @@ class Hooks {
                 )
             );
         }
+
+        self::delete_seller_balance_cache( $withdraw->get_status(), $withdraw->get_user_id(), $withdraw->get_id() );
     }
 }

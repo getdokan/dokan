@@ -34,13 +34,15 @@ class StoreSettingController extends WP_REST_Controller {
      * @return void
      */
     public function register_routes() {
-        register_rest_route( $this->namespace,  '/' . $this->rest_base, [
-            [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_settings' ],
-                'permission_callback' => [ $this, 'get_settings_permission_callback' ],
-            ]
-        ] );
+        register_rest_route(
+            $this->namespace, '/' . $this->rest_base, [
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_settings' ],
+					'permission_callback' => [ $this, 'get_settings_permission_callback' ],
+				],
+			]
+        );
     }
 
     /**
