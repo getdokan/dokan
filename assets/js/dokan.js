@@ -780,7 +780,6 @@ jQuery(function($) {
                                 options.push( { id: text[0], text: text[1]  } );
                             });
                         }
-
                         return {
                             results: options,
                             pagination: {
@@ -1567,26 +1566,30 @@ jQuery(function($) {
 jQuery(function($) {
     var api = wp.customize;
 
-    $('.sale_price_dates_fields input[name="_sale_price_dates_from"]').datepicker({
+    $('.datepicker').datepicker({
+        dateFormat: 'yy-mm-dd'
+    });
+
+    $('.dokan-start-date').datepicker({
         defaultDate: "",
         dateFormat: "yy-mm-dd",
         numberOfMonths: 1,
         onSelect: function (selectedDate) {
             let date = new Date(selectedDate);
             date.setDate(date.getDate() + 1);
-            $('input[name="_sale_price_dates_to"]').datepicker('option', {'minDate': date})
+            $('.dokan-end-date').datepicker('option', {'minDate': date})
         }
 
     });
 
-    $('.sale_price_dates_fields input[name="_sale_price_dates_to"]').datepicker({
+    $('.dokan-end-date').datepicker({
         defaultDate: "",
         dateFormat: "yy-mm-dd",
         numberOfMonths: 1,
         onSelect: function (selectedDate) {
             let date = new Date(selectedDate);
             date.setDate(date.getDate() - 1);
-            $('input[name="_sale_price_dates_from"]').datepicker('option', {'maxDate': date})
+            $('dokan-start-date').datepicker('option', {'maxDate': date})
         }
     });
 

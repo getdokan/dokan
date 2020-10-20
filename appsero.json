@@ -5,6 +5,7 @@
         "composer.json",
         "composer.lock",
         ".gitignore",
+        ".github",
         "assets/src",
         "src",
         "assets/css/style.css.map",
@@ -17,7 +18,6 @@
         "changelog.txt",
         ".gitignore",
         ".travis.yml",
-        ".travis.yml",
         "debug.log",
         "phpunit.xml",
         ".svnignore",
@@ -27,8 +27,10 @@
         "config.json",
         "phpcs.xml.dist",
         "webpack.config.js",
-        "composer.lock",
-        "composer.json",
+        "package-lock.json",
+        "package.json",
+        ".php_cs",
+        ".babelrc",
         ".editorconfig"
     ]
 }
