@@ -2,7 +2,7 @@
     <div id="dokan-upgrade-wrapper">
         <div id="dokan-upgrade-popper">
             <p>{{ __("You're using", 'dokan-lite' ) }} <span>{{ __( 'Dokan Lite', 'dokan-lite' ) }}</span>. {{ __( 'To unlock more features, consider', 'dokan-lite' ) }}</p>
-            <button @click="openPopup" class="button">{{ __( 'Upgrade to Pro', 'dokan-lite' ) }}</button>
+            <a href="https://wedevs.com/dokan-lite-upgrade-to-pro" class="button">{{ __( 'Upgrade to Pro', 'dokan-lite' ) }}</a>
         </div>
 
         <div v-if="showPopup" id="dokan-upgrade-popup">
