@@ -206,7 +206,7 @@ class Ajax {
 
         $order->payment_complete();
 
-        $this->store_capture_payment_data( $capture_payment['purchase_units'] );
+        $this->store_capture_payment_data( $capture_payment['purchase_units'], $order );
 
         do_action( 'dokan_paypal_capture_payment_completed', $order );
 
@@ -223,22 +223,53 @@ class Ajax {
      * Store each order capture id
      *
      * @param array $purchase_units
+     * @param \WC_Order $order
      *
      * @since DOKAN_LITE_SINCE
      *
      * @return void
      */
-    public function store_capture_payment_data( $purchase_units ) {
+    public function store_capture_payment_data( $purchase_units, \WC_Order $order ) {
         //add capture id to meta data
+        $meta_key_prefix = '_dokan_paypal_payment_';
+
         foreach ( $purchase_units as $key => $unit ) {
             $capture_id = $unit['payments']['captures'][0]['id'];
+
+            $paypal_fee_data                = $unit['payments']['captures'][0]['seller_receivable_breakdown']['paypal_fee'];
+            $paypal_processing_fee_currency = $paypal_fee_data['currency_code'];
+            $paypal_processing_fee          = $paypal_fee_data['value'];
 
             //this is a suborder id. if there is no suborder then it will be the main order id
             $_order_id = $unit['custom_id'];
 
+            $invoice_id = $unit['invoice_id'];
+
             //may be a suborder
             $_order = wc_get_order( $_order_id );
-            update_post_meta( $_order->get_id(), '_dokan_paypal_payment_capture_id', $capture_id );
+
+            $_order->add_order_note(
+                sprintf(
+                    __( 'PayPal processing fee is %s', 'dokan-lite' ),
+                    $paypal_processing_fee
+                )
+            );
+
+            //add order note to parent order
+            if ( $_order_id !== $invoice_id ) {
+                $order_url = $_order->get_edit_order_url();
+                $order->add_order_note(
+                    sprintf(
+                        __( 'PayPal processing for sub order %s is %s', 'dokan-lite' ),
+                        "<a href='{$order_url}'>{$_order_id}</a>",
+                        $paypal_processing_fee
+                    )
+                );
+            }
+
+            update_post_meta( $_order->get_id(), $meta_key_prefix . 'capture_id', $capture_id );
+            update_post_meta( $_order->get_id(), $meta_key_prefix . 'processing_fee', $paypal_processing_fee );
+            update_post_meta( $_order->get_id(), $meta_key_prefix . 'processing_currency', $paypal_processing_fee_currency );
         }
     }
 }
