@@ -208,7 +208,7 @@ class Ajax {
 
         $this->store_capture_payment_data( $capture_payment['purchase_units'], $order );
 
-        do_action( 'dokan_paypal_capture_payment_completed', $order );
+        do_action( 'dokan_paypal_capture_payment_completed', $order, $capture_payment );
 
         wp_send_json_success(
             [
