@@ -7,7 +7,7 @@ Tested up to: 5.5
 WC requires at least: 3.0
 WC tested up to: 4.6
 Requires PHP: 5.6
-Stable tag: 3.0.10
+Stable tag: 3.0.11
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -290,6 +290,10 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 == Changelog ==
+
+= v3.0.11 (October 22, 2020) =
+
+ * **Fix:** Fixes a JS loading issue when `SCRIPT_DEBUG` is enabled
 
 = v3.0.10 (October 20, 2020) =
 
