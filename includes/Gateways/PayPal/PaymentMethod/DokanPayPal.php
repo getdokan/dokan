@@ -477,9 +477,9 @@ class DokanPayPal extends WC_Payment_Gateway {
         $total_amount = $order->get_subtotal() + $tax_total + (float) $order->get_shipping_total();
         $total_amount = wc_format_decimal( $total_amount );
 
-        $seller_id   = dokan_get_seller_id_by_order( $order->get_id() );
-        $merchant_id = get_user_meta( $seller_id, '_dokan_paypal_marketplace_merchant_id', true );
-
+        $seller_id     = dokan_get_seller_id_by_order( $order->get_id() );
+        $merchant_id   = get_user_meta( $seller_id, '_dokan_paypal_marketplace_merchant_id', true );
+        $platform_fee  = wc_format_decimal( dokan()->commission->get_earning_by_order( $order, 'admin' ) );
         $product_items = $this->get_product_items( $order );
 
         $purchase_units = [
@@ -490,7 +490,7 @@ class DokanPayPal extends WC_Payment_Gateway {
                 'breakdown'     => [
                     'item_total'        => [
                         'currency_code' => 'USD',
-                        'value'         => $order->get_subtotal(),
+                        'value'         => wc_format_decimal( $order->get_subtotal() ),
                     ],
                     'tax_total'         => [
                         'currency_code' => 'USD',
@@ -498,7 +498,7 @@ class DokanPayPal extends WC_Payment_Gateway {
                     ],
                     'shipping'          => [
                         'currency_code' => 'USD',
-                        'value'         => $order->get_shipping_total(),
+                        'value'         => wc_format_decimal( $order->get_shipping_total() ),
                     ],
                     'handling'          => [
                         'currency_code' => 'USD',
@@ -525,7 +525,7 @@ class DokanPayPal extends WC_Payment_Gateway {
                     [
                         'amount' => [
                             'currency_code' => 'USD',
-                            'value'         => dokan()->commission->get_earning_by_order( $order, 'admin' ),
+                            'value'         => $platform_fee,
                         ],
                     ],
                 ],
