@@ -7,7 +7,7 @@
   "private": true,
   "scripts": {
     "dev": "WEBPACK_ENV=development webpack --progress --colors --watch --hide-modules",
-    "devBuild": "WEBPACK_ENV=development webpack --progress --colors --hide-modules",
+    "dev:build": "WEBPACK_ENV=development webpack --progress --colors --hide-modules",
     "build": "WEBPACK_ENV=production webpack",
     "makepot": "wpvuei18n makepot"
   },

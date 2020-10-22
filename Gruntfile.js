@@ -254,7 +254,7 @@ module.exports = function(grunt) {
 
             devBuild: {
                 cmd: 'npm',
-                args: ['run', 'devBuild']
+                args: ['run', 'dev:build']
             },
 
             removeDev:{
