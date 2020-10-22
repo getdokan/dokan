@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 3.0.9\n"
+"Project-Id-Version: Dokan 3.0.11\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2020-10-20 12:21:38+00:00\n"
+"POT-Creation-Date: 2020-10-22 11:54:51+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -469,7 +469,7 @@ msgstr ""
 msgid "Disable add new product in popup view"
 msgstr ""
 
-#: includes/Admin/Settings.php:426 src/admin/pages/VendorCapabilities.vue:82
+#: includes/Admin/Settings.php:426 src/admin/pages/VendorCapabilities.vue:89
 #: templates/admin-setup-wizard/step-selling.php:39
 msgid "Order Status Change"
 msgstr ""
@@ -566,6 +566,7 @@ msgid "Which Map API source you want to use in your site?"
 msgstr ""
 
 #: includes/Admin/Settings.php:521 includes/Admin/SetupWizard.php:356
+#: src/admin/pages/Premium.vue:388
 msgid "Google Maps"
 msgstr ""
 
@@ -839,7 +840,7 @@ msgstr ""
 
 #: includes/Admin/SetupWizardNoWC.php:182
 #: includes/Admin/SetupWizardWCAdmin.php:84 includes/Product/functions.php:184
-#: src/admin/pages/VendorCapabilities.vue:52
+#: src/admin/pages/VendorCapabilities.vue:59
 msgid "Shipping"
 msgstr ""
 
@@ -913,13 +914,13 @@ msgid "We'll use %1$s for product weight and %2$s for product dimensions."
 msgstr ""
 
 #: includes/Admin/UserProfile.php:38 includes/Ajax.php:141
-#: includes/Assets.php:404 src/admin/pages/VendorAccountFields.vue:279
+#: includes/Assets.php:408 src/admin/pages/VendorAccountFields.vue:279
 #: src/admin/pages/VendorAccountFields.vue:311
 #: src/admin/pages/VendorAccountFields.vue:343
 msgid "Available"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:39 includes/Assets.php:405
+#: includes/Admin/UserProfile.php:39 includes/Assets.php:409
 #: src/admin/pages/VendorAccountFields.vue:287
 #: src/admin/pages/VendorAccountFields.vue:319
 msgid "Not Available"
@@ -1205,121 +1206,121 @@ msgstr ""
 msgid "id param is required"
 msgstr ""
 
-#: includes/Assets.php:407
+#: includes/Assets.php:411
 msgid "Are you sure?"
 msgstr ""
 
-#: includes/Assets.php:408
+#: includes/Assets.php:412
 msgid "Something went wrong. Please try again."
 msgstr ""
 
-#: includes/Assets.php:482
+#: includes/Assets.php:486
 msgid "This field is required"
 msgstr ""
 
-#: includes/Assets.php:483
+#: includes/Assets.php:487
 msgid "Please fix this field."
 msgstr ""
 
-#: includes/Assets.php:484
+#: includes/Assets.php:488
 msgid "Please enter a valid email address."
 msgstr ""
 
-#: includes/Assets.php:485
+#: includes/Assets.php:489
 msgid "Please enter a valid URL."
 msgstr ""
 
-#: includes/Assets.php:486
+#: includes/Assets.php:490
 msgid "Please enter a valid date."
 msgstr ""
 
-#: includes/Assets.php:487
+#: includes/Assets.php:491
 msgid "Please enter a valid date (ISO)."
 msgstr ""
 
-#: includes/Assets.php:488
+#: includes/Assets.php:492
 msgid "Please enter a valid number."
 msgstr ""
 
-#: includes/Assets.php:489
+#: includes/Assets.php:493
 msgid "Please enter only digits."
 msgstr ""
 
-#: includes/Assets.php:490
+#: includes/Assets.php:494
 msgid "Please enter a valid credit card number."
 msgstr ""
 
-#: includes/Assets.php:491
+#: includes/Assets.php:495
 msgid "Please enter the same value again."
 msgstr ""
 
-#: includes/Assets.php:492
+#: includes/Assets.php:496
 msgid "Please enter no more than {0} characters."
 msgstr ""
 
-#: includes/Assets.php:493
+#: includes/Assets.php:497
 msgid "Please enter at least {0} characters."
 msgstr ""
 
-#: includes/Assets.php:494
+#: includes/Assets.php:498
 msgid "Please enter a value between {0} and {1} characters long."
 msgstr ""
 
-#: includes/Assets.php:495
+#: includes/Assets.php:499
 msgid "Please enter a value between {0} and {1}."
 msgstr ""
 
-#: includes/Assets.php:496
+#: includes/Assets.php:500
 msgid "Please enter a value less than or equal to {0}."
 msgstr ""
 
-#: includes/Assets.php:497
+#: includes/Assets.php:501
 msgid "Please enter a value greater than or equal to {0}."
 msgstr ""
 
-#: includes/Assets.php:619
+#: includes/Assets.php:623
 msgid "Upload featured image"
 msgstr ""
 
-#: includes/Assets.php:620
+#: includes/Assets.php:624
 msgid "Choose a file"
 msgstr ""
 
-#: includes/Assets.php:621
+#: includes/Assets.php:625
 msgid "Add Images to Product Gallery"
 msgstr ""
 
-#: includes/Assets.php:622
+#: includes/Assets.php:626
 msgid "Set featured image"
 msgstr ""
 
-#: includes/Assets.php:623 includes/woo-views/html-product-download.php:8
+#: includes/Assets.php:627 includes/woo-views/html-product-download.php:8
 msgid "Insert file URL"
 msgstr ""
 
-#: includes/Assets.php:624
+#: includes/Assets.php:628
 msgid "Add to gallery"
 msgstr ""
 
-#: includes/Assets.php:625
+#: includes/Assets.php:629
 msgid "Sorry, this attribute option already exists, Try a different one."
 msgstr ""
 
-#: includes/Assets.php:626
+#: includes/Assets.php:630
 msgid ""
 "Warning! This product will not have any variations if this option is not "
 "checked."
 msgstr ""
 
-#: includes/Assets.php:627
+#: includes/Assets.php:631
 msgid "Enter a name for the new attribute term:"
 msgstr ""
 
-#: includes/Assets.php:628
+#: includes/Assets.php:632
 msgid "Remove this attribute?"
 msgstr ""
 
-#: includes/Assets.php:637
+#: includes/Assets.php:641
 #. translators: %d: max linked variation.
 msgid ""
 "Are you sure you want to link all variations? This will create a new "
@@ -1327,171 +1328,171 @@ msgid ""
 "(max %d per run)."
 msgstr ""
 
-#: includes/Assets.php:638
+#: includes/Assets.php:642
 msgid "Enter a value"
 msgstr ""
 
-#: includes/Assets.php:639
+#: includes/Assets.php:643
 msgid "Variation menu order (determines position in the list of variations)"
 msgstr ""
 
-#: includes/Assets.php:640
+#: includes/Assets.php:644
 msgid "Enter a value (fixed or %)"
 msgstr ""
 
-#: includes/Assets.php:641
+#: includes/Assets.php:645
 msgid "Are you sure you want to delete all variations? This cannot be undone."
 msgstr ""
 
-#: includes/Assets.php:642
+#: includes/Assets.php:646
 msgid "Last warning, are you sure?"
 msgstr ""
 
-#: includes/Assets.php:643
+#: includes/Assets.php:647
 msgid "Choose an image"
 msgstr ""
 
-#: includes/Assets.php:644
+#: includes/Assets.php:648
 msgid "Set variation image"
 msgstr ""
 
-#: includes/Assets.php:645
+#: includes/Assets.php:649
 msgid "variation added"
 msgstr ""
 
-#: includes/Assets.php:646
+#: includes/Assets.php:650
 msgid "variations added"
 msgstr ""
 
-#: includes/Assets.php:647
+#: includes/Assets.php:651
 msgid "No variations added"
 msgstr ""
 
-#: includes/Assets.php:648
+#: includes/Assets.php:652
 msgid "Are you sure you want to remove this variation?"
 msgstr ""
 
-#: includes/Assets.php:649
+#: includes/Assets.php:653
 msgid "Sale start date (YYYY-MM-DD format or leave blank)"
 msgstr ""
 
-#: includes/Assets.php:650
+#: includes/Assets.php:654
 msgid "Sale end date (YYYY-MM-DD format or leave blank)"
 msgstr ""
 
-#: includes/Assets.php:651
+#: includes/Assets.php:655
 msgid "Save changes before changing page?"
 msgstr ""
 
-#: includes/Assets.php:652
+#: includes/Assets.php:656
 msgid "%qty% variation"
 msgstr ""
 
-#: includes/Assets.php:653
+#: includes/Assets.php:657
 msgid "%qty% variations"
 msgstr ""
 
-#: includes/Assets.php:654
+#: includes/Assets.php:658
 msgid "No Result Found"
 msgstr ""
 
-#: includes/Assets.php:655
+#: includes/Assets.php:659
 msgid "Please insert value less than the regular price!"
 msgstr ""
 
-#: includes/Assets.php:657 includes/Assets.php:822
+#: includes/Assets.php:661 includes/Assets.php:826
 #. translators: %s: decimal
 msgid "Please enter with one decimal point (%s) without thousand separators."
 msgstr ""
 
-#: includes/Assets.php:659 includes/Assets.php:824
+#: includes/Assets.php:663 includes/Assets.php:828
 #. translators: %s: price decimal separator
 msgid ""
 "Please enter with one monetary decimal point (%s) without thousand "
 "separators and currency symbols."
 msgstr ""
 
-#: includes/Assets.php:660 includes/Assets.php:825
+#: includes/Assets.php:664 includes/Assets.php:829
 msgid "Please enter in country code with two capital letters."
 msgstr ""
 
-#: includes/Assets.php:661 includes/Assets.php:826
+#: includes/Assets.php:665 includes/Assets.php:830
 msgid "Please enter in a value less than the regular price."
 msgstr ""
 
-#: includes/Assets.php:662 includes/Assets.php:827
+#: includes/Assets.php:666 includes/Assets.php:831
 msgid ""
 "This product has produced sales and may be linked to existing orders. Are "
 "you sure you want to delete it?"
 msgstr ""
 
-#: includes/Assets.php:663 includes/Assets.php:828
+#: includes/Assets.php:667 includes/Assets.php:832
 msgid ""
 "This action cannot be reversed. Are you sure you wish to erase personal "
 "data from the selected orders?"
 msgstr ""
 
-#: includes/Assets.php:673
+#: includes/Assets.php:677
 msgid "Select and Crop"
 msgstr ""
 
-#: includes/Assets.php:674
+#: includes/Assets.php:678
 msgid "Choose Image"
 msgstr ""
 
-#: includes/Assets.php:675
+#: includes/Assets.php:679
 msgid "Product title is required"
 msgstr ""
 
-#: includes/Assets.php:676
+#: includes/Assets.php:680
 msgid "Product category is required"
 msgstr ""
 
-#: includes/Assets.php:680
+#: includes/Assets.php:684
 msgid "One result is available, press enter to select it."
 msgstr ""
 
-#: includes/Assets.php:681
+#: includes/Assets.php:685
 msgid "%qty% results are available, use up and down arrow keys to navigate."
 msgstr ""
 
-#: includes/Assets.php:682
+#: includes/Assets.php:686
 msgid "No matches found"
 msgstr ""
 
-#: includes/Assets.php:683
+#: includes/Assets.php:687
 msgid "Loading failed"
 msgstr ""
 
-#: includes/Assets.php:684
+#: includes/Assets.php:688
 msgid "Please enter 1 or more characters"
 msgstr ""
 
-#: includes/Assets.php:685
+#: includes/Assets.php:689
 msgid "Please enter %qty% or more characters"
 msgstr ""
 
-#: includes/Assets.php:686
+#: includes/Assets.php:690
 msgid "Please delete 1 character"
 msgstr ""
 
-#: includes/Assets.php:687
+#: includes/Assets.php:691
 msgid "Please delete %qty% characters"
 msgstr ""
 
-#: includes/Assets.php:688
+#: includes/Assets.php:692
 msgid "You can only select 1 item"
 msgstr ""
 
-#: includes/Assets.php:689
+#: includes/Assets.php:693
 msgid "You can only select %qty% items"
 msgstr ""
 
-#: includes/Assets.php:690
+#: includes/Assets.php:694
 msgid "Loading more results&hellip;"
 msgstr ""
 
-#: includes/Assets.php:691
+#: includes/Assets.php:695
 msgid "Searching&hellip;"
 msgstr ""
 
@@ -4198,7 +4199,7 @@ msgstr ""
 msgid "Simple Product"
 msgstr ""
 
-#: includes/functions.php:777 src/admin/pages/VendorCapabilities.vue:92
+#: includes/functions.php:777 src/admin/pages/VendorCapabilities.vue:99
 msgid "Variable Product"
 msgstr ""
 
@@ -4400,7 +4401,7 @@ msgstr ""
 msgid "View reviews"
 msgstr ""
 
-#: includes/functions.php:2870
+#: includes/functions.php:2870 src/admin/pages/Premium.vue:395
 msgid "Manage reviews"
 msgstr ""
 
@@ -5016,6 +5017,98 @@ msgstr ""
 msgid "is built using Dokan"
 msgstr ""
 
+#: src/admin/pages/Premium.vue:258
+msgid "Premium modules to make everything easier & better"
+msgstr ""
+
+#: src/admin/pages/Premium.vue:262
+msgid "Frontend dashboard for vendors with advanced controls"
+msgstr ""
+
+#: src/admin/pages/Premium.vue:266
+msgid "Unlimited Product Variations and group product upload"
+msgstr ""
+
+#: src/admin/pages/Premium.vue:270
+msgid "Zone wise shipping with multiple method for vendors"
+msgstr ""
+
+#: src/admin/pages/Premium.vue:274
+msgid "Store support based on ticket system for your customers"
+msgstr ""
+
+#: src/admin/pages/Premium.vue:278
+msgid "Vendors will be able to generate coupon codes"
+msgstr ""
+
+#: src/admin/pages/Premium.vue:282
+msgid "Earning, Selling and Commission Reports & Statement"
+msgstr ""
+
+#: src/admin/pages/Premium.vue:286
+msgid "24/7 super fast premium customer support for you"
+msgstr ""
+
+#: src/admin/pages/Premium.vue:290
+msgid "Add Social profile to your vendor’s store and support for store SEO"
+msgstr ""
+
+#: src/admin/pages/Premium.vue:297
+msgid "Frontend order management"
+msgstr ""
+
+#: src/admin/pages/Premium.vue:304
+msgid "Seller Statement Reports"
+msgstr ""
+
+#: src/admin/pages/Premium.vue:311
+msgid "Making Announcements"
+msgstr ""
+
+#: src/admin/pages/Premium.vue:318
+msgid "Customized Product Categories"
+msgstr ""
+
+#: src/admin/pages/Premium.vue:325
+msgid "Store SEO"
+msgstr ""
+
+#: src/admin/pages/Premium.vue:332
+msgid "Back Ordering System"
+msgstr ""
+
+#: src/admin/pages/Premium.vue:339
+msgid "Store Contact Form"
+msgstr ""
+
+#: src/admin/pages/Premium.vue:346
+msgid "Single Product Multiple Seller"
+msgstr ""
+
+#: src/admin/pages/Premium.vue:353
+msgid "Seller Verification"
+msgstr ""
+
+#: src/admin/pages/Premium.vue:360
+msgid "Featured Seller"
+msgstr ""
+
+#: src/admin/pages/Premium.vue:367
+msgid "Multiple Commission Types"
+msgstr ""
+
+#: src/admin/pages/Premium.vue:374
+msgid "Frontend Shipping Tracking"
+msgstr ""
+
+#: src/admin/pages/Premium.vue:381
+msgid "Setup Wizard"
+msgstr ""
+
+#: src/admin/pages/Premium.vue:402
+msgid "Bookable Product"
+msgstr ""
+
 #: src/admin/pages/Settings.vue:9
 msgid "Dismiss this notice."
 msgstr ""
@@ -5107,153 +5200,153 @@ msgid "Select State"
 msgstr ""
 
 #: src/admin/pages/VendorCapabilities.vue:17
-#: src/admin/pages/VendorCapabilities.vue:31
+#: src/admin/pages/VendorCapabilities.vue:33
 msgid "Dokan Capability"
 msgstr ""
 
-#: src/admin/pages/VendorCapabilities.vue:47 templates/orders/details.php:101
+#: src/admin/pages/VendorCapabilities.vue:54 templates/orders/details.php:101
 msgid "Coupons"
 msgstr ""
 
-#: src/admin/pages/VendorCapabilities.vue:48
+#: src/admin/pages/VendorCapabilities.vue:55
 msgid "Each vendor can create unlimited discount coupon codes for their products."
 msgstr ""
 
-#: src/admin/pages/VendorCapabilities.vue:53
+#: src/admin/pages/VendorCapabilities.vue:60
 msgid ""
 "Vendors can configure their own shipping costs for each country, state & "
 "single products."
 msgstr ""
 
-#: src/admin/pages/VendorCapabilities.vue:57
+#: src/admin/pages/VendorCapabilities.vue:64
 msgid "Duplicate Product"
 msgstr ""
 
-#: src/admin/pages/VendorCapabilities.vue:58
+#: src/admin/pages/VendorCapabilities.vue:65
 msgid "Vendors can duplicate their own products for ease and time saving."
 msgstr ""
 
-#: src/admin/pages/VendorCapabilities.vue:62
+#: src/admin/pages/VendorCapabilities.vue:69
 msgid "Reporting"
 msgstr ""
 
-#: src/admin/pages/VendorCapabilities.vue:63
+#: src/admin/pages/VendorCapabilities.vue:70
 msgid ""
 "Earning, selling and commissions reports for vendors to improve sales & "
 "take major decisions."
 msgstr ""
 
-#: src/admin/pages/VendorCapabilities.vue:67
+#: src/admin/pages/VendorCapabilities.vue:74
 msgid "Create Tags"
 msgstr ""
 
-#: src/admin/pages/VendorCapabilities.vue:68
+#: src/admin/pages/VendorCapabilities.vue:75
 msgid ""
 "Vendors can create & attach tags to products to categorize & for better "
 "search engine optimization."
 msgstr ""
 
-#: src/admin/pages/VendorCapabilities.vue:72
+#: src/admin/pages/VendorCapabilities.vue:79
 msgid "Vendor Biography"
 msgstr ""
 
-#: src/admin/pages/VendorCapabilities.vue:73
+#: src/admin/pages/VendorCapabilities.vue:80
 msgid ""
 "Vendors can write about themselves & about their store in a text field "
 "which visitors can see from the store page"
 msgstr ""
 
-#: src/admin/pages/VendorCapabilities.vue:77
+#: src/admin/pages/VendorCapabilities.vue:84
 msgid "Vendor Product Upload"
 msgstr ""
 
-#: src/admin/pages/VendorCapabilities.vue:78
+#: src/admin/pages/VendorCapabilities.vue:85
 msgid "New vendors can start uploading products upon registration if admins allow."
 msgstr ""
 
-#: src/admin/pages/VendorCapabilities.vue:83
+#: src/admin/pages/VendorCapabilities.vue:90
 msgid ""
 "Vendors will be able to mark products as draft & update the order status to "
 "inform customers about progress."
 msgstr ""
 
-#: src/admin/pages/VendorCapabilities.vue:87
+#: src/admin/pages/VendorCapabilities.vue:94
 msgid "Social Share"
 msgstr ""
 
-#: src/admin/pages/VendorCapabilities.vue:88
+#: src/admin/pages/VendorCapabilities.vue:95
 msgid ""
 "Visitors and customers can share a store page with their friends and "
 "acquaintances on their social profiles."
 msgstr ""
 
-#: src/admin/pages/VendorCapabilities.vue:93
+#: src/admin/pages/VendorCapabilities.vue:100
 msgid "Vendors can create variable products with predefined and custom attributes."
 msgstr ""
 
-#: src/admin/pages/VendorCapabilities.vue:97
+#: src/admin/pages/VendorCapabilities.vue:104
 msgid "Store Opening & Closing Time"
 msgstr ""
 
-#: src/admin/pages/VendorCapabilities.vue:98
+#: src/admin/pages/VendorCapabilities.vue:105
 msgid ""
 "Vendors can define the working hours of their online store for each day of "
 "the week for visitors to see."
 msgstr ""
 
-#: src/admin/pages/VendorCapabilities.vue:102
+#: src/admin/pages/VendorCapabilities.vue:109
 msgid "Woocommerce Booking Integration"
 msgstr ""
 
-#: src/admin/pages/VendorCapabilities.vue:103
+#: src/admin/pages/VendorCapabilities.vue:110
 msgid ""
 "Create hotel rooms, resorts, conference rooms, cars, bikes, etc for renting "
 "out."
 msgstr ""
 
-#: src/admin/pages/VendorCapabilities.vue:107
+#: src/admin/pages/VendorCapabilities.vue:114
 msgid "Announcement For Vendors"
 msgstr ""
 
-#: src/admin/pages/VendorCapabilities.vue:108
+#: src/admin/pages/VendorCapabilities.vue:115
 msgid ""
 "Admins can make announcements targeted to a single vendor, multiple or all "
 "vendors."
 msgstr ""
 
-#: src/admin/pages/VendorCapabilities.vue:112
+#: src/admin/pages/VendorCapabilities.vue:119
 msgid "Woocommerce Simple Auctions Integration"
 msgstr ""
 
-#: src/admin/pages/VendorCapabilities.vue:113
+#: src/admin/pages/VendorCapabilities.vue:120
 msgid "Sell auction-able products in your store with Dokan’s integration."
 msgstr ""
 
-#: src/admin/pages/VendorCapabilities.vue:117
+#: src/admin/pages/VendorCapabilities.vue:124
 msgid "Social Profiles"
 msgstr ""
 
-#: src/admin/pages/VendorCapabilities.vue:118
+#: src/admin/pages/VendorCapabilities.vue:125
 msgid ""
 "Vendors can upload & showcase their Facebook, Twitter and Linkedin profiles "
 "on their store page."
 msgstr ""
 
-#: src/admin/pages/VendorCapabilities.vue:122
+#: src/admin/pages/VendorCapabilities.vue:129
 msgid "Refund"
 msgstr ""
 
-#: src/admin/pages/VendorCapabilities.vue:123
+#: src/admin/pages/VendorCapabilities.vue:130
 msgid ""
 "Vendors can send refund requests for an order to the admins who can approve "
 "or deny it from the dashboard."
 msgstr ""
 
-#: src/admin/pages/VendorCapabilities.vue:127
+#: src/admin/pages/VendorCapabilities.vue:134
 msgid "Store Seo"
 msgstr ""
 
-#: src/admin/pages/VendorCapabilities.vue:128
+#: src/admin/pages/VendorCapabilities.vue:135
 msgid ""
 "The Yoast SEO integration lets vendors define Store Title, Description, "
 "Slug and Keyword to appear in search engine results."
