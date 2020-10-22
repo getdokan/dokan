@@ -25,6 +25,8 @@
             </div>
         </div>
 
+        <ProCta />
+
         <div @click="closePopup" v-if="showPopup" id="dokan-capability-image-popup">
             <div class="modal-content">
                 <div class="body">
@@ -36,8 +38,13 @@
 </template>
 
 <script>
+import ProCta from '../components/ProCta.vue';
+
 export default {
     name: "VendorCapabilities",
+    components: {
+        ProCta,
+    },
     data() {
         return {
             showPopup: false,
@@ -161,6 +168,7 @@ export default {
             display: grid;
             grid-template-columns: repeat(12, 1fr);
             grid-gap: 16px;
+            margin-bottom: 30px;
         }
 
         .col-6 {
