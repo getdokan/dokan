@@ -299,12 +299,12 @@ module.exports = function(grunt) {
     grunt.registerTask('readme', ['wp_readme_to_markdown']);
 
     grunt.registerTask('release', [
-        'i18n',
         'readme',
         'less',
         'concat',
         'run:devBuild',
         'run:build',
+        'i18n',
         'run:removeDev',
         'run:dumpautoload',
     ]);
