@@ -247,7 +247,7 @@ class Assets {
     public function get_scripts() {
         global $wp_version;
 
-        $prefix         = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.min' : '';
+        $suffix         = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
         $asset_url      = DOKAN_PLUGIN_ASSEST;
         $asset_path     = DOKAN_DIR . '/assets/';
         $bootstrap_deps = [ 'dokan-vue-vendor', 'dokan-i18n-jed' ];
@@ -259,6 +259,10 @@ class Assets {
         }
 
         $scripts = [
+            'jquery-tiptip' => [
+                'src'       => WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip' . $suffix . '.js',
+                'deps'      => [ 'jquery' ],
+            ],
             'dokan-i18n-jed' => [
                 'src'       => $asset_url . '/vendors/i18n/jed.js',
                 'deps'      => [ 'jquery' ],
@@ -340,7 +344,7 @@ class Assets {
             ],
             'dokan-script' => [
                 'src'       => $asset_url . '/js/dokan.js',
-                'deps'      => [ 'imgareaselect', 'customize-base', 'customize-model', 'dokan-i18n-jed' ],
+                'deps'      => [ 'imgareaselect', 'customize-base', 'customize-model', 'dokan-i18n-jed', 'jquery-tiptip' ],
                 'version'   => filemtime( $asset_path . '/js/dokan.js' ),
             ],
             'dokan-vue-vendor' => [
@@ -543,7 +547,7 @@ class Assets {
             wp_enqueue_script( 'dokan-script' );
         }
 
-        if ( isset( $wp->query_vars['settings'] ) === 'store' ) {
+        if ( isset( $wp->query_vars['settings'] ) && $wp->query_vars['settings'] === 'store' ) {
             wp_enqueue_script( 'wc-country-select' );
             wp_enqueue_script( 'dokan-timepicker' );
         }
