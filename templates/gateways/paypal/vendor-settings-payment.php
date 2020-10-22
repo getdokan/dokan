@@ -29,13 +29,6 @@
 if ( ! $button_disabled ) :
 ?>
 <script type="text/javascript">
-    <?php
-    $url = site_url() . add_query_arg( [
-        'action'   => 'paypal-marketplace-connect',
-        '_wpnonce' => wp_create_nonce( 'paypal-marketplace-connect' ),
-    ] );
-    ?>
-
     ;(function($, document) {
         var clicked = false;
 

@@ -227,10 +227,7 @@ class DokanPayPal extends WC_Payment_Gateway {
     public function init_hooks() {
         add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, [ &$this, 'process_admin_options' ] );
         add_action( 'admin_footer', [ $this, 'admin_script' ] );
-        add_filter( 'dokan_paypal_advanced_credit_card_debit_card_supported_countries', [
-            $this,
-            'supported_countries',
-        ] );
+        add_filter( 'dokan_paypal_advanced_credit_card_debit_card_supported_countries', [ $this, 'supported_countries' ] );
     }
 
     /**

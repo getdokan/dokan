@@ -201,8 +201,7 @@ data-merchant-id="' . implode( ',', $paypal_merchant_ids ) . '" ' . $data_client
                 $errors->add(
                     'paypal-not-configured',
                     sprintf(
-                        __( '<strong>Error!</strong> You cannot complete your purchase until <strong>%1$s</strong> connected PayPal as a payment gateway. Please remove %2$s to continue.', 'dokan-lite' ),
-                        $vendor_name,
+                        __( '<strong>Error!</strong>Remove product %1$s and continue checkout, this product/vendor is not eligible to be paid with PayPal', 'dokan-lite' ),
                         implode( ', ', $vendor_products )
                     )
                 );
