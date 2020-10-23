@@ -472,11 +472,11 @@ class DokanPayPal extends WC_Payment_Gateway {
     public function make_purchase_unit_data( \WC_Order $order ) {
         $tax_total    = $this->get_tax_amount( $order );
         $total_amount = $order->get_subtotal() + $tax_total + (float) $order->get_shipping_total();
-        $total_amount = wc_format_decimal( $total_amount );
+        $total_amount = wc_format_decimal( $total_amount, 2 );
 
         $seller_id     = dokan_get_seller_id_by_order( $order->get_id() );
         $merchant_id   = get_user_meta( $seller_id, '_dokan_paypal_marketplace_merchant_id', true );
-        $platform_fee  = wc_format_decimal( dokan()->commission->get_earning_by_order( $order, 'admin' ) );
+        $platform_fee  = wc_format_decimal( dokan()->commission->get_earning_by_order( $order, 'admin' ), 2 );
         $product_items = $this->get_product_items( $order );
 
         $purchase_units = [
@@ -487,7 +487,7 @@ class DokanPayPal extends WC_Payment_Gateway {
                 'breakdown'     => [
                     'item_total'        => [
                         'currency_code' => 'USD',
-                        'value'         => wc_format_decimal( $order->get_subtotal() ),
+                        'value'         => wc_format_decimal( $order->get_subtotal(), 2 ),
                     ],
                     'tax_total'         => [
                         'currency_code' => 'USD',
@@ -495,7 +495,7 @@ class DokanPayPal extends WC_Payment_Gateway {
                     ],
                     'shipping'          => [
                         'currency_code' => 'USD',
-                        'value'         => wc_format_decimal( $order->get_shipping_total() ),
+                        'value'         => wc_format_decimal( $order->get_shipping_total(), 2 ),
                     ],
                     'handling'          => [
                         'currency_code' => 'USD',
@@ -606,7 +606,7 @@ class DokanPayPal extends WC_Payment_Gateway {
             $tax_amount += $tax['tax_total'];
         }
 
-        return wc_format_decimal( $tax_amount );
+        return wc_format_decimal( $tax_amount, 2 );
     }
 
     /**
