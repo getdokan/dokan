@@ -583,4 +583,15 @@ class Processor {
 
         return false;
     }
+
+    /**
+     * Get test mode
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return bool
+     */
+    public function get_test_mode() {
+        return $this->test_mode;
+    }
 }
