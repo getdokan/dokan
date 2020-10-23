@@ -654,5 +654,47 @@ class DokanPayPal extends WC_Payment_Gateway {
 
         update_user_meta( dokan_get_current_user_id(), '_dokan_paypal_marketplace_merchant_id', $this->get_option( 'partner_id' ) );
     }
+
+    /**
+     * Check if this payment method is available with conditions
+     * This payment method is only available if the 2 scenario passed which is mentioned below
+     *
+     * eg 1: if there is multi-vendor in a cart and one vendor is able to receive payment and another vendor is not,
+     * we will show the payment method in Checkout
+     *
+     * eg 2: if there is multi-vendor/single-vendor in a cart and both cannot receive payment via paypal,
+     * then the payment method will not show in Checkout
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return bool
+     */
+    public function is_available() {
+        $is_available = parent::is_available();
+
+        if ( ! $is_available ) {
+            return false;
+        }
+
+        $total_seller_count                      = 0;
+        $seller_is_able_to_receive_payment_count = 0;
+
+        foreach ( WC()->cart->get_cart() as $item ) {
+            $product_id = $item['data']->get_id();
+            $seller_id  = get_post_field( 'post_author', $product_id );
+            $total_seller_count ++;
+
+            if ( Helper::is_seller_enable_for_receive_payment( $seller_id ) ) {
+                $seller_is_able_to_receive_payment_count ++;
+            }
+        }
+
+        //allow if seller is able to receive payment in a cart is less than or equal to total seller
+        if ( $seller_is_able_to_receive_payment_count && $seller_is_able_to_receive_payment_count <= $total_seller_count ) {
+            return true;
+        }
+
+        return false;
+    }
 }
 

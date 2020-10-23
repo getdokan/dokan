@@ -274,17 +274,14 @@
                             number: {
                                 selector: '#dpm_card_number',
                                 placeholder: 'card number',
-                                prefill: "4493573935388639"
                             },
                             cvv: {
                                 selector: '#dpm_cvv',
                                 placeholder: 'card security number',
-                                prefill: '742'
                             },
                             expirationDate: {
                                 selector: '#dpm_card_expiry',
                                 placeholder: 'mm/yy',
-                                prefill: '11/22'
                             }
                         }
                     }).then(function (hf) {
