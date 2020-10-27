@@ -284,4 +284,42 @@ class Manager {
             }, $products
         );
     }
+
+    /**
+     * Insert withdraw data to vendor balance
+     *
+     * @param array $withdraw
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return void
+     */
+    public function insert_into_vendor_balance( array $withdraw ) {
+        global $wpdb;
+
+        $wpdb->insert( $wpdb->prefix . 'dokan_vendor_balance',
+            [
+                'vendor_id'     => $withdraw['vendor_id'],
+                'trn_id'        => $withdraw['order_id'],
+                'trn_type'      => 'dokan_withdraw',
+                'perticulars'   => 'Paid Via PayPal',
+                'debit'         => 0,
+                'credit'        => $withdraw['amount'],
+                'status'        => 'approved',
+                'trn_date'      => current_time( 'mysql' ),
+                'balance_date'  => current_time( 'mysql' ),
+            ],
+            [
+                '%d',
+                '%d',
+                '%s',
+                '%s',
+                '%f',
+                '%f',
+                '%s',
+                '%s',
+                '%s',
+            ]
+        );
+    }
 }

@@ -268,8 +268,19 @@ class Ajax {
             }
 
             update_post_meta( $_order->get_id(), $meta_key_prefix . 'capture_id', $capture_id );
+            update_post_meta( $_order->get_id(), 'dokan_gateway_fee', $paypal_processing_fee );
+            update_post_meta( $_order->get_id(), 'dokan_gateway_fee_paid_by', 'seller' );
             update_post_meta( $_order->get_id(), $meta_key_prefix . 'processing_fee', $paypal_processing_fee );
             update_post_meta( $_order->get_id(), $meta_key_prefix . 'processing_currency', $paypal_processing_fee_currency );
+
+            $seller_id = dokan_get_seller_id_by_order( $_order->get_id() );
+            $withdraw_data = [
+                'vendor_id' => $seller_id,
+                'order_id'  => $_order->get_id(),
+                'amount'    => $unit['amount']['value'],
+            ];
+
+            dokan()->payment_gateway->paypal_marketplace->insert_into_vendor_balance( $withdraw_data );
         }
     }
 }
