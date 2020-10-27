@@ -299,15 +299,15 @@ class Manager {
 
         $wpdb->insert( $wpdb->prefix . 'dokan_vendor_balance',
             [
-                'vendor_id'     => $withdraw['vendor_id'],
-                'trn_id'        => $withdraw['order_id'],
-                'trn_type'      => 'dokan_withdraw',
-                'perticulars'   => 'Paid Via PayPal',
-                'debit'         => 0,
-                'credit'        => $withdraw['amount'],
-                'status'        => 'approved',
-                'trn_date'      => current_time( 'mysql' ),
-                'balance_date'  => current_time( 'mysql' ),
+                'vendor_id'    => $withdraw['vendor_id'],
+                'trn_id'       => $withdraw['order_id'],
+                'trn_type'     => 'dokan_withdraw',
+                'perticulars'  => 'Paid Via PayPal',
+                'debit'        => 0,
+                'credit'       => $withdraw['amount'],
+                'status'       => 'approved',
+                'trn_date'     => current_time( 'mysql' ),
+                'balance_date' => current_time( 'mysql' ),
             ],
             [
                 '%d',
@@ -321,5 +321,53 @@ class Manager {
                 '%s',
             ]
         );
+
+        //update vendor net amount after subtracting of payment fee
+        $wpdb->update(
+            $wpdb->dokan_orders,
+            [ 'net_amount' => (float) $withdraw['amount'] ],
+            [ 'order_id' => $withdraw['order_id'] ],
+            [ '%f' ],
+            [ '%d' ]
+        );
+    }
+
+    /**
+     * Process seller withdraw
+     *
+     * @param array $withdraw
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return void
+     */
+    public function process_seller_withdraw( array $withdraw ) {
+        $IP = dokan_get_client_ip();
+
+        $data = [
+            'user_id' => $withdraw['vendor_id'],
+            'amount'  => $withdraw['amount'],
+            'date'    => current_time( 'mysql' ),
+            'status'  => 1,
+            'method'  => Helper::get_gateway_id(),
+            'notes'   => sprintf( __( 'Order %d payment Auto paid via PayPal', 'dokan-lite' ), $withdraw['order_id'] ),
+            'ip'      => $IP,
+        ];
+
+        dokan()->withdraw->insert_withdraw( $data );
+    }
+
+    /**
+     * Handle vendor balance and withdraw request
+     *
+     * @param array $withdraw_data
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return void
+     */
+    public function handle_vendor_balance( array $withdraw_data ) {
+        $this->insert_into_vendor_balance( $withdraw_data );
+        $this->process_seller_withdraw( $withdraw_data );
     }
 }

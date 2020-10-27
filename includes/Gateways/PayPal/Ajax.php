@@ -236,7 +236,8 @@ class Ajax {
         foreach ( $purchase_units as $key => $unit ) {
             $capture_id = $unit['payments']['captures'][0]['id'];
 
-            $paypal_fee_data                = $unit['payments']['captures'][0]['seller_receivable_breakdown']['paypal_fee'];
+            $seller_receivable              = $unit['payments']['captures'][0]['seller_receivable_breakdown'];
+            $paypal_fee_data                = $seller_receivable['paypal_fee'];
             $paypal_processing_fee_currency = $paypal_fee_data['currency_code'];
             $paypal_processing_fee          = $paypal_fee_data['value'];
 
@@ -277,10 +278,10 @@ class Ajax {
             $withdraw_data = [
                 'vendor_id' => $seller_id,
                 'order_id'  => $_order->get_id(),
-                'amount'    => $unit['amount']['value'],
+                'amount'    => $seller_receivable['net_amount']['value'],
             ];
 
-            dokan()->payment_gateway->paypal_marketplace->insert_into_vendor_balance( $withdraw_data );
+            dokan()->payment_gateway->paypal_marketplace->handle_vendor_balance( $withdraw_data );
         }
     }
 }
