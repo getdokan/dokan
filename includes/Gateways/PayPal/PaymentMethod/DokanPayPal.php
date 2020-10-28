@@ -653,6 +653,7 @@ class DokanPayPal extends WC_Payment_Gateway {
         parent::process_admin_options();
 
         update_user_meta( dokan_get_current_user_id(), '_dokan_paypal_marketplace_merchant_id', $this->get_option( 'partner_id' ) );
+        update_user_meta( dokan_get_current_user_id(), '_dokan_paypal_enable_for_receive_payment', true );
     }
 
     /**
@@ -672,6 +673,10 @@ class DokanPayPal extends WC_Payment_Gateway {
     public function is_available() {
         $is_available = parent::is_available();
 
+        if ( is_admin() ) {
+            return $is_available;
+        }
+        
         if ( ! $is_available ) {
             return false;
         }
