@@ -470,14 +470,29 @@ class DokanPayPal extends WC_Payment_Gateway {
      * @return array
      */
     public function make_purchase_unit_data( \WC_Order $order ) {
-        $tax_total    = $this->get_tax_amount( $order );
-        $total_amount = $order->get_subtotal() + $tax_total + (float) $order->get_shipping_total();
-        $total_amount = wc_format_decimal( $total_amount, 2 );
+        $subtotal       = $order->get_subtotal();
+        $tax_total      = $this->get_tax_amount( $order );
+        $shipping_total = wc_format_decimal( $order->get_shipping_total(), 2 );
+        $total_amount   = $order->get_subtotal() + $tax_total + (float) $order->get_shipping_total();
+        $total_amount   = wc_format_decimal( $total_amount, 2 );
 
         $seller_id     = dokan_get_seller_id_by_order( $order->get_id() );
         $merchant_id   = get_user_meta( $seller_id, '_dokan_paypal_marketplace_merchant_id', true );
         $platform_fee  = wc_format_decimal( dokan()->commission->get_earning_by_order( $order, 'admin' ), 2 );
+
         $product_items = $this->get_product_items( $order );
+
+        //if tax fee recipient is 'admin' then it will added with platform fee
+        if ( 'admin' === get_post_meta( $order->get_id(), 'tax_fee_recipient', true ) ) {
+            $subtotal     += $tax_total;
+            $tax_total    = 0.00;
+        }
+
+        //if shipping fee recipient is 'admin' then it will added with platform fee
+        if ( 'admin' === get_post_meta( $order->get_id(), 'shipping_fee_recipient', true ) ) {
+            $subtotal       += $shipping_total;
+            $shipping_total = 0.00;
+        }
 
         $purchase_units = [
             'reference_id'        => $order->get_order_key(),
@@ -487,15 +502,15 @@ class DokanPayPal extends WC_Payment_Gateway {
                 'breakdown'     => [
                     'item_total'        => [
                         'currency_code' => 'USD',
-                        'value'         => wc_format_decimal( $order->get_subtotal(), 2 ),
+                        'value'         => wc_format_decimal( $subtotal, 2 ),
                     ],
                     'tax_total'         => [
                         'currency_code' => 'USD',
-                        'value'         => $tax_total,
+                        'value'         => wc_format_decimal( $tax_total, 2 ),
                     ],
                     'shipping'          => [
                         'currency_code' => 'USD',
-                        'value'         => wc_format_decimal( $order->get_shipping_total(), 2 ),
+                        'value'         => wc_format_decimal( $shipping_total, 2 ),
                     ],
                     'handling'          => [
                         'currency_code' => 'USD',
@@ -563,6 +578,10 @@ class DokanPayPal extends WC_Payment_Gateway {
     /**
      * Get product items as PayPal format
      *
+     * NB: PayPal check all the values with item qty and item value and match with the main order value.
+     * So if the shipping and tax fee recipient is admin then
+     * we are dividing the tax total and shipping total based on no of items in a order.
+     *
      * @param $order
      *
      * @return array
@@ -570,9 +589,26 @@ class DokanPayPal extends WC_Payment_Gateway {
     public function get_product_items( \WC_Order $order ) {
         $items = [];
 
+        $extra_fee = 0;
+        $tax_total         = $this->get_tax_amount( $order );
+        $shipping_total    = wc_format_decimal( $order->get_shipping_total(), 2 );
+
+        $no_of_items = count( $order->get_items( 'line_item' ) );
+
+        //if tax fee recipient is 'admin' then it will added with line item value.
+        if ( 'admin' === get_post_meta( $order->get_id(), 'tax_fee_recipient', true ) ) {
+            $extra_fee += ( $tax_total / $no_of_items );
+        }
+
+        //if shipping fee recipient is 'admin' then will added with line item value.
+        if ( 'admin' === get_post_meta( $order->get_id(), 'shipping_fee_recipient', true ) ) {
+            $extra_fee += ( $shipping_total / $no_of_items );
+        }
+
         foreach ( $order->get_items( 'line_item' ) as $key => $line_item ) {
-            $product  = wc_get_product( $line_item->get_product_id() );
-            $category = $product->is_downloadable() || $product->is_virtual() ? 'DIGITAL_GOODS' : 'PHYSICAL_GOODS';
+            $product    = wc_get_product( $line_item->get_product_id() );
+            $category   = $product->is_downloadable() || $product->is_virtual() ? 'DIGITAL_GOODS' : 'PHYSICAL_GOODS';
+            $item_price = wc_format_decimal( ($line_item->get_total() + $extra_fee), 2 );
 
             $items[] = [
                 'name'        => $line_item->get_name(),
@@ -580,7 +616,7 @@ class DokanPayPal extends WC_Payment_Gateway {
                 'category'    => $category,
                 'unit_amount' => [
                     'currency_code' => 'USD',
-                    'value'         => $line_item->get_total(),
+                    'value'         => $item_price,
                 ],
                 'quantity'    => $line_item->get_quantity(),
             ];
