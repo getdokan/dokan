@@ -582,10 +582,6 @@ class DokanPayPal extends WC_Payment_Gateway {
                     'currency_code' => 'USD',
                     'value'         => $line_item->get_total(),
                 ],
-                'tax'         => [
-                    'currency_code' => 'USD',
-                    'value'         => $line_item->get_total_tax(),
-                ],
                 'quantity'    => $line_item->get_quantity(),
             ];
         }
@@ -603,7 +599,7 @@ class DokanPayPal extends WC_Payment_Gateway {
     public function get_tax_amount( \WC_Order $order ) {
         $tax_amount = 0;
         foreach ( $order->get_taxes() as $tax ) {
-            $tax_amount += $tax['tax_total'];
+            $tax_amount += $tax['tax_total'] + $tax['shipping_tax_total'];
         }
 
         return wc_format_decimal( $tax_amount, 2 );
@@ -676,7 +672,7 @@ class DokanPayPal extends WC_Payment_Gateway {
         if ( is_admin() ) {
             return $is_available;
         }
-        
+
         if ( ! $is_available ) {
             return false;
         }

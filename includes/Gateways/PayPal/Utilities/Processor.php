@@ -85,7 +85,7 @@ class Processor {
             'preferred_language_code' => 'en-US',
             'tracking_id'             => $tracking_id,
             'partner_config_override' => [
-                'partner_logo_url'       => 'https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_111x69.jpg',
+                'partner_logo_url'       => DOKAN_PLUGIN_ASSEST . '/images/dokan-logo.png',
                 'return_url'             => add_query_arg(
                     [
                         'action'   => 'paypal-marketplace-connect-success',

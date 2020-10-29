@@ -44,7 +44,7 @@ class CheckoutOrderCompleted extends WebhookEventHandler {
         }
 
         //allow if the order is pending
-        if ( 'wc-pending' !== $order->get_status() ) {
+        if ( 'wc-pending' !== $order->get_status() && 'pending' !== $order->get_status() ) {
             return;
         }
 
@@ -58,18 +58,11 @@ class CheckoutOrderCompleted extends WebhookEventHandler {
 
         $order->payment_complete();
 
-        //add capture id to meta data
-        $purchase_units = $event->resource->purchase_units;
+        //add capture id to meta data (converting it to array because store_capture_payment_data allows array data of purchase units)
+        $purchase_units = json_decode( wp_json_encode( $event->resource->purchase_units ), true );
 
-        foreach ( $purchase_units as $key => $unit ) {
-            $capture_id = $unit->payments->captures[0]->id;
+        dokan()->payment_gateway->paypal_marketplace->store_capture_payment_data( $purchase_units, $order );
 
-            //this is a suborder id. if there is no suborder then it will be the main order id
-            $_order_id = $unit->custom_id;
-
-            //may be a suborder
-            $_order = wc_get_order( $_order_id );
-            $_order->update_meta_data( '_dokan_paypal_payment_capture_id', $capture_id );
-        }
+        do_action( 'dokan_paypal_capture_payment_completed', $order, $capture_payment );
     }
 }
