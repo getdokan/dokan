@@ -73,12 +73,13 @@ class CartHandler extends DokanPayPal {
 
             //localize data
             $data = [
-                'payment_button_type'  => $this->get_option( 'button_type' ),
-                'is_checkout_page'     => is_checkout(),
-                'is_ucc_enabled'       => Helper::is_ucc_enabled_for_all_seller_in_cart(),
-                'nonce'                => wp_create_nonce( 'dokan_paypal' ),
-                'is_checkout_pay_page' => is_checkout_pay_page(),
-                'order_id'             => $order_id,
+                'payment_button_type'     => $this->get_option( 'button_type' ),
+                'is_checkout_page'        => is_checkout(),
+                'is_ucc_enabled'          => Helper::is_ucc_enabled_for_all_seller_in_cart(),
+                'nonce'                   => wp_create_nonce( 'dokan_paypal' ),
+                'is_checkout_pay_page'    => is_checkout_pay_page(),
+                'order_id'                => $order_id,
+                'card_info_error_message' => __( 'Please fill up the card info!', 'dokan-lite' ),
             ];
 
             wp_localize_script( 'dokan_paypal_sdk', 'dokan_paypal', $data );

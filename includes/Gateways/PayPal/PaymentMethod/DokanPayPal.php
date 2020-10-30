@@ -341,10 +341,14 @@ class DokanPayPal extends WC_Payment_Gateway {
         $create_order_data = [
             'intent'              => 'CAPTURE',
             'application_context' => [
-                'return_url'  => $order->get_checkout_order_received_url(),
-                'cancel_url'  => $order->get_cancel_order_url(),
-                'brand_name'  => 'DOKAN',
-                'user_action' => 'PAY_NOW',
+                'return_url'     => $order->get_checkout_order_received_url(),
+                'cancel_url'     => $order->get_cancel_order_url(),
+                'brand_name'     => 'DOKAN',
+                'user_action'    => 'PAY_NOW',
+                'payment_method' => [
+                    'payer_selected'  => 'PAYPAL',
+                    'payee_preferred' => 'IMMEDIATE_PAYMENT_REQUIRED',
+                ],
             ],
             'purchase_units'      => $purchase_units,
         ];

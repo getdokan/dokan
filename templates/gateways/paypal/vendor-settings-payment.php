@@ -30,53 +30,91 @@ if ( ! $button_disabled ) :
 ?>
 <script type="text/javascript">
     ;(function($, document) {
-        var clicked = false;
+        var paypal_connect = {
+            clicked: false,
+            load_partner_js: function () {
+                (function(d, s, id) {
+                   var js, ref = d.getElementsByTagName(s)[0];
+                   if (!d.getElementById(id)) {
+                       js = d.createElement(s);
+                       js.id = id;
+                       js.async = true;
+                       js.src = "https://www.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js";
+                       ref.parentNode.insertBefore(js, ref);
+                   }
+                }(document, "script", "paypal-js"));
+            },
+            render_button: function (connect_url) {
+                $('#paypal_connect_button').append('<div dir="ltr" style="text-align: left;" trbidi="on">\n' +
+                    '        <p class="dokan-text-left">\n' +
+                    '            <a\n' +
+                    '                data-paypal-button="true"\n' +
+                    '                target="PPFrame"\n' +
+                    '                href="'+ connect_url +'"\n' +
+                    '                id="vendor_paypal_connect"\n' +
+                    '                class="button button-primary <?php echo $button_class; ?>"\n' +
+                    '            >Connect To Paypal</a>\n' +
+                    '        </p>\n' +
+                    '    </div>');
 
-        $('.vendor_paypal_connect').on('click', function(e) {
-            if (clicked) {
-                return;
+                $('#paypal_connect_button').hide();
+            },
+            init: function () {
+                $('.vendor_paypal_connect').on('click', function(e) {
+                    if (paypal_connect.clicked) {
+                        return;
+                    }
+
+                    e.preventDefault();
+
+                    var vendor_email = $('#vendor_paypal_email_address').val();
+
+                    if (! vendor_email) {
+                        return;
+                    }
+
+                    $(this).addClass('disabled');
+
+                    let connect_data = {
+                        action: "dokan_paypal_marketplace_connect",
+                        vendor_paypal_email_address: vendor_email,
+                        nonce: '<?php echo $nonce;?>'
+                    };
+
+                    $.ajax({
+                        type: 'POST',
+                        url: dokan.ajaxurl,
+                        data: connect_data,
+                        dataType: 'json',
+                    }).done(function(result) {
+                        try {
+                            if (result.success) {
+                                paypal_connect.load_partner_js();
+                                paypal_connect.render_button(result.data.url);
+
+                                paypal_connect.clicked = true;
+
+                                setTimeout(function () {
+                                    document.getElementById('vendor_paypal_connect').click();
+                                }, 3000);
+                            } else {
+                                throw new Error(result.data.message);
+                            }
+                        } catch (err) {
+                            // Reload page
+                            if (result.data.reload === true) {
+                                window.location.href = result.data.url;
+                                return;
+                            }
+                        }
+                    }).fail(function(jqXHR, textStatus, errorThrown) {
+                    });
+                });
             }
 
-            e.preventDefault();
-            $(this).addClass('disabled');
-            var vendor_email = $('#vendor_paypal_email_address').val();
-            var connect_url = '<?php echo $url; ?>&vendor_paypal_email_address=' + vendor_email + '&displayMode=minibrowser';
+        };
 
-            if (! vendor_email) {
-                return;
-            }
-
-            (function(d, s, id) {
-                var js, ref = d.getElementsByTagName(s)[0];
-                if (!d.getElementById(id)) {
-                    js = d.createElement(s);
-                    js.id = id;
-                    js.async = true;
-                    js.src = "https://www.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js";
-                    ref.parentNode.insertBefore(js, ref);
-                }
-            }(document, "script", "paypal-js"));
-
-            $('#paypal_connect_button').append('<div dir="ltr" style="text-align: left;" trbidi="on">\n' +
-                '        <p class="dokan-text-left">\n' +
-                '            <a\n' +
-                '                data-paypal-button="true"\n' +
-                '                target="PPFrame"\n' +
-                '                href="'+ connect_url +'"\n' +
-                '                id="vendor_paypal_connect"\n' +
-                '                class="button button-primary <?php echo $button_class; ?>"\n' +
-                '            >Connect To Paypal</a>\n' +
-                '        </p>\n' +
-                '    </div>');
-
-            $('#paypal_connect_button').hide();
-
-            clicked = true;
-
-            setTimeout(function() {
-                document.getElementById("vendor_paypal_connect").click();
-            }, 3000);
-        });
+        paypal_connect.init();
     })(jQuery, document);
 </script>
 <?php endif; ?>

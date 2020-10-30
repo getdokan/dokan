@@ -21,9 +21,104 @@ class Ajax {
      * @since DOKAN_LITE_SINCE
      */
     public function __construct() {
-        //add ajax url for capture payment
+        add_action( 'wp_ajax_dokan_paypal_marketplace_connect', [ $this, 'handle_paypal_marketplace_connect' ] );
         add_action( 'wp_ajax_dokan_paypal_create_order', [ $this, 'create_order' ] );
         add_action( 'wp_ajax_dokan_paypal_capture_payment', [ $this, 'capture_payment' ] );
+    }
+
+    /**
+     * Handle paypal marketplace connect process
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return void
+     */
+    public function handle_paypal_marketplace_connect() {
+        $post_data = wp_unslash( $_POST );
+
+        $nonce = wp_verify_nonce( sanitize_text_field( $post_data['nonce'] ), 'paypal-marketplace-connect' );
+
+        if ( isset( $post_data['nonce'] ) && ! $nonce ) {
+            wp_send_json_error(
+                [
+                    'type'    => 'nonce',
+                    'message' => __( 'Are you cheating?', 'dokan-lite' ),
+                ]
+            );
+        }
+
+        $user_id       = dokan_get_current_user_id();
+        $email_address = sanitize_email( $post_data['vendor_paypal_email_address'] );
+
+        if ( ! $email_address ) {
+            wp_send_json_error(
+                [
+                    'type'    => 'error',
+                    'message' => __( 'Email address required', 'dokan-lite' ),
+                ]
+            );
+        }
+
+        $current_user   = _wp_get_current_user();
+        $tracking_id    = '_dokan_paypal_' . $current_user->user_login . '_' . $user_id;
+        $dokan_settings = get_user_meta( $user_id, 'dokan_profile_settings', true );
+
+        //get paypal product type based on seller country
+        $product_type = Helper::get_product_type( $dokan_settings['address']['country'] );
+
+        if ( ! $product_type ) {
+            wp_send_json_error(
+                [
+                    'type'    => 'error',
+                    'message' => __( 'Vendor\'s country is not supported by PayPal.', 'dokan-lite' ),
+                    'reload'  => true,
+                    'url'     => add_query_arg(
+                        [
+                            'status'  => 'seller_error',
+                            'message' => __( 'Vendor\'s country is not supported by PayPal.', 'dokan-lite' ),
+                        ],
+                        dokan_get_navigation_url( 'settings/payment' )
+                    ),
+                ]
+            );
+        }
+
+        $processor  = Processor::init();
+        $paypal_url = $processor->create_partner_referral( $email_address, $tracking_id, [ $product_type ] );
+
+        if ( is_wp_error( $paypal_url ) ) {
+            Helper::log_paypal_error( $user_id, $paypal_url, 'create_partner_referral', 'user' );
+
+            wp_send_json_error(
+                [
+                    'type'    => 'error',
+                    'message' => __( 'Connect PayPal error', 'dokan-lite' ),
+                ]
+            );
+        }
+
+        if ( isset( $paypal_url['links'][1] ) && 'action_url' === $paypal_url['links'][1]['rel'] ) {
+            $paypal_action_url = $paypal_url['links'][1]['href'] . '&displayMode=minibrowser';
+        }
+
+        //keeping email and partner id for later use
+        update_user_meta(
+            $user_id,
+            '_dokan_paypal_marketplace_settings',
+            [
+                'connect_process_started' => true,
+                'connection_status'       => 'pending',
+                'email'                   => $email_address,
+                'tracking_id'             => $tracking_id,
+            ]
+        );
+
+        wp_send_json_success(
+            [
+                'type'   => 'success',
+                'url'    => $paypal_action_url,
+            ]
+        );
     }
 
     /**
@@ -181,6 +276,7 @@ class Ajax {
                 [
                     'type'    => 'paypal_capture_payment',
                     'message' => __( 'Error in capturing payment.', 'dokan-lite' ),
+                    'data'    => $capture_payment,
                 ]
             );
         }

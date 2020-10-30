@@ -93,88 +93,9 @@ class Manager {
             exit();
         }
 
-        if ( 'paypal-marketplace-connect' === $get_data['action'] ) {
-            $this->handle_paypal_marketplace_connect( $get_data );
-        }
-
         if ( 'paypal-marketplace-connect-success' === $get_data['action'] ) {
             $this->handle_paypal_marketplace_connect_success_response();
         }
-    }
-
-    /**
-     * Handle paypal marketplace connect process
-     *
-     * @param $get_data
-     *
-     * @since DOKAN_LITE_SINCE
-     *
-     * @return void
-     */
-    public function handle_paypal_marketplace_connect( $get_data ) {
-        $user_id = dokan_get_current_user_id();
-
-        if ( ! isset( $get_data['vendor_paypal_email_address'] ) ) {
-            return;
-        }
-
-        $email_address  = sanitize_email( $get_data['vendor_paypal_email_address'] );
-        $current_user   = _wp_get_current_user();
-        $tracking_id    = '_dokan_paypal_' . $current_user->user_login . '_' . $user_id;
-        $dokan_settings = get_user_meta( $user_id, 'dokan_profile_settings', true );
-
-        //get paypal product type based on seller country
-        $product_type = Helper::get_product_type( $dokan_settings['address']['country'] );
-
-        if ( ! $product_type ) {
-            wp_safe_redirect(
-                add_query_arg(
-                    [
-                        'status'  => 'error',
-                        'message' => __( 'Seller country not supported.', 'dokan-lite' ),
-                    ],
-                    dokan_get_navigation_url( 'settings/payment' )
-                )
-            );
-            exit();
-        }
-
-        $processor  = Processor::init();
-        $paypal_url = $processor->create_partner_referral( $email_address, $tracking_id, [ $product_type ] );
-
-        if ( is_wp_error( $paypal_url ) ) {
-            Helper::log_paypal_error( $user_id, $paypal_url, 'create_partner_referral', 'user' );
-
-            wp_safe_redirect(
-                add_query_arg(
-                    [
-                        'status'  => 'paypal-error',
-                        'message' => $paypal_url['error'],
-                    ],
-                    dokan_get_navigation_url( 'settings/payment' )
-                )
-            );
-            exit();
-        }
-
-        if ( isset( $paypal_url['links'][1] ) && 'action_url' === $paypal_url['links'][1]['rel'] ) {
-            $paypal_action_url = $paypal_url['links'][1]['href'];
-        }
-
-        //keeping email and partner id for later use
-        update_user_meta(
-            $user_id,
-            '_dokan_paypal_marketplace_settings',
-            [
-                'connect_process_started' => true,
-                'connection_status'       => 'pending',
-                'email'                   => $email_address,
-                'tracking_id'             => $tracking_id,
-            ]
-        );
-
-        wp_redirect( $paypal_action_url );
-        exit();
     }
 
     /**

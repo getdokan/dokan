@@ -95,7 +95,7 @@ class Processor {
                     dokan_get_navigation_url( 'settings/payment' )
                 ),
                 'return_url_description' => 'the url to return the merchant after the paypal onboarding process.',
-                'action_renewal_url'     => 'https://testenterprises.com/renew-exprired-url',
+                'action_renewal_url'     => site_url(),
             ],
             'legal_consents'          => [
                 [
@@ -234,7 +234,8 @@ class Processor {
         $url                             = $this->make_paypal_url( "v2/checkout/orders/{$order_id}/capture" );
         $this->additional_request_header = [
             'Prefer'                        => 'return=representation',
-            'PayPal-Partner-Attribution-Id' => 'weDevs_SP_Dokan',
+            'PayPal-Partner-Attribution-Id' => $this->bn_code,
+            'PayPal-Request-Id'             => $order_id,
         ];
 
         $response = $this->make_request( $url, [] );

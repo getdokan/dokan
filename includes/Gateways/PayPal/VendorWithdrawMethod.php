@@ -19,6 +19,7 @@ class VendorWithdrawMethod {
      */
     public function __construct() {
         add_filter( 'dokan_withdraw_methods', [ $this, 'register_methods' ] );
+        add_action( 'dokan_payment_settings_before_form', [ $this, 'handle_error_message' ], 10, 2 );
     }
 
     /**
@@ -62,10 +63,11 @@ class VendorWithdrawMethod {
         $merchant_id = get_user_meta( get_current_user_id(), '_dokan_paypal_marketplace_merchant_id', true );
         $button_text = $merchant_id ? __( 'Connected', 'dokan-lite' ) : __( 'Sign up for PayPal', 'dokan-lite' );
 
+        $nonce                 = wp_create_nonce( 'paypal-marketplace-connect' );
         $connect_to_paypal_url = add_query_arg(
             [
                 'action'   => 'paypal-marketplace-connect',
-                '_wpnonce' => wp_create_nonce( 'paypal-marketplace-connect' ),
+                '_wpnonce' => $nonce,
             ],
             dokan_get_navigation_url( 'settings/payment' )
         );
@@ -79,7 +81,26 @@ class VendorWithdrawMethod {
                 'button_disabled' => $merchant_id ? true : false,
                 'button_class'    => $merchant_id ? 'dokan-btn-success disabled' : '',
                 'url'             => $connect_to_paypal_url,
+                'nonce'           => $nonce,
             ]
         );
+    }
+
+    /**
+     * Handle PayPal error message for payment settings
+     *
+     * @param $current_user
+     * @param $profile_info
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return void
+     */
+    public function handle_error_message( $current_user, $profile_info ) {
+        $_get_data = wp_unslash( $_GET );
+
+        if ( isset( $_get_data['status'] ) && 'seller_error' === $_get_data['status'] ) {
+            echo '<div class=\'dokan-error\'>' . $_get_data['message'] . '</div>';
+        }
     }
 }
