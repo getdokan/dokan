@@ -17,10 +17,10 @@ class V_2_9_23 extends DokanUpgrader {
     public static function dokan_update_store_name() {
         $processor = new V_2_9_23_StoreName();
 
-        $args = array(
+        $args = [
             'updating' => 'store_name',
-            'paged'    => 0
-        );
+            'paged'    => 0,
+        ];
 
         $processor->push_to_queue( $args )->dispatch_process();
     }

@@ -4,6 +4,7 @@ import Premium from 'admin/pages/Premium.vue'
 import Help from 'admin/pages/Help.vue'
 import Settings from 'admin/pages/Settings.vue'
 import Vendors from 'admin/pages/Vendors.vue'
+import VendorCapabilities from "admin/pages/VendorCapabilities.vue"
 
 let Vue            = dokan_get_lib('Vue')
 let Router         = dokan_get_lib('Router')
@@ -16,6 +17,7 @@ dokan_add_route(Withdraw)
 dokan_add_route(Premium)
 dokan_add_route(Help)
 dokan_add_route(Settings)
+dokan_add_route(VendorCapabilities)
 
 // if dokan pro not installed or dokan pro is greater than 2.9.14 register the `vendors` route.
 if ( ! dokan.hasPro || VersionCompare( dokan.proVersion, '2.9.14', '>' ) ) {

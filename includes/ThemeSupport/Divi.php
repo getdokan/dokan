@@ -17,8 +17,8 @@ class Divi {
      * The constructor
      */
     function __construct() {
-        add_action( 'template_redirect', [ $this, 'remove_sidebar'] );
-        add_filter( 'body_class', [ $this, 'full_width_page'] );
+        add_action( 'template_redirect', [ $this, 'remove_sidebar' ] );
+        add_filter( 'body_class', [ $this, 'full_width_page' ] );
         add_action( 'wp_enqueue_scripts', [ $this, 'style_reset' ] );
         add_action( 'dokan_store_page_query_filter', [ $this, 'set_current_page' ], 10, 2 );
     }
@@ -59,7 +59,6 @@ class Divi {
      */
     public function full_width_page( $classes ) {
         if ( dokan_is_store_page() || dokan_is_seller_dashboard() ) {
-
             if ( ! in_array( 'et_full_width_page', $classes ) ) {
                 $classes[] = 'et_full_width_page';
                 $classes[] = 'et_no_sidebar';
@@ -87,7 +86,7 @@ class Divi {
          * But created with custom rewrite rules. So we'll trick Divi builder to assume dokan store page is really `page` post_type.
          * So lets create a fake page object, and set it to `WP_Query->queried_object` and make the page `is_singular`.
          */
-        $page            = new stdClass;
+        $page            = new stdClass();
         $page->ID        = get_option( 'woocommerce_shop_page_id' ); // So it's created by admin, vendor can't see the edit page menu on navbar
         $page->post_type = 'page';
 
@@ -95,8 +94,10 @@ class Divi {
         $query->queried_object    = $page;
         $query->queried_object_id = $page->ID;
 
-        add_filter( 'pre_get_document_title', function() use ( $store_info ) {
-            return ! empty( $store_info['store_name'] ) ? $store_info['store_name'] : __( 'No Name', 'dokan-lite' );
-        } );
+        add_filter(
+            'pre_get_document_title', function() use ( $store_info ) {
+				return ! empty( $store_info['store_name'] ) ? $store_info['store_name'] : __( 'No Name', 'dokan-lite' );
+			}
+        );
     }
 }

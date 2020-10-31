@@ -13,6 +13,20 @@
         </div>
         <!-- End of Header Section -->
 
+        <!--   Vendor Capabilities Banner     -->
+        <div class="vendor-capabilities-banner" :style="bannerBg">
+            <img :src="bannerImage" :alt="__( 'Dokan Vendor Capabilities Banner', 'dokan-lite' )">
+            <div class="content">
+                <p class="title">{{ __( 'Vendor Capabilities', 'dokan-lite' ) }}</p>
+                <p>
+                    {{ __( 'One of the finest attractions of Dokan PRO is the vast array of powerful vendor controls & functions it provides so sellers can enjoy ownership, automation & freedom to run their stores. To use these awesome vendor features listed below, consider Upgrading to PRO.', 'dokan-lite' ) }}
+                </p>
+                <router-link class="button" :to="{ name: 'VendorCapabilities' }">
+                    {{ __( 'Check Out All Vendor Functionalities', 'dokan-lite' ) }}
+                </router-link>
+            </div>
+        </div>
+
         <!-- Service Section -->
         <div class="service-section">
             <h2 class="section-title">{{ __( 'Why Upgrade', 'dokan-lite' ) }}</h2>
@@ -148,16 +162,16 @@
                 <div class="table-row">
                     <div class="table-col"></div>
                     <div class="table-col">
-                        <a :href="buyNowProUrl + `add-to-cart=15310&variation_id=15316&attribute_pa_license=starter`" class="buy-btn starter" target="_blank">{{ __( 'Buy Now', 'dokan-lite' ) }}</a>
+                        <a :href="buyNowProUrl + `?add-to-cart=15310&variation_id=15316&attribute_pa_license=starter`" class="buy-btn starter" target="_blank">{{ __( 'Buy Now', 'dokan-lite' ) }}</a>
                     </div>
                     <div class="table-col popular">
-                        <a :href="buyNowProUrl + `add-to-cart=15310&variation_id=15314&attribute_pa_license=professional`" class="buy-btn professional" target="_blank">{{ __( 'Buy Now', 'dokan-lite' ) }}</a>
+                        <a :href="buyNowProUrl + `?add-to-cart=15310&variation_id=15314&attribute_pa_license=professional`" class="buy-btn professional" target="_blank">{{ __( 'Buy Now', 'dokan-lite' ) }}</a>
                     </div>
                     <div class="table-col">
-                        <a :href="buyNowProUrl + `add-to-cart=15310&variation_id=15315&attribute_pa_license=business`" class="buy-btn business" target="_blank">{{ __( 'Buy Now', 'dokan-lite' ) }}</a>
+                        <a :href="buyNowProUrl + `?add-to-cart=15310&variation_id=15315&attribute_pa_license=business`" class="buy-btn business" target="_blank">{{ __( 'Buy Now', 'dokan-lite' ) }}</a>
                     </div>
                     <div class="table-col">
-                        <a :href="buyNowProUrl + `add-to-cart=15310&variation_id=103829&attribute_pa_license=enterprise`" class="buy-btn enterprise" target="_blank">{{ __( 'Buy Now', 'dokan-lite' ) }}</a>
+                        <a :href="buyNowProUrl + `?add-to-cart=15310&variation_id=103829&attribute_pa_license=enterprise`" class="buy-btn enterprise" target="_blank">{{ __( 'Buy Now', 'dokan-lite' ) }}</a>
                     </div>
                 </div>
             </div>
@@ -215,31 +229,14 @@
         <!-- End of Testimonial Section -->
 
         <!-- CTA Section -->
-        <div class="cta-section" v-bind:style="{ 'background-image': 'url(' + cta.styles.bgPattern + '), linear-gradient( 45deg, rgb(255,125,144) 33%, rgb(255,173,111) 100%)' }">
-            <div class="feature-thumb">
-                <img :src="cta.thumbnail" alt="Dokan Lite">
-            </div>
-            <div class="content-area">
-                <h2>{{ __( 'Convinced?', 'dokan-lite' ) }}</h2>
-                <p>{{ __( 'With all the advance features you get it’s hard to resist buying Dokan Pro.', 'dokan-lite' ) }}</p>
-                <a :href="cta.url" class="btn">
-                    {{ __( 'I Want To Buy Now', 'dokan-lite' ) }}
-                    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                         viewBox="0 0 17.5 12.5" style="enable-background:new 0 0 17.5 12.5;" xml:space="preserve">
-                    <path class="st0" d="M10.6,1.5c-0.4-0.4-0.4-0.9,0-1.3c0.4-0.3,0.9-0.3,1.3,0l5.3,5.3c0.2,0.2,0.3,0.4,0.3,0.7s-0.1,0.5-0.3,0.7
-                        l-5.3,5.3c-0.4,0.4-0.9,0.4-1.3,0c-0.4-0.4-0.4-0.9,0-1.3l3.8-3.8H0.9C0.4,7.1,0,6.7,0,6.2s0.4-0.9,0.9-0.9h13.5L10.6,1.5z
-                         M10.6,1.5"/>
-                    </svg>
-                </a>
-            </div>
-        </div>
+        <ProCta />
         <!-- End of CTA Section -->
 
     </div>
 </template>
 
 <script>
-
+import ProCta from '../components/ProCta.vue';
 import 'slick-carousel/slick/slick.css';
 import Slick from 'vue-slick';
 
@@ -247,11 +244,15 @@ export default {
 
     name: 'Premium',
 
-    components: { Slick },
+    components: {
+        Slick,
+        ProCta
+    },
 
     data () {
         return {
             asstesUrl : dokan.urls.assetsUrl,
+            buyNowProUrl: 'https://wedevs.com/account/',
             services: [
                 {
                     "title": this.__( "Premium modules to make everything easier & better", "dokan-lite" ),
@@ -930,9 +931,14 @@ export default {
     },
 
     computed: {
-        buyNowProUrl() {
-            return dokan.urls.buynowpro.substr(-1) === '/' ? dokan.urls.buynowpro + '?' : dokan.urls.buynowpro + '&';
-        }
+        bannerBg() {
+            return {
+                backgroundImage: `url(${dokan.urls.assetsUrl}/images/dokan-vendor-capabilities-banner-bg.svg)`,
+            };
+        },
+        bannerImage() {
+            return `${dokan.urls.assetsUrl}/images/dokan-settings-banner.svg`;
+        },
     }
 };
 </script>
@@ -942,6 +948,40 @@ export default {
     .dokan-pro-features {
         font-family: 'Open Sans', sans-serif;
         margin: -10px -20px 0 -22px;
+
+        .vendor-capabilities-banner {
+            display: flex;
+            align-items: center;
+            padding: 50px;
+            height: auto;
+            border-radius: 9px;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            margin: 20px 70px;
+
+            .content {
+                margin: 30px;
+
+                .title {
+                    font-size: 26px;
+                    font-weight: bold;
+                    color: #FF0000;
+                }
+            }
+
+            a {
+                box-shadow: none;
+                background: #FF5722;
+                color: #fff;
+                border-color: #FF5722;
+
+                &:hover {
+                    color: #fff;
+                    background: lighten(#FF5722, 5%);
+                }
+            }
+        }
 
         a {
             transition: all .2s ease;

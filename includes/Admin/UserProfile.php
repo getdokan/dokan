@@ -43,7 +43,6 @@ class UserProfile {
             wp_enqueue_script( 'speaking-url' );
             wp_localize_script( 'jquery', 'dokan_user_profile', $admin_admin_script );
         }
-
     }
 
     /**
@@ -70,7 +69,7 @@ class UserProfile {
         $admin_commission_type = get_user_meta( $user->ID, 'dokan_admin_percentage_type', true );
         $feature_seller        = get_user_meta( $user->ID, 'dokan_feature_seller', true );
 
-        $social_fields     = dokan_get_social_profile_fields();
+        $social_fields = dokan_get_social_profile_fields();
 
         $address           = isset( $store_settings['address'] ) ? $store_settings['address'] : '';
         $address_street1   = isset( $store_settings['address']['street_1'] ) ? $store_settings['address']['street_1'] : '';
@@ -84,7 +83,7 @@ class UserProfile {
         $banner_height   = dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 );
         $admin_commission = ( 'flat' == $admin_commission_type ) ? wc_format_localized_price( $admin_commission ) : wc_format_localized_decimal( $admin_commission );
 
-        $country_state     = array(
+        $country_state = array(
             'country' => array(
                 'label'       => __( 'Country', 'dokan-lite' ),
                 'description' => '',
@@ -322,7 +321,7 @@ class UserProfile {
                     <td>
                         <select id="dokan_admin_percentage_type" name="dokan_admin_percentage_type">
                             <?php foreach ( dokan_commission_types() as $key => $value ) : ?>
-                                <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $admin_commission_type, $key );  ?>><?php echo esc_attr( $value ); ?></option>
+                                <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $admin_commission_type, $key ); ?>><?php echo esc_attr( $value ); ?></option>
                             <?php endforeach; ?>
                         </select>
                         <p class="description"><?php esc_html_e( 'Set the commmission type admin gets from this seller', 'dokan-lite' ); ?></p>
@@ -571,10 +570,12 @@ class UserProfile {
             }
         }
 
-        wp_update_user( array(
-			'ID'            => $user_id,
-			'user_nicename' => sanitize_title( $post_data['dokan_store_url'] ),
-        ) );
+        wp_update_user(
+            array(
+				'ID'            => $user_id,
+				'user_nicename' => sanitize_title( $post_data['dokan_store_url'] ),
+            )
+        );
 
         update_user_meta( $user_id, 'dokan_profile_settings', $store_settings );
         update_user_meta( $user_id, 'dokan_enable_selling', $selling );

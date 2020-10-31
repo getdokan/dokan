@@ -8,15 +8,20 @@ class TaxonomyDropdown extends Walker {
 
     /**
      * @see Walker::$tree_type
+     *
      * @var string
      */
     public $tree_type = 'category';
 
     /**
      * @see Walker::$db_fields
+     *
      * @var array
      */
-    public $db_fields = array('parent' => 'parent', 'id' => 'term_id');
+    public $db_fields = [
+        'parent' => 'parent',
+        'id'     => 'term_id',
+    ];
 
     /**
      * Post id
@@ -30,22 +35,22 @@ class TaxonomyDropdown extends Walker {
      *
      * @param int $post_id
      */
-    public function __construct( $post_id = 0 )  {
+    public function __construct( $post_id = 0 ) {
         $this->post_id = $post_id;
     }
 
     /**
      * Start element
      *
-     * @param  string $output
-     * @param  object $category
-     * @param  int $depth
-     * @param  array $args
-     * @param  int $id
+     * @param string $output
+     * @param object $category
+     * @param int    $depth
+     * @param array  $args
+     * @param int    $id
      *
      * @return void
      */
-    public function start_el( &$output, $category, $depth = 0, $args = array(), $id = 0 ) {
+    public function start_el( &$output, $category, $depth = 0, $args = [], $id = 0 ) {
         if ( defined( 'DOKAN_PRO_PLUGIN_VERSION' ) && version_compare( DOKAN_PRO_PLUGIN_VERSION, '2.9.14', '<' ) ) {
             $commission_val  = dokan_get_seller_percentage( dokan_get_current_user_id(), $this->post_id, $category->term_id );
             $commission_type = dokan_get_commission_type( dokan_get_current_user_id(), $this->post_id, $category->term_id );
@@ -59,7 +64,7 @@ class TaxonomyDropdown extends Walker {
 
         $pad      = str_repeat( '&nbsp;', $depth * 3 );
         $cat_name = apply_filters( 'list_cats', $category->name, $category );
-        $output   .= "\<option class=\"level-$depth\" value=\"" . $category->term_id . "\"";
+        $output .= "\<option class=\"level-$depth\" value=\"" . $category->term_id . '"';
 
         if ( defined( 'DOKAN_PRO_PLUGIN_VERSION' ) && version_compare( DOKAN_PRO_PLUGIN_VERSION, '2.9.14', '<' ) ) {
             $output .= ' data-commission="' . $commission_val . '" data-commission_type="' . $commission_type . '"';

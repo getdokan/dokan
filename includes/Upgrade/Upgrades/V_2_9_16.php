@@ -19,7 +19,7 @@ class V_2_9_16 extends DokanUpgrader {
 
         $args = [
             'updating' => 'store_settings',
-            'paged'    => 0
+            'paged'    => 0,
         ];
 
         $processor->push_to_queue( $args )->dispatch_process();

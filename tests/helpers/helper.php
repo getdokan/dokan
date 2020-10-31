@@ -7,12 +7,12 @@ class Dokan_Test_Helpers {
 
     public static function create_product( $product_name = 'Dummy Product', $price = 0, $seller_id = 0 ) {
         // Create the product
-        $product = wp_insert_post( array(
+        $product = wp_insert_post( [
             'post_title'  => $product_name,
             'post_type'   => 'product',
             'post_status' => 'publish',
-            'post_author' => $seller_id
-        ) );
+            'post_author' => $seller_id,
+        ] );
 
         update_post_meta( $product, '_price', $price );
         update_post_meta( $product, '_regular_price', $price );

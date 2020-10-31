@@ -26,7 +26,7 @@ class NewProductPending extends WC_Email {
         $this->description      = __( 'New Pending Product emails are sent to chosen recipient(s) when a new product is created by vendors.', 'dokan-lite' );
         $this->template_html    = 'emails/new-product-pending.php';
         $this->template_plain   = 'emails/plain/new-product-pending.php';
-        $this->template_base    = DOKAN_DIR.'/templates/';
+        $this->template_base    = DOKAN_DIR . '/templates/';
 
         // Triggers for this email
         add_action( 'dokan_email_trigger_new_pending_product', array( $this, 'trigger' ), 30, 2 );
@@ -65,10 +65,9 @@ class NewProductPending extends WC_Email {
      * @param array $postdata.
      */
     public function trigger( $product_id, $postdata ) {
-
-            if ( ! $this->is_enabled() || ! $this->get_recipient() ) {
-                return;
-            }
+		if ( ! $this->is_enabled() || ! $this->get_recipient() ) {
+			return;
+		}
 
             $product       = wc_get_product( $product_id );
             $seller_id     = get_post_field( 'post_author', $product_id );
@@ -76,27 +75,27 @@ class NewProductPending extends WC_Email {
             $category      = wp_get_post_terms( dokan_get_prop( $product, 'id' ), 'product_cat', array( 'fields' => 'names' ) );
             $category_name = $category ? reset( $category ) : 'N/A';
 
-            if ( is_a( $product, 'WC_Product' ) ) {
-                $this->object                = $product;
+		if ( is_a( $product, 'WC_Product' ) ) {
+			$this->object = $product;
 
-                $this->find['product-title'] = '{product_title}';
-                $this->find['price']         = '{price}';
-                $this->find['seller-name']   = '{seller_name}';
-                $this->find['seller_url']    = '{seller_url}';
-                $this->find['category']      = '{category}';
-                $this->find['product_link']  = '{product_link}';
-                $this->find['site_name']     = '{site_name}';
-                $this->find['site_url']      = '{site_url}';
+			$this->find['product-title'] = '{product_title}';
+			$this->find['price']         = '{price}';
+			$this->find['seller-name']   = '{seller_name}';
+			$this->find['seller_url']    = '{seller_url}';
+			$this->find['category']      = '{category}';
+			$this->find['product_link']  = '{product_link}';
+			$this->find['site_name']     = '{site_name}';
+			$this->find['site_url']      = '{site_url}';
 
-                $this->replace['product-title'] = $product->get_title();
-                $this->replace['price']         = $product->get_price();
-                $this->replace['seller-name']   = $seller->display_name;
-                $this->replace['seller_url']    = dokan_get_store_url( $seller->ID );
-                $this->replace['category']      = $category_name;
-                $this->replace['product_link']  = admin_url( 'post.php?action=edit&post=' . $product_id );
-                $this->replace['site_name']     = $this->get_from_name();
-                $this->replace['site_url']      = site_url();
-            }
+			$this->replace['product-title'] = $product->get_title();
+			$this->replace['price']         = $product->get_price();
+			$this->replace['seller-name']   = $seller->display_name;
+			$this->replace['seller_url']    = dokan_get_store_url( $seller->ID );
+			$this->replace['category']      = $category_name;
+			$this->replace['product_link']  = admin_url( 'post.php?action=edit&post=' . $product_id );
+			$this->replace['site_name']     = $this->get_from_name();
+			$this->replace['site_url']      = site_url();
+		}
 
             $this->setup_locale();
             $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
@@ -111,16 +110,17 @@ class NewProductPending extends WC_Email {
      */
     public function get_content_html() {
             ob_start();
-                wc_get_template( $this->template_html, array(
-                    'product'       => $this->object,
-                    'email_heading' => $this->get_heading(),
-                    'sent_to_admin' => true,
-                    'plain_text'    => false,
-                    'email'         => $this,
-                    'data'          => $this->replace
-                ), 'dokan/', $this->template_base );
+                wc_get_template(
+                    $this->template_html, array(
+						'product'       => $this->object,
+						'email_heading' => $this->get_heading(),
+						'sent_to_admin' => true,
+						'plain_text'    => false,
+						'email'         => $this,
+						'data'          => $this->replace,
+                    ), 'dokan/', $this->template_base
+                );
             return ob_get_clean();
-
     }
 
     /**
@@ -131,14 +131,16 @@ class NewProductPending extends WC_Email {
      */
     public function get_content_plain() {
             ob_start();
-                wc_get_template( $this->template_html, array(
-                    'product'       => $this->object,
-                    'email_heading' => $this->get_heading(),
-                    'sent_to_admin' => true,
-                    'plain_text'    => true,
-                    'email'         => $this,
-                    'data'          => $this->replace
-                ), 'dokan/', $this->template_base );
+                wc_get_template(
+                    $this->template_html, array(
+						'product'       => $this->object,
+						'email_heading' => $this->get_heading(),
+						'sent_to_admin' => true,
+						'plain_text'    => true,
+						'email'         => $this,
+						'data'          => $this->replace,
+                    ), 'dokan/', $this->template_base
+                );
             return ob_get_clean();
     }
 

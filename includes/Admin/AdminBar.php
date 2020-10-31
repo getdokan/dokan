@@ -36,38 +36,46 @@ class AdminBar {
         $args = array(
             'id'     => 'dokan',
             'title'  => __( 'Dokan', 'dokan-lite' ),
-            'href'   => admin_url( 'admin.php?page=dokan' )
+            'href'   => admin_url( 'admin.php?page=dokan' ),
         );
 
         $wp_admin_bar->add_menu( $args );
 
-        $wp_admin_bar->add_menu( array(
-            'id'     => 'dokan-dashboard',
-            'parent' => 'dokan',
-            'title'  => __( 'Dashboard', 'dokan-lite' ),
-            'href'   => admin_url( 'admin.php?page=dokan' )
-        ) );
+        $wp_admin_bar->add_menu(
+            array(
+				'id'     => 'dokan-dashboard',
+				'parent' => 'dokan',
+				'title'  => __( 'Dashboard', 'dokan-lite' ),
+				'href'   => admin_url( 'admin.php?page=dokan' ),
+            )
+        );
 
-        $wp_admin_bar->add_menu( array(
-            'id'     => 'dokan-withdraw',
-            'parent' => 'dokan',
-            'title'  => __( 'Withdraw', 'dokan-lite' ),
-            'href'   => admin_url( 'admin.php?page=dokan#/withdraw' )
-        ) );
+        $wp_admin_bar->add_menu(
+            array(
+				'id'     => 'dokan-withdraw',
+				'parent' => 'dokan',
+				'title'  => __( 'Withdraw', 'dokan-lite' ),
+				'href'   => admin_url( 'admin.php?page=dokan#/withdraw' ),
+            )
+        );
 
-        $wp_admin_bar->add_menu( array(
-            'id'     => 'dokan-pro-features',
-            'parent' => 'dokan',
-            'title'  => __( 'PRO Features', 'dokan-lite' ),
-            'href'   => admin_url( 'admin.php?page=dokan#/premium' )
-        ) );
+        $wp_admin_bar->add_menu(
+            array(
+				'id'     => 'dokan-pro-features',
+				'parent' => 'dokan',
+				'title'  => __( 'PRO Features', 'dokan-lite' ),
+				'href'   => admin_url( 'admin.php?page=dokan#/premium' ),
+            )
+        );
 
-        $wp_admin_bar->add_menu( array(
-            'id'     => 'dokan-settings',
-            'parent' => 'dokan',
-            'title'  => __( 'Settings', 'dokan-lite' ),
-            'href'   => admin_url( 'admin.php?page=dokan#/settings' )
-        ) );
+        $wp_admin_bar->add_menu(
+            array(
+				'id'     => 'dokan-settings',
+				'parent' => 'dokan',
+				'title'  => __( 'Settings', 'dokan-lite' ),
+				'href'   => admin_url( 'admin.php?page=dokan#/settings' ),
+            )
+        );
 
         /**
          * Add new or remove toolbar

@@ -10,7 +10,7 @@ class V_2_7_6 extends DokanUpgrader {
     /**
      * Modify ip column to support the max possible length of IPv6
      */
-    public static function update_table_structure(){
+    public static function update_table_structure() {
         global $wpdb;
 
         $wpdb->query(

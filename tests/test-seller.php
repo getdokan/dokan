@@ -3,6 +3,7 @@
 class Dokan_Test_Seller extends WP_UnitTestCase {
 
     private $seller_one = 0;
+
     private $seller_two = 0;
 
     public function setup() {
@@ -16,20 +17,20 @@ class Dokan_Test_Seller extends WP_UnitTestCase {
     }
 
     public function create_sellers() {
-        $this->seller_one = $this->factory->user->create( array(
+        $this->seller_one = $this->factory->user->create( [
             'role'        => 'seller',
             'user_login'  => 'seller_one',
             'description' => 'seller_one',
-        ) );
+        ] );
 
-        $this->seller_two = $this->factory->user->create( array(
+        $this->seller_two = $this->factory->user->create( [
             'role'        => 'seller',
             'user_login'  => 'seller_two',
             'description' => 'seller_two',
-        ) );
+        ] );
     }
 
-    function test_create_seller() {
+    public function test_create_seller() {
         $this->assertEquals( 'seller_one', get_userdata( $this->seller_one )->user_login );
         $this->assertEquals( 'seller_two', get_userdata( $this->seller_two )->user_login );
     }
@@ -41,5 +42,4 @@ class Dokan_Test_Seller extends WP_UnitTestCase {
         $this->assertInstanceOf( 'WC_Product_Simple', wc_get_product( $product_id ) );
         $this->assertEquals( '10', wc_get_product( $product_id )->get_price() );
     }
-
 }

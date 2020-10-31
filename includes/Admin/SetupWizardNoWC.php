@@ -3,7 +3,6 @@
 namespace WeDevs\Dokan\Admin;
 
 use WeDevs\Dokan\Admin\SetupWizard as DokanSetupWizard;
-use WeDevs\Dokan\Admin\SetupWizardWCAdmin;
 
 class SetupWizardNoWC extends DokanSetupWizard {
 
@@ -15,13 +14,13 @@ class SetupWizardNoWC extends DokanSetupWizard {
      * @return void
      */
     protected function set_steps() {
-        $this->steps = array(
-            'introduction' => array(
-                'name'    =>  __( 'Welcome to Dokan', 'dokan-lite' ),
-                'view'    => array( $this, 'step_introduction' ),
-                'handler' => array( $this, 'install_woocommerce' ),
-            ),
-        );
+        $this->steps = [
+            'introduction' => [
+                'name'    => __( 'Welcome to Dokan', 'dokan-lite' ),
+                'view'    => [ $this, 'step_introduction' ],
+                'handler' => [ $this, 'install_woocommerce' ],
+            ],
+        ];
     }
 
     /**
@@ -43,15 +42,15 @@ class SetupWizardNoWC extends DokanSetupWizard {
      * @return void
      */
     public function enqueue_scripts() {
-        wp_register_script( 'jquery-blockui', DOKAN_PLUGIN_ASSEST . '/vendors/jquery-blockui/jquery.blockUI.min.js', array( 'jquery' ), '2.70', true );
+        wp_register_script( 'jquery-blockui', DOKAN_PLUGIN_ASSEST . '/vendors/jquery-blockui/jquery.blockUI.min.js', [ 'jquery' ], '2.70', true );
 
-        wp_enqueue_style( 'dokan-setup', DOKAN_PLUGIN_ASSEST . '/css/setup-no-wc.css', array( 'install' ), DOKAN_PLUGIN_VERSION );
+        wp_enqueue_style( 'dokan-setup', DOKAN_PLUGIN_ASSEST . '/css/setup-no-wc.css', [ 'install' ], DOKAN_PLUGIN_VERSION );
 
-        wp_enqueue_script( 'wc-setup', DOKAN_PLUGIN_ASSEST . '/js/dokan-setup-no-wc.js', array( 'jquery', 'jquery-blockui' ), DOKAN_PLUGIN_VERSION, true );
+        wp_enqueue_script( 'wc-setup', DOKAN_PLUGIN_ASSEST . '/js/dokan-setup-no-wc.js', [ 'jquery', 'jquery-blockui' ], DOKAN_PLUGIN_VERSION, true );
         wp_localize_script(
             'wc-setup',
             'wc_setup_params',
-            array()
+            []
         );
     }
 
@@ -149,7 +148,7 @@ class SetupWizardNoWC extends DokanSetupWizard {
      *
      * @return \WeDevs\Dokan\Admin\SetupWizardWCAdmin
      */
-    protected static function get_wc_setup_wizard( $steps = array() ) {
+    protected static function get_wc_setup_wizard( $steps = [] ) {
         static $setup_wizard = null;
 
         if ( is_null( $setup_wizard ) ) {
@@ -167,23 +166,23 @@ class SetupWizardNoWC extends DokanSetupWizard {
      * @param array $steps
      */
     public static function add_wc_steps_to_wizard( $steps ) {
-        $new_steps = array();
+        $new_steps = [];
 
         foreach ( $steps as $step => $step_props ) {
             $new_steps[ $step ] = $step_props;
 
             if ( 'selling' === $step ) {
-                $new_steps['payment'] = array(
+                $new_steps['payment'] = [
                     'name'    => __( 'Payment', 'dokan-lite' ),
-                    'view'    => array( self::class, 'wc_setup_payment' ),
-                    'handler' => array( self::class, 'wc_setup_payment_save' ),
-                );
+                    'view'    => [ self::class, 'wc_setup_payment' ],
+                    'handler' => [ self::class, 'wc_setup_payment_save' ],
+                ];
 
-                $new_steps['shipping'] = array(
+                $new_steps['shipping'] = [
                     'name'    => __( 'Shipping', 'dokan-lite' ),
-                    'view'    => array( self::class, 'wc_setup_shipping' ),
-                    'handler' => array( self::class, 'wc_setup_shipping_save' ),
-                );
+                    'view'    => [ self::class, 'wc_setup_shipping' ],
+                    'handler' => [ self::class, 'wc_setup_shipping_save' ],
+                ];
             }
         }
 
@@ -201,13 +200,12 @@ class SetupWizardNoWC extends DokanSetupWizard {
         wp_localize_script(
             'wc-setup',
             'wc_setup_params',
-            array(
+            [
                 'states'    => WC()->countries->get_states(),
                 'postcodes' => self::get_postcodes(),
-            )
+            ]
         );
     }
-
 
     /**
      * Add WC fields to Store setup form

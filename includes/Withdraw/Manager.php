@@ -80,11 +80,13 @@ class Manager {
     public function is_valid_cancellation_request( $args ) {
         global $wpdb;
 
-        $result = $wpdb->get_row( $wpdb->prepare(
-            "select * from {$wpdb->dokan_withdraw} where id = %d and status = %d",
-            $args['id'],
-            $this->get_status_code( 'pending' )
-        ) );
+        $result = $wpdb->get_row(
+            $wpdb->prepare(
+                "select * from {$wpdb->dokan_withdraw} where id = %d and status = %d",
+                $args['id'],
+                $this->get_status_code( 'pending' )
+            )
+        );
 
         if ( ! empty( $result ) ) {
             // permission: vendor -> only own && shop_manager
@@ -326,10 +328,12 @@ class Manager {
         global $wpdb;
 
         if ( ! is_array( $id ) ) {
-            $result = $wpdb->get_row( $wpdb->prepare(
-                "select * from {$wpdb->dokan_withdraw} where id = %d",
-                $id
-            ), ARRAY_A );
+            $result = $wpdb->get_row(
+                $wpdb->prepare(
+                    "select * from {$wpdb->dokan_withdraw} where id = %d",
+                    $id
+                ), ARRAY_A
+            );
         } else {
             $attributes = array(
                 'id'      => '%d',
@@ -355,10 +359,12 @@ class Manager {
                 $formats[] = $id[ $field ];
             }
 
-            $result = $wpdb->get_row( $wpdb->prepare(
-                "select * from {$wpdb->dokan_withdraw} where 1 = 1 {$where}",
-                ...$formats
-            ), ARRAY_A );
+            $result = $wpdb->get_row(
+                $wpdb->prepare(
+                    "select * from {$wpdb->dokan_withdraw} where 1 = 1 {$where}",
+                    ...$formats
+                ), ARRAY_A
+            );
         }
 
         return $result ? new Withdraw( $result ) : null;

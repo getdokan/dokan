@@ -77,7 +77,7 @@
     <td data-title="<?php esc_attr_e( 'Price', 'dokan-lite' ); ?>">
         <?php
         if ( $product->get_price_html() ) {
-            echo wp_kses( $product->get_price_html(), $price_kses );
+            echo wp_kses_post( $product->get_price_html() );
         } else {
             echo '<span class="na">&ndash;</span>';
         }
