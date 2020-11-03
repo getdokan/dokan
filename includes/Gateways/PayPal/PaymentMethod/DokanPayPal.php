@@ -321,7 +321,9 @@ class DokanPayPal extends WC_Payment_Gateway {
             ];
         }
 
-        $process_payment = apply_filters( 'dokan_paypal_process_payment', $order );
+        $process_payment = apply_filters( 'dokan_paypal_process_payment', [
+            'order' => $order
+        ] );
 
         if ( isset( $process_payment['product_type'] ) && 'product_pack' === $process_payment['product_type'] ) {
             return $process_payment['data'];
@@ -612,7 +614,7 @@ class DokanPayPal extends WC_Payment_Gateway {
         foreach ( $order->get_items( 'line_item' ) as $key => $line_item ) {
             $product    = wc_get_product( $line_item->get_product_id() );
             $category   = $product->is_downloadable() || $product->is_virtual() ? 'DIGITAL_GOODS' : 'PHYSICAL_GOODS';
-            $item_price = wc_format_decimal( ($line_item->get_total() + $extra_fee), 2 );
+            $item_price = wc_format_decimal( ( $product->get_price() + $extra_fee ), 2 );
 
             $items[] = [
                 'name'        => $line_item->get_name(),
