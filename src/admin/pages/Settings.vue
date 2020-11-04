@@ -1,5 +1,7 @@
 <template>
     <div>
+        <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
+
         <div class="dokan-settings">
             <h2 style="margin-bottom: 15px;">{{ __( 'Settings', 'dokan-lite' ) }}</h2>
 
@@ -73,6 +75,7 @@
     let Loading = dokan_get_lib('Loading');
     import Fields from "admin/components/Fields.vue"
     import SettingsBanner from "admin/components/SettingsBanner.vue";
+    import UpgradeBanner from "admin/components/UpgradeBanner.vue";
 
     export default {
 
@@ -82,6 +85,7 @@
             Fields,
             Loading,
             SettingsBanner,
+            UpgradeBanner,
         },
 
         data () {
