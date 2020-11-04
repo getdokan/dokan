@@ -12,7 +12,7 @@ export default {
     name: "UpgradeBanner",
     data() {
         return {
-            upgradeURL: dokan.dokan_upgrade_to_pro_url
+            upgradeURL: dokan.urls.upgradeToPro
         }
     },
 }

@@ -30,7 +30,7 @@ export default {
             "bgPattern": dokan.urls.assetsUrl + '/images/premium/cta-pattern@2x.png'
         },
         "thumbnail": dokan.urls.assetsUrl + '/images/premium/cta-dokan-logo.png',
-        "url": dokan.urls.buynowpro
+        "url": dokan.urls.upgradeToPro
     }
   }
 }
