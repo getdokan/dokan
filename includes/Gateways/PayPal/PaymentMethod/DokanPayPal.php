@@ -595,9 +595,9 @@ class DokanPayPal extends WC_Payment_Gateway {
     public function get_product_items( \WC_Order $order ) {
         $items = [];
 
-        $extra_fee = 0;
-        $tax_total         = $this->get_tax_amount( $order );
-        $shipping_total    = wc_format_decimal( $order->get_shipping_total(), 2 );
+        $extra_fee      = 0;
+        $tax_total      = $this->get_tax_amount( $order );
+        $shipping_total = wc_format_decimal( $order->get_shipping_total(), 2 );
 
         $no_of_items = count( $order->get_items( 'line_item' ) );
 
@@ -612,9 +612,12 @@ class DokanPayPal extends WC_Payment_Gateway {
         }
 
         foreach ( $order->get_items( 'line_item' ) as $key => $line_item ) {
-            $product    = wc_get_product( $line_item->get_product_id() );
-            $category   = $product->is_downloadable() || $product->is_virtual() ? 'DIGITAL_GOODS' : 'PHYSICAL_GOODS';
-            $item_price = wc_format_decimal( ( $product->get_price() + $extra_fee ), 2 );
+            $product  = wc_get_product( $line_item->get_product_id() );
+            $category = $product->is_downloadable() || $product->is_virtual() ? 'DIGITAL_GOODS' : 'PHYSICAL_GOODS';
+
+            //get single item price by quantity. sometimes there will be product warranty add-on
+            $item_price = ( $line_item->get_total() / $line_item->get_quantity() ) + $extra_fee;
+            $item_price = wc_format_decimal( $item_price, 2 );
 
             $items[] = [
                 'name'        => $line_item->get_name(),
