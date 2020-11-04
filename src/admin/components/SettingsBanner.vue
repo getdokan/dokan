@@ -4,7 +4,7 @@
     <div class="content">
         <h1>{{ __( 'Looking for Coupons, Variable Products, SEO or Shipping?', 'dokan-lite' ) }}</h1>
         <p>{{ __( 'Unlock these awesome frontend features with Dokan PRO', 'dokan-lite' ) }}</p>
-        <a class="button" :href="upgradeURL">{{ __( 'Upgrade to Pro', 'dokan-lite' ) }}</a>
+        <a target="_blank" rel="noopener noreferrer" class="button" :href="upgradeURL">{{ __( 'Upgrade to Pro', 'dokan-lite' ) }}</a>
         <router-link class="button custom-button" :to="{ name: 'VendorCapabilities' }">
             {{ __( 'Check Out All Vendor Functionalities', 'dokan-lite' ) }}
         </router-link>
