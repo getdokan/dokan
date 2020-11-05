@@ -7,7 +7,7 @@ Tested up to: 5.5
 WC requires at least: 3.0
 WC tested up to: 4.6
 Requires PHP: 5.6
-Stable tag: 3.0.11
+Stable tag: 3.0.12
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -290,6 +290,11 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 == Changelog ==
+
+= v3.0.12 (November 5, 2020) =
+
+- **Fix:** Refactor upgrade to pro banner.
+- **Fix:** Temporary disable WooCommerce payment and shipping setup step from vendor setup wizard section. It was throwing a lot of deprecated warnings, we will fix it in the next version.
 
 = v3.0.11 (October 22, 2020) =
 
