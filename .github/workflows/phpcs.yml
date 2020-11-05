@@ -27,9 +27,9 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-
 
       - name: Install dependencies
-        run: composer install --prefer-dist --no-suggest --no-progress
+        uses: php-actions/composer@v2
         with:
-          tools: composer:v1
+          args: --prefer-dist --no-suggest --no-progress
 
       - id: changes
         run: |
