@@ -76,7 +76,7 @@ plugins.push(new OptimizeCSSPlugin({
 if ( isProduction() ) {
 
     plugins.push(new UglifyJsPlugin({
-        sourceMap: true,
+        sourceMap: false,
     }));
 
     plugins.push(new webpack.DefinePlugin({
