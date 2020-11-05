@@ -13,7 +13,7 @@ jobs:
         with:
           php-version: '7.3'
           coverage: none
-          tools: composer, cs2pr
+          tools: cs2pr, composer:v1
 
       - name: Get Composer cache directory
         id: composer-cache
@@ -23,8 +23,8 @@ jobs:
         uses: pat-s/always-upload-cache@v1.1.4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
+          key: ${{ runner.os }}-composer-new-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-new-
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-suggest --no-progress

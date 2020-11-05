@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 3.0.11\n"
+"Project-Id-Version: Dokan 3.0.12\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2020-10-22 11:54:51+00:00\n"
+"POT-Creation-Date: 2020-11-05 11:37:35+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -53,7 +53,7 @@ msgstr ""
 #: dokan.php:440 includes/Admin/AdminBar.php:75 includes/Admin/Menu.php:59
 #: includes/Dashboard/Templates/Settings.php:58
 #: includes/Dashboard/Templates/Settings.php:62 includes/template-tags.php:366
-#: src/admin/pages/Settings.vue:4
+#: src/admin/pages/Settings.vue:6
 msgid "Settings"
 msgstr ""
 
@@ -176,7 +176,7 @@ msgstr ""
 msgid "Withdraw %s"
 msgstr ""
 
-#: includes/Admin/Menu.php:47 src/admin/pages/Vendors.vue:3
+#: includes/Admin/Menu.php:47 src/admin/pages/Vendors.vue:6
 msgid "Vendors"
 msgstr ""
 
@@ -1400,33 +1400,33 @@ msgstr ""
 msgid "Please insert value less than the regular price!"
 msgstr ""
 
-#: includes/Assets.php:661 includes/Assets.php:826
+#: includes/Assets.php:661 includes/Assets.php:827
 #. translators: %s: decimal
 msgid "Please enter with one decimal point (%s) without thousand separators."
 msgstr ""
 
-#: includes/Assets.php:663 includes/Assets.php:828
+#: includes/Assets.php:663 includes/Assets.php:829
 #. translators: %s: price decimal separator
 msgid ""
 "Please enter with one monetary decimal point (%s) without thousand "
 "separators and currency symbols."
 msgstr ""
 
-#: includes/Assets.php:664 includes/Assets.php:829
+#: includes/Assets.php:664 includes/Assets.php:830
 msgid "Please enter in country code with two capital letters."
 msgstr ""
 
-#: includes/Assets.php:665 includes/Assets.php:830
+#: includes/Assets.php:665 includes/Assets.php:831
 msgid "Please enter in a value less than the regular price."
 msgstr ""
 
-#: includes/Assets.php:666 includes/Assets.php:831
+#: includes/Assets.php:666 includes/Assets.php:832
 msgid ""
 "This product has produced sales and may be linked to existing orders. Are "
 "you sure you want to delete it?"
 msgstr ""
 
-#: includes/Assets.php:667 includes/Assets.php:832
+#: includes/Assets.php:667 includes/Assets.php:833
 msgid ""
 "This action cannot be reversed. Are you sure you wish to erase personal "
 "data from the selected orders?"
@@ -4763,7 +4763,7 @@ msgstr ""
 msgid "Active"
 msgstr ""
 
-#: src/admin/components/Fields.vue:252 src/admin/pages/Settings.vue:188
+#: src/admin/components/Fields.vue:252 src/admin/pages/Settings.vue:192
 msgid "Select"
 msgstr ""
 
@@ -4940,7 +4940,7 @@ msgstr ""
 msgid "Thank you for subscribing!"
 msgstr ""
 
-#: src/admin/pages/Help.vue:3
+#: src/admin/pages/Help.vue:4
 msgid "Help"
 msgstr ""
 
@@ -5109,11 +5109,11 @@ msgstr ""
 msgid "Bookable Product"
 msgstr ""
 
-#: src/admin/pages/Settings.vue:9
+#: src/admin/pages/Settings.vue:11
 msgid "Dismiss this notice."
 msgstr ""
 
-#: src/admin/pages/Settings.vue:186
+#: src/admin/pages/Settings.vue:190
 msgid "Choose your file"
 msgstr ""
 
@@ -5395,31 +5395,31 @@ msgstr ""
 msgid "Google Plus"
 msgstr ""
 
-#: src/admin/pages/Vendors.vue:4
+#: src/admin/pages/Vendors.vue:7
 msgid "Add New"
 msgstr ""
 
-#: src/admin/pages/Vendors.vue:15
+#: src/admin/pages/Vendors.vue:18
 msgid "All <span class='count'>(%s)</span>"
 msgstr ""
 
-#: src/admin/pages/Vendors.vue:16 src/admin/pages/Withdraw.vue:21
+#: src/admin/pages/Vendors.vue:19 src/admin/pages/Withdraw.vue:24
 msgid "Approved <span class='count'>(%s)</span>"
 msgstr ""
 
-#: src/admin/pages/Vendors.vue:17 src/admin/pages/Withdraw.vue:20
+#: src/admin/pages/Vendors.vue:20 src/admin/pages/Withdraw.vue:23
 msgid "Pending <span class='count'>(%s)</span>"
 msgstr ""
 
-#: src/admin/pages/Withdraw.vue:3
+#: src/admin/pages/Withdraw.vue:6
 msgid "Withdraw Requests"
 msgstr ""
 
-#: src/admin/pages/Withdraw.vue:6 src/admin/pages/Withdraw.vue:15
+#: src/admin/pages/Withdraw.vue:9 src/admin/pages/Withdraw.vue:18
 msgid "Update Note"
 msgstr ""
 
-#: src/admin/pages/Withdraw.vue:22
+#: src/admin/pages/Withdraw.vue:25
 msgid "Cancelled <span class='count'>(%s)</span>"
 msgstr ""
 
