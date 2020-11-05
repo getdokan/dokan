@@ -15,16 +15,16 @@ jobs:
           coverage: none
           tools: cs2pr, composer:v1
 
-      - name: Get Composer cache directory
-        id: composer-cache
+      - name: Get composer cache directory
+        id: composercache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
 
-      - name: Setup cache
-        uses: pat-s/always-upload-cache@v1.1.4
+      - name: Cache dependencies
+        uses: actions/cache@v2
         with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-new-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-new-
+          path: ${{ steps.composercache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-suggest --no-progress
