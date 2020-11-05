@@ -2,7 +2,7 @@
     <div id="dokan-upgrade-wrapper">
         <div id="dokan-upgrade-popper">
             <p>{{ __("You're using", 'dokan-lite' ) }} <span>{{ __( 'Dokan Lite', 'dokan-lite' ) }}</span>. {{ __( 'To unlock more features, consider', 'dokan-lite' ) }}</p>
-            <a :href="upgradeURL" class="button">{{ __( 'Upgrade to Pro', 'dokan-lite' ) }}</a>
+            <a target="_blank" rel="noopener noreferrer" :href="upgradeURL" class="button">{{ __( 'Upgrade to Pro', 'dokan-lite' ) }}</a>
         </div>
     </div>
 </template>
@@ -12,7 +12,7 @@ export default {
     name: "UpgradeBanner",
     data() {
         return {
-            upgradeURL: dokan.dokan_upgrade_to_pro_url
+            upgradeURL: dokan.urls.upgradeToPro
         }
     },
 }
