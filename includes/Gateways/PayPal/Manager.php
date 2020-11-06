@@ -218,6 +218,16 @@ class Manager {
     public function insert_into_vendor_balance( array $withdraw ) {
         global $wpdb;
 
+        //update debit amount in vendor table
+        $wpdb->update(
+            $wpdb->dokan_vendor_balance,
+            [ 'debit' => (float) $withdraw['amount'] ],
+            [ 'vendor_id' => $withdraw['vendor_id'], 'trn_id' => $withdraw['order_id'], 'trn_type' => 'dokan_orders' ],
+            [ '%f' ],
+            [ '%d', '%d' ]
+        );
+
+        //insert withdraw amount
         $wpdb->insert( $wpdb->prefix . 'dokan_vendor_balance',
             [
                 'vendor_id'    => $withdraw['vendor_id'],
