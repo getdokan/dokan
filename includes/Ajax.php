@@ -54,6 +54,8 @@ class Ajax {
         add_action( 'wp_ajax_nopriv_dokan_get_login_form', [ $this, 'get_login_form' ] );
         add_action( 'wp_ajax_nopriv_dokan_login_user', [ $this, 'login_user' ] );
         add_action( 'wp_ajax_get_vendor_earning', [ $this, 'get_vendor_earning' ] );
+
+        add_action( 'wp_ajax_dokan-upgrade-dissmiss', [ $this, 'dismiss_pro_notice' ] );
     }
 
     /**
@@ -1012,5 +1014,22 @@ class Ajax {
         $args = apply_filters( 'dokan_withdraw_export_csv_args', $args );
 
         dokan()->withdraw->export( $args )->csv();
+    }
+
+    /**
+     * Dismiss the Dokan upgrade notice.
+     *
+     * @since 3.1
+     *
+     * @return void
+     */
+    public function dismiss_pro_notice() {
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            wp_send_json_error( __( 'You have no permission to do this action', 'dokan-lite' ) );
+        }
+
+        update_option( 'dokan_hide_pro_nag', 'hide' );
+
+        wp_send_json_success();
     }
 }

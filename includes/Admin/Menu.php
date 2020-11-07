@@ -91,6 +91,7 @@ class Menu {
      * @return void
      */
     public function dashboard() {
+        include DOKAN_DIR . '/templates/admin-header.php';
         echo '<div class="wrap"><div id="dokan-vue-admin"></div></div>';
     }
 }

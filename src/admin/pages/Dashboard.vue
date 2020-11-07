@@ -1,10 +1,10 @@
 <template>
     <div class="dokan-dashboard">
+        <UpgradeBanner v-if="!hasPro"></UpgradeBanner>
+
         <h1>{{ __( 'Dashboard', 'dokan-lite' ) }}</h1>
 
         <div class="widgets-wrapper">
-
-            <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
 
             <div class="left-side">
                 <postbox :title="__( 'At a Glance', 'dokan-lite' )" extraClass="dokan-status">
