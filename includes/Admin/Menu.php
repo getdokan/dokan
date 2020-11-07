@@ -32,6 +32,7 @@ class Menu {
         $withdraw_text = __( 'Withdraw', 'dokan-lite' );
         $slug          = 'dokan';
 
+        // phpcs:disable
         if ( $withdraw['pending'] ) {
             $withdraw_text = sprintf( __( 'Withdraw %s', 'dokan-lite' ), '<span class="awaiting-mod count-1"><span class="pending-count">' . $withdraw['pending'] . '</span></span>' );
         }
@@ -58,6 +59,8 @@ class Menu {
             $submenu[ $slug ][] = array( __( '<span style="color:#f18500">Help</span>', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/help' );
             $submenu[ $slug ][] = array( __( 'Settings', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/settings' );
         }
+
+        // phpcs:enable
 
         add_action( $dashboard, array( $this, 'dashboard_script' ) );
     }
