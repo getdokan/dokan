@@ -196,6 +196,7 @@ class Manager {
         }
 
         $vendor->update_meta( 'dokan_profile_settings', $store_data );
+        $vendor->update_meta( 'dokan_store_name', $store_data['store_name'] );
         $vendor->set_store_name( $store_data['store_name'] );
         $vendor->save();
 
