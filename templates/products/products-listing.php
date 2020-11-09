@@ -102,7 +102,7 @@
                             <tbody>
                                 <?php
                                 $pagenum       = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
-                                $post_statuses = apply_filters( 'dokan_product_listing_post_statuses', array( 'publish', 'draft', 'pending', 'future' ) );
+                                $post_statuses = apply_filters( 'dokan_product_listing_post_statuses', [ 'publish', 'draft', 'pending', 'future' ] );
                                 $get_data      = wp_unslash( $_GET );
 
                                 $args = array(
