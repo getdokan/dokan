@@ -615,8 +615,11 @@ class DokanPayPal extends WC_Payment_Gateway {
             $product  = wc_get_product( $line_item->get_product_id() );
             $category = $product->is_downloadable() || $product->is_virtual() ? 'DIGITAL_GOODS' : 'PHYSICAL_GOODS';
 
+            //dividing the extra fee by the quantity
+            $item_extra_fee = ( $extra_fee / $line_item->get_quantity() );
+
             //get single item price by quantity. sometimes there will be product warranty add-on
-            $item_price = ( $line_item->get_total() / $line_item->get_quantity() ) + $extra_fee;
+            $item_price = ( $line_item->get_total() / $line_item->get_quantity() ) + $item_extra_fee;
             $item_price = wc_format_decimal( $item_price, 2 );
 
             $items[] = [
