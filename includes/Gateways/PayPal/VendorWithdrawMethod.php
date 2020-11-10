@@ -50,19 +50,17 @@ class VendorWithdrawMethod {
      * @return void
      */
     public function paypal_connect_button( $store_settings ) {
-//        if ( isset( $_GET['page'] ) && 'dokan-seller-setup' === $_GET['page'] ) {
-//            return;
-//        }
-
         global $current_user;
 
         $email = isset( $store_settings['payment']['paypal']['email'] ) ? esc_attr( $store_settings['payment']['paypal']['email'] ) : $current_user->user_email;
 
         $partner_id = isset( $store_settings['payment']['paypal']['partner_id'] ) ? esc_attr( $store_settings['payment']['paypal']['partner_id'] ) : '';
 
-        $merchant_id = get_user_meta( get_current_user_id(), '_dokan_paypal_marketplace_merchant_id', true );
-        $button_text = $merchant_id ? __( 'Connected', 'dokan-lite' ) : __( 'Sign up for PayPal', 'dokan-lite' );
+        $merchant_id_enable = Helper::is_seller_enable_for_receive_payment( get_current_user_id() );
+        $button_text        = $merchant_id_enable ? __( 'Connected', 'dokan-lite' ) : __( 'Sign up for PayPal', 'dokan-lite' );
 
+        $merchant_id           = get_user_meta( get_current_user_id(), '_dokan_paypal_marketplace_merchant_id', true );
+        $primary_email         = get_user_meta( get_current_user_id(), '_dokan_paypal_primary_email_confirmed', true );
         $nonce                 = wp_create_nonce( 'paypal-marketplace-connect' );
         $connect_to_paypal_url = add_query_arg(
             [
@@ -78,10 +76,12 @@ class VendorWithdrawMethod {
                 'email'           => $email,
                 'partner_id'      => $partner_id,
                 'button_text'     => $button_text,
-                'button_disabled' => $merchant_id ? true : false,
-                'button_class'    => $merchant_id ? 'dokan-btn-success disabled' : '',
+                'button_disabled' => $merchant_id_enable ? true : false,
+                'button_class'    => $merchant_id_enable ? 'dokan-btn-success disabled' : '',
                 'url'             => $connect_to_paypal_url,
                 'nonce'           => $nonce,
+                'primary_email'   => $primary_email,
+                'merchant_id'     => $merchant_id,
             ]
         );
     }

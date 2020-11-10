@@ -69,7 +69,12 @@ class Manager {
             return;
         }
 
-        if ( ! isset( $_GET['action'] ) && $_GET['action'] !== 'paypal-marketplace-connect' && $_GET['action'] !== 'paypal-marketplace-connect-success' ) {
+        if (
+            ! isset( $_GET['action'] ) &&
+            $_GET['action'] !== 'paypal-marketplace-connect' &&
+            $_GET['action'] !== 'paypal-marketplace-connect-success' &&
+            $_GET['action'] !== 'merchant-status-update'
+        ) {
             return;
         }
 
@@ -93,8 +98,18 @@ class Manager {
             exit();
         }
 
+        if ( isset( $get_data['_wpnonce'] ) && $_GET['action'] === 'merchant-status-update' && ! wp_verify_nonce( $get_data['_wpnonce'], 'paypal-marketplace-connect' ) ) {
+            wp_safe_redirect( add_query_arg( [ 'message' => 'error' ], dokan_get_navigation_url( 'settings/payment' ) ) );
+            exit();
+        }
+
         if ( 'paypal-marketplace-connect-success' === $get_data['action'] ) {
             $this->handle_paypal_marketplace_connect_success_response();
+        }
+
+        if ( 'merchant-status-update' === $get_data['action'] ) {
+            $merchant_id = get_user_meta( dokan_get_current_user_id(), '_dokan_paypal_marketplace_merchant_id', true );
+            $this->validate_merchant_status( $merchant_id );
         }
     }
 

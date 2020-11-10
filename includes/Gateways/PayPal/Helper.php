@@ -22,8 +22,9 @@ class Helper {
     public static function get_supported_webhook_events() {
         return apply_filters(
             'dokan_paypal_get_supported_webhook_events', [
-                'CHECKOUT.ORDER.APPROVED'  => 'CheckoutOrderApproved',
-                'CHECKOUT.ORDER.COMPLETED' => 'CheckoutOrderCompleted',
+                'CHECKOUT.ORDER.APPROVED'          => 'CheckoutOrderApproved',
+                'CHECKOUT.ORDER.COMPLETED'         => 'CheckoutOrderCompleted',
+                'MERCHANT.PARTNER-CONSENT.REVOKED' => 'MerchantPartnerConsentRevoked',
             ]
         );
     }
@@ -330,5 +331,28 @@ class Helper {
         }
 
         dokan_log( "[Dokan PayPal Marketplace] $meta_key Error:\n" . print_r( $error, true ), 'error' );
+    }
+
+    /**
+     * Get user id by merchant id
+     *
+     * @param $merchant_id
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return int
+     */
+    public static function get_user_id( $merchant_id ) {
+        global $wpdb;
+
+        $user_id = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT `user_id` FROM $wpdb->usermeta WHERE `meta_key` = %s AND `meta_value`= %s",
+                '_dokan_paypal_marketplace_merchant_id',
+                $merchant_id
+            )
+        );
+
+        return absint( $user_id );
     }
 }

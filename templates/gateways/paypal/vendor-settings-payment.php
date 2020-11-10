@@ -11,6 +11,14 @@
                 type="email"
             >
         </div>
+
+        <?php if ($merchant_id && !$primary_email) : ?>
+        <div class="dokan-w12">
+            <div class="dokan-alert dokan-alert-warning dokan-text-left" style="margin-top: 15px">
+                <?php esc_html_e('Your primary email is not confirmed yet. To receive payment you must need to confirm your paypal primary email.', 'dokan-lite');?>
+            </div>
+        </div>
+        <?php endif;?>
     </div>
 
     <p class="dokan-text-left">
@@ -20,6 +28,20 @@
         >
             <?php echo esc_html( $button_text ); ?>
         </a>
+
+        <?php if ( $merchant_id && ! $primary_email ) : ?>
+            <?php $url = add_query_arg( [
+                'action'   => 'merchant-status-update',
+                '_wpnonce' => wp_create_nonce( 'paypal-marketplace-connect' ),
+            ] );
+            ?>
+            <a
+                href="<?php echo $url;?>"
+                class="button button-primary"
+            >
+                <?php echo esc_html_e( 'Update', 'dokan-lite' ); ?>
+            </a>
+        <?php endif;?>
     </p>
 
     <div id="paypal_connect_button"></div>

@@ -738,6 +738,24 @@ class DokanPayPal extends WC_Payment_Gateway {
             }
         }
 
+        if ( is_checkout_pay_page() ) {
+            global $wp;
+
+            //get order id if this is a order review page
+            $order_id = isset( $wp->query_vars['order-pay'] ) ? $wp->query_vars['order-pay'] : null;
+
+            $order = wc_get_order( $order_id );
+
+            foreach ( $order->get_items( 'line_item' ) as $key => $line_item ) {
+                $seller_id = get_post_field( 'post_author', $line_item->get_product_id() );
+                $total_seller_count ++;
+
+                if ( Helper::is_seller_enable_for_receive_payment( $seller_id ) ) {
+                    $seller_is_able_to_receive_payment_count ++;
+                }
+            }
+        }
+
         //allow if seller is able to receive payment in a cart is less than or equal to total seller
         if ( $seller_is_able_to_receive_payment_count && $seller_is_able_to_receive_payment_count <= $total_seller_count ) {
             return true;
