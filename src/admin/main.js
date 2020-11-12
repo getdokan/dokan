@@ -12,7 +12,9 @@ new Vue({
 
     created() {
         this.setLocaleData( dokan.i18n['dokan-lite'] );
-        this.setLocaleData( dokan.dokan_pro_i18n['dokan'] );
+        if ( dokan.dokan_pro_i18n ) {
+            this.setLocaleData( dokan.dokan_pro_i18n['dokan'] );
+        }
     }
 });
 

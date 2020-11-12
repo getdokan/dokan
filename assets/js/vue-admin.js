@@ -6839,7 +6839,10 @@ new Vue({
   },
   created: function created() {
     this.setLocaleData(dokan.i18n['dokan-lite']);
-    this.setLocaleData(dokan.dokan_pro_i18n['dokan']);
+
+    if (dokan.dokan_pro_i18n) {
+      this.setLocaleData(dokan.dokan_pro_i18n['dokan']);
+    }
   }
 }); // fix the admin menu for the slug "vue-app"
 
