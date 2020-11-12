@@ -23,13 +23,13 @@ class Manager {
     /**
      * Get all vendors
      *
-     * @since 2.8.0
+     * @param array $args
      *
-     * @param  array  $args
+     * @since 2.8.0
      *
      * @return array
      */
-    public function all( $args = array() ) {
+    public function all( $args = [] ) {
         return $this->get_vendors( $args );
     }
 
@@ -440,7 +440,6 @@ class Manager {
      * @return array
      */
     public function get_featured( $args = [] ) {
-
         $defaults = [
             'number'   => 10,
             'offset'   => 0,
