@@ -112,6 +112,26 @@ class CartHandler extends DokanPayPal {
                 $paypal_merchant_ids[ 'seller_' . $seller_id ] = $merchant_id;
             }
 
+            //if this is a order review page
+            if ( is_checkout_pay_page() ) {
+                global $wp;
+
+                //get order id if this is a order review page
+                $order_id = isset( $wp->query_vars['order-pay'] ) ? $wp->query_vars['order-pay'] : null;
+
+                $order = wc_get_order( $order_id );
+
+                foreach ( $order->get_items( 'line_item' ) as $key => $line_item ) {
+                    $product_id = $line_item->get_product_id();
+                    $seller_id  = get_post_field( 'post_author', $product_id );
+
+                    $merchant_id = get_user_meta( $seller_id, '_dokan_paypal_marketplace_merchant_id', true );
+                    $merchant_id = apply_filters( 'dokan_paypal_marketplace_merchant_id', $merchant_id, $product_id );
+
+                    $paypal_merchant_ids[ 'seller_' . $seller_id ] = $merchant_id;
+                }
+            }
+
             if ( count( $paypal_merchant_ids ) > 1 ) {
                 $source .= '&merchant-id=*';
             } elseif ( 1 === count( $paypal_merchant_ids ) ) {
