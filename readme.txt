@@ -291,6 +291,14 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v3.0.13 (November 12, 2020) =
+
+- **New:** Added new filter `dokan_is_product_author`
+- **New:** Apply new filter `dokan_product_listing_post_statuses` on product listing status
+- **Fix:** Store name search was not working when the vendor account was created by admin
+- **Fix:** Vendor was not changing when trying to change on product quick edit section from admin area
+- **Fix:** Some translation issue fixed on admin setting page
+
 = v3.0.12 (November 5, 2020) =
 
 - **Fix:** Refactor upgrade to pro banner.

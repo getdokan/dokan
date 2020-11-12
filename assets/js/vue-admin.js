@@ -3665,12 +3665,28 @@ var Currency = dokan_get_lib('Currency');
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: "UpgradeBanner",
   data: function data() {
     return {
+      show: true,
       upgradeURL: dokan.urls.upgradeToPro
     };
+  },
+  computed: {
+    showUpgrade: function showUpgrade() {
+      return !dokan.hasPro && dokan.proNag === "show";
+    }
+  },
+  methods: {
+    dismiss: function dismiss() {
+      this.show = false;
+      wp.ajax.post("dokan-upgrade-dissmiss");
+    }
   }
 });
 
@@ -6823,6 +6839,7 @@ new Vue({
   },
   created: function created() {
     this.setLocaleData(dokan.i18n['dokan-lite']);
+    this.setLocaleData(dokan.dokan_pro_i18n['dokan']);
   }
 }); // fix the admin menu for the slug "vue-app"
 
@@ -7070,31 +7087,34 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { attrs: { id: "dokan-upgrade-wrapper" } }, [
-    _c("div", { attrs: { id: "dokan-upgrade-popper" } }, [
-      _c("p", [
-        _vm._v(_vm._s(_vm.__("You're using", "dokan-lite")) + " "),
-        _c("span", [_vm._v(_vm._s(_vm.__("Dokan Lite", "dokan-lite")))]),
-        _vm._v(
-          ". " +
-            _vm._s(_vm.__("To unlock more features, consider", "dokan-lite"))
+  return _vm.show && _vm.showUpgrade
+    ? _c("div", { staticClass: "dokan-upgrade-bar" }, [
+        _vm._v("\n    You're using "),
+        _c("span", [_vm._v("Dokan Lite")]),
+        _vm._v(". To unlock more features, consider\n    "),
+        _c(
+          "a",
+          {
+            attrs: { target: "_blank", rel: "noopener", href: _vm.upgradeURL }
+          },
+          [_vm._v("\n        Upgrading to Pro")]
+        ),
+        _vm._v(".\n\n    "),
+        _c(
+          "div",
+          {
+            staticClass: "close-button",
+            attrs: { title: "Dismiss the notice" },
+            on: {
+              click: function($event) {
+                return _vm.dismiss()
+              }
+            }
+          },
+          [_vm._v("\n        ×\n    ")]
         )
-      ]),
-      _vm._v(" "),
-      _c(
-        "a",
-        {
-          staticClass: "button",
-          attrs: {
-            target: "_blank",
-            rel: "noopener noreferrer",
-            href: _vm.upgradeURL
-          }
-        },
-        [_vm._v(_vm._s(_vm.__("Upgrade to Pro", "dokan-lite")))]
-      )
-    ])
-  ])
+      ])
+    : _vm._e()
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -7116,15 +7136,15 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "dokan-dashboard" }, [
-    _c("h1", [_vm._v(_vm._s(_vm.__("Dashboard", "dokan-lite")))]),
-    _vm._v(" "),
-    _c(
-      "div",
-      { staticClass: "widgets-wrapper" },
-      [
-        !_vm.hasPro ? _c("UpgradeBanner") : _vm._e(),
-        _vm._v(" "),
+  return _c(
+    "div",
+    { staticClass: "dokan-dashboard" },
+    [
+      !_vm.hasPro ? _c("UpgradeBanner") : _vm._e(),
+      _vm._v(" "),
+      _c("h1", [_vm._v(_vm._s(_vm.__("Dashboard", "dokan-lite")))]),
+      _vm._v(" "),
+      _c("div", { staticClass: "widgets-wrapper" }, [
         _c(
           "div",
           { staticClass: "left-side" },
@@ -7597,10 +7617,10 @@ var render = function() {
           ],
           1
         )
-      ],
-      1
-    )
-  ])
+      ])
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true

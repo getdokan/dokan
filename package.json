@@ -1,6 +1,6 @@
 {
   "name": "dokan",
-  "version": "3.0.12",
+  "version": "3.0.13",
   "description": "A WordPress marketplace plugin",
   "author": "weDevs",
   "license": "GPL",
@@ -9,7 +9,8 @@
     "dev": "WEBPACK_ENV=development webpack --progress --colors --watch --hide-modules",
     "dev:build": "WEBPACK_ENV=development webpack --progress --colors --hide-modules",
     "build": "WEBPACK_ENV=production webpack",
-    "makepot": "wpvuei18n makepot"
+    "makepot": "wpvuei18n makepot",
+    "version": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md"
   },
   "dependencies": {
     "@wordpress/hooks": "^2.10.0",

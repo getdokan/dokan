@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 3.0.12\n"
+"Project-Id-Version: Dokan 3.0.13\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2020-11-05 11:37:35+00:00\n"
+"POT-Creation-Date: 2020-11-12 11:49:38+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -50,7 +50,7 @@ msgstr ""
 msgid "Get Pro"
 msgstr ""
 
-#: dokan.php:440 includes/Admin/AdminBar.php:75 includes/Admin/Menu.php:59
+#: dokan.php:440 includes/Admin/AdminBar.php:75 includes/Admin/Menu.php:60
 #: includes/Dashboard/Templates/Settings.php:58
 #: includes/Dashboard/Templates/Settings.php:62 includes/template-tags.php:366
 #: src/admin/pages/Settings.vue:6
@@ -118,20 +118,20 @@ msgstr ""
 msgid "Dokan"
 msgstr ""
 
-#: includes/Admin/AdminBar.php:48 includes/Admin/Menu.php:42
+#: includes/Admin/AdminBar.php:48 includes/Admin/Menu.php:43
 #: includes/Admin/Settings.php:473 includes/Install/Installer.php:157
-#: includes/template-tags.php:335 src/admin/pages/Dashboard.vue:3
+#: includes/template-tags.php:335 src/admin/pages/Dashboard.vue:5
 msgid "Dashboard"
 msgstr ""
 
 #: includes/Admin/AdminBar.php:57 includes/Admin/Menu.php:32
-#: includes/Admin/Menu.php:43 includes/Admin/SetupWizard.php:160
+#: includes/Admin/Menu.php:44 includes/Admin/SetupWizard.php:160
 #: includes/functions.php:2921 includes/template-tags.php:357
 #: templates/withdraw/header.php:11
 msgid "Withdraw"
 msgstr ""
 
-#: includes/Admin/AdminBar.php:66 includes/Admin/Menu.php:51
+#: includes/Admin/AdminBar.php:66 includes/Admin/Menu.php:52
 msgid "PRO Features"
 msgstr ""
 
@@ -172,15 +172,15 @@ msgstr ""
 msgid "Toggle Sub-orders"
 msgstr ""
 
-#: includes/Admin/Menu.php:36
+#: includes/Admin/Menu.php:37
 msgid "Withdraw %s"
 msgstr ""
 
-#: includes/Admin/Menu.php:47 src/admin/pages/Vendors.vue:6
+#: includes/Admin/Menu.php:48 src/admin/pages/Vendors.vue:6
 msgid "Vendors"
 msgstr ""
 
-#: includes/Admin/Menu.php:58
+#: includes/Admin/Menu.php:59
 msgid "<span style=\"color:#f18500\">Help</span>"
 msgstr ""
 
@@ -913,7 +913,7 @@ msgstr ""
 msgid "We'll use %1$s for product weight and %2$s for product dimensions."
 msgstr ""
 
-#: includes/Admin/UserProfile.php:38 includes/Ajax.php:141
+#: includes/Admin/UserProfile.php:38 includes/Ajax.php:145
 #: includes/Assets.php:408 src/admin/pages/VendorAccountFields.vue:279
 #: src/admin/pages/VendorAccountFields.vue:311
 #: src/admin/pages/VendorAccountFields.vue:343
@@ -1102,17 +1102,17 @@ msgstr ""
 msgid "Commision: "
 msgstr ""
 
-#: includes/Ajax.php:70 includes/Ajax.php:996
+#: includes/Ajax.php:72 includes/Ajax.php:1003 includes/Ajax.php:1033
 #: includes/Dashboard/Templates/Withdraw.php:110
 #: includes/Dashboard/Templates/Withdraw.php:175
 msgid "You have no permission to do this action"
 msgstr ""
 
-#: includes/Ajax.php:92
+#: includes/Ajax.php:94
 msgid "Something wrong, please try again later"
 msgstr ""
 
-#: includes/Ajax.php:108 includes/Dashboard/Templates/Settings.php:211
+#: includes/Ajax.php:112 includes/Dashboard/Templates/Settings.php:211
 #: includes/Dashboard/Templates/Settings.php:225
 #: includes/Dashboard/Templates/Settings.php:237
 #: includes/Dashboard/Templates/Settings.php:249
@@ -1125,84 +1125,85 @@ msgstr ""
 msgid "Are you cheating?"
 msgstr ""
 
-#: includes/Ajax.php:159 includes/Ajax.php:194
+#: includes/Ajax.php:163 includes/Ajax.php:198
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
-#: includes/Ajax.php:163 includes/Ajax.php:198
+#: includes/Ajax.php:167 includes/Ajax.php:202
 msgid "You have taken too long. Please go back and retry."
 msgstr ""
 
-#: includes/Ajax.php:173 includes/Ajax.php:208
+#: includes/Ajax.php:177 includes/Ajax.php:212
 msgid "You do not have permission to change this order"
 msgstr ""
 
-#: includes/Ajax.php:270
+#: includes/Ajax.php:275
+#. translators: numeric number of files
 msgid "File %d"
 msgstr ""
 
-#: includes/Ajax.php:291
+#: includes/Ajax.php:296
 msgid "You have no permission to manage this order"
 msgstr ""
 
-#: includes/Ajax.php:327 includes/Ajax.php:332
+#: includes/Ajax.php:332 includes/Ajax.php:337
 msgid "Please provide your name."
 msgstr ""
 
-#: includes/Ajax.php:339 includes/template-tags.php:150
+#: includes/Ajax.php:344 includes/template-tags.php:150
 msgid "Something went wrong!"
 msgstr ""
 
-#: includes/Ajax.php:345 includes/REST/StoreController.php:784
+#: includes/Ajax.php:350 includes/REST/StoreController.php:784
 msgid "Email sent successfully!"
 msgstr ""
 
-#: includes/Ajax.php:404 templates/orders/details.php:292
+#: includes/Ajax.php:409 templates/orders/details.php:292
 msgid "Delete note"
 msgstr ""
 
-#: includes/Ajax.php:434
+#: includes/Ajax.php:439
 msgid "Shipping provider: "
 msgstr ""
 
-#: includes/Ajax.php:434
+#: includes/Ajax.php:439
 msgid "Shipping number: "
 msgstr ""
 
-#: includes/Ajax.php:434
+#: includes/Ajax.php:439
 msgid "Shipped date: "
 msgstr ""
 
-#: includes/Ajax.php:476 includes/woo-views/html-product-download.php:14
+#: includes/Ajax.php:481 includes/woo-views/html-product-download.php:14
 msgid "Delete"
 msgstr ""
 
-#: includes/Ajax.php:519 includes/Vendor/UserSwitch.php:122
+#: includes/Ajax.php:524 includes/Vendor/UserSwitch.php:122
 msgid "Error: Nonce verification failed"
 msgstr ""
 
-#: includes/Ajax.php:609
+#: includes/Ajax.php:614
 msgid "Image could not be processed. Please go back and try again."
 msgstr ""
 
-#: includes/Ajax.php:764
-#. translators: 1: user display name 2: user ID 3: user email
+#: includes/Ajax.php:771
+#. translators: 1. Customer name, 2. Customer ID, 3: Customer email
 msgid "%1$s (#%2$s &ndash; %3$s)"
 msgstr ""
 
-#: includes/Ajax.php:912
+#: includes/Ajax.php:919
 msgid "Invalid username or password."
 msgstr ""
 
-#: includes/Ajax.php:923
+#: includes/Ajax.php:930
 msgid "Wrong username or password."
 msgstr ""
 
-#: includes/Ajax.php:952
+#: includes/Ajax.php:959
 msgid "User logged in successfully."
 msgstr ""
 
-#: includes/Ajax.php:1002
+#: includes/Ajax.php:1009
 msgid "id param is required"
 msgstr ""
 
@@ -1400,33 +1401,33 @@ msgstr ""
 msgid "Please insert value less than the regular price!"
 msgstr ""
 
-#: includes/Assets.php:661 includes/Assets.php:827
+#: includes/Assets.php:661 includes/Assets.php:828
 #. translators: %s: decimal
 msgid "Please enter with one decimal point (%s) without thousand separators."
 msgstr ""
 
-#: includes/Assets.php:663 includes/Assets.php:829
+#: includes/Assets.php:663 includes/Assets.php:830
 #. translators: %s: price decimal separator
 msgid ""
 "Please enter with one monetary decimal point (%s) without thousand "
 "separators and currency symbols."
 msgstr ""
 
-#: includes/Assets.php:664 includes/Assets.php:830
+#: includes/Assets.php:664 includes/Assets.php:831
 msgid "Please enter in country code with two capital letters."
 msgstr ""
 
-#: includes/Assets.php:665 includes/Assets.php:831
+#: includes/Assets.php:665 includes/Assets.php:832
 msgid "Please enter in a value less than the regular price."
 msgstr ""
 
-#: includes/Assets.php:666 includes/Assets.php:832
+#: includes/Assets.php:666 includes/Assets.php:833
 msgid ""
 "This product has produced sales and may be linked to existing orders. Are "
 "you sure you want to delete it?"
 msgstr ""
 
-#: includes/Assets.php:667 includes/Assets.php:833
+#: includes/Assets.php:667 includes/Assets.php:834
 msgid ""
 "This action cannot be reversed. Are you sure you wish to erase personal "
 "data from the selected orders?"
@@ -1548,7 +1549,7 @@ msgid "Bulk Actions"
 msgstr ""
 
 #: includes/Dashboard/Templates/Products.php:202
-#: includes/Product/functions.php:434
+#: includes/Product/functions.php:435
 msgid "Delete Permanently"
 msgstr ""
 
@@ -2633,68 +2634,69 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: includes/Product/functions.php:266
+#: includes/Product/functions.php:267
+#. translators: number of items
 msgid "%s item"
 msgid_plural "%s items"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/Product/functions.php:271
+#: includes/Product/functions.php:272
 msgid "Expand"
 msgstr ""
 
-#: includes/Product/functions.php:271 src/admin/components/ColorPicker.vue:31
+#: includes/Product/functions.php:272 src/admin/components/ColorPicker.vue:31
 #: src/upgrade/App.vue:49 templates/orders/details.php:357
 #: templates/settings/store-form.php:256
 msgid "Close"
 msgstr ""
 
-#: includes/Product/functions.php:274
+#: includes/Product/functions.php:275
 msgid "Go to the first page"
 msgstr ""
 
-#: includes/Product/functions.php:275
+#: includes/Product/functions.php:276
 msgid "Go to the previous page"
 msgstr ""
 
-#: includes/Product/functions.php:277
+#: includes/Product/functions.php:278
 msgid "Select Page"
 msgstr ""
 
-#: includes/Product/functions.php:278
+#: includes/Product/functions.php:279
 msgid "Current page"
 msgstr ""
 
-#: includes/Product/functions.php:285
+#: includes/Product/functions.php:286
 msgid "Go to the next page"
 msgstr ""
 
-#: includes/Product/functions.php:286
+#: includes/Product/functions.php:287
 msgid "Go to the last page"
 msgstr ""
 
-#: includes/Product/functions.php:310
+#: includes/Product/functions.php:311
 msgid "Visible"
 msgstr ""
 
-#: includes/Product/functions.php:311
+#: includes/Product/functions.php:312
 msgid "Catalog"
 msgstr ""
 
-#: includes/Product/functions.php:312 templates/products/listing-filter.php:56
+#: includes/Product/functions.php:313 templates/products/listing-filter.php:56
 msgid "Search"
 msgstr ""
 
-#: includes/Product/functions.php:313
+#: includes/Product/functions.php:314
 #: templates/products/new-product-single.php:119
 msgid "Hidden"
 msgstr ""
 
-#: includes/Product/functions.php:426
+#: includes/Product/functions.php:427
 msgid "Edit"
 msgstr ""
 
-#: includes/Product/functions.php:450 templates/my-orders.php:88
+#: includes/Product/functions.php:451 templates/my-orders.php:88
 #: templates/orders/listing.php:161 templates/sub-orders.php:59
 msgid "View"
 msgstr ""
@@ -3828,11 +3830,11 @@ msgstr ""
 msgid "Update is not required."
 msgstr ""
 
-#: includes/Vendor/Manager.php:179
+#: includes/Vendor/Manager.php:182
 msgid "Unable to create vendor"
 msgstr ""
 
-#: includes/Vendor/Manager.php:262
+#: includes/Vendor/Manager.php:266
 msgid "Email is not valid"
 msgstr ""
 
@@ -4810,8 +4812,7 @@ msgstr ""
 msgid "Unlock these awesome frontend features with Dokan PRO"
 msgstr ""
 
-#: src/admin/components/SettingsBanner.vue:7
-#: src/admin/components/UpgradeBanner.vue:5
+#: src/admin/components/SettingsBanner.vue:7 templates/admin-header.php:49
 msgid "Upgrade to Pro"
 msgstr ""
 
@@ -4827,18 +4828,6 @@ msgstr ""
 
 #: src/admin/components/TextEditor.vue:180
 msgid "Please select an image,"
-msgstr ""
-
-#: src/admin/components/UpgradeBanner.vue:4
-msgid "You're using"
-msgstr ""
-
-#: src/admin/components/UpgradeBanner.vue:4
-msgid "Dokan Lite"
-msgstr ""
-
-#: src/admin/components/UpgradeBanner.vue:4
-msgid "To unlock more features, consider"
 msgstr ""
 
 #: src/admin/components/UploadImage.vue:75
@@ -5484,6 +5473,34 @@ msgstr ""
 
 #: templates/account/vendor-registration.php:77
 msgid "Register"
+msgstr ""
+
+#: templates/admin-header.php:13
+msgid "Join our Facebook community group"
+msgstr ""
+
+#: templates/admin-header.php:16
+msgid "Community"
+msgstr ""
+
+#: templates/admin-header.php:24
+msgid "View the plugin documentation"
+msgstr ""
+
+#: templates/admin-header.php:27
+msgid "Docs"
+msgstr ""
+
+#: templates/admin-header.php:35
+msgid "Connect with your support team"
+msgstr ""
+
+#: templates/admin-header.php:38
+msgid "Support"
+msgstr ""
+
+#: templates/admin-header.php:47
+msgid "Upgrade to Dokan Pro"
 msgstr ""
 
 #: templates/admin-setup-wizard/run-wizard-notice.php:2
@@ -6726,15 +6743,15 @@ msgstr ""
 msgid "Add new product"
 msgstr ""
 
-#: templates/products/products-listing.php:171
+#: templates/products/products-listing.php:172
 msgid "No product found"
 msgstr ""
 
-#: templates/products/products-listing.php:194
+#: templates/products/products-listing.php:195
 msgid "&laquo; Previous"
 msgstr ""
 
-#: templates/products/products-listing.php:195
+#: templates/products/products-listing.php:196
 msgid "Next &raquo;"
 msgstr ""
 
@@ -7073,7 +7090,7 @@ msgctxt "enhanced select"
 msgid "Searching&hellip;"
 msgstr ""
 
-#: includes/Product/functions.php:283
+#: includes/Product/functions.php:284
 msgctxt "number of pages"
 msgid "of"
 msgstr ""
