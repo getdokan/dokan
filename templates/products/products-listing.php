@@ -102,13 +102,14 @@
                             <tbody>
                                 <?php
                                 $pagenum       = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
-                                $post_statuses = array( 'publish', 'draft', 'pending', 'future' );
+                                $post_statuses = apply_filters( 'dokan_product_listing_post_statuses', [ 'publish', 'draft', 'pending', 'future' ] );
                                 $get_data      = wp_unslash( $_GET );
 
                                 $args = array(
                                     'posts_per_page' => 15,
                                     'paged'          => $pagenum,
                                     'author'         => get_current_user_id(),
+                                    'post_status'    => $post_statuses,
                                     'tax_query'      => array(
                                         array(
                                             'taxonomy' => 'product_type',
