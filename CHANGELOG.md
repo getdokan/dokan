@@ -1,3 +1,18 @@
+## [3.0.13](https://github.com/weDevsOfficial/dokan/compare/v3.0.12...v3.0.13) (2020-11-12)
+
+
+### Bug Fixes
+
+* Product quick edit vendor not changing issue fixed ([fd57918](https://github.com/weDevsOfficial/dokan/commit/fd579184246a432127bdf77286fbb8a9d0a604c7))
+* Translation issue for Dokan Pro ([#944](https://github.com/weDevsOfficial/dokan/issues/944)) ([7b3f105](https://github.com/weDevsOfficial/dokan/commit/7b3f1052f259e84452754495f7a6c5358b2a3b8b))
+* vendor created by admin does not show in search result ([#949](https://github.com/weDevsOfficial/dokan/issues/949)) ([db00d62](https://github.com/weDevsOfficial/dokan/commit/db00d6213ddd4e86c210432a7b8d50bfc26fe02c)), closes [#936](https://github.com/weDevsOfficial/dokan/issues/936)
+
+### Features
+
+* Added admin header bar ([#947](https://github.com/weDevsOfficial/dokan/issues/947)) ([b9cb4a8](https://github.com/weDevsOfficial/dokan/commit/b9cb4a84f4adff58a9618f91821c9ee55f835fe9))
+* Apply new filter `dokan_product_listing_post_statuses ` on product listing status ([#950](https://github.com/weDevsOfficial/dokan/issues/950)) ([7f5b680](https://github.com/weDevsOfficial/dokan/commit/7f5b6800b93aaacdd4a1c4ad24af68c10fc96a8e))
+
+
 ## [3.0.11](https://github.com/weDevsOfficial/dokan/compare/v3.0.9...v3.0.11) (2020-10-22)
 
 

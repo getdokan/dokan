@@ -104,6 +104,54 @@
   border-width: 0 5px 5px;
   border-bottom-color: #000;
 }
+.dokan-admin-header {
+  background: #fff;
+  padding: 15px 15px 15px 22px;
+  margin: 0 0 0 -20px;
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+}
+.dokan-admin-header .dokan-admin-header__logo {
+  display: flex;
+  align-items: flex-end;
+}
+.dokan-admin-header .dokan-admin-header__logo img {
+  height: 28px;
+  width: auto;
+}
+.dokan-admin-header .dokan-admin-header__logo span {
+  margin-left: 8px;
+  font-family: Consolas, Monaco, monospace;
+  font-size: 11px;
+  background: #ffe6c4;
+  padding: 1px 7px;
+  border-radius: 3px;
+}
+.dokan-admin-header .dokan-admin-header__menu {
+  flex-basis: 100%;
+  text-align: right;
+  padding-right: 6px;
+}
+.dokan-admin-header .dokan-admin-header__menu a {
+  text-decoration: none;
+  margin-left: 5px;
+  color: #4c4c4c;
+  padding: 8px 5px;
+}
+.dokan-admin-header .dokan-admin-header__menu a:hover {
+  background-color: #f5f5f5;
+  border-radius: 3px;
+}
+.dokan-admin-header .dokan-admin-header__menu a.header-link--cta {
+  background-color: #ff5722;
+  color: #fff;
+  border-radius: 3px;
+  padding: 8px 10px;
+}
+.dokan-admin-header .dokan-admin-header__menu a.header-link--cta:hover {
+  background-color: #ff6a3c;
+}
 .dokan-dashboard .post-box-container {
   width: 49%;
   float: left;
@@ -132,7 +180,7 @@
 .dokan-dashboard .postbox .main h4 {
   margin: 0 0 7px 0;
   padding: 0 0 7px 0;
-  border-bottom: 1px solid #EEE;
+  border-bottom: 1px solid #eee;
 }
 .dokan-dashboard .postbox .inside {
   margin: 10px 0 0 0;
@@ -177,19 +225,19 @@
   color: green;
 }
 .dokan-dashboard .postbox.dokan-status ul li a .details span.up::before {
-  content: '+';
+  content: "+";
 }
 .dokan-dashboard .postbox.dokan-status ul li a .details span.up::after {
-  content: '%';
+  content: "%";
 }
 .dokan-dashboard .postbox.dokan-status ul li a .details span.down {
   color: red;
 }
 .dokan-dashboard .postbox.dokan-status ul li a .details span.down::before {
-  content: '-';
+  content: "-";
 }
 .dokan-dashboard .postbox.dokan-status ul li a .details span.down::after {
-  content: '%';
+  content: "%";
 }
 .dokan-dashboard .postbox.dokan-status ul li a strong {
   font-size: 18px;
@@ -350,7 +398,7 @@
   position: absolute;
   top: 0;
   right: 0;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: #fff;
   padding: 4px;
   z-index: 2;
