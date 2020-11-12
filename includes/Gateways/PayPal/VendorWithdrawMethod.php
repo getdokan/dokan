@@ -82,6 +82,7 @@ class VendorWithdrawMethod {
                 'nonce'           => $nonce,
                 'primary_email'   => $primary_email,
                 'merchant_id'     => $merchant_id,
+                'ajax_url'        => admin_url( 'admin-ajax.php' ),
             ]
         );
     }

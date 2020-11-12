@@ -105,7 +105,7 @@ if ( ! $button_disabled ) :
 
                     $.ajax({
                         type: 'POST',
-                        url: dokan.ajaxurl,
+                        url: '<?php echo $ajax_url; ?>',
                         data: connect_data,
                         dataType: 'json',
                     }).done(function(result) {

@@ -309,14 +309,14 @@
                                 }
                             };
 
-                            let dpm_card_number = document.getElementById('dpm_card_number').value;
-                            let dpm_cvv = document.getElementById('dpm_cvv').value;
-                            let dpm_card_expiry = document.getElementById('dpm_card_expiry').value;
-
-                            if (!dpm_card_number && !dpm_cvv && !dpm_card_expiry ) {
-                                dokan_paypal_marketplace.submit_error('<div class="woocommerce-error">' + dokan_paypal.card_info_error_message +'</div>');
-                                return;
-                            }
+                            // let dpm_card_number = document.getElementById('dpm_card_number').value;
+                            // let dpm_cvv = document.getElementById('dpm_cvv').value;
+                            // let dpm_card_expiry = document.getElementById('dpm_card_expiry').value;
+                            //
+                            // if (!dpm_card_number && !dpm_cvv && !dpm_card_expiry ) {
+                            //     dokan_paypal_marketplace.submit_error('<div class="woocommerce-error">' + dokan_paypal.card_info_error_message +'</div>');
+                            //     return;
+                            // }
 
                             hf.submit(args).then(function (res) {
                                 dokan_paypal_marketplace.capture_payment(order_id, order_redirect_url);
