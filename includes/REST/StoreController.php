@@ -485,7 +485,7 @@ class StoreController extends WP_REST_Controller {
             return new WP_Error( 'no_store_found', __( 'No store found', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
-        if ( class_exists( 'Dokan_Store_Reviews' ) ) {
+        if ( ! dokan_pro()->module->is_active( 'store_reviews' ) ) {
             $args = array(
                 'post_type'      => 'dokan_store_reviews',
                 'meta_key'       => 'store_id',
@@ -601,7 +601,7 @@ class StoreController extends WP_REST_Controller {
      * @return WP_REST_Response $response Response data.
      */
     public function prepare_reviews_for_response( $item, $request, $additional_fields = [] ) {
-        if ( class_exists( 'Dokan_Store_Reviews' ) ) {
+        if ( ! dokan_pro()->module->is_active( 'store_reviews' ) ) {
             $user          = get_user_by( 'id', $item->post_author );
             $user_gravatar = get_avatar_url( $user->user_email );
 
