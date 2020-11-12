@@ -207,11 +207,17 @@ class Helper {
      * @return bool
      */
     public static function is_ucc_enabled_for_all_seller_in_cart() {
+        $ucc_enabled = static::is_ucc_enabled();
+
+        if ( ! $ucc_enabled ) {
+            return false;
+        }
+
         foreach ( WC()->cart->get_cart() as $item ) {
             $product_id = $item['data']->get_id();
             $seller_id  = get_post_field( 'post_author', $product_id );
 
-            if ( static::is_ucc_enabled() && ! get_user_meta( $seller_id, '_dokan_paypal_enable_for_ucc', true ) ) {
+            if ( $ucc_enabled && ! get_user_meta( $seller_id, '_dokan_paypal_enable_for_ucc', true ) ) {
                 return false;
             }
         }
