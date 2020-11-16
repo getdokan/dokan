@@ -141,6 +141,11 @@ class Assets {
                 'name'      => 'VendorCapabilities',
                 'component' => 'VendorCapabilities',
             ],
+            [
+                'path'      => '/lite-modules',
+                'name'      => 'LiteModules',
+                'component' => 'LiteModules',
+            ],
         ];
 
         // @codingStandardsIgnoreLine
