@@ -142,9 +142,9 @@ class Assets {
                 'component' => 'VendorCapabilities',
             ],
             [
-                'path'      => '/lite-modules',
-                'name'      => 'LiteModules',
-                'component' => 'LiteModules',
+                'path'      => '/pro-modules',
+                'name'      => 'ProModules',
+                'component' => 'ProModules',
             ],
         ];
 

@@ -48,7 +48,7 @@ class Menu {
             }
 
             if ( ! dokan()->is_pro_exists() ) {
-                $submenu[ $slug ][] = array( __( 'Modules', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/lite-modules' );
+                $submenu[ $slug ][] = array( __( 'Modules', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/pro-modules' );
             }
 
             if ( ! dokan()->is_pro_exists() ) {

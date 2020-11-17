@@ -52,7 +52,7 @@
 import ModuleUpgradePopup from '../components/ModuleUpgradePopup.vue';
 
 export default {
-    name: "LiteModules",
+    name: "ProModules",
     components: {
         ModuleUpgradePopup,
     },
