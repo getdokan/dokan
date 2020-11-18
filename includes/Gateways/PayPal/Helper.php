@@ -361,4 +361,37 @@ class Helper {
 
         return absint( $user_id );
     }
+
+    /**
+     * Check if the paypal payment method is enabled or not
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return bool
+     */
+    public static function is_paypal_enabled() {
+        $paypal_enabled = dokan()->payment_gateway->paypal_marketplace->paypal_wc_gateway->get_option( 'enabled' );
+
+        if ( 'no' === $paypal_enabled ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Get Percentage of from a price
+     *
+     * @param $price
+     * @param $extra_amount
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return float|int
+     */
+    public static function get_percentage($price, $extra_amount) {
+        $percentage = ( $extra_amount * 100 ) / $price;
+
+        return $percentage;
+    }
 }
