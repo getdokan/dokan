@@ -23,13 +23,13 @@ class Manager {
     /**
      * Get all vendors
      *
-     * @since 2.8.0
+     * @param array $args
      *
-     * @param  array  $args
+     * @since 2.8.0
      *
      * @return array
      */
-    public function all( $args = array() ) {
+    public function all( $args = [] ) {
         return $this->get_vendors( $args );
     }
 
@@ -298,7 +298,7 @@ class Manager {
                 $vendor->update_meta( 'dokan_admin_percentage_type', $data['admin_commission_type'] );
             }
 
-            if ( isset( $data['admin_commission'] ) && ( is_numeric( $data['admin_commission'] ) || '' === $data['admin_commission'] ) ) {
+            if ( isset( $data['admin_commission'] ) && ( is_numeric( wc_format_decimal( $data['admin_commission'] ) ) || '' === $data['admin_commission'] ) ) {
                 $vendor->update_meta( 'dokan_admin_percentage', wc_format_decimal( $data['admin_commission'] ) );
             }
         }
@@ -440,7 +440,6 @@ class Manager {
      * @return array
      */
     public function get_featured( $args = [] ) {
-
         $defaults = [
             'number'   => 10,
             'offset'   => 0,
