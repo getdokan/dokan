@@ -1,3 +1,19 @@
+## [3.0.14](https://github.com/weDevsOfficial/dokan/compare/v3.0.13...v3.0.14) (2020-11-20)
+
+
+### Bug Fixes
+
+* comma separated decimal on vendor edit admin commission ([3ac5c6c](https://github.com/weDevsOfficial/dokan/commit/3ac5c6ce55801e61ae7b5a32efb64937ac9f10b3))
+* fixed cannot read property of dokan undefined error ([82979b4](https://github.com/weDevsOfficial/dokan/commit/82979b417e81f6f012b1f6dc60d290a4f1068ec9))
+* phpcs error ([0480ee8](https://github.com/weDevsOfficial/dokan/commit/0480ee83c49d1d344a0997e643aa90c614228f7a))
+
+
+### Features
+
+* limited time promotion admin notice ([9c69063](https://github.com/weDevsOfficial/dokan/commit/9c69063578f0bf5b97c522fbe8d2212dcb0ec490))
+
+
+
 ## [3.0.13](https://github.com/weDevsOfficial/dokan/compare/v3.0.12...v3.0.13) (2020-11-12)
 
 
