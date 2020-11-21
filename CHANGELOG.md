@@ -1,3 +1,12 @@
+## [3.0.15](https://github.com/weDevsOfficial/dokan/compare/v3.0.14...v3.0.15) (2020-11-21)
+
+
+### Bug Fixes
+
+* timezone mismatch ([6d14173](https://github.com/weDevsOfficial/dokan/commit/6d1417311e7efab85b0a3bc4d80d1614cf8835f5))
+
+
+
 ## [3.0.14](https://github.com/weDevsOfficial/dokan/compare/v3.0.13...v3.0.14) (2020-11-20)
 
 
