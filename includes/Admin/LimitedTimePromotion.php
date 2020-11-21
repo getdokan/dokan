@@ -199,7 +199,7 @@ class LimitedTimePromotion {
      * @return string
      */
     private function get_current_time_est() {
-        $dt = new \DateTime( current_time( 'mysql' ), new \DateTimeZone( 'UTC' ) );
+        $dt = new \DateTime( 'now', new \DateTimeZone( 'UTC' ) );
         $dt->setTimezone( new \DateTimeZone( 'EST' ) );
 
         return $dt->format( 'Y-m-d H:i:s T' );
