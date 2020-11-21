@@ -5,9 +5,9 @@
 **Requires at least:** 4.4  
 **Tested up to:** 5.5.3  
 **WC requires at least:** 3.0  
-**WC tested up to:** 4.6  
+**WC tested up to:** 4.7.0  
 **Requires PHP:** 5.6  
-**Stable tag:** 3.0.14  
+**Stable tag:** 3.0.15  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -290,6 +290,10 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 ## Changelog ##
+
+## v3.0.15 (November 21, 2020) ##
+
+- **fix** updated codebase to fix timezone mismatch
 
 ## v3.0.14 (November 20, 2020) ##
 
