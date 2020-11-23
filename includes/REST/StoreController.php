@@ -215,7 +215,7 @@ class StoreController extends WP_REST_Controller {
 
         if ( ! empty( $params['search'] ) ) {
             $args['search']         = '*' . sanitize_text_field( ( $params['search'] ) ) . '*';
-            $args['search_columns'] = array( 'user_login', 'user_email', 'display_name' );
+            $args['search_columns'] = array( 'user_login', 'user_email', 'display_name', 'user_nicename' );
         }
 
         if ( ! empty( $params['status'] ) ) {
