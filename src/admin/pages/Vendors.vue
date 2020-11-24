@@ -20,7 +20,7 @@
                 <li><router-link :to="{ name: 'Vendors', query: { status: 'pending' }}" active-class="current" exact v-html="sprintf( __( 'Pending <span class=\'count\'>(%s)</span>', 'dokan-lite' ), counts.pending )"></router-link></li>
             </ul>
 
-            <search title="Search Vendors" @searched="doSearch"></search>
+            <search :title="__( 'Search Vendors', 'dokan-lite')" @searched="doSearch"></search>
 
             <list-table
                 :columns="columns"
@@ -40,6 +40,7 @@
 
                 :sort-by="sortBy"
                 :sort-order="sortOrder"
+                :text="$root.listTableTexts()"
                 @sort="sortCallback"
 
                 @pagination="goToPage"
