@@ -48,7 +48,7 @@ class Tracker {
                 'wc_version'    => function_exists( 'WC' ) ? WC()->version : null,
                 'dokan_version' => DOKAN_PLUGIN_VERSION,
             ]
-          );
+        );
 
         $this->insights->init_plugin();
 
