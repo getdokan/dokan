@@ -574,6 +574,22 @@ class SetupWizard {
 									),
                                 )
                             );
+
+                            $this->display_recommended_item(
+                                array(
+                                    'type'        => 'wemail',
+                                    'title'       => __( 'weMail', 'dokan-lite' ),
+                                    'description' => __( 'Simplified Email  Marketing Solution for WordPress!', 'dokan-lite' ),
+                                    'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/wemail-logo.png',
+                                    'img_alt'     => __( 'weMail logo', 'dokan-lite' ),
+                                    'plugins'     => array(
+                                        array(
+                                            'name' => __( 'weMail', 'dokan-lite' ),
+                                            'slug' => 'wemail',
+                                        ),
+                                    ),
+                                )
+                            );
 						}
 					};
                     ?>
@@ -598,6 +614,7 @@ class SetupWizard {
         check_admin_referer( 'dokan-setup' );
 
         $setup_wc_conversion_tracking = isset( $_POST['setup_wc_conversion_tracking'] ) && 'yes' === $_POST['setup_wc_conversion_tracking'];
+        $setup_wemail                 = isset( $_POST['setup_wemail'] ) && 'yes' === $_POST['setup_wemail'];
 
         if ( $setup_wc_conversion_tracking && ! $this->is_wc_conversion_tracking_active() ) {
             $this->install_plugin(
@@ -606,6 +623,17 @@ class SetupWizard {
                     'name'      => __( 'WooCommerce Conversion Tracking', 'dokan-lite' ),
                     'repo-slug' => 'woocommerce-conversion-tracking',
                     'file'      => 'conversion-tracking.php',
+                )
+            );
+        }
+
+        if ( $setup_wemail && ! $this->is_wemail_active() ) {
+            $this->install_plugin(
+                'wemail',
+                array(
+                    'name'      => __( 'weMail', 'dokan-lite' ),
+                    'repo-slug' => 'wemail',
+                    'file'      => 'wemail.php',
                 )
             );
         }
@@ -691,6 +719,10 @@ class SetupWizard {
             return false;
         }
 
+        if ( $this->is_wemail_active() ) {
+            return false;
+        }
+
         return true;
     }
 
@@ -703,6 +735,17 @@ class SetupWizard {
      */
     protected function is_wc_conversion_tracking_active() {
         return is_plugin_active( 'woocommerce-conversion-tracking/conversion-tracking.php' );
+    }
+
+    /**
+     * Check if weMail is active or not
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return bool
+     */
+    protected function is_wemail_active() {
+        return is_plugin_active( 'wemail/wemail.php' );
     }
 
     /**
