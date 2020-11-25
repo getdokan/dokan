@@ -58,7 +58,8 @@ class RadioImageControl extends \WP_Customize_Control {
             return;
         }
 
-        $name = '_customize-radio-' . $this->id; ?>
+        $name = '_customize-radio-' . $this->id;
+        ?>
 
 		<span class="customize-control-title">
 			<?php echo esc_attr( $this->label ); ?>
@@ -83,8 +84,9 @@ class RadioImageControl extends \WP_Customize_Control {
                         } else {
                             ?>
                             <img src="<?php echo esc_html( $label['src'] ); ?>" alt="<?php echo esc_attr( $label['label'] ); ?>" title="<?php echo esc_attr( $label['label'] ); ?>">
-                        <?php
-                        } ?>
+                            <?php
+                        }
+                        ?>
 					</label>
 				</input>
 			<?php } ?>

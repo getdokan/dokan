@@ -433,7 +433,7 @@ class Customizer {
      * @return string
      */
     public function bool_to_on_off( $bool ) {
-        if ( !is_bool( $bool ) ) {
+        if ( ! is_bool( $bool ) ) {
             $bool = $this->on_off_to_bool( $bool );
         }
 
