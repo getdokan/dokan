@@ -307,6 +307,8 @@ final class WeDevs_Dokan {
         } else {
             require_once DOKAN_INC_DIR . '/template-tags.php';
         }
+
+        require_once DOKAN_INC_DIR . '/store-functions.php';
     }
 
     /**
@@ -351,6 +353,7 @@ final class WeDevs_Dokan {
         $this->container['dashboard']     = new \WeDevs\Dokan\Dashboard\Manager();
         $this->container['rewrite']       = new \WeDevs\Dokan\Rewrites();
         $this->container['commission']    = new \WeDevs\Dokan\Commission();
+        $this->container['customizer']    = new \WeDevs\Dokan\Customizer();
         $this->container['upgrades']      = new \WeDevs\Dokan\Upgrade\Manager();
 
         $this->container = apply_filters( 'dokan_get_class_container', $this->container );

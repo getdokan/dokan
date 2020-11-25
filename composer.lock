@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Appsero/client.git",
-                "reference": "c0d3dcc937ab68d690d8fb8f6511db37d7d7d7e9"
+                "reference": "5c3fdc4945c8680bca6fb01eee1ec5dc4f22de87"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Appsero/client/zipball/c0d3dcc937ab68d690d8fb8f6511db37d7d7d7e9",
-                "reference": "c0d3dcc937ab68d690d8fb8f6511db37d7d7d7e9",
+                "url": "https://api.github.com/repos/Appsero/client/zipball/5c3fdc4945c8680bca6fb01eee1ec5dc4f22de87",
+                "reference": "5c3fdc4945c8680bca6fb01eee1ec5dc4f22de87",
                 "shasum": ""
             },
             "require": {
@@ -46,7 +46,7 @@
                 "theme",
                 "wordpress"
             ],
-            "time": "2020-09-01T07:57:56+00:00"
+            "time": "2020-09-10T09:10:28+00:00"
         }
     ],
     "packages-dev": [
@@ -120,36 +120,31 @@
         },
         {
             "name": "doctrine/instantiator",
-            "version": "dev-master",
+            "version": "1.5.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/instantiator.git",
-                "reference": "3e7a22aed197e9333cc929e7f6b4300bdae91fcc"
+                "reference": "6410c4b8352cb64218641457cef64997e6b784fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/instantiator/zipball/3e7a22aed197e9333cc929e7f6b4300bdae91fcc",
-                "reference": "3e7a22aed197e9333cc929e7f6b4300bdae91fcc",
+                "url": "https://api.github.com/repos/doctrine/instantiator/zipball/6410c4b8352cb64218641457cef64997e6b784fb",
+                "reference": "6410c4b8352cb64218641457cef64997e6b784fb",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.1 || ^8.0"
             },
             "require-dev": {
-                "doctrine/coding-standard": "^6.0",
+                "doctrine/coding-standard": "^8.0",
                 "ext-pdo": "*",
                 "ext-phar": "*",
-                "phpbench/phpbench": "^0.13",
-                "phpstan/phpstan-phpunit": "^0.11",
-                "phpstan/phpstan-shim": "^0.11",
-                "phpunit/phpunit": "^7.0"
+                "phpbench/phpbench": "^0.13 || 1.0.0-alpha2",
+                "phpstan/phpstan": "^0.12",
+                "phpstan/phpstan-phpunit": "^0.12",
+                "phpunit/phpunit": "^7.0 || ^8.0 || ^9.0"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.4.x-dev"
-                }
-            },
             "autoload": {
                 "psr-4": {
                     "Doctrine\\Instantiator\\": "src/Doctrine/Instantiator/"
@@ -163,7 +158,7 @@
                 {
                     "name": "Marco Pivetta",
                     "email": "ocramius@gmail.com",
-                    "homepage": "http://ocramius.github.com/"
+                    "homepage": "https://ocramius.github.io/"
                 }
             ],
             "description": "A small, lightweight utility to instantiate objects in PHP without invoking their constructors",
@@ -186,7 +181,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-06-15T18:51:04+00:00"
+            "time": "2020-11-10T19:05:51+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -194,12 +189,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "a3409d10079990eeb489c3fead0ac070b5b38895"
+                "reference": "776f831124e9c62e1a2c601ecc52e776d8bb7220"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/a3409d10079990eeb489c3fead0ac070b5b38895",
-                "reference": "a3409d10079990eeb489c3fead0ac070b5b38895",
+                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/776f831124e9c62e1a2c601ecc52e776d8bb7220",
+                "reference": "776f831124e9c62e1a2c601ecc52e776d8bb7220",
                 "shasum": ""
             },
             "require": {
@@ -240,7 +235,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-08-28T16:31:07+00:00"
+            "time": "2020-11-13T09:40:50+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -460,12 +455,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCompatibility/PHPCompatibilityWP.git",
-                "reference": "1ef9c71f294470ff44493cfd305b6c48a18079f6"
+                "reference": "674ed5d2b57dc2ce1aca4c5eccef1db0a01bf48c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibilityWP/zipball/1ef9c71f294470ff44493cfd305b6c48a18079f6",
-                "reference": "1ef9c71f294470ff44493cfd305b6c48a18079f6",
+                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibilityWP/zipball/674ed5d2b57dc2ce1aca4c5eccef1db0a01bf48c",
+                "reference": "674ed5d2b57dc2ce1aca4c5eccef1db0a01bf48c",
                 "shasum": ""
             },
             "require": {
@@ -473,10 +468,10 @@
                 "phpcompatibility/phpcompatibility-paragonie": "^1.0"
             },
             "require-dev": {
-                "dealerdirect/phpcodesniffer-composer-installer": "^0.6"
+                "dealerdirect/phpcodesniffer-composer-installer": "^0.7"
             },
             "suggest": {
-                "dealerdirect/phpcodesniffer-composer-installer": "^0.6 || This Composer plugin will sort out the PHP_CodeSniffer 'installed_paths' automatically.",
+                "dealerdirect/phpcodesniffer-composer-installer": "^0.7 || This Composer plugin will sort out the PHP_CodeSniffer 'installed_paths' automatically.",
                 "roave/security-advisories": "dev-master || Helps prevent installing dependencies with known security issues."
             },
             "type": "phpcodesniffer-standard",
@@ -502,7 +497,7 @@
                 "standards",
                 "wordpress"
             ],
-            "time": "2020-07-11T18:28:40+00:00"
+            "time": "2020-11-15T19:56:55+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -559,12 +554,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
-                "reference": "069a785b2141f5bcf49f3e353548dc1cce6df556"
+                "reference": "e3324ecbde7319b0bbcf0fd7ca4af19469c38da9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/069a785b2141f5bcf49f3e353548dc1cce6df556",
-                "reference": "069a785b2141f5bcf49f3e353548dc1cce6df556",
+                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/e3324ecbde7319b0bbcf0fd7ca4af19469c38da9",
+                "reference": "e3324ecbde7319b0bbcf0fd7ca4af19469c38da9",
                 "shasum": ""
             },
             "require": {
@@ -603,7 +598,7 @@
                 }
             ],
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
-            "time": "2020-09-03T19:13:55+00:00"
+            "time": "2020-11-18T14:27:38+00:00"
         },
         {
             "name": "phpdocumentor/type-resolver",
@@ -611,12 +606,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/TypeResolver.git",
-                "reference": "e21c0bd532911ec05ebc258e4086ea61c86e0750"
+                "reference": "6a467b8989322d92aa1c8bf2bebcc6e5c2ba55c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/e21c0bd532911ec05ebc258e4086ea61c86e0750",
-                "reference": "e21c0bd532911ec05ebc258e4086ea61c86e0750",
+                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/6a467b8989322d92aa1c8bf2bebcc6e5c2ba55c0",
+                "reference": "6a467b8989322d92aa1c8bf2bebcc6e5c2ba55c0",
                 "shasum": ""
             },
             "require": {
@@ -648,32 +643,32 @@
                 }
             ],
             "description": "A PSR-5 based resolver of Class names, Types and Structural Element Names",
-            "time": "2020-09-02T21:29:45+00:00"
+            "time": "2020-09-17T18:55:26+00:00"
         },
         {
             "name": "phpspec/prophecy",
-            "version": "dev-master",
+            "version": "1.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "c99da517f9e7b6e6c4067611d804808c34d8cec3"
+                "reference": "8ce87516be71aae9b956f81906aaf0338e0d8a2d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/c99da517f9e7b6e6c4067611d804808c34d8cec3",
-                "reference": "c99da517f9e7b6e6c4067611d804808c34d8cec3",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/8ce87516be71aae9b956f81906aaf0338e0d8a2d",
+                "reference": "8ce87516be71aae9b956f81906aaf0338e0d8a2d",
                 "shasum": ""
             },
             "require": {
                 "doctrine/instantiator": "^1.2",
-                "php": "^7.2",
+                "php": "^7.2 || ~8.0, <8.1",
                 "phpdocumentor/reflection-docblock": "^5.2",
                 "sebastian/comparator": "^3.0 || ^4.0",
                 "sebastian/recursion-context": "^3.0 || ^4.0"
             },
             "require-dev": {
                 "phpspec/phpspec": "^6.0",
-                "phpunit/phpunit": "^8.0"
+                "phpunit/phpunit": "^8.0 || ^9.0 <9.3"
             },
             "type": "library",
             "extra": {
@@ -711,7 +706,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2020-07-21T10:09:02+00:00"
+            "time": "2020-09-29T09:10:42+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -1622,12 +1617,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "1371c59bd5da5cfc877ab8478753362edc9bbc9b"
+                "reference": "bb906ff8c4a1218abb030eab19e8b24fe9cd6c66"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/1371c59bd5da5cfc877ab8478753362edc9bbc9b",
-                "reference": "1371c59bd5da5cfc877ab8478753362edc9bbc9b",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/bb906ff8c4a1218abb030eab19e8b24fe9cd6c66",
+                "reference": "bb906ff8c4a1218abb030eab19e8b24fe9cd6c66",
                 "shasum": ""
             },
             "require": {
@@ -1665,24 +1660,24 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2020-09-02T05:55:26+00:00"
+            "time": "2020-11-20T05:25:26+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
-            "version": "dev-master",
+            "version": "dev-main",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-ctype.git",
-                "reference": "1c302646f6efc070cd46856e600e5e0684d6b454"
+                "reference": "fade6deebd931cfd7a544f68479405a6a08979a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/1c302646f6efc070cd46856e600e5e0684d6b454",
-                "reference": "1c302646f6efc070cd46856e600e5e0684d6b454",
+                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/fade6deebd931cfd7a544f68479405a6a08979a3",
+                "reference": "fade6deebd931cfd7a544f68479405a6a08979a3",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.3"
+                "php": ">=7.1"
             },
             "suggest": {
                 "ext-ctype": "For best performance"
@@ -1690,7 +1685,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.18-dev"
+                    "dev-main": "1.21-dev"
                 },
                 "thanks": {
                     "name": "symfony/polyfill",
@@ -1741,7 +1736,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-07-14T12:35:20+00:00"
+            "time": "2020-10-26T13:35:45+00:00"
         },
         {
             "name": "tareq1988/wp-php-cs-fixer",
@@ -1749,12 +1744,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tareq1988/wp-php-cs-fixer.git",
-                "reference": "bb389b8a95422885abe1121b92813b4a9f129e9f"
+                "reference": "56b9c1dd2b979a4ff7a25afa2e1c6b290a5ae876"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tareq1988/wp-php-cs-fixer/zipball/bb389b8a95422885abe1121b92813b4a9f129e9f",
-                "reference": "bb389b8a95422885abe1121b92813b4a9f129e9f",
+                "url": "https://api.github.com/repos/tareq1988/wp-php-cs-fixer/zipball/56b9c1dd2b979a4ff7a25afa2e1c6b290a5ae876",
+                "reference": "56b9c1dd2b979a4ff7a25afa2e1c6b290a5ae876",
                 "shasum": ""
             },
             "type": "library",
@@ -1774,7 +1769,7 @@
                 }
             ],
             "description": "WordPress rules for php-cs-fixer",
-            "time": "2020-05-21T07:06:37+00:00"
+            "time": "2020-09-21T09:47:38+00:00"
         },
         {
             "name": "theseer/tokenizer",

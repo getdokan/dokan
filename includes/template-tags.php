@@ -630,3 +630,71 @@ function dokan_myorder_login_check() {
         dokan_redirect_login();
     }
 }
+
+/**
+ * Store sidebar widget args
+ *
+ * @return array
+ */
+function dokan_store_sidebar_args() {
+    $args = [
+        'before_widget' => '<aside class="widget dokan-store-widget %s">',
+        'after_widget'  => '</aside>',
+        'before_title'  => '<h3 class="widget-title">',
+        'after_title'   => '</h3>',
+    ];
+
+    return apply_filters( 'dokan_store_sidebar_args', $args );
+}
+
+/**
+ * Store single category widget
+ *
+ * @return void
+ */
+function dokan_store_category_widget() {
+    $args = dokan_store_sidebar_args();
+
+    if ( dokan()->widgets->is_exists( 'store_category_menu' ) ) {
+        the_widget( dokan()->widgets->store_category_menu, [ 'title' => __( 'Store Product Category', 'dokan-lite' ) ], $args );
+    }
+}
+
+/**
+ * Store single location widget
+ *
+ * @return void
+ */
+function dokan_store_location_widget() {
+    $args = dokan_store_sidebar_args();
+
+    if ( dokan()->widgets->is_exists( 'store_location' ) && dokan_get_option( 'store_map', 'dokan_general', 'on' ) == 'on' ) {
+        the_widget( dokan()->widgets->store_location, [ 'title' => __( 'Store Location', 'dokan-lite' ) ], $args );
+    }
+}
+
+/**
+ * Store opening/closing time widget
+ *
+ * @return void
+ */
+function dokan_store_time_widget() {
+    $args = dokan_store_sidebar_args();
+
+    if ( dokan()->widgets->is_exists( 'store_open_close' ) && dokan_get_option( 'store_open_close', 'dokan_general', 'on' ) == 'on' ) {
+        the_widget( dokan()->widgets->store_open_close, [ 'title' => __( 'Store Time', 'dokan-lite' ) ], $args );
+    }
+}
+
+/**
+ * Store contact form widget
+ *
+ * @return void
+ */
+function dokan_store_contact_widget() {
+    $args = dokan_store_sidebar_args();
+
+    if ( dokan()->widgets->is_exists( 'store_contact_form' ) && dokan_get_option( 'contact_seller', 'dokan_general', 'on' ) == 'on' ) {
+        the_widget( dokan()->widgets->store_contact_form, [ 'title' => __( 'Contact Vendor', 'dokan-lite' ) ], $args );
+    }
+}
