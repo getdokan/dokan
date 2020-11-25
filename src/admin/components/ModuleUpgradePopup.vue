@@ -17,7 +17,7 @@
 
                     <div class="promo-card">
                         <img :src="bonusImage" :alt="__( 'Dokan Upgrade Promo', 'dokan-lite' )">
-                        <p>{{ __( 'Bonus: Dokan Lite users get 50% off regular price, automatically applied to checkout.', 'dokan-lite' ) }}</p>
+                        <p>{{ __( 'Bonus: Dokan Lite users get 30% off regular price, automatically applied to checkout.', 'dokan-lite' ) }}</p>
                     </div>
 
                     <span @click="closePopup">{{ __( 'Already upgraded?', 'dokan-lite' ) }}</span>
