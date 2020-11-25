@@ -3703,11 +3703,34 @@ div.media-sidebar a.edit-attachment {
   float: none;
   width: 100%;
 }
+.dokan-store-wrap {
+  display: flex;
+  margin: 20px 0;
+  flex-direction: column;
+}
+.dokan-store-wrap.layout-left {
+  flex-direction: column-reverse;
+}
+@media (min-width: 1000px) {
+  .dokan-store-wrap.layout-left,
+  .dokan-store-wrap.layout-right {
+    flex-direction: row;
+  }
+  .dokan-store-wrap .dokan-store-sidebar {
+    flex: 0 1 26%;
+  }
+  .dokan-store-wrap .dokan-single-store {
+    flex: 0 1 100%;
+  }
+  .dokan-store-wrap.layout-left .dokan-store-sidebar {
+    margin-right: 4%;
+  }
+  .dokan-store-wrap.layout-right .dokan-store-sidebar {
+    margin-left: 4%;
+  }
+}
 .dokan-single-store {
   margin: 0;
-}
-.dokan-single-store.dokan-w8 {
-  width: 72%;
 }
 .dokan-single-store .profile-frame {
   padding: 0px;

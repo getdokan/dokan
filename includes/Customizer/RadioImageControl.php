@@ -44,6 +44,7 @@ class RadioImageControl extends \WP_Customize_Control {
         .customize-control-dokan-radio-image .ui-state-active svg {
             opacity: 1;
             border: 2px solid #0285bb;
+            background-color: #fff;
         }
         </style>
 		<?php
