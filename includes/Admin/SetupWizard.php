@@ -34,7 +34,7 @@ class SetupWizard {
             add_action( 'admin_menu', array( $this, 'admin_menus' ) );
             add_action( 'admin_init', array( $this, 'setup_wizard' ), 99 );
 
-            if ( get_transient( 'dokan_setup_wizard_no_wc' ) && defined( 'WC_VERSION' ) && version_compare( WC_VERSION , '4.6.0', '<' ) ) { // todo: temporary fix, will add this feature again in future release
+            if ( get_transient( 'dokan_setup_wizard_no_wc' ) && defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '4.6.0', '<' ) ) { // todo: temporary fix, will add this feature again in future release
                 add_filter( 'dokan_admin_setup_wizard_steps', array( SetupWizardNoWC::class, 'add_wc_steps_to_wizard' ) );
                 add_filter( 'dokan_setup_wizard_enqueue_scripts', array( SetupWizardNoWC::class, 'enqueue_wc_localized_scripts' ) );
                 add_action( 'dokan_admin_setup_wizard_step_store_start', array( SetupWizardNoWC::class, 'add_wc_html_step_start' ) );
@@ -204,7 +204,10 @@ class SetupWizard {
      * Show the setup wizard.
      */
     public function setup_wizard() {
-        if ( empty( $_GET['page'] ) || 'dokan-setup' !== $_GET['page'] ) {
+        $get_data  = wp_unslash( $_GET ); // phpcs:ignore
+        $post_data = wp_unslash( $_POST ); // phpcs:ignore
+
+        if ( empty( $get_data['page'] ) || 'dokan-setup' !== $get_data['page'] ) {
             return;
         }
 
@@ -215,11 +218,11 @@ class SetupWizard {
             unset( $this->steps['recommended'] );
         }
 
-        $this->step = isset( $_GET['step'] ) ? sanitize_key( $_GET['step'] ) : current( array_keys( $this->steps ) );
+        $this->step = isset( $get_data['step'] ) ? sanitize_key( $get_data['step'] ) : current( array_keys( $this->steps ) );
 
         $this->enqueue_scripts();
 
-        if ( ! empty( $_POST['save_step'] ) && isset( $this->steps[ $this->step ]['handler'] ) ) { // WPCS: CSRF ok.
+        if ( ! empty( $post_data['save_step'] ) && isset( $this->steps[ $this->step ]['handler'] ) ) {
             call_user_func_array( $this->steps[ $this->step ]['handler'], array( $this ) );
         }
 
@@ -231,7 +234,7 @@ class SetupWizard {
     public function get_next_step_link() {
         $keys = array_keys( $this->steps );
 
-        return add_query_arg( 'step', $keys[ array_search( $this->step, array_keys( $this->steps ) ) + 1 ] );
+        return add_query_arg( 'step', $keys[ array_search( $this->step, array_keys( $this->steps ), true ) + 1 ] );
     }
 
     /**
@@ -285,7 +288,7 @@ class SetupWizard {
                 <?php
 				if ( $step_key === $this->step ) {
 					echo 'active';
-				} elseif ( array_search( $this->step, array_keys( $this->steps ) ) > array_search( $step_key, array_keys( $this->steps ) ) ) {
+				} elseif ( array_search( $this->step, array_keys( $this->steps ), true ) > array_search( $step_key, array_keys( $this->steps ), true ) ) {
 					echo 'done';
 				}
                 ?>
@@ -300,7 +303,7 @@ class SetupWizard {
      */
     public function setup_wizard_content() {
         if ( empty( $this->steps[ $this->step ]['view'] ) ) {
-            wp_redirect( esc_url_raw( add_query_arg( 'step', 'introduction' ) ) );
+            wp_safe_redirect( esc_url_raw( add_query_arg( 'step', 'introduction' ) ) );
             exit;
         }
 
@@ -396,7 +399,7 @@ class SetupWizard {
 
         do_action( 'dokan_admin_setup_wizard_save_step_store' );
 
-        wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
+        wp_safe_redirect( esc_url_raw( $this->get_next_step_link() ) );
         exit;
     }
 
@@ -441,7 +444,7 @@ class SetupWizard {
 
         update_option( 'dokan_selling', $options );
 
-        wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
+        wp_safe_redirect( esc_url_raw( $this->get_next_step_link() ) );
         exit;
     }
 
@@ -465,21 +468,19 @@ class SetupWizard {
                     <td colspan="2">
                         <ul class="wc-wizard-payment-gateways wc-wizard-services">
                             <?php foreach ( dokan_withdraw_register_methods() as $key => $method ) : ?>
-                                <li class="wc-wizard-service-item <?php echo ( in_array( $key, array_values( $withdraw_methods ) ) ) ? 'checked="checked"' : ''; ?>">
+                                <li class="wc-wizard-service-item <?php echo ( in_array( $key, array_values( $withdraw_methods ), true ) ) ? 'checked="checked"' : ''; ?>">
                                     <div class="wc-wizard-service-name">
                                         <p><?php echo $method['title']; ?></p>
                                     </div>
                                     <div class="wc-wizard-service-description">
                                         <?php
-                                        printf(
-                                            esc_html__( 'Enable %s for your vendor as a withdraw method', 'dokan-lite' ),
-                                            $method['title']
-                                        );
+                                        // translators: %s: withdraw method name
+                                        printf( esc_html__( 'Enable %s for your vendor as a withdraw method', 'dokan-lite' ), $method['title'] );
                                         ?>
                                     </div>
                                     <div class="dokan-wizard-service-enable">
-                                        <input type="checkbox" name="withdraw_methods[<?php esc_attr_e( $key ); ?>]" id="withdraw_methods[<?php esc_attr_e( $key ); ?>]" class="switch-input" value="<?php esc_attr_e( $key ); ?>" <?php echo ( in_array( $key, array_values( $withdraw_methods ) ) ) ? 'checked="checked"' : ''; ?>>
-                                        <label for="withdraw_methods[<?php esc_attr_e( $key ); ?>]" class="switch-label"></label>
+                                        <input type="checkbox" name="withdraw_methods[<?php esc_html( $key ); ?>]" id="withdraw_methods[<?php esc_html( $key ); ?>]" class="switch-input" value="<?php esc_html( $key ); ?>" <?php echo ( in_array( $key, array_values( $withdraw_methods ), true ) ) ? 'checked="checked"' : ''; ?>>
+                                        <label for="withdraw_methods[<?php esc_html( $key ); ?>]" class="switch-label"></label>
                                     </div>
                                 </li>
                             <?php endforeach ?>
@@ -650,7 +651,7 @@ class SetupWizard {
         // Let vendors/customers set their own password
         update_option( 'woocommerce_registration_generate_password', 'no' );
 
-        wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
+        wp_safe_redirect( esc_url_raw( $this->get_next_step_link() ) );
         exit;
     }
 
@@ -679,7 +680,7 @@ class SetupWizard {
 
         update_option( 'dokan_withdraw', $options );
 
-        wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
+        wp_safe_redirect( esc_url_raw( $this->get_next_step_link() ) );
         exit;
     }
 
