@@ -33,6 +33,7 @@ class Manager {
 				'electro'      => Electro::class,
 				'enfold'       => Enfold::class,
 				'twentytwenty' => TwentyTwenty::class,
+				'astra'        => Astra::class,
 			]
         );
 
