@@ -499,49 +499,51 @@ class StoreController extends WP_REST_Controller {
             return new WP_Error( 'no_store_found', __( 'No store found', 'dokan-lite' ), [ 'status' => 404 ] );
         }
 
-        if ( class_exists( 'Dokan_Store_Reviews' ) ) {
-            $args = [
-                'post_type'      => 'dokan_store_reviews',
-                'meta_key'       => 'store_id', //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-                'meta_value'     => $store_id, //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
-                'post_status'    => 'publish',
-                'posts_per_page' => (int) $request['per_page'],
-                'paged'          => (int) $request['page'],
-                'author__not_in' => [ get_current_user_id(), $store_id ],
-            ];
+        if ( dokan()->is_pro_exists() ) {
+            if ( dokan_pro()->module->is_active( 'store_reviews' ) ) {
+                $args = [
+                    'post_type'      => 'dokan_store_reviews',
+                    'meta_key'       => 'store_id', //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+                    'meta_value'     => $store_id, //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+                    'post_status'    => 'publish',
+                    'posts_per_page' => (int) $request['per_page'],
+                    'paged'          => (int) $request['page'],
+                    'author__not_in' => [ get_current_user_id(), $store_id ],
+                ];
 
-            $query = new WP_Query( $args );
+                $query = new WP_Query( $args );
 
-            if ( empty( $query->posts ) ) {
-                return new WP_Error( 'no_reviews_found', __( 'No reviews found', 'dokan-lite' ), [ 'status' => 404 ] );
+                if ( empty( $query->posts ) ) {
+                    return new WP_Error( 'no_reviews_found', __( 'No reviews found', 'dokan-lite' ), [ 'status' => 404 ] );
+                }
+
+                $data = [];
+
+                foreach ( $query->posts as $post ) {
+                    $data[] = $this->prepare_reviews_for_response( $post, $request );
+                }
+
+                $total_count = $query->found_posts;
+            } else {
+                $dokan_template_reviews = dokan_pro()->review;
+                $post_type              = 'product';
+                $limit                  = (int) $params['per_page'];
+                $paged                  = (int) ( $params['page'] - 1 ) * $params['per_page'];
+                $status                 = '1';
+                $comments               = $dokan_template_reviews->comment_query( $store_id, $post_type, $limit, $status, $paged );
+
+                if ( empty( $comments ) ) {
+                    return new WP_Error( 'no_reviews_found', __( 'No reviews found', 'dokan-lite' ), [ 'status' => 404 ] );
+                }
+
+                $data = [];
+
+                foreach ( $comments as $comment ) {
+                    $data[] = $this->prepare_reviews_for_response( $comment, $request );
+                }
+
+                $total_count = $this->get_total_review_count( $store_id, $post_type, $status );
             }
-
-            $data = [];
-
-            foreach ( $query->posts as $post ) {
-                $data[] = $this->prepare_reviews_for_response( $post, $request );
-            }
-
-            $total_count = $query->found_posts;
-        } else {
-            $dokan_template_reviews = dokan_pro()->review;
-            $post_type              = 'product';
-            $limit                  = (int) $params['per_page'];
-            $paged                  = (int) ( $params['page'] - 1 ) * $params['per_page'];
-            $status                 = '1';
-            $comments               = $dokan_template_reviews->comment_query( $store_id, $post_type, $limit, $status, $paged );
-
-            if ( empty( $comments ) ) {
-                return new WP_Error( 'no_reviews_found', __( 'No reviews found', 'dokan-lite' ), [ 'status' => 404 ] );
-            }
-
-            $data = [];
-
-            foreach ( $comments as $comment ) {
-                $data[] = $this->prepare_reviews_for_response( $comment, $request );
-            }
-
-            $total_count = $this->get_total_review_count( $store_id, $post_type, $status );
         }
 
         $response = rest_ensure_response( $data );
@@ -563,14 +565,6 @@ class StoreController extends WP_REST_Controller {
      */
     public function get_total_review_count( $id, $post_type, $status ) {
         global $wpdb;
-
-        // $sql = "SELECT COUNT(*)
-        //             FROM $wpdb->comments, $wpdb->posts
-        //             WHERE $wpdb->posts.post_author=%d AND
-        //             $wpdb->posts.post_status='publish' AND
-        //             $wpdb->comments.comment_post_ID=$wpdb->posts.ID AND
-        //             $wpdb->comments.comment_approved=%s AND
-        //             $wpdb->posts.post_type=%s";
 
         $total = $wpdb->get_var(
             $wpdb->prepare(
@@ -615,7 +609,7 @@ class StoreController extends WP_REST_Controller {
      * @return \WP_REST_Response $response Response data.
      */
     public function prepare_reviews_for_response( $item, $request, $additional_fields = [] ) {
-        if ( class_exists( 'Dokan_Store_Reviews' ) ) {
+        if ( dokan()->is_pro_exists() && dokan_pro()->module->is_active( 'store_reviews' ) ) {
             $user          = get_user_by( 'id', $item->post_author );
             $user_gravatar = get_avatar_url( $user->user_email );
 
