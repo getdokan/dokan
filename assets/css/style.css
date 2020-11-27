@@ -3608,6 +3608,9 @@ div.media-sidebar a.edit-attachment {
   display: block;
   width: 55%;
 }
+.dokan-settings-content .dokan-settings-area {
+  position: relative;
+}
 .dokan-settings-content .dokan-settings-area h1 {
   margin: 0px;
   padding: 0px;

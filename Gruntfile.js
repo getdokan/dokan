@@ -246,7 +246,36 @@ module.exports = function(grunt) {
                     config: 'myhost'
                 }
             },
-        }
+        },
+        run: {
+            options: {
+
+            },
+            build: {
+                cmd: 'npm',
+                args: ['run', 'build']
+            },
+
+            devBuild: {
+                cmd: 'npm',
+                args: ['run', 'dev:build']
+            },
+
+            removeDev:{
+                cmd: 'composer',
+                args: ['install', '--no-dev']
+            },
+
+            dumpautoload:{
+                cmd: 'composer',
+                args: ['dumpautoload', '-o']
+            },
+
+            composerInstall:{
+                cmd: 'composer',
+                args: ['install']
+            },
+        },
     });
 
     // Load NPM tasks to be used here
@@ -260,6 +289,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks( 'grunt-contrib-copy' );
     grunt.loadNpmTasks( 'grunt-contrib-compress' );
     grunt.loadNpmTasks( 'grunt-ssh' );
+    grunt.loadNpmTasks( 'grunt-run' );
     grunt.loadNpmTasks( 'grunt-wp-readme-to-markdown' );
 
     grunt.registerTask( 'default', [
@@ -273,17 +303,23 @@ module.exports = function(grunt) {
     grunt.registerTask('readme', ['wp_readme_to_markdown']);
 
     grunt.registerTask('release', [
-        'i18n',
         'readme',
         'less',
-        'concat'
+        'concat',
+        'run:devBuild',
+        'run:build',
+        'i18n',
+        'run:removeDev',
+        'run:dumpautoload',
     ]);
 
     grunt.registerTask( 'zip', [
         'clean',
         'copy',
-        'compress'
-    ])
+        'compress',
+        'run:composerInstall',
+        'run:dumpautoload',
+    ]);
 
     grunt.registerTask( 'deploy', [
         'sftp:upload', 'sshexec:updateVersion'

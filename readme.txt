@@ -3,11 +3,11 @@ Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, product vendors, woocommerce vendor, commission rate, e-commerce, ebay, ecommerce, yith, yithemes
 Requires at least: 4.4
-Tested up to: 5.5
+Tested up to: 5.5.3
 WC requires at least: 3.0
-WC tested up to: 4.4.1
+WC tested up to: 4.7.0
 Requires PHP: 5.6
-Stable tag: 3.0.9
+Stable tag: 3.0.15
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -290,6 +290,60 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Individual Seller Store-3
 
 == Changelog ==
+
+== v3.0.15 (November 21, 2020) ==
+
+- **fix** updated codebase to fix timezone mismatch
+
+== v3.0.14 (November 20, 2020) ==
+
+- **fix** Vendor edit admin commission on decimal separator as comma
+- **update** Limited time promotion admin notice
+
+= v3.0.13 (November 12, 2020) =
+
+- **New:** Added new filter `dokan_is_product_author`
+- **New:** Apply new filter `dokan_product_listing_post_statuses` on product listing status
+- **Fix:** Store name search was not working when the vendor account was created by admin
+- **Fix:** Vendor was not changing when trying to change on product quick edit section from admin area
+- **Fix:** Some translation issue fixed on admin setting page
+
+= v3.0.12 (November 5, 2020) =
+
+- **Fix:** Refactor upgrade to pro banner.
+- **Fix:** Temporary disable WooCommerce payment and shipping setup step from vendor setup wizard section. It was throwing a lot of deprecated warnings, we will fix it in the next version.
+
+= v3.0.11 (October 22, 2020) =
+
+ * **Fix:** Fixes a JS loading issue when `SCRIPT_DEBUG` is enabled
+
+= v3.0.10 (October 20, 2020) =
+
+- **Fix:** Vendor balance remains same after refund
+- **Fix:** Vendor name is not showing correctly on WooCommerce product list quick edit
+- **Fix:** CSS conflicting with the YITH Badge Management Plugin
+- **Fix:** Added postbox header div in postbox component
+- **Fix:** Guest checkout name in vendor order details
+- **Fix:** Phone field pasting option enabled settings page
+- **Fix:** Admin dashboard feed REST Request error
+- **Fix:** Prevent admin email for sub-order
+- **Fix:** Multiple category commission issue fallback to vendor commission
+- **Fix:** Admin vendor total count
+- **Fix:** Default order sorting issue
+- **Fix:** WC deprecate notice for using order parent_id directly
+- **Fix:** Label changed for external product type
+- **Fix:** Product tag add if do not exist
+- **Fix:** Store category widget not translate problem with WPML
+- **Fix:** On RESTful order creation, only single store is added into the response even if there are multiple stores
+- **Fix:** Product variation author id update for product quick save
+- **Fix:** Translation issue on Select2
+- **Fix:** Price schedule selection date added
+- **Fix:** Remove duplicate capabilities form seller role
+- **Fix:** Dashboard header add new button not showing with theme conflict
+- **Fix:** Order details page showing warning issue
+- **Fix:** After withdraw approval, sometimes it's not inserting in balance table
+- **Fix:** Redirect to 404 if vendor do not exist for TOC template
+- **Fix:** Withdrawal current balance is incorrect cause of cache issue
 
 = v3.0.9 (August 25, 2020) =
 
