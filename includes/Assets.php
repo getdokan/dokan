@@ -141,6 +141,11 @@ class Assets {
                 'name'      => 'VendorCapabilities',
                 'component' => 'VendorCapabilities',
             ],
+            [
+                'path'      => '/pro-modules',
+                'name'      => 'ProModules',
+                'component' => 'ProModules',
+            ],
         ];
 
         // @codingStandardsIgnoreLine
