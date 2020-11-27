@@ -48,7 +48,11 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
 
                                                 switch ( $item['type'] ) {
                                                     case 'line_item' :
-                                                        $_product   = $order->get_product_from_item( $item );
+                                                        if ( version_compare( WC_VERSION, '4.4.0', '>=' ) ) {
+                                                            $_product = $item->get_product();
+                                                        } else {
+                                                            $_product = $order->get_product_from_item( $item );
+                                                        }
                                                         dokan_get_template_part( 'orders/order-item-html', '', array(
                                                             'order'    => $order,
                                                             'item_id'  => $item_id,

@@ -19,7 +19,10 @@ class StoreLocation extends WP_Widget {
      * @return void
      */
     public function __construct() {
-        $widget_ops = array( 'classname' => 'dokan-store-location', 'description' => __( 'Dokan Vendor Store Location', 'dokan-lite' ) );
+        $widget_ops = array(
+			'classname' => 'dokan-store-location',
+			'description' => __( 'Dokan Vendor Store Location', 'dokan-lite' ),
+		);
         parent::__construct( 'dokan-store-location', __( 'Dokan: Store Location', 'dokan-lite' ), $widget_ops );
     }
 
@@ -32,7 +35,6 @@ class StoreLocation extends WP_Widget {
      * @return void Echoes it's output
      */
     public function widget( $args, $instance ) {
-
         if ( dokan_is_store_page() ) {
             extract( $args, EXTR_SKIP );
 
@@ -49,20 +51,22 @@ class StoreLocation extends WP_Widget {
             if ( empty( $map_location ) || ! dokan_has_map_api_key() ) {
                 return;
             }
-            
+
             echo $before_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
 
             if ( ! empty( $title ) ) {
                 echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
             }
-            do_action('dokan-store-widget-before-map' , get_query_var( 'author' ));
+            do_action( 'dokan-store-widget-before-map', get_query_var( 'author' ) );
 
-            dokan_get_template_part( 'widgets/store-map', '', array(
-                'store_info' => $store_info,
-                'map_location' => $map_location,
-            ) );
+            dokan_get_template_part(
+                'widgets/store-map', '', array(
+					'store_info' => $store_info,
+					'map_location' => $map_location,
+                )
+            );
 
-            do_action('dokan-store-widget-after-map', get_query_var( 'author' ));
+            do_action( 'dokan-store-widget-after-map', get_query_var( 'author' ) );
 
             echo $after_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
         }
@@ -94,9 +98,11 @@ class StoreLocation extends WP_Widget {
      * @return void Echoes it's output
      */
     public function form( $instance ) {
-        $instance = wp_parse_args( (array) $instance, array(
-            'title' => __( 'Store Location', 'dokan-lite' ),
-        ) );
+        $instance = wp_parse_args(
+            (array) $instance, array(
+				'title' => __( 'Store Location', 'dokan-lite' ),
+            )
+        );
 
         $title = $instance['title'];
         ?>

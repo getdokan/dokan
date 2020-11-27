@@ -19,7 +19,10 @@ class StoreContactForm extends WP_Widget {
      * @return void
      */
     public function __construct() {
-        $widget_ops = array( 'classname' => 'dokan-store-contact', 'description' => __( 'Dokan Vendor Contact Form', 'dokan-lite' ) );
+        $widget_ops = array(
+			'classname' => 'dokan-store-contact',
+			'description' => __( 'Dokan Vendor Contact Form', 'dokan-lite' ),
+		);
         parent::__construct( 'dokan-store-contact-widget', __( 'Dokan: Store Contact Form', 'dokan-lite' ), $widget_ops );
     }
 
@@ -32,7 +35,6 @@ class StoreContactForm extends WP_Widget {
      * @return void Echoes it's output
      **/
     function widget( $args, $instance ) {
-
         if ( dokan_is_store_page() || is_product() ) {
             extract( $args, EXTR_SKIP );
 
@@ -50,7 +52,7 @@ class StoreContactForm extends WP_Widget {
             }
 
             if ( dokan_is_store_page() ) {
-                $seller_id  = (int) get_query_var( 'author' );
+                $seller_id = (int) get_query_var( 'author' );
             }
 
             if ( empty( $seller_id ) ) {
@@ -73,12 +75,14 @@ class StoreContactForm extends WP_Widget {
                 $email    = $user->user_email;
             }
 
-            dokan_get_template_part( 'widgets/store-contact-form', '', array(
-                'seller_id'  => $seller_id,
-                'store_info' => $store_info,
-                'username'   => $username,
-                'email'      => $email,
-            ) );
+            dokan_get_template_part(
+                'widgets/store-contact-form', '', array(
+					'seller_id'  => $seller_id,
+					'store_info' => $store_info,
+					'username'   => $username,
+					'email'      => $email,
+                )
+            );
 
             echo $after_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
         }
@@ -110,9 +114,11 @@ class StoreContactForm extends WP_Widget {
      * @return void Echoes it's output
      */
     function form( $instance ) {
-        $instance = wp_parse_args( (array) $instance, array(
-            'title' => __( 'Contact Vendor', 'dokan-lite' ),
-        ) );
+        $instance = wp_parse_args(
+            (array) $instance, array(
+				'title' => __( 'Contact Vendor', 'dokan-lite' ),
+            )
+        );
 
         $title = $instance['title'];
         ?>

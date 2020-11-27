@@ -11,7 +11,10 @@ new Vue({
     render: h => h(App),
 
     created() {
-        this.setLocaleData( dokan.i18n['dokan-lite'] )
+        this.setLocaleData( dokan.i18n['dokan-lite'] );
+        if ( dokan.dokan_pro_i18n ) {
+            this.setLocaleData( dokan.dokan_pro_i18n['dokan'] );
+        }
     }
 });
 

@@ -3,12 +3,12 @@
  * Plugin Name: Dokan
  * Plugin URI: https://wordpress.org/plugins/dokan-lite/
  * Description: An e-commerce marketplace plugin for WordPress. Powered by WooCommerce and weDevs.
- * Version: 3.0.9
+ * Version: 3.0.15
  * Author: weDevs
  * Author URI: https://wedevs.com/
  * Text Domain: dokan-lite
  * WC requires at least: 3.0
- * WC tested up to: 4.4.1
+ * WC tested up to: 4.7.0
  * Domain Path: /languages/
  * License: GPL2
  */
@@ -56,7 +56,7 @@ final class WeDevs_Dokan {
      *
      * @var string
      */
-    public $version = '3.0.9';
+    public $version = '3.0.15';
 
     /**
      * Instance of self
@@ -186,7 +186,8 @@ final class WeDevs_Dokan {
         if ( ! $this->is_supported_php() ) {
             require_once WC_ABSPATH . 'includes/wc-notice-functions.php';
 
-            wc_print_notice( sprintf( __( 'The Minimum PHP Version Requirement for <b>Dokan</b> is %s. You are Running PHP %s', 'dokan-lite' ), $this->min_php, phpversion(), 'error' ) );
+            /* translators: 1: Required PHP Version 2: Running php version */
+            wc_print_notice( sprintf( __( 'The Minimum PHP Version Requirement for <b>Dokan</b> is %1$s. You are Running PHP %2$s', 'dokan-lite' ), $this->min_php, phpversion() ), 'error' );
             exit;
         }
 
@@ -329,6 +330,7 @@ final class WeDevs_Dokan {
             new \WeDevs\Dokan\Admin\UserProfile();
             new \WeDevs\Dokan\Admin\SetupWizard();
             new \WeDevs\Dokan\Admin\Promotion();
+            new \WeDevs\Dokan\Admin\LimitedTimePromotion();
         } else {
             new \WeDevs\Dokan\Vendor\StoreListsFilter();
             new \WeDevs\Dokan\ThemeSupport\Manager();
@@ -468,7 +470,9 @@ final class WeDevs_Dokan {
         }
 
         $plugin_url = self_admin_url( 'plugin-install.php?s=woocommerce&tab=search&type=term' );
-        $message    = sprintf( esc_html__( 'Dokan requires WooCommerce to be installed and active. You can activate %s here.', 'dokan-lite' ), '<a href="' . $plugin_url . '">WooCommerce</a>' );
+
+        /* translators: %s: wc plugin url */
+        $message = sprintf( __( 'Dokan requires WooCommerce to be installed and active. You can activate <a href="%s">WooCommerce</a> here.', 'dokan-lite' ), $plugin_url );
 
         echo wp_kses_post( sprintf( '<div class="error"><p><strong>%1$s</strong></p></div>', $message ) );
     }

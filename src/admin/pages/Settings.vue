@@ -1,42 +1,45 @@
 <template>
-    <div class="dokan-settings">
-        <h2 style="margin-bottom: 15px;">{{ __( 'Settings', 'dokan-lite' ) }}</h2>
+    <div>
+        <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
 
-        <div id="setting-message_updated" class="settings-error notice is-dismissible" :class="{ 'updated' : isUpdated, 'error' : !isUpdated }" v-if="isSaved">
-            <p><strong v-html="message"></strong></p>
-            <button type="button" class="notice-dismiss" @click.prevent="isSaved = false">
-                <span class="screen-reader-text">{{ __( 'Dismiss this notice.', 'dokan-lite' ) }}</span>
-            </button>
-        </div>
+        <div class="dokan-settings">
+            <h2 style="margin-bottom: 15px;">{{ __( 'Settings', 'dokan-lite' ) }}</h2>
 
-        <div class="dokan-settings-wrap">
-            <h2 class="nav-tab-wrapper">
-                <template v-for="section in settingSections">
-                    <a
-                        href="#"
-                        :class="['nav-tab', currentTab === section.id ? 'nav-tab-active' : '']"
-                        @click.prevent="changeTab(section)"
-                    >
-                        <span class="dashicons" :class="section.icon"></span> {{ section.title }}
-                    </a>
-                </template>
-            </h2>
+            <div id="setting-message_updated" class="settings-error notice is-dismissible" :class="{ 'updated' : isUpdated, 'error' : !isUpdated }" v-if="isSaved">
+                <p><strong v-html="message"></strong></p>
+                <button type="button" class="notice-dismiss" @click.prevent="isSaved = false">
+                    <span class="screen-reader-text">{{ __( 'Dismiss this notice.', 'dokan-lite' ) }}</span>
+                </button>
+            </div>
 
-            <div class="metabox-holder">
-                <template v-for="(fields, index) in settingFields" v-if="isLoaded">
-                    <div :id="index" class="group" v-if="currentTab === index">
-                        <form method="post" action="options.php">
-                            <input type="hidden" name="option_page" :value="index">
-                            <input type="hidden" name="action" value="update">
-                            <table class="form-table">
-                                <thead v-if="showSectionTitle(fields)">
+            <div class="dokan-settings-wrap">
+                <h2 class="nav-tab-wrapper">
+                    <template v-for="section in settingSections">
+                        <a
+                            href="#"
+                            :class="['nav-tab', currentTab === section.id ? 'nav-tab-active' : '']"
+                            @click.prevent="changeTab(section)"
+                        >
+                            <span class="dashicons" :class="section.icon"></span> {{ section.title }}
+                        </a>
+                    </template>
+                </h2>
+
+                <div class="metabox-holder">
+                    <template v-for="(fields, index) in settingFields" v-if="isLoaded">
+                        <div :id="index" class="group" v-if="currentTab === index">
+                            <form method="post" action="options.php">
+                                <input type="hidden" name="option_page" :value="index">
+                                <input type="hidden" name="action" value="update">
+                                <table class="form-table">
+                                    <thead v-if="showSectionTitle(fields)">
                                     <tr class="dokan-settings-field-type-sub_section">
                                         <th colspan="2" class="dokan-settings-sub-section-title">
                                             <label>{{ sectionTitle( index ) }}</label>
                                         </th>
                                     </tr>
-                                </thead>
-                                <tbody>
+                                    </thead>
+                                    <tbody>
                                     <Fields
                                         v-for="(field, fieldId) in fields"
                                         :section-id="index"
@@ -49,18 +52,21 @@
                                         :errors="errors"
                                         :toggle-loading-state="toggleLoadingState"
                                     />
-                                </tbody>
-                            </table>
-                            <p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes" @click.prevent="saveSettings( settingValues[index], index )"></p>
-                        </form>
-                    </div>
-                </template>
-            </div>
+                                    </tbody>
+                                </table>
+                                <p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes" @click.prevent="saveSettings( settingValues[index], index )"></p>
+                            </form>
+                        </div>
+                    </template>
+                </div>
 
-            <div class="loading" v-if="showLoading">
-                <loading></loading>
+                <div class="loading" v-if="showLoading">
+                    <loading></loading>
+                </div>
             </div>
         </div>
+
+        <SettingsBanner v-if="! hasPro"></SettingsBanner>
     </div>
 
 </template>
@@ -68,6 +74,8 @@
 <script>
     let Loading = dokan_get_lib('Loading');
     import Fields from "admin/components/Fields.vue"
+    import SettingsBanner from "admin/components/SettingsBanner.vue";
+    import UpgradeBanner from "admin/components/UpgradeBanner.vue";
 
     export default {
 
@@ -75,7 +83,9 @@
 
         components: {
             Fields,
-            Loading
+            Loading,
+            SettingsBanner,
+            UpgradeBanner,
         },
 
         data () {
@@ -90,7 +100,8 @@
                 settingFields: {},
                 settingValues: {},
                 requiredFields: [],
-                errors: []
+                errors: [],
+                hasPro: dokan.hasPro ? true : false
             }
         },
 

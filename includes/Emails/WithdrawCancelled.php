@@ -25,7 +25,7 @@ class WithdrawCancelled extends WC_Email {
         $this->description      = __( 'These emails are sent to vendor when a vendor withdraw request is cancelled', 'dokan-lite' );
         $this->template_html    = 'emails/withdraw-cancel.php';
         $this->template_plain   = 'emails/plain/withdraw-cancel.php';
-        $this->template_base    = DOKAN_DIR.'/templates/';
+        $this->template_base    = DOKAN_DIR . '/templates/';
 
         // Triggers for this email
         add_action( 'dokan_withdraw_request_cancelled', array( $this, 'trigger' ), 30, 2 );
@@ -90,7 +90,6 @@ class WithdrawCancelled extends WC_Email {
         $this->setup_locale();
         $this->send( $seller->user_email, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
         $this->restore_locale();
-
     }
 
         /**
@@ -101,14 +100,16 @@ class WithdrawCancelled extends WC_Email {
      */
     public function get_content_html() {
         ob_start();
-        wc_get_template( $this->template_html, array(
-            'seller'        => $this->object,
-            'email_heading' => $this->get_heading(),
-            'sent_to_admin' => true,
-            'plain_text'    => false,
-            'email'         => $this,
-            'data'          => $this->replace
-        ), 'dokan/', $this->template_base );
+        wc_get_template(
+            $this->template_html, array(
+				'seller'        => $this->object,
+				'email_heading' => $this->get_heading(),
+				'sent_to_admin' => true,
+				'plain_text'    => false,
+				'email'         => $this,
+				'data'          => $this->replace,
+            ), 'dokan/', $this->template_base
+        );
         return ob_get_clean();
     }
 
@@ -120,14 +121,16 @@ class WithdrawCancelled extends WC_Email {
      */
     public function get_content_plain() {
         ob_start();
-        wc_get_template( $this->template_html, array(
-            'seller'        => $this->object,
-            'email_heading' => $this->get_heading(),
-            'sent_to_admin' => true,
-            'plain_text'    => true,
-            'email'         => $this,
-            'data'          => $this->replace
-        ), 'dokan/', $this->template_base );
+        wc_get_template(
+            $this->template_html, array(
+				'seller'        => $this->object,
+				'email_heading' => $this->get_heading(),
+				'sent_to_admin' => true,
+				'plain_text'    => true,
+				'email'         => $this,
+				'data'          => $this->replace,
+            ), 'dokan/', $this->template_base
+        );
         return ob_get_clean();
     }
 

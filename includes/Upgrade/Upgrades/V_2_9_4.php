@@ -19,7 +19,7 @@ class V_2_9_4 extends DokanUpgrader {
 
         $args = [
             'updating' => 'shop_order_post_author',
-            'paged'    => 0
+            'paged'    => 0,
         ];
 
         $processor->push_to_queue( $args )->dispatch_process();
@@ -35,13 +35,13 @@ class V_2_9_4 extends DokanUpgrader {
 
         $table_name = $wpdb->prefix . 'dokan_refund';
 
-        if ( $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $table_name ) ) !== $table_name ) {
+        if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) ) !== $table_name ) {
             return;
         }
 
         $columns = [ 'item_qtys', 'item_totals', 'item_tax_totals' ];
 
-          foreach ( $columns as $column ) {
+		foreach ( $columns as $column ) {
             $wpdb->query( "ALTER TABLE `{$wpdb->prefix}dokan_refund` MODIFY COLUMN `{$column}` varchar(200)" );
         }
     }

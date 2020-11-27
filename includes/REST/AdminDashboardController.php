@@ -28,41 +28,41 @@ class AdminDashboardController extends DokanRESTAdminController {
      * @return void
      */
     public function register_routes() {
-
-        register_rest_route( $this->namespace, '/' . $this->base . '/feed', array(
-            array(
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => array( $this, 'get_feeds' ),
-                'permission_callback' => array( $this, 'check_permission' ),
-                'args'                => array(
-                    'items' => array(
-                        'type'        => 'integer',
-                        'description' => __( 'Number of feed item', 'dokan-lite' ),
-                        'required'    => false,
-                        'default'     => 5
-                    ),
-                    'show_summary' => array(
-                        'type'        => 'boolean',
-                        'description' => __( 'Flag for showing summary', 'dokan-lite' ),
-                        'required'    => false,
-                        'default'     => false
-                    ),
-                    'show_author' => array(
-                        'type'        => 'boolean',
-                        'description' => __( 'Flag for showing author', 'dokan-lite' ),
-                        'required'    => false,
-                        'default'     => false
-                    ),
-                    'show_date' => array(
-                        'type'        => 'boolean',
-                        'description' => __( 'Flag for showing date', 'dokan-lite' ),
-                        'required'    => false,
-                        'default'     => true
-                    ),
-                )
-            ),
-        ) );
-
+        register_rest_route(
+            $this->namespace, '/' . $this->base . '/feed', array(
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_feeds' ),
+					'permission_callback' => array( $this, 'check_permission' ),
+					'args'                => array(
+						'items' => array(
+							'type'        => 'integer',
+							'description' => __( 'Number of feed item', 'dokan-lite' ),
+							'required'    => false,
+							'default'     => 5,
+						),
+						'show_summary' => array(
+							'type'        => 'boolean',
+							'description' => __( 'Flag for showing summary', 'dokan-lite' ),
+							'required'    => false,
+							'default'     => false,
+						),
+						'show_author' => array(
+							'type'        => 'boolean',
+							'description' => __( 'Flag for showing author', 'dokan-lite' ),
+							'required'    => false,
+							'default'     => false,
+						),
+						'show_date' => array(
+							'type'        => 'boolean',
+							'description' => __( 'Flag for showing date', 'dokan-lite' ),
+							'required'    => false,
+							'default'     => true,
+						),
+					),
+				),
+            )
+        );
     }
 
     /**
@@ -97,7 +97,7 @@ class AdminDashboardController extends DokanRESTAdminController {
         if ( ! $rss->get_item_quantity() ) {
             return new WP_Error( 'error', __( 'An error has occurred, which probably means the feed is down. Try again later.', 'dokan-lite' ) );
             $rss->__destruct();
-            unset($rss);
+            unset( $rss );
         }
 
         $feeds = array();
@@ -139,7 +139,7 @@ class AdminDashboardController extends DokanRESTAdminController {
             if ( $show_author ) {
                 $author = $item->get_author();
 
-                if ( is_object($author) ) {
+                if ( is_object( $author ) ) {
                     $author = $author->get_name();
                     $author = esc_html( strip_tags( $author ) );
                 }
@@ -151,12 +151,12 @@ class AdminDashboardController extends DokanRESTAdminController {
                 'desc'    => $desc,
                 'summary' => $summary,
                 'date'    => $date,
-                'author'  => $author
+                'author'  => $author,
             );
         }
 
         $rss->__destruct();
-        unset($rss);
+        unset( $rss );
 
         return rest_ensure_response( $feeds );
     }

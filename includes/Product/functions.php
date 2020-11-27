@@ -14,7 +14,7 @@
  *
  * @param  array  $args
  *
- * @return integer|boolean
+ * @return integer|boolean|WP_Error
  */
 function dokan_save_product( $args ) {
     $defaults = array(
@@ -33,7 +33,7 @@ function dokan_save_product( $args ) {
         return new WP_Error( 'no-title', __( 'Please enter product title', 'dokan-lite' ) );
     }
 
-    if ( dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) == 'single' ) {
+    if ( dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) === 'single' ) {
         if ( absint( $data['product_cat'] ) < 0 ) {
             return new WP_Error( 'no-category', __( 'Please select a category', 'dokan-lite' ) );
         }
@@ -73,7 +73,7 @@ function dokan_save_product( $args ) {
 
     $post_arr = apply_filters( 'dokan_insert_product_post_data', $post_arr, $data );
 
-    if ( dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) == 'single' ) {
+    if ( dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) === 'single' ) {
         $cat_ids[] = $data['product_cat'];
     } else {
         if ( ! empty( $data['product_cat'] ) ) {
@@ -96,7 +96,7 @@ function dokan_save_product( $args ) {
         'sale_price'         => $data['_sale_price'] === '' ? '' : wc_format_decimal( $data['_sale_price'] ),
         'date_on_sale_from'  => isset( $data['_sale_price_dates_from'] ) ? wc_clean( $data['_sale_price_dates_from'] ) : '',
         'date_on_sale_to'    => isset( $data['_sale_price_dates_to'] ) ? wc_clean( $data['_sale_price_dates_to'] ) : '',
-        'catalog_visibility' => array_key_exists( $data['_visibility'], dokan_get_product_visibility_options() ) ? sanitize_text_field( $data['_visibility'] ) : 'visible'
+        'catalog_visibility' => array_key_exists( $data['_visibility'], dokan_get_product_visibility_options() ) ? sanitize_text_field( $data['_visibility'] ) : 'visible',
     ];
 
     $product = dokan()->product->create( $post_data );
@@ -205,41 +205,40 @@ function dokan_product_output_variations() {
                         <?php
                             $default_attributes = maybe_unserialize( get_post_meta( $post->ID, '_default_attributes', true ) );
 
-                            foreach ( $attributes as $attribute ) {
+						foreach ( $attributes as $attribute ) {
 
-                                // Only deal with attributes that are variations
-                                if ( ! $attribute['is_variation'] ) {
-                                    continue;
-                                }
+							// Only deal with attributes that are variations
+							if ( ! $attribute['is_variation'] ) {
+								continue;
+							}
 
-                                echo '<div class="dokan-variation-default-select dokan-w5 float-none">';
+							echo '<div class="dokan-variation-default-select dokan-w5 float-none">';
 
-                                // Get current value for variation (if set)
-                                $variation_selected_value = isset( $default_attributes[ sanitize_title( $attribute['name'] ) ] ) ? $default_attributes[ sanitize_title( $attribute['name'] ) ] : '';
+							// Get current value for variation (if set)
+							$variation_selected_value = isset( $default_attributes[ sanitize_title( $attribute['name'] ) ] ) ? $default_attributes[ sanitize_title( $attribute['name'] ) ] : '';
 
-                                // Name will be something like attribute_pa_color
-                                echo '<select class="dokan-form-control" name="default_attribute_' . esc_attr( sanitize_title( $attribute['name'] ) ) . '" data-current="' . esc_attr( $variation_selected_value ) . '"><option value="">' . esc_html__( 'No default', 'dokan-lite' ) . ' ' . esc_html( wc_attribute_label( $attribute['name'] ) ) . '&hellip;</option>';
+							// Name will be something like attribute_pa_color
+							echo '<select class="dokan-form-control" name="default_attribute_' . esc_attr( sanitize_title( $attribute['name'] ) ) . '" data-current="' . esc_attr( $variation_selected_value ) . '"><option value="">' . esc_html__( 'No default', 'dokan-lite' ) . ' ' . esc_html( wc_attribute_label( $attribute['name'] ) ) . '&hellip;</option>';
 
-                                // Get terms for attribute taxonomy or value if its a custom attribute
-                                if ( $attribute['is_taxonomy'] ) {
-                                    $post_terms = wp_get_post_terms( $post->ID, $attribute['name'] );
+							// Get terms for attribute taxonomy or value if its a custom attribute
+							if ( $attribute['is_taxonomy'] ) {
+								$post_terms = wp_get_post_terms( $post->ID, $attribute['name'] );
 
-                                    foreach ( $post_terms as $term ) {
-                                        echo '<option ' . selected( $variation_selected_value, $term->slug, false ) . ' value="' . esc_attr( $term->slug ) . '">' . esc_html( apply_filters( 'woocommerce_variation_option_name', $term->name ) ) . '</option>';
-                                    }
-                                } else {
-                                    $options = wc_get_text_attributes( $attribute['value'] );
+								foreach ( $post_terms as $term ) {
+									echo '<option ' . selected( $variation_selected_value, $term->slug, false ) . ' value="' . esc_attr( $term->slug ) . '">' . esc_html( apply_filters( 'woocommerce_variation_option_name', $term->name ) ) . '</option>';
+								}
+							} else {
+								$options = wc_get_text_attributes( $attribute['value'] );
 
-                                    foreach ( $options as $option ) {
-                                        $selected = sanitize_title( $variation_selected_value ) === $variation_selected_value ? selected( $variation_selected_value, sanitize_title( $option ), false ) : selected( $variation_selected_value, $option, false );
-                                        echo '<option ' . esc_attr( $selected ) . ' value="' . esc_attr( $option ) . '">' . esc_html( apply_filters( 'woocommerce_variation_option_name', $option ) ) . '</option>';
-                                    }
-                                }
+								foreach ( $options as $option ) {
+									$selected = sanitize_title( $variation_selected_value ) === $variation_selected_value ? selected( $variation_selected_value, sanitize_title( $option ), false ) : selected( $variation_selected_value, $option, false );
+									echo '<option ' . esc_attr( $selected ) . ' value="' . esc_attr( $option ) . '">' . esc_html( apply_filters( 'woocommerce_variation_option_name', $option ) ) . '</option>';
+								}
+							}
 
-                                echo '</select>';
-                                echo '</div>';
-
-                            }
+							echo '</select>';
+							echo '</div>';
+						}
                         ?>
                         <div class="dokan-clearfix"></div>
 
@@ -264,6 +263,7 @@ function dokan_product_output_variations() {
                 <div class="dokan-variations-pagenav dokan-right">
                     <span class="displaying-num">
                         <?php
+                            /* translators: number of items */
                             $variations_count_text = _n( '%s item', '%s items', esc_attr( $variations_count ), 'dokan-lite' );
                             printf( esc_html( $variations_count_text ), esc_attr( $variations_count ) );
                         ?>
@@ -281,7 +281,7 @@ function dokan_product_output_variations() {
                                     <option value="<?php echo esc_attr( $i ); ?>"><?php echo esc_html( $i ); ?></option>
                                 <?php endfor; ?>
                             </select>
-                             <?php esc_html_x( 'of', 'number of pages', 'dokan-lite' ); ?> <span class="total-pages"><?php echo esc_html( $variations_total_pages ); ?></span>
+                            <?php esc_html_x( 'of', 'number of pages', 'dokan-lite' ); ?> <span class="total-pages"><?php echo esc_html( $variations_total_pages ); ?></span>
                         </span>
                         <a class="next-page" title="<?php esc_attr_e( 'Go to the next page', 'dokan-lite' ); ?>" href="#">&rsaquo;</a>
                         <a class="last-page" title="<?php esc_attr_e( 'Go to the last page', 'dokan-lite' ); ?>" href="#">&raquo;</a>
@@ -306,12 +306,14 @@ function dokan_product_output_variations() {
  * @return array
  */
 function dokan_get_product_visibility_options() {
-    return apply_filters( 'dokan_product_visibility_options', array(
-        'visible' => __( 'Visible', 'dokan-lite' ),
-        'catalog' => __( 'Catalog', 'dokan-lite' ),
-        'search'  => __( 'Search', 'dokan-lite' ),
-        'hidden'  => __( 'Hidden', 'dokan-lite' ),
-    ) );
+    return apply_filters(
+        'dokan_product_visibility_options', array(
+			'visible' => __( 'Visible', 'dokan-lite' ),
+			'catalog' => __( 'Catalog', 'dokan-lite' ),
+			'search'  => __( 'Search', 'dokan-lite' ),
+			'hidden'  => __( 'Hidden', 'dokan-lite' ),
+        )
+    );
 }
 
 /**
@@ -335,7 +337,7 @@ function dokan_search_seller_products( $term, $user_ids = false, $type = '', $in
     $users_where   = '';
 
     if ( $type ) {
-        if ( in_array( $type, array( 'virtual', 'downloadable' ) ) ) {
+        if ( in_array( $type, array( 'virtual', 'downloadable' ), true ) ) {
             $type_join  = " LEFT JOIN {$wpdb->postmeta} postmeta_type ON posts.ID = postmeta_type.post_id ";
             $type_where = " AND ( postmeta_type.meta_key = '_{$type}' AND postmeta_type.meta_value = 'yes' ) ";
         }
@@ -412,7 +414,6 @@ function dokan_products_array_filter_editable( $product ) {
  * @return array
  */
 function dokan_product_get_row_action( $post ) {
-
     if ( empty( $post->ID ) ) {
         return array();
     }
@@ -432,13 +433,20 @@ function dokan_product_get_row_action( $post ) {
     if ( current_user_can( 'dokan_delete_product' ) ) {
         $row_action['delete'] = array(
             'title' => __( 'Delete Permanently', 'dokan-lite' ),
-            'url'   => wp_nonce_url( add_query_arg( array( 'action' => 'dokan-delete-product', 'product_id' => $product_id ), dokan_get_navigation_url('products') ), 'dokan-delete-product' ),
+            'url'   => wp_nonce_url(
+                add_query_arg(
+                    array(
+						'action' => 'dokan-delete-product',
+						'product_id' => $product_id,
+                    ), dokan_get_navigation_url( 'products' )
+                ), 'dokan-delete-product'
+            ),
             'class' => 'delete',
             'other' => 'onclick="return confirm( \'Are you sure?\' );"',
         );
     }
 
-    if ( current_user_can( 'dokan_view_product' ) && $post->post_status != 'pending' ) {
+    if ( current_user_can( 'dokan_view_product' ) && $post->post_status !== 'pending' ) {
         $row_action['view'] = array(
             'title' => __( 'View', 'dokan-lite' ),
             'url'   => get_permalink( $product_id ),
@@ -506,5 +514,5 @@ function dokan_get_translated_product_stock_status( $stock = false ) {
         return $stock_status;
     }
 
-    return isset( $stock_status[$stock] ) ? $stock_status[$stock] : '';
+    return isset( $stock_status[ $stock ] ) ? $stock_status[ $stock ] : '';
 }

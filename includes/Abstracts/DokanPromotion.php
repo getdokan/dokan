@@ -18,7 +18,7 @@ abstract class DokanPromotion {
      *
      * @var integer
      */
-    public $time_interval = 60*60*24*7;
+    public $time_interval = 60 * 60 * 24 * 7;
 
     /**
      * option key for promo
@@ -66,7 +66,7 @@ abstract class DokanPromotion {
             return;
         }
 
-        if ( ( strtotime( $current_time ) - strtotime( $last_time ) ) < $this->time_interval  ) {
+        if ( ( strtotime( $current_time ) - strtotime( $last_time ) ) < $this->time_interval ) {
             return;
         }
 
@@ -78,7 +78,7 @@ abstract class DokanPromotion {
                 <div class="content">
                     <h2><?php echo esc_html( $notice['title'] ); ?></h2>
                     <p><?php echo esc_html( $notice['content'] ); ?></p>
-                    <a href="<?php echo esc_url( $notice['link'] ); ?>" class="button button-primary promo-btn" target="_blank"><?php echo !empty( $notice['btn_text'] ) ? esc_html( $notice['btn_text'] ) : esc_html__( 'Learn More &rarr;', 'dokan-lite' ); ?></a>
+                    <a href="<?php echo esc_url( $notice['link'] ); ?>" class="button button-primary promo-btn" target="_blank"><?php echo ! empty( $notice['btn_text'] ) ? esc_html( $notice['btn_text'] ) : esc_html__( 'Learn More &rarr;', 'dokan-lite' ); ?></a>
                 </div>
                 <span class="prmotion-close-icon dashicons dashicons-no-alt" data-key="<?php echo esc_attr( $notice['key'] ); ?>" data-promo_key="<?php echo esc_attr( $this->promo_option_key ); ?>"></span>
                 <div class="clear"></div>
@@ -199,7 +199,7 @@ abstract class DokanPromotion {
             if ( ! isset( $already_displayed_promo[ $post_data['key'] ] ) ) {
                 $already_displayed_promo[ $post_data['key'] ] = array(
                     'display'        => 0,
-                    'last_displayed' => current_time( 'mysql' )
+                    'last_displayed' => current_time( 'mysql' ),
                 );
             }
 
@@ -229,7 +229,7 @@ abstract class DokanPromotion {
         $already_displayed_promo = get_option( $this->promo_option_key, array() );
 
         foreach ( $promotions as $key => $value ) {
-            if ( ! isset( $already_displayed_promo[$key] ) ) {
+            if ( ! isset( $already_displayed_promo[ $key ] ) ) {
                 $latest_promo = $value;
                 $latest_promo['key'] = $key;
                 return $latest_promo;

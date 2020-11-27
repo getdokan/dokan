@@ -16,15 +16,17 @@ class V_2_9_13 extends DokanUpgrader {
 
         $map_table = $wpdb->prefix . 'dokan_product_map';
 
-        if ( $wpdb->get_var( $wpdb->prepare("show tables like %s", $map_table ) ) !== $map_table ) {
+        if ( $wpdb->get_var( $wpdb->prepare( 'show tables like %s', $map_table ) ) !== $map_table ) {
             return;
         }
 
         $columns = $wpdb->get_results( "describe {$map_table}" );
 
-        $columns = array_filter( $columns, function ( $column ) {
-            return 'visibility' === $column->Field;
-        } );
+        $columns = array_filter(
+            $columns, function ( $column ) {
+				return 'visibility' === $column->Field;
+			}
+        );
 
         if ( empty( $columns ) ) {
             $wpdb->query(

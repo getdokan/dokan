@@ -140,25 +140,8 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                     <?php endif; ?>
 
                     <div class="dokan-form-group">
-                        <?php
-                        require_once DOKAN_LIB_DIR.'/class.taxonomy-walker.php';
-                        $drop_down_tags = wp_dropdown_categories( array(
-                            'show_option_none' => __( '', 'dokan-lite' ),
-                            'hierarchical'     => 1,
-                            'hide_empty'       => 0,
-                            'name'             => 'product_tag[]',
-                            'id'               => 'product_tag',
-                            'taxonomy'         => 'product_tag',
-                            'title_li'         => '',
-                            'class'            => 'product_tags dokan-form-control',
-                            'exclude'          => '',
-                            'selected'         => array(),
-                            'echo'             => 0,
-                            'walker'           => new TaxonomyDropdown()
-                        ) );
-
-                        echo str_replace( '<select', '<select data-placeholder="'.__( 'Select product tags', 'dokan-lite' ).'" multiple="multiple" ', $drop_down_tags ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
-                        ?>
+                        <label for="product_tag" class="form-label"><?php esc_html_e( 'Tags', 'dokan-lite' ); ?></label>
+                        <select multiple="multiple" name="product_tag[]" id="product_tag_search" class="product_tag_search product_tags dokan-form-control dokan-select2" data-placeholder="<?php esc_attr_e( 'Select tags', 'dokan-lite' ); ?>"></select>
                     </div>
 
                     <?php do_action( 'dokan_new_product_after_product_tags' ); ?>

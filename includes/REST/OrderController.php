@@ -66,107 +66,118 @@ class OrderController extends DokanRESTController {
      * Register the routes for orders.
      */
     public function register_routes() {
-        register_rest_route( $this->namespace, '/' . $this->base, array(
-            array(
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => array( $this, 'get_items' ),
-                'permission_callback' => array( $this, 'get_orders_permissions_check' ),
-                'args'                => $this->get_collection_params(),
-            ),
-            'schema' => array( $this, 'get_public_item_schema' ),
-        ) );
+        register_rest_route(
+            $this->namespace, '/' . $this->base, array(
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_items' ),
+					'permission_callback' => array( $this, 'get_orders_permissions_check' ),
+					'args'                => $this->get_collection_params(),
+				),
+				'schema' => array( $this, 'get_public_item_schema' ),
+            )
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/', array(
-            'args' => array(
-                'id' => array(
-                    'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
-                    'type'        => 'integer',
-                )
-            ),
-            array(
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => array( $this, 'get_item' ),
-                'args'                => $this->get_collection_params(),
-                'permission_callback' => array( $this, 'get_single_order_permissions_check' ),
-            ),
+        register_rest_route(
+            $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/', array(
+				'args' => array(
+					'id' => array(
+						'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
+						'type'        => 'integer',
+					),
+				),
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_item' ),
+					'args'                => $this->get_collection_params(),
+					'permission_callback' => array( $this, 'get_single_order_permissions_check' ),
+				),
 
-            array(
-                'methods'             => WP_REST_Server::EDITABLE,
-                'callback'            => array( $this, 'update_item' ),
-                'args'                => array(
-                    'status' => array(
-                        'type'        => 'string',
-                        'description' => __( 'Order Status', 'dokan-lite' ),
-                        'required'    => true,
-                        'sanitize_callback' => 'sanitize_text_field',
-                    )
-                ),
-                'permission_callback' => array( $this, 'update_order_permissions_check' ),
-            ),
-        ) );
+				array(
+					'methods'             => WP_REST_Server::EDITABLE,
+					'callback'            => array( $this, 'update_item' ),
+					'args'                => array(
+						'status' => array(
+							'type'        => 'string',
+							'description' => __( 'Order Status', 'dokan-lite' ),
+							'required'    => true,
+							'sanitize_callback' => 'sanitize_text_field',
+						),
+					),
+					'permission_callback' => array( $this, 'update_order_permissions_check' ),
+				),
+            )
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/notes', array(
-            'args' => array(
-                'id' => array(
-                    'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
-                    'type'        => 'integer',
-                )
-            ),
-            array(
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => array( $this, 'get_order_notes' ),
-                'args'                => $this->get_collection_params(),
-                'permission_callback' => array( $this, 'get_single_order_permissions_check' ),
-            ),
-            array(
-                'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => array( $this, 'create_order_note' ),
-                'permission_callback' => array( $this, 'get_single_order_permissions_check' ),
-                'args'                => array_merge( $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ), array(
-                    'note' => array(
-                        'type'        => 'string',
-                        'description' => __( 'Order note content.', 'dokan-lite' ),
-                        'required'    => true,
-                    ),
-                ) ),
-            ),
-        ) );
+        register_rest_route(
+            $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/notes', array(
+				'args' => array(
+					'id' => array(
+						'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
+						'type'        => 'integer',
+					),
+				),
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_order_notes' ),
+					'args'                => $this->get_collection_params(),
+					'permission_callback' => array( $this, 'get_single_order_permissions_check' ),
+				),
+				array(
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => array( $this, 'create_order_note' ),
+					'permission_callback' => array( $this, 'get_single_order_permissions_check' ),
+					'args'                => array_merge(
+						$this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ), array(
+							'note' => array(
+								'type'        => 'string',
+								'description' => __( 'Order note content.', 'dokan-lite' ),
+								'required'    => true,
+							),
+						)
+					),
+				),
+            )
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/notes/(?P<note_id>[\d]+)', array(
-            'args' => array(
-                'id' => array(
-                    'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
-                    'type'        => 'integer',
-                ),
-                'note_id' => array(
-                    'description' => __( 'Unique identifier for the note object.', 'dokan-lite' ),
-                    'type'        => 'integer',
-                )
-            ),
-            array(
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => array( $this, 'get_order_note' ),
-                'args'                => $this->get_collection_params(),
-                'permission_callback' => array( $this, 'get_single_order_permissions_check' ),
-            ),
-            array(
-                'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => array( $this, 'delete_order_note' ),
-                'args'                => $this->get_collection_params(),
-                'permission_callback' => array( $this, 'get_single_order_permissions_check' ),
-            ),
-        ) );
+        register_rest_route(
+            $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/notes/(?P<note_id>[\d]+)', array(
+				'args' => array(
+					'id' => array(
+						'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
+						'type'        => 'integer',
+					),
+					'note_id' => array(
+						'description' => __( 'Unique identifier for the note object.', 'dokan-lite' ),
+						'type'        => 'integer',
+					),
+				),
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_order_note' ),
+					'args'                => $this->get_collection_params(),
+					'permission_callback' => array( $this, 'get_single_order_permissions_check' ),
+				),
+				array(
+					'methods'             => WP_REST_Server::DELETABLE,
+					'callback'            => array( $this, 'delete_order_note' ),
+					'args'                => $this->get_collection_params(),
+					'permission_callback' => array( $this, 'get_single_order_permissions_check' ),
+				),
+            )
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->base . '/summary', array(
-            array(
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => array( $this, 'get_order_summary' ),
-                'permission_callback' => array( $this, 'check_orders_summary_permissions' ),
-                'args'                => $this->get_collection_params(),
-            ),
-            'schema' => array( $this, 'get_public_item_schema' ),
-        ) );
-
+        register_rest_route(
+            $this->namespace, '/' . $this->base . '/summary', array(
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_order_summary' ),
+					'permission_callback' => array( $this, 'check_orders_summary_permissions' ),
+					'args'                => $this->get_collection_params(),
+				),
+				'schema' => array( $this, 'get_public_item_schema' ),
+            )
+        );
     }
 
     /**
@@ -328,29 +339,37 @@ class OrderController extends DokanRESTController {
         $order_statuses = wc_get_order_statuses();
 
         if ( empty( $id ) ) {
-            return new WP_Error( "dokan_rest_invalid_{$this->post_type}_id", __( 'Invalid order ID', 'dokan-lite' ), array(
-                'status' => 404,
-            ) );
+            return new WP_Error(
+                "dokan_rest_invalid_{$this->post_type}_id", __( 'Invalid order ID', 'dokan-lite' ), array(
+					'status' => 404,
+                )
+            );
         }
 
         if ( empty( $status ) ) {
-            return new WP_Error( "dokan_rest_empty_{$this->post_type}_status", __( 'Order status must me required', 'dokan-lite' ), array(
-                'status' => 404,
-            ) );
+            return new WP_Error(
+                "dokan_rest_empty_{$this->post_type}_status", __( 'Order status must me required', 'dokan-lite' ), array(
+					'status' => 404,
+                )
+            );
         }
 
         if ( ! in_array( $status, array_keys( $order_statuses ) ) ) {
-            return new WP_Error( "dokan_rest_invalid_{$this->post_type}_status", __( 'Order status not valid', 'dokan-lite' ), array(
-                'status' => 404,
-            ) );
+            return new WP_Error(
+                "dokan_rest_invalid_{$this->post_type}_status", __( 'Order status not valid', 'dokan-lite' ), array(
+					'status' => 404,
+                )
+            );
         }
 
         $order = wc_get_order( $id );
 
         if ( ! $order ) {
-            return new WP_Error( "dokan_rest_invalid_order", __( 'Invalid order', 'dokan-lite' ), array(
-                'status' => 404,
-            ) );
+            return new WP_Error(
+                'dokan_rest_invalid_order', __( 'Invalid order', 'dokan-lite' ), array(
+					'status' => 404,
+                )
+            );
         }
 
         $order->set_status( $status );
@@ -402,7 +421,7 @@ class OrderController extends DokanRESTController {
         $paged        = isset( $request['page'] ) ? absint( $request['page'] ) : 1;
         $offset       = ( $paged - 1 ) * $limit;
 
-        $orders  = dokan_get_seller_orders( $request['seller_id'], $request['status'], $request['order_date'], $limit, $offset, $request['customer_id'] );
+        $orders = dokan_get_seller_orders( $request['seller_id'], $request['status'], $request['order_date'], $limit, $offset, $request['customer_id'] );
 
         $data_objects = array();
         $total_orders = 0;
@@ -461,8 +480,8 @@ class OrderController extends DokanRESTController {
 
         // Add SKU and PRICE to products.
         if ( is_callable( array( $item, 'get_product' ) ) ) {
-            $data['sku']   = $item->get_product() ? $item->get_product()->get_sku(): null;
-            $data['price'] = (float)( $item->get_total() / max( 1, $item->get_quantity() ) );
+            $data['sku']   = $item->get_product() ? $item->get_product()->get_sku() : null;
+            $data['price'] = (float) ( $item->get_total() / max( 1, $item->get_quantity() ) );
         }
 
         // Format taxes.
@@ -594,7 +613,6 @@ class OrderController extends DokanRESTController {
         $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, str_replace( '(?P<id>[\d]+)', $order->get_id(), $this->rest_base ), $note_id ) ) );
 
         return $response;
-
     }
 
     /**
@@ -768,7 +786,6 @@ class OrderController extends DokanRESTController {
      * @return array
      */
     public function set_order_vendor_id( $args ) {
-
         if ( defined( 'REST_REQUEST' ) ) {
             $args['post_author'] = dokan_get_current_user_id();
         }
@@ -1679,7 +1696,7 @@ class OrderController extends DokanRESTController {
         $schema            = $this->get_item_schema();
         $schema_properties = $schema['properties'];
 
-        $query_params['seller_id']    = array(
+        $query_params['seller_id'] = array(
             'required'    => false,
             'default'     => dokan_get_current_user_id(),
             'description' => $schema_properties['seller_id']['description'],
@@ -1693,14 +1710,14 @@ class OrderController extends DokanRESTController {
             'type'        => $schema_properties['status']['type'],
         );
 
-        $query_params['date_created']   = array(
+        $query_params['date_created'] = array(
             'required'    => false,
             'default'     => $schema_properties['date_created']['default'],
             'description' => $schema_properties['date_created']['description'],
             'type'        => $schema_properties['date_created']['type'],
         );
 
-        $query_params['customer_id']  = array(
+        $query_params['customer_id'] = array(
             'required'    => false,
             'default'     => $schema_properties['customer_id']['default'],
             'description' => $schema_properties['customer_id']['description'],

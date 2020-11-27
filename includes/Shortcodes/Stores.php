@@ -22,7 +22,7 @@ class Stores extends DokanShortcode {
             'per_page' => 10,
             'search'   => 'yes',
             'per_row'  => 3,
-            'featured' => 'no'
+            'featured' => 'no',
         );
 
         /**
@@ -39,7 +39,7 @@ class Stores extends DokanShortcode {
 
         $seller_args = array(
             'number' => $limit,
-            'offset' => $offset
+            'offset' => $offset,
         );
 
         $_get_data = wp_unslash( $_GET );
@@ -51,8 +51,8 @@ class Stores extends DokanShortcode {
                     [
                         'key'     => 'dokan_store_name',
                         'value'   => wc_clean( $_get_data['dokan_seller_search'] ),
-                        'compare' => 'LIKE'
-                    ]
+                        'compare' => 'LIKE',
+                    ],
                 ];
             }
         }
@@ -68,15 +68,17 @@ class Stores extends DokanShortcode {
          *
          * @since 2.4.9
          */
-        $template_args = apply_filters( 'dokan_store_list_args', array(
-            'sellers'    => $sellers,
-            'limit'      => $limit,
-            'offset'     => $offset,
-            'paged'      => $paged,
-            'image_size' => 'full',
-            'search'     => $attr['search'],
-            'per_row'    => $attr['per_row']
-        ) );
+        $template_args = apply_filters(
+            'dokan_store_list_args', array(
+				'sellers'    => $sellers,
+				'limit'      => $limit,
+				'offset'     => $offset,
+				'paged'      => $paged,
+				'image_size' => 'full',
+				'search'     => $attr['search'],
+				'per_row'    => $attr['per_row'],
+            )
+        );
 
         ob_start();
         dokan_get_template_part( 'store-lists', false, $template_args );

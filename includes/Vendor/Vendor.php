@@ -630,7 +630,7 @@ class Vendor {
 
         $status        = dokan_withdraw_get_active_order_status_in_comma();
         $cache_group   = 'dokan_seller_data_'.$this->id;
-        $cache_key     = 'dokan_seller_balance_' . $this->id;
+        $cache_key     = $on_date ? "dokan_seller_balance_on_{$on_date}_$this->id" : 'dokan_seller_balance_' . $this->id;
         $earning       = wp_cache_get( $cache_key, $cache_group );
         $threshold_day = dokan_get_option( 'withdraw_date_limit', 'dokan_withdraw', 0 );
         $on_date       = $on_date ? date( 'Y-m-d', strtotime( $on_date ) ) : current_time( 'mysql' );

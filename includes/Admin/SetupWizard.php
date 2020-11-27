@@ -10,10 +10,10 @@ namespace WeDevs\Dokan\Admin;
 class SetupWizard {
 
     /** @var string Currenct Step */
-    protected $step   = '';
+    protected $step = '';
 
     /** @var array Steps for the setup wizard */
-    protected $steps  = array();
+    protected $steps = array();
 
     /**
      * Actions to be executed after the HTTP response has completed
@@ -34,7 +34,7 @@ class SetupWizard {
             add_action( 'admin_menu', array( $this, 'admin_menus' ) );
             add_action( 'admin_init', array( $this, 'setup_wizard' ), 99 );
 
-            if ( get_transient( 'dokan_setup_wizard_no_wc' ) ) {
+            if ( get_transient( 'dokan_setup_wizard_no_wc' ) && defined( 'WC_VERSION' ) && version_compare( WC_VERSION , '4.6.0', '<' ) ) { // todo: temporary fix, will add this feature again in future release
                 add_filter( 'dokan_admin_setup_wizard_steps', array( SetupWizardNoWC::class, 'add_wc_steps_to_wizard' ) );
                 add_filter( 'dokan_setup_wizard_enqueue_scripts', array( SetupWizardNoWC::class, 'enqueue_wc_localized_scripts' ) );
                 add_action( 'dokan_admin_setup_wizard_step_store_start', array( SetupWizardNoWC::class, 'add_wc_html_step_start' ) );
@@ -51,8 +51,8 @@ class SetupWizard {
      * @return array
      */
     public function set_user_cap( $caps ) {
-        if ( ! empty( $caps[ 'manage_options' ] ) ) {
-            $caps[ 'manage_woocommerce' ] = true;
+        if ( ! empty( $caps['manage_options'] ) ) {
+            $caps['manage_woocommerce'] = true;
         }
 
         return $caps;
@@ -64,27 +64,29 @@ class SetupWizard {
      * @return void
      */
     public function enqueue_scripts() {
-        $suffix     = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+        $suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
         wp_register_script( 'jquery-tiptip', WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip' . $suffix . '.js', array( 'jquery' ), WC_VERSION, true );
         wp_register_script( 'jquery-blockui', WC()->plugin_url() . '/assets/js/jquery-blockui/jquery.blockUI' . $suffix . '.js', array( 'jquery' ), '2.70', true );
         wp_register_script( 'selectWoo', WC()->plugin_url() . '/assets/js/selectWoo/selectWoo.full' . $suffix . '.js', array( 'jquery' ), '1.0.1' );
         wp_register_script( 'wc-enhanced-select', WC()->plugin_url() . '/assets/js/admin/wc-enhanced-select' . $suffix . '.js', array( 'jquery', 'selectWoo' ), WC_VERSION );
-        wp_localize_script( 'wc-enhanced-select', 'wc_enhanced_select_params', array(
-            'i18n_matches_1'            => _x( 'One result is available, press enter to select it.', 'enhanced select', 'dokan-lite' ),
-            'i18n_matches_n'            => _x( '%qty% results are available, use up and down arrow keys to navigate.', 'enhanced select', 'dokan-lite' ),
-            'i18n_no_matches'           => _x( 'No matches found', 'enhanced select', 'dokan-lite' ),
-            'i18n_ajax_error'           => _x( 'Loading failed', 'enhanced select', 'dokan-lite' ),
-            'i18n_input_too_short_1'    => _x( 'Please enter 1 or more characters', 'enhanced select', 'dokan-lite' ),
-            'i18n_input_too_short_n'    => _x( 'Please enter %qty% or more characters', 'enhanced select', 'dokan-lite' ),
-            'i18n_input_too_long_1'     => _x( 'Please delete 1 character', 'enhanced select', 'dokan-lite' ),
-            'i18n_input_too_long_n'     => _x( 'Please delete %qty% characters', 'enhanced select', 'dokan-lite' ),
-            'i18n_selection_too_long_1' => _x( 'You can only select 1 item', 'enhanced select', 'dokan-lite' ),
-            'i18n_selection_too_long_n' => _x( 'You can only select %qty% items', 'enhanced select', 'dokan-lite' ),
-            'i18n_load_more'            => _x( 'Loading more results&hellip;', 'enhanced select', 'dokan-lite' ),
-            'i18n_searching'            => _x( 'Searching&hellip;', 'enhanced select', 'dokan-lite' ),
-            'ajax_url'                  => admin_url( 'admin-ajax.php' ),
-        ) );
+        wp_localize_script(
+            'wc-enhanced-select', 'wc_enhanced_select_params', array(
+				'i18n_matches_1'            => _x( 'One result is available, press enter to select it.', 'enhanced select', 'dokan-lite' ),
+				'i18n_matches_n'            => _x( '%qty% results are available, use up and down arrow keys to navigate.', 'enhanced select', 'dokan-lite' ),
+				'i18n_no_matches'           => _x( 'No matches found', 'enhanced select', 'dokan-lite' ),
+				'i18n_ajax_error'           => _x( 'Loading failed', 'enhanced select', 'dokan-lite' ),
+				'i18n_input_too_short_1'    => _x( 'Please enter 1 or more characters', 'enhanced select', 'dokan-lite' ),
+				'i18n_input_too_short_n'    => _x( 'Please enter %qty% or more characters', 'enhanced select', 'dokan-lite' ),
+				'i18n_input_too_long_1'     => _x( 'Please delete 1 character', 'enhanced select', 'dokan-lite' ),
+				'i18n_input_too_long_n'     => _x( 'Please delete %qty% characters', 'enhanced select', 'dokan-lite' ),
+				'i18n_selection_too_long_1' => _x( 'You can only select 1 item', 'enhanced select', 'dokan-lite' ),
+				'i18n_selection_too_long_n' => _x( 'You can only select %qty% items', 'enhanced select', 'dokan-lite' ),
+				'i18n_load_more'            => _x( 'Loading more results&hellip;', 'enhanced select', 'dokan-lite' ),
+				'i18n_searching'            => _x( 'Searching&hellip;', 'enhanced select', 'dokan-lite' ),
+				'ajax_url'                  => admin_url( 'admin-ajax.php' ),
+            )
+        );
 
         wp_enqueue_style( 'woocommerce_admin_styles', WC()->plugin_url() . '/assets/css/admin.css', array(), WC_VERSION );
         wp_enqueue_style( 'wc-setup', WC()->plugin_url() . '/assets/css/wc-setup.css', array( 'dashicons', 'install' ), WC_VERSION );
@@ -138,37 +140,39 @@ class SetupWizard {
      * @return void
      */
     protected function set_steps() {
-        $this->steps = apply_filters( 'dokan_admin_setup_wizard_steps', array(
-            'introduction' => array(
-                'name'    =>  __( 'Introduction', 'dokan-lite' ),
-                'view'    => array( $this, 'dokan_setup_introduction' ),
-            ),
-            'store' => array(
-                'name'    =>  __( 'Store', 'dokan-lite' ),
-                'view'    => array( $this, 'dokan_setup_store' ),
-                'handler' => array( $this, 'dokan_setup_store_save' ),
-            ),
-            'selling' => array(
-                'name'    =>  __( 'Selling', 'dokan-lite' ),
-                'view'    => array( $this, 'dokan_setup_selling' ),
-                'handler' => array( $this, 'dokan_setup_selling_save' ),
-            ),
-            'withdraw' => array(
-                'name'    =>  __( 'Withdraw', 'dokan-lite' ),
-                'view'    => array( $this, 'dokan_setup_withdraw' ),
-                'handler' => array( $this, 'dokan_setup_withdraw_save' ),
-            ),
-            'recommended' => array(
-                'name'    =>  __( 'Recommended', 'dokan-lite' ),
-                'view'    => array( $this, 'dokan_setup_recommended' ),
-                'handler' => array( $this, 'dokan_setup_recommended_save' ),
-            ),
-            'next_steps' => array(
-                'name'    =>  __( 'Ready!', 'dokan-lite' ),
-                'view'    => array( $this, 'dokan_setup_ready' ),
-                'handler' => ''
+        $this->steps = apply_filters(
+            'dokan_admin_setup_wizard_steps', array(
+				'introduction' => array(
+					'name'    => __( 'Introduction', 'dokan-lite' ),
+					'view'    => array( $this, 'dokan_setup_introduction' ),
+				),
+				'store' => array(
+					'name'    => __( 'Store', 'dokan-lite' ),
+					'view'    => array( $this, 'dokan_setup_store' ),
+					'handler' => array( $this, 'dokan_setup_store_save' ),
+				),
+				'selling' => array(
+					'name'    => __( 'Selling', 'dokan-lite' ),
+					'view'    => array( $this, 'dokan_setup_selling' ),
+					'handler' => array( $this, 'dokan_setup_selling_save' ),
+				),
+				'withdraw' => array(
+					'name'    => __( 'Withdraw', 'dokan-lite' ),
+					'view'    => array( $this, 'dokan_setup_withdraw' ),
+					'handler' => array( $this, 'dokan_setup_withdraw_save' ),
+				),
+				'recommended' => array(
+					'name'    => __( 'Recommended', 'dokan-lite' ),
+					'view'    => array( $this, 'dokan_setup_recommended' ),
+					'handler' => array( $this, 'dokan_setup_recommended_save' ),
+				),
+				'next_steps' => array(
+					'name'    => __( 'Ready!', 'dokan-lite' ),
+					'view'    => array( $this, 'dokan_setup_ready' ),
+					'handler' => '',
+				),
             )
-        ) );
+        );
     }
 
     /**
@@ -247,7 +251,7 @@ class SetupWizard {
             <?php do_action( 'admin_head' ); ?>
             <?php do_action( 'dokan_setup_wizard_styles' ); ?>
         </head>
-        <body class="wc-setup wp-core-ui<?php echo get_transient( 'dokan_setup_wizard_no_wc' ) ? ' dokan-setup-wizard-activated-wc' : '';  ?>">
+        <body class="wc-setup wp-core-ui<?php echo get_transient( 'dokan_setup_wizard_no_wc' ) ? ' dokan-setup-wizard-activated-wc' : ''; ?>">
             <?php
                 $logo_url = ( ! empty( $this->custom_logo ) ) ? $this->custom_logo : plugins_url( 'assets/images/dokan-logo.png', DOKAN_FILE );
             ?>
@@ -277,13 +281,15 @@ class SetupWizard {
         ?>
         <ol class="wc-setup-steps">
             <?php foreach ( $ouput_steps as $step_key => $step ) : ?>
-                <li class="<?php
-                    if ( $step_key === $this->step ) {
-                        echo 'active';
-                    } elseif ( array_search( $this->step, array_keys( $this->steps ) ) > array_search( $step_key, array_keys( $this->steps ) ) ) {
-                        echo 'done';
-                    }
-                ?>"><?php echo esc_html( $step['name'] ); ?></li>
+                <li class="
+                <?php
+				if ( $step_key === $this->step ) {
+					echo 'active';
+				} elseif ( array_search( $this->step, array_keys( $this->steps ) ) > array_search( $step_key, array_keys( $this->steps ) ) ) {
+					echo 'done';
+				}
+                ?>
+                "><?php echo esc_html( $step['name'] ); ?></li>
             <?php endforeach; ?>
         </ol>
         <?php
@@ -337,20 +343,22 @@ class SetupWizard {
             'admin'  => __( 'Admin', 'dokan-lite' ),
         );
 
-        $args = apply_filters( 'dokan_admin_setup_wizard_step_setup_store_template_args', array(
-            'custom_store_url'       => $custom_store_url,
-            'recipients'             => $recipients,
-            'shipping_fee_recipient' => $shipping_fee_recipient,
-            'tax_fee_recipient'      => $tax_fee_recipient,
-            'map_api_source'         => $map_api_source,
-            'gmap_api_key'           => $gmap_api_key,
-            'mapbox_access_token'    => $mapbox_access_token,
-            'map_api_source_options' => array(
-                'google_maps' => __( 'Google Maps', 'dokan-lite' ),
-                'mapbox'      => __( 'Mapbox', 'dokan-lite' ),
-            ),
-            'setup_wizard'           => $this,
-        ) );
+        $args = apply_filters(
+            'dokan_admin_setup_wizard_step_setup_store_template_args', array(
+				'custom_store_url'       => $custom_store_url,
+				'recipients'             => $recipients,
+				'shipping_fee_recipient' => $shipping_fee_recipient,
+				'tax_fee_recipient'      => $tax_fee_recipient,
+				'map_api_source'         => $map_api_source,
+				'gmap_api_key'           => $gmap_api_key,
+				'mapbox_access_token'    => $mapbox_access_token,
+				'map_api_source_options' => array(
+					'google_maps' => __( 'Google Maps', 'dokan-lite' ),
+					'mapbox'      => __( 'Mapbox', 'dokan-lite' ),
+				),
+				'setup_wizard'           => $this,
+            )
+        );
 
         dokan_get_template( 'admin-setup-wizard/step-store.php', $args );
     }
@@ -361,7 +369,7 @@ class SetupWizard {
     public function dokan_setup_store_save() {
         check_admin_referer( 'dokan-setup' );
 
-        $_post_data = wp_unslash($_POST);
+        $_post_data = wp_unslash( $_POST );
 
         $general_options = get_option( 'dokan_general', array() );
         $selling_options = get_option( 'dokan_selling', array() );
@@ -403,14 +411,16 @@ class SetupWizard {
         $order_status_change       = ! empty( $options['order_status_change'] ) ? $options['order_status_change'] : '';
         $dokan_commission_types    = dokan_commission_types();
 
-        $args = apply_filters( 'dokan_admin_setup_wizard_step_setup_selling_template_args', array(
-            'new_seller_enable_selling' => $new_seller_enable_selling,
-            'commission_type'           => $commission_type,
-            'admin_percentage'          => $admin_percentage,
-            'order_status_change'       => $order_status_change,
-            'dokan_commission_types'    => $dokan_commission_types,
-            'setup_wizard'              => $this,
-        ) );
+        $args = apply_filters(
+            'dokan_admin_setup_wizard_step_setup_selling_template_args', array(
+				'new_seller_enable_selling' => $new_seller_enable_selling,
+				'commission_type'           => $commission_type,
+				'admin_percentage'          => $admin_percentage,
+				'order_status_change'       => $order_status_change,
+				'dokan_commission_types'    => $dokan_commission_types,
+				'setup_wizard'              => $this,
+            )
+        );
 
         dokan_get_template( 'admin-setup-wizard/step-selling.php', $args );
     }
@@ -454,16 +464,18 @@ class SetupWizard {
                 <tr>
                     <td colspan="2">
                         <ul class="wc-wizard-payment-gateways wc-wizard-services">
-                            <?php foreach ( dokan_withdraw_register_methods() as $key => $method ): ?>
+                            <?php foreach ( dokan_withdraw_register_methods() as $key => $method ) : ?>
                                 <li class="wc-wizard-service-item <?php echo ( in_array( $key, array_values( $withdraw_methods ) ) ) ? 'checked="checked"' : ''; ?>">
                                     <div class="wc-wizard-service-name">
                                         <p><?php echo $method['title']; ?></p>
                                     </div>
                                     <div class="wc-wizard-service-description">
-                                        <?php printf(
+                                        <?php
+                                        printf(
                                             esc_html__( 'Enable %s for your vendor as a withdraw method', 'dokan-lite' ),
                                             $method['title']
-                                        ); ?>
+                                        );
+                                        ?>
                                     </div>
                                     <div class="dokan-wizard-service-enable">
                                         <input type="checkbox" name="withdraw_methods[<?php esc_attr_e( $key ); ?>]" id="withdraw_methods[<?php esc_attr_e( $key ); ?>]" class="switch-input" value="<?php esc_attr_e( $key ); ?>" <?php echo ( in_array( $key, array_values( $withdraw_methods ) ) ) ? 'checked="checked"' : ''; ?>>
@@ -545,19 +557,25 @@ class SetupWizard {
             <form method="post">
                 <ul class="recommended-step">
                     <?php
-                        if ( $this->user_can_install_plugin() ) {
-
-                            if ( ! $this->is_wc_conversion_tracking_active() ) {
-                                $this->display_recommended_item( array(
-                                    'type'        => 'wc_conversion_tracking',
-                                    'title'       => __( 'WooCommerce Conversion Tracking', 'dokan-lite' ),
-                                    'description' => __( 'Track conversions on your WooCommerce store like a pro!', 'dokan-lite' ),
-                                    'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/wc-conversion-tracking-logo.png',
-                                    'img_alt'     => __( 'WooCommerce Conversion Tracking logo', 'dokan-lite' ),
-                                    'plugins'     => array( array( 'name' => __( 'WooCommerce Conversion Tracking', 'dokan-lite' ), 'slug' => 'woocommerce-conversion-tracking' ) ),
-                                ) );
-                            }
-                        };
+					if ( $this->user_can_install_plugin() ) {
+						if ( ! $this->is_wc_conversion_tracking_active() ) {
+							$this->display_recommended_item(
+                                array(
+									'type'        => 'wc_conversion_tracking',
+									'title'       => __( 'WooCommerce Conversion Tracking', 'dokan-lite' ),
+									'description' => __( 'Track conversions on your WooCommerce store like a pro!', 'dokan-lite' ),
+									'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/wc-conversion-tracking-logo.png',
+									'img_alt'     => __( 'WooCommerce Conversion Tracking logo', 'dokan-lite' ),
+									'plugins'     => array(
+										array(
+											'name' => __( 'WooCommerce Conversion Tracking', 'dokan-lite' ),
+											'slug' => 'woocommerce-conversion-tracking',
+										),
+									),
+                                )
+                            );
+						}
+					};
                     ?>
                 </ul>
                 <p class="wc-setup-actions step">
@@ -579,7 +597,7 @@ class SetupWizard {
     public function dokan_setup_recommended_save() {
         check_admin_referer( 'dokan-setup' );
 
-        $setup_wc_conversion_tracking  = isset( $_POST['setup_wc_conversion_tracking'] ) && 'yes' === $_POST['setup_wc_conversion_tracking'];
+        $setup_wc_conversion_tracking = isset( $_POST['setup_wc_conversion_tracking'] ) && 'yes' === $_POST['setup_wc_conversion_tracking'];
 
         if ( $setup_wc_conversion_tracking && ! $this->is_wc_conversion_tracking_active() ) {
             $this->install_plugin(
@@ -721,14 +739,20 @@ class SetupWizard {
                     alt="<?php echo esc_attr( $img_alt ); ?>" />
                 <div class="recommended-item-description-container">
                     <h3><?php echo esc_html( $title ); ?></h3>
-                    <p><?php echo wp_kses( $description, array(
-                        'a' => array(
-                            'href'   => array(),
-                            'target' => array(),
-                            'rel'    => array(),
-                        ),
-                        'em' => array(),
-                    ) ); ?></p>
+                    <p>
+                    <?php
+                    echo wp_kses(
+                        $description, array(
+							'a' => array(
+								'href'   => array(),
+								'target' => array(),
+								'rel'    => array(),
+							),
+							'em' => array(),
+                        )
+                    );
+					?>
+                    </p>
                 </div>
             </label>
         </li>

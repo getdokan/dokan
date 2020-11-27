@@ -52,184 +52,200 @@ class ProductController extends DokanRESTController {
      * @return void
      */
     public function register_routes() {
-        register_rest_route( $this->namespace, '/' . $this->base, array(
-            'args' => array(
-                'id' => array(
-                    'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
-                    'type'        => 'integer',
-                ),
-            ),
-            array(
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => array( $this, 'get_items' ),
-                'args'                => $this->get_collection_params(),
-                'permission_callback' => array( $this, 'get_product_permissions_check' ),
-            ),
-            array(
-                'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => array( $this, 'create_item' ),
-                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
-                'permission_callback' => array( $this, 'create_product_permissions_check' ),
-            ),
-            'schema' => array( $this, 'get_public_item_schema' ),
-        ) );
-
-        register_rest_route( $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/', array(
-            'args' => array(
-                'id' => array(
-                    'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
-                    'type'        => 'integer',
-                ),
-            ),
-            array(
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => array( $this, 'get_item' ),
-                'args'                => $this->get_collection_params(),
-                'permission_callback' => array( $this, 'get_single_product_permissions_check' ),
-            ),
-            array(
-                'methods'             => WP_REST_Server::EDITABLE,
-                'callback'            => array( $this, 'update_item' ),
-                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-                'permission_callback' => array( $this, 'update_product_permissions_check' ),
-            ),
-            array(
-                'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => array( $this, 'delete_item' ),
-                'permission_callback' => array( $this, 'delete_product_permissions_check' ),
-                'args'                => array(
-                    'force' => array(
-                        'type'        => 'boolean',
-                        'default'     => false,
-                        'description' => __( 'Whether to bypass trash and force deletion.', 'dokan-lite' ),
-                    ),
-                ),
+        register_rest_route(
+            $this->namespace, '/' . $this->base, array(
+				'args' => array(
+					'id' => array(
+						'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
+						'type'        => 'integer',
+					),
+				),
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_items' ),
+					'args'                => $this->get_collection_params(),
+					'permission_callback' => array( $this, 'get_product_permissions_check' ),
+				),
+				array(
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => array( $this, 'create_item' ),
+					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+					'permission_callback' => array( $this, 'create_product_permissions_check' ),
+				),
+				'schema' => array( $this, 'get_public_item_schema' ),
             )
-        ) );
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->base . '/summary', array(
-            array(
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => array( $this, 'get_product_summary' ),
-                'permission_callback' => array( $this, 'get_product_summary_permissions_check' ),
-            ),
-        ) );
+        register_rest_route(
+            $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/', array(
+				'args' => array(
+					'id' => array(
+						'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
+						'type'        => 'integer',
+					),
+				),
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_item' ),
+					'args'                => $this->get_collection_params(),
+					'permission_callback' => array( $this, 'get_single_product_permissions_check' ),
+				),
+				array(
+					'methods'             => WP_REST_Server::EDITABLE,
+					'callback'            => array( $this, 'update_item' ),
+					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+					'permission_callback' => array( $this, 'update_product_permissions_check' ),
+				),
+				array(
+					'methods'             => WP_REST_Server::DELETABLE,
+					'callback'            => array( $this, 'delete_item' ),
+					'permission_callback' => array( $this, 'delete_product_permissions_check' ),
+					'args'                => array(
+						'force' => array(
+							'type'        => 'boolean',
+							'default'     => false,
+							'description' => __( 'Whether to bypass trash and force deletion.', 'dokan-lite' ),
+						),
+					),
+				),
+            )
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/related', array(
-            'args' => array(
-                'id' => array(
-                    'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
-                    'type'        => 'integer',
-                    'required'    => true,
-                ),
-                'per_page' => array(
-                    'description' => __( 'Number of product you want to get top rated product', 'dokan-lite' ),
-                    'type'        => 'integer',
-                    'default'     => 10
-                )
-            ),
-            array(
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => array( $this, 'get_related_product' ),
-                'permission_callback' => '__return_true',
-            ),
-        ) );
+        register_rest_route(
+            $this->namespace, '/' . $this->base . '/summary', array(
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_product_summary' ),
+					'permission_callback' => array( $this, 'get_product_summary_permissions_check' ),
+				),
+            )
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->base . '/top_rated', array(
-            'args' => array(
-                'per_page' => array(
-                    'description' => __( 'Number of product you want to get top rated product', 'dokan-lite' ),
-                    'type'        => 'integer',
-                    'default'     => 8
-                ),
-                'page' => array(
-                    'description' => __( 'Number of page number' ),
-                    'type'        => 'integer',
-                    'default'     => 1
-                ),
-                'seller_id' => array(
-                    'description' => __( 'Top rated product for specific vendor', 'dokan-lite' ),
-                    'type'        => 'integer',
-                ),
-            ),
-            array(
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => array( $this, 'get_top_rated_product' ),
-                'permission_callback' => '__return_true',
-            ),
-        ) );
+        register_rest_route(
+            $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/related', array(
+				'args' => array(
+					'id' => array(
+						'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
+						'type'        => 'integer',
+						'required'    => true,
+					),
+					'per_page' => array(
+						'description' => __( 'Number of product you want to get top rated product', 'dokan-lite' ),
+						'type'        => 'integer',
+						'default'     => 10,
+					),
+				),
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_related_product' ),
+					'permission_callback' => '__return_true',
+				),
+            )
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->base . '/best_selling', array(
-            'args' => array(
-                'per_page' => array(
-                    'description' => __( 'Number of product you want to get top rated product', 'dokan-lite' ),
-                    'type'        => 'integer',
-                    'default'     => 8
-                ),
-                'page' => array(
-                    'description' => __( 'Number of page number' ),
-                    'type'        => 'integer',
-                    'default'     => 1
-                ),
-                'seller_id' => array(
-                    'description' => __( 'Top rated product for specific vendor', 'dokan-lite' ),
-                    'type'        => 'integer',
-                ),
-            ),
-            array(
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => array( $this, 'get_best_selling_product' ),
-                'permission_callback' => '__return_true',
-            ),
-        ) );
+        register_rest_route(
+            $this->namespace, '/' . $this->base . '/top_rated', array(
+				'args' => array(
+					'per_page' => array(
+						'description' => __( 'Number of product you want to get top rated product', 'dokan-lite' ),
+						'type'        => 'integer',
+						'default'     => 8,
+					),
+					'page' => array(
+						'description' => __( 'Number of page number' ),
+						'type'        => 'integer',
+						'default'     => 1,
+					),
+					'seller_id' => array(
+						'description' => __( 'Top rated product for specific vendor', 'dokan-lite' ),
+						'type'        => 'integer',
+					),
+				),
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_top_rated_product' ),
+					'permission_callback' => '__return_true',
+				),
+            )
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->base . '/featured', array(
-            'args' => array(
-                'per_page' => array(
-                    'description' => __( 'Number of product you want to get top rated product', 'dokan-lite' ),
-                    'type'        => 'integer',
-                    'default'     => 8
-                ),
-                'page' => array(
-                    'description' => __( 'Number of page number' ),
-                    'type'        => 'integer',
-                    'default'     => 1
-                ),
-                'seller_id' => array(
-                    'description' => __( 'Top rated product for specific vendor', 'dokan-lite' ),
-                    'type'        => 'integer',
-                ),
-            ),
-            array(
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => array( $this, 'get_featured_product' ),
-                'permission_callback' => '__return_true',
-            ),
-        ) );
+        register_rest_route(
+            $this->namespace, '/' . $this->base . '/best_selling', array(
+				'args' => array(
+					'per_page' => array(
+						'description' => __( 'Number of product you want to get top rated product', 'dokan-lite' ),
+						'type'        => 'integer',
+						'default'     => 8,
+					),
+					'page' => array(
+						'description' => __( 'Number of page number' ),
+						'type'        => 'integer',
+						'default'     => 1,
+					),
+					'seller_id' => array(
+						'description' => __( 'Top rated product for specific vendor', 'dokan-lite' ),
+						'type'        => 'integer',
+					),
+				),
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_best_selling_product' ),
+					'permission_callback' => '__return_true',
+				),
+            )
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->base . '/latest', array(
-            'args' => array(
-                'per_page' => array(
-                    'description' => __( 'Number of product you want to get top rated product', 'dokan-lite' ),
-                    'type'        => 'integer',
-                    'default'     => 8
-                ),
-                'page' => array(
-                    'description' => __( 'Number of page number' ),
-                    'type'        => 'integer',
-                    'default'     => 1
-                ),
-                'seller_id' => array(
-                    'description' => __( 'Top rated product for specific vendor', 'dokan-lite' ),
-                    'type'        => 'integer',
-                ),
-            ),
-            array(
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => array( $this, 'get_latest_product' ),
-                'permission_callback' => '__return_true',
-            ),
-        ) );
+        register_rest_route(
+            $this->namespace, '/' . $this->base . '/featured', array(
+				'args' => array(
+					'per_page' => array(
+						'description' => __( 'Number of product you want to get top rated product', 'dokan-lite' ),
+						'type'        => 'integer',
+						'default'     => 8,
+					),
+					'page' => array(
+						'description' => __( 'Number of page number' ),
+						'type'        => 'integer',
+						'default'     => 1,
+					),
+					'seller_id' => array(
+						'description' => __( 'Top rated product for specific vendor', 'dokan-lite' ),
+						'type'        => 'integer',
+					),
+				),
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_featured_product' ),
+					'permission_callback' => '__return_true',
+				),
+            )
+        );
+
+        register_rest_route(
+            $this->namespace, '/' . $this->base . '/latest', array(
+				'args' => array(
+					'per_page' => array(
+						'description' => __( 'Number of product you want to get top rated product', 'dokan-lite' ),
+						'type'        => 'integer',
+						'default'     => 8,
+					),
+					'page' => array(
+						'description' => __( 'Number of page number' ),
+						'type'        => 'integer',
+						'default'     => 1,
+					),
+					'seller_id' => array(
+						'description' => __( 'Top rated product for specific vendor', 'dokan-lite' ),
+						'type'        => 'integer',
+					),
+				),
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_latest_product' ),
+					'permission_callback' => '__return_true',
+				),
+            )
+        );
     }
 
     /**
@@ -262,18 +278,18 @@ class ProductController extends DokanRESTController {
         }
 
         if ( empty( $request['name'] ) ) {
-            return new WP_Error( "dokan_product_no_title_found", sprintf( __( 'Product title must be required', 'dokan-lite' ), 'product' ), array( 'status' => 404 ) );
+            return new WP_Error( 'dokan_product_no_title_found', sprintf( __( 'Product title must be required', 'dokan-lite' ), 'product' ), array( 'status' => 404 ) );
         }
 
         $category_selection = dokan_get_option( 'product_category_style', 'dokan_selling', 'single' );
 
         if ( empty( $request['categories'] ) ) {
-            return new WP_Error( "dokan_product_category", __( 'Category must be required', 'dokan-lite' ), array( 'status' => 404 ) );
+            return new WP_Error( 'dokan_product_category', __( 'Category must be required', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
-        if (  'single' == $category_selection ) {
-            if ( count( $request['categories'] ) > 1  ) {
-                return new WP_Error( "dokan_product_category_no_more_one", __( 'You can not select more than category', 'dokan-lite' ), array( 'status' => 404 ) );
+        if ( 'single' == $category_selection ) {
+            if ( count( $request['categories'] ) > 1 ) {
+                return new WP_Error( 'dokan_product_category_no_more_one', __( 'You can not select more than category', 'dokan-lite' ), array( 'status' => 404 ) );
             }
         }
 
@@ -429,7 +445,7 @@ class ProductController extends DokanRESTController {
         $related_ids = wc_get_related_products( $request['id'], $request['per_page'] );
         $response = array();
 
-        if ( ! empty( $related_ids )  ) {
+        if ( ! empty( $related_ids ) ) {
             $objects = array_map( array( $this, 'get_object' ), $related_ids );
 
             foreach ( $objects as $object ) {
@@ -759,12 +775,12 @@ class ProductController extends DokanRESTController {
             'menu_order'            => $product->get_menu_order( $context ),
             'meta_data'             => $product->get_meta_data(),
             'store'                 => array(
-                                        'id'      => $store->get_id(),
-                                        'name'    => $store->get_shop_name(),
-                                        'url'     => $store->get_shop_url(),
-                                        'avatar'  => $store->get_avatar(),
-                                        'address' => $store->get_address()
-                                    )
+				'id'      => $store->get_id(),
+				'name'    => $store->get_shop_name(),
+				'url'     => $store->get_shop_url(),
+				'avatar'  => $store->get_avatar(),
+				'address' => $store->get_address(),
+			),
         );
 
         $response = rest_ensure_response( $data );
@@ -799,9 +815,11 @@ class ProductController extends DokanRESTController {
         }
 
         if ( 'variation' === $product->get_type() ) {
-            return new WP_Error( "dokan_rest_invalid_{$this->post_type}_id", __( 'To manipulate product variations you should use the /products/&lt;product_id&gt;/variations/&lt;id&gt; endpoint.', 'dokan-lite' ), array(
-                'status' => 404,
-            ) );
+            return new WP_Error(
+                "dokan_rest_invalid_{$this->post_type}_id", __( 'To manipulate product variations you should use the /products/&lt;product_id&gt;/variations/&lt;id&gt; endpoint.', 'dokan-lite' ), array(
+					'status' => 404,
+                )
+            );
         }
 
         // Post title.
@@ -903,7 +921,6 @@ class ProductController extends DokanRESTController {
                 }
 
                 if ( $attribute_id ) {
-
                     if ( isset( $attribute['options'] ) ) {
                         $options = $attribute['options'];
 
@@ -1021,7 +1038,6 @@ class ProductController extends DokanRESTController {
                 if ( version_compare( WC_VERSION, '3.4.7', '>' ) ) {
                     $product->set_low_stock_amount( '' );
                 }
-
             } elseif ( $product->is_type( 'external' ) ) {
                 $product->set_manage_stock( 'no' );
                 $product->set_backorders( 'no' );
@@ -1031,7 +1047,6 @@ class ProductController extends DokanRESTController {
                 if ( version_compare( WC_VERSION, '3.4.7', '>' ) ) {
                     $product->set_low_stock_amount( '' );
                 }
-
             } elseif ( $product->get_manage_stock() ) {
                 // Stock status is always determined by children so sync later.
                 if ( ! $product->is_type( 'variable' ) ) {
@@ -1041,7 +1056,6 @@ class ProductController extends DokanRESTController {
                 // Stock quantity.
                 if ( isset( $request['stock_quantity'] ) ) {
                     $product->set_stock_quantity( wc_stock_amount( $request['stock_quantity'] ) );
-
                 } elseif ( isset( $request['inventory_delta'] ) ) {
                     $stock_quantity  = wc_stock_amount( $product->get_stock_quantity() );
                     $stock_quantity += wc_stock_amount( $request['inventory_delta'] );
@@ -1269,9 +1283,9 @@ class ProductController extends DokanRESTController {
             $images[] = array(
                 'id'                => 0,
                 'date_created'      => wc_rest_prepare_date_response( current_time( 'mysql' ), false ), // Default to now.
-                'date_created_gmt'  => wc_rest_prepare_date_response( current_time( 'timestamp', true ) ), // Default to now.
+                'date_created_gmt'  => wc_rest_prepare_date_response( time() ), // Default to now.
                 'date_modified'     => wc_rest_prepare_date_response( current_time( 'mysql' ), false ),
-                'date_modified_gmt' => wc_rest_prepare_date_response( current_time( 'timestamp', true ) ),
+                'date_modified_gmt' => wc_rest_prepare_date_response( time() ),
                 'src'               => wc_placeholder_img_src(),
                 'name'              => __( 'Placeholder', 'dokan-lite' ),
                 'alt'               => __( 'Placeholder', 'dokan-lite' ),
@@ -1363,9 +1377,11 @@ class ProductController extends DokanRESTController {
      */
     protected function get_attribute_options( $product_id, $attribute ) {
         if ( isset( $attribute['is_taxonomy'] ) && $attribute['is_taxonomy'] ) {
-            return wc_get_product_terms( $product_id, $attribute['name'], array(
-                'fields' => 'names',
-            ) );
+            return wc_get_product_terms(
+                $product_id, $attribute['name'], array(
+					'fields' => 'names',
+                )
+            );
         } elseif ( isset( $attribute['value'] ) ) {
             return array_map( 'trim', explode( '|', $attribute['value'] ) );
         }
@@ -1502,10 +1518,12 @@ class ProductController extends DokanRESTController {
 
                 // Set the image name if present.
                 if ( ! empty( $image['name'] ) ) {
-                    wp_update_post( array(
-                        'ID'         => $attachment_id,
-                        'post_title' => $image['name'],
-                    ) );
+                    wp_update_post(
+                        array(
+							'ID'         => $attachment_id,
+							'post_title' => $image['name'],
+                        )
+                    );
                 }
 
                 // Set the image source if present, for future reference.
@@ -1591,7 +1609,7 @@ class ProductController extends DokanRESTController {
             $download->set_id( $key );
             $download->set_name( $file['name'] ? $file['name'] : wc_get_filename_from_url( $file['file'] ) );
             $download->set_file( apply_filters( 'woocommerce_file_download_path', $file['file'], $product, $key ) );
-            $files[]  = $download;
+            $files[] = $download;
         }
         $product->set_downloads( $files );
 
@@ -1629,7 +1647,6 @@ class ProductController extends DokanRESTController {
      */
     protected function save_default_attributes( $product, $request ) {
         if ( isset( $request['default_attributes'] ) && is_array( $request['default_attributes'] ) ) {
-
             $attributes         = $product->get_attributes();
             $default_attributes = array();
 
