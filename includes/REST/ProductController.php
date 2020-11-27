@@ -1412,12 +1412,14 @@ class ProductController extends DokanRESTController {
                     $option_term = get_term_by( 'slug', $attribute, $name );
                     $attributes[] = array(
                         'id'     => wc_attribute_taxonomy_id_by_name( $name ),
+                        'slug'   => $attribute_name,
                         'name'   => $this->get_attribute_taxonomy_name( $name, $_product ),
                         'option' => $option_term && ! is_wp_error( $option_term ) ? $option_term->name : $attribute,
                     );
                 } else {
                     $attributes[] = array(
                         'id'     => 0,
+                        'slug'   => $attribute_name,
                         'name'   => $this->get_attribute_taxonomy_name( $name, $_product ),
                         'option' => $attribute,
                     );
@@ -1427,6 +1429,7 @@ class ProductController extends DokanRESTController {
             foreach ( $product->get_attributes() as $attribute ) {
                 $attributes[] = array(
                     'id'        => $attribute['is_taxonomy'] ? wc_attribute_taxonomy_id_by_name( $attribute['name'] ) : 0,
+                    'slug'      => $attribute['name'],
                     'name'      => $this->get_attribute_taxonomy_name( $attribute['name'], $product ),
                     'position'  => (int) $attribute['position'],
                     'visible'   => (bool) $attribute['is_visible'],
