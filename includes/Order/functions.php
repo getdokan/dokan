@@ -58,8 +58,13 @@ function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = nul
     $orders      = wp_cache_get( $cache_key, $cache_group );
     $getdata     = wp_unslash( $_GET );
     $order       = empty( $getdata['order'] ) ? 'DESC' : sanitize_text_field( $getdata['order'] );
-    $order_by    = empty( $getdata['orderby'] ) ? 'p.post_date' : 'do.' . sanitize_text_field( $getdata['order'] );
+    $order_by    =  'p.post_date';
     $exclude     = ! empty( $getdata['exclude'] ) ? ' AND do.order_id NOT IN (' . esc_sql( $getdata['exclude'] ) . ')' : '';
+
+    if ( ! empty( $getdata['orderby'] ) &&
+        in_array( sanitize_text_field( $getdata['orderby'] ), [ 'id', 'order_id', 'seller_id', 'order_total', 'net_amount', 'order_status' ], true ) ) {
+        $order_by = 'do.' . sanitize_text_field( $getdata['orderby'] );
+    }
 
     $join  = $customer_id ? "LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id" : '';
     $where = $customer_id ? sprintf( "pm.meta_key = '_customer_user' AND pm.meta_value = %d AND", $customer_id ) : '';
