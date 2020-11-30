@@ -56,17 +56,26 @@ function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = nul
     $cache_group = "dokan_seller_data_{$seller_id}";
     $cache_key   = "dokan-seller-orders-{$status}-{$seller_id}-page-{$pagenum}";
     $orders      = wp_cache_get( $cache_key, $cache_group );
+    $getdata     = wp_unslash( $_GET );
+    $order       = empty( $getdata['order'] ) ? 'DESC' : sanitize_text_field( $getdata['order'] );
+    $order_by    =  'p.post_date';
+    $exclude     = ! empty( $getdata['exclude'] ) ? ' AND do.order_id NOT IN (' . esc_sql( $getdata['exclude'] ) . ')' : '';
 
-    $join        = $customer_id ? "LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id" : '';
-    $where       = $customer_id ? sprintf( "pm.meta_key = '_customer_user' AND pm.meta_value = %d AND", $customer_id ) : '';
+    if ( ! empty( $getdata['orderby'] ) &&
+        in_array( sanitize_text_field( $getdata['orderby'] ), [ 'id', 'order_id', 'seller_id', 'order_total', 'net_amount', 'order_status' ], true ) ) {
+        $order_by = 'do.' . sanitize_text_field( $getdata['orderby'] );
+    }
+
+    $join  = $customer_id ? "LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id" : '';
+    $where = $customer_id ? sprintf( "pm.meta_key = '_customer_user' AND pm.meta_value = %d AND", $customer_id ) : '';
 
     if ( $orders === false ) {
-        $status_where = ( $status == 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', $status );
+        $status_where = ( $status === 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', 'wc-' . $status );
         $date_query   = ( $order_date ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $order_date ) : '';
 
         $orders = $wpdb->get_results(
             $wpdb->prepare(
-                "SELECT do.order_id, p.post_date
+            "SELECT do.order_id, p.post_date
             FROM {$wpdb->prefix}dokan_orders AS do
             LEFT JOIN $wpdb->posts p ON do.order_id = p.ID
             {$join}
@@ -76,8 +85,9 @@ function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = nul
                 p.post_status != 'trash'
                 {$date_query}
                 {$status_where}
+                {$exclude}
             GROUP BY do.order_id
-            ORDER BY p.post_date DESC
+            ORDER BY {$order_by} {$order}
             LIMIT %d, %d", $seller_id, $offset, $limit
             )
         );
