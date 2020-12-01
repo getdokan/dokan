@@ -173,6 +173,9 @@ data-merchant-id="' . implode( ',', $paypal_merchant_ids ) . '" ' . $data_client
         }
 
         ?>
+
+        <img src="<?php echo DOKAN_PLUGIN_ASSEST . '/images/spinner-2x.gif'?>" class="paypal-loader" style="margin: 0 auto;" alt="PayPal is loading...">
+
         <div id="paypal-button-container" style="display:none;">
             <?php if ( Helper::is_ucc_enabled_for_all_seller_in_cart() ) : ?>
                 <div class="unbranded_checkout">

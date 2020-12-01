@@ -54,6 +54,7 @@
 
     setTimeout(() => {
         payment_method.init();
+        $('.paypal-loader').hide();
     }, 6000);
 
 })( jQuery, window, document );
@@ -201,7 +202,7 @@
                     dokan_paypal_marketplace.submit_error('<div class="woocommerce-error">' + errorThrown + '</div>');
                 });
             },
-            capture_payment: function (order_id, order_redirect_url) {
+            capture_payment: function (order_id, order_redirect_url, actions = false) {
                 dokan_paypal_marketplace.set_loading_on();
 
                 let capture_data = {
@@ -221,9 +222,15 @@
                     try {
                         if (result.success) {
                             window.location.href = order_redirect_url;
-                        } else if('INSTRUMENT_DECLINED' === result.data.data.details.issue) {
-                            window.location.reload();
                         } else {
+                            if (result.data.data) {
+                                let error_data = JSON.parse(result.data.data[0]);
+
+                                if ('INSTRUMENT_DECLINED' === error_data.details[0].issue) {
+                                    return actions.restart();
+                                }
+                            }
+
                             throw new Error(result.data.message);
                         }
                     } catch (err) {
@@ -309,9 +316,9 @@
                                 }
                             };
 
-                            // let dpm_card_number = document.getElementById('credit-card-number').value;
-                            // let dpm_cvv = document.getElementById('cvv').value;
-                            // let dpm_card_expiry = document.getElementById('expiration').value;
+                            // let dpm_card_number = document.getElementById('dpm_card_number').value;
+                            // let dpm_cvv = document.getElementById('dpm_cvv').value;
+                            // let dpm_card_expiry = document.getElementById('dpm_card_expiry').value;
                             //
                             // if (!dpm_card_number && !dpm_cvv && !dpm_card_expiry ) {
                             //     dokan_paypal_marketplace.submit_error('<div class="woocommerce-error">' + dokan_paypal.card_info_error_message +'</div>');
@@ -350,7 +357,7 @@
                         return false;
                     },
                     onApprove: function(data, actions) {
-                        dokan_paypal_marketplace.capture_payment(order_id, order_redirect_url);
+                        dokan_paypal_marketplace.capture_payment(order_id, order_redirect_url, actions);
                     },
                     onCancel: function() {
                         window.location.href = order_redirect_url;
@@ -365,7 +372,6 @@
         };
 
         setTimeout(() => {
-            console.log('paypal init');
             dokan_paypal_marketplace.init_paypal();
         }, 5000);
     });

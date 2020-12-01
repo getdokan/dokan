@@ -276,7 +276,7 @@ class Ajax {
                 [
                     'type'    => 'paypal_capture_payment',
                     'message' => __( 'Error in capturing payment.', 'dokan-lite' ),
-                    'data'    => $capture_payment,
+                    'data'    => $capture_payment->get_error_messages(),
                 ]
             );
         }

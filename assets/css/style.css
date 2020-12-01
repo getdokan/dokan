@@ -4960,6 +4960,13 @@ div.media-sidebar a.edit-attachment {
 #dokan-seller-listing-wrap.list-view .dokan-seller-wrap .dokan-single-seller .store-wrapper .store-footer[class] button {
   margin-right: 20px;
 }
+.woocommerce-order-pay .card_container,
+.woocommerce-order-pay #paypal-button-container {
+  max-width: 400px;
+}
+.woocommerce-order-pay #paypal-button-container {
+  margin: 0 auto;
+}
 .card_container {
   margin-top: 15px;
 }
