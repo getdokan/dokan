@@ -1,3 +1,22 @@
+## [3.0.16](https://github.com/weDevsOfficial/dokan/compare/v3.0.15...v3.0.16) (2020-12-01)
+
+
+### Bug Fixes
+
+* check if dokan pro exists ([3c91ab5](https://github.com/weDevsOfficial/dokan/commit/3c91ab57a4dc3c69e02e9b78f97ef555c8ce8923))
+* popup image and text for bonus ([aa7073a](https://github.com/weDevsOfficial/dokan/commit/aa7073aaaee2ff4173051f422520440810933181))
+* search by store name ([4f5e0c1](https://github.com/weDevsOfficial/dokan/commit/4f5e0c1f1a3504c5323fec94929b8835641299fd)), closes [#958](https://github.com/weDevsOfficial/dokan/issues/958)
+* store reviews rest api if module active ([53c2551](https://github.com/weDevsOfficial/dokan/commit/53c255102aa5e270093418afd97a39c271dae147))
+* upgrade popup styling mismatch issue ([73fde5b](https://github.com/weDevsOfficial/dokan/commit/73fde5bec6bd7db94a3c102b37d20dbc0b051fa5))
+
+
+### Features
+
+* custom deactivation reason for appsero tracker ([726183b](https://github.com/weDevsOfficial/dokan/commit/726183b551a291bf79c0afa7c617d3392a72f854))
+* dokan lite upgrade-to-pro modules page ([fb2bc16](https://github.com/weDevsOfficial/dokan/commit/fb2bc1638a1b56cc46cde197510fbc3fd654922e))
+
+
+
 ## [3.0.15](https://github.com/weDevsOfficial/dokan/compare/v3.0.14...v3.0.15) (2020-11-21)
 
 
