@@ -42,6 +42,8 @@ class Hooks {
         // restore order stock if it's been reduced by twice
         add_action( 'woocommerce_reduce_order_stock', array( $this, 'restore_reduced_order_stock' ) );
 
+        add_action( 'woocommerce_reduce_order_stock', [ $this, 'handle_order_notes_for_suborder' ], 99 );
+
         //Wc remove child order from wc_order_product_lookup & trim child order from posts for analytics
         add_action( 'wc-admin_import_orders', [ $this, 'delete_child_order_from_wc_order_product' ] );
         add_filter( 'woocommerce_analytics_orders_select_query', [ $this, 'trim_child_order_for_analytics_order' ] );
@@ -379,5 +381,51 @@ class Hooks {
         }
 
         return $orders;
+    }
+
+    /**
+     * Handle stock level wrong calculation in order notes for suborder
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param $order
+     *
+     * @return void
+     */
+    public function handle_order_notes_for_suborder( $order ) {
+        $has_sub_order = wp_get_post_parent_id( $order->get_id() );
+
+        //return if it has suborder. only continue if this is a suborder
+        if ( $order->get_meta( 'has_sub_order' ) && ! $has_sub_order ) {
+            return;
+        }
+
+        $order = wc_get_order( $order->get_id() );
+
+        $notes = wc_get_order_notes( [ 'order_id' => $order->get_id() ] );
+
+        //hold stock level notes instead of deleting
+        foreach ( $notes as $note ) {
+            //here using the woocommerce as text domain because we are using woocommerce text for searching
+            if ( false !== strpos( $note->content, __( 'Stock levels reduced:', 'woocommerce' ) ) ) {
+                //hold the order notes, so that it will not show in order details page
+                wp_set_comment_status( $note->id, 'hold' );
+            }
+        }
+
+        //adding stock level notes in order
+        foreach ( $order->get_items( 'line_item' ) as $key => $line_item ) {
+            $product = wc_get_product( $line_item->get_product_id() );
+
+            if ( $product->get_manage_stock() ) {
+                $stock_quantity    = $product->get_stock_quantity();
+                $previous_quantity = (int) $stock_quantity + $line_item->get_quantity();
+
+                $notes_content = $product->get_formatted_name() . ' ' . $previous_quantity . '&rarr;' . $stock_quantity;
+
+                //here using the woocommerce as text domain because we are using woocommerce text for adding
+                $order->add_order_note( __( 'Stock levels reduced:', 'woocommerce' ) . ' ' . $notes_content );
+            }
+        }
     }
 }
