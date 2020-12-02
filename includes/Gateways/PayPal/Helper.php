@@ -330,7 +330,7 @@ class Helper {
                 update_post_meta( $id, "_dokan_paypal_{$meta_key}_debug_id", $error_data['paypal_debug_id'] );
 
                 break;
-            case 'user' :
+            case 'user':
                 update_user_meta( $id, "_dokan_paypal_{$meta_key}_debug_id", $error_data['paypal_debug_id'] );
 
                 break;
@@ -389,7 +389,7 @@ class Helper {
      *
      * @return float|int
      */
-    public static function get_percentage($price, $extra_amount) {
+    public static function get_percentage( $price, $extra_amount ) {
         $percentage = ( $extra_amount * 100 ) / $price;
 
         return $percentage;

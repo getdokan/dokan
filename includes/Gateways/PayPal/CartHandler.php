@@ -39,7 +39,7 @@ class CartHandler extends DokanPayPal {
      * @return void
      */
     public function payment_scripts() {
-        if ( ! is_cart() && ! is_checkout() && ! isset( $_GET['pay_for_order'] ) ) {
+        if ( ! is_cart() && ! is_checkout() && ! isset( $_GET['pay_for_order'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
             return;
         }
 
@@ -58,7 +58,6 @@ class CartHandler extends DokanPayPal {
 
         //loading this scripts only in checkout page
         if ( ! is_order_received_page() && is_checkout() || is_checkout_pay_page() ) {
-
             global $wp;
 
             //get order id if this is a order review page
@@ -67,9 +66,9 @@ class CartHandler extends DokanPayPal {
             $paypal_js_sdk_url = $this->get_paypal_sdk_url();
 
             //paypal sdk enqueue
-            wp_enqueue_script( 'dokan_paypal_sdk', $paypal_js_sdk_url, [], null, false );
+            wp_enqueue_script( 'dokan_paypal_sdk', $paypal_js_sdk_url, [], null, false ); //phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
 
-            wp_enqueue_script( 'dokan_paypal_checkout', DOKAN_PLUGIN_ASSEST . '/js/paypal-checkout.js', [ 'dokan_paypal_sdk' ], '', true );
+            wp_enqueue_script( 'dokan_paypal_checkout', DOKAN_PLUGIN_ASSEST . '/js/paypal-checkout.js', [ 'dokan_paypal_sdk' ], '1.0.0', true );
 
             //localize data
             $data = [
@@ -153,8 +152,10 @@ class CartHandler extends DokanPayPal {
                 $data_client_token = 'data-client-token="' . $client_token . '"';
             }
 
+            //@codingStandardsIgnoreStart
             $tag = '<script async type="text/javascript" src="' . $source . '" id="' . $handle . '-js"
 data-merchant-id="' . implode( ',', $paypal_merchant_ids ) . '" ' . $data_client_token . ' data-partner-attribution-id="weDevs_SP_Dokan"></script>';
+            //@codingStandardsIgnoreEnd
         }
 
         return $tag;
@@ -174,7 +175,7 @@ data-merchant-id="' . implode( ',', $paypal_merchant_ids ) . '" ' . $data_client
 
         ?>
 
-        <img src="<?php echo DOKAN_PLUGIN_ASSEST . '/images/spinner-2x.gif'?>" class="paypal-loader" style="margin: 0 auto;" alt="PayPal is loading...">
+        <img src="<?php echo DOKAN_PLUGIN_ASSEST . '/images/spinner-2x.gif'; ?>" class="paypal-loader" style="margin: 0 auto;" alt="PayPal is loading...">
 
         <div id="paypal-button-container" style="display:none;">
             <?php if ( Helper::is_ucc_enabled_for_all_seller_in_cart() ) : ?>
@@ -208,7 +209,8 @@ data-merchant-id="' . implode( ',', $paypal_merchant_ids ) . '" ' . $data_client
 
         $available_vendors = [];
         foreach ( WC()->cart->get_cart() as $item ) {
-            $product_id                                                          = $item['data']->get_id();
+            $product_id = $item['data']->get_id();
+
             $available_vendors[ get_post_field( 'post_author', $product_id ) ][] = $item['data'];
         }
 
@@ -224,10 +226,8 @@ data-merchant-id="' . implode( ',', $paypal_merchant_ids ) . '" ' . $data_client
 
                 $errors->add(
                     'paypal-not-configured',
-                    sprintf(
-                        __( '<strong>Error!</strong>Remove product %1$s and continue checkout, this product/vendor is not eligible to be paid with PayPal', 'dokan-lite' ),
-                        implode( ', ', $vendor_products )
-                    )
+                    /* translators: %s: vendor products */
+                    sprintf( __( '<strong>Error!</strong>Remove product %s and continue checkout, this product/vendor is not eligible to be paid with PayPal', 'dokan-lite' ), implode( ', ', $vendor_products ) )
                 );
             }
         }

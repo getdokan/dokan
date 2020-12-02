@@ -130,7 +130,7 @@ class Ajax {
      */
     public function create_order() {
         try {
-            $post_data = wp_unslash( $_POST );
+            $post_data = wp_unslash( $_POST ); //phpcs:ignore WordPress.Security.NonceVerification.Missing
             $order_id  = $this->do_validation( $post_data );
 
             $dokan_paypal    = dokan()->payment_gateway->paypal_marketplace->paypal_wc_gateway;
@@ -206,7 +206,7 @@ class Ajax {
      */
     public function capture_payment() {
         try {
-            $post_data = wp_unslash( $_POST );
+            $post_data = wp_unslash( $_POST ); //phpcs:ignore WordPress.Security.NonceVerification.Missing
             $order_id  = $this->do_validation( $post_data );
 
             $paypal_order_id = get_post_meta( $order_id, '_dokan_paypal_order_id', true );
@@ -221,7 +221,6 @@ class Ajax {
             }
 
             $this->handle_capture_payment_validation( $order_id, $paypal_order_id );
-
         } catch ( \Exception $e ) {
             wp_send_json_error(
                 [
@@ -294,10 +293,8 @@ class Ajax {
         );
 
         $order->add_order_note(
-            sprintf(
-                __( 'PayPal payment completed. PayPal Order ID #%s', 'dokan-lite' ),
-                $paypal_order_id
-            )
+            /* translators: %s: paypal order id */
+            sprintf( __( 'PayPal payment completed. PayPal Order ID #%s', 'dokan-lite' ), $paypal_order_id )
         );
 
         $order->payment_complete();

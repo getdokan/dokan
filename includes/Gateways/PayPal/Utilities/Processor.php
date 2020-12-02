@@ -468,7 +468,7 @@ class Processor {
         $client_id     = $this->get_option( $prefix . 'app_user' );
         $client_secret = $this->get_option( $prefix . 'app_pass' );
 
-        return base64_encode( $client_id . ':' . $client_secret );
+        return base64_encode( $client_id . ':' . $client_secret ); //phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
     }
 
     /**

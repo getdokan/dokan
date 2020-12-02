@@ -119,12 +119,8 @@ class DokanPayPal extends WC_Payment_Gateway {
                 'type'        => 'checkbox',
                 'label'       => __( 'Enable PayPal sandbox', 'dokan-lite' ),
                 'default'     => 'no',
-                'description' => sprintf(
-                    __(
-                        'PayPal sandbox can be used to test payments. Sign up for a developer account <a href="%s">here</a>.', 'dokan-lite'
-                    ),
-                    'https://developer.paypal.com/'
-                ),
+                /* translators: %s: paypal developer url */
+                'description' => sprintf( __( 'PayPal sandbox can be used to test payments. Sign up for a developer account <a href="%s">here</a>.', 'dokan-lite' ), 'https://developer.paypal.com/' ),
             ],
             'partner_id'     => [
                 'title'       => __( 'Partner ID', 'dokan-lite' ),
@@ -209,10 +205,8 @@ class DokanPayPal extends WC_Payment_Gateway {
                 'type'        => 'checkbox',
                 'label'       => __( 'Enable logging', 'dokan-lite' ),
                 'default'     => 'no',
-                'description' => sprintf(
-                    __( 'Log PayPal events, such as IPN requests, inside <code>woocommerce/logs/paypal-%s.txt</code>', 'dokan-lite' ),
-                    sanitize_file_name( wp_hash( 'paypal' ) )
-                ),
+                /* translators: %s: log */
+                'description' => sprintf( __( 'Log PayPal events, such as IPN requests, inside <code>woocommerce/logs/paypal-%s.txt</code>', 'dokan-lite' ), sanitize_file_name( wp_hash( 'paypal' ) ) ),
             ],
         ];
     }
@@ -321,9 +315,11 @@ class DokanPayPal extends WC_Payment_Gateway {
             ];
         }
 
-        $process_payment = apply_filters( 'dokan_paypal_process_payment', [
-            'order' => $order
-        ] );
+        $process_payment = apply_filters(
+            'dokan_paypal_process_payment', [
+				'order' => $order,
+			]
+        );
 
         if ( isset( $process_payment['product_type'] ) && 'product_pack' === $process_payment['product_type'] ) {
             return $process_payment['data'];
@@ -704,11 +700,11 @@ class DokanPayPal extends WC_Payment_Gateway {
      * Check if this payment method is available with conditions
      * This payment method is only available if the 2 scenario passed which is mentioned below
      *
-     * eg 1: if there is multi-vendor in a cart and one vendor is able to receive payment and another vendor is not,
-     * we will show the payment method in Checkout
+     * Eg 1: if there is multi-vendor in a cart and one vendor is able to receive payment and another vendor is not,
+     * We will show the payment method in Checkout
      *
-     * eg 2: if there is multi-vendor/single-vendor in a cart and both cannot receive payment via paypal,
-     * then the payment method will not show in Checkout
+     * Eg 2: if there is multi-vendor/single-vendor in a cart and both cannot receive payment via paypal,
+     * Then the payment method will not show in Checkout
      *
      * @since DOKAN_LITE_SINCE
      *

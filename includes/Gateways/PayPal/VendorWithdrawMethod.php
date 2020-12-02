@@ -98,9 +98,9 @@ class VendorWithdrawMethod {
      * @return void
      */
     public function handle_error_message( $current_user, $profile_info ) {
-        $_get_data = wp_unslash( $_GET );
+        $_get_data = wp_unslash( $_GET );//phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-        if ( isset( $_get_data['status'] ) && 'seller_error' === $_get_data['status'] ) {
+        if ( isset( $_get_data['status'] ) && 'seller_error' === sanitize_text_field( $_get_data['status'] ) ) {
             echo '<div class=\'dokan-error\'>' . $_get_data['message'] . '</div>';
         }
     }

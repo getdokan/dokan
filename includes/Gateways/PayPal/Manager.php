@@ -70,10 +70,10 @@ class Manager {
         }
 
         if (
-            ! isset( $_GET['action'] ) &&
-            $_GET['action'] !== 'paypal-marketplace-connect' &&
-            $_GET['action'] !== 'paypal-marketplace-connect-success' &&
-            $_GET['action'] !== 'merchant-status-update'
+            isset( $_GET['action'] ) &&
+            'paypal-marketplace-connect' !== $_GET['action'] &&
+            'paypal-marketplace-connect-success' !== $_GET['action'] &&
+            'merchant-status-update' !== $_GET['action']
         ) {
             return;
         }
@@ -237,13 +237,18 @@ class Manager {
         $wpdb->update(
             $wpdb->dokan_vendor_balance,
             [ 'debit' => (float) $withdraw['amount'] ],
-            [ 'vendor_id' => $withdraw['vendor_id'], 'trn_id' => $withdraw['order_id'], 'trn_type' => 'dokan_orders' ],
+            [
+                'vendor_id' => $withdraw['vendor_id'],
+                'trn_id'    => $withdraw['order_id'],
+                'trn_type'  => 'dokan_orders',
+            ],
             [ '%f' ],
             [ '%d', '%d' ]
         );
 
         //insert withdraw amount
-        $wpdb->insert( $wpdb->prefix . 'dokan_vendor_balance',
+        $wpdb->insert(
+            $wpdb->prefix . 'dokan_vendor_balance',
             [
                 'vendor_id'    => $withdraw['vendor_id'],
                 'trn_id'       => $withdraw['order_id'],
@@ -288,7 +293,7 @@ class Manager {
      * @return void
      */
     public function process_seller_withdraw( array $withdraw ) {
-        $IP = dokan_get_client_ip();
+        $ip = dokan_get_client_ip();
 
         $data = [
             'user_id' => $withdraw['vendor_id'],
@@ -296,8 +301,9 @@ class Manager {
             'date'    => current_time( 'mysql' ),
             'status'  => 1,
             'method'  => Helper::get_gateway_id(),
+            /* translators: %d: order id */
             'notes'   => sprintf( __( 'Order %d payment Auto paid via PayPal', 'dokan-lite' ), $withdraw['order_id'] ),
-            'ip'      => $IP,
+            'ip'      => $ip,
         ];
 
         dokan()->withdraw->insert_withdraw( $data );
@@ -348,21 +354,16 @@ class Manager {
             $_order = wc_get_order( $_order_id );
 
             $_order->add_order_note(
-                sprintf(
-                    __( 'PayPal processing fee is %s', 'dokan-lite' ),
-                    $paypal_processing_fee
-                )
+                /* translators: %s: paypal processing fee */
+                sprintf( __( 'PayPal processing fee is %s', 'dokan-lite' ), $paypal_processing_fee )
             );
 
             //add order note to parent order
             if ( $_order_id !== $invoice_id ) {
                 $order_url = $_order->get_edit_order_url();
                 $order->add_order_note(
-                    sprintf(
-                        __( 'PayPal processing for sub order %s is %s', 'dokan-lite' ),
-                        "<a href='{$order_url}'>{$_order_id}</a>",
-                        $paypal_processing_fee
-                    )
+                    /* translators: 1$s: a tag with url , 2$s: paypal processing fee  */
+                    sprintf( __( 'PayPal processing for sub order %1$s is %2$s', 'dokan-lite' ), "<a href='{$order_url}'>{$_order_id}</a>", $paypal_processing_fee )
                 );
             }
 
