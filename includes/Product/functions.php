@@ -55,8 +55,8 @@ function dokan_save_product( $args ) {
         'post_type'    => 'product',
         'post_status'  => $post_status,
         'post_title'   => sanitize_text_field( $data['post_title'] ),
-        'post_content' => sanitize_textarea_field( $data['post_content'] ),
-        'post_excerpt' => sanitize_textarea_field( $data['post_excerpt'] ),
+        'post_content' => wp_kses_post( $data['post_content'] ),
+        'post_excerpt' => wp_kses_post( $data['post_excerpt'] ),
     );
 
     if ( ! empty( $data['ID'] ) ) {
