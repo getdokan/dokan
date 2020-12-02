@@ -37,6 +37,7 @@ class Hooks {
 
         if ( is_admin() ) {
             add_action( 'woocommerce_process_shop_order_meta', 'dokan_sync_insert_order' );
+            add_action( 'woocommerce_saved_order_items', [ $this, 'dokan_update_order_data' ], 99, 2 );
         }
 
         // restore order stock if it's been reduced by twice
@@ -379,5 +380,38 @@ class Hooks {
         }
 
         return $orders;
+    }
+
+    /**
+     * Update order data in `dokan_orders` table if the order amount is only updated from admin dashboard
+     *
+     * @param $order_id
+     * @param $items
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return void
+     */
+    public function dokan_update_order_data( $order_id, $items ) {
+        global $wpdb;
+
+        $order = wc_get_order( $order_id );
+
+        if ( ! is_object( $order ) ) {
+            return;
+        }
+
+        $seller_id = dokan_get_seller_id_by_order( $order_id );
+
+        $wpdb->update(
+            $wpdb->dokan_orders,
+            [
+                'order_total' => $order->get_total(),
+                'net_amount'  => dokan_get_seller_earnings_by_order( $order, $seller_id ),
+            ],
+            [ 'order_id' => $order_id ],
+            [ '%f', '%f' ],
+            [ '%d' ]
+        );
     }
 }
