@@ -7,7 +7,7 @@ Tested up to: 5.5.3
 WC requires at least: 3.0
 WC tested up to: 4.7.0
 Requires PHP: 5.6
-Stable tag: 3.0.15
+Stable tag: 3.0.16
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -289,13 +289,23 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 18. Frontend &rarr; Individual Seller Store-2
 19. Frontend &rarr; Individual Seller Store-3
 
+
 == Changelog ==
 
-== v3.0.15 (November 21, 2020) ==
+= v3.0.16 ( December 01, 2020 ) =
+
+- **fix:** Search by store name not working on store listing page when store created from admin area
+- **fix:** Store reviews REST API issue fix and improve
+- **fix:** Order fetching REST API issue fix and improve
+- **new:** Dokan upgrade to pro modules page added
+- **update:** weMail plugin added on recommended plugins list when run Dokan setup wizard
+- **fix:** Deactivation reasons icons and placeholder updated
+
+= v3.0.15 (November 21, 2020) =
 
 - **fix** updated codebase to fix timezone mismatch
 
-== v3.0.14 (November 20, 2020) ==
+= v3.0.14 (November 20, 2020) =
 
 - **fix** Vendor edit admin commission on decimal separator as comma
 - **update** Limited time promotion admin notice
