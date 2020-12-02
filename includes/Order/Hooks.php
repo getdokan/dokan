@@ -5,26 +5,26 @@ namespace WeDevs\Dokan\Order;
 use Exception;
 
 /**
-* Admin Hooks
-*
-* @package dokan
-*
-* @since 3.0.0
-*/
+ * Admin Hooks
+ *
+ * @package dokan
+ *
+ * @since 3.0.0
+ */
 class Hooks {
 
     /**
-     * Load autometically when class initiate
+     * Load automatically when class initiate
      *
      * @since 3.0.0
      */
     public function __construct() {
         // on order status change
-        add_action( 'woocommerce_order_status_changed', array( $this, 'on_order_status_change' ), 10, 4 );
-        add_action( 'woocommerce_order_status_changed', array( $this, 'on_sub_order_change' ), 99, 3 );
+        add_action( 'woocommerce_order_status_changed', [ $this, 'on_order_status_change' ], 10, 4 );
+        add_action( 'woocommerce_order_status_changed', [ $this, 'on_sub_order_change' ], 99, 3 );
 
         // create sub-orders
-        add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'split_vendor_orders' ) );
+        add_action( 'woocommerce_checkout_update_order_meta', [ $this, 'split_vendor_orders' ] );
 
         // order table synced for WooCommerce update order meta
         add_action( 'woocommerce_checkout_update_order_meta', 'dokan_sync_insert_order', 20 );
@@ -33,7 +33,7 @@ class Hooks {
         add_action( 'dokan_checkout_update_order_meta', 'dokan_sync_insert_order' );
 
         // prevent non-vendor coupons from being added
-        add_filter( 'woocommerce_coupon_is_valid', array( $this, 'ensure_vendor_coupon' ), 10, 2 );
+        add_filter( 'woocommerce_coupon_is_valid', [ $this, 'ensure_vendor_coupon' ], 10, 2 );
 
         if ( is_admin() ) {
             add_action( 'woocommerce_process_shop_order_meta', 'dokan_sync_insert_order' );
@@ -41,7 +41,7 @@ class Hooks {
         }
 
         // restore order stock if it's been reduced by twice
-        add_action( 'woocommerce_reduce_order_stock', array( $this, 'restore_reduced_order_stock' ) );
+        add_action( 'woocommerce_reduce_order_stock', [ $this, 'restore_reduced_order_stock' ] );
 
         //Wc remove child order from wc_order_product_lookup & trim child order from posts for analytics
         add_action( 'wc-admin_import_orders', [ $this, 'delete_child_order_from_wc_order_product' ] );
@@ -51,13 +51,12 @@ class Hooks {
     /**
      * Update the child order status when a parent order status is changed
      *
-     * @global object $wpdb
-     *
      * @param integer $order_id
      * @param string $old_status
      * @param string $new_status
      *
      * @return void
+     * @global object $wpdb
      */
     public function on_order_status_change( $order_id, $old_status, $new_status, $order ) {
         global $wpdb;
@@ -66,13 +65,13 @@ class Hooks {
         // and the order is created from dashboard.
         if ( empty( $order->post_parent ) && empty( $order->get_meta( 'has_sub_order' ) ) && is_admin() ) {
             // Remove the hook to prevent recursive callas.
-            remove_action( 'woocommerce_order_status_changed', array( $this, 'on_order_status_change' ), 10 );
+            remove_action( 'woocommerce_order_status_changed', [ $this, 'on_order_status_change' ], 10 );
 
             // Split the order.
             dokan()->order->maybe_split_orders( $order_id );
 
             // Add the hook back.
-            add_action( 'woocommerce_order_status_changed', array( $this, 'on_order_status_change' ), 10, 4 );
+            add_action( 'woocommerce_order_status_changed', [ $this, 'on_order_status_change' ], 10, 4 );
         }
 
         // make sure order status contains "wc-" prefix
@@ -83,17 +82,17 @@ class Hooks {
         // insert on dokan sync table
         $wpdb->update(
             $wpdb->dokan_orders,
-            array( 'order_status' => $new_status ),
-            array( 'order_id' => $order_id ),
-            array( '%s' ),
-            array( '%d' )
+            [ 'order_status' => $new_status ],
+            [ 'order_id' => $order_id ],
+            [ '%s' ],
+            [ '%d' ]
         );
 
         // if any child orders found, change the orders as well
         $sub_orders = get_children(
             [
                 'post_parent' => $order_id,
-                'post_type' => 'shop_order',
+                'post_type'   => 'shop_order',
             ]
         );
 
@@ -118,13 +117,13 @@ class Hooks {
         // update on vendor-balance table
         $wpdb->update(
             $wpdb->dokan_vendor_balance,
-            array( 'status' => $new_status ),
-            array(
-                'trn_id' => $order_id,
+            [ 'status' => $new_status ],
+            [
+                'trn_id'   => $order_id,
                 'trn_type' => 'dokan_orders',
-            ),
-            array( '%s' ),
-            array( '%d', '%s' )
+            ],
+            [ '%s' ],
+            [ '%d', '%s' ]
         );
 
         if ( $new_status === 'wc-refunded' ) {
@@ -148,14 +147,14 @@ class Hooks {
                 $wpdb->insert(
                     $wpdb->dokan_vendor_balance,
                     [
-                        'vendor_id'     => $seller_id,
-                        'trn_id'        => $order_id,
-                        'trn_type'      => 'dokan_refund',
-                        'debit'         => 0,
-                        'credit'        => $net_amount,
-                        'status'        => 'approved',
-                        'trn_date'      => current_time( 'mysql' ),
-                        'balance_date'  => current_time( 'mysql' ),
+                        'vendor_id'    => $seller_id,
+                        'trn_id'       => $order_id,
+                        'trn_type'     => 'dokan_refund',
+                        'debit'        => 0,
+                        'credit'       => $net_amount,
+                        'status'       => 'approved',
+                        'trn_date'     => current_time( 'mysql' ),
+                        'balance_date' => current_time( 'mysql' ),
                     ],
                     [
                         '%d',
@@ -223,7 +222,7 @@ class Hooks {
         $sub_orders      = get_children(
             [
                 'post_parent' => $parent_order_id,
-                'post_type' => 'shop_order',
+                'post_type'   => 'shop_order',
             ]
         );
 
@@ -270,15 +269,15 @@ class Hooks {
      * sure a product of the admin is in the cart. Otherwise it wouldn't be
      * possible to distribute the coupon in sub orders.
      *
-     * @param  boolean $valid
-     * @param  \WC_Coupon $coupon
+     * @param boolean $valid
+     * @param \WC_Coupon $coupon
      *
      * @return boolean|Execption
      */
     public function ensure_vendor_coupon( $valid, $coupon ) {
         $coupon_id         = $coupon->get_id();
         $vendor_id         = get_post_field( 'post_author', $coupon_id );
-        $available_vendors = array();
+        $available_vendors = [];
 
         if ( ! apply_filters( 'dokan_ensure_vendor_coupon', true ) ) {
             return $valid;
@@ -305,7 +304,7 @@ class Hooks {
     /**
      * Restore order stock if it's been reduced by twice
      *
-     * @param  object $order
+     * @param object $order
      *
      * @return void
      */
