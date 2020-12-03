@@ -181,7 +181,7 @@ data-merchant-id="' . implode( ',', $paypal_merchant_ids ) . '" ' . $data_client
             <?php if ( Helper::is_ucc_enabled_for_all_seller_in_cart() ) : ?>
                 <div class="unbranded_checkout">
                     <a id="pay_unbranded_order" href="#" class="button alt" value="Place order">Pay</a>
-                    <hr>
+                    <p class="text-center">OR</p>
                 </div>
             <?php endif; ?>
         </div>

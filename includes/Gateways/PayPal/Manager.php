@@ -80,7 +80,7 @@ class Manager {
 
         $get_data = wp_unslash( $_GET );
 
-        if ( isset( $get_data['_wpnonce'] ) && $_GET['action'] === 'paypal-marketplace-connect' && ! wp_verify_nonce( $get_data['_wpnonce'], 'paypal-marketplace-connect' ) ) {
+        if ( isset( $get_data['_wpnonce'] ) && 'paypal-marketplace-connect' === $_GET['action'] && ! wp_verify_nonce( $get_data['_wpnonce'], 'paypal-marketplace-connect' ) ) {
             wp_safe_redirect( add_query_arg( [ 'message' => 'error' ], dokan_get_navigation_url( 'settings/payment' ) ) );
             exit();
         }
@@ -156,7 +156,7 @@ class Manager {
         //update paypal email in dokan profile settings
         $dokan_settings = get_user_meta( $user_id, 'dokan_profile_settings', true );
 
-        $dokan_settings['payment']['paypal'] = [
+        $dokan_settings['payment']['dokan_paypal_marketplace'] = [
             'email' => $paypal_settings['email'],
         ];
         update_user_meta( $user_id, 'dokan_profile_settings', $dokan_settings );

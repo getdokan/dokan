@@ -33,7 +33,7 @@ class VendorWithdrawMethod {
      */
     public function register_methods( $methods ) {
         $methods['dokan-paypal-marketplace'] = [
-            'title'    => __( 'PayPal Marketplace', 'dokan-lite' ),
+            'title'    => __( 'Dokan PayPal Marketplace', 'dokan-lite' ),
             'callback' => [ $this, 'paypal_connect_button' ],
         ];
 
@@ -52,12 +52,10 @@ class VendorWithdrawMethod {
     public function paypal_connect_button( $store_settings ) {
         global $current_user;
 
-        $email = isset( $store_settings['payment']['paypal']['email'] ) ? esc_attr( $store_settings['payment']['paypal']['email'] ) : $current_user->user_email;
+        $email = isset( $store_settings['payment']['dokan_paypal_marketplace']['email'] ) ? esc_attr( $store_settings['payment']['dokan_paypal_marketplace']['email'] ) : $current_user->user_email;
 
-        $partner_id = isset( $store_settings['payment']['paypal']['partner_id'] ) ? esc_attr( $store_settings['payment']['paypal']['partner_id'] ) : '';
-
-        $merchant_id_enable = Helper::is_seller_enable_for_receive_payment( get_current_user_id() );
-        $button_text        = $merchant_id_enable ? __( 'Connected', 'dokan-lite' ) : __( 'Sign up for PayPal', 'dokan-lite' );
+        $is_seller_enabled = Helper::is_seller_enable_for_receive_payment( get_current_user_id() );
+        $button_text       = $is_seller_enabled ? __( 'Connected', 'dokan-lite' ) : __( 'Sign up for PayPal', 'dokan-lite' );
 
         $merchant_id           = get_user_meta( get_current_user_id(), '_dokan_paypal_marketplace_merchant_id', true );
         $primary_email         = get_user_meta( get_current_user_id(), '_dokan_paypal_primary_email_confirmed', true );
@@ -74,10 +72,9 @@ class VendorWithdrawMethod {
             'gateways/paypal/vendor-settings-payment.php',
             [
                 'email'           => $email,
-                'partner_id'      => $partner_id,
                 'button_text'     => $button_text,
-                'button_disabled' => $merchant_id_enable ? true : false,
-                'button_class'    => $merchant_id_enable ? 'dokan-btn-success disabled' : '',
+                'button_disabled' => $is_seller_enabled ? true : false,
+                'button_class'    => $is_seller_enabled ? 'dokan-btn-success disabled' : '',
                 'url'             => $connect_to_paypal_url,
                 'nonce'           => $nonce,
                 'primary_email'   => $primary_email,

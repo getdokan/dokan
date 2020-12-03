@@ -4992,6 +4992,10 @@ div.media-sidebar a.edit-attachment {
   text-align: center;
   width: 100%;
 }
+a.vendor_paypal_connect {
+  background-color: #333 !important;
+  color: #fff !important;
+}
 /*--------------------------------------------------
 :: Responsive Styles
 -------------------------------------------------- */
