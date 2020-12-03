@@ -1,6 +1,5 @@
 <template>
     <div id="lite-modules">
-        <ModuleUpgradePopup @toggle="togglePopup" :show-popup="showPopup"></ModuleUpgradePopup>
         <div class="dokan-modules-wrap">
             <h1>{{ __( 'Modules', 'dokan' ) }}</h1>
 
@@ -45,6 +44,7 @@
                 </div>
             </div>
         </div>
+        <ModuleUpgradePopup @toggle="togglePopup" :show-popup="showPopup"></ModuleUpgradePopup>
     </div>
 </template>
 
