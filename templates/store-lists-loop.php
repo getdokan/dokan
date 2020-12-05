@@ -73,7 +73,9 @@
 
                             <div class="store-footer">
                                 <div class="seller-avatar">
-                                    <?php echo get_avatar( $seller->ID, 150 ); ?>
+                                    <img src="<?php echo esc_url( $vendor->get_avatar() ) ?>"
+                                    alt="<?php echo esc_attr( $vendor->get_shop_name() ) ?>"
+                                    size="150">
                                 </div>
                                 <a href="<?php echo esc_url( $store_url ); ?>" title="<?php esc_attr_e( 'Visit Store', 'dokan-lite' );?>">
                                     <span class="dashicons dashicons-arrow-right-alt2 dokan-btn-theme dokan-btn-round"></span>
