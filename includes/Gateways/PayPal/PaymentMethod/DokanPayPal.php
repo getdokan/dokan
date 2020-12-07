@@ -304,16 +304,16 @@ class DokanPayPal extends WC_Payment_Gateway {
             ]
         );
 
-        if ( get_post_meta( $order->get_id(), '_dokan_paypal_order_id', true ) ) {
-            return [
-                'result'              => 'success',
-                'id'                  => $order_id,
-                'paypal_redirect_url' => get_post_meta( $order->get_id(), '_dokan_paypal_redirect_url', true ),
-                'paypal_order_id'     => get_post_meta( $order->get_id(), '_dokan_paypal_order_id', true ),
-                'redirect'            => get_post_meta( $order->get_id(), '_dokan_paypal_redirect_url', true ),
-                'success_redirect'    => $order->get_checkout_order_received_url(),
-            ];
-        }
+//        if ( get_post_meta( $order->get_id(), '_dokan_paypal_order_id', true ) ) {
+//            return [
+//                'result'              => 'success',
+//                'id'                  => $order_id,
+//                'paypal_redirect_url' => get_post_meta( $order->get_id(), '_dokan_paypal_redirect_url', true ),
+//                'paypal_order_id'     => get_post_meta( $order->get_id(), '_dokan_paypal_order_id', true ),
+//                'redirect'            => get_post_meta( $order->get_id(), '_dokan_paypal_redirect_url', true ),
+//                'success_redirect'    => $order->get_checkout_order_received_url(),
+//            ];
+//        }
 
         $process_payment = apply_filters(
             'dokan_paypal_process_payment', [
@@ -338,15 +338,17 @@ class DokanPayPal extends WC_Payment_Gateway {
 
         $create_order_data = [
             'intent'              => 'CAPTURE',
+            "payer"               => $this->get_shipping_address( $order, true ),
             'application_context' => [
-                'return_url'     => $order->get_checkout_order_received_url(),
-                'cancel_url'     => $order->get_cancel_order_url(),
-                'brand_name'     => 'DOKAN',
-                'user_action'    => 'PAY_NOW',
-                'payment_method' => [
+                'return_url'          => $order->get_checkout_order_received_url(),
+                'cancel_url'          => $order->get_cancel_order_url(),
+                'brand_name'          => 'DOKAN',
+                'user_action'         => 'PAY_NOW',
+                'payment_method'      => [
                     'payer_selected'  => 'PAYPAL',
                     'payee_preferred' => 'IMMEDIATE_PAYMENT_REQUIRED',
                 ],
+                'shipping_preference' => 'SET_PROVIDED_ADDRESS',
             ],
             'purchase_units'      => $purchase_units,
         ];
@@ -554,11 +556,13 @@ class DokanPayPal extends WC_Payment_Gateway {
     /**
      * Get shipping address as paypal format
      *
-     * @param $order
+     * @param \WC_Order $order
+     *
+     * @param bool $payer
      *
      * @return array
      */
-    public function get_shipping_address( \WC_Order $order ) {
+    public function get_shipping_address( \WC_Order $order, $payer = false ) {
         $address = [
             'address' => [
                 'name'           => [
@@ -573,6 +577,13 @@ class DokanPayPal extends WC_Payment_Gateway {
                 'country_code'   => $order->get_billing_country(),
             ],
         ];
+
+        if ( $payer ) {
+            $address['name'] = [
+                'given_name' => $order->get_billing_first_name(),
+                'surname'    => $order->get_billing_last_name(),
+            ];
+        }
 
         return $address;
     }
