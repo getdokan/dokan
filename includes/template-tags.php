@@ -469,13 +469,17 @@ function dokan_dashboard_nav( $active_menu = '' ) {
     $nav_menu          = dokan_get_dashboard_nav();
     $active_menu_parts = explode( '/', $active_menu );
 
+    if ( $active_menu && false !== strpos( $active_menu, '/' ) ) {
+        $active_menu = $active_menu_parts[1];
+    }
+
     if ( isset( $active_menu_parts[1] )
             && ( $active_menu_parts[1] == 'settings' || $active_menu_parts[0] == 'settings' )
             && isset( $nav_menu['settings']['sub'] )
             && ( array_key_exists( $active_menu_parts[1], $nav_menu['settings']['sub'] ) || array_key_exists( $active_menu_parts[2], $nav_menu['settings']['sub'] ) )
     ) {
         $urls        = $nav_menu['settings']['sub'];
-        $active_menu = $active_menu_parts[1];
+        $active_menu = $active_menu_parts[1] == 'settings' ? $active_menu_parts[2] : $active_menu_parts[1];
     } else {
         $urls = $nav_menu;
     }
