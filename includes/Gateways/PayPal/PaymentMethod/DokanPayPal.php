@@ -728,6 +728,11 @@ class DokanPayPal extends WC_Payment_Gateway {
             return false;
         }
 
+        //we are returning true for admin. otherwise admin will get error on the dashboard.
+        if ( is_admin() ) {
+            return true;
+        }
+
         foreach ( WC()->cart->get_cart() as $item ) {
             $product_id = $item['data']->get_id();
             $seller_id  = get_post_field( 'post_author', $product_id );
