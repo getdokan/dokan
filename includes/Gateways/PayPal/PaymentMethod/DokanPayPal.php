@@ -712,7 +712,7 @@ class DokanPayPal extends WC_Payment_Gateway {
      * This payment method is only available if the 2 scenario passed which is mentioned below
      *
      * Eg 1: if there is multi-vendor in a cart and one vendor is able to receive payment and another vendor is not,
-     * We will show the payment method in Checkout
+     * We will not show the payment method in Checkout
      *
      * Eg 2: if there is multi-vendor/single-vendor in a cart and both cannot receive payment via paypal,
      * Then the payment method will not show in Checkout
@@ -724,24 +724,16 @@ class DokanPayPal extends WC_Payment_Gateway {
     public function is_available() {
         $is_available = parent::is_available();
 
-        if ( is_admin() ) {
-            return $is_available;
-        }
-
         if ( ! $is_available ) {
             return false;
         }
 
-        $total_seller_count                      = 0;
-        $seller_is_able_to_receive_payment_count = 0;
-
         foreach ( WC()->cart->get_cart() as $item ) {
             $product_id = $item['data']->get_id();
             $seller_id  = get_post_field( 'post_author', $product_id );
-            $total_seller_count ++;
 
-            if ( Helper::is_seller_enable_for_receive_payment( $seller_id ) ) {
-                $seller_is_able_to_receive_payment_count ++;
+            if ( ! Helper::is_seller_enable_for_receive_payment( $seller_id ) ) {
+                return false;
             }
         }
 
@@ -753,22 +745,21 @@ class DokanPayPal extends WC_Payment_Gateway {
 
             $order = wc_get_order( $order_id );
 
+            //return if this is not an order object
+            if ( ! is_object( $order ) ) {
+                return false;
+            }
+
             foreach ( $order->get_items( 'line_item' ) as $key => $line_item ) {
                 $seller_id = get_post_field( 'post_author', $line_item->get_product_id() );
-                $total_seller_count ++;
 
-                if ( Helper::is_seller_enable_for_receive_payment( $seller_id ) ) {
-                    $seller_is_able_to_receive_payment_count ++;
+                if ( ! Helper::is_seller_enable_for_receive_payment( $seller_id ) ) {
+                    return false;
                 }
             }
         }
 
-        //allow if seller is able to receive payment in a cart is less than or equal to total seller
-        if ( $seller_is_able_to_receive_payment_count && $seller_is_able_to_receive_payment_count <= $total_seller_count ) {
-            return true;
-        }
-
-        return false;
+        return true;
     }
 }
 

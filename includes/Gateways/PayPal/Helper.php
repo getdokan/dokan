@@ -186,6 +186,8 @@ class Helper {
      *
      * @param $seller_id
      *
+     * @since DOKAN_LITE_SINCE
+     *
      * @return bool
      */
     public static function is_seller_enable_for_receive_payment( $seller_id ) {
