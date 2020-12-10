@@ -233,7 +233,7 @@ class Manager {
     public function insert_into_vendor_balance( array $withdraw ) {
         global $wpdb;
 
-        //update debit amount in vendor table
+        //update debit amount in vendor table where trn_type is `dokan_orders`
         $wpdb->update(
             $wpdb->dokan_vendor_balance,
             [ 'debit' => (float) $withdraw['amount'] ],
@@ -344,6 +344,7 @@ class Manager {
             $paypal_fee_data                = $seller_receivable['paypal_fee'];
             $paypal_processing_fee_currency = $paypal_fee_data['currency_code'];
             $paypal_processing_fee          = $paypal_fee_data['value'];
+            $platform_fee                   = $seller_receivable['platform_fees'][0]['amount']['value'];//admin commission
 
             //maybe this is a suborder id. if there is no suborder then it will be the main order id
             $_order_id = $unit['custom_id'];
@@ -372,6 +373,7 @@ class Manager {
             update_post_meta( $_order->get_id(), 'dokan_gateway_fee_paid_by', 'seller' );
             update_post_meta( $_order->get_id(), $meta_key_prefix . 'processing_fee', $paypal_processing_fee );
             update_post_meta( $_order->get_id(), $meta_key_prefix . 'processing_currency', $paypal_processing_fee_currency );
+            update_post_meta( $_order->get_id(), $meta_key_prefix . 'platform_fee', $platform_fee );
 
             $seller_id = dokan_get_seller_id_by_order( $_order->get_id() );
             $withdraw_data = [
