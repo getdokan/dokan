@@ -20,11 +20,11 @@ new Vue({
     methods: {
         listTableTexts() {
             return {
-                loading: this.__('Loading', 'dokan-lite'),
-                select_bulk_action: this.__('Select bulk action', 'dokan-lite'),
-                bulk_actions: this.__('Bulk Actions', 'dokan-lite'),
-                items: this.__('items', 'dokan-lite'),
-                apply: this.__('Apply', 'dokan-lite'),
+                loading: this.__( 'Loading', 'dokan-lite' ),
+                select_bulk_action: this.__( 'Select bulk action', 'dokan-lite' ),
+                bulk_actions: this.__( 'Bulk Actions', 'dokan-lite' ),
+                items: this.__( 'items', 'dokan-lite' ),
+                apply: this.__( 'Apply', 'dokan-lite' ),
             }
         }
     },
