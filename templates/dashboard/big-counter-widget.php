@@ -32,6 +32,9 @@
                 $status = dokan_withdraw_get_active_order_status();
                 $total = 0;
                 foreach ( $status as $order_status ){
+                    if ( ! isset( $orders_count->$order_status ) ) {
+                        continue;
+                    }
                     $total += $orders_count->$order_status;
                 }
                 echo esc_html( number_format_i18n( $total, 0 ) );
