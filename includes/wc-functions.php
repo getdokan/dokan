@@ -1123,3 +1123,33 @@ function dokan_store_category_delete_transient( $post_id ) {
 
 add_action( 'delete_post', 'dokan_store_category_delete_transient' );
 add_action( 'save_post', 'dokan_store_category_delete_transient' );
+
+if ( ! function_exists( 'dokan_woocs_recalculate_order_payment_completed' ) ) {
+    /**
+     * Recalculate order for wc currency switcher support
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param int $order_id
+     *
+     * @return bool
+     */
+    function dokan_woocs_recalculate_order_payment_completed( $order_id ) {
+        if ( class_exists( 'WOOCS' ) ) {
+            global $WOOCS;
+            $WOOCS->recalculate_order( $order_id );
+        }
+    }
+    
+    add_action( 'woocommerce_order_status_completed', 'dokan_woocs_recalculate_order_payment_completed', 1 );
+    add_action( 'woocommerce_payment_complete', 'dokan_woocs_recalculate_order_payment_completed' );
+}
+
+add_filter( 'wp_head', function() {
+    if ( dokan_is_seller_dashboard() ) {
+        if ( class_exists( 'WOOCS' ) ) {
+            global $WOOCS;
+            $WOOCS->reset_currency();
+        }
+    }
+});
