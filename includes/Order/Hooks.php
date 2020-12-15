@@ -404,7 +404,7 @@ class Hooks {
         $has_sub_order = wp_get_post_parent_id( $order->get_id() );
 
         //return if it has suborder. only continue if this is a suborder
-        if ( $order->get_meta( 'has_sub_order' ) && ! $has_sub_order ) {
+        if ( ! $has_sub_order ) {
             return;
         }
 
@@ -423,7 +423,9 @@ class Hooks {
 
         //adding stock level notes in order
         foreach ( $order->get_items( 'line_item' ) as $key => $line_item ) {
-            $product = wc_get_product( $line_item->get_product_id() );
+            $item_id = $line_item->get_variation_id() ? $line_item->get_variation_id() : $line_item->get_product_id();
+
+            $product = wc_get_product( $item_id );
 
             if ( $product->get_manage_stock() ) {
                 $stock_quantity    = $product->get_stock_quantity();
