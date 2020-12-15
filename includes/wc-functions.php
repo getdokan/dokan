@@ -1146,10 +1146,8 @@ if ( ! function_exists( 'dokan_woocs_recalculate_order_payment_completed' ) ) {
 }
 
 add_filter( 'wp_head', function() {
-    if ( dokan_is_seller_dashboard() ) {
-        if ( class_exists( 'WOOCS' ) ) {
-            global $WOOCS;
-            $WOOCS->reset_currency();
-        }
+    if ( dokan_is_seller_dashboard() && class_exists( 'WOOCS' ) ) {
+        global $WOOCS;
+        $WOOCS->reset_currency();
     }
 });
