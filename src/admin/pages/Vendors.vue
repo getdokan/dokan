@@ -15,9 +15,9 @@
             <hr class="wp-header-end">
 
             <ul class="subsubsub">
-                <li><router-link :to="{ name: 'Vendors', query: { status: 'all' }}" active-class="current" exact v-html="sprintf( __( 'All <span class=\'count\'>(%s)</span>', 'dokan-lite' ), counts.all )"></router-link> | </li>
-                <li><router-link :to="{ name: 'Vendors', query: { status: 'approved' }}" active-class="current" exact v-html="sprintf( __( 'Approved <span class=\'count\'>(%s)</span>', 'dokan-lite' ), counts.approved )"></router-link> | </li>
-                <li><router-link :to="{ name: 'Vendors', query: { status: 'pending' }}" active-class="current" exact v-html="sprintf( __( 'Pending <span class=\'count\'>(%s)</span>', 'dokan-lite' ), counts.pending )"></router-link></li>
+                <li><router-link :to="{ name: 'Vendors', query: { status: 'all' }}" active-class="current" exact >{{ __( 'All', 'dokan-lite' ) }} <span class="count">{{ counts.all }}</span></router-link> | </li>
+                <li><router-link :to="{ name: 'Vendors', query: { status: 'approved' }}" active-class="current" exact >{{ __( 'Approved', 'dokan-lite' ) }} <span class="count">{{ counts.approved }}</span></router-link> | </li>
+                <li><router-link :to="{ name: 'Vendors', query: { status: 'pending' }}" active-class="current" exact >{{ __( 'Pending', 'dokan-lite' ) }} <span class="count">{{ counts.pending }}</span></router-link> | </li>
             </ul>
 
             <search :title="__( 'Search Vendors', 'dokan-lite')" @searched="doSearch"></search>
