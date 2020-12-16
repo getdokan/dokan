@@ -38,6 +38,7 @@
                 :total-items="totalItems"
                 :per-page="perPage"
                 :current-page="currentPage"
+                :text="$root.listTableTexts()"
                 @pagination="goToPage"
                 @action:click="onActionClick"
                 @bulk:click="onBulkAction"

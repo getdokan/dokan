@@ -22,7 +22,7 @@
     "vue-notification": "^1.3.20",
     "vue-router": "^3.4.7",
     "vue-sweetalert2": "^1.6.4",
-    "vue-wp-list-table": "^1.2.0"
+    "vue-wp-list-table": "^1.3.0"
   },
   "devDependencies": {
     "@babel/plugin-proposal-optional-chaining": "^7.12.1",
