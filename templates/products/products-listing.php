@@ -169,7 +169,7 @@
                                 } else {
                                 ?>
                                     <tr>
-                                        <td colspan="7"><?php esc_html_e( 'No product found', 'dokan-lite' ); ?></td>
+                                        <td colspan="11"><?php esc_html_e( 'No product found', 'dokan-lite' ); ?></td>
                                     </tr>
                                 <?php } ?>
                             </tbody>
