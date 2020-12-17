@@ -383,32 +383,96 @@ class Hooks {
 
     /**
      * Update order data in `dokan_orders` table if the order amount is only updated from admin dashboard
+     * Also updated in sub orders if it is a parent id
      *
      * @param $order_id
-     * @param $items
+     * @param $updated_items
      *
      * @since DOKAN_LITE_SINCE
      *
      * @return void
+     * @throws Exception
      */
-    public function dokan_update_order_data( $order_id, $items ) {
-        global $wpdb;
-
+    public function dokan_update_order_data( $order_id, $updated_items ) {
         $order = wc_get_order( $order_id );
 
         if ( ! is_object( $order ) ) {
             return;
         }
 
-        $seller_id = dokan_get_seller_id_by_order( $order_id );
+        $sub_orders = get_children(
+            [
+                'post_parent' => $order_id,
+                'post_type'   => 'shop_order',
+            ]
+        );
+
+        if ( $order->get_meta( 'has_sub_order' ) ) {
+            //looping through sub order ids and get the order
+            foreach ( $sub_orders as $item ) {
+                $sub_order = wc_get_order( $item->ID );
+
+                /**
+                 * We are doing this because sub order's line items id is different than parent order
+                 *
+                 * looping through sub order line items
+                 */
+                foreach ( $sub_order->get_items() as $sub_item ) {
+                    $product_id = $sub_item['product_id'];
+
+                    //looping through updated items array to get order item id
+                    foreach ( $updated_items['order_item_id'] as $updated_item_id ) {
+                        //get the parent order's product id from line item id
+                        $changed_item_product_id = (int) wc_get_order_item_meta( $updated_item_id, '_product_id', true );
+
+                        //continue if sub item product id and parent order's product id match
+                        if ( $changed_item_product_id === $product_id ) {
+                            $qty = $updated_items['order_item_qty'][ $updated_item_id ];
+
+                            //if the quantity is same then we are skipping it. no need to update the data
+                            if ( $sub_item->get_quantity() === $qty ) {
+                                continue;
+                            }
+
+                            //converting it to string so that we can replace all the parent order line item id to suborders line item id
+                            $updated_items_to_string = wp_json_encode( $updated_items );
+
+                            $updated_items = json_decode( str_replace( $updated_item_id, $sub_item->get_id(), $updated_items_to_string ), true );
+
+                            //save the order
+                            wc_save_order_items( $sub_order->get_id(), $updated_items );
+                        }
+                    }
+                }
+
+                //no need to update amount in dokan orders table because the action will call again. and this time it will be a single order
+            }
+        } else {
+            $this->update_amount_in_dokan_orders_table( $order );
+        }
+
+        do_action( 'dokan_updated_order_data', $order );
+    }
+
+    /**
+     * Update amount of order data in dokan_orders tables
+     *
+     * @param \WC_Order $order
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return void
+     */
+    public function update_amount_in_dokan_orders_table( \WC_Order $order ) {
+        global $wpdb;
 
         $wpdb->update(
             $wpdb->dokan_orders,
             [
                 'order_total' => $order->get_total(),
-                'net_amount'  => dokan_get_seller_earnings_by_order( $order, $seller_id ),
+                'net_amount'  => dokan()->commission->calculate_commission_by_order( $order ),
             ],
-            [ 'order_id' => $order_id ],
+            [ 'order_id' => $order->get_id() ],
             [ '%f', '%f' ],
             [ '%d' ]
         );

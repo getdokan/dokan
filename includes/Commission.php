@@ -239,6 +239,22 @@ class Commission {
             return $earning;
         }
 
+        $earning = $this->calculate_commission_by_order( $order, $context );
+
+        return apply_filters( 'dokan_get_earning_by_order', $earning );
+    }
+
+    /**
+     * Calculate commission by order id and context
+     *
+     * @param $order
+     * @param string $context
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return float|int|mixed
+     */
+    public function calculate_commission_by_order( $order, $context = 'seller' ) {
         $earning = 0;
 
         foreach ( $order->get_items() as $item_id => $item ) {
@@ -269,7 +285,7 @@ class Commission {
 
         $earning = apply_filters_deprecated( 'dokan_order_admin_commission', [ $earning, $order, $context ], '2.9.21', 'dokan_get_earning_by_order' );
 
-        return apply_filters( 'dokan_get_earning_by_order', $earning );
+        return $earning;
     }
 
     /**
