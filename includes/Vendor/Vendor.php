@@ -1183,7 +1183,7 @@ class Vendor {
      * @return void
      */
     public function update_meta( $key, $value ) {
-        update_user_meta( $this->get_id(), $key, wc_clean( $value ) );
+        update_user_meta( $this->get_id(), $key, $value );
     }
 
     /**
