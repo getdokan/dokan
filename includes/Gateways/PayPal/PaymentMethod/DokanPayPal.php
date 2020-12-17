@@ -733,6 +733,11 @@ class DokanPayPal extends WC_Payment_Gateway {
             return true;
         }
 
+        //paypal does not allow if there are more than 10 products in the cart
+        if ( count( WC()->cart->get_cart() ) > 10 ) {
+            return false;
+        }
+
         foreach ( WC()->cart->get_cart() as $item ) {
             $product_id = $item['data']->get_id();
             $seller_id  = get_post_field( 'post_author', $product_id );
@@ -752,6 +757,11 @@ class DokanPayPal extends WC_Payment_Gateway {
 
             //return if this is not an order object
             if ( ! is_object( $order ) ) {
+                return false;
+            }
+
+            //paypal does not allow if there is more than 10 products in the order
+            if ( count( $order->get_items( 'line_item' ) ) > 10 ) {
                 return false;
             }
 
