@@ -17,10 +17,10 @@
 
                     <div class="promo-card">
                         <img :src="bonusImage" :alt="__( 'Dokan Upgrade Promo', 'dokan-lite' )">
-                        <p>{{ __( 'Bonus: Dokan Lite users get 30% off regular price, automatically applied to checkout.', 'dokan-lite' ) }}</p>
+                        <p>{{ __( 'Bonus: Dokan Lite users get 30% off regular price. Click on the link above to obtain the coupon & apply it during checkout.', 'dokan-lite' ) }}</p>
                     </div>
 
-                    <span @click="closePopup">{{ __( 'Already upgraded?', 'dokan-lite' ) }}</span>
+                    <span><a target="_blank" rel="noopener noreferrer" href="https://wedevs.com/docs/dokan/getting-started/installation-2/">{{ __( 'Already upgraded?', 'dokan-lite' ) }}</a></span>
                 </div>
             </div>
         </div>
@@ -148,10 +148,19 @@ export default {
                     box-shadow: 0px 0px 22px 0px rgba(207,207,207,1);
                     display: flex;
                     align-items: center;
+
+                    p {
+                        text-align: left;
+                        margin-left: 16px;
+                    }
                 }
                 span {
-                    cursor: pointer;
-                    color: #AD644E;
+                    a {
+                        background: transparent;
+                        text-decoration: none;
+                        cursor: pointer;
+                        color: #AD644E;
+                    }
                 }
             }
         }

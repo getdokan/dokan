@@ -80,7 +80,7 @@ class Tracker {
             [
                 'id'          => 'dokan-pro-is-expensive',
                 'text'        => 'Dokan PRO is expensive ',
-                'placeholder' => 'We’ve discounts going all year round. Please visit here to instantly get 30% off your purchase.',
+                'placeholder' => 'We’ve discounts going all year round. Please copy & visit this link to instantly get 30% off your purchase: https://wedevs.com/dokan-lite-upgrade-to-pro',
                 'icon'        => '<svg height="23" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23 23"><path d="M11.5 0C17.9 0 23 5.1 23 11.5S17.9 23 11.5 23 0 17.9 0 11.5 5.1 0 11.5 0zm0 2C6.3 2 2 6.3 2 11.5S6.3 21 11.5 21s9.5-4.3 9.5-9.5S16.7 2 11.5 2zm.5 3v1.1c.5 0 .9.1 1.4.3.4.1.8.3 1.1.6.3.2.6.5.8.9.2.4.3.8.4 1.3h-2.3c0-.4-.1-.7-.4-1-.3-.3-.6-.4-.9-.4v2.5c.1 0 .3.1.4.1.1 0 .3.1.4.1.8.2 1.4.4 1.8.7s.7.6 1 .9c.2.3.3.6.4.9 0 .3.1.6.1.8 0 .2-.1.5-.2.8-.1.3-.3.6-.6.9-.3.3-.7.6-1.2.8s-1.2.4-2 .4V18h-1v-1.2c-1.2-.1-2.1-.4-2.8-1S7.1 14.4 7 13.2h2.3c0 .5.2 1 .5 1.3.3.3.7.5 1.2.6v-3c-.1 0-.1 0-.2-.1-.1 0-.2 0-.3-.1l-1.2-.3c-.4-.1-.7-.3-1-.5-.3-.2-.6-.5-.7-.8s-.3-.7-.3-1.1c0-.5.1-.9.3-1.3.2-.4.5-.7.8-.9.3-.3.7-.4 1.2-.6l1.4-.3V5h1zm0 7.4v2.7c.2 0 .4-.1.6-.1l.6-.3c.2-.1.3-.3.4-.4.1-.2.2-.4.2-.6 0-.4-.1-.7-.4-.8-.4-.2-.8-.4-1.4-.5zm-1-4.6c-.2 0-.4 0-.5.1-.2 0-.3.1-.5.2l-.3.3c-.1.2-.1.4-.1.6 0 .3.1.6.3.7.2.2.6.3 1.1.4V7.8z" fill-rule="evenodd" clip-rule="evenodd" fill="#3b86ff"/></svg>',
             ],
             [

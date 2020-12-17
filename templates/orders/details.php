@@ -266,11 +266,12 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                     <div class="dokan-panel-heading"><strong><?php esc_html_e( 'Order Notes', 'dokan-lite' ); ?></strong></div>
                     <div class="dokan-panel-body" id="dokan-order-notes">
                         <?php
-                        $args = array(
+                        $args = [
                             'post_id' => $order_id,
                             'approve' => 'approve',
-                            'type'    => 'order_note'
-                        );
+                            'type'    => 'order_note',
+                            'status'  => 1,
+                        ];
 
                         remove_filter( 'comments_clauses', array( 'WC_Comments', 'exclude_order_comments' ), 10, 1 );
                         $notes = get_comments( $args );

@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 $store_user   = dokan()->vendor->get( get_query_var( 'author' ) );
 $store_info   = $store_user->get_shop_info();
 $map_location = $store_user->get_location();
+$layout       = get_theme_mod( 'store_layout', 'left' );
 
 get_header( 'shop' );
 
@@ -20,43 +21,51 @@ if ( function_exists( 'yoast_breadcrumb' ) ) {
 ?>
     <?php do_action( 'woocommerce_before_main_content' ); ?>
 
-    <?php dokan_get_template_part( 'store', 'sidebar', array( 'store_user' => $store_user, 'store_info' => $store_info, 'map_location' => $map_location ) ); ?>
+    <div class="dokan-store-wrap layout-<?php echo esc_attr( $layout ); ?>">
 
-    <div id="dokan-primary" class="dokan-single-store dokan-w8">
-        <div id="dokan-content" class="store-page-wrap woocommerce" role="main">
+        <?php if ( 'left' === $layout ) { ?>
+            <?php dokan_get_template_part( 'store', 'sidebar', array( 'store_user' => $store_user, 'store_info' => $store_info, 'map_location' => $map_location ) ); ?>
+        <?php } ?>
 
-            <?php dokan_get_template_part( 'store-header' ); ?>
+        <div id="dokan-primary" class="dokan-single-store">
+            <div id="dokan-content" class="store-page-wrap woocommerce" role="main">
 
-            <?php do_action( 'dokan_store_profile_frame_after', $store_user->data, $store_info ); ?>
+                <?php dokan_get_template_part( 'store-header' ); ?>
 
-            <?php if ( have_posts() ) { ?>
+                <?php do_action( 'dokan_store_profile_frame_after', $store_user->data, $store_info ); ?>
 
-                <div class="seller-items">
+                <?php if ( have_posts() ) { ?>
 
-                    <?php woocommerce_product_loop_start(); ?>
+                    <div class="seller-items">
 
-                        <?php while ( have_posts() ) : the_post(); ?>
+                        <?php woocommerce_product_loop_start(); ?>
 
-                            <?php wc_get_template_part( 'content', 'product' ); ?>
+                            <?php while ( have_posts() ) : the_post(); ?>
 
-                        <?php endwhile; // end of the loop. ?>
+                                <?php wc_get_template_part( 'content', 'product' ); ?>
 
-                    <?php woocommerce_product_loop_end(); ?>
+                            <?php endwhile; // end of the loop. ?>
 
-                </div>
+                        <?php woocommerce_product_loop_end(); ?>
 
-                <?php dokan_content_nav( 'nav-below' ); ?>
+                    </div>
 
-            <?php } else { ?>
+                    <?php dokan_content_nav( 'nav-below' ); ?>
 
-                <p class="dokan-info"><?php esc_html_e( 'No products were found of this vendor!', 'dokan-lite' ); ?></p>
+                <?php } else { ?>
 
-            <?php } ?>
-        </div>
+                    <p class="dokan-info"><?php esc_html_e( 'No products were found of this vendor!', 'dokan-lite' ); ?></p>
 
-    </div><!-- .dokan-single-store -->
+                <?php } ?>
+            </div>
 
-    <div class="dokan-clearfix"></div>
+        </div><!-- .dokan-single-store -->
+
+        <?php if ( 'right' === $layout ) { ?>
+            <?php dokan_get_template_part( 'store', 'sidebar', array( 'store_user' => $store_user, 'store_info' => $store_info, 'map_location' => $map_location ) ); ?>
+        <?php } ?>
+
+    </div><!-- .dokan-store-wrap -->
 
     <?php do_action( 'woocommerce_after_main_content' ); ?>
 
