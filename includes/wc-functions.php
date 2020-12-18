@@ -259,6 +259,11 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
         } else {
             update_post_meta( $post_id, '_price', '' === $regular_price ? '' : wc_format_decimal( $regular_price ) );
         }
+
+        //update product price if date to is smaller than current date
+        if ( $date_to && strtotime( $date_to ) < strtotime( 'NOW', current_time( 'timestamp' ) ) ) {
+            update_post_meta( $post_id, '_price', $regular_price );
+        }
     }
 
     //enable reviews
