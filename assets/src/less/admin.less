@@ -1,6 +1,63 @@
 @import "mixins.less";
 @import "tooltip.less";
 
+.dokan-admin-header {
+    background: #fff;
+    padding: 15px 15px 15px 22px;
+    margin: 0 0 0 -20px;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+
+    .dokan-admin-header__logo {
+        display: flex;
+        align-items: flex-end;
+
+        img {
+            height: 28px;
+            width: auto;
+        }
+
+        span {
+            margin-left: 8px;
+            font-family: Consolas, Monaco, monospace;
+            font-size: 11px;
+            background: #ffe6c4;
+            padding: 1px 7px;
+            border-radius: 3px;
+        }
+    }
+
+    .dokan-admin-header__menu {
+        flex-basis: 100%;
+        text-align: right;
+        padding-right: 6px;
+
+        a {
+            text-decoration: none;
+            margin-left: 5px;
+            color: #4c4c4c;
+            padding: 8px 5px;
+
+            &:hover {
+                background-color: #f5f5f5;
+                border-radius: 3px;
+            }
+        }
+
+        a.header-link--cta {
+            background-color: #ff5722;
+            color: #fff;
+            border-radius: 3px;
+            padding: 8px 10px;
+
+            &:hover {
+                background-color: #ff6a3c;
+            }
+        }
+    }
+}
+
 .dokan-dashboard {
     .post-box-container {
         width: 49%;
@@ -28,7 +85,7 @@
             h4 {
                 margin: 0 0 7px 0;
                 padding: 0 0 7px 0;
-                border-bottom: 1px solid #EEE;
+                border-bottom: 1px solid #eee;
             }
         }
 
@@ -59,8 +116,8 @@
                         display: block;
                         color: #aaa;
                         padding: 10px;
-                        -webkit-transition: all ease .5s;
-                        transition: all ease .5s;
+                        -webkit-transition: all ease 0.5s;
+                        transition: all ease 0.5s;
                         position: relative;
                         font-size: 12px;
                         .details {
@@ -72,19 +129,19 @@
                             span.up {
                                 color: green;
                                 &::before {
-                                    content: '+';
+                                    content: "+";
                                 }
                                 &::after {
-                                    content: '%';
+                                    content: "%";
                                 }
                             }
                             span.down {
                                 color: red;
                                 &::before {
-                                    content: '-';
+                                    content: "-";
                                 }
                                 &::after {
-                                    content: '%';
+                                    content: "%";
                                 }
                             }
                         }
@@ -173,7 +230,7 @@
 }
 
 .chosen-container-multi .chosen-choices li.search-field input[type="text"] {
-    height:23px;
+    height: 23px;
 }
 
 .dokan-settings-wrap {
@@ -269,14 +326,12 @@
     }
 }
 
-
-
 .dokan-settings-radio-image {
     display: block;
     width: 50%;
     background: #fff;
-    -webkit-box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 );
-    box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 );
+    -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
     margin: 0 0 15px;
     position: relative;
     line-height: 0;
@@ -292,7 +347,7 @@
         position: absolute;
         top: 0;
         right: 0;
-        background-color: #4CAF50;
+        background-color: #4caf50;
         color: #fff;
         padding: 4px;
         z-index: 2;
@@ -339,8 +394,7 @@
 }
 
 .wp-pointer-buttons {
-
-    button.next{
+    button.next {
         margin-right: 5px;
     }
     a.dokan {
@@ -349,5 +403,4 @@
     a.dokan:before {
         content: unset;
     }
-
 }

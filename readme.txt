@@ -3,11 +3,11 @@ Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, product vendors, woocommerce vendor, commission rate, e-commerce, ebay, ecommerce, yith, yithemes
 Requires at least: 4.4
-Tested up to: 5.5
+Tested up to: 5.5.3
 WC requires at least: 3.0
-WC tested up to: 4.6
+WC tested up to: 4.7.0
 Requires PHP: 5.6
-Stable tag: 3.0.11
+Stable tag: 3.0.16
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -289,7 +289,39 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 18. Frontend &rarr; Individual Seller Store-2
 19. Frontend &rarr; Individual Seller Store-3
 
+
 == Changelog ==
+
+= v3.0.16 ( December 01, 2020 ) =
+
+- **fix:** Search by store name not working on store listing page when store created from admin area
+- **fix:** Store reviews REST API issue fix and improve
+- **fix:** Order fetching REST API issue fix and improve
+- **new:** Dokan upgrade to pro modules page added
+- **update:** weMail plugin added on recommended plugins list when run Dokan setup wizard
+- **fix:** Deactivation reasons icons and placeholder updated
+
+= v3.0.15 (November 21, 2020) =
+
+- **fix** updated codebase to fix timezone mismatch
+
+= v3.0.14 (November 20, 2020) =
+
+- **fix** Vendor edit admin commission on decimal separator as comma
+- **update** Limited time promotion admin notice
+
+= v3.0.13 (November 12, 2020) =
+
+- **New:** Added new filter `dokan_is_product_author`
+- **New:** Apply new filter `dokan_product_listing_post_statuses` on product listing status
+- **Fix:** Store name search was not working when the vendor account was created by admin
+- **Fix:** Vendor was not changing when trying to change on product quick edit section from admin area
+- **Fix:** Some translation issue fixed on admin setting page
+
+= v3.0.12 (November 5, 2020) =
+
+- **Fix:** Refactor upgrade to pro banner.
+- **Fix:** Temporary disable WooCommerce payment and shipping setup step from vendor setup wizard section. It was throwing a lot of deprecated warnings, we will fix it in the next version.
 
 = v3.0.11 (October 22, 2020) =
 
