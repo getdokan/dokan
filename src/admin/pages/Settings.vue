@@ -14,6 +14,8 @@
 
             <div class="dokan-settings-wrap">
                 <h2 class="nav-tab-wrapper">
+                    <input type="text" class="dokan-admin-search-settings" placeholder="Search e.g. vendor" @keypress.enter="searchSettings" @input="validateBlankSearch">
+
                     <template v-for="section in settingSections">
                         <a
                             href="#"
@@ -320,6 +322,72 @@
             toggleLoadingState() {
                 this.showLoading = ! this.showLoading;
             },
+
+            validateBlankSearch(input) {
+                let searchText = input.target.value.toLowerCase();
+
+                if ( '' === searchText ) {
+                    this.settingSections = dokan.settings_sections;
+
+                    console.log(this.settingSections);
+
+                    this.settingFields   = dokan.settings_fields;
+
+                    return false;
+                }
+
+                return true;
+            },
+
+            searchSettings(input) {
+                let searchText = input.target.value.toLowerCase();
+
+                if ( ! this.validateBlankSearch( input ) ) {
+                    return;
+                }
+
+                var self = this;
+                let settingFields = {};
+                let filteredSettingSections = [];
+                let settingSections = [];
+                let dokan_setting_fields = dokan.settings_fields;
+
+                Object.keys( dokan_setting_fields ).forEach( function( section, index ) {
+                    Object.keys( dokan_setting_fields[section] ).forEach( function( field, i ) {
+                        if (dokan_setting_fields[section][field].type === "sub_section") {
+                            return;
+                        }
+
+                        let label = dokan_setting_fields[section][field]['label'].toLowerCase();
+
+                        if ( label && label.includes(searchText) ) {
+                            if (!settingFields[section]) {
+                                settingFields[section] = {};
+                            }
+
+                            settingFields[section][field] = dokan_setting_fields[section][field];
+
+                            if ( filteredSettingSections.indexOf(section) === -1 ) {
+                                filteredSettingSections.push(section);
+                            }
+                        }
+                    } );
+                } );
+
+                let currentTab = 0;
+                Object.keys(dokan.settings_sections).forEach((section, index) => {
+                    if (filteredSettingSections.indexOf(dokan.settings_sections[section].id) !== -1) {
+                        if (!currentTab) {
+                            this.changeTab(dokan.settings_sections[section]);
+                            currentTab = 1;
+                        }
+                        settingSections.push(dokan.settings_sections[section]);
+                    }
+                });
+
+                self.settingFields = settingFields;
+                self.settingSections = settingSections;
+            },
         },
 
         created() {
@@ -506,6 +574,19 @@
                 max-width:100%;
             }
          }
+
+        .dokan-admin-search-settings {
+            border: 1px solid #ddd;
+            border-radius: 0px;
+            height: 48px;
+            display: block;
+            width: 100%;
+            border-left: 0;
+            border-top: 0;
+            padding: 0 15px;
+            background: #eee;
+            font-weight: 400;
+        }
     }
 
     .form-table th.dokan-settings-sub-section-title {
