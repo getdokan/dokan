@@ -1141,9 +1141,10 @@ if ( ! function_exists( 'dokan_woocs_recalculate_order_payment_completed' ) ) {
         }
     }
     
-    add_action( 'woocommerce_order_status_completed', 'dokan_woocs_recalculate_order_payment_completed', 1 );
-    add_action( 'woocommerce_payment_complete', 'dokan_woocs_recalculate_order_payment_completed' );
 }
+
+add_action( 'woocommerce_order_status_completed', 'dokan_woocs_recalculate_order_payment_completed', 1 );
+add_action( 'woocommerce_payment_complete', 'dokan_woocs_recalculate_order_payment_completed' );
 
 add_filter( 'wp_head', function() {
     if ( dokan_is_seller_dashboard() && class_exists( 'WOOCS' ) ) {
