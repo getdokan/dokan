@@ -4,7 +4,7 @@ namespace WeDevs\Dokan\Upgrade\Upgrades;
 
 use WeDevs\Dokan\Abstracts\DokanUpgrader;
 
-class V_3_0_17 extends DokanUpgrader {
+class V_3_1_0 extends DokanUpgrader {
 
     /**
      * Remove any numeric indexed data from withdraw_methods added due to dokan setup wizard
