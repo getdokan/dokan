@@ -15,7 +15,19 @@ new Vue({
         if ( dokan.dokan_pro_i18n ) {
             this.setLocaleData( dokan.dokan_pro_i18n['dokan'] );
         }
-    }
+    },
+
+    methods: {
+        listTableTexts() {
+            return {
+                loading: this.__( 'Loading', 'dokan-lite' ),
+                select_bulk_action: this.__( 'Select bulk action', 'dokan-lite' ),
+                bulk_actions: this.__( 'Bulk Actions', 'dokan-lite' ),
+                items: this.__( 'items', 'dokan-lite' ),
+                apply: this.__( 'Apply', 'dokan-lite' ),
+            }
+        }
+    },
 });
 
 

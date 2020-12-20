@@ -3,11 +3,11 @@ Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, product vendors, woocommerce vendor, commission rate, e-commerce, ebay, ecommerce, yith, yithemes
 Requires at least: 4.4
-Tested up to: 5.5.3
+Tested up to: 5.6
 WC requires at least: 3.0
-WC tested up to: 4.7.0
+WC tested up to: 4.8.0
 Requires PHP: 5.6
-Stable tag: 3.0.16
+Stable tag: 3.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -291,6 +291,27 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.1.0 ( December 20, 2020 ) =
+
+- [new] Store page customizer and better theme support
+- [fix] Stock level wrong calculation in order notes
+- [fix] Improve search with store name in Dokan admin vendor listing and store listing page
+- [fix] Store listing page avatar image not showing properly on store listing page
+- [fix] Store and store term and conditions template make high priority
+- [fix] Store settings page url issue when vendor dashboard use as child page
+- [fix] Vendor dashboard menu not selected when vendor dashboard use as a child page
+- [fix] Ordering issue on category dropdown on product listing filter area
+- [fix] Vue wp list table package updated, translation support for list tables
+- [fix] Dokan vendor dashboard big counter warning issue fixed
+- [fix] Vendor dashboard product table column issue fixed
+- [fix] Update custom deactivation reason placeholder text
+- [fix] Vendor biography formatting issue when update any vendor from Dokan admin area
+- [fix] Added attribute slug with product REST API
+- [fix] Vendor listing and withdraw page not loading correctly in admin area when use others languages
+- [fix] Upgrade to pro module page overlapping issue with admin notice, css & changed svg
+- [fix] Withdraw methods toggle options not working on Dokan setup wizard
+- [fix] Withdraw methods are not saving for some users, fixed via Dokan upgrader
 
 = v3.0.16 ( December 01, 2020 ) =
 

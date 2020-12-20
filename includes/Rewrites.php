@@ -22,9 +22,9 @@ class Rewrites {
         add_action( 'pre_get_posts', [ $this, 'store_query_filter' ] );
 
         add_filter( 'woocommerce_get_query_vars', [ $this, 'resolve_wc_query_conflict' ] );
-        add_filter( 'template_include', [ $this, 'store_template' ] );
+        add_filter( 'template_include', [ $this, 'store_template' ], 99 );
         add_filter( 'template_include', [ $this, 'product_edit_template' ], 99 );
-        add_filter( 'template_include', [ $this, 'store_toc_template' ] );
+        add_filter( 'template_include', [ $this, 'store_toc_template' ], 99 );
         add_filter( 'query_vars', [ $this, 'register_query_var' ] );
         add_filter( 'woocommerce_get_breadcrumb', [ $this, 'store_page_breadcrumb' ] );
     }

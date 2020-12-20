@@ -3785,6 +3785,7 @@ var Currency = dokan_get_lib('Currency');
 //
 //
 //
+//
 var ListTable = dokan_get_lib('ListTable');
 var Modal = dokan_get_lib('Modal');
 var Currency = dokan_get_lib('Currency');
@@ -6136,6 +6137,7 @@ var RefreshSettingOptions = dokan_get_lib('RefreshSettingOptions');
 //
 //
 //
+//
 
 
 var ListTable = dokan_get_lib('ListTable');
@@ -7146,6 +7148,17 @@ new Vue({
     if (dokan.dokan_pro_i18n) {
       this.setLocaleData(dokan.dokan_pro_i18n['dokan']);
     }
+  },
+  methods: {
+    listTableTexts: function listTableTexts() {
+      return {
+        loading: this.__('Loading', 'dokan-lite'),
+        select_bulk_action: this.__('Select bulk action', 'dokan-lite'),
+        bulk_actions: this.__('Bulk Actions', 'dokan-lite'),
+        items: this.__('items', 'dokan-lite'),
+        apply: this.__('Apply', 'dokan-lite')
+      };
+    }
   }
 }); // fix the admin menu for the slug "vue-app"
 
@@ -8082,24 +8095,22 @@ var render = function() {
             _c(
               "li",
               [
-                _c("router-link", {
-                  attrs: {
-                    to: { name: "Withdraw", query: { status: "pending" } },
-                    "active-class": "current",
-                    exact: ""
+                _c(
+                  "router-link",
+                  {
+                    attrs: {
+                      to: { name: "Withdraw", query: { status: "pending" } },
+                      "active-class": "current",
+                      exact: ""
+                    }
                   },
-                  domProps: {
-                    innerHTML: _vm._s(
-                      _vm.sprintf(
-                        _vm.__(
-                          "Pending <span class='count'>(%s)</span>",
-                          "dokan-lite"
-                        ),
-                        _vm.counts.pending
-                      )
-                    )
-                  }
-                }),
+                  [
+                    _vm._v(_vm._s(_vm.__("Pending", "dokan-lite")) + " "),
+                    _c("span", { staticClass: "count" }, [
+                      _vm._v(_vm._s(_vm.counts.pending))
+                    ])
+                  ]
+                ),
                 _vm._v(" | ")
               ],
               1
@@ -8108,24 +8119,22 @@ var render = function() {
             _c(
               "li",
               [
-                _c("router-link", {
-                  attrs: {
-                    to: { name: "Withdraw", query: { status: "approved" } },
-                    "active-class": "current",
-                    exact: ""
+                _c(
+                  "router-link",
+                  {
+                    attrs: {
+                      to: { name: "Withdraw", query: { status: "approved" } },
+                      "active-class": "current",
+                      exact: ""
+                    }
                   },
-                  domProps: {
-                    innerHTML: _vm._s(
-                      _vm.sprintf(
-                        _vm.__(
-                          "Approved <span class='count'>(%s)</span>",
-                          "dokan-lite"
-                        ),
-                        _vm.counts.approved
-                      )
-                    )
-                  }
-                }),
+                  [
+                    _vm._v(_vm._s(_vm.__("Approved", "dokan-lite")) + " "),
+                    _c("span", { staticClass: "count" }, [
+                      _vm._v(_vm._s(_vm.counts.approved))
+                    ])
+                  ]
+                ),
                 _vm._v(" | ")
               ],
               1
@@ -8134,24 +8143,23 @@ var render = function() {
             _c(
               "li",
               [
-                _c("router-link", {
-                  attrs: {
-                    to: { name: "Withdraw", query: { status: "cancelled" } },
-                    "active-class": "current",
-                    exact: ""
+                _c(
+                  "router-link",
+                  {
+                    attrs: {
+                      to: { name: "Withdraw", query: { status: "cancelled" } },
+                      "active-class": "current",
+                      exact: ""
+                    }
                   },
-                  domProps: {
-                    innerHTML: _vm._s(
-                      _vm.sprintf(
-                        _vm.__(
-                          "Cancelled <span class='count'>(%s)</span>",
-                          "dokan-lite"
-                        ),
-                        _vm.counts.cancelled
-                      )
-                    )
-                  }
-                })
+                  [
+                    _vm._v(_vm._s(_vm.__("Cancelled", "dokan-lite")) + " "),
+                    _c("span", { staticClass: "count" }, [
+                      _vm._v(_vm._s(_vm.counts.cancelled))
+                    ])
+                  ]
+                ),
+                _vm._v(" | ")
               ],
               1
             )
@@ -8170,7 +8178,8 @@ var render = function() {
               "total-pages": _vm.totalPages,
               "total-items": _vm.totalItems,
               "per-page": _vm.perPage,
-              "current-page": _vm.currentPage
+              "current-page": _vm.currentPage,
+              text: _vm.$root.listTableTexts()
             },
             on: {
               pagination: _vm.goToPage,
@@ -11700,24 +11709,22 @@ var render = function() {
             _c(
               "li",
               [
-                _c("router-link", {
-                  attrs: {
-                    to: { name: "Vendors", query: { status: "all" } },
-                    "active-class": "current",
-                    exact: ""
+                _c(
+                  "router-link",
+                  {
+                    attrs: {
+                      to: { name: "Vendors", query: { status: "all" } },
+                      "active-class": "current",
+                      exact: ""
+                    }
                   },
-                  domProps: {
-                    innerHTML: _vm._s(
-                      _vm.sprintf(
-                        _vm.__(
-                          "All <span class='count'>(%s)</span>",
-                          "dokan-lite"
-                        ),
-                        _vm.counts.all
-                      )
-                    )
-                  }
-                }),
+                  [
+                    _vm._v(_vm._s(_vm.__("All", "dokan-lite")) + " "),
+                    _c("span", { staticClass: "count" }, [
+                      _vm._v(_vm._s(_vm.counts.all))
+                    ])
+                  ]
+                ),
                 _vm._v(" | ")
               ],
               1
@@ -11726,24 +11733,22 @@ var render = function() {
             _c(
               "li",
               [
-                _c("router-link", {
-                  attrs: {
-                    to: { name: "Vendors", query: { status: "approved" } },
-                    "active-class": "current",
-                    exact: ""
+                _c(
+                  "router-link",
+                  {
+                    attrs: {
+                      to: { name: "Vendors", query: { status: "approved" } },
+                      "active-class": "current",
+                      exact: ""
+                    }
                   },
-                  domProps: {
-                    innerHTML: _vm._s(
-                      _vm.sprintf(
-                        _vm.__(
-                          "Approved <span class='count'>(%s)</span>",
-                          "dokan-lite"
-                        ),
-                        _vm.counts.approved
-                      )
-                    )
-                  }
-                }),
+                  [
+                    _vm._v(_vm._s(_vm.__("Approved", "dokan-lite")) + " "),
+                    _c("span", { staticClass: "count" }, [
+                      _vm._v(_vm._s(_vm.counts.approved))
+                    ])
+                  ]
+                ),
                 _vm._v(" | ")
               ],
               1
@@ -11752,31 +11757,30 @@ var render = function() {
             _c(
               "li",
               [
-                _c("router-link", {
-                  attrs: {
-                    to: { name: "Vendors", query: { status: "pending" } },
-                    "active-class": "current",
-                    exact: ""
+                _c(
+                  "router-link",
+                  {
+                    attrs: {
+                      to: { name: "Vendors", query: { status: "pending" } },
+                      "active-class": "current",
+                      exact: ""
+                    }
                   },
-                  domProps: {
-                    innerHTML: _vm._s(
-                      _vm.sprintf(
-                        _vm.__(
-                          "Pending <span class='count'>(%s)</span>",
-                          "dokan-lite"
-                        ),
-                        _vm.counts.pending
-                      )
-                    )
-                  }
-                })
+                  [
+                    _vm._v(_vm._s(_vm.__("Pending", "dokan-lite")) + " "),
+                    _c("span", { staticClass: "count" }, [
+                      _vm._v(_vm._s(_vm.counts.pending))
+                    ])
+                  ]
+                ),
+                _vm._v(" | ")
               ],
               1
             )
           ]),
           _vm._v(" "),
           _c("search", {
-            attrs: { title: "Search Vendors" },
+            attrs: { title: _vm.__("Search Vendors", "dokan-lite") },
             on: { searched: _vm.doSearch }
           }),
           _vm._v(" "),
@@ -11796,7 +11800,8 @@ var render = function() {
               "action-column": _vm.actionColumn,
               "not-found": "No vendors found.",
               "sort-by": _vm.sortBy,
-              "sort-order": _vm.sortOrder
+              "sort-order": _vm.sortOrder,
+              text: _vm.$root.listTableTexts()
             },
             on: {
               sort: _vm.sortCallback,
@@ -12372,7 +12377,7 @@ var render = function() {
                   _vm._v(
                     _vm._s(
                       _vm.__(
-                        "Bonus: Dokan Lite users get 30% off regular price, automatically applied to checkout.",
+                        "Bonus: Dokan Lite users get 30% off regular price. Click on the link above to obtain the coupon & apply it during checkout.",
                         "dokan-lite"
                       )
                     )
@@ -12380,8 +12385,19 @@ var render = function() {
                 ])
               ]),
               _vm._v(" "),
-              _c("span", { on: { click: _vm.closePopup } }, [
-                _vm._v(_vm._s(_vm.__("Already upgraded?", "dokan-lite")))
+              _c("span", [
+                _c(
+                  "a",
+                  {
+                    attrs: {
+                      target: "_blank",
+                      rel: "noopener noreferrer",
+                      href:
+                        "https://wedevs.com/docs/dokan/getting-started/installation-2/"
+                    }
+                  },
+                  [_vm._v(_vm._s(_vm.__("Already upgraded?", "dokan-lite")))]
+                )
               ])
             ])
           ])
@@ -12413,11 +12429,6 @@ var render = function() {
     "div",
     { attrs: { id: "lite-modules" } },
     [
-      _c("ModuleUpgradePopup", {
-        attrs: { "show-popup": _vm.showPopup },
-        on: { toggle: _vm.togglePopup }
-      }),
-      _vm._v(" "),
       _c("div", { staticClass: "dokan-modules-wrap" }, [
         _c("h1", [_vm._v(_vm._s(_vm.__("Modules", "dokan")))]),
         _vm._v(" "),
@@ -12550,7 +12561,12 @@ var render = function() {
             2
           )
         ])
-      ])
+      ]),
+      _vm._v(" "),
+      _c("ModuleUpgradePopup", {
+        attrs: { "show-popup": _vm.showPopup },
+        on: { toggle: _vm.togglePopup }
+      })
     ],
     1
   )

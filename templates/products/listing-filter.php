@@ -29,6 +29,8 @@ do_action( 'dokan_product_listing_filter_before_form' );
                     'name'             => 'product_cat',
                     'id'               => 'product_cat',
                     'taxonomy'         => 'product_cat',
+                    'orderby'          => 'name',
+                    'order'            => 'ASC',
                     'title_li'         => '',
                     'class'            => 'product_cat dokan-form-control chosen',
                     'exclude'          => '',

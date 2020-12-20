@@ -39,27 +39,27 @@ if ( ! function_exists( 'dokan_content_nav' ) ) :
 			$nav_class = 'site-navigation post-navigation';
 		}
 		?>
-    <nav role="navigation" id="<?php echo esc_attr( $nav_id ); ?>" class="<?php echo esc_attr( $nav_class ); ?>">
+        <nav role="navigation" id="<?php echo esc_attr( $nav_id ); ?>" class="<?php echo esc_attr( $nav_class ); ?>">
 
-        <ul class="pager">
-        <?php if ( is_single() ) : // navigation links for single posts ?>
+            <ul class="pager">
+            <?php if ( is_single() ) : // navigation links for single posts ?>
 
-            <li class="previous">
-                <?php previous_post_link( '%link', _x( '&larr;', 'Previous post link', 'dokan-lite' ) . ' %title' ); ?>
-            </li>
-            <li class="next">
-                <?php next_post_link( '%link', '%title ' . _x( '&rarr;', 'Next post link', 'dokan-lite' ) ); ?>
-            </li>
+                <li class="previous">
+                    <?php previous_post_link( '%link', _x( '&larr;', 'Previous post link', 'dokan-lite' ) . ' %title' ); ?>
+                </li>
+                <li class="next">
+                    <?php next_post_link( '%link', '%title ' . _x( '&rarr;', 'Next post link', 'dokan-lite' ) ); ?>
+                </li>
 
-        <?php endif; ?>
-        </ul>
+            <?php endif; ?>
+            </ul>
 
 
-        <?php if ( $wp_query->max_num_pages > 1 && ( dokan_is_store_page() || is_home() || is_archive() || is_search() ) ) : // navigation links for home, archive, and search pages ?>
-            <?php dokan_page_navi( '', '', $wp_query ); ?>
-        <?php endif; ?>
+            <?php if ( $wp_query->max_num_pages > 1 && ( dokan_is_store_page() || is_home() || is_archive() || is_search() ) ) : // navigation links for home, archive, and search pages ?>
+                <?php dokan_page_navi( '', '', $wp_query ); ?>
+            <?php endif; ?>
 
-    </nav>
+        </nav>
 		<?php
 	}
 
@@ -69,32 +69,40 @@ if ( ! function_exists( 'dokan_page_navi' ) ) :
 
 	function dokan_page_navi( $before = '', $after = '', $wp_query ) {
 		$posts_per_page = intval( get_query_var( 'posts_per_page' ) );
-		$paged = intval( get_query_var( 'paged' ) );
-		$numposts = $wp_query->found_posts;
-		$max_page = $wp_query->max_num_pages;
-		if ( $numposts <= $posts_per_page ) {
+		$paged          = intval( get_query_var( 'paged' ) );
+		$numposts       = $wp_query->found_posts;
+		$max_page       = $wp_query->max_num_pages;
+
+        if ( $numposts <= $posts_per_page ) {
 			return;
-		}
-		if ( empty( $paged ) || $paged == 0 ) {
+        }
+
+		if ( empty( $paged ) || $paged === 0 ) {
 			$paged = 1;
-		}
-		$pages_to_show = 7;
+        }
+
+		$pages_to_show         = 7;
 		$pages_to_show_minus_1 = $pages_to_show - 1;
-		$half_page_start = floor( $pages_to_show_minus_1 / 2 );
-		$half_page_end = ceil( $pages_to_show_minus_1 / 2 );
-		$start_page = $paged - $half_page_start;
-		if ( $start_page <= 0 ) {
+		$half_page_start       = floor( $pages_to_show_minus_1 / 2 );
+		$half_page_end         = ceil( $pages_to_show_minus_1 / 2 );
+		$start_page            = $paged - $half_page_start;
+
+        if ( $start_page <= 0 ) {
 			$start_page = 1;
-		}
+        }
+
 		$end_page = $paged + $half_page_end;
-		if ( ( $end_page - $start_page ) != $pages_to_show_minus_1 ) {
+
+        if ( ( $end_page - $start_page ) != $pages_to_show_minus_1 ) {
 			$end_page = $start_page + $pages_to_show_minus_1;
 		}
-		if ( $end_page > $max_page ) {
+
+        if ( $end_page > $max_page ) {
 			$start_page = $max_page - $pages_to_show_minus_1;
 			$end_page = $max_page;
 		}
-		if ( $start_page <= 0 ) {
+
+        if ( $start_page <= 0 ) {
 			$start_page = 1;
 		}
 
@@ -118,13 +126,16 @@ if ( ! function_exists( 'dokan_page_navi' ) ) :
 				echo '<li><a href="' . esc_url( get_pagenum_link( $i ) ) . '">' . esc_html__( number_format_i18n( $i ) ) . '</a></li>';
 			}
 		}
-		echo '<li class="">';
+
+        echo '<li class="">';
 		next_posts_link( __( 'Next &rarr;', 'dokan-lite' ) );
 		echo '</li>';
-		if ( $end_page < $max_page ) {
+
+        if ( $end_page < $max_page ) {
 			$last_page_text = '&rarr;';
 			echo '<li class="next"><a href="' . esc_url( get_pagenum_link( $max_page ) ) . '" title="Last">' . esc_html__( $last_page_text ) . '</a></li>';
-		}
+        }
+
 		echo '</ul></div>' . $after . ''; //phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
 	}
 
@@ -469,13 +480,17 @@ function dokan_dashboard_nav( $active_menu = '' ) {
     $nav_menu          = dokan_get_dashboard_nav();
     $active_menu_parts = explode( '/', $active_menu );
 
+    if ( $active_menu && false !== strpos( $active_menu, '/' ) ) {
+        $active_menu = $active_menu_parts[1];
+    }
+
     if ( isset( $active_menu_parts[1] )
-            && $active_menu_parts[0] == 'settings'
+            && ( $active_menu_parts[1] == 'settings' || $active_menu_parts[0] == 'settings' )
             && isset( $nav_menu['settings']['sub'] )
-            && array_key_exists( $active_menu_parts[1], $nav_menu['settings']['sub'] )
+            && ( array_key_exists( $active_menu_parts[1], $nav_menu['settings']['sub'] ) || array_key_exists( $active_menu_parts[2], $nav_menu['settings']['sub'] ) )
     ) {
         $urls        = $nav_menu['settings']['sub'];
-        $active_menu = $active_menu_parts[1];
+        $active_menu = $active_menu_parts[1] == 'settings' ? $active_menu_parts[2] : $active_menu_parts[1];
     } else {
         $urls = $nav_menu;
     }
@@ -628,5 +643,73 @@ function dokan_myorder_login_check() {
 
     if ( $my_order_page_id == $post->ID ) {
         dokan_redirect_login();
+    }
+}
+
+/**
+ * Store sidebar widget args
+ *
+ * @return array
+ */
+function dokan_store_sidebar_args() {
+    $args = [
+        'before_widget' => '<aside class="widget dokan-store-widget %s">',
+        'after_widget'  => '</aside>',
+        'before_title'  => '<h3 class="widget-title">',
+        'after_title'   => '</h3>',
+    ];
+
+    return apply_filters( 'dokan_store_sidebar_args', $args );
+}
+
+/**
+ * Store single category widget
+ *
+ * @return void
+ */
+function dokan_store_category_widget() {
+    $args = dokan_store_sidebar_args();
+
+    if ( dokan()->widgets->is_exists( 'store_category_menu' ) ) {
+        the_widget( dokan()->widgets->store_category_menu, [ 'title' => __( 'Store Product Category', 'dokan-lite' ) ], $args );
+    }
+}
+
+/**
+ * Store single location widget
+ *
+ * @return void
+ */
+function dokan_store_location_widget() {
+    $args = dokan_store_sidebar_args();
+
+    if ( dokan()->widgets->is_exists( 'store_location' ) && dokan_get_option( 'store_map', 'dokan_general', 'on' ) == 'on' ) {
+        the_widget( dokan()->widgets->store_location, [ 'title' => __( 'Store Location', 'dokan-lite' ) ], $args );
+    }
+}
+
+/**
+ * Store opening/closing time widget
+ *
+ * @return void
+ */
+function dokan_store_time_widget() {
+    $args = dokan_store_sidebar_args();
+
+    if ( dokan()->widgets->is_exists( 'store_open_close' ) && dokan_get_option( 'store_open_close', 'dokan_general', 'on' ) == 'on' ) {
+        the_widget( dokan()->widgets->store_open_close, [ 'title' => __( 'Store Time', 'dokan-lite' ) ], $args );
+    }
+}
+
+/**
+ * Store contact form widget
+ *
+ * @return void
+ */
+function dokan_store_contact_widget() {
+    $args = dokan_store_sidebar_args();
+
+    if ( dokan()->widgets->is_exists( 'store_contact_form' ) && dokan_get_option( 'contact_seller', 'dokan_general', 'on' ) == 'on' ) {
+        the_widget( dokan()->widgets->store_contact_form, [ 'title' => __( 'Contact Vendor', 'dokan-lite' ) ], $args );
     }
 }
