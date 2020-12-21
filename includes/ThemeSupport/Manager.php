@@ -26,12 +26,14 @@ class Manager {
     private function include_support() {
         $supported_themes = apply_filters(
             'dokan_load_theme_support_files', [
-				'storefront' => Storefront::class,
-				'flatsome'   => Flatsome::class,
-				'divi'       => Divi::class,
-				'rehub'      => Rehub::class,
-				'electro'    => Electro::class,
-				'enfold'     => Enfold::class,
+				'storefront'   => Storefront::class,
+				'flatsome'     => Flatsome::class,
+				'divi'         => Divi::class,
+				'rehub'        => Rehub::class,
+				'electro'      => Electro::class,
+				'enfold'       => Enfold::class,
+				'twentytwenty' => TwentyTwenty::class,
+				'astra'        => Astra::class,
 			]
         );
 

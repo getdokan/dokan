@@ -479,8 +479,8 @@ class SetupWizard {
                                         ?>
                                     </div>
                                     <div class="dokan-wizard-service-enable">
-                                        <input type="checkbox" name="withdraw_methods[<?php esc_html( $key ); ?>]" id="withdraw_methods[<?php esc_html( $key ); ?>]" class="switch-input" value="<?php esc_html( $key ); ?>" <?php echo ( in_array( $key, array_values( $withdraw_methods ), true ) ) ? 'checked="checked"' : ''; ?>>
-                                        <label for="withdraw_methods[<?php esc_html( $key ); ?>]" class="switch-label"></label>
+                                        <input type="checkbox" name="withdraw_methods[<?php echo esc_attr( $key ); ?>]" id="withdraw_methods[<?php echo esc_attr( $key ); ?>]" class="switch-input" value="<?php echo esc_attr( $key ); ?>" <?php echo ( in_array( $key, array_values( $withdraw_methods ), true ) ) ? 'checked="checked"' : ''; ?>>
+                                        <label for="withdraw_methods[<?php echo esc_attr( $key ); ?>]" class="switch-label"></label>
                                     </div>
                                 </li>
                             <?php endforeach ?>

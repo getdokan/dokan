@@ -5,26 +5,30 @@ namespace WeDevs\Dokan\Order;
 use Exception;
 
 /**
-* Admin Hooks
-*
-* @package dokan
-*
-* @since 3.0.0
-*/
+ * Admin Hooks
+ *
+ * @package dokan
+ *
+ * @since 3.0.0
+ *
+ * @author weDevs
+ */
 class Hooks {
 
     /**
-     * Load autometically when class initiate
+     * Load automatically when class initiate
      *
      * @since 3.0.0
+     *
+     * @return void
      */
     public function __construct() {
         // on order status change
-        add_action( 'woocommerce_order_status_changed', array( $this, 'on_order_status_change' ), 10, 4 );
-        add_action( 'woocommerce_order_status_changed', array( $this, 'on_sub_order_change' ), 99, 3 );
+        add_action( 'woocommerce_order_status_changed', [ $this, 'on_order_status_change' ], 10, 4 );
+        add_action( 'woocommerce_order_status_changed', [ $this, 'on_sub_order_change' ], 99, 3 );
 
         // create sub-orders
-        add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'split_vendor_orders' ) );
+        add_action( 'woocommerce_checkout_update_order_meta', [ $this, 'split_vendor_orders' ] );
 
         // order table synced for WooCommerce update order meta
         add_action( 'woocommerce_checkout_update_order_meta', 'dokan_sync_insert_order', 20 );
@@ -33,14 +37,16 @@ class Hooks {
         add_action( 'dokan_checkout_update_order_meta', 'dokan_sync_insert_order' );
 
         // prevent non-vendor coupons from being added
-        add_filter( 'woocommerce_coupon_is_valid', array( $this, 'ensure_vendor_coupon' ), 10, 2 );
+        add_filter( 'woocommerce_coupon_is_valid', [ $this, 'ensure_vendor_coupon' ], 10, 2 );
 
         if ( is_admin() ) {
             add_action( 'woocommerce_process_shop_order_meta', 'dokan_sync_insert_order' );
         }
 
         // restore order stock if it's been reduced by twice
-        add_action( 'woocommerce_reduce_order_stock', array( $this, 'restore_reduced_order_stock' ) );
+        add_action( 'woocommerce_reduce_order_stock', [ $this, 'restore_reduced_order_stock' ] );
+
+        add_action( 'woocommerce_reduce_order_stock', [ $this, 'handle_order_notes_for_suborder' ], 99 );
 
         //Wc remove child order from wc_order_product_lookup & trim child order from posts for analytics
         add_action( 'wc-admin_import_orders', [ $this, 'delete_child_order_from_wc_order_product' ] );
@@ -50,13 +56,12 @@ class Hooks {
     /**
      * Update the child order status when a parent order status is changed
      *
-     * @global object $wpdb
-     *
      * @param integer $order_id
      * @param string $old_status
      * @param string $new_status
      *
      * @return void
+     * @global object $wpdb
      */
     public function on_order_status_change( $order_id, $old_status, $new_status, $order ) {
         global $wpdb;
@@ -65,13 +70,13 @@ class Hooks {
         // and the order is created from dashboard.
         if ( empty( $order->post_parent ) && empty( $order->get_meta( 'has_sub_order' ) ) && is_admin() ) {
             // Remove the hook to prevent recursive callas.
-            remove_action( 'woocommerce_order_status_changed', array( $this, 'on_order_status_change' ), 10 );
+            remove_action( 'woocommerce_order_status_changed', [ $this, 'on_order_status_change' ], 10 );
 
             // Split the order.
             dokan()->order->maybe_split_orders( $order_id );
 
             // Add the hook back.
-            add_action( 'woocommerce_order_status_changed', array( $this, 'on_order_status_change' ), 10, 4 );
+            add_action( 'woocommerce_order_status_changed', [ $this, 'on_order_status_change' ], 10, 4 );
         }
 
         // make sure order status contains "wc-" prefix
@@ -82,17 +87,17 @@ class Hooks {
         // insert on dokan sync table
         $wpdb->update(
             $wpdb->dokan_orders,
-            array( 'order_status' => $new_status ),
-            array( 'order_id' => $order_id ),
-            array( '%s' ),
-            array( '%d' )
+            [ 'order_status' => $new_status ],
+            [ 'order_id' => $order_id ],
+            [ '%s' ],
+            [ '%d' ]
         );
 
         // if any child orders found, change the orders as well
         $sub_orders = get_children(
             [
                 'post_parent' => $order_id,
-                'post_type' => 'shop_order',
+                'post_type'   => 'shop_order',
             ]
         );
 
@@ -117,13 +122,13 @@ class Hooks {
         // update on vendor-balance table
         $wpdb->update(
             $wpdb->dokan_vendor_balance,
-            array( 'status' => $new_status ),
-            array(
-                'trn_id' => $order_id,
+            [ 'status' => $new_status ],
+            [
+                'trn_id'   => $order_id,
                 'trn_type' => 'dokan_orders',
-            ),
-            array( '%s' ),
-            array( '%d', '%s' )
+            ],
+            [ '%s' ],
+            [ '%d', '%s' ]
         );
 
         if ( $new_status === 'wc-refunded' ) {
@@ -147,14 +152,14 @@ class Hooks {
                 $wpdb->insert(
                     $wpdb->dokan_vendor_balance,
                     [
-                        'vendor_id'     => $seller_id,
-                        'trn_id'        => $order_id,
-                        'trn_type'      => 'dokan_refund',
-                        'debit'         => 0,
-                        'credit'        => $net_amount,
-                        'status'        => 'approved',
-                        'trn_date'      => current_time( 'mysql' ),
-                        'balance_date'  => current_time( 'mysql' ),
+                        'vendor_id'    => $seller_id,
+                        'trn_id'       => $order_id,
+                        'trn_type'     => 'dokan_refund',
+                        'debit'        => 0,
+                        'credit'       => $net_amount,
+                        'status'       => 'approved',
+                        'trn_date'     => current_time( 'mysql' ),
+                        'balance_date' => current_time( 'mysql' ),
                     ],
                     [
                         '%d',
@@ -222,7 +227,7 @@ class Hooks {
         $sub_orders      = get_children(
             [
                 'post_parent' => $parent_order_id,
-                'post_type' => 'shop_order',
+                'post_type'   => 'shop_order',
             ]
         );
 
@@ -250,6 +255,8 @@ class Hooks {
     /**
      * Split order for vendor
      *
+     * @param $parent_order_id
+     *
      * @since 3.0.0
      *
      * @return void
@@ -261,7 +268,7 @@ class Hooks {
     /**
      * Ensure vendor coupon
      *
-     * For consistancy, restrict coupons in cart if only
+     * For consistency, restrict coupons in cart if only
      * products from that vendor exists in the cart. Also, a coupon
      * should be restricted with a product.
      *
@@ -269,15 +276,16 @@ class Hooks {
      * sure a product of the admin is in the cart. Otherwise it wouldn't be
      * possible to distribute the coupon in sub orders.
      *
-     * @param  boolean $valid
-     * @param  \WC_Coupon $coupon
+     * @param boolean $valid
+     * @param \WC_Coupon $coupon
      *
      * @return boolean|Execption
+     * @throws Exception
      */
     public function ensure_vendor_coupon( $valid, $coupon ) {
         $coupon_id         = $coupon->get_id();
         $vendor_id         = get_post_field( 'post_author', $coupon_id );
-        $available_vendors = array();
+        $available_vendors = [];
 
         if ( ! apply_filters( 'dokan_ensure_vendor_coupon', true ) ) {
             return $valid;
@@ -304,7 +312,7 @@ class Hooks {
     /**
      * Restore order stock if it's been reduced by twice
      *
-     * @param  object $order
+     * @param object $order
      *
      * @return void
      */
@@ -350,6 +358,8 @@ class Hooks {
     }
 
     /**
+     * Delete_child_order_from_wc_order_product
+     *
      * @param \ActionScheduler_Action $args
      *
      * @return void
@@ -379,5 +389,53 @@ class Hooks {
         }
 
         return $orders;
+    }
+
+    /**
+     * Handle stock level wrong calculation in order notes for suborder
+     *
+     * @param $order
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return void
+     */
+    public function handle_order_notes_for_suborder( $order ) {
+        $has_sub_order = wp_get_post_parent_id( $order->get_id() );
+
+        //return if it has suborder. only continue if this is a suborder
+        if ( ! $has_sub_order ) {
+            return;
+        }
+
+        $order = wc_get_order( $order->get_id() );
+
+        $notes = wc_get_order_notes( [ 'order_id' => $order->get_id() ] );
+
+        //change stock level note status instead of deleting
+        foreach ( $notes as $note ) {
+            //here using the woocommerce as text domain because we are using woocommerce text for searching
+            if ( false !== strpos( $note->content, __( 'Stock levels reduced:', 'woocommerce' ) ) ) { //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+                //update notes status to `hold`, so that it will not show in order details page
+                wp_set_comment_status( $note->id, 'hold' );
+            }
+        }
+
+        //adding stock level notes in order
+        foreach ( $order->get_items( 'line_item' ) as $key => $line_item ) {
+            $item_id = $line_item->get_variation_id() ? $line_item->get_variation_id() : $line_item->get_product_id();
+
+            $product = wc_get_product( $item_id );
+
+            if ( $product->get_manage_stock() ) {
+                $stock_quantity    = $product->get_stock_quantity();
+                $previous_quantity = (int) $stock_quantity + $line_item->get_quantity();
+
+                $notes_content = $product->get_formatted_name() . ' ' . $previous_quantity . '&rarr;' . $stock_quantity;
+
+                //here using the woocommerce as text domain because we are using woocommerce text for adding
+                $order->add_order_note( __( 'Stock levels reduced:', 'woocommerce' ) . ' ' . $notes_content ); //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+            }
+        }
     }
 }

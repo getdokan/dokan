@@ -39,28 +39,12 @@ class LimitedTimePromotion {
 
         $notices = [
             [
-                'key'        => 'early-bird-black-friday-2020',
-                'start_date' => '2020-11-23 09:00:00 EST',
-                'end_date'   => '2020-11-23 13:59:00 EST',
-                'title'      => 'Enjoy Flat 50% OFF on Dokan.',
-                'content'    => 'Get Your Early Bird Black Friday Deals Now.',
-                'link'       => 'https://wedevs.com/dokan/pricing?utm_medium=text&utm_source=wordpress-dokan',
-            ],
-            [
-                'key'        => 'black-friday-2020',
-                'start_date' => '2020-11-23 14:00:00 EST',
-                'end_date'   => '2020-11-27 23:59:00 EST',
-                'title'      => 'Enjoy Up To 60% OFF on Dokan.',
-                'content'    => 'Get Your Black Friday Deals Now.',
-                'link'       => 'https://wedevs.com/dokan/pricing?utm_medium=text&utm_source=wordpress-dokan',
-            ],
-            [
-                'key'        => 'cyber-monday-2020',
-                'start_date' => '2020-11-28 00:00:00 EST',
-                'end_date'   => '2020-12-04 23:59:00 EST',
-                'title'      => 'Enjoy Up To 60% OFF on Dokan.',
-                'content'    => 'Get Your Cyber Monday Deals Now.',
-                'link'       => 'https://wedevs.com/dokan/pricing?utm_medium=text&utm_source=wordpress-dokan',
+                'key'        => 'holiday-2020',
+                'start_date' => '2020-12-22 09:00:00 EST',
+                'end_date'   => '2021-01-08 23:59:00 EST',
+                'title'      => 'Enjoy Up To 60% OFF on Dokan Pro.',
+                'content'    => 'Get Your Holiday Deals Now.',
+                'link'       => 'https://wedevs.com/dokan/pricing?utm_medium=text&utm_source=wordpress-dokan-holidays',
             ],
         ];
 

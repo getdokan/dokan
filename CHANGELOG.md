@@ -1,3 +1,43 @@
+# [3.1.0](https://github.com/weDevsOfficial/dokan/compare/v3.0.16...v3.1.0) (2020-12-20)
+
+
+### Bug Fixes
+
+* added attribute slug with product api ([955f5cf](https://github.com/weDevsOfficial/dokan/commit/955f5cfa296a2bec6064b500b0e105596f807efe))
+* Dashboard big counter warning issue fixed ([63a5ae2](https://github.com/weDevsOfficial/dokan/commit/63a5ae27cc177f92d819c2a6bdc794027c91d906))
+* fixed withdraw methods are not saving for some users via dokan upgrader ([6f43433](https://github.com/weDevsOfficial/dokan/commit/6f4343355de46a4c807a15a046a7a2cf9960ce7c))
+* missing translation for list table ([d1ec3cb](https://github.com/weDevsOfficial/dokan/commit/d1ec3cb8df4c809e1687ac8b2498af24ed720aac))
+* order notes stock calculation with variable product, in vendor dashboard ([0697665](https://github.com/weDevsOfficial/dokan/commit/06976651130812a54b0faa6323b55f0c39c41d0b))
+* Ordering issue on category dropdown on product listing filter area ([a5f4511](https://github.com/weDevsOfficial/dokan/commit/a5f4511a1acdbd91dddfaa814ee670516993234d))
+* page wrapper issue for store-toc page ([#1000](https://github.com/weDevsOfficial/dokan/issues/1000)) ([361913f](https://github.com/weDevsOfficial/dokan/commit/361913f781a02af870b5018bf3dc9febc1da98c2))
+* Stock level wrong calculation in order notes ([1e0ebfb](https://github.com/weDevsOfficial/dokan/commit/1e0ebfbc65d6670e68b5ce50d4ef031891d74a00))
+* Store and store TOC tempalte make high priority ([9f5238f](https://github.com/weDevsOfficial/dokan/commit/9f5238fa48fbf1cddb3a5f7896ddb39a7d6ba236))
+* Store listing page avatar image not showing properly ([7767342](https://github.com/weDevsOfficial/dokan/commit/7767342e586b42ba43897ffde6ba216b820b2c68))
+* store search with meta query ([2095486](https://github.com/weDevsOfficial/dokan/commit/209548681fa0aa357debfb9cfdbac4d638d9e424))
+* Store Settigns apge url issue when vendor dashboard use as child page ([92bb455](https://github.com/weDevsOfficial/dokan/commit/92bb455bf48e5aaee5d73eb393ba9c9d418ab476))
+* Upgrade to pro module page overlapping issue with admin notice, change bonus svg ([f10c904](https://github.com/weDevsOfficial/dokan/commit/f10c90434f7831182c7c1c58185f456ea871ffa9))
+* vendor biography formatting issue ([aaa6f98](https://github.com/weDevsOfficial/dokan/commit/aaa6f9860c38d29c4b6e4c8e7d3644e431dc3fc5))
+* Vendor dashboard menu not selected issue fixed [#986](https://github.com/weDevsOfficial/dokan/issues/986) ([98c34b2](https://github.com/weDevsOfficial/dokan/commit/98c34b27601fdec758de30d4475ee9de71c11df9))
+* Vendor dashboard product cols issue fixed ([6f7064b](https://github.com/weDevsOfficial/dokan/commit/6f7064be61791d84e34de32383ef228c5452c3e6))
+* Vendor listing and withdraw page not loading from admin area when use other langauges issue fixed ([853eca3](https://github.com/weDevsOfficial/dokan/commit/853eca30fe7a1b5f0097e6b20ebde18582ef78fc))
+* vue wp list table package updated, translation support for list tables ([da97ea2](https://github.com/weDevsOfficial/dokan/commit/da97ea2fe7f9541555df075f11d8fb174a9143e3))
+* Withdraw methods toggle options not working ([7801942](https://github.com/weDevsOfficial/dokan/commit/78019426cda950b7681c550e35f77604ca8a595c))
+* **theme-support:** Duplicate sidebar from theme was showing when storefront was enabled ([b4e92d3](https://github.com/weDevsOfficial/dokan/commit/b4e92d3a61ce42495b2937e2bbfe7ea68a2914dc))
+
+
+### Features
+
+* holiday limited time promotion ([#999](https://github.com/weDevsOfficial/dokan/issues/999)) ([177b2dd](https://github.com/weDevsOfficial/dokan/commit/177b2dd7dbe055b3434bd601b8b71c7ccbd27e5b))
+* **customizer:** Added layout support for store page ([78fc2ae](https://github.com/weDevsOfficial/dokan/commit/78fc2ae55c1faf51560d10b384d721e24351f2a6))
+* **customizer:** Added store customizer ([b96e4b4](https://github.com/weDevsOfficial/dokan/commit/b96e4b49cb05704bcf427d25e234a75cade6aeca))
+* **theme-support:** Added Astra theme support for store and dashboard ([5287736](https://github.com/weDevsOfficial/dokan/commit/5287736c9dad4842f6672e85cdd6ea76c7afbe52))
+* **theme-support:** Added twenty twenty theme support for store page ([c51c7e9](https://github.com/weDevsOfficial/dokan/commit/c51c7e98cadb5c90de5ab9cfd64d41339dd43d2e))
+* custom deactivation reason for appsero tracker ([726183b](https://github.com/weDevsOfficial/dokan/commit/726183b551a291bf79c0afa7c617d3392a72f854))
+* dokan lite upgrade-to-pro modules page ([fb2bc16](https://github.com/weDevsOfficial/dokan/commit/fb2bc1638a1b56cc46cde197510fbc3fd654922e))
+* limited time promotion admin notice ([9c69063](https://github.com/weDevsOfficial/dokan/commit/9c69063578f0bf5b97c522fbe8d2212dcb0ec490))
+
+
+
 ## [3.0.16](https://github.com/weDevsOfficial/dokan/compare/v3.0.15...v3.0.16) (2020-12-01)
 
 
