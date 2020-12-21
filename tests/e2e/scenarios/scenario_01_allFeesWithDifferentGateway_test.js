@@ -1,0 +1,127 @@
+var faker = require('faker');
+const { fake } = require('faker');
+
+Feature('All fess from different payment gateway Functionality');
+
+Scenario('Single order', ({ I }) => {
+    I.amOnPage('/my-account/');
+        I.fillField('username', 'luchi');
+        I.fillField('password', '!!@@1122qq');
+        I.click('login');
+    I.amOnPage('/shop/');
+        I.amOnPage('/dokan/shop/?orderby=date');
+        I.wait(5);
+        I.click('//main[@id="main"]/ul/li/a/img');
+        I.click('Add to cart');
+    I.amOnPage('/cart/');
+        // I.waitForElement('.woocommerce-shipping-totals.shipping');
+        // I.waitForElement('.includes_tax');
+        // I.waitForElement('.excludes_tax');
+        I.click('Proceed to checkout');
+    I.seeInCurrentUrl('/checkout');
+        I.fillField('#billing_first_name', faker.name.firstName());
+        I.fillField('#billing_last_name', faker.name.lastName());
+        I.fillField('#billing_company', faker.company.companyName());
+        I.fillField('#billing_address_1', faker.address.streetAddress());
+        I.fillField('#billing_city', faker.address.city());
+        I.fillField('#billing_phone', faker.phone.phoneNumberFormat());
+        I.fillField('#billing_email', faker.internet.email());
+            //Payment with different payment gateway
+                I.checkOption('Direct bank transfer');
+                // I.checkOption('Check payments');
+                // I.checkOption('Cash on delivery'); 
+                // I.wirecardCreditCardPayment();
+                // I.checkOption('PayPal Adaptive');
+                // I.stripePayment();
+        I.click('woocommerce_checkout_place_order');
+        I.waitForText('Thank you. Your order has been received.', 30, '.woocommerce-order');
+        I.see('Thank you. Your order has been received.');
+});
+
+Scenario('Multiple order', ({ I }) => {
+    I.amOnPage('/my-account/');
+        I.fillField('username', 'luchi');
+        I.fillField('password', '!!@@1122qq');
+        I.click('login');
+    // I.amOnPage('/shop/');
+    //     I.amOnPage('/dokan/shop/?orderby=date');
+    //     I.wait(5);
+    //     I.click('//main[@id="main"]/ul/li/a/img');
+    //     I.click('Add to cart');
+    I.amOnPage('/store-listing/');
+        I.click({ css :'.dokan-single-seller:nth-child(1) .store-content a'})
+        I.click('//li[1]/a/img');
+            I.click('Add to cart');
+        I.click('Vendor Info');
+        I.click('.details');
+        I.click('.details a');
+        I.click('//li[2]/a/img');
+        I.waitForElement('.woocommerce-notices-wrapper', 30);
+        I.click('Add to cart');
+    I.amOnPage('/cart/');
+        // I.waitForElement('.woocommerce-shipping-totals.shipping');
+        // I.waitForElement('.includes_tax');
+        // I.waitForElement('.excludes_tax');
+        I.click('Proceed to checkout');
+    I.seeInCurrentUrl('/checkout');
+        I.fillField('#billing_first_name', faker.name.firstName());
+        I.fillField('#billing_last_name', faker.name.lastName());
+        I.fillField('#billing_company', faker.company.companyName());
+        I.fillField('#billing_address_1', faker.address.streetAddress());
+        I.fillField('#billing_city', faker.address.city());
+        I.fillField('#billing_phone', faker.phone.phoneNumberFormat());
+        I.fillField('#billing_email', faker.internet.email());
+            //Payment with different payment gateway
+                // I.checkOption('Direct bank transfer');
+                I.checkOption('Check payments');
+                // I.checkOption('Cash on delivery'); 
+                // I.wirecardCreditCardPayment();
+                // I.checkOption('PayPal Adaptive');
+                // I.stripePayment();
+        I.click('woocommerce_checkout_place_order');
+        I.waitForText('Thank you. Your order has been received.', 30, '.woocommerce-order');
+        I.see('Thank you. Your order has been received.');
+});
+
+Scenario('Multiple order from multiple vendor', ({ I }) => {
+    I.amOnPage('/my-account/');
+        I.fillField('username', 'luchi');
+        I.fillField('password', '!!@@1122qq');
+        I.click('login');
+    // I.amOnPage('/shop/');
+    //     I.amOnPage('/dokan/shop/?orderby=date');
+    //     I.wait(5);
+    //     I.click('//main[@id="main"]/ul/li/a/img');
+    //     I.click('Add to cart');
+    I.amOnPage('store-listing/');
+			I.click({ css : '.dokan-single-seller:nth-child(1) .store-content a'});
+			I.click('//li[2]/a/img');
+			I.click('Add to cart');
+		I.amOnPage('store-listing/');
+			I.click({ css : '.dokan-single-seller:nth-child(2) .store-content a'});
+			I.click('//li[2]/a/img');
+			I.click('Add to cart');
+    I.amOnPage('/cart/');
+        // I.waitForElement('.woocommerce-shipping-totals.shipping');
+        // I.waitForElement('.includes_tax');
+        // I.waitForElement('.excludes_tax');
+        I.click('Proceed to checkout');
+    I.seeInCurrentUrl('/checkout');
+        I.fillField('#billing_first_name', faker.name.firstName());
+        I.fillField('#billing_last_name', faker.name.lastName());
+        I.fillField('#billing_company', faker.company.companyName());
+        I.fillField('#billing_address_1', faker.address.streetAddress());
+        I.fillField('#billing_city', faker.address.city());
+        I.fillField('#billing_phone', faker.phone.phoneNumberFormat());
+        I.fillField('#billing_email', faker.internet.email());
+            //Payment with different payment gateway
+                // I.checkOption('Direct bank transfer');
+                // I.checkOption('Check payments');
+                I.checkOption('Cash on delivery'); 
+                // I.wirecardCreditCardPayment();
+                // I.checkOption('PayPal Adaptive');
+                // I.stripePayment();
+        I.click('woocommerce_checkout_place_order');
+        I.waitForText('Thank you. Your order has been received.', 30, '.woocommerce-order');
+        I.see('Thank you. Your order has been received.');
+});

@@ -12653,7 +12653,7 @@ function toComment(sourceMap) {
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* WEBPACK VAR INJECTION */(function(process) {/*!
-  * vue-router v3.4.7
+  * vue-router v3.4.9
   * (c) 2020 Evan You
   * @license MIT
   */
@@ -14019,6 +14019,14 @@ function addRouteRecord (
         path || name
       )) + " cannot be a " + "string id. Use an actual component instead."
     );
+
+    warn(
+      // eslint-disable-next-line no-control-regex
+      !/[^\u0000-\u007F]+/.test(path),
+      "Route with path \"" + path + "\" contains unencoded characters, make sure " +
+        "your path is correctly encoded before passing it to the router. Use " +
+        "encodeURI to encode static segments of your path."
+    );
   }
 
   var pathToRegexpOptions =
@@ -14324,14 +14332,6 @@ function matchRoute (
   path,
   params
 ) {
-  try {
-    path = decodeURI(path);
-  } catch (err) {
-    if (process.env.NODE_ENV !== 'production') {
-      warn(false, ("Error decoding \"" + path + "\". Leaving it intact."));
-    }
-  }
-
   var m = path.match(regex);
 
   if (!m) {
@@ -14344,7 +14344,7 @@ function matchRoute (
     var key = regex.keys[i - 1];
     if (key) {
       // Fix #1994: using * with props: true generates a param named 0
-      params[key.name || 'pathMatch'] = m[i];
+      params[key.name || 'pathMatch'] = typeof m[i] === 'string' ? decode(m[i]) : m[i];
     }
   }
 
@@ -14534,7 +14534,17 @@ function scrollToPosition (shouldScroll, position) {
   }
 
   if (position) {
-    window.scrollTo(position.x, position.y);
+    // $flow-disable-line
+    if ('scrollBehavior' in document.documentElement.style) {
+      window.scrollTo({
+        left: position.x,
+        top: position.y,
+        // $flow-disable-line
+        behavior: shouldScroll.behavior
+      });
+    } else {
+      window.scrollTo(position.x, position.y);
+    }
   }
 }
 
@@ -15699,7 +15709,7 @@ function createHref (base, fullPath, mode) {
 }
 
 VueRouter.install = install;
-VueRouter.version = '3.4.7';
+VueRouter.version = '3.4.9';
 VueRouter.isNavigationFailure = isNavigationFailure;
 VueRouter.NavigationFailureType = NavigationFailureType;
 
@@ -18472,6 +18482,18 @@ if (GlobalVue) {
     sortOrder: {
       type: String,
       default: "asc"
+    },
+    text: {
+      type: Object,
+      default: () => {
+        return {
+          loading: 'Loading',
+          select_bulk_action: 'Select bulk action',
+          bulk_actions: 'Bulk Actions',
+          items: 'items',
+          apply: 'Apply'
+        };
+      }
     }
   },
 
@@ -22969,7 +22991,7 @@ function _colorChange (data, oldHue) {
 /* 147 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_RESULT__;// TinyColor v1.4.1
+var __WEBPACK_AMD_DEFINE_RESULT__;// TinyColor v1.4.2
 // https://github.com/bgrins/TinyColor
 // Brian Grinstead, MIT License
 
@@ -25430,7 +25452,13 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { class: { "table-loading": _vm.loading } }, [
     _vm.loading
-      ? _c("div", { staticClass: "table-loader-wrap" }, [_vm._m(0)])
+      ? _c("div", { staticClass: "table-loader-wrap" }, [
+          _c("div", { staticClass: "table-loader-center" }, [
+            _c("div", { staticClass: "table-loader" }, [
+              _vm._v(_vm._s(_vm.text.loading))
+            ])
+          ])
+        ])
       : _vm._e(),
     _vm._v(" "),
     _c("div", { staticClass: "tablenav top" }, [
@@ -25442,7 +25470,7 @@ var render = function() {
                 staticClass: "screen-reader-text",
                 attrs: { for: "bulk-action-selector-top" }
               },
-              [_vm._v("Select bulk action")]
+              [_vm._v(_vm._s(_vm.text.select_bulk_action))]
             ),
             _vm._v(" "),
             _c(
@@ -25475,7 +25503,7 @@ var render = function() {
               },
               [
                 _c("option", { attrs: { value: "-1" } }, [
-                  _vm._v("Bulk Actions")
+                  _vm._v(_vm._s(_vm.text.bulk_actions))
                 ]),
                 _vm._v(" "),
                 _vm._l(_vm.bulkActions, function(action) {
@@ -25499,7 +25527,7 @@ var render = function() {
                   }
                 }
               },
-              [_vm._v("Apply")]
+              [_vm._v(_vm._s(_vm.text.apply))]
             )
           ])
         : _vm._e(),
@@ -25508,7 +25536,7 @@ var render = function() {
       _vm._v(" "),
       _c("div", { staticClass: "tablenav-pages" }, [
         _c("span", { staticClass: "displaying-num" }, [
-          _vm._v(_vm._s(_vm.itemsTotal) + " items")
+          _vm._v(_vm._s(_vm.itemsTotal) + " " + _vm._s(_vm.text.items))
         ]),
         _vm._v(" "),
         _vm.hasPagination
@@ -25971,7 +25999,7 @@ var render = function() {
                 staticClass: "screen-reader-text",
                 attrs: { for: "bulk-action-selector-top" }
               },
-              [_vm._v("Select bulk action")]
+              [_vm._v(_vm._s(_vm.text.select_bulk_action))]
             ),
             _vm._v(" "),
             _c(
@@ -26004,7 +26032,7 @@ var render = function() {
               },
               [
                 _c("option", { attrs: { value: "-1" } }, [
-                  _vm._v("Bulk Actions")
+                  _vm._v(_vm._s(_vm.text.bulk_actions))
                 ]),
                 _vm._v(" "),
                 _vm._l(_vm.bulkActions, function(action) {
@@ -26035,7 +26063,7 @@ var render = function() {
       _vm._v(" "),
       _c("div", { staticClass: "tablenav-pages" }, [
         _c("span", { staticClass: "displaying-num" }, [
-          _vm._v(_vm._s(_vm.itemsTotal) + " items")
+          _vm._v(_vm._s(_vm.itemsTotal) + " " + _vm._s(_vm.text.items))
         ]),
         _vm._v(" "),
         _vm.hasPagination
@@ -26170,16 +26198,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "table-loader-center" }, [
-      _c("div", { staticClass: "table-loader" }, [_vm._v("Loading")])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
