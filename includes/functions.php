@@ -979,6 +979,28 @@ function dokan_edit_product_url( $product ) {
         );
     }
 
+    switch ( $product->get_type() ) {
+        case 'booking':
+            $url = add_query_arg(
+                [
+                    'product_id' => $product->get_id(),
+                    'action'     => 'edit',
+                ],
+                dokan_get_navigation_url( 'booking' ) . '/edit/'
+            );
+            break;
+
+        case 'auction':
+            $url = add_query_arg(
+                [
+                    'product_id' => $product->get_id(),
+                    'action'     => 'edit',
+                ],
+                dokan_get_navigation_url( 'auction' )
+            );
+            break;
+    }
+
     return apply_filters( 'dokan_get_edit_product_url', $url, $product );
 }
 
