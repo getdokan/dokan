@@ -14,6 +14,9 @@
                     $store_info        = dokan_get_store_info( $seller->ID );
                     $store_address     = dokan_get_seller_short_address( $seller->ID );
                     $store_banner_url  = $store_banner_id ? wp_get_attachment_image_src( $store_banner_id, $image_size ) : DOKAN_PLUGIN_ASSEST . '/images/default-store-banner.png';
+                    
+                    $show_store_open_close    = dokan_get_option( 'store_open_close', 'dokan_appearance', 'on' );
+                    $dokan_store_time_enabled = isset( $store_info['dokan_store_time_enabled'] ) ? $store_info['dokan_store_time_enabled'] : '';
                     ?>
 
                     <li class="dokan-single-seller woocommerce coloum-<?php echo esc_attr( $per_row ); ?> <?php echo ( ! $store_banner_id ) ? 'no-banner-img' : ''; ?>">
@@ -76,6 +79,13 @@
                                     <img src="<?php echo esc_url( $vendor->get_avatar() ) ?>"
                                     alt="<?php echo esc_attr( $vendor->get_shop_name() ) ?>"
                                     size="150">
+                                    <?php if ( 'on' === $show_store_open_close && 'yes' === $dokan_store_time_enabled ) : ?>
+                                        <?php if ( dokan_is_store_open( $seller->ID ) ) { ?>
+                                            <span class="dokan-store-is-open-close-status dokan-store-is-open-status" title="<?php esc_attr_e( 'Store is Open', 'dokan-lite' );?>"></span>
+                                        <?php } else { ?>
+                                            <span class="dokan-store-is-open-close-status dokan-store-is-closed-status" title="<?php esc_attr_e( 'Store is Closed', 'dokan-lite' );?>"></span>
+                                        <?php } ?>
+                                    <?php endif ?>
                                 </div>
                                 <a href="<?php echo esc_url( $store_url ); ?>" title="<?php esc_attr_e( 'Visit Store', 'dokan-lite' );?>">
                                     <span class="dashicons dashicons-arrow-right-alt2 dokan-btn-theme dokan-btn-round"></span>
