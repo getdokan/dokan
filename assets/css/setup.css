@@ -183,3 +183,9 @@
   -webkit-order: 3;
   order: 3;
 }
+// fixed logo issue on phone
+@media only screen and (max-width: 600px) {
+    #wc-logo img {
+        width: 100%;
+    }
+}
