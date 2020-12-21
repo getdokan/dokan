@@ -123,7 +123,7 @@ class SetupWizard extends DokanSetupWizard {
         </head>
         <body class="wc-setup wp-core-ui">
             <?php if ( ! empty( $this->custom_logo ) ) { ?>
-                <h1 id="wc-logo"><a href="<?php echo esc_url( home_url() ) ?>"><img src="<?php echo esc_url( $this->custom_logo ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" style="width : 100%;" /></a></h1>
+                <h1 id="wc-logo"><a href="<?php echo esc_url( home_url() ) ?>"><img src="<?php echo esc_url( $this->custom_logo ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" /></a></h1>
             <?php } else {
                 echo '<h1 id="wc-logo">' . esc_attr( get_bloginfo( 'name' ) ) . '</h1>';
             }
