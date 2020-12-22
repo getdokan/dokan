@@ -13,8 +13,12 @@
             </div>
 
             <div class="dokan-settings-wrap">
-                <h2 class="nav-tab-wrapper">
-                    <input type="text" class="dokan-admin-search-settings" placeholder="Search e.g. vendor" @keypress.enter="searchSettings" @input="validateBlankSearch">
+                <div class="nav-tab-wrapper">
+                    <div class="search-box">
+                        <input type="text" class="dokan-admin-search-settings" placeholder="Search e.g. vendor" @input="searchInSettings" ref="searchInSettings" v-model="searchText">
+
+                        <span class="dashicons dashicons-no-alt" @click.prevent="clearSearch" v-if="'' !== searchText"></span>
+                    </div>
 
                     <template v-for="section in settingSections">
                         <a
@@ -25,7 +29,7 @@
                             <span class="dashicons" :class="section.icon"></span> {{ section.title }}
                         </a>
                     </template>
-                </h2>
+                </div>
 
                 <div class="metabox-holder">
                     <template v-for="(fields, index) in settingFields" v-if="isLoaded">
@@ -103,7 +107,9 @@
                 settingValues: {},
                 requiredFields: [],
                 errors: [],
-                hasPro: dokan.hasPro ? true : false
+                hasPro: dokan.hasPro ? true : false,
+                searchText: '',
+                awaitingSearch: false,
             }
         },
 
@@ -323,29 +329,41 @@
                 this.showLoading = ! this.showLoading;
             },
 
-            validateBlankSearch(input) {
-                let searchText = input.target.value.toLowerCase();
+            clearSearch() {
+                this.searchText = '';
+
+                this.validateBlankSearch();
+            },
+
+            validateBlankSearch() {
+                let searchText = this.searchText.toLowerCase();
 
                 if ( '' === searchText ) {
                     this.settingSections = dokan.settings_sections;
-
-                    console.log(this.settingSections);
-
                     this.settingFields   = dokan.settings_fields;
-
                     return false;
                 }
 
                 return true;
             },
 
-            searchSettings(input) {
-                let searchText = input.target.value.toLowerCase();
-
-                if ( ! this.validateBlankSearch( input ) ) {
+            searchInSettings(input) {
+                if ( ! this.validateBlankSearch() ) {
                     return;
                 }
 
+                if (!this.awaitingSearch) {
+                    setTimeout(() => {
+                        let searchText = this.$refs.searchInSettings.value.toLowerCase();
+                        this.doSearch(searchText);
+                        this.awaitingSearch = false;
+                    }, 1000);
+                }
+
+                this.awaitingSearch = true;
+            },
+
+            doSearch(searchText) {
                 var self = this;
                 let settingFields = {};
                 let filteredSettingSections = [];
@@ -387,7 +405,7 @@
 
                 self.settingFields = settingFields;
                 self.settingSections = settingSections;
-            },
+            }
         },
 
         created() {
@@ -452,7 +470,7 @@
             }
         }
 
-        h2.nav-tab-wrapper {
+        div.nav-tab-wrapper {
             flex: 1;
             border-bottom: none;
             padding: 0;
@@ -575,17 +593,34 @@
             }
          }
 
-        .dokan-admin-search-settings {
-            border: 1px solid #ddd;
-            border-radius: 0px;
-            height: 48px;
-            display: block;
-            width: 100%;
-            border-left: 0;
-            border-top: 0;
-            padding: 0 15px;
-            background: #eee;
-            font-weight: 400;
+        .search-box {
+            position: relative;
+
+            span.dashicons.dashicons-no-alt {
+                position: absolute;
+                top: 13px;
+                right: 0;
+                color: #ff0000;
+                z-index: 999;
+                cursor: pointer;
+            }
+
+            .dokan-admin-search-settings {
+                border: 1px solid #ddd;
+                border-radius: 0px;
+                height: 48px;
+                display: block;
+                width: 100%;
+                border-left: 0;
+                border-top: 0;
+                padding: 0 15px;
+                background: #eee;
+                font-weight: 400;
+            }
+
+            input[type="text"]:focus {
+                border-color: transparent;
+            }
         }
     }
 
