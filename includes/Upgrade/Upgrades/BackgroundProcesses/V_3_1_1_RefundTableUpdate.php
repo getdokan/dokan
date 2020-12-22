@@ -54,7 +54,7 @@ class V_3_1_1_RefundTableUpdate extends DokanBackgroundProcesses {
         $columns = [ 'item_totals', 'item_tax_totals' ];
 
         foreach ( $columns as $column ) {
-            $wpdb->query( "ALTER TABLE `{$wpdb->prefix}dokan_refund` MODIFY COLUMN `{$column}` TEXT" );
+            $wpdb->query( $wpdb->prepare( 'ALTER TABLE %s MODIFY COLUMN %s TEXT', $table_name, $column ) );
         }
 
         return [
