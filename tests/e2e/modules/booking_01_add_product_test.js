@@ -1,4 +1,4 @@
-Feature('Booking Product module');
+Feature('modules/booking Product module');
 
 Scenario('Vendor add booking product', ({ I }) => {
     I.loginAsVendor();

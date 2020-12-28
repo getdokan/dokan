@@ -1,14 +1,11 @@
-Feature('booking_02_customer module');
+Feature('mdules/booking_02_customer module');
 
 Scenario('Customer book product', ({ I }) => {
     I.loginAsCustomer();
         I.amOnPage('/shop/');
         I.selectOption('//select[@name="orderby"]','Sort by latest');
-        I.click('//main[@id="main"]/ul/li/a/img');
-        // I.moveMouseOver('//td/a');
-        // I.wait(10);
+        I.click('//main[@id="main"]/ul/li/a/img')
         I.click('//td/a');
-        // I.wait(10);
         I.click('#wc-bookings-form-start-time');
         I.click('//select/option[2]');
         I.click('#wc-bookings-form-end-time');

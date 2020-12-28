@@ -16,7 +16,7 @@ module.exports = function() {
       this.amOnPage('/wp-admin');
       //this.click('Log in');
       this.fillField('#user_login', 'admin');
-      this.fillField('#user_pass', 'admin');
+      this.fillField('#user_pass', '!!@@1122qq');
       this.click('Log In');
     },
     loginAsVendor: function () {
@@ -34,9 +34,8 @@ module.exports = function() {
         this.click('login');
     },
     loginAsCustomer: function () {
-      this.amOnPage('/');
-        this.click('Log in');
-        this.fillField('username', 'customer');
+      this.amOnPage('/my-account/');
+        this.fillField('username', 'customer-one');
         this.fillField('password', '123456');
         this.click('login');
     },
@@ -188,6 +187,29 @@ module.exports = function() {
           this.wait(2);
           this.fillField('#billing_cpf', '122323');
           this.wait(2);
+    },
+    productAddonForCategory: function (){
+      this. $this;
+      this.click('Settings');
+    	this.click('Addons');
+    	this.click('Create New addon');
+    	this.wait(3);
+    	this.fillField('#addon-reference','Addon2-Vendor1');
+      this.fillField('addon-priority','10');
+      this.click({css : '.select2-selection__rendered'});
+      this.wait(5);
+      this.selectOption('/html/body/span/span/span/ul/li[2]/strong','Uncategorized');
+      this.click('Add Field');
+    	this.wait(2);
+      this.CheckOption('//*[@id="wc-pao-addon-content-type-0"]','Checkboxes');
+      this.fillField('product_addon_option_label[0][]','Mashroom');
+      this.checkOption('#wc-pao-addon-content-title-format','Heading');
+      this.checkOption('#wc-pao-addon-description-enable-0');
+      this.fillField('#wc-pao-addon-description-0','Mashroom with cheese');
+      this.fillField('product_addon_option_label[0][]','Mashroom');
+      this.checkOption('.wc-pao-addon-option-price-type','percentage_based');
+      this.fillField('product_addon_option_price[0][]','5');
+      this.click('Publish');
     },
   });
 }
