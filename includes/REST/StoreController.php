@@ -245,6 +245,7 @@ class StoreController extends WP_REST_Controller {
             unset( $args['search'] );
             unset( $args['search_columns'] );
 
+            $args['status']     = [ 'approved', 'pending' ];
             $args['meta_query'] = [
                 [
                     'key'     => 'dokan_store_name',
