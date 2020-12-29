@@ -290,8 +290,8 @@ final class WeDevs_Dokan {
      * @return void
      */
     public function includes() {
-        require_once DOKAN_DIR . '/depricated/depricated-functions.php';
-        require_once DOKAN_DIR . '/depricated/depricated-hooks.php';
+        require_once DOKAN_DIR . '/deprecated/deprecated-functions.php';
+        require_once DOKAN_DIR . '/deprecated/deprecated-hooks.php';
         require_once DOKAN_INC_DIR . '/functions.php';
         require_once DOKAN_INC_DIR . '/Order/functions.php';
         require_once DOKAN_INC_DIR . '/Product/functions.php';
@@ -300,7 +300,7 @@ final class WeDevs_Dokan {
         require_once DOKAN_INC_DIR . '/wc-functions.php';
 
         require_once DOKAN_INC_DIR . '/wc-template.php';
-        require_once DOKAN_DIR . '/depricated/depricated-classes.php';
+        require_once DOKAN_DIR . '/deprecated/deprecated-classes.php';
 
         if ( is_admin() ) {
             require_once DOKAN_INC_DIR . '/Admin/functions.php';
