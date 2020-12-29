@@ -23,7 +23,11 @@ defined( 'ABSPATH' ) || exit; ?>
     <?php do_action( 'dokan_before_store_lists_filter_left', $stores ); ?>
     <div class="left">
         <p class="item store-count">
-            <?php printf( '%1$s: %2$d', __( 'Total store showing', 'dokan-lite' ), $number_of_store ); ?>
+            <?php if ( $number_of_store > 1 ) { ?>
+                <?php printf( '%1$s: %2$d', __( 'Total stores showing', 'dokan-lite' ), $number_of_store ); ?>
+            <?php } else { ?>
+                <?php printf( '%1$s: %2$d', __( 'Total store showing', 'dokan-lite' ), $number_of_store ); ?>
+            <?php } ?>
         </p>
     </div>
 
