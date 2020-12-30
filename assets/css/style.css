@@ -5275,6 +5275,7 @@ div.media-sidebar a.edit-attachment {
   .dokan-dashboard .dokan-dashboard-content {
     float: none;
     width: 100%;
+    padding: 20px;
   }
   .dokan-dashboard .dokan-dash-sidebar article,
   .dokan-dashboard .dokan-dashboard-content article {
