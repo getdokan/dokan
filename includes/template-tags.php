@@ -552,7 +552,14 @@ if ( ! function_exists( 'dokan_store_category_menu' ) ) :
         $all_terms = [];
         foreach ( $product_ids as $product_id ) {
             $terms = get_the_terms( $product_id, 'product_cat' );
-            array_push( $all_terms, $terms[0] );
+
+            if ( count( $terms ) > 1 ) {
+                foreach ( $terms as $term ) {
+                    array_push( $all_terms, $term );
+                }
+            } else {
+               array_push( $all_terms, $terms[0] ); 
+            }
 		}
         // hold unique categoreis
         $categories = [];
