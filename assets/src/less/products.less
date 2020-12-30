@@ -318,6 +318,13 @@
     .featured-image {
       width: 35%;
     }
+
+    @media (max-width: 430px) {
+      .dokan-product-meta,
+      .featured-image {
+        width: 100%;
+      }
+    }
   }
 
   .dokan-product-short-description {
@@ -767,6 +774,12 @@
     .content-half-part {
       &.virtual-checkbox {
         padding-left: 10px;
+      }
+
+      @media (max-width: 430px) {
+        &.virtual-checkbox {
+          padding-left: 0;
+        }
       }
     }
   }
