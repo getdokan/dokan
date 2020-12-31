@@ -104,7 +104,9 @@
 
             <div class="right-side">
                 <postbox :title="__( 'Overview', 'dokan-lite' )" class="overview-chart">
-                    <chart :data="report" v-if="report !== null"></chart>
+                    <div v-if="report !== null">
+                        <chart :data="report"></chart>
+                    </div>
                     <div class="loading" v-else>
                         <loading></loading>
                     </div>
