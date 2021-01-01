@@ -251,7 +251,7 @@ function dokan_product_output_variations() {
             <div class="dokan-variations-container wc-metaboxes" data-attributes="
             <?php
                 // esc_attr does not double encode - htmlspecialchars does
-                echo esc_attr( htmlspecialchars( json_encode( $attributes ) ) );
+                echo esc_attr( htmlspecialchars( wp_json_encode( $attributes ) ) );
             ?>
             " data-total="<?php echo esc_attr( $variations_count ); ?>" data-total_pages="<?php echo esc_attr( $variations_total_pages ); ?>" data-page="1" data-edited="false">
             </div>
@@ -442,7 +442,7 @@ function dokan_product_get_row_action( $post ) {
                 ), 'dokan-delete-product'
             ),
             'class' => 'delete',
-            'other' => 'onclick="return confirm( \'Are you sure?\' );"',
+            'other' => 'onclick="return confirm( \'' . __( 'Are you sure?', 'dokan-lite' ) . '\' );"',
         );
     }
 
