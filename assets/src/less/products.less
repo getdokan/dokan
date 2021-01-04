@@ -327,6 +327,13 @@
     }
   }
 
+  @media (max-width: 430px) {
+    .dokan-form-top-area {
+      display: flex;
+      flex-direction: column-reverse;
+    }
+  }
+
   .dokan-product-short-description {
     margin-bottom: 20px;
     margin-top: 10px;
@@ -869,6 +876,19 @@
 
     .container-image-and-badge {
       position: inherit;
+    }
+
+    @media (max-width: 430px) {
+      a.close {
+        display: block !important;
+        height: 80px !important;
+        width: 80px !important;
+        top: 0;
+        right: 0;
+        padding: 0;
+        margin: 0;
+        font-size: 50px;
+      }
     }
   }
 

@@ -435,11 +435,12 @@ select.dokan-form-control {
   .dokan-w4,
   .dokan-w5,
   .dokan-w6,
+  .dokan-w7,
   .dokan-w8,
   .dokan-w9,
   .dokan-w10,
   .dokan-w11 {
-    width: 100%;
+    width: 100% !important;
   }
 }
 .woocommerce .form-row.has-error {
@@ -2779,6 +2780,12 @@ div.media-sidebar a.edit-attachment {
     width: 100%;
   }
 }
+@media (max-width: 430px) {
+  .product-edit-new-container .dokan-form-top-area {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+}
 .product-edit-new-container .dokan-product-short-description {
   margin-bottom: 20px;
   margin-top: 10px;
@@ -3203,6 +3210,18 @@ div.media-sidebar a.edit-attachment {
 }
 .product-edit-container .dokan-feat-image-upload .container-image-and-badge {
   position: inherit;
+}
+@media (max-width: 430px) {
+  .product-edit-container .dokan-feat-image-upload a.close {
+    display: block !important;
+    height: 80px !important;
+    width: 80px !important;
+    top: 0;
+    right: 0;
+    padding: 0;
+    margin: 0;
+    font-size: 50px;
+  }
 }
 .product-edit-container .dokan-list-category-box {
   border: 1px solid #ccc;
