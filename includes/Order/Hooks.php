@@ -525,6 +525,8 @@ class Hooks {
     public function update_amount_in_sync_tables( \WC_Order $order ) {
         global $wpdb;
 
+        $order->add_order_note( __( 'Manually updated order amount by admin', 'dokan-lite' ) );
+
         //update amount in dokan order table
         $wpdb->update(
             $wpdb->dokan_orders,
