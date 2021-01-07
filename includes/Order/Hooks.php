@@ -507,7 +507,7 @@ class Hooks {
                 //no need to update amount in dokan orders table because the action will call again. and this time it will be a single order
             }
         } else {
-            $this->update_amount_in_dokan_orders_table( $order );
+            $this->update_amount_in_sync_tables( $order );
         }
 
         do_action( 'dokan_updated_order_data', $order );
@@ -522,9 +522,10 @@ class Hooks {
      *
      * @return void
      */
-    public function update_amount_in_dokan_orders_table( \WC_Order $order ) {
+    public function update_amount_in_sync_tables( \WC_Order $order ) {
         global $wpdb;
 
+        //update amount in dokan order table
         $wpdb->update(
             $wpdb->dokan_orders,
             [
@@ -534,6 +535,19 @@ class Hooks {
             [ 'order_id' => $order->get_id() ],
             [ '%f', '%f' ],
             [ '%d' ]
+        );
+
+        //update in vendor balance
+        $wpdb->update(
+            $wpdb->dokan_vendor_balance,
+            [ 'debit' => dokan()->commission->calculate_commission_by_order( $order ) ],
+            [
+                'vendor_id' => dokan_get_seller_id_by_order( $order->get_id() ),
+                'trn_id'    => $order->get_id(),
+                'trn_type'  => 'dokan_orders',
+            ],
+            [ '%f' ],
+            [ '%d', '%d' ]
         );
     }
 }
