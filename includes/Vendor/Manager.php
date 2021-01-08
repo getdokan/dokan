@@ -49,7 +49,7 @@ class Manager {
             'offset'     => 0,
             'orderby'    => 'registered',
             'order'      => 'ASC',
-            'status'     => 'approved',
+            'status'     => [ 'approved', 'pending' ],
             'featured'   => '', // yes or no
             'meta_query' => [],
         ];
