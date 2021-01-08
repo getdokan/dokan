@@ -443,7 +443,7 @@ function dokan_product_get_row_action( $post ) {
             ),
             'class' => 'delete',
             'other' => 'onclick="return confirm( \'' . __( 'Are you sure?', 'dokan-lite' ) . '\' );"',
-        );
+        ];
     }
 
     if ( current_user_can( 'dokan_view_product' ) && $post->post_status !== 'pending' ) {
