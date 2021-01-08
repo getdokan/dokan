@@ -1144,3 +1144,29 @@ function dokan_store_category_delete_transient( $post_id ) {
 
 add_action( 'delete_post', 'dokan_store_category_delete_transient' );
 add_action( 'save_post', 'dokan_store_category_delete_transient' );
+
+/**
+ * Add vendor email on customers note mail replay to
+ *
+ * @param string $headers
+ * @param string $id
+ * @param object $order
+ *
+ * @return string $headers
+ */
+function dokan_add_reply_to_vendor_email_on_wc_customer_note_mail( $headers = '', $id = '', $order ) {
+    if ( 'customer_note' === $id ) {
+        foreach ( $order->get_items( 'line_item' ) as $item ) {
+            $product_id  = $item['product_id'];
+            $author      = get_post_field( 'post_author', $product_id );
+            $author_data = get_userdata( absint( $author ) );
+            $user_email  = $author_data->user_email;
+
+            $headers .= "Reply-to: <$user_email>\r\n";
+        }
+    }
+
+    return $headers;
+}
+
+add_filter( 'woocommerce_email_headers', 'dokan_add_reply_to_vendor_email_on_wc_customer_note_mail', 10, 3 );
