@@ -170,11 +170,11 @@ class Settings {
         }
 
         //settings fields are called every time. so we kept it in cache for a small amount of time. to avoid error and better performance.
-        $settings_fields = get_transient( 'get_settings_fields' );
+        $settings_fields = get_transient( 'get_dokan_settings_fields' );
 
         if ( ! $settings_fields ) {
             $settings_fields = $this->get_settings_fields();
-            set_transient( 'get_settings_fields', $settings_fields, 90 );
+            set_transient( 'get_dokan_settings_fields', $settings_fields, 90 );
         }
 
         // Iterate over registered fields and see if we can find proper callback
