@@ -585,10 +585,14 @@ if ( ! function_exists( 'dokan_store_category_menu' ) ) :
         foreach ( $product_ids as $product_id ) {
             $terms = get_the_terms( $product_id, 'product_cat' );
 
-            foreach ( $terms as $term ) {
-                array_push( $all_terms, $term );
+            //allow when there is terms and do not have any wp_errors
+            if ( $terms && ! is_wp_error( $terms ) ) {
+                foreach ( $terms as $term ) {
+                    array_push( $all_terms, $term );
+                }
             }
 		}
+        
         // hold unique categoreis
         $categories = [];
         foreach ( $all_terms as $term ) {
