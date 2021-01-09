@@ -12,6 +12,15 @@ use WeDevs\Dokan\Abstracts\DokanBackgroundProcesses;
 class V_3_1_1_RefundTableUpdate extends DokanBackgroundProcesses {
 
     /**
+     * Action
+     *
+     * @since 3.1.1
+     *
+     * @var string
+     */
+    protected $action = 'dokan_upgrade_bp_3_1_1';
+
+    /**
      * Perform updates
      *
      * @param mixed $item
@@ -20,46 +29,49 @@ class V_3_1_1_RefundTableUpdate extends DokanBackgroundProcesses {
      *
      * @return mixed
      */
-    public function task( $item ) {
-        if ( empty( $item ) ) {
+    public function task( $db_data ) {
+        if ( empty( $db_data ) ) {
             return false;
         }
 
-        if ( 'dokan_refund_table_updated_tax_and_item_total_id' === $item['updating'] ) {
-            return $this->update_dokan_refund_table( $item['paged'] );
+        global $wpdb;
+
+        require_once ABSPATH . 'wp-admin/install-helper.php';
+
+        if ( isset( $db_data['fields'] ) && is_array( $db_data['fields'] ) ) {
+
+            // get required data from input array
+            $table_name     = $wpdb->prefix . $db_data['table'];
+            $col_type       = $db_data['type'];
+            $null           = $db_data['null'];
+            $is_null        = $null === 'NULL' ? 'YES' : 'NO';
+            $default_value  = $db_data['default'];
+
+            foreach ( $db_data['fields'] as $field ) {
+                // Check the column.
+                if ( ! check_column( $table_name, $field, $col_type ) ) {
+                    $query = "ALTER TABLE $table_name MODIFY COLUMN $field $col_type";
+
+                    // set null
+                    if ( ! empty( $null ) ) {
+                        $query .= " $null";
+                    }
+
+                    // set default
+                    if ( ! empty( $default_value ) ) {
+                        $query .= " DEFAULT '$default_value'";
+                    }
+
+                    // update db field
+                    $q     = $wpdb->query( $query );
+
+                    if ( $wpdb->last_error ) {
+                        dokan_log( __( 'Upgrading db fields error: ', 'dokan-lite' ) . __FILE__ . ' ' . __LINE__ . ' ' . $wpdb->last_error );
+                    }
+                }
+            }
         }
 
         return false;
-    }
-
-    /**
-     * Update dokan refund table fields item_totals
-     * and item_tax_totals
-     *
-     * @param $paged
-     *
-     * @since DOKAN_LITE_SINCE
-     *
-     * @return array|boolean
-     */
-    private function update_dokan_refund_table( $paged ) {
-        global $wpdb;
-
-        $table_name = $wpdb->prefix . 'dokan_refund';
-
-        if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) ) !== $table_name ) {
-            return;
-        }
-
-        $columns = [ 'item_totals', 'item_tax_totals' ];
-
-        foreach ( $columns as $column ) {
-            $wpdb->query( $wpdb->prepare( 'ALTER TABLE %s MODIFY COLUMN %s TEXT', $table_name, $column ) );
-        }
-
-        return [
-            'updating' => 'dokan_refund_table_updated_tax_and_item_total_id',
-            'paged'    => 0,
-        ];
     }
 }

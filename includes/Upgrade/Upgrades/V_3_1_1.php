@@ -12,14 +12,31 @@ class V_3_1_1 extends DokanUpgrader {
      *
      * @return void
      */
-    public static function update_dokan_refund_table_tax_and_item_total() {
+    public static function update_dokan_refund_table() {
         $processor = new V_3_1_1_RefundTableUpdate();
 
-        $args = [
-            'updating' => 'dokan_refund_table_updated_tax_and_item_total_id',
-            'paged'    => 0,
+        $tables = [
+            [
+                'table'     => 'dokan_refund',
+                'fields'    => [ 'item_totals' ],
+                'type'      => 'text',
+                'null'      => 'NULL',
+                'default'   => '',
+            ],
+
+            [
+                'table'     => 'dokan_refund',
+                'fields'    => [ 'item_tax_totals' ],
+                'type'      => 'text',
+                'null'      => 'NULL',
+                'default'   => '',
+            ],
         ];
 
-        $processor->push_to_queue( $args )->dispatch_process();
+        foreach ( $tables as $row ) {
+            $processor->push_to_queue( $row );
+        }
+
+        $processor->dispatch_process();
     }
 }
