@@ -35,7 +35,7 @@
                             <li class="vendor">
                                 <div class="dashicons dashicons-id"></div>
                                 <router-link :to="hasPro ? {name: 'Vendors'} : ''">
-                                    <strong>{{ sprintf( __( '%s Vendor', 'dokan-lite' ), overview.vendors.this_month ) }}</strong>
+                                    <strong>{{ overview.vendors.this_month }} {{ __( 'Vendor', 'dokan-lite' ) }}</strong>
                                     <div class="details">
                                         {{ __( 'signup this month', 'dokan-lite' ) }} <span :class="overview.vendors.class">{{ overview.vendors.parcent }}</span>
                                     </div>
@@ -44,14 +44,14 @@
                             <li class="approval">
                                 <div class="dashicons dashicons-businessman"></div>
                                 <router-link :to="hasPro ? {name: 'Vendors', query: {status: 'pending'} } : ''">
-                                    <strong>{{ sprintf( __( '%s Vendor', 'dokan-lite' ), overview.vendors.inactive ) }}</strong>
+                                    <strong>{{ overview.vendors.inactive }} {{ __( 'Vendor', 'dokan-lite' ) }}</strong>
                                     <div class="details">{{ __( 'awaiting approval', 'dokan-lite' ) }}</div>
                                 </router-link>
                             </li>
                             <li class="product">
                                 <div class="dashicons dashicons-cart"></div>
                                 <a href="#">
-                                    <strong>{{ sprintf( __( '%s Products', 'dokan-lite' ), overview.products.this_month ) }}</strong>
+                                    <strong>{{ overview.products.this_month }} {{ __( 'Products', 'dokan-lite' ) }}</strong>
                                     <div class="details">
                                         {{ __( 'created this month', 'dokan-lite' ) }} <span :class="overview.products.class">{{ overview.products.parcent }}</span>
                                     </div>
@@ -60,7 +60,7 @@
                             <li class="withdraw">
                                 <div class="dashicons dashicons-money"></div>
                                 <router-link :to="{name: 'Withdraw', query: {status: 'pending'}}">
-                                    <strong>{{ sprintf( __( '%s Withdrawals', 'dokan-lite' ), overview.withdraw.pending ) }}</strong>
+                                    <strong>{{ overview.withdraw.pending }} {{ __( 'Withdrawals', 'dokan-lite' ) }}</strong>
                                     <div class="details">{{ __( 'awaiting approval', 'dokan-lite' ) }}</div>
                                 </router-link>
                             </li>
@@ -104,7 +104,9 @@
 
             <div class="right-side">
                 <postbox :title="__( 'Overview', 'dokan-lite' )" class="overview-chart">
-                    <chart :data="report" v-if="report !== null"></chart>
+                    <div v-if="report !== null">
+                        <chart :data="report"></chart>
+                    </div>
                     <div class="loading" v-else>
                         <loading></loading>
                     </div>
