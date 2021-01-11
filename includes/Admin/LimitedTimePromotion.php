@@ -39,12 +39,13 @@ class LimitedTimePromotion {
 
         $notices = [
             [
-                'key'        => 'holiday-2020',
-                'start_date' => '2020-12-22 09:00:00 EST',
-                'end_date'   => '2021-01-08 23:59:00 EST',
-                'title'      => 'Enjoy Up To 60% OFF on Dokan Pro.',
-                'content'    => 'Get Your Holiday Deals Now.',
-                'link'       => 'https://wedevs.com/dokan/pricing?utm_medium=text&utm_source=wordpress-dokan-holidays',
+                'pro'        => true,
+                'key'        => 'dokan-pro-changes',
+                'start_date' => '2021-01-10 09:00:00 EST',
+                'end_date'   => '2021-02-28 23:59:00 EST',
+                'title'      => 'Dokan Pro Upcoming Changes',
+                'content'    => '<p><b>PayPal Adaptive Payment</b> module will be shutdown from Dokan Pro <code>v3.1.5</code></p><p><b>Vendor Subscription Product</b> module will be renamed as <b>Product Subscription</b> starting from Dokan Pro <code>v3.1.5</code></p>',
+                'link'       => '',
             ],
         ];
 
@@ -71,12 +72,18 @@ class LimitedTimePromotion {
             return;
         }
 
+        if ( $notice['pro'] && ! dokan()->is_pro_exists() ) {
+            return;
+        }
+
         ?>
-        <div class="notice dokan-limited-time-promotional-notice">
+        <div class="notice notice-error dokan-limited-time-promotional-notice">
             <div class="content">
                 <h2><?php echo esc_html( $notice['title'] ); ?></h2>
-                <p><?php echo esc_html( $notice['content'] ); ?></p>
+                <p><?php echo wp_kses_post( $notice['content'] ); ?></p>
+                <?php if( ! empty( $notice['link'] ) ): ?>
                 <a href="<?php echo esc_url( $notice['link'] ); ?>" class="button button-primary promo-btn" target="_blank"><?php echo esc_html__( 'Get Deals &rarr;', 'dokan-lite' ); ?></a>
+                <?php endif ?>
             </div>
             <span class="prmotion-close-icon dashicons dashicons-no-alt" data-key="<?php echo esc_attr( $notice['key'] ); ?>"></span>
             <div class="clear"></div>
