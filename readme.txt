@@ -1,13 +1,13 @@
 === Dokan - Best WooCommerce Multivendor Marketplace Solution - Build Your Own Amazon, eBay, Etsy ===
 Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
-Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, product vendors, woocommerce vendor, commission rate, e-commerce, ebay, ecommerce, yith, yithemes
+Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce, yith, yithemes
 Requires at least: 4.4
 Tested up to: 5.6
 WC requires at least: 3.0
 WC tested up to: 4.8.0
 Requires PHP: 5.6
-Stable tag: 3.1.0
+Stable tag: 3.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -291,6 +291,24 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.1.1 ( January 11, 2021 ) =
+
+- **feat:** Added searching feature for Dokan admin settings
+- **new:** Added "Visit Vendor Dashboard" link to admin bar
+- **new:** Added current_datetime() compatible dokan functions for WordPress version < 5.3
+- **update:** Updated refund table item_totals and item_tax_totals fields via Dokan upgrader
+- **perf:** Optimized Dokan admin settings page to load setting page faster
+- **fix:** Added vendor search feature for disabled vendors
+- **fix:** Product discount showing wrong when a product that has a limited time discount and sets a schedule on the calendar on the frontend dashboard
+- **fix:** Fixed creating addon by vendor staff was not working for product
+- **fix:** Fixed coupons created by the vendor can not be modified
+- **fix:** Fixed admin dashboard wasn't loading due to use of sprintf for some translatable strings
+- **fix:** Fixed display issue for State and Country multi-select of Dokan vendor create modal
+- **fix:** Translation issue fixed on store listing page
+- **fix:** Store product category not showing properly
+- **fix:** Fixed missing text-domain on product listing delete confirmation alert
+- **fix:** Responsive dashboard product and order table
 
 = v3.1.0 ( December 20, 2020 ) =
 
