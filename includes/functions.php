@@ -3916,7 +3916,7 @@ function dokan_current_datetime() {
 }
 
 /**
- * Function dokan_wp_timezone() compatibility for wp version < 5.3
+ * Function wp_timezone() compatibility for wp version < 5.3
  *
  * @since 3.1.1
  *
@@ -3931,7 +3931,7 @@ function dokan_wp_timezone() {
 }
 
 /**
- * Function dokan_wp_timezone_string() compatibility for wp version < 5.3
+ * Function wp_timezone_string() compatibility for wp version < 5.3
  *
  * @since 3.1.1
  *
