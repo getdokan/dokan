@@ -212,7 +212,7 @@
                     } else {
                     ?>
                         <div class="dokan-dashboard-not-product-found">
-                            <i class="fa fa-cube"></i>
+                            <img src="<?php echo esc_url( plugins_url( 'assets/images/no-product-found.svg', DOKAN_FILE ) ); ?>" alt="dokan setup" class="no-product-found-icon">
                             <h2 class="dokan-blank-product-message">
                                 <?php esc_html_e( 'Ready to start selling something awesome?', 'dokan-lite' ); ?>
                             </h2>
