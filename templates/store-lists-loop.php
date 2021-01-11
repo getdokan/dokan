@@ -38,6 +38,14 @@
 
                                         <?php do_action( 'dokan_seller_listing_after_featured', $seller, $store_info ); ?>
                                     </div>
+                                    
+                                    <?php if ( 'on' === $show_store_open_close && 'yes' === $dokan_store_time_enabled ) : ?>
+                                        <?php if ( dokan_is_store_open( $seller->ID ) ) { ?>
+                                            <span class="dokan-store-is-open-close-status dokan-store-is-open-status" title="<?php esc_attr_e( 'Store is Open', 'dokan-lite' );?>"><?php esc_html_e( 'Open', 'dokan-lite' ); ?></span>
+                                        <?php } else { ?>
+                                            <span class="dokan-store-is-open-close-status dokan-store-is-closed-status" title="<?php esc_attr_e( 'Store is Closed', 'dokan-lite' );?>"><?php esc_html_e( 'Closed', 'dokan-lite' ); ?></span>
+                                        <?php } ?>
+                                    <?php endif ?>
 
                                     <div class="store-data">
                                         <h2><a href="<?php echo esc_attr( $store_url ); ?>"><?php echo esc_html( $store_name ); ?></a></h2>
@@ -79,13 +87,6 @@
                                     <img src="<?php echo esc_url( $vendor->get_avatar() ) ?>"
                                     alt="<?php echo esc_attr( $vendor->get_shop_name() ) ?>"
                                     size="150">
-                                    <?php if ( 'on' === $show_store_open_close && 'yes' === $dokan_store_time_enabled ) : ?>
-                                        <?php if ( dokan_is_store_open( $seller->ID ) ) { ?>
-                                            <span class="dokan-store-is-open-close-status dokan-store-is-open-status" title="<?php esc_attr_e( 'Store is Open', 'dokan-lite' );?>"></span>
-                                        <?php } else { ?>
-                                            <span class="dokan-store-is-open-close-status dokan-store-is-closed-status" title="<?php esc_attr_e( 'Store is Closed', 'dokan-lite' );?>"></span>
-                                        <?php } ?>
-                                    <?php endif ?>
                                 </div>
                                 <a href="<?php echo esc_url( $store_url ); ?>" title="<?php esc_attr_e( 'Visit Store', 'dokan-lite' );?>">
                                     <span class="dashicons dashicons-arrow-right-alt2 dokan-btn-theme dokan-btn-round"></span>
