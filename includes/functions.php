@@ -3899,3 +3899,96 @@ function dokan_is_vendor_info_hidden( $option = null ) {
 
     return ! empty( $options[ $option ] );
 }
+
+/**
+ * Function current_datetime() compatibility for wp version < 5.3
+ *
+ * @since 3.1.1
+ * @throws Exception
+ * @return DateTimeImmutable
+ */
+function dokan_current_datetime() {
+    if ( function_exists( 'current_datetime' ) ) {
+        return current_datetime();
+    }
+
+    return new DateTimeImmutable( 'now', dokan_wp_timezone() );
+}
+
+/**
+ * Function wp_timezone() compatibility for wp version < 5.3
+ *
+ * @since 3.1.1
+ *
+ * @return DateTimeZone
+ */
+function dokan_wp_timezone() {
+    if ( function_exists( 'wp_timezone' ) ) {
+        return wp_timezone();
+    }
+
+    return new DateTimeZone( dokan_wp_timezone_string() );
+}
+
+/**
+ * Function wp_timezone_string() compatibility for wp version < 5.3
+ *
+ * @since 3.1.1
+ *
+ * @return string
+ */
+function dokan_wp_timezone_string() {
+    if ( function_exists( 'wp_timezone_string' ) ) {
+        return wp_timezone_string();
+    }
+
+    $timezone_string = get_option( 'timezone_string' );
+
+    if ( $timezone_string ) {
+        return $timezone_string;
+    }
+
+    $offset  = (float) get_option( 'gmt_offset' );
+    $hours   = (int) $offset;
+    $minutes = ( $offset - $hours );
+
+    $sign      = ( $offset < 0 ) ? '-' : '+';
+    $abs_hour  = abs( $hours );
+    $abs_mins  = abs( $minutes * 60 );
+    $tz_offset = sprintf( '%s%02d:%02d', $sign, $abs_hour, $abs_mins );
+
+    return $tz_offset;
+}
+
+/**
+ * Get a formatted date from WordPress format
+ *
+ * @param string|timestamp $date the date string or timestamp
+ * @param string|bool $format date format string or false for default WordPress date
+ * @since 3.1.1
+ *
+ * @throws Exception
+ * @return string|false The date, translated if locale specifies it. False on invalid timestamp input.
+ */
+function dokan_format_date( $date, $format = false ) {
+    // if date is empty, get current datetime timestamp
+    if ( empty( $date ) ) {
+        $date = dokan_current_datetime()->getTimestamp();
+    }
+
+    // if no format is specified, get default WordPress date format
+    if ( ! $format ) {
+        $format = wc_date_format();
+    }
+
+    // if date is not timestamp, convert it to timestamp
+    if ( ! is_numeric( $date ) ) {
+        $date = dokan_current_datetime()->modify( $date )->getTimestamp();
+    }
+
+    if ( function_exists( 'wp_date' ) ) {
+        return wp_date( $format, $date );
+    }
+
+    return date_i18n( $format, $date );
+}
