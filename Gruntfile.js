@@ -318,8 +318,8 @@ module.exports = function(grunt) {
     'clean',
     'copy',
     'compress',
-    'run:composerInstall',
-    'run:dumpautoload'
+    //'run:composerInstall',
+    //'run:dumpautoload'
   ]);
 
   grunt.registerTask('deploy', ['sftp:upload', 'sshexec:updateVersion']);
