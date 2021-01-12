@@ -213,6 +213,7 @@ class StoreController extends WP_REST_Controller {
         $args = [
             'number' => (int) $params['per_page'],
             'offset' => (int) ( $params['page'] - 1 ) * $params['per_page'],
+            'status' => 'all'
         ];
 
         if ( ! empty( $params['search'] ) ) {
