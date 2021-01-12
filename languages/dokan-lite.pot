@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 3.1.1\n"
+"Project-Id-Version: Dokan 3.1.2\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2021-01-11 10:56:21+00:00\n"
+"POT-Creation-Date: 2021-01-12 12:20:58+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -77,12 +77,12 @@ msgid "Learn More &rarr;"
 msgstr ""
 
 #: includes/Abstracts/DokanPromotion.php:186
-#: includes/Admin/LimitedTimePromotion.php:164
+#: includes/Admin/LimitedTimePromotion.php:171
 msgid "You have no permission to do that"
 msgstr ""
 
 #: includes/Abstracts/DokanPromotion.php:190
-#: includes/Admin/LimitedTimePromotion.php:168 includes/Admin/Settings.php:72
+#: includes/Admin/LimitedTimePromotion.php:175 includes/Admin/Settings.php:72
 #: includes/Admin/Settings.php:100
 msgid "Invalid nonce"
 msgstr ""
@@ -179,7 +179,7 @@ msgstr ""
 msgid "Toggle Sub-orders"
 msgstr ""
 
-#: includes/Admin/LimitedTimePromotion.php:79
+#: includes/Admin/LimitedTimePromotion.php:85
 msgid "Get Deals &rarr;"
 msgstr ""
 
@@ -1182,7 +1182,7 @@ msgstr ""
 msgid "Something went wrong!"
 msgstr ""
 
-#: includes/Ajax.php:350 includes/REST/StoreController.php:809
+#: includes/Ajax.php:350 includes/REST/StoreController.php:810
 msgid "Email sent successfully!"
 msgstr ""
 
@@ -3784,36 +3784,36 @@ msgstr ""
 msgid "Status for the store object."
 msgstr ""
 
-#: includes/REST/StoreController.php:287 includes/REST/StoreController.php:358
-#: includes/REST/StoreController.php:516
+#: includes/REST/StoreController.php:288 includes/REST/StoreController.php:359
+#: includes/REST/StoreController.php:517
 msgid "No store found"
 msgstr ""
 
-#: includes/REST/StoreController.php:310 includes/REST/StoreController.php:834
+#: includes/REST/StoreController.php:311 includes/REST/StoreController.php:835
 msgid "No vendor found for updating status"
 msgstr ""
 
-#: includes/REST/StoreController.php:315
+#: includes/REST/StoreController.php:316
 msgid "Invalid user ID for reassignment."
 msgstr ""
 
-#: includes/REST/StoreController.php:534 includes/REST/StoreController.php:553
+#: includes/REST/StoreController.php:535 includes/REST/StoreController.php:554
 msgid "No reviews found"
 msgstr ""
 
-#: includes/REST/StoreController.php:738
+#: includes/REST/StoreController.php:739
 msgid "This email address is not valid"
 msgstr ""
 
-#: includes/REST/StoreController.php:781
+#: includes/REST/StoreController.php:782
 msgid "No vendor is found to be send an email."
 msgstr ""
 
-#: includes/REST/StoreController.php:828
+#: includes/REST/StoreController.php:829
 msgid "Status parameter must be active or inactive"
 msgstr ""
 
-#: includes/REST/StoreController.php:862
+#: includes/REST/StoreController.php:863
 msgid "No items found for bulk updating"
 msgstr ""
 
@@ -3941,11 +3941,11 @@ msgstr ""
 msgid "Upgrading db fields error: "
 msgstr ""
 
-#: includes/Vendor/Manager.php:182
+#: includes/Vendor/Manager.php:189
 msgid "Unable to create vendor"
 msgstr ""
 
-#: includes/Vendor/Manager.php:266
+#: includes/Vendor/Manager.php:273
 msgid "Email is not valid"
 msgstr ""
 

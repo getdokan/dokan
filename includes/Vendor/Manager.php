@@ -49,27 +49,34 @@ class Manager {
             'offset'     => 0,
             'orderby'    => 'registered',
             'order'      => 'ASC',
-            'status'     => [ 'approved', 'pending' ],
+            'status'     => [ 'approved' ],
             'featured'   => '', // yes or no
             'meta_query' => [],
         ];
 
-        $args   = wp_parse_args( $args, $defaults );
-        $status = $args['status'];
+        $args = wp_parse_args( $args, $defaults );
 
-        // check if the user has permission to see pending vendors
-        if ( 'approved' != $args['status'] && current_user_can( 'manage_woocommerce' ) ) {
-            $status = $args['status'];
-        }
+        $status = (array) $args['status'];
 
-        if ( in_array( $status, [ 'approved', 'pending' ] ) ) {
-            $operator = ( $status == 'approved' ) ? '=' : '!=';
+        $meta_query = [ 'relation' => 'OR' ];
 
-            $args['meta_query'][] = [
+        foreach ( $status as $stat ) {
+            if ( $stat === 'all' ) {
+                continue;
+            }
+
+            $meta_query[] = [
                 'key'     => 'dokan_enable_selling',
-                'value'   => 'yes',
-                'compare' => $operator,
+                'value'   => ( $stat == 'approved' ) ? 'yes' : 'no',
+                'compare' => '=',
             ];
+        }
+        
+        if ( ! empty( $args['meta_query'] ) ) {
+            $args['meta_query']['relation'] = 'AND';
+            $args['meta_query'][]           = $meta_query;
+        } else {
+            $args['meta_query'] = $meta_query;
         }
 
         // if featured
