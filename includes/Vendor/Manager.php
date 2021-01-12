@@ -43,8 +43,6 @@ class Manager {
     public function get_vendors( $args = [] ) {
         $vendors = [];
 
-        //var_dump( $args );
-
         $defaults = [
             'role__in'   => [ 'seller', 'administrator' ],
             'number'     => 10,
