@@ -43,13 +43,15 @@ class Manager {
     public function get_vendors( $args = [] ) {
         $vendors = [];
 
+        //var_dump( $args );
+
         $defaults = [
             'role__in'   => [ 'seller', 'administrator' ],
             'number'     => 10,
             'offset'     => 0,
             'orderby'    => 'registered',
             'order'      => 'ASC',
-            'status'     => [ 'approved', 'pending' ],
+            'status'     => 'approved',
             'featured'   => '', // yes or no
             'meta_query' => [],
         ];
@@ -58,9 +60,11 @@ class Manager {
         $status = $args['status'];
 
         // check if the user has permission to see pending vendors
-        if ( 'approved' != $args['status'] && current_user_can( 'manage_woocommerce' ) ) {
-            $status = 'approved';
+        if ( 'approved' !== $status && 'all' !== $status && current_user_can( 'manage_woocommerce' ) ) {
+            $status = 'pending';
         }
+
+        //var_dump( $status ); exit();
 
         if ( in_array( $status, [ 'approved', 'pending' ] ) ) {
             $operator = ( $status == 'approved' ) ? '=' : '!=';
