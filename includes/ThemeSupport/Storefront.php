@@ -15,7 +15,7 @@ class Storefront {
      * The constructor
      */
     function __construct() {
-        add_action( 'storefront_page_after', [ $this, 'remove_sidebar' ], 5 );
+        add_action( 'woocommerce_after_main_content', [ $this, 'remove_sidebar' ], 5 );
         add_filter( 'body_class', [ $this, 'full_width_page' ] );
         add_action( 'wp_enqueue_scripts', [ $this, 'reset_style' ] );
     }

@@ -13,7 +13,13 @@
             </div>
 
             <div class="dokan-settings-wrap">
-                <h2 class="nav-tab-wrapper">
+                <div class="nav-tab-wrapper">
+                    <div class="search-box">
+                        <input type="text" class="dokan-admin-search-settings" placeholder="Search e.g. vendor" @input="searchInSettings" ref="searchInSettings" v-model="searchText">
+
+                        <span class="dashicons dashicons-no-alt" @click.prevent="clearSearch" v-if="'' !== searchText"></span>
+                    </div>
+
                     <template v-for="section in settingSections">
                         <a
                             href="#"
@@ -23,7 +29,7 @@
                             <span class="dashicons" :class="section.icon"></span> {{ section.title }}
                         </a>
                     </template>
-                </h2>
+                </div>
 
                 <div class="metabox-holder">
                     <template v-for="(fields, index) in settingFields" v-if="isLoaded">
@@ -101,7 +107,9 @@
                 settingValues: {},
                 requiredFields: [],
                 errors: [],
-                hasPro: dokan.hasPro ? true : false
+                hasPro: dokan.hasPro ? true : false,
+                searchText: '',
+                awaitingSearch: false,
             }
         },
 
@@ -320,6 +328,84 @@
             toggleLoadingState() {
                 this.showLoading = ! this.showLoading;
             },
+
+            clearSearch() {
+                this.searchText = '';
+
+                this.validateBlankSearch();
+            },
+
+            validateBlankSearch() {
+                let searchText = this.searchText.toLowerCase();
+
+                if ( '' === searchText ) {
+                    this.settingSections = dokan.settings_sections;
+                    this.settingFields   = dokan.settings_fields;
+                    return false;
+                }
+
+                return true;
+            },
+
+            searchInSettings(input) {
+                if ( ! this.validateBlankSearch() ) {
+                    return;
+                }
+
+                if (!this.awaitingSearch) {
+                    setTimeout(() => {
+                        let searchText = this.$refs.searchInSettings.value.toLowerCase();
+                        this.doSearch(searchText);
+                        this.awaitingSearch = false;
+                    }, 1000);
+                }
+
+                this.awaitingSearch = true;
+            },
+
+            doSearch(searchText) {
+                var self = this;
+                let settingFields = {};
+                let filteredSettingSections = [];
+                let settingSections = [];
+                let dokan_setting_fields = dokan.settings_fields;
+
+                Object.keys( dokan_setting_fields ).forEach( function( section, index ) {
+                    Object.keys( dokan_setting_fields[section] ).forEach( function( field, i ) {
+                        if (dokan_setting_fields[section][field].type === "sub_section") {
+                            return;
+                        }
+
+                        let label = dokan_setting_fields[section][field]['label'].toLowerCase();
+
+                        if ( label && label.includes(searchText) ) {
+                            if (!settingFields[section]) {
+                                settingFields[section] = {};
+                            }
+
+                            settingFields[section][field] = dokan_setting_fields[section][field];
+
+                            if ( filteredSettingSections.indexOf(section) === -1 ) {
+                                filteredSettingSections.push(section);
+                            }
+                        }
+                    } );
+                } );
+
+                let currentTab = 0;
+                Object.keys(dokan.settings_sections).forEach((section, index) => {
+                    if (filteredSettingSections.indexOf(dokan.settings_sections[section].id) !== -1) {
+                        if (!currentTab) {
+                            this.changeTab(dokan.settings_sections[section]);
+                            currentTab = 1;
+                        }
+                        settingSections.push(dokan.settings_sections[section]);
+                    }
+                });
+
+                self.settingFields = settingFields;
+                self.settingSections = settingSections;
+            }
         },
 
         created() {
@@ -384,7 +470,7 @@
             }
         }
 
-        h2.nav-tab-wrapper {
+        div.nav-tab-wrapper {
             flex: 1;
             border-bottom: none;
             padding: 0;
@@ -506,6 +592,36 @@
                 max-width:100%;
             }
          }
+
+        .search-box {
+            position: relative;
+
+            span.dashicons.dashicons-no-alt {
+                position: absolute;
+                top: 13px;
+                right: 0;
+                color: #ff0000;
+                z-index: 999;
+                cursor: pointer;
+            }
+
+            .dokan-admin-search-settings {
+                border: 1px solid #ddd;
+                border-radius: 0px;
+                height: 48px;
+                display: block;
+                width: 100%;
+                border-left: 0;
+                border-top: 0;
+                padding: 0 15px;
+                background: #eee;
+                font-weight: 400;
+            }
+
+            input[type="text"]:focus {
+                border-color: transparent;
+            }
+        }
     }
 
     .form-table th.dokan-settings-sub-section-title {

@@ -3,10 +3,13 @@
 /**
  * Lists all depricated classes
  */
-class Dokan_Depricated_Classes {
+class Dokan_Deprecated_Classes {
 
+    /**
+     * Initialize
+     */
     public function __construct() {
-        $dir_path = DOKAN_DIR . '/depricated';
+        $dir_path = DOKAN_DIR . '/deprecated';
 
         require_once $dir_path . '/class-abstract-class-dokan-background-processes.php';
         require_once $dir_path . '/Singleton.php';
@@ -26,4 +29,4 @@ class Dokan_Depricated_Classes {
     }
 }
 
-new Dokan_Depricated_Classes();
+new Dokan_Deprecated_Classes();

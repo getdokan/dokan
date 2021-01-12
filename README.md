@@ -1,13 +1,13 @@
 # Dokan - Best WooCommerce Multivendor Marketplace Solution - Build Your Own Amazon, eBay, Etsy #
 **Contributors:** [tareq1988](https://profiles.wordpress.org/tareq1988), [wedevs](https://profiles.wordpress.org/wedevs), [nizamuddinbabu](https://profiles.wordpress.org/nizamuddinbabu)  
 **Donate Link:** http://tareq.co/donate/  
-**Tags:** WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, product vendors, woocommerce vendor, commission rate, e-commerce, ebay, ecommerce, yith, yithemes  
+**Tags:** WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce, yith, yithemes  
 **Requires at least:** 4.4  
-**Tested up to:** 5.5.3  
+**Tested up to:** 5.6  
 **WC requires at least:** 3.0  
-**WC tested up to:** 4.7.0  
+**WC tested up to:** 4.8.0  
 **Requires PHP:** 5.6  
-**Stable tag:** 3.0.15  
+**Stable tag:** 3.1.1  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -289,13 +289,62 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 18. Frontend &rarr; Individual Seller Store-2
 19. Frontend &rarr; Individual Seller Store-3
 
+
 ## Changelog ##
 
-## v3.0.15 (November 21, 2020) ##
+### v3.1.1 ( January 11, 2021 ) ###
+
+- **feat:** Added searching feature for Dokan admin settings
+- **new:** Added "Visit Vendor Dashboard" link to admin bar
+- **new:** Added current_datetime() compatible dokan functions for WordPress version < 5.3
+- **update:** Updated refund table item_totals and item_tax_totals fields via Dokan upgrader
+- **perf:** Optimized Dokan admin settings page to load setting page faster
+- **fix:** Added vendor search feature for disabled vendors
+- **fix:** Product discount showing wrong when a product that has a limited time discount and sets a schedule on the calendar on the frontend dashboard
+- **fix:** Fixed creating addon by vendor staff was not working for product
+- **fix:** Fixed coupons created by the vendor can not be modified
+- **fix:** Fixed admin dashboard wasn't loading due to use of sprintf for some translatable strings
+- **fix:** Fixed display issue for State and Country multi-select of Dokan vendor create modal
+- **fix:** Translation issue fixed on store listing page
+- **fix:** Store product category not showing properly
+- **fix:** Fixed missing text-domain on product listing delete confirmation alert
+- **fix:** Responsive dashboard product and order table
+
+### v3.1.0 ( December 20, 2020 ) ###
+
+- [new] Store page customizer and better theme support
+- [fix] Stock level wrong calculation in order notes
+- [fix] Improve search with store name in Dokan admin vendor listing and store listing page
+- [fix] Store listing page avatar image not showing properly on store listing page
+- [fix] Store and store term and conditions template make high priority
+- [fix] Store settings page url issue when vendor dashboard use as child page
+- [fix] Vendor dashboard menu not selected when vendor dashboard use as a child page
+- [fix] Ordering issue on category dropdown on product listing filter area
+- [fix] Vue wp list table package updated, translation support for list tables
+- [fix] Dokan vendor dashboard big counter warning issue fixed
+- [fix] Vendor dashboard product table column issue fixed
+- [fix] Update custom deactivation reason placeholder text
+- [fix] Vendor biography formatting issue when update any vendor from Dokan admin area
+- [fix] Added attribute slug with product REST API
+- [fix] Vendor listing and withdraw page not loading correctly in admin area when use others languages
+- [fix] Upgrade to pro module page overlapping issue with admin notice, css & changed svg
+- [fix] Withdraw methods toggle options not working on Dokan setup wizard
+- [fix] Withdraw methods are not saving for some users, fixed via Dokan upgrader
+
+### v3.0.16 ( December 01, 2020 ) ###
+
+- **fix:** Search by store name not working on store listing page when store created from admin area
+- **fix:** Store reviews REST API issue fix and improve
+- **fix:** Order fetching REST API issue fix and improve
+- **new:** Dokan upgrade to pro modules page added
+- **update:** weMail plugin added on recommended plugins list when run Dokan setup wizard
+- **fix:** Deactivation reasons icons and placeholder updated
+
+### v3.0.15 (November 21, 2020) ###
 
 - **fix** updated codebase to fix timezone mismatch
 
-## v3.0.14 (November 20, 2020) ##
+### v3.0.14 (November 20, 2020) ###
 
 - **fix** Vendor edit admin commission on decimal separator as comma
 - **update** Limited time promotion admin notice

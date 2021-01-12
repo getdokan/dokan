@@ -12,12 +12,12 @@ use WP_REST_Server;
 use WeDevs\Dokan\Abstracts\DokanRESTController;
 
 /**
-* Store API Controller
-*
-* @package dokan
-*
-* @author weDevs <info@wedevs.com>
-*/
+ * Store API Controller
+ *
+ * @package dokan
+ *
+ * @author weDevs <info@wedevs.com>
+ */
 class ProductController extends DokanRESTController {
 
     /**
@@ -44,207 +44,207 @@ class ProductController extends DokanRESTController {
     /**
      * Post status
      */
-    protected $post_status = array( 'publish', 'pending', 'draft' );
+    protected $post_status = [ 'publish', 'pending', 'draft' ];
 
     /**
-     * Register all routes releated with stores
+     * Register all routes related with stores
      *
      * @return void
      */
     public function register_routes() {
         register_rest_route(
-            $this->namespace, '/' . $this->base, array(
-				'args' => array(
-					'id' => array(
-						'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
-						'type'        => 'integer',
-					),
-				),
-				array(
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_items' ),
-					'args'                => $this->get_collection_params(),
-					'permission_callback' => array( $this, 'get_product_permissions_check' ),
-				),
-				array(
-					'methods'             => WP_REST_Server::CREATABLE,
-					'callback'            => array( $this, 'create_item' ),
-					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
-					'permission_callback' => array( $this, 'create_product_permissions_check' ),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
-            )
+            $this->namespace, '/' . $this->base, [
+                'args'   => [
+                    'id' => [
+                        'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
+                        'type'        => 'integer',
+                    ],
+                ],
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_items' ],
+                    'args'                => $this->get_collection_params(),
+                    'permission_callback' => [ $this, 'get_product_permissions_check' ],
+                ],
+                [
+                    'methods'             => WP_REST_Server::CREATABLE,
+                    'callback'            => [ $this, 'create_item' ],
+                    'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+                    'permission_callback' => [ $this, 'create_product_permissions_check' ],
+                ],
+                'schema' => [ $this, 'get_public_item_schema' ],
+            ]
         );
 
         register_rest_route(
-            $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/', array(
-				'args' => array(
-					'id' => array(
-						'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
-						'type'        => 'integer',
-					),
-				),
-				array(
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_item' ),
-					'args'                => $this->get_collection_params(),
-					'permission_callback' => array( $this, 'get_single_product_permissions_check' ),
-				),
-				array(
-					'methods'             => WP_REST_Server::EDITABLE,
-					'callback'            => array( $this, 'update_item' ),
-					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-					'permission_callback' => array( $this, 'update_product_permissions_check' ),
-				),
-				array(
-					'methods'             => WP_REST_Server::DELETABLE,
-					'callback'            => array( $this, 'delete_item' ),
-					'permission_callback' => array( $this, 'delete_product_permissions_check' ),
-					'args'                => array(
-						'force' => array(
-							'type'        => 'boolean',
-							'default'     => false,
-							'description' => __( 'Whether to bypass trash and force deletion.', 'dokan-lite' ),
-						),
-					),
-				),
-            )
+            $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/', [
+                'args' => [
+                    'id' => [
+                        'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
+                        'type'        => 'integer',
+                    ],
+                ],
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_item' ],
+                    'args'                => $this->get_collection_params(),
+                    'permission_callback' => [ $this, 'get_single_product_permissions_check' ],
+                ],
+                [
+                    'methods'             => WP_REST_Server::EDITABLE,
+                    'callback'            => [ $this, 'update_item' ],
+                    'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+                    'permission_callback' => [ $this, 'update_product_permissions_check' ],
+                ],
+                [
+                    'methods'             => WP_REST_Server::DELETABLE,
+                    'callback'            => [ $this, 'delete_item' ],
+                    'permission_callback' => [ $this, 'delete_product_permissions_check' ],
+                    'args'                => [
+                        'force' => [
+                            'type'        => 'boolean',
+                            'default'     => false,
+                            'description' => __( 'Whether to bypass trash and force deletion.', 'dokan-lite' ),
+                        ],
+                    ],
+                ],
+            ]
         );
 
         register_rest_route(
-            $this->namespace, '/' . $this->base . '/summary', array(
-				array(
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_product_summary' ),
-					'permission_callback' => array( $this, 'get_product_summary_permissions_check' ),
-				),
-            )
+            $this->namespace, '/' . $this->base . '/summary', [
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_product_summary' ],
+                    'permission_callback' => [ $this, 'get_product_summary_permissions_check' ],
+                ],
+            ]
         );
 
         register_rest_route(
-            $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/related', array(
-				'args' => array(
-					'id' => array(
-						'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
-						'type'        => 'integer',
-						'required'    => true,
-					),
-					'per_page' => array(
-						'description' => __( 'Number of product you want to get top rated product', 'dokan-lite' ),
-						'type'        => 'integer',
-						'default'     => 10,
-					),
-				),
-				array(
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_related_product' ),
-					'permission_callback' => '__return_true',
-				),
-            )
+            $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/related', [
+                'args' => [
+                    'id'       => [
+                        'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
+                        'type'        => 'integer',
+                        'required'    => true,
+                    ],
+                    'per_page' => [
+                        'description' => __( 'Number of product you want to get top rated product', 'dokan-lite' ),
+                        'type'        => 'integer',
+                        'default'     => 10,
+                    ],
+                ],
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_related_product' ],
+                    'permission_callback' => '__return_true',
+                ],
+            ]
         );
 
         register_rest_route(
-            $this->namespace, '/' . $this->base . '/top_rated', array(
-				'args' => array(
-					'per_page' => array(
-						'description' => __( 'Number of product you want to get top rated product', 'dokan-lite' ),
-						'type'        => 'integer',
-						'default'     => 8,
-					),
-					'page' => array(
-						'description' => __( 'Number of page number' ),
-						'type'        => 'integer',
-						'default'     => 1,
-					),
-					'seller_id' => array(
-						'description' => __( 'Top rated product for specific vendor', 'dokan-lite' ),
-						'type'        => 'integer',
-					),
-				),
-				array(
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_top_rated_product' ),
-					'permission_callback' => '__return_true',
-				),
-            )
+            $this->namespace, '/' . $this->base . '/top_rated', [
+                'args' => [
+                    'per_page'  => [
+                        'description' => __( 'Number of product you want to get top rated product', 'dokan-lite' ),
+                        'type'        => 'integer',
+                        'default'     => 8,
+                    ],
+                    'page'      => [
+                        'description' => __( 'Number of page number', 'dokan-lite' ),
+                        'type'        => 'integer',
+                        'default'     => 1,
+                    ],
+                    'seller_id' => [
+                        'description' => __( 'Top rated product for specific vendor', 'dokan-lite' ),
+                        'type'        => 'integer',
+                    ],
+                ],
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_top_rated_product' ],
+                    'permission_callback' => '__return_true',
+                ],
+            ]
         );
 
         register_rest_route(
-            $this->namespace, '/' . $this->base . '/best_selling', array(
-				'args' => array(
-					'per_page' => array(
-						'description' => __( 'Number of product you want to get top rated product', 'dokan-lite' ),
-						'type'        => 'integer',
-						'default'     => 8,
-					),
-					'page' => array(
-						'description' => __( 'Number of page number' ),
-						'type'        => 'integer',
-						'default'     => 1,
-					),
-					'seller_id' => array(
-						'description' => __( 'Top rated product for specific vendor', 'dokan-lite' ),
-						'type'        => 'integer',
-					),
-				),
-				array(
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_best_selling_product' ),
-					'permission_callback' => '__return_true',
-				),
-            )
+            $this->namespace, '/' . $this->base . '/best_selling', [
+                'args' => [
+                    'per_page'  => [
+                        'description' => __( 'Number of product you want to get top rated product', 'dokan-lite' ),
+                        'type'        => 'integer',
+                        'default'     => 8,
+                    ],
+                    'page'      => [
+                        'description' => __( 'Number of page number', 'dokan-lite' ),
+                        'type'        => 'integer',
+                        'default'     => 1,
+                    ],
+                    'seller_id' => [
+                        'description' => __( 'Top rated product for specific vendor', 'dokan-lite' ),
+                        'type'        => 'integer',
+                    ],
+                ],
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_best_selling_product' ],
+                    'permission_callback' => '__return_true',
+                ],
+            ]
         );
 
         register_rest_route(
-            $this->namespace, '/' . $this->base . '/featured', array(
-				'args' => array(
-					'per_page' => array(
-						'description' => __( 'Number of product you want to get top rated product', 'dokan-lite' ),
-						'type'        => 'integer',
-						'default'     => 8,
-					),
-					'page' => array(
-						'description' => __( 'Number of page number' ),
-						'type'        => 'integer',
-						'default'     => 1,
-					),
-					'seller_id' => array(
-						'description' => __( 'Top rated product for specific vendor', 'dokan-lite' ),
-						'type'        => 'integer',
-					),
-				),
-				array(
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_featured_product' ),
-					'permission_callback' => '__return_true',
-				),
-            )
+            $this->namespace, '/' . $this->base . '/featured', [
+                'args' => [
+                    'per_page'  => [
+                        'description' => __( 'Number of product you want to get top rated product', 'dokan-lite' ),
+                        'type'        => 'integer',
+                        'default'     => 8,
+                    ],
+                    'page'      => [
+                        'description' => __( 'Number of page number', 'dokan-lite' ),
+                        'type'        => 'integer',
+                        'default'     => 1,
+                    ],
+                    'seller_id' => [
+                        'description' => __( 'Top rated product for specific vendor', 'dokan-lite' ),
+                        'type'        => 'integer',
+                    ],
+                ],
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_featured_product' ],
+                    'permission_callback' => '__return_true',
+                ],
+            ]
         );
 
         register_rest_route(
-            $this->namespace, '/' . $this->base . '/latest', array(
-				'args' => array(
-					'per_page' => array(
-						'description' => __( 'Number of product you want to get top rated product', 'dokan-lite' ),
-						'type'        => 'integer',
-						'default'     => 8,
-					),
-					'page' => array(
-						'description' => __( 'Number of page number' ),
-						'type'        => 'integer',
-						'default'     => 1,
-					),
-					'seller_id' => array(
-						'description' => __( 'Top rated product for specific vendor', 'dokan-lite' ),
-						'type'        => 'integer',
-					),
-				),
-				array(
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_latest_product' ),
-					'permission_callback' => '__return_true',
-				),
-            )
+            $this->namespace, '/' . $this->base . '/latest', [
+                'args' => [
+                    'per_page'  => [
+                        'description' => __( 'Number of product you want to get top rated product', 'dokan-lite' ),
+                        'type'        => 'integer',
+                        'default'     => 8,
+                    ],
+                    'page'      => [
+                        'description' => __( 'Number of page number', 'dokan-lite' ),
+                        'type'        => 'integer',
+                        'default'     => 1,
+                    ],
+                    'seller_id' => [
+                        'description' => __( 'Top rated product for specific vendor', 'dokan-lite' ),
+                        'type'        => 'integer',
+                    ],
+                ],
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_latest_product' ],
+                    'permission_callback' => '__return_true',
+                ],
+            ]
         );
     }
 
@@ -253,43 +253,46 @@ class ProductController extends DokanRESTController {
      *
      * @since 2.8.0
      *
-     * @return WC_Product|null|false
+     * @return \WC_Product|null|false
      */
     public function get_object( $id ) {
         return wc_get_product( $id );
     }
 
     /**
-     * validation_before_create_product
+     * Validation_before_create_product
+     *
+     * @param $request
      *
      * @since 1.0.0
      *
-     * @return void
+     * @return bool|WP_Error
      */
     public function validation_before_create_item( $request ) {
         $store_id = dokan_get_current_user_id();
 
         if ( empty( $store_id ) ) {
-            return new WP_Error( 'no_store_found', __( 'No seller found', 'dokan-lite' ), array( 'status' => 404 ) );
+            return new WP_Error( 'no_store_found', __( 'No seller found', 'dokan-lite' ), [ 'status' => 404 ] );
         }
 
         if ( ! empty( $request['id'] ) ) {
-            return new WP_Error( "woocommerce_rest_{$this->post_type}_exists", sprintf( __( 'Cannot create existing %s.', 'dokan-lite' ), 'product' ), array( 'status' => 400 ) );
+            /* translators: %s: product */
+            return new WP_Error( "woocommerce_rest_{$this->post_type}_exists", sprintf( __( 'Cannot create existing %s.', 'dokan-lite' ), 'product' ), [ 'status' => 400 ] );
         }
 
         if ( empty( $request['name'] ) ) {
-            return new WP_Error( 'dokan_product_no_title_found', sprintf( __( 'Product title must be required', 'dokan-lite' ), 'product' ), array( 'status' => 404 ) );
+            return new WP_Error( 'dokan_product_no_title_found', sprintf( __( 'Product title must be required', 'dokan-lite' ), 'product' ), [ 'status' => 404 ] );
         }
 
         $category_selection = dokan_get_option( 'product_category_style', 'dokan_selling', 'single' );
 
         if ( empty( $request['categories'] ) ) {
-            return new WP_Error( 'dokan_product_category', __( 'Category must be required', 'dokan-lite' ), array( 'status' => 404 ) );
+            return new WP_Error( 'dokan_product_category', __( 'Category must be required', 'dokan-lite' ), [ 'status' => 404 ] );
         }
 
-        if ( 'single' == $category_selection ) {
+        if ( 'single' === $category_selection ) {
             if ( count( $request['categories'] ) > 1 ) {
-                return new WP_Error( 'dokan_product_category_no_more_one', __( 'You can not select more than category', 'dokan-lite' ), array( 'status' => 404 ) );
+                return new WP_Error( 'dokan_product_category_no_more_one', __( 'You can not select more than category', 'dokan-lite' ), [ 'status' => 404 ] );
             }
         }
 
@@ -299,34 +302,36 @@ class ProductController extends DokanRESTController {
     /**
      * Validation before update product
      *
+     * @param $request
+     *
      * @since 2.8.0
      *
-     * @return void
+     * @return bool|WP_Error
      */
     public function validation_before_update_item( $request ) {
         $store_id = dokan_get_current_user_id();
 
         if ( empty( $store_id ) ) {
-            return new WP_Error( 'no_store_found', __( 'No seller found', 'dokan-lite' ), array( 'status' => 404 ) );
+            return new WP_Error( 'no_store_found', __( 'No seller found', 'dokan-lite' ), [ 'status' => 404 ] );
         }
 
         $object = $this->get_object( (int) $request['id'] );
 
         if ( ! $object || 0 === $object->get_id() ) {
-            return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Invalid ID.', 'dokan-lite' ), array( 'status' => 400 ) );
+            return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Invalid ID.', 'dokan-lite' ), [ 'status' => 400 ] );
         }
 
         $product_author = get_post_field( 'post_author', $object->get_id() );
 
-        if ( $store_id != $product_author ) {
-            return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Sorry, you have no permission to do this. Since it\'s not your product.', 'dokan-lite' ), array( 'status' => 400 ) );
+        if ( $store_id !== $product_author ) {
+            return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Sorry, you have no permission to do this. Since it\'s not your product.', 'dokan-lite' ), [ 'status' => 400 ] );
         }
 
         return true;
     }
 
     /**
-     * validation_before_delete_item
+     * Validation_before_delete_item
      *
      * @since 2.8.0
      *
@@ -338,20 +343,20 @@ class ProductController extends DokanRESTController {
         $result   = false;
 
         if ( ! $object || 0 === $object->get_id() ) {
-            return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Invalid ID.', 'dokan-lite' ), array( 'status' => 404 ) );
+            return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Invalid ID.', 'dokan-lite' ), [ 'status' => 404 ] );
         }
 
         $product_author = get_post_field( 'post_author', $object->get_id() );
 
-        if ( $store_id != $product_author ) {
-            return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Sorry, you have no permission to do this. Since it\'s not your product.', 'dokan-lite' ), array( 'status' => 400 ) );
+        if ( $store_id !== $product_author ) {
+            return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Sorry, you have no permission to do this. Since it\'s not your product.', 'dokan-lite' ), [ 'status' => 400 ] );
         }
 
         return true;
     }
 
     /**
-     * get_product_permissions_check
+     * Get product permissions check
      *
      * @since 2.8.0
      *
@@ -362,7 +367,7 @@ class ProductController extends DokanRESTController {
     }
 
     /**
-     * create_product_permissions_check
+     * Create_product_permissions_check
      *
      * @since 2.8.0
      *
@@ -373,7 +378,7 @@ class ProductController extends DokanRESTController {
     }
 
     /**
-     * get_single_product_permissions_check
+     * Get_single_product_permissions_check
      *
      * @since 2.8.0
      *
@@ -384,7 +389,7 @@ class ProductController extends DokanRESTController {
     }
 
     /**
-     * update_product_permissions_check
+     * Update_product_permissions_check
      *
      * @since 2.8.0
      *
@@ -426,10 +431,10 @@ class ProductController extends DokanRESTController {
     public function get_product_summary( $request ) {
         $seller_id = dokan_get_current_user_id();
 
-        $data = array(
+        $data = [
             'post_counts'  => dokan_count_posts( 'product', $seller_id ),
             'products_url' => dokan_get_navigation_url( 'products' ),
-        );
+        ];
 
         return rest_ensure_response( $data );
     }
@@ -443,10 +448,10 @@ class ProductController extends DokanRESTController {
      */
     public function get_related_product( $request ) {
         $related_ids = wc_get_related_products( $request['id'], $request['per_page'] );
-        $response = array();
+        $response    = [];
 
         if ( ! empty( $related_ids ) ) {
-            $objects = array_map( array( $this, 'get_object' ), $related_ids );
+            $objects = array_map( [ $this, 'get_object' ], $related_ids );
 
             foreach ( $objects as $object ) {
                 $data           = $this->prepare_data_for_response( $object, $request );
@@ -464,15 +469,15 @@ class ProductController extends DokanRESTController {
      *
      * @since 2.9.1
      *
-     * @return void
+     * @return array|object|WP_Error|\WP_REST_Response
      */
     public function get_top_rated_product( $request ) {
         $result   = dokan_get_top_rated_products( $request['per_page'], $request['seller_id'], $request['page'] );
-        $data     = array();
-        $response = array();
+        $data     = [];
+        $response = [];
 
         if ( $result->posts ) {
-            $objects = array_map( array( $this, 'get_object' ), $result->posts );
+            $objects = array_map( [ $this, 'get_object' ], $result->posts );
 
             foreach ( $objects as $object ) {
                 $data           = $this->prepare_data_for_response( $object, $request );
@@ -495,11 +500,11 @@ class ProductController extends DokanRESTController {
      */
     public function get_best_selling_product( $request ) {
         $result   = dokan_get_best_selling_products( $request['per_page'], $request['seller_id'], $request['page'] );
-        $data     = array();
-        $response = array();
+        $data     = [];
+        $response = [];
 
         if ( $result->posts ) {
-            $objects = array_map( array( $this, 'get_object' ), $result->posts );
+            $objects = array_map( [ $this, 'get_object' ], $result->posts );
 
             foreach ( $objects as $object ) {
                 $data           = $this->prepare_data_for_response( $object, $request );
@@ -522,11 +527,11 @@ class ProductController extends DokanRESTController {
      */
     public function get_featured_product( $request ) {
         $result   = dokan_get_featured_products( $request['per_page'], $request['seller_id'], $request['page'] );
-        $data     = array();
-        $response = array();
+        $data     = [];
+        $response = [];
 
         if ( $result->posts ) {
-            $objects = array_map( array( $this, 'get_object' ), $result->posts );
+            $objects = array_map( [ $this, 'get_object' ], $result->posts );
 
             foreach ( $objects as $object ) {
                 $data           = $this->prepare_data_for_response( $object, $request );
@@ -539,6 +544,7 @@ class ProductController extends DokanRESTController {
 
         return $response;
     }
+
     /**
      * Latest product
      *
@@ -547,12 +553,12 @@ class ProductController extends DokanRESTController {
      * @return array
      */
     public function get_latest_product( $request ) {
-        $result      = dokan_get_latest_products( $request['per_page'], $request['seller_id'], $request['page'] );
-        $data        = array();
-        $response    = array();
+        $result   = dokan_get_latest_products( $request['per_page'], $request['seller_id'], $request['page'] );
+        $data     = [];
+        $response = [];
 
         if ( $result->posts ) {
-            $objects = array_map( array( $this, 'get_object' ), $result->posts );
+            $objects = array_map( [ $this, 'get_object' ], $result->posts );
 
             foreach ( $objects as $object ) {
                 $data           = $this->prepare_data_for_response( $object, $request );
@@ -566,6 +572,13 @@ class ProductController extends DokanRESTController {
         return $response;
     }
 
+    /**
+     * Prepare objects query
+     *
+     * @param \WeDevs\Dokan\Abstracts\WP_REST_Request $request
+     *
+     * @return array
+     */
     protected function prepare_objects_query( $request ) {
         $args = parent::prepare_objects_query( $request );
 
@@ -574,57 +587,57 @@ class ProductController extends DokanRESTController {
 
         // Taxonomy query to filter products by type, category,
         // tag, shipping class, and attribute.
-        $tax_query = array();
+        $tax_query = [];
 
         // Map between taxonomy name and arg's key.
-        $taxonomies = array(
+        $taxonomies = [
             'product_cat'            => 'category',
             'product_tag'            => 'tag',
             'product_shipping_class' => 'shipping_class',
-        );
+        ];
 
         // Set tax_query for each passed arg.
         foreach ( $taxonomies as $taxonomy => $key ) {
             if ( ! empty( $request[ $key ] ) ) {
-                $tax_query[] = array(
+                $tax_query[] = [
                     'taxonomy' => $taxonomy,
                     'field'    => 'term_id',
                     'terms'    => $request[ $key ],
-                );
+                ];
             }
         }
 
         // Filter product type by slug.
         if ( ! empty( $request['type'] ) ) {
-            $tax_query[] = array(
+            $tax_query[] = [
                 'taxonomy' => 'product_type',
                 'field'    => 'slug',
                 'terms'    => $request['type'],
-            );
+            ];
         }
 
         // Filter by attribute and term.
         if ( ! empty( $request['attribute'] ) && ! empty( $request['attribute_term'] ) ) {
             if ( in_array( $request['attribute'], wc_get_attribute_taxonomy_names(), true ) ) {
-                $tax_query[] = array(
+                $tax_query[] = [
                     'taxonomy' => $request['attribute'],
                     'field'    => 'term_id',
                     'terms'    => $request['attribute_term'],
-                );
+                ];
             }
         }
 
         if ( ! empty( $tax_query ) ) {
-            $args['tax_query'] = $tax_query; // WPCS: slow query ok.
+            $args['tax_query'] = $tax_query; //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
         }
 
         // Filter featured.
         if ( is_bool( $request['featured'] ) ) {
-            $args['tax_query'][] = array(
+            $args['tax_query'][] = [
                 'taxonomy' => 'product_visibility',
                 'field'    => 'name',
                 'terms'    => 'featured',
-            );
+            ];
         }
 
         // Filter by sku.
@@ -635,37 +648,37 @@ class ProductController extends DokanRESTController {
                 $skus[] = $request['sku'];
             }
 
-            $args['meta_query'] = $this->add_meta_query( // WPCS: slow query ok.
-                $args, array(
+            $args['meta_query'] = $this->add_meta_query( //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+                $args, [
                     'key'     => '_sku',
                     'value'   => $skus,
                     'compare' => 'IN',
-                )
+                ]
             );
         }
 
         // Filter by tax class.
         if ( ! empty( $request['tax_class'] ) ) {
-            $args['meta_query'] = $this->add_meta_query( // WPCS: slow query ok.
-                $args, array(
+            $args['meta_query'] = $this->add_meta_query( //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+                $args, [
                     'key'   => '_tax_class',
                     'value' => 'standard' !== $request['tax_class'] ? $request['tax_class'] : '',
-                )
+                ]
             );
         }
 
         // Price filter.
         if ( ! empty( $request['min_price'] ) || ! empty( $request['max_price'] ) ) {
-            $args['meta_query'] = $this->add_meta_query( $args, wc_get_min_max_price_meta_query( $request ) );  // WPCS: slow query ok.
+            $args['meta_query'] = $this->add_meta_query( $args, wc_get_min_max_price_meta_query( $request ) );  //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
         }
 
         // Filter product in stock or out of stock.
         if ( is_bool( $request['in_stock'] ) ) {
-            $args['meta_query'] = $this->add_meta_query( // WPCS: slow query ok.
-                $args, array(
+            $args['meta_query'] = $this->add_meta_query( //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+                $args, [
                     'key'   => '_stock_status',
                     'value' => true === $request['in_stock'] ? 'instock' : 'outofstock',
-                )
+                ]
             );
         }
 
@@ -675,14 +688,14 @@ class ProductController extends DokanRESTController {
             $on_sale_ids = wc_get_product_ids_on_sale();
 
             // Use 0 when there's no on sale products to avoid return all products.
-            $on_sale_ids = empty( $on_sale_ids ) ? array( 0 ) : $on_sale_ids;
+            $on_sale_ids = empty( $on_sale_ids ) ? [ 0 ] : $on_sale_ids;
 
             $args[ $on_sale_key ] += $on_sale_ids;
         }
 
         // Force the post_type argument, since it's not a user input variable.
         if ( ! empty( $request['sku'] ) ) {
-            $args['post_type'] = array( 'product', 'product_variation' );
+            $args['post_type'] = [ 'product', 'product_variation' ];
         } else {
             $args['post_type'] = $this->post_type;
         }
@@ -694,15 +707,16 @@ class ProductController extends DokanRESTController {
      * Get product data.
      *
      * @param WC_Product $product Product instance.
-     * @param string     $context Request context.
+     * @param string $context Request context.
      *                            Options: 'view' and 'edit'.
+     *
      * @return array
      */
     protected function prepare_data_for_response( $product, $request ) {
         $context   = ! empty( $request['context'] ) ? $request['context'] : 'view';
         $author_id = get_post_field( 'post_author', $product->get_id() );
         $store     = dokan()->vendor->get( $author_id );
-        $data = array(
+        $data      = [
             'id'                    => $product->get_id(),
             'name'                  => $product->get_name( $context ),
             'slug'                  => $product->get_slug( $context ),
@@ -748,11 +762,11 @@ class ProductController extends DokanRESTController {
             'backordered'           => $product->is_on_backorder(),
             'sold_individually'     => $product->is_sold_individually(),
             'weight'                => $product->get_weight( $context ),
-            'dimensions'            => array(
+            'dimensions'            => [
                 'length' => $product->get_length( $context ),
                 'width'  => $product->get_width( $context ),
                 'height' => $product->get_height( $context ),
-            ),
+            ],
             'shipping_required'     => $product->needs_shipping(),
             'shipping_taxable'      => $product->is_shipping_taxable(),
             'shipping_class'        => $product->get_shipping_class(),
@@ -770,31 +784,34 @@ class ProductController extends DokanRESTController {
             'images'                => $this->get_images( $product ),
             'attributes'            => $this->get_attributes( $product ),
             'default_attributes'    => $this->get_default_attributes( $product ),
-            'variations'            => array(),
-            'grouped_products'      => array(),
+            'variations'            => [],
+            'grouped_products'      => [],
             'menu_order'            => $product->get_menu_order( $context ),
             'meta_data'             => $product->get_meta_data(),
-            'store'                 => array(
-				'id'      => $store->get_id(),
-				'name'    => $store->get_shop_name(),
-				'url'     => $store->get_shop_url(),
-				'avatar'  => $store->get_avatar(),
-				'address' => $store->get_address(),
-			),
-        );
+            'store'                 => [
+                'id'      => $store->get_id(),
+                'name'    => $store->get_shop_name(),
+                'url'     => $store->get_shop_url(),
+                'avatar'  => $store->get_avatar(),
+                'address' => $store->get_address(),
+            ],
+        ];
 
         $response = rest_ensure_response( $data );
         $response->add_links( $this->prepare_links( $product, $request ) );
+
         return apply_filters( "dokan_rest_prepare_{$this->post_type}_object", $response, $product, $request );
     }
 
     /**
      * Prepare object for database mapping
      *
-     * @param objec  $request
+     * @param object $request
      * @param boolean $creating
      *
      * @return object
+     * @throws WC_REST_Exception
+     * @throws \WC_Data_Exception
      */
     protected function prepare_object_for_database( $request, $creating = false ) {
         $id = isset( $request['id'] ) ? absint( $request['id'] ) : 0;
@@ -816,9 +833,9 @@ class ProductController extends DokanRESTController {
 
         if ( 'variation' === $product->get_type() ) {
             return new WP_Error(
-                "dokan_rest_invalid_{$this->post_type}_id", __( 'To manipulate product variations you should use the /products/&lt;product_id&gt;/variations/&lt;id&gt; endpoint.', 'dokan-lite' ), array(
-					'status' => 404,
-                )
+                "dokan_rest_invalid_{$this->post_type}_id", __( 'To manipulate product variations you should use the /products/&lt;product_id&gt;/variations/&lt;id&gt; endpoint.', 'dokan-lite' ), [
+                    'status' => 404,
+                ]
             );
         }
 
@@ -902,7 +919,7 @@ class ProductController extends DokanRESTController {
 
         // Attributes.
         if ( isset( $request['attributes'] ) ) {
-            $attributes = array();
+            $attributes = [];
 
             foreach ( $request['attributes'] as $attribute ) {
                 $attribute_id   = 0;
@@ -932,7 +949,7 @@ class ProductController extends DokanRESTController {
                         $values = array_map( 'wc_sanitize_term_text_based', $options );
                         $values = array_filter( $values, 'strlen' );
                     } else {
-                        $values = array();
+                        $values = [];
                     }
 
                     if ( ! empty( $values ) ) {
@@ -966,7 +983,7 @@ class ProductController extends DokanRESTController {
         }
 
         // Sales and prices.
-        if ( in_array( $product->get_type(), array( 'variable', 'grouped' ), true ) ) {
+        if ( in_array( $product->get_type(), [ 'variable', 'grouped' ], true ) ) {
             $product->set_regular_price( '' );
             $product->set_sale_price( '' );
             $product->set_date_on_sale_to( '' );
@@ -1057,7 +1074,7 @@ class ProductController extends DokanRESTController {
                 if ( isset( $request['stock_quantity'] ) ) {
                     $product->set_stock_quantity( wc_stock_amount( $request['stock_quantity'] ) );
                 } elseif ( isset( $request['inventory_delta'] ) ) {
-                    $stock_quantity  = wc_stock_amount( $product->get_stock_quantity() );
+                    $stock_quantity = wc_stock_amount( $product->get_stock_quantity() );
                     $stock_quantity += wc_stock_amount( $request['inventory_delta'] );
                     $product->set_stock_quantity( wc_stock_amount( $stock_quantity ) );
                 }
@@ -1077,7 +1094,7 @@ class ProductController extends DokanRESTController {
 
         // Upsells.
         if ( isset( $request['upsell_ids'] ) ) {
-            $upsells = array();
+            $upsells = [];
             $ids     = $request['upsell_ids'];
 
             if ( ! empty( $ids ) ) {
@@ -1093,7 +1110,7 @@ class ProductController extends DokanRESTController {
 
         // Cross sells.
         if ( isset( $request['cross_sell_ids'] ) ) {
-            $crosssells = array();
+            $crosssells = [];
             $ids        = $request['cross_sell_ids'];
 
             if ( ! empty( $ids ) ) {
@@ -1180,9 +1197,9 @@ class ProductController extends DokanRESTController {
          * The dynamic portion of the hook name, `$this->post_type`,
          * refers to the object type slug.
          *
-         * @param WC_Data         $product  Object object.
-         * @param WP_REST_Request $request  Request object.
-         * @param bool            $creating If is creating a new object.
+         * @param WC_Data $product Object object.
+         * @param WP_REST_Request $request Request object.
+         * @param bool $creating If is creating a new object.
          */
         return apply_filters( "woocommerce_rest_pre_insert_{$this->post_type}_object", $product, $request, $creating );
     }
@@ -1190,25 +1207,25 @@ class ProductController extends DokanRESTController {
     /**
      * Prepare links for the request.
      *
-     * @param WC_Data         $object  Object data.
+     * @param WC_Data $object Object data.
      * @param WP_REST_Request $request Request object.
      *
      * @return array                   Links for the given post.
      */
     protected function prepare_links( $object, $request ) {
-        $links = array(
-            'self'       => array(
+        $links = [
+            'self'       => [
                 'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->base, $object->get_id() ) ),
-            ),
-            'collection' => array(
+            ],
+            'collection' => [
                 'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->base ) ),
-            ),
-        );
+            ],
+        ];
 
         if ( $object->get_parent_id() ) {
-            $links['up'] = array(
+            $links['up'] = [
                 'href' => rest_url( sprintf( '/%s/products/%d', $this->namespace, $object->get_parent_id() ) ),
-            );
+            ];
         }
 
         return $links;
@@ -1217,19 +1234,20 @@ class ProductController extends DokanRESTController {
     /**
      * Get taxonomy terms.
      *
-     * @param WC_Product $product  Product instance.
-     * @param string     $taxonomy Taxonomy slug.
+     * @param WC_Product $product Product instance.
+     * @param string $taxonomy Taxonomy slug.
+     *
      * @return array
      */
     protected function get_taxonomy_terms( $product, $taxonomy = 'cat' ) {
-        $terms = array();
+        $terms = [];
 
         foreach ( wc_get_object_terms( $product->get_id(), 'product_' . $taxonomy ) as $term ) {
-            $terms[] = array(
+            $terms[] = [
                 'id'   => $term->term_id,
                 'name' => $term->name,
                 'slug' => $term->slug,
-            );
+            ];
         }
 
         return $terms;
@@ -1239,11 +1257,12 @@ class ProductController extends DokanRESTController {
      * Get the images for a product or product variation.
      *
      * @param WC_Product|WC_Product_Variation $product Product instance.
+     *
      * @return array
      */
     protected function get_images( $product ) {
-        $images = array();
-        $attachment_ids = array();
+        $images         = [];
+        $attachment_ids = [];
 
         // Add featured image.
         if ( has_post_thumbnail( $product->get_id() ) ) {
@@ -1265,7 +1284,7 @@ class ProductController extends DokanRESTController {
                 continue;
             }
 
-            $images[] = array(
+            $images[] = [
                 'id'                => (int) $attachment_id,
                 'date_created'      => wc_rest_prepare_date_response( $attachment_post->post_date, false ),
                 'date_created_gmt'  => wc_rest_prepare_date_response( strtotime( $attachment_post->post_date_gmt ) ),
@@ -1275,22 +1294,24 @@ class ProductController extends DokanRESTController {
                 'name'              => get_the_title( $attachment_id ),
                 'alt'               => get_post_meta( $attachment_id, '_wp_attachment_image_alt', true ),
                 'position'          => (int) $position,
-            );
+            ];
         }
 
         // Set a placeholder image if the product has no images set.
         if ( empty( $images ) ) {
-            $images[] = array(
+            $images[] = [
                 'id'                => 0,
-                'date_created'      => wc_rest_prepare_date_response( current_time( 'mysql' ), false ), // Default to now.
-                'date_created_gmt'  => wc_rest_prepare_date_response( time() ), // Default to now.
+                'date_created'      => wc_rest_prepare_date_response( current_time( 'mysql' ), false ),
+                // Default to now.
+                'date_created_gmt'  => wc_rest_prepare_date_response( time() ),
+                // Default to now.
                 'date_modified'     => wc_rest_prepare_date_response( current_time( 'mysql' ), false ),
                 'date_modified_gmt' => wc_rest_prepare_date_response( time() ),
                 'src'               => wc_placeholder_img_src(),
                 'name'              => __( 'Placeholder', 'dokan-lite' ),
                 'alt'               => __( 'Placeholder', 'dokan-lite' ),
                 'position'          => 0,
-            );
+            ];
         }
 
         return $images;
@@ -1299,10 +1320,10 @@ class ProductController extends DokanRESTController {
     /**
      * Get attribute taxonomy label.
      *
-     * @deprecated 2.8.0
+     * @param string $name Taxonomy name.
      *
-     * @param  string $name Taxonomy name.
      * @return string
+     * @deprecated 2.8.0
      */
     protected function get_attribute_taxonomy_label( $name ) {
         $tax    = get_taxonomy( $name );
@@ -1314,9 +1335,10 @@ class ProductController extends DokanRESTController {
     /**
      * Get product attribute taxonomy name.
      *
+     * @param string $slug Taxonomy name.
+     * @param WC_Product $product Product data.
+     *
      * @since  2.8.0
-     * @param  string     $slug    Taxonomy name.
-     * @param  WC_Product $product Product data.
      * @return string
      */
     protected function get_attribute_taxonomy_name( $slug, $product ) {
@@ -1331,6 +1353,7 @@ class ProductController extends DokanRESTController {
         // Taxonomy attribute name.
         if ( $attribute->is_taxonomy() ) {
             $taxonomy = $attribute->get_taxonomy_object();
+
             return $taxonomy->attribute_label;
         }
 
@@ -1342,25 +1365,26 @@ class ProductController extends DokanRESTController {
      * Get default attributes.
      *
      * @param WC_Product $product Product instance.
+     *
      * @return array
      */
     protected function get_default_attributes( $product ) {
-        $default = array();
+        $default = [];
 
         if ( $product->is_type( 'variable' ) ) {
             foreach ( array_filter( (array) $product->get_default_attributes(), 'strlen' ) as $key => $value ) {
                 if ( 0 === strpos( $key, 'pa_' ) ) {
-                    $default[] = array(
+                    $default[] = [
                         'id'     => wc_attribute_taxonomy_id_by_name( $key ),
                         'name'   => $this->get_attribute_taxonomy_name( $key, $product ),
                         'option' => $value,
-                    );
+                    ];
                 } else {
-                    $default[] = array(
+                    $default[] = [
                         'id'     => 0,
                         'name'   => $this->get_attribute_taxonomy_name( $key, $product ),
                         'option' => $value,
-                    );
+                    ];
                 }
             }
         }
@@ -1371,32 +1395,34 @@ class ProductController extends DokanRESTController {
     /**
      * Get attribute options.
      *
-     * @param int   $product_id Product ID.
-     * @param array $attribute  Attribute data.
+     * @param int $product_id Product ID.
+     * @param array $attribute Attribute data.
+     *
      * @return array
      */
     protected function get_attribute_options( $product_id, $attribute ) {
         if ( isset( $attribute['is_taxonomy'] ) && $attribute['is_taxonomy'] ) {
             return wc_get_product_terms(
-                $product_id, $attribute['name'], array(
-					'fields' => 'names',
-                )
+                $product_id, $attribute['name'], [
+                    'fields' => 'names',
+                ]
             );
         } elseif ( isset( $attribute['value'] ) ) {
             return array_map( 'trim', explode( '|', $attribute['value'] ) );
         }
 
-        return array();
+        return [];
     }
 
     /**
      * Get the attributes for a product or product variation.
      *
      * @param WC_Product|WC_Product_Variation $product Product instance.
+     *
      * @return array
      */
     protected function get_attributes( $product ) {
-        $attributes = array();
+        $attributes = [];
 
         if ( $product->is_type( 'variation' ) ) {
             $_product = wc_get_product( $product->get_parent_id() );
@@ -1409,30 +1435,33 @@ class ProductController extends DokanRESTController {
 
                 // Taxonomy-based attributes are prefixed with `pa_`, otherwise simply `attribute_`.
                 if ( 0 === strpos( $attribute_name, 'attribute_pa_' ) ) {
-                    $option_term = get_term_by( 'slug', $attribute, $name );
-                    $attributes[] = array(
+                    $option_term  = get_term_by( 'slug', $attribute, $name );
+                    $attributes[] = [
                         'id'     => wc_attribute_taxonomy_id_by_name( $name ),
+                        'slug'   => $attribute_name,
                         'name'   => $this->get_attribute_taxonomy_name( $name, $_product ),
                         'option' => $option_term && ! is_wp_error( $option_term ) ? $option_term->name : $attribute,
-                    );
+                    ];
                 } else {
-                    $attributes[] = array(
+                    $attributes[] = [
                         'id'     => 0,
+                        'slug'   => $attribute_name,
                         'name'   => $this->get_attribute_taxonomy_name( $name, $_product ),
                         'option' => $attribute,
-                    );
+                    ];
                 }
             }
         } else {
             foreach ( $product->get_attributes() as $attribute ) {
-                $attributes[] = array(
+                $attributes[] = [
                     'id'        => $attribute['is_taxonomy'] ? wc_attribute_taxonomy_id_by_name( $attribute['name'] ) : 0,
+                    'slug'      => $attribute['name'],
                     'name'      => $this->get_attribute_taxonomy_name( $attribute['name'], $product ),
                     'position'  => (int) $attribute['position'],
                     'visible'   => (bool) $attribute['is_visible'],
                     'variation' => (bool) $attribute['is_variation'],
                     'options'   => $this->get_attribute_options( $product->get_id(), $attribute ),
-                );
+                ];
             }
         }
 
@@ -1443,45 +1472,48 @@ class ProductController extends DokanRESTController {
      * Get the downloads for a product or product variation.
      *
      * @param WC_Product|WC_Product_Variation $product Product instance.
+     *
      * @return array
      */
     protected function get_downloads( $product ) {
-        $downloads = array();
+        $downloads = [];
 
         if ( $product->is_downloadable() ) {
             foreach ( $product->get_downloads() as $file_id => $file ) {
-                $downloads[] = array(
+                $downloads[] = [
                     'id'   => $file_id, // MD5 hash.
                     'name' => $file['name'],
                     'file' => $file['file'],
-                );
+                ];
             }
         }
 
         return $downloads;
     }
 
-        /**
+    /**
      * Prepare a single product for create or update.
      *
-     * @param  WP_REST_Request $request Request object.
-     * @param  bool            $creating If is creating a new object.
+     * @param WP_REST_Request $request Request object.
+     * @param bool $creating If is creating a new object.
+     *
      * @return WP_Error|WC_Data
      */
 
     /**
      * Set product images.
      *
-     * @throws WC_REST_Exception REST API exceptions.
      * @param WC_Product $product Product instance.
-     * @param array      $images  Images data.
+     * @param array $images Images data.
+     *
      * @return WC_Product
+     * @throws WC_REST_Exception REST API exceptions.
      */
     protected function set_product_images( $product, $images ) {
-        $images = is_array( $images ) ? array_filter( $images ) : array();
+        $images = is_array( $images ) ? array_filter( $images ) : [];
 
         if ( ! empty( $images ) ) {
-            $gallery = array();
+            $gallery = [];
 
             foreach ( $images as $image ) {
                 $attachment_id = isset( $image['id'] ) ? absint( $image['id'] ) : 0;
@@ -1519,10 +1551,10 @@ class ProductController extends DokanRESTController {
                 // Set the image name if present.
                 if ( ! empty( $image['name'] ) ) {
                     wp_update_post(
-                        array(
-							'ID'         => $attachment_id,
-							'post_title' => $image['name'],
-                        )
+                        [
+                            'ID'         => $attachment_id,
+                            'post_title' => $image['name'],
+                        ]
                     );
                 }
 
@@ -1535,7 +1567,7 @@ class ProductController extends DokanRESTController {
             $product->set_gallery_image_ids( $gallery );
         } else {
             $product->set_image_id( '' );
-            $product->set_gallery_image_ids( array() );
+            $product->set_gallery_image_ids( [] );
         }
 
         return $product;
@@ -1545,7 +1577,8 @@ class ProductController extends DokanRESTController {
      * Save product shipping data.
      *
      * @param WC_Product $product Product instance.
-     * @param array      $data    Shipping data.
+     * @param array $data Shipping data.
+     *
      * @return WC_Product
      */
     protected function save_product_shipping_data( $product, $data ) {
@@ -1589,9 +1622,10 @@ class ProductController extends DokanRESTController {
     /**
      * Save downloadable files.
      *
-     * @param WC_Product $product    Product instance.
-     * @param array      $downloads  Downloads data.
-     * @param int        $deprecated Deprecated since 3.0.
+     * @param WC_Product $product Product instance.
+     * @param array $downloads Downloads data.
+     * @param int $deprecated Deprecated since 3.0.
+     *
      * @return WC_Product
      */
     protected function save_downloadable_files( $product, $downloads, $deprecated = 0 ) {
@@ -1599,7 +1633,7 @@ class ProductController extends DokanRESTController {
             wc_deprecated_argument( 'variation_id', '3.0', 'save_downloadable_files() not requires a variation_id anymore.' );
         }
 
-        $files = array();
+        $files = [];
         foreach ( $downloads as $key => $file ) {
             if ( empty( $file['file'] ) ) {
                 continue;
@@ -1619,9 +1653,10 @@ class ProductController extends DokanRESTController {
     /**
      * Save taxonomy terms.
      *
-     * @param WC_Product $product  Product instance.
-     * @param array      $terms    Terms data.
-     * @param string     $taxonomy Taxonomy name.
+     * @param WC_Product $product Product instance.
+     * @param array $terms Terms data.
+     * @param string $taxonomy Taxonomy name.
+     *
      * @return WC_Product
      */
     protected function save_taxonomy_terms( $product, $terms, $taxonomy = 'cat' ) {
@@ -1639,16 +1674,17 @@ class ProductController extends DokanRESTController {
     /**
      * Save default attributes.
      *
+     * @param WC_Product $product Product instance.
+     * @param WP_REST_Request $request Request data.
+     *
      * @since 3.0.0
      *
-     * @param WC_Product      $product Product instance.
-     * @param WP_REST_Request $request Request data.
      * @return WC_Product
      */
     protected function save_default_attributes( $product, $request ) {
         if ( isset( $request['default_attributes'] ) && is_array( $request['default_attributes'] ) ) {
             $attributes         = $product->get_attributes();
-            $default_attributes = array();
+            $default_attributes = [];
 
             foreach ( $request['default_attributes'] as $attribute ) {
                 $attribute_id   = 0;
@@ -1696,7 +1732,7 @@ class ProductController extends DokanRESTController {
         return $product;
     }
 
-        /**
+    /**
      * Get the Product's schema, conforming to JSON Schema.
      *
      * @return array
@@ -1705,616 +1741,616 @@ class ProductController extends DokanRESTController {
     public function get_item_schema() {
         $weight_unit    = get_option( 'woocommerce_weight_unit' );
         $dimension_unit = get_option( 'woocommerce_dimension_unit' );
-        $schema         = array(
+        $schema         = [
             '$schema'    => 'http://json-schema.org/draft-04/schema#',
             'title'      => $this->post_type,
             'type'       => 'object',
-            'properties' => array(
-                'id'                    => array(
+            'properties' => [
+                'id'                    => [
                     'description' => __( 'Unique identifier for the resource.', 'dokan-lite' ),
                     'type'        => 'integer',
-                    'context'     => array( 'view', 'edit' ),
+                    'context'     => [ 'view', 'edit' ],
                     'readonly'    => true,
-                ),
-                'name'                  => array(
+                ],
+                'name'                  => [
                     'description' => __( 'Product name.', 'dokan-lite' ),
                     'type'        => 'string',
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'slug'                  => array(
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'slug'                  => [
                     'description' => __( 'Product slug.', 'dokan-lite' ),
                     'type'        => 'string',
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'permalink'             => array(
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'permalink'             => [
                     'description' => __( 'Product URL.', 'dokan-lite' ),
                     'type'        => 'string',
                     'format'      => 'uri',
-                    'context'     => array( 'view', 'edit' ),
+                    'context'     => [ 'view', 'edit' ],
                     'readonly'    => true,
-                ),
-                'date_created'          => array(
+                ],
+                'date_created'          => [
                     'description' => __( "The date the product was created, in the site's timezone.", 'dokan-lite' ),
                     'type'        => 'date-time',
-                    'context'     => array( 'view', 'edit' ),
+                    'context'     => [ 'view', 'edit' ],
                     'readonly'    => true,
-                ),
-                'date_created_gmt'      => array(
+                ],
+                'date_created_gmt'      => [
                     'description' => __( 'The date the product was created, as GMT.', 'dokan-lite' ),
                     'type'        => 'date-time',
-                    'context'     => array( 'view', 'edit' ),
+                    'context'     => [ 'view', 'edit' ],
                     'readonly'    => true,
-                ),
-                'date_modified'         => array(
+                ],
+                'date_modified'         => [
                     'description' => __( "The date the product was last modified, in the site's timezone.", 'dokan-lite' ),
                     'type'        => 'date-time',
-                    'context'     => array( 'view', 'edit' ),
+                    'context'     => [ 'view', 'edit' ],
                     'readonly'    => true,
-                ),
-                'date_modified_gmt'     => array(
+                ],
+                'date_modified_gmt'     => [
                     'description' => __( 'The date the product was last modified, as GMT.', 'dokan-lite' ),
                     'type'        => 'date-time',
-                    'context'     => array( 'view', 'edit' ),
+                    'context'     => [ 'view', 'edit' ],
                     'readonly'    => true,
-                ),
-                'type'                  => array(
+                ],
+                'type'                  => [
                     'description' => __( 'Product type.', 'dokan-lite' ),
                     'type'        => 'string',
                     'default'     => 'simple',
                     'enum'        => array_keys( wc_get_product_types() ),
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'status'                => array(
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'status'                => [
                     'description' => __( 'Product status (post status).', 'dokan-lite' ),
                     'type'        => 'string',
                     'default'     => 'publish',
                     'enum'        => array_keys( get_post_statuses() ),
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'featured'              => array(
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'featured'              => [
                     'description' => __( 'Featured product.', 'dokan-lite' ),
                     'type'        => 'boolean',
                     'default'     => false,
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'catalog_visibility'    => array(
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'catalog_visibility'    => [
                     'description' => __( 'Catalog visibility.', 'dokan-lite' ),
                     'type'        => 'string',
                     'default'     => 'visible',
-                    'enum'        => array( 'visible', 'catalog', 'search', 'hidden' ),
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'description'           => array(
+                    'enum'        => [ 'visible', 'catalog', 'search', 'hidden' ],
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'description'           => [
                     'description' => __( 'Product description.', 'dokan-lite' ),
                     'type'        => 'string',
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'short_description'     => array(
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'short_description'     => [
                     'description' => __( 'Product short description.', 'dokan-lite' ),
                     'type'        => 'string',
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'sku'                   => array(
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'sku'                   => [
                     'description' => __( 'Unique identifier.', 'dokan-lite' ),
                     'type'        => 'string',
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'price'                 => array(
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'price'                 => [
                     'description' => __( 'Current product price.', 'dokan-lite' ),
                     'type'        => 'string',
-                    'context'     => array( 'view', 'edit' ),
+                    'context'     => [ 'view', 'edit' ],
                     'readonly'    => true,
-                ),
-                'regular_price'         => array(
+                ],
+                'regular_price'         => [
                     'description' => __( 'Product regular price.', 'dokan-lite' ),
                     'type'        => 'string',
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'sale_price'            => array(
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'sale_price'            => [
                     'description' => __( 'Product sale price.', 'dokan-lite' ),
                     'type'        => 'string',
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'date_on_sale_from'     => array(
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'date_on_sale_from'     => [
                     'description' => __( "Start date of sale price, in the site's timezone.", 'dokan-lite' ),
                     'type'        => 'date-time',
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'date_on_sale_from_gmt' => array(
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'date_on_sale_from_gmt' => [
                     'description' => __( 'Start date of sale price, as GMT.', 'dokan-lite' ),
                     'type'        => 'date-time',
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'date_on_sale_to'       => array(
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'date_on_sale_to'       => [
                     'description' => __( "End date of sale price, in the site's timezone.", 'dokan-lite' ),
                     'type'        => 'date-time',
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'date_on_sale_to_gmt'   => array(
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'date_on_sale_to_gmt'   => [
                     'description' => __( 'End date of sale price, as GMT.', 'dokan-lite' ),
                     'type'        => 'date-time',
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'price_html'            => array(
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'price_html'            => [
                     'description' => __( 'Price formatted in HTML.', 'dokan-lite' ),
                     'type'        => 'string',
-                    'context'     => array( 'view', 'edit' ),
+                    'context'     => [ 'view', 'edit' ],
                     'readonly'    => true,
-                ),
-                'on_sale'               => array(
+                ],
+                'on_sale'               => [
                     'description' => __( 'Shows if the product is on sale.', 'dokan-lite' ),
                     'type'        => 'boolean',
-                    'context'     => array( 'view', 'edit' ),
+                    'context'     => [ 'view', 'edit' ],
                     'readonly'    => true,
-                ),
-                'purchasable'           => array(
+                ],
+                'purchasable'           => [
                     'description' => __( 'Shows if the product can be bought.', 'dokan-lite' ),
                     'type'        => 'boolean',
-                    'context'     => array( 'view', 'edit' ),
+                    'context'     => [ 'view', 'edit' ],
                     'readonly'    => true,
-                ),
-                'total_sales'           => array(
+                ],
+                'total_sales'           => [
                     'description' => __( 'Amount of sales.', 'dokan-lite' ),
                     'type'        => 'integer',
-                    'context'     => array( 'view', 'edit' ),
+                    'context'     => [ 'view', 'edit' ],
                     'readonly'    => true,
-                ),
-                'virtual'               => array(
+                ],
+                'virtual'               => [
                     'description' => __( 'If the product is virtual.', 'dokan-lite' ),
                     'type'        => 'boolean',
                     'default'     => false,
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'downloadable'          => array(
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'downloadable'          => [
                     'description' => __( 'If the product is downloadable.', 'dokan-lite' ),
                     'type'        => 'boolean',
                     'default'     => false,
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'downloads'             => array(
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'downloads'             => [
                     'description' => __( 'List of downloadable files.', 'dokan-lite' ),
                     'type'        => 'array',
-                    'context'     => array( 'view', 'edit' ),
-                    'items'       => array(
+                    'context'     => [ 'view', 'edit' ],
+                    'items'       => [
                         'type'       => 'object',
-                        'properties' => array(
-                            'id'   => array(
+                        'properties' => [
+                            'id'   => [
                                 'description' => __( 'File MD5 hash.', 'dokan-lite' ),
                                 'type'        => 'string',
-                                'context'     => array( 'view', 'edit' ),
+                                'context'     => [ 'view', 'edit' ],
                                 'readonly'    => true,
-                            ),
-                            'name' => array(
+                            ],
+                            'name' => [
                                 'description' => __( 'File name.', 'dokan-lite' ),
                                 'type'        => 'string',
-                                'context'     => array( 'view', 'edit' ),
-                            ),
-                            'file' => array(
+                                'context'     => [ 'view', 'edit' ],
+                            ],
+                            'file' => [
                                 'description' => __( 'File URL.', 'dokan-lite' ),
                                 'type'        => 'string',
-                                'context'     => array( 'view', 'edit' ),
-                            ),
-                        ),
-                    ),
-                ),
-                'download_limit'        => array(
+                                'context'     => [ 'view', 'edit' ],
+                            ],
+                        ],
+                    ],
+                ],
+                'download_limit'        => [
                     'description' => __( 'Number of times downloadable files can be downloaded after purchase.', 'dokan-lite' ),
                     'type'        => 'integer',
-                    'default'     => -1,
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'download_expiry'       => array(
+                    'default'     => - 1,
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'download_expiry'       => [
                     'description' => __( 'Number of days until access to downloadable files expires.', 'dokan-lite' ),
                     'type'        => 'integer',
-                    'default'     => -1,
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'external_url'          => array(
+                    'default'     => - 1,
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'external_url'          => [
                     'description' => __( 'Product external URL. Only for external products.', 'dokan-lite' ),
                     'type'        => 'string',
                     'format'      => 'uri',
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'button_text'           => array(
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'button_text'           => [
                     'description' => __( 'Product external button text. Only for external products.', 'dokan-lite' ),
                     'type'        => 'string',
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'tax_status'            => array(
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'tax_status'            => [
                     'description' => __( 'Tax status.', 'dokan-lite' ),
                     'type'        => 'string',
                     'default'     => 'taxable',
-                    'enum'        => array( 'taxable', 'shipping', 'none' ),
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'tax_class'             => array(
+                    'enum'        => [ 'taxable', 'shipping', 'none' ],
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'tax_class'             => [
                     'description' => __( 'Tax class.', 'dokan-lite' ),
                     'type'        => 'string',
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'manage_stock'          => array(
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'manage_stock'          => [
                     'description' => __( 'Stock management at product level.', 'dokan-lite' ),
                     'type'        => 'boolean',
                     'default'     => false,
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'stock_quantity'        => array(
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'stock_quantity'        => [
                     'description' => __( 'Stock quantity.', 'dokan-lite' ),
                     'type'        => 'integer',
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'in_stock'              => array(
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'in_stock'              => [
                     'description' => __( 'Controls whether or not the product is listed as "in stock" or "out of stock" on the frontend.', 'dokan-lite' ),
                     'type'        => 'boolean',
                     'default'     => true,
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'backorders'            => array(
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'backorders'            => [
                     'description' => __( 'If managing stock, this controls if backorders are allowed.', 'dokan-lite' ),
                     'type'        => 'string',
                     'default'     => 'no',
-                    'enum'        => array( 'no', 'notify', 'yes' ),
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'backorders_allowed'    => array(
+                    'enum'        => [ 'no', 'notify', 'yes' ],
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'backorders_allowed'    => [
                     'description' => __( 'Shows if backorders are allowed.', 'dokan-lite' ),
                     'type'        => 'boolean',
-                    'context'     => array( 'view', 'edit' ),
+                    'context'     => [ 'view', 'edit' ],
                     'readonly'    => true,
-                ),
-                'backordered'           => array(
+                ],
+                'backordered'           => [
                     'description' => __( 'Shows if the product is on backordered.', 'dokan-lite' ),
                     'type'        => 'boolean',
-                    'context'     => array( 'view', 'edit' ),
+                    'context'     => [ 'view', 'edit' ],
                     'readonly'    => true,
-                ),
-                'sold_individually'     => array(
+                ],
+                'sold_individually'     => [
                     'description' => __( 'Allow one item to be bought in a single order.', 'dokan-lite' ),
                     'type'        => 'boolean',
                     'default'     => false,
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'weight'                => array(
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'weight'                => [
                     /* translators: %s: weight unit */
                     'description' => sprintf( __( 'Product weight (%s).', 'dokan-lite' ), $weight_unit ),
                     'type'        => 'string',
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'dimensions'            => array(
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'dimensions'            => [
                     'description' => __( 'Product dimensions.', 'dokan-lite' ),
                     'type'        => 'object',
-                    'context'     => array( 'view', 'edit' ),
-                    'properties'  => array(
-                        'length' => array(
+                    'context'     => [ 'view', 'edit' ],
+                    'properties'  => [
+                        'length' => [
                             /* translators: %s: dimension unit */
                             'description' => sprintf( __( 'Product length (%s).', 'dokan-lite' ), $dimension_unit ),
                             'type'        => 'string',
-                            'context'     => array( 'view', 'edit' ),
-                        ),
-                        'width'  => array(
+                            'context'     => [ 'view', 'edit' ],
+                        ],
+                        'width'  => [
                             /* translators: %s: dimension unit */
                             'description' => sprintf( __( 'Product width (%s).', 'dokan-lite' ), $dimension_unit ),
                             'type'        => 'string',
-                            'context'     => array( 'view', 'edit' ),
-                        ),
-                        'height' => array(
+                            'context'     => [ 'view', 'edit' ],
+                        ],
+                        'height' => [
                             /* translators: %s: dimension unit */
                             'description' => sprintf( __( 'Product height (%s).', 'dokan-lite' ), $dimension_unit ),
                             'type'        => 'string',
-                            'context'     => array( 'view', 'edit' ),
-                        ),
-                    ),
-                ),
-                'shipping_required'     => array(
+                            'context'     => [ 'view', 'edit' ],
+                        ],
+                    ],
+                ],
+                'shipping_required'     => [
                     'description' => __( 'Shows if the product need to be shipped.', 'dokan-lite' ),
                     'type'        => 'boolean',
-                    'context'     => array( 'view', 'edit' ),
+                    'context'     => [ 'view', 'edit' ],
                     'readonly'    => true,
-                ),
-                'shipping_taxable'      => array(
+                ],
+                'shipping_taxable'      => [
                     'description' => __( 'Shows whether or not the product shipping is taxable.', 'dokan-lite' ),
                     'type'        => 'boolean',
-                    'context'     => array( 'view', 'edit' ),
+                    'context'     => [ 'view', 'edit' ],
                     'readonly'    => true,
-                ),
-                'shipping_class'        => array(
+                ],
+                'shipping_class'        => [
                     'description' => __( 'Shipping class slug.', 'dokan-lite' ),
                     'type'        => 'string',
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'shipping_class_id'     => array(
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'shipping_class_id'     => [
                     'description' => __( 'Shipping class ID.', 'dokan-lite' ),
                     'type'        => 'integer',
-                    'context'     => array( 'view', 'edit' ),
+                    'context'     => [ 'view', 'edit' ],
                     'readonly'    => true,
-                ),
-                'reviews_allowed'       => array(
+                ],
+                'reviews_allowed'       => [
                     'description' => __( 'Allow reviews.', 'dokan-lite' ),
                     'type'        => 'boolean',
                     'default'     => true,
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'average_rating'        => array(
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'average_rating'        => [
                     'description' => __( 'Reviews average rating.', 'dokan-lite' ),
                     'type'        => 'string',
-                    'context'     => array( 'view', 'edit' ),
+                    'context'     => [ 'view', 'edit' ],
                     'readonly'    => true,
-                ),
-                'rating_count'          => array(
+                ],
+                'rating_count'          => [
                     'description' => __( 'Amount of reviews that the product have.', 'dokan-lite' ),
                     'type'        => 'integer',
-                    'context'     => array( 'view', 'edit' ),
+                    'context'     => [ 'view', 'edit' ],
                     'readonly'    => true,
-                ),
-                'related_ids'           => array(
+                ],
+                'related_ids'           => [
                     'description' => __( 'List of related products IDs.', 'dokan-lite' ),
                     'type'        => 'array',
-                    'items'       => array(
+                    'items'       => [
                         'type' => 'integer',
-                    ),
-                    'context'     => array( 'view', 'edit' ),
+                    ],
+                    'context'     => [ 'view', 'edit' ],
                     'readonly'    => true,
-                ),
-                'upsell_ids'            => array(
+                ],
+                'upsell_ids'            => [
                     'description' => __( 'List of up-sell products IDs.', 'dokan-lite' ),
                     'type'        => 'array',
-                    'items'       => array(
+                    'items'       => [
                         'type' => 'integer',
-                    ),
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'cross_sell_ids'        => array(
+                    ],
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'cross_sell_ids'        => [
                     'description' => __( 'List of cross-sell products IDs.', 'dokan-lite' ),
                     'type'        => 'array',
-                    'items'       => array(
+                    'items'       => [
                         'type' => 'integer',
-                    ),
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'parent_id'             => array(
+                    ],
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'parent_id'             => [
                     'description' => __( 'Product parent ID.', 'dokan-lite' ),
                     'type'        => 'integer',
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'purchase_note'         => array(
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'purchase_note'         => [
                     'description' => __( 'Optional note to send the customer after purchase.', 'dokan-lite' ),
                     'type'        => 'string',
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'categories'            => array(
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'categories'            => [
                     'description' => __( 'List of categories.', 'dokan-lite' ),
                     'type'        => 'array',
-                    'context'     => array( 'view', 'edit' ),
-                    'items'       => array(
+                    'context'     => [ 'view', 'edit' ],
+                    'items'       => [
                         'type'       => 'object',
-                        'properties' => array(
-                            'id'   => array(
+                        'properties' => [
+                            'id'   => [
                                 'description' => __( 'Category ID.', 'dokan-lite' ),
                                 'type'        => 'integer',
-                                'context'     => array( 'view', 'edit' ),
-                            ),
-                            'name' => array(
+                                'context'     => [ 'view', 'edit' ],
+                            ],
+                            'name' => [
                                 'description' => __( 'Category name.', 'dokan-lite' ),
                                 'type'        => 'string',
-                                'context'     => array( 'view', 'edit' ),
+                                'context'     => [ 'view', 'edit' ],
                                 'readonly'    => true,
-                            ),
-                            'slug' => array(
+                            ],
+                            'slug' => [
                                 'description' => __( 'Category slug.', 'dokan-lite' ),
                                 'type'        => 'string',
-                                'context'     => array( 'view', 'edit' ),
+                                'context'     => [ 'view', 'edit' ],
                                 'readonly'    => true,
-                            ),
-                        ),
-                    ),
-                ),
-                'tags'                  => array(
+                            ],
+                        ],
+                    ],
+                ],
+                'tags'                  => [
                     'description' => __( 'List of tags.', 'dokan-lite' ),
                     'type'        => 'array',
-                    'context'     => array( 'view', 'edit' ),
-                    'items'       => array(
+                    'context'     => [ 'view', 'edit' ],
+                    'items'       => [
                         'type'       => 'object',
-                        'properties' => array(
-                            'id'   => array(
+                        'properties' => [
+                            'id'   => [
                                 'description' => __( 'Tag ID.', 'dokan-lite' ),
                                 'type'        => 'integer',
-                                'context'     => array( 'view', 'edit' ),
-                            ),
-                            'name' => array(
+                                'context'     => [ 'view', 'edit' ],
+                            ],
+                            'name' => [
                                 'description' => __( 'Tag name.', 'dokan-lite' ),
                                 'type'        => 'string',
-                                'context'     => array( 'view', 'edit' ),
+                                'context'     => [ 'view', 'edit' ],
                                 'readonly'    => true,
-                            ),
-                            'slug' => array(
+                            ],
+                            'slug' => [
                                 'description' => __( 'Tag slug.', 'dokan-lite' ),
                                 'type'        => 'string',
-                                'context'     => array( 'view', 'edit' ),
+                                'context'     => [ 'view', 'edit' ],
                                 'readonly'    => true,
-                            ),
-                        ),
-                    ),
-                ),
-                'images'                => array(
+                            ],
+                        ],
+                    ],
+                ],
+                'images'                => [
                     'description' => __( 'List of images.', 'dokan-lite' ),
                     'type'        => 'array',
-                    'context'     => array( 'view', 'edit' ),
-                    'items'       => array(
+                    'context'     => [ 'view', 'edit' ],
+                    'items'       => [
                         'type'       => 'object',
-                        'properties' => array(
-                            'id'                => array(
+                        'properties' => [
+                            'id'                => [
                                 'description' => __( 'Image ID.', 'dokan-lite' ),
                                 'type'        => 'integer',
-                                'context'     => array( 'view', 'edit' ),
-                            ),
-                            'date_created'      => array(
+                                'context'     => [ 'view', 'edit' ],
+                            ],
+                            'date_created'      => [
                                 'description' => __( "The date the image was created, in the site's timezone.", 'dokan-lite' ),
                                 'type'        => 'date-time',
-                                'context'     => array( 'view', 'edit' ),
+                                'context'     => [ 'view', 'edit' ],
                                 'readonly'    => true,
-                            ),
-                            'date_created_gmt'  => array(
+                            ],
+                            'date_created_gmt'  => [
                                 'description' => __( 'The date the image was created, as GMT.', 'dokan-lite' ),
                                 'type'        => 'date-time',
-                                'context'     => array( 'view', 'edit' ),
+                                'context'     => [ 'view', 'edit' ],
                                 'readonly'    => true,
-                            ),
-                            'date_modified'     => array(
+                            ],
+                            'date_modified'     => [
                                 'description' => __( "The date the image was last modified, in the site's timezone.", 'dokan-lite' ),
                                 'type'        => 'date-time',
-                                'context'     => array( 'view', 'edit' ),
+                                'context'     => [ 'view', 'edit' ],
                                 'readonly'    => true,
-                            ),
-                            'date_modified_gmt' => array(
+                            ],
+                            'date_modified_gmt' => [
                                 'description' => __( 'The date the image was last modified, as GMT.', 'dokan-lite' ),
                                 'type'        => 'date-time',
-                                'context'     => array( 'view', 'edit' ),
+                                'context'     => [ 'view', 'edit' ],
                                 'readonly'    => true,
-                            ),
-                            'src'               => array(
+                            ],
+                            'src'               => [
                                 'description' => __( 'Image URL.', 'dokan-lite' ),
                                 'type'        => 'string',
                                 'format'      => 'uri',
-                                'context'     => array( 'view', 'edit' ),
-                            ),
-                            'name'              => array(
+                                'context'     => [ 'view', 'edit' ],
+                            ],
+                            'name'              => [
                                 'description' => __( 'Image name.', 'dokan-lite' ),
                                 'type'        => 'string',
-                                'context'     => array( 'view', 'edit' ),
-                            ),
-                            'alt'               => array(
+                                'context'     => [ 'view', 'edit' ],
+                            ],
+                            'alt'               => [
                                 'description' => __( 'Image alternative text.', 'dokan-lite' ),
                                 'type'        => 'string',
-                                'context'     => array( 'view', 'edit' ),
-                            ),
-                            'position'          => array(
+                                'context'     => [ 'view', 'edit' ],
+                            ],
+                            'position'          => [
                                 'description' => __( 'Image position. 0 means that the image is featured.', 'dokan-lite' ),
                                 'type'        => 'integer',
-                                'context'     => array( 'view', 'edit' ),
-                            ),
-                        ),
-                    ),
-                ),
-                'attributes'            => array(
+                                'context'     => [ 'view', 'edit' ],
+                            ],
+                        ],
+                    ],
+                ],
+                'attributes'            => [
                     'description' => __( 'List of attributes.', 'dokan-lite' ),
                     'type'        => 'array',
-                    'context'     => array( 'view', 'edit' ),
-                    'items'       => array(
+                    'context'     => [ 'view', 'edit' ],
+                    'items'       => [
                         'type'       => 'object',
-                        'properties' => array(
-                            'id'        => array(
+                        'properties' => [
+                            'id'        => [
                                 'description' => __( 'Attribute ID.', 'dokan-lite' ),
                                 'type'        => 'integer',
-                                'context'     => array( 'view', 'edit' ),
-                            ),
-                            'name'      => array(
+                                'context'     => [ 'view', 'edit' ],
+                            ],
+                            'name'      => [
                                 'description' => __( 'Attribute name.', 'dokan-lite' ),
                                 'type'        => 'string',
-                                'context'     => array( 'view', 'edit' ),
-                            ),
-                            'position'  => array(
+                                'context'     => [ 'view', 'edit' ],
+                            ],
+                            'position'  => [
                                 'description' => __( 'Attribute position.', 'dokan-lite' ),
                                 'type'        => 'integer',
-                                'context'     => array( 'view', 'edit' ),
-                            ),
-                            'visible'   => array(
+                                'context'     => [ 'view', 'edit' ],
+                            ],
+                            'visible'   => [
                                 'description' => __( "Define if the attribute is visible on the \"Additional information\" tab in the product's page.", 'dokan-lite' ),
                                 'type'        => 'boolean',
                                 'default'     => false,
-                                'context'     => array( 'view', 'edit' ),
-                            ),
-                            'variation' => array(
+                                'context'     => [ 'view', 'edit' ],
+                            ],
+                            'variation' => [
                                 'description' => __( 'Define if the attribute can be used as variation.', 'dokan-lite' ),
                                 'type'        => 'boolean',
                                 'default'     => false,
-                                'context'     => array( 'view', 'edit' ),
-                            ),
-                            'options'   => array(
+                                'context'     => [ 'view', 'edit' ],
+                            ],
+                            'options'   => [
                                 'description' => __( 'List of available term names of the attribute.', 'dokan-lite' ),
                                 'type'        => 'array',
-                                'context'     => array( 'view', 'edit' ),
-                                'items'       => array(
+                                'context'     => [ 'view', 'edit' ],
+                                'items'       => [
                                     'type' => 'string',
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
-                'default_attributes'    => array(
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                'default_attributes'    => [
                     'description' => __( 'Defaults variation attributes.', 'dokan-lite' ),
                     'type'        => 'array',
-                    'context'     => array( 'view', 'edit' ),
-                    'items'       => array(
+                    'context'     => [ 'view', 'edit' ],
+                    'items'       => [
                         'type'       => 'object',
-                        'properties' => array(
-                            'id'     => array(
+                        'properties' => [
+                            'id'     => [
                                 'description' => __( 'Attribute ID.', 'dokan-lite' ),
                                 'type'        => 'integer',
-                                'context'     => array( 'view', 'edit' ),
-                            ),
-                            'name'   => array(
+                                'context'     => [ 'view', 'edit' ],
+                            ],
+                            'name'   => [
                                 'description' => __( 'Attribute name.', 'dokan-lite' ),
                                 'type'        => 'string',
-                                'context'     => array( 'view', 'edit' ),
-                            ),
-                            'option' => array(
+                                'context'     => [ 'view', 'edit' ],
+                            ],
+                            'option' => [
                                 'description' => __( 'Selected attribute term name.', 'dokan-lite' ),
                                 'type'        => 'string',
-                                'context'     => array( 'view', 'edit' ),
-                            ),
-                        ),
-                    ),
-                ),
-                'variations'            => array(
+                                'context'     => [ 'view', 'edit' ],
+                            ],
+                        ],
+                    ],
+                ],
+                'variations'            => [
                     'description' => __( 'List of variations IDs.', 'dokan-lite' ),
                     'type'        => 'array',
-                    'context'     => array( 'view', 'edit' ),
-                    'items'       => array(
+                    'context'     => [ 'view', 'edit' ],
+                    'items'       => [
                         'type' => 'integer',
-                    ),
+                    ],
                     'readonly'    => true,
-                ),
-                'grouped_products'      => array(
+                ],
+                'grouped_products'      => [
                     'description' => __( 'List of grouped products ID.', 'dokan-lite' ),
                     'type'        => 'array',
-                    'items'       => array(
+                    'items'       => [
                         'type' => 'integer',
-                    ),
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'menu_order'            => array(
+                    ],
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'menu_order'            => [
                     'description' => __( 'Menu order, used to custom sort products.', 'dokan-lite' ),
                     'type'        => 'integer',
-                    'context'     => array( 'view', 'edit' ),
-                ),
-                'meta_data'             => array(
+                    'context'     => [ 'view', 'edit' ],
+                ],
+                'meta_data'             => [
                     'description' => __( 'Meta data.', 'dokan-lite' ),
                     'type'        => 'array',
-                    'context'     => array( 'view', 'edit' ),
-                    'items'       => array(
+                    'context'     => [ 'view', 'edit' ],
+                    'items'       => [
                         'type'       => 'object',
-                        'properties' => array(
-                            'id'    => array(
+                        'properties' => [
+                            'id'    => [
                                 'description' => __( 'Meta ID.', 'dokan-lite' ),
                                 'type'        => 'integer',
-                                'context'     => array( 'view', 'edit' ),
+                                'context'     => [ 'view', 'edit' ],
                                 'readonly'    => true,
-                            ),
-                            'key'   => array(
+                            ],
+                            'key'   => [
                                 'description' => __( 'Meta key.', 'dokan-lite' ),
                                 'type'        => 'string',
-                                'context'     => array( 'view', 'edit' ),
-                            ),
-                            'value' => array(
+                                'context'     => [ 'view', 'edit' ],
+                            ],
+                            'value' => [
                                 'description' => __( 'Meta value.', 'dokan-lite' ),
                                 'type'        => 'mixed',
-                                'context'     => array( 'view', 'edit' ),
-                            ),
-                        ),
-                    ),
-                ),
-            ),
-        );
+                                'context'     => [ 'view', 'edit' ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
 
         return $this->add_additional_fields_schema( $schema );
     }

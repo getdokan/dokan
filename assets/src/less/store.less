@@ -9,13 +9,43 @@
     }
 }
 
+.dokan-store-wrap {
+    display: flex;
+    margin: 20px 0;
+    flex-direction: column;
+
+    &.layout-left {
+        flex-direction: column-reverse;
+    }
+
+    @media (min-width: 1000px) {
+        &.layout-left,
+        &.layout-right {
+            flex-direction: row;
+        }
+
+        .dokan-store-sidebar {
+            flex: 0 1 26%;
+        }
+
+        .dokan-single-store {
+            flex: 0 1 100%;
+        }
+
+        &.layout-left .dokan-store-sidebar {
+            margin-right: 4%;
+        }
+
+        &.layout-right .dokan-store-sidebar {
+            margin-left: 4%;
+        }
+    }
+
+}
+
 // store
 .dokan-single-store {
     margin: 0;
-
-    &.dokan-w8 {
-        width: 72%;
-    }
 
     .profile-frame {
         padding: 0px;
