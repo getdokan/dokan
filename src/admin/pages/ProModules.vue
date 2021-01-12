@@ -223,7 +223,7 @@ export default {
                 {
                     name: this.__( 'Vendor Staff Manager', 'dokan-lite' ),
                     description: this.__( 'A plugin for manage store via vendor staffs.', 'dokan-lite' ),
-                    thumbnail: `${dokan.urls.assetsUrl}/images/modules/analytics.png`,
+                    thumbnail: `${dokan.urls.assetsUrl}/images/modules/vendor-staff.png`,
                     docLink: 'https://wedevs.com/docs/dokan/modules/dokan-vendor-staff-manager/',
                     modLink: 'https://wedevs.com/dokan/modules/vendor-staff-manager/',
                 },

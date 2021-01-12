@@ -8,7 +8,7 @@ export default {
         return {
             options: {
                 responsive: true,
-                maintainAspectRatio: false,
+                maintainAspectRatio: true,
                 scales: {
                     xAxes: [{
                         type: 'time',

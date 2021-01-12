@@ -1570,6 +1570,13 @@ jQuery(function($) {
     dateFormat: 'yy-mm-dd'
   });
 
+  // Toggle list table rows on small screens.
+  $('.dokan-table tbody').on('click', '.toggle-row', function() {
+    $(this)
+      .closest('tr')
+      .toggleClass('is-expanded');
+  });
+
   $('.dokan-start-date').datepicker({
     defaultDate: '',
     dateFormat: 'yy-mm-dd',
@@ -1577,7 +1584,9 @@ jQuery(function($) {
     onSelect: function(selectedDate) {
       let date = new Date(selectedDate);
       date.setDate(date.getDate() + 1);
-      $('.dokan-end-date').datepicker('option', { minDate: date });
+      $('.dokan-end-date').datepicker('option', {
+        minDate: date
+      });
     }
   });
 
@@ -1588,7 +1597,9 @@ jQuery(function($) {
     onSelect: function(selectedDate) {
       let date = new Date(selectedDate);
       date.setDate(date.getDate() - 1);
-      $('dokan-start-date').datepicker('option', { maxDate: date });
+      $('dokan-start-date').datepicker('option', {
+        maxDate: date
+      });
     }
   });
 

@@ -45,7 +45,7 @@
 
     $dokan_appearance         = dokan_get_option( 'store_header_template', 'dokan_appearance', 'default' );
     $show_store_open_close    = dokan_get_option( 'store_open_close', 'dokan_appearance', 'on' );
-    $dokan_days               = array( 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday' );
+    $dokan_days               = [ 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday' ];
     $all_times                = isset( $profile_info['dokan_store_time'] ) ? $profile_info['dokan_store_time'] : '';
     $dokan_store_time_enabled = isset( $profile_info['dokan_store_time_enabled'] ) ? $profile_info['dokan_store_time_enabled'] : '';
     $dokan_store_open_notice  = isset( $profile_info['dokan_store_open_notice'] ) ? $profile_info['dokan_store_open_notice'] : '';
@@ -83,7 +83,7 @@
                         $banner_height    = dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 );
 
                         $help_text = sprintf(
-                            __('Upload a banner for your store. Banner size is (%sx%s) pixels.', 'dokan-lite' ),
+                            __( 'Upload a banner for your store. Banner size is (%sx%s) pixels.', 'dokan-lite' ),
                             $banner_width, $banner_height
                         );
 
@@ -134,7 +134,7 @@
         $verified = false;
 
         if ( isset( $profile_info['dokan_verification']['info']['store_address']['v_status'] ) ) {
-            if ( $profile_info['dokan_verification']['info']['store_address']['v_status'] == 'approved' ){
+            if ( $profile_info['dokan_verification']['info']['store_address']['v_status'] == 'approved' ) {
                 $verified = true;
             }
         }
@@ -181,10 +181,10 @@
 
             <div class="dokan-w6 dokan-text-left">
                 <?php
-                    dokan_get_template( 'maps/dokan-maps-with-search.php', array(
+                    dokan_get_template( 'maps/dokan-maps-with-search.php', [
                         'map_location' => $map_location,
                         'map_address'  => $map_address,
-                    ) );
+                    ] );
                 ?>
             </div> <!-- col.md-4 -->
         </div> <!-- .dokan-form-group -->
@@ -193,14 +193,15 @@
         <!--terms and conditions enable or not -->
         <?php
         $tnc_enable = dokan_get_option( 'seller_enable_terms_and_conditions', 'dokan_general', 'off' );
-        if ( $tnc_enable == 'on' ) :
+
+        if ( $tnc_enable == 'on' ) {
             ?>
             <div class="dokan-form-group">
                 <label class="dokan-w3 dokan-control-label"><?php esc_html_e( 'Terms and Conditions', 'dokan-lite' ); ?></label>
                 <div class="dokan-w5 dokan-text-left dokan_tock_check">
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" id="dokan_store_tnc_enable" value="on" <?php echo $enable_tnc == 'on' ? 'checked':'' ; ?> name="dokan_store_tnc_enable"> <?php esc_html_e( 'Show terms and conditions in store page', 'dokan-lite' ); ?>
+                            <input type="checkbox" id="dokan_store_tnc_enable" value="on" <?php echo $enable_tnc == 'on' ? 'checked' : ''; ?> name="dokan_store_tnc_enable"> <?php esc_html_e( 'Show terms and conditions in store page', 'dokan-lite' ); ?>
                         </label>
                     </div>
                 </div>
@@ -209,29 +210,30 @@
                 <label class="dokan-w3 dokan-control-label" for="dokan_store_tnc"><?php esc_html_e( 'TOC Details', 'dokan-lite' ); ?></label>
                 <div class="dokan-w8 dokan-text-left">
                     <?php
-                        $settings = array(
+                        $settings = [
                             'editor_height' => 200,
                             'media_buttons' => false,
                             'teeny'         => true,
-                            'quicktags'     => false
-                        );
-                        wp_editor( $store_tnc, 'dokan_store_tnc', $settings );
-                    ?>
+                            'quicktags'     => false,
+                        ];
+
+            wp_editor( $store_tnc, 'dokan_store_tnc', $settings ); ?>
                 </div>
             </div>
 
-        <?php endif;?>
+        <?php
+        }?>
 
-        <?php if ( $show_store_open_close == 'on' ) : ?>
+        <?php if ( $show_store_open_close == 'on' ) { ?>
         <div class="dokan-form-group store-open-close-time">
-            <label class="dokan-w3 control-label" for="dokan-store-close">
+            <label class="dokan-w3 dokan-control-label" for="dokan-store-close">
                 <?php esc_html_e( 'Store Opening Closing Time', 'dokan-lite' ); ?>
             </label>
 
             <div class="dokan-w5 dokan-text-left dokan_tock_check">
                 <div class="checkbox">
                     <label for="dokan-store-time-enable" class="control-label">
-                        <input type="checkbox" name="dokan_store_time_enabled" id="dokan-store-time-enable" value="yes" <?php echo $dokan_store_time_enabled == 'yes' ? 'checked': ''; ?>>
+                        <input type="checkbox" name="dokan_store_time_enabled" id="dokan-store-time-enable" value="yes" <?php echo $dokan_store_time_enabled == 'yes' ? 'checked' : ''; ?>>
                         <?php esc_html_e( 'Show store opening closing time widget in store page', 'dokan-lite' ); ?>
                     </label>
                 </div>
@@ -241,57 +243,53 @@
         <div class="dokan-form-group store-open-close">
             <label class="dokan-w3 control-label"></label>
             <div class="dokan-w6" style="width: auto">
-                <?php foreach ( $dokan_days as $key => $day ) : ?>
+                <?php foreach ( $dokan_days as $key => $day ) { ?>
                     <?php
                         $status = isset( $all_times[$day]['status'] ) ? $all_times[$day]['status'] : '';
                         $status = isset( $all_times[$day]['open'] ) ? $all_times[$day]['open'] : $status;
                     ?>
                     <div class="dokan-form-group">
-                        <label class="day control-label" for="<?php echo esc_attr( $day ) ?>-opening-time">
+                        <label class="day control-label" for="<?php echo esc_attr( $day ); ?>-opening-time">
                             <?php echo esc_html( dokan_get_translated_days( $day ) ); ?>
                         </label>
                         <label for="">
-                            <select name="<?php echo esc_attr( $day ) ?>_on_off" class="dokan-on-off dokan-form-control">
-                                <option value="close" <?php ! empty( $status ) ? selected( $status, 'close' ) : '' ?> >
+                            <select name="<?php echo esc_attr( $day ); ?>_on_off" class="dokan-on-off dokan-form-control">
+                                <option value="close" <?php ! empty( $status ) ? selected( $status, 'close' ) : ''; ?> >
                                     <?php esc_html_e( 'Close', 'dokan-lite' ); ?>
                                 </option>
-                                <option value="open" <?php ! empty( $status ) ? selected( $status, 'open' ) : '' ?> >
+                                <option value="open" <?php ! empty( $status ) ? selected( $status, 'open' ) : ''; ?> >
                                     <?php esc_html_e( 'Open', 'dokan-lite' ); ?>
                                 </option>
                             </select>
                         </label>
-                        <label for="opening-time" class="time" style="visibility: <?php echo isset( $status ) && $status == 'open' ? 'visible' : 'hidden' ?>" >
-                            <input type="text" class="dokan-form-control" name="<?php echo esc_attr( strtolower( $day ) ); ?>_opening_time" id="<?php echo esc_attr( $day ) ?>-opening-time" placeholder="<?php echo esc_attr( date_i18n( get_option( 'time_format', 'g:i a' ), current_time( 'timestamp' ) ) ); ?>" value="<?php echo isset( $all_times[$day]['opening_time'] ) ? esc_attr( $all_times[$day]['opening_time'] ) : '' ?>" >
+                        <label for="opening-time" class="time" style="visibility: <?php echo isset( $status ) && $status == 'open' ? 'visible' : 'hidden'; ?>" >
+                            <input type="text" class="dokan-form-control" name="<?php echo esc_attr( strtolower( $day ) ); ?>_opening_time" id="<?php echo esc_attr( $day ); ?>-opening-time" placeholder="<?php echo esc_attr( date_i18n( get_option( 'time_format', 'g:i a' ), current_time( 'timestamp' ) ) ); ?>" value="<?php echo isset( $all_times[$day]['opening_time'] ) ? esc_attr( $all_times[$day]['opening_time'] ) : ''; ?>" >
                         </label>
-                        <label for="closing-time" class="time" style="visibility: <?php echo isset( $status ) && $status == 'open' ? 'visible' : 'hidden' ?>" >
-                            <input type="text" class="dokan-form-control" name="<?php echo esc_attr( $day ) ?>_closing_time" id="<?php echo esc_attr( $day ) ?>-closing-time" placeholder="<?php echo esc_attr( date_i18n( get_option( 'time_format', 'g:i a' ), current_time( 'timestamp' ) ) ); ?>" value="<?php echo isset( $all_times[$day]['closing_time'] ) ? esc_attr( $all_times[$day]['closing_time'] ) : '' ?>">
+                        <label for="closing-time" class="time" style="visibility: <?php echo isset( $status ) && $status == 'open' ? 'visible' : 'hidden'; ?>" >
+                            <input type="text" class="dokan-form-control" name="<?php echo esc_attr( $day ); ?>_closing_time" id="<?php echo esc_attr( $day ); ?>-closing-time" placeholder="<?php echo esc_attr( date_i18n( get_option( 'time_format', 'g:i a' ), current_time( 'timestamp' ) ) ); ?>" value="<?php echo isset( $all_times[$day]['closing_time'] ) ? esc_attr( $all_times[$day]['closing_time'] ) : ''; ?>">
                         </label>
                     </div>
-                <?php endforeach; ?>
+                <?php } ?>
             </div>
         </div>
 
         <div class="dokan-form-group store-open-close">
-            <label class="dokan-w3 control-label" for="dokan-store-time-notice">
+            <label class="dokan-w3 dokan-control-label" for="dokan-store-time-notice">
                 <?php esc_html_e( 'Store Open Notice', 'dokan-lite' ); ?>
             </label>
-            <div class="dokan-w6" style="width: auto">
-                <div class="dokan-form-group">
-                    <input type="text" class="dokan-form-control input-md" name="dokan_store_open_notice" placeholder="<?php esc_attr_e( 'Store is open', 'dokan-lite' ) ?>" value="<?php echo esc_attr( $dokan_store_open_notice ); ?>">
-                </div>
+            <div class="dokan-w6">
+                <input type="text" class="dokan-form-control input-md" name="dokan_store_open_notice" placeholder="<?php esc_attr_e( 'Store is open', 'dokan-lite' ); ?>" value="<?php echo esc_attr( $dokan_store_open_notice ); ?>">
             </div>
         </div>
         <div class="dokan-form-group store-open-close">
-            <label class="dokan-w3 control-label" for="dokan-store-time-notice">
+            <label class="dokan-w3 dokan-control-label" for="dokan-store-time-notice">
                 <?php esc_html_e( 'Store Close Notice', 'dokan-lite' ); ?>
             </label>
-            <div class="dokan-w6" style="width: auto">
-                <div class="dokan-form-group">
-                    <input type="text" class="dokan-form-control input-md" name="dokan_store_close_notice" placeholder="<?php esc_attr_e( 'Store is closed', 'dokan-lite' ) ?>" value="<?php echo esc_attr( $dokan_store_close_notice ); ?>">
-                </div>
+            <div class="dokan-w6">
+                <input type="text" class="dokan-form-control input-md" name="dokan_store_close_notice" placeholder="<?php esc_attr_e( 'Store is closed', 'dokan-lite' ); ?>" value="<?php echo esc_attr( $dokan_store_close_notice ); ?>">
             </div>
         </div>
-        <?php endif; ?>
+        <?php } ?>
 
         <?php do_action( 'dokan_settings_form_bottom', $current_user, $profile_info ); ?>
 
@@ -313,38 +311,6 @@
 
     .dokan-settings-content .dokan-settings-area .dokan-banner .dokan-remove-banner-image {
         height: <?php echo esc_attr( $banner_height ) . 'px'; ?>;
-    }
-    .store-open-close .dokan-form-group {
-        text-align: left;
-          display: flex;
-    }
-    .store-open-close .dokan-w6 {
-        width: 50% !important;
-    }
-    .store-open-close label.day {
-        width: 200px;
-    }
-    .store-open-close label.time {
-        padding-left: 5px;
-    }
-    .store-open-close select.dokan-form-control {
-        width: auto;
-    }
-    @media only screen and ( max-width: 415px ) {
-        .store-open-close label:first-child {
-            width: 100%;
-            text-align: left;
-        }
-        .store-open-close  .time input {
-            width: 75px;
-        }
-        .store-open-close .dokan-form-group:first-child {
-            margin-top: 50px
-        }
-        .store-open-close label.day.control-label {
-            width: 0;
-            padding-right: 85px;
-        }
     }
 
 </style>
