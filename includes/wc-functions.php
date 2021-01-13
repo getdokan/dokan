@@ -242,12 +242,10 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
 
         // Dates
         update_post_meta( $post_id, '_sale_price_dates_from', $date_from ? strtotime( $date_from ) : '' );
-
-        // error_log( var_export( date('y-m-d H:i:s'), true ) );
         update_post_meta( $post_id, '_sale_price_dates_to', $date_to ? strtotime( '+ 23 hours', strtotime( $date_to ) ) : '' );
 
         if ( $date_to && ! $date_from ) {
-            $date_from = date( 'Y-m-d' );
+            $date_from = date( 'Y-m-d' ); // phpcs:ignore
             update_post_meta( $post_id, '_sale_price_dates_from', strtotime( $date_from ) );
         }
 
@@ -1170,3 +1168,24 @@ function dokan_add_reply_to_vendor_email_on_wc_customer_note_mail( $headers = ''
 }
 
 add_filter( 'woocommerce_email_headers', 'dokan_add_reply_to_vendor_email_on_wc_customer_note_mail', 10, 3 );
+
+/**
+ * Keep old vendor after duplicate any product
+ *
+ * @param object $duplicate
+ * @param object $product
+ *
+ * @return void
+ */
+function dokan_keep_old_vendor_woocommerce_duplicate_product( $duplicate, $product ) {
+    $old_author = get_post_field( 'post_author', $product->get_id() );
+    $new_author = get_post_field( 'post_author', $duplicate->get_id() );
+
+    if ( absint( $old_author ) === absint( $new_author ) ) {
+        return;
+    }
+
+    dokan_override_product_author( $duplicate, absint( $old_author ) );
+}
+
+add_action( 'woocommerce_product_duplicate', 'dokan_keep_old_vendor_woocommerce_duplicate_product', 35, 2 );
