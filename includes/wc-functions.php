@@ -500,7 +500,7 @@ function dokan_seller_displayname( $display_name ) {
     return $display_name;
 }
 
-add_filter( 'pre_user_display_name', 'dokan_seller_displayname' );
+//add_filter( 'pre_user_display_name', 'dokan_seller_displayname' );
 
 /**
  * Get featured products
