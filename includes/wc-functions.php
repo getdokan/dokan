@@ -245,7 +245,7 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
         update_post_meta( $post_id, '_sale_price_dates_to', $date_to ? strtotime( '+ 23 hours', strtotime( $date_to ) ) : '' );
 
         if ( $date_to && ! $date_from ) {
-            $date_from = gmdate( 'Y-m-d' );
+            $date_from = date( 'Y-m-d' ); // phpcs:ignore
             update_post_meta( $post_id, '_sale_price_dates_from', strtotime( $date_from ) );
         }
 
