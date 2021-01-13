@@ -661,7 +661,11 @@ class Vendor {
         }
 
         if ( $formatted ) {
-            return apply_filters( 'dokan_get_formatted_seller_balance', wc_price( $earning ), $this->id );
+            $decimal = ( 0 === wc_get_price_decimals() ) ? 2 : wc_get_price_decimals();
+            return apply_filters( 
+                'dokan_get_formatted_seller_balance', 
+                wc_price( $earning, [ 'decimals' => $decimal ] 
+            ), $this->id );
         }
 
         return apply_filters( 'dokan_get_seller_balance', $earning, $this->id );
