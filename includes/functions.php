@@ -3339,7 +3339,7 @@ function dokan_stop_sending_multiple_email() {
 add_action( 'woocommerce_order_status_pending_to_on-hold', 'dokan_stop_sending_multiple_email' );
 add_action( 'woocommerce_order_status_on-hold_to_processing', 'dokan_stop_sending_multiple_email' );
 add_action( 'woocommerce_order_status_pending_to_processing', 'dokan_stop_sending_multiple_email' );
-add_action( 'woocommerce_order_status_completed', 'dokan_stop_sending_multiple_email' );
+//add_action( 'woocommerce_order_status_completed', 'dokan_stop_sending_multiple_email' );
 
 /**
  * Remove hook for anonymous class
