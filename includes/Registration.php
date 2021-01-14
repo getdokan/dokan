@@ -87,7 +87,7 @@ class Registration {
     function set_new_vendor_names( $data ) {
         $post_data = wp_unslash( $_POST ); // WPCS: CSRF ok.
 
-        $allowed_roles = array( 'customer', 'seller' );
+        $allowed_roles = apply_filters( 'dokan_register_user_role', array( 'customer', 'seller' ) );
         $role          = ( isset( $post_data['role'] ) && in_array( $post_data['role'], $allowed_roles ) ) ? $post_data['role'] : 'customer';
 
         $data['role'] = $role;
