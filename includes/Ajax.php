@@ -264,7 +264,7 @@ class Ajax {
                     $inserted_id = wc_downloadable_file_permission( $download_id, $product_id, $order );
 
                     if ( $inserted_id ) {
-                        $download = new WC_Customer_Download( $inserted_id );
+                        $download = new \WC_Customer_Download( $inserted_id );
                         $loop ++;
                         $file_counter ++;
 
