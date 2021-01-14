@@ -249,7 +249,7 @@ class StoreController extends WP_REST_Controller {
             $args['meta_query'] = [
                 [
                     'key'     => 'dokan_store_name',
-                    'value'   => sanitize_text_field( $params['search'] ),
+                    'value'   => isset( $params['search'] ) ? sanitize_text_field( $params['search'] ) : '',
                     'compare' => 'LIKE',
                 ],
             ];
