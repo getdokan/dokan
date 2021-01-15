@@ -5429,3 +5429,17 @@ div.media-sidebar a.edit-attachment {
     max-width: 200px;
   }
 }
+
+.form-row.form-group.user-role .radio [type="radio"] {
+  cursor: pointer;
+}
+
+.form-row.form-group.user-role .radio {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.form-row.form-group.user-role .radio:hover {
+  color: #526b6f;
+}
+
