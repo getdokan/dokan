@@ -2851,8 +2851,11 @@ jQuery(function($) {
             event.preventDefault();
 
             const queryString = decodeURIComponent( $.param( storeLists.query ) );
+            const target      = '/page';
+            const pathName    = window.location.pathname;
+            const path        = pathName.includes( target ) ? pathName.substr( 0, pathName.indexOf( target ) ) : '';
 
-            window.history.pushState( null, null, `?${queryString}` );
+            window.history.pushState( null, null, `${path}?${queryString}` );
             window.location.reload();
         },
 
