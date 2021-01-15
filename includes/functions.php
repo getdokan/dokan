@@ -3982,8 +3982,12 @@ function dokan_format_date( $date = '', $format = false ) {
     }
 
     // if date is not timestamp, convert it to timestamp
-    if ( ! is_numeric( $date ) ) {
-        $date = dokan_current_datetime()->modify( $date )->getTimestamp();
+    try {
+        if ( ! is_numeric( $date ) ) {
+            $date = dokan_current_datetime()->modify( $date )->getTimestamp();
+        }
+    } catch( Exception $exception ) {
+        $date = null;
     }
 
     if ( function_exists( 'wp_date' ) ) {
