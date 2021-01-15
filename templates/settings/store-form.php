@@ -52,6 +52,8 @@
     $dokan_store_close_notice = isset( $profile_info['dokan_store_close_notice'] ) ? $profile_info['dokan_store_close_notice'] : '';
 ?>
 <?php do_action( 'dokan_settings_before_form', $current_user, $profile_info ); ?>
+    
+    <div id="banner-added-notify"></div>
 
     <form method="post" id="store-form"  action="" class="dokan-form-horizontal">
 

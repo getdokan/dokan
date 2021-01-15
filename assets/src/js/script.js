@@ -230,6 +230,15 @@ jQuery(function($) {
         $(this.uploadBtn)
           .parent('.button-area')
           .addClass('dokan-hide');
+
+        $('#banner-added-notify').html(dokan.dokan_banner_added_notify_msg);
+        $('#banner-added-notify').addClass('dokan-banner-added-notify-panel');
+        
+        setTimeout(function() {
+          $('#banner-added-notify').html('');
+          $('#banner-added-notify').removeClass('dokan-banner-added-notify-panel').slow();
+        }, 5000 );
+
       } else if ($(this.uploadBtn).hasClass('dokan-pro-gravatar-drag')) {
         var wrap = $(this.uploadBtn).closest('.dokan-gravatar');
 
