@@ -36,7 +36,7 @@
                 <article class="dokan-product-listing-area">
 
                     <?php
-                    $product_query = dokan()->product->all( [ 'author' => get_current_user_id() ] );
+                    $product_query = dokan()->product->all( [ 'author' => dokan_get_current_user_id() ] );
 
                     if ( $product_query->have_posts() ) {
                     ?>
@@ -44,7 +44,7 @@
                         <div class="product-listing-top dokan-clearfix">
                             <?php dokan_product_listing_status_filter(); ?>
 
-                            <?php if ( dokan_is_seller_enabled( get_current_user_id() ) ): ?>
+                            <?php if ( dokan_is_seller_enabled( dokan_get_current_user_id() ) ): ?>
                                 <span class="dokan-add-product-link">
                                     <?php if ( current_user_can( 'dokan_add_product' ) ): ?>
                                         <a href="<?php echo esc_url( dokan_get_navigation_url( 'new-product' ) ); ?>" class="dokan-btn dokan-btn-theme <?php echo ( 'on' == dokan_get_option( 'disable_product_popup', 'dokan_selling', 'off' ) ) ? '' : 'dokan-add-new-product'; ?>">
@@ -114,7 +114,7 @@
                                         $args = array(
                                             'posts_per_page' => 15,
                                             'paged'          => $pagenum,
-                                            'author'         => get_current_user_id(),
+                                            'author'         => dokan_get_current_user_id(),
                                             'post_status'    => $post_statuses,
                                             'tax_query'      => array(
                                                 array(
@@ -209,15 +209,18 @@
                         }
                         ?>
                     <?php    
-                    } else {
+                    } elseif ( dokan_is_seller_enabled( dokan_get_current_user_id() ) ) {
                     ?>
                         <div class="dokan-dashboard-not-product-found">
                             <img src="<?php echo esc_url( plugins_url( 'assets/images/no-product-found.svg', DOKAN_FILE ) ); ?>" alt="dokan setup" class="no-product-found-icon">
+                            <h4 class="dokan-blank-product-message">
+                                <?php esc_html_e( 'Product Not Found!', 'dokan-lite' ); ?>
+                            </h4>
                             <h2 class="dokan-blank-product-message">
                                 <?php esc_html_e( 'Ready to start selling something awesome?', 'dokan-lite' ); ?>
                             </h2>
                             
-                            <?php if ( dokan_is_seller_enabled( get_current_user_id() ) ): ?>
+                            <?php if ( dokan_is_seller_enabled( dokan_get_current_user_id() ) ): ?>
                                 <span class="dokan-add-product-link">
                                     <?php if ( current_user_can( 'dokan_add_product' ) ): ?>
                                         <a href="<?php echo esc_url( dokan_get_navigation_url( 'new-product' ) ); ?>" class="dokan-btn dokan-btn-theme <?php echo ( 'on' == dokan_get_option( 'disable_product_popup', 'dokan_selling', 'off' ) ) ? '' : 'dokan-add-new-product'; ?>">
