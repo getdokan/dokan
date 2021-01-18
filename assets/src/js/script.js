@@ -216,6 +216,7 @@ jQuery(function($) {
     },
 
     setImageFromURL: function(url, attachmentId, width, height) {
+      var banner_profile_upload_status = false;
       if ($(this.uploadBtn).hasClass('dokan-banner-drag')) {
         var wrap = $(this.uploadBtn).closest('.dokan-banner');
 
@@ -231,13 +232,7 @@ jQuery(function($) {
           .parent('.button-area')
           .addClass('dokan-hide');
 
-        $('#banner-added-notify').html(dokan.dokan_banner_added_notify_msg);
-        $('#banner-added-notify').addClass('dokan-banner-added-notify-panel');
-        
-        setTimeout(function() {
-          $('#banner-added-notify').html('');
-          $('#banner-added-notify').removeClass('dokan-banner-added-notify-panel').slow();
-        }, 10000 );
+        banner_profile_upload_status = true;
 
       } else if ($(this.uploadBtn).hasClass('dokan-pro-gravatar-drag')) {
         var wrap = $(this.uploadBtn).closest('.dokan-gravatar');
@@ -245,13 +240,7 @@ jQuery(function($) {
         wrap.find('input.dokan-file-field').val(attachmentId);
         wrap.find('img.dokan-gravatar-img').attr('src', url);
 
-        $('#banner-added-notify').html(dokan.dokan_banner_added_notify_msg);
-        $('#banner-added-notify').addClass('dokan-banner-added-notify-panel');
-        
-        setTimeout(function() {
-          $('#banner-added-notify').html('');
-          $('#banner-added-notify').removeClass('dokan-banner-added-notify-panel').slow();
-        }, 10000 );
+        banner_profile_upload_status = true;
 
         $(this.uploadBtn)
           .parent()
@@ -262,6 +251,17 @@ jQuery(function($) {
           .parent('.gravatar-button-area')
           .addClass('dokan-hide');
       }
+
+      if ( banner_profile_upload_status === true ) {
+        $('#banner-added-notify').html(dokan.dokan_banner_added_notify_msg);
+        $('#banner-added-notify').addClass('dokan-banner-added-notify-panel');
+        
+        setTimeout(function() {
+          $('#banner-added-notify').html('');
+          $('#banner-added-notify').removeClass('dokan-banner-added-notify-panel').slow();
+        }, 10000 );
+      }
+
     },
 
     removeImage: function() {
