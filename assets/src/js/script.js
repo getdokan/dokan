@@ -260,8 +260,18 @@ jQuery(function($) {
           $('#banner-added-notify').html('');
           $('#banner-added-notify').removeClass('dokan-banner-added-notify-panel').slow();
         }, 10000 );
-      }
 
+        $(window).on("beforeunload", function() {
+          return dokan.dokan_banner_added_alert_msg;
+        });
+        
+        $(document).ready(function() {
+          $("#store-form").on("submit", function(e) {
+            $(window).off("beforeunload");
+            return true;
+          });
+        });
+      }
     },
 
     removeImage: function() {
