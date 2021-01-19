@@ -269,6 +269,8 @@ function dokan_count_orders( $user_id ) {
             'total'         => 0,
         ];
 
+        $counts = apply_filters( 'dokan_order_status_count', $counts );
+
         $results = $wpdb->get_results(
             $wpdb->prepare(
                 "SELECT do.order_status
