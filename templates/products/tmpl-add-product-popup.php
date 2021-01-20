@@ -29,7 +29,6 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                         </div>
                     </div>
 
-                    <?php if ( apply_filters( 'dokan_product_gallery_allow_add_images', true ) ): ?>
                         <div class="dokan-product-gallery">
                             <div class="dokan-side-body" id="dokan-product-images">
                                 <div id="product_images_container">
@@ -43,7 +42,6 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                                 </div>
                             </div>
                         </div>
-                    <?php endif; ?>
 
                 </div>
                 <div class="content-half-part dokan-product-field-content">
@@ -160,3 +158,4 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
         </form>
     </div>
 </script>
+<?php do_action( 'dokan_add_product_js_template_end' );?>

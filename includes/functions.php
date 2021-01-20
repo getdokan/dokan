@@ -3982,7 +3982,7 @@ function dokan_format_date( $date = '', $format = false ) {
     }
 
     // if date is not timestamp, convert it to timestamp
-    if ( ! is_numeric( $date ) ) {
+    if ( ! is_numeric( $date ) && strtotime( $date ) ) {
         $date = dokan_current_datetime()->modify( $date )->getTimestamp();
     }
 

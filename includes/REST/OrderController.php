@@ -235,7 +235,7 @@ class OrderController extends DokanRESTController {
 
         // Format decimal values.
         foreach ( $format_decimal as $key ) {
-            $data[ $key ] = wc_format_decimal( $data[ $key ], $this->request['dp'] );
+            $data[ $key ] = wc_format_decimal( $data[ $key ], '' );
         }
 
         // Format date values.
@@ -259,7 +259,7 @@ class OrderController extends DokanRESTController {
             $data['refunds'][] = array(
                 'id'     => $refund->get_id(),
                 'refund' => $refund->get_reason() ? $refund->get_reason() : '',
-                'total'  => '-' . wc_format_decimal( $refund->get_amount(), $this->request['dp'] ),
+                'total'  => '-' . wc_format_decimal( $refund->get_amount(), '' ),
             );
         }
 
@@ -474,7 +474,7 @@ class OrderController extends DokanRESTController {
         // Format decimal values.
         foreach ( $format_decimal as $key ) {
             if ( isset( $data[ $key ] ) ) {
-                $data[ $key ] = wc_format_decimal( $data[ $key ], $this->request['dp'] );
+                $data[ $key ] = wc_format_decimal( $data[ $key ], '' );
             }
         }
 
