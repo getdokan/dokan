@@ -17,6 +17,7 @@
                     
                     $show_store_open_close    = dokan_get_option( 'store_open_close', 'dokan_appearance', 'on' );
                     $dokan_store_time_enabled = isset( $store_info['dokan_store_time_enabled'] ) ? $store_info['dokan_store_time_enabled'] : '';
+                    $store_open_is_on = ( 'on' === $show_store_open_close && 'yes' === $dokan_store_time_enabled && ! $is_store_featured ) ? 'store_open_is_on' : '';
                     ?>
 
                     <li class="dokan-single-seller woocommerce coloum-<?php echo esc_attr( $per_row ); ?> <?php echo ( ! $store_banner_id ) ? 'no-banner-img' : ''; ?>">
@@ -47,7 +48,7 @@
                                         <?php } ?>
                                     <?php endif ?>
 
-                                    <div class="store-data">
+                                    <div class="store-data <?php echo esc_attr( $store_open_is_on ); ?>">
                                         <h2><a href="<?php echo esc_attr( $store_url ); ?>"><?php echo esc_html( $store_name ); ?></a></h2>
 
                                         <?php if ( !empty( $store_rating['count'] ) ): ?>
