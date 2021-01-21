@@ -3992,3 +3992,22 @@ function dokan_format_date( $date = '', $format = false ) {
 
     return date_i18n( $format, $date );
 }
+
+/**
+ * Get threshold day for a user
+ *
+ * @param $user_id
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @return integer threshold day
+ */
+function dokan_get_withdraw_threshold( $user_id ) {
+    if ( get_user_meta( $user_id, 'withdraw_date_limit', true ) !== '' ) {
+        $threshold_day = get_user_meta( $user_id, 'withdraw_date_limit', true );
+    } else {
+        $threshold_day = dokan_get_option( 'withdraw_date_limit', 'dokan_withdraw', -1 );
+    }
+
+    return $threshold_day;
+}
