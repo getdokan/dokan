@@ -81,6 +81,7 @@ class Manager {
 
         // if featured
         if ( 'yes' == $args['featured'] ) {
+            $args['meta_query']['relation'] = 'AND';
             $args['meta_query'][] = [
                 'key'     => 'dokan_feature_seller',
                 'value'   => 'yes',
