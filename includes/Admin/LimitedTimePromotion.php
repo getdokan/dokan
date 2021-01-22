@@ -54,29 +54,27 @@ class LimitedTimePromotion {
         }
 
         $current_time_est = $this->get_current_time_est();
-        $notice           = [];
+        $selected_notices = [];
 
         $already_displayed_promo = get_option( $this->promo_option_key, [] );
 
         foreach ( $notices as $ntc ) {
-            if ( in_array( $ntc['key'], $already_displayed_promo, true ) ) {
+            if ( in_array( $ntc['key'], $already_displayed_promo, true ) || ( $ntc['pro'] && ! dokan()->is_pro_exists() ) ) {
                 continue;
             }
 
             if ( strtotime( $ntc['start_date'] ) < strtotime( $current_time_est ) && strtotime( $current_time_est ) < strtotime( $ntc['end_date'] ) ) {
-                $notice = $ntc;
+                $selected_notices[] = $ntc;
             }
         }
 
-        if ( empty( $notice ) ) {
-            return;
-        }
-
-        if ( $notice['pro'] && ! dokan()->is_pro_exists() ) {
+        if ( empty( $selected_notices ) ) {
             return;
         }
 
         ?>
+
+        <?php foreach( $selected_notices as $notice ): ?>
         <div class="notice notice-error dokan-limited-time-promotional-notice">
             <div class="content">
                 <h2><?php echo esc_html( $notice['title'] ); ?></h2>
@@ -88,6 +86,7 @@ class LimitedTimePromotion {
             <span class="prmotion-close-icon dashicons dashicons-no-alt" data-key="<?php echo esc_attr( $notice['key'] ); ?>"></span>
             <div class="clear"></div>
         </div>
+        <?php endforeach; ?>
 
         <style>
             .dokan-limited-time-promotional-notice {
