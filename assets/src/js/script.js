@@ -123,6 +123,10 @@ jQuery(function($) {
       $('a.dokan-gravatar-drag').on('click', this.simpleImageUpload);
       $('a.dokan-remove-gravatar-image').on('click', this.removeGravatar);
 
+      $('.dokan-update-setting-top-button').click(function(){
+          $("input[name='dokan_update_store_settings']").click();
+      });
+
       this.validateForm(self);
 
       return false;
@@ -253,14 +257,6 @@ jQuery(function($) {
       }
 
       if ( banner_profile_upload_status === true ) {
-        $('#banner-added-notify').html(dokan.dokan_banner_added_notify_msg);
-        $('#banner-added-notify').addClass('dokan-banner-added-notify-panel');
-        
-        setTimeout(function() {
-          $('#banner-added-notify').html('');
-          $('#banner-added-notify').removeClass('dokan-banner-added-notify-panel').slow();
-        }, 10000 );
-
         $(window).on("beforeunload", function() {
           return dokan.dokan_banner_added_alert_msg;
         });
@@ -474,8 +470,10 @@ jQuery(function($) {
           self.serialize() + '&action=dokan_settings&form_id=' + form_id;
 
       self.find('.ajax_prev').append('<span class="dokan-loading"> </span>');
+      $('.dokan-update-setting-top-button').append('<span class="dokan-loading"> </span>');
       $.post(dokan.ajaxurl, form_data, function(resp) {
         self.find('span.dokan-loading').remove();
+        $('.dokan-update-setting-top-button span.dokan-loading').remove();
         $('html,body').animate({ scrollTop: 100 });
 
         if (resp.success) {
