@@ -489,13 +489,18 @@ class Settings {
 
         } elseif ( wp_verify_nonce( $post_data['_wpnonce'], 'dokan_store_settings_nonce' ) ) {
 
+            $default_locations = dokan_get_option( 'location', 'dokan_geolocation' );
+            $find_address      = ! empty( $post_data['find_address'] ) ? sanitize_text_field( $post_data['find_address'] ) : $default_locations['address'];
+            $default_location  = $default_locations['latitude'] . ',' . $default_locations['longitude'];
+            $location          = ! empty( $post_data['find_address'] ) ? sanitize_text_field( $post_data['location'] ) : $default_location;
+
             // update store setttings info
             $dokan_settings = array(
                 'store_name'               => sanitize_text_field( $post_data['dokan_store_name'] ),
                 'store_ppp'                => absint( $post_data['dokan_store_ppp'] ),
                 'address'                  => isset( $post_data['dokan_address'] ) ? array_map( 'sanitize_text_field', $post_data['dokan_address'] ) : $prev_dokan_settings['address'],
-                'location'                 => sanitize_text_field( $post_data['location'] ),
-                'find_address'             => sanitize_text_field( $post_data['find_address'] ),
+                'location'                 => $location,
+                'find_address'             => $find_address,
                 'banner'                   => isset( $post_data['dokan_banner'] ) ? absint( $post_data['dokan_banner'] ) : 0,
                 'phone'                    => sanitize_text_field( $post_data['setting_phone'] ),
                 'show_email'               => sanitize_text_field( $post_data['setting_show_email'] ),

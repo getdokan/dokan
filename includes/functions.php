@@ -3692,7 +3692,7 @@ if ( ! function_exists( 'dokan_get_seller_status_count' ) ) {
     function dokan_get_seller_status_count() {
         $active_users = new WP_User_Query(
             [
-                'role'       => 'seller',
+                'role__in'       => [ 'seller', 'administrator' ],
                 'meta_key'   => 'dokan_enable_selling',
                 'meta_value' => 'yes',
                 'fields'     => 'ID',
