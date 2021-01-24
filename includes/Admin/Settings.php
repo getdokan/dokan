@@ -357,6 +357,12 @@ class Settings {
                     'type'    => 'checkbox',
                     'default' => 'off',
                 ],
+                'store_product_per_page' => [
+                    'name'    => 'store_product_per_page',
+                    'label'   => __( 'Store Product Per Page', 'dokan-lite' ),
+                    'type'    => 'number',
+                    'default' => '12',
+                ],
             ]
         );
 
