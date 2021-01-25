@@ -357,9 +357,9 @@ class Settings {
                     'type'    => 'checkbox',
                     'default' => 'off',
                 ],
-                'store_product_per_page' => [
-                    'name'    => 'store_product_per_page',
-                    'label'   => __( 'Store Product Per Page', 'dokan-lite' ),
+                'store_products_per_page' => [
+                    'name'    => 'store_products_per_page',
+                    'label'   => __( 'Store Products Per Page', 'dokan-lite' ),
                     'type'    => 'number',
                     'default' => '12',
                 ],
