@@ -282,10 +282,11 @@ class Rewrites {
             }
 
             $store_info    = dokan_get_store_info( $seller_info->data->ID );
-            $post_per_page = isset( $store_info['store_ppp'] ) && ! empty( $store_info['store_ppp'] ) ? $store_info['store_ppp'] : 12;
+            $product_ppp   = dokan_get_option( 'store_products_per_page', 'dokan_general', 12 );
+            $post_per_page = isset( $store_info['store_ppp'] ) && ! empty( $store_info['store_ppp'] ) ? $store_info['store_ppp'] : $product_ppp;
 
             do_action( 'dokan_store_page_query_filter', $query, $store_info );
-            set_query_var( 'posts_per_page', $post_per_page );
+            set_query_var( 'posts_per_page', apply_filters( 'dokan_store_products_per_page', $post_per_page ) );
 
             $query->set( 'post_type', 'product' );
             $query->set( 'author_name', $author );
