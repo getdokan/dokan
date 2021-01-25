@@ -53,16 +53,18 @@ class Settings {
      */
     public function render_settings_header() {
         global $wp;
+        $is_main_setting = 0;
 
         if ( isset( $wp->query_vars['settings'] ) && $wp->query_vars['settings'] == 'store' ) {
-            $heading = __( 'Settings', 'dokan-lite' );
+            $heading         = __( 'Settings', 'dokan-lite' );
+            $is_main_setting = 1;
         } elseif ( isset( $wp->query_vars['settings'] ) && $wp->query_vars['settings'] == 'payment' ) {
             $heading = __( 'Payment Settings', 'dokan-lite' );
         } else {
             $heading = apply_filters( 'dokan_dashboard_settings_heading_title', __( 'Settings', 'dokan-lite' ), $wp->query_vars['settings'] );
         }
 
-        dokan_get_template_part( 'settings/header', '', array( 'heading' => $heading ) );
+        dokan_get_template_part( 'settings/header', '', array( 'heading' => $heading, 'is_main_setting' => $is_main_setting ) );
     }
 
     /**

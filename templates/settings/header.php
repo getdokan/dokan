@@ -15,7 +15,9 @@
 	    </h1>
 	</div>
 
-    <span class="dokan-update-setting-top">
-        <button class="dokan-update-setting-top-button dokan-btn dokan-btn-theme dokan-right"><?php esc_html_e( 'Update Settings', 'dokan-lite' ); ?></button>
-    </span>
+	<?php if ( isset( $is_main_setting ) && $is_main_setting === 1 ) : ?>
+	    <span class="dokan-update-setting-top">
+	        <button class="dokan-update-setting-top-button dokan-btn dokan-btn-theme dokan-right"><?php esc_html_e( 'Update Settings', 'dokan-lite' ); ?></button>
+	    </span>
+	<?php endif ?>
 </header><!-- .dokan-dashboard-header -->
