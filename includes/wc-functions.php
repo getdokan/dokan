@@ -1218,4 +1218,4 @@ function send_email_for_order_cancellation( $recipient, $order ) {
     return $recipient;
 }
 
-add_filter("woocommerce_email_recipient_cancelled_order", 'send_email_for_order_cancellation', 10, 3);
+add_filter("woocommerce_email_recipient_cancelled_order", 'send_email_for_order_cancellation', 10, 2);
