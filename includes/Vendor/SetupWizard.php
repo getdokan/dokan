@@ -182,7 +182,7 @@ class SetupWizard extends DokanSetupWizard {
         <form method="post" class="dokan-seller-setup-form">
             <table class="form-table">
                 <tr>
-                    <th scope="row"><label for="store_ppp"><?php esc_attr_e( 'Store Product Per Page', 'dokan-lite' ); ?></label></th>
+                    <th scope="row"><label for="store_ppp"><?php esc_attr_e( 'Store Products Per Page', 'dokan-lite' ); ?></label></th>
                     <td>
                         <input type="text" id="store_ppp" name="store_ppp" value="<?php echo esc_attr( $store_ppp ); ?>" />
                     </td>
