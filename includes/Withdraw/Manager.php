@@ -317,6 +317,17 @@ class Manager {
     }
 
     /**
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return int|null
+     */
+    public function get_total_withdraw_count() {
+        $withdraws = new Withdraws();
+        $count = $withdraws->get_total();
+        return (int) $count;
+    }
+
+    /**
      * Get a single withdraw
      *
      * @since 3.0.0
