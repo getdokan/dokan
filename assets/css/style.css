@@ -4661,6 +4661,16 @@ div.media-sidebar a.edit-attachment {
   padding: 5px 8px;
   margin-bottom: 5px;
 }
+.form-row.form-group.user-role .radio [type="radio"] {
+  cursor: pointer;
+}
+.form-row.form-group.user-role .radio {
+  display: inline-block;
+  cursor: pointer;
+}
+.form-row.form-group.user-role .radio:hover {
+  color: #526b6f;
+}
 .dokan-popup-content {
   padding: 18px;
 }
