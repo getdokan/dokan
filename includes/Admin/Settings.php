@@ -441,7 +441,7 @@ class Settings {
                 'order_status_change'       => [
                     'name'    => 'order_status_change',
                     'label'   => __( 'Order Status Change', 'dokan-lite' ),
-                    'desc'    => __( 'Allow/Disallow vendor to update order status', 'dokan-lite' ),
+                    'desc'    => __( 'Allow vendor to update order status', 'dokan-lite' ),
                     'type'    => 'checkbox',
                     'default' => 'on',
                 ],
