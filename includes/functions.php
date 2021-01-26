@@ -7,7 +7,7 @@
  * @return void
  */
 function dokan_admin_menu_position() {
-    return apply_filters( 'dokan_menu_position', 17 );
+    return apply_filters( 'dokan_menu_position', 55.4 );
 }
 
 /**
