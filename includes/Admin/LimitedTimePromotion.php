@@ -40,6 +40,7 @@ class LimitedTimePromotion {
         $notices = [
             [
                 'pro'         => false,
+                'lite'        => true,
                 'key'         => 'dokan-withdraw-promo',
                 'thumbnail'   => DOKAN_PLUGIN_ASSEST . '/images/withdraw-request-promo.svg',
                 'start_date'  => '2021-01-10 09:00:00 EST',
@@ -61,7 +62,7 @@ class LimitedTimePromotion {
         $already_displayed_promo = get_option( $this->promo_option_key, [] );
 
         foreach ( $notices as $ntc ) {
-            if ( in_array( $ntc['key'], $already_displayed_promo, true ) || ( $ntc['pro'] && ! dokan()->is_pro_exists() ) ) {
+            if ( in_array( $ntc['key'], $already_displayed_promo, true ) ) {
                 continue;
             }
 
@@ -71,8 +72,26 @@ class LimitedTimePromotion {
                 continue;
             }
 
+            $show = false;
+
             if ( strtotime( $ntc['start_date'] ) < strtotime( $current_time_est ) && strtotime( $current_time_est ) < strtotime( $ntc['end_date'] ) ) {
-                $selected_notices[] = $ntc;
+                if ( $ntc['lite'] ) {
+                    $show = true;
+                }
+
+                if ( dokan()->is_pro_exists() ) {
+                    if ( $ntc['lite'] ) {
+                        $show = false;
+                    }
+
+                    if ( $ntc['pro'] ) {
+                        $show = true;
+                    }
+                }
+
+                if ( $show ) {
+                    $selected_notices[] = $ntc;
+                }
             }
         }
 
@@ -120,6 +139,7 @@ class LimitedTimePromotion {
                 top: 10px;
                 right: 10px;
                 cursor: pointer;
+                padding-top: 0px;
             }
 
             .content {
