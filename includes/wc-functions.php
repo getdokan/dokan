@@ -1040,7 +1040,7 @@ add_action( 'woocommerce_product_tabs', 'dokan_set_more_from_seller_tab', 10 );
 function dokan_get_more_products_from_seller( $seller_id = 0, $posts_per_page = 6 ) {
     global $product, $post;
 
-    if ( $seller_id === 0 ) {
+    if ( $seller_id === 0 || 'more_seller_product' === $seller_id ) {
         $seller_id = $post->post_author;
     }
 
