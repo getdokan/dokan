@@ -61,7 +61,7 @@ class LimitedTimePromotion {
         $already_displayed_promo = get_option( $this->promo_option_key, [] );
 
         foreach ( $notices as $ntc ) {
-            if ( in_array( $ntc['key'], $already_displayed_promo, true ) || ( $ntc['pro'] && ! dokan()->is_pro_exists() ) ) {
+            if ( in_array( $ntc['key'], $already_displayed_promo, true ) || ( ! $ntc['pro'] && dokan()->is_pro_exists() ) ) {
                 continue;
             }
 
@@ -120,9 +120,10 @@ class LimitedTimePromotion {
                 top: 10px;
                 right: 10px;
                 cursor: pointer;
+                padding-top: 0px;
             }
 
-            .content {
+            .dokan-limited-time-promotional-notice .content {
                 color: white;
                 padding: 14px;
                 width: 100%;
@@ -131,30 +132,30 @@ class LimitedTimePromotion {
                 align-items: center;
             }
 
-            .content .thumbnail img{
+            .dokan-limited-time-promotional-notice .content .thumbnail img{
                 height: 100px;
             }
 
-            .content .title {
+            .dokan-limited-time-promotional-notice .content .title {
                 font-size: 18px;
                 margin-left: 24px;
                 margin-right: 48px;
             }
 
-            .content .title span {
+            .dokan-limited-time-promotional-notice .content .title span {
                 font-weight: bolder;
             }
 
-            .content .body p {
+            .dokan-limited-time-promotional-notice .content .body p {
                 font-size: 10px;
             }
 
-            .content .body span {
+            .dokan-limited-time-promotional-notice .content .body span {
                 color: #FF6393;
                 font-size: 28px;
             }
 
-            .content a {
+            .dokan-limited-time-promotional-notice .content a {
                 margin-left: 48px;
                 text-decoration: none;
                 padding: 10px 20px;
