@@ -254,7 +254,7 @@ class SetupWizard {
             <?php do_action( 'admin_head' ); ?>
             <?php do_action( 'dokan_setup_wizard_styles' ); ?>
         </head>
-        <body class="wc-setup wp-core-ui<?php echo get_transient( 'dokan_setup_wizard_no_wc' ) ? ' dokan-setup-wizard-activated-wc' : ''; ?>">
+        <body class="wc-setup dokan-admin-setup-wizard wp-core-ui<?php echo get_transient( 'dokan_setup_wizard_no_wc' ) ? ' dokan-setup-wizard-activated-wc' : ''; ?>">
             <?php
                 $logo_url = ( ! empty( $this->custom_logo ) ) ? $this->custom_logo : plugins_url( 'assets/images/dokan-logo.png', DOKAN_FILE );
             ?>
