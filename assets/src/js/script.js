@@ -470,6 +470,7 @@ jQuery(function($) {
           self.serialize() + '&action=dokan_settings&form_id=' + form_id;
 
       self.find('.ajax_prev').append('<span class="dokan-loading"> </span>');
+      $('.dokan-update-setting-top-button span.dokan-loading').remove();
       $('.dokan-update-setting-top-button').append('<span class="dokan-loading"> </span>');
       $.post(dokan.ajaxurl, form_data, function(resp) {
         self.find('span.dokan-loading').remove();
