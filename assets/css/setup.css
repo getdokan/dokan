@@ -183,3 +183,6 @@
   -webkit-order: 3;
   order: 3;
 }
+.dokan-vendor-setup-wizard #wc-logo img{
+  max-width: 270px;
+}
