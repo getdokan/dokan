@@ -48,7 +48,7 @@ class BestSellingProduct extends DokanShortcode {
             <?php endwhile; ?>
         </ul>
         <?php
-
+        wp_reset_postdata();
         return ob_get_clean();
     }
 }
