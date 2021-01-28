@@ -209,18 +209,19 @@
                         }
                         ?>
                     <?php    
-                    } elseif ( dokan_is_seller_enabled( dokan_get_current_user_id() ) ) {
+                    } else {
                     ?>
                         <div class="dokan-dashboard-product-listing-wrapper dokan-dashboard-not-product-found">
                             <img src="<?php echo esc_url( plugins_url( 'assets/images/no-product-found.svg', DOKAN_FILE ) ); ?>" alt="dokan setup" class="no-product-found-icon">
                             <h4 class="dokan-blank-product-message">
-                                <?php esc_html_e( 'Product Not Found!', 'dokan-lite' ); ?>
+                                <?php esc_html_e( 'No Products Found!', 'dokan-lite' ); ?>
                             </h4>
-                            <h2 class="dokan-blank-product-message">
-                                <?php esc_html_e( 'Ready to start selling something awesome?', 'dokan-lite' ); ?>
-                            </h2>
                             
                             <?php if ( dokan_is_seller_enabled( dokan_get_current_user_id() ) ): ?>
+                                <h2 class="dokan-blank-product-message">
+                                    <?php esc_html_e( 'Ready to start selling something awesome?', 'dokan-lite' ); ?>
+                                </h2>
+
                                 <span class="dokan-add-product-link">
                                     <?php if ( current_user_can( 'dokan_add_product' ) ): ?>
                                         <a href="<?php echo esc_url( dokan_get_navigation_url( 'new-product' ) ); ?>" class="dokan-btn dokan-btn-theme <?php echo ( 'on' == dokan_get_option( 'disable_product_popup', 'dokan_selling', 'off' ) ) ? '' : 'dokan-add-new-product'; ?>">
