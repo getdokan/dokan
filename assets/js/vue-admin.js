@@ -6436,7 +6436,7 @@ var Search = dokan_get_lib('Search');
           text: message
         });
 
-        if (_this3.currentStatus !== 'all') {
+        if ('all' === _this3.currentStatus || 'pending' === _this3.currentStatus || 'approved' === _this3.currentStatus) {
           _this3.fetchVendors();
         }
       });
