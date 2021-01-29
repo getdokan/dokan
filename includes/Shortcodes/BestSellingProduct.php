@@ -15,7 +15,7 @@ class BestSellingProduct extends DokanShortcode {
      *
      * @return string
      */
-    function render_shortcode( $atts ) {
+    public function render_shortcode( $atts ) {
         /**
         * Filter return the number of best selling product per page.
         *
@@ -48,7 +48,7 @@ class BestSellingProduct extends DokanShortcode {
             <?php endwhile; ?>
         </ul>
         <?php
-
+        wp_reset_postdata();
         return ob_get_clean();
     }
 }
