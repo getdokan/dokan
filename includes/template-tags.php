@@ -298,7 +298,7 @@ function dokan_order_listing_status_filter() {
                 </span>
             </a>
         </li>
-        <li<?php echo $status_class === 'wc-canceled' ? ' class="active"' : ''; ?>>
+        <li<?php echo $status_class === 'wc-cancelled' ? ' class="active"' : ''; ?>>
             <?php
 			if ( $order_date ) {
 				$date_filter = array(
@@ -592,7 +592,6 @@ if ( ! function_exists( 'dokan_store_category_menu' ) ) :
                 }
             }
 		}
-        
         // hold unique categoreis
         $categories = [];
         foreach ( $all_terms as $term ) {

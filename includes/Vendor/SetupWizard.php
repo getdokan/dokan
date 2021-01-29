@@ -121,7 +121,7 @@ class SetupWizard extends DokanSetupWizard {
             <?php do_action( 'admin_print_styles' ); ?>
             <?php do_action( 'dokan_setup_wizard_styles' ); ?>
         </head>
-        <body class="wc-setup wp-core-ui">
+        <body class="wc-setup wp-core-ui dokan-vendor-setup-wizard">
             <?php if ( ! empty( $this->custom_logo ) ) { ?>
                 <h1 id="wc-logo"><a href="<?php echo esc_url( home_url() ) ?>"><img src="<?php echo esc_url( $this->custom_logo ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" /></a></h1>
             <?php } else {
@@ -182,7 +182,7 @@ class SetupWizard extends DokanSetupWizard {
         <form method="post" class="dokan-seller-setup-form">
             <table class="form-table">
                 <tr>
-                    <th scope="row"><label for="store_ppp"><?php esc_attr_e( 'Store Product Per Page', 'dokan-lite' ); ?></label></th>
+                    <th scope="row"><label for="store_ppp"><?php esc_attr_e( 'Store Products Per Page', 'dokan-lite' ); ?></label></th>
                     <td>
                         <input type="text" id="store_ppp" name="store_ppp" value="<?php echo esc_attr( $store_ppp ); ?>" />
                     </td>

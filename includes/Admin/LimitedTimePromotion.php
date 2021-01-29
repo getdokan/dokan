@@ -39,13 +39,15 @@ class LimitedTimePromotion {
 
         $notices = [
             [
-                'pro'        => true,
-                'key'        => 'dokan-pro-changes',
-                'start_date' => '2021-01-10 09:00:00 EST',
-                'end_date'   => '2021-02-28 23:59:00 EST',
-                'title'      => 'Dokan Pro Upcoming Changes',
-                'content'    => '<p><b>PayPal Adaptive Payment</b> module will be shutdown from Dokan Pro <code>v3.1.5</code></p><p><b>Vendor Subscription Product</b> module will be renamed as <b>Product Subscription</b> starting from Dokan Pro <code>v3.1.5</code></p>',
-                'link'       => '',
+                'pro'         => false,
+                'key'         => 'dokan-withdraw-promo',
+                'thumbnail'   => DOKAN_PLUGIN_ASSEST . '/images/withdraw-request-promo.svg',
+                'start_date'  => '2021-01-10 09:00:00 EST',
+                'end_date'    => '2021-03-28 23:59:00 EST',
+                'title'       => "<p>You’ve received <span>at least 5 Vendor</span> Withdrawal Requests already!</p><p>Want to get the full breakdown of your earnings?</p><p>Upgrade to Dokan Pro at <span>30% off</span> today!</p>",
+                'body'        => "<p>Use this code at checkout:</p><span>dokanpro30</span>",
+                'link'        => 'https://wedevs.com/dokan/pricing?utm_medium=wordpress-dashboard&utm_source=upgrade-to-pro',
+                'button_text' => 'Get Now'
             ],
         ];
 
@@ -54,85 +56,112 @@ class LimitedTimePromotion {
         }
 
         $current_time_est = $this->get_current_time_est();
-        $notice           = [];
+        $selected_notices = [];
 
         $already_displayed_promo = get_option( $this->promo_option_key, [] );
 
         foreach ( $notices as $ntc ) {
-            if ( in_array( $ntc['key'], $already_displayed_promo, true ) ) {
+            if ( in_array( $ntc['key'], $already_displayed_promo, true ) || ( ! $ntc['pro'] && dokan()->is_pro_exists() ) ) {
+                continue;
+            }
+
+            // Temporary condition for withdraw request promo
+            $withdraw_count = dokan()->withdraw->get_total_withdraw_count();
+            if ( $withdraw_count <= 4 ) {
                 continue;
             }
 
             if ( strtotime( $ntc['start_date'] ) < strtotime( $current_time_est ) && strtotime( $current_time_est ) < strtotime( $ntc['end_date'] ) ) {
-                $notice = $ntc;
+                $selected_notices[] = $ntc;
             }
         }
 
-        if ( empty( $notice ) ) {
-            return;
-        }
-
-        if ( $notice['pro'] && ! dokan()->is_pro_exists() ) {
+        if ( empty( $selected_notices ) ) {
             return;
         }
 
         ?>
-        <div class="notice notice-error dokan-limited-time-promotional-notice">
+
+        <?php foreach( $selected_notices as $notice ): ?>
+        <div class="notice dokan-notice dokan-limited-time-promotional-notice">
             <div class="content">
-                <h2><?php echo esc_html( $notice['title'] ); ?></h2>
-                <p><?php echo wp_kses_post( $notice['content'] ); ?></p>
-                <?php if( ! empty( $notice['link'] ) ): ?>
-                <a href="<?php echo esc_url( $notice['link'] ); ?>" class="button button-primary promo-btn" target="_blank"><?php echo esc_html__( 'Get Deals &rarr;', 'dokan-lite' ); ?></a>
-                <?php endif ?>
+                <div class="thumbnail">
+                    <img src="<?php echo $notice['thumbnail'] ?>" alt="thumbnail">
+                </div>
+                <div class="title">
+                    <?php echo $notice['title'] ?>
+                </div>
+                <div class="body">
+                    <?php echo $notice['body'] ?>
+                </div>
+                <a target="_blank" href="<?php echo $notice['link'] ?>"><?php echo esc_html( $notice['button_text'] ) ?></a>
             </div>
             <span class="prmotion-close-icon dashicons dashicons-no-alt" data-key="<?php echo esc_attr( $notice['key'] ); ?>"></span>
             <div class="clear"></div>
         </div>
+        <?php endforeach; ?>
 
         <style>
+
+            .dokan-notice {
+                border: 0px;
+            }
+
             .dokan-limited-time-promotional-notice {
-                padding: 20px;
-                box-sizing: border-box;
+                padding: 10px;
                 position: relative;
+                background-color: #4B0063;
             }
 
             .dokan-limited-time-promotional-notice .prmotion-close-icon {
                 position: absolute;
-                top: 20px;
-                right: 20px;
+                background: white;
+                border-radius: 10px;
+                top: 10px;
+                right: 10px;
                 cursor: pointer;
+                padding-top: 0px;
             }
 
             .dokan-limited-time-promotional-notice .content {
-                float: left;
-                width: 75%;
+                color: white;
+                padding: 14px;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
             }
 
-            .dokan-limited-time-promotional-notice .content h2 {
-                margin: 3px 0px 5px;
-                font-size: 17px;
-                font-weight: bold;
-                color: #555;
-                line-height: 25px;
+            .dokan-limited-time-promotional-notice .content .thumbnail img{
+                height: 100px;
             }
 
-            .dokan-limited-time-promotional-notice .content p {
-                font-size: 14px;
-                text-align: justify;
-                color: #666;
-                margin-bottom: 10px;
+            .dokan-limited-time-promotional-notice .content .title {
+                font-size: 18px;
+                margin-left: 24px;
+                margin-right: 48px;
+            }
+
+            .dokan-limited-time-promotional-notice .content .title span {
+                font-weight: bolder;
+            }
+
+            .dokan-limited-time-promotional-notice .content .body p {
+                font-size: 10px;
+            }
+
+            .dokan-limited-time-promotional-notice .content .body span {
+                color: #FF6393;
+                font-size: 28px;
             }
 
             .dokan-limited-time-promotional-notice .content a {
-                border: none;
-                box-shadow: none;
-                height: 31px;
-                line-height: 30px;
-                border-radius: 3px;
-                background: #ff5722;
-                text-shadow: none;
-                width: 140px;
-                text-align: center;
+                margin-left: 48px;
+                text-decoration: none;
+                padding: 10px 20px;
+                background-color: white;
+                color: black;
+                border-radius: 22px;
             }
         </style>
 

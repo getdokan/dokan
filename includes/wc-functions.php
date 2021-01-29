@@ -31,6 +31,8 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
 
     // Gallery Images
     if ( isset( $data['product_image_gallery'] ) ) {
+        $data = apply_filters( 'dokan_restrict_product_image_gallery_on_edit', $data );
+
         $attachment_ids = array_filter( explode( ',', wc_clean( $data['product_image_gallery'] ) ) );
         update_post_meta( $post_id, '_product_image_gallery', implode( ',', $attachment_ids ) );
     }
@@ -242,12 +244,10 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
 
         // Dates
         update_post_meta( $post_id, '_sale_price_dates_from', $date_from ? strtotime( $date_from ) : '' );
-
-        // error_log( var_export( date('y-m-d H:i:s'), true ) );
         update_post_meta( $post_id, '_sale_price_dates_to', $date_to ? strtotime( '+ 23 hours', strtotime( $date_to ) ) : '' );
 
         if ( $date_to && ! $date_from ) {
-            $date_from = date( 'Y-m-d' );
+            $date_from = date( 'Y-m-d' ); // phpcs:ignore
             update_post_meta( $post_id, '_sale_price_dates_from', strtotime( $date_from ) );
         }
 
@@ -500,7 +500,7 @@ function dokan_seller_displayname( $display_name ) {
     return $display_name;
 }
 
-add_filter( 'pre_user_display_name', 'dokan_seller_displayname' );
+//add_filter( 'pre_user_display_name', 'dokan_seller_displayname' );
 
 /**
  * Get featured products
@@ -1040,7 +1040,7 @@ add_action( 'woocommerce_product_tabs', 'dokan_set_more_from_seller_tab', 10 );
 function dokan_get_more_products_from_seller( $seller_id = 0, $posts_per_page = 6 ) {
     global $product, $post;
 
-    if ( $seller_id === 0 ) {
+    if ( $seller_id === 0 || 'more_seller_product' === $seller_id ) {
         $seller_id = $post->post_author;
     }
 
@@ -1170,3 +1170,24 @@ function dokan_add_reply_to_vendor_email_on_wc_customer_note_mail( $headers = ''
 }
 
 add_filter( 'woocommerce_email_headers', 'dokan_add_reply_to_vendor_email_on_wc_customer_note_mail', 10, 3 );
+
+/**
+ * Keep old vendor after duplicate any product
+ *
+ * @param object $duplicate
+ * @param object $product
+ *
+ * @return void
+ */
+function dokan_keep_old_vendor_woocommerce_duplicate_product( $duplicate, $product ) {
+    $old_author = get_post_field( 'post_author', $product->get_id() );
+    $new_author = get_post_field( 'post_author', $duplicate->get_id() );
+
+    if ( absint( $old_author ) === absint( $new_author ) ) {
+        return;
+    }
+
+    dokan_override_product_author( $duplicate, absint( $old_author ) );
+}
+
+add_action( 'woocommerce_product_duplicate', 'dokan_keep_old_vendor_woocommerce_duplicate_product', 35, 2 );
