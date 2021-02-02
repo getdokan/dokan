@@ -332,7 +332,7 @@ export default {
                     text: message,
                 });
 
-                if (this.currentStatus !== 'all' ) {
+                if ( 'all' === this.currentStatus || 'pending' === this.currentStatus || 'approved' === this.currentStatus ) {
                     this.fetchVendors();
                 }
             });

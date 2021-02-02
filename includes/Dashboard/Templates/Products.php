@@ -90,7 +90,7 @@ class Products {
             'post'            => $post,
             'is_downloadable' => $is_downloadable,
             'is_virtual'      => $is_virtual,
-            'class'           => 'show_if_simple',
+            'class'           => 'show_if_subscription show_if_variable-subscription show_if_simple',
         ) );
     }
 

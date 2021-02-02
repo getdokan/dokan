@@ -699,6 +699,7 @@ class Assets {
                 'i18n_load_more'                      => __( 'Loading more results&hellip;', 'dokan-lite' ),
                 'i18n_searching'                      => __( 'Searching&hellip;', 'dokan-lite' ),
                 'i18n_date_format'                    => get_option( 'date_format' ),
+                'dokan_banner_added_alert_msg'        => __( 'Are you sure? You have uploaded banner but didn\'t click the Update Settings button!', 'dokan-lite' ),
             ];
 
             $default_args = array_merge( $default_args, $custom_args );
