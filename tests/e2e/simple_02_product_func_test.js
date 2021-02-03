@@ -1,6 +1,7 @@
 var Factory = require('rosie').Factory;
 var faker = require('faker');
 const helpers = require('../../pages/helpers');
+//const locator = require('../../pages/product_locator');
 
 //const helper = require('./helpers');
 Feature('Simple product fucntionality');
@@ -22,6 +23,9 @@ Scenario('simple product functional', ({
     helpers.cancelschedule();
     helpers.setregularprice();
     helpers.checkWrongPrice();
+    //Virtual Option
+    helpers.checkVirtual();
+    helpers.uncheckVirtual();
     //Category & Tags
     helpers.checksinglecat();
     helpers.checkmulticat();
@@ -30,14 +34,11 @@ Scenario('simple product functional', ({
     helpers.shortDesc();
     helpers.desc();
     helpers.clearDesc();
-    helpers.shortDesc();
+    // helpers.shortDesc();
     helpers.desc();
     //Wholesale product
     helpers.wholesale();
     helpers.clearwholesale();
     helpers.wholesale();
-    //Virtual Option
-    helpers.checkVirtual();
-    helpers.uncheckVirtual();
 
 });

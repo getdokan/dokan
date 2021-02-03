@@ -30,7 +30,8 @@ exports.config = {
     include: {
         I: './steps_file.js',
         product: './pages/product.js',
-        helpers: './pages/helpers.js'
+        helpers: './pages/helpers.js',
+        product_locator: './pages/product_locator.js'
     },
     bootstrap: null,
     mocha: {},
