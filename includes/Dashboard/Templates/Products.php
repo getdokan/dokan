@@ -387,6 +387,7 @@ class Products {
 
         $errors     = array();
         $post_title = sanitize_text_field( $postdata['post_title'] );
+        $post_slug  = isset( $postdata['editable-post-name'] ) && ! empty( $postdata['editable-post-name'] ) ? sanitize_text_field( $postdata['editable-post-name'] ) : '';
 
         if ( empty( $post_title ) ) {
             $errors[] = __( 'Please enter product title', 'dokan-lite' );
@@ -426,6 +427,14 @@ class Products {
                 'post_status'    => isset( $postdata['post_status'] ) ? sanitize_text_field( $postdata['post_status'] ) : 'pending',
                 'comment_status' => isset( $postdata['_enable_reviews'] ) ? 'open' : 'closed',
             ) );
+            
+            if ( $post_slug ) {
+                global $wpdb;
+
+                if ( empty( $wpdb->get_row( "SELECT post_name FROM {$wpdb->prefix}posts WHERE post_name = '" . $post_slug . "'", 'ARRAY_A' ) ) ) {
+                    $product_info['post_name'] = $post_slug;
+                }
+            }
 
             wp_update_post( $product_info );
 
