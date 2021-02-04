@@ -49,5 +49,19 @@ module.exports = {
     ProductStatusDropdown: '#post_status',
     ProductVisibilityDropdown: '#_visibility',
     ProductReviewCheckbox: 'div.dokan-section-content > div:nth-child(5) > label',
+    //group product Functional 
+    RmaCheckBox: '#dokan_rma_product_override',
+    RmaLabelInput: '#dokan-rma-label',
+    RmaTypeDropdown: '#dokan-warranty-type',
+    RmaPolicyIframe: '#warranty_policy_ifr',
+    RmaPolicyInput: '//body[@id="tinymce" and @data-id="warranty_policy"]',
+    RmaLengthDropdown: '#dokan-warranty-length',
+    RmaLengthValue: 'warranty_length_value',
+    RmaLengthDuration: '#dokan-warranty-length-duration',
+    RmaAddonCostInput: 'warranty_addon_price[]',
+    RmaAddonDurationInput: 'warranty_addon_length[]',
+    RmaWarrentyAddonBtn: 'a.dokan-btn.dokan-btn-default.add-item',
+
+
 
 }

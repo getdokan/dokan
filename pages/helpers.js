@@ -144,6 +144,42 @@ module.exports = {
         I.clearField(locator.WholeSaleQty);
         I.click(locator.SaveProduct);
         I.wait(2);
-    }
+    },
+    // Start of Group product Functionalities
+    checkrmalimited() {
+        I.checkOption(locator.RmaCheckBox);
+        I.fillField(locator.RmaLabelInput, 'New Warranty limited');
+        I.selectOption(locator.RmaTypeDropdown, 'Warranty Included');
+        I.selectOption(locator.RmaLengthDropdown, 'Limited');
+        I.fillField(locator.RmaLengthValue, '10');
+        I.selectOption(locator.RmaLengthDuration, 'Months');
+        I.scrollTo(locator.RmaContentDiv);
+        within({
+            frame: locator.RmaPolicyIframe
+        }, () => {
+            I.fillField(locator.RmaPolicyInput, 'policy added');
+        });
+        I.click(locator.SaveProduct);
+    },
+    checkrmalifetime() {
+        I.checkOption(locator.RmaCheckBox);
+        I.fillField(locator.RmaLabelInput, 'New Warranty Lifetime');
+        I.selectOption(locator.RmaTypeDropdown, 'Warranty Included');
+        I.selectOption(locator.RmaLengthDropdown, 'Lifetime');
+        I.click(locator.SaveProduct);
+    },
+    // checkrmawarrentyaddon() {
+    //     I.checkOption(locator.RmaCheckBox);
+    //     I.fillField(locator.RmaLabelInput, 'New Warranty Addon');
+    //     I.selectOption(locator.RmaTypeDropdown, 'Warranty Included');
+    //     I.fillField(locator.RmaAddonCostInput, '50');
+    //     I.fillField(locator.RmaAddonDurationInput, '1');
+    //     I.click(locator.RmaWarrentyAddonBtn);
+    //     I.click(locator.SaveProduct);
+    // }, Work needed of this function
+    clearrma() {
+        I.uncheckOption(locator.RmaCheckBox);
+        I.click(locator.SaveProduct);
+    },
 
 }
