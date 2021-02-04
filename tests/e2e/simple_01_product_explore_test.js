@@ -8,7 +8,7 @@ Scenario('product edit explore test', ({ I }) => {
     I.fillField('Password', 'alvitazwar1122334456');
     I.click('.login > p:nth-child(4) > button:nth-child(3)');
     I.click('Products');
-    I.click('group_product');
+    I.click('simple_pro_1');
     // Starting to explore
     //Check Error
     I.checkError();
@@ -51,7 +51,6 @@ Scenario('product edit explore test', ({ I }) => {
     I.seeElementInDOM(locator.LinkProductContent);
     I.see('Upsells');
     I.see('Cross-sells');
-    I.see('Grouped products');
     //Attribute
     I.seeElementInDOM(locator.AttributeSectionHeading);
     I.seeElementInDOM(locator.AttributeSectionDropdown);
