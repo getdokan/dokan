@@ -60,7 +60,13 @@ module.exports = {
     RmaLengthDuration: '#dokan-warranty-length-duration',
     RmaAddonCostInput: 'warranty_addon_price[]',
     RmaAddonDurationInput: 'warranty_addon_length[]',
+    RmaAddonDurationDropdown: '//*[@id="warranty_addon_duration[]"]',
     RmaWarrentyAddonBtn: 'a.dokan-btn.dokan-btn-default.add-item',
+    PurchaseNotesInput: '#_purchase_note',
+    LinkedProductUpsells: 'div.content-half-part.dokan-form-group.hide_if_variation > span > span.selection > span > ul > li > input',
+    LinkedProductCrossSells: 'div.dokan-section-content > div:nth-child(2) > span > span.selection > span > ul > li > input',
+    LinkedProductGrouped: 'div.dokan-group-product-content.show_if_grouped > span > span.selection > span > ul > li > input',
+
 
 
 

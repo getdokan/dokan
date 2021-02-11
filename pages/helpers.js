@@ -168,18 +168,47 @@ module.exports = {
         I.selectOption(locator.RmaLengthDropdown, 'Lifetime');
         I.click(locator.SaveProduct);
     },
-    // checkrmawarrentyaddon() {
-    //     I.checkOption(locator.RmaCheckBox);
-    //     I.fillField(locator.RmaLabelInput, 'New Warranty Addon');
-    //     I.selectOption(locator.RmaTypeDropdown, 'Warranty Included');
-    //     I.fillField(locator.RmaAddonCostInput, '50');
-    //     I.fillField(locator.RmaAddonDurationInput, '1');
-    //     I.click(locator.RmaWarrentyAddonBtn);
-    //     I.click(locator.SaveProduct);
-    // }, Work needed of this function
+    checkrmawarrentyaddon() {
+        I.checkOption(locator.RmaCheckBox);
+        I.fillField(locator.RmaLabelInput, 'New Warranty Addon');
+        I.selectOption(locator.RmaTypeDropdown, 'Warranty as Add-On');
+        I.fillField(locator.RmaAddonCostInput, '50');
+        I.fillField(locator.RmaAddonDurationInput, '1');
+        I.selectOption(locator.RmaAddonDurationDropdown, 'Days');
+        I.click(locator.RmaWarrentyAddonBtn);
+        I.click(locator.SaveProduct);
+    },
     clearrma() {
         I.uncheckOption(locator.RmaCheckBox);
         I.click(locator.SaveProduct);
     },
+    checknotes() {
+        I.fillField(locator.PurchaseNotesInput, faker.lorem.text());
+        I.click(locator.SaveProduct);
+        I.clearField(locator.PurchaseNotesInput);
+    },
+    checkgroup() {
+        I.scrollTo(locator.LinkedProductSection);
+        I.click(locator.LinkedProductUpsells);
+        I.fillField(locator.LinkedProductUpsells, 'simple_pro_1');
+        I.wait(1);
+        I.pressKey('Enter');
+        I.wait(1);
+        I.fillField(locator.LinkedProductUpsells, 'simple_pro_2');
+        I.wait(1);
+        I.pressKey('Enter');
+        I.clearField(locator.LinkedProductUpsells);
+        I.click(locator.LinkedProductCrossSells);
+        I.fillField(locator.LinkedProductCrossSells, 'simple_pro_3');
+        I.wait(1);
+        I.pressKey('Enter');
+        I.clearField(locator.LinkedProductCrossSells);
+        I.click(locator.LinkedProductGrouped);
+        I.fillField(locator.LinkedProductGrouped, 'group_product_2');
+        I.wait(1);
+        I.pressKey('Enter');
+        I.clearField(locator.LinkedProductGrouped);
+        I.click(locator.SaveProduct);
+    }
 
 }
