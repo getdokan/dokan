@@ -3171,6 +3171,7 @@ function dokan_get_translated_days( $day ) {
  * @param  int user_id
  *
  * @since  2.8.2
+ * @since  3.2.1 replaced time related functions with dokan_current_datetime()
  *
  * @return bool
  */
@@ -3178,7 +3179,9 @@ function dokan_is_store_open( $user_id ) {
     $store_user = dokan()->vendor->get( $user_id );
     $store_info = $store_user->get_shop_info();
     $open_days  = isset( $store_info['dokan_store_time'] ) ? $store_info['dokan_store_time'] : '';
-    $today      = strtolower( date( 'l' ) );
+
+    $current_time = dokan_current_datetime();
+    $today        = strtolower( $current_time->format( 'l' ) );
 
     if ( ! isset( $open_days[ $today ] ) ) {
         return false;
@@ -3192,9 +3195,8 @@ function dokan_is_store_open( $user_id ) {
             return true;
         }
 
-        $current_time = current_time( 'timestamp' );
-        $open         = strtotime( $schedule['opening_time'] );
-        $close        = strtotime( $schedule['closing_time'] );
+        $open  = $current_time->modify( $schedule['opening_time'] );
+        $close = $current_time->modify( $schedule['closing_time'] );
 
         if ( $open <= $current_time && $close >= $current_time ) {
             return true;
