@@ -31,19 +31,22 @@ class NoticeHandler {
             return;
         }
 
-        $notices = [
+        $notices = apply_filters(
+            'dokan_all_notices',
             [
-                'pro'         => true,
-                'key'         => 'dokan-withdraw-promo',
-                'thumbnail'   => DOKAN_PLUGIN_ASSEST . '/images/withdraw-request-promo.svg',
-                'start_date'  => '2021-01-10 09:00:00 EST',
-                'end_date'    => '2021-03-28 23:59:00 EST',
-                'title'       => '<p>You’ve received <span>at least 5 Vendor</span> Withdrawal Requests already!</p><p>Want to get the full breakdown of your earnings?</p><p>Upgrade to Dokan Pro at <span>30% off</span> today!</p>',
-                'body'        => '<p>Use this code at checkout:</p><span>dokanpro30</span>',
-                'link'        => 'https://wedevs.com/dokan/pricing?utm_medium=wordpress-dashboard&utm_source=upgrade-to-pro',
-                'button_text' => 'Get Now',
-            ],
-        ];
+				[
+					'pro'         => true,
+					'key'         => 'dokan-withdraw-promo',
+					'thumbnail'   => DOKAN_PLUGIN_ASSEST . '/images/withdraw-request-promo.svg',
+					'start_date'  => '2021-01-10 09:00:00 EST',
+					'end_date'    => '2021-03-28 23:59:00 EST',
+					'title'       => '<p>You’ve received <span>at least 5 Vendor</span> Withdrawal Requests already!</p><p>Want to get the full breakdown of your earnings?</p><p>Upgrade to Dokan Pro at <span>30% off</span> today!</p>',
+					'body'        => '<p>Use this code at checkout:</p><span>dokanpro30</span>',
+					'link'        => 'https://wedevs.com/dokan/pricing?utm_medium=wordpress-dashboard&utm_source=upgrade-to-pro',
+					'button_text' => 'Get Now',
+				],
+			]
+        );
 
         if ( empty( $notices ) ) {
             return;
