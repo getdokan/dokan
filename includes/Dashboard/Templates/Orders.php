@@ -61,7 +61,7 @@ class Orders {
         $order_id = isset( $_GET['order_id'] ) ? intval( $_GET['order_id'] ) : 0;
 
         if ( $order_id ) {
-            $_nonce = isset( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ) : '';
+            $_nonce = isset( $_REQUEST['_wpnonce'] ) ? sanitize_key( $_REQUEST['_wpnonce'] ) : '';
 
             if ( wp_verify_nonce( $_nonce, 'dokan_view_order' ) && current_user_can( 'dokan_view_order' ) ) {
                 dokan_get_template_part( 'orders/details' );
@@ -95,11 +95,7 @@ class Orders {
 
         $post_data = wp_unslash( $_POST );
 
-        if ( ! isset( $post_data['dokan_vendor_order_export_nonce'] ) ) {
-            return;
-        }
-
-        if ( ! wp_verify_nonce( sanitize_text_field( $post_data['dokan_vendor_order_export_nonce'] ), 'dokan_vendor_order_export_action' ) ) {
+        if ( ! isset( $post_data['dokan_vendor_order_export_nonce'] ) || ! wp_verify_nonce( sanitize_key( $post_data['dokan_vendor_order_export_nonce'] ), 'dokan_vendor_order_export_action' ) ) {
             return;
         }
 
