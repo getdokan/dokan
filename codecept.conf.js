@@ -16,15 +16,16 @@ exports.config = {
             // waitForTimeout: 5000, // wait for 5 seconds, by default it's wait 1 sec
             // smartWait: 5000
             windowSize: '1200x1280',
+            show: false, // nEEd Analysis
             timeouts: {
                 "script": 60000,
                 "page load": 10000
             },
-            desiredCapabilities: {
-                chromeOptions: {
-                    args: ["--headless", "--disable-gpu", "--no-sandbox"]
-                }
-            },
+            // desiredCapabilities: {
+            //     chromeOptions: {
+            //         args: ["--headless", "--disable-gpu", "--no-sandbox"]
+            //     }
+            // },
         }
     },
     include: {
@@ -45,7 +46,7 @@ exports.config = {
             enabled: true
         },
         screenshotOnFail: {
-            enabled: true
+            enabled: false
         }
     }
 }
