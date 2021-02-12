@@ -842,7 +842,7 @@ function dokan_save_account_details() {
 
     $postdata = wp_unslash( $_POST );
 
-    if ( empty( $postdata['_wpnonce'] ) || ! wp_verify_nonce( $postdata['_wpnonce'], 'dokan_save_account_details' ) ) {
+    if ( empty( $postdata['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $postdata['_wpnonce'] ), 'dokan_save_account_details' ) ) {
         return;
     }
 
@@ -1092,7 +1092,7 @@ function dokan_bulk_order_status_change() {
 
     $postdata = wp_unslash( $_POST );
 
-    if ( ! isset( $postdata['security'] ) || ! wp_verify_nonce( $postdata['security'], 'bulk_order_status_change' ) ) {
+    if ( ! isset( $postdata['security'] ) || ! wp_verify_nonce( sanitize_key( $postdata['security'] ), 'bulk_order_status_change' ) ) {
         return;
     }
 
