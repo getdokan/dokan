@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 3.2.0\n"
+"Project-Id-Version: Dokan 3.2.1\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2021-01-29 11:32:18+00:00\n"
+"POT-Creation-Date: 2021-02-12 11:34:02+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -121,7 +121,7 @@ msgid "Dokan"
 msgstr ""
 
 #: includes/Admin/AdminBar.php:54 includes/Admin/Menu.php:43
-#: includes/Admin/Settings.php:490 includes/Install/Installer.php:157
+#: includes/Admin/Settings.php:491 includes/Install/Installer.php:157
 #: includes/template-tags.php:378 src/admin/pages/Dashboard.vue:5
 msgid "Dashboard"
 msgstr ""
@@ -143,7 +143,7 @@ msgstr ""
 
 #: includes/Admin/Hooks.php:64 includes/Admin/Hooks.php:70
 #: includes/Admin/Hooks.php:357 includes/Admin/Hooks.php:379
-#: includes/Admin/Settings.php:401 includes/Admin/Settings.php:412
+#: includes/Admin/Settings.php:402 includes/Admin/Settings.php:413
 #: includes/Admin/SetupWizard.php:345 includes/Install/Installer.php:93
 #: includes/wc-template.php:17 includes/wc-template.php:172
 #: includes/wc-template.php:321 src/admin/pages/Dashboard.vue:38
@@ -422,136 +422,142 @@ msgstr ""
 msgid "Store Products Per Page"
 msgstr ""
 
-#: includes/Admin/Settings.php:373
+#: includes/Admin/Settings.php:363
+msgid ""
+"Set how many products to display per page on the vendor store page. It will "
+"affect only if the vendor isn't set this value on their vendor setting page."
+msgstr ""
+
+#: includes/Admin/Settings.php:374
 msgid "Commission"
 msgstr ""
 
-#: includes/Admin/Settings.php:378
+#: includes/Admin/Settings.php:379
 msgid "Commission Type "
 msgstr ""
 
-#: includes/Admin/Settings.php:379
+#: includes/Admin/Settings.php:380
 msgid "Select a commission type for Vendor"
 msgstr ""
 
-#: includes/Admin/Settings.php:386 src/admin/pages/VendorPaymentFields.vue:69
+#: includes/Admin/Settings.php:387 src/admin/pages/VendorPaymentFields.vue:69
 #: src/admin/pages/VendorPaymentFields.vue:78
 #: templates/admin-setup-wizard/step-selling.php:31
 msgid "Admin Commission"
 msgstr ""
 
-#: includes/Admin/Settings.php:387
+#: includes/Admin/Settings.php:388
 msgid "Amount you get from each sale"
 msgstr ""
 
-#: includes/Admin/Settings.php:397
+#: includes/Admin/Settings.php:398
 #: templates/admin-setup-wizard/step-store.php:14
 msgid "Shipping Fee Recipient"
 msgstr ""
 
-#: includes/Admin/Settings.php:398
+#: includes/Admin/Settings.php:399
 msgid "Who will be receiving the Shipping fees"
 msgstr ""
 
-#: includes/Admin/Settings.php:402 includes/Admin/Settings.php:413
+#: includes/Admin/Settings.php:403 includes/Admin/Settings.php:414
 #: includes/Admin/SetupWizard.php:346
 msgid "Admin"
 msgstr ""
 
-#: includes/Admin/Settings.php:408
+#: includes/Admin/Settings.php:409
 #: templates/admin-setup-wizard/step-store.php:28
 msgid "Tax Fee Recipient"
 msgstr ""
 
-#: includes/Admin/Settings.php:409
+#: includes/Admin/Settings.php:410
 msgid "Who will be receiving the Tax fees"
 msgstr ""
 
-#: includes/Admin/Settings.php:424
+#: includes/Admin/Settings.php:425
 msgid "Vendor Capability"
 msgstr ""
 
-#: includes/Admin/Settings.php:429
+#: includes/Admin/Settings.php:430
 msgid "New Vendor Product Upload"
 msgstr ""
 
-#: includes/Admin/Settings.php:430
+#: includes/Admin/Settings.php:431
 msgid "Allow newly registered vendors to add products"
 msgstr ""
 
-#: includes/Admin/Settings.php:436
+#: includes/Admin/Settings.php:437
 msgid "Disable Product Popup"
 msgstr ""
 
-#: includes/Admin/Settings.php:437
+#: includes/Admin/Settings.php:438
 msgid "Disable add new product in popup view"
 msgstr ""
 
-#: includes/Admin/Settings.php:443 src/admin/pages/VendorCapabilities.vue:89
+#: includes/Admin/Settings.php:444 src/admin/pages/VendorCapabilities.vue:89
 #: templates/admin-setup-wizard/step-selling.php:39
 msgid "Order Status Change"
 msgstr ""
 
-#: includes/Admin/Settings.php:444
+#: includes/Admin/Settings.php:445
 msgid "Allow vendor to update order status"
 msgstr ""
 
-#: includes/Admin/Settings.php:463 includes/Admin/SetupWizard.php:465
+#: includes/Admin/Settings.php:464 includes/Admin/SetupWizard.php:465
 msgid "Withdraw Methods"
 msgstr ""
 
-#: includes/Admin/Settings.php:464
+#: includes/Admin/Settings.php:465
 msgid "Select suitable Withdraw methods for Vendors"
 msgstr ""
 
-#: includes/Admin/Settings.php:471 includes/Admin/SetupWizard.php:502
+#: includes/Admin/Settings.php:472 includes/Admin/SetupWizard.php:502
 msgid "Minimum Withdraw Limit"
 msgstr ""
 
-#: includes/Admin/Settings.php:472
+#: includes/Admin/Settings.php:473
 msgid ""
 "Minimum balance required to make a withdraw request. Leave blank to set no "
 "minimum limits."
 msgstr ""
 
-#: includes/Admin/Settings.php:481
+#: includes/Admin/Settings.php:482
 msgid "Exclude COD Payments"
 msgstr ""
 
-#: includes/Admin/Settings.php:482
+#: includes/Admin/Settings.php:483
 msgid ""
 "If an order is paid with Cash on Delivery (COD), then exclude that payment "
 "from vendor balance."
 msgstr ""
 
-#: includes/Admin/Settings.php:491
+#: includes/Admin/Settings.php:492
 msgid "Select a page to show Vendor Dashboard"
 msgstr ""
 
-#: includes/Admin/Settings.php:493 includes/Admin/Settings.php:501
-#: includes/Admin/Settings.php:509 includes/Admin/Settings.php:517
+#: includes/Admin/Settings.php:494 includes/Admin/Settings.php:502
+#: includes/Admin/Settings.php:510 includes/Admin/Settings.php:517
 #: includes/Admin/Settings.php:627
 msgid "Select page"
 msgstr ""
 
-#: includes/Admin/Settings.php:498 includes/Install/Installer.php:169
+#: includes/Admin/Settings.php:499 includes/Install/Installer.php:169
 #: templates/global/header-menu.php:46
 msgid "My Orders"
 msgstr ""
 
-#: includes/Admin/Settings.php:499
+#: includes/Admin/Settings.php:500
 msgid "Select a page to show My Orders"
 msgstr ""
 
-#: includes/Admin/Settings.php:506
+#: includes/Admin/Settings.php:507
 msgid "Store Listing"
 msgstr ""
 
-#: includes/Admin/Settings.php:507
+#: includes/Admin/Settings.php:508
 msgid "Select a page to show all Stores"
 msgstr ""
 
-#: includes/Admin/Settings.php:514
+#: includes/Admin/Settings.php:515
 msgid "Terms and Conditions Page"
 msgstr ""
 
@@ -650,7 +656,7 @@ msgstr ""
 msgid "Email Address"
 msgstr ""
 
-#: includes/Admin/Settings.php:609 includes/Admin/UserProfile.php:211
+#: includes/Admin/Settings.php:609 includes/Admin/UserProfile.php:212
 #: src/admin/pages/VendorAccountFields.vue:64
 #: templates/account/vendor-registration.php:33
 #: templates/global/seller-registration-form.php:36
@@ -701,7 +707,7 @@ msgstr ""
 msgid "Store"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:155 includes/Admin/UserProfile.php:294
+#: includes/Admin/SetupWizard.php:155 includes/Admin/UserProfile.php:295
 msgid "Selling"
 msgstr ""
 
@@ -791,14 +797,14 @@ msgstr ""
 
 #: includes/Admin/SetupWizard.php:537 includes/Admin/SetupWizard.php:600
 #: includes/Admin/SetupWizardWCAdmin.php:232
-#: includes/Vendor/SetupWizard.php:243 includes/Vendor/SetupWizard.php:396
+#: includes/Vendor/SetupWizard.php:243 includes/Vendor/SetupWizard.php:390
 #: templates/admin-setup-wizard/step-selling.php:53
 #: templates/admin-setup-wizard/step-store.php:100
 msgid "Continue"
 msgstr ""
 
 #: includes/Admin/SetupWizard.php:538 includes/Vendor/SetupWizard.php:244
-#: includes/Vendor/SetupWizard.php:397
+#: includes/Vendor/SetupWizard.php:391
 #: templates/admin-setup-wizard/step-selling.php:54
 #: templates/admin-setup-wizard/step-store.php:101
 msgid "Skip this step"
@@ -942,7 +948,7 @@ msgstr ""
 msgid "We'll use %1$s for product weight and %2$s for product dimensions."
 msgstr ""
 
-#: includes/Admin/UserProfile.php:38 includes/Ajax.php:145
+#: includes/Admin/UserProfile.php:38 includes/Ajax.php:143
 #: includes/Assets.php:413 src/admin/pages/VendorAccountFields.vue:279
 #: src/admin/pages/VendorAccountFields.vue:311
 #: src/admin/pages/VendorAccountFields.vue:343
@@ -986,121 +992,122 @@ msgstr ""
 msgid "Upload banner"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:122
+#: includes/Admin/UserProfile.php:123
+#. translators: %1$s: banner width, %2$s: banner height in integers
 msgid "Upload a banner for your store. Banner size is (%1$sx%2$s) pixels."
 msgstr ""
 
-#: includes/Admin/UserProfile.php:134
+#: includes/Admin/UserProfile.php:135
 msgid "Store name"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:141
+#: includes/Admin/UserProfile.php:142
 #: src/admin/pages/VendorAccountFields.vue:53
 msgid "Store URL"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:149 includes/Privacy.php:223
+#: includes/Admin/UserProfile.php:150 includes/Privacy.php:223
 msgid "Address 1"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:156 includes/Privacy.php:224
+#: includes/Admin/UserProfile.php:157 includes/Privacy.php:224
 msgid "Address 2"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:163
+#: includes/Admin/UserProfile.php:164
 msgid "Town/City"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:170
+#: includes/Admin/UserProfile.php:171
 msgid "Zip Code"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:229
+#: includes/Admin/UserProfile.php:230
 msgid "Payment Options : "
 msgstr ""
 
-#: includes/Admin/UserProfile.php:234
+#: includes/Admin/UserProfile.php:235
 msgid "Paypal Email "
 msgstr ""
 
-#: includes/Admin/UserProfile.php:242
+#: includes/Admin/UserProfile.php:243
 msgid "Skrill Email "
 msgstr ""
 
-#: includes/Admin/UserProfile.php:251
+#: includes/Admin/UserProfile.php:252
 msgid "Bank name "
 msgstr ""
 
-#: includes/Admin/UserProfile.php:257
+#: includes/Admin/UserProfile.php:258
 msgid "Account Name "
 msgstr ""
 
-#: includes/Admin/UserProfile.php:263
+#: includes/Admin/UserProfile.php:264
 msgid "Account Number "
 msgstr ""
 
-#: includes/Admin/UserProfile.php:269
+#: includes/Admin/UserProfile.php:270
 msgid "Bank Address "
 msgstr ""
 
-#: includes/Admin/UserProfile.php:275 includes/Privacy.php:279
+#: includes/Admin/UserProfile.php:276 includes/Privacy.php:279
 #: src/admin/pages/VendorPaymentFields.vue:30
 msgid "Routing Number"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:281
+#: includes/Admin/UserProfile.php:282
 msgid "Bank IBAN "
 msgstr ""
 
-#: includes/Admin/UserProfile.php:287
+#: includes/Admin/UserProfile.php:288
 msgid "Bank Swift "
 msgstr ""
 
-#: includes/Admin/UserProfile.php:299
+#: includes/Admin/UserProfile.php:300
 msgid "Enable Adding Products"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:302
+#: includes/Admin/UserProfile.php:303
 msgid "Enable or disable product adding capability"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:307
+#: includes/Admin/UserProfile.php:308
 msgid "Publishing"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:312
+#: includes/Admin/UserProfile.php:313
 msgid "Publish product directly"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:315
+#: includes/Admin/UserProfile.php:316
 msgid "Bypass pending, publish products directly"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:320
+#: includes/Admin/UserProfile.php:321
 msgid "Admin Commission Type "
 msgstr ""
 
-#: includes/Admin/UserProfile.php:327
+#: includes/Admin/UserProfile.php:328
 msgid "Set the commmission type admin gets from this seller"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:331
+#: includes/Admin/UserProfile.php:332
 msgid "Admin Commission "
 msgstr ""
 
-#: includes/Admin/UserProfile.php:335
+#: includes/Admin/UserProfile.php:336
 msgid "It will override the default commission admin gets from each sales"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:340
+#: includes/Admin/UserProfile.php:341
 msgid "Featured vendor"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:345
+#: includes/Admin/UserProfile.php:346
 msgid "Mark as featured vendor"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:348
+#: includes/Admin/UserProfile.php:349
 msgid "This vendor will be marked as a featured vendor."
 msgstr ""
 
@@ -1131,7 +1138,7 @@ msgstr ""
 msgid "Commision: "
 msgstr ""
 
-#: includes/Ajax.php:72 includes/Ajax.php:1003 includes/Ajax.php:1033
+#: includes/Ajax.php:72 includes/Ajax.php:999 includes/Ajax.php:1029
 #: includes/Dashboard/Templates/Withdraw.php:110
 #: includes/Dashboard/Templates/Withdraw.php:175
 msgid "You have no permission to do this action"
@@ -1141,98 +1148,99 @@ msgstr ""
 msgid "Something wrong, please try again later"
 msgstr ""
 
-#: includes/Ajax.php:112 includes/Dashboard/Templates/Settings.php:213
-#: includes/Dashboard/Templates/Settings.php:227
-#: includes/Dashboard/Templates/Settings.php:239
-#: includes/Dashboard/Templates/Settings.php:251
-#: includes/Dashboard/Templates/Settings.php:288
-#: includes/Dashboard/Templates/Settings.php:354
-#: includes/Dashboard/Templates/Settings.php:395
-#: includes/Dashboard/Templates/Settings.php:445
+#: includes/Ajax.php:108 includes/Dashboard/Templates/Settings.php:213
+#: includes/Dashboard/Templates/Settings.php:217
+#: includes/Dashboard/Templates/Settings.php:231
+#: includes/Dashboard/Templates/Settings.php:243
+#: includes/Dashboard/Templates/Settings.php:255
+#: includes/Dashboard/Templates/Settings.php:292
+#: includes/Dashboard/Templates/Settings.php:358
+#: includes/Dashboard/Templates/Settings.php:399
+#: includes/Dashboard/Templates/Settings.php:449
 #: includes/Dashboard/Templates/Withdraw.php:106
 #: includes/Dashboard/Templates/Withdraw.php:171
 msgid "Are you cheating?"
 msgstr ""
 
-#: includes/Ajax.php:163 includes/Ajax.php:198
+#: includes/Ajax.php:161 includes/Ajax.php:196
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
-#: includes/Ajax.php:167 includes/Ajax.php:202
+#: includes/Ajax.php:165 includes/Ajax.php:200
 msgid "You have taken too long. Please go back and retry."
 msgstr ""
 
-#: includes/Ajax.php:177 includes/Ajax.php:212
+#: includes/Ajax.php:175 includes/Ajax.php:210
 msgid "You do not have permission to change this order"
 msgstr ""
 
-#: includes/Ajax.php:275
+#: includes/Ajax.php:273
 #. translators: numeric number of files
 msgid "File %d"
 msgstr ""
 
-#: includes/Ajax.php:296
+#: includes/Ajax.php:294
 msgid "You have no permission to manage this order"
 msgstr ""
 
-#: includes/Ajax.php:332 includes/Ajax.php:337
+#: includes/Ajax.php:330 includes/Ajax.php:335
 msgid "Please provide your name."
 msgstr ""
 
-#: includes/Ajax.php:344 includes/template-tags.php:161
+#: includes/Ajax.php:342 includes/template-tags.php:161
 msgid "Something went wrong!"
 msgstr ""
 
-#: includes/Ajax.php:350 includes/REST/StoreController.php:812
+#: includes/Ajax.php:348 includes/REST/StoreController.php:812
 msgid "Email sent successfully!"
 msgstr ""
 
-#: includes/Ajax.php:409 templates/orders/details.php:293
+#: includes/Ajax.php:407 templates/orders/details.php:293
 msgid "Delete note"
 msgstr ""
 
-#: includes/Ajax.php:439
+#: includes/Ajax.php:437
 msgid "Shipping provider: "
 msgstr ""
 
-#: includes/Ajax.php:439
+#: includes/Ajax.php:437
 msgid "Shipping number: "
 msgstr ""
 
-#: includes/Ajax.php:439
+#: includes/Ajax.php:437
 msgid "Shipped date: "
 msgstr ""
 
-#: includes/Ajax.php:481 includes/woo-views/html-product-download.php:14
+#: includes/Ajax.php:479 includes/woo-views/html-product-download.php:14
 msgid "Delete"
 msgstr ""
 
-#: includes/Ajax.php:524 includes/Vendor/UserSwitch.php:122
+#: includes/Ajax.php:520 includes/Vendor/UserSwitch.php:122
 msgid "Error: Nonce verification failed"
 msgstr ""
 
-#: includes/Ajax.php:614
+#: includes/Ajax.php:610
 msgid "Image could not be processed. Please go back and try again."
 msgstr ""
 
-#: includes/Ajax.php:771
+#: includes/Ajax.php:767
 #. translators: 1. Customer name, 2. Customer ID, 3: Customer email
 msgid "%1$s (#%2$s &ndash; %3$s)"
 msgstr ""
 
-#: includes/Ajax.php:919
+#: includes/Ajax.php:915
 msgid "Invalid username or password."
 msgstr ""
 
-#: includes/Ajax.php:930
+#: includes/Ajax.php:926
 msgid "Wrong username or password."
 msgstr ""
 
-#: includes/Ajax.php:959
+#: includes/Ajax.php:955
 msgid "User logged in successfully."
 msgstr ""
 
-#: includes/Ajax.php:1009
+#: includes/Ajax.php:1005
 msgid "id param is required"
 msgstr ""
 
@@ -1666,33 +1674,33 @@ msgstr ""
 msgid "Delete Permanently"
 msgstr ""
 
-#: includes/Dashboard/Templates/Products.php:235
+#: includes/Dashboard/Templates/Products.php:231
 msgid "Details of your product ..."
 msgstr ""
 
-#: includes/Dashboard/Templates/Products.php:244
-#: includes/Dashboard/Templates/Products.php:392
+#: includes/Dashboard/Templates/Products.php:240
+#: includes/Dashboard/Templates/Products.php:388
 #: includes/Product/functions.php:31
 msgid "Please enter product title"
 msgstr ""
 
-#: includes/Dashboard/Templates/Products.php:251
-#: includes/Dashboard/Templates/Products.php:399
+#: includes/Dashboard/Templates/Products.php:247
+#: includes/Dashboard/Templates/Products.php:395
 #: includes/Product/functions.php:36
 msgid "Please select a category"
 msgstr ""
 
-#: includes/Dashboard/Templates/Products.php:256
-#: includes/Dashboard/Templates/Products.php:404
+#: includes/Dashboard/Templates/Products.php:252
+#: includes/Dashboard/Templates/Products.php:400
 #: includes/Product/functions.php:40
 msgid "Please select AT LEAST ONE category"
 msgstr ""
 
-#: includes/Dashboard/Templates/Products.php:411
+#: includes/Dashboard/Templates/Products.php:407
 msgid "No product found!"
 msgstr ""
 
-#: includes/Dashboard/Templates/Products.php:415
+#: includes/Dashboard/Templates/Products.php:411
 #: includes/Product/functions.php:64
 msgid "I swear this is not your product!"
 msgstr ""
@@ -1708,50 +1716,50 @@ msgid ""
 "payments seamlessly."
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:223
+#: includes/Dashboard/Templates/Settings.php:227
 msgid "Pemission denied social"
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:235
-#: includes/Dashboard/Templates/Settings.php:247
+#: includes/Dashboard/Templates/Settings.php:239
+#: includes/Dashboard/Templates/Settings.php:251
 msgid "Pemission denied"
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:265
+#: includes/Dashboard/Templates/Settings.php:269
 msgid "Your information has been saved successfully"
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:296
-#: includes/Dashboard/Templates/Settings.php:403
+#: includes/Dashboard/Templates/Settings.php:300
+#: includes/Dashboard/Templates/Settings.php:407
 msgid "Store name required"
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:302
-#: includes/Dashboard/Templates/Settings.php:362
-#: includes/Dashboard/Templates/Settings.php:409
+#: includes/Dashboard/Templates/Settings.php:306
+#: includes/Dashboard/Templates/Settings.php:366
+#: includes/Dashboard/Templates/Settings.php:413
 msgid "Store type required"
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:310
-#: includes/Dashboard/Templates/Settings.php:370
-#: includes/Dashboard/Templates/Settings.php:417
-#: includes/Dashboard/Templates/Settings.php:454
+#: includes/Dashboard/Templates/Settings.php:314
+#: includes/Dashboard/Templates/Settings.php:374
+#: includes/Dashboard/Templates/Settings.php:421
+#: includes/Dashboard/Templates/Settings.php:458
 msgid "Invalid email"
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:329
+#: includes/Dashboard/Templates/Settings.php:333
 msgid "Address field for %s is required"
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:611
+#: includes/Dashboard/Templates/Settings.php:619
 msgid "Book"
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:612
+#: includes/Dashboard/Templates/Settings.php:620
 msgid "Dress"
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:613
+#: includes/Dashboard/Templates/Settings.php:621
 msgid "Electronic"
 msgstr ""
 
@@ -4019,15 +4027,15 @@ msgstr ""
 msgid "Select an option&hellip;"
 msgstr ""
 
-#: includes/Vendor/SetupWizard.php:374
+#: includes/Vendor/SetupWizard.php:368
 msgid "Payment Setup"
 msgstr ""
 
-#: includes/Vendor/SetupWizard.php:478
+#: includes/Vendor/SetupWizard.php:466
 msgid "Your Store is Ready!"
 msgstr ""
 
-#: includes/Vendor/SetupWizard.php:483
+#: includes/Vendor/SetupWizard.php:471
 msgid "Go to your Store Dashboard!"
 msgstr ""
 
