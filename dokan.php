@@ -332,7 +332,7 @@ final class WeDevs_Dokan {
             new \WeDevs\Dokan\Admin\UserProfile();
             new \WeDevs\Dokan\Admin\SetupWizard();
             new \WeDevs\Dokan\Admin\Promotion();
-            new \WeDevs\Dokan\Admin\LimitedTimePromotion();
+            new \WeDevs\Dokan\Admin\NoticeHandler();
         } else {
             new \WeDevs\Dokan\Vendor\StoreListsFilter();
             new \WeDevs\Dokan\ThemeSupport\Manager();
