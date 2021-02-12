@@ -36,7 +36,7 @@
                 <article class="dokan-product-listing-area">
 
                     <?php
-                    $product_query = dokan()->product->all( [ 'author' => dokan_get_current_user_id() ] );
+                    $product_query = dokan()->product->all( [ 'author' => dokan_get_current_user_id(), 'posts_per_page' => 1 ] );
 
                     if ( $product_query->have_posts() ) {
                     ?>
