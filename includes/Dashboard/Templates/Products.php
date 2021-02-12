@@ -371,7 +371,11 @@ class Products {
             return;
         }
 
-        if ( ! isset( $_POST['dokan_update_product'] ) || ! wp_verify_nonce( sanitize_key( $_POST['dokan_edit_product_nonce'] ), 'dokan_edit_product' ) ) {
+        if ( ! isset( $_POST['dokan_update_product'] ) ) {
+            return;
+        }
+
+        if ( ! isset( $_POST['dokan_edit_product_nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['dokan_edit_product_nonce'] ), 'dokan_edit_product' ) ) {
             return;
         }
 
