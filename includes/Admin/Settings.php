@@ -360,7 +360,7 @@ class Settings {
                 'store_products_per_page' => [
                     'name'    => 'store_products_per_page',
                     'label'   => __( 'Store Products Per Page', 'dokan-lite' ),
-                    'desc'    => __( 'Set how many products to display per page on the vendor store page. It will affect only if the vendor isn\'t set this value on their vendor setting page..', 'dokan-lite' ),
+                    'desc'    => __( 'Set how many products to display per page on the vendor store page. It will affect only if the vendor isn\'t set this value on their vendor setting page.', 'dokan-lite' ),
                     'type'    => 'number',
                     'default' => '12',
                 ],
