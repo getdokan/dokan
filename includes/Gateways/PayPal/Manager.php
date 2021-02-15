@@ -103,11 +103,11 @@ class Manager {
             exit();
         }
 
-        if ( 'paypal-marketplace-connect-success' === $get_data['action'] ) {
+        if ( isset( $get_data['action'] ) && 'paypal-marketplace-connect-success' === $get_data['action'] ) {
             $this->handle_paypal_marketplace_connect_success_response();
         }
 
-        if ( 'merchant-status-update' === $get_data['action'] ) {
+        if ( isset( $get_data['action'] ) && 'merchant-status-update' === $get_data['action'] ) {
             $merchant_id = get_user_meta( dokan_get_current_user_id(), '_dokan_paypal_marketplace_merchant_id', true );
             $this->validate_merchant_status( $merchant_id );
         }

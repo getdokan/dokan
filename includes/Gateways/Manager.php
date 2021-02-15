@@ -54,7 +54,7 @@ class Manager {
      *
      * @return array
      */
-    public function register_gateway( $gateways ) {
+    public static function register_gateway( $gateways ) {
         $gateways[] = self::$class_name;
 
         return $gateways;

@@ -1044,8 +1044,8 @@ function dokan_get_more_products_from_seller( $seller_id = 0, $posts_per_page = 
         $seller_id = $post->post_author;
     }
 
-    if ( ! abs( $posts_per_page ) ) {
-        $posts_per_page = 4;
+    if ( ! is_int( $posts_per_page ) ) {
+        $posts_per_page = apply_filters( 'dokan_get_more_products_per_page', 6 );
     }
 
     $args = [
