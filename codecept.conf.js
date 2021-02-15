@@ -20,11 +20,11 @@ exports.config = {
                 "script": 60000,
                 "page load": 10000
             },
-            desiredCapabilities: {
-                chromeOptions: {
-                    args: ["--headless", "--disable-gpu", "--no-sandbox"]
-                }
-            },
+            // desiredCapabilities: {
+            //     chromeOptions: {
+            //         args: ["--headless", "--disable-gpu", "--no-sandbox"]
+            //     }
+            // },
         }
     },
     include: {

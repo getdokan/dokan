@@ -59,6 +59,18 @@ module.exports = {
      EnableProductDiscount:'//*[@id="_is_lot_discount"]',
      DiscountProductQuantity:'//*[@id="_lot_discount_quantity"]',
      DiscountProductAmount:'//*[@id="_lot_discount_amount"]',
+
+    //ExploreSimpleSubscriptionproduct
+    SimpleSubscriptionproductPrice:'#_subscription_price',
+    SubscriptionInterval:'#_subscription_period_interval',
+    SubscriptionPeriod:'#_subscription_period',
+    SubscriptionDiscountPrice:{css:'.content-full-part > div:nth-child(2) > input:nth-child(2)'},
+    ExpirationSubscription:'#_subscription_length',
+    SignUpfee:'#_subscription_sign_up_fee',
+    FreeTrial:'#_subscription_trial_length',
+    TrialPeriod:'_subscription_trial_period',
+
+
      
 
 
