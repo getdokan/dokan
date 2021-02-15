@@ -49,5 +49,18 @@ module.exports = {
     ProductStatusDropdown: '#post_status',
     ProductVisibilityDropdown: '#_visibility',
     ProductReviewCheckbox: 'div.dokan-section-content > div:nth-child(5) > label',
+   
+     //Variable product explore
+     ScrollToAttribute:{css:'.add_new_attribute'},
+     ProductAttributeName:'attribute_names[0]',
+     ProductAttributeValue:'//li/div[2]/div[2]/span/span/span/ul/li/input',
+     ProductAttributeVisibility:'attribute_visibility[0]',
+     ProductAttributeVariation:'attribute_variation[0]',
+     EnableProductDiscount:'//*[@id="_is_lot_discount"]',
+     DiscountProductQuantity:'//*[@id="_lot_discount_quantity"]',
+     DiscountProductAmount:'//*[@id="_lot_discount_amount"]',
+     
+
+
 
 }
