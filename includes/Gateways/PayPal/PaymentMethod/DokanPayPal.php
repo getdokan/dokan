@@ -315,11 +315,7 @@ class DokanPayPal extends WC_Payment_Gateway {
 //            ];
 //        }
 
-        $process_payment = apply_filters(
-            'dokan_paypal_process_payment', [
-				'order' => $order,
-			]
-        );
+        $process_payment = apply_filters( 'dokan_paypal_process_payment', [	'order' => $order ] );
 
         if ( isset( $process_payment['product_type'] ) && 'product_pack' === $process_payment['product_type'] ) {
             return $process_payment['data'];
@@ -477,7 +473,7 @@ class DokanPayPal extends WC_Payment_Gateway {
         $subtotal       = $order->get_subtotal();
         $tax_total      = $this->get_tax_amount( $order );
         $shipping_total = wc_format_decimal( $order->get_shipping_total(), 2 );
-        $total_amount   = $order->get_subtotal() + $tax_total + (float) $order->get_shipping_total();
+        $total_amount   = $order->get_subtotal() + $tax_total + (float) $order->get_shipping_total() - $order->get_total_discount();
         $total_amount   = wc_format_decimal( $total_amount, 2 );
 
         $seller_id     = dokan_get_seller_id_by_order( $order->get_id() );
@@ -524,6 +520,10 @@ class DokanPayPal extends WC_Payment_Gateway {
                         'currency_code' => 'USD',
                         'value'         => '0.00',
                     ],
+                    'discount' => [
+                        'currency_code' => 'USD',
+                        'value'         => $order->get_total_discount(),
+                    ],
                     'insurance'         => [
                         'currency_code' => 'USD',
                         'value'         => '0.00',
@@ -549,7 +549,7 @@ class DokanPayPal extends WC_Payment_Gateway {
             'invoice_id'          => $order->get_parent_id() ? $order->get_parent_id() : $order->get_id(),
             'custom_id'           => $order->get_id(),
         ];
-
+        
         return $purchase_units;
     }
 
@@ -626,7 +626,7 @@ class DokanPayPal extends WC_Payment_Gateway {
             $item_extra_fee = ( $extra_fee / $line_item->get_quantity() );
 
             //get single item price by quantity. sometimes there will be product warranty add-on
-            $item_price = ( $line_item->get_total() / $line_item->get_quantity() ) + $item_extra_fee;
+            $item_price = ( $line_item->get_subtotal() / $line_item->get_quantity() ) + $item_extra_fee;
             $item_price = wc_format_decimal( $item_price, 2 );
 
             $items[] = [
