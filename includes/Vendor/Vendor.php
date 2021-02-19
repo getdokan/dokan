@@ -662,9 +662,9 @@ class Vendor {
 
         if ( $formatted ) {
             $decimal = ( 0 === wc_get_price_decimals() ) ? 2 : wc_get_price_decimals();
-            return apply_filters( 
-                'dokan_get_formatted_seller_balance', 
-                wc_price( $earning, [ 'decimals' => $decimal ] 
+            return apply_filters(
+                'dokan_get_formatted_seller_balance',
+                wc_price( $earning, [ 'decimals' => $decimal ]
             ), $this->id );
         }
 
@@ -1216,7 +1216,7 @@ class Vendor {
      * @param string $social Name of social settings to set, fb, twitter
      * @param string $value
      */
-    protected function set_social_prop( $prop, $social = 'social', $value ) {
+    protected function set_social_prop( $prop, $social, $value ) {
         if ( ! $this->shop_data ) {
             $this->popluate_store_data();
         }
@@ -1235,9 +1235,13 @@ class Vendor {
      *
      * @param string $prop
      * @param string $address
-     * @param string value
+     * @param $value
      */
-    protected function set_address_prop( $prop, $address = 'address', $value ) {
+    protected function set_address_prop( $prop, $address, $value ) {
+        if ( ! isset( $address ) || $address === '' ) {
+            $address = 'address';
+        }
+
         $this->set_social_prop( $prop, $address, $value );
     }
 
@@ -1248,7 +1252,11 @@ class Vendor {
      * @param string $paypal
      * @param mix value
      */
-    protected function set_payment_prop( $prop, $paypal = 'paypal', $value ) {
+    protected function set_payment_prop( $prop, $paypal, $value ) {
+        if ( ! isset( $paypal ) || $paypal === '' ) {
+            $paypal = 'paypal';
+        }
+
         if ( ! $this->shop_data ) {
             $this->popluate_store_data();
         }
