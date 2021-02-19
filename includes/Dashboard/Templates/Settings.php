@@ -500,6 +500,15 @@ class Settings {
         } elseif ( wp_verify_nonce( sanitize_key( $post_data['_wpnonce'] ), 'dokan_store_settings_nonce' ) ) {
 
             $default_locations = dokan_get_option( 'location', 'dokan_geolocation' );
+
+            if ( ! is_array( $default_locations ) || empty( $default_locations ) ) {
+                $default_locations = array(
+                    'latitude'  => '',
+                    'longitude' => '',
+                    'address'   => '',
+                );
+            }
+
             $find_address      = ! empty( $post_data['find_address'] ) ? sanitize_text_field( $post_data['find_address'] ) : $default_locations['address'];
             $default_location  = $default_locations['latitude'] . ',' . $default_locations['longitude'];
             $location          = ! empty( $post_data['find_address'] ) ? sanitize_text_field( $post_data['location'] ) : $default_location;
