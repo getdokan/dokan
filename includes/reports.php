@@ -15,7 +15,7 @@ if ( ! function_exists( 'dokan_get_order_report_data' ) ) :
 	 * @param string $end_date
 	 * @return obj
 	 */
-	function dokan_get_order_report_data( $args = array(), $start_date, $end_date ) {
+	function dokan_get_order_report_data( $args = array(), $start_date = '', $end_date = '' ) {
 		global $wpdb;
 
 		$current_user = dokan_get_current_user_id();

@@ -1154,7 +1154,7 @@ add_action( 'save_post', 'dokan_store_category_delete_transient' );
  *
  * @return string $headers
  */
-function dokan_add_reply_to_vendor_email_on_wc_customer_note_mail( $headers = '', $id = '', $order ) {
+function dokan_add_reply_to_vendor_email_on_wc_customer_note_mail( $headers = '', $id = '', $order = null ) {
     if ( 'customer_note' === $id ) {
         foreach ( $order->get_items( 'line_item' ) as $item ) {
             $product_id  = $item['product_id'];
