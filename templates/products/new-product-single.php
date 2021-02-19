@@ -187,7 +187,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
 
                                     <?php do_action( 'dokan_product_edit_after_title', $post, $post_id ); ?>
 
-                                    <div class="show_if_simple dokan-clearfix">
+                                    <div class="show_if_simple dokan-clearfix show_if_external">
 
                                         <div class="dokan-form-group dokan-clearfix dokan-price-container">
 
