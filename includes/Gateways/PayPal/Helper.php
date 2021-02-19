@@ -93,13 +93,11 @@ class Helper {
             return false;
         }
 
-        foreach ( $supported_countries as $key => $country_name ) {
-            if ( 'US' === $key ) {
-                return static::get_advanced_credit_card_debit_card_us_supported_currencies();
-            }
-
-            return static::get_supported_currencies();
+        if ( 'US' === $country_code ) {
+            return static::get_advanced_credit_card_debit_card_us_supported_currencies();
         }
+
+        return static::get_supported_currencies();
     }
 
     /**
@@ -395,5 +393,48 @@ class Helper {
         $percentage = ( $extra_amount * 100 ) / $price;
 
         return $percentage;
+    }
+
+    /**
+     * Get webhook events for notification
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return array
+     */
+    public static function get_webhook_events_for_notification() {
+        $events = array_keys( static::get_supported_webhook_events() );
+
+        $events = array_merge( $events, [
+            'BILLING.SUBSCRIPTION.ACTIVATED',
+            'BILLING.SUBSCRIPTION.CANCELLED',
+            'BILLING.SUBSCRIPTION.PAYMENT.FAILED',
+            'PAYMENT.SALE.COMPLETED',
+        ] );
+
+        $notification_events = array_map( function ( $event ) {
+            return [ 'name' => $event ];
+        }, $events );
+
+        return $notification_events;
+    }
+
+    /**
+     * Get settings of the gateway
+     *
+     * @param null $key
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return mixed|void
+     */
+    public static function get_settings( $key = null ) {
+        $settings = get_option( 'woocommerce_' . static::get_gateway_id() . '_settings', [] );
+
+        if ( $key && isset( $settings[ $key ] ) ) {
+            return $settings[ $key ];
+        }
+
+        return $settings;
     }
 }

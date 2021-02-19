@@ -43,6 +43,11 @@ class WebhookHandler {
      * @throws \WeDevs\Dokan\Exceptions\DokanException
      */
     public function handle_events() {
+        //if the gateway is disabled then we are not processing further execution
+        if ( 'no' === Helper::get_settings( 'enabled' ) ) {
+            exit;
+        }
+
         $request_body = file_get_contents( 'php://input' );
         $event        = json_decode( $request_body );
 

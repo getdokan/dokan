@@ -304,16 +304,16 @@ class DokanPayPal extends WC_Payment_Gateway {
             ]
         );
 
-//        if ( get_post_meta( $order->get_id(), '_dokan_paypal_order_id', true ) ) {
-//            return [
-//                'result'              => 'success',
-//                'id'                  => $order_id,
-//                'paypal_redirect_url' => get_post_meta( $order->get_id(), '_dokan_paypal_redirect_url', true ),
-//                'paypal_order_id'     => get_post_meta( $order->get_id(), '_dokan_paypal_order_id', true ),
-//                'redirect'            => get_post_meta( $order->get_id(), '_dokan_paypal_redirect_url', true ),
-//                'success_redirect'    => $order->get_checkout_order_received_url(),
-//            ];
-//        }
+        if ( get_post_meta( $order->get_id(), '_dokan_paypal_order_id', true ) ) {
+            return [
+                'result'              => 'success',
+                'id'                  => $order_id,
+                'paypal_redirect_url' => get_post_meta( $order->get_id(), '_dokan_paypal_redirect_url', true ),
+                'paypal_order_id'     => get_post_meta( $order->get_id(), '_dokan_paypal_order_id', true ),
+                'redirect'            => get_post_meta( $order->get_id(), '_dokan_paypal_redirect_url', true ),
+                'success_redirect'    => $order->get_checkout_order_received_url(),
+            ];
+        }
 
         $process_payment = apply_filters( 'dokan_paypal_process_payment', [	'order' => $order ] );
 
@@ -473,8 +473,6 @@ class DokanPayPal extends WC_Payment_Gateway {
         $subtotal       = $order->get_subtotal();
         $tax_total      = $this->get_tax_amount( $order );
         $shipping_total = wc_format_decimal( $order->get_shipping_total(), 2 );
-        $total_amount   = $order->get_subtotal() + $tax_total + (float) $order->get_shipping_total() - $order->get_total_discount();
-        $total_amount   = wc_format_decimal( $total_amount, 2 );
 
         $seller_id     = dokan_get_seller_id_by_order( $order->get_id() );
         $merchant_id   = get_user_meta( $seller_id, '_dokan_paypal_marketplace_merchant_id', true );
@@ -497,35 +495,35 @@ class DokanPayPal extends WC_Payment_Gateway {
         $purchase_units = [
             'reference_id'        => $order->get_order_key(),
             'amount'              => [
-                'currency_code' => 'USD',
-                'value'         => $total_amount,
+                'currency_code' => get_woocommerce_currency(),
+                'value'         => wc_format_decimal( $order->get_total(), 2 ),
                 'breakdown'     => [
                     'item_total'        => [
-                        'currency_code' => 'USD',
+                        'currency_code' => get_woocommerce_currency(),
                         'value'         => wc_format_decimal( $subtotal, 2 ),
                     ],
                     'tax_total'         => [
-                        'currency_code' => 'USD',
+                        'currency_code' => get_woocommerce_currency(),
                         'value'         => wc_format_decimal( $tax_total, 2 ),
                     ],
                     'shipping'          => [
-                        'currency_code' => 'USD',
+                        'currency_code' => get_woocommerce_currency(),
                         'value'         => wc_format_decimal( $shipping_total, 2 ),
                     ],
                     'handling'          => [
-                        'currency_code' => 'USD',
+                        'currency_code' => get_woocommerce_currency(),
                         'value'         => '0.00',
                     ],
                     'shipping_discount' => [
-                        'currency_code' => 'USD',
+                        'currency_code' => get_woocommerce_currency(),
                         'value'         => '0.00',
                     ],
                     'discount' => [
-                        'currency_code' => 'USD',
+                        'currency_code' => get_woocommerce_currency(),
                         'value'         => $order->get_total_discount(),
                     ],
                     'insurance'         => [
-                        'currency_code' => 'USD',
+                        'currency_code' => get_woocommerce_currency(),
                         'value'         => '0.00',
                     ],
                 ],
@@ -540,7 +538,7 @@ class DokanPayPal extends WC_Payment_Gateway {
                 'platform_fees'     => [
                     [
                         'amount' => [
-                            'currency_code' => 'USD',
+                            'currency_code' => get_woocommerce_currency(),
                             'value'         => $platform_fee,
                         ],
                     ],
@@ -549,7 +547,7 @@ class DokanPayPal extends WC_Payment_Gateway {
             'invoice_id'          => $order->get_parent_id() ? $order->get_parent_id() : $order->get_id(),
             'custom_id'           => $order->get_id(),
         ];
-        
+
         return $purchase_units;
     }
 
@@ -634,7 +632,7 @@ class DokanPayPal extends WC_Payment_Gateway {
                 'sku'         => $product->get_sku(),
                 'category'    => $category,
                 'unit_amount' => [
-                    'currency_code' => 'USD',
+                    'currency_code' => get_woocommerce_currency(),
                     'value'         => $item_price,
                 ],
                 'quantity'    => $line_item->get_quantity(),
@@ -702,6 +700,18 @@ class DokanPayPal extends WC_Payment_Gateway {
      */
     public function process_admin_options() {
         parent::process_admin_options();
+
+        //create webhook automatically
+        if ( ! get_option( '_dokan_paypal_marketplace_webhook', false ) ) {
+            $events = Helper::get_webhook_events_for_notification();
+
+            $processor = Processor::init();
+            $response  = $processor->create_webhook( 'https://kapilpaul.me/wc-api/dokan-paypal', $events );
+
+            if ( ! is_wp_error( $response ) ) {
+                update_option( '_dokan_paypal_marketplace_webhook', $response['id'] );
+            }
+        }
 
         update_user_meta( dokan_get_current_user_id(), '_dokan_paypal_marketplace_merchant_id', $this->get_option( 'partner_id' ) );
         update_user_meta( dokan_get_current_user_id(), '_dokan_paypal_enable_for_receive_payment', true );

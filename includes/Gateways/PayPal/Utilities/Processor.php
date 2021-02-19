@@ -278,6 +278,36 @@ class Processor {
     }
 
     /**
+     * Create webhook on PayPal
+     *
+     * @param $webhook_url
+     * @param $event_types
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return array|\WP_Error
+     */
+    public function create_webhook( $webhook_url, $event_types ) {
+        $url          = $this->make_paypal_url( "v1/notifications/webhooks" );
+        $webhook_data = [
+            "url"         => $webhook_url,
+            'event_types' => $event_types,
+        ];
+
+        $response = $this->make_request( $url, wp_json_encode( $webhook_data ) );
+
+        if ( is_wp_error( $response ) ) {
+            return $response;
+        }
+
+        if ( isset( $response['id'] ) ) {
+            return $response;
+        }
+
+        return new \WP_Error( 'dokan_paypal_create_webhook_error', $response );
+    }
+
+    /**
      * Get access token
      *
      * @since DOKAN_LITE_SINCE
