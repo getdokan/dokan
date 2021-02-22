@@ -1,11 +1,11 @@
 <?php
 /**
- * New Order Email.
+ * Completed Order Email.
  *
- * An email sent to the vendor when a new order is created by customer.
+ * An email sent to the vendor when a order is completed.
  *
- * @class       VendorNewOrder
- * @version     2.6.8
+ * @class       VendorCompletedOrder
+ * @version     DOKAN_LITE_SINCE
  *
  */
 

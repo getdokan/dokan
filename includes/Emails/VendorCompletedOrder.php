@@ -5,11 +5,11 @@ namespace WeDevs\Dokan\Emails;
 use WC_Email;
 
 /**
- * New Order Email.
+ * Completed Order Email.
  *
- * An email sent to the admin when a new order is received/paid for.
+ * An email sent to the admin when a order is completed for.
  *
- * @class       VendorNewOrder
+ * @class       VendorCompletedOrder
  * @version     2.6.8
  * @package     Dokan/Classes/Emails
  * @author      weDevs
@@ -35,7 +35,7 @@ class VendorCompletedOrder extends WC_Email {
 
         // Triggers for this email.
         add_action( 'woocommerce_order_status_completed_notification', array( $this, 'trigger' ), 10, 2 );
-		//Prevent admin email for sub-order
+	    //Prevent admin email for sub-order
         add_filter( 'woocommerce_email_enabled_new_order', [ $this, 'prevent_sub_order_admin_email' ], 10, 2 );
         // Call parent constructor.
         parent::__construct();
