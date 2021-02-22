@@ -10,7 +10,7 @@ use WC_Email;
  * An email sent to the admin when a order is completed for.
  *
  * @class       VendorCompletedOrder
- * @version     2.6.8
+ * @version     DOKAN_LITE_SINCE
  * @package     Dokan/Classes/Emails
  * @author      weDevs
  * @extends     WC_Email
@@ -47,7 +47,7 @@ class VendorCompletedOrder extends WC_Email {
     /**
      * Get email subject.
      *
-     * @since  3.1.0
+     * @since  DOKAN_LITE_SINCE
      * @return string
      */
     public function get_default_subject() {
@@ -57,7 +57,7 @@ class VendorCompletedOrder extends WC_Email {
     /**
      * Get email heading.
      *
-     * @since  3.1.0
+     * @since  DOKAN_LITE_SINCE
      * @return string
      */
     public function get_default_heading() {
