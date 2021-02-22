@@ -15,7 +15,7 @@
             <?php dokan_post_input_box( $post_id, '_sku' ); ?>
         </div>
 
-        <div class="content-half-part hide_if_variable">
+        <div class="content-half-part hide_if_variable hide_if_external">
             <label for="_stock_status" class="form-label"><?php esc_html_e( 'Stock Status', 'dokan-lite' ); ?></label>
 
             <?php dokan_post_input_box( $post_id, '_stock_status', array( 'options' => array(
@@ -28,7 +28,7 @@
         <div class="dokan-clearfix"></div>
 
         <?php if ( 'yes' === get_option( 'woocommerce_manage_stock' ) ) : ?>
-        <div class="dokan-form-group hide_if_variation hide_if_grouped">
+        <div class="dokan-form-group hide_if_variation hide_if_grouped hide_if_external">
             <?php dokan_post_input_box( $post_id, '_manage_stock', array( 'label' => __( 'Enable product stock management', 'dokan-lite' ) ), 'checkbox' ); ?>
         </div>
 
@@ -59,7 +59,7 @@
         </div><!-- .show_if_stock -->
         <?php endif; ?>
 
-        <div class="dokan-form-group hide_if_grouped">
+        <div class="dokan-form-group hide_if_grouped hide_if_external">
             <label class="" for="_sold_individually">
                 <input name="_sold_individually" id="_sold_individually" value="yes" type="checkbox" <?php checked( $_sold_individually, 'yes' ); ?>>
                 <?php esc_html_e( 'Allow only one quantity of this product to be bought in a single order', 'dokan-lite' ) ?>
