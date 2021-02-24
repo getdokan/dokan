@@ -1,5 +1,6 @@
-<div class="dokan-stripe-connect-container">
+<?php echo wc_print_notices(); ?>
 
+<div class="dokan-stripe-connect-container">
     <div class="dokan-form-group">
         <div class="dokan-w8">
             <input
@@ -12,7 +13,7 @@
             >
         </div>
 
-        <?php if ($merchant_id && !$primary_email) : ?>
+        <?php if ( $merchant_id && ! $primary_email ) : ?>
         <div class="dokan-w12">
             <div class="dokan-alert dokan-alert-warning dokan-text-left" style="margin-top: 15px">
                 <?php esc_html_e('Your primary email is not confirmed yet. To receive payment you must need to confirm your paypal primary email.', 'dokan-lite');?>

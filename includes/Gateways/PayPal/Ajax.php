@@ -89,10 +89,14 @@ class Ajax {
         if ( is_wp_error( $paypal_url ) ) {
             Helper::log_paypal_error( $user_id, $paypal_url, 'create_partner_referral', 'user' );
 
+            wc_add_wp_error_notices( $paypal_url );
+
             wp_send_json_error(
                 [
                     'type'    => 'error',
+                    'reload'  => true,
                     'message' => __( 'Connect PayPal error', 'dokan-lite' ),
+                    'url'     => dokan_get_navigation_url( 'settings/payment' ),
                 ]
             );
         }
