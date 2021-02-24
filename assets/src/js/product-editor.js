@@ -796,6 +796,7 @@
     // On DOM ready
     $(function() {
         Dokan_Editor.init();
+        $('.show_if_auction').show();
 
         // PRODUCT TYPE SPECIFIC OPTIONS.
         $( 'select#product_type' ).change( function() {
@@ -859,6 +860,8 @@
             $( '.hide_if_' + product_type ).hide();
 
             $( 'input#_manage_stock' ).change();
+
+            $('.show_if_auction').show();
         }
 
         // Sale price schedule.
