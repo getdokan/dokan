@@ -291,7 +291,7 @@ class WithdrawController extends WP_REST_Controller {
 
         $data ['current_balance']   = dokan_get_seller_balance( dokan_get_current_user_id(), false );
         $data['withdraw_limit']     = dokan_get_option( 'withdraw_limit', 'dokan_withdraw', - 1 );
-        $data['withdraw_threshold'] = dokan_get_option( 'withdraw_date_limit', 'dokan_withdraw', - 1 );
+        $data['withdraw_threshold'] = dokan_get_withdraw_threshold( dokan_get_current_user_id() );
 
         return rest_ensure_response( $data );
     }

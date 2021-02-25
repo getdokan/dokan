@@ -632,9 +632,14 @@ class Vendor {
         $cache_group   = 'dokan_seller_data_'.$this->id;
         $cache_key     = $on_date ? "dokan_seller_balance_on_{$on_date}_$this->id" : 'dokan_seller_balance_' . $this->id;
         $earning       = wp_cache_get( $cache_key, $cache_group );
-        $threshold_day = dokan_get_option( 'withdraw_date_limit', 'dokan_withdraw', 0 );
+        $threshold_day = dokan_get_withdraw_threshold( dokan_get_current_user_id() );
         $on_date       = $on_date ? date( 'Y-m-d', strtotime( $on_date ) ) : current_time( 'mysql' );
-        $date          = date( 'Y-m-d', strtotime( $on_date . ' -'.$threshold_day.' days' ) );
+
+        if ( $threshold_day === -1 ) {
+            $threshold_day = 0;
+        }
+
+        $date = date( 'Y-m-d', strtotime( $on_date . ' -'.$threshold_day.' days' ) );
 
         if ( false === $earning ) {
             $installed_version = get_option( 'dokan_theme_version' );
