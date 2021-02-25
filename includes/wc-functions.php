@@ -74,6 +74,11 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
     }
 
     if ( isset( $data['_sale_price'] ) ) {
+        //if regular price is lower than sale price then we are setting it to empty
+        if ( $data['_regular_price'] <= $data['_sale_price'] ) {
+            $data['_sale_price'] = '';
+        }
+
         update_post_meta( $post_id, '_sale_price', ( $data['_sale_price'] === '' ? '' : wc_format_decimal( $data['_sale_price'] ) ) );
     }
 
