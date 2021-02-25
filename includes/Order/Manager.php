@@ -157,6 +157,8 @@ class Manager {
             $order->set_payment_method_title( $parent_order->get_payment_method_title() );
             $order->update_meta_data( '_dokan_vendor_id', $seller_id );
 
+            do_action( 'dokan_create_sub_order_before_calculate_totals', $order, $parent_order, $seller_products );
+
             // finally, let the order re-calculate itself and save
             $order->calculate_totals();
 
