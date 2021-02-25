@@ -4006,8 +4006,8 @@ function dokan_get_withdraw_threshold( $user_id ) {
     if ( get_user_meta( $user_id, 'withdraw_date_limit', true ) !== '' ) {
         $threshold_day = get_user_meta( $user_id, 'withdraw_date_limit', true );
     } else {
-        $threshold_day = dokan_get_option( 'withdraw_date_limit', 'dokan_withdraw', -1 );
+        $threshold_day = dokan_get_option( 'withdraw_date_limit', 'dokan_withdraw', 0 );
     }
 
-    return $threshold_day;
+    return ( $threshold_day ) ? absint( $threshold_day ) : 0;
 }

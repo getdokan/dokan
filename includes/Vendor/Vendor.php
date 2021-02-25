@@ -634,12 +634,7 @@ class Vendor {
         $earning       = wp_cache_get( $cache_key, $cache_group );
         $threshold_day = dokan_get_withdraw_threshold( dokan_get_current_user_id() );
         $on_date       = $on_date ? date( 'Y-m-d', strtotime( $on_date ) ) : current_time( 'mysql' );
-
-        if ( $threshold_day === -1 ) {
-            $threshold_day = 0;
-        }
-
-        $date = date( 'Y-m-d', strtotime( $on_date . ' -'.$threshold_day.' days' ) );
+        $date          = date( 'Y-m-d', strtotime( $on_date . ' -'.$threshold_day.' days' ) );
 
         if ( false === $earning ) {
             $installed_version = get_option( 'dokan_theme_version' );

@@ -356,7 +356,6 @@ function dokan_sync_insert_order( $order_id ) {
     $net_amount         = $order_total - $admin_commission;
     $net_amount         = apply_filters( 'dokan_order_net_amount', $net_amount, $order );
     $threshold_day      = dokan_get_withdraw_threshold( $seller_id );
-    $threshold_day      = ( $threshold_day && $threshold_day !== -1 ) ? $threshold_day : 0;
 
     dokan_delete_sync_duplicate_order( $order_id, $seller_id );
 
