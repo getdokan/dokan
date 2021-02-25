@@ -1034,6 +1034,8 @@ add_action( 'woocommerce_product_tabs', 'dokan_set_more_from_seller_tab', 10 );
  * @param int $posts_per_page
  *
  * @since 2.5
+ * @since DOKAN_LITE_SINCE added filter 'dokan_get_more_products_per_page'
+ *
  * @global object $product
  * @global object $post
  */
@@ -1044,8 +1046,8 @@ function dokan_get_more_products_from_seller( $seller_id = 0, $posts_per_page = 
         $seller_id = $post->post_author;
     }
 
-    if ( ! abs( $posts_per_page ) ) {
-        $posts_per_page = 4;
+    if ( ! is_int( $posts_per_page ) ) {
+        $posts_per_page = apply_filters( 'dokan_get_more_products_per_page', 6 );
     }
 
     $args = [
