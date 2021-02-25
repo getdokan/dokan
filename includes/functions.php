@@ -2322,10 +2322,6 @@ function dokan_get_social_profile_fields() {
             'icon'  => 'facebook-square',
             'title' => __( 'Facebook', 'dokan-lite' ),
         ],
-        'gplus' => [
-            'icon'  => 'google',
-            'title' => __( 'Google', 'dokan-lite' ),
-        ],
         'twitter' => [
             'icon'  => 'twitter-square',
             'title' => __( 'Twitter', 'dokan-lite' ),
