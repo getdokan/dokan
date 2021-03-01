@@ -96,7 +96,6 @@ export default {
                 gravatar_id: '',
                 social: {
                     fb: '',
-                    gplus: '',
                     youtube: '',
                     twitter: '',
                     linkedin: '',
