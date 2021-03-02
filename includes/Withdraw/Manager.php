@@ -29,8 +29,8 @@ class Manager {
     public function is_valid_approval_request( $args ) {
         $user_id = $args['user_id'];
         $limit   = $this->get_withdraw_limit();
-        $balance = round( dokan_get_seller_balance( $user_id, false ), 2 );
-        $amount  = wc_format_decimal( $args['amount'] );
+        $balance = wc_format_decimal( dokan_get_seller_balance( $user_id, false ), 2 );
+        $amount  = wc_format_decimal( $args['amount'], 2 );
         $method  = $args['method'];
 
         if ( empty( $amount ) ) {
@@ -42,10 +42,11 @@ class Manager {
         }
 
         if ( $amount < $limit ) {
+            // translators: %s: withdraw limit amount
             return new WP_Error( 'dokan_withdraw_amount', sprintf( __( 'Withdraw amount must be greater than %s', 'dokan-lite' ), wc_price( $limit ) ) );
         }
 
-        if ( ! in_array( $method, dokan_get_seller_active_withdraw_methods( $user_id ) ) ) {
+        if ( ! in_array( $method, dokan_get_seller_active_withdraw_methods( $user_id ), true ) ) {
             return new WP_Error( 'dokan_withdraw_invalid_method', __( 'Withdraw method is not active.', 'dokan-lite' ) );
         }
 
@@ -316,6 +317,17 @@ class Manager {
     }
 
     /**
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return int|null
+     */
+    public function get_total_withdraw_count() {
+        $withdraws = new Withdraws();
+        $count = $withdraws->get_total();
+        return (int) $count;
+    }
+
+    /**
      * Get a single withdraw
      *
      * @since 3.0.0
@@ -359,12 +371,7 @@ class Manager {
                 $formats[] = $id[ $field ];
             }
 
-            $result = $wpdb->get_row(
-                $wpdb->prepare(
-                    "select * from {$wpdb->dokan_withdraw} where 1 = 1 {$where}",
-                    ...$formats
-                ), ARRAY_A
-            );
+            $result = $wpdb->get_row( $wpdb->prepare( "select * from {$wpdb->dokan_withdraw} where 1 = 1 {$where}", ...$formats ), ARRAY_A );  // phpcs:ignore
         }
 
         return $result ? new Withdraw( $result ) : null;

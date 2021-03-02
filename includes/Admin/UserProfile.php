@@ -26,8 +26,8 @@ class UserProfile {
      *
      * @return void
      */
-    function enqueue_scripts( $page ) {
-        if ( in_array( $page, array( 'profile.php', 'user-edit.php' ) ) ) {
+    public function enqueue_scripts( $page ) {
+        if ( in_array( $page, array( 'profile.php', 'user-edit.php' ), true ) ) {
             wp_enqueue_media();
 
             $admin_admin_script = array(
@@ -52,7 +52,7 @@ class UserProfile {
      *
      * @return void|false
      */
-    function add_meta_fields( $user ) {
+    public function add_meta_fields( $user ) {
         if ( ! current_user_can( 'manage_woocommerce' ) ) {
             return;
         }
@@ -81,7 +81,7 @@ class UserProfile {
 
         $banner_width    = dokan_get_option( 'store_banner_width', 'dokan_appearance', 625 );
         $banner_height   = dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 );
-        $admin_commission = ( 'flat' == $admin_commission_type ) ? wc_format_localized_price( $admin_commission ) : wc_format_localized_decimal( $admin_commission );
+        $admin_commission = ( 'flat' === $admin_commission_type ) ? wc_format_localized_price( $admin_commission ) : wc_format_localized_decimal( $admin_commission );
 
         $country_state = array(
             'country' => array(
@@ -119,6 +119,7 @@ class UserProfile {
                                 <p class="description">
                                     <?php
                                     echo sprintf(
+                                        /* translators: %1$s: banner width, %2$s: banner height in integers */
                                         esc_attr__( 'Upload a banner for your store. Banner size is (%1$sx%2$s) pixels.', 'dokan-lite' ),
                                         esc_attr( $banner_width ),
                                         esc_attr( $banner_height )
@@ -177,10 +178,10 @@ class UserProfile {
                     <tr>
                         <th><label for="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $field['label'] ); ?></label></th>
                         <td>
-                            <?php if ( ! empty( $field['type'] ) && 'select' == $field['type'] ) : ?>
+                            <?php if ( ! empty( $field['type'] ) && 'select' === (string) $field['type'] ) : ?>
                             <select name="dokan_store_address[<?php echo esc_attr( $key ); ?>]" id="<?php echo esc_attr( $key ); ?>" class="<?php echo ( ! empty( $field['class'] ) ? esc_attr( $field['class'] ) : '' ); ?>" style="width: 25em;">
                                     <?php
-									if ( 'country' == $key ) {
+									if ( 'country' === (string) $key ) {
 										$selected = esc_attr( $address_country );
 									} else {
 										$selected = esc_attr( $address_state );
@@ -192,7 +193,7 @@ class UserProfile {
                                 </select>
                             <?php else : ?>
                                 <?php
-                                if ( 'country' == $key ) {
+                                if ( 'country' === (string) $key ) {
                                     $value = esc_attr( $address_country );
                                 } else {
                                     $value = esc_attr( $address_state );
@@ -531,14 +532,14 @@ class UserProfile {
      *
      * @return void
      */
-    function save_meta_fields( $user_id ) {
+    public function save_meta_fields( $user_id ) {
         if ( ! current_user_can( 'manage_woocommerce' ) ) {
             return;
         }
 
         $post_data = wp_unslash( $_POST );
 
-        if ( isset( $post_data['dokan_update_user_profile_info_nonce'] ) && ! wp_verify_nonce( $post_data['dokan_update_user_profile_info_nonce'], 'dokan_update_user_profile_info' ) ) {
+        if ( ! isset( $post_data['dokan_update_user_profile_info_nonce'] ) || ! wp_verify_nonce( sanitize_key( $post_data['dokan_update_user_profile_info_nonce'] ), 'dokan_update_user_profile_info' ) ) {
             return;
         }
 
@@ -548,7 +549,7 @@ class UserProfile {
 
         $selling         = sanitize_text_field( $post_data['dokan_enable_selling'] );
         $publishing      = sanitize_text_field( $post_data['dokan_publish'] );
-        $percentage      = isset( $post_data['dokan_admin_percentage'] ) && $post_data['dokan_admin_percentage'] != '' ? $post_data['dokan_admin_percentage'] : '';
+        $percentage      = isset( $post_data['dokan_admin_percentage'] ) && $post_data['dokan_admin_percentage'] !== '' ? $post_data['dokan_admin_percentage'] : '';
         $percentage_type = empty( $post_data['dokan_admin_percentage_type'] ) ? 'percentage' : sanitize_text_field( $post_data['dokan_admin_percentage_type'] );
         $feature_seller  = sanitize_text_field( $post_data['dokan_feature'] );
         $store_settings  = dokan_get_store_info( $user_id );

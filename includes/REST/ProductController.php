@@ -321,7 +321,7 @@ class ProductController extends DokanRESTController {
             return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Invalid ID.', 'dokan-lite' ), [ 'status' => 400 ] );
         }
 
-        $product_author = get_post_field( 'post_author', $object->get_id() );
+        $product_author = (int) get_post_field( 'post_author', $object->get_id() );
 
         if ( $store_id !== $product_author ) {
             return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Sorry, you have no permission to do this. Since it\'s not your product.', 'dokan-lite' ), [ 'status' => 400 ] );
@@ -346,7 +346,7 @@ class ProductController extends DokanRESTController {
             return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Invalid ID.', 'dokan-lite' ), [ 'status' => 404 ] );
         }
 
-        $product_author = get_post_field( 'post_author', $object->get_id() );
+        $product_author = (int) get_post_field( 'post_author', $object->get_id() );
 
         if ( $store_id !== $product_author ) {
             return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Sorry, you have no permission to do this. Since it\'s not your product.', 'dokan-lite' ), [ 'status' => 400 ] );
@@ -583,7 +583,7 @@ class ProductController extends DokanRESTController {
         $args = parent::prepare_objects_query( $request );
 
         // Set post_status.
-        $args['post_status'] = isset( $request['status'] ) ? $request['status'] : $request['post_status'];
+        $args['post_status'] = isset( $request['status'] ) ? $request['status'] : $this->post_status;
 
         // Taxonomy query to filter products by type, category,
         // tag, shipping class, and attribute.

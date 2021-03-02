@@ -187,7 +187,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
 
                                     <?php do_action( 'dokan_product_edit_after_title', $post, $post_id ); ?>
 
-                                    <div class="show_if_simple dokan-clearfix">
+                                    <div class="show_if_simple dokan-clearfix show_if_external">
 
                                         <div class="dokan-form-group dokan-clearfix dokan-price-container">
 
@@ -363,7 +363,6 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                         </div>
                                     </div><!-- .dokan-feat-image-upload -->
 
-                                    <?php if ( apply_filters( 'dokan_product_gallery_allow_add_images', true ) ): ?>
                                         <div class="dokan-product-gallery">
                                             <div class="dokan-side-body" id="dokan-product-images">
                                                 <div id="product_images_container">
@@ -397,7 +396,9 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                                 </div>
                                             </div>
                                         </div> <!-- .product-gallery -->
-                                    <?php endif; ?>
+
+                                    <?php do_action( 'dokan_product_gallery_image_count' );?>
+
                                 </div><!-- .content-half-part -->
                             </div><!-- .dokan-form-top-area -->
 

@@ -90,7 +90,7 @@ class Products {
             'post'            => $post,
             'is_downloadable' => $is_downloadable,
             'is_virtual'      => $is_virtual,
-            'class'           => 'show_if_simple',
+            'class'           => 'show_if_subscription show_if_variable-subscription show_if_simple',
         ) );
     }
 
@@ -220,15 +220,11 @@ class Products {
             return;
         }
 
-        if ( ! isset( $_POST['dokan_add_new_product_nonce'] ) ) {
+        if ( ! isset( $_POST['dokan_add_new_product_nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['dokan_add_new_product_nonce'] ), 'dokan_add_new_product' )  ) {
             return;
         }
 
         $postdata = wp_unslash( $_POST );
-
-        if ( ! wp_verify_nonce( sanitize_key( $postdata['dokan_add_new_product_nonce'] ), 'dokan_add_new_product' ) ) {
-            return;
-        }
 
         $errors             = array();
         self::$product_cat  = -1;
@@ -379,11 +375,11 @@ class Products {
             return;
         }
 
-        $postdata = wp_unslash( $_POST );
-
-        if ( ! wp_verify_nonce( sanitize_key( $postdata['dokan_edit_product_nonce'] ), 'dokan_edit_product' ) ) {
+        if ( ! isset( $_POST['dokan_edit_product_nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['dokan_edit_product_nonce'] ), 'dokan_edit_product' ) ) {
             return;
         }
+
+        $postdata = wp_unslash( $_POST );
 
         $errors     = array();
         $post_title = sanitize_text_field( $postdata['post_title'] );
@@ -500,35 +496,35 @@ class Products {
             return;
         }
 
-        if ( isset( $_GET['action'] ) && $_GET['action'] == 'dokan-delete-product' ) {
-            $product_id = isset( $_GET['product_id'] ) ? (int) $_GET['product_id'] : 0;
+        if ( ! isset( $_GET['action'] ) || $_GET['action'] !== 'dokan-delete-product' ) {
+            return;
+        }
 
-            $getdata = wp_unslash( $_GET );
-
-            if ( ! $product_id ) {
-                wp_redirect( add_query_arg( array( 'message' => 'error' ), dokan_get_navigation_url( 'products' ) ) );
-                return;
-            }
-
-            if ( ! wp_verify_nonce( $getdata['_wpnonce'], 'dokan-delete-product' ) ) {
-                wp_redirect( add_query_arg( array( 'message' => 'error' ), dokan_get_navigation_url( 'products' ) ) );
-                return;
-            }
-
-            if ( ! dokan_is_product_author( $product_id ) ) {
-                wp_redirect( add_query_arg( array( 'message' => 'error' ), dokan_get_navigation_url( 'products' ) ) );
-                return;
-            }
-
-            dokan()->product->delete( $product_id, true );
-
-            do_action( 'dokan_product_deleted', $product_id );
-
-            $redirect = apply_filters( 'dokan_add_new_product_redirect', dokan_get_navigation_url( 'products' ), '' );
-
-            wp_redirect( add_query_arg( array( 'message' => 'product_deleted' ), $redirect ) );
+        if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_GET['_wpnonce'] ), 'dokan-delete-product' ) ) {
+            wp_redirect( add_query_arg( array( 'message' => 'error' ), dokan_get_navigation_url( 'products' ) ) );
             exit;
         }
+
+        $product_id = isset( $_GET['product_id'] ) ? (int) wp_unslash( $_GET['product_id'] ) : 0;
+
+        if ( ! $product_id ) {
+            wp_redirect( add_query_arg( array( 'message' => 'error' ), dokan_get_navigation_url( 'products' ) ) );
+            exit;
+        }
+
+        if ( ! dokan_is_product_author( $product_id ) ) {
+            wp_redirect( add_query_arg( array( 'message' => 'error' ), dokan_get_navigation_url( 'products' ) ) );
+            exit;
+        }
+
+        dokan()->product->delete( $product_id, true );
+
+        do_action( 'dokan_product_deleted', $product_id );
+
+        $redirect = apply_filters( 'dokan_add_new_product_redirect', dokan_get_navigation_url( 'products' ), '' );
+
+        wp_redirect( add_query_arg( array( 'message' => 'product_deleted' ), $redirect ) );
+        exit;
     }
 
 }

@@ -254,7 +254,7 @@ class SetupWizard {
             <?php do_action( 'admin_head' ); ?>
             <?php do_action( 'dokan_setup_wizard_styles' ); ?>
         </head>
-        <body class="wc-setup wp-core-ui<?php echo get_transient( 'dokan_setup_wizard_no_wc' ) ? ' dokan-setup-wizard-activated-wc' : ''; ?>">
+        <body class="wc-setup dokan-admin-setup-wizard wp-core-ui<?php echo get_transient( 'dokan_setup_wizard_no_wc' ) ? ' dokan-setup-wizard-activated-wc' : ''; ?>">
             <?php
                 $logo_url = ( ! empty( $this->custom_logo ) ) ? $this->custom_logo : plugins_url( 'assets/images/dokan-logo.png', DOKAN_FILE );
             ?>
@@ -443,6 +443,8 @@ class SetupWizard {
         $options['order_status_change']       = isset( $_post_data['order_status_change'] ) ? 'on' : 'off';
 
         update_option( 'dokan_selling', $options );
+
+        do_action( 'dokan_admin_setup_wizard_save_step_setup_selling', $options, $_post_data );
 
         wp_safe_redirect( esc_url_raw( $this->get_next_step_link() ) );
         exit;

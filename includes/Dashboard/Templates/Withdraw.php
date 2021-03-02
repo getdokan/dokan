@@ -102,7 +102,7 @@ class Withdraw {
     protected function handle_cancel_request() {
         $get_data = wp_unslash( $_GET );
 
-        if ( ! wp_verify_nonce( $get_data['_wpnonce'], 'dokan_cancel_withdraw' ) ) {
+        if ( ! isset( $get_data['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $get_data['_wpnonce'] ), 'dokan_cancel_withdraw' ) ) {
             $this->add_error( esc_html__( 'Are you cheating?', 'dokan-lite' ) );
         }
 
@@ -110,7 +110,7 @@ class Withdraw {
             $this->add_error( esc_html__( 'You have no permission to do this action', 'dokan-lite' ) );
         }
 
-        if ( empty( $get_data['id'] ) ) {
+        if ( empty( wp_unslash( $get_data['id'] ) ) ) {
             $this->add_error( esc_html__( 'Missing withdraw id.', 'dokan-lite' ) );
         }
 
@@ -119,7 +119,7 @@ class Withdraw {
         }
 
         $user_id     = get_current_user_id();
-        $withdraw_id = absint( $get_data['id'] );
+        $withdraw_id = absint( wp_unslash( $get_data['id'] ) );
 
         if ( ! dokan_is_seller_enabled( $user_id ) ) {
             return $this->add_error( esc_html__( 'Your account is not enabled for selling, please contact the admin', 'dokan-lite' ) );
@@ -314,7 +314,7 @@ class Withdraw {
     public function show_seller_balance() {
         $balance        = dokan_get_seller_balance( dokan_get_current_user_id(), true );
         $withdraw_limit = dokan_get_option( 'withdraw_limit', 'dokan_withdraw', -1 );
-        $threshold      = dokan_get_option( 'withdraw_date_limit', 'dokan_withdraw', -1 );
+        $threshold      = dokan_get_withdraw_threshold( dokan_get_current_user_id() );
 
         $message = sprintf( __( 'Current Balance: %s ', 'dokan-lite' ), $balance );
 

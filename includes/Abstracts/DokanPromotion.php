@@ -186,7 +186,7 @@ abstract class DokanPromotion {
             wp_send_json_error( __( 'You have no permission to do that', 'dokan-lite' ) );
         }
 
-        if ( ! wp_verify_nonce( $post_data['nonce'], 'dokan_admin' ) ) {
+        if ( ! isset( $post_data['nonce'] ) || ! wp_verify_nonce( sanitize_key( $post_data['nonce'] ), 'dokan_admin' ) ) {
             wp_send_json_error( __( 'Invalid nonce', 'dokan-lite' ) );
         }
 

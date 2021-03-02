@@ -26,7 +26,7 @@ class Manager {
             'post_type'      => 'product',
             'post_status'    => $post_statuses,
             'posts_per_page' => -1,
-            'orderby'        => 'post_date',
+            'orderby'        => 'post_date ID',
             'order'          => 'DESC',
             'paged'          => 1,
         ];

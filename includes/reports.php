@@ -15,7 +15,7 @@ if ( ! function_exists( 'dokan_get_order_report_data' ) ) :
 	 * @param string $end_date
 	 * @return obj
 	 */
-	function dokan_get_order_report_data( $args = array(), $start_date, $end_date ) {
+	function dokan_get_order_report_data( $args, $start_date, $end_date ) {
 		global $wpdb;
 
 		$current_user = dokan_get_current_user_id();
@@ -114,7 +114,7 @@ if ( ! function_exists( 'dokan_get_order_report_data' ) ) :
         AND     do.order_status IN ('" . implode( "','", apply_filters( 'woocommerce_reports_order_statuses', array( 'wc-completed', 'wc-processing', 'wc-on-hold' ) ) ) . "')
         ";
 
-		if ( $filter_range ) {
+		if ( $filter_range && ! empty( $start_date ) && ! empty( $end_date ) ) {
 			$query['where'] .= "
             AND     DATE(post_date) >= '" . $start_date . "'
             AND     DATE(post_date) <= '" . $end_date . "'

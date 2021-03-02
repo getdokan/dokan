@@ -213,6 +213,7 @@ class StoreController extends WP_REST_Controller {
         $args = [
             'number' => (int) $params['per_page'],
             'offset' => (int) ( $params['page'] - 1 ) * $params['per_page'],
+            'status' => 'all'
         ];
 
         if ( ! empty( $params['search'] ) ) {
@@ -240,15 +241,17 @@ class StoreController extends WP_REST_Controller {
 
         $stores       = dokan()->vendor->get_vendors( $args );
 
+        $search_text = isset( $params['search'] ) ? sanitize_text_field( $params['search'] ) : '';
+
         // if no stores found in then we are searching again with meta value. here need to remove search and search_columns, because with this args meta_query is not working
-        if ( ! count( $stores ) ) {
+        if ( ! count( $stores ) && ! empty( $search_text ) ) {
             unset( $args['search'] );
             unset( $args['search_columns'] );
 
             $args['meta_query'] = [
                 [
                     'key'     => 'dokan_store_name',
-                    'value'   => sanitize_text_field( $params['search'] ),
+                    'value'   => $search_text,
                     'compare' => 'LIKE',
                 ],
             ];

@@ -1,13 +1,13 @@
 # Dokan - Best WooCommerce Multivendor Marketplace Solution - Build Your Own Amazon, eBay, Etsy #
 **Contributors:** [tareq1988](https://profiles.wordpress.org/tareq1988), [wedevs](https://profiles.wordpress.org/wedevs), [nizamuddinbabu](https://profiles.wordpress.org/nizamuddinbabu)  
 **Donate Link:** http://tareq.co/donate/  
-**Tags:** WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, product vendors, woocommerce vendor, commission rate, e-commerce, ebay, ecommerce, yith, yithemes  
+**Tags:** WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce, yith, yithemes  
 **Requires at least:** 4.4  
-**Tested up to:** 5.5.3  
+**Tested up to:** 5.6.1  
 **WC requires at least:** 3.0  
-**WC tested up to:** 4.7.0  
+**WC tested up to:** 5.0.0  
 **Requires PHP:** 5.6  
-**Stable tag:** 3.0.16  
+**Stable tag:** 3.2.1  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -291,6 +291,81 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 ## Changelog ##
+
+### v3.2.1 ( February 12, 2021 ) ###
+
+**fix:** Optimized code for better security
+**update:** performance improvements on vendor dashboard end
+**fix:** fixed conflict with user frontend menu position with Dokan
+
+### v3.2.0 ( January 29, 2021 ) ###
+
+**new** Added blank product page new UI on vendor dashboard
+**new** Added Store open and closed status on dokan store listing page
+**new** Added a setting where admin can set how many products to display on vendor single store page
+**new** Added a new validation message after upload a banner/profile picture, show a browser alert if user tries to leave the current page without saving the changes.
+**new** Added a new update setting button on top of the vendor setting form
+**new** Added downloadable and virtual product type support for subscription products
+**update** Dokan withdrawal request promotion
+**fix** While registering as a vendor, radio button should work only when user click mouse cursor on the top of the radio button.
+**fix** Product add pop-up validation error message style
+**fix** Vendor pending tab keeps loading issue fixed
+**fix** Improved the mapbox address search input field and make it same as google map search box
+**fix** Keep old vendor as product author while duplicating product from the admin area
+**fix** Fixed rounded vendor balance can not be withdrawn
+**fix** Fixed resetting geolocation address is not selecting default location address
+**fix** Fixed featured attribute of the store list shortcode doesn't work
+**fix** Fixed vendors count not working on autoload in admin vendor listing page
+**fix** Fixed downloadable product "Grant Access" JS error
+**fix** Added filter for $allowed_roles in vendor registration which was missing
+**fix** If the vendor has a rounded value in their balance then vendors are unable to request a withdrawal of the full amount
+**fix** When order data is retrieved via API, the "total" order value is gets rounded
+**fix** Elementor conflict with Dokan best and top selling product shortcodes issue fixed
+**fix** More product tab showing other vendors product issue fixed
+
+### v3.1.2 ( January 12, 2021 ) ###
+
+- **fix:** Store listing page displaying disabled vendors
+- **notice:** Added Paypal adaptive modules removal notice
+
+### v3.1.1 ( January 11, 2021 ) ###
+
+- **feat:** Added searching feature for Dokan admin settings
+- **new:** Added "Visit Vendor Dashboard" link to admin bar
+- **new:** Added current_datetime() compatible dokan functions for WordPress version < 5.3
+- **update:** Updated refund table item_totals and item_tax_totals fields via Dokan upgrader
+- **perf:** Optimized Dokan admin settings page to load setting page faster
+- **fix:** Added vendor search feature for disabled vendors
+- **fix:** Product discount showing wrong when a product that has a limited time discount and sets a schedule on the calendar on the frontend dashboard
+- **fix:** Fixed creating addon by vendor staff was not working for product
+- **fix:** Fixed coupons created by the vendor can not be modified
+- **fix:** Fixed admin dashboard wasn't loading due to use of sprintf for some translatable strings
+- **fix:** Fixed display issue for State and Country multi-select of Dokan vendor create modal
+- **fix:** Translation issue fixed on store listing page
+- **fix:** Store product category not showing properly
+- **fix:** Fixed missing text-domain on product listing delete confirmation alert
+- **fix:** Responsive dashboard product and order table
+
+### v3.1.0 ( December 20, 2020 ) ###
+
+- [new] Store page customizer and better theme support
+- [fix] Stock level wrong calculation in order notes
+- [fix] Improve search with store name in Dokan admin vendor listing and store listing page
+- [fix] Store listing page avatar image not showing properly on store listing page
+- [fix] Store and store term and conditions template make high priority
+- [fix] Store settings page url issue when vendor dashboard use as child page
+- [fix] Vendor dashboard menu not selected when vendor dashboard use as a child page
+- [fix] Ordering issue on category dropdown on product listing filter area
+- [fix] Vue wp list table package updated, translation support for list tables
+- [fix] Dokan vendor dashboard big counter warning issue fixed
+- [fix] Vendor dashboard product table column issue fixed
+- [fix] Update custom deactivation reason placeholder text
+- [fix] Vendor biography formatting issue when update any vendor from Dokan admin area
+- [fix] Added attribute slug with product REST API
+- [fix] Vendor listing and withdraw page not loading correctly in admin area when use others languages
+- [fix] Upgrade to pro module page overlapping issue with admin notice, css & changed svg
+- [fix] Withdraw methods toggle options not working on Dokan setup wizard
+- [fix] Withdraw methods are not saving for some users, fixed via Dokan upgrader
 
 ### v3.0.16 ( December 01, 2020 ) ###
 

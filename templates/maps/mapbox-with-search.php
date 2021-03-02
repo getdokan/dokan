@@ -2,11 +2,12 @@
 
 <div class="dokan-map-wrap">
     <div class="dokan-map-search-bar">
-        <input id="dokan-map-add" type="text" class="dokan-map-search" value="<?php echo esc_attr( $map_address ); ?>" name="find_address" placeholder="<?php esc_attr_e( 'Address', 'dokan-lite' ); ?>" size="30" />
+        <input id="dokan-map-add" type="hidden" class="dokan-map-search" value="<?php echo esc_attr( $map_address ); ?>" name="find_address" placeholder="<?php esc_attr_e( 'Address', 'dokan-lite' ); ?>" size="30" />
         <a href="#" class="dokan-map-find-btn" id="dokan-location-find-btn" type="button"><?php esc_html_e( 'Find Address', 'dokan-lite' ); ?></a>
     </div>
 
     <div class="dokan-maps-container">
+        <div id="dokan-geocoder" class="dokan-geocoder"></div>
         <div id="<?php echo esc_attr( $map_id ); ?>"></div>
     </div>
 </div>
@@ -110,7 +111,6 @@
         }
 
         dokanMapbox.addControl( new mapboxgl.NavigationControl() );
-        dokanMapbox.addControl( new SearchButtonControl( mapboxId ), 'top-left' );
 
         dokanMapbox.on( 'load', function () {
             dokanGeocoder = new MapboxGeocoder( {
@@ -122,7 +122,8 @@
                 reverseGeocode: true,
             });
 
-            dokanMapbox.addControl( dokanGeocoder, 'top-left' );
+            document.getElementById('dokan-geocoder').appendChild(dokanGeocoder.onAdd(dokanMapbox));
+
             dokanGeocoder.setInput( location.address );
 
             dokanGeocoder.on( 'result', function ( resultData ) {
@@ -160,6 +161,22 @@
     #<?php echo $map_id; ?> {
         width: 100%;
         height: 300px;
+    }
+
+    .dokan-geocoder {
+        z-index: 1;
+        width: 100%;
+        left: 50%;
+        margin-left: 0%;
+        margin: 0px auto;
+    }
+
+    .mapboxgl-ctrl-geocoder {
+        min-width: 100%;
+    }
+
+    .mapboxgl-ctrl-geocoder--input{
+        padding-left: 30px !important;
     }
 
     .dokan-mapboxgl-ctrl.mapboxgl-ctrl-group > button {

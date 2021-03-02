@@ -1,251 +1,254 @@
 .wp-editor-wrap {
-    border: 1px solid @borderColor;
+  border: 1px solid @borderColor;
 }
 
-.dokan-message, .dokan-info, .dokan-error {
-    padding: 15px 15px 15px 50px;
-    margin: 5px 0 15px 0;
-    position: relative;
-    background: #fff;
-    border-bottom: 1px solid @borderColor;
-    border-left: 1px solid @borderColor;
-    border-right: 1px solid @borderColor;
-    .border-radius(4px);
+.dokan-message,
+.dokan-info,
+.dokan-error {
+  padding: 15px 15px 15px 50px;
+  margin: 5px 0 15px 0;
+  position: relative;
+  background: #fff;
+  border-bottom: 1px solid @borderColor;
+  border-left: 1px solid @borderColor;
+  border-right: 1px solid @borderColor;
+  .border-radius(4px);
 
-    &:before {
-        position: absolute;
-        top: 0;
-        left: 15px;
-        padding-top: 15px;
-        font-family: sans-serif;
-        color: #fff;
-        width: 20px;
-        border-bottom-left-radius: 4px;
-        border-bottom-right-radius: 4px;
-        text-align: center;
-    }
+  &:before {
+    position: absolute;
+    top: 0;
+    left: 15px;
+    padding-top: 15px;
+    font-family: sans-serif;
+    color: #fff;
+    width: 20px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    text-align: center;
+  }
 }
 
 .dokan-message {
-    border-top:3px solid #8fae1b;
+  border-top: 3px solid #8fae1b;
 
-    &:before {
-        background-color:#8fae1b;
-        content: "\2713";
-    }
+  &:before {
+    background-color: #8fae1b;
+    content: '\2713';
+  }
 }
 
 .dokan-info {
-    border-top:3px solid #109AE7;
+  border-top: 3px solid #109ae7;
 
-    &:before {
-        background-color:#109AE7;
-        content: "\2713";
-        content: "i";
-        font-family: Times, Georgia, serif;
-        font-style: italic;
-    }
+  &:before {
+    background-color: #109ae7;
+    content: '\2713';
+    content: 'i';
+    font-family: Times, Georgia, serif;
+    font-style: italic;
+  }
 }
 
 .dokan-error {
-    border-top:3px solid #b81c23;
+  border-top: 3px solid #b81c23;
 
-    &:before {
-        background-color:#b81c23;
-        content: "\00d7";
-        font-weight: 700;
-    }
+  &:before {
+    background-color: #b81c23;
+    content: '\00d7';
+    font-weight: 700;
+  }
 }
 
-ul.dokan_tabs{
-    border-bottom: 1px solid @borderColor;
-    margin-bottom: 20px;
-    line-height: 24px;
+ul.dokan_tabs {
+  border-bottom: 1px solid @borderColor;
+  margin-bottom: 20px;
+  line-height: 24px;
 
-    > li {
-        margin-bottom: -1px !important;
+  > li {
+    margin-bottom: -1px !important;
+  }
+
+  li {
+    display: inline-block;
+    margin-right: 5px !important;
+    border: 1px solid @borderColor;
+    border-bottom: none;
+
+    &:first-child {
+      margin-left: 10px;
     }
 
-    li {
-        display:inline-block;
-        margin-right: 5px !important;
-        border:1px solid @borderColor;
-        border-bottom: none;
+    a {
+      display: block;
+      padding: 6px 8px !important;
 
-        &:first-child {
-            margin-left: 10px;
-        }
-
-        a {
-            display: block;
-            padding: 6px 8px !important;
-
-            &:hover {
-                background-color: #eee;
-            }
-        }
-
-        &.dokan-hide {
-            display: none;
-        }
+      &:hover {
+        background-color: #eee;
+      }
     }
 
-    li.active {
-        border-bottom: 1px solid #fff !important;
+    &.dokan-hide {
+      display: none;
     }
+  }
+
+  li.active {
+    border-bottom: 1px solid #fff !important;
+  }
 }
 
 .dokan-pagination-container {
-    text-align: center;
+  text-align: center;
 
-    .dokan-pagination {
-        display: inline-block;
-        padding-left: 0;
+  .dokan-pagination {
+    display: inline-block;
+    padding-left: 0;
 
-        li {
-            display: inline;
+    li {
+      display: inline;
 
-            a {
-                padding: 3px 10px;
-                border: 1px solid @borderColor;
-                margin-right: 3px;
-                text-decoration: none;
-            }
+      a {
+        padding: 3px 10px;
+        border: 1px solid @borderColor;
+        margin-right: 3px;
+        text-decoration: none;
+      }
 
-            &.active a {
-                background: #eee;
-            }
+      &.active a {
+        background: #eee;
+      }
 
-            &.disabled a {
-                cursor: not-allowed;
-                color: #ccc;
-            }
-        }
+      &.disabled a {
+        cursor: not-allowed;
+        color: #ccc;
+      }
     }
+  }
 }
 
-input[type="submit"].dokan-btn,
+input[type='submit'].dokan-btn,
 a.dokan-btn,
 .dokan-btn {
-    display: inline-block;
-    margin-bottom: 0; // For input.btn
-    font-weight: normal;
-    text-align: center;
-    vertical-align: middle;
-    touch-action: manipulation;
-    cursor: pointer;
-    background-image: none; // Reset unusual Firefox-on-Android default style; see https://github.com/necolas/normalize.css/issues/214
-    border: 1px solid transparent;
-    white-space: nowrap;
-    .button-size(6px; 12px; 14px; 1.428571429; 4px);
-    .user-select(none);
+  display: inline-block;
+  margin-bottom: 0; // For input.btn
+  font-weight: normal;
+  text-align: center;
+  vertical-align: middle;
+  touch-action: manipulation;
+  cursor: pointer;
+  background-image: none; // Reset unusual Firefox-on-Android default style; see https://github.com/necolas/normalize.css/issues/214
+  border: 1px solid transparent;
+  white-space: nowrap;
+  background-color: #eee;
+  color: #444;
+  .button-size(6px; 12px; 14px; 1.428571429; 3px);
+  .user-select(none);
 
-    &:hover,
-    &:focus,
-    &.focus {
-        color: #333;
-        text-decoration: none;
-    }
+  &:hover,
+  &:focus,
+  &.focus {
+    color: #333;
+    text-decoration: none;
+  }
 
-    &:active,
-    &.active {
-        outline: 0;
-       background-image: none;
-       .box-shadow(inset 0 3px 5px rgba(0,0,0,.125));
-    }
+  &:active,
+  &.active {
+    outline: 0;
+    background-image: none;
+    .box-shadow(inset 0 3px 5px rgba(0, 0, 0, 0.125));
+  }
 }
 
-
-input[type="submit"].dokan-btn-theme,
+input[type='submit'].dokan-btn-theme,
 a.dokan-btn-theme,
 .dokan-btn-theme {
-    .button-variant( #fff; @mainColor; @mainColor);
+  .button-variant(#fff; @mainColor; @mainColor);
 }
 
-input[type="submit"].dokan-btn-success,
+input[type='submit'].dokan-btn-success,
 a.dokan-btn-success,
 .dokan-btn-success {
-    .button-variant(#fff; @brand-success; darken(@brand-success, 5%));
+  .button-variant(#fff; @brand-success; darken(@brand-success, 5%));
 }
 
-input[type="submit"].dokan-btn-default,
+input[type='submit'].dokan-btn-default,
 a.dokan-btn-default,
 .dokan-btn-default {
-    .button-variant(#333; #fff; #ccc);
+  .button-variant(#333; #fff; #ccc);
 }
 
-input[type="submit"].dokan-btn-danger,
+input[type='submit'].dokan-btn-danger,
 a.dokan-btn-danger,
 .dokan-btn-danger {
-    .button-variant(#fff; @brand-danger; darken(@brand-danger, 5%));
+  .button-variant(#fff; @brand-danger; darken(@brand-danger, 5%));
 }
 
-input[type="submit"].dokan-btn-info,
+input[type='submit'].dokan-btn-info,
 a.dokan-btn-info,
 .dokan-btn-info {
-    .button-variant(#fff; @brand-info; darken(@brand-info, 5%));
+  .button-variant(#fff; @brand-info; darken(@brand-info, 5%));
 }
 
-input[type="submit"].dokan-btn-lg,
+input[type='submit'].dokan-btn-lg,
 a.dokan-btn-lg,
 .dokan-btn-lg {
-    .button-size(10px; 16px; 18px; 1.33; 6px);
+  .button-size(10px; 16px; 18px; 1.33; 6px);
 }
 
-input[type="submit"].dokan-btn-sm,
+input[type='submit'].dokan-btn-sm,
 a.dokan-btn-sm,
 .dokan-btn-sm {
-    .button-size(5px; 10px; 12px; 1.5; 3px);
+  .button-size(5px; 10px; 12px; 1.5; 3px);
 }
 
 .dokan-btn-round[class] {
-    border-radius: 50%;
-    width: 35px;
-    height: 34px;
-    font-size: 25px;
-    line-height: 34px;
+  border-radius: 50%;
+  width: 35px;
+  height: 34px;
+  font-size: 25px;
+  line-height: 34px;
 }
 
 // Tables
 .dokan-table {
-    width: 100%;
-    max-width: 100%;
-    margin-bottom: 20px;
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 20px;
 
-    // Cells
-    > thead,
-    > tbody,
-    > tfoot {
-        > tr {
-            > th,
-            > td {
-                padding: 8px;
-                line-height: 1.42;
-                vertical-align: top;
-                border-top: 1px solid @borderColor;
-            }
-        }
+  // Cells
+  > thead,
+  > tbody,
+  > tfoot {
+    > tr {
+      > th,
+      > td {
+        padding: 8px;
+        line-height: 1.42;
+        vertical-align: top;
+        border-top: 1px solid @borderColor;
+      }
     }
-    // Bottom align for column headings
-    > thead > tr > th {
-        vertical-align: bottom;
-        border-bottom: 2px solid @borderColor;
+  }
+  // Bottom align for column headings
+  > thead > tr > th {
+    vertical-align: bottom;
+    border-bottom: 2px solid @borderColor;
+  }
+  // Remove top border from thead by default
+  > caption + thead,
+  > colgroup + thead,
+  > thead:first-child {
+    > tr:first-child {
+      > th,
+      > td {
+        border-top: 0;
+      }
     }
-    // Remove top border from thead by default
-    > caption + thead,
-    > colgroup + thead,
-    > thead:first-child {
-        > tr:first-child {
-            > th,
-            > td {
-                border-top: 0;
-            }
-        }
-    }
-    // Account for multiple tbody instances
-    > tbody + tbody {
-        border-top: 2px solid @borderColor;
-    }
+  }
+  // Account for multiple tbody instances
+  > tbody + tbody {
+    border-top: 2px solid @borderColor;
+  }
 }
 
 .dokan-table-striped {
@@ -254,35 +257,33 @@ a.dokan-btn-sm,
   }
 }
 
-
 .table-row-variant(active; @table-bg-active);
 .table-row-variant(success; @state-success-bg);
 .table-row-variant(info; @state-info-bg);
 .table-row-variant(warning; @state-warning-bg);
 .table-row-variant(danger; @state-danger-bg);
 
-
 .chart-tooltip {
-    position: absolute;
-    display: none;
-    line-height: 1;
-    background: #333;
-    color: #fff;
-    padding: 3px 5px;
-    font-size: 11px;
-    border-radius: 3px;
+  position: absolute;
+  display: none;
+  line-height: 1;
+  background: #333;
+  color: #fff;
+  padding: 3px 5px;
+  font-size: 11px;
+  border-radius: 3px;
 }
 
 .dokan-tooltips-help {
-    margin-left: 7px;
+  margin-left: 7px;
 
-    i {
-        color: #ccc;
-    }
+  i {
+    color: #ccc;
+  }
 }
 
-.tooltip-inner{
-    font-size: 12px;
+.tooltip-inner {
+  font-size: 12px;
 }
 
 /**
@@ -290,181 +291,178 @@ a.dokan-btn-sm,
  */
 
 .media-modal {
-    .screen-reader-text {
-        overflow: hidden;
-        padding: 0;
-        position: absolute;
-        width: 1px;
-    }
+  .screen-reader-text {
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
 }
 
 .chosen-container-multi {
-    .chosen-choices {
-        li.search-field {
-            input[type="text"] {
-                height: 28px;
-            }
-        }
+  .chosen-choices {
+    li.search-field {
+      input[type='text'] {
+        height: 28px;
+      }
     }
+  }
 }
 
 .mfp-zoom-out {
+  /* start state */
+  .mfp-with-anim {
+    -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=0)';
+    filter: alpha(opacity=0);
+    opacity: 0;
+    -moz-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    -webkit-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    -moz-transform: scale(1.3);
+    -ms-transform: scale(1.3);
+    -o-transform: scale(1.3);
+    -webkit-transform: scale(1.3);
+    transform: scale(1.3);
+  }
 
-    /* start state */
+  &.mfp-bg {
+    -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=0)';
+    filter: alpha(opacity=0);
+    opacity: 0;
+    -moz-transition: all 0.3s ease-out;
+    -o-transition: all 0.3s ease-out;
+    -webkit-transition: all 0.3s ease-out;
+    transition: all 0.3s ease-out;
+  }
+
+  /* animate in */
+  &.mfp-ready {
     .mfp-with-anim {
-        -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-        filter: alpha(opacity=0);
-        opacity: 0;
-        -moz-transition: all 0.3s ease-in-out;
-        -o-transition: all 0.3s ease-in-out;
-        -webkit-transition: all 0.3s ease-in-out;
-        transition: all 0.3s ease-in-out;
-        -moz-transform: scale(1.3);
-        -ms-transform: scale(1.3);
-        -o-transform: scale(1.3);
-        -webkit-transform: scale(1.3);
-        transform: scale(1.3)
+      -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=100)';
+      filter: alpha(opacity=100);
+      opacity: 1;
+      -moz-transform: scale(1);
+      -ms-transform: scale(1);
+      -o-transform: scale(1);
+      -webkit-transform: scale(1);
+      transform: scale(1);
     }
-
     &.mfp-bg {
-        -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-        filter: alpha(opacity=0);
-        opacity: 0;
-        -moz-transition: all 0.3s ease-out;
-        -o-transition: all 0.3s ease-out;
-        -webkit-transition: all 0.3s ease-out;
-        transition: all 0.3s ease-out
+      -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=80)';
+      filter: alpha(opacity=80);
+      opacity: 0.8;
     }
+  }
 
-    /* animate in */
-    &.mfp-ready {
-        .mfp-with-anim {
-            -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
-            filter: alpha(opacity=100);
-            opacity: 1;
-            -moz-transform: scale(1);
-            -ms-transform: scale(1);
-            -o-transform: scale(1);
-            -webkit-transform: scale(1);
-            transform: scale(1)
-        }
-        &.mfp-bg {
-            -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
-            filter: alpha(opacity=80);
-            opacity: 0.8
-        }
+  /* animate out */
+  &.mfp-removing {
+    .mfp-with-anim {
+      -moz-transform: scale(1.3);
+      -ms-transform: scale(1.3);
+      -o-transform: scale(1.3);
+      -webkit-transform: scale(1.3);
+      transform: scale(1.3);
+      -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=0)';
+      filter: alpha(opacity=0);
+      opacity: 0;
     }
-
-    /* animate out */
-    &.mfp-removing {
-
-        .mfp-with-anim {
-            -moz-transform: scale(1.3);
-            -ms-transform: scale(1.3);
-            -o-transform: scale(1.3);
-            -webkit-transform: scale(1.3);
-            transform: scale(1.3);
-            -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-            filter: alpha(opacity=0);
-            opacity: 0
-        }
-        &.mfp-bg {
-            -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-            filter: alpha(opacity=0);
-            opacity: 0
-        }
+    &.mfp-bg {
+      -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=0)';
+      filter: alpha(opacity=0);
+      opacity: 0;
     }
+  }
 }
 
 .dokan-blur-effect {
-    background-color: #eee;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
-    filter: alpha(opacity=40);
-    opacity: 0.4
+  background-color: #eee;
+  -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=40)';
+  filter: alpha(opacity=40);
+  opacity: 0.4;
 }
 .dokan-right-margin-30 {
-    margin-right: 30px;
+  margin-right: 30px;
 }
 
 .dokan_tock_check {
-    width: auto;
+  width: auto;
 }
 
-table.my_account_orders{
-    tbody{
-        tr{
-            td.order-actions{
-                a.button{
-                    margin-right: 10px;
-                }
-            }
+table.my_account_orders {
+  tbody {
+    tr {
+      td.order-actions {
+        a.button {
+          margin-right: 10px;
         }
+      }
     }
+  }
 }
 
-.dokan-dashboard-content{
-    ul.dokan_tabs{
-        border-bottom: 1px solid @borderColor;
-        margin-bottom: 20px;
-        line-height: 24px;
+.dokan-dashboard-content {
+  ul.dokan_tabs {
+    border-bottom: 1px solid @borderColor;
+    margin-bottom: 20px;
+    line-height: 24px;
 
-        > li {
-            margin-bottom: -1px !important;
-        }
-
-        li {
-            display:inline-block;
-            margin-right: 5px !important;
-            border:1px solid @borderColor;
-            border-bottom: none;
-
-            &:first-child {
-                margin-left: 10px;
-            }
-
-            a {
-                display: block;
-                padding: 6px 8px !important;
-
-                &:hover {
-                    background-color: #eee;
-                }
-            }
-
-            &.dokan-hide {
-                display: none;
-            }
-        }
-
-        li.active {
-            border-bottom: 1px solid #fff !important;
-        }
+    > li {
+      margin-bottom: -1px !important;
     }
+
+    li {
+      display: inline-block;
+      margin-right: 5px !important;
+      border: 1px solid @borderColor;
+      border-bottom: none;
+
+      &:first-child {
+        margin-left: 10px;
+      }
+
+      a {
+        display: block;
+        padding: 6px 8px !important;
+
+        &:hover {
+          background-color: #eee;
+        }
+      }
+
+      &.dokan-hide {
+        display: none;
+      }
+    }
+
+    li.active {
+      border-bottom: 1px solid #fff !important;
+    }
+  }
 }
 
 .wc_error_tip {
-    max-width: 20em;
-    line-height: 1.8em;
+  max-width: 20em;
+  line-height: 1.8em;
+  position: absolute;
+  white-space: normal;
+  background: #d82223;
+  margin: 2em 1px 0 -1em;
+  z-index: 9999999;
+  color: #fff;
+  font-size: 12px;
+  padding: 8px;
+
+  &:after {
+    content: '';
+    display: block;
+    border: 8px solid #d82223;
+    border-right-color: transparent;
+    border-left-color: transparent;
+    border-top-color: transparent;
     position: absolute;
-    white-space: normal;
-    background: #d82223;
-    margin: 2em 1px 0 -1em;
-    z-index: 9999999;
-    color: #fff;
-    font-size: 12px;
-    padding: 8px;
-
-    &:after {
-        content: "";
-        display: block;
-        border: 8px solid #d82223;
-        border-right-color: transparent;
-        border-left-color: transparent;
-        border-top-color: transparent;
-        position: absolute;
-        top: -3px;
-        left: 50%;
-        margin: -1em 0 0 -3px;
-    }
+    top: -3px;
+    left: 50%;
+    margin: -1em 0 0 -3px;
+  }
 }
-

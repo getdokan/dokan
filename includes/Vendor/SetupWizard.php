@@ -121,7 +121,7 @@ class SetupWizard extends DokanSetupWizard {
             <?php do_action( 'admin_print_styles' ); ?>
             <?php do_action( 'dokan_setup_wizard_styles' ); ?>
         </head>
-        <body class="wc-setup wp-core-ui">
+        <body class="wc-setup wp-core-ui dokan-vendor-setup-wizard">
             <?php if ( ! empty( $this->custom_logo ) ) { ?>
                 <h1 id="wc-logo"><a href="<?php echo esc_url( home_url() ) ?>"><img src="<?php echo esc_url( $this->custom_logo ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" /></a></h1>
             <?php } else {
@@ -182,7 +182,7 @@ class SetupWizard extends DokanSetupWizard {
         <form method="post" class="dokan-seller-setup-form">
             <table class="form-table">
                 <tr>
-                    <th scope="row"><label for="store_ppp"><?php esc_attr_e( 'Store Product Per Page', 'dokan-lite' ); ?></label></th>
+                    <th scope="row"><label for="store_ppp"><?php esc_attr_e( 'Store Products Per Page', 'dokan-lite' ); ?></label></th>
                     <td>
                         <input type="text" id="store_ppp" name="store_ppp" value="<?php echo esc_attr( $store_ppp ); ?>" />
                     </td>
@@ -330,13 +330,7 @@ class SetupWizard extends DokanSetupWizard {
      * Save store options.
      */
     public function dokan_setup_store_save() {
-        if ( ! isset( $_POST['_wpnonce'] ) ) {
-            return;
-        }
-
-        $nonce = sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) );
-
-        if ( ! wp_verify_nonce( $nonce, 'dokan-seller-setup' ) ) {
+        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'dokan-seller-setup' ) ) {
             return;
         }
 
@@ -350,14 +344,14 @@ class SetupWizard extends DokanSetupWizard {
         if ( $dokan_settings['address'] ) {
             $dokan_settings['profile_completion']['address']   = 10;
             $profile_settings                                  = get_user_meta( $this->store_id, 'dokan_profile_settings', true );
-            
+
             if ( ! empty( $profile_settings['profile_completion']['progress'] ) ) {
-                $dokan_settings['profile_completion']['progress'] = $profile_settings['profile_completion']['progress'] + 10; 
+                $dokan_settings['profile_completion']['progress'] = $profile_settings['profile_completion']['progress'] + 10;
             }
         }
 
         update_user_meta( $this->store_id, 'dokan_profile_settings', $dokan_settings );
-        
+
         do_action( 'dokan_seller_wizard_store_field_save', $this );
 
         wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
@@ -407,22 +401,16 @@ class SetupWizard extends DokanSetupWizard {
      * Save payment options.
      */
     public function dokan_setup_payment_save() {
+        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'dokan-seller-setup' ) ) {
+            return;
+        }
+
         $posted_data = wp_unslash( $_POST );
-
-        if ( ! isset( $posted_data['_wpnonce'] ) ) {
-            return;
-        }
-
-        $nonce = sanitize_text_field( wp_unslash( $posted_data['_wpnonce'] ) );
-
-        if ( ! wp_verify_nonce( $nonce, 'dokan-seller-setup' ) ) {
-            return;
-        }
 
         $dokan_settings = $this->store_info;
 
         if ( isset( $posted_data['settings']['bank'] ) ) {
-            $bank = array_map( 'sanitize_text_field', array_map( 'wp_unslash', $posted_data['settings']['bank'] ) );
+            $bank = $posted_data['settings']['bank'];
 
             $dokan_settings['payment']['bank'] = array(
                 'ac_name'        => sanitize_text_field( $bank['ac_name'] ),
@@ -455,7 +443,7 @@ class SetupWizard extends DokanSetupWizard {
         if ( isset( $posted_data['settings']['paypal'] ) || isset( $posted_data['settings']['skrill'] ) ) {
             $profile_settings = get_user_meta( $this->store_id, 'dokan_profile_settings', true );
             if ( ! empty( $profile_settings['profile_completion']['progress'] ) ) {
-                $dokan_settings['profile_completion']['progress'] = $profile_settings['profile_completion']['progress'] + 15; 
+                $dokan_settings['profile_completion']['progress'] = $profile_settings['profile_completion']['progress'] + 15;
             }
         }
 

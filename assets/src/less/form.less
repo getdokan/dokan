@@ -1,51 +1,48 @@
-.dokan-form-container{
-
-    label {
-        display: inline-block;
-        max-width: 100%; // Force IE8 to wrap long content (see https://github.com/twbs/bootstrap/issues/13141)
-        margin-bottom: 5px;
-    }
+.dokan-form-container {
+  label {
+    display: inline-block;
+    max-width: 100%; // Force IE8 to wrap long content (see https://github.com/twbs/bootstrap/issues/13141)
+    margin-bottom: 5px;
+  }
 }
 
 .dokan-form-control {
-    background-color: #ffffff;
-    background-image: none;
-    border: 1px solid @borderColor;
-    padding:4px 6px;
-    border-radius: 0;
-    color: #555555;
-    display: block;
-    font-size: 14px;
-    min-height: 26px;
-    line-height: 26px;
-    vertical-align: middle;
-    width: 100%;
-    margin: 0;
+  background-color: #ffffff;
+  background-image: none;
+  border: 1px solid @borderColor;
+  padding: 4px 6px;
+  border-radius: 0;
+  color: #555555;
+  display: block;
+  font-size: 14px;
+  min-height: 26px;
+  line-height: 26px;
+  vertical-align: middle;
+  width: 100%;
+  margin: 0;
 
-    p {
-        margin-bottom: 0;
-    }
+  p {
+    margin-bottom: 0;
+  }
 }
 
 textarea.dokan-form-control {
-    height:auto;
+  height: auto;
 }
 
 select.dokan-form-control {
-    height:35px;
+  height: 35px;
 }
 
 .dokan-radio-inline + .dokan-radio-inline,
 .dokan-checkbox-inline + .dokan-checkbox-inline {
-    margin-left: 10px;
-    margin-top: 0;
+  margin-left: 10px;
+  margin-top: 0;
 }
-
 
 .dokan-form-group {
-    margin-bottom: 15px;
+  margin-bottom: 15px;
 }
-
 
 //
 // Input groups
@@ -54,31 +51,31 @@ select.dokan-form-control {
 // Base styles
 // -------------------------
 .dokan-input-group {
-    position: relative; // For dropdowns
-    display: table;
-    border-collapse: separate; // prevent input groups from inheriting border styles from table cells when placed within a table
+  position: relative; // For dropdowns
+  display: table;
+  border-collapse: separate; // prevent input groups from inheriting border styles from table cells when placed within a table
 
-    // Undo padding and float of grid classes
-    &[class*="col-"] {
-        float: none;
-        padding-left: 0;
-        padding-right: 0;
-    }
+  // Undo padding and float of grid classes
+  &[class*='col-'] {
+    float: none;
+    padding-left: 0;
+    padding-right: 0;
+  }
 
-    .dokan-form-control {
-        // Ensure that the input is always above the *appended* addon button for
-        // proper border colors.
-        position: relative;
-        z-index: 2;
+  .dokan-form-control {
+    // Ensure that the input is always above the *appended* addon button for
+    // proper border colors.
+    position: relative;
+    z-index: 2;
 
-        // IE9 fubars the placeholder attribute in text inputs and the arrows on
-        // select elements in input groups. To fix it, we float the input. Details:
-        // https://github.com/twbs/bootstrap/issues/11561#issuecomment-28936855
-        float: left;
+    // IE9 fubars the placeholder attribute in text inputs and the arrows on
+    // select elements in input groups. To fix it, we float the input. Details:
+    // https://github.com/twbs/bootstrap/issues/11561#issuecomment-28936855
+    float: left;
 
-        width: 100%;
-        margin-bottom: 0;
-    }
+    width: 100%;
+    margin-bottom: 0;
+  }
 }
 
 // Display as table-cell
@@ -86,37 +83,37 @@ select.dokan-form-control {
 .dokan-input-group-addon,
 .dokan-input-group-btn,
 .dokan-input-group .form-control {
-    display: table-cell;
+  display: table-cell;
 
-    &:not(:first-child):not(:last-child) {
-        border-radius: 0;
-    }
+  &:not(:first-child):not(:last-child) {
+    border-radius: 0;
+  }
 }
 // Addon and addon wrapper for buttons
 .dokan-input-group-addon,
 .dokan-input-group-btn {
-    width: 1%;
-    white-space: nowrap;
-    vertical-align: middle; // Match the inputs
+  width: 1%;
+  white-space: nowrap;
+  vertical-align: middle; // Match the inputs
 }
 
 // Text input groups
 // -------------------------
 .dokan-input-group-addon {
-    padding: 6px 12px;
-    font-weight: normal;
-    line-height: 1;
-    color: #555;
-    text-align: center;
-    background-color: #eee;
-    border: 1px solid @borderColor;
-    border-radius: 4px;
+  padding: 6px 12px;
+  font-weight: normal;
+  line-height: 1;
+  color: #555;
+  text-align: center;
+  background-color: #eee;
+  border: 1px solid @borderColor;
+  border-radius: 4px;
 
-    // Nuke default margins from checkboxes and radios to vertically center within.
-    input[type="radio"],
-    input[type="checkbox"] {
-        margin-top: 0;
-    }
+  // Nuke default margins from checkboxes and radios to vertically center within.
+  input[type='radio'],
+  input[type='checkbox'] {
+    margin-top: 0;
+  }
 }
 
 // Reset rounded corners
@@ -127,11 +124,11 @@ select.dokan-form-control {
 .dokan-input-group-btn:first-child > .dropdown-toggle,
 .dokan-input-group-btn:last-child > .btn:not(:last-child):not(.dropdown-toggle),
 .dokan-input-group-btn:last-child > .btn-group:not(:last-child) > .btn {
-     border-bottom-right-radius: 0px;
-         border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+  border-top-right-radius: 0px;
 }
 .dokan-input-group-addon:first-child {
-    border-right: 0;
+  border-right: 0;
 }
 .dokan-input-group .dokan-form-control:last-child,
 .dokan-input-group-addon:last-child,
@@ -140,178 +137,194 @@ select.dokan-form-control {
 .dokan-input-group-btn:last-child > .dropdown-toggle,
 .dokan-input-group-btn:first-child > .btn:not(:first-child),
 .dokan-input-group-btn:first-child > .btn-group:not(:first-child) > .btn {
-    border-bottom-left-radius: 0px;
-         border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+  border-top-left-radius: 0px;
 }
 .dokan-input-group-addon:last-child {
-    border-left: 0;
+  border-left: 0;
 }
 
 // Button input groups
 // -------------------------
 .dokan-input-group-btn {
+  position: relative;
+  // Jankily prevent input button groups from wrapping with `white-space` and
+  // `font-size` in combination with `inline-block` on buttons.
+  font-size: 0;
+  white-space: nowrap;
+
+  // Negative margin for spacing, position for bringing hovered/focused/actived
+  // element above the siblings.
+  > .btn {
     position: relative;
-    // Jankily prevent input button groups from wrapping with `white-space` and
-    // `font-size` in combination with `inline-block` on buttons.
-    font-size: 0;
-    white-space: nowrap;
+    + .btn {
+      margin-left: -1px;
+    }
+    // Bring the "active" button to the front
+    &:hover,
+    &:focus,
+    &:active {
+      z-index: 2;
+    }
+  }
 
-    // Negative margin for spacing, position for bringing hovered/focused/actived
-    // element above the siblings.
-    > .btn {
-        position: relative;
-        + .btn {
-            margin-left: -1px;
-        }
-        // Bring the "active" button to the front
-        &:hover,
-        &:focus,
-        &:active {
-            z-index: 2;
-        }
+  // Negative margin to only have a 1px border between the two
+  &:first-child {
+    > .btn,
+    > .btn-group {
+      margin-right: -1px;
     }
-
-    // Negative margin to only have a 1px border between the two
-    &:first-child {
-        > .btn,
-        > .btn-group {
-            margin-right: -1px;
-        }
+  }
+  &:last-child {
+    > .btn,
+    > .btn-group {
+      margin-left: -1px;
     }
-    &:last-child {
-        > .btn,
-        > .btn-group {
-            margin-left: -1px;
-        }
-    }
+  }
 }
 
-
 .dokan-form-horizontal {
+  label {
+    display: inline-block;
+    max-width: 100%; // Force IE8 to wrap long content (see https://github.com/twbs/bootstrap/issues/13141)
+    margin-bottom: 5px;
+  }
 
-    label {
-        display: inline-block;
-        max-width: 100%; // Force IE8 to wrap long content (see https://github.com/twbs/bootstrap/issues/13141)
-        margin-bottom: 5px;
+  text-align: center;
+
+  .dokan-form-group {
+    &:before,
+    &:after {
+      display: table;
+      content: ' ';
     }
 
-
-    text-align: center;
-
-    .dokan-form-group {
-
-        &:before, &:after {
-            display: table;
-                content: " ";
-        }
-
-        &:after {
-            clear:both;
-        }
+    &:after {
+      clear: both;
     }
+  }
 
+  .dokan-control-label {
+    text-align: right;
+    margin-bottom: 0;
+    margin-top: 0;
+    padding-right: 15px;
+    font-weight: bold;
+  }
+
+  @media (max-width: 430px) {
     .dokan-control-label {
-        text-align: right;
-        margin-bottom: 0;
-            margin-top: 0;
-            padding-right: 15px;
+      text-align: left;
     }
+  }
 }
 
 .dokan-row {
-    margin-right: -15px;
-    margin-left: -15px;
+  margin-right: -15px;
+  margin-left: -15px;
 }
 
 .dokan-w1 {
-    width: 8.33333333%;
-    float:left;
+  width: 8.33333333%;
+  float: left;
 }
 
 .dokan-w2 {
-    width: 16.66666667%;
-    float:left;
+  width: 16.66666667%;
+  float: left;
 }
 
 .dokan-w3 {
-    width:25%;
-    float:left;
+  width: 25%;
+  float: left;
 }
 
 .dokan-w4 {
-    width: 33.33333333%;
-    float:left;
+  width: 33.33333333%;
+  float: left;
 }
 
 .dokan-w5 {
-    width: 41.66666667%;
-    float:left;
+  width: 41.66666667%;
+  float: left;
 }
 
 .dokan-w6 {
-    width:50%;
-    float:left
+  width: 50%;
+  float: left;
 }
 .dokan-w7 {
-    width:63%;
-    float:left;
+  width: 63%;
+  float: left;
 }
 
 .dokan-w8 {
-    width: 58.33333333%;
-    float:left;
+  width: 58.33333333%;
+  float: left;
 }
 
 .dokan-w9 {
-    width: 75%;
-    float:left;
+  width: 75%;
+  float: left;
 }
 
 .dokan-w10 {
-    width: 83.33333333%;
-    float:left;
+  width: 83.33333333%;
+  float: left;
 }
 
 .dokan-w11 {
-    width: 91.66666667%;
-    float:left;
+  width: 91.66666667%;
+  float: left;
 }
 
 .dokan-w12 {
-    width: 100%;
-    float:left;
+  width: 100%;
+  float: left;
 }
 
 .dokan-text-left {
-    text-align: left;
+  text-align: left;
 }
 
 .dokan-text-right {
-    text-align: right;
+  text-align: right;
+}
+
+@media (max-width: 430px) {
+  .dokan-w3,
+  .dokan-w4,
+  .dokan-w5,
+  .dokan-w6,
+  .dokan-w7,
+  .dokan-w8,
+  .dokan-w9,
+  .dokan-w10,
+  .dokan-w11 {
+    width: 100% !important;
+  }
 }
 
 // Form Errors
 // -------------------------
 .woocommerce {
+  .form-row.has-error {
+    background-color: #ffe5e5;
+    padding: 10px;
+    border-radius: 3px;
+  }
 
-    .form-row.has-error {
-        background-color: #ffe5e5;
-        padding: 10px;
-        border-radius: 3px;
+  form.register.dokan-vendor-register {
+    border: none;
+    padding: 0;
+
+    .name-field {
+      display: flex;
+      justify-content: space-between;
+
+      p {
+        width: 48%;
+      }
     }
-
-    form.register.dokan-vendor-register {
-        border: none;
-        padding: 0;
-
-        .name-field {
-            display: flex;
-            justify-content: space-between;
-
-            p {
-                width: 48%;
-            }
-        }
-    }
-
+  }
 }
