@@ -64,7 +64,29 @@ module.exports = {
   I.clearField('//textarea[@name="variable_description[0]"]');
   I.click('Save Variations');
 
- }
+ },
+
+ CreateVariationforsubscription()
+ {
+  I.click({css:'.variation-topbar-heading > .dokan-clearfix'});
+  I.selectOption({css:'.variation-topbar-heading > select:nth-child(2)'},'green');
+  I.click({css:'.variation-topbar-heading > select:nth-child(2)'});
+  I.fillField({css:'input.wc_input_price:nth-child(1)'},'100');
+  I.selectOption('variable_subscription_period_interval[0]','every');
+  I.selectOption('variable_subscription_period[0]','day');
+  I.fillField('#variable_sale_price0','12');
+  I.fillField('.wc_input_subscription_intial_price','10');
+  I.fillField({css:'.wc_input_subscription_trial_length'},'10');
+  I.selectOption({css:'div.subscription-sign-up-fee:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > select:nth-child(1)'},'day');
+  I.fillField('//input[@name="variable_weight[0]"]',faker.random.number());
+  I.fillField('//input[@id="product_length[0]"]',faker.random.number());
+  I.fillField({css:'//input[@name="variable_width[0]"]'},faker.random.number());
+  I.fillField('//input[@name="variable_height[0]"]',faker.random.number());
+  I.selectOption('//select[@id="variable_shipping_class[0]"]','Flat rate');
+  I.fillField('//textarea[@name="variable_description[0]"]',faker.random.words());
+  I.click('Save Variations');
+ },
+
 
   // insert your locators and methods here
 }

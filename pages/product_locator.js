@@ -49,6 +49,7 @@ module.exports = {
     ProductStatusDropdown: '#post_status',
     ProductVisibilityDropdown: '#_visibility',
     ProductReviewCheckbox: 'div.dokan-section-content > div:nth-child(5) > label',
+
     //group product Functional 
     RmaCheckBox: '#dokan_rma_product_override',
     RmaLabelInput: '#dokan-rma-label',
@@ -66,6 +67,31 @@ module.exports = {
     LinkedProductUpsells: 'div.content-half-part.dokan-form-group.hide_if_variation > span > span.selection > span > ul > li > input',
     LinkedProductCrossSells: 'div.dokan-section-content > div:nth-child(2) > span > span.selection > span > ul > li > input',
     LinkedProductGrouped: 'div.dokan-group-product-content.show_if_grouped > span > span.selection > span > ul > li > input',
+
+=======
+   
+     //Variable product explore
+     ScrollToAttribute:{css:'.add_new_attribute'},
+     ProductAttributeName:'attribute_names[0]',
+     ProductAttributeValue:'//li/div[2]/div[2]/span/span/span/ul/li/input',
+     ProductAttributeVisibility:'attribute_visibility[0]',
+     ProductAttributeVariation:'attribute_variation[0]',
+     EnableProductDiscount:'//*[@id="_is_lot_discount"]',
+     DiscountProductQuantity:'//*[@id="_lot_discount_quantity"]',
+     DiscountProductAmount:'//*[@id="_lot_discount_amount"]',
+
+    //ExploreSimpleSubscriptionproduct
+    SimpleSubscriptionproductPrice:'#_subscription_price',
+    SubscriptionInterval:'#_subscription_period_interval',
+    SubscriptionPeriod:'#_subscription_period',
+    SubscriptionDiscountPrice:{css:'.content-full-part > div:nth-child(2) > input:nth-child(2)'},
+    ExpirationSubscription:'#_subscription_length',
+    SignUpfee:'#_subscription_sign_up_fee',
+    FreeTrial:'#_subscription_trial_length',
+    TrialPeriod:'_subscription_trial_period',
+
+
+     
 
 
 
