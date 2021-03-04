@@ -27,4 +27,4 @@ Scenario('Group Product Functional Behaviour Testing', ({ I }) => {
     helpers.checkgroup();
     I.see('Success! The product has been saved successfully.', '.dokan-message');
     //Purchase Notes Functionality Test
-});
+}).tag('@product');

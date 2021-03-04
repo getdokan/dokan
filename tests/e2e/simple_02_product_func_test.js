@@ -41,4 +41,4 @@ Scenario('simple product functional', ({
     helpers.clearwholesale();
     helpers.wholesale();
 
-});
+}).tag('@product');

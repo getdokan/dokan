@@ -2,15 +2,21 @@ Feature('explore Frontend Functionality');
 
 Before(({ I }) => { // or Background
     // loginAs('user');
-    const loginBtnText = 'login';
-    
-    I.amOnPage('/my-account/');
-    I.fillField('username', 'jones');
-    I.fillField('password', 'aa');
-    I.checkOption('Remember me');
-    I.click(loginBtnText);
+    // const loginBtnText = 'login';
+
+    // I.amOnPage('/my-account/');
+    // I.fillField('username', 'jones');
+    // I.fillField('password', 'aa');
+    // I.checkOption('Remember me');
+    // I.click(loginBtnText);
     // I.dontSeeElement('.woocommerce-error');
-  });
+    I.amOnPage('http://dokan-pro.test/');
+    I.checkError();
+    I.click('Login / Register');
+    I.fillField('Username or email address', 'alvitazwar@wedevs.com');
+    I.fillField('Password', 'alvitazwar1122334456');
+    I.click('.login > p:nth-child(4) > button:nth-child(3)');
+});
 
 // Scenario('Preview and Explore Vendor Dashboard', ({ I }) => {
 //         I.seeInCurrentUrl('/dashboard/');
@@ -231,61 +237,59 @@ Before(({ I }) => { // or Background
 // 	I.amOnPage('/shop');
 //         I.waitForElement('#content');
 //         // I.checkError();
-	
-	
+
+
 
 // });
 
 Scenario('Preview and Explore Vendor Store Page', ({ I }) => {
     I.amOnPage('/my-account');
-        I.see('My account');
-            I.waitForElement('div.woocommerce-MyAccount-content');
-            I.checkError();
-            I.click('recent orders');
-                I.seeInCurrentUrl('/my-account/orders/');
-                I.click('Dashboard');
-            // I.click('shipping and billing addresses');
-            //     I.seeInCurrentUrl('/my-account/edit-address/');
-            //     I.click('Dashboard');
-            // I.click('edit your password and account details');
-            //     I.seeInCurrentUrl('/my-account/edit-account/');
-            //     I.click('Dashboard');
-            // I.click('Go to Vendor Dashboard');
-            //     I.seeInCurrentUrl('/dashboard/');
-            //     I.amOnPage('/my-account');
-        I.click('Orders');
-            I.waitForElement('.woocommerce-MyAccount-content', 5);
-            I.checkError();
-            I.click('//*[@id="post-12"]/div/div/div/table/tbody/tr/td[1]/a');
-                I.waitForElement('.woocommerce-MyAccount-content', 5);
-                I.checkError();
-        I.click('Subscriptions');
-            I.waitForElement('.woocommerce_account_subscriptions', 5);
-            I.checkError();
-        I.click('Downloads');
-            I.waitForElement('.woocommerce-MyAccount-content', 5);
-            I.checkError();
-        I.click('Addresses');
-            I.waitForElement('.woocommerce-MyAccount-content',5);
-            I.checkError();
-                I.see('Billing address');
-                I.see('Shipping address');
-        I.click('RMA Requests');
-            I.waitForElement('.woocommerce-MyAccount-content', 5);
-            I.checkError();
-        I.click('Account details');
-            I.waitForElement('.woocommerce-MyAccount-content',5);
-            I.checkError();
-        I.click('Vendors');
-            I.waitForElement('.woocommerce-MyAccount-content',5);
-            I.checkError();
-        I.click('Seller Support Ticket');
-            I.waitForElement('.woocommerce-MyAccount-content',5);
-            I.checkError();
-        I.click('Bookings');
-            I.waitForElement('.woocommerce-MyAccount-content',5);
-            I.checkError();
-        I.click('Logout');	
-});
-
-
+    I.see('My account');
+    I.waitForElement('div.woocommerce-MyAccount-content');
+    I.checkError();
+    I.click('recent orders');
+    I.seeInCurrentUrl('/my-account/orders/');
+    I.click('Dashboard');
+    // I.click('shipping and billing addresses');
+    //     I.seeInCurrentUrl('/my-account/edit-address/');
+    //     I.click('Dashboard');
+    // I.click('edit your password and account details');
+    //     I.seeInCurrentUrl('/my-account/edit-account/');
+    //     I.click('Dashboard');
+    // I.click('Go to Vendor Dashboard');
+    //     I.seeInCurrentUrl('/dashboard/');
+    //     I.amOnPage('/my-account');
+    I.click('Orders');
+    I.waitForElement('.woocommerce-MyAccount-content', 5);
+    I.checkError();
+    I.click('//*[@id="post-12"]/div/div/div/table/tbody/tr/td[1]/a');
+    I.waitForElement('.woocommerce-MyAccount-content', 5);
+    I.checkError();
+    I.click('Subscriptions');
+    I.waitForElement('.woocommerce_account_subscriptions', 5);
+    I.checkError();
+    I.click('Downloads');
+    I.waitForElement('.woocommerce-MyAccount-content', 5);
+    I.checkError();
+    I.click('Addresses');
+    I.waitForElement('.woocommerce-MyAccount-content', 5);
+    I.checkError();
+    I.see('Billing address');
+    I.see('Shipping address');
+    I.click('RMA Requests');
+    I.waitForElement('.woocommerce-MyAccount-content', 5);
+    I.checkError();
+    I.click('Account details');
+    I.waitForElement('.woocommerce-MyAccount-content', 5);
+    I.checkError();
+    I.click('Vendors');
+    I.waitForElement('.woocommerce-MyAccount-content', 5);
+    I.checkError();
+    I.click('Seller Support Ticket');
+    I.waitForElement('.woocommerce-MyAccount-content', 5);
+    I.checkError();
+    I.click('Bookings');
+    I.waitForElement('.woocommerce-MyAccount-content', 5);
+    I.checkError();
+    I.click('Logout');
+}).tag('@exp');
