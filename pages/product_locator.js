@@ -49,6 +49,26 @@ module.exports = {
     ProductStatusDropdown: '#post_status',
     ProductVisibilityDropdown: '#_visibility',
     ProductReviewCheckbox: 'div.dokan-section-content > div:nth-child(5) > label',
+
+    //group product Functional 
+    RmaCheckBox: '#dokan_rma_product_override',
+    RmaLabelInput: '#dokan-rma-label',
+    RmaTypeDropdown: '#dokan-warranty-type',
+    RmaPolicyIframe: '#warranty_policy_ifr',
+    RmaPolicyInput: '//body[@id="tinymce" and @data-id="warranty_policy"]',
+    RmaLengthDropdown: '#dokan-warranty-length',
+    RmaLengthValue: 'warranty_length_value',
+    RmaLengthDuration: '#dokan-warranty-length-duration',
+    RmaAddonCostInput: 'warranty_addon_price[]',
+    RmaAddonDurationInput: 'warranty_addon_length[]',
+    RmaAddonDurationDropdown: '//*[@id="warranty_addon_duration[]"]',
+    RmaWarrentyAddonBtn: 'a.dokan-btn.dokan-btn-default.add-item',
+    PurchaseNotesInput: '#_purchase_note',
+    LinkedProductUpsells: 'div.content-half-part.dokan-form-group.hide_if_variation > span > span.selection > span > ul > li > input',
+    LinkedProductCrossSells: 'div.dokan-section-content > div:nth-child(2) > span > span.selection > span > ul > li > input',
+    LinkedProductGrouped: 'div.dokan-group-product-content.show_if_grouped > span > span.selection > span > ul > li > input',
+
+=======
    
      //Variable product explore
      ScrollToAttribute:{css:'.add_new_attribute'},
@@ -72,6 +92,7 @@ module.exports = {
 
 
      
+
 
 
 

@@ -70,4 +70,4 @@ Scenario('product edit explore test', ({ I }) => {
     I.seeElementInDOM(locator.ProductReviewCheckbox);
     console.log('All Elemennts Are present');
 
-});
+}).tag('@product');

@@ -15,7 +15,7 @@ Scenario('simple product functional', ({
     I.fillField('Password', 'alvitazwar1122334456');
     I.click('.login > p:nth-child(4) > button:nth-child(3)');
     I.click('Products');
-    I.click('simple_pro_1');
+    I.click('simple_pro_1'); //This product needs to be on dokan site in order to run this test.
     I.wait(3);
     //Product Functionality Check
     //Product functionality Price and schedule
@@ -41,4 +41,4 @@ Scenario('simple product functional', ({
     helpers.clearwholesale();
     helpers.wholesale();
 
-});
+}).tag('@product');
