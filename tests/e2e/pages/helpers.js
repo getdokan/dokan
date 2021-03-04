@@ -47,8 +47,8 @@ module.exports = {
         I.seeInField('Email address', locator.EmailAddress);
     },
     loginAsVendor() {
-        I.fillField('Username or email address ', 'alvitazwar@wedevs.com');
-        I.fillField('Password', 'alvitazwar1122334456');
+        I.fillField('Username or email address ', 'vendor-one');
+        I.fillField('Password', '123456');
         I.click('Login');
         I.seeInCurrentUrl('/dashboard');
     },
@@ -127,7 +127,7 @@ module.exports = {
         console.log('Admin Current Balance:', admin_current_balance);
         let ad_actual_bal = await I.grabTextFrom(locator.AdminBalance);
         admin_actual_balance = parseInt(ad_actual_bal.replace('৳', "").replace('$', "").trim());
-        strict.equal(admin_current_balance, admin_actual_balance,"Message Done");
+        strict.equal(admin_current_balance, admin_actual_balance, "Message Done");
         console.log('Admin Existing Balance', admin_existing_balance, '+', 'Current Comission', admin_current_commission, '=', 'Admin Actual Balance', admin_existing_balance + admin_current_commission);
         I.say('Calculation matched');
     },

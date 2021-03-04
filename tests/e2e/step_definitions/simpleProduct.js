@@ -11,7 +11,7 @@ Given('Existing balance of Admin will be checked', async() => {
 When('Customer purchase a simple product', () => {
     I.loginAsCustomer();
     I.amOnPage('/shop');
-    I.click('simple_pro_1');
+    I.click('simple_pro_3');
     //Place A new Order
     helpers.placeOrder();
     helpers.customerlogout();
