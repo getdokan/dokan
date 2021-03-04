@@ -67,7 +67,11 @@ endif;
 
 if ( ! function_exists( 'dokan_page_navi' ) ) :
 
-	function dokan_page_navi( $before = '', $after = '', $wp_query ) {
+	function dokan_page_navi( $before, $after, $wp_query ) {
+        if ( ! ( $wp_query instanceof WP_Query ) ) {
+            return;
+        }
+
 		$posts_per_page = intval( get_query_var( 'posts_per_page' ) );
 		$paged          = intval( get_query_var( 'paged' ) );
 		$numposts       = $wp_query->found_posts;

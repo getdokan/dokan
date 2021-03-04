@@ -74,6 +74,11 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
     }
 
     if ( isset( $data['_sale_price'] ) ) {
+        //if regular price is lower than sale price then we are setting it to empty
+        if ( $data['_regular_price'] <= $data['_sale_price'] ) {
+            $data['_sale_price'] = '';
+        }
+
         update_post_meta( $post_id, '_sale_price', ( $data['_sale_price'] === '' ? '' : wc_format_decimal( $data['_sale_price'] ) ) );
     }
 
@@ -1034,6 +1039,8 @@ add_action( 'woocommerce_product_tabs', 'dokan_set_more_from_seller_tab', 10 );
  * @param int $posts_per_page
  *
  * @since 2.5
+ * @since DOKAN_LITE_SINCE added filter 'dokan_get_more_products_per_page'
+ *
  * @global object $product
  * @global object $post
  */
@@ -1044,8 +1051,8 @@ function dokan_get_more_products_from_seller( $seller_id = 0, $posts_per_page = 
         $seller_id = $post->post_author;
     }
 
-    if ( ! abs( $posts_per_page ) ) {
-        $posts_per_page = 4;
+    if ( ! is_int( $posts_per_page ) ) {
+        $posts_per_page = apply_filters( 'dokan_get_more_products_per_page', 6 );
     }
 
     $args = [
@@ -1154,7 +1161,11 @@ add_action( 'save_post', 'dokan_store_category_delete_transient' );
  *
  * @return string $headers
  */
-function dokan_add_reply_to_vendor_email_on_wc_customer_note_mail( $headers = '', $id = '', $order ) {
+function dokan_add_reply_to_vendor_email_on_wc_customer_note_mail( $headers, $id, $order ) {
+    if ( ! ( $order instanceof WC_Order ) ) {
+        return $headers;
+    }
+
     if ( 'customer_note' === $id ) {
         foreach ( $order->get_items( 'line_item' ) as $item ) {
             $product_id  = $item['product_id'];
