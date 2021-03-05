@@ -70,7 +70,7 @@ function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = nul
     $where = $customer_id ? sprintf( "pm.meta_key = '_customer_user' AND pm.meta_value = %d AND", $customer_id ) : '';
 
     if ( $orders === false ) {
-        $status_where = ( $status === 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', 'wc-' . $status );
+        $status_where = ( $status === 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', $status );
         $date_query   = ( $order_date ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $order_date ) : '';
 
         $orders = $wpdb->get_results(
@@ -269,6 +269,8 @@ function dokan_count_orders( $user_id ) {
             'total'         => 0,
         ];
 
+        $counts = apply_filters( 'dokan_order_status_count', $counts );
+
         $results = $wpdb->get_results(
             $wpdb->prepare(
                 "SELECT do.order_status
@@ -353,8 +355,7 @@ function dokan_sync_insert_order( $order_id ) {
     $admin_commission   = dokan()->commission->get_earning_by_order( $order, 'admin' );
     $net_amount         = $order_total - $admin_commission;
     $net_amount         = apply_filters( 'dokan_order_net_amount', $net_amount, $order );
-    $threshold_day      = dokan_get_option( 'withdraw_date_limit', 'dokan_withdraw', 0 );
-    $threshold_day      = $threshold_day ? $threshold_day : 0;
+    $threshold_day      = dokan_get_withdraw_threshold( $seller_id );
 
     dokan_delete_sync_duplicate_order( $order_id, $seller_id );
 

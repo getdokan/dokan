@@ -983,17 +983,15 @@ function dokan_edit_product_url( $product ) {
         return false;
     }
 
-    if ( 'publish' === $product->get_status() ) {
-        $url = trailingslashit( get_permalink( $product->get_id() ) ) . 'edit/';
-    } else {
-        $url = add_query_arg(
-            [
-                'product_id' => $product->get_id(),
-                'action'     => 'edit',
-            ],
-            dokan_get_navigation_url( 'products' )
-        );
-    }
+
+    $url = add_query_arg(
+        [
+            'product_id' => $product->get_id(),
+            'action'     => 'edit',
+        ],
+        dokan_get_navigation_url( 'products' )
+    );
+
 
     return apply_filters( 'dokan_get_edit_product_url', $url, $product );
 }
@@ -2322,10 +2320,6 @@ function dokan_get_social_profile_fields() {
             'icon'  => 'facebook-square',
             'title' => __( 'Facebook', 'dokan-lite' ),
         ],
-        'gplus' => [
-            'icon'  => 'google',
-            'title' => __( 'Google', 'dokan-lite' ),
-        ],
         'twitter' => [
             'icon'  => 'twitter-square',
             'title' => __( 'Twitter', 'dokan-lite' ),
@@ -3171,6 +3165,7 @@ function dokan_get_translated_days( $day ) {
  * @param  int user_id
  *
  * @since  2.8.2
+ * @since  3.2.1 replaced time related functions with dokan_current_datetime()
  *
  * @return bool
  */
@@ -3178,7 +3173,9 @@ function dokan_is_store_open( $user_id ) {
     $store_user = dokan()->vendor->get( $user_id );
     $store_info = $store_user->get_shop_info();
     $open_days  = isset( $store_info['dokan_store_time'] ) ? $store_info['dokan_store_time'] : '';
-    $today      = strtolower( date( 'l' ) );
+
+    $current_time = dokan_current_datetime();
+    $today        = strtolower( $current_time->format( 'l' ) );
 
     if ( ! isset( $open_days[ $today ] ) ) {
         return false;
@@ -3192,9 +3189,8 @@ function dokan_is_store_open( $user_id ) {
             return true;
         }
 
-        $current_time = current_time( 'timestamp' );
-        $open         = strtotime( $schedule['opening_time'] );
-        $close        = strtotime( $schedule['closing_time'] );
+        $open  = $current_time->modify( $schedule['opening_time'] );
+        $close = $current_time->modify( $schedule['closing_time'] );
 
         if ( $open <= $current_time && $close >= $current_time ) {
             return true;
@@ -3991,4 +3987,23 @@ function dokan_format_date( $date = '', $format = false ) {
     }
 
     return date_i18n( $format, $date );
+}
+
+/**
+ * Get threshold day for a user
+ *
+ * @param $user_id
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @return integer threshold day
+ */
+function dokan_get_withdraw_threshold( $user_id ) {
+    if ( get_user_meta( $user_id, 'withdraw_date_limit', true ) !== '' ) {
+        $threshold_day = get_user_meta( $user_id, 'withdraw_date_limit', true );
+    } else {
+        $threshold_day = dokan_get_option( 'withdraw_date_limit', 'dokan_withdraw', 0 );
+    }
+
+    return ( $threshold_day ) ? absint( $threshold_day ) : 0;
 }

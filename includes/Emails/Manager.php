@@ -90,6 +90,7 @@ class Manager {
         $wc_emails['Dokan_Email_Withdraw_Cancelled']      = new WithdrawCancelled();
         $wc_emails['Dokan_Email_Contact_Seller']          = new ContactSeller();
         $wc_emails['Dokan_Email_New_Order']               = new VendorNewOrder();
+        $wc_emails['Dokan_Email_Completed_Order']         = new VendorCompletedOrder();
 
         return apply_filters( 'dokan_email_classes', $wc_emails );
     }
@@ -123,7 +124,7 @@ class Manager {
 
         $template_name = basename( $template );
 
-        if ( in_array( $template_name, $dokan_emails ) ) {
+        if ( in_array( $template_name, $dokan_emails, true ) ) {
             return 'dokan';
         }
 
@@ -194,7 +195,7 @@ class Manager {
             $this->get_from_name(),
             home_url(),
         );
-
+        // translators: %1: from name, %2: from name
         $subject = sprintf( __( '"%1$s" sent you a message from your "%2$s" store', 'dokan-lite' ), $from_name, $this->get_from_name() );
         $body = str_replace( $find, $replace, $body );
         $headers = array( "Reply-To: {$from_name}<{$from_email}>" );
@@ -246,6 +247,7 @@ class Manager {
             home_url(),
         );
 
+        // translators: %1: from name, %2: status
         $subject = sprintf( __( '[%1$s] Refund Request %2$s', 'dokan-lite' ), $this->get_from_name(), $status );
         $body = str_replace( $find, $replace, $body );
 
@@ -279,7 +281,7 @@ class Manager {
             $this->get_from_name(),
             home_url(),
         );
-
+        // translators: %s: from name
         $subject = sprintf( __( '[%s] New Refund Request', 'dokan-lite' ), $this->get_from_name() );
         $body = str_replace( $find, $replace, $body );
         $this->send( $this->admin_email(), $subject, $body );
@@ -336,7 +338,7 @@ class Manager {
         ob_start();
         dokan_get_template_part( 'emails/withdraw-new' );
         $body = ob_get_clean();
-
+        // translators: %s: from name
         $subject = sprintf( __( '[%s] New Withdraw Request', 'dokan-lite' ), $this->get_from_name() );
         $body = $this->prepare_withdraw( $body, $user, $amount, $method );
 
@@ -359,6 +361,7 @@ class Manager {
         $body = ob_get_clean();
 
         $user = get_user_by( 'id', $user_id );
+        // translators: %s: from name
         $subject = sprintf( __( '[%s] Your Withdraw Request has been approved', 'dokan-lite' ), $this->get_from_name() );
         $body = $this->prepare_withdraw( $body, $user, $amount, $method );
 
@@ -382,6 +385,7 @@ class Manager {
         $body = ob_get_clean();
 
         $user = get_user_by( 'id', $user_id );
+        // translators: %s: from name
         $subject = sprintf( __( '[%s] Your Withdraw Request has been cancelled', 'dokan-lite' ), $this->get_from_name() );
         $body = $this->prepare_withdraw( $body, $user, $amount, $method, $note );
 
@@ -418,8 +422,9 @@ class Manager {
             $this->get_from_name(),
             home_url(),
         );
-
+        // translators: %s: from name
         $body = str_replace( $find, $replace, $body );
+        // translators: %s: from name
         $subject = sprintf( __( '[%s] New Vendor Registered', 'dokan-lite' ), $this->get_from_name() );
 
         $this->send( $this->admin_email(), $subject, $body );
@@ -437,7 +442,7 @@ class Manager {
     public function new_product_added( $product_id, $status = 'pending' ) {
         $template = 'emails/new-product-pending';
 
-        if ( $status == 'publish' ) {
+        if ( 'publish' === $status ) {
             $template = 'emails/new-product';
         }
         ob_start();
@@ -473,6 +478,7 @@ class Manager {
         );
 
         $body = str_replace( $find, $replace, $body );
+        // translators: %s: from name
         $subject = sprintf( __( '[%s] New Product Added', 'dokan-lite' ), $this->get_from_name() );
 
         $this->send( $this->admin_email(), $subject, $body );
@@ -513,6 +519,7 @@ class Manager {
         );
 
         $body = str_replace( $find, $replace, $body );
+        // translators: %s: from name
         $subject = sprintf( __( '[%s] Your product has been approved!', 'dokan-lite' ), $this->get_from_name() );
 
         $this->send( $seller->user_email, $subject, $body );

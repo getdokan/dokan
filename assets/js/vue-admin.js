@@ -6599,7 +6599,6 @@ var Loading = dokan_get_lib('Loading');
         gravatar_id: '',
         social: {
           fb: '',
-          gplus: '',
           youtube: '',
           twitter: '',
           linkedin: '',

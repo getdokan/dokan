@@ -10,12 +10,12 @@
 
     <div class="dokan-section-content">
 
-        <div class="content-half-part dokan-form-group hide_if_variation">
+        <div class="content-half-part dokan-form-group">
             <label for="_sku" class="form-label"><?php esc_html_e( 'SKU', 'dokan-lite' ); ?> <span><?php esc_html_e( '(Stock Keeping Unit)', 'dokan-lite' ); ?></span></label>
             <?php dokan_post_input_box( $post_id, '_sku' ); ?>
         </div>
 
-        <div class="content-half-part hide_if_variable">
+        <div class="content-half-part hide_if_variable hide_if_external">
             <label for="_stock_status" class="form-label"><?php esc_html_e( 'Stock Status', 'dokan-lite' ); ?></label>
 
             <?php dokan_post_input_box( $post_id, '_stock_status', array( 'options' => array(
@@ -28,25 +28,25 @@
         <div class="dokan-clearfix"></div>
 
         <?php if ( 'yes' === get_option( 'woocommerce_manage_stock' ) ) : ?>
-        <div class="dokan-form-group hide_if_variation hide_if_grouped">
+        <div class="dokan-form-group hide_if_grouped hide_if_external">
             <?php dokan_post_input_box( $post_id, '_manage_stock', array( 'label' => __( 'Enable product stock management', 'dokan-lite' ) ), 'checkbox' ); ?>
         </div>
 
         <div class="show_if_stock dokan-stock-management-wrapper dokan-form-group dokan-clearfix">
 
-            <div class="content-half-part hide_if_variation">
+            <div class="content-half-part">
                 <label for="_stock" class="form-label"><?php esc_html_e( 'Stock quantity', 'dokan-lite' ); ?></label>
                 <input type="number" class="dokan-form-control" name="_stock" placeholder="<?php esc_attr__( '1', 'dokan-lite' ); ?>" value="<?php echo esc_attr( wc_stock_amount( $_stock ) ); ?>" min="0" step="1">
             </div>
 
             <?php if ( version_compare( WC_VERSION, '3.4.7', '>' ) ) : ?>
-            <div class="content-half-part hide_if_variation">
+            <div class="content-half-part">
                 <label for="_low_stock_amount" class="form-label"><?php esc_html_e( 'Low stock threshold', 'dokan-lite' ); ?></label>
                 <input type="number" class="dokan-form-control" name="_low_stock_amount" placeholder="<?php esc_attr__( '1', 'dokan-lite' ); ?>" value="<?php echo esc_attr( wc_stock_amount( $_low_stock_amount ) ); ?>" min="0" step="1">
             </div>
             <?php endif; ?>
 
-            <div class="content-half-part hide_if_variation last-child">
+            <div class="content-half-part last-child">
                 <label for="_backorders" class="form-label"><?php esc_html_e( 'Allow Backorders', 'dokan-lite' ); ?></label>
 
                 <?php dokan_post_input_box( $post_id, '_backorders', array( 'options' => array(
@@ -59,7 +59,7 @@
         </div><!-- .show_if_stock -->
         <?php endif; ?>
 
-        <div class="dokan-form-group hide_if_grouped">
+        <div class="dokan-form-group hide_if_grouped hide_if_external">
             <label class="" for="_sold_individually">
                 <input name="_sold_individually" id="_sold_individually" value="yes" type="checkbox" <?php checked( $_sold_individually, 'yes' ); ?>>
                 <?php esc_html_e( 'Allow only one quantity of this product to be bought in a single order', 'dokan-lite' ) ?>

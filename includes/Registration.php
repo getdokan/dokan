@@ -150,8 +150,7 @@ class Registration {
             'map_val'               => 15,
             'payment_method_val'    => 15,
             'social_val' => array(
-                'fb'        => 2,
-                'gplus'     => 2,
+                'fb'        => 4,
                 'twitter'   => 2,
                 'youtube'   => 2,
                 'linkedin'  => 2,

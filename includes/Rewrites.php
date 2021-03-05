@@ -324,6 +324,9 @@ class Rewrites {
             }
 
             $query->set( 'tax_query', apply_filters( 'dokan_store_tax_query', $tax_query ) );
+
+            // set orderby param
+            $query->set( 'orderby', 'post_date ID' );
         }
     }
 }

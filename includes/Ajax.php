@@ -416,7 +416,7 @@ class Ajax {
      * Add shipping tracking info via ajax
      */
     public function add_shipping_tracking_info() {
-        if ( ! isset( $_POST['dokan_security_nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['dokan_security_nonce'] ), 'dokan_security_action' ) ) {
+        if ( ! isset( $_REQUEST['security'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['security'] ), 'add-shipping-tracking-info' ) ) {
             die( -1 );
         }
 
