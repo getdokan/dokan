@@ -17,7 +17,8 @@ exports.config = {
         I: './steps_file.js',
         product: './pages/product.js',
         helpers: './pages/helpers.js',
-        locator: './pages/locator.js'
+        locator: './pages/locator.js',
+        explore: './pages/explore.js',
     },
     mocha: {},
     bootstrap: null,

@@ -47,9 +47,16 @@ module.exports = {
     AdminMoveCursor: '#wp-admin-bar-my-account > a',
     AdminLogout: '#wp-admin-bar-logout > a',
 
-
-
-
+    //Vendor Dashboard Elements
+    VendorContent: '.dokan-dashboard-content',
+    ProgressBar: '.dokan-progress',
+    LeftDashboard: 'div.dokan-w6.dokan-dash-left',
+    SaleGraph: 'div.dashboard-widget.sells-graph',
+    DashAnnountment: 'div.dashboard-widget.dokan-announcement-widget',
+    ProductWidget: 'div.dashboard-widget.products',
+    //VendorProduct Overview Page
+    ProductArea: '.dokan-product-listing-area',
+    AddProductSpan: '.dokan-add-product-link',
 
 
 }

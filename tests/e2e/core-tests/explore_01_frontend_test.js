@@ -1,4 +1,9 @@
+const { ifError, strict } = require("assert");
+const { assert, Console } = require("console");
+const explore = require('../pages/explore');
 Feature('explore Frontend Functionality');
+
+
 
 Before(({ I }) => { // or Background
     I.loginAsVendor();
@@ -6,107 +11,78 @@ Before(({ I }) => { // or Background
 
 Scenario('Preview and Explore Vendor Dashboard', ({ I }) => {
     //Dashboard Element Start
-    I.seeInCurrentUrl('/dashboard/');
-    I.waitForElement('.dokan-dashboard-content');
-    I.checkError();
-    I.seeElement('.dokan-progress');
-    I.see('Sales');
-    I.see('Sales this Month');
-    I.see('Orders');
-    I.see('Latest Announcement');
-    I.see('Reviews');
-    I.see('Products');
+    // var possiblePromise = explore.checkDashboardElements();
+    // var certainPromise = Promise.resolve(possiblePromise).then((result) => {
+    //     console.log(result);
+    // }).catch((err) => {
+    //     console.log("Error Intest")
+    // });
+    // console.log(certainPromise);
+    explore.checkDashboardElements();
     //Dashboard element Finish
     //Vendor Products
+    explore.checkProductPage();
 
-    I.click('Products');
-    I.seeInCurrentUrl('/dashboard/products/');
-    I.waitForElement('.dokan-product-listing-area');
-    I.checkError();
-    I.seeElement('.active');
-    I.seeElement('.active', 'All');
-    I.see('Online');
-    I.seeElement('.dokan-add-product-link', 'Add new Product');
-    I.seeElement('.dokan-add-product-link', 'Import');
-    I.seeElement('.dokan-add-product-link', 'Export');
-    I.seeElement('form', 'All dates');
-    I.seeElement('form', 'Select a category');
-    I.seeElement('form', 'Filter');
-    I.seeElement('form', 'Search Products');
-    I.seeElement('form', 'Search');
-    I.seeElement('form', 'Bulk Actions');
-    I.seeElement('form', 'Apply');
-    I.seeElement('table', '.dokan-checkbox');
-    I.seeElement('table', 'Image');
-    I.seeElement('table', 'Name');
-    I.seeElement('table', 'Status');
-    I.seeElement('table', 'SKU');
-    I.seeElement('table', 'Stock');
-    I.seeElement('table', 'Price');
-    I.seeElement('table', 'Earning');
-    I.seeElement('table', 'Type');
-    I.seeElement('table', 'Views');
-    I.seeElement('table', 'Date');
-    I.click('//*[@id="dokan-product-list-table"]/tbody/tr[1]/td[2]/strong/a');
-    I.checkError();
-    //Order Explore
-    I.click('Orders');
-    I.waitForElement('.dokan-orders-area');
-    I.checkError();
-    I.seeElement('form', 'order_date_filter');
-    I.seeElement('form', 'Filter by registered customer');
-    I.seeElement('form', 'Filter');
-    I.seeElement('form', 'Export All');
-    I.seeElement('form', 'Export Filtered');
-    I.seeElement('form', 'Bulk Actions');
-    I.seeElement('form', 'Apply');
-    I.click('//*[@id="order-filter"]/table/tbody/tr[1]/td[1]/a');
-    I.checkError();
-    I.amOnPage('/dashboard/orders/?order_status=wc-completed/');
-    I.checkError();
-    I.amOnPage('/dashboard/orders/?order_status=wc-processing/');
-    I.checkError();
-    I.amOnPage('/dashboard/orders/?order_status=wc-on-hold/');
-    I.checkError();
-    I.amOnPage('/dashboard/orders/?order_status=wc-pending/');
-    I.checkError();
-    I.amOnPage('/dashboard/orders/?order_status=wc-cancelled/');
-    I.checkError();
-    I.amOnPage('/dashboard/orders/?order_status=wc-refunded/');
-    I.checkError();
-    I.amOnPage('/dashboard/orders/?order_status=wc-failed/');
-    I.checkError();
-    I.click('Subscription');
-    tryTo(() => {
-        I.click('User Subscriptions');
-        I.waitForElement('.dashboard-user-subscription-area');
-        I.checkError();
-        I.click('//*[@id="post-5"]/div/div/div[2]/article/table/tbody/tr/td[2]/a/strong');
-        I.checkError();
-    });
-    I.waitForElement('div > div.seller_subs_info');
-    I.checkError();
-    // I.click('//*[@id="post-5"]/div/div/div[2]/article/table/tbody/tr/td[2]/a/strong');
-    // I.checkError(); 
-    //Explore Coupons
-    I.click('Coupons');
-    I.waitForElement('.dashboard-coupons-area');
-    I.checkError();
-    //Explore Reports
-    I.click('Reports');
-    I.waitForElement('.dokan-dashboard-content.dokan-reports-content');
-    I.checkError();
-    I.click('Sales by day');
-    I.checkError();
-    I.click('Top selling');
-    I.checkError();
-    I.click('Top earning');
-    I.checkError();
-    I.click('Statement');
-    I.checkError();
-    I.click('Reviews');
-    I.waitForElement('.dokan-comments-wrap');
-    I.checkError();
+    // I.click('//*[@id="dokan-product-list-table"]/tbody/tr[1]/td[2]/strong/a');
+    // I.checkError();
+    // //Order Explore
+    // I.click('Orders');
+    // I.waitForElement('.dokan-orders-area');
+    // I.checkError();
+    // I.seeElement('form', 'order_date_filter');
+    // I.seeElement('form', 'Filter by registered customer');
+    // I.seeElement('form', 'Filter');
+    // I.seeElement('form', 'Export All');
+    // I.seeElement('form', 'Export Filtered');
+    // I.seeElement('form', 'Bulk Actions');
+    // I.seeElement('form', 'Apply');
+    // I.click('//*[@id="order-filter"]/table/tbody/tr[1]/td[1]/a');
+    // I.checkError();
+    // I.amOnPage('/dashboard/orders/?order_status=wc-completed/');
+    // I.checkError();
+    // I.amOnPage('/dashboard/orders/?order_status=wc-processing/');
+    // I.checkError();
+    // I.amOnPage('/dashboard/orders/?order_status=wc-on-hold/');
+    // I.checkError();
+    // I.amOnPage('/dashboard/orders/?order_status=wc-pending/');
+    // I.checkError();
+    // I.amOnPage('/dashboard/orders/?order_status=wc-cancelled/');
+    // I.checkError();
+    // I.amOnPage('/dashboard/orders/?order_status=wc-refunded/');
+    // I.checkError();
+    // I.amOnPage('/dashboard/orders/?order_status=wc-failed/');
+    // I.checkError();
+    // I.click('Subscription');
+    // tryTo(() => {
+    //     I.click('User Subscriptions');
+    //     I.waitForElement('.dashboard-user-subscription-area');
+    //     I.checkError();
+    //     I.click('//*[@id="post-5"]/div/div/div[2]/article/table/tbody/tr/td[2]/a/strong');
+    //     I.checkError();
+    // });
+    // I.waitForElement('div > div.seller_subs_info');
+    // I.checkError();
+    // // I.click('//*[@id="post-5"]/div/div/div[2]/article/table/tbody/tr/td[2]/a/strong');
+    // // I.checkError(); 
+    // //Explore Coupons
+    // I.click('Coupons');
+    // I.waitForElement('.dashboard-coupons-area');
+    // I.checkError();
+    // //Explore Reports
+    // I.click('Reports');
+    // I.waitForElement('.dokan-dashboard-content.dokan-reports-content');
+    // I.checkError();
+    // I.click('Sales by day');
+    // I.checkError();
+    // I.click('Top selling');
+    // I.checkError();
+    // I.click('Top earning');
+    // I.checkError();
+    // I.click('Statement');
+    // I.checkError();
+    // I.click('Reviews');
+    // I.waitForElement('.dokan-comments-wrap');
+    // I.checkError();
     // I.click('//*[@id="dokan-comments-table"]/tbody/tr/td[4]/a');
     //     I.checkError();
     //Explore Reviews
@@ -139,12 +115,12 @@ Scenario('Preview and Explore Vendor Dashboard', ({ I }) => {
     // I.click('Subscription');
     // 	I.waitForElement('.dokan-dashboard-content');
     //     I.checkError();
-    I.click('Analytics');
-    I.waitForElement('.dokan-reports-area');
-    I.amOnPage('/dashboard/support/?ticket_status=all/');
-    I.checkError();
-    I.amOnPage('/dashboard/support/?ticket_status=closed/');
-    I.checkError();
+    // I.click('Analytics');
+    // I.waitForElement('.dokan-reports-area');
+    // I.amOnPage('/dashboard/support/?ticket_status=all/');
+    // I.checkError();
+    // I.amOnPage('/dashboard/support/?ticket_status=closed/');
+    // I.checkError();
     //////////////////////////////////////////////////////////
     // I.click('Settings');
     // I.waitForElement('.dokan-settings-area');
