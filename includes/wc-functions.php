@@ -95,26 +95,6 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
         update_post_meta( $post_id, '_purchase_note', wp_kses_post( $data['_purchase_note'] ) );
     }
 
-    // Unique SKU
-    $sku     = get_post_meta( $post_id, '_sku', true );
-    $new_sku = (string) wc_clean( $data['_sku'] );
-
-    if ( '' === $new_sku ) {
-        update_post_meta( $post_id, '_sku', '' );
-    } elseif ( $new_sku !== $sku ) {
-        if ( ! empty( $new_sku ) ) {
-            $unique_sku = wc_product_has_unique_sku( $post_id, $new_sku );
-
-            if ( ! $unique_sku ) {
-                $woocommerce_errors[] = __( 'Product SKU must be unique', 'dokan-lite' );
-            } else {
-                update_post_meta( $post_id, '_sku', $new_sku );
-            }
-        } else {
-            update_post_meta( $post_id, '_sku', '' );
-        }
-    }
-
     // Save Attributes
     $attributes = [];
 
@@ -398,6 +378,22 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
             update_post_meta( $post_id, '_download_type', wc_clean( $data['_download_type'] ) );
         }
     }
+
+    // Update SKU
+    $old_sku = get_post_meta( $post_id, '_sku', true );
+    delete_post_meta( $post_id, '_sku' );
+
+    $product = wc_get_product( $post_id );
+
+    $sku = trim( wp_unslash( $data['_sku'] ) ) !== '' ? sanitize_text_field( wp_unslash( $data['_sku'] ) ) : '';
+    try {
+        $product->set_sku( $sku );
+    } catch ( \WC_Data_Exception $e ) {
+        $product->set_sku( $old_sku );
+        $woocommerce_errors[] = __( 'Product SKU must be unique', 'dokan-lite' );
+    }
+
+    $product->save();
 
     // Do action for product type
     do_action( 'woocommerce_process_product_meta_' . $product_type, $post_id );
