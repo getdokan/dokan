@@ -1825,7 +1825,7 @@ jQuery(function($) {
         $(window).on("beforeunload", function() {
           return dokan.dokan_banner_added_alert_msg;
         });
-        
+
         $(document).ready(function() {
           $("#store-form").on("submit", function(e) {
             $(window).off("beforeunload");
@@ -2604,15 +2604,18 @@ jQuery(function($) {
 
     .on(
       'change',
-      '#_sale_price.wc_input_price[type=text], .wc_input_price[name^=variable_sale_price]',
+      '#_sale_price.wc_input_price[type=text], .wc_input_price[name^=variable_sale_price], #_subscription_sale_price.wc_input_price[type=text]',
       function() {
         var sale_price_field = $(this),
+          product_type_selector = $('#product_type'),
           regular_price_field;
 
         if (sale_price_field.attr('name').indexOf('variable') !== -1) {
           regular_price_field = sale_price_field
             .parents('.variable_pricing')
             .find('.wc_input_price[name^=variable_regular_price]');
+        } else if ( product_type_selector.length && 'subscription' === product_type_selector.find(':selected').val() ) {
+          regular_price_field = $('#_subscription_price');
         } else {
           regular_price_field = $('#_regular_price');
         }
@@ -2638,15 +2641,18 @@ jQuery(function($) {
 
     .on(
       'keyup',
-      '#_sale_price.wc_input_price[type=text], .wc_input_price[name^=variable_sale_price]',
+      '#_sale_price.wc_input_price[type=text], .wc_input_price[name^=variable_sale_price], #_subscription_sale_price.wc_input_price[type=text]',
       function() {
         var sale_price_field = $(this),
+          product_type_selector = $('#product_type'),
           regular_price_field;
 
         if (sale_price_field.attr('name').indexOf('variable') !== -1) {
           regular_price_field = sale_price_field
             .parents('.variable_pricing')
             .find('.wc_input_price[name^=variable_regular_price]');
+        } else if ( product_type_selector.length && 'subscription' === product_type_selector.find(':selected').val() ) {
+          regular_price_field = $('#_subscription_price');
         } else {
           regular_price_field = $('#_regular_price');
         }
