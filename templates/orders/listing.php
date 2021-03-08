@@ -52,6 +52,9 @@ if ( $user_orders ) {
                     <th><?php esc_html_e( 'Order Total', 'dokan-lite' ); ?></th>
                     <th><?php esc_html_e( 'Earning', 'dokan-lite' ); ?></th>
                     <th><?php esc_html_e( 'Status', 'dokan-lite' ); ?></th>
+                    <?php if ( function_exists( 'dokan_shipping_tracking_status_by_orderid' ) ) : ?>
+                        <th><?php esc_html_e( 'Shipping Status', 'dokan-lite' ); ?></th>
+                    <?php endif; ?>
                     <th><?php esc_html_e( 'Customer', 'dokan-lite' ); ?></th>
                     <th><?php esc_html_e( 'Date', 'dokan-lite' ); ?></th>
                     <?php if ( current_user_can( 'dokan_manage_order' ) ) { ?>
@@ -86,6 +89,11 @@ if ( $user_orders ) {
                         <td class="dokan-order-status" data-title="<?php esc_attr_e( 'Status', 'dokan-lite' ); ?>" >
                             <?php echo '<span class="dokan-label dokan-label-' . dokan_get_order_status_class( dokan_get_prop( $order, 'status' ) ) . '">' . dokan_get_order_status_translated( dokan_get_prop( $order, 'status' ) ) . '</span>'; ?>
                         </td>
+                        <?php if ( function_exists( 'dokan_shipping_tracking_status_by_orderid' ) ) : ?>
+                            <td class="dokan-order-shipping-status" data-title="<?php esc_attr_e( 'Shipping Status', 'dokan-lite' ); ?>" >
+                                <?php echo dokan_shipping_tracking_status_by_orderid( $order->get_id(), 1 ); ?>
+                            </td>
+                        <?php endif; ?>
                         <td class="dokan-order-customer" data-title="<?php esc_attr_e( 'Customer', 'dokan-lite' ); ?>" >
                             <?php
                             $user_info = '';
