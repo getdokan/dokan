@@ -58,5 +58,56 @@ module.exports = {
     ProductArea: '.dokan-product-listing-area',
     AddProductSpan: '.dokan-add-product-link',
 
+    //Product Order Page
+    OrderArea: '.dokan-orders-area',
+    CompleteOrder: '/dashboard/orders/?order_status=wc-completed/',
+    ProcessingOrder: '/dashboard/orders/?order_status=wc-processing/',
+    HoldOrder: '/dashboard/orders/?order_status=wc-on-hold/',
+    PendingOrder: '/dashboard/orders/?order_status=wc-pending/',
+    CancelOrder: '/dashboard/orders/?order_status=wc-cancelled/',
+    RefundOrder: '/dashboard/orders/?order_status=wc-refunded/',
+    FailedOrder: '/dashboard/orders/?order_status=wc-failed/',
+    //Coupon Page
+    CouponArea: '.dashboard-coupons-area',
+
+    //Report Page
+    ReportArea: '.dokan-dashboard-content.dokan-reports-content',
+    //Review Page
+    ReviewArea: 'div.dokan-dashboard-content.dokan-reviews-content',
+    ReviewhHold: '/dashboard/reviews/?comment_status=hold/',
+    ReviewSpam: '/dashboard/reviews/?comment_status=spam/',
+    ReviewTrash: '/dashboard/reviews/?comment_status=trash/',
+    //Withdraw Page
+    WithdrawArea: '.dokan-withdraw-area',
+    //Return Request
+    ReturnRequestArea: '.dokan-rma-request-area',
+    //Staff
+    StaffArea: 'div.dokan-dashboard-content.dokan-staffs-content',
+    //Follower
+    FollowerArea: '.dashboard-content-area',
+    //Subscription
+    SubscriptionArea: '.dokan-dashboard-content',
+    //Analytics
+    AnalyticsArea: '.dokan-reports-area',
+    AllAnalytics: '/dashboard/support/?ticket_status=all/',
+    CloseAnalytics: '/dashboard/support/?ticket_status=closed/',
+    //Settings
+    SettingArea: '.dokan-settings-area',
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
