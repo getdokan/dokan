@@ -418,7 +418,7 @@ class Products {
 
         self::$errors = apply_filters( 'dokan_can_edit_product', $errors );
 
-        if ( !self::$errors ) {
+        if ( ! self::$errors ) {
             $product_info = apply_filters( 'dokan_update_product_post_data', array(
                 'ID'             => $post_id,
                 'post_title'     => $post_title,
@@ -431,7 +431,13 @@ class Products {
             if ( $post_slug ) {
                 global $wpdb;
 
-                if ( empty( $wpdb->get_row( "SELECT post_name FROM {$wpdb->prefix}posts WHERE post_name = '" . $post_slug . "'", 'ARRAY_A' ) ) ) {
+                $results = $wpdb->get_row(
+                    $wpdb->prepare(
+                        "SELECT post_name FROM {$wpdb->prefix}posts WHERE post_name = %s", $post_slug
+                    ), ARRAY_A
+                );
+
+                if ( empty( $results ) ) {
                     $product_info['post_name'] = $post_slug;
                 }
             }

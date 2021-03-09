@@ -956,15 +956,15 @@
         function dokanProductEditPermalink() {
             var i, slug_value,
                 $el, revert_e,
-                c = 0,
-                real_slug = $('#post_name'),
-                revert_slug = real_slug.val(),
-                permalink = $( '#sample-permalink' ),
-                permalinkOrig = permalink.html(),
+                c              = 0,
+                real_slug      = $('#post_name'),
+                revert_slug    = real_slug.val(),
+                permalink      = $( '#sample-permalink' ),
+                permalinkOrig  = permalink.html(),
                 permalinkInner = $( '#sample-permalink a' ).html(),
-                buttons = $('#edit-slug-buttons'),
-                buttonsOrig = buttons.html(),
-                full = $('#editable-post-name-full');
+                buttons        = $('#edit-slug-buttons'),
+                buttonsOrig    = buttons.html(),
+                full           = $('#editable-post-name-full');
 
             // Deal with Twemoji in the post-name.
             full.find( 'img' ).replaceWith( function() { return this.alt; } );
@@ -973,7 +973,7 @@
             permalink.html( permalinkInner );
 
             // Save current content to revert to when cancelling.
-            $el = $( '#editable-post-name' );
+            $el      = $( '#editable-post-name' );
             revert_e = $el.html();
 
             buttons.html( '<button type="button" class="save button button-small">' + dokan.i18n_ok_text + '</button> <button type="button" class="cancel button-link">' + dokan.i18n_cancel_text + '</button>' );
