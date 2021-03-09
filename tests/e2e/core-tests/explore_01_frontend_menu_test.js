@@ -1,13 +1,13 @@
 const { ifError, strict } = require("assert");
 const { assert, Console } = require("console");
 const explore = require('../pages/explore');
-Feature('explore Frontend Functionality');
+Feature('Explore Menus');
 
 Before(({ I }) => { // or Background
     I.loginAsVendor();
 });
 
-Scenario('Preview and Explore Vendor Dashboard', async({ I }) => {
+Scenario('Explore Vendor All Menu Pages', async({ I }) => {
     //Dashboard Element Start
     explore.checkDashboardElements();
     //Dashboard element Finish
@@ -68,55 +68,3 @@ Scenario('Preview and Explore Vendor Dashboard', async({ I }) => {
 //     I.waitForElement('#content');
 //     // I.checkError();
 // });
-
-// Scenario('Preview and Explore Vendor Store Page', ({ I }) => {
-//     I.amOnPage('/my-account');
-//     I.see('My account');
-//     I.waitForElement('div.woocommerce-MyAccount-content');
-//     I.checkError();
-//     I.click('recent orders');
-//     I.seeInCurrentUrl('/my-account/orders/');
-//     I.click('Dashboard');
-//     // I.click('shipping and billing addresses');
-//     //     I.seeInCurrentUrl('/my-account/edit-address/');
-//     //     I.click('Dashboard');
-//     // I.click('edit your password and account details');
-//     //     I.seeInCurrentUrl('/my-account/edit-account/');
-//     //     I.click('Dashboard');
-//     // I.click('Go to Vendor Dashboard');
-//     //     I.seeInCurrentUrl('/dashboard/');
-//     //     I.amOnPage('/my-account');
-//     I.click('Orders');
-//     I.waitForElement('.woocommerce-MyAccount-content', 5);
-//     I.checkError();
-//     I.click('//*[@id="post-12"]/div/div/div/table/tbody/tr/td[1]/a');
-//     I.waitForElement('.woocommerce-MyAccount-content', 5);
-//     I.checkError();
-//     I.click('Subscriptions');
-//     I.waitForElement('.woocommerce_account_subscriptions', 5);
-//     I.checkError();
-//     I.click('Downloads');
-//     I.waitForElement('.woocommerce-MyAccount-content', 5);
-//     I.checkError();
-//     I.click('Addresses');
-//     I.waitForElement('.woocommerce-MyAccount-content', 5);
-//     I.checkError();
-//     I.see('Billing address');
-//     I.see('Shipping address');
-//     I.click('RMA Requests');
-//     I.waitForElement('.woocommerce-MyAccount-content', 5);
-//     I.checkError();
-//     I.click('Account details');
-//     I.waitForElement('.woocommerce-MyAccount-content', 5);
-//     I.checkError();
-//     I.click('Vendors');
-//     I.waitForElement('.woocommerce-MyAccount-content', 5);
-//     I.checkError();
-//     I.click('Seller Support Ticket');
-//     I.waitForElement('.woocommerce-MyAccount-content', 5);
-//     I.checkError();
-//     I.click('Bookings');
-//     I.waitForElement('.woocommerce-MyAccount-content', 5);
-//     I.checkError();
-//     I.click('Logout');
-// }).tag('@exp');

@@ -163,4 +163,87 @@ module.exports = {
         I.waitForElement(locator.SettingArea);
         I.checkError();
     },
+    checkMyAccOrderDetails() {
+        I.amOnPage('/my-account');
+        I.see('My account');
+        I.waitForElement(locator.MyAccountDiv);
+        I.checkError();
+        I.click('Orders');
+        I.seeInCurrentUrl('/my-account/orders/');
+        I.waitForElement(locator.MyAccountDiv);
+        I.checkError();
+        I.click('Downloads');
+        I.waitForElement(locator.MyAccountDiv, 5);
+        I.checkError();
+        I.click('Address');
+        I.seeInCurrentUrl('/my-account/edit-address/');
+        I.waitForElement(locator.MyAccountDiv, 5);
+        I.checkError();
+        tryTo(() => {
+            I.see('Billing address').then((result) => {
+                console.log("Visilbe Billing address");
+            }).catch((err) => {
+                console.log("Invisible Billing address", err)
+            });
+        });
+        tryTo(() => {
+            I.see('Shipping address').then((result) => {
+                console.log("Visilbe Shipping address");
+            }).catch((err) => {
+                //I.say('Invisible shipping', 'Red');
+                console.log('Invisible Shipping address');
+            });
+        });
+
+        I.click('RMA Requests');
+        I.seeInCurrentUrl('/my-account/rma-requests/');
+        I.waitForElement(locator.MyAccountDiv, 5);
+        I.checkError();
+        I.click('Account details');
+        I.seeInCurrentUrl('/my-account/edit-account/');
+        I.waitForElement(locator.MyAccountDiv, 5);
+        I.checkError();
+        I.click('Vendors');
+        I.seeInCurrentUrl('/my-account/following/');
+        I.waitForElement(locator.MyAccountDiv, 5);
+        I.checkError();
+        I.click('Seller Support Ticket');
+        I.seeInCurrentUrl('/my-account/support-tickets/');
+        I.waitForElement(locator.MyAccountDiv, 5);
+        I.checkError();
+
+    },
+    checkStoreSettings() {
+        I.amOnPage('/dashboard/settings/store/');
+        I.click(locator.ShopLink);
+        I.waitForElement(locator.StoreContent);
+        I.checkError();
+        I.click(locator.ReviewBtn);
+        I.waitForElement(locator.ReviewDiv);
+        I.checkError();
+        tryTo(() => {
+            I.click('Vendor Biography');
+            I.waitForElement('#vendor-biography');
+            I.checkError();
+        });
+        I.switchToPreviousTab(); //Switch prevoius Tab
+        I.closeCurrentTab(); // Close  urrent Tab
+        I.amOnPage('/store-listing');
+        //     I.waitForElement('#content');
+        //     I.checkError();
+        //     I.selectOption('form select[name=stores_orderby]', 'Most Popular');
+        //     I.waitForElement('.seller-listing-content');
+        //     I.selectOption('form select[name=stores_orderby]', 'Top Rated');
+        //     I.waitForElement('.seller-listing-content');
+        //     I.selectOption('form select[name=stores_orderby]', 'Most Reviewed');
+        //     I.waitForElement('.seller-listing-content');
+        //     I.amOnPage('/cart');
+        //     I.waitForElement('#content');
+        //     I.checkError();
+        //     I.amOnPage('/checkout');
+        //     I.waitForElement('#content');
+        //     I.checkError();
+        //     I.amOnPage('/shop');
+        //     I.waitForElement('#content');
+    },
 }

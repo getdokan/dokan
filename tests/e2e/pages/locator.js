@@ -93,6 +93,16 @@ module.exports = {
     CloseAnalytics: '/dashboard/support/?ticket_status=closed/',
     //Settings
     SettingArea: '.dokan-settings-area',
+    ShopLink: 'li.dokan-common-links.dokan-clearfix > a:nth-child(1)',
+    //My Account Main Page
+    MyAccountDiv: '.woocommerce-MyAccount-content',
+    //Store Vendor
+    StoreContent: '.content-area',
+    ReviewDiv: '#reviews',
+    ReviewBtn: '.dokan-list-inline > li:nth-of-type(2) > a',
+
+
+
 
 
 
