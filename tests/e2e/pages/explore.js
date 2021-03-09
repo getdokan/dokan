@@ -99,8 +99,8 @@ module.exports = {
         //Explore Reviews
         I.click('Reviews');
         I.waitForElement(locator.ReviewArea);
-        I.click('Submit');
-        I.checkError();
+        // I.click('Submit');
+        // I.checkError();
         I.amOnPage(locator.ReviewhHold);
         I.checkError();
         I.amOnPage(locator.ReviewSpam);
