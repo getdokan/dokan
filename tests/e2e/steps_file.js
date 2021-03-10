@@ -21,7 +21,7 @@ module.exports = function() {
             this.amOnPage('/my-account/');
             // this.click('Log in');
             this.fillField('username', 'vendor-one');
-            this.fillField('password', '123456');
+            this.fillField('password', secret('123456'));
             this.click('login');
         },
         loginAsVendorTwo: function() {

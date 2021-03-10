@@ -218,32 +218,34 @@ module.exports = {
         I.click(locator.ShopLink);
         I.waitForElement(locator.StoreContent);
         I.checkError();
+        I.seeElementInDOM(locator.ReviewBtn, 5);
+        I.waitForClickable(locator.ReviewBtn, 5);
         I.click(locator.ReviewBtn);
-        I.waitForElement(locator.ReviewDiv);
+        //I.waitForElement(locator.ReviewDiv, 5);
         I.checkError();
         tryTo(() => {
             I.click('Vendor Biography');
             I.waitForElement('#vendor-biography');
             I.checkError();
         });
-        I.switchToPreviousTab(); //Switch prevoius Tab
+        //I.switchToPreviousTab(); //Switch prevoius Tab
         I.closeCurrentTab(); // Close  urrent Tab
         I.amOnPage('/store-listing');
-        //     I.waitForElement('#content');
-        //     I.checkError();
-        //     I.selectOption('form select[name=stores_orderby]', 'Most Popular');
-        //     I.waitForElement('.seller-listing-content');
-        //     I.selectOption('form select[name=stores_orderby]', 'Top Rated');
-        //     I.waitForElement('.seller-listing-content');
-        //     I.selectOption('form select[name=stores_orderby]', 'Most Reviewed');
-        //     I.waitForElement('.seller-listing-content');
-        //     I.amOnPage('/cart');
-        //     I.waitForElement('#content');
-        //     I.checkError();
-        //     I.amOnPage('/checkout');
-        //     I.waitForElement('#content');
-        //     I.checkError();
-        //     I.amOnPage('/shop');
-        //     I.waitForElement('#content');
+        I.waitForElement(locator.Content);
+        I.checkError();
+        I.selectOption(locator.StoreDropdown, 'Most Popular');
+        I.waitForElement(locator.StoreContent);
+        I.selectOption(locator.StoreDropdown, 'Top Rated');
+        I.waitForElement(locator.StoreContent);
+        I.selectOption(locator.StoreDropdown, 'Most Reviewed');
+        I.waitForElement(locator.StoreContent);
+        I.amOnPage('/cart');
+        I.waitForElement(locator.Content);
+        I.checkError();
+        I.amOnPage('/checkout');
+        I.waitForElement(locator.Content);
+        I.checkError();
+        I.amOnPage('/shop');
+        I.waitForElement(locator.Content);
     },
 }
