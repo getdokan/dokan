@@ -13,6 +13,6 @@
     "codeceptjs": "^3.0.5",
     "faker": "^5.4.0",
     "rosie": "^2.0.1",
-    "webdriverio": "^7.0.9"
+    "webdriverio": "^7.1.1"
   }
 }
