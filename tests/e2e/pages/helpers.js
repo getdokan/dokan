@@ -12,10 +12,8 @@ var admin_current_commission;
 var admin_current_balance;
 var admin_actual_balance;
 
+const {I} = inject();
 
-const {
-    I
-} = inject();
 module.exports = {
 
     pageStatus() {
