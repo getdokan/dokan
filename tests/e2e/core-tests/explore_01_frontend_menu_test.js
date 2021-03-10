@@ -17,7 +17,13 @@ Scenario('Explore Vendor All Menu Pages', async({ I }) => {
     explore.checkOrderPage();
     I.click('Subscription');
     tryTo(() => {
-        I.click('User Subscriptions');
+        I.click('User Subscriptions').then((result) => {
+            I.say('Module Activated', 'blue');
+        }).catch((err) => {
+            //console.log('%cPay attention to me', 'color:firebrick;font-size:40px');
+            I.say('Alvi Inactivate', 'megenta');
+        });
+
         I.waitForElement('.dashboard-user-subscription-area');
         I.checkError();
         I.click('//*[@id="post-5"]/div/div/div[2]/article/table/tbody/tr/td[2]/a/strong');
@@ -33,38 +39,3 @@ Scenario('Explore Vendor All Menu Pages', async({ I }) => {
     explore.checkSettingPage();
 
 });
-
-
-// Scenario('Preview and Explore Vendor Account Page', ({ I }) => {
-//     I.amOnPage('/dashboard/settings/store/');
-//     I.click('a.tips');
-//     // I.waitForElement('.content-area');
-//     I.waitForElement('.dokan-single-store');
-//     I.checkError();
-//     I.click('Reviews');
-//     I.waitForElement('#reviews');
-//     I.checkError();
-//     I.click('Vendor Biography');
-//     I.waitForElement('#vendor-biography');
-//     I.checkError();
-//     // I.switchToPreviousTab();         //Switch prevoius Tab
-//     I.closeCurrentTab(); // Close  urrent Tab
-//     I.amOnPage('/store-listing');
-//     I.waitForElement('#content');
-//     I.checkError();
-//     I.selectOption('form select[name=stores_orderby]', 'Most Popular');
-//     I.waitForElement('.seller-listing-content');
-//     I.selectOption('form select[name=stores_orderby]', 'Top Rated');
-//     I.waitForElement('.seller-listing-content');
-//     I.selectOption('form select[name=stores_orderby]', 'Most Reviewed');
-//     I.waitForElement('.seller-listing-content');
-//     I.amOnPage('/cart');
-//     I.waitForElement('#content');
-//     I.checkError();
-//     I.amOnPage('/checkout');
-//     I.waitForElement('#content');
-//     I.checkError();
-//     I.amOnPage('/shop');
-//     I.waitForElement('#content');
-//     // I.checkError();
-// });

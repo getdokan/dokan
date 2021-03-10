@@ -94,12 +94,16 @@ module.exports = {
     //Settings
     SettingArea: '.dokan-settings-area',
     ShopLink: 'li.dokan-common-links.dokan-clearfix > a:nth-child(1)',
+    //Store listing
+    StoreContent: '.seller-listing-content',
+    StoreDropdown: 'form select[name=stores_orderby]',
+    Content: '#content',
     //My Account Main Page
     MyAccountDiv: '.woocommerce-MyAccount-content',
     //Store Vendor
     StoreContent: '.content-area',
     ReviewDiv: '#reviews',
-    ReviewBtn: '.dokan-list-inline > li:nth-of-type(2) > a',
+    ReviewBtn: '//*[@id="content"]//div/ul/li[2]/a',
 
 
 
