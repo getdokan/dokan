@@ -34,7 +34,7 @@ module.exports = function() {
         loginAsCustomer: function() {
             this.amOnPage('/my-account/');
             this.fillField('username', 'customer-one');
-            this.fillField('password', '123456');
+            this.fillField('password', secret('123456'));
             this.click('login');
         },
 

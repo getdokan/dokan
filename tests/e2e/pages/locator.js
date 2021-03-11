@@ -104,6 +104,9 @@ module.exports = {
     StoreContent: '.content-area',
     ReviewDiv: '#reviews',
     ReviewBtn: '//*[@id="content"]//div/ul/li[2]/a',
+    // Shop Page Locators
+    SortingDropdown: '#post-68 > div > div > form > select',
+    ThirdProductLocator: ' li.product.type-product.post-148.status-publish.instock.product_cat-for-multiple.product_tag-gadgets.product_tag-single.shipping-taxable.purchasable.product-type-simple > div > div.item-bar > div.item-button > a',
 
     // Locators for Simple Product Functional Test
     // Start

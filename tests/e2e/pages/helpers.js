@@ -56,6 +56,16 @@ module.exports = {
         existing_balance = parseInt(bal.replace(/[, \$৳]+/g, ""));
         console.log('Existing Balance:', existing_balance);
     },
+    SelectSingleProduct() {
+        I.amOnPage('/shop/');
+        I.click('simple_product');
+    },
+    SelectMultipleProduct() {
+        I.amOnPage('/shop/');
+        I.selectOption(locator.SortingDropdown, 'price-desc');
+        I.click(locator.ThirdProductLocator);
+        I.click('simple_product');
+    },
     placeOrder() {
         I.click('Add to cart');
         I.click(locator.ViewCart); //View Cart
