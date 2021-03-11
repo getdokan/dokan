@@ -22,4 +22,4 @@ Scenario('Preview and Explore Vendor Store Page', ({ I }) => {
 
     explore.checkStoreSettings(); //Need to work
 
-}).tag('@exp');
+});
