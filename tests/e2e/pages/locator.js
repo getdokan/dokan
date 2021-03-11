@@ -87,10 +87,19 @@ module.exports = {
     FollowerArea: '.dashboard-content-area',
     //Subscription
     SubscriptionArea: '.dokan-dashboard-content',
+    //Booking
+    BookingArea: '.dokan-product-listing',
+    BookingManage: '/dashboard/booking/my-bookings/',
+    BookingCalendar: '/dashboard/booking/calendar/',
+    BookingResources: '/dashboard/booking/resources/',
     //Analytics
     AnalyticsArea: '.dokan-reports-area',
     AllAnalytics: '/dashboard/support/?ticket_status=all/',
     CloseAnalytics: '/dashboard/support/?ticket_status=closed/',
+    //Auction
+    AuctionOnline: '/dashboard/auction/?post_status=publish',
+    AuctionPending: '/dashboard/auction/?post_status=pending',
+    AuctionDraft: '/dashboard/auction/?post_status=draft',
     //Settings
     SettingArea: '.dokan-settings-area',
     ShopLink: 'li.dokan-common-links.dokan-clearfix > a:nth-child(1)',

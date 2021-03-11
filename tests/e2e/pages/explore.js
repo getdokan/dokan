@@ -7,7 +7,7 @@ const locator = require('./locator');
 const { I } = inject();
 
 module.exports = {
-    checkDashboardElements() {
+    DashboardElements() {
         I.amOnPage('/dashboard');
         I.seeInCurrentUrl('/dashboard/');
         I.waitForElement(locator.VendorContent);
@@ -17,10 +17,9 @@ module.exports = {
         I.seeElement(locator.SaleGraph);
         I.seeElementInDOM(locator.DashAnnountment);
         I.seeElementInDOM(locator.ProductWidget);
-
         //I.dontSeeElementInDOM(locator.ProductWidget)
     },
-    checkProductPage() {
+    ProductPageElements() {
         I.amOnPage('/dashboard');
         I.click('Products');
         I.seeInCurrentUrl('/dashboard/products/');
@@ -51,7 +50,7 @@ module.exports = {
         I.seeElement('table', 'Views');
         I.seeElement('table', 'Date');
     },
-    checkOrderPage() {
+    OrderPageElements() {
         I.amOnPage('/dashboard');
         I.click('Orders');
         I.waitForElement(locator.OrderArea);
@@ -79,12 +78,35 @@ module.exports = {
         I.checkError();
 
     },
-    checkCouponReportReview() {
+    UserSubscriptionPageElements() {
         I.amOnPage('/dashboard');
-        I.click('Coupons');
-        I.waitForElement(locator.CouponArea);
-        I.checkError();
-        //Explore Reports
+        
+        tryTo(() => {
+            I.click('User Subscriptions').then((result) => {
+                I.say('Product Subscription Module Activated', 'yellow');
+            }).catch((err) => {
+                I.say('Product Subscription Module Inactivated', 'red');
+            });
+            I.waitForElement('.dashboard-user-subscription-area');
+            I.checkError();
+            // I.click('//*[@id="post-5"]/div/div/div[2]/article/table/tbody/tr/td[2]/a/strong');
+            // I.checkError();
+        });
+    },
+    CouponPageElements() {
+        I.amOnPage('/dashboard');
+        tryTo(() => {
+            I.click('Coupons').then((result) => {
+                I.say('Coupon: Dokan Pro Activate', 'yellow');
+            }).catch((err) => {
+                I.say('Coupon: Dokan Pro Deactivate', 'red');
+            });
+            I.waitForElement(locator.CouponArea);
+            I.checkError();
+        });
+    },
+    ReportPageElements() {
+        I.amOnPage('/dashboard');
         I.click('Reports');
         I.waitForElement(locator.ReportArea);
         I.checkError();
@@ -96,7 +118,8 @@ module.exports = {
         I.checkError();
         I.click('Statement');
         I.checkError();
-        //Explore Reviews
+    },
+    ReviewPageElements() {
         I.click('Reviews');
         I.waitForElement(locator.ReviewArea);
         // I.click('Submit');
@@ -108,7 +131,7 @@ module.exports = {
         I.amOnPage(locator.ReviewTrash);
         I.checkError();
     },
-    checkWithdrawReturnStaff() {
+    WithdrawPageElements() {
         I.amOnPage('/dashboard');
         I.click('Withdraw');
         I.waitForElement(locator.WithdrawArea);
@@ -117,25 +140,90 @@ module.exports = {
         I.checkError();
         I.click('Cancelled Requests');
         I.checkError();
+    },
+    ReturnRequestPageElements() {
+        I.amOnPage('/dashboard');
         I.click('Return Request');
         I.waitForElement(locator.ReturnRequestArea);
         I.checkError();
+    },
+    StaffPageElements() {
+        I.amOnPage('/dashboard');
         I.click('Staff');
         I.waitForElement(locator.StaffArea);
     },
-    checkFollowerSubscriptionAnalytics() {
+    FollowerPageElements() {
         I.amOnPage('/dashboard');
         I.click('Followers');
         I.waitForElement(locator.FollowerArea);
         I.checkError();
+    },
+    SubscriptionPageElements() {
+        I.amOnPage('/dashboard');
         I.click('Subscription');
         I.waitForElement(locator.SubscriptionArea);
         I.checkError();
+    },
+    BookingPageElements() {
+        I.amOnPage('/dashboard');
+        I.click('Booking');
+        I.waitForElement(locator.BookingArea);
+        I.checkError();
+        // I.click('//*[@id="post-5"]/div/div/div[2]/div/article/table/tbody/tr/td[2]/p/a');
+        // I.checkError();
+        I.amOnPage(locator.BookingManage);
+        I.waitForElement('.dokan-orders-area');
+        I.checkError();
+        // I.click('//*[@id="post-5"]/div/div/div[2]/div/article/table/tbody/tr/td[9]');
+        // I.checkError();
+        I.amOnPage(locator.BookingCalendar);
+        I.waitForElement('.wc_bookings_calendar_form');
+        I.checkError();
+        I.amOnPage(locator.BookingResources);
+        I.waitForElement('.dokan-product-listing');
+        I.checkError();
+    },
+    AnalyticsPageElements() {
+        I.amOnPage('/dashboard');
         I.click('Analytics');
         I.waitForElement(locator.AnalyticsArea);
         I.amOnPage(locator.AllAnalytics);
         I.checkError();
         I.amOnPage(locator.CloseAnalytics);
+        I.checkError();
+    },
+    AnnouncementPageElements() {
+        I.amOnPage('/dashboard');
+        I.click('Announcements');
+        I.waitForElement('.dokan-notice-listing-area');
+        I.checkError();
+    },
+    ToolPageElements() {
+        I.amOnPage('/dashboard');
+        I.click('Tools');
+        I.waitForElement('#import');
+        I.checkError();
+        I.amOnPage('/dashboard/tools/#export');
+        I.checkError();
+    },
+    AuctionPageElements() {
+        I.amOnPage('/dashboard');
+        I.click('Auction');
+        I.amOnPage(locator.AuctionOnline);
+        I.checkError();
+        I.amOnPage(locator.AuctionPending);
+        I.checkError();
+        I.amOnPage(locator.AuctionDraft);
+        I.checkError();
+    },
+    InboxPageElements() {
+        I.amOnPage('/dashboard');
+        I.amOnPage('/dashboard/inbox/');
+        I.checkError();
+    },
+    SupportPageElements() {
+        I.amOnPage('/dashboard');
+        I.amOnPage('/dashboard/support/');
         I.checkError();
     },
     checkSettingPage() {

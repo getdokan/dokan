@@ -8,34 +8,51 @@ Before(({ I }) => { // or Background
 });
 
 Scenario('Explore Vendor All Menu Pages', async({ I }) => {
-    //Dashboard Element Start
-    explore.checkDashboardElements();
-    //Dashboard element Finish
-    //Vendor Products
-    explore.checkProductPage();
-    //Order Explore
-    explore.checkOrderPage();
-    I.click('Subscription');
-    tryTo(() => {
-        I.click('User Subscriptions').then((result) => {
-            I.say('Module Activated', 'blue');
-        }).catch((err) => {
-            //console.log('%cPay attention to me', 'color:firebrick;font-size:40px');
-            I.say('Alvi Inactivate', 'megenta');
-        });
+    
+    // explore.DashboardElements(); 
+    // explore.ProductPageElements(); 
+    // explore.OrderPageElements(); 
+    explore.UserSubscriptionPageElements(); 
 
-        I.waitForElement('.dashboard-user-subscription-area');
-        I.checkError();
-        I.click('//*[@id="post-5"]/div/div/div[2]/article/table/tbody/tr/td[2]/a/strong');
-        I.checkError();
-    });
-    //Explore Coupons Report and Review
-    explore.checkCouponReportReview();
-    // Explore Withdraw Return
-    explore.checkWithdrawReturnStaff();
-    //Explore Followe subscription
-    explore.checkFollowerSubscriptionAnalytics();
-    //Explore Setting
-    explore.checkSettingPage();
+    // const proFeature = ['User Subscriptions', 'Subscription'];
+    // tryTo(() => {
+    //     I.click('User Subscriptions').then((result) => {
+    //         I.say('Product Subscription Module Activated', 'yellow');
+    //     }).catch((err) => {
+    //         I.say('Product Subscription Module Inactivated', 'red');
+    //     });
+
+    // // It's working only live server
+    //     // I.waitForElement('.dashboard-user-subscription-area');
+    //     // I.checkError();
+    //     // I.click('//*[@id="post-5"]/div/div/div[2]/article/table/tbody/tr/td[2]/a/strong');
+    //     // I.checkError();
+    // });
+
+    // tryTo(() => {
+    //     I.click('Subscription').then((result) => {
+    //         I.say('Vendor Subscription Module Activated', 'yellow');
+    //     }).catch((err) => {
+    //         I.say('Vendor Subscription Module Inactivated', 'red');
+    //     });
+    // });
+    
+    explore.CouponPageElements();
+    // explore.ReportPageElements();
+    // explore.ReviewPageElements();
+    // explore.WithdrawPageElements();
+    // explore.ReturnRequestPageElements();
+    // explore.StaffPageElements();
+    // explore.FollowerPageElements();
+    // explore.SubscriptionPageElements();
+    // explore.BookingPageElements();
+    // explore.AnalyticsPageElements();
+    // explore.AnnouncementPageElements();
+    // explore.ToolPageElements();
+    // explore.AuctionPageElements();
+    // explore.InboxPageElements();
+    // explore.SupportPageElements();
+    // explore.SettingsPageElements();
+    // explore.checkSettingPage(); //Explore Setting
 
 });
