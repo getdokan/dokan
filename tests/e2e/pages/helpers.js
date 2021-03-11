@@ -66,6 +66,14 @@ module.exports = {
         I.click(locator.ThirdProductLocator);
         I.click('simple_product');
     },
+    SelectMultipleProductMultiplrVendor() {
+        I.amOnPage('/shop/');
+        I.selectOption(locator.SortingDropdown, 'price-desc');
+        I.click(locator.ThirdProductLocator);
+        I.click('simple_product_2');
+    },
+
+
     placeOrder() {
         I.click('Add to cart');
         I.click(locator.ViewCart); //View Cart
