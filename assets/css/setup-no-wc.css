@@ -313,6 +313,9 @@ body {
   -webkit-order: 3;
   order: 3;
 }
+.dokan-admin-setup-wizard {
+  border: none;
+}
 .wc-return-to-dashboard {
   text-align: center;
   display: block;
