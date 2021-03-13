@@ -183,3 +183,6 @@
   -webkit-order: 3;
   order: 3;
 }
+.dokan-admin-setup-wizard {
+  border: none;
+}
