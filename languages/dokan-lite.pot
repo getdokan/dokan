@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 3.2.2\n"
+"Project-Id-Version: Dokan 3.2.3\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2021-03-05 09:02:34+00:00\n"
+"POT-Creation-Date: 2021-03-13 14:56:24+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -77,12 +77,12 @@ msgid "Learn More &rarr;"
 msgstr ""
 
 #: includes/Abstracts/DokanPromotion.php:186
-#: includes/Admin/LimitedTimePromotion.php:200
+#: includes/Admin/LimitedTimePromotion.php:164
 msgid "You have no permission to do that"
 msgstr ""
 
 #: includes/Abstracts/DokanPromotion.php:190
-#: includes/Admin/LimitedTimePromotion.php:204 includes/Admin/Settings.php:72
+#: includes/Admin/LimitedTimePromotion.php:168 includes/Admin/Settings.php:72
 #: includes/Admin/Settings.php:100
 msgid "Invalid nonce"
 msgstr ""
@@ -177,6 +177,10 @@ msgstr ""
 
 #: includes/Admin/Hooks.php:328
 msgid "Toggle Sub-orders"
+msgstr ""
+
+#: includes/Admin/LimitedTimePromotion.php:79
+msgid "Get Deals &rarr;"
 msgstr ""
 
 #: includes/Admin/Menu.php:37

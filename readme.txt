@@ -3,11 +3,11 @@ Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce, yith, yithemes
 Requires at least: 4.4
-Tested up to: 5.6.2
+Tested up to: 5.7
 WC requires at least: 3.0
-WC tested up to: 5.0.0
+WC tested up to: 5.1.0
 Requires PHP: 5.6
-Stable tag: 3.2.2
+Stable tag: 3.2.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -291,6 +291,11 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.2.3 ( March 13, 2021 ) =
+
+- **notice:** limited time promotion for weDevs birthday
+- **update:** WordPress 5.7 and WooCommerce 5.1 compatibility
 
 = v3.2.2 ( March 5, 2021 ) =
 
