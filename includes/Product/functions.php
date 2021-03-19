@@ -86,16 +86,40 @@ function dokan_save_product( $args ) {
         'description'        => $post_arr['post_content'],
         'short_description'  => $post_arr['post_excerpt'],
         'status'             => $post_status,
-        'featured_image_id'  => ! empty( $data['feat_image_id'] ) ? absint( $data['feat_image_id'] ) : '',
-        'gallery_image_ids'  => ! empty( $data['product_image_gallery'] ) ? array_filter( explode( ',', wc_clean( $data['product_image_gallery'] ) ) ) : [],
-        'tags'               => array_map( 'absint', (array) $data['product_tag'] ),
         'categories'         => $cat_ids,
-        'regular_price'      => $data['_regular_price'] === '' ? '' : wc_format_decimal( $data['_regular_price'] ),
-        'sale_price'         => $data['_sale_price'] === '' ? '' : wc_format_decimal( $data['_sale_price'] ),
-        'date_on_sale_from'  => isset( $data['_sale_price_dates_from'] ) ? wc_clean( $data['_sale_price_dates_from'] ) : '',
-        'date_on_sale_to'    => isset( $data['_sale_price_dates_to'] ) ? wc_clean( $data['_sale_price_dates_to'] ) : '',
-        'catalog_visibility' => array_key_exists( $data['_visibility'], dokan_get_product_visibility_options() ) ? sanitize_text_field( $data['_visibility'] ) : 'visible',
     ];
+
+    if ( isset( $data['feat_image_id'] ) ) {
+        $post_data['featured_image_id'] = ! empty( $data['feat_image_id'] ) ? absint( $data['feat_image_id'] ) : '';
+    }
+
+    if ( isset( $data['product_image_gallery'] ) ) {
+        $post_data['gallery_image_ids'] = ! empty( $data['product_image_gallery'] ) ? array_filter( explode( ',', wc_clean( $data['product_image_gallery'] ) ) ) : [];
+    }
+
+    if ( isset( $data['product_tag'] ) ) {
+        $post_data['tags'] = array_map( 'absint', (array) $data['product_tag'] );
+    }
+
+    if ( isset( $data['_regular_price'] ) ) {
+        $post_data['regular_price'] = $data['_regular_price'] === '' ? '' : wc_format_decimal( $data['_regular_price'] );
+    }
+
+    if ( isset( $data['_sale_price'] ) ) {
+        $post_data['sale_price'] = wc_format_decimal( $data['_sale_price'] );
+    }
+
+    if ( isset( $data['_sale_price_dates_from'] ) ) {
+        $post_data['date_on_sale_from'] = wc_clean( $data['_sale_price_dates_from'] );
+    }
+
+    if ( isset( $data['_sale_price_dates_to'] ) ) {
+        $post_data['date_on_sale_to'] = wc_clean( $data['_sale_price_dates_to'] );
+    }
+
+    if ( isset( $data['_visibility'] ) && array_key_exists( $data['_visibility'], dokan_get_product_visibility_options() ) ) {
+        $post_data['catalog_visibility'] = sanitize_text_field( $data['_visibility'] );
+    }
 
     $product = dokan()->product->create( $post_data );
 
