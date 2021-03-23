@@ -412,7 +412,6 @@ class SetupWizard {
 
         $new_seller_enable_selling = ! empty( $options['new_seller_enable_selling'] ) ? $options['new_seller_enable_selling'] : '';
         $commission_type           = ! empty( $options['commission_type'] ) ? $options['commission_type'] : 'percentage';
-        $admin_percentage          = ! empty( $options['admin_percentage'] ) ? $options['admin_percentage'] : $admin_percentage;
         $order_status_change       = ! empty( $options['order_status_change'] ) ? $options['order_status_change'] : '';
         $dokan_commission_types    = dokan_commission_types();
 
@@ -456,14 +455,17 @@ class SetupWizard {
      * Withdraw Step.
      */
     public function dokan_setup_withdraw() {
-        $options               = get_option( 'dokan_withdraw', array() );
-        $withdraw_methods      = isset( $options['withdraw_methods'] ) ? $options['withdraw_methods'] : array( 'paypal' );
-        $withdraw_limit        = isset( $options['withdraw_limit'] ) ? $options['withdraw_limit'] : 50;
-        $withdraw_order_status = isset( $options['withdraw_order_status'] ) ? $options['withdraw_order_status'] : array( 'wc-completed' => 'wc-completed' );
+        $options = get_option(
+            'dokan_withdraw', array(
+				'withdraw_methods'      => array( 'paypal' ),
+				'withdraw_limit'        => 50,
+				'withdraw_order_status' => array( 'wc-completed' => 'wc-completed' ),
+            )
+        );
 
-        $withdraw_methods      = ! empty( $options['withdraw_methods'] ) ? $options['withdraw_methods'] : $withdraw_methods;
-        $withdraw_limit        = ! empty( $options['withdraw_limit'] ) ? $options['withdraw_limit'] : $withdraw_limit;
-        $withdraw_order_status = ! empty( $options['withdraw_order_status'] ) ? $options['withdraw_order_status'] : $withdraw_order_status;
+        $withdraw_methods      = ! empty( $options['withdraw_methods'] ) ? $options['withdraw_methods'] : array();
+        $withdraw_limit        = ! empty( $options['withdraw_limit'] ) ? $options['withdraw_limit'] : 0;
+        $withdraw_order_status = ! empty( $options['withdraw_order_status'] ) ? $options['withdraw_order_status'] : array();
         ?>
         <h1><?php esc_html_e( 'Withdraw Setup', 'dokan-lite' ); ?></h1>
         <form method="post">
