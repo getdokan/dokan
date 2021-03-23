@@ -249,7 +249,6 @@ class Installer {
         $this->create_sync_table();
         $this->create_refund_table();
         $this->create_vendor_balance_table();
-        $this->create_shipping_tracking_table();
     }
 
     /**
@@ -348,39 +347,6 @@ class Installer {
               PRIMARY KEY (id)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
 
-        dbDelta( $sql );
-    }
-
-    /**
-     * Add new table for shipping tracking
-     *
-     * @since 2.4.11
-     *
-     * @return void
-     */
-    public function create_shipping_tracking_table() {
-        global $wpdb;
-
-        $sql = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}dokan_shipping_tracking` (
-               `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-               `order_id` bigint(20) unsigned NOT NULL,
-               `seller_id` bigint(20) NOT NULL,
-               `provider` text NULL,
-               `provider_label` text NULL,
-               `provider_url` text NULL,
-               `number` text NULL,
-               `date` varchar(200) NULL,
-               `shipping_status` varchar(200) NULL,
-               `status_label` varchar(200) NULL,
-               `is_notify` varchar(20) NULL,
-               `item_id` text NULL,
-               `item_qty` text NULL,
-               `last_update` timestamp NOT NULL,
-               `status` int(1) NOT NULL,
-               `tracking_data` text NULL,
-              PRIMARY KEY (id)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
-            
         dbDelta( $sql );
     }
 
