@@ -85,7 +85,7 @@
 
                             <div class="store-footer">
                                 <div class="seller-avatar">
-                                    <a href="<?php echo esc_attr( $store_url ); ?>">
+                                    <a href="<?php echo esc_url( $store_url ); ?>">
                                         <img src="<?php echo esc_url( $vendor->get_avatar() ) ?>"
                                         alt="<?php echo esc_attr( $vendor->get_shop_name() ) ?>"
                                         size="150">
