@@ -61,7 +61,7 @@
                 </template>
 
                 <template slot="method_details" slot-scope="data">
-                    {{ getPaymentDetails(data.row.method, data.row.user.payment) }}
+                    <div class="method_details_inner" v-html="getPaymentDetails(data.row.method, data.row.user.payment)"></div>
                 </template>
 
                 <template slot="actions" slot-scope="data">
@@ -337,19 +337,27 @@ export default {
 
                 } else if ( 'bank' === method ) {
                     if ( data.bank.hasOwnProperty('ac_name') ) {
-                        details = this.sprintf( this.__( 'Account Name: %s', 'dokan-lite' ),  data.bank.ac_name );
+                        details = this.sprintf( this.__( '<p>Account Name: %s</p>', 'dokan-lite' ),  data.bank.ac_name );
                     }
 
                     if ( data.bank.hasOwnProperty('ac_number') ) {
-                        details += this.sprintf( this.__( ', Account Number: %s', 'dokan-lite' ), data.bank.ac_number );
+                        details += this.sprintf( this.__( '<p>Account Number: %s</p>', 'dokan-lite' ), data.bank.ac_number );
                     }
 
                     if ( data.bank.hasOwnProperty('bank_name') ) {
-                        details += this.sprintf( this.__( ', Bank Name: %s', 'dokan-lite' ), data.bank.bank_name );
+                        details += this.sprintf( this.__( '<p>Bank Name: %s</p>', 'dokan-lite' ), data.bank.bank_name );
+                    }
+
+                    if ( data.bank.hasOwnProperty('iban') ) {
+                        details += this.sprintf( this.__( '<p>IBAN: %s</p>', 'dokan-lite' ), data.bank.iban );
                     }
 
                     if ( data.bank.hasOwnProperty('routing_number') ) {
-                        details += this.sprintf( this.__( ', Routing Number: %s', 'dokan-lite' ), data.bank.routing_number );
+                        details += this.sprintf( this.__( '<p>Routing Number: %s</p>', 'dokan-lite' ), data.bank.routing_number );
+                    }
+
+                    if ( data.bank.hasOwnProperty('swift') ) {
+                        details += this.sprintf( this.__( '<p>Swift Code: %s</p>', 'dokan-lite' ), data.bank.swift );
                     }
                 }
             }
@@ -530,6 +538,12 @@ export default {
         .cancelled {
             background: #eba3a3;
             color: #761919
+        }
+    }
+
+    .method_details_inner {
+        p {
+            margin-bottom: 2px;
         }
     }
 }
