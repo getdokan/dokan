@@ -35,7 +35,7 @@ class Hooks {
 
         $post_data = wp_unslash( $_POST );
 
-        if ( ! isset( $post_data['security'] ) || ! wp_verify_nonce( $post_data['security'], 'bulk_product_status_change' ) ) {
+        if ( ! isset( $post_data['security'] ) || ! wp_verify_nonce( sanitize_key( $post_data['security'] ), 'bulk_product_status_change' ) ) {
             return;
         }
         if ( ! isset( $post_data['status'] ) || ! isset( $post_data['bulk_products'] ) ) {

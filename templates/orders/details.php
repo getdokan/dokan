@@ -347,9 +347,7 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                                         <label class="dokan-control-label"><?php esc_html_e( 'Date Shipped', 'dokan-lite' ); ?></label>
                                         <input type="text" name="shipped_date" id="shipped-date" class="dokan-form-control" value="" placeholder="<?php esc_attr_e( get_option( 'date_format' ), 'dokan-lite' ); ?>">
                                     </div>
-
                                     <input type="hidden" name="security" id="security" value="<?php echo esc_attr( wp_create_nonce('add-shipping-tracking-info' ) ); ?>">
-                                    <?php wp_nonce_field( 'dokan_security_action', 'dokan_security_nonce' ); ?>
                                     <input type="hidden" name="post_id" id="post-id" value="<?php echo esc_attr( dokan_get_prop( $order, 'id' ) ); ?>">
                                     <input type="hidden" name="action" id="action" value="dokan_add_shipping_tracking_info">
 

@@ -32,7 +32,7 @@
             <td>
                 <input type="text" class="location-input" id="admin_percentage" name="admin_percentage" value="<?php echo esc_attr( $admin_percentage ); ?>" />
                 <?php do_action( 'dokan_admin_setup_wizard_after_admin_commission' ); ?>
-                <p class="description"><?php esc_html_e( 'How much amount (%) you will get from each order', 'dokan-lite' ); ?></p>
+                <p class="description combine-commission-description"><?php esc_html_e( 'How much amount (%) you will get from each order', 'dokan-lite' ); ?></p>
             </td>
         </tr>
         <tr>

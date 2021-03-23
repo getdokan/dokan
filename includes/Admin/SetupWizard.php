@@ -444,6 +444,8 @@ class SetupWizard {
 
         update_option( 'dokan_selling', $options );
 
+        do_action( 'dokan_admin_setup_wizard_save_step_setup_selling', $options, $_post_data );
+
         wp_safe_redirect( esc_url_raw( $this->get_next_step_link() ) );
         exit;
     }

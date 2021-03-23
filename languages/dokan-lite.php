@@ -250,7 +250,6 @@ return [
 	__( 'Facebook', 'dokan-lite' ),
 	__( 'https://example.com' ),
 	__( 'Flickr', 'dokan-lite' ),
-	__( 'Google Plus', 'dokan-lite' ),
 	__( 'Twitter', 'dokan-lite' ),
 	__( 'Youtube', 'dokan-lite' ),
 	__( 'Linkedin', 'dokan-lite' ),

@@ -11,7 +11,7 @@ use WP_Error;
  */
 class Registration {
 
-    function __construct() {
+    public function __construct() {
         // validate registration
         add_filter( 'woocommerce_process_registration_errors', array( $this, 'validate_registration' ) );
         add_filter( 'woocommerce_registration_errors', array( $this, 'validate_registration' ) );
@@ -28,7 +28,7 @@ class Registration {
      *
      * @return \WP_Error
      */
-    function validate_registration( $error ) {
+    public function validate_registration( $error ) {
         if ( is_checkout() ) {
             return $error;
         }
@@ -41,10 +41,10 @@ class Registration {
         $nonce_check = apply_filters( 'dokan_register_nonce_check', true );
 
         if ( $nonce_check ) {
-            $nonce_value = isset( $post_data['_wpnonce'] ) ? $post_data['_wpnonce'] : '';
-            $nonce_value = isset( $post_data['woocommerce-register-nonce'] ) ? $post_data['woocommerce-register-nonce'] : $nonce_value;
+            $nonce_value = isset( $post_data['_wpnonce'] ) ? sanitize_key( $post_data['_wpnonce'] ) : '';
+            $nonce_value = isset( $post_data['woocommerce-register-nonce'] ) ? sanitize_key( $post_data['woocommerce-register-nonce'] ) : $nonce_value;
 
-            if ( ! wp_verify_nonce( $nonce_value, 'woocommerce-register' ) ) {
+            if ( empty( $nonce_value ) || ! wp_verify_nonce( $nonce_value, 'woocommerce-register' ) ) {
                 return new WP_Error( 'nonce_verification_failed', __( 'Nonce verification failed', 'dokan-lite' ) );
             }
         }
@@ -52,7 +52,7 @@ class Registration {
         $allowed_roles = apply_filters( 'dokan_register_user_role', array( 'customer', 'seller' ) );
 
         // is the role name allowed or user is trying to manipulate?
-        if ( isset( $post_data['role'] ) && ! in_array( $post_data['role'], $allowed_roles ) ) {
+        if ( isset( $post_data['role'] ) && ! in_array( $post_data['role'], $allowed_roles, true ) ) {
             return new WP_Error( 'role-error', __( 'Cheating, eh?', 'dokan-lite' ) );
         }
 
@@ -67,7 +67,7 @@ class Registration {
             )
         );
 
-        if ( $role == 'seller' ) {
+        if ( $role === 'seller' ) {
             foreach ( $required_fields as $field => $msg ) {
                 if ( empty( trim( $post_data[ $field ] ) ) ) {
                     return new WP_Error( "$field-error", $msg );
@@ -84,20 +84,20 @@ class Registration {
      * @param array $data
      * @return array
      */
-    function set_new_vendor_names( $data ) {
-        $post_data = wp_unslash( $_POST ); // WPCS: CSRF ok.
+    public function set_new_vendor_names( $data ) {
+        $post_data = wp_unslash( $_POST ); // phpcs:ignore WordPress.Security.NonceVerification
 
         $allowed_roles = apply_filters( 'dokan_register_user_role', array( 'customer', 'seller' ) );
-        $role          = ( isset( $post_data['role'] ) && in_array( $post_data['role'], $allowed_roles ) ) ? $post_data['role'] : 'customer';
+        $role          = ( isset( $post_data['role'] ) && in_array( $post_data['role'], $allowed_roles, true ) ) ? $post_data['role'] : 'customer';
 
         $data['role'] = $role;
 
-        if ( $role != 'seller' ) {
+        if ( $role !== 'seller' ) {
             return $data;
         }
 
-        $data['first_name']    = strip_tags( $post_data['fname'] );
-        $data['last_name']     = strip_tags( $post_data['lname'] );
+        $data['first_name']    = wp_strip_all_tags( $post_data['fname'] );
+        $data['last_name']     = wp_strip_all_tags( $post_data['lname'] );
         $data['user_nicename'] = sanitize_user( $post_data['shopurl'] );
 
         return $data;
@@ -111,10 +111,10 @@ class Registration {
      *
      * @return void
      */
-    function save_vendor_info( $user_id, $data ) {
-        $post_data = wp_unslash( $_POST ); // WPCS: CSRF ok.
+    public function save_vendor_info( $user_id, $data ) {
+        $post_data = wp_unslash( $_POST ); // phpcs:ignore WordPress.Security.NonceVerification
 
-        if ( ! isset( $data['role'] ) || $data['role'] != 'seller' ) {
+        if ( ! isset( $data['role'] ) || $data['role'] !== 'seller' ) {
             return;
         }
 
@@ -150,8 +150,7 @@ class Registration {
             'map_val'               => 15,
             'payment_method_val'    => 15,
             'social_val' => array(
-                'fb'        => 2,
-                'gplus'     => 2,
+                'fb'        => 4,
                 'twitter'   => 2,
                 'youtube'   => 2,
                 'linkedin'  => 2,

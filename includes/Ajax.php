@@ -101,11 +101,7 @@ class Ajax {
      * @return void
      */
     public function shop_url_check() {
-        global $user_ID;
-
-        $nonce = isset( $_POST['_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['_nonce'] ) ) : '';
-
-        if ( ! wp_verify_nonce( $nonce, 'dokan_reviews' ) ) {
+        if ( ! isset( $_POST['_nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_nonce'] ), 'dokan_reviews' ) ) {
             wp_send_json_error(
                 [
 					'type'    => 'nonce',
@@ -113,6 +109,8 @@ class Ajax {
 				]
             );
         }
+
+        global $user_ID;
 
         $url_slug = isset( $_POST['url_slug'] ) ? sanitize_text_field( wp_unslash( $_POST['url_slug'] ) ) : '';
         $check    = true;
@@ -418,7 +416,7 @@ class Ajax {
      * Add shipping tracking info via ajax
      */
     public function add_shipping_tracking_info() {
-        if ( isset( $_POST['dokan_security_nonce'] ) && ! wp_verify_nonce( sanitize_key( $_POST['dokan_security_nonce'] ), 'dokan_security_action' ) ) {
+        if ( ! isset( $_REQUEST['security'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['security'] ), 'add-shipping-tracking-info' ) ) {
             die( -1 );
         }
 
@@ -518,9 +516,7 @@ class Ajax {
      * @return void
      */
     public function seller_listing_search() {
-        $nonce = isset( $_REQUEST['_wpnonce'] ) ? sanitize_key( $_REQUEST['_wpnonce'] ) : '';
-
-        if ( ! $nonce || ! wp_verify_nonce( $nonce, 'dokan-seller-listing-search' ) ) {
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'dokan-seller-listing-search' ) ) {
             wp_send_json_error( __( 'Error: Nonce verification failed', 'dokan-lite' ) );
         }
 
@@ -538,7 +534,7 @@ class Ajax {
         $per_row         = isset( $_REQUEST['per_row'] ) ? absint( $_REQUEST['per_row'] ) : '3';
 
         if ( '' !== $search_term ) {
-            $seller_args['meta_query'] = [
+            $seller_args['meta_query'] = [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
                 [
                     'key'     => 'dokan_store_name',
                     'value'   => $search_term,
@@ -947,7 +943,7 @@ class Ajax {
 
         foreach ( $headers as $header ) {
             if ( 0 === strpos( $header, 'Set-Cookie: ' . LOGGED_IN_COOKIE ) ) {
-                $value = str_replace( '&', urlencode( '&' ), substr( $header, 12 ) );
+                $value = str_replace( '&', rawurlencode( '&' ), substr( $header, 12 ) );
                 parse_str( current( explode( ';', $value, 1 ) ), $pair );
                 $_COOKIE[ LOGGED_IN_COOKIE ] = $pair[ LOGGED_IN_COOKIE ];
                 break;

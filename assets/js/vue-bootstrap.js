@@ -4538,11 +4538,6 @@ var SearchButtonControl = /*#__PURE__*/function () {
 //
 //
 //
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'VendorSocialFields',
   props: {
@@ -6359,7 +6354,7 @@ var render = function() {
         { staticClass: "dokan-form-group" },
         [
           _c("div", { staticClass: "column" }, [
-            _c("label", { attrs: { for: "" } }, [
+            _c("label", { attrs: { for: "facebook" } }, [
               _vm._v(_vm._s(_vm.__("Facebook", "dokan-lite")))
             ]),
             _vm._v(" "),
@@ -6374,6 +6369,7 @@ var render = function() {
               ],
               staticClass: "dokan-form-input",
               attrs: {
+                id: "facebook",
                 type: "text",
                 placeholder: _vm.__("https://example.com")
               },
@@ -6390,7 +6386,7 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "column" }, [
-            _c("label", { attrs: { for: "" } }, [
+            _c("label", { attrs: { for: "flickr" } }, [
               _vm._v(_vm._s(_vm.__("Flickr", "dokan-lite")))
             ]),
             _vm._v(" "),
@@ -6405,6 +6401,7 @@ var render = function() {
               ],
               staticClass: "dokan-form-input",
               attrs: {
+                id: "flickr",
                 type: "text",
                 placeholder: _vm.__("https://example.com")
               },
@@ -6421,38 +6418,7 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "column" }, [
-            _c("label", { attrs: { for: "" } }, [
-              _vm._v(_vm._s(_vm.__("Google Plus", "dokan-lite")))
-            ]),
-            _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.vendorInfo.social.gplus,
-                  expression: "vendorInfo.social.gplus"
-                }
-              ],
-              staticClass: "dokan-form-input",
-              attrs: {
-                type: "text",
-                placeholder: _vm.__("https://example.com")
-              },
-              domProps: { value: _vm.vendorInfo.social.gplus },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(_vm.vendorInfo.social, "gplus", $event.target.value)
-                }
-              }
-            })
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "column" }, [
-            _c("label", { attrs: { for: "" } }, [
+            _c("label", { attrs: { for: "twitter" } }, [
               _vm._v(_vm._s(_vm.__("Twitter", "dokan-lite")))
             ]),
             _vm._v(" "),
@@ -6467,6 +6433,7 @@ var render = function() {
               ],
               staticClass: "dokan-form-input",
               attrs: {
+                id: "twitter",
                 type: "text",
                 placeholder: _vm.__("https://example.com")
               },
@@ -6487,7 +6454,7 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "column" }, [
-            _c("label", { attrs: { for: "" } }, [
+            _c("label", { attrs: { for: "youtube" } }, [
               _vm._v(_vm._s(_vm.__("Youtube", "dokan-lite")))
             ]),
             _vm._v(" "),
@@ -6502,6 +6469,7 @@ var render = function() {
               ],
               staticClass: "dokan-form-input",
               attrs: {
+                id: "youtube",
                 type: "text",
                 placeholder: _vm.__("https://example.com")
               },
@@ -6522,7 +6490,7 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "column" }, [
-            _c("label", { attrs: { for: "" } }, [
+            _c("label", { attrs: { for: "linkedin" } }, [
               _vm._v(_vm._s(_vm.__("Linkedin", "dokan-lite")))
             ]),
             _vm._v(" "),
@@ -6537,6 +6505,7 @@ var render = function() {
               ],
               staticClass: "dokan-form-input",
               attrs: {
+                id: "linkedin",
                 type: "text",
                 placeholder: _vm.__("https://example.com")
               },
@@ -6557,7 +6526,7 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "column" }, [
-            _c("label", { attrs: { for: "" } }, [
+            _c("label", { attrs: { id: "pinterest", for: "pinterest" } }, [
               _vm._v(_vm._s(_vm.__("Pinterest", "dokan-lite")))
             ]),
             _vm._v(" "),
@@ -6592,7 +6561,7 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "column" }, [
-            _c("label", { attrs: { for: "" } }, [
+            _c("label", { attrs: { for: "instagram" } }, [
               _vm._v(_vm._s(_vm.__("Instagram", "dokan-lite")))
             ]),
             _vm._v(" "),
@@ -6607,6 +6576,7 @@ var render = function() {
               ],
               staticClass: "dokan-form-input",
               attrs: {
+                id: "instagram",
                 type: "text",
                 placeholder: _vm.__("https://example.com")
               },
