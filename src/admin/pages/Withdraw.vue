@@ -337,27 +337,27 @@ export default {
 
                 } else if ( 'bank' === method ) {
                     if ( data.bank.hasOwnProperty('ac_name') ) {
-                        details = this.sprintf( this.__( '<p>Account Name: %s</p>', 'dokan-lite' ),  data.bank.ac_name );
+                        details = this.sprintf( this.__( '%sAccount Name: %s %s', 'dokan-lite' ), '<p>', data.bank.ac_name, '</p>' );
                     }
 
                     if ( data.bank.hasOwnProperty('ac_number') ) {
-                        details += this.sprintf( this.__( '<p>Account Number: %s</p>', 'dokan-lite' ), data.bank.ac_number );
+                        details += this.sprintf( this.__( '%sAccount Number: %s %s', 'dokan-lite' ), '<p>', data.bank.ac_number, '</p>' );
                     }
 
                     if ( data.bank.hasOwnProperty('bank_name') ) {
-                        details += this.sprintf( this.__( '<p>Bank Name: %s</p>', 'dokan-lite' ), data.bank.bank_name );
+                        details += this.sprintf( this.__( '%sBank Name: %s %s', 'dokan-lite' ), '<p>', data.bank.bank_name, '</p>' );
                     }
 
                     if ( data.bank.hasOwnProperty('iban') ) {
-                        details += this.sprintf( this.__( '<p>IBAN: %s</p>', 'dokan-lite' ), data.bank.iban );
+                        details += this.sprintf( this.__( '%sIBAN: %s %s', 'dokan-lite' ), '<p>', data.bank.iban, '</p>' );
                     }
 
                     if ( data.bank.hasOwnProperty('routing_number') ) {
-                        details += this.sprintf( this.__( '<p>Routing Number: %s</p>', 'dokan-lite' ), data.bank.routing_number );
+                        details += this.sprintf( this.__( '%sRouting Number: %s %s', 'dokan-lite' ), '<p>', data.bank.routing_number, '</p>' );
                     }
 
                     if ( data.bank.hasOwnProperty('swift') ) {
-                        details += this.sprintf( this.__( '<p>Swift Code: %s</p>', 'dokan-lite' ), data.bank.swift );
+                        details += this.sprintf( this.__( '%sSwift Code: %s %s', 'dokan-lite' ), '<p>', data.bank.swift, '</p>' );
                     }
                 }
             }
