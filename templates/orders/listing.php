@@ -7,6 +7,7 @@ $customer_id    = isset( $_GET['customer_id'] ) ? sanitize_key( $_GET['customer_
 $order_status   = isset( $_GET['order_status'] ) ? sanitize_key( $_GET['order_status'] ) : 'all';
 $paged          = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
 $order_date     = isset( $_GET['order_date'] ) ? sanitize_key( $_GET['order_date'] ) : null;
+$allow_shipment = dokan_get_option( 'enabled', 'dokan_shipping_status_setting', 'off' );
 $order_statuses = apply_filters( 'dokan_bulk_order_statuses', [
     '-1'            => __( 'Bulk Actions', 'dokan-lite' ),
     'wc-on-hold'    => __( 'Change status to on-hold', 'dokan-lite' ),
@@ -52,6 +53,9 @@ if ( $user_orders ) {
                     <th><?php esc_html_e( 'Order Total', 'dokan-lite' ); ?></th>
                     <th><?php esc_html_e( 'Earning', 'dokan-lite' ); ?></th>
                     <th><?php esc_html_e( 'Status', 'dokan-lite' ); ?></th>
+                    <?php if ( function_exists( 'dokan_get_order_shipment_current_status' ) && 'on' === $allow_shipment ) : ?>
+                        <th><?php esc_html_e( 'Shipment', 'dokan-lite' ); ?></th>
+                    <?php endif; ?>
                     <th><?php esc_html_e( 'Customer', 'dokan-lite' ); ?></th>
                     <th><?php esc_html_e( 'Date', 'dokan-lite' ); ?></th>
                     <?php if ( current_user_can( 'dokan_manage_order' ) ) { ?>
@@ -86,6 +90,11 @@ if ( $user_orders ) {
                         <td class="dokan-order-status" data-title="<?php esc_attr_e( 'Status', 'dokan-lite' ); ?>" >
                             <?php echo '<span class="dokan-label dokan-label-' . dokan_get_order_status_class( dokan_get_prop( $order, 'status' ) ) . '">' . dokan_get_order_status_translated( dokan_get_prop( $order, 'status' ) ) . '</span>'; ?>
                         </td>
+                        <?php if ( function_exists( 'dokan_get_order_shipment_current_status' ) && 'on' === $allow_shipment ) : ?>
+                            <td class="dokan-order-shipping-status" data-title="<?php esc_attr_e( 'Shipping Status', 'dokan-lite' ); ?>" >
+                                <?php echo dokan_get_order_shipment_current_status( $order->get_id() ); ?>
+                            </td>
+                        <?php endif; ?>
                         <td class="dokan-order-customer" data-title="<?php esc_attr_e( 'Customer', 'dokan-lite' ); ?>" >
                             <?php
                             $user_info = '';
@@ -94,7 +103,7 @@ if ( $user_orders ) {
                         $user_info = get_userdata( $order->get_user_id() );
                     }
 
-                    if ( !empty( $user_info ) ) {
+                    if ( ! empty( $user_info ) ) {
                         $user = '';
 
                         if ( $user_info->first_name || $user_info->last_name ) {
