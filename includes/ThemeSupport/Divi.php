@@ -16,7 +16,7 @@ class Divi {
     /**
      * The constructor
      */
-    function __construct() {
+    public function __construct() {
         add_action( 'template_redirect', [ $this, 'remove_sidebar' ] );
         add_filter( 'body_class', [ $this, 'full_width_page' ] );
         add_action( 'wp_enqueue_scripts', [ $this, 'style_reset' ] );
@@ -59,7 +59,7 @@ class Divi {
      */
     public function full_width_page( $classes ) {
         if ( dokan_is_store_page() || dokan_is_seller_dashboard() ) {
-            if ( ! in_array( 'et_full_width_page', $classes ) ) {
+            if ( ! in_array( 'et_full_width_page', $classes, true ) ) {
                 $classes[] = 'et_full_width_page';
                 $classes[] = 'et_no_sidebar';
             }
@@ -90,9 +90,12 @@ class Divi {
         $page->ID        = get_option( 'woocommerce_shop_page_id' ); // So it's created by admin, vendor can't see the edit page menu on navbar
         $page->post_type = 'page';
 
-        $query->is_singular       = true;
-        $query->queried_object    = $page;
-        $query->queried_object_id = $page->ID;
+        if ( $page->ID ) {
+            $page->ancestors          = [ $page->ID ];
+            $query->is_singular       = true;
+            $query->queried_object    = $page;
+            $query->queried_object_id = $page->ID;
+        }
 
         add_filter(
             'pre_get_document_title', function() use ( $store_info ) {
