@@ -383,7 +383,7 @@ class Products {
 
         $errors      = array();
         $post_title  = sanitize_text_field( $postdata['post_title'] );
-        $post_slug   = isset( $postdata['editable-post-name'] ) && ! empty( $postdata['editable-post-name'] ) ? sanitize_text_field( $postdata['editable-post-name'] ) : '';
+        $post_slug   = isset( $postdata['editable-post-name'] ) && ! empty( $postdata['editable-post-name'] ) ? sanitize_title( $postdata['editable-post-name'] ) : '';
         $post_status = isset( $postdata['post_status'] ) ? sanitize_text_field( $postdata['post_status'] ) : 'pending';
 
         if ( empty( $post_title ) ) {
