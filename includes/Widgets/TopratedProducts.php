@@ -28,7 +28,7 @@ class TopratedProducts extends WP_Widget {
      * @param array $instance Saved values from database.
      */
     public function widget( $args, $instance ) {
-        $title = apply_filters( 'widget_title', $instance['title'] );
+        $title = isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : '';
         extract( $instance );
 
         $r = dokan_get_top_rated_products( $no_of_product );
