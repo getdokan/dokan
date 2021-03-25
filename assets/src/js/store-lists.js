@@ -70,6 +70,14 @@
                     $( '#dokan-store-listing-filter-form-wrap' ).slideToggle();
                 }
             }
+
+            $('body').keypress(function (e) {
+                var key = e.which;
+                if( key == 13 ) {
+                    $( "#dokan-store-listing-filter-form-wrap" ).submit();
+                    return false;  
+                }
+            }); 
         },
 
         buildSortByQuery: function( event ) {
