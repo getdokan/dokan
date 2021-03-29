@@ -44,7 +44,7 @@ class StoreContactForm extends WP_Widget {
 
             $instance = wp_parse_args( $instance, $defaults );
 
-            $title = apply_filters( 'widget_title', $instance['title'] );
+            $title = isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : '';
 
             if ( is_product() ) {
                 global $post;

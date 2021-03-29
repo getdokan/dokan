@@ -28,8 +28,11 @@ class TopratedProducts extends WP_Widget {
      * @param array $instance Saved values from database.
      */
     public function widget( $args, $instance ) {
-        $title = apply_filters( 'widget_title', $instance['title'] );
-        extract( $instance );
+        extract( $args, EXTR_SKIP );
+
+        $title         = isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : '';
+        $no_of_product = isset( $instance['no_of_product'] ) ? $instance['no_of_product'] : 8;
+        $show_rating   = isset( $instance['show_rating'] ) ? $instance['show_rating'] : false;
 
         $r = dokan_get_top_rated_products( $no_of_product );
 
@@ -40,7 +43,7 @@ class TopratedProducts extends WP_Widget {
 
         dokan_get_template_part(
             'widgets/widget-content-product', '', array(
-				'r' => $r,
+				'r'           => $r,
 				'show_rating' => $show_rating,
             )
         );
