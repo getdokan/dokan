@@ -1,4 +1,5 @@
 // in this file you can append custom step methods to 'I' object
+var faker = require('faker');
 
 module.exports = function() {
     return actor({
@@ -36,6 +37,14 @@ module.exports = function() {
             this.fillField('username', 'customer-one');
             this.fillField('password', secret('123456'));
             this.click('login');
+        },
+        registrationAsCustomer: function() {
+            this.amOnPage('/my-account/');
+            this.fillField('Email address', faker.internet.email());
+            this.fillField('#reg_password', faker.internet.password());
+            this.checkOption('I am a customer');
+            this.click('Register');
+            this.seeInCurrentUrl('/my-account');
         },
 
     });

@@ -54,6 +54,7 @@ module.exports = {
     SaleGraph: 'div.dashboard-widget.sells-graph',
     DashAnnountment: 'div.dashboard-widget.dokan-announcement-widget',
     ProductWidget: 'div.dashboard-widget.products',
+    ReviewsContent: 'div.dashboard-widget.reviews',
     //VendorProduct Overview Page
     ProductArea: '.dokan-product-listing-area',
     AddProductSpan: '.dokan-add-product-link',
@@ -104,18 +105,22 @@ module.exports = {
     SettingArea: '.dokan-settings-area',
     ShopLink: 'li.dokan-common-links.dokan-clearfix > a:nth-child(1)',
     //Store listing
-    StoreContent: '.seller-listing-content',
+    StoreListContent: '.seller-listing-content',
     StoreDropdown: 'form select[name=stores_orderby]',
     Content: '#content',
     //My Account Main Page
     MyAccountDiv: '.woocommerce-MyAccount-content',
-    //Store Vendor
-    StoreContent: '.content-area',
-    ReviewDiv: '#reviews',
-    ReviewBtn: '//*[@id="content"]//div/ul/li[2]/a',
+
     // Shop Page Locators
     SortingDropdown: '#post-68 > div > div > form > select',
     ThirdProductLocator: ' li.product.type-product.post-148.status-publish.instock.product_cat-for-multiple.product_tag-gadgets.product_tag-single.shipping-taxable.purchasable.product-type-simple > div > div.item-bar > div.item-button > a',
+
+    //Store Page All Tab & Other Location
+    TermsAndCondition:'//*[@id="content"]//div/ul/li[2]/a',
+    ReviewTab: '//*[@id="content"]//div/ul/li[3]/a',
+    VendorBioTab:'//*[@id="content"]//div/ul/li[4]/a',
+    StoreContent: '.content-area',
+    ReviewDiv: '#reviews',
 
     // Locators for Simple Product Functional Test
     // Start

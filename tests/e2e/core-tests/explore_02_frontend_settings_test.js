@@ -5,7 +5,6 @@ Before(({ I }) => { // or Background
     I.loginAsVendor();
 });
 Scenario('Preview and Explore Vendor Store Page', ({ I }) => {
-    add
     explore.checkMyAccOrderDetails();
     tryTo(() => {
         I.amOnPage('/my-account');
