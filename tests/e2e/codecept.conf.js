@@ -4,6 +4,8 @@ exports.config = {
         WebDriver: {
             url: 'http://localhost:10003/',
             // url: 'http://dokan-pro.test/',
+            // url: 'http://localhost:10003/',
+            url: 'http://dokan-pro.test/',
             browser: 'chrome',
 
             // desiredCapabilities: {

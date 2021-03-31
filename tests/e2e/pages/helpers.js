@@ -17,7 +17,7 @@ const { I } = inject();
 module.exports = {
 
     pageStatus() {
-        I.amOnPage('http://localhost:10003/');
+        I.amOnPage('/');
         I.click('Login / Register');
         I.seeElement(locator.RegisterLocator);
     },
