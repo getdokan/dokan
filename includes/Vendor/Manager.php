@@ -98,7 +98,7 @@ class Manager {
 
         $this->total_users = $user_query->total_users;
 
-        if ( $args['fields'] !== 'all' || ( is_array( $args['fields'] ) && in_array( 'all', $args['fields'], true ) ) ) {
+        if ( $args['fields'] !== 'all' ) {
             return $results;
         }
 
