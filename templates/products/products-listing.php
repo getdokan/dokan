@@ -112,11 +112,11 @@
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $pagenum       = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
-                                        $post_statuses = apply_filters( 'dokan_product_listing_post_statuses', [ 'publish', 'draft', 'pending', 'future' ] );
+                                        $pagenum        = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
+                                        $post_statuses  = apply_filters( 'dokan_product_listing_post_statuses', [ 'publish', 'draft', 'pending', 'future' ] );
                                         $stock_statuses = apply_filters( 'dokan_product_stock_statuses', [ 'instock', 'outofstock' ] );
-                                        $product_types = apply_filters( 'dokan_product_types', 'simple' );
-                                        $get_data      = wp_unslash( $_GET );
+                                        $product_types  = apply_filters( 'dokan_product_types', 'simple' );
+                                        $get_data       = wp_unslash( $_GET );
 
                                         $args = array(
                                             'posts_per_page' => 15,

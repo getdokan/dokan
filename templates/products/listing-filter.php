@@ -40,7 +40,7 @@ $product_type  = isset( $get_data['product_type'] ) ? $get_data['product_type'] 
 
         <?php if ( is_array( $product_types ) ) : ?>
             <div class="dokan-form-group">
-                <select name="product_type" id="filter-by-type" class="dokan-form-control">
+                <select name="product_type" id="filter-by-type" class="dokan-form-control" style="max-width:140px;">
                     <option value=""><?php esc_html_e( 'Product type', 'dokan-lite' ); ?></option>
                     <?php foreach ( $product_types as $type_key => $p_type ) : ?>
                         <option value="<?php echo esc_attr( $type_key ); ?>" <?php echo selected( $product_type, $type_key ); ?>><?php echo esc_html( $p_type ); ?></option>

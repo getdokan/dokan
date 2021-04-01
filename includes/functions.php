@@ -230,7 +230,7 @@ function dokan_count_posts( $post_type, $user_id ) {
 }
 
 /**
- * Count post stock type from a user
+ * Count stock product type from a user
  *
  * @global WPDB $wpdb
  *
@@ -246,7 +246,7 @@ function dokan_count_stock_posts( $post_type, $user_id, $stock_type ) {
     global $wpdb;
 
     $cache_group = 'dokan_seller_product_data_' . $stock_type . '_' . $user_id;
-    $cache_key   = 'dokan-count-'  . $post_type . '_' . $stock_type . '-' . $user_id;
+    $cache_key   = 'dokan-count-' . $post_type . '_' . $stock_type . '-' . $user_id;
     $counts      = wp_cache_get( $cache_key, $cache_group );
 
     if ( false === $counts ) {
@@ -264,7 +264,7 @@ function dokan_count_stock_posts( $post_type, $user_id, $stock_type ) {
                     GROUP BY p.post_status",
                     $post_type,
                     $user_id,
-                    $stock_type,
+                    $stock_type
                 ),
                 ARRAY_A
             );
