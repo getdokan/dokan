@@ -3141,6 +3141,12 @@ div.media-sidebar a.edit-attachment {
 .product-edit-container {
   font-size: 13px;
 }
+.product-edit-container #editable-post-name-full {
+  display: none;
+}
+.product-edit-container #edit-slug-box {
+  margin-top: 10px;
+}
 .product-edit-container .dokan-product-title-alert,
 .product-edit-container .dokan-product-cat-alert {
   color: #f05025;
