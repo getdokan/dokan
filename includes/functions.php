@@ -3189,8 +3189,8 @@ function dokan_is_store_open( $user_id ) {
             return true;
         }
 
-        $open  = $current_time->modify( $schedule['opening_time'] );
-        $close = $current_time->modify( $schedule['closing_time'] );
+        $open  = DateTimeImmutable::createFromFormat( esc_attr( get_option( 'time_format' ) ), $schedule['opening_time'], new DateTimeZone( dokan_wp_timezone_string() ) );
+        $close = DateTimeImmutable::createFromFormat( esc_attr( get_option( 'time_format' ) ), $schedule['closing_time'], new DateTimeZone( dokan_wp_timezone_string() ) );
 
         if ( $open <= $current_time && $close >= $current_time ) {
             return true;

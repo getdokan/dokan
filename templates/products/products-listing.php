@@ -36,7 +36,12 @@
                 <article class="dokan-product-listing-area">
 
                     <?php
-                    $product_query = dokan()->product->all( [ 'author' => dokan_get_current_user_id(), 'posts_per_page' => 1 ] );
+                    $product_listing_args = [
+                        'author'            => dokan_get_current_user_id(),
+                        'posts_per_page'    => 1,
+                        'post_status'       => apply_filters( 'dokan_product_listing_post_statuses', [ 'publish', 'draft', 'pending', 'future' ] ),
+                    ];
+                    $product_query = dokan()->product->all( $product_listing_args );
 
                     if ( $product_query->have_posts() ) {
                     ?>
@@ -208,7 +213,7 @@
                             echo '</div>';
                         }
                         ?>
-                    <?php    
+                    <?php
                     } else {
                     ?>
                         <div class="dokan-dashboard-product-listing-wrapper dokan-dashboard-not-product-found">
@@ -216,7 +221,7 @@
                             <h4 class="dokan-blank-product-message">
                                 <?php esc_html_e( 'No Products Found!', 'dokan-lite' ); ?>
                             </h4>
-                            
+
                             <?php if ( dokan_is_seller_enabled( dokan_get_current_user_id() ) ): ?>
                                 <h2 class="dokan-blank-product-message">
                                     <?php esc_html_e( 'Ready to start selling something awesome?', 'dokan-lite' ); ?>

@@ -381,8 +381,10 @@ class Products {
 
         $postdata = wp_unslash( $_POST );
 
-        $errors     = array();
-        $post_title = sanitize_text_field( $postdata['post_title'] );
+        $errors      = array();
+        $post_title  = sanitize_text_field( $postdata['post_title'] );
+        $post_slug   = isset( $postdata['editable-post-name'] ) && ! empty( $postdata['editable-post-name'] ) ? sanitize_title( $postdata['editable-post-name'] ) : '';
+        $post_status = isset( $postdata['post_status'] ) ? sanitize_text_field( $postdata['post_status'] ) : 'pending';
 
         if ( empty( $post_title ) ) {
             $errors[] = __( 'Please enter product title', 'dokan-lite' );
@@ -413,15 +415,19 @@ class Products {
 
         self::$errors = apply_filters( 'dokan_can_edit_product', $errors );
 
-        if ( !self::$errors ) {
+        if ( ! self::$errors ) {
             $product_info = apply_filters( 'dokan_update_product_post_data', array(
                 'ID'             => $post_id,
                 'post_title'     => $post_title,
                 'post_content'   => wp_kses_post( $postdata['post_content'] ),
                 'post_excerpt'   => wp_kses_post( $postdata['post_excerpt'] ),
-                'post_status'    => isset( $postdata['post_status'] ) ? sanitize_text_field( $postdata['post_status'] ) : 'pending',
+                'post_status'    => $post_status,
                 'comment_status' => isset( $postdata['_enable_reviews'] ) ? 'open' : 'closed',
             ) );
+            
+            if ( $post_slug ) {
+                $product_info['post_name'] = wp_unique_post_slug( $post_slug, $post_id, $post_status, 'product', 0 );
+            }
 
             wp_update_post( $product_info );
 

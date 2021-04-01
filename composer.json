@@ -15,7 +15,7 @@
   },
   "require-dev": {
     "wp-coding-standards/wpcs": "dev-master",
-    "dealerdirect/phpcodesniffer-composer-installer": "^0.4.3",
+    "dealerdirect/phpcodesniffer-composer-installer": "dev-master",
     "tareq1988/wp-php-cs-fixer": "dev-master",
     "phpcompatibility/phpcompatibility-wp": "dev-master",
     "phpunit/phpunit": ">=5.7.27"

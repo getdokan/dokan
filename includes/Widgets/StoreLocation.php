@@ -44,7 +44,7 @@ class StoreLocation extends WP_Widget {
 
             $instance = wp_parse_args( $instance, $defaults );
 
-            $title        = apply_filters( 'widget_title', $instance['title'] );
+            $title        = isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : '';
             $store_info   = dokan_get_store_info( get_query_var( 'author' ) );
             $map_location = isset( $store_info['location'] ) ? esc_attr( $store_info['location'] ) : '';
 

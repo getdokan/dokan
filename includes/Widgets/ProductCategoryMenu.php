@@ -30,7 +30,7 @@ class ProductCategoryMenu extends WP_Widget {
     public function widget( $args, $instance ) {
         extract( $args, EXTR_SKIP );
 
-        $title = apply_filters( 'widget_title', $instance['title'] );
+        $title = isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : '';
 
         echo $before_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
 

@@ -1198,3 +1198,28 @@ function dokan_keep_old_vendor_woocommerce_duplicate_product( $duplicate, $produ
 }
 
 add_action( 'woocommerce_product_duplicate', 'dokan_keep_old_vendor_woocommerce_duplicate_product', 35, 2 );
+
+
+/**
+ * Send email to the vendor/seller when cancel the order
+ */
+function send_email_for_order_cancellation( $recipient, $order ) {
+    if ( ! $order instanceof \WC_Order ) {
+        return $recipient;
+    }
+
+    // get the order id from order object
+    $seller_id = dokan_get_seller_id_by_order( $order->get_id() );
+    
+    $seller_info      = get_userdata( $seller_id );
+    $seller_email     = $seller_info->user_email;
+
+    // if admin email & seller email is same
+    if ( false === strpos( $recipient, $seller_email ) ) {
+        $recipient .= ',' . $seller_email;
+    }
+
+    return $recipient;
+}
+
+add_filter("woocommerce_email_recipient_cancelled_order", 'send_email_for_order_cancellation', 10, 2);
