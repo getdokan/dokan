@@ -7,7 +7,7 @@
 **WC requires at least:** 3.0  
 **WC tested up to:** 5.1.0  
 **Requires PHP:** 5.6  
-**Stable tag:** 3.2.3  
+**Stable tag:** 3.2.4  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -291,6 +291,19 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 ## Changelog ##
+
+### v3.2.4 ( March 31, 2021 ) ###
+
+- **new:** Enter key allow for vendor search on store listing page
+- **feat:** Vendors able to edit product slug from their product edit page
+- **update:** Set default values withdraw methods, limit, order status, commissions on the setup wizard
+- **refactor:** product create update redundant check
+- **fix:** time format with a forward slash (\) wasn't parsing correctly on store open/close time dropdown
+- **fix:** Products: Preview of text is not appearing instantly while adding Product Tags
+- **fix:** Withdraw: IBAN number is not showing on the Dokan Admin
+- **fix:** Warning showing on all widget when use on Elementor
+- **fix:** Divi theme store single page showing warning issue fixed
+- **fix:** Store listing filter most recent is not working issue fixed
 
 ### v3.2.3 ( March 13, 2021 ) ###
 
