@@ -72,7 +72,7 @@ var Dokan_Vendor_Registration = {
 
     ensurePhoneNumber: function(e) {
         // Allow: backspace, delete, tab, escape, enter and .
-        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 91, 107, 109, 110, 187, 189, 190]) !== -1 ||
+        if ($.inArray(e.keyCode, [48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 46, 8, 9, 27, 13, 91, 107, 109, 110, 187, 189, 190]) !== -1 ||
 
             // Allow: Ctrl+A
             (e.keyCode == 65 && e.ctrlKey === true) ||
