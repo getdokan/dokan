@@ -23,6 +23,10 @@ class Stores extends DokanShortcode {
             'search'   => 'yes',
             'per_row'  => 3,
             'featured' => 'no',
+            'category' => '',
+            'order'    => '',
+            'orderby'  => '',
+            'store_id' => '',
         );
 
         /**
@@ -60,6 +64,26 @@ class Stores extends DokanShortcode {
 
         if ( 'yes' === $attr['featured'] ) {
             $seller_args['featured'] = 'yes';
+        }
+
+        if ( ! empty( $attr['category'] ) ) {
+            $seller_args['store_category_query'][] = array(
+                'taxonomy' => 'store_category',
+                'field'    => 'slug',
+                'terms'    => explode( ',', $attr['category'] ),
+            );
+        }
+
+        if ( ! empty( $attr['order'] ) ) {
+            $seller_args['order'] = $attr['order'];
+        }
+
+        if ( ! empty( $attr['orderby'] ) ) {
+            $seller_args['orderby'] = $attr['orderby'];
+        }
+
+        if ( ! empty( $attr['store_id'] ) ) {
+            $seller_args['include'] = explode( ',', $attr['store_id'] );
         }
 
         $sellers = dokan_get_sellers( apply_filters( 'dokan_seller_listing_args', $seller_args, $_GET ) );
