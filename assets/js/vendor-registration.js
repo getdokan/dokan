@@ -72,7 +72,7 @@ var Dokan_Vendor_Registration = {
 
     ensurePhoneNumber: function(e) {
         // Allow: backspace, delete, tab, escape, enter and .
-        if ($.inArray(e.keyCode, [48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 46, 8, 9, 27, 13, 91, 107, 109, 110, 187, 189, 190]) !== -1 ||
+        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 91, 107, 109, 110, 187, 189, 190]) !== -1 ||
 
             // Allow: Ctrl+A
             (e.keyCode == 65 && e.ctrlKey === true) ||
@@ -82,10 +82,18 @@ var Dokan_Vendor_Registration = {
                 // let it happen, don't do anything
                 return;
         }
-
+        
+        if ( e.shiftKey && e.key === '.' ) {
+            return;
+        }
+        
         // Ensure that it is a number and stop the keypress
-        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-            e.preventDefault();
+        if ( ( e.shiftKey && ! isNaN( Number(e.key) ) ) ) {
+            return;
+        }
+
+        if ( isNaN( Number(e.key) ) ) {
+           e.preventDefault(); 
         }
     },
 
