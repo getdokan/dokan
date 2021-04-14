@@ -1099,7 +1099,7 @@ function dokan_get_store_url( $user_id ) {
     $user_nicename    = ( ! false == $userdata ) ? $userdata->user_nicename : '';
     $custom_store_url = dokan_get_option( 'custom_store_url', 'dokan_general', 'store' );
 
-    return sprintf( '%s/%s/', home_url( '/' . $custom_store_url ), $user_nicename );
+    return home_url( '/' . $custom_store_url . '/' . $user_nicename . '/' );
 }
 
 /**
