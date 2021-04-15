@@ -2049,10 +2049,12 @@ function dokan_get_navigation_url( $name = '' ) {
         return '';
     }
 
+    $url = get_permalink( $page_id );
+
     if ( ! empty( $name ) ) {
-        $url = get_permalink( $page_id ) . $name . '/';
-    } else {
-        $url = get_permalink( $page_id );
+        $urlParts         = wp_parse_url( $url );
+        $urlParts['path'] = $urlParts['path'] . $name . '/';
+        $url              = http_build_url( '', $urlParts );
     }
 
     return apply_filters( 'dokan_get_navigation_url', esc_url( $url ), $name );
