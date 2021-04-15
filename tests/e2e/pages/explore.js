@@ -50,6 +50,21 @@ module.exports = {
         I.seeElement('.active');
         I.seeElement('.active', 'All');
         I.see('Online');
+        I.see('Draft');
+        I.see('In stock');
+        I.see('Out of stock');
+        I.amOnPage('/dashboard/products/?post_status=publish');
+        I.waitForElement(locator.ProductArea);
+        I.checkError();
+        I.amOnPage('/dashboard/products/?post_status=draft');
+        I.waitForElement(locator.ProductArea);
+        I.checkError();
+        I.amOnPage('/dashboard/products/?post_status=instock');
+        I.waitForElement(locator.ProductArea);
+        I.checkError();
+        I.amOnPage('/dashboard/products/?post_status=outofstock');
+        I.waitForElement(locator.ProductArea);
+        I.checkError();
         I.seeElement(locator.AddProductSpan, 'Add new Product');
         I.seeElementInDOM(locator.AddProductSpan, 'Import'); //need update
         I.seeElementInDOM(locator.AddProductSpan, 'Export'); //need update
@@ -108,11 +123,11 @@ module.exports = {
             }).catch((err) => {
                 I.say('Product Subscription Module Inactivated', 'red');
             });
-            I.waitForElement('.dashboard-user-subscription-area');
-            I.checkError();
-            // I.click('//*[@id="post-5"]/div/div/div[2]/article/table/tbody/tr/td[2]/a/strong');
-            // I.checkError();
         });
+        I.waitForElement('.dashboard-user-subscription-area');
+        I.checkError();
+        // I.click('//*[@id="post-5"]/div/div/div[2]/article/table/tbody/tr/td[2]/a/strong');
+        // I.checkError();
     },
     CouponPageElements() {
         I.amOnPage('/dashboard');
@@ -122,9 +137,9 @@ module.exports = {
             }).catch((err) => {
                 I.say('Coupon: Dokan Pro Deactivate', 'red');
             });
-            I.waitForElement(locator.CouponArea);
-            I.checkError();
         });
+        I.waitForElement(locator.CouponArea);
+        I.checkError();
     },
     ReportPageElements() {
         I.amOnPage('/dashboard');
@@ -134,17 +149,17 @@ module.exports = {
             }).catch((err) => {
                 I.say('Reports: Dokan Pro Deactivate', 'red');
             });
-            I.waitForElement(locator.ReportArea);
-            I.checkError();
-            I.click('Sales by day');
-            I.checkError();
-            I.click('Top selling');
-            I.checkError();
-            I.click('Top earning');
-            I.checkError();
-            I.click('Statement');
-            I.checkError();
         });
+        I.waitForElement(locator.ReportArea);
+        I.checkError();
+        I.click('Sales by day');
+        I.checkError();
+        I.click('Top selling');
+        I.checkError();
+        I.click('Top earning');
+        I.checkError();
+        I.click('Statement');
+        I.checkError();
         
     },
     ReviewPageElements() {
@@ -155,16 +170,16 @@ module.exports = {
             }).catch((err) => {
                 I.say('Reviews: Dokan Pro Deactivate', 'red');
             });
-            I.waitForElement(locator.ReviewArea);
-            // I.click('Submit');
-            // I.checkError();
-            I.amOnPage(locator.ReviewhHold);
-            I.checkError();
-            I.amOnPage(locator.ReviewSpam);
-            I.checkError();
-            I.amOnPage(locator.ReviewTrash);
-            I.checkError();
         });
+        I.waitForElement(locator.ReviewArea);
+        // I.click('Submit');
+        // I.checkError();
+        I.amOnPage(locator.ReviewhHold);
+        I.checkError();
+        I.amOnPage(locator.ReviewSpam);
+        I.checkError();
+        I.amOnPage(locator.ReviewTrash);
+        I.checkError();
     },
     WithdrawPageElements() {
         I.amOnPage('/dashboard');
@@ -184,9 +199,9 @@ module.exports = {
             }).catch((err) => {
                 I.say('Return Request: Dokan Pro Deactivate', 'red');
             });
-            I.waitForElement(locator.ReturnRequestArea);
-            I.checkError();
         });
+        I.waitForElement(locator.ReturnRequestArea);
+        I.checkError();
     },
     StaffPageElements() {
         I.amOnPage('/dashboard');
@@ -196,9 +211,9 @@ module.exports = {
             }).catch((err) => {
                 I.say('Staff: Dokan Pro Deactivate', 'red');
             });
-            I.waitForElement(locator.StaffArea);
-            I.checkError();
         });
+        I.waitForElement(locator.StaffArea);
+        I.checkError();
     },
     FollowerPageElements() {
         I.amOnPage('/dashboard');
@@ -208,9 +223,9 @@ module.exports = {
             }).catch((err) => {
                 I.say('Followers: Dokan Pro Deactivate', 'red');
             });
-            I.waitForElement(locator.FollowerArea);
-            I.checkError();
-        });        
+        });    
+        I.waitForElement(locator.FollowerArea);
+        I.checkError();    
     },
     SubscriptionPageElements() {
         I.amOnPage('/dashboard');
@@ -220,9 +235,9 @@ module.exports = {
             }).catch((err) => {
                 I.say('Subscription: Dokan Pro Deactivate', 'red');
             });
-            I.waitForElement(locator.SubscriptionArea);
-            I.checkError();
         });
+        I.waitForElement(locator.SubscriptionArea);
+        I.checkError();
     },
     BookingPageElements() {
         I.amOnPage('/dashboard');
@@ -232,22 +247,22 @@ module.exports = {
             }).catch((err) => {
                 I.say('Booking: Dokan Pro Deactivate', 'red');
             });
-            I.waitForElement(locator.BookingArea);
-            I.checkError();
-            // I.click('//*[@id="post-5"]/div/div/div[2]/div/article/table/tbody/tr/td[2]/p/a');
-            // I.checkError();
-            I.amOnPage(locator.BookingManage);
-            I.waitForElement('.dokan-orders-area');
-            I.checkError();
-            // I.click('//*[@id="post-5"]/div/div/div[2]/div/article/table/tbody/tr/td[9]');
-            // I.checkError();
-            I.amOnPage(locator.BookingCalendar);
-            I.waitForElement('.wc_bookings_calendar_form');
-            I.checkError();
-            I.amOnPage(locator.BookingResources);
-            I.waitForElement('.dokan-product-listing');
-            I.checkError();
         });
+        I.waitForElement(locator.BookingArea);
+        I.checkError();
+        // I.click('//*[@id="post-5"]/div/div/div[2]/div/article/table/tbody/tr/td[2]/p/a');
+        // I.checkError();
+        I.amOnPage(locator.BookingManage);
+        I.waitForElement('.dokan-orders-area');
+        I.checkError();
+        // I.click('//*[@id="post-5"]/div/div/div[2]/div/article/table/tbody/tr/td[9]');
+        // I.checkError();
+        I.amOnPage(locator.BookingCalendar);
+        I.waitForElement('.wc_bookings_calendar_form');
+        I.checkError();
+        I.amOnPage(locator.BookingResources);
+        I.waitForElement('.dokan-product-listing');
+        I.checkError();
     },
     AnalyticsPageElements() {
         I.amOnPage('/dashboard');
@@ -257,12 +272,12 @@ module.exports = {
             }).catch((err) => {
                 I.say('Vendor Analytics: Dokan Pro Deactivate', 'red');
             });
-            I.waitForElement(locator.AnalyticsArea);
-            I.amOnPage(locator.AllAnalytics);
-            I.checkError();
-            I.amOnPage(locator.CloseAnalytics);
-            I.checkError();
         });
+        I.waitForElement(locator.AnalyticsArea);
+        I.amOnPage(locator.AllAnalytics);
+        I.checkError();
+        I.amOnPage(locator.CloseAnalytics);
+        I.checkError();
     },
     AnnouncementPageElements() {
         I.amOnPage('/dashboard');
@@ -272,9 +287,9 @@ module.exports = {
             }).catch((err) => {
                 I.say('Announcements: Dokan Pro Deactivate', 'red');
             });
-            I.waitForElement('.dokan-notice-listing-area');
-            I.checkError();
         });
+        I.waitForElement('.dokan-notice-listing-area');
+        I.checkError();
     },
     ToolPageElements() {
         I.amOnPage('/dashboard');
@@ -284,11 +299,11 @@ module.exports = {
             }).catch((err) => {
                 I.say('Tools: Dokan Pro Deactivate', 'red');
             });
-            I.waitForElement('#import');
-            I.checkError();
-            I.amOnPage('/dashboard/tools/#export');
-            I.checkError();
         });
+        I.waitForElement('#import');
+        I.checkError();
+        I.amOnPage('/dashboard/tools/#export');
+        I.checkError();
     },
     AuctionPageElements() {
         I.amOnPage('/dashboard');
@@ -298,13 +313,13 @@ module.exports = {
             }).catch((err) => {
                 I.say('Auction: Dokan Pro Deactivate', 'red');
             });
-            I.amOnPage(locator.AuctionOnline);
-            I.checkError();
-            I.amOnPage(locator.AuctionPending);
-            I.checkError();
-            I.amOnPage(locator.AuctionDraft);
-            I.checkError();
         });
+        I.amOnPage(locator.AuctionOnline);
+        I.checkError();
+        I.amOnPage(locator.AuctionPending);
+        I.checkError();
+        I.amOnPage(locator.AuctionDraft);
+        I.checkError();
     },
     InboxPageElements() {
         I.amOnPage('/dashboard/inbox/');
@@ -314,8 +329,8 @@ module.exports = {
             }).catch((err) => {
                 I.say('Inbox: Dokan Pro Deactivate', 'red');
             });
-            I.checkError();
         });
+        I.checkError();
     },
     SupportPageElements() {
         I.amOnPage('/dashboard/support/');
@@ -325,8 +340,8 @@ module.exports = {
             }).catch((err) => {
                 I.say('Support: Dokan Pro Deactivate', 'red');
             });
-            I.checkError();
         });
+        I.checkError();
     },
     StoreSettingsPageElements() {
         I.amOnPage('/dashboard');
@@ -348,9 +363,9 @@ module.exports = {
             }).catch((err) => {
                 I.say('Addons: Dokan Pro Deactivate', 'red');
             });
-            I.waitForElement(locator.SettingArea);
-            I.checkError();
         });
+        I.waitForElement(locator.SettingArea);
+        I.checkError();
     },
     VerificationPageElements() {
         I.amOnPage('dashboard/settings/store/');
@@ -360,9 +375,9 @@ module.exports = {
             }).catch((err) => {
                 I.say('Verification: Dokan Pro Deactivate', 'red');
             });
-            I.waitForElement(locator.SettingArea);
-            I.checkError();
         });
+        I.waitForElement(locator.SettingArea);
+        I.checkError();
     },
     ShippingPageElements() {
         I.amOnPage('dashboard/settings/store/');
@@ -372,9 +387,9 @@ module.exports = {
             }).catch((err) => {
                 I.say('Shipping: Dokan Pro Deactivate', 'red');
             });
-            I.waitForElement(locator.SettingArea);
-            I.checkError();
         });
+        I.waitForElement(locator.SettingArea);
+        I.checkError();
     },
     ShipStationPageElements() {
         I.amOnPage('dashboard/settings/store/');
@@ -384,9 +399,9 @@ module.exports = {
             }).catch((err) => {
                 I.say('ShipStation: Dokan Pro Deactivate', 'red');
             });
-            I.waitForElement(locator.SettingArea);
-            I.checkError();
         });
+        I.waitForElement(locator.SettingArea);
+        I.checkError();
     },
     SocialProfilePageElements() {
         I.amOnPage('dashboard/settings/store/');
@@ -396,9 +411,9 @@ module.exports = {
             }).catch((err) => {
                 I.say('SocialProfile: Dokan Pro Deactivate', 'red');
             });
-            I.waitForElement(locator.SettingArea);
-            I.checkError();
         });
+        I.waitForElement(locator.SettingArea);
+        I.checkError();
     },
     RMAPageElements() {
         I.amOnPage('dashboard/settings/store/');
@@ -408,9 +423,9 @@ module.exports = {
             }).catch((err) => {
                 I.say('RMA: Dokan Pro Deactivate', 'red');
             });
-            I.waitForElement(locator.SettingArea);
-            I.checkError();
         });
+        I.waitForElement(locator.SettingArea);
+        I.checkError();
     },
     StoreSEOElements() {
         I.amOnPage('dashboard/settings/store/');
@@ -420,9 +435,9 @@ module.exports = {
             }).catch((err) => {
                 I.say('StoreSEO: Dokan Pro Deactivate', 'red');
             });
-            I.waitForElement(locator.SettingArea);
-            I.checkError();
         });
+        I.waitForElement(locator.SettingArea);
+        I.checkError();
     },
     MyAccountDashboard() {
         I.amOnPage('/my-account/');
@@ -480,11 +495,11 @@ module.exports = {
                 I.say('RMA Request: Dokan Pro Feature', 'yellow');
             }).catch((err) => {
                 I.say('RMA Request: Dokan Pro Deactivate', 'red');
-            });
-            I.seeInCurrentUrl('/my-account/rma-requests/');
-            I.waitForElement(locator.MyAccountDiv, 5);
-            I.checkError(); 
-        });              
+            }); 
+        });
+        I.seeInCurrentUrl('/my-account/rma-requests/');
+        I.waitForElement(locator.MyAccountDiv, 5);
+        I.checkError();              
     },
     MyAccountAccountDetails() {
         I.amOnPage('/my-account/');
@@ -501,10 +516,10 @@ module.exports = {
             }).catch((err) => {
                 I.say('Vendors: Dokan Pro Deactivate', 'red');
             });
-            I.seeInCurrentUrl('/my-account/following/');
-            I.waitForElement(locator.MyAccountDiv, 5);
-            I.checkError(); 
-        });        
+        });
+        I.seeInCurrentUrl('/my-account/following/');
+        I.waitForElement(locator.MyAccountDiv, 5);
+        I.checkError();         
     },
     MyAccountInbox() {
         I.amOnPage('/my-account/');
@@ -514,10 +529,10 @@ module.exports = {
             }).catch((err) => {
                 I.say('Inbox: Dokan Pro Deactivate', 'red');
             });
-            I.seeInCurrentUrl('/my-account/customer-inbox/');
-            I.waitForElement(locator.MyAccountDiv, 5);
-            I.checkError(); 
-        });       
+        });
+        I.seeInCurrentUrl('/my-account/customer-inbox/');
+        I.waitForElement(locator.MyAccountDiv, 5);
+        I.checkError();        
     },
     MyAccountSellerSupportTickets() {
         I.amOnPage('/my-account/');
@@ -527,10 +542,10 @@ module.exports = {
             }).catch((err) => {
                 I.say('Seller Support Tickets: Dokan Pro Deactivate', 'red');
             });
-            I.seeInCurrentUrl('/my-account/support-tickets/');
-            I.waitForElement(locator.MyAccountDiv, 5);
-            I.checkError(); 
-        });       
+        });
+        I.seeInCurrentUrl('/my-account/support-tickets/');
+        I.waitForElement(locator.MyAccountDiv, 5);
+        I.checkError();        
     },
     MyAccountBookings() {
         I.amOnPage('/my-account/');
@@ -598,6 +613,418 @@ module.exports = {
     CheckoutPage() {
         I.amOnPage('/checkout');
         I.waitForElement(locator.Content);
+        I.checkError();
+    },
+
+    // Backed Explorating Testing
+    DokanDashboardElements() {
+        I.click('Dokan');
+        I.waitForElement('.widgets-wrapper');
+        I.checkError();
+        I.see('At a Glance');
+        I.see('Overview');
+        I.see('Dokan News Updates');
+    },
+    ModulePageElements() {
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/');
+        I.click('Modules');
+        I.waitForElement('.module-content', 5);
+        I.checkError();
+            // I.seeElement('.displaying-num','26 items');
+        // Activate all modules
+        I.click('#view-switch-list');
+        I.click('//input[@type="checkbox"]');
+        I.selectOption('#bulk-action-selector-top','Activate');
+        I.click('Apply');
+    },
+    BackendWithdrawPageElements() {
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/');
+        I.click('Withdraw');
+        I.waitForElement('.withdraw-requests');
+        I.checkError();
+        I.seeElement({css: '.subsubsub > li:nth-child(2) > a'});
+        I.seeElement({css:'.subsubsub > li:nth-child(3) > a'});
+        I.seeElement({"css":".top #bulk-action-selector-top"});
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/withdraw?status=approved');
+        I.checkError();
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/withdraw?status=cancelled');
+        I.checkError();
+    },
+    VendorsPageElements() {
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/');
+        I.click('Vendors');
+        I.waitForElement('.vendor-list');
+        I.checkError();
+        I.see('Add New');
+        tryTo(() => {
+            I.see('Store Categories').then((result) => {
+                I.say('Store Categories: Dokan Pro Feature', 'yellow');
+            }).catch((err) => {
+                I.say('Store Categories: Dokan Pro Deactivate', 'red');
+            });
+        });  
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/vendors?status=approved');
+        I.waitForElement('.vendor-list');
+        I.checkError();
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/vendors?status=pending');
+        I.waitForElement('.vendor-list');
+        I.checkError();
+        I.seeElement('#post-search-input');
+        I.see('Bulk Actions');
+    },
+    AbuseReportsPageElements() {
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/');
+        tryTo(() => {
+            I.click('Abuse Reports').then((result) => {
+                I.say('Abuse Reports: Dokan Pro Feature', 'yellow');
+            }).catch((err) => {
+                I.say('Abuse Reports: Dokan Pro Deactivate', 'red');
+            });
+        });
+        I.waitForElement('#vue-backend-app');
+        I.checkError();
+        I.seeElement({"css":".top #bulk-action-selector-top"});
+        I.seeElement({"css":"select:nth-child(1)"});
+        I.seeElement({"css":"#select2-filter-products-container > .select2-selection__placeholder"});
+        I.seeElement({"css":"#select2-filter-vendors-container > .select2-selection__placeholder"});
+
+    },
+    StoreReviewPageElements() {
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/');
+        tryTo(() => {
+            I.click('Store Reviews').then((result) => {
+                I.say('Store Reviews: Dokan Pro Feature', 'yellow');
+            }).catch((err) => {
+                I.say('Store Reviews: Dokan Pro Deactivate', 'red');
+            });
+        });
+        I.waitForElement('.dokan-store-reviews');
+        I.checkError();
+        I.seeElement({"css":".top #bulk-action-selector-top"});
+        I.seeElement( "//span[@id='select2-filter-vendors-container']/span");
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/store-reviews?status=trash');
+        I.waitForElement('.dokan-store-reviews');
+        I.checkError(); 
+    },
+    BackendAnnouncementPageElements() {
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/');
+        tryTo(() => {
+            I.click('Announcements').then((result) => {
+                I.say('Announcements: Dokan Pro Feature', 'yellow');
+            }).catch((err) => {
+                I.say('Announcements: Dokan Pro Deactivate', 'red');
+            });
+        });
+        I.waitForElement('.dokan-announcement-wrapper');
+        I.checkError();
+        I.seeElement("//a[contains(text(),'Add Announcement')]");
+        I.seeElement("//a[contains(@href, '#/announcement?status=publish')]");
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/announcement?status=publish');
+        I.waitForElement('.dokan-announcement-wrapper');
+        I.checkError();
+        I.seeElement("//a[contains(@href, '#/announcement?status=pending')]");
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/announcement?status=pending');
+        I.waitForElement('.dokan-announcement-wrapper');
+        I.checkError();
+        I.seeElement("//a[contains(@href, '#/announcement?status=future')]");
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/announcement?status=future');
+        I.waitForElement('.dokan-announcement-wrapper');
+        I.checkError();
+        I.seeElement("//a[contains(@href, '#/announcement?status=draft')]");
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/announcement?status=draft');
+        I.waitForElement('.dokan-announcement-wrapper');
+        I.checkError();
+        I.seeElement("//a[contains(@href, '#/announcement?status=trash')]");
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/announcement?status=trash');
+        I.waitForElement('.dokan-announcement-wrapper');
+        I.checkError();
+        I.seeElement({"css":".top #bulk-action-selector-top"});  
+    },
+    RefundPageElements() {
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/');
+        tryTo(() => {
+            I.click('Refunds').then((result) => {
+                I.say('Refunds: Dokan Pro Feature', 'yellow');
+            }).catch((err) => {
+                I.say('Refunds: Dokan Pro Deactivate', 'red');
+            });
+        });
+        I.waitForElement('.dokan-refund-wrapper');
+        I.checkError();
+        I.seeElement("(//a[contains(@href, '#/refund?status=pending')])[2]");
+        I.seeElement("//a[contains(@href, '#/refund?status=completed')]");
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/refund?status=completed');
+        I.waitForElement('.dokan-refund-wrapper');
+        I.checkError();
+        I.seeElement("//a[contains(@href, '#/refund?status=cancelled')]");
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/refund?status=cancelled');
+        I.waitForElement('.dokan-refund-wrapper');
+        I.checkError();
+        I.seeElement({"css":".top #bulk-action-selector-top"}); 
+    },
+    BackendReportsPageElements() {
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/');
+        tryTo(() => {
+            I.click('Reports').then((result) => {
+                I.say('Reports: Dokan Pro Feature', 'yellow');
+            }).catch((err) => {
+                I.say('Reports: Dokan Pro Deactivate', 'red');
+            });
+        });
+        I.waitForElement('#vue-backend-app');
+        I.checkError();
+        I.click("By Day");
+        I.waitForElement('#vue-backend-app');
+        I.checkError();
+        I.click("By Year");
+        I.waitForElement('#vue-backend-app');
+        I.checkError();
+        I.click("By Vendor");
+        I.waitForElement('#vue-backend-app');
+        I.checkError();
+        I.click('All Logs');
+        I.waitForElement('#vue-backend-app');
+        I.checkError();
+        I.seeElement("//span[@id='select2-filter-vendors-container']");
+        I.seeElement("//span[@id='select2-filter-status-container']");
+        I.seeElement("//input[@id='post-search-input']");
+        I.seeElement('#export-logs'); 
+    },
+    BackendToolPageElements() {
+        // I.click('Tools'); //Click event facing problems because WordPress Have another Tools menu
+        tryTo(() => {
+            I.amOnPage('/wp-admin/admin.php?page=dokan#/tools').then((result) => {
+                I.say('Tools: Dokan Pro Feature', 'yellow');
+            }).catch((err) => {
+                I.say('Tools: Dokan Pro Deactivate', 'red');
+            });
+        }); 
+        I.waitForElement('.tools-page');
+        I.checkError();
+        I.seeElement("//a[contains(text(),'Dashboard')]");
+        I.seeElement("//a[contains(text(),'Re-build')]");
+        I.seeElement("//a[contains(text(),'Check Orders')]");
+    },
+    BackendSubscriptionPageElements() {
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/');
+        tryTo(() => {
+            I.click('Subscriptions').then((result) => {
+                I.say('Subscriptions: Dokan Pro Feature', 'yellow');
+            }).catch((err) => {
+                I.say('Subscriptions: Dokan Pro Deactivate', 'red');
+            });
+        }); 
+        I.waitForElement('.subscription-list');
+        I.checkError();
+        I.seeElement('#bulk-action-selector-top');
+       
+    },
+    BackendVerificationPageElements() {
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/');
+        tryTo(() => {
+            I.click('Verifications').then((result) => {
+                I.say('Verifications: Dokan Pro Feature', 'yellow');
+            }).catch((err) => {
+                I.say('Verifications: Dokan Pro Deactivate', 'red');
+            });
+        });
+        I.waitForElement('//*[@id="wpbody-content"]/div[2]/table');
+        I.checkError();
+        I.amOnPage('/wp-admin/admin.php?page=dokan-seller-verifications&status=approved');
+        I.waitForElement('//*[@id="wpbody-content"]/div[2]/table');
+        I.checkError();
+        I.amOnPage('/wp-admin/admin.php?page=dokan-seller-verifications&status=rejected');
+        I.waitForElement('//*[@id="wpbody-content"]/div[2]/table');
+        I.checkError(); 
+    },
+    WholesaleCustomerPageElements() {
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/');
+        tryTo(() => {
+            I.click('Wholesale Customer').then((result) => {
+                I.say('Wholesale Customer: Dokan Pro Feature', 'yellow');
+            }).catch((err) => {
+                I.say('Wholesale Customer: Dokan Pro Deactivate', 'red');
+            });
+        }); 
+        I.waitForElement('.wholesale-customer-list');
+        I.checkError();
+        I.seeElement({"css":".top #bulk-action-selector-top"});
+        I.seeElement("//a[contains(@href, '#/wholesale-customer?status=all')]");
+        I.seeElement("//a[contains(@href, '#/wholesale-customer?status=active')]");
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/wholesale-customer?status=active');
+        I.waitForElement('.wholesale-customer-list');
+        I.checkError();
+        I.seeElement("//a[contains(@href, '#/wholesale-customer?status=deactive')]");
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/wholesale-customer?status=deactive');
+        I.waitForElement('.wholesale-customer-list');
+        I.checkError();
+    },
+    HelpPageElements() {
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/');
+        I.click('Help');
+        I.waitForElement('#wpbody-content');
+        I.checkError();
+    },
+    LicensePageElements() {
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/');
+        tryTo(() => {
+            I.click('License').then((result) => {
+                I.say('License: Dokan Pro Feature', 'yellow');
+            }).catch((err) => {
+                I.say('License: Dokan Pro Deactivate', 'red');
+            });
+        }); 
+        I.waitForElement('.appsero-license-details');
+        I.checkError();
+    },
+    BackendSettingsPageElements() {
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/settings');
+        // I.click('Settings'); ////Click event facing problems because WordPress Have another Settings menu
+        // I.click('General');
+        I.waitForElement('#dokan_general', 5);
+        I.checkError();
+    },
+    SellingOptionsSettingsTabElements() {
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/settings');
+        I.click('Selling Options');
+        I.waitForElement('#dokan_selling');
+        I.checkError();
+    },
+    WithdrawOptionsSettingsTabElements() {
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/settings');
+        I.click('Withdraw Options');
+        I.waitForElement('#dokan_withdraw');
+        I.checkError();
+    },
+    PageSettingsTabElements() {
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/settings');
+        I.click('Page Settings');
+        I.waitForElement('#dokan_pages');
+        I.checkError();
+    },
+    AppearanceSettingsTabElements() {
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/settings');
+        I.click('//a[5]');
+        I.waitForElement('#dokan_appearance');
+        I.checkError();
+            // Enable: Show Map on Store Page
+            I.checkOption("//input[@id='dokan_appearance[store_map]']");
+            I.checkOption("google_maps");
+            I.click("Save Changes");
+    },
+    PrivacyPolicySettingsTabElements() {
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/settings');
+        I.click('Privacy Policy');
+        I.waitForElement('#dokan_privacy');
+        I.checkError();
+    },
+    SellerVerificationSettingsTabElements() {
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/settings');
+        I.click('Seller Verification');
+        I.waitForElement('#dokan_verification');
+        I.checkError();
+    },
+    VerificationSMSGatewaySettingsTabElements() {
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/settings');
+        I.click('Verification SMS Gateways');
+        I.waitForElement('#dokan_verification_sms_gateways');
+        I.checkError();
+    },
+    ColorsSettingsTabElements() {
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/settings');
+        tryTo(() => {
+            I.click('Colors').then((result) => {
+                I.say('Colors Settings: Dokan Pro Feature', 'yellow');
+            }).catch((err) => {
+                I.say('Colors Settings: Dokan Pro Deactivate', 'red');
+            });
+        }); 
+        I.waitForElement('#dokan_colors');
+        I.checkError();
+    },
+    EmailVerificationSettingsTabElements() {
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/settings');
+        I.click('Email Verification');
+        I.waitForElement('#dokan_email_verification');
+        I.checkError();
+    },
+    SocialAPISettingsTabElements() {
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/settings');
+        I.click('Social API');
+        I.waitForElement('#dokan_social_api');
+        I.checkError(); 
+    },
+    LiveChatSettingsTabElements() {
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/settings');
+        I.click('Live Chat');
+        I.waitForElement('#dokan_live_chat');
+        I.checkError();
+    },
+    RMASettingsTabElements() {
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/settings');
+        tryTo(() => {
+            I.click('RMA').then((result) => {
+                I.say('RMA Settings: Dokan Pro Feature', 'yellow');
+            }).catch((err) => {
+                I.say('RMA Settings: Dokan Pro Deactivate', 'red');
+            });
+        });
+        I.waitForElement('#dokan_rma');
+            I.checkError();
+            // Setup RMA Settings
+            I.selectOption("//select[@id='dokan_rma[rma_order_status]']","Completed");
+            I.selectOption("//select[@id='dokan_rma[rma_enable_refund_request]']","yes");
+            I.selectOption("//select[@id='dokan_rma[rma_enable_coupon_request]']","yes");
+            I.click("Save Changes");
+            I.see('Setting has been saved successfully.');
+    },
+    WholesaleSettingsTabElements() {
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/settings');
+        tryTo(() => {
+            I.click('Wholesale').then((result) => {
+                I.say('Wholesale Settings: Dokan Pro Feature', 'yellow');
+            }).catch((err) => {
+                I.say('Wholesale Settings: Dokan Pro Deactivate', 'red');
+            });
+        });
+        I.waitForElement('#dokan_wholesale');
+        I.checkError();
+        // Configuration Wholesale
+        I.checkOption("//input[@id='dokan_wholesale[wholesale_price_display][wholesale_customer]']");
+        I.selectOption("//select[@id='dokan_wholesale[need_approval_for_wholesale_customer]']","Yes");
+        I.click("Save Changes");
+        I.see('Setting has been saved successfully.'); 
+        
+    },
+    GeolocationSettingsTabElements() {
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/settings');
+        I.click('Geolocation');
+        I.waitForElement('#dokan_geolocation');
+        I.checkError();
+        I.fillField("//*[@id='dokan_geolocation']/form/table/tbody/tr[9]/td/div/input","Dhanmondi, Dhaka 1205, Bangladesh");
+        I.click("Save Changes");
+    },
+    ProductReportAbuseSettingsTabElements() {
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/settings');
+        I.click('Product Report Abuse');
+        I.waitForElement('#dokan_report_abuse');
+        I.checkError();
+    },
+    SingleProductMultivendorSettingsTabElements() {
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/settings');
+        I.click('Single Product MultiVendor');
+        I.waitForElement('#dokan_spmv');
+        I.checkError();
+    },
+    VendorAnalyticsSettingsTabElements() {
+        I.amOnPage('/wp-admin/admin.php?page=dokan#/settings');
+        I.click('Vendor Analytics');
+        I.waitForElement('#dokan_vendor_analytics');
+        I.checkError();
+    },
+    VendorSubscriptionSettingsTabElements() {
+        I.click('Vendor Subscription');
+        I.waitForElement('#dokan_product_subscription');
         I.checkError();
     },
 }

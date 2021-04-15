@@ -17,6 +17,7 @@ module.exports = function() {
             this.fillField('#user_login', 'admin');
             this.fillField('#user_pass', 'admin');
             this.click('Log In');
+            this.amOnPage('/wp-admin/');
         },
         loginAsVendor: function() {
             this.amOnPage('/my-account/');

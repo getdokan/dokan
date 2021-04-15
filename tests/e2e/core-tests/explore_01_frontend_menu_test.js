@@ -1,7 +1,8 @@
 const { ifError, strict } = require("assert");
 const { assert, Console } = require("console");
 const explore = require('../pages/explore');
-Feature('Explore Menus');
+
+Feature('Explore Frontend Functionality');
 
 Before(({ I }) => { // or Background
     I.loginAsVendor();

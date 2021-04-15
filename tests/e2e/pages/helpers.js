@@ -108,19 +108,19 @@ module.exports = {
         //I.click('Orders');
         let earning = await I.grabTextFrom(locator.CurrentEarning);
         current_earnings = parseInt(earning.replace(/[, \$৳]+/g, ""));
-        console.log('Current Earning ', current_earnings);
+        console.log('Vendor Current Earning ', current_earnings);
 
     },
     async balanceAssertEqual() {
         // this.grabCurrentEarnings();
         I.amOnPage('/dashboard/withdraw');
         current_balance = existing_balance + current_earnings;
-        console.log('Current balance', current_balance);
+        console.log('Vendor Current balance', current_balance);
         const up_bal = await I.grabTextFrom(locator.VendorBalance);
         actual_balance = parseInt(up_bal.replace(/[, \$৳]+/g, ""));
         strict.equal(current_balance, actual_balance);
         I.say('Calculation matched');
-        console.log('Existing Balance', existing_balance, '+', 'Current Earning', current_earnings, '=', 'Actual Balance', existing_balance + current_earnings);
+        console.log('Vendor Existing Balance', existing_balance, '+', 'Vendor Current Earning', current_earnings, '=', 'Vendor Actual Balance', existing_balance + current_earnings);
 
     },
     async adminBalanceCheck() {
