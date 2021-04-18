@@ -183,8 +183,8 @@ export default {
         'vendorInfo.user_nicename'( newValue ) {
             if ( typeof newValue !== 'undefined' ) {
                 this.showStoreUrl = false;
-                this.otherStoreUrl = this.defaultUrl + newValue.trim().split(' ').join('-').toLowerCase();
-                this.vendorInfo.user_nicename = newValue.split(' ').join('-').toLowerCase();
+                this.otherStoreUrl = this.defaultUrl + newValue.trim().split(' ').join('-').toLowerCase().replace(/[^\w\s/-]/g, '').replace( /-+/g, '-' );
+                this.vendorInfo.user_nicename = newValue.split(' ').join('-').toLowerCase().replace(/[^\w\s/-]/g, '').replace( /-+/g, '-' );
 
                 // check if the typed url is available
                 this.checkStoreName();
@@ -202,7 +202,7 @@ export default {
 
     computed: {
         storeUrl() {
-            let storeUrl = this.vendorInfo.store_name.trim().split(' ').join('-').toLowerCase();
+            let storeUrl = this.vendorInfo.store_name.trim().split(' ').join('-').toLowerCase().replace(/[^\w\s/-]/g, '').replace( /-+/g, '-' );
             this.vendorInfo.user_nicename = storeUrl;
             this.otherStoreUrl = this.defaultUrl + storeUrl;
             return this.defaultUrl + storeUrl;
