@@ -26,7 +26,7 @@ function dokana_admin_menu_capability() {
  *
  * @since 2.7.3
  *
- * @return void
+ * @return int
  */
 function dokan_get_current_user_id() {
     if ( current_user_can( 'vendor_staff' ) ) {
@@ -199,7 +199,16 @@ function dokan_count_posts( $post_type, $user_id ) {
         if ( ! $results ) {
             $results = $wpdb->get_results(
                 $wpdb->prepare(
-                    "SELECT post_status, COUNT( * ) AS num_posts FROM {$wpdb->posts} WHERE post_type = %s AND post_author = %d GROUP BY post_status",
+                    "SELECT post_status, COUNT( * ) AS num_posts FROM {$wpdb->posts} as posts
+                            INNER JOIN {$wpdb->term_relationships} AS term_relationships ON posts.ID = term_relationships.object_id
+                            INNER JOIN {$wpdb->term_taxonomy} AS term_taxonomy ON term_relationships.term_taxonomy_id = term_taxonomy.term_taxonomy_id
+                            INNER JOIN {$wpdb->terms} AS terms ON term_taxonomy.term_id = terms.term_id
+                            WHERE
+                                term_taxonomy.taxonomy = 'product_type'
+                            AND terms.slug != 'booking'
+                            AND posts.post_type = %s
+                            AND posts.post_author = %d
+                                GROUP BY posts.post_status",
                     $post_type,
                     $user_id
                 ),
