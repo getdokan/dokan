@@ -1040,17 +1040,36 @@ function dokan_locate_template( $template_name, $template_path = '', $default_pa
  *
  * @param string $page
  * @param string $context
+ * @param string $subpage
  *
  * @return string url of the page
  */
-function dokan_get_page_url( $page, $context = 'dokan' ) {
+function dokan_get_page_url( $page, $context = 'dokan', $subpage = '' ) {
     if ( $context == 'woocommerce' ) {
         $page_id = wc_get_page_id( $page );
     } else {
         $page_id = dokan_get_option( $page, 'dokan_pages' );
     }
 
-    return apply_filters( 'dokan_get_page_url', get_permalink( $page_id ), $page_id, $context );
+    $url = get_permalink( $page_id );
+
+    if ( $subpage ) {
+        $url = dokan_add_subpage_to_url( $url, $subpage );
+    }
+
+    return apply_filters( 'dokan_get_page_url', $url, $page_id, $context, $subpage );
+}
+
+/**
+ * @param string $url
+ * @param string $subpage
+ *
+ * @return false|string
+ */
+function dokan_add_subpage_to_url( $url, $subpage ) {
+    $url_parts         = wp_parse_url( $url );
+    $url_parts['path'] = $url_parts['path'] . $subpage;
+    return http_build_url( '', $url_parts );
 }
 
 /**
@@ -2138,9 +2157,7 @@ function dokan_get_navigation_url( $name = '' ) {
     $url = get_permalink( $page_id );
 
     if ( ! empty( $name ) ) {
-        $urlParts         = wp_parse_url( $url );
-        $urlParts['path'] = $urlParts['path'] . $name . '/';
-        $url              = http_build_url( '', $urlParts );
+        $url = dokan_add_subpage_to_url( $url, $name . '/' );
     }
 
     return apply_filters( 'dokan_get_navigation_url', esc_url( $url ), $name );
