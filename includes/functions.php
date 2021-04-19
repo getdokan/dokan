@@ -183,16 +183,19 @@ function dokan_redirect_if_not_seller( $redirect = '' ) {
  *
  * @param string $post_type
  * @param int    $user_id
+ * @param array  $exclude_product_types The product types that will be excluded from count
  *
  * @return array
  */
-function dokan_count_posts( $post_type, $user_id, $exclude_product_type = 'booking' ) {
+function dokan_count_posts( $post_type, $user_id, $exclude_product_types = array( 'booking' ) ) {
     global $wpdb;
 
-    $cache_group = 'dokan_seller_product_data_' . $user_id;
-    $cache_key   = 'dokan-count-' . $post_type . '-' . $user_id;
-    $counts      = wp_cache_get( $cache_key, $cache_group );
-
+    $exclude_product_types      = esc_sql( $exclude_product_types );
+    $exclude_product_types_text = "'" . implode( "', '", $exclude_product_types ) . "'";
+    $exclude_product_types_key  = implode( '-', $exclude_product_types );
+    $cache_group                = 'dokan_seller_product_data_' . $user_id;
+    $cache_key                  = 'dokan-count-' . $post_type . '-' . $exclude_product_types_key . '-' . $user_id;
+    $counts                     = wp_cache_get( $cache_key, $cache_group );
     if ( false === $counts ) {
         $results = apply_filters( 'dokan_count_posts', null, $post_type, $user_id );
 
@@ -205,11 +208,10 @@ function dokan_count_posts( $post_type, $user_id, $exclude_product_type = 'booki
                             INNER JOIN {$wpdb->terms} AS terms ON term_taxonomy.term_id = terms.term_id
                             WHERE
                                 term_taxonomy.taxonomy = 'product_type'
-                            AND terms.slug != %s
+                            AND terms.slug NOT IN ({$exclude_product_types_text})
                             AND posts.post_type = %s
                             AND posts.post_author = %d
                                 GROUP BY posts.post_status",
-                    $exclude_product_type,
                     $post_type,
                     $user_id
                 ),
