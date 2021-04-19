@@ -524,13 +524,22 @@ function dokan_dashboard_nav( $active_menu = '' ) {
         $active_menu = $active_menu_parts[1];
     }
 
+    /**
+     * Filters the settings' key.
+     *
+     * @param string $settings_key "settings" (default)
+     *
+     * @return string
+     */
+    $settings_key = apply_filters( 'dokan_dashboard_nav_settings_key', 'settings' );
+
     if ( isset( $active_menu_parts[1] )
-            && ( $active_menu_parts[1] === 'settings' || $active_menu_parts[0] === 'settings' )
-            && isset( $nav_menu['settings']['sub'] )
-            && ( array_key_exists( $active_menu_parts[1], $nav_menu['settings']['sub'] ) || array_key_exists( $active_menu_parts[2], $nav_menu['settings']['sub'] ) )
+            && ( $active_menu_parts[1] === $settings_key || $active_menu_parts[0] === $settings_key )
+            && isset( $nav_menu[ $settings_key ]['sub'] )
+            && ( array_key_exists( $active_menu_parts[1], $nav_menu[ $settings_key ]['sub'] ) || array_key_exists( $active_menu_parts[2], $nav_menu[ $settings_key ]['sub'] ) )
     ) {
-        $urls        = $nav_menu['settings']['sub'];
-        $active_menu = $active_menu_parts[1] === 'settings' ? $active_menu_parts[2] : $active_menu_parts[1];
+        $urls        = $nav_menu[ $settings_key ]['sub'];
+        $active_menu = $active_menu_parts[1] === $settings_key ? $active_menu_parts[2] : $active_menu_parts[1];
     } else {
         $urls = $nav_menu;
     }
