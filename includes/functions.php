@@ -186,7 +186,7 @@ function dokan_redirect_if_not_seller( $redirect = '' ) {
  *
  * @return array
  */
-function dokan_count_posts( $post_type, $user_id ) {
+function dokan_count_posts( $post_type, $user_id, $exclude_product_type = 'booking' ) {
     global $wpdb;
 
     $cache_group = 'dokan_seller_product_data_' . $user_id;
@@ -205,10 +205,11 @@ function dokan_count_posts( $post_type, $user_id ) {
                             INNER JOIN {$wpdb->terms} AS terms ON term_taxonomy.term_id = terms.term_id
                             WHERE
                                 term_taxonomy.taxonomy = 'product_type'
-                            AND terms.slug != 'booking'
+                            AND terms.slug != %s
                             AND posts.post_type = %s
                             AND posts.post_author = %d
                                 GROUP BY posts.post_status",
+                    $exclude_product_type,
                     $post_type,
                     $user_id
                 ),
