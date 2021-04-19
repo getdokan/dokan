@@ -72,7 +72,7 @@
             }
 
             if ( $( "#dokan-store-listing-filter-form-wrap" ).length ) {
-                $('body').keypress(function (e) {
+                $('.store-search-input').keypress(function (e) {
                     var key = e.which;
                     if( key == 13 ) {
                         $( "#dokan-store-listing-filter-form-wrap" ).submit();
