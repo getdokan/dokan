@@ -6,6 +6,9 @@
  *
  * @package dokan
  */
+
+$allow_shipment      = dokan_get_option( 'enabled', 'dokan_shipping_status_setting', 'off' );
+$wc_shipping_enabled = get_option( 'woocommerce_calc_shipping' ) === 'yes' ? true : false;
 ?>
 
 <header>
@@ -25,6 +28,9 @@
             <th class="order-number"><span class="nobr"><?php esc_html_e( 'Order', 'dokan-lite' ); ?></span></th>
             <th class="order-date"><span class="nobr"><?php esc_html_e( 'Date', 'dokan-lite' ); ?></span></th>
             <th class="order-status"><span class="nobr"><?php esc_html_e( 'Status', 'dokan-lite' ); ?></span></th>
+            <?php if ( function_exists( 'dokan_get_order_shipment_current_status' ) && 'on' === $allow_shipment && $wc_shipping_enabled ) : ?>
+                <th class="order-shipment-status"><?php esc_html_e( 'Shipment', 'dokan-lite' ); ?></th>
+            <?php endif; ?>
             <th class="order-total"><span class="nobr"><?php esc_html_e( 'Total', 'dokan-lite' ); ?></span></th>
             <th class="order-actions">&nbsp;</th>
         </tr>
@@ -47,6 +53,11 @@
                 <td class="order-status" style="text-align:left; white-space:nowrap;">
                     <?php echo isset( $statuses['wc-' . dokan_get_prop( $order, 'status' )] ) ? esc_html( $statuses['wc-' . dokan_get_prop( $order, 'status' )] ) : esc_html( dokan_get_prop( $order, 'status' ) ); ?>
                 </td>
+                <?php if ( function_exists( 'dokan_get_order_shipment_current_status' ) && 'on' === $allow_shipment && $wc_shipping_enabled ) : ?>
+                    <td class="dokan-order-shipping-status" data-title="<?php esc_attr_e( 'Shipping Status', 'dokan-lite' ); ?>" >
+                        <?php echo dokan_get_order_shipment_current_status( $order->get_id() ); ?>
+                    </td>
+                <?php endif; ?>
                 <td class="order-total">
                     <?php echo wp_kses_post( sprintf( _n( '%s for %s item', '%s for %s items', $item_count, 'dokan-lite' ), $order->get_formatted_order_total(), $item_count ) ); ?>
                 </td>
