@@ -226,7 +226,8 @@
             <td width="72%">
                 <ul class="dokan-settings-repeatable-list">
                     <li v-if="fieldValue[fieldData.name]" v-for="(optionVal, optionKey) in fieldValue[fieldData.name]">
-                        {{ optionVal.value }} <span class="dashicons dashicons-no-alt remove-item" @click.prevent="removeItem( optionKey, fieldData.name )"></span>
+                        {{ optionVal.value }} <span v-if="!optionVal.must_use" class="dashicons dashicons-no-alt remove-item" @click.prevent="removeItem( optionKey, fieldData.name )"></span>
+                        <span class="repeatable-item-description" v-html="optionVal.desc"></span>
                     </li>
 
                 </ul>
@@ -490,6 +491,11 @@
 </script>
 
 <style lang="less">
+    span.repeatable-item-description {
+        color: #999;
+        font-size: 11px;
+        font-style: italic;
+    }
     ul.dokan-settings-repeatable-list {
         list-style-type: disc;
         padding-left: 20px;
