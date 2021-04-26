@@ -86,6 +86,10 @@ class Products {
         $is_virtual      = ( 'yes' == $_virtual ) ? true : false;
         $digital_mode    = dokan_get_option( 'global_digital_mode', 'dokan_general', 'sell_both' );
 
+        if ( 'sell_physical' === $digital_mode ) {
+            return;
+        }
+
         dokan_get_template_part( 'products/download-virtual', '', array(
             'post_id'         => $post_id,
             'post'            => $post,
