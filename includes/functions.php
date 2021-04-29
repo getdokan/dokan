@@ -193,8 +193,8 @@ function dokan_count_posts( $post_type, $user_id, $exclude_product_types = array
     $exclude_product_types      = esc_sql( $exclude_product_types );
     $exclude_product_types_text = "'" . implode( "', '", $exclude_product_types ) . "'";
     $exclude_product_types_key  = implode( '-', $exclude_product_types );
-    $cache_group                = 'dokan_seller_product_data_' . $user_id;
-    $cache_key                  = 'dokan-count-cache-' . $post_type . '-' . $exclude_product_types_key . '-' . $user_id;
+    $cache_group                = 'dokan_cache_seller_product_data_' . $user_id;
+    $cache_key                  = 'dokan-count-' . $post_type . '-' . $exclude_product_types_key . '-' . $user_id;
     $counts                     = wp_cache_get( $cache_key, $cache_group );
     $tracked_cache_keys         = get_option( $cache_group, [] );
 
@@ -2775,6 +2775,7 @@ function dokan_cache_clear_seller_product_data( $product_id, $post_data = [] ) {
 
     dokan_clear_product_caches( $product_id );
     dokan_cache_clear_group( 'dokan_seller_product_data_' . $seller_id );
+    dokan_cache_clear_group( 'dokan_cache_seller_product_data_' . $seller_id );
     delete_transient( 'dokan-store-category-' . $seller_id );
 }
 
