@@ -139,7 +139,7 @@
             if ( $time_diff > 0 && $time_diff < 24 * 60 * 60 ) {
                 $h_time = sprintf( __( '%s ago', 'dokan-lite' ), human_time_diff( $time ) );
             } else {
-                $h_time = mysql2date( __( 'Y/m/d', 'dokan-lite' ), $m_time );
+                $h_time = $t_time;
             }
         }
 
