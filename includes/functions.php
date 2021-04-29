@@ -26,7 +26,7 @@ function dokana_admin_menu_capability() {
  *
  * @since 2.7.3
  *
- * @return void
+ * @return int
  */
 function dokan_get_current_user_id() {
     if ( current_user_can( 'vendor_staff' ) ) {
@@ -183,15 +183,25 @@ function dokan_redirect_if_not_seller( $redirect = '' ) {
  *
  * @param string $post_type
  * @param int    $user_id
+ * @param array  $exclude_product_types The product types that will be excluded from count
  *
  * @return array
  */
-function dokan_count_posts( $post_type, $user_id ) {
+function dokan_count_posts( $post_type, $user_id, $exclude_product_types = array( 'booking' ) ) {
     global $wpdb;
 
-    $cache_group = 'dokan_seller_product_data_' . $user_id;
-    $cache_key   = 'dokan-count-' . $post_type . '-' . $user_id;
-    $counts      = wp_cache_get( $cache_key, $cache_group );
+    $exclude_product_types      = esc_sql( $exclude_product_types );
+    $exclude_product_types_text = "'" . implode( "', '", $exclude_product_types ) . "'";
+    $exclude_product_types_key  = implode( '-', $exclude_product_types );
+    $cache_group                = 'dokan_cache_seller_product_data_' . $user_id;
+    $cache_key                  = 'dokan-count-' . $post_type . '-' . $exclude_product_types_key . '-' . $user_id;
+    $counts                     = wp_cache_get( $cache_key, $cache_group );
+    $tracked_cache_keys         = get_option( $cache_group, [] );
+
+    if ( ! in_array( $cache_key, $tracked_cache_keys, true ) ) {
+        $tracked_cache_keys[] = $cache_key;
+        update_option( $cache_group, $tracked_cache_keys );
+    }
 
     if ( false === $counts ) {
         $results = apply_filters( 'dokan_count_posts', null, $post_type, $user_id );
@@ -199,7 +209,16 @@ function dokan_count_posts( $post_type, $user_id ) {
         if ( ! $results ) {
             $results = $wpdb->get_results(
                 $wpdb->prepare(
-                    "SELECT post_status, COUNT( * ) AS num_posts FROM {$wpdb->posts} WHERE post_type = %s AND post_author = %d GROUP BY post_status",
+                    "SELECT post_status, COUNT( * ) AS num_posts FROM {$wpdb->posts} as posts
+                            INNER JOIN {$wpdb->term_relationships} AS term_relationships ON posts.ID = term_relationships.object_id
+                            INNER JOIN {$wpdb->term_taxonomy} AS term_taxonomy ON term_relationships.term_taxonomy_id = term_taxonomy.term_taxonomy_id
+                            INNER JOIN {$wpdb->terms} AS terms ON term_taxonomy.term_id = terms.term_id
+                            WHERE
+                                term_taxonomy.taxonomy = 'product_type'
+                            AND terms.slug NOT IN ({$exclude_product_types_text})
+                            AND posts.post_type = %s
+                            AND posts.post_author = %d
+                                GROUP BY posts.post_status",
                     $post_type,
                     $user_id
                 ),
@@ -2823,6 +2842,7 @@ function dokan_cache_clear_seller_product_data( $product_id, $post_data = [] ) {
 
     dokan_clear_product_caches( $product_id );
     dokan_cache_clear_group( 'dokan_seller_product_data_' . $seller_id );
+    dokan_cache_clear_group( 'dokan_cache_seller_product_data_' . $seller_id );
     dokan_cache_clear_group( 'dokan_cache_seller_product_stock_data_' . $seller_id );
     delete_transient( 'dokan-store-category-' . $seller_id );
 }
