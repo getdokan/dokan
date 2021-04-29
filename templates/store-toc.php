@@ -24,7 +24,7 @@ get_header( 'shop' );
         <?php dokan_get_template_part( 'store', 'sidebar', array( 'store_user' => $store_user, 'store_info' => $store_info, 'map_location' => $map_location ) ); ?>
     <?php } ?>
 
-<div id="primary" class="content-area dokan-single-store dokan-w8">
+<div id="primary" class="content-area dokan-single-store">
     <div id="dokan-content" class="site-content store-review-wrap woocommerce" role="main">
 
         <?php dokan_get_template_part( 'store-header' ); ?>
