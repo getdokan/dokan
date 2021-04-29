@@ -348,6 +348,7 @@ class Products {
                     }
 
                     update_post_meta( $product_id, '_visibility', 'visible' );
+                    update_post_meta( $product_id, '_stock_status', 'instock' );
 
                     do_action( 'dokan_new_product_added', $product_id, $postdata );
 

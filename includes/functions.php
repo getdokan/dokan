@@ -230,6 +230,73 @@ function dokan_count_posts( $post_type, $user_id ) {
 }
 
 /**
+ * Count stock product type from a user
+ *
+ * @global WPDB $wpdb
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @param string $post_type
+ * @param int    $user_id
+ * @param string $stock_type
+ *
+ * @return int $counts
+ */
+function dokan_count_stock_posts( $post_type, $user_id, $stock_type ) {
+    global $wpdb;
+
+    $cache_group   = 'dokan_cache_seller_product_stock_data_' . $user_id;
+    $cache_key     = 'dokan-count-' . $post_type . '_' . $stock_type . '-' . $user_id;
+    $counts        = wp_cache_get( $cache_key, $cache_group );
+    $get_old_cache = get_option( $cache_group, [] );
+
+    if ( ! in_array( $cache_key, $get_old_cache, true ) ) {
+        $get_old_cache[] = $cache_key;
+    }
+
+    update_option( $cache_group, $get_old_cache );
+
+    if ( false === $counts ) {
+        $results = apply_filters( 'dokan_count_posts_' . $stock_type, null, $post_type, $user_id );
+
+        if ( ! $results ) {
+            $results = $wpdb->get_results(
+                $wpdb->prepare(
+                    "SELECT p.post_status, COUNT( * ) AS num_posts 
+                    FROM {$wpdb->prefix}posts as p INNER JOIN {$wpdb->prefix}postmeta as pm ON p.ID = pm.post_id
+                    WHERE p.post_type = %s
+                    AND p.post_author = %d
+                    AND pm.meta_key   = '_stock_status'
+                    AND pm.meta_value = %s
+                    GROUP BY p.post_status",
+                    $post_type,
+                    $user_id,
+                    $stock_type
+                ),
+                ARRAY_A
+            );
+        }
+
+        $post_status = array_keys( dokan_get_post_status() );
+        $total       = 0;
+
+        foreach ( $results as $row ) {
+            if ( ! in_array( $row['post_status'], $post_status, true ) ) {
+                continue;
+            }
+
+            $total += (int) $row['num_posts'];
+        }
+
+        $counts = $total;
+
+        wp_cache_set( $cache_key, $counts, $cache_group, 3600 * 6 );
+    }
+
+    return $counts;
+}
+
+/**
  * Get comment count based on post type and user id
  *
  * @global WPDB $wpdb
@@ -2756,6 +2823,7 @@ function dokan_cache_clear_seller_product_data( $product_id, $post_data = [] ) {
 
     dokan_clear_product_caches( $product_id );
     dokan_cache_clear_group( 'dokan_seller_product_data_' . $seller_id );
+    dokan_cache_clear_group( 'dokan_cache_seller_product_stock_data_' . $seller_id );
     delete_transient( 'dokan-store-category-' . $seller_id );
 }
 
