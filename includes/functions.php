@@ -194,8 +194,15 @@ function dokan_count_posts( $post_type, $user_id, $exclude_product_types = array
     $exclude_product_types_text = "'" . implode( "', '", $exclude_product_types ) . "'";
     $exclude_product_types_key  = implode( '-', $exclude_product_types );
     $cache_group                = 'dokan_seller_product_data_' . $user_id;
-    $cache_key                  = 'dokan-count-' . $post_type . '-' . $exclude_product_types_key . '-' . $user_id;
+    $cache_key                  = 'dokan-count-cache-' . $post_type . '-' . $exclude_product_types_key . '-' . $user_id;
     $counts                     = wp_cache_get( $cache_key, $cache_group );
+    $tracked_cache_keys         = get_option( $cache_group, [] );
+
+    if ( ! in_array( $cache_key, $tracked_cache_keys, true ) ) {
+        $tracked_cache_keys[] = $cache_key;
+        update_option( $cache_group, $tracked_cache_keys );
+    }
+
     if ( false === $counts ) {
         $results = apply_filters( 'dokan_count_posts', null, $post_type, $user_id );
 
