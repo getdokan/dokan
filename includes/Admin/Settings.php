@@ -483,12 +483,14 @@ class Settings {
                     'desc'    => __( 'Order status for which vendor can make a withdraw request.', 'dokan-lite' ),
                     'type'    => 'multicheck',
                     'default' => array(
-                        'wc-completed' => __( 'Completed', 'dokan-lite' ),
+                        'wc-completed'  => __( 'Completed', 'dokan-lite' ),
                         'wc-processing' => __( 'Processing', 'dokan-lite' ),
+                        'wc-on-hold'    => __( 'On-hold', 'dokan-lite' ),
                     ),
                     'options' => array(
-                        'wc-completed' => __( 'Completed', 'dokan-lite' ),
+                        'wc-completed'  => __( 'Completed', 'dokan-lite' ),
                         'wc-processing' => __( 'Processing', 'dokan-lite' ),
+                        'wc-on-hold'    => __( 'On-hold', 'dokan-lite' ),
                     ),
                 ],
                 'exclude_cod_payment' => [
