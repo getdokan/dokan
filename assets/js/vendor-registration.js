@@ -82,10 +82,18 @@ var Dokan_Vendor_Registration = {
                 // let it happen, don't do anything
                 return;
         }
-
+        
+        if ( e.shiftKey && e.key === '.' ) {
+            return;
+        }
+        
         // Ensure that it is a number and stop the keypress
-        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-            e.preventDefault();
+        if ( ( e.shiftKey && ! isNaN( Number(e.key) ) ) ) {
+            return;
+        }
+
+        if ( isNaN( Number(e.key) ) ) {
+           e.preventDefault(); 
         }
     },
 

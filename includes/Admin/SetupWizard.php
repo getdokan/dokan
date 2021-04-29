@@ -530,12 +530,6 @@ class SetupWizard {
                                     <?php esc_html_e( 'Processing', 'dokan-lite' ); ?>
                                 </label>
                             </li>
-                            <li class="checkbox">
-                                <input type="checkbox" name="withdraw_order_status[wc-on-hold]" id="withdraw_order_status[wc-on-hold]" class="switch-input" value="wc-on-hold" <?php echo ( array_key_exists( 'wc-on-hold', $withdraw_order_status ) ) ? 'checked="true"' : ''; ?>>
-                                <label for="withdraw_order_status[wc-on-hold]">
-                                    <?php esc_html_e( 'On-hold', 'dokan-lite' ); ?>
-                                </label>
-                            </li>
                         </ul>
 
                         <p class="description"><?php esc_html_e( 'Order status for which vendor can make a withdraw request.', 'dokan-lite' ); ?></p>

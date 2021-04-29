@@ -111,6 +111,8 @@ class Orders {
         }
 
         if ( isset( $post_data['dokan_order_export_filtered'] ) ) {
+            $get_data    = wp_unslash( $_GET );
+            $customer_id = isset( $get_data['customer_id'] ) ? $get_data['customer_id'] : null;
 
             $filename = 'Orders-' . time();
             header( 'Content-Type: application/csv; charset=' . get_option( 'blog_charset' ) );
@@ -119,7 +121,7 @@ class Orders {
             $order_date   = ( isset( $post_data['order_date'] ) ) ? sanitize_text_field( $post_data['order_date'] ) : null;
             $order_status = ( isset( $post_data['order_status'] ) ) ? sanitize_text_field( $post_data['order_status'] ) : 'all';
 
-            $user_orders  = dokan_get_seller_orders( dokan_get_current_user_id(), $order_status, $order_date, 10000000, 0 );
+            $user_orders  = dokan_get_seller_orders( dokan_get_current_user_id(), $order_status, $order_date, 10000000, 0, $customer_id );
             dokan_order_csv_export( $user_orders );
             exit();
         }
