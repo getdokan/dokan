@@ -436,8 +436,8 @@ if (false) {(function () {
     'vendorInfo.user_nicename': function vendorInfoUser_nicename(newValue) {
       if (typeof newValue !== 'undefined') {
         this.showStoreUrl = false;
-        this.otherStoreUrl = this.defaultUrl + newValue.trim().split(' ').join('-');
-        this.vendorInfo.user_nicename = newValue.split(' ').join('-'); // check if the typed url is available
+        this.otherStoreUrl = this.defaultUrl + newValue.trim().split(' ').join('-').toLowerCase().replace(/[^\w\s/-]/g, '').replace(/-+/g, '-');
+        this.vendorInfo.user_nicename = newValue.split(' ').join('-').toLowerCase().replace(/[^\w\s/-]/g, '').replace(/-+/g, '-'); // check if the typed url is available
 
         this.checkStoreName();
       }
@@ -451,7 +451,7 @@ if (false) {(function () {
   },
   computed: {
     storeUrl: function storeUrl() {
-      var storeUrl = this.vendorInfo.store_name.trim().split(' ').join('-');
+      var storeUrl = this.vendorInfo.store_name.trim().split(' ').join('-').toLowerCase().replace(/[^\w\s/-]/g, '').replace(/-+/g, '-');
       this.vendorInfo.user_nicename = storeUrl;
       this.otherStoreUrl = this.defaultUrl + storeUrl;
       return this.defaultUrl + storeUrl;
