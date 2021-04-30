@@ -3,11 +3,11 @@ Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce, yith, yithemes
 Requires at least: 4.4
-Tested up to: 5.7
+Tested up to: 5.7.1
 WC requires at least: 3.0
-WC tested up to: 5.1.0
+WC tested up to: 5.2.2
 Requires PHP: 5.6
-Stable tag: 3.2.4
+Stable tag: 3.2.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -292,7 +292,25 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
-= v3.2.4 ( March 31, 2021 ) =
+= v3.2.5 ( April 30, 2021 ) =
+
+- **fix:** Fix single store page template layout
+- **fix:** [wpml] Fix malformed dashboard subpage URL when page_link is filtered to add a query parameter
+- **fix:** product count exclude booking product
+- **fix:** order export not filtered customer filtered data
+- **fix:** [wpml] Fix malformed store URL when the home URL contains a query parameter
+- **fix:** capitalise vendor url in add new vendor
+- **new:** Sub orders set dynamic post status on WooCommerce my account order details page
+- **new:** Store listing shortcode enhancements, Store Category wise: [dokan-stores category="clothing"] Order wise: [dokan-stores order="ASC"] Orderby wise: [dokan-stores orderby="registered"] Store_id wise: [dokan-stores store_id="1, 2, 3"
+- **new:** Vendor product listing page added 2 new filters options stock wise and product type wise
+- **new:** Order status for withdraw option added on dokan admin setting page
+- **new:** Store open close option disabled by default when a vendor register
+- **fix:** Vendor setup wizard page broken issue fixed
+- **fix:** Inconsistency template CSS class dokan-w3 issue fixed on vendor setting page
+- **fix:** Unable to add multiple lines to the short Description field issue fixed
+- **fix:** AZERTY keyboard restrict registration issue fixed for vendor register form
+
+= v3.2.4 ( April 01, 2021 ) =
 
 - **new:** Enter key allow for vendor search on store listing page
 - **feat:** Vendors able to edit product slug from their product edit page

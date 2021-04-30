@@ -2910,13 +2910,15 @@ jQuery(function($) {
                 }
             }
 
-            $('body').keypress(function (e) {
-                var key = e.which;
-                if( key == 13 ) {
-                    $( "#dokan-store-listing-filter-form-wrap" ).submit();
-                    return false;  
-                }
-            }); 
+            if ( $( "#dokan-store-listing-filter-form-wrap" ).length ) {
+                $('.store-search-input').keypress(function (e) {
+                    var key = e.which;
+                    if( key == 13 ) {
+                        $( "#dokan-store-listing-filter-form-wrap" ).submit();
+                        return false;  
+                    }
+                });
+            }
         },
 
         buildSortByQuery: function( event ) {
