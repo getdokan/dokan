@@ -316,6 +316,12 @@ body {
 .dokan-admin-setup-wizard {
   border: none;
 }
+.dokan-vendor-setup-wizard {
+  border: none;
+}
+.dokan-vendor-setup-wizard #wc-logo img {
+  max-width: 100%;
+}
 .wc-return-to-dashboard {
   text-align: center;
   display: block;

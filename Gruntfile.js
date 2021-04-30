@@ -196,7 +196,9 @@ module.exports = function(grunt) {
           '!**/Gruntfile.js',
           '!**/package.json',
           '!**/README.md',
-          '!**/*~'
+          '!**/*~',
+          '!vendor/jakeasmith/http_build_url/*',
+          '!vendor/jakeasmith/http_build_url/tests/**',
         ],
         dest: 'build/'
       }

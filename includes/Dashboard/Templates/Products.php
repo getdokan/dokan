@@ -84,12 +84,18 @@ class Products {
         $_virtual        = get_post_meta( $post_id, '_virtual', true );
         $is_downloadable = ( 'yes' == $_downloadable ) ? true : false;
         $is_virtual      = ( 'yes' == $_virtual ) ? true : false;
+        $digital_mode    = dokan_get_option( 'global_digital_mode', 'dokan_general', 'sell_both' );
+
+        if ( 'sell_physical' === $digital_mode ) {
+            return;
+        }
 
         dokan_get_template_part( 'products/download-virtual', '', array(
             'post_id'         => $post_id,
             'post'            => $post,
             'is_downloadable' => $is_downloadable,
             'is_virtual'      => $is_virtual,
+            'digital_mode'    => $digital_mode,
             'class'           => 'show_if_subscription show_if_variable-subscription show_if_simple',
         ) );
     }
@@ -124,6 +130,12 @@ class Products {
      * @return void
      */
     public static function load_downloadable_template( $post, $post_id ) {
+        $digital_mode = dokan_get_option( 'global_digital_mode', 'dokan_general', 'sell_both' );
+
+        if ( 'sell_physical' === $digital_mode ) {
+            return;
+        }
+
         dokan_get_template_part( 'products/downloadable', '', array(
             'post_id' => $post_id,
             'post'    => $post,
@@ -336,6 +348,7 @@ class Products {
                     }
 
                     update_post_meta( $product_id, '_visibility', 'visible' );
+                    update_post_meta( $product_id, '_stock_status', 'instock' );
 
                     do_action( 'dokan_new_product_added', $product_id, $postdata );
 

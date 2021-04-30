@@ -201,7 +201,7 @@ class Vendor {
             'store_tnc'               => '',
             'show_min_order_discount' => 'no',
             'store_seo'               => array(),
-            'dokan_store_time_enabled' => 'yes',
+            'dokan_store_time_enabled' => 'no',
             'dokan_store_open_notice'  => '',
             'dokan_store_close_notice' => ''
         );

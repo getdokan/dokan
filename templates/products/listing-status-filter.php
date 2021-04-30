@@ -22,4 +22,15 @@
             <a href="<?php echo esc_url( add_query_arg( array( 'post_status' => $status ), $permalink ) ); ?>"><?php echo esc_html( $status_label ). ' (' . esc_html( $post_counts->{$status} ) . ')'; ?></a>
         </li>
     <?php endforeach ?>
+    <?php if ( $instock_counts ) : ?>
+        <li<?php echo $status_class == 'instock' ? ' class="active"' : ''; ?>>
+            <a href="<?php echo esc_url( add_query_arg( array( 'post_status' => 'instock' ), $permalink ) ); ?>"><?php echo esc_html_e( 'In stock' ). ' (' . esc_html( $instock_counts ) . ')'; ?></a>
+        </li>
+    <?php endif; ?>
+
+    <?php if ( $outofstock_counts ) : ?>
+        <li<?php echo $status_class == 'outofstock' ? ' class="active"' : ''; ?>>
+            <a href="<?php echo esc_url( add_query_arg( array( 'post_status' => 'outofstock' ), $permalink ) ); ?>"><?php echo esc_html_e( 'Out of stock' ). ' (' . esc_html( $outofstock_counts ) . ')'; ?></a>
+        </li>
+    <?php endif; ?>
 </ul> <!-- .post-statuses-filter -->

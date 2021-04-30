@@ -11,7 +11,8 @@
   ],
   "minimum-stability": "dev",
   "require": {
-    "appsero/client": "dev-master"
+    "appsero/client": "dev-master",
+    "jakeasmith/http_build_url": "^1"
   },
   "require-dev": {
     "wp-coding-standards/wpcs": "dev-master",
