@@ -188,6 +188,104 @@ module.exports = {
     LinkedProductCrossSells: 'div.dokan-section-content > div:nth-child(2) > span > span.selection > span > ul > li > input',
     LinkedProductGrouped: 'div.dokan-group-product-content.show_if_grouped > span > span.selection > span > ul > li > input',
 
+    //Locator for create auction product
+    AuctionProductTitle:'post_title',
+    AuctionProductCategory:'product_cat',
+    AddAuctionProxy:'#_auction_proxy',
+    AuctionStartPrice:'_auction_start_price',
+    BidAuctionProduct:'_auction_bid_increment',
+    ReservePrice:'_auction_reserved_price',
+    RegularPrice:'_regular_price',
+    StartDate:'//input[@id="_auction_dates_from"]',
+    EndDate:'//input[@id="_auction_dates_to"]',
+
+   //Locator for Booking product
+    BookingProductTitle:'post_title',
+    BookingDurationType:'_wc_booking_duration_type',
+    BookingDuration:'_wc_booking_duration',
+    BookingDurationUnit:'_wc_booking_duration_unit',
+    BookingMinDuration:'_wc_booking_min_duration',
+    BookingMaxDuration:'_wc_booking_max_duration',
+    BookingCalendarDisplay:'_wc_booking_calendar_display_mode',
+    BookingEnableRangePicker:'_wc_booking_enable_range_picker',
+    BookingQuantity:'_wc_booking_qty',
+    BookingMinDate:'_wc_booking_min_date',
+    BookingMinDateUnit:'_wc_booking_min_date_unit',
+    BookingMaxDate:'_wc_booking_max_date',
+    BookingMaxDateUnit:'_wc_booking_max_date_unit',
+    BookingBufferPeriod:'_wc_booking_buffer_period',
+    BookingAvailabiltyFromDate:' //*[@name="wc_booking_availability_from_date[]"]',
+    BookingAvailabiltyToDate:'wc_booking_availability_to_date',
+    BookingAvalability:'wc_booking_availability_bookable',
+    BookingAvailabiltyPriority:'wc_booking_availability_priority',
+    BookingCost:'_wc_booking_cost',
+    BookingBlockCost:'_wc_booking_block_cost',
+    BookingDisplayCost:'_wc_display_cost',
+    
+    //Purchase Booking Product
+
+    DateFilter:'//select[@name="orderby"]',
+    BookingButtonClick:{css:'.product:nth-child(1) > .item-content .flaticon'},
+    BookingStartTime:'#wc-bookings-form-start-time',
+    BookingEndTime:'#wc-bookings-form-end-time',
+
+   //SingleproductMultiplevendor
+    SpmvSellItemButton:'dokan_spmv[sell_item_btn]',
+    SpmvAvailableVendorListTitle:'dokan_spmv[available_vendor_list_title]',
+    SpmvAvailableVendorListPosition:'dokan_spmv[available_vendor_list_position]',
+    SpmvShowOrder:'dokan_spmv[show_order]',
+    SpmvSettingUpdate:'#setting-message_updated',
+    
+    //Vendor Set vacation 
+     SetVacation:'setting_go_vacation',
+     StoreCloseStyle:'settings_closing_style',
+     StoreCloseFrom:'dokan_seller_vacation_datewise_from',
+     StoreCloseTo:'dokan_seller_vacation_datewise_to',
+     SellerVacationMessage:'dokan_seller_vacation_datewise_message',
+     SellerVacationSave:'#dokan-seller-vacation-save-edit',
+ 
+     //wholesaleproductlocator
+     WholeSalePrice:'#dokan-wholesale-price',
+     WholeSaleProductQuantity:'#dokan-wholesale-qty',
+
+     //LiveSeachModulelocator
+     SelectSearchwithSuggestionBox:'//select[@id="dokan_live_search_setting[live_search_option]"]',
+     LiveSearchWidget:'//div[@id="widget-21_dokna_product_search-__i__"]/div/div[2]/h3',
+     DokanSideBarWidget:'//button[contains(.,"Dokan Store Sidebar")]',
+     ClickSearchBox:'//input[@name="s"]',
+     
+     //Locator for subscription product
+
+     EnableSubscription:'dokan_product_subscription[enable_pricing]',
+     EnableSubscriptionPack:'dokan_product_subscription[enable_subscription_pack_in_reg]',
+     EnableSubscriptionByMail:'dokan_product_subscription[notify_by_email]',
+     SubscriptionEndMail:'//*[@id="dokan_product_subscription[no_of_days_before_mail]"]',
+     SubscriptionStatus:'dokan_product_subscription[product_status_after_end]',
+     SubmitDokanSubscription:{ css : '#dokan_product_subscription #submit'},
+     SubscriptionPack:'post_title',
+     SubscriptionPrice:'_regular_price',
+     NumberOfSubscriptionProduct:'//input[@id="_no_of_product"]',
+     SubscriptionPackValidaty:'//input[@id="_no_of_product"]',
+     SubscriptionProductCommission:'_subscription_product_admin_commission_type',
+     GlobalAdminCommission:'admin_commission',
+
+     //StripePaymentGatewayLocator
+     StripePaymentTitle:{css: 'tr:nth-child(7) .wc-payment-gateway-method-title'},
+     EnableStripe:'#woocommerce_dokan-stripe-connect_enabled',
+     ConnectOnTestMode:'#woocommerce_dokan-stripe-connect_testmode',
+     EnableStripeCheckOut:'Enable Stripe Checkout',
+     StripeSecretKey:'#woocommerce_dokan-stripe-connect_test_secret_key',
+     StripePublicKey:'#woocommerce_dokan-stripe-connect_test_publishable_key',
+     StripeClientId:'#woocommerce_dokan-stripe-connect_test_client_id',
+     
+
+        
+
+  
+
+
+
+
 
 
 
