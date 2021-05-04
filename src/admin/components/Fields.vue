@@ -193,6 +193,14 @@
             </td>
         </template>
 
+        <template v-if="'warning' == fieldData.type">
+            <th scope="row" class="dokan-setting-warning" colspan="2">
+                <div class="error">
+                    <p :for="sectionId + '[' + fieldData.name + ']'"><span class="dokan-setting-warning-label"><span class="dashicons dashicons-warning"></span> {{ fieldData.label }}</span> <span class="dokan-setting-warning-msg">{{fieldData.desc}}</span></p>
+                </div>
+            </th>
+        </template>
+
         <template v-if="'radio' == fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
@@ -528,6 +536,22 @@
     }
     .dokan-error.combine-commission {
         margin-left: 10px;
+    }
+    .dokan-setting-warning {
+
+        .dokan-setting-warning-label {
+            color: #d63638;
+            font-weight: bold;
+        }
+
+        .dashicons {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .dokan-setting-warning-msg {
+            font-weight: 300;
+        }
     }
     .dokan-settings-field-type-radio {
 
