@@ -537,7 +537,8 @@
     .dokan-error.combine-commission {
         margin-left: 10px;
     }
-    .dokan-setting-warning {
+    th.dokan-setting-warning {
+        padding: 10px 10px 10px 0;
 
         .dokan-setting-warning-label {
             color: #d63638;
