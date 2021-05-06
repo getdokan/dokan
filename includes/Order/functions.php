@@ -887,7 +887,7 @@ function dokan_order_csv_export( $orders, $file = null ) {
                     $line[ $row_key ] = $the_order->get_total();
                     break;
                 case 'earnings':
-                    $line[ $row_key ] = dokan()->commission->get_earning_by_order($the_order);
+                    $line[ $row_key ] = dokan()->commission->get_earning_by_order( $the_order );
                     break;
                 case 'order_status':
                     $line[ $row_key ] = $statuses[ 'wc-' . dokan_get_prop( $the_order, 'status' ) ];
