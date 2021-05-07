@@ -136,8 +136,8 @@
             $post_timestamp_GMT   = get_post_time( 'G', true, $post );
             $post_datetime_C      = get_post_time( 'c', true, $post );
             $time_diff            = time() - $post_timestamp_GMT;
-            $human_readable_time  = dokan_date_time_format( $post_datetime_C );
-            $post_published_date  = apply_filters( 'post_date_column_time', dokan_date_time_format( $post_datetime_C, true ), $post, 'date', 'all' );
+            $human_readable_time  = dokan_date_time_format( get_date_from_gmt( $post_datetime_C, 'Y-m-d H:i:s' ) );
+            $post_published_date  = apply_filters( 'post_date_column_time', dokan_date_time_format( get_date_from_gmt( $post_datetime_C, 'Y-m-d H:i:s' ), true ), $post, 'date', 'all' );
 
             if ( $time_diff > 0 && $time_diff < 24 * 60 * 60 ) {
                 $human_readable_time = sprintf( __( '%s ago', 'dokan-lite' ), human_time_diff( $post_timestamp_GMT ) );
