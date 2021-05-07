@@ -133,14 +133,24 @@
             $post_published_date = $human_readable_time = __( 'Unpublished', 'dokan-lite' );
             $time_diff = 0;
         } else {
-            $post_timestamp_GMT   = get_post_time( 'G', true, $post );
-            $post_datetime_C      = get_post_time( 'c', true, $post );
-            $time_diff            = time() - $post_timestamp_GMT;
-            $human_readable_time  = dokan_date_time_format( get_date_from_gmt( $post_datetime_C, 'Y-m-d H:i:s' ) );
-            $post_published_date  = apply_filters( 'post_date_column_time', dokan_date_time_format( get_date_from_gmt( $post_datetime_C, 'Y-m-d H:i:s' ), true ), $post, 'date', 'all' );
+            // get current time
+            $current_time = dokan_current_datetime();
+            // set timezone to gmt
+            $gmt_time = $current_time->setTimezone( new DateTimeZone( 'UTC' ) );
+            // read post gmt time
+            $post_time_gmt = $gmt_time->modify( $post->post_date_gmt );
 
+            $format = apply_filters( 'dokan_date_time_format', wc_date_format() . ' ' . wc_time_format() );
+            // currently dokan_format_date doesn't support time format, will update this soon,
+            // right now we need to send $format from our end.
+            // if you need date only remove $format from dokan_format_date function parameter
+            $human_readable_time = dokan_format_date( $post_time_gmt->getTimestamp(), $format );
+            $post_published_date = apply_filters( 'post_date_column_time', dokan_format_date( $post_time_gmt->getTimestamp() ), $post, 'date', 'all' );
+
+            // get human readable time
+            $time_diff = $current_time->getTimestamp() - $post_time_gmt->getTimestamp();
             if ( $time_diff > 0 && $time_diff < 24 * 60 * 60 ) {
-                $human_readable_time = sprintf( __( '%s ago', 'dokan-lite' ), human_time_diff( $post_timestamp_GMT ) );
+                $human_readable_time = sprintf( __( '%s ago', 'dokan-lite' ), human_time_diff( $post_time_gmt->getTimestamp() ) );
             }
         }
 
