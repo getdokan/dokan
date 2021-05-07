@@ -812,6 +812,7 @@ function dokan_order_csv_headers() {
 			'order_shipping_cost'  => __( 'Shipping Cost', 'dokan-lite' ),
 			'order_payment_method' => __( 'Payment method', 'dokan-lite' ),
 			'order_total'          => __( 'Order Total', 'dokan-lite' ),
+            'earnings'             => __( 'Earnings', 'dokan-lite' ),
 			'order_status'         => __( 'Order Status', 'dokan-lite' ),
 			'order_date'           => __( 'Order Date', 'dokan-lite' ),
 			'billing_company'      => __( 'Billing Company', 'dokan-lite' ),
@@ -884,6 +885,9 @@ function dokan_order_csv_export( $orders, $file = null ) {
                     break;
                 case 'order_total':
                     $line[ $row_key ] = $the_order->get_total();
+                    break;
+                case 'earnings':
+                    $line[ $row_key ] = dokan()->commission->get_earning_by_order( $the_order );
                     break;
                 case 'order_status':
                     $line[ $row_key ] = $statuses[ 'wc-' . dokan_get_prop( $the_order, 'status' ) ];
