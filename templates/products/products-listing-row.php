@@ -139,13 +139,13 @@
             if ( $time_diff > 0 && $time_diff < 24 * 60 * 60 ) {
                 $h_time = sprintf( __( '%s ago', 'dokan-lite' ), human_time_diff( $time ) );
             } else {
-                $h_time = $t_time;
+                $h_time = $m_time;
             }
         }
 
         $post_date_column_time = apply_filters( 'post_date_column_time', dokan_date_time_format( $h_time, true ), $post, 'date', 'all' );
 
-        echo '<abbr title="' . esc_attr( dokan_date_time_format( $t_time ) ) . '">' . esc_html( $post_date_column_time ) . '</abbr>';
+        echo '<abbr title="' . esc_attr( dokan_date_time_format( $h_time ) ) . '">' . esc_html( $post_date_column_time ) . '</abbr>';
         echo '<div class="status">';
 
         if ( 'publish' == $post->post_status ) {
