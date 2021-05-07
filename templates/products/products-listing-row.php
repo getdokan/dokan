@@ -126,26 +126,25 @@
     </td>
     <td class="post-date" data-title="<?php esc_attr_e( 'Date', 'dokan-lite' ); ?>">
         <?php
+
+
+
         if ( '0000-00-00 00:00:00' == $post->post_date ) {
-            $t_time    = $h_time    = __( 'Unpublished', 'dokan-lite' );
+            $post_published_date = $human_readable_time = __( 'Unpublished', 'dokan-lite' );
             $time_diff = 0;
         } else {
-            $t_time = get_the_time( __( 'Y/m/d g:i:s A', 'dokan-lite' ) );
-            $m_time = $post->post_date;
-            $time   = get_post_time( 'G', true, $post );
-
-            $time_diff = time() - $time;
+            $post_timestamp_GMT   = get_post_time( 'G', true, $post );
+            $post_datetime_C      = get_post_time( 'c', true, $post );
+            $time_diff            = time() - $post_timestamp_GMT;
+            $human_readable_time  = dokan_date_time_format( $post_datetime_C );
+            $post_published_date  = apply_filters( 'post_date_column_time', dokan_date_time_format( $post_datetime_C, true ), $post, 'date', 'all' );
 
             if ( $time_diff > 0 && $time_diff < 24 * 60 * 60 ) {
-                $h_time = sprintf( __( '%s ago', 'dokan-lite' ), human_time_diff( $time ) );
-            } else {
-                $h_time = $m_time;
+                $human_readable_time = sprintf( __( '%s ago', 'dokan-lite' ), human_time_diff( $post_timestamp_GMT ) );
             }
         }
 
-        $post_date_column_time = apply_filters( 'post_date_column_time', dokan_date_time_format( $h_time, true ), $post, 'date', 'all' );
-
-        echo '<abbr title="' . esc_attr( dokan_date_time_format( $h_time ) ) . '">' . esc_html( $post_date_column_time ) . '</abbr>';
+        echo '<abbr title="' . esc_attr( $human_readable_time ) . '">' . esc_html( $post_published_date ) . '</abbr>';
         echo '<div class="status">';
 
         if ( 'publish' == $post->post_status ) {
