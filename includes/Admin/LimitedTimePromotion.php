@@ -39,12 +39,12 @@ class LimitedTimePromotion {
 
         $notices = [
             [
-                'key'        => 'dokan-wedevs-birthday-2021',
-                'start_date' => '2021-03-15 00:01:00 EST',
-                'end_date'   => '2021-03-22 23:59:00 EST',
-                'title'      => "It's Our Birthday!",
-                'content'    => 'Enjoy Up To 45% OFF on Dokan Pro',
-                'link'       => 'https://wedevs.com/dokan/pricing?utm_medium=text&utm_source=wordpress-dokan-wedevs-birthday',
+                'key'        => 'dokan-wedevs-eid-2021',
+                'start_date' => '2021-05-11 00:09:00 EST',
+                'end_date'   => '2021-05-24 23:00:00 EST',
+                'title'      => "Eid Mubarak! Stay Safe & Spread Happiness.",
+                'content'    => 'Enjoy Up To 50% OFF on Dokan Pro.',
+                'link'       => 'https://wedevs.com/dokan/pricing?utm_medium=text&utm_source=wordpress-dokan-eidoffer2021',
             ],
         ];
 
