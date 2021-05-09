@@ -7,7 +7,7 @@ Tested up to: 5.7.1
 WC requires at least: 3.0
 WC tested up to: 5.2.2
 Requires PHP: 5.6
-Stable tag: 3.2.5
+Stable tag: 3.2.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -291,6 +291,19 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.2.6 ( May 8, 2021 ) =
+
+- **new:** Added new action hooks on order details sidebar
+- **new:** Dokan admin setting warning type field added on Dokan admin setting
+- **new:** Dokan admin setting repeatable field added 2 new options must-use and desc
+- **new:** Introduce the filter hook dokan_dashboard_nav_settings_key for store settings slug
+- **new:** Eid 2021 promotion added
+- **new:** New hook: Vendor dashboard custom CSV orders export
+- **new:** Vendor Order export CSV file earnings column added
+- **fix:** Decimal as comma separated sale price does not save
+- **fix:** Product variation pagination for post type pending
+- **fix:** product published date displaying current date in local language
 
 = v3.2.5 ( April 30, 2021 ) =
 
