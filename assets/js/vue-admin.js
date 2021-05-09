@@ -5911,6 +5911,15 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 var TextEditor = dokan_get_lib('TextEditor');
 var GoogleMaps = dokan_get_lib('GoogleMaps');
@@ -10669,6 +10678,48 @@ var render = function() {
               ]
             : _vm._e(),
           _vm._v(" "),
+          "warning" == _vm.fieldData.type
+            ? [
+                _c(
+                  "th",
+                  {
+                    staticClass: "dokan-setting-warning",
+                    attrs: { scope: "row", colspan: "2" }
+                  },
+                  [
+                    _c("div", { staticClass: "error" }, [
+                      _c(
+                        "p",
+                        {
+                          attrs: {
+                            for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
+                          }
+                        },
+                        [
+                          _c(
+                            "span",
+                            { staticClass: "dokan-setting-warning-label" },
+                            [
+                              _c("span", {
+                                staticClass: "dashicons dashicons-warning"
+                              }),
+                              _vm._v(" " + _vm._s(_vm.fieldData.label))
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "span",
+                            { staticClass: "dokan-setting-warning-msg" },
+                            [_vm._v(_vm._s(_vm.fieldData.desc))]
+                          )
+                        ]
+                      )
+                    ])
+                  ]
+                )
+              ]
+            : _vm._e(),
+          _vm._v(" "),
           "radio" == _vm.fieldData.type
             ? [
                 _c("th", { attrs: { scope: "row" } }, [
@@ -10832,18 +10883,25 @@ var render = function() {
                                 _vm._s(optionVal.value) +
                                 " "
                             ),
+                            !optionVal.must_use
+                              ? _c("span", {
+                                  staticClass:
+                                    "dashicons dashicons-no-alt remove-item",
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.removeItem(
+                                        optionKey,
+                                        _vm.fieldData.name
+                                      )
+                                    }
+                                  }
+                                })
+                              : _vm._e(),
+                            _vm._v(" "),
                             _c("span", {
-                              staticClass:
-                                "dashicons dashicons-no-alt remove-item",
-                              on: {
-                                click: function($event) {
-                                  $event.preventDefault()
-                                  return _vm.removeItem(
-                                    optionKey,
-                                    _vm.fieldData.name
-                                  )
-                                }
-                              }
+                              staticClass: "repeatable-item-description",
+                              domProps: { innerHTML: _vm._s(optionVal.desc) }
                             })
                           ])
                         : _vm._e()
