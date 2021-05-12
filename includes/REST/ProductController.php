@@ -103,7 +103,7 @@ class ProductController extends DokanRESTController {
                     'args'                => [
                         'force' => [
                             'type'        => 'boolean',
-                            'default'     => false,
+                            'default'     => true,
                             'description' => __( 'Whether to bypass trash and force deletion.', 'dokan-lite' ),
                         ],
                     ],
