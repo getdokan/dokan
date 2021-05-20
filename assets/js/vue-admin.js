@@ -445,6 +445,10 @@ if (false) {(function () {
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -2063,7 +2067,7 @@ var render = function() {
         { staticClass: "dokan-form-group" },
         [
           _c("div", { staticClass: "column" }, [
-            _c("label", { attrs: { for: "store-email" } }, [
+            _c("label", { attrs: { for: "first-name" } }, [
               _vm._v(_vm._s(_vm.__("First Name", "dokan-lite")))
             ]),
             _vm._v(" "),
@@ -2079,6 +2083,7 @@ var render = function() {
               staticClass: "dokan-form-input",
               attrs: {
                 type: "email",
+                id: "first-name",
                 placeholder: _vm.__("First Name", "dokan-lite")
               },
               domProps: { value: _vm.vendorInfo.first_name },
@@ -2094,7 +2099,7 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "column" }, [
-            _c("label", { attrs: { for: "store-email" } }, [
+            _c("label", { attrs: { for: "last-name" } }, [
               _vm._v(_vm._s(_vm.__("Last Name", "dokan-lite")))
             ]),
             _vm._v(" "),
@@ -2110,6 +2115,7 @@ var render = function() {
               staticClass: "dokan-form-input",
               attrs: {
                 type: "email",
+                id: "last-name",
                 placeholder: _vm.__("Last Name", "dokan-lite")
               },
               domProps: { value: _vm.vendorInfo.last_name },
@@ -2148,6 +2154,7 @@ var render = function() {
               },
               attrs: {
                 type: "text",
+                id: "store-name",
                 placeholder: _vm.getError("store_name")
                   ? _vm.__("Store Name is required", "dokan-lite")
                   : _vm.__("Store Name", "dokan-lite")
@@ -2166,7 +2173,7 @@ var render = function() {
           _vm._v(" "),
           !_vm.getId()
             ? _c("div", { staticClass: "column" }, [
-                _c("label", { attrs: { for: "store-url" } }, [
+                _c("label", { attrs: { for: "user-nicename" } }, [
                   _vm._v(_vm._s(_vm.__("Store URL", "dokan-lite")))
                 ]),
                 _vm._v(" "),
@@ -2182,6 +2189,7 @@ var render = function() {
                   staticClass: "dokan-form-input",
                   attrs: {
                     type: "text",
+                    id: "user-nicename",
                     placeholder: _vm.__("Store Url", "dokan-lite")
                   },
                   domProps: { value: _vm.vendorInfo.user_nicename },
@@ -2239,6 +2247,7 @@ var render = function() {
               staticClass: "dokan-form-input",
               attrs: {
                 type: "number",
+                id: "store-phone",
                 placeholder: _vm.__("123456789", "dokan-lite")
               },
               domProps: { value: _vm.vendorInfo.phone },
@@ -2277,6 +2286,7 @@ var render = function() {
               },
               attrs: {
                 type: "email",
+                id: "store-email",
                 placeholder: _vm.getError("email")
                   ? _vm.__("Email is required", "dokan-lite")
                   : _vm.__("store@email.com", "dokan-lite")
@@ -2309,7 +2319,7 @@ var render = function() {
           !_vm.getId()
             ? [
                 _c("div", { staticClass: "column" }, [
-                  _c("label", { attrs: { for: "store-username" } }, [
+                  _c("label", { attrs: { for: "user-login" } }, [
                     _vm._v(_vm._s(_vm.__("Username", "dokan-lite")))
                   ]),
                   _c("span", { staticClass: "required-field" }, [_vm._v("*")]),
@@ -2330,6 +2340,7 @@ var render = function() {
                     },
                     attrs: {
                       type: "text",
+                      id: "user-login",
                       placeholder: _vm.getError("user_login")
                         ? _vm.__("Username is required", "dokan-lite")
                         : _vm.__("Username", "dokan-lite")
@@ -2405,7 +2416,11 @@ var render = function() {
                             }
                           ],
                           staticClass: "dokan-form-input",
-                          attrs: { type: "text", placeholder: "********" },
+                          attrs: {
+                            id: "store-password",
+                            type: "text",
+                            placeholder: "********"
+                          },
                           domProps: { value: _vm.vendorInfo.user_pass },
                           on: {
                             input: function($event) {
@@ -2556,6 +2571,7 @@ var render = function() {
               staticClass: "dokan-form-input",
               attrs: {
                 type: "text",
+                id: "street-1",
                 placeholder: _vm.__("Street 1", "dokan-lite")
               },
               domProps: { value: _vm.vendorInfo.address.street_1 },
@@ -2591,6 +2607,7 @@ var render = function() {
               staticClass: "dokan-form-input",
               attrs: {
                 type: "text",
+                id: "street-2",
                 placeholder: _vm.__("Street 2", "dokan-lite")
               },
               domProps: { value: _vm.vendorInfo.address.street_2 },
@@ -2626,6 +2643,7 @@ var render = function() {
               staticClass: "dokan-form-input",
               attrs: {
                 type: "text",
+                id: "city",
                 placeholder: _vm.__("City", "dokan-lite")
               },
               domProps: { value: _vm.vendorInfo.address.city },
@@ -2655,7 +2673,11 @@ var render = function() {
                 }
               ],
               staticClass: "dokan-form-input",
-              attrs: { type: "text", placeholder: _vm.__("Zip", "dokan-lite") },
+              attrs: {
+                type: "text",
+                id: "zip",
+                placeholder: _vm.__("Zip", "dokan-lite")
+              },
               domProps: { value: _vm.vendorInfo.address.zip },
               on: {
                 input: function($event) {
@@ -2678,6 +2700,7 @@ var render = function() {
               _vm._v(" "),
               _c("Multiselect", {
                 attrs: {
+                  id: "country",
                   options: _vm.countries,
                   multiselect: false,
                   label: "name",
@@ -2719,6 +2742,7 @@ var render = function() {
                       ],
                       staticClass: "dokan-form-input",
                       attrs: {
+                        id: "state",
                         type: "text",
                         placeholder: _vm.__("State", "dokan-lite")
                       },
@@ -2740,6 +2764,7 @@ var render = function() {
                 : [
                     _c("Multiselect", {
                       attrs: {
+                        id: "state",
                         options: _vm.getStatesFromCountryCode(_vm.selectedCode),
                         multiselect: false,
                         showLabels: false,
@@ -2893,6 +2918,7 @@ var render = function() {
                   staticClass: "dokan-form-input",
                   attrs: {
                     type: "text",
+                    id: "account-name",
                     placeholder: _vm.__("Account Name", "dokan-lite")
                   },
                   domProps: { value: _vm.vendorInfo.payment.bank.ac_name },
@@ -2928,6 +2954,7 @@ var render = function() {
                   staticClass: "dokan-form-input",
                   attrs: {
                     type: "text",
+                    id: "account-number",
                     placeholder: _vm.__("1233456789", "dokan-lite")
                   },
                   domProps: { value: _vm.vendorInfo.payment.bank.ac_number },
@@ -2963,6 +2990,7 @@ var render = function() {
                   staticClass: "dokan-form-input",
                   attrs: {
                     type: "text",
+                    id: "bank-name",
                     placeholder: _vm.__("Bank Name", "dokan-lite")
                   },
                   domProps: { value: _vm.vendorInfo.payment.bank.bank_name },
@@ -2998,6 +3026,7 @@ var render = function() {
                   staticClass: "dokan-form-input",
                   attrs: {
                     type: "text",
+                    id: "bank-address",
                     placeholder: _vm.__("Bank Address", "dokan-lite")
                   },
                   domProps: { value: _vm.vendorInfo.payment.bank.bank_addr },
@@ -3033,6 +3062,7 @@ var render = function() {
                   staticClass: "dokan-form-input",
                   attrs: {
                     type: "text",
+                    id: "routing-number",
                     placeholder: _vm.__("123456789", "dokan-lite")
                   },
                   domProps: {
@@ -3070,6 +3100,7 @@ var render = function() {
                   staticClass: "dokan-form-input",
                   attrs: {
                     type: "text",
+                    id: "iban",
                     placeholder: _vm.__("123456789", "dokan-lite")
                   },
                   domProps: { value: _vm.vendorInfo.payment.bank.iban },
@@ -3105,6 +3136,7 @@ var render = function() {
                   staticClass: "dokan-form-input",
                   attrs: {
                     type: "text",
+                    id: "swift",
                     placeholder: _vm.__("123456789", "dokan-lite")
                   },
                   domProps: { value: _vm.vendorInfo.payment.bank.swift },
@@ -3144,7 +3176,7 @@ var render = function() {
                   class: { column: _vm.getId(), "checkbox-group": !_vm.getId() }
                 },
                 [
-                  _c("label", { attrs: { for: "account-name" } }, [
+                  _c("label", { attrs: { for: "paypal-email" } }, [
                     _vm._v(_vm._s(_vm.__("PayPal Email", "dokan-lite")))
                   ]),
                   _vm._v(" "),
@@ -3160,6 +3192,7 @@ var render = function() {
                     staticClass: "dokan-form-input",
                     attrs: {
                       type: "email",
+                      id: "paypal-email",
                       placeholder: _vm.__("store@email.com", "dokan-lite")
                     },
                     domProps: { value: _vm.vendorInfo.payment.paypal.email },
@@ -3186,7 +3219,7 @@ var render = function() {
                         "div",
                         { staticClass: "column" },
                         [
-                          _c("label", [
+                          _c("label", { attrs: { for: "commission-type" } }, [
                             _vm._v(
                               _vm._s(
                                 _vm.__("Admin Commission Type", "dokan-lite")
@@ -3196,6 +3229,7 @@ var render = function() {
                           _vm._v(" "),
                           _c("Multiselect", {
                             attrs: {
+                              id: "commission-type",
                               options: _vm.commissionTypes,
                               "track-by": "name",
                               label: "label",
