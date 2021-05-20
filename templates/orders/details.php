@@ -12,10 +12,6 @@ $statuses = wc_get_order_statuses();
 $order    = new WC_Order( $order_id );
 $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', 'off' );
 
-// Delivery time
-$delivery_time_date = get_post_meta( $order_id, 'dokan_delivery_time_date', true ) ? date("F j, Y", strtotime( get_post_meta( $order_id, 'dokan_delivery_time_date', true ) ) ) : null ;
-$delivery_time_slot = get_post_meta( $order_id, 'dokan_delivery_time_slot', true ) ? get_post_meta( $order_id, 'dokan_delivery_time_slot', true ) : null ;
-
 ?>
 <div class="dokan-clearfix">
     <div class="dokan-w8 dokan-order-left-content">
@@ -214,12 +210,6 @@ $delivery_time_slot = get_post_meta( $order_id, 'dokan_delivery_time_slot', true
                                 <span><?php esc_html_e( 'Order Date:', 'dokan-lite' ); ?></span>
                                 <?php echo esc_html( dokan_get_date_created( $order ) ); ?>
                             </li>
-                            <?php if( ! empty( $delivery_time_date ) ): ?>
-                            <li>
-                                <span><?php esc_html_e( 'Delivery Date: ', 'dokan-lite' ); ?></span>
-                                <?php echo esc_html( $delivery_time_date ); ?> &middot; <?php echo ' ' . esc_html( $delivery_time_slot ); ?>
-                            </li>
-                            <?php endif; ?>
                             <li class="earning-from-order">
                                 <span><?php esc_html_e( 'Earning From Order:', 'dokan-lite' ); ?></span>
                                 <?php echo wp_kses_post( wc_price( dokan()->commission->get_earning_by_order( $order ) ) ); ?>
@@ -271,6 +261,8 @@ $delivery_time_slot = get_post_meta( $order_id, 'dokan_delivery_time_slot', true
                     </div>
                 </div>
             </div>
+
+            <?php do_action( 'dokan_order_details_general_details_after', $order_id ); ?>
 
             <div class="" style="width:100%">
                 <div class="dokan-panel dokan-panel-default">
