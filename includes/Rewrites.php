@@ -334,7 +334,7 @@ class Rewrites {
     /**
      * Store listing page make order by random
      *
-     * @since DOKAN_PRO_SINCE
+     * @since DOKAN_LITE_SINCE
      *
      * @param obj $class
      *
