@@ -27,6 +27,7 @@ class Rewrites {
         add_filter( 'template_include', [ $this, 'store_toc_template' ], 99 );
         add_filter( 'query_vars', [ $this, 'register_query_var' ] );
         add_filter( 'woocommerce_get_breadcrumb', [ $this, 'store_page_breadcrumb' ] );
+        add_action( 'pre_user_query', [ $this, 'random_store_query' ] );
     }
 
     /**
@@ -328,5 +329,26 @@ class Rewrites {
             // set orderby param
             $query->set( 'orderby', 'post_date ID' );
         }
+    }
+
+    /**
+     * Store listing page make order by random
+     *
+     * @since DOKAN_PRO_SINCE
+     *
+     * @param obj $class
+     *
+     * @return obj $class
+     */
+    public function random_store_query( $class ) {
+        if ( ! dokan_is_store_listing() ) {
+            return $class;
+        }
+
+        if ( 'random' === $class->query_vars['orderby'] ) {
+            $class->query_orderby = str_replace( 'user_login', 'RAND()', $class->query_orderby );
+        }
+
+        return $class;
     }
 }
