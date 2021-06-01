@@ -1054,7 +1054,7 @@
         if ( $('#dokan-edit-product-id').val() && $('#post_title').val() && $('#samplepermalinknonce').val() ) {
             $.post(
                 ajaxurl,
-                {   
+                {
                     action: 'sample-permalink',
                     post_id: $('#dokan-edit-product-id').val(),
                     new_slug: $('#edited-post-name-dokan').val(),
@@ -1077,6 +1077,10 @@
                   callback.apply(context, args);
                 }, ms || 0);
             };
+        }
+
+        if ( $( 'input#_virtual:checked' ).length && $( 'input#_disable_shipping:checked' ).length ) {
+            $( 'input#_disable_shipping' ).click();
         }
 
     });
