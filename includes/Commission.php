@@ -96,6 +96,12 @@ class Commission {
             $tmp_order->update_meta_data( 'dokan_gateway_fee', $gateway_fee );
             $tmp_order->add_order_note( sprintf( __( 'Payment gateway processing fee %s', 'dokan-lite' ), round( $gateway_fee, 2 ) ) );
             $tmp_order->save_meta_data();
+
+            //remove cache for seller and admin earning of sub order
+            $seller_cache_key = 'dokan_get_earning_from_order_table' . $tmp_order->get_id() . 'seller';
+            $admin_cache_key  = 'dokan_get_earning_from_order_table' . $tmp_order->get_id() . 'admin';
+            wp_cache_delete( $seller_cache_key );
+            wp_cache_delete( $admin_cache_key );
         }
     }
 
