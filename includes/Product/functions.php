@@ -472,9 +472,10 @@ function dokan_product_get_row_action( $post ) {
 
     if ( current_user_can( 'dokan_view_product' ) && $post->post_status !== 'pending' ) {
         $row_action['view'] = [
-            'title' => __( 'View', 'dokan-lite' ),
-            'url'   => get_permalink( $product_id ),
-            'class' => 'view',
+            'title'  => __( 'View', 'dokan-lite' ),
+            'url'    => get_permalink( $product_id ),
+            'class'  => 'view',
+            'target' => '_blank',
         ];
     }
 
@@ -492,7 +493,7 @@ function dokan_product_get_row_action( $post ) {
 
         $sep = ( $i < $action_count ) ? ' | ' : '';
 
-        $row_action_html[ $key ] = sprintf( '<span class="%s"><a href="%s" %s>%s</a>%s</span>', $action['class'], esc_url( $action['url'] ), isset( $action['other'] ) ? $action['other'] : '', $action['title'], $sep );
+        $row_action_html[ $key ] = sprintf( '<span class="%s"><a href="%s" %s target="%s">%s</a>%s</span>', $action['class'], esc_url( $action['url'] ), isset( $action['other'] ) ? $action['other'] : '', isset( $action['target'] ) ? $action['target'] : '', $action['title'], $sep );
     }
 
     $row_action_html = apply_filters( 'dokan_product_row_action_html', $row_action_html, $post );

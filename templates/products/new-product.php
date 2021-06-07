@@ -211,6 +211,7 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                                                 'class'            => 'product_cat dokan-form-control dokan-select2',
                                                 'exclude'          => '',
                                                 'selected'         => $selected_cat,
+                                                'walker'           => new TaxonomyDropdown()
                                             );
 
                                             wp_dropdown_categories( apply_filters( 'dokan_product_cat_dropdown_args', $category_args ) );
