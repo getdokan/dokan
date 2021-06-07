@@ -54,9 +54,22 @@ class Stores extends DokanShortcode {
             if ( ! empty( $_get_data['dokan_seller_search'] ) ) {
                 $seller_args['meta_query'] = [
                     [
-                        'key'     => 'dokan_store_name',
-                        'value'   => wc_clean( $_get_data['dokan_seller_search'] ),
-                        'compare' => 'LIKE',
+                        'relation' => 'OR',
+                        [
+                            'key'     => 'dokan_store_name',
+                            'value'   => wc_clean( $_get_data['dokan_seller_search'] ),
+                            'compare' => 'LIKE',
+                        ],
+                        [
+                            'key'     => 'first_name',
+                            'value'   => wc_clean( $_get_data['dokan_seller_search'] ),
+                            'compare' => 'LIKE',
+                        ],
+                        [
+                            'key'     => 'last_name',
+                            'value'   => wc_clean( $_get_data['dokan_seller_search'] ),
+                            'compare' => 'LIKE',
+                        ],
                     ],
                 ];
             }
@@ -95,13 +108,13 @@ class Stores extends DokanShortcode {
          */
         $template_args = apply_filters(
             'dokan_store_list_args', array(
-				'sellers'    => $sellers,
-				'limit'      => $limit,
-				'offset'     => $offset,
-				'paged'      => $paged,
-				'image_size' => 'full',
-				'search'     => $attr['search'],
-				'per_row'    => $attr['per_row'],
+                'sellers'    => $sellers,
+                'limit'      => $limit,
+                'offset'     => $offset,
+                'paged'      => $paged,
+                'image_size' => 'full',
+                'search'     => $attr['search'],
+                'per_row'    => $attr['per_row'],
             )
         );
 
