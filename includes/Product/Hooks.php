@@ -73,7 +73,6 @@ class Hooks {
                     <?php endforeach; ?>
                 </select>
                 <input type="hidden" name="paged" value="1" />
-                <?php // wc_query_string_form_fields( null, array( 'orderby', 'submit', 'paged', 'product-page' ) ); ?>
                 <input type="submit" name="search_store_products" class="search-store-products dokan-btn-theme" value="<?php esc_attr_e( 'Search', 'dokan-lite' ); ?>">
             </form>
         </div>
