@@ -3920,26 +3920,6 @@ div.media-sidebar a.edit-attachment {
 .dokan-single-store {
   margin: 0;
 }
-.dokan-single-store .dokan-store-products-filter-area .product-name-search {
-  height: 40px;
-  border: solid 1px #eee;
-  background-color: #fff;
-}
-.dokan-single-store .dokan-store-products-filter-area .orderby-search {
-  height: 40px;
-  border: solid 1px #eee;
-  background-color: #fff;
-}
-.dokan-single-store .dokan-store-products-filter-area .search-store-products {
-  height: 40px;
-  border: solid 1px #ccc;
-  background-color: #eee;
-}
-.dokan-single-store .dokan-store-products-filter-area .dokan-store-products-ordeby {
-  margin-bottom: 20px;
-  float: right;
-  margin-right: 0px;
-}
 .dokan-single-store .profile-frame {
   padding: 0px;
   position: relative;
