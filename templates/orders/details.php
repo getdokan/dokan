@@ -11,6 +11,7 @@ if ( !dokan_is_seller_has_order( dokan_get_current_user_id(), $order_id ) ) {
 $statuses = wc_get_order_statuses();
 $order    = new WC_Order( $order_id );
 $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', 'off' );
+$customer_ip        = get_post_meta( dokan_get_prop( $order, 'id' ), '_customer_ip_address', true );
 ?>
 <div class="dokan-clearfix">
     <div class="dokan-w8 dokan-order-left-content">
@@ -239,7 +240,9 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                             </li>
                             <li>
                                 <span><?php esc_html_e( 'Customer IP:', 'dokan-lite' ); ?></span>
-                                <?php echo esc_html( get_post_meta( dokan_get_prop( $order, 'id' ), '_customer_ip_address', true ) ); ?>
+                                <a href="<?php echo esc_url( 'https://tools.keycdn.com/geo?host=' . $customer_ip ); ?>" target="_blank">
+                                    <?php echo esc_html( $customer_ip ); ?>
+                                </a>
                             </li>
 
                             <?php do_action( 'dokan_order_details_after_customer_info', $order ); ?>
