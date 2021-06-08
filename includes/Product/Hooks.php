@@ -32,7 +32,7 @@ class Hooks {
     public function store_products_orderby() {
         $show_default_orderby    = 'menu_order' === apply_filters( 'dokan_default_store_products_orderby', get_option( 'woocommerce_default_catalog_orderby', 'menu_order' ) );
         $catalog_orderby_options = apply_filters(
-            'woocommerce_catalog_orderby',
+            'dokan_store_product_catalog_orderby',
             array(
                 'menu_order' => __( 'Default sorting', 'dokan-lite' ),
                 'popularity' => __( 'Sort by popularity', 'dokan-lite' ),
@@ -64,15 +64,19 @@ class Hooks {
             $orderby = current( array_keys( $catalog_orderby_options ) );
         }
         ?>
-        <form class="dokan-store-products-ordeby woocommerce-ordering" method="get">
-            <select name="orderby" class="orderby" aria-label="<?php esc_attr_e( 'Shop order', 'dokan-lite' ); ?>">
-                <?php foreach ( $catalog_orderby_options as $id => $name ) : ?>
-                    <option value="<?php echo esc_attr( $id ); ?>" <?php selected( $orderby, $id ); ?>><?php echo esc_html( $name ); ?></option>
-                <?php endforeach; ?>
-            </select>
-            <input type="hidden" name="paged" value="1" />
-            <?php wc_query_string_form_fields( null, array( 'orderby', 'submit', 'paged', 'product-page' ) ); ?>
-        </form>
+        <div class="dokan-store-products-filter-area dokan-clearfix">
+            <form class="dokan-store-products-ordeby" method="get">
+                <input type="text" name="product_name" class="product-name-search" placeholder="<?php esc_attr_e( 'Enter product name', 'dokan-lite' ); ?>">
+                <select name="orderby" class="orderby orderby-search" aria-label="<?php esc_attr_e( 'Shop order', 'dokan-lite' ); ?>">
+                    <?php foreach ( $catalog_orderby_options as $id => $name ) : ?>
+                        <option value="<?php echo esc_attr( $id ); ?>" <?php selected( $orderby, $id ); ?>><?php echo esc_html( $name ); ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <input type="hidden" name="paged" value="1" />
+                <?php // wc_query_string_form_fields( null, array( 'orderby', 'submit', 'paged', 'product-page' ) ); ?>
+                <input type="submit" name="search_store_products" class="search-store-products dokan-btn-theme" value="<?php esc_attr_e( 'Search', 'dokan-lite' ); ?>">
+            </form>
+        </div>
         <?php
     }
 

@@ -33,7 +33,7 @@ if ( function_exists( 'yoast_breadcrumb' ) ) {
                 <?php dokan_get_template_part( 'store-header' ); ?>
 
                 <?php do_action( 'dokan_store_profile_frame_after', $store_user->data, $store_info ); ?>
-
+                
                 <?php if ( have_posts() ) { ?>
 
                     <div class="seller-items">
