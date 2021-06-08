@@ -278,6 +278,7 @@
                 form = self.closest('form#dokan-add-new-product-form'),
                 btn_id = self.attr('data-btn_id');
 
+            form.find( 'span.dokan-show-add-product-success' ).html('');
             form.find( 'span.dokan-show-add-product-error' ).html('');
             form.find( 'span.dokan-add-new-product-spinner' ).css( 'display', 'inline-block' );
 
@@ -313,6 +314,11 @@
                         $('.dokan-dashboard-product-listing-wrapper').load( window.location.href + ' table.product-listing-table' );
                         $.magnificPopup.close();
                         Dokan_Editor.openProductPopup();
+                        $( 'span.dokan-show-add-product-success' ).html( dokan.product_created_response );
+                        
+                        setTimeout(function() {
+                            $( 'span.dokan-show-add-product-success' ).html( '' );
+                        }, 3000);
                     }
                 } else {
                     self.removeAttr( 'disabled' );
