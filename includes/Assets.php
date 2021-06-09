@@ -86,6 +86,9 @@ class Assets {
             wp_enqueue_style( 'dokan-plugin-list-css' );
         }
 
+        // Dokan helper JS file, need to load this file
+        wp_enqueue_script( 'dokan-util-helper', DOKAN_PLUGIN_ASSEST . '/src/js/helper.js', ['jquery'], DOKAN_PRO_PLUGIN_VERSION, true );
+
         do_action( 'dokan_enqueue_admin_scripts' );
     }
 
@@ -478,6 +481,9 @@ class Assets {
 
         wp_enqueue_script( 'dokan-login-form-popup' );
 
+        // Dokan helper JS file, need to load this file
+        wp_enqueue_script( 'dokan-util-helper', DOKAN_PLUGIN_ASSEST . '/src/js/helper.js', ['jquery'], DOKAN_PRO_PLUGIN_VERSION, true );
+
         do_action( 'dokan_enqueue_scripts' );
     }
 
@@ -840,6 +846,7 @@ class Assets {
                 'i18n_remove_personal_data_notice'    => __( 'This action cannot be reversed. Are you sure you wish to erase personal data from the selected orders?', 'dokan-lite' ),
                 'decimal_point'                       => $decimal,
                 'mon_decimal_point'                   => wc_get_price_decimal_separator(),
+                'i18n_date_format'                    => get_option( 'date_format' ),
             ]
         );
     }
