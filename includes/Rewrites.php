@@ -332,8 +332,8 @@ class Rewrites {
             }
 
             // set orderby param
-            if ( isset( $_GET['orderby'] ) && ! empty( $_GET['orderby'] ) ) {
-                $orderby  = wc_clean( wp_unslash( $_GET['orderby'] ) );
+            if ( isset( $_GET['product_orderby'] ) && ! empty( $_GET['product_orderby'] ) ) {
+                $orderby  = wc_clean( wp_unslash( $_GET['product_orderby'] ) );
                 $ordering = $this->get_catalog_ordering_args( $orderby );
 
                 $query->set( 'orderby', $ordering['orderby'] );
@@ -358,7 +358,7 @@ class Rewrites {
         // Get ordering from query string unless defined.
         if ( ! $orderby ) {
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-            $orderby_value = isset( $_GET['orderby'] ) ? wc_clean( (string) wp_unslash( $_GET['orderby'] ) ) : wc_clean( get_query_var( 'orderby' ) );
+            $orderby_value = isset( $_GET['product_orderby'] ) ? wc_clean( (string) wp_unslash( $_GET['product_orderby'] ) ) : wc_clean( get_query_var( 'product_orderby' ) );
 
             if ( ! $orderby_value ) {
                 if ( is_search() ) {
