@@ -158,6 +158,30 @@
             $(".product_tag_search").select2({
                 allowClear: false,
                 tags: ( dokan.product_vendors_can_create_tags && 'on' === dokan.product_vendors_can_create_tags ),
+                createTag: function ( $params ) {
+                    var $term = $.trim( $params.term );
+                    if ( $term === '' ) {
+                      return null;
+                    }
+
+                    return {
+                      id: $term,
+                      text: $term,
+                      newTag: true // add additional parameters
+                    }
+                },
+                insertTag: function ( data, tag ) {
+                    var $found = false;
+
+                    $.each( data, function ( index, value ) {
+                        if ( $.trim( tag.text ).toUpperCase() == $.trim( value.text ).toUpperCase() ) {
+                            $found = true;
+                        }
+                    });
+
+                    if ( ! $found ) data.unshift( tag );
+                },
+                minimumInputLength: 2,
                 ajax: {
                     url: dokan.ajaxurl,
                     dataType: 'json',
