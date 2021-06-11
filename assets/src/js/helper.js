@@ -3,7 +3,11 @@
  *
  * @since DOKAN_PRO_SINCE
  */
-function dokan_get_i18n_date_format() {
+function dokan_get_i18n_date_format( format = true ) {
+  if( ! format ) {
+    return dokan.i18n_date_format;
+  }
+
   let formatMap = {
     // Day
     d: 'dd',
