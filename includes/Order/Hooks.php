@@ -283,8 +283,14 @@ class Hooks {
      * @throws Exception
      */
     public function ensure_vendor_coupon( $valid, $coupon ) {
-        $coupon_id         = $coupon->get_id();
-        $vendor_id         = get_post_field( 'post_author', $coupon_id );
+        $coupon_id           = $coupon->get_id();
+        $vendor_id           = get_post_field( 'post_author', $coupon_id );
+        $ensure_admin_coupon = $this->ensure_admin_have_create_vendors_coupon( $valid, $coupon );
+
+        if ( $ensure_admin_coupon['have_admin_coupons'] ) {
+            return $ensure_admin_coupon['valid'];
+        }
+
         $available_vendors = [];
 
         if ( ! apply_filters( 'dokan_ensure_vendor_coupon', true ) ) {
@@ -307,6 +313,69 @@ class Hooks {
         }
 
         return $valid;
+    }
+
+    /**
+     * Ensure vendor have coupon created by admin
+     *
+     * @param boolean $valid
+     * @param \WC_Coupon $coupon
+     *
+     * @return boolean|Execption
+     * @throws Exception
+     */
+    public function ensure_admin_have_create_vendors_coupon( $valid, $coupon ) {
+        $coupon_id        = $coupon->get_id();
+        $commissions_type = get_post_meta( $coupon_id, 'coupon_commissions_type', true );
+
+        if ( empty( $commissions_type ) ) {
+            return [
+				'have_admin_coupons' => false,
+				'valid' => $valid,
+			];
+        }
+
+        $enabled_all_vendor  = get_post_meta( $coupon_id, 'admin_coupons_enabled_for_vendor', true );
+        $vendors_ids         = get_post_meta( $coupon_id, 'coupons_vendors_ids', true );
+        $vendors_ids         = ! empty( $vendors_ids ) ? explode( ',', $vendors_ids ) : [];
+        $exclude_vendors     = get_post_meta( $coupon_id, 'coupons_exclude_vendors_ids', true );
+        $exclude_vendors     = ! empty( $exclude_vendors ) ? explode( ',', $exclude_vendors ) : [];
+        $admin_shared_amount = get_post_meta( $coupon_id, 'admin_shared_coupon_amount', true );
+        $current_valid       = false;
+        $available_vendors   = [];
+
+        if ( 'yes' === $enabled_all_vendor && empty( $exclude_vendors ) ) {
+            $current_valid = true;
+        }
+
+        foreach ( WC()->cart->get_cart() as $item ) {
+            $product_id = $item['data']->get_id();
+
+            $available_vendors[] = (int) get_post_field( 'post_author', $product_id );
+        }
+
+        if ( 'yes' === $enabled_all_vendor && ! empty( $exclude_vendors ) ) {
+            foreach ( $available_vendors as $available_vendor_id ) {
+                if ( ! in_array( $available_vendor_id, $exclude_vendors, true ) ) {
+                    $current_valid = true;
+                    break;
+                }
+            }
+        }
+
+        if ( 'no' === $enabled_all_vendor && ! empty( $vendors_ids ) ) {
+            foreach ( $vendors_ids as $vendors_id ) {
+                if ( in_array( (int) $vendors_id, $available_vendors, true ) ) {
+                    $current_valid = true;
+                    break;
+                }
+            }
+        }
+
+        return [
+			'have_admin_coupons' => $current_valid,
+			'valid' => $current_valid,
+		];
     }
 
     /**
