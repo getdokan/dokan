@@ -281,7 +281,7 @@ function dokan_count_stock_posts( $post_type, $user_id, $stock_type ) {
         if ( ! $results ) {
             $results = $wpdb->get_results(
                 $wpdb->prepare(
-                    "SELECT p.post_status, COUNT( * ) AS num_posts 
+                    "SELECT p.post_status, COUNT( * ) AS num_posts
                     FROM {$wpdb->prefix}posts as p INNER JOIN {$wpdb->prefix}postmeta as pm ON p.ID = pm.post_id
                     WHERE p.post_type = %s
                     AND p.post_author = %d
@@ -3928,9 +3928,9 @@ function dokan_met_minimum_php_version_for_wc( $required_version = '7.0' ) {
 function dokan_has_map_api_key() {
     $dokan_appearance = get_option( 'dokan_appearance', [] );
 
-    if ( 'google_maps' === $dokan_appearance['map_api_source'] && ! empty( $dokan_appearance['gmap_api_key'] ) ) {
+    if ( isset( $dokan_appearance['map_api_source'] ) && 'google_maps' === $dokan_appearance[ 'map_api_source' ] ) {
         return true;
-    } elseif ( 'mapbox' === $dokan_appearance['map_api_source'] && ! empty( $dokan_appearance['mapbox_access_token'] ) ) {
+    } elseif ( isset( $dokan_appearance['map_api_source'] ) && 'mapbox' === $dokan_appearance[ 'map_api_source' ] ) {
         return true;
     }
 
