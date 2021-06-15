@@ -103,13 +103,14 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                                 'name'             => 'product_cat',
                                 'id'               => 'product_cat',
                                 'taxonomy'         => 'product_cat',
+                                'orderby'          => 'name',
                                 'title_li'         => '',
                                 'class'            => 'product_cat dokan-form-control dokan-select2',
                                 'exclude'          => '',
                                 'selected'         => $product_cat,
                             );
 
-                            wp_dropdown_categories( apply_filters( 'dokan_product_cat_dropdown_args', $category_args ) );
+                            wp_dropdown_categories( $category_args );
                         ?>
                         </div>
                     <?php elseif ( dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) == 'multiple' ): ?>
