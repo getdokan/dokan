@@ -126,26 +126,35 @@
     </td>
     <td class="post-date" data-title="<?php esc_attr_e( 'Date', 'dokan-lite' ); ?>">
         <?php
+
+
+
         if ( '0000-00-00 00:00:00' == $post->post_date ) {
-            $t_time    = $h_time    = __( 'Unpublished', 'dokan-lite' );
+            $post_published_date = $human_readable_time = __( 'Unpublished', 'dokan-lite' );
             $time_diff = 0;
         } else {
-            $t_time = get_the_time( __( 'Y/m/d g:i:s A', 'dokan-lite' ) );
-            $m_time = $post->post_date;
-            $time   = get_post_time( 'G', true, $post );
+            // get current time
+            $current_time = dokan_current_datetime();
+            // set timezone to gmt
+            $gmt_time = $current_time->setTimezone( new DateTimeZone( 'UTC' ) );
+            // read post gmt time
+            $post_time_gmt = $gmt_time->modify( $post->post_date_gmt );
 
-            $time_diff = time() - $time;
+            $format = apply_filters( 'dokan_date_time_format', wc_date_format() . ' ' . wc_time_format() );
+            // currently dokan_format_date doesn't support time format, will update this soon,
+            // right now we need to send $format from our end.
+            // if you need date only remove $format from dokan_format_date function parameter
+            $human_readable_time = dokan_format_date( $post_time_gmt->getTimestamp(), $format );
+            $post_published_date = apply_filters( 'post_date_column_time', dokan_format_date( $post_time_gmt->getTimestamp() ), $post, 'date', 'all' );
 
+            // get human readable time
+            $time_diff = $current_time->getTimestamp() - $post_time_gmt->getTimestamp();
             if ( $time_diff > 0 && $time_diff < 24 * 60 * 60 ) {
-                $h_time = sprintf( __( '%s ago', 'dokan-lite' ), human_time_diff( $time ) );
-            } else {
-                $h_time = mysql2date( __( 'Y/m/d', 'dokan-lite' ), $m_time );
+                $human_readable_time = sprintf( __( '%s ago', 'dokan-lite' ), human_time_diff( $post_time_gmt->getTimestamp() ) );
             }
         }
 
-        $post_date_column_time = apply_filters( 'post_date_column_time', dokan_date_time_format( $h_time, true ), $post, 'date', 'all' );
-
-        echo '<abbr title="' . esc_attr( dokan_date_time_format( $t_time ) ) . '">' . esc_html( $post_date_column_time ) . '</abbr>';
+        echo '<abbr title="' . esc_attr( $human_readable_time ) . '">' . esc_html( $post_published_date ) . '</abbr>';
         echo '<div class="status">';
 
         if ( 'publish' == $post->post_status ) {

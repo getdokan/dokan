@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 3.2.5\n"
+"Project-Id-Version: Dokan 3.2.6\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2021-04-30 15:46:48+00:00\n"
+"POT-Creation-Date: 2021-05-08 17:52:35+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -541,7 +541,7 @@ msgstr ""
 #: includes/Admin/Settings.php:490 includes/Admin/SetupWizard.php:530
 #: includes/Dashboard/Templates/Dashboard.php:111
 #: includes/Order/functions.php:542 templates/dashboard/orders-widget.php:36
-#: templates/orders/listing.php:140
+#: templates/orders/listing.php:151
 msgid "Processing"
 msgstr ""
 
@@ -1199,7 +1199,7 @@ msgstr ""
 msgid "Email sent successfully!"
 msgstr ""
 
-#: includes/Ajax.php:407 templates/orders/details.php:293
+#: includes/Ajax.php:407 templates/orders/details.php:295
 msgid "Delete note"
 msgstr ""
 
@@ -1684,7 +1684,7 @@ msgid "You have no permission to view this page"
 msgstr ""
 
 #: includes/Dashboard/Templates/Products.php:213 src/admin/main.js:25
-#: templates/orders/listing.php:11
+#: templates/orders/listing.php:14
 msgid "Bulk Actions"
 msgstr ""
 
@@ -2220,112 +2220,116 @@ msgstr ""
 msgid "Payment method"
 msgstr ""
 
-#: includes/Order/functions.php:814 templates/orders/listing.php:52
-#: templates/orders/listing.php:80
+#: includes/Order/functions.php:814 templates/orders/listing.php:55
+#: templates/orders/listing.php:86
 msgid "Order Total"
 msgstr ""
 
-#: includes/Order/functions.php:815 includes/REST/OrderController.php:102
+#: includes/Order/functions.php:815
+msgid "Earnings"
+msgstr ""
+
+#: includes/Order/functions.php:816 includes/REST/OrderController.php:102
 msgid "Order Status"
 msgstr ""
 
-#: includes/Order/functions.php:816
+#: includes/Order/functions.php:817
 msgid "Order Date"
 msgstr ""
 
-#: includes/Order/functions.php:817
+#: includes/Order/functions.php:818
 msgid "Billing Company"
 msgstr ""
 
-#: includes/Order/functions.php:818
+#: includes/Order/functions.php:819
 msgid "Billing First Name"
 msgstr ""
 
-#: includes/Order/functions.php:819
+#: includes/Order/functions.php:820
 msgid "Billing Last Name"
 msgstr ""
 
-#: includes/Order/functions.php:820
+#: includes/Order/functions.php:821
 msgid "Billing Full Name"
 msgstr ""
 
-#: includes/Order/functions.php:821
+#: includes/Order/functions.php:822
 msgid "Billing Email"
 msgstr ""
 
-#: includes/Order/functions.php:822
+#: includes/Order/functions.php:823
 msgid "Billing Phone"
 msgstr ""
 
-#: includes/Order/functions.php:823
+#: includes/Order/functions.php:824
 msgid "Billing Address 1"
 msgstr ""
 
-#: includes/Order/functions.php:824
+#: includes/Order/functions.php:825
 msgid "Billing Address 2"
 msgstr ""
 
-#: includes/Order/functions.php:825
+#: includes/Order/functions.php:826
 msgid "Billing City"
 msgstr ""
 
-#: includes/Order/functions.php:826
+#: includes/Order/functions.php:827
 msgid "Billing State"
 msgstr ""
 
-#: includes/Order/functions.php:827
+#: includes/Order/functions.php:828
 msgid "Billing Postcode"
 msgstr ""
 
-#: includes/Order/functions.php:828
+#: includes/Order/functions.php:829
 msgid "Billing Country"
 msgstr ""
 
-#: includes/Order/functions.php:829
+#: includes/Order/functions.php:830
 msgid "Shipping Company"
 msgstr ""
 
-#: includes/Order/functions.php:830
+#: includes/Order/functions.php:831
 msgid "Shipping First Name"
 msgstr ""
 
-#: includes/Order/functions.php:831
+#: includes/Order/functions.php:832
 msgid "Shipping Last Name"
 msgstr ""
 
-#: includes/Order/functions.php:832
+#: includes/Order/functions.php:833
 msgid "Shipping Full Name"
 msgstr ""
 
-#: includes/Order/functions.php:833
+#: includes/Order/functions.php:834
 msgid "Shipping Address 1"
 msgstr ""
 
-#: includes/Order/functions.php:834
+#: includes/Order/functions.php:835
 msgid "Shipping Address 2"
 msgstr ""
 
-#: includes/Order/functions.php:835
+#: includes/Order/functions.php:836
 msgid "Shipping City"
 msgstr ""
 
-#: includes/Order/functions.php:836
+#: includes/Order/functions.php:837
 msgid "Shipping State"
 msgstr ""
 
-#: includes/Order/functions.php:837
+#: includes/Order/functions.php:838
 msgid "Shipping Postcode"
 msgstr ""
 
-#: includes/Order/functions.php:838
+#: includes/Order/functions.php:839
 msgid "Shipping Country"
 msgstr ""
 
-#: includes/Order/functions.php:839
+#: includes/Order/functions.php:840
 msgid "Customer IP"
 msgstr ""
 
-#: includes/Order/functions.php:840
+#: includes/Order/functions.php:841
 msgid "Customer Note"
 msgstr ""
 
@@ -2685,9 +2689,9 @@ msgid "Delete all variations"
 msgstr ""
 
 #: includes/Product/functions.php:187 templates/my-orders.php:29
-#: templates/orders/listing.php:54 templates/orders/listing.php:86
+#: templates/orders/listing.php:57 templates/orders/listing.php:92
 #: templates/products/products-listing-row.php:58
-#: templates/products/products-listing.php:100 templates/sub-orders.php:27
+#: templates/products/products-listing.php:100 templates/sub-orders.php:30
 #: templates/withdraw/pending-request-listing.php:18
 msgid "Status"
 msgstr ""
@@ -2808,7 +2812,7 @@ msgid "Expand"
 msgstr ""
 
 #: includes/Product/functions.php:293 src/admin/components/ColorPicker.vue:31
-#: src/upgrade/App.vue:49 templates/orders/details.php:356
+#: src/upgrade/App.vue:49 templates/orders/details.php:358
 #: templates/settings/store-form.php:258
 msgid "Close"
 msgstr ""
@@ -2859,7 +2863,7 @@ msgid "Edit"
 msgstr ""
 
 #: includes/Product/functions.php:475 templates/my-orders.php:88
-#: templates/orders/listing.php:158 templates/sub-orders.php:59
+#: templates/orders/listing.php:169 templates/sub-orders.php:70
 msgid "View"
 msgstr ""
 
@@ -2892,7 +2896,7 @@ msgstr ""
 #: includes/REST/AdminReportController.php:142
 #: templates/dashboard/orders-widget.php:21
 #: templates/dashboard/products-widget.php:26 templates/my-orders.php:30
-#: templates/orders/order-fee-html.php:17 templates/sub-orders.php:28
+#: templates/orders/order-fee-html.php:17 templates/sub-orders.php:34
 msgid "Total"
 msgstr ""
 
@@ -4200,7 +4204,7 @@ msgid "Dokan: Store Category Menu"
 msgstr ""
 
 #: includes/Widgets/StoreCategoryMenu.php:36
-#: includes/Widgets/StoreCategoryMenu.php:80 includes/template-tags.php:720
+#: includes/Widgets/StoreCategoryMenu.php:80 includes/template-tags.php:729
 msgid "Store Product Category"
 msgstr ""
 
@@ -4213,7 +4217,7 @@ msgid "Dokan: Store Contact Form"
 msgstr ""
 
 #: includes/Widgets/StoreContactForm.php:42
-#: includes/Widgets/StoreContactForm.php:119 includes/template-tags.php:759
+#: includes/Widgets/StoreContactForm.php:119 includes/template-tags.php:768
 msgid "Contact Vendor"
 msgstr ""
 
@@ -4226,7 +4230,7 @@ msgid "Dokan: Store Location"
 msgstr ""
 
 #: includes/Widgets/StoreLocation.php:42 includes/Widgets/StoreLocation.php:103
-#: includes/template-tags.php:733
+#: includes/template-tags.php:742
 msgid "Store Location"
 msgstr ""
 
@@ -4239,7 +4243,7 @@ msgid "Dokan: Store Opening Closing Time Widget"
 msgstr ""
 
 #: includes/Widgets/StoreOpenClose.php:41
-#: includes/Widgets/StoreOpenClose.php:111 includes/template-tags.php:746
+#: includes/Widgets/StoreOpenClose.php:111 includes/template-tags.php:755
 msgid "Store Time"
 msgstr ""
 
@@ -4357,7 +4361,7 @@ msgstr ""
 msgid "Pending Review"
 msgstr ""
 
-#: includes/functions.php:830 templates/products/products-listing-row.php:157
+#: includes/functions.php:830 templates/products/products-listing-row.php:166
 msgid "Scheduled"
 msgstr ""
 
@@ -4661,8 +4665,8 @@ msgstr ""
 
 #: includes/functions.php:3041 templates/dashboard/big-counter-widget.php:29
 #: templates/my-orders.php:27 templates/orders/details.php:21
-#: templates/orders/listing.php:51 templates/orders/listing.php:71
-#: templates/sub-orders.php:25
+#: templates/orders/listing.php:54 templates/orders/listing.php:77
+#: templates/sub-orders.php:28
 msgid "Order"
 msgstr ""
 
@@ -4806,16 +4810,16 @@ msgstr ""
 msgid "Back to Dashboard"
 msgstr ""
 
-#: includes/template-tags.php:555 templates/settings/header.php:14
+#: includes/template-tags.php:564 templates/settings/header.php:14
 #: templates/store-lists-loop.php:94
 msgid "Visit Store"
 msgstr ""
 
-#: includes/template-tags.php:556 templates/global/header-menu.php:48
+#: includes/template-tags.php:565 templates/global/header-menu.php:48
 msgid "Edit Account"
 msgstr ""
 
-#: includes/template-tags.php:557
+#: includes/template-tags.php:566
 msgid "Log out"
 msgstr ""
 
@@ -4930,15 +4934,15 @@ msgstr ""
 msgid "Both percentage and fixed fee is required."
 msgstr ""
 
-#: src/admin/components/Fields.vue:248
+#: src/admin/components/Fields.vue:257
 msgid "Active"
 msgstr ""
 
-#: src/admin/components/Fields.vue:252 src/admin/pages/Settings.vue:200
+#: src/admin/components/Fields.vue:261 src/admin/pages/Settings.vue:200
 msgid "Select"
 msgstr ""
 
-#: src/admin/components/Fields.vue:485
+#: src/admin/components/Fields.vue:494
 msgid "is required."
 msgstr ""
 
@@ -5045,7 +5049,7 @@ msgstr ""
 msgid "Loading"
 msgstr ""
 
-#: src/admin/main.js:24 templates/orders/listing.php:30
+#: src/admin/main.js:24 templates/orders/listing.php:33
 #: templates/products/products-listing.php:78
 msgid "Select bulk action"
 msgstr ""
@@ -5054,7 +5058,7 @@ msgstr ""
 msgid "items"
 msgstr ""
 
-#: src/admin/main.js:27 templates/orders/listing.php:41
+#: src/admin/main.js:27 templates/orders/listing.php:44
 #: templates/products/products-listing.php:89
 #: templates/store-lists-filter.php:84
 msgid "Apply"
@@ -6113,7 +6117,7 @@ msgid ""
 msgstr ""
 
 #: templates/dashboard/big-counter-widget.php:21
-#: templates/orders/listing.php:53 templates/orders/listing.php:83
+#: templates/orders/listing.php:56 templates/orders/listing.php:89
 #: templates/products/products-listing-row.php:91
 #: templates/products/products-listing.php:107
 msgid "Earning"
@@ -6360,7 +6364,7 @@ msgid "Price"
 msgstr ""
 
 #: templates/emails/vendor-completed-order.php:84
-#: templates/emails/vendor-new-order.php:84 templates/sub-orders.php:16
+#: templates/emails/vendor-new-order.php:84 templates/sub-orders.php:19
 msgid "Note:"
 msgstr ""
 
@@ -6485,17 +6489,17 @@ msgstr ""
 msgid "Recent Orders"
 msgstr ""
 
-#: templates/my-orders.php:28 templates/orders/listing.php:56
-#: templates/orders/listing.php:111
+#: templates/my-orders.php:28 templates/orders/listing.php:59
+#: templates/orders/listing.php:117
 #: templates/products/products-listing-row.php:127
-#: templates/products/products-listing.php:110 templates/sub-orders.php:26
+#: templates/products/products-listing.php:110 templates/sub-orders.php:29
 #: templates/withdraw/approved-request-listing.php:16
 #: templates/withdraw/cancelled-request-listing.php:16
 #: templates/withdraw/pending-request-listing.php:16
 msgid "Date"
 msgstr ""
 
-#: templates/my-orders.php:55 templates/sub-orders.php:51
+#: templates/my-orders.php:55 templates/sub-orders.php:62
 msgid "%s for %s item"
 msgid_plural "%s for %s items"
 msgstr[0] ""
@@ -6607,47 +6611,47 @@ msgstr ""
 msgid "Customer Note:"
 msgstr ""
 
-#: templates/orders/details.php:266
+#: templates/orders/details.php:268
 msgid "Order Notes"
 msgstr ""
 
-#: templates/orders/details.php:291
+#: templates/orders/details.php:293
 msgid "added %s ago"
 msgstr ""
 
-#: templates/orders/details.php:300
+#: templates/orders/details.php:302
 msgid "There are no notes for this order yet."
 msgstr ""
 
-#: templates/orders/details.php:309
+#: templates/orders/details.php:311
 msgid "Add note"
 msgstr ""
 
-#: templates/orders/details.php:317
+#: templates/orders/details.php:319
 msgid "Customer note"
 msgstr ""
 
-#: templates/orders/details.php:318
+#: templates/orders/details.php:320
 msgid "Private note"
 msgstr ""
 
-#: templates/orders/details.php:326
+#: templates/orders/details.php:328
 msgid "Add Note"
 msgstr ""
 
-#: templates/orders/details.php:333 templates/orders/details.php:342
+#: templates/orders/details.php:335 templates/orders/details.php:344
 msgid "Tracking Number"
 msgstr ""
 
-#: templates/orders/details.php:337
+#: templates/orders/details.php:339
 msgid "Shipping Provider Name / URL"
 msgstr ""
 
-#: templates/orders/details.php:347
+#: templates/orders/details.php:349
 msgid "Date Shipped"
 msgstr ""
 
-#: templates/orders/details.php:355
+#: templates/orders/details.php:357
 msgid "Add Tracking Details"
 msgstr ""
 
@@ -6659,46 +6663,54 @@ msgstr ""
 msgid "Grant Access"
 msgstr ""
 
-#: templates/orders/listing.php:12
+#: templates/orders/listing.php:15
 msgid "Change status to on-hold"
 msgstr ""
 
-#: templates/orders/listing.php:13
+#: templates/orders/listing.php:16
 msgid "Change status to processing"
 msgstr ""
 
-#: templates/orders/listing.php:14
+#: templates/orders/listing.php:17
 msgid "Change status to completed"
 msgstr ""
 
-#: templates/orders/listing.php:55 templates/orders/listing.php:89
+#: templates/orders/listing.php:58 templates/orders/listing.php:95
 msgid "Customer"
 msgstr ""
 
-#: templates/orders/listing.php:58 templates/orders/listing.php:130
+#: templates/orders/listing.php:61 templates/sub-orders.php:32
+msgid "Shipment"
+msgstr ""
+
+#: templates/orders/listing.php:64 templates/orders/listing.php:141
 #: templates/products/downloadable.php:37
 msgid "Action"
 msgstr ""
 
-#: templates/orders/listing.php:73 templates/orders/listing.php:75
+#: templates/orders/listing.php:79 templates/orders/listing.php:81
 msgid "Order %s"
 msgstr ""
 
-#: templates/orders/listing.php:114
-#: templates/products/products-listing-row.php:130
+#: templates/orders/listing.php:120
+#: templates/products/products-listing-row.php:133
 msgid "Unpublished"
 msgstr ""
 
-#: templates/orders/listing.php:121
-#: templates/products/products-listing-row.php:140
+#: templates/orders/listing.php:127
+#: templates/products/products-listing-row.php:153
 msgid "%s ago"
 msgstr ""
 
-#: templates/orders/listing.php:149
+#: templates/orders/listing.php:136 templates/sub-orders.php:57
+msgid "Shipping Status"
+msgstr ""
+
+#: templates/orders/listing.php:160
 msgid "Complete"
 msgstr ""
 
-#: templates/orders/listing.php:222
+#: templates/orders/listing.php:233
 msgid "No orders found"
 msgstr ""
 
@@ -7159,23 +7171,15 @@ msgstr ""
 msgid "Views"
 msgstr ""
 
-#: templates/products/products-listing-row.php:133
-msgid "Y/m/d g:i:s A"
-msgstr ""
-
-#: templates/products/products-listing-row.php:142
-msgid "Y/m/d"
-msgstr ""
-
-#: templates/products/products-listing-row.php:152
+#: templates/products/products-listing-row.php:161
 msgid "Published"
 msgstr ""
 
-#: templates/products/products-listing-row.php:155
+#: templates/products/products-listing-row.php:164
 msgid "Missed schedule"
 msgstr ""
 
-#: templates/products/products-listing-row.php:160
+#: templates/products/products-listing-row.php:169
 msgid "Last Modified"
 msgstr ""
 
@@ -7387,11 +7391,11 @@ msgstr ""
 msgid "No products were found of this vendor!"
 msgstr ""
 
-#: templates/sub-orders.php:12
+#: templates/sub-orders.php:15
 msgid "Sub Orders"
 msgstr ""
 
-#: templates/sub-orders.php:17
+#: templates/sub-orders.php:20
 msgid ""
 "This order has products from multiple vendors. So we divided this order "
 "into multiple vendor orders.\n"

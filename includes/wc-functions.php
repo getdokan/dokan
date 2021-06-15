@@ -75,7 +75,7 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
 
     if ( isset( $data['_sale_price'] ) ) {
         //if regular price is lower than sale price then we are setting it to empty
-        if ( $data['_regular_price'] <= $data['_sale_price'] ) {
+        if ( (float) wc_format_decimal( $data['_regular_price'] ) <= (float) wc_format_decimal( $data['_sale_price'] ) ) {
             $data['_sale_price'] = '';
         }
 
@@ -1210,7 +1210,7 @@ function send_email_for_order_cancellation( $recipient, $order ) {
 
     // get the order id from order object
     $seller_id = dokan_get_seller_id_by_order( $order->get_id() );
-    
+
     $seller_info      = get_userdata( $seller_id );
     $seller_email     = $seller_info->user_email;
 

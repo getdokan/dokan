@@ -125,6 +125,9 @@ class Orders {
             dokan_order_csv_export( $user_orders );
             exit();
         }
+        
+        // Allow dev to create custom CSV
+        do_action('dokan_after_handle_order_export', $post_data);
     }
 
 }

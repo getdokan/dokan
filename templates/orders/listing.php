@@ -1,12 +1,15 @@
 <?php
 global $woocommerce;
 
-$seller_id      = dokan_get_current_user_id();
-$limit          = 10;
-$customer_id    = isset( $_GET['customer_id'] ) ? sanitize_key( $_GET['customer_id'] ) : null;
-$order_status   = isset( $_GET['order_status'] ) ? sanitize_key( $_GET['order_status'] ) : 'all';
-$paged          = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
-$order_date     = isset( $_GET['order_date'] ) ? sanitize_key( $_GET['order_date'] ) : null;
+$seller_id           = dokan_get_current_user_id();
+$limit               = 10;
+$customer_id         = isset( $_GET['customer_id'] ) ? sanitize_key( $_GET['customer_id'] ) : null;
+$order_status        = isset( $_GET['order_status'] ) ? sanitize_key( $_GET['order_status'] ) : 'all';
+$paged               = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
+$order_date          = isset( $_GET['order_date'] ) ? sanitize_key( $_GET['order_date'] ) : null;
+$allow_shipment      = dokan_get_option( 'enabled', 'dokan_shipping_status_setting', 'off' );
+$wc_shipping_enabled = get_option( 'woocommerce_calc_shipping' ) === 'yes' ? true : false;
+
 $order_statuses = apply_filters( 'dokan_bulk_order_statuses', [
     '-1'            => __( 'Bulk Actions', 'dokan-lite' ),
     'wc-on-hold'    => __( 'Change status to on-hold', 'dokan-lite' ),
@@ -54,6 +57,9 @@ if ( $user_orders ) {
                     <th><?php esc_html_e( 'Status', 'dokan-lite' ); ?></th>
                     <th><?php esc_html_e( 'Customer', 'dokan-lite' ); ?></th>
                     <th><?php esc_html_e( 'Date', 'dokan-lite' ); ?></th>
+                    <?php if ( function_exists( 'dokan_get_order_shipment_current_status' ) && 'on' === $allow_shipment && $wc_shipping_enabled ) : ?>
+                        <th><?php esc_html_e( 'Shipment', 'dokan-lite' ); ?></th>
+                    <?php endif; ?>
                     <?php if ( current_user_can( 'dokan_manage_order' ) ) { ?>
                         <th width="17%"><?php esc_html_e( 'Action', 'dokan-lite' ); ?></th>
                     <?php } ?>
@@ -94,7 +100,7 @@ if ( $user_orders ) {
                         $user_info = get_userdata( $order->get_user_id() );
                     }
 
-                    if ( !empty( $user_info ) ) {
+                    if ( ! empty( $user_info ) ) {
                         $user = '';
 
                         if ( $user_info->first_name || $user_info->last_name ) {
@@ -126,6 +132,11 @@ if ( $user_orders ) {
 
                     echo '<abbr title="' . esc_attr( dokan_date_time_format( $t_time ) ) . '">' . esc_html( apply_filters( 'post_date_column_time', dokan_date_time_format( $h_time, true ), dokan_get_prop( $order, 'id' ) ) ) . '</abbr>'; ?>
                         </td>
+                        <?php if ( function_exists( 'dokan_get_order_shipment_current_status' ) && 'on' === $allow_shipment && $wc_shipping_enabled ) : ?>
+                            <td class="dokan-order-shipping-status" data-title="<?php esc_attr_e( 'Shipping Status', 'dokan-lite' ); ?>" >
+                                <?php echo dokan_get_order_shipment_current_status( $order->get_id() ); ?>
+                            </td>
+                        <?php endif; ?>
                         <?php if ( current_user_can( 'dokan_manage_order' ) ) { ?>
                             <td class="dokan-order-action" width="17%" data-title="<?php esc_attr_e( 'Action', 'dokan-lite' ); ?>" >
                                 <?php
