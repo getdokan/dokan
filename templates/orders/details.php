@@ -262,7 +262,7 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                 </div>
             </div>
 
-            <?php do_action( 'dokan_order_details_general_details_after', $order_id ); ?>
+            <?php do_action( 'dokan_order_detail_after_order_general_details', $order ); ?>
 
             <div class="" style="width:100%">
                 <div class="dokan-panel dokan-panel-default">
