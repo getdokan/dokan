@@ -3996,7 +3996,6 @@ function dokan_format_date( $date = '', $format = false ) {
  * @param string|bool $format date format string or false for default WordPress date
  * @since 3.2.7
  *
- * @throws Exception
  * @return string|false The date, translated if locale specifies it. False on invalid timestamp input.
  */
 function dokan_format_datetime( $date = '', $format = false ) {
