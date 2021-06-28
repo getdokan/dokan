@@ -420,7 +420,7 @@ class Assets {
             'rounding_precision' => wc_get_rounding_precision(),
             'mon_decimal_point'  => wc_get_price_decimal_separator(),
             'product_types'      => apply_filters( 'dokan_product_types', [ 'simple' ] ),
-            'loading_img'        => plugins_url( 'assets/images/loading.gif', __FILE__ ),
+            'loading_img'        => DOKAN_PLUGIN_ASSEST . '/images/loading.gif',
             'store_product_search_nonce' => wp_create_nonce( 'dokan_store_product_search_nonce' ),
         ];
 

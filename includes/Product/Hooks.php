@@ -31,97 +31,100 @@ class Hooks {
      * @return void
      */
     public function store_product_search_action() {
+        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'dokan_store_product_search_nonce' ) ) {
+            wp_send_json_error( __( 'Error: Nonce verification failed', 'dokan-lite' ) );
+        }
+
         global $wpdb;
 
         $return_result              = array();
         $return_result['type']      = 'error';
         $return_result['data_list'] = '<li> ' . __( 'Products not found with this search', 'dokan-lite' ) . ' </li>';
         $output                     = '';
-        $get_postdata               = $_POST;
 
-        // _wpnonce check for an extra layer of security, the function will exit if it fails
-        if ( ! isset( $get_postdata['_wpnonce'] ) || ! wp_verify_nonce( $get_postdata['_wpnonce'], 'dokan_store_product_search_nonce' ) ) {
-            wp_send_json_error( __( 'Error: Nonce verification failed', 'dokan-lite' ) );
+        if ( ! isset( $_POST['search_term'] ) || empty( $_POST['search_term'] ) ) {
+            die();
         }
 
-        if ( isset( $get_postdata['search_term'] ) && ! empty( $get_postdata['search_term'] ) ) {
-            $keyword  = wc_clean( wp_unslash( $get_postdata['search_term'] ) );
-            $store_id = intval( wp_unslash( $get_postdata['store_id'] ) );
+        $keyword  = wc_clean( wp_unslash( $_POST['search_term'] ) );
+        $store_id = intval( wp_unslash( $_POST['store_id'] ) );
 
-            $querystr = "SELECT DISTINCT $wpdb->posts.*
-            FROM $wpdb->posts, $wpdb->postmeta
-            WHERE $wpdb->posts.ID = $wpdb->postmeta.post_id
-            AND (
-                ($wpdb->postmeta.meta_key = '_sku' AND $wpdb->postmeta.meta_value LIKE '%{$keyword}%')
-                OR
-                ($wpdb->posts.post_content LIKE '%{$keyword}%')
-                OR
-                ($wpdb->posts.post_title LIKE '%{$keyword}%')
-            )
-            AND $wpdb->posts.post_status = 'publish'
-            AND $wpdb->posts.post_type   = 'product'
-            AND $wpdb->posts.post_author = $store_id
-            ORDER BY $wpdb->posts.post_date DESC LIMIT 250";
+        $querystr = "SELECT DISTINCT posts.ID, posts.post_title, posts.post_status, posts.post_type, posts.post_author, posts.post_date
+                FROM $wpdb->posts as posts, $wpdb->postmeta as postmeta
+                WHERE posts.ID = postmeta.post_id
+                AND (
+                    (postmeta.meta_key = '_sku' AND postmeta.meta_value LIKE '%{$keyword}%')
+                    OR
+                    (posts.post_content LIKE '%{$keyword}%')
+                    OR
+                    (posts.post_title LIKE '%{$keyword}%')
+                )
+                AND posts.post_status = 'publish'
+                AND posts.post_type   = 'product'
+                AND posts.post_author = $store_id
+                ORDER BY posts.post_date DESC LIMIT 250";
 
-            $query_results = $wpdb->get_results( $querystr );
+        $query_results = $wpdb->get_results( $querystr );
 
-            if ( ! empty( $query_results ) ) {
-                foreach ( $query_results as $result ) {
-                    $product    = wc_get_product( $result->ID );
-                    $price      = wc_price( $product->get_price() );
-                    $price_sale = $product->get_sale_price();
-                    $stock      = $product->get_stock_status();
-                    $sku        = $product->get_sku();
-                    $categories = wp_get_post_terms( $result->ID, 'product_cat' );
+        if ( empty( $query_results ) ) {
+            echo wp_json_encode( $return_result );
+            die();
+        }
 
-                    if ( 'variable' === $product->get_type() ) {
-                        $price = wc_price( $product->get_variation_price() ) . ' - ' . wc_price( $product->get_variation_price( 'max' ) );
-                    }
+        foreach ( $query_results as $result ) {
+            $product    = wc_get_product( $result->ID );
+            $price      = wc_price( $product->get_price() );
+            $price_sale = $product->get_sale_price();
+            $stock      = $product->get_stock_status();
+            $sku        = $product->get_sku();
+            $categories = wp_get_post_terms( $result->ID, 'product_cat' );
 
-                    $get_product_image = esc_url( get_the_post_thumbnail_url( $result->ID, 'thumbnail' ) );
-
-                    if ( empty( $get_product_image ) && function_exists( 'wc_placeholder_img_src' ) ) {
-                        $get_product_image = wc_placeholder_img_src();
-                    }
-
-                    $output .= '<li>';
-                    $output .= '<a href="' . get_post_permalink( $result->ID ) . '">';
-                    $output .= '<div class="dokan-ls-product-image">';
-                    $output .= '<img src="' . $get_product_image . '">';
-                    $output .= '</div>';
-                    $output .= '<div class="dokan-ls-product-data">';
-                    $output .= '<h3>' . $result->post_title . '</h3>';
-
-                    if ( ! empty( $price ) ) {
-                        $output .= '<div class="product-price">';
-                        $output .= '<span class="dokan-ls-regular-price">' . $price . '</span>';
-                        if ( ! empty( $price_sale ) ) {
-                            $output .= '<span class="dokan-ls-sale-price">' . wc_price( $price_sale ) . '</span>';
-                        }
-                        $output .= '</div>';
-                    }
-
-                    if ( ! empty( $categories ) ) {
-                        $output .= '<div class="dokan-ls-product-categories">';
-                        foreach ( $categories as $category ) {
-                            if ( $category->parent ) {
-                                $parent  = get_term_by( 'id', $category->parent, 'product_cat' );
-                                $output .= '<span>' . $parent->name . '</span>';
-                            }
-                            $output .= '<span>' . $category->name . '</span>';
-                        }
-                        $output .= '</div>';
-                    }
-
-                    if ( ! empty( $sku ) ) {
-                        $output .= '<div class="dokan-ls-product-sku">' . esc_html__( 'SKU:', 'dokan-lite' ) . ' ' . $sku . '</div>';
-                    }
-
-                    $output .= '</div>';
-                    $output .= '</a>';
-                    $output .= '</li>';
-                }
+            if ( 'variable' === $product->get_type() ) {
+                $price = wc_price( $product->get_variation_price() ) . ' - ' . wc_price( $product->get_variation_price( 'max' ) );
             }
+
+            $get_product_image = esc_url( get_the_post_thumbnail_url( $result->ID, 'thumbnail' ) );
+
+            if ( empty( $get_product_image ) && function_exists( 'wc_placeholder_img_src' ) ) {
+                $get_product_image = wc_placeholder_img_src();
+            }
+
+            $output .= '<li>';
+            $output .= '<a href="' . get_post_permalink( $result->ID ) . '">';
+            $output .= '<div class="dokan-ls-product-image">';
+            $output .= '<img src="' . $get_product_image . '">';
+            $output .= '</div>';
+            $output .= '<div class="dokan-ls-product-data">';
+            $output .= '<h3>' . $result->post_title . '</h3>';
+
+            if ( ! empty( $price ) ) {
+                $output .= '<div class="product-price">';
+                $output .= '<span class="dokan-ls-regular-price">' . $price . '</span>';
+                if ( ! empty( $price_sale ) ) {
+                    $output .= '<span class="dokan-ls-sale-price">' . wc_price( $price_sale ) . '</span>';
+                }
+                $output .= '</div>';
+            }
+
+            if ( ! empty( $categories ) ) {
+                $output .= '<div class="dokan-ls-product-categories">';
+                foreach ( $categories as $category ) {
+                    if ( $category->parent ) {
+                        $parent  = get_term_by( 'id', $category->parent, 'product_cat' );
+                        $output .= '<span>' . $parent->name . '</span>';
+                    }
+                    $output .= '<span>' . $category->name . '</span>';
+                }
+                $output .= '</div>';
+            }
+
+            if ( ! empty( $sku ) ) {
+                $output .= '<div class="dokan-ls-product-sku">' . esc_html__( 'SKU:', 'dokan-lite' ) . ' ' . $sku . '</div>';
+            }
+
+            $output .= '</div>';
+            $output .= '</a>';
+            $output .= '</li>';
         }
 
         if ( $output ) {
