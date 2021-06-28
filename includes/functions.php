@@ -3655,11 +3655,14 @@ function dokan_commission_types() {
  * @return void|string
  */
 function dokan_login_form( $args = [], $echo = false ) {
+    $login_url = apply_filters( 'dokan_redirect_login', dokan_get_page_url( 'myaccount', 'woocommerce' ) );
+
     $defaults = [
         'title'        => esc_html__( 'Please Login to Continue', 'dokan-lite' ),
         'id'           => 'dokan-login-form',
         'nonce_action' => 'dokan-login-form-action',
         'nonce_name'   => 'dokan-login-form-nonce',
+        'login_url'    => $login_url,
     ];
 
     $args = wp_parse_args( $args, $defaults );
