@@ -192,7 +192,7 @@ class Ajax {
             die();
         }
 
-        if ( ! current_user_can( 'dokandar' ) && 'on' !== dokan_get_option( 'order_status_change', 'dokan_selling', 'on' ) ) {
+        if ( ! current_user_can( 'dokandar' ) || 'on' !== dokan_get_option( 'order_status_change', 'dokan_selling', 'on' ) ) {
             wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'dokan-lite' ) );
         }
 
@@ -290,7 +290,7 @@ class Ajax {
     public function change_order_status() {
         check_ajax_referer( 'dokan_change_status' );
 
-        if ( ! current_user_can( 'dokan_manage_order' ) ) {
+        if ( ! current_user_can( 'dokan_manage_order' ) || 'on' !== dokan_get_option( 'order_status_change', 'dokan_selling', 'on' ) ) {
             wp_send_json_error( __( 'You have no permission to manage this order', 'dokan-lite' ) );
 
             return;
