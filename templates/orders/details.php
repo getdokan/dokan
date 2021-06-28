@@ -11,7 +11,7 @@ if ( !dokan_is_seller_has_order( dokan_get_current_user_id(), $order_id ) ) {
 $statuses = wc_get_order_statuses();
 $order    = new WC_Order( $order_id );
 $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', 'off' );
-$customer_ip        = get_post_meta( dokan_get_prop( $order, 'id' ), '_customer_ip_address', true );
+$customer_ip        = get_post_meta( $order->get_id(), '_customer_ip_address', true );
 ?>
 <div class="dokan-clearfix">
     <div class="dokan-w8 dokan-order-left-content">
