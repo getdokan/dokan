@@ -197,6 +197,13 @@ final class WeDevs_Dokan {
         $this->container['upgrades'] = new \WeDevs\Dokan\Upgrade\Manager();
         $installer                   = new \WeDevs\Dokan\Install\Installer();
         $installer->do_install();
+
+        // fix rewrite rules
+        if ( ! isset( $this->container['rewrite'] ) ) {
+            $this->container['rewrite'] = new \WeDevs\Dokan\Rewrites();
+        }
+        $this->container['rewrite']->register_rule();
+        flush_rewrite_rules();
     }
 
     /**
@@ -351,10 +358,14 @@ final class WeDevs_Dokan {
         $this->container['api']           = new \WeDevs\Dokan\REST\Manager();
         $this->container['withdraw']      = new \WeDevs\Dokan\Withdraw\Manager();
         $this->container['dashboard']     = new \WeDevs\Dokan\Dashboard\Manager();
-        $this->container['rewrite']       = new \WeDevs\Dokan\Rewrites();
         $this->container['commission']    = new \WeDevs\Dokan\Commission();
         $this->container['customizer']    = new \WeDevs\Dokan\Customizer();
         $this->container['upgrades']      = new \WeDevs\Dokan\Upgrade\Manager();
+
+        //fix rewrite rules
+        if ( ! isset( $this->container['rewrite'] ) ) {
+            $this->container['rewrite'] = new \WeDevs\Dokan\Rewrites();
+        }
 
         $this->container = apply_filters( 'dokan_get_class_container', $this->container );
 
