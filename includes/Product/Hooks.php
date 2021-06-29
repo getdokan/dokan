@@ -42,7 +42,7 @@ class Hooks {
         $return_result['data_list'] = '<li> ' . __( 'Products not found with this search', 'dokan-lite' ) . ' </li>';
         $output                     = '';
 
-        if ( ! isset( $_POST['search_term'] ) || empty( $_POST['search_term'] ) ) {
+        if ( ! isset( $_POST['search_term'] ) || empty( $_POST['search_term'] ) || ! isset( $_POST['store_id'] ) ) {
             die();
         }
 
@@ -64,7 +64,7 @@ class Hooks {
                 AND posts.post_status = 'publish'
                 AND posts.post_type   = 'product'
                 AND posts.post_author = %d
-                ORDER BY posts.post_date DESC LIMIT 250",
+                ORDER BY posts.post_date DESC LIMIT 100",
             $keyword,
             $keyword,
             $keyword,
@@ -153,17 +153,7 @@ class Hooks {
      */
     public function store_products_orderby() {
         $show_default_orderby    = 'menu_order' === apply_filters( 'dokan_default_store_products_orderby', get_option( 'woocommerce_default_catalog_orderby', 'menu_order' ) );
-        $catalog_orderby_options = apply_filters(
-            'dokan_store_product_catalog_orderby',
-            array(
-                'menu_order' => __( 'Default sorting', 'dokan-lite' ),
-                'popularity' => __( 'Sort by popularity', 'dokan-lite' ),
-                'rating'     => __( 'Sort by average rating', 'dokan-lite' ),
-                'date'       => __( 'Sort by latest', 'dokan-lite' ),
-                'price'      => __( 'Sort by price: low to high', 'dokan-lite' ),
-                'price-desc' => __( 'Sort by price: high to low', 'dokan-lite' ),
-            )
-        );
+        $catalog_orderby_options = dokan_store_product_catalog_orderby();
 
         $default_orderby = wc_get_loop_prop( 'is_search' ) ? 'relevance' : apply_filters( 'dokan_default_store_products_orderby', get_option( 'woocommerce_default_catalog_orderby', '' ) );
         $orderby = isset( $_GET['product_orderby'] ) ? wc_clean( wp_unslash( $_GET['product_orderby'] ) ) : $default_orderby;

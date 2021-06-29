@@ -547,3 +547,26 @@ function dokan_get_translated_product_stock_status( $stock = false ) {
 
     return isset( $stock_status[ $stock ] ) ? $stock_status[ $stock ] : '';
 }
+
+/**
+ * Get dokan store products catalog orderby
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @return array
+ */
+function dokan_store_product_catalog_orderby() {
+    $orderby_options = apply_filters(
+        'dokan_store_product_catalog_orderby',
+        array(
+            'menu_order' => __( 'Default sorting', 'dokan' ),
+            'popularity' => __( 'Sort by popularity', 'dokan' ),
+            'rating'     => __( 'Sort by average rating', 'dokan' ),
+            'date'       => __( 'Sort by latest', 'dokan' ),
+            'price'      => __( 'Sort by price: low to high', 'dokan' ),
+            'price-desc' => __( 'Sort by price: high to low', 'dokan' ),
+        )
+    );
+
+    return $orderby_options;
+}

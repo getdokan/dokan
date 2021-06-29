@@ -358,13 +358,13 @@ class Rewrites {
         // Get ordering from query string unless defined.
         if ( ! $orderby ) {
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-            $orderby_value = isset( $_GET['product_orderby'] ) ? wc_clean( (string) wp_unslash( $_GET['product_orderby'] ) ) : wc_clean( get_query_var( 'product_orderby' ) );
+            $orderby_value = isset( $_GET['product_orderby'] ) ? wc_clean( wp_unslash( $_GET['product_orderby'] ) ) : wc_clean( get_query_var( 'product_orderby' ) );
 
             if ( ! $orderby_value ) {
                 if ( is_search() ) {
                     $orderby_value = 'relevance';
                 } else {
-                    $orderby_value = apply_filters( 'woocommerce_default_catalog_orderby', get_option( 'woocommerce_default_catalog_orderby', 'menu_order' ) );
+                    $orderby_value = apply_filters( 'dokan_default_catalog_orderby', get_option( 'woocommerce_default_catalog_orderby', 'menu_order' ) );
                 }
             }
 
