@@ -153,7 +153,17 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                 <span class="dokan-show-add-product-error"></span>
                 <span class="dokan-spinner dokan-add-new-product-spinner dokan-hide"></span>
                 <input type="submit" id="dokan-create-new-product-btn" class="dokan-btn dokan-btn-default" data-btn_id="create_new" value="<?php esc_attr_e( 'Create product', 'dokan-lite' ) ?>">
+                <?php
+                $display_create_and_add_new_button = true;
+                if ( method_exists( '\DokanPro\Modules\Subscription\Helper', 'get_vendor_remaining_products' )  ) {
+                    if ( 2 > \DokanPro\Modules\Subscription\Helper::get_vendor_remaining_products( dokan_get_current_user_id() ) ) {
+                        $display_create_and_add_new_button = false;
+                    }
+                }
+                if ( $display_create_and_add_new_button ) :
+                ?>
                 <input type="submit" id="dokan-create-and-add-new-product-btn" class="dokan-btn dokan-btn-theme" data-btn_id="create_and_new" value="<?php esc_attr_e( 'Create & add new', 'dokan-lite' ) ?>">
+                <?php endif; ?>
             </div>
         </form>
     </div>
