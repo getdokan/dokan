@@ -48,21 +48,28 @@ class Hooks {
 
         $keyword  = wc_clean( wp_unslash( $_POST['search_term'] ) );
         $store_id = intval( wp_unslash( $_POST['store_id'] ) );
+        $keyword  = '%' . $wpdb->esc_like( $keyword ) . '%';
 
-        $querystr = "SELECT DISTINCT posts.ID, posts.post_title, posts.post_status, posts.post_type, posts.post_author, posts.post_date
+        $querystr = $wpdb->prepare(
+            "SELECT DISTINCT posts.ID
                 FROM $wpdb->posts as posts, $wpdb->postmeta as postmeta
                 WHERE posts.ID = postmeta.post_id
                 AND (
-                    (postmeta.meta_key = '_sku' AND postmeta.meta_value LIKE '%{$keyword}%')
+                    (postmeta.meta_key = '_sku' AND postmeta.meta_value LIKE %s)
                     OR
-                    (posts.post_content LIKE '%{$keyword}%')
+                    (posts.post_content LIKE %s)
                     OR
-                    (posts.post_title LIKE '%{$keyword}%')
+                    (posts.post_title LIKE %s)
                 )
                 AND posts.post_status = 'publish'
                 AND posts.post_type   = 'product'
-                AND posts.post_author = $store_id
-                ORDER BY posts.post_date DESC LIMIT 250";
+                AND posts.post_author = %d
+                ORDER BY posts.post_date DESC LIMIT 250",
+            $keyword,
+            $keyword,
+            $keyword,
+            $store_id
+        );
 
         $query_results = $wpdb->get_results( $querystr );
 
@@ -77,6 +84,7 @@ class Hooks {
             $price_sale = $product->get_sale_price();
             $stock      = $product->get_stock_status();
             $sku        = $product->get_sku();
+            $get_name   = $product->get_name();
             $categories = wp_get_post_terms( $result->ID, 'product_cat' );
 
             if ( 'variable' === $product->get_type() ) {
@@ -95,7 +103,7 @@ class Hooks {
             $output .= '<img src="' . $get_product_image . '">';
             $output .= '</div>';
             $output .= '<div class="dokan-ls-product-data">';
-            $output .= '<h3>' . $result->post_title . '</h3>';
+            $output .= '<h3>' . $get_name . '</h3>';
 
             if ( ! empty( $price ) ) {
                 $output .= '<div class="product-price">';
