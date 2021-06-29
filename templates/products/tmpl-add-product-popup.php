@@ -152,6 +152,7 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
             </div>
             <div class="product-container-footer">
                 <span class="dokan-show-add-product-error"></span>
+                <span class="dokan-show-add-product-success"></span>
                 <span class="dokan-spinner dokan-add-new-product-spinner dokan-hide"></span>
                 <input type="submit" id="dokan-create-new-product-btn" class="dokan-btn dokan-btn-default" data-btn_id="create_new" value="<?php esc_attr_e( 'Create product', 'dokan-lite' ) ?>">
                 <input type="submit" id="dokan-create-and-add-new-product-btn" class="dokan-btn dokan-btn-theme" data-btn_id="create_and_new" value="<?php esc_attr_e( 'Create & add new', 'dokan-lite' ) ?>">
