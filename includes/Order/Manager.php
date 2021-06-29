@@ -69,7 +69,7 @@ class Manager {
                 }, $orders
             );
 
-            $orders = apply_filters('dokan_get_vendor_orders', $orders, $args);
+            $orders = apply_filters( 'dokan_get_vendor_orders', $orders, $args );
 
             wp_cache_set( $cache_key, $orders, $cache_group );
             dokan_cache_update_group( $cache_key, $cache_group );
