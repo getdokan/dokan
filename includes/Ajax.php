@@ -766,10 +766,8 @@ class Ajax {
             /* translators: 1: user display name 2: user ID 3: user email */
             $found_customers[ $id ] = sprintf(
                 /* translators: 1. Customer name, 2. Customer ID, 3: Customer email */
-                esc_html__( '%1$s (#%2$s &ndash; %3$s)', 'dokan-lite' ),
-                $customer->get_first_name() . ' ' . $customer->get_last_name(),
-                $customer->get_id(),
-                $customer->get_email()
+                esc_html__( '%1$s', 'dokan-lite' ),
+                $customer->get_first_name() . ' ' . $customer->get_last_name()
             );
         }
 
