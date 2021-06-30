@@ -26,6 +26,10 @@
             </button>
         </div>
 
+        <p class="dokan-popup-create-an-account">
+            &nbsp;&nbsp; <?php esc_html_e( 'or', 'dokan-lite' ); ?> &nbsp;&nbsp; <a href="<?php echo esc_url( $login_url ); ?>" class="dokan-btn dokan-btn-theme"><?php esc_html_e( 'Create an account', 'dokan-lite' ); ?></a>
+        </p>
+
         <?php wp_nonce_field( esc_html( $nonce_action ), esc_html( $nonce_name ) ); ?>
     </fieldset>
 </form>

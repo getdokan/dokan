@@ -184,7 +184,7 @@ $customer_ip        = get_post_meta( $order->get_id(), '_customer_ip_address', t
                                     <a href="#" class="dokan-edit-status"><small><?php esc_html_e( '&nbsp; Edit', 'dokan-lite' ); ?></small></a>
                                 <?php } ?>
                             </li>
-                            <?php if ( current_user_can( 'dokan_manage_order' ) ): ?>
+                            <?php if ( current_user_can( 'dokan_manage_order' ) && dokan_get_option( 'order_status_change', 'dokan_selling', 'on' ) == 'on' && $order->get_status() !== 'cancelled' && $order->get_status() !== 'refunded' ): ?>
                                 <li class="dokan-hide">
                                     <form id="dokan-order-status-form" action="" method="post">
 

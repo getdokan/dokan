@@ -3011,7 +3011,7 @@ function dokan_get_all_caps() {
             'dokan_view_order_menu'          => __( 'View order menu', 'dokan-lite' ),
             'dokan_view_coupon_menu'         => __( 'View coupon menu', 'dokan-lite' ),
             'dokan_view_report_menu'         => __( 'View report menu', 'dokan-lite' ),
-            'dokan_view_review_menu'         => __( 'Vuew review menu', 'dokan-lite' ),
+            'dokan_view_review_menu'         => __( 'View review menu', 'dokan-lite' ),
             'dokan_view_withdraw_menu'       => __( 'View withdraw menu', 'dokan-lite' ),
             'dokan_view_store_settings_menu' => __( 'View store settings menu', 'dokan-lite' ),
             'dokan_view_store_payment_menu'  => __( 'View payment settings menu', 'dokan-lite' ),
@@ -3655,11 +3655,14 @@ function dokan_commission_types() {
  * @return void|string
  */
 function dokan_login_form( $args = [], $echo = false ) {
+    $login_url = apply_filters( 'dokan_redirect_login', dokan_get_page_url( 'myaccount', 'woocommerce' ) );
+
     $defaults = [
         'title'        => esc_html__( 'Please Login to Continue', 'dokan-lite' ),
         'id'           => 'dokan-login-form',
         'nonce_action' => 'dokan-login-form-action',
         'nonce_name'   => 'dokan-login-form-nonce',
+        'login_url'    => $login_url,
     ];
 
     $args = wp_parse_args( $args, $defaults );
@@ -3928,9 +3931,9 @@ function dokan_met_minimum_php_version_for_wc( $required_version = '7.0' ) {
 function dokan_has_map_api_key() {
     $dokan_appearance = get_option( 'dokan_appearance', [] );
 
-    if ( 'google_maps' === $dokan_appearance['map_api_source'] && ! empty( $dokan_appearance['gmap_api_key'] ) ) {
+    if ( ! empty( $dokan_appearance['map_api_source'] ) && 'google_maps' === $dokan_appearance['map_api_source'] && ! empty( $dokan_appearance['gmap_api_key'] ) ) {
         return true;
-    } elseif ( 'mapbox' === $dokan_appearance['map_api_source'] && ! empty( $dokan_appearance['mapbox_access_token'] ) ) {
+    } elseif ( ! empty( $dokan_appearance['map_api_source'] ) && 'mapbox' === $dokan_appearance['map_api_source'] && ! empty( $dokan_appearance['mapbox_access_token'] ) ) {
         return true;
     }
 
@@ -4065,6 +4068,38 @@ function dokan_format_date( $date = '', $format = false ) {
     // if no format is specified, get default WordPress date format
     if ( ! $format ) {
         $format = wc_date_format();
+    }
+
+    // if date is not timestamp, convert it to timestamp
+    if ( ! is_numeric( $date ) && strtotime( $date ) ) {
+        $date = dokan_current_datetime()->modify( $date )->getTimestamp();
+    }
+
+    if ( function_exists( 'wp_date' ) ) {
+        return wp_date( $format, $date );
+    }
+
+    return date_i18n( $format, $date );
+}
+
+/**
+ * Get a formatted date, time from WordPress format
+ *
+ * @param string|timestamp $date the date string or timestamp
+ * @param string|bool $format date format string or false for default WordPress date
+ * @since 3.2.7
+ *
+ * @return string|false The date, translated if locale specifies it. False on invalid timestamp input.
+ */
+function dokan_format_datetime( $date = '', $format = false ) {
+    // if date is empty, get current datetime timestamp
+    if ( empty( $date ) ) {
+        $date = dokan_current_datetime()->getTimestamp();
+    }
+
+    // if no format is specified, get default WordPress date format
+    if ( ! $format ) {
+        $format = wc_date_format() . ' ' . wc_time_format();
     }
 
     // if date is not timestamp, convert it to timestamp
