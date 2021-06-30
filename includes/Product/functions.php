@@ -549,7 +549,7 @@ function dokan_get_translated_product_stock_status( $stock = false ) {
 }
 
 /**
- * Get dokan store products catalog orderby
+ * Get dokan store products filter catalog orderby
  *
  * @since DOKAN_LITE_SINCE
  *
