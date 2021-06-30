@@ -11,6 +11,7 @@ if ( !dokan_is_seller_has_order( dokan_get_current_user_id(), $order_id ) ) {
 $statuses = wc_get_order_statuses();
 $order    = new WC_Order( $order_id );
 $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', 'off' );
+
 ?>
 <div class="dokan-clearfix">
     <div class="dokan-w8 dokan-order-left-content">
