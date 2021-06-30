@@ -46,8 +46,8 @@ class Hooks {
             die();
         }
 
-        $keyword  = wc_clean( wp_unslash( $_POST['search_term'] ) );
-        $store_id = intval( wp_unslash( $_POST['store_id'] ) );
+        $keyword  = wc_clean( wp_unslash( $_POST['search_term'] ) ); //phpcs:ignore
+        $store_id = intval( wp_unslash( $_POST['store_id'] ) ); //phpcs:ignore
         $keyword  = '%' . $wpdb->esc_like( $keyword ) . '%';
 
         $querystr = $wpdb->prepare(
@@ -156,7 +156,7 @@ class Hooks {
         $catalog_orderby_options = dokan_store_product_catalog_orderby();
 
         $default_orderby = wc_get_loop_prop( 'is_search' ) ? 'relevance' : apply_filters( 'dokan_default_store_products_orderby', get_option( 'woocommerce_default_catalog_orderby', '' ) );
-        $orderby = isset( $_GET['product_orderby'] ) ? wc_clean( wp_unslash( $_GET['product_orderby'] ) ) : $default_orderby;
+        $orderby = isset( $_GET['product_orderby'] ) ? wc_clean( wp_unslash( $_GET['product_orderby'] ) ) : $default_orderby; //phpcs:ignore
 
         if ( wc_get_loop_prop( 'is_search' ) ) {
             $catalog_orderby_options = array_merge( array( 'relevance' => __( 'Relevance', 'dokan-lite' ) ), $catalog_orderby_options );
@@ -203,7 +203,7 @@ class Hooks {
      *
      * @return string
      */
-    function bulk_product_status_change() {
+    public function bulk_product_status_change() {
         if ( ! current_user_can( 'dokan_delete_product' ) ) {
             return;
         }
@@ -236,7 +236,7 @@ class Hooks {
      *
      * @return void
      */
-    function bulk_product_delete( $action, $products ) {
+    public function bulk_product_delete( $action, $products ) {
         if ( 'delete' !== $action || empty( $products ) ) {
             return;
         }

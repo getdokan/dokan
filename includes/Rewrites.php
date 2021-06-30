@@ -326,14 +326,14 @@ class Rewrites {
             $query->set( 'tax_query', apply_filters( 'dokan_store_tax_query', $tax_query ) );
 
             if ( isset( $_GET['product_name'] ) && ! empty( $_GET['product_name'] ) ) {
-                $product_name = wc_clean( wp_unslash( $_GET['product_name'] ) );
+                $product_name = wc_clean( wp_unslash( $_GET['product_name'] ) ); //phpcs:ignore
 
                 $query->set( 's', $product_name );
             }
 
             // set orderby param
             if ( isset( $_GET['product_orderby'] ) && ! empty( $_GET['product_orderby'] ) ) {
-                $orderby  = wc_clean( wp_unslash( $_GET['product_orderby'] ) );
+                $orderby  = wc_clean( wp_unslash( $_GET['product_orderby'] ) ); //phpcs:ignore
                 $ordering = $this->get_catalog_ordering_args( $orderby );
 
                 $query->set( 'orderby', $ordering['orderby'] );
@@ -358,7 +358,7 @@ class Rewrites {
         // Get ordering from query string unless defined.
         if ( ! $orderby ) {
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-            $orderby_value = isset( $_GET['product_orderby'] ) ? wc_clean( wp_unslash( $_GET['product_orderby'] ) ) : wc_clean( get_query_var( 'product_orderby' ) );
+            $orderby_value = isset( $_GET['product_orderby'] ) ? wc_clean( wp_unslash( $_GET['product_orderby'] ) ) : wc_clean( get_query_var( 'product_orderby' ) ); //phpcs:ignore
 
             if ( ! $orderby_value ) {
                 if ( is_search() ) {

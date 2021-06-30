@@ -559,12 +559,12 @@ function dokan_store_product_catalog_orderby() {
     $orderby_options = apply_filters(
         'dokan_store_product_catalog_orderby',
         array(
-            'menu_order' => __( 'Default sorting', 'dokan' ),
-            'popularity' => __( 'Sort by popularity', 'dokan' ),
-            'rating'     => __( 'Sort by average rating', 'dokan' ),
-            'date'       => __( 'Sort by latest', 'dokan' ),
-            'price'      => __( 'Sort by price: low to high', 'dokan' ),
-            'price-desc' => __( 'Sort by price: high to low', 'dokan' ),
+            'menu_order' => __( 'Default sorting', 'dokan-lite' ),
+            'popularity' => __( 'Sort by popularity', 'dokan-lite' ),
+            'rating'     => __( 'Sort by average rating', 'dokan-lite' ),
+            'date'       => __( 'Sort by latest', 'dokan-lite' ),
+            'price'      => __( 'Sort by price: low to high', 'dokan-lite' ),
+            'price-desc' => __( 'Sort by price: high to low', 'dokan-lite' ),
         )
     );
 
