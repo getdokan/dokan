@@ -89,12 +89,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Dealerdirect/phpcodesniffer-composer-installer.git",
-                "reference": "c960cf4629fab7155caca18c038ca7257b7595e3"
+                "reference": "ce4370ee5a2b1642bca908d4b54a369e845bb678"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Dealerdirect/phpcodesniffer-composer-installer/zipball/c960cf4629fab7155caca18c038ca7257b7595e3",
-                "reference": "c960cf4629fab7155caca18c038ca7257b7595e3",
+                "url": "https://api.github.com/repos/Dealerdirect/phpcodesniffer-composer-installer/zipball/ce4370ee5a2b1642bca908d4b54a369e845bb678",
+                "reference": "ce4370ee5a2b1642bca908d4b54a369e845bb678",
                 "shasum": ""
             },
             "require": {
@@ -147,7 +147,7 @@
                 "stylecheck",
                 "tests"
             ],
-            "time": "2021-03-14T13:49:41+00:00"
+            "time": "2021-06-13T15:16:43+00:00"
         },
         {
             "name": "doctrine/instantiator",
@@ -364,12 +364,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCompatibility/PHPCompatibilityWP.git",
-                "reference": "8c09ff3d057942ea4ca2ec7494f72c33c8d7f863"
+                "reference": "fa2daf6891a8c6a0eea11ae62faab6849b17d48d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibilityWP/zipball/8c09ff3d057942ea4ca2ec7494f72c33c8d7f863",
-                "reference": "8c09ff3d057942ea4ca2ec7494f72c33c8d7f863",
+                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibilityWP/zipball/fa2daf6891a8c6a0eea11ae62faab6849b17d48d",
+                "reference": "fa2daf6891a8c6a0eea11ae62faab6849b17d48d",
                 "shasum": ""
             },
             "require": {
@@ -406,7 +406,7 @@
                 "standards",
                 "wordpress"
             ],
-            "time": "2021-04-12T18:59:20+00:00"
+            "time": "2021-06-22T10:21:10+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -1534,12 +1534,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "fde816c3c3229af6440ed542df00d37a7bc6a261"
+                "reference": "bf08940c11f5c1c08040c3235ab45207f7088970"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/fde816c3c3229af6440ed542df00d37a7bc6a261",
-                "reference": "fde816c3c3229af6440ed542df00d37a7bc6a261",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/bf08940c11f5c1c08040c3235ab45207f7088970",
+                "reference": "bf08940c11f5c1c08040c3235ab45207f7088970",
                 "shasum": ""
             },
             "require": {
@@ -1577,7 +1577,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2021-04-28T03:23:55+00:00"
+            "time": "2021-06-24T22:42:21+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",

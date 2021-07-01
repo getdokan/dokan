@@ -34,4 +34,4 @@ function dokan_depricated_elementor_store_widgets( $default_widget_args, $widget
     return $default_widget_args;
 }
 
-add_action( 'elementor/widgets/wordpress/widget_args', 'dokan_depricated_elementor_store_widgets', 10, 2 );
+add_filter( 'elementor/widgets/wordpress/widget_args', 'dokan_depricated_elementor_store_widgets', 10, 2 );

@@ -3,11 +3,11 @@ Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce, yith, yithemes
 Requires at least: 4.4
-Tested up to: 5.7.1
+Tested up to: 5.7.2
 WC requires at least: 3.0
-WC tested up to: 5.2.2
+WC tested up to: 5.4.1
 Requires PHP: 5.6
-Stable tag: 3.2.6
+Stable tag: 3.2.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -291,6 +291,24 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.2.7 ( Jul 01, 2021 ) =
+
+- **new:** Added Orderby filtering for single store product listing page
+- **new:** Added custom ip address lookup link
+- **new:** Added a success message after creating a product from add new product modal window
+- **new:** Added - - for category listing in add new product page and add new product modal window
+- **new:** Added a new shortcode attribute named with_products_only in [dokan_store] shortcake so that vendor without product can be filtered out from store listing page
+- **new(api):** Add support to send objects to trash, thanks to @Mário Valney
+- **fix:** Fixed duplicate tag create issue, if new tag is searched with mixed character case
+- **fix:** Wrong hooks used on Elementor widgets
+- **fix:** Typo in Staff - Manage Menu Permissions fixed
+- **fix:** Fixed an error in Dokan setting for new installation of Dokan Lite
+- **fix:** Fixed vendor order page pagination issue for date and customer filter
+- **fix:** Fixed “In stock" and "Out of stock" translation issue
+- **fix:** Email template override directory location correction for dokan vendor completed order
+- **fix:** delete cache data after updating dokan vendor balance table
+- **fix:** Fixed a bug that would allow vendors to change order status even if they don't have permission to do so, thanks to @CODLOP
 
 = v3.2.6 ( May 8, 2021 ) =
 
