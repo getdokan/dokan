@@ -72,7 +72,7 @@ class TaxonomyDropdown extends Walker {
             $output .= ' data-commission="' . $commission_val . '" data-product-id="' . $this->post_id . '"';
         }
 
-        if ( in_array( $category->term_id, $args['selected'], true ) ) {
+        if ( is_array( $args['selected'] ) && in_array( $category->term_id, $args['selected'], true ) ) {
             $output .= ' selected="selected"';
         }
 
