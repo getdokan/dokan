@@ -96,7 +96,7 @@ class Ajax {
     }
 
     /**
-     * Check the availibility of shop name.
+     * Check the availability of shop name.
      *
      * @return void
      */
@@ -124,7 +124,7 @@ class Ajax {
         if ( is_user_logged_in() && dokan_is_user_customer( $user_ID ) ) {
             $current_user = wp_get_current_user();
 
-            if ( $current_user->user_nicename === $user->user_nicename ) {
+            if ( $user && $current_user->user_nicename === $user->user_nicename ) {
                 $check = true;
             }
         }
@@ -132,7 +132,7 @@ class Ajax {
         if ( is_admin() && isset( $_POST['vendor_id'] ) ) {
             $vendor = get_user_by( 'id', intval( $_POST['vendor_id'] ) );
 
-            if ( $vendor->user_nicename === $user->user_nicename ) {
+            if ( $vendor && $user && $vendor->user_nicename === $user->user_nicename ) {
                 $check = true;
             }
         }
