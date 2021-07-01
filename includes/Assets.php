@@ -13,8 +13,10 @@ class Assets {
 
         if ( is_admin() ) {
             add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_scripts' ] );
+            add_action( 'admin_enqueue_scripts', [ $this, 'load_dokan_helper_script' ] );
         } else {
             add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_front_scripts' ] );
+            add_action( 'wp_enqueue_scripts', [ $this, 'load_dokan_helper_script' ] );
         }
     }
 
@@ -85,9 +87,6 @@ class Assets {
         if ( 'plugins.php' === $hook ) {
             wp_enqueue_style( 'dokan-plugin-list-css' );
         }
-
-        // Dokan helper JS file, need to load this file
-        wp_enqueue_script( 'dokan-util-helper', DOKAN_PLUGIN_ASSEST . '/src/js/helper.js', ['jquery'], DOKAN_PLUGIN_VERSION, true );
 
         do_action( 'dokan_enqueue_admin_scripts' );
     }
@@ -385,6 +384,12 @@ class Assets {
                 'deps'      => [ 'dokan-popup', 'dokan-i18n-jed' ],
                 'version'   => filemtime( $asset_path . '/js/login-form-popup.js' ),
             ],
+            'dokan-util-helper' => [
+                'src'       => $asset_url . '/js/helper.js',
+                'deps'      => [ 'jquery' ],
+                'version'   => filemtime( $asset_path . 'js/helper.js' ),
+                'in_footer' => false,
+            ],
         ];
 
         return $scripts;
@@ -483,12 +488,24 @@ class Assets {
 
         wp_enqueue_script( 'dokan-login-form-popup' );
 
-        // Dokan helper JS file, need to load this file
-        wp_enqueue_script( 'dokan-util-helper', DOKAN_PLUGIN_ASSEST . '/src/js/helper.js', ['jquery'], DOKAN_PLUGIN_VERSION, true );
-
         do_action( 'dokan_enqueue_scripts' );
     }
 
+    /**
+     * Enqueue Dokan Helper Script
+     *
+     * @since 3.2.7
+     */
+    public function load_dokan_helper_script() {
+        // Dokan helper JS file, need to load this file
+        wp_enqueue_script( 'dokan-util-helper' );
+
+        $localize_data = [
+            'i18n_date_format' => wc_date_format(),
+        ];
+
+        wp_localize_script( 'dokan-util-helper', 'dokan_helper', $localize_data );
+    }
     /**
      * Load form validate script args
      *
