@@ -3,10 +3,9 @@ exports.config = {
     helpers: {
         WebDriver: {
             url: 'http://localhost:10003/',
-            // url: 'http://dokan-pro.test/',
-            // url: 'https://dokan.ajaira.website/', 
+            
             browser: 'chrome',
-            // windowSize: "maximize",
+        
 
             desiredCapabilities: {
                 chromeOptions: {
