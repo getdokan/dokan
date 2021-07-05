@@ -28,8 +28,7 @@ class BestSellingProducts extends WP_Widget {
      * @param array $instance Saved values from database.
      */
     public function widget( $args, $instance ) {
-        $title = ! empty( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : '';
-
+        $title           = isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : '';
         $no_of_product   = isset( $instance['no_of_product'] ) ? $instance['no_of_product'] : 8;
         $show_rating     = isset( $instance['show_rating'] ) ? $instance['show_rating'] : false;
         $hide_outofstock = isset( $instance['hide_outofstock'] ) ? $instance['hide_outofstock'] : false;

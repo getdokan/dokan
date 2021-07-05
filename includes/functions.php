@@ -26,7 +26,7 @@ function dokana_admin_menu_capability() {
  *
  * @since 2.7.3
  *
- * @return void
+ * @return int
  */
 function dokan_get_current_user_id() {
     if ( current_user_can( 'vendor_staff' ) ) {
@@ -183,15 +183,25 @@ function dokan_redirect_if_not_seller( $redirect = '' ) {
  *
  * @param string $post_type
  * @param int    $user_id
+ * @param array  $exclude_product_types The product types that will be excluded from count
  *
  * @return array
  */
-function dokan_count_posts( $post_type, $user_id ) {
+function dokan_count_posts( $post_type, $user_id, $exclude_product_types = array( 'booking' ) ) {
     global $wpdb;
 
-    $cache_group = 'dokan_seller_product_data_' . $user_id;
-    $cache_key   = 'dokan-count-' . $post_type . '-' . $user_id;
-    $counts      = wp_cache_get( $cache_key, $cache_group );
+    $exclude_product_types      = esc_sql( $exclude_product_types );
+    $exclude_product_types_text = "'" . implode( "', '", $exclude_product_types ) . "'";
+    $exclude_product_types_key  = implode( '-', $exclude_product_types );
+    $cache_group                = 'dokan_cache_seller_product_data_' . $user_id;
+    $cache_key                  = 'dokan-count-' . $post_type . '-' . $exclude_product_types_key . '-' . $user_id;
+    $counts                     = wp_cache_get( $cache_key, $cache_group );
+    $tracked_cache_keys         = get_option( $cache_group, [] );
+
+    if ( ! in_array( $cache_key, $tracked_cache_keys, true ) ) {
+        $tracked_cache_keys[] = $cache_key;
+        update_option( $cache_group, $tracked_cache_keys );
+    }
 
     if ( false === $counts ) {
         $results = apply_filters( 'dokan_count_posts', null, $post_type, $user_id );
@@ -199,7 +209,16 @@ function dokan_count_posts( $post_type, $user_id ) {
         if ( ! $results ) {
             $results = $wpdb->get_results(
                 $wpdb->prepare(
-                    "SELECT post_status, COUNT( * ) AS num_posts FROM {$wpdb->posts} WHERE post_type = %s AND post_author = %d GROUP BY post_status",
+                    "SELECT post_status, COUNT( * ) AS num_posts FROM {$wpdb->posts} as posts
+                            INNER JOIN {$wpdb->term_relationships} AS term_relationships ON posts.ID = term_relationships.object_id
+                            INNER JOIN {$wpdb->term_taxonomy} AS term_taxonomy ON term_relationships.term_taxonomy_id = term_taxonomy.term_taxonomy_id
+                            INNER JOIN {$wpdb->terms} AS terms ON term_taxonomy.term_id = terms.term_id
+                            WHERE
+                                term_taxonomy.taxonomy = 'product_type'
+                            AND terms.slug NOT IN ({$exclude_product_types_text})
+                            AND posts.post_type = %s
+                            AND posts.post_author = %d
+                                GROUP BY posts.post_status",
                     $post_type,
                     $user_id
                 ),
@@ -222,6 +241,73 @@ function dokan_count_posts( $post_type, $user_id ) {
 
         $counts['total'] = $total;
         $counts          = (object) $counts;
+
+        wp_cache_set( $cache_key, $counts, $cache_group, 3600 * 6 );
+    }
+
+    return $counts;
+}
+
+/**
+ * Count stock product type from a user
+ *
+ * @global WPDB $wpdb
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @param string $post_type
+ * @param int    $user_id
+ * @param string $stock_type
+ *
+ * @return int $counts
+ */
+function dokan_count_stock_posts( $post_type, $user_id, $stock_type ) {
+    global $wpdb;
+
+    $cache_group   = 'dokan_cache_seller_product_stock_data_' . $user_id;
+    $cache_key     = 'dokan-count-' . $post_type . '_' . $stock_type . '-' . $user_id;
+    $counts        = wp_cache_get( $cache_key, $cache_group );
+    $get_old_cache = get_option( $cache_group, [] );
+
+    if ( ! in_array( $cache_key, $get_old_cache, true ) ) {
+        $get_old_cache[] = $cache_key;
+    }
+
+    update_option( $cache_group, $get_old_cache );
+
+    if ( false === $counts ) {
+        $results = apply_filters( 'dokan_count_posts_' . $stock_type, null, $post_type, $user_id );
+
+        if ( ! $results ) {
+            $results = $wpdb->get_results(
+                $wpdb->prepare(
+                    "SELECT p.post_status, COUNT( * ) AS num_posts 
+                    FROM {$wpdb->prefix}posts as p INNER JOIN {$wpdb->prefix}postmeta as pm ON p.ID = pm.post_id
+                    WHERE p.post_type = %s
+                    AND p.post_author = %d
+                    AND pm.meta_key   = '_stock_status'
+                    AND pm.meta_value = %s
+                    GROUP BY p.post_status",
+                    $post_type,
+                    $user_id,
+                    $stock_type
+                ),
+                ARRAY_A
+            );
+        }
+
+        $post_status = array_keys( dokan_get_post_status() );
+        $total       = 0;
+
+        foreach ( $results as $row ) {
+            if ( ! in_array( $row['post_status'], $post_status, true ) ) {
+                continue;
+            }
+
+            $total += (int) $row['num_posts'];
+        }
+
+        $counts = $total;
 
         wp_cache_set( $cache_key, $counts, $cache_group, 3600 * 6 );
     }
@@ -983,17 +1069,15 @@ function dokan_edit_product_url( $product ) {
         return false;
     }
 
-    if ( 'publish' === $product->get_status() ) {
-        $url = trailingslashit( get_permalink( $product->get_id() ) ) . 'edit/';
-    } else {
-        $url = add_query_arg(
-            [
-                'product_id' => $product->get_id(),
-                'action'     => 'edit',
-            ],
-            dokan_get_navigation_url( 'products' )
-        );
-    }
+
+    $url = add_query_arg(
+        [
+            'product_id' => $product->get_id(),
+            'action'     => 'edit',
+        ],
+        dokan_get_navigation_url( 'products' )
+    );
+
 
     return apply_filters( 'dokan_get_edit_product_url', $url, $product );
 }
@@ -1101,7 +1185,7 @@ function dokan_get_store_url( $user_id ) {
     $user_nicename    = ( ! false == $userdata ) ? $userdata->user_nicename : '';
     $custom_store_url = dokan_get_option( 'custom_store_url', 'dokan_general', 'store' );
 
-    return sprintf( '%s/%s/', home_url( '/' . $custom_store_url ), $user_nicename );
+    return home_url( '/' . $custom_store_url . '/' . $user_nicename . '/' );
 }
 
 /**
@@ -2051,10 +2135,12 @@ function dokan_get_navigation_url( $name = '' ) {
         return '';
     }
 
+    $url = get_permalink( $page_id );
+
     if ( ! empty( $name ) ) {
-        $url = get_permalink( $page_id ) . $name . '/';
-    } else {
-        $url = get_permalink( $page_id );
+        $urlParts         = wp_parse_url( $url );
+        $urlParts['path'] = $urlParts['path'] . $name . '/';
+        $url              = http_build_url( '', $urlParts );
     }
 
     return apply_filters( 'dokan_get_navigation_url', esc_url( $url ), $name );
@@ -2758,6 +2844,8 @@ function dokan_cache_clear_seller_product_data( $product_id, $post_data = [] ) {
 
     dokan_clear_product_caches( $product_id );
     dokan_cache_clear_group( 'dokan_seller_product_data_' . $seller_id );
+    dokan_cache_clear_group( 'dokan_cache_seller_product_data_' . $seller_id );
+    dokan_cache_clear_group( 'dokan_cache_seller_product_stock_data_' . $seller_id );
     delete_transient( 'dokan-store-category-' . $seller_id );
 }
 
@@ -2923,7 +3011,7 @@ function dokan_get_all_caps() {
             'dokan_view_order_menu'          => __( 'View order menu', 'dokan-lite' ),
             'dokan_view_coupon_menu'         => __( 'View coupon menu', 'dokan-lite' ),
             'dokan_view_report_menu'         => __( 'View report menu', 'dokan-lite' ),
-            'dokan_view_review_menu'         => __( 'Vuew review menu', 'dokan-lite' ),
+            'dokan_view_review_menu'         => __( 'View review menu', 'dokan-lite' ),
             'dokan_view_withdraw_menu'       => __( 'View withdraw menu', 'dokan-lite' ),
             'dokan_view_store_settings_menu' => __( 'View store settings menu', 'dokan-lite' ),
             'dokan_view_store_payment_menu'  => __( 'View payment settings menu', 'dokan-lite' ),
@@ -3191,8 +3279,8 @@ function dokan_is_store_open( $user_id ) {
             return true;
         }
 
-        $open  = $current_time->modify( $schedule['opening_time'] );
-        $close = $current_time->modify( $schedule['closing_time'] );
+        $open  = DateTimeImmutable::createFromFormat( esc_attr( get_option( 'time_format' ) ), $schedule['opening_time'], new DateTimeZone( dokan_wp_timezone_string() ) );
+        $close = DateTimeImmutable::createFromFormat( esc_attr( get_option( 'time_format' ) ), $schedule['closing_time'], new DateTimeZone( dokan_wp_timezone_string() ) );
 
         if ( $open <= $current_time && $close >= $current_time ) {
             return true;
@@ -3567,11 +3655,14 @@ function dokan_commission_types() {
  * @return void|string
  */
 function dokan_login_form( $args = [], $echo = false ) {
+    $login_url = apply_filters( 'dokan_redirect_login', dokan_get_page_url( 'myaccount', 'woocommerce' ) );
+
     $defaults = [
         'title'        => esc_html__( 'Please Login to Continue', 'dokan-lite' ),
         'id'           => 'dokan-login-form',
         'nonce_action' => 'dokan-login-form-action',
         'nonce_name'   => 'dokan-login-form-nonce',
+        'login_url'    => $login_url,
     ];
 
     $args = wp_parse_args( $args, $defaults );
@@ -3840,9 +3931,9 @@ function dokan_met_minimum_php_version_for_wc( $required_version = '7.0' ) {
 function dokan_has_map_api_key() {
     $dokan_appearance = get_option( 'dokan_appearance', [] );
 
-    if ( 'google_maps' === $dokan_appearance['map_api_source'] && ! empty( $dokan_appearance['gmap_api_key'] ) ) {
+    if ( ! empty( $dokan_appearance['map_api_source'] ) && 'google_maps' === $dokan_appearance['map_api_source'] && ! empty( $dokan_appearance['gmap_api_key'] ) ) {
         return true;
-    } elseif ( 'mapbox' === $dokan_appearance['map_api_source'] && ! empty( $dokan_appearance['mapbox_access_token'] ) ) {
+    } elseif ( ! empty( $dokan_appearance['map_api_source'] ) && 'mapbox' === $dokan_appearance['map_api_source'] && ! empty( $dokan_appearance['mapbox_access_token'] ) ) {
         return true;
     }
 
@@ -3977,6 +4068,38 @@ function dokan_format_date( $date = '', $format = false ) {
     // if no format is specified, get default WordPress date format
     if ( ! $format ) {
         $format = wc_date_format();
+    }
+
+    // if date is not timestamp, convert it to timestamp
+    if ( ! is_numeric( $date ) && strtotime( $date ) ) {
+        $date = dokan_current_datetime()->modify( $date )->getTimestamp();
+    }
+
+    if ( function_exists( 'wp_date' ) ) {
+        return wp_date( $format, $date );
+    }
+
+    return date_i18n( $format, $date );
+}
+
+/**
+ * Get a formatted date, time from WordPress format
+ *
+ * @param string|timestamp $date the date string or timestamp
+ * @param string|bool $format date format string or false for default WordPress date
+ * @since 3.2.7
+ *
+ * @return string|false The date, translated if locale specifies it. False on invalid timestamp input.
+ */
+function dokan_format_datetime( $date = '', $format = false ) {
+    // if date is empty, get current datetime timestamp
+    if ( empty( $date ) ) {
+        $date = dokan_current_datetime()->getTimestamp();
+    }
+
+    // if no format is specified, get default WordPress date format
+    if ( ! $format ) {
+        $format = wc_date_format() . ' ' . wc_time_format();
     }
 
     // if date is not timestamp, convert it to timestamp

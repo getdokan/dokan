@@ -75,7 +75,7 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
 
     if ( isset( $data['_sale_price'] ) ) {
         //if regular price is lower than sale price then we are setting it to empty
-        if ( $data['_regular_price'] <= $data['_sale_price'] ) {
+        if ( (float) wc_format_decimal( $data['_regular_price'] ) <= (float) wc_format_decimal( $data['_sale_price'] ) ) {
             $data['_sale_price'] = '';
         }
 
@@ -93,26 +93,6 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
 
     if ( isset( $data['_purchase_note'] ) ) {
         update_post_meta( $post_id, '_purchase_note', wp_kses_post( $data['_purchase_note'] ) );
-    }
-
-    // Unique SKU
-    $sku     = get_post_meta( $post_id, '_sku', true );
-    $new_sku = (string) wc_clean( $data['_sku'] );
-
-    if ( '' === $new_sku ) {
-        update_post_meta( $post_id, '_sku', '' );
-    } elseif ( $new_sku !== $sku ) {
-        if ( ! empty( $new_sku ) ) {
-            $unique_sku = wc_product_has_unique_sku( $post_id, $new_sku );
-
-            if ( ! $unique_sku ) {
-                $woocommerce_errors[] = __( 'Product SKU must be unique', 'dokan-lite' );
-            } else {
-                update_post_meta( $post_id, '_sku', $new_sku );
-            }
-        } else {
-            update_post_meta( $post_id, '_sku', '' );
-        }
     }
 
     // Save Attributes
@@ -398,6 +378,22 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
             update_post_meta( $post_id, '_download_type', wc_clean( $data['_download_type'] ) );
         }
     }
+
+    // Update SKU
+    $old_sku = get_post_meta( $post_id, '_sku', true );
+    delete_post_meta( $post_id, '_sku' );
+
+    $product = wc_get_product( $post_id );
+
+    $sku = trim( wp_unslash( $data['_sku'] ) ) !== '' ? sanitize_text_field( wp_unslash( $data['_sku'] ) ) : '';
+    try {
+        $product->set_sku( $sku );
+    } catch ( \WC_Data_Exception $e ) {
+        $product->set_sku( $old_sku );
+        $woocommerce_errors[] = __( 'Product SKU must be unique', 'dokan-lite' );
+    }
+
+    $product->save();
 
     // Do action for product type
     do_action( 'woocommerce_process_product_meta_' . $product_type, $post_id );
@@ -1202,3 +1198,28 @@ function dokan_keep_old_vendor_woocommerce_duplicate_product( $duplicate, $produ
 }
 
 add_action( 'woocommerce_product_duplicate', 'dokan_keep_old_vendor_woocommerce_duplicate_product', 35, 2 );
+
+
+/**
+ * Send email to the vendor/seller when cancel the order
+ */
+function send_email_for_order_cancellation( $recipient, $order ) {
+    if ( ! $order instanceof \WC_Order ) {
+        return $recipient;
+    }
+
+    // get the order id from order object
+    $seller_id = dokan_get_seller_id_by_order( $order->get_id() );
+
+    $seller_info      = get_userdata( $seller_id );
+    $seller_email     = $seller_info->user_email;
+
+    // if admin email & seller email is same
+    if ( false === strpos( $recipient, $seller_email ) ) {
+        $recipient .= ',' . $seller_email;
+    }
+
+    return $recipient;
+}
+
+add_filter("woocommerce_email_recipient_cancelled_order", 'send_email_for_order_cancellation', 10, 2);

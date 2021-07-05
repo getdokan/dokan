@@ -95,6 +95,8 @@
                 </p>
             </td>
         </tr>
+        
+        <?php do_action( 'dokan_admin_setup_wizard_step_store_after', $setup_wizard ); ?>
     </table>
     <p class="wc-setup-actions step">
         <input type="submit" class="button-primary button button-large button-next" value="<?php esc_attr_e( 'Continue', 'dokan-lite' ); ?>" name="save_step" />

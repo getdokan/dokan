@@ -38,7 +38,7 @@ class StoreCategoryMenu extends WP_Widget {
 
             $instance = wp_parse_args( $instance, $defaults );
 
-            $title      = apply_filters( 'widget_title', $instance['title'] );
+            $title      = isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : '';
             $seller_id  = (int) get_query_var( 'author' );
 
             if ( ! empty( $title ) ) {

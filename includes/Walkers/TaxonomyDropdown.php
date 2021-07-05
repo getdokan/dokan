@@ -62,7 +62,7 @@ class TaxonomyDropdown extends Walker {
             }
         }
 
-        $pad      = str_repeat( '&nbsp;', $depth * 3 );
+        $pad      = str_repeat( '&nbsp;&#8212;', $depth * 1 );
         $cat_name = apply_filters( 'list_cats', $category->name, $category );
         $output .= "\<option class=\"level-$depth\" value=\"" . $category->term_id . '"';
 
@@ -72,12 +72,12 @@ class TaxonomyDropdown extends Walker {
             $output .= ' data-commission="' . $commission_val . '" data-product-id="' . $this->post_id . '"';
         }
 
-        if ( in_array( $category->term_id, $args['selected'] ) ) {
+        if ( is_array( $args['selected'] ) && in_array( $category->term_id, $args['selected'], true ) ) {
             $output .= ' selected="selected"';
         }
 
         $output .= '>';
-        $output .= $pad . $cat_name;
+        $output .= $pad . ' ' . $cat_name;
 
         if ( $args['show_count'] ) {
             $output .= '&nbsp;&nbsp;(' . $category->count . ')';
