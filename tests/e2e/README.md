@@ -43,13 +43,16 @@ create codecept.conf.js & copy code from example.codecept.conf.js
 
 ## Running Test:
 
-**Inside e2e you can find a folder core-tests**
+**Inside e2e you can find a folder core-tests.**
+
 **Inside Core-test you can find one folder modules & another scripts are based on dokan features**
 
 **if you want to run your script based on Dokan module**
 ```sh
 npx codeceptjs run core-tests/modules/auction_product_01_admin_settings_test.js
   ```
- ```sh
+ 
+**if you want to run test script based on feature .you have to run**
+```sh
 npx codeceptjs run core-tests/explore_01_frontend_menu_test.js
   ```

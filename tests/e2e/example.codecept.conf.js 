@@ -42,9 +42,8 @@ xports.config = {
         },
         tryTo: {
             enabled: true
-        }
-    },
-     autoLogin: {
+        },
+        autoLogin: {
       enabled: true,
       saveToFile: false,
       inject: 'loginAs',
@@ -86,7 +85,7 @@ xports.config = {
      },
      },
      },
-            
+    },     
     tests: './core-tests/*_test.js',
     name: 'e2e'
 }
