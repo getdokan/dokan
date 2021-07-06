@@ -1,12 +1,14 @@
 var Factory = require('rosie').Factory;
 var faker = require('faker');
+const { loginAsVendor } = require('../pages/helpers');
 const helpers = require('../pages/helpers');
 Feature('Simple product fucntionality');
-Before(({ I }) => { // or Background
-    I.loginAsVendor();
-});
-Scenario('simple product functional', ({ I }) => {
-
+// Before(({ I }) => { // or Background
+//     I.loginAsVendor();
+// });
+Scenario('simple product functional', ({ I,loginAs }) => {
+    
+    loginAs('vendor');
     I.click('Products');
     I.click('simple_pro_3'); //This product needs to be on dokan site in order to run this test.
     I.wait(3);

@@ -1,11 +1,13 @@
 var faker = require('faker');
 const { fake } = require('faker');
+const { loginAsVendor } = require('../pages/helpers');
 const helpers = require('../pages/helpers');
 Feature('Group Product Functionality Test');
-Before(({ I }) => { // or Background
-    I.loginAsVendor();
-});
-Scenario('Group Product Functional Behaviour Testing', ({ I }) => {
+// Before(({ I }) => { // or Background
+//     I.loginAsVendor();
+// });
+Scenario('Group Product Functional Behaviour Testing', ({ I,loginAs }) => {
+    loginAs('vendor');
     I.click('Products');
     I.click('group_product');
     //RMA Functionality Test
