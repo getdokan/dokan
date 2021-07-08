@@ -185,7 +185,8 @@ abstract class DokanRESTController extends WP_REST_Controller {
         $response = rest_ensure_response( $data );
 
         // If we're forcing, then delete permanently.
-        $object->delete( true );
+        $object->delete( $request['force'] );
+
         $result = 0 === $object->get_id();
 
         if ( ! $result ) {

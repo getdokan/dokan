@@ -45,9 +45,9 @@ class Settings {
     public function format_price_values( $option_values, $option_name ) {
         if ( 'dokan_selling' === $option_name ) {
             if ( isset( $option_values['commission_type'] ) && 'flat' === $option_values['commission_type'] ) {
-                $option_values['admin_percentage'] = wc_format_localized_price( $option_values['admin_percentage'] );
+                $option_values['admin_percentage'] = isset( $option_values['admin_percentage'] ) ? wc_format_localized_price( $option_values['admin_percentage'] ) : 0;
             } else {
-                $option_values['admin_percentage'] = wc_format_decimal( $option_values['admin_percentage'] );
+                $option_values['admin_percentage'] = isset( $option_values['admin_percentage'] ) ? wc_format_decimal( $option_values['admin_percentage'] ) : 0 ;
             }
         }
 
@@ -476,6 +476,20 @@ class Settings {
                     'class'                      => 'wc_input_price',
                     'sanitize_callback'          => 'wc_format_decimal',
                     'response_sanitize_callback' => 'wc_format_localized_price',
+                ],
+                'withdraw_order_status' => [
+                    'name'    => 'withdraw_order_status',
+                    'label'   => __( 'Order Status for Withdraw', 'dokan-lite' ),
+                    'desc'    => __( 'Order status for which vendor can make a withdraw request.', 'dokan-lite' ),
+                    'type'    => 'multicheck',
+                    'default' => array(
+                        'wc-completed'  => 'wc-completed',
+                    ),
+                    'options' => array(
+                        'wc-completed'  => __( 'Completed', 'dokan-lite' ),
+                        'wc-processing' => __( 'Processing', 'dokan-lite' ),
+                        'wc-on-hold'    => __( 'On-hold', 'dokan-lite' ),
+                    ),
                 ],
                 'exclude_cod_payment' => [
                     'name'    => 'exclude_cod_payment',

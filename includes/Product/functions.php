@@ -86,16 +86,40 @@ function dokan_save_product( $args ) {
         'description'        => $post_arr['post_content'],
         'short_description'  => $post_arr['post_excerpt'],
         'status'             => $post_status,
-        'featured_image_id'  => ! empty( $data['feat_image_id'] ) ? absint( $data['feat_image_id'] ) : '',
-        'gallery_image_ids'  => ! empty( $data['product_image_gallery'] ) ? array_filter( explode( ',', wc_clean( $data['product_image_gallery'] ) ) ) : [],
-        'tags'               => array_map( 'absint', (array) $data['product_tag'] ),
         'categories'         => $cat_ids,
-        'regular_price'      => $data['_regular_price'] === '' ? '' : wc_format_decimal( $data['_regular_price'] ),
-        'sale_price'         => $data['_sale_price'] === '' ? '' : wc_format_decimal( $data['_sale_price'] ),
-        'date_on_sale_from'  => isset( $data['_sale_price_dates_from'] ) ? wc_clean( $data['_sale_price_dates_from'] ) : '',
-        'date_on_sale_to'    => isset( $data['_sale_price_dates_to'] ) ? wc_clean( $data['_sale_price_dates_to'] ) : '',
-        'catalog_visibility' => array_key_exists( $data['_visibility'], dokan_get_product_visibility_options() ) ? sanitize_text_field( $data['_visibility'] ) : 'visible',
     ];
+
+    if ( isset( $data['feat_image_id'] ) ) {
+        $post_data['featured_image_id'] = ! empty( $data['feat_image_id'] ) ? absint( $data['feat_image_id'] ) : '';
+    }
+
+    if ( isset( $data['product_image_gallery'] ) ) {
+        $post_data['gallery_image_ids'] = ! empty( $data['product_image_gallery'] ) ? array_filter( explode( ',', wc_clean( $data['product_image_gallery'] ) ) ) : [];
+    }
+
+    if ( isset( $data['product_tag'] ) ) {
+        $post_data['tags'] = array_map( 'absint', (array) $data['product_tag'] );
+    }
+
+    if ( isset( $data['_regular_price'] ) ) {
+        $post_data['regular_price'] = $data['_regular_price'] === '' ? '' : wc_format_decimal( $data['_regular_price'] );
+    }
+
+    if ( isset( $data['_sale_price'] ) ) {
+        $post_data['sale_price'] = wc_format_decimal( $data['_sale_price'] );
+    }
+
+    if ( isset( $data['_sale_price_dates_from'] ) ) {
+        $post_data['date_on_sale_from'] = wc_clean( $data['_sale_price_dates_from'] );
+    }
+
+    if ( isset( $data['_sale_price_dates_to'] ) ) {
+        $post_data['date_on_sale_to'] = wc_clean( $data['_sale_price_dates_to'] );
+    }
+
+    if ( isset( $data['_visibility'] ) && array_key_exists( $data['_visibility'], dokan_get_product_visibility_options() ) ) {
+        $post_data['catalog_visibility'] = sanitize_text_field( $data['_visibility'] );
+    }
 
     $product = dokan()->product->create( $post_data );
 
@@ -137,7 +161,7 @@ function dokan_product_output_variations() {
         }
     }
 
-    $variations_count       = absint( $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(ID) FROM $wpdb->posts WHERE post_parent = %d AND post_type = 'product_variation' AND post_status IN ('publish', 'private')", $post->ID ) ) );
+    $variations_count       = absint( $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(ID) FROM $wpdb->posts WHERE post_parent = %d AND post_type = 'product_variation' AND post_status IN ('publish', 'private', 'pending')", $post->ID ) ) );
     $variations_per_page    = absint( apply_filters( 'woocommerce_admin_meta_boxes_variations_per_page', 15 ) );
     $variations_total_pages = ceil( $variations_count / $variations_per_page ); ?>
     <div id="dokan-variable-product-options" class="">
@@ -522,4 +546,55 @@ function dokan_get_translated_product_stock_status( $stock = false ) {
     }
 
     return isset( $stock_status[ $stock ] ) ? $stock_status[ $stock ] : '';
+}
+
+/**
+ * Get dokan store products filter catalog orderby
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @return array
+ */
+function dokan_store_product_catalog_orderby() {
+    $show_default_orderby = 'menu_order' === apply_filters( 'dokan_default_store_products_orderby', get_option( 'woocommerce_default_catalog_orderby', 'menu_order' ) );
+
+    $catalog_orderby_options = apply_filters(
+        'dokan_store_product_catalog_orderby',
+        array(
+            'menu_order' => __( 'Default sorting', 'dokan-lite' ),
+            'popularity' => __( 'Sort by popularity', 'dokan-lite' ),
+            'rating'     => __( 'Sort by average rating', 'dokan-lite' ),
+            'date'       => __( 'Sort by latest', 'dokan-lite' ),
+            'price'      => __( 'Sort by price: low to high', 'dokan-lite' ),
+            'price-desc' => __( 'Sort by price: high to low', 'dokan-lite' ),
+        )
+    );
+
+    $default_orderby = wc_get_loop_prop( 'is_search' ) ? 'relevance' : apply_filters( 'dokan_default_store_products_orderby', get_option( 'woocommerce_default_catalog_orderby', '' ) );
+    $orderby = isset( $_GET['product_orderby'] ) ? wc_clean( wp_unslash( $_GET['product_orderby'] ) ) : $default_orderby; //phpcs:ignore
+
+    if ( wc_get_loop_prop( 'is_search' ) ) {
+        $catalog_orderby_options = array_merge( array( 'relevance' => __( 'Relevance', 'dokan-lite' ) ), $catalog_orderby_options );
+
+        unset( $catalog_orderby_options['menu_order'] );
+    }
+
+    if ( ! $show_default_orderby ) {
+        unset( $catalog_orderby_options['menu_order'] );
+    }
+
+    if ( ! wc_review_ratings_enabled() ) {
+        unset( $catalog_orderby_options['rating'] );
+    }
+
+    if ( ! array_key_exists( $orderby, $catalog_orderby_options ) ) {
+        $orderby = current( array_keys( $catalog_orderby_options ) );
+    }
+
+    $orderby_options = array(
+        'orderby'  => $orderby,
+        'catalogs' => $catalog_orderby_options,
+    );
+
+    return $orderby_options;
 }

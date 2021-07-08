@@ -36,7 +36,12 @@
                 <article class="dokan-product-listing-area">
 
                     <?php
-                    $product_query = dokan()->product->all( [ 'author' => dokan_get_current_user_id(), 'posts_per_page' => 1 ] );
+                    $product_listing_args = [
+                        'author'            => dokan_get_current_user_id(),
+                        'posts_per_page'    => 1,
+                        'post_status'       => apply_filters( 'dokan_product_listing_post_statuses', [ 'publish', 'draft', 'pending', 'future' ] ),
+                    ];
+                    $product_query = dokan()->product->all( $product_listing_args );
 
                     if ( $product_query->have_posts() ) {
                     ?>
@@ -107,9 +112,11 @@
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $pagenum       = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
-                                        $post_statuses = apply_filters( 'dokan_product_listing_post_statuses', [ 'publish', 'draft', 'pending', 'future' ] );
-                                        $get_data      = wp_unslash( $_GET );
+                                        $pagenum        = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
+                                        $post_statuses  = apply_filters( 'dokan_product_listing_post_statuses', [ 'publish', 'draft', 'pending', 'future' ] );
+                                        $stock_statuses = apply_filters( 'dokan_product_stock_statuses', [ 'instock', 'outofstock' ] );
+                                        $product_types  = apply_filters( 'dokan_product_types', 'simple' );
+                                        $get_data       = wp_unslash( $_GET );
 
                                         $args = array(
                                             'posts_per_page' => 15,
@@ -126,7 +133,7 @@
                                             ),
                                         );
 
-                                        if ( isset( $get_data['post_status']) && in_array( $get_data['post_status'], $post_statuses ) ) {
+                                        if ( isset( $get_data['post_status']) && in_array( $get_data['post_status'], $post_statuses, true ) ) {
                                             $args['post_status'] = $get_data['post_status'];
                                         }
 
@@ -143,8 +150,24 @@
                                             );
                                         }
 
+                                        if ( isset( $get_data['product_type']) && array_key_exists( $get_data['product_type'], $product_types ) ) {
+                                            $args['tax_query'][] = array(
+                                                'taxonomy' => 'product_type',
+                                                'field'    => 'slug',
+                                                'terms'    => $get_data['product_type'],
+                                            );
+                                        }
+
                                         if ( isset( $get_data['product_search_name']) && !empty( $get_data['product_search_name'] ) ) {
                                             $args['s'] = $get_data['product_search_name'];
+                                        }
+
+                                        if ( isset( $get_data['post_status']) && in_array( $get_data['post_status'], $stock_statuses, true ) ) {
+                                            $args['meta_query'][] = array(
+                                                'key'     => '_stock_status',
+                                                'value'   => $get_data['post_status'],
+                                                'compare' => '='
+                                            );
                                         }
 
                                         $original_post = $post;
@@ -208,7 +231,7 @@
                             echo '</div>';
                         }
                         ?>
-                    <?php    
+                    <?php
                     } else {
                     ?>
                         <div class="dokan-dashboard-product-listing-wrapper dokan-dashboard-not-product-found">
@@ -216,7 +239,7 @@
                             <h4 class="dokan-blank-product-message">
                                 <?php esc_html_e( 'No Products Found!', 'dokan-lite' ); ?>
                             </h4>
-                            
+
                             <?php if ( dokan_is_seller_enabled( dokan_get_current_user_id() ) ): ?>
                                 <h2 class="dokan-blank-product-message">
                                     <?php esc_html_e( 'Ready to start selling something awesome?', 'dokan-lite' ); ?>

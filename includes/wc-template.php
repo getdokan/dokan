@@ -75,13 +75,7 @@ function dokan_order_show_suborders( $parent_order ) {
         [
             'post_parent' => dokan_get_prop( $parent_order, 'id' ),
             'post_type'   => 'shop_order',
-            'post_status' => [
-                'wc-pending',
-                'wc-completed',
-                'wc-processing',
-                'wc-on-hold',
-                'wc-cancelled',
-            ],
+            'post_status' => array_keys( wc_get_order_statuses() ),
         ]
     );
 

@@ -349,7 +349,7 @@
         } );
         $( '.time .dokan-form-control' ).timepicker({
             scrollDefault: 'now',
-            timeFormat: '<?php echo esc_attr( get_option( 'time_format' ) ); ?>',
+            timeFormat: '<?php echo addcslashes( esc_attr( get_option( 'time_format' ) ), '\\' ); ?>',
             step: <?php echo 'h' === strtolower( get_option( 'time_format' ) ) ? '60' : '30'; ?>
         });
         // dokan store open close scripts end //

@@ -407,10 +407,11 @@ class SetupWizard {
      * Selling step.
      */
     public function dokan_setup_selling() {
-        $options = get_option( 'dokan_selling', array() );
+        $options          = get_option( 'dokan_selling', array( 'admin_percentage' => 10 ) );
+        $admin_percentage = isset( $options['admin_percentage'] ) ? $options['admin_percentage'] : 10;
+
         $new_seller_enable_selling = ! empty( $options['new_seller_enable_selling'] ) ? $options['new_seller_enable_selling'] : '';
         $commission_type           = ! empty( $options['commission_type'] ) ? $options['commission_type'] : 'percentage';
-        $admin_percentage          = ! empty( $options['admin_percentage'] ) ? $options['admin_percentage'] : '';
         $order_status_change       = ! empty( $options['order_status_change'] ) ? $options['order_status_change'] : '';
         $dokan_commission_types    = dokan_commission_types();
 
@@ -454,7 +455,13 @@ class SetupWizard {
      * Withdraw Step.
      */
     public function dokan_setup_withdraw() {
-        $options = get_option( 'dokan_withdraw', array() );
+        $options = get_option(
+            'dokan_withdraw', array(
+				'withdraw_methods'      => array( 'paypal' ),
+				'withdraw_limit'        => 50,
+				'withdraw_order_status' => array( 'wc-completed' => 'wc-completed' ),
+            )
+        );
 
         $withdraw_methods      = ! empty( $options['withdraw_methods'] ) ? $options['withdraw_methods'] : array();
         $withdraw_limit        = ! empty( $options['withdraw_limit'] ) ? $options['withdraw_limit'] : 0;
@@ -521,12 +528,6 @@ class SetupWizard {
                                 <input type="checkbox" name="withdraw_order_status[wc-processing]" id="withdraw_order_status[wc-processing]" class="switch-input" value="wc-processing" <?php echo ( array_key_exists( 'wc-processing', $withdraw_order_status ) ) ? 'checked="true"' : ''; ?>>
                                 <label for="withdraw_order_status[wc-processing]">
                                     <?php esc_html_e( 'Processing', 'dokan-lite' ); ?>
-                                </label>
-                            </li>
-                            <li class="checkbox">
-                                <input type="checkbox" name="withdraw_order_status[wc-on-hold]" id="withdraw_order_status[wc-on-hold]" class="switch-input" value="wc-on-hold" <?php echo ( array_key_exists( 'wc-on-hold', $withdraw_order_status ) ) ? 'checked="true"' : ''; ?>>
-                                <label for="withdraw_order_status[wc-on-hold]">
-                                    <?php esc_html_e( 'On-hold', 'dokan-lite' ); ?>
                                 </label>
                             </li>
                         </ul>

@@ -11,6 +11,7 @@ if ( !dokan_is_seller_has_order( dokan_get_current_user_id(), $order_id ) ) {
 $statuses = wc_get_order_statuses();
 $order    = new WC_Order( $order_id );
 $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', 'off' );
+$customer_ip        = get_post_meta( $order->get_id(), '_customer_ip_address', true );
 ?>
 <div class="dokan-clearfix">
     <div class="dokan-w8 dokan-order-left-content">
@@ -183,7 +184,7 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                                     <a href="#" class="dokan-edit-status"><small><?php esc_html_e( '&nbsp; Edit', 'dokan-lite' ); ?></small></a>
                                 <?php } ?>
                             </li>
-                            <?php if ( current_user_can( 'dokan_manage_order' ) ): ?>
+                            <?php if ( current_user_can( 'dokan_manage_order' ) && dokan_get_option( 'order_status_change', 'dokan_selling', 'on' ) == 'on' && $order->get_status() !== 'cancelled' && $order->get_status() !== 'refunded' ): ?>
                                 <li class="dokan-hide">
                                     <form id="dokan-order-status-form" action="" method="post">
 
@@ -239,7 +240,9 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                             </li>
                             <li>
                                 <span><?php esc_html_e( 'Customer IP:', 'dokan-lite' ); ?></span>
-                                <?php echo esc_html( get_post_meta( dokan_get_prop( $order, 'id' ), '_customer_ip_address', true ) ); ?>
+                                <a href="<?php echo esc_url( 'https://tools.keycdn.com/geo?host=' . $customer_ip ); ?>" target="_blank">
+                                    <?php echo esc_html( $customer_ip ); ?>
+                                </a>
                             </li>
 
                             <?php do_action( 'dokan_order_details_after_customer_info', $order ); ?>
@@ -260,6 +263,8 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                     </div>
                 </div>
             </div>
+
+            <?php do_action( 'dokan_order_detail_after_order_general_details', $order ); ?>
 
             <div class="" style="width:100%">
                 <div class="dokan-panel dokan-panel-default">
@@ -361,6 +366,9 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                     </div> <!-- .dokan-panel-body -->
                 </div> <!-- .dokan-panel -->
             </div>
+
+            <?php do_action( 'dokan_order_detail_after_order_notes', $order ); ?>
+
         </div> <!-- .row -->
     </div> <!-- .col-md-4 -->
 </div>

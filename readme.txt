@@ -3,11 +3,11 @@ Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce, yith, yithemes
 Requires at least: 4.4
-Tested up to: 5.6.1
+Tested up to: 5.7.2
 WC requires at least: 3.0
-WC tested up to: 5.0.0
+WC tested up to: 5.4.1
 Requires PHP: 5.6
-Stable tag: 3.2.1
+Stable tag: 3.2.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -292,36 +292,128 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v3.2.7 ( Jul 01, 2021 ) =
+
+- **new:** Added Orderby filtering for single store product listing page
+- **new:** Added custom ip address lookup link
+- **new:** Added a success message after creating a product from add new product modal window
+- **new:** Added - - for category listing in add new product page and add new product modal window
+- **new:** Added a new shortcode attribute named with_products_only in [dokan_store] shortcake so that vendor without product can be filtered out from store listing page
+- **new(api):** Add support to send objects to trash, thanks to @Mário Valney
+- **fix:** Fixed duplicate tag create issue, if new tag is searched with mixed character case
+- **fix:** Wrong hooks used on Elementor widgets
+- **fix:** Typo in Staff - Manage Menu Permissions fixed
+- **fix:** Fixed an error in Dokan setting for new installation of Dokan Lite
+- **fix:** Fixed vendor order page pagination issue for date and customer filter
+- **fix:** Fixed “In stock" and "Out of stock" translation issue
+- **fix:** Email template override directory location correction for dokan vendor completed order
+- **fix:** delete cache data after updating dokan vendor balance table
+- **fix:** Fixed a bug that would allow vendors to change order status even if they don't have permission to do so, thanks to @CODLOP
+
+= v3.2.6 ( May 8, 2021 ) =
+
+- **new:** Added new action hooks on order details sidebar
+- **new:** Dokan admin setting warning type field added on Dokan admin setting
+- **new:** Dokan admin setting repeatable field added 2 new options must-use and desc
+- **new:** Introduce the filter hook dokan_dashboard_nav_settings_key for store settings slug
+- **new:** Eid 2021 promotion added
+- **new:** New hook: Vendor dashboard custom CSV orders export
+- **new:** Vendor Order export CSV file earnings column added
+- **fix:** Decimal as comma separated sale price does not save
+- **fix:** Product variation pagination for post type pending
+- **fix:** product published date displaying current date in local language
+
+= v3.2.5 ( April 30, 2021 ) =
+
+- **fix:** Fix single store page template layout
+- **fix:** [wpml] Fix malformed dashboard subpage URL when page_link is filtered to add a query parameter
+- **fix:** product count exclude booking product
+- **fix:** order export not filtered customer filtered data
+- **fix:** [wpml] Fix malformed store URL when the home URL contains a query parameter
+- **fix:** capitalise vendor url in add new vendor
+- **new:** Sub orders set dynamic post status on WooCommerce my account order details page
+- **new:** Store listing shortcode enhancements, Store Category wise: [dokan-stores category="clothing"] Order wise: [dokan-stores order="ASC"] Orderby wise: [dokan-stores orderby="registered"] Store_id wise: [dokan-stores store_id="1, 2, 3"
+- **new:** Vendor product listing page added 2 new filters options stock wise and product type wise
+- **new:** Order status for withdraw option added on dokan admin setting page
+- **new:** Store open close option disabled by default when a vendor register
+- **fix:** Vendor setup wizard page broken issue fixed
+- **fix:** Inconsistency template CSS class dokan-w3 issue fixed on vendor setting page
+- **fix:** Unable to add multiple lines to the short Description field issue fixed
+- **fix:** AZERTY keyboard restrict registration issue fixed for vendor register form
+
+= v3.2.4 ( April 01, 2021 ) =
+
+- **new:** Enter key allow for vendor search on store listing page
+- **feat:** Vendors able to edit product slug from their product edit page
+- **update:** Set default values withdraw methods, limit, order status, commissions on the setup wizard
+- **refactor:** product create update redundant check
+- **fix:** time format with a forward slash (\) wasn't parsing correctly on store open/close time dropdown
+- **fix:** Products: Preview of text is not appearing instantly while adding Product Tags
+- **fix:** Withdraw: IBAN number is not showing on the Dokan Admin
+- **fix:** Warning showing on all widget when use on Elementor
+- **fix:** Divi theme store single page showing warning issue fixed
+- **fix:** Store listing filter most recent is not working issue fixed
+
+= v3.2.3 ( March 13, 2021 ) =
+
+- **notice:** limited time promotion for weDevs birthday
+- **update:** WordPress 5.7 and WooCommerce 5.1 compatibility
+
+= v3.2.2 ( March 5, 2021 ) =
+
+- **new:** Added order completed email notification for vendors
+- **new:** Added Vendor individual withdraw threshold option
+- **new:** Added a new hook (dokan_admin_setup_wizard_save_step_setup_selling) after admin setup wizard save setup selling step
+- **new:** Added a new action hook (dokan_create_sub_order_before_calculate_totals) when creating a suborder
+- **update:** Added sales price validation check for subscription product
+- **update:** Added a new filter hook (dokan_order_status_count) in order status to support custom order status
+- **update:** WP kses added new allowed arguments for image tag
+- **fix:** Product update and delete permission error via REST API
+- **fix:** Fixed some PHP 8 warnings
+- **fix:** Store settings error on save in vendor dashboard area
+- **fix:** Order delivery tracking number wasn't saving as order notes
+- **fix:** Export order by status on vendor dashboard issue fixed
+- **fix:** Product discount price is set empty if regular price is lower than discount price
+- **fix:** Fatal error on product tab's post per page in more products section
+- **fix:** Store/products orderby query parameter
+- **fix:** Dokan store open time timezone mismatch
+- **fix:** Prices fields showing for external product
+- **fix:** Unable to save stock value for variation product
+- **fix:** Deprecated Gplus cleanup
+- **fix:** Unable to save stock value for variation product
+- **fix:** Different edit url for publish products in vendor dashbboard
+- **fix:** SKU wasn't saving from vendor dashboard
+
 = v3.2.1 ( February 12, 2021 ) =
 
-**fix:** Optimized code for better security
-**update:** performance improvements on vendor dashboard end
-**fix:** fixed conflict with user frontend menu position with Dokan
+- **fix:** Optimized code for better security
+- **update:** performance improvements on vendor dashboard end
+- **fix:** fixed conflict with user frontend menu position with Dokan
 
 = v3.2.0 ( January 29, 2021 ) =
 
-**new** Added blank product page new UI on vendor dashboard
-**new** Added Store open and closed status on dokan store listing page
-**new** Added a setting where admin can set how many products to display on vendor single store page
-**new** Added a new validation message after upload a banner/profile picture, show a browser alert if user tries to leave the current page without saving the changes.
-**new** Added a new update setting button on top of the vendor setting form
-**new** Added downloadable and virtual product type support for subscription products
-**update** Dokan withdrawal request promotion
-**fix** While registering as a vendor, radio button should work only when user click mouse cursor on the top of the radio button.
-**fix** Product add pop-up validation error message style
-**fix** Vendor pending tab keeps loading issue fixed
-**fix** Improved the mapbox address search input field and make it same as google map search box
-**fix** Keep old vendor as product author while duplicating product from the admin area
-**fix** Fixed rounded vendor balance can not be withdrawn
-**fix** Fixed resetting geolocation address is not selecting default location address
-**fix** Fixed featured attribute of the store list shortcode doesn't work
-**fix** Fixed vendors count not working on autoload in admin vendor listing page
-**fix** Fixed downloadable product "Grant Access" JS error
-**fix** Added filter for $allowed_roles in vendor registration which was missing
-**fix** If the vendor has a rounded value in their balance then vendors are unable to request a withdrawal of the full amount
-**fix** When order data is retrieved via API, the "total" order value is gets rounded
-**fix** Elementor conflict with Dokan best and top selling product shortcodes issue fixed
-**fix** More product tab showing other vendors product issue fixed
+- **new:** Added blank product page new UI on vendor dashboard
+- **new:** Added Store open and closed status on dokan store listing page
+- **new:** Added a setting where admin can set how many products to display on vendor single store page
+- **new:** Added a new validation message after upload a banner/profile picture, show a browser alert if user tries to leave the current page without saving the changes.
+- **new:** Added a new update setting button on top of the vendor setting form
+- **new:** Added downloadable and virtual product type support for subscription products
+- **update:** Dokan withdrawal request promotion
+- **fix:** While registering as a vendor, radio button should work only when user click mouse cursor on the top of the radio button.
+- **fix:** Product add pop-up validation error message style
+- **fix:** Vendor pending tab keeps loading issue fixed
+- **fix:** Improved the mapbox address search input field and make it same as google map search box
+- **fix:** Keep old vendor as product author while duplicating product from the admin area
+- **fix:** Fixed rounded vendor balance can not be withdrawn
+- **fix:** Fixed resetting geolocation address is not selecting default location address
+- **fix:** Fixed featured attribute of the store list shortcode doesn't work
+- **fix:** Fixed vendors count not working on autoload in admin vendor listing page
+- **fix:** Fixed downloadable product "Grant Access" JS error
+- **fix:** Added filter for $allowed_roles in vendor registration which was missing
+- **fix:** If the vendor has a rounded value in their balance then vendors are unable to request a withdrawal of the full amount
+- **fix:** When order data is retrieved via API, the "total" order value is gets rounded
+- **fix:** Elementor conflict with Dokan best and top selling product shortcodes issue fixed
+- **fix:** More product tab showing other vendors product issue fixed
 
 = v3.1.2 ( January 12, 2021 ) =
 

@@ -14,13 +14,16 @@
                 <input
                     :type="fieldData.type || 'text'"
                     class="regular-text"
-                    :class="fieldData.class"
+                    :class="[ { 'dokan-input-validation-error': hasValidationError( fieldData.name ) }, fieldData.class ]"
                     :id="sectionId + '[' + fieldData.name + ']'"
                     :name="sectionId + '[' + fieldData.name + ']'"
                     v-model="fieldValue[fieldData.name]"
                 >
                 <p v-if="hasError( fieldData.name )" class="dokan-error">
                     {{ getError( fieldData.label ) }}
+                </p>
+                <p v-if="hasValidationError( fieldData.name )" class="dokan-error">
+                  {{ getValidationErrorMessage( fieldData.name ) }}
                 </p>
                 <p class="description" v-html="fieldData.desc"></p>
             </td>
@@ -31,9 +34,15 @@
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
             <td>
-                <input type="number" :min="fieldData.min" :max="fieldData.max" :step="fieldData.step" class="regular-text" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
+              <input type="number" :min="fieldData.min" :max="fieldData.max" :step="fieldData.step" class="regular-text"
+                     :class="[ { 'dokan-input-validation-error': hasValidationError( fieldData.name ) }, fieldData.class ]"
+                     :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'"
+                     v-model="fieldValue[fieldData.name]">
                 <p v-if="hasError( fieldData.name )" class="dokan-error">
                     {{ getError( fieldData.label ) }}
+                </p>
+                <p v-if="hasValidationError( fieldData.name )" class="dokan-error">
+                  {{ getValidationErrorMessage( fieldData.name ) }}
                 </p>
                 <p class="description" v-html="fieldData.desc"></p>
             </td>
@@ -47,6 +56,9 @@
                 <input type="text" :min="fieldData.min" class="regular-text" :class="{ wc_input_decimal: allSettingsValues.dokan_selling.commission_type=='percentage', 'wc_input_price': allSettingsValues.dokan_selling.commission_type=='flat' }" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
                 <p v-if="hasError( fieldData.name )" class="dokan-error">
                     {{ getError( fieldData.label ) }}
+                </p>
+                <p v-if="hasValidationError( fieldData.name )" class="dokan-error">
+                  {{ getValidationErrorMessage( fieldData.name ) }}
                 </p>
                 <p class="description" v-html="fieldData.desc"></p>
             </td>
@@ -91,6 +103,9 @@
                 <p v-if="hasError( fieldData.name )" class="dokan-error">
                     {{ getError( fieldData.label ) }}
                 </p>
+                <p v-if="hasValidationError( fieldData.name )" class="dokan-error">
+                  {{ getValidationErrorMessage( fieldData.name ) }}
+                </p>
                 <p class="description" v-html="fieldData.desc"></p>
             </td>
         </template>
@@ -106,6 +121,9 @@
                         {{ fieldData.desc }}
                     </label>
                 </fieldset>
+                <p v-if="hasValidationError( fieldData.name )" class="dokan-error">
+                  {{ getValidationErrorMessage( fieldData.name ) }}
+                </p>
             </td>
         </template>
 
@@ -123,6 +141,9 @@
                         <br>
                     </template>
                 </fieldset>
+                <p v-if="hasValidationError( fieldData.name )" class="dokan-error">
+                  {{ getValidationErrorMessage( fieldData.name ) }}
+                </p>
             </td>
         </template>
 
@@ -137,7 +158,7 @@
                 </select>
 
                 <select v-else class="regular" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
-                    <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
+                    <option v-if="fieldData.placeholder" value="" disabled v-html="fieldData.placeholder"></option>
                     <optgroup v-for="optionGroup in fieldData.options" :label="optionGroup.group_label">
                         <option v-for="option in optionGroup.group_values" :value="option.value" v-html="option.label" />
                     </optgroup>
@@ -149,6 +170,10 @@
                     :field="fieldData"
                     :toggle-loading-state="toggleLoadingState"
                 />
+
+                <p v-if="hasValidationError( fieldData.name )" class="dokan-error">
+                  {{ getValidationErrorMessage( fieldData.name ) }}
+                </p>
 
                 <p class="description" v-html="fieldData.desc"></p>
             </td>
@@ -193,6 +218,14 @@
             </td>
         </template>
 
+        <template v-if="'warning' == fieldData.type">
+            <th scope="row" class="dokan-setting-warning" colspan="2">
+                <div class="error">
+                    <p :for="sectionId + '[' + fieldData.name + ']'"><span class="dokan-setting-warning-label"><span class="dashicons dashicons-warning"></span> {{ fieldData.label }}</span> <span class="dokan-setting-warning-msg">{{fieldData.desc}}</span></p>
+                </div>
+            </th>
+        </template>
+
         <template v-if="'radio' == fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
@@ -226,7 +259,8 @@
             <td width="72%">
                 <ul class="dokan-settings-repeatable-list">
                     <li v-if="fieldValue[fieldData.name]" v-for="(optionVal, optionKey) in fieldValue[fieldData.name]">
-                        {{ optionVal.value }} <span class="dashicons dashicons-no-alt remove-item" @click.prevent="removeItem( optionKey, fieldData.name )"></span>
+                        {{ optionVal.value }} <span v-if="!optionVal.must_use" class="dashicons dashicons-no-alt remove-item" @click.prevent="removeItem( optionKey, fieldData.name )"></span>
+                        <span class="repeatable-item-description" v-html="optionVal.desc"></span>
                     </li>
 
                 </ul>
@@ -308,7 +342,7 @@
             RefreshSettingOptions,
         },
 
-        props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues', 'errors', 'toggleLoadingState'],
+        props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues', 'errors', 'toggleLoadingState', 'validationErrors'],
 
         data() {
             return {
@@ -484,12 +518,34 @@
             getError( label ) {
                 return label + ' ' + this.__( 'is required.', 'dokan-lite' )
             },
+
+            hasValidationError( key ) {
+              if ( this.validationErrors.filter( e => e.name === key ).length > 0 ) {
+                return key;
+              }
+            },
+
+            getValidationErrorMessage( key ) {
+              let errorMessage = '';
+              this.validationErrors.forEach( obj => {
+                if ( obj.name === key ) {
+                  errorMessage = obj.error;
+                }
+              } );
+
+              return errorMessage;
+            }
         }
 
     };
 </script>
 
 <style lang="less">
+    span.repeatable-item-description {
+        color: #999;
+        font-size: 11px;
+        font-style: italic;
+    }
     ul.dokan-settings-repeatable-list {
         list-style-type: disc;
         padding-left: 20px;
@@ -520,8 +576,30 @@
         margin-top: -10px;
         font-style: italic;
     }
+
+    .dokan-input-validation-error {
+      border-color: red !important;
+    }
+
     .dokan-error.combine-commission {
         margin-left: 10px;
+    }
+    th.dokan-setting-warning {
+        padding: 10px 10px 10px 0;
+
+        .dokan-setting-warning-label {
+            color: #d63638;
+            font-weight: bold;
+        }
+
+        .dashicons {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .dokan-setting-warning-msg {
+            font-weight: 300;
+        }
     }
     .dokan-settings-field-type-radio {
 

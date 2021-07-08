@@ -119,6 +119,7 @@ class Manager {
                 'withdraw-cancel.php',
                 'withdraw-approve.php',
                 'vendor-new-order.php',
+                'vendor-completed-order.php',
             )
         );
 

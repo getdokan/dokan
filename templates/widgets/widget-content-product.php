@@ -9,11 +9,14 @@
 
 $img_kses = apply_filters( 'dokan_product_image_attributes', array(
     'img' => array(
-        'alt'    => array(),
-        'class'  => array(),
-        'height' => array(),
-        'src'    => array(),
-        'width'  => array(),
+        'alt'         => array(),
+        'class'       => array(),
+        'height'      => array(),
+        'src'         => array(),
+        'width'       => array(),
+        'srcset'      => array(),
+        'data-srcset' => array(),
+        'data-src'    => array(),
     ),
 ) );
 

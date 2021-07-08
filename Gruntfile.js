@@ -65,7 +65,8 @@ module.exports = function(grunt) {
             '!<%= dirs.devJsSrc %>/admin.js',
             '!<%= dirs.devJsSrc %>/login-form-popup.js',
             '!<%= dirs.devJsSrc %>/dokan-maps-compat.js',
-            '!<%= dirs.devJsSrc %>/setup-no-wc.js'
+            '!<%= dirs.devJsSrc %>/setup-no-wc.js',
+            '!<%= dirs.devJsSrc %>/helper.js'
           ],
           '<%= dirs.js %>/login-form-popup.js': [
             '<%= dirs.devJsSrc %>/login-form-popup.js'
@@ -89,7 +90,14 @@ module.exports = function(grunt) {
         files: {
           '<%= dirs.js %>/flot-all.min.js': '<%= dirs.vendors %>/flot/*.js'
         }
+      },
+
+      helper: {
+        files: {
+          '<%= dirs.js %>/helper.js': '<%= dirs.devJsSrc %>/helper.js'
+        }
       }
+
     },
 
     addtextdomain: {
@@ -196,7 +204,9 @@ module.exports = function(grunt) {
           '!**/Gruntfile.js',
           '!**/package.json',
           '!**/README.md',
-          '!**/*~'
+          '!**/*~',
+          '!vendor/jakeasmith/http_build_url/*',
+          '!vendor/jakeasmith/http_build_url/tests/**',
         ],
         dest: 'build/'
       }

@@ -96,7 +96,7 @@ class Ajax {
     }
 
     /**
-     * Check the availibility of shop name.
+     * Check the availability of shop name.
      *
      * @return void
      */
@@ -104,9 +104,9 @@ class Ajax {
         if ( ! isset( $_POST['_nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_nonce'] ), 'dokan_reviews' ) ) {
             wp_send_json_error(
                 [
-					'type'    => 'nonce',
-					'message' => __( 'Are you cheating?', 'dokan-lite' ),
-				]
+                    'type'    => 'nonce',
+                    'message' => __( 'Are you cheating?', 'dokan-lite' ),
+                ]
             );
         }
 
@@ -124,7 +124,7 @@ class Ajax {
         if ( is_user_logged_in() && dokan_is_user_customer( $user_ID ) ) {
             $current_user = wp_get_current_user();
 
-            if ( $current_user->user_nicename === $user->user_nicename ) {
+            if ( $user && $current_user->user_nicename === $user->user_nicename ) {
                 $check = true;
             }
         }
@@ -132,7 +132,7 @@ class Ajax {
         if ( is_admin() && isset( $_POST['vendor_id'] ) ) {
             $vendor = get_user_by( 'id', intval( $_POST['vendor_id'] ) );
 
-            if ( $vendor->user_nicename === $user->user_nicename ) {
+            if ( $vendor && $user && $vendor->user_nicename === $user->user_nicename ) {
                 $check = true;
             }
         }
@@ -140,9 +140,9 @@ class Ajax {
         if ( $check ) {
             wp_send_json_success(
                 [
-					'message' => __( 'Available', 'dokan-lite' ),
-					'url'     => sanitize_user( $url_slug ),
-				]
+                    'message' => __( 'Available', 'dokan-lite' ),
+                    'url'     => sanitize_user( $url_slug ),
+                ]
             );
         }
     }
@@ -192,7 +192,7 @@ class Ajax {
             die();
         }
 
-        if ( ! current_user_can( 'dokandar' ) && 'on' !== dokan_get_option( 'order_status_change', 'dokan_selling', 'on' ) ) {
+        if ( ! current_user_can( 'dokandar' ) || 'on' !== dokan_get_option( 'order_status_change', 'dokan_selling', 'on' ) ) {
             wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'dokan-lite' ) );
         }
 
@@ -290,7 +290,7 @@ class Ajax {
     public function change_order_status() {
         check_ajax_referer( 'dokan_change_status' );
 
-        if ( ! current_user_can( 'dokan_manage_order' ) ) {
+        if ( ! current_user_can( 'dokan_manage_order' ) || 'on' !== dokan_get_option( 'order_status_change', 'dokan_selling', 'on' ) ) {
             wp_send_json_error( __( 'You have no permission to manage this order', 'dokan-lite' ) );
 
             return;
@@ -465,9 +465,9 @@ class Ajax {
 
             do_action(
                 'woocommerce_new_customer_note', [
-					'order_id' => dokan_get_prop( $order, 'id' ),
-					'customer_note' => $ship_info,
-				]
+                    'order_id' => dokan_get_prop( $order, 'id' ),
+                    'customer_note' => $ship_info,
+                ]
             );
 
             echo '<li rel="' . esc_attr( $comment_id ) . '" class="note ';
@@ -548,15 +548,15 @@ class Ajax {
 
         $template_args = apply_filters(
             'dokan_store_list_args', [
-				'sellers'         => $sellers,
-				'limit'           => $limit,
-				'paged'           => $paged,
-				'image_size'      => 'medium',
-				'search'          => 'yes',
-				'pagination_base' => $pagination_base,
-				'per_row'         => $per_row,
-				'search_query'    => $search_term,
-			]
+                'sellers'         => $sellers,
+                'limit'           => $limit,
+                'paged'           => $paged,
+                'image_size'      => 'medium',
+                'search'          => 'yes',
+                'pagination_base' => $pagination_base,
+                'per_row'         => $per_row,
+                'search_query'    => $search_term,
+            ]
         );
 
         ob_start();
@@ -589,9 +589,9 @@ class Ajax {
 
         $dimensions = $this->get_header_dimensions(
             [
-				'height' => absint( $crop_details['height'] ),
-				'width'  => absint( $crop_details['width'] ),
-			]
+                'height' => absint( $crop_details['height'] ),
+                'width'  => absint( $crop_details['width'] ),
+            ]
         );
 
         $attachment_id = absint( $post_id );
@@ -683,14 +683,16 @@ class Ajax {
         $page   = ! empty( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : 1;
         $offset = ( $page - 1 ) * 10;
 
-        $drop_down_tags = [
-            'name__like' => $name,
-            'hide_empty' => 0,
-            'orderby'    => 'name',
-            'order'      => 'ASC',
-            'number'     => 10,
-            'offset'     => $offset,
-        ];
+        $drop_down_tags = apply_filters(
+            'dokan_search_product_tags_for_vendor_products', [
+                'name__like' => $name,
+                'hide_empty' => 0,
+                'orderby'    => 'name',
+                'order'      => 'ASC',
+                'number'     => 10,
+                'offset'     => $offset,
+            ]
+        );
 
         $product_tags = get_terms( 'product_tag', $drop_down_tags );
 
@@ -764,10 +766,8 @@ class Ajax {
             /* translators: 1: user display name 2: user ID 3: user email */
             $found_customers[ $id ] = sprintf(
                 /* translators: 1. Customer name, 2. Customer ID, 3: Customer email */
-                esc_html__( '%1$s (#%2$s &ndash; %3$s)', 'dokan-lite' ),
-                $customer->get_first_name() . ' ' . $customer->get_last_name(),
-                $customer->get_id(),
-                $customer->get_email()
+                esc_html__( '%1$s', 'dokan-lite' ),
+                $customer->get_first_name() . ' ' . $customer->get_last_name()
             );
         }
 
@@ -795,9 +795,9 @@ class Ajax {
         $has_flex_height  = ! empty( $general_settings['store_banner_flex_height'] ) ? $general_settings['store_banner_flex_height'] : true;
         $has_max_width    = ! empty( $general_settings['store_banner_max_width'] ) ? $general_settings['store_banner_max_width'] : false;
         $dst              = [
-			'dst_height' => null,
-			'dst_width' => null,
-		];
+            'dst_height' => null,
+            'dst_width' => null,
+        ];
 
         // For flex, limit size of image displayed to 1500px unless theme says otherwise
         if ( $has_flex_width ) {
@@ -917,9 +917,9 @@ class Ajax {
 
         $wp_user = wp_signon(
             [
-				'user_login'    => $user_login,
-				'user_password' => $user_password,
-			], ''
+                'user_login'    => $user_login,
+                'user_password' => $user_password,
+            ], ''
         );
 
         if ( is_wp_error( $wp_user ) ) {
@@ -952,8 +952,8 @@ class Ajax {
 
         $response = apply_filters(
             'dokan_ajax_login_user_response', [
-				'message' => esc_html__( 'User logged in successfully.', 'dokan-lite' ),
-			]
+                'message' => esc_html__( 'User logged in successfully.', 'dokan-lite' ),
+            ]
         );
 
         wp_send_json_success( $response );

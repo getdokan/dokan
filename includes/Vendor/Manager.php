@@ -52,6 +52,7 @@ class Manager {
             'status'     => [ 'approved' ],
             'featured'   => '', // yes or no
             'meta_query' => [],
+            'fields'     => 'all',
         ];
 
         $args = wp_parse_args( $args, $defaults );
@@ -71,7 +72,7 @@ class Manager {
                 'compare' => '=',
             ];
         }
-        
+
         if ( ! empty( $args['meta_query'] ) ) {
             $args['meta_query']['relation'] = 'AND';
             $args['meta_query'][]           = $meta_query;
@@ -96,6 +97,10 @@ class Manager {
         $results    = $user_query->get_results();
 
         $this->total_users = $user_query->total_users;
+
+        if ( $args['fields'] !== 'all' ) {
+            return $results;
+        }
 
         foreach ( $results as $key => $result ) {
             $vendors[] = $this->get( $result );
