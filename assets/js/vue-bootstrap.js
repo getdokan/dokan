@@ -1822,7 +1822,7 @@ var render = function() {
               on: {
                 click: function($event) {
                   $event.preventDefault()
-                  return _vm.uploadImage($event)
+                  return _vm.uploadImage.apply(null, arguments)
                 }
               }
             },
@@ -1861,7 +1861,7 @@ var render = function() {
             on: {
               click: function($event) {
                 $event.preventDefault()
-                return _vm.generatePassword($event)
+                return _vm.generatePassword.apply(null, arguments)
               }
             }
           },
@@ -1877,7 +1877,7 @@ var render = function() {
             on: {
               click: function($event) {
                 $event.preventDefault()
-                return _vm.regenratePassword($event)
+                return _vm.regenratePassword.apply(null, arguments)
               }
             }
           },
@@ -1896,7 +1896,7 @@ var render = function() {
             on: {
               click: function($event) {
                 $event.preventDefault()
-                return _vm.cancelButton($event)
+                return _vm.cancelButton.apply(null, arguments)
               }
             }
           },
@@ -5408,7 +5408,9 @@ var render = function() {
                 "header",
                 { staticClass: "modal-header" },
                 [
-                  _vm._t("header", [_c("h1", [_vm._v(_vm._s(_vm.title))])]),
+                  _vm._t("header", function() {
+                    return [_c("h1", [_vm._v(_vm._s(_vm.title))])]
+                  }),
                   _vm._v(" "),
                   _c(
                     "button",
@@ -6279,7 +6281,7 @@ var render = function() {
       on: {
         click: function($event) {
           $event.preventDefault()
-          return _vm.refreshSettings($event)
+          return _vm.refreshSettings.apply(null, arguments)
         }
       }
     },

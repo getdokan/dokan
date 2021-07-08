@@ -1882,7 +1882,7 @@ var render = function() {
               on: {
                 click: function($event) {
                   $event.preventDefault()
-                  return _vm.uploadImage($event)
+                  return _vm.uploadImage.apply(null, arguments)
                 }
               }
             },
@@ -1921,7 +1921,7 @@ var render = function() {
             on: {
               click: function($event) {
                 $event.preventDefault()
-                return _vm.generatePassword($event)
+                return _vm.generatePassword.apply(null, arguments)
               }
             }
           },
@@ -1937,7 +1937,7 @@ var render = function() {
             on: {
               click: function($event) {
                 $event.preventDefault()
-                return _vm.regenratePassword($event)
+                return _vm.regenratePassword.apply(null, arguments)
               }
             }
           },
@@ -1956,7 +1956,7 @@ var render = function() {
             on: {
               click: function($event) {
                 $event.preventDefault()
-                return _vm.cancelButton($event)
+                return _vm.cancelButton.apply(null, arguments)
               }
             }
           },
@@ -5326,6 +5326,7 @@ var Loading = dokan_get_lib('Loading');
 //
 //
 //
+//
 var Loading = dokan_get_lib('Loading');
 
 
@@ -5351,6 +5352,7 @@ var Loading = dokan_get_lib('Loading');
       settingValues: {},
       requiredFields: [],
       errors: [],
+      validationErrors: [],
       hasPro: dokan.hasPro ? true : false,
       searchText: '',
       awaitingSearch: false
@@ -5471,11 +5473,10 @@ var Loading = dokan_get_lib('Loading');
             break;
           }
         }
+
+        self.validationErrors = [];
       }).fail(function (jqXHR) {
-        var messages = jqXHR.responseJSON.data.map(function (error) {
-          return error.message;
-        });
-        alert(messages.join(' '));
+        self.validationErrors = jqXHR.responseJSON.data.errors;
       }).always(function () {
         self.showLoading = false;
       });
@@ -5954,6 +5955,31 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 var TextEditor = dokan_get_lib('TextEditor');
 var GoogleMaps = dokan_get_lib('GoogleMaps');
@@ -5968,7 +5994,7 @@ var RefreshSettingOptions = dokan_get_lib('RefreshSettingOptions');
     Mapbox: Mapbox,
     RefreshSettingOptions: RefreshSettingOptions
   },
-  props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues', 'errors', 'toggleLoadingState'],
+  props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues', 'errors', 'toggleLoadingState', 'validationErrors'],
   data: function data() {
     return {
       repeatableItem: {},
@@ -6141,6 +6167,22 @@ var RefreshSettingOptions = dokan_get_lib('RefreshSettingOptions');
     },
     getError: function getError(label) {
       return label + ' ' + this.__('is required.', 'dokan-lite');
+    },
+    hasValidationError: function hasValidationError(key) {
+      if (this.validationErrors.filter(function (e) {
+        return e.name === key;
+      }).length > 0) {
+        return key;
+      }
+    },
+    getValidationErrorMessage: function getValidationErrorMessage(key) {
+      var errorMessage = '';
+      this.validationErrors.forEach(function (obj) {
+        if (obj.name === key) {
+          errorMessage = obj.error;
+        }
+      });
+      return errorMessage;
     }
   }
 });
@@ -9649,7 +9691,14 @@ var render = function() {
                           }
                         ],
                         staticClass: "regular-text",
-                        class: _vm.fieldData.class,
+                        class: [
+                          {
+                            "dokan-input-validation-error": _vm.hasValidationError(
+                              _vm.fieldData.name
+                            )
+                          },
+                          _vm.fieldData.class
+                        ],
                         attrs: {
                           id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
                           name: _vm.sectionId + "[" + _vm.fieldData.name + "]",
@@ -9703,7 +9752,14 @@ var render = function() {
                           }
                         ],
                         staticClass: "regular-text",
-                        class: _vm.fieldData.class,
+                        class: [
+                          {
+                            "dokan-input-validation-error": _vm.hasValidationError(
+                              _vm.fieldData.name
+                            )
+                          },
+                          _vm.fieldData.class
+                        ],
                         attrs: {
                           id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
                           name: _vm.sectionId + "[" + _vm.fieldData.name + "]",
@@ -9735,7 +9791,14 @@ var render = function() {
                           }
                         ],
                         staticClass: "regular-text",
-                        class: _vm.fieldData.class,
+                        class: [
+                          {
+                            "dokan-input-validation-error": _vm.hasValidationError(
+                              _vm.fieldData.name
+                            )
+                          },
+                          _vm.fieldData.class
+                        ],
                         attrs: {
                           id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
                           name: _vm.sectionId + "[" + _vm.fieldData.name + "]",
@@ -9761,6 +9824,18 @@ var render = function() {
                         _vm._v(
                           "\n                " +
                             _vm._s(_vm.getError(_vm.fieldData.label)) +
+                            "\n            "
+                        )
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.hasValidationError(_vm.fieldData.name)
+                    ? _c("p", { staticClass: "dokan-error" }, [
+                        _vm._v(
+                          "\n              " +
+                            _vm._s(
+                              _vm.getValidationErrorMessage(_vm.fieldData.name)
+                            ) +
                             "\n            "
                         )
                       ])
@@ -9799,6 +9874,14 @@ var render = function() {
                       }
                     ],
                     staticClass: "regular-text",
+                    class: [
+                      {
+                        "dokan-input-validation-error": _vm.hasValidationError(
+                          _vm.fieldData.name
+                        )
+                      },
+                      _vm.fieldData.class
+                    ],
                     attrs: {
                       type: "number",
                       min: _vm.fieldData.min,
@@ -9827,6 +9910,18 @@ var render = function() {
                         _vm._v(
                           "\n                " +
                             _vm._s(_vm.getError(_vm.fieldData.label)) +
+                            "\n            "
+                        )
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.hasValidationError(_vm.fieldData.name)
+                    ? _c("p", { staticClass: "dokan-error" }, [
+                        _vm._v(
+                          "\n              " +
+                            _vm._s(
+                              _vm.getValidationErrorMessage(_vm.fieldData.name)
+                            ) +
                             "\n            "
                         )
                       ])
@@ -9901,6 +9996,18 @@ var render = function() {
                         _vm._v(
                           "\n                " +
                             _vm._s(_vm.getError(_vm.fieldData.label)) +
+                            "\n            "
+                        )
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.hasValidationError(_vm.fieldData.name)
+                    ? _c("p", { staticClass: "dokan-error" }, [
+                        _vm._v(
+                          "\n              " +
+                            _vm._s(
+                              _vm.getValidationErrorMessage(_vm.fieldData.name)
+                            ) +
                             "\n            "
                         )
                       ])
@@ -10130,6 +10237,18 @@ var render = function() {
                       ])
                     : _vm._e(),
                   _vm._v(" "),
+                  _vm.hasValidationError(_vm.fieldData.name)
+                    ? _c("p", { staticClass: "dokan-error" }, [
+                        _vm._v(
+                          "\n              " +
+                            _vm._s(
+                              _vm.getValidationErrorMessage(_vm.fieldData.name)
+                            ) +
+                            "\n            "
+                        )
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
                   _c("p", {
                     staticClass: "description",
                     domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
@@ -10232,7 +10351,19 @@ var render = function() {
                         )
                       ]
                     )
-                  ])
+                  ]),
+                  _vm._v(" "),
+                  _vm.hasValidationError(_vm.fieldData.name)
+                    ? _c("p", { staticClass: "dokan-error" }, [
+                        _vm._v(
+                          "\n              " +
+                            _vm._s(
+                              _vm.getValidationErrorMessage(_vm.fieldData.name)
+                            ) +
+                            "\n            "
+                        )
+                      ])
+                    : _vm._e()
                 ])
               ]
             : _vm._e(),
@@ -10377,7 +10508,19 @@ var render = function() {
                       })
                     ],
                     2
-                  )
+                  ),
+                  _vm._v(" "),
+                  _vm.hasValidationError(_vm.fieldData.name)
+                    ? _c("p", { staticClass: "dokan-error" }, [
+                        _vm._v(
+                          "\n              " +
+                            _vm._s(
+                              _vm.getValidationErrorMessage(_vm.fieldData.name)
+                            ) +
+                            "\n            "
+                        )
+                      ])
+                    : _vm._e()
                 ])
               ]
             : _vm._e(),
@@ -10501,7 +10644,7 @@ var render = function() {
                           [
                             _vm.fieldData.placeholder
                               ? _c("option", {
-                                  attrs: { value: "" },
+                                  attrs: { value: "", disabled: "" },
                                   domProps: {
                                     innerHTML: _vm._s(_vm.fieldData.placeholder)
                                   }
@@ -10539,6 +10682,20 @@ var render = function() {
                             "toggle-loading-state": _vm.toggleLoadingState
                           }
                         })
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.hasValidationError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n              " +
+                              _vm._s(
+                                _vm.getValidationErrorMessage(
+                                  _vm.fieldData.name
+                                )
+                              ) +
+                              "\n            "
+                          )
+                        ])
                       : _vm._e(),
                     _vm._v(" "),
                     _c("p", {
@@ -11439,7 +11596,7 @@ var render = function() {
                       on: {
                         click: function($event) {
                           $event.preventDefault()
-                          return _vm.clearSearch($event)
+                          return _vm.clearSearch.apply(null, arguments)
                         }
                       }
                     })
@@ -11562,6 +11719,8 @@ var render = function() {
                                             "all-settings-values":
                                               _vm.settingValues,
                                             errors: _vm.errors,
+                                            validationErrors:
+                                              _vm.validationErrors,
                                             "toggle-loading-state":
                                               _vm.toggleLoadingState
                                           },
