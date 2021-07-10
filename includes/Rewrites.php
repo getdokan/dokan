@@ -95,6 +95,9 @@ class Rewrites {
         // default base is product
         $base = empty( $base ) ? 'product' : $base;
 
+        // get custom store url from settings so that we can use it from other places
+        $this->custom_store_url = dokan_get_option( 'custom_store_url', 'dokan_general', 'store' );
+
         // special treatment for product cat
         if ( stripos( $base, 'product_cat' ) ) {
 
