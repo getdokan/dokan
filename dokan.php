@@ -105,6 +105,7 @@ final class WeDevs_Dokan {
         register_deactivation_hook( __FILE__, [ $this, 'deactivate' ] );
 
         add_action( 'woocommerce_loaded', [ $this, 'init_plugin' ] );
+        add_action( 'woocommerce_flush_rewrite_rules', [ $this, 'flush_rewrite_rules' ] );
         add_action( 'admin_notices', [ $this, 'render_missing_woocommerce_notice' ] );
         add_action( 'admin_notices', [ $this, 'render_run_admin_setup_wizard_notice' ] );
 
@@ -198,6 +199,18 @@ final class WeDevs_Dokan {
         $installer                   = new \WeDevs\Dokan\Install\Installer();
         $installer->do_install();
 
+        // rewrite rules during dokan activation
+        if ( $this->has_woocommerce() ) {
+            $this->flush_rewrite_rules();
+        }
+    }
+
+    /**
+     * Flush rewrite rules after dokan is activated or woocommerce is activated
+     *
+     * @since 3.2.8
+     */
+    public function flush_rewrite_rules() {
         // fix rewrite rules
         if ( ! isset( $this->container['rewrite'] ) ) {
             $this->container['rewrite'] = new \WeDevs\Dokan\Rewrites();
@@ -475,20 +488,20 @@ final class WeDevs_Dokan {
      * @return void
      */
     public function render_missing_woocommerce_notice() {
-        if ( ! get_transient( 'dokan_wc_missing_notice' ) ) {
-            return;
+        // check wooCommerce is available and active
+        $has_woocommerce = $this->has_woocommerce();
+
+        // check if woocommerce installed
+        $woocommerce_installed = $this->is_woocommerce_installed();
+
+        if ( ( ! $has_woocommerce || ! $woocommerce_installed ) && current_user_can( 'activate_plugins' ) ) {
+            dokan_get_template(
+                'admin-notice-dependencies.php', [
+					'has_woocommerce' => $has_woocommerce,
+					'woocommerce_installed' => $woocommerce_installed,
+				]
+            );
         }
-
-        if ( $this->has_woocommerce() ) {
-            return delete_transient( 'dokan_wc_missing_notice' );
-        }
-
-        $plugin_url = self_admin_url( 'plugin-install.php?s=woocommerce&tab=search&type=term' );
-
-        /* translators: %s: wc plugin url */
-        $message = sprintf( __( 'Dokan requires WooCommerce to be installed and active. You can activate <a href="%s">WooCommerce</a> here.', 'dokan-lite' ), $plugin_url );
-
-        echo wp_kses_post( sprintf( '<div class="error"><p><strong>%1$s</strong></p></div>', $message ) );
     }
 
     /**
@@ -519,7 +532,7 @@ final class WeDevs_Dokan {
     }
 
     /**
-     * Check whether woocommerce is installed or not
+     * Check whether woocommerce is installed and active
      *
      * @since 2.9.16
      *
@@ -527,6 +540,17 @@ final class WeDevs_Dokan {
      */
     public function has_woocommerce() {
         return class_exists( 'WooCommerce' );
+    }
+
+    /**
+     * Check whether woocommerce is installed
+     *
+     * @since 3.2.8
+     *
+     * @return bool
+     */
+    public function is_woocommerce_installed() {
+        return in_array( 'woocommerce/woocommerce.php', array_keys( get_plugins() ), true );
     }
 
     /**
