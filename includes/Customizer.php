@@ -254,6 +254,8 @@ class Customizer {
             ]
         );
 
+        do_action( 'dokan_store_customizer_after_vendor_info', $wp_customize );
+
         if ( isset( $wp_customize->selective_refresh ) ) {
             $wp_customize->selective_refresh->add_partial(
                 'store_header_template',
