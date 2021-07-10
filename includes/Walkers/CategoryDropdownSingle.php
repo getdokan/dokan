@@ -13,9 +13,9 @@ class CategoryDropdownSingle extends TaxonomyDropdown {
      * @var array
      */
     var $db_fields = array(
-		'parent' => 'parent',
-		'id' => 'term_id',
-	);
+        'parent' => 'parent',
+        'id'     => 'term_id',
+    );
 
     public function __construct( $post_id ) {
         $this->post_id = $post_id;
@@ -34,7 +34,7 @@ class CategoryDropdownSingle extends TaxonomyDropdown {
             }
         }
 
-        $pad      = str_repeat( '&nbsp;', $depth * 3 );
+        $pad      = str_repeat( '&nbsp;&#8212;', $depth * 1 );
         $cat_name = apply_filters( 'list_cats', $category->name, $category );
         $output   .= "\t<option class=\"level-$depth\" value=\"" . $category->term_id . '"';
 
@@ -49,7 +49,7 @@ class CategoryDropdownSingle extends TaxonomyDropdown {
         }
 
         $output .= '>';
-        $output .= $pad . $cat_name;
+        $output .= $pad . ' ' . $cat_name;
         $output .= "</option>\n";
     }
 }

@@ -74,7 +74,9 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
 
                 <?php
 
-                $can_sell = apply_filters( 'dokan_can_post', true );
+                $can_sell         = apply_filters( 'dokan_can_post', true );
+                $can_create_tags  = dokan_get_option( 'product_vendors_can_create_tags', 'dokan_selling' );
+                $tags_placeholder = 'on' === $can_create_tags ? __( 'Select tags/Add tags', 'dokan-lite' ) : __( 'Select product tags', 'dokan-lite' );
 
                 if ( $can_sell ) {
                     $posted_img       = dokan_posted_input( 'feat_image_id' );
@@ -211,6 +213,7 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                                                 'class'            => 'product_cat dokan-form-control dokan-select2',
                                                 'exclude'          => '',
                                                 'selected'         => $selected_cat,
+                                                'walker'           => new TaxonomyDropdown()
                                             );
 
                                             wp_dropdown_categories( apply_filters( 'dokan_product_cat_dropdown_args', $category_args ) );
@@ -247,7 +250,7 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
 
                                     <div class="dokan-form-group">
                                         <label for="product_tag" class="form-label"><?php esc_html_e( 'Tags', 'dokan-lite' ); ?></label>
-                                        <select multiple="multiple" placeholder="<?php esc_attr_e( 'Select product tags', 'dokan-lite' ); ?>" name="product_tag[]" id="product_tag_search" class="product_tag_search product_tags dokan-form-control dokan-select2" data-placeholder="<?php esc_attr_e( 'Select tags', 'dokan-lite' ); ?>"></select>
+                                        <select multiple="multiple" placeholder="<?php echo esc_attr( $tags_placeholder ); ?>" name="product_tag[]" id="product_tag_search" class="product_tag_search product_tags dokan-form-control dokan-select2" data-placeholder="<?php echo esc_attr( $tags_placeholder ); ?>"></select>
                                     </div>
 
                                     <?php do_action( 'dokan_new_product_after_product_tags' ); ?>

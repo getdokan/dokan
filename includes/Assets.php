@@ -13,8 +13,10 @@ class Assets {
 
         if ( is_admin() ) {
             add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_scripts' ] );
+            add_action( 'admin_enqueue_scripts', [ $this, 'load_dokan_helper_script' ] );
         } else {
             add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_front_scripts' ] );
+            add_action( 'wp_enqueue_scripts', [ $this, 'load_dokan_helper_script' ] );
         }
     }
 
@@ -382,6 +384,12 @@ class Assets {
                 'deps'      => [ 'dokan-popup', 'dokan-i18n-jed' ],
                 'version'   => filemtime( $asset_path . '/js/login-form-popup.js' ),
             ],
+            'dokan-util-helper' => [
+                'src'       => $asset_url . '/js/helper.js',
+                'deps'      => [ 'jquery' ],
+                'version'   => filemtime( $asset_path . 'js/helper.js' ),
+                'in_footer' => false,
+            ],
         ];
 
         return $scripts;
@@ -420,6 +428,8 @@ class Assets {
             'rounding_precision' => wc_get_rounding_precision(),
             'mon_decimal_point'  => wc_get_price_decimal_separator(),
             'product_types'      => apply_filters( 'dokan_product_types', [ 'simple' ] ),
+            'loading_img'        => DOKAN_PLUGIN_ASSEST . '/images/loading.gif',
+            'store_product_search_nonce' => wp_create_nonce( 'dokan_store_product_search_nonce' ),
         ];
 
         $localize_script     = apply_filters( 'dokan_localized_args', $default_script );
@@ -481,6 +491,21 @@ class Assets {
         do_action( 'dokan_enqueue_scripts' );
     }
 
+    /**
+     * Enqueue Dokan Helper Script
+     *
+     * @since 3.2.7
+     */
+    public function load_dokan_helper_script() {
+        // Dokan helper JS file, need to load this file
+        wp_enqueue_script( 'dokan-util-helper' );
+
+        $localize_data = [
+            'i18n_date_format' => wc_date_format(),
+        ];
+
+        wp_localize_script( 'dokan-util-helper', 'dokan_helper', $localize_data );
+    }
     /**
      * Load form validate script args
      *
@@ -683,6 +708,7 @@ class Assets {
                 'chooseImage'                         => __( 'Choose Image', 'dokan-lite' ),
                 'product_title_required'              => __( 'Product title is required', 'dokan-lite' ),
                 'product_category_required'           => __( 'Product category is required', 'dokan-lite' ),
+                'product_created_response'            => __( 'Product created successfully', 'dokan-lite' ),
                 'search_products_nonce'               => wp_create_nonce( 'search-products' ),
                 'search_products_tags_nonce'          => wp_create_nonce( 'search-products-tags' ),
                 'search_customer_nonce'               => wp_create_nonce( 'search-customer' ),
@@ -842,6 +868,7 @@ class Assets {
                 'i18n_remove_personal_data_notice'    => __( 'This action cannot be reversed. Are you sure you wish to erase personal data from the selected orders?', 'dokan-lite' ),
                 'decimal_point'                       => $decimal,
                 'mon_decimal_point'                   => wc_get_price_decimal_separator(),
+                'i18n_date_format'                    => wc_date_format(),
             ]
         );
     }
