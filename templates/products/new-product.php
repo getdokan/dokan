@@ -145,6 +145,7 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                                             </div>
                                         </div>
                                     </div> <!-- .product-gallery -->
+                                    <?php do_action( 'dokan_product_gallery_image_count' ); ?>
                                 </div>
 
                                 <div class="content-half-part dokan-product-meta">
