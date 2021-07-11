@@ -269,7 +269,17 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
 
                             <div class="dokan-form-group dokan-right">
                                 <?php wp_nonce_field( 'dokan_add_new_product', 'dokan_add_new_product_nonce' ); ?>
+                                <?php
+                                $display_create_and_add_new_button = true;
+                                if ( function_exists( 'dokan_pro' ) && dokan_pro()->module->is_active( 'product_subscription' ) ) {
+                                    if ( \DokanPro\Modules\Subscription\Helper::get_vendor_remaining_products( dokan_get_current_user_id() ) <= 1 ) {
+                                        $display_create_and_add_new_button = false;
+                                    }
+                                }
+                                if ( $display_create_and_add_new_button ) :
+                                ?>
                                 <button type="submit" name="add_product" class="dokan-btn dokan-btn-default" value="create_and_add_new"><?php esc_attr_e( 'Create & Add New', 'dokan-lite' ); ?></button>
+                                <?php endif; ?>
                                 <button type="submit" name="add_product" class="dokan-btn dokan-btn-default dokan-btn-theme" value="create_new"><?php esc_attr_e( 'Create Product', 'dokan-lite' ); ?></button>
                             </div>
 
