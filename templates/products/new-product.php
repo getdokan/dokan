@@ -267,8 +267,8 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                                 <?php wp_nonce_field( 'dokan_add_new_product', 'dokan_add_new_product_nonce' ); ?>
                                 <?php
                                 $display_create_and_add_new_button = true;
-                                if ( method_exists( '\DokanPro\Modules\Subscription\Helper', 'get_vendor_remaining_products' )  ) {
-                                    if ( 2 > \DokanPro\Modules\Subscription\Helper::get_vendor_remaining_products( dokan_get_current_user_id() ) ) {
+                                if ( function_exists( 'dokan_pro' ) && dokan_pro()->module->is_active( 'product_subscription' ) ) {
+                                    if ( \DokanPro\Modules\Subscription\Helper::get_vendor_remaining_products( dokan_get_current_user_id() ) <= 1 ) {
                                         $display_create_and_add_new_button = false;
                                     }
                                 }

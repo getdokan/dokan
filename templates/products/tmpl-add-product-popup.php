@@ -155,8 +155,8 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                 <input type="submit" id="dokan-create-new-product-btn" class="dokan-btn dokan-btn-default" data-btn_id="create_new" value="<?php esc_attr_e( 'Create product', 'dokan-lite' ) ?>">
                 <?php
                 $display_create_and_add_new_button = true;
-                if ( method_exists( '\DokanPro\Modules\Subscription\Helper', 'get_vendor_remaining_products' )  ) {
-                    if ( 2 > \DokanPro\Modules\Subscription\Helper::get_vendor_remaining_products( dokan_get_current_user_id() ) ) {
+                if ( function_exists( 'dokan_pro' ) && dokan_pro()->module->is_active( 'product_subscription' ) ) {
+                    if ( \DokanPro\Modules\Subscription\Helper::get_vendor_remaining_products( dokan_get_current_user_id() ) <= 1 ) {
                         $display_create_and_add_new_button = false;
                     }
                 }
