@@ -339,7 +339,7 @@
                         $.magnificPopup.close();
                         Dokan_Editor.openProductPopup();
                         $( 'span.dokan-show-add-product-success' ).html( dokan.product_created_response );
-                        
+
                         setTimeout(function() {
                             $( 'span.dokan-show-add-product-success' ).html( '' );
                         }, 3000);
@@ -502,8 +502,9 @@
                         attributeWrapper.append( $html );
                         $( 'select#product_type' ).trigger('change');
                         Dokan_Editor.loadSelect2();
+                        Dokan_Editor.bindProductTagDropdown();
                         Dokan_Editor.attribute.reArrangeAttribute();
-                    };
+                    }
 
                     self.closest('.dokan-attribute-type').find('span.dokan-attribute-spinner').addClass('dokan-hide');
 
@@ -1084,7 +1085,7 @@
         if ( $('#dokan-edit-product-id').val() && $('#post_title').val() && $('#samplepermalinknonce').val() ) {
             $.post(
                 ajaxurl,
-                {   
+                {
                     action: 'sample-permalink',
                     post_id: $('#dokan-edit-product-id').val(),
                     new_slug: $('#edited-post-name-dokan').val(),
