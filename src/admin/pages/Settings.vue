@@ -56,6 +56,7 @@
                                         @openMedia="showMedia"
                                         :key="fieldId"
                                         :errors="errors"
+                                        :validationErrors="validationErrors"
                                         :toggle-loading-state="toggleLoadingState"
                                     />
                                     </tbody>
@@ -107,6 +108,7 @@
                 settingValues: {},
                 requiredFields: [],
                 errors: [],
+                validationErrors: [],
                 hasPro: dokan.hasPro ? true : false,
                 searchText: '',
                 awaitingSearch: false,
@@ -245,13 +247,11 @@
                                 break;
                             }
                         }
+
+                        self.validationErrors = [];
                     } )
                     .fail( function ( jqXHR ) {
-                        var messages = jqXHR.responseJSON.data.map( function ( error ) {
-                            return error.message;
-                        } );
-
-                        alert( messages.join( ' ' ) );
+                        self.validationErrors = jqXHR.responseJSON.data.errors;
                     } )
                     .always( function () {
                         self.showLoading = false;

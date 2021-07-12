@@ -16,12 +16,12 @@ $user_id     = '';
 if ( ! empty( $_GET['customer_id'] ) ) { // WPCS: input var ok.
     $user_id = absint( $_GET['customer_id'] ); // WPCS: input var ok, sanitization ok.
     $user    = get_user_by( 'id', $user_id );
+    $customer = new WC_Customer( $user_id );
 
     $user_string = sprintf(
         /* translators: 1: user display name 2: user ID 3: user email */
-        esc_html__( '%1$s (#%2$s)', 'dokan-lite' ),
-        $user->display_name,
-        absint( $user->ID )
+        esc_html__( '%1$s', 'dokan-lite' ),
+        $customer->get_first_name() . ' ' . $customer->get_last_name()
     );
 }
 

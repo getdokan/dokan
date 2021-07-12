@@ -151,6 +151,10 @@
             </div>
         </div>
 
+        <?php do_action( 'dokan_settings_after_store_phone', $current_user, $profile_info ); ?>
+
+        <?php do_action( 'dokan_settings_before_store_email', $current_user, $profile_info ); ?>
+
         <div class="dokan-form-group">
             <label class="dokan-w3 dokan-control-label"><?php esc_html_e( 'Email', 'dokan-lite' ); ?></label>
             <div class="dokan-w5 dokan-text-left">

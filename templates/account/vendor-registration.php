@@ -55,6 +55,13 @@
         <small><?php echo esc_url( home_url()  . '/' . dokan_get_option( 'custom_store_url', 'dokan_general', 'store' ) ); ?>/<strong id="url-alart"></strong></small>
     </p>
 
+    <?php
+    /**
+     * @since 3.2.8
+     */
+    do_action( 'dokan_seller_registration_after_shopurl_field', ! empty( $postdata ) ? $postdata : [] );
+    ?>
+
     <?php do_action( 'register_form' ); ?>
 
     <?php
