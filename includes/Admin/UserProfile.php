@@ -215,6 +215,13 @@ class UserProfile {
                     </td>
                 </tr>
 
+                <?php
+                /**
+                 * @since 3.2.7
+                 */
+                do_action( 'dokan_user_profile_after_phone_number', $store_settings, $user );
+                ?>
+
                 <?php foreach ( $social_fields as $key => $value ) { ?>
 
                     <tr>
