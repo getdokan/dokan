@@ -7,7 +7,7 @@ Tested up to: 5.7.2
 WC requires at least: 3.0
 WC tested up to: 5.4.1
 Requires PHP: 5.6
-Stable tag: 3.2.7
+Stable tag: 3.2.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -292,13 +292,26 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v3.2.8 ( Jul 12, 2021 ) =
+
+- **update:** Added Composer 2 support
+- **fix:** Fixed rewrite rules issues after Dokan plugin is installed and after change store slug
+- **new:** Added dokan summer sale promotion
+- **new:** Added a new action hook named dokan_store_customizer_after_vendor_info under Dokan Store Customizer
+- **update:** added $data parameter to existing dokan_vendor_create_data action hook
+- **new:** added a new action hook named dokan_before_create_vendor
+- **new:** added a new action hook named dokan_seller_registration_after_shopurl_field
+- **new:** added a new action hook named dokan_settings_after_store_phone
+- **new:** added a new action hook dokan_settings_before_store_email
+- **new:** added a new action hook dokan_product_gallery_image_count
+
 = v3.2.7 ( Jul 01, 2021 ) =
 
 - **new:** Added Orderby filtering for single store product listing page
 - **new:** Added custom ip address lookup link
 - **new:** Added a success message after creating a product from add new product modal window
 - **new:** Added - - for category listing in add new product page and add new product modal window
-- **new:** Added a new shortcode attribute named with_products_only in [dokan_store] shortcake so that vendor without product can be filtered out from store listing page
+- **new:** Added a new shortcode attribute named with_products_only in [dokan-stores] shortcode so that vendor without product can be filtered out from store listing page
 - **new(api):** Add support to send objects to trash, thanks to @Mário Valney
 - **fix:** Fixed duplicate tag create issue, if new tag is searched with mixed character case
 - **fix:** Wrong hooks used on Elementor widgets
