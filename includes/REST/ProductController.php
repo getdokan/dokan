@@ -784,8 +784,8 @@ class ProductController extends DokanRESTController {
             'images'                => $this->get_images( $product ),
             'attributes'            => $this->get_attributes( $product ),
             'default_attributes'    => $this->get_default_attributes( $product ),
-            'variations'            => [],
-            'grouped_products'      => [],
+            'variations'            => $product->is_type( 'variable' ) ? $product->get_children() : [],
+            'grouped_products'      => $product->is_type( 'grouped' ) ? $product->get_children() : [],
             'menu_order'            => $product->get_menu_order( $context ),
             'meta_data'             => $product->get_meta_data(),
             'store'                 => [
