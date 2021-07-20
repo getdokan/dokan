@@ -213,7 +213,7 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                                                 'title_li'         => '',
                                                 'class'            => 'product_cat dokan-form-control dokan-select2',
                                                 'exclude'          => '',
-                                                'selected'         => $selected_cat,
+                                                'selected'         => (array) $selected_cat,
                                                 'walker'           => new TaxonomyDropdown()
                                             );
 
