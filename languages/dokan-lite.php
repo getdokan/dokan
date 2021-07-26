@@ -164,7 +164,7 @@ return [
 	__( 'Dismiss this notice.', 'dokan-lite' ),
 	__( 'Choose your file', 'dokan-lite' ),
 	__( 'Vendor Picture', 'dokan-lite' ),
-	__( 'You can change your profile picutre on %s', 'dokan-lite' ),
+	__( 'You can change your profile picture on %s', 'dokan-lite' ),
 	__( 'Upload Banner', 'dokan-lite' ),
 	__( 'First Name', 'dokan-lite' ),
 	__( 'Last Name', 'dokan-lite' ),

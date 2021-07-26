@@ -5596,7 +5596,7 @@ msgid "Vendor Picture"
 msgstr ""
 
 #: src/admin/pages/VendorAccountFields.vue:17
-msgid "You can change your profile picutre on %s"
+msgid "You can change your profile picture on %s"
 msgstr ""
 
 #: src/admin/pages/VendorAccountFields.vue:23
