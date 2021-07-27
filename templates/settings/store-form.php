@@ -131,16 +131,17 @@
          <!--address-->
 
         <?php
-        $verified = false;
+            if ( ! dokan_pro()->module->is_active( 'delivery_time' ) ) {
+                $verified = false;
 
-        if ( isset( $profile_info['dokan_verification']['info']['store_address']['v_status'] ) ) {
-            if ( $profile_info['dokan_verification']['info']['store_address']['v_status'] == 'approved' ) {
-                $verified = true;
+                if ( isset( $profile_info['dokan_verification']['info']['store_address']['v_status'] ) ) {
+                    if ( $profile_info['dokan_verification']['info']['store_address']['v_status'] == 'approved' ) {
+                        $verified = true;
+                    }
+                }
+
+                dokan_seller_address_fields( $verified );
             }
-        }
-
-        dokan_seller_address_fields( $verified );
-
         ?>
         <!--address-->
 
