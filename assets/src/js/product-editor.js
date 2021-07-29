@@ -1110,6 +1110,10 @@
             };
         }
 
+        $( window ).on( "load", function (){
+            if ( $( 'input#_virtual:checked' ).length ) {
+                show_and_hide_panels();
+            }
+        });
     });
-
 })(jQuery);
