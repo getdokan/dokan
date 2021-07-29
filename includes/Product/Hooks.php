@@ -152,6 +152,12 @@ class Hooks {
      * @return void
      */
     public function store_products_orderby() {
+        $store_products = dokan_get_option( 'store_products', 'dokan_appearance' );
+
+        if ( ! empty( $store_products['hide_product_filter'] ) ) {
+            return;
+        }
+
         $orderby_options = dokan_store_product_catalog_orderby();
         $store_user      = dokan()->vendor->get( get_query_var( 'author' ) );
         $store_id        = $store_user->get_id();
