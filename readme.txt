@@ -3,11 +3,11 @@ Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce, yith, yithemes
 Requires at least: 4.4
-Tested up to: 5.7.2
+Tested up to: 5.8
 WC requires at least: 3.0
-WC tested up to: 5.4.1
+WC tested up to: 5.5.2
 Requires PHP: 5.6
-Stable tag: 3.2.8
+Stable tag: 3.2.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -291,6 +291,15 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.2.9 ( Aug 2, 2021 ) =
+
+- **New:** Added customize settings for store product filter option to show/hide
+- **Fix:** Product tag search not working in variable product after adding new attribute
+- **New:** added a new hook dokan_earning_by_order_item_price
+- **Fix:** display shipping widget though virtual checkbox selected
+- **Fix:** Children IDs not showing on REST API
+- **Fix:** fixed a js error while refunding from vendor dashboard: size() is not a function
 
 = v3.2.8 ( Jul 12, 2021 ) =
 

@@ -259,10 +259,12 @@ class Commission {
             $product_id = $item->get_product()->get_id();
             $refund     = $order->get_total_refunded_for_item( $item_id );
 
+            $item_price = apply_filters( 'dokan_earning_by_order_item_price', $item->get_total(), $item );
+
             if ( $refund ) {
-                $earning += $this->get_earning_by_product( $product_id, $context, $item->get_total() - $refund );
+                $earning += $this->get_earning_by_product( $product_id, $context, $item_price - $refund );
             } else {
-                $earning += $this->get_earning_by_product( $product_id, $context, $item->get_total() );
+                $earning += $this->get_earning_by_product( $product_id, $context, $item_price );
             }
         }
 
