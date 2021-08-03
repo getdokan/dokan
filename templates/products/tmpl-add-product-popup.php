@@ -125,6 +125,7 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                                 'name'             => 'product_cat[]',
                                 'id'               => 'product_cat',
                                 'taxonomy'         => 'product_cat',
+                                'orderby'          => 'name',
                                 'title_li'         => '',
                                 'class'            => 'product_cat dokan-form-control dokan-select2',
                                 'exclude'          => '',
