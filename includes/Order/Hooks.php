@@ -394,8 +394,7 @@ class Hooks {
         return $orders;
     }
 
-    public function hide_customer_info_from_vendor_order_export ( $headers )
-    {
+    public function hide_customer_info_from_vendor_order_export( $headers ) {
         $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', 'off' );
         if ( 'off' !== $hide_customer_info ) {
             unset( $headers['billing_email'] );
