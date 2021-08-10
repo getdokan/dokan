@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 3.2.9\n"
+"Project-Id-Version: Dokan 3.2.10\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2021-08-02 10:42:26+00:00\n"
+"POT-Creation-Date: 2021-08-10 13:47:19+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2182,20 +2182,20 @@ msgstr ""
 msgid "Store List"
 msgstr ""
 
-#: includes/Order/Hooks.php:251
+#: includes/Order/Hooks.php:254
 msgid "Mark parent order completed when all child orders are completed."
 msgstr ""
 
-#: includes/Order/Hooks.php:296
+#: includes/Order/Hooks.php:299
 msgid "A coupon must be restricted with a vendor product."
 msgstr ""
 
-#: includes/Order/Hooks.php:351
+#: includes/Order/Hooks.php:354
 #. translators: %s item name.
 msgid "Unable to restore stock for item %s."
 msgstr ""
 
-#: includes/Order/Hooks.php:418 includes/Order/Hooks.php:437
+#: includes/Order/Hooks.php:431 includes/Order/Hooks.php:450
 msgid "Stock levels reduced:"
 msgstr ""
 
@@ -7100,65 +7100,65 @@ msgid "To"
 msgstr ""
 
 #: templates/products/new-product-single.php:259
-#: templates/products/new-product-single.php:292
+#: templates/products/new-product-single.php:293
 msgid "Category"
 msgstr ""
 
-#: templates/products/new-product-single.php:287
+#: templates/products/new-product-single.php:288
 msgid "Please choose a category!"
 msgstr ""
 
-#: templates/products/new-product-single.php:312
-#: templates/products/new-product.php:247
-#: templates/products/tmpl-add-product-popup.php:138
+#: templates/products/new-product-single.php:314
+#: templates/products/new-product.php:249
+#: templates/products/tmpl-add-product-popup.php:140
 msgid "Select product category"
 msgstr ""
 
-#: templates/products/new-product-single.php:318
-#: templates/products/new-product.php:253
-#: templates/products/tmpl-add-product-popup.php:144
+#: templates/products/new-product-single.php:320
+#: templates/products/new-product.php:255
+#: templates/products/tmpl-add-product-popup.php:146
 msgid "Tags"
 msgstr ""
 
-#: templates/products/new-product-single.php:323
+#: templates/products/new-product-single.php:325
 #: templates/products/new-product.php:79
 #: templates/products/tmpl-add-product-popup.php:19
 msgid "Select tags/Add tags"
 msgstr ""
 
-#: templates/products/new-product-single.php:323
+#: templates/products/new-product-single.php:325
 #: templates/products/new-product.php:79
 #: templates/products/tmpl-add-product-popup.php:19
 msgid "Select product tags"
 msgstr ""
 
-#: templates/products/new-product-single.php:360
+#: templates/products/new-product-single.php:362
 #: templates/products/tmpl-add-product-popup.php:25
 msgid "Upload a product cover image"
 msgstr ""
 
-#: templates/products/new-product-single.php:391
+#: templates/products/new-product-single.php:393
 #: templates/products/new-product.php:133
 msgid "Delete image"
 msgstr ""
 
-#: templates/products/new-product-single.php:397
+#: templates/products/new-product-single.php:399
 #: templates/products/new-product.php:140
 #: templates/products/tmpl-add-product-popup.php:39
 msgid "Add gallery image"
 msgstr ""
 
-#: templates/products/new-product-single.php:413
+#: templates/products/new-product-single.php:415
 msgid "Short Description"
 msgstr ""
 
-#: templates/products/new-product-single.php:418
-#: templates/products/new-product.php:262
+#: templates/products/new-product-single.php:420
+#: templates/products/new-product.php:264
 msgid "Description"
 msgstr ""
 
-#: templates/products/new-product-single.php:434
-#: templates/products/new-product-single.php:435
+#: templates/products/new-product-single.php:436
+#: templates/products/new-product-single.php:437
 msgid "Save Product"
 msgstr ""
 
@@ -7179,15 +7179,15 @@ msgstr ""
 msgid "Short description of the product..."
 msgstr ""
 
-#: templates/products/new-product.php:262
+#: templates/products/new-product.php:264
 msgid "Add your product description"
 msgstr ""
 
-#: templates/products/new-product.php:281
+#: templates/products/new-product.php:283
 msgid "Create & Add New"
 msgstr ""
 
-#: templates/products/new-product.php:283
+#: templates/products/new-product.php:285
 msgid "Create Product"
 msgstr ""
 
@@ -7287,15 +7287,15 @@ msgstr ""
 msgid "Ready to start selling something awesome?"
 msgstr ""
 
-#: templates/products/tmpl-add-product-popup.php:151
+#: templates/products/tmpl-add-product-popup.php:153
 msgid "Enter some short description about this product..."
 msgstr ""
 
-#: templates/products/tmpl-add-product-popup.php:159
+#: templates/products/tmpl-add-product-popup.php:161
 msgid "Create product"
 msgstr ""
 
-#: templates/products/tmpl-add-product-popup.php:169
+#: templates/products/tmpl-add-product-popup.php:171
 msgid "Create & add new"
 msgstr ""
 
