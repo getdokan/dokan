@@ -7,7 +7,7 @@
 **WC requires at least:** 3.0  
 **WC tested up to:** 5.5.2  
 **Requires PHP:** 5.6  
-**Stable tag:** 3.2.9  
+**Stable tag:** 3.2.10  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -291,6 +291,12 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 ## Changelog ##
+
+### v3.2.10 ( Aug 10, 2021 ) ###
+
+- **update:** Hide customer billing email and ip address from vendor order export data based on admin setting
+- **update:** Default Category order by set to name and order by as ascending
+- **fix:** After submitting the Create Product from the selected category is not selected
 
 ### v3.2.9 ( Aug 2, 2021 ) ###
 
