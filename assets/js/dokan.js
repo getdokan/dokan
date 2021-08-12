@@ -379,7 +379,7 @@ jQuery(function($) {
                         line_item_totals:       JSON.stringify( line_item_totals, null, '' ),
                         line_item_tax_totals:   JSON.stringify( line_item_tax_totals, null, '' ),
                         api_refund:             $( this ).is( '.do-api-refund' ),
-                        restock_refunded_items: $( '#restock_refunded_items:checked' ).size() ? 'true' : 'false',
+                        restock_refunded_items: $( '#restock_refunded_items:checked' ).length ? 'true' : 'false',
                         security:               dokan_refund.order_item_nonce
                     };
 
@@ -942,7 +942,7 @@ jQuery(function($) {
                         $.magnificPopup.close();
                         Dokan_Editor.openProductPopup();
                         $( 'span.dokan-show-add-product-success' ).html( dokan.product_created_response );
-                        
+
                         setTimeout(function() {
                             $( 'span.dokan-show-add-product-success' ).html( '' );
                         }, 3000);
@@ -1105,8 +1105,9 @@ jQuery(function($) {
                         attributeWrapper.append( $html );
                         $( 'select#product_type' ).trigger('change');
                         Dokan_Editor.loadSelect2();
+                        Dokan_Editor.bindProductTagDropdown();
                         Dokan_Editor.attribute.reArrangeAttribute();
-                    };
+                    }
 
                     self.closest('.dokan-attribute-type').find('span.dokan-attribute-spinner').addClass('dokan-hide');
 
@@ -1687,7 +1688,7 @@ jQuery(function($) {
         if ( $('#dokan-edit-product-id').val() && $('#post_title').val() && $('#samplepermalinknonce').val() ) {
             $.post(
                 ajaxurl,
-                {   
+                {
                     action: 'sample-permalink',
                     post_id: $('#dokan-edit-product-id').val(),
                     new_slug: $('#edited-post-name-dokan').val(),
@@ -1712,8 +1713,12 @@ jQuery(function($) {
             };
         }
 
+        $( window ).on( "load", function (){
+            if ( $( 'input#_virtual:checked' ).length ) {
+                show_and_hide_panels();
+            }
+        });
     });
-
 })(jQuery);
 
 jQuery(function($) {

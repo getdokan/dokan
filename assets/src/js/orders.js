@@ -379,7 +379,7 @@ jQuery(function($) {
                         line_item_totals:       JSON.stringify( line_item_totals, null, '' ),
                         line_item_tax_totals:   JSON.stringify( line_item_tax_totals, null, '' ),
                         api_refund:             $( this ).is( '.do-api-refund' ),
-                        restock_refunded_items: $( '#restock_refunded_items:checked' ).size() ? 'true' : 'false',
+                        restock_refunded_items: $( '#restock_refunded_items:checked' ).length ? 'true' : 'false',
                         security:               dokan_refund.order_item_nonce
                     };
 

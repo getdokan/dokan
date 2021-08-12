@@ -210,6 +210,7 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                                                 'name'             => 'product_cat',
                                                 'id'               => 'product_cat',
                                                 'taxonomy'         => 'product_cat',
+                                                'orderby'          => 'name',
                                                 'title_li'         => '',
                                                 'class'            => 'product_cat dokan-form-control dokan-select2',
                                                 'exclude'          => '',
@@ -236,6 +237,7 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                                                 'name'             => 'product_cat[]',
                                                 'id'               => 'product_cat',
                                                 'taxonomy'         => 'product_cat',
+                                                'orderby'          => 'name',
                                                 'title_li'         => '',
                                                 'class'            => 'product_cat dokan-form-control dokan-select2',
                                                 'exclude'          => '',
@@ -272,7 +274,7 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                                 <?php
                                 $display_create_and_add_new_button = true;
                                 if ( function_exists( 'dokan_pro' ) && dokan_pro()->module->is_active( 'product_subscription' ) ) {
-                                    if ( \DokanPro\Modules\Subscription\Helper::get_vendor_remaining_products( dokan_get_current_user_id() ) <= 1 ) {
+                                    if ( \DokanPro\Modules\Subscription\Helper::get_vendor_remaining_products( dokan_get_current_user_id() ) === 1 ) {
                                         $display_create_and_add_new_button = false;
                                     }
                                 }
