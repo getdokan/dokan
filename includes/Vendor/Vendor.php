@@ -529,6 +529,65 @@ class Vendor {
     }
 
     /**
+     * Get a vendor all published products
+     *
+     * @since 3.2.11
+     *
+     * @return array
+     */
+    public function get_published_products() {
+        $transient_key = 'dokan_vendor_get_published_products_' . $this->id;
+
+        if ( false === ( $products = get_transient( $transient_key ) ) ) {
+            $products = dokan()->product->all( [
+                'author'      => $this->id,
+                'post_status' => 'publish',
+                'fields'      => 'ids'
+            ] );
+            $products = $products->posts;
+            set_transient( $transient_key, $products, WEEK_IN_SECONDS );
+        }
+
+        return $products;
+    }
+
+    /**
+     * Get a vendor store published products categories
+     *
+     * @since 3.2.11
+     *
+     * @return array
+     */
+    public function get_store_categories() {
+        $transient_key = 'dokan_vendor_get_store_categories_' . $this->id;
+
+        if ( false === ( $all_categories = get_transient( $transient_key ) ) ) {
+            $products = $this->get_published_products();
+            if ( empty( $products ) ) {
+                return [];
+            }
+
+            $all_categories = [];
+            foreach ( $products as $product_id ) {
+                $terms = get_the_terms( $product_id, 'product_cat' );
+
+                //allow when there is terms and do not have any wp_errors
+                if ( $terms && ! is_wp_error( $terms ) ) {
+                    foreach ( $terms as $term ) {
+                        if ( ! array_key_exists( $term->term_id, $all_categories ) ) {
+                            $all_categories[ $term->term_id ] = $term;
+                        }
+                    }
+                }
+            }
+
+            set_transient( $transient_key, $all_categories, WEEK_IN_SECONDS );
+        }
+
+        return $all_categories;
+    }
+
+    /**
      * Get vendor orders
      *
      * @since 3.0.0

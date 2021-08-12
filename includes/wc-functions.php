@@ -956,6 +956,12 @@ function dokan_clear_product_category_cache( $post_id ) {
     $seller_id = get_post_field( 'post_author', $post_id );
 
     delete_transient( 'dokan-store-category-' . $seller_id );
+
+    // delete vendor get_published_products() method transient
+    delete_transient( 'dokan_vendor_get_published_products_' . $seller_id );
+
+    // delete vendor get_store_categories() method transient
+    delete_transient( 'dokan_vendor_get_store_categories_' . $seller_id );
 }
 
 if ( ! function_exists( 'dokan_date_time_format' ) ) {

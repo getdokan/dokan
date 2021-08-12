@@ -196,6 +196,22 @@ class StoreController extends WP_REST_Controller {
                 ],
             ]
         );
+
+        register_rest_route(
+            $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/categories', [
+                'args' => [
+                    'id' => [
+                        'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
+                        'type'        => 'integer',
+                    ],
+                ],
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_store_category' ],
+                    'permission_callback' => '__return_true',
+                ],
+            ]
+        );
     }
 
     /**
@@ -892,6 +908,30 @@ class StoreController extends WP_REST_Controller {
                 }
             }
         }
+
+        return $response;
+    }
+
+    /**
+     * Get singe store
+     *
+     * @param $request
+     *
+     * @since 3.2.11
+     *
+     * @return WP_Error|\WP_REST_Response
+     */
+    public function get_store_category( $request ) {
+        $store_id = absint( $request['id'] );
+
+        $store = dokan()->vendor->get( $store_id );
+
+        if ( empty( $store->id ) || ! $store instanceof Vendor ) {
+            return new WP_Error( 'no_store_found', __( 'No store found', 'dokan-lite' ), [ 'status' => 404 ] );
+        }
+
+        $category_data = $store->get_store_categories();
+        $response      = rest_ensure_response( $category_data );
 
         return $response;
     }
