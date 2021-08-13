@@ -941,10 +941,10 @@ function dokan_save_account_details() {
 
 add_action( 'template_redirect', 'dokan_save_account_details' );
 
-add_action( 'trashed_post', 'dokan_clear_product_category_cache' );
-add_action( 'deleted_post', 'dokan_clear_product_category_cache' );
-add_action( 'dokan_new_product_added', 'dokan_clear_product_category_cache' );
-add_action( 'dokan_product_updated', 'dokan_clear_product_category_cache' );
+add_action( 'wp_trash_post', 'dokan_clear_product_category_cache' );
+add_action( 'delete_post', 'dokan_clear_product_category_cache' );
+add_action( 'woocommerce_new_product', 'dokan_clear_product_category_cache' );
+add_action( 'woocommerce_update_product', 'dokan_clear_product_category_cache' );
 
 function dokan_clear_product_category_cache( $post_id ) {
     $product = wc_get_product( $post_id );
@@ -1135,24 +1135,6 @@ function dokan_bulk_order_status_change() {
 }
 
 add_action( 'template_redirect', 'dokan_bulk_order_status_change' );
-
-/**
- * Clear transient once a product is saved or deleted
- *
- * @param int $post_id
- *
- * @return void
- */
-function dokan_store_category_delete_transient( $post_id ) {
-    $post_tmp  = get_post( $post_id );
-    $seller_id = $post_tmp->post_author;
-
-    //delete store category transient
-    delete_transient( 'dokan-store-category-' . $seller_id );
-}
-
-add_action( 'delete_post', 'dokan_store_category_delete_transient' );
-add_action( 'save_post', 'dokan_store_category_delete_transient' );
 
 /**
  * Add vendor email on customers note mail replay to
