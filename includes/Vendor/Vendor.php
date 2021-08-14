@@ -575,6 +575,39 @@ class Vendor {
                 if ( $terms && ! is_wp_error( $terms ) ) {
                     foreach ( $terms as $term ) {
                         if ( ! array_key_exists( $term->term_id, $all_categories ) ) {
+                            // get extra information
+                            $display_type            = get_term_meta( $term->term_id, 'display_type', true );
+                            $thumbnail_id            = absint( get_term_meta( $term->term_id, 'thumbnail_id', true ) );
+                            $category_commision_type = get_term_meta( $term->term_id, 'per_category_admin_commission_type', true );
+                            $category_commision      = get_term_meta( $term->term_id, 'per_category_admin_commission', true );
+                            $category_icon           = get_term_meta( $term->term_id, 'dokan_cat_icon', true );
+                            $category_icon_color     = get_term_meta( $term->term_id, 'dokan_cat_icon_color', true );
+
+
+                            // get category image url
+                            if ( $thumbnail_id ) {
+                                $thumbnail = wp_get_attachment_thumb_url( $thumbnail_id );
+                                // get the image URL
+                                $image = wp_get_attachment_url( $thumbnail_id );
+                            } else {
+                                $image = $thumbnail = wc_placeholder_img_src();
+                            }
+
+                            // fix commission
+                            $category_commision = ! empty( $category_commision ) ? wc_format_decimal( $category_commision ) : 0.00;
+
+                            // set extra fields to term object
+                            $term->thumbnail = $thumbnail;
+                            $term->image     = $image;
+                            // set icon and icon color
+                            $term->icon         = $category_icon;
+                            $term->icon_color   = $category_icon_color;
+                            $term->display_type = $display_type;
+                            // set commissions
+                            $term->admin_commission_type = $category_commision_type;
+                            $term->admin_commission      = $category_commision;
+
+                            // finally store category data
                             $all_categories[ $term->term_id ] = $term;
                         }
                     }

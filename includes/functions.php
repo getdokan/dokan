@@ -2742,7 +2742,7 @@ function dokan_get_category_wise_seller_commission( $product_id, $category_id = 
     }
 
     if ( ! empty( $category_commision ) ) {
-        return (float) $category_commision;
+        return wc_format_decimal( $category_commision );
     }
 
     return 0;
