@@ -552,29 +552,69 @@ class Vendor {
     }
 
     /**
-     * Get a vendor store published products categories
+     * Get a vendor all published products
      *
      * @since 3.2.11
      *
      * @return array
      */
-    public function get_store_categories() {
+    public function get_best_selling_products() {
+        $transient_key = 'dokan_vendor_get_best_selling_products_' . $this->id;
+
+        if ( false === ( $products = get_transient( $transient_key ) ) ) {
+            $args = [
+                'author'         => $this->id,
+                'post_status'    => 'publish',
+                'fields'         => 'ids',
+                'posts_per_page' => -1,
+            ];
+
+            $args['meta_query'] = [ //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+                [
+                    'key'     => '_stock_status',
+                    'value'   => 'outofstock',
+                    'compare' => '!=',
+                ],
+            ];
+
+            $products = dokan()->product->best_selling( $args );
+            $products = $products->posts;
+            set_transient( $transient_key, $products, WEEK_IN_SECONDS );
+        }
+
+        return $products;
+    }
+
+    /**
+     * Get a vendor store published products categories
+     *
+     * @param bool $best_selling
+     *
+     * @since 3.2.11
+     *
+     * @return array
+     */
+    public function get_store_categories( $best_selling = false ) {
         $transient_key = 'dokan_vendor_get_store_categories_' . $this->id;
+        if ( $best_selling ) {
+            $transient_key = 'dokan_vendor_get_best_selling_categories_' . $this->id;
+        }
 
         if ( false === ( $all_categories = get_transient( $transient_key ) ) ) {
-            $products = $this->get_published_products();
+            $products = true === $best_selling ? $this->get_best_selling_products() : $this->get_published_products();
             if ( empty( $products ) ) {
                 return [];
             }
 
             $all_categories = [];
+            $category_index = [];
             foreach ( $products as $product_id ) {
                 $terms = get_the_terms( $product_id, 'product_cat' );
 
                 //allow when there is terms and do not have any wp_errors
                 if ( $terms && ! is_wp_error( $terms ) ) {
                     foreach ( $terms as $term ) {
-                        if ( ! array_key_exists( $term->term_id, $all_categories ) ) {
+                        if ( ! in_array( $term->term_id, $category_index, true ) ) {
                             // get extra information
                             $display_type            = get_term_meta( $term->term_id, 'display_type', true );
                             $thumbnail_id            = absint( get_term_meta( $term->term_id, 'thumbnail_id', true ) );
@@ -608,7 +648,8 @@ class Vendor {
                             $term->admin_commission      = $category_commision;
 
                             // finally store category data
-                            $all_categories[ $term->term_id ] = $term;
+                            $all_categories[] = $term;
+                            $category_index[] = $term->term_id;
                         }
                     }
                 }

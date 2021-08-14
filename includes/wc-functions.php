@@ -941,10 +941,12 @@ function dokan_save_account_details() {
 
 add_action( 'template_redirect', 'dokan_save_account_details' );
 
-add_action( 'wp_trash_post', 'dokan_clear_product_category_cache', 10, 1 );
-add_action( 'delete_post', 'dokan_clear_product_category_cache', 10, 1 );
-add_action( 'woocommerce_new_product', 'dokan_clear_product_category_cache', 10, 1 );
-add_action( 'woocommerce_update_product', 'dokan_clear_product_category_cache', 10, 1 );
+
+/**
+ * This method will delete product/category related cache for a particular vendor
+ *
+ * @param int $post_id
+ */
 function dokan_clear_product_category_cache( $post_id ) {
     $product = wc_get_product( $post_id );
 
@@ -958,10 +960,48 @@ function dokan_clear_product_category_cache( $post_id ) {
 
     // delete vendor get_published_products() method transient
     delete_transient( 'dokan_vendor_get_published_products_' . $seller_id );
+    delete_transient( 'dokan_vendor_get_best_selling_products_' . $seller_id );
 
     // delete vendor get_store_categories() method transient
     delete_transient( 'dokan_vendor_get_store_categories_' . $seller_id );
+    delete_transient( 'dokan_vendor_get_best_selling_categories_' . $seller_id );
 }
+add_action( 'wp_trash_post', 'dokan_clear_product_category_cache', 10, 1 );
+add_action( 'delete_post', 'dokan_clear_product_category_cache', 10, 1 );
+add_action( 'woocommerce_new_product', 'dokan_clear_product_category_cache', 10, 1 );
+add_action( 'woocommerce_update_product', 'dokan_clear_product_category_cache', 10, 1 );
+
+/**
+ * This method will delete vendors best selling product cache after a new order has been made
+ *
+ * @since 3.2.11
+ *
+ * @param int $post_id
+ */
+function dokan_clear_best_selling_product_category_cache( $order_id ) {
+    $order = wc_get_order( $order_id );
+
+    if ( ! $order ) {
+        return;
+    }
+
+    // check if order has suborder
+    if ( $order->get_meta( 'has_sub_order' ) ) {
+        // same hooks will be called for individual sub orders
+        return;
+    }
+
+    // get vendor id from order
+    $seller_id = dokan_get_seller_id_by_order( $order_id );
+    if ( empty( $seller_id ) ) {
+        return;
+    }
+
+    delete_transient( 'dokan_vendor_get_best_selling_products_' . $seller_id );
+    delete_transient( 'dokan_vendor_get_best_selling_categories_' . $seller_id );
+}
+add_action( 'woocommerce_new_order', array( $this, 'dokan_clear_best_selling_product_category_cache' ), 10, 1 );
+add_action( 'woocommerce_update_order', array( $this, 'dokan_clear_best_selling_product_category_cache' ), 10, 1 );
 
 /**
  * This method will delete store category cache after a category is updated

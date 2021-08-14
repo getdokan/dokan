@@ -153,7 +153,7 @@ function dokan_product_dashboard_errors() {
             dokan_get_template_part(
                 'global/dokan-success', '', array(
                     'deleted' => true,
-                    'message' => __( 'Product succesfully deleted', 'dokan-lite' ),
+                    'message' => __( 'Product successfully deleted', 'dokan-lite' ),
                 )
             );
             break;
