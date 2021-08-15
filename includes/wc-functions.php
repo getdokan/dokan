@@ -1000,8 +1000,8 @@ function dokan_clear_best_selling_product_category_cache( $order_id ) {
     delete_transient( 'dokan_vendor_get_best_selling_products_' . $seller_id );
     delete_transient( 'dokan_vendor_get_best_selling_categories_' . $seller_id );
 }
-add_action( 'woocommerce_new_order', array( $this, 'dokan_clear_best_selling_product_category_cache' ), 10, 1 );
-add_action( 'woocommerce_update_order', array( $this, 'dokan_clear_best_selling_product_category_cache' ), 10, 1 );
+add_action( 'woocommerce_new_order', 'dokan_clear_best_selling_product_category_cache', 10, 1 );
+add_action( 'woocommerce_update_order', 'dokan_clear_best_selling_product_category_cache', 10, 1 );
 
 /**
  * This method will delete store category cache after a category is updated
