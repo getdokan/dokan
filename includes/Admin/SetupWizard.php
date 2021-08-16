@@ -578,7 +578,9 @@ class SetupWizard {
 									),
                                 )
                             );
+                        }
 
+                        if ( ! $this->is_wemail_active() ) {
                             $this->display_recommended_item(
                                 array(
                                     'type'        => 'wemail',
@@ -590,6 +592,24 @@ class SetupWizard {
                                         array(
                                             'name' => __( 'weMail', 'dokan-lite' ),
                                             'slug' => 'wemail',
+                                        ),
+                                    ),
+                                )
+                            );
+                        }
+
+                        if ( ! $this->is_texty_active() ) {
+                            $this->display_recommended_item(
+                                array(
+                                    'type'        => 'texty',
+                                    'title'       => __( 'Texty', 'dokan-lite' ),
+                                    'description' => __( 'SMS Notification for WordPress, WooCommerce, Dokan and more', 'dokan-lite' ),
+                                    'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/texty-logo.png',
+                                    'img_alt'     => __( 'Texty logo', 'dokan-lite' ),
+                                    'plugins'     => array(
+                                        array(
+                                            'name' => __( 'Texty', 'dokan-lite' ),
+                                            'slug' => 'texty',
                                         ),
                                     ),
                                 )
@@ -619,6 +639,7 @@ class SetupWizard {
 
         $setup_wc_conversion_tracking = isset( $_POST['setup_wc_conversion_tracking'] ) && 'yes' === $_POST['setup_wc_conversion_tracking'];
         $setup_wemail                 = isset( $_POST['setup_wemail'] ) && 'yes' === $_POST['setup_wemail'];
+        $setup_texty                  = isset( $_POST['setup_texty'] ) && 'yes' === $_POST['setup_texty'];
 
         if ( $setup_wc_conversion_tracking && ! $this->is_wc_conversion_tracking_active() ) {
             $this->install_plugin(
@@ -638,6 +659,17 @@ class SetupWizard {
                     'name'      => __( 'weMail', 'dokan-lite' ),
                     'repo-slug' => 'wemail',
                     'file'      => 'wemail.php',
+                )
+            );
+        }
+
+        if ( $setup_texty && ! $this->is_texty_active() ) {
+            $this->install_plugin(
+                'texty',
+                array(
+                    'name'      => __( 'Texty', 'dokan-lite' ),
+                    'repo-slug' => 'texty',
+                    'file'      => 'texty.php',
                 )
             );
         }
@@ -727,6 +759,10 @@ class SetupWizard {
             return false;
         }
 
+        if ( $this->is_texty_active() ) {
+            return false;
+        }
+
         return true;
     }
 
@@ -750,6 +786,17 @@ class SetupWizard {
      */
     protected function is_wemail_active() {
         return is_plugin_active( 'wemail/wemail.php' );
+    }
+
+    /**
+     * Check if texty is active or not
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return bool
+     */
+    protected function is_texty_active() {
+        return is_plugin_active( 'texty/texty.php' );
     }
 
     /**
