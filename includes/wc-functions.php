@@ -1042,6 +1042,7 @@ function dokan_clear_edit_product_category_cache( $term_id ) {
     }
 }
 add_action( 'edit_product_cat', 'dokan_clear_edit_product_category_cache', 10, 1 );
+add_action( 'pre_delete_term', 'dokan_clear_edit_product_category_cache', 10, 1 );
 
 if ( ! function_exists( 'dokan_date_time_format' ) ) {
 
