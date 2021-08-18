@@ -50,7 +50,7 @@
 
                 <template slot="vendor" slot-scope="{ row }">
                     <router-link :to="'/vendors/' + row.vendor.id">
-                        {{ row.vendor.name ? row.vendor.name : __('(no name)', 'dokan') }}
+                        {{ row.vendor.name ? row.vendor.name : __('(no name)', 'dokan-lite') }}
                     </router-link>
                 </template>
 
@@ -74,7 +74,7 @@
                     <select
                         id="filter-vendors"
                         style="width: 190px;"
-                        :data-placeholder="__('Filter by vendor', 'dokan')"
+                        :data-placeholder="__('Filter by vendor', 'dokan-lite')"
                     />
                     <button
                         v-if="filter.user_id"
