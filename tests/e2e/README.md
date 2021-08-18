@@ -17,7 +17,7 @@ selenium-standalone start
 
 # Create a test folder and under this run :
 ```sh
-git clone https://github.com/shanjidah/dokan.git
+git clone https://github.com/weDevsOfficial/dokan.git
 git checkout test/automation
 cd dokan
 composer install
