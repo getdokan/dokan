@@ -274,8 +274,8 @@ class Manager {
         if ( $shipping_methods ) {
             foreach ( $shipping_methods as $method_item_id => $shipping_object ) {
                 $shipping_seller_id = wc_get_order_item_meta( $method_item_id, 'seller_id', true );
-
-                if ( $order_seller_id == $shipping_seller_id ) {
+                // In dokan lite, we do not have any dokan shipping methods.
+                if ( ! dokan()->is_pro_exists() || $order_seller_id === $shipping_seller_id ) {
                     $applied_shipping_method = $shipping_object;
                     break;
                 }
