@@ -283,6 +283,18 @@ class Hooks {
      * @throws Exception
      */
     public function ensure_vendor_coupon( $valid, $coupon ) {
+        $available_vendors = [];
+
+        foreach ( WC()->cart->get_cart() as $item ) {
+            $product_id = $item['data']->get_id();
+
+            $available_vendors[] = get_post_field( 'post_author', $product_id );
+        }
+
+        if ( $coupon->is_type( 'fixed_cart' ) && count( array_unique( $available_vendors ) ) > 1 ) {
+            throw new Exception( __( 'A coupon must be restricted with single vendor only.', 'dokan-lite' ) );
+        }
+
         $coupon_id           = $coupon->get_id();
         $vendor_id           = get_post_field( 'post_author', $coupon_id );
         $ensure_admin_coupon = $this->ensure_admin_have_create_vendors_coupon( $valid, $coupon );
@@ -291,8 +303,6 @@ class Hooks {
             return $ensure_admin_coupon['valid'];
         }
 
-        $available_vendors = [];
-
         if ( ! apply_filters( 'dokan_ensure_vendor_coupon', true ) ) {
             return $valid;
         }
@@ -300,12 +310,6 @@ class Hooks {
         // a coupon must be bound with a product
         if ( count( $coupon->get_product_ids() ) === 0 ) {
             throw new Exception( __( 'A coupon must be restricted with a vendor product.', 'dokan-lite' ) );
-        }
-
-        foreach ( WC()->cart->get_cart() as $item ) {
-            $product_id = $item['data']->get_id();
-
-            $available_vendors[] = get_post_field( 'post_author', $product_id );
         }
 
         if ( ! in_array( $vendor_id, $available_vendors, true ) ) {
@@ -331,15 +335,15 @@ class Hooks {
         if ( empty( $commissions_type ) ) {
             return [
 				'have_admin_coupons' => false,
-				'valid' => $valid,
+				'valid'              => $valid,
 			];
         }
 
         $enabled_all_vendor  = get_post_meta( $coupon_id, 'admin_coupons_enabled_for_vendor', true );
         $vendors_ids         = get_post_meta( $coupon_id, 'coupons_vendors_ids', true );
-        $vendors_ids         = ! empty( $vendors_ids ) ? explode( ',', $vendors_ids ) : [];
+        $vendors_ids         = ! empty( $vendors_ids ) ? array_map( 'intval', explode( ',', $vendors_ids) ) : [];
         $exclude_vendors     = get_post_meta( $coupon_id, 'coupons_exclude_vendors_ids', true );
-        $exclude_vendors     = ! empty( $exclude_vendors ) ? explode( ',', $exclude_vendors ) : [];
+        $exclude_vendors     = ! empty( $exclude_vendors ) ? array_map( 'intval', explode( ',', $exclude_vendors) ) : [];
         $admin_shared_amount = get_post_meta( $coupon_id, 'admin_shared_coupon_amount', true );
         $current_valid       = false;
         $available_vendors   = [];
@@ -374,7 +378,7 @@ class Hooks {
 
         return [
 			'have_admin_coupons' => $current_valid,
-			'valid' => $current_valid,
+			'valid'              => $current_valid,
 		];
     }
 

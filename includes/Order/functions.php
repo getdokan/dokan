@@ -353,7 +353,7 @@ function dokan_sync_insert_order( $order_id ) {
     $order_total        = $order->get_total();
     $order_status       = dokan_get_prop( $order, 'status' );
     $admin_commission   = dokan()->commission->get_earning_by_order( $order, 'admin' );
-    $net_amount         = $order_total - $admin_commission;
+    $net_amount         = dokan()->commission->get_earning_by_order( $order, 'seller' );
     $net_amount         = apply_filters( 'dokan_order_net_amount', $net_amount, $order );
     $threshold_day      = dokan_get_withdraw_threshold( $seller_id );
 

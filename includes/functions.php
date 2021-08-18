@@ -485,7 +485,7 @@ function dokan_generate_sync_table() {
                     'order_id'     => $order->order_id,
                     'seller_id'    => $order->seller_id,
                     'order_total'  => $order->order_total,
-                    'net_amount'   => $order->order_total - $admin_commission,
+                    'net_amount'   => dokan()->commission->get_earning_by_order( $order, 'seller' ),
                     'order_status' => $order->order_status,
                 ],
                 [
