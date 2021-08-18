@@ -8,7 +8,7 @@ Feature('Simple product fucntionality');
 // });
 Scenario('simple product functional', ({ I,loginAs }) => {
     
-    loginAs('vendor');
+    loginAs('Vendor');
     I.click('Products');
     I.click('simple_pro_3'); //This product needs to be on dokan site in order to run this test.
     I.wait(3);

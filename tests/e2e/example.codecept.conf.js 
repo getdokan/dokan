@@ -1,8 +1,8 @@
-xports.config = {
+exports.config = {
     output: './output',
     helpers: {
         WebDriver: {
-            url: 'http://localhost:10003/',
+            url: 'add your project url',
             
             browser: 'chrome',
         
@@ -82,9 +82,7 @@ xports.config = {
                 I.fillField('password', 'customer password');
                 I.click('login');
     },
-     },
-     },
-     },
+     }
     },     
     tests: './core-tests/*_test.js',
     name: 'e2e'

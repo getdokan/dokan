@@ -4,7 +4,7 @@ Feature('Group/Variable product explore');
 //     I.loginAsVendor();
 // });
 Scenario('product edit explore test', ({ I,loginAs }) => {
-    loginAs('vendor');
+    loginAs('Vendor');
     I.click('Products');
     I.click('group_product');
     // Starting to explore

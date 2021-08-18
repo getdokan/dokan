@@ -7,7 +7,7 @@ Feature('Group Product Functionality Test');
 //     I.loginAsVendor();
 // });
 Scenario('Group Product Functional Behaviour Testing', ({ I,loginAs }) => {
-    loginAs('vendor');
+    loginAs('Vendor');
     I.click('Products');
     I.click('group_product');
     //RMA Functionality Test
