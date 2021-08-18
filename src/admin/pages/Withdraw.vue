@@ -20,9 +20,9 @@
             </modal>
 
             <ul class="subsubsub">
-                <li><router-link :to="{ name: 'Withdraw', query: { status: 'pending' }}" active-class="current" exact >{{ __( 'Pending', 'dokan-lite' ) }} <span class="count">{{ counts.pending }}</span></router-link> | </li>
-                <li><router-link :to="{ name: 'Withdraw', query: { status: 'approved' }}" active-class="current" exact >{{ __( 'Approved', 'dokan-lite' ) }} <span class="count">{{ counts.approved }}</span></router-link> | </li>
-                <li><router-link :to="{ name: 'Withdraw', query: { status: 'cancelled' }}" active-class="current" exact >{{ __( 'Cancelled', 'dokan-lite' ) }} <span class="count">{{ counts.cancelled }}</span></router-link> | </li>
+                <li><router-link :class="{current: currentStatus === 'pending'}" :to="{ name: 'Withdraw', query: { status: 'pending' }}" >{{ __( 'Pending', 'dokan-lite' ) }} <span class="count">{{ counts.pending }}</span></router-link> | </li>
+                <li><router-link :class="{current: currentStatus === 'approved'}" :to="{ name: 'Withdraw', query: { status: 'approved' }}">{{ __( 'Approved', 'dokan-lite' ) }} <span class="count">{{ counts.approved }}</span></router-link> | </li>
+                <li><router-link :class="{current: currentStatus === 'cancelled'}" :to="{ name: 'Withdraw', query: { status: 'cancelled' }}" >{{ __( 'Cancelled', 'dokan-lite' ) }} <span class="count">{{ counts.cancelled }}</span></router-link> | </li>
             </ul>
 
             <list-table
