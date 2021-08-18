@@ -637,9 +637,9 @@ class SetupWizard {
     public function dokan_setup_recommended_save() {
         check_admin_referer( 'dokan-setup' );
 
-        $setup_wc_conversion_tracking = isset( $_POST['setup_wc_conversion_tracking'] ) && 'yes' === $_POST['setup_wc_conversion_tracking'];
-        $setup_wemail                 = isset( $_POST['setup_wemail'] ) && 'yes' === $_POST['setup_wemail'];
-        $setup_texty                  = isset( $_POST['setup_texty'] ) && 'yes' === $_POST['setup_texty'];
+        $setup_wc_conversion_tracking = isset( $_POST['setup_wc_conversion_tracking'] ) && 'yes' === sanitize_text_field( wp_unslash( $_POST['setup_wc_conversion_tracking'] ) );
+        $setup_wemail                 = isset( $_POST['setup_wemail'] ) && 'yes' === sanitize_text_field( wp_unslash( $_POST['setup_wemail'] ) );
+        $setup_texty                  = isset( $_POST['setup_texty'] ) && 'yes' === sanitize_text_field( wp_unslash( $_POST['setup_texty'] ) );
 
         if ( $setup_wc_conversion_tracking && ! $this->is_wc_conversion_tracking_active() ) {
             $this->install_plugin(
@@ -780,7 +780,7 @@ class SetupWizard {
     /**
      * Check if weMail is active or not
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @return bool
      */
@@ -791,7 +791,7 @@ class SetupWizard {
     /**
      * Check if texty is active or not
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.2.11
      *
      * @return bool
      */
