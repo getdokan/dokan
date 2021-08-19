@@ -5,7 +5,7 @@ Feature('Explore Settings');
 //     I.loginAsVend();
 // });
 Scenario('Preview and Explore Vendor Store Page', ({ I,loginAs}) => {
-    loginAs('vendor');
+    loginAs('Vendor');
     explore.checkMyAccOrderDetails();
     tryTo(() => {
         I.amOnPage('/my-account');

@@ -10,7 +10,7 @@ Feature('Explore Frontend Functionality');
 //  });
 
 Scenario('Explore Vendor All Menu Pages',async ({I,loginAs}) => {
-    loginAs('vendor');
+    loginAs('Vendor');
     //Explore Vendor Dashboard Elements
     explore.DashboardElements(); 
     explore.ProductPageElements(); 
