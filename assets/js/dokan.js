@@ -379,7 +379,7 @@ jQuery(function($) {
                         line_item_totals:       JSON.stringify( line_item_totals, null, '' ),
                         line_item_tax_totals:   JSON.stringify( line_item_tax_totals, null, '' ),
                         api_refund:             $( this ).is( '.do-api-refund' ),
-                        restock_refunded_items: $( '#restock_refunded_items:checked' ).size() ? 'true' : 'false',
+                        restock_refunded_items: $( '#restock_refunded_items:checked' ).length ? 'true' : 'false',
                         security:               dokan_refund.order_item_nonce
                     };
 
@@ -761,6 +761,30 @@ jQuery(function($) {
             $(".product_tag_search").select2({
                 allowClear: false,
                 tags: ( dokan.product_vendors_can_create_tags && 'on' === dokan.product_vendors_can_create_tags ),
+                createTag: function ( $params ) {
+                    var $term = $.trim( $params.term );
+                    if ( $term === '' ) {
+                      return null;
+                    }
+
+                    return {
+                      id: $term,
+                      text: $term,
+                      newTag: true // add additional parameters
+                    }
+                },
+                insertTag: function ( data, tag ) {
+                    var $found = false;
+
+                    $.each( data, function ( index, value ) {
+                        if ( $.trim( tag.text ).toUpperCase() == $.trim( value.text ).toUpperCase() ) {
+                            $found = true;
+                        }
+                    });
+
+                    if ( ! $found ) data.unshift( tag );
+                },
+                minimumInputLength: 2,
                 ajax: {
                     url: dokan.ajaxurl,
                     dataType: 'json',
@@ -881,6 +905,7 @@ jQuery(function($) {
                 form = self.closest('form#dokan-add-new-product-form'),
                 btn_id = self.attr('data-btn_id');
 
+            form.find( 'span.dokan-show-add-product-success' ).html('');
             form.find( 'span.dokan-show-add-product-error' ).html('');
             form.find( 'span.dokan-add-new-product-spinner' ).css( 'display', 'inline-block' );
 
@@ -916,6 +941,11 @@ jQuery(function($) {
                         $('.dokan-dashboard-product-listing-wrapper').load( window.location.href + ' table.product-listing-table' );
                         $.magnificPopup.close();
                         Dokan_Editor.openProductPopup();
+                        $( 'span.dokan-show-add-product-success' ).html( dokan.product_created_response );
+
+                        setTimeout(function() {
+                            $( 'span.dokan-show-add-product-success' ).html( '' );
+                        }, 3000);
                     }
                 } else {
                     self.removeAttr( 'disabled' );
@@ -1075,8 +1105,9 @@ jQuery(function($) {
                         attributeWrapper.append( $html );
                         $( 'select#product_type' ).trigger('change');
                         Dokan_Editor.loadSelect2();
+                        Dokan_Editor.bindProductTagDropdown();
                         Dokan_Editor.attribute.reArrangeAttribute();
-                    };
+                    }
 
                     self.closest('.dokan-attribute-type').find('span.dokan-attribute-spinner').addClass('dokan-hide');
 
@@ -1657,7 +1688,7 @@ jQuery(function($) {
         if ( $('#dokan-edit-product-id').val() && $('#post_title').val() && $('#samplepermalinknonce').val() ) {
             $.post(
                 ajaxurl,
-                {   
+                {
                     action: 'sample-permalink',
                     post_id: $('#dokan-edit-product-id').val(),
                     new_slug: $('#edited-post-name-dokan').val(),
@@ -1682,8 +1713,12 @@ jQuery(function($) {
             };
         }
 
+        $( window ).on( "load", function (){
+            if ( $( 'input#_virtual:checked' ).length ) {
+                show_and_hide_panels();
+            }
+        });
     });
-
 })(jQuery);
 
 jQuery(function($) {
@@ -2919,6 +2954,53 @@ jQuery(function($) {
                     }
                 });
             }
+
+            $( 'body' ).click( function ( evt ) {  
+                if ( ! $( evt.target ).is( 'div#dokan-store-products-search-result li' ) ) {    
+                    $("#dokan-store-products-search-result").html('');
+                    $('#dokan-store-products-search-result').removeClass( 'dokan-store-products-search-has-results' );           
+                }
+            });
+
+            $( 'body' ).on( 'keyup', '.dokan-store-products-filter-search', dokan_debounce_delay( function ( evt ) {
+                evt.preventDefault();
+
+                var self        = $(this);
+                var search_term = self.val();
+                var store_id    = self.data('store_id');
+
+                if ( ! search_term ) {
+                    return;
+                }
+
+                $('.dokan-store-products-filter-search').addClass('dokan-ajax-search-loader');
+                $('#dokan-store-products-search-result').removeClass( 'dokan-store-products-search-has-results' );
+                $('#dokan-store-products-search-result').hide();
+                $("#dokan-store-products-search-result").html('');
+
+                jQuery.ajax({
+                    type     : "post",
+                    dataType : "json",
+                    url      : dokan.ajaxurl,
+                    data: {
+                        search_term : search_term,
+                        store_id    : store_id,
+                        _wpnonce    : dokan.store_product_search_nonce,
+                        action      : 'dokan_store_product_search_action'
+                    },
+                    success: function(response) {
+                        $('.dokan-store-products-filter-search').removeClass('dokan-ajax-search-loader');
+                        $("#dokan-store-products-search-result").show();
+                        $('#dokan-store-products-search-result').addClass( 'dokan-store-products-search-has-results' );
+
+                        if ( response.type == 'success' ){
+                            $("#dokan-store-products-search-result").html('<ul>'+response.data_list+'</ul>');
+                        } else {
+                            $("#dokan-store-products-search-result").html('<ul class="dokan-store-product-results-not-found">'+response.data_list+'</ul>');
+                        }
+                    }
+                });
+            }, 500 ) );
         },
 
         buildSortByQuery: function( event ) {
@@ -3144,6 +3226,21 @@ jQuery(function($) {
     if ( window.dokan ) {
         window.dokan.storeLists = storeLists;
         window.dokan.storeLists.init();
+    }
+
+    function dokan_debounce_delay( callback, ms ) {
+        var timer = 0;
+
+        return function() {
+            var context = this, 
+                args    = arguments;
+
+            clearTimeout( timer );
+
+            timer = setTimeout( function () {
+              callback.apply( context, args );
+            }, ms || 0);
+        };
     }
 
 })(jQuery);

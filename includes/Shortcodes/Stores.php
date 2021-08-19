@@ -19,14 +19,15 @@ class Stores extends DokanShortcode {
      */
     public function render_shortcode( $atts ) {
         $defaults = array(
-            'per_page' => 10,
-            'search'   => 'yes',
-            'per_row'  => 3,
-            'featured' => 'no',
-            'category' => '',
-            'order'    => '',
-            'orderby'  => '',
-            'store_id' => '',
+            'per_page'           => 10,
+            'search'             => 'yes',
+            'per_row'            => 3,
+            'featured'           => 'no',
+            'category'           => '',
+            'order'              => '',
+            'orderby'            => '',
+            'store_id'           => '',
+            'with_products_only' => '',
         );
 
         /**
@@ -80,6 +81,10 @@ class Stores extends DokanShortcode {
 
         if ( ! empty( $attr['orderby'] ) ) {
             $seller_args['orderby'] = $attr['orderby'];
+        }
+
+        if ( ! empty( $attr['with_products_only'] ) && 'yes' === $attr['with_products_only'] ) {
+            $seller_args['has_published_posts'] = [ 'product' ];
         }
 
         if ( ! empty( $attr['store_id'] ) ) {

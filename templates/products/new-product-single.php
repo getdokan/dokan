@@ -274,6 +274,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                                 'name'             => 'product_cat',
                                                 'id'               => 'product_cat',
                                                 'taxonomy'         => 'product_cat',
+                                                'orderby'          => 'name',
                                                 'title_li'         => '',
                                                 'class'            => 'product_cat dokan-form-control dokan-select2',
                                                 'exclude'          => '',
@@ -301,6 +302,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                                 'name'             => 'product_cat[]',
                                                 'id'               => 'product_cat',
                                                 'taxonomy'         => 'product_cat',
+                                                'orderby'          => 'name',
                                                 'title_li'         => '',
                                                 'class'            => 'product_cat dokan-form-control dokan-select2',
                                                 'exclude'          => '',
@@ -318,13 +320,15 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                         <label for="product_tag" class="form-label"><?php esc_html_e( 'Tags', 'dokan-lite' ); ?></label>
                                         <?php
                                         require_once DOKAN_LIB_DIR.'/class.taxonomy-walker.php';
-                                        $terms = wp_get_post_terms( $post_id, 'product_tag', array( 'fields' => 'all' ) );
+                                        $terms            = wp_get_post_terms( $post_id, 'product_tag', array( 'fields' => 'all' ) );
+                                        $can_create_tags  = dokan_get_option( 'product_vendors_can_create_tags', 'dokan_selling' );
+                                        $tags_placeholder = 'on' === $can_create_tags ? __( 'Select tags/Add tags', 'dokan-lite' ) : __( 'Select product tags', 'dokan-lite' );
 
                                         $drop_down_tags = array(
                                             'hide_empty' => 0,
                                         );
                                         ?>
-                                        <select multiple="multiple" name="product_tag[]" id="product_tag_search" class="product_tag_search product_tags dokan-form-control dokan-select2" data-placeholder="<?php esc_attr_e( 'Select tags', 'dokan-lite' ); ?>">
+                                        <select multiple="multiple" name="product_tag[]" id="product_tag_search" class="product_tag_search product_tags dokan-form-control dokan-select2" data-placeholder="<?php echo esc_attr( $tags_placeholder ); ?>">
                                             <?php if ( ! empty( $terms ) ) : ?>
                                                 <?php foreach ( $terms as $tax_term ) : ?>
                                                     <option value="<?php echo esc_attr( $tax_term->term_id ); ?>" selected="selected" ><?php echo esc_html( $tax_term->name ); ?></option>

@@ -186,36 +186,48 @@ function dokan_get_seller_withdraw_by_date( $start_date, $end_date, $seller_id =
  * Get the orders total from a specific seller
  *
  * @global object $wpdb
- * @param int $seller_id
- * @return array
+ * @param array $args
+ * @return int
  */
-function dokan_get_seller_orders_number( $seller_id, $status = 'all' ) {
+function dokan_get_seller_orders_number( $args = [] ) {
     global $wpdb;
 
+    $seller_id   = ! empty( $args['seller_id'] ) ? $args['seller_id'] : 0;
+    $status      = ! empty( $args['status'] ) ? $args['status'] : 'all';
     $cache_group = 'dokan_seller_data_' . $seller_id;
-    $cache_key   = 'dokan-seller-orders-count-' . $status . '-' . $seller_id;
+    $cache_key   = 'dokan-seller-orders-count-' . md5( json_encode( $args ) );
     $count       = wp_cache_get( $cache_key, $cache_group );
 
-    if ( $count === false ) {
+//    if ( $count === false ) {
         $status_where = ( $status == 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', $status );
+        $join = '';
+        $customer_where = '';
+        if ( ! empty( $args['customer_id'] ) ) {
+            $join = " LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id";
+            $customer_where = $wpdb->prepare(" AND pm.meta_key = '_customer_user' AND pm.meta_value = %d", $args['customer_id'] );
+        }
+        $date_where = ! empty( $args['date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $args['date'] ) : '';
 
         $result = $wpdb->get_row(
             $wpdb->prepare(
                 "SELECT COUNT(do.order_id) as count
                 FROM {$wpdb->prefix}dokan_orders AS do
                 LEFT JOIN $wpdb->posts p ON do.order_id = p.ID
+                {$join}
                 WHERE
                     do.seller_id = %d AND
                     p.post_status != 'trash'
-                    {$status_where}", $seller_id
+                    {$status_where}
+                    {$customer_where}
+                    {$date_where}", $seller_id
             )
         );
 
         $count = $result->count;
 
-        wp_cache_set( $cache_key, $count, $cache_group );
-        dokan_cache_update_group( $cache_key, $cache_group );
-    }
+//        wp_cache_set( $cache_key, $count, $cache_group );
+//        dokan_cache_update_group( $cache_key, $cache_group );
+//    }
 
     return $count;
 }

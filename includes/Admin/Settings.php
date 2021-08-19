@@ -45,9 +45,9 @@ class Settings {
     public function format_price_values( $option_values, $option_name ) {
         if ( 'dokan_selling' === $option_name ) {
             if ( isset( $option_values['commission_type'] ) && 'flat' === $option_values['commission_type'] ) {
-                $option_values['admin_percentage'] = wc_format_localized_price( $option_values['admin_percentage'] );
+                $option_values['admin_percentage'] = isset( $option_values['admin_percentage'] ) ? wc_format_localized_price( $option_values['admin_percentage'] ) : 0;
             } else {
-                $option_values['admin_percentage'] = wc_format_decimal( $option_values['admin_percentage'] );
+                $option_values['admin_percentage'] = isset( $option_values['admin_percentage'] ) ? wc_format_decimal( $option_values['admin_percentage'] ) : 0 ;
             }
         }
 
@@ -107,12 +107,19 @@ class Settings {
             $option_name  = $_post_data['section'];
             $option_value = $this->sanitize_options( $_post_data['settingsData'], 'edit' );
             $option_value = apply_filters( 'dokan_save_settings_value', $option_value, $option_name );
+            $old_options  = get_option( $option_name, [] );
 
             do_action( 'dokan_before_saving_settings', $option_name, $option_value );
 
             update_option( $option_name, $option_value );
 
             do_action( 'dokan_after_saving_settings', $option_name, $option_value );
+
+            // only flush rewrite rules if store url has been changed
+            if ( 'dokan_general' === $option_name && isset( $old_options['custom_store_url'] ) && $old_options['custom_store_url'] !== $option_value['custom_store_url'] ) {
+                dokan()->rewrite->register_rule();
+                flush_rewrite_rules();
+            }
 
             wp_send_json_success(
                 [

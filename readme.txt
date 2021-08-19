@@ -3,11 +3,11 @@ Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce, yith, yithemes
 Requires at least: 4.4
-Tested up to: 5.7.1
+Tested up to: 5.8
 WC requires at least: 3.0
-WC tested up to: 5.2.2
+WC tested up to: 5.5.2
 Requires PHP: 5.6
-Stable tag: 3.2.6
+Stable tag: 3.2.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -291,6 +291,52 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.2.10 ( Aug 10, 2021 ) =
+
+- **update:** Hide customer billing email and ip address from vendor order export data based on admin setting
+- **update:** Default Category order by set to name and order by as ascending
+- **fix:** After submitting the Create Product from the selected category is not selected
+
+= v3.2.9 ( Aug 2, 2021 ) =
+
+- **New:** Added customize settings for store product filter option to show/hide
+- **Fix:** Product tag search not working in variable product after adding new attribute
+- **New:** added a new hook dokan_earning_by_order_item_price
+- **Fix:** display shipping widget though virtual checkbox selected
+- **Fix:** Children IDs not showing on REST API
+- **Fix:** fixed a js error while refunding from vendor dashboard: size() is not a function
+
+= v3.2.8 ( Jul 12, 2021 ) =
+
+- **update:** Added Composer 2 support
+- **fix:** Fixed rewrite rules issues after Dokan plugin is installed and after change store slug
+- **new:** Added dokan summer sale promotion
+- **new:** Added a new action hook named dokan_store_customizer_after_vendor_info under Dokan Store Customizer
+- **update:** added $data parameter to existing dokan_vendor_create_data action hook
+- **new:** added a new action hook named dokan_before_create_vendor
+- **new:** added a new action hook named dokan_seller_registration_after_shopurl_field
+- **new:** added a new action hook named dokan_settings_after_store_phone
+- **new:** added a new action hook dokan_settings_before_store_email
+- **new:** added a new action hook dokan_product_gallery_image_count
+
+= v3.2.7 ( Jul 01, 2021 ) =
+
+- **new:** Added Orderby filtering for single store product listing page
+- **new:** Added custom ip address lookup link
+- **new:** Added a success message after creating a product from add new product modal window
+- **new:** Added - - for category listing in add new product page and add new product modal window
+- **new:** Added a new shortcode attribute named with_products_only in [dokan-stores] shortcode so that vendor without product can be filtered out from store listing page
+- **new(api):** Add support to send objects to trash, thanks to @Mário Valney
+- **fix:** Fixed duplicate tag create issue, if new tag is searched with mixed character case
+- **fix:** Wrong hooks used on Elementor widgets
+- **fix:** Typo in Staff - Manage Menu Permissions fixed
+- **fix:** Fixed an error in Dokan setting for new installation of Dokan Lite
+- **fix:** Fixed vendor order page pagination issue for date and customer filter
+- **fix:** Fixed “In stock" and "Out of stock" translation issue
+- **fix:** Email template override directory location correction for dokan vendor completed order
+- **fix:** delete cache data after updating dokan vendor balance table
+- **fix:** Fixed a bug that would allow vendors to change order status even if they don't have permission to do so, thanks to @CODLOP
 
 = v3.2.6 ( May 8, 2021 ) =
 

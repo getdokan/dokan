@@ -15,6 +15,8 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                         $wrap_class        = ' dokan-hide';
                         $instruction_class = '';
                         $feat_image_id     = 0;
+                        $can_create_tags   = dokan_get_option( 'product_vendors_can_create_tags', 'dokan_selling' );
+                        $tags_placeholder  = 'on' === $can_create_tags ? __( 'Select tags/Add tags', 'dokan-lite' ) : __( 'Select product tags', 'dokan-lite' );
                         ?>
                         <div class="instruction-inside<?php echo esc_attr( $instruction_class ); ?>">
                             <input type="hidden" name="feat_image_id" class="dokan-feat-image-id" value="<?php echo esc_attr( $feat_image_id ); ?>">
@@ -103,10 +105,12 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                                 'name'             => 'product_cat',
                                 'id'               => 'product_cat',
                                 'taxonomy'         => 'product_cat',
+                                'orderby'          => 'name',
                                 'title_li'         => '',
                                 'class'            => 'product_cat dokan-form-control dokan-select2',
                                 'exclude'          => '',
                                 'selected'         => $product_cat,
+                                'walker'           => new TaxonomyDropdown()
                             );
 
                             wp_dropdown_categories( apply_filters( 'dokan_product_cat_dropdown_args', $category_args ) );
@@ -124,6 +128,7 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                                 'name'             => 'product_cat[]',
                                 'id'               => 'product_cat',
                                 'taxonomy'         => 'product_cat',
+                                'orderby'          => 'name',
                                 'title_li'         => '',
                                 'class'            => 'product_cat dokan-form-control dokan-select2',
                                 'exclude'          => '',
@@ -139,7 +144,7 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
 
                     <div class="dokan-form-group">
                         <label for="product_tag" class="form-label"><?php esc_html_e( 'Tags', 'dokan-lite' ); ?></label>
-                        <select multiple="multiple" name="product_tag[]" id="product_tag_search" class="product_tag_search product_tags dokan-form-control dokan-select2" data-placeholder="<?php esc_attr_e( 'Select tags', 'dokan-lite' ); ?>"></select>
+                        <select multiple="multiple" name="product_tag[]" id="product_tag_search" class="product_tag_search product_tags dokan-form-control dokan-select2" data-placeholder="<?php echo esc_attr( $tags_placeholder ); ?>"></select>
                     </div>
 
                     <?php do_action( 'dokan_new_product_after_product_tags' ); ?>
@@ -151,9 +156,20 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
             </div>
             <div class="product-container-footer">
                 <span class="dokan-show-add-product-error"></span>
+                <span class="dokan-show-add-product-success"></span>
                 <span class="dokan-spinner dokan-add-new-product-spinner dokan-hide"></span>
                 <input type="submit" id="dokan-create-new-product-btn" class="dokan-btn dokan-btn-default" data-btn_id="create_new" value="<?php esc_attr_e( 'Create product', 'dokan-lite' ) ?>">
+                <?php
+                $display_create_and_add_new_button = true;
+                if ( function_exists( 'dokan_pro' ) && dokan_pro()->module->is_active( 'product_subscription' ) ) {
+                    if ( \DokanPro\Modules\Subscription\Helper::get_vendor_remaining_products( dokan_get_current_user_id() ) === 1 ) {
+                        $display_create_and_add_new_button = false;
+                    }
+                }
+                if ( $display_create_and_add_new_button ) :
+                ?>
                 <input type="submit" id="dokan-create-and-add-new-product-btn" class="dokan-btn dokan-btn-theme" data-btn_id="create_and_new" value="<?php esc_attr_e( 'Create & add new', 'dokan-lite' ) ?>">
+                <?php endif; ?>
             </div>
         </form>
     </div>

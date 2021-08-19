@@ -74,7 +74,9 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
 
                 <?php
 
-                $can_sell = apply_filters( 'dokan_can_post', true );
+                $can_sell         = apply_filters( 'dokan_can_post', true );
+                $can_create_tags  = dokan_get_option( 'product_vendors_can_create_tags', 'dokan_selling' );
+                $tags_placeholder = 'on' === $can_create_tags ? __( 'Select tags/Add tags', 'dokan-lite' ) : __( 'Select product tags', 'dokan-lite' );
 
                 if ( $can_sell ) {
                     $posted_img       = dokan_posted_input( 'feat_image_id' );
@@ -143,6 +145,7 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                                             </div>
                                         </div>
                                     </div> <!-- .product-gallery -->
+                                    <?php do_action( 'dokan_product_gallery_image_count' ); ?>
                                 </div>
 
                                 <div class="content-half-part dokan-product-meta">
@@ -207,10 +210,12 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                                                 'name'             => 'product_cat',
                                                 'id'               => 'product_cat',
                                                 'taxonomy'         => 'product_cat',
+                                                'orderby'          => 'name',
                                                 'title_li'         => '',
                                                 'class'            => 'product_cat dokan-form-control dokan-select2',
                                                 'exclude'          => '',
                                                 'selected'         => $selected_cat,
+                                                'walker'           => new TaxonomyDropdown()
                                             );
 
                                             wp_dropdown_categories( apply_filters( 'dokan_product_cat_dropdown_args', $category_args ) );
@@ -232,6 +237,7 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                                                 'name'             => 'product_cat[]',
                                                 'id'               => 'product_cat',
                                                 'taxonomy'         => 'product_cat',
+                                                'orderby'          => 'name',
                                                 'title_li'         => '',
                                                 'class'            => 'product_cat dokan-form-control dokan-select2',
                                                 'exclude'          => '',
@@ -247,7 +253,7 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
 
                                     <div class="dokan-form-group">
                                         <label for="product_tag" class="form-label"><?php esc_html_e( 'Tags', 'dokan-lite' ); ?></label>
-                                        <select multiple="multiple" placeholder="<?php esc_attr_e( 'Select product tags', 'dokan-lite' ); ?>" name="product_tag[]" id="product_tag_search" class="product_tag_search product_tags dokan-form-control dokan-select2" data-placeholder="<?php esc_attr_e( 'Select tags', 'dokan-lite' ); ?>"></select>
+                                        <select multiple="multiple" placeholder="<?php echo esc_attr( $tags_placeholder ); ?>" name="product_tag[]" id="product_tag_search" class="product_tag_search product_tags dokan-form-control dokan-select2" data-placeholder="<?php echo esc_attr( $tags_placeholder ); ?>"></select>
                                     </div>
 
                                     <?php do_action( 'dokan_new_product_after_product_tags' ); ?>
@@ -265,7 +271,17 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
 
                             <div class="dokan-form-group dokan-right">
                                 <?php wp_nonce_field( 'dokan_add_new_product', 'dokan_add_new_product_nonce' ); ?>
+                                <?php
+                                $display_create_and_add_new_button = true;
+                                if ( function_exists( 'dokan_pro' ) && dokan_pro()->module->is_active( 'product_subscription' ) ) {
+                                    if ( \DokanPro\Modules\Subscription\Helper::get_vendor_remaining_products( dokan_get_current_user_id() ) === 1 ) {
+                                        $display_create_and_add_new_button = false;
+                                    }
+                                }
+                                if ( $display_create_and_add_new_button ) :
+                                ?>
                                 <button type="submit" name="add_product" class="dokan-btn dokan-btn-default" value="create_and_add_new"><?php esc_attr_e( 'Create & Add New', 'dokan-lite' ); ?></button>
+                                <?php endif; ?>
                                 <button type="submit" name="add_product" class="dokan-btn dokan-btn-default dokan-btn-theme" value="create_new"><?php esc_attr_e( 'Create Product', 'dokan-lite' ); ?></button>
                             </div>
 
