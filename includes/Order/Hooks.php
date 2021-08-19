@@ -292,7 +292,7 @@ class Hooks {
         }
 
         if ( $coupon->is_type( 'fixed_cart' ) && count( array_unique( $available_vendors ) ) > 1 ) {
-            throw new Exception( __( 'A coupon must be restricted with single vendor only.', 'dokan-lite' ) );
+            throw new Exception( __( 'This coupon is invalid for multiple vendors.', 'dokan-lite' ) );
         }
 
         $coupon_id           = $coupon->get_id();
