@@ -13,6 +13,7 @@ package-lock.json
 config.json
 tests/e2e/node_modules
 tests/e2e/output
+tests/e2e/codecept.conf.js
 
 # Composer
 /vendor/

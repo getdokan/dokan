@@ -1,10 +1,11 @@
 const explore = require('../pages/explore');
 Feature('Explore Settings');
 
-Before(({ I }) => { // or Background
-    I.loginAsVendor();
-});
-Scenario('Preview and Explore Vendor Store Page', ({ I }) => {
+// Before(({ I }) => { // or Background
+//     I.loginAsVend();
+// });
+Scenario('Preview and Explore Vendor Store Page', ({ I,loginAs}) => {
+    loginAs('Vendor');
     explore.checkMyAccOrderDetails();
     tryTo(() => {
         I.amOnPage('/my-account');

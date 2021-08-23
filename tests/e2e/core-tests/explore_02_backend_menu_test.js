@@ -4,11 +4,12 @@ const explore = require('../pages/explore');
 
 Feature('Explore Backend Functionality');
 
-Before(({ I }) => { // or Background
-    I.loginAsAdmin();
-});
+// Before(loginAs => {
+//         loginAs('users'); // login using user session
+//      });
 
-Scenario('Explore Backedn All Menu', async({ I }) => {
+Scenario('Explore Backedn All Menu', async({ I,loginAs }) => {
+    loginAs('admin');
     explore.DokanDashboardElements();
     explore.ModulePageElements();
     explore.VendorsPageElements();

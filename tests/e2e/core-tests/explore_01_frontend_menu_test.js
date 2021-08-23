@@ -1,15 +1,16 @@
-const { ifError, strict } = require("assert");
-const { assert, Console } = require("console");
 const explore = require('../pages/explore');
 
 Feature('Explore Frontend Functionality');
 
-Before(({ I }) => { // or Background
-    I.loginAsVendor();
-});
+// Before('Login As vendor',( {I,loginAs} ) => { // or Background
+//     loginAs('vendor');
+// });
+// Before(loginAs => {
+//     loginAs('users'); // login using user session
+//  });
 
-Scenario('Explore Vendor All Menu Pages', async({ I }) => {
-    
+Scenario('Explore Vendor All Menu Pages',async ({I,loginAs}) => {
+    loginAs('Vendor');
     //Explore Vendor Dashboard Elements
     explore.DashboardElements(); 
     explore.ProductPageElements(); 

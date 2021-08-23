@@ -1,9 +1,10 @@
 const locator = require('../pages/locator');
 Feature('Simple product explore');
-Before(({ I }) => { // or Background
-    I.loginAsVendor();
-});
-Scenario('product edit explore test', ({ I }) => {
+// Before(({ I }) => { // or Background
+//     I.loginAsVendor();
+// });
+Scenario('product edit explore test', ({ I,loginAs }) => {
+    loginAs('Vendor');
     I.click('Products');
     I.click('simple_pro_3');
     // Starting to explore
