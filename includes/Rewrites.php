@@ -511,9 +511,9 @@ class Rewrites {
      *
      * @since DOKAN_PRO_SINCE
      *
-     * @param obj $query
+     * @param WP_User_Query
      *
-     * @return obj $query
+     * @return WP_User_Query
      */
     public function random_store_query( $query ) {
         if ( ! dokan_is_store_listing() ) {
@@ -529,7 +529,9 @@ class Rewrites {
                 'user_nicename, ID',
             ];
 
-            if ( false === ( $selected_orderby = get_transient( 'dokan_store_listing_random_orderby' ) ) ) {
+            $selected_orderby = get_transient( 'dokan_store_listing_random_orderby' );
+
+            if ( false === $selected_orderby ) {
                 $selected_orderby = $order_by[ array_rand( $order_by, 1 ) ];
 
                 set_transient( 'dokan_store_listing_random_orderby', $selected_orderby, MINUTE_IN_SECONDS * 10 );
