@@ -52,6 +52,12 @@ class WithdrawController extends WP_REST_Controller {
 					),
 					'permission_callback' => [ $this, 'get_items_permissions_check' ],
 				],
+                [
+                    'methods'             => WP_REST_Server::CREATABLE,
+                    'callback'            => [ $this, 'create_item' ],
+                    'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+                    'permission_callback' => [ $this, 'create_item_permissions_check' ],
+                ],
 			]
         );
 
