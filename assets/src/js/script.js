@@ -123,8 +123,8 @@ jQuery(function($) {
       $('a.dokan-gravatar-drag').on('click', this.simpleImageUpload);
       $('a.dokan-remove-gravatar-image').on('click', this.removeGravatar);
 
-      $('.dokan-update-setting-top-button').click(function(){
-          $("input[name='dokan_update_store_settings']").click();
+      $('.dokan-update-setting-top-button').on( 'click', function(){
+          $("input[name='dokan_update_store_settings']").trigger( 'click' );
       });
 
       this.validateForm(self);

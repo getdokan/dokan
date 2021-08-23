@@ -76,15 +76,15 @@
                     var key = e.which;
                     if( key == 13 ) {
                         $( "#dokan-store-listing-filter-form-wrap" ).submit();
-                        return false;  
+                        return false;
                     }
                 });
             }
 
-            $( 'body' ).click( function ( evt ) {  
-                if ( ! $( evt.target ).is( 'div#dokan-store-products-search-result li' ) ) {    
+            $( 'body' ).on( 'click', function ( evt ) {
+                if ( ! $( evt.target ).is( 'div#dokan-store-products-search-result li' ) ) {
                     $("#dokan-store-products-search-result").html('');
-                    $('#dokan-store-products-search-result').removeClass( 'dokan-store-products-search-has-results' );           
+                    $('#dokan-store-products-search-result').removeClass( 'dokan-store-products-search-has-results' );
                 }
             });
 
@@ -358,7 +358,7 @@
         var timer = 0;
 
         return function() {
-            var context = this, 
+            var context = this,
                 args    = arguments;
 
             clearTimeout( timer );

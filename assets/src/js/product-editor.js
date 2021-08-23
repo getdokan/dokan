@@ -1010,11 +1010,11 @@
             buttons.html( '<button type="button" class="save button button-small">' + dokan.i18n_ok_text + '</button> <button type="button" class="cancel button-link">' + dokan.i18n_cancel_text + '</button>' );
 
             // Save permalink changes.
-            buttons.children( '.save' ).click( function() {
+            buttons.children( '.save' ).on( 'click', function() {
                 var new_slug = $el.children( 'input' ).val();
 
                 if ( new_slug == $('#editable-post-name-full').text() ) {
-                    buttons.children('.cancel').click();
+                    buttons.children('.cancel').trigger( 'click' );
                     return;
                 }
 
@@ -1046,7 +1046,7 @@
             });
 
             // Cancel editing of permalink.
-            buttons.children( '.cancel' ).click( function() {
+            buttons.children( '.cancel' ).on( 'click', function() {
                 $('#view-post-btn').show();
                 $el.html(revert_e);
                 buttons.html(buttonsOrig);
@@ -1067,11 +1067,11 @@
                 // On [Enter], just save the new slug, don't save the post.
                 if ( 13 === key ) {
                     e.preventDefault();
-                    buttons.children( '.save' ).click();
+                    buttons.children( '.save' ).trigger('click');
                 }
                 // On [Esc] cancel the editing.
                 if ( 27 === key ) {
-                    buttons.children( '.cancel' ).click();
+                    buttons.children( '.cancel' ).trigger('click');
                 }
             } ).keyup( function() {
                 real_slug.val( this.value );
