@@ -364,8 +364,6 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
             update_post_meta( $post_id, '_downloadable_files', $files );
         } else {
             update_post_meta( $post_id, '_downloadable_files', '' );
-            update_post_meta( $post_id, '_download_limit', '' );
-            update_post_meta( $post_id, '_download_expiry', '' );
         }
 
         update_post_meta( $post_id, '_download_limit', $_download_limit );
