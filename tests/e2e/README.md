@@ -29,19 +29,18 @@ git checkout test/automation
 
 **Open that test folder on visual studio code or your favourite Code Editor!**
 **Open example.codecept.conf.js file under dokan>tests>e2e**
-**then you have to first install composer & npm**
 
 ```sh
-create codecept.conf.js & copy code from example.codecept.conf.js
-
+Create codecept.conf.js & Copy code from example.codecept.conf.js
 ```
-**before run your test-suits make sure you have to install npm**
- add your admin ,two vendors ,customer credentials.
+```sh
+Under codecept.conf.js file
+Add your Admin, Multiple Vendors, Customer credentials (Username & Password).
+```
 
 ```sh
- cd tests/e2e
-  Your root will seem like : dokan/tests/e2e 
- ```
+npm install
+```
 
 ## Step 5
 
