@@ -47,7 +47,7 @@ exports.config = {
           saveToFile: false,
           inject: 'loginAs',
             users: {
-          admin: {
+            admin: {
             login: (I) => {
                I.amOnPage('/wp-admin/');
                 I.fillField('#user_login', 'username');
