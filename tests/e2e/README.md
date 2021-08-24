@@ -18,10 +18,10 @@ selenium-standalone start
 # Create a test folder and under this run :
 ```sh
 git clone https://github.com/weDevsOfficial/dokan.git
-git checkout test/automation
 cd dokan
 composer install
 composer dump autoload -o
+git checkout test/automation
 ```
 ## Step 4
 
@@ -33,8 +33,12 @@ composer dump autoload -o
 
 ```sh
 create codecept.conf.js & copy code from example.codecept.conf.js
+
+```
+**before run your test-suits make sure you have to install npm**
  add your admin ,two vendors ,customer credentials.
 
+```sh
  cd tests/e2e
   Your root will seem like : dokan/tests/e2e 
  ```
