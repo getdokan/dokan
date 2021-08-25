@@ -20,9 +20,9 @@
             </modal>
 
             <ul class="subsubsub">
-                <li><router-link :to="{ name: 'Withdraw', query: { status: 'pending' }}" active-class="current" exact >{{ __( 'Pending', 'dokan-lite' ) }} <span class="count">{{ counts.pending }}</span></router-link> | </li>
-                <li><router-link :to="{ name: 'Withdraw', query: { status: 'approved' }}" active-class="current" exact >{{ __( 'Approved', 'dokan-lite' ) }} <span class="count">{{ counts.approved }}</span></router-link> | </li>
-                <li><router-link :to="{ name: 'Withdraw', query: { status: 'cancelled' }}" active-class="current" exact >{{ __( 'Cancelled', 'dokan-lite' ) }} <span class="count">{{ counts.cancelled }}</span></router-link> | </li>
+                <li><router-link :class="{current: currentStatus === 'pending'}" :to="{ name: 'Withdraw', query: { status: 'pending' }}" >{{ __( 'Pending', 'dokan-lite' ) }} <span class="count">{{ counts.pending }}</span></router-link> | </li>
+                <li><router-link :class="{current: currentStatus === 'approved'}" :to="{ name: 'Withdraw', query: { status: 'approved' }}">{{ __( 'Approved', 'dokan-lite' ) }} <span class="count">{{ counts.approved }}</span></router-link> | </li>
+                <li><router-link :class="{current: currentStatus === 'cancelled'}" :to="{ name: 'Withdraw', query: { status: 'cancelled' }}" >{{ __( 'Cancelled', 'dokan-lite' ) }} <span class="count">{{ counts.cancelled }}</span></router-link> | </li>
             </ul>
 
             <list-table
@@ -48,6 +48,12 @@
                     <strong><a :href="vendorUrl(data.row.user.id)">{{ data.row.user.store_name ? data.row.user.store_name : __( '(no name)', 'dokan-lite' ) }}</a></strong>
                 </template>
 
+                <template slot="vendor" slot-scope="{ row }">
+                    <router-link :to="'/vendors/' + row.vendor.id">
+                        {{ row.vendor.name ? row.vendor.name : __('(no name)', 'dokan-lite') }}
+                    </router-link>
+                </template>
+
                 <template slot="amount" slot-scope="data">
                     <currency :amount="data.row.amount"></currency>
                 </template>
@@ -62,6 +68,20 @@
 
                 <template slot="method_details" slot-scope="data">
                     <div class="method_details_inner" v-html="getPaymentDetails(data.row.method, data.row.user.payment)"></div>
+                </template>
+
+                <template slot="filters">
+                    <select
+                        id="filter-vendors"
+                        style="width: 190px;"
+                        :data-placeholder="__('Filter by vendor', 'dokan-lite')"
+                    />
+                    <button
+                        v-if="filter.user_id"
+                        type="button"
+                        class="button"
+                        @click="filter.user_id = 0"
+                    >&times;</button>
                 </template>
 
                 <template slot="actions" slot-scope="data">
@@ -93,6 +113,7 @@ let ListTable = dokan_get_lib('ListTable');
 let Modal     = dokan_get_lib('Modal');
 let Currency  = dokan_get_lib('Currency');
 
+import $ from 'jquery';
 import UpgradeBanner from "admin/components/UpgradeBanner.vue";
 
 
@@ -118,7 +139,9 @@ export default {
             totalPages: 1,
             perPage: 10,
             totalItems: 0,
-
+            filter: {
+                user_id: 0
+            },
             counts: {
                 pending: 0,
                 approved: 0,
@@ -146,11 +169,25 @@ export default {
 
     watch: {
         '$route.query.status'() {
+            this.filter.user_id = 0;
+            this.clearSelection('#filter-vendors');
             this.fetchRequests();
         },
 
         '$route.query.page'() {
             this.fetchRequests();
+        },
+
+        '$route.query.user_id'() {
+            this.fetchRequests();
+        },
+
+        'filter.user_id'(user_id) {
+            if (user_id === 0) {
+                this.clearSelection('#filter-vendors');
+            }
+
+            this.goTo(this.query);
         }
     },
 
@@ -244,6 +281,39 @@ export default {
         this.fetchRequests();
     },
 
+    mounted() {
+        const self = this;
+
+        $('#filter-vendors').selectWoo({
+            ajax: {
+                url: "".concat(dokan.rest.root, "dokan/v1/stores"),
+                dataType: 'json',
+                headers: {
+                    "X-WP-Nonce" : dokan.rest.nonce
+                },
+                data(params) {
+                    return {
+                        search: params.term
+                    };
+                },
+                processResults(data) {
+                    return {
+                        results: data.map((store) => {
+                            return {
+                                id: store.id,
+                                text: store.store_name
+                            };
+                        })
+                    };
+                }
+            }
+        });
+
+        $('#filter-vendors').on('select2:select', (e) => {
+            self.filter.user_id = e.params.data.id;
+        });
+    },
+
     methods: {
 
         updatedCounts(xhr) {
@@ -267,8 +337,12 @@ export default {
 
         fetchRequests() {
             this.loading = true;
+            let url = '/withdraw?per_page=' + this.perPage + '&page=' + this.currentPage + '&status=' + this.currentStatus;
+            if (parseInt(this.filter.user_id) > 0) {
+                url += '&user_id=' + this.filter.user_id;
+            }
 
-            dokan.api.get('/withdraw?per_page=' + this.perPage + '&page=' + this.currentPage + '&status=' + this.currentStatus)
+            dokan.api.get(url)
             .done((response, status, xhr) => {
                 this.requests = response;
                 this.loading = false;
@@ -283,7 +357,18 @@ export default {
                 name: 'Withdraw',
                 query: {
                     status: this.currentStatus,
-                    page: page
+                    page: page,
+                    user_id: this.filter.user_id
+                }
+            });
+        },
+
+        goTo(page) {
+            this.$router.push({
+                name: 'Withdraw',
+                query: {
+                    status: this.currentStatus,
+                    user_id: this.filter.user_id
                 }
             });
         },
@@ -472,7 +557,11 @@ export default {
                     note: null
                 }
             });
-        }
+        },
+
+        clearSelection(element) {
+            $(element).val(null).trigger('change');
+        },
     }
 };
 </script>
