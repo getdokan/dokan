@@ -52,7 +52,7 @@
                 <p class="description"><?php esc_html_e( 'Which Map API source you want to use in your site?', 'dokan-lite' ); ?></p>
             </td>
         </tr>
-        <tr>
+        <tr id="google_maps_api_wrapper">
             <th scope="row"><label for="gmap_api_key"><?php esc_html_e( 'Google Map API Key', 'dokan-lite' ); ?></label></th>
             <td>
                 <input type="text" id="gmap_api_key" name="gmap_api_key" class="location-input" value="<?php echo esc_attr( $gmap_api_key ); ?>" />
@@ -67,7 +67,7 @@
                 </p>
             </td>
         </tr>
-        <tr>
+        <tr id="mapbox_api_wrapper">
             <th scope="row"><label for="mapbox_access_token"><?php esc_html_e( 'Mapbox Access Token', 'dokan-lite' ); ?></label></th>
             <td>
                 <input type="text" id="mapbox_access_token" name="mapbox_access_token" class="location-input" value="<?php echo esc_attr( $mapbox_access_token ); ?>" />
@@ -95,7 +95,7 @@
                 </p>
             </td>
         </tr>
-        
+
         <?php do_action( 'dokan_admin_setup_wizard_step_store_after', $setup_wizard ); ?>
     </table>
     <p class="wc-setup-actions step">
@@ -106,6 +106,22 @@
 </form>
 
 <script type="text/javascript">
+    function handleMapApiSource() {
+        if (jQuery('#map_api_source').val() === 'mapbox') {
+            jQuery('#google_maps_api_wrapper').hide();
+            jQuery('#mapbox_api_wrapper').show();
+        } else {
+            jQuery('#google_maps_api_wrapper').show();
+            jQuery('#mapbox_api_wrapper').hide();
+        }
+    }
+    jQuery(document).ready(function () {
+        handleMapApiSource();
+    });
+    jQuery('#map_api_source').on('change', function (e) {
+        e.preventDefault();
+        handleMapApiSource();
+    });
     jQuery('.insights-data-we-collect').on('click', function(e) {
         e.preventDefault();
         jQuery('#collection-info').slideToggle('fast');
