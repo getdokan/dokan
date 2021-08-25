@@ -28,7 +28,6 @@ exports.config = {
     gherkin: {
         features: './features/*.feature',
         steps: [
-            './step_definitions/steps.js',
             './step_definitions/simpleProduct.js',
         ]
     },
@@ -44,11 +43,11 @@ exports.config = {
             enabled: true
         },
         autoLogin: {
-      enabled: true,
-      saveToFile: false,
-      inject: 'loginAs',
-      users: {
-          admin: {
+          enabled: true,
+          saveToFile: false,
+          inject: 'loginAs',
+            users: {
+            admin: {
             login: (I) => {
                I.amOnPage('/wp-admin/');
                 I.fillField('#user_login', 'username');
@@ -67,23 +66,26 @@ exports.config = {
                 I.click('login');
     },
      },
-     VendorTwo: {
-          login: (I) => {
-            I.amOnPage('/my-account/');
-            I.fillField('username', 'Enter Your vendor name');
-            I.fillField('password', 'vendor password');
-            I.click('login');
+           VendorTwo: {
+             login: (I) => {
+               I.amOnPage('/my-account/');
+                I.fillField('username', 'Enter Your vendor name');
+                I.fillField('password', 'vendor password');
+                I.click('login');
     },
      },
-    Customer: {
-          login: (I) => {
+            Customer: {
+                login: (I) => {
             I.amOnPage('/my-account/');
                 I.fillField('username', 'Enter Your Customer name');
                 I.fillField('password', 'customer password');
                 I.click('login');
-    },
-     }
-    },     
+                
+                    }
+                }
+            }
+        }
+    },    
     tests: './core-tests/*_test.js',
     name: 'e2e'
 }
