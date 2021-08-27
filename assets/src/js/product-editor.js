@@ -1062,7 +1062,7 @@
             }
             slug_value = ( c > full.length / 4 ) ? '' : full;
 
-            $el.html( '<input type="text" id="new-post-slug" value="' + slug_value + '" autocomplete="off" />' ).children( 'input' ).keydown( function( e ) {
+            $el.html( '<input type="text" id="new-post-slug" value="' + slug_value + '" autocomplete="off" />' ).children( 'input' ).on( 'keydown', function( e ) {
                 var key = e.which;
                 // On [Enter], just save the new slug, don't save the post.
                 if ( 13 === key ) {

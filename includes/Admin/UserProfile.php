@@ -475,7 +475,7 @@ class UserProfile {
 
             Dokan_Settings.init();
 
-            $('#seller-url').keydown(function(e) {
+            $('#seller-url').on( 'keydown', function(e) {
                 var text = $(this).val();
 
                 // Allow: backspace, delete, tab, escape, enter and .
