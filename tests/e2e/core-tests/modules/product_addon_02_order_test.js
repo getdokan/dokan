@@ -3,6 +3,6 @@ Feature('Purchase product with addon ');
 
 Scenario('Purchase Product with addon', ({ I,loginAs}) => {
      session('Customer view',()=>{
-        loginAsCustomer();
+        loginAs('Customer');
     })
 });
