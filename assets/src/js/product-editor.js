@@ -1073,7 +1073,7 @@
                 if ( 27 === key ) {
                     buttons.children( '.cancel' ).trigger('click');
                 }
-            } ).keyup( function() {
+            } ).on( 'keyup', function() {
                 real_slug.val( this.value );
             }).focus();
         }

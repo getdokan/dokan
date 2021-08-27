@@ -493,7 +493,7 @@ class UserProfile {
                 }
             });
 
-            $('#seller-url').keyup(function(e) {
+            $('#seller-url').on( 'keyup', function(e) {
                 $('#url-alart').text( getSlug( $(this).val() ) );
             });
 
