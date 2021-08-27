@@ -86,7 +86,7 @@ jQuery(function($) {
         var data = {
             action: 'dokan_grant_access_to_download',
             product_ids: product,
-            loop: $('.order_download_permissions .panel').size(),
+            loop: $('.order_download_permissions .panel').length,
             order_id: self.data('order-id'),
             security: self.data('nonce')
         };
