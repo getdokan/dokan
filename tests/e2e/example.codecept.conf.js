@@ -1,9 +1,12 @@
 exports.config = {
+
     tests: 'core-tests/**/*_test.js',
+
     output: './output',
     helpers: {
         WebDriver: {
             url: 'add your project url',
+
 
             browser: 'chrome',
 
@@ -12,6 +15,7 @@ exports.config = {
                 // chromeOptions: {
                 //     args: ["--headless","--window-size=1200,1600", "--disable-gpu", "--no-sandbox"]
                 // }
+
             },
         },
     },
@@ -30,7 +34,6 @@ exports.config = {
         features: './features/*.feature',
         steps: [
             './step_definitions/simpleProduct.js',
-
         ]
     },
     plugins: {
@@ -91,4 +94,5 @@ exports.config = {
     // tests:'core-tests/**/*_test.js',
     // // tests: './core-tests/*_test.js',
     // name: 'e2e'
+
 }
