@@ -270,14 +270,20 @@ class Manager {
         $order_seller_id  = dokan_get_seller_id_by_order( $order->get_id() );
 
         $applied_shipping_method = '';
+        $pass_parent_shipping    = false;
+        $dokan_pro_exists        = dokan()->is_pro_exists();
 
         if ( $shipping_methods ) {
             foreach ( $shipping_methods as $method_item_id => $shipping_object ) {
                 $shipping_seller_id = wc_get_order_item_meta( $method_item_id, 'seller_id', true );
-                // In dokan lite, we do not have any dokan shipping methods.
-                if ( ! dokan()->is_pro_exists() || $order_seller_id === absint( $shipping_seller_id ) ) {
+                if ( $order_seller_id === absint( $shipping_seller_id ) ) {
                     $applied_shipping_method = $shipping_object;
                     break;
+                }
+
+                // In dokan lite, we do not have any dokan shipping methods.
+                if ( ! $dokan_pro_exists ) {
+                    $pass_parent_shipping = $shipping_object;
                 }
             }
         }
@@ -286,8 +292,12 @@ class Manager {
 
         // bail out if no shipping methods found
         if ( ! $shipping_method ) {
-            dokan_log( sprintf( '#%d - No shipping method found. Aborting.', $order->get_id() ) );
-            return;
+            if ( ! $dokan_pro_exists && $pass_parent_shipping ) {
+                $shipping_method = $pass_parent_shipping;
+            } else {
+                dokan_log( sprintf( '#%d - No shipping method found. Aborting.', $order->get_id() ) );
+                return;
+            }
         }
 
         if ( is_a( $shipping_method, 'WC_Order_Item_Shipping' ) ) {
@@ -295,7 +305,7 @@ class Manager {
 
             dokan_log( sprintf( '#%d - Adding shipping item.', $order->get_id() ) );
 
-            if ( ! dokan()->is_pro_exists() ) {
+            if ( ! $dokan_pro_exists && $pass_parent_shipping ) {
                 $item->set_props(
                     array(
                         'method_title' => $shipping_method->get_name(),
