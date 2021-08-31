@@ -5,9 +5,9 @@ Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi selle
 Requires at least: 4.4
 Tested up to: 5.8
 WC requires at least: 3.0
-WC tested up to: 5.5.2
+WC tested up to: 5.6.0
 Requires PHP: 5.6
-Stable tag: 3.2.10
+Stable tag: 3.2.11
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -291,6 +291,20 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.2.11 ( Aug 31, 2021 ) =
+
+- **new:** Added new shortcode attribute named random to display store list randomly [dokan-stores orderby="random"]
+- **fix:** Fixed fatal error when vendor registration shortcode used from API
+- **fix:** Added Map API selection section on Dokan admin setup wizard page
+- **new:** Added **'Texty – SMS Notification for WordPress, WooCommerce, Dokan and more'** plugin as recommended plugins under Dokan admin setup wizard page
+- **new:** Added vendor filter on admin Withdraw page
+- **new:** Added a new REST route to get corresponding vendor's product categories under StoreController API (GET: wp-json/dokan/v1/stores/3/categories)
+- **new:** Added a new REST route to get corresponding vendor's popular product categories under StoreController API (GET: wp-json/dokan/v1/stores/3/categories?best_selling=1)
+- **new:** Added REST API route to create withdrawal request (POST: /wp-json/dokan/v1/withdraw/ )
+- **Fix:** fixed unable to remove downloadable file when there is only one file exists
+- **fix:** fixed fatal error with deleted product of an order
+- **new:** What's new button added under dokan admin page top bar section
 
 = v3.2.10 ( Aug 10, 2021 ) =
 
