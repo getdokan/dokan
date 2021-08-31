@@ -295,14 +295,25 @@ class Manager {
 
             dokan_log( sprintf( '#%d - Adding shipping item.', $order->get_id() ) );
 
-            $item->set_props(
-                array(
-					'method_title' => $shipping_method->get_name(),
-					'method_id'    => $shipping_method->get_method_id(),
-					'total'        => $shipping_method->get_total(),
-					'taxes'        => $shipping_method->get_taxes(),
-                )
-            );
+            if ( ! dokan()->is_pro_exists() ) {
+                $item->set_props(
+                    array(
+                        'method_title' => $shipping_method->get_name(),
+                        'method_id'    => $shipping_method->get_method_id(),
+                        'total'        => 0.00,
+                        'taxes'        => 0.00,
+                    )
+                );
+            } else {
+                $item->set_props(
+                    array(
+                        'method_title' => $shipping_method->get_name(),
+                        'method_id'    => $shipping_method->get_method_id(),
+                        'total'        => $shipping_method->get_total(),
+                        'taxes'        => $shipping_method->get_taxes(),
+                    )
+                );
+            }
 
             $metadata = $shipping_method->get_meta_data();
 
