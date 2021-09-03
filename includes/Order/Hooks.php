@@ -286,31 +286,37 @@ class Hooks {
      * @throws Exception
      */
     public function ensure_vendor_coupon( $valid, $coupon ) {
-        $available_vendors = [];
+        $available_vendors  = [];
+        $available_products = [];
 
         foreach ( WC()->cart->get_cart() as $item ) {
             $product_id = $item['data']->get_id();
 
-            $available_vendors[] = get_post_field( 'post_author', $product_id );
+            $available_vendors[]  = intval( get_post_field( 'post_author', $product_id ) );
+            $available_products[] = $product_id;
         }
 
         if ( $coupon->is_type( 'fixed_cart' ) && count( array_unique( $available_vendors ) ) > 1 ) {
             throw new Exception( __( 'This coupon is invalid for multiple vendors.', 'dokan-lite' ) );
         }
 
-        $coupon_id           = $coupon->get_id();
-        $vendor_id           = get_post_field( 'post_author', $coupon_id );
-        $ensure_admin_coupon = $this->ensure_admin_have_create_vendors_coupon( $valid, $coupon );
+        $vendor_id        = $coupon->get_meta( 'post_author' );
+        $commissions_type = $coupon->get_meta( 'coupon_commissions_type' );
 
-        if ( $ensure_admin_coupon['have_admin_coupons'] ) {
-            return $ensure_admin_coupon['valid'];
+        if (
+            dokan()->is_pro_exists() &&
+            function_exists( 'dokan_is_order_have_admin_coupons_for_vendors' ) &&
+            ! empty( $commissions_type ) &&
+            $this->ensure_admin_have_create_vendors_coupon( $coupon, $available_vendors, $available_products )
+        ) {
+            return true;
         }
 
         if ( ! apply_filters( 'dokan_ensure_vendor_coupon', true ) ) {
             return $valid;
         }
 
-        // a coupon must be bound with a product
+        // A coupon must be bound with a product
         if ( count( $coupon->get_product_ids() ) === 0 ) {
             throw new Exception( __( 'A coupon must be restricted with a vendor product.', 'dokan-lite' ) );
         }
@@ -325,64 +331,14 @@ class Hooks {
     /**
      * Ensure vendor have coupon created by admin
      *
-     * @param boolean $valid
      * @param \WC_Coupon $coupon
+     * @param array      $available_vendors
+     * @param array      $available_products
      *
-     * @return boolean|Execption
-     * @throws Exception
+     * @return boolean
      */
-    public function ensure_admin_have_create_vendors_coupon( $valid, $coupon ) {
-        $coupon_id        = $coupon->get_id();
-        $commissions_type = get_post_meta( $coupon_id, 'coupon_commissions_type', true );
-
-        if ( empty( $commissions_type ) ) {
-            return [
-				'have_admin_coupons' => false,
-				'valid'              => $valid,
-			];
-        }
-
-        $enabled_all_vendor  = get_post_meta( $coupon_id, 'admin_coupons_enabled_for_vendor', true );
-        $vendors_ids         = get_post_meta( $coupon_id, 'coupons_vendors_ids', true );
-        $vendors_ids         = ! empty( $vendors_ids ) ? array_map( 'intval', explode( ',', $vendors_ids) ) : [];
-        $exclude_vendors     = get_post_meta( $coupon_id, 'coupons_exclude_vendors_ids', true );
-        $exclude_vendors     = ! empty( $exclude_vendors ) ? array_map( 'intval', explode( ',', $exclude_vendors) ) : [];
-        $admin_shared_amount = get_post_meta( $coupon_id, 'admin_shared_coupon_amount', true );
-        $current_valid       = false;
-        $available_vendors   = [];
-
-        if ( 'yes' === $enabled_all_vendor && empty( $exclude_vendors ) ) {
-            $current_valid = true;
-        }
-
-        foreach ( WC()->cart->get_cart() as $item ) {
-            $product_id = $item['data']->get_id();
-
-            $available_vendors[] = (int) get_post_field( 'post_author', $product_id );
-        }
-
-        if ( 'yes' === $enabled_all_vendor && ! empty( $exclude_vendors ) ) {
-            foreach ( $available_vendors as $available_vendor_id ) {
-                if ( ! in_array( $available_vendor_id, $exclude_vendors, true ) ) {
-                    $current_valid = true;
-                    break;
-                }
-            }
-        }
-
-        if ( 'no' === $enabled_all_vendor && ! empty( $vendors_ids ) ) {
-            foreach ( $vendors_ids as $vendors_id ) {
-                if ( in_array( (int) $vendors_id, $available_vendors, true ) ) {
-                    $current_valid = true;
-                    break;
-                }
-            }
-        }
-
-        return [
-			'have_admin_coupons' => $current_valid,
-			'valid'              => $current_valid,
-		];
+    public function ensure_admin_have_create_vendors_coupon( $coupon, $available_vendors, $available_products ) {
+        return dokan_pro()->coupon->admin_coupon_is_valid( $coupon, $available_vendors, $available_products );
     }
 
     /**
