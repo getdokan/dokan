@@ -2968,6 +2968,7 @@ function dokan_get_all_caps() {
             'dokan_manage_order'      => __( 'Manage order', 'dokan-lite' ),
             'dokan_manage_order_note' => __( 'Manage order note', 'dokan-lite' ),
             'dokan_manage_refund'     => __( 'Manage refund', 'dokan-lite' ),
+            'dokan_export_order'      => __( 'Export order', 'dokan-lite' ),
         ],
 
         'coupon' => [

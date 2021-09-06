@@ -95,7 +95,7 @@ class Orders {
 
         $post_data = wp_unslash( $_POST );
 
-        if ( ! isset( $post_data['dokan_vendor_order_export_nonce'] ) || ! wp_verify_nonce( sanitize_key( $post_data['dokan_vendor_order_export_nonce'] ), 'dokan_vendor_order_export_action' ) ) {
+        if ( ! isset( $post_data['dokan_vendor_order_export_nonce'] ) || ! wp_verify_nonce( sanitize_key( $post_data['dokan_vendor_order_export_nonce'] ), 'dokan_vendor_order_export_action' ) || ! current_user_can( 'dokan_export_order' ) || ! current_user_can( 'administrator' ) || ! current_user_can( 'seller' ) ) {
             return;
         }
 
