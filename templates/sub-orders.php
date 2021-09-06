@@ -28,7 +28,7 @@ $wc_shipping_enabled = get_option( 'woocommerce_calc_shipping' ) === 'yes' ? tru
      * @args WC_Order[] $sub_orders
      * @args array $statuses
      */
-    esc_html_e( apply_filters( 'dokan_suborder_notice_to_customer', 'This order has products from multiple vendors. So we divided this order into multiple vendor orders.
+    echo apply_filters( 'dokan_suborder_notice_to_customer', esc_html__( 'This order has products from multiple vendors. So we divided this order into multiple vendor orders.
     Each order will be handled by their respective vendor independently.', 'dokan-lite' ), $parent_order, $sub_orders, $statuses );
     ?>
 </div>
