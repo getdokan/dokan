@@ -89,8 +89,9 @@ function dokan_order_show_suborders( $parent_order ) {
         'sub-orders',
         '',
         [
-            'sub_orders' => $sub_orders,
-            'statuses'   => $statuses,
+            'parent_order' => $parent_order,
+            'sub_orders'   => $sub_orders,
+            'statuses'     => $statuses,
         ]
     );
 }
