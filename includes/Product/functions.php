@@ -61,7 +61,7 @@ function dokan_save_product( $args ) {
         $post_arr['ID'] = absint( $data['ID'] );
 
         if ( ! dokan_is_product_author( $post_arr['ID'] ) ) {
-            return new WP_Error( 'not-own', __( 'I swear this is not your product!', 'dokan-lite' ) );
+            return new WP_Error( 'not-own', __( 'Sorry, You can not modify another vendor\'s product !', 'dokan-lite' ) );
         }
 
         $is_updating = true;
