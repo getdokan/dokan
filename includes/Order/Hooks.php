@@ -300,7 +300,8 @@ class Hooks {
             throw new Exception( __( 'This coupon is invalid for multiple vendors.', 'dokan-lite' ) );
         }
 
-        $vendor_id        = $coupon->get_meta( 'post_author' );
+        $coupon_id        = $coupon->get_id();
+        $vendor_id        = intval( get_post_field( 'post_author', $coupon_id ) );
         $commissions_type = $coupon->get_meta( 'coupon_commissions_type' );
 
         if (
