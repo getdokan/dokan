@@ -39,9 +39,9 @@ class Upgrades {
     /**
      * Get DB installed version number
      *
-     * @return string
      * @since 3.0.0
      *
+     * @return string
      */
     public static function get_db_installed_version() {
         return get_option( dokan()->get_db_version_key(), null );
@@ -50,15 +50,15 @@ class Upgrades {
     /**
      * Checks if upgrade is required or not
      *
+     * @since 3.0.0
+     *
      * @param bool $is_required
      *
      * @return bool
-     * @since 3.0.0
-     *
      */
     public static function is_upgrade_required( $is_required = false ) {
         $installed_version = self::get_db_installed_version();
-        $upgrade_versions = array_keys( self::$upgrades );
+        $upgrade_versions  = array_keys( self::$upgrades );
 
         if ( $installed_version && version_compare( $installed_version, end( $upgrade_versions ), '<' ) ) {
             return true;
@@ -70,9 +70,9 @@ class Upgrades {
     /**
      * Update Dokan DB version
      *
-     * @return void
      * @since 3.0.0
      *
+     * @return void
      */
     public static function update_db_dokan_version() {
         $installed_version = self::get_db_installed_version();
@@ -85,11 +85,11 @@ class Upgrades {
     /**
      * Get upgrades
      *
+     * @since 3.0.0
+     *
      * @param array $upgrades
      *
      * @return array
-     * @since 3.0.0
-     *
      */
     public static function get_upgrades( $upgrades = [] ) {
         if ( ! self::is_upgrade_required() ) {
@@ -100,7 +100,7 @@ class Upgrades {
 
         foreach ( self::$upgrades as $version => $class_name ) {
             if ( version_compare( $installed_version, $version, '<' ) ) {
-                $upgrades[$version][] = $class_name;
+                $upgrades[ $version ][] = $class_name;
             }
         }
 
