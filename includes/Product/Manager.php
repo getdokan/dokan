@@ -33,7 +33,20 @@ class Manager {
 
         $args = wp_parse_args( $args, $defaults );
 
-        return new WP_Query( apply_filters( 'dokan_all_products_query', $args ) );
+
+        $cache_group = 'dokan_cache_seller_product_data_' . dokan_get_current_user_id();
+        $cache_key   = 'dokan_seller_products-' . md5( json_encode( $args ) );
+
+        $products = wp_cache_get( $cache_key, $cache_group );
+
+        if ( false === $products ) {
+            $products = new WP_Query( apply_filters( 'dokan_all_products_query', $args ) );
+
+            wp_cache_set( $cache_key, $products, $cache_group );
+            dokan()->cache->dokan_cache_update_group( $cache_key, $cache_group );
+        }
+
+        return $products;
     }
 
     /**
