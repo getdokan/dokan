@@ -229,6 +229,8 @@ class Hooks {
         foreach ( $products as $product_id ) {
             if ( dokan_is_product_author( $product_id ) ) {
                 dokan()->product->delete( $product_id, true );
+
+                do_action( 'dokan_bulk_product_delete', $product_id );
             }
         }
 
