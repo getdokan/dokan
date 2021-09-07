@@ -3,6 +3,8 @@
 namespace WeDevs\Dokan\Cache;
 
 use WC_Cache_Helper;
+use WeDevs\Dokan\Order\OrderCache;
+use WeDevs\Dokan\Product\ProductCache;
 
 defined( 'ABSPATH' ) || exit;
 

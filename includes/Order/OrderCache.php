@@ -1,6 +1,8 @@
 <?php
 
-namespace WeDevs\Dokan\Cache;
+namespace WeDevs\Dokan\Order;
+
+use WeDevs\Dokan\Cache\CacheHelper;
 
 /**
  * OrderCache class

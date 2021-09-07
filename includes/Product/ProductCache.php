@@ -1,6 +1,8 @@
 <?php
 
-namespace WeDevs\Dokan\Cache;
+namespace WeDevs\Dokan\Product;
+
+use WeDevs\Dokan\Cache\CacheHelper;
 
 /**
  * ProductCache class
@@ -16,7 +18,10 @@ class ProductCache extends CacheHelper {
         add_action( 'dokan_product_updated', [ $this, 'dokan_cache_clear_seller_product_data' ], 20 );
         add_action( 'dokan_product_duplicate_after_save', [ $this, 'dokan_cache_clear_seller_product_data' ], 20 );
         add_action( 'dokan_product_deleted', [ $this, 'dokan_cache_clear_seller_product_data' ], 20 );
+        add_action( 'woocommerce_product_duplicate', [ $this, 'dokan_cache_clear_seller_product_data' ], 20 );
         add_action( 'woocommerce_product_import_inserted_product_object', [ $this, 'dokan_cache_clear_seller_product_data' ], 20 );
+        add_action( 'woocommerce_update_product', [ $this, 'dokan_cache_clear_seller_product_data' ], 20 );
+        add_action( 'woocommerce_delete_product_transients', [ $this, 'dokan_cache_clear_seller_product_data' ], 20 );
     }
 
     /**
