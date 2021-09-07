@@ -741,7 +741,7 @@ class Vendor {
             $earning = (float) $result->earnings;
 
             wp_cache_set( $cache_key, $earning, $cache_group );
-            dokan_cache_update_group( $cache_key , $cache_group );
+            dokan()->cache->dokan_cache_update_group( $cache_key , $cache_group );
         }
 
         if ( $formatted ) {
@@ -790,7 +790,7 @@ class Vendor {
             $earning = (float) $result->earnings - (float) round( $result->withdraw, wc_get_rounding_precision() );
 
             wp_cache_set( $cache_key, $earning, $cache_group );
-            dokan_cache_update_group( $cache_key , $cache_group );
+            dokan()->cache->dokan_cache_update_group( $cache_key , $cache_group );
         }
 
         if ( $formatted ) {
