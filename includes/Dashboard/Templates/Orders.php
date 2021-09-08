@@ -85,7 +85,7 @@ class Orders {
      * @return void
      */
     function handle_order_export() {
-        if ( ! isset( $_POST['dokan_vendor_order_export_nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['dokan_vendor_order_export_nonce'] ), 'dokan_vendor_order_export_action' ) ) {
+        if ( ! isset( $_POST['dokan_vendor_order_export_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['dokan_vendor_order_export_nonce'] ) ), 'dokan_vendor_order_export_action' ) ) {
             return;
         }
 
@@ -116,8 +116,8 @@ class Orders {
             header( 'Content-Type: application/csv; charset=' . get_option( 'blog_charset' ) );
             header( "Content-Disposition: attachment; filename=$filename.csv" );
 
-            $order_date   = ( isset( $_POST['order_date'] ) ) ? sanitize_text_field( $_POST['order_date'] ) : null;
-            $order_status = ( isset( $_POST['order_status'] ) ) ? sanitize_text_field( $_POST['order_status'] ) : 'all';
+            $order_date   = ( isset( $_POST['order_date'] ) ) ? sanitize_text_field( wp_unslash( $_POST['order_date'] ) ) : null;
+            $order_status = ( isset( $_POST['order_status'] ) ) ? sanitize_text_field( wp_unslash( $_POST['order_status'] ) ) : 'all';
 
             $user_orders  = dokan_get_seller_orders( dokan_get_current_user_id(), $order_status, $order_date, 10000000, 0, $customer_id );
             dokan_order_csv_export( $user_orders );
