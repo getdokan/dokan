@@ -131,7 +131,7 @@
          <!--address-->
 
         <?php
-            if ( ! dokan_pro()->module->is_active( 'delivery_time' ) ) {
+            if (  class_exists( 'Dokan_Pro' ) && ! dokan_pro()->module->is_active( 'delivery_time' ) ) {
                 $verified = false;
 
                 if ( isset( $profile_info['dokan_verification']['info']['store_address']['v_status'] ) ) {
