@@ -19,12 +19,11 @@ class ProductCache extends CacheHelper {
         add_action( 'dokan_product_updated', [ $this, 'dokan_clear_product_caches' ], 20 );
         add_action( 'dokan_product_duplicate_after_save', [ $this, 'dokan_cache_clear_seller_product_data' ], 20, 3 );
         add_action( 'dokan_product_deleted', [ $this, 'dokan_cache_clear_seller_product_data' ], 20 );
-        add_action( 'dokan_bulk_product_status_change', [ $this, 'dokan_bulk_product_status_change'], 21, 2 );
-        add_action( 'dokan_bulk_product_delete', [ $this, 'dokan_cache_clear_seller_product_data'], 21 );
+        add_action( 'dokan_bulk_product_status_change', [ $this, 'dokan_bulk_product_status_change'], 20, 2 );
+        add_action( 'dokan_bulk_product_delete', [ $this, 'dokan_cache_clear_seller_product_data'], 20 );
 
         add_action( 'woocommerce_product_duplicate', [ $this, 'dokan_cache_clear_seller_product_data' ], 20 );
         add_action( 'woocommerce_update_product', [ $this, 'dokan_cache_clear_seller_product_data' ], 20 );
-        add_action( 'woocommerce_update_product', [ $this, 'dokan_clear_product_caches' ], 20 );
         add_action( 'woocommerce_product_import_inserted_product_object', [ $this, 'dokan_cache_clear_seller_product_data' ], 20 );
     }
 
@@ -85,13 +84,15 @@ class ProductCache extends CacheHelper {
      * @since DOKAN_LITE_SINCE
      *
      * @param  string $status
-     * @param  int    $product_id
+     * @param  array  $products
      *
      * @return void
      */
-    public function dokan_bulk_product_status_change( $status, $product_id ) {
-        $seller_id = dokan_get_current_user_id();
+    public function dokan_bulk_product_status_change( $status, $products ) {
+        foreach ( $products  as $product ) {
+            self::dokan_clear_product_caches( $product );
+        }
 
-        self::dokan_cache_clear_group( 'dokan_cache_seller_product_data_' . $seller_id );
+        self::dokan_cache_clear_seller_product_data( null, [] );
     }
 }
