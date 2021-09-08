@@ -22,6 +22,11 @@ class V_3_2_12 extends DokanUpgrader {
             ]
         );
 
+        // return if no vendor staff found
+        if ( ! count( $staffs ) ) {
+            return;
+        }
+
         // adding capability to each staff
         foreach ( $staffs as $staff ) {
             $staff->add_cap( 'dokan_export_order' );
