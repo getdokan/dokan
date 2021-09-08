@@ -278,9 +278,7 @@ class Manager {
     public function get_formatted_details( $method, $user_id ) {
         $vendor = dokan()->vendor->get( $user_id );
 
-        if ( isset( $vendor->get_payment_profiles()[$method] ) ) {
-            return [ $method => $vendor->get_payment_profiles()[$method] ];
-        }
+        return isset( $vendor->get_payment_profiles()[ $method ] ) ? $vendor->get_payment_profiles()[ $method ] : [];
     }
 
     /**

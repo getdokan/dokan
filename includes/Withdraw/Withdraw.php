@@ -43,7 +43,7 @@ class Withdraw {
             'status'  => absint( $data['status'] ),
             'method'  => $data['method'],
             'note'    => $data['note'],
-            'details' => ! empty( $data['details'] ) ? maybe_unserialize( $data['details'] ) : array(),
+            'details' => $data['details'],
             'ip'      => $data['ip'],
         ];
     }
