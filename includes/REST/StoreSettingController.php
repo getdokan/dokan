@@ -138,10 +138,10 @@ class StoreSettingController extends WP_REST_Controller {
     protected function prepare_links( $object, $request ) {
         $links = [
             'self'       => [
-                'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->base, $object['id'] ) ),
+                'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $object['id'] ) ),
             ],
             'collection' => [
-                'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->base ) ),
+                'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ),
             ],
         ];
 
