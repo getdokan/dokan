@@ -110,7 +110,7 @@ class Orders {
         }
 
         if ( isset( $_POST['dokan_order_export_filtered'] ) ) {
-            $customer_id = isset( $_GET['customer_id'] ) ? absint( wp_unslash( $_GET['customer_id'] ) ) : null;
+            $customer_id = isset( $_GET['customer_id'] ) ? absint( wp_unslash( $_GET['customer_id'] ) ) : 0;
 
             $filename = 'Orders-' . time();
             header( 'Content-Type: application/csv; charset=' . get_option( 'blog_charset' ) );
@@ -125,6 +125,8 @@ class Orders {
         }
         
         /**
+         * Just after exporting the csv file
+         * 
          * @since 3.2.12 removed hook argument
          * use $_POST superglobal to access post data
          */

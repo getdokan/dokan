@@ -18,7 +18,7 @@ class V_3_2_12 extends DokanUpgrader {
         // get all staffs
         $staffs = get_users(
             [
-                'role__in'   => [ 'vendor_staff' ],
+                'role__in' => [ 'vendor_staff' ],
             ]
         );
 
