@@ -15,20 +15,15 @@ class V_3_2_12 extends DokanUpgrader {
      * @return void
      */
     public static function add_dokan_export_product_capability_to_staff() {
-        // get all staffs
-        $staffs = get_users(
+        // get all staffs, vendors and admin
+        $users = get_users(
             [
-                'role__in' => [ 'vendor_staff' ],
+                'role__in' => [ 'vendor_staff', 'seller', 'administrator' ],
             ]
         );
 
-        // return if no vendor staff found
-        if ( ! count( $staffs ) ) {
-            return;
-        }
-
-        // adding capability to each staff
-        foreach ( $staffs as $staff ) {
+        // adding capability to each staff, vendors and admin
+        foreach ( $users as $staff ) {
             $staff->add_cap( 'dokan_export_order' );
         }
     }
