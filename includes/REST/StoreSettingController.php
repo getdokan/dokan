@@ -75,7 +75,7 @@ class StoreSettingController extends WP_REST_Controller {
 
         $store = dokan()->vendor->get( $store_id );
 
-        do_action( 'dokan_rest_store_settings_update_store', $store, $request );
+        do_action( 'dokan_rest_store_settings_after_update', $store, $request );
 
         $stores_data = $this->prepare_item_for_response( $store, $request );
         $response    = rest_ensure_response( $stores_data );
@@ -133,11 +133,11 @@ class StoreSettingController extends WP_REST_Controller {
      * @param \WC_Data $object Object data.
      * @param \WP_REST_Request $request Request object.
      *
-     * @return array                   Links for the given post.
+     * @return array Links for the given post.
      */
     protected function prepare_links( $object, $request ) {
         $links = [
-            'self'       => [
+            'self' => [
                 'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $object['id'] ) ),
             ],
             'collection' => [
@@ -149,7 +149,7 @@ class StoreSettingController extends WP_REST_Controller {
     }
 
     /**
-     * Prepare a single user output for response
+     * Prepare a single item output for response
      *
      * @param $store
      * @param \WP_REST_Request $request Request object.
