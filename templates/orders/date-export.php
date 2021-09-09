@@ -41,7 +41,7 @@ $order_status = isset( $_GET['order_status'] ) ? sanitize_key( $_GET['order_stat
         </div>
     </form>
 
-    <?php if ( current_user_can( 'manage_woocommerce' ) || current_user_can( 'dokan_export_order' ) ) : ?>
+    <?php if ( current_user_can( 'seller' ) || current_user_can( 'dokan_export_order' ) ) : ?>
         <form action="" method="POST" class="dokan-right">
             <div class="dokan-form-group">
                 <?php
