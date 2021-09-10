@@ -86,7 +86,7 @@ jQuery(function($) {
         var data = {
             action: 'dokan_grant_access_to_download',
             product_ids: product,
-            loop: $('.order_download_permissions .panel').size(),
+            loop: $('.order_download_permissions .panel').length,
             order_id: self.data('order-id'),
             security: self.data('nonce')
         };
@@ -429,7 +429,7 @@ jQuery(function($) {
                         '',
                         dokan_refund.mon_decimal_point
                     ) )
-                    .change();
+                    .trigger( 'change' );
             },
 
             amount_changed: function() {
@@ -459,7 +459,7 @@ jQuery(function($) {
                     parseFloat( accounting.formatNumber( unit_total * refund_qty, dokan_refund.rounding_precision, '' ) )
                         .toString()
                         .replace( '.', dokan_refund.mon_decimal_point )
-                ).change();
+                ).trigger( 'change' );
 
                 // Taxes
                 $( 'td.line_tax', $row ).each( function() {
@@ -472,9 +472,9 @@ jQuery(function($) {
                             parseFloat( accounting.formatNumber( unit_total_tax * refund_qty, dokan_refund.rounding_precision, '' ) )
                                 .toString()
                                 .replace( '.', dokan_refund.mon_decimal_point )
-                        ).change();
+                        ).trigger( 'change' );
                     } else {
-                        refund_line_total_tax.val( 0 ).change();
+                        refund_line_total_tax.val( 0 ).trigger( 'change' );
                     }
                 });
 
