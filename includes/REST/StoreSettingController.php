@@ -102,8 +102,13 @@ class StoreSettingController extends WP_REST_Controller {
      */
     public function get_settings_permission_callback() {
         $vendor = $this->get_vendor();
+
         if ( is_wp_error( $vendor ) ) {
             return $vendor;
+        }
+
+        if ( empty( $vendor->get_id() ) ) {
+            return new WP_Error( 'no_store_found', __( 'No vendor found', 'dokan-lite' ), [ 'status' => 404 ] );
         }
 
         return true;
