@@ -23,17 +23,17 @@ class V_3_2_12 extends DokanUpgrader {
             return;
         }
 
-        $columns = $wpdb->get_results( "describe {$map_table}" );
+        $columns = $wpdb->get_results( "describe {$map_table}" ); // phpcs:ignore
 
         $columns = array_filter(
             $columns, function ( $column ) {
-            return 'details' === $column->Field;
-        }
+                return 'details' === $column->Field; // phpcs:ignore
+            }
         );
 
         if ( empty( $columns ) ) {
             $wpdb->query(
-                "alter table {$map_table} add column details longtext NOT NULL AFTER note"
+                "alter table {$map_table} add column details longtext NOT NULL AFTER note" // phpcs:ignore
             );
         }
     }
