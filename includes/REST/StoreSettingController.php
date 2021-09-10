@@ -60,12 +60,7 @@ class StoreSettingController extends WP_REST_Controller {
      * @return WP_Error|\WP_REST_Response
      */
     public function update_settings( $request ) {
-        $vendor = $this->get_vendor();
-
-        if ( empty( $vendor->get_id() ) ) {
-            return new WP_Error( 'no_store_found', __( 'No vendor found', 'dokan-lite' ), [ 'status' => 404 ] );
-        }
-
+        $vendor   = $this->get_vendor();
         $params   = $request->get_params();
         $store_id = dokan()->vendor->update( $vendor->get_id(), $params );
 
@@ -170,5 +165,4 @@ class StoreSettingController extends WP_REST_Controller {
 
         return apply_filters( 'dokan_rest_prepare_store_settings_item_for_response', $response );
     }
-
 }
