@@ -579,16 +579,26 @@ class WithdrawController extends WP_REST_Controller {
      * @return data
      */
     public function prepare_item_for_response( $withdraw, $request ) {
-        $methods = dokan_withdraw_get_methods();
+        $vendor = $this->get_user_data( $withdraw->get_user_id() );
+
+        if ( empty( $vendor ) ) {
+            return;
+        }
+
+        $methods     = dokan_withdraw_get_methods();
+        $get_details = ! empty( $withdraw->get_details() ) ? maybe_unserialize( $withdraw->get_details() ) : array();
+        $details     = [ $withdraw->get_method() => $get_details ];
+
         $data = [
             'id'           => absint( $withdraw->get_id() ),
-            'user'         => $this->get_user_data( $withdraw->get_user_id() ),
+            'user'         => $vendor,
             'amount'       => floatval( $withdraw->get_amount() ),
             'created'      => mysql_to_rfc3339( $withdraw->get_date() ),
             'status'       => dokan()->withdraw->get_status_name( $withdraw->get_status() ),
             'method'       => $withdraw->get_method(),
             'method_title' => array_key_exists( $withdraw->get_method(), $methods ) ? $methods[ $withdraw->get_method() ] : $withdraw->get_method(),
             'note'         => $withdraw->get_note(),
+            'details'      => version_compare( DOKAN_PLUGIN_VERSION, '3.2.11', '>' ) ? $details : $vendor['payment'],
             'ip'           => $withdraw->get_ip(),
         ];
 
