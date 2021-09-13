@@ -94,6 +94,7 @@ class Commission {
             );
 
             $tmp_order->update_meta_data( 'dokan_gateway_fee', $gateway_fee );
+            // translators: %s: Geteway fee
             $tmp_order->add_order_note( sprintf( __( 'Payment gateway processing fee %s', 'dokan-lite' ), wc_format_decimal( $gateway_fee, 2 ) ) );
             $tmp_order->save_meta_data();
 
@@ -120,7 +121,7 @@ class Commission {
         $meta_to_return = [];
 
         foreach ( $formated_meta as $key => $meta ) {
-            if ( ! in_array( $meta->key, $meta_to_hide ) ) {
+            if ( ! in_array( $meta->key, $meta_to_hide, true ) ) {
                 array_push( $meta_to_return, $meta );
             }
         }
@@ -232,8 +233,8 @@ class Commission {
         // So we'll return the previously earned commission to keep backward compatability.
         $saved_admin_fee = get_post_meta( $order->get_id(), '_dokan_admin_fee', true );
 
-        if ( $saved_admin_fee != '' ) {
-            $saved_fee = ( 'seller' == $context ) ? $order->get_total() - $saved_admin_fee : $saved_admin_fee;
+        if ( $saved_admin_fee !== '' ) {
+            $saved_fee = ( 'seller' === $context ) ? $order->get_total() - $saved_admin_fee : $saved_admin_fee;
             return apply_filters( 'dokan_order_admin_commission', $saved_fee, $order );
         }
 
@@ -258,9 +259,9 @@ class Commission {
 
             $product_id = $item->get_product()->get_id();
             $refund     = $order->get_total_refunded_for_item( $item_id );
-            $vendor     = dokan_get_vendor_by_product( $product_id );
+            $vendor_id  = (int) get_post_field( 'post_author', $product_id );
 
-            if ( function_exists( 'dokan_is_order_have_admin_coupons_for_vendors' ) && function_exists( 'dokan_get_earning_use_admin_coupon_for_vendor' ) && dokan_is_order_have_admin_coupons_for_vendors( $order, $vendor ) ) {
+            if ( dokan_is_order_have_apply_admin_coupons( $order, $vendor_id ) ) {
                 $earning += dokan_get_earning_use_admin_coupon_for_vendor( $earning, $order, $item, $context, $product_id, $refund );
             } else {
                 $item_price = apply_filters( 'dokan_earning_by_order_item_price', $item->get_total(), $item );
