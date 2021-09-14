@@ -40,3 +40,37 @@ function dokan_get_i18n_date_format( format = true ) {
 
   return datepickerFormat;
 }
+
+/**
+ * Dokan Sweet Alert
+ * 
+ * @param object args
+ * 
+ * @return void | bool
+ */
+ async function dokan_sweet_alert( args ) {
+  switch( args.action ) {
+    case 'alert' :
+        Swal.fire({
+          icon: args.status,
+          text: args.message,
+          confirmButtonColor: '#ee502f',
+          });
+        break;
+    
+    case 'confirm' : 
+        return await Swal.fire({
+          text: args.message,
+          showCancelButton: true,
+          confirmButtonColor: '#f97325',
+          cancelButtonColor: '#c92d0e',
+          });
+          
+    default : 
+        Swal.fire({
+          icon: args.status,
+          text: args.message,
+          confirmButtonColor: '#ee502f',
+          });
+  }
+}

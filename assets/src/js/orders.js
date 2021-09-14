@@ -332,10 +332,16 @@ jQuery(function($) {
 
         refunds: {
 
-            do_refund: function() {
+            do_refund: async function() {
                 dokan_seller_meta_boxes_order_items.block();
+                
+                let args = {
+                    action  : 'confirm',
+                    message :  dokan_refund.i18n_do_refund
+                };
+                let isRefund = await dokan_sweet_alert( args  );
 
-                if ( window.confirm( dokan_refund.i18n_do_refund ) ) {
+                if ( 'undefined' !== isRefund && isRefund.isConfirmed ) {
                     var refund_amount = $( 'input#refund_amount' ).val();
                     var refund_reason = $( 'input#refund_reason' ).val();
 
@@ -384,7 +390,13 @@ jQuery(function($) {
                     };
 
                     $.post( dokan_refund.ajax_url, data, function( response ) {
-                        response.data.message ? window.alert( response.data.message ) : null;
+                        let args = {
+                            action  : 'alert',
+                            message :  response.data.message,
+                            status  : 'success'
+                        };
+                        
+                        response.data.message ? dokan_sweet_alert( args ) : null;
                         dokan_seller_meta_boxes_order_items.reload_items();
                     }).fail( function ( jqXHR ) {
                         var message = [];
@@ -400,8 +412,14 @@ jQuery(function($) {
                                 message.push( data );
                             }
                         }
+                        
+                        let args = {
+                            action  : 'alert',
+                            message :  message.join( ' ' ),
+                            status  : 'error'
+                        };
 
-                        window.alert( message.join( ' ' ) );
+                        dokan_sweet_alert( args );
                         dokan_seller_meta_boxes_order_items.unblock();
                     } );
                 } else {

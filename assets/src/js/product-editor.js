@@ -515,10 +515,16 @@
                 });
             },
 
-            removeAttribute: function(evt) {
+            removeAttribute: async function(evt) {
+                evt.preventDefault()
                 evt.stopPropagation();
+                let args = {
+                    action  : 'confirm',
+                    message :  dokan.remove_attribute
+                };
 
-                if ( window.confirm( dokan.remove_attribute ) ) {
+                let isRemoved = await dokan_sweet_alert( args  );
+                if ( 'undefined' !== isRemoved && isRemoved.isConfirmed  ) {
                     var $parent = $( this ).closest('li.product-attribute-list');
 
                     $parent.fadeOut( 300, function() {
