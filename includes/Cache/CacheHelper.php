@@ -5,6 +5,7 @@ namespace WeDevs\Dokan\Cache;
 use WC_Cache_Helper;
 use WeDevs\Dokan\Order\OrderCache;
 use WeDevs\Dokan\Product\ProductCache;
+use WeDevs\Dokan\Vendor\VendorCache;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -15,8 +16,32 @@ defined( 'ABSPATH' ) || exit;
  */
 class CacheHelper extends WC_Cache_Helper {
 
+    /**
+     * Holds various class instances
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @var array
+     */
+    private $container = [];
+
     public function __construct() {
         $this->init_classes();
+    }
+
+    /**
+     * Magic getter to bypass referencing objects
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param string $prop
+     *
+     * @return Class Instance
+     */
+    public function __get( $prop ) {
+        if ( array_key_exists( $prop, $this->container ) ) {
+            return $this->container[ $prop ];
+        }
     }
 
     /**
@@ -25,8 +50,9 @@ class CacheHelper extends WC_Cache_Helper {
      * @since DOKAN_LITE_SINCE
      */
     public function init_classes() {
-        new ProductCache();
-        new OrderCache();
+        $this->container['product'] = new ProductCache();
+        $this->container['order']   = new OrderCache();
+        $this->container['vendor']  = new VendorCache();
     }
 
     /**

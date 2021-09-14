@@ -33,7 +33,6 @@ class Manager {
 
         $args = wp_parse_args( $args, $defaults );
 
-
         $cache_group = 'dokan_cache_seller_product_data_' . dokan_get_current_user_id();
         $cache_key   = 'dokan_seller_products-' . md5( json_encode( $args ) );
 
