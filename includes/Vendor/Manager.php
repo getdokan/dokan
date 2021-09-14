@@ -93,17 +93,26 @@ class Manager {
         unset( $args['status'] );
         unset( $args['featured'] );
 
-        $user_query = new WP_User_Query( $args );
-        $results    = $user_query->get_results();
+        $cache_group = dokan()->cache->vendor->get_cache_group();
+        $cache_key   = 'doken-vendors-' . md5( json_encode( $args ) );
+        $vendors     = wp_cache_get( $cache_key, $cache_group );
 
-        $this->total_users = $user_query->total_users;
+        if ( false === $vendors ) {
+            $user_query = new WP_User_Query( $args );
+            $results    = $user_query->get_results();
 
-        if ( $args['fields'] !== 'all' ) {
-            return $results;
-        }
+            $this->total_users = $user_query->total_users;
 
-        foreach ( $results as $key => $result ) {
-            $vendors[] = $this->get( $result );
+            if ( $args['fields'] !== 'all' ) {
+                return $results;
+            }
+
+            foreach ( $results as $result ) {
+                $vendors[] = $this->get( $result );
+            }
+
+            wp_cache_set( $cache_key, $vendors, $cache_group );
+            dokan()->cache->dokan_cache_update_group( $cache_key, $cache_group );
         }
 
         return $vendors;
@@ -450,6 +459,8 @@ class Manager {
 
         require_once ABSPATH . 'wp-admin/includes/user.php';
         wp_delete_user( $vendor_id, $reassign );
+
+        do_action( 'dokan_delete_vendor', $vendor_id );
 
         return $vendor;
     }
