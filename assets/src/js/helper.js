@@ -50,14 +50,6 @@ function dokan_get_i18n_date_format( format = true ) {
  */
  async function dokan_sweet_alert( args ) {
   switch( args.action ) {
-    case 'alert' :
-        Swal.fire({
-          icon: args.status,
-          text: args.message,
-          confirmButtonColor: '#ee502f',
-          });
-        break;
-    
     case 'confirm' : 
         return await Swal.fire({
           text: args.message,
@@ -65,7 +57,8 @@ function dokan_get_i18n_date_format( format = true ) {
           confirmButtonColor: '#f97325',
           cancelButtonColor: '#c92d0e',
           });
-          
+    
+    case 'alert' :      
     default : 
         Swal.fire({
           icon: args.status,

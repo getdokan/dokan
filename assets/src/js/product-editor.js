@@ -462,7 +462,13 @@
 
                     $.post( dokan.ajaxurl, data, function( response ) {
                         if ( response.error ) {
-                            window.alert( response.error );
+                            let args = {
+                                action  : 'alert',
+                                message :  response.error,
+                                status  : 'error'
+                            };
+
+                            dokan_sweet_alert( args );
                         } else if ( response.slug ) {
                             $wrapper.find( 'select.dokan_attribute_values' ).append( '<option value="' + response.slug + '" selected="selected">' + response.name + '</option>' );
                             $wrapper.find( 'select.dokan_attribute_values' ).change();
