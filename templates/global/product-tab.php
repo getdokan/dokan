@@ -20,17 +20,17 @@
                 <?php echo esc_html( $store_info['store_name'] ); ?>
             </span>
         </li>
+        <li class="seller-name">
+            <span>
+                <?php esc_html_e( 'Vendor:', 'dokan-lite' ); ?>
+            </span>
+
+            <span class="details">
+                <?php printf( '<a href="%s">%s</a>', esc_url( dokan_get_store_url( $author->ID ) ), esc_attr( $store_info['store_name'] ) ); ?>
+            </span>
+        </li>
     <?php } ?>
 
-    <li class="seller-name">
-        <span>
-            <?php esc_html_e( 'Vendor:', 'dokan-lite' ); ?>
-        </span>
-
-        <span class="details">
-            <?php printf( '<a href="%s">%s</a>', esc_url( dokan_get_store_url( $author->ID ) ), esc_attr( $author->display_name ) ); ?>
-        </span>
-    </li>
     <?php if ( ! dokan_is_vendor_info_hidden( 'address' ) && ! empty( $store_info['address'] ) ) { ?>
         <li class="store-address">
             <span><b><?php esc_html_e( 'Address:', 'dokan-lite' ); ?></b></span>
