@@ -115,7 +115,7 @@
                                         $pagenum        = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
                                         $post_statuses  = apply_filters( 'dokan_product_listing_post_statuses', [ 'publish', 'draft', 'pending', 'future' ] );
                                         $stock_statuses = apply_filters( 'dokan_product_stock_statuses', [ 'instock', 'outofstock' ] );
-                                        $product_types  = apply_filters( 'dokan_product_types', 'simple' );
+                                        $product_types  = apply_filters( 'dokan_product_types', [ 'simple' => __( 'Simple', 'dokan-lite' ) ] );
                                         $get_data       = wp_unslash( $_GET );
 
                                         $args = array(
