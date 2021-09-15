@@ -431,8 +431,8 @@ class Products {
             $maximum_tags_select_length = apply_filters( 'dokan_maximum_tags_select_length', -1 );
 
             // Setting limitation for how many product tags that vendor can input.
-            if ( $maximum_tags_select_length !== 0 && $maximum_tags_select_length !== -1 && count( $postdata['product_tag'] ) !== 0 && count( $postdata['product_tag'] ) > $maximum_tags_select_length ) {
-                $errors[] = sprintf( __( 'You can only select %s items', 'dokan-lite' ), number_format_i18n( $maximum_tags_select_length ) );
+            if ( $maximum_tags_select_length !== -1 && count( $postdata['product_tag'] ) !== 0 && count( $postdata['product_tag'] ) > $maximum_tags_select_length ) {
+                $errors[] = sprintf( __( 'You can only select %s tags', 'dokan-lite' ), number_format_i18n( $maximum_tags_select_length ) );
             }
         }
 

@@ -142,12 +142,10 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                         </div>
                     <?php endif; ?>
 
-                    <?php if ( apply_filters( 'dokan_maximum_tags_select_length', -1 ) !== 0 ): ?>
                     <div class="dokan-form-group">
                         <label for="product_tag" class="form-label"><?php esc_html_e( 'Tags', 'dokan-lite' ); ?></label>
                         <select multiple="multiple" name="product_tag[]" id="product_tag_search" class="product_tag_search product_tags dokan-form-control dokan-select2" data-placeholder="<?php echo esc_attr( $tags_placeholder ); ?>"></select>
                     </div>
-                    <?php endif; ?>
 
                     <?php do_action( 'dokan_new_product_after_product_tags' ); ?>
 
