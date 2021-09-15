@@ -231,10 +231,19 @@ class Manager {
     public function get_withdraw_requests( $user_id = '', $status = 0, $limit = 10, $offset = 0 ) {
         global $wpdb;
 
-        if ( empty( $user_id ) ) {
-            $result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} WHERE status = %d LIMIT %d, %d", $status, $offset, $limit ) );
-        } else {
-            $result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} WHERE user_id = %d AND status = %d LIMIT %d, %d", $user_id, $status, $offset, $limit ) );
+        $cache_group = empty ( $user_id ) ? dokan()->cache->withdraw->get_admin_cache_group() : dokan()->cache->withdraw->get_seller_cache_group();
+        $cache_key   = "dokan-withdraw-requests-$user_id-$status-$limit-$offset";
+        $result      = wp_cache_get( $cache_key, $cache_group );
+
+        if ( false === $result ) {
+            if ( empty( $user_id ) ) {
+                $result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} WHERE status = %d LIMIT %d, %d", $status, $offset, $limit ) );
+            } else {
+                $result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} WHERE user_id = %d AND status = %d LIMIT %d, %d", $user_id, $status, $offset, $limit ) );
+            }
+
+            wp_cache_set( $cache_key, $result, $cache_group );
+            dokan()->cache->update_group( $cache_key, $cache_group );
         }
 
         return $result;

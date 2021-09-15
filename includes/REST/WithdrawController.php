@@ -268,7 +268,16 @@ class WithdrawController extends WP_REST_Controller {
             $args['ids'] = $request['ids'];
         }
 
-        $withdraws = dokan()->withdraw->all( $args );
+        $cache_group = dokan()->cache->withdraw->get_admin_cache_group();
+        $cache_key   = 'dokan-withdraw-requests-' . md5( json_encode( $args ) );
+        $withdraws   = wp_cache_get( $cache_key, $cache_group );
+
+        if ( false === $withdraws ) {
+            $withdraws = dokan()->withdraw->all( $args );
+
+            wp_cache_set( $cache_key, $withdraws, $cache_group );
+            dokan()->cache->update_group( $cache_key , $cache_group );
+        }
 
         $data = [];
         foreach ( $withdraws->withdraws as $withdraw ) {
@@ -295,7 +304,7 @@ class WithdrawController extends WP_REST_Controller {
     public function get_balance() {
         $data = [];
 
-        $data ['current_balance']   = dokan_get_seller_balance( dokan_get_current_user_id(), false );
+        $data['current_balance']    = dokan_get_seller_balance( dokan_get_current_user_id(), false );
         $data['withdraw_limit']     = dokan_get_option( 'withdraw_limit', 'dokan_withdraw', - 1 );
         $data['withdraw_threshold'] = dokan_get_withdraw_threshold( dokan_get_current_user_id() );
 
