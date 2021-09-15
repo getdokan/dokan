@@ -94,7 +94,7 @@
             $price = dokan_get_variable_product_earning( $product->get_id() );
             echo wp_kses( $price, $price_kses );
         } else {
-            $price = wc_price( dokan()->commission->get_earning_by_product( $product ) );
+            $price = wc_price( dokan()->commission->get_earning_by_product( $product, 'seller', wc_get_price_to_display( $product ) ) );
             echo wp_kses( $price, $price_kses );
         }
         ?>
