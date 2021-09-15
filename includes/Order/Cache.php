@@ -5,13 +5,13 @@ namespace WeDevs\Dokan\Order;
 use WeDevs\Dokan\Cache\CacheHelper;
 
 /**
- * OrderCache class
+ * Order Cache class
  *
  * @since DOKAN_LITE_SINCE
  *
  * Manage all caches for orders
  */
-class OrderCache extends CacheHelper {
+class Cache extends CacheHelper {
 
     public function __construct() {
         add_action( 'dokan_checkout_update_order_meta', [ $this, 'reset_seller_order_data' ], 10, 2 );
@@ -30,7 +30,7 @@ class OrderCache extends CacheHelper {
      * @return void
      */
     public static function reset_seller_order_data( $order_id, $seller_id ) {
-        self::dokan_cache_clear_group( 'dokan_seller_data_' . $seller_id );
+        self::clear_group( 'dokan_seller_data_' . $seller_id );
     }
 
     /**

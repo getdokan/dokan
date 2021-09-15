@@ -5,13 +5,13 @@ namespace WeDevs\Dokan\Vendor;
 use WeDevs\Dokan\Cache\CacheHelper;
 
 /**
- * VendorCache class
+ * Vendor Cache class
  *
  * @since DOKAN_LITE_SINCE
  *
  * Manage all of the caches for vendor
  */
-class VendorCache extends CacheHelper {
+class Cache extends CacheHelper {
 
     private $cache_group;
 
@@ -25,11 +25,27 @@ class VendorCache extends CacheHelper {
         add_action( 'dokan_vendor_disabled', [ $this, 'clear_cache_group' ] );
     }
 
+    /**
+     * Clear Vendor Cache Group
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param int $vendor_id
+     *
+     * @return void
+     */
     public function clear_cache_group( $vendor_id = null )
     {
-        self::dokan_cache_clear_group( $this->cache_group );
+        self::clear_group( $this->cache_group );
     }
 
+    /**
+     * Get Vendor Cache Group Name
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return string $cache_group name
+     */
     public function get_cache_group() {
         return $this->cache_group;
     }

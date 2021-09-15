@@ -3,9 +3,11 @@
 namespace WeDevs\Dokan\Cache;
 
 use WC_Cache_Helper;
-use WeDevs\Dokan\Order\OrderCache;
-use WeDevs\Dokan\Product\ProductCache;
-use WeDevs\Dokan\Vendor\VendorCache;
+use WeDevs\Dokan\Traits\ChainableContainer;
+use WeDevs\Dokan\Order\Cache as OrderCache;
+use WeDevs\Dokan\Product\Cache as ProductCache;
+use WeDevs\Dokan\Vendor\Cache as VendorCache;
+use WeDevs\Dokan\Withdraw\Cache as WithdrawCache;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -16,32 +18,10 @@ defined( 'ABSPATH' ) || exit;
  */
 class CacheHelper extends WC_Cache_Helper {
 
-    /**
-     * Holds various class instances
-     *
-     * @since DOKAN_LITE_SINCE
-     *
-     * @var array
-     */
-    private $container = [];
+    use ChainableContainer;
 
     public function __construct() {
         $this->init_classes();
-    }
-
-    /**
-     * Magic getter to bypass referencing objects
-     *
-     * @since DOKAN_LITE_SINCE
-     *
-     * @param string $prop
-     *
-     * @return Class Instance
-     */
-    public function __get( $prop ) {
-        if ( array_key_exists( $prop, $this->container ) ) {
-            return $this->container[ $prop ];
-        }
     }
 
     /**
@@ -50,9 +30,10 @@ class CacheHelper extends WC_Cache_Helper {
      * @since DOKAN_LITE_SINCE
      */
     public function init_classes() {
-        $this->container['product'] = new ProductCache();
-        $this->container['order']   = new OrderCache();
-        $this->container['vendor']  = new VendorCache();
+        $this->container['product']  = new ProductCache();
+        $this->container['order']    = new OrderCache();
+        $this->container['vendor']   = new VendorCache();
+        $this->container['withdraw'] = new WithdrawCache();
     }
 
     /**
@@ -262,7 +243,7 @@ class CacheHelper extends WC_Cache_Helper {
      *
      * @return void
      */
-    public static function dokan_cache_clear_group( $group ) {
+    public static function clear_group( $group ) {
         $keys = get_option( $group, [] );
 
         if ( ! empty( $keys ) ) {
@@ -285,7 +266,7 @@ class CacheHelper extends WC_Cache_Helper {
      *
      * @return void
      */
-    public static function dokan_cache_update_group( $key, $group ) {
+    public static function update_group( $key, $group ) {
         $keys = get_option( $group, [] );
 
         if ( in_array( $key, $keys ) ) {
