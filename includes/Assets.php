@@ -430,6 +430,7 @@ class Assets {
             'product_types'      => apply_filters( 'dokan_product_types', [ 'simple' ] ),
             'loading_img'        => DOKAN_PLUGIN_ASSEST . '/images/loading.gif',
             'store_product_search_nonce' => wp_create_nonce( 'dokan_store_product_search_nonce' ),
+            'maximum_tags_select_length' => apply_filters( 'dokan_maximum_tags_select_length', -1 ),  // Filter of maximun a vendor can add tags
         ];
 
         $localize_script     = apply_filters( 'dokan_localized_args', $default_script );
