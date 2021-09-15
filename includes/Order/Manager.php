@@ -70,7 +70,7 @@ class Manager {
             );
 
             wp_cache_set( $cache_key, $orders, $cache_group );
-            dokan()->cache->dokan_cache_update_group( $cache_key, $cache_group );
+            dokan()->cache->update_group( $cache_key, $cache_group );
         }
 
         return $orders;

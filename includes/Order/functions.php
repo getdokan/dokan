@@ -93,7 +93,7 @@ function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = nul
         );
 
         wp_cache_set( $cache_key, $orders, $cache_group );
-        dokan()->cache->dokan_cache_update_group( $cache_key, $cache_group );
+        dokan()->cache->update_group( $cache_key, $cache_group );
     }
 
     return $orders;
@@ -147,7 +147,7 @@ function dokan_get_seller_orders_by_date( $start_date, $end_date, $seller_id = f
         );
 
         wp_cache_set( $cache_key, $orders, $cache_group, 3600 * 2 );
-        dokan()->cache->dokan_cache_update_group( $cache_key, $cache_group );
+        dokan()->cache->update_group( $cache_key, $cache_group );
     }
 
     return $orders;
@@ -308,7 +308,7 @@ function dokan_count_orders( $user_id ) {
 
         $counts = (object) $counts;
         wp_cache_set( $cache_key, $counts, $cache_group );
-        dokan()->cache->dokan_cache_update_group( $cache_key, $cache_group );
+        dokan()->cache->update_group( $cache_key, $cache_group );
     }
 
     return $counts;

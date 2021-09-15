@@ -42,7 +42,7 @@ class Manager {
             $products = new WP_Query( apply_filters( 'dokan_all_products_query', $args ) );
 
             wp_cache_set( $cache_key, $products, $cache_group );
-            dokan()->cache->dokan_cache_update_group( $cache_key, $cache_group );
+            dokan()->cache->update_group( $cache_key, $cache_group );
         }
 
         return $products;

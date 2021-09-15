@@ -437,7 +437,7 @@ function dokan_author_total_sales( $seller_id ) {
         $earnings = $count->earnings;
 
         wp_cache_set( $cache_key, $earnings, $cache_group );
-        dokan()->cache->dokan_cache_update_group( $cache_key, $cache_group );
+        dokan()->cache->update_group( $cache_key, $cache_group );
     }
 
     return apply_filters( 'dokan_seller_total_sales', $earnings );

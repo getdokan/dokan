@@ -741,7 +741,7 @@ class Vendor {
             $earning = (float) $result->earnings;
 
             wp_cache_set( $cache_key, $earning, $cache_group );
-            dokan()->cache->dokan_cache_update_group( $cache_key , $cache_group );
+            dokan()->cache->update_group( $cache_key , $cache_group );
         }
 
         if ( $formatted ) {
@@ -762,7 +762,7 @@ class Vendor {
         global $wpdb;
 
         $status        = dokan_withdraw_get_active_order_status_in_comma();
-        $cache_group   = 'dokan_seller_data_'.$this->id;
+        $cache_group   = dokan()->cache->withdraw->get_seller_cache_group();
         $cache_key     = $on_date ? "dokan_seller_balance_on_{$on_date}_$this->id" : 'dokan_seller_balance_' . $this->id;
         $earning       = wp_cache_get( $cache_key, $cache_group );
         $threshold_day = dokan_get_withdraw_threshold( dokan_get_current_user_id() );
@@ -790,7 +790,7 @@ class Vendor {
             $earning = (float) $result->earnings - (float) round( $result->withdraw, wc_get_rounding_precision() );
 
             wp_cache_set( $cache_key, $earning, $cache_group );
-            dokan()->cache->dokan_cache_update_group( $cache_key , $cache_group );
+            dokan()->cache->update_group( $cache_key , $cache_group );
         }
 
         if ( $formatted ) {
