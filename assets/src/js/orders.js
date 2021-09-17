@@ -335,11 +335,7 @@ jQuery(function($) {
             do_refund: async function() {
                 dokan_seller_meta_boxes_order_items.block();
                 
-                let args = {
-                    action  : 'confirm',
-                    message :  dokan_refund.i18n_do_refund
-                };
-                let isRefund = await dokan_sweet_alert( args  );
+                let isRefund = await dokan_sweet_alert( dokan_refund.i18n_do_refund, { action : 'confirm' }  );
 
                 if ( 'undefined' !== isRefund && isRefund.isConfirmed ) {
                     var refund_amount = $( 'input#refund_amount' ).val();
@@ -390,13 +386,7 @@ jQuery(function($) {
                     };
 
                     $.post( dokan_refund.ajax_url, data, function( response ) {
-                        let args = {
-                            action  : 'alert',
-                            message :  response.data.message,
-                            status  : 'success'
-                        };
-                        
-                        response.data.message ? dokan_sweet_alert( args ) : null;
+                        response.data.message ? dokan_sweet_alert( response.data.message, { status : 'success' } ) : null;
                         dokan_seller_meta_boxes_order_items.reload_items();
                     }).fail( function ( jqXHR ) {
                         var message = [];
@@ -412,14 +402,8 @@ jQuery(function($) {
                                 message.push( data );
                             }
                         }
-                        
-                        let args = {
-                            action  : 'alert',
-                            message :  message.join( ' ' ),
-                            status  : 'error'
-                        };
 
-                        dokan_sweet_alert( args );
+                        dokan_sweet_alert( message.join( ' ' ), { status : 'error' } );
                         dokan_seller_meta_boxes_order_items.unblock();
                     } );
                 } else {

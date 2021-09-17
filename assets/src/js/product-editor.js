@@ -462,13 +462,7 @@
 
                     $.post( dokan.ajaxurl, data, function( response ) {
                         if ( response.error ) {
-                            let args = {
-                                action  : 'alert',
-                                message :  response.error,
-                                status  : 'error'
-                            };
-
-                            dokan_sweet_alert( args );
+                            dokan_sweet_alert( response.error, { action : 'alert', status : 'error' } );
                         } else if ( response.slug ) {
                             $wrapper.find( 'select.dokan_attribute_values' ).append( '<option value="' + response.slug + '" selected="selected">' + response.name + '</option>' );
                             $wrapper.find( 'select.dokan_attribute_values' ).change();
@@ -524,12 +518,8 @@
             removeAttribute: async function(evt) {
                 evt.preventDefault()
                 evt.stopPropagation();
-                let args = {
-                    action  : 'confirm',
-                    message :  dokan.remove_attribute
-                };
 
-                let isRemoved = await dokan_sweet_alert( args  );
+                let isRemoved = await dokan_sweet_alert( dokan.remove_attribute, { action : 'confirm' } );
                 if ( 'undefined' !== isRemoved && isRemoved.isConfirmed  ) {
                     var $parent = $( this ).closest('li.product-attribute-list');
 
