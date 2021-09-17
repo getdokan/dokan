@@ -1,3 +1,5 @@
+import {__} from "../../../src/utils/i18n";
+
 ;(function($){
 
     var variantsHolder = $('#variants-holder');
@@ -940,7 +942,7 @@
             let sale_price = $( 'input.dokan-product-sales-price' ).val();
             let earning_suggestion = $('.simple-product span.vendor-price');
 
-            earning_suggestion.html( 'Calculating' );
+            earning_suggestion.html( __('Calculating', 'dokan-lite') );
 
             $.get( dokan.ajaxurl, {
                 action: 'get_vendor_earning',
