@@ -724,6 +724,7 @@ class Assets {
                 'i18n_selection_too_long_n'           => __( 'You can only select %qty% items', 'dokan-lite' ),
                 'i18n_load_more'                      => __( 'Loading more results&hellip;', 'dokan-lite' ),
                 'i18n_searching'                      => __( 'Searching&hellip;', 'dokan-lite' ),
+                'i18n_calculating'                    => __( 'Calculating', 'dokan-lite' ),
                 'i18n_ok_text'                        => __( 'OK', 'dokan-lite' ),
                 'i18n_cancel_text'                    => __( 'Cancel', 'dokan-lite' ),
                 'i18n_date_format'                    => get_option( 'date_format' ),
