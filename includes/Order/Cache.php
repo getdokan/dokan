@@ -17,6 +17,7 @@ class Cache extends CacheHelper {
         add_action( 'dokan_checkout_update_order_meta', [ $this, 'reset_seller_order_data' ], 10, 2 );
         add_action( 'woocommerce_order_status_changed', [ $this, 'reset_seller_order_data' ], 10, 4 );
         add_action( 'woocommerce_update_order', [ $this, 'reset_cache_on_update_order' ] );
+        add_action( 'woocommerce_order_refunded', [ $this, 'reset_cache_on_update_order' ] );
     }
 
     /**
