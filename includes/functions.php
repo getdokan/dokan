@@ -4119,3 +4119,22 @@ function dokan_get_withdraw_threshold( $user_id ) {
 
     return ( $threshold_day ) ? absint( $threshold_day ) : 0;
 }
+
+/**
+ * Dokan Withdraw Limit Value Validation
+ *
+ * @param mixed $option_value
+ * @param mixed $option_name
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @return mixed $optins
+ */
+function dokan_withdraw_limit_value_validation( $option_value, $option_name ) {
+    if( $option_value['withdraw_limit'] < 0 ) {
+        $option_value['withdraw_limit'] = 0;
+    }
+    return $option_value;
+}
+
+add_filter( 'dokan_save_settings_value', 'dokan_withdraw_limit_value_validation' , 10, 2 );
