@@ -4131,8 +4131,8 @@ function dokan_get_withdraw_threshold( $user_id ) {
  * @return mixed $option_value
  */
 function dokan_withdraw_limit_value_validation( $option_value, $option_name ) {
-    if( $option_value['withdraw_limit'] < 0 ) {
-        $option_value['withdraw_limit'] = 0;
+    if ( ! empty( $option_value['withdraw_limit'] ) ) {
+        $option_value['withdraw_limit'] = $option_value['withdraw_limit'] < 0 ? 0 : $option_value['withdraw_limit'];
     }
     return $option_value;
 }
