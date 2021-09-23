@@ -12,6 +12,8 @@ class BestSellingProduct extends DokanShortcode {
      * Render best selling products
      *
      * @param  array  $atts
+     * @param  array  $content
+     * @param  array  $tag
      *
      * @return string
      */

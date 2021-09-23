@@ -11,6 +11,8 @@ class TopRatedProduct extends DokanShortcode {
      * Render top rated products via shortcode
      *
      * @param array $atts
+     * @param array $content
+     * @param array $tag
      *
      * @return string
      */

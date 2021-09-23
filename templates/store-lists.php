@@ -62,6 +62,7 @@ do_action( 'dokan_after_seller_listing_serach_form', $sellers );
  * @since 2.8.6
  *
  * @var array $sellers
+ * @var array $recived_template_args
  */
 do_action( 'dokan_before_seller_listing_loop', $sellers, $recived_template_args );
 

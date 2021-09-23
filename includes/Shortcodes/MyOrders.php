@@ -11,6 +11,10 @@ class MyOrders extends DokanShortcode {
     /**
      * Render my orders page
      *
+     * @param array $atts
+     * @param array $content
+     * @param array $tag
+     *
      * @return string
      */
     public function render_shortcode( $atts, $content = null, $tag = '' ) {

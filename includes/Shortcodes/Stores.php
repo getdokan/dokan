@@ -14,6 +14,8 @@ class Stores extends DokanShortcode {
      * @since 2.4
      *
      * @param  array $atts
+     * @param  array $content
+     * @param  array $tag
      *
      * @return string
      */

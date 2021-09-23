@@ -15,6 +15,8 @@ class Dashboard extends DokanShortcode {
      * in the frontend user dashboard.
      *
      * @param array $atts
+     * @param array $content
+     * @param array $tag
      *
      * @return void
      */
