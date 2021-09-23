@@ -13,7 +13,7 @@ class MyOrders extends DokanShortcode {
      *
      * @return string
      */
-    public function render_shortcode( $atts ) {
+    public function render_shortcode( $atts, $content = null, $tag = '' ) {
         if ( ! is_user_logged_in() ) {
             return;
         }

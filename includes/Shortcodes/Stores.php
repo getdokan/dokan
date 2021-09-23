@@ -17,7 +17,7 @@ class Stores extends DokanShortcode {
      *
      * @return string
      */
-    public function render_shortcode( $atts ) {
+    public function render_shortcode( $atts, $content = null, $tag = '' ) {
         $defaults = array(
             'per_page'           => 10,
             'search'             => 'yes',
@@ -100,13 +100,14 @@ class Stores extends DokanShortcode {
          */
         $template_args = apply_filters(
             'dokan_store_list_args', array(
-				'sellers'    => $sellers,
-				'limit'      => $limit,
-				'offset'     => $offset,
-				'paged'      => $paged,
-				'image_size' => 'full',
-				'search'     => $attr['search'],
-				'per_row'    => $attr['per_row'],
+				'sellers'       => $sellers,
+				'limit'         => $limit,
+				'offset'        => $offset,
+				'paged'         => $paged,
+				'image_size'    => 'full',
+				'search'        => $attr['search'],
+				'per_row'       => $attr['per_row'],
+                'shortcode_tag' => $tag,
             )
         );
 
