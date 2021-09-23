@@ -18,7 +18,7 @@ class Dashboard extends DokanShortcode {
      *
      * @return void
      */
-    public function render_shortcode( $atts ) {
+    public function render_shortcode(  $atts, $content = null, $tag = '' ) {
         global $wp;
 
         if ( ! function_exists( 'WC' ) ) {

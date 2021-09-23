@@ -7,6 +7,8 @@ $get_data = wp_unslash( $_GET );
 
 $search_query = null;
 
+$recived_template_args = isset( $args ) ? $args : [];
+
 if ( 'yes' === $search ) {
     $search_query = isset( $get_data['dokan_seller_search'] ) ? sanitize_text_field( $get_data['dokan_seller_search'] ) : '';
 }
@@ -61,7 +63,7 @@ do_action( 'dokan_after_seller_listing_serach_form', $sellers );
  *
  * @var array $sellers
  */
-do_action( 'dokan_before_seller_listing_loop', $sellers );
+do_action( 'dokan_before_seller_listing_loop', $sellers, $recived_template_args );
 
 $template_args = array(
     'sellers'         => $sellers,

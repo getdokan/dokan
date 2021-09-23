@@ -14,7 +14,7 @@ class TopRatedProduct extends DokanShortcode {
      *
      * @return string
      */
-    public function render_shortcode( $atts ) {
+    public function render_shortcode( $atts, $content = null, $tag = ''  ) {
 
         /**
          * Filter return the number of top rated product per page.

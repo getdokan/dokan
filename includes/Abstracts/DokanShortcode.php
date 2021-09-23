@@ -18,5 +18,5 @@ abstract class DokanShortcode {
         return $this->shortcode;
     }
 
-    abstract public function render_shortcode( $atts );
+    abstract public function render_shortcode( $atts, $content = null, $tag = '' );
 }
