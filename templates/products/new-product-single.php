@@ -434,7 +434,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
 
                             <!--hidden input for Firefox issue-->
                             <input type="hidden" name="dokan_update_product" value="<?php esc_attr_e( 'Save Product', 'dokan-lite' ); ?>"/>
-                            <input type="submit" name="dokan_update_product" class="dokan-btn dokan-btn-theme dokan-btn-lg dokan-right" value="<?php esc_attr_e( 'Save Product', 'dokan-lite' ); ?>"/>
+                            <input type="submit" name="dokan_update_product" id="publish" class="dokan-btn dokan-btn-theme dokan-btn-lg dokan-right" value="<?php esc_attr_e( 'Save Product', 'dokan-lite' ); ?>"/>
                             <div class="dokan-clearfix"></div>
                         </form>
                     <?php } else { ?>
