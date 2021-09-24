@@ -427,8 +427,14 @@ class Products {
         }
 
         if ( isset( $postdata['product_tag'] ) ) {
-            // Filter of maximun a vendor can add tags
-            $maximum_tags_select_length = apply_filters( 'dokan_maximum_tags_select_length', -1 );
+            /**
+             * Filter of maximun a vendor can add tags.
+             *
+             * @since 3.3.7
+             *
+             * @param integer default -1
+             */
+            $maximum_tags_select_length = apply_filters( 'dokan_product_tags_select_max_length', -1 );
 
             // Setting limitation for how many product tags that vendor can input.
             if ( $maximum_tags_select_length !== -1 && count( $postdata['product_tag'] ) !== 0 && count( $postdata['product_tag'] ) > $maximum_tags_select_length ) {

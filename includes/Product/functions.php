@@ -98,11 +98,18 @@ function dokan_save_product( $args ) {
     }
 
     if ( isset( $data['product_tag'] ) ) {
-        // Filter of maximun a vendor can add tags
-        $maximum_tags_select_length = apply_filters( 'dokan_maximum_tags_select_length', -1 );
+        /**
+         * Filter of maximun a vendor can add tags.
+         *
+         * @since 3.3.7
+         *
+         * @param integer default -1
+         */
+        $maximum_tags_select_length = apply_filters( 'dokan_product_tags_select_max_length', -1 );
 
         // Setting limitation for how many product tags that vendor can input.
         if ( $maximum_tags_select_length !== -1 && count( $data['product_tag'] ) !== 0 && count( $data['product_tag'] ) > $maximum_tags_select_length ) {
+            /* translators: %s: maximum tag length */
             return new WP_Error( 'tags-limit', sprintf( __( 'You can only select %s tags', 'dokan-lite' ), number_format_i18n( $maximum_tags_select_length ) ) );
         }
 
