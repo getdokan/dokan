@@ -335,7 +335,7 @@ jQuery(function($) {
             do_refund: async function() {
                 dokan_seller_meta_boxes_order_items.block();
                 
-                let isRefund = await dokan_sweet_alert( dokan_refund.i18n_do_refund, { action : 'confirm' }  );
+                const isRefund = await dokan_sweet_alert( dokan_refund.i18n_do_refund, { action : 'confirm' }  );
 
                 if ( 'undefined' !== isRefund && isRefund.isConfirmed ) {
                     var refund_amount = $( 'input#refund_amount' ).val();

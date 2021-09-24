@@ -519,7 +519,7 @@
                 evt.preventDefault()
                 evt.stopPropagation();
 
-                let isRemoved = await dokan_sweet_alert( dokan.remove_attribute, { action : 'confirm' } );
+                const isRemoved = await dokan_sweet_alert( dokan.remove_attribute, { action : 'confirm' } );
                 if ( 'undefined' !== isRemoved && isRemoved.isConfirmed  ) {
                     var $parent = $( this ).closest('li.product-attribute-list');
 

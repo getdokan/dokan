@@ -44,10 +44,12 @@ function dokan_get_i18n_date_format( format = true ) {
 /**
  * Dokan Sweet Alert
  *
- * @since DOKAN_LITE
+ * @since 3.2.11
  *
  * @param {string} message The event message for notification
- * @param {object} [options] Configuration of sweet alert.
+ * @param {object} [options] Configuration of sweet alert parameter like
+ *                           action - which operation should be done
+ *                           html - add extra html content
  *
  * @return {Promise | bool} Return Promise on success, and false on failure
  */
