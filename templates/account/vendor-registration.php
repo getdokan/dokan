@@ -1,4 +1,4 @@
-<?php wc_print_notices(); ?>
+<?php function_exists( 'wc_print_notices' ) ? wc_print_notices() : ''; ?>
 
 <form id="dokan-vendor-register" method="post" class="register dokan-vendor-register">
 

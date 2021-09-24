@@ -443,7 +443,7 @@
         $(function() {
             dokan_address_select.init();
 
-            $('#setting_phone').keydown(function(e) {
+            $('#setting_phone').on( 'keydown', function(e) {
                 // Allow: backspace, delete, tab, escape, enter and .
                 if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 91, 107, 109, 110, 187, 189, 190]) !== -1 ||
                      // Allow: Ctrl+A

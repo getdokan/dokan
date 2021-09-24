@@ -27,6 +27,7 @@ class Rewrites {
         add_filter( 'template_include', [ $this, 'store_toc_template' ], 99 );
         add_filter( 'query_vars', [ $this, 'register_query_var' ] );
         add_filter( 'woocommerce_get_breadcrumb', [ $this, 'store_page_breadcrumb' ] );
+        add_action( 'pre_user_query', [ $this, 'random_store_query' ] );
     }
 
     /**
@@ -503,5 +504,42 @@ class Rewrites {
             $sql .= " LEFT JOIN {$wpdb->wc_product_meta_lookup} wc_product_meta_lookup ON $wpdb->posts.ID = wc_product_meta_lookup.product_id ";
         }
         return $sql;
+    }
+
+    /**
+     * Store listing page make order by random
+     *
+     * @since DOKAN_PRO_SINCE
+     *
+     * @param WP_User_Query
+     *
+     * @return WP_User_Query
+     */
+    public function random_store_query( $query ) {
+        if ( ! dokan_is_store_listing() ) {
+            return $query;
+        }
+
+        if ( 'random' === $query->query_vars['orderby'] ) {
+            $order_by = [
+                'ID',
+                'user_login, ID',
+                'user_email',
+                'user_registered, ID',
+                'user_nicename, ID',
+            ];
+
+            $selected_orderby = get_transient( 'dokan_store_listing_random_orderby' );
+
+            if ( false === $selected_orderby ) {
+                $selected_orderby = $order_by[ array_rand( $order_by, 1 ) ];
+
+                set_transient( 'dokan_store_listing_random_orderby', $selected_orderby, MINUTE_IN_SECONDS * 10 );
+            }
+
+            $query->query_orderby = "ORDER BY $selected_orderby";
+        }
+
+        return $query;
     }
 }

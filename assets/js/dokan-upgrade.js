@@ -1,6 +1,6 @@
 dokanWebpack([3],{
 
-/***/ 23:
+/***/ 17:
 /***/ (function(module, exports) {
 
 module.exports = jQuery;
@@ -383,7 +383,7 @@ var sprintf = Jed.sprintf;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_i18n__ = __webpack_require__(40);
 //

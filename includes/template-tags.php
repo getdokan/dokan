@@ -153,7 +153,7 @@ function dokan_product_dashboard_errors() {
             dokan_get_template_part(
                 'global/dokan-success', '', array(
                     'deleted' => true,
-                    'message' => __( 'Product succesfully deleted', 'dokan-lite' ),
+                    'message' => __( 'Product successfully deleted', 'dokan-lite' ),
                 )
             );
             break;
@@ -584,41 +584,24 @@ if ( ! function_exists( 'dokan_store_category_menu' ) ) :
      * Store category menu for a store
      *
      * @param  int $seller_id
+     *
+     * @since 3.2.11 rewritten whole function
+     *
      * @return void
      */
     function dokan_store_category_menu( $seller_id, $title = '' ) {
         ?>
     <div id="cat-drop-stack" class="store-cat-stack-dokan">
         <?php
-        $vendor      = dokan()->vendor->get( get_query_var( 'author' ) );
-        $vendor_id   = $vendor->get_id();
-        $products    = $vendor->get_products();
-        $product_ids = [];
-        foreach ( $products->posts as $product ) {
-            array_push( $product_ids, $product->ID );
+        $seller_id = empty( $seller_id ) ? get_query_var( 'author' ) : $seller_id;
+        $vendor    = dokan()->vendor->get( $seller_id );
+        if ( $vendor instanceof \WeDevs\Dokan\Vendor\Vendor ) {
+            $categories = $vendor->get_store_categories();
+            $walker = new \WeDevs\Dokan\Walkers\StoreCategory( $seller_id );
+            echo '<ul>';
+            echo call_user_func_array( array( &$walker, 'walk' ), array( $categories, 0, array() ) ); //phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+            echo '</ul>';
         }
-        // hold all the terms
-        $all_terms = [];
-        foreach ( $product_ids as $product_id ) {
-            $terms = get_the_terms( $product_id, 'product_cat' );
-
-            //allow when there is terms and do not have any wp_errors
-            if ( $terms && ! is_wp_error( $terms ) ) {
-                foreach ( $terms as $term ) {
-                    array_push( $all_terms, $term );
-                }
-            }
-        }
-        // hold unique categoreis
-        $categories = [];
-        foreach ( $all_terms as $term ) {
-            $categories[ serialize( $term ) ] = $term;
-        }
-        $categories = array_values( $categories );
-        $walker = new \WeDevs\Dokan\Walkers\StoreCategory( $seller_id );
-        echo '<ul>';
-        echo call_user_func_array( array( &$walker, 'walk' ), array( $categories, 0, array() ) ); //phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
-        echo '</ul>';
         ?>
     </div>
         <?php

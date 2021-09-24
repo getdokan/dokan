@@ -281,7 +281,7 @@ function dokan_count_stock_posts( $post_type, $user_id, $stock_type ) {
         if ( ! $results ) {
             $results = $wpdb->get_results(
                 $wpdb->prepare(
-                    "SELECT p.post_status, COUNT( * ) AS num_posts 
+                    "SELECT p.post_status, COUNT( * ) AS num_posts
                     FROM {$wpdb->prefix}posts as p INNER JOIN {$wpdb->prefix}postmeta as pm ON p.ID = pm.post_id
                     WHERE p.post_type = %s
                     AND p.post_author = %d
@@ -2235,25 +2235,27 @@ function dokan_get_processing_time_value( $index ) {
  * Dokan get vendor order details by order ID
  *
  * @param int $order
- * @param int $vendor_id
+ * @param int|null $vendor_id, will remove this parameter in future
  *
- * @return array
+ * @since 3.2.11 rewritten entire function
+ *
+ * @return array will return empty array in case order has suborders
  */
-function dokan_get_vendor_order_details( $order_id, $vendor_id ) {
+function dokan_get_vendor_order_details( $order_id, $vendor_id = null ) {
     $order      = wc_get_order( $order_id );
-    $info       = [];
     $order_info = [];
 
-    foreach ( $order->get_items( 'line_item' ) as $item ) {
-        $product_id  = $item->get_product()->get_id();
-        $author_id   = get_post_field( 'post_author', $product_id );
+    if ( ! $order instanceof WC_Abstract_Order || $order->get_meta( 'has_sub_order' ) ) {
+        return apply_filters( 'dokan_get_vendor_order_details', $order_info, $order_id, $vendor_id );
+    }
 
-        if ( $vendor_id == $author_id ) {
-            $info['product']  = $item['name'];
-            $info['quantity'] = $item['quantity'];
-            $info['total']    = $item['total'];
-            array_push( $order_info, $info );
-        }
+    foreach ( $order->get_items( 'line_item' ) as $item ) {
+        $info = [
+            'product'  => $item['name'],
+            'quantity' => $item['quantity'],
+            'total'    => $item['total'],
+        ];
+        array_push( $order_info, $info );
     }
 
     return apply_filters( 'dokan_get_vendor_order_details', $order_info, $order_id, $vendor_id );
@@ -2742,7 +2744,7 @@ function dokan_get_category_wise_seller_commission( $product_id, $category_id = 
     }
 
     if ( ! empty( $category_commision ) ) {
-        return (float) $category_commision;
+        return wc_format_decimal( $category_commision );
     }
 
     return 0;
@@ -2822,7 +2824,6 @@ add_action( 'dokan_checkout_update_order_meta', 'dokan_cache_reset_seller_order_
 add_action( 'woocommerce_order_status_changed', 'dokan_cache_reset_order_data_on_status', 10, 4 );
 add_action( 'dokan_new_product_added', 'dokan_cache_clear_seller_product_data', 20, 2 );
 add_action( 'dokan_product_updated', 'dokan_cache_clear_seller_product_data', 20 );
-add_action( 'delete_post', 'dokan_cache_clear_deleted_product', 20 );
 
 /**
  * Reset cache group related to seller orders
@@ -2846,20 +2847,6 @@ function dokan_cache_clear_seller_product_data( $product_id, $post_data = [] ) {
     dokan_cache_clear_group( 'dokan_seller_product_data_' . $seller_id );
     dokan_cache_clear_group( 'dokan_cache_seller_product_data_' . $seller_id );
     dokan_cache_clear_group( 'dokan_cache_seller_product_stock_data_' . $seller_id );
-    delete_transient( 'dokan-store-category-' . $seller_id );
-}
-
-/**
- * Reset the cache group for store category when deleted
- *
- * @param int $post_id
- *
- * @return void
- */
-function dokan_cache_clear_deleted_product( $post_id ) {
-    $seller_id = get_post_field( 'post_author', $post_id );
-
-    delete_transient( 'dokan-store-category-' . $seller_id );
 }
 
 /**
