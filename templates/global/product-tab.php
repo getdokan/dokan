@@ -13,7 +13,7 @@
 <ul class="list-unstyled">
     <?php do_action( 'dokan_product_seller_tab_start', $author, $store_info ); ?>
 
-    <?php if ( !empty( $store_info['store_name'] ) ) : ?>
+    <?php if ( ! empty( $store_info['store_name'] ) ) : ?>
         <li class="store-name">
             <span><?php esc_html_e( 'Store Name:', 'dokan-lite' ); ?></span>
             <span class="details">
