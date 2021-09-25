@@ -92,6 +92,38 @@ class AdminBar {
     }
 
     /**
+     * Get admin menus data for dokan.
+     *
+     * @since 3.2.13
+     *
+     * @return array
+     */
+    public function get_dokan_admin_menus() {
+        $menus = [
+            [
+                'parent' => 'site-name',
+				'id'     => 'view-store',
+				'title'  => __( 'Visit Shop', 'dokan-lite' ),
+				'href'   => wc_get_page_permalink( 'shop' ),
+            ],
+            [
+                'parent' => 'site-name',
+                'id'     => 'view-dokan-stores',
+                'title'  => __( 'Visit Dokan Stores', 'dokan-lite' ),
+                'href'   => home_url( '/store-listing' ),
+            ],
+            [
+                'parent' => 'site-name',
+                'id'     => 'view-dashboard',
+                'title'  => __( 'Visit Vendor Dashboard', 'dokan-lite' ),
+                'href'   => dokan_get_navigation_url(),
+            ],
+        ];
+
+        return $menus;
+    }
+
+    /**
      * Show visit vendor dashboard
      *
      * @param WP_Admin_Bar $wp_admin_bar
@@ -108,19 +140,22 @@ class AdminBar {
             return;
         }
 
-        $dashboard = dokan_get_navigation_url();
+        $menus = $this->get_dokan_admin_menus();
 
-        if ( ! $dashboard ) {
-            return;
-        }
+        // Show wp admin menus in admin bar here, if menu URL.
+        foreach ( $menus as $menu ) :
+            if ( '' === $menu['href'] ) :
+                return;
+            endif;
 
-        $wp_admin_bar->add_node(
-            [
-                'parent' => 'site-name',
-                'id'     => 'view-dashboard',
-                'title'  => __( 'Visit Vendor Dashboard', 'dokan-lite' ),
-                'href'   => $dashboard,
-            ]
-        );
+            $wp_admin_bar->add_node(
+                [
+                    'parent' => $menu['parent'],
+                    'id'     => $menu['id'],
+                    'title'  => $menu['title'],
+                    'href'   => $menu['href'],
+                ]
+            );
+        endforeach;
     }
 }
