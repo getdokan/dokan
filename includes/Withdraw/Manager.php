@@ -242,7 +242,7 @@ class Manager {
                 $result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} WHERE user_id = %d AND status = %d LIMIT %d, %d", $user_id, $status, $offset, $limit ) );
             }
 
-            wp_cache_set( $cache_key, $result, $cache_group );
+            dokan()->cache->set_cache( $cache_key, $result, $cache_group );
             dokan()->cache->update_group( $cache_key, $cache_group );
         }
 

@@ -41,7 +41,7 @@ class Manager {
         if ( false === $products ) {
             $products = new WP_Query( apply_filters( 'dokan_all_products_query', $args ) );
 
-            wp_cache_set( $cache_key, $products, $cache_group );
+            dokan()->cache->set_cache( $cache_key, $products, $cache_group );
             dokan()->cache->update_group( $cache_key, $cache_group );
         }
 

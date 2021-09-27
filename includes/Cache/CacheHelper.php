@@ -12,9 +12,11 @@ use WeDevs\Dokan\Withdraw\Cache as WithdrawCache;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * CacheHelper class
+ * Cache Helper class.
  *
- * Manage all of the caches of Dokan and handles it beautifully
+ * Manage all of the caches of Dokan and handles caches beautifully.
+ *
+ * @since DOKAN_LITE_SINCE
  */
 class CacheHelper extends WC_Cache_Helper {
 
@@ -34,47 +36,6 @@ class CacheHelper extends WC_Cache_Helper {
         $this->container['order']    = new OrderCache();
         $this->container['vendor']   = new VendorCache();
         $this->container['withdraw'] = new WithdrawCache();
-    }
-
-    /**
-     * Get prefix for use with wp_cache_set. Allows all cache in a group to be invalidated at once.
-     *
-     * @since DOKAN_LITE_SINCE
-     *
-     * @param  string $group Group of cache to get.
-     * @return string
-     */
-    public static function get_cache_prefix( $group ) {
-        $prefix = wp_cache_get( 'dokan_' . $group . '_cache_prefix', $group );
-
-        if ( false === $prefix ) {
-            $prefix = microtime();
-            wp_cache_set( 'dokan_' . $group . '_cache_prefix', $prefix, $group );
-        }
-
-        return 'dokan_cache_' . $prefix . '_';
-    }
-
-    /**
-     * Increment group cache prefix (invalidates cache).
-     *
-     * @since DOKAN_LITE_SINCE
-     *
-     * @param string $group Group of cache to clear.
-     */
-    public static function incr_cache_prefix( $group ) {
-        self::invalidate_cache_group( $group );
-    }
-
-    /**
-     * Invalidate cache group.
-     *
-     * @since DOKAN_LITE_SINCE
-     *
-     * @param string $group Group of cache to clear
-     */
-    public static function invalidate_cache_group( $group ) {
-        wp_cache_set( 'dokan_' . $group . '_cache_prefix', microtime(), $group );
     }
 
     /**
@@ -110,13 +71,32 @@ class CacheHelper extends WC_Cache_Helper {
 		return $transient_value;
 	}
 
+    /**
+     * Set Cache for Dokan.
+     *
+     * Update the cache for dokan. We've added some defaults to set the cache.
+     * Like, We set default expiry time, cache group to remove some redundant assign of those data.
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param string $key
+     * @param mixed  $data
+     * @param string $group  eg: `dokan`, `dokan_seller_data_[seller_id]`
+     * @param int    $expire eg: default: `DAY_IN_SECONDS`, `3600`
+     *
+     * @return void
+     */
+    public static function set_cache( $key, $data, $group, $expire = DAY_IN_SECONDS ) {
+		wp_cache_set( $key, $data, $group, $expire );
+	}
 
     /**
-     * Get Transient value from a key both From Object & Normal data
+     * Get Transient value from a key.
      *
+     * It applies for oth from Object & Normal data
      * If needs only key value, just pass `$transient_key`
      * If the transient value is an object, and need to get the params of that object
-     * then pass the second args `$param`
+     * then pass the second args `$param`.
      *
      * Examples:
      *
@@ -158,7 +138,7 @@ class CacheHelper extends WC_Cache_Helper {
 	}
 
     /**
-     * Set Transient value for a key
+     * Set Transient value for a key.
      *
      * If needs to set only the key value, then pass only the first transient key
      * If needs to update/insert the transient value on that object's param, pass params key also
@@ -207,9 +187,13 @@ class CacheHelper extends WC_Cache_Helper {
 	}
 
     /**
-     * When the transient version increases, this is used to remove all past transients to avoid filling the DB.
+     * Delete Transient Version.
      *
-     * Note: this only works on transients appended with the transient version, and when object caching is not being used.
+     * When the transient version increases, this is used to remove all past transients
+     * to avoid filling the DB.
+     *
+     * Note: this only works on transients appended with the transient version, and
+     * when object caching is not being used.
      *
      * @since DOKAN_LITE_SINCE
      *
@@ -235,7 +219,7 @@ class CacheHelper extends WC_Cache_Helper {
     }
 
     /**
-     * Bulk clear cache values by group name
+     * Bulk clear cache values by group.
      *
      * @since DOKAN_LITE_SINCE
      *
@@ -257,7 +241,7 @@ class CacheHelper extends WC_Cache_Helper {
     }
 
     /**
-     * Keep record of keys by group name
+     * Update keys by group name.
      *
      * @since DOKAN_LITE_SINCE
      *

@@ -707,7 +707,7 @@ class Commission {
         }
 
         $earning = 'seller' === $context ? (float) $result->net_amount : (float) $result->order_total - (float) $result->net_amount;
-        wp_cache_set( $cache_key, $earning );
+        dokan()->cache->set_cache( $cache_key, $earning );
 
         return $earning;
     }

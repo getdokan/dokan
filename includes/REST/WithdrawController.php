@@ -275,7 +275,7 @@ class WithdrawController extends WP_REST_Controller {
         if ( false === $withdraws ) {
             $withdraws = dokan()->withdraw->all( $args );
 
-            wp_cache_set( $cache_key, $withdraws, $cache_group );
+            dokan()->cache->set_cache( $cache_key, $withdraws, $cache_group );
             dokan()->cache->update_group( $cache_key , $cache_group );
         }
 

@@ -5,11 +5,13 @@ namespace WeDevs\Dokan\Withdraw;
 use WeDevs\Dokan\Cache\CacheHelper;
 
 /**
- * Withdraw Cache class
+ * Withdraw Cache class.
+ *
+ * Manage all of the caches for vendor and admin withdrawal functionalities.
  *
  * @since DOKAN_LITE_SINCE
  *
- * Manage all of the caches for vendor
+ * @see \WeDevs\Dokan\Cache\CacheHelper
  */
 class Cache extends CacheHelper {
 
@@ -29,7 +31,7 @@ class Cache extends CacheHelper {
     }
 
     /**
-     * Get Withdraw Cache Group Name For Admin
+     * Get Withdraw Cache Group Name For Admin.
      *
      * @since DOKAN_LITE_SINCE
      *
@@ -40,7 +42,7 @@ class Cache extends CacheHelper {
     }
 
     /**
-     * Get Withdraw Cache Group Name
+     * Get Withdraw Cache Group Name for Vendor.
      *
      * @since DOKAN_LITE_SINCE
      *
@@ -51,19 +53,18 @@ class Cache extends CacheHelper {
     }
 
     /**
-     * Clear Withdraw Cache Group for Admin Withdraw List
+     * Clear Withdraw Cache Group for Admin.
      *
      * @since DOKAN_LITE_SINCE
      *
      * @return void
      */
-    public function clear_admin_cache_group()
-    {
+    public function clear_admin_cache_group() {
         self::clear_group( $this->cache_group_admin );
     }
 
     /**
-     * Clear Withdraw Cache Group for Seller Withdraw List
+     * Clear Withdraw Cache Group for Seller.
      *
      * @since DOKAN_LITE_SINCE
      *
@@ -71,8 +72,7 @@ class Cache extends CacheHelper {
      *
      * @return void
      */
-    public function clear_seller_cache_group( $seller_id = null )
-    {
+    public function clear_seller_cache_group( $seller_id = null ) {
         if ( ! empty ( $seller_id ) ) {
             $this->seller_id = $seller_id;
         }
@@ -81,13 +81,13 @@ class Cache extends CacheHelper {
     }
 
     /**
-     * Clear Cache After Seller Request
+     * Clear Cache After Seller Withdraw request.
      *
      * @since DOKAN_LITE_SINCE
      *
-     * @param  int     $seller_id
-     * @param  float   $amount
-     * @param  string  $method
+     * @param  int    $seller_id
+     * @param  float  $amount
+     * @param  string $method
      *
      * @return void
      */
@@ -97,7 +97,7 @@ class Cache extends CacheHelper {
     }
 
     /**
-     * Clear Cache After Update Withdraws from admin
+     * Clear Cache After Update Withdraws by admin.
      *
      * @since DOKAN_LITE_SINCE
      *
@@ -109,7 +109,7 @@ class Cache extends CacheHelper {
     }
 
     /**
-     * Delete seller balance cache after a withdraw update
+     * Delete seller balance cache after a withdraw update.
      *
      * @since DOKAN_LITE_SINCE
      *
@@ -127,7 +127,7 @@ class Cache extends CacheHelper {
     }
 
     /**
-     * Update vendor balance after approve a request
+     * Update vendor balance after approve a request.
      *
      * @since DOKAN_LITE_SINCE
      *

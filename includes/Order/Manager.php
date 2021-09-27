@@ -69,7 +69,7 @@ class Manager {
                 }, $orders
             );
 
-            wp_cache_set( $cache_key, $orders, $cache_group );
+            dokan()->cache->set_cache( $cache_key, $orders, $cache_group );
             dokan()->cache->update_group( $cache_key, $cache_group );
         }
 

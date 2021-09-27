@@ -255,7 +255,7 @@ function dokan_get_withdraw_count( $user_id = null ) {
             }
         }
 
-        wp_cache_set( $cache_key, $counts, $cache_group );
+        dokan()->cache->set_cache( $cache_key, $counts, $cache_group );
         dokan()->cache->update_group( $cache_key , $cache_group );
     }
 

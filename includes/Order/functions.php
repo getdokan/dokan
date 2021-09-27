@@ -92,7 +92,7 @@ function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = nul
             )
         );
 
-        wp_cache_set( $cache_key, $orders, $cache_group );
+        dokan()->cache->set_cache( $cache_key, $orders, $cache_group );
         dokan()->cache->update_group( $cache_key, $cache_group );
     }
 
@@ -146,7 +146,7 @@ function dokan_get_seller_orders_by_date( $start_date, $end_date, $seller_id = f
             )
         );
 
-        wp_cache_set( $cache_key, $orders, $cache_group, 3600 * 2 );
+        dokan()->cache->set_cache( $cache_key, $orders, $cache_group, 3600 * 2 );
         dokan()->cache->update_group( $cache_key, $cache_group );
     }
 
@@ -307,7 +307,7 @@ function dokan_count_orders( $user_id ) {
         }
 
         $counts = (object) $counts;
-        wp_cache_set( $cache_key, $counts, $cache_group );
+        dokan()->cache->set_cache( $cache_key, $counts, $cache_group );
         dokan()->cache->update_group( $cache_key, $cache_group );
     }
 
@@ -452,7 +452,7 @@ function dokan_get_seller_id_by_order( $order_id ) {
                 $wpdb->prepare( "SELECT seller_id FROM {$wpdb->prefix}dokan_orders WHERE order_id = %d LIMIT 1", $order_id )
             )
         );
-        wp_cache_set( $cache_key, $seller_id, $cache_group );
+        dokan()->cache->set_cache( $cache_key, $seller_id, $cache_group );
     }
 
     if ( ! empty( $seller_id ) ) {

@@ -5,11 +5,13 @@ namespace WeDevs\Dokan\Order;
 use WeDevs\Dokan\Cache\CacheHelper;
 
 /**
- * Order Cache class
+ * Order Cache class.
+ *
+ * Manage all caches for order related functionalities.
  *
  * @since DOKAN_LITE_SINCE
  *
- * Manage all caches for orders
+ * @see \WeDevs\Dokan\Cache\CacheHelper
  */
 class Cache extends CacheHelper {
 
@@ -21,7 +23,7 @@ class Cache extends CacheHelper {
     }
 
     /**
-     * Reset cache group related to seller orders
+     * Reset cache group related to seller orders.
      *
      * @since DOKAN_LITE_SINCE
      *
@@ -32,10 +34,13 @@ class Cache extends CacheHelper {
      */
     public static function reset_seller_order_data( $order_id, $seller_id ) {
         self::clear_group( 'dokan_seller_data_' . $seller_id );
+
+        // Remove cached seller_id after an woocommerce order
+        wp_cache_delete( 'dokan_get_seller_id_' . $order_id, 'dokan_get_seller_id_by_order' );
     }
 
     /**
-     * Reset cache data on update woocomerce order
+     * Reset cache data on update woocomerce order.
      *
      * @since DOKAN_LITE_SINCE
      *

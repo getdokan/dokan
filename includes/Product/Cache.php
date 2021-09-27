@@ -5,30 +5,32 @@ namespace WeDevs\Dokan\Product;
 use WeDevs\Dokan\Cache\CacheHelper;
 
 /**
- * Product Cache class
+ * Product Cache class.
+ *
+ * Manage all caches for products.
  *
  * @since DOKAN_LITE_SINCE
  *
- * Manage all caches for products
+ * @see \WeDevs\Dokan\Cache\CacheHelper
  */
 class Cache extends CacheHelper {
 
     public function __construct() {
-        add_action( 'dokan_new_product_added', [ $this, 'dokan_cache_clear_seller_product_data' ], 20, 2 );
-        add_action( 'dokan_product_updated', [ $this, 'dokan_cache_clear_seller_product_data' ], 20 );
-        add_action( 'dokan_product_updated', [ $this, 'dokan_clear_product_caches' ], 20 );
-        add_action( 'dokan_product_duplicate_after_save', [ $this, 'dokan_cache_clear_seller_product_data' ], 20, 3 );
-        add_action( 'dokan_product_deleted', [ $this, 'dokan_cache_clear_seller_product_data' ], 20 );
-        add_action( 'dokan_bulk_product_status_change', [ $this, 'dokan_bulk_product_status_change'], 20, 2 );
-        add_action( 'dokan_bulk_product_delete', [ $this, 'dokan_cache_clear_seller_product_data'], 20 );
+        add_action( 'dokan_new_product_added', [ $this, 'clear_seller_product_caches' ], 20, 2 );
+        add_action( 'dokan_product_updated', [ $this, 'clear_seller_product_caches' ], 20 );
+        add_action( 'dokan_product_updated', [ $this, 'clear_single_product_caches' ], 20 );
+        add_action( 'dokan_product_duplicate_after_save', [ $this, 'clear_seller_product_caches' ], 20, 3 );
+        add_action( 'dokan_product_deleted', [ $this, 'clear_seller_product_caches' ], 20 );
+        add_action( 'dokan_bulk_product_status_change', [ $this, 'cache_clear_bulk_product_status_change'], 20, 2 );
+        add_action( 'dokan_bulk_product_delete', [ $this, 'clear_seller_product_caches'], 20 );
 
-        add_action( 'woocommerce_product_duplicate', [ $this, 'dokan_cache_clear_seller_product_data' ], 20 );
-        add_action( 'woocommerce_update_product', [ $this, 'dokan_cache_clear_seller_product_data' ], 20 );
-        add_action( 'woocommerce_product_import_inserted_product_object', [ $this, 'dokan_cache_clear_seller_product_data' ], 20 );
+        add_action( 'woocommerce_product_duplicate', [ $this, 'clear_seller_product_caches' ], 20 );
+        add_action( 'woocommerce_update_product', [ $this, 'clear_seller_product_caches' ], 20 );
+        add_action( 'woocommerce_product_import_inserted_product_object', [ $this, 'clear_seller_product_caches' ], 20 );
     }
 
     /**
-     * Reset cache group related to seller products
+     * Reset cache group related to seller products.
      *
      * @since DOKAN_LITE_SINCE
      *
@@ -37,7 +39,7 @@ class Cache extends CacheHelper {
      *
      * @return void
      */
-    public static function dokan_cache_clear_seller_product_data( $product_id, $post_data = [] ) {
+    public static function clear_seller_product_caches( $product_id, $post_data = [] ) {
         $seller_id = dokan_get_current_user_id();
 
         self::clear_group( 'dokan_cache_seller_product_data_' . $seller_id );
@@ -46,7 +48,7 @@ class Cache extends CacheHelper {
 
 
     /**
-     * Dokan clear product caches.
+     * Clear Single Product Caches.
      *
      * We'll be calling `WC_Product_Data_Store_CPT::clear_caches()` to clear product caches.
      *
@@ -56,7 +58,7 @@ class Cache extends CacheHelper {
      *
      * @return void
      */
-    public static function dokan_clear_product_caches( $product ) {
+    public static function clear_single_product_caches( $product ) {
         if ( ! $product instanceof \WC_Product ) {
             $product = wc_get_product( $product );
         }
@@ -79,7 +81,7 @@ class Cache extends CacheHelper {
     }
 
     /**
-     * Bulk Product Status Change
+     * Clear Cache on bulk product status change.
      *
      * @since DOKAN_LITE_SINCE
      *
@@ -88,11 +90,11 @@ class Cache extends CacheHelper {
      *
      * @return void
      */
-    public function dokan_bulk_product_status_change( $status, $products ) {
+    public function cache_clear_bulk_product_status_change( $status, $products ) {
         foreach ( $products  as $product ) {
-            self::dokan_clear_product_caches( $product );
+            self::clear_single_product_caches( $product );
         }
 
-        self::dokan_cache_clear_seller_product_data( null, [] );
+        self::clear_seller_product_caches( null, [] );
     }
 }
