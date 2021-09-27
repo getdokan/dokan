@@ -14,6 +14,13 @@ use WC_Email;
  */
 class ContactSeller extends WC_Email {
 
+    /**
+     * Reply email
+     *
+     * DOKAN_LITE_SINCE
+     *
+     * @var string
+     */
     private $reply_to;
 
     /**
