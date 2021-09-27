@@ -249,7 +249,6 @@ class Installer {
         $this->create_sync_table();
         $this->create_refund_table();
         $this->create_vendor_balance_table();
-        $this->create_vendor_summary_table();
     }
 
     /**
@@ -371,36 +370,6 @@ class Installer {
                `trn_date` timestamp NOT NULL,
                `balance_date` timestamp NOT NULL,
               PRIMARY KEY (id)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
-
-        dbDelta( $sql );
-    }
-
-    /**
-     * Create vendor-summary table
-     *
-     * @since DOKAN_LITE_SINCE
-     *
-     * @return void
-     */
-    public function create_vendor_summary_table() {
-        global $wpdb;
-
-        $sql = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}dokan_vendor_summary` (
-               `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-               `vendor_id` bigint(20) unsigned NOT NULL,
-               `sales_amount` decimal(19,4) NOT NULL DEFAULT 0,
-               `sales_earning` decimal(19,4) NOT NULL DEFAULT 0,
-               `balance` decimal(19,4) NOT NULL DEFAULT 0,
-               `pageview_count` bigint(20) unsigned NOT NULL DEFAULT 0,
-               `order_counts` varchar(130) NULL,
-               `review_counts` varchar(100) NULL,
-               `product_counts` varchar(100) NULL,
-               `expired_at` timestamp NOT NULL,
-               `updated_at` timestamp NOT NULL,
-              PRIMARY KEY  (id),
-              UNIQUE KEY vendor_id (vendor_id),
-              KEY expired_at (expired_at)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
 
         dbDelta( $sql );
