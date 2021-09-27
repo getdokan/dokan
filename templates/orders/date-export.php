@@ -41,17 +41,19 @@ $order_status = isset( $_GET['order_status'] ) ? sanitize_key( $_GET['order_stat
         </div>
     </form>
 
-    <form action="" method="POST" class="dokan-right">
-        <div class="dokan-form-group">
-            <?php
-                wp_nonce_field( 'dokan_vendor_order_export_action', 'dokan_vendor_order_export_nonce' );
-            ?>
-            <input type="submit" name="dokan_order_export_all"  class="dokan-btn dokan-btn-sm dokan-btn-danger dokan-btn-theme" value="<?php esc_attr_e( 'Export All', 'dokan-lite' ); ?>">
-            <input type="submit" name="dokan_order_export_filtered"  class="dokan-btn dokan-btn-sm dokan-btn-danger dokan-btn-theme" value="<?php esc_attr_e( 'Export Filtered', 'dokan-lite' ); ?>">
-            <input type="hidden" name="order_date" value="<?php echo esc_attr( $filter_date ); ?>">
-            <input type="hidden" name="order_status" value="<?php echo esc_attr( $order_status ); ?>">
-        </div>
-    </form>
+    <?php if ( current_user_can( 'seller' ) || current_user_can( 'dokan_export_order' ) ) : ?>
+        <form action="" method="POST" class="dokan-right">
+            <div class="dokan-form-group">
+                <?php
+                    wp_nonce_field( 'dokan_vendor_order_export_action', 'dokan_vendor_order_export_nonce' );
+                ?>
+                <input type="submit" name="dokan_order_export_all"  class="dokan-btn dokan-btn-sm dokan-btn-danger dokan-btn-theme" value="<?php esc_attr_e( 'Export All', 'dokan-lite' ); ?>">
+                <input type="submit" name="dokan_order_export_filtered"  class="dokan-btn dokan-btn-sm dokan-btn-danger dokan-btn-theme" value="<?php esc_attr_e( 'Export Filtered', 'dokan-lite' ); ?>">
+                <input type="hidden" name="order_date" value="<?php echo esc_attr( $filter_date ); ?>">
+                <input type="hidden" name="order_status" value="<?php echo esc_attr( $order_status ); ?>">
+            </div>
+        </form>
+    <?php endif; ?>
 
     <div class="dokan-clearfix"></div>
 </div>
