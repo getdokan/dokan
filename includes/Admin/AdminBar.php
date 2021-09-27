@@ -102,9 +102,9 @@ class AdminBar {
         $menus = [
             [
                 'parent' => 'site-name',
-				'id'     => 'view-store',
-				'title'  => __( 'Visit Shop', 'dokan-lite' ),
-				'href'   => wc_get_page_permalink( 'shop' ),
+                'id'     => 'view-store',
+                'title'  => __( 'Visit Shop', 'dokan-lite' ),
+                'href'   => wc_get_page_permalink( 'shop' ),
             ],
             [
                 'parent' => 'site-name',
