@@ -109,7 +109,7 @@ class AdminBar {
             [
                 'parent' => 'site-name',
                 'id'     => 'view-dokan-stores',
-                'title'  => __( 'Visit Dokan Stores', 'dokan-lite' ),
+                'title'  => __( 'Visit Vendor Stores', 'dokan-lite' ),
                 'href'   => home_url( '/store-listing' ),
             ],
             [
