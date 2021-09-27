@@ -109,12 +109,12 @@ class ContactSeller extends WC_Email {
         ob_start();
         wc_get_template(
             $this->template_html, array(
-            'email_heading' => $this->get_heading(),
-            'sent_to_admin' => true,
-            'plain_text'    => false,
-            'email'         => $this,
-            'data'          => $this->replace,
-        ), 'dokan/', $this->template_base
+                'email_heading' => $this->get_heading(),
+                'sent_to_admin' => true,
+                'plain_text'    => false,
+                'email'         => $this,
+                'data'          => $this->replace,
+            ), 'dokan/', $this->template_base
         );
         return ob_get_clean();
     }
@@ -129,12 +129,12 @@ class ContactSeller extends WC_Email {
         ob_start();
         wc_get_template(
             $this->template_html, array(
-            'email_heading' => $this->get_heading(),
-            'sent_to_admin' => true,
-            'plain_text'    => true,
-            'email'         => $this,
-            'data'          => $this->replace,
-        ), 'dokan/', $this->template_base
+                'email_heading' => $this->get_heading(),
+                'sent_to_admin' => true,
+                'plain_text'    => true,
+                'email'         => $this,
+                'data'          => $this->replace,
+            ), 'dokan/', $this->template_base
         );
         return ob_get_clean();
     }
