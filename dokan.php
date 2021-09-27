@@ -358,7 +358,7 @@ final class WeDevs_Dokan {
             new \WeDevs\Dokan\ThemeSupport\Manager();
         }
 
-        $this->container['cache']         = new \WeDevs\Dokan\Cache\CacheHelper;
+        $this->container['cache']         = new \WeDevs\Dokan\Cache\CacheHelper();
         $this->container['pageview']      = new \WeDevs\Dokan\PageViews();
         $this->container['seller_wizard'] = new \WeDevs\Dokan\Vendor\SetupWizard();
         $this->container['core']          = new \WeDevs\Dokan\Core();

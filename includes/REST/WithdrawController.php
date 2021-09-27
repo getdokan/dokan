@@ -276,7 +276,7 @@ class WithdrawController extends WP_REST_Controller {
             $withdraws = dokan()->withdraw->all( $args );
 
             dokan()->cache->set_cache( $cache_key, $withdraws, $cache_group );
-            dokan()->cache->update_group( $cache_key , $cache_group );
+            dokan()->cache->update_group( $cache_key, $cache_group );
         }
 
         $data = [];

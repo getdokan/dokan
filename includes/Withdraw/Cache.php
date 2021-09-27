@@ -15,7 +15,7 @@ use WeDevs\Dokan\Cache\CacheHelper;
  */
 class Cache extends CacheHelper {
 
-    public  $seller_id;
+    public $seller_id;
     private $cache_group_admin;
     private $cache_group_seller;
 
@@ -73,7 +73,7 @@ class Cache extends CacheHelper {
      * @return void
      */
     public function clear_seller_cache_group( $seller_id = null ) {
-        if ( ! empty ( $seller_id ) ) {
+        if ( ! empty( $seller_id ) ) {
             $this->seller_id = $seller_id;
         }
 

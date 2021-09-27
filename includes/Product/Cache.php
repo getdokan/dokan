@@ -21,8 +21,8 @@ class Cache extends CacheHelper {
         add_action( 'dokan_product_updated', [ $this, 'clear_single_product_caches' ], 20 );
         add_action( 'dokan_product_duplicate_after_save', [ $this, 'clear_seller_product_caches' ], 20, 3 );
         add_action( 'dokan_product_deleted', [ $this, 'clear_seller_product_caches' ], 20 );
-        add_action( 'dokan_bulk_product_status_change', [ $this, 'cache_clear_bulk_product_status_change'], 20, 2 );
-        add_action( 'dokan_bulk_product_delete', [ $this, 'clear_seller_product_caches'], 20 );
+        add_action( 'dokan_bulk_product_status_change', [ $this, 'cache_clear_bulk_product_status_change' ], 20, 2 );
+        add_action( 'dokan_bulk_product_delete', [ $this, 'clear_seller_product_caches' ], 20 );
 
         add_action( 'woocommerce_product_duplicate', [ $this, 'clear_seller_product_caches' ], 20 );
         add_action( 'woocommerce_update_product', [ $this, 'clear_seller_product_caches' ], 20 );
