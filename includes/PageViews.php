@@ -60,6 +60,7 @@ class PageViews {
             $new_views = absint( $old_views ) + 1;
 
             update_post_meta( $post_id, $this->meta_key, $new_views, $old_views );
+            dokan()->cache->clear_group( 'dokan_page_view' );
         }
     }
 

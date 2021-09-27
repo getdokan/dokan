@@ -242,7 +242,7 @@ function dokan_count_posts( $post_type, $user_id, $exclude_product_types = array
         $counts['total'] = $total;
         $counts          = (object) $counts;
 
-        wp_cache_set( $cache_key, $counts, $cache_group, 3600 * 6 );
+        dokan()->cache->set_cache( $cache_key, $counts, $cache_group, 3600 * 6 );
     }
 
     return $counts;
@@ -309,7 +309,7 @@ function dokan_count_stock_posts( $post_type, $user_id, $stock_type ) {
 
         $counts = $total;
 
-        wp_cache_set( $cache_key, $counts, $cache_group, 3600 * 6 );
+        dokan()->cache->set_cache( $cache_key, $counts, $cache_group, 3600 * 6 );
     }
 
     return $counts;
@@ -373,7 +373,7 @@ function dokan_count_comments( $post_type, $user_id ) {
         $counts['total'] = $total;
 
         $counts = (object) $counts;
-        wp_cache_set( $cache_key, $counts, 'dokan-lite', 3600 * 2 );
+        dokan()->cache->set_cache( $cache_key, $counts, 'dokan-lite', 3600 * 2 );
     }
 
     return $counts;
@@ -391,10 +391,11 @@ function dokan_count_comments( $post_type, $user_id ) {
 function dokan_author_pageviews( $seller_id ) {
     global $wpdb;
 
-    $cache_key = 'dokan-pageview-' . $seller_id;
-    $pageview  = wp_cache_get( $cache_key, 'dokan_page_view' );
+    $cache_key   = 'dokan-pageview-' . $seller_id;
+    $cache_group = 'dokan_page_view';
+    $pageview    = wp_cache_get( $cache_key, $cache_group );
 
-    if ( $pageview === false ) {
+    if ( false === $pageview ) {
         $count = $wpdb->get_row(
             $wpdb->prepare(
                 "SELECT SUM(meta_value) as pageview
@@ -407,7 +408,8 @@ function dokan_author_pageviews( $seller_id ) {
 
         $pageview = $count->pageview;
 
-        wp_cache_set( $cache_key, $pageview, 'dokan_page_view', 3600 * 4 );
+        dokan()->cache->set_cache( $cache_key, $pageview, $cache_group, 3600 * 4 );
+        dokan()->cache->update_group( $cache_key, $cache_group );
     }
 
     return $pageview;
@@ -436,7 +438,7 @@ function dokan_author_total_sales( $seller_id ) {
 
         $earnings = $count->earnings;
 
-        wp_cache_set( $cache_key, $earnings, $cache_group );
+        dokan()->cache->set_cache( $cache_key, $earnings, $cache_group );
         dokan()->cache->update_group( $cache_key, $cache_group );
     }
 
