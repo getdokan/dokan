@@ -37,6 +37,12 @@
             // Submit the form
             $( '#dokan-store-listing-filter-form-wrap .apply-filter #apply-filter-btn' ).on( 'click', this.submitForm );
 
+            if ( ! this.getQueryParam( 'latitude' ) && ! this.getQueryParam( 'longitude' ) ) {
+                $.when( $( '#dokan-store-listing-filter-wrap .dokan-store-list-filter-button, #dokan-store-listing-filter-wrap .dokan-icons, #dokan-store-listing-filter-form-wrap .apply-filter #cancel-filter-btn ' ).trigger( 'click' ) ).then( function() {
+                    $( '.locate-icon' ).trigger( 'click' );
+                });
+            }
+
             this.maybeHideListView();
 
             const self = storeLists;
@@ -301,6 +307,17 @@
                     self.query[ param ] = value[ index ];
                 }
             });
+        },
+
+        /**
+         * Get query param
+         * 
+         * @return boolean
+         */
+        getQueryParam: function ( param ) {
+            var results = new RegExp( '[\?&]' + param + '=([^&#]*)' ).exec( window.location.href );
+
+            return null === results ? false : true;
         },
 
         /**
