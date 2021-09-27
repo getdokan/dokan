@@ -143,10 +143,10 @@ class AdminBar {
         $menus = $this->get_dokan_admin_menus();
 
         // Show wp admin menus in admin bar here, if menu URL.
-        foreach ( $menus as $menu ) :
-            if ( '' === $menu['href'] ) :
+        foreach ( $menus as $menu ) {
+            if ( ! isset( $menu['href'] ) || empty( $menu['href'] ) ) {
                 return;
-            endif;
+            }
 
             $wp_admin_bar->add_node(
                 [
@@ -156,6 +156,6 @@ class AdminBar {
                     'href'   => $menu['href'],
                 ]
             );
-        endforeach;
+        }
     }
 }
