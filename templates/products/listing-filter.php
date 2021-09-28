@@ -9,8 +9,8 @@ $get_data  = wp_unslash( $_GET ); // WPCS: CSRF ok.
 $post_data = wp_unslash( $_POST ); // WPCS: CSRF ok.
 
 do_action( 'dokan_product_listing_filter_before_form' );
-$product_types = apply_filters( 'dokan_product_types', ['simple'] );
-$product_type  = isset( $get_data['product_type'] ) ? $get_data['product_type'] : ''; 
+$product_types = apply_filters( 'dokan_product_types', [ 'simple' => __( 'Simple', 'dokan' ) ] );
+$product_type  = isset( $get_data['product_type'] ) ? $get_data['product_type'] : '';
 ?>
 
     <form class="dokan-form-inline dokan-w8 dokan-product-date-filter" method="get" >

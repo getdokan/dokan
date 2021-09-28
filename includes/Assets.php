@@ -427,7 +427,7 @@ class Assets {
             'commission_type'    => dokan_get_commission_type( dokan_get_current_user_id() ),
             'rounding_precision' => wc_get_rounding_precision(),
             'mon_decimal_point'  => wc_get_price_decimal_separator(),
-            'product_types'      => apply_filters( 'dokan_product_types', [ 'simple' ] ),
+            'product_types'      => apply_filters( 'dokan_product_types', [ 'simple' => __( 'Simple', 'dokan-lite' ) ] ),
             'loading_img'        => DOKAN_PLUGIN_ASSEST . '/images/loading.gif',
             'store_product_search_nonce' => wp_create_nonce( 'dokan_store_product_search_nonce' ),
         ];
