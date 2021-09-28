@@ -1,11 +1,11 @@
 var Factory = require('rosie').Factory;
 var faker = require('faker');
 const helpers = require('../pages/helpers');
-const { I } = inject();
+const I = inject();
 
-Given('Existing balance of Admin will be checked', async() => {
+Given('Existing balance of Admin will be checked', () => {
     I.loginAsAdmin();
-    await helpers.adminBalanceCheck();
+    helpers.adminBalanceCheck();
     helpers.adminlogout();
 });
 When('Customer purchase a simple product', () => {

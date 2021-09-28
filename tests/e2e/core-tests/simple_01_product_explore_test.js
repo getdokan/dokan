@@ -5,7 +5,7 @@ Feature('Simple product explore');
 //     I.loginAsVendor();
 // });
 Scenario('product edit explore test', ({ I,loginAs}) => {
-    loginAsVendor('Vendor');
+    loginAs('Vendor');
     I.click('Products');
     I.click('simple_pro_3');
     // Starting to explore

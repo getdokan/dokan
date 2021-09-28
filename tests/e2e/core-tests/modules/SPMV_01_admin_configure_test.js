@@ -3,8 +3,8 @@ const helpers = require("../../pages/helpers");
 const config  = require('../../pages/config');
 
 
-Scenario('Admin set SingleProductMultiplevendor', ({ I }) => {
-    I.loginAsAdmin();
+Scenario('Admin set SingleProductMultiplevendor', ({ I,loginAs }) => {
+    loginAs('admin');
     config.EnableSpmv();
 
 });
