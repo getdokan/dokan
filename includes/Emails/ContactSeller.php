@@ -17,7 +17,7 @@ class ContactSeller extends WC_Email {
     /**
      * Reply email
      *
-     * DOKAN_LITE_SINCE
+     * @since DOKAN_LITE_SINCE
      *
      * @var string
      */
@@ -98,7 +98,7 @@ class ContactSeller extends WC_Email {
     /**
      * Set customer email address for reply
      *
-     * DOKAN_LITE_SINCE
+     * @since DOKAN_LITE_SINCE
      *
      * @return mixed
      */
