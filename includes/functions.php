@@ -2968,8 +2968,8 @@ function dokan_get_all_caps() {
             'dokan_manage_order'      => __( 'Manage order', 'dokan-lite' ),
             'dokan_manage_order_note' => __( 'Manage order note', 'dokan-lite' ),
             'dokan_manage_refund'     => __( 'Manage refund', 'dokan-lite' ),
+            'dokan_export_order'      => __( 'Export order', 'dokan-lite' ),
         ],
-
         'coupon' => [
             'dokan_add_coupon'    => __( 'Add coupon', 'dokan-lite' ),
             'dokan_edit_coupon'   => __( 'Edit coupon', 'dokan-lite' ),
@@ -3980,7 +3980,7 @@ function dokan_is_vendor_info_hidden( $option = null ) {
  * Function current_datetime() compatibility for wp version < 5.3
  *
  * @since 3.1.1
- * @throws Exception
+ *
  * @return DateTimeImmutable
  */
 function dokan_current_datetime() {
@@ -4041,9 +4041,9 @@ function dokan_wp_timezone_string() {
  *
  * @param string|timestamp $date the date string or timestamp
  * @param string|bool $format date format string or false for default WordPress date
+ *
  * @since 3.1.1
  *
- * @throws Exception
  * @return string|false The date, translated if locale specifies it. False on invalid timestamp input.
  */
 function dokan_format_date( $date = '', $format = false ) {
