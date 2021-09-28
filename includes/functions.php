@@ -4126,7 +4126,7 @@ function dokan_get_withdraw_threshold( $user_id ) {
  * @param mixed $option_value
  * @param mixed $option_name
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.2.12
  *
  * @return mixed $option_value
  */
