@@ -789,8 +789,24 @@ class Ajax {
         $max_width        = 0;
         $width            = absint( $dimensions['width'] );
         $height           = absint( $dimensions['height'] );
-        $theme_width      = dokan_get_option( 'store_banner_width', 'dokan_appearance', 625 );
-        $theme_height     = dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 );
+
+        /**
+         * Store Banner width size
+         *
+         * @since 3.2.12
+         *
+         * @param int
+         */
+        $theme_width = apply_filters( 'dokan_store_banner_default_width', dokan_get_option( 'store_banner_width', 'dokan_appearance', 625 ) );
+
+        /**
+         * Store Banner height size
+         *
+         * @since 3.2.12
+         *
+         * @param int
+         */
+        $theme_height     = apply_filters( 'dokan_store_banner_default_height', dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 ) );
         $has_flex_width   = ! empty( $general_settings['store_banner_flex_width'] ) ? $general_settings['store_banner_flex_width'] : true;
         $has_flex_height  = ! empty( $general_settings['store_banner_flex_height'] ) ? $general_settings['store_banner_flex_height'] : true;
         $has_max_width    = ! empty( $general_settings['store_banner_max_width'] ) ? $general_settings['store_banner_max_width'] : false;

@@ -79,8 +79,24 @@
                          * @since 2.4.10
                          */
                         $general_settings = get_option( 'dokan_general', [] );
-                        $banner_width     = dokan_get_option( 'store_banner_width', 'dokan_appearance', 625 );
-                        $banner_height    = dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 );
+
+                        /**
+                         * Store banner width size
+                         *
+                         * @since 3.2.12
+                         *
+                         * @param int
+                         */
+                        $banner_width = apply_filters( 'dokan_store_banner_default_width', dokan_get_option( 'store_banner_width', 'dokan_appearance', 625 ) );
+
+                        /**
+                         * Store banner height size
+                         *
+                         * @since 3.2.12
+                         *
+                         * @param int
+                         */
+                        $banner_height = apply_filters( 'dokan_store_banner_default_height', dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 ) );
 
                         $help_text = sprintf(
                             __( 'Upload a banner for your store. Banner size is (%sx%s) pixels.', 'dokan-lite' ),
