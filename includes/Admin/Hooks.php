@@ -93,53 +93,61 @@ class Hooks {
     /**
      * Adds custom column on dokan admin shop order table
      *
-     * @global type $post
-     * @global type $woocommerce
-     * @global \WC_Order $the_order
-     *
-     * @param type $col
+     * @param string $col
      *
      * @return void
      */
     public function shop_order_custom_columns( $col ) {
+        /**
+         * @global \WP_Post $post
+         * @global \WC_Order $the_order
+         */
         global $post, $the_order;
 
-        if ( empty( $the_order ) || $the_order->get_id() != $post->ID ) {
+        if ( empty( $the_order ) || $the_order->get_id() !== $post->ID ) {
             $the_order = new \WC_Order( $post->ID );
         }
 
         if ( ! current_user_can( 'manage_woocommerce' ) ) {
-            return $col;
+            return;
         }
 
+        if ( ! in_array( $col, [ 'order_number', 'suborder', 'seller' ], true ) ) {
+            return;
+        }
+
+        $output = '';
         switch ( $col ) {
             case 'order_number':
                 if ( $post->post_parent !== 0 ) {
-                    echo '<strong>';
-                    echo esc_html__( '&nbsp;Sub Order of', 'dokan-lite' );
-                    printf( ' <a href="%s">#%s</a>', esc_url( admin_url( 'post.php?action=edit&post=' . $post->post_parent ) ), esc_html( $post->post_parent ) );
-                    echo '</strong>';
+                    $output = '<strong>';
+                    $output .= esc_html__( '&nbsp;Sub Order of', 'dokan-lite' );
+                    $output .= sprintf( ' <a href="%s">#%s</a>', esc_url( admin_url( 'post.php?action=edit&post=' . $post->post_parent ) ), esc_html( $post->post_parent ) );
+                    $output .= '</strong>';
                 }
                 break;
 
             case 'suborder':
-                $has_sub = get_post_meta( $post->ID, 'has_sub_order', true );
-
-                if ( $has_sub == '1' ) {
-                    printf( '<a href="#" class="show-sub-orders" data-class="parent-%1$d" data-show="%2$s" data-hide="%3$s">%2$s</a>', esc_attr( $post->ID ), esc_attr__( 'Show Sub-Orders', 'dokan-lite' ), esc_attr__( 'Hide Sub-Orders', 'dokan-lite' ) );
+                if ( '1' === $the_order->get_meta( 'has_sub_order', true ) ) {
+                    $output = sprintf( '<a href="#" class="show-sub-orders" data-class="parent-%1$d" data-show="%2$s" data-hide="%3$s">%2$s</a>', esc_attr( $post->ID ), esc_attr__( 'Show Sub-Orders', 'dokan-lite' ), esc_attr__( 'Hide Sub-Orders', 'dokan-lite' ) );
                 }
                 break;
 
             case 'seller':
-                $has_sub = get_post_meta( $post->ID, 'has_sub_order', true );
+                $has_sub = $the_order->get_meta( 'has_sub_order', true );
+                $seller  = get_user_by( 'id', dokan_get_seller_id_by_order( $post->ID ) );
 
-                if ( $has_sub != '1' && $seller = get_user_by( 'id', dokan_get_seller_id_by_order( $post->ID ) ) ) {
-                    printf( '<a href="%s">%s</a>', esc_url( admin_url( 'edit.php?post_type=shop_order&vendor_id=' . $seller->ID ) ), esc_html( $seller->display_name ) );
+                if ( $has_sub !== '1' && $seller ) {
+                    $output = sprintf( '<a href="%s">%s</a>', esc_url( admin_url( 'edit.php?post_type=shop_order&vendor_id=' . $seller->ID ) ), esc_html( $seller->display_name ) );
                 } else {
-                    esc_html_e( '(no name)', 'dokan-lite' );
+                    $output = esc_html__( '(no name)', 'dokan-lite' );
                 }
 
                 break;
+        }
+
+        if ( ! empty( $output ) ) {
+            echo apply_filters( "dokan_manage_shop_order_custom_columns_{$col}", $output, $the_order );
         }
     }
 
