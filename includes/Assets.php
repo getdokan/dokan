@@ -414,22 +414,30 @@ class Assets {
         }
 
         $default_script = [
-            'ajaxurl'            => admin_url( 'admin-ajax.php' ),
-            'nonce'              => wp_create_nonce( 'dokan_reviews' ),
-            'ajax_loader'        => DOKAN_PLUGIN_ASSEST . '/images/ajax-loader.gif',
-            'seller'             => [
+            'ajaxurl'                    => admin_url( 'admin-ajax.php' ),
+            'nonce'                      => wp_create_nonce( 'dokan_reviews' ),
+            'ajax_loader'                => DOKAN_PLUGIN_ASSEST . '/images/ajax-loader.gif',
+            'seller'                     => [
                 'available'     => __( 'Available', 'dokan-lite' ),
                 'notAvailable'  => __( 'Not Available', 'dokan-lite' ),
             ],
-            'delete_confirm'     => __( 'Are you sure?', 'dokan-lite' ),
-            'wrong_message'      => __( 'Something went wrong. Please try again.', 'dokan-lite' ),
-            'vendor_percentage'  => dokan_get_seller_percentage( dokan_get_current_user_id() ),
-            'commission_type'    => dokan_get_commission_type( dokan_get_current_user_id() ),
-            'rounding_precision' => wc_get_rounding_precision(),
-            'mon_decimal_point'  => wc_get_price_decimal_separator(),
-            'product_types'      => apply_filters( 'dokan_product_types', [ 'simple' => __( 'Simple', 'dokan-lite' ) ] ),
-            'loading_img'        => DOKAN_PLUGIN_ASSEST . '/images/loading.gif',
+            'delete_confirm'             => __( 'Are you sure?', 'dokan-lite' ),
+            'wrong_message'              => __( 'Something went wrong. Please try again.', 'dokan-lite' ),
+            'vendor_percentage'          => dokan_get_seller_percentage( dokan_get_current_user_id() ),
+            'commission_type'            => dokan_get_commission_type( dokan_get_current_user_id() ),
+            'rounding_precision'         => wc_get_rounding_precision(),
+            'mon_decimal_point'          => wc_get_price_decimal_separator(),
+            'product_types'              => apply_filters( 'dokan_product_types', [ 'simple' ] ),
+            'loading_img'                => DOKAN_PLUGIN_ASSEST . '/images/loading.gif',
             'store_product_search_nonce' => wp_create_nonce( 'dokan_store_product_search_nonce' ),
+            /**
+             * Filter of maximun a vendor can add tags.
+             *
+             * @since 3.3.7
+             *
+             * @param integer default -1
+             */
+            'maximum_tags_select_length' => apply_filters( 'dokan_product_tags_select_max_length', -1 ),  // Filter of maximun a vendor can add tags
         ];
 
         $localize_script     = apply_filters( 'dokan_localized_args', $default_script );
