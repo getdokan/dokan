@@ -734,6 +734,7 @@ class Assets {
                 'i18n_searching'                      => __( 'Searching&hellip;', 'dokan-lite' ),
                 'i18n_ok_text'                        => __( 'OK', 'dokan-lite' ),
                 'i18n_cancel_text'                    => __( 'Cancel', 'dokan-lite' ),
+                'i18n_attribute_label'                => __( 'Attribute Name', 'dokan-lite' ),
                 'i18n_date_format'                    => get_option( 'date_format' ),
                 'dokan_banner_added_alert_msg'        => __( 'Are you sure? You have uploaded banner but didn\'t click the Update Settings button!', 'dokan-lite' ),
             ];
