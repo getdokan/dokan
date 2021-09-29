@@ -94,7 +94,7 @@ class AdminBar {
     /**
      * Get admin menus data for dokan.
      *
-     * @since 3.2.13
+     * @since DOKAN_ITE_SINCE
      *
      * @return array
      */
@@ -142,20 +142,18 @@ class AdminBar {
 
         $menus = $this->get_dokan_admin_menus();
 
-        // Show wp admin menus in admin bar here, if menu URL.
+        // Added admin menus for dokan in wp admin bar.
         foreach ( $menus as $menu ) {
-            if ( empty( $menu['href'] ) ) {
-                return;
+            if ( ! empty( $menu['href'] ) ) {
+                $wp_admin_bar->add_node(
+                    [
+                        'parent' => $menu['parent'],
+                        'id'     => $menu['id'],
+                        'title'  => $menu['title'],
+                        'href'   => $menu['href'],
+                    ]
+                );
             }
-
-            $wp_admin_bar->add_node(
-                [
-                    'parent' => $menu['parent'],
-                    'id'     => $menu['id'],
-                    'title'  => $menu['title'],
-                    'href'   => $menu['href'],
-                ]
-            );
         }
     }
 }
