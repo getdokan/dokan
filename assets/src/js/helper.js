@@ -44,34 +44,29 @@ function dokan_get_i18n_date_format( format = true ) {
 /**
  * Dokan Sweet Alert
  *
- * @since 3.2.11
+ * @since 3.2.13
  *
  * @param {string} message The event message for notification
- * @param {object} [options] Configuration of sweet alert parameter like
- *                           action - which operation should be done
- *                           html - add extra html content
+ * @param {object} [options] Configuration of sweet alert modal
  *
  * @return {Promise | bool} Return Promise on success, and false on failure
  */
  async function dokan_sweet_alert( message = '' , options = {} ) {
-  switch( options.action ) {
+  const defaults = {
+    text: message,
+  }
+
+  const args = { ...defaults, ...options };
+
+  console.log( args );
+
+  switch( args.action ) {
     case 'confirm' :
-        return await Swal.fire({
-          text: message,
-          html: options.html,
-          showCancelButton: true,
-          confirmButtonColor: '#f97325',
-          cancelButtonColor: '#c92d0e',
-        });
+        return await Swal.fire( args );
         break;
 
     case 'alert' :
     default :
-        Swal.fire({
-          icon: options.status,
-          html: options.html,
-          text: message,
-          confirmButtonColor: '#ee502f'
-        });
+        Swal.fire( args );
   }
 }

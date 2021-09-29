@@ -462,7 +462,7 @@
 
                     $.post( dokan.ajaxurl, data, function( response ) {
                         if ( response.error ) {
-                            dokan_sweet_alert( response.error, { action : 'alert', status : 'error' } );
+                            dokan_sweet_alert( response.error, { action : 'alert', icon : 'error', confirmButtonColor: '#f97325' } );
                         } else if ( response.slug ) {
                             $wrapper.find( 'select.dokan_attribute_values' ).append( '<option value="' + response.slug + '" selected="selected">' + response.name + '</option>' );
                             $wrapper.find( 'select.dokan_attribute_values' ).change();
@@ -519,7 +519,9 @@
                 evt.preventDefault()
                 evt.stopPropagation();
 
-                const isRemoved = await dokan_sweet_alert( dokan.remove_attribute, { action : 'confirm' } );
+                const isRemoved = await dokan_sweet_alert( dokan.remove_attribute, { 
+                    action : 'confirm', showCancelButton: true, confirmButtonColor: '#f97325',cancelButtonColor: '#c92d0e' } );
+                
                 if ( 'undefined' !== isRemoved && isRemoved.isConfirmed  ) {
                     var $parent = $( this ).closest('li.product-attribute-list');
 
