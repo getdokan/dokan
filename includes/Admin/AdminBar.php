@@ -144,7 +144,7 @@ class AdminBar {
 
         // Show wp admin menus in admin bar here, if menu URL.
         foreach ( $menus as $menu ) {
-            if ( ! isset( $menu['href'] ) || empty( $menu['href'] ) ) {
+            if ( empty( $menu['href'] ) ) {
                 return;
             }
 
