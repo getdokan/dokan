@@ -785,6 +785,7 @@ jQuery(function($) {
                     if ( ! $found ) data.unshift( tag );
                 },
                 minimumInputLength: 2,
+                maximumSelectionLength: dokan.maximum_tags_select_length !== undefined ? dokan.maximum_tags_select_length : -1,
                 ajax: {
                     url: dokan.ajaxurl,
                     dataType: 'json',
