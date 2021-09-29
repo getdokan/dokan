@@ -94,7 +94,7 @@ class AdminBar {
     /**
      * Get admin menus data for dokan.
      *
-     * @since DOKAN_ITE_SINCE
+     * @since DOKAN_LITE_SINCE
      *
      * @return array
      */
