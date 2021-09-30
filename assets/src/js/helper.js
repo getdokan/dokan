@@ -58,8 +58,6 @@ function dokan_get_i18n_date_format( format = true ) {
 
   const args = { ...defaults, ...options };
 
-  console.log( args );
-
   switch( args.action ) {
     case 'confirm' :
         return await Swal.fire( args );
