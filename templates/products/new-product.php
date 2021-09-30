@@ -75,8 +75,6 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                 <?php
 
                 $can_sell         = apply_filters( 'dokan_can_post', true );
-                $can_create_tags  = dokan_get_option( 'product_vendors_can_create_tags', 'dokan_selling' );
-                $tags_placeholder = 'on' === $can_create_tags ? __( 'Select tags/Add tags', 'dokan-lite' ) : __( 'Select product tags', 'dokan-lite' );
 
                 if ( $can_sell ) {
                     $posted_img       = dokan_posted_input( 'feat_image_id' );
@@ -253,7 +251,19 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
 
                                     <div class="dokan-form-group">
                                         <label for="product_tag" class="form-label"><?php esc_html_e( 'Tags', 'dokan-lite' ); ?></label>
-                                        <select multiple="multiple" placeholder="<?php echo esc_attr( $tags_placeholder ); ?>" name="product_tag[]" id="product_tag_search" class="product_tag_search product_tags dokan-form-control dokan-select2" data-placeholder="<?php echo esc_attr( $tags_placeholder ); ?>"></select>
+                                        <?php
+                                            $terms            = dokan_posted_input( 'product_tag', true );
+                                            $can_create_tags  = dokan_get_option( 'product_vendors_can_create_tags', 'dokan_selling' );
+                                            $tags_placeholder = 'on' === $can_create_tags ? __( 'Select tags/Add tags', 'dokan-lite' ) : __( 'Select product tags', 'dokan-lite' );
+                                        ?>
+                                        <select multiple="multiple" name="product_tag[]" id="product_tag_search" class="product_tag_search product_tags dokan-form-control dokan-select2" data-placeholder="<?php echo esc_attr( $tags_placeholder ); ?>">
+                                            <?php if ( ! empty( $terms ) ) : ?>
+                                                <?php foreach ( $terms as $tax_term_id ) : ?>
+                                                    <?php $tax_term = get_term( $tax_term_id ); ?>
+                                                    <option value="<?php echo esc_attr( $tax_term->term_id ); ?>" selected="selected" ><?php echo esc_html( $tax_term->name ); ?></option>
+                                                <?php endforeach ?>
+                                            <?php endif ?>
+                                        </select>
                                     </div>
 
                                     <?php do_action( 'dokan_new_product_after_product_tags' ); ?>
