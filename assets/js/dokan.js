@@ -785,6 +785,7 @@ jQuery(function($) {
                     if ( ! $found ) data.unshift( tag );
                 },
                 minimumInputLength: 2,
+                maximumSelectionLength: dokan.maximum_tags_select_length !== undefined ? dokan.maximum_tags_select_length : -1,
                 ajax: {
                     url: dokan.ajaxurl,
                     dataType: 'json',
@@ -1020,7 +1021,7 @@ jQuery(function($) {
                     value = self.val();
 
                 if ( value == '' ) {
-                    self.closest( 'li' ).find( 'strong' ).html( 'Attribute Name' );
+                    self.closest( 'li' ).find( 'strong' ).html( dokan.i18n_attribute_label );
                 } else {
                     self.closest( 'li' ).find( 'strong' ).html( value );
                 }
