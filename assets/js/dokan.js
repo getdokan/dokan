@@ -1021,7 +1021,7 @@ jQuery(function($) {
                     value = self.val();
 
                 if ( value == '' ) {
-                    self.closest( 'li' ).find( 'strong' ).html( 'Attribute Name' );
+                    self.closest( 'li' ).find( 'strong' ).html( dokan.i18n_attribute_label );
                 } else {
                     self.closest( 'li' ).find( 'strong' ).html( value );
                 }
