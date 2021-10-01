@@ -111,6 +111,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                    <?php do_action( 'dokan_product_list_before_table_body_start' ); ?>
                                         <?php
                                         $pagenum        = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
                                         $post_statuses  = apply_filters( 'dokan_product_listing_post_statuses', [ 'publish', 'draft', 'pending', 'future' ] );
