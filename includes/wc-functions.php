@@ -964,6 +964,13 @@ function dokan_clear_product_category_cache( $post_id ) {
     delete_transient( 'dokan_vendor_get_published_products_' . $seller_id );
     delete_transient( 'dokan_vendor_get_best_selling_products_' . $seller_id );
 
+    if ( function_exists( 'wpml_get_current_language' ) ) {
+        $current_lang = wpml_get_current_language();
+        // delete vendor get_store_categories() method transient
+        delete_transient( 'dokan_vendor_get_store_categories_' . $current_lang . '_' . $seller_id );
+        delete_transient( 'dokan_vendor_get_best_selling_categories_' . $current_lang . '_' . $seller_id );
+    }
+
     // delete vendor get_store_categories() method transient
     delete_transient( 'dokan_vendor_get_store_categories_' . $seller_id );
     delete_transient( 'dokan_vendor_get_best_selling_categories_' . $seller_id );
@@ -1040,6 +1047,10 @@ function dokan_clear_edit_product_category_cache( $term_id ) {
 
     foreach ( $seller_ids as $seller_id ) {
         // delete vendor get_store_categories() method transient
+        if ( function_exists( 'wpml_get_current_language' ) ) {
+            $current_lang = wpml_get_current_language();
+            delete_transient( 'dokan_vendor_get_store_categories_' . $current_lang . '_' . $seller_id );
+        }
         delete_transient( 'dokan_vendor_get_store_categories_' . $seller_id );
     }
 }
