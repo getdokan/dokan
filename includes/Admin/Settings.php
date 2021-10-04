@@ -763,7 +763,7 @@ class Settings {
         $settings_fields['data_clear_on_uninstall'] = [
             'name'    => 'data_clear_on_uninstall',
             'label'   => __( 'Data Clear', 'dokan-lite' ),
-            'desc'    => __( 'Clear all the data related to Dokan Lite and Pro after plugin deletion.', 'dokan-lite' ),
+            'desc'    => __( 'Delete all data and tables related to Dokan and Dokan Pro plugin while deleting the Dokan plugin.', 'dokan-lite' ),
             'type'    => 'checkbox',
             'default' => 'off',
         ];
