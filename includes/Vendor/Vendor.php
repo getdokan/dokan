@@ -596,10 +596,9 @@ class Vendor {
      */
     public function get_store_categories( $best_selling = false ) {
         if ( function_exists( 'wpml_get_current_language' ) ) {
-            $current_lang  = wpml_get_current_language();
-            $transient_key = 'dokan_vendor_get_store_categories_' . $current_lang . '_' . $this->id;
+            $transient_key = 'dokan_vendor_get_store_categories_' . wpml_get_current_language() . '_' . $this->id;
             if ( $best_selling ) {
-                $transient_key = 'dokan_vendor_get_best_selling_categories_' . $current_lang . '_' . $this->id;
+                $transient_key = 'dokan_vendor_get_best_selling_categories_' . wpml_get_current_language() . '_' . $this->id;
             }
         } else {
             $transient_key = 'dokan_vendor_get_store_categories_' . $this->id;
