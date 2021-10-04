@@ -1061,8 +1061,12 @@ function dokan_get_page_url( $page, $context = 'dokan', $subpage = '' ) {
 }
 
 /**
+ * Add subpage to url: this will add wpml like plugin compatibility
+ *
  * @param string $url
  * @param string $subpage
+ *
+ * @since 3.2.14
  *
  * @return false|string
  */
