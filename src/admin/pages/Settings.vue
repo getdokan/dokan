@@ -83,6 +83,7 @@
     import Fields from "admin/components/Fields.vue"
     import SettingsBanner from "admin/components/SettingsBanner.vue";
     import UpgradeBanner from "admin/components/UpgradeBanner.vue";
+    import $ from 'jquery';
 
     export default {
 
@@ -405,6 +406,28 @@
 
                 self.settingFields = settingFields;
                 self.settingSections = settingSections;
+            },
+
+            handleDataClearCheckboxEvent() {
+                let self = this;
+                $('#dokan_general\\[data_clear_on_uninstall\\]').on('click', function () {
+                    if( $(this).is(':checked') ) {
+                        self.$swal({
+                            title: self.__( 'Are you sure?', 'dokan-lite' ),
+                            type: 'warning',
+                            html: self.__( 'All the data will be clear after uninstall and you will not able to recover that.', 'dokan-lite' ),
+                            showCancelButton: true,
+                            confirmButtonText: self.__( 'Okay', 'dokan-lite' ),
+                            cancelButtonText: self.__( 'Cancel', 'dokan-lite' ),
+                        }).then( async (response) => {
+                            if ( response.value ) {
+                                $('#dokan_general\\[data_clear_on_uninstall\\]').prop( 'checked', true );
+                            }
+                        })
+
+                        return false;
+                    }
+                });
             }
         },
 
@@ -419,6 +442,10 @@
             this.settingSections = dokan.settings_sections;
             this.settingFields = dokan.settings_fields;
         },
+
+        updated() {
+            this.handleDataClearCheckboxEvent();
+        }
     };
 
 </script>
@@ -638,9 +665,17 @@
     }
 
     .form-table .dokan-settings-field-type-sub_section:first-child th.dokan-settings-sub-section-title {
-
         label {
             margin-top: 0;
+        }
+    }
+
+    tr.data_clear_on_uninstall {
+        td fieldset label {
+            background: #e00;
+            padding: 5px;
+            color: white;
+            border-radius: 3px;
         }
     }
 </style>

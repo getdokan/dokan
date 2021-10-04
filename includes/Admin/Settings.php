@@ -30,6 +30,7 @@ class Settings {
         add_filter( 'dokan_admin_localize_script', [ $this, 'add_admin_settings_nonce' ] );
         add_action( 'wp_ajax_dokan_refresh_admin_settings_field_options', [ $this, 'refresh_admin_settings_field_options' ] );
         add_filter( 'dokan_get_settings_values', [ $this, 'format_price_values' ], 12, 2 );
+        add_filter( 'dokan_settings_general_site_options', [ $this, 'add_dokan_data_clear_setting' ], 310 );
     }
 
     /**
@@ -749,5 +750,24 @@ class Settings {
         } catch ( Exception $e ) {
             $this->send_response_error( $e );
         }
+    }
+
+    /**
+     * Dokan data clear setting
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return array $settings_fields
+     */
+    public function add_dokan_data_clear_setting( $settings_fields ) {
+        $settings_fields['data_clear_on_uninstall'] = [
+            'name'    => 'data_clear_on_uninstall',
+            'label'   => __( 'Data Clear', 'dokan-lite' ),
+            'desc'    => __( 'Clear all the data related to Dokan Lite and Pro after plugin deletion.', 'dokan-lite' ),
+            'type'    => 'checkbox',
+            'default' => 'off',
+        ];
+
+        return $settings_fields;
     }
 }
