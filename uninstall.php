@@ -11,13 +11,13 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
  *
  * @package Dokan\Uninstaller
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.2.14
  */
 class Dokan_Uninstaller {
     /**
      * Constructor for the class Dokan_Uninstaller
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.2.14
      */
     public function __construct() {
         global $wpdb;
@@ -58,7 +58,7 @@ class Dokan_Uninstaller {
     /**
      * Return a list of Dokan capabilities
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.2.14
      *
      * @return string[]
      */
@@ -112,7 +112,7 @@ class Dokan_Uninstaller {
     /**
      * Remove Dokan roles.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.2.14
      *
      * @return void
      */
@@ -139,7 +139,7 @@ class Dokan_Uninstaller {
      * Return a list of tables. Used to make sure all Dokan tables are dropped
      * when uninstalling the plugin
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.2.14
      *
      * @return array Dokan tables.
      */
@@ -168,7 +168,7 @@ class Dokan_Uninstaller {
     /**
      * Drop all tables created by Dokan Lite and Pro
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.2.14
      *
      * @return void
      */
@@ -185,7 +185,7 @@ class Dokan_Uninstaller {
     /**
      * Change Dokan Vendor to WooCommerce Customer
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.2.14
      *
      * @return void
      */
