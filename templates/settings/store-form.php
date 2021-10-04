@@ -131,16 +131,17 @@
          <!--address-->
 
         <?php
-        $verified = false;
+            if (  class_exists( 'Dokan_Pro' ) && ! dokan_pro()->module->is_active( 'delivery_time' ) ) {
+                $verified = false;
 
-        if ( isset( $profile_info['dokan_verification']['info']['store_address']['v_status'] ) ) {
-            if ( $profile_info['dokan_verification']['info']['store_address']['v_status'] == 'approved' ) {
-                $verified = true;
+                if ( isset( $profile_info['dokan_verification']['info']['store_address']['v_status'] ) ) {
+                    if ( $profile_info['dokan_verification']['info']['store_address']['v_status'] == 'approved' ) {
+                        $verified = true;
+                    }
+                }
+
+                dokan_seller_address_fields( $verified );
             }
-        }
-
-        dokan_seller_address_fields( $verified );
-
         ?>
         <!--address-->
 
@@ -150,6 +151,10 @@
                 <input id="setting_phone" value="<?php echo esc_attr( $phone ); ?>" name="setting_phone" placeholder="<?php esc_attr_e( '+123456..', 'dokan-lite' ); ?>" class="dokan-form-control input-md" type="text">
             </div>
         </div>
+
+        <?php do_action( 'dokan_settings_after_store_phone', $current_user, $profile_info ); ?>
+
+        <?php do_action( 'dokan_settings_before_store_email', $current_user, $profile_info ); ?>
 
         <div class="dokan-form-group">
             <label class="dokan-w3 dokan-control-label"><?php esc_html_e( 'Email', 'dokan-lite' ); ?></label>
@@ -439,7 +444,7 @@
         $(function() {
             dokan_address_select.init();
 
-            $('#setting_phone').keydown(function(e) {
+            $('#setting_phone').on( 'keydown', function(e) {
                 // Allow: backspace, delete, tab, escape, enter and .
                 if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 91, 107, 109, 110, 187, 189, 190]) !== -1 ||
                      // Allow: Ctrl+A

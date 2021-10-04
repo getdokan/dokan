@@ -27,6 +27,7 @@ class Rewrites {
         add_filter( 'template_include', [ $this, 'store_toc_template' ], 99 );
         add_filter( 'query_vars', [ $this, 'register_query_var' ] );
         add_filter( 'woocommerce_get_breadcrumb', [ $this, 'store_page_breadcrumb' ] );
+        add_action( 'pre_user_query', [ $this, 'random_store_query' ] );
     }
 
     /**
@@ -94,6 +95,9 @@ class Rewrites {
 
         // default base is product
         $base = empty( $base ) ? 'product' : $base;
+
+        // get custom store url from settings so that we can use it from other places
+        $this->custom_store_url = dokan_get_option( 'custom_store_url', 'dokan_general', 'store' );
 
         // special treatment for product cat
         if ( stripos( $base, 'product_cat' ) ) {
@@ -325,8 +329,217 @@ class Rewrites {
 
             $query->set( 'tax_query', apply_filters( 'dokan_store_tax_query', $tax_query ) );
 
+            if ( isset( $_GET['product_name'] ) && ! empty( $_GET['product_name'] ) ) {
+                $product_name = wc_clean( wp_unslash( $_GET['product_name'] ) ); //phpcs:ignore
+
+                $query->set( 's', $product_name );
+            }
+
             // set orderby param
-            $query->set( 'orderby', 'post_date ID' );
+            if ( isset( $_GET['product_orderby'] ) && ! empty( $_GET['product_orderby'] ) ) {
+                $orderby  = wc_clean( wp_unslash( $_GET['product_orderby'] ) ); //phpcs:ignore
+                $ordering = $this->get_catalog_ordering_args( $orderby );
+
+                $query->set( 'orderby', $ordering['orderby'] );
+                $query->set( 'order', $ordering['order'] );
+            } else {
+                $query->set( 'orderby', 'post_date ID' );
+            }
         }
+    }
+
+    /**
+     * Returns an array of arguments for ordering products based on the selected values.
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param string $orderby Order by param
+     * @param string $order Order param
+     *
+     * @return array
+     */
+    public function get_catalog_ordering_args( $orderby = '', $order = '' ) {
+        // Get ordering from query string unless defined.
+        if ( ! $orderby ) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            $orderby_value = isset( $_GET['product_orderby'] ) ? wc_clean( wp_unslash( $_GET['product_orderby'] ) ) : wc_clean( get_query_var( 'product_orderby' ) ); //phpcs:ignore
+
+            if ( ! $orderby_value ) {
+                if ( is_search() ) {
+                    $orderby_value = 'relevance';
+                } else {
+                    $orderby_value = apply_filters( 'dokan_default_catalog_orderby', get_option( 'woocommerce_default_catalog_orderby', 'menu_order' ) );
+                }
+            }
+
+            // Get order + orderby args from string.
+            $orderby_value = is_array( $orderby_value ) ? $orderby_value : explode( '-', $orderby_value );
+            $orderby       = esc_attr( $orderby_value[0] );
+            $order         = ! empty( $orderby_value[1] ) ? $orderby_value[1] : $order;
+        }
+
+        // Convert to correct format.
+        $orderby = strtolower( is_array( $orderby ) ? (string) current( $orderby ) : (string) $orderby );
+        $order   = strtoupper( is_array( $order ) ? (string) current( $order ) : (string) $order );
+        $args    = array(
+            'orderby'  => $orderby,
+            'order'    => ( 'DESC' === $order ) ? 'DESC' : 'ASC',
+            'meta_key' => '',
+        );
+
+        switch ( $orderby ) {
+            case 'id':
+                $args['orderby'] = 'ID';
+                break;
+            case 'menu_order':
+                $args['orderby'] = 'menu_order title';
+                break;
+            case 'title':
+                $args['orderby'] = 'title';
+                $args['order']   = ( 'DESC' === $order ) ? 'DESC' : 'ASC';
+                break;
+            case 'relevance':
+                $args['orderby'] = 'relevance';
+                $args['order']   = 'DESC';
+                break;
+            case 'rand':
+                $args['orderby'] = 'rand';
+                break;
+            case 'date':
+                $args['orderby'] = 'date ID';
+                $args['order']   = ( 'ASC' === $order ) ? 'ASC' : 'DESC';
+                break;
+            case 'price':
+                add_filter( 'posts_clauses', [ $this, 'order_by_price_asc_post_clauses' ] );
+                break;
+            case 'price-desc':
+                add_filter( 'posts_clauses', [ $this, 'order_by_price_desc_post_clauses' ] );
+                break;
+            case 'popularity':
+                add_filter( 'posts_clauses', [ $this, 'order_by_popularity_post_clauses' ] );
+                break;
+            case 'rating':
+                add_filter( 'posts_clauses', [ $this, 'order_by_rating_post_clauses' ] );
+                break;
+        }
+
+        return apply_filters( 'dokan_get_store_products_ordering_args', $args, $orderby, $order );
+    }
+
+    /**
+     * Handle numeric price sorting
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param array $args Query args
+     *
+     * @return array
+     */
+    public function order_by_price_asc_post_clauses( $args ) {
+        $args['join']    = $this->append_product_sorting_table_join( $args['join'] );
+        $args['orderby'] = ' wc_product_meta_lookup.min_price ASC, wc_product_meta_lookup.product_id ASC ';
+        return $args;
+    }
+
+    /**
+     * Handle numeric price sorting
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param array $args Query args
+     *
+     * @return array
+     */
+    public function order_by_price_desc_post_clauses( $args ) {
+        $args['join']    = $this->append_product_sorting_table_join( $args['join'] );
+        $args['orderby'] = ' wc_product_meta_lookup.max_price DESC, wc_product_meta_lookup.product_id DESC ';
+        return $args;
+    }
+
+    /**
+     * WP Core does not let us change the sort direction for individual orderby params
+     *
+     * This lets us sort by meta value desc, and have a second orderby param
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param array $args Query args
+     *
+     * @return array
+     */
+    public function order_by_popularity_post_clauses( $args ) {
+        $args['join']    = $this->append_product_sorting_table_join( $args['join'] );
+        $args['orderby'] = ' wc_product_meta_lookup.total_sales DESC, wc_product_meta_lookup.product_id DESC ';
+        return $args;
+    }
+
+    /**
+     * Order by rating post clauses
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param array $args Query args
+     *
+     * @return array
+     */
+    public function order_by_rating_post_clauses( $args ) {
+        $args['join']    = $this->append_product_sorting_table_join( $args['join'] );
+        $args['orderby'] = ' wc_product_meta_lookup.average_rating DESC, wc_product_meta_lookup.rating_count DESC, wc_product_meta_lookup.product_id DESC ';
+        return $args;
+    }
+
+    /**
+     * Join wc_product_meta_lookup to posts if not already joined.
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param string $sql SQL join
+     *
+     * @return string
+     */
+    private function append_product_sorting_table_join( $sql ) {
+        global $wpdb;
+
+        if ( ! strstr( $sql, 'wc_product_meta_lookup' ) ) {
+            $sql .= " LEFT JOIN {$wpdb->wc_product_meta_lookup} wc_product_meta_lookup ON $wpdb->posts.ID = wc_product_meta_lookup.product_id ";
+        }
+        return $sql;
+    }
+
+    /**
+     * Store listing page make order by random
+     *
+     * @since DOKAN_PRO_SINCE
+     *
+     * @param WP_User_Query
+     *
+     * @return WP_User_Query
+     */
+    public function random_store_query( $query ) {
+        if ( ! dokan_is_store_listing() ) {
+            return $query;
+        }
+
+        if ( 'random' === $query->query_vars['orderby'] ) {
+            $order_by = [
+                'ID',
+                'user_login, ID',
+                'user_email',
+                'user_registered, ID',
+                'user_nicename, ID',
+            ];
+
+            $selected_orderby = get_transient( 'dokan_store_listing_random_orderby' );
+
+            if ( false === $selected_orderby ) {
+                $selected_orderby = $order_by[ array_rand( $order_by, 1 ) ];
+
+                set_transient( 'dokan_store_listing_random_orderby', $selected_orderby, MINUTE_IN_SECONDS * 10 );
+            }
+
+            $query->query_orderby = "ORDER BY $selected_orderby";
+        }
+
+        return $query;
     }
 }

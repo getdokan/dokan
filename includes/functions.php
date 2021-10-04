@@ -281,7 +281,7 @@ function dokan_count_stock_posts( $post_type, $user_id, $stock_type ) {
         if ( ! $results ) {
             $results = $wpdb->get_results(
                 $wpdb->prepare(
-                    "SELECT p.post_status, COUNT( * ) AS num_posts 
+                    "SELECT p.post_status, COUNT( * ) AS num_posts
                     FROM {$wpdb->prefix}posts as p INNER JOIN {$wpdb->prefix}postmeta as pm ON p.ID = pm.post_id
                     WHERE p.post_type = %s
                     AND p.post_author = %d
@@ -2252,25 +2252,27 @@ function dokan_get_processing_time_value( $index ) {
  * Dokan get vendor order details by order ID
  *
  * @param int $order
- * @param int $vendor_id
+ * @param int|null $vendor_id, will remove this parameter in future
  *
- * @return array
+ * @since 3.2.11 rewritten entire function
+ *
+ * @return array will return empty array in case order has suborders
  */
-function dokan_get_vendor_order_details( $order_id, $vendor_id ) {
+function dokan_get_vendor_order_details( $order_id, $vendor_id = null ) {
     $order      = wc_get_order( $order_id );
-    $info       = [];
     $order_info = [];
 
-    foreach ( $order->get_items( 'line_item' ) as $item ) {
-        $product_id  = $item->get_product()->get_id();
-        $author_id   = get_post_field( 'post_author', $product_id );
+    if ( ! $order instanceof WC_Abstract_Order || $order->get_meta( 'has_sub_order' ) ) {
+        return apply_filters( 'dokan_get_vendor_order_details', $order_info, $order_id, $vendor_id );
+    }
 
-        if ( $vendor_id == $author_id ) {
-            $info['product']  = $item['name'];
-            $info['quantity'] = $item['quantity'];
-            $info['total']    = $item['total'];
-            array_push( $order_info, $info );
-        }
+    foreach ( $order->get_items( 'line_item' ) as $item ) {
+        $info = [
+            'product'  => $item['name'],
+            'quantity' => $item['quantity'],
+            'total'    => $item['total'],
+        ];
+        array_push( $order_info, $info );
     }
 
     return apply_filters( 'dokan_get_vendor_order_details', $order_info, $order_id, $vendor_id );
@@ -2759,7 +2761,7 @@ function dokan_get_category_wise_seller_commission( $product_id, $category_id = 
     }
 
     if ( ! empty( $category_commision ) ) {
-        return (float) $category_commision;
+        return wc_format_decimal( $category_commision );
     }
 
     return 0;
@@ -2839,7 +2841,6 @@ add_action( 'dokan_checkout_update_order_meta', 'dokan_cache_reset_seller_order_
 add_action( 'woocommerce_order_status_changed', 'dokan_cache_reset_order_data_on_status', 10, 4 );
 add_action( 'dokan_new_product_added', 'dokan_cache_clear_seller_product_data', 20, 2 );
 add_action( 'dokan_product_updated', 'dokan_cache_clear_seller_product_data', 20 );
-add_action( 'delete_post', 'dokan_cache_clear_deleted_product', 20 );
 
 /**
  * Reset cache group related to seller orders
@@ -2863,20 +2864,6 @@ function dokan_cache_clear_seller_product_data( $product_id, $post_data = [] ) {
     dokan_cache_clear_group( 'dokan_seller_product_data_' . $seller_id );
     dokan_cache_clear_group( 'dokan_cache_seller_product_data_' . $seller_id );
     dokan_cache_clear_group( 'dokan_cache_seller_product_stock_data_' . $seller_id );
-    delete_transient( 'dokan-store-category-' . $seller_id );
-}
-
-/**
- * Reset the cache group for store category when deleted
- *
- * @param int $post_id
- *
- * @return void
- */
-function dokan_cache_clear_deleted_product( $post_id ) {
-    $seller_id = get_post_field( 'post_author', $post_id );
-
-    delete_transient( 'dokan-store-category-' . $seller_id );
 }
 
 /**
@@ -2998,8 +2985,8 @@ function dokan_get_all_caps() {
             'dokan_manage_order'      => __( 'Manage order', 'dokan-lite' ),
             'dokan_manage_order_note' => __( 'Manage order note', 'dokan-lite' ),
             'dokan_manage_refund'     => __( 'Manage refund', 'dokan-lite' ),
+            'dokan_export_order'      => __( 'Export order', 'dokan-lite' ),
         ],
-
         'coupon' => [
             'dokan_add_coupon'    => __( 'Add coupon', 'dokan-lite' ),
             'dokan_edit_coupon'   => __( 'Edit coupon', 'dokan-lite' ),
@@ -3028,7 +3015,7 @@ function dokan_get_all_caps() {
             'dokan_view_order_menu'          => __( 'View order menu', 'dokan-lite' ),
             'dokan_view_coupon_menu'         => __( 'View coupon menu', 'dokan-lite' ),
             'dokan_view_report_menu'         => __( 'View report menu', 'dokan-lite' ),
-            'dokan_view_review_menu'         => __( 'Vuew review menu', 'dokan-lite' ),
+            'dokan_view_review_menu'         => __( 'View review menu', 'dokan-lite' ),
             'dokan_view_withdraw_menu'       => __( 'View withdraw menu', 'dokan-lite' ),
             'dokan_view_store_settings_menu' => __( 'View store settings menu', 'dokan-lite' ),
             'dokan_view_store_payment_menu'  => __( 'View payment settings menu', 'dokan-lite' ),
@@ -3672,11 +3659,14 @@ function dokan_commission_types() {
  * @return void|string
  */
 function dokan_login_form( $args = [], $echo = false ) {
+    $login_url = apply_filters( 'dokan_redirect_login', dokan_get_page_url( 'myaccount', 'woocommerce' ) );
+
     $defaults = [
         'title'        => esc_html__( 'Please Login to Continue', 'dokan-lite' ),
         'id'           => 'dokan-login-form',
         'nonce_action' => 'dokan-login-form-action',
         'nonce_name'   => 'dokan-login-form-nonce',
+        'login_url'    => $login_url,
     ];
 
     $args = wp_parse_args( $args, $defaults );
@@ -3945,9 +3935,9 @@ function dokan_met_minimum_php_version_for_wc( $required_version = '7.0' ) {
 function dokan_has_map_api_key() {
     $dokan_appearance = get_option( 'dokan_appearance', [] );
 
-    if ( 'google_maps' === $dokan_appearance['map_api_source'] && ! empty( $dokan_appearance['gmap_api_key'] ) ) {
+    if ( ! empty( $dokan_appearance['map_api_source'] ) && 'google_maps' === $dokan_appearance['map_api_source'] && ! empty( $dokan_appearance['gmap_api_key'] ) ) {
         return true;
-    } elseif ( 'mapbox' === $dokan_appearance['map_api_source'] && ! empty( $dokan_appearance['mapbox_access_token'] ) ) {
+    } elseif ( ! empty( $dokan_appearance['map_api_source'] ) && 'mapbox' === $dokan_appearance['map_api_source'] && ! empty( $dokan_appearance['mapbox_access_token'] ) ) {
         return true;
     }
 
@@ -4007,7 +3997,7 @@ function dokan_is_vendor_info_hidden( $option = null ) {
  * Function current_datetime() compatibility for wp version < 5.3
  *
  * @since 3.1.1
- * @throws Exception
+ *
  * @return DateTimeImmutable
  */
 function dokan_current_datetime() {
@@ -4068,9 +4058,9 @@ function dokan_wp_timezone_string() {
  *
  * @param string|timestamp $date the date string or timestamp
  * @param string|bool $format date format string or false for default WordPress date
+ *
  * @since 3.1.1
  *
- * @throws Exception
  * @return string|false The date, translated if locale specifies it. False on invalid timestamp input.
  */
 function dokan_format_date( $date = '', $format = false ) {
@@ -4082,6 +4072,38 @@ function dokan_format_date( $date = '', $format = false ) {
     // if no format is specified, get default WordPress date format
     if ( ! $format ) {
         $format = wc_date_format();
+    }
+
+    // if date is not timestamp, convert it to timestamp
+    if ( ! is_numeric( $date ) && strtotime( $date ) ) {
+        $date = dokan_current_datetime()->modify( $date )->getTimestamp();
+    }
+
+    if ( function_exists( 'wp_date' ) ) {
+        return wp_date( $format, $date );
+    }
+
+    return date_i18n( $format, $date );
+}
+
+/**
+ * Get a formatted date, time from WordPress format
+ *
+ * @param string|timestamp $date the date string or timestamp
+ * @param string|bool $format date format string or false for default WordPress date
+ * @since 3.2.7
+ *
+ * @return string|false The date, translated if locale specifies it. False on invalid timestamp input.
+ */
+function dokan_format_datetime( $date = '', $format = false ) {
+    // if date is empty, get current datetime timestamp
+    if ( empty( $date ) ) {
+        $date = dokan_current_datetime()->getTimestamp();
+    }
+
+    // if no format is specified, get default WordPress date format
+    if ( ! $format ) {
+        $format = wc_date_format() . ' ' . wc_time_format();
     }
 
     // if date is not timestamp, convert it to timestamp

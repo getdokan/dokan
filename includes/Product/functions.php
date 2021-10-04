@@ -98,6 +98,21 @@ function dokan_save_product( $args ) {
     }
 
     if ( isset( $data['product_tag'] ) ) {
+        /**
+         * Filter of maximun a vendor can add tags.
+         *
+         * @since 3.3.7
+         *
+         * @param integer default -1
+         */
+        $maximum_tags_select_length = apply_filters( 'dokan_product_tags_select_max_length', -1 );
+
+        // Setting limitation for how many product tags that vendor can input.
+        if ( $maximum_tags_select_length !== -1 && count( $data['product_tag'] ) !== 0 && count( $data['product_tag'] ) > $maximum_tags_select_length ) {
+            /* translators: %s: maximum tag length */
+            return new WP_Error( 'tags-limit', sprintf( __( 'You can only select %s tags', 'dokan-lite' ), number_format_i18n( $maximum_tags_select_length ) ) );
+        }
+
         $post_data['tags'] = array_map( 'absint', (array) $data['product_tag'] );
     }
 
@@ -546,4 +561,55 @@ function dokan_get_translated_product_stock_status( $stock = false ) {
     }
 
     return isset( $stock_status[ $stock ] ) ? $stock_status[ $stock ] : '';
+}
+
+/**
+ * Get dokan store products filter catalog orderby
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @return array
+ */
+function dokan_store_product_catalog_orderby() {
+    $show_default_orderby = 'menu_order' === apply_filters( 'dokan_default_store_products_orderby', get_option( 'woocommerce_default_catalog_orderby', 'menu_order' ) );
+
+    $catalog_orderby_options = apply_filters(
+        'dokan_store_product_catalog_orderby',
+        array(
+            'menu_order' => __( 'Default sorting', 'dokan-lite' ),
+            'popularity' => __( 'Sort by popularity', 'dokan-lite' ),
+            'rating'     => __( 'Sort by average rating', 'dokan-lite' ),
+            'date'       => __( 'Sort by latest', 'dokan-lite' ),
+            'price'      => __( 'Sort by price: low to high', 'dokan-lite' ),
+            'price-desc' => __( 'Sort by price: high to low', 'dokan-lite' ),
+        )
+    );
+
+    $default_orderby = wc_get_loop_prop( 'is_search' ) ? 'relevance' : apply_filters( 'dokan_default_store_products_orderby', get_option( 'woocommerce_default_catalog_orderby', '' ) );
+    $orderby = isset( $_GET['product_orderby'] ) ? wc_clean( wp_unslash( $_GET['product_orderby'] ) ) : $default_orderby; //phpcs:ignore
+
+    if ( wc_get_loop_prop( 'is_search' ) ) {
+        $catalog_orderby_options = array_merge( array( 'relevance' => __( 'Relevance', 'dokan-lite' ) ), $catalog_orderby_options );
+
+        unset( $catalog_orderby_options['menu_order'] );
+    }
+
+    if ( ! $show_default_orderby ) {
+        unset( $catalog_orderby_options['menu_order'] );
+    }
+
+    if ( ! wc_review_ratings_enabled() ) {
+        unset( $catalog_orderby_options['rating'] );
+    }
+
+    if ( ! array_key_exists( $orderby, $catalog_orderby_options ) ) {
+        $orderby = current( array_keys( $catalog_orderby_options ) );
+    }
+
+    $orderby_options = array(
+        'orderby'  => $orderby,
+        'catalogs' => $catalog_orderby_options,
+    );
+
+    return $orderby_options;
 }

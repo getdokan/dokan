@@ -311,8 +311,12 @@ if (false) {(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_debounce__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_Switches_vue__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_UploadImage_vue__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_PasswordGenerator_vue__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_UploadImage_vue__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_PasswordGenerator_vue__ = __webpack_require__(19);
+//
+//
+//
+//
 //
 //
 //
@@ -1440,6 +1444,12 @@ if (false) {(function () {
 /* 15 */,
 /* 16 */,
 /* 17 */
+/***/ (function(module, exports) {
+
+module.exports = jQuery;
+
+/***/ }),
+/* 18 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1495,7 +1505,7 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1547,9 +1557,9 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 19 */,
 /* 20 */,
-/* 21 */
+/* 21 */,
+/* 22 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1600,13 +1610,7 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 22 */,
-/* 23 */
-/***/ (function(module, exports) {
-
-module.exports = jQuery;
-
-/***/ }),
+/* 23 */,
 /* 24 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1878,7 +1882,7 @@ var render = function() {
               on: {
                 click: function($event) {
                   $event.preventDefault()
-                  return _vm.uploadImage($event)
+                  return _vm.uploadImage.apply(null, arguments)
                 }
               }
             },
@@ -1917,7 +1921,7 @@ var render = function() {
             on: {
               click: function($event) {
                 $event.preventDefault()
-                return _vm.generatePassword($event)
+                return _vm.generatePassword.apply(null, arguments)
               }
             }
           },
@@ -1933,7 +1937,7 @@ var render = function() {
             on: {
               click: function($event) {
                 $event.preventDefault()
-                return _vm.regenratePassword($event)
+                return _vm.regenratePassword.apply(null, arguments)
               }
             }
           },
@@ -1952,7 +1956,7 @@ var render = function() {
             on: {
               click: function($event) {
                 $event.preventDefault()
-                return _vm.cancelButton($event)
+                return _vm.cancelButton.apply(null, arguments)
               }
             }
           },
@@ -2063,7 +2067,7 @@ var render = function() {
         { staticClass: "dokan-form-group" },
         [
           _c("div", { staticClass: "column" }, [
-            _c("label", { attrs: { for: "store-email" } }, [
+            _c("label", { attrs: { for: "first-name" } }, [
               _vm._v(_vm._s(_vm.__("First Name", "dokan-lite")))
             ]),
             _vm._v(" "),
@@ -2079,6 +2083,7 @@ var render = function() {
               staticClass: "dokan-form-input",
               attrs: {
                 type: "email",
+                id: "first-name",
                 placeholder: _vm.__("First Name", "dokan-lite")
               },
               domProps: { value: _vm.vendorInfo.first_name },
@@ -2094,7 +2099,7 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "column" }, [
-            _c("label", { attrs: { for: "store-email" } }, [
+            _c("label", { attrs: { for: "last-name" } }, [
               _vm._v(_vm._s(_vm.__("Last Name", "dokan-lite")))
             ]),
             _vm._v(" "),
@@ -2110,6 +2115,7 @@ var render = function() {
               staticClass: "dokan-form-input",
               attrs: {
                 type: "email",
+                id: "last-name",
                 placeholder: _vm.__("Last Name", "dokan-lite")
               },
               domProps: { value: _vm.vendorInfo.last_name },
@@ -2148,6 +2154,7 @@ var render = function() {
               },
               attrs: {
                 type: "text",
+                id: "store-name",
                 placeholder: _vm.getError("store_name")
                   ? _vm.__("Store Name is required", "dokan-lite")
                   : _vm.__("Store Name", "dokan-lite")
@@ -2166,7 +2173,7 @@ var render = function() {
           _vm._v(" "),
           !_vm.getId()
             ? _c("div", { staticClass: "column" }, [
-                _c("label", { attrs: { for: "store-url" } }, [
+                _c("label", { attrs: { for: "user-nicename" } }, [
                   _vm._v(_vm._s(_vm.__("Store URL", "dokan-lite")))
                 ]),
                 _vm._v(" "),
@@ -2182,6 +2189,7 @@ var render = function() {
                   staticClass: "dokan-form-input",
                   attrs: {
                     type: "text",
+                    id: "user-nicename",
                     placeholder: _vm.__("Store Url", "dokan-lite")
                   },
                   domProps: { value: _vm.vendorInfo.user_nicename },
@@ -2239,6 +2247,7 @@ var render = function() {
               staticClass: "dokan-form-input",
               attrs: {
                 type: "number",
+                id: "store-phone",
                 placeholder: _vm.__("123456789", "dokan-lite")
               },
               domProps: { value: _vm.vendorInfo.phone },
@@ -2277,6 +2286,7 @@ var render = function() {
               },
               attrs: {
                 type: "email",
+                id: "store-email",
                 placeholder: _vm.getError("email")
                   ? _vm.__("Email is required", "dokan-lite")
                   : _vm.__("store@email.com", "dokan-lite")
@@ -2309,7 +2319,7 @@ var render = function() {
           !_vm.getId()
             ? [
                 _c("div", { staticClass: "column" }, [
-                  _c("label", { attrs: { for: "store-username" } }, [
+                  _c("label", { attrs: { for: "user-login" } }, [
                     _vm._v(_vm._s(_vm.__("Username", "dokan-lite")))
                   ]),
                   _c("span", { staticClass: "required-field" }, [_vm._v("*")]),
@@ -2330,6 +2340,7 @@ var render = function() {
                     },
                     attrs: {
                       type: "text",
+                      id: "user-login",
                       placeholder: _vm.getError("user_login")
                         ? _vm.__("Username is required", "dokan-lite")
                         : _vm.__("Username", "dokan-lite")
@@ -2405,7 +2416,11 @@ var render = function() {
                             }
                           ],
                           staticClass: "dokan-form-input",
-                          attrs: { type: "text", placeholder: "********" },
+                          attrs: {
+                            id: "store-password",
+                            type: "text",
+                            placeholder: "********"
+                          },
                           domProps: { value: _vm.vendorInfo.user_pass },
                           on: {
                             input: function($event) {
@@ -2556,6 +2571,7 @@ var render = function() {
               staticClass: "dokan-form-input",
               attrs: {
                 type: "text",
+                id: "street-1",
                 placeholder: _vm.__("Street 1", "dokan-lite")
               },
               domProps: { value: _vm.vendorInfo.address.street_1 },
@@ -2591,6 +2607,7 @@ var render = function() {
               staticClass: "dokan-form-input",
               attrs: {
                 type: "text",
+                id: "street-2",
                 placeholder: _vm.__("Street 2", "dokan-lite")
               },
               domProps: { value: _vm.vendorInfo.address.street_2 },
@@ -2626,6 +2643,7 @@ var render = function() {
               staticClass: "dokan-form-input",
               attrs: {
                 type: "text",
+                id: "city",
                 placeholder: _vm.__("City", "dokan-lite")
               },
               domProps: { value: _vm.vendorInfo.address.city },
@@ -2655,7 +2673,11 @@ var render = function() {
                 }
               ],
               staticClass: "dokan-form-input",
-              attrs: { type: "text", placeholder: _vm.__("Zip", "dokan-lite") },
+              attrs: {
+                type: "text",
+                id: "zip",
+                placeholder: _vm.__("Zip", "dokan-lite")
+              },
               domProps: { value: _vm.vendorInfo.address.zip },
               on: {
                 input: function($event) {
@@ -2678,6 +2700,7 @@ var render = function() {
               _vm._v(" "),
               _c("Multiselect", {
                 attrs: {
+                  id: "country",
                   options: _vm.countries,
                   multiselect: false,
                   label: "name",
@@ -2719,6 +2742,7 @@ var render = function() {
                       ],
                       staticClass: "dokan-form-input",
                       attrs: {
+                        id: "state",
                         type: "text",
                         placeholder: _vm.__("State", "dokan-lite")
                       },
@@ -2740,6 +2764,7 @@ var render = function() {
                 : [
                     _c("Multiselect", {
                       attrs: {
+                        id: "state",
                         options: _vm.getStatesFromCountryCode(_vm.selectedCode),
                         multiselect: false,
                         showLabels: false,
@@ -2893,6 +2918,7 @@ var render = function() {
                   staticClass: "dokan-form-input",
                   attrs: {
                     type: "text",
+                    id: "account-name",
                     placeholder: _vm.__("Account Name", "dokan-lite")
                   },
                   domProps: { value: _vm.vendorInfo.payment.bank.ac_name },
@@ -2928,6 +2954,7 @@ var render = function() {
                   staticClass: "dokan-form-input",
                   attrs: {
                     type: "text",
+                    id: "account-number",
                     placeholder: _vm.__("1233456789", "dokan-lite")
                   },
                   domProps: { value: _vm.vendorInfo.payment.bank.ac_number },
@@ -2963,6 +2990,7 @@ var render = function() {
                   staticClass: "dokan-form-input",
                   attrs: {
                     type: "text",
+                    id: "bank-name",
                     placeholder: _vm.__("Bank Name", "dokan-lite")
                   },
                   domProps: { value: _vm.vendorInfo.payment.bank.bank_name },
@@ -2998,6 +3026,7 @@ var render = function() {
                   staticClass: "dokan-form-input",
                   attrs: {
                     type: "text",
+                    id: "bank-address",
                     placeholder: _vm.__("Bank Address", "dokan-lite")
                   },
                   domProps: { value: _vm.vendorInfo.payment.bank.bank_addr },
@@ -3033,6 +3062,7 @@ var render = function() {
                   staticClass: "dokan-form-input",
                   attrs: {
                     type: "text",
+                    id: "routing-number",
                     placeholder: _vm.__("123456789", "dokan-lite")
                   },
                   domProps: {
@@ -3070,6 +3100,7 @@ var render = function() {
                   staticClass: "dokan-form-input",
                   attrs: {
                     type: "text",
+                    id: "iban",
                     placeholder: _vm.__("123456789", "dokan-lite")
                   },
                   domProps: { value: _vm.vendorInfo.payment.bank.iban },
@@ -3105,6 +3136,7 @@ var render = function() {
                   staticClass: "dokan-form-input",
                   attrs: {
                     type: "text",
+                    id: "swift",
                     placeholder: _vm.__("123456789", "dokan-lite")
                   },
                   domProps: { value: _vm.vendorInfo.payment.bank.swift },
@@ -3144,7 +3176,7 @@ var render = function() {
                   class: { column: _vm.getId(), "checkbox-group": !_vm.getId() }
                 },
                 [
-                  _c("label", { attrs: { for: "account-name" } }, [
+                  _c("label", { attrs: { for: "paypal-email" } }, [
                     _vm._v(_vm._s(_vm.__("PayPal Email", "dokan-lite")))
                   ]),
                   _vm._v(" "),
@@ -3160,6 +3192,7 @@ var render = function() {
                     staticClass: "dokan-form-input",
                     attrs: {
                       type: "email",
+                      id: "paypal-email",
                       placeholder: _vm.__("store@email.com", "dokan-lite")
                     },
                     domProps: { value: _vm.vendorInfo.payment.paypal.email },
@@ -3186,7 +3219,7 @@ var render = function() {
                         "div",
                         { staticClass: "column" },
                         [
-                          _c("label", [
+                          _c("label", { attrs: { for: "commission-type" } }, [
                             _vm._v(
                               _vm._s(
                                 _vm.__("Admin Commission Type", "dokan-lite")
@@ -3196,6 +3229,7 @@ var render = function() {
                           _vm._v(" "),
                           _c("Multiselect", {
                             attrs: {
+                              id: "commission-type",
                               options: _vm.commissionTypes,
                               "track-by": "name",
                               label: "label",
@@ -3455,7 +3489,7 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_Chart_vue__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_Chart_vue__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__ = __webpack_require__(7);
 //
 //
@@ -3706,7 +3740,29 @@ var Currency = dokan_get_lib('Currency');
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_UpgradeBanner_vue__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__ = __webpack_require__(7);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -3801,13 +3857,14 @@ var ListTable = dokan_get_lib('ListTable');
 var Modal = dokan_get_lib('Modal');
 var Currency = dokan_get_lib('Currency');
 
+
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'Withdraw',
   components: {
     ListTable: ListTable,
     Modal: Modal,
     Currency: Currency,
-    UpgradeBanner: __WEBPACK_IMPORTED_MODULE_0_admin_components_UpgradeBanner_vue__["a" /* default */]
+    UpgradeBanner: __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__["a" /* default */]
   },
   data: function data() {
     return {
@@ -3819,6 +3876,9 @@ var Currency = dokan_get_lib('Currency');
       totalPages: 1,
       perPage: 10,
       totalItems: 0,
+      filter: {
+        user_id: 0
+      },
       counts: {
         pending: 0,
         approved: 0,
@@ -3861,10 +3921,22 @@ var Currency = dokan_get_lib('Currency');
   },
   watch: {
     '$route.query.status': function $routeQueryStatus() {
+      this.filter.user_id = 0;
+      this.clearSelection('#filter-vendors');
       this.fetchRequests();
     },
     '$route.query.page': function $routeQueryPage() {
       this.fetchRequests();
+    },
+    '$route.query.user_id': function $routeQueryUser_id() {
+      this.fetchRequests();
+    },
+    'filter.user_id': function filterUser_id(user_id) {
+      if (user_id === 0) {
+        this.clearSelection('#filter-vendors');
+      }
+
+      this.goTo(this.query);
     }
   },
   computed: {
@@ -3933,6 +4005,36 @@ var Currency = dokan_get_lib('Currency');
   created: function created() {
     this.fetchRequests();
   },
+  mounted: function mounted() {
+    var self = this;
+    __WEBPACK_IMPORTED_MODULE_0_jquery___default()('#filter-vendors').selectWoo({
+      ajax: {
+        url: "".concat(dokan.rest.root, "dokan/v1/stores"),
+        dataType: 'json',
+        headers: {
+          "X-WP-Nonce": dokan.rest.nonce
+        },
+        data: function data(params) {
+          return {
+            search: params.term
+          };
+        },
+        processResults: function processResults(data) {
+          return {
+            results: data.map(function (store) {
+              return {
+                id: store.id,
+                text: store.store_name
+              };
+            })
+          };
+        }
+      }
+    });
+    __WEBPACK_IMPORTED_MODULE_0_jquery___default()('#filter-vendors').on('select2:select', function (e) {
+      self.filter.user_id = e.params.data.id;
+    });
+  },
   methods: {
     updatedCounts: function updatedCounts(xhr) {
       this.counts.pending = parseInt(xhr.getResponseHeader('X-Status-Pending'));
@@ -3954,7 +4056,13 @@ var Currency = dokan_get_lib('Currency');
       var _this = this;
 
       this.loading = true;
-      dokan.api.get('/withdraw?per_page=' + this.perPage + '&page=' + this.currentPage + '&status=' + this.currentStatus).done(function (response, status, xhr) {
+      var url = '/withdraw?per_page=' + this.perPage + '&page=' + this.currentPage + '&status=' + this.currentStatus;
+
+      if (parseInt(this.filter.user_id) > 0) {
+        url += '&user_id=' + this.filter.user_id;
+      }
+
+      dokan.api.get(url).done(function (response, status, xhr) {
         _this.requests = response;
         _this.loading = false;
 
@@ -3968,7 +4076,17 @@ var Currency = dokan_get_lib('Currency');
         name: 'Withdraw',
         query: {
           status: this.currentStatus,
-          page: page
+          page: page,
+          user_id: this.filter.user_id
+        }
+      });
+    },
+    goTo: function goTo(page) {
+      this.$router.push({
+        name: 'Withdraw',
+        query: {
+          status: this.currentStatus,
+          user_id: this.filter.user_id
         }
       });
     },
@@ -4165,6 +4283,9 @@ var Currency = dokan_get_lib('Currency');
           note: null
         };
       });
+    },
+    clearSelection: function clearSelection(element) {
+      __WEBPACK_IMPORTED_MODULE_0_jquery___default()(element).val(null).trigger('change');
     }
   }
 });
@@ -5292,6 +5413,7 @@ var Loading = dokan_get_lib('Loading');
 //
 //
 //
+//
 var Loading = dokan_get_lib('Loading');
 
 
@@ -5317,6 +5439,7 @@ var Loading = dokan_get_lib('Loading');
       settingValues: {},
       requiredFields: [],
       errors: [],
+      validationErrors: [],
       hasPro: dokan.hasPro ? true : false,
       searchText: '',
       awaitingSearch: false
@@ -5437,11 +5560,10 @@ var Loading = dokan_get_lib('Loading');
             break;
           }
         }
+
+        self.validationErrors = [];
       }).fail(function (jqXHR) {
-        var messages = jqXHR.responseJSON.data.map(function (error) {
-          return error.message;
-        });
-        alert(messages.join(' '));
+        self.validationErrors = jqXHR.responseJSON.data.errors;
       }).always(function () {
         self.showLoading = false;
       });
@@ -5920,6 +6042,31 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 var TextEditor = dokan_get_lib('TextEditor');
 var GoogleMaps = dokan_get_lib('GoogleMaps');
@@ -5934,7 +6081,7 @@ var RefreshSettingOptions = dokan_get_lib('RefreshSettingOptions');
     Mapbox: Mapbox,
     RefreshSettingOptions: RefreshSettingOptions
   },
-  props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues', 'errors', 'toggleLoadingState'],
+  props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues', 'errors', 'toggleLoadingState', 'validationErrors'],
   data: function data() {
     return {
       repeatableItem: {},
@@ -6107,6 +6254,22 @@ var RefreshSettingOptions = dokan_get_lib('RefreshSettingOptions');
     },
     getError: function getError(label) {
       return label + ' ' + this.__('is required.', 'dokan-lite');
+    },
+    hasValidationError: function hasValidationError(key) {
+      if (this.validationErrors.filter(function (e) {
+        return e.name === key;
+      }).length > 0) {
+        return key;
+      }
+    },
+    getValidationErrorMessage: function getValidationErrorMessage(key) {
+      var errorMessage = '';
+      this.validationErrors.forEach(function (obj) {
+        if (obj.name === key) {
+          errorMessage = obj.error;
+        }
+      });
+      return errorMessage;
     }
   }
 });
@@ -8200,10 +8363,9 @@ var render = function() {
                 _c(
                   "router-link",
                   {
+                    class: { current: _vm.currentStatus === "pending" },
                     attrs: {
-                      to: { name: "Withdraw", query: { status: "pending" } },
-                      "active-class": "current",
-                      exact: ""
+                      to: { name: "Withdraw", query: { status: "pending" } }
                     }
                   },
                   [
@@ -8224,10 +8386,9 @@ var render = function() {
                 _c(
                   "router-link",
                   {
+                    class: { current: _vm.currentStatus === "approved" },
                     attrs: {
-                      to: { name: "Withdraw", query: { status: "approved" } },
-                      "active-class": "current",
-                      exact: ""
+                      to: { name: "Withdraw", query: { status: "approved" } }
                     }
                   },
                   [
@@ -8248,10 +8409,9 @@ var render = function() {
                 _c(
                   "router-link",
                   {
+                    class: { current: _vm.currentStatus === "cancelled" },
                     attrs: {
-                      to: { name: "Withdraw", query: { status: "cancelled" } },
-                      "active-class": "current",
-                      exact: ""
+                      to: { name: "Withdraw", query: { status: "cancelled" } }
                     }
                   },
                   [
@@ -8267,248 +8427,317 @@ var render = function() {
             )
           ]),
           _vm._v(" "),
-          _c("list-table", {
-            attrs: {
-              columns: _vm.columns,
-              rows: _vm.requests,
-              loading: _vm.loading,
-              "action-column": _vm.actionColumn,
-              actions: _vm.actions,
-              "show-cb": _vm.showCb,
-              "bulk-actions": _vm.bulkActions,
-              "not-found": _vm.notFound,
-              "total-pages": _vm.totalPages,
-              "total-items": _vm.totalItems,
-              "per-page": _vm.perPage,
-              "current-page": _vm.currentPage,
-              text: _vm.$root.listTableTexts()
-            },
-            on: {
-              pagination: _vm.goToPage,
-              "action:click": _vm.onActionClick,
-              "bulk:click": _vm.onBulkAction
-            },
-            scopedSlots: _vm._u([
-              {
-                key: "seller",
-                fn: function(data) {
-                  return [
-                    _c("img", {
-                      attrs: {
-                        src: data.row.user.gravatar,
-                        alt: data.row.user.store_name,
-                        width: "50"
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("strong", [
+          _c(
+            "list-table",
+            {
+              attrs: {
+                columns: _vm.columns,
+                rows: _vm.requests,
+                loading: _vm.loading,
+                "action-column": _vm.actionColumn,
+                actions: _vm.actions,
+                "show-cb": _vm.showCb,
+                "bulk-actions": _vm.bulkActions,
+                "not-found": _vm.notFound,
+                "total-pages": _vm.totalPages,
+                "total-items": _vm.totalItems,
+                "per-page": _vm.perPage,
+                "current-page": _vm.currentPage,
+                text: _vm.$root.listTableTexts()
+              },
+              on: {
+                pagination: _vm.goToPage,
+                "action:click": _vm.onActionClick,
+                "bulk:click": _vm.onBulkAction
+              },
+              scopedSlots: _vm._u([
+                {
+                  key: "seller",
+                  fn: function(data) {
+                    return [
+                      _c("img", {
+                        attrs: {
+                          src: data.row.user.gravatar,
+                          alt: data.row.user.store_name,
+                          width: "50"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("strong", [
+                        _c(
+                          "a",
+                          { attrs: { href: _vm.vendorUrl(data.row.user.id) } },
+                          [
+                            _vm._v(
+                              _vm._s(
+                                data.row.user.store_name
+                                  ? data.row.user.store_name
+                                  : _vm.__("(no name)", "dokan-lite")
+                              )
+                            )
+                          ]
+                        )
+                      ])
+                    ]
+                  }
+                },
+                {
+                  key: "vendor",
+                  fn: function(ref) {
+                    var row = ref.row
+                    return [
                       _c(
-                        "a",
-                        { attrs: { href: _vm.vendorUrl(data.row.user.id) } },
+                        "router-link",
+                        { attrs: { to: "/vendors/" + row.vendor.id } },
                         [
                           _vm._v(
-                            _vm._s(
-                              data.row.user.store_name
-                                ? data.row.user.store_name
-                                : _vm.__("(no name)", "dokan-lite")
-                            )
+                            "\n                    " +
+                              _vm._s(
+                                row.vendor.name
+                                  ? row.vendor.name
+                                  : _vm.__("(no name)", "dokan-lite")
+                              ) +
+                              "\n                "
                           )
                         ]
                       )
-                    ])
-                  ]
-                }
-              },
-              {
-                key: "amount",
-                fn: function(data) {
-                  return [
-                    _c("currency", { attrs: { amount: data.row.amount } })
-                  ]
-                }
-              },
-              {
-                key: "status",
-                fn: function(data) {
-                  return [
-                    _c("span", { class: data.row.status }, [
-                      _vm._v(_vm._s(_vm._f("capitalize")(data.row.status)))
-                    ])
-                  ]
-                }
-              },
-              {
-                key: "created",
-                fn: function(data) {
-                  return [
-                    _vm._v(
-                      "\n                " +
-                        _vm._s(
-                          _vm.moment(data.row.created).format("MMM D, YYYY")
-                        ) +
-                        "\n            "
-                    )
-                  ]
-                }
-              },
-              {
-                key: "method_details",
-                fn: function(data) {
-                  return [
-                    _c("div", {
-                      staticClass: "method_details_inner",
-                      domProps: {
-                        innerHTML: _vm._s(
-                          _vm.getPaymentDetails(
-                            data.row.method,
-                            data.row.user.payment
+                    ]
+                  }
+                },
+                {
+                  key: "amount",
+                  fn: function(data) {
+                    return [
+                      _c("currency", { attrs: { amount: data.row.amount } })
+                    ]
+                  }
+                },
+                {
+                  key: "status",
+                  fn: function(data) {
+                    return [
+                      _c("span", { class: data.row.status }, [
+                        _vm._v(_vm._s(_vm._f("capitalize")(data.row.status)))
+                      ])
+                    ]
+                  }
+                },
+                {
+                  key: "created",
+                  fn: function(data) {
+                    return [
+                      _vm._v(
+                        "\n                " +
+                          _vm._s(
+                            _vm.moment(data.row.created).format("MMM D, YYYY")
+                          ) +
+                          "\n            "
+                      )
+                    ]
+                  }
+                },
+                {
+                  key: "method_details",
+                  fn: function(data) {
+                    return [
+                      _c("div", {
+                        staticClass: "method_details_inner",
+                        domProps: {
+                          innerHTML: _vm._s(
+                            _vm.getPaymentDetails(
+                              data.row.method,
+                              data.row.details
+                            )
                           )
-                        )
-                      }
-                    })
-                  ]
+                        }
+                      })
+                    ]
+                  }
+                },
+                {
+                  key: "actions",
+                  fn: function(data) {
+                    return [
+                      data.row.status === "pending"
+                        ? [
+                            _c("div", { staticClass: "button-group" }, [
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "button button-small",
+                                  attrs: {
+                                    title: _vm.__(
+                                      "Approve Request",
+                                      "dokan-lite"
+                                    )
+                                  },
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.changeStatus(
+                                        "approved",
+                                        data.row.id
+                                      )
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("span", {
+                                    staticClass: "dashicons dashicons-yes"
+                                  })
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "button button-small",
+                                  attrs: {
+                                    title: _vm.__("Add Note", "dokan-lite")
+                                  },
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.openNoteModal(
+                                        data.row.note,
+                                        data.row.id
+                                      )
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("span", {
+                                    staticClass:
+                                      "dashicons dashicons-testimonial"
+                                  })
+                                ]
+                              )
+                            ])
+                          ]
+                        : data.row.status === "approved"
+                        ? [
+                            _c("div", { staticClass: "button-group" }, [
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "button button-small",
+                                  attrs: {
+                                    title: _vm.__("Add Note", "dokan-lite")
+                                  },
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.openNoteModal(
+                                        data.row.note,
+                                        data.row.id
+                                      )
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("span", {
+                                    staticClass:
+                                      "dashicons dashicons-testimonial"
+                                  })
+                                ]
+                              )
+                            ])
+                          ]
+                        : [
+                            _c("div", { staticClass: "button-group" }, [
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "button button-small",
+                                  attrs: {
+                                    title: _vm.__(
+                                      "Mark as Pending",
+                                      "dokan-lite"
+                                    )
+                                  },
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.changeStatus(
+                                        "pending",
+                                        data.row.id
+                                      )
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("span", {
+                                    staticClass: "dashicons dashicons-backup"
+                                  })
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "button button-small",
+                                  attrs: {
+                                    title: _vm.__("Add Note", "dokan-lite")
+                                  },
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.openNoteModal(
+                                        data.row.note,
+                                        data.row.id
+                                      )
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("span", {
+                                    staticClass:
+                                      "dashicons dashicons-testimonial"
+                                  })
+                                ]
+                              )
+                            ])
+                          ]
+                    ]
+                  }
                 }
-              },
-              {
-                key: "actions",
-                fn: function(data) {
-                  return [
-                    data.row.status === "pending"
-                      ? [
-                          _c("div", { staticClass: "button-group" }, [
-                            _c(
-                              "button",
-                              {
-                                staticClass: "button button-small",
-                                attrs: {
-                                  title: _vm.__("Approve Request", "dokan-lite")
-                                },
-                                on: {
-                                  click: function($event) {
-                                    $event.preventDefault()
-                                    return _vm.changeStatus(
-                                      "approved",
-                                      data.row.id
-                                    )
-                                  }
-                                }
-                              },
-                              [
-                                _c("span", {
-                                  staticClass: "dashicons dashicons-yes"
-                                })
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "button",
-                              {
-                                staticClass: "button button-small",
-                                attrs: {
-                                  title: _vm.__("Add Note", "dokan-lite")
-                                },
-                                on: {
-                                  click: function($event) {
-                                    $event.preventDefault()
-                                    return _vm.openNoteModal(
-                                      data.row.note,
-                                      data.row.id
-                                    )
-                                  }
-                                }
-                              },
-                              [
-                                _c("span", {
-                                  staticClass: "dashicons dashicons-testimonial"
-                                })
-                              ]
-                            )
-                          ])
-                        ]
-                      : data.row.status === "approved"
-                      ? [
-                          _c("div", { staticClass: "button-group" }, [
-                            _c(
-                              "button",
-                              {
-                                staticClass: "button button-small",
-                                attrs: {
-                                  title: _vm.__("Add Note", "dokan-lite")
-                                },
-                                on: {
-                                  click: function($event) {
-                                    $event.preventDefault()
-                                    return _vm.openNoteModal(
-                                      data.row.note,
-                                      data.row.id
-                                    )
-                                  }
-                                }
-                              },
-                              [
-                                _c("span", {
-                                  staticClass: "dashicons dashicons-testimonial"
-                                })
-                              ]
-                            )
-                          ])
-                        ]
-                      : [
-                          _c("div", { staticClass: "button-group" }, [
-                            _c(
-                              "button",
-                              {
-                                staticClass: "button button-small",
-                                attrs: {
-                                  title: _vm.__("Mark as Pending", "dokan-lite")
-                                },
-                                on: {
-                                  click: function($event) {
-                                    $event.preventDefault()
-                                    return _vm.changeStatus(
-                                      "pending",
-                                      data.row.id
-                                    )
-                                  }
-                                }
-                              },
-                              [
-                                _c("span", {
-                                  staticClass: "dashicons dashicons-backup"
-                                })
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "button",
-                              {
-                                staticClass: "button button-small",
-                                attrs: {
-                                  title: _vm.__("Add Note", "dokan-lite")
-                                },
-                                on: {
-                                  click: function($event) {
-                                    $event.preventDefault()
-                                    return _vm.openNoteModal(
-                                      data.row.note,
-                                      data.row.id
-                                    )
-                                  }
-                                }
-                              },
-                              [
-                                _c("span", {
-                                  staticClass: "dashicons dashicons-testimonial"
-                                })
-                              ]
-                            )
-                          ])
-                        ]
-                  ]
-                }
-              }
-            ])
-          })
+              ])
+            },
+            [
+              _vm._v(" "),
+              _vm._v(" "),
+              _vm._v(" "),
+              _vm._v(" "),
+              _vm._v(" "),
+              _vm._v(" "),
+              _c("template", { slot: "filters" }, [
+                _c("select", {
+                  staticStyle: { width: "190px" },
+                  attrs: {
+                    id: "filter-vendors",
+                    "data-placeholder": _vm.__("Filter by vendor", "dokan-lite")
+                  }
+                }),
+                _vm._v(" "),
+                _vm.filter.user_id
+                  ? _c(
+                      "button",
+                      {
+                        staticClass: "button",
+                        attrs: { type: "button" },
+                        on: {
+                          click: function($event) {
+                            _vm.filter.user_id = 0
+                          }
+                        }
+                      },
+                      [_vm._v("×")]
+                    )
+                  : _vm._e()
+              ])
+            ],
+            2
+          )
         ],
         1
       )
@@ -9615,7 +9844,14 @@ var render = function() {
                           }
                         ],
                         staticClass: "regular-text",
-                        class: _vm.fieldData.class,
+                        class: [
+                          {
+                            "dokan-input-validation-error": _vm.hasValidationError(
+                              _vm.fieldData.name
+                            )
+                          },
+                          _vm.fieldData.class
+                        ],
                         attrs: {
                           id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
                           name: _vm.sectionId + "[" + _vm.fieldData.name + "]",
@@ -9669,7 +9905,14 @@ var render = function() {
                           }
                         ],
                         staticClass: "regular-text",
-                        class: _vm.fieldData.class,
+                        class: [
+                          {
+                            "dokan-input-validation-error": _vm.hasValidationError(
+                              _vm.fieldData.name
+                            )
+                          },
+                          _vm.fieldData.class
+                        ],
                         attrs: {
                           id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
                           name: _vm.sectionId + "[" + _vm.fieldData.name + "]",
@@ -9701,7 +9944,14 @@ var render = function() {
                           }
                         ],
                         staticClass: "regular-text",
-                        class: _vm.fieldData.class,
+                        class: [
+                          {
+                            "dokan-input-validation-error": _vm.hasValidationError(
+                              _vm.fieldData.name
+                            )
+                          },
+                          _vm.fieldData.class
+                        ],
                         attrs: {
                           id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
                           name: _vm.sectionId + "[" + _vm.fieldData.name + "]",
@@ -9727,6 +9977,18 @@ var render = function() {
                         _vm._v(
                           "\n                " +
                             _vm._s(_vm.getError(_vm.fieldData.label)) +
+                            "\n            "
+                        )
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.hasValidationError(_vm.fieldData.name)
+                    ? _c("p", { staticClass: "dokan-error" }, [
+                        _vm._v(
+                          "\n              " +
+                            _vm._s(
+                              _vm.getValidationErrorMessage(_vm.fieldData.name)
+                            ) +
                             "\n            "
                         )
                       ])
@@ -9765,6 +10027,14 @@ var render = function() {
                       }
                     ],
                     staticClass: "regular-text",
+                    class: [
+                      {
+                        "dokan-input-validation-error": _vm.hasValidationError(
+                          _vm.fieldData.name
+                        )
+                      },
+                      _vm.fieldData.class
+                    ],
                     attrs: {
                       type: "number",
                       min: _vm.fieldData.min,
@@ -9793,6 +10063,18 @@ var render = function() {
                         _vm._v(
                           "\n                " +
                             _vm._s(_vm.getError(_vm.fieldData.label)) +
+                            "\n            "
+                        )
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.hasValidationError(_vm.fieldData.name)
+                    ? _c("p", { staticClass: "dokan-error" }, [
+                        _vm._v(
+                          "\n              " +
+                            _vm._s(
+                              _vm.getValidationErrorMessage(_vm.fieldData.name)
+                            ) +
                             "\n            "
                         )
                       ])
@@ -9867,6 +10149,18 @@ var render = function() {
                         _vm._v(
                           "\n                " +
                             _vm._s(_vm.getError(_vm.fieldData.label)) +
+                            "\n            "
+                        )
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.hasValidationError(_vm.fieldData.name)
+                    ? _c("p", { staticClass: "dokan-error" }, [
+                        _vm._v(
+                          "\n              " +
+                            _vm._s(
+                              _vm.getValidationErrorMessage(_vm.fieldData.name)
+                            ) +
                             "\n            "
                         )
                       ])
@@ -10096,6 +10390,18 @@ var render = function() {
                       ])
                     : _vm._e(),
                   _vm._v(" "),
+                  _vm.hasValidationError(_vm.fieldData.name)
+                    ? _c("p", { staticClass: "dokan-error" }, [
+                        _vm._v(
+                          "\n              " +
+                            _vm._s(
+                              _vm.getValidationErrorMessage(_vm.fieldData.name)
+                            ) +
+                            "\n            "
+                        )
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
                   _c("p", {
                     staticClass: "description",
                     domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
@@ -10198,7 +10504,19 @@ var render = function() {
                         )
                       ]
                     )
-                  ])
+                  ]),
+                  _vm._v(" "),
+                  _vm.hasValidationError(_vm.fieldData.name)
+                    ? _c("p", { staticClass: "dokan-error" }, [
+                        _vm._v(
+                          "\n              " +
+                            _vm._s(
+                              _vm.getValidationErrorMessage(_vm.fieldData.name)
+                            ) +
+                            "\n            "
+                        )
+                      ])
+                    : _vm._e()
                 ])
               ]
             : _vm._e(),
@@ -10343,7 +10661,19 @@ var render = function() {
                       })
                     ],
                     2
-                  )
+                  ),
+                  _vm._v(" "),
+                  _vm.hasValidationError(_vm.fieldData.name)
+                    ? _c("p", { staticClass: "dokan-error" }, [
+                        _vm._v(
+                          "\n              " +
+                            _vm._s(
+                              _vm.getValidationErrorMessage(_vm.fieldData.name)
+                            ) +
+                            "\n            "
+                        )
+                      ])
+                    : _vm._e()
                 ])
               ]
             : _vm._e(),
@@ -10467,7 +10797,7 @@ var render = function() {
                           [
                             _vm.fieldData.placeholder
                               ? _c("option", {
-                                  attrs: { value: "" },
+                                  attrs: { value: "", disabled: "" },
                                   domProps: {
                                     innerHTML: _vm._s(_vm.fieldData.placeholder)
                                   }
@@ -10505,6 +10835,20 @@ var render = function() {
                             "toggle-loading-state": _vm.toggleLoadingState
                           }
                         })
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.hasValidationError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n              " +
+                              _vm._s(
+                                _vm.getValidationErrorMessage(
+                                  _vm.fieldData.name
+                                )
+                              ) +
+                              "\n            "
+                          )
+                        ])
                       : _vm._e(),
                     _vm._v(" "),
                     _c("p", {
@@ -11405,7 +11749,7 @@ var render = function() {
                       on: {
                         click: function($event) {
                           $event.preventDefault()
-                          return _vm.clearSearch($event)
+                          return _vm.clearSearch.apply(null, arguments)
                         }
                       }
                     })
@@ -11528,6 +11872,8 @@ var render = function() {
                                             "all-settings-values":
                                               _vm.settingValues,
                                             errors: _vm.errors,
+                                            validationErrors:
+                                              _vm.validationErrors,
                                             "toggle-loading-state":
                                               _vm.toggleLoadingState
                                           },

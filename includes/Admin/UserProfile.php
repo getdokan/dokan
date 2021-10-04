@@ -215,6 +215,13 @@ class UserProfile {
                     </td>
                 </tr>
 
+                <?php
+                /**
+                 * @since 3.2.7
+                 */
+                do_action( 'dokan_user_profile_after_phone_number', $store_settings, $user );
+                ?>
+
                 <?php foreach ( $social_fields as $key => $value ) { ?>
 
                     <tr>
@@ -468,7 +475,7 @@ class UserProfile {
 
             Dokan_Settings.init();
 
-            $('#seller-url').keydown(function(e) {
+            $('#seller-url').on( 'keydown', function(e) {
                 var text = $(this).val();
 
                 // Allow: backspace, delete, tab, escape, enter and .
@@ -486,7 +493,7 @@ class UserProfile {
                 }
             });
 
-            $('#seller-url').keyup(function(e) {
+            $('#seller-url').on( 'keyup', function(e) {
                 $('#url-alart').text( getSlug( $(this).val() ) );
             });
 

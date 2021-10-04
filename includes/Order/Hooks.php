@@ -51,6 +51,9 @@ class Hooks {
         //Wc remove child order from wc_order_product_lookup & trim child order from posts for analytics
         add_action( 'wc-admin_import_orders', [ $this, 'delete_child_order_from_wc_order_product' ] );
         add_filter( 'woocommerce_analytics_orders_select_query', [ $this, 'trim_child_order_for_analytics_order' ] );
+
+        // remove customer info from order export based on setting
+        add_filter( 'dokan_csv_export_headers', [ $this, 'hide_customer_info_from_vendor_order_export' ], 20, 1 );
     }
 
     /**
@@ -389,6 +392,16 @@ class Hooks {
         }
 
         return $orders;
+    }
+
+    public function hide_customer_info_from_vendor_order_export( $headers ) {
+        $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', 'off' );
+        if ( 'off' !== $hide_customer_info ) {
+            unset( $headers['billing_email'] );
+            unset( $headers['customer_ip'] );
+        }
+
+        return $headers;
     }
 
     /**

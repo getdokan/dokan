@@ -186,36 +186,48 @@ function dokan_get_seller_withdraw_by_date( $start_date, $end_date, $seller_id =
  * Get the orders total from a specific seller
  *
  * @global object $wpdb
- * @param int $seller_id
- * @return array
+ * @param array $args
+ * @return int
  */
-function dokan_get_seller_orders_number( $seller_id, $status = 'all' ) {
+function dokan_get_seller_orders_number( $args = [] ) {
     global $wpdb;
 
+    $seller_id   = ! empty( $args['seller_id'] ) ? $args['seller_id'] : 0;
+    $status      = ! empty( $args['status'] ) ? $args['status'] : 'all';
     $cache_group = 'dokan_seller_data_' . $seller_id;
-    $cache_key   = 'dokan-seller-orders-count-' . $status . '-' . $seller_id;
+    $cache_key   = 'dokan-seller-orders-count-' . md5( json_encode( $args ) );
     $count       = wp_cache_get( $cache_key, $cache_group );
 
-    if ( $count === false ) {
+//    if ( $count === false ) {
         $status_where = ( $status == 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', $status );
+        $join = '';
+        $customer_where = '';
+        if ( ! empty( $args['customer_id'] ) ) {
+            $join = " LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id";
+            $customer_where = $wpdb->prepare(" AND pm.meta_key = '_customer_user' AND pm.meta_value = %d", $args['customer_id'] );
+        }
+        $date_where = ! empty( $args['date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $args['date'] ) : '';
 
         $result = $wpdb->get_row(
             $wpdb->prepare(
                 "SELECT COUNT(do.order_id) as count
                 FROM {$wpdb->prefix}dokan_orders AS do
                 LEFT JOIN $wpdb->posts p ON do.order_id = p.ID
+                {$join}
                 WHERE
                     do.seller_id = %d AND
                     p.post_status != 'trash'
-                    {$status_where}", $seller_id
+                    {$status_where}
+                    {$customer_where}
+                    {$date_where}", $seller_id
             )
         );
 
         $count = $result->count;
 
-        wp_cache_set( $cache_key, $count, $cache_group );
-        dokan_cache_update_group( $cache_key, $cache_group );
-    }
+//        wp_cache_set( $cache_key, $count, $cache_group );
+//        dokan_cache_update_group( $cache_key, $cache_group );
+//    }
 
     return $count;
 }
@@ -412,11 +424,12 @@ function dokan_sync_insert_order( $order_id ) {
 /**
  * Get a seller ID based on WooCommerce order.
  *
- * If multiple post author is found, then this order contains products
- * from multiple sellers. In that case, the seller ID becomes `0`.
+ * If Order has suborder, this method will return 0
  *
  * @global object $wpdb
  * @param int $order_id
+ *
+ * @since 3.2.11 rewritten entire function
  *
  * @return int | 0 on failure
  */
@@ -425,44 +438,60 @@ function dokan_get_seller_id_by_order( $order_id ) {
 
     $cache_key   = 'dokan_get_seller_id_' . $order_id;
     $cache_group = 'dokan_get_seller_id_by_order';
-    $seller      = wp_cache_get( $cache_key, $cache_group );
+    $seller_id   = wp_cache_get( $cache_key, $cache_group );
     $items       = [];
-    $seller_id   = 0;
 
-    if ( false === $seller ) {
-        $seller = $wpdb->get_results( $wpdb->prepare( "SELECT seller_id FROM {$wpdb->prefix}dokan_orders WHERE order_id = %d", $order_id ) );
-        wp_cache_set( $cache_key, $seller, $cache_group );
+    // hack: delete old cached data, will delete this code later version of dokan lite
+    if ( is_array( $seller_id ) ) {
+        $seller_id = false;
     }
 
-    if ( count( $seller ) === 1 ) {
-        $seller_id = absint( reset( $seller )->seller_id );
+    if ( false === $seller_id ) {
+        $seller_id = absint(
+            $wpdb->get_var(
+                $wpdb->prepare( "SELECT seller_id FROM {$wpdb->prefix}dokan_orders WHERE order_id = %d LIMIT 1", $order_id )
+            )
+        );
+        wp_cache_set( $cache_key, $seller_id, $cache_group );
+    }
+
+    if ( ! empty( $seller_id ) ) {
         return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
     }
 
-    // if seller is not found, try to retrieve it via line items
-    if ( ! $seller ) {
-        $order = dokan()->order->get( $order_id );
+    // get order instance
+    $order = dokan()->order->get( $order_id );
 
-        if ( ! $order instanceof WC_Order ) {
-            return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
-        }
-
-        if ( $order->get_meta( 'has_sub_order' ) ) {
-            return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
-        }
-
-        $items = $order->get_items( 'line_item' );
-
-        if ( ! $items ) {
-            return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
-        }
-
-        $product_id = current( $items )->get_product_id();
-        $seller_id  = get_post_field( 'post_author', $product_id );
-        $seller_id  = $seller_id ? absint( $seller_id ) : 0;
-
+    if ( ! $order instanceof WC_Abstract_Order ) {
         return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
     }
+
+    // if order has suborder, return 0
+    if ( $order->get_meta( 'has_sub_order' ) ) {
+        return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
+    }
+
+    // check order meta to get vendor id
+    $seller_id = absint( $order->get_meta( '_dokan_vendor_id' ) );
+    if ( $seller_id ) {
+        return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
+    }
+
+    // finally get vendor id from line items
+    $items = $order->get_items( 'line_item' );
+    if ( ! $items ) {
+        return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
+    }
+
+    foreach ( $items as $item ) {
+        $product_id = $item->get_product_id();
+        $seller_id  = absint( get_post_field( 'post_author', $product_id ) );
+        if ( $seller_id ) {
+            break;
+        }
+    }
+
+    return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
 }
 
 /**

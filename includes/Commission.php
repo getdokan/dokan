@@ -66,7 +66,7 @@ class Commission {
                 continue;
             }
 
-            $gateway_fee = ( $processing_fee / $order->get_total() ) * $tmp_order->get_total();
+            $gateway_fee = wc_format_decimal( ( $processing_fee / $order->get_total() ) * $tmp_order->get_total() );
 
             // Ensure sub-orders also get the correct payment gateway fee (if any)
             $gateway_fee = apply_filters( 'dokan_get_processing_gateway_fee', $gateway_fee, $tmp_order, $order );
@@ -94,8 +94,15 @@ class Commission {
             );
 
             $tmp_order->update_meta_data( 'dokan_gateway_fee', $gateway_fee );
-            $tmp_order->add_order_note( sprintf( __( 'Payment gateway processing fee %s', 'dokan-lite' ), round( $gateway_fee, 2 ) ) );
+            $tmp_order->add_order_note( sprintf( __( 'Payment gateway processing fee %s', 'dokan-lite' ), wc_format_decimal( $gateway_fee, 2 ) ) );
             $tmp_order->save_meta_data();
+
+            //remove cache for seller earning
+            $cache_key = 'dokan_get_earning_from_order_table' . $tmp_order->get_id() . 'seller';
+            wp_cache_delete( $cache_key );
+            // remove cache for seller earning
+            $cache_key = 'dokan_get_earning_from_order_table' . $tmp_order->get_id() . 'admin';
+            wp_cache_delete( $cache_key );
         }
     }
 
@@ -252,10 +259,12 @@ class Commission {
             $product_id = $item->get_product()->get_id();
             $refund     = $order->get_total_refunded_for_item( $item_id );
 
+            $item_price = apply_filters( 'dokan_earning_by_order_item_price', $item->get_total(), $item );
+
             if ( $refund ) {
-                $earning += $this->get_earning_by_product( $product_id, $context, $item->get_total() - $refund );
+                $earning += $this->get_earning_by_product( $product_id, $context, $item_price - $refund );
             } else {
-                $earning += $this->get_earning_by_product( $product_id, $context, $item->get_total() );
+                $earning += $this->get_earning_by_product( $product_id, $context, $item_price );
             }
         }
 

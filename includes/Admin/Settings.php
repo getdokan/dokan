@@ -45,9 +45,9 @@ class Settings {
     public function format_price_values( $option_values, $option_name ) {
         if ( 'dokan_selling' === $option_name ) {
             if ( isset( $option_values['commission_type'] ) && 'flat' === $option_values['commission_type'] ) {
-                $option_values['admin_percentage'] = wc_format_localized_price( $option_values['admin_percentage'] );
+                $option_values['admin_percentage'] = isset( $option_values['admin_percentage'] ) ? wc_format_localized_price( $option_values['admin_percentage'] ) : 0;
             } else {
-                $option_values['admin_percentage'] = wc_format_decimal( $option_values['admin_percentage'] );
+                $option_values['admin_percentage'] = isset( $option_values['admin_percentage'] ) ? wc_format_decimal( $option_values['admin_percentage'] ) : 0 ;
             }
         }
 
@@ -107,12 +107,19 @@ class Settings {
             $option_name  = $_post_data['section'];
             $option_value = $this->sanitize_options( $_post_data['settingsData'], 'edit' );
             $option_value = apply_filters( 'dokan_save_settings_value', $option_value, $option_name );
+            $old_options  = get_option( $option_name, [] );
 
             do_action( 'dokan_before_saving_settings', $option_name, $option_value );
 
             update_option( $option_name, $option_value );
 
             do_action( 'dokan_after_saving_settings', $option_name, $option_value );
+
+            // only flush rewrite rules if store url has been changed
+            if ( 'dokan_general' === $option_name && isset( $old_options['custom_store_url'] ) && $old_options['custom_store_url'] !== $option_value['custom_store_url'] ) {
+                dokan()->rewrite->register_rule();
+                flush_rewrite_rules();
+            }
 
             wp_send_json_success(
                 [
@@ -303,7 +310,15 @@ class Settings {
     public function get_settings_fields() {
         $pages_array = $this->get_post_type( 'page' );
 
-        $commission_types = dokan_commission_types();
+        $commission_types              = dokan_commission_types();
+        $withdraw_order_status_options = apply_filters(
+            'dokan_settings_withdraw_order_status_options',
+            array(
+                'wc-completed'  => __( 'Completed', 'dokan-lite' ),
+                'wc-processing' => __( 'Processing', 'dokan-lite' ),
+                'wc-on-hold'    => __( 'On-hold', 'dokan-lite' ),
+            )
+        );
 
         $general_site_options = apply_filters(
             'dokan_settings_general_site_options', [
@@ -485,11 +500,7 @@ class Settings {
                     'default' => array(
                         'wc-completed'  => 'wc-completed',
                     ),
-                    'options' => array(
-                        'wc-completed'  => __( 'Completed', 'dokan-lite' ),
-                        'wc-processing' => __( 'Processing', 'dokan-lite' ),
-                        'wc-on-hold'    => __( 'On-hold', 'dokan-lite' ),
-                    ),
+                    'options' => $withdraw_order_status_options,
                 ],
                 'exclude_cod_payment' => [
                     'name'    => 'exclude_cod_payment',

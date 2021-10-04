@@ -16,12 +16,12 @@ $user_id     = '';
 if ( ! empty( $_GET['customer_id'] ) ) { // WPCS: input var ok.
     $user_id = absint( $_GET['customer_id'] ); // WPCS: input var ok, sanitization ok.
     $user    = get_user_by( 'id', $user_id );
+    $customer = new WC_Customer( $user_id );
 
     $user_string = sprintf(
         /* translators: 1: user display name 2: user ID 3: user email */
-        esc_html__( '%1$s (#%2$s)', 'dokan-lite' ),
-        $user->display_name,
-        absint( $user->ID )
+        esc_html__( '%1$s', 'dokan-lite' ),
+        $customer->get_first_name() . ' ' . $customer->get_last_name()
     );
 }
 
@@ -41,17 +41,19 @@ $order_status = isset( $_GET['order_status'] ) ? sanitize_key( $_GET['order_stat
         </div>
     </form>
 
-    <form action="" method="POST" class="dokan-right">
-        <div class="dokan-form-group">
-            <?php
-                wp_nonce_field( 'dokan_vendor_order_export_action', 'dokan_vendor_order_export_nonce' );
-            ?>
-            <input type="submit" name="dokan_order_export_all"  class="dokan-btn dokan-btn-sm dokan-btn-danger dokan-btn-theme" value="<?php esc_attr_e( 'Export All', 'dokan-lite' ); ?>">
-            <input type="submit" name="dokan_order_export_filtered"  class="dokan-btn dokan-btn-sm dokan-btn-danger dokan-btn-theme" value="<?php esc_attr_e( 'Export Filtered', 'dokan-lite' ); ?>">
-            <input type="hidden" name="order_date" value="<?php echo esc_attr( $filter_date ); ?>">
-            <input type="hidden" name="order_status" value="<?php echo esc_attr( $order_status ); ?>">
-        </div>
-    </form>
+    <?php if ( current_user_can( 'seller' ) || current_user_can( 'dokan_export_order' ) ) : ?>
+        <form action="" method="POST" class="dokan-right">
+            <div class="dokan-form-group">
+                <?php
+                    wp_nonce_field( 'dokan_vendor_order_export_action', 'dokan_vendor_order_export_nonce' );
+                ?>
+                <input type="submit" name="dokan_order_export_all"  class="dokan-btn dokan-btn-sm dokan-btn-danger dokan-btn-theme" value="<?php esc_attr_e( 'Export All', 'dokan-lite' ); ?>">
+                <input type="submit" name="dokan_order_export_filtered"  class="dokan-btn dokan-btn-sm dokan-btn-danger dokan-btn-theme" value="<?php esc_attr_e( 'Export Filtered', 'dokan-lite' ); ?>">
+                <input type="hidden" name="order_date" value="<?php echo esc_attr( $filter_date ); ?>">
+                <input type="hidden" name="order_status" value="<?php echo esc_attr( $order_status ); ?>">
+            </div>
+        </form>
+    <?php endif; ?>
 
     <div class="dokan-clearfix"></div>
 </div>

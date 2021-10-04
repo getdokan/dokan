@@ -37,7 +37,7 @@ class V_2_9_23_StoreName extends DokanBackgroundProcesses {
      *
      * @since 2.9.23
      *
-     * @return void
+     * @return void|array
      */
     private function update_store_name( $paged ) {
         $limit = 50;
