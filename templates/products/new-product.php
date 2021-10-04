@@ -259,8 +259,8 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                                         <select multiple="multiple" name="product_tag[]" id="product_tag_search" class="product_tag_search product_tags dokan-form-control dokan-select2" data-placeholder="<?php echo esc_attr( $tags_placeholder ); ?>">
                                             <?php if ( ! empty( $terms ) ) : ?>
                                                 <?php foreach ( $terms as $product_term_id ) : ?>
-                                                    <?php $tax_term = get_term( $product_term_id ); ?>
-                                                    <option value="<?php echo esc_attr( $tax_term->term_id ); ?>" selected="selected" ><?php echo esc_html( $tax_term->name ); ?></option>
+                                                    <?php $product_term = get_term( $product_term_id ); ?>
+                                                    <option value="<?php echo esc_attr( $product_term->term_id ); ?>" selected="selected" ><?php echo esc_html( $product_term->name ); ?></option>
                                                 <?php endforeach ?>
                                             <?php endif ?>
                                         </select>
