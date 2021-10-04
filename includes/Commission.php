@@ -86,9 +86,9 @@ class Commission {
                 $wpdb->dokan_vendor_balance,
                 [ 'debit' => (float) $net_amount ],
                 [
-					'trn_id' => $tmp_order->get_id(),
-					'trn_type' => 'dokan_orders',
-				],
+                    'trn_id' => $tmp_order->get_id(),
+                    'trn_type' => 'dokan_orders',
+                ],
                 [ '%f' ],
                 [ '%d', '%s' ]
             );
@@ -222,7 +222,7 @@ class Commission {
         }
 
         if ( ! $order ) {
-			return new \WP_Error( __( 'Order not found', 'dokan-lite' ), 404 );
+            return new \WP_Error( __( 'Order not found', 'dokan-lite' ), 404 );
         }
 
         if ( $order->get_meta( 'has_sub_order' ) ) {
@@ -805,10 +805,10 @@ class Commission {
         if ( $has_suborder ) {
             $sub_order_ids = get_children(
                 [
-					'post_parent' => $order->get_id(),
-					'post_type' => 'shop_order',
-					'fields' => 'ids',
-				]
+                    'post_parent' => $order->get_id(),
+                    'post_type' => 'shop_order',
+                    'fields' => 'ids',
+                ]
             );
 
             foreach ( $sub_order_ids as $sub_order_id ) {
