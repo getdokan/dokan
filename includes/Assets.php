@@ -384,9 +384,14 @@ class Assets {
                 'deps'      => [ 'dokan-popup', 'dokan-i18n-jed' ],
                 'version'   => filemtime( $asset_path . '/js/login-form-popup.js' ),
             ],
+            'dokan-sweetalert2' => [
+                'src'       => $asset_url . '/vendors/sweetalert2/sweetalert2.all.min.js',
+                'deps'      => [ 'dokan-popup', 'dokan-i18n-jed' ],
+                'version'   => filemtime( $asset_path . '/vendors/sweetalert2/sweetalert2.all.min.js' ),
+            ],
             'dokan-util-helper' => [
                 'src'       => $asset_url . '/js/helper.js',
-                'deps'      => [ 'jquery' ],
+                'deps'      => [ 'jquery', 'dokan-sweetalert2' ],
                 'version'   => filemtime( $asset_path . 'js/helper.js' ),
                 'in_footer' => false,
             ],
