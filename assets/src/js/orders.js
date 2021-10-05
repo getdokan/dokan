@@ -335,8 +335,12 @@ jQuery(function($) {
             do_refund: async function() {
                 dokan_seller_meta_boxes_order_items.block();
                 
-                const isRefund = await dokan_sweet_alert( dokan_refund.i18n_do_refund, { 
-                    action : 'confirm', showCancelButton: true, confirmButtonColor:'#28a745',cancelButtonColor:'#dc3545' } );
+                const isRefund = await dokan_sweetalert( dokan_refund.i18n_do_refund, { 
+                    action : 'confirm', 
+                    showCancelButton: true, 
+                    confirmButtonColor:'#28a745',
+                    cancelButtonColor:'#dc3545' 
+                } );
 
                 if ( 'undefined' !== isRefund && isRefund.isConfirmed ) {
                     var refund_amount = $( 'input#refund_amount' ).val();

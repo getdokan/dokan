@@ -450,7 +450,13 @@
 
                 var $wrapper           = $(this).closest( 'li.product-attribute-list' );
                 var attribute          = $wrapper.data( 'taxonomy' );
-                let result             = await dokan_sweet_alert( dokan.new_attribute_prompt, { action: 'prompt', input:'text', showCancelButton: true, confirmButtonColor:  '#28a745', cancelButtonColor:'#dc3545'  } );
+                let result             = await dokan_sweetalert( dokan.new_attribute_prompt, {  
+                    action: 'prompt', 
+                    input:'text', 
+                    showCancelButton: true, 
+                    confirmButtonColor:  '#28a745', 
+                    cancelButtonColor:'#dc3545'  
+                } );
                 var new_attribute_name = result.value;
 
                 if ( new_attribute_name ) {
@@ -464,7 +470,10 @@
 
                     $.post( dokan.ajaxurl, data, function( response ) {
                         if ( response.error ) {
-                            dokan_sweet_alert( response.error, { action : 'alert', confirmButtonColor:'#28a745' } );
+                            dokan_sweetalert( response.error, { 
+                                action : 'alert', 
+                                confirmButtonColor:'#28a745' 
+                            } );
                         } else if ( response.slug ) {
                             $wrapper.find( 'select.dokan_attribute_values' ).append( '<option value="' + response.slug + '" selected="selected">' + response.name + '</option>' );
                             $wrapper.find( 'select.dokan_attribute_values' ).trigger( 'change' );
@@ -521,8 +530,12 @@
                 evt.stopPropagation();
                 evt.preventDefault();
 
-                const isRemoved = await dokan_sweet_alert( dokan.remove_attribute, { 
-                    action :'confirm', showCancelButton:true, confirmButtonColor:'#28a745',cancelButtonColor: '#dc3545' } );
+                const isRemoved = await dokan_sweetalert( dokan.remove_attribute, { 
+                    action :'confirm', 
+                    showCancelButton:true, 
+                    confirmButtonColor:'#28a745',
+                    cancelButtonColor: '#dc3545' 
+                } );
 
                 if ( 'undefined' !== isRemoved && isRemoved.isConfirmed ) {
                     var $parent = $( this ).closest('li.product-attribute-list');

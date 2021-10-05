@@ -51,7 +51,7 @@ function dokan_get_i18n_date_format( format = true ) {
  *
  * @return {Promise | bool} Return Promise on success, and false on failure
  */
- async function dokan_sweet_alert( message = '' , options = {} ) {
+ async function dokan_sweetalert( message = '' , options = {} ) {
   const defaults = {
     text: message,
   }
