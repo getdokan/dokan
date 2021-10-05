@@ -58,8 +58,11 @@ class Settings {
         if ( isset( $wp->query_vars['settings'] ) && $wp->query_vars['settings'] == 'store' ) {
             $heading          = __( 'Settings', 'dokan-lite' );
             $is_store_setting = true;
-        } elseif ( isset( $wp->query_vars['settings'] ) && $wp->query_vars['settings'] == 'payment' ) {
-            $heading = __( 'Payment Settings', 'dokan-lite' );
+        } elseif ( isset( $wp->query_vars['settings'] ) && 'payment' == substr( $wp->query_vars['settings'], 0, 7 ) ) {
+            $heading = __( 'Withdraw Payment Method', 'dokan-lite' );
+            $slug = str_replace( 'payment/manage-', '', $wp->query_vars['settings'] );
+
+            $heading = $this->getPaymentHeading( $slug, $heading );
         } else {
             $heading = apply_filters( 'dokan_dashboard_settings_heading_title', __( 'Settings', 'dokan-lite' ), $wp->query_vars['settings'] );
         }
@@ -147,14 +150,14 @@ class Settings {
             }
         }
 
-        if ( isset( $wp->query_vars['settings'] ) && 'payment' == $wp->query_vars['settings'] ) {
+        if ( isset( $wp->query_vars['settings'] ) && 'payment' == substr( $wp->query_vars['settings'], 0, 7 ) ) {
             if ( ! current_user_can( 'dokan_view_store_payment_menu' ) ) {
                 dokan_get_template_part('global/dokan-error', '', array(
                     'deleted' => false,
                     'message' => __( 'You have no permission to view this page', 'dokan-lite' )
                 ) );
             } else {
-                $this->load_payment_content();
+                $this->load_payment_content( substr( $wp->query_vars['settings'], 7 ) );
             }
         }
 
@@ -186,15 +189,20 @@ class Settings {
      *
      * @since 2.4
      *
+     * @param $slug_suffix
+     *
      * @return void
      */
-    public function load_payment_content() {
+    public function load_payment_content( $slug_suffix ) {
         $methods      = dokan_withdraw_get_active_methods();
         $currentuser  = dokan_get_current_user_id();
         $profile_info = dokan_get_store_info( dokan_get_current_user_id() );
+        $method = str_replace( '/manage-', '', $slug_suffix );
+        wp_enqueue_script( 'dokan-dashboard-payment' );
 
-        dokan_get_template_part( 'settings/payment', '', array(
+        dokan_get_template_part( 'settings/payment', $method ? 'manage' : '', array(
             'methods'      => $methods,
+            'method_key'   => $method,
             'current_user' => $currentuser,
             'profile_info' => $profile_info,
         ) );
@@ -575,7 +583,7 @@ class Settings {
 
             //update payment settings info
             $dokan_settings = array(
-                'payment' => array(),
+                'payment' => $prev_dokan_settings['payment'],
             );
 
             if ( isset( $post_data['settings']['bank'] ) ) {
@@ -602,6 +610,10 @@ class Settings {
                 $dokan_settings['payment']['skrill'] = array(
                     'email' => sanitize_email( $post_data['settings']['skrill']['email'] ),
                 );
+            }
+
+            if ( isset( $post_data['settings']['default-method'] ) ) {
+                $dokan_settings['payment']['default-method']  = sanitize_text_field( $post_data['settings']['default-method'] );
             }
         }
 
@@ -631,5 +643,33 @@ class Settings {
         );
 
         return apply_filters( 'dokan_category', $dokan_category );
+    }
+
+    /**
+     * Get proper heading for payments of vendor dashboard payment settings
+     *
+     * @since 3.2.12
+     *
+     * @param $slug
+     * @param $heading
+     *
+     * @return string
+     */
+    private function getPaymentHeading( $slug, $heading ) {
+        if ( $slug === 'bank' ) {
+            $heading = __( 'Add Bank Account' );
+        } elseif ( $slug === 'paypal' ) {
+            $heading = 'Paypal Settings';
+        } elseif ( $slug === 'dokan-moip-connect' ) {
+            $heading = 'Wirecard(MOIP) Settings';
+        } elseif ( $slug === 'dokan-stripe-connect' ) {
+            $heading = 'Stripe Settings';
+        } elseif ( $slug === 'skrill' ) {
+            $heading = 'Skrill Settings';
+        } elseif ( $slug === 'dokan-paypal-marketplace' ) {
+            $heading = 'Dokan Paypal Marketplace Settings';
+        }
+
+        return $heading;
     }
 }
