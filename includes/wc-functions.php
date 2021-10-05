@@ -964,12 +964,15 @@ function dokan_clear_product_category_cache( $post_id ) {
     delete_transient( 'dokan_vendor_get_published_products_' . $seller_id );
     delete_transient( 'dokan_vendor_get_best_selling_products_' . $seller_id );
 
-    $transient_key = function_exists( 'wpml_get_current_language' ) ? 'dokan_vendor_get_store_categories_' . wpml_get_current_language() . '_' . $seller_id : 'dokan_vendor_get_store_categories_' . $seller_id;
-    $best_selling_transient_key = function_exists( 'wpml_get_current_language' ) ? 'dokan_vendor_get_best_selling_categories_' . wpml_get_current_language() . '_' . $seller_id : 'dokan_vendor_get_best_selling_categories_' . $seller_id;
+    if ( function_exists( 'wpml_get_active_languages' ) ) {
+        foreach ( wpml_get_active_languages() as $active_language ) {
+            delete_transient( 'dokan_vendor_get_store_categories_' . $active_language['code'] . '_' . $seller_id );
+            delete_transient( 'dokan_vendor_get_best_selling_categories_' . $active_language['code'] . '_' . $seller_id );
+        }
+    }
 
-    // delete vendor get_store_categories() method transient
-    delete_transient( $transient_key );
-    delete_transient( $best_selling_transient_key );
+    delete_transient( 'dokan_vendor_get_store_categories_' . $seller_id );
+    delete_transient( 'dokan_vendor_get_best_selling_categories_' . $seller_id );
 }
 add_action( 'wp_trash_post', 'dokan_clear_product_category_cache', 10, 1 );
 add_action( 'delete_post', 'dokan_clear_product_category_cache', 10, 1 );
@@ -1043,8 +1046,13 @@ function dokan_clear_edit_product_category_cache( $term_id ) {
 
     foreach ( $seller_ids as $seller_id ) {
         // delete vendor get_store_categories() method transient
-        $transient_key = function_exists( 'wpml_get_current_language' ) ? 'dokan_vendor_get_store_categories_' . wpml_get_current_language() . '_' . $seller_id : 'dokan_vendor_get_store_categories_' . $seller_id;
-        delete_transient( $transient_key );
+        if ( function_exists( 'wpml_get_active_languages' ) ) {
+            foreach ( wpml_get_active_languages() as $active_language ) {
+                delete_transient( 'dokan_vendor_get_store_categories_' . $active_language['code'] . '_' . $seller_id );
+            }
+        }
+
+        delete_transient( 'dokan_vendor_get_store_categories_' . $seller_id );
     }
 }
 add_action( 'edit_product_cat', 'dokan_clear_edit_product_category_cache', 10, 1 );
