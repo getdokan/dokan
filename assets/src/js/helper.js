@@ -55,6 +55,7 @@ function dokan_get_i18n_date_format( format = true ) {
   const defaults = {
     text: message,
   }
+  
   const args     = { ...defaults, ...options };
 
   switch( args.action ) {

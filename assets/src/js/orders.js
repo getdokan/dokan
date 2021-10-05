@@ -336,7 +336,7 @@ jQuery(function($) {
                 dokan_seller_meta_boxes_order_items.block();
                 
                 const isRefund = await dokan_sweet_alert( dokan_refund.i18n_do_refund, { 
-                    action : 'confirm', showCancelButton: true, confirmButtonColor:'#28a745',cancelButtonColor:'#dc3545' } );
+                    action : 'confirm', showCancelButton: true, confirmButtonColor: '#28a745',cancelButtonColor: '#dc3545' } );
 
                 if ( 'undefined' !== isRefund && isRefund.isConfirmed ) {
                     var refund_amount = $( 'input#refund_amount' ).val();
@@ -387,7 +387,7 @@ jQuery(function($) {
                     };
 
                     $.post( dokan_refund.ajax_url, data, function( response ) {
-                        response.data.message ? dokan_sweet_alert( response.data.message, { confirmButtonColor:'#28a745' } ) : null;
+                        response.data.message ? dokan_sweet_alert( response.data.message, { confirmButtonColor: '#28a745' } ) : null;
                         dokan_seller_meta_boxes_order_items.reload_items();
                     }).fail( function ( jqXHR ) {
                         var message = [];
@@ -404,7 +404,7 @@ jQuery(function($) {
                             }
                         }
 
-                        dokan_sweet_alert( message.join( ' ' ), { confirmButtonColor:'#28a745' } );
+                        dokan_sweet_alert( message.join( ' ' ), { confirmButtonColor: '#28a745' } );
                         dokan_seller_meta_boxes_order_items.unblock();
                     } );
                 } else {
