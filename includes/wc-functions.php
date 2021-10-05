@@ -964,13 +964,8 @@ function dokan_clear_product_category_cache( $post_id ) {
     delete_transient( 'dokan_vendor_get_published_products_' . $seller_id );
     delete_transient( 'dokan_vendor_get_best_selling_products_' . $seller_id );
 
-    if ( function_exists( 'wpml_get_current_language' ) ) {
-        $transient_key = 'dokan_vendor_get_store_categories_' . wpml_get_current_language() . '_' . $seller_id;
-        $best_selling_transient_key = 'dokan_vendor_get_best_selling_categories_' . wpml_get_current_language() . '_' . $seller_id;
-    } else {
-        $transient_key = 'dokan_vendor_get_store_categories_' . $seller_id;
-        $best_selling_transient_key = 'dokan_vendor_get_best_selling_categories_' . $seller_id;
-    }
+    $transient_key = function_exists( 'wpml_get_current_language' ) ? 'dokan_vendor_get_store_categories_' . wpml_get_current_language() . '_' . $seller_id : 'dokan_vendor_get_store_categories_' . $seller_id;
+    $best_selling_transient_key = function_exists( 'wpml_get_current_language' ) ? 'dokan_vendor_get_best_selling_categories_' . wpml_get_current_language() . '_' . $seller_id : 'dokan_vendor_get_best_selling_categories_' . $seller_id;
 
     // delete vendor get_store_categories() method transient
     delete_transient( $transient_key );
@@ -1048,11 +1043,7 @@ function dokan_clear_edit_product_category_cache( $term_id ) {
 
     foreach ( $seller_ids as $seller_id ) {
         // delete vendor get_store_categories() method transient
-        if ( function_exists( 'wpml_get_current_language' ) ) {
-            $transient_key = 'dokan_vendor_get_store_categories_' . wpml_get_current_language() . '_' . $seller_id;
-        } else {
-            $transient_key = 'dokan_vendor_get_store_categories_' . $seller_id;
-        }
+        $transient_key = function_exists( 'wpml_get_current_language' ) ? 'dokan_vendor_get_store_categories_' . wpml_get_current_language() . '_' . $seller_id : 'dokan_vendor_get_store_categories_' . $seller_id;
         delete_transient( $transient_key );
     }
 }
