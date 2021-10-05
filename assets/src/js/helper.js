@@ -62,6 +62,10 @@ function dokan_get_i18n_date_format( format = true ) {
     case 'confirm' :
         return await Swal.fire( args );
         break;
+    
+    case 'prompt' :
+        return await Swal.fire( args );
+        break;
 
     case 'alert' :
     default :
