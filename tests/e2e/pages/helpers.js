@@ -40,6 +40,20 @@ module.exports = {
         I.click('Not right now');
         I.seeInCurrentUrl('/dashboard');
     },
+
+    CreateProduct(){
+      I.amOnPage('/dashboard/products/');
+      I.click('Add new product');
+      I.fillField(locator.ProductTitleInput,faker.commerce.productName());
+      I.fillField(locator.ProductPrice,faker.commerce.price());
+      I.wait(2);
+      // I.attachFile('.dokan-feat-image-btn', '/data/images.jpeg');
+      I.selectOption(locator.ProductCategory, 'Uncategorized');
+      I.click(locator.AddProduct);
+      I.wait(4);
+    //   I.see('Edit Product');
+    //   I.see('View Product');
+    },
     checkVendor() {
         I.amOnPage('/dashboard');
         I.moveCursorTo(locator.MenuHoverDropdown);
