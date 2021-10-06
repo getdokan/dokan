@@ -200,11 +200,19 @@ class Settings {
         $method = str_replace( '/manage-', '', $slug_suffix );
         wp_enqueue_script( 'dokan-dashboard-payment' );
 
+        if ( stripos( $method, '/edit' ) !== false ) {
+            $is_edit_mode = true;
+            $method = str_replace( '/edit', '', $method );
+        } else {
+            $is_edit_mode = false;
+        }
+
         dokan_get_template_part( 'settings/payment', $method ? 'manage' : '', array(
-            'methods'      => $methods,
-            'method_key'   => $method,
-            'current_user' => $currentuser,
-            'profile_info' => $profile_info,
+            'methods'        => $methods,
+            'method_key'     => $method,
+            'current_user'   => $currentuser,
+            'profile_info'   => $profile_info,
+            'is_edit_method' => $is_edit_mode,
         ) );
     }
 
@@ -467,6 +475,12 @@ class Settings {
             }
         }
 
+        if ( ! empty( $post_data['settings']['bank'] ) ) {
+            if ( empty( $post_data['settings']['bank']['declaration'] ) ) {
+                $error->add( 'dokan_bank_declaration', __( 'You must attest that the bank account is yours.', 'dokan-lite' ) );
+            }
+        }
+
         if ( $error->get_error_codes() ) {
             return $error;
         }
@@ -597,7 +611,15 @@ class Settings {
                     'routing_number' => sanitize_text_field( $bank['routing_number'] ),
                     'iban'           => sanitize_text_field( $bank['iban'] ),
                     'swift'          => sanitize_text_field( $bank['swift'] ),
+                    'ac_type'        => sanitize_text_field( $bank['ac_type'] ),
+                    'declaration'    => sanitize_text_field( $bank['declaration'] ),
                 );
+
+                if ( !empty( $post_data['settings']['default-method'] ) ) {
+                    $post_data['settings']['default-method'] = 'bank';
+                } else {
+                    $post_data['settings']['default-method'] = ( $dokan_settings['payment']['default-method'] === 'bank' ) ? '' : $dokan_settings['payment']['default-method'];
+                }
             }
 
             if ( isset( $post_data['settings']['paypal'] ) ) {
@@ -613,7 +635,7 @@ class Settings {
             }
 
             if ( isset( $post_data['settings']['default-method'] ) ) {
-                $dokan_settings['payment']['default-method']  = sanitize_text_field( $post_data['settings']['default-method'] );
+                $dokan_settings['payment']['default-method'] = sanitize_text_field( $post_data['settings']['default-method'] );
             }
         }
 
