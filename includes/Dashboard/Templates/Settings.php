@@ -704,17 +704,17 @@ class Settings {
      * @return string
      */
     private function getPaymentHeading( $slug, $heading ) {
-        if ( $slug === 'bank' ) {
+        if ( $slug === 'bank' || $slug === ( 'bank' . '/edit' ) ) {
             $heading = __( 'Add Bank Account' );
-        } elseif ( $slug === 'paypal' ) {
+        } elseif ( $slug === 'paypal' || $slug === ( 'paypal' . '/edit' ) ) {
             $heading = 'Paypal Settings';
-        } elseif ( $slug === 'dokan-moip-connect' ) {
+        } elseif ( $slug === 'dokan-moip-connect' || $slug === ( 'dokan-moip-connect' . '/edit' ) ) {
             $heading = 'Wirecard(MOIP) Settings';
-        } elseif ( $slug === 'dokan-stripe-connect' ) {
+        } elseif ( $slug === 'dokan-stripe-connect' || $slug === ( 'dokan-stripe-connect' . '/edit' ) ) {
             $heading = 'Stripe Settings';
-        } elseif ( $slug === 'skrill' ) {
+        } elseif ( $slug === 'skrill' || $slug === ( 'skrill' . '/edit' ) ) {
             $heading = 'Skrill Settings';
-        } elseif ( $slug === 'dokan-paypal-marketplace' ) {
+        } elseif ( $slug === 'dokan-paypal-marketplace' || $slug === ( 'dokan-paypal-marketplace' . '/edit' ) ) {
             $heading = 'Dokan Paypal Marketplace Settings';
         }
 
