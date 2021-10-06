@@ -273,10 +273,12 @@ class Settings {
 
                 $ajax_validate = $this->payment_validate();
                 break;
+            default:
+                $ajax_validate = new WP_Error( 'no_match', 'Not Found' );
         }
 
         if ( is_wp_error( $ajax_validate ) ) {
-            wp_send_json_error( $ajax_validate->get_error_message() );
+            wp_send_json_error( $ajax_validate->get_error_messages() );
         }
 
         // we are good to go
@@ -467,8 +469,16 @@ class Settings {
 
         $error = new WP_Error();
 
-        if ( ! empty( $post_data['setting_paypal_email'] ) ) {
-            $email = sanitize_email( $post_data['setting_paypal_email'] );
+        if ( ! empty( $post_data['settings']['paypal'] ) ) {
+            $email = sanitize_email( $post_data['settings']['paypal']['email'] );
+
+            if ( empty( $email ) ) {
+                $error->add( 'dokan_email', __( 'Invalid email', 'dokan-lite' ) );
+            }
+        }
+
+        if ( ! empty( $post_data['settings']['skrill'] ) ) {
+            $email = sanitize_email( $post_data['settings']['skrill']['email'] );
 
             if ( empty( $email ) ) {
                 $error->add( 'dokan_email', __( 'Invalid email', 'dokan-lite' ) );
@@ -476,6 +486,22 @@ class Settings {
         }
 
         if ( ! empty( $post_data['settings']['bank'] ) ) {
+            if ( empty( $post_data['settings']['bank']['ac_name'] ) ) {
+                $error->add( 'dokan_bank_ac_name', __( 'No account holder name', 'dokan-lite' ) );
+            }
+
+            if ( empty( $post_data['settings']['bank']['ac_number'] ) ) {
+                $error->add( 'dokan_bank_ac_number', __( 'No account number', 'dokan-lite' ) );
+            }
+
+            if ( empty( $post_data['settings']['bank']['routing_number'] ) ) {
+                $error->add( 'dokan_bank_ac_routing_number', __( 'No account routing number', 'dokan-lite' ) );
+            }
+
+            if ( empty( $post_data['settings']['bank']['ac_type'] ) ) {
+                $error->add( 'dokan_bank_ac_type', __( 'Please select account type', 'dokan-lite' ) );
+            }
+
             if ( empty( $post_data['settings']['bank']['declaration'] ) ) {
                 $error->add( 'dokan_bank_declaration', __( 'You must attest that the bank account is yours.', 'dokan-lite' ) );
             }
