@@ -148,7 +148,7 @@ function dokan_withdraw_method_skrill( $store_settings ) {
     <div class="dokan-form-group">
         <div class="dokan-w8">
             <div class="dokan-input-group">
-                <span class="dokan-input-group-addon"><?php esc_htmlt_e( 'E-mail', 'dokan-lite' ); ?></span>
+                <span class="dokan-input-group-addon"><?php esc_html_e( 'E-mail', 'dokan-lite' ); ?></span>
                 <input value="<?php echo esc_attr( $email ); ?>" name="settings[skrill][email]" class="dokan-form-control email" placeholder="you@domain.com" type="text">
             </div>
         </div>
@@ -171,48 +171,123 @@ function dokan_withdraw_method_bank( $store_settings ) {
     $routing_number = isset( $store_settings['payment']['bank']['routing_number'] ) ? $store_settings['payment']['bank']['routing_number'] : '';
     $iban           = isset( $store_settings['payment']['bank']['iban'] ) ? $store_settings['payment']['bank']['iban'] : '';
     $swift_code     = isset( $store_settings['payment']['bank']['swift'] ) ? $store_settings['payment']['bank']['swift'] : '';
+    $account_type   = isset( $store_settings['payment']['bank']['ac_type'] ) ? $store_settings['payment']['bank']['ac_type'] : '';
+    $default_method = isset( $store_settings['payment']['default-method'] ) ? $store_settings['payment']['default-method'] : '';
     ?>
-    <div class="dokan-form-group">
-        <div class="dokan-w8">
-            <input name="settings[bank][ac_name]" value="<?php echo esc_attr( $account_name ); ?>" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Your bank account name', 'dokan-lite' ); ?>" type="text">
+    <div style="background-color: white; box-shadow: 0 3px 10px rgb(0 0 0 / 0.2); margin-right: 10px; padding: 20px">
+
+        <p style="text-align: left"><?php esc_html_e( 'Deposit earnings directly to your U.S. bank account free of charge', 'dokan-lite' ); ?></p>
+
+        <div class="dokan-form-group">
+            <div style="text-align: left;">
+                <label style="color: black; font-weight: bold;" for="ac_name"><?php esc_html_e( 'Account Holder', 'dokan-lite' ); ?> </label>
+            </div>
+
+            <div class="dokan-w10">
+                <input id='ac_name' name="settings[bank][ac_name]" value="<?php echo esc_attr( $account_name ); ?>" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Your bank account name', 'dokan-lite' ); ?>" type="text">
+            </div>
+        </div>
+
+        <div class="dokan-form-group">
+            <div style="text-align: left;">
+                <label style="color: black; font-weight: bold;" for="ac_type"><?php esc_html_e( 'Account Type', 'dokan-lite' ); ?> </label>
+            </div>
+
+            <div class="dokan-w10">
+                <select style="padding: 10px 15px; border-radius: 5px; min-height: 50px" id='ac_type' name="settings[bank][ac_type]" class="dokan-form-control">
+                    <option value="" <?php echo ( ( $account_type === '' ) ? 'selected' : '' ); ?> > <?php esc_html_e( 'Please Select...', 'dokan-lite' ); ?> </option>
+                    <option value="personal" <?php echo ( ( $account_type === 'personal' ) ? 'selected' : '' ); ?> > <?php esc_html_e( 'Personal', 'dokan-lite' ); ?> </option>
+                    <option value="business" <?php echo ( ( $account_type === 'business' ) ? 'selected' : '' ); ?> > <?php esc_html_e( 'Business', 'dokan-lite' ); ?> </option>
+                </select>
+            </div>
+        </div>
+
+        <div class="dokan-form-group">
+            <div style="text-align: left;">
+                <label style="color: black; font-weight: bold;"><?php esc_html_e( 'Routing & Account Number', 'dokan-lite' ); ?> </label>
+            </div>
+
+            <div class="dokan-w10">
+                <input name="settings[bank][routing_number]" value="<?php echo esc_attr( $routing_number ); ?>" class="dokan-form-control dokan-w4" placeholder="<?php esc_attr_e( 'Routing number', 'dokan-lite' ); ?>" type="text">
+                <input style="float: right" name="settings[bank][ac_number]" value="<?php echo esc_attr( $account_number ); ?>" class="dokan-form-control dokan-w7" placeholder="<?php esc_attr_e( 'Your bank account number', 'dokan-lite' ); ?>" type="text">
+            </div>
+        </div>
+
+        <div class="dokan-form-group">
+            <div class="dokan-w10">
+                <input name="settings[bank][bank_name]" value="<?php echo esc_attr( $bank_name ); ?>" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Name of bank', 'dokan-lite' ); ?>" type="text">
+            </div>
+        </div>
+
+        <div class="dokan-form-group">
+            <div class="dokan-w10">
+                <textarea name="settings[bank][bank_addr]" rows="5" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Address of your bank', 'dokan-lite' ); ?>"><?php echo esc_html( $bank_addr ); ?></textarea>
+            </div>
+        </div>
+
+        <div class="dokan-form-group">
+            <div class="dokan-w10">
+                <input name="settings[bank][iban]" value="<?php echo esc_attr( $iban ); ?>" class="dokan-form-control" placeholder="<?php esc_attr_e( 'IBAN', 'dokan-lite' ); ?>" type="text">
+            </div>
+        </div>
+
+        <div class="dokan-form-group">
+            <div class="dokan-w10">
+                <input value="<?php echo esc_attr( $swift_code ); ?>" name="settings[bank][swift]" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Swift code', 'dokan-lite' ); ?>" type="text">
+            </div>
+        </div> <!-- .dokan-form-group -->
+
+        <div style="text-align: left" class="dokan-form-group">
+            <img alt="<?php esc_attr_e( 'bank check', 'dokan-lite' ); ?>" src="<?php echo esc_url( DOKAN_PLUGIN_ASSEST . '/images/dashboard-settings/payment/bank-check.png' ); ?>"/>
+        </div>
+
+        <div class="dokan-form-group" style="text-align: left">
+            <input id="declaration" value="I attest that I am the owner and have full authorization to this bank account" name="settings[bank][declaration]" checked type="checkbox" required/>
+            <label for="declaration">
+                <?php esc_html_e( 'I attest that I am the owner and have full authorization to this bank account', 'dokan-lite' ); ?>
+            </label>
+        </div>
+
+        <div class="dokan-form-group" style="text-align: left">
+            <input id="default-method" name="settings[default-method]" value="bank" type="checkbox" <?php echo ( $default_method === 'bank' ? 'checked' : '' ); ?>/>
+            <label for="default-method">
+                <?php esc_html_e( 'Make this default payment method', 'dokan-lite' ); ?>
+            </label>
+        </div>
+
+        <div style="display: flex; box-shadow: 0 3px 10px rgb(0 0 0 / 0.2); padding: 10px; margin-bottom: 10px">
+            <div style="display: flex; flex-direction: column; justify-content: center; padding: 5px">
+                <svg style="color: orange" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                    <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                </svg>
+            </div>
+
+            <div style="margin: 0 10px; border-left: 1px #dddddd solid"></div>
+
+            <div style="text-align: left;">
+                <span style="display: block"><b><?php esc_html_e( 'Please double-check your account information!', 'dokan-lite' ); ?></b></span>
+                <span style="display: block"><?php esc_html_e( 'Incorrect or mismatched account name and number can result in withdrawal delays and fees', 'dokan-lite' ); ?></>
+            </div>
+        </div>
+
+        <p style="text-align: left; margin-bottom: 2em"><?php esc_html_e( 'This Payment method will become available in 3 days.', 'dokan-lite' ); ?></p>
+
+        <div style="background-color: #EEEEEE; text-align: left; border-top: 1px #cccccc solid; padding: 20px; margin: -20px; ">
+            <button class="ajax_prev" type="submit" name="dokan_update_payment_settings" style="background-color: #2B78E4; color: white; border-radius: 3px">
+                <?php
+                if ( isset( $store_settings['is_edit_method'] ) && $store_settings['is_edit_method'] ) {
+                    esc_html_e( 'Save', 'dokan-lite' );
+                } else {
+                    esc_html_e( 'Add Account', 'dokan-lite' );
+                }
+                ?>
+            </button>
+            <a href="<?php echo esc_url( home_url( '/dashboard/settings/payment/' ) ); ?>" style="margin-left: 10px; text-decoration: none; color: #2B78E4">
+                <?php esc_html_e( 'Cancel', 'dokan-lite' ); ?>
+            </a>
         </div>
     </div>
-
-    <div class="dokan-form-group">
-        <div class="dokan-w8">
-            <input name="settings[bank][ac_number]" value="<?php echo esc_attr( $account_number ); ?>" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Your bank account number', 'dokan-lite' ); ?>" type="text">
-        </div>
-    </div>
-
-    <div class="dokan-form-group">
-        <div class="dokan-w8">
-            <input name="settings[bank][bank_name]" value="<?php echo esc_attr( $bank_name ); ?>" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Name of bank', 'dokan-lite' ); ?>" type="text">
-        </div>
-    </div>
-
-    <div class="dokan-form-group">
-        <div class="dokan-w8">
-            <textarea name="settings[bank][bank_addr]" rows="5" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Address of your bank', 'dokan-lite' ); ?>"><?php echo esc_html( $bank_addr ); ?></textarea>
-        </div>
-    </div>
-
-    <div class="dokan-form-group">
-        <div class="dokan-w8">
-            <input name="settings[bank][routing_number]" value="<?php echo esc_attr( $routing_number ); ?>" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Routing number', 'dokan-lite' ); ?>" type="text">
-        </div>
-    </div>
-
-    <div class="dokan-form-group">
-        <div class="dokan-w8">
-            <input name="settings[bank][iban]" value="<?php echo esc_attr( $iban ); ?>" class="dokan-form-control" placeholder="<?php esc_attr_e( 'IBAN', 'dokan-lite' ); ?>" type="text">
-        </div>
-    </div>
-
-    <div class="dokan-form-group">
-        <div class="dokan-w8">
-            <input value="<?php echo esc_attr( $swift_code ); ?>" name="settings[bank][swift]" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Swift code', 'dokan-lite' ); ?>" type="text">
-        </div>
-    </div> <!-- .dokan-form-group -->
     <?php
 }
 
