@@ -174,7 +174,7 @@ function dokan_withdraw_method_bank( $store_settings ) {
     $account_type   = isset( $store_settings['payment']['bank']['ac_type'] ) ? $store_settings['payment']['bank']['ac_type'] : '';
     $default_method = isset( $store_settings['payment']['default-method'] ) ? $store_settings['payment']['default-method'] : '';
     ?>
-    <div style="background-color: white; box-shadow: 0 3px 10px rgb(0 0 0 / 0.2); margin-right: 10px; padding: 20px">
+    <div style="background-color: white; box-shadow: 0 3px 10px rgb( 0 0 0 / 0.2 ); margin-right: 10px; padding: 20px">
 
         <p style="text-align: left"><?php esc_html_e( 'Deposit earnings directly to your U.S. bank account free of charge', 'dokan-lite' ); ?></p>
 
@@ -255,7 +255,7 @@ function dokan_withdraw_method_bank( $store_settings ) {
             </label>
         </div>
 
-        <div style="display: flex; box-shadow: 0 3px 10px rgb(0 0 0 / 0.2); padding: 10px; margin-bottom: 10px">
+        <div style="display: flex; box-shadow: 0 3px 10px rgb( 0 0 0 / 0.2 ); padding: 10px; margin-bottom: 10px">
             <div style="display: flex; flex-direction: column; justify-content: center; padding: 5px">
                 <svg style="color: orange" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
