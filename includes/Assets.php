@@ -390,10 +390,10 @@ class Assets {
                 'version'   => filemtime( $asset_path . 'js/helper.js' ),
                 'in_footer' => false,
             ],
-            'dokan-dashboard-payment' => [
-                'src'       => $asset_url . '/js/dokan-dashboard-payment.js',
+            'vendor-dashboard-payment' => [
+                'src'       => $asset_url . '/js/vendor-dashboard-payment-settings.js',
                 'deps'      => [ 'jquery' ],
-                'version'   => filemtime( $asset_path . 'js/dokan-dashboard-payment.js' ),
+                'version'   => filemtime( $asset_path . 'js/vendor-dashboard-payment-settings.js' ),
                 'in_footer' => true,
             ],
         ];
