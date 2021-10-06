@@ -265,7 +265,7 @@ class Commission {
                 dokan()->is_pro_exists() &&
                 dokan_is_order_have_apply_admin_coupons( $order, $vendor_id )
             ) {
-                $earning += dokan_pro()->coupon->get_earning_use_admin_coupon_for_vendor( $earning, $order, $item, $context, $product_id, $refund );
+                $earning += dokan_pro()->coupon->get_earning_use_admin_coupon_for_vendor( $order, $item, $context, $item->get_product(), $vendor_id, $refund );
             } else {
                 $item_price = apply_filters( 'dokan_earning_by_order_item_price', $item->get_total(), $item );
 
