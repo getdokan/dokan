@@ -4131,11 +4131,9 @@ function dokan_get_withdraw_threshold( $user_id ) {
  * @return int $width Banner width
  */
 function dokan_get_vendor_store_banner_width() {
-    $width = (int) apply_filters( 'dokan_store_banner_default_width', dokan_get_option( 'store_banner_width', 'dokan_appearance', 625 ) );
+    $width = absint( apply_filters( 'dokan_store_banner_default_width', dokan_get_option( 'store_banner_width', 'dokan_appearance', 625 ) ) );
 
-    $width = ( absint( $width ) !== 0  ) ? absint( $width ) : 625;
-
-    return $width;
+    return ( $width !== 0 ) ? $width : 625;
 }
 
 /**
@@ -4149,9 +4147,7 @@ function dokan_get_vendor_store_banner_width() {
  * @return int $height Banner height
  */
 function dokan_get_vendor_store_banner_height() {
-    $height = (int) apply_filters( 'dokan_store_banner_default_height', dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 ) );
+    $height = absint( apply_filters( 'dokan_store_banner_default_height', dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 ) ) );
 
-    $height = ( absint( $height ) !== 0  ) ? absint( $height ) : 300;
-
-    return $height;
+    return ( $height !== 0 ) ? $height : 300;
 }
