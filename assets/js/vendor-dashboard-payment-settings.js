@@ -1,4 +1,4 @@
-( function dokan_dashboard_payment( $ ) {
+( function( $ ) {
   $( "button[data-dokan-payment-method]" ).click( function () {
     var btn = $( this );
     var data = {
@@ -9,15 +9,15 @@
       'settings[default-method]'    : btn.data( 'dokan-payment-method' )
     };
 
-    var old = btn.html();
-    btn.html('<img alt="spinner" src="' + dokan.ajax_loader+'" />');
+    var old_content = btn.html();
+    btn.html('<img alt="spinner" src="' + dokan.ajax_loader + '" />');
     btn.attr( 'disabled', 'disabled' );
 
     $.post( dokan.ajaxurl, data, function ( response ) {
       if ( response.success ) {
         location.reload();
       } else {
-        btn.html( old );
+        btn.html( old_content );
         btn.removeAttr( 'disabled' );
 
         var error_area = $( '#vendor-dashboard-payment-settings-error' );
@@ -30,20 +30,4 @@
       }
     } );
   } );
-
-/*  //click on dropdown
-  $( "#toggle-vendor-payment-method-drop-down" ).click( function ( e ) {
-    var dropdown = $( '#vendor-payment-method-drop-down' );
-    var display = dropdown.css( 'display' ) !== 'none' ? 'none' : 'block';
-    dropdown.css( 'display', display );
-    e.stopPropagation();
-  } );
-
-  $( document ).click( function () {
-    var dropdown = $( '#vendor-payment-method-drop-down' );
-    if ( dropdown.css( 'display' ) !== 'none' ) {
-      dropdown.css('display', 'none');
-    }
-  } );*/
-
 } ) ( jQuery );
