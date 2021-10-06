@@ -452,10 +452,7 @@
                 var attribute          = $wrapper.data( 'taxonomy' );
                 let result             = await dokan_sweetalert( dokan.new_attribute_prompt, {  
                     action: 'prompt', 
-                    input:'text', 
-                    showCancelButton: true, 
-                    confirmButtonColor:  '#28a745', 
-                    cancelButtonColor:'#dc3545'  
+                    input:'text'
                 } );
                 var new_attribute_name = result.value;
 
@@ -471,8 +468,8 @@
                     $.post( dokan.ajaxurl, data, function( response ) {
                         if ( response.error ) {
                             dokan_sweetalert( response.error, { 
-                                action : 'alert', 
-                                confirmButtonColor:'#28a745' 
+                                action : 'alert',
+                                icon   : 'warning'
                             } );
                         } else if ( response.slug ) {
                             $wrapper.find( 'select.dokan_attribute_values' ).append( '<option value="' + response.slug + '" selected="selected">' + response.name + '</option>' );
@@ -531,10 +528,8 @@
                 evt.preventDefault();
 
                 const isRemoved = await dokan_sweetalert( dokan.remove_attribute, { 
-                    action :'confirm', 
-                    showCancelButton:true, 
-                    confirmButtonColor:'#28a745',
-                    cancelButtonColor: '#dc3545' 
+                    action :'confirm',
+                    icon: 'warning' 
                 } );
 
                 if ( 'undefined' !== isRemoved && isRemoved.isConfirmed ) {
