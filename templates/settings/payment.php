@@ -14,11 +14,11 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
 <div>
     <h2 style=" padding: 25px; display: none; background-color: palevioletred" id="vendor-dashboard-payment-settings-error"></h2>
     <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #EEEEEE">
-        <h2 style="margin: 5px 0">Payment Methods</h2>
-        <div id="vendor-dashboard-payment-settings-toggle-dropdown">
+        <h2 style="margin: 5px 0; flex-grow: 1">Payment Methods</h2>
+        <div id="vendor-dashboard-payment-settings-toggle-dropdown" style="flex-grow: 2; text-align: right">
             <button id="toggle-vendor-payment-method-drop-down" style="border-radius: 3px; padding: 5px; background-color: #2B78E4">Add Payment Method</button>
             <div style="position: relative;">
-                <div id="vendor-payment-method-drop-down" style=" border: 1px black solid; padding: 0 5px; position: absolute; top: 0; background-color: white">
+                <div id="vendor-payment-method-drop-down" style=" border: 1px black solid; padding: 0 5px; position: absolute; top: 0; right: 0; background-color: white">
                     <?php
                     $profile_methods = array_keys( $profile_info['payment'] );
                     $unused_methods = array_diff( $methods, $profile_methods );
@@ -112,14 +112,15 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
                 </div>
                 <div>
                     <?php if ( isset( $profile_info['payment']['default-method'] ) && $profile_info['payment']['default-method'] === $method_key ) {?>
-                        <button disabled tabindex="-1" style="border: 1px solid gray; background-color: #BBBBBB; color: black; padding: 2px 6px; border-radius: 3px">Default</button>
+                        <button disabled tabindex="-1" style="border: 1px solid gray; background-color: #BBBBBB; color: black; padding: 2px 6px; border-radius: 3px; margin-bottom: 3px">Default</button>
                     <?php } else { ?>
                         <button data-dokan-payment-method="<?php echo esc_attr( $method_key ) ?>"
                                 style="border: 1px solid gray;
                                 background-color: #DDDDDD;
                                 color: black;
                                 padding: 2px 6px;
-                                border-radius: 3px">
+                                border-radius: 3px;
+                                margin-bottom: 3px">
                             Make Default
                         </button>
                     <?php } ?>
