@@ -1042,17 +1042,40 @@ function dokan_locate_template( $template_name, $template_path = '', $default_pa
  *
  * @param string $page
  * @param string $context
+ * @param string $subpage
  *
  * @return string url of the page
  */
-function dokan_get_page_url( $page, $context = 'dokan' ) {
+function dokan_get_page_url( $page, $context = 'dokan', $subpage = '' ) {
     if ( $context == 'woocommerce' ) {
         $page_id = wc_get_page_id( $page );
     } else {
         $page_id = dokan_get_option( $page, 'dokan_pages' );
     }
 
-    return apply_filters( 'dokan_get_page_url', get_permalink( $page_id ), $page_id, $context );
+    $url = get_permalink( $page_id );
+
+    if ( $subpage ) {
+        $url = dokan_add_subpage_to_url( $url, $subpage );
+    }
+
+    return apply_filters( 'dokan_get_page_url', $url, $page_id, $context, $subpage );
+}
+
+/**
+ * Add subpage to url: this will add wpml like plugin compatibility
+ *
+ * @param string $url
+ * @param string $subpage
+ *
+ * @since 3.2.14
+ *
+ * @return false|string
+ */
+function dokan_add_subpage_to_url( $url, $subpage ) {
+    $url_parts         = wp_parse_url( $url );
+    $url_parts['path'] = $url_parts['path'] . $subpage;
+    return http_build_url( '', $url_parts );
 }
 
 /**
@@ -2140,9 +2163,7 @@ function dokan_get_navigation_url( $name = '' ) {
     $url = get_permalink( $page_id );
 
     if ( ! empty( $name ) ) {
-        $urlParts         = wp_parse_url( $url );
-        $urlParts['path'] = $urlParts['path'] . $name . '/';
-        $url              = http_build_url( '', $urlParts );
+        $url = dokan_add_subpage_to_url( $url, $name . '/' );
     }
 
     return apply_filters( 'dokan_get_navigation_url', esc_url( $url ), $name );
@@ -2897,8 +2918,8 @@ function dokan_get_all_caps() {
             'dokan_manage_order'      => __( 'Manage order', 'dokan-lite' ),
             'dokan_manage_order_note' => __( 'Manage order note', 'dokan-lite' ),
             'dokan_manage_refund'     => __( 'Manage refund', 'dokan-lite' ),
+            'dokan_export_order'      => __( 'Export order', 'dokan-lite' ),
         ],
-
         'coupon' => [
             'dokan_add_coupon'    => __( 'Add coupon', 'dokan-lite' ),
             'dokan_edit_coupon'   => __( 'Edit coupon', 'dokan-lite' ),
@@ -3909,7 +3930,7 @@ function dokan_is_vendor_info_hidden( $option = null ) {
  * Function current_datetime() compatibility for wp version < 5.3
  *
  * @since 3.1.1
- * @throws Exception
+ *
  * @return DateTimeImmutable
  */
 function dokan_current_datetime() {
@@ -3970,9 +3991,9 @@ function dokan_wp_timezone_string() {
  *
  * @param string|timestamp $date the date string or timestamp
  * @param string|bool $format date format string or false for default WordPress date
+ *
  * @since 3.1.1
  *
- * @throws Exception
  * @return string|false The date, translated if locale specifies it. False on invalid timestamp input.
  */
 function dokan_format_date( $date = '', $format = false ) {

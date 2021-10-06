@@ -1,7 +1,7 @@
 <?php
 global $post;
 
-$pagination_base = str_replace( $post->ID, '%#%', esc_url( get_pagenum_link( $post->ID ) ) );
+$pagination_base = empty( $post ) ? '' : str_replace( $post->ID, '%#%', esc_url( get_pagenum_link( $post->ID ) ) );
 
 $get_data = wp_unslash( $_GET );
 

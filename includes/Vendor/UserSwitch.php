@@ -86,7 +86,7 @@ class UserSwitch {
 
         <script type="text/javascript">
             (function($) {
-                $( '#user-switching-installer-notice #user-switching-installer' ).click( function ( e ) {
+                $( '#user-switching-installer-notice #user-switching-installer' ).on( 'click', function ( e ) {
                     e.preventDefault();
                     $( this ).addClass( 'install-now updating-message' );
                     $( this ).text( '<?php echo esc_js( 'Installing...', 'dokan-lite' ); ?>' );

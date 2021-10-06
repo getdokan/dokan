@@ -337,6 +337,7 @@ class Manager {
         // update vendor store data
         if ( ! empty( $data['store_name'] ) ) {
             $vendor->set_store_name( $data['store_name'] );
+            $vendor->update_meta( 'dokan_store_name', $data['store_name'] );
         }
 
         if ( ! empty( $data['phone'] ) ) {

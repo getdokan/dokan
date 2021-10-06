@@ -131,16 +131,17 @@
          <!--address-->
 
         <?php
-        $verified = false;
+            if (  class_exists( 'Dokan_Pro' ) && ! dokan_pro()->module->is_active( 'delivery_time' ) ) {
+                $verified = false;
 
-        if ( isset( $profile_info['dokan_verification']['info']['store_address']['v_status'] ) ) {
-            if ( $profile_info['dokan_verification']['info']['store_address']['v_status'] == 'approved' ) {
-                $verified = true;
+                if ( isset( $profile_info['dokan_verification']['info']['store_address']['v_status'] ) ) {
+                    if ( $profile_info['dokan_verification']['info']['store_address']['v_status'] == 'approved' ) {
+                        $verified = true;
+                    }
+                }
+
+                dokan_seller_address_fields( $verified );
             }
-        }
-
-        dokan_seller_address_fields( $verified );
-
         ?>
         <!--address-->
 
@@ -443,7 +444,7 @@
         $(function() {
             dokan_address_select.init();
 
-            $('#setting_phone').keydown(function(e) {
+            $('#setting_phone').on( 'keydown', function(e) {
                 // Allow: backspace, delete, tab, escape, enter and .
                 if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 91, 107, 109, 110, 187, 189, 190]) !== -1 ||
                      // Allow: Ctrl+A
