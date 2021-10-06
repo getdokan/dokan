@@ -10,6 +10,31 @@
 			display:inline-block;
 			padding:0px 5px;
 		}
+    .dokan-panel-body {
+      .dokan-panel-inner-container {
+        position: relative;
+        border-bottom: 1px solid #EDEDED;
+        padding: 15px 0;
+
+        &:last-child {
+          border-bottom: none;
+          margin-bottom: -15px;
+        }
+        &:first-child {
+          margin-top: -15px;
+        }
+
+        .dokan-w5 {
+          position: absolute;
+          right: 10px;
+          top: 50%;
+          transform: translate(10px, -50%);
+          button {
+            float: right;
+          }
+        }
+      }
+    }
 
 	}
 }
