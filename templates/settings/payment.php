@@ -52,8 +52,9 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
                         <li>
                             <a href="<?php echo esc_url(  home_url( "dashboard/settings/payment/manage-" . $method_key ) ); ?>">
                                 <div style="display: flex; align-items: center; border-bottom: 1px gray solid; padding: 5px 0">
-                                    <img src="<?php echo esc_url( DOKAN_PLUGIN_ASSEST . "/images/dashboard-settings/payment/$method_key.png" ); ?>" alt="$method_key"
-                                        style="width: 3vw; min-width: 20px"/>
+                                    <div style="width: calc( 12px + 2vw );">
+                                        <i class="fa <?php echo get_payment_method_icon_class( $method_key ); ?>" style="color: black; font-size: calc( 12px + 1.5vw );"></i>
+                                    </div>
                                     <span style="margin-left: 10px; color: #333333"> <?php
                                         //translators: %s: payment method title
                                         echo sprintf( __( 'Direct to %s', 'dokan-lite' ), esc_html__( $method['title'], 'dokan-lite' ) );
@@ -98,8 +99,9 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
         <li>
             <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: #CCCCCC solid 1px">
                 <div style="display: flex; align-items: center">
-                    <img src="<?php echo esc_url( DOKAN_PLUGIN_ASSEST . "/images/dashboard-settings/payment/$method_key.png" ); ?>" alt="$method_key"
-                        style="width: 5vw; min-width: 30px"/>
+                    <div style="width: calc( 12px + 4vw );">
+                        <i class="fa <?php echo get_payment_method_icon_class( $method_key ); ?>" style="color: black; font-size: calc( 12px + 3vw );"></i>
+                    </div>
                     <span style="margin-left: 10px; color: #333333">
                         <?php
                         esc_html_e( $method['title'], 'dokan-lite' );
@@ -145,4 +147,17 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
 /**
  * @since 2.2.2 Insert action after social settings form
  */
-do_action( 'dokan_payment_settings_after_form', $current_user, $profile_info ); ?>
+do_action( 'dokan_payment_settings_after_form', $current_user, $profile_info );
+
+function get_payment_method_icon_class( $method ) {
+    if ( stripos( $method, 'stripe' ) !== false ) {
+        return 'fa-cc-stripe';
+    } elseif ( stripos( $method, 'paypal' ) !== false ) {
+        return 'fa-cc-paypal';
+    } elseif ( stripos( $method, 'bank' ) !== false ) {
+        return 'fa-university';
+    } else {
+        return 'fa-credit-card';
+    }
+}
+?>
