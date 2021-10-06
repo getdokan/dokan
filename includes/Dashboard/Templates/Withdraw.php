@@ -45,6 +45,7 @@ class Withdraw {
         add_action( 'dokan_withdraw_content', array( $this, 'withdraw_status_filter' ), 15 );
         add_action( 'dokan_withdraw_content', array( $this, 'show_seller_balance' ), 5 );
         add_action( 'dokan_withdraw_content', array( $this, 'withdraw_form_and_listing' ), 20 );
+        add_action( 'dokan_withdraw_content', array( $this, 'withdraw_layout_display' ), 0 );
     }
 
     /**
@@ -532,5 +533,9 @@ class Withdraw {
             $message = __( 'Sorry, no transactions were found!', 'dokan-lite' );
             $this->show_warning_message( $message );
         }
+    }
+
+    public function withdraw_layout_display() {
+        dokan_get_template_part( 'withdraw/withdraw-content', '' );
     }
 }
