@@ -644,14 +644,6 @@ class Assets {
 
             $locale          = localeconv();
             $decimal         = isset( $locale['decimal_point'] ) ? $locale['decimal_point'] : '.';
-
-            /**
-             * Store banner width size
-             *
-             * @since 3.2.12
-             *
-             * @param int
-             */
             $banner_width    = dokan_get_vendor_store_banner_width();
             $banner_height   = dokan_get_vendor_store_banner_height();
             $has_flex_width  = ! empty( $general_settings['store_banner_flex_width'] ) ? $general_settings['store_banner_flex_width'] : true;
