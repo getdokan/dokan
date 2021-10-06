@@ -198,7 +198,7 @@ class Settings {
         $currentuser  = dokan_get_current_user_id();
         $profile_info = dokan_get_store_info( dokan_get_current_user_id() );
         $method = str_replace( '/manage-', '', $slug_suffix );
-        wp_enqueue_script( 'dokan-dashboard-payment' );
+        wp_enqueue_script( 'vendor-dashboard-payment' );
 
         if ( stripos( $method, '/edit' ) !== false ) {
             $is_edit_mode = true;
@@ -500,6 +500,8 @@ class Settings {
 
             if ( empty( $post_data['settings']['bank']['ac_type'] ) ) {
                 $error->add( 'dokan_bank_ac_type', __( 'Please select account type', 'dokan-lite' ) );
+            } else if ( ! in_array( $post_data['settings']['bank']['ac_type'], [ 'personal', 'business' ] ) ) {
+                $error->add( 'dokan_bank_ac_type', __( 'Invalid Account Type', 'dokan-lite' ) );
             }
 
             if ( empty( $post_data['settings']['bank']['declaration'] ) ) {
@@ -641,7 +643,7 @@ class Settings {
                     'declaration'    => sanitize_text_field( $bank['declaration'] ),
                 );
 
-                if ( !empty( $post_data['settings']['default-method'] ) ) {
+                if ( ! empty( $post_data['settings']['default-method'] ) ) {
                     $post_data['settings']['default-method'] = 'bank';
                 } else {
                     $post_data['settings']['default-method'] = ( $dokan_settings['payment']['default-method'] === 'bank' ) ? '' : $dokan_settings['payment']['default-method'];
