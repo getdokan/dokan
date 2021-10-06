@@ -24,10 +24,16 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
         ?>
             <fieldset class="payment-field-<?php echo esc_attr( $method_key ); ?>">
                 <div class="dokan-form-group">
-                    <label class="dokan-w3 dokan-control-label" for="dokan_setting"><?php echo esc_html( $method['title'] ) ?></label>
-                    <div class="dokan-w6">
-                        <?php call_user_func( $method['callback'], $profile_info ); ?>
-                    </div> <!-- .dokan-w6 -->
+                    <?php if ( $method_key === 'bank' ) {
+                        $augmented_profile                   = $profile_info;
+                        $augmented_profile['is_edit_method'] = $is_edit_method;
+                        call_user_func( $method['callback'], $augmented_profile );
+                    } else { ?>
+                        <label class="dokan-w3 dokan-control-label" for="dokan_setting"><?php echo esc_html( $method['title'] ) ?></label>
+                        <div class="dokan-w6">
+                            <?php call_user_func( $method['callback'], $profile_info ); ?>
+                        </div> <!-- .dokan-w6 -->
+                    <?php } ?>
                 </div>
             </fieldset>
         <?php } ?>
@@ -37,7 +43,7 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
      */
     do_action( 'dokan_payment_settings_form_bottom', $current_user, $profile_info ); ?>
 
-    <?php if ( $has_methods ): ?>
+    <?php if ( $has_methods && $method_key !== 'bank' ): ?>
         <div class="dokan-form-group">
             <div class="dokan-w4 ajax_prev dokan-text-left" style="margin-left:24%;">
                 <input type="submit" name="dokan_update_payment_settings" class="dokan-btn dokan-btn-danger dokan-btn-theme" value="<?php esc_attr_e( 'Update Settings', 'dokan-lite' ); ?>">

@@ -122,7 +122,7 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
                             Make Default
                         </button>
                     <?php } ?>
-                    <a href="<?php echo esc_url(  home_url( "dashboard/settings/payment/manage-" . $method_key ) ); ?>">
+                    <a href="<?php echo esc_url(  home_url( "dashboard/settings/payment/manage-" . $method_key . "/edit" ) ); ?>">
                         <button style="border: 1px solid gray; background-color: #DDDDDD; color: black; padding: 2px 6px; border-radius: 3px">Manage</button>
                     </a>
                 </div>
