@@ -55,7 +55,8 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
                                     <img src="<?php echo esc_url( DOKAN_PLUGIN_ASSEST . "/images/dashboard-settings/payment/$method_key.png" ); ?>" alt="$method_key"
                                         style="width: 3vw; min-width: 20px"/>
                                     <span style="margin-left: 10px; color: #333333"> <?php
-                                        esc_html_e( $method['title'], 'dokan-lite' );
+                                        //translators: %s: payment method title
+                                        echo sprintf( __( 'Direct to %s', 'dokan-lite' ), esc_html__( $method['title'], 'dokan-lite' ) );
                                         ?>
                                     </span>
                                 </div>
