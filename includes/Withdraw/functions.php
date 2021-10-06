@@ -289,3 +289,58 @@ function dokan_withdraw_get_active_order_status_in_comma() {
 
     return $status;
 }
+
+/**
+ * Get withdraw method formatted icon.
+ *
+ * @since 3.3.12
+ *
+ * @param string $method_key Withdraw Method key
+ *
+ * @return string
+ */
+function dokan_withdraw_get_method_icon( $method_key ) {
+    // TODO: need appropriate icon svgs.
+    switch ( $method_key ) {
+        case 'paypal':
+            $method_icon = '<i class="fa fa-cc-paypal" aria-hidden="true"></i>';
+            break;
+        case 'bank':
+            $method_icon = '<i class="fa fa-university" aria-hidden="true"></i>';
+            break;
+        case 'skrill':
+            $method_icon = '<span class="dashicons dashicons-money-alt"></span>';
+            break;
+        default:
+            $method_icon = '<i class="fa fa-money" aria-hidden="true"></i>';
+    }
+    return apply_filters( 'dokan_withdraw_method_icon', $method_icon, $method_key );
+}
+
+/**
+ * Get withdraw method additional info.
+ *
+ * @since 3.3.12
+ *
+ * @param string $method_key Withdraw Method key
+ *
+ * @return string
+ */
+function dokan_withdraw_get_method_additional_info( $method_key ) {
+    $payment_methods = get_user_meta( dokan_get_current_user_id(), 'dokan_profile_settings' )[0]['payment'];
+    $no_information = __( 'No information found.', 'dokan-lite' );
+    switch ( $method_key ) {
+        case 'paypal':
+        case 'skrill':
+            // translators: 1: Email address for withdraw method.
+            $method_info = empty( $payment_methods[ $method_key ]['email'] ) ? $no_information : sprintf( __( '( Email: %1$s )', 'dokan-lite' ), $payment_methods[ $method_key ]['email'] );
+            break;
+        case 'bank':
+            // translators: 1: Bank account holder name. 2: Bank name. 1: Bank account number
+            $method_info = empty( $payment_methods[ $method_key ]['ac_number'] ) ? $no_information : sprintf( __( '- %1$s - %2$s - ****%3$s', 'dokan-lite' ), $payment_methods[ $method_key ]['ac_name'], $payment_methods[ $method_key ]['bank_name'], substr( $payment_methods[ $method_key ]['ac_number'], -4 ) );
+            break;
+        default:
+            $method_info = '';
+    }
+    return apply_filters( 'dokan_withdraw_method_additional_info', $method_info, $method_key );
+}
