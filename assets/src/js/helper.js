@@ -52,29 +52,24 @@ function dokan_get_i18n_date_format( format = true ) {
  * @return {Promise | bool} Return Promise on success, and false on failure
  */
  async function dokan_sweetalert( message = '' , options = {} ) {
-  let defaults = {};
-  let args = {};
+  const defaults = {
+    text              : message,
+    showCancelButton  : true, 
+    confirmButtonColor:'#28a745',
+    cancelButtonColor :'#dc3545',
+  };
+  
+  const args    = { ...defaults, ...options };
 
-  switch( options.action ) {
+  switch( args.action ) {
     case 'confirm':
     case 'prompt' :
-      defaults = {
-        text              : message,
-        showCancelButton  : true, 
-        confirmButtonColor:'#28a745',
-        cancelButtonColor :'#dc3545' 
-      }
-      args    = { ...defaults, ...options };
       return await Swal.fire( args );
       break;
 
     case 'alert' :
     default :
-      defaults = {
-        text              : message,
-        confirmButtonColor:'#28a745'
-      }
-      args    = { ...defaults, ...options };
+      delete args.showCancelButton;
       Swal.fire( args );
       break;
   }

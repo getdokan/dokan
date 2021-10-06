@@ -337,7 +337,7 @@ jQuery(function($) {
                 
                 const isRefund = await dokan_sweetalert( dokan_refund.i18n_do_refund, { 
                     action : 'confirm', 
-                    icon   : 'warning'
+                    icon   : 'warning',
                 } );
 
                 if ( 'undefined' !== isRefund && isRefund.isConfirmed ) {
@@ -390,7 +390,7 @@ jQuery(function($) {
 
                     $.post( dokan_refund.ajax_url, data, function( response ) {
                         response.data.message ? dokan_sweetalert( response.data.message, { 
-                            icon: 'success'
+                            icon: 'success',
                         } ) : null;
                         dokan_seller_meta_boxes_order_items.reload_items();
                     }).fail( function ( jqXHR ) {
@@ -407,8 +407,8 @@ jQuery(function($) {
                                 message.push( data );
                             }
                         }
-
-                        dokan_sweetalert( message.join( ' ' ), { icon: 'error' } );
+                        
+                        dokan_sweetalert( message.join( ' ' ), { icon: 'error', } );
                         dokan_seller_meta_boxes_order_items.unblock();
                     } );
                 } else {

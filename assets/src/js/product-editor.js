@@ -451,8 +451,8 @@
                 var $wrapper           = $(this).closest( 'li.product-attribute-list' );
                 var attribute          = $wrapper.data( 'taxonomy' );
                 let result             = await dokan_sweetalert( dokan.new_attribute_prompt, {  
-                    action: 'prompt', 
-                    input:'text'
+                    action : 'prompt', 
+                    input  :'text'
                 } );
                 var new_attribute_name = result.value;
 
@@ -529,7 +529,7 @@
 
                 const isRemoved = await dokan_sweetalert( dokan.remove_attribute, { 
                     action :'confirm',
-                    icon: 'warning' 
+                    icon   :'warning' 
                 } );
 
                 if ( 'undefined' !== isRemoved && isRemoved.isConfirmed ) {
