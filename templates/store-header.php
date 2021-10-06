@@ -15,15 +15,7 @@ $store_closed_notice      = isset( $store_info['dokan_store_close_notice'] ) && 
 $show_store_open_close    = dokan_get_option( 'store_open_close', 'dokan_appearance', 'on' );
 
 $general_settings         = get_option( 'dokan_general', [] );
-
-/**
- * Store banner width size
- *
- * @since 3.2.12
- *
- * @param int
- */
-$banner_width = apply_filters( 'dokan_store_banner_default_width', dokan_get_option( 'store_banner_width', 'dokan_appearance', 625 ) );
+$banner_width             = dokan_get_vendor_store_banner_width();
 
 if ( ( 'default' === $profile_layout ) || ( 'layout2' === $profile_layout ) ) {
     $profile_img_class = 'profile-img-circle';

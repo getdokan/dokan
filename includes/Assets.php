@@ -652,16 +652,8 @@ class Assets {
              *
              * @param int
              */
-            $banner_width = apply_filters( 'dokan_store_banner_default_width', dokan_get_option( 'store_banner_width', 'dokan_appearance', 625 ) );
-
-            /**
-             * Store banner height size
-             *
-             * @since 3.2.12
-             *
-             * @param int
-             */
-            $banner_height = apply_filters( 'dokan_store_banner_default_height', dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 ) );
+            $banner_width    = dokan_get_vendor_store_banner_width();
+            $banner_height   = dokan_get_vendor_store_banner_height();
             $has_flex_width  = ! empty( $general_settings['store_banner_flex_width'] ) ? $general_settings['store_banner_flex_width'] : true;
             $has_flex_height = ! empty( $general_settings['store_banner_flex_height'] ) ? $general_settings['store_banner_flex_height'] : true;
 
