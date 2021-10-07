@@ -38,6 +38,7 @@
                      *
                      * @since 2.4
                      */
+                    do_action( 'dokan_withdraw_content_area_header' );
                     do_action( 'dokan_withdraw_dashboard_content_area_header' );
                 ?>
 

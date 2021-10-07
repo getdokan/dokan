@@ -4815,6 +4815,44 @@ div.media-sidebar a.edit-attachment {
   display: inline-block;
   padding: 0px 5px;
 }
+.dokan-withdraw-content .dokan-withdraw-area .dokan-panel-body .dokan-panel-inner-container {
+  position: relative;
+  border-bottom: 1px solid #EDEDED;
+  padding: 15px 0;
+}
+.dokan-withdraw-content .dokan-withdraw-area .dokan-panel-body .dokan-panel-inner-container:last-child {
+  border-bottom: none;
+  margin-bottom: -15px;
+}
+.dokan-withdraw-content .dokan-withdraw-area .dokan-panel-body .dokan-panel-inner-container:first-child {
+  margin-top: -15px;
+}
+.dokan-withdraw-content .dokan-withdraw-area .dokan-panel-body .dokan-panel-inner-container p {
+  margin-bottom: 5px;
+}
+.dokan-withdraw-content .dokan-withdraw-area .dokan-panel-body .dokan-panel-inner-container .dokan-w8 img {
+  display: inline-block;
+  vertical-align: middle;
+}
+.dokan-withdraw-content .dokan-withdraw-area .dokan-panel-body .dokan-panel-inner-container .dokan-w5 {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translate(10px, -50%);
+}
+.dokan-withdraw-content .dokan-withdraw-area .dokan-panel-body .dokan-panel-inner-container .dokan-w5 button {
+  float: right;
+}
+.dokan-withdraw-content .dokan-withdraw-area .dokan-panel-body .dokan-panel-inner-container .dokan-w5 #dokan-withdraw-display-requests-button {
+  float: right;
+  text-decoration: none;
+}
+.dokan-withdraw-content .dokan-withdraw-area .dokan-withdraw-status-filter-container {
+  margin-bottom: 15px;
+}
+.dokan-withdraw-popup {
+  padding: 15px;
+}
 .dokan-login-form-popup-wrapper {
   width: 430px !important;
   padding: 16px !important;

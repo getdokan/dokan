@@ -300,19 +300,31 @@ function dokan_withdraw_get_active_order_status_in_comma() {
  * @return string
  */
 function dokan_withdraw_get_method_icon( $method_key ) {
-    // TODO: need appropriate icon svgs.
+    $asset_path = DOKAN_PLUGIN_ASSEST . '/images/withdraw-methods/';
     switch ( $method_key ) {
         case 'paypal':
-            $method_icon = '<i class="fa fa-cc-paypal fa-lg fa-border" aria-hidden="true"></i>';
+            $method_icon = $asset_path . 'PayPal.svg';
+            break;
+        case 'stripe':
+            $method_icon = $asset_path . 'Stripe.svg';
+            break;
+        case 'mangopay':
+            $method_icon = $asset_path . 'MangoPay.svg';
+            break;
+        case 'razorpay':
+            $method_icon = $asset_path . 'RazorPay.svg';
             break;
         case 'bank':
-            $method_icon = '<i class="fa fa-university fa-lg fa-border" aria-hidden="true"></i>';
+            $method_icon = $asset_path . 'Bank.svg';
             break;
         case 'skrill':
-            $method_icon = '<i class="fa fa-money fa-lg fa-border" aria-hidden="true"></i>';
+            $method_icon = $asset_path . 'Bank.svg';
+            break;
+        case 'dokan-moip-connect':
+            $method_icon = $asset_path . 'WireCard.svg';
             break;
         default:
-            $method_icon = '<i class="fa fa-money fa-lg fa-border" aria-hidden="true"></i>';
+            $method_icon = $asset_path . 'Bank.svg';
     }
     return apply_filters( 'dokan_withdraw_method_icon', $method_icon, $method_key );
 }

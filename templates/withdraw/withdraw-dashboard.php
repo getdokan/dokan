@@ -93,17 +93,15 @@
         $default_method = dokan_withdraw_get_default_method();
 
         foreach ( $active_methods as $method ) :
-            $method_icon = dokan_withdraw_get_method_icon( $method );
-            $method_info = dokan_withdraw_get_method_additional_info( $method );
+            $method_icon  = dokan_withdraw_get_method_icon( $method );
+            $method_info  = dokan_withdraw_get_method_additional_info( $method );
+            $method_title = dokan_withdraw_get_method_title( $method );
             ?>
             <div class="dokan-clearfix dokan-panel-inner-container">
                 <div class="dokan-w8">
-                    <?php
-                    echo wp_kses_post( $method_icon );
-                    echo ' <strong>' . esc_html( dokan_withdraw_get_method_title( $method ) ) . '</strong> ';
-                    echo ' <small>' . esc_html( $method_info ) . '</small> ';
-
-                    ?>
+                    <img src="<?php echo esc_url( $method_icon ); ?>" width="60" height="60" alt="<?php echo esc_attr( $method_title ); ?>" />
+                    <strong><?php echo esc_html( $method_title ); ?></strong>
+                    <small><?php echo esc_html( $method_info ) ?></small>
                 </div>
                 <div class="dokan-w5">
                     <?php if ( $default_method === $method ) : ?>
