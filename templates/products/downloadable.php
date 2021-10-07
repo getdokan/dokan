@@ -32,8 +32,8 @@
                     </tfoot>
                     <thead>
                         <tr>
-                            <th><?php esc_html_e( 'Name', 'dokan-lite' ); ?> <span class="tips" title="<?php esc_attr_e( 'This is the name of the download shown to the customer.', 'dokan-lite' ); ?>">[?]</span></th>
-                            <th><?php esc_html_e( 'File URL', 'dokan-lite' ); ?> <span class="tips" title="<?php esc_attr_e( 'This is the URL or absolute path to the file which customers will get access to.', 'dokan-lite' ); ?>">[?]</span></th>
+                            <th><?php esc_html_e( 'Name', 'dokan-lite' ); ?> <span class="tips" data-placement="top" data-toggle="tooltip" title="<?php esc_attr_e( 'This is the name of the download shown to the customer.', 'dokan-lite' ); ?>"><span class="dashicons dashicons-editor-help"></span></span></th>
+                            <th><?php esc_html_e( 'File URL', 'dokan-lite' ); ?> <span class="tips" data-placement="top" data-toggle="tooltip" title="<?php esc_attr_e( 'This is the URL or absolute path to the file which customers will get access to.', 'dokan-lite' ); ?>"><span class="dashicons dashicons-editor-help"></span></span></th>
                             <th><?php esc_html_e( 'Action', 'dokan-lite' ); ?></th>
                         </tr>
                     </thead>
