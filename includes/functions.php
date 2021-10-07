@@ -4121,20 +4121,41 @@ function dokan_get_withdraw_threshold( $user_id ) {
 }
 
 /**
- * Dokan Withdraw Limit Value Validation
+ * Validates admin withdraw limit settings
  *
  * @param mixed $option_value
  * @param mixed $option_name
  *
- * @since 3.2.12
+ * @since 3.2.14
  *
  * @return mixed $option_value
  */
-function dokan_withdraw_limit_value_validation( $option_value, $option_name ) {
-    if ( ! empty( $option_value['withdraw_limit'] ) ) {
-        $option_value['withdraw_limit'] = $option_value['withdraw_limit'] < 0 ? 0 : $option_value['withdraw_limit'];
+function dokan_withdraw_limit_value_validation( $option_name, $option_value ) {
+    if ( 'dokan_withdraw' !== $option_name ) {
+        return;
     }
-    return $option_value;
+    
+    $errors = [];
+    
+    if ( ! empty( $option_value['withdraw_limit'] && $option_value['withdraw_limit'] < 0 ) ) {
+        $errors[] = [
+            'name' => 'withdraw_limit',
+            'error' => __( 'Minimum Withdraw Limit can\'t be negative value.', 'dokan' ),
+        ];
+    }
+    
+    if ( ! empty( $errors ) ) {
+        wp_send_json_error(
+            [
+                'settings' => [
+                    'name'  => $option_name,
+                    'value' => $option_value,
+                ],
+                'message'  => __( 'Validation error', 'dokan' ),
+                'errors' => $errors,
+            ],
+            400
+        );
+    }
 }
-
-add_filter( 'dokan_save_settings_value', 'dokan_withdraw_limit_value_validation' , 10, 2 );
+add_action( 'dokan_before_saving_settings', 'dokan_withdraw_limit_value_validation' , 20, 2 );
