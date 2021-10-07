@@ -100,7 +100,7 @@ class ContactSeller extends WC_Email {
      *
      * @since DOKAN_LITE_SINCE
      *
-     * @return mixed
+     * @return string
      */
     public function set_reply_to() {
         return $this->reply_to;
