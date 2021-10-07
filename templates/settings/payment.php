@@ -114,20 +114,14 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
                 </div>
                 <div>
                     <?php if ( isset( $profile_info['payment']['default-method'] ) && $profile_info['payment']['default-method'] === $method_key ) {?>
-                        <button disabled tabindex="-1" style="border: 1px solid gray; background-color: #BBBBBB; color: black; padding: 2px 6px; border-radius: 3px; margin-bottom: 3px">Default</button>
+                        <button disabled tabindex="-1" class="dokan-btn-sm" style="background-color: gray; margin-bottom: 3px">Default</button>
                     <?php } else { ?>
-                        <button data-dokan-payment-method="<?php echo esc_attr( $method_key ) ?>"
-                                style="border: 1px solid gray;
-                                background-color: #DDDDDD;
-                                color: black;
-                                padding: 2px 6px;
-                                border-radius: 3px;
-                                margin-bottom: 3px">
+                        <button class="dokan-btn-sm dokan-btn-success" data-dokan-payment-method="<?php echo esc_attr( $method_key ) ?>" style="margin-bottom: 3px">
                             Make Default
                         </button>
                     <?php } ?>
                     <a href="<?php echo esc_url(  home_url( "dashboard/settings/payment/manage-" . $method_key . "/edit" ) ); ?>">
-                        <button style="border: 1px solid gray; background-color: #DDDDDD; color: black; padding: 2px 6px; border-radius: 3px">Manage</button>
+                        <button class="dokan-btn-sm dokan-btn-theme">Manage</button>
                     </a>
                 </div>
             </div>
