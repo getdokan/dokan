@@ -10,24 +10,36 @@
     };
 
     var old_content = btn.html();
-    btn.html('<img alt="spinner" src="' + dokan.ajax_loader + '" />');
+    btn.append( ' <span class="dokan-loading"> </span>' );
     btn.attr( 'disabled', 'disabled' );
 
-    $.post( dokan.ajaxurl, data, function ( response ) {
-      if ( response.success ) {
-        location.reload();
-      } else {
-        btn.html( old_content );
-        btn.removeAttr( 'disabled' );
-
-        var error_area = $( '#vendor-dashboard-payment-settings-error' );
-        error_area.css( 'display', 'block' );
-        error_area.html( response.data );
-
-        setTimeout( () => {
-          error_area.css( 'display', 'none' );
-        }, 5000);
+    $.ajax( {
+      url: dokan.ajaxurl,
+      method: "post",
+      data: data,
+      success: function ( response ) {
+        if ( response.success ) {
+          location.reload();
+          } else {
+            handleError( response );
+          }
+      },
+      error: function ( response ) {
+        handleError( response );
       }
     } );
+
+    function handleError( response ) {
+      btn.html( old_content );
+      btn.removeAttr( 'disabled' );
+
+      var error_area = $( '#vendor-dashboard-payment-settings-error' );
+      error_area.css( 'display', 'block' );
+      error_area.html( response.data ? response.data : response.statusText );
+
+      setTimeout( () => {
+        error_area.css( 'display', 'none' );
+      }, 5000);
+    }
   } );
 } ) ( jQuery );
