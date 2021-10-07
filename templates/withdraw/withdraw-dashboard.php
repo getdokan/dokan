@@ -85,7 +85,7 @@
 <?php do_action( 'dokan_withdraw_content_after_payment_details_section' ); ?>
 
 
-<div class="dokan-panel dokan-panel-default">
+<div class="dokan-panel dokan-panel-default" id="dokan-withdraw-payment-method-list" data-security="<?php echo esc_attr( wp_create_nonce( 'dokan_withdraw_make_default' ) ); ?>" >
     <div class="dokan-panel-heading"><strong><?php esc_html_e( 'Payment Methods', 'dokan-lite' ); ?></strong></div>
     <div class="dokan-panel-body general-details">
         <?php
@@ -107,9 +107,9 @@
                 </div>
                 <div class="dokan-w5">
                     <?php if ( $default_method === $method ) : ?>
-                    <button class="dokan-btn dokan-btn-theme" disabled data-withdraw-method="<?php esc_attr( $method ); ?>"><?php esc_html_e( 'Default', 'dokan-lite' ); ?></button>
+                    <button class="dokan-btn dokan-btn-theme" disabled data-method="<?php echo esc_attr( $method ); ?>"><?php esc_html_e( 'Default', 'dokan-lite' ); ?></button>
                    <?php else: ?>
-                   <button class="dokan-btn dokan-btn-theme dokan-withdraw-make-default-button" data-withdraw-method="<?php esc_attr( $method ); ?>"><?php esc_html_e( 'Make Default', 'dokan-lite' ); ?></button>
+                   <button class="dokan-btn dokan-btn-theme dokan-withdraw-make-default-button" data-method="<?php echo esc_attr( $method ); ?>"><?php esc_html_e( 'Make Default', 'dokan-lite' ); ?></button>
                    <?php endif; ?>
                 </div>
             </div>

@@ -32,7 +32,7 @@ class Hooks {
      */
     private function ajax() {
         add_action( 'wp_ajax_dokan_handle_withdraw_request', [ $this, 'handle_withdraw_request' ] );
-        add_action( 'wp_ajax_dokan_handle_make_default_method', [ $this, 'handle_make_default_method' ] );
+        add_action( 'wp_ajax_dokan_withdraw_handle_make_default_method', [ $this, 'handle_make_default_method' ] );
     }
 
     /**
@@ -245,7 +245,7 @@ class Hooks {
             wp_send_json_error( esc_html__( 'You have no permission to do this action', 'dokan-lite' ) );
         }
 
-        $method = isset( $_POST['method'] ) ? sanitize_text_field( wp_unslash( $_POST['method'] ) ) : '';
+        $method = isset( $_POST['method'] ) ? sanitize_key( wp_unslash( $_POST['method'] ) ) : '';
         if ( empty( $method ) ) {
             wp_send_json_error( esc_html__( 'Which method?', 'dokan-lite' ) );
         }

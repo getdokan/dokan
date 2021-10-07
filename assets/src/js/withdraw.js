@@ -8,7 +8,7 @@
 
             $('.dokan-withdraw-make-default-button').on( 'click', (e) => {
                 e.preventDefault();
-                Dokan_Withdraw.makeDefault();
+                Dokan_Withdraw.makeDefault( e );
             } );
 
             $('#dokan-withdraw-request-submit').on( 'click', (e) => {
@@ -44,19 +44,36 @@
                 }
             });
         },
-        makeDefault: () => {
-            let self = $(this),
-                makeDefaultTemplate = wp.template( 'make-withdraw-method-default-popup' );
+        makeDefault: ( e ) => {
+            const button      = $( e.target );
+            const paymentArea = $( '#dokan-withdraw-payment-method-list' );
 
-            $.magnificPopup.open({
-                fixedContentPos: true,
-                items: {
-                    src: makeDefaultTemplate().trim(),
-                    type: 'inline'
-                },
-                callbacks: {
+
+            paymentArea.block({
+                message: null,
+                overlayCSS: {
+                    background: '#fff',
+                    opacity: 0.6
                 }
             });
+
+            $.post(
+                dokan.ajaxurl,
+                {
+                    action: 'dokan_withdraw_handle_make_default_method',
+                    nonce: paymentArea.data( 'security' ),
+                    method: button.data( 'method' ),
+                },
+                ( response ) => {
+                    if ( response.success ) {
+                        paymentArea.unblock();
+                        window.location.reload();
+                    } else {
+                        console.error( response.data );
+                        paymentArea.unblock();
+                    }
+                }
+            );
         },
         handleWithdrawRequest: ( e ) => {
             e.preventDefault();
@@ -89,7 +106,7 @@
                         form.unblock();
                     }
                 }
-            )
+            );
         }
     };
 
