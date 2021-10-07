@@ -23,9 +23,9 @@
                 /**
                  *  dokan_withdraw_content_inside_before hook
                  *
-                 *  @since 3.3.12
+                 *  @since 2.4
                  */
-                do_action( 'dokan_withdraw_dashboard_content_inside_before' );
+                do_action( 'dokan_withdraw_content_inside_before' );
             ?>
 
             <article class="dokan-withdraw-area">
@@ -38,7 +38,7 @@
                      *
                      * @since 2.4
                      */
-                    do_action( 'dokan_withdraw_dashboard_content_area_header' );
+                    do_action( 'dokan_withdraw_content_area_header' );
                 ?>
 
                 <div class="entry-content">
@@ -54,7 +54,7 @@
                          *
                          * @since 2.4
                          */
-                        do_action( 'dokan_withdraw_dashboard_content' );
+                        do_action( 'dokan_withdraw_content' );
                     ?>
 
                 </div><!-- .entry-content -->
@@ -68,7 +68,7 @@
                  *
                  *  @since 2.4
                  */
-                do_action( 'dokan_withdraw_dashboard_content_inside_after' );
+                do_action( 'dokan_withdraw_content_inside_after' );
             ?>
         </div><!-- .dokan-dashboard-content -->
 

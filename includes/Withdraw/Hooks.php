@@ -14,6 +14,24 @@ class Hooks {
     public function __construct() {
         add_action( 'dokan_withdraw_status_updated', [ self::class, 'delete_seller_balance_cache' ], 10, 3 );
         add_action( 'dokan_withdraw_request_approved', [ self::class, 'update_vendor_balance' ], 11 );
+        add_filter( 'dokan_query_var_filter', [ $this, 'add_withdraw_list_query_var' ] );
+        add_action( 'dokan_load_custom_template', [ $this, 'display_request_listing' ] );
+        add_filter( 'dokan_dashboard_nav_active', [ $this, 'active_dashboard_nav_menu' ], 10, 3 );
+
+        if ( wp_doing_ajax() ) {
+            $this->ajax();
+        }
+    }
+
+    /**
+     * All the withdrawal related ajax hooks.
+     *
+     * @since 3.3.12
+     *
+     * @return void
+     */
+    private function ajax() {
+        add_action( 'wp_ajax_dokan_handle_withdraw_request', [ $this, 'handle_withdraw_request' ] );
     }
 
     /**
@@ -86,5 +104,114 @@ class Hooks {
         }
 
         self::delete_seller_balance_cache( $withdraw->get_status(), $withdraw->get_user_id(), $withdraw->get_id() );
+    }
+
+    /**
+     * Add withdraw listing query var
+     *
+     * @since 3.3.12
+     *
+     * @param array $query_vars
+     *
+     * @return array
+     */
+    public function add_withdraw_list_query_var( $query_vars ) {
+        $query_vars[] = 'withdraw-requests';
+
+        return $query_vars;
+    }
+
+    /**
+     * Display withdraw listing.
+     *
+     * @since 3.3.12
+     *
+     * @param array $query_vars
+     *
+     * @return void
+     */
+    public function display_request_listing( $query_vars ) {
+        if ( empty( $query_vars ) || ! array_key_exists( 'withdraw-requests', $query_vars ) ) {
+            return;
+        }
+
+        if ( ! current_user_can( 'dokan_view_withdraw_menu' ) ) {
+            dokan_get_template_part( 'global/no-permission' );
+        } else {
+            dokan_get_template_part( 'withdraw/withdraw-listing' );
+        }
+
+    }
+
+    /**
+     * Handle withdraw request ajax.
+     *
+     * @since 3.3.12
+     *
+     * @return void
+     */
+    public function handle_withdraw_request() {
+        $user_id = dokan_get_current_user_id();
+
+        if ( dokan()->withdraw->has_pending_request( $user_id ) ) {
+            wp_send_json_error( esc_html__( 'You already have a pending withdraw request.', 'dokan-lite' ) );
+        }
+
+        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'dokan_withdraw' ) ) {
+            wp_send_json_error( esc_html__( 'Are you cheating?', 'dokan-lite' ) );
+        }
+
+        if ( ! current_user_can( 'dokan_manage_withdraw' ) ) {
+            wp_send_json_error( esc_html__( 'You have no permission to do this action', 'dokan-lite' ) );
+        }
+
+        if ( empty( $_POST['amount'] ) ) {
+            wp_send_json_error( esc_html__( 'Withdraw amount is required', 'dokan-lite' ) );
+        }
+
+        $amount = (float) wc_format_decimal( wc_clean( wp_unslash( $_POST['amount'] ) ) );
+
+        if ( $amount < 0 ) {
+            wp_send_json_error( esc_html__( 'Negative withdraw amount is not permitted.', 'dokan-lite' ) );
+        }
+
+        $method  = dokan_withdraw_get_default_method( $user_id );
+        $args    = array(
+            'user_id' => $user_id,
+            'amount'  => $amount,
+            'method'  => $method,
+        );
+
+        $validate_request = dokan()->withdraw->is_valid_approval_request( $args );
+
+        if ( is_wp_error( $validate_request )  ) {
+            wp_send_json_error( $validate_request->get_error_message(), $validate_request->get_error_code() );
+        }
+
+        $data = array(
+            'user_id' => $user_id,
+            'amount'  => $amount,
+            'status'  => dokan()->withdraw->get_status_code( 'pending' ),
+            'method'  => $method,
+            'ip'      => dokan_get_client_ip(),
+            'note'    => '',
+        );
+
+        $withdraw = dokan()->withdraw->create( $data );
+
+        if ( is_wp_error( $withdraw ) ) {
+            wp_send_json_error( $withdraw->get_error_message(), $withdraw->get_error_code() );
+        }
+
+        do_action( 'dokan_after_withdraw_request', $user_id, $amount, $method );
+
+        wp_send_json_success( __( 'Withdraw request successful.', 'dokan-lite' ) );
+    }
+
+    public function active_dashboard_nav_menu( $active_menu, $request, $active ) {
+        if (  'withdraw-requests' !== $active_menu ) {
+            return $active_menu;
+        }
+        return 'withdraw';
     }
 }

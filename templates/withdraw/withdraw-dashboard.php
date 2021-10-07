@@ -13,9 +13,9 @@
         <div class="dokan-clearfix dokan-panel-inner-container">
             <div class="dokan-w8">
                 <?php
-                $balance        = dokan_get_seller_balance( dokan_get_current_user_id(), true );
-                $withdraw_limit = dokan_get_option( 'withdraw_limit', 'dokan_withdraw', -1 );
-                $threshold      = dokan_get_withdraw_threshold( dokan_get_current_user_id() );
+                    $balance        = dokan_get_seller_balance( dokan_get_current_user_id(), true );
+                    $withdraw_limit = dokan_get_option( 'withdraw_limit', 'dokan_withdraw', -1 );
+                    $threshold      = dokan_get_withdraw_threshold( dokan_get_current_user_id() );
                 ?>
                 <p>
                     <strong><?php esc_html_e( 'Your Balance:', 'dokan-lite' ); ?></strong> <?php echo $balance; ?><br>
@@ -29,56 +29,60 @@
                     <?php endif; ?>
                 </p>
 
-                <?php do_action( 'dokan-withdraw-content-after-balance' ); ?>
+                <?php do_action( 'dokan_withdraw_content_after_balance' ); ?>
 
             </div>
             <div class="dokan-w5">
                 <button class="dokan-btn dokan-btn-theme" id="dokan-request-withdraw-button"><?php esc_html_e( 'Request Withdraw', 'dokan-lite' ); ?></button>
-                <?php do_action( 'dokan-withdraw-content-after-balance-button' ); ?>
+                <?php do_action( 'dokan_withdraw_content_after_balance_button' ); ?>
             </div>
         </div>
 
     </div>
 </div>
 
-<?php do_action( 'dokan-withdraw-content-after-balance-section' ); ?>
+<?php do_action( 'dokan_withdraw_content_after_balance_section' ); ?>
 
 <div class="dokan-panel dokan-panel-default">
     <div class="dokan-panel-heading"><strong><?php esc_html_e( 'Payment Details', 'dokan-lite' ); ?></strong></div>
     <div class="dokan-panel-body general-details">
         <div class="dokan-clearfix dokan-panel-inner-container">
             <div class="dokan-w8">
-                <?php
 
-                $last_withdraw = dokan()->withdraw->get_withdraw_requests(  dokan_get_current_user_id(), 1, 1 );
-                $payment_details = __( 'You do not have any approved withdraw yet.', 'dokan-lite' );
-                if ( ! empty( $last_withdraw ) ) {
-                    $last_withdraw_amount      = wc_price( $last_withdraw['amount'] );
-                    $last_withdraw_date        = dokan_format_date( $last_withdraw['date'] );
-                    $last_withdraw_method_used = dokan_withdraw_get_method_title( $last_withdraw['method'] );
-                    $payment_details = sprintf( __( '%1$s on %2$s to %3$s', 'dokan-lite' ), $last_withdraw_amount, $last_withdraw_date, $last_withdraw_method_used );
-                }
+                <?php
+                    $last_withdraw = dokan()->withdraw->get_withdraw_requests(  dokan_get_current_user_id(), 1, 1 );
+                    $payment_details = __( 'You do not have any approved withdraw yet.', 'dokan-lite' );
+
+                    if ( ! empty( $last_withdraw ) ) {
+                        $last_withdraw_amount      = '<strong>' . wc_price( $last_withdraw[0]->amount ) . '</strong>';
+                        $last_withdraw_date        = '<strong>' . dokan_format_date( $last_withdraw[0]->date ) . '</strong>';
+                        $last_withdraw_method_used = '<strong>' . dokan_withdraw_get_method_title( $last_withdraw[0]->method ) . '</strong>';
+
+                        // translators: 1: Last formatted withdraw amount 2: Last formatted withdraw date 3: Last formatted withdraw method used.
+                        $payment_details = sprintf( __( '%1$s on %2$s to %3$s', 'dokan-lite' ), $last_withdraw_amount, $last_withdraw_date, $last_withdraw_method_used );
+                    }
                 ?>
+
                 <p>
                     <strong><?php esc_html_e( 'Last Payment', 'dokan-lite' ); ?></strong><br>
-                    <?php echo esc_html( $payment_details ); ?>
+                    <?php echo wp_kses_post( $payment_details ); ?>
                 </p>
 
-                <?php do_action( 'dokan-withdraw-content-after-last-payment' ); ?>
+                <?php do_action( 'dokan_withdraw_content_after_last_payment' ); ?>
 
             </div>
             <div class="dokan-w5">
-                <button class="dokan-btn dokan-btn-theme" id="dokan-request-withdraw-button"><?php esc_html_e( 'View Payments', 'dokan-lite' ); ?></button>
-                <?php do_action( 'dokan-withdraw-content-after-last-payment-button' ); ?>
+                <a href="<?php echo esc_url( dokan_get_navigation_url( 'withdraw-requests' ) ); ?>" class="dokan-btn dokan-btn-theme" id="dokan-withdraw-display-requests-button"><?php esc_html_e( 'View Payments', 'dokan-lite' ); ?></a>
+                <?php do_action( 'dokan_withdraw_content_after_last_payment_button' ); ?>
             </div>
         </div>
 
-        <?php do_action( 'dokan-withdraw-content-after-last-payment-section' ); ?>
+        <?php do_action( 'dokan_withdraw_content_after_last_payment_section' ); ?>
 
     </div>
 </div>
 
-<?php do_action( 'dokan-withdraw-content-after-payment-details-section' ); ?>
+<?php do_action( 'dokan_withdraw_content_after_payment_details_section' ); ?>
 
 
 <div class="dokan-panel dokan-panel-default">
@@ -86,18 +90,18 @@
     <div class="dokan-panel-body general-details">
         <?php
         $active_methods = dokan_withdraw_get_active_methods();
-        $default_method = 'paypal'; // TODO: make it dynamic.
+        $default_method = dokan_withdraw_get_default_method();
 
         foreach ( $active_methods as $method ) :
-            $method_icon    = dokan_withdraw_get_method_icon( $method );
-            $method_info    = dokan_withdraw_get_method_additional_info( $method );
+            $method_icon = dokan_withdraw_get_method_icon( $method );
+            $method_info = dokan_withdraw_get_method_additional_info( $method );
             ?>
             <div class="dokan-clearfix dokan-panel-inner-container">
                 <div class="dokan-w8">
                     <?php
                     echo wp_kses_post( $method_icon );
                     echo ' <strong>' . esc_html( dokan_withdraw_get_method_title( $method ) ) . '</strong> ';
-                    echo esc_html( $method_info );
+                    echo ' <small>' . esc_html( $method_info ) . '</small> ';
 
                     ?>
                 </div>
@@ -110,12 +114,13 @@
                 </div>
             </div>
         <?php
-        unset( $method_icon, $method_info );
-        endforeach;
+            unset( $method_icon, $method_info );
+            endforeach;
         ?>
 
-        <?php do_action( 'dokan-withdraw-content-after-payment-methods-list' ); ?>
+        <?php do_action( 'dokan_withdraw_content_after_payment_methods_list' ); ?>
 
     </div>
 </div>
-<?php do_action( 'dokan-withdraw-content-after-payment-methods-section' ); ?>
+
+<?php do_action( 'dokan_withdraw_content_after_payment_methods_section' ); ?>

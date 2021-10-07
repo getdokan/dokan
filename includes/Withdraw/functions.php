@@ -303,16 +303,16 @@ function dokan_withdraw_get_method_icon( $method_key ) {
     // TODO: need appropriate icon svgs.
     switch ( $method_key ) {
         case 'paypal':
-            $method_icon = '<i class="fa fa-cc-paypal" aria-hidden="true"></i>';
+            $method_icon = '<i class="fa fa-cc-paypal fa-lg fa-border" aria-hidden="true"></i>';
             break;
         case 'bank':
-            $method_icon = '<i class="fa fa-university" aria-hidden="true"></i>';
+            $method_icon = '<i class="fa fa-university fa-lg fa-border" aria-hidden="true"></i>';
             break;
         case 'skrill':
-            $method_icon = '<span class="dashicons dashicons-money-alt"></span>';
+            $method_icon = '<i class="fa fa-money fa-lg fa-border" aria-hidden="true"></i>';
             break;
         default:
-            $method_icon = '<i class="fa fa-money" aria-hidden="true"></i>';
+            $method_icon = '<i class="fa fa-money fa-lg fa-border" aria-hidden="true"></i>';
     }
     return apply_filters( 'dokan_withdraw_method_icon', $method_icon, $method_key );
 }
@@ -333,7 +333,7 @@ function dokan_withdraw_get_method_additional_info( $method_key ) {
         case 'paypal':
         case 'skrill':
             // translators: 1: Email address for withdraw method.
-            $method_info = empty( $payment_methods[ $method_key ]['email'] ) ? $no_information : sprintf( __( '( Email: %1$s )', 'dokan-lite' ), $payment_methods[ $method_key ]['email'] );
+            $method_info = empty( $payment_methods[ $method_key ]['email'] ) ? $no_information : sprintf( __( '( %1$s )', 'dokan-lite' ), dokan_mask_email_address( $payment_methods[ $method_key ]['email'] ) );
             break;
         case 'bank':
             // translators: 1: Bank account holder name. 2: Bank name. 1: Bank account number
@@ -343,4 +343,41 @@ function dokan_withdraw_get_method_additional_info( $method_key ) {
             $method_info = '';
     }
     return apply_filters( 'dokan_withdraw_method_additional_info', $method_info, $method_key );
+}
+
+/**
+ * Mask or hide part of email address.
+ *
+ * @since 3.3.12
+ *
+ * @param string $email Email address
+ *
+ * @return string
+ */
+function dokan_mask_email_address( $email ) {
+    if ( ! filter_var( $email, FILTER_VALIDATE_EMAIL ) ) {
+        return $email;
+    }
+
+    list( $first, $last ) = explode( '@', $email );
+    $first       = str_replace( substr( $first, '3' ), str_repeat( '*', strlen( $first ) - 3 ), $first );
+    $last        = explode( '.', $last );
+    $last_domain = str_replace( substr( $last['0'], '1' ), str_repeat( '*', strlen( $last['0'] ) - 1 ), $last['0'] );
+
+    return $first . '@' . $last_domain . '.' . $last['1'];
+}
+
+/**
+ * Get the default withdrall method.
+ *
+ * @since 3.3.12
+ *
+ * @param int $vendor_id
+ *
+ * @return string
+ */
+function dokan_withdraw_get_default_method( $vendor_id = 0 ) {
+    $vendor_id ? $vendor_id : dokan_get_current_user_id();
+    // todo: implement it here.
+    return 'paypal';
 }

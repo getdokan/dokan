@@ -42,10 +42,12 @@ class Withdraw {
         add_action( 'template_redirect', array( $this, 'handle_request' ) );
         add_action( 'dokan_withdraw_content_inside_before', array( $this, 'show_seller_enable_message' ) );
         add_action( 'dokan_withdraw_content_area_header', array( $this, 'withdraw_header_render' ) );
-        add_action( 'dokan_withdraw_content', array( $this, 'withdraw_status_filter' ), 15 );
-        add_action( 'dokan_withdraw_content', array( $this, 'show_seller_balance' ), 5 );
-        add_action( 'dokan_withdraw_content', array( $this, 'withdraw_form_and_listing' ), 20 );
-        add_action( 'dokan_withdraw_content', array( $this, 'withdraw_layout_display' ), 0 );
+        add_action( 'dokan_withdraw_content', array( $this, 'withdraw_status_filter' ), 10 );
+        add_action( 'dokan_withdraw_content', array( $this, 'withdraw_form_and_listing' ), 15 );
+        add_action( 'dokan_withdraw_dashboard_content', array( $this, 'withdraw_dashboard_layout_display' ), 10 );
+        add_action( 'dokan_withdraw_content_after', array( $this, 'include_withdraw_popup_templates' ), 10 );
+        add_action( 'dokan_send_withdraw_request_popup_form_content', array( $this, 'withdraw_request_popup_form_content' ), 10 );
+        add_action( 'dokan_withdraw_content_after_last_payment_section', array( $this, 'pending_withdraw_requests' ), 20 );
     }
 
     /**
@@ -149,7 +151,7 @@ class Withdraw {
 
         wp_redirect( add_query_arg( array(
             'message' => 'request_cancelled',
-        ), dokan_get_navigation_url( 'withdraw' ) ) );
+        ), dokan_get_navigation_url( 'withdraw-requests' ) ) );
     }
 
     /**
@@ -223,7 +225,7 @@ class Withdraw {
 
         wp_redirect( add_query_arg( array(
             'message' => 'request_success',
-        ), dokan_get_navigation_url( 'withdraw' ) ) );
+        ), dokan_get_navigation_url( 'withdraw-requests' ) ) );
     }
 
     /**
@@ -339,7 +341,7 @@ class Withdraw {
      */
     public function withdraw_form_and_listing() {
         if ( $this->get_current_status() == 'pending' ) {
-            $this->withdraw_form();
+            $this->withdraw_requests( dokan_get_current_user_id() );
         } elseif ( $this->get_current_status() == 'approved' ) {
             $this->user_approved_withdraws( dokan_get_current_user_id() );
         } elseif ( $this->get_current_status() == 'cancelled' ) {
@@ -535,7 +537,66 @@ class Withdraw {
         }
     }
 
-    public function withdraw_layout_display() {
-        dokan_get_template_part( 'withdraw/withdraw-content', '' );
+    /**
+     * Display dashboard content
+     *
+     * @since 3.3.12
+     *
+     * @return void
+     */
+    public function withdraw_dashboard_layout_display() {
+        dokan_get_template_part( 'withdraw/withdraw-dashboard', '' );
+    }
+
+    /**
+     * Display dashboard content
+     *
+     * @since 3.3.12
+     *
+     * @return void
+     */
+    public function include_withdraw_popup_templates() {
+        dokan_get_template_part( 'withdraw/tmpl-withdraw-request-popup', '' );
+    }
+
+    public function withdraw_request_popup_form_content() {
+        $current_user_id = dokan_get_current_user_id();
+
+        $balance = dokan()->withdraw->get_user_balance( $current_user_id );
+
+        if ( $balance < 0 ) {
+            $message = sprintf( __( 'You have already withdrawn %s. This amount will be deducted from your balance.', 'dokan-lite' ), wc_price( $balance ) );
+            $this->show_error_messages( $message );
+        }
+
+        if ( dokan()->withdraw->has_pending_request( $current_user_id ) ) {
+            $message = sprintf( '<p>%s</p><p>%s</p>', __( 'You already have pending withdraw request(s).', 'dokan-lite' ), __( 'Please submit your request after approval or cancellation of your previous request.', 'dokan-lite' ) );
+            $this->show_error_messages( $message );
+            return;
+        } else if ( ! dokan()->withdraw->has_withdraw_balance( $current_user_id ) ) {
+            $message = __( 'You don\'t have sufficient balance for a withdraw request!', 'dokan-lite' );
+            $this->show_error_messages( $message );
+            return;
+        }
+
+        $payment_methods         = array_intersect( dokan_get_seller_active_withdraw_methods(), dokan_withdraw_get_active_methods() );
+        $default_withdraw_method = dokan_withdraw_get_default_method( $current_user_id );
+        dokan_get_template_part( 'withdraw/request-form', '', array(
+            'amount'          => $balance,
+            'withdraw_method' => $default_withdraw_method,
+            'payment_methods' => $payment_methods,
+        ) );
+    }
+
+    public function pending_withdraw_requests( $user_id ) {
+        if ( ! current_user_can( 'dokan_manage_withdraw' ) ) {
+            return;
+        }
+
+        $withdraw_requests = dokan()->withdraw->get_withdraw_requests( $user_id );
+
+        dokan_get_template_part( 'withdraw/pending-request-listing-dashboard', '', array(
+            'withdraw_requests' => $withdraw_requests,
+        ) );
     }
 }
