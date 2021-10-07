@@ -208,6 +208,17 @@ class Hooks {
         wp_send_json_success( __( 'Withdraw request successful.', 'dokan-lite' ) );
     }
 
+    /**
+     * Set withdraw menu as active.
+     *
+     * @since 3.3.12
+     *
+     * @param string $active_menu
+     * @param $request
+     * @param array $active
+     *
+     * @return string
+     */
     public function active_dashboard_nav_menu( $active_menu, $request, $active ) {
         if (  'withdraw-requests' !== $active_menu ) {
             return $active_menu;
