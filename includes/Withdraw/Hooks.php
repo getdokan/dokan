@@ -32,6 +32,7 @@ class Hooks {
      */
     private function ajax() {
         add_action( 'wp_ajax_dokan_handle_withdraw_request', [ $this, 'handle_withdraw_request' ] );
+        add_action( 'wp_ajax_dokan_handle_make_default_method', [ $this, 'handle_make_default_method' ] );
     }
 
     /**
@@ -224,5 +225,37 @@ class Hooks {
             return $active_menu;
         }
         return 'withdraw';
+    }
+
+    /**
+     * Handle default with method change.
+     *
+     * @since 3.3.12
+     *
+     * @return void
+     */
+    public function handle_make_default_method() {
+        $user_id = dokan_get_current_user_id();
+
+        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'dokan_withdraw_make_default' ) ) {
+            wp_send_json_error( esc_html__( 'Are you cheating?', 'dokan-lite' ) );
+        }
+
+        if ( ! current_user_can( 'dokan_manage_withdraw' ) ) {
+            wp_send_json_error( esc_html__( 'You have no permission to do this action', 'dokan-lite' ) );
+        }
+
+        $method = isset( $_POST['method'] ) ? sanitize_text_field( wp_unslash( $_POST['method'] ) ) : '';
+        if ( empty( $method ) ) {
+            wp_send_json_error( esc_html__( 'Which method?', 'dokan-lite' ) );
+        }
+
+        if ( ! in_array( $method, dokan_withdraw_get_active_methods() ) ) {
+            wp_send_json_error( esc_html__( 'Method not active.', 'dokan-lite' ) );
+        }
+
+        update_user_meta( $user_id, 'dokan_withdraw_default_method', $method );
+
+        wp_send_json_success( esc_html__( 'Default method update successful.', 'dokan-lite' ) );
     }
 }
