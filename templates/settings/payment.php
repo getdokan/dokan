@@ -12,16 +12,16 @@ $has_methods_dropdown = false;
 do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info ); ?>
 
 <div>
-    <h2 style=" padding: 25px; display: none; background-color: palevioletred" id="vendor-dashboard-payment-settings-error"></h2>
+    <h2 style="padding: 25px; display: none; background-color: palevioletred" id="vendor-dashboard-payment-settings-error"></h2>
     <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #EEEEEE">
         <h2 style="margin: 5px 0; flex-grow: 1"> <?php esc_html_e( 'Payment Methods', 'dokan-lite' ); ?></h2>
         <div id="vendor-dashboard-payment-settings-toggle-dropdown" style="flex-grow: 2; text-align: right">
             <button id="toggle-vendor-payment-method-drop-down" class="dokan-btn dokan-btn-success"> <?php esc_html_e( 'Add Payment Method', 'dokan-lite' ); ?></button>
             <div style="position: relative;">
-                <div id="vendor-payment-method-drop-down" style=" border: 1px black solid; position: absolute; top: 0; right: 0; background-color: white">
+                <div id="vendor-payment-method-drop-down" style="border: 1px black solid; position: absolute; top: 0; right: 0; background-color: white">
                     <?php
                     $profile_methods = array_keys( $profile_info['payment'] );
-                    $unused_methods = array_diff( $methods, $profile_methods );
+                    $unused_methods  = array_diff( $methods, $profile_methods );
 
                     $mis_match_methods = [ 'stripe', 'moip' ];
                     $mis_match_methods = array_filter( $mis_match_methods, function ( $key ) use( $profile_methods ) {

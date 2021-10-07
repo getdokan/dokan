@@ -20,9 +20,9 @@
       success: function ( response ) {
         if ( response.success ) {
           location.reload();
-          } else {
-            handleError( response );
-          }
+        } else {
+          handleError( response );
+        }
       },
       error: function ( response ) {
         handleError( response );
