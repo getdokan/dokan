@@ -214,24 +214,40 @@ function dokan_withdraw_method_bank( $store_settings ) {
         </div>
 
         <div class="dokan-form-group">
+            <div style="text-align: left;">
+                <label style="color: black; font-weight: bold;"><?php esc_html_e( 'Bank Name', 'dokan-lite' ); ?> </label>
+            </div>
+
             <div class="dokan-w10">
                 <input name="settings[bank][bank_name]" value="<?php echo esc_attr( $bank_name ); ?>" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Name of bank', 'dokan-lite' ); ?>" type="text">
             </div>
         </div>
 
         <div class="dokan-form-group">
+            <div style="text-align: left;">
+                <label style="color: black; font-weight: bold;"><?php esc_html_e( 'Bank Address', 'dokan-lite' ); ?> </label>
+            </div>
+
             <div class="dokan-w10">
                 <textarea name="settings[bank][bank_addr]" rows="5" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Address of your bank', 'dokan-lite' ); ?>"><?php echo esc_html( $bank_addr ); ?></textarea>
             </div>
         </div>
 
         <div class="dokan-form-group">
+            <div style="text-align: left;">
+                <label style="color: black; font-weight: bold;"><?php esc_html_e( 'Bank IBAN', 'dokan-lite' ); ?> </label>
+            </div>
+
             <div class="dokan-w10">
                 <input name="settings[bank][iban]" value="<?php echo esc_attr( $iban ); ?>" class="dokan-form-control" placeholder="<?php esc_attr_e( 'IBAN', 'dokan-lite' ); ?>" type="text">
             </div>
         </div>
 
         <div class="dokan-form-group">
+            <div style="text-align: left;">
+                <label style="color: black; font-weight: bold;"><?php esc_html_e( 'Bank Swift Code', 'dokan-lite' ); ?> </label>
+            </div>
+
             <div class="dokan-w10">
                 <input value="<?php echo esc_attr( $swift_code ); ?>" name="settings[bank][swift]" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Swift code', 'dokan-lite' ); ?>" type="text">
             </div>
@@ -257,10 +273,7 @@ function dokan_withdraw_method_bank( $store_settings ) {
 
         <div style="display: flex; box-shadow: 0 3px 10px rgb( 0 0 0 / 0.2 ); padding: 10px; margin-bottom: 10px">
             <div style="display: flex; flex-direction: column; justify-content: center; padding: 5px">
-                <svg style="color: orange" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
-                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                    <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
-                </svg>
+                <i style="color: orange" class="fa fa-info-circle fa-2x" aria-hidden="true"></i>
             </div>
 
             <div style="margin: 0 10px; border-left: 1px #dddddd solid"></div>
