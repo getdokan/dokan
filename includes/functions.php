@@ -4146,17 +4146,18 @@ function dokan_get_withdraw_threshold( $user_id ) {
  *
  * @param WC_Order $order
  * @param int      $vendor_id
+ * @param int      $product_id
  *
  * @return bool
  */
-function dokan_is_order_have_apply_admin_coupons( $order, $vendor_id ) {
+function dokan_is_order_have_apply_admin_coupons( $order, $vendor_id, $product_id = 0 ) {
     if ( ! dokan()->is_pro_exists() ) {
         return false;
     }
 
     if (
         function_exists( 'dokan_is_order_have_admin_coupons_for_vendors' ) &&
-        dokan_is_order_have_admin_coupons_for_vendors( $order, $vendor_id ) ) {
+        dokan_is_order_have_admin_coupons_for_vendors( $order, $vendor_id, $product_id ) ) {
         return true;
     }
 
