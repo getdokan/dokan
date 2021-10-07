@@ -377,7 +377,17 @@ function dokan_mask_email_address( $email ) {
  * @return string
  */
 function dokan_withdraw_get_default_method( $vendor_id = 0 ) {
-    $vendor_id ? $vendor_id : dokan_get_current_user_id();
-    // todo: implement it here.
+    $vendor_id      = $vendor_id ? $vendor_id : dokan_get_current_user_id();
+    $active_methods = dokan_get_seller_active_withdraw_methods( $vendor_id );
+    $method         = get_user_meta( $vendor_id, 'dokan_withdraw_default_method', true );
+
+    if ( ! empty( $method ) ) {
+        return $method;
+    }
+
+    if ( ! empty( $active_methods ) ) {
+        return $active_methods[0];
+    }
+
     return 'paypal';
 }
