@@ -24,21 +24,14 @@ class PageViews {
         echo '<script type="text/javascript">
             jQuery(document).ready( function($) {
 				if(localStorage){
-                    var date = new Date();
-                    var new_date = date.getDate();
+                    var new_date = new Date().toISOString().slice(0, 10);
                     var dokan_pageview_count = JSON.parse(localStorage.getItem("dokan_pageview_count"));
 					var storeData = [];
 					var post_id = [];
 
-					if ( dokan_pageview_count ){
-					    if (dokan_pageview_count[0].post_id && dokan_pageview_count[0].today === new_date){
-						    post_id = dokan_pageview_count[0].post_id;
-						}
-						if ( dokan_pageview_count[0].today !== new_date ){
-                            post_id = [];
-                        }
+					if ( dokan_pageview_count != null && dokan_pageview_count[0].post_id && dokan_pageview_count[0].today === new_date ){
+				        post_id = dokan_pageview_count[0].post_id;
 					}
-
                     if ( dokan_pageview_count == null || dokan_pageview_count[0].today !== new_date || ! dokan_pageview_count[0].post_id.includes( ' . get_the_ID() . ' )  ) {
 						var data = {
                             action: "dokan_pageview",
