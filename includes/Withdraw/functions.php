@@ -380,7 +380,7 @@ function dokan_mask_email_address( $email ) {
 }
 
 /**
- * Get the default withdrall method.
+ * Get the default withdrawal method.
  *
  * @since 3.3.12
  *

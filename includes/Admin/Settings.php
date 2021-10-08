@@ -473,43 +473,46 @@ class Settings {
                 $selling_option_commission,
                 $selling_option_vendor_capability
             ),
-            'dokan_withdraw'   => [
-                'withdraw_methods'    => [
-                    'name'    => 'withdraw_methods',
-                    'label'   => __( 'Withdraw Methods', 'dokan-lite' ),
-                    'desc'    => __( 'Select suitable Withdraw methods for Vendors', 'dokan-lite' ),
-                    'type'    => 'multicheck',
-                    'default' => [ 'paypal' => 'paypal' ],
-                    'options' => dokan_withdraw_get_methods(),
-                ],
-                'withdraw_limit'      => [
-                    'name'                       => 'withdraw_limit',
-                    'label'                      => __( 'Minimum Withdraw Limit', 'dokan-lite' ),
-                    'desc'                       => __( 'Minimum balance required to make a withdraw request. Leave blank to set no minimum limits.', 'dokan-lite' ),
-                    'default'                    => '50',
-                    'type'                       => 'text',
-                    'class'                      => 'wc_input_price',
-                    'sanitize_callback'          => 'wc_format_decimal',
-                    'response_sanitize_callback' => 'wc_format_localized_price',
-                ],
-                'withdraw_order_status' => [
-                    'name'    => 'withdraw_order_status',
-                    'label'   => __( 'Order Status for Withdraw', 'dokan-lite' ),
-                    'desc'    => __( 'Order status for which vendor can make a withdraw request.', 'dokan-lite' ),
-                    'type'    => 'multicheck',
-                    'default' => array(
-                        'wc-completed'  => 'wc-completed',
-                    ),
-                    'options' => $withdraw_order_status_options,
-                ],
-                'exclude_cod_payment' => [
-                    'name'    => 'exclude_cod_payment',
-                    'label'   => __( 'Exclude COD Payments', 'dokan-lite' ),
-                    'desc'    => __( 'If an order is paid with Cash on Delivery (COD), then exclude that payment from vendor balance.', 'dokan-lite' ),
-                    'type'    => 'checkbox',
-                    'default' => 'off',
-                ],
-            ],
+            'dokan_withdraw'   => apply_filters(
+                'dokan_settings_withdraw_options',
+                [
+                    'withdraw_methods' => [
+                        'name'    => 'withdraw_methods',
+                        'label'   => __( 'Withdraw Methods', 'dokan-lite' ),
+                        'desc'    => __( 'Select suitable Withdraw methods for Vendors', 'dokan-lite' ),
+                        'type'    => 'multicheck',
+                        'default' => [ 'paypal' => 'paypal' ],
+                        'options' => dokan_withdraw_get_methods(),
+                    ],
+                    'withdraw_limit'      => [
+                        'name'                       => 'withdraw_limit',
+                        'label'                      => __( 'Minimum Withdraw Limit', 'dokan-lite' ),
+                        'desc'                       => __( 'Minimum balance required to make a withdraw request. Leave blank to set no minimum limits.', 'dokan-lite' ),
+                        'default'                    => '50',
+                        'type'                       => 'text',
+                        'class'                      => 'wc_input_price',
+                        'sanitize_callback'          => 'wc_format_decimal',
+                        'response_sanitize_callback' => 'wc_format_localized_price',
+                    ],
+                    'withdraw_order_status' => [
+                        'name'    => 'withdraw_order_status',
+                        'label'   => __( 'Order Status for Withdraw', 'dokan-lite' ),
+                        'desc'    => __( 'Order status for which vendor can make a withdraw request.', 'dokan-lite' ),
+                        'type'    => 'multicheck',
+                        'default' => array(
+                            'wc-completed'  => 'wc-completed',
+                        ),
+                        'options' => $withdraw_order_status_options,
+                    ],
+                    'exclude_cod_payment' => [
+                        'name'    => 'exclude_cod_payment',
+                        'label'   => __( 'Exclude COD Payments', 'dokan-lite' ),
+                        'desc'    => __( 'If an order is paid with Cash on Delivery (COD), then exclude that payment from vendor balance.', 'dokan-lite' ),
+                        'type'    => 'checkbox',
+                        'default' => 'off',
+                    ],
+                ]
+            ),
             'dokan_pages'      => [
                 'dashboard'     => [
                     'name'        => 'dashboard',
