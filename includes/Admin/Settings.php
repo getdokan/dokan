@@ -755,7 +755,7 @@ class Settings {
     /**
      * Dokan data clear setting
      *
-     * @since 3.2.14
+     * @since 3.2.15
      *
      * @return array $settings_fields
      */
