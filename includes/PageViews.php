@@ -23,27 +23,27 @@ class PageViews {
 
         echo '<script type="text/javascript">
             jQuery(document).ready( function($) {
-				if(localStorage){
+			    if(localStorage){
                     var new_date = new Date().toISOString().slice(0, 10);
                     var dokan_pageview_count = JSON.parse(localStorage.getItem("dokan_pageview_count"));
-					var storeData = [];
-					var post_id = [];
+				    var storeData = [];
+				    var post_id = [];
 
-					if ( dokan_pageview_count != null && dokan_pageview_count[0].post_id && dokan_pageview_count[0].today === new_date ){
+				    if ( dokan_pageview_count != null && dokan_pageview_count[0].post_id && dokan_pageview_count[0].today === new_date ){
 				        post_id = dokan_pageview_count[0].post_id;
-					}
+				    }
                     if ( dokan_pageview_count == null || dokan_pageview_count[0].today !== new_date || ! dokan_pageview_count[0].post_id.includes( ' . get_the_ID() . ' )  ) {
-						var data = {
+					    var data = {
                             action: "dokan_pageview",
                             _ajax_nonce: "' . esc_html( $nonce ) . '",
                             post_id: ' . get_the_ID() . ',
                         }
                         $.post( "' . esc_url( admin_url( 'admin-ajax.php' ) ) . '", data );
-						post_id.push(' . get_the_ID() . ');
+					    post_id.push(' . get_the_ID() . ');
                         storeData.push({"today": new_date, "post_id" : post_id});
                         localStorage.setItem("dokan_pageview_count", JSON.stringify(storeData));
                     }
-				}
+			    }
             } );
             </script>';
     }
