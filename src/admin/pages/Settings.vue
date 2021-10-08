@@ -410,7 +410,7 @@
 
             handleDataClearCheckboxEvent() {
                 let self = this;
-                $('#dokan_general\\[data_clear_on_uninstall\\]').on('click', function () {
+                $('.data_clear_on_uninstall').on('change', "#dokan_general\\[data_clear_on_uninstall\\]", function (e) {
                     if( $(this).is(':checked') ) {
                         self.$swal({
                             title: self.__( 'Are you sure?', 'dokan-lite' ),
@@ -419,13 +419,11 @@
                             showCancelButton: true,
                             confirmButtonText: self.__( 'Okay', 'dokan-lite' ),
                             cancelButtonText: self.__( 'Cancel', 'dokan-lite' ),
-                        }).then( async (response) => {
-                            if ( response.value ) {
-                                $('#dokan_general\\[data_clear_on_uninstall\\]').prop( 'checked', true );
+                        }).then( (response) => {
+                            if ( response.dismiss ) {
+                                self.settingValues.dokan_general.data_clear_on_uninstall = 'off';
                             }
-                        })
-
-                        return false;
+                        });
                     }
                 });
             }
