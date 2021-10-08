@@ -415,7 +415,7 @@
                         self.$swal({
                             title: self.__( 'Are you sure?', 'dokan-lite' ),
                             type: 'warning',
-                            html: self.__( 'All data and tables related to Dokan and Dokan Pro will be deleted permanently after deleting the Dokan plugin. You will not be able to recover your lost data unless you keep a backup. Are you sure you want to enable this feature?', 'dokan-lite' ),
+                            html: self.__( 'All data and tables related to Dokan and Dokan Pro will be deleted permanently after deleting the Dokan plugin. You will not be able to recover your lost data unless you keep a backup. Do you want to continue?', 'dokan-lite' ),
                             showCancelButton: true,
                             confirmButtonText: self.__( 'Okay', 'dokan-lite' ),
                             cancelButtonText: self.__( 'Cancel', 'dokan-lite' ),
