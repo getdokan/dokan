@@ -117,14 +117,10 @@ class Dokan_Uninstaller {
      * @return void
      */
     private function remove_roles() {
-        global $wp_roles;
+        $wp_roles = wp_roles();
 
         if ( ! class_exists( 'WP_Roles' ) ) {
             return;
-        }
-
-        if ( ! isset( $wp_roles ) ) {
-            $wp_roles = new WP_Roles(); // @codingStandardsIgnoreLine
         }
 
         foreach ( $this->get_dokan_capabilities() as $capability ) {
