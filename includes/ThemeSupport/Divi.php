@@ -108,7 +108,7 @@ class Divi {
     /**
      * Use divi theme assets when product is empty in store.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.2.15
      *
      * @return void
      */
@@ -119,7 +119,7 @@ class Divi {
             return;
         }
 
-        $post               = new stdClass();
+        $post               = new stdClass(); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
         $post->ID           = -1;
         $post->post_content = '';
         $post->post_type    = '';
