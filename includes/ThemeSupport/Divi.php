@@ -21,7 +21,7 @@ class Divi {
         add_filter( 'body_class', [ $this, 'full_width_page' ] );
         add_action( 'wp_enqueue_scripts', [ $this, 'style_reset' ] );
         add_action( 'dokan_store_page_query_filter', [ $this, 'set_current_page' ], 10, 2 );
-        add_action( 'wp', array( $this, 'use_dynamic_assets_for_empty_product' ) );
+        add_action( 'wp', [ $this, 'use_dynamic_assets_for_empty_product' ] );
     }
 
     /**
