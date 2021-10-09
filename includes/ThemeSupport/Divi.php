@@ -119,7 +119,7 @@ class Divi {
             return;
         }
 
-        $post               = new stdClass(); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+        $post               = new stdClass();   // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
         $post->ID           = -1;
         $post->post_content = '';
         $post->post_type    = '';
