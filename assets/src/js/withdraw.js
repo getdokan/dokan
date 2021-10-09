@@ -12,8 +12,21 @@
             } );
 
             $('#dokan-withdraw-request-submit').on( 'click', (e) => {
-                Dokan_Withdraw.handleWithdrawRequest( e )
+                Dokan_Withdraw.handleWithdrawRequest( e );
             } );
+
+            $('#dokan-withdraw-display-schedule-popup').on( 'click', (e) => {
+                Dokan_Withdraw.opensScheduleWindow( e );
+            } );
+
+            $('#dokan-withdraw-schedule-request-submit').on( 'click', (e) => {
+                Dokan_Withdraw.handleScheduleChangeRequest( e );
+            } );
+
+            $("input[name='withdraw-schedule']").on( 'change', (e) => {
+                Dokan_Withdraw.handleScheduleChange( e );
+            })
+
         },
         openRequestWithdrawWindow: () => {
             let self = $(this),
@@ -41,6 +54,7 @@
                     type: 'inline'
                 },
                 callbacks: {
+                    open: () => Dokan_Withdraw.init(), // to initiate event listeners.
                 }
             });
         },
@@ -107,6 +121,43 @@
                     }
                 }
             );
+        },
+        handleScheduleChangeRequest: ( e ) => {
+            e.preventDefault();
+            const schedule = $( "input[name='withdraw-schedule']:checked").val();
+            const nonce   = $( '#dokan-withdraw-schedule-request-submit').data('security');
+            const form     = $( '#withdraw-schedule-popup' );
+
+            form.block({
+                message: null,
+                overlayCSS: {
+                    background: '#fff',
+                    opacity: 0.6
+                }
+            });
+
+            $.post(
+                dokan.ajaxurl,
+                {
+                    action: 'dokan_handle_withdraw_schedule_change_request',
+                    nonce: nonce,
+                    schedule: schedule
+                },
+                ( response ) => {
+                    if ( response.success ) {
+                        alert( response.data );
+                        form.unblock();
+                        window.location.reload();
+                    } else {
+                        alert( response.data );
+                        form.unblock();
+                    }
+                }
+            );
+        },
+        handleScheduleChange: (e) => {
+            const nextDate = $(e.target).data('next-schedule');
+            $( '#dokan-withdraw-next-scheduled-date').html(nextDate);
         }
     };
 

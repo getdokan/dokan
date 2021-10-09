@@ -466,9 +466,11 @@ class Withdraw {
     /**
      * Get all withdraws
      *
-     * @param integer $user_id [description]
+     * @param integer $user_id
+     * @param integer $limit
+     * @param integer $offset
      *
-     * @return [type] [description]
+     * @return array
      */
     public function get_all_withdraws( $user_id, $limit = 100, $offset = 0 ) {
         if ( ! current_user_can( 'dokan_manage_withdraw' ) ) {
