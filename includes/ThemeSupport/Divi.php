@@ -21,6 +21,7 @@ class Divi {
         add_filter( 'body_class', [ $this, 'full_width_page' ] );
         add_action( 'wp_enqueue_scripts', [ $this, 'style_reset' ] );
         add_action( 'dokan_store_page_query_filter', [ $this, 'set_current_page' ], 10, 2 );
+        add_action( 'wp', array( $this, 'use_dynamic_assets_for_empty_product' ) );
     }
 
     /**
@@ -102,5 +103,28 @@ class Divi {
 				return ! empty( $store_info['store_name'] ) ? $store_info['store_name'] : __( 'No Name', 'dokan-lite' );
 			}
         );
+    }
+
+    /**
+     * Use divi theme assets when product is empty in store.
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return void
+     */
+    public function use_dynamic_assets_for_empty_product() {
+        global $post;
+
+        if ( ! dokan_is_store_page() || ! empty( $post ) ) {
+            return;
+        }
+
+        $post               = new stdClass();
+        $post->ID           = -1;
+        $post->post_content = '';
+        $post->post_type    = '';
+
+        setup_postdata( $post );
+        wp_reset_postdata();
     }
 }
