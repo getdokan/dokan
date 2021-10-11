@@ -125,6 +125,5 @@ class Divi {
         $post->post_type    = '';
 
         setup_postdata( $post );
-        wp_reset_postdata();
     }
 }
