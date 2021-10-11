@@ -92,40 +92,6 @@ class AdminBar {
     }
 
     /**
-     * Get admin menus data for dokan.
-     *
-     * @since 3.2.15
-     *
-     * @return array
-     */
-    public function get_dokan_admin_bar_menus() {
-        $page_id = (int) dokan_get_option( 'dashboard', 'dokan_pages', 0 );
-
-        $menus = [
-            [
-                'parent' => 'site-name',
-                'id'     => 'view-store',
-                'title'  => __( 'Visit Shop', 'dokan-lite' ),
-                'href'   => wc_get_page_permalink( 'shop' ),
-            ],
-            [
-                'parent' => 'site-name',
-                'id'     => 'view-dokan-stores',
-                'title'  => __( 'Visit Stores', 'dokan-lite' ),
-                'href'   => dokan_get_store_url( dokan_get_current_user_id() ),
-            ],
-            [
-                'parent' => 'site-name',
-                'id'     => 'view-dashboard',
-                'title'  => __( 'Visit Vendor Dashboard', 'dokan-lite' ),
-                'href'   => get_permalink( $page_id ? $page_id : '' ),
-            ],
-        ];
-
-        return $menus;
-    }
-
-    /**
      * Show visit vendor dashboard
      *
      * @param WP_Admin_Bar $wp_admin_bar
@@ -146,16 +112,50 @@ class AdminBar {
 
         // Added admin menus for dokan in wp admin bar.
         foreach ( $menus as $menu ) {
-            if ( ! empty( $menu['href'] ) ) {
-                $wp_admin_bar->add_node(
-                    [
-                        'parent' => $menu['parent'],
-                        'id'     => $menu['id'],
-                        'title'  => $menu['title'],
-                        'href'   => $menu['href'],
-                    ]
-                );
-            }
+            $wp_admin_bar->add_node( $menu );
         }
+    }
+
+    /**
+     * Get admin menus data for dokan.
+     *
+     * @since 3.2.15
+     *
+     * @return array
+     */
+    public function get_dokan_admin_bar_menus() {
+        $menus            = [];
+        $shop             = wc_get_page_permalink( 'shop' );
+        $stores           = (int) dokan_get_option( 'store_listing', 'dokan_pages', 0 );
+        $vendor_dashboard = (int) dokan_get_option( 'dashboard', 'dokan_pages', 0 );
+
+        if ( $shop ) {
+            $menus[] = [
+                'parent' => 'site-name',
+                'id'     => 'view-store',
+                'title'  => __( 'Visit Shop', 'dokan-lite' ),
+                'href'   => wc_get_page_permalink( 'shop' ),
+            ];
+        }
+
+        if ( $stores ) {
+            $menus[] = [
+                'parent' => 'site-name',
+                'id'     => 'view-stores',
+                'title'  => __( 'Visit Stores', 'dokan-lite' ),
+                'href'   => get_permalink( $stores ),
+            ];
+        }
+
+        if ( $vendor_dashboard ) {
+            $menus[] = [
+                'parent' => 'site-name',
+                'id'     => 'view-dashboard',
+                'title'  => __( 'Visit Vendor Dashboard', 'dokan-lite' ),
+                'href'   => get_permalink( $vendor_dashboard ),
+            ];
+        }
+
+        return $menus;
     }
 }
