@@ -100,7 +100,7 @@ jQuery(function($) {
                 $('#accordion').append( response );
 
             } else {
-                dokan_sweetalert( dokan_refund.i18n_download_access , { 
+                dokan_sweetalert( dokan.i18n_download_access , { 
                     icon: 'warning',
                 } );
 
@@ -116,7 +116,7 @@ jQuery(function($) {
 
     $('.order_download_permissions').on('click', 'button.revoke_access', async function(e){
         e.preventDefault();
-        const answer = await dokan_sweetalert( dokan_refund.i18n_download_permission, { 
+        const answer = await dokan_sweetalert( dokan.i18n_download_permission, { 
             action : 'confirm', 
             icon   : 'warning',
         } );
