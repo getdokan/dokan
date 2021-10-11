@@ -34,7 +34,7 @@ class CacheHelper {
 	 * @return string|array|false transient version based on time(), 10 digits.
 	 */
 	public static function get_transient_version( $group, $refresh = false ) {
-		$transient_name  = 'dokan-' .  $group . '-transient-version';
+		$transient_name  = "dokan-$group-transient-version";
 		$transient_value = get_transient( $transient_name );
 
 		if ( false === $transient_value || true === $refresh ) {
@@ -73,7 +73,7 @@ class CacheHelper {
      *
      * @return mixed false or Transient value
      */
-	public static function dokan_get_transient( $key, $group = null) {
+	public static function dokan_get_transient( $key, $group = null ) {
         if ( empty( $group ) ) {
             return get_transient( $key );
         }
