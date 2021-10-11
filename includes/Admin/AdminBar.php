@@ -94,11 +94,13 @@ class AdminBar {
     /**
      * Get admin menus data for dokan.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.2.15
      *
      * @return array
      */
-    public function get_dokan_admin_menus() {
+    public function get_dokan_admin_bar_menues() {
+        $page_id = (int) dokan_get_option( 'dashboard', 'dokan_pages', 0 );
+
         $menus = [
             [
                 'parent' => 'site-name',
@@ -109,14 +111,14 @@ class AdminBar {
             [
                 'parent' => 'site-name',
                 'id'     => 'view-dokan-stores',
-                'title'  => __( 'Visit Vendor Stores', 'dokan-lite' ),
-                'href'   => home_url( '/store-listing' ),
+                'title'  => __( 'Visit Stores', 'dokan-lite' ),
+                'href'   => dokan_get_store_url( dokan_get_current_user_id() ),
             ],
             [
                 'parent' => 'site-name',
                 'id'     => 'view-dashboard',
                 'title'  => __( 'Visit Vendor Dashboard', 'dokan-lite' ),
-                'href'   => dokan_get_navigation_url(),
+                'href'   => get_permalink( $page_id ? $page_id : '' ),
             ],
         ];
 
@@ -140,7 +142,7 @@ class AdminBar {
             return;
         }
 
-        $menus = $this->get_dokan_admin_menus();
+        $menus = $this->get_dokan_admin_bar_menues();
 
         // Added admin menus for dokan in wp admin bar.
         foreach ( $menus as $menu ) {
