@@ -41,7 +41,7 @@ class Dokan_Uninstaller {
             // Delete Pages created by dokan
             $pages = get_option( 'dokan_pages', [] );
             foreach ( $pages as $page_id ) {
-                wp_trash_post( $page_id );
+                wp_delete_post( $page_id, true );
             }
 
             // Delete Dokan related options
@@ -85,7 +85,7 @@ class Dokan_Uninstaller {
     private function remove_roles() {
         $wp_roles = wp_roles();
 
-        if ( ! class_exists( 'WP_Roles' ) ) {
+        if ( ! is_a( $wp_roles, 'WP_Roles' ) ) {
             return;
         }
 
