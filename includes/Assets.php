@@ -652,8 +652,8 @@ class Assets {
 
             $locale          = localeconv();
             $decimal         = isset( $locale['decimal_point'] ) ? $locale['decimal_point'] : '.';
-            $banner_width    = dokan_get_option( 'store_banner_width', 'dokan_appearance', 625 );
-            $banner_height   = dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 );
+            $banner_width    = dokan_get_vendor_store_banner_width();
+            $banner_height   = dokan_get_vendor_store_banner_height();
             $has_flex_width  = ! empty( $general_settings['store_banner_flex_width'] ) ? $general_settings['store_banner_flex_width'] : true;
             $has_flex_height = ! empty( $general_settings['store_banner_flex_height'] ) ? $general_settings['store_banner_flex_height'] : true;
 
@@ -732,6 +732,7 @@ class Assets {
                 'i18n_selection_too_long_n'           => __( 'You can only select %qty% items', 'dokan-lite' ),
                 'i18n_load_more'                      => __( 'Loading more results&hellip;', 'dokan-lite' ),
                 'i18n_searching'                      => __( 'Searching&hellip;', 'dokan-lite' ),
+                'i18n_calculating'                    => __( 'Calculating', 'dokan-lite' ),
                 'i18n_ok_text'                        => __( 'OK', 'dokan-lite' ),
                 'i18n_cancel_text'                    => __( 'Cancel', 'dokan-lite' ),
                 'i18n_attribute_label'                => __( 'Attribute Name', 'dokan-lite' ),
