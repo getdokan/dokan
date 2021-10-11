@@ -3,11 +3,11 @@
 **Donate Link:** http://tareq.co/donate/  
 **Tags:** WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce, yith, yithemes  
 **Requires at least:** 4.4  
-**Tested up to:** 5.8  
+**Tested up to:** 5.8.1  
 **WC requires at least:** 3.0  
-**WC tested up to:** 5.6.0  
+**WC tested up to:** 5.7.1  
 **Requires PHP:** 5.6  
-**Stable tag:** 3.2.11  
+**Stable tag:** 3.2.13  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -291,6 +291,23 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 ## Changelog ##
+
+### v3.2.12 ( Sep 13, 2021 ) ###
+**fix:** fixed warning on product listing page due to filter data type mismatch
+**update:** added dynamic filter named: dokan_manage_shop_order_custom_columns_%s hook under shop_order_custom_columns method
+**feat:** Set limitation for how many product tags that vendor can input, admin can set tag limit via filter hook: dokan_product_tags_select_max_length
+**fix:** fixed localization issue on attribute label
+**fix:** fixed Single store product search not working for logged out users
+
+### v3.2.12 ( Sep 13, 2021 ) ###
+
+- ***new*** Withdraw details keep save as log
+- ***new*** Vendor settings update REST api support
+- ***new*** New Filter hook added for Order status list allowed for withdrawal 'dokan_settings_withdraw_order_status_options'
+- ***fix*** Check if pagination_base post is empty
+- ***fix*** Single store page map hide based on setting
+- ***fix*** added upgrader to reassign dokan_store_name meta because it was missing for some vendor
+- ***fix*** JS deprecated warnings fixed
 
 ### v3.2.11 ( Aug 31, 2021 ) ###
 

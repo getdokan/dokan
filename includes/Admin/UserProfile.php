@@ -78,10 +78,9 @@ class UserProfile {
         $address_zip       = isset( $store_settings['address']['zip'] ) ? $store_settings['address']['zip'] : '';
         $address_country   = isset( $store_settings['address']['country'] ) ? $store_settings['address']['country'] : '';
         $address_state     = isset( $store_settings['address']['state'] ) ? $store_settings['address']['state'] : '';
-
-        $banner_width    = dokan_get_option( 'store_banner_width', 'dokan_appearance', 625 );
-        $banner_height   = dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 );
-        $admin_commission = ( 'flat' === $admin_commission_type ) ? wc_format_localized_price( $admin_commission ) : wc_format_localized_decimal( $admin_commission );
+        $banner_width      = dokan_get_vendor_store_banner_width();
+        $banner_height     = dokan_get_vendor_store_banner_height();
+        $admin_commission  = ( 'flat' === $admin_commission_type ) ? wc_format_localized_price( $admin_commission ) : wc_format_localized_decimal( $admin_commission );
 
         $country_state = array(
             'country' => array(

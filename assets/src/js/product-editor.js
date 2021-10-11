@@ -182,6 +182,7 @@
                     if ( ! $found ) data.unshift( tag );
                 },
                 minimumInputLength: 2,
+                maximumSelectionLength: dokan.maximum_tags_select_length !== undefined ? dokan.maximum_tags_select_length : -1,
                 ajax: {
                     url: dokan.ajaxurl,
                     dataType: 'json',
@@ -417,7 +418,7 @@
                     value = self.val();
 
                 if ( value == '' ) {
-                    self.closest( 'li' ).find( 'strong' ).html( 'Attribute Name' );
+                    self.closest( 'li' ).find( 'strong' ).html( dokan.i18n_attribute_label );
                 } else {
                     self.closest( 'li' ).find( 'strong' ).html( value );
                 }
@@ -940,7 +941,7 @@
             let sale_price = $( 'input.dokan-product-sales-price' ).val();
             let earning_suggestion = $('.simple-product span.vendor-price');
 
-            earning_suggestion.html( 'Calculating' );
+            earning_suggestion.html( dokan.i18n_calculating );
 
             $.get( dokan.ajaxurl, {
                 action: 'get_vendor_earning',

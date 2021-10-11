@@ -78,9 +78,9 @@
                          *
                          * @since 2.4.10
                          */
-                        $general_settings = get_option( 'dokan_general', [] );
-                        $banner_width     = dokan_get_option( 'store_banner_width', 'dokan_appearance', 625 );
-                        $banner_height    = dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 );
+                        $general_settings   = get_option( 'dokan_general', [] );
+                        $banner_width       = dokan_get_vendor_store_banner_width();
+                        $banner_height      = dokan_get_vendor_store_banner_height();
 
                         $help_text = sprintf(
                             __( 'Upload a banner for your store. Banner size is (%sx%s) pixels.', 'dokan-lite' ),
@@ -131,16 +131,17 @@
          <!--address-->
 
         <?php
-        $verified = false;
+            if (  class_exists( 'Dokan_Pro' ) && ! dokan_pro()->module->is_active( 'delivery_time' ) ) {
+                $verified = false;
 
-        if ( isset( $profile_info['dokan_verification']['info']['store_address']['v_status'] ) ) {
-            if ( $profile_info['dokan_verification']['info']['store_address']['v_status'] == 'approved' ) {
-                $verified = true;
+                if ( isset( $profile_info['dokan_verification']['info']['store_address']['v_status'] ) ) {
+                    if ( $profile_info['dokan_verification']['info']['store_address']['v_status'] == 'approved' ) {
+                        $verified = true;
+                    }
+                }
+
+                dokan_seller_address_fields( $verified );
             }
-        }
-
-        dokan_seller_address_fields( $verified );
-
         ?>
         <!--address-->
 
