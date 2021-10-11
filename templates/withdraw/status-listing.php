@@ -21,7 +21,9 @@
         </li>
     </ul>
     <span class="dokan-add-product-link" style="float: right; display: inline-block;">
-        <button class="dokan-btn dokan-btn-theme" id="dokan-request-withdraw-button"><i class="fa fa-money">&nbsp;</i> Request Withdraw </button>
-        <a href="<?php echo esc_url( dokan_get_navigation_url( 'withdraw' ) ) ?>" class="dokan-btn">Withdraw Dashboard</a>
+        <?php if ( dokan_withdraw_is_manual_request_enabled() ) : ?>
+        <button class="dokan-btn dokan-btn-theme" id="dokan-request-withdraw-button"><i class="fa fa-money">&nbsp;</i> <?php esc_html_e( 'Request Withdraw', 'dokan-lite' ); ?> </button>
+        <?php endif; ?>
+        <a href="<?php echo esc_url( dokan_get_navigation_url( 'withdraw' ) ) ?>" class="dokan-btn"><?php esc_html_e( 'Withdraw Dashboard', 'dokan-lite' ); ?> </a>
     </span>
 </div>

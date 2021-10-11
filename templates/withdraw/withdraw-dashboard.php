@@ -33,8 +33,12 @@
 
             </div>
             <div class="dokan-w5">
+                <?php if ( dokan_withdraw_is_manual_request_enabled() ) : ?>
                 <button class="dokan-btn dokan-btn-theme" id="dokan-request-withdraw-button"><?php esc_html_e( 'Request Withdraw', 'dokan-lite' ); ?></button>
-                <?php do_action( 'dokan_withdraw_content_after_balance_button' ); ?>
+                <?php
+                endif;
+                do_action( 'dokan_withdraw_content_after_balance_button' );
+                ?>
             </div>
         </div>
 
