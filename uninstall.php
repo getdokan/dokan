@@ -132,6 +132,7 @@ class Dokan_Uninstaller {
         }
 
         remove_role( 'seller' );
+        remove_role( 'vendor_staff' );
     }
 
     /**
