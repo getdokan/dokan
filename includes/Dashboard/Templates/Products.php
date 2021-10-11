@@ -426,6 +426,22 @@ class Products {
             $errors[] = __( 'I swear this is not your product!', 'dokan-lite' );
         }
 
+        if ( isset( $postdata['product_tag'] ) ) {
+            /**
+             * Filter of maximun a vendor can add tags.
+             *
+             * @since 3.3.7
+             *
+             * @param integer default -1
+             */
+            $maximum_tags_select_length = apply_filters( 'dokan_product_tags_select_max_length', -1 );
+
+            // Setting limitation for how many product tags that vendor can input.
+            if ( $maximum_tags_select_length !== -1 && count( $postdata['product_tag'] ) !== 0 && count( $postdata['product_tag'] ) > $maximum_tags_select_length ) {
+                $errors[] = sprintf( __( 'You can only select %s tags', 'dokan-lite' ), number_format_i18n( $maximum_tags_select_length ) );
+            }
+        }
+
         self::$errors = apply_filters( 'dokan_can_edit_product', $errors );
 
         if ( ! self::$errors ) {
@@ -437,7 +453,7 @@ class Products {
                 'post_status'    => $post_status,
                 'comment_status' => isset( $postdata['_enable_reviews'] ) ? 'open' : 'closed',
             ) );
-            
+
             if ( $post_slug ) {
                 $product_info['post_name'] = wp_unique_post_slug( $post_slug, $post_id, $post_status, 'product', 0 );
             }
