@@ -15,13 +15,22 @@ use WC_Email;
 class ContactSeller extends WC_Email {
 
     /**
+     * Reply Name
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @var string
+     */
+    private $from_name;
+
+    /**
      * Reply email
      *
      * @since DOKAN_LITE_SINCE
      *
      * @var string
      */
-    private $reply_to;
+    private $from_email;
 
     /**
      * Constructor.
@@ -36,7 +45,6 @@ class ContactSeller extends WC_Email {
 
         // Triggers for this email
         add_action( 'dokan_trigger_contact_seller_mail', array( $this, 'trigger' ), 30, 4 );
-        add_filter( 'woocommerce_email_from_address', array( $this, 'set_reply_to' ) );
 
         // Call parent constructor
         parent::__construct();
@@ -73,7 +81,9 @@ class ContactSeller extends WC_Email {
             return;
         }
 
-        $this->reply_to = $contact_email;
+        $this->from_name = $contact_name;
+        $this->from_email = $contact_email;
+
         $seller = get_user_by( 'email', $seller_email );
 
         $this->find['seller_name']    = '{seller_name}';
@@ -96,14 +106,25 @@ class ContactSeller extends WC_Email {
     }
 
     /**
-     * Set customer email address for reply
+     * Get the name for outgoing emails.
+     *
+     * @sience DOKAN_LITE_SINCE
+     *
+     * @return string
+     */
+    public function get_from_name( $from_name = '' ) {
+        return $this->from_name;
+    }
+
+    /**
+     * Get the from address for outgoing emails.
      *
      * @since DOKAN_LITE_SINCE
      *
      * @return string
      */
-    public function set_reply_to() {
-        return $this->reply_to;
+    public function get_from_address( $from_email = '' ) {
+        return $this->from_email;
     }
 
     /**
