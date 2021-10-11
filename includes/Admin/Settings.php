@@ -310,7 +310,15 @@ class Settings {
     public function get_settings_fields() {
         $pages_array = $this->get_post_type( 'page' );
 
-        $commission_types = dokan_commission_types();
+        $commission_types              = dokan_commission_types();
+        $withdraw_order_status_options = apply_filters(
+            'dokan_settings_withdraw_order_status_options',
+            array(
+                'wc-completed'  => __( 'Completed', 'dokan-lite' ),
+                'wc-processing' => __( 'Processing', 'dokan-lite' ),
+                'wc-on-hold'    => __( 'On-hold', 'dokan-lite' ),
+            )
+        );
 
         $general_site_options = apply_filters(
             'dokan_settings_general_site_options', [
@@ -492,11 +500,7 @@ class Settings {
                     'default' => array(
                         'wc-completed'  => 'wc-completed',
                     ),
-                    'options' => array(
-                        'wc-completed'  => __( 'Completed', 'dokan-lite' ),
-                        'wc-processing' => __( 'Processing', 'dokan-lite' ),
-                        'wc-on-hold'    => __( 'On-hold', 'dokan-lite' ),
-                    ),
+                    'options' => $withdraw_order_status_options,
                 ],
                 'exclude_cod_payment' => [
                     'name'    => 'exclude_cod_payment',

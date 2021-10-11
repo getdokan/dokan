@@ -8546,7 +8546,7 @@ var render = function() {
                           innerHTML: _vm._s(
                             _vm.getPaymentDetails(
                               data.row.method,
-                              data.row.user.payment
+                              data.row.details
                             )
                           )
                         }

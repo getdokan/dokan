@@ -67,7 +67,7 @@
                 </template>
 
                 <template slot="method_details" slot-scope="data">
-                    <div class="method_details_inner" v-html="getPaymentDetails(data.row.method, data.row.user.payment)"></div>
+                    <div class="method_details_inner" v-html="getPaymentDetails(data.row.method, data.row.details)"></div>
                 </template>
 
                 <template slot="filters">

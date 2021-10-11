@@ -164,10 +164,11 @@ class Manager {
             'status'  => $args['status'],
             'method'  => $args['method'],
             'note'    => $args['notes'],
+            'details' => $args['details'],
             'ip'      => $args['ip'],
         );
 
-        $format = array( '%d', '%f', '%s', '%d', '%s', '%s', '%s' );
+        $format = array( '%d', '%f', '%s', '%d', '%s', '%s', '%s', '%s' );
 
         $inserted = $wpdb->insert( $wpdb->dokan_withdraw, $data, $format );
 
@@ -276,6 +277,20 @@ class Manager {
     }
 
     /**
+     * Get withdraw details by method and user
+     *
+     * @param  string $method
+     * @param  int    $user_id
+     *
+     * @return integer
+     */
+    public function get_formatted_details( $method, $user_id ) {
+        $vendor = dokan()->vendor->get( $user_id );
+
+        return isset( $vendor->get_payment_profiles()[ $method ] ) ? (array) $vendor->get_payment_profiles()[ $method ] : [];
+    }
+
+    /**
      * Get withdraw status from code
      *
      * @since 3.0.0
@@ -364,6 +379,7 @@ class Manager {
                 'status'  => '%d',
                 'method'  => '%s',
                 'note'    => '%s',
+                'details' => '%s',
                 'ip'      => '%s',
             );
 
