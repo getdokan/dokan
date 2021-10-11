@@ -2,13 +2,6 @@
 
 namespace WeDevs\Dokan\Cache;
 
-use WC_Cache_Helper;
-use WeDevs\Dokan\Traits\ChainableContainer;
-use WeDevs\Dokan\Order\Cache as OrderCache;
-use WeDevs\Dokan\Product\Cache as ProductCache;
-use WeDevs\Dokan\Vendor\Cache as VendorCache;
-use WeDevs\Dokan\Withdraw\Cache as WithdrawCache;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -18,25 +11,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since DOKAN_LITE_SINCE
  */
-class CacheHelper extends WC_Cache_Helper {
-
-    use ChainableContainer;
-
-    public function __construct() {
-        $this->init_classes();
-    }
-
-    /**
-     * Initializes all classes for caching independently
-     *
-     * @since DOKAN_LITE_SINCE
-     */
-    public function init_classes() {
-        $this->container['product']  = new ProductCache();
-        $this->container['order']    = new OrderCache();
-        $this->container['vendor']   = new VendorCache();
-        $this->container['withdraw'] = new WithdrawCache();
-    }
+class CacheHelper {
 
     /**
 	 * Get transient version.
@@ -54,7 +29,7 @@ class CacheHelper extends WC_Cache_Helper {
      * @since  DOKAN_LITE_SINCE
 	 *
 	 * @param  string             $group   Name for the group of transients we need to invalidate.
-	 * @param  boolean            $refresh true to force a new version.
+	 * @param  bool            $refresh true to force a new version.
      *
 	 * @return string|array|false transient version based on time(), 10 digits.
 	 */
@@ -72,25 +47,6 @@ class CacheHelper extends WC_Cache_Helper {
 	}
 
     /**
-     * Set Cache for Dokan.
-     *
-     * Update the cache for dokan. We've added some defaults to set the cache.
-     * Like, We set default expiry time, cache group to remove some redundant assign of those data.
-     *
-     * @since DOKAN_LITE_SINCE
-     *
-     * @param string $key
-     * @param mixed  $data
-     * @param string $group  eg: `dokan`, `dokan_seller_data_[seller_id]`
-     * @param int    $expire eg: default: `DAY_IN_SECONDS`, `3600`
-     *
-     * @return void
-     */
-    public static function set_cache( $key, $data, $group, $expire = DAY_IN_SECONDS ) {
-		wp_cache_set( $key, $data, $group, $expire );
-	}
-
-    /**
      * Get Transient value from a key.
      *
      * It applies for oth from Object & Normal data
@@ -105,161 +61,145 @@ class CacheHelper extends WC_Cache_Helper {
      * CacheHelper::dokan_get_transient( 'transient_key' ); // returns `transient_key` value;
      * ```
      *
-     * Get transient value for the object's param
+     * Get transient value for a group
      * ```
-     * CacheHelper::dokan_get_transient( 'transient_key', 'param_name' ); // returns `get_transient(transient_key)[param_name]` value;
+     * CacheHelper::dokan_get_transient( 'transient_key', 'group_name' );
      * ```
      *
      * @since DOKAN_LITE_SINCE
      *
-     * @param string        $transient_key  eg: seller_data_[id]
-     * @param string        $param          eg: null, seller_earnings
+     * @param string $key    eg: seller_data_[id]
+     * @param string $group  eg: null, seller_earnings
      *
-     * @return bool|string  False or Transient value
+     * @return mixed false or Transient value
      */
-	public static function dokan_get_transient( $transient_key, $param = null) {
-		$transient_value = get_transient( $transient_key );
-
-        if ( ! $transient_value ) {
-            return false;
+	public static function dokan_get_transient( $key, $group = null) {
+        if ( empty( $group ) ) {
+            return get_transient( $key );
         }
 
-        if ( ! empty( $param ) && is_array( $transient_value ) ) {
-            $value = $transient_value[ $param ];
+        $transient_version = self::get_transient_version( $group );
+        $transient_value   = get_transient( $key );
 
-            if ( ! empty( $value ) ) {
-                return $value;
-            }
-
-            return false;
+        if (
+            isset( $transient_value['value'], $transient_value['version'] ) &&
+            $transient_value['version'] === $transient_version
+        ) {
+            return $transient_value['value'];
         }
 
-        return $transient_value;
+        return false;
 	}
 
     /**
      * Set Transient value for a key.
      *
-     * If needs to set only the key value, then pass only the first transient key
-     * If needs to update/insert the transient value on that object's param, pass params key also
-     *
-     * Examples:
-     *
-     * When needs to add/update values inside an array param, like add/update `seller_earnings` param
-     * in `sellers_data` transient, the calling process would be:
-     *
-     * ```
-     * CacheHelper::dokan_set_transient( 'sellers_data', 100, 'seller_earnings');
-     * ```
-     *
-     * When needs to add/update only key value:
-     *
-     * ```
-     * CacheHelper::dokan_set_transient( 'announcements', array());
-     * ```
-     *
      * @since DOKAN_LITE_SINCE
      *
      * @param string $transient_key     eg: seller_data_[id]
      * @param string $transient_value   eg: 6000, ['earning' => 1]
-     * @param string $param             eg: seller_earnings
-     * @param int    $expiration        default: 1 Day => DAY_IN_SECONDS
+     * @param string $group             eg: seller_earnings
+     * @param int    $expiration        default: 1 Week => WEEK_IN_SECONDS
      *
-     * @return void  Insert/Update the transient
+     * @return bool  Inserted/Updated the transient or not
      */
-	public static function dokan_set_transient( $transient_key, $transient_value, $param = null, $expiration = DAY_IN_SECONDS ) {
-        if ( ! empty( $param ) ) {
-            $previous_transient_value = get_transient( $transient_key );
-
-            if ( ! empty( $previous_transient_value ) && is_array( $previous_transient_value )) {
-                $previous_transient_value[ $param ] = $transient_value;
-                set_transient( $transient_key, $previous_transient_value, $expiration );
-            } else {
-                $data = [
-                    $param => $transient_value
-                ];
-
-                set_transient( $transient_key, $data, $expiration );
-            }
-        } else {
-            set_transient( $transient_key, $transient_value, $expiration );
+	public static function dokan_set_transient( $key, $value, $group = null, $expiration = WEEK_IN_SECONDS ) {
+        if ( empty( $group ) ) {
+            return set_transient( $key, $value, $expiration );
         }
+
+        $transient_version = self::get_transient_version( $group );
+
+        $transient_value   = array(
+            'version' => $transient_version,
+            'value'   => $value,
+        );
+
+        return set_transient( $key, $transient_value, $expiration );
 	}
 
     /**
-     * Delete Transient Version.
+	 * Get prefix for use with wp_cache_set.
      *
-     * When the transient version increases, this is used to remove all past transients
-     * to avoid filling the DB.
+     * It allows all cache in a group to be invalidated at once.
+	 *
+     * @since DOKAN_LITE_SINCE
      *
-     * Note: this only works on transients appended with the transient version, and
-     * when object caching is not being used.
+	 * @param  string $group Group of cache to get.
+     *
+	 * @return string
+	 */
+	public static function get_cache_prefix( $group ) {
+		$prefix = wp_cache_get( 'dokan_' . $group . '_cache_prefix', $group );
+
+		if ( false === $prefix ) {
+			$prefix = microtime();
+			wp_cache_set( 'dokan_' . $group . '_cache_prefix', $prefix, $group );
+		}
+
+		return 'dokan_cache_' . $prefix . '_';
+	}
+
+    /**
+     * Get Cache for Dokan.
+     *
+     * Example:
+     * ```
+     * CacheHelper::get_cache( 'all_products', 'seller_products' );
+     * ```
      *
      * @since DOKAN_LITE_SINCE
      *
-     * @param string $version Version of the transient to remove.
+     * @param string  $key
+     * @param string  $group   eg: `dokan`, `dokan_seller_data_[seller_id]`
+     * @param bool $forced eg: default: `false`
+     *
+     * @return mixed|false
      */
-    public static function delete_version_transients( $version = '' ) {
-        if ( ! wp_using_ext_object_cache() && ! empty( $version ) ) {
-            global $wpdb;
-
-            $limit = apply_filters( 'dokan_delete_version_transients_limit', 1000 );
-
-            if ( ! $limit ) {
-                return;
-            }
-
-            $affected = $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s LIMIT %d;", '\_transient\_dokan\_%' . $version, $limit ) );
-
-            // If affected rows is equal to limit, there are more rows to delete. Delete in 30 secs.
-            if ( $affected === $limit ) {
-                wp_schedule_single_event( time() + 30, 'delete_version_transients', array( $version ) );
-            }
-        }
-    }
-
-    /**
-     * Bulk clear cache values by group.
-     *
-     * @since DOKAN_LITE_SINCE
-     *
-     * @param string $group
-     *
-     * @return void
-     */
-    public static function clear_group( $group ) {
-        $keys = get_option( $group, [] );
-
-        if ( ! empty( $keys ) ) {
-            foreach ( $keys as $key ) {
-                wp_cache_delete( $key, $group );
-                unset( $keys[ $key ] );
-            }
+    public static function get_cache( $key, $group = null, $forced = false ) {
+        if ( empty( $group ) ) {
+            return wp_cache_get( $key, $group, $forced );
         }
 
-        update_option( $group, $keys );
-    }
+        $key = self::get_cache_prefix( $group ) . $key;
+
+        return wp_cache_get( $key, $group, $forced );
+	}
 
     /**
-     * Update keys by group name.
+     * Set Cache for Dokan.
+     *
+     * Update the cache for dokan. We've added some defaults to set the cache.
+     * Like, We set default expiry time, cache group to remove some redundant assign of those data.
      *
      * @since DOKAN_LITE_SINCE
      *
      * @param string $key
-     * @param string $group
+     * @param mixed  $data
+     * @param string $group  eg: `dokan`, `dokan_seller_data_[seller_id]`
+     * @param int    $expire time in seconds eg: default: `WEEK_IN_SECONDS`
      *
-     * @return void
+     * @return bool
      */
-    public static function update_group( $key, $group ) {
-        $keys = get_option( $group, [] );
+    public static function set_cache( $key, $data, $group = null, $expire = WEEK_IN_SECONDS ) {
+        return wp_cache_set( $key, $data, $group, $expire );
+	}
 
-        if ( in_array( $key, $keys ) ) {
-            return;
-        }
-
-        $keys[] = $key;
-        update_option( $group, $keys );
-    }
+    /**
+	 * Invalidate cache group at once.
+     *
+     * Example:
+     * ```
+     * CacheHelper::invalidate_cache_group( 'seller_products' );
+     * ```
+	 *
+	 * @since DOKAN_LITE_SINCE
+     *
+	 * @param string $group Group of cache to clear.
+     *
+     * @return bool
+	 */
+	public static function invalidate_cache_group( $group ) {
+		return wp_cache_set( 'dokan_' . $group . '_cache_prefix', microtime(), $group );
+	}
 }
-
-CacheHelper::init();
