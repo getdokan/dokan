@@ -32,7 +32,9 @@ jQuery(function($) {
                 prev_li.find('label').replaceWith(response.data);
                 prev_li.find('a.dokan-edit-status').removeClass('dokan-hide');
             } else {
-                alert( response.data );
+                dokan_sweetalert( response.data, { 
+                    icon: 'success',
+                } );
             }
         });
     });
@@ -98,8 +100,9 @@ jQuery(function($) {
                 $('#accordion').append( response );
 
             } else {
-
-                alert('Could not grant access - the user may already have permission for this file or billing email is not set. Ensure the billing email is set, and the order has been saved.');
+                dokan_sweetalert( 'Could not grant access - the user may already have permission for this file or billing email is not set. Ensure the billing email is set, and the order has been saved.', { 
+                    icon: 'warning',
+                } );
 
             }
 
@@ -111,11 +114,14 @@ jQuery(function($) {
         return false;
     });
 
-    $('.order_download_permissions').on('click', 'button.revoke_access', function(e){
+    $('.order_download_permissions').on('click', 'button.revoke_access', async function(e){
         e.preventDefault();
-        var answer = confirm('Are you sure you want to revoke access to this download?');
+        const answer = await dokan_sweetalert( 'Are you sure you want to revoke access to this download?', { 
+            action : 'confirm', 
+            icon   : 'warning',
+        } );
 
-        if (answer){
+        if ( 'undefined' !== answer && answer.isConfirmed ){
 
             var self = $(this),
                 el = self.closest('.dokan-panel');
