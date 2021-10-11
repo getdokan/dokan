@@ -72,6 +72,43 @@ class Dokan_Uninstaller {
         $capabilities[] = 'dokandar';
         $capabilities[] = 'seller';
 
+        /* Capabilities added from RMA module */
+        $capabilities = array_merge( $capabilities, [ 'dokan_view_store_rma_menu', 'dokan_view_store_rma_settings_menu' ] );
+
+        /* Capabilities added from Booking module */
+        $capabilities = array_merge(
+            $capabilities,
+            [
+                'dokan_view_booking_menu',
+                'dokan_add_booking_product',
+                'dokan_edit_booking_product',
+                'dokan_delete_booking_product',
+                'dokan_manage_booking_products',
+                'dokan_manage_booking_calendar',
+                'dokan_manage_bookings',
+                'dokan_manage_booking_resource',
+            ]
+        );
+
+        /* Capabilities added from Support Ticket module */
+        $capabilities = array_merge( $capabilities, [ 'dokan_manage_support_tickets' ] );
+
+        /* Capabilities added from ExportImport module */
+        $capabilities = array_merge( $capabilities, [ 'dokan_view_tools_menu' ] );
+
+        /* Capabilities added from Vendor Verification module */
+        $capabilities = array_merge( $capabilities, [ 'dokan_view_store_verification_menu' ] );
+
+        /* Capabilities added from Simple Auction module */
+        $capabilities = array_merge(
+            $capabilities, [
+                'dokan_view_auction_menu',
+                'dokan_add_auction_product',
+                'dokan_edit_auction_product',
+                'dokan_delete_auction_product',
+            ]
+        );
+
         return $capabilities;
     }
 
