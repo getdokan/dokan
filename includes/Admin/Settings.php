@@ -27,7 +27,7 @@ class Settings {
         add_filter( 'dokan_admin_localize_script', [ $this, 'settings_localize_data' ], 10 );
         add_action( 'wp_ajax_dokan_get_setting_values', [ $this, 'get_settings_value' ], 10 );
         add_action( 'wp_ajax_dokan_save_settings', [ $this, 'save_settings_value' ], 10 );
-        add_action( 'dokan_before_saving_settings', [ $this, 'set_withdraw_limit_value_validation' ] , 10, 2 );
+        add_action( 'dokan_before_saving_settings', [ $this, 'set_withdraw_limit_value_validation' ], 10, 2 );
         add_filter( 'dokan_admin_localize_script', [ $this, 'add_admin_settings_nonce' ] );
         add_action( 'wp_ajax_dokan_refresh_admin_settings_field_options', [ $this, 'refresh_admin_settings_field_options' ] );
         add_filter( 'dokan_get_settings_values', [ $this, 'format_price_values' ], 12, 2 );
