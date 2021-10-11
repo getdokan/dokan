@@ -27,6 +27,7 @@ class Settings {
         add_filter( 'dokan_admin_localize_script', [ $this, 'settings_localize_data' ], 10 );
         add_action( 'wp_ajax_dokan_get_setting_values', [ $this, 'get_settings_value' ], 10 );
         add_action( 'wp_ajax_dokan_save_settings', [ $this, 'save_settings_value' ], 10 );
+        add_action( 'dokan_before_saving_settings', [ $this, 'set_withdraw_limit_value_validation' ] , 10, 2 );
         add_filter( 'dokan_admin_localize_script', [ $this, 'add_admin_settings_nonce' ] );
         add_action( 'wp_ajax_dokan_refresh_admin_settings_field_options', [ $this, 'refresh_admin_settings_field_options' ] );
         add_filter( 'dokan_get_settings_values', [ $this, 'format_price_values' ], 12, 2 );
@@ -748,6 +749,45 @@ class Settings {
             wp_send_json_success( $options );
         } catch ( Exception $e ) {
             $this->send_response_error( $e );
+        }
+    }
+
+    /**
+     * Validates admin withdraw limit settings
+     *
+     * @param mixed $option_value
+     * @param mixed $option_name
+     *
+     * @since 3.2.15
+     *
+     * @return mixed $option_value
+     */
+    public function set_withdraw_limit_value_validation( $option_name, $option_value ) {
+        if ( 'dokan_withdraw' !== $option_name ) {
+            return;
+        }
+        
+        $errors = [];
+        
+        if ( ! empty( $option_value['withdraw_limit'] && $option_value['withdraw_limit'] < 0 ) ) {
+            $errors[] = [
+                'name' => 'withdraw_limit',
+                'error' => __( 'Minimum Withdraw Limit can\'t be negative value.', 'dokan' ),
+            ];
+        }
+        
+        if ( ! empty( $errors ) ) {
+            wp_send_json_error(
+                [
+                    'settings' => [
+                        'name'  => $option_name,
+                        'value' => $option_value,
+                    ],
+                    'message'  => __( 'Validation error', 'dokan' ),
+                    'errors' => $errors,
+                ],
+                400
+            );
         }
     }
 }
