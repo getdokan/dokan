@@ -98,7 +98,7 @@ class AdminBar {
      *
      * @return array
      */
-    public function get_dokan_admin_bar_menues() {
+    public function get_dokan_admin_bar_menus() {
         $page_id = (int) dokan_get_option( 'dashboard', 'dokan_pages', 0 );
 
         $menus = [
@@ -142,7 +142,7 @@ class AdminBar {
             return;
         }
 
-        $menus = $this->get_dokan_admin_bar_menues();
+        $menus = $this->get_dokan_admin_bar_menus();
 
         // Added admin menus for dokan in wp admin bar.
         foreach ( $menus as $menu ) {
