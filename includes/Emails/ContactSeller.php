@@ -15,15 +15,6 @@ use WC_Email;
 class ContactSeller extends WC_Email {
 
     /**
-     * Reply Name
-     *
-     * @since DOKAN_LITE_SINCE
-     *
-     * @var string
-     */
-    private $from_name;
-
-    /**
      * Reply email
      *
      * @since DOKAN_LITE_SINCE
@@ -81,7 +72,6 @@ class ContactSeller extends WC_Email {
             return;
         }
 
-        $this->from_name = $contact_name;
         $this->from_email = $contact_email;
 
         $seller = get_user_by( 'email', $seller_email );
@@ -103,17 +93,6 @@ class ContactSeller extends WC_Email {
         $this->setup_locale();
         $this->send( $seller_email, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
         $this->restore_locale();
-    }
-
-    /**
-     * Get the name for outgoing emails.
-     *
-     * @sience DOKAN_LITE_SINCE
-     *
-     * @return string
-     */
-    public function get_from_name( $from_name = '' ) {
-        return $this->from_name;
     }
 
     /**
