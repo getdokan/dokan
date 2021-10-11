@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\Order;
 
+use WeDevs\Dokan\Cache\CacheHelper;
+
 /**
  * Order Management API
  *
@@ -36,7 +38,7 @@ class Manager {
         // Use all arguments to create a hash used as cache key
         $cache_key = 'dokan_seller_orders-' . md5( json_encode( $args ) );
 
-        $orders = wp_cache_get( $cache_key, $cache_group );
+        $orders = CacheHelper::get_cache( $cache_key, $cache_group );
 
         $join        = $args['customer_id'] ? "LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id" : '';
         $where       = $args['customer_id'] ? sprintf( "pm.meta_key = '_customer_user' AND pm.meta_value = %d AND", $args['customer_id'] ) : '';
@@ -69,8 +71,7 @@ class Manager {
                 }, $orders
             );
 
-            dokan()->cache->set_cache( $cache_key, $orders, $cache_group );
-            dokan()->cache->update_group( $cache_key, $cache_group );
+            CacheHelper::set_cache( $cache_key, $orders, $cache_group );
         }
 
         return $orders;

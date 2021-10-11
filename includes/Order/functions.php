@@ -1,4 +1,7 @@
 <?php
+
+use WeDevs\Dokan\Cache\CacheHelper;
+
 /**
  * Dokan get seller amount from order total
  *
@@ -55,7 +58,7 @@ function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = nul
     $pagenum     = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
     $cache_group = "dokan_seller_data_{$seller_id}";
     $cache_key   = "dokan-seller-orders-{$status}-{$seller_id}-page-{$pagenum}";
-    $orders      = wp_cache_get( $cache_key, $cache_group );
+    $orders      = CacheHelper::get_cache( $cache_key, $cache_group );
     $getdata     = wp_unslash( $_GET );
     $order       = empty( $getdata['order'] ) ? 'DESC' : sanitize_text_field( $getdata['order'] );
     $order_by    =  'p.post_date';
@@ -92,8 +95,7 @@ function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = nul
             )
         );
 
-        dokan()->cache->set_cache( $cache_key, $orders, $cache_group );
-        dokan()->cache->update_group( $cache_key, $cache_group );
+        CacheHelper::set_cache( $cache_key, $orders, $cache_group );
     }
 
     return $orders;
@@ -118,7 +120,7 @@ function dokan_get_seller_orders_by_date( $start_date, $end_date, $seller_id = f
 
     $cache_group = 'dokan_seller_data_' . $seller_id;
     $cache_key   = md5( 'dokan-seller-orders-' . $end_date . '-' . $end_date . '-' . $seller_id );
-    $orders      = wp_cache_get( $cache_key, $cache_group );
+    $orders      = CacheHelper::get_cache( $cache_key, $cache_group );
 
     if ( $orders === false ) {
         $status_where = '';
@@ -146,8 +148,7 @@ function dokan_get_seller_orders_by_date( $start_date, $end_date, $seller_id = f
             )
         );
 
-        dokan()->cache->set_cache( $cache_key, $orders, $cache_group, 3600 * 2 );
-        dokan()->cache->update_group( $cache_key, $cache_group );
+        CacheHelper::set_cache( $cache_key, $orders, $cache_group, 3600 * 2 );
     }
 
     return $orders;
@@ -196,7 +197,7 @@ function dokan_get_seller_orders_number( $args = [] ) {
     $status      = ! empty( $args['status'] ) ? $args['status'] : 'all';
     $cache_group = 'dokan_seller_data_' . $seller_id;
     $cache_key   = 'dokan-seller-orders-count-' . md5( json_encode( $args ) );
-    $count       = wp_cache_get( $cache_key, $cache_group );
+    $count       = CacheHelper::get_cache( $cache_key, $cache_group );
 
 //    if ( $count === false ) {
         $status_where = ( $status == 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', $status );
@@ -267,7 +268,7 @@ function dokan_count_orders( $user_id ) {
 
     $cache_group = 'dokan_seller_data_' . $user_id;
     $cache_key   = 'dokan-count-orders-' . $user_id;
-    $counts      = wp_cache_get( $cache_key, $cache_group );
+    $counts      = CacheHelper::get_cache( $cache_key, $cache_group );
 
     if ( $counts === false ) {
         $counts = [
@@ -307,8 +308,7 @@ function dokan_count_orders( $user_id ) {
         }
 
         $counts = (object) $counts;
-        dokan()->cache->set_cache( $cache_key, $counts, $cache_group );
-        dokan()->cache->update_group( $cache_key, $cache_group );
+        CacheHelper::set_cache( $cache_key, $counts, $cache_group );
     }
 
     return $counts;
@@ -438,7 +438,7 @@ function dokan_get_seller_id_by_order( $order_id ) {
 
     $cache_key   = 'dokan_get_seller_id_' . $order_id;
     $cache_group = 'dokan_get_seller_id_by_order';
-    $seller_id   = wp_cache_get( $cache_key, $cache_group );
+    $seller_id   = CacheHelper::get_cache( $cache_key, $cache_group );
     $items       = [];
 
     // hack: delete old cached data, will delete this code later version of dokan lite
@@ -452,7 +452,7 @@ function dokan_get_seller_id_by_order( $order_id ) {
                 $wpdb->prepare( "SELECT seller_id FROM {$wpdb->prefix}dokan_orders WHERE order_id = %d LIMIT 1", $order_id )
             )
         );
-        dokan()->cache->set_cache( $cache_key, $seller_id, $cache_group );
+        CacheHelper::set_cache( $cache_key, $seller_id, $cache_group );
     }
 
     if ( ! empty( $seller_id ) ) {

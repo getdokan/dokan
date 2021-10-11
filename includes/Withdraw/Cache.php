@@ -60,7 +60,7 @@ class Cache extends CacheHelper {
      * @return void
      */
     public function clear_admin_cache_group() {
-        self::clear_group( $this->cache_group_admin );
+        self::invalidate_cache_group( $this->cache_group_admin );
     }
 
     /**
@@ -77,7 +77,7 @@ class Cache extends CacheHelper {
             $this->seller_id = $seller_id;
         }
 
-        self::clear_group( $this->cache_group_seller );
+        self::invalidate_cache_group( $this->cache_group_seller );
     }
 
     /**

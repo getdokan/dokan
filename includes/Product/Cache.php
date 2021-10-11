@@ -42,8 +42,8 @@ class Cache extends CacheHelper {
     public static function clear_seller_product_caches( $product_id, $post_data = [] ) {
         $seller_id = dokan_get_current_user_id();
 
-        self::clear_group( 'dokan_cache_seller_product_data_' . $seller_id );
-        self::clear_group( 'dokan_cache_seller_product_stock_data_' . $seller_id );
+        self::invalidate_cache_group( 'dokan_cache_seller_product_data_' . $seller_id );
+        self::invalidate_cache_group( 'dokan_cache_seller_product_stock_data_' . $seller_id );
     }
 
 

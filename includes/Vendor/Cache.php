@@ -37,7 +37,7 @@ class Cache extends CacheHelper {
      * @return void
      */
     public function clear_cache_group( $vendor_id = null ) {
-        self::clear_group( $this->cache_group );
+        self::invalidate_cache_group( $this->cache_group );
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Withdraw;
 
+use WeDevs\Dokan\Cache\CacheHelper;
 use WP_Error;
 use WeDevs\Dokan\Withdraw\Withdraws;
 
@@ -233,7 +234,7 @@ class Manager {
 
         $cache_group = empty ( $user_id ) ? dokan()->cache->withdraw->get_admin_cache_group() : dokan()->cache->withdraw->get_seller_cache_group();
         $cache_key   = "dokan-withdraw-requests-$user_id-$status-$limit-$offset";
-        $result      = wp_cache_get( $cache_key, $cache_group );
+        $result      = CacheHelper::get_cache( $cache_key, $cache_group );
 
         if ( false === $result ) {
             if ( empty( $user_id ) ) {
@@ -242,8 +243,7 @@ class Manager {
                 $result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} WHERE user_id = %d AND status = %d LIMIT %d, %d", $user_id, $status, $offset, $limit ) );
             }
 
-            dokan()->cache->set_cache( $cache_key, $result, $cache_group );
-            dokan()->cache->update_group( $cache_key, $cache_group );
+            CacheHelper::set_cache( $cache_key, $result, $cache_group );
         }
 
         return $result;

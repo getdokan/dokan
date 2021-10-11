@@ -1,4 +1,7 @@
 <?php
+
+use WeDevs\Dokan\Cache\CacheHelper;
+
 /**
  * Dokan Admin menu position
  *
@@ -195,7 +198,7 @@ function dokan_count_posts( $post_type, $user_id, $exclude_product_types = array
     $exclude_product_types_key  = implode( '-', $exclude_product_types );
     $cache_group                = 'dokan_cache_seller_product_data_' . $user_id;
     $cache_key                  = 'dokan-count-' . $post_type . '-' . $exclude_product_types_key . '-' . $user_id;
-    $counts                     = wp_cache_get( $cache_key, $cache_group );
+    $counts                     = CacheHelper::get_cache( $cache_key, $cache_group );
     $tracked_cache_keys         = get_option( $cache_group, [] );
 
     if ( ! in_array( $cache_key, $tracked_cache_keys, true ) ) {
@@ -242,7 +245,7 @@ function dokan_count_posts( $post_type, $user_id, $exclude_product_types = array
         $counts['total'] = $total;
         $counts          = (object) $counts;
 
-        dokan()->cache->set_cache( $cache_key, $counts, $cache_group, 3600 * 6 );
+        CacheHelper::set_cache( $cache_key, $counts, $cache_group, 3600 * 6 );
     }
 
     return $counts;
@@ -266,7 +269,7 @@ function dokan_count_stock_posts( $post_type, $user_id, $stock_type ) {
 
     $cache_group   = 'dokan_cache_seller_product_stock_data_' . $user_id;
     $cache_key     = 'dokan-count-' . $post_type . '_' . $stock_type . '-' . $user_id;
-    $counts        = wp_cache_get( $cache_key, $cache_group );
+    $counts        = CacheHelper::get_cache( $cache_key, $cache_group );
     $get_old_cache = get_option( $cache_group, [] );
 
     if ( ! in_array( $cache_key, $get_old_cache, true ) ) {
@@ -309,7 +312,7 @@ function dokan_count_stock_posts( $post_type, $user_id, $stock_type ) {
 
         $counts = $total;
 
-        dokan()->cache->set_cache( $cache_key, $counts, $cache_group, 3600 * 6 );
+        CacheHelper::set_cache( $cache_key, $counts, $cache_group, 3600 * 6 );
     }
 
     return $counts;
@@ -330,7 +333,7 @@ function dokan_count_comments( $post_type, $user_id ) {
     global $wpdb;
 
     $cache_key = 'dokan-count-comments-' . $post_type . '-' . $user_id;
-    $counts    = wp_cache_get( $cache_key, 'dokan-lite' );
+    $counts    = CacheHelper::get_cache( $cache_key, 'dokan-lite' );
 
     if ( $counts === false ) {
         $count = $wpdb->get_results(
@@ -373,7 +376,7 @@ function dokan_count_comments( $post_type, $user_id ) {
         $counts['total'] = $total;
 
         $counts = (object) $counts;
-        dokan()->cache->set_cache( $cache_key, $counts, 'dokan-lite', 3600 * 2 );
+        CacheHelper::set_cache( $cache_key, $counts, 'dokan-lite', 3600 * 2 );
     }
 
     return $counts;
@@ -393,7 +396,7 @@ function dokan_author_pageviews( $seller_id ) {
 
     $cache_key   = 'dokan-pageview-' . $seller_id;
     $cache_group = 'dokan_page_view';
-    $pageview    = wp_cache_get( $cache_key, $cache_group );
+    $pageview    = CacheHelper::get_cache( $cache_key, $cache_group );
 
     if ( false === $pageview ) {
         $count = $wpdb->get_row(
@@ -408,8 +411,7 @@ function dokan_author_pageviews( $seller_id ) {
 
         $pageview = $count->pageview;
 
-        dokan()->cache->set_cache( $cache_key, $pageview, $cache_group, 3600 * 4 );
-        dokan()->cache->update_group( $cache_key, $cache_group );
+        CacheHelper::set_cache( $cache_key, $pageview, $cache_group, 3600 * 4 );
     }
 
     return $pageview;
@@ -429,7 +431,7 @@ function dokan_author_total_sales( $seller_id ) {
 
     $cache_group = 'dokan_seller_data_' . $seller_id;
     $cache_key   = 'dokan-earning-' . $seller_id;
-    $earnings    = wp_cache_get( $cache_key, $cache_group );
+    $earnings    = CacheHelper::get_cache( $cache_key, $cache_group );
 
     if ( $earnings === false ) {
         $count = $wpdb->get_row(
@@ -438,8 +440,7 @@ function dokan_author_total_sales( $seller_id ) {
 
         $earnings = $count->earnings;
 
-        dokan()->cache->set_cache( $cache_key, $earnings, $cache_group );
-        dokan()->cache->update_group( $cache_key, $cache_group );
+        CacheHelper::set_cache( $cache_key, $earnings, $cache_group );
     }
 
     return apply_filters( 'dokan_seller_total_sales', $earnings );

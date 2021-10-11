@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Vendor;
 
+use WeDevs\Dokan\Cache\CacheHelper;
 use WP_Error;
 use WP_User_Query;
 use WeDevs\Dokan\Vendor\Vendor;
@@ -95,7 +96,7 @@ class Manager {
 
         $cache_group = dokan()->cache->vendor->get_cache_group();
         $cache_key   = 'doken-vendors-' . md5( json_encode( $args ) );
-        $vendors     = wp_cache_get( $cache_key, $cache_group );
+        $vendors     = CacheHelper::get_cache( $cache_key, $cache_group );
 
         if ( false === $vendors ) {
             $user_query = new WP_User_Query( $args );
@@ -111,8 +112,7 @@ class Manager {
                 $vendors[] = $this->get( $result );
             }
 
-            dokan()->cache->set_cache( $cache_key, $vendors, $cache_group );
-            dokan()->cache->update_group( $cache_key, $cache_group );
+            CacheHelper::set_cache( $cache_key, $vendors, $cache_group );
         }
 
         return $vendors;

@@ -33,7 +33,7 @@ class Cache extends CacheHelper {
      * @return void
      */
     public static function reset_seller_order_data( $order_id, $seller_id ) {
-        self::clear_group( 'dokan_seller_data_' . $seller_id );
+        self::invalidate_cache_group( 'dokan_seller_data_' . $seller_id );
 
         // Remove cached seller_id after an woocommerce order
         wp_cache_delete( 'dokan_get_seller_id_' . $order_id, 'dokan_get_seller_id_by_order' );

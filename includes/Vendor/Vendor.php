@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Vendor;
 
+use WeDevs\Dokan\Cache\CacheHelper;
 use WP_Query;
 
 /**
@@ -701,7 +702,7 @@ class Vendor {
         $status        = dokan_withdraw_get_active_order_status_in_comma();
         $cache_group   = 'dokan_seller_data_'.$this->id;
         $cache_key     = 'dokan_seller_earnings_' . $this->id;
-        $earning       = wp_cache_get( $cache_key, $cache_group );
+        $earning       = CacheHelper::get_cache( $cache_key, $cache_group );
         $on_date       = $on_date ? date( 'Y-m-d', strtotime( $on_date ) ) : current_time( 'mysql' );
         $trn_type      = 'dokan_refund';
         $refund_status = 'approved';
@@ -740,8 +741,7 @@ class Vendor {
 
             $earning = (float) $result->earnings;
 
-            dokan()->cache->set_cache( $cache_key, $earning, $cache_group );
-            dokan()->cache->update_group( $cache_key, $cache_group );
+            CacheHelper::set_cache( $cache_key, $earning, $cache_group );
         }
 
         if ( $formatted ) {
@@ -764,7 +764,7 @@ class Vendor {
         $status        = dokan_withdraw_get_active_order_status_in_comma();
         $cache_group   = dokan()->cache->withdraw->get_seller_cache_group();
         $cache_key     = $on_date ? "dokan_seller_balance_on_{$on_date}_$this->id" : 'dokan_seller_balance_' . $this->id;
-        $earning       = wp_cache_get( $cache_key, $cache_group );
+        $earning       = CacheHelper::get_cache( $cache_key, $cache_group );
         $threshold_day = dokan_get_withdraw_threshold( dokan_get_current_user_id() );
         $on_date       = $on_date ? date( 'Y-m-d', strtotime( $on_date ) ) : current_time( 'mysql' );
         $date          = date( 'Y-m-d', strtotime( $on_date . ' -'.$threshold_day.' days' ) );
@@ -789,8 +789,7 @@ class Vendor {
 
             $earning = (float) $result->earnings - (float) round( $result->withdraw, wc_get_rounding_precision() );
 
-            dokan()->cache->set_cache( $cache_key, $earning, $cache_group );
-            dokan()->cache->update_group( $cache_key, $cache_group );
+            CacheHelper::set_cache( $cache_key, $earning, $cache_group );
         }
 
         if ( $formatted ) {

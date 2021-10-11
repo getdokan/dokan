@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Product;
 
+use WeDevs\Dokan\Cache\CacheHelper;
 use WP_Query;
 use WP_Error;
 
@@ -36,13 +37,12 @@ class Manager {
         $cache_group = 'dokan_cache_seller_product_data_' . dokan_get_current_user_id();
         $cache_key   = 'dokan_seller_products-' . md5( json_encode( $args ) );
 
-        $products = wp_cache_get( $cache_key, $cache_group );
+        $products = CacheHelper::get_cache( $cache_key, $cache_group );
 
         if ( false === $products ) {
             $products = new WP_Query( apply_filters( 'dokan_all_products_query', $args ) );
 
-            dokan()->cache->set_cache( $cache_key, $products, $cache_group );
-            dokan()->cache->update_group( $cache_key, $cache_group );
+            CacheHelper::set_cache( $cache_key, $products, $cache_group );
         }
 
         return $products;
