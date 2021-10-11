@@ -63,50 +63,16 @@ class Dokan_Uninstaller {
      * @return string[]
      */
     private function get_dokan_capabilities() {
-        return [
-            'dokan_view_sales_overview',
-            'dokan_view_sales_report_chart',
-            'dokan_view_announcement',
-            'dokan_view_order_report',
-            'dokan_view_review_reports',
-            'dokan_view_product_status_report',
-            'dokan_view_overview_report',
-            'dokan_view_daily_sale_report',
-            'dokan_view_top_selling_report',
-            'dokan_view_top_earning_report',
-            'dokan_view_statement_report',
-            'dokan_view_order',
-            'dokan_manage_order',
-            'dokan_manage_order_note',
-            'dokan_manage_refund',
-            'dokan_add_coupon',
-            'dokan_edit_coupon',
-            'dokan_delete_coupon',
-            'dokan_view_reviews',
-            'dokan_manage_reviews',
-            'dokan_manage_withdraw',
-            'dokan_add_product',
-            'dokan_edit_product',
-            'dokan_delete_product',
-            'dokan_view_product',
-            'dokan_duplicate_product',
-            'dokan_import_product',
-            'dokan_export_product',
-            'dokan_view_overview_menu',
-            'dokan_view_product_menu',
-            'dokan_view_order_menu',
-            'dokan_view_coupon_menu',
-            'dokan_view_report_menu',
-            'dokan_view_review_menu',
-            'dokan_view_withdraw_menu',
-            'dokan_view_store_settings_menu',
-            'dokan_view_store_payment_menu',
-            'dokan_view_store_shipping_menu',
-            'dokan_view_store_social_menu',
-            'dokan_view_store_seo_menu',
-            'dokandar',
-            'seller',
-        ];
+        require_once dirname( __FILE__ ) . '/includes/functions.php';
+
+        $capabilities = [];
+        foreach ( dokan_get_all_caps() as $cap ) {
+            $capabilities = array_merge( $capabilities, array_keys( $cap ) );
+        }
+        $capabilities[] = 'dokandar';
+        $capabilities[] = 'seller';
+
+        return $capabilities;
     }
 
     /**
@@ -140,25 +106,23 @@ class Dokan_Uninstaller {
      * @return array Dokan tables.
      */
     private function get_tables() {
-        global $wpdb;
-
-        return array(
-            "{$wpdb->prefix}dokan_refund",
-            "{$wpdb->prefix}dokan_withdraw",
-            "{$wpdb->prefix}dokan_announcement",
-            "{$wpdb->prefix}dokan_orders",
-            "{$wpdb->prefix}dokan_vendor_balance",
-            "{$wpdb->prefix}dokan_product_map",
-            "{$wpdb->prefix}dokan_follow_store_followers",
-            "{$wpdb->prefix}dokan_report_abuse_reports",
-            "{$wpdb->prefix}dokan_rma_conversations",
-            "{$wpdb->prefix}dokan_rma_request",
-            "{$wpdb->prefix}dokan_rma_request_product",
-            "{$wpdb->prefix}dokan_shipping_zone_methods",
-            "{$wpdb->prefix}dokan_shipping_zone_locations",
-            "{$wpdb->prefix}dokan_shipping_tracking",
-            "{$wpdb->prefix}dokan_delivery_time",
-        );
+        return [
+            'dokan_refund',
+            'dokan_withdraw',
+            'dokan_announcement',
+            'dokan_orders',
+            'dokan_vendor_balance',
+            'dokan_product_map',
+            'dokan_follow_store_followers',
+            'dokan_report_abuse_reports',
+            'dokan_rma_conversations',
+            'dokan_rma_request',
+            'dokan_rma_request_product',
+            'dokan_shipping_zone_methods',
+            'dokan_shipping_zone_locations',
+            'dokan_shipping_tracking',
+            'dokan_delivery_time',
+        ];
     }
 
     /**
@@ -174,7 +138,7 @@ class Dokan_Uninstaller {
         $tables = $this->get_tables();
 
         foreach ( $tables as $table ) {
-            $wpdb->query( "DROP TABLE IF EXISTS {$table}" ); // phpcs:ignore
+            $wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}{$table}" ); // phpcs:ignore
         }
     }
 
