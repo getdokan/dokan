@@ -100,7 +100,7 @@ jQuery(function($) {
                 $('#accordion').append( response );
 
             } else {
-                dokan_sweetalert( 'Could not grant access - the user may already have permission for this file or billing email is not set. Ensure the billing email is set, and the order has been saved.', { 
+                dokan_sweetalert( dokan_refund.i18n_download_access , { 
                     icon: 'warning',
                 } );
 
@@ -116,7 +116,7 @@ jQuery(function($) {
 
     $('.order_download_permissions').on('click', 'button.revoke_access', async function(e){
         e.preventDefault();
-        const answer = await dokan_sweetalert( 'Are you sure you want to revoke access to this download?', { 
+        const answer = await dokan_sweetalert( dokan_refund.i18n_download_permission, { 
             action : 'confirm', 
             icon   : 'warning',
         } );
