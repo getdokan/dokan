@@ -941,7 +941,7 @@
             let sale_price = $( 'input.dokan-product-sales-price' ).val();
             let earning_suggestion = $('.simple-product span.vendor-price');
 
-            earning_suggestion.html( 'Calculating' );
+            earning_suggestion.html( dokan.i18n_calculating );
 
             $.get( dokan.ajaxurl, {
                 action: 'get_vendor_earning',
