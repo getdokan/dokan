@@ -4140,3 +4140,35 @@ function dokan_get_withdraw_threshold( $user_id ) {
 
     return ( $threshold_day ) ? absint( $threshold_day ) : 0;
 }
+
+/**
+ * Get vendor store banner width
+ *
+ * Added new filter hook for vendor store
+ * banner width size @hook dokan_store_banner_default_width
+ *
+ * @since 3.2.15
+ *
+ * @return int $width Banner width
+ */
+function dokan_get_vendor_store_banner_width() {
+    $width = absint( apply_filters( 'dokan_store_banner_default_width', dokan_get_option( 'store_banner_width', 'dokan_appearance', 625 ) ) );
+
+    return ( $width !== 0 ) ? $width : 625;
+}
+
+/**
+ * Get vendor store banner height
+ *
+ * Added new filter hook for vendor
+ * store banner height size @hook dokan_store_banner_default_height
+ *
+ * @since 3.2.15
+ *
+ * @return int $height Banner height
+ */
+function dokan_get_vendor_store_banner_height() {
+    $height = absint( apply_filters( 'dokan_store_banner_default_height', dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 ) ) );
+
+    return ( $height !== 0 ) ? $height : 300;
+}
