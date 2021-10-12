@@ -147,6 +147,138 @@
             </td>
         </template>
 
+        <template v-if="'disbursement-schedule-quarterly' === fieldData.type && showSettingsField( 'quarterly')">
+            <th scope="row">
+                <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
+            </th>
+            <td>
+                <div class="col-3">
+                    <div class="dokan-input-group">
+                        <span class="dokan-input-group-addon" :id="sectionId + '[' + fieldData.name + ']'">{{ __( 'First Quarter', 'dokan-lite' ) }}</span>
+                        <select v-if="!fieldData.grouped" class="regular" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]" v-on:change="setDisbursementQuarterlySettings">
+                            <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
+                            <option v-for="( optionVal, optionKey ) in fieldData.options" :value="optionKey" v-html="optionVal"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="dokan-input-group">
+                        <span class="dokan-input-group-addon">{{ __( 'Second Quarter', 'dokan-lite' ) }}</span>
+                        <select v-if="!fieldData.grouped" class="regular" disabled v-model="disbursementSettings.quarterly.second">
+                            <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
+                            <option v-for="( optionVal, optionKey ) in fieldData.options2" :value="optionKey" v-html="optionVal"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="dokan-input-group">
+                        <span class="dokan-input-group-addon">{{ __( 'Third Quarter', 'dokan-lite' ) }}</span>
+                        <select v-if="!fieldData.grouped" class="regular" disabled v-model="disbursementSettings.quarterly.third">
+                            <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
+                            <option v-for="( optionVal, optionKey ) in fieldData.options3" :value="optionKey" v-html="optionVal"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="dokan-input-group">
+                        <span class="dokan-input-group-addon">{{ __( 'Fourth Quarter', 'dokan-lite' ) }}</span>
+                        <select v-if="!fieldData.grouped" class="regular" disabled v-model="disbursementSettings.quarterly.fourth">
+                            <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
+                            <option v-for="( optionVal, optionKey ) in fieldData.options4" :value="optionKey" v-html="optionVal"></option>
+                        </select>
+                    </div>
+                </div>
+
+
+
+                <RefreshSettingOptions
+                    v-if="fieldData.refresh_options"
+                    :section="sectionId"
+                    :field="fieldData"
+                    :toggle-loading-state="toggleLoadingState"
+                />
+
+                <p v-if="hasValidationError( fieldData.name )" class="dokan-error">
+                    {{ getValidationErrorMessage( fieldData.name ) }}
+                </p>
+
+                <p class="description" v-html="fieldData.desc"></p>
+            </td>
+        </template>
+
+        <template v-if="'disbursement-schedule-biweekly' === fieldData.type && showSettingsField( 'biweekly')">
+            <th scope="row">
+                <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
+            </th>
+            <td>
+                <div class="col-3">
+                    <div class="dokan-input-group">
+                        <span class="dokan-input-group-addon" :id="sectionId + '[' + fieldData.name + ']'">{{ __( 'First Week', 'dokan-lite' ) }}</span>
+                        <select v-if="!fieldData.grouped" class="regular" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]" v-on:change="setDisbursementBiweeklySettings">
+                            <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
+                            <option v-for="( optionVal, optionKey ) in fieldData.options" :value="optionKey" v-html="optionVal"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="dokan-input-group">
+                        <span class="dokan-input-group-addon">{{ __( 'Second Week', 'dokan-lite' ) }}</span>
+                        <select v-if="!fieldData.grouped" class="regular" disabled v-model="disbursementSettings.biweekly.second">
+                            <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
+                            <option v-for="( optionVal, optionKey ) in fieldData.options2" :value="optionKey" v-html="optionVal"></option>
+                        </select>
+                    </div>
+                </div>
+
+
+
+                <RefreshSettingOptions
+                    v-if="fieldData.refresh_options"
+                    :section="sectionId"
+                    :field="fieldData"
+                    :toggle-loading-state="toggleLoadingState"
+                />
+
+                <p v-if="hasValidationError( fieldData.name )" class="dokan-error">
+                    {{ getValidationErrorMessage( fieldData.name ) }}
+                </p>
+
+                <p class="description" v-html="fieldData.desc"></p>
+            </td>
+        </template>
+
+        <template v-if="'disbursement-schedule-day' === fieldData.type && showSettingsField( fieldData.name.split('_')[0] )">
+            <th scope="row">
+                <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
+            </th>
+            <td>
+                <select v-if="!fieldData.grouped" class="regular" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
+                    <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
+                    <option v-for="( optionVal, optionKey ) in fieldData.options" :value="optionKey" v-html="optionVal"></option>
+                </select>
+
+                <select v-else class="regular" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
+                    <option v-if="fieldData.placeholder" value="" disabled v-html="fieldData.placeholder"></option>
+                    <optgroup v-for="optionGroup in fieldData.options" :label="optionGroup.group_label">
+                        <option v-for="option in optionGroup.group_values" :value="option.value" v-html="option.label" />
+                    </optgroup>
+                </select>
+
+                <RefreshSettingOptions
+                    v-if="fieldData.refresh_options"
+                    :section="sectionId"
+                    :field="fieldData"
+                    :toggle-loading-state="toggleLoadingState"
+                />
+
+                <p v-if="hasValidationError( fieldData.name )" class="dokan-error">
+                    {{ getValidationErrorMessage( fieldData.name ) }}
+                </p>
+
+                <p class="description" v-html="fieldData.desc"></p>
+            </td>
+        </template>
+
         <template v-if="'select' == fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
@@ -348,7 +480,22 @@
             return {
                 repeatableItem: {},
                 hideMap: false,
+                disbursementSettings: {
+                    quarterly: {
+                        second: '',
+                        third: '',
+                        fourth: '',
+                    },
+                    biweekly: {
+                        second: '',
+                    },
+                    visible: [],
+                },
             }
+        },
+        mounted() {
+            this.setDisbursementQuarterlySettings();
+            this.setDisbursementBiweeklySettings();
         },
 
         computed: {
@@ -534,9 +681,36 @@
               } );
 
               return errorMessage;
-            }
+            },
+            setDisbursementQuarterlySettings() {
+                if ( this.fieldValue['quarterly_schedule'] === 'january' ) {
+                    this.disbursementSettings.quarterly.second = 'april';
+                    this.disbursementSettings.quarterly.third = 'july';
+                    this.disbursementSettings.quarterly.fourth = 'october';
+                }
+                if ( this.fieldValue['quarterly_schedule'] === 'february' ) {
+                    this.disbursementSettings.quarterly.second = 'may';
+                    this.disbursementSettings.quarterly.third = 'august';
+                    this.disbursementSettings.quarterly.fourth = 'november';
+                }
+                if ( this.fieldValue['quarterly_schedule'] === 'march' ) {
+                    this.disbursementSettings.quarterly.second = 'june';
+                    this.disbursementSettings.quarterly.third = 'september';
+                    this.disbursementSettings.quarterly.fourth = 'december';
+                }
+            },
+            setDisbursementBiweeklySettings() {
+                if ( this.fieldValue['biweekly_schedule_week'] === '1' ) {
+                    this.disbursementSettings.biweekly.second = '3';
+                }
+                if ( this.fieldValue['biweekly_schedule_week'] === '2' ) {
+                    this.disbursementSettings.biweekly.second = '4';
+                }
+            },
+            showSettingsField( fieldKey ) {
+                return this.fieldValue['disbursement_schedule'][fieldKey] !== '';
+            },
         }
-
     };
 </script>
 
@@ -612,5 +786,9 @@
                 }
             }
         }
+    }
+    .col-3 {
+        width: 24.5%;
+        display: inline-block;
     }
 </style>
