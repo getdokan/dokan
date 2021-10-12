@@ -39,12 +39,12 @@ class LimitedTimePromotion {
 
         $notices = [
             [
-                'key'        => 'dokan-summer-sale-promotion-2021',
-                'start_date' => '2021-07-16 00:09:00 EST',
-                'end_date'   => '2021-07-26 23:00:00 EST',
-                'title'      => "Summer Sale! Chill out with weDevs.",
-                'content'    => 'Enjoy Up To 45% OFF on Dokan Pro.',
-                'link'       => 'https://wedevs.com/dokan/pricing?utm_medium=text&utm_source=wordpress-dokan-summer-sale2021',
+                'key'        => 'dokan-halloween2021',
+                'start_date' => '2021-10-21 00:09:00 EST',
+                'end_date'   => '2021-10-31 00:09:00 EST',
+                'title'      => 'Get Yourself a Spooky Delight !',
+                'content'    => 'Get Up To 45% OFF on Dokan Pro.',
+                'link'       => 'https://wedevs.com/dokan/pricing?utm_medium=text&utm_source=wordpress-dokan-halloween2021',
             ],
         ];
 
