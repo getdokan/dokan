@@ -38,9 +38,7 @@
                     src: withdrawTemplate().trim(),
                     type: 'inline'
                 },
-                callbacks: {
-                    // open: () => Dokan_Withdraw.init() // to initiate event listeners.
-                }
+                callbacks: {}
             });
             Dokan_Withdraw.init();
         },
@@ -54,9 +52,7 @@
                     src: scheduleTemplate().trim(),
                     type: 'inline'
                 },
-                callbacks: {
-                    // open: () => Dokan_Withdraw.init() // to initiate event listeners.
-                }
+                callbacks: {}
             });
             Dokan_Withdraw.init();
         },
@@ -82,10 +78,25 @@
                 },
                 ( response ) => {
                     if ( response.success ) {
+                        dokan_sweetalert( response.data, {
+                            position: 'bottom-end',
+                            toast: true,
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            timerProgressBar: true,
+                        } );
                         paymentArea.unblock();
                         window.location.reload();
                     } else {
-                        console.error( response.data );
+                        dokan_sweetalert( response.data, {
+                            position: 'bottom-end',
+                            toast: true,
+                            icon: 'error',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            timerProgressBar: true,
+                        } );
                         paymentArea.unblock();
                     }
                 }
@@ -114,11 +125,21 @@
                 },
                 ( response ) => {
                     if ( response.success ) {
-                        alert( response.data );
+                        dokan_sweetalert( response.data, {
+                            position: 'bottom-end',
+                            toast: true,
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            timerProgressBar: true,
+                        } );
                         form.unblock();
                         window.location.reload();
                     } else {
-                        alert( response.data );
+                        dokan_sweetalert( '', {
+                            icon: 'error',
+                            html: response.data,
+                        } );
                         form.unblock();
                     }
                 }
@@ -147,11 +168,21 @@
                 },
                 ( response ) => {
                     if ( response.success ) {
-                        alert( response.data );
+                        dokan_sweetalert( response.data, {
+                            position: 'bottom-end',
+                            toast: true,
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            timerProgressBar: true,
+                        } );
                         form.unblock();
                         window.location.reload();
                     } else {
-                        alert( response.data );
+                        dokan_sweetalert( '', {
+                            icon: 'error',
+                            html: response.data,
+                        } );
                         form.unblock();
                     }
                 }
