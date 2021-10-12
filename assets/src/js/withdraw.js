@@ -107,7 +107,7 @@
             const amount = $( 'input#withdraw-amount').val();
             const nonce  = $( 'input#dokan_withdraw_nonce').val();
             const form   = $( '#withdraw-request-popup' );
-            const method = $( 'input#withdraw-method' );
+            const method = $( '#withdraw-method' ).val();
 
             form.block({
                 message: null,
