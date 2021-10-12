@@ -4130,7 +4130,7 @@ function dokan_format_datetime( $date = '', $format = false ) {
  * @param bool $gmt_date
  * @return bool|int date timestamp on success, false otherwise
  */
-function dokan_get_post_timestamp( $date_string, $gmt_date = false ) {
+function dokan_get_timestamp( $date_string, $gmt_date = false ) {
     // get current time
     $now = dokan_current_datetime();
     // convert to gmt time
