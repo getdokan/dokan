@@ -107,6 +107,7 @@
             const amount = $( 'input#withdraw-amount').val();
             const nonce  = $( 'input#dokan_withdraw_nonce').val();
             const form   = $( '#withdraw-request-popup' );
+            const method = $( 'input#withdraw-method' );
 
             form.block({
                 message: null,
@@ -121,7 +122,8 @@
                 {
                     action: 'dokan_handle_withdraw_request',
                     nonce: nonce,
-                    amount: amount
+                    amount: amount,
+                    method: method,
                 },
                 ( response ) => {
                     if ( response.success ) {

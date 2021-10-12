@@ -166,17 +166,25 @@ class Hooks {
             wp_send_json_error( esc_html__( 'You have no permission to do this action', 'dokan-lite' ) );
         }
 
+        if ( ! isset( $_POST['method'] ) ) {
+            wp_send_json_error( esc_html__( 'Withdraw method is required', 'dokan-lite' ) );
+        }
         if ( empty( $_POST['amount'] ) ) {
             wp_send_json_error( esc_html__( 'Withdraw amount is required', 'dokan-lite' ) );
         }
 
         $amount = (float) wc_format_decimal( wc_clean( wp_unslash( $_POST['amount'] ) ) );
+        $method =  wc_clean( wp_unslash( $_POST['method'] ) );
+
+        if ( ! in_array( $method, dokan_get_seller_active_withdraw_methods( $user_id ), true ) ) {
+            wp_send_json_error( esc_html__( 'Withdraw method is not activated.', 'dokan-lite' ) );
+        }
 
         if ( $amount < 0 ) {
             wp_send_json_error( esc_html__( 'Negative withdraw amount is not permitted.', 'dokan-lite' ) );
         }
 
-        $method  = dokan_withdraw_get_default_method( $user_id );
+
         $args    = array(
             'user_id' => $user_id,
             'amount'  => $amount,
