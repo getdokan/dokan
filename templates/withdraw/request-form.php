@@ -27,9 +27,12 @@
         <label for="withdraw-method" class="dokan-w4 dokan-control-label">
             <?php esc_html_e( 'Withdraw Method', 'dokan-lite' ); ?>
         </label>
-
         <div class="dokan-w5 dokan-text-left">
-            <strong><?php echo esc_html( dokan_withdraw_get_method_title( $withdraw_method ) ); ?></strong>
+            <select class="dokan-form-control" required name="withdraw_method" id="withdraw-method">
+                <?php foreach ( $payment_methods as $method_name ) : ?>
+                    <option <?php selected( $withdraw_method, $method_name );  ?>value="<?php echo esc_attr( $method_name ); ?>"><?php echo esc_html( dokan_withdraw_get_method_title( $method_name ) ); ?></option>
+                <?php endforeach; ?>
+            </select>
         </div>
     </div>
 
