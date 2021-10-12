@@ -130,11 +130,11 @@ class CacheHelper {
 	 * @return string
 	 */
 	public static function get_cache_prefix( $group ) {
-		$prefix = wp_cache_get( 'dokan_' . $group . '_cache_prefix', $group );
+		$prefix = wp_cache_get( 'dokan_' . $group, $group );
 
 		if ( false === $prefix ) {
 			$prefix = microtime();
-			wp_cache_set( 'dokan_' . $group . '_cache_prefix', $prefix, $group );
+			wp_cache_set( 'dokan_' . $group, $prefix, $group );
 		}
 
 		return 'dokan_cache_' . $prefix . '_';
@@ -200,6 +200,6 @@ class CacheHelper {
      * @return bool
 	 */
 	public static function invalidate_cache_group( $group ) {
-		return wp_cache_set( 'dokan_' . $group . '_cache_prefix', microtime(), $group );
+		return wp_cache_set( 'dokan_' . $group, microtime(), $group );
 	}
 }
