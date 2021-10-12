@@ -39,9 +39,10 @@
                     type: 'inline'
                 },
                 callbacks: {
-                    open: () => Dokan_Withdraw.init(), // to initiate event listeners.
+                    // open: () => Dokan_Withdraw.init() // to initiate event listeners.
                 }
             });
+            Dokan_Withdraw.init();
         },
         opensScheduleWindow: () => {
             let self = $(this),
@@ -54,9 +55,10 @@
                     type: 'inline'
                 },
                 callbacks: {
-                    open: () => Dokan_Withdraw.init(), // to initiate event listeners.
+                    // open: () => Dokan_Withdraw.init() // to initiate event listeners.
                 }
             });
+            Dokan_Withdraw.init();
         },
         makeDefault: ( e ) => {
             const button      = $( e.target );
@@ -158,7 +160,7 @@
         handleScheduleChange: (e) => {
             const nextDate = $(e.target).data('next-schedule');
             $( '#dokan-withdraw-next-scheduled-date').html(nextDate);
-        }
+        },
     };
 
     $(document).ready(function() {
