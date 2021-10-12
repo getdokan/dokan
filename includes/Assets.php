@@ -384,9 +384,14 @@ class Assets {
                 'deps'      => [ 'dokan-popup', 'dokan-i18n-jed' ],
                 'version'   => filemtime( $asset_path . '/js/login-form-popup.js' ),
             ],
+            'dokan-sweetalert2' => [
+                'src'       => $asset_url . '/vendors/sweetalert2/sweetalert2.all.min.js',
+                'deps'      => [ 'dokan-popup', 'dokan-i18n-jed' ],
+                'version'   => filemtime( $asset_path . '/vendors/sweetalert2/sweetalert2.all.min.js' ),
+            ],
             'dokan-util-helper' => [
                 'src'       => $asset_url . '/js/helper.js',
-                'deps'      => [ 'jquery' ],
+                'deps'      => [ 'jquery', 'dokan-sweetalert2' ],
                 'version'   => filemtime( $asset_path . 'js/helper.js' ),
                 'in_footer' => false,
             ],
@@ -430,6 +435,8 @@ class Assets {
             'product_types'              => apply_filters( 'dokan_product_types', [ 'simple' ] ),
             'loading_img'                => DOKAN_PLUGIN_ASSEST . '/images/loading.gif',
             'store_product_search_nonce' => wp_create_nonce( 'dokan_store_product_search_nonce' ),
+            'i18n_download_permission'   => __( 'Are you sure you want to revoke access to this download?', 'dokan-lite' ),
+            'i18n_download_access'       => __( 'Could not grant access - the user may already have permission for this file or billing email is not set. Ensure the billing email is set, and the order has been saved.', 'dokan-lite' ),   
             /**
              * Filter of maximun a vendor can add tags.
              *
