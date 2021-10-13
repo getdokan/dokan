@@ -40,3 +40,37 @@ function dokan_get_i18n_date_format( format = true ) {
 
   return datepickerFormat;
 }
+
+/**
+ * Dokan Sweet Alert
+ *
+ * @since 3.2.13
+ *
+ * @param {string} message The event message for notification
+ * @param {object} [options] Configuration of sweet alert modal
+ *
+ * @return {Promise | bool} Return Promise on success, and false on failure
+ */
+ async function dokan_sweetalert( message = '' , options = {} ) {
+  const defaults = {
+    text              : message,
+    showCancelButton  : true, 
+    confirmButtonColor:'#28a745',
+    cancelButtonColor :'#dc3545',
+  };
+  
+  const args    = { ...defaults, ...options };
+
+  switch( args.action ) {
+    case 'confirm':
+    case 'prompt' :
+      return await Swal.fire( args );
+      break;
+
+    case 'alert' :
+    default :
+      delete args.showCancelButton;
+      Swal.fire( args );
+      break;
+  }
+}

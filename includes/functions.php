@@ -4123,6 +4123,27 @@ function dokan_format_datetime( $date = '', $format = false ) {
 }
 
 /**
+ * This method will convert datetime string into timestamp
+ *
+ * @since 3.2.15
+ * @param string $date_string
+ * @param bool $gmt_date
+ * @return bool|int date timestamp on success, false otherwise
+ */
+function dokan_get_timestamp( $date_string, $gmt_date = false ) {
+    // get current time
+    $now = dokan_current_datetime();
+    // convert to gmt time
+    if ( $gmt_date ) {
+        $now = $now->setTimezone( new DateTimeZone( 'UTC' ) );
+    }
+    // modify current date
+    $now = $now->modify( $date_string );
+
+    return $now ? $now->getTimestamp() : false;
+}
+
+/**
  * Get threshold day for a user
  *
  * @param $user_id
@@ -4139,4 +4160,36 @@ function dokan_get_withdraw_threshold( $user_id ) {
     }
 
     return ( $threshold_day ) ? absint( $threshold_day ) : 0;
+}
+
+/**
+ * Get vendor store banner width
+ *
+ * Added new filter hook for vendor store
+ * banner width size @hook dokan_store_banner_default_width
+ *
+ * @since 3.2.15
+ *
+ * @return int $width Banner width
+ */
+function dokan_get_vendor_store_banner_width() {
+    $width = absint( apply_filters( 'dokan_store_banner_default_width', dokan_get_option( 'store_banner_width', 'dokan_appearance', 625 ) ) );
+
+    return ( $width !== 0 ) ? $width : 625;
+}
+
+/**
+ * Get vendor store banner height
+ *
+ * Added new filter hook for vendor
+ * store banner height size @hook dokan_store_banner_default_height
+ *
+ * @since 3.2.15
+ *
+ * @return int $height Banner height
+ */
+function dokan_get_vendor_store_banner_height() {
+    $height = absint( apply_filters( 'dokan_store_banner_default_height', dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 ) ) );
+
+    return ( $height !== 0 ) ? $height : 300;
 }
