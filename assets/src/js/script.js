@@ -1148,3 +1148,30 @@ jQuery(function($) {
       });
     });
 })(jQuery);
+
+/**
+ * Show Delete Button Prompt
+ *
+ * @param {object} event
+ * @param {string} messgae
+ *
+ * @returns boolean
+ */
+ async function dokan_show_delete_prompt( event, messgae ) {
+  event.preventDefault(); 
+  
+  let answer = await dokan_sweetalert( messgae, {
+    action  : 'confirm',
+    icon    : 'warning'
+  } );
+
+  if( answer.isConfirmed && undefined !== event.target.href ) {
+      window.location.href = event.target.href;
+  } 
+  else if( answer.isConfirmed && undefined !== event.target.dataset.url ) {
+      window.location.href = event.target.dataset.url;
+  }
+  else {
+    return false;
+  }
+}
