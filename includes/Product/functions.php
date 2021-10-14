@@ -481,7 +481,7 @@ function dokan_product_get_row_action( $post ) {
                 ), 'dokan-delete-product'
             ),
             'class' => 'delete',
-            'other' => 'onclick="return confirm( \'' . __( 'Are you sure?', 'dokan-lite' ) . '\' );"',
+            'other' => 'onclick="dokan_show_delete_prompt( event, \'' . __( 'Are you sure?', 'dokan-lite' ) . '\' );"',
         ];
     }
 
