@@ -26,7 +26,7 @@ class Withdraw {
     protected $errors = null;
 
     /**
-     * Load Autometically When class initiate
+     * Load Automatically When class initiate
      *
      * Trigger all actions
      *
@@ -350,7 +350,9 @@ class Withdraw {
     }
 
     /**
-     * List withdraw request for a user
+     * List withdraw request for a user for dashboard.
+     *
+     * @since 3.2.16
      *
      * @param  int  $user_id
      *
@@ -491,6 +493,8 @@ class Withdraw {
     /**
      * Print the approved user withdraw requests
      *
+     * @since 3.2.16
+     *
      * @param  int  $user_id
      *
      * @return void
@@ -542,7 +546,7 @@ class Withdraw {
     /**
      * Display dashboard content
      *
-     * @since 3.3.12
+     * @since 3.2.16
      *
      * @return void
      */
@@ -553,7 +557,7 @@ class Withdraw {
     /**
      * Display dashboard content
      *
-     * @since 3.3.12
+     * @since 3.2.16
      *
      * @return void
      */
@@ -590,6 +594,13 @@ class Withdraw {
         ) );
     }
 
+    /**
+     * Get pending withdraw request in dashboard listing.
+     *
+     * @since 3.2.16
+     *
+     * @param int $user_id
+     */
     public function pending_withdraw_requests( $user_id ) {
         if ( ! current_user_can( 'dokan_manage_withdraw' ) ) {
             return;
