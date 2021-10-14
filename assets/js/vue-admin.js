@@ -5,7 +5,7 @@ dokanWebpack([0],[
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Switches_vue__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Switches_vue__ = __webpack_require__(11);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_aa8ad7dc_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Switches_vue__ = __webpack_require__(29);
 var disposed = false
@@ -64,7 +64,7 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(17);
 
 /* harmony default export */ __webpack_exports__["a"] = ({
   extends: __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__["Line"],
@@ -192,6 +192,12 @@ if (false) {(function () {
 
 /***/ }),
 /* 8 */
+/***/ (function(module, exports) {
+
+module.exports = jQuery;
+
+/***/ }),
+/* 9 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -304,7 +310,7 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -686,7 +692,7 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -721,7 +727,7 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -948,7 +954,7 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1031,7 +1037,7 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1212,7 +1218,7 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1441,19 +1447,13 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 15 */,
 /* 16 */,
-/* 17 */
-/***/ (function(module, exports) {
-
-module.exports = jQuery;
-
-/***/ }),
+/* 17 */,
 /* 18 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_UploadImage_vue__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_UploadImage_vue__ = __webpack_require__(12);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_40b3524c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_UploadImage_vue__ = __webpack_require__(31);
 var disposed = false
@@ -1509,7 +1509,7 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_PasswordGenerator_vue__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_PasswordGenerator_vue__ = __webpack_require__(13);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4084a478_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_PasswordGenerator_vue__ = __webpack_require__(32);
 var disposed = false
@@ -1615,7 +1615,7 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ColorPicker_vue__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ColorPicker_vue__ = __webpack_require__(9);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_01dc0d51_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ColorPicker_vue__ = __webpack_require__(26);
 var disposed = false
@@ -1768,7 +1768,7 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorAccountFields_vue__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorAccountFields_vue__ = __webpack_require__(10);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2b13daea_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorAccountFields_vue__ = __webpack_require__(33);
 var disposed = false
@@ -2018,7 +2018,7 @@ var render = function() {
                   innerHTML: _vm._s(
                     _vm.sprintf(
                       _vm.__(
-                        "You can change your profile picutre on %s",
+                        "You can change your profile picture on %s",
                         "dokan-lite"
                       ),
                       "<a href='https://gravatar.com/' target='_blank'>Gravatar</a>"
@@ -2478,7 +2478,7 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorAddressFields_vue__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorAddressFields_vue__ = __webpack_require__(14);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_9504c01e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorAddressFields_vue__ = __webpack_require__(36);
 var disposed = false
@@ -2815,7 +2815,7 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorPaymentFields_vue__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorPaymentFields_vue__ = __webpack_require__(15);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2ed34783_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorPaymentFields_vue__ = __webpack_require__(39);
 var disposed = false
@@ -3740,7 +3740,7 @@ var Currency = dokan_get_lib('Currency');
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__ = __webpack_require__(7);
 //
@@ -5334,6 +5334,8 @@ var Loading = dokan_get_lib('Loading');
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_Fields_vue__ = __webpack_require__(136);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_SettingsBanner_vue__ = __webpack_require__(166);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_UpgradeBanner_vue__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_jquery__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_jquery__);
 //
 //
 //
@@ -5415,6 +5417,7 @@ var Loading = dokan_get_lib('Loading');
 //
 //
 var Loading = dokan_get_lib('Loading');
+
 
 
 
@@ -5709,6 +5712,25 @@ var Loading = dokan_get_lib('Loading');
       });
       self.settingFields = settingFields;
       self.settingSections = settingSections;
+    },
+    handleDataClearCheckboxEvent: function handleDataClearCheckboxEvent() {
+      var self = this;
+      __WEBPACK_IMPORTED_MODULE_3_jquery___default()('.data_clear_on_uninstall').on('change', "#dokan_general\\[data_clear_on_uninstall\\]", function (e) {
+        if (__WEBPACK_IMPORTED_MODULE_3_jquery___default()(this).is(':checked')) {
+          self.$swal({
+            title: self.__('Are you sure?', 'dokan-lite'),
+            type: 'warning',
+            html: self.__('All data and tables related to Dokan and Dokan Pro will be deleted permanently after deleting the Dokan plugin. You will not be able to recover your lost data unless you keep a backup. Do you want to continue?', 'dokan-lite'),
+            showCancelButton: true,
+            confirmButtonText: self.__('Okay', 'dokan-lite'),
+            cancelButtonText: self.__('Cancel', 'dokan-lite')
+          }).then(function (response) {
+            if (response.dismiss) {
+              self.settingValues.dokan_general.data_clear_on_uninstall = 'off';
+            }
+          });
+        }
+      });
     }
   },
   created: function created() {
@@ -5721,6 +5743,9 @@ var Loading = dokan_get_lib('Loading');
 
     this.settingSections = dokan.settings_sections;
     this.settingFields = dokan.settings_fields;
+  },
+  updated: function updated() {
+    this.handleDataClearCheckboxEvent();
   }
 });
 
@@ -6067,6 +6092,138 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 var TextEditor = dokan_get_lib('TextEditor');
 var GoogleMaps = dokan_get_lib('GoogleMaps');
@@ -6085,8 +6242,23 @@ var RefreshSettingOptions = dokan_get_lib('RefreshSettingOptions');
   data: function data() {
     return {
       repeatableItem: {},
-      hideMap: false
+      hideMap: false,
+      disbursementSettings: {
+        quarterly: {
+          second: '',
+          third: '',
+          fourth: ''
+        },
+        biweekly: {
+          second: ''
+        },
+        visible: []
+      }
     };
+  },
+  mounted: function mounted() {
+    this.setDisbursementQuarterlySettings();
+    this.setDisbursementBiweeklySettings();
   },
   computed: {
     shoudShow: function shoudShow() {
@@ -6270,6 +6442,37 @@ var RefreshSettingOptions = dokan_get_lib('RefreshSettingOptions');
         }
       });
       return errorMessage;
+    },
+    setDisbursementQuarterlySettings: function setDisbursementQuarterlySettings() {
+      if (this.fieldValue['quarterly_schedule'] === 'january') {
+        this.disbursementSettings.quarterly.second = 'april';
+        this.disbursementSettings.quarterly.third = 'july';
+        this.disbursementSettings.quarterly.fourth = 'october';
+      }
+
+      if (this.fieldValue['quarterly_schedule'] === 'february') {
+        this.disbursementSettings.quarterly.second = 'may';
+        this.disbursementSettings.quarterly.third = 'august';
+        this.disbursementSettings.quarterly.fourth = 'november';
+      }
+
+      if (this.fieldValue['quarterly_schedule'] === 'march') {
+        this.disbursementSettings.quarterly.second = 'june';
+        this.disbursementSettings.quarterly.third = 'september';
+        this.disbursementSettings.quarterly.fourth = 'december';
+      }
+    },
+    setDisbursementBiweeklySettings: function setDisbursementBiweeklySettings() {
+      if (this.fieldValue['biweekly_schedule_week'] === '1') {
+        this.disbursementSettings.biweekly.second = '3';
+      }
+
+      if (this.fieldValue['biweekly_schedule_week'] === '2') {
+        this.disbursementSettings.biweekly.second = '4';
+      }
+    },
+    showSettingsField: function showSettingsField(fieldKey) {
+      return this.fieldValue['disbursement_schedule'][fieldKey] !== '';
     }
   }
 });
@@ -10675,6 +10878,778 @@ var render = function() {
                       ])
                     : _vm._e()
                 ])
+              ]
+            : _vm._e(),
+          _vm._v(" "),
+          "disbursement-schedule-quarterly" === _vm.fieldData.type &&
+          _vm.showSettingsField("quarterly")
+            ? [
+                _c("th", { attrs: { scope: "row" } }, [
+                  _c(
+                    "label",
+                    {
+                      attrs: {
+                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
+                      }
+                    },
+                    [_vm._v(_vm._s(_vm.fieldData.label))]
+                  )
+                ]),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  [
+                    _c("div", { staticClass: "col-3" }, [
+                      _c("div", { staticClass: "dokan-input-group" }, [
+                        _c(
+                          "span",
+                          {
+                            staticClass: "dokan-input-group-addon",
+                            attrs: {
+                              id: _vm.sectionId + "[" + _vm.fieldData.name + "]"
+                            }
+                          },
+                          [
+                            _vm._v(
+                              _vm._s(_vm.__("First Quarter", "dokan-lite"))
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        !_vm.fieldData.grouped
+                          ? _c(
+                              "select",
+                              {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.fieldValue[_vm.fieldData.name],
+                                    expression: "fieldValue[fieldData.name]"
+                                  }
+                                ],
+                                staticClass: "regular",
+                                attrs: {
+                                  name:
+                                    _vm.sectionId +
+                                    "[" +
+                                    _vm.fieldData.name +
+                                    "]",
+                                  id:
+                                    _vm.sectionId +
+                                    "[" +
+                                    _vm.fieldData.name +
+                                    "]"
+                                },
+                                on: {
+                                  change: [
+                                    function($event) {
+                                      var $$selectedVal = Array.prototype.filter
+                                        .call($event.target.options, function(
+                                          o
+                                        ) {
+                                          return o.selected
+                                        })
+                                        .map(function(o) {
+                                          var val =
+                                            "_value" in o ? o._value : o.value
+                                          return val
+                                        })
+                                      _vm.$set(
+                                        _vm.fieldValue,
+                                        _vm.fieldData.name,
+                                        $event.target.multiple
+                                          ? $$selectedVal
+                                          : $$selectedVal[0]
+                                      )
+                                    },
+                                    _vm.setDisbursementQuarterlySettings
+                                  ]
+                                }
+                              },
+                              [
+                                _vm.fieldData.placeholder
+                                  ? _c("option", {
+                                      attrs: { value: "" },
+                                      domProps: {
+                                        innerHTML: _vm._s(
+                                          _vm.fieldData.placeholder
+                                        )
+                                      }
+                                    })
+                                  : _vm._e(),
+                                _vm._v(" "),
+                                _vm._l(_vm.fieldData.options, function(
+                                  optionVal,
+                                  optionKey
+                                ) {
+                                  return _c("option", {
+                                    domProps: {
+                                      value: optionKey,
+                                      innerHTML: _vm._s(optionVal)
+                                    }
+                                  })
+                                })
+                              ],
+                              2
+                            )
+                          : _vm._e()
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-3" }, [
+                      _c("div", { staticClass: "dokan-input-group" }, [
+                        _c("span", { staticClass: "dokan-input-group-addon" }, [
+                          _vm._v(_vm._s(_vm.__("Second Quarter", "dokan-lite")))
+                        ]),
+                        _vm._v(" "),
+                        !_vm.fieldData.grouped
+                          ? _c(
+                              "select",
+                              {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value:
+                                      _vm.disbursementSettings.quarterly.second,
+                                    expression:
+                                      "disbursementSettings.quarterly.second"
+                                  }
+                                ],
+                                staticClass: "regular",
+                                attrs: { disabled: "" },
+                                on: {
+                                  change: function($event) {
+                                    var $$selectedVal = Array.prototype.filter
+                                      .call($event.target.options, function(o) {
+                                        return o.selected
+                                      })
+                                      .map(function(o) {
+                                        var val =
+                                          "_value" in o ? o._value : o.value
+                                        return val
+                                      })
+                                    _vm.$set(
+                                      _vm.disbursementSettings.quarterly,
+                                      "second",
+                                      $event.target.multiple
+                                        ? $$selectedVal
+                                        : $$selectedVal[0]
+                                    )
+                                  }
+                                }
+                              },
+                              [
+                                _vm.fieldData.placeholder
+                                  ? _c("option", {
+                                      attrs: { value: "" },
+                                      domProps: {
+                                        innerHTML: _vm._s(
+                                          _vm.fieldData.placeholder
+                                        )
+                                      }
+                                    })
+                                  : _vm._e(),
+                                _vm._v(" "),
+                                _vm._l(_vm.fieldData.options2, function(
+                                  optionVal,
+                                  optionKey
+                                ) {
+                                  return _c("option", {
+                                    domProps: {
+                                      value: optionKey,
+                                      innerHTML: _vm._s(optionVal)
+                                    }
+                                  })
+                                })
+                              ],
+                              2
+                            )
+                          : _vm._e()
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-3" }, [
+                      _c("div", { staticClass: "dokan-input-group" }, [
+                        _c("span", { staticClass: "dokan-input-group-addon" }, [
+                          _vm._v(_vm._s(_vm.__("Third Quarter", "dokan-lite")))
+                        ]),
+                        _vm._v(" "),
+                        !_vm.fieldData.grouped
+                          ? _c(
+                              "select",
+                              {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value:
+                                      _vm.disbursementSettings.quarterly.third,
+                                    expression:
+                                      "disbursementSettings.quarterly.third"
+                                  }
+                                ],
+                                staticClass: "regular",
+                                attrs: { disabled: "" },
+                                on: {
+                                  change: function($event) {
+                                    var $$selectedVal = Array.prototype.filter
+                                      .call($event.target.options, function(o) {
+                                        return o.selected
+                                      })
+                                      .map(function(o) {
+                                        var val =
+                                          "_value" in o ? o._value : o.value
+                                        return val
+                                      })
+                                    _vm.$set(
+                                      _vm.disbursementSettings.quarterly,
+                                      "third",
+                                      $event.target.multiple
+                                        ? $$selectedVal
+                                        : $$selectedVal[0]
+                                    )
+                                  }
+                                }
+                              },
+                              [
+                                _vm.fieldData.placeholder
+                                  ? _c("option", {
+                                      attrs: { value: "" },
+                                      domProps: {
+                                        innerHTML: _vm._s(
+                                          _vm.fieldData.placeholder
+                                        )
+                                      }
+                                    })
+                                  : _vm._e(),
+                                _vm._v(" "),
+                                _vm._l(_vm.fieldData.options3, function(
+                                  optionVal,
+                                  optionKey
+                                ) {
+                                  return _c("option", {
+                                    domProps: {
+                                      value: optionKey,
+                                      innerHTML: _vm._s(optionVal)
+                                    }
+                                  })
+                                })
+                              ],
+                              2
+                            )
+                          : _vm._e()
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-3" }, [
+                      _c("div", { staticClass: "dokan-input-group" }, [
+                        _c("span", { staticClass: "dokan-input-group-addon" }, [
+                          _vm._v(_vm._s(_vm.__("Fourth Quarter", "dokan-lite")))
+                        ]),
+                        _vm._v(" "),
+                        !_vm.fieldData.grouped
+                          ? _c(
+                              "select",
+                              {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value:
+                                      _vm.disbursementSettings.quarterly.fourth,
+                                    expression:
+                                      "disbursementSettings.quarterly.fourth"
+                                  }
+                                ],
+                                staticClass: "regular",
+                                attrs: { disabled: "" },
+                                on: {
+                                  change: function($event) {
+                                    var $$selectedVal = Array.prototype.filter
+                                      .call($event.target.options, function(o) {
+                                        return o.selected
+                                      })
+                                      .map(function(o) {
+                                        var val =
+                                          "_value" in o ? o._value : o.value
+                                        return val
+                                      })
+                                    _vm.$set(
+                                      _vm.disbursementSettings.quarterly,
+                                      "fourth",
+                                      $event.target.multiple
+                                        ? $$selectedVal
+                                        : $$selectedVal[0]
+                                    )
+                                  }
+                                }
+                              },
+                              [
+                                _vm.fieldData.placeholder
+                                  ? _c("option", {
+                                      attrs: { value: "" },
+                                      domProps: {
+                                        innerHTML: _vm._s(
+                                          _vm.fieldData.placeholder
+                                        )
+                                      }
+                                    })
+                                  : _vm._e(),
+                                _vm._v(" "),
+                                _vm._l(_vm.fieldData.options4, function(
+                                  optionVal,
+                                  optionKey
+                                ) {
+                                  return _c("option", {
+                                    domProps: {
+                                      value: optionKey,
+                                      innerHTML: _vm._s(optionVal)
+                                    }
+                                  })
+                                })
+                              ],
+                              2
+                            )
+                          : _vm._e()
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _vm.fieldData.refresh_options
+                      ? _c("RefreshSettingOptions", {
+                          attrs: {
+                            section: _vm.sectionId,
+                            field: _vm.fieldData,
+                            "toggle-loading-state": _vm.toggleLoadingState
+                          }
+                        })
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.hasValidationError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(
+                                _vm.getValidationErrorMessage(
+                                  _vm.fieldData.name
+                                )
+                              ) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c("p", {
+                      staticClass: "description",
+                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+                    })
+                  ],
+                  1
+                )
+              ]
+            : _vm._e(),
+          _vm._v(" "),
+          "disbursement-schedule-biweekly" === _vm.fieldData.type &&
+          _vm.showSettingsField("biweekly")
+            ? [
+                _c("th", { attrs: { scope: "row" } }, [
+                  _c(
+                    "label",
+                    {
+                      attrs: {
+                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
+                      }
+                    },
+                    [_vm._v(_vm._s(_vm.fieldData.label))]
+                  )
+                ]),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  [
+                    _c("div", { staticClass: "col-3" }, [
+                      _c("div", { staticClass: "dokan-input-group" }, [
+                        _c(
+                          "span",
+                          {
+                            staticClass: "dokan-input-group-addon",
+                            attrs: {
+                              id: _vm.sectionId + "[" + _vm.fieldData.name + "]"
+                            }
+                          },
+                          [_vm._v(_vm._s(_vm.__("First Week", "dokan-lite")))]
+                        ),
+                        _vm._v(" "),
+                        !_vm.fieldData.grouped
+                          ? _c(
+                              "select",
+                              {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.fieldValue[_vm.fieldData.name],
+                                    expression: "fieldValue[fieldData.name]"
+                                  }
+                                ],
+                                staticClass: "regular",
+                                attrs: {
+                                  name:
+                                    _vm.sectionId +
+                                    "[" +
+                                    _vm.fieldData.name +
+                                    "]",
+                                  id:
+                                    _vm.sectionId +
+                                    "[" +
+                                    _vm.fieldData.name +
+                                    "]"
+                                },
+                                on: {
+                                  change: [
+                                    function($event) {
+                                      var $$selectedVal = Array.prototype.filter
+                                        .call($event.target.options, function(
+                                          o
+                                        ) {
+                                          return o.selected
+                                        })
+                                        .map(function(o) {
+                                          var val =
+                                            "_value" in o ? o._value : o.value
+                                          return val
+                                        })
+                                      _vm.$set(
+                                        _vm.fieldValue,
+                                        _vm.fieldData.name,
+                                        $event.target.multiple
+                                          ? $$selectedVal
+                                          : $$selectedVal[0]
+                                      )
+                                    },
+                                    _vm.setDisbursementBiweeklySettings
+                                  ]
+                                }
+                              },
+                              [
+                                _vm.fieldData.placeholder
+                                  ? _c("option", {
+                                      attrs: { value: "" },
+                                      domProps: {
+                                        innerHTML: _vm._s(
+                                          _vm.fieldData.placeholder
+                                        )
+                                      }
+                                    })
+                                  : _vm._e(),
+                                _vm._v(" "),
+                                _vm._l(_vm.fieldData.options, function(
+                                  optionVal,
+                                  optionKey
+                                ) {
+                                  return _c("option", {
+                                    domProps: {
+                                      value: optionKey,
+                                      innerHTML: _vm._s(optionVal)
+                                    }
+                                  })
+                                })
+                              ],
+                              2
+                            )
+                          : _vm._e()
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-3" }, [
+                      _c("div", { staticClass: "dokan-input-group" }, [
+                        _c("span", { staticClass: "dokan-input-group-addon" }, [
+                          _vm._v(_vm._s(_vm.__("Second Week", "dokan-lite")))
+                        ]),
+                        _vm._v(" "),
+                        !_vm.fieldData.grouped
+                          ? _c(
+                              "select",
+                              {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value:
+                                      _vm.disbursementSettings.biweekly.second,
+                                    expression:
+                                      "disbursementSettings.biweekly.second"
+                                  }
+                                ],
+                                staticClass: "regular",
+                                attrs: { disabled: "" },
+                                on: {
+                                  change: function($event) {
+                                    var $$selectedVal = Array.prototype.filter
+                                      .call($event.target.options, function(o) {
+                                        return o.selected
+                                      })
+                                      .map(function(o) {
+                                        var val =
+                                          "_value" in o ? o._value : o.value
+                                        return val
+                                      })
+                                    _vm.$set(
+                                      _vm.disbursementSettings.biweekly,
+                                      "second",
+                                      $event.target.multiple
+                                        ? $$selectedVal
+                                        : $$selectedVal[0]
+                                    )
+                                  }
+                                }
+                              },
+                              [
+                                _vm.fieldData.placeholder
+                                  ? _c("option", {
+                                      attrs: { value: "" },
+                                      domProps: {
+                                        innerHTML: _vm._s(
+                                          _vm.fieldData.placeholder
+                                        )
+                                      }
+                                    })
+                                  : _vm._e(),
+                                _vm._v(" "),
+                                _vm._l(_vm.fieldData.options2, function(
+                                  optionVal,
+                                  optionKey
+                                ) {
+                                  return _c("option", {
+                                    domProps: {
+                                      value: optionKey,
+                                      innerHTML: _vm._s(optionVal)
+                                    }
+                                  })
+                                })
+                              ],
+                              2
+                            )
+                          : _vm._e()
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _vm.fieldData.refresh_options
+                      ? _c("RefreshSettingOptions", {
+                          attrs: {
+                            section: _vm.sectionId,
+                            field: _vm.fieldData,
+                            "toggle-loading-state": _vm.toggleLoadingState
+                          }
+                        })
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.hasValidationError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(
+                                _vm.getValidationErrorMessage(
+                                  _vm.fieldData.name
+                                )
+                              ) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c("p", {
+                      staticClass: "description",
+                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+                    })
+                  ],
+                  1
+                )
+              ]
+            : _vm._e(),
+          _vm._v(" "),
+          "disbursement-schedule-day" === _vm.fieldData.type &&
+          _vm.showSettingsField(_vm.fieldData.name.split("_")[0])
+            ? [
+                _c("th", { attrs: { scope: "row" } }, [
+                  _c(
+                    "label",
+                    {
+                      attrs: {
+                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
+                      }
+                    },
+                    [_vm._v(_vm._s(_vm.fieldData.label))]
+                  )
+                ]),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  [
+                    !_vm.fieldData.grouped
+                      ? _c(
+                          "select",
+                          {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.fieldValue[_vm.fieldData.name],
+                                expression: "fieldValue[fieldData.name]"
+                              }
+                            ],
+                            staticClass: "regular",
+                            attrs: {
+                              name:
+                                _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                              id: _vm.sectionId + "[" + _vm.fieldData.name + "]"
+                            },
+                            on: {
+                              change: function($event) {
+                                var $$selectedVal = Array.prototype.filter
+                                  .call($event.target.options, function(o) {
+                                    return o.selected
+                                  })
+                                  .map(function(o) {
+                                    var val = "_value" in o ? o._value : o.value
+                                    return val
+                                  })
+                                _vm.$set(
+                                  _vm.fieldValue,
+                                  _vm.fieldData.name,
+                                  $event.target.multiple
+                                    ? $$selectedVal
+                                    : $$selectedVal[0]
+                                )
+                              }
+                            }
+                          },
+                          [
+                            _vm.fieldData.placeholder
+                              ? _c("option", {
+                                  attrs: { value: "" },
+                                  domProps: {
+                                    innerHTML: _vm._s(_vm.fieldData.placeholder)
+                                  }
+                                })
+                              : _vm._e(),
+                            _vm._v(" "),
+                            _vm._l(_vm.fieldData.options, function(
+                              optionVal,
+                              optionKey
+                            ) {
+                              return _c("option", {
+                                domProps: {
+                                  value: optionKey,
+                                  innerHTML: _vm._s(optionVal)
+                                }
+                              })
+                            })
+                          ],
+                          2
+                        )
+                      : _c(
+                          "select",
+                          {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.fieldValue[_vm.fieldData.name],
+                                expression: "fieldValue[fieldData.name]"
+                              }
+                            ],
+                            staticClass: "regular",
+                            attrs: {
+                              name:
+                                _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                              id: _vm.sectionId + "[" + _vm.fieldData.name + "]"
+                            },
+                            on: {
+                              change: function($event) {
+                                var $$selectedVal = Array.prototype.filter
+                                  .call($event.target.options, function(o) {
+                                    return o.selected
+                                  })
+                                  .map(function(o) {
+                                    var val = "_value" in o ? o._value : o.value
+                                    return val
+                                  })
+                                _vm.$set(
+                                  _vm.fieldValue,
+                                  _vm.fieldData.name,
+                                  $event.target.multiple
+                                    ? $$selectedVal
+                                    : $$selectedVal[0]
+                                )
+                              }
+                            }
+                          },
+                          [
+                            _vm.fieldData.placeholder
+                              ? _c("option", {
+                                  attrs: { value: "", disabled: "" },
+                                  domProps: {
+                                    innerHTML: _vm._s(_vm.fieldData.placeholder)
+                                  }
+                                })
+                              : _vm._e(),
+                            _vm._v(" "),
+                            _vm._l(_vm.fieldData.options, function(
+                              optionGroup
+                            ) {
+                              return _c(
+                                "optgroup",
+                                { attrs: { label: optionGroup.group_label } },
+                                _vm._l(optionGroup.group_values, function(
+                                  option
+                                ) {
+                                  return _c("option", {
+                                    domProps: {
+                                      value: option.value,
+                                      innerHTML: _vm._s(option.label)
+                                    }
+                                  })
+                                }),
+                                0
+                              )
+                            })
+                          ],
+                          2
+                        ),
+                    _vm._v(" "),
+                    _vm.fieldData.refresh_options
+                      ? _c("RefreshSettingOptions", {
+                          attrs: {
+                            section: _vm.sectionId,
+                            field: _vm.fieldData,
+                            "toggle-loading-state": _vm.toggleLoadingState
+                          }
+                        })
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.hasValidationError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(
+                                _vm.getValidationErrorMessage(
+                                  _vm.fieldData.name
+                                )
+                              ) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c("p", {
+                      staticClass: "description",
+                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+                    })
+                  ],
+                  1
+                )
               ]
             : _vm._e(),
           _vm._v(" "),

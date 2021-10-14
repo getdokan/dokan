@@ -2,7 +2,7 @@
 /**
  * Dokan Withdraw Pending Request Listing Template for dashboard
  *
- * @since 3.3.12
+ * @since 3.2.16
  *
  * @package dokan
  */

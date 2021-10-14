@@ -293,7 +293,7 @@ function dokan_withdraw_get_active_order_status_in_comma() {
 /**
  * Get withdraw method formatted icon.
  *
- * @since 3.3.12
+ * @since 3.2.16
  *
  * @param string $method_key Withdraw Method key
  *
@@ -332,7 +332,7 @@ function dokan_withdraw_get_method_icon( $method_key ) {
 /**
  * Get withdraw method additional info.
  *
- * @since 3.3.12
+ * @since 3.2.16
  *
  * @param string $method_key Withdraw Method key
  *
@@ -360,7 +360,7 @@ function dokan_withdraw_get_method_additional_info( $method_key ) {
 /**
  * Mask or hide part of email address.
  *
- * @since 3.3.12
+ * @since 3.2.16
  *
  * @param string $email Email address
  *
@@ -382,7 +382,7 @@ function dokan_mask_email_address( $email ) {
 /**
  * Get the default withdrawal method.
  *
- * @since 3.3.12
+ * @since 3.2.16
  *
  * @param int $vendor_id
  *
@@ -407,7 +407,7 @@ function dokan_withdraw_get_default_method( $vendor_id = 0 ) {
 /**
  * Check if manual withdraw request sending enabled.
  *
- * @since 3.2.14
+ * @since 3.2.16
  *
  * @return bool
  */

@@ -2599,6 +2599,12 @@ div.media-sidebar a.edit-attachment {
   display: block;
   text-align: center;
 }
+.dokan-product-listing .dokan-product-listing-area table.product-listing-table span.earning-info:before {
+  font-family: FontAwesome;
+  content: '\f05a';
+  display: inline;
+  margin-left: 5px;
+}
 .dokan-product-listing .dokan-product-listing-area table.product-listing-table mark.instock {
   color: #7ad03a;
   background: transparent;

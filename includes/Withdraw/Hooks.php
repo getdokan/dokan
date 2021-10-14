@@ -12,8 +12,8 @@ class Hooks {
      * @return void
      */
     public function __construct() {
-        add_action( 'dokan_withdraw_status_updated', [ self::class, 'delete_seller_balance_cache' ], 10, 3 );
-        add_action( 'dokan_withdraw_request_approved', [ self::class, 'update_vendor_balance' ], 11 );
+        add_action( 'dokan_withdraw_status_updated', [ $this, 'delete_seller_balance_cache' ], 10, 3 );
+        add_action( 'dokan_withdraw_request_approved', [ $this, 'update_vendor_balance' ], 11 );
         add_filter( 'dokan_query_var_filter', [ $this, 'add_withdraw_list_query_var' ] );
         add_action( 'dokan_load_custom_template', [ $this, 'display_request_listing' ] );
         add_filter( 'dokan_dashboard_nav_active', [ $this, 'active_dashboard_nav_menu' ], 10, 3 );
@@ -26,7 +26,7 @@ class Hooks {
     /**
      * All the withdrawal related ajax hooks.
      *
-     * @since 3.3.12
+     * @since 3.2.16
      *
      * @return void
      */
@@ -110,7 +110,7 @@ class Hooks {
     /**
      * Add withdraw listing query var
      *
-     * @since 3.3.12
+     * @since 3.2.16
      *
      * @param array $query_vars
      *
@@ -125,7 +125,7 @@ class Hooks {
     /**
      * Display withdraw listing.
      *
-     * @since 3.3.12
+     * @since 3.2.16
      *
      * @param array $query_vars
      *
@@ -147,7 +147,7 @@ class Hooks {
     /**
      * Handle withdraw request ajax.
      *
-     * @since 3.3.12
+     * @since 3.2.16
      *
      * @return void
      */
@@ -220,7 +220,7 @@ class Hooks {
     /**
      * Set withdraw menu as active.
      *
-     * @since 3.3.12
+     * @since 3.2.16
      *
      * @param string $active_menu
      * @param $request
@@ -238,7 +238,7 @@ class Hooks {
     /**
      * Handle default with method change.
      *
-     * @since 3.3.12
+     * @since 3.2.16
      *
      * @return void
      */
