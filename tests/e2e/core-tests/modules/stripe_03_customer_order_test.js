@@ -2,10 +2,10 @@ const helpers = require("../../pages/helpers");
 
 Feature('modules/stripe_03_customer_order');
 
-Scenario('Customer payment with dokan stripe', ({ I }) => {
+Scenario('Customer payment with dokan stripe', ({ I,loginAs }) => {
     
     I.amOnPage('/my-account/');
-      I.loginAsCustomer();
+      loginAs('Customer');
       helpers.CustomerPurchasewithStripe();
   
 });

@@ -9,6 +9,7 @@ Scenario('product edit explore test', ({ I,loginAs}) => {
     I.CreateProduct();
     // I.click('Products');
     // I.click('simple_pro_3');
+
     // Starting to explore
     //Check Error
     I.checkError();
