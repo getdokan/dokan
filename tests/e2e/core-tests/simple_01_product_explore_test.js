@@ -6,10 +6,8 @@ Feature('Simple product explore');
 // });
 Scenario('product edit explore test', ({ I,loginAs}) => {
     loginAs('Vendor');
-    I.CreateProduct();
-    // I.click('Products');
-    // I.click('simple_pro_3');
-
+    helpers.createProduct();
+    
     // Starting to explore
     //Check Error
     I.checkError();
