@@ -149,7 +149,7 @@ module.exports = {
     //Locators Group Product explore 
     ProductLabel: 'span.dokan-label.dokan-label-success.dokan-product-status-label',
     ProductViewBtn: 'h1 > span.dokan-right > a',
-    ProductTitleInput: '#post_title',
+    ProductTitleInput:'.dokan-form-control',
     ProductPrice:'_regular_price',
     ProductCategory:'#product_cat',
     ProductTypeInput: '#product_type',
