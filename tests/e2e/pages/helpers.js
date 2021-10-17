@@ -41,7 +41,7 @@ module.exports = {
         I.seeInCurrentUrl('/dashboard');
     },
 
-    CreateProduct(){
+    createProduct(){
       I.amOnPage('/dashboard/products/');
       I.click('Add new product');
       I.fillField(locator.ProductTitleInput,faker.commerce.productName());
