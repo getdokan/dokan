@@ -362,6 +362,8 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
             do_action( 'dokan_process_file_download', $post_id, 0, $files );
 
             update_post_meta( $post_id, '_downloadable_files', $files );
+        } else {
+            update_post_meta( $post_id, '_downloadable_files', '' );
         }
 
         update_post_meta( $post_id, '_download_limit', $_download_limit );
@@ -941,11 +943,12 @@ function dokan_save_account_details() {
 
 add_action( 'template_redirect', 'dokan_save_account_details' );
 
-add_action( 'trashed_post', 'dokan_clear_product_category_cache' );
-add_action( 'deleted_post', 'dokan_clear_product_category_cache' );
-add_action( 'dokan_new_product_added', 'dokan_clear_product_category_cache' );
-add_action( 'dokan_product_updated', 'dokan_clear_product_category_cache' );
 
+/**
+ * This method will delete product/category related cache for a particular vendor
+ *
+ * @param int $post_id
+ */
 function dokan_clear_product_category_cache( $post_id ) {
     $product = wc_get_product( $post_id );
 
@@ -956,7 +959,104 @@ function dokan_clear_product_category_cache( $post_id ) {
     $seller_id = get_post_field( 'post_author', $post_id );
 
     delete_transient( 'dokan-store-category-' . $seller_id );
+
+    // delete vendor get_published_products() method transient
+    delete_transient( 'dokan_vendor_get_published_products_' . $seller_id );
+    delete_transient( 'dokan_vendor_get_best_selling_products_' . $seller_id );
+
+    if ( function_exists( 'wpml_get_active_languages' ) ) {
+        foreach ( wpml_get_active_languages() as $active_language ) {
+            delete_transient( 'dokan_vendor_get_store_categories_' . $active_language['code'] . '_' . $seller_id );
+            delete_transient( 'dokan_vendor_get_best_selling_categories_' . $active_language['code'] . '_' . $seller_id );
+        }
+    }
+
+    delete_transient( 'dokan_vendor_get_store_categories_' . $seller_id );
+    delete_transient( 'dokan_vendor_get_best_selling_categories_' . $seller_id );
 }
+add_action( 'wp_trash_post', 'dokan_clear_product_category_cache', 10, 1 );
+add_action( 'delete_post', 'dokan_clear_product_category_cache', 10, 1 );
+add_action( 'woocommerce_new_product', 'dokan_clear_product_category_cache', 10, 1 );
+add_action( 'woocommerce_update_product', 'dokan_clear_product_category_cache', 10, 1 );
+
+/**
+ * This method will delete vendors best selling product cache after a new order has been made
+ *
+ * @since 3.2.11
+ *
+ * @param int $post_id
+ */
+function dokan_clear_best_selling_product_category_cache( $order_id ) {
+    $order = wc_get_order( $order_id );
+
+    if ( ! $order ) {
+        return;
+    }
+
+    // check if order has suborder
+    if ( $order->get_meta( 'has_sub_order' ) ) {
+        // same hooks will be called for individual sub orders
+        return;
+    }
+
+    // get vendor id from order
+    $seller_id = dokan_get_seller_id_by_order( $order_id );
+    if ( empty( $seller_id ) ) {
+        return;
+    }
+
+    delete_transient( 'dokan_vendor_get_best_selling_products_' . $seller_id );
+    delete_transient( 'dokan_vendor_get_best_selling_categories_' . $seller_id );
+}
+add_action( 'woocommerce_new_order', 'dokan_clear_best_selling_product_category_cache', 10, 1 );
+add_action( 'woocommerce_update_order', 'dokan_clear_best_selling_product_category_cache', 10, 1 );
+
+/**
+ * This method will delete store category cache after a category is updated
+ *
+ * @since 3.2.10
+ *
+ * @param int $term_id
+ */
+function dokan_clear_edit_product_category_cache( $term_id ) {
+    // get taxonomy slug
+    $term = get_term_by( 'ID', $term_id, 'product_cat' );
+    if ( false === $term || ! isset( $term->slug ) ) {
+        return;
+    }
+
+    // get associated product id with this category
+    $args = [
+        'status'   => 'publish',
+        'limit'    => -1,
+        'return'   => 'ids',
+        'category' => array( $term->slug ),
+    ];
+
+    $query = new WC_Product_Query( $args );
+    $products = $query->get_products();
+
+    if ( empty( $products ) ) {
+        return;
+    }
+
+    global $wpdb;
+    $products = implode( ',', $products );
+    $seller_ids = $wpdb->get_col( "SELECT DISTINCT post_author from {$wpdb->posts} WHERE ID in ($products)" ); // phpcs:ignore
+
+    foreach ( $seller_ids as $seller_id ) {
+        // delete vendor get_store_categories() method transient
+        if ( function_exists( 'wpml_get_active_languages' ) ) {
+            foreach ( wpml_get_active_languages() as $active_language ) {
+                delete_transient( 'dokan_vendor_get_store_categories_' . $active_language['code'] . '_' . $seller_id );
+            }
+        }
+
+        delete_transient( 'dokan_vendor_get_store_categories_' . $seller_id );
+    }
+}
+add_action( 'edit_product_cat', 'dokan_clear_edit_product_category_cache', 10, 1 );
+add_action( 'pre_delete_term', 'dokan_clear_edit_product_category_cache', 10, 1 );
 
 if ( ! function_exists( 'dokan_date_time_format' ) ) {
 
@@ -1129,24 +1229,6 @@ function dokan_bulk_order_status_change() {
 }
 
 add_action( 'template_redirect', 'dokan_bulk_order_status_change' );
-
-/**
- * Clear transient once a product is saved or deleted
- *
- * @param int $post_id
- *
- * @return void
- */
-function dokan_store_category_delete_transient( $post_id ) {
-    $post_tmp  = get_post( $post_id );
-    $seller_id = $post_tmp->post_author;
-
-    //delete store category transient
-    delete_transient( 'dokan-store-category-' . $seller_id );
-}
-
-add_action( 'delete_post', 'dokan_store_category_delete_transient' );
-add_action( 'save_post', 'dokan_store_category_delete_transient' );
 
 /**
  * Add vendor email on customers note mail replay to

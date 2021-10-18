@@ -5,7 +5,7 @@ dokanWebpack([0],[
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Switches_vue__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Switches_vue__ = __webpack_require__(11);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_aa8ad7dc_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Switches_vue__ = __webpack_require__(29);
 var disposed = false
@@ -64,7 +64,7 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(17);
 
 /* harmony default export */ __webpack_exports__["a"] = ({
   extends: __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__["Line"],
@@ -192,6 +192,12 @@ if (false) {(function () {
 
 /***/ }),
 /* 8 */
+/***/ (function(module, exports) {
+
+module.exports = jQuery;
+
+/***/ }),
+/* 9 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -304,15 +310,15 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_debounce__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_Switches_vue__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_UploadImage_vue__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_PasswordGenerator_vue__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_UploadImage_vue__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_PasswordGenerator_vue__ = __webpack_require__(19);
 //
 //
 //
@@ -686,7 +692,7 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -721,7 +727,7 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -948,7 +954,7 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1031,7 +1037,7 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1212,7 +1218,7 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1441,13 +1447,13 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 15 */,
 /* 16 */,
-/* 17 */
+/* 17 */,
+/* 18 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_UploadImage_vue__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_UploadImage_vue__ = __webpack_require__(12);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_40b3524c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_UploadImage_vue__ = __webpack_require__(31);
 var disposed = false
@@ -1499,11 +1505,11 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_PasswordGenerator_vue__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_PasswordGenerator_vue__ = __webpack_require__(13);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4084a478_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_PasswordGenerator_vue__ = __webpack_require__(32);
 var disposed = false
@@ -1551,9 +1557,9 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 19 */,
 /* 20 */,
-/* 21 */
+/* 21 */,
+/* 22 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1604,18 +1610,12 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 22 */,
-/* 23 */
-/***/ (function(module, exports) {
-
-module.exports = jQuery;
-
-/***/ }),
+/* 23 */,
 /* 24 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ColorPicker_vue__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ColorPicker_vue__ = __webpack_require__(9);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_01dc0d51_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ColorPicker_vue__ = __webpack_require__(26);
 var disposed = false
@@ -1768,7 +1768,7 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorAccountFields_vue__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorAccountFields_vue__ = __webpack_require__(10);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2b13daea_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorAccountFields_vue__ = __webpack_require__(33);
 var disposed = false
@@ -2018,7 +2018,7 @@ var render = function() {
                   innerHTML: _vm._s(
                     _vm.sprintf(
                       _vm.__(
-                        "You can change your profile picutre on %s",
+                        "You can change your profile picture on %s",
                         "dokan-lite"
                       ),
                       "<a href='https://gravatar.com/' target='_blank'>Gravatar</a>"
@@ -2478,7 +2478,7 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorAddressFields_vue__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorAddressFields_vue__ = __webpack_require__(14);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_9504c01e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorAddressFields_vue__ = __webpack_require__(36);
 var disposed = false
@@ -2815,7 +2815,7 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorPaymentFields_vue__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorPaymentFields_vue__ = __webpack_require__(15);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2ed34783_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorPaymentFields_vue__ = __webpack_require__(39);
 var disposed = false
@@ -3489,7 +3489,7 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_Chart_vue__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_Chart_vue__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__ = __webpack_require__(7);
 //
 //
@@ -3740,7 +3740,29 @@ var Currency = dokan_get_lib('Currency');
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_UpgradeBanner_vue__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__ = __webpack_require__(7);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -3835,13 +3857,14 @@ var ListTable = dokan_get_lib('ListTable');
 var Modal = dokan_get_lib('Modal');
 var Currency = dokan_get_lib('Currency');
 
+
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'Withdraw',
   components: {
     ListTable: ListTable,
     Modal: Modal,
     Currency: Currency,
-    UpgradeBanner: __WEBPACK_IMPORTED_MODULE_0_admin_components_UpgradeBanner_vue__["a" /* default */]
+    UpgradeBanner: __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__["a" /* default */]
   },
   data: function data() {
     return {
@@ -3853,6 +3876,9 @@ var Currency = dokan_get_lib('Currency');
       totalPages: 1,
       perPage: 10,
       totalItems: 0,
+      filter: {
+        user_id: 0
+      },
       counts: {
         pending: 0,
         approved: 0,
@@ -3895,10 +3921,22 @@ var Currency = dokan_get_lib('Currency');
   },
   watch: {
     '$route.query.status': function $routeQueryStatus() {
+      this.filter.user_id = 0;
+      this.clearSelection('#filter-vendors');
       this.fetchRequests();
     },
     '$route.query.page': function $routeQueryPage() {
       this.fetchRequests();
+    },
+    '$route.query.user_id': function $routeQueryUser_id() {
+      this.fetchRequests();
+    },
+    'filter.user_id': function filterUser_id(user_id) {
+      if (user_id === 0) {
+        this.clearSelection('#filter-vendors');
+      }
+
+      this.goTo(this.query);
     }
   },
   computed: {
@@ -3967,6 +4005,36 @@ var Currency = dokan_get_lib('Currency');
   created: function created() {
     this.fetchRequests();
   },
+  mounted: function mounted() {
+    var self = this;
+    __WEBPACK_IMPORTED_MODULE_0_jquery___default()('#filter-vendors').selectWoo({
+      ajax: {
+        url: "".concat(dokan.rest.root, "dokan/v1/stores"),
+        dataType: 'json',
+        headers: {
+          "X-WP-Nonce": dokan.rest.nonce
+        },
+        data: function data(params) {
+          return {
+            search: params.term
+          };
+        },
+        processResults: function processResults(data) {
+          return {
+            results: data.map(function (store) {
+              return {
+                id: store.id,
+                text: store.store_name
+              };
+            })
+          };
+        }
+      }
+    });
+    __WEBPACK_IMPORTED_MODULE_0_jquery___default()('#filter-vendors').on('select2:select', function (e) {
+      self.filter.user_id = e.params.data.id;
+    });
+  },
   methods: {
     updatedCounts: function updatedCounts(xhr) {
       this.counts.pending = parseInt(xhr.getResponseHeader('X-Status-Pending'));
@@ -3988,7 +4056,13 @@ var Currency = dokan_get_lib('Currency');
       var _this = this;
 
       this.loading = true;
-      dokan.api.get('/withdraw?per_page=' + this.perPage + '&page=' + this.currentPage + '&status=' + this.currentStatus).done(function (response, status, xhr) {
+      var url = '/withdraw?per_page=' + this.perPage + '&page=' + this.currentPage + '&status=' + this.currentStatus;
+
+      if (parseInt(this.filter.user_id) > 0) {
+        url += '&user_id=' + this.filter.user_id;
+      }
+
+      dokan.api.get(url).done(function (response, status, xhr) {
         _this.requests = response;
         _this.loading = false;
 
@@ -4002,7 +4076,17 @@ var Currency = dokan_get_lib('Currency');
         name: 'Withdraw',
         query: {
           status: this.currentStatus,
-          page: page
+          page: page,
+          user_id: this.filter.user_id
+        }
+      });
+    },
+    goTo: function goTo(page) {
+      this.$router.push({
+        name: 'Withdraw',
+        query: {
+          status: this.currentStatus,
+          user_id: this.filter.user_id
         }
       });
     },
@@ -4199,6 +4283,9 @@ var Currency = dokan_get_lib('Currency');
           note: null
         };
       });
+    },
+    clearSelection: function clearSelection(element) {
+      __WEBPACK_IMPORTED_MODULE_0_jquery___default()(element).val(null).trigger('change');
     }
   }
 });
@@ -5247,6 +5334,8 @@ var Loading = dokan_get_lib('Loading');
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_Fields_vue__ = __webpack_require__(136);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_SettingsBanner_vue__ = __webpack_require__(166);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_UpgradeBanner_vue__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_jquery__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_jquery__);
 //
 //
 //
@@ -5328,6 +5417,7 @@ var Loading = dokan_get_lib('Loading');
 //
 //
 var Loading = dokan_get_lib('Loading');
+
 
 
 
@@ -5622,6 +5712,25 @@ var Loading = dokan_get_lib('Loading');
       });
       self.settingFields = settingFields;
       self.settingSections = settingSections;
+    },
+    handleDataClearCheckboxEvent: function handleDataClearCheckboxEvent() {
+      var self = this;
+      __WEBPACK_IMPORTED_MODULE_3_jquery___default()('.data_clear_on_uninstall').on('change', "#dokan_general\\[data_clear_on_uninstall\\]", function (e) {
+        if (__WEBPACK_IMPORTED_MODULE_3_jquery___default()(this).is(':checked')) {
+          self.$swal({
+            title: self.__('Are you sure?', 'dokan-lite'),
+            type: 'warning',
+            html: self.__('All data and tables related to Dokan and Dokan Pro will be deleted permanently after deleting the Dokan plugin. You will not be able to recover your lost data unless you keep a backup. Do you want to continue?', 'dokan-lite'),
+            showCancelButton: true,
+            confirmButtonText: self.__('Okay', 'dokan-lite'),
+            cancelButtonText: self.__('Cancel', 'dokan-lite')
+          }).then(function (response) {
+            if (response.dismiss) {
+              self.settingValues.dokan_general.data_clear_on_uninstall = 'off';
+            }
+          });
+        }
+      });
     }
   },
   created: function created() {
@@ -5634,6 +5743,9 @@ var Loading = dokan_get_lib('Loading');
 
     this.settingSections = dokan.settings_sections;
     this.settingFields = dokan.settings_fields;
+  },
+  updated: function updated() {
+    this.handleDataClearCheckboxEvent();
   }
 });
 
@@ -8276,10 +8388,9 @@ var render = function() {
                 _c(
                   "router-link",
                   {
+                    class: { current: _vm.currentStatus === "pending" },
                     attrs: {
-                      to: { name: "Withdraw", query: { status: "pending" } },
-                      "active-class": "current",
-                      exact: ""
+                      to: { name: "Withdraw", query: { status: "pending" } }
                     }
                   },
                   [
@@ -8300,10 +8411,9 @@ var render = function() {
                 _c(
                   "router-link",
                   {
+                    class: { current: _vm.currentStatus === "approved" },
                     attrs: {
-                      to: { name: "Withdraw", query: { status: "approved" } },
-                      "active-class": "current",
-                      exact: ""
+                      to: { name: "Withdraw", query: { status: "approved" } }
                     }
                   },
                   [
@@ -8324,10 +8434,9 @@ var render = function() {
                 _c(
                   "router-link",
                   {
+                    class: { current: _vm.currentStatus === "cancelled" },
                     attrs: {
-                      to: { name: "Withdraw", query: { status: "cancelled" } },
-                      "active-class": "current",
-                      exact: ""
+                      to: { name: "Withdraw", query: { status: "cancelled" } }
                     }
                   },
                   [
@@ -8343,248 +8452,317 @@ var render = function() {
             )
           ]),
           _vm._v(" "),
-          _c("list-table", {
-            attrs: {
-              columns: _vm.columns,
-              rows: _vm.requests,
-              loading: _vm.loading,
-              "action-column": _vm.actionColumn,
-              actions: _vm.actions,
-              "show-cb": _vm.showCb,
-              "bulk-actions": _vm.bulkActions,
-              "not-found": _vm.notFound,
-              "total-pages": _vm.totalPages,
-              "total-items": _vm.totalItems,
-              "per-page": _vm.perPage,
-              "current-page": _vm.currentPage,
-              text: _vm.$root.listTableTexts()
-            },
-            on: {
-              pagination: _vm.goToPage,
-              "action:click": _vm.onActionClick,
-              "bulk:click": _vm.onBulkAction
-            },
-            scopedSlots: _vm._u([
-              {
-                key: "seller",
-                fn: function(data) {
-                  return [
-                    _c("img", {
-                      attrs: {
-                        src: data.row.user.gravatar,
-                        alt: data.row.user.store_name,
-                        width: "50"
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("strong", [
+          _c(
+            "list-table",
+            {
+              attrs: {
+                columns: _vm.columns,
+                rows: _vm.requests,
+                loading: _vm.loading,
+                "action-column": _vm.actionColumn,
+                actions: _vm.actions,
+                "show-cb": _vm.showCb,
+                "bulk-actions": _vm.bulkActions,
+                "not-found": _vm.notFound,
+                "total-pages": _vm.totalPages,
+                "total-items": _vm.totalItems,
+                "per-page": _vm.perPage,
+                "current-page": _vm.currentPage,
+                text: _vm.$root.listTableTexts()
+              },
+              on: {
+                pagination: _vm.goToPage,
+                "action:click": _vm.onActionClick,
+                "bulk:click": _vm.onBulkAction
+              },
+              scopedSlots: _vm._u([
+                {
+                  key: "seller",
+                  fn: function(data) {
+                    return [
+                      _c("img", {
+                        attrs: {
+                          src: data.row.user.gravatar,
+                          alt: data.row.user.store_name,
+                          width: "50"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("strong", [
+                        _c(
+                          "a",
+                          { attrs: { href: _vm.vendorUrl(data.row.user.id) } },
+                          [
+                            _vm._v(
+                              _vm._s(
+                                data.row.user.store_name
+                                  ? data.row.user.store_name
+                                  : _vm.__("(no name)", "dokan-lite")
+                              )
+                            )
+                          ]
+                        )
+                      ])
+                    ]
+                  }
+                },
+                {
+                  key: "vendor",
+                  fn: function(ref) {
+                    var row = ref.row
+                    return [
                       _c(
-                        "a",
-                        { attrs: { href: _vm.vendorUrl(data.row.user.id) } },
+                        "router-link",
+                        { attrs: { to: "/vendors/" + row.vendor.id } },
                         [
                           _vm._v(
-                            _vm._s(
-                              data.row.user.store_name
-                                ? data.row.user.store_name
-                                : _vm.__("(no name)", "dokan-lite")
-                            )
+                            "\n                    " +
+                              _vm._s(
+                                row.vendor.name
+                                  ? row.vendor.name
+                                  : _vm.__("(no name)", "dokan-lite")
+                              ) +
+                              "\n                "
                           )
                         ]
                       )
-                    ])
-                  ]
-                }
-              },
-              {
-                key: "amount",
-                fn: function(data) {
-                  return [
-                    _c("currency", { attrs: { amount: data.row.amount } })
-                  ]
-                }
-              },
-              {
-                key: "status",
-                fn: function(data) {
-                  return [
-                    _c("span", { class: data.row.status }, [
-                      _vm._v(_vm._s(_vm._f("capitalize")(data.row.status)))
-                    ])
-                  ]
-                }
-              },
-              {
-                key: "created",
-                fn: function(data) {
-                  return [
-                    _vm._v(
-                      "\n                " +
-                        _vm._s(
-                          _vm.moment(data.row.created).format("MMM D, YYYY")
-                        ) +
-                        "\n            "
-                    )
-                  ]
-                }
-              },
-              {
-                key: "method_details",
-                fn: function(data) {
-                  return [
-                    _c("div", {
-                      staticClass: "method_details_inner",
-                      domProps: {
-                        innerHTML: _vm._s(
-                          _vm.getPaymentDetails(
-                            data.row.method,
-                            data.row.user.payment
+                    ]
+                  }
+                },
+                {
+                  key: "amount",
+                  fn: function(data) {
+                    return [
+                      _c("currency", { attrs: { amount: data.row.amount } })
+                    ]
+                  }
+                },
+                {
+                  key: "status",
+                  fn: function(data) {
+                    return [
+                      _c("span", { class: data.row.status }, [
+                        _vm._v(_vm._s(_vm._f("capitalize")(data.row.status)))
+                      ])
+                    ]
+                  }
+                },
+                {
+                  key: "created",
+                  fn: function(data) {
+                    return [
+                      _vm._v(
+                        "\n                " +
+                          _vm._s(
+                            _vm.moment(data.row.created).format("MMM D, YYYY")
+                          ) +
+                          "\n            "
+                      )
+                    ]
+                  }
+                },
+                {
+                  key: "method_details",
+                  fn: function(data) {
+                    return [
+                      _c("div", {
+                        staticClass: "method_details_inner",
+                        domProps: {
+                          innerHTML: _vm._s(
+                            _vm.getPaymentDetails(
+                              data.row.method,
+                              data.row.details
+                            )
                           )
-                        )
-                      }
-                    })
-                  ]
+                        }
+                      })
+                    ]
+                  }
+                },
+                {
+                  key: "actions",
+                  fn: function(data) {
+                    return [
+                      data.row.status === "pending"
+                        ? [
+                            _c("div", { staticClass: "button-group" }, [
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "button button-small",
+                                  attrs: {
+                                    title: _vm.__(
+                                      "Approve Request",
+                                      "dokan-lite"
+                                    )
+                                  },
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.changeStatus(
+                                        "approved",
+                                        data.row.id
+                                      )
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("span", {
+                                    staticClass: "dashicons dashicons-yes"
+                                  })
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "button button-small",
+                                  attrs: {
+                                    title: _vm.__("Add Note", "dokan-lite")
+                                  },
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.openNoteModal(
+                                        data.row.note,
+                                        data.row.id
+                                      )
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("span", {
+                                    staticClass:
+                                      "dashicons dashicons-testimonial"
+                                  })
+                                ]
+                              )
+                            ])
+                          ]
+                        : data.row.status === "approved"
+                        ? [
+                            _c("div", { staticClass: "button-group" }, [
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "button button-small",
+                                  attrs: {
+                                    title: _vm.__("Add Note", "dokan-lite")
+                                  },
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.openNoteModal(
+                                        data.row.note,
+                                        data.row.id
+                                      )
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("span", {
+                                    staticClass:
+                                      "dashicons dashicons-testimonial"
+                                  })
+                                ]
+                              )
+                            ])
+                          ]
+                        : [
+                            _c("div", { staticClass: "button-group" }, [
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "button button-small",
+                                  attrs: {
+                                    title: _vm.__(
+                                      "Mark as Pending",
+                                      "dokan-lite"
+                                    )
+                                  },
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.changeStatus(
+                                        "pending",
+                                        data.row.id
+                                      )
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("span", {
+                                    staticClass: "dashicons dashicons-backup"
+                                  })
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "button button-small",
+                                  attrs: {
+                                    title: _vm.__("Add Note", "dokan-lite")
+                                  },
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.openNoteModal(
+                                        data.row.note,
+                                        data.row.id
+                                      )
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("span", {
+                                    staticClass:
+                                      "dashicons dashicons-testimonial"
+                                  })
+                                ]
+                              )
+                            ])
+                          ]
+                    ]
+                  }
                 }
-              },
-              {
-                key: "actions",
-                fn: function(data) {
-                  return [
-                    data.row.status === "pending"
-                      ? [
-                          _c("div", { staticClass: "button-group" }, [
-                            _c(
-                              "button",
-                              {
-                                staticClass: "button button-small",
-                                attrs: {
-                                  title: _vm.__("Approve Request", "dokan-lite")
-                                },
-                                on: {
-                                  click: function($event) {
-                                    $event.preventDefault()
-                                    return _vm.changeStatus(
-                                      "approved",
-                                      data.row.id
-                                    )
-                                  }
-                                }
-                              },
-                              [
-                                _c("span", {
-                                  staticClass: "dashicons dashicons-yes"
-                                })
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "button",
-                              {
-                                staticClass: "button button-small",
-                                attrs: {
-                                  title: _vm.__("Add Note", "dokan-lite")
-                                },
-                                on: {
-                                  click: function($event) {
-                                    $event.preventDefault()
-                                    return _vm.openNoteModal(
-                                      data.row.note,
-                                      data.row.id
-                                    )
-                                  }
-                                }
-                              },
-                              [
-                                _c("span", {
-                                  staticClass: "dashicons dashicons-testimonial"
-                                })
-                              ]
-                            )
-                          ])
-                        ]
-                      : data.row.status === "approved"
-                      ? [
-                          _c("div", { staticClass: "button-group" }, [
-                            _c(
-                              "button",
-                              {
-                                staticClass: "button button-small",
-                                attrs: {
-                                  title: _vm.__("Add Note", "dokan-lite")
-                                },
-                                on: {
-                                  click: function($event) {
-                                    $event.preventDefault()
-                                    return _vm.openNoteModal(
-                                      data.row.note,
-                                      data.row.id
-                                    )
-                                  }
-                                }
-                              },
-                              [
-                                _c("span", {
-                                  staticClass: "dashicons dashicons-testimonial"
-                                })
-                              ]
-                            )
-                          ])
-                        ]
-                      : [
-                          _c("div", { staticClass: "button-group" }, [
-                            _c(
-                              "button",
-                              {
-                                staticClass: "button button-small",
-                                attrs: {
-                                  title: _vm.__("Mark as Pending", "dokan-lite")
-                                },
-                                on: {
-                                  click: function($event) {
-                                    $event.preventDefault()
-                                    return _vm.changeStatus(
-                                      "pending",
-                                      data.row.id
-                                    )
-                                  }
-                                }
-                              },
-                              [
-                                _c("span", {
-                                  staticClass: "dashicons dashicons-backup"
-                                })
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "button",
-                              {
-                                staticClass: "button button-small",
-                                attrs: {
-                                  title: _vm.__("Add Note", "dokan-lite")
-                                },
-                                on: {
-                                  click: function($event) {
-                                    $event.preventDefault()
-                                    return _vm.openNoteModal(
-                                      data.row.note,
-                                      data.row.id
-                                    )
-                                  }
-                                }
-                              },
-                              [
-                                _c("span", {
-                                  staticClass: "dashicons dashicons-testimonial"
-                                })
-                              ]
-                            )
-                          ])
-                        ]
-                  ]
-                }
-              }
-            ])
-          })
+              ])
+            },
+            [
+              _vm._v(" "),
+              _vm._v(" "),
+              _vm._v(" "),
+              _vm._v(" "),
+              _vm._v(" "),
+              _vm._v(" "),
+              _c("template", { slot: "filters" }, [
+                _c("select", {
+                  staticStyle: { width: "190px" },
+                  attrs: {
+                    id: "filter-vendors",
+                    "data-placeholder": _vm.__("Filter by vendor", "dokan-lite")
+                  }
+                }),
+                _vm._v(" "),
+                _vm.filter.user_id
+                  ? _c(
+                      "button",
+                      {
+                        staticClass: "button",
+                        attrs: { type: "button" },
+                        on: {
+                          click: function($event) {
+                            _vm.filter.user_id = 0
+                          }
+                        }
+                      },
+                      [_vm._v("×")]
+                    )
+                  : _vm._e()
+              ])
+            ],
+            2
+          )
         ],
         1
       )

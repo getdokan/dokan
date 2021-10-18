@@ -1,12 +1,5 @@
 dokanWebpack([3],{
 
-/***/ 23:
-/***/ (function(module, exports) {
-
-module.exports = jQuery;
-
-/***/ }),
-
 /***/ 249:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -379,11 +372,18 @@ var sprintf = Jed.sprintf;
 
 /***/ }),
 
+/***/ 8:
+/***/ (function(module, exports) {
+
+module.exports = jQuery;
+
+/***/ }),
+
 /***/ 91:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_i18n__ = __webpack_require__(40);
 //

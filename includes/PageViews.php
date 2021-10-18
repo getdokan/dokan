@@ -23,12 +23,25 @@ class PageViews {
 
         echo '<script type="text/javascript">
             jQuery(document).ready( function($) {
-                var data = {
-                    action: "dokan_pageview",
-                    _ajax_nonce: "' . esc_html( $nonce ) . '",
-                    post_id: ' . get_the_ID() . ',
+                if(localStorage){
+                    let new_date = new Date().toISOString().slice(0, 10);
+                    let dokan_pageview_count = JSON.parse(localStorage.getItem("dokan_pageview_count"));
+                    let post_id = ' . get_the_ID() . ';
+
+                    if ( dokan_pageview_count === null || ( dokan_pageview_count.today && dokan_pageview_count.today !== new_date ) ) {
+                        dokan_pageview_count = { "today": new_date, "post_ids": [] };
+                    }
+                    if ( ! dokan_pageview_count.post_ids.includes( post_id )  ) {
+                        var data = {
+                            action: "dokan_pageview",
+                            _ajax_nonce: "' . esc_html( $nonce ) . '",
+                            post_id: ' . get_the_ID() . ',
+                        }
+                        $.post( "' . esc_url( admin_url( 'admin-ajax.php' ) ) . '", data );
+                        dokan_pageview_count.post_ids.push( post_id );
+                        localStorage.setItem("dokan_pageview_count", JSON.stringify(dokan_pageview_count));
+                    }
                 }
-                $.post( "' . esc_url( admin_url( 'admin-ajax.php' ) ) . '", data );
             } );
             </script>';
     }
@@ -37,20 +50,10 @@ class PageViews {
         if ( is_singular( 'product' ) ) {
             global $post;
 
-            if ( empty( $_COOKIE['dokan_product_viewed'] ) ) {
-                $dokan_viewed_products = array();
-            } else {
-                $dokan_viewed_products = (array) explode( ',', sanitize_text_field( wp_unslash( $_COOKIE['dokan_product_viewed'] ) ) );
-            }
-
-            if ( ! in_array( $post->ID, $dokan_viewed_products ) ) {
-                $dokan_viewed_products[] = $post->ID;
-
+            if ( $post->post_author !== dokan_get_current_user_id() ) {
                 wp_enqueue_script( 'jquery' );
                 add_action( 'wp_footer', array( $this, 'load_scripts' ) );
             }
-            // Store for single product view
-            setcookie( 'dokan_product_viewed', implode( ',', $dokan_viewed_products ) );
         }
     }
 

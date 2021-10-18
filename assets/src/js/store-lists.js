@@ -37,6 +37,12 @@
             // Submit the form
             $( '#dokan-store-listing-filter-form-wrap .apply-filter #apply-filter-btn' ).on( 'click', this.submitForm );
 
+            if ( ! this.getQueryParam( 'latitude' ) && ! this.getQueryParam( 'longitude' ) ) {
+                $.when( $( '.dokan-store-list-filter-button' ).trigger( 'click' ) ).then( function() {
+                    $( '.locate-icon' ).trigger( 'click' );
+                });
+            }
+
             this.maybeHideListView();
 
             const self = storeLists;
@@ -72,19 +78,19 @@
             }
 
             if ( $( "#dokan-store-listing-filter-form-wrap" ).length ) {
-                $('.store-search-input').keypress(function (e) {
+                $('.store-search-input').on( 'keypress', function (e) {
                     var key = e.which;
                     if( key == 13 ) {
                         $( "#dokan-store-listing-filter-form-wrap" ).submit();
-                        return false;  
+                        return false;
                     }
                 });
             }
 
-            $( 'body' ).click( function ( evt ) {  
-                if ( ! $( evt.target ).is( 'div#dokan-store-products-search-result li' ) ) {    
+            $( 'body' ).on( 'click', function ( evt ) {
+                if ( ! $( evt.target ).is( 'div#dokan-store-products-search-result li' ) ) {
                     $("#dokan-store-products-search-result").html('');
-                    $('#dokan-store-products-search-result').removeClass( 'dokan-store-products-search-has-results' );           
+                    $('#dokan-store-products-search-result').removeClass( 'dokan-store-products-search-has-results' );
                 }
             });
 
@@ -304,6 +310,19 @@
         },
 
         /**
+         * Get query param
+         *
+         * @param string param
+         *
+         * @return boolean
+         */
+        getQueryParam: function ( param ) {
+            var results = new RegExp( '[\?&]' + param + '=([^&#]*)' ).exec( window.location.href );
+
+            return null !== results;
+        },
+
+        /**
          * Get params from
          *
          * @return array
@@ -358,7 +377,7 @@
         var timer = 0;
 
         return function() {
-            var context = this, 
+            var context = this,
                 args    = arguments;
 
             clearTimeout( timer );

@@ -529,6 +529,139 @@ class Vendor {
     }
 
     /**
+     * Get a vendor all published products
+     *
+     * @since 3.2.11
+     *
+     * @return array
+     */
+    public function get_published_products() {
+        $transient_key = 'dokan_vendor_get_published_products_' . $this->id;
+
+        if ( false === ( $products = get_transient( $transient_key ) ) ) {
+            $products = dokan()->product->all( [
+                'author'      => $this->id,
+                'post_status' => 'publish',
+                'fields'      => 'ids'
+            ] );
+            $products = $products->posts;
+            set_transient( $transient_key, $products, WEEK_IN_SECONDS );
+        }
+
+        return $products;
+    }
+
+    /**
+     * Get a vendor all published products
+     *
+     * @since 3.2.11
+     *
+     * @return array
+     */
+    public function get_best_selling_products() {
+        $transient_key = 'dokan_vendor_get_best_selling_products_' . $this->id;
+
+        if ( false === ( $products = get_transient( $transient_key ) ) ) {
+            $args = [
+                'author'         => $this->id,
+                'post_status'    => 'publish',
+                'fields'         => 'ids',
+                'posts_per_page' => -1,
+            ];
+
+            $args['meta_query'] = [ //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+                [
+                    'key'     => '_stock_status',
+                    'value'   => 'outofstock',
+                    'compare' => '!=',
+                ],
+            ];
+
+            $products = dokan()->product->best_selling( $args );
+            $products = $products->posts;
+            set_transient( $transient_key, $products, WEEK_IN_SECONDS );
+        }
+
+        return $products;
+    }
+
+    /**
+     * Get a vendor store published products categories
+     *
+     * @param bool $best_selling
+     *
+     * @since 3.2.11
+     *
+     * @return array
+     */
+    public function get_store_categories( $best_selling = false ) {
+        $transient_key = function_exists( 'wpml_get_current_language' ) ? 'dokan_vendor_get_store_categories_' . wpml_get_current_language() . '_' . $this->id  : 'dokan_vendor_get_store_categories_' . $this->id;
+        if ( $best_selling ) {
+            $transient_key = function_exists( 'wpml_get_current_language' ) ? 'dokan_vendor_get_best_selling_categories_' . wpml_get_current_language() . '_' . $this->id : 'dokan_vendor_get_best_selling_categories_' . $this->id;
+        }
+
+        if ( false === ( $all_categories = get_transient( $transient_key ) ) ) {
+            $products = true === $best_selling ? $this->get_best_selling_products() : $this->get_published_products();
+            if ( empty( $products ) ) {
+                return [];
+            }
+
+            $all_categories = [];
+            $category_index = [];
+            foreach ( $products as $product_id ) {
+                $terms = get_the_terms( $product_id, 'product_cat' );
+
+                //allow when there is terms and do not have any wp_errors
+                if ( $terms && ! is_wp_error( $terms ) ) {
+                    foreach ( $terms as $term ) {
+                        if ( ! in_array( $term->term_id, $category_index, true ) ) {
+                            // get extra information
+                            $display_type            = get_term_meta( $term->term_id, 'display_type', true );
+                            $thumbnail_id            = absint( get_term_meta( $term->term_id, 'thumbnail_id', true ) );
+                            $category_commision_type = get_term_meta( $term->term_id, 'per_category_admin_commission_type', true );
+                            $category_commision      = get_term_meta( $term->term_id, 'per_category_admin_commission', true );
+                            $category_icon           = get_term_meta( $term->term_id, 'dokan_cat_icon', true );
+                            $category_icon_color     = get_term_meta( $term->term_id, 'dokan_cat_icon_color', true );
+
+
+                            // get category image url
+                            if ( $thumbnail_id ) {
+                                $thumbnail = wp_get_attachment_thumb_url( $thumbnail_id );
+                                // get the image URL
+                                $image = wp_get_attachment_url( $thumbnail_id );
+                            } else {
+                                $image = $thumbnail = wc_placeholder_img_src();
+                            }
+
+                            // fix commission
+                            $category_commision = ! empty( $category_commision ) ? wc_format_decimal( $category_commision ) : 0.00;
+
+                            // set extra fields to term object
+                            $term->thumbnail = $thumbnail;
+                            $term->image     = $image;
+                            // set icon and icon color
+                            $term->icon         = $category_icon;
+                            $term->icon_color   = $category_icon_color;
+                            $term->display_type = $display_type;
+                            // set commissions
+                            $term->admin_commission_type = $category_commision_type;
+                            $term->admin_commission      = $category_commision;
+
+                            // finally store category data
+                            $all_categories[] = $term;
+                            $category_index[] = $term->term_id;
+                        }
+                    }
+                }
+            }
+
+            set_transient( $transient_key, $all_categories, WEEK_IN_SECONDS );
+        }
+
+        return $all_categories;
+    }
+
+    /**
      * Get vendor orders
      *
      * @since 3.0.0

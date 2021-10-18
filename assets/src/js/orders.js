@@ -32,7 +32,9 @@ jQuery(function($) {
                 prev_li.find('label').replaceWith(response.data);
                 prev_li.find('a.dokan-edit-status').removeClass('dokan-hide');
             } else {
-                alert( response.data );
+                dokan_sweetalert( response.data, { 
+                    icon: 'success',
+                } );
             }
         });
     });
@@ -86,7 +88,7 @@ jQuery(function($) {
         var data = {
             action: 'dokan_grant_access_to_download',
             product_ids: product,
-            loop: $('.order_download_permissions .panel').size(),
+            loop: $('.order_download_permissions .panel').length,
             order_id: self.data('order-id'),
             security: self.data('nonce')
         };
@@ -98,8 +100,9 @@ jQuery(function($) {
                 $('#accordion').append( response );
 
             } else {
-
-                alert('Could not grant access - the user may already have permission for this file or billing email is not set. Ensure the billing email is set, and the order has been saved.');
+                dokan_sweetalert( dokan.i18n_download_access , { 
+                    icon: 'warning',
+                } );
 
             }
 
@@ -111,11 +114,14 @@ jQuery(function($) {
         return false;
     });
 
-    $('.order_download_permissions').on('click', 'button.revoke_access', function(e){
+    $('.order_download_permissions').on('click', 'button.revoke_access', async function(e){
         e.preventDefault();
-        var answer = confirm('Are you sure you want to revoke access to this download?');
+        const answer = await dokan_sweetalert( dokan.i18n_download_permission, { 
+            action : 'confirm', 
+            icon   : 'warning',
+        } );
 
-        if (answer){
+        if ( 'undefined' !== answer && answer.isConfirmed ){
 
             var self = $(this),
                 el = self.closest('.dokan-panel');
@@ -332,10 +338,15 @@ jQuery(function($) {
 
         refunds: {
 
-            do_refund: function() {
+            do_refund: async function() {
                 dokan_seller_meta_boxes_order_items.block();
+                
+                const isRefund = await dokan_sweetalert( dokan_refund.i18n_do_refund, { 
+                    action : 'confirm', 
+                    icon   : 'warning',
+                } );
 
-                if ( window.confirm( dokan_refund.i18n_do_refund ) ) {
+                if ( 'undefined' !== isRefund && isRefund.isConfirmed ) {
                     var refund_amount = $( 'input#refund_amount' ).val();
                     var refund_reason = $( 'input#refund_reason' ).val();
 
@@ -384,7 +395,9 @@ jQuery(function($) {
                     };
 
                     $.post( dokan_refund.ajax_url, data, function( response ) {
-                        response.data.message ? window.alert( response.data.message ) : null;
+                        response.data.message ? dokan_sweetalert( response.data.message, { 
+                            icon: 'success',
+                        } ) : null;
                         dokan_seller_meta_boxes_order_items.reload_items();
                     }).fail( function ( jqXHR ) {
                         var message = [];
@@ -400,8 +413,8 @@ jQuery(function($) {
                                 message.push( data );
                             }
                         }
-
-                        window.alert( message.join( ' ' ) );
+                        
+                        dokan_sweetalert( message.join( ' ' ), { icon: 'error', } );
                         dokan_seller_meta_boxes_order_items.unblock();
                     } );
                 } else {
@@ -429,7 +442,7 @@ jQuery(function($) {
                         '',
                         dokan_refund.mon_decimal_point
                     ) )
-                    .change();
+                    .trigger( 'change' );
             },
 
             amount_changed: function() {
@@ -459,7 +472,7 @@ jQuery(function($) {
                     parseFloat( accounting.formatNumber( unit_total * refund_qty, dokan_refund.rounding_precision, '' ) )
                         .toString()
                         .replace( '.', dokan_refund.mon_decimal_point )
-                ).change();
+                ).trigger( 'change' );
 
                 // Taxes
                 $( 'td.line_tax', $row ).each( function() {
@@ -472,9 +485,9 @@ jQuery(function($) {
                             parseFloat( accounting.formatNumber( unit_total_tax * refund_qty, dokan_refund.rounding_precision, '' ) )
                                 .toString()
                                 .replace( '.', dokan_refund.mon_decimal_point )
-                        ).change();
+                        ).trigger( 'change' );
                     } else {
-                        refund_line_total_tax.val( 0 ).change();
+                        refund_line_total_tax.val( 0 ).trigger( 'change' );
                     }
                 });
 
