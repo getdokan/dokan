@@ -33,4 +33,6 @@
             <a href="<?php echo esc_url( add_query_arg( array( 'post_status' => 'outofstock' ), $permalink ) ); ?>"><?php echo esc_html_e( 'Out of stock', 'dokan-lite' ). ' (' . esc_html( $outofstock_counts ) . ')'; ?></a>
         </li>
     <?php endif; ?>
+
+    <?php do_action( 'dokan_after_product_listing_status_filter' ); ?>
 </ul> <!-- .post-statuses-filter -->
