@@ -88,6 +88,10 @@ class Assets {
             wp_enqueue_style( 'dokan-plugin-list-css' );
         }
 
+        // Assets for all admin dashboard pages
+        wp_enqueue_style( 'dokan-admin-notice-css' );
+        wp_enqueue_script( 'dokan-admin-notice' );
+
         do_action( 'dokan_enqueue_admin_scripts' );
     }
 
@@ -214,6 +218,10 @@ class Assets {
             'dokan-admin-css' => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/admin.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/admin.css' ),
+            ],
+            'dokan-admin-notice-css' => [
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/admin-notice.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/css/admin-notice.css' ),
             ],
             'dokan-vue-vendor' => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/vue-vendor.css',
@@ -344,6 +352,11 @@ class Assets {
                 'deps'      => [ 'jquery', 'dokan-i18n-jed' ],
                 'version'   => filemtime( $asset_path . '/js/dokan-admin.js' ),
             ],
+            'dokan-admin-notice' => [
+                'src'       => $asset_url . '/js/dokan-admin-notice.js',
+                'deps'      => [ 'jquery' ],
+                'version'   => filemtime( $asset_path . '/js/dokan-admin-notice.js' ),
+            ],
             'dokan-vendor-registration' => [
                 'src'       => $asset_url . '/js/vendor-registration.js',
                 'deps'      => [ 'dokan-form-validate', 'jquery', 'speaking-url', 'dokan-i18n-jed' ],
@@ -436,7 +449,7 @@ class Assets {
             'loading_img'                => DOKAN_PLUGIN_ASSEST . '/images/loading.gif',
             'store_product_search_nonce' => wp_create_nonce( 'dokan_store_product_search_nonce' ),
             'i18n_download_permission'   => __( 'Are you sure you want to revoke access to this download?', 'dokan-lite' ),
-            'i18n_download_access'       => __( 'Could not grant access - the user may already have permission for this file or billing email is not set. Ensure the billing email is set, and the order has been saved.', 'dokan-lite' ),   
+            'i18n_download_access'       => __( 'Could not grant access - the user may already have permission for this file or billing email is not set. Ensure the billing email is set, and the order has been saved.', 'dokan-lite' ),
             /**
              * Filter of maximun a vendor can add tags.
              *
