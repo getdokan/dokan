@@ -267,7 +267,7 @@ class Commission {
             ) {
                 $earning += dokan_pro()->coupon->get_earning_use_admin_coupon_for_vendor( $order, $item, $context, $item->get_product(), $vendor_id, $refund );
             } else {
-                $item_price = apply_filters( 'dokan_earning_by_order_item_price', $item->get_total(), $item );
+                $item_price = apply_filters( 'dokan_earning_by_order_item_price', $item->get_total(), $item, $order );
 
                 if ( $refund ) {
                     $earning += $this->get_earning_by_product( $product_id, $context, $item_price - $refund );
