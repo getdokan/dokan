@@ -62,7 +62,7 @@ class ReviewNotice {
             <div class="dokan-review-notice-logo">
                 <img src="http://dokan-dev.test/wp-content/plugins/dokan-lite/assets/images/dokan-logo-small.svg" alt="Dokan Logo">
             </div>
-            <p class="dokan-notice-text"><?php _e( 'Enjoying <a href="https://wordpress.org/plugins/dokan-lite/" target="_blank">Dokan multivendor</a>? If our plugin is performing well for you, it would be great if you could kindly write a review about <a href="https://wordpress.org/plugins/dokan-lite/" target="_blank">Dokan on WordPress.org</a>. It would give us insights to grow and improve this plugin.', 'dokan' ); ?></p>
+            <p class="dokan-notice-text"><?php _e( 'Enjoying <strong><a href="https://wordpress.org/plugins/dokan-lite/" target="_blank">Dokan multivendor</a></strong>? If our plugin is performing well for you, it would be great if you could kindly write a review about <strong><a href="https://wordpress.org/plugins/dokan-lite/" target="_blank">Dokan on WordPress.org</a></strong>. It would give us insights to grow and improve this plugin.', 'dokan' ); ?></p>
             <div class="dokan-notice-buttons">
                 <a class="button dokan-notice-btn dokan-notice-btn-primary dokan-notice-action" href="https://wordpress.org/support/plugin/dokan-lite/reviews/?filter=5" target="_blank"data-key="dokan-notice-postpond"><?php esc_html_e( 'Yes, You Deserve It', 'dokan' ); ?></a>
                 <button class="button dokan-notice-btn dokan-notice-action" href="#"data-key="dokan-notice-postpond"><?php esc_html_e( 'Maybe Later', 'dokan' ); ?></button>
@@ -76,15 +76,15 @@ class ReviewNotice {
             .dokan-review-notice {
                 position: relative;
                 padding-right: 40px;
-                padding-bottom: 12px;
+                padding-bottom: 8px;
                 border-left: 4px solid #f1545d;
             }
 
             .dokan-review-notice .dokan-review-notice-logo {
                 float: left;
-                width: 84px;
+                width: 86px;
                 height: auto;
-                padding: 10px 10px 0 0;
+                padding: 10px 12px 0 0;
                 box-sizing: border-box;
             }
 
@@ -109,8 +109,8 @@ class ReviewNotice {
 
             .dokan-review-notice span.dokan-notice-close{
                 position: absolute;
-                top: 10px;
-                right: 10px;
+                top: 8px;
+                right: 8px;
                 cursor: pointer;
             }
         </style>
