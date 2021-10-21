@@ -67,15 +67,15 @@ class ReviewNotice {
      */
     public function review_notice_action_handler() {
         if ( ! wp_verify_nonce( $_POST['nonce'], 'dokan_admin' ) ) {
-            wp_send_json_error( __( 'Invalid nonce', 'dokan' ) );
+            wp_send_json_error( __( 'Invalid nonce', 'dokan-lite' ) );
         }
 
         if ( ! current_user_can( 'manage_woocommerce' ) ) {
-            wp_send_json_error( __( 'You have no permission to do that', 'dokan' ) );
+            wp_send_json_error( __( 'You have no permission to do that', 'dokan-lite' ) );
         }
 
         if ( empty( $_POST['dokan_ask_for_review_notice_action'] ) || empty( $_POST['key'] ) ) {
-            wp_send_json_error( __( 'Invalid request', 'dokan' ) );
+            wp_send_json_error( __( 'Invalid request', 'dokan-lite' ) );
         }
 
         $status = false;
@@ -99,7 +99,7 @@ class ReviewNotice {
         }
 
         if ( empty( $status ) ) {
-            wp_send_json_error( __( 'Request failed', 'dokan' ) );
+            wp_send_json_error( __( 'Request failed', 'dokan-lite' ) );
         }
 
         wp_send_json_success();
