@@ -18,14 +18,14 @@
                     $threshold      = dokan_get_withdraw_threshold( dokan_get_current_user_id() );
                 ?>
                 <p>
-                    <strong><?php esc_html_e( 'Your Balance:', 'dokan-lite' ); ?></strong> <?php echo $balance; ?><br>
+                    <?php esc_html_e( 'Your Balance:', 'dokan-lite' ); ?> <strong> <?php echo $balance; ?></strong><br>
                     <?php if ( $withdraw_limit !== -1 ) : ?>
-                    <strong><?php esc_html_e( 'Minimum Withdraw Amount:', 'dokan-lite' ); ?></strong> <?php echo wc_price( $withdraw_limit ); ?><br>
+                    <?php esc_html_e( 'Minimum Withdraw Amount:', 'dokan-lite' ); ?> <strong><?php echo wc_price( $withdraw_limit ); ?></strong><br>
                     <?php
                         endif;
                         if ( $threshold !== -1 ) :
                     ?>
-                    <strong><?php esc_html_e( 'Withdraw Threshold:', 'dokan-lite' ); ?></strong> <?php echo sprintf( _n( '%s day', '%s days', $threshold, 'dokan-lite' ), number_format_i18n( $threshold ) ); ?>
+                    <?php esc_html_e( 'Withdraw Threshold:', 'dokan-lite' ); ?> <strong><?php echo sprintf( _n( '%s day', '%s days', $threshold, 'dokan-lite' ), number_format_i18n( $threshold ) ); ?></strong>
                     <?php endif; ?>
                 </p>
 
@@ -34,7 +34,7 @@
             </div>
             <div class="dokan-w5">
                 <?php if ( dokan_withdraw_is_manual_request_enabled() ) : ?>
-                <button class="dokan-btn dokan-btn-theme" id="dokan-request-withdraw-button"><?php esc_html_e( 'Request Withdraw', 'dokan-lite' ); ?></button>
+                <button class="dokan-btn" id="dokan-request-withdraw-button"><?php esc_html_e( 'Request Withdraw', 'dokan-lite' ); ?></button>
                 <?php
                 endif;
                 do_action( 'dokan_withdraw_content_after_balance_button' );
@@ -76,7 +76,7 @@
 
             </div>
             <div class="dokan-w5">
-                <a href="<?php echo esc_url( dokan_get_navigation_url( 'withdraw-requests' ) ); ?>" class="dokan-btn dokan-btn-theme" id="dokan-withdraw-display-requests-button"><?php esc_html_e( 'View Payments', 'dokan-lite' ); ?></a>
+                <a href="<?php echo esc_url( dokan_get_navigation_url( 'withdraw-requests' ) ); ?>" class="dokan-btn" id="dokan-withdraw-display-requests-button"><?php esc_html_e( 'View Payments', 'dokan-lite' ); ?></a>
                 <?php do_action( 'dokan_withdraw_content_after_last_payment_button' ); ?>
             </div>
         </div>
@@ -109,9 +109,9 @@
                 </div>
                 <div class="dokan-w5">
                     <?php if ( $default_method === $method ) : ?>
-                    <button class="dokan-btn dokan-btn-theme" disabled data-method="<?php echo esc_attr( $method ); ?>"><?php esc_html_e( 'Default', 'dokan-lite' ); ?></button>
+                    <button class="dokan-btn dokan-btn-default" disabled data-method="<?php echo esc_attr( $method ); ?>"><?php esc_html_e( 'Default', 'dokan-lite' ); ?></button>
                    <?php else: ?>
-                   <button class="dokan-btn dokan-btn-theme dokan-withdraw-make-default-button" data-method="<?php echo esc_attr( $method ); ?>"><?php esc_html_e( 'Make Default', 'dokan-lite' ); ?></button>
+                   <button class="dokan-btn dokan-withdraw-make-default-button" data-method="<?php echo esc_attr( $method ); ?>"><?php esc_html_e( 'Make Default', 'dokan-lite' ); ?></button>
                    <?php endif; ?>
                 </div>
             </div>

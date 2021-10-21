@@ -11,7 +11,7 @@ if ( $withdraw_requests ) :
 ?>
     <div class="dokan-clearfix dokan-panel-inner-container">
         <div class="dokan-w12">
-            <h4>Pending Requests</h4>
+            <strong><?php esc_html_e( 'Pending Requests', 'dokan-lite' ); ?></strong>
             <table class="dokan-table dokan-table-striped">
                 <tr>
                     <th><?php esc_html_e( 'Amount', 'dokan-lite' ); ?></th>
