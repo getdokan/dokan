@@ -103,7 +103,7 @@
             ?>
             <div class="dokan-clearfix dokan-panel-inner-container">
                 <div class="dokan-w8">
-                    <img src="<?php echo esc_url( $method_icon ); ?>" width="60" height="60" alt="<?php echo esc_attr( $method_title ); ?>" />
+                    <img src="<?php echo esc_url( $method_icon ); ?>" width="40" height="40" alt="<?php echo esc_attr( $method_title ); ?>" class="dokan-withdraw-method-logo" />
                     <strong><?php echo esc_html( $method_title ); ?></strong>
                     <small><?php echo esc_html( $method_info ) ?></small>
                 </div>
