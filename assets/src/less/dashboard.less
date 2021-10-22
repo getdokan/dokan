@@ -188,6 +188,90 @@ div.media-sidebar a.edit-attachment{
                     height: 300px;
                 }
             }
+
+            .dokan-payment-settings-summary {
+
+                #vendor-dashboard-payment-settings-error {
+                    padding: 25px;
+                    display: none;
+                    background-color: palevioletred
+                }
+
+                div.payment-methods-listing-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 10px;
+                    background-color: #EEEEEE;
+
+                    > h2 {
+                        margin: 5px 0;
+                        flex-grow: 1;
+                    }
+
+                    > div {
+                        flex-grow: 2;
+                        text-align: right;
+
+                        #vendor-payment-method-drop-down {
+                            border: 1px black solid;
+                            position: absolute;
+                            top: 0;
+                            right: 0;
+                            background-color: white;
+
+                            ul {
+                                li {
+                                div {
+                                  display: flex;
+                                  align-items: center;
+                                  border-bottom: 1px #dddddd solid;
+                                  padding: 10px 10px;
+
+                                  img {
+                                    width: calc(12px + 1.5vw);
+                                    border: 1px solid lightgray;
+                                    border-radius: 50%;
+                                  }
+
+                                  span {
+                                    margin-left: 10px;
+                                    color: #333333;
+                                  }
+                                }
+                              }
+                            }
+                        }
+                    }
+                }
+
+                > ul {
+                    li {
+                        > div {
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            padding: 10px;
+                            border-bottom: #CCCCCC solid 1px;
+
+                            > div {
+                                display: flex;
+                                align-items: center;
+
+                                img {
+                                    width: calc( 12px + 3vw );
+                                    border: 1px solid grey;
+                                    border-radius: 50%;
+                                }
+
+                                span {
+                                    margin-left: 10px; color: #333333
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         .edit-account {
