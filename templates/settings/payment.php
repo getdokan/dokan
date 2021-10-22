@@ -11,14 +11,14 @@ $has_methods_dropdown = false;
 
 do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info ); ?>
 
-<div>
-    <h2 style="padding: 25px; display: none; background-color: palevioletred" id="vendor-dashboard-payment-settings-error"></h2>
-    <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #EEEEEE">
-        <h2 style="margin: 5px 0; flex-grow: 1"> <?php esc_html_e( 'Payment Methods', 'dokan-lite' ); ?></h2>
-        <div id="vendor-dashboard-payment-settings-toggle-dropdown" style="flex-grow: 2; text-align: right">
+<div class="dokan-payment-settings-summary">
+    <h2 id="vendor-dashboard-payment-settings-error"></h2>
+    <div class="payment-methods-listing-header">
+        <h2> <?php esc_html_e( 'Payment Methods', 'dokan-lite' ); ?></h2>
+        <div id="vendor-dashboard-payment-settings-toggle-dropdown">
             <button id="toggle-vendor-payment-method-drop-down" class="dokan-btn dokan-btn-success"> <?php esc_html_e( 'Add Payment Method', 'dokan-lite' ); ?></button>
             <div style="position: relative;">
-                <div id="vendor-payment-method-drop-down" style="border: 1px black solid; position: absolute; top: 0; right: 0; background-color: white">
+                <div id="vendor-payment-method-drop-down">
                     <?php
                     $profile_methods = array_keys( $profile_info['payment'] );
                     $unused_methods  = array_diff( $methods, $profile_methods );
@@ -51,9 +51,9 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
                         ?>
                         <li>
                             <a href="<?php echo esc_url(  home_url( "dashboard/settings/payment/manage-" . $method_key ) ); ?>">
-                                <div style="display: flex; align-items: center; border-bottom: 1px #dddddd solid; padding: 10px 10px">
-                                    <img style="width: calc( 12px + 1.5vw ); border: 1px solid lightgray; border-radius: 50%;" src="<?php echo esc_url( DOKAN_PLUGIN_ASSEST . "/images/dashboard-settings/payment/$method_key.svg" ); ?>" alt="<?php echo esc_attr( $method_key ); ?>" />
-                                    <span style="margin-left: 10px; color: #333333"> <?php
+                                <div>
+                                    <img src="<?php echo esc_url( DOKAN_PLUGIN_ASSEST . "/images/dashboard-settings/payment/$method_key.svg" ); ?>" alt="<?php echo esc_attr( $method_key ); ?>" />
+                                    <span> <?php
                                         //translators: %s: payment method title
                                         echo sprintf( __( 'Direct to %s', 'dokan-lite' ), esc_html__( $method['title'], 'dokan-lite' ) );
                                         ?>
@@ -66,7 +66,7 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
 
                     <?php if ( ! $has_methods_dropdown ) { ?>
                         <div>
-                            All payment methods are used
+                            <?php esc_html_e( 'All payment methods are used', 'dokan-lite' ); ?>
                         </div>
                     <?php } ?>
                 </div>
@@ -95,10 +95,10 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
         }
         ?>
         <li>
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: #CCCCCC solid 1px">
-                <div style="display: flex; align-items: center">
-                    <img style="width: calc( 12px + 3vw ); border: 1px solid grey; border-radius: 50%;" src="<?php echo esc_url( DOKAN_PLUGIN_ASSEST . "/images/dashboard-settings/payment/$method_key.svg" ); ?>" alt="<?php echo esc_attr( $method_key ); ?>" />
-                    <span style="margin-left: 10px; color: #333333">
+            <div>
+                <div>
+                    <img src="<?php echo esc_url( DOKAN_PLUGIN_ASSEST . "/images/dashboard-settings/payment/$method_key.svg" ); ?>" alt="<?php echo esc_attr( $method_key ); ?>" />
+                    <span>
                         <?php
                         esc_html_e( $method['title'], 'dokan-lite' );
 
@@ -110,14 +110,14 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
                 </div>
                 <div>
                     <?php if ( isset( $profile_info['payment']['default-method'] ) && $profile_info['payment']['default-method'] === $method_key ) {?>
-                        <button disabled tabindex="-1" class="dokan-btn-sm" style="background-color: gray; margin-bottom: 3px">Default</button>
+                        <button disabled tabindex="-1" class="dokan-btn-sm" style="background-color: gray; margin-bottom: 3px"><?php esc_html_e( 'Default', 'dokan-lite' ); ?></button>
                     <?php } else { ?>
                         <button class="dokan-btn-sm dokan-btn-success" data-dokan-payment-method="<?php echo esc_attr( $method_key ) ?>" style="margin-bottom: 3px">
-                            Make Default
+                            <?php esc_html_e( 'Make Default', 'dokan-lite' ); ?>
                         </button>
                     <?php } ?>
                     <a href="<?php echo esc_url(  home_url( "dashboard/settings/payment/manage-" . $method_key . "/edit" ) ); ?>">
-                        <button class="dokan-btn-sm dokan-btn-theme">Manage</button>
+                        <button style="margin-bottom: 3px; margin-left: 3px" class="dokan-btn-sm dokan-btn-theme"><?php esc_html_e( 'Manage', 'dokan-lite' ); ?></button>
                     </a>
                 </div>
             </div>
