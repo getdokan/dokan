@@ -58,7 +58,7 @@ class Settings {
         if ( isset( $wp->query_vars['settings'] ) && $wp->query_vars['settings'] == 'store' ) {
             $heading          = __( 'Settings', 'dokan-lite' );
             $is_store_setting = true;
-        } elseif ( isset( $wp->query_vars['settings'] ) && 'payment' == substr( $wp->query_vars['settings'], 0, 7 ) ) {
+        } elseif ( isset( $wp->query_vars['settings'] ) && 'payment' === substr( $wp->query_vars['settings'], 0, 7 ) ) {
             $heading = __( 'Withdraw Payment Method', 'dokan-lite' );
             $slug = str_replace( 'payment/manage-', '', $wp->query_vars['settings'] );
 
@@ -150,7 +150,7 @@ class Settings {
             }
         }
 
-        if ( isset( $wp->query_vars['settings'] ) && 'payment' == substr( $wp->query_vars['settings'], 0, 7 ) ) {
+        if ( isset( $wp->query_vars['settings'] ) && 'payment' === substr( $wp->query_vars['settings'], 0, 7 ) ) {
             if ( ! current_user_can( 'dokan_view_store_payment_menu' ) ) {
                 dokan_get_template_part('global/dokan-error', '', array(
                     'deleted' => false,
@@ -207,7 +207,7 @@ class Settings {
             $is_edit_mode = false;
         }
 
-        dokan_get_template_part( 'settings/payment', $method ? 'manage' : '', array(
+        dokan_get_template_part( 'settings/payment', ! empty( $method ) ? 'manage' : '', array(
             'methods'        => $methods,
             'method_key'     => $method,
             'current_user'   => $currentuser,
@@ -274,7 +274,7 @@ class Settings {
                 $ajax_validate = $this->payment_validate();
                 break;
             default:
-                $ajax_validate = new WP_Error( 'no_match', 'Not Found' );
+                $ajax_validate = new WP_Error( 'no_match', __( 'Settings form with given id not found', 'dokan-lite' ) );
         }
 
         if ( is_wp_error( $ajax_validate ) ) {
@@ -469,7 +469,7 @@ class Settings {
 
         $error = new WP_Error();
 
-        if ( ! empty( $post_data['settings']['paypal'] ) ) {
+        if ( ! empty( $post_data['settings']['paypal'] ) && isset( $post_data['settings']['paypal']['email'] ) ) {
             $email = sanitize_email( $post_data['settings']['paypal']['email'] );
 
             if ( empty( $email ) ) {
@@ -477,7 +477,7 @@ class Settings {
             }
         }
 
-        if ( ! empty( $post_data['settings']['skrill'] ) ) {
+        if ( ! empty( $post_data['settings']['skrill'] ) && isset( $post_data['settings']['skrill']['email'] ) ) {
             $email = sanitize_email( $post_data['settings']['skrill']['email'] );
 
             if ( empty( $email ) ) {
@@ -487,15 +487,15 @@ class Settings {
 
         if ( ! empty( $post_data['settings']['bank'] ) ) {
             if ( empty( $post_data['settings']['bank']['ac_name'] ) ) {
-                $error->add( 'dokan_bank_ac_name', __( 'No account holder name', 'dokan-lite' ) );
+                $error->add( 'dokan_bank_ac_name', __( 'Account holder name is required', 'dokan-lite' ) );
             }
 
             if ( empty( $post_data['settings']['bank']['ac_number'] ) ) {
-                $error->add( 'dokan_bank_ac_number', __( 'No account number', 'dokan-lite' ) );
+                $error->add( 'dokan_bank_ac_number', __( 'Account number is required', 'dokan-lite' ) );
             }
 
             if ( empty( $post_data['settings']['bank']['routing_number'] ) ) {
-                $error->add( 'dokan_bank_ac_routing_number', __( 'No account routing number', 'dokan-lite' ) );
+                $error->add( 'dokan_bank_ac_routing_number', __( 'Routing number is required', 'dokan-lite' ) );
             }
 
             if ( empty( $post_data['settings']['bank']['ac_type'] ) ) {
@@ -698,7 +698,7 @@ class Settings {
     /**
      * Get proper heading for payments of vendor dashboard payment settings
      *
-     * @since 3.2.12
+     * @since DOKAN_LITE_SINCE
      *
      * @param $slug
      * @param $heading
@@ -706,18 +706,18 @@ class Settings {
      * @return string
      */
     private function getPaymentHeading( $slug, $heading ) {
-        if ( $slug === 'bank' || $slug === ( 'bank' . '/edit' ) ) {
-            $heading = __( 'Add Bank Account' );
-        } elseif ( $slug === 'paypal' || $slug === ( 'paypal' . '/edit' ) ) {
-            $heading = 'Paypal Settings';
-        } elseif ( $slug === 'dokan-moip-connect' || $slug === ( 'dokan-moip-connect' . '/edit' ) ) {
-            $heading = 'Wirecard(MOIP) Settings';
-        } elseif ( $slug === 'dokan-stripe-connect' || $slug === ( 'dokan-stripe-connect' . '/edit' ) ) {
-            $heading = 'Stripe Settings';
-        } elseif ( $slug === 'skrill' || $slug === ( 'skrill' . '/edit' ) ) {
-            $heading = 'Skrill Settings';
-        } elseif ( $slug === 'dokan-paypal-marketplace' || $slug === ( 'dokan-paypal-marketplace' . '/edit' ) ) {
-            $heading = 'Dokan Paypal Marketplace Settings';
+        if ( 'bank' === $slug || 'bank/edit' === $slug ) {
+            $heading = __( 'Add Bank Account', 'dokan-lite' );
+        } elseif ( 'paypal' === $slug || 'paypal/edit' === $slug ) {
+            $heading = __( 'Paypal Settings', 'dokan-lite' );
+        } elseif ( 'dokan-moip-connect' === $slug || 'dokan-moip-connect/edit' === $slug ) {
+            $heading = __( 'Wirecard(MOIP) Settings', 'dokan-lite' );
+        } elseif ( 'dokan-stripe-connect' === $slug || 'dokan-stripe-connect/edit' === $slug ) {
+            $heading = __( 'Stripe Settings', 'dokan-lite' );
+        } elseif ( 'skrill' === $slug || 'skrill/edit' === $slug ) {
+            $heading = __( 'Skrill Settings', 'dokan-lite' );
+        } elseif ( 'dokan-paypal-marketplace' === $slug || 'dokan-paypal-marketplace/edit' === $slug ) {
+            $heading = __( 'Dokan Paypal Marketplace Settings', 'dokan-lite' );
         }
 
         return $heading;
