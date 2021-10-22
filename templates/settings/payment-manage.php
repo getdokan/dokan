@@ -6,8 +6,7 @@
  *
  * @package dokan
  */
-$has_methods = false;
-do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info ); ?>
+$has_methods = false; ?>
 
 <form method="post" id="payment-form"  action="" class="dokan-form-horizontal">
 
@@ -39,7 +38,7 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
         <?php } ?>
     <?php
     /**
-     * @since 2.2.2 Insert action on botton of payment settings form
+     * @since 3.2.15 Insert action on botton of payment settings form
      */
     do_action( 'dokan_payment_settings_form_bottom', $current_user, $profile_info ); ?>
 
@@ -58,10 +57,3 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
         dokan_get_template_part( 'global/dokan-error', '', array( 'deleted' => false, 'message' => __( 'No withdraw method is available. Please contact site admin.', 'dokan-lite' ) ) );
     }
 ?>
-
-
-<?php
-/**
- * @since 2.2.2 Insert action after social settings form
- */
-do_action( 'dokan_payment_settings_after_form', $current_user, $profile_info ); ?>
