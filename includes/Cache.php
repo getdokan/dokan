@@ -1,17 +1,15 @@
 <?php
 
-namespace WeDevs\Dokan\Cache;
-
-defined( 'ABSPATH' ) || exit;
+namespace WeDevs\Dokan;
 
 /**
  * Cache Helper class.
  *
- * Manage all of the caches of Dokan and handles caches beautifully.
+ * Manage all of the caches of Dokan and handles it beautifully.
  *
  * @since DOKAN_LITE_SINCE
  */
-class CacheHelper {
+class Cache {
 
     /**
 	 * Get transient version.
@@ -28,12 +26,12 @@ class CacheHelper {
      *
      * @since  DOKAN_LITE_SINCE
 	 *
-	 * @param  string             $group   Name for the group of transients we need to invalidate.
-	 * @param  bool            $refresh true to force a new version.
+	 * @param  string $group   Name for the group of transients we need to invalidate.
+	 * @param  bool   $refresh true to force a new version.
      *
 	 * @return string|array|false transient version based on time(), 10 digits.
 	 */
-	public static function get_transient_version( $group, $refresh = false ) {
+	protected static function get_transient_version( $group, $refresh = false ) {
 		$transient_name  = "dokan-$group-transient-version";
 		$transient_value = get_transient( $transient_name );
 
@@ -58,12 +56,12 @@ class CacheHelper {
      *
      * Get transient value for a normal key
      * ```
-     * CacheHelper::dokan_get_transient( 'transient_key' ); // returns `transient_key` value;
+     * Cache::get_transient( 'transient_key' ); // returns `transient_key` value;
      * ```
      *
      * Get transient value for a group
      * ```
-     * CacheHelper::dokan_get_transient( 'transient_key', 'group_name' );
+     * Cache::get_transient( 'transient_key', 'group_name' );
      * ```
      *
      * @since DOKAN_LITE_SINCE
@@ -73,7 +71,7 @@ class CacheHelper {
      *
      * @return mixed false or Transient value
      */
-	public static function dokan_get_transient( $key, $group = null ) {
+	public static function get_transient( $key, $group = '' ) {
         if ( empty( $group ) ) {
             return get_transient( $key );
         }
@@ -103,7 +101,7 @@ class CacheHelper {
      *
      * @return bool  Inserted/Updated the transient or not
      */
-	public static function dokan_set_transient( $key, $value, $group = null, $expiration = WEEK_IN_SECONDS ) {
+	public static function set_transient( $key, $value, $group = '', $expiration = WEEK_IN_SECONDS ) {
         if ( empty( $group ) ) {
             return set_transient( $key, $value, $expiration );
         }
@@ -129,7 +127,7 @@ class CacheHelper {
      *
 	 * @return string
 	 */
-	public static function get_cache_prefix( $group ) {
+	protected static function get_prefix( $group ) {
 		$prefix = wp_cache_get( 'dokan_' . $group, $group );
 
 		if ( false === $prefix ) {
@@ -145,23 +143,23 @@ class CacheHelper {
      *
      * Example:
      * ```
-     * CacheHelper::get_cache( 'all_products', 'seller_products' );
+     * Cache::get( 'all_products', 'seller_products' );
      * ```
      *
      * @since DOKAN_LITE_SINCE
      *
-     * @param string  $key
-     * @param string  $group   eg: `dokan`, `dokan_seller_data_[seller_id]`
-     * @param bool $forced eg: default: `false`
+     * @param string $key
+     * @param string $group  eg: `dokan`, `dokan_seller_data_[seller_id]`
+     * @param bool   $forced eg: default: `false`
      *
      * @return mixed|false
      */
-    public static function get_cache( $key, $group = null, $forced = false ) {
+    public static function get( $key, $group = '', $forced = false ) {
         if ( empty( $group ) ) {
             return wp_cache_get( $key, $group, $forced );
         }
 
-        $key = self::get_cache_prefix( $group ) . $key;
+        $key = self::get_prefix( $group ) . $key;
 
         return wp_cache_get( $key, $group, $forced );
 	}
@@ -181,8 +179,27 @@ class CacheHelper {
      *
      * @return bool
      */
-    public static function set_cache( $key, $data, $group = null, $expire = WEEK_IN_SECONDS ) {
+    public static function set( $key, $data, $group = '', $expire = WEEK_IN_SECONDS ) {
         return wp_cache_set( $key, $data, $group, $expire );
+	}
+
+    /**
+	 * Delete Cache.
+     *
+     * Example:
+     * ```
+     * Cache::delete( 'seller_products_data_1' );
+     * ```
+	 *
+	 * @since DOKAN_LITE_SINCE
+     *
+	 * @param string $key   Cache Key Name.
+	 * @param string $group Cache Group Name.
+     *
+     * @return bool
+	 */
+	public static function delete( $key, $group = '' ) {
+		return wp_cache_delete( $key, $group );
 	}
 
     /**
@@ -190,7 +207,7 @@ class CacheHelper {
      *
      * Example:
      * ```
-     * CacheHelper::invalidate_cache_group( 'seller_products' );
+     * Cache::invalidate_group( 'seller_products' );
      * ```
 	 *
 	 * @since DOKAN_LITE_SINCE
@@ -199,7 +216,7 @@ class CacheHelper {
      *
      * @return bool
 	 */
-	public static function invalidate_cache_group( $group ) {
+	public static function invalidate_group( $group ) {
 		return wp_cache_set( 'dokan_' . $group, microtime(), $group );
 	}
 }

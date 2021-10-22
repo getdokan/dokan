@@ -2,7 +2,7 @@
 
 namespace WeDevs\Dokan\Withdraw;
 
-use WeDevs\Dokan\Cache\CacheHelper;
+use WeDevs\Dokan\Cache as DokanCache;
 
 /**
  * Withdraw Cache class.
@@ -11,9 +11,9 @@ use WeDevs\Dokan\Cache\CacheHelper;
  *
  * @since DOKAN_LITE_SINCE
  *
- * @see \WeDevs\Dokan\Cache\CacheHelper
+ * @see \WeDevs\Dokan\Cache
  */
-class Cache extends CacheHelper {
+class Cache {
 
     public $seller_id;
     private $cache_group_admin;
@@ -60,7 +60,7 @@ class Cache extends CacheHelper {
      * @return void
      */
     public function clear_admin_cache_group() {
-        self::invalidate_cache_group( $this->cache_group_admin );
+        DokanCache::invalidate_group( $this->cache_group_admin );
     }
 
     /**
@@ -77,7 +77,7 @@ class Cache extends CacheHelper {
             $this->seller_id = $seller_id;
         }
 
-        self::invalidate_cache_group( $this->cache_group_seller );
+        DokanCache::invalidate_group( $this->cache_group_seller );
     }
 
     /**

@@ -2,7 +2,7 @@
 
 namespace WeDevs\Dokan\Vendor;
 
-use WeDevs\Dokan\Cache\CacheHelper;
+use WeDevs\Dokan\Cache;
 use WP_Query;
 
 /**
@@ -702,7 +702,7 @@ class Vendor {
         $status        = dokan_withdraw_get_active_order_status_in_comma();
         $cache_group   = 'dokan_seller_data_'.$this->id;
         $cache_key     = 'dokan_seller_earnings_' . $this->id;
-        $earning       = CacheHelper::get_cache( $cache_key, $cache_group );
+        $earning       = Cache::get( $cache_key, $cache_group );
         $on_date       = $on_date ? date( 'Y-m-d', strtotime( $on_date ) ) : current_time( 'mysql' );
         $trn_type      = 'dokan_refund';
         $refund_status = 'approved';
@@ -741,7 +741,7 @@ class Vendor {
 
             $earning = (float) $result->earnings;
 
-            CacheHelper::set_cache( $cache_key, $earning, $cache_group );
+            Cache::set( $cache_key, $earning, $cache_group );
         }
 
         if ( $formatted ) {
@@ -761,11 +761,12 @@ class Vendor {
     public function get_balance( $formatted = true, $on_date= '' ) {
         global $wpdb;
 
+        $vendor_id     = dokan_get_current_user_id();
         $status        = dokan_withdraw_get_active_order_status_in_comma();
-        $cache_group   = dokan()->cache->withdraw->get_seller_cache_group();
+        $cache_group   = "dokan_withdraws_seller_$vendor_id";
         $cache_key     = $on_date ? "dokan_seller_balance_on_{$on_date}_$this->id" : 'dokan_seller_balance_' . $this->id;
-        $earning       = CacheHelper::get_cache( $cache_key, $cache_group );
-        $threshold_day = dokan_get_withdraw_threshold( dokan_get_current_user_id() );
+        $earning       = Cache::get( $cache_key, $cache_group );
+        $threshold_day = dokan_get_withdraw_threshold( $vendor_id );
         $on_date       = $on_date ? date( 'Y-m-d', strtotime( $on_date ) ) : current_time( 'mysql' );
         $date          = date( 'Y-m-d', strtotime( $on_date . ' -'.$threshold_day.' days' ) );
 
@@ -789,7 +790,7 @@ class Vendor {
 
             $earning = (float) $result->earnings - (float) round( $result->withdraw, wc_get_rounding_precision() );
 
-            CacheHelper::set_cache( $cache_key, $earning, $cache_group );
+            Cache::set( $cache_key, $earning, $cache_group );
         }
 
         if ( $formatted ) {

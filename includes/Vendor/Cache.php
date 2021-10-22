@@ -2,7 +2,7 @@
 
 namespace WeDevs\Dokan\Vendor;
 
-use WeDevs\Dokan\Cache\CacheHelper;
+use WeDevs\Dokan\Cache as DokanCache;
 
 /**
  * Vendor Cache class.
@@ -11,9 +11,9 @@ use WeDevs\Dokan\Cache\CacheHelper;
  *
  * @since DOKAN_LITE_SINCE
  *
- * @see \WeDevs\Dokan\Cache\CacheHelper
+ * @see \WeDevs\Dokan\Cache
  */
-class Cache extends CacheHelper {
+class Cache {
 
     private $cache_group;
 
@@ -37,7 +37,7 @@ class Cache extends CacheHelper {
      * @return void
      */
     public function clear_cache_group( $vendor_id = null ) {
-        self::invalidate_cache_group( $this->cache_group );
+        DokanCache::invalidate_group( $this->cache_group );
     }
 
     /**

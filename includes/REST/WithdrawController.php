@@ -3,7 +3,7 @@
 namespace WeDevs\Dokan\REST;
 
 use Exception;
-use WeDevs\Dokan\Cache\CacheHelper;
+use WeDevs\Dokan\Cache;
 use WP_Error;
 use WP_REST_Controller;
 use WP_REST_Server;
@@ -269,14 +269,14 @@ class WithdrawController extends WP_REST_Controller {
             $args['ids'] = $request['ids'];
         }
 
-        $cache_group = dokan()->cache->withdraw->get_admin_cache_group();
+        $cache_group = 'dokan_withdraws';
         $cache_key   = 'dokan-withdraw-requests-' . md5( json_encode( $args ) );
-        $withdraws   = CacheHelper::get_cache( $cache_key, $cache_group );
+        $withdraws   = Cache::get( $cache_key, $cache_group );
 
         if ( false === $withdraws ) {
             $withdraws = dokan()->withdraw->all( $args );
 
-            CacheHelper::set_cache( $cache_key, $withdraws, $cache_group );
+            Cache::set( $cache_key, $withdraws, $cache_group );
         }
 
         $data = [];

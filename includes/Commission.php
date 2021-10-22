@@ -2,8 +2,6 @@
 
 namespace WeDevs\Dokan;
 
-use WeDevs\Dokan\Cache\CacheHelper;
-
 /**
  * Dokan Commission Class
  *
@@ -691,7 +689,7 @@ class Commission {
         global $wpdb;
 
         $cache_key = 'dokan_get_earning_from_order_table' . $order_id . $context;
-        $earning   = CacheHelper::get_cache( $cache_key );
+        $earning   = Cache::get( $cache_key );
 
         if ( false !== $earning ) {
             return $earning;
@@ -709,7 +707,7 @@ class Commission {
         }
 
         $earning = 'seller' === $context ? (float) $result->net_amount : (float) $result->order_total - (float) $result->net_amount;
-        CacheHelper::set_cache( $cache_key, $earning );
+        Cache::set( $cache_key, $earning );
 
         return $earning;
     }

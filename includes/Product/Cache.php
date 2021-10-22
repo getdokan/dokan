@@ -2,7 +2,7 @@
 
 namespace WeDevs\Dokan\Product;
 
-use WeDevs\Dokan\Cache\CacheHelper;
+use WeDevs\Dokan\Cache as DokanCache;
 
 /**
  * Product Cache class.
@@ -11,9 +11,9 @@ use WeDevs\Dokan\Cache\CacheHelper;
  *
  * @since DOKAN_LITE_SINCE
  *
- * @see \WeDevs\Dokan\Cache\CacheHelper
+ * @see \WeDevs\Dokan\Cache
  */
-class Cache extends CacheHelper {
+class Cache {
 
     public function __construct() {
         add_action( 'dokan_new_product_added', [ $this, 'clear_seller_product_caches' ], 20, 2 );
@@ -42,8 +42,8 @@ class Cache extends CacheHelper {
     public static function clear_seller_product_caches( $product_id, $post_data = [] ) {
         $seller_id = dokan_get_current_user_id();
 
-        self::invalidate_cache_group( 'dokan_cache_seller_product_data_' . $seller_id );
-        self::invalidate_cache_group( 'dokan_cache_seller_product_stock_data_' . $seller_id );
+        DokanCache::invalidate_group( 'dokan_cache_seller_product_data_' . $seller_id );
+        DokanCache::invalidate_group( 'dokan_cache_seller_product_stock_data_' . $seller_id );
     }
 
 

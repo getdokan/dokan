@@ -2,7 +2,7 @@
 
 namespace WeDevs\Dokan\Withdraw;
 
-use WeDevs\Dokan\Cache\CacheHelper;
+use WeDevs\Dokan\Cache;
 use WP_Error;
 use WeDevs\Dokan\Withdraw\Withdraws;
 
@@ -233,9 +233,9 @@ class Manager {
     public function get_withdraw_requests( $user_id = '', $status = 0, $limit = 10, $offset = 0 ) {
         global $wpdb;
 
-        $cache_group = empty ( $user_id ) ? dokan()->cache->withdraw->get_admin_cache_group() : dokan()->cache->withdraw->get_seller_cache_group();
+        $cache_group = empty ( $user_id ) ? 'dokan_withdraws' : "dokan_withdraws_seller_$user_id";
         $cache_key   = "dokan-withdraw-requests-$user_id-$status-$limit-$offset";
-        $result      = CacheHelper::get_cache( $cache_key, $cache_group );
+        $result      = Cache::get( $cache_key, $cache_group );
 
         if ( false === $result ) {
             if ( empty( $user_id ) ) {
@@ -244,7 +244,7 @@ class Manager {
                 $result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} WHERE user_id = %d AND status = %d LIMIT %d, %d", $user_id, $status, $offset, $limit ) );
             }
 
-            CacheHelper::set_cache( $cache_key, $result, $cache_group );
+            Cache::set( $cache_key, $result, $cache_group );
         }
 
         return $result;
