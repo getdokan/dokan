@@ -184,7 +184,7 @@ function dokan_withdraw_method_bank( $store_settings ) {
             </div>
 
             <div class="dokan-w10">
-                <input id='ac_name' name="settings[bank][ac_name]" value="<?php echo esc_attr( $account_name ); ?>" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Your bank account name', 'dokan-lite' ); ?>" type="text">
+                <input id='ac_name' name="settings[bank][ac_name]" value="<?php echo esc_attr( $account_name ); ?>" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Your bank account name', 'dokan-lite' ); ?>" type="text" required>
             </div>
         </div>
 
@@ -194,7 +194,7 @@ function dokan_withdraw_method_bank( $store_settings ) {
             </div>
 
             <div class="dokan-w10">
-                <select style="padding: 10px 15px; border-radius: 5px; min-height: 50px" id='ac_type' name="settings[bank][ac_type]" class="dokan-form-control">
+                <select style="padding: 10px 15px; border-radius: 5px; min-height: 50px" id='ac_type' name="settings[bank][ac_type]" class="dokan-form-control" required>
                     <option value="" <?php echo ( ( $account_type === '' ) ? 'selected' : '' ); ?> > <?php esc_html_e( 'Please Select...', 'dokan-lite' ); ?> </option>
                     <option value="personal" <?php echo ( ( $account_type === 'personal' ) ? 'selected' : '' ); ?> > <?php esc_html_e( 'Personal', 'dokan-lite' ); ?> </option>
                     <option value="business" <?php echo ( ( $account_type === 'business' ) ? 'selected' : '' ); ?> > <?php esc_html_e( 'Business', 'dokan-lite' ); ?> </option>
@@ -208,8 +208,8 @@ function dokan_withdraw_method_bank( $store_settings ) {
             </div>
 
             <div class="dokan-w10">
-                <input name="settings[bank][routing_number]" value="<?php echo esc_attr( $routing_number ); ?>" class="dokan-form-control dokan-w4" placeholder="<?php esc_attr_e( 'Routing number', 'dokan-lite' ); ?>" type="text">
-                <input style="float: right" name="settings[bank][ac_number]" value="<?php echo esc_attr( $account_number ); ?>" class="dokan-form-control dokan-w7" placeholder="<?php esc_attr_e( 'Your bank account number', 'dokan-lite' ); ?>" type="text">
+                <input name="settings[bank][routing_number]" value="<?php echo esc_attr( $routing_number ); ?>" class="dokan-form-control dokan-w4" placeholder="<?php esc_attr_e( 'Routing number', 'dokan-lite' ); ?>" type="text" required>
+                <input style="float: right" name="settings[bank][ac_number]" value="<?php echo esc_attr( $account_number ); ?>" class="dokan-form-control dokan-w7" placeholder="<?php esc_attr_e( 'Your bank account number', 'dokan-lite' ); ?>" type="text" required>
             </div>
         </div>
 
@@ -258,7 +258,7 @@ function dokan_withdraw_method_bank( $store_settings ) {
         </div>
 
         <div class="dokan-form-group" style="text-align: left">
-            <input id="declaration" value="I attest that I am the owner and have full authorization to this bank account" name="settings[bank][declaration]" checked type="checkbox" required/>
+            <input id="declaration" name="settings[bank][declaration]" checked type="checkbox" required/>
             <label for="declaration">
                 <?php esc_html_e( 'I attest that I am the owner and have full authorization to this bank account', 'dokan-lite' ); ?>
             </label>
