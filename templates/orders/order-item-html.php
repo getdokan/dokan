@@ -81,15 +81,16 @@ $img_kses = apply_filters( 'dokan_product_image_attributes', array(
     <td width="1%">
         <?php
             if ( isset( $item['qty'] ) ) {
-                $item_qty = $item['qty'];
+                $qty = $item->get_quantity();
                 $refunded_qty = $order->get_qty_refunded_for_item( $item_id );
-
-                if ( $refunded_qty ) {
-                    echo '<del>' . esc_html( $item_qty ) . '</del> ';
-                    $item_qty = $item_qty + $refunded_qty; // $refunded_qty is already negative
-                }
-
-                echo esc_html( $item_qty );
+                
+                if ( $refunded_qty ) { 
+                    $qty_display = '<del>' . esc_html( $qty ) . '</del> <ins>' . esc_html( $qty - ( $refunded_qty * -1 ) ) . '</ins>';
+                } else {
+                    $qty_display = esc_html( $qty );
+                } 
+                
+                echo $qty_display;
             }
         ?>
     </td>
