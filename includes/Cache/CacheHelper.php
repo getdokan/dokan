@@ -38,9 +38,9 @@ class CacheHelper {
 		$transient_value = get_transient( $transient_name );
 
 		if ( false === $transient_value || true === $refresh ) {
-			$transient_value = (string) time();
+			$transient_value = time();
 
-			self::dokan_set_transient( $transient_name, $transient_value );
+			set_transient( $transient_name, $transient_value );
 		}
 
 		return $transient_value;
