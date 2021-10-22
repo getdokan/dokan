@@ -31,7 +31,7 @@ class ReviewNotice {
 
         $exclude = apply_filters( 'dokan_ask_for_review_admin_notice_exclude_pages', [ 'users.php', 'tools.php', 'options-general.php', 'options-writing.php', 'options-reading.php', 'options-discussion.php', 'options-media.php', 'options-permalink.php', 'options-privacy.php', 'edit-comments.php', 'upload.php', 'media-new.php', 'import.php', 'export.php', 'site-health.php', 'export-personal-data.php', 'erase-personal-data.php' ] );
 
-        if ( in_array( $pagenow, $exclude ) ) {
+        if ( in_array( $pagenow, $exclude, true ) ) {
             return;
         }
 
@@ -66,7 +66,7 @@ class ReviewNotice {
      * @return void
      */
     public function review_notice_action_handler() {
-        if ( ! wp_verify_nonce( $_POST['nonce'], 'dokan_admin' ) ) {
+        if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'dokan_admin' ) ) {
             wp_send_json_error( __( 'Invalid nonce', 'dokan-lite' ) );
         }
 
@@ -79,7 +79,7 @@ class ReviewNotice {
         }
 
         $status = false;
-        if ( 'dokan-notice-dismiss' === wp_unslash( $_POST['key'] ) ) {
+        if ( 'dokan-notice-dismiss' === wp_unslash( sanitize_key( $_POST['key'] ) ) ) {
             $result = update_option( 'dokan_review_notice_enable', 0 );
             $status = $result ? true : false;
 
@@ -87,7 +87,7 @@ class ReviewNotice {
             delete_option( 'dokan_review_notice_postpond_time' );
         }
 
-        if ( 'dokan-notice-postpond' === wp_unslash( $_POST['key'] ) && $status === false ) {
+        if ( 'dokan-notice-postpond' === wp_unslash( sanitize_key( $_POST['key'] ) ) && $status === false ) {
             $result = update_option( 'dokan_review_notice_enable', 1 );
             $status = $result && $status !== false ? true : false;
 
