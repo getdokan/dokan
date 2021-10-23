@@ -38,7 +38,7 @@ $has_methods = false; ?>
         <?php } ?>
     <?php
     /**
-     * @since 3.2.15 Insert action on botton of payment settings form
+     * @since DOKAN_LITE_SINCE Insert action on botton of payment settings form
      */
     do_action( 'dokan_payment_settings_form_bottom', $current_user, $profile_info ); ?>
 
