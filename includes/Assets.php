@@ -390,12 +390,6 @@ class Assets {
                 'version'   => filemtime( $asset_path . 'js/helper.js' ),
                 'in_footer' => false,
             ],
-            'vendor-dashboard-payment' => [
-                'src'       => $asset_url . '/js/vendor-dashboard-payment-settings.js',
-                'deps'      => [ 'jquery' ],
-                'version'   => filemtime( $asset_path . 'js/vendor-dashboard-payment-settings.js' ),
-                'in_footer' => true,
-            ],
         ];
 
         return $scripts;

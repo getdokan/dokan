@@ -198,7 +198,6 @@ class Settings {
         $currentuser  = dokan_get_current_user_id();
         $profile_info = dokan_get_store_info( dokan_get_current_user_id() );
         $method = str_replace( '/manage-', '', $slug_suffix );
-        wp_enqueue_script( 'vendor-dashboard-payment' );
 
         if ( stripos( $method, '/edit' ) !== false ) {
             $is_edit_mode = true;
