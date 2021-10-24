@@ -1,8 +1,8 @@
 ;(function($) {
 
     /**
-    * Dokan ask for reveiw admin notice
-    */
+     * Dokan ask for reveiw admin notice
+     */
     let Dokan_ask_for_reveiw_notice = {
         init : function () {
             $( '.dokan-review-notice .dokan-notice-action' ).on( 'click', function( e ) {

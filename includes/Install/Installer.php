@@ -55,9 +55,10 @@ class Installer {
      */
     public function add_version_info() {
         $first_installed = get_option( 'dokan_installed_time' );
+        $current_time    = dokan_current_datetime()->getTimestamp();
 
         if ( ! $first_installed ) {
-            update_option( 'dokan_installed_time', time() );
+            update_option( 'dokan_installed_time', $current_time );
         }
     }
 

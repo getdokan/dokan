@@ -2,7 +2,7 @@
 /**
  * Ask for review notice template
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.2.16
  */
 ?>
 <div class="notice notice-warning dokan-notice dokan-review-notice">
@@ -11,7 +11,7 @@
     <div class="dokan-review-notice-logo">
         <img src="http://dokan-dev.test/wp-content/plugins/dokan-lite/assets/images/dokan-logo-small.svg" alt="Dokan Logo">
     </div>
-    <p class="dokan-notice-text"><?php _e( 'Enjoying <strong><a href="https://wordpress.org/plugins/dokan-lite/" target="_blank">Dokan multivendor</a></strong>? If our plugin is performing well for you, it would be great if you could kindly write a review about <strong><a href="https://wordpress.org/plugins/dokan-lite/" target="_blank">Dokan on WordPress.org</a></strong>. It would give us insights to grow and improve this plugin.', 'dokan-lite' ); ?></p>
+    <p class="dokan-notice-text"><?php echo wp_kses_post( _( 'Enjoying <strong><a href="https://wordpress.org/plugins/dokan-lite/" target="_blank">Dokan multivendor</a></strong>? If our plugin is performing well for you, it would be great if you could kindly write a review about <strong><a href="https://wordpress.org/plugins/dokan-lite/" target="_blank">Dokan on WordPress.org</a></strong>. It would give us insights to grow and improve this plugin.', 'dokan-lite' ) ); ?></p>
     <div class="dokan-notice-buttons" data-nonce="<?php echo wp_create_nonce( 'dokan_admin' ); ?>">
         <a class="button dokan-notice-btn dokan-notice-btn-primary dokan-notice-action" href="https://wordpress.org/support/plugin/dokan-lite/reviews/?filter=5#new-post" target="_blank"data-key="dokan-notice-postpond" data-nonce="<?php echo wp_create_nonce( 'dokan_admin' ); ?>"><?php esc_html_e( 'Yes, You Deserve It', 'dokan-lite' ); ?></a>
         <button class="button dokan-notice-btn dokan-notice-action" href="#" data-key="dokan-notice-postpond" data-nonce="<?php echo wp_create_nonce( 'dokan_admin' ); ?>"><?php esc_html_e( 'Maybe Later', 'dokan-lite' ); ?></button>
