@@ -174,7 +174,7 @@ function dokan_withdraw_method_bank( $store_settings ) {
     $account_type   = isset( $store_settings['payment']['bank']['ac_type'] ) ? $store_settings['payment']['bank']['ac_type'] : '';
     $default_method = isset( $store_settings['payment']['default-method'] ) ? $store_settings['payment']['default-method'] : '';
     ?>
-    <div style="background-color: white; box-shadow: 0 3px 10px rgb( 0 0 0 / 0.2 ); margin-right: 10px; padding: 20px">
+    <div>
 
         <p style="text-align: left"><?php esc_html_e( 'Deposit earnings directly to your U.S. bank account free of charge', 'dokan-lite' ); ?></p>
 
@@ -271,12 +271,12 @@ function dokan_withdraw_method_bank( $store_settings ) {
             </label>
         </div>
 
-        <div style="display: flex; box-shadow: 0 3px 10px rgb( 0 0 0 / 0.2 ); padding: 10px; margin-bottom: 10px">
-            <div style="display: flex; flex-direction: column; justify-content: center; padding: 5px">
+        <div class="data-warning">
+            <div class="left-icon-container">
                 <i style="color: orange" class="fa fa-info-circle fa-2x" aria-hidden="true"></i>
             </div>
 
-            <div style="margin: 0 10px; border-left: 1px #dddddd solid"></div>
+            <div class="vr-separator"></div>
 
             <div style="text-align: left;">
                 <span style="display: block"><b><?php esc_html_e( 'Please double-check your account information!', 'dokan-lite' ); ?></b></span>
