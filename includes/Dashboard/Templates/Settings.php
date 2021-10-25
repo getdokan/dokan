@@ -273,7 +273,7 @@ class Settings {
                 $ajax_validate = $this->payment_validate();
                 break;
             default:
-                $ajax_validate = new WP_Error( 'no_match', __( 'Settings form with given id not found', 'dokan-lite' ) );
+                $ajax_validate = new WP_Error( 'form_id_not_matched', __( 'Failed to process data, invalid submission', 'dokan-lite' ) );
         }
 
         if ( is_wp_error( $ajax_validate ) ) {
