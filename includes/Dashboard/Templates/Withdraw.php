@@ -39,6 +39,10 @@ class Withdraw {
 
         $this->errors = new WP_Error();
 
+        if ( dokan_withdraw_is_disabled() ) {
+            return;
+        }
+
         add_action( 'template_redirect', array( $this, 'handle_request' ) );
         add_action( 'dokan_withdraw_content_inside_before', array( $this, 'show_seller_enable_message' ) );
         add_action( 'dokan_withdraw_content_area_header', array( $this, 'withdraw_header_render' ) );

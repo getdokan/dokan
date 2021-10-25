@@ -12,6 +12,9 @@ class Hooks {
      * @return void
      */
     public function __construct() {
+        if ( dokan_withdraw_is_disabled() ) {
+            return;
+        }
         add_action( 'dokan_withdraw_status_updated', [ $this, 'delete_seller_balance_cache' ], 10, 3 );
         add_action( 'dokan_withdraw_request_approved', [ $this, 'update_vendor_balance' ], 11 );
         add_filter( 'dokan_query_var_filter', [ $this, 'add_withdraw_list_query_var' ] );
@@ -185,7 +188,7 @@ class Hooks {
         }
 
 
-        $args    = array(
+        $args = array(
             'user_id' => $user_id,
             'amount'  => $amount,
             'method'  => $method,

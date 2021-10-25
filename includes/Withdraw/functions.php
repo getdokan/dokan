@@ -414,3 +414,14 @@ function dokan_withdraw_get_default_method( $vendor_id = 0 ) {
 function dokan_withdraw_is_manual_request_enabled() {
     return apply_filters( 'dokan_withdraw_manual_request_enable', true );
 }
+
+/**
+ * Check if `Hide Withdraw Option` is enabled and hide withdraw dashboard.
+ *
+ * @since 3.2.16
+ *
+ * @return bool
+ */
+function dokan_withdraw_is_disabled() {
+    return apply_filters( 'dokan_withdraw_disable', false );
+}
