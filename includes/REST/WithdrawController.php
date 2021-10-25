@@ -269,8 +269,8 @@ class WithdrawController extends WP_REST_Controller {
             $args['ids'] = $request['ids'];
         }
 
-        $cache_group = 'dokan_withdraws';
-        $cache_key   = 'dokan-withdraw-requests-' . md5( json_encode( $args ) );
+        $cache_group = 'dokan_cache_withdraws';
+        $cache_key   = 'withdraw_requests_' . md5( json_encode( $args ) );
         $withdraws   = Cache::get( $cache_key, $cache_group );
 
         if ( false === $withdraws ) {

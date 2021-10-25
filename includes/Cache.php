@@ -143,13 +143,16 @@ class Cache {
 	 *
 	 * Example:
 	 * ```
-	 * Cache::get( 'all_products', 'seller_products' );
+	 * $cache_key   = 'cache_key_name',
+	 * $cache_group = 'cache_group_name';
+	 *
+	 * Cache::get( $cache_key, $cache_group );
 	 * ```
 	 *
 	 * @since DOKAN_LITE_SINCE
 	 *
 	 * @param string $key
-	 * @param string $group  eg: `dokan`, `dokan_seller_data_[seller_id]`
+	 * @param string $group  eg: `dokan`, `dokan_cache_seller_data_[seller_id]`
 	 * @param bool   $forced eg: default: `false`
 	 *
 	 * @return mixed|false
@@ -170,16 +173,33 @@ class Cache {
 	 * Update the cache for dokan. We've added some defaults to set the cache.
 	 * Like, We set default expiry time, cache group to remove some redundant assign of those data.
 	 *
+	 * Example:
+	 * ```
+	 * $cache_key    = 'cache_key_name',
+	 * $cache_group  = 'cache_group_name';
+	 * $cache_result = Cache::get( $cache_key, $cache_group );
+	 *
+	 * if ( false === $cache_result ) {
+	 *      $cache_result = []; // Calculate & set to to $cache_result
+	 *      Cache::set( $cache_key, $cache_result, $cache_group );
+	 * }
+	 * ```
 	 * @since DOKAN_LITE_SINCE
 	 *
 	 * @param string $key
 	 * @param mixed  $data
-	 * @param string $group  eg: `dokan`, `dokan_seller_data_[seller_id]`
+	 * @param string $group  eg: `dokan`, `dokan_cache_seller_data_[seller_id]`
 	 * @param int    $expire time in seconds eg: default: `WEEK_IN_SECONDS`
 	 *
 	 * @return bool
 	 */
     public static function set( $key, $data, $group = '', $expire = WEEK_IN_SECONDS ) {
+        if ( empty( $group ) ) {
+            return wp_cache_set( $key, $group, $expire );
+        }
+
+        $key = self::get_prefix( $group ) . $key;
+
         return wp_cache_set( $key, $data, $group, $expire );
 	}
 
@@ -193,13 +213,14 @@ class Cache {
 	 *
 	 * @since DOKAN_LITE_SINCE
 	 *
-	 * @param string $key   Cache Key Name.
-	 * @param string $group Cache Group Name.
+	 * @param string $key — The key under which to store the value.
+	 * @param string $group — The group value appended to the $key.
+	 * @param int    $time The amount of time the server will wait to delete the item in seconds.
 	 *
 	 * @return bool
 	 */
-	public static function delete( $key, $group = '' ) {
-		return wp_cache_delete( $key, $group );
+	public static function delete( $key, $group = '', $time = 0 ) {
+		return wp_cache_delete( $key, $group, $time );
 	}
 
 	/**
@@ -207,7 +228,7 @@ class Cache {
 	 *
 	 * Example:
 	 * ```
-	 * Cache::invalidate_group( 'seller_products' );
+	 * Cache::invalidate_group( 'dokan_cache_seller_products' );
 	 * ```
 	 *
 	 * @since DOKAN_LITE_SINCE

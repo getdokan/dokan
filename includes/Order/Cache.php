@@ -33,10 +33,10 @@ class Cache {
      * @return void
      */
     public static function reset_seller_order_data( $order_id, $seller_id ) {
-        DokanCache::invalidate_group( 'dokan_seller_data_' . $seller_id );
+        DokanCache::invalidate_group( 'dokan_cache_seller_data_' . $seller_id );
 
         // Remove cached seller_id after an woocommerce order
-        wp_cache_delete( 'dokan_get_seller_id_' . $order_id, 'dokan_get_seller_id_by_order' );
+        DokanCache::delete( 'get_seller_id_' . $order_id, 'dokan_cache_get_seller_id_by_order' );
     }
 
     /**

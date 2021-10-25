@@ -33,14 +33,15 @@ class Manager {
         ];
 
         $args = wp_parse_args( $args, $defaults );
+        $args = apply_filters( 'dokan_all_products_query', $args );
 
-        $cache_group = 'dokan_cache_seller_product_data_' . dokan_get_current_user_id();
-        $cache_key   = 'dokan_seller_products-' . md5( json_encode( $args ) );
+        $cache_group = 'dokan_cache_product_data';
+        $cache_key   = 'product_manager_all_' . md5( json_encode( $args ) );
 
         $products = Cache::get( $cache_key, $cache_group );
 
         if ( false === $products ) {
-            $products = new WP_Query( apply_filters( 'dokan_all_products_query', $args ) );
+            $products = new WP_Query( $args );
 
             Cache::set( $cache_key, $products, $cache_group );
         }
@@ -461,7 +462,7 @@ class Manager {
         $id = isset( $args['id'] ) ? absint( $args['id'] ) : 0;
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'no-id-found', __( 'No product ID found for updating' ), [ 'status' => 401 ] );
+            return new WP_Error( 'no-id-found', __( 'No product ID found for updating', 'dokan-lite' ), [ 'status' => 401 ] );
         }
 
         return $this->create( $args );

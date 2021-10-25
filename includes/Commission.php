@@ -99,10 +99,11 @@ class Commission {
 
             //remove cache for seller earning
             $cache_key = 'dokan_get_earning_from_order_table' . $tmp_order->get_id() . 'seller';
-            wp_cache_delete( $cache_key );
+            Cache::delete( $cache_key );
+
             // remove cache for seller earning
             $cache_key = 'dokan_get_earning_from_order_table' . $tmp_order->get_id() . 'admin';
-            wp_cache_delete( $cache_key );
+            Cache::delete( $cache_key );
         }
     }
 

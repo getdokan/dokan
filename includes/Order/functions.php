@@ -56,8 +56,8 @@ function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = nul
     global $wpdb;
 
     $pagenum     = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
-    $cache_group = "dokan_seller_data_{$seller_id}";
-    $cache_key   = "dokan-seller-orders-{$status}-{$seller_id}-page-{$pagenum}";
+    $cache_group = "dokan_cache_seller_data_{$seller_id}";
+    $cache_key   = "seller_orders_{$status}_{$seller_id}_page_{$pagenum}";
     $orders      = Cache::get( $cache_key, $cache_group );
     $getdata     = wp_unslash( $_GET );
     $order       = empty( $getdata['order'] ) ? 'DESC' : sanitize_text_field( $getdata['order'] );
@@ -118,8 +118,8 @@ function dokan_get_seller_orders_by_date( $start_date, $end_date, $seller_id = f
     $end_date    = date( 'Y-m-d h:i:s', strtotime( $end_date . '-1 minute' ) );
     $start_date  = date( 'Y-m-d', strtotime( $start_date ) );
 
-    $cache_group = 'dokan_seller_data_' . $seller_id;
-    $cache_key   = md5( 'dokan-seller-orders-' . $end_date . '-' . $end_date . '-' . $seller_id );
+    $cache_group = 'dokan_cache_seller_data_' . $seller_id;
+    $cache_key   = md5( "seller_orders_{$start_date}_{$end_date}_{$seller_id}" );
     $orders      = Cache::get( $cache_key, $cache_group );
 
     if ( $orders === false ) {
@@ -195,8 +195,8 @@ function dokan_get_seller_orders_number( $args = [] ) {
 
     $seller_id   = ! empty( $args['seller_id'] ) ? $args['seller_id'] : 0;
     $status      = ! empty( $args['status'] ) ? $args['status'] : 'all';
-    $cache_group = 'dokan_seller_data_' . $seller_id;
-    $cache_key   = 'dokan-seller-orders-count-' . md5( json_encode( $args ) );
+    $cache_group = 'dokan_cache_seller_data_' . $seller_id;
+    $cache_key   = 'seller_orders_count_' . md5( json_encode( $args ) );
     $count       = Cache::get( $cache_key, $cache_group );
 
 //    if ( $count === false ) {
@@ -266,8 +266,8 @@ function dokan_is_seller_has_order( $seller_id, $order_id ) {
 function dokan_count_orders( $user_id ) {
     global $wpdb;
 
-    $cache_group = 'dokan_seller_data_' . $user_id;
-    $cache_key   = 'dokan-count-orders-' . $user_id;
+    $cache_group = 'dokan_cache_seller_data_' . $user_id;
+    $cache_key   = 'count_orders_' . $user_id;
     $counts      = Cache::get( $cache_key, $cache_group );
 
     if ( $counts === false ) {
@@ -436,8 +436,8 @@ function dokan_sync_insert_order( $order_id ) {
 function dokan_get_seller_id_by_order( $order_id ) {
     global $wpdb;
 
-    $cache_key   = 'dokan_get_seller_id_' . $order_id;
-    $cache_group = 'dokan_get_seller_id_by_order';
+    $cache_group = 'dokan_cache_get_seller_id_by_order';
+    $cache_key   = 'get_seller_id_' . $order_id;
     $seller_id   = Cache::get( $cache_key, $cache_group );
     $items       = [];
 

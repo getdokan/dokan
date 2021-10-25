@@ -15,11 +15,7 @@ use WeDevs\Dokan\Cache as DokanCache;
  */
 class Cache {
 
-    private $cache_group;
-
     public function __construct() {
-        $this->cache_group = 'dokan_vendors';
-
         add_action( 'dokan_new_vendor', [ $this, 'clear_cache_group' ] );
         add_action( 'dokan_update_vendor', [ $this, 'clear_cache_group' ] );
         add_action( 'dokan_delete_vendor', [ $this, 'clear_cache_group' ] );
@@ -37,17 +33,6 @@ class Cache {
      * @return void
      */
     public function clear_cache_group( $vendor_id = null ) {
-        DokanCache::invalidate_group( $this->cache_group );
-    }
-
-    /**
-     * Get Vendor Cache Group Name.
-     *
-     * @since DOKAN_LITE_SINCE
-     *
-     * @return string $cache_group name
-     */
-    public function get_cache_group() {
-        return $this->cache_group;
+        DokanCache::invalidate_group( 'dokan_cache_vendors' );
     }
 }

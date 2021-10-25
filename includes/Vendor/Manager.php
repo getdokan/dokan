@@ -94,25 +94,26 @@ class Manager {
         unset( $args['status'] );
         unset( $args['featured'] );
 
-        $cache_group = 'dokan_vendors';
-        $cache_key   = 'doken-vendors-' . md5( json_encode( $args ) );
-        $vendors     = Cache::get( $cache_key, $cache_group );
+        $cache_group = 'dokan_cache_vendors';
+        $cache_key   = 'vendors_' . md5( json_encode( $args ) );
+        $user_query  = Cache::get( $cache_key, $cache_group );
 
-        if ( false === $vendors ) {
+        if ( false === $user_query ) {
             $user_query = new WP_User_Query( $args );
-            $results    = $user_query->get_results();
 
-            $this->total_users = $user_query->total_users;
+            Cache::set( $cache_key, $user_query, $cache_group );
+        }
 
-            if ( $args['fields'] !== 'all' ) {
-                return $results;
-            }
+        $results = $user_query->get_results();
 
-            foreach ( $results as $result ) {
-                $vendors[] = $this->get( $result );
-            }
+        $this->total_users = $user_query->total_users;
 
-            Cache::set( $cache_key, $vendors, $cache_group );
+        if ( $args['fields'] !== 'all' ) {
+            return $results;
+        }
+
+        foreach ( $results as $result ) {
+            $vendors[] = $this->get( $result );
         }
 
         return $vendors;

@@ -233,8 +233,8 @@ class Manager {
     public function get_withdraw_requests( $user_id = '', $status = 0, $limit = 10, $offset = 0 ) {
         global $wpdb;
 
-        $cache_group = empty ( $user_id ) ? 'dokan_withdraws' : "dokan_withdraws_seller_$user_id";
-        $cache_key   = "dokan-withdraw-requests-$user_id-$status-$limit-$offset";
+        $cache_group = empty( $user_id ) ? 'dokan_cache_withdraws' : "dokan_cache_withdraws_seller_$user_id";
+        $cache_key   = "withdraw_requests_{$user_id}_{$status}_{$limit}_{$offset}";
         $result      = Cache::get( $cache_key, $cache_group );
 
         if ( false === $result ) {

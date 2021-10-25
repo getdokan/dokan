@@ -18,15 +18,16 @@ class Cache {
     public function __construct() {
         add_action( 'dokan_new_product_added', [ $this, 'clear_seller_product_caches' ], 20, 2 );
         add_action( 'dokan_product_updated', [ $this, 'clear_seller_product_caches' ], 20 );
-        add_action( 'dokan_product_updated', [ $this, 'clear_single_product_caches' ], 20 );
-        add_action( 'dokan_product_duplicate_after_save', [ $this, 'clear_seller_product_caches' ], 20, 3 );
         add_action( 'dokan_product_deleted', [ $this, 'clear_seller_product_caches' ], 20 );
-        add_action( 'dokan_bulk_product_status_change', [ $this, 'cache_clear_bulk_product_status_change' ], 20, 2 );
         add_action( 'dokan_bulk_product_delete', [ $this, 'clear_seller_product_caches' ], 20 );
+        add_action( 'dokan_product_duplicate_after_save', [ $this, 'clear_seller_product_caches' ], 20, 3 );
 
-        add_action( 'woocommerce_product_duplicate', [ $this, 'clear_seller_product_caches' ], 20 );
         add_action( 'woocommerce_update_product', [ $this, 'clear_seller_product_caches' ], 20 );
+        add_action( 'woocommerce_product_duplicate', [ $this, 'clear_seller_product_caches' ], 20 );
         add_action( 'woocommerce_product_import_inserted_product_object', [ $this, 'clear_seller_product_caches' ], 20 );
+
+        add_action( 'dokan_product_updated', [ $this, 'clear_single_product_caches' ], 20 );
+        add_action( 'dokan_bulk_product_status_change', [ $this, 'cache_clear_bulk_product_status_change' ], 20, 2 );
     }
 
     /**
@@ -40,8 +41,9 @@ class Cache {
      * @return void
      */
     public static function clear_seller_product_caches( $product_id, $post_data = [] ) {
-        $seller_id = dokan_get_current_user_id();
+        $seller_id = get_post_field( 'post_author', $product_id );
 
+        DokanCache::invalidate_group( 'dokan_cache_product_data' );
         DokanCache::invalidate_group( 'dokan_cache_seller_product_data_' . $seller_id );
         DokanCache::invalidate_group( 'dokan_cache_seller_product_stock_data_' . $seller_id );
     }
@@ -95,6 +97,8 @@ class Cache {
             self::clear_single_product_caches( $product );
         }
 
-        self::clear_seller_product_caches( null, [] );
+        foreach ($products as $product_id ) {
+            self::clear_seller_product_caches( $product_id, [] );
+        }
     }
 }
