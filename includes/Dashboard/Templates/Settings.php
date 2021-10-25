@@ -197,7 +197,7 @@ class Settings {
         $methods      = dokan_withdraw_get_active_methods();
         $currentuser  = dokan_get_current_user_id();
         $profile_info = dokan_get_store_info( dokan_get_current_user_id() );
-        $method = str_replace( '/manage-', '', $slug_suffix );
+        $method       = str_replace( '/manage-', '', $slug_suffix );
 
         if ( stripos( $method, '/edit' ) !== false ) {
             $is_edit_mode = true;
