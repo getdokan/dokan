@@ -5,9 +5,9 @@ Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi selle
 Requires at least: 4.4
 Tested up to: 5.8.1
 WC requires at least: 3.0
-WC tested up to: 5.7.1
+WC tested up to: 5.8.0
 Requires PHP: 5.6
-Stable tag: 3.2.14
+Stable tag: 3.2.15
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -291,6 +291,25 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.2.15 ( Oct 13, 2021 ) =
+
+- **feat:** Permanently delete Dokan related data (custom tables, options, pages, user roles and capabilities etc) after plugin delete based on admin Setting
+- **new:** added filter hook dokan_store_banner_default_width and dokan_store_banner_default_height so that theme/plugin author can change store banner with and height based on their needs
+- **new:** Added Dokan stores page link under Admin bar menu, from now on “Visit Store” redirects to Dokan store list page and “Visit Shop” directs to WooCommerce Product list page.
+- **new:** Added integration of sweetalert2 to replace default javascript alert, prompt, confirm, and toast notifications
+- **update:** Added a new tooltip in vendor dashboard product listing page after earning column to clarify vendors about possible earning from their products
+- **update:** Added localization support for text "Calculating"
+- **update:** Now Dokan page view count will be stored in the browser’s Local Storage instead of browser Cookies. Some caching plugins weren't able to cache single product pages due to this. This fix will let caching plugins to cache single product pages from now on
+- **fix:** Single product page used to display the seller's real name instead of store name on the vendor info tab. Issue has been resolved now.
+- **fix:** When a vendor adds a new product If the form has any validation error then old selected tags went missing. This issue has been resolved now.
+- **fix:** Store Address input fields were missing in vendor dashboard’s store setting form when the Dokan Pro plugin was not installed. Now this issue has been fixed.
+- **fix:** Removed vendor verification verified status check from vendor dashboard’s store settings page if dokan pro is not installed or vendor verification module is not active
+- **fix:** Single Store product category wasn’t working if WPML plugin was installed. Now this issue has been fixed.,
+- **fix:** Added validation for withdraw limit
+- **fix:** Corrected spelling to 'picture' from 'picutre'
+- **fix:** In the latest version of Divi, theme assets weren’t loading if a single store page doesn’t contain any product. This issue has been fixed now.
+- **fix:** Vendor Contact form didn't contain “Reply To” email address when a customer would contact a vendor via the vendor contact form widget. Issue has been resolved now.
 
 = v3.2.14 ( Oct 04, 2021 ) =
 
