@@ -286,7 +286,7 @@ function dokan_withdraw_method_bank( $store_settings ) {
 
         <p style="text-align: left; margin-bottom: 2em"><?php esc_html_e( 'This Payment method will become available in 3 days.', 'dokan-lite' ); ?></p>
 
-        <div style="background-color: #EEEEEE; text-align: left; border-top: 1px #cccccc solid; padding: 20px; margin: -20px; ">
+        <div class="bottom-actions">
             <button class="ajax_prev" type="submit" name="dokan_update_payment_settings" style="background-color: #2B78E4; color: white; border-radius: 3px">
                 <?php
                 if ( isset( $store_settings['is_edit_method'] ) && $store_settings['is_edit_method'] ) {
@@ -296,7 +296,7 @@ function dokan_withdraw_method_bank( $store_settings ) {
                 }
                 ?>
             </button>
-            <a href="<?php echo esc_url( home_url( '/dashboard/settings/payment/' ) ); ?>" style="margin-left: 10px; text-decoration: none; color: #2B78E4">
+            <a href="<?php echo esc_url( home_url( '/dashboard/settings/payment/' ) ); ?>">
                 <?php esc_html_e( 'Cancel', 'dokan-lite' ); ?>
             </a>
         </div>
