@@ -524,7 +524,7 @@ function dokan_product_get_row_action( $post ) {
  * @since  2.9.8
  * @since 3.2.16 added $id parameter
  *
- * @return Dokan_Vendor|false on failure
+ * @return int|\WeDevs\Dokan\Vendor\Vendor|false on failure
  */
 function dokan_get_vendor_by_product( $product, $id = false ) {
     if ( ! $product instanceof WC_Product ) {
