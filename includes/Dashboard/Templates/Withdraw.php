@@ -46,15 +46,15 @@ class Withdraw {
         add_filter( 'dokan_query_var_filter', [ $this, 'add_withdraw_list_query_var' ] );
         add_action( 'dokan_load_custom_template', [ $this, 'display_request_listing' ] );
         add_filter( 'dokan_dashboard_nav_active', [ $this, 'active_dashboard_nav_menu' ], 10, 3 );
-        add_action( 'template_redirect', array( $this, 'handle_request' ) );
-        add_action( 'dokan_withdraw_content_inside_before', array( $this, 'show_seller_enable_message' ) );
-        add_action( 'dokan_withdraw_content_area_header', array( $this, 'withdraw_header_render' ) );
-        add_action( 'dokan_withdraw_content', array( $this, 'withdraw_status_filter' ), 10 );
-        add_action( 'dokan_withdraw_content', array( $this, 'withdraw_form_and_listing' ), 15 );
-        add_action( 'dokan_withdraw_content', array( $this, 'withdraw_dashboard_layout_display' ), 10 );
-        add_action( 'dokan_withdraw_content_after', array( $this, 'include_withdraw_popup_templates' ), 10 );
-        add_action( 'dokan_send_withdraw_request_popup_form_content', array( $this, 'withdraw_request_popup_form_content' ), 10 );
-        add_action( 'dokan_withdraw_content_after_last_payment_section', array( $this, 'pending_withdraw_requests' ), 20 );
+        add_action( 'template_redirect', [ $this, 'handle_request' ] );
+        add_action( 'dokan_withdraw_content_inside_before', [  $this, 'show_seller_enable_message' ] );
+        add_action( 'dokan_withdraw_content_area_header', [ $this, 'withdraw_header_render' ] );
+        add_action( 'dokan_withdraw_content', [ $this, 'withdraw_status_filter' ], 10 );
+        add_action( 'dokan_withdraw_content', [ $this, 'withdraw_form_and_listing' ], 15 );
+        add_action( 'dokan_withdraw_content', [ $this, 'withdraw_dashboard_layout_display' ], 10 );
+        add_action( 'dokan_withdraw_content_after', [ $this, 'include_withdraw_popup_templates' ], 10 );
+        add_action( 'dokan_send_withdraw_request_popup_form_content', [ $this, 'withdraw_request_popup_form_content' ], 10 );
+        add_action( 'dokan_withdraw_content_after_last_payment_section', [ $this, 'pending_withdraw_requests' ], 20 );
     }
 
     /**
@@ -348,6 +348,7 @@ class Withdraw {
      * Get Withdraw form and listing
      *
      * @since 2.4
+     * @since 3.2.16 Display only in `withdraw-requests` endpoint.
      *
      * @return void
      */
