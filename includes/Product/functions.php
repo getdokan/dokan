@@ -543,7 +543,7 @@ function dokan_get_vendor_by_product( $product, $id = false ) {
 
     $vendor_id = apply_filters( 'dokan_get_vendor_by_product', $vendor_id, $product );
 
-    return false === $id ? dokan()->vendor->get( $vendor_id ) : $vendor_id;
+    return false === $id ? dokan()->vendor->get( $vendor_id ) : (int) $vendor_id;
 }
 
 /**
