@@ -108,10 +108,18 @@ final class WeDevs_Dokan {
         add_action( 'woocommerce_flush_rewrite_rules', [ $this, 'flush_rewrite_rules' ] );
         add_action( 'admin_notices', [ $this, 'render_missing_woocommerce_notice' ] );
         add_action( 'admin_notices', [ $this, 'render_run_admin_setup_wizard_notice' ] );
+        add_action( 'admin_notices', [ $this, 'admin_notice_banner' ] );
 
         $this->init_appsero_tracker();
 
         add_action( 'plugins_loaded', [ $this, 'woocommerce_not_loaded' ], 11 );
+    }
+
+    /**
+     * Display admin notices
+     */
+    public function admin_notice_banner() {
+        dokan_get_template( 'admin-notices.php' );
     }
 
     /**

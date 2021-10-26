@@ -186,5 +186,45 @@ jQuery(function($) {
             });
         });
 
+        var currentSlide = 1;
+        var totalNotice = $(".dokan-admin-notice").length;
+        $('.total-notice').text(totalNotice);
+
+        function plusNotices(n) {
+          showNotices(currentSlide += n);
+        }
+
+        function showNotices(n) {
+          if (currentSlide === totalNotice){
+            $('.total-notice, .next').removeClass('active');
+            $('.current-notice, .prev').addClass('active');
+            return false;
+          }
+
+          if (currentSlide === 1){
+            $('.total-notice, .next').addClass('active');
+            $('.current-notice, .prev').removeClass('active');
+            return false;
+          }
+
+          if (n > totalNotice) {
+            currentSlide = 1
+          }
+          if (n < 1) {
+            currentSlide = totalNotice
+          }
+
+          $('.current-notice').text(currentSlide);
+          $('.dokan-admin-notice').hide().removeClass('active');
+          $('.dokan-admin-notice:nth-child('+ currentSlide + ')').css('display','block').addClass('active');
+        }
+
+        $('.next').click(function(){
+          plusNotices(1);
+        });
+
+        $('.prev').click(function(){
+          plusNotices(-1);
+        });
 });
 
