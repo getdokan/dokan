@@ -43,6 +43,9 @@ class Withdraw {
             return;
         }
 
+        add_filter( 'dokan_query_var_filter', [ $this, 'add_withdraw_list_query_var' ] );
+        add_action( 'dokan_load_custom_template', [ $this, 'display_request_listing' ] );
+        add_filter( 'dokan_dashboard_nav_active', [ $this, 'active_dashboard_nav_menu' ], 10, 3 );
         add_action( 'template_redirect', array( $this, 'handle_request' ) );
         add_action( 'dokan_withdraw_content_inside_before', array( $this, 'show_seller_enable_message' ) );
         add_action( 'dokan_withdraw_content_area_header', array( $this, 'withdraw_header_render' ) );
@@ -52,10 +55,6 @@ class Withdraw {
         add_action( 'dokan_withdraw_content_after', array( $this, 'include_withdraw_popup_templates' ), 10 );
         add_action( 'dokan_send_withdraw_request_popup_form_content', array( $this, 'withdraw_request_popup_form_content' ), 10 );
         add_action( 'dokan_withdraw_content_after_last_payment_section', array( $this, 'pending_withdraw_requests' ), 20 );
-
-        add_filter( 'dokan_query_var_filter', [ $this, 'add_withdraw_list_query_var' ] );
-        add_action( 'dokan_load_custom_template', [ $this, 'display_request_listing' ] );
-        add_filter( 'dokan_dashboard_nav_active', [ $this, 'active_dashboard_nav_menu' ], 10, 3 );
     }
 
     /**
@@ -256,7 +255,7 @@ class Withdraw {
      *
      * @since 3.0.0
      *
-     * @param string $message
+     * @param string|array $messages
      * @param bool   $deleted
      *
      * @return void
@@ -310,7 +309,11 @@ class Withdraw {
      * @return void
      */
     public function withdraw_status_filter() {
+        global $wp;
 
+        if ( ! isset( $wp->query_vars['withdraw-requests'] ) ) {
+            return;
+        }
         dokan_get_template_part( 'withdraw/status-listing', '', array(
             'current' => $this->get_current_status(),
         ) );
@@ -349,9 +352,12 @@ class Withdraw {
      * @return void
      */
     public function withdraw_form_and_listing() {
-        if ( ! isset( $_GET['withdraw-requests'] ) ) {
+        global $wp;
+
+        if ( ! isset( $wp->query_vars['withdraw-requests'] ) ) {
             return;
         }
+
         if ( $this->get_current_status() == 'pending' ) {
             $this->withdraw_requests( dokan_get_current_user_id() );
         } elseif ( $this->get_current_status() == 'approved' ) {
@@ -563,10 +569,33 @@ class Withdraw {
      * @return void
      */
     public function withdraw_dashboard_layout_display() {
-        if ( ! isset( $_GET['withdraw'] ) ) {
+        global $wp;
+
+        if ( ! isset( $wp->query_vars['withdraw'] ) ) {
             return;
         }
-        dokan_get_template_part( 'withdraw/withdraw-dashboard', '' );
+
+        $last_withdraw = dokan()->withdraw->get_withdraw_requests(  dokan_get_current_user_id(), 1, 1 );
+        $payment_details = __( 'You do not have any approved withdraw yet.', 'dokan-lite' );
+
+        if ( ! empty( $last_withdraw ) ) {
+            $last_withdraw_amount      = '<strong>' . wc_price( $last_withdraw[0]->amount ) . '</strong>';
+            $last_withdraw_date        = '<strong>' . dokan_format_date( $last_withdraw[0]->date ) . '</strong>';
+            $last_withdraw_method_used = '<strong>' . dokan_withdraw_get_method_title( $last_withdraw[0]->method ) . '</strong>';
+
+            // translators: 1: Last formatted withdraw amount 2: Last formatted withdraw date 3: Last formatted withdraw method used.
+            $payment_details = sprintf( __( '%1$s on %2$s to %3$s', 'dokan-lite' ), $last_withdraw_amount, $last_withdraw_date, $last_withdraw_method_used );
+        }
+
+        $args = [
+            'balance'         => dokan_get_seller_balance( dokan_get_current_user_id(), true ),
+            'withdraw_limit'  => dokan_get_option( 'withdraw_limit', 'dokan_withdraw', -1 ),
+            'threshold'       => dokan_get_withdraw_threshold( dokan_get_current_user_id() ),
+            'payment_details' => $payment_details,
+            'active_methods'  => dokan_withdraw_get_active_methods(),
+            'default_method'  => dokan_withdraw_get_default_method(),
+        ];
+        dokan_get_template_part( 'withdraw/withdraw-dashboard', '', $args );
     }
 
     /**

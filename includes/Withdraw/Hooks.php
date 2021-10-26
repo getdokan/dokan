@@ -12,9 +12,6 @@ class Hooks {
      * @return void
      */
     public function __construct() {
-        if ( dokan_withdraw_is_disabled() ) {
-            return;
-        }
         add_action( 'dokan_withdraw_status_updated', [ $this, 'delete_seller_balance_cache' ], 10, 3 );
         add_action( 'dokan_withdraw_request_approved', [ $this, 'update_vendor_balance' ], 11 );
 
