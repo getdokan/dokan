@@ -48,10 +48,14 @@ class Withdraw {
         add_action( 'dokan_withdraw_content_area_header', array( $this, 'withdraw_header_render' ) );
         add_action( 'dokan_withdraw_content', array( $this, 'withdraw_status_filter' ), 10 );
         add_action( 'dokan_withdraw_content', array( $this, 'withdraw_form_and_listing' ), 15 );
-        add_action( 'dokan_withdraw_dashboard_content', array( $this, 'withdraw_dashboard_layout_display' ), 10 );
+        add_action( 'dokan_withdraw_content', array( $this, 'withdraw_dashboard_layout_display' ), 10 );
         add_action( 'dokan_withdraw_content_after', array( $this, 'include_withdraw_popup_templates' ), 10 );
         add_action( 'dokan_send_withdraw_request_popup_form_content', array( $this, 'withdraw_request_popup_form_content' ), 10 );
         add_action( 'dokan_withdraw_content_after_last_payment_section', array( $this, 'pending_withdraw_requests' ), 20 );
+
+        add_filter( 'dokan_query_var_filter', [ $this, 'add_withdraw_list_query_var' ] );
+        add_action( 'dokan_load_custom_template', [ $this, 'display_request_listing' ] );
+        add_filter( 'dokan_dashboard_nav_active', [ $this, 'active_dashboard_nav_menu' ], 10, 3 );
     }
 
     /**
@@ -306,6 +310,7 @@ class Withdraw {
      * @return void
      */
     public function withdraw_status_filter() {
+
         dokan_get_template_part( 'withdraw/status-listing', '', array(
             'current' => $this->get_current_status(),
         ) );
@@ -344,6 +349,9 @@ class Withdraw {
      * @return void
      */
     public function withdraw_form_and_listing() {
+        if ( ! isset( $_GET['withdraw-requests'] ) ) {
+            return;
+        }
         if ( $this->get_current_status() == 'pending' ) {
             $this->withdraw_requests( dokan_get_current_user_id() );
         } elseif ( $this->get_current_status() == 'approved' ) {
@@ -555,11 +563,14 @@ class Withdraw {
      * @return void
      */
     public function withdraw_dashboard_layout_display() {
+        if ( ! isset( $_GET['withdraw'] ) ) {
+            return;
+        }
         dokan_get_template_part( 'withdraw/withdraw-dashboard', '' );
     }
 
     /**
-     * Display dashboard content
+     * Include withdraw request popup content
      *
      * @since 3.2.16
      *
@@ -569,6 +580,13 @@ class Withdraw {
         dokan_get_template_part( 'withdraw/tmpl-withdraw-request-popup', '' );
     }
 
+    /**
+     * Populate withdraw request popup content.
+     *
+     * @since 3.2.16
+     *
+     * @return void
+     */
     public function withdraw_request_popup_form_content() {
         $current_user_id = dokan_get_current_user_id();
 
@@ -615,5 +633,61 @@ class Withdraw {
         dokan_get_template_part( 'withdraw/pending-request-listing-dashboard', '', array(
             'withdraw_requests' => $withdraw_requests,
         ) );
+    }
+
+
+    /**
+     * Add withdraw listing query var
+     *
+     * @since 3.2.16
+     *
+     * @param array $query_vars
+     *
+     * @return array
+     */
+    public function add_withdraw_list_query_var( $query_vars ) {
+        $query_vars[] = 'withdraw-requests';
+
+        return $query_vars;
+    }
+
+    /**
+     * Display withdraw listing.
+     *
+     * @since 3.2.16
+     *
+     * @param array $query_vars
+     *
+     * @return void
+     */
+    public function display_request_listing( $query_vars ) {
+        if ( empty( $query_vars ) || ! array_key_exists( 'withdraw-requests', $query_vars ) ) {
+            return;
+        }
+
+        if ( ! current_user_can( 'dokan_view_withdraw_menu' ) ) {
+            dokan_get_template_part( 'global/no-permission' );
+        } else {
+            dokan_get_template_part( 'withdraw/withdraw' );
+        }
+
+    }
+
+    /**
+     * Set withdraw menu as active.
+     *
+     * @since 3.2.16
+     *
+     * @param string $active_menu
+     * @param $request
+     * @param array $active
+     *
+     * @return string
+     */
+    public function active_dashboard_nav_menu( $active_menu, $request, $active ) {
+        if (  'withdraw-requests' !== $active_menu ) {
+            return $active_menu;
+        }
+        return 'withdraw';
     }
 }

@@ -17,9 +17,6 @@ class Hooks {
         }
         add_action( 'dokan_withdraw_status_updated', [ $this, 'delete_seller_balance_cache' ], 10, 3 );
         add_action( 'dokan_withdraw_request_approved', [ $this, 'update_vendor_balance' ], 11 );
-        add_filter( 'dokan_query_var_filter', [ $this, 'add_withdraw_list_query_var' ] );
-        add_action( 'dokan_load_custom_template', [ $this, 'display_request_listing' ] );
-        add_filter( 'dokan_dashboard_nav_active', [ $this, 'active_dashboard_nav_menu' ], 10, 3 );
 
         if ( wp_doing_ajax() ) {
             $this->ajax();
@@ -111,43 +108,6 @@ class Hooks {
     }
 
     /**
-     * Add withdraw listing query var
-     *
-     * @since 3.2.16
-     *
-     * @param array $query_vars
-     *
-     * @return array
-     */
-    public function add_withdraw_list_query_var( $query_vars ) {
-        $query_vars[] = 'withdraw-requests';
-
-        return $query_vars;
-    }
-
-    /**
-     * Display withdraw listing.
-     *
-     * @since 3.2.16
-     *
-     * @param array $query_vars
-     *
-     * @return void
-     */
-    public function display_request_listing( $query_vars ) {
-        if ( empty( $query_vars ) || ! array_key_exists( 'withdraw-requests', $query_vars ) ) {
-            return;
-        }
-
-        if ( ! current_user_can( 'dokan_view_withdraw_menu' ) ) {
-            dokan_get_template_part( 'global/no-permission' );
-        } else {
-            dokan_get_template_part( 'withdraw/withdraw-listing' );
-        }
-
-    }
-
-    /**
      * Handle withdraw request ajax.
      *
      * @since 3.2.16
@@ -218,24 +178,6 @@ class Hooks {
         do_action( 'dokan_after_withdraw_request', $user_id, $amount, $method );
 
         wp_send_json_success( __( 'Withdraw request successful.', 'dokan-lite' ) );
-    }
-
-    /**
-     * Set withdraw menu as active.
-     *
-     * @since 3.2.16
-     *
-     * @param string $active_menu
-     * @param $request
-     * @param array $active
-     *
-     * @return string
-     */
-    public function active_dashboard_nav_menu( $active_menu, $request, $active ) {
-        if (  'withdraw-requests' !== $active_menu ) {
-            return $active_menu;
-        }
-        return 'withdraw';
     }
 
     /**
