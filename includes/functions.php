@@ -479,7 +479,7 @@ function dokan_generate_sync_table() {
             $wc_order         = wc_get_order( $order->order_id );
             $admin_commission = dokan_get_admin_commission_by( $wc_order, $order->seller_id );
 
-            if ( dokan_is_order_have_apply_admin_coupons( $order, $seller_id ) ) {
+            if ( dokan_is_admin_coupon_applied( $order, $seller_id ) ) {
                 $net_amount = dokan()->commission->get_earning_by_order( $order, 'seller' );
             } else {
                 $net_amount = $order_total - $admin_commission;
@@ -4179,14 +4179,10 @@ function dokan_get_withdraw_threshold( $user_id ) {
  *
  * @return bool
  */
-function dokan_is_order_have_apply_admin_coupons( $order, $vendor_id, $product_id = 0 ) {
-    if ( ! dokan()->is_pro_exists() ) {
-        return false;
-    }
-
+function dokan_is_admin_coupon_applied( $order, $vendor_id, $product_id = 0 ) {
     if (
-        function_exists( 'dokan_is_order_have_admin_coupons_for_vendors' ) &&
-        dokan_is_order_have_admin_coupons_for_vendors( $order, $vendor_id, $product_id ) ) {
+        function_exists( 'dokan_is_admin_coupon_used_for_vendors' ) &&
+        dokan_is_admin_coupon_used_for_vendors( $order, $vendor_id, $product_id ) ) {
         return true;
     }
 

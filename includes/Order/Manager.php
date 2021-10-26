@@ -348,7 +348,13 @@ class Manager {
         foreach ( $used_coupons as $item ) {
             $coupon = new \WC_Coupon( $item->get_code() );
 
-            if ( $coupon && ! is_wp_error( $coupon ) && ( array_intersect( $product_ids, $coupon->get_product_ids() ) || ( function_exists( 'dokan_is_order_have_admin_coupons_for_vendors' ) && dokan_pro()->coupon->admin_coupon_is_valid( $coupon, [ $seller_id ], $product_ids ) ) ) ) {
+            if (
+                $coupon &&
+                ! is_wp_error( $coupon ) &&
+                ( array_intersect( $product_ids, $coupon->get_product_ids() ) ||
+                    apply_filters( 'dokan_is_order_have_admin_coupon', $coupon, [ $seller_id ], $product_ids )
+                )
+            ) {
                 $new_item = new \WC_Order_Item_Coupon();
                 $new_item->set_props(
                     array(

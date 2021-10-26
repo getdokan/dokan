@@ -366,7 +366,7 @@ function dokan_sync_insert_order( $order_id ) {
     $order_status       = dokan_get_prop( $order, 'status' );
     $admin_commission   = dokan()->commission->get_earning_by_order( $order, 'admin' );
 
-    if ( dokan_is_order_have_apply_admin_coupons( $order, $seller_id ) ) {
+    if ( dokan_is_admin_coupon_applied( $order, $seller_id ) ) {
         $net_amount = dokan()->commission->get_earning_by_order( $order, 'seller' );
     } else {
         $net_amount = $order_total - $admin_commission;

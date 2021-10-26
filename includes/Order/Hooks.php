@@ -292,7 +292,7 @@ class Hooks {
         foreach ( WC()->cart->get_cart() as $item ) {
             $product_id = $item['data']->get_id();
 
-            $available_vendors[]  = intval( get_post_field( 'post_author', $product_id ) );
+            $available_vendors[]  = dokan_get_vendor_by_product( $product_id );
             $available_products[] = $product_id;
         }
 
@@ -300,16 +300,8 @@ class Hooks {
             throw new Exception( __( 'This coupon is invalid for multiple vendors.', 'dokan-lite' ) );
         }
 
-        $coupon_id        = $coupon->get_id();
-        $vendor_id        = intval( get_post_field( 'post_author', $coupon_id ) );
-        $commissions_type = $coupon->get_meta( 'coupon_commissions_type' );
-
-        if (
-            dokan()->is_pro_exists() &&
-            function_exists( 'dokan_is_order_have_admin_coupons_for_vendors' ) &&
-            ! empty( $commissions_type ) &&
-            $this->ensure_admin_have_create_vendors_coupon( $coupon, $available_vendors, $available_products )
-        ) {
+        // Make sure applied coupon created by admin
+        if ( apply_filters( 'dokan_ensure_admin_have_create_coupon', $coupon, $available_vendors, $available_products ) ) {
             return true;
         }
 
@@ -322,24 +314,14 @@ class Hooks {
             throw new Exception( __( 'A coupon must be restricted with a vendor product.', 'dokan-lite' ) );
         }
 
+        $coupon_id = $coupon->get_id();
+        $vendor_id = intval( get_post_field( 'post_author', $coupon_id ) );
+
         if ( ! in_array( $vendor_id, $available_vendors, true ) ) {
             return false;
         }
 
         return $valid;
-    }
-
-    /**
-     * Ensure vendor have coupon created by admin
-     *
-     * @param \WC_Coupon $coupon
-     * @param array      $available_vendors
-     * @param array      $available_products
-     *
-     * @return boolean
-     */
-    public function ensure_admin_have_create_vendors_coupon( $coupon, $available_vendors, $available_products ) {
-        return dokan_pro()->coupon->admin_coupon_is_valid( $coupon, $available_vendors, $available_products );
     }
 
     /**
