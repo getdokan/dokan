@@ -352,7 +352,7 @@ class Manager {
                 $coupon &&
                 ! is_wp_error( $coupon ) &&
                 ( array_intersect( $product_ids, $coupon->get_product_ids() ) ||
-                    apply_filters( 'dokan_is_order_have_admin_coupon', $coupon, [ $seller_id ], $product_ids )
+                    apply_filters( 'dokan_is_order_have_admin_coupon', false, $coupon, [ $seller_id ], $product_ids )
                 )
             ) {
                 $new_item = new \WC_Order_Item_Coupon();

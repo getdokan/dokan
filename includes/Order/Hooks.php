@@ -292,7 +292,7 @@ class Hooks {
         foreach ( WC()->cart->get_cart() as $item ) {
             $product_id = $item['data']->get_id();
 
-            $available_vendors[]  = dokan_get_vendor_by_product( $product_id );
+            $available_vendors[]  = (int) get_post_field( 'post_author', $product_id );
             $available_products[] = $product_id;
         }
 
@@ -301,7 +301,7 @@ class Hooks {
         }
 
         // Make sure applied coupon created by admin
-        if ( apply_filters( 'dokan_ensure_admin_have_create_coupon', $coupon, $available_vendors, $available_products ) ) {
+        if ( apply_filters( 'dokan_ensure_admin_have_create_coupon', $valid, $coupon, $available_vendors, $available_products ) ) {
             return true;
         }
 
