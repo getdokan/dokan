@@ -509,9 +509,47 @@ class Settings {
                 );
             }
 
-            $find_address      = ! empty( $post_data['find_address'] ) ? sanitize_text_field( $post_data['find_address'] ) : $default_locations['address'];
-            $default_location  = $default_locations['latitude'] . ',' . $default_locations['longitude'];
-            $location          = ! empty( $post_data['find_address'] ) ? sanitize_text_field( $post_data['location'] ) : $default_location;
+            $find_address     = ! empty( $post_data['find_address'] ) ? sanitize_text_field( $post_data['find_address'] ) : $default_locations['address'];
+            $default_location = $default_locations['latitude'] . ',' . $default_locations['longitude'];
+            $location         = ! empty( $post_data['find_address'] ) ? sanitize_text_field( $post_data['location'] ) : $default_location;
+            $dokan_days       = [ 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday' ];
+
+            // Make 7 days opening & closing time variable in $current_day_opening_time$. Here $current_day_opening_time = sunday_opening_time..., $$openig_or_closing_time = $sunday_opening_time...
+            foreach ( $dokan_days as $day ) {
+                $opening_time = isset( $_POST[ $day . '_opening_time' ] ) ? wp_unslash( $_POST[ $day . '_opening_time' ] ) : '';
+                $closing_time = isset( $_POST[ $day . '_closing_time' ] ) ? wp_unslash( $_POST[ $day . '_closing_time' ] ) : '';
+                $store_status = isset( $_POST[ $day . '_on_off' ] ) ? wp_unslash( $_POST[ $day . '_on_off' ] ) : '';
+
+                if ( empty( $opening_time ) || empty( $closing_time ) || 'open' !== $store_status ) {
+                    $$day['status']            = isset( $store_status ) ? $store_status : '';
+                    $$day['opening_time']      = '';
+                    $$day['closing_time']      = '';
+                    $dokan_store_time[ $day ]  = isset( $$day ) ? $$day : [];
+
+                    continue;
+                }
+
+                if ( is_array( $opening_time ) || is_array( $closing_time ) ) {
+                    break;
+                }
+
+                $opening_time = date_create( sanitize_text_field( $opening_time ) );
+                $closing_time = date_create( sanitize_text_field( $closing_time ) );
+
+                $opening_time = date_format( $opening_time, 'g:i a' );
+                $closing_time = date_format( $closing_time, 'g:i a' );
+
+                $current_day_opening_time = $day . '_opening_time';
+                $current_day_closing_time = $day . '_closing_time';
+
+                // Get current day's data in $$day and set in dokan store time for update. Here $$day = $sunday...
+                $$current_day_opening_time = isset( $opening_time ) ? $opening_time : '';
+                $$current_day_closing_time = isset( $closing_time ) ? $closing_time : '';
+                $$day['status']            = isset( $store_status ) && 'open' === $store_status ? 'open' : 'close';
+                $$day['opening_time']      = $$current_day_opening_time;
+                $$day['closing_time']      = $$current_day_closing_time;
+                $dokan_store_time[ $day ]  = isset( $$day ) ? $$day : [];
+            }
 
             // update store setttings info
             $dokan_settings = array(
@@ -527,43 +565,7 @@ class Settings {
                 'gravatar'                 => isset( $post_data['dokan_gravatar'] ) ? absint( $post_data['dokan_gravatar'] ) : 0,
                 'enable_tnc'               => isset( $post_data['dokan_store_tnc_enable'] ) && 'on' == $post_data['dokan_store_tnc_enable'] ? 'on' : 'off',
                 'store_tnc'                => isset( $post_data['dokan_store_tnc'] ) ? wp_kses_post( $post_data['dokan_store_tnc'] ) : '',
-                'dokan_store_time'         => array(
-                    'sunday'               => array(
-                        'status'           => isset( $post_data['sunday_on_off'] ) && 'open' == $post_data['sunday_on_off'] ? 'open' : 'close',
-                        'opening_time'     => isset( $post_data['sunday_opening_time'] ) ? sanitize_text_field( $post_data['sunday_opening_time'] ) : '',
-                        'closing_time'     => isset( $post_data['sunday_closing_time'] ) ? sanitize_text_field( $post_data['sunday_closing_time'] ) : '',
-                    ),
-                    'monday'               => array(
-                        'status'           => isset( $post_data['monday_on_off'] ) && 'open' == $post_data['monday_on_off'] ? 'open' : 'close',
-                        'opening_time'     => isset( $post_data['monday_opening_time'] ) ? sanitize_text_field( $post_data['monday_opening_time'] ) : '',
-                        'closing_time'     => isset( $post_data['monday_closing_time'] ) ? sanitize_text_field( $post_data['monday_closing_time'] ) : '',
-                    ),
-                    'tuesday'              => array(
-                        'status'           => isset( $post_data['tuesday_on_off'] ) && 'open' == $post_data['tuesday_on_off'] ? 'open' : 'close',
-                        'opening_time'     => isset( $post_data['tuesday_opening_time'] ) ? sanitize_text_field( $post_data['tuesday_opening_time'] ) : '',
-                        'closing_time'     => isset( $post_data['tuesday_closing_time'] ) ? sanitize_text_field( $post_data['tuesday_closing_time'] ) : '',
-                    ),
-                    'wednesday'            => array(
-                        'status'           => isset( $post_data['wednesday_on_off'] ) && 'open' == $post_data['wednesday_on_off'] ? 'open' : 'close',
-                        'opening_time'     => isset( $post_data['wednesday_opening_time'] ) ? sanitize_text_field( $post_data['wednesday_opening_time'] ) : '',
-                        'closing_time'     => isset( $post_data['wednesday_closing_time'] ) ? sanitize_text_field( $post_data['wednesday_closing_time'] ) : '',
-                    ),
-                    'thursday'             => array(
-                        'status'           => isset( $post_data['thursday_on_off'] ) && 'open' == $post_data['thursday_on_off'] ? 'open' : 'close',
-                        'opening_time'     => isset( $post_data['thursday_opening_time'] ) ? sanitize_text_field( $post_data['thursday_opening_time'] ) : '',
-                        'closing_time'     => isset( $post_data['thursday_closing_time'] ) ? sanitize_text_field( $post_data['thursday_closing_time'] ) : '',
-                    ),
-                    'friday'               => array(
-                        'status'           => isset( $post_data['friday_on_off'] ) && 'open' == $post_data['friday_on_off'] ? 'open' : 'close',
-                        'opening_time'     => isset( $post_data['friday_opening_time'] ) ? sanitize_text_field( $post_data['friday_opening_time'] ) : '',
-                        'closing_time'     => isset( $post_data['friday_closing_time'] ) ? sanitize_text_field( $post_data['friday_closing_time'] ) : '',
-                    ),
-                    'saturday'             => array(
-                        'status'           => isset( $post_data['saturday_on_off'] ) && 'open' == $post_data['saturday_on_off'] ? 'open' : 'close',
-                        'opening_time'     => isset( $post_data['saturday_opening_time'] ) ? sanitize_text_field( $post_data['saturday_opening_time'] ) : '',
-                        'closing_time'     => isset( $post_data['saturday_closing_time'] ) ? sanitize_text_field( $post_data['saturday_closing_time'] ) : '',
-                    ),
-                ),
+                'dokan_store_time'         => apply_filters( 'dokan_store_time', ( isset( $dokan_store_time ) ? $dokan_store_time : [] ) ),
                 'dokan_store_time_enabled' => isset( $post_data['dokan_store_time_enabled'] ) && 'yes' == $post_data['dokan_store_time_enabled'] ? 'yes' : 'no',
                 'dokan_store_open_notice'  => isset( $post_data['dokan_store_open_notice'] ) ? sanitize_textarea_field( $post_data['dokan_store_open_notice'] ) : '',
                 'dokan_store_close_notice' => isset( $post_data['dokan_store_close_notice'] ) ? sanitize_textarea_field( $post_data['dokan_store_close_notice'] ) : '',

@@ -3258,6 +3258,58 @@ function dokan_get_translated_days( $day ) {
 }
 
 /**
+ * Get store opening time.
+ *
+ * @since 3.2.16
+ *
+ * @param string $current_day
+ * @param int    $index
+ *
+ * @return mixed|string
+ */
+function dokan_get_store_opening_time( $current_day, $index = 0 ) {
+    $profile_info       = dokan_get_store_info( dokan_get_current_user_id() );
+    $dokan_store_time   = isset( $profile_info['dokan_store_time'] ) ? $profile_info['dokan_store_time'] : '';
+    $dokan_opening_time = $dokan_store_time[ $current_day ]['opening_time'];
+
+    if ( ! empty( $dokan_opening_time ) && ! is_array( $dokan_opening_time ) ) {
+        return $dokan_opening_time;
+    }
+
+    if ( ! empty( $dokan_opening_time ) && is_array( $dokan_opening_time ) ) {
+        return $dokan_opening_time[ $index ];
+    }
+
+    return '';
+}
+
+/**
+ * Get store closing time.
+ *
+ * @since 3.2.16
+ *
+ * @param string $current_day
+ * @param int    $index
+ *
+ * @return mixed|string
+ */
+function dokan_get_store_closing_time( $current_day, $index = 0 ) {
+    $profile_info       = dokan_get_store_info( dokan_get_current_user_id() );
+    $dokan_store_time   = isset( $profile_info['dokan_store_time'] ) ? $profile_info['dokan_store_time'] : '';
+    $dokan_closing_time = $dokan_store_time[ $current_day ]['closing_time'];
+
+    if ( ! empty( $dokan_closing_time ) && ! is_array( $dokan_closing_time ) ) {
+        return $dokan_closing_time;
+    }
+
+    if ( ! empty( $dokan_closing_time ) && is_array( $dokan_closing_time ) ) {
+        return $dokan_closing_time[ $index ];
+    }
+
+    return '';
+}
+
+/**
  * Dokan is store open
  *
  * @param  int user_id
@@ -3274,28 +3326,45 @@ function dokan_is_store_open( $user_id ) {
 
     $current_time = dokan_current_datetime();
     $today        = strtolower( $current_time->format( 'l' ) );
+    $store_open   = false;
+    $status       = '';
+    $schedule     = [];
 
-    if ( ! isset( $open_days[ $today ] ) ) {
-        return false;
+    error_log( print_r( $current_time, 1 ) );
+
+    if ( isset( $open_days[ $today ] ) ) {
+        $schedule = $open_days[ $today ];
+        $status   = isset( $schedule['open'] ) ? $schedule['open'] : $schedule['status'];
     }
 
-    $schedule = $open_days[ $today ];
-    $status   = isset( $schedule['open'] ) ? $schedule['open'] : $schedule['status'];
+    if ( isset( $status ) && 'open' === $status ) {
+        $open  = isset( $schedule ) ? $schedule['opening_time'] : '';
+        $close = isset( $schedule ) ? $schedule['closing_time'] : '';
 
-    if ( 'open' === $status ) {
-        if ( empty( $schedule['opening_time'] ) || empty( $schedule['closing_time'] ) ) {
-            return true;
+        if ( empty( $open ) || empty( $close ) ) {
+            $store_open = true;
         }
 
-        $open  = DateTimeImmutable::createFromFormat( esc_attr( get_option( 'time_format' ) ), $schedule['opening_time'], new DateTimeZone( dokan_wp_timezone_string() ) );
-        $close = DateTimeImmutable::createFromFormat( esc_attr( get_option( 'time_format' ) ), $schedule['closing_time'], new DateTimeZone( dokan_wp_timezone_string() ) );
+        if ( ! is_null( $open ) && ! is_null( $close ) ) {
+            $open       = is_array( $open ) ? $open[0] : $open;
+            $close      = is_array( $close ) ? $close[0] : $close;
 
-        if ( $open <= $current_time && $close >= $current_time ) {
-            return true;
+            $open_time  = date_create( $open );
+            $close_time = date_create( $close );
+
+            $open_time  = date_format( $open_time, 'g:i a' );
+            $close_time = date_format( $close_time, 'g:i a' );
+
+            $open_time  = DateTimeImmutable::createFromFormat( 'g:i a', $open_time, new DateTimeZone( dokan_wp_timezone_string() ) );
+            $close_time = DateTimeImmutable::createFromFormat( 'g:i a', $close_time, new DateTimeZone( dokan_wp_timezone_string() ) );
+
+            if ( $open_time <= $current_time && $close_time >= $current_time ) {
+                $store_open = true;
+            }
         }
     }
 
-    return false;
+    return apply_filters( 'dokan_is_store_open', $store_open, $status, $schedule );
 }
 
 /**
@@ -3303,7 +3372,10 @@ function dokan_is_store_open( $user_id ) {
  *
  * @param int $customer_id
  * @param int $seller_id
- *
+ *n, new DateTimeZone( dokan_wp_timezone_string() ) );
+$close = date_create( $close );
+$close = date_format( $open, 'g:i a' );
+$close = DateTimeImmutable::createFromFormat( 'g:i a', $close, new D
  * @since  2.8.6
  *
  * @return bool
