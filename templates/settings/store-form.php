@@ -59,11 +59,7 @@
     $dokan_store_status = apply_filters( 'dokan_store_status', $all_status );
 ?>
 <?php do_action( 'dokan_settings_before_form', $current_user, $profile_info ); ?>
-<style>
-    /*select {*/
-    /*    font-family: 'FontAwesome', 'Second Font name';*/
-    /*}*/
-</style>
+
     <form method="post" id="store-form"  action="" class="dokan-form-horizontal">
 
         <?php wp_nonce_field( 'dokan_store_settings_nonce' ); ?>
@@ -393,18 +389,6 @@
                 self.closest('.store-open-close').find('.dokan-w6').css({'width': 'auto'});
             }
 
-        } );
-
-        $( '.dokan-form-group-container' ).each( function(e) {
-            $(this).find( '.dokan-form-group' ).each( function (e) {
-                let self          = $(this),
-                    foundSelected = self.closest( '.dokan-form-group' ).find( 'select option[selected]' );
-
-                if ( undefined === foundSelected[0] ) {
-                    self.closest( '.dokan-form-group' ).find( 'select option[value="open"]' ).attr( 'selected', 'selected' );
-                    self.closest( '.dokan-form-group' ).find( '.time' ).css({ 'visibility': 'visible' });
-                }
-            } );
         } );
 
         $( '.time .dokan-form-control' ).timepicker({

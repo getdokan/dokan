@@ -3370,10 +3370,7 @@ function dokan_is_store_open( $user_id ) {
  *
  * @param int $customer_id
  * @param int $seller_id
- *n, new DateTimeZone( dokan_wp_timezone_string() ) );
-$close = date_create( $close );
-$close = date_format( $open, 'g:i a' );
-$close = DateTimeImmutable::createFromFormat( 'g:i a', $close, new D
+ *
  * @since  2.8.6
  *
  * @return bool
