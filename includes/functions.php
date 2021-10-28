@@ -477,7 +477,13 @@ function dokan_generate_sync_table() {
     if ( $orders ) {
         foreach ( $orders as $order ) {
             $wc_order         = wc_get_order( $order->order_id );
-            $admin_commission = dokan_get_admin_commission_by( $wc_order, $order->seller_id );
+
+            if ( dokan_is_admin_coupon_applied( $order, $seller_id ) ) {
+                $net_amount = dokan()->commission->get_earning_by_order( $order, 'seller' );
+            } else {
+                $admin_commission = dokan()->commission->get_earning_by_order( $order, 'admin' );
+                $net_amount       = $order_total - $admin_commission;
+            }
 
             $wpdb->insert(
                 $table_name,
@@ -485,7 +491,7 @@ function dokan_generate_sync_table() {
                     'order_id'     => $order->order_id,
                     'seller_id'    => $order->seller_id,
                     'order_total'  => $order->order_total,
-                    'net_amount'   => $order->order_total - $admin_commission,
+                    'net_amount'   => $net_amount,
                     'order_status' => $order->order_status,
                 ],
                 [
@@ -4160,6 +4166,27 @@ function dokan_get_withdraw_threshold( $user_id ) {
     }
 
     return ( $threshold_day ) ? absint( $threshold_day ) : 0;
+}
+
+/**
+ * Check a order have apply admin coupon
+ * 
+ * @since DOKAN_LITE_SINCE
+ *
+ * @param WC_Order $order
+ * @param int      $vendor_id
+ * @param int      $product_id
+ *
+ * @return bool
+ */
+function dokan_is_admin_coupon_applied( $order, $vendor_id, $product_id = 0 ) {
+    if (
+        function_exists( 'dokan_is_admin_coupon_used_for_vendors' ) &&
+        dokan_is_admin_coupon_used_for_vendors( $order, $vendor_id, $product_id ) ) {
+        return true;
+    }
+
+    return false;
 }
 
 /**
