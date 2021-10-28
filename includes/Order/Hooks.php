@@ -296,7 +296,9 @@ class Hooks {
             $available_products[] = $product_id;
         }
 
-        if ( $coupon->is_type( 'fixed_cart' ) && count( array_unique( $available_vendors ) ) > 1 ) {
+        $available_vendors = array_unique( $available_vendors );
+
+        if ( $coupon->is_type( 'fixed_cart' ) && count( $available_vendors ) > 1 ) {
             throw new Exception( __( 'This coupon is invalid for multiple vendors.', 'dokan-lite' ) );
         }
 

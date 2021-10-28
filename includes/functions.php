@@ -477,12 +477,12 @@ function dokan_generate_sync_table() {
     if ( $orders ) {
         foreach ( $orders as $order ) {
             $wc_order         = wc_get_order( $order->order_id );
-            $admin_commission = dokan_get_admin_commission_by( $wc_order, $order->seller_id );
 
             if ( dokan_is_admin_coupon_applied( $order, $seller_id ) ) {
                 $net_amount = dokan()->commission->get_earning_by_order( $order, 'seller' );
             } else {
-                $net_amount = $order_total - $admin_commission;
+                $admin_commission = dokan()->commission->get_earning_by_order( $order, 'admin' );
+                $net_amount       = $order_total - $admin_commission;
             }
 
             $wpdb->insert(
