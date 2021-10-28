@@ -339,10 +339,22 @@ class Manager {
             return;
         }
 
+        $seller_id = dokan_get_seller_id_by_order( $order->get_id() );
+
+        if ( ! $seller_id ) {
+            return;
+        }
+
         foreach ( $used_coupons as $item ) {
             $coupon = new \WC_Coupon( $item->get_code() );
 
-            if ( $coupon && ! is_wp_error( $coupon ) && array_intersect( $product_ids, $coupon->get_product_ids() ) ) {
+            if (
+                $coupon &&
+                ! is_wp_error( $coupon ) &&
+                ( array_intersect( $product_ids, $coupon->get_product_ids() ) ||
+                    apply_filters( 'dokan_is_order_have_admin_coupon', false, $coupon, [ $seller_id ], $product_ids )
+                )
+            ) {
                 $new_item = new \WC_Order_Item_Coupon();
                 $new_item->set_props(
                     array(
