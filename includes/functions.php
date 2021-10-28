@@ -4169,9 +4169,29 @@ function dokan_get_withdraw_threshold( $user_id ) {
 }
 
 /**
+ * Insert a value or key/value pair (assoc array) after a specific key in an array.  If key doesn't exist, value is appended
+ * to the end of the array.
+ *
+ * @param array $old_array
+ * @param array $new_array
+ * @param string $insert_after_key
+ *
+ * @since 3.2.16
+ *
+ * @return array
+ */
+function dokan_array_insert_after( array $old_array, array $new_array, $insert_after_key ) {
+    $keys   = array_keys( $old_array );
+    $index  = array_search( $insert_after_key, $keys, true );
+    $pos    = false === $index ? count( $old_array ) : $index + 1;
+
+    return array_slice( $old_array, 0, $pos, true ) + $new_array + array_slice( $old_array, $pos, count( $old_array ) - 1, true );
+}
+  
+/**  
  * Check a order have apply admin coupon
  * 
- * @since DOKAN_LITE_SINCE
+ * @since 3.2.16
  *
  * @param WC_Order $order
  * @param int      $vendor_id
