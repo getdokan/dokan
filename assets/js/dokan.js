@@ -2898,7 +2898,32 @@ jQuery(function($) {
       });
     });
 })(jQuery);
+/**
+ * Show Delete Button Prompt
+ *
+ * @param {object} event
+ * @param {string} messgae
+ *
+ * @returns boolean
+ */
+ async function dokan_show_delete_prompt( event, messgae ) {
+  event.preventDefault(); 
+  
+  let answer = await dokan_sweetalert( messgae, {
+    action  : 'confirm',
+    icon    : 'warning'
+  } );
 
+  if( answer.isConfirmed && undefined !== event.target.href ) {
+      window.location.href = event.target.href;
+  } 
+  else if( answer.isConfirmed && undefined !== event.target.dataset.url ) {
+      window.location.href = event.target.dataset.url;
+  }
+  else {
+    return false;
+  }
+}
 ;(function($) {
     var storeLists = {
         /**
@@ -2937,12 +2962,6 @@ jQuery(function($) {
 
             // Submit the form
             $( '#dokan-store-listing-filter-form-wrap .apply-filter #apply-filter-btn' ).on( 'click', this.submitForm );
-
-            if ( ! this.getQueryParam( 'latitude' ) && ! this.getQueryParam( 'longitude' ) ) {
-                $.when( $( '.dokan-store-list-filter-button' ).trigger( 'click' ) ).then( function() {
-                    $( '.locate-icon' ).trigger( 'click' );
-                });
-            }
 
             this.maybeHideListView();
 
@@ -3208,19 +3227,6 @@ jQuery(function($) {
                     self.query[ param ] = value[ index ];
                 }
             });
-        },
-
-        /**
-         * Get query param
-         *
-         * @param string param
-         *
-         * @return boolean
-         */
-        getQueryParam: function ( param ) {
-            var results = new RegExp( '[\?&]' + param + '=([^&#]*)' ).exec( window.location.href );
-
-            return null !== results;
         },
 
         /**
