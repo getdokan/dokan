@@ -9,6 +9,9 @@
         <template v-if="containCommonFields( fieldData.type )">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
+                <span v-if="fieldData.tool_tips">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tips_msg" v-tooltip="fieldData.tips_msg"></i>
+                </span>
             </th>
             <td>
                 <input
@@ -32,6 +35,9 @@
         <template v-if="'number' === fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
+                <span v-if="fieldData.tool_tips">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tips_msg" v-tooltip="fieldData.tips_msg"></i>
+                </span>
             </th>
             <td>
               <input type="number" :min="fieldData.min" :max="fieldData.max" :step="fieldData.step" class="regular-text"
@@ -97,6 +103,9 @@
         <template v-if="'textarea' == fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
+                <span v-if="fieldData.tool_tips">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tips_msg" v-tooltip="fieldData.tips_msg"></i>
+                </span>
             </th>
             <td>
                 <textarea type="textarea" :rows="fieldData.rows" :cols="fieldData.cols" class="regular-text" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]"></textarea>
@@ -113,10 +122,13 @@
         <template v-if="'checkbox' == fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
+                <span v-if="fieldData.tool_tips">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tips_msg" v-tooltip="fieldData.tips_msg"></i>
+                </span>
             </th>
             <td>
                 <fieldset>
-                    <label :for="sectionId + '[' + fieldData.name + ']'">
+                     <label :for="sectionId + '[' + fieldData.name + ']'">
                         <input type="checkbox" class="checkbox" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]" true-value="on" false-value="off">
                         {{ fieldData.desc }}
                     </label>
@@ -130,6 +142,9 @@
         <template v-if="'multicheck' == fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
+                <span v-if="fieldData.tool_tips">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tips_msg" v-tooltip="fieldData.tips_msg"></i>
+                </span>
             </th>
             <td>
                 <fieldset>
@@ -150,6 +165,9 @@
         <template v-if="'select' == fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
+                <span v-if="fieldData.tool_tips">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tips_msg" v-tooltip="fieldData.tips_msg"></i>
+                </span>
             </th>
             <td>
                 <select v-if="!fieldData.grouped" class="regular" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
@@ -209,6 +227,9 @@
         <template v-if="'html' == fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
+                <span v-if="fieldData.tool_tips">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tips_msg" v-tooltip="fieldData.tips_msg"></i>
+                </span>
             </th>
             <td>
                 <p v-if="hasError( fieldData.name )" class="dokan-error">
@@ -245,6 +266,9 @@
         <template v-if="'wpeditor' == fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
+                <span v-if="fieldData.tool_tips">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tips_msg" v-tooltip="fieldData.tips_msg"></i>
+                </span>
             </th>
             <td width="72%">
                 <text-editor v-model="fieldValue[fieldData.name]"></text-editor>
@@ -255,6 +279,9 @@
         <template v-if="'repeatable' == fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
+                <span v-if="fieldData.tool_tips">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tips_msg" v-tooltip="fieldData.tips_msg"></i>
+                </span>
             </th>
             <td width="72%">
                 <ul class="dokan-settings-repeatable-list">
