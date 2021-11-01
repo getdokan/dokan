@@ -7,13 +7,13 @@ use WeDevs\Dokan\Abstracts\DokanUpgrader;
 class V_3_3_1 extends DokanUpgrader {
 
     /**
-     * Updates withdraw database table
+     * Updates withdraw database table column
      *
      * @since 3.3.7
      *
      * @return void
      */
-    public static function update_withdraw_table() {
+    public static function update_withdraw_table_column() {
         global $wpdb;
 
         include_once ABSPATH . 'wp-admin/includes/upgrade.php';
@@ -25,18 +25,18 @@ class V_3_3_1 extends DokanUpgrader {
         }
 
         $wpdb->query(
-            "ALTER TABLE `{$wpdb->prefix}dokan_withdraw` ADD COLUMN details longtext NOT NULL AFTER note" // phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange
+            "ALTER TABLE `{$wpdb->prefix}dokan_withdraw` ADD COLUMN `details` longtext AFTER `note`" // phpcs:ignore
         );
     }
 
     /**
-     * Updates refund database table
+     * Updates withdraw database table column
      *
      * @since 3.3.7
      *
      * @return void
      */
-    public static function update_refund_table() {
+    public static function update_refund_table_column() {
         global $wpdb;
 
         include_once ABSPATH . 'wp-admin/includes/upgrade.php';
