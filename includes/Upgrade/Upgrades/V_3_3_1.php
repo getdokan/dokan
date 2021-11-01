@@ -9,7 +9,7 @@ class V_3_3_1 extends DokanUpgrader {
     /**
      * Updates withdraw database table column
      *
-     * @since 3.3.7
+     * @since DOKAN_LITE_SINCE
      *
      * @return void
      */
@@ -32,7 +32,7 @@ class V_3_3_1 extends DokanUpgrader {
     /**
      * Updates withdraw database table column
      *
-     * @since 3.3.7
+     * @since DOKAN_LITE_SINCE
      *
      * @return void
      */
@@ -41,16 +41,16 @@ class V_3_3_1 extends DokanUpgrader {
 
         include_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
-        $existing_columns = $wpdb->get_col( "DESC `{$wpdb->prefix}dokan_refund`", 0 );
+        $existing_columns = $wpdb->get_results( "DESC `{$wpdb->prefix}dokan_refund`" );
 
-        if ( in_array( 'item_totals', $existing_columns, true ) && in_array( 'item_tax_totals', $existing_columns, true ) ) {
-            $wpdb->query(
-                "ALTER TABLE `{$wpdb->prefix}dokan_refund` MODIFY COLUMN item_totals text" // phpcs:ignore
-            );
-
-            $wpdb->query(
-                "ALTER TABLE `{$wpdb->prefix}dokan_refund` MODIFY COLUMN item_tax_totals text" // phpcs:ignore
-            );
+        if ( ! empty( $existing_columns ) ) {
+            foreach ( $existing_columns as $existing_column ) {
+                if ( ( ( 'item_totals' === $existing_column->Field ) || ( 'item_tax_totals' === $existing_column->Field ) ) && 'text' !== $existing_column->Type ) {
+                    $wpdb->query(
+                        "ALTER TABLE `{$wpdb->prefix}dokan_refund` MODIFY COLUMN {$existing_column->Field} text" // phpcs:ignore
+                    );
+                }
+            }
         }
     }
 }
