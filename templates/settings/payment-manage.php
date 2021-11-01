@@ -2,8 +2,6 @@
 /**
  * Dokan Settings Payment Template
  *
- * @since 2.2.2 Insert action before payment settings form
- *
  * @package dokan
  */
 $has_methods = false; ?>
