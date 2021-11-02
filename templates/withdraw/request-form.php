@@ -3,7 +3,7 @@
  * Dokan Withdraw Request Form Template
  *
  * @since 2.4
- * @since 3.2.16 Appearance changed.
+ * @since 3.3.1 Appearance changed.
  *
  * @package dokan
  */

@@ -348,7 +348,7 @@ class Withdraw {
      * Get Withdraw form and listing
      *
      * @since 2.4
-     * @since 3.2.16 Display only in `withdraw-requests` endpoint.
+     * @since 3.3.1 Display only in `withdraw-requests` endpoint.
      *
      * @return void
      */
@@ -371,7 +371,7 @@ class Withdraw {
     /**
      * List withdraw request for a user for dashboard.
      *
-     * @since 3.2.16
+     * @since 3.3.1
      *
      * @param  int  $user_id
      *
@@ -512,7 +512,7 @@ class Withdraw {
     /**
      * Print the approved user withdraw requests
      *
-     * @since 3.2.16
+     * @since 3.3.1
      *
      * @param  int  $user_id
      *
@@ -562,7 +562,7 @@ class Withdraw {
     /**
      * Display dashboard content
      *
-     * @since 3.2.16
+     * @since 3.3.1
      *
      * @return void
      */
@@ -599,7 +599,7 @@ class Withdraw {
     /**
      * Include withdraw request popup content
      *
-     * @since 3.2.16
+     * @since 3.3.1
      *
      * @return void
      */
@@ -610,7 +610,7 @@ class Withdraw {
     /**
      * Populate withdraw request popup content.
      *
-     * @since 3.2.16
+     * @since 3.3.1
      *
      * @return void
      */
@@ -628,7 +628,7 @@ class Withdraw {
             $message = sprintf( '<p>%s</p><p>%s</p>', __( 'You already have pending withdraw request(s).', 'dokan-lite' ), __( 'Please submit your request after approval or cancellation of your previous request.', 'dokan-lite' ) );
             $this->show_error_messages( $message );
             return;
-        } else if ( ! dokan()->withdraw->has_withdraw_balance( $current_user_id ) ) {
+        } if ( ! dokan()->withdraw->has_withdraw_balance( $current_user_id ) ) {
             $message = __( 'You don\'t have sufficient balance for a withdraw request!', 'dokan-lite' );
             $this->show_error_messages( $message );
             return;
@@ -646,7 +646,7 @@ class Withdraw {
     /**
      * Get pending withdraw request in dashboard listing.
      *
-     * @since 3.2.16
+     * @since 3.3.1
      *
      * @param int $user_id
      */
@@ -662,11 +662,10 @@ class Withdraw {
         ) );
     }
 
-
     /**
      * Add withdraw listing query var
      *
-     * @since 3.2.16
+     * @since 3.3.1
      *
      * @param array $query_vars
      *
@@ -681,7 +680,7 @@ class Withdraw {
     /**
      * Display withdraw listing.
      *
-     * @since 3.2.16
+     * @since 3.3.1
      *
      * @param array $query_vars
      *
@@ -703,7 +702,7 @@ class Withdraw {
     /**
      * Set withdraw menu as active.
      *
-     * @since 3.2.16
+     * @since 3.3.1
      *
      * @param string $active_menu
      * @param $request

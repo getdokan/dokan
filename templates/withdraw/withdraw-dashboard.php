@@ -2,7 +2,7 @@
 /**
  * Dokan Dashboard Withdraw Content
  *
- * @since 3.2.16
+ * @since 3.3.1
  *
  * @package dokan
  */

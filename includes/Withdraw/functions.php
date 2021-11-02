@@ -293,7 +293,7 @@ function dokan_withdraw_get_active_order_status_in_comma() {
 /**
  * Get withdraw method formatted icon.
  *
- * @since 3.2.16
+ * @since 3.3.1
  *
  * @param string $method_key Withdraw Method key
  *
@@ -303,28 +303,28 @@ function dokan_withdraw_get_method_icon( $method_key ) {
     $asset_path = DOKAN_PLUGIN_ASSEST . '/images/withdraw-methods/';
     switch ( $method_key ) {
         case 'paypal':
-            $method_icon = $asset_path . 'PayPal.svg';
+            $method_icon = $asset_path . 'paypal.svg';
             break;
         case 'stripe':
-            $method_icon = $asset_path . 'Stripe.svg';
+            $method_icon = $asset_path . 'stripe.svg';
             break;
         case 'mangopay':
-            $method_icon = $asset_path . 'MangoPay.svg';
+            $method_icon = $asset_path . 'mangopay.svg';
             break;
         case 'razorpay':
-            $method_icon = $asset_path . 'RazorPay.svg';
+            $method_icon = $asset_path . 'razorpay.svg';
             break;
         case 'bank':
-            $method_icon = $asset_path . 'Bank.svg';
+            $method_icon = $asset_path . 'bank.svg';
             break;
         case 'skrill':
-            $method_icon = $asset_path . 'Skrill.svg';
+            $method_icon = $asset_path . 'skrill.svg';
             break;
         case 'dokan-moip-connect':
-            $method_icon = $asset_path . 'WireCard.svg';
+            $method_icon = $asset_path . 'wirecard.svg';
             break;
         default:
-            $method_icon = $asset_path . 'Bank.svg';
+            $method_icon = $asset_path . 'bank.svg';
     }
     return apply_filters( 'dokan_withdraw_method_icon', $method_icon, $method_key );
 }
@@ -332,7 +332,7 @@ function dokan_withdraw_get_method_icon( $method_key ) {
 /**
  * Get withdraw method additional info.
  *
- * @since 3.2.16
+ * @since 3.3.1
  *
  * @param string $method_key Withdraw Method key
  *
@@ -360,7 +360,7 @@ function dokan_withdraw_get_method_additional_info( $method_key ) {
 /**
  * Mask or hide part of email address.
  *
- * @since 3.2.16
+ * @since 3.3.1
  *
  * @param string $email Email address
  *
@@ -382,7 +382,7 @@ function dokan_mask_email_address( $email ) {
 /**
  * Get the default withdrawal method.
  *
- * @since 3.2.16
+ * @since 3.3.1
  *
  * @param int $vendor_id
  *
@@ -407,7 +407,7 @@ function dokan_withdraw_get_default_method( $vendor_id = 0 ) {
 /**
  * Check if manual withdraw request sending enabled.
  *
- * @since 3.2.16
+ * @since 3.3.1
  *
  * @return bool
  */
@@ -418,7 +418,7 @@ function dokan_withdraw_is_manual_request_enabled() {
 /**
  * Check if `Hide Withdraw Option` is enabled and hide withdraw dashboard.
  *
- * @since 3.2.16
+ * @since 3.3.1
  *
  * @return bool
  */

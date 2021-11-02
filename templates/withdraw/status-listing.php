@@ -3,7 +3,7 @@
  * Dokan Withdraw Status filter template
  *
  * @since 2.4
- * @since 3.2.16 Additional button added.
+ * @since 3.3.1 Additional button added.
  *
  * @package dokan
  */

@@ -60,7 +60,6 @@
             const button      = $( e.target );
             const paymentArea = $( '#dokan-withdraw-payment-method-list' );
 
-
             paymentArea.block({
                 message: null,
                 overlayCSS: {
@@ -150,7 +149,7 @@
         handleScheduleChangeRequest: ( e ) => {
             e.preventDefault();
             const schedule = $( "input[name='withdraw-schedule']:checked").val();
-            const nonce   = $( '#dokan-withdraw-schedule-request-submit').data('security');
+            const nonce    = $( '#dokan-withdraw-schedule-request-submit').data('security');
             const form     = $( '#withdraw-schedule-popup' );
 
             form.block({

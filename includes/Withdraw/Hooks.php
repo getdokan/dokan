@@ -23,7 +23,7 @@ class Hooks {
     /**
      * All the withdrawal related ajax hooks.
      *
-     * @since 3.2.16
+     * @since 3.3.1
      *
      * @return void
      */
@@ -107,19 +107,19 @@ class Hooks {
     /**
      * Handle withdraw request ajax.
      *
-     * @since 3.2.16
+     * @since 3.3.1
      *
      * @return void
      */
     public function handle_withdraw_request() {
+        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'dokan_withdraw' ) ) {
+            wp_send_json_error( esc_html__( 'Are you cheating?', 'dokan-lite' ) );
+        }
+
         $user_id = dokan_get_current_user_id();
 
         if ( dokan()->withdraw->has_pending_request( $user_id ) ) {
             wp_send_json_error( esc_html__( 'You already have a pending withdraw request.', 'dokan-lite' ) );
-        }
-
-        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'dokan_withdraw' ) ) {
-            wp_send_json_error( esc_html__( 'Are you cheating?', 'dokan-lite' ) );
         }
 
         if ( ! current_user_can( 'dokan_manage_withdraw' ) ) {
@@ -129,11 +129,12 @@ class Hooks {
         if ( ! isset( $_POST['method'] ) ) {
             wp_send_json_error( esc_html__( 'Withdraw method is required', 'dokan-lite' ) );
         }
+
         if ( empty( $_POST['amount'] ) ) {
             wp_send_json_error( esc_html__( 'Withdraw amount is required', 'dokan-lite' ) );
         }
 
-        $amount = (float) wc_format_decimal( wc_clean( wp_unslash( $_POST['amount'] ) ) );
+        $amount = (float) wc_format_decimal( wp_unslash( $_POST['amount'] ) );
         $method =  wc_clean( wp_unslash( $_POST['method'] ) );
 
         if ( ! in_array( $method, dokan_get_seller_active_withdraw_methods( $user_id ), true ) ) {
@@ -143,7 +144,6 @@ class Hooks {
         if ( $amount < 0 ) {
             wp_send_json_error( esc_html__( 'Negative withdraw amount is not permitted.', 'dokan-lite' ) );
         }
-
 
         $args = array(
             'user_id' => $user_id,
@@ -180,7 +180,7 @@ class Hooks {
     /**
      * Handle default with method change.
      *
-     * @since 3.2.16
+     * @since 3.3.1
      *
      * @return void
      */
@@ -197,10 +197,10 @@ class Hooks {
 
         $method = isset( $_POST['method'] ) ? sanitize_key( wp_unslash( $_POST['method'] ) ) : '';
         if ( empty( $method ) ) {
-            wp_send_json_error( esc_html__( 'Which method?', 'dokan-lite' ) );
+            wp_send_json_error( esc_html__( 'Please provide Withdrew method.', 'dokan-lite' ) );
         }
 
-        if ( ! in_array( $method, dokan_withdraw_get_active_methods() ) ) {
+        if ( ! in_array( $method, dokan_withdraw_get_active_methods(), true ) ) {
             wp_send_json_error( esc_html__( 'Method not active.', 'dokan-lite' ) );
         }
 
