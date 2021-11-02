@@ -13,7 +13,7 @@
         <div class="dokan-clearfix dokan-panel-inner-container">
             <div class="dokan-w8">
                 <p>
-                    <?php esc_html_e( 'Your Balance:', 'dokan-lite' ); ?> <strong> <?php echo $balance; ?></strong><br>
+                    <?php esc_html_e( 'Your Balance:', 'dokan-lite' ); ?> <strong> <a href="<?php echo function_exists( 'dokan_pro' ) ? esc_url( add_query_arg( 'chart', 'sales_statement', dokan_get_navigation_url( 'reports' ) ) ) : ''; ?>"><?php echo wp_kses_post( $balance ); ?></a></strong><br>
                     <?php if ( $withdraw_limit !== -1 ) : ?>
                     <?php esc_html_e( 'Minimum Withdraw Amount:', 'dokan-lite' ); ?> <strong><?php echo wc_price( $withdraw_limit ); ?></strong><br>
                     <?php
@@ -74,9 +74,10 @@
     <div class="dokan-panel-body general-details">
         <?php
         foreach ( $active_methods as $method ) :
-            $method_icon  = dokan_withdraw_get_method_icon( $method );
-            $method_info  = dokan_withdraw_get_method_additional_info( $method );
-            $method_title = dokan_withdraw_get_method_title( $method );
+            $method_icon     = dokan_withdraw_get_method_icon( $method );
+            $method_info     = dokan_withdraw_get_method_additional_info( $method );
+            $method_title    = dokan_withdraw_get_method_title( $method );
+            $has_information = in_array( $method, dokan_get_seller_active_withdraw_methods() );
             ?>
             <div class="dokan-clearfix dokan-panel-inner-container">
                 <div class="dokan-w8">
@@ -87,7 +88,9 @@
                 <div class="dokan-w5">
                     <?php if ( $default_method === $method ) : ?>
                     <button class="dokan-btn dokan-btn-default" disabled data-method="<?php echo esc_attr( $method ); ?>"><?php esc_html_e( 'Default', 'dokan-lite' ); ?></button>
-                   <?php else: ?>
+                    <?php elseif ( ! $has_information ) : ?>
+                    <a href="<?php echo esc_url( dokan_get_navigation_url( 'settings/payment' ) ); ?>" class="dokan-btn" data-method="<?php echo esc_attr( $method ); ?>"><?php esc_html_e( 'Setup', 'dokan-lite' ); ?></a>
+                    <?php else: ?>
                    <button class="dokan-btn dokan-withdraw-make-default-button" data-method="<?php echo esc_attr( $method ); ?>"><?php esc_html_e( 'Make Default', 'dokan-lite' ); ?></button>
                    <?php endif; ?>
                 </div>

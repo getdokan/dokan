@@ -525,14 +525,11 @@ class Withdraw {
         $requests = dokan()->withdraw->get_withdraw_requests( $user_id, 1, 100 );
 
         if ( $requests ) {
-
             dokan_get_template_part( 'withdraw/approved-request-listing', '', array(
                 'requests' => $requests,
             ) );
-
         } else {
             $this->show_warning_message( __( 'Sorry, no transactions were found!', 'dokan-lite' ) );
-
         }
     }
 
@@ -581,7 +578,7 @@ class Withdraw {
 
         if ( ! empty( $last_withdraw ) ) {
             $last_withdraw_amount      = '<strong>' . wc_price( $last_withdraw[0]->amount ) . '</strong>';
-            $last_withdraw_date        = '<strong>' . dokan_format_date( $last_withdraw[0]->date ) . '</strong>';
+            $last_withdraw_date        = '<strong><em>' . dokan_format_date( $last_withdraw[0]->date ) . '</em></strong>';
             $last_withdraw_method_used = '<strong>' . dokan_withdraw_get_method_title( $last_withdraw[0]->method ) . '</strong>';
 
             // translators: 1: Last formatted withdraw amount 2: Last formatted withdraw date 3: Last formatted withdraw method used.
