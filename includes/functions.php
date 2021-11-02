@@ -3331,33 +3331,24 @@ function dokan_is_store_open( $user_id ) {
     $status                 = '';
     $schedule               = [];
 
+    // Check if isset current day open, close time.
     if ( isset( $open_days[ $today ] ) ) {
         $schedule = $open_days[ $today ];
         $status   = isset( $schedule['open'] ) ? $schedule['open'] : $schedule['status'];
     }
 
+    // Check if our store is open then check store opening, closing time for throw store open status.
     if ( isset( $status ) && 'open' === $status ) {
-        $open  = isset( $schedule ) ? $schedule['opening_time'] : '';
-        $close = isset( $schedule ) ? $schedule['closing_time'] : '';
+        $open_time  = ! empty( $schedule['opening_time'] ) ? ( is_array( $schedule['opening_time'] ) ? $schedule['opening_time'][0] : $schedule['opening_time'] ) : '';
+        $close_time = ! empty( $schedule['closing_time'] ) ? ( is_array( $schedule['closing_time'] ) ? $schedule['closing_time'][0] : $schedule['closing_time'] ) : '';
 
-        if ( empty( $open ) || empty( $close ) ) {
+        if ( empty( $open_time ) || empty( $close_time ) ) {
             $store_open = true;
         }
 
-        if ( ! is_null( $open ) && ! is_null( $close ) ) {
-            $open       = is_array( $open ) ? $open[0] : $open;
-            $close      = is_array( $close ) ? $close[0] : $close;
-
-            // Make 12 hours format data for check.
-            $open_time  = DateTimeImmutable::createFromFormat( wc_time_format(), $open, new DateTimeZone( dokan_wp_timezone_string() ) );
-            $open_time  = $open_time->format( 'g:i a' );
-            $close_time = DateTimeImmutable::createFromFormat( wc_time_format(), $close, new DateTimeZone( dokan_wp_timezone_string() ) );
-            $close_time = $close_time->format( 'g:i a' );
-
-            // Check vendor picked time and current time for show store open...
-            if ( $open_time <= $formatted_current_time && $close_time >= $formatted_current_time ) {
-                $store_open = true;
-            }
+        // Check vendor picked time and current time for show store open...
+        if ( $open_time <= $formatted_current_time && $close_time >= $formatted_current_time ) {
+            $store_open = true;
         }
     }
 
