@@ -117,6 +117,10 @@ final class WeDevs_Dokan {
 
     /**
      * Display admin notices
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return void
      */
     public function admin_notice_banner() {
         dokan_get_template( 'admin-notices.php' );

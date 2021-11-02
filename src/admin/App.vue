@@ -1,13 +1,20 @@
 <template>
     <div id="vue-backend-app">
+        <AdminNotice/>
         <router-view />
         <notifications position="bottom right"/>
     </div>
 </template>
 
 <script>
+import AdminNotice from "./components/AdminNotice.vue";
+
 export default {
-    name: 'App'
+    name: 'App',
+
+    components: {
+        AdminNotice
+    }
 };
 </script>
 

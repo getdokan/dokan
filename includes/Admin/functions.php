@@ -631,3 +631,7 @@ function dokan_admin_report_by_seller( $chosen_seller_id ) {
 
     return $data;
 }
+
+function dokan_get_admin_notices() {
+    return apply_filters( 'dokan_admin_notices', [] );
+}
