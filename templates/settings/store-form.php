@@ -276,7 +276,7 @@
 
                                 <?php
                                 /**
-                                 * @since DOKAN_PRO_SINCE
+                                 * @since 3.2.16
                                  */
                                 do_action( 'after_dokan_status_selection', $status );
                                 ?>
@@ -284,6 +284,7 @@
                             </label>
                             <label for="opening-time" class="time" style="visibility: <?php echo isset( $status ) && $status == 'open' ? 'visible' : 'hidden'; ?>" >
                                 <?php
+                                    /* translators: %1$s is replaced with current day string, %2$s is replaced with placeholder string & %3$s is replaced with store opening time as a string value. */
                                     $dokan_store_opening_entities = sprintf( '<input type="text" class="dokan-form-control opening-time" name="opening_time[%1$s]" id="opening-time[%1$s]" placeholder="%2$s" value="%3$s" >', esc_attr( strtolower( $day ) ), esc_attr( '00:00' ), esc_attr( dokan_get_store_opening_time( $day ) ) );
 
                                     echo apply_filters( 'dokan_store_opening_time_entities', $dokan_store_opening_entities, $day );
@@ -291,6 +292,7 @@
                             </label>
                             <label for="closing-time" class="time" style="visibility: <?php echo isset( $status ) && $status == 'open' ? 'visible' : 'hidden'; ?>" >
                                 <?php
+                                /* translators: %1$s is replaced with current day string, %2$s is replaced with placeholder string & %3$s is replaced with store closing time as a string value. */
                                     $dokan_store_closing_entities = sprintf( '<input type="text" class="dokan-form-control closing-time" name="closing_time[%1$s]" id="closing-time[%1$s]" placeholder="%2$s" value="%3$s" >', esc_attr( strtolower( $day ) ), esc_attr( '00:00' ), esc_attr( dokan_get_store_closing_time( $day ) ) );
 
                                     echo apply_filters( 'dokan_store_closing_time_entities', $dokan_store_closing_entities, $day );
@@ -299,7 +301,7 @@
 
                             <?php
                             /**
-                             * @since DOKAN_PRO_SINCE
+                             * @since 3.2.16
                              */
                             do_action( 'dokan_store_open_close_actions', $status );
                             ?>
@@ -308,7 +310,7 @@
 
                         <?php
                         /**
-                         * @since DOKAN_PRO_SINCE
+                         * @since 3.2.16
                          */
                         do_action( 'after_dokan_store_time_settings_form', $day, $status );
                         ?>
@@ -378,6 +380,7 @@
 
         $('#dokan-store-time-enable').trigger('change');
 
+        // Show & hide our opening, closing time fields by using this change event.
         $( '.dokan-on-off' ).on( 'change', function() {
             var self = $(this);
 
@@ -391,11 +394,32 @@
 
         } );
 
+        // Set timepicker jquery here.
         $( '.time .dokan-form-control' ).timepicker({
             scrollDefault: 'now',
             timeFormat: '<?php echo addcslashes( esc_attr( wc_time_format() ), '\\' ); ?>',
             step: <?php echo 'h:i' === strtolower( wc_time_format() ) ? '60' : '30'; ?>,
         });
+
+        // Update closing time on focus when previously setted up closing time field.
+        $( '.dokan-form-group-container' ).on( 'focus', '.dokan-form-control',  function(e) {
+            e.stopPropagation();
+
+            let self       = $(this),
+                startVal   = self.closest( '.dokan-form-group' ).find( '.time .dokan-form-control:eq(0)' ).val(),
+                startValue = moment( startVal, [ 'h:mm A' ] ).add( <?php echo 'h:i' === strtolower( wc_time_format() ) ? '60' : '30'; ?>, 'minutes' ).format( 'hh:mm A' );
+
+            // Set closing time when set multiple store closing time.
+            if ( startValue ) {
+                self.closest( '.dokan-form-group' ).find( '.time .dokan-form-control:eq(1)' ).timepicker( {
+                    scrollDefault: 'now',
+                    minTime: startValue,
+                    maxTime: '<?php echo 'h:i' === strtolower( wc_time_format() ) ? '23:00' : '11:30 pm' ?>',
+                    timeFormat: '<?php echo addcslashes( esc_attr( wc_time_format() ), '\\' ); ?>',
+                    step: '<?php echo 'h:i' === strtolower( wc_time_format() ) ? '60' : '30'; ?>',
+                } );
+            }
+        } );
 
         // Update timepicker time index after change store opening time.
         $( '.dokan-form-group' ).on( 'change', '.opening-time', function() {
@@ -411,25 +435,6 @@
                 step: '<?php echo 'h:i' === strtolower( wc_time_format() ) ? '60' : '30'; ?>',
             });
             self.closest( '.dokan-form-group' ).find( '.time .closing-time' ).timepicker( 'option', 'minTime', startTime );
-        } );
-
-        $( '.dokan-form-group-container' ).on( 'focus', '.dokan-form-control',  function(e) {
-            e.stopPropagation();
-
-            let self        = $(this),
-                startVal    = self.closest( '.dokan-form-group' ).find( '.time .clock-picker .dokan-form-control:eq(0)' ).val(),
-                startValue  = moment( startVal, [ 'h:mm A' ] ).add( <?php echo 'h:i' === strtolower( wc_time_format() ) ? '60' : '30'; ?>, 'minutes' ).format( 'hh:mm A' );
-
-            // Set closing time when set multiple store closing time.
-            if ( startValue ) {
-                self.closest( '.dokan-form-group' ).find( '.time .clock-picker .dokan-form-control:eq(1)' ).timepicker( {
-                    scrollDefault: 'now',
-                    minTime: startValue,
-                    maxTime: '<?php echo 'h:i' === strtolower( wc_time_format() ) ? '23:00' : '11:30 pm' ?>',
-                    timeFormat: '<?php echo addcslashes( esc_attr( wc_time_format() ), '\\' ); ?>',
-                    step: '<?php echo 'h:i' === strtolower( wc_time_format() ) ? '60' : '30'; ?>',
-                } );
-            }
         } );
         // dokan store open close scripts end //
 
