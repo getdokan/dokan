@@ -696,7 +696,6 @@ class Withdraw {
         } else {
             dokan_get_template_part( 'withdraw/withdraw' );
         }
-
     }
 
     /**
