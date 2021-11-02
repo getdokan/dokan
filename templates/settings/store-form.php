@@ -292,7 +292,7 @@
                             </label>
                             <label for="closing-time" class="time" style="visibility: <?php echo isset( $status ) && $status == 'open' ? 'visible' : 'hidden'; ?>" >
                                 <?php
-                                /* translators: %1$s is replaced with current day string, %2$s is replaced with placeholder string & %3$s is replaced with store closing time as a string value. */
+                                    /* translators: %1$s is replaced with current day string, %2$s is replaced with placeholder string & %3$s is replaced with store closing time as a string value. */
                                     $dokan_store_closing_entities = sprintf( '<input type="text" class="dokan-form-control closing-time" name="closing_time[%1$s]" id="closing-time[%1$s]" placeholder="%2$s" value="%3$s" >', esc_attr( strtolower( $day ) ), esc_attr( '00:00' ), esc_attr( dokan_get_store_closing_time( $day ) ) );
 
                                     echo apply_filters( 'dokan_store_closing_time_entities', $dokan_store_closing_entities, $day );
