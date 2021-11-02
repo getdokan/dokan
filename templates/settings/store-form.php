@@ -45,7 +45,7 @@
 
     $dokan_appearance         = dokan_get_option( 'store_header_template', 'dokan_appearance', 'default' );
     $show_store_open_close    = dokan_get_option( 'store_open_close', 'dokan_appearance', 'on' );
-    $dokan_days               = [ 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday' ];
+    $dokan_days               = dokan_get_translated_days( true );
     $all_times                = isset( $profile_info['dokan_store_time'] ) ? $profile_info['dokan_store_time'] : '';
     $dokan_store_time_enabled = isset( $profile_info['dokan_store_time_enabled'] ) ? $profile_info['dokan_store_time_enabled'] : '';
     $dokan_store_open_notice  = isset( $profile_info['dokan_store_open_notice'] ) ? $profile_info['dokan_store_open_notice'] : '';
@@ -255,18 +255,18 @@
         <div class="dokan-form-group store-open-close">
             <label class="dokan-w3 control-label"></label>
             <div class="dokan-w6" style="width: auto">
-                <?php foreach ( $dokan_days as $key => $day ) { ?>
+                <?php foreach ( $dokan_days as $day_key => $day ) { ?>
                     <?php
-                        $status = isset( $all_times[ $day ]['status'] ) ? $all_times[ $day ]['status'] : '';
-                        $status = isset( $all_times[ $day ]['open'] ) ? $all_times[ $day ]['open'] : $status;
+                        $status = isset( $all_times[ $day_key ]['status'] ) ? $all_times[ $day_key ]['status'] : '';
+                        $status = isset( $all_times[ $day_key ]['open'] ) ? $all_times[ $day_key ]['open'] : $status;
                     ?>
                     <div class="dokan-form-group-container">
                         <div class="dokan-form-group">
                             <label class="day control-label" for="opening-time[<?php echo esc_attr( $day ); ?>]">
-                                <?php echo apply_filters( 'dokan_show_store_days', esc_html( dokan_get_translated_days( $day ) ), $status ); ?>
+                                <?php echo apply_filters( 'dokan_show_store_days', esc_html( dokan_get_translated_days( $day_key ) ), $status ); ?>
                             </label>
                             <label for="">
-                                <select name="<?php echo esc_attr( $day ); ?>[working_status]" class="dokan-on-off dokan-form-control">
+                                <select name="<?php echo esc_attr( $day_key ); ?>[working_status]" class="dokan-on-off dokan-form-control">
                                     <?php foreach ( $dokan_store_status as $status_key => $status_value ) : ?>
                                         <option value="<?php echo esc_attr( $status_key ); ?>" <?php ! empty( $status ) ? selected( $status, $status_key ) : ''; ?> >
                                             <?php esc_html_e( $status_value, 'dokan-lite' ); ?>
@@ -285,17 +285,17 @@
                             <label for="opening-time" class="time" style="visibility: <?php echo isset( $status ) && $status == 'open' ? 'visible' : 'hidden'; ?>" >
                                 <?php
                                     /* translators: %1$s is replaced with current day string, %2$s is replaced with placeholder string & %3$s is replaced with store opening time as a string value. */
-                                    $dokan_store_opening_entities = sprintf( '<input type="text" class="dokan-form-control opening-time" name="opening_time[%1$s]" id="opening-time[%1$s]" placeholder="%2$s" value="%3$s" >', esc_attr( strtolower( $day ) ), esc_attr( '00:00' ), esc_attr( dokan_get_store_opening_time( $day ) ) );
+                                    $dokan_store_opening_entities = sprintf( '<input type="text" class="dokan-form-control opening-time" name="opening_time[%1$s]" id="opening-time[%1$s]" placeholder="%2$s" value="%3$s" >', esc_attr( $day_key ), esc_attr( '00:00' ), esc_attr( dokan_get_store_opening_time( $day_key ) ) );
 
-                                    echo apply_filters( 'dokan_store_opening_time_entities', $dokan_store_opening_entities, $day );
+                                    echo apply_filters( 'dokan_store_opening_time_entities', $dokan_store_opening_entities, $day_key );
                                 ?>
                             </label>
                             <label for="closing-time" class="time" style="visibility: <?php echo isset( $status ) && $status == 'open' ? 'visible' : 'hidden'; ?>" >
                                 <?php
                                     /* translators: %1$s is replaced with current day string, %2$s is replaced with placeholder string & %3$s is replaced with store closing time as a string value. */
-                                    $dokan_store_closing_entities = sprintf( '<input type="text" class="dokan-form-control closing-time" name="closing_time[%1$s]" id="closing-time[%1$s]" placeholder="%2$s" value="%3$s" >', esc_attr( strtolower( $day ) ), esc_attr( '00:00' ), esc_attr( dokan_get_store_closing_time( $day ) ) );
+                                    $dokan_store_closing_entities = sprintf( '<input type="text" class="dokan-form-control closing-time" name="closing_time[%1$s]" id="closing-time[%1$s]" placeholder="%2$s" value="%3$s" >', esc_attr( $day_key ), esc_attr( '00:00' ), esc_attr( dokan_get_store_closing_time( $day_key ) ) );
 
-                                    echo apply_filters( 'dokan_store_closing_time_entities', $dokan_store_closing_entities, $day );
+                                    echo apply_filters( 'dokan_store_closing_time_entities', $dokan_store_closing_entities, $day_key );
                                 ?>
                             </label>
 
@@ -312,7 +312,7 @@
                         /**
                          * @since 3.2.16
                          */
-                        do_action( 'after_dokan_store_time_settings_form', $day, $status );
+                        do_action( 'after_dokan_store_time_settings_form', $day_key, $status );
                         ?>
 
                     </div>

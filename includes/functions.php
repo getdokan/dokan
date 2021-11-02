@@ -3219,40 +3219,56 @@ add_filter( 'woocommerce_admin_order_preview_actions', 'dokan_remove_action_butt
 /**
  * Dokan get translated days
  *
- * @param  string day
+ * @param  string days
  *
  * @since  2.8.2
  *
- * @return string
+ * @return string|array
  */
-function dokan_get_translated_days( $day ) {
-    switch ( $day ) {
+function dokan_get_translated_days( $days = false ) {
+    $all_days = [
+        'sunday'    => __( 'Sunday', 'dokan-lite' ),
+        'monday'    => __( 'Monday', 'dokan-lite' ),
+        'tuesday'   => __( 'Tuesday', 'dokan-lite' ),
+        'wednesday' => __( 'Wednesday', 'dokan-lite' ),
+        'thursday'  => __( 'Thursday', 'dokan-lite' ),
+        'friday'    => __( 'Friday', 'dokan-lite' ),
+        'saturday'  => __( 'Saturday', 'dokan-lite' ),
+    ];
+
+    // Get days array if our $days is true.
+    if ( true === $days ) {
+        return $all_days;
+    }
+
+    // Translated only day if passed the name of current day.
+    switch ( $days ) {
         case 'saturday':
-            return __( 'Saturday', 'dokan-lite' );
+            return $all_days['saturday'];
 
         case 'sunday':
-            return __( 'Sunday', 'dokan-lite' );
+            return $all_days['sunday'];
 
         case 'monday':
-            return __( 'Monday', 'dokan-lite' );
+            return $all_days['monday'];
 
         case 'tuesday':
-            return __( 'Tuesday', 'dokan-lite' );
+            return $all_days['tuesday'];
 
         case 'wednesday':
-            return __( 'Wednesday', 'dokan-lite' );
+            return $all_days['wednesday'];
 
         case 'thursday':
-            return __( 'Thursday', 'dokan-lite' );
+            return $all_days['thursday'];
 
         case 'friday':
-            return __( 'Friday', 'dokan-lite' );
+            return $all_days['friday'];
 
         case 'close':
             return apply_filters( 'dokan_store_close_day_label', __( 'Off Day', 'dokan-lite' ) );
 
         default:
-            return apply_filters( 'dokan_get_translated_days', '', $day );
+            return apply_filters( 'dokan_get_translated_days', '', $days );
             break;
     }
 }
