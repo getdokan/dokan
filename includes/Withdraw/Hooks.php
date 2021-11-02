@@ -135,7 +135,7 @@ class Hooks {
         }
 
         $amount = (float) wc_format_decimal( wp_unslash( $_POST['amount'] ) );
-        $method =  wc_clean( wp_unslash( $_POST['method'] ) );
+        $method = wc_clean( wp_unslash( $_POST['method'] ) );
 
         if ( ! in_array( $method, dokan_get_seller_active_withdraw_methods( $user_id ), true ) ) {
             wp_send_json_error( esc_html__( 'Withdraw method is not activated.', 'dokan-lite' ) );
