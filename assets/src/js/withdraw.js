@@ -25,8 +25,7 @@
 
             $("input[name='withdraw-schedule']").on( 'change', (e) => {
                 Dokan_Withdraw.handleScheduleChange( e );
-            })
-
+            });
         },
         openRequestWithdrawWindow: () => {
             let self = $(this),
