@@ -3270,7 +3270,7 @@ function dokan_get_translated_days( $day ) {
 function dokan_get_store_opening_time( $current_day, $index = 0 ) {
     $profile_info       = dokan_get_store_info( dokan_get_current_user_id() );
     $dokan_store_time   = isset( $profile_info['dokan_store_time'] ) ? $profile_info['dokan_store_time'] : '';
-    $dokan_opening_time = $dokan_store_time[ $current_day ]['opening_time'];
+    $dokan_opening_time = isset( $dokan_store_time[ $current_day ]['opening_time'] ) ? $dokan_store_time[ $current_day ]['opening_time'] : '';
 
     if ( ! empty( $dokan_opening_time ) && ! is_array( $dokan_opening_time ) ) {
         return $dokan_opening_time;
@@ -3296,7 +3296,7 @@ function dokan_get_store_opening_time( $current_day, $index = 0 ) {
 function dokan_get_store_closing_time( $current_day, $index = 0 ) {
     $profile_info       = dokan_get_store_info( dokan_get_current_user_id() );
     $dokan_store_time   = isset( $profile_info['dokan_store_time'] ) ? $profile_info['dokan_store_time'] : '';
-    $dokan_closing_time = $dokan_store_time[ $current_day ]['closing_time'];
+    $dokan_closing_time = isset( $dokan_store_time[ $current_day ]['closing_time'] ) ? $dokan_store_time[ $current_day ]['closing_time'] : '';
 
     if ( ! empty( $dokan_closing_time ) && ! is_array( $dokan_closing_time ) ) {
         return $dokan_closing_time;
@@ -3324,11 +3324,12 @@ function dokan_is_store_open( $user_id ) {
     $store_info = $store_user->get_shop_info();
     $open_days  = isset( $store_info['dokan_store_time'] ) ? $store_info['dokan_store_time'] : '';
 
-    $current_time = dokan_current_datetime();
-    $today        = strtolower( $current_time->format( 'l' ) );
-    $store_open   = false;
-    $status       = '';
-    $schedule     = [];
+    $current_time           = dokan_current_datetime();
+    $formatted_current_time = dokan_current_datetime()->format( 'g:i a' );
+    $today                  = strtolower( $current_time->format( 'l' ) );
+    $store_open             = false;
+    $status                 = '';
+    $schedule               = [];
 
     if ( isset( $open_days[ $today ] ) ) {
         $schedule = $open_days[ $today ];
@@ -3347,16 +3348,14 @@ function dokan_is_store_open( $user_id ) {
             $open       = is_array( $open ) ? $open[0] : $open;
             $close      = is_array( $close ) ? $close[0] : $close;
 
-            $open_time  = date_create( $open );
-            $close_time = date_create( $close );
+            // Make 12 hours format data for check.
+            $open_time  = DateTimeImmutable::createFromFormat( wc_time_format(), $open, new DateTimeZone( dokan_wp_timezone_string() ) );
+            $open_time  = $open_time->format( 'g:i a' );
+            $close_time = DateTimeImmutable::createFromFormat( wc_time_format(), $close, new DateTimeZone( dokan_wp_timezone_string() ) );
+            $close_time = $close_time->format( 'g:i a' );
 
-            $open_time  = date_format( $open_time, 'g:i a' );
-            $close_time = date_format( $close_time, 'g:i a' );
-
-            $open_time  = DateTimeImmutable::createFromFormat( 'g:i a', $open_time, new DateTimeZone( dokan_wp_timezone_string() ) );
-            $close_time = DateTimeImmutable::createFromFormat( 'g:i a', $close_time, new DateTimeZone( dokan_wp_timezone_string() ) );
-
-            if ( $open_time <= $current_time && $close_time >= $current_time ) {
+            // Check vendor picked time and current time for show store open...
+            if ( $open_time <= $formatted_current_time && $close_time >= $formatted_current_time ) {
                 $store_open = true;
             }
         }
