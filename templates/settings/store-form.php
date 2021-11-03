@@ -382,9 +382,7 @@
 
         $( '.dokan-form-group-container' ).each( function(e) {
             $(this).find( '.dokan-form-group' ).each( function (e) {
-                // let selectedWorkingStatus = $(this).find( 'option:selected' ).val();
-                let selectedWorkingStatus = $(this).find( '.dokan-on-off option[selected]' ).length,
-                    foundNextElement      = $(this).next( '.dokan-form-group' ).find( 'span.and-time' );
+                let selectedWorkingStatus = $(this).find( '.dokan-on-off option[selected]' ).length;
 
                 if ( ! selectedWorkingStatus ) {
                     $(this).find( '.dokan-on-off option[value="close"]' ).attr( 'selected', 'selected' );
