@@ -55,5 +55,3 @@ if ( $withdraw_requests ) :
     </div>
 <?php
 endif;
-
-
