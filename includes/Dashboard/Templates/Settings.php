@@ -512,28 +512,25 @@ class Settings {
             $find_address     = ! empty( $_POST['find_address'] ) ? wc_clean( wp_unslash( $_POST['find_address'] ) ) : $default_locations['address'];
             $default_location = $default_locations['latitude'] . ',' . $default_locations['longitude'];
             $location         = ! empty( $_POST['find_address'] ) ? wc_clean( wp_unslash( $_POST['location'] ) ) : $default_location;
-            $dokan_days       = dokan_get_translated_days( true );
+            $dokan_days       = dokan_get_translated_days();
             $dokan_store_time = [];
 
             // Get & set 7 days opening & closing time for update dokan store time.
             foreach ( $dokan_days as $day_key => $day ) {
-                $opening_time = isset( $_POST['opening_time'][ $day_key ] ) ? wc_clean( wp_unslash( $_POST['opening_time'][ $day_key ] ) ) : '';
-                $closing_time = isset( $_POST['closing_time'][ $day_key ] ) ? wc_clean( wp_unslash( $_POST['closing_time'][ $day_key ] ) ) : '';
-                $store_status = ! empty( $_POST[ $day_key ]['working_status'] ) ? wc_clean( wp_unslash( $_POST[ $day_key ]['working_status'] ) ) : 'close';
-                $current_day  = [];
+                $opening_time          = isset( $_POST['opening_time'][ $day_key ] ) ? wc_clean( wp_unslash( $_POST['opening_time'][ $day_key ] ) ) : '';
+                $closing_time          = isset( $_POST['closing_time'][ $day_key ] ) ? wc_clean( wp_unslash( $_POST['closing_time'][ $day_key ] ) ) : '';
+                $store_status          = ! empty( $_POST[ $day_key ]['working_status'] ) ? wc_clean( wp_unslash( $_POST[ $day_key ]['working_status'] ) ) : 'close';
+                $current_day           = [];
+                $current_day['status'] = $store_status;
 
                 // If pass null value or our store is not open then our store will be close.
-                if ( empty( $opening_time ) || empty( $closing_time ) || 'open' !== $store_status ) {
-                    $current_day['status']       = 'close';
-                    $current_day['opening_time'] = '';
-                    $current_day['closing_time'] = '';
-                    $dokan_store_time[ $day ]    = $current_day;
+                if ( empty( $opening_time ) || is_array( $opening_time ) || empty( $closing_time ) || is_array( $closing_time ) || 'open' !== $store_status ) {
+                    $current_day['status']        = 'close';
+                    $current_day['opening_time']  = '';
+                    $current_day['closing_time']  = '';
+                    $dokan_store_time[ $day_key ] = $current_day;
 
                     continue;
-                }
-
-                if ( is_array( $opening_time ) || is_array( $closing_time ) ) {
-                    break;
                 }
 
                 // Make 12 hours format data for save.

@@ -45,7 +45,7 @@
 
     $dokan_appearance         = dokan_get_option( 'store_header_template', 'dokan_appearance', 'default' );
     $show_store_open_close    = dokan_get_option( 'store_open_close', 'dokan_appearance', 'on' );
-    $dokan_days               = dokan_get_translated_days( true );
+    $dokan_days               = dokan_get_translated_days();
     $all_times                = isset( $profile_info['dokan_store_time'] ) ? $profile_info['dokan_store_time'] : '';
     $dokan_store_time_enabled = isset( $profile_info['dokan_store_time_enabled'] ) ? $profile_info['dokan_store_time_enabled'] : '';
     $dokan_store_open_notice  = isset( $profile_info['dokan_store_open_notice'] ) ? $profile_info['dokan_store_open_notice'] : '';
@@ -262,7 +262,7 @@
                     ?>
                     <div class="dokan-form-group-container">
                         <div class="dokan-form-group">
-                            <label class="day control-label" for="opening-time[<?php echo esc_attr( $day ); ?>]">
+                            <label class="day control-label" for="opening-time[<?php echo esc_attr( $day_key ); ?>][working_status]">
                                 <?php echo apply_filters( 'dokan_show_store_days', esc_html( dokan_get_translated_days( $day_key ) ), $status ); ?>
                             </label>
                             <label for="">
@@ -380,12 +380,26 @@
 
         $('#dokan-store-time-enable').trigger('change');
 
+        $( '.dokan-form-group-container' ).each( function(e) {
+            $(this).find( '.dokan-form-group' ).each( function (e) {
+                // let selectedWorkingStatus = $(this).find( 'option:selected' ).val();
+                let selectedWorkingStatus = $(this).find( '.dokan-on-off option[selected]' ).length,
+                    foundNextElement      = $(this).next( '.dokan-form-group' ).find( 'span.and-time' );
+
+                if ( ! selectedWorkingStatus ) {
+                    $(this).find( '.dokan-on-off option[value="close"]' ).attr( 'selected', 'selected' );
+                }
+            } );
+        } );
+
         // Show & hide our opening, closing time fields by using this change event.
         $( '.dokan-on-off' ).on( 'change', function() {
             var self = $(this);
 
             if ( self.val() == 'open' ) {
                 self.closest('.dokan-form-group').find('.time').css({'visibility': 'visible'});
+                self.closest('.dokan-form-group').find('.opening-time').val('');
+                self.closest('.dokan-form-group').find('.closing-time').val('');
             } else {
                 self.closest('.dokan-form-group').find('.time').css({'visibility': 'hidden'});
                 self.closest('.store-open-close').find('.dokan-w6').removeClass('dokan-text-left');

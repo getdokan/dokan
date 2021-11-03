@@ -3225,7 +3225,7 @@ add_filter( 'woocommerce_admin_order_preview_actions', 'dokan_remove_action_butt
  *
  * @return string|array
  */
-function dokan_get_translated_days( $days = false ) {
+function dokan_get_translated_days( $days = true ) {
     $all_days = [
         'sunday'    => __( 'Sunday', 'dokan-lite' ),
         'monday'    => __( 'Monday', 'dokan-lite' ),
@@ -3269,7 +3269,6 @@ function dokan_get_translated_days( $days = false ) {
 
         default:
             return apply_filters( 'dokan_get_translated_days', '', $days );
-            break;
     }
 }
 
@@ -3362,7 +3361,7 @@ function dokan_is_store_open( $user_id ) {
             $store_open = true;
         }
 
-        // Check vendor picked time and current time for show store open...
+        // Check vendor picked time and current time for show store open.
         if ( $open_time <= $formatted_current_time && $close_time >= $formatted_current_time ) {
             $store_open = true;
         }
