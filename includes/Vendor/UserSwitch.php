@@ -20,34 +20,11 @@ class UserSwitch {
      * @since DOKAN_LITE_SINCE
      */
     public function __construct() {
-        add_filter( 'dokan_settings_selling_option_vendor_capability', [ $this, 'add_settings_user_switching' ], 20 );
         add_action( 'admin_notices', [ $this, 'activation_notice' ] );
         add_action( 'wp_ajax_dokan_pro_install_user_switching', [ $this, 'install_user_switching' ] );
         add_filter( 'dokan_admin_localize_script', [ $this, 'add_localize_data' ], 15 );
         add_filter( 'dokan_rest_store_additional_fields', [ $this, 'populate_switch_url' ], 2, 3 );
         add_action( 'dokan_dashboard_content_inside_before', [ $this, 'show_user_switching_message' ], 9 );
-    }
-
-    /**
-     * Load settings for user switching
-     *
-     * @since DOKAN_LITE_SINCE
-     *
-     * @param array $settings_fields
-     *
-     * @return array
-     */
-    public function add_settings_user_switching( $settings_fields ) {
-        $settings_fields['enable_user_switching'] = array(
-            'name'               => 'enable_user_switching',
-            'label'              => __( 'Enable Vendor Switching', 'dokan-lite' ),
-            'refresh_after_save' => true,
-            'desc'               => __( 'Allow this settings admin can switch any vendor account', 'dokan-lite' ),
-            'type'               => 'checkbox',
-            'default'            => 'off'
-        );
-
-        return $settings_fields;
     }
 
     /**
@@ -58,13 +35,7 @@ class UserSwitch {
      * @return void
      */
     public function activation_notice() {
-        $core_plugin_file = 'user-switching/user-switching.php';
-
-        if ( 'off' === dokan_get_option('enable_user_switching', 'dokan_selling', 'off' ) ) {
-            return;
-        }
-
-        if ( file_exists( WP_PLUGIN_DIR . '/' . $core_plugin_file ) && is_plugin_active( $core_plugin_file ) ) {
+        if ( $this->is_feature_active() ) {
             return;
         }
 
@@ -143,15 +114,11 @@ class UserSwitch {
      * @return void
      */
     public function is_feature_active() {
-        if ( 'on' === dokan_get_option('enable_user_switching', 'dokan_selling', 'off' ) ) {
-            $core_plugin_file = 'user-switching/user-switching.php';
+        $core_plugin_file = 'user-switching/user-switching.php';
 
-            if ( file_exists( WP_PLUGIN_DIR . '/' . $core_plugin_file ) && is_plugin_active( $core_plugin_file ) ) {
-                return true;
-            }
+        if ( file_exists( WP_PLUGIN_DIR . '/' . $core_plugin_file ) && is_plugin_active( $core_plugin_file ) ) {
+            return true;
         }
-
-        return false;
     }
 
     /**
