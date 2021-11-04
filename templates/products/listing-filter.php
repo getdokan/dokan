@@ -21,6 +21,12 @@ $product_type  = isset( $get_data['product_type'] ) ? $get_data['product_type'] 
 
         <div class="dokan-form-group">
             <?php
+
+                /**
+                 *  dokan_excluded_product_categories hook
+                 *
+                 *  @since 3.2.16
+                 */
                 wp_dropdown_categories( [
                     'show_option_none' => __( '- Select a category -', 'dokan-lite' ),
                     'hierarchical'     => 1,
@@ -32,7 +38,7 @@ $product_type  = isset( $get_data['product_type'] ) ? $get_data['product_type'] 
                     'order'            => 'ASC',
                     'title_li'         => '',
                     'class'            => 'product_cat dokan-form-control chosen',
-                    'exclude'          => '',
+                    'exclude'          => apply_filters( 'dokan_excluded_product_categories', '' ),
                     'selected'         => isset( $get_data['product_cat'] ) ? $get_data['product_cat'] : '-1',
                 ] );
             ?>
