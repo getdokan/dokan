@@ -128,7 +128,7 @@
             </th>
             <td>
                 <fieldset>
-                     <label :for="sectionId + '[' + fieldData.name + ']'">
+                    <label :for="sectionId + '[' + fieldData.name + ']'">
                         <input type="checkbox" class="checkbox" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]" true-value="on" false-value="off">
                         {{ fieldData.desc }}
                     </label>
