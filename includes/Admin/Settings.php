@@ -373,8 +373,7 @@ class Settings {
                     'desc'      => __( 'Enable Terms and Conditions for vendor stores', 'dokan-lite' ),
                     'type'      => 'checkbox',
                     'default'   => 'off',
-                    'tool_tips' => true,
-                    'tips_msg'  => __( 'Prompt Terms and Condition check for Vendors when creating store on your site', 'dokan-lite' ),
+                    'tooltip'   => __( 'Prompt Terms and Condition check for Vendors when creating store on your site', 'dokan-lite' ),
                 ],
                 'store_products_per_page' => [
                     'name'      => 'store_products_per_page',
@@ -382,8 +381,7 @@ class Settings {
                     'desc'      => __( 'Set how many products to display per page on the vendor store page. It will affect only if the vendor isn\'t set this value on their vendor setting page.', 'dokan-lite' ),
                     'type'      => 'number',
                     'default'   => '12',
-                    'tool_tips' => true,
-                    'tips_msg'  => __( 'It will affect the vendor only if they havent set a value on their settings page.', 'dokan-lite' ),
+                    'tooltip'   => __( 'It will affect the vendor only if they havent set a value on their settings page.', 'dokan-lite' ),
                 ],
             ]
         );
@@ -402,8 +400,7 @@ class Settings {
                     'type'      => 'select',
                     'options'   => $commission_types,
                     'default'   => 'percentage',
-                    'tool_tips' => true,
-                    'tips_msg'  => __( 'Select a commission type', 'dokan-lite' ),
+                    'tooltip'   => __( 'Select a commission type', 'dokan-lite' ),
                 ],
                 'admin_percentage'       => [
                     'name'              => 'admin_percentage',
@@ -454,8 +451,7 @@ class Settings {
                     'desc'      => __( 'Allow newly registered vendors to add products', 'dokan-lite' ),
                     'type'      => 'checkbox',
                     'default'   => 'on',
-                    'tool_tips' => true,
-                    'tips_msg'  => __( 'Enable vendor selling capability upon registration on site', 'dokan-lite' ),
+                    'tooltip'   => __( 'Enable vendor selling capability upon registration on site', 'dokan-lite' ),
                 ],
                 'disable_product_popup'     => [
                     'name'      => 'disable_product_popup',
@@ -463,8 +459,7 @@ class Settings {
                     'desc'      => __( 'Disable add new product in popup view', 'dokan-lite' ),
                     'type'      => 'checkbox',
                     'default'   => 'off',
-                    'tool_tips' => true,
-                    'tips_msg'  => __( 'Disable add new product in popup view', 'dokan-lite' ),
+                    'tooltip'   => __( 'Disable add new product in popup view', 'dokan-lite' ),
                 ],
                 'order_status_change'       => [
                     'name'    => 'order_status_change',
@@ -555,8 +550,7 @@ class Settings {
                     'options'     => $pages_array,
                     /* translators: %s: dokan pages  */
                     'desc'        => sprintf( __( 'Select where you want to add Dokan pages <a target="_blank" href="%s"> Learn More </a>', 'dokan-lite' ), 'https://wedevs.com/docs/dokan/settings/page-settings-2/' ),
-                    'tool_tips'   => true,
-                    'tips_msg'    => __( 'Select a page to display the Terms and Conditions of your store for Vendors', 'dokan-lite' ),
+                    'tooltip'     => __( 'Select a page to display the Terms and Conditions of your store for Vendors', 'dokan-lite' ),
                 ],
             ],
             'dokan_appearance' => [
@@ -589,8 +583,7 @@ class Settings {
                     'label'     => __( 'Google Map API Key', 'dokan-lite' ),
                     'desc'      => __( '<a href="https://developers.google.com/maps/documentation/javascript/" target="_blank" rel="noopener noreferrer">API Key</a> is needed to display map on store page', 'dokan-lite' ),
                     'type'      => 'text',
-                    'tool_tips' => true,
-                    'tips_msg'  => __( 'Insert Google API Key (with hyperlink) to display store map', 'dokan-lite' ),
+                    'tooltip'   => __( 'Insert Google API Key (with hyperlink) to display store map', 'dokan-lite' ),
                 ],
                 'mapbox_access_token'        => [
                     'name'    => 'mapbox_access_token',
@@ -621,8 +614,7 @@ class Settings {
                         'layout3' => DOKAN_PLUGIN_ASSEST . '/images/store-header-templates/layout3.png',
                     ],
                     'default'   => 'default',
-                    'tool_tips' => true,
-                    'tips_msg'  => __( 'Choose your header design from any of the templates provided. You can change it again anytime', 'dokan-lite' ),
+                    'tooltip'   => __( 'Choose your header design from any of the templates provided. You can change it again anytime', 'dokan-lite' ),
                 ],
                 'store_open_close'           => [
                     'name'    => 'store_open_close',
@@ -676,8 +668,7 @@ class Settings {
                     'type'      => 'textarea',
                     'rows'      => 5,
                     'default'   => __( 'Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our [dokan_privacy_policy]', 'dokan-lite' ),
-                    'tool_tips' => true,
-                    'tips_msg'  => __( 'Customize the Privacy Policy text that will be displayed on your store', 'dokan-lite' ),
+                    'tooltip'   => __( 'Customize the Privacy Policy text that will be displayed on your store', 'dokan-lite' ),
                 ],
             ],
         ];
@@ -824,8 +815,7 @@ class Settings {
             'desc'      => __( 'Delete all data and tables related to Dokan and Dokan Pro plugin while deleting the Dokan plugin.', 'dokan-lite' ),
             'type'      => 'checkbox',
             'default'   => 'off',
-            'tool_tips' => true,
-            'tips_msg'  => __( 'Delete all data and tables related to Dokan and Dokan Pro plugin when deleting the Dokan plugin.', 'dokan-lite' ),
+            'tooltip'   => __( 'Delete all data and tables related to Dokan and Dokan Pro plugin when deleting the Dokan plugin.', 'dokan-lite' ),
         ];
 
         return $settings_fields;

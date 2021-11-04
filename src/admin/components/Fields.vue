@@ -9,8 +9,8 @@
         <template v-if="containCommonFields( fieldData.type )">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
-                <span v-if="fieldData.tool_tips">
-                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tips_msg" v-tooltip="fieldData.tips_msg"></i>
+                <span v-if="fieldData.tooltip">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
                 </span>
             </th>
             <td>
@@ -35,8 +35,8 @@
         <template v-if="'number' === fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
-                <span v-if="fieldData.tool_tips">
-                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tips_msg" v-tooltip="fieldData.tips_msg"></i>
+                <span v-if="fieldData.tooltip">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
                 </span>
             </th>
             <td>
@@ -103,8 +103,8 @@
         <template v-if="'textarea' == fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
-                <span v-if="fieldData.tool_tips">
-                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tips_msg" v-tooltip="fieldData.tips_msg"></i>
+                <span v-if="fieldData.tooltip">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
                 </span>
             </th>
             <td>
@@ -122,8 +122,8 @@
         <template v-if="'checkbox' == fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
-                <span v-if="fieldData.tool_tips">
-                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tips_msg" v-tooltip="fieldData.tips_msg"></i>
+                <span v-if="fieldData.tooltip">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
                 </span>
             </th>
             <td>
@@ -142,8 +142,8 @@
         <template v-if="'multicheck' == fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
-                <span v-if="fieldData.tool_tips">
-                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tips_msg" v-tooltip="fieldData.tips_msg"></i>
+                <span v-if="fieldData.tooltip">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
                 </span>
             </th>
             <td>
@@ -165,8 +165,8 @@
         <template v-if="'select' == fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
-                <span v-if="fieldData.tool_tips">
-                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tips_msg" v-tooltip="fieldData.tips_msg"></i>
+                <span v-if="fieldData.tooltip">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
                 </span>
             </th>
             <td>
@@ -227,8 +227,8 @@
         <template v-if="'html' == fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
-                <span v-if="fieldData.tool_tips">
-                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tips_msg" v-tooltip="fieldData.tips_msg"></i>
+                <span v-if="fieldData.tooltip">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
                 </span>
             </th>
             <td>
@@ -266,8 +266,8 @@
         <template v-if="'wpeditor' == fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
-                <span v-if="fieldData.tool_tips">
-                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tips_msg" v-tooltip="fieldData.tips_msg"></i>
+                <span v-if="fieldData.tooltip">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
                 </span>
             </th>
             <td width="72%">
@@ -279,8 +279,8 @@
         <template v-if="'repeatable' == fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
-                <span v-if="fieldData.tool_tips">
-                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tips_msg" v-tooltip="fieldData.tips_msg"></i>
+                <span v-if="fieldData.tooltip">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
                 </span>
             </th>
             <td width="72%">
