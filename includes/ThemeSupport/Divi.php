@@ -93,7 +93,7 @@ class Divi {
 
         if ( $page->ID ) {
             $page->ancestors          = [ $page->ID ];
-            $query->is_singular       = true;
+            $query->is_singular       = false;
             $query->queried_object    = $page;
             $query->queried_object_id = $page->ID;
         }
