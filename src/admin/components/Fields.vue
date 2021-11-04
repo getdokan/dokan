@@ -300,6 +300,9 @@
         <template v-if="'radio_image' == fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
+                <span v-if="fieldData.tooltip">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                </span>
             </th>
             <td>
                 <div class="radio-image-container">
