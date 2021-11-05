@@ -726,7 +726,7 @@ class Settings {
          * @param string $slug    page slug for the payment method
          * @param string $heading previous heading
          */
-        $heading = apply_filters( 'dokan_vendor_dashboard_manage_payment_heading', $slug, $heading );
+        $heading = apply_filters( 'dokan_vendor_dashboard_payment_settings_heading', $slug, $heading );
 
         return $heading;
     }
