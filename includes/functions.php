@@ -3225,7 +3225,7 @@ add_filter( 'woocommerce_admin_order_preview_actions', 'dokan_remove_action_butt
  *
  * @return string|array
  */
-function dokan_get_translated_days( $days = null ) {
+function dokan_get_translated_days( $day = null ) {
     $all_days = [
         'sunday'    => __( 'Sunday', 'dokan-lite' ),
         'monday'    => __( 'Monday', 'dokan-lite' ),
@@ -3237,12 +3237,12 @@ function dokan_get_translated_days( $days = null ) {
     ];
 
     // Get days array if our $days is true.
-    if ( ! $days ) {
+    if ( empty( $day ) ) {
         return $all_days;
     }
 
     // Translated only day if passed the name of current day.
-    switch ( $days ) {
+    switch ( $day ) {
         case 'saturday':
             return $all_days['saturday'];
 
