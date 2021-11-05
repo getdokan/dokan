@@ -189,7 +189,7 @@ class Settings {
      *
      * @since 2.4
      *
-     * @param $slug_suffix
+     * @param string $slug_suffix
      *
      * @return void
      */
@@ -699,8 +699,8 @@ class Settings {
      *
      * @since DOKAN_LITE_SINCE
      *
-     * @param $slug
-     * @param $heading
+     * @param string $slug
+     * @param string $heading
      *
      * @return string
      */
