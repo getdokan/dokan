@@ -648,13 +648,14 @@ class Withdraw {
      *
      * @since 3.3.1
      *
-     * @param int $user_id
+     * @return void
      */
-    public function pending_withdraw_requests( $user_id ) {
+    public function pending_withdraw_requests() {
         if ( ! current_user_can( 'dokan_manage_withdraw' ) ) {
             return;
         }
 
+        $user_id           = dokan_get_current_user_id();
         $withdraw_requests = dokan()->withdraw->get_withdraw_requests( $user_id );
 
         dokan_get_template_part( 'withdraw/pending-request-listing-dashboard', '', array(
