@@ -719,6 +719,16 @@ class Settings {
             $heading = __( 'Dokan Paypal Marketplace Settings', 'dokan-lite' );
         }
 
+        /**
+         * To allow new payment extension give their own heading
+         *
+         * @since DOKAN_LITE_SINCE
+         *
+         * @param string $slug    page slug for the payment method
+         * @param string $heading previous heading
+         */
+        $heading = apply_filters( 'dokan_vendor_dashboard_manage_payment_heading', $slug, $heading );
+
         return $heading;
     }
 }
