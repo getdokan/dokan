@@ -340,7 +340,8 @@ function dokan_withdraw_get_method_icon( $method_key ) {
  */
 function dokan_withdraw_get_method_additional_info( $method_key ) {
     $payment_methods = get_user_meta( dokan_get_current_user_id(), 'dokan_profile_settings' )[0]['payment'];
-    $no_information = __( 'No information found.', 'dokan-lite' );
+    $no_information  = __( 'No information found.', 'dokan-lite' );
+
     switch ( $method_key ) {
         case 'paypal':
         case 'skrill':

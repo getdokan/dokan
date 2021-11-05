@@ -152,7 +152,7 @@ class Withdraw {
             ->set_status( dokan()->withdraw->get_status_code( 'cancelled' ) )
             ->save();
 
-        if ( is_wp_error( $withdraw )  ) {
+        if ( is_wp_error( $withdraw ) ) {
             return $this->add_error( $withdraw->get_error_message(), $withdraw->get_code() );
         }
 
@@ -628,7 +628,9 @@ class Withdraw {
             $message = sprintf( '<p>%s</p><p>%s</p>', __( 'You already have pending withdraw request(s).', 'dokan-lite' ), __( 'Please submit your request after approval or cancellation of your previous request.', 'dokan-lite' ) );
             $this->show_error_messages( $message );
             return;
-        } if ( ! dokan()->withdraw->has_withdraw_balance( $current_user_id ) ) {
+        }
+
+        if ( ! dokan()->withdraw->has_withdraw_balance( $current_user_id ) ) {
             $message = __( 'You don\'t have sufficient balance for a withdraw request!', 'dokan-lite' );
             $this->show_error_messages( $message );
             return;

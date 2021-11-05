@@ -39,7 +39,7 @@
     <div class="dokan-form-group">
         <div class="ajax_prev footer">
             <?php wp_nonce_field( 'dokan_withdraw', 'dokan_withdraw_nonce' ); ?>
-            <button type="submit" id="dokan-withdraw-request-submit" class="dokan-btn dokan-btn-theme"><?php esc_attr_e( 'Submit Request', 'dokan-lite' ); ?></button>
+            <button type="submit" id="dokan-withdraw-request-submit" class="dokan-btn dokan-btn-theme"><?php esc_html_e( 'Submit Request', 'dokan-lite' ); ?></button>
             <input type="hidden" name="dokan_handle_withdraw_request" value="approval">
         </div>
     </div>

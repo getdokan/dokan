@@ -87,12 +87,12 @@
                 </div>
                 <div class="dokan-w5">
                     <?php if ( $default_method === $method ) : ?>
-                    <button class="dokan-btn dokan-btn-default" disabled data-method="<?php echo esc_attr( $method ); ?>"><?php esc_html_e( 'Default', 'dokan-lite' ); ?></button>
+                        <button class="dokan-btn dokan-btn-default" disabled data-method="<?php echo esc_attr( $method ); ?>"><?php esc_html_e( 'Default', 'dokan-lite' ); ?></button>
                     <?php elseif ( ! $has_information ) : ?>
-                    <a href="<?php echo esc_url( dokan_get_navigation_url( 'settings/payment' ) ); ?>" class="dokan-btn" data-method="<?php echo esc_attr( $method ); ?>"><?php esc_html_e( 'Setup', 'dokan-lite' ); ?></a>
+                        <a href="<?php echo esc_url( dokan_get_navigation_url( 'settings/payment' ) ); ?>" class="dokan-btn" data-method="<?php echo esc_attr( $method ); ?>"><?php esc_html_e( 'Setup', 'dokan-lite' ); ?></a>
                     <?php else: ?>
-                   <button class="dokan-btn dokan-withdraw-make-default-button" data-method="<?php echo esc_attr( $method ); ?>"><?php esc_html_e( 'Make Default', 'dokan-lite' ); ?></button>
-                   <?php endif; ?>
+                        <button class="dokan-btn dokan-withdraw-make-default-button" data-method="<?php echo esc_attr( $method ); ?>"><?php esc_html_e( 'Make Default', 'dokan-lite' ); ?></button>
+                    <?php endif; ?>
                 </div>
             </div>
         <?php

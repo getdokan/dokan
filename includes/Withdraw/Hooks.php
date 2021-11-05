@@ -135,7 +135,7 @@ class Hooks {
         }
 
         $amount = (float) wc_format_decimal( wp_unslash( $_POST['amount'] ) );
-        $method = wc_clean( wp_unslash( $_POST['method'] ) );
+        $method = sanitize_text_field( wp_unslash( $_POST['method'] ) );
 
         if ( ! in_array( $method, dokan_get_seller_active_withdraw_methods( $user_id ), true ) ) {
             wp_send_json_error( esc_html__( 'Withdraw method is not activated.', 'dokan-lite' ) );
@@ -153,7 +153,7 @@ class Hooks {
 
         $validate_request = dokan()->withdraw->is_valid_approval_request( $args );
 
-        if ( is_wp_error( $validate_request )  ) {
+        if ( is_wp_error( $validate_request ) ) {
             wp_send_json_error( $validate_request->get_error_message(), $validate_request->get_error_code() );
         }
 
