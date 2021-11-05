@@ -60,9 +60,8 @@ class Settings {
             $is_store_setting = true;
         } elseif ( isset( $wp->query_vars['settings'] ) && 'payment' === substr( $wp->query_vars['settings'], 0, 7 ) ) {
             $heading = __( 'Withdraw Payment Method', 'dokan-lite' );
-            $slug = str_replace( 'payment/manage-', '', $wp->query_vars['settings'] );
-
-            $heading = $this->getPaymentHeading( $slug, $heading );
+            $slug    = str_replace( 'payment/manage-', '', $wp->query_vars['settings'] );
+            $heading = $this->get_payment_heading( $slug, $heading );
         } else {
             $heading = apply_filters( 'dokan_dashboard_settings_heading_title', __( 'Settings', 'dokan-lite' ), $wp->query_vars['settings'] );
         }
@@ -645,7 +644,7 @@ class Settings {
                 if ( ! empty( $post_data['settings']['default-method'] ) ) {
                     $post_data['settings']['default-method'] = 'bank';
                 } else {
-                    $post_data['settings']['default-method'] = ( $dokan_settings['payment']['default-method'] === 'bank' ) ? '' : $dokan_settings['payment']['default-method'];
+                    $post_data['settings']['default-method'] = ( 'bank' === $dokan_settings['payment']['default-method'] ) ? '' : $dokan_settings['payment']['default-method'];
                 }
             }
 
@@ -704,7 +703,7 @@ class Settings {
      *
      * @return string
      */
-    private function getPaymentHeading( $slug, $heading ) {
+    private function get_payment_heading( $slug, $heading ) {
         if ( 'bank' === $slug || 'bank/edit' === $slug ) {
             $heading = __( 'Add Bank Account', 'dokan-lite' );
         } elseif ( 'paypal' === $slug || 'paypal/edit' === $slug ) {
