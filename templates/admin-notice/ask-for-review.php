@@ -9,7 +9,7 @@
     <?php do_action( 'dokan_ask_for_review_admin_notice_content_before' ); ?>
 
     <div class="dokan-review-notice-logo">
-        <img src="http://dokan-dev.test/wp-content/plugins/dokan-lite/assets/images/dokan-logo-small.svg" alt="Dokan Logo">
+        <img src="<?php echo DOKAN_PLUGIN_ASSEST; ?>/images/dokan-logo-small.svg" alt="Dokan Logo">
     </div>
     <p class="dokan-notice-text"><?php echo wp_kses_post( __( 'Enjoying <strong><a href="https://wordpress.org/plugins/dokan-lite/" target="_blank">Dokan multivendor</a></strong>? If our plugin is performing well for you, it would be great if you could kindly write a review about <strong><a href="https://wordpress.org/plugins/dokan-lite/" target="_blank">Dokan on WordPress.org</a></strong>. It would give us insights to grow and improve this plugin.', 'dokan-lite' ) ); ?></p>
     <div class="dokan-notice-buttons" data-nonce="<?php echo wp_create_nonce( 'dokan_admin' ); ?>">
