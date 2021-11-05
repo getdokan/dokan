@@ -223,13 +223,11 @@
                             <span class="dokan-input-group-addon">{{ __( 'Week day', 'dokan-lite' ) }}</span>
                             <select v-if="!fieldData.grouped" class="regular" :name="sectionId + '[' + fieldData.name + '][days]'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]['days']">
                                 <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
-                                <option v-for="( optionVal, optionKey ) in fieldData.options.days" :value="optionKey" v-html="optionVal"></option>
+                                <option v-if="!( 'L' !== fieldValue[fieldData.name]['week'] && ( 'saturday' === optionKey || 'sunday'=== optionKey ) )" v-for="( optionVal, optionKey ) in fieldData.options.days" :value="optionKey" v-html="optionVal"></option>
                             </select>
                         </div>
                     </div>
                 </div>
-
-
 
                 <RefreshSettingOptions
                     v-if="fieldData.refresh_options"
@@ -266,13 +264,11 @@
                             <span class="dokan-input-group-addon">{{ __( 'Week day', 'dokan-lite' ) }}</span>
                             <select v-if="!fieldData.grouped" class="regular" :name="sectionId + '[' + fieldData.name + '][days]'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]['days']">
                                 <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
-                                <option v-for="( optionVal, optionKey ) in fieldData.options.days" :value="optionKey" v-html="optionVal"></option>
+                                <option v-if="!( 'L' !== fieldValue[fieldData.name]['week'] && ( 'saturday' === optionKey || 'sunday'=== optionKey ) )" v-for="( optionVal, optionKey ) in fieldData.options.days" :value="optionKey" v-html="optionVal"></option>
                             </select>
                         </div>
                     </div>
                 </div>
-
-
 
                 <RefreshSettingOptions
                     v-if="fieldData.refresh_options"
@@ -795,8 +791,7 @@
             setDisbursementBiweeklySettings() {
                 if ( this.fieldValue['biweekly_schedule']['week'] === '1' ) {
                     this.disbursementSettings.biweekly.second = '3';
-                }
-                if ( this.fieldValue['biweekly_schedule']['week'] === '2' ) {
+                } else if ( this.fieldValue['biweekly_schedule']['week'] === '2' ) {
                     this.disbursementSettings.biweekly.second = '4';
                 }
             },
