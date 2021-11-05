@@ -775,13 +775,11 @@
                     this.disbursementSettings.quarterly.second = 'april';
                     this.disbursementSettings.quarterly.third = 'july';
                     this.disbursementSettings.quarterly.fourth = 'october';
-                }
-                if ( this.fieldValue['quarterly_schedule']['month'] === 'february' ) {
+                } else if ( this.fieldValue['quarterly_schedule']['month'] === 'february' ) {
                     this.disbursementSettings.quarterly.second = 'may';
                     this.disbursementSettings.quarterly.third = 'august';
                     this.disbursementSettings.quarterly.fourth = 'november';
-                }
-                if ( this.fieldValue['quarterly_schedule']['month'] === 'march' ) {
+                } else if ( this.fieldValue['quarterly_schedule']['month'] === 'march' ) {
                     this.disbursementSettings.quarterly.second = 'june';
                     this.disbursementSettings.quarterly.third = 'september';
                     this.disbursementSettings.quarterly.fourth = 'december';
