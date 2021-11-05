@@ -3219,13 +3219,13 @@ add_filter( 'woocommerce_admin_order_preview_actions', 'dokan_remove_action_butt
 /**
  * Dokan get translated days
  *
- * @param  string days
+ * @param  string|null days
  *
  * @since  2.8.2
  *
  * @return string|array
  */
-function dokan_get_translated_days( $days = true ) {
+function dokan_get_translated_days( $days = null ) {
     $all_days = [
         'sunday'    => __( 'Sunday', 'dokan-lite' ),
         'monday'    => __( 'Monday', 'dokan-lite' ),
@@ -3237,7 +3237,7 @@ function dokan_get_translated_days( $days = true ) {
     ];
 
     // Get days array if our $days is true.
-    if ( true === $days ) {
+    if ( ! $days ) {
         return $all_days;
     }
 
@@ -3273,52 +3273,27 @@ function dokan_get_translated_days( $days = true ) {
 }
 
 /**
- * Get store opening time.
+ * Collect store times here.
  *
  * @since 3.2.16
  *
  * @param string $current_day
+ * @param string $times
  * @param int    $index
  *
  * @return mixed|string
  */
-function dokan_get_store_opening_time( $current_day, $index = 0 ) {
-    $profile_info       = dokan_get_store_info( dokan_get_current_user_id() );
-    $dokan_store_time   = isset( $profile_info['dokan_store_time'] ) ? $profile_info['dokan_store_time'] : '';
-    $dokan_opening_time = isset( $dokan_store_time[ $current_day ]['opening_time'] ) ? $dokan_store_time[ $current_day ]['opening_time'] : '';
-
-    if ( ! empty( $dokan_opening_time ) && ! is_array( $dokan_opening_time ) ) {
-        return $dokan_opening_time;
-    }
-
-    if ( ! empty( $dokan_opening_time ) && is_array( $dokan_opening_time ) ) {
-        return $dokan_opening_time[ $index ];
-    }
-
-    return '';
-}
-
-/**
- * Get store closing time.
- *
- * @since 3.2.16
- *
- * @param string $current_day
- * @param int    $index
- *
- * @return mixed|string
- */
-function dokan_get_store_closing_time( $current_day, $index = 0 ) {
-    $profile_info       = dokan_get_store_info( dokan_get_current_user_id() );
-    $dokan_store_time   = isset( $profile_info['dokan_store_time'] ) ? $profile_info['dokan_store_time'] : '';
-    $dokan_closing_time = isset( $dokan_store_time[ $current_day ]['closing_time'] ) ? $dokan_store_time[ $current_day ]['closing_time'] : '';
-
-    if ( ! empty( $dokan_closing_time ) && ! is_array( $dokan_closing_time ) ) {
-        return $dokan_closing_time;
-    }
+function dokan_get_store_times( $current_day, $times, $index = 0 ) {
+    $store_info         = dokan_get_store_info( dokan_get_current_user_id() );
+    $dokan_store_time   = isset( $store_info['dokan_store_time'] ) ? $store_info['dokan_store_time'] : '';
+    $dokan_closing_time = isset( $dokan_store_time[ $current_day ][ $times ] ) ? $dokan_store_time[ $current_day ][ $times ] : '';
 
     if ( ! empty( $dokan_closing_time ) && is_array( $dokan_closing_time ) ) {
         return $dokan_closing_time[ $index ];
+    }
+
+    if ( ! empty( $dokan_closing_time ) ) {
+        return $dokan_closing_time;
     }
 
     return '';

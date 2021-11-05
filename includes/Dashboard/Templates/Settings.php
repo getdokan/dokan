@@ -509,9 +509,9 @@ class Settings {
                 ];
             }
 
-            $find_address     = ! empty( $_POST['find_address'] ) ? wc_clean( wp_unslash( $_POST['find_address'] ) ) : $default_locations['address'];
+            $find_address     = ! empty( $_POST['find_address'] ) ? sanitize_text_field( wp_unslash( $_POST['find_address'] ) ) : $default_locations['address'];
             $default_location = $default_locations['latitude'] . ',' . $default_locations['longitude'];
-            $location         = ! empty( $_POST['find_address'] ) ? wc_clean( wp_unslash( $_POST['location'] ) ) : $default_location;
+            $location         = ! empty( $_POST['find_address'] ) ? sanitize_text_field( wp_unslash( $_POST['location'] ) ) : $default_location;
             $dokan_days       = dokan_get_translated_days();
             $dokan_store_time = [];
 
@@ -519,7 +519,7 @@ class Settings {
             foreach ( $dokan_days as $day_key => $day ) {
                 $opening_time          = isset( $_POST['opening_time'][ $day_key ] ) ? wc_clean( wp_unslash( $_POST['opening_time'][ $day_key ] ) ) : '';
                 $closing_time          = isset( $_POST['closing_time'][ $day_key ] ) ? wc_clean( wp_unslash( $_POST['closing_time'][ $day_key ] ) ) : '';
-                $store_status          = ! empty( $_POST[ $day_key ]['working_status'] ) ? wc_clean( wp_unslash( $_POST[ $day_key ]['working_status'] ) ) : 'close';
+                $store_status          = ! empty( $_POST[ $day_key ]['working_status'] ) ? sanitize_text_field( wp_unslash( $_POST[ $day_key ]['working_status'] ) ) : 'close';
                 $current_day           = [];
                 $current_day['status'] = $store_status;
 
@@ -543,8 +543,8 @@ class Settings {
 
                 // Get and set current day's data for update dokan store time.
                 $current_day['status']        = $store_status;
-                $current_day['opening_time']  = isset( $opening_time ) ? $opening_time : '';
-                $current_day['closing_time']  = isset( $closing_time ) ? $closing_time : '';
+                $current_day['opening_time']  = $opening_time;
+                $current_day['closing_time']  = $closing_time;
                 $dokan_store_time[ $day_key ] = $current_day;    // Make dokan store time data here.
             }
 

@@ -282,18 +282,18 @@
                                 ?>
 
                             </label>
-                            <label for="opening-time" class="time" style="visibility: <?php echo isset( $status ) && $status == 'open' ? 'visible' : 'hidden'; ?>" >
+                            <label for="opening-time[<?php echo esc_attr( $day_key ); ?>]" class="time" style="visibility: <?php echo isset( $status ) && $status == 'open' ? 'visible' : 'hidden'; ?>" >
                                 <?php
                                     /* translators: %1$s is replaced with current day string, %2$s is replaced with placeholder string & %3$s is replaced with store opening time as a string value. */
-                                    $dokan_store_opening_entities = sprintf( '<input type="text" class="dokan-form-control opening-time" name="opening_time[%1$s]" id="opening-time[%1$s]" placeholder="%2$s" value="%3$s" >', esc_attr( $day_key ), esc_attr( '00:00' ), esc_attr( dokan_get_store_opening_time( $day_key ) ) );
+                                    $dokan_store_opening_entities = sprintf( '<input type="text" class="dokan-form-control opening-time" name="opening_time[%1$s]" id="opening-time[%1$s]" placeholder="%2$s" value="%3$s" >', esc_attr( $day_key ), '00:00', esc_attr( dokan_get_store_times( $day_key, 'opening_time' ) ) );
 
                                     echo apply_filters( 'dokan_store_opening_time_entities', $dokan_store_opening_entities, $day_key );
                                 ?>
                             </label>
-                            <label for="closing-time" class="time" style="visibility: <?php echo isset( $status ) && $status == 'open' ? 'visible' : 'hidden'; ?>" >
+                            <label for="closing-time[<?php echo esc_attr( $day_key ); ?>]" class="time" style="visibility: <?php echo isset( $status ) && $status == 'open' ? 'visible' : 'hidden'; ?>" >
                                 <?php
                                     /* translators: %1$s is replaced with current day string, %2$s is replaced with placeholder string & %3$s is replaced with store closing time as a string value. */
-                                    $dokan_store_closing_entities = sprintf( '<input type="text" class="dokan-form-control closing-time" name="closing_time[%1$s]" id="closing-time[%1$s]" placeholder="%2$s" value="%3$s" >', esc_attr( $day_key ), esc_attr( '00:00' ), esc_attr( dokan_get_store_closing_time( $day_key ) ) );
+                                    $dokan_store_closing_entities = sprintf( '<input type="text" class="dokan-form-control closing-time" name="closing_time[%1$s]" id="closing-time[%1$s]" placeholder="%2$s" value="%3$s" >', esc_attr( $day_key ), '00:00', esc_attr( dokan_get_store_times( $day_key, 'closing_time' ) ) );
 
                                     echo apply_filters( 'dokan_store_closing_time_entities', $dokan_store_closing_entities, $day_key );
                                 ?>
@@ -381,18 +381,18 @@
         $('#dokan-store-time-enable').trigger('change');
 
         $( '.dokan-form-group-container' ).each( function(e) {
-            $(this).find( '.dokan-form-group' ).each( function (e) {
-                let selectedWorkingStatus = $(this).find( '.dokan-on-off option[selected]' ).length;
+            $( this ).find( '.dokan-form-group' ).each( function (e) {
+                const selectedWorkingStatus = $( this ).find( '.dokan-on-off option[selected]' ).length;
 
                 if ( ! selectedWorkingStatus ) {
-                    $(this).find( '.dokan-on-off option[value="close"]' ).attr( 'selected', 'selected' );
+                    $( this ).find( '.dokan-on-off option[value="close"]' ).attr( 'selected', 'selected' );
                 }
             } );
         } );
 
         // Show & hide our opening, closing time fields by using this change event.
         $( '.dokan-on-off' ).on( 'change', function() {
-            var self = $(this);
+            const self = $( this );
 
             if ( self.val() == 'open' ) {
                 self.closest('.dokan-form-group').find('.time').css({'visibility': 'visible'});
@@ -417,7 +417,7 @@
         $( '.dokan-form-group-container' ).on( 'focus', '.dokan-form-control',  function(e) {
             e.stopPropagation();
 
-            let self       = $(this),
+            const self     = $( this ),
                 startVal   = self.closest( '.dokan-form-group' ).find( '.time .dokan-form-control:eq(0)' ).val(),
                 startValue = moment( startVal, [ 'h:mm A' ] ).add( <?php echo 'h:i' === strtolower( wc_time_format() ) ? '60' : '30'; ?>, 'minutes' ).format( 'hh:mm A' );
 
@@ -435,7 +435,7 @@
 
         // Update timepicker time index after change store opening time.
         $( '.dokan-form-group' ).on( 'change', '.opening-time', function() {
-            let self      = $(this),
+            const self    = $( this ),
                 openValue = self.closest( '.dokan-form-group' ).find( '.time .dokan-form-control:eq(0)' ).val(),
                 startTime = moment( openValue, [ 'h:mm A' ] ).add( <?php echo 'h:i' === strtolower( wc_time_format() ) ? '60' : '30'; ?>, 'minutes' ).format( 'hh:mm A' );
 
