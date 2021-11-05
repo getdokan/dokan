@@ -201,7 +201,7 @@ class Settings {
 
         if ( stripos( $method, '/edit' ) !== false ) {
             $is_edit_mode = true;
-            $method = str_replace( '/edit', '', $method );
+            $method       = str_replace( '/edit', '', $method );
         } else {
             $is_edit_mode = false;
         }
