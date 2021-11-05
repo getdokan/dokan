@@ -176,11 +176,11 @@ function dokan_withdraw_method_bank( $store_settings ) {
     ?>
     <div>
 
-        <p style="text-align: left"><?php esc_html_e( 'Deposit earnings directly to your U.S. bank account free of charge', 'dokan-lite' ); ?></p>
+        <p class="dokan-text-left"><?php esc_html_e( 'Deposit earnings directly to your U.S. bank account free of charge', 'dokan-lite' ); ?></p>
 
         <div class="dokan-form-group">
-            <div style="text-align: left;">
-                <label style="color: black; font-weight: bold;" for="ac_name"><?php esc_html_e( 'Account Holder', 'dokan-lite' ); ?> </label>
+            <div>
+                <label for="ac_name"><?php esc_html_e( 'Account Holder', 'dokan-lite' ); ?> </label>
             </div>
 
             <div class="dokan-w10">
@@ -189,12 +189,12 @@ function dokan_withdraw_method_bank( $store_settings ) {
         </div>
 
         <div class="dokan-form-group">
-            <div style="text-align: left;">
-                <label style="color: black; font-weight: bold;" for="ac_type"><?php esc_html_e( 'Account Type', 'dokan-lite' ); ?> </label>
+            <div>
+                <label for="ac_type"><?php esc_html_e( 'Account Type', 'dokan-lite' ); ?> </label>
             </div>
 
             <div class="dokan-w10">
-                <select style="padding: 10px 15px; border-radius: 5px; min-height: 50px" id='ac_type' name="settings[bank][ac_type]" class="dokan-form-control" required>
+                <select id='ac_type' name="settings[bank][ac_type]" class="dokan-form-control" required>
                     <option value="" <?php echo ( ( $account_type === '' ) ? 'selected' : '' ); ?> > <?php esc_html_e( 'Please Select...', 'dokan-lite' ); ?> </option>
                     <option value="personal" <?php echo ( ( $account_type === 'personal' ) ? 'selected' : '' ); ?> > <?php esc_html_e( 'Personal', 'dokan-lite' ); ?> </option>
                     <option value="business" <?php echo ( ( $account_type === 'business' ) ? 'selected' : '' ); ?> > <?php esc_html_e( 'Business', 'dokan-lite' ); ?> </option>
@@ -203,19 +203,19 @@ function dokan_withdraw_method_bank( $store_settings ) {
         </div>
 
         <div class="dokan-form-group">
-            <div style="text-align: left;">
-                <label style="color: black; font-weight: bold;"><?php esc_html_e( 'Routing & Account Number', 'dokan-lite' ); ?> </label>
+            <div>
+                <label><?php esc_html_e( 'Routing & Account Number', 'dokan-lite' ); ?> </label>
             </div>
 
             <div class="dokan-w10">
                 <input name="settings[bank][routing_number]" value="<?php echo esc_attr( $routing_number ); ?>" class="dokan-form-control dokan-w4" placeholder="<?php esc_attr_e( 'Routing number', 'dokan-lite' ); ?>" type="text" required>
-                <input style="float: right" name="settings[bank][ac_number]" value="<?php echo esc_attr( $account_number ); ?>" class="dokan-form-control dokan-w7" placeholder="<?php esc_attr_e( 'Your bank account number', 'dokan-lite' ); ?>" type="text" required>
+                <input name="settings[bank][ac_number]" value="<?php echo esc_attr( $account_number ); ?>" class="dokan-form-control dokan-w7 dokan-right" placeholder="<?php esc_attr_e( 'Your bank account number', 'dokan-lite' ); ?>" type="text" required>
             </div>
         </div>
 
         <div class="dokan-form-group">
-            <div style="text-align: left;">
-                <label style="color: black; font-weight: bold;"><?php esc_html_e( 'Bank Name', 'dokan-lite' ); ?> </label>
+            <div>
+                <label><?php esc_html_e( 'Bank Name', 'dokan-lite' ); ?> </label>
             </div>
 
             <div class="dokan-w10">
@@ -224,8 +224,8 @@ function dokan_withdraw_method_bank( $store_settings ) {
         </div>
 
         <div class="dokan-form-group">
-            <div style="text-align: left;">
-                <label style="color: black; font-weight: bold;"><?php esc_html_e( 'Bank Address', 'dokan-lite' ); ?> </label>
+            <div>
+                <label><?php esc_html_e( 'Bank Address', 'dokan-lite' ); ?> </label>
             </div>
 
             <div class="dokan-w10">
@@ -234,8 +234,8 @@ function dokan_withdraw_method_bank( $store_settings ) {
         </div>
 
         <div class="dokan-form-group">
-            <div style="text-align: left;">
-                <label style="color: black; font-weight: bold;"><?php esc_html_e( 'Bank IBAN', 'dokan-lite' ); ?> </label>
+            <div>
+                <label><?php esc_html_e( 'Bank IBAN', 'dokan-lite' ); ?> </label>
             </div>
 
             <div class="dokan-w10">
@@ -244,28 +244,28 @@ function dokan_withdraw_method_bank( $store_settings ) {
         </div>
 
         <div class="dokan-form-group">
-            <div style="text-align: left;">
-                <label style="color: black; font-weight: bold;"><?php esc_html_e( 'Bank Swift Code', 'dokan-lite' ); ?> </label>
+            <div>
+                <label><?php esc_html_e( 'Bank Swift Code', 'dokan-lite' ); ?> </label>
             </div>
 
             <div class="dokan-w10">
                 <input value="<?php echo esc_attr( $swift_code ); ?>" name="settings[bank][swift]" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Swift code', 'dokan-lite' ); ?>" type="text">
             </div>
-        </div> <!-- .dokan-form-group -->
+        </div>
 
-        <div style="text-align: left" class="dokan-form-group">
+        <div class="dokan-form-group dokan-text-left">
             <img alt="<?php esc_attr_e( 'bank check', 'dokan-lite' ); ?>" src="<?php echo esc_url( DOKAN_PLUGIN_ASSEST . '/images/dashboard-settings/payment/bank-check.png' ); ?>"/>
         </div>
 
-        <div class="dokan-form-group" style="text-align: left">
+        <div class="dokan-form-group dokan-text-left">
             <input id="declaration" name="settings[bank][declaration]" checked type="checkbox" required/>
             <label for="declaration">
                 <?php esc_html_e( 'I attest that I am the owner and have full authorization to this bank account', 'dokan-lite' ); ?>
             </label>
         </div>
 
-        <div class="dokan-form-group" style="text-align: left">
-            <input id="default-method" name="settings[default-method]" value="bank" type="checkbox" <?php echo ( $default_method === 'bank' ? 'checked' : '' ); ?>/>
+        <div class="dokan-form-group dokan-text-left">
+            <input id="default-method" name="settings[default-method]" value="bank" type="checkbox" <?php checked( 'bank', $default_method ); ?>/>
             <label for="default-method">
                 <?php esc_html_e( 'Make this default payment method', 'dokan-lite' ); ?>
             </label>
@@ -273,18 +273,19 @@ function dokan_withdraw_method_bank( $store_settings ) {
 
         <div class="data-warning">
             <div class="left-icon-container">
-                <i style="color: orange" class="fa fa-info-circle fa-2x" aria-hidden="true"></i>
+                <i class="fa fa-info-circle fa-2x" aria-hidden="true"></i>
             </div>
 
             <div class="vr-separator"></div>
 
-            <div style="text-align: left;">
-                <span style="display: block"><b><?php esc_html_e( 'Please double-check your account information!', 'dokan-lite' ); ?></b></span>
-                <span style="display: block"><?php esc_html_e( 'Incorrect or mismatched account name and number can result in withdrawal delays and fees', 'dokan-lite' ); ?></>
+            <div class="dokan-text-left">
+                <span class="display-block"><b><?php esc_html_e( 'Please double-check your account information!', 'dokan-lite' ); ?></b></span>
+                <br/>
+                <span class="display-block"><?php esc_html_e( 'Incorrect or mismatched account name and number can result in withdrawal delays and fees', 'dokan-lite' ); ?></>
             </div>
         </div>
 
-        <p style="text-align: left; margin-bottom: 2em"><?php esc_html_e( 'This Payment method will become available in 3 days.', 'dokan-lite' ); ?></p>
+        <p class="bottom-note"><?php esc_html_e( 'This Payment method will become available in 3 days.', 'dokan-lite' ); ?></p>
 
         <div class="bottom-actions">
             <button class="ajax_prev dokan-btn dokan-btn-theme" type="submit" name="dokan_update_payment_settings">

@@ -17,7 +17,7 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
         <h2> <?php esc_html_e( 'Payment Methods', 'dokan-lite' ); ?></h2>
         <div id="vendor-dashboard-payment-settings-toggle-dropdown">
             <button id="toggle-vendor-payment-method-drop-down" class="dokan-btn dokan-btn-success"> <?php esc_html_e( 'Add Payment Method', 'dokan-lite' ); ?></button>
-            <div style="position: relative;">
+            <div id="vendor-payment-method-drop-down-wrapper">
                 <div id="vendor-payment-method-drop-down">
                     <?php
                     $profile_methods = array_keys( $profile_info['payment'] );
@@ -38,7 +38,7 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
                         return ! $found;
                     } );
                     ?>
-                    <ul style="list-style: none; margin: 0">
+                    <ul>
                     <?php foreach ( $unused_methods as $method_key ) {
                         $method = dokan_withdraw_get_method( $method_key );
 
@@ -73,7 +73,7 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
             </div>
         </div>
     </div>
-    <ul style="list-style: none">
+    <ul>
 
     <?php wp_nonce_field( 'dokan_payment_settings_nonce' );
     $mis_match_map = [
@@ -110,14 +110,14 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
                 </div>
                 <div>
                     <?php if ( isset( $profile_info['payment']['default-method'] ) && $profile_info['payment']['default-method'] === $method_key ) {?>
-                        <button disabled tabindex="-1" class="dokan-btn-sm" style="background-color: gray; margin-bottom: 3px"><?php esc_html_e( 'Default', 'dokan-lite' ); ?></button>
+                        <button disabled tabindex="-1" class="dokan-btn-sm"><?php esc_html_e( 'Default', 'dokan-lite' ); ?></button>
                     <?php } else { ?>
-                        <button class="dokan-btn-sm dokan-btn-success" data-dokan-payment-method="<?php echo esc_attr( $method_key ) ?>" style="margin-bottom: 3px">
+                        <button class="dokan-btn-sm dokan-btn-success" data-dokan-payment-method="<?php echo esc_attr( $method_key ) ?>">
                             <?php esc_html_e( 'Make Default', 'dokan-lite' ); ?>
                         </button>
                     <?php } ?>
                     <a href="<?php echo esc_url(  home_url( "dashboard/settings/payment/manage-" . $method_key . "/edit" ) ); ?>">
-                        <button style="margin-bottom: 3px; margin-left: 3px" class="dokan-btn-sm dokan-btn-theme"><?php esc_html_e( 'Manage', 'dokan-lite' ); ?></button>
+                        <button class="dokan-btn-theme dokan-btn-sm"><?php esc_html_e( 'Manage', 'dokan-lite' ); ?></button>
                     </a>
                 </div>
             </div>

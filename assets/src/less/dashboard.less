@@ -221,6 +221,9 @@ div.media-sidebar a.edit-attachment{
                             background-color: white;
 
                             ul {
+                                list-style: none;
+                                margin: 0;
+
                                 li {
                                     div {
                                         display: flex;
@@ -246,6 +249,8 @@ div.media-sidebar a.edit-attachment{
                 }
 
                 > ul {
+                    list-style: none;
+
                     li {
                         > div {
                             display: flex;
@@ -267,6 +272,17 @@ div.media-sidebar a.edit-attachment{
                                 span {
                                     margin-left: 10px; color: #333333
                                 }
+
+                                button {
+                                    margin-bottom: 3px !important;
+                                    min-height: 30px !important;
+                                }
+
+                                a {
+                                    button {
+                                        margin-left: 3px !important;
+                                    }
+                                }
                             }
                         }
                     }
@@ -282,6 +298,23 @@ div.media-sidebar a.edit-attachment{
                             margin-right: 10px;
                             padding: 20px;
 
+                            div.dokan-form-group {
+                                > div {
+                                    .dokan-text-left();
+
+                                    label {
+                                        color: black;
+                                        font-weight: bold;
+                                    }
+
+                                    select {
+                                        padding: 10px 15px;
+                                        border-radius: 5px;
+                                        min-height: 50px;
+                                    }
+                                }
+                            }
+
                             div.data-warning {
                                 display: flex;
                                 box-shadow: 0 0 5px #AAAAAA;
@@ -293,12 +326,21 @@ div.media-sidebar a.edit-attachment{
                                     flex-direction: column;
                                     justify-content: center;
                                     padding: 5px;
+
+                                    i {
+                                        color: orange;
+                                    }
                                 }
 
                                 div.vr-separator {
                                     margin: 0 10px;
                                     border-left: 1px #dddddd solid;
                                 }
+                            }
+
+                            .bottom-note {
+                                text-align: left;
+                                margin-bottom: 2em;
                             }
 
                             .bottom-actions {
@@ -315,6 +357,12 @@ div.media-sidebar a.edit-attachment{
                                 }
                             }
                         }
+                    }
+                }
+
+                > div.dokan-form-group {
+                    > div.ajax_prev.dokan-w4 {
+                        margin-left: 24%;
                     }
                 }
             }
