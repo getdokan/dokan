@@ -196,8 +196,8 @@ function dokan_withdraw_method_bank( $store_settings ) {
             <div class="dokan-w10">
                 <select id='ac_type' name="settings[bank][ac_type]" class="dokan-form-control" required>
                     <option value="" <?php echo ( ( $account_type === '' ) ? 'selected' : '' ); ?> > <?php esc_html_e( 'Please Select...', 'dokan-lite' ); ?> </option>
-                    <option value="personal" <?php echo ( ( $account_type === 'personal' ) ? 'selected' : '' ); ?> > <?php esc_html_e( 'Personal', 'dokan-lite' ); ?> </option>
-                    <option value="business" <?php echo ( ( $account_type === 'business' ) ? 'selected' : '' ); ?> > <?php esc_html_e( 'Business', 'dokan-lite' ); ?> </option>
+                    <option value="personal" <?php selected( 'personal', $account_type ); ?> > <?php esc_html_e( 'Personal', 'dokan-lite' ); ?> </option>
+                    <option value="business" <?php selected( 'business', $account_type ); ?> > <?php esc_html_e( 'Business', 'dokan-lite' ); ?> </option>
                 </select>
             </div>
         </div>
