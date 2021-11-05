@@ -3225,7 +3225,7 @@ add_filter( 'woocommerce_admin_order_preview_actions', 'dokan_remove_action_butt
  *
  * @return string|array
  */
-function dokan_get_translated_days( $day = null ) {
+function dokan_get_translated_days( $day = '' ) {
     $all_days = [
         'sunday'    => __( 'Sunday', 'dokan-lite' ),
         'monday'    => __( 'Monday', 'dokan-lite' ),
@@ -3241,35 +3241,15 @@ function dokan_get_translated_days( $day = null ) {
         return $all_days;
     }
 
-    // Translated only day if passed the name of current day.
-    switch ( $day ) {
-        case 'saturday':
-            return $all_days['saturday'];
-
-        case 'sunday':
-            return $all_days['sunday'];
-
-        case 'monday':
-            return $all_days['monday'];
-
-        case 'tuesday':
-            return $all_days['tuesday'];
-
-        case 'wednesday':
-            return $all_days['wednesday'];
-
-        case 'thursday':
-            return $all_days['thursday'];
-
-        case 'friday':
-            return $all_days['friday'];
-
-        case 'close':
-            return apply_filters( 'dokan_store_close_day_label', __( 'Off Day', 'dokan-lite' ) );
-
-        default:
-            return apply_filters( 'dokan_get_translated_days', '', $days );
+    if ( isset( $all_days[ $day ] ) ) {
+        return $all_days[ $day ];
     }
+
+    if ( 'close' === $day ) {
+        return apply_filters( 'dokan_store_close_day_label', __( 'Off Day', 'dokan-lite' ) );
+    }
+
+    return apply_filters( 'dokan_get_translated_days', '', $day );
 }
 
 /**
@@ -3278,15 +3258,15 @@ function dokan_get_translated_days( $day = null ) {
  * @since 3.2.16
  *
  * @param string $current_day
- * @param string $times
+ * @param string $times_type  eg: opening_time or closing_time
  * @param int    $index
  *
  * @return mixed|string
  */
-function dokan_get_store_times( $current_day, $times, $index = 0 ) {
+function dokan_get_store_times( $current_day, $times_type, $index = 0 ) {
     $store_info         = dokan_get_store_info( dokan_get_current_user_id() );
     $dokan_store_time   = isset( $store_info['dokan_store_time'] ) ? $store_info['dokan_store_time'] : '';
-    $dokan_closing_time = isset( $dokan_store_time[ $current_day ][ $times ] ) ? $dokan_store_time[ $current_day ][ $times ] : '';
+    $dokan_closing_time = isset( $dokan_store_time[ $current_day ][ $times_type ] ) ? $dokan_store_time[ $current_day ][ $times_type ] : '';
 
     if ( ! empty( $dokan_closing_time ) && is_array( $dokan_closing_time ) ) {
         return $dokan_closing_time[ $index ];

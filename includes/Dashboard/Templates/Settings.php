@@ -511,7 +511,7 @@ class Settings {
 
             $find_address     = ! empty( $_POST['find_address'] ) ? sanitize_text_field( wp_unslash( $_POST['find_address'] ) ) : $default_locations['address'];
             $default_location = $default_locations['latitude'] . ',' . $default_locations['longitude'];
-            $location         = ! empty( $_POST['find_address'] ) ? sanitize_text_field( wp_unslash( $_POST['location'] ) ) : $default_location;
+            $location         = ! empty( $_POST['location'] ) ? sanitize_text_field( wp_unslash( $_POST['location'] ) ) : $default_location;
             $dokan_days       = dokan_get_translated_days();
             $dokan_store_time = [];
 
