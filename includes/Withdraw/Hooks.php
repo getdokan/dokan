@@ -116,14 +116,14 @@ class Hooks {
             wp_send_json_error( esc_html__( 'Are you cheating?', 'dokan-lite' ) );
         }
 
+        if ( ! current_user_can( 'dokan_manage_withdraw' ) ) {
+            wp_send_json_error( esc_html__( 'You have no permission to do this action', 'dokan-lite' ) );
+        }
+
         $user_id = dokan_get_current_user_id();
 
         if ( dokan()->withdraw->has_pending_request( $user_id ) ) {
             wp_send_json_error( esc_html__( 'You already have a pending withdraw request.', 'dokan-lite' ) );
-        }
-
-        if ( ! current_user_can( 'dokan_manage_withdraw' ) ) {
-            wp_send_json_error( esc_html__( 'You have no permission to do this action', 'dokan-lite' ) );
         }
 
         if ( ! isset( $_POST['method'] ) ) {
