@@ -24,7 +24,7 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
                     $unused_methods    = get_unused_payment_methods( $methods, $profile_info['payment'], $mis_match_methods );
                     ?>
                     <ul>
-                    <?php foreach ( $unused_methods as $method_key ) {
+                    <?php foreach ( $unused_methods as $method_key ) :
                         $method = dokan_withdraw_get_method( $method_key );
 
                         if ( ! empty( $method ) ) {
@@ -32,10 +32,9 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
                         } else {
                             continue;
                         }
-
                         ?>
                         <li>
-                            <a href="<?php echo esc_url(  home_url( "dashboard/settings/payment/manage-" . $method_key ) ); ?>">
+                            <a href="<?php echo esc_url( home_url( "dashboard/settings/payment/manage-" . $method_key ) ); ?>">
                                 <div>
                                     <img src="<?php echo esc_url( DOKAN_PLUGIN_ASSEST . "/images/dashboard-settings/payment/$method_key.svg" ); ?>" alt="<?php echo esc_attr( $method_key ); ?>" />
                                     <span> <?php
@@ -46,28 +45,29 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
                                 </div>
                             </a>
                         </li>
-                    <?php } ?>
+                    <?php endforeach; ?>
                     </ul>
 
-                    <?php if ( ! $has_methods_dropdown ) { ?>
+                    <?php if ( ! $has_methods_dropdown ) : ?>
                         <div>
                             <?php esc_html_e( 'All payment methods are used', 'dokan-lite' ); ?>
                         </div>
-                    <?php } ?>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
     </div>
     <ul>
 
-    <?php wp_nonce_field( 'dokan_payment_settings_nonce' );
+    <?php
+    wp_nonce_field( 'dokan_payment_settings_nonce' );
     $mis_match_map = [
         'dokan-stripe-connect' => 'stripe',
         'dokan-moip-connect'   => 'moip'
     ];
 
-    foreach ( $methods as $method_key ) {
-        if ( ! isset( $profile_info['payment'][$method_key] ) && ! isset( $profile_info['payment'][$mis_match_map[$method_key]] ) ) {
+    foreach ( $methods as $method_key ) :
+        if ( ! isset( $profile_info['payment'][ $method_key ] ) && ! isset( $profile_info['payment'][ $mis_match_map[ $method_key ] ] ) ) {
             continue;
         }
 
@@ -87,8 +87,8 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
                         <?php
                         esc_html_e( $method['title'], 'dokan-lite' );
 
-                        if ( isset( $profile_info['payment'][$method_key]['email'] ) ) {
-                            echo " (" . $profile_info['payment'][$method_key]['email'] . ")";
+                        if ( isset( $profile_info['payment'][ $method_key ] ) && isset( $profile_info['payment'][ $method_key ]['email'] ) ) {
+                            echo " (" . $profile_info['payment'][ $method_key ]['email'] . ")";
                         }
                         ?>
                     </span>
@@ -107,7 +107,7 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
                 </div>
             </div>
         </li>
-    <?php } ?>
+    <?php endforeach; ?>
     </ul>
 </div>
 
