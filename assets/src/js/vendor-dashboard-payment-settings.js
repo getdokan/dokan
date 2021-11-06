@@ -5,7 +5,7 @@
       _wpnonce                      : $( '#_wpnonce' ).val(),
       action                        : 'dokan_settings',
       form_id                       : 'payment-form',
-      dokan_update_payment_settings : 'Update Settings',
+      dokan_update_payment_settings : dokan.update_settings,
       'settings[default-method]'    : btn.data( 'dokan-payment-method' )
     };
 
