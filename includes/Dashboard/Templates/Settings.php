@@ -704,18 +704,36 @@ class Settings {
      * @return string
      */
     private function get_payment_heading( $slug, $heading ) {
-        if ( 'bank' === $slug || 'bank/edit' === $slug ) {
-            $heading = __( 'Add Bank Account', 'dokan-lite' );
-        } elseif ( 'paypal' === $slug || 'paypal/edit' === $slug ) {
-            $heading = __( 'Paypal Settings', 'dokan-lite' );
-        } elseif ( 'dokan-moip-connect' === $slug || 'dokan-moip-connect/edit' === $slug ) {
-            $heading = __( 'Wirecard(MOIP) Settings', 'dokan-lite' );
-        } elseif ( 'dokan-stripe-connect' === $slug || 'dokan-stripe-connect/edit' === $slug ) {
-            $heading = __( 'Stripe Settings', 'dokan-lite' );
-        } elseif ( 'skrill' === $slug || 'skrill/edit' === $slug ) {
-            $heading = __( 'Skrill Settings', 'dokan-lite' );
-        } elseif ( 'dokan-paypal-marketplace' === $slug || 'dokan-paypal-marketplace/edit' === $slug ) {
-            $heading = __( 'Dokan Paypal Marketplace Settings', 'dokan-lite' );
+        switch ( $slug ) {
+            case 'bank':
+            case 'bank/edit':
+                $heading = __( 'Add Bank Account', 'dokan-lite' );
+                break;
+
+            case 'paypal':
+            case 'paypal/edit':
+                $heading = __( 'Paypal Settings', 'dokan-lite' );
+                break;
+
+            case 'dokan-moip-connect':
+            case 'dokan-moip-connect/edit':
+                $heading = __( 'Wirecard(MOIP) Settings', 'dokan-lite' );
+                break;
+
+            case 'dokan-stripe-connect':
+            case 'dokan-stripe-connect/edit':
+                $heading = __( 'Stripe Settings', 'dokan-lite' );
+                break;
+
+            case 'skrill':
+            case 'skrill/edit':
+                $heading = __( 'Skrill Settings', 'dokan-lite' );
+                break;
+
+            case 'dokan-paypal-marketplace':
+            case 'dokan-paypal-marketplace/edit':
+                $heading = __( 'Dokan Paypal Marketplace Settings', 'dokan-lite' );
+                break;
         }
 
         /**
