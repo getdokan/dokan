@@ -20,23 +20,8 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
             <div id="vendor-payment-method-drop-down-wrapper">
                 <div id="vendor-payment-method-drop-down">
                     <?php
-                    $profile_methods = array_keys( $profile_info['payment'] );
-                    $unused_methods  = array_diff( $methods, $profile_methods );
-
                     $mis_match_methods = [ 'stripe', 'moip' ];
-                    $mis_match_methods = array_filter( $mis_match_methods, function ( $key ) use( $profile_methods ) {
-                        return in_array( $key,  $profile_methods);
-                    } );
-
-                    $unused_methods = array_filter( $unused_methods, function ( $key ) use ( $mis_match_methods ) {
-                        $found = false;
-
-                        foreach ( $mis_match_methods as $mis_match_method ) {
-                            $found = $found || ( false !== stripos( $key, $mis_match_method ) );
-                        }
-
-                        return ! $found;
-                    } );
+                    $unused_methods    = get_unused_payment_methods( $methods, $profile_info['payment'], $mis_match_methods );
                     ?>
                     <ul>
                     <?php foreach ( $unused_methods as $method_key ) {
