@@ -380,6 +380,47 @@ function dokan_withdraw_get_active_order_status_in_comma() {
 }
 
 /**
+ * Get withdraw method formatted icon.
+ *
+ * NB: Copied from PR 1370
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @param string $method_key Withdraw Method key
+ *
+ * @return string
+ */
+function dokan_withdraw_get_method_icon( $method_key ) {
+    $asset_path = DOKAN_PLUGIN_ASSEST . '/images/withdraw-methods/';
+    switch ( $method_key ) {
+        case 'paypal':
+            $method_icon = $asset_path . 'paypal.svg';
+            break;
+        case 'stripe':
+            $method_icon = $asset_path . 'stripe.svg';
+            break;
+        case 'mangopay':
+            $method_icon = $asset_path . 'mangopay.svg';
+            break;
+        case 'razorpay':
+            $method_icon = $asset_path . 'razorpay.svg';
+            break;
+        case 'bank':
+            $method_icon = $asset_path . 'bank.svg';
+            break;
+        case 'skrill':
+            $method_icon = $asset_path . 'skrill.svg';
+            break;
+        case 'dokan-moip-connect':
+            $method_icon = $asset_path . 'wirecard.svg';
+            break;
+        default:
+            $method_icon = $asset_path . 'bank.svg';
+    }
+    return apply_filters( 'dokan_withdraw_method_icon', $method_icon, $method_key );
+}
+
+/**
  * Get unused payment methods
  *
  * @since DOKAN_LITE_SINCE

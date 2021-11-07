@@ -20,6 +20,10 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
             <div id="vendor-payment-method-drop-down-wrapper">
                 <div id="vendor-payment-method-drop-down">
                     <?php
+                    $icon_mismatch_map = [
+                        'dokan-stripe-connect'     => 'stripe',
+                        'dokan-paypal-marketplace' => 'paypal'
+                    ];
                     $mis_match_methods = [ 'stripe', 'moip' ];
                     $unused_methods    = get_unused_payment_methods( $methods, $profile_info['payment'], $mis_match_methods );
                     ?>
@@ -36,7 +40,7 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
                         <li>
                             <a href="<?php echo esc_url( home_url( "dashboard/settings/payment/manage-" . $method_key ) ); ?>">
                                 <div>
-                                    <img src="<?php echo esc_url( DOKAN_PLUGIN_ASSEST . "/images/dashboard-settings/payment/$method_key.svg" ); ?>" alt="<?php echo esc_attr( $method_key ); ?>" />
+                                    <img src="<?php echo esc_url( dokan_withdraw_get_method_icon( isset( $icon_mismatch_map[ $method_key ] ) ? $icon_mismatch_map[ $method_key ] : $method_key ) ); ?>" alt="<?php echo esc_attr( $method_key ); ?>" />
                                     <span> <?php
                                         //translators: %s: payment method title
                                         echo sprintf( __( 'Direct to %s', 'dokan-lite' ), esc_html__( $method['title'], 'dokan-lite' ) );
@@ -82,7 +86,7 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
         <li>
             <div>
                 <div>
-                    <img src="<?php echo esc_url( DOKAN_PLUGIN_ASSEST . "/images/dashboard-settings/payment/$method_key.svg" ); ?>" alt="<?php echo esc_attr( $method_key ); ?>" />
+                    <img src="<?php echo esc_url( dokan_withdraw_get_method_icon( isset( $icon_mismatch_map[ $method_key ] ) ? $icon_mismatch_map[ $method_key ] : $method_key ) ); ?>" alt="<?php echo esc_attr( $method_key ); ?>" />
                     <span>
                         <?php
                         esc_html_e( $method['title'], 'dokan-lite' );
