@@ -254,7 +254,7 @@ function dokan_withdraw_method_bank( $store_settings ) {
         </div>
 
         <div class="dokan-form-group dokan-text-left">
-            <img alt="<?php esc_attr_e( 'bank check', 'dokan-lite' ); ?>" src="<?php echo esc_url( DOKAN_PLUGIN_ASSEST . '/images/dashboard-settings/payment/bank-check.png' ); ?>"/>
+            <img alt="<?php esc_attr_e( 'bank check', 'dokan-lite' ); ?>" src="<?php echo esc_url( DOKAN_PLUGIN_ASSEST . '/images/withdraw-methods/bank-check.png' ); ?>"/>
         </div>
 
         <div class="dokan-form-group dokan-text-left">
