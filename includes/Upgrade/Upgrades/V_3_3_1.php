@@ -45,10 +45,10 @@ class V_3_3_1 extends DokanUpgrader {
 
         foreach ( (array) $existing_columns as $existing_column ) {
             if (
-                'text' !== $existing_column->Type &&
+                'text' !== $existing_column->Type && // phpcs:ignore
                 (
-                    'item_totals' === $existing_column->Field ||
-                    'item_tax_totals' === $existing_column->Field
+                    'item_totals' === $existing_column->Field ||  // phpcs:ignore
+                    'item_tax_totals' === $existing_column->Field  // phpcs:ignore
                 )
             ) {
                 $wpdb->query(
