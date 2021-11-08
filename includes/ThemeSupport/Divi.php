@@ -93,9 +93,15 @@ class Divi {
 
         if ( $page->ID ) {
             $page->ancestors          = [ $page->ID ];
-            $query->is_singular       = false;
+            $query->is_singular       = true;
             $query->queried_object    = $page;
             $query->queried_object_id = $page->ID;
+        }
+
+        $author = get_query_var( dokan_get_option( 'custom_store_url', 'dokan_general', 'store' ) );
+
+        if ( ! is_admin() && $query->is_main_query() && ! empty( $author ) ) {
+            $query->is_singular = false;
         }
 
         add_filter(
