@@ -661,7 +661,7 @@ class Settings {
             }
 
             if ( isset( $post_data['settings']['default-method'] ) ) {
-                $dokan_settings['payment']['default-method'] = sanitize_text_field( $post_data['settings']['default-method'] );
+                update_user_meta( dokan_get_current_user_id(), 'dokan_withdraw_default_method', sanitize_text_field( $post_data['settings']['default-method'] ) );
             }
         }
 

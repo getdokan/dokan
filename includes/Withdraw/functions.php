@@ -172,7 +172,7 @@ function dokan_withdraw_method_bank( $store_settings ) {
     $iban           = isset( $store_settings['payment']['bank']['iban'] ) ? $store_settings['payment']['bank']['iban'] : '';
     $swift_code     = isset( $store_settings['payment']['bank']['swift'] ) ? $store_settings['payment']['bank']['swift'] : '';
     $account_type   = isset( $store_settings['payment']['bank']['ac_type'] ) ? $store_settings['payment']['bank']['ac_type'] : '';
-    $default_method = isset( $store_settings['payment']['default-method'] ) ? $store_settings['payment']['default-method'] : '';
+    $default_method = dokan_withdraw_get_default_method( dokan_get_current_user_id() );
     ?>
     <div>
 
@@ -382,9 +382,7 @@ function dokan_withdraw_get_active_order_status_in_comma() {
 /**
  * Get withdraw method formatted icon.
  *
- * NB: Copied from PR 1370
- *
- * @since DOKAN_LITE_SINCE
+ * @since 3.3.1
  *
  * @param string $method_key Withdraw Method key
  *
@@ -412,13 +410,39 @@ function dokan_withdraw_get_method_icon( $method_key ) {
             $method_icon = $asset_path . 'skrill.svg';
             break;
         case 'dokan-moip-connect':
-            $method_icon = $asset_path . 'wirecard.svg';
+            $method_icon =$asset_path . 'wirecard.svg';
             break;
         default:
             $method_icon = $asset_path . 'bank.svg';
     }
     return apply_filters( 'dokan_withdraw_method_icon', $method_icon, $method_key );
 }
+
+/**
+ * Get the default withdrawal method.
+ *
+ * @since 3.3.1
+ *
+ * @param int $vendor_id
+ *
+ * @return string
+ */
+function dokan_withdraw_get_default_method( $vendor_id = 0 ) {
+    $vendor_id      = $vendor_id ? $vendor_id : dokan_get_current_user_id();
+    $active_methods = dokan_get_seller_active_withdraw_methods( $vendor_id );
+    $method         = get_user_meta( $vendor_id, 'dokan_withdraw_default_method', true );
+
+    if ( ! empty( $method ) ) {
+        return $method;
+    }
+
+    if ( ! empty( $active_methods ) ) {
+        return $active_methods[0];
+    }
+
+    return 'paypal';
+}
+
 
 /**
  * Get unused payment methods

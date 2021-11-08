@@ -64,8 +64,9 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
     <ul>
 
     <?php
-    wp_nonce_field( 'dokan_payment_settings_nonce' );
-    $mis_match_map = [
+    wp_nonce_field( 'dokan_withdraw_make_default' );
+    $default_method = dokan_withdraw_get_default_method( $current_user );
+    $mis_match_map  = [
         'dokan-stripe-connect' => 'stripe',
         'dokan-moip-connect'   => 'moip'
     ];
@@ -98,7 +99,7 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
                     </span>
                 </div>
                 <div>
-                    <?php if ( isset( $profile_info['payment']['default-method'] ) && $profile_info['payment']['default-method'] === $method_key ) {?>
+                    <?php if ( $default_method === $method_key ) {?>
                         <button disabled tabindex="-1" class="dokan-btn-sm"><?php esc_html_e( 'Default', 'dokan-lite' ); ?></button>
                     <?php } else { ?>
                         <button class="dokan-btn-sm dokan-btn-success" data-dokan-payment-method="<?php echo esc_attr( $method_key ) ?>">

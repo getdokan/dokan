@@ -2,11 +2,11 @@
   $( "button[data-dokan-payment-method]" ).click( function () {
     var btn = $( this );
     var data = {
-      _wpnonce                      : $( '#_wpnonce' ).val(),
-      action                        : 'dokan_settings',
+      nonce                      : $( '#_wpnonce' ).val(),
+      action                        : 'dokan_withdraw_handle_make_default_method',
       form_id                       : 'payment-form',
       dokan_update_payment_settings : dokan.update_settings,
-      'settings[default-method]'    : btn.data( 'dokan-payment-method' )
+      'method'                      : btn.data( 'dokan-payment-method' )
     };
 
     var old_content = btn.html();
