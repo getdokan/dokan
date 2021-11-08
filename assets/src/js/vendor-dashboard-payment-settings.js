@@ -2,7 +2,7 @@
   $( "button[data-dokan-payment-method]" ).click( function () {
     var btn = $( this );
     var data = {
-      nonce                      : $( '#_wpnonce' ).val(),
+      nonce                         : $( '#_wpnonce' ).val(),
       action                        : 'dokan_withdraw_handle_make_default_method',
       form_id                       : 'payment-form',
       dokan_update_payment_settings : dokan.update_settings,
