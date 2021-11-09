@@ -410,7 +410,7 @@ function dokan_withdraw_get_method_icon( $method_key ) {
             $method_icon = $asset_path . 'skrill.svg';
             break;
         case 'dokan-moip-connect':
-            $method_icon =$asset_path . 'wirecard.svg';
+            $method_icon = $asset_path . 'wirecard.svg';
             break;
         default:
             $method_icon = $asset_path . 'bank.svg';
