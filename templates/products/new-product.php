@@ -50,6 +50,7 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                 </h1>
             </header><!-- .entry-header -->
 
+            <?php do_action( 'dokan_new_product_before_product_area' ); ?>
 
             <div class="dokan-new-product-area">
                 <?php if ( dokan()->dashboard->templates->products->has_errors() ) { ?>
