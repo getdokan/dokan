@@ -98,12 +98,6 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                         <div class="dokan-form-group">
                             <?php
                             $product_cat = -1;
-
-                            /**
-                             *  dokan_excluded_product_categories hook
-                             *
-                             *  @since 3.2.16
-                             */
                             $category_args =  array(
                                 'show_option_none' => __( '- Select a category -', 'dokan-lite' ),
                                 'hierarchical'     => 1,
@@ -114,7 +108,7 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                                 'orderby'          => 'name',
                                 'title_li'         => '',
                                 'class'            => 'product_cat dokan-form-control dokan-select2',
-                                'exclude'          => apply_filters( 'dokan_excluded_product_categories', '' ),
+                                'exclude'          => '',
                                 'selected'         => $product_cat,
                                 'walker'           => new TaxonomyDropdown()
                             );
@@ -127,12 +121,6 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                             <?php
                             $term = array();
                             include_once DOKAN_LIB_DIR.'/class.taxonomy-walker.php';
-
-                            /**
-                             *  dokan_excluded_product_categories hook
-                             *
-                             *  @since 3.2.16
-                             */
                             $drop_down_category = wp_dropdown_categories(  apply_filters( 'dokan_product_cat_dropdown_args', array(
                                 'show_option_none' => __( '', 'dokan-lite' ),
                                 'hierarchical'     => 1,
@@ -143,7 +131,7 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                                 'orderby'          => 'name',
                                 'title_li'         => '',
                                 'class'            => 'product_cat dokan-form-control dokan-select2',
-                                'exclude'          => apply_filters( 'dokan_excluded_product_categories', '' ),
+                                'exclude'          => '',
                                 'selected'         => $term,
                                 'echo'             => 0,
                                 'walker'           => new TaxonomyDropdown()

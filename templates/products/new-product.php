@@ -201,12 +201,6 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
 
                                             <?php
                                             $selected_cat  = dokan_posted_input( 'product_cat' );
-
-                                            /**
-                                             *  dokan_excluded_product_categories hook
-                                             *
-                                             *  @since 3.2.16
-                                             */
                                             $category_args =  array(
                                                 'show_option_none' => __( '- Select a category -', 'dokan-lite' ),
                                                 'hierarchical'     => 1,
@@ -217,7 +211,7 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                                                 'orderby'          => 'name',
                                                 'title_li'         => '',
                                                 'class'            => 'product_cat dokan-form-control dokan-select2',
-                                                'exclude'          => apply_filters( 'dokan_excluded_product_categories', '' ),
+                                                'exclude'          => '',
                                                 'selected'         => $selected_cat,
                                                 'walker'           => new TaxonomyDropdown()
                                             );
@@ -234,11 +228,6 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                                             $selected_cat  = dokan_posted_input( 'product_cat', true );
                                             $selected_cat  = empty( $selected_cat ) ? array() : $selected_cat;
 
-                                            /**
-                                             *  dokan_excluded_product_categories hook
-                                             *
-                                             *  @since 3.2.16
-                                             */
                                             $drop_down_category = wp_dropdown_categories( apply_filters( 'dokan_product_cat_dropdown_args', array(
                                                 'show_option_none' => __( '', 'dokan-lite' ),
                                                 'hierarchical'     => 1,
@@ -249,7 +238,7 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                                                 'orderby'          => 'name',
                                                 'title_li'         => '',
                                                 'class'            => 'product_cat dokan-form-control dokan-select2',
-                                                'exclude'          => apply_filters( 'dokan_excluded_product_categories, '' ),
+                                                'exclude'          => '',
                                                 'selected'         => $selected_cat,
                                                 'echo'             => 0,
                                                 'walker'           => new TaxonomyDropdown()
