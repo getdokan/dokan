@@ -260,7 +260,7 @@
                         $status = isset( $all_times[ $day_key ]['status'] ) ? $all_times[ $day_key ]['status'] : '';
                         $status = isset( $all_times[ $day_key ]['open'] ) ? $all_times[ $day_key ]['open'] : $status;
                     ?>
-                    <div class="dokan-form-group-container">
+                    <div class="dokan-store-times">
                         <div class="dokan-form-group">
                             <label class="day control-label" for="opening-time[<?php echo esc_attr( $day_key ); ?>][working_status]">
                                 <?php echo apply_filters( 'dokan_show_store_days', esc_html( dokan_get_translated_days( $day_key ) ), $status ); ?>
@@ -380,7 +380,7 @@
 
         $('#dokan-store-time-enable').trigger('change');
 
-        $( '.dokan-form-group-container' ).each( function(e) {
+        $( '.dokan-store-times' ).each( function(e) {
             $( this ).find( '.dokan-form-group' ).each( function (e) {
                 const selectedWorkingStatus = $( this ).find( '.dokan-on-off option[selected]' ).length;
 
@@ -414,7 +414,7 @@
         });
 
         // Update closing time on focus when previously setted up closing time field.
-        $( '.dokan-form-group-container' ).on( 'focus', '.dokan-form-control',  function(e) {
+        $( '.dokan-store-times' ).on( 'focus', '.dokan-form-control',  function(e) {
             e.stopPropagation();
 
             const self     = $( this ),
