@@ -30,7 +30,7 @@ if ( $withdraw_requests ) :
                             <?php
                             $url = add_query_arg( array(
                                 'dokan_handle_withdraw_request' => 'cancel',
-                                'id'     => $request->id
+                                'id'                            => $request->id
                             ), dokan_get_navigation_url( 'withdraw-requests' ) );
                             ?>
                             <a href="<?php echo esc_url( wp_nonce_url( $url, 'dokan_cancel_withdraw' ) ); ?>">
