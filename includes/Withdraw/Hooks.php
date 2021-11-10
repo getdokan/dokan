@@ -185,8 +185,6 @@ class Hooks {
      * @return void
      */
     public function handle_make_default_method() {
-        $user_id = dokan_get_current_user_id();
-
         if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'dokan_withdraw_make_default' ) ) {
             wp_send_json_error( esc_html__( 'Are you cheating?', 'dokan-lite' ) );
         }
@@ -204,6 +202,7 @@ class Hooks {
             wp_send_json_error( esc_html__( 'Method not active.', 'dokan-lite' ) );
         }
 
+        $user_id = dokan_get_current_user_id();
         update_user_meta( $user_id, 'dokan_withdraw_default_method', $method );
 
         wp_send_json_success( esc_html__( 'Default method update successful.', 'dokan-lite' ) );

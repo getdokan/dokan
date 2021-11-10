@@ -32,7 +32,7 @@ jQuery(function($) {
                 prev_li.find('label').replaceWith(response.data);
                 prev_li.find('a.dokan-edit-status').removeClass('dokan-hide');
             } else {
-                dokan_sweetalert( response.data, {
+                dokan_sweetalert( response.data, { 
                     icon: 'success',
                 } );
             }
@@ -100,7 +100,7 @@ jQuery(function($) {
                 $('#accordion').append( response );
 
             } else {
-                dokan_sweetalert( dokan.i18n_download_access , {
+                dokan_sweetalert( dokan.i18n_download_access , { 
                     icon: 'warning',
                 } );
 
@@ -116,8 +116,8 @@ jQuery(function($) {
 
     $('.order_download_permissions').on('click', 'button.revoke_access', async function(e){
         e.preventDefault();
-        const answer = await dokan_sweetalert( dokan.i18n_download_permission, {
-            action : 'confirm',
+        const answer = await dokan_sweetalert( dokan.i18n_download_permission, { 
+            action : 'confirm', 
             icon   : 'warning',
         } );
 
@@ -340,9 +340,9 @@ jQuery(function($) {
 
             do_refund: async function() {
                 dokan_seller_meta_boxes_order_items.block();
-
-                const isRefund = await dokan_sweetalert( dokan_refund.i18n_do_refund, {
-                    action : 'confirm',
+                
+                const isRefund = await dokan_sweetalert( dokan_refund.i18n_do_refund, { 
+                    action : 'confirm', 
                     icon   : 'warning',
                 } );
 
@@ -395,7 +395,7 @@ jQuery(function($) {
                     };
 
                     $.post( dokan_refund.ajax_url, data, function( response ) {
-                        response.data.message ? dokan_sweetalert( response.data.message, {
+                        response.data.message ? dokan_sweetalert( response.data.message, { 
                             icon: 'success',
                         } ) : null;
                         dokan_seller_meta_boxes_order_items.reload_items();
@@ -413,7 +413,7 @@ jQuery(function($) {
                                 message.push( data );
                             }
                         }
-
+                        
                         dokan_sweetalert( message.join( ' ' ), { icon: 'error', } );
                         dokan_seller_meta_boxes_order_items.unblock();
                     } );
@@ -1066,8 +1066,8 @@ jQuery(function($) {
 
                 var $wrapper           = $(this).closest( 'li.product-attribute-list' );
                 var attribute          = $wrapper.data( 'taxonomy' );
-                let result             = await dokan_sweetalert( dokan.new_attribute_prompt, {
-                    action : 'prompt',
+                let result             = await dokan_sweetalert( dokan.new_attribute_prompt, {  
+                    action : 'prompt', 
                     input  :'text'
                 } );
                 var new_attribute_name = result.value;
@@ -1083,7 +1083,7 @@ jQuery(function($) {
 
                     $.post( dokan.ajaxurl, data, function( response ) {
                         if ( response.error ) {
-                            dokan_sweetalert( response.error, {
+                            dokan_sweetalert( response.error, { 
                                 action : 'alert',
                                 icon   : 'warning'
                             } );
@@ -1143,9 +1143,9 @@ jQuery(function($) {
                 evt.stopPropagation();
                 evt.preventDefault();
 
-                const isRemoved = await dokan_sweetalert( dokan.remove_attribute, {
+                const isRemoved = await dokan_sweetalert( dokan.remove_attribute, { 
                     action :'confirm',
-                    icon   :'warning'
+                    icon   :'warning' 
                 } );
 
                 if ( 'undefined' !== isRemoved && isRemoved.isConfirmed ) {
