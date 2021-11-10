@@ -20,12 +20,12 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
                 <div id="vendor-payment-method-drop-down">
                     <?php
                     $has_methods_in_dropdown = false;
-                    $icon_mismatch_map    = [
+                    $icon_mismatch_map       = [
                         'dokan-stripe-connect'     => 'stripe',
                         'dokan-paypal-marketplace' => 'paypal'
                     ];
-                    $mis_match_methods    = [ 'stripe', 'moip' ];
-                    $unused_methods       = get_unused_payment_methods( $methods, $profile_info['payment'], $mis_match_methods );
+                    $mis_match_methods       = [ 'stripe', 'moip' ];
+                    $unused_methods          = get_unused_payment_methods( $methods, $profile_info['payment'], $mis_match_methods );
                     ?>
                     <ul>
                     <?php foreach ( $unused_methods as $method_key ) :
