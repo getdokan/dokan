@@ -688,24 +688,27 @@ function dokan_get_new_post_status() {
 /**
  * Function to get the client ip address
  *
+ * @since 3.3.1 Updated some logic
+ *
  * @return string
  */
 function dokan_get_client_ip() {
-    $ipaddress = '';
-    $_server   = $_SERVER;
-
-    if ( isset( $_server['HTTP_CLIENT_IP'] ) ) {
-        $ipaddress = $_server['HTTP_CLIENT_IP'];
-    } elseif ( isset( $_server['HTTP_X_FORWARDED_FOR'] ) ) {
-        $ipaddress = $_server['HTTP_X_FORWARDED_FOR'];
-    } elseif ( isset( $_server['HTTP_X_FORWARDED'] ) ) {
-        $ipaddress = $_server['HTTP_X_FORWARDED'];
-    } elseif ( isset( $_server['HTTP_FORWARDED_FOR'] ) ) {
-        $ipaddress = $_server['HTTP_FORWARDED_FOR'];
-    } elseif ( isset( $_server['HTTP_FORWARDED'] ) ) {
-        $ipaddress = $_server['HTTP_FORWARDED'];
-    } elseif ( isset( $_server['REMOTE_ADDR'] ) ) {
-        $ipaddress = $_server['REMOTE_ADDR'];
+    if ( isset( $_SERVER['HTTP_X_REAL_IP'] ) ) {
+        $ipaddress = sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_REAL_IP'] ) );
+    } elseif ( isset( $_SERVER['HTTP_CLIENT_IP'] ) ) {
+        $ipaddress = sanitize_text_field( wp_unslash( $_SERVER['HTTP_CLIENT_IP'] ) );
+    } elseif ( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
+        // Proxy servers can send through this header like this: X-Forwarded-For: client1, proxy1, proxy2
+        // Make sure we always only send through the first IP in the list which should always be the client IP.
+        $ipaddress = (string) rest_is_ip_address( trim( current( preg_split( '/,/', sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) ) ) ) );
+    } elseif ( isset( $_SERVER['HTTP_X_FORWARDED'] ) ) {
+        $ipaddress = sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED'] ) );
+    } elseif ( isset( $_SERVER['HTTP_FORWARDED_FOR'] ) ) {
+        $ipaddress = sanitize_text_field( wp_unslash( $_SERVER['HTTP_FORWARDED_FOR'] ) );
+    } elseif ( isset( $_SERVER['HTTP_FORWARDED'] ) ) {
+        $ipaddress = sanitize_text_field( wp_unslash( $_SERVER['HTTP_FORWARDED'] ) );
+    } elseif ( isset( $_SERVER['REMOTE_ADDR'] ) ) {
+        $ipaddress = sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) );
     } else {
         $ipaddress = 'UNKNOWN';
     }
@@ -4187,10 +4190,10 @@ function dokan_array_insert_after( array $old_array, array $new_array, $insert_a
 
     return array_slice( $old_array, 0, $pos, true ) + $new_array + array_slice( $old_array, $pos, count( $old_array ) - 1, true );
 }
-  
-/**  
+
+/**
  * Check a order have apply admin coupon
- * 
+ *
  * @since 3.2.16
  *
  * @param WC_Order $order
