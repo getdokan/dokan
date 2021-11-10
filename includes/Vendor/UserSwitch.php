@@ -15,7 +15,7 @@ use user_switching;
 class UserSwitch {
 
     /**
-     * Load autometically when class initiate
+     * Load automatically when class initiate
      *
      * @since DOKAN_LITE_SINCE
      */
@@ -30,7 +30,7 @@ class UserSwitch {
      *
      * @since DOKAN_LITE_SINCE
      *
-     * @return void
+     * @return boolean
      */
     public function is_feature_active() {
         $core_plugin_file = 'user-switching/user-switching.php';
@@ -38,10 +38,12 @@ class UserSwitch {
         if ( file_exists( WP_PLUGIN_DIR . '/' . $core_plugin_file ) && is_plugin_active( $core_plugin_file ) ) {
             return true;
         }
+
+        return false;
     }
 
     /**
-     * Add localize scription for loading if feature avaiable or not
+     * Add localize scription for loading if feature available or not
      *
      * @since DOKAN_LITE_SINCE
      *
@@ -54,7 +56,7 @@ class UserSwitch {
     }
 
     /**
-     * Populate swith url for user
+     * Populate switch url for user
      *
      * @since DOKAN_LITE_SINCE
      *
@@ -85,7 +87,7 @@ class UserSwitch {
      *
      * @since DOKAN_LITE_SINCE
      *
-     * @return html
+     * @return void
      */
     public function show_user_switching_message() {
         if ( ! class_exists( 'user_switching' ) ) {
