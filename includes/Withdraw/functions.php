@@ -426,3 +426,24 @@ function dokan_withdraw_is_manual_request_enabled() {
 function dokan_withdraw_is_disabled() {
     return apply_filters( 'dokan_withdraw_disable', false );
 }
+
+/**
+ * Get the payment methods that are eligable for manual/schedule withdraw.
+ *
+ * @since 3.3.1
+ *
+ * @return array
+ */
+function dokan_withdraw_get_withdrawable_active_methods() {
+    return array_diff(
+        dokan_withdraw_get_active_methods(),
+        apply_filters(
+            'dokan_withdraw_split_payment_supported_methods',
+            [
+                'dokan-stripe-connect',
+                'dokan-paypal-marketplace',
+                'dokan-moip-connect',
+            ]
+        )
+    );
+}
