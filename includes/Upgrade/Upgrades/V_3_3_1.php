@@ -44,13 +44,7 @@ class V_3_3_1 extends DokanUpgrader {
         $existing_columns = $wpdb->get_results( "DESC `{$wpdb->prefix}dokan_refund`" );
 
         foreach ( (array) $existing_columns as $existing_column ) {
-            if (
-                'text' !== $existing_column->Type && // phpcs:ignore
-                (
-                    'item_totals' === $existing_column->Field ||  // phpcs:ignore
-                    'item_tax_totals' === $existing_column->Field  // phpcs:ignore
-                )
-            ) {
+            if ( in_array( $existing_column->Field, [ 'item_totals', 'item_tax_totals' ], true ) && 'text' !== $existing_column->Type ) { // phpcs:ignore
                 $wpdb->query(
                     "ALTER TABLE `{$wpdb->prefix}dokan_refund` MODIFY COLUMN {$existing_column->Field} text" // phpcs:ignore
                 );
