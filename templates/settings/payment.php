@@ -76,10 +76,6 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
 </div>
 
 <?php
-if ( empty( $methods ) ) {
-    dokan_get_template_part( 'global/dokan-error', '', array( 'deleted' => false, 'message' => __( 'No withdraw method is available. Please contact site admin.', 'dokan-lite' ) ) );
-}
-
 /**
  * @since 2.2.2 Insert action after social settings form
  */

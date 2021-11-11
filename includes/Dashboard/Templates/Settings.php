@@ -264,14 +264,25 @@ class Settings {
                     'icon_mismatch_map' => $icon_mismatch_map,
                 ]
             );
+
+            if ( empty( $methods ) ) {
+                dokan_get_template_part( 'global/dokan-error', '', array( 'deleted' => false, 'message' => __( 'No withdraw method is available. Please contact site admin.', 'dokan-lite' ) ) );
+                return;
+            }
         } else {
+            $method = dokan_withdraw_get_method( $method_key );
             $args = array_merge(
                 $args,
                 [
-                    'method'     => dokan_withdraw_get_method( $method_key ),
+                    'method'     => $method,
                     'method_key' => $method_key,
                 ]
             );
+
+            if ( empty( $method ) || ! isset( $method['callback'] ) || ! is_callable( $method['callback'] ) ) {
+                dokan_get_template_part( 'global/dokan-error', '', array( 'deleted' => false, 'message' => __( 'Invalid withdraw method. Please contact site admin', 'dokan-lite' ) ) );
+                return;
+            }
         }
 
         dokan_get_template_part( 'settings/payment', ! empty( $method_key ) ? 'manage' : '', $args );
