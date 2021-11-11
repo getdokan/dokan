@@ -255,7 +255,7 @@ class Settings {
             'profile_info' => $profile_info,
         ];
 
-        if ( empty( $method_key) ) {
+        if ( empty( $method_key ) ) {
             $args = array_merge(
                 $args,
                 [
