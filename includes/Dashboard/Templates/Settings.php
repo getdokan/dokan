@@ -193,24 +193,32 @@ class Settings {
      * @return void
      */
     public function load_payment_content( $slug_suffix ) {
-        $methods      = dokan_withdraw_get_active_methods();
-        $currentuser  = dokan_get_current_user_id();
-        $profile_info = dokan_get_store_info( dokan_get_current_user_id() );
-        $method       = str_replace( '/manage-', '', $slug_suffix );
+        $methods       = dokan_withdraw_get_active_methods();
+        $currentuser   = dokan_get_current_user_id();
+        $profile_info  = dokan_get_store_info( dokan_get_current_user_id() );
+        $method_key    = str_replace( '/manage-', '', $slug_suffix );
+        $is_edit_mode  = false;
+        $mis_match_map = [
+            'dokan-stripe-connect' => 'stripe',
+            'dokan-moip-connect'   => 'moip'
+        ];
 
-        if ( stripos( $method, '/edit' ) !== false ) {
+        if ( stripos( $method_key, '/edit' ) !== false ) {
             $is_edit_mode = true;
-            $method       = str_replace( '/edit', '', $method );
-        } else {
-            $is_edit_mode = false;
+            $method_key   = str_replace( '/edit', '', $method_key );
         }
 
-        dokan_get_template_part( 'settings/payment', ! empty( $method ) ? 'manage' : '', array(
-            'methods'        => $methods,
-            'method_key'     => $method,
-            'current_user'   => $currentuser,
-            'profile_info'   => $profile_info,
-            'is_edit_method' => $is_edit_mode,
+        if ( $is_edit_mode && 'bank' === $method_key ) {
+            $profile_info['is_edit_method'] = $is_edit_mode;
+        }
+
+        dokan_get_template_part( 'settings/payment', ! empty( $method_key ) ? 'manage' : '', array(
+            'methods'       => $methods,
+            'method'        => dokan_withdraw_get_method( $method_key ),
+            'method_key'    => $method_key,
+            'current_user'  => $currentuser,
+            'profile_info'  => $profile_info,
+            'mis_match_map' => $mis_match_map,
         ) );
     }
 
@@ -640,12 +648,6 @@ class Settings {
                     'ac_type'        => sanitize_text_field( $bank['ac_type'] ),
                     'declaration'    => sanitize_text_field( $bank['declaration'] ),
                 );
-
-                if ( ! empty( $post_data['settings']['default-method'] ) ) {
-                    $post_data['settings']['default-method'] = 'bank';
-                } else {
-                    $post_data['settings']['default-method'] = ( 'bank' === $dokan_settings['payment']['default-method'] ) ? '' : $dokan_settings['payment']['default-method'];
-                }
             }
 
             if ( isset( $post_data['settings']['paypal'] ) ) {
@@ -658,10 +660,6 @@ class Settings {
                 $dokan_settings['payment']['skrill'] = array(
                     'email' => sanitize_email( $post_data['settings']['skrill']['email'] ),
                 );
-            }
-
-            if ( isset( $post_data['settings']['default-method'] ) ) {
-                update_user_meta( dokan_get_current_user_id(), 'dokan_withdraw_default_method', sanitize_text_field( $post_data['settings']['default-method'] ) );
             }
         }
 
@@ -743,7 +741,7 @@ class Settings {
          *
          * @param string $heading previous heading
          */
-        $heading = apply_filters( "dokan_vendor_dashboard_payment_{$slug}_settings_heading", $heading );
+        $heading = apply_filters( "dokan_vendor_dashboard_payment_settings_heading", $heading, $slug );
 
         return $heading;
     }

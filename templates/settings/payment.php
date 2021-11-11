@@ -24,8 +24,8 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
                         'dokan-stripe-connect'     => 'stripe',
                         'dokan-paypal-marketplace' => 'paypal'
                     ];
-                    $mis_match_methods       = [ 'stripe', 'moip' ];
-                    $unused_methods          = get_unused_payment_methods( $methods, $profile_info['payment'], $mis_match_methods );
+
+                    $unused_methods = dokan_get_unused_payment_methods( $methods, $profile_info['payment'], [ 'stripe', 'moip' ] );
                     ?>
                     <ul>
                     <?php foreach ( $unused_methods as $method_key ) :
@@ -65,12 +65,6 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
     <ul>
 
     <?php
-    wp_nonce_field( 'dokan_withdraw_make_default' );
-    $default_method = dokan_withdraw_get_default_method( $current_user );
-    $mis_match_map  = [
-        'dokan-stripe-connect' => 'stripe',
-        'dokan-moip-connect'   => 'moip'
-    ];
 
     foreach ( $methods as $method_key ) :
         if ( ! isset( $profile_info['payment'][ $method_key ] ) && ! isset( $profile_info['payment'][ $mis_match_map[ $method_key ] ] ) ) {
@@ -100,14 +94,6 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
                     </span>
                 </div>
                 <div>
-                    <?php if ( $default_method === $method_key ) : ?>
-                        <button disabled tabindex="-1" class="dokan-btn-sm"><?php esc_html_e( 'Default', 'dokan-lite' ); ?></button>
-                    <?php else : ?>
-                        <button class="dokan-btn-sm dokan-btn-success" data-dokan-payment-method="<?php echo esc_attr( $method_key ) ?>">
-                            <?php esc_html_e( 'Make Default', 'dokan-lite' ); ?>
-                        </button>
-                    <?php endif; ?>
-
                     <a href="<?php echo esc_url(  home_url( "dashboard/settings/payment/manage-" . $method_key . "/edit" ) ); ?>">
                         <button class="dokan-btn-theme dokan-btn-sm"><?php esc_html_e( 'Manage', 'dokan-lite' ); ?></button>
                     </a>

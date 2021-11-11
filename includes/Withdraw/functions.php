@@ -164,15 +164,15 @@ function dokan_withdraw_method_skrill( $store_settings ) {
  * @param array $store_settings
  */
 function dokan_withdraw_method_bank( $store_settings ) {
-    $account_name   = isset( $store_settings['payment']['bank']['ac_name'] ) ? $store_settings['payment']['bank']['ac_name'] : '';
-    $account_number = isset( $store_settings['payment']['bank']['ac_number'] ) ? $store_settings['payment']['bank']['ac_number'] : '';
-    $bank_name      = isset( $store_settings['payment']['bank']['bank_name'] ) ? $store_settings['payment']['bank']['bank_name'] : '';
-    $bank_addr      = isset( $store_settings['payment']['bank']['bank_addr'] ) ? $store_settings['payment']['bank']['bank_addr'] : '';
-    $routing_number = isset( $store_settings['payment']['bank']['routing_number'] ) ? $store_settings['payment']['bank']['routing_number'] : '';
-    $iban           = isset( $store_settings['payment']['bank']['iban'] ) ? $store_settings['payment']['bank']['iban'] : '';
-    $swift_code     = isset( $store_settings['payment']['bank']['swift'] ) ? $store_settings['payment']['bank']['swift'] : '';
-    $account_type   = isset( $store_settings['payment']['bank']['ac_type'] ) ? $store_settings['payment']['bank']['ac_type'] : '';
-    $default_method = dokan_withdraw_get_default_method( dokan_get_current_user_id() );
+    $account_name         = isset( $store_settings['payment']['bank']['ac_name'] ) ? $store_settings['payment']['bank']['ac_name'] : '';
+    $account_number       = isset( $store_settings['payment']['bank']['ac_number'] ) ? $store_settings['payment']['bank']['ac_number'] : '';
+    $bank_name            = isset( $store_settings['payment']['bank']['bank_name'] ) ? $store_settings['payment']['bank']['bank_name'] : '';
+    $bank_addr            = isset( $store_settings['payment']['bank']['bank_addr'] ) ? $store_settings['payment']['bank']['bank_addr'] : '';
+    $routing_number       = isset( $store_settings['payment']['bank']['routing_number'] ) ? $store_settings['payment']['bank']['routing_number'] : '';
+    $iban                 = isset( $store_settings['payment']['bank']['iban'] ) ? $store_settings['payment']['bank']['iban'] : '';
+    $swift_code           = isset( $store_settings['payment']['bank']['swift'] ) ? $store_settings['payment']['bank']['swift'] : '';
+    $account_type         = isset( $store_settings['payment']['bank']['ac_type'] ) ? $store_settings['payment']['bank']['ac_type'] : '';
+    $save_or_add_btn_text = isset( $store_settings['is_edit_method'] ) && $store_settings['is_edit_method'] ? __( 'Save', 'dokan-lite' ) : __( 'Add Account', 'dokan-lite' );
     ?>
     <div>
 
@@ -264,13 +264,6 @@ function dokan_withdraw_method_bank( $store_settings ) {
             </label>
         </div>
 
-        <div class="dokan-form-group dokan-text-left">
-            <input id="default-method" name="settings[default-method]" value="bank" type="checkbox" <?php checked( 'bank', $default_method ); ?>/>
-            <label for="default-method">
-                <?php esc_html_e( 'Make this default payment method', 'dokan-lite' ); ?>
-            </label>
-        </div>
-
         <div class="data-warning">
             <div class="left-icon-container">
                 <i class="fa fa-info-circle fa-2x" aria-hidden="true"></i>
@@ -289,13 +282,7 @@ function dokan_withdraw_method_bank( $store_settings ) {
 
         <div class="bottom-actions">
             <button class="ajax_prev dokan-btn dokan-btn-theme" type="submit" name="dokan_update_payment_settings">
-                <?php
-                if ( isset( $store_settings['is_edit_method'] ) && $store_settings['is_edit_method'] ) {
-                    esc_html_e( 'Save', 'dokan-lite' );
-                } else {
-                    esc_html_e( 'Add Account', 'dokan-lite' );
-                }
-                ?>
+                <?php echo $save_or_add_btn_text; ?>
             </button>
             <a href="<?php echo esc_url( home_url( '/dashboard/settings/payment/' ) ); ?>">
                 <?php esc_html_e( 'Cancel', 'dokan-lite' ); ?>
@@ -419,32 +406,6 @@ function dokan_withdraw_get_method_icon( $method_key ) {
 }
 
 /**
- * Get the default withdrawal method.
- *
- * @since 3.3.1
- *
- * @param int $vendor_id
- *
- * @return string
- */
-function dokan_withdraw_get_default_method( $vendor_id = 0 ) {
-    $vendor_id      = $vendor_id ? $vendor_id : dokan_get_current_user_id();
-    $active_methods = dokan_get_seller_active_withdraw_methods( $vendor_id );
-    $method         = get_user_meta( $vendor_id, 'dokan_withdraw_default_method', true );
-
-    if ( ! empty( $method ) ) {
-        return $method;
-    }
-
-    if ( ! empty( $active_methods ) ) {
-        return $active_methods[0];
-    }
-
-    return 'paypal';
-}
-
-
-/**
  * Get unused payment methods
  *
  * @since DOKAN_LITE_SINCE
@@ -455,7 +416,7 @@ function dokan_withdraw_get_default_method( $vendor_id = 0 ) {
  *
  * @return array
  */
-function get_unused_payment_methods( $methods, $profile_methods, $mis_match_methods ) {
+function dokan_get_unused_payment_methods( $methods, $profile_methods, $mis_match_methods ) {
     $profile_methods = array_keys( $profile_methods );
     $unused_methods  = array_diff( $methods, $profile_methods );
 

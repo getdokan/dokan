@@ -8,18 +8,13 @@
 
 <form method="post" id="payment-form"  action="" class="dokan-form-horizontal">
 
-    <?php wp_nonce_field( 'dokan_payment_settings_nonce' ); ?>
-
-    <?php
-    $method = dokan_withdraw_get_method( $method_key );
+    <?php wp_nonce_field( 'dokan_payment_settings_nonce' );
 
     if ( ! empty( $method ) && isset( $method['callback'] ) && is_callable( $method['callback'] ) ) : ?>
         <fieldset class="payment-field-<?php echo esc_attr( $method_key ); ?>">
             <div class="dokan-form-group">
                 <?php if ( 'bank' === $method_key ) :
-                    $augmented_profile                   = $profile_info;
-                    $augmented_profile['is_edit_method'] = $is_edit_method;
-                    call_user_func( $method['callback'], $augmented_profile );
+                    call_user_func( $method['callback'], $profile_info );
                 else : ?>
                     <label class="dokan-w3 dokan-control-label" for="dokan_setting"><?php echo esc_html( $method['title'] ) ?></label>
                     <div class="dokan-w6">
