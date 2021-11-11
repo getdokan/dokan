@@ -40,7 +40,7 @@ class LimitedTimePromotion {
         $notices = [
             [
                 'key'        => 'dokan-bfcm2021',
-                'start_date' => '2021-10-19 09:00:00 EST',
+                'start_date' => '2021-11-19 09:00:00 EST',
                 'end_date'   => '2021-11-30 23:00:00 EST',
                 'title'      => 'Irresistible Black Friday & Cyber Monday Deals.',
                 'content'    => 'Enjoy Up To 50% OFF on Dokan Pro.',
