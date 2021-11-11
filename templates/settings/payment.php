@@ -18,25 +18,8 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
             <button id="toggle-vendor-payment-method-drop-down" class="dokan-btn dokan-btn-success"> <?php esc_html_e( 'Add Payment Method', 'dokan-lite' ); ?></button>
             <div id="vendor-payment-method-drop-down-wrapper">
                 <div id="vendor-payment-method-drop-down">
-                    <?php
-                    $has_methods_in_dropdown = false;
-                    $icon_mismatch_map       = [
-                        'dokan-stripe-connect'     => 'stripe',
-                        'dokan-paypal-marketplace' => 'paypal'
-                    ];
-
-                    $unused_methods = dokan_get_unused_payment_methods( $methods, $profile_info['payment'], [ 'stripe', 'moip' ] );
-                    ?>
                     <ul>
-                    <?php foreach ( $unused_methods as $method_key ) :
-                        $method = dokan_withdraw_get_method( $method_key );
-
-                        if ( ! empty( $method ) ) {
-                            $has_methods_in_dropdown = true;
-                        } else {
-                            continue;
-                        }
-                        ?>
+                    <?php foreach ( $unused_methods as $method_key => $method ) :?>
                         <li>
                             <a href="<?php echo esc_url( home_url( "dashboard/settings/payment/manage-" . $method_key ) ); ?>">
                                 <div>
@@ -53,7 +36,7 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
                     <?php endforeach; ?>
                     </ul>
 
-                    <?php if ( ! $has_methods_in_dropdown ) : ?>
+                    <?php if ( empty( $unused_methods ) ) : ?>
                         <div>
                             <?php esc_html_e( 'All payment methods are used.', 'dokan-lite' ); ?>
                         </div>
@@ -66,19 +49,7 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
 
     <?php
 
-    foreach ( $methods as $method_key ) :
-        if ( ! isset( $profile_info['payment'][ $method_key ] ) && ! isset( $profile_info['payment'][ $mis_match_map[ $method_key ] ] ) ) {
-            continue;
-        }
-
-        $method = dokan_withdraw_get_method( $method_key );
-
-        if ( ! empty( $method ) ) {
-            $has_methods = true;
-        } else {
-            continue;
-        }
-        ?>
+    foreach ( $methods as $method_key => $method ) : ?>
         <li>
             <div>
                 <div>
@@ -105,13 +76,10 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
 </div>
 
 <?php
-    if ( ! $has_methods ) {
-        dokan_get_template_part( 'global/dokan-error', '', array( 'deleted' => false, 'message' => __( 'No withdraw method is available. Please contact site admin.', 'dokan-lite' ) ) );
-    }
-?>
+if ( empty( $methods ) ) {
+    dokan_get_template_part( 'global/dokan-error', '', array( 'deleted' => false, 'message' => __( 'No withdraw method is available. Please contact site admin.', 'dokan-lite' ) ) );
+}
 
-
-<?php
 /**
  * @since 2.2.2 Insert action after social settings form
  */

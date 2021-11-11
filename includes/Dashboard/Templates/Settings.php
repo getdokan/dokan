@@ -203,6 +203,44 @@ class Settings {
             'dokan-moip-connect'   => 'moip'
         ];
 
+        $unused_methods       = dokan_get_unused_payment_methods( $methods, $profile_info['payment'], [ 'stripe', 'moip' ] );
+        $unused_methods_assoc = array_reduce(
+            $unused_methods,
+            function ( $in_dropdown, $method_key ) {
+                $cur_method = dokan_withdraw_get_method( $method_key );
+
+                if ( ! empty( $cur_method ) ) {
+                    $in_dropdown[ $method_key ] = $cur_method;
+                }
+
+                return $in_dropdown;
+            },
+            []
+        );
+
+        $methods = array_reduce(
+            $methods,
+            function ( $previous_array, $method_key ) use ( $mis_match_map, $profile_info ) {
+                if ( ! isset( $profile_info['payment'][ $method_key ] ) && ! isset( $profile_info['payment'][ $mis_match_map[ $method_key ] ] ) ) {
+                    return $previous_array;
+                }
+
+                $cur_method = dokan_withdraw_get_method( $method_key );
+
+                if ( ! empty( $cur_method ) ) {
+                    $previous_array[ $method_key ] = $cur_method;
+                }
+
+                return $previous_array;
+            },
+            []
+        );
+
+        $icon_mismatch_map = [
+            'dokan-stripe-connect'     => 'stripe',
+            'dokan-paypal-marketplace' => 'paypal'
+        ];
+
         if ( stripos( $method_key, '/edit' ) !== false ) {
             $is_edit_mode = true;
             $method_key   = str_replace( '/edit', '', $method_key );
@@ -212,14 +250,31 @@ class Settings {
             $profile_info['is_edit_method'] = $is_edit_mode;
         }
 
-        dokan_get_template_part( 'settings/payment', ! empty( $method_key ) ? 'manage' : '', array(
-            'methods'       => $methods,
-            'method'        => dokan_withdraw_get_method( $method_key ),
-            'method_key'    => $method_key,
-            'current_user'  => $currentuser,
-            'profile_info'  => $profile_info,
-            'mis_match_map' => $mis_match_map,
-        ) );
+        $args = [
+            'current_user' => $currentuser,
+            'profile_info' => $profile_info,
+        ];
+
+        if ( empty( $method_key) ) {
+            $args = array_merge(
+                $args,
+                [
+                    'methods'           => $methods,
+                    'unused_methods'    => $unused_methods_assoc,
+                    'icon_mismatch_map' => $icon_mismatch_map,
+                ]
+            );
+        } else {
+            $args = array_merge(
+                $args,
+                [
+                    'method'     => dokan_withdraw_get_method( $method_key ),
+                    'method_key' => $method_key,
+                ]
+            );
+        }
+
+        dokan_get_template_part( 'settings/payment', ! empty( $method_key ) ? 'manage' : '', $args );
     }
 
     /**
