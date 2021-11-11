@@ -125,7 +125,7 @@
             <label class="dokan-w3 dokan-control-label" for="dokan_store_ppp"><?php esc_html_e( 'Store Products Per Page', 'dokan-lite' ); ?></label>
 
             <div class="dokan-w5 dokan-text-left">
-                <input id="dokan_store_ppp" value="<?php ! empty( $store_ppp ) ? esc_attr( $store_ppp ) : ''; ?>" name="dokan_store_ppp" placeholder="<?php esc_attr_e( 'Enter the number of products', 'dokan-lite' ); ?>" class="dokan-form-control" type="number">
+                <input id="dokan_store_ppp" value="<?php ! empty( $store_ppp ) ? esc_attr( $store_ppp ) : ''; ?>" name="dokan_store_ppp" placeholder="<?php printf( esc_attr__( 'Products to display on store page, default value is %s', 'dokan-lite' ), dokan_get_option( 'store_products_per_page', 'dokan_general', 12 ) ); ?>" class="dokan-form-control" type="number">
             </div>
         </div>
          <!--address-->
