@@ -43,25 +43,31 @@ class ReviewNotice {
             return;
         }
 
-        if ( empty( get_option( 'dokan_review_notice_enable', 1 ) ) ) {
+        // Check if notice was hidden.
+        if ( 'yes' === get_option( 'dokan_review_notice_hidden', 'no' ) ) {
             return;
         }
 
-        $initial_delay_days = apply_filters( 'dokan_ask_for_review_admin_notice_initial_delay_days', 10 );
-        $postpond_days      = apply_filters( 'dokan_ask_for_review_admin_notice_postpond_days', 15 );
-        $current_time       = dokan_current_datetime()->getTimestamp();
-        $install_time       = get_option( 'dokan_installed_time' );
-        $eligible_time      = strtotime( $initial_delay_days . ' days', $install_time );
-        $postpond_time      = get_option( 'dokan_review_notice_postpond_time', 0 );
+        // Check if notice postponed.
+        $notice_postponed = get_option( 'dokan_review_notice_postponed' );
 
-        if ( ! empty( get_option( 'dokan_review_notice_postpond' ) ) ) {
-            $eligible_time = strtotime( $postpond_days . ' days', $postpond_time );
-        }
-
-        if ( $eligible_time >= $current_time ) {
+        if ( ! empty( $notice_postponed ) && $notice_postponed > time() ) {
             return;
         }
 
+        // Check if plugin install time exists.
+        $installed_time = get_option( 'dokan_installed_time' );
+
+        if ( ! empty( $installed_time ) ) {
+            $initial_delay_days = apply_filters( 'dokan_ask_for_review_admin_notice_initial_delay_days', 10 );
+            $eligible_time      = dokan_current_datetime()->modify( "+$initial_delay_days  days" );
+
+            if ( $eligible_time->getTimestamp() < time() ) {
+                return;
+            }
+        }
+
+        // All checking passed, display admin notice.
         dokan_get_template( 'admin-notice/ask-for-review.php' );
     }
 
@@ -85,24 +91,21 @@ class ReviewNotice {
             wp_send_json_error( __( 'Invalid request', 'dokan-lite' ) );
         }
 
-        $updated = [];
         if ( 'dokan-notice-dismiss' === wp_unslash( sanitize_key( $_POST['key'] ) ) ) {
-            $updated[] = update_option( 'dokan_review_notice_enable', 0 ) ? 1 : 0;
+            update_option( 'dokan_review_notice_hidden', 'yes' );
 
-            delete_option( 'dokan_review_notice_postpond' );
-            delete_option( 'dokan_review_notice_postpond_time' );
+            wp_send_json_success();
         }
 
         if ( 'dokan-notice-postpond' === wp_unslash( sanitize_key( $_POST['key'] ) ) ) {
-            $updated[] = update_option( 'dokan_review_notice_enable', 1 ) ? 1 : 0;
-            $updated[] = update_option( 'dokan_review_notice_postpond', 1 ) ? 1 : 0;
-            $updated[] = update_option( 'dokan_review_notice_postpond_time', time() ) ? 1 : 0;
+            $postponed_days = apply_filters( 'dokan_ask_for_review_admin_notice_postpond_days', 15 );
+            $postponed      = dokan_current_datetime()->modify( "+$postponed_days days" )->getTimestamp();
+
+            update_option( 'dokan_review_notice_postponed', $postponed );
+
+            wp_send_json_success();
         }
 
-        if ( in_array( 0, $updated, true ) ) {
-            wp_send_json_error( __( 'Request failed', 'dokan-lite' ) );
-        }
-
-        wp_send_json_success();
+        wp_send_json_error( __( 'Request failed', 'dokan-lite' ) );
     }
 }
