@@ -3,11 +3,11 @@ Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce, yith, yithemes
 Requires at least: 4.4
-Tested up to: 5.8.1
+Tested up to: 5.8.2
 WC requires at least: 3.0
-WC tested up to: 5.8.0
+WC tested up to: 5.9.0
 Requires PHP: 5.6
-Stable tag: 3.3.0
+Stable tag: 3.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -291,6 +291,19 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.3.1 ( Nov 12, 2021 ) =
+
+- **new:** Added Vue DateRangePicker library #1409
+- **update:** updated vendor store per page placeholder text #1396
+- **update:** Removed user switch setting from Dokan selling setting, now user switching will work if plugin exists #1394
+- **fix:** Added missing param on woocommerce_admin_order_item_headers #1414
+- **fix:** Fixed WC mail template overwrite wasn’t working #1403
+- **fix:** add call to filter dokan_product_cat_dropdown_args to listing-filter.php #1408 (thanks to David Marín )
+- **fix:** updated dokan_product_seller_info() function to not to add vendor data if vendor id doesn’t exists #1401 (thanks to David Marín )
+- **fix:** Hide `Show email address in store` settings from store settings page if admin disable this settings from customiser. #1393
+- **fix:** added upgrader to change refund and withdraw database table column #1391
+- **add:** Black Friday promotion 2021 #1411
 
 = v3.3.0 ( Oct 31, 2021 ) =
 
