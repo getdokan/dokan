@@ -49,15 +49,13 @@ class Installer {
     /**
      * Adds plugin installation time.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.3.1
      *
      * @return boolean
      */
     public function add_version_info() {
-        $first_installed = get_option( 'dokan_installed_time' );
-        $current_time    = dokan_current_datetime()->getTimestamp();
-
-        if ( ! $first_installed ) {
+        if ( empty( get_option( 'dokan_installed_time' ) ) ) {
+            $current_time  = dokan_current_datetime()->getTimestamp();
             update_option( 'dokan_installed_time', $current_time );
         }
     }
