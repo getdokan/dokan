@@ -51,4 +51,18 @@ class V_3_3_1 extends DokanUpgrader {
             }
         }
     }
+
+    /**
+     * This will add installed time for existing users
+     *
+     * @since 3.3.1
+     *
+     * @return void
+     */
+    public static function add_version_info() {
+        if ( empty( get_option( 'dokan_installed_time' ) ) ) {
+            $current_time  = dokan_current_datetime()->modify( '- 11 days' )->getTimestamp();
+            update_option( 'dokan_installed_time', $current_time );
+        }
+    }
 }
