@@ -35,7 +35,9 @@ import Currency from "admin/components/Currency.vue"
 import LazyInput from "admin/components/LazyInput.vue"
 import Progressbar from "admin/components/Progressbar.vue"
 import Search from "admin/components/Search.vue"
-import Datepicker from "admin/components/Datepicker.vue"
+import Datepicker from "admin/components/Datepicker.vue";
+import DateRangePicker from 'vue2-daterange-picker';
+import 'vue2-daterange-picker/dist/vue2-daterange-picker.css';
 import VueSweetalert2 from 'vue-sweetalert2';
 import ColorPicker from "admin/components/ColorPicker.vue"
 import GoogleMaps from "admin/components/GoogleMaps.vue"
@@ -101,6 +103,7 @@ window.dokan.libs['LazyInput']           = LazyInput;
 window.dokan.libs['Progressbar']         = Progressbar;
 window.dokan.libs['Search']              = Search;
 window.dokan.libs['Datepicker']          = Datepicker;
+window.dokan.libs['DateRangePicker']     = DateRangePicker;
 window.dokan.libs['Multiselect']         = Multiselect;
 window.dokan.libs['ColorPicker']         = ColorPicker;
 window.dokan.libs['debounce']            = Debounce;
