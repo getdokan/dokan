@@ -276,7 +276,7 @@ class ProductController extends DokanRESTController {
         }
 
         if ( ! dokan_is_seller_enabled( $store_id ) ) {
-            return new WP_Error( 'invalid_request', __( 'Error! Your account is not enabled for selling, please contact the admin', 'dokan-lite' ), [ 'status' => 400 ] );;
+            return new WP_Error( 'invalid_request', __( 'Error! Your account is not enabled for selling, please contact the admin', 'dokan-lite' ), [ 'status' => 400 ] );
         }
 
         if ( ! empty( $request['id'] ) ) {
