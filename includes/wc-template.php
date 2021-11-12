@@ -9,7 +9,7 @@
 function dokan_product_seller_info( $item_data, $cart_item ) {
     $vendor = dokan_get_vendor_by_product( $cart_item['product_id'] );
 
-    if ( ! $vendor ) {
+    if ( ! $vendor || ! $vendor->get_id() ) {
         return $item_data;
     }
 
