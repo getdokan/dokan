@@ -90,13 +90,14 @@ class ReviewNotice {
 
         // Check if the notice action key is valid.
         $key = isset( $_POST['key'] ) ? sanitize_text_field( wp_unslash( $_POST['key'] ) ) : '';
-        if ( empty( $key ) || ! in_array( $key, [ 'dokan-notice-postponed', 'dokan-notice-dismiss' ],  true ) ) {
+        if ( empty( $key ) || ! in_array( $key, [ 'dokan-notice-postponed', 'dokan-notice-dismiss' ], true ) ) {
             wp_send_json_error( __( 'Invalid request', 'dokan-lite' ) );
         }
 
         // Dismiss the notice.
         if ( 'dokan-notice-dismiss' === $key ) {
             update_option( 'dokan_review_notice_hidden', 'yes' );
+            delete_option( 'dokan_review_notice_postponed' );
 
             wp_send_json_success();
         }
