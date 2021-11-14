@@ -1,8 +1,8 @@
 <template>
     <div class="dokan-dashboard">
-        <UpgradeBanner v-if="!hasPro"></UpgradeBanner>
-
         <h1>{{ __( 'Dashboard', 'dokan-lite' ) }}</h1>
+
+        <UpgradeBanner v-if="!hasPro"></UpgradeBanner>
 
         <div class="widgets-wrapper">
 

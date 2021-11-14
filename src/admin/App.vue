@@ -1,6 +1,6 @@
 <template>
     <div id="vue-backend-app">
-        <AdminNotice/>
+        <AdminNotice></AdminNotice>
         <router-view />
         <notifications position="bottom right"/>
     </div>

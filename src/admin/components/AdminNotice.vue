@@ -1,46 +1,56 @@
 <template>
-    <div class="dokan-admin-messages notice" v-if="notices && notices.length">
-        <transition-group :name="transitionName">
+    <div class="notice">
+        <div class="dokan-notices" v-if="notices && notices.length">
             <template v-for="(notice, index) in notices">
-                <div class="dokan-admin-message" :key="index" v-show="current_notice === (index + 1)" :class="[notice.type]" @mouseover="stopAutoSlide" @mouseout="startAutoSlide">
-                    <div class="notice-content" :style="notice.title ? '' : 'align-items: center'">
+                <div class="dokan-notice" :key="index" :class="[{ 'active': (index + 1) === current_notice }, notice.type]" @mouseover="stopAutoSlide" @mouseout="startAutoSlide">
+                    <div class="notice-content" :style="! notice.title || ! notice.actions ? 'align-items: center' : ''">
                         <div class="logo-wrap">
                             <div class="logo"></div>
                             <span class="icon" :class="`icon-${notice.type}`"></span>
                         </div>
                         <div class="message">
-                            <h3>{{ notice.title }}</h3>
+                            <h3 v-if="notice.title">{{ notice.title }}</h3>
                             <div v-html="notice.description"></div>
                             <template v-if="notice.actions && notice.actions.length">
-                                <a v-for="action in notice.actions" class="btn" :class="[`btn-${action.type}`, action.class]" :href="action.action">{{ action.text }}</a>
+                                <template v-for="action in notice.actions">
+                                    <a v-if="action.action" class="btn" :class="[`btn-${action.type}`, action.class]" :href="action.action">{{ action.text }}</a>
+                                    <button :disabled="loading" v-else class="btn" :class="[`btn-${action.type}`, action.class]" @click="handleAction(action, index)">{{ loading || task_completed ? button_text : action.text }}</button>
+                                </template>
                             </template>
                         </div>
 
-                        <div class="close-notice" v-if="notice.show_close_button"  @click="hideNotice(notice.hide_on_close, index)">
+                        <a :href="notice.close_url" class="close-notice" v-if="notice.show_close_button && notice.close_url">
                             <span class="dashicons dashicons-no-alt"></span>
-                        </div>
+                        </a>
+                        <button :disabled="loading" class="close-notice" v-if="notice.show_close_button && ! notice.close_url"  @click="hideNotice(notice, index)">
+                            <span class="dashicons dashicons-no-alt"></span>
+                        </button>
                     </div>
                 </div>
             </template>
-        </transition-group>
-        <div class="slide-notice" v-show="notices.length > 1">
-            <span class="dashicons dashicons-arrow-left-alt2 prev" :class="{ active: current_notice > 1 }" @click="prevNotice()"></span>
-            <span class="notice-count" :class="{ active: current_notice > 1 }"><span class="current-notice">{{  current_notice }}</span> of <span class="total-notice" :class="{ active: current_notice < notices.length }">{{ notices.length }}</span></span>
-            <span class="dashicons dashicons-arrow-right-alt2 next" :class="{ active: current_notice < notices.length }" @click="nextNotice()"></span>
+            <div class="slide-notice" v-show="notices.length > 1">
+                <span class="dashicons dashicons-arrow-left-alt2 prev" :class="{ active: current_notice > 1 }" @click="prevNotice()"></span>
+                <span class="notice-count" :class="{ active: current_notice > 1 }"><span class="current-notice">{{  current_notice }}</span> of <span class="total-notice" :class="{ active: current_notice < notices.length }">{{ notices.length }}</span></span>
+                <span class="dashicons dashicons-arrow-right-alt2 next" :class="{ active: current_notice < notices.length }" @click="nextNotice()"></span>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
+import $ from 'jquery';
+
 export default {
     name: "AdminNotice",
 
-    data(){
+    data() {
         return {
-            current_notice: 1,
-            transitionName: 'fade',
             timer: null,
             notices: [],
+            loading: false,
+            button_text: '',
+            current_notice: 1,
+            task_completed: false,
         }
     },
 
@@ -53,89 +63,130 @@ export default {
     },
 
     methods: {
-        fetch(){
-            dokan.api.get('/admin/notices')
-                .done(response => {
-                    this.notices = response
-                        .filter(notice => notice.description)
-                        .sort((firstNotice, secondNotice) => firstNotice.priority - secondNotice.priority);
+        fetch() {
+            dokan.api.get( '/admin/notices' )
+                .done( response => {
+                    this.notices = response.filter( notice => notice.description );
                 });
         },
 
-        slideNotice(n){
+        slideNotice( n ) {
             this.current_notice += n;
-
-            n === 1 ? (this.transitionName = "slide-next") : (this.transitionName = "slide-prev");
 
             let len = this.notices.length;
 
-            if (this.current_notice < 1) {
+            if ( this.current_notice < 1 ) {
                 this.current_notice = len;
             }
 
-            if (this.current_notice > len) {
+            if ( this.current_notice > len ) {
                 this.current_notice = 1;
             }
-
-            // let contentHeight = document.querySelector(`.dokan-admin-message:nth-child(${this.current_notice})`).clientHeight;
-            // let element = document.querySelector('.dokan-admin-messages .slide-notice');
-            // element.style.top = `calc(${contentHeight / 2}% - 30px)`;
-            // element.style.top = `${contentHeight / 2}%`;
-            // element.style.transform = `translate(0, -${contentHeight / 2}%)`;
-            // console.log(`calc(${contentHeight / 2}% - 25px)`);
         },
 
-        nextNotice(){
+        nextNotice() {
             this.stopAutoSlide();
-            this.slideNotice(1);
+            this.slideNotice( 1 );
         },
 
-        prevNotice(){
+        prevNotice() {
             this.stopAutoSlide();
-            this.slideNotice(-1);
+            this.slideNotice( -1 );
         },
 
-        startAutoSlide(){
-            // this.timer = setInterval(() => {
-            //     this.slideNotice(1);
-            // }, 5000)
+        startAutoSlide() {
+            this.timer = setInterval(() => {
+                this.slideNotice(1);
+            }, 5000)
         },
 
         stopAutoSlide(){
-            clearTimeout(this.timer);
+            clearTimeout( this.timer );
             this.timer = null;
         },
 
-        hideNotice(hide_on_close, index){
-            if (hide_on_close) {
-                this.notices.splice(index, 1);
+        hideNotice( notice, index ){
+            $.ajax( {
+                url: dokan.ajaxurl,
+                method: 'post',
+                dataType: 'json',
+                data: notice.ajax_data,
+            } ).always( () => {
+                this.loading = false;
+            } ).done( () => {
+                this.notices.splice( index, 1 );
                 this.current_notice = 1;
+            } );
+        },
+
+        handleAction( action, index ) {
+            if ( action.confirm_message ) {
+                this.$swal( {
+                    title: this.__( 'Are you sure?', 'dokan-lite' ),
+                    type: 'warning',
+                    html: action.confirm_message,
+                    showCancelButton: true,
+                    confirmButtonText: action.text,
+                    cancelButtonText: this.__( 'Cancel', 'dokan-lite' ),
+                }).then( ( response ) => {
+                    if ( response.value ) {
+                        this.handleRequest( action, index );
+                    }
+                } );
+            } else {
+                this.handleRequest( action, index );
             }
+        },
+
+        handleRequest( action, index ) {
+            this.loading = true;
+            this.button_text = action.loading_text ? action.loading_text : this.__( 'Loading...', 'dokan-lite' );
+
+            $.ajax( {
+                url: dokan.ajaxurl,
+                method: 'post',
+                dataType: 'json',
+                data: action.ajax_data,
+            } ).always( () => {
+                this.loading = false;
+            } ).done( () => {
+                this.button_text = action.completed_text ? action.completed_text : action.text;
+                this.task_completed = true;
+
+                if ( action.reload ) {
+                    window.location.reload();
+                } else {
+                    this.notices.splice( index, 1 );
+                    this.current_notice = 1;
+                }
+            } );
         }
     }
 }
 </script>
 
 <style lang="less" scoped>
-.dokan-admin-messages {
+.notice {
+    border-width: 0;
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.dokan-notices {
     position: relative;
-    overflow: hidden;
-    width: 100%;
-    min-height: 150px;
     box-sizing: border-box;
 
-    &.notice {
-        border-width: 0;
-        padding: 0;
-        background: transparent;
-        box-shadow: none;
-    }
+    .dokan-notice {
+        display: none;
+        transition: .2s;
+        animation-duration: 1s;
+        animation-fill-mode: both;
+        animation-name: fadeIn;
 
-    .dokan-admin-message {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
+        &.active {
+            display: block;
+        }
 
         &.success {
             border-left: 2px solid #82b642;
@@ -159,7 +210,7 @@ export default {
 
         .notice-content {
             display: flex;
-            padding: 23px 27px;
+            padding: 20px 25px;
             border:  1px solid #dfe2e7;
             border-radius: 0 5px 5px 0;
             background: #fff;
@@ -224,10 +275,10 @@ export default {
         }
 
         .message {
-            margin: 0 108px 0 23px;
+            margin: 0 110px 0 23px;
 
             h3 {
-                margin: 0;
+                margin: 0 0 10px;
                 font-weight: bold;
                 font-size: 18px;
                 font-family: Roboto, sans-serif;
@@ -238,11 +289,6 @@ export default {
                 font-weight: 400;
                 font-size: 13px;
                 font-family: "SF Pro Text", sans-serif;
-                margin: 15px 0;
-            }
-
-            a {
-                text-decoration: none;
             }
 
             .btn {
@@ -250,6 +296,7 @@ export default {
                 font-weight: 300;
                 padding: 8px 15px;
                 margin-right: 15px;
+                margin-top: 10px;
                 border-radius: 3px;
                 border: 1px solid #00769d;
                 cursor: pointer;
@@ -257,6 +304,10 @@ export default {
                 text-decoration: none;
                 font-family: "SF Pro Text", sans-serif;
                 display: inline-block;
+
+                &:disabled {
+                    opacity: .7;
+                }
             }
 
             .btn-primary {
@@ -292,6 +343,9 @@ export default {
             position: absolute;
             top: 10px;
             right: 13px;
+            border: 0;
+            background: transparent;
+            text-decoration: none;
 
             span {
                 font-size: 15px;
@@ -336,44 +390,24 @@ export default {
     }
 }
 
-.slide-leave-active,
-.slide-enter-active {
-    transition: 1s;
+@media only screen and (max-width: 576px) {
+    .dokan-notices .dokan-notice .message {
+        margin: 0 0 0 23px;
+    }
+
+    .dokan-notices .slide-notice {
+        bottom: 6px;
+        top: unset;
+    }
 }
 
-.slide-enter {
-    opacity: .3;
-    transform: translateX(100%);
+@keyframes fadeIn {
+    from {
+        opacity: 0.3;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
-.slide-leave-to {
-    opacity: 0;
-    transform: translateX(-100%);
-}
-
-.slide-next-enter-active,
-.slide-next-leave-active {
-    transition: transform 0.5s ease-in-out;
-}
-
-.slide-next-enter {
-    transform: translate(100%);
-}
-
-.slide-next-leave-to {
-    transform: translate(-100%);
-}
-
-.slide-prev-enter-active,
-.slide-prev-leave-active {
-    transition: transform 0.5s ease-in-out;
-}
-
-.slide-prev-enter {
-    transform: translate(-100%);
-}
-
-.slide-prev-leave-to {
-    transform: translate(100%);
-}
 </style>

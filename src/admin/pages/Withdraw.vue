@@ -1,9 +1,8 @@
 <template>
     <div>
-        <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
-
         <div class="withdraw-requests">
             <h1>{{ __( 'Withdraw Requests', 'dokan-lite' ) }}</h1>
+            <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
 
             <modal
                 :title="__( 'Update Note', 'dokan-lite' )"

@@ -5,60 +5,75 @@
     </div>
 
     <div class="dokan-admin-header__menu">
-        <a
-            href="https://www.facebook.com/groups/dokanMultivendor"
-            class="header-link"
-            target="_blank"
-            rel="noopener"
-            title="<?php esc_attr_e( 'Join our Facebook community group', 'dokan-lite' ); ?>"
-        >
-            <div class="dashicons dashicons-facebook"></div>
-            <span class="title"><?php echo esc_html_e( 'Community', 'dokan-lite' ); ?></span>
-        </a>
-
-        <a
-            href="https://wedevs.com/docs/dokan/getting-started/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite"
-            class="header-link"
-            target="_blank"
-            rel="noopener"
-            title="<?php esc_attr_e( 'View the plugin documentation', 'dokan-lite' ); ?>"
-        >
-            <span class="dashicons dashicons-welcome-learn-more"></span>
-            <span class="title"><?php echo esc_html_e( 'Docs', 'dokan-lite' ); ?></span>
-        </a>
-
-        <a
-            href="https://wedevs.com/account/tickets/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite"
-            class="header-link"
-            rel="noopener"
-            target="_blank"
-            title="<?php esc_attr_e( 'Connect with your support team', 'dokan-lite' ); ?>"
-        >
-            <span class="dashicons dashicons-sos"></span>
-            <span class="title"><?php echo esc_html_e( 'Support', 'dokan-lite' ); ?></span>
-        </a>
-
-        <?php if ( ! dokan()->is_pro_exists() ) { ?>
-            <a
-                href="https://wedevs.com/dokan-lite-upgrade-to-pro/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite"
-                class="header-link header-link--cta"
-                rel="noopener"
-                target="_blank"
-                title="<?php esc_attr_e( 'Upgrade to Dokan Pro', 'dokan-lite' ); ?>"
-            >
-                <?php echo esc_html_e( 'Upgrade to Pro', 'dokan-lite' ); ?>
-            </a>
-        <?php } ?>
-
-        <?php if ( dokan()->is_pro_exists() ) { ?>
-            <a
-                href="<?php echo esc_url( admin_url( 'admin.php?page=whats-new-dokan' ) ); ?>"
-                class="header-link header-link--cta"
-                rel="noopener"
-                title="<?php esc_attr_e( 'What\'s New', 'dokan-lite' ); ?>"
-            >
-                <?php echo esc_html_e( 'What\'s New', 'dokan-lite' ); ?>
-            </a>
-        <?php } ?>
+        <div class="menu-item">
+            <div class="item">
+                <div class="icon-question-mark"></div>
+                <div class="dropdown">
+                    <h3><?php esc_html_e( 'Get Help', 'dokan-lite' ); ?></h3>
+                    <div class="list-item">
+                        <a href="#">
+                            <div class="icon">
+                                <div class="icon-whats-new"></div>
+                            </div>
+                             <?php esc_html_e( 'What’s New', 'dokan-lite' ); ?>
+                        </a>
+                        <a
+                            href="https://wedevs.com/account/tickets/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite"
+                            title="<?php esc_attr_e( 'Connect with your support team', 'dokan-lite' ); ?>"
+                            target="_blank"
+                        >
+                            <div class="icon">
+                                <div class="icon-get-support"></div>
+                            </div>
+                            <?php esc_html_e( 'Get Support', 'dokan-lite' ); ?>
+                        </a>
+                        <a
+                            href="https://www.facebook.com/groups/dokanMultivendor"
+                            title="<?php esc_attr_e( 'Join our Facebook community group', 'dokan-lite' ); ?>"
+                            target="_blank"
+                        >
+                            <div class="icon">
+                                <div class="icon-community"></div>
+                            </div>
+                            <?php esc_html_e( 'Community', 'dokan-lite' ); ?>
+                        </a>
+                        <a
+                            href="https://wedevs.com/docs/dokan/getting-started/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite"
+                            title="<?php esc_attr_e( 'View the plugin documentation', 'dokan-lite' ); ?>"
+                            target="_blank"
+                        >
+                            <div class="icon">
+                                <div class="icon-documentation"></div>
+                            </div>
+                            <?php esc_html_e( 'Documentation', 'dokan-lite' ); ?>
+                        </a>
+                        <a href="#">
+                            <div class="icon">
+                                <div class="icon-faq"></div>
+                            </div>
+                            <?php esc_html_e( 'FAQ', 'dokan-lite' ); ?>
+                        </a>
+                        <a href="#">
+                            <div class="icon">
+                                <div class="icon-basic"></div>
+                            </div>
+                            <?php esc_html_e( 'Basic & Fundamental', 'dokan-lite' ); ?>
+                        </a>
+                        <a href="#">
+                            <div class="icon">
+                                <div class="icon-request-feature"></div>
+                            </div>
+                            <?php esc_html_e( 'Request a Feature', 'dokan-lite' ); ?>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--<div class="menu-item">
+            <div class="item">
+                <span class="notification-count">4</span>
+                <div class="icon-notification-bell"></div>
+            </div>
+        </div>-->
     </div>
 </div>

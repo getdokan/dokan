@@ -17,6 +17,7 @@ class Hooks {
      */
     public function __construct() {
         // Load all actions
+        add_action( 'admin_notices', [ $this, 'admin_notices' ] );
         add_action( 'manage_shop_order_posts_custom_column', [ $this, 'shop_order_custom_columns' ], 11 );
         add_action( 'admin_footer-edit.php', [ $this, 'admin_shop_order_scripts' ] );
         add_action( 'wp_trash_post', [ $this, 'admin_on_trash_order' ] );
@@ -33,6 +34,23 @@ class Hooks {
         add_filter( 'post_class', [ $this, 'admin_shop_order_row_classes' ], 10, 2 );
         add_filter( 'post_types_to_delete_with_user', [ $this, 'add_wc_post_types_to_delete_user' ], 10, 2 );
         add_filter( 'dokan_save_settings_value', [ $this, 'update_pages' ], 10, 2 );
+    }
+
+    /**
+     * Display admin notices
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return void
+     */
+    public function admin_notices() {
+        $notices = dokan_get_admin_notices();
+
+        if ( empty( $notices ) ) {
+            return;
+        }
+
+        dokan_get_template( 'admin-notices.php', [ 'notices' => $notices ] );
     }
 
     /**

@@ -1,107 +1,72 @@
+<?php
+
+$description_kses = [
+    'strong' => [
+        'class' => [],
+    ],
+    'a' => [
+        'href'    => [],
+    ],
+];
+
+?>
+
 <div class="dokan-admin-notices notice">
-    <div class="dokan-admin-notice warning active">
-        <div class="notice-content">
-            <div class="logo-wrap">
-                <div class="logo"></div>
-                <span class="icon icon-warning"></span>
-            </div>
-            <div class="message">
-                <h3><?php esc_html_e( 'Please be warned !', 'dokan-lite' ); ?></h3>
-                <p><?php esc_html_e( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididun ut labore et dolore magna aliqua. ja', 'dokan-lite' ); ?></p>
-                <a class="btn btn-primary" href="<?php echo admin_url( 'admin.php?page=dokan_updates' ); ?>"><?php esc_html_e( 'Update Now', 'dokan-lite' ); ?></a>
-                <a class="btn btn-secondary" href="<?php echo admin_url( 'admin.php?page=dokan_updates' ); ?>"><?php esc_html_e( 'Learn More', 'dokan-lite' ); ?></a>
-            </div>
+    <?php foreach ( $notices as $key => $notice ) : ?>
+        <div class="dokan-admin-notice <?php echo esc_attr( $notice['type'] ); ?> <?php echo 0 === $key ? 'active' : ''; ?>">
+            <div class="notice-content" style="<?php echo empty( $notice['title'] ) || empty( $notice['actions'] ) ? 'align-items: center' : ''; ?>">
+                <div class="logo-wrap">
+                    <div class="logo"></div>
+                    <span class="icon icon-<?php echo esc_attr( $notice['type'] ); ?>"></span>
+                </div>
+                <div class="message">
+                    <?php if ( ! empty( $notice['title'] ) ) : ?>
+                        <h3><?php echo esc_html( $notice['title'] ); ?></h3>
+                    <?php endif; ?>
+                    <div><?php echo wp_kses( $notice['description'], $description_kses ); ?></div>
+                    <?php if ( ! empty( $notice['actions'] ) ) : ?>
+                        <?php foreach( $notice['actions'] as $action ) : ?>
+                            <?php if ( ! empty( $action['action'] ) ) : ?>
+                                <a class="btn btn-<?php echo esc_attr( $action['type'] ); ?> <?php echo ! empty( $action['class'] ) ? esc_attr( $action['class'] ) : ''; ?>" href="<?php echo esc_url( $action['action'] ); ?>"><?php echo esc_html( $action['text'] ); ?></a>
+                            <?php else : ?>
+                                <button class="btn btn-<?php echo esc_attr( $action['type'] ); ?> <?php echo ! empty( $action['class'] ) ? esc_attr( $action['class'] ) : ''; ?>" data-ajax-data="<?php echo ! empty( $action['ajax_data'] ) ? esc_attr( json_encode( $action['ajax_data'] ) ) : ''; ?>" data-confirm="<?php echo ! empty( $action['confirm_message'] ) ? esc_attr( $action['confirm_message'] ) : ''; ?>" data-loading="<?php echo ! empty( $action['loading_text'] ) ? esc_attr( $action['loading_text'] ) : __('Loading...', 'dokan-lite'); ?>" data-completed="<?php echo ! empty( $action['completed_text'] ) ? esc_attr( $action['completed_text'] ) : $action['text']; ?>" data-reload="<?php echo ! empty( $action['reload'] ) ? esc_attr( $action['reload'] ) : false; ?>"><?php echo esc_html( $action['text'] ); ?></button>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
 
-            <div class="close-notice">
-                <span class="dashicons dashicons-no-alt"></span>
+                <?php if ( isset( $notice['show_close_button'] ) && $notice['show_close_button'] ) : ?>
+                    <?php if ( ! empty( $notice['close_url'] ) ) : ?>
+                        <a class="notice-close" href="<?php echo esc_attr( $notice['close_url'] ); ?>">
+                            <span class="dashicons dashicons-no-alt"></span>
+                        </a>
+                    <?php else : ?>
+                        <button class="close-notice" data-ajax-data="<?php echo ! empty( $notice['ajax_data'] ) ? esc_attr( json_encode( $notice['ajax_data'] ) ) : ''; ?>">
+                            <span class="dashicons dashicons-no-alt"></span>
+                        </button>
+                    <?php endif; ?>
+                <?php endif; ?>
             </div>
         </div>
-    </div>
-    <div class="dokan-admin-notice info">
-        <div class="notice-content">
-            <div class="logo-wrap">
-                <div class="logo"></div>
-                <span class="icon icon-info"></span>
-            </div>
-            <div class="message">
-                <h3><?php esc_html_e( 'Be informed', 'dokan-lite' ); ?></h3>
-                <p><?php esc_html_e( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididun ut labore et dolore magna aliqua. ja', 'dokan-lite' ); ?></p>
-                <a class="btn btn-primary" href="<?php echo admin_url( 'admin.php?page=dokan_updates' ); ?>"><?php esc_html_e( 'Update Now', 'dokan-lite' ); ?></a>
-                <a class="btn btn-secondary" href="<?php echo admin_url( 'admin.php?page=dokan_updates' ); ?>"><?php esc_html_e( 'Learn More', 'dokan-lite' ); ?></a>
-            </div>
-
-            <div class="close-notice">
-                <span class="dashicons dashicons-no-alt"></span>
-            </div>
+    <?php endforeach; ?>
+    <?php if ( count( $notices ) > 1 ) : ?>
+        <div class="slide-notice">
+            <span class="dashicons dashicons-arrow-left-alt2 prev"></span>
+            <span class="notice-count"><span class="current-notice">1</span> <?php esc_html_e( 'of', 'dokan-lite' ); ?> <span class="total-notice active"></span></span>
+            <span class="dashicons dashicons-arrow-right-alt2 active next"></span>
         </div>
-    </div>
-    <div class="dokan-admin-notice success">
-        <div class="notice-content">
-            <div class="logo-wrap">
-                <div class="logo"></div>
-                <span class="icon icon-success"></span>
-            </div>
-            <div class="message">
-                <h3><?php esc_html_e( 'Successful', 'dokan-lite' ); ?></h3>
-                <p><?php esc_html_e( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididun ut labore et dolore magna aliqua. ja', 'dokan-lite' ); ?></p>
-                <a class="btn btn-primary" href="<?php echo admin_url( 'admin.php?page=dokan_updates' ); ?>"><?php esc_html_e( 'Update Now', 'dokan-lite' ); ?></a>
-                <a class="btn btn-secondary" href="<?php echo admin_url( 'admin.php?page=dokan_updates' ); ?>"><?php esc_html_e( 'Learn More', 'dokan-lite' ); ?></a>
-            </div>
-
-            <div class="close-notice">
-                <span class="dashicons dashicons-no-alt"></span>
-            </div>
-        </div>
-    </div>
-    <div class="dokan-admin-notice promotion">
-        <div class="notice-content">
-            <div class="logo-wrap">
-                <div class="logo"></div>
-                <span class="icon icon-promotion"></span>
-            </div>
-            <div class="message">
-                <h3><?php esc_html_e( '35% Discount is wating for you !', 'dokan-lite' ); ?></h3>
-                <p><?php esc_html_e( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididun ut labore et dolore magna aliqua. ja', 'dokan-lite' ); ?></p>
-                <a class="btn btn-primary" href="<?php echo admin_url( 'admin.php?page=dokan_updates' ); ?>"><?php esc_html_e( 'Update Now', 'dokan-lite' ); ?></a>
-                <a class="btn btn-secondary" href="<?php echo admin_url( 'admin.php?page=dokan_updates' ); ?>"><?php esc_html_e( 'Learn More', 'dokan-lite' ); ?></a>
-            </div>
-
-            <div class="close-notice">
-                <span class="dashicons dashicons-no-alt"></span>
-            </div>
-        </div>
-    </div>
-    <div class="dokan-admin-notice">
-        <div class="notice-content" style="align-items: center">
-            <div class="logo-wrap">
-                <div class="logo"></div>
-                <div class="icon icon-alert"></div>
-            </div>
-            <div class="message">
-                <p><?php esc_html_e( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididun ut labore et dolore.', 'dokan-lite' ); ?><a href="<?php echo admin_url( 'admin.php?page=dokan_updates' ); ?>"> <?php esc_html_e( 'Chick here', 'dokan-lite' ); ?></a></p>
-            </div>
-
-            <div class="close-notice">
-                <span class="dashicons dashicons-no-alt"></span>
-            </div>
-        </div>
-    </div>
-    <div class="slide-notice">
-        <span class="dashicons dashicons-arrow-left-alt2 prev"></span>
-        <span class="notice-count"><span class="current-notice">1</span> of <span class="total-notice active"></span></span>
-        <span class="dashicons dashicons-arrow-right-alt2 active next"></span>
-    </div>
+    <?php endif; ?>
 </div>
 <style>
     .dokan-admin-notices {
         position: relative;
-        overflow: hidden;
     }
 
     .dokan-admin-notices.notice {
         border-width: 0;
         padding: 0;
         background: transparent;
+        box-shadow: none;
     }
 
     .dokan-admin-notices .dokan-admin-notice {
@@ -138,7 +103,7 @@
 
     .dokan-admin-notices .dokan-admin-notice .notice-content {
         display: flex;
-        padding: 23px 27px;
+        padding: 20px 25px;
         border: 1px solid #dfe2e7;
         border-radius: 0 5px 5px 0;
         background: #fff;
@@ -204,22 +169,21 @@
     }
 
     .dokan-admin-notices .dokan-admin-notice .message {
-        margin: 0 23px;
+        margin: 0 110px 0 23px;
     }
 
     .dokan-admin-notices .dokan-admin-notice .message h3 {
-        margin: 0;
         font-weight: bold;
         font-size: 18px;
         font-family: Roboto, sans-serif;
+        margin: 0 0 10px;
     }
 
-    .dokan-admin-notices .dokan-admin-notice .message p {
+    .dokan-admin-notices .dokan-admin-notice .message div {
         color: #4b4b4b;
         font-weight: 400;
         font-size: 13px;
         font-family: "SF Pro Text", sans-serif;
-        margin: 15px 0 !important;
     }
 
     .dokan-admin-notices .dokan-admin-notice .message .btn {
@@ -227,6 +191,7 @@
         font-weight: 300;
         padding: 8px 15px;
         margin-right: 15px;
+        margin-top: 10px;
         border-radius: 3px;
         border: 1px solid #00769d;
         cursor: pointer;
@@ -234,6 +199,10 @@
         text-decoration: none;
         font-family: "SF Pro Text", sans-serif;
         display: inline-block;
+    }
+
+    .dokan-admin-notices .dokan-admin-notice .message .btn:disabled {
+        opacity: .7;
     }
 
     .dokan-admin-notices .dokan-admin-notice .message .btn-primary {
@@ -264,13 +233,18 @@
         text-decoration: none;
     }
 
-    .dokan-admin-notices .dokan-admin-notice .close-notice {
+    .dokan-admin-notices .dokan-admin-notice .close-notice,
+    .dokan-admin-notices .dokan-admin-notice .notice-close {
         position: absolute;
         top: 10px;
         right: 13px;
+        border: 0;
+        background: transparent;
+        text-decoration: none;
     }
 
-    .dokan-admin-notices .dokan-admin-notice .close-notice span {
+    .dokan-admin-notices .dokan-admin-notice .close-notice span,
+    .dokan-admin-notices .dokan-admin-notice .notice-close span {
         font-size: 15px;
         display: flex;
         align-items: center;
@@ -284,7 +258,8 @@
         height: 20px;
     }
 
-    .dokan-admin-notices .dokan-admin-notice .close-notice span:hover {
+    .dokan-admin-notices .dokan-admin-notice .close-notice span:hover,
+    .dokan-admin-notices .dokan-admin-notice .notice-close span:hover {
         color: #f16982;
         border-color: #f16982;
     }
@@ -310,22 +285,38 @@
         cursor: pointer;
     }
 
+    @media only screen and (max-width: 576px) {
+        .dokan-admin-notices .dokan-admin-notice .message {
+            margin: 0 0 0 23px;
+        }
+
+        .dokan-admin-notices .slide-notice {
+            bottom: 6px;
+            top: unset;
+        }
+    }
+
+    @font-face {
+        font-family: "SF Pro Text";
+        src: url(<?php echo DOKAN_PLUGIN_ASSEST . '/font/SF-Pro-Text-Regular.otf'; ?>) format('opentype');
+        font-weight: 400;
+    }
 
     @keyframes fadeIn {
         from {
             opacity: 0.3;
-            /*transform: translateX(10%)*/
         }
         to {
             opacity: 1;
-            /*transform: translateX(0%)*/
         }
     }
 </style>
 <script>
-    jQuery(function($) {
-        var currentSlide = 1;
-        var totalNotice = $(".dokan-admin-notice").length;
+    jQuery( document ).ready( function ( $ ) {
+        var currentSlide = 1,
+            timer = null,
+            totalNotice = $(".dokan-admin-notice").length;
+
         $('.dokan-admin-notices .total-notice').text(totalNotice);
 
         function plusNotices(n) {
@@ -341,14 +332,20 @@
                 currentSlide = totalNotice
             }
 
+            if (currentSlide < totalNotice) {
+                $('.dokan-admin-notices .total-notice, .dokan-admin-notices .next').addClass('active');
+            }
+
             if (currentSlide === totalNotice) {
                 $('.dokan-admin-notices .total-notice, .dokan-admin-notices .next').removeClass('active');
-                $('.dokan-admin-notices .current-notice, .dokan-admin-notices .prev').addClass('active');
             }
 
             if (currentSlide === 1) {
-                $('.dokan-admin-notices .total-notice, .dokan-admin-notices .next').addClass('active');
                 $('.dokan-admin-notices .current-notice, .dokan-admin-notices .prev').removeClass('active');
+            }
+
+            if (currentSlide > 1) {
+                $('.dokan-admin-notices .current-notice, .dokan-admin-notices .prev').addClass('active');
             }
 
             $('.dokan-admin-notices .current-notice').text(currentSlide);
@@ -356,12 +353,98 @@
             $('.dokan-admin-notice:nth-child(' + currentSlide + ')').addClass('active');
         }
 
+
+        $('.dokan-admin-notices').mouseover(function(){
+            stopAutoSlide();
+        }).mouseleave(function(){
+            startAutoSlide();
+        });
+
+        startAutoSlide();
+
+        function startAutoSlide() {
+            timer = setInterval(() => {
+                plusNotices(1);
+            }, 5000)
+        }
+
+        function stopAutoSlide() {
+            clearTimeout(timer);
+            timer = null;
+        }
+
         $('.dokan-admin-notices .next').click(function () {
+            stopAutoSlide();
             plusNotices(1);
         });
 
         $('.dokan-admin-notices .prev').click(function () {
+            stopAutoSlide();
             plusNotices(-1);
         });
+
+        $( 'body' ).on( 'click', '.dokan-admin-notices .close-notice', function ( e ) {
+            e.preventDefault();
+
+            var self = $( this ),
+                data = self.data( 'ajax-data' );
+
+            self.attr( 'disabled', true );
+
+            $.post( ajaxurl, data, function ( response ) {
+                if ( response.success ) {
+                    plusNotices(1);
+                    self.closest('.dokan-admin-notice.active').remove();
+                    $('.dokan-admin-notices .total-notice').text(totalNotice - 1);
+                    $('.dokan-admin-notices .current-notice').text(currentSlide - 1);
+                }
+            } );
+        } );
+
+        $( 'body' ).on( 'click', '.dokan-admin-notices .message button', function ( e ) {
+            e.preventDefault();
+            var self = $( this );
+
+            if ( self.data('confirm') ) {
+                Swal.fire({
+                    title: '<?php echo __("Are you sure?", "dokan-lite") ?>',
+                    icon: 'warning',
+                    html: self.data('confirm'),
+                    showCancelButton: true,
+                    confirmButtonText: self.text(),
+                }).then((response) => {
+                    if (response.isConfirmed) {
+                        handleRequest( self );
+                    }
+                });
+            } else {
+                handleRequest( self );
+            }
+        } );
+
+        function handleRequest(self) {
+            var data = self.data('ajax-data');
+
+            self.attr( 'disabled', true );
+            self.text( self.data('loading') );
+
+            $.ajax( {
+                url: ajaxurl,
+                method: 'post',
+                dataType: 'json',
+                data: data,
+            } ).done( () => {
+                self.text( self.data('completed') );
+
+                if (self.data('reload')) {
+                    window.location.reload();
+                } else {
+                    plusNotices(1);
+                    self.closest('.dokan-admin-notice.active').remove();
+                    $('.dokan-admin-notices .total-notice').text(totalNotice - 1);
+                    $('.dokan-admin-notices .current-notice').text(currentSlide - 1);
+                }
+            } );
+        }
     });
 </script>

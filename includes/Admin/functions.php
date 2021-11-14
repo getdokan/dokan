@@ -632,6 +632,48 @@ function dokan_admin_report_by_seller( $chosen_seller_id ) {
     return $data;
 }
 
+/**
+ * Dokan specific notices
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @return array
+ */
+function dokan_get_notices() {
+    $notices = apply_filters( 'dokan_notices', [] );
+
+    uasort( $notices, 'dokan_sort_by_priority' );
+
+    return array_values( $notices );
+}
+
+/**
+ * Dokan global notices
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @return array
+ */
 function dokan_get_admin_notices() {
-    return apply_filters( 'dokan_admin_notices', [] );
+    $notices = apply_filters( 'dokan_admin_notices', [] );
+
+    uasort( $notices, 'dokan_sort_by_priority' );
+
+    return array_values( $notices );
+}
+
+/**
+ * Sort all promotions depends on priority key
+ *
+ * @param array $a
+ * @param array $b
+ *
+ * @return integer
+ */
+function dokan_sort_by_priority( $a, $b ) {
+    if ( isset( $a['priority'] ) && isset( $b['priority'] ) ) {
+        return $a['priority'] - $b['priority'];
+    }
+
+    return -1;
 }

@@ -22,7 +22,7 @@ class AdminNoticeController extends DokanRESTAdminController {
     protected $base = '';
 
     /**
-     * Register all routes releated with stores
+     * Register all routes related with stores
      *
      * @return void
      */
@@ -46,7 +46,7 @@ class AdminNoticeController extends DokanRESTAdminController {
     public function get_notices() {
         require_once DOKAN_INC_DIR . '/Admin/functions.php';
 
-        $notices = dokan_get_admin_notices();
+        $notices = dokan_get_notices();
 
         return rest_ensure_response( $notices );
     }

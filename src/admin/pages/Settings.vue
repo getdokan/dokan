@@ -1,9 +1,9 @@
 <template>
     <div>
-        <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
-
         <div class="dokan-settings">
             <h2 style="margin-bottom: 15px;">{{ __( 'Settings', 'dokan-lite' ) }}</h2>
+
+            <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
 
             <div id="setting-message_updated" class="settings-error notice is-dismissible" :class="{ 'updated' : isUpdated, 'error' : !isUpdated }" v-if="isSaved">
                 <p><strong v-html="message"></strong></p>

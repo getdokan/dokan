@@ -3,7 +3,7 @@
  * Plugin Name: Dokan
  * Plugin URI: https://wordpress.org/plugins/dokan-lite/
  * Description: An e-commerce marketplace plugin for WordPress. Powered by WooCommerce and weDevs.
- * Version: 3.3.0
+ * Version: 3.2.15
  * Author: weDevs
  * Author URI: https://wedevs.com/
  * Text Domain: dokan-lite
@@ -56,7 +56,7 @@ final class WeDevs_Dokan {
      *
      * @var string
      */
-    public $version = '3.3.0';
+    public $version = '3.2.15';
 
     /**
      * Instance of self
@@ -106,24 +106,12 @@ final class WeDevs_Dokan {
 
         add_action( 'woocommerce_loaded', [ $this, 'init_plugin' ] );
         add_action( 'woocommerce_flush_rewrite_rules', [ $this, 'flush_rewrite_rules' ] );
-        add_action( 'admin_notices', [ $this, 'render_missing_woocommerce_notice' ] );
-        add_action( 'admin_notices', [ $this, 'render_run_admin_setup_wizard_notice' ] );
-        add_action( 'admin_notices', [ $this, 'admin_notice_banner' ] );
+        add_filter( 'admin_notices', [ $this, 'render_missing_woocommerce_notice' ] );
+        add_filter( 'dokan_admin_notices', [ $this, 'render_run_admin_setup_wizard_notice' ] );
 
         $this->init_appsero_tracker();
 
         add_action( 'plugins_loaded', [ $this, 'woocommerce_not_loaded' ], 11 );
-    }
-
-    /**
-     * Display admin notices
-     *
-     * @since DOKAN_LITE_SINCE
-     *
-     * @return void
-     */
-    public function admin_notice_banner() {
-        dokan_get_template( 'admin-notices.php' );
     }
 
     /**
@@ -363,7 +351,6 @@ final class WeDevs_Dokan {
             new \WeDevs\Dokan\Admin\Settings();
             new \WeDevs\Dokan\Admin\UserProfile();
             new \WeDevs\Dokan\Admin\SetupWizard();
-            new \WeDevs\Dokan\Admin\Promotion();
             new \WeDevs\Dokan\Admin\LimitedTimePromotion();
         } else {
             new \WeDevs\Dokan\Vendor\StoreListsFilter();
@@ -509,9 +496,9 @@ final class WeDevs_Dokan {
         if ( ( ! $has_woocommerce || ! $woocommerce_installed ) && current_user_can( 'activate_plugins' ) ) {
             dokan_get_template(
                 'admin-notice-dependencies.php', [
-					'has_woocommerce' => $has_woocommerce,
-					'woocommerce_installed' => $woocommerce_installed,
-				]
+                    'has_woocommerce' => $has_woocommerce,
+                    'woocommerce_installed' => $woocommerce_installed,
+                ]
             );
         }
     }
@@ -521,13 +508,15 @@ final class WeDevs_Dokan {
      *
      * @since 2.9.27
      *
-     * @return void
+     * @param array $notices
+     *
+     * @return array
      */
-    public function render_run_admin_setup_wizard_notice() {
+    public function render_run_admin_setup_wizard_notice( $notices ) {
         $ran_wizard = get_option( 'dokan_admin_setup_wizard_ready', false );
 
         if ( $ran_wizard ) {
-            return;
+            return $notices;
         }
 
         // If vendor found, don't show the setup wizard as admin already ran the `setup wizard`
@@ -535,12 +524,27 @@ final class WeDevs_Dokan {
         $vendor_count = dokan_get_seller_status_count();
 
         if ( ! empty( $vendor_count['active'] ) ) {
-            return update_option( 'dokan_admin_setup_wizard_ready', true );
+            update_option( 'dokan_admin_setup_wizard_ready', true );
+            return $notices;
         }
 
         require_once DOKAN_INC_DIR . '/functions.php';
 
-        dokan_get_template( 'admin-setup-wizard/run-wizard-notice.php' );
+        $notices[] = [
+            'type'              => 'success',
+            'description'       => __( '<strong>Welcome to Dokan</strong> &#8211; You&lsquo;re almost ready to start selling :)', 'dokan-lite' ),
+            'show_close_button' => false,
+            'priority'          => 1,
+            'actions'           => [
+                [
+                    'type'   => 'primary',
+                    'text'   => __( 'Run the Setup Wizard', 'dokan-lite' ),
+                    'action' => admin_url( 'admin.php?page=dokan-setup' ),
+                ],
+            ],
+        ];
+
+        return $notices;
     }
 
     /**

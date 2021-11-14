@@ -1,7 +1,8 @@
 <template>
     <div class="dokan-help-page">
-        <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
         <h1>{{ __( 'Help', 'dokan-lite' ) }}</h1>
+
+        <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
 
         <div class="section-wrapper" v-if="docs !== null">
             <postbox v-for="(section, index) in docs" :title="section.title" :key="index">
