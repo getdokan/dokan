@@ -382,9 +382,8 @@ function dokan_count_comments( $post_type, $user_id ) {
 function dokan_author_pageviews( $seller_id ) {
     global $wpdb;
 
-    $cache_group = 'page_view';
-    $cache_key   = 'pageview_' . $seller_id;
-    $pageview    = Cache::get( $cache_key, $cache_group );
+    $cache_key   = "pageview_{$seller_id}";
+    $pageview    = Cache::get( $cache_key );
 
     if ( false === $pageview ) {
         $count = $wpdb->get_row(
