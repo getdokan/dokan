@@ -190,29 +190,27 @@ class Hooks {
      *
      * @since 2.8.6
      *
-     * @return string
+     * @return void
      */
     public function bulk_product_status_change() {
         if ( ! current_user_can( 'dokan_delete_product' ) ) {
             return;
         }
 
-        $post_data = wp_unslash( $_POST );
-
-        if ( ! isset( $post_data['security'] ) || ! wp_verify_nonce( sanitize_key( $post_data['security'] ), 'bulk_product_status_change' ) ) {
+        if ( ! isset( $_POST['security'] ) || ! wp_verify_nonce( sanitize_key( $_POST['security'] ), 'bulk_product_status_change' ) ) {
             return;
         }
-        if ( ! isset( $post_data['status'] ) || ! isset( $post_data['bulk_products'] ) ) {
+        if ( ! isset( $_POST['status'] ) || ! isset( $_POST['bulk_products'] ) ) {
             return;
         }
 
-        $status   = $post_data['status'];
-        $products = $post_data['bulk_products'];
-
+        $status = sanitize_text_field( wp_unslash( $_POST['status'] ) );
         // -1 means bluk action option value
-        if ( $status === '-1' ) {
+        if ( '-1' === $status ) {
             return;
         }
+
+        $products = array_map( 'absint', wp_unslash( $_POST['bulk_products'] ) );
 
         do_action( 'dokan_bulk_product_status_change', $status, $products );
     }

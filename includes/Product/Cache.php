@@ -16,11 +16,11 @@ use WeDevs\Dokan\Cache as DokanCache;
 class Cache {
 
     public function __construct() {
-        add_action( 'dokan_new_product_added', [ $this, 'clear_seller_product_caches' ], 20, 2 );
+        add_action( 'dokan_new_product_added', [ $this, 'clear_seller_product_caches' ], 20 );
         add_action( 'dokan_product_updated', [ $this, 'clear_seller_product_caches' ], 20 );
         add_action( 'dokan_product_deleted', [ $this, 'clear_seller_product_caches' ], 20 );
         add_action( 'dokan_bulk_product_delete', [ $this, 'clear_seller_product_caches' ], 20 );
-        add_action( 'dokan_product_duplicate_after_save', [ $this, 'clear_seller_product_caches' ], 20, 3 );
+        add_action( 'dokan_product_duplicate_after_save', [ $this, 'clear_seller_product_caches' ], 20 );
 
         add_action( 'woocommerce_update_product', [ $this, 'clear_seller_product_caches' ], 20 );
         add_action( 'woocommerce_product_duplicate', [ $this, 'clear_seller_product_caches' ], 20 );
@@ -40,7 +40,11 @@ class Cache {
      *
      * @return void
      */
-    public static function clear_seller_product_caches( $product_id, $post_data = [] ) {
+    public function clear_seller_product_caches( $product_id ) {
+        // some hooks can return product object also, making sure we are getting id only
+        if ( $product_id instanceof \WC_Product ) {
+            $product_id = $product_id->get_id();
+        }
         $seller_id = get_post_field( 'post_author', $product_id );
 
         DokanCache::invalidate_group( 'product_data' );
@@ -60,12 +64,16 @@ class Cache {
      *
      * @return void
      */
-    public static function clear_single_product_caches( $product ) {
+    public function clear_single_product_caches( $product ) {
         if ( ! $product instanceof \WC_Product ) {
             $product = wc_get_product( $product );
         }
 
-        if ( $product instanceof \WC_Product ) {
+        if ( ! $product instanceof \WC_Product ) {
+            return;
+        }
+
+        try {
             $store       = \WC_Data_Store::load( 'product-' . $product->get_type() );
             $class       = $store->get_current_class_name();
             $class       = is_object( $class ) ? $class : new $class();
@@ -79,6 +87,8 @@ class Cache {
             $method = $reflection->getMethod( $method_name );
             $method->setAccessible( true );
             $method->invokeArgs( $class, [ &$product ] );
+        } catch ( \Exception $e ) {
+
         }
     }
 
@@ -93,12 +103,14 @@ class Cache {
      * @return void
      */
     public function cache_clear_bulk_product_status_change( $status, $products ) {
-        foreach ( $products  as $product ) {
-            self::clear_single_product_caches( $product );
+        // for delete action, separate hooks will be called
+        if ( 'delete' === $status || empty( $products )) {
+            return;
         }
 
-        foreach ($products as $product_id ) {
-            self::clear_seller_product_caches( $product_id, [] );
+        foreach ( $products  as $product_id ) {
+            $this->clear_single_product_caches( $product_id );
+            $this->clear_seller_product_caches( $product_id );
         }
     }
 }
