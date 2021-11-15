@@ -2,7 +2,7 @@
 
 namespace WeDevs\Dokan\Product;
 
-use WeDevs\Dokan\Cache as DokanCache;
+use WeDevs\Dokan\Cache;
 
 /**
  * Product Cache class.
@@ -13,7 +13,7 @@ use WeDevs\Dokan\Cache as DokanCache;
  *
  * @see \WeDevs\Dokan\Cache
  */
-class Cache {
+class ProductCache {
 
     public function __construct() {
         add_action( 'dokan_new_product_added', [ $this, 'clear_seller_product_caches' ], 20 );
@@ -47,9 +47,9 @@ class Cache {
         }
         $seller_id = get_post_field( 'post_author', $product_id );
 
-        DokanCache::invalidate_group( 'product_data' );
-        DokanCache::invalidate_group( 'seller_product_data_' . $seller_id );
-        DokanCache::invalidate_group( 'seller_product_stock_data_' . $seller_id );
+        Cache::invalidate_group( 'product_data' );
+        Cache::invalidate_group( 'seller_product_data_' . $seller_id );
+        Cache::invalidate_group( 'seller_product_stock_data_' . $seller_id );
     }
 
 
