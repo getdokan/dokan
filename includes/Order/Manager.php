@@ -33,17 +33,14 @@ class Manager {
         $args = wp_parse_args( $args, $default );
 
         $offset      = ( $args['paged'] - 1 ) * $args['limit'];
-        $cache_group = 'seller_data_' . $args['seller_id'];
-
-        // Use all arguments to create a hash used as cache key
-        $cache_key = 'seller_orders_' . md5( json_encode( $args ) );
+        $cache_group = "seller_order_data_{$args['seller_id']}";
+        $cache_key   = 'seller_orders_all_' . md5( wp_json_encode( $args ) ); // Use all arguments to create a hash used as cache key
 
         $orders = Cache::get( $cache_key, $cache_group );
 
-        $join  = $args['customer_id'] ? "LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id" : '';
-        $where = $args['customer_id'] ? sprintf( "pm.meta_key = '_customer_user' AND pm.meta_value = %d AND", $args['customer_id'] ) : '';
-
-        if ( $orders === false ) {
+        if ( false === $orders ) {
+            $join         = $args['customer_id'] ? "LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id" : '';
+            $where        = $args['customer_id'] ? sprintf( "pm.meta_key = '_customer_user' AND pm.meta_value = %d AND", $args['customer_id'] ) : '';
             $status_where = ( $args['status'] == 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', $args['status'] );
             $date_query   = ( $args['date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $args['date'] ) : '';
 

@@ -417,21 +417,19 @@ function dokan_author_pageviews( $seller_id ) {
 function dokan_author_total_sales( $seller_id ) {
     global $wpdb;
 
-    $cache_group = 'seller_data_' . $seller_id;
-    $cache_key   = 'earning_' . $seller_id;
+    $cache_group = "seller_order_data_{$seller_id}";
+    $cache_key   = "earning_{$seller_id}";
     $earnings    = Cache::get( $cache_key, $cache_group );
 
-    if ( $earnings === false ) {
-        $count = $wpdb->get_row(
+    if ( false === $earnings ) {
+        $earnings = (int) $wpdb->get_var(
             $wpdb->prepare( "SELECT SUM(order_total) as earnings FROM {$wpdb->prefix}dokan_orders WHERE seller_id = %d AND order_status IN('wc-completed', 'wc-processing', 'wc-on-hold')", $seller_id )
         );
-
-        $earnings = $count->earnings;
 
         Cache::set( $cache_key, $earnings, $cache_group );
     }
 
-    return apply_filters( 'dokan_seller_total_sales', $earnings );
+    return apply_filters( 'dokan_seller_total_sales', $earnings, $seller_id );
 }
 
 /**

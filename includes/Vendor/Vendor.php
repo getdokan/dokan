@@ -700,7 +700,7 @@ class Vendor {
         global $wpdb;
 
         $status        = dokan_withdraw_get_active_order_status_in_comma();
-        $cache_group   = 'seller_data_'.$this->id;
+        $cache_group   = 'seller_order_data_'.$this->id;
         $cache_key     = 'seller_earnings_' . $this->id;
         $earning       = Cache::get( $cache_key, $cache_group );
         $on_date       = $on_date ? date( 'Y-m-d', strtotime( $on_date ) ) : current_time( 'mysql' );
