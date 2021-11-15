@@ -17,9 +17,9 @@ class OrderCache {
 
     public function __construct() {
         add_action( 'dokan_checkout_update_order_meta', [ $this, 'reset_seller_order_data' ], 10, 2 );
-        add_action( 'woocommerce_order_status_changed', [ $this, 'reset_seller_order_data' ], 10, 4 );
-        add_action( 'woocommerce_update_order', [ $this, 'reset_cache_on_update_order' ] );
-        add_action( 'woocommerce_order_refunded', [ $this, 'reset_cache_on_update_order' ] );
+        add_action( 'woocommerce_order_status_changed', [ $this, 'order_status_changed' ], 10 );
+        add_action( 'woocommerce_update_order', [ $this, 'reset_cache_on_update_order' ], 10 );
+        add_action( 'woocommerce_order_refunded', [ $this, 'reset_cache_on_update_order' ], 10 );
     }
 
     /**
@@ -32,7 +32,7 @@ class OrderCache {
      *
      * @return void
      */
-    public static function reset_seller_order_data( $order_id, $seller_id ) {
+    public function reset_seller_order_data( $order_id, $seller_id ) {
         Cache::invalidate_group( "seller_order_data_{$seller_id}" );
 
         // Remove cached seller_id after an woocommerce order
@@ -40,7 +40,7 @@ class OrderCache {
     }
 
     /**
-     * Reset cache data on update woocomerce order.
+     * Reset cache data on update WooCommerce order status.
      *
      * @since 3.3.2
      *
@@ -48,9 +48,23 @@ class OrderCache {
      *
      * @return void
      */
-    public static function reset_cache_on_update_order( $order_id ) {
+    public function order_status_changed( $order_id ) {
+        $seller_id = dokan_get_seller_id_by_order( $order_id );
+        $this->reset_seller_order_data( $order_id, $seller_id );
+    }
+
+    /**
+     * Reset cache data on update WooCommerce order.
+     *
+     * @since 3.3.2
+     *
+     * @param int $order_id
+     *
+     * @return void
+     */
+    public function reset_cache_on_update_order( $order_id ) {
         $seller_id = dokan_get_seller_id_by_order( $order_id );
 
-        self::reset_seller_order_data( $order_id, $seller_id );
+        $this->reset_seller_order_data( $order_id, $seller_id );
     }
 }
