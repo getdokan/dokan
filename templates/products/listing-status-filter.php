@@ -34,5 +34,5 @@
         </li>
     <?php endif; ?>
 
-    <?php do_action( 'dokan_after_product_listing_status_filter' ); ?>
+    <?php do_action( 'dokan_after_product_listing_status_filter', $permalink, $status_class, $post_counts, $statuses ); ?>
 </ul> <!-- .post-statuses-filter -->
