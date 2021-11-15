@@ -9,7 +9,7 @@ use WeDevs\Dokan\Cache as DokanCache;
  *
  * Manage all of the caches for vendor.
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.3.2
  *
  * @see \WeDevs\Dokan\Cache
  */
@@ -26,13 +26,13 @@ class Cache {
     /**
      * Clear Vendor Cache Group.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.3.2
      *
      * @param int $vendor_id
      *
      * @return void
      */
     public function clear_cache_group( $vendor_id = null ) {
-        DokanCache::invalidate_group( 'dokan_cache_vendors' );
+        DokanCache::invalidate_group( 'vendors' );
     }
 }

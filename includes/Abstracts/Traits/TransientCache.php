@@ -7,7 +7,7 @@ namespace WeDevs\Dokan\Abstracts\Traits;
  *
  * Handles Transient underneath functionalities with the help of this TransientTrait trait.
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.3.2
  *
  * @package WeDevs\Dokan\Abstracts\Traits
  */
@@ -23,7 +23,7 @@ trait TransientCache {
      * to append a unique string (based on time()) to each transient. When transients
      * are invalidated, the transient version will increment and data will be regenerated
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.3.2
      *
      * @param  string $group   Name for the group of transients we need to invalidate.
      * @param  bool   $refresh true to force a new version.
@@ -48,7 +48,7 @@ trait TransientCache {
     /**
      * Add Cache Prefix to key.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.3.2
      *
      * @param string $key
      * @param string $group; default: ''
@@ -86,7 +86,7 @@ trait TransientCache {
      * Cache::get_transient( 'transient_key', 'group_name' );
      * ```
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.3.2
      *
      * @param string $key    eg: seller_data_[id]
      * @param string $group  eg: null, seller_earnings
@@ -118,7 +118,7 @@ trait TransientCache {
     /**
      * Set Transient value for a key.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.3.2
      *
      * @param string $key           eg: seller_data_[id]
      * @param string $value         eg: 6000, ['earning' => 1]
@@ -149,7 +149,7 @@ trait TransientCache {
     /**
      * Delete transient.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.3.2
      *
      * @param string $key    eg: seller_data_[id]
      * @param string $group  eg: seller_earnings
@@ -171,7 +171,7 @@ trait TransientCache {
      * Cache::invalidate_transient_group( 'group_name' );
      * ```
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.3.2
      *
      * @param string $group Group of transients data to clear.
      *

@@ -9,7 +9,7 @@ use WeDevs\Dokan\Cache as DokanCache;
  *
  * Manage all caches for order related functionalities.
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.3.2
  *
  * @see \WeDevs\Dokan\Cache
  */
@@ -25,7 +25,7 @@ class Cache {
     /**
      * Reset cache group related to seller orders.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.3.2
      *
      * @param int $order_id
      * @param int $seller_id
@@ -33,16 +33,16 @@ class Cache {
      * @return void
      */
     public static function reset_seller_order_data( $order_id, $seller_id ) {
-        DokanCache::invalidate_group( 'dokan_cache_seller_data_' . $seller_id );
+        DokanCache::invalidate_group( 'seller_data_' . $seller_id );
 
         // Remove cached seller_id after an woocommerce order
-        DokanCache::delete( 'get_seller_id_' . $order_id, 'dokan_cache_get_seller_id_by_order' );
+        DokanCache::delete( 'get_seller_id_' . $order_id, 'get_seller_id_by_order' );
     }
 
     /**
      * Reset cache data on update woocomerce order.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.3.2
      *
      * @param int $order_id
      *

@@ -7,7 +7,7 @@ namespace WeDevs\Dokan\Abstracts\Traits;
  *
  * Handles Caching underneath functionalities with the help of this Cacheable trait.
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.3.2
  *
  * @package WeDevs\Dokan\Abstracts\Traits
  */
@@ -16,7 +16,7 @@ trait ObjectCache {
     /**
      * Add Cache Prefix to key.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.3.2
      *
      * @param string $key
      * @param string $group default: ''
@@ -52,7 +52,7 @@ trait ObjectCache {
      * Cache::get( $cache_key, $cache_group );
      * ```
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.3.2
      *
      * @param string $key
      * @param string $group  Optional. Where the cache contents are grouped. Default empty.
@@ -84,7 +84,7 @@ trait ObjectCache {
      * }
      * ```
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.3.2
      *
      * @param string $key
      * @param mixed  $value
@@ -107,7 +107,7 @@ trait ObjectCache {
      * Cache::delete( 'cache_key_name', 'cache_group_name' );
      * ```
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.3.2
      *
      * @param string $key   The key under which to store the value.
      * @param string $group The group value appended to the $key.
@@ -129,7 +129,7 @@ trait ObjectCache {
      * Cache::invalidate_group( 'group_name' );
      * ```
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.3.2
      *
      * @param string $group Group of cache to clear.
      *
@@ -147,7 +147,7 @@ trait ObjectCache {
      * @param  string $key
      * @param  string $group
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.3.2
      *
      * @return array
      */
@@ -167,7 +167,7 @@ trait ObjectCache {
      * This will Replace microtime() value's dot => '.' and space => ' '
      * characters with underscore => '_' character
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.3.2
      *
      * @return string
      */

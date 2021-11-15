@@ -94,7 +94,7 @@ class Manager {
         unset( $args['status'] );
         unset( $args['featured'] );
 
-        $cache_group = 'dokan_cache_vendors';
+        $cache_group = 'vendors';
         $cache_key   = 'vendors_' . md5( json_encode( $args ) );
         $user_query  = Cache::get( $cache_key, $cache_group );
 

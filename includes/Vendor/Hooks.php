@@ -7,7 +7,7 @@ class Hooks {
     /**
      * Class constructor
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.3.2 Added Cache
      *
      * @return void
      */

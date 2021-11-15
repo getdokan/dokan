@@ -9,7 +9,7 @@ use WeDevs\Dokan\Cache as DokanCache;
  *
  * Manage all of the caches for vendor and admin withdrawal functionalities.
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.3.2
  *
  * @see \WeDevs\Dokan\Cache
  */
@@ -20,7 +20,7 @@ class Cache {
      *
      * @var string
      */
-    const CACHE_GROUP_ADMIN = 'dokan_cache_withdraws';
+    const CACHE_GROUP_ADMIN = 'withdraws';
 
     public function __construct() {
         add_action( 'dokan_after_withdraw_request', [ $this, 'clear_cache_after_seller_request' ], 10, 3 );
@@ -33,7 +33,7 @@ class Cache {
     /**
      * Clear Withdraw Cache Group for Admin.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.3.2
      *
      * @return void
      */
@@ -44,21 +44,21 @@ class Cache {
     /**
      * Clear Withdraw Cache Group for Seller.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.3.2
      *
      * @param int $seller_id
      *
      * @return void
      */
     public function clear_seller_cache_group( $seller_id ) {
-        $cache_group = 'dokan_cache_withdraws_seller_' . $seller_id;
+        $cache_group = 'withdraws_seller_' . $seller_id;
         DokanCache::invalidate_group( $cache_group );
     }
 
     /**
      * Clear Cache After Seller Withdraw request.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.3.2
      *
      * @param  int    $seller_id
      * @param  float  $amount
@@ -74,7 +74,7 @@ class Cache {
     /**
      * Clear Cache After Update Withdraws by admin.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.3.2
      *
      * @param Withdraw $withdraw
      *
@@ -90,7 +90,7 @@ class Cache {
     /**
      * Delete seller balance cache after a withdraw update.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.3.2
      *
      * @param string $status
      * @param int    $seller_id
@@ -99,7 +99,7 @@ class Cache {
      * @return void
      */
     public function delete_seller_balance_cache( $status, $seller_id, $id ) {
-        $cache_group = 'dokan_cache_withdraws_seller_' . $seller_id;
+        $cache_group = 'withdraws_seller_' . $seller_id;
         $cache_key   = 'seller_balance_' . $seller_id;
 
         DokanCache::delete( $cache_key, $cache_group );
@@ -108,7 +108,7 @@ class Cache {
     /**
      * Handle cache on Approve/Reject withdraw request.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.3.2
      *
      * @param Withdraw $withdraw
      *

@@ -196,7 +196,7 @@ function dokan_count_posts( $post_type, $user_id, $exclude_product_types = array
     $exclude_product_types      = esc_sql( $exclude_product_types );
     $exclude_product_types_text = "'" . implode( "', '", $exclude_product_types ) . "'";
     $exclude_product_types_key  = implode( '-', $exclude_product_types );
-    $cache_group                = "dokan_cache_seller_product_data_$user_id";
+    $cache_group                = "seller_product_data_$user_id";
     $cache_key                  = "count_{$post_type}_{$exclude_product_types_key}_{$user_id}";
     $counts                     = Cache::get( $cache_key, $cache_group );
 
@@ -261,7 +261,7 @@ function dokan_count_posts( $post_type, $user_id, $exclude_product_types = array
 function dokan_count_stock_posts( $post_type, $user_id, $stock_type ) {
     global $wpdb;
 
-    $cache_group = 'dokan_cache_seller_product_stock_data_' . $user_id;
+    $cache_group = 'seller_product_stock_data_' . $user_id;
     $cache_key   = "count_{$post_type}_{$stock_type}-{$user_id}";
     $counts      = Cache::get( $cache_key, $cache_group );
 
@@ -382,7 +382,7 @@ function dokan_count_comments( $post_type, $user_id ) {
 function dokan_author_pageviews( $seller_id ) {
     global $wpdb;
 
-    $cache_group = 'dokan_cache_page_view';
+    $cache_group = 'page_view';
     $cache_key   = 'pageview_' . $seller_id;
     $pageview    = Cache::get( $cache_key, $cache_group );
 
@@ -417,7 +417,7 @@ function dokan_author_pageviews( $seller_id ) {
 function dokan_author_total_sales( $seller_id ) {
     global $wpdb;
 
-    $cache_group = 'dokan_cache_seller_data_' . $seller_id;
+    $cache_group = 'seller_data_' . $seller_id;
     $cache_key   = 'earning_' . $seller_id;
     $earnings    = Cache::get( $cache_key, $cache_group );
 

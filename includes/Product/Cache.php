@@ -9,7 +9,7 @@ use WeDevs\Dokan\Cache as DokanCache;
  *
  * Manage all caches for products.
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.3.2
  *
  * @see \WeDevs\Dokan\Cache
  */
@@ -33,7 +33,7 @@ class Cache {
     /**
      * Reset cache group related to seller products.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.3.2
      *
      * @param int   $product_id
      * @param array $post_data
@@ -43,9 +43,9 @@ class Cache {
     public static function clear_seller_product_caches( $product_id, $post_data = [] ) {
         $seller_id = get_post_field( 'post_author', $product_id );
 
-        DokanCache::invalidate_group( 'dokan_cache_product_data' );
-        DokanCache::invalidate_group( 'dokan_cache_seller_product_data_' . $seller_id );
-        DokanCache::invalidate_group( 'dokan_cache_seller_product_stock_data_' . $seller_id );
+        DokanCache::invalidate_group( 'product_data' );
+        DokanCache::invalidate_group( 'seller_product_data_' . $seller_id );
+        DokanCache::invalidate_group( 'seller_product_stock_data_' . $seller_id );
     }
 
 
@@ -54,7 +54,7 @@ class Cache {
      *
      * We'll be calling `WC_Product_Data_Store_CPT::clear_caches()` to clear product caches.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.3.2
      *
      * @param int|\WC_Product $product
      *
@@ -85,7 +85,7 @@ class Cache {
     /**
      * Clear Cache on bulk product status change.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.3.2
      *
      * @param  string $status
      * @param  array  $products

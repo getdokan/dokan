@@ -10,7 +10,7 @@ use WeDevs\Dokan\Abstracts\Traits\TransientCache;
  *
  * Manage all of the caches of your WordPress plugin and handles it beautifully.
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.3.2
  *
  * @package WeDevs\Dokan\Abstracts\Cache
  */
@@ -21,7 +21,7 @@ abstract class DokanCache {
     /**
      * Get Cache Group Prefix.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.3.2
      *
      * @return string
      */
@@ -30,7 +30,7 @@ abstract class DokanCache {
     /**
      * Get Cache Key Prefix.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.3.2
      *
      * @return string
      */
@@ -39,7 +39,7 @@ abstract class DokanCache {
     /**
      * Add Cache Group Prefix to group.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.3.2
      *
      * @param string $group
      *
