@@ -31,7 +31,7 @@ trait TransientCache {
      * @return string transient version based on microtime().
      */
     private static function get_transient_version( $group, $refresh = false ) {
-        $transient_name  = static::get_cache_group_with_prefix( $group ) . "-transient-version";
+        $transient_name  = static::get_cache_group_with_prefix( $group ) . '-transient-version';
         $transient_value = get_transient( $transient_name );
 
         // If no transient value found,
@@ -57,7 +57,7 @@ trait TransientCache {
      */
     private static function get_formatted_transient_key( $key, $group = '' ) {
         // Don't add prefix to non-cacheable groups.
-        if ( empty ( $group ) ) {
+        if ( empty( $group ) ) {
             return static::get_cache_prefix() . '_' . sanitize_key( $key );
         }
 

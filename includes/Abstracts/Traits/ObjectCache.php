@@ -25,7 +25,7 @@ trait ObjectCache {
      */
     private static function get_cache_key_with_prefix( $key, $group = '' ) {
         // Don't add prefix to non-cacheable groups.
-        if ( empty ( $group ) ) {
+        if ( empty( $group ) ) {
             return static::get_cache_prefix() . '_' . sanitize_key( $key );
         }
 
@@ -35,7 +35,7 @@ trait ObjectCache {
 
         if ( false === $prefix ) {
             $prefix = static::get_time_prefix();
-            wp_cache_set( $group .  '_prefix' , $prefix, $group );
+            wp_cache_set( $group . '_prefix', $prefix, $group );
         }
 
         return static::get_cache_prefix() . '_' . $prefix . '_' . sanitize_key( $key );
@@ -61,7 +61,7 @@ trait ObjectCache {
      * @return mixed|false
      */
     public static function get( $key, $group = '', $forced = false ) {
-        extract( static::get_key_and_group( $key, $group ) );
+        extract( static::get_key_and_group( $key, $group ) ); //phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 
         return wp_cache_get( $key, $group, $forced );
     }
@@ -94,7 +94,7 @@ trait ObjectCache {
      * @return bool
      */
     public static function set( $key, $value, $group = '', $expire = WEEK_IN_SECONDS ) {
-        extract( static::get_key_and_group( $key, $group ) );
+        extract( static::get_key_and_group( $key, $group ) ); //phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 
         return wp_cache_set( $key, $value, $group, $expire );
     }
@@ -116,7 +116,7 @@ trait ObjectCache {
      * @return bool
      */
     public static function delete( $key, $group = '', $time = 0 ) {
-        extract( static::get_key_and_group( $key, $group ) );
+        extract( static::get_key_and_group( $key, $group ) ); //phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 
         return wp_cache_delete( $key, $group, $time );
     }
