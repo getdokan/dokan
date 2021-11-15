@@ -375,12 +375,32 @@ export default {
         padding: 6px 8px;
         border: 1px solid #b5bfc9;
         border-radius: 3px;
-        color: #dadfe4;
         background: #fff;
         transform: translateY(-50%);
 
+
         .notice-count {
             margin: 0 6px;
+            font-weight: normal;
+            font-size: 12px;
+            color: #acacac;
+            font-family: "SF Pro Text", sans-serif;
+        }
+
+        .current-notice.active,
+        .total-notice.active {
+            font-weight: 600;
+        }
+
+        .next,
+        .prev {
+            color: #dadfe4;
+        }
+
+        .next.active,
+        .prev.active {
+            color: #9da6ae;
+            cursor: pointer;
         }
 
         .active {

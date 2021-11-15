@@ -1,16 +1,3 @@
-<?php
-
-$description_kses = [
-    'strong' => [
-        'class' => [],
-    ],
-    'a' => [
-        'href'    => [],
-    ],
-];
-
-?>
-
 <div class="dokan-admin-notices notice">
     <?php foreach ( $notices as $key => $notice ) : ?>
         <div class="dokan-admin-notice <?php echo esc_attr( $notice['type'] ); ?> <?php echo 0 === $key ? 'active' : ''; ?>">
@@ -23,13 +10,13 @@ $description_kses = [
                     <?php if ( ! empty( $notice['title'] ) ) : ?>
                         <h3><?php echo esc_html( $notice['title'] ); ?></h3>
                     <?php endif; ?>
-                    <div><?php echo wp_kses( $notice['description'], $description_kses ); ?></div>
+                    <div><?php echo wp_kses_post( $notice['description'] ); ?></div>
                     <?php if ( ! empty( $notice['actions'] ) ) : ?>
                         <?php foreach( $notice['actions'] as $action ) : ?>
                             <?php if ( ! empty( $action['action'] ) ) : ?>
                                 <a class="btn btn-<?php echo esc_attr( $action['type'] ); ?> <?php echo ! empty( $action['class'] ) ? esc_attr( $action['class'] ) : ''; ?>" href="<?php echo esc_url( $action['action'] ); ?>"><?php echo esc_html( $action['text'] ); ?></a>
                             <?php else : ?>
-                                <button class="btn btn-<?php echo esc_attr( $action['type'] ); ?> <?php echo ! empty( $action['class'] ) ? esc_attr( $action['class'] ) : ''; ?>" data-ajax-data="<?php echo ! empty( $action['ajax_data'] ) ? esc_attr( json_encode( $action['ajax_data'] ) ) : ''; ?>" data-confirm="<?php echo ! empty( $action['confirm_message'] ) ? esc_attr( $action['confirm_message'] ) : ''; ?>" data-loading="<?php echo ! empty( $action['loading_text'] ) ? esc_attr( $action['loading_text'] ) : __('Loading...', 'dokan-lite'); ?>" data-completed="<?php echo ! empty( $action['completed_text'] ) ? esc_attr( $action['completed_text'] ) : $action['text']; ?>" data-reload="<?php echo ! empty( $action['reload'] ) ? esc_attr( $action['reload'] ) : false; ?>"><?php echo esc_html( $action['text'] ); ?></button>
+                                <button class="dokan-btn btn btn-<?php echo esc_attr( $action['type'] ); ?> <?php echo ! empty( $action['class'] ) ? esc_attr( $action['class'] ) : ''; ?>" data-ajax-data="<?php echo ! empty( $action['ajax_data'] ) ? esc_attr( json_encode( $action['ajax_data'] ) ) : ''; ?>" data-confirm="<?php echo ! empty( $action['confirm_message'] ) ? esc_attr( $action['confirm_message'] ) : ''; ?>" data-loading="<?php echo ! empty( $action['loading_text'] ) ? esc_attr( $action['loading_text'] ) : __('Loading...', 'dokan-lite'); ?>" data-completed="<?php echo ! empty( $action['completed_text'] ) ? esc_attr( $action['completed_text'] ) : $action['text']; ?>" data-reload="<?php echo ! empty( $action['reload'] ) ? esc_attr( $action['reload'] ) : false; ?>"><?php echo esc_html( $action['text'] ); ?></button>
                             <?php endif; ?>
                         <?php endforeach; ?>
                     <?php endif; ?>
@@ -201,6 +188,10 @@ $description_kses = [
         display: inline-block;
     }
 
+    .dokan-admin-notices .dokan-admin-notice .message .dokan-btn {
+        padding: 10px 15px;
+    }
+
     .dokan-admin-notices .dokan-admin-notice .message .btn:disabled {
         opacity: .7;
     }
@@ -208,7 +199,6 @@ $description_kses = [
     .dokan-admin-notices .dokan-admin-notice .message .btn-primary {
         color: #fff;
         background: #2579B1;
-        margin-right: 15px;
         font-weight: 400;
     }
 
@@ -220,7 +210,6 @@ $description_kses = [
     .dokan-admin-notices .dokan-admin-notice .message .btn-secondary {
         color: #2579B1;
         background: transparent;
-        margin-right: 15px;
         font-weight: 400;
     }
 
@@ -271,16 +260,30 @@ $description_kses = [
         padding: 6px 8px;
         border: 1px solid #b5bfc9;
         border-radius: 3px;
-        color: #dadfe4;
         background: #fff;
         transform: translateY(-50%);
     }
 
     .dokan-admin-notices .slide-notice .notice-count {
         margin: 0 6px;
+        font-weight: normal;
+        font-size: 12px;
+        color: #acacac;
+        font-family: "SF Pro Text", sans-serif;
     }
 
-    .dokan-admin-notices .slide-notice .active {
+    .dokan-admin-notices .slide-notice .current-notice.active,
+    .dokan-admin-notices .slide-notice .total-notice.active {
+        font-weight: 600;
+    }
+
+    .dokan-admin-notices .slide-notice .next,
+    .dokan-admin-notices .slide-notice .prev {
+        color: #dadfe4;
+    }
+
+    .dokan-admin-notices .slide-notice .next.active,
+    .dokan-admin-notices .slide-notice .prev.active {
         color: #9da6ae;
         cursor: pointer;
     }
@@ -363,13 +366,13 @@ $description_kses = [
         startAutoSlide();
 
         function startAutoSlide() {
-            timer = setInterval(() => {
-                plusNotices(1);
-            }, 5000)
+            // timer = setInterval(() => {
+            //     plusNotices(1);
+            // }, 5000);
         }
 
         function stopAutoSlide() {
-            clearTimeout(timer);
+            clearInterval(timer);
             timer = null;
         }
 

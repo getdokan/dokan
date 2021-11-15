@@ -105,63 +105,8 @@ if ( ! defined( 'ABSPATH' ) ) {
         font-family: "SF Pro Text", sans-serif;
     }
 
-    .dokan-woocommerce-missing-notice .message .btn {
-        font-size: 12px;
-        font-weight: 300;
-        padding: 8px 15px;
-        margin-right: 15px;
-        margin-top: 10px;
-        border-radius: 3px;
-        border: 1px solid #00769d;
-        cursor: pointer;
-        transition: all .2s linear;
-        text-decoration: none;
-        font-family: "SF Pro Text", sans-serif;
-        display: inline-block;
-    }
-
-    .dokan-woocommerce-missing-notice .message .btn-primary {
-        color: #fff;
-        background: #2579B1;
-        margin-right: 15px;
-        font-weight: 400;
-    }
-
-    .dokan-woocommerce-missing-notice .message .btn-primary:hover {
-        background: transparent;
-        color: #2579B1;
-    }
-
     .dokan-woocommerce-missing-notice .message a {
         text-decoration: none;
-    }
-
-    .dokan-woocommerce-missing-notice .close-notice {
-        position: absolute;
-        top: 10px;
-        right: 13px;
-        border: 0;
-        background: transparent;
-        text-decoration: none;
-    }
-
-    .dokan-woocommerce-missing-notice .close-notice span {
-        font-size: 15px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #c2c2c2;
-        transition: all .2s ease;
-        cursor: pointer;
-        border: 1px solid #f3f3f3;
-        border-radius: 55px;
-        width: 20px;
-        height: 20px;
-    }
-
-    .dokan-woocommerce-missing-notice .close-notice span:hover {
-        color: #f16982;
-        border-color: #f16982;
     }
 
     @font-face {
