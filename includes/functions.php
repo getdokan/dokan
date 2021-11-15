@@ -191,19 +191,21 @@ function dokan_redirect_if_not_seller( $redirect = '' ) {
  * @return array
  */
 function dokan_count_posts( $post_type, $user_id, $exclude_product_types = array( 'booking' ) ) {
-    global $wpdb;
+    // get all function arguments as key => value pairs
+    $args = get_defined_vars();
 
-    $exclude_product_types      = esc_sql( $exclude_product_types );
-    $exclude_product_types_text = "'" . implode( "', '", $exclude_product_types ) . "'";
-    $exclude_product_types_key  = implode( '-', $exclude_product_types );
-    $cache_group                = "seller_product_data_$user_id";
-    $cache_key                  = "count_{$post_type}_{$exclude_product_types_key}_{$user_id}";
-    $counts                     = Cache::get( $cache_key, $cache_group );
+    $cache_group = "seller_product_data_$user_id";
+    $cache_key   = 'count_posts_' . md5( wp_json_encode( $args ) );
+    $counts      = Cache::get( $cache_key, $cache_group );
 
     if ( false === $counts ) {
         $results = apply_filters( 'dokan_count_posts', null, $post_type, $user_id );
 
         if ( ! $results ) {
+            global $wpdb;
+            $exclude_product_types      = esc_sql( $exclude_product_types );
+            $exclude_product_types_text = "'" . implode( "', '", $exclude_product_types ) . "'";
+
             $results = $wpdb->get_results(
                 $wpdb->prepare(
                     "SELECT post_status, COUNT( * ) AS num_posts FROM {$wpdb->posts} as posts
@@ -239,7 +241,7 @@ function dokan_count_posts( $post_type, $user_id, $exclude_product_types = array
         $counts['total'] = $total;
         $counts          = (object) $counts;
 
-        Cache::set( $cache_key, $counts, $cache_group, 3600 * 6 );
+        Cache::set( $cache_key, $counts, $cache_group );
     }
 
     return $counts;
@@ -262,7 +264,7 @@ function dokan_count_stock_posts( $post_type, $user_id, $stock_type ) {
     global $wpdb;
 
     $cache_group = 'seller_product_stock_data_' . $user_id;
-    $cache_key   = "count_{$post_type}_{$stock_type}-{$user_id}";
+    $cache_key   = "count_stock_posts_{$user_id}_{$post_type}_{$stock_type}";
     $counts      = Cache::get( $cache_key, $cache_group );
 
     if ( false === $counts ) {
@@ -299,7 +301,7 @@ function dokan_count_stock_posts( $post_type, $user_id, $stock_type ) {
 
         $counts = $total;
 
-        Cache::set( $cache_key, $counts, $cache_group, 3600 * 6 );
+        Cache::set( $cache_key, $counts, $cache_group );
     }
 
     return $counts;
@@ -319,6 +321,7 @@ function dokan_count_stock_posts( $post_type, $user_id, $stock_type ) {
 function dokan_count_comments( $post_type, $user_id ) {
     global $wpdb;
 
+    //todo: delete comment cache
     $cache_group = 'dokan-lite';
     $cache_key   = "count_comments_{$post_type}_{$user_id}";
     $counts      = Cache::get( $cache_key, $cache_group );
