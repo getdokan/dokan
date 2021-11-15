@@ -437,9 +437,8 @@ function dokan_sync_insert_order( $order_id ) {
 function dokan_get_seller_id_by_order( $order_id ) {
     global $wpdb;
 
-    $cache_group = 'get_seller_id_by_order';
-    $cache_key   = 'get_seller_id_' . $order_id;
-    $seller_id   = Cache::get( $cache_key, $cache_group );
+    $cache_key   = 'get_seller_id_by_order_' . $order_id;
+    $seller_id   = Cache::get( $cache_key );
     $items       = [];
 
     // hack: delete old cached data, will delete this code later version of dokan lite
@@ -448,12 +447,10 @@ function dokan_get_seller_id_by_order( $order_id ) {
     }
 
     if ( false === $seller_id ) {
-        $seller_id = absint(
-            $wpdb->get_var(
-                $wpdb->prepare( "SELECT seller_id FROM {$wpdb->prefix}dokan_orders WHERE order_id = %d LIMIT 1", $order_id )
-            )
+        $seller_id = (int) $wpdb->get_var(
+            $wpdb->prepare( "SELECT seller_id FROM {$wpdb->prefix}dokan_orders WHERE order_id = %d LIMIT 1", $order_id )
         );
-        Cache::set( $cache_key, $seller_id, $cache_group );
+        Cache::set( $cache_key, $seller_id );
     }
 
     if ( ! empty( $seller_id ) ) {
@@ -461,7 +458,7 @@ function dokan_get_seller_id_by_order( $order_id ) {
     }
 
     // get order instance
-    $order = dokan()->order->get( $order_id );
+    $order = wc_get_order( $order_id );
 
     if ( ! $order instanceof WC_Abstract_Order ) {
         return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );

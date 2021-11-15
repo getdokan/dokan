@@ -36,7 +36,7 @@ class Cache {
         DokanCache::invalidate_group( "seller_order_data_{$seller_id}" );
 
         // Remove cached seller_id after an woocommerce order
-        DokanCache::delete( "get_seller_id_{$order_id}", 'get_seller_id_by_order' );
+        DokanCache::delete( "get_seller_id_by_order_{$order_id}" );
     }
 
     /**
