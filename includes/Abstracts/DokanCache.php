@@ -6,7 +6,7 @@ use WeDevs\Dokan\Abstracts\Traits\ObjectCache;
 use WeDevs\Dokan\Abstracts\Traits\TransientCache;
 
 /**
- * Cache class.
+ * Dokan Cache class.
  *
  * Manage all of the caches of your WordPress plugin and handles it beautifully.
  *

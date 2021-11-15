@@ -25,6 +25,7 @@ class Cache {
     public function __construct() {
         add_action( 'dokan_after_withdraw_request', [ $this, 'clear_cache_after_seller_request' ], 10, 3 );
         add_action( 'dokan_withdraw_updated', [ $this, 'clear_cache_after_admin_update' ], 10 );
+        add_action( 'dokan_withdraw_deleted', [ $this, 'clear_cache_after_admin_update' ], 10 );
         add_action( 'dokan_withdraw_status_updated', [ $this, 'delete_seller_balance_cache' ], 10, 3 );
 
         add_action( 'dokan_withdraw_request_approved', [ $this, 'handle_withdraw_request_approval' ], 11 );

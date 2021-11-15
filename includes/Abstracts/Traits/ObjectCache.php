@@ -138,7 +138,7 @@ trait ObjectCache {
     public static function invalidate_group( $group ) {
         $group = static::get_cache_group_with_prefix( $group );
 
-        return wp_cache_set( $group, static::get_time_prefix(), $group );
+        return wp_cache_set( $group . '_prefix', static::get_time_prefix(), $group );
     }
 
     /**
