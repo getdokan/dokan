@@ -48,7 +48,7 @@
             </td>
         </template>
 
-        <template v-if="'price' == fieldData.type && allSettingsValues.dokan_selling && 'combine' !== allSettingsValues.dokan_selling.commission_type">
+        <template v-if="'price' == fieldData.type && allSettingsValues.dokan_selling && ( 'flat' === allSettingsValues.dokan_selling.commission_type || 'percentage' === allSettingsValues.dokan_selling.commission_type )">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
@@ -64,7 +64,7 @@
             </td>
         </template>
 
-        <template v-if="'combine' == fieldData.type && haveCondition( fieldData ) && fieldData.condition.type == 'show' && checkConditionLogic( fieldData, fieldValue )">
+        <template v-if="'combine' == fieldData.type && haveCondition( fieldData ) && 'combine' === allSettingsValues.dokan_selling.commission_type && fieldData.condition.type == 'show' && checkConditionLogic( fieldData, fieldValue )">
                 <th scope="row">
                     <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
                 </th>
@@ -92,6 +92,107 @@
                 </p>
 
                 <p class="description" v-html="fieldData.desc"></p>
+        </template>
+
+        <template v-if="'product_price' == fieldData.type && allSettingsValues.dokan_selling && 'product_price' === allSettingsValues.dokan_selling.commission_type">
+            <th scope="row">
+                <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
+            </th>
+            <td v-if="'' !== fieldValue[fieldData.name]">
+                <div>
+                </div>
+                    <span>{{ __( 'Product price commission', 'dokan-lite' ) }}</span>
+
+                    <div class="product_price_commission list-complete-item" v-for="( commission, key ) in fieldValue[fieldData.name]" v-bind:key="key">
+                        <div class="product_price_commission_close"><span @click.prevent="removeProductPriceCommissionFromList(key)" class="dashicons dashicons-remove"></span></div>
+                        <div>
+                            <th scope="row">
+                                <label :for="sectionId + '[' + fieldData.fields['product_cost'].name +key + ']'">{{ fieldData.fields['product_cost'].label }}</label>
+                            </th>
+                            <td>
+                                <input
+                                    type="number"
+                                    :min="fieldData.min"
+                                    class="regular-text"
+                                    :id="sectionId + '[' + fieldData.fields['product_cost'].name +key + ']'"
+                                    :name="sectionId + '[' + fieldData.fields['product_cost'].name +key + ']'"
+                                    v-model="fieldValue[fieldData.name][key].product_cost"
+                                >
+                                <p v-if="currentProductPriceCommissionError( key, 'product_cost' )" class="dokan-error">
+                                    {{ currentProductPriceCommissionError( key, 'product_cost' ) }}
+                                </p>
+                            </td>
+                        </div>
+
+                        <div>
+                            <th scope="row">
+                                <label :for="sectionId + '[' + fieldData.fields['rule'].name +key + ']'">{{ fieldData.fields['rule'].label }}</label>
+                            </th>
+                            <td>
+                                <select class="regular-text" :name="sectionId + '[' + fieldData.fields['rule'].name +key + ']'" :id="sectionId + '[' + fieldData.fields['rule'].name +key + ']'" v-model="fieldValue[fieldData.name][key].rule">
+                                    <option v-for="( optionVal, key ) in Object.keys( fieldData.fields['rule'].options )" :key="key" :value="optionVal" v-html="fieldData.fields['rule'].options[optionVal]"></option>
+                                </select>
+
+                                <p v-if="currentProductPriceCommissionError( key, 'rule' )" class="dokan-error">
+                                    {{ currentProductPriceCommissionError( key, 'rule' ) }}
+                                </p>
+                            </td>
+                        </div>
+
+                        <div>
+                            <th scope="row">
+                                <label :for="sectionId + '[' + fieldData.fields['commission_type'].name +key + ']'">{{ fieldData.fields['commission_type'].label }}</label>
+                            </th>
+                            <td>
+                                <select class="regular-text" :name="sectionId + '[' + fieldData.fields['commission_type'].name +key + ']'" :id="sectionId + '[' + fieldData.fields['commission_type'].name +key + ']'" v-model="fieldValue[fieldData.name][key].commission_type">
+                                    <option v-for="( optionVal, key ) in Object.keys( fieldData.fields['commission_type'].options )" :key="key" :value="optionVal" v-html="fieldData.fields['commission_type'].options[optionVal]"></option>
+                                </select>
+                                <p v-if="currentProductPriceCommissionError( key, 'commission_type' )" class="dokan-error">
+                                    {{ currentProductPriceCommissionError( key, 'commission_type' ) }}
+                                </p>
+                            </td>
+                        </div>
+
+                        <div>
+                            <th scope="row">
+                                <label :for="sectionId + '[' + fieldData.fields['admin_commission'].name +key + ']'">{{ fieldData.fields['admin_commission'].label }}</label>
+                            </th>
+                            <td>
+                                <template v-if="'percentage' === fieldValue[fieldData.name][key].commission_type">
+                                    <input type="number" :min="fieldData.min" class="regular-text" :id="sectionId + '[' + fieldData.fields['admin_commission'].name +key + ']'" :name="sectionId + '[' + fieldData.fields['admin_commission'].name +key + ']'" v-model="fieldValue[fieldData.name][key].percentage">
+                                    <p v-if="currentProductPriceCommissionError( key, 'percentage' )" class="dokan-error">
+                                        {{ currentProductPriceCommissionError( key, 'percentage' ) }}
+                                    </p>
+                                </template>
+                                <template v-else-if="'flat' === fieldValue[fieldData.name][key].commission_type">
+                                    <input type="number" :min="fieldData.min" class="regular-text" :id="sectionId + '[' + fieldData.fields['admin_commission'].name +key + ']'" :name="sectionId + '[' + fieldData.fields['admin_commission'].name +key + ']'" v-model="fieldValue[fieldData.name][key].flat">
+                                    <p v-if="currentProductPriceCommissionError( key, 'flat' )" class="dokan-error">
+                                        {{ currentProductPriceCommissionError( key, 'flat' ) }}
+                                    </p>
+                                </template>
+
+                                <template v-else>
+                                    <td class="percent_fee product-price-commission">
+                                        <input type="text" :min="fieldData.min" class="wc_input_decimal regular-text" :id="sectionId + '[' + fieldData.fields['admin_commission'].name +key + ']'" :name="sectionId + '[' + fieldData.fields['admin_commission'].name +key + ']'" v-model="fieldValue[fieldData.name][key].percentage">
+                                        {{ '%' }}
+                                    </td>
+
+                                    <td class="fixed_fee product-price-commission">
+                                        {{ '+' }}
+                                        <input type="text" :min="fieldData.min" class="wc_input_price regular-text" :id="sectionId + '[' + fieldData.fields['admin_commission'].name +key + ']'" :name="sectionId + '[' + fieldData.fields['admin_commission'].name +key + ']'" v-model="fieldValue[fieldData.name][key].flat">
+                                    </td>
+                                    <p v-if="currentProductPriceCommissionError( key, 'combine' )" class="dokan-error">
+                                        {{ currentProductPriceCommissionError( key, 'combine' ) }}
+                                    </p>
+                                </template>
+                            </td>
+                        </div>
+                    </div>
+
+                <div>
+                    <button @click.prevent="addProductPriceCommission" type="button">{{ __( 'Add', 'dokan-lite' ) }}</button>
+                </div>
+            </td>
         </template>
 
         <template v-if="'textarea' == fieldData.type">
@@ -152,7 +253,7 @@
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
             <td>
-                <select v-if="!fieldData.grouped" class="regular" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
+                <select @change="getAndCheckCommissionType" v-if="!fieldData.grouped" class="regular" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
                     <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
                     <option v-for="( optionVal, optionKey ) in fieldData.options" :value="optionKey" v-html="optionVal"></option>
                 </select>
@@ -534,7 +635,65 @@
               } );
 
               return errorMessage;
-            }
+            },
+
+            getAndCheckCommissionType( event ) {
+                if ( 'product_price' === event.target.value ) {
+                    if ( '' === this.fieldValue.product_price ) {
+                        this.fieldValue.product_price = [
+                            {
+                                product_cost: 10,
+                                rule: 'upto',
+                                commission_type: 'percentage',
+                                flat: 10,
+                                percentage: 10
+                            }
+                        ];
+                    }
+                }
+            },
+
+            addProductPriceCommission() {
+                const dummyData = {
+                    product_cost: 10,
+                    rule: 'upto',
+                    commission_type: 'percentage',
+                    flat: 10,
+                    percentage: 10
+                }
+
+                const commissions = '' === this.fieldValue.product_price ? dummyData : this.fieldValue.product_price;
+
+                commissions.push( dummyData );
+                this.fieldValue.product_price = commissions;
+            },
+
+            removeProductPriceCommissionFromList( key ) {
+                this.fieldValue.product_price.splice( key, 1 );
+            },
+
+            currentProductPriceCommissionError( index, field ) {
+                let allErrors = this.errors;
+
+                let result = false;
+
+                if ( 'object' === typeof allErrors ) {
+                    Object.keys( allErrors ).forEach( item => {
+                        if ( undefined !== allErrors[item].product_price ) {
+                            let productPriceCommissionErrors = allErrors[item].product_price;
+                            Object.keys( productPriceCommissionErrors ).forEach( ( element, itemIndex ) => {
+                                let errorObj = productPriceCommissionErrors[element];
+
+                                if ( errorObj.index === index && errorObj.field === field  ) {
+                                    result = errorObj.msg;
+                                }
+                            });
+                        }
+                    } );
+                }
+
+                return result;
+            },
         }
 
     };
@@ -613,4 +772,39 @@
             }
         }
     }
+
+    .product_price_commission{
+        border-radius: 4px;
+        border: 1px solid #8c8f94;
+        background-color: #fff;
+        padding: 8px;
+        margin: 8px 0;
+
+        .product_price_commission_close{
+            display: block;
+            width: 100%;
+            overflow: hidden;
+
+            .dashicons-remove{
+                float: right;
+                display: block;
+                cursor: pointer;
+
+                &:hover{
+                    color: #d63638;
+                }
+
+                &:active{
+                    color: #e2573f;
+                }
+            }
+        }
+
+        .product-price-commission {
+                padding: 0;
+                margin-bottom: 0;
+        }
+    }
+
 </style>
+
