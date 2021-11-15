@@ -46,7 +46,7 @@ class ProductCache {
     public function clear_seller_product_caches( $product ) {
         // some hooks can return product object also, making sure we are getting id only
         if ( ! $product instanceof \WC_Product ) {
-            $product_id = wc_get_product( $product );
+            $product = wc_get_product( $product );
         }
 
         if ( ! $product instanceof \WC_Product ) {
