@@ -1,6 +1,6 @@
 <?php
 
-namespace WeDevs\Dokan\Abstracts\Traits;
+namespace WeDevs\Dokan\Traits;
 
 /**
  * Transient trait.
@@ -37,7 +37,7 @@ trait TransientCache {
         // If no transient value found,
         // Set a new version number by replacing some characters to underscores.
         if ( false === $transient_value || true === $refresh ) {
-            $transient_value = str_replace( [ '.', ' ' ], '_', microtime() );
+            $transient_value = static::get_time_prefix();
 
             set_transient( $transient_name, $transient_value );
         }

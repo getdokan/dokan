@@ -1,6 +1,6 @@
 <?php
 
-namespace WeDevs\Dokan\Abstracts\Traits;
+namespace WeDevs\Dokan\Traits;
 
 /**
  * Object Cache trait.
@@ -159,19 +159,5 @@ trait ObjectCache {
             'key'   => $key,
             'group' => $group,
         ];
-    }
-
-    /**
-     * Get Microtime value as prefix.
-     *
-     * This will Replace microtime() value's dot => '.' and space => ' '
-     * characters with underscore => '_' character
-     *
-     * @since 3.3.2
-     *
-     * @return string
-     */
-    private static function get_time_prefix() {
-        return str_replace( [ '.', ' ' ], '_', microtime() );
     }
 }
