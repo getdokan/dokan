@@ -56,7 +56,7 @@ class Hooks {
         add_filter( 'dokan_csv_export_headers', [ $this, 'hide_customer_info_from_vendor_order_export' ], 20, 1 );
 
         // Init Order Cache Class
-        new Cache();
+        new OrderCache();
     }
 
     /**

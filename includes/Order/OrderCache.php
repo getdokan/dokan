@@ -2,7 +2,7 @@
 
 namespace WeDevs\Dokan\Order;
 
-use WeDevs\Dokan\Cache as DokanCache;
+use WeDevs\Dokan\Cache;
 
 /**
  * Order Cache class.
@@ -13,7 +13,7 @@ use WeDevs\Dokan\Cache as DokanCache;
  *
  * @see \WeDevs\Dokan\Cache
  */
-class Cache {
+class OrderCache {
 
     public function __construct() {
         add_action( 'dokan_checkout_update_order_meta', [ $this, 'reset_seller_order_data' ], 10, 2 );
@@ -33,10 +33,10 @@ class Cache {
      * @return void
      */
     public static function reset_seller_order_data( $order_id, $seller_id ) {
-        DokanCache::invalidate_group( "seller_order_data_{$seller_id}" );
+        Cache::invalidate_group( "seller_order_data_{$seller_id}" );
 
         // Remove cached seller_id after an woocommerce order
-        DokanCache::delete( "get_seller_id_by_order_{$order_id}" );
+        Cache::delete( "get_seller_id_by_order_{$order_id}" );
     }
 
     /**
