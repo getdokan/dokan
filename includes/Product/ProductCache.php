@@ -19,12 +19,15 @@ class ProductCache {
         add_action( 'dokan_new_product_added', [ $this, 'clear_seller_product_caches' ], 20 );
         add_action( 'dokan_product_updated', [ $this, 'clear_seller_product_caches' ], 20 );
         add_action( 'dokan_product_deleted', [ $this, 'clear_seller_product_caches' ], 20 );
-        add_action( 'dokan_bulk_product_delete', [ $this, 'clear_seller_product_caches' ], 20 );
         add_action( 'dokan_product_duplicate_after_save', [ $this, 'clear_seller_product_caches' ], 20 );
 
+        add_action( 'woocommerce_new_product', [ $this, 'clear_seller_product_caches' ], 20 );
         add_action( 'woocommerce_update_product', [ $this, 'clear_seller_product_caches' ], 20 );
         add_action( 'woocommerce_product_duplicate', [ $this, 'clear_seller_product_caches' ], 20 );
         add_action( 'woocommerce_product_import_inserted_product_object', [ $this, 'clear_seller_product_caches' ], 20 );
+
+        add_action( 'wp_trash_post', [ $this, 'clear_seller_product_caches' ], 20 );
+        add_action( 'delete_post', [ $this, 'clear_seller_product_caches' ], 20 );
 
         add_action( 'dokan_product_updated', [ $this, 'clear_single_product_caches' ], 20 );
         add_action( 'dokan_bulk_product_status_change', [ $this, 'cache_clear_bulk_product_status_change' ], 20, 2 );
@@ -40,12 +43,17 @@ class ProductCache {
      *
      * @return void
      */
-    public function clear_seller_product_caches( $product_id ) {
+    public function clear_seller_product_caches( $product ) {
         // some hooks can return product object also, making sure we are getting id only
-        if ( $product_id instanceof \WC_Product ) {
-            $product_id = $product_id->get_id();
+        if ( ! $product instanceof \WC_Product ) {
+            $product_id = wc_get_product( $product );
         }
-        $seller_id = get_post_field( 'post_author', $product_id );
+
+        if ( ! $product instanceof \WC_Product ) {
+            return;
+        }
+
+        $seller_id = get_post_field( 'post_author', $product->get_id() );
 
         Cache::invalidate_group( 'product_data' );
         Cache::invalidate_group( 'seller_product_data_' . $seller_id );
