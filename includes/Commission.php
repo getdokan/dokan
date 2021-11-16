@@ -99,11 +99,11 @@ class Commission {
             $tmp_order->save_meta_data();
 
             //remove cache for seller earning
-            $cache_key = 'get_earning_from_order_table' . $tmp_order->get_id() . 'seller';
+            $cache_key = "get_earning_from_order_table_{$tmp_order->get_id()}_seller";
             Cache::delete( $cache_key );
 
             // remove cache for seller earning
-            $cache_key = 'get_earning_from_order_table' . $tmp_order->get_id() . 'admin';
+            $cache_key = "get_earning_from_order_table_{$tmp_order->get_id()}_admin";
             Cache::delete( $cache_key );
         }
     }
@@ -691,7 +691,7 @@ class Commission {
     public function get_earning_from_order_table( $order_id, $context = 'seller' ) {
         global $wpdb;
 
-        $cache_key = 'get_earning_from_order_table' . $order_id . $context;
+        $cache_key = "get_earning_from_order_table_{$order_id}_{$context}";
         $earning   = Cache::get( $cache_key );
 
         if ( false !== $earning ) {
