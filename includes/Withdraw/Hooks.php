@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\Withdraw;
 
+use Automattic\WooCommerce\Utilities\NumberUtil;
+
 class Hooks {
 
     /**
@@ -15,13 +17,13 @@ class Hooks {
         add_action( 'dokan_withdraw_request_approved', [ $this, 'update_vendor_balance' ], 11 );
 
         // Init Withdraw Cache Class
-        new Cache();
+        new WithdrawCache();
     }
 
     /**
      * Update vendor balance after approve a request.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.0
      *
      * @param \WeDevs\Dokan\Withdraw\Withdraw $withdraw
      *
@@ -30,7 +32,7 @@ class Hooks {
     public function update_vendor_balance( $withdraw ) {
         global $wpdb;
 
-        if ( round( dokan_get_seller_balance( $withdraw->get_user_id(), false ), 2 ) < round( $withdraw->get_amount(), 2 ) ) {
+        if ( NumberUtil::round( dokan_get_seller_balance( $withdraw->get_user_id(), false ), 2 ) < NumberUtil::round( $withdraw->get_amount(), 2 ) ) {
             return;
         }
 

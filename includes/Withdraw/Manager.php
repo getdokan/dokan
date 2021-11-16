@@ -231,13 +231,15 @@ class Manager {
      * @return array
      */
     public function get_withdraw_requests( $user_id = '', $status = 0, $limit = 10, $offset = 0 ) {
-        global $wpdb;
+        // get all function arguments as key => value pairs
+        $args = get_defined_vars();
 
-        $cache_group = empty( $user_id ) ? 'withdraws' : "withdraws_seller_$user_id";
-        $cache_key   = "withdraw_requests_{$user_id}_{$status}_{$limit}_{$offset}";
+        $cache_group = empty( $user_id ) ? 'withdraws' : "withdraws_seller_{$user_id}";
+        $cache_key   = 'withdraw_requests_' . md5( wp_json_encode( $args ) );
         $result      = Cache::get( $cache_key, $cache_group );
 
         if ( false === $result ) {
+            global $wpdb;
             if ( empty( $user_id ) ) {
                 $result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} WHERE status = %d LIMIT %d, %d", $status, $offset, $limit ) );
             } else {

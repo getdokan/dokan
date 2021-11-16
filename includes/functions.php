@@ -401,7 +401,7 @@ function dokan_author_pageviews( $seller_id ) {
 
         $pageview = $count->pageview;
 
-        Cache::set( $cache_key, $pageview, $cache_group, 3600 * 4 );
+        Cache::set( $cache_key, $pageview );
     }
 
     return $pageview;

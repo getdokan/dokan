@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Order;
 
 use WeDevs\Dokan\Cache;
+use WeDevs\Dokan\Withdraw\WithdrawCache;
 
 /**
  * Order Cache class.
@@ -40,6 +41,9 @@ class OrderCache {
 
         // Remove cached seller_id after an woocommerce order
         Cache::delete( "get_seller_id_by_order_{$order_id}" );
+
+        // Remove withdraw cache
+        WithdrawCache::delete( $seller_id );
     }
 
     /**

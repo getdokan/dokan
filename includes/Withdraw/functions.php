@@ -230,7 +230,7 @@ function dokan_get_withdraw_count( $user_id = null ) {
     global $wpdb;
 
     $cache_group = empty( $user_id ) ? 'withdraws' : "withdraws_seller_$user_id";
-    $cache_key   = 'withdraw_count_' . $user_id;
+    $cache_key   = "get_withdraw_count_{$user_id}";
     $counts      = Cache::get( $cache_key, $cache_group );
 
     if ( false === $counts ) {
