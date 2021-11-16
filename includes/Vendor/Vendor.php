@@ -540,16 +540,17 @@ class Vendor {
      * @return array
      */
     public function get_published_products() {
-        $transient_key = 'dokan_vendor_get_published_products_' . $this->id;
+        $transient_group = "seller_product_data_{$this->get_id()}";
+        $transient_key   = "get_published_products_{$this->get_id()}";
 
-        if ( false === ( $products = get_transient( $transient_key ) ) ) {
+        if ( false === ( $products = Cache::get_transient( $transient_key, $transient_group ) ) ) {
             $products = dokan()->product->all( [
                 'author'      => $this->id,
                 'post_status' => 'publish',
                 'fields'      => 'ids'
             ] );
             $products = $products->posts;
-            set_transient( $transient_key, $products, WEEK_IN_SECONDS );
+            Cache::set_transient( $transient_key, $products, $transient_group );
         }
 
         return $products;
@@ -563,9 +564,10 @@ class Vendor {
      * @return array
      */
     public function get_best_selling_products() {
-        $transient_key = 'dokan_vendor_get_best_selling_products_' . $this->id;
+        $transient_group = "seller_product_data_{$this->get_id()}";
+        $transient_key   = "get_best_selling_products_{$this->get_id()}";
 
-        if ( false === ( $products = get_transient( $transient_key ) ) ) {
+        if ( false === ( $products = Cache::get_transient( $transient_key, $transient_group ) ) ) {
             $args = [
                 'author'         => $this->id,
                 'post_status'    => 'publish',
@@ -583,7 +585,7 @@ class Vendor {
 
             $products = dokan()->product->best_selling( $args );
             $products = $products->posts;
-            set_transient( $transient_key, $products, WEEK_IN_SECONDS );
+            Cache::set_transient( $transient_key, $products, $transient_group );
         }
 
         return $products;
@@ -599,12 +601,13 @@ class Vendor {
      * @return array
      */
     public function get_store_categories( $best_selling = false ) {
-        $transient_key = function_exists( 'wpml_get_current_language' ) ? 'dokan_vendor_get_store_categories_' . wpml_get_current_language() . '_' . $this->id  : 'dokan_vendor_get_store_categories_' . $this->id;
+        $transient_group = "seller_product_data_{$this->get_id()}";
+        $transient_key = function_exists( 'wpml_get_current_language' ) ? 'get_store_categories_' . wpml_get_current_language() . '_' . $this->get_id()  : 'get_store_categories_' . $this->get_id();
         if ( $best_selling ) {
-            $transient_key = function_exists( 'wpml_get_current_language' ) ? 'dokan_vendor_get_best_selling_categories_' . wpml_get_current_language() . '_' . $this->id : 'dokan_vendor_get_best_selling_categories_' . $this->id;
+            $transient_key = function_exists( 'wpml_get_current_language' ) ? 'get_best_selling_categories_' . wpml_get_current_language() . '_' . $this->get_id() : 'get_best_selling_categories_' . $this->get_id();
         }
 
-        if ( false === ( $all_categories = get_transient( $transient_key ) ) ) {
+        if ( false === ( $all_categories = Cache::get_transient( $transient_key, $transient_group ) ) ) {
             $products = true === $best_selling ? $this->get_best_selling_products() : $this->get_published_products();
             if ( empty( $products ) ) {
                 return [];
@@ -659,7 +662,7 @@ class Vendor {
                 }
             }
 
-            set_transient( $transient_key, $all_categories, WEEK_IN_SECONDS );
+            Cache::set_transient( $transient_key, $all_categories, $transient_group );
         }
 
         return $all_categories;
@@ -703,8 +706,8 @@ class Vendor {
         global $wpdb;
 
         $on_date     = $on_date && strtotime( $on_date ) ? dokan_current_datetime()->modify( $on_date ) : dokan_current_datetime();
-        $cache_group = 'seller_order_data_'.$this->id;
-        $cache_key   = "seller_earnings_{$this->id}_{$on_date->format('Y_m_d')}";
+        $cache_group = "seller_order_data_{$this->get_id()}";
+        $cache_key   = "seller_earnings_{$this->get_id()}_{$on_date->format('Y_m_d')}";
         $earning     = Cache::get( $cache_key, $cache_group );
         $on_date     = $on_date->format( 'Y-m-d H:i:s' );
 

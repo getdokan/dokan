@@ -69,6 +69,7 @@ class ProductCache {
         Cache::invalidate_group( 'product_data' );
         Cache::invalidate_group( "seller_product_data_{$seller_id}" );
         Cache::invalidate_group( "seller_product_stock_data_{$seller_id}" );
+        Cache::invalidate_transient_group( "seller_product_data_{$seller_id}" );
     }
 
     /**
