@@ -1626,8 +1626,8 @@ function dokan_get_product_count( $from = null, $to = null, $seller_id = null ) 
         [
             'date_query' => [
                 [
-                    'year'  => date( 'Y' ),
-                    'month' => date( 'm' ),
+                    'year'  => dokan_current_datetime()->format( 'Y' ),
+                    'month' => dokan_current_datetime()->format( 'm' ),
                 ],
             ],
             'author' => $seller_id ? $seller_id : '',
@@ -1639,8 +1639,8 @@ function dokan_get_product_count( $from = null, $to = null, $seller_id = null ) 
         [
             'date_query' => [
                 [
-                    'year'  => date( 'Y', strtotime( 'last month' ) ),
-                    'month' => date( 'm', strtotime( 'last month' ) ),
+                    'year'  => dokan_current_datetime()->modify( 'last month' )->format( 'Y' ),
+                    'month' => dokan_current_datetime()->modify( 'last month' )->format( 'm' ),
                 ],
             ],
             'author' => $seller_id ? $seller_id : '',
