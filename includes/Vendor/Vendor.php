@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Vendor;
 
+use Automattic\WooCommerce\Utilities\NumberUtil;
 use WeDevs\Dokan\Cache;
 use WP_Query;
 use WP_User;
@@ -704,7 +705,7 @@ class Vendor {
         $cache_group = 'seller_order_data_'.$this->id;
         $cache_key   = "seller_earnings_{$this->id}_{$on_date->format('Y_m_d')}";
         $earning     = Cache::get( $cache_key, $cache_group );
-        $on_date     = $on_date->format( 'Y-m-d' );
+        $on_date     = $on_date->format( 'Y-m-d H:i:s' );
 
         if ( false === $earning ) {
             $installed_version = get_option( 'dokan_theme_version' );
@@ -757,34 +758,37 @@ class Vendor {
     public function get_balance( $formatted = true, $on_date= '' ) {
         global $wpdb;
 
-        $vendor_id     = dokan_get_current_user_id();
-        $status        = dokan_withdraw_get_active_order_status_in_comma();
-        $cache_group   = "withdraws_seller_$vendor_id";
-        $cache_key     = $on_date ? "seller_balance_on_{$on_date}_$this->id" : 'seller_balance_' . $this->id;
+        $seller_id     = $this->get_id() ? $this->get_id() : dokan_get_current_user_id();
+        $threshold_day = dokan_get_withdraw_threshold( $seller_id );
+        $on_date       = $on_date && strtotime( $on_date ) ? dokan_current_datetime()->modify( $on_date ) : dokan_current_datetime();
+        $date          = $on_date->modify( "- $threshold_day days" )->format( 'Y-m-d' );
+        $cache_group   = "withdraws_seller_{$seller_id}";
+        $cache_key     = "seller_balance_{$seller_id}_{$on_date->format( 'Y_m_d' )}";
         $earning       = Cache::get( $cache_key, $cache_group );
-        $threshold_day = dokan_get_withdraw_threshold( $vendor_id );
-        $on_date       = $on_date ? date( 'Y-m-d', strtotime( $on_date ) ) : current_time( 'mysql' );
-        $date          = date( 'Y-m-d', strtotime( $on_date . ' -'.$threshold_day.' days' ) );
+        $on_date       = $on_date->format( 'Y-m-d H:i:s' );
+
 
         if ( false === $earning ) {
             $installed_version = get_option( 'dokan_theme_version' );
+            $status            = dokan_withdraw_get_active_order_status_in_comma();
+
             if ( ! $installed_version || version_compare( $installed_version, '2.8.2', '>' ) ) {
                 $result = $wpdb->get_row( $wpdb->prepare(
                         "SELECT SUM(debit) as earnings,
                         ( SELECT SUM(credit) FROM {$wpdb->prefix}dokan_vendor_balance WHERE vendor_id = %d AND DATE(balance_date) <= %s ) as withdraw
                         from {$wpdb->prefix}dokan_vendor_balance
                         WHERE vendor_id = %d AND DATE(balance_date) <= %s AND status IN($status)",
-                    $this->id, $on_date, $this->id, $on_date ) );
+                    $seller_id, $on_date, $seller_id, $on_date ) );
             } else {
                 $result = $wpdb->get_row( $wpdb->prepare(
                     "SELECT SUM(net_amount) as earnings,
                     (SELECT SUM(amount) FROM {$wpdb->prefix}dokan_withdraw WHERE user_id = %d AND status = 1 AND DATE(`date`) <= %s) as withdraw
                     FROM {$wpdb->prefix}dokan_orders as do LEFT JOIN {$wpdb->prefix}posts as p ON do.order_id = p.ID
                     WHERE seller_id = %d AND DATE(p.post_date) <= %s AND order_status IN ($status)",
-                    $this->id, $on_date, $this->id, $date ) );
+                    $seller_id, $on_date, $seller_id, $date ) );
             }
 
-            $earning = (float) $result->earnings - (float) round( $result->withdraw, wc_get_rounding_precision() );
+            $earning = (float) $result->earnings - (float) NumberUtil::round( $result->withdraw, wc_get_rounding_precision() );
 
             Cache::set( $cache_key, $earning, $cache_group );
         }

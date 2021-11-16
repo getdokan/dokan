@@ -56,8 +56,8 @@ class ProductCache {
         $seller_id = get_post_field( 'post_author', $product->get_id() );
 
         Cache::invalidate_group( 'product_data' );
-        Cache::invalidate_group( 'seller_product_data_' . $seller_id );
-        Cache::invalidate_group( 'seller_product_stock_data_' . $seller_id );
+        Cache::invalidate_group( "seller_product_data_{$seller_id}" );
+        Cache::invalidate_group( "seller_product_stock_data_{$seller_id}" );
     }
 
 
