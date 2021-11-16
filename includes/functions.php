@@ -468,7 +468,13 @@ function dokan_generate_sync_table() {
     if ( $orders ) {
         foreach ( $orders as $order ) {
             $wc_order         = wc_get_order( $order->order_id );
-            $admin_commission = dokan_get_admin_commission_by( $wc_order, $order->seller_id );
+
+            if ( dokan_is_admin_coupon_applied( $order, $seller_id ) ) {
+                $net_amount = dokan()->commission->get_earning_by_order( $order, 'seller' );
+            } else {
+                $admin_commission = dokan()->commission->get_earning_by_order( $order, 'admin' );
+                $net_amount       = $order_total - $admin_commission;
+            }
 
             $wpdb->insert(
                 $table_name,
@@ -476,7 +482,7 @@ function dokan_generate_sync_table() {
                     'order_id'     => $order->order_id,
                     'seller_id'    => $order->seller_id,
                     'order_total'  => $order->order_total,
-                    'net_amount'   => $order->order_total - $admin_commission,
+                    'net_amount'   => $net_amount,
                     'order_status' => $order->order_status,
                 ],
                 [
@@ -673,24 +679,27 @@ function dokan_get_new_post_status() {
 /**
  * Function to get the client ip address
  *
+ * @since 3.3.1 Updated some logic
+ *
  * @return string
  */
 function dokan_get_client_ip() {
-    $ipaddress = '';
-    $_server   = $_SERVER;
-
-    if ( isset( $_server['HTTP_CLIENT_IP'] ) ) {
-        $ipaddress = $_server['HTTP_CLIENT_IP'];
-    } elseif ( isset( $_server['HTTP_X_FORWARDED_FOR'] ) ) {
-        $ipaddress = $_server['HTTP_X_FORWARDED_FOR'];
-    } elseif ( isset( $_server['HTTP_X_FORWARDED'] ) ) {
-        $ipaddress = $_server['HTTP_X_FORWARDED'];
-    } elseif ( isset( $_server['HTTP_FORWARDED_FOR'] ) ) {
-        $ipaddress = $_server['HTTP_FORWARDED_FOR'];
-    } elseif ( isset( $_server['HTTP_FORWARDED'] ) ) {
-        $ipaddress = $_server['HTTP_FORWARDED'];
-    } elseif ( isset( $_server['REMOTE_ADDR'] ) ) {
-        $ipaddress = $_server['REMOTE_ADDR'];
+    if ( isset( $_SERVER['HTTP_X_REAL_IP'] ) ) {
+        $ipaddress = sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_REAL_IP'] ) );
+    } elseif ( isset( $_SERVER['HTTP_CLIENT_IP'] ) ) {
+        $ipaddress = sanitize_text_field( wp_unslash( $_SERVER['HTTP_CLIENT_IP'] ) );
+    } elseif ( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
+        // Proxy servers can send through this header like this: X-Forwarded-For: client1, proxy1, proxy2
+        // Make sure we always only send through the first IP in the list which should always be the client IP.
+        $ipaddress = (string) rest_is_ip_address( trim( current( preg_split( '/,/', sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) ) ) ) );
+    } elseif ( isset( $_SERVER['HTTP_X_FORWARDED'] ) ) {
+        $ipaddress = sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED'] ) );
+    } elseif ( isset( $_SERVER['HTTP_FORWARDED_FOR'] ) ) {
+        $ipaddress = sanitize_text_field( wp_unslash( $_SERVER['HTTP_FORWARDED_FOR'] ) );
+    } elseif ( isset( $_SERVER['HTTP_FORWARDED'] ) ) {
+        $ipaddress = sanitize_text_field( wp_unslash( $_SERVER['HTTP_FORWARDED'] ) );
+    } elseif ( isset( $_SERVER['REMOTE_ADDR'] ) ) {
+        $ipaddress = sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) );
     } else {
         $ipaddress = 'UNKNOWN';
     }
@@ -4041,6 +4050,27 @@ function dokan_format_datetime( $date = '', $format = false ) {
 }
 
 /**
+ * This method will convert datetime string into timestamp
+ *
+ * @since 3.2.15
+ * @param string $date_string
+ * @param bool $gmt_date
+ * @return bool|int date timestamp on success, false otherwise
+ */
+function dokan_get_timestamp( $date_string, $gmt_date = false ) {
+    // get current time
+    $now = dokan_current_datetime();
+    // convert to gmt time
+    if ( $gmt_date ) {
+        $now = $now->setTimezone( new DateTimeZone( 'UTC' ) );
+    }
+    // modify current date
+    $now = $now->modify( $date_string );
+
+    return $now ? $now->getTimestamp() : false;
+}
+
+/**
  * Get threshold day for a user
  *
  * @param $user_id
@@ -4057,4 +4087,77 @@ function dokan_get_withdraw_threshold( $user_id ) {
     }
 
     return ( $threshold_day ) ? absint( $threshold_day ) : 0;
+}
+
+/**
+ * Insert a value or key/value pair (assoc array) after a specific key in an array.  If key doesn't exist, value is appended
+ * to the end of the array.
+ *
+ * @param array $old_array
+ * @param array $new_array
+ * @param string $insert_after_key
+ *
+ * @since 3.2.16
+ *
+ * @return array
+ */
+function dokan_array_insert_after( array $old_array, array $new_array, $insert_after_key ) {
+    $keys   = array_keys( $old_array );
+    $index  = array_search( $insert_after_key, $keys, true );
+    $pos    = false === $index ? count( $old_array ) : $index + 1;
+
+    return array_slice( $old_array, 0, $pos, true ) + $new_array + array_slice( $old_array, $pos, count( $old_array ) - 1, true );
+}
+
+/**
+ * Check a order have apply admin coupon
+ *
+ * @since 3.2.16
+ *
+ * @param WC_Order $order
+ * @param int      $vendor_id
+ * @param int      $product_id
+ *
+ * @return bool
+ */
+function dokan_is_admin_coupon_applied( $order, $vendor_id, $product_id = 0 ) {
+    if (
+        function_exists( 'dokan_is_admin_coupon_used_for_vendors' ) &&
+        dokan_is_admin_coupon_used_for_vendors( $order, $vendor_id, $product_id ) ) {
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Get vendor store banner width
+ *
+ * Added new filter hook for vendor store
+ * banner width size @hook dokan_store_banner_default_width
+ *
+ * @since 3.2.15
+ *
+ * @return int $width Banner width
+ */
+function dokan_get_vendor_store_banner_width() {
+    $width = absint( apply_filters( 'dokan_store_banner_default_width', dokan_get_option( 'store_banner_width', 'dokan_appearance', 625 ) ) );
+
+    return ( $width !== 0 ) ? $width : 625;
+}
+
+/**
+ * Get vendor store banner height
+ *
+ * Added new filter hook for vendor
+ * store banner height size @hook dokan_store_banner_default_height
+ *
+ * @since 3.2.15
+ *
+ * @return int $height Banner height
+ */
+function dokan_get_vendor_store_banner_height() {
+    $height = absint( apply_filters( 'dokan_store_banner_default_height', dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 ) ) );
+
+    return ( $height !== 0 ) ? $height : 300;
 }

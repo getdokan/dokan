@@ -1,11 +1,11 @@
 dokanWebpack([4],{
 
-/***/ 233:
+/***/ 236:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__wordpress_hooks__ = __webpack_require__(234);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__wordpress_hooks__ = __webpack_require__(237);
 
 dokan.wpPackages = {
   hooks: Object(__WEBPACK_IMPORTED_MODULE_0__wordpress_hooks__["a" /* createHooks */])()
@@ -13,4 +13,4 @@ dokan.wpPackages = {
 
 /***/ })
 
-},[233]);
+},[236]);

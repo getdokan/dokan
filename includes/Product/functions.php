@@ -481,7 +481,7 @@ function dokan_product_get_row_action( $post ) {
                 ), 'dokan-delete-product'
             ),
             'class' => 'delete',
-            'other' => 'onclick="return confirm( \'' . __( 'Are you sure?', 'dokan-lite' ) . '\' );"',
+            'other' => 'onclick="dokan_show_delete_prompt( event, \'' . __( 'Are you sure?', 'dokan-lite' ) . '\' );"',
         ];
     }
 
@@ -518,13 +518,15 @@ function dokan_product_get_row_action( $post ) {
 /**
  * Dokan get vendor by product
  *
- * @param int|object $id Product ID or Product Object
+ * @param int|WC_Product $product Product ID or Product Object
+ * @param bool $id return true to get vendor id
  *
  * @since  2.9.8
+ * @since 3.2.16 added $id parameter
  *
- * @return Dokan_Vendor|false on faiure
+ * @return int|\WeDevs\Dokan\Vendor\Vendor|false on failure
  */
-function dokan_get_vendor_by_product( $product ) {
+function dokan_get_vendor_by_product( $product, $id = false ) {
     if ( ! $product instanceof WC_Product ) {
         $product = wc_get_product( $product );
     }
@@ -541,7 +543,7 @@ function dokan_get_vendor_by_product( $product ) {
 
     $vendor_id = apply_filters( 'dokan_get_vendor_by_product', $vendor_id, $product );
 
-    return dokan()->vendor->get( $vendor_id );
+    return false === $id ? dokan()->vendor->get( $vendor_id ) : (int) $vendor_id;
 }
 
 /**

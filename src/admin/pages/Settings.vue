@@ -83,6 +83,7 @@
     import Fields from "admin/components/Fields.vue"
     import SettingsBanner from "admin/components/SettingsBanner.vue";
     import UpgradeBanner from "admin/components/UpgradeBanner.vue";
+    import $ from 'jquery';
 
     export default {
 
@@ -405,6 +406,26 @@
 
                 self.settingFields = settingFields;
                 self.settingSections = settingSections;
+            },
+
+            handleDataClearCheckboxEvent() {
+                let self = this;
+                $('.data_clear_on_uninstall').on('change', "#dokan_general\\[data_clear_on_uninstall\\]", function (e) {
+                    if( $(this).is(':checked') ) {
+                        self.$swal({
+                            title: self.__( 'Are you sure?', 'dokan-lite' ),
+                            type: 'warning',
+                            html: self.__( 'All data and tables related to Dokan and Dokan Pro will be deleted permanently after deleting the Dokan plugin. You will not be able to recover your lost data unless you keep a backup. Do you want to continue?', 'dokan-lite' ),
+                            showCancelButton: true,
+                            confirmButtonText: self.__( 'Okay', 'dokan-lite' ),
+                            cancelButtonText: self.__( 'Cancel', 'dokan-lite' ),
+                        }).then( (response) => {
+                            if ( response.dismiss ) {
+                                self.settingValues.dokan_general.data_clear_on_uninstall = 'off';
+                            }
+                        });
+                    }
+                });
             }
         },
 
@@ -419,6 +440,10 @@
             this.settingSections = dokan.settings_sections;
             this.settingFields = dokan.settings_fields;
         },
+
+        updated() {
+            this.handleDataClearCheckboxEvent();
+        }
     };
 
 </script>
@@ -638,9 +663,17 @@
     }
 
     .form-table .dokan-settings-field-type-sub_section:first-child th.dokan-settings-sub-section-title {
-
         label {
             margin-top: 0;
+        }
+    }
+
+    tr.data_clear_on_uninstall {
+        td fieldset label {
+            background: #e00;
+            padding: 5px;
+            color: white;
+            border-radius: 3px;
         }
     }
 </style>

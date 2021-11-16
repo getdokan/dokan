@@ -14,7 +14,7 @@
                     </div>
 
                     <p class="picture-footer"
-                        v-html="sprintf( __( 'You can change your profile picutre on %s', 'dokan-lite' ), '<a href=\'https://gravatar.com/\' target=\'_blank\'>Gravatar</a>' )"
+                        v-html="sprintf( __( 'You can change your profile picture on %s', 'dokan-lite' ), '<a href=\'https://gravatar.com/\' target=\'_blank\'>Gravatar</a>' )"
                     />
                 </div>
 
