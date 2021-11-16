@@ -317,29 +317,38 @@ class Ajax {
      * Catches the form submission from store page
      */
     public function contact_seller() {
-        check_ajax_referer( 'dokan_contact_seller' );
+        if ( ! isset( $_POST['dokan_contact_seller_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['dokan_contact_seller_nonce'] ) ), 'dokan_contact_seller' ) ) {
+            wp_send_json_error( __( 'Invalid nonce', 'dokan-lite' ) );
+        }
 
-        $posted = $_POST;
-
-        $contact_name    = sanitize_text_field( $posted['name'] );
-        $contact_email   = sanitize_email( $posted['email'] );
-        $contact_message = wp_strip_all_tags( $posted['message'] );
-        $error_template  = '<div class="alert alert-danger">%s</div>';
+        $contact_name    = sanitize_text_field( wp_unslash( $_POST['name'] ) );
+        $contact_email   = sanitize_email( wp_unslash( $_POST['email'] ) );
+        $contact_message = sanitize_text_field( wp_unslash( $_POST['message'] ) );
+        $captcha_token   = sanitize_key( wp_unslash( $_POST['recaptcha_token'] ) );
+        $captcha_sitekey = sanitize_key( wp_unslash( $_POST['recaptcha_site_key'] ) );
+        $error_template  = '<span class="alert alert-danger error">%s</span>';
 
         if ( empty( $contact_name ) ) {
             $message = sprintf( $error_template, __( 'Please provide your name.', 'dokan-lite' ) );
             wp_send_json_error( $message );
         }
 
-        if ( empty( $contact_name ) ) {
-            $message = sprintf( $error_template, __( 'Please provide your name.', 'dokan-lite' ) );
+        if ( empty( $contact_email ) ) {
+            $message = sprintf( $error_template, __( 'Please provide your email.', 'dokan-lite' ) );
             wp_send_json_error( $message );
         }
 
-        $seller = get_user_by( 'id', (int) $posted['seller_id'] );
+        $seller = get_user_by( 'id', intval( wp_unslash( $_POST['seller_id'] ) ) );
 
-        if ( ! $seller ) {
+        if ( empty( $seller ) ) {
             $message = sprintf( $error_template, __( 'Something went wrong!', 'dokan-lite' ) );
+            wp_send_json_error( $message );
+        }
+
+        $recaptcha_validate = $this->recaptcha_validation_handler( $captcha_sitekey, $captcha_token );
+
+        if ( empty( $recaptcha_validate ) ) {
+            $message = sprintf( $error_template, __( 'Google reCaptcha varification failed!' ) );
             wp_send_json_error( $message );
         }
 
@@ -1032,5 +1041,27 @@ class Ajax {
         update_option( 'dokan_hide_pro_nag', 'hide' );
 
         wp_send_json_success();
+    }
+
+    /**
+     * Handler for reCaptcha validation request.
+     *
+     * @since 3.3.2
+     *
+     * @param string $token
+     * @param string $sitekey
+     *
+     * @return boolean
+     */
+    function recaptcha_validation_handler( $sitekey, $token ) {
+        if ( empty( $sitekey ) || empty( $token ) ) {
+            return false;
+        }
+
+        $siteverify = 'https://www.google.com/recaptcha/api/siteverify';
+        $response   = file_get_contents( $siteverify . '?secret=' . $sitekey . '&response=' . $token );
+        $response   = json_decode( $response, true );
+
+        return $response['success'];
     }
 }
