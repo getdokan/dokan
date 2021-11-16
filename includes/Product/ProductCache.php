@@ -38,8 +38,7 @@ class ProductCache {
      *
      * @since 3.3.2
      *
-     * @param int   $product_id
-     * @param array $post_data
+     * @param int|\WC_Product $product
      *
      * @return void
      */
@@ -54,12 +53,23 @@ class ProductCache {
         }
 
         $seller_id = get_post_field( 'post_author', $product->get_id() );
+        self::delete( $seller_id );
+    }
 
+    /**
+     * Delete cache group related to seller products.
+     *
+     * @since 3.3.2
+     *
+     * @param int $seller_id
+     *
+     * @return void
+     */
+    public static function delete( $seller_id ) {
         Cache::invalidate_group( 'product_data' );
         Cache::invalidate_group( "seller_product_data_{$seller_id}" );
         Cache::invalidate_group( "seller_product_stock_data_{$seller_id}" );
     }
-
 
     /**
      * Clear Single Product Caches.

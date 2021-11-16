@@ -4,6 +4,7 @@ namespace WeDevs\Dokan\Vendor;
 
 use Automattic\WooCommerce\Utilities\NumberUtil;
 use WeDevs\Dokan\Cache;
+use WeDevs\Dokan\Product\ProductCache;
 use WP_Query;
 use WP_User;
 
@@ -753,9 +754,12 @@ class Vendor {
      *
      * @since 3.0.0
      *
-     * @return void
+     * @param bool $formatted
+     * @param string $on_date
+     *
+     * @return float|string float if formatted is false, string otherwise
      */
-    public function get_balance( $formatted = true, $on_date= '' ) {
+    public function get_balance( $formatted = true, $on_date = '' ) {
         global $wpdb;
 
         $seller_id     = $this->get_id() ? $this->get_id() : dokan_get_current_user_id();
@@ -941,9 +945,8 @@ class Vendor {
 
                 wp_update_post( array( 'ID' => $pro->ID, 'post_status' => $status ) );
             }
-            Cache::invalidate_group( 'product_data' );
-            Cache::invalidate_group( 'seller_product_data_' . $this->get_id() );
-            Cache::invalidate_group( 'seller_product_stock_data_' . $this->get_id() );
+            // delete product cache
+            ProductCache::delete( $this->get_id() );
         }
     }
 

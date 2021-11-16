@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Vendor;
 
 use WeDevs\Dokan\Cache;
+use WeDevs\Dokan\Product\ProductCache;
 
 /**
  * Vendor Cache class.
@@ -35,8 +36,6 @@ class VendorCache {
     public function clear_cache_group( $vendor_id ) {
         Cache::invalidate_group( 'vendors' );
         // delete product cache for this vendor
-        Cache::invalidate_group( 'product_data' );
-        Cache::invalidate_group( 'seller_product_data_' . $vendor_id );
-        Cache::invalidate_group( 'seller_product_stock_data_' . $vendor_id );
+        ProductCache::delete( $vendor_id );
     }
 }
