@@ -34,9 +34,9 @@ class Manager {
 
         $args = wp_parse_args( $args, $defaults );
         $args = apply_filters( 'dokan_all_products_query', $args );
-
-        $cache_group = 'product_data';
-        $cache_key   = 'product_manager_all_' . md5( json_encode( $args ) );
+        // get cache group and key
+        $cache_group = ! empty( $args['author'] ) ? "seller_product_data_{$args['author']}" : 'product_data';
+        $cache_key   = 'product_manager_all_' . md5( wp_json_encode( $args ) );
 
         $products = Cache::get( $cache_key, $cache_group );
 
