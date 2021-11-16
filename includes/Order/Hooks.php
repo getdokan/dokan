@@ -292,7 +292,9 @@ class Hooks {
         foreach ( WC()->cart->get_cart() as $item ) {
             $product_id = $item['data']->get_id();
 
-            $available_vendors[]  = (int) get_post_field( 'post_author', $product_id );
+            $vendor = dokan_get_vendor_by_product( $product_id );
+            $available_vendors[]  = $vendor ? $vendor->get_id() : 0;
+
             $available_products[] = $product_id;
         }
 
