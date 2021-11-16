@@ -4,6 +4,7 @@ namespace WeDevs\Dokan\Vendor;
 
 use WeDevs\Dokan\Cache;
 use WP_Query;
+use WP_User;
 
 /**
  * Dokan Vendor
@@ -699,37 +700,34 @@ class Vendor {
     public function get_earnings( $formatted = true, $on_date = '' ) {
         global $wpdb;
 
-        $status        = dokan_withdraw_get_active_order_status_in_comma();
-        $cache_group   = 'seller_order_data_'.$this->id;
-        $cache_key     = 'seller_earnings_' . $this->id;
-        $earning       = Cache::get( $cache_key, $cache_group );
-        $on_date       = $on_date ? date( 'Y-m-d', strtotime( $on_date ) ) : current_time( 'mysql' );
-        $trn_type      = 'dokan_refund';
-        $refund_status = 'approved';
+        $on_date     = $on_date && strtotime( $on_date ) ? dokan_current_datetime()->modify( $on_date ) : dokan_current_datetime();
+        $cache_group = 'seller_order_data_'.$this->id;
+        $cache_key   = "seller_earnings_{$this->id}_{$on_date->format('Y_m_d')}";
+        $earning     = Cache::get( $cache_key, $cache_group );
+        $on_date     = $on_date->format( 'Y-m-d' );
 
         if ( false === $earning ) {
             $installed_version = get_option( 'dokan_theme_version' );
+            $status            = dokan_withdraw_get_active_order_status_in_comma();
 
             if ( ! $installed_version || version_compare( $installed_version, '2.8.2', '>' ) ) {
-                $debit_balance  = $wpdb->get_row( $wpdb->prepare(
+                $debit_balance  = $wpdb->get_var( $wpdb->prepare(
                     "SELECT SUM(debit) AS earnings
                     FROM {$wpdb->prefix}dokan_vendor_balance
                     WHERE
                         vendor_id = %d AND DATE(balance_date) <= %s AND status IN ($status) AND trn_type = 'dokan_orders'",
                     $this->id, $on_date ) );
 
-               $credit_balance = $wpdb->get_row( $wpdb->prepare(
+               $credit_balance = $wpdb->get_var( $wpdb->prepare(
                     "SELECT SUM(credit) AS earnings
                     FROM {$wpdb->prefix}dokan_vendor_balance
                     WHERE
                         vendor_id = %d AND DATE(balance_date) <= %s AND trn_type = %s AND status = %s",
-                    $this->id, $on_date, $trn_type, $refund_status ) );
+                    $this->id, $on_date, 'dokan_refund', 'approved' ) );
 
-                $earnings         = $debit_balance->earnings - $credit_balance->earnings;
-                $result           = new \stdClass;
-                $result->earnings = $earnings;
+                $earning = floatval( $debit_balance - $credit_balance );
             } else {
-                $result = $wpdb->get_row( $wpdb->prepare(
+                $earning = (float) $wpdb->get_var( $wpdb->prepare(
                     "SELECT
                         SUM(net_amount) as earnings
                     FROM
@@ -738,8 +736,6 @@ class Vendor {
                         seller_id = %d AND DATE(p.post_date) <= %s AND order_status IN ($status)",
                     $this->id, $on_date ) );
             }
-
-            $earning = (float) $result->earnings;
 
             Cache::set( $cache_key, $earning, $cache_group );
         }
@@ -809,7 +805,7 @@ class Vendor {
      *
      * @since 3.0.0
      *
-     * @return void
+     * @return array
      */
     public function get_rating() {
         global $wpdb;
