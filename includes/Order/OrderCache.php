@@ -20,6 +20,9 @@ class OrderCache {
         add_action( 'woocommerce_order_status_changed', [ $this, 'order_status_changed' ], 10 );
         add_action( 'woocommerce_update_order', [ $this, 'reset_cache_on_update_order' ], 10 );
         add_action( 'woocommerce_order_refunded', [ $this, 'reset_cache_on_update_order' ], 10 );
+
+        add_action( 'wp_trash_post', [ $this, 'reset_cache_before_deleting_order' ], 20 );
+        add_action( 'delete_post', [ $this, 'reset_cache_before_deleting_order' ], 20 );
     }
 
     /**
@@ -63,6 +66,28 @@ class OrderCache {
      * @return void
      */
     public function reset_cache_on_update_order( $order_id ) {
+        $seller_id = dokan_get_seller_id_by_order( $order_id );
+
+        $this->reset_seller_order_data( $order_id, $seller_id );
+    }
+
+    /**
+     * Reset cache data on deleting WooCommerce order.
+     *
+     * @since 3.3.2
+     *
+     * @param int $order_id
+     *
+     * @return void
+     */
+    public function reset_cache_before_deleting_order( $order_id ) {
+        // wp_trash_post and delete_post is generic hooks and will be called for each product delete
+        // we are making sure $order_id is a valid order
+        $order = wc_get_order( $order_id );
+        if ( ! $order ) {
+            return;
+        }
+
         $seller_id = dokan_get_seller_id_by_order( $order_id );
 
         $this->reset_seller_order_data( $order_id, $seller_id );
