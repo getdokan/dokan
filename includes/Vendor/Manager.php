@@ -95,7 +95,7 @@ class Manager {
         unset( $args['featured'] );
 
         $cache_group = 'vendors';
-        $cache_key   = 'vendors_' . md5( json_encode( $args ) );
+        $cache_key   = 'vendors_' . md5( wp_json_encode( $args ) );
         $user_query  = Cache::get( $cache_key, $cache_group );
 
         if ( false === $user_query ) {

@@ -13,6 +13,6 @@ class Hooks {
      */
     public function __construct() {
         // Init Vendor Cache Class
-        new Cache();
+        new VendorCache();
     }
 }

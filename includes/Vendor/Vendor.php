@@ -262,7 +262,7 @@ class Vendor {
      *
      * @since 3.0.0
      *
-     * @return void
+     * @return int
      */
     public function get_id() {
         return $this->id;
@@ -941,6 +941,9 @@ class Vendor {
 
                 wp_update_post( array( 'ID' => $pro->ID, 'post_status' => $status ) );
             }
+            Cache::invalidate_group( 'product_data' );
+            Cache::invalidate_group( 'seller_product_data_' . $this->get_id() );
+            Cache::invalidate_group( 'seller_product_stock_data_' . $this->get_id() );
         }
     }
 
