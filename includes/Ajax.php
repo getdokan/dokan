@@ -339,7 +339,7 @@ class Ajax {
             wp_send_json_error( $message );
         }
 
-        $seller = get_user_by( 'id', intval( wp_unslash( $_POST['seller_id'] ) ) );
+        $seller =  ! empty( $_POST['seller_id'] ) ? get_user_by( 'id', intval( wp_unslash( $_POST['seller_id'] ) ) ): 0;
 
         if ( empty( $seller ) ) {
             $message = sprintf( $error_template, __( 'Something went wrong!', 'dokan-lite' ) );
@@ -351,7 +351,7 @@ class Ajax {
             $recaptcha_validate = $this->recaptcha_validation_handler( $captcha_sitekey, $captcha_token, $captcha_action );
 
             if ( empty( $recaptcha_validate ) ) {
-                $message = sprintf( $error_template, __( 'Google reCaptcha varification failed!' ) );
+                $message = sprintf( $error_template, __( 'Google reCaptcha varification failed!', 'dokan-lite' ) );
                 wp_send_json_error( $message );
             }
         }
@@ -1058,7 +1058,7 @@ class Ajax {
      *
      * @return boolean
      */
-    function recaptcha_validation_handler( $sitekey, $token, $action ) {
+    public function recaptcha_validation_handler( $sitekey, $token, $action ) {
         if ( empty( $sitekey ) || empty( $token ) ) {
             return false;
         }
