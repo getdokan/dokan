@@ -14,16 +14,29 @@ use WP_Widget;
 class StoreContactForm extends WP_Widget {
 
     /**
+     * Google reCaptcha site key
+     *
+     * @since 3.3.2
+     *
+     * @var string|boolean
+     */
+    public $recaptcha_site_key;
+
+    /**
      * Constructor
      *
      * @return void
      */
     public function __construct() {
+        $this->recaptcha_site_key = dokan_get_option( 'recaptcha_site_key', 'dokan_appearance' );
+
         $widget_ops = array(
 			'classname' => 'dokan-store-contact',
 			'description' => __( 'Dokan Vendor Contact Form', 'dokan-lite' ),
 		);
         parent::__construct( 'dokan-store-contact-widget', __( 'Dokan: Store Contact Form', 'dokan-lite' ), $widget_ops );
+
+        add_action( 'wp_head', [ $this, 'enqueue_contact_widget_scripts' ] );
     }
 
     /**
@@ -77,11 +90,11 @@ class StoreContactForm extends WP_Widget {
 
             dokan_get_template_part(
                 'widgets/store-contact-form', '', array(
-					'seller_id'          => $seller_id,
-					'store_info'         => $store_info,
-					'username'           => $username,
-					'email'              => $email,
-                    'recaptcha_site_key' => dokan_get_option( 'recaptcha_site_key', 'dokan_appearance' ),
+                    'seller_id'          => $seller_id,
+                    'store_info'         => $store_info,
+                    'username'           => $username,
+                    'email'              => $email,
+                    'recaptcha_site_key' => $this->recaptcha_site_key,
                 )
             );
 
@@ -127,6 +140,26 @@ class StoreContactForm extends WP_Widget {
             <label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'dokan-lite' ); ?></label>
             <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
         </p>
+        <?php
+    }
+
+    /**
+     * Enqueue handler for contact widget assets
+     *
+     * @since 3.3.2
+     *
+     * @return void
+     */
+    public function enqueue_contact_widget_scripts() {
+        wp_enqueue_script( 'dokan-recaptcha' );
+        ?>
+        <script>
+            grecaptcha.ready( function() {
+                grecaptcha.execute( '<?php echo esc_html( $this->recaptcha_site_key ); ?>', { action: 'dokan_contact_seller_recaptcha' } ).then( function( token ) {
+                document.getElementById( 'token' ).value = 'token';
+                } );
+            } );
+        </script>
         <?php
     }
 }

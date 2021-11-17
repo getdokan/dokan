@@ -321,11 +321,12 @@ class Ajax {
             wp_send_json_error( __( 'Invalid nonce', 'dokan-lite' ) );
         }
 
-        $contact_name    = sanitize_text_field( wp_unslash( $_POST['name'] ) );
-        $contact_email   = sanitize_email( wp_unslash( $_POST['email'] ) );
-        $contact_message = sanitize_text_field( wp_unslash( $_POST['message'] ) );
-        $captcha_token   = sanitize_key( wp_unslash( $_POST['recaptcha_token'] ) );
-        $captcha_sitekey = sanitize_key( wp_unslash( $_POST['recaptcha_site_key'] ) );
+        $contact_name    = ! empty( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
+        $contact_email   = ! empty( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '';
+        $contact_message = ! empty( $_POST['message'] ) ? sanitize_text_field( wp_unslash( $_POST['message'] ) ) : '';
+        $captcha_token   = ! empty( $_POST['recaptcha_token'] ) ? sanitize_key( wp_unslash( $_POST['recaptcha_token'] ) ) : '';
+        $captcha_sitekey = ! empty( $_POST['recaptcha_site_key'] ) ? sanitize_key( wp_unslash( $_POST['recaptcha_site_key'] ) ) : '';
+        $captcha_action  = ! empty( $_POST['recaptcha_action'] ) ? sanitize_key( wp_unslash( $_POST['recaptcha_action'] ) ) : '';
         $error_template  = '<span class="alert alert-danger error">%s</span>';
 
         if ( empty( $contact_name ) ) {
@@ -345,7 +346,8 @@ class Ajax {
             wp_send_json_error( $message );
         }
 
-        $recaptcha_validate = $this->recaptcha_validation_handler( $captcha_sitekey, $captcha_token );
+        // Validate reCaptcha
+        $recaptcha_validate = $this->recaptcha_validation_handler( $captcha_sitekey, $captcha_token, $captcha_action );
 
         if ( empty( $recaptcha_validate ) ) {
             $message = sprintf( $error_template, __( 'Google reCaptcha varification failed!' ) );
@@ -1050,10 +1052,11 @@ class Ajax {
      *
      * @param string $token
      * @param string $sitekey
+     * @param string $action
      *
      * @return boolean
      */
-    function recaptcha_validation_handler( $sitekey, $token ) {
+    function recaptcha_validation_handler( $sitekey, $token, $action ) {
         if ( empty( $sitekey ) || empty( $token ) ) {
             return false;
         }
@@ -1061,6 +1064,11 @@ class Ajax {
         $siteverify = 'https://www.google.com/recaptcha/api/siteverify';
         $response   = file_get_contents( $siteverify . '?secret=' . $sitekey . '&response=' . $token );
         $response   = json_decode( $response, true );
+
+        // Validate reCaptcha action
+        if ( $action !== $response['action'] ) {
+            return false;
+        }
 
         return $response['success'];
     }
