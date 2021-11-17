@@ -94,45 +94,15 @@
                 <p class="description" v-html="fieldData.desc"></p>
         </template>
 
-        <template v-if="'product_price' == fieldData.type && allSettingsValues.dokan_selling && 'product_price' === allSettingsValues.dokan_selling.commission_type">
+        <template v-if="('product_price' == fieldData.type && 'product_price' === allSettingsValues.dokan_selling.commission_type)
+            || ('product_quantity' == fieldData.type && 'product_quantity' === allSettingsValues.dokan_selling.commission_type)
+            || ('vendor_sale' == fieldData.type && 'vendor_sale' === allSettingsValues.dokan_selling.commission_type)
+            && allSettingsValues.dokan_selling"
+        >
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
 
-            <PriceQuantityVendorSale
-                :id="id"
-                :fieldData="fieldData"
-                :sectionId="sectionId"
-                :fieldValue="fieldValue"
-                :allSettingsValues="allSettingsValues"
-                :errors="errors"
-                :toggleLoadingState="toggleLoadingState"
-                :validationErrors="validationErrors"
-                :commission_title="__( 'Product quantity commission', 'dokan-lite' )"
-            />
-        </template>
-
-        <template v-if="'product_quantity' == fieldData.type && allSettingsValues.dokan_selling && 'product_quantity' === allSettingsValues.dokan_selling.commission_type">
-            <th scope="row">
-                <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
-            </th>
-            <PriceQuantityVendorSale
-                :id="id"
-                :fieldData="fieldData"
-                :sectionId="sectionId"
-                :fieldValue="fieldValue"
-                :allSettingsValues="allSettingsValues"
-                :errors="errors"
-                :toggleLoadingState="toggleLoadingState"
-                :validationErrors="validationErrors"
-                :commission_title="__( 'Product quantity commission', 'dokan-lite' )"
-            />
-        </template>
-
-        <template v-if="'vendor_sale' == fieldData.type && allSettingsValues.dokan_selling && 'vendor_sale' === allSettingsValues.dokan_selling.commission_type">
-            <th scope="row">
-                <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
-            </th>
             <PriceQuantityVendorSale
                 :id="id"
                 :fieldData="fieldData"
