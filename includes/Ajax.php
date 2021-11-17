@@ -339,7 +339,7 @@ class Ajax {
             wp_send_json_error( $message );
         }
 
-        $seller =  ! empty( $_POST['seller_id'] ) ? get_user_by( 'id', intval( wp_unslash( $_POST['seller_id'] ) ) ): 0;
+        $seller = ! empty( $_POST['seller_id'] ) ? get_user_by( 'id', intval( wp_unslash( $_POST['seller_id'] ) ) ) : 0;
 
         if ( empty( $seller ) ) {
             $message = sprintf( $error_template, __( 'Something went wrong!', 'dokan-lite' ) );
