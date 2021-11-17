@@ -270,7 +270,7 @@ class WithdrawController extends WP_REST_Controller {
         }
 
         $cache_group = 'withdraws';
-        $cache_key   = 'withdraw_requests_' . md5( json_encode( $args ) );
+        $cache_key   = 'withdraw_requests_' . md5( wp_json_encode( $args ) );
         $withdraws   = Cache::get( $cache_key, $cache_group );
 
         if ( false === $withdraws ) {

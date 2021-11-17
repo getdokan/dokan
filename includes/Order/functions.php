@@ -66,7 +66,7 @@ function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = nul
     if ( false === $orders ) {
         $getdata     = wp_unslash( $_GET );
         $order       = empty( $getdata['order'] ) ? 'DESC' : sanitize_text_field( $getdata['order'] );
-        $order_by    =  'p.post_date';
+        $order_by    = 'p.post_date';
         $exclude     = ! empty( $getdata['exclude'] ) ? ' AND do.order_id NOT IN (' . esc_sql( $getdata['exclude'] ) . ')' : '';
 
         if ( ! empty( $getdata['orderby'] ) &&
@@ -206,7 +206,7 @@ function dokan_get_seller_orders_number( $args = [] ) {
     $count       = Cache::get( $cache_key, $cache_group );
 
     if ( false === $count ) {
-        $status_where = ( $status === 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', $status );
+        $status_where = ( 'all' === $status ) ? '' : $wpdb->prepare( ' AND order_status = %s', $status );
         $join = '';
         $customer_where = '';
         if ( ! empty( $args['customer_id'] ) ) {
