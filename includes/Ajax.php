@@ -346,12 +346,14 @@ class Ajax {
             wp_send_json_error( $message );
         }
 
-        // Validate reCaptcha
-        $recaptcha_validate = $this->recaptcha_validation_handler( $captcha_sitekey, $captcha_token, $captcha_action );
+        // Validate captcha if checking enabled from admin setting
+        if ( ! empty( dokan_get_option( 'recaptcha_site_key', 'dokan_appearance' ) ) ) {
+            $recaptcha_validate = $this->recaptcha_validation_handler( $captcha_sitekey, $captcha_token, $captcha_action );
 
-        if ( empty( $recaptcha_validate ) ) {
-            $message = sprintf( $error_template, __( 'Google reCaptcha varification failed!' ) );
-            wp_send_json_error( $message );
+            if ( empty( $recaptcha_validate ) ) {
+                $message = sprintf( $error_template, __( 'Google reCaptcha varification failed!' ) );
+                wp_send_json_error( $message );
+            }
         }
 
         do_action( 'dokan_trigger_contact_seller_mail', $seller->user_email, $contact_name, $contact_email, $contact_message );
