@@ -156,7 +156,7 @@ class StoreContactForm extends WP_Widget {
         <script>
             grecaptcha.ready( function() {
                 grecaptcha.execute( '<?php echo esc_html( $this->recaptcha_site_key ); ?>', { action: 'dokan_contact_seller_recaptcha' } ).then( function( token ) {
-                document.getElementById( 'token' ).value = 'token';
+                document.getElementById( 'token' ).value = token;
                 } );
             } );
         </script>
