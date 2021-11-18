@@ -23,16 +23,16 @@ class CacheInvalidate {
     }
 
     /**
-     * Invalidate comments cache group of the specific post.
+     * Invalidate comments cache group of the specific post type.
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.3.2
      *
      * @param string $group
      * @param int    $user_id
      *
      * @return void
      */
-    public function clear_comment_cache( $post_type, $user_id) {
+    public function clear_comment_cache( $post_type, $user_id ) {
         $group = "count_{$post_type}_comments_{$user_id}";
 
         Cache::invalidate_group( $group );
