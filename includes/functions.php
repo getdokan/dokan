@@ -322,8 +322,8 @@ function dokan_count_comments( $post_type, $user_id ) {
     global $wpdb;
 
     //todo: delete comment cache
-    $cache_group = 'dokan-lite';
-    $cache_key   = "count_comments_{$post_type}_{$user_id}";
+    $cache_group = "count_{$post_type}_comments_{$user_id}";
+    $cache_key   = "comments";
     $counts      = Cache::get( $cache_key, $cache_group );
 
     if ( $counts === false ) {
