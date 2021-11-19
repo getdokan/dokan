@@ -4,7 +4,7 @@
 
         <template v-if="'' !== fieldValue[fieldData.name]">
             <div class="new_commission_body" v-for="( commission, key ) in fieldValue[fieldData.name]" v-bind:key="key">
-                <div class="new_commission_body_close"><span @click.prevent="removeProductQuantityCommissionFromList(key)" class="dashicons dashicons-remove"></span></div>
+                <div class="new_commission_body_close"><span @click.prevent="removeCommissionFromList(key)" class="dashicons dashicons-remove"></span></div>
 
                 <div>
                     <th scope="row">
@@ -19,8 +19,8 @@
                             :name="sectionId + '[' + fieldData.fields[id].name +key + ']'"
                             v-model="fieldValue[fieldData.name][key][id]"
                         >
-                        <p v-if="currentProductQuantityCommissionError( key, id )" class="dokan-error">
-                            {{ currentProductQuantityCommissionError( key, id ) }}
+                        <p v-if="currentCommissionError( key, id )" class="dokan-error">
+                            {{ currentCommissionError( key, id ) }}
                         </p>
                     </td>
                 </div>
@@ -34,8 +34,8 @@
                             <option v-for="( optionVal, key ) in Object.keys( fieldData.fields['rule'].options )" :key="key" :value="optionVal" v-html="fieldData.fields['rule'].options[optionVal]"></option>
                         </select>
 
-                        <p v-if="currentProductQuantityCommissionError( key, 'rule' )" class="dokan-error">
-                            {{ currentProductQuantityCommissionError( key, 'rule' ) }}
+                        <p v-if="currentCommissionError( key, 'rule' )" class="dokan-error">
+                            {{ currentCommissionError( key, 'rule' ) }}
                         </p>
                     </td>
                 </div>
@@ -48,8 +48,8 @@
                         <select class="regular-text" :name="sectionId + '[' + fieldData.fields['commission_type'].name +key + ']'" :id="sectionId + '[' + fieldData.fields['commission_type'].name +key + ']'" v-model="fieldValue[fieldData.name][key].commission_type">
                             <option v-for="( optionVal, key ) in Object.keys( fieldData.fields['commission_type'].options )" :key="key" :value="optionVal" v-html="fieldData.fields['commission_type'].options[optionVal]"></option>
                         </select>
-                        <p v-if="currentProductQuantityCommissionError( key, 'commission_type' )" class="dokan-error">
-                            {{ currentProductQuantityCommissionError( key, 'commission_type' ) }}
+                        <p v-if="currentCommissionError( key, 'commission_type' )" class="dokan-error">
+                            {{ currentCommissionError( key, 'commission_type' ) }}
                         </p>
                     </td>
                 </div>
@@ -61,14 +61,14 @@
                     <td>
                         <template v-if="'percentage' === fieldValue[fieldData.name][key].commission_type">
                             <input type="number" :min="fieldData.min" class="regular-text" :id="sectionId + '[' + fieldData.fields['admin_commission'].name +key + ']'" :name="sectionId + '[' + fieldData.fields['admin_commission'].name +key + ']'" v-model="fieldValue[fieldData.name][key].percentage">
-                            <p v-if="currentProductQuantityCommissionError( key, 'percentage' )" class="dokan-error">
-                                {{ currentProductQuantityCommissionError( key, 'percentage' ) }}
+                            <p v-if="currentCommissionError( key, 'percentage' )" class="dokan-error">
+                                {{ currentCommissionError( key, 'percentage' ) }}
                             </p>
                         </template>
                         <template v-else-if="'flat' === fieldValue[fieldData.name][key].commission_type">
                             <input type="number" :min="fieldData.min" class="regular-text" :id="sectionId + '[' + fieldData.fields['admin_commission'].name +key + ']'" :name="sectionId + '[' + fieldData.fields['admin_commission'].name +key + ']'" v-model="fieldValue[fieldData.name][key].flat">
-                            <p v-if="currentProductQuantityCommissionError( key, 'flat' )" class="dokan-error">
-                                {{ currentProductQuantityCommissionError( key, 'flat' ) }}
+                            <p v-if="currentCommissionError( key, 'flat' )" class="dokan-error">
+                                {{ currentCommissionError( key, 'flat' ) }}
                             </p>
                         </template>
 
@@ -82,8 +82,8 @@
                                 {{ '+' }}
                                 <input type="text" :min="fieldData.min" class="wc_input_price regular-text" :id="sectionId + '[' + fieldData.fields['admin_commission'].name +key + ']'" :name="sectionId + '[' + fieldData.fields['admin_commission'].name +key + ']'" v-model="fieldValue[fieldData.name][key].flat">
                             </td>
-                            <p v-if="currentProductQuantityCommissionError( key, 'combine' )" class="dokan-error">
-                                {{ currentProductQuantityCommissionError( key, 'combine' ) }}
+                            <p v-if="currentCommissionError( key, 'combine' )" class="dokan-error">
+                                {{ currentCommissionError( key, 'combine' ) }}
                             </p>
                         </template>
                     </td>
@@ -113,11 +113,11 @@ export default {
                 this.fieldValue[this.id] = commissions;
             },
 
-            removeProductQuantityCommissionFromList( key ) {
+            removeCommissionFromList( key ) {
                 this.fieldValue[this.id].splice( key, 1 );
             },
 
-            currentProductQuantityCommissionError( index, field ) {
+            currentCommissionError( index, field ) {
                 let allErrors = this.errors;
 
                 let result = false;

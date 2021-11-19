@@ -74,6 +74,20 @@
                         </div>
                     </div>
 
+                    <div class="column" v-else-if="newCommissions.includes( selectedCommissionType.name )">
+                        <SinglePriceQuantityVendorSale
+                            v-for="( commission, index ) in vendorInfo.admin_commission"
+                            :key="index"
+                            :commission="commission"
+                            :allCommission="vendorInfo.admin_commission"
+                            :selectedCommission="selectedCommissionType"
+                            :index="index"
+                            v-on:updateCommissionState="updateCommissionState"
+                            v-on:removeCommissionFromList="removeCommissionFromList"
+                        />
+                        <button @click.prevent="addNewCommissionData" type="button">{{ __( 'Add', 'dokan-lite' ) }}</button>
+                    </div>
+
                     <div class="column" v-else>
                         <label>{{ __( 'Admin Commission', 'dokan-lite' )  }}</label>
                         <input type="text" class="dokan-form-input" :class="{ 'wc_input_price': selectedCommissionType.name == 'flat', 'wc_input_decimal': selectedCommissionType.name != 'flat' }" v-model="vendorInfo.admin_commission">
@@ -117,12 +131,15 @@
 import Switches from 'admin/components/Switches.vue'
 import { Multiselect } from 'vue-multiselect';
 
+import SinglePriceQuantityVendorSale from '../components/Fields/SinglePriceQuantityVendorSale.vue'
+
 export default {
     name: 'VendorPaymentFields',
 
     components: {
         Switches,
-        Multiselect
+        Multiselect,
+        SinglePriceQuantityVendorSale
     },
 
     props: {
@@ -148,7 +165,19 @@ export default {
                 {
                     name: 'combine',
                     label: this.__( 'Combine', 'dokan-lite' )
-                }
+                },
+                {
+                    name: 'vendor_sale',
+                    label: this.__( 'Vendor sale', 'dokan-lite' )
+                },
+                {
+                    name: 'product_price',
+                    label: this.__( 'Product price', 'dokan-lite' )
+                },
+                {
+                    name: 'product_quantity',
+                    label: this.__( 'Product Quantity', 'dokan-lite' )
+                },
             ],
             selectedCommissionType: {
                 name: 'flat',
@@ -156,6 +185,13 @@ export default {
             },
             getBankFields: dokan.hooks.applyFilters( 'getVendorBankFields', [] ),
             getPyamentFields: dokan.hooks.applyFilters( 'AfterPyamentFields', [] ),
+            newCommissions: [ 'vendor_sale', 'product_price', 'product_quantity' ],
+            newCommissionData: {
+                rule: 'upto',
+                commission_type: 'percentage',
+                flat: 10,
+                percentage: 10
+            },
         }
     },
 
@@ -222,8 +258,46 @@ export default {
             }
 
             this.vendorInfo.admin_commission_type = name;
-        }
-    }
+            this.$emit('setAdminCommissoinArray', this.getAndCheckCommissionType( true ) );
+        },
+
+        getAndCheckCommissionType( begin = false ) {
+            let selectedCommissionName = this.selectedCommissionType.name;
+            let commissionData = {...this.newCommissionData};
+            commissionData[selectedCommissionName] = 1;
+
+            if ( this.newCommissions.includes( selectedCommissionName ) ) {
+                return begin ? [commissionData] : commissionData;
+            } else {
+                return '';
+            }
+        },
+
+        addNewCommissionData() {
+            let oldCommissions = [...this.vendorInfo.admin_commission];
+            oldCommissions.push( this.getAndCheckCommissionType() );
+
+            this.$emit('setAdminCommissoinArray', oldCommissions);
+        },
+
+        updateCommissionState( obj ) {
+            let { value, field, index, type  } = obj;
+
+            let oldCommissions = [...this.vendorInfo.admin_commission];
+            oldCommissions[index][field] = type === 'number' ? Number( value ) : String( value );
+
+            this.$emit('setAdminCommissoinArray', oldCommissions);
+        },
+
+        removeCommissionFromList( obj ) {
+            let { value, field, index, type  } = obj;
+
+            let oldCommissions = [...this.vendorInfo.admin_commission];
+            oldCommissions.splice( index, 1 );
+
+            this.$emit('setAdminCommissoinArray', oldCommissions);
+        },
+    },
 };
 </script>
 

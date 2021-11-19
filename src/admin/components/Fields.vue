@@ -562,42 +562,16 @@
             },
 
             getAndCheckCommissionType( event ) {
-                if ( 'product_price' === event.target.value ) {
-                    if ( '' === this.fieldValue.product_price ) {
-                        this.fieldValue.product_price = [
-                            {
-                                product_price: 10,
-                                rule: 'upto',
-                                commission_type: 'percentage',
-                                flat: 10,
-                                percentage: 10
-                            }
-                        ];
-                    }
-                } else if ( 'product_quantity' === event.target.value ) {
-                    if ( '' === this.fieldValue.product_quantity ) {
-                        this.fieldValue.product_quantity = [
-                            {
-                                product_quantity: 1,
-                                rule: 'upto',
-                                commission_type: 'percentage',
-                                flat: 10,
-                                percentage: 10
-                            }
-                        ];
-                    }
-                } else if ( 'vendor_sale' === event.target.value ) {
-                    if ( '' === this.fieldValue.vendor_sale ) {
-                        this.fieldValue.vendor_sale = [
-                            {
-                                vendor_sale: 1,
-                                rule: 'upto',
-                                commission_type: 'percentage',
-                                flat: 10,
-                                percentage: 10
-                            }
-                        ];
-                    }
+                if ( '' === this.fieldValue[event.target.value] ) {
+                    this.fieldValue[event.target.value] = [
+                        {
+                            [event.target.value]: 10,
+                            rule: 'upto',
+                            commission_type: 'percentage',
+                            flat: 10,
+                            percentage: 10
+                        }
+                    ];
                 }
             },
         }

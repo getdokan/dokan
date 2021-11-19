@@ -334,7 +334,7 @@ class UserProfile {
                         <p class="description"><?php esc_html_e( 'Set the commmission type admin gets from this seller', 'dokan-lite' ); ?></p>
                     </td>
                 </tr>
-                <tr>
+                <tr class="dokan-main-commission">
                     <th><?php esc_html_e( 'Admin Commission ', 'dokan-lite' ); ?></th>
                     <td>
                         <input type="text" class="wc_input_price small-text" id="admin-commission" name="dokan_admin_percentage" value="<?php echo esc_attr( $admin_commission ); ?>">
