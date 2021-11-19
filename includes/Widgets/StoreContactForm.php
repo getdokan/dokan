@@ -151,7 +151,7 @@ class StoreContactForm extends WP_Widget {
      * @return void
      */
     public function enqueue_contact_widget_scripts() {
-        wp_enqueue_script( 'dokan-recaptcha' );
+        wp_enqueue_script( 'dokan-google-recaptcha' );
         ?>
         <script>
             grecaptcha.ready( function() {

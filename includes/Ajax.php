@@ -339,7 +339,7 @@ class Ajax {
             wp_send_json_error( $message );
         }
 
-        $seller = ! empty( $_POST['seller_id'] ) ? get_user_by( 'id', intval( wp_unslash( $_POST['seller_id'] ) ) ) : 0;
+        $seller = ! empty( $_POST['seller_id'] ) ? get_user_by( 'id', absint( wp_unslash( $_POST['seller_id'] ) ) ) : 0;
 
         if ( empty( $seller ) ) {
             $message = sprintf( $error_template, __( 'Something went wrong!', 'dokan-lite' ) );
@@ -1059,19 +1059,20 @@ class Ajax {
      * @return boolean
      */
     public function recaptcha_validation_handler( $sitekey, $token, $action ) {
-        if ( empty( $sitekey ) || empty( $token ) ) {
+        if ( empty( $sitekey ) || empty( $token ) || empty( $action ) ) {
             return false;
         }
 
-        $siteverify = 'https://www.google.com/recaptcha/api/siteverify';
-        $response   = file_get_contents( $siteverify . '?secret=' . $sitekey . '&response=' . $token );
-        $response   = json_decode( $response, true );
+        $siteverify    = 'https://www.google.com/recaptcha/api/siteverify';
+        $response      = wp_remote_get( $siteverify . '?secret=' . $sitekey . '&response=' . $token );
+        $response_body = wp_remote_retrieve_body( $response );
+        $response_data = json_decode( $response_body, true );
 
         // Validate reCaptcha action
-        if ( $action !== $response['action'] ) {
+        if ( empty( $response_data['action'] ) || $action !== $response_data['action'] ) {
             return false;
         }
 
-        return $response['success'];
+        return $response_data['success'];
     }
 }

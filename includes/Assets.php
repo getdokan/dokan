@@ -319,7 +319,7 @@ class Assets {
                 'deps'      => [ 'jquery' ],
                 'in_footer' => false,
             ],
-            'dokan-recaptcha' => [
+            'dokan-google-recaptcha' => [
                 'src'       => 'https://www.google.com/recaptcha/api.js?render=' . dokan_get_option( 'recaptcha_site_key', 'dokan_appearance' ),
                 'in_footer' => false,
             ],
