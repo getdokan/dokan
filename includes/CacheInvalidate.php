@@ -20,7 +20,7 @@ class CacheInvalidate {
         // Clear global comment related caches.
         add_action( 'comment_post', [ $this, 'comment_created' ], 10, 3 );
         add_action( 'edit_comment', [ $this, 'comment_updated' ], 10, 2 );
-        add_action( 'delete_comment', [ $this, 'comment_deleted' ], 10, 2 );
+        add_action( 'delete_comment', [ $this, 'comment_deleted' ], 10, 1 );
     }
 
     /**
@@ -84,7 +84,13 @@ class CacheInvalidate {
      *
      * @return void
      */
-    private function comment_deleted( $comment_id, $comment ) {
+    private function comment_deleted( $comment_id ) {
+        // get comment via comment id
+        $comment = get_comment( $comment_id );
+        if ( ! $comment ) {
+            return false;
+        }
+
         $post_type = get_post_type( $comment->comment_post_ID );
         $seller_id = get_post_field( 'post_author', $comment->comment_post_ID );
 
