@@ -54,16 +54,16 @@
                     </div>
                     <div class="card-version" :style="isCurrentVersion( index ) ? activeVersionBorder : ''">
                         <transition-group name="slide" tag="div">
-                            <div class="feature-list" v-for="( changes, key, i ) in version.changes" :key="`index-${i}`" v-if="( 0 === index ) || ( i < 1 ) || isOpenVersion( index )">
+                            <div class="feature-list" v-for="( changes, key, i ) in version.changes" :key="`index-${i}`" v-if="( 0 === index ) || ( i < 1 ) || isOpenVersion( `lite-${index}` )">
                                 <span class="feature-badge" :class="badgeClass( key )">{{ key }}</span>
-                                <div class="feature" v-for="( change, j ) in changes" v-if="( 0 === index ) || ( j < 2 ) || isOpenVersion( index )">
+                                <div class="feature" v-for="( change, j ) in changes" v-if="( 0 === index ) || ( j < 2 ) || isOpenVersion( `lite-${index}` )">
                                     <h5>{{ change.title }}</h5>
                                     <div v-html="change.description"></div>
                                 </div>
                             </div>
                         </transition-group>
                         <div class="continue-reading" v-if="0 !== index && Object.keys( version.changes ).length > 1">
-                            <a href="#" @click.prevent="toggleReading( index )">{{ isOpenVersion( index ) ? __( 'View Less...', 'dokan-lite' )  :  __( 'Continue reading...', 'dokan-lite' ) }}</a>
+                            <a href="#" @click.prevent="toggleReading( `lite-${index}` )">{{ isOpenVersion( `lite-${index}` ) ? __( 'View Less...', 'dokan-lite' )  :  __( 'Continue reading...', 'dokan-lite' ) }}</a>
                         </div>
                     </div>
                 </div>
@@ -74,16 +74,16 @@
                     </div>
                     <div class="card-version" :style="isCurrentVersion( index ) ? activeVersionBorder : ''">
                         <transition-group name="slide" tag="div">
-                            <div class="feature-list" v-for="( changes, key, i ) in version.changes" :key="`index-${i}`" v-if="( 0 === index ) || ( i < 1 ) || isOpenVersion( index )">
+                            <div class="feature-list" v-for="( changes, key, i ) in version.changes" :key="`index-${i}`" v-if="( 0 === index ) || ( i < 1 ) || isOpenVersion( `pro-${index}` )">
                                 <span class="feature-badge" :class="badgeClass( key )">{{ key }}</span>
-                                <div class="feature" v-for="( change, j ) in changes" v-if="( 0 === index ) || j < 2 || isOpenVersion( index )">
+                                <div class="feature" v-for="( change, j ) in changes" v-if="( 0 === index ) || j < 2 || isOpenVersion( `pro-${index}` )">
                                     <h5>{{ change.title }}</h5>
                                     <div v-html="change.description"></div>
                                 </div>
                             </div>
                         </transition-group>
                         <div class="continue-reading" v-if="0 !== index && Object.keys( version.changes ).length > 1">
-                            <a href="#" @click.prevent="toggleReading( index )">{{ isOpenVersion( index ) ? __( 'View Less...', 'dokan-lite' )  :  __( 'Continue reading...', 'dokan-lite' ) }}</a>
+                            <a href="#" @click.prevent="toggleReading( `pro-${index}` )">{{ isOpenVersion( `pro-${index}` ) ? __( 'View Less...', 'dokan-lite' )  :  __( 'Continue reading...', 'dokan-lite' ) }}</a>
                         </div>
                     </div>
                 </div>
@@ -126,7 +126,7 @@ export default {
     },
 
     methods: {
-        formatReleaseDate(date){
+        formatReleaseDate( date ) {
             return $.datepicker.formatDate( dokan_get_i18n_date_format(), new Date( date ) );
         },
 
@@ -143,7 +143,7 @@ export default {
             }
         },
 
-        getDokanLiteChangeLog(){
+        getDokanLiteChangeLog() {
             this.loading = true;
             dokan.api.get( '/admin/changelog' )
                 .done( response => {
@@ -152,7 +152,7 @@ export default {
                 } );
         },
 
-        getDokanProChangeLog(){
+        getDokanProChangeLog() {
             this.loading = true;
             dokan.api.get( '/admin/dokan-pro-changelog' )
                 .done( response => {
@@ -161,7 +161,7 @@ export default {
                 } );
         },
 
-        toggleReading(index){
+        toggleReading( index ) {
             if( this.isOpenVersion( index ) ){
                 return this.openVersions.splice( this.openVersions.indexOf( index ), 1 );
             }
@@ -169,11 +169,11 @@ export default {
             return this.openVersions.push( index );
         },
 
-        isOpenVersion( index ){
+        isOpenVersion( index ) {
             return this.openVersions.includes( index );
         },
 
-        switchPackage( pack ){
+        switchPackage( pack ) {
             if ( null === this.pro_versions && 'pro' === pack ) {
                 this.getDokanProChangeLog();
             }
@@ -181,7 +181,7 @@ export default {
             this.active_package = pack;
         },
 
-        isActivePackage( pack ){
+        isActivePackage( pack ) {
             return this.active_package === pack;
         },
 
@@ -202,7 +202,7 @@ export default {
             this.addBorder();
         },
 
-        isCurrentVersion( index ){
+        isCurrentVersion( index ) {
             return this.current_version === index;
         },
 

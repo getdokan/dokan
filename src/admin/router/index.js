@@ -61,12 +61,12 @@ parseRouteComponent(dokan.routes);
 export default new Router({
     routes: dokan.routes,
 
-    scrollBehavior (to, from, savedPosition) {
-      if (to.hash) {
-        return {
-          selector: to.hash,
-          behavior: 'smooth',
+    scrollBehavior( to, from, savedPosition ) {
+        if ( to.hash ) {
+            return {
+              selector: to.hash,
+              behavior: 'smooth',
+            }
         }
-      }
     }
 })

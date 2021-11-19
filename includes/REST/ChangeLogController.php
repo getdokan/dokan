@@ -12,26 +12,19 @@ use WP_REST_Server;
  */
 class ChangeLogController extends DokanRESTAdminController {
     /**
-     * Route base.
-     *
-     * @var string
-     */
-    protected $base = '';
-
-    /**
      * Register all routes related with stores
      *
      * @return void
      */
     public function register_routes() {
         register_rest_route(
-            $this->namespace, '/changelog', array(
-                array(
+            $this->namespace, '/changelog', [
+                [
                     'methods'             => WP_REST_Server::READABLE,
-                    'callback'            => array( $this, 'get_change_log' ),
-                    'permission_callback' => array( $this, 'check_permission' ),
-                ),
-            )
+                    'callback'            => [ $this, 'get_change_log' ],
+                    'permission_callback' => [ $this, 'check_permission' ],
+                ],
+            ]
         );
     }
 
