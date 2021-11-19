@@ -1073,6 +1073,6 @@ class Ajax {
             return false;
         }
 
-        return $response_data['success'];
+        return $response_data['success'] ? $response_data['success'] : false;
     }
 }
