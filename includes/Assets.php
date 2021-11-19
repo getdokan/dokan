@@ -148,6 +148,11 @@ class Assets {
                 'name'      => 'ProModules',
                 'component' => 'ProModules',
             ],
+            [
+                'path'      => '/changelog',
+                'name'      => 'ChangeLog',
+                'component' => 'ChangeLog',
+            ],
         ];
 
         // @codingStandardsIgnoreLine
@@ -436,7 +441,7 @@ class Assets {
             'loading_img'                => DOKAN_PLUGIN_ASSEST . '/images/loading.gif',
             'store_product_search_nonce' => wp_create_nonce( 'dokan_store_product_search_nonce' ),
             'i18n_download_permission'   => __( 'Are you sure you want to revoke access to this download?', 'dokan-lite' ),
-            'i18n_download_access'       => __( 'Could not grant access - the user may already have permission for this file or billing email is not set. Ensure the billing email is set, and the order has been saved.', 'dokan-lite' ),   
+            'i18n_download_access'       => __( 'Could not grant access - the user may already have permission for this file or billing email is not set. Ensure the billing email is set, and the order has been saved.', 'dokan-lite' ),
             /**
              * Filter of maximun a vendor can add tags.
              *

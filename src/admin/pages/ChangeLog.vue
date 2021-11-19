@@ -2,312 +2,95 @@
     <div class="dokan-help-page">
         <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
 
-        <div class="section-wrapper" v-if="true">
-            <div class="change-log">
+        <div class="section-wrapper">
+            <div class="dokan-notice">
+                <h2></h2>
+            </div>
+            <div class="change-log" :class="hasPro ? 'pro-change-log' : 'lite-change-log'">
                 <h3>{{ __( 'Dokan Changelog', 'dokan-lite' ) }}</h3>
                 <div v-if="hasPro" class="switch-button-wrap">
                     <transition-group name="fade">
-                        <span :key="1" class="active" :style="isActivePackage('pro')  ? 'right: 0' : 'left: 0'"></span>
-                        <button :key="2" class="switch-button lite" :class="{ 'active-case' : isActivePackage('lite') }" @click="switchPackage('lite')">{{ __('Lite', 'dokan-lite') }}</button>
-                        <button :key="3" class="switch-button pro" :class="{ 'active-case' : isActivePackage('pro')  }" @click="switchPackage('pro')">{{ __('Pro', 'dokan-lite') }}</button>
+                        <span :key="1" class="active" :style="isActivePackage( 'pro' )  ? 'right: 0' : 'left: 0'"></span>
+                        <button :key="2" class="switch-button lite" :class="{ 'active-case' : isActivePackage( 'lite' ) }" @click="switchPackage( 'lite' )">{{ __( 'Lite', 'dokan-lite' ) }}</button>
+                        <button :key="3" class="switch-button pro" :class="{ 'active-case' : isActivePackage( 'pro' )  }" @click="switchPackage( 'pro' )">{{ __( 'PRO', 'dokan-lite' ) }}</button>
                     </transition-group>
                 </div>
-                <div class="jump-version">
-                    <p>{{ __('Jump to version', 'dokan-lite') }}... <span class="dashicons dashicons-arrow-down-alt2"></span></p>
+                <div v-if="! loading" class="jump-version">
+                    <p>{{ __( 'Jump to version', 'dokan-lite' ) }}... <span class="dashicons dashicons-arrow-down-alt2"></span></p>
                     <div class="version-menu">
                         <div class="version-dropdown">
-                            <ul>
-                                <li v-for="(version, index) in versions" :class="{ 'current' : isCurrentVersion(index) }" @click="jumpVersion(index)">
-                                    <router-link :to="{ name: 'ChangeLog', hash: `#${index}`}">
-                                        {{ __('Version', 'dokan-lite') }} {{ version }}
-                                        <span v-if="index === 0">({{ __('Latest', 'dokan-lite')}})</span>
+                            <ul v-show="isActivePackage( 'lite' )">
+                                <li v-for="(version, index) in lite_versions" :class="{ 'current' : isCurrentVersion( index ) }" @click="jumpVersion( index )">
+                                    <router-link :to="{ name: 'ChangeLog', hash: `#lite-${index}` }">
+                                        {{ version.version }}
+                                        <span v-if="0 === index">({{ __( 'Latest', 'dokan-lite' ) }})</span>
+                                        <span v-if="isCurrentVersion(index) && 0 !== index">({{ __( 'Current', 'dokan-lite' ) }})</span>
+                                    </router-link>
+                                </li>
+                            </ul>
+                            <ul v-show="isActivePackage( 'pro' )">
+                                <li v-for="( version, index ) in pro_versions" :class="{ 'current' : isCurrentVersion( index ) }" @click="jumpVersion( index )">
+                                    <router-link :to="{ name: 'ChangeLog', hash: `#pro-${index}` }">
+                                        {{ version.version }}
+                                        <span v-if="0 === index">({{ __( 'Latest', 'dokan-lite' ) }})</span>
+                                        <span v-if="isCurrentVersion( index ) && 0 !== index">({{ __( 'Current', 'dokan-lite' ) }})</span>
                                     </router-link>
                                 </li>
                             </ul>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="version-list"  v-show="isActivePackage('lite')">
-                <div class="version latest-version" id="0">
-                    <div class="version-number">
-                        <h4>{{ __('Version', 'dokan-lite') }} 3.3.6</h4>
-                        <p>Aug 30, 2021 <label>{{ __('Latest', 'dokan-lite') }}</label> </p>
-                    </div>
-                    <div class="card-version" :style="isCurrentVersion(0) ? activeVersionBorder : ''">
-                        <div class="feature-list">
-                            <span class="feature-btn btn-green">{{ __('New', 'dokan-lite') }}</span>
-                            <div class="feature">
-                                <h5>Feature Name</h5>
-                                <p>Order note for Suborder and main order added when an refund request gets canceled.</p>
-                            </div>
-
-                            <div class="feature">
-                                <h5>Feature Name</h5>
-                                <p>Added Net Sale section under vendor dashboard where Total order amount was deducted from the refunded amount</p>
-                                <img src="https://placeimg.com/650/350/tech" alt="">
-                            </div>
-
-                            <div class="feature">
-                                <h5>Feature Name</h5>
-                                <p>Order note for Suborder and main order added when an refund request gets canceled. Order note for Suborder and main order added when an refund request gets canceled. .</p>
-                            </div>
-                        </div>
-                        <div class="feature-list">
-                            <span class="feature-btn btn-blue">{{ __('Improved', 'dokan-lite') }}</span>
-                            <div class="feature">
-                                <h5>Feature Name</h5>
-                                <p>Order note for Suborder and main order added when an refund request gets canceled.</p>
-                            </div>
-
-                            <div class="feature">
-                                <h5>Feature Name</h5>
-                                <p>Added Net Sale section under vendor dashboard where Total order amount was deducted from the refunded amount</p>
-                            </div>
-                        </div>
-                        <div class="feature-list">
-                            <span class="feature-btn btn-red">{{ __('Fixed', 'dokan-lite') }}</span>
-                            <div class="feature">
-                                <h5>Booking:</h5>
-                                <ul>
-                                    <li>Fixed Dokan booking details shows wrong order information after admin creates manual booking from WordPress admin panel</li>
-                                    <li>Display fatal error, after deleting booking product which is associated with any customer.</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="version old-version" id="1" :style="isOpenVersion(1) ? '' : 'max-height: 276px; overflow: hidden'">
-                    <div class="version-number">
-                        <h4>Version 3.3.5</h4>
-                        <p>Aug 30, 2021 </p>
-                    </div>
-                    <div class="card-version" :style="isCurrentVersion(1) ? activeVersionBorder : ''">
-                        <div class="feature-list">
-                            <span class="feature-btn btn-green">New</span>
-                            <div class="feature">
-                                <h5>Feature Name</h5>
-                                <p>Order note for Suborder and main order added when an refund request gets canceled.</p>
-                            </div>
-
-                            <div class="feature">
-                                <h5>Feature Name</h5>
-                                <p>Added Net Sale section under vendor dashboard where Total order amount was deducted from the refunded amount</p>
-                            </div>
-                        </div>
-                        <div class="feature-list">
-                            <span class="feature-btn btn-green">New</span>
-                            <div class="feature">
-                                <h5>Feature Name</h5>
-                                <p>Order note for Suborder and main order added when an refund request gets canceled.</p>
-                            </div>
-
-                            <div class="feature">
-                                <h5>Feature Name</h5>
-                                <p>Added Net Sale section under vendor dashboard where Total order amount was deducted from the refunded amount</p>
-                            </div>
-                        </div>
-                        <div class="feature-list">
-                            <span class="feature-btn btn-green">New</span>
-                            <div class="feature">
-                                <h5>Feature Name</h5>
-                                <p>Order note for Suborder and main order added when an refund request gets canceled.</p>
-                            </div>
-
-                            <div class="feature">
-                                <h5>Feature Name</h5>
-                                <p>Added Net Sale section under vendor dashboard where Total order amount was deducted from the refunded amount</p>
-                            </div>
-                        </div>
-                        <div class="continue-reading">
-                            <a href="#" @click.prevent="toggleReading(1)">{{ isOpenVersion(1) ? 'View Less...' : 'Continue reading...' }}</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="version old-version" id="2">
-                    <div class="version-number">
-                        <h4>Version 3.3.4</h4>
-                        <p>Aug 30, 2021 </p>
-                    </div>
-                    <div class="card-version" :style="isCurrentVersion(2) ? activeVersionBorder : ''">
-                        <div class="feature-list">
-                            <span class="feature-btn btn-green">New</span>
-                            <div class="feature">
-                                <h5>Feature Name</h5>
-                                <p>Order note for Suborder and main order added when an refund request gets canceled.</p>
-                            </div>
-
-                            <div class="feature">
-                                <h5>Feature Name</h5>
-                                <p>Added Net Sale section under vendor dashboard where Total order amount was deducted from the refunded amount</p>
-                            </div>
-                        </div>
-
-                        <div class="continue-reading">
-                            <a href="#">Continue reading...</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="version old-version" id="3">
-                    <div class="version-number">
-                        <h4>Version 3.3.3</h4>
-                        <p>Aug 30, 2021 </p>
-                    </div>
-                    <div class="card-version" :style="isCurrentVersion(3) ? activeVersionBorder : ''">
-                        <div class="feature-list">
-                            <span class="feature-btn btn-green">New</span>
-                            <div class="feature">
-                                <h5>Feature Name</h5>
-                                <p>Order note for Suborder and main order added when an refund request gets canceled.</p>
-                            </div>
-
-                            <div class="feature">
-                                <h5>Feature Name</h5>
-                                <p>Added Net Sale section under vendor dashboard where Total order amount was deducted from the refunded amount</p>
-                            </div>
-                        </div>
-
-                        <div class="continue-reading">
-                            <a href="#">Continue reading...</a>
-                        </div>
-                    </div>
+                <div class="loading" v-else>
+                    <loading></loading>
                 </div>
             </div>
 
-            <div class="version-list"  v-show="isActivePackage('pro')">
-                <div class="version latest-version">
+            <div class="version-list">
+                <div v-show="isActivePackage( 'lite' )" class="version" v-for="( version, index ) in lite_versions" :class="0 === index ? 'latest-version' : 'old-version'" :id="`lite-${index}`">
                     <div class="version-number">
-                        <h4>Version 2.3.6</h4>
-                        <p>Aug 15, 2021 <label>Latest</label> </p>
+                        <h4>{{ version.version }}</h4>
+                        <p>{{ formatReleaseDate( version.released ) }} <label v-if="0 === index">{{ __( 'Latest', 'dokan-lite' ) }}</label> </p>
                     </div>
-                    <div class="card-version">
-                        <div class="feature-list">
-                            <span class="feature-btn btn-green">New</span>
-                            <div class="feature">
-                                <h5>Feature Name</h5>
-                                <p>Order note for Suborder and main order added when an refund request gets canceled.</p>
+                    <div class="card-version" :style="isCurrentVersion( index ) ? activeVersionBorder : ''">
+                        <transition-group name="slide" tag="div">
+                            <div class="feature-list" v-for="( changes, key, i ) in version.changes" :key="`index-${i}`" v-if="( 0 === index ) || ( i < 1 ) || isOpenVersion( index )">
+                                <span class="feature-badge" :class="badgeClass( key )">{{ key }}</span>
+                                <div class="feature" v-for="( change, j ) in changes" v-if="( 0 === index ) || ( j < 2 ) || isOpenVersion( index )">
+                                    <h5>{{ change.title }}</h5>
+                                    <div v-html="change.description"></div>
+                                </div>
                             </div>
-
-                            <div class="feature">
-                                <h5>Feature Name</h5>
-                                <p>Added Net Sale section under vendor dashboard where Total order amount was deducted from the refunded amount</p>
-                                <img src="https://placeimg.com/650/350/tech" alt="">
-                            </div>
-
-                            <div class="feature">
-                                <h5>Feature Name</h5>
-                                <p>Order note for Suborder and main order added when an refund request gets canceled. Order note for Suborder and main order added when an refund request gets canceled. .</p>
-                            </div>
-                        </div>
-                        <div class="feature-list">
-                            <span class="feature-btn btn-blue">Improved</span>
-                            <div class="feature">
-                                <h5>Feature Name</h5>
-                                <p>Order note for Suborder and main order added when an refund request gets canceled.</p>
-                            </div>
-
-                            <div class="feature">
-                                <h5>Feature Name</h5>
-                                <p>Added Net Sale section under vendor dashboard where Total order amount was deducted from the refunded amount</p>
-                            </div>
-                        </div>
-                        <div class="feature-list">
-                            <span class="feature-btn btn-red">Fixed</span>
-                            <div class="feature">
-                                <h5>Booking:</h5>
-                                <ul>
-                                    <li>Fixed Dokan booking details shows wrong order information after admin creates manual booking from WordPress admin panel</li>
-                                    <li>Display fatal error, after deleting booking product which is associated with any customer.</li>
-                                </ul>
-                            </div>
+                        </transition-group>
+                        <div class="continue-reading" v-if="0 !== index && Object.keys( version.changes ).length > 1">
+                            <a href="#" @click.prevent="toggleReading( index )">{{ isOpenVersion( index ) ? __( 'View Less...', 'dokan-lite' )  :  __( 'Continue reading...', 'dokan-lite' ) }}</a>
                         </div>
                     </div>
                 </div>
-
-                <div class="version old-version">
+                <div v-show="isActivePackage( 'pro' )" class="version" v-for="( version, index ) in pro_versions" :class="0 === index ? 'latest-version' : 'old-version'" :id="`pro-${index}`">
                     <div class="version-number">
-                        <h4>Version 2.3.5</h4>
-                        <p>Aug 30, 2021 </p>
+                        <h4>{{ version.version }}</h4>
+                        <p>{{ formatReleaseDate( version.released ) }} <label v-if="0 === index">{{ __( 'Latest', 'dokan-lite' ) }}</label> </p>
                     </div>
-                    <div class="card-version">
-                        <div class="feature-list">
-                            <span class="feature-btn btn-green">New</span>
-                            <div class="feature">
-                                <h5>Feature Name</h5>
-                                <p>Order note for Suborder and main order added when an refund request gets canceled.</p>
+                    <div class="card-version" :style="isCurrentVersion( index ) ? activeVersionBorder : ''">
+                        <transition-group name="slide" tag="div">
+                            <div class="feature-list" v-for="( changes, key, i ) in version.changes" :key="`index-${i}`" v-if="( 0 === index ) || ( i < 1 ) || isOpenVersion( index )">
+                                <span class="feature-badge" :class="badgeClass( key )">{{ key }}</span>
+                                <div class="feature" v-for="( change, j ) in changes" v-if="( 0 === index ) || j < 2 || isOpenVersion( index )">
+                                    <h5>{{ change.title }}</h5>
+                                    <div v-html="change.description"></div>
+                                </div>
                             </div>
-
-                            <div class="feature">
-                                <h5>Feature Name</h5>
-                                <p>Added Net Sale section under vendor dashboard where Total order amount was deducted from the refunded amount</p>
-                            </div>
-                        </div>
-
-                        <div class="continue-reading">
-                            <a href="#">Continue reading...</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="version old-version">
-                    <div class="version-number">
-                        <h4>Version 2.3.4</h4>
-                        <p>Aug 30, 2021 </p>
-                    </div>
-                    <div class="card-version">
-                        <div class="feature-list">
-                            <span class="feature-btn btn-green">New</span>
-                            <div class="feature">
-                                <h5>Feature Name</h5>
-                                <p>Order note for Suborder and main order added when an refund request gets canceled.</p>
-                            </div>
-
-                            <div class="feature">
-                                <h5>Feature Name</h5>
-                                <p>Added Net Sale section under vendor dashboard where Total order amount was deducted from the refunded amount</p>
-                            </div>
-                        </div>
-
-                        <div class="continue-reading">
-                            <a href="#">Continue reading...</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="version old-version">
-                    <div class="version-number">
-                        <h4>Version 2.3.3</h4>
-                        <p>Aug 30, 2021 </p>
-                    </div>
-                    <div class="card-version">
-                        <div class="feature-list">
-                            <span class="feature-btn btn-green">New</span>
-                            <div class="feature">
-                                <h5>Feature Name</h5>
-                                <p>Order note for Suborder and main order added when an refund request gets canceled.</p>
-                            </div>
-
-                            <div class="feature">
-                                <h5>Feature Name</h5>
-                                <p>Added Net Sale section under vendor dashboard where Total order amount was deducted from the refunded amount</p>
-                            </div>
-                        </div>
-
-                        <div class="continue-reading">
-                            <a href="#">Continue reading...</a>
+                        </transition-group>
+                        <div class="continue-reading" v-if="0 !== index && Object.keys( version.changes ).length > 1">
+                            <a href="#" @click.prevent="toggleReading( index )">{{ isOpenVersion( index ) ? __( 'View Less...', 'dokan-lite' )  :  __( 'Continue reading...', 'dokan-lite' ) }}</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="loading" v-else>
-            <loading></loading>
-        </div>
-        <button @click="scrollTop" class="scroll-to-top" :style=" scrollPosition > 300 ? 'opacity: 1; visibility: visible' : ''">
+
+        <button @click="scrollTop" class="scroll-to-top" :style="scrollPosition > 300 ? 'opacity: 1; visibility: visible' : ''">
             <span class="dashicons dashicons-arrow-up-alt"></span>
         </button>
     </div>
@@ -317,10 +100,10 @@
 
 let Loading = dokan_get_lib('Loading');
 
+import $ from 'jquery';
 import UpgradeBanner from "admin/components/UpgradeBanner.vue";
 
 export default {
-
     name: 'ChangeLog',
 
     components: {
@@ -332,45 +115,77 @@ export default {
         return {
             active_package: 'lite',
             current_version: 0,
-            hasPro: dokan.hasPro ? true : false,
-            releases: [],
-            versions: [
-                '3.3.6',
-                '3.3.5',
-                '3.3.4',
-                '3.3.3',
-                '3.3.2',
-                '3.3.1',
-                '3.2.9',
-                '3.2.8',
-            ],
             scrollPosition: null,
-            openVersion: 0,
-            activeVersionBorder: ''
+            openVersions: [],
+            activeVersionBorder: '',
+            lite_versions: null,
+            pro_versions: null,
+            loading: false,
+            hasPro: dokan.hasPro ? true : false,
         };
     },
 
     methods: {
-        toggleReading(index){
-            if(this.openVersion === index){
-                return this.openVersion = 0;
+        formatReleaseDate(date){
+            return $.datepicker.formatDate( dokan_get_i18n_date_format(), new Date( date ) );
+        },
+
+        badgeClass( key ) {
+            switch ( key ) {
+                case 'New':
+                case 'New Module':
+                case 'New Feature':
+                    return  'badge-green';
+                case 'Fix':
+                    return  'badge-red';
+                default:
+                    return 'badge-blue';
             }
-            return this.openVersion = index;
         },
 
-        isOpenVersion(index){
-            return this.openVersion === index;
+        getDokanLiteChangeLog(){
+            this.loading = true;
+            dokan.api.get( '/admin/changelog' )
+                .done( response => {
+                    this.lite_versions = response;
+                    this.loading = false;
+                } );
         },
 
-        switchPackage(pack){
+        getDokanProChangeLog(){
+            this.loading = true;
+            dokan.api.get( '/admin/dokan-pro-changelog' )
+                .done( response => {
+                    this.pro_versions = response;
+                    this.loading = false;
+                } );
+        },
+
+        toggleReading(index){
+            if( this.isOpenVersion( index ) ){
+                return this.openVersions.splice( this.openVersions.indexOf( index ), 1 );
+            }
+
+            return this.openVersions.push( index );
+        },
+
+        isOpenVersion( index ){
+            return this.openVersions.includes( index );
+        },
+
+        switchPackage( pack ){
+            if ( null === this.pro_versions && 'pro' === pack ) {
+                this.getDokanProChangeLog();
+            }
+
             this.active_package = pack;
         },
 
-        isActivePackage(pack){
+        isActivePackage( pack ){
             return this.active_package === pack;
         },
 
-        removeBorder(){
+        addBorder(){
             let timeout;
 
             clearTimeout(timeout);
@@ -382,12 +197,12 @@ export default {
             }, 3000);
         },
 
-        jumpVersion(id){
+        jumpVersion( id ){
             this.current_version = id;
-            this.removeBorder();
+            this.addBorder();
         },
 
-        isCurrentVersion(index){
+        isCurrentVersion( index ){
             return this.current_version === index;
         },
 
@@ -401,40 +216,78 @@ export default {
     },
 
     created() {
-        window.addEventListener('scroll', this.updatePosition)
+        this.getDokanLiteChangeLog();
+        window.addEventListener( 'scroll', this.updatePosition );
     },
 
     destroyed() {
-        window.removeEventListener('scroll', this.updatePosition)
+        window.removeEventListener( 'scroll', this.updatePosition );
     }
 };
 </script>
 
 <style lang="less" scoped>
 .fade-enter-active, .fade-leave-active {
-    transition: opacity .5s;
+    transition: opacity .3s ease;
 }
 .fade-enter, .fade-leave-to {
     opacity: 0;
 }
 
+.slide-enter-active,
+.slide-leave-active {
+    transition-duration: 0.1s;
+    transition-timing-function: linear;
+}
+
+.slide-enter-to, .slide-leave {
+    max-height: 100px;
+    overflow: hidden;
+}
+
+.slide-enter, .slide-leave-to {
+    overflow: hidden;
+    max-height: 0;
+}
+ul {
+    cursor: pointer;
+}
+
 .dokan-help-page {
 
     .section-wrapper {
+        h2 {
+            margin: 0;
+            color: transparent;
+        }
+
+        .dokan-notice {
+            background: rgba(223, 0, 0, 0.05);
+            margin: -15px -20px 0;
+            padding: 15px 15px 0;
+        }
 
         .change-log {
-            height: 410px;
             background: rgba(223, 0, 0, 0.05);
-            margin: -15px -20px 0 -22px;
+            margin: -15px -20px 0;
+
+            &.lite-change-log {
+                height: 340px;
+            }
+
+            &.pro-change-log {
+                height: 400px;
+            }
 
             h3 {
                 color: #000000;
                 font-size: 30px;
                 text-align: center;
-                padding-top: 45px;
-                margin-top: 0;
+                margin: 0;
+                padding: 45px 0 0;
                 font-weight: 800;
                 font-family: "SF Pro Text", sans-serif;
+                margin-bottom: 28px;
             }
 
             .switch-button-wrap {
@@ -443,7 +296,7 @@ export default {
                 text-align: center;
                 cursor: pointer;
                 transition: all .2s ease;
-                margin: 28px auto 24px;
+                margin: 0 auto;
                 background: #ffffff;
                 border-radius: 53px;
                 position: relative;
@@ -489,7 +342,7 @@ export default {
 
             .jump-version {
                 width: 178px;
-                margin: 0 auto;
+                margin: 24px auto 0;
                 position: relative;
 
                 p {
@@ -536,10 +389,14 @@ export default {
                     }
 
                     .version-dropdown {
-                        height: 300px;
+                        max-height: 300px;
                         text-align: left;
                         background: #ffffff;
                         overflow-y: auto;
+
+                        ul {
+                            cursor: context-menu;
+                        }
 
                         li {
                             margin-bottom: 25px;
@@ -617,89 +474,87 @@ export default {
                     border-radius: 3px;
                     padding: 25px;
                     box-sizing: border-box;
-                    position: relative;
 
-                    .feature-list {
-                        margin-bottom: 40px;
+                    div {
+                        overflow: hidden;
 
-                        &:last-child {
-                            margin-bottom: 0;
-                        }
-
-                        .feature-btn {
-                            color: #ffffff;
-                            padding: 6px 14px;
-                            border-radius: 3px;
-                            font-weight: 600;
-                            font-size: 15px;
-                            display: inline-block;
-                        }
-
-                        .btn-green {
-                            background: #00B728;
-                        }
-
-                        .btn-blue {
-                            background: #028AFB;
-                        }
-
-                        .btn-red {
-                            background: #F83838;
-                        }
-
-                        .feature {
-                            margin: 11px 0;
+                        .feature-list {
+                            margin-bottom: 40px;
 
                             &:last-child {
                                 margin-bottom: 0;
                             }
 
-                            h5 {
-                                color: #000000;
-                                margin: 0;
-                                font-size: 14px;
-                                font-weight: bold;
-                                font-family: "SF Pro Text", sans-serif;
+                            .feature-badge {
+                                color: #ffffff;
+                                padding: 6px 14px;
+                                border-radius: 3px;
+                                font-weight: 600;
+                                font-size: 15px;
+                                display: inline-block;
                             }
 
-                            p {
-                                color: #000000;
-                                margin: 0;
-                                font-size: 14px;
-                                font-weight: 400;
-                                opacity: 0.8;
-                                font-family: "SF Pro Text", sans-serif;
+                            .badge-green {
+                                background: #00B728;
                             }
 
-                            img {
-                                width: 100%;
-                                height: auto;
-                                margin-top: 10px;
+                            .badge-blue {
+                                background: #028AFB;
                             }
 
-                            ul {
-                                list-style: disc outside;
-                                opacity: 0.7;
-                                font-size: 14px;
-                                font-weight: 400;
-                                margin-left: 18px;
+                            .badge-red {
+                                background: #F83838;
+                            }
+
+                            .feature {
+                                margin: 11px 0;
+
+                                &:last-child {
+                                    margin-bottom: 0;
+                                }
+
+                                h5 {
+                                    color: #000000;
+                                    margin: 0;
+                                    font-size: 14px;
+                                    font-weight: bold;
+                                    font-family: "SF Pro Text", sans-serif;
+                                }
+
+                                div {
+                                    color: #000000;
+                                    font-size: 14px;
+                                    font-weight: 400;
+                                    opacity: 0.8;
+                                    font-family: "SF Pro Text", sans-serif;
+                                }
+
+                                img {
+                                    width: 100%;
+                                    height: auto;
+                                    margin-top: 10px;
+                                }
+
+                                ul {
+                                    list-style: disc outside;
+                                    opacity: 0.7;
+                                    font-size: 14px;
+                                    font-weight: 400;
+                                    margin-left: 18px;
+                                }
                             }
                         }
                     }
 
                     .continue-reading {
-                        position: absolute;
-                        bottom: 1px;
-                        left: 0;
-                        height: 60px;
-                        background: #ffffff;
-                        width: 100%;
-                        text-align: center;
-
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        margin-top: 30px;
 
                         a {
                             font-weight: 600;
-                            font-size: 15px;
+                            font-size: 13px;
                             text-decoration: none;
                             padding: 6px 14px;
                             display: inline-block;
@@ -714,7 +569,6 @@ export default {
                         }
                     }
                 }
-
                 .version-number {
                     h4 {
                         font-weight: 700;
@@ -736,7 +590,7 @@ export default {
                         color: #fff;
                         background: #8e44ad;
                         border-radius: 53px;
-                        margin-left: 9px;
+                        margin-left: 5px;
                         padding: 2px 12px;
                         font-weight: 400;
                         font-family: "SF Pro Text", sans-serif;
@@ -769,9 +623,7 @@ export default {
         }
 
         @media screen and ( min-width: 992px ) and ( max-width: 1199px ) {
-            .change-log {
-                margin: -10px -17px 0 -20px;
-            }
+
             .version-list {
                 .version {
                     display: flex;
@@ -795,14 +647,22 @@ export default {
         }
 
         @media only screen and ( max-width: 991px ) {
+            .dokan-notice {
+                background: #f7f8fa;
+                margin: -15px -10px 0;
+                padding: 15px 15px 0;
+            }
 
             .change-log {
-                height: 270px;
                 background: #f7f8fa;
-                margin: -15px -12px 0 -10px;
+                margin: -15px -10px 0;
 
-                h3 {
-                    padding-top: 30px;
+                &.lite-change-log {
+                    height: 220px;
+                }
+
+                &.pro-change-log {
+                    height: 280px;
                 }
             }
 
@@ -813,6 +673,10 @@ export default {
                         border: 0;
                         box-shadow: none;
                         border-radius: 0;
+
+                        .continue-reading {
+                            justify-content: start;
+                        }
                     }
                 }
 
@@ -859,7 +723,7 @@ export default {
         box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.09);
         cursor: pointer;
         opacity: 0;
-        visibility: invisible;
+        visibility: hidden;
         transition: all .2s ease;
     }
 
