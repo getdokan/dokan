@@ -88,12 +88,12 @@ trait ObjectCache {
      *
      * @param string $key
      * @param mixed  $value
-     * @param string $group  default: ``;                eg: `products`, `employees`
-     * @param int    $expire default: `WEEK_IN_SECONDS`; eg: 120, DAY_IN_SECONDS
+     * @param string $group  default: ``;                    eg: `products`, `employees`
+     * @param int    $expire default: `WEEK_IN_SECONDS * 2`; eg: 120, DAY_IN_SECONDS
      *
      * @return bool
      */
-    public static function set( $key, $value, $group = '', $expire = WEEK_IN_SECONDS ) {
+    public static function set( $key, $value, $group = '', $expire = WEEK_IN_SECONDS * 2 ) {
         extract( static::get_key_and_group( $key, $group ) ); //phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 
         return wp_cache_set( $key, $value, $group, $expire );
