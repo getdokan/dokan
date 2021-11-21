@@ -37,7 +37,7 @@ class WithdrawCache {
      * @return void
      */
     public static function delete( $seller_id ) {
-        $cache_group = 'withdraws_seller_' . $seller_id;
+        $cache_group = "withdraws_seller_$seller_id";
         Cache::invalidate_group( $cache_group );
         Cache::invalidate_group( 'withdraws' );
     }

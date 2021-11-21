@@ -107,7 +107,7 @@ class ProductCache {
             $method->setAccessible( true );
             $method->invokeArgs( $class, [ &$product ] );
         } catch ( \Exception $e ) {
-
+            return;
         }
     }
 
@@ -123,7 +123,7 @@ class ProductCache {
      */
     public function cache_clear_bulk_product_status_change( $status, $products ) {
         // for delete action, separate hooks will be called
-        if ( 'delete' === $status || empty( $products )) {
+        if ( 'delete' === $status || empty( $products ) ) {
             return;
         }
 
