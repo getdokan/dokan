@@ -173,6 +173,14 @@ module.exports = {
     ProductStatusDropdown: '#post_status',
     ProductVisibilityDropdown: '#_visibility',
     ProductReviewCheckbox: 'div.dokan-section-content > div:nth-child(5) > label',
+    ProductAttributeName:'attribute_names[0]',
+    ProductAttributeValue:'//li/div[2]/div[2]/span/span/span/ul/li/input',
+    ProductAttributeVisibility:'attribute_visibility[0]',
+    ProductAttributeVariation:'attribute_variation[0]',
+    EnableProductDiscount:'//*[@id="_is_lot_discount"]',
+    DiscountProductQuantity:'//*[@id="_lot_discount_quantity"]',
+    DiscountProductAmount:'//*[@id="_lot_discount_amount"]',
+
     //group product Functional 
     RmaCheckBox: '#dokan_rma_product_override',
     RmaLabelInput: '#dokan-rma-label',
@@ -281,9 +289,19 @@ module.exports = {
      StripePublicKey:'#woocommerce_dokan-stripe-connect_test_publishable_key',
      StripeClientId:'#woocommerce_dokan-stripe-connect_test_client_id',
      
+    //locator for shipping
 
-        
-
+    EnableSellingLocation:'#woocommerce_allowed_countries',
+    EnableShippingLocation:'#woocommerce_ship_to_countries',
+    ZoneRegion:{css:'#mainform > table > tbody > tr:nth-child(2) > td > span > span.selection > span > ul > li > input'},
+    AddShippingMethod:{css:'#mainform > table > tbody > tr:nth-child(3) > td > table > tfoot > tr > td > button'},
+    SelectShippingMethod:{css:'#wc-backbone-modal-dialog > div.wc-backbone-modal > div > section > article > form > div > select'},
+   
+    
+     //locator for refund
+     firstOrder:{css:'tr:nth-child(1) strong'},
+     EditOrderStatus:{css:'.dokan-edit-status'},
+     ChangeOrderStatus:'#order_status',
   
 
 
