@@ -28,6 +28,31 @@ class OrderCache {
     }
 
     /**
+     * Delete order cache
+     *
+     * @since 3.3.2
+     *
+     * @param int $seller_id
+     * @param int|null $order_id
+     *
+     * @return void
+     */
+    public static function delete( $seller_id, $order_id = null ) {
+        Cache::invalidate_group( "seller_order_data_{$seller_id}" );
+
+        // Remove cached seller_id after an woocommerce order
+        if ( ! empty( $order_id ) ) {
+            Cache::delete( "get_seller_id_by_order_{$order_id}" );
+        }
+
+        // Remove withdraw cache
+        WithdrawCache::delete( $seller_id );
+
+        // delete report cache
+        Cache::invalidate_transient_group( "report_data_seller_{$seller_id}" );
+    }
+
+    /**
      * Reset cache group related to seller orders.
      *
      * @since 3.3.2
@@ -38,16 +63,7 @@ class OrderCache {
      * @return void
      */
     public function reset_seller_order_data( $order_id, $seller_id ) {
-        Cache::invalidate_group( "seller_order_data_{$seller_id}" );
-
-        // Remove cached seller_id after an woocommerce order
-        Cache::delete( "get_seller_id_by_order_{$order_id}" );
-
-        // Remove withdraw cache
-        WithdrawCache::delete( $seller_id );
-
-        // delete report cache
-        Cache::invalidate_transient_group( "report_data_seller_{$seller_id}" );
+        self::delete( $seller_id, $order_id );
     }
 
     /**
@@ -61,7 +77,7 @@ class OrderCache {
      */
     public function reset_order_cache( $order_id ) {
         $seller_id = dokan_get_seller_id_by_order( $order_id );
-        $this->reset_seller_order_data( $order_id, $seller_id );
+        self::delete( $seller_id, $order_id );
     }
 
     /**
@@ -83,6 +99,6 @@ class OrderCache {
 
         $seller_id = dokan_get_seller_id_by_order( $order_id );
 
-        $this->reset_seller_order_data( $order_id, $seller_id );
+        self::delete( $seller_id, $order_id );
     }
 }
