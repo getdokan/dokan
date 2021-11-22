@@ -321,9 +321,8 @@ function dokan_count_stock_posts( $post_type, $user_id, $stock_type ) {
 function dokan_count_comments( $post_type, $user_id ) {
     global $wpdb;
 
-    //todo: delete comment cache
     $cache_group = "count_{$post_type}_comments_{$user_id}";
-    $cache_key   = "comments";
+    $cache_key   = 'comments';
     $counts      = Cache::get( $cache_key, $cache_group );
 
     if ( $counts === false ) {
@@ -367,7 +366,7 @@ function dokan_count_comments( $post_type, $user_id ) {
         $counts['total'] = $total;
 
         $counts = (object) $counts;
-        Cache::set( $cache_key, $counts, $cache_group, 3600 * 2 );
+        Cache::set( $cache_key, $counts, $cache_group );
     }
 
     return $counts;
