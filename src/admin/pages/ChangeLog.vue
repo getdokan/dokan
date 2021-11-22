@@ -6,7 +6,7 @@
             <div class="dokan-notice">
                 <h2></h2>
             </div>
-            <div class="change-log" :class="hasPro ? 'pro-change-log' : 'lite-change-log'">
+            <div class="change-log" :class="hasPro ? 'pro-change-log' : 'lite-change-log'" id="change-log">
                 <h3>{{ __( 'Dokan Changelog', 'dokan-lite' ) }}</h3>
                 <div v-if="hasPro" class="switch-button-wrap">
                     <transition-group name="fade">
@@ -20,21 +20,17 @@
                     <div class="version-menu">
                         <div class="version-dropdown">
                             <ul v-show="isActivePackage( 'lite' )">
-                                <li v-for="(version, index) in lite_versions" :class="{ 'current' : isCurrentVersion( index ) }" @click="jumpVersion( index )">
-                                    <router-link :to="{ name: 'ChangeLog', hash: `#lite-${index}` }">
-                                        {{ version.version }}
-                                        <span v-if="0 === index">({{ __( 'Latest', 'dokan-lite' ) }})</span>
-                                        <span v-if="isCurrentVersion(index) && 0 !== index">({{ __( 'Current', 'dokan-lite' ) }})</span>
-                                    </router-link>
+                                <li v-for="(version, index) in lite_versions" :class="{ 'current' : isCurrentVersion( `lite-${index}` ) }" @click="jumpVersion( `lite-${index}` )">
+                                    {{ version.version }}
+                                    <span v-if="0 === index">({{ __( 'Latest', 'dokan-lite' ) }})</span>
+                                    <span v-if="isCurrentVersion( `lite-${index}` ) && 0 !== index">({{ __( 'Current', 'dokan-lite' ) }})</span>
                                 </li>
                             </ul>
                             <ul v-show="isActivePackage( 'pro' )">
-                                <li v-for="( version, index ) in pro_versions" :class="{ 'current' : isCurrentVersion( index ) }" @click="jumpVersion( index )">
-                                    <router-link :to="{ name: 'ChangeLog', hash: `#pro-${index}` }">
-                                        {{ version.version }}
-                                        <span v-if="0 === index">({{ __( 'Latest', 'dokan-lite' ) }})</span>
-                                        <span v-if="isCurrentVersion( index ) && 0 !== index">({{ __( 'Current', 'dokan-lite' ) }})</span>
-                                    </router-link>
+                                <li v-for="( version, index ) in pro_versions" :class="{ 'current' : isCurrentVersion( `pro-${index}` ) }" @click="jumpVersion( `pro-${index}` )">
+                                    {{ version.version }}
+                                    <span v-if="0 === index">({{ __( 'Latest', 'dokan-lite' ) }})</span>
+                                    <span v-if="isCurrentVersion( `pro-${index}` ) && 0 !== index">({{ __( 'Current', 'dokan-lite' ) }})</span>
                                 </li>
                             </ul>
                         </div>
@@ -52,7 +48,7 @@
                         <h4>{{ version.version }}</h4>
                         <p>{{ formatReleaseDate( version.released ) }} <label v-if="0 === index">{{ __( 'Latest', 'dokan-lite' ) }}</label> </p>
                     </div>
-                    <div class="card-version" :style="isCurrentVersion( index ) ? activeVersionBorder : ''">
+                    <div class="card-version" :style="isCurrentVersion( `lite-${index}` ) ? activeVersionBorder : ''">
                         <transition-group name="slide" tag="div">
                             <div class="feature-list" v-for="( changes, key, i ) in version.changes" :key="`index-${i}`" v-if="( 0 === index ) || ( i < 1 ) || isOpenVersion( `lite-${index}` )">
                                 <span class="feature-badge" :class="badgeClass( key )">{{ key }}</span>
@@ -72,7 +68,7 @@
                         <h4>{{ version.version }}</h4>
                         <p>{{ formatReleaseDate( version.released ) }} <label v-if="0 === index">{{ __( 'Latest', 'dokan-lite' ) }}</label> </p>
                     </div>
-                    <div class="card-version" :style="isCurrentVersion( index ) ? activeVersionBorder : ''">
+                    <div class="card-version" :style="isCurrentVersion( `pro-${index}` ) ? activeVersionBorder : ''">
                         <transition-group name="slide" tag="div">
                             <div class="feature-list" v-for="( changes, key, i ) in version.changes" :key="`index-${i}`" v-if="( 0 === index ) || ( i < 1 ) || isOpenVersion( `pro-${index}` )">
                                 <span class="feature-badge" :class="badgeClass( key )">{{ key }}</span>
@@ -114,7 +110,7 @@ export default {
     data () {
         return {
             active_package: 'lite',
-            current_version: 0,
+            current_version: 'lite-0',
             scrollPosition: null,
             openVersions: [],
             activeVersionBorder: '',
@@ -199,6 +195,7 @@ export default {
 
         jumpVersion( id ){
             this.current_version = id;
+            this.goToPosition( id );
             this.addBorder();
         },
 
@@ -210,8 +207,14 @@ export default {
             this.scrollPosition = window.scrollY
         },
 
-        scrollTop(){
-            window.scrollTo(0,0);
+        scrollTop() {
+            this.goToPosition( 'change-log' );
+        },
+
+        goToPosition( id ) {
+            $('html, body').animate({
+                scrollTop: $( `#${id}` ).offset().top
+            }, 500);
         }
     },
 
@@ -396,45 +399,37 @@ ul {
 
                         ul {
                             cursor: context-menu;
-                        }
 
-                        li {
-                            margin-bottom: 25px;
-
-                            a {
+                            li {
+                                margin-bottom: 25px;
                                 color: #000000;
                                 font-size: 14px;
                                 font-weight: 400;
                                 font-family: "SF Pro Text", sans-serif;
                                 transition: all .2s linear;
-                                text-decoration: none;
+                                cursor: pointer;
 
                                 &:hover {
                                     color: #f2624d;
                                 }
 
-                                &:focus {
-                                    outline: 0;
-                                    box-shadow: none;
+                                &:last-child {
+                                    margin-bottom: 0;
                                 }
-                            }
 
-                            &:last-child {
-                                margin-bottom: 0;
-                            }
+                                &.current {
+                                    color: #f2624d;
+                                    font-weight: bold;
+                                    font-family: "SF Pro Text", sans-serif;
+                                }
 
-                            &.current a {
-                                color: #f2624d;
-                                font-weight: bold;
-                                font-family: "SF Pro Text", sans-serif;
-                            }
-
-                            span {
-                                display: block;
-                                font-size: 12px;
-                                color: #758598;
-                                font-weight: 400;
-                                font-family: "SF Pro Text", sans-serif;
+                                span {
+                                    display: block;
+                                    font-size: 12px;
+                                    color: #758598;
+                                    font-weight: 400;
+                                    font-family: "SF Pro Text", sans-serif;
+                                }
                             }
                         }
 
