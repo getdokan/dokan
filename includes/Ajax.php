@@ -1073,6 +1073,12 @@ class Ajax {
             return false;
         }
 
-        return $response_data['success'] ? $response_data['success'] : false;
+        // Check if the response data is not empty
+        if ( empty( $response_data['success'] ) ) {
+            return false;
+        }
+
+        // Return success after passing checks
+        return $response_data['success'];
     }
 }
