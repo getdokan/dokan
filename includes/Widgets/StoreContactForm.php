@@ -20,7 +20,7 @@ class StoreContactForm extends WP_Widget {
      *
      * @var string|boolean
      */
-    public $recaptcha_site_key;
+    protected $recaptcha_site_key;
 
     /**
      * Constructor
@@ -151,6 +151,12 @@ class StoreContactForm extends WP_Widget {
      * @return void
      */
     public function enqueue_contact_widget_scripts() {
+        // Check if recaptcha sitekey exists and the page is a store page
+        if ( empty( $this->recaptcha_site_key ) || ! dokan_is_store_page() ) {
+            return;
+        }
+
+        // Enqueue scripts after passing check
         wp_enqueue_script( 'dokan-google-recaptcha' );
         ?>
         <script>
