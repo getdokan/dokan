@@ -637,10 +637,14 @@ function dokan_admin_report_by_seller( $chosen_seller_id ) {
  *
  * @since DOKAN_LITE_SINCE
  *
- * @return array
+ * @return array | void
  */
 function dokan_get_notices() {
     $notices = apply_filters( 'dokan_notices', [] );
+
+    if ( empty( $notices ) ) {
+        return;
+    }
 
     uasort( $notices, 'dokan_sort_by_priority' );
 
@@ -652,10 +656,14 @@ function dokan_get_notices() {
  *
  * @since DOKAN_LITE_SINCE
  *
- * @return array
+ * @return array | void
  */
 function dokan_get_admin_notices() {
     $notices = apply_filters( 'dokan_admin_notices', [] );
+
+    if ( empty( $notices ) ) {
+        return;
+    }
 
     uasort( $notices, 'dokan_sort_by_priority' );
 

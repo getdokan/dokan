@@ -1,6 +1,20 @@
 @import "mixins.less";
 @import "tooltip.less";
 
+@font-face {
+  font-family: "Lato";
+  src: url("../font/Lato-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Lato";
+  src: url("../font/Lato-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
 .dokan-admin-header {
     background: #fff;
     padding: 12px 15px 10px 22px;
@@ -617,6 +631,8 @@
     }
 }
 
-.dokan-notices .message a {
-  text-decoration: none;
+.dokan-admin-notices {
+      a {
+          text-decoration: none;
+      }
 }

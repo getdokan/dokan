@@ -532,11 +532,10 @@ final class WeDevs_Dokan {
         require_once DOKAN_INC_DIR . '/functions.php';
 
         $notices[] = [
-            'type'              => 'success',
-            'description'       => __( '<strong>Welcome to Dokan</strong> &#8211; You&lsquo;re almost ready to start selling :)', 'dokan-lite' ),
-            'show_close_button' => false,
-            'priority'          => 1,
-            'actions'           => [
+            'type'        => 'success',
+            'description' => __( '<strong>Welcome to Dokan</strong> &#8211; You&lsquo;re almost ready to start selling :)', 'dokan-lite' ),
+            'priority'    => 1,
+            'actions'     => [
                 [
                     'type'   => 'primary',
                     'text'   => __( 'Run the Setup Wizard', 'dokan-lite' ),

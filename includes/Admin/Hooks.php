@@ -44,13 +44,10 @@ class Hooks {
      * @return void
      */
     public function admin_notices() {
-        $notices = dokan_get_admin_notices();
-
-        if ( empty( $notices ) ) {
-            return;
-        }
-
-        dokan_get_template( 'admin-notices.php', [ 'notices' => $notices ] );
+        dokan_get_template_part( 'admin-notices' );
+        wp_enqueue_style( 'dokan-upgrade', DOKAN_PLUGIN_ASSEST . '/css/dokan-admin-notice.css', [], DOKAN_PLUGIN_VERSION );
+        wp_localize_script( 'dokan-vue-vendor', 'dokan', dokan()->scripts->get_admin_localized_scripts() );
+        wp_enqueue_script( 'dokan-upgrade', DOKAN_PLUGIN_ASSEST . '/js/dokan-admin-notice.js', [ 'jquery', 'dokan-vue-vendor', 'dokan-vue-bootstrap' ], DOKAN_PLUGIN_VERSION, true );
     }
 
     /**

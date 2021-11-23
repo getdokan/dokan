@@ -83,7 +83,7 @@ class LimitedTimePromotion {
                         <div class="message">
                             <h3><?php echo esc_html( $notice['title'] ); ?></h3>
                             <div><?php echo esc_html( $notice['content'] ); ?></div>
-                            <a class="btn btn-primary" target="_blank" href="<?php echo esc_url( $notice['link'] ); ?>"><?php echo esc_html( $notice['button_text'] ); ?></a>
+                            <a class="btn btn-primary" target="_blank" href="<?php echo esc_url( $notice['link'] ); ?>"><?php echo esc_html__( 'Get Deals &rarr;', 'dokan-lite' ); ?></a>
                         </div>
 
                         <button class="close-notice" data-key="<?php echo esc_attr( $notice['key'] ); ?>">
@@ -109,7 +109,7 @@ class LimitedTimePromotion {
 
                 .dokan-promo-notice .notice-content {
                     display: flex;
-                    padding: 20px 25px;
+                    padding: 16px 20px;
                     border: 1px solid #dfe2e7;
                     border-radius: 0 5px 5px 0;
                     background: #fff;
@@ -232,6 +232,11 @@ class LimitedTimePromotion {
                     font-family: "SF Pro Text";
                     src: url(<?php echo DOKAN_PLUGIN_ASSEST . '/font/SF-Pro-Text-Regular.otf'; ?>) format('opentype');
                     font-weight: 400;
+                }
+                @font-face {
+                    font-family: "SF Pro Text";
+                    src: url(<?php echo DOKAN_PLUGIN_ASSEST . '/font/SF-Pro-Text-Light.otf'; ?>) format('opentype');
+                    font-weight: 300;
                 }
             </style>
             <script>

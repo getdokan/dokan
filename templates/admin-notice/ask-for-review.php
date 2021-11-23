@@ -39,8 +39,7 @@
 
     .dokan-review-notice .notice-content {
         display: flex;
-        align-items: center;
-        padding: 20px 25px;
+        padding: 16px 20px;
         border: 1px solid #dfe2e7;
         border-radius: 0 5px 5px 0;
         background: #fff;
