@@ -434,6 +434,7 @@ export default {
             min-height: 247px;
 
             .dokan-admin-notice {
+                min-height: 152px;
 
                 .message {
                     margin: 0 0 0 23px;
@@ -442,7 +443,7 @@ export default {
         }
 
         .slide-notice {
-            bottom: 7px;
+            bottom: 56px;
             top: unset;
             right: 13px;
         }
@@ -455,6 +456,7 @@ export default {
             min-height: 200px;
 
             .dokan-admin-notice {
+                min-height: 128px;
 
                 .message {
                     margin: 0 0 0 23px;
@@ -463,7 +465,9 @@ export default {
         }
 
         .slide-notice {
-            bottom: 7px;
+            bottom: 35px;
+            right: 12px;
+            padding: 3px 8px;
             top: unset;
         }
     }
@@ -472,7 +476,11 @@ export default {
 @media screen and (min-width: 577px) and (max-width: 768px) {
     .dokan-admin-notices {
         .dokan-notice-slides {
-            min-height: 170px;
+            min-height: 138px;
+
+            .dokan-admin-notice {
+                min-height: 100px;
+            }
         }
     }
 }

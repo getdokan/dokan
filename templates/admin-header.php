@@ -7,12 +7,22 @@
     <div class="dokan-admin-header__menu">
         <div class="menu-item">
             <div class="item">
-                <span class="whats-new-pointer"></span>
+                <?php
+                    $versions = get_option( 'dokan_whats_new_versions', array() );
+                    $has_new_version = false;
+
+                    if ( ! in_array( DOKAN_PRO_PLUGIN_VERSION, $versions ) ) {
+                        $has_new_version = true;
+                    }
+                ?>
+                <?php if ( $has_new_version ) : ?>
+                    <span class="whats-new-pointer"></span>
+                <?php endif; ?>
                 <div class="icon-question-mark"></div>
                 <div class="dropdown">
                     <h3><?php esc_html_e( 'Get Help', 'dokan-lite' ); ?></h3>
                     <div class="list-item">
-                        <a href="<?php echo esc_url( admin_url( 'admin.php?page=dokan#/changelog' ) ); ?>" class="active">
+                        <a href="<?php echo esc_url( admin_url( 'admin.php?page=dokan#/changelog' ) ); ?>" class="<?php echo $has_new_version ? 'active' : ''  ?>">
                             <div class="icon">
                                 <div class="icon-whats-new"></div>
                             </div>
