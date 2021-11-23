@@ -13,14 +13,6 @@ use WeDevs\Dokan\Abstracts\DokanRESTAdminController;
 * @package dokan
 */
 class AdminNoticeController extends DokanRESTAdminController {
-
-    /**
-     * Route base.
-     *
-     * @var string
-     */
-    protected $base = '';
-
     /**
      * Register all routes related with stores
      *
@@ -28,22 +20,22 @@ class AdminNoticeController extends DokanRESTAdminController {
      */
     public function register_routes() {
         register_rest_route(
-            $this->namespace, '/notices', array(
-                array(
+            $this->namespace, '/notices', [
+                [
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => array( $this, 'get_notices' ),
                     'permission_callback' => array( $this, 'check_permission' ),
-                ),
-            )
+                ],
+            ]
         );
         register_rest_route(
-            $this->namespace, '/admin-notices', array(
-                array(
+            $this->namespace, '/admin-notices', [
+                [
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => array( $this, 'get_admin_notices' ),
                     'permission_callback' => array( $this, 'check_permission' ),
-                ),
-            )
+                ],
+            ]
         );
     }
 
