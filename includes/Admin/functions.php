@@ -671,7 +671,7 @@ function dokan_get_admin_notices() {
 }
 
 /**
- * Sort all promotions depends on priority key
+ * Sort all notices depends on priority key
  *
  * @param array $a
  * @param array $b

@@ -106,17 +106,17 @@ export default {
         },
 
         startAutoSlide() {
-            // this.timer = setInterval(() => {
-            //     this.slideNotice(1);
-            // }, 5000);
+            this.timer = setInterval(() => {
+                this.slideNotice(1);
+            }, 5000);
         },
 
-        stopAutoSlide(){
+        stopAutoSlide() {
             clearInterval( this.timer );
             this.timer = null;
         },
 
-        hideNotice( notice, index ){
+        hideNotice( notice, index ) {
             $.ajax( {
                 url: dokan.ajaxurl,
                 method: 'post',
