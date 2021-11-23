@@ -4,4 +4,4 @@ Scenario('Customer Order Multiple Product from signle vendor', ({ I ,loginAs}) =
     loginAs('Customer');
     helpers.SelectMultipleProduct();
     helpers.placeOrder();
-}).tag('order');
+}).tag('order');     

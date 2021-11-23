@@ -40,13 +40,14 @@ module.exports = {
         I.click('Not right now');
         I.seeInCurrentUrl('/dashboard');
     },
-
+   
     createProduct(){
       I.amOnPage('/dashboard/products/');
       I.click('Add new product');
+      
       I.fillField(locator.ProductTitleInput,faker.commerce.productName());
       I.fillField(locator.ProductPrice,faker.commerce.price());
-    //   I.wait(2);
+      I.wait(2);
       // I.attachFile('.dokan-feat-image-btn', '/data/images.jpeg');
       I.selectOption(locator.ProductCategory, 'Uncategorized');
       I.click(locator.AddProduct);
@@ -75,17 +76,15 @@ module.exports = {
     },
     SelectSingleProduct() {
         I.amOnPage('/shop/');
-        I.click({css: 'li.product:nth-child(1) > span:nth-child(2) > span:nth-child(2) > a:nth-child(1) > i:nth-child(1)'});
-        I.click('/html/body/div[1]/div/div/div/div[2]/div/div/main/ul/li[2]');
+        I.click('//main[@id="main"]/ul/li/a/img');
+        I.click('Add to cart');
         // I.click('simple_product');
     },
     SelectMultipleProduct() {
         I.amOnPage('/shop/');
         // I.selectOption(locator.SortingDropdown, 'price-desc');
         // I.click(locator.ThirdProductLocator);
-        I.click({css: 'li.product:nth-child(1) > span:nth-child(2) > span:nth-child(2) > a:nth-child(1) > i:nth-child(1)'});
-        I.wait(5);
-        I.click('/html/body/div[1]/div/div/div/div[2]/div/div/main/ul/li[2]');
+        I.click('//main[@id="main"]/ul/li/a/img');
         I.click('Add to cart');
     },
     SelectMultipleProductMultiplrVendor() {
