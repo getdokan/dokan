@@ -8,10 +8,10 @@
         <div class="menu-item">
             <div class="item">
                 <?php
-                    $versions = get_option( 'dokan_whats_new_versions', array() );
+                    $versions = get_option( 'dokan_changelog_versions', array() );
                     $has_new_version = false;
 
-                    if ( ! in_array( DOKAN_PRO_PLUGIN_VERSION, $versions ) ) {
+                    if ( ! in_array( DOKAN_PLUGIN_VERSION, $versions ) ) {
                         $has_new_version = true;
                     }
                 ?>
