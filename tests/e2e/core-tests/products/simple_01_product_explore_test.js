@@ -1,9 +1,13 @@
+const { data } = require('cheerio/lib/api/attributes');
+const { helper } = require('codeceptjs');
+const { getData } = require('../../pages/helpers');
 const helpers = require('../../pages/helpers');
 const locator = require('../../pages/locator');
 Feature('Simple product explore');
 
 Scenario('Simple product edit explore test', ({ I,loginAs}) => {
     loginAs('Vendor');
+    
     helpers.createProduct();
     
     // Starting to explore
