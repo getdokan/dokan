@@ -31,7 +31,7 @@
 <tr class="<?php echo esc_attr( $tr_class ); ?>">
     <th class="dokan-product-select check-column">
         <label for="cb-select-<?php echo esc_attr( $post->ID ); ?>"></label>
-        <input class="cb-select-items dokan-checkbox" type="checkbox" name="bulk_products[]" value="<?php echo esc_attr( $post->ID ); ?>">
+        <input class="cb-select-items dokan-checkbox" type="checkbox" data-product-name="<?php echo esc_attr( $product->get_title() ); ?>" name="bulk_products[]" value="<?php echo esc_attr( $post->ID ); ?>">
     </th>
     <td data-title="<?php esc_attr_e( 'Image', 'dokan-lite' ); ?>" class="column-thumb">
         <?php if ( current_user_can( 'dokan_edit_product' ) ) { ?>
