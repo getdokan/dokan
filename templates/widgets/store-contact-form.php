@@ -26,8 +26,7 @@
 
     <?php wp_nonce_field( 'dokan_contact_seller', 'dokan_contact_seller_nonce' ); ?>
     <input type="hidden" name="recaptcha_token" id="token">
-    <input type="hidden" name="recaptcha_site_key" id="sitekey" value="<?php echo esc_attr( $recaptcha_site_key ); ?>">
-    <input type="hidden" name="recaptcha_action" id="sitekey" value="<?php echo esc_attr( 'dokan_contact_seller_recaptcha' ); ?>">
+    <input type="hidden" name="recaptcha_action" value="<?php echo esc_attr( 'dokan_contact_seller_recaptcha' ); ?>">
     <input type="hidden" name="seller_id" value="<?php echo esc_html( $seller_id ); ?>">
     <input type="hidden" name="action" value="dokan_contact_seller">
     <input type="submit" name="store_message_send" value="<?php esc_attr_e( 'Send Message', 'dokan-lite' ); ?>" class="dokan-right dokan-btn dokan-btn-theme">

@@ -325,7 +325,6 @@ class Ajax {
         $contact_email   = ! empty( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '';
         $contact_message = ! empty( $_POST['message'] ) ? sanitize_text_field( wp_unslash( $_POST['message'] ) ) : '';
         $captcha_token   = ! empty( $_POST['recaptcha_token'] ) ? sanitize_key( wp_unslash( $_POST['recaptcha_token'] ) ) : '';
-        $captcha_sitekey = ! empty( $_POST['recaptcha_site_key'] ) ? sanitize_key( wp_unslash( $_POST['recaptcha_site_key'] ) ) : '';
         $captcha_action  = ! empty( $_POST['recaptcha_action'] ) ? sanitize_key( wp_unslash( $_POST['recaptcha_action'] ) ) : '';
         $error_template  = '<span class="alert alert-danger error">%s</span>';
 
@@ -346,8 +345,10 @@ class Ajax {
             wp_send_json_error( $message );
         }
 
+        $captcha_sitekey = dokan_get_option( 'recaptcha_site_key', 'dokan_appearance' );
+
         // Validate captcha if checking enabled from admin setting
-        if ( ! empty( dokan_get_option( 'recaptcha_site_key', 'dokan_appearance' ) ) ) {
+        if ( ! empty( $captcha_sitekey ) ) {
             $recaptcha_validate = $this->recaptcha_validation_handler( $captcha_sitekey, $captcha_token, $captcha_action );
 
             if ( empty( $recaptcha_validate ) ) {
