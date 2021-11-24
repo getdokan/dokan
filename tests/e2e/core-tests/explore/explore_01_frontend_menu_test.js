@@ -9,7 +9,7 @@ Feature('Explore Frontend Functionality');
 //     loginAs('users'); // login using user session
 //  });
 
-Scenario.skip('Explore Vendor All Menu Pages',async ({I,loginAs}) => {
+Scenario('Explore Vendor All Menu Pages',async ({I,loginAs}) => {
     loginAs('Vendor');
     //Explore Vendor Dashboard Elements
     explore.DashboardElements(); 

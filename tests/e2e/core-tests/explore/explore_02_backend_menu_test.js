@@ -8,7 +8,7 @@ Feature('Explore Backend Functionality');
 //         loginAs('users'); // login using user session
 //      });
 
-Scenario.skip('Explore Backedn All Menu', async({ I,loginAs }) => {
+Scenario('Explore Backedn All Menu', async({ I,loginAs }) => {
     loginAs('admin');
     explore.DokanDashboardElements();
     explore.ModulePageElements();
