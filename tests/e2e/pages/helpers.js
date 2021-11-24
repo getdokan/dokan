@@ -20,12 +20,16 @@ const { I } = inject();
 module.exports = {
 
     pageStatus() {
-        I.amOnPage('/');
-        I.click('Login / Register');
+        I.amOnPage('/my-account');
+        // I.click('Login / Register');
         I.seeElement(locator.RegisterLocator);
     },
-    registerSuccess() {
-
+    customerRegisterSuccess() {
+        I.fillField(locator.EmailAdressLocator, locator.EmailAddress);
+        I.fillField(locator.PasswordInput, locator.PasswordValue);
+        I.click('Register');
+    },
+    vendorRegisterSuccess() {
         I.fillField(locator.EmailAdressLocator, locator.EmailAddress);
         I.fillField(locator.PasswordInput, locator.PasswordValue);
         I.checkOption('I am a vendor');
@@ -57,9 +61,10 @@ module.exports = {
     },
     checkVendor() {
         I.amOnPage('/dashboard');
-        I.moveCursorTo(locator.MenuHoverDropdown);
-        I.click(locator.MyAccount);
-        I.click(locator.EditAccount);
+        // I.moveCursorTo(locator.MenuHoverDropdown);
+        // I.click(locator.MyAccount);
+        // I.click(locator.EditAccount);
+        I.amOnPage('/my-account/edit-account/');
         I.seeInField('Email address', locator.EmailAddress);
     },
     loginAsVendor() {

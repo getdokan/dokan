@@ -5,7 +5,7 @@ const { I } = inject();
 module.exports = {
     // Locators for  Registration page
     // Start
-    RegisterLocator: 'div.grid-50.tablet-grid-50.reg-form > h2',
+    RegisterLocator: '#customer_login > div.u-column2.col-2',
     EmailAddress: faker.internet.email(),
     EmailAdressLocator: 'Email address',
     PasswordInput: '#reg_password',
