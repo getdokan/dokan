@@ -8,12 +8,12 @@ use WeDevs\Dokan\Exceptions\DokanException;
 use WeDevs\Dokan\Traits\AjaxResponseError;
 
 /**
-* Admin Settings Class
-*
-* @package dokan
-*
-* @since 3.0.0
-*/
+ * Admin Settings Class
+ *
+ * @package dokan
+ *
+ * @since 3.0.0
+ */
 class Settings {
 
     use AjaxResponseError;
