@@ -583,23 +583,25 @@ module.exports = {
     },
     vendoraddsupporticket()
     {
-        I.click('Settings');
+    I.click('Settings');
     I.click('Store');
     I.wait(3);
     I.checkOption('#support_checkbox');
     I.scrollTo('#dokan_support_btn_name',20,40);
-    I.fillField('#dokan_support_btn_name','Want to need support');
+    I.fillField('#dokan_support_btn_name','Get Support');
     I.click('Update Settings');
     },
     Getsupport()
     {
         I.amOnPage('/store/vendor-one/');
-                I.click('Want to need support');
-                I.wait(5);
-                I.fillField('#dokan-support-subject','need support');
-                I.fillField('#dokan-support-msg','This product is too bad');
-                I.click('Submit');
-                I.wait(5);
+        I.click('Get Support');
+        I.wait(5);
+        I.fillField('#dokan-support-subject', faker.lorem.sentence());
+        I.click('div:nth-child(2) > select');
+        I.click('div:nth-child(2) > select > option:nth-child(2)');
+        I.fillField('#dokan-support-msg', faker.lorem.paragraphs());
+        I.click('Submit');
+        I.wait(5);
     },
     ReplyTicket()
     {
