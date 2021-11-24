@@ -44,7 +44,8 @@ class UserSwitch {
             'refresh_after_save' => true,
             'desc'               => __( 'Allow this settings admin can switch any vendor account', 'dokan-lite' ),
             'type'               => 'checkbox',
-            'default'            => 'off'
+            'default'            => 'off',
+            'tooltip'            => __( 'If checked, admin can switch to any vendor account from Dokan Dashboard -> Vendors -> switch to.', 'dokan-lite' ),
         );
 
         return $settings_fields;

@@ -356,6 +356,7 @@ class Settings {
                     'desc'    => __( 'Disable welcome wizard for newly registered vendors', 'dokan-lite' ),
                     'type'    => 'checkbox',
                     'default' => 'off',
+                    'tooltip' => __( 'If checked, vendors will not be prompted through a guided set up process but redirected straight to the vendor dashboard.', 'dokan-lite' ),
                 ],
             ]
         );
@@ -451,7 +452,7 @@ class Settings {
                     'desc'    => __( 'Allow newly registered vendors to add products', 'dokan-lite' ),
                     'type'    => 'checkbox',
                     'default' => 'on',
-                    'tooltip' => __( 'Enable vendor selling capability upon registration on site', 'dokan-lite' ),
+                    'tooltip' => __( 'If checked, vendors will have permission to sell immediately after registration. If unchecked, newly registered vendors cannot add products until selling capability is activated manually from Dashboard -> Vendors.', 'dokan-lite' ),
                 ],
                 'disable_product_popup'     => [
                     'name'    => 'disable_product_popup',
@@ -459,7 +460,7 @@ class Settings {
                     'desc'    => __( 'Disable add new product in popup view', 'dokan-lite' ),
                     'type'    => 'checkbox',
                     'default' => 'off',
-                    'tooltip' => __( 'Disable add new product in popup view', 'dokan-lite' ),
+                    'tooltip' => __( 'If disabled, instead of a pop up window vendor will redirect to product page when adding new product.', 'dokan-lite' ),
                 ],
                 'order_status_change'       => [
                     'name'    => 'order_status_change',
@@ -467,6 +468,7 @@ class Settings {
                     'desc'    => __( 'Allow vendor to update order status', 'dokan-lite' ),
                     'type'    => 'checkbox',
                     'default' => 'on',
+                    'tooltip' => __( 'Checking this will enable sellers to change the order status. If unchecked, only admin can change the order status.', 'dokan-lite' ),
                 ],
             ]
         );
@@ -488,6 +490,7 @@ class Settings {
                     'type'    => 'multicheck',
                     'default' => [ 'paypal' => 'paypal' ],
                     'options' => dokan_withdraw_get_methods(),
+                    'tooltip' => __( 'Check to add available payment methods for vendors to withdraw money.', 'dokan' ),
                 ],
                 'withdraw_limit'      => [
                     'name'                       => 'withdraw_limit',
@@ -508,6 +511,7 @@ class Settings {
                         'wc-completed'  => 'wc-completed',
                     ),
                     'options' => $withdraw_order_status_options,
+                    'tooltip' => __( 'Select the status of the withdrawal request sent to you by the vendor. We prefer you select "completed"', 'dokan-lite' ),
                 ],
                 'exclude_cod_payment' => [
                     'name'    => 'exclude_cod_payment',
@@ -550,7 +554,7 @@ class Settings {
                     'options'     => $pages_array,
                     /* translators: %s: dokan pages  */
                     'desc'        => sprintf( __( 'Select where you want to add Dokan pages <a target="_blank" href="%s"> Learn More </a>', 'dokan-lite' ), 'https://wedevs.com/docs/dokan/settings/page-settings-2/' ),
-                    'tooltip'     => __( 'Select a page to display the Terms and Conditions of your store for Vendors', 'dokan-lite' ),
+                    'tooltip'     => __( 'Select a page to display the Terms and Conditions of your store for Vendors.', 'dokan-lite' ),
                 ],
             ],
             'dokan_appearance' => [
@@ -583,7 +587,7 @@ class Settings {
                     'label'   => __( 'Google Map API Key', 'dokan-lite' ),
                     'desc'    => __( '<a href="https://developers.google.com/maps/documentation/javascript/" target="_blank" rel="noopener noreferrer">API Key</a> is needed to display map on store page', 'dokan-lite' ),
                     'type'    => 'text',
-                    'tooltip' => __( 'Insert Google API Key (with hyperlink) to display store map', 'dokan-lite' ),
+                    'tooltip' => __( 'Insert Google API Key (with hyperlink) to display store map.', 'dokan-lite' ),
                 ],
                 'mapbox_access_token'        => [
                     'name'    => 'mapbox_access_token',
@@ -614,7 +618,7 @@ class Settings {
                         'layout3' => DOKAN_PLUGIN_ASSEST . '/images/store-header-templates/layout3.png',
                     ],
                     'default' => 'default',
-                    'tooltip' => __( 'Choose your header design from any of the templates provided. You can change it again anytime', 'dokan-lite' ),
+                    'tooltip' => __( 'Choose your header design from any of the templates provided. You can change it again anytime.', 'dokan-lite' ),
                 ],
                 'store_open_close'           => [
                     'name'    => 'store_open_close',
@@ -668,7 +672,7 @@ class Settings {
                     'type'    => 'textarea',
                     'rows'    => 5,
                     'default' => __( 'Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our [dokan_privacy_policy]', 'dokan-lite' ),
-                    'tooltip' => __( 'Customize the Privacy Policy text that will be displayed on your store', 'dokan-lite' ),
+                    'tooltip' => __( 'Customize the Privacy Policy text that will be displayed on your store.', 'dokan-lite' ),
                 ],
             ],
         ];
@@ -815,7 +819,7 @@ class Settings {
             'desc'    => __( 'Delete all data and tables related to Dokan and Dokan Pro plugin while deleting the Dokan plugin.', 'dokan-lite' ),
             'type'    => 'checkbox',
             'default' => 'off',
-            'tooltip' => __( 'Delete all data and tables related to Dokan and Dokan Pro plugin when deleting the Dokan plugin.', 'dokan-lite' ),
+            'tooltip' => __( 'Check this to remove Dokan related data and table from the database upon deleting the plugin. When you delete the Dokan lite version, it will also delete all the data related to Dokan Pro as well. This won\'t happen when the plugins are deactivated..', 'dokan-lite' ),
         ];
 
         return $settings_fields;
