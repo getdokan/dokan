@@ -356,7 +356,7 @@ class Settings {
                     'desc'    => __( 'Disable welcome wizard for newly registered vendors', 'dokan-lite' ),
                     'type'    => 'checkbox',
                     'default' => 'off',
-                    'tooltip' => __( 'If checked, vendors will not be prompted through a guided set up process but redirected straight to the vendor dashboard.', 'dokan-lite' ),
+                    'tooltip' => __( 'If checked, vendors will not be prompted through a guided setup process but redirected straight to the vendor dashboard.', 'dokan-lite' ),
                 ],
             ]
         );
@@ -490,7 +490,7 @@ class Settings {
                     'type'    => 'multicheck',
                     'default' => [ 'paypal' => 'paypal' ],
                     'options' => dokan_withdraw_get_methods(),
-                    'tooltip' => __( 'Check to add available payment methods for vendors to withdraw money.', 'dokan' ),
+                    'tooltip' => __( 'Check to add available payment methods for vendors to withdraw money.', 'dokan-lite' ),
                 ],
                 'withdraw_limit'      => [
                     'name'                       => 'withdraw_limit',
