@@ -155,7 +155,7 @@ $customer_ip        = get_post_meta( $order->get_id(), '_customer_ip_address', t
             </div>
 
             <div class="clear"></div>
-
+            <?php if ( $order->get_downloadable_items() ) : ?>
             <div class="" style="width: 100%">
                 <div class="dokan-panel dokan-panel-default">
                     <div class="dokan-panel-heading"><strong><?php esc_html_e( 'Downloadable Product Permission', 'dokan-lite' ); ?></strong></div>
@@ -166,6 +166,7 @@ $customer_ip        = get_post_meta( $order->get_id(), '_customer_ip_address', t
                     </div>
                 </div>
             </div>
+            <?php endif; ?>
         </div>
     </div>
 
