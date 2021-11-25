@@ -39,12 +39,12 @@ class LimitedTimePromotion {
 
         $notices = [
             [
-                'key'        => 'dokan-wedevs-eid-2021',
-                'start_date' => '2021-05-11 00:09:00 EST',
-                'end_date'   => '2021-05-24 23:00:00 EST',
-                'title'      => "Eid Mubarak! Stay Safe & Spread Happiness.",
+                'key'        => 'dokan-bfcm2021',
+                'start_date' => '2021-11-19 09:00:00 EST',
+                'end_date'   => '2021-11-30 23:00:00 EST',
+                'title'      => 'Irresistible Black Friday & Cyber Monday Deals.',
                 'content'    => 'Enjoy Up To 50% OFF on Dokan Pro.',
-                'link'       => 'https://wedevs.com/dokan/pricing?utm_medium=text&utm_source=wordpress-dokan-eidoffer2021',
+                'link'       => 'https://wedevs.com/dokan/pricing?utm_medium=text&utm_source=wordpress-dokan-bfcm2021',
             ],
         ];
 

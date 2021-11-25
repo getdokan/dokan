@@ -32,7 +32,7 @@ $customer_ip        = get_post_meta( $order->get_id(), '_customer_ip_address', t
                                         <tr>
                                             <th class="item" colspan="2"><?php esc_html_e( 'Item', 'dokan-lite' ); ?></th>
 
-                                            <?php do_action( 'woocommerce_admin_order_item_headers' ); ?>
+                                            <?php do_action( 'woocommerce_admin_order_item_headers', $order ); ?>
 
                                             <th class="quantity"><?php esc_html_e( 'Qty', 'dokan-lite' ); ?></th>
 

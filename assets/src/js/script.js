@@ -53,7 +53,7 @@ jQuery(function($) {
   var prev_data_index = null;
   var prev_series_index = null;
 
-  jQuery('.chart-placeholder').bind('plothover', function(event, pos, item) {
+  jQuery('.chart-placeholder').on('plothover', function(event, pos, item) {
     if (item) {
       if (
         prev_data_index != item.dataIndex ||
@@ -123,8 +123,8 @@ jQuery(function($) {
       $('a.dokan-gravatar-drag').on('click', this.simpleImageUpload);
       $('a.dokan-remove-gravatar-image').on('click', this.removeGravatar);
 
-      $('.dokan-update-setting-top-button').click(function(){
-          $("input[name='dokan_update_store_settings']").click();
+      $('.dokan-update-setting-top-button').on( 'click', function(){
+          $("input[name='dokan_update_store_settings']").trigger( 'click' );
       });
 
       this.validateForm(self);
@@ -1148,3 +1148,29 @@ jQuery(function($) {
       });
     });
 })(jQuery);
+/**
+ * Show Delete Button Prompt
+ *
+ * @param {object} event
+ * @param {string} messgae
+ *
+ * @returns boolean
+ */
+ async function dokan_show_delete_prompt( event, messgae ) {
+  event.preventDefault(); 
+  
+  let answer = await dokan_sweetalert( messgae, {
+    action  : 'confirm',
+    icon    : 'warning'
+  } );
+
+  if( answer.isConfirmed && undefined !== event.target.href ) {
+      window.location.href = event.target.href;
+  } 
+  else if( answer.isConfirmed && undefined !== event.target.dataset.url ) {
+      window.location.href = event.target.dataset.url;
+  }
+  else {
+    return false;
+  }
+}

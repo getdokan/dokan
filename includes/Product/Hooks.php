@@ -21,6 +21,7 @@ class Hooks {
         add_action( 'dokan_bulk_product_status_change', [ $this, 'bulk_product_delete' ], 10, 2 );
         add_action( 'dokan_store_profile_frame_after', [ $this, 'store_products_orderby' ], 10, 2 );
         add_action( 'wp_ajax_dokan_store_product_search_action', [ $this, 'store_product_search_action' ], 10, 2 );
+        add_action( 'wp_ajax_nopriv_dokan_store_product_search_action', [ $this, 'store_product_search_action' ], 10, 2 );
     }
 
     /**
@@ -152,6 +153,12 @@ class Hooks {
      * @return void
      */
     public function store_products_orderby() {
+        $store_products = dokan_get_option( 'store_products', 'dokan_appearance' );
+
+        if ( ! empty( $store_products['hide_product_filter'] ) ) {
+            return;
+        }
+
         $orderby_options = dokan_store_product_catalog_orderby();
         $store_user      = dokan()->vendor->get( get_query_var( 'author' ) );
         $store_id        = $store_user->get_id();

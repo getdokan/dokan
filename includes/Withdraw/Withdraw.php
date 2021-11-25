@@ -29,6 +29,7 @@ class Withdraw {
             'status'  => dokan()->withdraw->get_status_code( 'pending' ),
             'method'  => 'paypal',
             'note'    => '',
+            'details' => '',
             'ip'      => '',
         ];
 
@@ -42,6 +43,7 @@ class Withdraw {
             'status'  => absint( $data['status'] ),
             'method'  => $data['method'],
             'note'    => $data['note'],
+            'details' => $data['details'],
             'ip'      => $data['ip'],
         ];
     }
@@ -132,6 +134,17 @@ class Withdraw {
      */
     public function get_note() {
         return $this->data['note'];
+    }
+
+    /**
+     * Get details
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return string
+     */
+    public function get_details() {
+        return $this->data['details'];
     }
 
     /**
@@ -230,6 +243,20 @@ class Withdraw {
     }
 
     /**
+     * Set details
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param string $details
+     *
+     * @return \WeDevs\Dokan\Withdraw\Withdraw
+     */
+    public function set_details( $details ) {
+        $this->data['details'] = $details;
+        return $this;
+    }
+
+    /**
      * Set ip
      *
      * @since 3.0.0
@@ -268,12 +295,14 @@ class Withdraw {
     protected function create() {
         global $wpdb;
 
+        $this->data['details'] = maybe_serialize( dokan()->withdraw->get_formatted_details( $this->data['method'], absint( $this->data['user_id'] ) ) );
+
         unset( $this->data['id'] );
 
         $inserted = $wpdb->insert(
             $wpdb->dokan_withdraw,
             $this->data,
-            [ '%d', '%s', '%s', '%d', '%s', '%s', '%s' ]
+            [ '%d', '%s', '%s', '%d', '%s', '%s', '%s', '%s' ]
         );
 
         if ( $inserted !== 1 ) {

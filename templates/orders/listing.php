@@ -109,7 +109,7 @@ if ( $user_orders ) {
                             $user .= esc_html( $user_info->display_name );
                         }
                     } else {
-                        $user = $order->get_formatted_billing_full_name();
+                        $user = empty( trim( $order->get_formatted_billing_full_name() ) ) ? __( 'Guest', 'dokan-lite' ) : $order->get_formatted_billing_full_name();
                     }
 
                     echo esc_html( $user ); ?>

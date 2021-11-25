@@ -9,7 +9,7 @@
 function dokan_product_seller_info( $item_data, $cart_item ) {
     $vendor = dokan_get_vendor_by_product( $cart_item['product_id'] );
 
-    if ( ! $vendor ) {
+    if ( ! $vendor || ! $vendor->get_id() ) {
         return $item_data;
     }
 
@@ -89,8 +89,9 @@ function dokan_order_show_suborders( $parent_order ) {
         'sub-orders',
         '',
         [
-            'sub_orders' => $sub_orders,
-            'statuses'   => $statuses,
+            'parent_order' => $parent_order,
+            'sub_orders'   => $sub_orders,
+            'statuses'     => $statuses,
         ]
     );
 }
@@ -191,8 +192,8 @@ function dokan_author_field_quick_edit() {
                 var $vendor_id_inline_data = $('#dokan_vendor_id_inline_' + post_id).find('#dokan_vendor_id').text(),
                     $wc_inline_data = $('#woocommerce_inline_' + post_id );
 
-                $( 'select[name="dokan_product_author_override"] option', '.inline-edit-row' ).attr( 'selected', false ).change();
-                $( 'select[name="dokan_product_author_override"] option[value="' + $vendor_id_inline_data + '"]' ).attr( 'selected', 'selected' ).change();
+                $( 'select[name="dokan_product_author_override"] option', '.inline-edit-row' ).attr( 'selected', false ).trigger( 'change' );
+                $( 'select[name="dokan_product_author_override"] option[value="' + $vendor_id_inline_data + '"]' ).attr( 'selected', 'selected' ).trigger( 'change' );
             });
         })(jQuery);
     </script>

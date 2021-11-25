@@ -78,9 +78,9 @@
                          *
                          * @since 2.4.10
                          */
-                        $general_settings = get_option( 'dokan_general', [] );
-                        $banner_width     = dokan_get_option( 'store_banner_width', 'dokan_appearance', 625 );
-                        $banner_height    = dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 );
+                        $general_settings   = get_option( 'dokan_general', [] );
+                        $banner_width       = dokan_get_vendor_store_banner_width();
+                        $banner_height      = dokan_get_vendor_store_banner_height();
 
                         $help_text = sprintf(
                             __( 'Upload a banner for your store. Banner size is (%sx%s) pixels.', 'dokan-lite' ),
@@ -125,22 +125,23 @@
             <label class="dokan-w3 dokan-control-label" for="dokan_store_ppp"><?php esc_html_e( 'Store Products Per Page', 'dokan-lite' ); ?></label>
 
             <div class="dokan-w5 dokan-text-left">
-                <input id="dokan_store_ppp" value="<?php echo esc_attr( $store_ppp ); ?>" name="dokan_store_ppp" placeholder="10" class="dokan-form-control" type="number">
+                <input id="dokan_store_ppp" value="<?php ! empty( $store_ppp ) ? esc_attr( $store_ppp ) : ''; ?>" name="dokan_store_ppp" placeholder="<?php printf( esc_attr__( 'Products to display on store page, default value is %s', 'dokan-lite' ), dokan_get_option( 'store_products_per_page', 'dokan_general', 12 ) ); ?>" class="dokan-form-control" type="number">
             </div>
         </div>
          <!--address-->
 
         <?php
-        $verified = false;
+            if ( ! function_exists( 'dokan_pro' ) || ( function_exists( 'dokan_pro' ) && ! dokan_pro()->module->is_active( 'delivery_time' ) ) ) {
+                $verified = false;
 
-        if ( isset( $profile_info['dokan_verification']['info']['store_address']['v_status'] ) ) {
-            if ( $profile_info['dokan_verification']['info']['store_address']['v_status'] == 'approved' ) {
-                $verified = true;
+                if ( function_exists( 'dokan_pro' ) && dokan_pro()->module->is_active( 'vendor_verification' ) && isset( $profile_info['dokan_verification']['info']['store_address']['v_status'] ) ) {
+                    if ( $profile_info['dokan_verification']['info']['store_address']['v_status'] == 'approved' ) {
+                        $verified = true;
+                    }
+                }
+
+                dokan_seller_address_fields( $verified );
             }
-        }
-
-        dokan_seller_address_fields( $verified );
-
         ?>
         <!--address-->
 
@@ -151,6 +152,11 @@
             </div>
         </div>
 
+        <?php do_action( 'dokan_settings_after_store_phone', $current_user, $profile_info ); ?>
+
+        <?php do_action( 'dokan_settings_before_store_email', $current_user, $profile_info ); ?>
+        
+        <?php if ( ! dokan_is_vendor_info_hidden( 'email' ) ) : ?>
         <div class="dokan-form-group">
             <label class="dokan-w3 dokan-control-label"><?php esc_html_e( 'Email', 'dokan-lite' ); ?></label>
             <div class="dokan-w5 dokan-text-left">
@@ -162,6 +168,7 @@
                 </div>
             </div>
         </div>
+        <?php endif; ?>
 
         <div class="dokan-form-group">
             <label class="dokan-w3 dokan-control-label"><?php esc_html_e( 'More products', 'dokan-lite' ); ?></label>
@@ -439,7 +446,7 @@
         $(function() {
             dokan_address_select.init();
 
-            $('#setting_phone').keydown(function(e) {
+            $('#setting_phone').on( 'keydown', function(e) {
                 // Allow: backspace, delete, tab, escape, enter and .
                 if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 91, 107, 109, 110, 187, 189, 190]) !== -1 ||
                      // Allow: Ctrl+A

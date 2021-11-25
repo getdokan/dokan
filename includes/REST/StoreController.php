@@ -196,6 +196,28 @@ class StoreController extends WP_REST_Controller {
                 ],
             ]
         );
+
+        register_rest_route(
+            $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/categories', [
+                'args' => [
+                    'id' => [
+                        'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
+                        'type'        => 'integer',
+                    ],
+                    'best_selling' => [
+                        'description' => __( 'Get Best Selling Products Category.', 'dokan-lite' ),
+                        'type'        => 'boolean',
+                        'default'     => false,
+                        'required'    => false,
+                    ],
+                ],
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_store_category' ],
+                    'permission_callback' => '__return_true',
+                ],
+            ]
+        );
     }
 
     /**
@@ -892,6 +914,31 @@ class StoreController extends WP_REST_Controller {
                 }
             }
         }
+
+        return $response;
+    }
+
+    /**
+     * Get singe store
+     *
+     * @param $request
+     *
+     * @since 3.2.11
+     *
+     * @return WP_Error|\WP_REST_Response
+     */
+    public function get_store_category( $request ) {
+        $store_id     = absint( $request['id'] );
+        $best_selling = boolval( $request->get_param( 'best_selling' ) );
+
+        $store = dokan()->vendor->get( $store_id );
+
+        if ( empty( $store->id ) || ! $store instanceof Vendor ) {
+            return new WP_Error( 'no_store_found', __( 'No store found', 'dokan-lite' ), [ 'status' => 404 ] );
+        }
+
+        $category_data = $store->get_store_categories( $best_selling );
+        $response      = rest_ensure_response( $category_data );
 
         return $response;
     }

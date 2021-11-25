@@ -78,10 +78,9 @@ class UserProfile {
         $address_zip       = isset( $store_settings['address']['zip'] ) ? $store_settings['address']['zip'] : '';
         $address_country   = isset( $store_settings['address']['country'] ) ? $store_settings['address']['country'] : '';
         $address_state     = isset( $store_settings['address']['state'] ) ? $store_settings['address']['state'] : '';
-
-        $banner_width    = dokan_get_option( 'store_banner_width', 'dokan_appearance', 625 );
-        $banner_height   = dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 );
-        $admin_commission = ( 'flat' === $admin_commission_type ) ? wc_format_localized_price( $admin_commission ) : wc_format_localized_decimal( $admin_commission );
+        $banner_width      = dokan_get_vendor_store_banner_width();
+        $banner_height     = dokan_get_vendor_store_banner_height();
+        $admin_commission  = ( 'flat' === $admin_commission_type ) ? wc_format_localized_price( $admin_commission ) : wc_format_localized_decimal( $admin_commission );
 
         $country_state = array(
             'country' => array(
@@ -214,6 +213,13 @@ class UserProfile {
                         <input type="text" name="dokan_store_phone" class="regular-text" value="<?php echo esc_attr( $store_settings['phone'] ); ?>">
                     </td>
                 </tr>
+
+                <?php
+                /**
+                 * @since 3.2.7
+                 */
+                do_action( 'dokan_user_profile_after_phone_number', $store_settings, $user );
+                ?>
 
                 <?php foreach ( $social_fields as $key => $value ) { ?>
 
@@ -468,7 +474,7 @@ class UserProfile {
 
             Dokan_Settings.init();
 
-            $('#seller-url').keydown(function(e) {
+            $('#seller-url').on( 'keydown', function(e) {
                 var text = $(this).val();
 
                 // Allow: backspace, delete, tab, escape, enter and .
@@ -486,7 +492,7 @@ class UserProfile {
                 }
             });
 
-            $('#seller-url').keyup(function(e) {
+            $('#seller-url').on( 'keyup', function(e) {
                 $('#url-alart').text( getSlug( $(this).val() ) );
             });
 

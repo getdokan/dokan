@@ -366,7 +366,7 @@ class Assets {
             ],
             'dokan-vue-admin' => [
                 'src'       => $asset_url . '/js/vue-admin.js',
-                'deps'      => [ 'jquery', 'jquery-ui-datepicker', 'dokan-i18n-jed', 'dokan-vue-vendor', 'dokan-vue-bootstrap' ],
+                'deps'      => [ 'jquery', 'jquery-ui-datepicker', 'dokan-i18n-jed', 'dokan-vue-vendor', 'dokan-vue-bootstrap', 'selectWoo' ],
                 'version'   => filemtime( $asset_path . '/js/vue-admin.js' ),
             ],
             'dokan-vue-frontend' => [
@@ -384,9 +384,14 @@ class Assets {
                 'deps'      => [ 'dokan-popup', 'dokan-i18n-jed' ],
                 'version'   => filemtime( $asset_path . '/js/login-form-popup.js' ),
             ],
+            'dokan-sweetalert2' => [
+                'src'       => $asset_url . '/vendors/sweetalert2/sweetalert2.all.min.js',
+                'deps'      => [ 'dokan-popup', 'dokan-i18n-jed' ],
+                'version'   => filemtime( $asset_path . '/vendors/sweetalert2/sweetalert2.all.min.js' ),
+            ],
             'dokan-util-helper' => [
                 'src'       => $asset_url . '/js/helper.js',
-                'deps'      => [ 'jquery' ],
+                'deps'      => [ 'jquery', 'dokan-sweetalert2' ],
                 'version'   => filemtime( $asset_path . 'js/helper.js' ),
                 'in_footer' => false,
             ],
@@ -414,22 +419,32 @@ class Assets {
         }
 
         $default_script = [
-            'ajaxurl'            => admin_url( 'admin-ajax.php' ),
-            'nonce'              => wp_create_nonce( 'dokan_reviews' ),
-            'ajax_loader'        => DOKAN_PLUGIN_ASSEST . '/images/ajax-loader.gif',
-            'seller'             => [
+            'ajaxurl'                    => admin_url( 'admin-ajax.php' ),
+            'nonce'                      => wp_create_nonce( 'dokan_reviews' ),
+            'ajax_loader'                => DOKAN_PLUGIN_ASSEST . '/images/ajax-loader.gif',
+            'seller'                     => [
                 'available'     => __( 'Available', 'dokan-lite' ),
                 'notAvailable'  => __( 'Not Available', 'dokan-lite' ),
             ],
-            'delete_confirm'     => __( 'Are you sure?', 'dokan-lite' ),
-            'wrong_message'      => __( 'Something went wrong. Please try again.', 'dokan-lite' ),
-            'vendor_percentage'  => dokan_get_seller_percentage( dokan_get_current_user_id() ),
-            'commission_type'    => dokan_get_commission_type( dokan_get_current_user_id() ),
-            'rounding_precision' => wc_get_rounding_precision(),
-            'mon_decimal_point'  => wc_get_price_decimal_separator(),
-            'product_types'      => apply_filters( 'dokan_product_types', [ 'simple' ] ),
-            'loading_img'        => DOKAN_PLUGIN_ASSEST . '/images/loading.gif',
+            'delete_confirm'             => __( 'Are you sure?', 'dokan-lite' ),
+            'wrong_message'              => __( 'Something went wrong. Please try again.', 'dokan-lite' ),
+            'vendor_percentage'          => dokan_get_seller_percentage( dokan_get_current_user_id() ),
+            'commission_type'            => dokan_get_commission_type( dokan_get_current_user_id() ),
+            'rounding_precision'         => wc_get_rounding_precision(),
+            'mon_decimal_point'          => wc_get_price_decimal_separator(),
+            'product_types'              => apply_filters( 'dokan_product_types', [ 'simple' ] ),
+            'loading_img'                => DOKAN_PLUGIN_ASSEST . '/images/loading.gif',
             'store_product_search_nonce' => wp_create_nonce( 'dokan_store_product_search_nonce' ),
+            'i18n_download_permission'   => __( 'Are you sure you want to revoke access to this download?', 'dokan-lite' ),
+            'i18n_download_access'       => __( 'Could not grant access - the user may already have permission for this file or billing email is not set. Ensure the billing email is set, and the order has been saved.', 'dokan-lite' ),   
+            /**
+             * Filter of maximun a vendor can add tags.
+             *
+             * @since 3.3.7
+             *
+             * @param integer default -1
+             */
+            'maximum_tags_select_length' => apply_filters( 'dokan_product_tags_select_max_length', -1 ),  // Filter of maximun a vendor can add tags
         ];
 
         $localize_script     = apply_filters( 'dokan_localized_args', $default_script );
@@ -644,8 +659,8 @@ class Assets {
 
             $locale          = localeconv();
             $decimal         = isset( $locale['decimal_point'] ) ? $locale['decimal_point'] : '.';
-            $banner_width    = dokan_get_option( 'store_banner_width', 'dokan_appearance', 625 );
-            $banner_height   = dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 );
+            $banner_width    = dokan_get_vendor_store_banner_width();
+            $banner_height   = dokan_get_vendor_store_banner_height();
             $has_flex_width  = ! empty( $general_settings['store_banner_flex_width'] ) ? $general_settings['store_banner_flex_width'] : true;
             $has_flex_height = ! empty( $general_settings['store_banner_flex_height'] ) ? $general_settings['store_banner_flex_height'] : true;
 
@@ -724,8 +739,10 @@ class Assets {
                 'i18n_selection_too_long_n'           => __( 'You can only select %qty% items', 'dokan-lite' ),
                 'i18n_load_more'                      => __( 'Loading more results&hellip;', 'dokan-lite' ),
                 'i18n_searching'                      => __( 'Searching&hellip;', 'dokan-lite' ),
+                'i18n_calculating'                    => __( 'Calculating', 'dokan-lite' ),
                 'i18n_ok_text'                        => __( 'OK', 'dokan-lite' ),
                 'i18n_cancel_text'                    => __( 'Cancel', 'dokan-lite' ),
+                'i18n_attribute_label'                => __( 'Attribute Name', 'dokan-lite' ),
                 'i18n_date_format'                    => get_option( 'date_format' ),
                 'dokan_banner_added_alert_msg'        => __( 'Are you sure? You have uploaded banner but didn\'t click the Update Settings button!', 'dokan-lite' ),
             ];

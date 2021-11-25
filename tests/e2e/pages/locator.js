@@ -5,7 +5,7 @@ const { I } = inject();
 module.exports = {
     // Locators for  Registration page
     // Start
-    RegisterLocator: 'div.grid-50.tablet-grid-50.reg-form > h2',
+    RegisterLocator: '#customer_login > div.u-column2.col-2',
     EmailAddress: faker.internet.email(),
     EmailAdressLocator: 'Email address',
     PasswordInput: '#reg_password',
@@ -149,8 +149,11 @@ module.exports = {
     //Locators Group Product explore 
     ProductLabel: 'span.dokan-label.dokan-label-success.dokan-product-status-label',
     ProductViewBtn: 'h1 > span.dokan-right > a',
-    ProductTitleInput: '#post_title',
+    ProductTitleInput:'.dokan-form-control',
+    ProductPrice:'_regular_price',
+    ProductCategory:'#product_cat',
     ProductTypeInput: '#product_type',
+    AddProduct:'#dokan-create-new-product-btn',
     ProductTypeFavIcon: 'div.content-half-part.dokan-product-meta > div:nth-child(2) > label > i',
     UploadImgDiv: 'div.instruction-inside',
     UploadImgLink: 'div.instruction-inside > a',
@@ -170,6 +173,14 @@ module.exports = {
     ProductStatusDropdown: '#post_status',
     ProductVisibilityDropdown: '#_visibility',
     ProductReviewCheckbox: 'div.dokan-section-content > div:nth-child(5) > label',
+    ProductAttributeName:'attribute_names[0]',
+    ProductAttributeValue:'//li/div[2]/div[2]/span/span/span/ul/li/input',
+    ProductAttributeVisibility:'attribute_visibility[0]',
+    ProductAttributeVariation:'attribute_variation[0]',
+    EnableProductDiscount:'//*[@id="_is_lot_discount"]',
+    DiscountProductQuantity:'//*[@id="_lot_discount_quantity"]',
+    DiscountProductAmount:'//*[@id="_lot_discount_amount"]',
+
     //group product Functional 
     RmaCheckBox: '#dokan_rma_product_override',
     RmaLabelInput: '#dokan-rma-label',
@@ -278,11 +289,22 @@ module.exports = {
      StripePublicKey:'#woocommerce_dokan-stripe-connect_test_publishable_key',
      StripeClientId:'#woocommerce_dokan-stripe-connect_test_client_id',
      
+    //locator for shipping
 
-        
-
+    EnableSellingLocation:'#woocommerce_allowed_countries',
+    EnableShippingLocation:'#woocommerce_ship_to_countries',
+    ZoneRegion:{css:'#mainform > table > tbody > tr:nth-child(2) > td > span > span.selection > span > ul > li > input'},
+    AddShippingMethod:{css:'#mainform > table > tbody > tr:nth-child(3) > td > table > tfoot > tr > td > button'},
+    SelectShippingMethod:{css:'#wc-backbone-modal-dialog > div.wc-backbone-modal > div > section > article > form > div > select'},
+   
+    
+     //locator for refund
+     firstOrder:{css:'tr:nth-child(1) strong'},
+     EditOrderStatus:{css:'.dokan-edit-status'},
+     ChangeOrderStatus:'#order_status',
   
-
+    //Product Create
+    AuctionProduct: faker.commerce.productName(),
 
 
 

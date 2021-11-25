@@ -607,6 +607,8 @@ class Settings {
 
         $dokan_settings = array_merge( $prev_dokan_settings, $dokan_settings );
 
+        $dokan_settings = apply_filters( 'dokan_store_profile_settings_args', $dokan_settings, $store_id );
+
         update_user_meta( $store_id, 'dokan_profile_settings', $dokan_settings );
 
         do_action( 'dokan_store_profile_saved', $store_id, $dokan_settings );

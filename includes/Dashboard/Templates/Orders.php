@@ -71,7 +71,7 @@ class Orders {
                 dokan_get_template_part( 'global/dokan-error', '', array( 'deleted' => false, 'message' => __( 'You have no permission to view this order', 'dokan-lite' ) ) );
             }
 
-		} else {
+        } else {
             dokan_get_template_part( 'orders/date-export' );
             dokan_get_template_part( 'orders/listing' );
         }
@@ -81,26 +81,27 @@ class Orders {
      * Export user orders to CSV format
      *
      * @since 1.4
+     * @since 3.2.13  dokan_export_order permission check added
+     *                for vendor staff
      *
      * @return void
      */
     function handle_order_export() {
-        if ( ! is_user_logged_in() ) {
+        if ( ! isset( $_POST['dokan_vendor_order_export_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['dokan_vendor_order_export_nonce'] ) ), 'dokan_vendor_order_export_action' ) ) {
             return;
         }
 
-        if ( ! dokan_is_user_seller( get_current_user_id() ) ) {
+        // return if is not vendor or vendor staff
+        if ( ! dokan_is_user_seller( dokan_get_current_user_id() ) ) {
             return;
         }
 
-        $post_data = wp_unslash( $_POST );
-
-        if ( ! isset( $post_data['dokan_vendor_order_export_nonce'] ) || ! wp_verify_nonce( sanitize_key( $post_data['dokan_vendor_order_export_nonce'] ), 'dokan_vendor_order_export_action' ) ) {
+        // return if current user is vendor staff and don't have proper permission
+        if ( current_user_can( 'vendor_staff' ) && ! current_user_can( 'dokan_export_order' ) ) {
             return;
         }
 
-        if ( isset( $post_data['dokan_order_export_all'] ) ) {
-
+        if ( isset( $_POST['dokan_order_export_all'] ) ) {
             $filename = 'Orders-' . time();
             header( 'Content-Type: application/csv; charset=' . get_option( 'blog_charset' ) );
             header( "Content-Disposition: attachment; filename=$filename.csv" );
@@ -110,24 +111,28 @@ class Orders {
             exit();
         }
 
-        if ( isset( $post_data['dokan_order_export_filtered'] ) ) {
-            $get_data    = wp_unslash( $_GET );
-            $customer_id = isset( $get_data['customer_id'] ) ? $get_data['customer_id'] : null;
+        if ( isset( $_POST['dokan_order_export_filtered'] ) ) {
+            $customer_id = isset( $_GET['customer_id'] ) ? absint( wp_unslash( $_GET['customer_id'] ) ) : 0;
 
             $filename = 'Orders-' . time();
             header( 'Content-Type: application/csv; charset=' . get_option( 'blog_charset' ) );
             header( "Content-Disposition: attachment; filename=$filename.csv" );
 
-            $order_date   = ( isset( $post_data['order_date'] ) ) ? sanitize_text_field( $post_data['order_date'] ) : null;
-            $order_status = ( isset( $post_data['order_status'] ) ) ? sanitize_text_field( $post_data['order_status'] ) : 'all';
+            $order_date   = ( isset( $_POST['order_date'] ) ) ? sanitize_text_field( wp_unslash( $_POST['order_date'] ) ) : null;
+            $order_status = ( isset( $_POST['order_status'] ) ) ? sanitize_text_field( wp_unslash( $_POST['order_status'] ) ) : 'all';
 
             $user_orders  = dokan_get_seller_orders( dokan_get_current_user_id(), $order_status, $order_date, 10000000, 0, $customer_id );
             dokan_order_csv_export( $user_orders );
             exit();
         }
         
-        // Allow dev to create custom CSV
-        do_action('dokan_after_handle_order_export', $post_data);
+        /**
+         * Just after exporting the csv file
+         * 
+         * @since 3.2.13 removed hook argument
+         * use $_POST superglobal to access post data
+         */
+        do_action( 'dokan_after_handle_order_export' );
     }
 
 }

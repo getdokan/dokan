@@ -51,6 +51,9 @@ class Hooks {
         //Wc remove child order from wc_order_product_lookup & trim child order from posts for analytics
         add_action( 'wc-admin_import_orders', [ $this, 'delete_child_order_from_wc_order_product' ] );
         add_filter( 'woocommerce_analytics_orders_select_query', [ $this, 'trim_child_order_for_analytics_order' ] );
+
+        // remove customer info from order export based on setting
+        add_filter( 'dokan_csv_export_headers', [ $this, 'hide_customer_info_from_vendor_order_export' ], 20, 1 );
     }
 
     /**
@@ -283,24 +286,38 @@ class Hooks {
      * @throws Exception
      */
     public function ensure_vendor_coupon( $valid, $coupon ) {
-        $coupon_id         = $coupon->get_id();
-        $vendor_id         = get_post_field( 'post_author', $coupon_id );
-        $available_vendors = [];
+        $available_vendors  = [];
+        $available_products = [];
+
+        foreach ( WC()->cart->get_cart() as $item ) {
+            $product_id = $item['data']->get_id();
+
+            $available_vendors[]  = (int) get_post_field( 'post_author', $product_id );
+            $available_products[] = $product_id;
+        }
+
+        $available_vendors = array_unique( $available_vendors );
+
+        if ( $coupon->is_type( 'fixed_cart' ) && count( $available_vendors ) > 1 ) {
+            throw new Exception( __( 'This coupon is invalid for multiple vendors.', 'dokan-lite' ) );
+        }
+
+        // Make sure applied coupon created by admin
+        if ( apply_filters( 'dokan_ensure_admin_have_create_coupon', $valid, $coupon, $available_vendors, $available_products ) ) {
+            return true;
+        }
 
         if ( ! apply_filters( 'dokan_ensure_vendor_coupon', true ) ) {
             return $valid;
         }
 
-        // a coupon must be bound with a product
+        // A coupon must be bound with a product
         if ( count( $coupon->get_product_ids() ) === 0 ) {
             throw new Exception( __( 'A coupon must be restricted with a vendor product.', 'dokan-lite' ) );
         }
 
-        foreach ( WC()->cart->get_cart() as $item ) {
-            $product_id = $item['data']->get_id();
-
-            $available_vendors[] = get_post_field( 'post_author', $product_id );
-        }
+        $coupon_id = $coupon->get_id();
+        $vendor_id = intval( get_post_field( 'post_author', $coupon_id ) );
 
         if ( ! in_array( $vendor_id, $available_vendors, true ) ) {
             return false;
@@ -389,6 +406,16 @@ class Hooks {
         }
 
         return $orders;
+    }
+
+    public function hide_customer_info_from_vendor_order_export( $headers ) {
+        $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', 'off' );
+        if ( 'off' !== $hide_customer_info ) {
+            unset( $headers['billing_email'] );
+            unset( $headers['customer_ip'] );
+        }
+
+        return $headers;
     }
 
     /**

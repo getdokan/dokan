@@ -360,12 +360,18 @@ function dokan_sync_insert_order( $order_id ) {
         return;
     }
 
-    $order              = dokan()->order->get( $order_id );
-    $seller_id          = dokan_get_seller_id_by_order( $order_id );
-    $order_total        = $order->get_total();
-    $order_status       = dokan_get_prop( $order, 'status' );
-    $admin_commission   = dokan()->commission->get_earning_by_order( $order, 'admin' );
-    $net_amount         = $order_total - $admin_commission;
+    $order        = dokan()->order->get( $order_id );
+    $seller_id    = dokan_get_seller_id_by_order( $order_id );
+    $order_total  = $order->get_total();
+    $order_status = dokan_get_prop( $order, 'status' );
+
+    if ( dokan_is_admin_coupon_applied( $order, $seller_id ) ) {
+        $net_amount = dokan()->commission->get_earning_by_order( $order, 'seller' );
+    } else {
+        $admin_commission = dokan()->commission->get_earning_by_order( $order, 'admin' );
+        $net_amount       = $order_total - $admin_commission;
+    }
+
     $net_amount         = apply_filters( 'dokan_order_net_amount', $net_amount, $order );
     $threshold_day      = dokan_get_withdraw_threshold( $seller_id );
 
@@ -424,11 +430,12 @@ function dokan_sync_insert_order( $order_id ) {
 /**
  * Get a seller ID based on WooCommerce order.
  *
- * If multiple post author is found, then this order contains products
- * from multiple sellers. In that case, the seller ID becomes `0`.
+ * If Order has suborder, this method will return 0
  *
  * @global object $wpdb
  * @param int $order_id
+ *
+ * @since 3.2.11 rewritten entire function
  *
  * @return int | 0 on failure
  */
@@ -437,44 +444,60 @@ function dokan_get_seller_id_by_order( $order_id ) {
 
     $cache_key   = 'dokan_get_seller_id_' . $order_id;
     $cache_group = 'dokan_get_seller_id_by_order';
-    $seller      = wp_cache_get( $cache_key, $cache_group );
+    $seller_id   = wp_cache_get( $cache_key, $cache_group );
     $items       = [];
-    $seller_id   = 0;
 
-    if ( false === $seller ) {
-        $seller = $wpdb->get_results( $wpdb->prepare( "SELECT seller_id FROM {$wpdb->prefix}dokan_orders WHERE order_id = %d", $order_id ) );
-        wp_cache_set( $cache_key, $seller, $cache_group );
+    // hack: delete old cached data, will delete this code later version of dokan lite
+    if ( is_array( $seller_id ) ) {
+        $seller_id = false;
     }
 
-    if ( count( $seller ) === 1 ) {
-        $seller_id = absint( reset( $seller )->seller_id );
+    if ( false === $seller_id ) {
+        $seller_id = absint(
+            $wpdb->get_var(
+                $wpdb->prepare( "SELECT seller_id FROM {$wpdb->prefix}dokan_orders WHERE order_id = %d LIMIT 1", $order_id )
+            )
+        );
+        wp_cache_set( $cache_key, $seller_id, $cache_group );
+    }
+
+    if ( ! empty( $seller_id ) ) {
         return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
     }
 
-    // if seller is not found, try to retrieve it via line items
-    if ( ! $seller ) {
-        $order = dokan()->order->get( $order_id );
+    // get order instance
+    $order = dokan()->order->get( $order_id );
 
-        if ( ! $order instanceof WC_Order ) {
-            return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
-        }
-
-        if ( $order->get_meta( 'has_sub_order' ) ) {
-            return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
-        }
-
-        $items = $order->get_items( 'line_item' );
-
-        if ( ! $items ) {
-            return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
-        }
-
-        $product_id = current( $items )->get_product_id();
-        $seller_id  = get_post_field( 'post_author', $product_id );
-        $seller_id  = $seller_id ? absint( $seller_id ) : 0;
-
+    if ( ! $order instanceof WC_Abstract_Order ) {
         return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
     }
+
+    // if order has suborder, return 0
+    if ( $order->get_meta( 'has_sub_order' ) ) {
+        return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
+    }
+
+    // check order meta to get vendor id
+    $seller_id = absint( $order->get_meta( '_dokan_vendor_id' ) );
+    if ( $seller_id ) {
+        return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
+    }
+
+    // finally get vendor id from line items
+    $items = $order->get_items( 'line_item' );
+    if ( ! $items ) {
+        return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
+    }
+
+    foreach ( $items as $item ) {
+        $product_id = $item->get_product_id();
+        $seller_id  = absint( get_post_field( 'post_author', $product_id ) );
+        if ( $seller_id ) {
+            break;
+        }
+    }
+
+    return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
 }
 
 /**
