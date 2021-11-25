@@ -1,3 +1,5 @@
+require('dotenv').config()
+const env = require('./env');
 exports.config = {
 
     tests: 'core-tests/**/*_test.js',
@@ -5,12 +7,8 @@ exports.config = {
     output: './output',
     helpers: {
         WebDriver: {
-            url: 'add your project url',
-
-
+            url: env('URL'),
             browser: 'chrome',
-
-
             desiredCapabilities: {
                 // chromeOptions: {
                 //     args: ["--headless","--window-size=1200,1600", "--disable-gpu", "--no-sandbox"]
@@ -47,6 +45,9 @@ exports.config = {
         tryTo: {
             enabled: true
         },
+        allure: {
+            enabled: 'true'
+        },
         autoLogin: {
             enabled: true,
             saveToFile: false,
@@ -55,8 +56,8 @@ exports.config = {
                 admin: {
                     login: (I) => {
                         I.amOnPage('/wp-admin/');
-                        I.fillField('#user_login', 'admin');
-                        I.fillField('#user_pass', secret('admin'));
+                        I.fillField('#user_login', env('ADMIN'));
+                        I.fillField('#user_pass', env(secret('ADMIN_PASSWORD')));
                         I.click('Log In');
                     },
                     check: (I) => {
@@ -66,24 +67,32 @@ exports.config = {
                 Vendor: {
                     login: (I) => {
                         I.amOnPage('/my-account/');
-                        I.fillField('username', 'Username');
-                        I.fillField('password', secret('Password'));
+                        I.fillField('username', env('VENDOR_ONE'));
+                        I.fillField('password', env(secret('VENDOR_ONE_PASSWORD')));
                         I.click('login');
                     },
                 },
                 VendorTwo: {
                     login: (I) => {
                         I.amOnPage('/my-account/');
-                        I.fillField('username', 'Username');
-                        I.fillField('password', secret('Password'));
+                        I.fillField('username', env('VENDOR_TWO'));
+                        I.fillField('password', env(secret('VENDOR_TWO_PASSWORD')));
                         I.click('login');
                     },
                 },
                 Customer: {
                     login: (I) => {
                         I.amOnPage('/my-account/');
-                        I.fillField('username', 'username');
-                        I.fillField('password', secret('password'));
+                        I.fillField('username', env('CUSTOMER_ONE'));
+                        I.fillField('password', env(secret('CUSTOMER_ONE_PASSWORD')));
+                        I.click('login');
+                    }
+                },
+                CustomerTwo: {
+                    login: (I) => {
+                        I.amOnPage('/my-account/');
+                        I.fillField('username', env('CUSTOMER_TWO'));
+                        I.fillField('password', env(secret('CUSTOMER_TWO_PASSWORD')));
                         I.click('login');
                     }
                 }
@@ -94,5 +103,4 @@ exports.config = {
     // tests:'core-tests/**/*_test.js',
     // // tests: './core-tests/*_test.js',
     // name: 'e2e'
-
 }
