@@ -511,7 +511,7 @@ class Settings {
                         'wc-completed'  => 'wc-completed',
                     ),
                     'options' => $withdraw_order_status_options,
-                    'tooltip' => __( 'Select the status of the withdrawal request sent to you by the vendor. We prefer you select "completed"', 'dokan-lite' ),
+                    'tooltip' => __( 'Select the order status that will allow vendors to make withdraw request. We prefer you select "completed", "processing".', 'dokan-lite' ),
                 ],
                 'exclude_cod_payment' => [
                     'name'    => 'exclude_cod_payment',
@@ -599,6 +599,7 @@ class Settings {
                     'label'   => __( 'Mapbox Access Token', 'dokan-lite' ),
                     'desc'    => __( '<a href="https://docs.mapbox.com/help/how-mapbox-works/access-tokens/" target="_blank" rel="noopener noreferrer">Access Token</a> is needed to display map on store page', 'dokan-lite' ),
                     'type'    => 'text',
+                    'tooltip' => __( 'Insert Mapbox Access Token (with hyperlink) to display store map.', 'dokan-lite' ),
                 ],
                 'contact_seller'             => [
                     'name'    => 'contact_seller',
