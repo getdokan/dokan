@@ -5,6 +5,10 @@
  * @since 2.4
  *
  * @package dokan
+ *
+ * @var WC_Order $parent_order
+ * @var WC_Order[] $sub_orders
+ * @var array $statuses
  */
 
 $allow_shipment      = dokan_get_option( 'enabled', 'dokan_shipping_status_setting', 'off' );
@@ -17,8 +21,16 @@ $wc_shipping_enabled = get_option( 'woocommerce_calc_shipping' ) === 'yes' ? tru
 
 <div class="dokan-info">
     <strong><?php esc_html_e( 'Note:', 'dokan-lite' ); ?></strong>
-    <?php esc_html_e( 'This order has products from multiple vendors. So we divided this order into multiple vendor orders.
-    Each order will be handled by their respective vendor independently.', 'dokan-lite' ); ?>
+    <?php
+    /**
+     * @since 3.2.12 added filter dokan_suborder_notice_to_customer
+     * @args WC_Order $parent_order
+     * @args WC_Order[] $sub_orders
+     * @args array $statuses
+     */
+    echo apply_filters( 'dokan_suborder_notice_to_customer', esc_html__( 'This order has products from multiple vendors. So we divided this order into multiple vendor orders.
+    Each order will be handled by their respective vendor independently.', 'dokan-lite' ), $parent_order, $sub_orders, $statuses );
+    ?>
 </div>
 
 <table class="shop_table my_account_orders table table-striped">

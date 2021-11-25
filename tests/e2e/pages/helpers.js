@@ -15,17 +15,21 @@ var auction_check_box;
 var auction_proxy_check;
 
 
-const { I } = inject();
+const { I, loginAs } = inject();
 
 module.exports = {
 
     pageStatus() {
-        I.amOnPage('/');
-        I.click('Login / Register');
+        I.amOnPage('/my-account');
+        // I.click('Login / Register');
         I.seeElement(locator.RegisterLocator);
     },
-    registerSuccess() {
-
+    customerRegisterSuccess() {
+        I.fillField(locator.EmailAdressLocator, locator.EmailAddress);
+        I.fillField(locator.PasswordInput, locator.PasswordValue);
+        I.click('Register');
+    },
+    vendorRegisterSuccess() {
         I.fillField(locator.EmailAdressLocator, locator.EmailAddress);
         I.fillField(locator.PasswordInput, locator.PasswordValue);
         I.checkOption('I am a vendor');
@@ -40,11 +44,27 @@ module.exports = {
         I.click('Not right now');
         I.seeInCurrentUrl('/dashboard');
     },
+   
+    createProduct(){
+      I.amOnPage('/dashboard/products/');
+      I.click('Add new product');
+      
+      I.fillField(locator.ProductTitleInput,faker.commerce.productName());
+      I.fillField(locator.ProductPrice,faker.commerce.price());
+      I.wait(2);
+      // I.attachFile('.dokan-feat-image-btn', '/data/images.jpeg');
+      I.selectOption(locator.ProductCategory, 'Uncategorized');
+      I.click(locator.AddProduct);
+      I.wait(4);
+    //   I.see('Edit Product');
+    //   I.see('View Product');
+    },
     checkVendor() {
         I.amOnPage('/dashboard');
-        I.moveCursorTo(locator.MenuHoverDropdown);
-        I.click(locator.MyAccount);
-        I.click(locator.EditAccount);
+        // I.moveCursorTo(locator.MenuHoverDropdown);
+        // I.click(locator.MyAccount);
+        // I.click(locator.EditAccount);
+        I.amOnPage('/my-account/edit-account/');
         I.seeInField('Email address', locator.EmailAddress);
     },
     loginAsVendor() {
@@ -61,35 +81,59 @@ module.exports = {
     },
     SelectSingleProduct() {
         I.amOnPage('/shop/');
-        I.click('simple_product');
+        I.click('//main[@id="main"]/ul/li/a/img');
+        I.click('Add to cart');
+        // I.click('simple_product');
     },
     SelectMultipleProduct() {
         I.amOnPage('/shop/');
-        I.selectOption(locator.SortingDropdown, 'price-desc');
-        I.click(locator.ThirdProductLocator);
-        I.click('simple_product');
+        // I.selectOption(locator.SortingDropdown, 'price-desc');
+        // I.click(locator.ThirdProductLocator);
+        I.click('//main[@id="main"]/ul/li/a/img');
+        I.click('Add to cart');
     },
     SelectMultipleProductMultiplrVendor() {
-        I.amOnPage('/shop/');
-        I.selectOption(locator.SortingDropdown, 'price-desc');
-        I.click(locator.ThirdProductLocator);
-        I.click('simple_product_2');
+        I.amOnPage('/store/');
+        I.click({css:'#dokan-seller-listing-wrap > div > ul > li:nth-child(1) > div > div.store-footer > a > span'});
+        I.click({css: 'li.product:nth-child(1) > span:nth-child(2) > span:nth-child(2) > a:nth-child(1) > i:nth-child(1)'});
+        I.wait(5);
+        I.amOnPage('/store/');
+        I.click({css:'li.dokan-single-seller:nth-child(2) > div:nth-child(1) > div:nth-child(3) > a:nth-child(2) > span:nth-child(1'});
+        I.click({css: 'li.product:nth-child(1) > span:nth-child(2) > span:nth-child(2) > a:nth-child(1) > i:nth-child(1)'});
+        I.wait(5);
+        
+    },
+    createvariation() {
+        I.fillField(locator.ProductAttributeName,'Color');
+        I.fillField(locator.ProductAttributeValue,'red');
+        I.pressKey('Enter');
+        I.fillField(locator.ProductAttributeValue,'blue');
+        I.pressKey('Enter');
+        I.checkOption(locator.ProductAttributeVisibility);
+        I.checkOption(locator.ProductAttributeVariation);
+        I.click('Save attribute');
+        I.wait(4);
+        I.click('Go');
+
     },
 
 
-    placeOrder() {
-        I.click('Add to cart');
-        I.click(locator.ViewCart); //View Cart
+    async placeOrder() {
+        I.amOnPage('/cart/');
+        // I.click(locator.ViewCart); //View Cart
         I.click(locator.ProceedCheckout); // Proceed To checkout
         I.seeInCurrentUrl('/checkout');
         I.fillField(locator.BillingFirstName, locator.FirstName);
         I.fillField(locator.BillingLastName, locator.Lastname);
         I.fillField(locator.BillingCompanyName, faker.company.companyName());
-        I.fillField(locator.BillingAddress, faker.address.streetAddress());
+        I.fillField(locator.BillingAddress, 'United States');
         I.fillField(locator.BillingCity, faker.address.city());
         I.fillField(locator.BillingPhone, faker.phone.phoneNumberFormat());
         I.fillField(locator.BillingEmail, locator.EmailAddress);
-        I.checkOption('Direct bank transfer'); // This will be Replaced Soon.
+        I.fillField('#billing_postcode',faker.random.arrayElement(['10010','10001','10005']));
+        I.wait(5);
+
+        //I.checkOption('Direct bank transfer'); // This will be Replaced Soon.
         I.click(locator.PlaceOrderBtn);
         I.waitForText(locator.OrderSuccessMsg, 30, '.woocommerce-order');
     },
@@ -106,12 +150,26 @@ module.exports = {
     },
 
 
+
     async grabCurrentEarnings() {
         I.amOnPage('/dashboard/orders');
         //I.click('Orders');
         let earning = await I.grabTextFrom(locator.CurrentEarning);
         current_earnings = parseInt(earning.replace(/[, \$৳]+/g, ""));
         console.log('Current Earning ', current_earnings);
+
+    },
+
+    productsorting()
+    { 
+        I.amOnPage('/shop/');
+        I.selectOption('//select[@name="orderby"]', 'Sort by latest');
+        I.wait(5);
+        I.click('//main[@id="main"]/ul/li/a/img');
+        I.wait(5);
+        I.click('//button[@name="add-to-cart"]');
+        I.click('View cart');
+        I.wait(5);
 
     },
     async balanceAssertEqual() {
@@ -201,30 +259,40 @@ module.exports = {
 
     },
 
-    checkWrongPrice() {
+   async checkWrongPrice() {
         I.fillField('Price', '12');
-        //this.fillField('Discounted Price','15');
+        I.fillField('Discounted Price','15');
         I.click(locator.SaveProduct);
+        const result = await tryTo(() => I.see('.wc_error_tip'));
+        console.log(result);
+        if(result == true)
+        {
+            console.log('Product save successfully');
+        }
+        else{
+            console.log('Regular Price should not be lower than discount price. Validation neededs');
+        }
+       
         I.see(locator.SuccessMsg);
-        console.log('Price should not be lower than discount price. Validation neededs');
+        
     },
     checkmulticat() {
         I.refreshPage();
         I.click(locator.CategoryContainer);
         I.click(locator.CategoryInput);
-        I.fillField(locator.CategoryInput, 'For multiple');
+        I.fillField(locator.CategoryInput, 'multiple');
         I.pressKey('Enter');
         I.click(locator.SaveProduct);
-        I.see('For multiple');
+        I.see('multiple');
     },
     checksinglecat() {
 
         I.click(locator.CategoryContainer);
         I.click(locator.CategoryInput);
-        I.fillField(locator.CategoryInput, 'For single');
+        I.fillField(locator.CategoryInput,'single');
         I.pressKey('Enter');
         I.click(locator.SaveProduct);
-        I.see('For single');
+        I.see('single');
     },
     checktags() {
         I.refreshPage();
@@ -294,7 +362,7 @@ module.exports = {
         I.fillField(locator.WholeSalePrice, faker.random.number(10, 20));
         I.fillField(locator.WholeSaleQty, faker.random.number(5, 10));
         I.click(locator.SaveProduct);
-        I.wait(3);
+       // I.wait(3);
     },
     clearwholesale() {
         I.scrollTo(locator.WholeSaleDiv);
@@ -345,35 +413,36 @@ module.exports = {
         I.click(locator.SaveProduct);
         I.clearField(locator.PurchaseNotesInput);
     },
-    checkgroup() {
-        I.scrollTo(locator.LinkedProductSection);
-        I.click(locator.LinkedProductUpsells);
-        I.fillField(locator.LinkedProductUpsells, 'simple_pro_1');
-        I.wait(1);
-        I.pressKey('Enter');
-        I.wait(1);
-        I.fillField(locator.LinkedProductUpsells, 'simple_pro_2');
-        I.wait(1);
-        I.pressKey('Enter');
-        I.clearField(locator.LinkedProductUpsells);
-        I.click(locator.LinkedProductCrossSells);
-        I.fillField(locator.LinkedProductCrossSells, 'simple_pro_3');
-        I.wait(1);
-        I.pressKey('Enter');
-        I.clearField(locator.LinkedProductCrossSells);
-        I.click(locator.LinkedProductGrouped);
-        I.fillField(locator.LinkedProductGrouped, 'group_product_2');
-        I.wait(1);
-        I.pressKey('Enter');
-        I.clearField(locator.LinkedProductGrouped);
-        I.click(locator.SaveProduct);
-    },
+    // checkgroup() {
+    //     I.scrollTo(locator.LinkedProductSection);
+    //     I.click(locator.LinkedProductUpsells);
+    //     I.fillField(locator.LinkedProductUpsells, 'simple_pro_1');
+    //     I.wait(1);
+    //     I.pressKey('Enter');
+    //     I.wait(1);
+    //     I.fillField(locator.LinkedProductUpsells, 'simple_pro_2');
+    //     I.wait(1);
+    //     I.pressKey('Enter');
+    //     I.clearField(locator.LinkedProductUpsells);
+    //     I.click(locator.LinkedProductCrossSells);
+    //     I.fillField(locator.LinkedProductCrossSells, 'simple_pro_3');
+    //     I.wait(1);
+    //     I.pressKey('Enter');
+    //     I.clearField(locator.LinkedProductCrossSells);
+    //     I.click(locator.LinkedProductGrouped);
+    //     I.fillField(locator.LinkedProductGrouped, 'group_product_2');
+    //     I.wait(1);
+    //     I.pressKey('Enter');
+    //     //I.clearField(locator.LinkedProductGrouped);
+    //     I.wait(3);
+    //     I.click(locator.SaveProduct);
+    // },
     async createauctionproduct()
     {
         I.click('Auction');
         I.click('Add New Auction Product');
         I.wait(4);
-        I.fillField('post_title','New Auction Product');
+        I.fillField('post_title', locator.AuctionProduct);
         I.selectOption('product_cat','Uncategorized');
             I.checkOption(locator.AddAuctionProxy);
             I.fillField(locator.AuctionStartPrice,'5');
@@ -386,7 +455,9 @@ module.exports = {
             I.click(locator.EndDate);
             I.wait(2);
             I.click('Now');
-            I.selectOption({css:'.ui_tpicker_minute_slider > .ui-timepicker-select'},'30');
+            // I.selectOption('#ui-datepicker-div > div.ui-timepicker-div > dl > dd.ui_tpicker_hour > div > select', '01');
+            I.selectOption('#ui-datepicker-div > div.ui-timepicker-div > dl > dd.ui_tpicker_minute > div > select', '59');
+            // I.selectOption({css:'.ui_tpicker_minute_slider > .ui-timepicker-select'},'30');
             I.wait(5);
             I.click('Add auction Product');
             I.wait(3);
@@ -394,28 +465,24 @@ module.exports = {
         
     },
     PurchaseAuctionProduct(){
-        I.amOnPage('/store-listing/');
-        I.click('Filter');
-        I.wait(3);
-        I.fillField('dokan_seller_search','vendor-one');
-        I.click('//a[contains(text(),"Vendor-one")]');
-        I.click({css:'.product:nth-child(1) > .item-content .flaticon'});
-        I.wait(5);
-        I.click('Bid');
-        I.wait(5);
-            session('2nd Customer bid', () => { 
-                I.loginAsCustomerTwo();
-                I.amOnPage('/shop/');
-                I.selectOption('//select[@name="orderby"]','Sort by latest');
-                I.wait(5);
-                I.click('//main[@id="main"]/ul/li/a/img');
-                I.wait(5);
-                I.click('Bid');
-                I.wait(2);
-                I.click('Bid');
-                I.click('Bid');
-                I.click('Bid'); 
-    });   
+        I.amOnPage('/store/vendor-one/');
+        // I.amOnPage('/shop');
+        // I.selectOption('//select[@name="orderby"]','Sort by latest');
+        I.click(locator.AuctionProduct);
+        for(let x=0; x<=3; x++){
+            I.click('Bid');
+       }
+        session('2nd Customer bid', () => { 
+            loginAs('CustomerTwo');
+            I.amOnPage('/store/vendor-one/');
+                    /* Facing problems, latest auction products not found in 'Sort by latest' list */
+                // I.amOnPage('/shop');
+                // I.selectOption('//select[@name="orderby"]','Sort by latest'); 
+            I.click(locator.AuctionProduct);
+            for(let x=0; x<=4; x++){
+                 I.click('Bid');
+            }
+        });   
     },
     createBookingProduct()
     {
@@ -502,7 +569,7 @@ module.exports = {
     
     Customerviewvacationmessage()
     {
-        I.wait(3);
+    I.wait(3);
     I.amOnPage('/store-listing/');
     I.click({ css : '.dokan-single-seller:nth-child(1) .dashicons'});
     I.scrollTo('#primary', 100,600);
@@ -519,23 +586,25 @@ module.exports = {
     },
     vendoraddsupporticket()
     {
-        I.click('Settings');
+    I.click('Settings');
     I.click('Store');
     I.wait(3);
     I.checkOption('#support_checkbox');
     I.scrollTo('#dokan_support_btn_name',20,40);
-    I.fillField('#dokan_support_btn_name','Want to need support');
+    I.fillField('#dokan_support_btn_name','Get Support');
     I.click('Update Settings');
     },
     Getsupport()
     {
         I.amOnPage('/store/vendor-one/');
-                I.click('Want to need support');
-                I.wait(5);
-                I.fillField('#dokan-support-subject','need support');
-                I.fillField('#dokan-support-msg','This product is too bad');
-                I.click('Submit');
-                I.wait(5);
+        I.click('Get Support');
+        I.wait(5);
+        I.fillField('#dokan-support-subject', faker.lorem.sentence());
+        I.click('div:nth-child(2) > select');
+        I.click('div:nth-child(2) > select > option:nth-child(2)');
+        I.fillField('#dokan-support-msg', faker.lorem.paragraphs());
+        I.click('Submit');
+        I.wait(5);
     },
     ReplyTicket()
     {
@@ -697,17 +766,14 @@ module.exports = {
     },
     VendorConnectStripe()
     {
-        I.amOnPage('/my-account/');
-            I.fillField('Username or email address', 'vendor-one');
-            I.fillField('Password', '123456');
-            I.click('Login');
+        
             I.amOnPage('/dashboard/settings/payment/');
-            I.click('//a[@class="clear"]//img');
+            I.click({css:'.dokan-stripe-connect-link > img:nth-child(1)'});
             // I.dontSee('Your account is not connected to Stripe. Connect your Stripe account to receive payouts.');
-            I.click('#skip-account-app');
-            I.wait(5);
-            I.waitUrlEquals('dashboard/settings/payment/');
-            I.see('Your account is connected with Stripe');
+            // I.click('#skip-account-app');
+            // I.wait(5);
+            // I.waitUrlEquals('dashboard/settings/payment/');
+            // I.see('Your account is connected with Stripe');
     },
     CustomerPurchasewithStripe()
     {
@@ -736,5 +802,58 @@ module.exports = {
           	I.waitForText('Thank you. Your order has been received.', 30, '.woocommerce-order');
         I.see('Thank you. Your order has been received.');
     },
+    SentRefundRequest()
+    {
+        I.click(locator.firstOrder); 
+        I.wait(5);  
+        I.click(locator.EditOrderStatus);
+        I.selectOption(locator.ChangeOrderStatus,faker.random.arrayElement(['Completed','Processing']));
+        I.click('Update');
+        I.click('Request Refund');
+        I.fillField('.refund_order_item_qty','1');       
+        I.click('#woocommerce-order-items');
+        I.click('Submit Refund Request');
+        I.click('OK');
+        I.click('OK');
+    },
+    CheckRefund(){
+        I.click('#toplevel_page_dokan');
+        I.click('Refunds');
+        I.wait(5);
+        I.checkOption('//table/tbody/tr/td[1]');
+        I.selectOption('#bulk-action-selector-top','Approve Refund');
+        I.click('Apply');       
+        I.wait(5);
+        I.click('#post-search-input');
+        I.type('vendor-two');
+        I.type('123');
+        I.wait(5);
+        I.clearField('#post-search-input');
+        I.refreshPage();
+        I.wait(3);
+    },
+    SetPaymentInfo(){
+        I.amOnPage('/dashboard/settings/payment/');
+        I.fillField('settings[paypal][email]','vendor-one@gmail.com')
+        I.fillField('settings[bank][ac_name]','Standerd Bank')
+        I.fillField('settings[bank][ac_number]','110001')
+        I.fillField('settings[bank][bank_name]','abc')
+        I.fillField('settings[bank][bank_addr]','dhaka,bangladesh')
+        I.fillField('settings[bank][routing_number]','12244')
+        I.fillField('settings[bank][iban]','788')
+        I.fillField('settings[bank][swift]','1123')
+        I.click('Update Settings')
+        I.see('Your information has been saved successfully')
+    },
+    SentWithdrawRequest()
+    {
+        I.amOnPage('/dashboard/withdraw/');
+        I.fillField('#withdraw-amount','200');
+        I.selectOption('#withdraw-method',faker.random.arrayElement(['Bank Transfer','PayPal']));
+        I.click('Submit Request');
+        I.wait('5');
+        I.see('Your request has been received successfully and being reviewed!');
+    },
+    
 
 }

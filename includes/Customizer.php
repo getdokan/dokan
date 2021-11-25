@@ -254,6 +254,8 @@ class Customizer {
             ]
         );
 
+        do_action( 'dokan_store_customizer_after_vendor_info', $wp_customize );
+
         if ( isset( $wp_customize->selective_refresh ) ) {
             $wp_customize->selective_refresh->add_partial(
                 'store_header_template',
@@ -269,6 +271,39 @@ class Customizer {
                 ]
             );
         }
+
+        $wp_customize->add_control(
+            new Customizer\HeadingControl(
+                $wp_customize,
+                'store_products',
+                [
+                    'section'  => 'dokan_store',
+                    'label'    => __( 'Vendor Products', 'dokan-lite' ),
+                    'settings' => [],
+                ]
+            )
+        );
+
+        $wp_customize->add_setting(
+            'dokan_appearance[store_products][hide_product_filter]',
+            [
+                'default'              => '',
+                'type'                 => 'option',
+                'capability'           => $this->capability,
+                'sanitize_callback'    => [ $this, 'bool_to_string' ],
+                'sanitize_js_callback' => [ $this, 'empty_to_bool' ],
+            ]
+        );
+
+        $wp_customize->add_control(
+            'hide_product_filter',
+            [
+                'label'    => __( 'Hide product filter', 'dokan-lite' ),
+                'section'  => 'dokan_store',
+                'settings' => 'dokan_appearance[store_products][hide_product_filter]',
+                'type'     => 'checkbox',
+            ]
+        );
 
         $wp_customize->add_control(
             new Customizer\HeadingControl(

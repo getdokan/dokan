@@ -13,6 +13,10 @@
     "codeceptjs": "^3.0.5",
     "faker": "^5.4.0",
     "rosie": "^2.0.1",
-    "webdriverio": "^7.1.1"
+    "webdriverio": "^7.7.4"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.10",
+    "dotenv": "^10.0.0"
   }
 }

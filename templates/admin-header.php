@@ -49,5 +49,16 @@
                 <?php echo esc_html_e( 'Upgrade to Pro', 'dokan-lite' ); ?>
             </a>
         <?php } ?>
+
+        <?php if ( dokan()->is_pro_exists() ) { ?>
+            <a
+                href="<?php echo esc_url( admin_url( 'admin.php?page=whats-new-dokan' ) ); ?>"
+                class="header-link header-link--cta"
+                rel="noopener"
+                title="<?php esc_attr_e( 'What\'s New', 'dokan-lite' ); ?>"
+            >
+                <?php echo esc_html_e( 'What\'s New', 'dokan-lite' ); ?>
+            </a>
+        <?php } ?>
     </div>
 </div>

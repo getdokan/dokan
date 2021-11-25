@@ -16,7 +16,7 @@ class StoreCategoryMenu extends WP_Widget {
 			'classname' => 'dokan-store-menu',
 			'description' => __( 'Dokan Seller Store Menu', 'dokan-lite' ),
 		);
-        parent::__construct( 'dokan-store-menu', __( 'Dokan: Store Category Menu', 'dokan-lite' ), $widget_ops );
+        parent::__construct( 'dokan-store-menu', __( 'Dokan: Store Product Category Menu', 'dokan-lite' ), $widget_ops );
     }
 
     /**

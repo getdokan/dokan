@@ -173,13 +173,11 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                         <input type="hidden" value="<?php echo esc_attr( $post->post_name ); ?>" name="edited-post-name" class="dokan-hide" id="edited-post-name-dokan">
                                     </div>
 
-                                    <?php $product_types = apply_filters( 'dokan_product_types', 'simple' ); ?>
+                                    <?php $product_types = apply_filters( 'dokan_product_types', [ 'simple' => __( 'Simple', 'dokan-lite' ) ] ); ?>
 
-                                    <?php if( 'simple' === $product_types ): ?>
+                                    <?php if( is_array( $product_types ) && count( $product_types ) === 1 && array_key_exists( 'simple', $product_types ) ): ?>
                                             <input type="hidden" id="product_type" name="product_type" value="simple">
-                                    <?php endif; ?>
-
-                                    <?php if ( is_array( $product_types ) ): ?>
+                                    <?php elseif ( is_array( $product_types ) ): ?>
                                         <div class="dokan-form-group">
                                             <label for="product_type" class="form-label"><?php esc_html_e( 'Product Type', 'dokan-lite' ); ?> <i class="fa fa-question-circle tips" aria-hidden="true" data-title="<?php esc_html_e( 'Choose Variable if your product has multiple attributes - like sizes, colors, quality etc', 'dokan-lite' ); ?>"></i></label>
                                             <select name="product_type" class="dokan-form-control" id="product_type">
@@ -274,6 +272,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                                 'name'             => 'product_cat',
                                                 'id'               => 'product_cat',
                                                 'taxonomy'         => 'product_cat',
+                                                'orderby'          => 'name',
                                                 'title_li'         => '',
                                                 'class'            => 'product_cat dokan-form-control dokan-select2',
                                                 'exclude'          => '',
@@ -301,6 +300,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                                 'name'             => 'product_cat[]',
                                                 'id'               => 'product_cat',
                                                 'taxonomy'         => 'product_cat',
+                                                'orderby'          => 'name',
                                                 'title_li'         => '',
                                                 'class'            => 'product_cat dokan-form-control dokan-select2',
                                                 'exclude'          => '',
@@ -432,7 +432,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
 
                             <!--hidden input for Firefox issue-->
                             <input type="hidden" name="dokan_update_product" value="<?php esc_attr_e( 'Save Product', 'dokan-lite' ); ?>"/>
-                            <input type="submit" name="dokan_update_product" class="dokan-btn dokan-btn-theme dokan-btn-lg dokan-right" value="<?php esc_attr_e( 'Save Product', 'dokan-lite' ); ?>"/>
+                            <input type="submit" name="dokan_update_product" id="publish" class="dokan-btn dokan-btn-theme dokan-btn-lg dokan-right" value="<?php esc_attr_e( 'Save Product', 'dokan-lite' ); ?>"/>
                             <div class="dokan-clearfix"></div>
                         </form>
                     <?php } else { ?>

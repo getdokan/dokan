@@ -1,4 +1,4 @@
-<?php wc_print_notices(); ?>
+<?php function_exists( 'wc_print_notices' ) ? wc_print_notices() : ''; ?>
 
 <form id="dokan-vendor-register" method="post" class="register dokan-vendor-register">
 
@@ -54,6 +54,13 @@
         <input type="text" class="input-text form-control" name="shopurl" id="seller-url" value="<?php if ( ! empty( $postdata['shopurl'] ) ) echo esc_attr($postdata['shopurl']); ?>" required="required" />
         <small><?php echo esc_url( home_url()  . '/' . dokan_get_option( 'custom_store_url', 'dokan_general', 'store' ) ); ?>/<strong id="url-alart"></strong></small>
     </p>
+
+    <?php
+    /**
+     * @since 3.2.8
+     */
+    do_action( 'dokan_seller_registration_after_shopurl_field', ! empty( $postdata ) ? $postdata : [] );
+    ?>
 
     <?php do_action( 'register_form' ); ?>
 

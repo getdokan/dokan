@@ -40,6 +40,9 @@ class VendorNewOrder extends WC_Email {
         add_action( 'woocommerce_order_status_failed_to_processing_notification', array( $this, 'trigger' ), 10, 2 );
         add_action( 'woocommerce_order_status_failed_to_completed_notification', array( $this, 'trigger' ), 10, 2 );
         add_action( 'woocommerce_order_status_failed_to_on-hold_notification', array( $this, 'trigger' ), 10, 2 );
+        add_action( 'woocommerce_order_status_cancelled_to_processing_notification', array( $this, 'trigger' ), 10, 2 );
+        add_action( 'woocommerce_order_status_cancelled_to_completed_notification', array( $this, 'trigger' ), 10, 2 );
+        add_action( 'woocommerce_order_status_cancelled_to_on-hold_notification', array( $this, 'trigger' ), 10, 2 );
 		//Prevent admin email for sub-order
         add_filter( 'woocommerce_email_enabled_new_order', [ $this, 'prevent_sub_order_admin_email' ], 10, 2 );
         // Call parent constructor.
@@ -91,24 +94,23 @@ class VendorNewOrder extends WC_Email {
             $this->placeholders['{order_number}'] = $this->object->get_order_number();
         }
 
-        $sellers = dokan_get_seller_id_by_order( $order_id );
-        if ( empty( $sellers ) ) {
+        $seller_id = dokan_get_seller_id_by_order( $order_id );
+        if ( empty( $seller_id ) ) {
             return;
         }
 
         // check has sub order
         if ( $order->get_meta( 'has_sub_order' ) ) {
-        	foreach ( $sellers as $seller ) {
-        		$seller_info      = get_userdata( $seller );
-		        $seller_email     = $seller_info->user_email;
-		        $this->order_info = dokan_get_vendor_order_details( $order_id, $seller );
-			    $this->send( $seller_email, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
-        	}
+            // same hook will be called again for sub-orders, so we don't need to process this from here.
+            return;
         } else {
-        	$seller_info      = get_userdata( $sellers );
-		    $seller_email     = $seller_info->user_email;
-        	$this->order_info = dokan_get_vendor_order_details( $order_id, $sellers );
-	        $this->send( $seller_email, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
+            $seller_info = get_userdata( $seller_id );
+            if ( ! $seller_info ) {
+                return;
+            }
+            $seller_email     = $seller_info->user_email;
+            $this->order_info = dokan_get_vendor_order_details( $order_id );
+            $this->send( $seller_email, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
         }
         $this->restore_locale();
     }
@@ -128,7 +130,7 @@ class VendorNewOrder extends WC_Email {
                 'plain_text'    => false,
                 'email'         => $this,
                 'order_info'    => $this->order_info,
-            ), 'dokan', $this->template_base
+            ), 'dokan/', $this->template_base
         );
     }
 

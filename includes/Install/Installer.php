@@ -13,6 +13,7 @@ use WP_Roles;
 class Installer {
     public function do_install() {
         // installs
+        $this->add_version_info();
         $this->user_roles();
         $this->setup_pages();
         $this->woocommerce_settings();
@@ -42,6 +43,20 @@ class Installer {
         if ( ! $was_installed_before ) {
             update_option( 'dokan_admin_setup_wizard_ready', false );
             set_transient( '_dokan_setup_page_redirect', true, 30 );
+        }
+    }
+
+    /**
+     * Adds plugin installation time.
+     *
+     * @since 3.3.1
+     *
+     * @return boolean
+     */
+    public function add_version_info() {
+        if ( empty( get_option( 'dokan_installed_time' ) ) ) {
+            $current_time = dokan_current_datetime()->getTimestamp();
+            update_option( 'dokan_installed_time', $current_time );
         }
     }
 
@@ -267,6 +282,7 @@ class Installer {
                `status` int(1) NOT NULL,
                `method` varchar(30) NOT NULL,
                `note` text NOT NULL,
+               `details` longtext NOT NULL,
                `ip` varchar(50) NOT NULL,
               PRIMARY KEY (id)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";

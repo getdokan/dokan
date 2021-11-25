@@ -125,7 +125,7 @@ class Manager {
      *
      * @param object|integer $vendor
      *
-     * @return object|vednor instance
+     * @return object|Vendor instance
      */
     public function get( $vendor ) {
         return new Vendor( $vendor );
@@ -136,7 +136,7 @@ class Manager {
      *
      * @param array $data
      *
-     * @return Dokan_Vendor|WP_Error on failure
+     * @return Vendor|WP_Error on failure
      */
     public function create( $data = [] ) {
         $defaults = [
@@ -164,6 +164,9 @@ class Manager {
             wp_send_new_user_notifications( $vendor_id, 'admin' );
         }
 
+        /**
+         * @since 3.2.7 added $data parameter
+         */
         $store_data = apply_filters( 'dokan_vendor_create_data', [
             'store_name'              => ! empty( $data['store_name'] ) ? $data['store_name'] : '',
             'social'                  => ! empty( $data['social'] ) ? $data['social'] : [],
@@ -185,7 +188,7 @@ class Manager {
             'show_min_order_discount' => ! empty( $data['show_min_order_discount'] ) ? $data['show_min_order_discount'] : 'no',
             'store_seo'               => ! empty( $data['store_seo'] ) ? $data['store_seo'] : [],
             'dokan_store_time'        => ! empty( $data['store_open_close'] ) ? $data['store_open_close'] : [],
-        ] );
+        ], $data );
 
         $vendor = dokan()->vendor->get( $vendor_id );
 
@@ -214,6 +217,12 @@ class Manager {
         $vendor->update_meta( 'dokan_profile_settings', $store_data );
         $vendor->update_meta( 'dokan_store_name', $store_data['store_name'] );
         $vendor->set_store_name( $store_data['store_name'] );
+
+        /**
+         * @since 3.2.7 hook introduced
+         */
+        do_action( 'dokan_before_create_vendor', $vendor->get_id(), $data );
+
         $vendor->save();
 
         do_action( 'dokan_new_vendor', $vendor_id );
@@ -319,6 +328,7 @@ class Manager {
         // update vendor store data
         if ( ! empty( $data['store_name'] ) ) {
             $vendor->set_store_name( $data['store_name'] );
+            $vendor->update_meta( 'dokan_store_name', $data['store_name'] );
         }
 
         if ( ! empty( $data['phone'] ) ) {

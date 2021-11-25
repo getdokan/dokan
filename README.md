@@ -3,11 +3,11 @@
 **Donate Link:** http://tareq.co/donate/  
 **Tags:** WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce, yith, yithemes  
 **Requires at least:** 4.4  
-**Tested up to:** 5.7.2  
+**Tested up to:** 5.8.2  
 **WC requires at least:** 3.0  
-**WC tested up to:** 5.4.1  
+**WC tested up to:** 5.9.0  
 **Requires PHP:** 5.6  
-**Stable tag:** 3.2.7  
+**Stable tag:** 3.3.1  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -292,13 +292,116 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 ## Changelog ##
 
+### v3.3.1 ( Nov 12, 2021 ) ###
+
+- **fix:** Added missing param on woocommerce_admin_order_item_headers #1414
+- **add:** Black Friday promotion 2021 #1411
+- **new:** Added Vue DateRangePicker library #1409
+- **fix:** Fixed WC mail template overwrite wasn’t working #1403
+ - **fix:** add call to filter dokan_product_cat_dropdown_args to listing-filter.php #1408 (thanks to David Marín )
+- **fix:** updated dokan_product_seller_info() function to not to add vendor data if vendor id doesn’t exists #1401 (thanks to David Marín )
+- **fix:** Hide `Show email address in store` settings from store settings page if admin disable this settings from customiser. #1393
+-  **update:** updated vendor store per page placeholder text #1396
+- **fix:** added upgrader to change refund and withdraw database table column #1391
+- **update:** Removed user switch setting from Dokan selling setting, now user switching will work if plugin exists #1394
+
+### v3.3.0 ( Oct 31, 2021 ) ###
+
+- **update:** Added integration of sweetalert2 for alert, prompt, confirm, toast notification
+- **fix:**  Fixed typo in vendor earning tooltip.
+- **fix** Vendor wasn't getting a notification when order status change from cancelled to processing, on-hold, or completed. This has been fixed now
+
+### v3.2.15 ( Oct 13, 2021 ) ###
+
+- **feat:** Permanently delete Dokan related data (custom tables, options, pages, user roles and capabilities etc) after plugin delete based on admin Setting
+- **new:** added filter hook dokan_store_banner_default_width and dokan_store_banner_default_height so that theme/plugin author can change store banner with and height based on their needs
+- **new:** Added Dokan stores page link under Admin bar menu, from now on “Visit Store” redirects to Dokan store list page and “Visit Shop” directs to WooCommerce Product list page.
+- **new:** Added integration of sweetalert2 to replace default javascript alert, prompt, confirm, and toast notifications
+- **update:** Added a new tooltip in vendor dashboard product listing page after earning column to clarify vendors about possible earning from their products
+- **update:** Added localization support for text "Calculating"
+- **update:** Now Dokan page view count will be stored in the browser’s Local Storage instead of browser Cookies. Some caching plugins weren't able to cache single product pages due to this. This fix will let caching plugins to cache single product pages from now on
+- **fix:** Single product page used to display the seller's real name instead of store name on the vendor info tab. Issue has been resolved now.
+- **fix:** When a vendor adds a new product If the form has any validation error then old selected tags went missing. This issue has been resolved now.
+- **fix:** Store Address input fields were missing in vendor dashboard’s store setting form when the Dokan Pro plugin was not installed. Now this issue has been fixed.
+- **fix:** Removed vendor verification verified status check from vendor dashboard’s store settings page if dokan pro is not installed or vendor verification module is not active
+- **fix:** Single Store product category wasn’t working if WPML plugin was installed. Now this issue has been fixed.,
+- **fix:** Added validation for withdraw limit
+- **fix:** Corrected spelling to 'picture' from 'picutre'
+- **fix:** In the latest version of Divi, theme assets weren’t loading if a single store page doesn’t contain any product. This issue has been fixed now.
+- **fix:** Vendor Contact form didn't contain “Reply To” email address when a customer would contact a vendor via the vendor contact form widget. Issue has been resolved now.
+
+### v3.2.14 ( Oct 04, 2021 ) ###
+
+- **fix:** multiple issue fixed in WPML integration with Dokan
+
+
+### v3.2.13 ( Sep 30, 2021 ) ###
+
+- **fix:** fixed warning on product listing page due to filter data type mismatch
+- **update:** added dynamic filter named: dokan_manage_shop_order_custom_columns_%s hook under shop_order_custom_columns method
+- **feat:** Set limitation for how many product tags that vendor can input, admin can set tag limit via filter hook: dokan_product_tags_select_max_length
+- **fix:** fixed localization issue on attribute label
+- **fix:** fixed Single store product search not working for logged out users
+
+### v3.2.12 ( Sep 13, 2021 ) ###
+
+- ***new*** Withdraw details keep save as log
+- ***new*** Vendor settings update REST api support
+- ***new*** New Filter hook added for Order status list allowed for withdrawal 'dokan_settings_withdraw_order_status_options'
+- ***fix*** Check if pagination_base post is empty
+- ***fix*** Single store page map hide based on setting
+- ***fix*** added upgrader to reassign dokan_store_name meta because it was missing for some vendor
+- ***fix*** JS deprecated warnings fixed
+
+### v3.2.11 ( Aug 31, 2021 ) ###
+
+- **new:** Added new shortcode attribute named random to display store list randomly [dokan-stores orderby="random"]
+- **fix:** Fixed fatal error when vendor registration shortcode used from API
+- **fix:** Added Map API selection section on Dokan admin setup wizard page
+- **new:** Added **'Texty – SMS Notification for WordPress, WooCommerce, Dokan and more'** plugin as recommended plugins under Dokan admin setup wizard page
+- **new:** Added vendor filter on admin Withdraw page
+- **new:** Added a new REST route to get corresponding vendor's product categories under StoreController API (GET: wp-json/dokan/v1/stores/3/categories)
+- **new:** Added a new REST route to get corresponding vendor's popular product categories under StoreController API (GET: wp-json/dokan/v1/stores/3/categories?best_selling=1)
+- **new:** Added REST API route to create withdrawal request (POST: /wp-json/dokan/v1/withdraw/ )
+- **Fix:** fixed unable to remove downloadable file when there is only one file exists
+- **fix:** fixed fatal error with deleted product of an order
+- **new:** What's new button added under dokan admin page top bar section
+
+### v3.2.10 ( Aug 10, 2021 ) ###
+
+- **update:** Hide customer billing email and ip address from vendor order export data based on admin setting
+- **update:** Default Category order by set to name and order by as ascending
+- **fix:** After submitting the Create Product from the selected category is not selected
+
+### v3.2.9 ( Aug 2, 2021 ) ###
+
+- **New:** Added customize settings for store product filter option to show/hide
+- **Fix:** Product tag search not working in variable product after adding new attribute
+- **New:** added a new hook dokan_earning_by_order_item_price
+- **Fix:** display shipping widget though virtual checkbox selected
+- **Fix:** Children IDs not showing on REST API
+- **Fix:** fixed a js error while refunding from vendor dashboard: size() is not a function
+
+### v3.2.8 ( Jul 12, 2021 ) ###
+
+- **update:** Added Composer 2 support
+- **fix:** Fixed rewrite rules issues after Dokan plugin is installed and after change store slug
+- **new:** Added dokan summer sale promotion
+- **new:** Added a new action hook named dokan_store_customizer_after_vendor_info under Dokan Store Customizer
+- **update:** added $data parameter to existing dokan_vendor_create_data action hook
+- **new:** added a new action hook named dokan_before_create_vendor
+- **new:** added a new action hook named dokan_seller_registration_after_shopurl_field
+- **new:** added a new action hook named dokan_settings_after_store_phone
+- **new:** added a new action hook dokan_settings_before_store_email
+- **new:** added a new action hook dokan_product_gallery_image_count
+
 ### v3.2.7 ( Jul 01, 2021 ) ###
 
 - **new:** Added Orderby filtering for single store product listing page
 - **new:** Added custom ip address lookup link
 - **new:** Added a success message after creating a product from add new product modal window
 - **new:** Added - - for category listing in add new product page and add new product modal window
-- **new:** Added a new shortcode attribute named with_products_only in [dokan_store] shortcake so that vendor without product can be filtered out from store listing page
+- **new:** Added a new shortcode attribute named with_products_only in [dokan-stores] shortcode so that vendor without product can be filtered out from store listing page
 - **new(api):** Add support to send objects to trash, thanks to @Mário Valney
 - **fix:** Fixed duplicate tag create issue, if new tag is searched with mixed character case
 - **fix:** Wrong hooks used on Elementor widgets

@@ -289,7 +289,7 @@ class SetupWizard extends DokanSetupWizard {
                             }
 
                             $statebox.html( '<option value="">' + state_option_text + '</option>' + options );
-                            $statebox.val( value ).change();
+                            $statebox.val( value ).trigger( 'change' );
 
                             $( document.body ).trigger( 'country_to_state_changed', [country, $wrapper ] );
 
@@ -316,7 +316,7 @@ class SetupWizard extends DokanSetupWizard {
                     $('.wc-enhanced-select').select2();
                 });
 
-                $( ':input.country_to_state' ).change();
+                $( ':input.country_to_state' ).trigger( 'change' );
 
             })(jQuery)
 
