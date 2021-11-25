@@ -15,7 +15,7 @@ var auction_check_box;
 var auction_proxy_check;
 
 
-const { I } = inject();
+const { I, loginAs } = inject();
 
 module.exports = {
 
@@ -442,7 +442,7 @@ module.exports = {
         I.click('Auction');
         I.click('Add New Auction Product');
         I.wait(4);
-        I.fillField('post_title','New Auction Product');
+        I.fillField('post_title', locator.AuctionProduct);
         I.selectOption('product_cat','Uncategorized');
             I.checkOption(locator.AddAuctionProxy);
             I.fillField(locator.AuctionStartPrice,'5');
@@ -455,7 +455,9 @@ module.exports = {
             I.click(locator.EndDate);
             I.wait(2);
             I.click('Now');
-            I.selectOption({css:'.ui_tpicker_minute_slider > .ui-timepicker-select'},'30');
+            // I.selectOption('#ui-datepicker-div > div.ui-timepicker-div > dl > dd.ui_tpicker_hour > div > select', '01');
+            I.selectOption('#ui-datepicker-div > div.ui-timepicker-div > dl > dd.ui_tpicker_minute > div > select', '59');
+            // I.selectOption({css:'.ui_tpicker_minute_slider > .ui-timepicker-select'},'30');
             I.wait(5);
             I.click('Add auction Product');
             I.wait(3);
@@ -463,28 +465,24 @@ module.exports = {
         
     },
     PurchaseAuctionProduct(){
-        I.amOnPage('/store-listing/');
-        I.click('Filter');
-        I.wait(3);
-        I.fillField('dokan_seller_search','vendor-one');
-        I.click('//a[contains(text(),"Vendor-one")]');
-        I.click({css:'.product:nth-child(1) > .item-content .flaticon'});
-        I.wait(5);
-        I.click('Bid');
-        I.wait(5);
-            session('2nd Customer bid', () => { 
-                I.loginAsCustomerTwo();
-                I.amOnPage('/shop/');
-                I.selectOption('//select[@name="orderby"]','Sort by latest');
-                I.wait(5);
-                I.click('//main[@id="main"]/ul/li/a/img');
-                I.wait(5);
-                I.click('Bid');
-                I.wait(2);
-                I.click('Bid');
-                I.click('Bid');
-                I.click('Bid'); 
-    });   
+        I.amOnPage('/store/vendor-one/');
+        // I.amOnPage('/shop');
+        // I.selectOption('//select[@name="orderby"]','Sort by latest');
+        I.click(locator.AuctionProduct);
+        for(let x=0; x<=3; x++){
+            I.click('Bid');
+       }
+        session('2nd Customer bid', () => { 
+            loginAs('CustomerTwo');
+            I.amOnPage('/store/vendor-one/');
+                    /* Facing problems, latest auction products not found in 'Sort by latest' list */
+                // I.amOnPage('/shop');
+                // I.selectOption('//select[@name="orderby"]','Sort by latest'); 
+            I.click(locator.AuctionProduct);
+            for(let x=0; x<=4; x++){
+                 I.click('Bid');
+            }
+        });   
     },
     createBookingProduct()
     {

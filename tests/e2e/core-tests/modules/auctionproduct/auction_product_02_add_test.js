@@ -7,4 +7,4 @@ Feature('modules/auction_product_02_add_test');
 Scenario('Create Auction Product', ({I,loginAs}) => {
     loginAs('Vendor');
     helpers.createauctionproduct();
-}).tag('@auction');
+}).tag('@auction').tag('@auction_create');

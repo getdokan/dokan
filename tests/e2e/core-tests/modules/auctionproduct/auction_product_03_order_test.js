@@ -7,4 +7,4 @@ Scenario('Order Auction Product', ({ I,loginAs }) => {
     loginAs('Customer');
     helpers.PurchaseAuctionProduct();
 
-}).tag('@auction');
+}).tag('@auction').tag('@auction_order');

@@ -303,7 +303,8 @@ module.exports = {
      EditOrderStatus:{css:'.dokan-edit-status'},
      ChangeOrderStatus:'#order_status',
   
-
+    //Product Create
+    AuctionProduct: faker.commerce.productName(),
 
 
 
