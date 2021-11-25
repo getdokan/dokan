@@ -23,8 +23,8 @@ class AdminNoticeController extends DokanRESTAdminController {
             $this->namespace, '/notices', [
                 [
                     'methods'             => WP_REST_Server::READABLE,
-                    'callback'            => array( $this, 'get_notices' ),
-                    'permission_callback' => array( $this, 'check_permission' ),
+                    'callback'            => [ $this, 'get_notices' ],
+                    'permission_callback' => [ $this, 'check_permission' ],
                 ],
             ]
         );
@@ -32,8 +32,8 @@ class AdminNoticeController extends DokanRESTAdminController {
             $this->namespace, '/admin-notices', [
                 [
                     'methods'             => WP_REST_Server::READABLE,
-                    'callback'            => array( $this, 'get_admin_notices' ),
-                    'permission_callback' => array( $this, 'check_permission' ),
+                    'callback'            => [ $this, 'get_admin_notices' ],
+                    'permission_callback' => [ $this, 'check_permission' ],
                 ],
             ]
         );
