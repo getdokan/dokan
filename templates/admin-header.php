@@ -9,11 +9,7 @@
             <div class="item">
                 <?php
                     $versions = get_option( 'dokan_changelog_versions', array() );
-                    $has_new_version = false;
-
-                    if ( ! in_array( DOKAN_PLUGIN_VERSION, $versions ) ) {
-                        $has_new_version = true;
-                    }
+                    $has_new_version = ! in_array( DOKAN_PLUGIN_VERSION, $versions );
                 ?>
                 <?php if ( $has_new_version ) : ?>
                     <span class="whats-new-pointer"></span>

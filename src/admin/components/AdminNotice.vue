@@ -298,7 +298,7 @@ export default {
                     margin: 0 0 10px;
                     font-weight: bold;
                     font-size: 18px;
-                    font-family: Roboto, sans-serif;
+                    font-family: "Roboto", sans-serif;
                 }
 
                 div {
@@ -336,6 +336,7 @@ export default {
                     background: #2579B1;
                     margin-right: 15px;
                     font-weight: 400;
+                    letter-spacing: .5px;
                 }
 
                 .btn-primary:hover {
