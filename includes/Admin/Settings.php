@@ -579,11 +579,6 @@ class Settings {
                 ],
                 'gmap_api_key'               => [
                     'name'    => 'gmap_api_key',
-                    'show_if' => [
-                        'map_api_source' => [
-                            'equal' => 'google_maps',
-                        ],
-                    ],
                     'label'   => __( 'Google Map API Key', 'dokan-lite' ),
                     'desc'    => __( '<a href="https://developers.google.com/maps/documentation/javascript/" target="_blank" rel="noopener noreferrer">API Key</a> is needed to display map on store page', 'dokan-lite' ),
                     'type'    => 'text',
@@ -591,11 +586,6 @@ class Settings {
                 ],
                 'mapbox_access_token'        => [
                     'name'    => 'mapbox_access_token',
-                    'show_if' => [
-                        'map_api_source' => [
-                            'equal' => 'mapbox',
-                        ],
-                    ],
                     'label'   => __( 'Mapbox Access Token', 'dokan-lite' ),
                     'desc'    => __( '<a href="https://docs.mapbox.com/help/how-mapbox-works/access-tokens/" target="_blank" rel="noopener noreferrer">Access Token</a> is needed to display map on store page', 'dokan-lite' ),
                     'type'    => 'text',
