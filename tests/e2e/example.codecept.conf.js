@@ -9,6 +9,7 @@ exports.config = {
         WebDriver: {
             url: env('URL'),
             browser: 'chrome',
+            smartWait: 5000,
             desiredCapabilities: {
                 // chromeOptions: {
                 //     args: ["--headless","--window-size=1200,1600", "--disable-gpu", "--no-sandbox"]
@@ -46,7 +47,10 @@ exports.config = {
             enabled: true
         },
         allure: {
-            enabled: 'true'
+            enabled: true
+        },
+        autoDelay: {
+            enabled: true
         },
         autoLogin: {
             enabled: true,
