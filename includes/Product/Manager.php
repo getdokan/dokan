@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Product;
 
+use WeDevs\Dokan\Cache;
 use WP_Query;
 use WP_Error;
 
@@ -32,8 +33,20 @@ class Manager {
         ];
 
         $args = wp_parse_args( $args, $defaults );
+        $args = apply_filters( 'dokan_all_products_query', $args );
+        // get cache group and key
+        $cache_group = ! empty( $args['author'] ) ? "seller_product_data_{$args['author']}" : 'product_data';
+        $cache_key   = 'product_manager_all_' . md5( wp_json_encode( $args ) );
 
-        return new WP_Query( apply_filters( 'dokan_all_products_query', $args ) );
+        $products = Cache::get( $cache_key, $cache_group );
+
+        if ( false === $products ) {
+            $products = new WP_Query( $args );
+
+            Cache::set( $cache_key, $products, $cache_group );
+        }
+
+        return $products;
     }
 
     /**
@@ -449,7 +462,7 @@ class Manager {
         $id = isset( $args['id'] ) ? absint( $args['id'] ) : 0;
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'no-id-found', __( 'No product ID found for updating' ), [ 'status' => 401 ] );
+            return new WP_Error( 'no-id-found', __( 'No product ID found for updating', 'dokan-lite' ), [ 'status' => 401 ] );
         }
 
         return $this->create( $args );
