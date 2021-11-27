@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\Withdraw;
 
+use Automattic\WooCommerce\Utilities\NumberUtil;
+
 class Hooks {
 
     /**
@@ -12,29 +14,14 @@ class Hooks {
      * @return void
      */
     public function __construct() {
-        add_action( 'dokan_withdraw_status_updated', [ self::class, 'delete_seller_balance_cache' ], 10, 3 );
-        add_action( 'dokan_withdraw_request_approved', [ self::class, 'update_vendor_balance' ], 11 );
+        add_action( 'dokan_withdraw_request_approved', [ $this, 'update_vendor_balance' ], 11 );
+
+        // Init Withdraw Cache Class
+        new WithdrawCache();
     }
 
     /**
-     * Delete seller balance cache after a withdraw update
-     *
-     * @since 3.0.0
-     *
-     * @param string $status
-     * @param int    $user_id
-     * @param int    $id
-     *
-     * @return void
-     */
-    public static function delete_seller_balance_cache( $status, $user_id, $id ) {
-        $cache_group = 'dokan_seller_data_' . $user_id;
-        $cache_key = 'dokan_seller_balance_' . $user_id;
-        wp_cache_delete( $cache_key, $cache_group );
-    }
-
-    /**
-     * Update vendor balance after approve a request
+     * Update vendor balance after approve a request.
      *
      * @since 3.0.0
      *
@@ -42,10 +29,10 @@ class Hooks {
      *
      * @return void
      */
-    public static function update_vendor_balance( $withdraw ) {
+    public function update_vendor_balance( $withdraw ) {
         global $wpdb;
 
-        if ( round( dokan_get_seller_balance( $withdraw->get_user_id(), false ), 2 ) < round( $withdraw->get_amount(), 2 ) ) {
+        if ( NumberUtil::round( dokan_get_seller_balance( $withdraw->get_user_id(), false ), 2 ) < NumberUtil::round( $withdraw->get_amount(), 2 ) ) {
             return;
         }
 
@@ -84,7 +71,5 @@ class Hooks {
                 )
             );
         }
-
-        self::delete_seller_balance_cache( $withdraw->get_status(), $withdraw->get_user_id(), $withdraw->get_id() );
     }
 }

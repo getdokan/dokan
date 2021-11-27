@@ -1,5 +1,7 @@
 <?php
 
+use WeDevs\Dokan\Cache;
+
 if ( ! function_exists( 'dokan_get_order_report_data' ) ) :
 	/**
 	 * Generate SQL query and fetch the report data based on the arguments passed
@@ -220,7 +222,11 @@ if ( ! function_exists( 'dokan_get_order_report_data' ) ) :
 			error_log( '<pre>%s</pre>', print_r( $query, true ) );
 		}
 
-		if ( $debug || $nocache || ( false === ( $result = get_transient( 'dokan_wc_report_' . $query_hash ) ) ) ) {
+        $cache_group = "report_data_seller_{$current_user}";
+        $cache_key   = 'wc_report_' . $query_hash;
+
+        $result = Cache::get_transient( $cache_key, $cache_group );
+		if ( $debug || $nocache || ( false === $result ) ) {
 			$result = apply_filters( 'dokan_reports_get_order_report_data', $wpdb->$query_type( $query ), $data );
 
 			if ( $filter_range ) {
@@ -233,7 +239,7 @@ if ( ! function_exists( 'dokan_get_order_report_data' ) ) :
 				$expiration = 60 * 60 * 24; // 24 hour
 			}
 
-			set_transient( 'dokan_wc_report_' . $query_hash, $result, $expiration );
+			Cache::set_transient( $cache_key, $result, $cache_group, $expiration );
 		}
 
 		return $result;
