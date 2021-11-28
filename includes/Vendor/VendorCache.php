@@ -33,7 +33,7 @@ class VendorCache {
      *
      * @return void
      */
-    public function delete( ) {
+    public static function delete() {
         Cache::invalidate_group( 'vendors' );
     }
 
@@ -48,7 +48,7 @@ class VendorCache {
      */
     public function clear_cache_group( $vendor_id ) {
         // Delete vendor cache group
-        $this->delete();
+        self::delete();
 
         // delete product cache for this vendor
         ProductCache::delete( $vendor_id );
@@ -67,7 +67,7 @@ class VendorCache {
     public function after_update_vendor_profile( $store_id, $dokan_settings ) {
         // We'll just delete vendor cache group,
         // no need to delete product caches
-        $this->delete();
+        self::delete();
     }
 
     /**
@@ -83,7 +83,7 @@ class VendorCache {
     public function after_created_new_wp_user( $user_id, $userdata ) {
         // If a user is created with seller role, then delete vendor cache.
         if ( ! empty( $userdata['role'] && 'seller' === $userdata['role'] ) ) {
-            $this->delete();
+            self::delete();
         }
     }
 }
