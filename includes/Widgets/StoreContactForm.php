@@ -45,8 +45,6 @@ class StoreContactForm extends WP_Widget {
 			'description' => __( 'Dokan Vendor Contact Form', 'dokan-lite' ),
 		);
         parent::__construct( 'dokan-store-contact-widget', __( 'Dokan: Store Contact Form', 'dokan-lite' ), $widget_ops );
-
-        add_action( 'wp_head', [ $this, 'enqueue_contact_widget_scripts' ] );
     }
 
     /**
@@ -107,6 +105,8 @@ class StoreContactForm extends WP_Widget {
                 )
             );
 
+            wp_localize_script( 'dokan-script', 'google_recaptcha', [ 'recaptcha_sitekey' => $this->recaptcha_site_key ] );
+
             echo $after_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
         }
 
@@ -149,31 +149,6 @@ class StoreContactForm extends WP_Widget {
             <label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'dokan-lite' ); ?></label>
             <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
         </p>
-        <?php
-    }
-
-    /**
-     * Enqueue handler for contact widget assets
-     *
-     * @since 3.3.2
-     *
-     * @return void
-     */
-    public function enqueue_contact_widget_scripts() {
-        // Check if the page is a store page and recaptcha sitekey, secretkey exist
-        if ( ! dokan_is_store_page() || empty( $this->recaptcha_site_key ) || empty( $this->recaptcha_secret_key ) ) {
-            return;
-        }
-
-        // Enqueue scripts after passing check
-        ?>
-        <script>
-            grecaptcha.ready( function() {
-                grecaptcha.execute( '<?php echo esc_html( $this->recaptcha_site_key ); ?>', { action: 'dokan_contact_seller_recaptcha' } ).then( function( token ) {
-                document.getElementById( 'token' ).value = token;
-                } );
-            } );
-        </script>
         <?php
     }
 }

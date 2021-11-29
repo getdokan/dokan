@@ -324,8 +324,8 @@ class Ajax {
         $contact_name    = ! empty( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
         $contact_email   = ! empty( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '';
         $contact_message = ! empty( $_POST['message'] ) ? sanitize_text_field( wp_unslash( $_POST['message'] ) ) : '';
-        $captcha_action  = ! empty( $_POST['recaptcha_action'] ) ? sanitize_key( wp_unslash( $_POST['recaptcha_action'] ) ) : '';
-        $captcha_token   = ! empty( $_POST['recaptcha_token'] ) ? wp_unslash( $_POST['recaptcha_token'] ) : '';
+        $captcha_action  = ! empty( $_POST['dokan_recaptcha_action'] ) ? sanitize_key( wp_unslash( $_POST['dokan_recaptcha_action'] ) ) : '';
+        $captcha_token   = ! empty( $_POST['dokan_recaptcha_token'] ) ? wp_unslash( $_POST['dokan_recaptcha_token'] ) : '';
         $error_template  = '<span class="alert alert-danger error">%s</span>';
 
         if ( empty( $contact_name ) ) {

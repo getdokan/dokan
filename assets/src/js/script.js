@@ -573,6 +573,14 @@ jQuery(function($) {
           label.remove();
         },
         submitHandler: function(form) {
+          // Google reCaptcha site key
+          const recaptchaSiteKey = google_recaptcha.recaptcha_sitekey;
+
+          // Execute recaptcha token request
+          grecaptcha.execute(recaptchaSiteKey, { action: 'dokan_contact_seller_recaptcha' }).then(function(token) {
+            document.getElementById('dokan_recaptcha_token').value = token;
+          });
+
           $(form).block({
             message: null,
             overlayCSS: {
@@ -1157,8 +1165,8 @@ jQuery(function($) {
  * @returns boolean
  */
  async function dokan_show_delete_prompt( event, messgae ) {
-  event.preventDefault(); 
-  
+  event.preventDefault();
+
   let answer = await dokan_sweetalert( messgae, {
     action  : 'confirm',
     icon    : 'warning'
@@ -1166,7 +1174,7 @@ jQuery(function($) {
 
   if( answer.isConfirmed && undefined !== event.target.href ) {
       window.location.href = event.target.href;
-  } 
+  }
   else if( answer.isConfirmed && undefined !== event.target.dataset.url ) {
       window.location.href = event.target.dataset.url;
   }
