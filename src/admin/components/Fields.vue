@@ -124,6 +124,8 @@
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
 
+            <td class="tooltips-data combine-tips-style"></td>
+
             <PriceQuantityVendorSale
                 :id="id"
                 :fieldData="fieldData"
@@ -643,7 +645,7 @@ export default {
                 }
             } );
         },
-        
+
         getAndCheckCommissionType( event ) {
             if ( '' === this.fieldValue[event.target.value] ) {
                 this.fieldValue[event.target.value] = [
