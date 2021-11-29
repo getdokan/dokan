@@ -64,11 +64,11 @@
                 </div>
             </div>
         </div>
-        <!--<div class="menu-item">
-            <div class="item">
-                <span class="notification-count">4</span>
-                <div class="icon-notification-bell"></div>
-            </div>
-        </div>-->
+<!--        <div class="menu-item">-->
+<!--            <div class="item">-->
+<!--                <span class="notification-count">4</span>-->
+<!--                <div class="icon-notification-bell"></div>-->
+<!--            </div>-->
+<!--        </div>-->
     </div>
 </div>

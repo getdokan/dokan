@@ -22,9 +22,51 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: "SF Pro Text";
+  src: url("../font/SF-Pro-Text-Heavy.otf") format("opentype");
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SF Pro Text";
+  src: url("../font/SF-Pro-Text-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SF Pro Text";
+  src: url("../font/SF-Pro-Text-Semibold.otf") format("opentype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SF Pro Text";
+  src: url("../font/SF-Pro-Text-Medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SF Pro Text";
+  src: url("../font/SF-Pro-Text-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SF Pro Text";
+  src: url("../font/SF-Pro-Text-Light.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+}
+
 .dokan-admin-header {
     background: #fff;
-    padding: 12px 15px 10px 22px;
+    padding: 15px 15px 15px 22px;
     margin: 0 0 0 -20px;
     box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
     display: flex;
@@ -32,24 +74,31 @@
     justify-content: space-between;
 
     .dokan-admin-header__logo {
+        display: flex;
+
         img {
             height: 25px;
             width: auto;
+            margin-right: 12px;
         }
 
         span {
-            font-family: Consolas, Monaco, monospace;
+            color: #F1634C;
+            background: #FFF4F2;
+            padding: 4px 12px;
             font-size: 12px;
-            display: block;
-            color: #bababa;
+            font-weight: 500;
+            font-family: "SF Pro Text", sans-serif;
+            border: 1px solid rgba(241, 99, 76, 0.2);
+            border-radius: 93px;
         }
     }
 
     .dokan-admin-header__menu {
         padding-right: 6px;
+        display: flex;
 
         .menu-item {
-            display: inline-block;
             position: relative;
 
             .item {
@@ -116,7 +165,7 @@
                     .dropdown {
                         opacity: 1;
                         visibility: visible;
-                        top: 49px;
+                        top: 48px;
                     }
                 }
 
