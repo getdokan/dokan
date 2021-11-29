@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\REST;
 
 use Exception;
+use WeDevs\Dokan\Cache;
 use WP_Error;
 use WP_REST_Controller;
 use WP_REST_Server;
@@ -268,7 +269,15 @@ class WithdrawController extends WP_REST_Controller {
             $args['ids'] = $request['ids'];
         }
 
-        $withdraws = dokan()->withdraw->all( $args );
+        $cache_group = 'withdraws';
+        $cache_key   = 'withdraw_requests_' . md5( wp_json_encode( $args ) );
+        $withdraws   = Cache::get( $cache_key, $cache_group );
+
+        if ( false === $withdraws ) {
+            $withdraws = dokan()->withdraw->all( $args );
+
+            Cache::set( $cache_key, $withdraws, $cache_group );
+        }
 
         $data = [];
         foreach ( $withdraws->withdraws as $withdraw ) {
@@ -295,7 +304,7 @@ class WithdrawController extends WP_REST_Controller {
     public function get_balance() {
         $data = [];
 
-        $data ['current_balance']   = dokan_get_seller_balance( dokan_get_current_user_id(), false );
+        $data['current_balance']    = dokan_get_seller_balance( dokan_get_current_user_id(), false );
         $data['withdraw_limit']     = dokan_get_option( 'withdraw_limit', 'dokan_withdraw', - 1 );
         $data['withdraw_threshold'] = dokan_get_withdraw_threshold( dokan_get_current_user_id() );
 
