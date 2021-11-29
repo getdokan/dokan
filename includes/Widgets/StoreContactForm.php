@@ -23,12 +23,22 @@ class StoreContactForm extends WP_Widget {
     protected $recaptcha_site_key;
 
     /**
+     * Google reCaptcha secret key
+     *
+     * @since 3.3.2
+     *
+     * @var string|boolean
+     */
+    protected $recaptcha_secret_key;
+
+    /**
      * Constructor
      *
      * @return void
      */
     public function __construct() {
-        $this->recaptcha_site_key = dokan_get_option( 'recaptcha_site_key', 'dokan_appearance' );
+        $this->recaptcha_site_key   = dokan_get_option( 'recaptcha_site_key', 'dokan_appearance' );
+        $this->recaptcha_secret_key = dokan_get_option( 'recaptcha_secret_key', 'dokan_appearance' );
 
         $widget_ops = array(
 			'classname' => 'dokan-store-contact',
@@ -150,13 +160,12 @@ class StoreContactForm extends WP_Widget {
      * @return void
      */
     public function enqueue_contact_widget_scripts() {
-        // Check if recaptcha sitekey exists and the page is a store page
-        if ( empty( $this->recaptcha_site_key ) || ! dokan_is_store_page() ) {
+        // Check if the page is a store page and recaptcha sitekey, secretkey exist
+        if ( ! dokan_is_store_page() || empty( $this->recaptcha_site_key ) || empty( $this->recaptcha_secret_key ) ) {
             return;
         }
 
         // Enqueue scripts after passing check
-        wp_enqueue_script( 'dokan-google-recaptcha' );
         ?>
         <script>
             grecaptcha.ready( function() {

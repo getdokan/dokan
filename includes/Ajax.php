@@ -324,8 +324,8 @@ class Ajax {
         $contact_name    = ! empty( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
         $contact_email   = ! empty( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '';
         $contact_message = ! empty( $_POST['message'] ) ? sanitize_text_field( wp_unslash( $_POST['message'] ) ) : '';
-        $captcha_token   = ! empty( $_POST['recaptcha_token'] ) ? sanitize_key( wp_unslash( $_POST['recaptcha_token'] ) ) : '';
         $captcha_action  = ! empty( $_POST['recaptcha_action'] ) ? sanitize_key( wp_unslash( $_POST['recaptcha_action'] ) ) : '';
+        $captcha_token   = ! empty( $_POST['recaptcha_token'] ) ? wp_unslash( $_POST['recaptcha_token'] ) : '';
         $error_template  = '<span class="alert alert-danger error">%s</span>';
 
         if ( empty( $contact_name ) ) {
@@ -345,11 +345,12 @@ class Ajax {
             wp_send_json_error( $message );
         }
 
-        $captcha_sitekey = dokan_get_option( 'recaptcha_site_key', 'dokan_appearance' );
+        $captcha_sitekey   = dokan_get_option( 'recaptcha_site_key', 'dokan_appearance' );
+        $captcha_secretkey = dokan_get_option( 'recaptcha_secret_key', 'dokan_appearance' );
 
         // Validate captcha if checking enabled from admin setting
-        if ( ! empty( $captcha_sitekey ) ) {
-            $recaptcha_validate = $this->recaptcha_validation_handler( $captcha_sitekey, $captcha_token, $captcha_action );
+        if ( ! empty( $captcha_sitekey ) && ! empty( $captcha_secretkey ) ) {
+            $recaptcha_validate = $this->recaptcha_validation_handler( $captcha_action, $captcha_token, $captcha_secretkey );
 
             if ( empty( $recaptcha_validate ) ) {
                 $message = sprintf( $error_template, __( 'Google reCaptcha varification failed!', 'dokan-lite' ) );
@@ -1053,29 +1054,35 @@ class Ajax {
      *
      * @since 3.3.2
      *
-     * @param string $token
-     * @param string $sitekey
      * @param string $action
+     * @param string $token
+     * @param string $secretkey
      *
      * @return boolean
      */
-    public function recaptcha_validation_handler( $sitekey, $token, $action ) {
-        if ( empty( $sitekey ) || empty( $token ) || empty( $action ) ) {
+    public function recaptcha_validation_handler( $action, $token, $secretkey ) {
+        if ( empty( $action ) || empty( $token ) || empty( $secretkey ) ) {
             return false;
         }
 
         $siteverify    = 'https://www.google.com/recaptcha/api/siteverify';
-        $response      = wp_remote_get( $siteverify . '?secret=' . $sitekey . '&response=' . $token );
+        $response      = wp_remote_get( $siteverify . '?secret=' . $secretkey . '&response=' . $token );
         $response_body = wp_remote_retrieve_body( $response );
         $response_data = json_decode( $response_body, true );
+
+        // Check if the response data is not empty
+        if ( empty( $response_data['success'] ) ) {
+            return false;
+        }
 
         // Validate reCaptcha action
         if ( empty( $response_data['action'] ) || $action !== $response_data['action'] ) {
             return false;
         }
 
-        // Check if the response data is not empty
-        if ( empty( $response_data['success'] ) ) {
+        // Validate reCaptcha score
+        $min_eligible_score = apply_filters( 'dokan_recaptcha_minimum_eligible_score', 0.5 );
+        if ( empty( $response_data['score'] ) || $response_data['score'] < $min_eligible_score ) {
             return false;
         }
 

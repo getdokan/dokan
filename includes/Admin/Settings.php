@@ -596,10 +596,16 @@ class Settings {
                     'type'    => 'checkbox',
                     'default' => 'on',
                 ],
-                'recaptcha_site_key'   => [
+                'recaptcha_site_key'         => [
                     'name'    => 'recaptcha_site_key',
                     'label'   => __( 'Google reCaptcha v3 Site Key', 'dokan-lite' ),
                     'desc'    => __( '<a href="https://www.google.com/recaptcha/admin/" target="_blank" rel="noopener noreferrer">Site Key</a> is needed to verify store contact form invisible captcha', 'dokan-lite' ),
+                    'type'    => 'text',
+                ],
+                'recaptcha_secret_key'       => [
+                    'name'    => 'recaptcha_secret_key',
+                    'label'   => __( 'Google reCaptcha v3 Secret Key', 'dokan-lite' ),
+                    'desc'    => __( '<a href="https://www.google.com/recaptcha/admin/" target="_blank" rel="noopener noreferrer">Secret Key</a> is needed to verify store contact form invisible captcha', 'dokan-lite' ),
                     'type'    => 'text',
                 ],
                 'store_header_template'      => [
