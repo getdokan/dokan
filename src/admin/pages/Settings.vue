@@ -302,13 +302,14 @@
                         if ( field in value && value[field].length < 1 ) {
                             if ( ! this.errors.includes( field ) ) {
                                 this.errors.push( field );
-                                // If flat or percentage commission is set. Remove the required field.
-                                if ( 'flat' === value['commission_type'] || 'percentage' === value['commission_type'] || 'product_price' === value['commission_type'] || 'product_quantity' === value['commission_type'] || 'vendor_sale' === value['commission_type'] ) {
-                                    this.errors = this.arrayRemove( this.errors, 'admin_percentage' );
-                                    this.errors = this.arrayRemove( this.errors, 'additional_fee' );
+                                // If flat or percentage product_price or product_quantity or vendor_sale or commission is set. Remove the required field.
+                                let all_commisions = [ 'admin_percentage', 'additional_fee', 'product_price', 'product_quantity', 'vendor_sale' ];
+                                if ( 'flat' === value['commission_type'] || 'percentage' === value['commission_type'] || new_commission_types.includes( value['commission_type'] ) ) {
+                                    this.errors = this.errors.filter(val => !all_commisions.includes(val));
                                 }
 
-                                if ( 'product_price' === value['commission_type'] || 'product_quantity' === value['commission_type'] || 'vendor_sale' === value['commission_type'] ) {
+                                let new_commisions = [ 'product_price', 'product_quantity', 'vendor_sale' ];
+                                if ( new_commisions.includes( value['commission_type'] ) ) {
                                     const commission_type = value['commission_type']
                                     const commission_items = this.settingValues[section][commission_type];
 
@@ -330,14 +331,14 @@
                 return false;
             },
 
-            validateProductPriceAndQuantityCommission( product_prices_commission_items = [], section, validateionItem = 'product_price' ){
+            validateProductPriceAndQuantityCommission( commission_items = [], section, validateionItem = 'product_price' ){
                 const product_price_errors = [];
 
-                product_prices_commission_items.forEach( ( element, index ) => {
+                commission_items.forEach( ( element, index ) => {
                     Object.keys(element).forEach( validaiton_element => {
                         const inputValue   = element[validaiton_element];
                         let fieldSettings  = this.settingFields[section][validateionItem].fields;
-                        let curretSettings = this.settingFields[section][validateionItem].fields;
+                        let curretSettings = fieldSettings;
 
                         let fieldValues    = this.settingValues[section][validateionItem];
 
