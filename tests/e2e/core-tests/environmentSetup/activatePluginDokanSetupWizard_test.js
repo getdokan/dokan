@@ -1,7 +1,7 @@
 Feature('Environment Setup');
 
 Scenario('Activating Dokan Plugin & running setup wizard',async ({ I , loginAs}) => {
-    loginAs('admin');
+loginAs('admin');
     I.amOnPage('/wp-admin/plugins.php');
     //Activating dokan-lite plugin
     const deactivate = await I.grabNumberOfVisibleElements('#deactivate-dokan-lite');
@@ -21,13 +21,13 @@ Scenario('Activating Dokan Plugin & running setup wizard',async ({ I , loginAs})
             I.click('.button-primary');
             I.click('.button-primary');
             I.click('.button-primary');
-            I.click('/html/body/div[1]/form/ul/li[1]/label');
-            I.click('/html/body/div[1]/form/ul/li[2]/label');
-            I.click('/html/body/div[1]/form/ul/li[3]/label');
+            // Enabling other plugins
+            // I.click('/html/body/div[1]/form/ul/li[1]/label');
+            // I.click('/html/body/div[1]/form/ul/li[2]/label');
+            // I.click('/html/body/div[1]/form/ul/li[3]/label');
             I.click('.button-primary');
             I.click('Return to the WordPress Dashboard');
-            I.see('Dokan');
-            
+            I.see('Dokan');          
     });
 
 });
