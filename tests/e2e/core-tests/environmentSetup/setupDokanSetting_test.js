@@ -1,5 +1,5 @@
-Feature('');
+Feature('Environment Setup');
 
-Scenario('test something', ({ I }) => {
+Scenario('Dokan setting configuration', ({ I }) => {
 
 });
