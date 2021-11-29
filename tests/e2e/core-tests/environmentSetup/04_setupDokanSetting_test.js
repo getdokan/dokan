@@ -1,5 +1,5 @@
 Feature('Environment Setup');
 
-Scenario('Dokan setting configuration', ({ I }) => {
+Scenario('@environmentSetup Dokan setting configuration', ({ I }) => {
 
 });

@@ -2,7 +2,7 @@ const { default: pause } = require("webdriverio/build/commands/browser/pause");
 
 Feature('Environment Setup');
 
-Scenario('Run woocommerce setup wizard',async ({ I , loginAs}) => {
+Scenario('@environmentSetup Run woocommerce setup wizard',async ({ I , loginAs}) => {
 loginAs('admin');
     tryTo(() => {
         I.amOnPage('/wp-admin/admin.php?page=wc-admin');

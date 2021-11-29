@@ -1,6 +1,6 @@
 Feature('Environment Setup');
 
-Scenario('Activating Dokan Plugin & running setup wizard',async ({ I , loginAs}) => {
+Scenario('@environmentSetup Activating Dokan Plugin & running setup wizard',async ({ I , loginAs}) => {
 loginAs('admin');
     I.amOnPage('/wp-admin/plugins.php');
     //Activating dokan-lite plugin

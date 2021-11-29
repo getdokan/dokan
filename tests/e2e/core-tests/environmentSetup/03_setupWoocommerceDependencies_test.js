@@ -3,7 +3,7 @@ const config = require('../../pages/config.js');
 var faker = require('faker');
 Feature('Environment Setup');
 
-Scenario('Setup woocommerce dependencies', ({ I,loginAs}) => {
+Scenario('@environmentSetup woocommerce dependencies', ({ I,loginAs}) => {
   loginAs('admin');
   //Add shipping
       I.click('WooCommerce');
