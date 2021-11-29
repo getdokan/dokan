@@ -21,6 +21,7 @@ class CacheInvalidate {
         add_action( 'comment_post', [ $this, 'comment_created' ], 10, 3 );
         add_action( 'edit_comment', [ $this, 'comment_updated' ], 10, 2 );
         add_action( 'delete_comment', [ $this, 'comment_deleted' ], 10, 1 );
+        add_action( 'wp_set_comment_status', [ $this, 'comment_status_change' ], 10, 2 );
     }
 
     /**
@@ -50,7 +51,7 @@ class CacheInvalidate {
      *
      * @return void
      */
-    private function comment_created( $comment_id, $comment_approved, $comment_data ) {
+    public function comment_created( $comment_id, $comment_approved, $comment_data ) {
         $post_type = get_post_type( $comment_data['comment_post_ID'] );
         $seller_id = get_post_field( 'post_author', $comment_data['comment_post_ID'] );
 
@@ -67,7 +68,7 @@ class CacheInvalidate {
      *
      * @return void
      */
-    private function comment_updated( $comment_id, $comment_data ) {
+    public function comment_updated( $comment_id, $comment_data ) {
         $post_type = get_post_type( $comment_data['comment_post_ID'] );
         $seller_id = get_post_field( 'post_author', $comment_data['comment_post_ID'] );
 
@@ -75,7 +76,7 @@ class CacheInvalidate {
     }
 
     /**
-     * Fires after a comment is being deleted.
+     * Fires before a comment is being deleted.
      *
      * @since 3.3.2
      *
@@ -84,7 +85,7 @@ class CacheInvalidate {
      *
      * @return void
      */
-    private function comment_deleted( $comment_id ) {
+    public function comment_deleted( $comment_id ) {
         // get comment via comment id
         $comment = get_comment( $comment_id );
         if ( ! $comment ) {
@@ -95,5 +96,20 @@ class CacheInvalidate {
         $seller_id = get_post_field( 'post_author', $comment->comment_post_ID );
 
         $this->clear_comment_cache( $post_type, $seller_id );
+    }
+
+    /**
+     * Fires after a comment status is being changed.
+     *
+     * @since 3.3.2
+     *
+     * @param int    $comment_id     Comment ID.
+     * @param string $comment_status Current comment status. Possible values include
+     *                               'hold', '0', 'approve', '1', 'spam', and 'trash'.
+     *
+     * @return void
+     */
+    public function comment_status_change( $comment_id, $comment_status ) {
+        $this->comment_deleted( $comment_id );
     }
 }
