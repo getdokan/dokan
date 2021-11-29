@@ -854,6 +854,4 @@ module.exports = {
         I.wait('5');
         I.see('Your request has been received successfully and being reviewed!');
     },
-    
-
 }

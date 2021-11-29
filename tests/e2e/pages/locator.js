@@ -306,7 +306,9 @@ module.exports = {
     //Product Create
     AuctionProduct: faker.commerce.productName(),
 
-
+    //Backend Settings
+    ConfirmationMessage:'Setting has been saved successfully.',
+    ConfirmationLocator: '#setting-message_updated',
 
 
 
