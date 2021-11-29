@@ -34,7 +34,7 @@ function dokana_admin_menu_capability() {
 function dokan_get_current_user_id() {
     if ( current_user_can( 'vendor_staff' ) ) {
         $staff_id  = get_current_user_id();
-        $vendor_id = get_user_meta( $staff_id, '_vendor_id', true );
+        $vendor_id = (int) get_user_meta( $staff_id, '_vendor_id', true );
 
         if ( empty( $vendor_id ) ) {
             return $staff_id;
