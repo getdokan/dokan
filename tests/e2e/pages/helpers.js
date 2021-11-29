@@ -25,12 +25,12 @@ module.exports = {
         I.seeElement(locator.RegisterLocator);
     },
     customerRegisterSuccess() {
-        I.fillField(locator.EmailAdressLocator, locator.EmailAddress);
+        I.fillField(locator.EmailAdressLocator, locator.CustomerEmailAddress);
         I.fillField(locator.PasswordInput, locator.PasswordValue);
         I.click('Register');
     },
     vendorRegisterSuccess() {
-        I.fillField(locator.EmailAdressLocator, locator.EmailAddress);
+        I.fillField(locator.EmailAdressLocator, locator.VendorEmailAddress);
         I.fillField(locator.PasswordInput, locator.PasswordValue);
         I.checkOption('I am a vendor');
         I.fillField('First Name', locator.FirstName);

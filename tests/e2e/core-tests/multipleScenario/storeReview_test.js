@@ -9,4 +9,4 @@ Scenario('Customer submit a review for vendor', ({ I }) => {
     I.fillField('#dokan-review-title', faker.lorem.sentence());
     I.fillField('#dokan-review-details', faker.lorem.paragraph());
     I.click('Submit');
-});
+}).tag('@store-review').tag('@multipleScenario');

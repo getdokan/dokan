@@ -6,10 +6,11 @@ module.exports = {
     // Locators for  Registration page
     // Start
     RegisterLocator: '#customer_login > div.u-column2.col-2',
-    EmailAddress: faker.internet.email(),
+    CustomerEmailAddress: faker.internet.email(),
+    VendorEmailAddress: faker.internet.email(),
     EmailAdressLocator: 'Email address',
     PasswordInput: '#reg_password',
-    PasswordValue: 'alvitazwar@54321',
+    PasswordValue: faker.internet.password(),
     FirstName: faker.name.firstName(),
     Lastname: faker.name.lastName(),
     Shopname: faker.name.title(),
