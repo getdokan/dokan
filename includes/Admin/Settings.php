@@ -589,24 +589,28 @@ class Settings {
                     'desc'    => __( '<a href="https://docs.mapbox.com/help/how-mapbox-works/access-tokens/" target="_blank" rel="noopener noreferrer">Access Token</a> is needed to display map on store page', 'dokan-lite' ),
                     'type'    => 'text',
                 ],
+                'recaptcha_validation_label' => [
+                    'name'  => 'recaptcha_validation_label',
+                    'label' => __( 'Google reCaptcha Validation', 'dokan-lite' ),
+                    'type'  => 'html',
+                    'desc'    => __( '<a href="https://developers.google.com/recaptcha/docs/v3" target="_blank" rel="noopener noreferrer">reCaptcha v3</a> credentials required to enable store contact form invisible captcha', 'dokan-lite' ),
+                ],
+                'recaptcha_site_key'         => [
+                    'name'    => 'recaptcha_site_key',
+                    'label'   => __( 'Site Key', 'dokan-lite' ),
+                    'type'    => 'text',
+                ],
+                'recaptcha_secret_key'       => [
+                    'name'    => 'recaptcha_secret_key',
+                    'label'   => __( 'Secret Key', 'dokan-lite' ),
+                    'type'    => 'text',
+                ],
                 'contact_seller'             => [
                     'name'    => 'contact_seller',
                     'label'   => __( 'Show Contact Form on Store Page', 'dokan-lite' ),
                     'desc'    => __( 'Display a vendor contact form in the store sidebar', 'dokan-lite' ),
                     'type'    => 'checkbox',
                     'default' => 'on',
-                ],
-                'recaptcha_site_key'         => [
-                    'name'    => 'recaptcha_site_key',
-                    'label'   => __( 'Google reCaptcha v3 Site Key', 'dokan-lite' ),
-                    'desc'    => __( '<a href="https://www.google.com/recaptcha/admin/" target="_blank" rel="noopener noreferrer">Site Key</a> is needed to verify store contact form invisible captcha', 'dokan-lite' ),
-                    'type'    => 'text',
-                ],
-                'recaptcha_secret_key'       => [
-                    'name'    => 'recaptcha_secret_key',
-                    'label'   => __( 'Google reCaptcha v3 Secret Key', 'dokan-lite' ),
-                    'desc'    => __( '<a href="https://www.google.com/recaptcha/admin/" target="_blank" rel="noopener noreferrer">Secret Key</a> is needed to verify store contact form invisible captcha', 'dokan-lite' ),
-                    'type'    => 'text',
                 ],
                 'store_header_template'      => [
                     'name'    => 'store_header_template',
