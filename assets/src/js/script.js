@@ -562,6 +562,7 @@ jQuery(function($) {
   var Dokan_Seller = {
     init: function() {
       this.validate(this);
+      this.executeRecaptcha();
     },
 
     validate: function(self) {
@@ -605,10 +606,12 @@ jQuery(function($) {
 
     // Execute recaptcha token request
     executeRecaptcha: function() {
-      const recaptchaSitekey = $('#dokan_recaptcha_sitekey').val();
+      const recaptchaSitekey    = $('#dokan_recaptcha_sitekey').val();
+      const recaptchaTokenField = $('#dokan_recaptcha_token');
 
       grecaptcha.execute(recaptchaSitekey, { action: 'dokan_contact_seller_recaptcha' }).then(function(token) {
-        $('#dokan_recaptcha_token').val(token);
+        recaptchaTokenField.val('');
+        recaptchaTokenField.val(token);
       });
     }
   };

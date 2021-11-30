@@ -506,7 +506,8 @@ class Assets {
         }
 
         // Script for contact form widget google recaptcha
-        if ( dokan_is_store_page() && ! empty( dokan_get_option( 'recaptcha_site_key', 'dokan_appearance' ) ) && ! empty( dokan_get_option( 'recaptcha_secret_key', 'dokan_appearance' ) ) ) {
+        if ( dokan_is_store_page() || is_product() ) {
+            if ( ! empty( dokan_get_option( 'recaptcha_site_key', 'dokan_appearance' ) ) && ! empty( dokan_get_option( 'recaptcha_secret_key', 'dokan_appearance' ) ) )
             wp_enqueue_script( 'dokan-google-recaptcha' );
         }
 
