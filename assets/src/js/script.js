@@ -562,7 +562,6 @@ jQuery(function($) {
   var Dokan_Seller = {
     init: function() {
       this.validate(this);
-      this.executeRecaptcha();
     },
 
     validate: function(self) {
@@ -574,6 +573,8 @@ jQuery(function($) {
           label.remove();
         },
         submitHandler: function(form) {
+          self.executeRecaptcha();
+
           $(form).block({
             message: null,
             overlayCSS: {
@@ -604,8 +605,10 @@ jQuery(function($) {
 
     // Execute recaptcha token request
     executeRecaptcha: function() {
-      grecaptcha.execute('6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', { action: 'dokan_contact_seller_recaptcha' }).then(function(token) {
-        document.getElementById('dokan_recaptcha_token').value = token;
+      const recaptchaSitekey = $('#dokan_recaptcha_sitekey').val();
+
+      grecaptcha.execute(recaptchaSitekey, { action: 'dokan_contact_seller_recaptcha' }).then(function(token) {
+        $('#dokan_recaptcha_token').val(token);
       });
     }
   };
