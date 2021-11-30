@@ -64,7 +64,7 @@
                         </a>
                         <a href="<?php echo esc_url( admin_url( 'admin.php?page=dokan-setup' ) ); ?>">
                             <div class="icon">
-                                <div class="icon-request-feature"></div>
+                                <div class="icon-setup-wizard"></div>
                             </div>
                             <?php esc_html_e( 'Run Setup Wizard', 'dokan-lite' ); ?>
                         </a>
