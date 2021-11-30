@@ -671,7 +671,7 @@ function dokan_get_admin_notices() {
 }
 
 /**
- * Dokan global notices
+ * Dokan promotional notices
  *
  * @since DOKAN_LITE_SINCE
  *
