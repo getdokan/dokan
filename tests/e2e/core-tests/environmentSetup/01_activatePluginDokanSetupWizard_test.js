@@ -11,7 +11,6 @@ loginAs('admin');
         else{
             I.click('#activate-dokan-lite')
         }
-
     //Running setup wizerd
         tryTo(() => {
             I.amOnPage('/wp-admin/admin.php?page=dokan-setup');

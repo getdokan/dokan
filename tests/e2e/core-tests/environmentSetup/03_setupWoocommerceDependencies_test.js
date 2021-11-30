@@ -5,7 +5,7 @@ Feature('Environment Setup');
 
 Scenario('@environmentSetup woocommerce dependencies', ({ I,loginAs}) => {
   loginAs('admin');
-  //Add shipping
+      //Add shipping
       I.click('WooCommerce');
       I.amOnPage('/wp-admin/admin.php?page=wc-settings');
       I.wait(3);
@@ -26,7 +26,7 @@ Scenario('@environmentSetup woocommerce dependencies', ({ I,loginAs}) => {
       I.click({css:'#btn-ok'});
       I.wait(5);
       I.refreshPage();
-//Add TAX
+      //Add TAX
       I.amOnPage('/wp-admin/admin.php?page=wc-settings');
       config.configureTax();
 });
