@@ -98,13 +98,14 @@ class StoreContactForm extends WP_Widget {
 
             dokan_get_template_part(
                 'widgets/store-contact-form', '', array(
-                    'seller_id'         => $seller_id,
-                    'store_info'        => $store_info,
-                    'username'          => $username,
-                    'email'             => $email,
-                    'recaptcha_sitekey' => $this->recaptcha_site_key,
+                    'seller_id'  => $seller_id,
+                    'store_info' => $store_info,
+                    'username'   => $username,
+                    'email'      => $email,
                 )
             );
+
+            wp_localize_script( 'dokan-script', 'google_recaptcha', [ 'recaptcha_sitekey' => $this->recaptcha_site_key ] );
 
             echo $after_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
         }

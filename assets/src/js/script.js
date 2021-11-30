@@ -606,10 +606,16 @@ jQuery(function($) {
 
     // Execute recaptcha token request
     executeRecaptcha: function() {
-      const recaptchaSitekey    = $('#dokan_recaptcha_sitekey').val();
+      const recaptchaSiteKey    = google_recaptcha.recaptcha_sitekey;
       const recaptchaTokenField = $('#dokan_recaptcha_token');
 
-      grecaptcha.execute(recaptchaSitekey, { action: 'dokan_contact_seller_recaptcha' }).then(function(token) {
+      // Check if the recaptcha site key exists
+      if ( '' === recaptchaSiteKey ) {
+          return;
+      }
+
+      // Execute recaptcha after passing checks
+      grecaptcha.execute(recaptchaSiteKey, { action: 'dokan_contact_seller_recaptcha' }).then(function(token) {
         recaptchaTokenField.val('');
         recaptchaTokenField.val(token);
       });
