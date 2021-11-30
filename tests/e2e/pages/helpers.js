@@ -40,9 +40,6 @@ module.exports = {
         I.click(locator.PhoneNumberInput);
         I.fillField(locator.PhoneNumberInput, locator.PhoneNumberValue);
         I.click('Register');
-        //I.see('Welcome to the Marketplace!');
-        I.click('Not right now');
-        I.seeInCurrentUrl('/dashboard');
     },
    
     createProduct(){
@@ -60,12 +57,12 @@ module.exports = {
     //   I.see('View Product');
     },
     checkVendor() {
-        I.amOnPage('/dashboard');
+        // I.amOnPage('/dashboard');
         // I.moveCursorTo(locator.MenuHoverDropdown);
         // I.click(locator.MyAccount);
         // I.click(locator.EditAccount);
         I.amOnPage('/my-account/edit-account/');
-        I.seeInField('Email address', locator.EmailAddress);
+        I.seeInField('Email address', locator.VendorEmailAddress);
     },
     loginAsVendor() {
         I.fillField('Username or email address ', 'vendor-one');
