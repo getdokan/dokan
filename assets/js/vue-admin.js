@@ -6092,6 +6092,91 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 var TextEditor = dokan_get_lib('TextEditor');
 var GoogleMaps = dokan_get_lib('GoogleMaps');
@@ -9840,7 +9925,9 @@ var render = function() {
                     attrs: { colspan: "2" }
                   },
                   [_c("label", [_vm._v(_vm._s(_vm.fieldData.label))])]
-                )
+                ),
+                _vm._v(" "),
+                _c("td", { staticClass: "tooltips-data" })
               ]
             : _vm._e(),
           _vm._v(" "),
@@ -9858,173 +9945,217 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _c("td", [
-                  (_vm.fieldData.type || "text") === "checkbox"
-                    ? _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.fieldValue[_vm.fieldData.name],
-                            expression: "fieldValue[fieldData.name]"
-                          }
-                        ],
-                        staticClass: "regular-text",
-                        class: [
-                          {
-                            "dokan-input-validation-error": _vm.hasValidationError(
-                              _vm.fieldData.name
-                            )
+                _c("td", { staticClass: "tooltips-data" }, [
+                  _vm.fieldData.tooltip
+                    ? _c("span", [
+                        _c("i", {
+                          directives: [
+                            {
+                              name: "tooltip",
+                              rawName: "v-tooltip",
+                              value: _vm.fieldData.tooltip,
+                              expression: "fieldData.tooltip"
+                            }
+                          ],
+                          staticClass: "dashicons dashicons-editor-help tips",
+                          attrs: { title: _vm.fieldData.tooltip }
+                        })
+                      ])
+                    : _vm._e()
+                ]),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  {
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    (_vm.fieldData.type || "text") === "checkbox"
+                      ? _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.fieldValue[_vm.fieldData.name],
+                              expression: "fieldValue[fieldData.name]"
+                            }
+                          ],
+                          staticClass: "regular-text",
+                          class: [
+                            {
+                              "dokan-input-validation-error": _vm.hasValidationError(
+                                _vm.fieldData.name
+                              )
+                            },
+                            _vm.fieldData.class
+                          ],
+                          attrs: {
+                            id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                            name:
+                              _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                            type: "checkbox"
                           },
-                          _vm.fieldData.class
-                        ],
-                        attrs: {
-                          id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                          name: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                          type: "checkbox"
-                        },
-                        domProps: {
-                          checked: Array.isArray(
-                            _vm.fieldValue[_vm.fieldData.name]
-                          )
-                            ? _vm._i(_vm.fieldValue[_vm.fieldData.name], null) >
-                              -1
-                            : _vm.fieldValue[_vm.fieldData.name]
-                        },
-                        on: {
-                          change: function($event) {
-                            var $$a = _vm.fieldValue[_vm.fieldData.name],
-                              $$el = $event.target,
-                              $$c = $$el.checked ? true : false
-                            if (Array.isArray($$a)) {
-                              var $$v = null,
-                                $$i = _vm._i($$a, $$v)
-                              if ($$el.checked) {
-                                $$i < 0 &&
-                                  _vm.$set(
-                                    _vm.fieldValue,
-                                    _vm.fieldData.name,
-                                    $$a.concat([$$v])
-                                  )
+                          domProps: {
+                            checked: Array.isArray(
+                              _vm.fieldValue[_vm.fieldData.name]
+                            )
+                              ? _vm._i(
+                                  _vm.fieldValue[_vm.fieldData.name],
+                                  null
+                                ) > -1
+                              : _vm.fieldValue[_vm.fieldData.name]
+                          },
+                          on: {
+                            change: function($event) {
+                              var $$a = _vm.fieldValue[_vm.fieldData.name],
+                                $$el = $event.target,
+                                $$c = $$el.checked ? true : false
+                              if (Array.isArray($$a)) {
+                                var $$v = null,
+                                  $$i = _vm._i($$a, $$v)
+                                if ($$el.checked) {
+                                  $$i < 0 &&
+                                    _vm.$set(
+                                      _vm.fieldValue,
+                                      _vm.fieldData.name,
+                                      $$a.concat([$$v])
+                                    )
+                                } else {
+                                  $$i > -1 &&
+                                    _vm.$set(
+                                      _vm.fieldValue,
+                                      _vm.fieldData.name,
+                                      $$a
+                                        .slice(0, $$i)
+                                        .concat($$a.slice($$i + 1))
+                                    )
+                                }
                               } else {
-                                $$i > -1 &&
-                                  _vm.$set(
-                                    _vm.fieldValue,
-                                    _vm.fieldData.name,
-                                    $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                                  )
+                                _vm.$set(
+                                  _vm.fieldValue,
+                                  _vm.fieldData.name,
+                                  $$c
+                                )
                               }
-                            } else {
-                              _vm.$set(_vm.fieldValue, _vm.fieldData.name, $$c)
                             }
                           }
-                        }
-                      })
-                    : (_vm.fieldData.type || "text") === "radio"
-                    ? _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.fieldValue[_vm.fieldData.name],
-                            expression: "fieldValue[fieldData.name]"
-                          }
-                        ],
-                        staticClass: "regular-text",
-                        class: [
-                          {
-                            "dokan-input-validation-error": _vm.hasValidationError(
-                              _vm.fieldData.name
-                            )
+                        })
+                      : (_vm.fieldData.type || "text") === "radio"
+                      ? _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.fieldValue[_vm.fieldData.name],
+                              expression: "fieldValue[fieldData.name]"
+                            }
+                          ],
+                          staticClass: "regular-text",
+                          class: [
+                            {
+                              "dokan-input-validation-error": _vm.hasValidationError(
+                                _vm.fieldData.name
+                              )
+                            },
+                            _vm.fieldData.class
+                          ],
+                          attrs: {
+                            id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                            name:
+                              _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                            type: "radio"
                           },
-                          _vm.fieldData.class
-                        ],
-                        attrs: {
-                          id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                          name: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                          type: "radio"
-                        },
-                        domProps: {
-                          checked: _vm._q(
-                            _vm.fieldValue[_vm.fieldData.name],
-                            null
-                          )
-                        },
-                        on: {
-                          change: function($event) {
-                            return _vm.$set(
-                              _vm.fieldValue,
-                              _vm.fieldData.name,
+                          domProps: {
+                            checked: _vm._q(
+                              _vm.fieldValue[_vm.fieldData.name],
                               null
                             )
-                          }
-                        }
-                      })
-                    : _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.fieldValue[_vm.fieldData.name],
-                            expression: "fieldValue[fieldData.name]"
-                          }
-                        ],
-                        staticClass: "regular-text",
-                        class: [
-                          {
-                            "dokan-input-validation-error": _vm.hasValidationError(
-                              _vm.fieldData.name
-                            )
                           },
-                          _vm.fieldData.class
-                        ],
-                        attrs: {
-                          id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                          name: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                          type: _vm.fieldData.type || "text"
-                        },
-                        domProps: { value: _vm.fieldValue[_vm.fieldData.name] },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
+                          on: {
+                            change: function($event) {
+                              return _vm.$set(
+                                _vm.fieldValue,
+                                _vm.fieldData.name,
+                                null
+                              )
                             }
-                            _vm.$set(
-                              _vm.fieldValue,
-                              _vm.fieldData.name,
-                              $event.target.value
-                            )
                           }
-                        }
-                      }),
-                  _vm._v(" "),
-                  _vm.hasError(_vm.fieldData.name)
-                    ? _c("p", { staticClass: "dokan-error" }, [
-                        _vm._v(
-                          "\n                " +
-                            _vm._s(_vm.getError(_vm.fieldData.label)) +
-                            "\n            "
-                        )
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm.hasValidationError(_vm.fieldData.name)
-                    ? _c("p", { staticClass: "dokan-error" }, [
-                        _vm._v(
-                          "\n              " +
-                            _vm._s(
-                              _vm.getValidationErrorMessage(_vm.fieldData.name)
-                            ) +
-                            "\n            "
-                        )
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _c("p", {
-                    staticClass: "description",
-                    domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                  })
-                ])
+                        })
+                      : _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.fieldValue[_vm.fieldData.name],
+                              expression: "fieldValue[fieldData.name]"
+                            }
+                          ],
+                          staticClass: "regular-text",
+                          class: [
+                            {
+                              "dokan-input-validation-error": _vm.hasValidationError(
+                                _vm.fieldData.name
+                              )
+                            },
+                            _vm.fieldData.class
+                          ],
+                          attrs: {
+                            id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                            name:
+                              _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                            type: _vm.fieldData.type || "text"
+                          },
+                          domProps: {
+                            value: _vm.fieldValue[_vm.fieldData.name]
+                          },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.fieldValue,
+                                _vm.fieldData.name,
+                                $event.target.value
+                              )
+                            }
+                          }
+                        }),
+                    _vm._v(" "),
+                    _vm.hasError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(_vm.getError(_vm.fieldData.label)) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.hasValidationError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(
+                                _vm.getValidationErrorMessage(
+                                  _vm.fieldData.name
+                                )
+                              ) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c("p", {
+                      staticClass: "description",
+                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+                    })
+                  ]
+                )
               ]
             : _vm._e(),
           _vm._v(" "),
@@ -10042,75 +10173,106 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _c("td", [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.fieldValue[_vm.fieldData.name],
-                        expression: "fieldValue[fieldData.name]"
-                      }
-                    ],
-                    staticClass: "regular-text",
+                _c("td", { staticClass: "tooltips-data" }, [
+                  _vm.fieldData.tooltip
+                    ? _c("span", [
+                        _c("i", {
+                          directives: [
+                            {
+                              name: "tooltip",
+                              rawName: "v-tooltip",
+                              value: _vm.fieldData.tooltip,
+                              expression: "fieldData.tooltip"
+                            }
+                          ],
+                          staticClass: "dashicons dashicons-editor-help tips",
+                          attrs: { title: _vm.fieldData.tooltip }
+                        })
+                      ])
+                    : _vm._e()
+                ]),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  {
                     class: [
-                      {
-                        "dokan-input-validation-error": _vm.hasValidationError(
-                          _vm.fieldData.name
-                        )
-                      },
-                      _vm.fieldData.class
-                    ],
-                    attrs: {
-                      type: "number",
-                      min: _vm.fieldData.min,
-                      max: _vm.fieldData.max,
-                      step: _vm.fieldData.step,
-                      id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                      name: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                    },
-                    domProps: { value: _vm.fieldValue[_vm.fieldData.name] },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.fieldValue[_vm.fieldData.name],
+                          expression: "fieldValue[fieldData.name]"
                         }
-                        _vm.$set(
-                          _vm.fieldValue,
-                          _vm.fieldData.name,
-                          $event.target.value
-                        )
+                      ],
+                      staticClass: "regular-text",
+                      class: [
+                        {
+                          "dokan-input-validation-error": _vm.hasValidationError(
+                            _vm.fieldData.name
+                          )
+                        },
+                        _vm.fieldData.class
+                      ],
+                      attrs: {
+                        type: "number",
+                        min: _vm.fieldData.min,
+                        max: _vm.fieldData.max,
+                        step: _vm.fieldData.step,
+                        id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                        name: _vm.sectionId + "[" + _vm.fieldData.name + "]"
+                      },
+                      domProps: { value: _vm.fieldValue[_vm.fieldData.name] },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.fieldValue,
+                            _vm.fieldData.name,
+                            $event.target.value
+                          )
+                        }
                       }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _vm.hasError(_vm.fieldData.name)
-                    ? _c("p", { staticClass: "dokan-error" }, [
-                        _vm._v(
-                          "\n                " +
-                            _vm._s(_vm.getError(_vm.fieldData.label)) +
-                            "\n            "
-                        )
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm.hasValidationError(_vm.fieldData.name)
-                    ? _c("p", { staticClass: "dokan-error" }, [
-                        _vm._v(
-                          "\n              " +
-                            _vm._s(
-                              _vm.getValidationErrorMessage(_vm.fieldData.name)
-                            ) +
-                            "\n            "
-                        )
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _c("p", {
-                    staticClass: "description",
-                    domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                  })
-                ])
+                    }),
+                    _vm._v(" "),
+                    _vm.hasError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(_vm.getError(_vm.fieldData.label)) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.hasValidationError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(
+                                _vm.getValidationErrorMessage(
+                                  _vm.fieldData.name
+                                )
+                              ) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c("p", {
+                      staticClass: "description",
+                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+                    })
+                  ]
+                )
               ]
             : _vm._e(),
           _vm._v(" "),
@@ -10130,73 +10292,87 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _c("td", [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.fieldValue[_vm.fieldData.name],
-                        expression: "fieldValue[fieldData.name]"
-                      }
-                    ],
-                    staticClass: "regular-text",
-                    class: {
-                      wc_input_decimal:
-                        _vm.allSettingsValues.dokan_selling.commission_type ==
-                        "percentage",
-                      wc_input_price:
-                        _vm.allSettingsValues.dokan_selling.commission_type ==
-                        "flat"
-                    },
-                    attrs: {
-                      type: "text",
-                      min: _vm.fieldData.min,
-                      id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                      name: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                    },
-                    domProps: { value: _vm.fieldValue[_vm.fieldData.name] },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
+                _c("td", { staticClass: "tooltips-data" }),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  {
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.fieldValue[_vm.fieldData.name],
+                          expression: "fieldValue[fieldData.name]"
                         }
-                        _vm.$set(
-                          _vm.fieldValue,
-                          _vm.fieldData.name,
-                          $event.target.value
-                        )
+                      ],
+                      staticClass: "regular-text",
+                      class: {
+                        wc_input_decimal:
+                          _vm.allSettingsValues.dokan_selling.commission_type ==
+                          "percentage",
+                        wc_input_price:
+                          _vm.allSettingsValues.dokan_selling.commission_type ==
+                          "flat"
+                      },
+                      attrs: {
+                        type: "text",
+                        min: _vm.fieldData.min,
+                        id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                        name: _vm.sectionId + "[" + _vm.fieldData.name + "]"
+                      },
+                      domProps: { value: _vm.fieldValue[_vm.fieldData.name] },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.fieldValue,
+                            _vm.fieldData.name,
+                            $event.target.value
+                          )
+                        }
                       }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _vm.hasError(_vm.fieldData.name)
-                    ? _c("p", { staticClass: "dokan-error" }, [
-                        _vm._v(
-                          "\n                " +
-                            _vm._s(_vm.getError(_vm.fieldData.label)) +
-                            "\n            "
-                        )
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm.hasValidationError(_vm.fieldData.name)
-                    ? _c("p", { staticClass: "dokan-error" }, [
-                        _vm._v(
-                          "\n              " +
-                            _vm._s(
-                              _vm.getValidationErrorMessage(_vm.fieldData.name)
-                            ) +
-                            "\n            "
-                        )
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _c("p", {
-                    staticClass: "description",
-                    domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                  })
-                ])
+                    }),
+                    _vm._v(" "),
+                    _vm.hasError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(_vm.getError(_vm.fieldData.label)) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.hasValidationError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(
+                                _vm.getValidationErrorMessage(
+                                  _vm.fieldData.name
+                                )
+                              ) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c("p", {
+                      staticClass: "description",
+                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+                    })
+                  ]
+                )
               ]
             : _vm._e(),
           _vm._v(" "),
@@ -10216,6 +10392,8 @@ var render = function() {
                     [_vm._v(_vm._s(_vm.fieldData.label))]
                   )
                 ]),
+                _vm._v(" "),
+                _c("td", { staticClass: "tooltips-data combine-tips-style" }),
                 _vm._v(" "),
                 _c("td", { staticClass: "percent_fee" }, [
                   _c("input", {
@@ -10263,13 +10441,11 @@ var render = function() {
                       }
                     }
                   }),
-                  _vm._v("\n                " + _vm._s("%") + "\n            ")
+                  _vm._v("\n            " + _vm._s("%") + "\n        ")
                 ]),
                 _vm._v(" "),
                 _c("td", { staticClass: "fixed_fee" }, [
-                  _vm._v(
-                    "\n                " + _vm._s("+") + "\n                "
-                  ),
+                  _vm._v("\n            " + _vm._s("+") + "\n            "),
                   _c("input", {
                     directives: [
                       {
@@ -10320,34 +10496,34 @@ var render = function() {
                 _vm.hasError(_vm.fieldData.fields.fixed_fee.name)
                   ? _c("p", { staticClass: "dokan-error combine-commission" }, [
                       _vm._v(
-                        "\n                " +
+                        "\n            " +
                           _vm._s(
                             _vm.__(
                               "Both percentage and fixed fee is required.",
                               "dokan-lite"
                             )
                           ) +
-                          "\n            "
+                          "\n        "
                       )
                     ])
                   : _vm.hasError(_vm.fieldData.fields.percent_fee.name)
                   ? _c("p", { staticClass: "dokan-error combine-commission" }, [
                       _vm._v(
-                        "\n                " +
+                        "\n            " +
                           _vm._s(
                             _vm.getError(_vm.fieldData.fields.percent_fee.label)
                           ) +
-                          "\n            "
+                          "\n        "
                       )
                     ])
                   : _vm.hasError(_vm.fieldData.fields.fixed_fee.name)
                   ? _c("p", { staticClass: "dokan-error combine-commission" }, [
                       _vm._v(
-                        "\n                " +
+                        "\n            " +
                           _vm._s(
                             _vm.getError(_vm.fieldData.fields.fixed_fee.label)
                           ) +
-                          "\n            "
+                          "\n        "
                       )
                     ])
                   : _vm._e(),
@@ -10373,66 +10549,97 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _c("td", [
-                  _c("textarea", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.fieldValue[_vm.fieldData.name],
-                        expression: "fieldValue[fieldData.name]"
-                      }
-                    ],
-                    staticClass: "regular-text",
-                    attrs: {
-                      type: "textarea",
-                      rows: _vm.fieldData.rows,
-                      cols: _vm.fieldData.cols,
-                      id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                      name: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                    },
-                    domProps: { value: _vm.fieldValue[_vm.fieldData.name] },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
+                _c("td", { staticClass: "tooltips-data" }, [
+                  _vm.fieldData.tooltip
+                    ? _c("span", [
+                        _c("i", {
+                          directives: [
+                            {
+                              name: "tooltip",
+                              rawName: "v-tooltip",
+                              value: _vm.fieldData.tooltip,
+                              expression: "fieldData.tooltip"
+                            }
+                          ],
+                          staticClass: "dashicons dashicons-editor-help tips",
+                          attrs: { title: _vm.fieldData.tooltip }
+                        })
+                      ])
+                    : _vm._e()
+                ]),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  {
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c("textarea", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.fieldValue[_vm.fieldData.name],
+                          expression: "fieldValue[fieldData.name]"
                         }
-                        _vm.$set(
-                          _vm.fieldValue,
-                          _vm.fieldData.name,
-                          $event.target.value
-                        )
+                      ],
+                      staticClass: "regular-text",
+                      attrs: {
+                        type: "textarea",
+                        rows: _vm.fieldData.rows,
+                        cols: _vm.fieldData.cols,
+                        id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                        name: _vm.sectionId + "[" + _vm.fieldData.name + "]"
+                      },
+                      domProps: { value: _vm.fieldValue[_vm.fieldData.name] },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.fieldValue,
+                            _vm.fieldData.name,
+                            $event.target.value
+                          )
+                        }
                       }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _vm.hasError(_vm.fieldData.name)
-                    ? _c("p", { staticClass: "dokan-error" }, [
-                        _vm._v(
-                          "\n                " +
-                            _vm._s(_vm.getError(_vm.fieldData.label)) +
-                            "\n            "
-                        )
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm.hasValidationError(_vm.fieldData.name)
-                    ? _c("p", { staticClass: "dokan-error" }, [
-                        _vm._v(
-                          "\n              " +
-                            _vm._s(
-                              _vm.getValidationErrorMessage(_vm.fieldData.name)
-                            ) +
-                            "\n            "
-                        )
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _c("p", {
-                    staticClass: "description",
-                    domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                  })
-                ])
+                    }),
+                    _vm._v(" "),
+                    _vm.hasError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(_vm.getError(_vm.fieldData.label)) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.hasValidationError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(
+                                _vm.getValidationErrorMessage(
+                                  _vm.fieldData.name
+                                )
+                              ) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c("p", {
+                      staticClass: "description",
+                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+                    })
+                  ]
+                )
               ]
             : _vm._e(),
           _vm._v(" "),
@@ -10450,100 +10657,135 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _c("td", [
-                  _c("fieldset", [
-                    _c(
-                      "label",
-                      {
-                        attrs: {
-                          for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                        }
-                      },
-                      [
-                        _c("input", {
+                _c("td", { staticClass: "tooltips-data" }, [
+                  _vm.fieldData.tooltip
+                    ? _c("span", [
+                        _c("i", {
                           directives: [
                             {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.fieldValue[_vm.fieldData.name],
-                              expression: "fieldValue[fieldData.name]"
+                              name: "tooltip",
+                              rawName: "v-tooltip",
+                              value: _vm.fieldData.tooltip,
+                              expression: "fieldData.tooltip"
                             }
                           ],
-                          staticClass: "checkbox",
-                          attrs: {
-                            type: "checkbox",
-                            id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                            name:
-                              _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                            "true-value": "on",
-                            "false-value": "off"
-                          },
-                          domProps: {
-                            checked: Array.isArray(
-                              _vm.fieldValue[_vm.fieldData.name]
-                            )
-                              ? _vm._i(
-                                  _vm.fieldValue[_vm.fieldData.name],
-                                  null
-                                ) > -1
-                              : _vm._q(_vm.fieldValue[_vm.fieldData.name], "on")
-                          },
-                          on: {
-                            change: function($event) {
-                              var $$a = _vm.fieldValue[_vm.fieldData.name],
-                                $$el = $event.target,
-                                $$c = $$el.checked ? "on" : "off"
-                              if (Array.isArray($$a)) {
-                                var $$v = null,
-                                  $$i = _vm._i($$a, $$v)
-                                if ($$el.checked) {
-                                  $$i < 0 &&
-                                    _vm.$set(
-                                      _vm.fieldValue,
-                                      _vm.fieldData.name,
-                                      $$a.concat([$$v])
-                                    )
-                                } else {
-                                  $$i > -1 &&
-                                    _vm.$set(
-                                      _vm.fieldValue,
-                                      _vm.fieldData.name,
-                                      $$a
-                                        .slice(0, $$i)
-                                        .concat($$a.slice($$i + 1))
-                                    )
-                                }
-                              } else {
-                                _vm.$set(
-                                  _vm.fieldValue,
-                                  _vm.fieldData.name,
-                                  $$c
-                                )
-                              }
-                            }
-                          }
-                        }),
-                        _vm._v(
-                          "\n                    " +
-                            _vm._s(_vm.fieldData.desc) +
-                            "\n                "
-                        )
-                      ]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _vm.hasValidationError(_vm.fieldData.name)
-                    ? _c("p", { staticClass: "dokan-error" }, [
-                        _vm._v(
-                          "\n              " +
-                            _vm._s(
-                              _vm.getValidationErrorMessage(_vm.fieldData.name)
-                            ) +
-                            "\n            "
-                        )
+                          staticClass: "dashicons dashicons-editor-help tips",
+                          attrs: { title: _vm.fieldData.tooltip }
+                        })
                       ])
                     : _vm._e()
-                ])
+                ]),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  {
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c("fieldset", [
+                      _c(
+                        "label",
+                        {
+                          attrs: {
+                            for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
+                          }
+                        },
+                        [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.fieldValue[_vm.fieldData.name],
+                                expression: "fieldValue[fieldData.name]"
+                              }
+                            ],
+                            staticClass: "checkbox",
+                            attrs: {
+                              type: "checkbox",
+                              id:
+                                _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                              name:
+                                _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                              "true-value": "on",
+                              "false-value": "off"
+                            },
+                            domProps: {
+                              checked: Array.isArray(
+                                _vm.fieldValue[_vm.fieldData.name]
+                              )
+                                ? _vm._i(
+                                    _vm.fieldValue[_vm.fieldData.name],
+                                    null
+                                  ) > -1
+                                : _vm._q(
+                                    _vm.fieldValue[_vm.fieldData.name],
+                                    "on"
+                                  )
+                            },
+                            on: {
+                              change: function($event) {
+                                var $$a = _vm.fieldValue[_vm.fieldData.name],
+                                  $$el = $event.target,
+                                  $$c = $$el.checked ? "on" : "off"
+                                if (Array.isArray($$a)) {
+                                  var $$v = null,
+                                    $$i = _vm._i($$a, $$v)
+                                  if ($$el.checked) {
+                                    $$i < 0 &&
+                                      _vm.$set(
+                                        _vm.fieldValue,
+                                        _vm.fieldData.name,
+                                        $$a.concat([$$v])
+                                      )
+                                  } else {
+                                    $$i > -1 &&
+                                      _vm.$set(
+                                        _vm.fieldValue,
+                                        _vm.fieldData.name,
+                                        $$a
+                                          .slice(0, $$i)
+                                          .concat($$a.slice($$i + 1))
+                                      )
+                                  }
+                                } else {
+                                  _vm.$set(
+                                    _vm.fieldValue,
+                                    _vm.fieldData.name,
+                                    $$c
+                                  )
+                                }
+                              }
+                            }
+                          }),
+                          _vm._v(
+                            "\n                    " +
+                              _vm._s(_vm.fieldData.desc) +
+                              "\n                "
+                          )
+                        ]
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _vm.hasValidationError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(
+                                _vm.getValidationErrorMessage(
+                                  _vm.fieldData.name
+                                )
+                              ) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e()
+                  ]
+                )
               ]
             : _vm._e(),
           _vm._v(" "),
@@ -10561,146 +10803,181 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _c("td", [
-                  _c(
-                    "fieldset",
-                    [
-                      _vm._l(_vm.fieldData.options, function(
-                        optionVal,
-                        optionKey
-                      ) {
-                        return [
-                          _c(
-                            "label",
+                _c("td", { staticClass: "tooltips-data" }, [
+                  _vm.fieldData.tooltip
+                    ? _c("span", [
+                        _c("i", {
+                          directives: [
                             {
-                              attrs: {
-                                for:
-                                  _vm.sectionId +
-                                  "[" +
-                                  _vm.fieldData.name +
-                                  "][" +
-                                  optionKey +
-                                  "]"
-                              }
-                            },
-                            [
-                              _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value:
-                                      _vm.fieldValue[_vm.fieldData.name][
-                                        optionKey
-                                      ],
-                                    expression:
-                                      "fieldValue[fieldData.name][optionKey]"
-                                  }
-                                ],
-                                staticClass: "checkbox",
-                                attrs: {
-                                  type: "checkbox",
-                                  id:
-                                    _vm.sectionId +
-                                    "[" +
-                                    _vm.fieldData.name +
-                                    "][" +
-                                    optionKey +
-                                    "]",
-                                  name:
-                                    _vm.sectionId +
-                                    "[" +
-                                    _vm.fieldData.name +
-                                    "][" +
-                                    optionKey +
-                                    "]",
-                                  "true-value": optionKey,
-                                  "false-value": ""
-                                },
-                                domProps: {
-                                  checked: Array.isArray(
-                                    _vm.fieldValue[_vm.fieldData.name][
-                                      optionKey
-                                    ]
-                                  )
-                                    ? _vm._i(
-                                        _vm.fieldValue[_vm.fieldData.name][
-                                          optionKey
-                                        ],
-                                        null
-                                      ) > -1
-                                    : _vm._q(
-                                        _vm.fieldValue[_vm.fieldData.name][
-                                          optionKey
-                                        ],
-                                        optionKey
-                                      )
-                                },
-                                on: {
-                                  change: function($event) {
-                                    var $$a =
-                                        _vm.fieldValue[_vm.fieldData.name][
-                                          optionKey
-                                        ],
-                                      $$el = $event.target,
-                                      $$c = $$el.checked ? optionKey : ""
-                                    if (Array.isArray($$a)) {
-                                      var $$v = null,
-                                        $$i = _vm._i($$a, $$v)
-                                      if ($$el.checked) {
-                                        $$i < 0 &&
-                                          _vm.$set(
-                                            _vm.fieldValue[_vm.fieldData.name],
-                                            optionKey,
-                                            $$a.concat([$$v])
-                                          )
-                                      } else {
-                                        $$i > -1 &&
-                                          _vm.$set(
-                                            _vm.fieldValue[_vm.fieldData.name],
-                                            optionKey,
-                                            $$a
-                                              .slice(0, $$i)
-                                              .concat($$a.slice($$i + 1))
-                                          )
-                                      }
-                                    } else {
-                                      _vm.$set(
-                                        _vm.fieldValue[_vm.fieldData.name],
-                                        optionKey,
-                                        $$c
-                                      )
-                                    }
-                                  }
-                                }
-                              }),
-                              _vm._v(
-                                "\n                        " +
-                                  _vm._s(optionVal) +
-                                  "\n                    "
-                              )
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c("br")
-                        ]
-                      })
-                    ],
-                    2
-                  ),
-                  _vm._v(" "),
-                  _vm.hasValidationError(_vm.fieldData.name)
-                    ? _c("p", { staticClass: "dokan-error" }, [
-                        _vm._v(
-                          "\n              " +
-                            _vm._s(
-                              _vm.getValidationErrorMessage(_vm.fieldData.name)
-                            ) +
-                            "\n            "
-                        )
+                              name: "tooltip",
+                              rawName: "v-tooltip",
+                              value: _vm.fieldData.tooltip,
+                              expression: "fieldData.tooltip"
+                            }
+                          ],
+                          staticClass: "dashicons dashicons-editor-help tips",
+                          attrs: { title: _vm.fieldData.tooltip }
+                        })
                       ])
                     : _vm._e()
-                ])
+                ]),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  {
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c(
+                      "fieldset",
+                      [
+                        _vm._l(_vm.fieldData.options, function(
+                          optionVal,
+                          optionKey
+                        ) {
+                          return [
+                            _c(
+                              "label",
+                              {
+                                attrs: {
+                                  for:
+                                    _vm.sectionId +
+                                    "[" +
+                                    _vm.fieldData.name +
+                                    "][" +
+                                    optionKey +
+                                    "]"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value:
+                                        _vm.fieldValue[_vm.fieldData.name][
+                                          optionKey
+                                        ],
+                                      expression:
+                                        "fieldValue[fieldData.name][optionKey]"
+                                    }
+                                  ],
+                                  staticClass: "checkbox",
+                                  attrs: {
+                                    type: "checkbox",
+                                    id:
+                                      _vm.sectionId +
+                                      "[" +
+                                      _vm.fieldData.name +
+                                      "][" +
+                                      optionKey +
+                                      "]",
+                                    name:
+                                      _vm.sectionId +
+                                      "[" +
+                                      _vm.fieldData.name +
+                                      "][" +
+                                      optionKey +
+                                      "]",
+                                    "true-value": optionKey,
+                                    "false-value": ""
+                                  },
+                                  domProps: {
+                                    checked: Array.isArray(
+                                      _vm.fieldValue[_vm.fieldData.name][
+                                        optionKey
+                                      ]
+                                    )
+                                      ? _vm._i(
+                                          _vm.fieldValue[_vm.fieldData.name][
+                                            optionKey
+                                          ],
+                                          null
+                                        ) > -1
+                                      : _vm._q(
+                                          _vm.fieldValue[_vm.fieldData.name][
+                                            optionKey
+                                          ],
+                                          optionKey
+                                        )
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      var $$a =
+                                          _vm.fieldValue[_vm.fieldData.name][
+                                            optionKey
+                                          ],
+                                        $$el = $event.target,
+                                        $$c = $$el.checked ? optionKey : ""
+                                      if (Array.isArray($$a)) {
+                                        var $$v = null,
+                                          $$i = _vm._i($$a, $$v)
+                                        if ($$el.checked) {
+                                          $$i < 0 &&
+                                            _vm.$set(
+                                              _vm.fieldValue[
+                                                _vm.fieldData.name
+                                              ],
+                                              optionKey,
+                                              $$a.concat([$$v])
+                                            )
+                                        } else {
+                                          $$i > -1 &&
+                                            _vm.$set(
+                                              _vm.fieldValue[
+                                                _vm.fieldData.name
+                                              ],
+                                              optionKey,
+                                              $$a
+                                                .slice(0, $$i)
+                                                .concat($$a.slice($$i + 1))
+                                            )
+                                        }
+                                      } else {
+                                        _vm.$set(
+                                          _vm.fieldValue[_vm.fieldData.name],
+                                          optionKey,
+                                          $$c
+                                        )
+                                      }
+                                    }
+                                  }
+                                }),
+                                _vm._v(
+                                  "\n                        " +
+                                    _vm._s(optionVal) +
+                                    "\n                    "
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c("br")
+                          ]
+                        })
+                      ],
+                      2
+                    ),
+                    _vm._v(" "),
+                    _vm.hasValidationError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(
+                                _vm.getValidationErrorMessage(
+                                  _vm.fieldData.name
+                                )
+                              ) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e()
+                  ]
+                )
               ]
             : _vm._e(),
           _vm._v(" "),
@@ -10720,6 +10997,42 @@ var render = function() {
                 _vm._v(" "),
                 _c(
                   "td",
+                  {
+                    class: [
+                      "combine" === _vm.fieldData.type
+                        ? "tooltips-data combine-tips-style"
+                        : "tooltips-data"
+                    ]
+                  },
+                  [
+                    _vm.fieldData.tooltip
+                      ? _c("span", [
+                          _c("i", {
+                            directives: [
+                              {
+                                name: "tooltip",
+                                rawName: "v-tooltip",
+                                value: _vm.fieldData.tooltip,
+                                expression: "fieldData.tooltip"
+                              }
+                            ],
+                            staticClass: "dashicons dashicons-editor-help tips",
+                            attrs: { title: _vm.fieldData.tooltip }
+                          })
+                        ])
+                      : _vm._e()
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  {
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
                   [
                     !_vm.fieldData.grouped
                       ? _c(
@@ -10866,7 +11179,7 @@ var render = function() {
                     _vm.hasValidationError(_vm.fieldData.name)
                       ? _c("p", { staticClass: "dokan-error" }, [
                           _vm._v(
-                            "\n              " +
+                            "\n                " +
                               _vm._s(
                                 _vm.getValidationErrorMessage(
                                   _vm.fieldData.name
@@ -10901,70 +11214,82 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _c("td", [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.fieldValue[_vm.fieldData.name],
-                        expression: "fieldValue[fieldData.name]"
-                      }
-                    ],
-                    staticClass: "regular-text wpsa-url",
-                    attrs: {
-                      type: "text",
-                      id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                      name: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                    },
-                    domProps: { value: _vm.fieldValue[_vm.fieldData.name] },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
+                _c("td", { staticClass: "tooltips-data" }),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  {
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.fieldValue[_vm.fieldData.name],
+                          expression: "fieldValue[fieldData.name]"
                         }
-                        _vm.$set(
-                          _vm.fieldValue,
-                          _vm.fieldData.name,
-                          $event.target.value
-                        )
+                      ],
+                      staticClass: "regular-text wpsa-url",
+                      attrs: {
+                        type: "text",
+                        id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                        name: _vm.sectionId + "[" + _vm.fieldData.name + "]"
+                      },
+                      domProps: { value: _vm.fieldValue[_vm.fieldData.name] },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.fieldValue,
+                            _vm.fieldData.name,
+                            $event.target.value
+                          )
+                        }
                       }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c("input", {
-                    staticClass: "button wpsa-browse",
-                    attrs: { type: "button", value: "Choose File" },
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault()
-                        return _vm.$emit(
-                          "openMedia",
-                          {
-                            sectionId: _vm.sectionId,
-                            name: _vm.fieldData.name
-                          },
-                          $event
-                        )
+                    }),
+                    _vm._v(" "),
+                    _c("input", {
+                      staticClass: "button wpsa-browse",
+                      attrs: { type: "button", value: "Choose File" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.$emit(
+                            "openMedia",
+                            {
+                              sectionId: _vm.sectionId,
+                              name: _vm.fieldData.name
+                            },
+                            $event
+                          )
+                        }
                       }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _vm.hasError(_vm.fieldData.name)
-                    ? _c("p", { staticClass: "dokan-error" }, [
-                        _vm._v(
-                          "\n                " +
-                            _vm._s(_vm.getError(_vm.fieldData.label)) +
-                            "\n            "
-                        )
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _c("p", {
-                    staticClass: "description",
-                    domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                  })
-                ])
+                    }),
+                    _vm._v(" "),
+                    _vm.hasError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(_vm.getError(_vm.fieldData.label)) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c("p", {
+                      staticClass: "description",
+                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+                    })
+                  ]
+                )
               ]
             : _vm._e(),
           _vm._v(" "),
@@ -10982,8 +11307,17 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
+                _c("td", { staticClass: "tooltips-data" }),
+                _vm._v(" "),
                 _c(
                   "td",
+                  {
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
                   [
                     _c("color-picker", {
                       model: {
@@ -11029,22 +11363,51 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _c("td", [
-                  _vm.hasError(_vm.fieldData.name)
-                    ? _c("p", { staticClass: "dokan-error" }, [
-                        _vm._v(
-                          "\n                " +
-                            _vm._s(_vm.getError(_vm.fieldData.label)) +
-                            "\n            "
-                        )
+                _c("td", { staticClass: "tooltips-data" }, [
+                  _vm.fieldData.tooltip
+                    ? _c("span", [
+                        _c("i", {
+                          directives: [
+                            {
+                              name: "tooltip",
+                              rawName: "v-tooltip",
+                              value: _vm.fieldData.tooltip,
+                              expression: "fieldData.tooltip"
+                            }
+                          ],
+                          staticClass: "dashicons dashicons-editor-help tips",
+                          attrs: { title: _vm.fieldData.tooltip }
+                        })
                       ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _c("p", {
-                    staticClass: "description",
-                    domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                  })
-                ])
+                    : _vm._e()
+                ]),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  {
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _vm.hasError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(_vm.getError(_vm.fieldData.label)) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c("p", {
+                      staticClass: "description",
+                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+                    })
+                  ]
+                )
               ]
             : _vm._e(),
           _vm._v(" "),
@@ -11086,7 +11449,9 @@ var render = function() {
                       )
                     ])
                   ]
-                )
+                ),
+                _vm._v(" "),
+                _c("td", { staticClass: "tooltips-data" })
               ]
             : _vm._e(),
           _vm._v(" "),
@@ -11104,85 +11469,98 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _c("td", { staticClass: "dokan-settings-field-type-radio" }, [
-                  _c(
-                    "fieldset",
-                    [
-                      _vm._l(_vm.fieldData.options, function(
-                        optionVal,
-                        optionKey
-                      ) {
-                        return [
-                          _c(
-                            "label",
-                            {
-                              attrs: {
-                                for:
-                                  _vm.sectionId +
-                                  "[" +
-                                  _vm.fieldData.name +
-                                  "][" +
-                                  optionKey +
-                                  "]"
-                              }
-                            },
-                            [
-                              _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.fieldValue[_vm.fieldData.name],
-                                    expression: "fieldValue[fieldData.name]"
-                                  }
-                                ],
-                                staticClass: "radio",
+                _c("td", { staticClass: "tooltips-data" }),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  {
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : "",
+                      "dokan-settings-field-type-radio"
+                    ]
+                  },
+                  [
+                    _c(
+                      "fieldset",
+                      [
+                        _vm._l(_vm.fieldData.options, function(
+                          optionVal,
+                          optionKey
+                        ) {
+                          return [
+                            _c(
+                              "label",
+                              {
                                 attrs: {
-                                  type: "radio",
-                                  id:
+                                  for:
                                     _vm.sectionId +
                                     "[" +
                                     _vm.fieldData.name +
                                     "][" +
                                     optionKey +
-                                    "]",
-                                  name: optionKey
-                                },
-                                domProps: {
-                                  value: optionKey,
-                                  checked: _vm._q(
-                                    _vm.fieldValue[_vm.fieldData.name],
-                                    optionKey
-                                  )
-                                },
-                                on: {
-                                  change: function($event) {
-                                    return _vm.$set(
-                                      _vm.fieldValue,
-                                      _vm.fieldData.name,
+                                    "]"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.fieldValue[_vm.fieldData.name],
+                                      expression: "fieldValue[fieldData.name]"
+                                    }
+                                  ],
+                                  staticClass: "radio",
+                                  attrs: {
+                                    type: "radio",
+                                    id:
+                                      _vm.sectionId +
+                                      "[" +
+                                      _vm.fieldData.name +
+                                      "][" +
+                                      optionKey +
+                                      "]",
+                                    name: optionKey
+                                  },
+                                  domProps: {
+                                    value: optionKey,
+                                    checked: _vm._q(
+                                      _vm.fieldValue[_vm.fieldData.name],
                                       optionKey
                                     )
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      return _vm.$set(
+                                        _vm.fieldValue,
+                                        _vm.fieldData.name,
+                                        optionKey
+                                      )
+                                    }
                                   }
-                                }
-                              }),
-                              _vm._v(
-                                " " +
-                                  _vm._s(optionVal) +
-                                  "\n                    "
-                              )
-                            ]
-                          )
-                        ]
-                      })
-                    ],
-                    2
-                  ),
-                  _vm._v(" "),
-                  _c("p", {
-                    staticClass: "description",
-                    domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                  })
-                ])
+                                }),
+                                _vm._v(
+                                  " " +
+                                    _vm._s(optionVal) +
+                                    "\n                    "
+                                )
+                              ]
+                            )
+                          ]
+                        })
+                      ],
+                      2
+                    ),
+                    _vm._v(" "),
+                    _c("p", {
+                      staticClass: "description",
+                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+                    })
+                  ]
+                )
               ]
             : _vm._e(),
           _vm._v(" "),
@@ -11200,9 +11578,35 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
+                _c("td", { staticClass: "tooltips-data" }, [
+                  _vm.fieldData.tooltip
+                    ? _c("span", [
+                        _c("i", {
+                          directives: [
+                            {
+                              name: "tooltip",
+                              rawName: "v-tooltip",
+                              value: _vm.fieldData.tooltip,
+                              expression: "fieldData.tooltip"
+                            }
+                          ],
+                          staticClass: "dashicons dashicons-editor-help tips",
+                          attrs: { title: _vm.fieldData.tooltip }
+                        })
+                      ])
+                    : _vm._e()
+                ]),
+                _vm._v(" "),
                 _c(
                   "td",
-                  { attrs: { width: "72%" } },
+                  {
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ],
+                    attrs: { width: "72%" }
+                  },
                   [
                     _c("text-editor", {
                       model: {
@@ -11238,96 +11642,128 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _c("td", { attrs: { width: "72%" } }, [
-                  _c(
-                    "ul",
-                    { staticClass: "dokan-settings-repeatable-list" },
-                    _vm._l(_vm.fieldValue[_vm.fieldData.name], function(
-                      optionVal,
-                      optionKey
-                    ) {
-                      return _vm.fieldValue[_vm.fieldData.name]
-                        ? _c("li", [
-                            _vm._v(
-                              "\n                    " +
-                                _vm._s(optionVal.value) +
-                                " "
-                            ),
-                            !optionVal.must_use
-                              ? _c("span", {
-                                  staticClass:
-                                    "dashicons dashicons-no-alt remove-item",
-                                  on: {
-                                    click: function($event) {
-                                      $event.preventDefault()
-                                      return _vm.removeItem(
-                                        optionKey,
-                                        _vm.fieldData.name
-                                      )
-                                    }
-                                  }
-                                })
-                              : _vm._e(),
-                            _vm._v(" "),
-                            _c("span", {
-                              staticClass: "repeatable-item-description",
-                              domProps: { innerHTML: _vm._s(optionVal.desc) }
-                            })
-                          ])
-                        : _vm._e()
-                    }),
-                    0
-                  ),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.repeatableItem[_vm.fieldData.name],
-                        expression: "repeatableItem[fieldData.name]"
-                      }
+                _c("td", { staticClass: "tooltips-data" }, [
+                  _vm.fieldData.tooltip
+                    ? _c("span", [
+                        _c("i", {
+                          directives: [
+                            {
+                              name: "tooltip",
+                              rawName: "v-tooltip",
+                              value: _vm.fieldData.tooltip,
+                              expression: "fieldData.tooltip"
+                            }
+                          ],
+                          staticClass: "dashicons dashicons-editor-help tips",
+                          attrs: { title: _vm.fieldData.tooltip }
+                        })
+                      ])
+                    : _vm._e()
+                ]),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  {
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
                     ],
-                    staticClass: "regular-text",
-                    attrs: { type: "text" },
-                    domProps: { value: _vm.repeatableItem[_vm.fieldData.name] },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
+                    attrs: { width: "72%" }
+                  },
+                  [
+                    _c(
+                      "ul",
+                      { staticClass: "dokan-settings-repeatable-list" },
+                      _vm._l(_vm.fieldValue[_vm.fieldData.name], function(
+                        optionVal,
+                        optionKey
+                      ) {
+                        return _vm.fieldValue[_vm.fieldData.name]
+                          ? _c("li", [
+                              _vm._v(
+                                "\n                    " +
+                                  _vm._s(optionVal.value) +
+                                  " "
+                              ),
+                              !optionVal.must_use
+                                ? _c("span", {
+                                    staticClass:
+                                      "dashicons dashicons-no-alt remove-item",
+                                    on: {
+                                      click: function($event) {
+                                        $event.preventDefault()
+                                        return _vm.removeItem(
+                                          optionKey,
+                                          _vm.fieldData.name
+                                        )
+                                      }
+                                    }
+                                  })
+                                : _vm._e(),
+                              _vm._v(" "),
+                              _c("span", {
+                                staticClass: "repeatable-item-description",
+                                domProps: { innerHTML: _vm._s(optionVal.desc) }
+                              })
+                            ])
+                          : _vm._e()
+                      }),
+                      0
+                    ),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.repeatableItem[_vm.fieldData.name],
+                          expression: "repeatableItem[fieldData.name]"
                         }
-                        _vm.$set(
-                          _vm.repeatableItem,
-                          _vm.fieldData.name,
-                          $event.target.value
-                        )
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c(
-                    "a",
-                    {
-                      staticClass: "button dokan-repetable-add-item-btn",
-                      attrs: { href: "#" },
+                      ],
+                      staticClass: "regular-text",
+                      attrs: { type: "text" },
+                      domProps: {
+                        value: _vm.repeatableItem[_vm.fieldData.name]
+                      },
                       on: {
-                        click: function($event) {
-                          $event.preventDefault()
-                          return _vm.addItem(
-                            _vm.fieldData.type,
-                            _vm.fieldData.name
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.repeatableItem,
+                            _vm.fieldData.name,
+                            $event.target.value
                           )
                         }
                       }
-                    },
-                    [_vm._v("+")]
-                  ),
-                  _vm._v(" "),
-                  _c("p", {
-                    staticClass: "description",
-                    domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                  })
-                ])
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "a",
+                      {
+                        staticClass: "button dokan-repetable-add-item-btn",
+                        attrs: { href: "#" },
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.addItem(
+                              _vm.fieldData.type,
+                              _vm.fieldData.name
+                            )
+                          }
+                        }
+                      },
+                      [_vm._v("+")]
+                    ),
+                    _vm._v(" "),
+                    _c("p", {
+                      staticClass: "description",
+                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+                    })
+                  ]
+                )
               ]
             : _vm._e(),
           _vm._v(" "),
@@ -11345,105 +11781,120 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _c("td", [
-                  _c(
-                    "div",
-                    { staticClass: "radio-image-container" },
-                    [
-                      _vm._l(_vm.fieldData.options, function(image, name) {
-                        return [
-                          _c(
-                            "label",
-                            {
-                              staticClass: "radio-image",
-                              class: {
-                                active:
-                                  _vm.fieldValue[_vm.fieldData.name] === name,
-                                "not-active":
-                                  _vm.fieldValue[_vm.fieldData.name] !== name
-                              }
-                            },
-                            [
-                              _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.fieldValue[_vm.fieldData.name],
-                                    expression: "fieldValue[fieldData.name]"
-                                  }
-                                ],
-                                staticClass: "radio",
-                                attrs: {
-                                  type: "radio",
-                                  name: _vm.fieldData.name
-                                },
-                                domProps: {
-                                  value: name,
-                                  checked: _vm._q(
-                                    _vm.fieldValue[_vm.fieldData.name],
-                                    name
-                                  )
-                                },
-                                on: {
-                                  change: function($event) {
-                                    return _vm.$set(
-                                      _vm.fieldValue,
-                                      _vm.fieldData.name,
+                _c("td", { staticClass: "tooltips-data" }),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  {
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c(
+                      "div",
+                      { staticClass: "radio-image-container" },
+                      [
+                        _vm._l(_vm.fieldData.options, function(image, name) {
+                          return [
+                            _c(
+                              "label",
+                              {
+                                staticClass: "radio-image",
+                                class: {
+                                  active:
+                                    _vm.fieldValue[_vm.fieldData.name] === name,
+                                  "not-active":
+                                    _vm.fieldValue[_vm.fieldData.name] !== name
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.fieldValue[_vm.fieldData.name],
+                                      expression: "fieldValue[fieldData.name]"
+                                    }
+                                  ],
+                                  staticClass: "radio",
+                                  attrs: {
+                                    type: "radio",
+                                    name: _vm.fieldData.name
+                                  },
+                                  domProps: {
+                                    value: name,
+                                    checked: _vm._q(
+                                      _vm.fieldValue[_vm.fieldData.name],
                                       name
                                     )
-                                  }
-                                }
-                              }),
-                              _vm._v(" "),
-                              _c(
-                                "span",
-                                { staticClass: "current-option-indicator" },
-                                [
-                                  _c("span", {
-                                    staticClass: "dashicons dashicons-yes"
-                                  }),
-                                  _vm._v(
-                                    " " + _vm._s(_vm.__("Active", "dokan-lite"))
-                                  )
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c("img", { attrs: { src: image } }),
-                              _vm._v(" "),
-                              _c("span", { staticClass: "active-option" }, [
-                                _c(
-                                  "button",
-                                  {
-                                    staticClass:
-                                      "button button-primary button-hero",
-                                    attrs: { type: "button" },
-                                    on: {
-                                      click: function($event) {
-                                        $event.preventDefault()
-                                        _vm.fieldValue[
-                                          _vm.fieldData.name
-                                        ] = name
-                                      }
-                                    }
                                   },
+                                  on: {
+                                    change: function($event) {
+                                      return _vm.$set(
+                                        _vm.fieldValue,
+                                        _vm.fieldData.name,
+                                        name
+                                      )
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c(
+                                  "span",
+                                  { staticClass: "current-option-indicator" },
                                   [
+                                    _c("span", {
+                                      staticClass: "dashicons dashicons-yes"
+                                    }),
                                     _vm._v(
-                                      "\n                                " +
-                                        _vm._s(_vm.__("Select", "dokan-lite")) +
-                                        "\n                            "
+                                      " " +
+                                        _vm._s(_vm.__("Active", "dokan-lite"))
                                     )
                                   ]
-                                )
-                              ])
-                            ]
-                          )
-                        ]
-                      })
-                    ],
-                    2
-                  )
-                ])
+                                ),
+                                _vm._v(" "),
+                                _c("img", { attrs: { src: image } }),
+                                _vm._v(" "),
+                                _c("span", { staticClass: "active-option" }, [
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass:
+                                        "button button-primary button-hero",
+                                      attrs: { type: "button" },
+                                      on: {
+                                        click: function($event) {
+                                          $event.preventDefault()
+                                          _vm.fieldValue[
+                                            _vm.fieldData.name
+                                          ] = name
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n                                " +
+                                          _vm._s(
+                                            _vm.__("Select", "dokan-lite")
+                                          ) +
+                                          "\n                            "
+                                      )
+                                    ]
+                                  )
+                                ])
+                              ]
+                            )
+                          ]
+                        })
+                      ],
+                      2
+                    )
+                  ]
+                )
               ]
             : _vm._e(),
           _vm._v(" "),
@@ -11461,8 +11912,17 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
+                _c("td", { staticClass: "tooltips-data" }),
+                _vm._v(" "),
                 _c(
                   "td",
+                  {
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
                   [
                     _c("input", {
                       attrs: {
