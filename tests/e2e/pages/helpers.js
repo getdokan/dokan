@@ -13,7 +13,7 @@ var admin_current_balance;
 var admin_actual_balance;
 var auction_check_box;
 var auction_proxy_check;
-
+var regex= /[$,]/gm;
 
 const { I, loginAs } = inject();
 
@@ -70,16 +70,17 @@ module.exports = {
         I.click('Login');
         I.seeInCurrentUrl('/dashboard');
     },
-    async checkExistingBalance() {
-        I.amOnPage('/dashboard/withdraw');
-        const bal = await I.grabTextFrom(locator.VendorBalance);
-        existing_balance = parseInt(bal.replace(/[, \$৳]+/g, ""));
-        console.log('Existing Balance:', existing_balance);
-    },
+    // async checkExistingBalance() {
+    //     I.amOnPage('/dashboard/withdraw');
+    //     const bal = await I.grabTextFrom(locator.VendorBalance);
+    //     // existing_balance = parseInt(bal.replace(/[, \$৳]+/g, ""));
+    //     existing_balance = parseFloat(bal.replace(regex, ''));
+    //     console.log('Existing Balance:', existing_balance);
+    // },
     SelectSingleProduct() {
         I.amOnPage('/shop/');
         I.click('//main[@id="main"]/ul/li/a/img');
-        I.click('Add to cart');
+        // I.click('Add to cart');
         // I.click('simple_product');
     },
     SelectMultipleProduct() {
@@ -87,7 +88,7 @@ module.exports = {
         // I.selectOption(locator.SortingDropdown, 'price-desc');
         // I.click(locator.ThirdProductLocator);
         I.click('//main[@id="main"]/ul/li/a/img');
-        I.click('Add to cart');
+        // I.click('Add to cart');
     },
     SelectMultipleProductMultiplrVendor() {
         I.amOnPage('/store/');
@@ -116,8 +117,9 @@ module.exports = {
 
 
     async placeOrder() {
-        I.amOnPage('/cart/');
-        // I.click(locator.ViewCart); //View Cart
+        I.click('Add to cart');
+        // I.amOnPage('/cart/');
+        I.click(locator.ViewCart); //View Cart
         I.click(locator.ProceedCheckout); // Proceed To checkout
         I.seeInCurrentUrl('/checkout');
         I.fillField(locator.BillingFirstName, locator.FirstName);
@@ -126,7 +128,7 @@ module.exports = {
         I.fillField(locator.BillingAddress, 'United States');
         I.fillField(locator.BillingCity, faker.address.city());
         I.fillField(locator.BillingPhone, faker.phone.phoneNumberFormat());
-        I.fillField(locator.BillingEmail, locator.EmailAddress);
+        I.fillField(locator.BillingEmail, locator.CustomerEmailAddress);
         I.fillField('#billing_postcode',faker.random.arrayElement(['10010','10001','10005']));
         I.wait(5);
 
@@ -148,14 +150,15 @@ module.exports = {
 
 
 
-    async grabCurrentEarnings() {
-        I.amOnPage('/dashboard/orders');
-        //I.click('Orders');
-        let earning = await I.grabTextFrom(locator.CurrentEarning);
-        current_earnings = parseInt(earning.replace(/[, \$৳]+/g, ""));
-        console.log('Current Earning ', current_earnings);
+    // async grabCurrentEarnings() {
+    //     I.amOnPage('/dashboard/orders');
+    //     //I.click('Orders');
+    //     let earning = await I.grabTextFrom(locator.CurrentEarning);
+    //     // current_earnings = parseInt(earning.replace(/[, \$৳]+/g, ""));
+    //     current_earnings = parseFloat(earning.replace(regex, ''));
+    //     console.log('Current Earning ', current_earnings);
 
-    },
+    // },
 
     productsorting()
     { 
@@ -169,48 +172,64 @@ module.exports = {
         I.wait(5);
 
     },
-    async balanceAssertEqual() {
-        // this.grabCurrentEarnings();
-        I.amOnPage('/dashboard/withdraw');
-        current_balance = existing_balance + current_earnings;
-        console.log('Current balance', current_balance);
-        const up_bal = await I.grabTextFrom(locator.VendorBalance);
-        actual_balance = parseInt(up_bal.replace(/[, \$৳]+/g, ""));
-        strict.equal(current_balance, actual_balance);
-        I.say('Calculation matched');
-        console.log('Existing Balance', existing_balance, '+', 'Current Earning', current_earnings, '=', 'Actual Balance', existing_balance + current_earnings);
+    // async balanceAssertEqual() {
+    //     // this.grabCurrentEarnings();
+    //     I.amOnPage('/dashboard/withdraw');
+    //     current_balance = existing_balance + current_earnings;
+    //     console.log('Current balance', current_balance);
+    //     console.log('Current balance2', existing_balance ,current_earnings);
+        
+    //     const up_bal = await I.grabTextFrom(locator.VendorBalance);
+    //     // actual_balance = parseInt(up_bal.replace(/[, \$৳]+/g, ""));
+    //     actual_balance = parseFloat(up_bal.replace(regex, ''));
+    //     strict.equal(current_balance, actual_balance);
+    //     I.say('Calculation matched');
+    //     console.log('Existing Balance', existing_balance, '+', 'Current Earning', current_earnings, '=', 'Actual Balance', existing_balance + current_earnings);
 
-    },
-    async adminBalanceCheck() {
-        I.amOnPage('/wp-admin/admin.php?page=dokan#/reports');
-        I.scrollTo(locator.AdminBalance);
-        let ad_bal = await I.grabTextFrom(locator.AdminBalance);
-        admin_existing_balance = parseInt(ad_bal.replace('৳', "").replace('$', "").trim());
-        console.log('Admin Existing Balance:', admin_existing_balance);
-    },
-    async getAdminComission() {
-        I.amOnPage('/wp-admin/admin.php?page=dokan#/reports?tab=logs');
-        let ad_com = await I.grabTextFrom(locator.AdminComission);
-        admin_current_commission = parseInt(ad_com.replace('৳', "").replace('$', "").trim());
-        console.log('Admin Current Commission:', admin_current_commission);
-    },
-    async checkAdminCalculation() {
-        I.amOnPage('/wp-admin/admin.php?page=dokan#/reports');
-        I.scrollTo(locator.AdminBalance);
-        admin_current_balance = admin_existing_balance + admin_current_commission;
-        console.log('Admin Current Balance:', admin_current_balance);
-        let ad_actual_bal = await I.grabTextFrom(locator.AdminBalance);
-        admin_actual_balance = parseInt(ad_actual_bal.replace('৳', "").replace('$', "").trim());
-        strict.equal(admin_current_balance, admin_actual_balance, "Message Done");
-        console.log('Admin Existing Balance', admin_existing_balance, '+', 'Current Comission', admin_current_commission, '=', 'Admin Actual Balance', admin_existing_balance + admin_current_commission);
-        I.say('Calculation matched');
-    },
+    // },
+    // async adminBalanceCheck() {
+    //     I.amOnPage('/wp-admin/admin.php?page=dokan#/reports');
+    //     I.wait(5);
+    //     I.scrollTo(locator.AdminBalance);
+    //     let ad_bal = await I.grabTextFrom(locator.AdminBalance);
+    //     // admin_existing_balance = parseInt(ad_bal.replace('৳', "").replace('$', "").trim());
+    //     // console.log('Admin Existing Balance:', admin_existing_balance);
+        
+    //     admin_existing_balance = parseFloat(ad_bal.replace(regex, ''));
+    //     console.log('Admin Existing Balance:', admin_existing_balance);
+    // },
+    // async getAdminComission() {
+    //     I.amOnPage('/wp-admin/admin.php?page=dokan#/reports?tab=logs');
+    //     I.wait(5);
+    //     let ad_com = await I.grabTextFrom(locator.AdminComission);
+    //     // admin_current_commission = parseInt(ad_com.replace('৳', "").replace('$', "").trim());
+    //     // console.log('Admin Current Commission:', admin_current_commission);
+
+
+    //     admin_current_commission = parseFloat(ad_com.replace(regex, ''));
+    //     console.log('Admin Current Commission:', admin_current_commission);
+    // },
+    // async checkAdminCalculation() {
+    //     I.amOnPage('/wp-admin/admin.php?page=dokan#/reports');
+    //     I.wait(5);
+    //     I.scrollTo(locator.AdminBalance);
+    //     admin_current_balance = admin_existing_balance + admin_current_commission;
+    //     console.log('Admin Current Balance:', admin_current_balance);
+    //     let ad_actual_bal = await I.grabTextFrom(locator.AdminBalance);
+    //     // admin_actual_balance = parseInt(ad_actual_bal.replace('৳', "").replace('$', "").trim());
+        
+    //     admin_actual_balance = parseFloat(ad_actual_bal.replace(regex, ''));
+    //     strict.equal(admin_current_balance, admin_actual_balance, "Message Done");
+    //     console.log('Admin Existing Balance', admin_existing_balance, '+', 'Current Comission', admin_current_commission, '=', 'Admin Actual Balance', admin_existing_balance + admin_current_commission);
+    //     I.say('Calculation matched');
+    // },
     vendorlogout() {
         I.moveCursorTo(locator.VendorMoveCursor);
         I.click(locator.VendorLogout);
     },
     customerlogout() {
-        I.moveCursorTo(locator.CustomerMoveCursor);
+        // I.moveCursorTo(locator.CustomerMoveCursor);
+        I.amOnPage('/my-account/');
         I.click('Log out');
     },
     adminlogout() {
