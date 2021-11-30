@@ -41,6 +41,8 @@ class Manager {
         if ( false === $orders ) {
             $join         = $args['customer_id'] ? "LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id" : '';
             $where        = $args['customer_id'] ? sprintf( "pm.meta_key = '_customer_user' AND pm.meta_value = %d AND", $args['customer_id'] ) : '';
+            $where       .= isset( $args['s'] ) ? $wpdb->prepare( ' p.title = %s AND', $args['s'] ) : '';
+            $where       .= isset( $args['p'] ) ? $wpdb->prepare( ' p.ID = %d AND', $args['p'] ) : '';
             $status_where = ( $args['status'] == 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', $args['status'] );
             $date_query   = ( $args['date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $args['date'] ) : '';
 

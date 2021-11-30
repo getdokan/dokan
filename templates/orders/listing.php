@@ -10,6 +10,18 @@ $order_date          = isset( $_GET['order_date'] ) ? sanitize_key( $_GET['order
 $allow_shipment      = dokan_get_option( 'enabled', 'dokan_shipping_status_setting', 'off' );
 $wc_shipping_enabled = get_option( 'woocommerce_calc_shipping' ) === 'yes' ? true : false;
 
+$search_args = [
+    'seller_id'   => $seller_id,
+    'customer_id' => $customer_id,
+    'status'      => $order_status,
+    'paged'       => $paged,
+    'limit'       => $limit,
+    'date'        => $order_date,
+];
+
+$order_search    = ( isset( $_GET['order_search_key'] ) && ! is_numeric( $_GET['order_search_key'] ) ) ? $search_args['s'] = sanitize_key( $_GET['order_search_key'] ) : '';
+$order_search_id = ( isset( $_GET['order_search_key'] ) && is_numeric( $_GET['order_search_key'] ) ) ? $search_args['p'] = sanitize_key( absint( $_GET['order_search_key'] ) ) : '';
+
 $order_statuses = apply_filters( 'dokan_bulk_order_statuses', [
     '-1'            => __( 'Bulk Actions', 'dokan-lite' ),
     'wc-on-hold'    => __( 'Change status to on-hold', 'dokan-lite' ),
@@ -17,13 +29,7 @@ $order_statuses = apply_filters( 'dokan_bulk_order_statuses', [
     'wc-completed'  => __( 'Change status to completed', 'dokan-lite' ),
 ] );
 
-$user_orders  = dokan()->vendor->get( $seller_id )->get_orders( [
-    'customer_id' => $customer_id,
-    'status'      => $order_status,
-    'paged'       => $paged,
-    'limit'       => $limit,
-    'date'        => $order_date,
-] );
+$user_orders  = dokan()->vendor->get( $seller_id )->get_orders( $search_args );
 
 if ( $user_orders ) {
     ?>
@@ -194,12 +200,8 @@ if ( $user_orders ) {
     </form>
 
     <?php
-    $order_count = dokan_get_seller_orders_number( [
-        'seller_id'   => $seller_id,
-        'status'      => $order_status,
-        'customer_id' => $customer_id,
-        'date'        => $order_date,
-    ] );
+    unset( $search_args['limit'], $search_args['paged'] );
+    $order_count = dokan_get_seller_orders_number( $search_args );
 
     // if date is selected then calculate number_of_pages accordingly otherwise calculate number_of_pages =  ( total_orders / limit );
     $num_of_pages = ceil( $order_count / $limit );

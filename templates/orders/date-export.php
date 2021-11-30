@@ -26,17 +26,19 @@ if ( ! empty( $_GET['customer_id'] ) ) { // WPCS: input var ok.
 }
 
 $filter_date  = isset( $_GET['order_date'] ) ? sanitize_key( $_GET['order_date'] ) : '';
+$order_search = isset( $_GET['order_search_key'] ) ? sanitize_key( $_GET['order_search_key'] ) : '';
 $order_status = isset( $_GET['order_status'] ) ? sanitize_key( $_GET['order_status'] ) : 'all';
 
 ?>
 <div class="dokan-order-filter-serach">
     <form action="" method="GET" class="dokan-left">
         <div class="dokan-form-group">
+            <input type="text" name="order_search_key" placeholder="<?php esc_html_e( 'Search Order', 'dokan-lite' ); ?>" value="<?php echo isset( $order_search ) ? esc_attr( $order_search ) : ''; ?>" style="width:140px; padding-bottom:7px">
             <input type="text" autocomplete="off" class="datepicker" style="width:120px; padding-bottom:7px" name="order_date" id="order_date_filter" placeholder="<?php esc_attr_e( 'Filter by Date', 'dokan-lite' ); ?>" value="<?php echo esc_attr( $filter_date ); ?>">
             <select name="customer_id" id="dokan-filter-customer" style="width:220px" class="dokan-form-control"  data-allow_clear="true" data-placeholder="<?php esc_attr_e( 'Filter by registered customer', 'dokan-lite' ); ?>">
                 <option value="<?php echo esc_attr( $user_id ); ?>" selected="selected"><?php echo wp_kses_post( $user_string ); ?><option>
             </select>
-            <input type="submit" name="dokan_order_filter" class="dokan-btn dokan-btn-sm dokan-btn-danger dokan-btn-theme" value="<?php esc_attr_e( 'Filter', 'dokan-lite' ); ?>">
+            <input type="submit" name="dokan_order_filter" class="dokan-btn dokan-btn-sm dokan-btn-danger dokan-btn-theme" value="<?php esc_attr_e( 'Apply', 'dokan-lite' ); ?>">
             <input type="hidden" name="order_status" value="<?php echo  esc_attr( $order_status ); ?>">
         </div>
     </form>

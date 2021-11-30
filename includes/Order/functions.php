@@ -213,7 +213,9 @@ function dokan_get_seller_orders_number( $args = [] ) {
             $join = " LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id";
             $customer_where = $wpdb->prepare(" AND pm.meta_key = '_customer_user' AND pm.meta_value = %d", $args['customer_id'] );
         }
-        $date_where = ! empty( $args['date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $args['date'] ) : '';
+        $date_where     = ! empty( $args['date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $args['date'] ) : '';
+        $search_where_s = isset( $args['s'] ) ? $wpdb->prepare( ' AND p.title = %s', $args['s'] ) : '';
+        $search_where_p = isset( $args['p'] ) ? $wpdb->prepare( ' AND p.ID = %d', $args['p'] ) : '';
 
         $count = (int) $wpdb->get_var(
             $wpdb->prepare(
@@ -226,6 +228,8 @@ function dokan_get_seller_orders_number( $args = [] ) {
                     p.post_status != 'trash'
                     {$status_where}
                     {$customer_where}
+                    {$search_where_s}
+                    {$search_where_p}
                     {$date_where}", $seller_id
             )
         );
