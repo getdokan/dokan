@@ -18,7 +18,7 @@ class StoreContactForm extends WP_Widget {
      *
      * @since 3.3.2
      *
-     * @var string|boolean
+     * @var string
      */
     protected $recaptcha_site_key;
 
@@ -27,7 +27,7 @@ class StoreContactForm extends WP_Widget {
      *
      * @since 3.3.2
      *
-     * @var string|boolean
+     * @var string
      */
     protected $recaptcha_secret_key;
 
