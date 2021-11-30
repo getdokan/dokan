@@ -9,6 +9,7 @@ Scenario('Group product edit explore test', ({ I,loginAs }) => {
     loginAs('Vendor');
     helpers.createProduct();
     I.selectOption(locator.ProductTypeInput,'Group Product');
+
     // Starting to explore
     //Check Error
     I.checkError();
