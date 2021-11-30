@@ -8,17 +8,19 @@
         <div class="menu-item">
             <div class="item">
                 <?php
-                    $versions = get_option( 'dokan_changelog_versions', array() );
-                    $has_new_version = ! in_array( DOKAN_PLUGIN_VERSION, $versions );
+                    $dokan_lite_versions        = get_option( 'dokan_lite_changelog_versions', array() );
+                    $dokan_pro_versions         = get_option( 'dokan_pro_changelog_versions', array() );
+                    $has_dokan_lite_new_version = ! in_array( DOKAN_PLUGIN_VERSION, $dokan_lite_versions );
+                    $has_dokan_pro_new_version  = dokan()->is_pro_exists() && ! in_array( DOKAN_PRO_PLUGIN_VERSION, $dokan_pro_versions );
                 ?>
-                <?php if ( $has_new_version ) : ?>
+                <?php if ( $has_dokan_lite_new_version || $has_dokan_pro_new_version ) : ?>
                     <span class="whats-new-pointer"></span>
                 <?php endif; ?>
                 <div class="icon-question-mark"></div>
                 <div class="dropdown">
                     <h3><?php esc_html_e( 'Get Help', 'dokan-lite' ); ?></h3>
                     <div class="list-item">
-                        <a href="<?php echo esc_url( admin_url( 'admin.php?page=dokan#/changelog' ) ); ?>" class="<?php echo $has_new_version ? 'active' : ''  ?>">
+                        <a href="<?php echo esc_url( admin_url( 'admin.php?page=dokan#/changelog' ) ); ?>" class="<?php echo $has_dokan_lite_new_version || $has_dokan_pro_new_version ? 'active' : ''  ?>">
                             <div class="icon">
                                 <div class="icon-whats-new"></div>
                             </div>
@@ -59,6 +61,12 @@
                                 <div class="icon-request-feature"></div>
                             </div>
                             <?php esc_html_e( 'Request a Feature', 'dokan-lite' ); ?>
+                        </a>
+                        <a href="<?php echo esc_url( admin_url( 'admin.php?page=dokan-setup' ) ); ?>">
+                            <div class="icon">
+                                <div class="icon-request-feature"></div>
+                            </div>
+                            <?php esc_html_e( 'Run Setup Wizard', 'dokan-lite' ); ?>
                         </a>
                     </div>
                 </div>

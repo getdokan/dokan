@@ -95,24 +95,18 @@ if ( ! defined( 'ABSPATH' ) ) {
         margin: 0 0 10px;
         font-weight: bold;
         font-size: 18px;
-        font-family: Roboto, sans-serif;
+        font-family: "Segoe UI", sans-serif;
     }
 
     .dokan-woocommerce-missing-notice .message div {
         color: #4b4b4b;
         font-weight: 400;
         font-size: 13px;
-        font-family: "SF Pro Text", sans-serif;
+        font-family: "Segoe UI", sans-serif;
     }
 
     .dokan-woocommerce-missing-notice .message a {
         text-decoration: none;
-    }
-
-    @font-face {
-        font-family: "SF Pro Text";
-        src: url(<?php echo DOKAN_PLUGIN_ASSEST . '/font/SF-Pro-Text-Regular.otf'; ?>) format('opentype');
-        font-weight: 400;
     }
 </style>
 <?php endif; ?>

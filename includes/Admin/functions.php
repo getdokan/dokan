@@ -671,6 +671,69 @@ function dokan_get_admin_notices() {
 }
 
 /**
+ * Dokan global notices
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @return array | void
+ */
+function dokan_get_promo_notices() {
+    $promos = [
+        [
+            'key'        => 'dokan-bfcm2021',
+            'start_date' => '2021-11-19 09:00:00 EST',
+            'end_date'   => '2021-11-30 23:00:00 EST',
+            'title'      => 'Irresistible Black Friday & Cyber Monday Deals.',
+            'content'    => 'Enjoy Up To 50% OFF on Dokan Pro.',
+            'link'       => 'https://wedevs.com/dokan/pricing?utm_medium=text&utm_source=wordpress-dokan-bfcm2021',
+        ],
+    ];
+
+    $notices          = [];
+    $current_time_est = dokan_current_datetime()->setTimezone( new \DateTimeZone( 'EST' ) )->format( 'Y-m-d H:i:s T' );
+
+    $already_displayed_promo = get_option( '_dokan_limited_time_promo', [] );
+
+    foreach ( $promos as $promo ) {
+        if ( in_array( $promo['key'], $already_displayed_promo, true ) ) {
+            continue;
+        }
+
+        if ( strtotime( $promo['start_date'] ) < strtotime( $current_time_est ) && strtotime( $current_time_est ) < strtotime( $promo['end_date'] ) ) {
+            $notices[] = [
+                'type'              => 'promotion',
+                'title'             => $promo['title'],
+                'description'       => $promo['content'],
+                'priority'          => 10,
+                'show_close_button' => true,
+                'ajax_data'         => [
+                    'dokan_limited_time_promotion_dismissed' => true,
+                    'action'                                 => 'dokan_dismiss_limited_time_promotional_notice',
+                    'nonce'                                  => wp_create_nonce( 'dokan_admin' ),
+                    'key'                                    => $promo['key'],
+                ],
+                'actions'           => [
+                    [
+                        'type'   => 'primary',
+                        'text'   => __( 'Get Deals', 'dokan-lite' ),
+                        'action' => $promo['link'],
+                        'target' => '_blank',
+                    ],
+                ],
+            ];
+        }
+    }
+
+    if ( empty( $notices ) ) {
+        return;
+    }
+
+    uasort( $notices, 'dokan_sort_by_priority' );
+
+    return array_values( $notices );
+}
+
+/**
  * Sort all notices depends on priority key
  *
  * @param array $a

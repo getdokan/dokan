@@ -129,7 +129,7 @@ export default {
 
     data() {
         return {
-            show: true,
+            show: dokan.showPromoBanner,
             upgradeURL: dokan.urls.upgradeToPro,
             features: [
                 this.__( 'Table rate shipping', 'dokan-lite' ),
@@ -139,12 +139,6 @@ export default {
                 this.__( 'Delivery Time', 'dokan-lite' ),
             ]
         };
-    },
-
-    beforeMount() {
-        if (document.querySelector('.dokan-promo-notice')) {
-            this.show = false;
-        }
     },
 
     computed: {
@@ -166,7 +160,7 @@ export default {
 <style lang="less">
 .dokan-promo-banner {
     display: flex;
-    column-gap: 2.5rem;
+    column-gap: 2rem;
     align-items: center;
     justify-content: center;
     background-color: #262626;
@@ -177,7 +171,7 @@ export default {
 
     &.notice {
         border: 0;
-        padding-right: 50px;
+        padding-right: 40px;
         padding-left: 10px;
     }
 
@@ -194,14 +188,14 @@ export default {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        column-gap: 2rem;
+        column-gap: 1.5rem;
 
         h3 {
             color: #ffffff;
             font-size: 18px;
             font-weight: bold;
             font-style: normal;
-            font-family: 'Lato', sans-serif;
+            font-family: "SF Pro Text", sans-serif;
             margin: 0;
         }
 
@@ -210,7 +204,7 @@ export default {
             font-size: 14px;
             font-style: normal;
             font-weight: normal;
-            font-family: 'Lato', sans-serif;
+            font-family: "SF Pro Text", sans-serif;
         }
 
         .features {
@@ -227,7 +221,7 @@ export default {
                 font-size: 14px;
                 font-style: normal;
                 font-weight: normal;
-                font-family: 'Lato', sans-serif;
+                font-family: "SF Pro Text", sans-serif;
                 padding-left: 34px;
                 cursor: context-menu;
             }
@@ -258,8 +252,8 @@ export default {
                 color: #999999;
                 font-style: normal;
                 font-weight: normal;
-                font-size: 15px;
-                font-family: 'Lato', sans-serif;
+                font-size: 16px;
+                font-family: "SF Pro Text", sans-serif;
             }
 
             a:hover {
@@ -320,11 +314,11 @@ export default {
 @media only screen and (max-width: 576px) {
     .dokan-promo-banner {
         flex-wrap: wrap;
-        background-position: bottom -42px right 0;
+        background-position: bottom -42px right 10px;
         background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg fill='none' viewBox='0 0 375 771' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m88.51 60.599c-20.901 7.5598-30.712 48.555 0 64.695 150.3 78.984 184.67-5.224 189.57-42.161 2.106-15.887-3.949-76.325-42.228-69.419-38.278 6.9056-28.557-7.269-61.671-13.084-33.114-5.8152-34.632 30.166-45.569 44.341-10.937 14.175-13.975 6.1787-40.102 15.628z' fill='%23DCE0FF' fill-opacity='.06'/%3E%3Cpath d='m78.527 707.26c-52.744-0.654-74.328 42.221-78.527 63.74h375v-85.395c-33.595-47.805-93.225-21.656-137.74 4.494s-92.805 17.978-158.73 17.161z' fill='url(%23a)' fill-opacity='.09' opacity='.87'/%3E%3Cg filter='url(%23d)'%3E%3Cpath d='m64.201 538.9-3.7738 4.554-0.0141 0.016c-0.2246 0.253-0.3344 0.591-0.3011 0.927l0.5988 6.063c0.1266 1.282-0.4424 2.55-1.4851 3.307-1.0427 0.758-2.4239 0.907-3.6045 0.391l-5.5811-2.443c-0.3098-0.136-0.665-0.136-0.9747 0l-5.5811 2.443c-1.1768 0.515-2.5583 0.37-3.6045-0.391-1.0427-0.757-1.6117-2.024-1.4851-3.307l0.5989-6.063c0.0332-0.336-0.0766-0.674-0.3012-0.927l-0.0275-0.032-3.7604-4.538c-0.8443-0.963-1.1231-2.313-0.7273-3.532 0.3977-1.223 1.4242-2.155 2.6801-2.433l5.6821-1.305c0.3303-0.073 0.6176-0.281 0.7885-0.573l3.0793-5.257c0.6514-1.112 1.8567-1.803 3.1455-1.803 1.2889 0 2.4942 0.691 3.1456 1.803l3.0793 5.257c0.1709 0.292 0.4582 0.5 0.7885 0.573l0.012 2e-3 5.6702 1.303c1.2558 0.278 2.2823 1.21 2.68 2.433 0.3957 1.219 0.117 2.569-0.7273 3.532zm-6.5076 5.736c-0.0988-1.002 0.2247-2.007 0.888-2.763l3.774-4.555 0.014-0.016c0.2855-0.321 0.3803-0.774 0.2476-1.183-0.1327-0.408-0.4759-0.719-0.8956-0.811l-0.0119-3e-3 -5.6698-1.303c-0.988-0.218-1.8476-0.843-2.359-1.717l-3.0793-5.257c-0.2171-0.37-0.6189-0.601-1.0485-0.601-0.4295 0-0.8314 0.231-1.0485 0.601l-3.0793 5.257c-0.5114 0.873-1.371 1.499-2.359 1.717l-5.6818 1.306c-0.4196 0.092-0.7628 0.403-0.8956 0.811-0.1327 0.409-0.0378 0.862 0.2477 1.183l0.0275 0.032 3.7603 4.539c0.6634 0.756 0.9868 1.761 0.888 2.763l-0.5988 6.063c-0.0423 0.427 0.1474 0.85 0.495 1.102 0.3474 0.253 0.8078 0.303 1.2014 0.13l5.5812-2.443c0.9289-0.406 1.9947-0.406 2.9236 0l5.5811 2.443c0.3937 0.173 0.854 0.123 1.2016-0.13 0.3475-0.252 0.5372-0.675 0.495-1.102l-0.5989-6.063zm-10.718-8.479c0.4745 0.475 0.4745 1.244 0 1.719-0.4746 0.474-1.2439 0.474-1.7185 0-0.4745-0.475-0.4745-1.244 0-1.719 0.4746-0.474 1.2439-0.474 1.7185 0zm5.1555 6.875c-0.4745 0.474-0.4745 1.244 0 1.718 0.4746 0.475 1.244 0.475 1.7185 0 0.4746-0.474 0.4746-1.244 0-1.718-0.4746-0.475-1.2439-0.475-1.7185 0zm0.2045-7.082-7.2898 7.289 1.7182 1.719 7.2899-7.29-1.7183-1.718z' clip-rule='evenodd' fill='%23fff' fill-opacity='.24' fill-rule='evenodd'/%3E%3C/g%3E%3Cg filter='url(%23c)'%3E%3Cpath d='m326.7 308.65c0.225-0.105 0.479-0.125 0.714-0.058 0.232 0.077 0.401 0.272 0.441 0.511l2.323 7.747c0.527 1.742-0.125 3.652-1.628 4.769l-13.727 10.088 0.08 0.77c0.114 0.654 0.529 1.213 1.126 1.513 0.603 0.304 1.329 0.285 1.932-0.051l13.491-7.953c0.383-0.226 0.871-0.107 1.091 0.264 0.219 0.372 0.086 0.857-0.297 1.082l-13.491 7.953c-1.071 0.59-2.353 0.635-3.434 0.12-1.096-0.527-1.855-1.548-2.039-2.744l-0.109-0.979-12.004-10.294c-0.654-0.546-1.595-0.625-2.359-0.196l-2.324 1.369c-0.383 0.226-0.871 0.108-1.09-0.264s-0.086-0.856 0.297-1.082l2.323-1.37c1.357-0.781 3.044-0.649 4.213 0.329l1.715 1.483 22.756-13.007zm0.883 11.725c0.986-0.688 1.417-1.917 1.064-3.031l-2.02-6.836-21.438 12.229 8.821 7.59 13.573-9.952zm3.207 10.038c-1.724 1.016-2.321 3.196-1.335 4.869s3.183 2.205 4.907 1.189 2.321-3.196 1.335-4.869-3.183-2.206-4.907-1.189zm2.778 4.712c-0.958 0.564-2.178 0.269-2.726-0.661-0.548-0.929-0.216-2.14 0.742-2.705s2.178-0.269 2.726 0.661c0.548 0.929 0.216 2.14-0.742 2.705zm-15.956 3.057c-1.724 1.016-2.322 3.196-1.336 4.869 0.987 1.673 3.183 2.205 4.907 1.189s2.322-3.196 1.336-4.869-3.183-2.205-4.907-1.189zm2.778 4.712c-0.958 0.564-2.179 0.269-2.726-0.661-0.548-0.929-0.216-2.14 0.741-2.705 0.958-0.564 2.179-0.269 2.726 0.661 0.548 0.929 0.216 2.14-0.741 2.705z' clip-rule='evenodd' fill='%23fff' fill-opacity='.23' fill-rule='evenodd'/%3E%3C/g%3E%3Cg filter='url(%23b)'%3E%3Cpath d='m73.24 181.81-6.1918 16.319c-0.5001 1.308-1.5302 2.355-2.8272 2.876s-2.7655 0.477-4.0289-0.121l-13.06-6.177c-1.2634-0.598-2.2289-1.705-2.649-3.038s-0.2639-2.794 0.4286-4.008l8.6906-15.142c0.5559-0.975 1.7884-1.363 2.8047-0.883l2.4654 1.167 0.0525-0.111c1.4092-2.979 4.9793-4.257 7.9585-2.847 2.9791 1.409 4.2564 4.979 2.8472 7.958l-0.0525 0.111 2.4655 1.166c1.0163 0.481 1.4978 1.68 1.0963 2.73zm-7.131-10.328c-2.0763-0.982-4.5647-0.092-5.5468 1.984l-0.0525 0.111 7.5313 3.562 0.0525-0.11c0.9821-2.077 0.0919-4.565-1.9845-5.547zm-5.1424 27.765c0.8208 0.388 1.7368 0.416 2.5794 0.077 0.8427-0.338 1.4854-0.991 1.8098-1.84l6.1917-16.319c0.0664-0.173-0.0122-0.369-0.1782-0.448l-2.4655-1.166-0.9538 2.016c-0.2138 0.453-0.7537 0.646-1.2058 0.432-0.452-0.214-0.6452-0.754-0.4313-1.206l0.9537-2.016-7.5313-3.563-0.9538 2.017c-0.2138 0.452-0.7537 0.645-1.2058 0.431-0.452-0.214-0.6452-0.754-0.4313-1.206l0.9537-2.016-2.4654-1.166c-0.166-0.079-0.3673-0.016-0.4583 0.144l-8.6905 15.142c-0.4488 0.787-0.5462 1.698-0.2733 2.564 0.273 0.866 0.8752 1.557 1.6961 1.945l13.06 6.178zm1.8809-14.324c0.4709-0.168 0.9892 0.077 1.1576 0.548 0.1685 0.471-0.0767 0.989-0.5477 1.157l-6.2368 2.232c-0.2354 0.084-0.4828 0.065-0.6922-0.034s-0.3811-0.278-0.4653-0.514l-1.0457-2.923c-0.1685-0.471 0.0767-0.989 0.5476-1.158 0.4709-0.168 0.9892 0.077 1.1577 0.548l0.7406 2.07 5.3842-1.926z' clip-rule='evenodd' fill='%23fff' fill-opacity='.24' fill-rule='evenodd'/%3E%3C/g%3E%3Cdefs%3E%3Cfilter id='d' x='31.607' y='521.61' width='35.89' height='35.25' color-interpolation-filters='sRGB' filterUnits='userSpaceOnUse'%3E%3CfeFlood flood-opacity='0' result='BackgroundImageFix'/%3E%3CfeBlend in='SourceGraphic' in2='BackgroundImageFix' result='shape'/%3E%3CfeGaussianBlur result='effect1_foregroundBlur_84_2924' stdDeviation='1.19635'/%3E%3C/filter%3E%3Cfilter id='c' x='292.79' y='306.05' width='45.886' height='41.206' color-interpolation-filters='sRGB' filterUnits='userSpaceOnUse'%3E%3CfeFlood flood-opacity='0' result='BackgroundImageFix'/%3E%3CfeBlend in='SourceGraphic' in2='BackgroundImageFix' result='shape'/%3E%3CfeGaussianBlur result='effect1_foregroundBlur_84_2924' stdDeviation='1.25098'/%3E%3C/filter%3E%3Cfilter id='b' x='41.86' y='166.88' width='33.913' height='36.878' color-interpolation-filters='sRGB' filterUnits='userSpaceOnUse'%3E%3CfeFlood flood-opacity='0' result='BackgroundImageFix'/%3E%3CfeBlend in='SourceGraphic' in2='BackgroundImageFix' result='shape'/%3E%3CfeGaussianBlur result='effect1_foregroundBlur_84_2924' stdDeviation='1.19582'/%3E%3C/filter%3E%3ClinearGradient id='a' x1='187.71' x2='187.68' y1='425.81' y2='764.05' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%23fff' offset='0'/%3E%3Cstop stop-color='%23fff' stop-opacity='0' offset='1'/%3E%3C/linearGradient%3E%3C/defs%3E%3C/svg%3E");
 
         &.notice {
-            padding: 20px 40px 50px;
+            padding: 20px 44px 50px;
         }
 
         .thumbnail {

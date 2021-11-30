@@ -108,6 +108,7 @@ final class WeDevs_Dokan {
         add_action( 'woocommerce_flush_rewrite_rules', [ $this, 'flush_rewrite_rules' ] );
         add_filter( 'admin_notices', [ $this, 'render_missing_woocommerce_notice' ] );
         add_filter( 'dokan_admin_notices', [ $this, 'render_run_admin_setup_wizard_notice' ] );
+        add_filter( 'wp_ajax_dokan_dismiss_admin_setup_wizard_notice', [ $this, 'dismiss_admin_setup_wizard_notice' ] );
 
         $this->init_appsero_tracker();
 
@@ -532,10 +533,16 @@ final class WeDevs_Dokan {
         require_once DOKAN_INC_DIR . '/functions.php';
 
         $notices[] = [
-            'type'        => 'success',
-            'description' => __( '<strong>Welcome to Dokan</strong> &#8211; You&lsquo;re almost ready to start selling :)', 'dokan-lite' ),
-            'priority'    => 1,
-            'actions'     => [
+            'type'              => 'success',
+            'description'       => __( '<strong>Welcome to Dokan</strong> &#8211; You&lsquo;re almost ready to start selling :)', 'dokan-lite' ),
+            'priority'          => 1,
+            'show_close_button' => true,
+            'ajax_data'         => [
+                'dismiss_dokan_admin_setup_wizard_notice' => true,
+                'action'                                  => 'dokan_dismiss_admin_setup_wizard_notice',
+                'nonce'                                   => wp_create_nonce( 'dokan_admin' ),
+            ],
+            'actions'           => [
                 [
                     'type'   => 'primary',
                     'text'   => __( 'Run the Setup Wizard', 'dokan-lite' ),
@@ -545,6 +552,30 @@ final class WeDevs_Dokan {
         ];
 
         return $notices;
+    }
+
+    /**
+     * Dismisses admin setup wizard notice
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return void
+     */
+    public function dismiss_admin_setup_wizard_notice() {
+        $post_data = wc_clean( wp_unslash( $_POST ) );
+
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            wp_send_json_error( __( 'You have no permission to do that', 'dokan-lite' ) );
+        }
+
+        if ( ! wp_verify_nonce( $post_data['nonce'], 'dokan_admin' ) ) {
+            wp_send_json_error( __( 'Invalid nonce', 'dokan-lite' ) );
+        }
+
+        if ( isset( $post_data['dismiss_dokan_admin_setup_wizard_notice'] ) && $post_data['dismiss_dokan_admin_setup_wizard_notice'] ) {
+            update_option( 'dokan_admin_setup_wizard_ready', true );
+            wp_send_json_success();
+        }
     }
 
     /**

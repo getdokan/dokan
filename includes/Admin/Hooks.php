@@ -17,7 +17,6 @@ class Hooks {
      */
     public function __construct() {
         // Load all actions
-        add_action( 'admin_enqueue_scripts', [ $this, 'load_dokan_notice_scripts' ] );
         add_action( 'admin_notices', [ $this, 'admin_notices' ] );
         add_action( 'manage_shop_order_posts_custom_column', [ $this, 'shop_order_custom_columns' ], 11 );
         add_action( 'admin_footer-edit.php', [ $this, 'admin_shop_order_scripts' ] );
@@ -38,17 +37,6 @@ class Hooks {
     }
 
     /**
-     * Enqueue dokan amin notice css
-     *
-     * @since DOKAN_LITE_SINCE
-     *
-     * @return void
-     */
-    public function load_dokan_notice_scripts() {
-        wp_enqueue_style( 'dokan-admin-notice', DOKAN_PLUGIN_ASSEST . '/css/dokan-admin-notice.css', [], DOKAN_PLUGIN_VERSION );
-    }
-
-    /**
      * Display admin notices
      *
      * @since DOKAN_LITE_SINCE
@@ -57,8 +45,6 @@ class Hooks {
      */
     public function admin_notices() {
         dokan_get_template_part( 'admin-notices' );
-        wp_localize_script( 'dokan-vue-vendor', 'dokan', dokan()->scripts->get_admin_localized_scripts() );
-        wp_enqueue_script( 'dokan-admin-notice', DOKAN_PLUGIN_ASSEST . '/js/dokan-admin-notice.js', [ 'jquery', 'dokan-vue-vendor', 'dokan-vue-bootstrap' ], DOKAN_PLUGIN_VERSION, true );
     }
 
     /**

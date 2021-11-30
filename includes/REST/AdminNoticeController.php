@@ -6,15 +6,15 @@ use WP_REST_Server;
 use WeDevs\Dokan\Abstracts\DokanRESTAdminController;
 
 /**
-* Admin Dashboard
+* Admin Notice Controller
 *
-* @since 2.8.0
+* @since DOKAN_LITE_SINCE
 *
 * @package dokan
 */
 class AdminNoticeController extends DokanRESTAdminController {
     /**
-     * Register all routes related with stores
+     * Register all routes related with dokan admin notices
      *
      * @return void
      */
@@ -37,6 +37,15 @@ class AdminNoticeController extends DokanRESTAdminController {
                 ],
             ]
         );
+        register_rest_route(
+            $this->namespace, '/promo-notices', [
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_promo_notices' ],
+                    'permission_callback' => [ $this, 'check_permission' ],
+                ],
+            ]
+        );
     }
 
     /**
@@ -48,6 +57,19 @@ class AdminNoticeController extends DokanRESTAdminController {
         require_once DOKAN_INC_DIR . '/Admin/functions.php';
 
         $notices = dokan_get_notices();
+
+        return rest_ensure_response( $notices );
+    }
+
+    /**
+     * Get dokan promotional notices
+     *
+     * @return WP_REST_Response
+     */
+    public function get_promo_notices() {
+        require_once DOKAN_INC_DIR . '/Admin/functions.php';
+
+        $notices = dokan_get_promo_notices();
 
         return rest_ensure_response( $notices );
     }
