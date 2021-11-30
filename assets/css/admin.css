@@ -354,6 +354,27 @@
   padding-right: 10px;
   background: #fff;
 }
+td.tooltips-data {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 4px;
+  padding-right: 0;
+}
+.tooltips-data span {
+  width: 20px;
+}
+ul.dokan-settings-repeatable-list {
+  margin: 0;
+}
+.form-table tr td.dokan_checkbox_up {
+  vertical-align: top;
+  margin-top: 0.45em !important;
+}
+td.combine-tips-style {
+  display: table-cell;
+  vertical-align: top;
+}
 .wc_error_tip {
   max-width: 20em;
   line-height: 1.8em;

@@ -7,7 +7,7 @@ Tested up to: 5.8.2
 WC requires at least: 3.0
 WC tested up to: 5.9.0
 Requires PHP: 5.6
-Stable tag: 3.3.1
+Stable tag: 3.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -291,6 +291,14 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.3.2 ( Nov 30, 2021 ) =
+
+- **update:** Caching Enhancement and Fixes
+- **update:** Added tooltips for setting options
+- **update:** Google Map and Mapbox setting fields will be always visible
+- **fix:** Product was creating via API even selling option was disabled for a vendor
+- **fix:** Withdraw details field value conflict with old withdraw data
 
 = v3.3.1 ( Nov 12, 2021 ) =
 
