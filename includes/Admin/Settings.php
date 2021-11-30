@@ -601,11 +601,13 @@ class Settings {
                     'name'    => 'recaptcha_site_key',
                     'label'   => __( 'Site Key', 'dokan-lite' ),
                     'type'    => 'text',
+                    'tooltip' => __( 'Insert Google reCaptcha v3 site key.', 'dokan-lite' ),
                 ],
                 'recaptcha_secret_key'       => [
                     'name'    => 'recaptcha_secret_key',
                     'label'   => __( 'Secret Key', 'dokan-lite' ),
                     'type'    => 'text',
+                    'tooltip' => __( 'Insert Google reCaptcha v3 secret key.', 'dokan-lite' ),
                 ],
                 'contact_seller'             => [
                     'name'    => 'contact_seller',
