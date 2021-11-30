@@ -163,12 +163,6 @@
         color: #f16982;
         border-color: #f16982;
     }
-
-    @font-face {
-        font-family: "SF Pro Text";
-        src: url(<?php echo DOKAN_PLUGIN_ASSEST . '/font/SF-Pro-Text-Regular.otf'; ?>) format('opentype');
-        font-weight: 400;
-    }
 </style>
 
 <script>
