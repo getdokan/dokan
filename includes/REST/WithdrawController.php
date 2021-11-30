@@ -596,7 +596,11 @@ class WithdrawController extends WP_REST_Controller {
 
         $methods     = dokan_withdraw_get_methods();
         $get_details = ! empty( $withdraw->get_details() ) ? maybe_unserialize( $withdraw->get_details() ) : array();
-        $details     = [ $withdraw->get_method() => $get_details ];
+        $details     = $vendor['payment'];
+
+        if ( version_compare( DOKAN_PLUGIN_VERSION, '3.2.11', '>' ) && ! empty( $get_details ) ) {
+            $details = [ $withdraw->get_method() => $get_details ];
+        }
 
         $data = [
             'id'           => absint( $withdraw->get_id() ),
@@ -607,7 +611,7 @@ class WithdrawController extends WP_REST_Controller {
             'method'       => $withdraw->get_method(),
             'method_title' => array_key_exists( $withdraw->get_method(), $methods ) ? $methods[ $withdraw->get_method() ] : $withdraw->get_method(),
             'note'         => $withdraw->get_note(),
-            'details'      => version_compare( DOKAN_PLUGIN_VERSION, '3.2.11', '>' ) ? $details : $vendor['payment'],
+            'details'      => $details,
             'ip'           => $withdraw->get_ip(),
         ];
 
