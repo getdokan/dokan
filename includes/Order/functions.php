@@ -460,19 +460,19 @@ function dokan_get_seller_id_by_order( $order_id ) {
     }
 
     if ( ! empty( $seller_id ) ) {
-        return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
+        return apply_filters( 'dokan_get_seller_id_by_order', (int) $seller_id, $items );
     }
 
     // get order instance
     $order = wc_get_order( $order_id );
 
     if ( ! $order instanceof WC_Abstract_Order ) {
-        return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
+        return apply_filters( 'dokan_get_seller_id_by_order', 0, $items );
     }
 
     // if order has suborder, return 0
     if ( $order->get_meta( 'has_sub_order' ) ) {
-        return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
+        return apply_filters( 'dokan_get_seller_id_by_order', 0, $items );
     }
 
     // check order meta to get vendor id
@@ -484,18 +484,18 @@ function dokan_get_seller_id_by_order( $order_id ) {
     // finally get vendor id from line items
     $items = $order->get_items( 'line_item' );
     if ( ! $items ) {
-        return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
+        return apply_filters( 'dokan_get_seller_id_by_order', 0, $items );
     }
 
     foreach ( $items as $item ) {
         $product_id = $item->get_product_id();
         $seller_id  = absint( get_post_field( 'post_author', $product_id ) );
         if ( $seller_id ) {
-            break;
+            return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
         }
     }
 
-    return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
+    return apply_filters( 'dokan_get_seller_id_by_order', 0, $items );
 }
 
 /**
