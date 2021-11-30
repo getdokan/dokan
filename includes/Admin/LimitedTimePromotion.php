@@ -25,7 +25,7 @@ class LimitedTimePromotion {
      * LimitedTimePromotion constructor
      */
     public function __construct() {
-        add_filter( 'admin_notices', [ $this, 'show_promotions' ] );
+        add_action( 'admin_notices', [ $this, 'show_promotions' ] );
         add_action( 'wp_ajax_dokan_dismiss_limited_time_promotional_notice', [ $this, 'dismiss_limited_time_promo' ] );
     }
 
