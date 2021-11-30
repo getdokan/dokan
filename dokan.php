@@ -106,7 +106,7 @@ final class WeDevs_Dokan {
 
         add_action( 'woocommerce_loaded', [ $this, 'init_plugin' ] );
         add_action( 'woocommerce_flush_rewrite_rules', [ $this, 'flush_rewrite_rules' ] );
-        add_filter( 'admin_notices', [ $this, 'render_missing_woocommerce_notice' ] );
+        add_action( 'admin_notices', [ $this, 'render_missing_woocommerce_notice' ] );
         add_filter( 'dokan_admin_notices', [ $this, 'render_run_admin_setup_wizard_notice' ] );
         add_filter( 'wp_ajax_dokan_dismiss_admin_setup_wizard_notice', [ $this, 'dismiss_admin_setup_wizard_notice' ] );
 
