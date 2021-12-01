@@ -1486,6 +1486,7 @@ jQuery(function($) {
             var product_type    = $( '#product_type' ).val();
             var is_virtual      = $( 'input#_virtual:checked' ).length;
             var is_downloadable = $( 'input#_downloadable:checked' ).length;
+            let shippingTaxContainer  = $( '.dokan-product-shipping-tax' );
 
             // Hide/Show all with rules.
             var hide_classes = '.hide_if_downloadable, .hide_if_virtual';
@@ -1515,6 +1516,18 @@ jQuery(function($) {
             }
             if ( is_virtual ) {
                 $( '.hide_if_virtual' ).hide();
+
+                if ( 1 === $( '.dokan-product-shipping-tax .dokan-section-content' ).first().children().length ) {
+                    shippingTaxContainer.hide();
+                } else {
+                    if ( shippingTaxContainer.hasClass('hide_if_virtual') ) {
+                        shippingTaxContainer.removeClass('hide_if_virtual');
+                    }
+
+                    shippingTaxContainer.show();
+                }
+            } else {
+                shippingTaxContainer.show();
             }
 
             $( '.hide_if_' + product_type ).hide();

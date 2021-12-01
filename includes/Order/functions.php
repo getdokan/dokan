@@ -1,4 +1,7 @@
 <?php
+
+use WeDevs\Dokan\Cache;
+
 /**
  * Dokan get seller amount from order total
  *
@@ -50,26 +53,30 @@ function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
  * @return array
  */
 function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = null, $limit = 10, $offset = 0, $customer_id = null ) {
+    // get all function arguments as key => value pairs
+    $args = get_defined_vars();
+
     global $wpdb;
 
     $pagenum     = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
-    $cache_group = "dokan_seller_data_{$seller_id}";
-    $cache_key   = "dokan-seller-orders-{$status}-{$seller_id}-page-{$pagenum}";
-    $orders      = wp_cache_get( $cache_key, $cache_group );
-    $getdata     = wp_unslash( $_GET );
-    $order       = empty( $getdata['order'] ) ? 'DESC' : sanitize_text_field( $getdata['order'] );
-    $order_by    =  'p.post_date';
-    $exclude     = ! empty( $getdata['exclude'] ) ? ' AND do.order_id NOT IN (' . esc_sql( $getdata['exclude'] ) . ')' : '';
+    $cache_group = "seller_order_data_{$seller_id}";
+    $cache_key   = 'get_seller_orders_' . md5( wp_json_encode( array_merge( $args, [ 'page' => $pagenum ] ) ) );
+    $orders      = Cache::get( $cache_key, $cache_group );
 
-    if ( ! empty( $getdata['orderby'] ) &&
-        in_array( sanitize_text_field( $getdata['orderby'] ), [ 'id', 'order_id', 'seller_id', 'order_total', 'net_amount', 'order_status' ], true ) ) {
-        $order_by = 'do.' . sanitize_text_field( $getdata['orderby'] );
-    }
+    if ( false === $orders ) {
+        $getdata     = wp_unslash( $_GET );
+        $order       = empty( $getdata['order'] ) ? 'DESC' : sanitize_text_field( $getdata['order'] );
+        $order_by    = 'p.post_date';
+        $exclude     = ! empty( $getdata['exclude'] ) ? ' AND do.order_id NOT IN (' . esc_sql( $getdata['exclude'] ) . ')' : '';
 
-    $join  = $customer_id ? "LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id" : '';
-    $where = $customer_id ? sprintf( "pm.meta_key = '_customer_user' AND pm.meta_value = %d AND", $customer_id ) : '';
+        if ( ! empty( $getdata['orderby'] ) &&
+            in_array( sanitize_text_field( $getdata['orderby'] ), [ 'id', 'order_id', 'seller_id', 'order_total', 'net_amount', 'order_status' ], true ) ) {
+            $order_by = 'do.' . sanitize_text_field( $getdata['orderby'] );
+        }
 
-    if ( $orders === false ) {
+        $join  = $customer_id ? "LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id" : '';
+        $where = $customer_id ? sprintf( "pm.meta_key = '_customer_user' AND pm.meta_value = %d AND", $customer_id ) : '';
+
         $status_where = ( $status === 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', $status );
         $date_query   = ( $order_date ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $order_date ) : '';
 
@@ -92,8 +99,7 @@ function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = nul
             )
         );
 
-        wp_cache_set( $cache_key, $orders, $cache_group );
-        dokan_cache_update_group( $cache_key, $cache_group );
+        Cache::set( $cache_key, $orders, $cache_group );
     }
 
     return $orders;
@@ -108,20 +114,22 @@ function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = nul
  * @return array
  */
 function dokan_get_seller_orders_by_date( $start_date, $end_date, $seller_id = false, $status = 'all' ) {
+    // get all function arguments as key => value pairs
+    $args = get_defined_vars();
+
     global $wpdb;
 
     $seller_id = ! $seller_id ? dokan_get_current_user_id() : intval( $seller_id );
+    $cache_group = 'seller_order_data_' . $seller_id;
+    $cache_key   = 'get_seller_orders_by_date_' . md5( wp_json_encode( $args ) );
+    $orders      = Cache::get( $cache_key, $cache_group );
 
-    $end_date    = date( 'Y-m-d 00:00:00', strtotime( $end_date ) );
-    $end_date    = date( 'Y-m-d h:i:s', strtotime( $end_date . '-1 minute' ) );
-    $start_date  = date( 'Y-m-d', strtotime( $start_date ) );
-
-    $cache_group = 'dokan_seller_data_' . $seller_id;
-    $cache_key   = md5( 'dokan-seller-orders-' . $end_date . '-' . $end_date . '-' . $seller_id );
-    $orders      = wp_cache_get( $cache_key, $cache_group );
-
-    if ( $orders === false ) {
-        $status_where = '';
+    if ( false === $orders ) {
+        // format start and end date
+        $date_start = dokan_current_datetime()->setTime( 0, 0, 0);
+        $date_end   = $date_start->setTime( 23, 59, 59 );
+        $start_date = strtotime( $start_date ) ? $date_start->modify( $start_date ) : $date_start; // strtotime is needed because modify() method can return false
+        $end_date   = strtotime( $end_date ) ? $date_end->modify( $end_date ) : $date_end;
 
         if ( is_array( $status ) ) {
             $status_where = sprintf( " AND order_status IN ('%s')", implode( "', '", $status ) );
@@ -129,7 +137,7 @@ function dokan_get_seller_orders_by_date( $start_date, $end_date, $seller_id = f
             $status_where = $wpdb->prepare( ' AND order_status = %s', $status );
         }
 
-        $date_query = $wpdb->prepare( ' AND DATE( p.post_date ) >= %s AND DATE( p.post_date ) <= %s', $start_date, $end_date );
+        $date_query = $wpdb->prepare( ' AND DATE( p.post_date ) >= %s AND DATE( p.post_date ) <= %s', $start_date->format( 'Y-m-d H:i:s' ), $end_date->format( 'Y-m-d H:i:s' ) );
 
         $orders = $wpdb->get_results(
             $wpdb->prepare(
@@ -146,8 +154,7 @@ function dokan_get_seller_orders_by_date( $start_date, $end_date, $seller_id = f
             )
         );
 
-        wp_cache_set( $cache_key, $orders, $cache_group, 3600 * 2 );
-        dokan_cache_update_group( $cache_key, $cache_group );
+        Cache::set( $cache_key, $orders, $cache_group );
     }
 
     return $orders;
@@ -194,12 +201,12 @@ function dokan_get_seller_orders_number( $args = [] ) {
 
     $seller_id   = ! empty( $args['seller_id'] ) ? $args['seller_id'] : 0;
     $status      = ! empty( $args['status'] ) ? $args['status'] : 'all';
-    $cache_group = 'dokan_seller_data_' . $seller_id;
-    $cache_key   = 'dokan-seller-orders-count-' . md5( json_encode( $args ) );
-    $count       = wp_cache_get( $cache_key, $cache_group );
+    $cache_group = "seller_order_data_{$seller_id}";
+    $cache_key   = 'get_seller_orders_number_' . md5( wp_json_encode( $args ) );
+    $count       = Cache::get( $cache_key, $cache_group );
 
-//    if ( $count === false ) {
-        $status_where = ( $status == 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', $status );
+    if ( false === $count ) {
+        $status_where = ( 'all' === $status ) ? '' : $wpdb->prepare( ' AND order_status = %s', $status );
         $join = '';
         $customer_where = '';
         if ( ! empty( $args['customer_id'] ) ) {
@@ -208,7 +215,7 @@ function dokan_get_seller_orders_number( $args = [] ) {
         }
         $date_where = ! empty( $args['date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $args['date'] ) : '';
 
-        $result = $wpdb->get_row(
+        $count = (int) $wpdb->get_var(
             $wpdb->prepare(
                 "SELECT COUNT(do.order_id) as count
                 FROM {$wpdb->prefix}dokan_orders AS do
@@ -223,11 +230,8 @@ function dokan_get_seller_orders_number( $args = [] ) {
             )
         );
 
-        $count = $result->count;
-
-//        wp_cache_set( $cache_key, $count, $cache_group );
-//        dokan_cache_update_group( $cache_key, $cache_group );
-//    }
+        Cache::set( $cache_key, $count, $cache_group );
+    }
 
     return $count;
 }
@@ -265,11 +269,11 @@ function dokan_is_seller_has_order( $seller_id, $order_id ) {
 function dokan_count_orders( $user_id ) {
     global $wpdb;
 
-    $cache_group = 'dokan_seller_data_' . $user_id;
-    $cache_key   = 'dokan-count-orders-' . $user_id;
-    $counts      = wp_cache_get( $cache_key, $cache_group );
+    $cache_group = "seller_order_data_{$user_id}";
+    $cache_key   = "count_orders_{$user_id}";
+    $counts      = Cache::get( $cache_key, $cache_group );
 
-    if ( $counts === false ) {
+    if ( false === $counts ) {
         $counts = [
             'wc-pending'    => 0,
             'wc-completed'  => 0,
@@ -296,8 +300,6 @@ function dokan_count_orders( $user_id ) {
         );
 
         if ( $results ) {
-            $total = 0;
-
             foreach ( $results as $order ) {
                 if ( isset( $counts[ $order->order_status ] ) ) {
                     $counts[ $order->order_status ] += 1;
@@ -307,8 +309,7 @@ function dokan_count_orders( $user_id ) {
         }
 
         $counts = (object) $counts;
-        wp_cache_set( $cache_key, $counts, $cache_group );
-        dokan_cache_update_group( $cache_key, $cache_group );
+        Cache::set( $cache_key, $counts, $cache_group );
     }
 
     return $counts;
@@ -442,9 +443,8 @@ function dokan_sync_insert_order( $order_id ) {
 function dokan_get_seller_id_by_order( $order_id ) {
     global $wpdb;
 
-    $cache_key   = 'dokan_get_seller_id_' . $order_id;
-    $cache_group = 'dokan_get_seller_id_by_order';
-    $seller_id   = wp_cache_get( $cache_key, $cache_group );
+    $cache_key   = 'get_seller_id_by_order_' . $order_id;
+    $seller_id   = Cache::get( $cache_key );
     $items       = [];
 
     // hack: delete old cached data, will delete this code later version of dokan lite
@@ -453,28 +453,26 @@ function dokan_get_seller_id_by_order( $order_id ) {
     }
 
     if ( false === $seller_id ) {
-        $seller_id = absint(
-            $wpdb->get_var(
-                $wpdb->prepare( "SELECT seller_id FROM {$wpdb->prefix}dokan_orders WHERE order_id = %d LIMIT 1", $order_id )
-            )
+        $seller_id = (int) $wpdb->get_var(
+            $wpdb->prepare( "SELECT seller_id FROM {$wpdb->prefix}dokan_orders WHERE order_id = %d LIMIT 1", $order_id )
         );
-        wp_cache_set( $cache_key, $seller_id, $cache_group );
+        Cache::set( $cache_key, $seller_id );
     }
 
     if ( ! empty( $seller_id ) ) {
-        return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
+        return apply_filters( 'dokan_get_seller_id_by_order', (int) $seller_id, $items );
     }
 
     // get order instance
-    $order = dokan()->order->get( $order_id );
+    $order = wc_get_order( $order_id );
 
     if ( ! $order instanceof WC_Abstract_Order ) {
-        return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
+        return apply_filters( 'dokan_get_seller_id_by_order', 0, $items );
     }
 
     // if order has suborder, return 0
     if ( $order->get_meta( 'has_sub_order' ) ) {
-        return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
+        return apply_filters( 'dokan_get_seller_id_by_order', 0, $items );
     }
 
     // check order meta to get vendor id
@@ -486,18 +484,18 @@ function dokan_get_seller_id_by_order( $order_id ) {
     // finally get vendor id from line items
     $items = $order->get_items( 'line_item' );
     if ( ! $items ) {
-        return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
+        return apply_filters( 'dokan_get_seller_id_by_order', 0, $items );
     }
 
     foreach ( $items as $item ) {
         $product_id = $item->get_product_id();
         $seller_id  = absint( get_post_field( 'post_author', $product_id ) );
         if ( $seller_id ) {
-            break;
+            return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
         }
     }
 
-    return apply_filters( 'dokan_get_seller_id_by_order', $seller_id, $items );
+    return apply_filters( 'dokan_get_seller_id_by_order', 0, $items );
 }
 
 /**

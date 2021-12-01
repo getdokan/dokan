@@ -4,13 +4,22 @@
             <th colspan="2" class="dokan-settings-sub-section-title">
                 <label>{{ fieldData.label }}</label>
             </th>
+            <td class="tooltips-data"></td>
         </template>
 
         <template v-if="containCommonFields( fieldData.type )">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
-            <td>
+
+            <td class="tooltips-data">
+                <span v-if="fieldData.tooltip">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                </span>
+            </td>
+
+            <td v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+
                 <input
                     :type="fieldData.type || 'text'"
                     class="regular-text"
@@ -33,11 +42,18 @@
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
-            <td>
-              <input type="number" :min="fieldData.min" :max="fieldData.max" :step="fieldData.step" class="regular-text"
-                     :class="[ { 'dokan-input-validation-error': hasValidationError( fieldData.name ) }, fieldData.class ]"
-                     :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'"
-                     v-model="fieldValue[fieldData.name]">
+
+            <td class="tooltips-data">
+                <span v-if="fieldData.tooltip">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                </span>
+            </td>
+
+            <td v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+                <input type="number" :min="fieldData.min" :max="fieldData.max" :step="fieldData.step" class="regular-text"
+                       :class="[ { 'dokan-input-validation-error': hasValidationError( fieldData.name ) }, fieldData.class ]"
+                       :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'"
+                       v-model="fieldValue[fieldData.name]">
                 <p v-if="hasError( fieldData.name )" class="dokan-error">
                     {{ getError( fieldData.label ) }}
                 </p>
@@ -52,7 +68,10 @@
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
-            <td>
+
+            <td class="tooltips-data"></td>
+
+            <td v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <input type="text" :min="fieldData.min" class="regular-text" :class="{ wc_input_decimal: allSettingsValues.dokan_selling.commission_type=='percentage', 'wc_input_price': allSettingsValues.dokan_selling.commission_type=='flat' }" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
                 <p v-if="hasError( fieldData.name )" class="dokan-error">
                     {{ getError( fieldData.label ) }}
@@ -69,10 +88,12 @@
                     <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
                 </th>
 
-                <td class="percent_fee">
-                    <input type="text" class="wc_input_decimal regular-text" :id="sectionId + '[' + fieldData.name + ']' + '[' + 'percent_fee' + ']'" :name="sectionId + '[' + fieldData.fields.percent_fee.name + ']'" v-model="fieldValue[fieldData.fields.percent_fee.name]">
-                    {{ '%' }}
-                </td>
+            <td class="tooltips-data combine-tips-style"></td>
+
+            <td class="percent_fee">
+                <input type="text" class="wc_input_decimal regular-text" :id="sectionId + '[' + fieldData.name + ']' + '[' + 'percent_fee' + ']'" :name="sectionId + '[' + fieldData.fields.percent_fee.name + ']'" v-model="fieldValue[fieldData.fields.percent_fee.name]">
+                {{ '%' }}
+            </td>
 
                 <td class="fixed_fee">
                     {{ '+' }}
@@ -98,7 +119,14 @@
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
-            <td>
+
+            <td class="tooltips-data">
+                <span v-if="fieldData.tooltip">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                </span>
+            </td>
+
+            <td v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <textarea type="textarea" :rows="fieldData.rows" :cols="fieldData.cols" class="regular-text" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]"></textarea>
                 <p v-if="hasError( fieldData.name )" class="dokan-error">
                     {{ getError( fieldData.label ) }}
@@ -114,7 +142,14 @@
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
-            <td>
+
+            <td class="tooltips-data">
+                <span v-if="fieldData.tooltip">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                </span>
+            </td>
+
+            <td v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <label :for="sectionId + '[' + fieldData.name + ']'">
                         <input type="checkbox" class="checkbox" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]" true-value="on" false-value="off">
@@ -131,7 +166,14 @@
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
-            <td>
+
+            <td class="tooltips-data">
+                <span v-if="fieldData.tooltip">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                </span>
+            </td>
+
+            <td v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <template v-for="(optionVal, optionKey) in fieldData.options">
                         <label :for="sectionId + '[' + fieldData.name + '][' + optionKey + ']'">
@@ -370,7 +412,14 @@
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
-            <td>
+
+            <td v-bind:class="['combine' === fieldData.type ? 'tooltips-data combine-tips-style' : 'tooltips-data']">
+                <span v-if="fieldData.tooltip">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                </span>
+            </td>
+
+            <td v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <select v-if="!fieldData.grouped" class="regular" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
                     <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
                     <option v-for="( optionVal, optionKey ) in fieldData.options" :value="optionKey" v-html="optionVal"></option>
@@ -402,7 +451,10 @@
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
-            <td>
+
+            <td class="tooltips-data"></td>
+
+            <td v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <input type="text" class="regular-text wpsa-url" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
                 <input type="button" class="button wpsa-browse" value="Choose File" v-on:click.prevent="$emit( 'openMedia', { sectionId: sectionId, name: fieldData.name }, $event )">
                 <p v-if="hasError( fieldData.name )" class="dokan-error">
@@ -416,7 +468,10 @@
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
-            <td>
+
+            <td class="tooltips-data"></td>
+
+            <td v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <color-picker v-model="fieldValue[fieldData.name]"></color-picker>
                 <p v-if="hasError( fieldData.name )" class="dokan-error">
                     {{ getError( fieldData.label ) }}
@@ -429,7 +484,14 @@
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
-            <td>
+
+            <td class="tooltips-data">
+                <span v-if="fieldData.tooltip">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                </span>
+            </td>
+
+            <td v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <p v-if="hasError( fieldData.name )" class="dokan-error">
                     {{ getError( fieldData.label ) }}
                 </p>
@@ -443,13 +505,17 @@
                     <p :for="sectionId + '[' + fieldData.name + ']'"><span class="dokan-setting-warning-label"><span class="dashicons dashicons-warning"></span> {{ fieldData.label }}</span> <span class="dokan-setting-warning-msg">{{fieldData.desc}}</span></p>
                 </div>
             </th>
+            <td class="tooltips-data"></td>
         </template>
 
         <template v-if="'radio' == fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
-            <td class="dokan-settings-field-type-radio">
+
+            <td class="tooltips-data"></td>
+
+            <td v-bind:class="[fieldData.content_class ? fieldData.content_class : '', 'dokan-settings-field-type-radio']">
                 <fieldset>
                     <template v-for="( optionVal, optionKey ) in fieldData.options">
                         <label :for="sectionId + '[' + fieldData.name + '][' + optionKey + ']'">
@@ -465,7 +531,14 @@
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
-            <td width="72%">
+
+            <td class="tooltips-data">
+                <span v-if="fieldData.tooltip">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                </span>
+            </td>
+
+            <td width="72%" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <text-editor v-model="fieldValue[fieldData.name]"></text-editor>
                 <p class="description" v-html="fieldData.desc"></p>
             </td>
@@ -475,7 +548,14 @@
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
-            <td width="72%">
+
+            <td class="tooltips-data">
+                <span v-if="fieldData.tooltip">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                </span>
+            </td>
+
+            <td width="72%" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <ul class="dokan-settings-repeatable-list">
                     <li v-if="fieldValue[fieldData.name]" v-for="(optionVal, optionKey) in fieldValue[fieldData.name]">
                         {{ optionVal.value }} <span v-if="!optionVal.must_use" class="dashicons dashicons-no-alt remove-item" @click.prevent="removeItem( optionKey, fieldData.name )"></span>
@@ -493,7 +573,10 @@
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
-            <td>
+
+            <td class="tooltips-data"></td>
+
+            <td v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <div class="radio-image-container">
                     <template v-for="( image, name ) in fieldData.options">
                         <label class="radio-image" :class="{ 'active' : fieldValue[fieldData.name] === name, 'not-active' : fieldValue[fieldData.name] !== name }">
@@ -516,7 +599,9 @@
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
 
-            <td>
+            <td class="tooltips-data"></td>
+
+            <td v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <input type="hidden" :name="sectionId + '[' + fieldData.name + ']'" :value="mapLocation">
                 <Mapbox
                     v-if="mapApiSource === 'mapbox'"
