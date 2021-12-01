@@ -303,8 +303,8 @@
                             if ( ! this.errors.includes( field ) ) {
                                 this.errors.push( field );
                                 // If flat or percentage product_price or product_quantity or vendor_sale or commission is set. Remove the required field.
-                                let all_commisions = [ 'admin_percentage', 'additional_fee', 'product_price', 'product_quantity', 'vendor_sale' ];
-                                if ( 'flat' === value['commission_type'] || 'percentage' === value['commission_type'] || new_commission_types.includes( value['commission_type'] ) ) {
+                                let all_commisions = [ 'flat', 'percentage', 'product_price', 'product_quantity', 'vendor_sale', 'admin_percentage', 'additional_fee' ];
+                                if ( all_commisions.includes( value['commission_type'] ) ) {
                                     this.errors = this.errors.filter(val => !all_commisions.includes(val));
                                 }
 
