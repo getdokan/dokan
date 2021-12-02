@@ -40,7 +40,7 @@ if ( function_exists( 'yoast_breadcrumb' ) ) {
                 if ( empty( $products_appearance['hide_featured_products'] ) ) {
                     $featured_products = dokan_get_featured_products( $items_to_show, $vendor_id );
                     ?>
-                <div class="dokan-latest-products">
+                <div id="dokan-featured-products" class="dokan-products-display_section">
                     <h2 class="products-list-heading"><?php esc_html_e('Featured Products'); ?></h2>
 
                 <?php if ( $featured_products->have_posts() ) { ?>
@@ -71,7 +71,7 @@ if ( function_exists( 'yoast_breadcrumb' ) ) {
                 if ( empty( $products_appearance['hide_latest_products'] ) ) {
                     $latest_products = dokan_get_latest_products( $items_to_show, $vendor_id );
                     ?>
-                <div class="dokan-latest-products">
+                <div id="dokan-latest-products" class="dokan-products-display_section">
                     <h2 class="products-list-heading"><?php esc_html_e('Latest Products'); ?></h2>
 
                 <?php if ( $latest_products->have_posts() ) { ?>
@@ -92,6 +92,37 @@ if ( function_exists( 'yoast_breadcrumb' ) ) {
                 <?php } else { ?>
 
                     <p class="dokan-info"><?php esc_html_e( 'No latest products were found of this vendor!', 'dokan-lite' ); ?></p>
+
+                <?php } ?>
+                </div>
+                <?php
+                }
+
+                // Best selling products section
+                if ( empty( $products_appearance['hide_best_selling_products'] ) ) {
+                    $best_selling_products = dokan_get_best_selling_products( $items_to_show, $vendor_id );
+                    ?>
+                <div id="dokan-best-selling-products" class="dokan-products-display_section">
+                    <h2 class="products-list-heading"><?php esc_html_e('Best Selling Products'); ?></h2>
+
+                <?php if ( $best_selling_products->have_posts() ) { ?>
+                    <div class="seller-items">
+
+                        <?php woocommerce_product_loop_start(); ?>
+
+                            <?php while ( $best_selling_products->have_posts() ) : $best_selling_products->the_post(); ?>
+
+                                <?php wc_get_template_part( 'content', 'product' ); ?>
+
+                            <?php endwhile; // end of the loop. ?>
+
+                        <?php woocommerce_product_loop_end(); ?>
+
+                    </div>
+
+                <?php } else { ?>
+
+                    <p class="dokan-info"><?php esc_html_e( 'No top rated products were found of this vendor!', 'dokan-lite' ); ?></p>
 
                 <?php } ?>
                 </div>
