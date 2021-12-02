@@ -36,10 +36,41 @@ if ( function_exists( 'yoast_breadcrumb' ) ) {
                 <?php
                 dokan_get_template_part( 'store-header' );
 
+                // Featured products section
+                if ( empty( $products_appearance['hide_featured_products'] ) ) {
+                    $featured_products = dokan_get_featured_products( $items_to_show, $vendor_id );
+                    ?>
+                <div class="dokan-latest-products">
+                    <h2 class="products-list-heading"><?php esc_html_e('Featured Products'); ?></h2>
+
+                <?php if ( $featured_products->have_posts() ) { ?>
+                    <div class="seller-items">
+
+                        <?php woocommerce_product_loop_start(); ?>
+
+                            <?php while ( $featured_products->have_posts() ) : $featured_products->the_post(); ?>
+
+                                <?php wc_get_template_part( 'content', 'product' ); ?>
+
+                            <?php endwhile; // end of the loop. ?>
+
+                        <?php woocommerce_product_loop_end(); ?>
+
+                    </div>
+
+                <?php } else { ?>
+
+                    <p class="dokan-info"><?php esc_html_e( 'No featured products were found of this vendor!', 'dokan-lite' ); ?></p>
+
+                <?php } ?>
+                </div>
+                <?php
+                }
+
+                // Latest products section
                 if ( empty( $products_appearance['hide_latest_products'] ) ) {
                     $latest_products = dokan_get_latest_products( $items_to_show, $vendor_id );
                     ?>
-                <!-- Latest Products Section Start -->
                 <div class="dokan-latest-products">
                     <h2 class="products-list-heading"><?php esc_html_e('Latest Products'); ?></h2>
 
@@ -64,7 +95,6 @@ if ( function_exists( 'yoast_breadcrumb' ) ) {
 
                 <?php } ?>
                 </div>
-                <!-- Latest Products Section End -->
                 <?php } ?>
 
                 <?php do_action( 'dokan_store_profile_frame_after', $store_user->data, $store_info ); ?>
