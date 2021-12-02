@@ -1,7 +1,7 @@
 <template>
     <tr :class="[id, `dokan-settings-field-type-${fieldData.type}`]" v-if="shoudShow">
         <template v-if="'sub_section' === fieldData.type">
-            <th colspan="2" class="dokan-settings-sub-section-title">
+            <th colspan="3" class="dokan-settings-sub-section-title">
                 <label>{{ fieldData.label }}</label>
             </th>
             <td class="tooltips-data"></td>
@@ -193,6 +193,11 @@
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
+            <td class="tooltips-data">
+                <span v-if="fieldData.tooltip">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                </span>
+            </td>
             <td>
                 <fieldset>
                     <template v-for="(optionVal, optionKey) in fieldData.options">
@@ -213,6 +218,11 @@
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
+            <td class="tooltips-data">
+                <span v-if="fieldData.tooltip">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                </span>
+            </td>
             <td>
                 <div class="col-3">
                     <div class="dokan-input-group">
@@ -290,6 +300,11 @@
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
+            <td class="tooltips-data">
+                <span v-if="fieldData.tooltip">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                </span>
+            </td>
             <td>
                 <div class="dokan-schedule-week-day-container">
                     <div class="col-3">
@@ -331,6 +346,11 @@
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
+            <td class="tooltips-data">
+                <span v-if="fieldData.tooltip">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                </span>
+            </td>
             <td>
                 <div class="col-3">
                     <div class="dokan-input-group">
@@ -380,6 +400,11 @@
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
+            <td class="tooltips-data">
+                <span v-if="fieldData.tooltip">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                </span>
+            </td>
             <td>
                 <select v-if="!fieldData.grouped" class="regular" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
                     <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
@@ -856,6 +881,9 @@
             },
 
             setDisbursementQuarterlySettings() {
+                if (  ! ( 'quarterly_schedule' in this.fieldValue ) ) {
+                    return;
+                }
                 if ( this.fieldValue['quarterly_schedule']['month'] === 'january' ) {
                     this.disbursementSettings.quarterly.second = 'april';
                     this.disbursementSettings.quarterly.third = 'july';
@@ -872,6 +900,9 @@
             },
 
             setDisbursementBiweeklySettings() {
+                if (  ! ( 'biweekly_schedule' in this.fieldValue ) ) {
+                    return;
+                }
                 if ( this.fieldValue['biweekly_schedule']['week'] === '1' ) {
                     this.disbursementSettings.biweekly.second = '3';
                 } else if ( this.fieldValue['biweekly_schedule']['week'] === '2' ) {

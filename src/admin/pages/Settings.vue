@@ -40,7 +40,7 @@
                                 <table class="form-table">
                                     <thead v-if="showSectionTitle(fields)">
                                     <tr class="dokan-settings-field-type-sub_section">
-                                        <th colspan="2" class="dokan-settings-sub-section-title">
+                                        <th colspan="3" class="dokan-settings-sub-section-title">
                                             <label>{{ sectionTitle( index ) }}</label>
                                         </th>
                                     </tr>
