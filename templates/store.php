@@ -122,6 +122,37 @@ if ( function_exists( 'yoast_breadcrumb' ) ) {
 
                 <?php } else { ?>
 
+                    <p class="dokan-info"><?php esc_html_e( 'No best selling products were found of this vendor!', 'dokan-lite' ); ?></p>
+
+                <?php } ?>
+                </div>
+                <?php
+                }
+
+                // Top rated products section
+                if ( empty( $products_appearance['hide_top_rated_products'] ) ) {
+                    $top_rated_products = dokan_get_latest_products( $items_to_show, $vendor_id );
+                    ?>
+                <div id="dokan-top-rated-products" class="dokan-products-display_section">
+                    <h2 class="products-list-heading"><?php esc_html_e('Top Rated Products'); ?></h2>
+
+                <?php if ( $top_rated_products->have_posts() ) { ?>
+                    <div class="seller-items">
+
+                        <?php woocommerce_product_loop_start(); ?>
+
+                            <?php while ( $top_rated_products->have_posts() ) : $top_rated_products->the_post(); ?>
+
+                                <?php wc_get_template_part( 'content', 'product' ); ?>
+
+                            <?php endwhile; // end of the loop. ?>
+
+                        <?php woocommerce_product_loop_end(); ?>
+
+                    </div>
+
+                <?php } else { ?>
+
                     <p class="dokan-info"><?php esc_html_e( 'No top rated products were found of this vendor!', 'dokan-lite' ); ?></p>
 
                 <?php } ?>
