@@ -107,30 +107,28 @@ class VendorDashboardController extends \WP_REST_Controller {
      */
     public function get_dashboard_statistics() {
         $vendor = dokan()->vendor->get( dokan_get_current_user_id() );
-
+        // TODO: make it appropriate.
         return rest_ensure_response(
             [
-                'total_sales'    => $vendor->get_sales(),
-                'total_orders'   => $vendor->get_orders_count(),
-                'total_products' => $vendor->get_products_count(),
+                'total_sales'    => (int) $vendor->get_total_sales(),
+                'total_orders'   => dokan_count_orders( dokan_get_current_user_id() ),
+                'total_products' => dokan_count_posts( 'product', dokan_get_current_user_id() ),
                 'total_earnings' => $vendor->get_earnings(),
-                'total_views'    => $vendor->get_pageview(),
+                'total_views'    => dokan_author_pageviews( dokan_get_current_user_id() ),
             ]
         );
     }
 
     /**
-     * Get Vendor profile completeness.
+     * Get Vendor profile Information.
      *
      * @since 3.3.3
      *
      * @return WP_Error|WP_HTTP_Response|WP_REST_Response
      */
     public function get_profile_completeness() {
-        $vendor = dokan()->vendor->get( get_current_user_id() );
-
         return rest_ensure_response(
-            $vendor->get_profile_completeness()
+            dokan_get_store_info( dokan_get_current_user_id() )
         );
     }
 
